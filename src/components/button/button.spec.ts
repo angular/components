@@ -23,16 +23,27 @@ describe('MdButton', () => {
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => { builder = tcb; }));
 
   describe('button[md-button]', () => {
-    it('should handle a click on the button', (done: () => void) => {
+    //it('should handle a click on the button', (done: () => void) => {
+    //  return builder.createAsync(TestApp).then((fixture) => {
+    //    let testComponent = fixture.debugElement.componentInstance;
+    //    let buttonDebugElement = fixture.debugElement.query(By.css('button'));
+    //
+    //    buttonDebugElement.nativeElement.click();
+    //    expect(testComponent.clickCount).toBe(1);
+    //    done();
+    //  });
+    //});
+
+    it('should handle a click on the button', testAsync(() => {
       return builder.createAsync(TestApp).then((fixture) => {
+        expect(1).toBe(2);
         let testComponent = fixture.debugElement.componentInstance;
         let buttonDebugElement = fixture.debugElement.query(By.css('button'));
 
         buttonDebugElement.nativeElement.click();
         expect(testComponent.clickCount).toBe(1);
-        done();
       });
-    });
+    }));
 
   });
 });
