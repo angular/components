@@ -16,7 +16,7 @@ module.exports = function(defaults) {
   return mergeTrees([
     angularAppTree.toTree(),
     componentCssTree,
-    demoAppCssTree,
+    demoAppCssTree
   ]);
 };
 
