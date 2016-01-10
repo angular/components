@@ -31,7 +31,7 @@ module.exports = function(config) {
     proxies: {
       // required for component assests fetched by Angular's compiler
       "/demo-app/": "/base/dist/demo-app/",
-      "/components/": "/base/dist/components/",
+      "/components/": "/base/dist/components/"
     },
     exclude: [],
     preprocessors: {},

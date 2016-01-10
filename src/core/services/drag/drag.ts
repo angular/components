@@ -1,5 +1,4 @@
 import {DOM} from "angular2/src/platform/dom/dom_adapter";
-import {Json} from "angular2/src/facade/lang";
 
 export class MdDrag {
 
