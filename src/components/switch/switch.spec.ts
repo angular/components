@@ -16,7 +16,7 @@ import {MdSwitch} from './switch';
 import {AsyncTestFn} from "angular2/testing";
 import {FORM_DIRECTIVES} from "angular2/common";
 import {Input} from "angular2/core";
-
+import {By} from 'angular2/platform/browser';
 
 describe('MdSwitch', () => {
   let builder: TestComponentBuilder;
@@ -24,10 +24,10 @@ describe('MdSwitch', () => {
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => { builder = tcb; }));
 
   describe('md-switch', () => {
-    it('should change the model value', (done: () => void) => {
+    it('should change the model value', (done:() => void) => {
       return builder.createAsync(TestApp).then((fixture) => {
         let testComponent = fixture.debugElement.componentInstance;
-        let switchElement = getChildDebugElement(fixture.debugElement, 'md-switch');
+        let switchElement = fixture.debugElement.query(By.css('md-switch'));
 
         expect(switchElement.nativeElement.classList.contains('md-checked')).toBe(false);
 
@@ -39,21 +39,34 @@ describe('MdSwitch', () => {
         done();
       });
     });
+
+    it('should not change the model if disabled', (done:() => void) => {
+      return builder.createAsync(TestApp).then((fixture) => {
+        let testComponent = fixture.debugElement.componentInstance;
+        let switchElement = fixture.debugElement.query(By.css('md-switch'));
+
+        expect(switchElement.nativeElement.classList.contains('md-checked')).toBe(false);
+
+        testComponent.isDisabled = true;
+        fixture.detectChanges();
+
+        switchElement.nativeElement.click();
+
+        expect(switchElement.nativeElement.classList.contains('md-checked')).toBe(false);
+        done();
+      });
+    });
   });
 });
-
-/** Gets a child DebugElement by tag name. */
-function getChildDebugElement(parent: DebugElement, tagName: string): DebugElement {
-  return parent.query(debugEl => debugEl.nativeElement.tagName.toLowerCase() == tagName);
-}
 
 /** Test component that contains an MdSwitch. */
 @Component({
   selector: 'test-app',
   directives: [MdSwitch, FORM_DIRECTIVES],
   template:
-    '<md-switch [(ngModel)]="testSwitch">Test Switch</md-switch>',
+    '<md-switch [(ngModel)]="testSwitch" [disabled]="isDisabled">Test Switch</md-switch>',
 })
 class TestApp {
   testSwitch = false;
+  isDisabled = false;
 }

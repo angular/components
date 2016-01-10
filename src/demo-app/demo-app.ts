@@ -8,6 +8,7 @@ import {FORM_DIRECTIVES} from "angular2/common";
   selector: 'demo-app',
   providers: [],
   templateUrl: 'demo-app/demo-app.html',
+  styleUrls: ['demo-app/demo-app.css'],
   directives: [MdButton, MdSwitch, FORM_DIRECTIVES],
   pipes: []
 })
