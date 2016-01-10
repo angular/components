@@ -8,10 +8,11 @@ __karma__.loaded = function() {};
 /**
  * Gets map of module alias to location or package.
  * @param dir Directory name under `src/` for create a map for.
+ * @param core Is that a map of the core files
  */
-function getPathsMap(dir) {
+function getPathsMap(dir, core) {
   return Object.keys(window.__karma__.files)
-    .filter(isComponentsFile)
+    .filter(!!core ? isCoreFile : isComponentsFile)
     .reduce(function(pathsMapping, appPath) {
       var pathToReplace = new RegExp('^/base/dist/' + dir + '/');
       var moduleName = appPath.replace(pathToReplace, './').replace(/\.js$/, '');
@@ -26,6 +27,11 @@ System.config({
       defaultExtension: false,
       format: 'register',
       map: getPathsMap('components')
+    },
+    'base/dist/core': {
+      defaultExtension: false,
+      format: 'register',
+      map: getPathsMap('core', true)
     }
   }
 });
@@ -45,6 +51,10 @@ System.import('angular2/platform/browser').then(function(browser_adapter) {
 }, function(error) {
   __karma__.error(error.stack || error);
 });
+
+function isCoreFile(filePath) {
+  return /^\/base\/dist\/core\/(?!spec)([a-z0-9-_\/]+)\.js$/.test(filePath);
+}
 
 function isComponentsFile(filePath) {
   return /^\/base\/dist\/components\/(?!spec)([a-z0-9-_\/]+)\.js$/.test(filePath);
