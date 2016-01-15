@@ -1,5 +1,7 @@
 # Material Design for Angular 2
 
+[![Join the chat at https://gitter.im/angular/material2](https://badges.gitter.im/angular/material2.svg)](https://gitter.im/angular/material2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is the home for the Angular team's Material Design components built on top of Angular 2.
 Things are in very early stages now- check back soon for more progress.
 
