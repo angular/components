@@ -1,3 +1,4 @@
+'use strict';
 var fs = require('fs');
 var path = require('path');
 
@@ -5,12 +6,13 @@ var mergeTrees = require('broccoli-merge-trees');
 var Angular2App = require('angular-cli/lib/broccoli/angular2-app');
 var BroccoliSass = require('broccoli-sass');
 var broccoliAutoprefixer = require('broccoli-autoprefixer');
+var cssjanus = require('cssjanus');
 
 var autoprefixerOptions = require('./build/autoprefixer-options');
 
 module.exports = function(defaults) {
   var demoAppCssTree = new BroccoliSass(['src/demo-app'], './demo-app.scss', 'demo-app/demo-app.css');
-  var componentCssTree = getComponentsCssTree();
+  var componentCssTree = getCssTree('src/components/', 'components/');
   var angularAppTree = new Angular2App(defaults);
 
   return mergeTrees([
@@ -21,27 +23,52 @@ module.exports = function(defaults) {
 };
 
 
+/** Generate RTL CSS files along side regular CSS. */
+class BroccoliSassWithRtl extends BroccoliSass {
+  build() {
+    // This will output the regular CSS.
+    super.build();
+
+    // We then read that file and output the RTL CSS.
+    const cssOutputPath = path.join(this.outputPath, this.outputFile);
+    const cssRtlOutputPath = path.join(this.outputPath,
+        path.dirname(this.outputFile),
+        path.basename(this.outputFile, '.css') + '-rtl.css');
+    fs.writeFileSync(cssRtlOutputPath, cssjanus.transform(fs.readFileSync(cssOutputPath).toString()));
+  }
+}
+
+
+
 /** Gets the tree for all of the components' CSS. */
-function getComponentsCssTree() {
-  // Assume that the list of components is all directories in `src/components/`
-  var componentsSrc = 'src/components/';
-  var components = fs.readdirSync(componentsSrc)
-      .filter(file => fs.statSync(path.join(componentsSrc, file)).isDirectory());
+function getCssTree(source, destination) {
+  function walk(dir) {
+    const dirs = fs.readdirSync(dir)
+        .filter(file => fs.statSync(path.join(dir, file)).isDirectory());
+    if (!dirs.length) {
+      return [dir];
+    }
 
-  var componentCssTrees = components.reduce((trees, component) => {
-    // We want each individual scss file to be compiled into a corresponding css file
-    // so that they can be individually included in styleUrls.
-    var scssFiles = fs.readdirSync(path.join(componentsSrc, component))
-        .filter(file => path.extname(file) === '.scss')
-        .map(file => path.basename(file, '.scss'));
+    return dirs.reduce((previous, current) => {
+        return previous.concat(walk(path.join(dir, current)));
+    }, [dir]);
+  }
 
-    return scssFiles.map(fileName => {
-      return BroccoliSass(
-        [`src/components/${component}`, 'src/core/style'], // Directories w/ scss sources
-        `./${fileName}.scss`,                              // Root scss input file
-        `components/${component}/${fileName}.css`);        // Css output file
-    }).concat(trees);
-  }, []);
+  const trees = walk(source)
+    .reduce((previous, current) => {
+      const dir = path.join(destination, current.substr(source.length));
+      const scssFiles = fs.readdirSync(current)
+          .filter(file => path.extname(file) === '.scss')
+          .map(file => path.basename(file, '.scss'));
 
-  return broccoliAutoprefixer(mergeTrees(componentCssTrees), autoprefixerOptions);
+      return scssFiles.map(filename => {
+          return new BroccoliSassWithRtl(
+            [current, 'src/core/style'],
+            path.join('.', filename + '.scss'),
+            path.join(dir, filename + '.css')
+          );
+      }).concat(previous);
+    }, []);
+
+  return broccoliAutoprefixer(mergeTrees(trees), autoprefixerOptions);
 }
