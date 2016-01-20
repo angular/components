@@ -30,15 +30,21 @@ env:
   - secure: "fq/U7VDMWO8O8SnAQkdbkoSe2X92PVqg4d044HmRYVmcf6YbO48+xeGJ8yOk0pCBwl3ISO4Q2ot0x546kxfiYBuHkZetlngZxZCtQiFT9kyId8ZKcYdXaIW9OVdw3Gh3tQyUwDucfkVhqcs52D6NZjyE2aWZ4/d1V4kWRO/LMgo="
   matrix:
     # Order: a slower build first, so that we don't occupy an idle travis worker waiting for others to complete.
-    - MODE=saucelabs_required
-    - MODE=browserstack_required
-    - MODE=saucelabs_optional
-    - MODE=browserstack_optional
+    - MODE=saucelabs_unit_required
+    - MODE=browserstack_unit_required
+    - MODE=saucelabs_unit_optional
+    - MODE=browserstack_unit_optional
+    - MODE=saucelabs_e2e_required
+    - MODE=browserstack_e2e_required
+    - MODE=saucelabs_e2e_optional
+    - MODE=browserstack_e2e_optional
 
 matrix:
   allow_failures:
-  - env: "MODE=saucelabs_optional"
-  - env: "MODE=browserstack_optional"
+  - env: "MODE=saucelabs_unit_optional"
+  - env: "MODE=browserstack_unit_optional"
+  - env: "MODE=saucelabs_e2e_optional"
+  - env: "MODE=browserstack_e2e_optional"
 
 install:
   - npm install
@@ -53,7 +59,6 @@ before_script:
 
 script:
 - ./scripts/ci/build-and-test.sh ${MODE}
-- ./scripts/ci/test-e2e-js.sh
 
 cache:
   directories:

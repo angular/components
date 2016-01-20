@@ -13,4 +13,7 @@ exports.config = {
     showColors: true,
     defaultTimeoutInterval: 60000
   },
+
+  sauceUser: process.env.SAUCE_USERNAME,
+  sauceKey: process.env.SAUCE_ACCESS_KEY,
 };

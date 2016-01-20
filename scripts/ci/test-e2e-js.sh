@@ -12,7 +12,6 @@ function killServer () {
   kill $serverPid
 }
 
-
 ./node_modules/.bin/ng serve&
 serverPid=$!
 
