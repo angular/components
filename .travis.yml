@@ -53,6 +53,7 @@ before_script:
 
 script:
 - ./scripts/ci/build-and-test.sh ${MODE}
+- ./scripts/ci/test-e2e-js.sh
 
 cache:
   directories:
