@@ -1,3 +1,5 @@
+/// <reference path="../tools/typings/node/node.d.ts" />
+
 // This file is named differently than its JS bootstrapper to avoid the ts compiler to overwrite it.
 
 import path = require('path');

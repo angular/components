@@ -10,7 +10,8 @@
   "scripts": {
     "build": "ng build",
     "demo-app": "cd src && ng serve",
-    "test": "karma start test/karma.conf.js"
+    "test": "karma start test/karma.conf.js",
+    "ts2dart": "ts2dart "
   },
   "version": "2.0.0-alpha.0",
   "license": "Apache-2.0",
@@ -30,6 +31,7 @@
     "angular-cli": "0.0.*",
     "angular-cli-github-pages": "^0.2.0",
     "broccoli-autoprefixer": "^4.1.0",
+    "broccoli-caching-writer": "^2.2.1",
     "broccoli-merge-trees": "^1.1.1",
     "broccoli-sass": "^0.7.0",
     "browserstacktunnel-wrapper": "^1.4.2",
@@ -41,6 +43,9 @@
     "karma-firefox-launcher": "^0.1.7",
     "karma-jasmine": "^0.3.6",
     "karma-sauce-launcher": "^0.2.14",
+    "mkdirp": "^0.5.1",
+    "ts-node": "^0.5.5",
+    "ts2dart": "^0.7.20",
     "tslint": "^3.2.2",
     "typescript": "^1.7.5"
   }
