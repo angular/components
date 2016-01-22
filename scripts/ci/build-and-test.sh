@@ -48,10 +48,22 @@ teardown_tunnel() {
   esac
 }
 
+# Run the tests for this run (either unit or e2e).
+run_tests() {
+  case "$MODE" in
+    *unit*)
+      npm run build
+      karma start test/karma.conf.js --single-run --no-auto-watch --reporters='dots'
+      ;;
+    *e2e*)
+     ./scripts/ci/test-e2e-js.sh
+      ;;
+    *)
+      ;;
+  esac
+}
 
 start_tunnel
 wait_for_tunnel
-npm run build
-karma start test/karma.conf.js --single-run --no-auto-watch --reporters='dots'
+run_tests
 teardown_tunnel
-
