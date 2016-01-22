@@ -1,3 +1,5 @@
+/// <reference path="../tools/typings/node/node.d.ts" />
+
 type ContextConfigurationInfo = { target: string, required: boolean };
 export interface ConfigurationInfo {
   unitTest: ContextConfigurationInfo;
@@ -11,6 +13,7 @@ export interface BrowserLauncherInfo {
   platform?: string;
   device?: string;
   browser?: string;
+  browserName?: string;
   browser_version?: string;
   os?: string;
   os_version?: string;
