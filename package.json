@@ -10,6 +10,7 @@
   "scripts": {
     "build": "ng build",
     "demo-app": "cd src && ng serve",
+    "postinstall": "tsd reinstall",
     "test": "karma start test/karma.conf.js"
   },
   "version": "2.0.0-alpha.0",
@@ -41,6 +42,7 @@
     "karma-firefox-launcher": "^0.1.7",
     "karma-jasmine": "^0.3.6",
     "karma-sauce-launcher": "^0.2.14",
+    "tsd": "^0.6.5",
     "tslint": "^3.2.2",
     "typescript": "^1.7.5"
   }
