@@ -5,6 +5,7 @@ import {SidenavDemo} from './sidenav/sidenav-demo';
 import {RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 import {Dir} from '../directives/dir/dir';
 import {MdButton} from '../components/button/button';
+import {WhiteframeDemo} from './whiteframe/whiteframe-demo';
 
 @Component({
   selector: 'home',
@@ -24,6 +25,7 @@ export class Home {}
   {path: '/', name: 'Home', component: Home, useAsDefault: true},
   {path: '/button',   name: 'ButtonDemo', component: ButtonDemo},
   {path: '/card', name: 'CardDemo', component: CardDemo},
-  {path: '/sidenav', name: 'SidenavDemo', component: SidenavDemo}
+  {path: '/sidenav', name: 'SidenavDemo', component: SidenavDemo},
+  {path: '/whiteframe', name:'WhiteframeDemo', component: WhiteframeDemo}
 ])
 export class DemoApp { }
