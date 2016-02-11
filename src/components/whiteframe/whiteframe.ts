@@ -1,4 +1,4 @@
-import {Component, Input, ElementRef,ViewEncapsulation, OnInit} from 'angular2/core';
+import {Component, Input, ElementRef, ViewEncapsulation, OnInit} from 'angular2/core';
 import {CONST} from 'angular2/src/facade/lang';
 
 @Component({
@@ -8,9 +8,9 @@ import {CONST} from 'angular2/src/facade/lang';
     encapsulation: ViewEncapsulation.None
 })
 export class MdWhiteframe implements OnInit {
-    @CONST() static MIN_DP:number = 1;
-    @CONST() static MAX_DP:number = 24;
-    @CONST() static DEFAULT_DP:number = 4;
+    @CONST() static MIN_DP: number = 1;
+    @CONST() static MAX_DP: number = 24;
+    @CONST() static DEFAULT_DP: number = 4;
 
     private elevation_:number;
 
@@ -32,8 +32,6 @@ export class MdWhiteframe implements OnInit {
         }
 
         this.dpCssClass = 'md-whiteframe-' + this.elevation_ + 'dp';
-        this.el.nativeElement.className +=
-            (this.el.nativeElement.className !== '' ? ' ' : '') +
-            this.dpCssClass;
+        this.el.nativeElement.classList.add(this.dpCssClass);
     }
 }
