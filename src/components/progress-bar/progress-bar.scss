@@ -1,0 +1,205 @@
+@import "variables";
+@import "default-theme";
+
+$progress-bar-height: 5px !default;
+$progress-bar-full-animation-duration: 2s !default;
+$progress-bar-piece-animation-duration: 250ms !default;
+
+/** In buffer mode a repeated SVG object is used as a background.  Each of the following defines the SVG object for each
+    of the class defined colors.
+
+    Each string is a URL encoded version of:
+
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+         version="1.1" x="0px" y="0px" enable-background="new 0 0 5 2"
+         xml:space="preserve" viewBox="0 0 5 2" preserveAspectRatio="none slice">
+      <circle cx="1" cy="1" r="1" fill="{INJECTED_COLOR}"/>
+    </svg>
+
+    */
+$buffer-bubbles-primary: (
+  "data:image/svg+xml;charset=UTF-8,%3Csvg%20version%3D%271.1%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27" +
+  "%20xmlns%3Axlink%3D%27http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%27%20x%3D%270px%27%20y%3D%270px%27%20enable-backgroun" +
+  "d%3D%27new%200%200%205%202%27%20xml%3Aspace%3D%27preserve%27%20viewBox%3D%270%200%205%202%27%20preserveAspectRatio" +
+  "%3D%27none%20slice%27%3E%3Ccircle%20cx%3D%271%27%20cy%3D%271%27%20r%3D%271%27%20fill%3D%27" +
+  md-color($md-primary, 100) + "%27%2F%3E%3C%2Fsvg%3E") !default;
+$buffer-bubbles-accent: (
+  "data:image/svg+xml;charset=UTF-8,%3Csvg%20version%3D%271.1%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27" +
+  "%20xmlns%3Axlink%3D%27http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%27%20x%3D%270px%27%20y%3D%270px%27%20enable-backgroun" +
+  "d%3D%27new%200%200%205%202%27%20xml%3Aspace%3D%27preserve%27%20viewBox%3D%270%200%205%202%27%20preserveAspectRatio" +
+  "%3D%27none%20slice%27%3E%3Ccircle%20cx%3D%271%27%20cy%3D%271%27%20r%3D%271%27%20fill%3D%27" +
+  md-color($md-accent, 100) + "%27%2F%3E%3C%2Fsvg%3E") !default;
+$buffer-bubbles-warn: (
+  "data:image/svg+xml;charset=UTF-8,%3Csvg%20version%3D%271.1%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27" +
+  "%20xmlns%3Axlink%3D%27http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%27%20x%3D%270px%27%20y%3D%270px%27%20enable-backgroun" +
+  "d%3D%27new%200%200%205%202%27%20xml%3Aspace%3D%27preserve%27%20viewBox%3D%270%200%205%202%27%20preserveAspectRatio" +
+  "%3D%27none%20slice%27%3E%3Ccircle%20cx%3D%271%27%20cy%3D%271%27%20r%3D%271%27%20fill%3D%27" +
+  md-color($md-warn, 100) + "%27%2F%3E%3C%2Fsvg%3E") !default;
+
+:host {
+  display: block;
+  /** Height is provided for md-progress-bar to act as a default. */
+  height: $progress-bar-height;
+  overflow: hidden;
+  position: relative;
+  /** translateZ is added to force the md-progress-bar into its own GPU layer. */
+  transform: translateZ(0);
+  transition: opacity $progress-bar-piece-animation-duration linear;
+  width: 100%;
+
+  .background {
+    background: url($buffer-bubbles-primary);
+    background-repeat: repeat-x;
+    background-size: 10px 4px;
+    height: 100%;
+    position: absolute;
+    visibility: hidden;
+    width: 100%;
+  }
+
+  .buffer {
+    background-color: md-color($md-primary, 100);
+    height: 100%;
+    position: absolute;
+    transform-origin: top left;
+    transition: transform $progress-bar-piece-animation-duration ease;
+    width: 100%;
+  }
+
+  .bar {
+    animation: none;
+    height: 100%;
+    position: absolute;
+    transform-origin: top left;
+    transition: transform $progress-bar-piece-animation-duration ease;
+    width: 100%;
+  }
+
+  .bar::after {
+    animation: none;
+    background-color: md-color($md-primary, 600);
+    content: '';
+    display: inline-block;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+  }
+
+  .secondary {
+    visibility: hidden;
+  }
+
+  &.md-accent {
+    .background {
+      background: url($buffer-bubbles-accent);
+      background-repeat: repeat-x;
+      background-size: 10px 4px;
+    }
+    .buffer {
+      background-color: md-color($md-accent, 100);
+    }
+    .bar::after {
+      background-color: md-color($md-accent, 600);
+    }
+  }
+
+  &.md-warn {
+    .background {
+      background: url($buffer-bubbles-warn);
+      background-repeat: repeat-x;
+      background-size: 10px 4px;
+    }
+    .buffer {
+      background-color: md-color($md-warn, 100);
+    }
+    .bar::after {
+      background-color: md-color($md-warn, 600);
+    }
+  }
+
+  &[mode="query"] {
+    transform: rotateZ(180deg);
+  }
+
+  &[mode="indeterminate"],
+  &[mode="query"] {
+    .bar {
+      transition: none;
+    }
+    .primary {
+      animation: primary-indeterminate-translate $progress-bar-full-animation-duration infinite linear;
+      left: -145.166611%;
+    }
+    .primary.bar::after {
+      animation: primary-indeterminate-scale $progress-bar-full-animation-duration infinite linear;
+    }
+    .secondary {
+      animation: secondary-indeterminate-translate $progress-bar-full-animation-duration infinite linear;
+      left: -54.888891%;
+      visibility: visible;
+    }
+    .secondary.bar::after {
+      animation: secondary-indeterminate-scale $progress-bar-full-animation-duration infinite linear;
+    }
+  }
+
+  &[mode="buffer"] {
+    .background {
+      animation: background-scroll $progress-bar-piece-animation-duration infinite linear;
+      visibility: visible;
+    }
+  }
+}
+
+
+// Reverse the apparent directionality of progress vars for rtl.
+:host-context([dir="rtl"]) {
+  transform: rotateY(180deg);
+}
+
+
+/** Animations for indeterminate and query mode. */
+// Primary indicator.
+@keyframes primary-indeterminate-translate {
+  0%      { transform: translateX(0px); }
+  20%     { animation-timing-function: $progress-bar-primary-indeterminate-translate-step-2;
+            transform: translateX(0px); }
+  59.15%  { animation-timing-function: $progress-bar-primary-indeterminate-translate-step-3;
+            transform: translateX(83.67142%); }
+  100%    { transform: translateX(200.611057%); }
+}
+
+@keyframes primary-indeterminate-scale {
+  0%      { transform: scaleX(.08); }
+  36.65%  { animation-timing-function: $progress-bar-primary-indeterminate-scale-step-2;
+            transform: scaleX(.08); }
+  69.15%  { animation-timing-function: $progress-bar-primary-indeterminate-scale-step-3;
+            transform: scaleX(.661479); }
+  100%    { transform: scaleX(.08); }
+}
+
+// Secondary indicator.
+@keyframes secondary-indeterminate-translate {
+  0%      { animation-timing-function: $progress-bar-secondary-indeterminate-translate-step-1;
+            transform: translateX(0px);  }
+  25%     { animation-timing-function: $progress-bar-secondary-indeterminate-translate-step-2;
+            transform: translateX(37.651913%); }
+  48.35%  { animation-timing-function: $progress-bar-secondary-indeterminate-translate-step-3;
+            transform: translateX(84.386165%); }
+  100%    { transform: translateX(160.277782%); }
+}
+
+@keyframes secondary-indeterminate-scale {
+  0%      { animation-timing-function: $progress-bar-secondary-indeterminate-scale-step-1;
+            transform: scaleX(.08); }
+  19.15%  { animation-timing-function: $progress-bar-secondary-indeterminate-scale-step-2;
+            transform: scaleX(.457104); }
+  44.15%  { animation-timing-function: $progress-bar-secondary-indeterminate-scale-step-3;
+            transform: scaleX(.727960); }
+  100%    { transform: scaleX(.08); }
+}
+
+/** Animation for buffer mode. */
+@keyframes background-scroll {
+  to      { transform: translateX(-10px); }
+}

@@ -2,6 +2,7 @@ import {Component} from 'angular2/core';
 import {CardDemo} from './card/card-demo';
 import {ButtonDemo} from './button/button-demo';
 import {SidenavDemo} from './sidenav/sidenav-demo';
+import {ProgressBarDemo} from './progress-bar/progress-bar-demo';
 import {ProgressCircleDemo} from './progress-circle/progress-circle-demo';
 import {RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 import {Dir} from '../directives/dir/dir';
@@ -27,5 +28,6 @@ export class Home {}
   {path: '/card', name: 'CardDemo', component: CardDemo},
   {path: '/sidenav', name: 'SidenavDemo', component: SidenavDemo},
   {path: '/progress-circle', name: 'ProgressCircleDemo', component: ProgressCircleDemo},
+  {path: '/progress-bar', name: 'ProgressBarDemo', component: ProgressBarDemo},
 ])
 export class DemoApp { }

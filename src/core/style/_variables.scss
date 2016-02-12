@@ -31,3 +31,24 @@ $swift-ease-in: all $swift-ease-in-duration $swift-ease-in-timing-function !defa
 $swift-ease-in-out-duration: 0.5s !default;
 $swift-ease-in-out-timing-function: $ease-in-out-curve-function !default;
 $swift-ease-in-out: all $swift-ease-in-out-duration $swift-ease-in-out-timing-function !default;
+
+// Progress Bar Timing functions:
+// $progress-bar-primary-indeterminate-translate-step-1 has no timing function.
+$progress-bar-primary-indeterminate-translate-step-2: cubic-bezier(.5, 0, .701732, .495819) !default;
+$progress-bar-primary-indeterminate-translate-step-3: cubic-bezier(.302435, .381352, .55, .956352) !default;
+// $progress-bar-primary-indeterminate-translate-step-4 has no timing function.
+
+// $progress-bar-primary-indeterminate-scale-step-1 has no timing function
+$progress-bar-primary-indeterminate-scale-step-2: cubic-bezier(.334731, .124820, .785844, 1) !default;
+$progress-bar-primary-indeterminate-scale-step-3: cubic-bezier(.06, .11, .6, 1) !default;
+// $progress-bar-primary-indeterminate-scale-step-4 has no timing function
+
+$progress-bar-secondary-indeterminate-translate-step-1: cubic-bezier(.15, 0, .515058, .409685) !default;
+$progress-bar-secondary-indeterminate-translate-step-2: cubic-bezier(.310330, .284058, .8, .733712) !default;
+$progress-bar-secondary-indeterminate-translate-step-3: cubic-bezier(.4, .627035, .6, .902026) !default;
+// $progress-bar-secondary-indeterminate-translate-step-4 has no timing function
+
+$progress-bar-secondary-indeterminate-scale-step-1: cubic-bezier(.15, 0, .515058, .409685) !default;
+$progress-bar-secondary-indeterminate-scale-step-2: cubic-bezier(.310330, .284058, .8, .733712) !default;
+$progress-bar-secondary-indeterminate-scale-step-3: cubic-bezier(.4, .627035, .6, .902026) !default;
+// $progress-bar-secondary-indeterminate-scale-step-4 has no timing function
