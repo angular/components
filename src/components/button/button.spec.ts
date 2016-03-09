@@ -46,6 +46,36 @@ export function main() {
         done();
       });
     });
+    it('should append class based on color attribute to an existing class list', (done: () => void) => {
+      return builder.createAsync(TestApp).then((fixture) => {
+        let testComponent = fixture.debugElement.componentInstance;
+        let buttonDebugElement = fixture.debugElement.query(By.css('button'));
+        let aDebugElement = fixture.debugElement.query(By.css('a'));
+
+        //button color should append to an existing class list
+        testComponent.buttonColor = 'warn';
+        buttonDebugElement.nativeElement.classList.add('foo');
+        aDebugElement.nativeElement.classList.add('foo');
+        fixture.detectChanges();
+        expect(buttonDebugElement.nativeElement.classList.contains('md-warn')).toBe(true);
+        expect(buttonDebugElement.nativeElement.classList.contains('foo')).toBe(true);
+        expect(aDebugElement.nativeElement.classList.contains('md-warn')).toBe(true);
+        expect(aDebugElement.nativeElement.classList.contains('foo')).toBe(true);
+        done();
+      });
+    });
+    it('should not render a class attribute when no color attribute is provided', (done: () => void) => {
+      //covering fix #75
+      return builder.createAsync(TestApp).then((fixture) => {
+        let buttonDebugElement = fixture.debugElement.query(By.css('button'));
+        let aDebugElement = fixture.debugElement.query(By.css('a'));
+
+        fixture.detectChanges();
+        expect(buttonDebugElement.nativeElement.hasAttribute('class')).toBe(false);
+        expect(aDebugElement.nativeElement.hasAttribute('class')).toBe(false);
+        done();
+      });
+    });
 
     // Regular button tests
     describe('button[md-button]', () => {

@@ -1,11 +1,14 @@
 import {
   Component,
+  ElementRef,
   ViewEncapsulation,
   Input,
   HostBinding,
   HostListener,
   ChangeDetectionStrategy,
+  Renderer,
 } from 'angular2/core';
+
 import {TimerWrapper} from 'angular2/src/facade/async';
 
 // TODO(jelbourn): Ink ripples.
@@ -18,7 +21,6 @@ import {TimerWrapper} from 'angular2/src/facade/async';
   inputs: ['color'],
   host: {
     '[class.md-button-focus]': 'isKeyboardFocused',
-    '[class]': 'setClassList()',
     '(mousedown)': 'setMousedown()',
     '(focus)': 'setKeyboardFocus()',
     '(blur)': 'removeKeyboardFocus()'
@@ -29,7 +31,31 @@ import {TimerWrapper} from 'angular2/src/facade/async';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdButton {
-  color: string;
+  private color_: string;
+
+  // Setting the class when a color property is provided
+  // cannot be done through [ngClass] on host or [class] = 'getClassList()'
+  // @see http://stackoverflow.com/questions/35506395
+  @Input()
+  set color(value: string) {
+    // Remove the previous color if one provided
+    if (this.color_ != null) {
+      this.renderer.setElementClass(this.elementRef, 'md-' + this.color_, false);
+    }
+
+    this.color_ = value;
+
+    if (value != null) {
+      this.renderer.setElementClass(this.elementRef, 'md-' + this.color_, true);
+    }
+  }
+
+  get color(): string {
+    return this.color_;
+  }
+
+  constructor(public elementRef: ElementRef, public renderer: Renderer) {
+  }
 
   /** Whether the button has focus from the keyboard (not the mouse). Used for class binding. */
   isKeyboardFocused: boolean = false;
@@ -37,15 +63,15 @@ export class MdButton {
   /** Whether a mousedown has occurred on this element in the last 100ms. */
   isMouseDown: boolean = false;
 
-  setClassList() {return `md-${this.color}`;}
-
   setMousedown() {
     // We only *show* the focus style when focus has come to the button via the keyboard.
     // The Material Design spec is silent on this topic, and without doing this, the
     // button continues to look :active after clicking.
     // @see http://marcysutton.com/button-focus-hell/
     this.isMouseDown = true;
-    TimerWrapper.setTimeout(() => { this.isMouseDown = false; }, 100);
+    TimerWrapper.setTimeout(() => {
+      this.isMouseDown = false;
+    }, 100);
   }
 
   setKeyboardFocus($event: any) {
@@ -62,7 +88,6 @@ export class MdButton {
   inputs: ['color'],
   host: {
     '[class.md-button-focus]': 'isKeyboardFocused',
-    '[class]': 'setClassList()',
     '(mousedown)': 'setMousedown()',
     '(focus)': 'setKeyboardFocus()',
     '(blur)': 'removeKeyboardFocus()'
@@ -74,8 +99,12 @@ export class MdButton {
 export class MdAnchor extends MdButton {
   disabled_: boolean = null;
 
+  constructor(elementRef_: ElementRef, renderer_: Renderer) {
+    super(elementRef_, renderer_);
+  }
+
   @HostBinding('tabIndex')
-  get tabIndex():number {
+  get tabIndex(): number {
     return this.disabled ? -1 : 0;
   }
 
@@ -87,7 +116,9 @@ export class MdAnchor extends MdButton {
 
   @HostBinding('attr.disabled')
   @Input('disabled')
-  get disabled() { return this.disabled_; }
+  get disabled() {
+    return this.disabled_;
+  }
 
   set disabled(value: boolean) {
     // The presence of *any* disabled value makes the component disabled, *except* for false.
