@@ -46,6 +46,7 @@
     "karma": "^0.13.15",
     "karma-browserstack-launcher": "^0.1.7",
     "karma-chrome-launcher": "^0.2.1",
+    "karma-coverage": "^0.5.5",
     "karma-dart": "^0.3.0",
     "karma-firefox-launcher": "^0.1.7",
     "karma-jasmine": "^0.3.6",

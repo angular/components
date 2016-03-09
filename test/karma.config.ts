@@ -13,6 +13,7 @@ export function config(config) {
     frameworks: ['jasmine'],
     plugins: [
       require('karma-jasmine'),
+      require('karma-coverage'),
       require('karma-browserstack-launcher'),
       require('karma-sauce-launcher'),
       require('karma-chrome-launcher'),
@@ -57,12 +58,23 @@ export function config(config) {
     customLaunchers: customLaunchers,
 
     exclude: [],
-    preprocessors: {},
-    reporters: ['dots'],
+    preprocessors: {
+      'dist/**/!(*spec).js': ['coverage']
+    }
+    reporters: ['dots', 'coverage'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
+
+    coverageReporter: {
+      dir: 'coverage/',
+      reporters: [
+        { type: 'text-summary' },
+        { type: 'json', subdir: '.', file: 'coverage-final.json' },
+        { type: 'html' }
+      ]
+    },
 
     sauceLabs: {
       testName: 'material2',
@@ -89,7 +101,7 @@ export function config(config) {
     browserNoActivityTimeout: 100000,
     browsers: ['Chrome'],
 
-    singleRun: false
+    singleRun: true
   });
 
   if (process.env['TRAVIS']) {
