@@ -11,6 +11,7 @@
     "build": "ng build",
     "dartanalyzer": "cd dist/dart && pub install && cd ../.. && ts-node scripts/ci/dart_analyzer",
     "demo-app": "cd src && ng serve",
+    "reinstall": "git clean -dfx -e '.*'",
     "test": "karma start test/karma.conf.js",
     "tslint" : "tslint -c tslint.json 'src/**/*.ts'",
     "typings": "typings install --ambient"
@@ -46,6 +47,7 @@
     "karma": "^0.13.15",
     "karma-browserstack-launcher": "^0.1.7",
     "karma-chrome-launcher": "^0.2.1",
+    "karma-coverage": "^0.5.5",
     "karma-dart": "^0.3.0",
     "karma-firefox-launcher": "^0.1.7",
     "karma-jasmine": "^0.3.6",
