@@ -1,6 +1,7 @@
 Error.stackTraceLimit = Infinity;
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
+// Increased the timeout to 15s for Edge 13
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;
 
 __karma__.loaded = function() {};
 
