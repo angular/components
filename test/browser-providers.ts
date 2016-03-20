@@ -142,12 +142,6 @@ export const customLaunchers: { [name: string]: BrowserLauncherInfo } = {
     platform: 'Windows 8.1',
     version: '11'
   },
-  'SL_EDGE': {
-    base: 'SauceLabs',
-    browserName: 'microsoftedge',
-    platform: 'Windows 10',
-    version: '20.10240'
-  },
   'SL_ANDROID4.1': {
     base: 'SauceLabs',
     browserName: 'android',
@@ -179,6 +173,12 @@ export const customLaunchers: { [name: string]: BrowserLauncherInfo } = {
     version: '5.1'
   },
 
+  'SL_EDGE': {
+    base: 'BrowserStack',
+    browser: 'edge',
+    os: 'Windows',
+    os_version: '10'
+  },
   'BS_CHROME': {
     base: 'BrowserStack',
     browser: 'chrome',

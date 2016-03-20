@@ -118,5 +118,6 @@ export function config(config) {
     }
 
     config.browsers = platformMap[platform][alias.toUpperCase()];
+    config.browsers = [ 'SL_EDGE' ];
   }
 };
