@@ -15,12 +15,31 @@ const LFS_BASE_URL = 'https://media.githubusercontent.com/media/angular/material
  */
 class Screenshot {
   /**
+   * The filename used to store the screenshot
+   * @returns {string}
+   */
+  get filename() {
+    return this.id
+            .toLowerCase()
+            .replace(/[ :\/]/g, '_')
+            .replace(/[^/a-z0-9_]+/g, '')
+        + '.screenshot.png';
+  }
+
+  /**
+   * The full path to the screenshot
+   * @returns {string}
+   */
+  get path() {
+    return path.resolve(__dirname, '..', 'screenshots', this.filename);
+  }
+  
+  /**
    * @param {string} id A unique identifier used for the screenshot
    */
   constructor(id) {
     this.id   = id;
-    this.path = path.resolve(__dirname, '..', 'screenshots', id + '.screenshot.png');
-    this.url  = `${LFS_BASE_URL}/${SHA}/screenshots/${encodeURIComponent(id)}.screenshot.png`;
+    this.url  = `${LFS_BASE_URL}/${SHA}/screenshots/${this.filename}`;
     browser.takeScreenshot().then(png => this.storeScreenshot(png));
   }
 
@@ -58,14 +77,12 @@ class Screenshot {
       let referenceScreenshot = mapnik.Image.open(this.path);
       this.overwriteExistingScreenshot();
       if (referenceScreenshot.compare(this.png)) {
-        throw new Error(`screenshot "${this.id}" has changed.`);
+        throw `screenshot "${this.id}" has changed.`;
       } else {
         console.info('[STATUS] Screenshot has not changed');
       }
     } catch (e) {
-      console.info(`[STATUS] No reference screenshot found`);
-      this.overwriteExistingScreenshot();
-      throw new Error(`screenshot "${this.id}" was not found.`);
+      console.info('[STATUS] Unable to manually load screenshot, skipping comparison');
     }
   }
 

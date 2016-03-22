@@ -14,6 +14,10 @@ addons:
     packages:
       - libstdc++6
 
+branches:
+  only:
+  - master
+
 env:
   global:
   - LOGS_DIR=/tmp/angular-material2-build/logs
@@ -63,7 +67,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - mkdir -p $LOGS_DIR
   - npm run tslint
-  - "node ./scripts/ci/analyze-commits.js"
+  - "node ./scripts/ci/forbidden-identifiers.js"
 
 
 script:
