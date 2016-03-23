@@ -1,6 +1,7 @@
 import {
   Component,
   Directive,
+  ElementRef,
   Input,
   OnChanges,
   SimpleChange,
@@ -11,27 +12,31 @@ import {
 } from './icon_provider';
 
 @Component({
-  template: `<md-icon-inline [innerHTML]="iconSvg"></md-icon-inline>`,
+  template: '<div class="md-icon-layout"></div>',
   selector: 'md-icon',
+  styleUrls: ['./components/icon/icon.css'],
   viewProviders: [MdIconProvider],
 })
 export class MdIcon implements OnChanges {
   @Input() svgSrc: string;
   @Input() svgIcon: string;
     
-  iconSvg: string;
-    
-  constructor(private _mdIconProvider: MdIconProvider) {
-    this.iconSvg = '<b>123456</b>';
+  constructor(private _element: ElementRef, private _mdIconProvider: MdIconProvider) {
   }
     
   ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
     if (this.svgIcon) {
       this._mdIconProvider.loadIcon(this.svgIcon)
-        .subscribe((svg: string) => {this.iconSvg = svg;});
+        .subscribe((svg: SVGElement) => this._setSvgElement(svg));
     } else if (this.svgSrc) {
       this._mdIconProvider.loadUrl(this.svgSrc)
-        .subscribe((svg: string) => {this.iconSvg = svg;});    
+        .subscribe((svg: SVGElement) => this._setSvgElement(svg));    
     }
+  }
+  
+  private _setSvgElement(svg: SVGElement) {
+    const layoutElement = this._element.nativeElement.querySelector('.md-icon-layout');
+    layoutElement.innerHTML = '';
+    layoutElement.appendChild(svg);
   }
 }
