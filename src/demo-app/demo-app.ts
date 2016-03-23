@@ -2,6 +2,7 @@ import {Component} from 'angular2/core';
 import {Route, RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 import {CardDemo} from './card/card-demo';
 import {ButtonDemo} from './button/button-demo';
+import {IconDemo} from './icon/icon-demo';
 import {RadioDemo} from './radio/radio-demo';
 import {SidenavDemo} from './sidenav/sidenav-demo';
 import {ProgressCircleDemo} from './progress-circle/progress-circle-demo';
@@ -36,5 +37,6 @@ export class Home {}
   new Route({path: '/portal', name: 'PortalDemo', component: PortalDemo}),
   new Route({path: '/checkbox', name: 'CheckboxDemo', component: CheckboxDemo}),
   new Route({path: '/toolbar', name: 'ToolbarDemo', component: ToolbarDemo}),
+  new Route({path: '/icon', name: 'IconDemo', component: IconDemo}),
 ])
 export class DemoApp { }
