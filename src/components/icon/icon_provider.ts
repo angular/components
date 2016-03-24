@@ -3,8 +3,7 @@ import {Http, HTTP_PROVIDERS} from 'angular2/http';
 import {Observable} from 'rxjs/Rx';
 
 /**
-  *  Configuration item stored in the Icon registry; used for lookups
-  *  to load if not already cached in the `loaded` cache
+  *  Configuration for a named icon, used when initially loading it.
   */
 class IconConfig {
   constructor(public url: string, public viewBoxSize: number) {
@@ -28,10 +27,10 @@ export class MdIconProvider {
   private _fontSets = <[FontSet]>[];
   
   constructor(private _http: Http) {
-    var defaultIcons = [
+    const defaultIcons = [
       {
         id: 'md-tabs-arrow',
-        // Should these be something that won't collide with real URLs?
+        // Should these be something that can't collide with real URLs?
         // Symbol might work but that's ES6 only with no backport to ES5.
         url: '[[md-tabs-arrow.svg]]',
         svg: '<svg version="1.1" x="0px" y="0px" viewBox="0 0 24 24"><g><polygon points="15.4,7.4 14,6 8,12 14,18 15.4,16.6 10.8,12 "/></g></svg>'
@@ -95,7 +94,8 @@ export class MdIconProvider {
   
   private _loadIconFromConfig(config: IconConfig): Observable<SVGElement> {
     // Fetch and cache SVG, if we haven't already.
-    var svgResponse: Observable<string> = this._cachedSvgByUrl.has(config.url) ?
+    // (Is there an Angular 2 equivalent of $templateCache?)
+    const svgResponse: Observable<string> = this._cachedSvgByUrl.has(config.url) ?
         Observable.of(this._cachedSvgByUrl.get(config.url)) :
         this._http.get(config.url)
             .map((response) => response.text())
