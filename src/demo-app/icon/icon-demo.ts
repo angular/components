@@ -10,7 +10,10 @@ import {MdIconProvider} from '../../components/icon/icon-provider';
     viewProviders: [MdIconProvider],
 })
 export class IconDemo {
+  showAndroid = false;
+
   constructor(mdIconProvider: MdIconProvider) {
       mdIconProvider.icon('thumb-up', '/demo-app/assets/thumbup-icon.svg');
+      mdIconProvider.iconSet('core', '/demo-app/assets/core-icon-set.svg');
   }
 }
