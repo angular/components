@@ -9,13 +9,12 @@ import {
 
 import {
   MdIconProvider,
-} from './icon_provider';
+} from './icon-provider';
 
 @Component({
   template: '<div class="md-icon-layout"></div>',
   selector: 'md-icon',
   styleUrls: ['./components/icon/icon.css'],
-  viewProviders: [MdIconProvider],
 })
 export class MdIcon implements OnChanges {
   @Input() svgSrc: string;
