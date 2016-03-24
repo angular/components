@@ -26,10 +26,10 @@ export class MdIcon implements OnChanges {
     
   ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
     if (this.svgIcon) {
-      this._mdIconProvider.loadIcon(this.svgIcon)
+      this._mdIconProvider.loadIconByName(this.svgIcon)
         .subscribe((svg: SVGElement) => this._setSvgElement(svg));
     } else if (this.svgSrc) {
-      this._mdIconProvider.loadUrl(this.svgSrc)
+      this._mdIconProvider.loadIconByUrl(this.svgSrc)
         .subscribe((svg: SVGElement) => this._setSvgElement(svg));    
     }
   }
