@@ -1,4 +1,4 @@
-import {Injectable} from 'angular2/core';
+import {Injectable, Renderer} from 'angular2/core';
 import {Http, Response, HTTP_PROVIDERS} from 'angular2/http';
 import {Observable} from 'rxjs/Rx';
 
@@ -10,14 +10,8 @@ class IconConfig {
   }
 }
 
-class FontSet {
-  constructor(public alias: string, fontSet: string) {
-  }
-}
-
 @Injectable()
 export class MdIconProvider {
-  private _predefinedIcons = new Map<string, string>();
   private _iconConfigsByName = new Map<string, IconConfig>();
   private _cachedIconsByName = new Map<string, SVGElement>();
 
@@ -27,51 +21,48 @@ export class MdIconProvider {
   private _cachedIconsBySetAndName = new Map<string, SVGElement>();
   private _cachedIconsByUrl = new Map<string, SVGElement>();
 
+  private _fontClassNamesByAlias = new Map<string, string>();
+
   private _inProgressUrlFetches = new Map<string, Observable<string>>();
   
   private _defaultViewBoxSize = 24;
-  private _defaultFontSet = 'material-icons';
-  private _fontSets = <[FontSet]>[];
+  private _defaultFontSetClass = 'material-icons';
   
-  constructor(private _http: Http) {
-    const defaultIcons = [
-      {
-        id: 'md-tabs-arrow',
-        svg: '<svg version="1.1" x="0px" y="0px" viewBox="0 0 24 24"><g><polygon points="15.4,7.4 14,6 8,12 14,18 15.4,16.6 10.8,12 "/></g></svg>'
-      },
-      {
-        id: 'md-close',
-        svg: '<svg version="1.1" x="0px" y="0px" viewBox="0 0 24 24"><g><path d="M19 6.41l-1.41-1.41-5.59 5.59-5.59-5.59-1.41 1.41 5.59 5.59-5.59 5.59 1.41 1.41 5.59-5.59 5.59 5.59 1.41-1.41-5.59-5.59z"/></g></svg>'
-      },
-      {
-        id: 'md-cancel',
-        svg: '<svg version="1.1" x="0px" y="0px" viewBox="0 0 24 24"><g><path d="M12 2c-5.53 0-10 4.47-10 10s4.47 10 10 10 10-4.47 10-10-4.47-10-10-10zm5 13.59l-1.41 1.41-3.59-3.59-3.59 3.59-1.41-1.41 3.59-3.59-3.59-3.59 1.41-1.41 3.59 3.59 3.59-3.59 1.41 1.41-3.59 3.59 3.59 3.59z"/></g></svg>'
-      },
-      {
-        id: 'md-menu',
-        svg: '<svg version="1.1" x="0px" y="0px" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" /></svg>'
-      },
-      {
-        id: 'md-toggle-arrow',
-        svg: '<svg version="1.1" x="0px" y="0px" viewBox="0 0 48 48"><path d="M24 16l-12 12 2.83 2.83 9.17-9.17 9.17 9.17 2.83-2.83z"/><path d="M0 0h48v48h-48z" fill="none"/></svg>'
-      },
-      {
-        id: 'md-calendar',
-        svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>'
-      },
-    ];
-    for (const item of defaultIcons) {
-      this._predefinedIcons.set(item.id, item.svg);
-    }
+  constructor(private _http: Http, private _renderer: Renderer) {
   }
   
-  icon(name: string, url: string, viewBoxSize=0) {
+  public registerIcon(name: string, url: string, viewBoxSize:number=0): MdIconProvider {
     this._iconConfigsByName.set(name, new IconConfig(url, viewBoxSize || this._defaultViewBoxSize));
+    return this;
   }
   
-  iconSet(name: string, url: string, viewBoxSize=0) {
+  public registerIconSet(name: string, url: string, viewBoxSize=0): MdIconProvider {
     this._iconSetConfigsByName.set(
         name, new IconConfig(url, viewBoxSize || this._defaultViewBoxSize));
+    return this;
+  }
+  
+  public registerFontSet(alias: string, className?: string): MdIconProvider {
+    this._fontClassNamesByAlias.set(alias, className || alias);
+    return this;
+  }
+  
+  public setDefaultViewBoxSize(size: number) {
+    this._defaultViewBoxSize = size;
+    return this;
+  }
+  
+  public getDefaultViewBoxSize(): number {
+    return this._defaultViewBoxSize;
+  }
+  
+  public setDefaultFontSetClass(className: string) {
+    this._defaultFontSetClass = className;
+    return this;
+  }
+  
+  public getDefaultFontSetClass(): string {
+    return this._defaultFontSetClass;
   }
 
   loadIconByName(iconName: string): Observable<SVGElement> {
@@ -81,14 +72,7 @@ export class MdIconProvider {
     }
     const iconConfig = this._iconConfigsByName.get(iconName);
     if (!iconConfig) {
-      // Check for predefined icon, create element and cache if so.
-      if (this._predefinedIcons.has(iconName)) {
-        const icon = this._svgElementFromString(this._predefinedIcons.get(iconName));
-        this._cachedIconsByName.set(iconName, icon);
-        return Observable.of(icon.cloneNode(true));
-      } else {
-        throw Error('Unknown icon: ' + iconName);
-      }
+      throw Error('Unknown icon: ' + iconName);
     }
     return this._loadIconFromConfig(iconConfig)
         .do((svg: SVGElement) => this._cachedIconsByName.set(iconName, svg));
@@ -124,6 +108,13 @@ export class MdIconProvider {
     }
     return this._loadIconFromConfig(new IconConfig(url, this._defaultViewBoxSize))
         .do((svg: SVGElement) => this._cachedIconsByUrl.set(url, svg));
+  }
+
+  classNameForFontAlias(alias: string): string {
+    if (!this._fontClassNamesByAlias.has(alias)) {
+      throw Error('Unknown font alias: ' + alias);
+    }
+    return this._fontClassNamesByAlias.get(alias);
   }
   
   private _fetchUrl(url: string): Observable<string> {
@@ -161,16 +152,6 @@ export class MdIconProvider {
     this._setSvgAttributes(svg, config);
     return svg;
   }
-  
-  private _svgElementFromString(str: string): SVGElement {
-    const div = document.createElement('DIV');
-    div.innerHTML = str;
-    const svg = <SVGElement>div.querySelector('svg');
-    if (!svg) {
-      throw Error('<svg> tag not found');
-    }
-    return svg;
-  }
 
   private _setSvgAttributes(svg: SVGElement, config: IconConfig) {
     const viewBoxSize = config.viewBoxSize || this._defaultViewBoxSize;
@@ -194,14 +175,23 @@ export class MdIconProvider {
     }
     // createElement('SVG') doesn't work as expected; the DOM ends up with
     // the correct nodes, but the SVG content doesn't render. Instead we
-    // have to set the entire SVG content via innerHTML, and then grab
-    // the <svg> node.
+    // have to create an empty SVG node using innerHTML and append its content.
     // http://stackoverflow.com/questions/23003278/svg-innerhtml-in-firefox-can-not-display
-    const div = document.createElement('DIV');
-    div.appendChild(iconNode);
-    div.innerHTML = '<svg>' + div.innerHTML + '</svg>';
-    const svg = <SVGElement>div.querySelector('svg');
+    const svg = this._svgElementFromString('<svg></svg>');
+    svg.appendChild(iconNode);
     this._setSvgAttributes(svg, config);
+    return svg;
+  }
+
+  private _svgElementFromString(str: string): SVGElement {
+    // TODO: Is there a better way than innerHTML? Renderer doesn't appear to have a method for
+    // creating an element from an HTML string.
+    const div = document.createElement('DIV');
+    div.innerHTML = str;
+    const svg = <SVGElement>div.querySelector('svg');
+    if (!svg) {
+      throw Error('<svg> tag not found');
+    }
     return svg;
   }
 }
