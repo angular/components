@@ -29,10 +29,10 @@ import {
   encapsulation: ViewEncapsulation.None,
 })
 export class MdIcon implements OnChanges, OnInit {
-  @Input('md-svg-src') svgSrc: string;
-  @Input('md-svg-icon') svgIcon: string;
-  @Input('md-font-set') fontSet: string;
-  @Input('md-font-icon') fontIcon: string;
+  @Input() svgSrc: string;
+  @Input() svgIcon: string;
+  @Input() fontSet: string;
+  @Input() fontIcon: string;
   @Input() alt: string;
   
   @Input('aria-label') ariaLabelFromParent: string = '';
