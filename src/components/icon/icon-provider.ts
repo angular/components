@@ -28,7 +28,7 @@ export class MdIconProvider {
   private _defaultViewBoxSize = 24;
   private _defaultFontSetClass = 'material-icons';
   
-  constructor(private _http: Http, private _renderer: Renderer) {
+  constructor(private _http: Http) {
   }
   
   public registerIcon(name: string, url: string, viewBoxSize:number=0): MdIconProvider {
@@ -127,6 +127,8 @@ export class MdIconProvider {
       return this._inProgressUrlFetches.get(url);
     }
     console.log("*** Sending request");
+    throw Error('oops');
+    /*
     const req = this._http.get(url)
         .do((response) => {
           console.log('*** Removing request: ' + url);
@@ -135,6 +137,7 @@ export class MdIconProvider {
         .map((response) => response.text());
     this._inProgressUrlFetches.set(url, req);
     return req;
+    */
   }
   
   private _loadIconFromConfig(config: IconConfig): Observable<SVGElement> {

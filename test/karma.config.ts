@@ -31,6 +31,8 @@ export function config(config) {
       'node_modules/reflect-metadata/Reflect.js',
       {pattern: 'node_modules/angular2/bundles/angular2.dev.js', included: true, watched: true},
       {pattern: 'node_modules/angular2/bundles/testing.dev.js', included: true, watched: true},
+      {pattern: 'node_modules/angular2/bundles/http.dev.js', included: true, watched: true},
+      //{pattern: 'node_modules/angular2/http/testing.js', included: true, watched: true},
 
       {pattern: 'test/karma-test-shim.js', included: true, watched: true},
 
