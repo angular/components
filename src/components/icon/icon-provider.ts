@@ -127,8 +127,6 @@ export class MdIconProvider {
       return this._inProgressUrlFetches.get(url);
     }
     console.log("*** Sending request");
-    throw Error('oops');
-    /*
     const req = this._http.get(url)
         .do((response) => {
           console.log('*** Removing request: ' + url);
@@ -137,7 +135,6 @@ export class MdIconProvider {
         .map((response) => response.text());
     this._inProgressUrlFetches.set(url, req);
     return req;
-    */
   }
   
   private _loadIconFromConfig(config: IconConfig): Observable<SVGElement> {

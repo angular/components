@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   Directive,
   ElementRef,
@@ -23,7 +24,6 @@ import {
   styleUrls: ['./components/icon/icon.css'],
   host: {
     'role': 'img',
-    '[attr.aria-label]': 'ariaLabel()',
   },
   directives: [NgClass],
   encapsulation: ViewEncapsulation.None,
@@ -43,6 +43,7 @@ export class MdIcon implements OnChanges, OnInit {
   constructor(
       private _element: ElementRef,
       private _renderer: Renderer,
+      private _changeDetectorRef: ChangeDetectorRef,
       private _mdIconProvider: MdIconProvider) {
   }
     
@@ -67,15 +68,34 @@ export class MdIcon implements OnChanges, OnInit {
     if (this._usingFontIcon()) {
       this._updateFontIconClasses();
     }
+    
+    this._updateAriaLabel();
   }
   
   ngOnInit() {
+    // Update font classes and aria attribute here because ngOnChanges won't be called
+    // if none of the inputs are present. That can happen for a ligature icon like
+    // <md-icon>home</md-icon>, in which case we need to set the default icon font and
+    // get the aria label from the text content.
     if (this._usingFontIcon()) {
       this._updateFontIconClasses();
     }
+    this._updateAriaLabel();
+  }
+
+  private _updateAriaLabel() {
+    console.log('aria from parent: ' + this.ariaLabelFromParent);
+    if (!this.ariaLabelFromParent) {
+      const ariaLabel = this._getAriaLabel();
+      console.log('Got aria label: ' + ariaLabel);
+      if (ariaLabel) {
+        this._renderer.setElementAttribute(this._element.nativeElement, 'aria-label', ariaLabel);
+        this._changeDetectorRef.detectChanges();
+      }
+    }
   }
   
-  ariaLabel() {
+  private _getAriaLabel() {
     // If the parent provided an aria-label attribute value, use it as-is. Otherwise look for a
     // reasonable value from the alt attribute, font icon name, SVG icon name, or (for ligatures)
     // the text content of the directive.
@@ -110,6 +130,9 @@ export class MdIcon implements OnChanges, OnInit {
   }
 
   private _updateFontIconClasses() {
+    if (!this._usingFontIcon()) {
+      return;
+    }
     const elem = this._element.nativeElement;
     const fontSetClass = this.fontSet ?
         this._mdIconProvider.classNameForFontAlias(this.fontSet) :

@@ -1,6 +1,7 @@
 export {
   it,
   iit,
+  xit,
   describe,
   ddescribe,
   expect,
