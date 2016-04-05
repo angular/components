@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "add-stream": "^1.0.0",
-    "angular-cli": "^0.0.28",
+    "angular-cli": "^0.0.29",
     "angular-cli-github-pages": "^0.2.0",
     "broccoli-autoprefixer": "^4.1.0",
     "broccoli-caching-writer": "^2.2.1",
