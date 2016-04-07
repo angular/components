@@ -14,7 +14,7 @@ import {
   MockBackend,
   MockConnection} from 'angular2/http/testing';
 import {
-  it,
+  it, iit,
   describe,
   ddescribe,
   expect,
@@ -96,22 +96,24 @@ export function main() {
         });
       });
 
-      // This test is disabled because the DOM in the test environment can't read
-      // the text content of the md-icon element.
-      xit('should set aria label from text content if not specified', (done: () => void) => {
+      it('should set aria label from text content if not specified', (done: () => void) => {
         return builder.createAsync(MdIconLigatureTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
           testComponent.iconName = 'home';
           fixture.detectChanges();
           expect(mdIconElement.getAttribute('aria-label')).toBe('home');
+
+          testComponent.iconName = 'hand';
+          fixture.detectChanges();
+          expect(mdIconElement.getAttribute('aria-label')).toBe('hand');
+
           done();
         });
       });
 
-      // And getAttribute doesn't see values set by Renderer.setElementAttribute?
-      xit('should use provided aria label', (done: () => void) => {
-        return builder.createAsync(MdIconLigatureTestApp).then((fixture) => {
+      it('should use provided aria label', (done: () => void) => {
+        return builder.createAsync(MdIconLigatureWithAriaBindingTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
           testComponent.iconName = 'home';
@@ -175,6 +177,9 @@ export function main() {
           let pathElement = svgElement.children[0];
           expect(pathElement.tagName.toLowerCase()).toBe('path');
           expect(pathElement.getAttribute('d')).toBe('woof');
+          // The aria label should be taken from the icon name.
+          expect(mdIconElement.getAttribute('aria-label')).toBe('fido');
+
 
           // Change the icon, and the SVG element should be replaced.
           testComponent.iconName = 'fluffy';
@@ -186,6 +191,7 @@ export function main() {
           pathElement = svgElement.children[0];
           expect(pathElement.tagName.toLowerCase()).toBe('path');
           expect(pathElement.getAttribute('d')).toBe('meow');
+          expect(mdIconElement.getAttribute('aria-label')).toBe('fluffy');
 
           done();
         });
@@ -210,6 +216,8 @@ export function main() {
           let pathElement = svgChild.children[0];
           expect(pathElement.tagName.toLowerCase()).toBe('path');
           expect(pathElement.getAttribute('d')).toBe('oink');
+          // The aria label should be taken from the icon name (without the icon set portion).
+          expect(mdIconElement.getAttribute('aria-label')).toBe('pig');
 
           // Change the icon, and the SVG element should be replaced.
           testComponent.iconName = 'farm:cow';
@@ -224,7 +232,32 @@ export function main() {
           pathElement = svgChild.children[0];
           expect(pathElement.tagName.toLowerCase()).toBe('path');
           expect(pathElement.getAttribute('d')).toBe('moo');
+          expect(mdIconElement.getAttribute('aria-label')).toBe('cow');
 
+          done();
+        });
+      });
+    });
+    
+    describe('custom fonts', () => {
+      it('should apply CSS classes for custom font and icon', (done: () => void) => {
+        mdIconProvider.registerFontSet('f1', 'font1');
+        mdIconProvider.registerFontSet('f2');
+        return builder.createAsync(MdIconCustomFontCssTestApp).then((fixture) => {
+          const testComponent = fixture.debugElement.componentInstance;
+          const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
+          testComponent.fontSet = 'f1';
+          testComponent.fontIcon = 'house';
+          fixture.detectChanges();
+          expect(sortedClassNames(mdIconElement)).toEqual(['font1', 'house']);
+          expect(mdIconElement.getAttribute('aria-label')).toBe('house');
+          
+          testComponent.fontSet = 'f2';
+          testComponent.fontIcon = 'igloo';
+          fixture.detectChanges();
+          expect(sortedClassNames(mdIconElement)).toEqual(['f2', 'igloo']);
+          expect(mdIconElement.getAttribute('aria-label')).toBe('igloo');
+          
           done();
         });
       });
@@ -232,16 +265,40 @@ export function main() {
   });
 }
 
-/** Test component that contains an MdIcon. */
+/** Test components that contain an MdIcon. */
 @Component({
   selector: 'test-app',
-  template: `<md-icon foo="bar" aria-label="{{ariaLabel}}">{{iconName}}</md-icon>`,
+  template: `<md-icon>{{iconName}}</md-icon>`,
   directives: [MdIcon],
 })
 class MdIconLigatureTestApp {
   ariaLabel: string = null;
   iconName = '';
 }
+
+@Component({
+  selector: 'test-app',
+  template: `<md-icon aria-label="{{ariaLabel}}">{{iconName}}</md-icon>`,
+  directives: [MdIcon],
+})
+class MdIconLigatureWithAriaBindingTestApp {
+  ariaLabel: string = null;
+  iconName = '';
+}
+
+@Component({
+  selector: 'test-app',
+  template: `
+      <md-icon fontSet="{{fontSet}}" fontIcon="{{fontIcon}}" aria-label="{{ariaLabel}}"></md-icon>
+  `,
+  directives: [MdIcon],
+})
+class MdIconCustomFontCssTestApp {
+  ariaLabel: string = null;
+  fontSet = '';
+  fontIcon = '';
+}
+
 
 @Component({
   selector: 'test-app',

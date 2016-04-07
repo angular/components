@@ -1,4 +1,5 @@
 import {
+  AfterContentChecked,
   ChangeDetectorRef,
   Component,
   Directive,
@@ -28,7 +29,7 @@ import {
   directives: [NgClass],
   encapsulation: ViewEncapsulation.None,
 })
-export class MdIcon implements OnChanges, OnInit {
+export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
   @Input() svgSrc: string;
   @Input() svgIcon: string;
   @Input() fontSet: string;
@@ -46,19 +47,37 @@ export class MdIcon implements OnChanges, OnInit {
       private _changeDetectorRef: ChangeDetectorRef,
       private _mdIconProvider: MdIconProvider) {
   }
-    
+
+  /**
+   * Splits an svgIcon binding value into its icon set and icon name components.
+   * Returns a 2-element array of [(icon set), (icon name)].
+   * The separator for the two fields is ':'. If there is no separator, an empty
+   * string is returned for the icon set and the entire value is returned for
+   * the icon name. If the argument is falsy, returns an array of two empty strings.
+   * Examples:
+   *   'social:cake' -> ['social', 'cake']
+   *   'penguin' -> ['', 'penguin']
+   *   null -> ['', '']
+   */
+  private _splitIconName(iconName: string): [string, string] {
+    if (!iconName) {
+      return ['', ''];
+    }
+    const sepIndex = this.svgIcon.indexOf(':');
+    if (sepIndex == -1) {
+      return ['', iconName];
+    }
+    return [iconName.substring(0, sepIndex), iconName.substring(sepIndex + 1)];
+  }
+
   ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
     if (this.svgIcon) {
-      const sepIndex = this.svgIcon.indexOf(':');
-      if (sepIndex == -1) {
-        // Icon not in set.
-        this._mdIconProvider.loadIconByName(this.svgIcon)
+      const [iconSet, iconName] = this._splitIconName(this.svgIcon);
+      if (iconSet) {
+        this._mdIconProvider.loadIconFromSetByName(iconSet, iconName)
             .subscribe((svg: SVGElement) => this._setSvgElement(svg));
       } else {
-        // Set name is before separator.
-        const setName = this.svgIcon.substring(0, sepIndex);
-        const iconName = this.svgIcon.substring(sepIndex + 1);
-        this._mdIconProvider.loadIconFromSetByName(setName, iconName)
+        this._mdIconProvider.loadIconByName(this.svgIcon)
             .subscribe((svg: SVGElement) => this._setSvgElement(svg));
       }
     } else if (this.svgSrc) {
@@ -68,31 +87,29 @@ export class MdIcon implements OnChanges, OnInit {
     if (this._usingFontIcon()) {
       this._updateFontIconClasses();
     }
-    
     this._updateAriaLabel();
   }
-  
+
   ngOnInit() {
-    // Update font classes and aria attribute here because ngOnChanges won't be called
-    // if none of the inputs are present. That can happen for a ligature icon like
-    // <md-icon>home</md-icon>, in which case we need to set the default icon font and
-    // get the aria label from the text content.
+    // Update font classes because ngOnChanges won't be called if none of the inputs are present,
+    // e.g. <md-icon>arrow</md-icon>. In this case we need to add a CSS class for the default font.
     if (this._usingFontIcon()) {
       this._updateFontIconClasses();
     }
+  }
+
+  ngAfterContentChecked() {
+    // Update aria label here because it may depend on the projected text content.
+    // (e.g. <md-icon>home</md-icon> should use 'home').
     this._updateAriaLabel();
   }
 
   private _updateAriaLabel() {
-    console.log('aria from parent: ' + this.ariaLabelFromParent);
-    if (!this.ariaLabelFromParent) {
       const ariaLabel = this._getAriaLabel();
-      console.log('Got aria label: ' + ariaLabel);
       if (ariaLabel) {
         this._renderer.setElementAttribute(this._element.nativeElement, 'aria-label', ariaLabel);
         this._changeDetectorRef.detectChanges();
       }
-    }
   }
   
   private _getAriaLabel() {
@@ -103,7 +120,7 @@ export class MdIcon implements OnChanges, OnInit {
         this.ariaLabelFromParent ||
         this.alt ||
         this.fontIcon ||
-        this.svgIcon;
+        this._splitIconName(this.svgIcon)[1];
     if (label) {
       return label;
     }
