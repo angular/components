@@ -10,19 +10,15 @@ cd $(dirname $0)/../..
 source scripts/ci/sources/mode.sh
 source scripts/ci/sources/tunnel.sh
 
-# Setup environment.
-is_dart && source scripts/ci/sources/env_dart.sh
-
 start_tunnel
 npm run build
 npm run inline-resources
-echo
-is_dart && pub install
 
 wait_for_tunnel
-if is_dart; then
-  npm run dartanalyzer
-elif [[ "$MODE" = e2e* ]]; then
+if is_lint; then
+  npm run tslint
+  npm run ci:forbidden-identifiers
+elif is_e2e; then
   ng serve &
   sleep 20
   npm run e2e

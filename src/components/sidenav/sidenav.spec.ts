@@ -1,4 +1,8 @@
 import {
+  it,
+  describe,
+  expect,
+  beforeEach,
   ComponentFixture,
   TestComponentBuilder,
   fakeAsync,
@@ -8,16 +12,8 @@ import {
 } from 'angular2/testing';
 import {XHR} from 'angular2/src/compiler/xhr';
 import {
-  it,
-  describe,
-  expect,
-  beforeEach,
-} from '../../core/facade/testing';
-import {
-  getComputedStyle
-} from '../../core/facade/html';
-import {
   Component,
+  Type,
   ViewMetadata
 } from 'angular2/core';
 
@@ -33,7 +29,7 @@ function fakeAsyncAdaptor(fn: () => void) {
 /**
  * Create a ComponentFixture from the builder. This takes a template and a style for sidenav.
  */
-function createFixture(builder: TestComponentBuilder,
+function createFixture(appType: Type, builder: TestComponentBuilder,
     template: string, style: string): ComponentFixture {
   let fixture: ComponentFixture = null;
   // Remove the styles (which remove the animations/transitions).
@@ -43,7 +39,7 @@ function createFixture(builder: TestComponentBuilder,
       styles: [style],
       directives: [MdSidenav],
     }))
-    .createAsync(BasicTestApp).then((f: ComponentFixture) => { fixture = f; });
+    .createAsync(appType).then((f: ComponentFixture) => { fixture = f; });
   tick();
 
   return fixture;
@@ -86,7 +82,7 @@ export function main() {
 
     describe('methods', () => {
       it('should be able to open and close', fakeAsyncAdaptor(() => {
-        let fixture = createFixture(builder, template, style);
+        let fixture = createFixture(BasicTestApp, builder, template, style);
 
         let testComponent: BasicTestApp = fixture.debugElement.componentInstance;
         let openButtonElement = fixture.debugElement.query(By.css('.open'));
@@ -135,12 +131,12 @@ export function main() {
       }));
 
       it('open/close() return a promise that resolves after animation end', fakeAsyncAdaptor(() => {
-        let fixture = createFixture(builder, template, style);
+        let fixture = createFixture(BasicTestApp, builder, template, style);
         let sidenav: MdSidenav = fixture.debugElement
           .query(By.directive(MdSidenav)).componentInstance;
         let called = false;
 
-        sidenav.open().then((_: any) => {
+        sidenav.open().then(() => {
           called = true;
         });
 
@@ -150,7 +146,7 @@ export function main() {
         expect(called).toBe(true);
 
         called = false;
-        sidenav.close().then((_: any) => {
+        sidenav.close().then(() => {
           called = true;
         });
 
@@ -162,7 +158,7 @@ export function main() {
       }));
 
       it('open/close() twice returns the same promise', fakeAsyncAdaptor(() => {
-        let fixture = createFixture(builder, template, style);
+        let fixture = createFixture(BasicTestApp, builder, template, style);
         let sidenav: MdSidenav = fixture.debugElement
           .query(By.directive(MdSidenav)).componentInstance;
 
@@ -177,19 +173,18 @@ export function main() {
       }));
 
       it('open() then close() cancel animations when called too fast', fakeAsyncAdaptor(() => {
-        let fixture = createFixture(builder, template, style);
+        let fixture = createFixture(BasicTestApp, builder, template, style);
         let sidenav: MdSidenav = fixture.debugElement
           .query(By.directive(MdSidenav)).componentInstance;
 
-        let closePromise: Promise<void>;
         let openCalled = false;
         let openCancelled = false;
         let closeCalled = false;
 
-        sidenav.open().then((_: any) => { openCalled = true; }, () => { openCancelled = true; });
+        sidenav.open().then(() => { openCalled = true; }, () => { openCancelled = true; });
 
         // We do not call transition end, close directly.
-        closePromise = sidenav.close().then((_: any) => { closeCalled = true; });
+        sidenav.close().then(() => { closeCalled = true; });
 
         endSidenavTransition(fixture);
         tick();
@@ -201,7 +196,7 @@ export function main() {
       }));
 
       it('close() then open() cancel animations when called too fast', fakeAsyncAdaptor(() => {
-        let fixture = createFixture(builder, template, style);
+        let fixture = createFixture(BasicTestApp, builder, template, style);
         let sidenav: MdSidenav = fixture.debugElement
           .query(By.directive(MdSidenav)).componentInstance;
 
@@ -215,9 +210,9 @@ export function main() {
         tick();
 
         // Then close and check behavior.
-        sidenav.close().then((_: any) => { closeCalled = true; }, () => { closeCancelled = true; });
+        sidenav.close().then(() => { closeCalled = true; }, () => { closeCancelled = true; });
         // We do not call transition end, open directly.
-        sidenav.open().then((_: any) => { openCalled = true; });
+        sidenav.open().then(() => { openCalled = true; });
 
         endSidenavTransition(fixture);
         tick();
@@ -227,9 +222,54 @@ export function main() {
         expect(openCalled).toBe(true);
         tick();
       }));
+
+      it('does not throw when created without a sidenav', fakeAsyncAdaptor(() => {
+        expect(() => {
+          let fixture = createFixture(SidenavLayoutNoSidenavTestApp, builder, template, style);
+          fixture.detectChanges();
+          tick();
+        }).not.toThrow();
+      }));
+
+      it('does throw when created with two sidenav on the same side', fakeAsyncAdaptor(() => {
+        expect(() => {
+          let fixture = createFixture(SidenavLayoutTwoSidenavTestApp, builder, template, style);
+          fixture.detectChanges();
+          tick();
+        }).toThrow();
+      }));
     });
   });
 }
+
+
+/** Test component that contains an MdSidenavLayout but no MdSidenav. */
+@Component({
+  selector: 'test-app',
+  directives: [MD_SIDENAV_DIRECTIVES],
+  template: `
+    <md-sidenav-layout>
+    </md-sidenav-layout>
+  `,
+})
+class SidenavLayoutNoSidenavTestApp {
+}
+
+
+/** Test component that contains an MdSidenavLayout and 2 MdSidenav on the same side. */
+@Component({
+  selector: 'test-app',
+  directives: [MD_SIDENAV_DIRECTIVES],
+  template: `
+    <md-sidenav-layout>
+      <md-sidenav> </md-sidenav>
+      <md-sidenav> </md-sidenav>
+    </md-sidenav-layout>
+  `,
+})
+class SidenavLayoutTwoSidenavTestApp {
+}
+
 
 /** Test component that contains an MdSidenavLayout and one MdSidenav. */
 @Component({

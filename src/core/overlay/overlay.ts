@@ -3,12 +3,15 @@ import {
   AppViewManager,
   OpaqueToken,
   Inject,
-  Injectable} from 'angular2/core';
-import {CONST_EXPR} from 'angular2/src/facade/lang';
+  Injectable,
+  ElementRef
+} from 'angular2/core';
 import {OverlayState} from './overlay-state';
 import {DomPortalHost} from '../portal/dom-portal-host';
 import {OverlayRef} from './overlay-ref';
-import {DOM} from '../platform/dom/dom_adapter';
+import {GlobalPositionStrategy} from './position/global-position-strategy';
+import {RelativePositionStrategy} from './position/relative-position-strategy';
+
 
 // Re-export overlay-related modules so they can be imported directly from here.
 export {OverlayState} from './overlay-state';
@@ -16,7 +19,7 @@ export {OverlayRef} from './overlay-ref';
 export {createOverlayContainer} from './overlay-container';
 
 /** Token used to inject the DOM element that serves as the overlay container. */
-export const OVERLAY_CONTAINER_TOKEN = CONST_EXPR(new OpaqueToken('overlayContainer'));
+export const OVERLAY_CONTAINER_TOKEN = new OpaqueToken('overlayContainer');
 
 /** Next overlay unique ID. */
 let nextUniqueId = 0;
@@ -36,7 +39,7 @@ let defaultState = new OverlayState();
  @Injectable()
 export class Overlay {
   constructor(
-      @Inject(OVERLAY_CONTAINER_TOKEN) private _overlayContainerElement: Element,
+      @Inject(OVERLAY_CONTAINER_TOKEN) private _overlayContainerElement: HTMLElement,
       private _dynamicComponentLoader: DynamicComponentLoader,
       private _appViewManager: AppViewManager) {
   }
@@ -51,14 +54,22 @@ export class Overlay {
   }
 
   /**
+   * Returns a position builder that can be used, via fluent API,
+   * to construct and configure a position strategy.
+   */
+  position() {
+    return POSITION_BUILDER;
+  }
+
+  /**
    * Creates the DOM element for an overlay.
    * @param state State to apply to the created element.
    * @returns Promise resolving to the created element.
    */
-  private _createPaneElement(state: OverlayState): Promise<Element> {
-    var pane = DOM.createElement('div');
+  private _createPaneElement(state: OverlayState): Promise<HTMLElement> {
+    var pane = document.createElement('div');
     pane.id  = `md-overlay-${nextUniqueId++}`;
-    DOM.addClass(pane, 'md-overlay-pane');
+    pane.classList.add('md-overlay-pane');
 
     this.applyState(pane, state);
     this._overlayContainerElement.appendChild(pane);
@@ -71,9 +82,10 @@ export class Overlay {
    * @param pane The pane to modify.
    * @param state The state to apply.
    */
-  applyState(pane: Element, state: OverlayState) {
-    // Not yet implemented.
-    // TODO(jelbourn): apply state to the pane element.
+  applyState(pane: HTMLElement, state: OverlayState) {
+    if (state.positionStrategy != null) {
+      state.positionStrategy.apply(pane);
+    }
   }
 
   /**
@@ -81,7 +93,7 @@ export class Overlay {
    * @param pane The DOM element to turn into a portal host.
    * @returns A portal host for the given DOM element.
    */
-  private _createPortalHost(pane: Element): DomPortalHost {
+  private _createPortalHost(pane: HTMLElement): DomPortalHost {
     return new DomPortalHost(
         pane,
         this._dynamicComponentLoader,
@@ -93,7 +105,24 @@ export class Overlay {
    * @param pane DOM element for the overlay
    * @returns {OverlayRef}
    */
-  private _createOverlayRef(pane: Element): OverlayRef {
+  private _createOverlayRef(pane: HTMLElement): OverlayRef {
     return new OverlayRef(this._createPortalHost(pane));
   }
 }
+
+
+/** Builder for overlay position strategy. */
+export class OverlayPositionBuilder {
+  /** Creates a global position strategy. */
+  global() {
+    return new GlobalPositionStrategy();
+  }
+
+  /** Creates a relative position strategy. */
+  relativeTo(elementRef: ElementRef) {
+    return new RelativePositionStrategy(elementRef);
+  }
+}
+
+// We only ever need one position builder.
+let POSITION_BUILDER: OverlayPositionBuilder = new OverlayPositionBuilder();

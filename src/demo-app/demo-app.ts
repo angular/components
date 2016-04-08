@@ -14,6 +14,7 @@ import {ToolbarDemo} from './toolbar/toolbar-demo';
 import {OverlayDemo} from './overlay/overlay-demo';
 import {ListDemo} from './list/list-demo';
 import {InputDemo} from './input/input-demo';
+import {LiveAnnouncerDemo} from './live-announcer/live-announcer-demo';
 
 
 @Component({
@@ -44,5 +45,6 @@ export class Home {}
   new Route({path: '/toolbar', name: 'ToolbarDemo', component: ToolbarDemo}),
   new Route({path: '/icon', name: 'IconDemo', component: IconDemo}),
   new Route({path: '/list', name: 'ListDemo', component: ListDemo}),
+  new Route({path: '/live-announcer', name: 'LiveAnnouncerDemo', component: LiveAnnouncerDemo})
 ])
 export class DemoApp { }

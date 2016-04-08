@@ -11,21 +11,13 @@ import {
   Output,
   QueryList,
   Type,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  EventEmitter,
 } from 'angular2/core';
-import {PromiseWrapper, ObservableWrapper, EventEmitter} from 'angular2/src/facade/async';
-import {iterateListLike} from 'angular2/src/facade/collection';
 import {BaseException} from 'angular2/src/facade/exceptions';
-import {CONST_EXPR, isPresent} from 'angular2/src/facade/lang';
 import {Dir} from '../../core/rtl/dir';
-import {OneOf} from '../../core/annotations/one-of';
 import {PromiseCompleter} from 'angular2/src/facade/promise';
 
-
-/**
- * Exception thrown when a MdSidenavLayout is missing both sidenavs.
- */
-export class MdMissingSidenavException extends BaseException {}
 
 /**
  * Exception thrown when two MdSidenav are matching the same side.
@@ -51,25 +43,25 @@ export class MdDuplicatedSidenavException extends BaseException {
 })
 export class MdSidenav {
   /** Alignment of the sidenav (direction neutral); whether 'start' or 'end'. */
-  @Input() @OneOf(['start', 'end']) align: string = 'start';
+  @Input() align: 'start' | 'end' = 'start';
 
   /** Mode of the sidenav; whether 'over' or 'side'. */
-  @Input() @OneOf(['over', 'push', 'side']) mode: string = 'over';
+  @Input() mode: 'over' | 'push' | 'side' = 'over';
 
   /** Whether the sidenav is opened. */
   @Input('opened') private _opened: boolean;
 
   /** Event emitted when the sidenav is being opened. Use this to synchronize animations. */
-  @Output('open-start') onOpenStart = new EventEmitter<Object>();
+  @Output('open-start') onOpenStart = new EventEmitter<void>();
 
   /** Event emitted when the sidenav is fully opened. */
-  @Output('open') onOpen = new EventEmitter<Object>();
+  @Output('open') onOpen = new EventEmitter<void>();
 
   /** Event emitted when the sidenav is being closed. Use this to synchronize animations. */
-  @Output('close-start') onCloseStart = new EventEmitter<Object>();
+  @Output('close-start') onCloseStart = new EventEmitter<void>();
 
   /** Event emitted when the sidenav is fully closed. */
-  @Output('close') onClose = new EventEmitter<Object>();
+  @Output('close') onClose = new EventEmitter<void>();
 
 
   /**
@@ -107,14 +99,11 @@ export class MdSidenav {
    * close() when it's closed.
    * @param isOpen
    */
-  toggle(isOpen?: boolean): Promise<void> {
-    if (!isPresent(isOpen)) {
-      isOpen = !this.opened;
-    }
+  toggle(isOpen: boolean = !this.opened): Promise<void> {
     // Shortcut it if we're already opened.
     if (isOpen === this.opened) {
       if (!this._transition) {
-        return PromiseWrapper.resolve(null);
+        return Promise.resolve();
       } else {
         return isOpen ? this._openPromise : this._closePromise;
       }
@@ -268,7 +257,7 @@ export class MdSidenavLayout implements AfterContentInit {
 
   ngAfterContentInit() {
     // On changes, assert on consistency.
-    ObservableWrapper.subscribe(this._sidenavs.changes, () => this._validateDrawers());
+    this._sidenavs.changes.subscribe(() => this._validateDrawers());
     this._validateDrawers();
   }
 
@@ -292,12 +281,9 @@ export class MdSidenavLayout implements AfterContentInit {
    */
   private _validateDrawers() {
     this._start = this._end = null;
-    if (this._sidenavs.length === 0) {
-      throw new MdMissingSidenavException();
-    }
 
     // Ensure that we have at most one start and one end sidenav.
-    iterateListLike(this._sidenavs, (sidenav: any) => {
+    this._sidenavs.forEach(sidenav => {
       if (sidenav.align == 'end') {
         if (this._end != null) {
           throw new MdDuplicatedSidenavException('end');
@@ -368,4 +354,4 @@ export class MdSidenavLayout implements AfterContentInit {
 }
 
 
-export const MD_SIDENAV_DIRECTIVES: Type[] = CONST_EXPR([MdSidenavLayout, MdSidenav]);
+export const MD_SIDENAV_DIRECTIVES: Type[] = [MdSidenavLayout, MdSidenav];
