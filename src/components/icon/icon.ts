@@ -71,18 +71,18 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
   }
 
   ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
+    // TODO: Only refetch icons if the values actually changed.
     if (this.svgIcon) {
       const [iconSet, iconName] = this._splitIconName(this.svgIcon);
-      if (iconSet) {
-        this._mdIconProvider.loadIconFromSetByName(iconSet, iconName)
-            .subscribe((svg: SVGElement) => this._setSvgElement(svg));
-      } else {
-        this._mdIconProvider.loadIconByName(this.svgIcon)
-            .subscribe((svg: SVGElement) => this._setSvgElement(svg));
-      }
+      this._mdIconProvider.loadIconFromSetByName(iconSet, iconName)
+          .subscribe(
+              (svg: SVGElement) => this._setSvgElement(svg),
+              (err: any) => console.log(`Error retrieving icon: ${err}`));
     } else if (this.svgSrc) {
       this._mdIconProvider.loadIconFromUrl(this.svgSrc)
-        .subscribe((svg: SVGElement) => this._setSvgElement(svg));    
+        .subscribe(
+            (svg: SVGElement) => this._setSvgElement(svg),
+            (err: any) => console.log(`Error retrieving icon: ${err}`));
     }
     if (this._usingFontIcon()) {
       this._updateFontIconClasses();

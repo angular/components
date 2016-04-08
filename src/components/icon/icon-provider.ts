@@ -1,24 +1,30 @@
 import {Injectable, Renderer} from 'angular2/core';
 import {Http, Response, HTTP_PROVIDERS} from 'angular2/http';
-import {Observable} from 'rxjs/Rx';
+import {AsyncSubject, Observer, Observable} from 'rxjs/Rx';
 
 /**
-  *  Configuration for a named icon, used when initially loading it.
+  *  Configuration for an icon, possibly including the cached SVG element.
   */
 class IconConfig {
+  svgElement: SVGElement = null;
   constructor(public url: string, public viewBoxSize: number) {
   }
 }
 
 @Injectable()
 export class MdIconProvider {
-  private _iconConfigsByName = new Map<string, IconConfig>();
-  private _cachedIconsByName = new Map<string, SVGElement>();
+  // Cache all the things.
 
-  private _iconSetConfigsByName = new Map<string, IconConfig>();
-  private _cachedIconSets = new Map<string, SVGElement>();
-  // Keys here are "[setName]:[iconName]"
-  private _cachedIconsBySetAndName = new Map<string, SVGElement>();
+  // IconConfig objects and cached SVG elements for individual icons.
+  // First level of cache is icon set (which is the empty string for the default set).
+  // Second level is the icon name within the set.
+  private _iconConfigs = new Map<string, Map<string, IconConfig>>();
+
+  // IconConfig objects and cached SVG elements for icon sets.
+  // These are stored only by set name, but multiple URLs can be registered under the same name.
+  private _iconSetConfigs = new Map<string, [IconConfig]>();
+
+  // Cache for icons loaded by direct URLs.
   private _cachedIconsByUrl = new Map<string, SVGElement>();
 
   private _fontClassNamesByAlias = new Map<string, string>();
@@ -31,14 +37,30 @@ export class MdIconProvider {
   constructor(private _http: Http) {
   }
   
-  public registerIcon(name: string, url: string, viewBoxSize:number=0): MdIconProvider {
-    this._iconConfigsByName.set(name, new IconConfig(url, viewBoxSize || this._defaultViewBoxSize));
+  public addIcon(iconName: string, url: string, viewBoxSize:number=0): MdIconProvider {
+    return this.addIconInSet('', iconName, url, viewBoxSize);
+  }
+  
+  public addIconInSet(
+      setName: string, iconName: string, url: string, viewBoxSize:number=0): MdIconProvider {
+    let iconSetMap = this._iconConfigs.get(setName);
+    if (!iconSetMap) {
+      iconSetMap = new Map<string, IconConfig>();
+      this._iconConfigs.set(setName, iconSetMap);
+    }
+    iconSetMap.set(iconName, new IconConfig(url, viewBoxSize || this._defaultViewBoxSize));
     return this;
   }
   
-  public registerIconSet(name: string, url: string, viewBoxSize=0): MdIconProvider {
-    this._iconSetConfigsByName.set(
-        name, new IconConfig(url, viewBoxSize || this._defaultViewBoxSize));
+  public addIconSet(setName: string, url: string, viewBoxSize=0): MdIconProvider {
+    const config = new IconConfig(url, viewBoxSize || this._defaultViewBoxSize);
+    if (this._iconSetConfigs.has(setName)) {
+      // TODO: Allow multiple icon sets.
+      throw Error('Attempted to add multiple icon sets for: ' + setName);
+      // this._iconSetConfigsByName.get(iconSet).push(config);
+    } else {
+      this._iconSetConfigs.set(setName, [config]);
+    }
     return this;
   }
   
@@ -65,41 +87,126 @@ export class MdIconProvider {
     return this._defaultFontSetClass;
   }
 
-  loadIconByName(iconName: string): Observable<SVGElement> {
-    if (this._cachedIconsByName.has(iconName)) {
-      // Copy the element so changes won't affect the original.
-      return Observable.of(this._cachedIconsByName.get(iconName).cloneNode(true));
-    }
-    const iconConfig = this._iconConfigsByName.get(iconName);
-    if (!iconConfig) {
-      throw Error('Unknown icon: ' + iconName);
-    }
-    return this._loadIconFromConfig(iconConfig)
-        .do((svg: SVGElement) => this._cachedIconsByName.set(iconName, svg));
-  }
-  
   loadIconFromSetByName(setName: string, iconName: string): Observable<SVGElement> {
-    const combinedKey = setName + ':' + iconName;
-    // Check for this specific icon being cached.
-    if (this._cachedIconsBySetAndName.has(combinedKey)) {
-      return Observable.of(this._cachedIconsBySetAndName.get(combinedKey).cloneNode(true));
+    // Return (copy of) cached icon if possible.
+    if (this._iconConfigs.has(setName) && this._iconConfigs.get(setName).has(iconName)) {
+      const config = this._iconConfigs.get(setName).get(iconName);
+      if (config.svgElement) {
+        // We already have the SVG element for this icon, return a copy.
+        return Observable.of(config.svgElement.cloneNode(true));
+      } else {
+        // Fetch the icon from the config's URL, cache it, and return a copy.
+        return this._loadIconFromConfig(config)
+          .do((svg: SVGElement) => config.svgElement = svg)
+          .map((svg: SVGElement) => svg.cloneNode(true));
+      }
     }
-    const iconConfig = this._iconSetConfigsByName.get(setName);
-    if (!iconConfig) {
-        throw Error('Unknown icon set: ' + setName);
+    // See if we have any icon sets registered for the set name.
+    const iconSetConfigs = this._iconSetConfigs.get(setName);
+    if (iconSetConfigs) {
+      const unfetchedIconSetConfigs = <[IconConfig]>[];
+      // For all the icon set SVG elements we've fetched, see if any contain an icon with the
+      // requested name.
+      for (const setConfig of iconSetConfigs) {
+        if (setConfig.svgElement) {
+          const namedIcon = this._extractSvgIconFromSet(setConfig.svgElement, iconName, setConfig);
+          if (namedIcon) {
+            // We could cache namedSvg in _iconConfigs, but since we have to make a copy every
+            // time anyway, there's probably not much advantage compared to just always extracting
+            // it from the icon set.
+            return Observable.of(namedIcon.cloneNode(true));
+          }
+        } else {
+          unfetchedIconSetConfigs.push(setConfig);
+        }
+      }
+      // Not found in any cached icon sets. If there are icon sets with URLs that we haven't
+      // fetched, fetch them now and look for iconName in the results.
+      if (unfetchedIconSetConfigs.length) {
+        // The fun part. We need to asynchronously fetch the URLs, and see if any of them
+        // have an icon with the requested name.
+        let foundIcon: SVGElement = null;
+        
+        let parallelHttpRequests = unfetchedIconSetConfigs.map((setConfig) => {
+          return this._loadIconSetFromConfig(setConfig)
+              .catch((err: any, source: any, caught: any): Observable<SVGElement> => {
+                // Swallow errors fetching individual URLs so the combined Observable won't
+                // necessarily fail.
+                console.log(`Loading icon set URL: ${setConfig.url} failed with error: ${err}`);
+                return Observable.of(null);
+              })
+              .do((svg: SVGElement) => {
+                // Cache SVG element and look for named icon if we haven't already found it.
+                if (svg) {
+                  setConfig.svgElement = svg;
+                }
+                if (!foundIcon) {
+                  foundIcon = this._extractSvgIconFromSet(svg, iconName, setConfig);
+                }
+              });
+        });
+        // This will wait for all the URLs to come back. Ideally we'd like to return as soon as we
+        // find an icon with the correct name.
+        return Observable.forkJoin(parallelHttpRequests)
+            .map((ignoredResults: any) => {
+              if (foundIcon) {
+                return foundIcon;
+              }
+              throw Error(`Failed to find icon name: ${iconName} in set: ${setName}`);
+            });
+        /* // Trying to use AsyncSubject, which isn't working. The URL never gets fetched.
+        const subject = new AsyncSubject<SVGElement>();
+        let responsesReceived = 0;
+
+        console.log('AAA');
+        for (const setConfig of unfetchedIconSetConfigs) {
+          console.log('BBB: ' + setConfig.url);
+          this._loadIconSetFromConfig(setConfig)
+            .do((svg: SVGElement) => {
+              // Cache the element.
+              console.log(`Got icon set svg: ${svg}`);
+              setConfig.svgElement = svg;
+              if (!foundIcon) {
+                const namedIcon = this._extractSvgIconFromSet(svg, iconName, setConfig);
+                if (namedIcon) {
+                  // Avoid broadcasting multiple items if more than one set has a matching icon.
+                  foundIcon = true;
+                  subject.next(namedIcon);
+                }
+              }
+              responsesReceived += 1;
+              if (!foundIcon && responsesReceived == unfetchedIconSetConfigs.length) {
+                subject.error(`Failed to find icon name: ${iconName} in set: ${setName}`);
+              }
+            })
+            .catch((err: any, source: Observable<SVGElement>, caught: any): Observable<SVGElement> => {
+              console.log(`Loading icon set URL: ${setConfig.url} failed with error: ${err}`);
+              responsesReceived += 1;
+              if (!foundIcon && responsesReceived == unfetchedIconSetConfigs.length) {
+                subject.error(`Failed to find icon name: ${iconName} in set: ${setName}`);
+              }
+              return source;
+            });
+        }
+        return subject;
+        */
+        
+        /* // Simple implementation that only supports one icon set.
+        // Fetch the set and extract the icon.
+        const firstConfig = unfetchedIconSetConfigs[0];
+        return this._loadIconSetFromConfig(firstConfig)
+          .do((iconSet: SVGElement) => firstConfig.svgElement = iconSet)
+          .map((iconSet: SVGElement) => {
+            const namedIcon = this._extractSvgIconFromSet(iconSet, iconName, firstConfig);
+            if (!namedIcon) {
+              throw Error(`Failed to find icon name: ${iconName} in set: ${setName}`);
+            }
+            return namedIcon;
+          });
+        */
+      }
     }
-    // Check for the icon set being cached.
-    if (this._cachedIconSets.has(setName)) {
-      var iconFromSet = this._extractSvgIconFromSet(
-          this._cachedIconSets.get(setName), iconName, iconConfig);
-      this._cachedIconsBySetAndName.set(combinedKey, iconFromSet);
-      return Observable.of(iconFromSet.cloneNode(true));
-    }
-    // Fetch the set and extract the icon.
-    return this._loadIconSetFromConfig(iconConfig)
-        .do((iconSet: SVGElement) => this._cachedIconSets.set(setName, iconSet))
-        .map((iconSet: SVGElement) =>
-            this._extractSvgIconFromSet(iconSet, iconName, iconConfig));
+    return Observable.throw(Error(`Unknown icon name: ${iconName} in set: ${setName}`));
   }
   
   loadIconFromUrl(url: string): Observable<SVGElement> {
@@ -126,9 +233,10 @@ export class MdIconProvider {
       console.log("*** Using existing request");
       return this._inProgressUrlFetches.get(url);
     }
-    console.log("*** Sending request");
+    console.log(`*** Sending request for ${url}`);
     const req = this._http.get(url)
         .do((response) => {
+          console.log(`*** Got response for ${url}`);
           console.log('*** Removing request: ' + url);
           this._inProgressUrlFetches.delete(url);
         })
@@ -171,7 +279,7 @@ export class MdIconProvider {
       iconSet: SVGElement, iconName: string, config: IconConfig): SVGElement {
     const iconNode = iconSet.querySelector('#' + iconName);
     if (!iconNode) {
-      throw Error('No icon found in set with id: ' + iconName);
+      return null;
     }
     // createElement('SVG') doesn't work as expected; the DOM ends up with
     // the correct nodes, but the SVG content doesn't render. Instead we

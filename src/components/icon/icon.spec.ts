@@ -55,6 +55,7 @@ export function main() {
       builder = tcb;
       mdIconProvider = mip;
       // Set fake responses for various SVG URLs.
+      // TODO: Keep track of requests so we can verify caching behavior.
       mockBackend.connections.subscribe((connection: any) => {
         switch (connection.request.url) {
           case 'cat.svg':
@@ -163,8 +164,8 @@ export function main() {
       });
 
       it('should register icon URLs by name', (done: () => void) => {
-        mdIconProvider.registerIcon('fluffy', 'cat.svg');
-        mdIconProvider.registerIcon('fido', 'dog.svg');
+        mdIconProvider.addIcon('fluffy', 'cat.svg');
+        mdIconProvider.addIcon('fido', 'dog.svg');
         return builder.createAsync(MdIconFromSvgNameTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
@@ -198,7 +199,7 @@ export function main() {
       });
 
       it('should extract icon from SVG icon set', (done: () => void) => {
-        mdIconProvider.registerIconSet('farm', 'farm-set.svg');
+        mdIconProvider.addIconSet('farm', 'farm-set.svg');
         return builder.createAsync(MdIconFromSvgNameTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');

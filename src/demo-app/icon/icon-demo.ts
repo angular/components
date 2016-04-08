@@ -15,8 +15,8 @@ export class IconDemo {
 
   constructor(mdIconProvider: MdIconProvider) {
       mdIconProvider
-          .registerIcon('thumb-up', '/demo-app/icon/assets/thumbup-icon.svg')
-          .registerIconSet('core', '/demo-app/icon/assets/core-icon-set.svg')
+          .addIcon('thumb-up', '/demo-app/icon/assets/thumbup-icon.svg')
+          .addIconSet('core', '/demo-app/icon/assets/core-icon-set.svg')
           .registerFontSet('fontawesome', 'fa');
   }
 }
