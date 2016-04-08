@@ -1,8 +1,14 @@
 import {
+  it, iit,
+  describe,
+  ddescribe,
+  expect,
+  beforeEach,
+  beforeEachProviders,
+  xit,
   inject,
   TestComponentBuilder,
 } from 'angular2/testing';
-
 import {
   HTTP_PROVIDERS,
   BaseRequestOptions,
@@ -13,15 +19,6 @@ import {
 import {
   MockBackend,
   MockConnection} from 'angular2/http/testing';
-import {
-  it, iit,
-  describe,
-  ddescribe,
-  expect,
-  beforeEach,
-  beforeEachProviders,
-  xit,
-} from '../../core/facade/testing';
 import {
   provide,
   Component} from 'angular2/core';
@@ -299,7 +296,6 @@ class MdIconCustomFontCssTestApp {
   fontSet = '';
   fontIcon = '';
 }
-
 
 @Component({
   selector: 'test-app',
