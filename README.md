@@ -1,5 +1,5 @@
 # Material Design for Angular 2
-
+[![npm version](https://badge.fury.io/js/material2.svg)](http://badge.fury.io/js/material2)
 [![Build Status](https://travis-ci.org/angular/material2.svg?branch=master)](https://travis-ci.org/angular/material2)
 [![Gitter](https://badges.gitter.im/angular/material2.svg)](https://gitter.im/angular/material2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
