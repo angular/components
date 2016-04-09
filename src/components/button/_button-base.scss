@@ -1,9 +1,9 @@
 
-@import "variables";
-@import "elevation";
+@import "../../core/style/variables";
+@import "../../core/style/elevation";
 
 // TODO(jelbourn): This goes away.
-@import "default-theme";
+@import "../../core/style/default-theme";
 @import "button-theme";
 
 // Flat and raised button standards
