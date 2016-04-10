@@ -20,7 +20,7 @@ export class MdIconProvider {
 
   // IconConfig objects and cached SVG elements for icon sets.
   // These are stored only by set name, but multiple URLs can be registered under the same name.
-  private _iconSetConfigs = new Map<string, [IconConfig]>();
+  private _iconSetConfigs = new Map<string, IconConfig[]>();
 
   // Cache for icons loaded by direct URLs.
   private _cachedIconsByUrl = new Map<string, SVGElement>();
@@ -28,19 +28,19 @@ export class MdIconProvider {
   private _fontClassNamesByAlias = new Map<string, string>();
 
   private _inProgressUrlFetches = new Map<string, Observable<string>>();
-  
+
   private _defaultViewBoxSize = 24;
   private _defaultFontSetClass = 'material-icons';
-  
+
   constructor(private _http: Http) {
   }
-  
-  public addIcon(iconName: string, url: string, viewBoxSize:number=0): MdIconProvider {
+
+  public addIcon(iconName: string, url: string, viewBoxSize:number=0): this {
     return this.addIconInSet('', iconName, url, viewBoxSize);
   }
-  
+
   public addIconInSet(
-      setName: string, iconName: string, url: string, viewBoxSize:number=0): MdIconProvider {
+      setName: string, iconName: string, url: string, viewBoxSize:number=0): this {
     let iconSetMap = this._iconConfigs.get(setName);
     if (!iconSetMap) {
       iconSetMap = new Map<string, IconConfig>();
@@ -49,8 +49,8 @@ export class MdIconProvider {
     iconSetMap.set(iconName, new IconConfig(url, viewBoxSize || this._defaultViewBoxSize));
     return this;
   }
-  
-  public addIconSet(setName: string, url: string, viewBoxSize=0): MdIconProvider {
+
+  public addIconSet(setName: string, url: string, viewBoxSize=0): this {
     const config = new IconConfig(url, viewBoxSize || this._defaultViewBoxSize);
     if (this._iconSetConfigs.has(setName)) {
       this._iconSetConfigs.get(setName).push(config);
@@ -59,26 +59,26 @@ export class MdIconProvider {
     }
     return this;
   }
-  
-  public registerFontSet(alias: string, className?: string): MdIconProvider {
+
+  public registerFontSet(alias: string, className?: string): this {
     this._fontClassNamesByAlias.set(alias, className || alias);
     return this;
   }
-  
+
   public setDefaultViewBoxSize(size: number) {
     this._defaultViewBoxSize = size;
     return this;
   }
-  
+
   public getDefaultViewBoxSize(): number {
     return this._defaultViewBoxSize;
   }
-  
+
   public setDefaultFontSetClass(className: string) {
     this._defaultFontSetClass = className;
     return this;
   }
-  
+
   public getDefaultFontSetClass(): string {
     return this._defaultFontSetClass;
   }
@@ -145,7 +145,7 @@ export class MdIconProvider {
     return Observable.throw(Error(`Unknown icon name: ${iconName} in set: ${setName}`));
   }
 
-  private _extractIconWithNameFromAnySet(iconName: string, setConfigs: [IconConfig]): SVGElement {
+  private _extractIconWithNameFromAnySet(iconName: string, setConfigs: IconConfig[]): SVGElement {
     // Iterate backwards, so icon sets added later have precedence.
     for (let i = setConfigs.length - 1; i >= 0; i--) {
       const config = setConfigs[i];
@@ -158,7 +158,7 @@ export class MdIconProvider {
     }
     return null;
   }
-  
+
   loadIconFromUrl(url: string): Observable<SVGElement> {
     if (this._cachedIconsByUrl.has(url)) {
       return Observable.of(this._cachedIconsByUrl.get(url).cloneNode(true));
@@ -168,16 +168,15 @@ export class MdIconProvider {
   }
 
   classNameForFontAlias(alias: string): string {
-    if (!this._fontClassNamesByAlias.has(alias)) {
-      throw Error('Unknown font alias: ' + alias);
-    }
-    return this._fontClassNamesByAlias.get(alias);
+    return this._fontClassNamesByAlias.get(alias) || alias;
   }
-  
+
   private _fetchUrl(url: string): Observable<string> {
     // FIXME: This is trying to avoid sending a duplicate request for a URL when there is already
     // a request in progress for that URL. But it's not working; even though we return the cached
     // Observable, a second request is still sent.
+    // Observable.share seems like it should work, but doesn't seem to have any effect.
+    // (http://xgrommx.github.io/rx-book/content/observable/observable_instance_methods/share.html)
     console.log('*** fetchUrl: ' + url);
     if (this._inProgressUrlFetches.has(url)) {
       console.log("*** Using existing request");
@@ -192,19 +191,19 @@ export class MdIconProvider {
         })
         .map((response) => response.text());
     this._inProgressUrlFetches.set(url, req);
-    return req;
+    return req.share();
   }
-  
+
   private _loadIconFromConfig(config: IconConfig): Observable<SVGElement> {
     return this._fetchUrl(config.url)
         .map(svgText => this._createSvgElementForSingleIcon(svgText, config));
   }
-  
+
   private _loadIconSetFromConfig(config: IconConfig): Observable<SVGElement> {
     return this._fetchUrl(config.url)
         .map((svgText) => this._svgElementFromString(svgText));
   }
-  
+
   private _createSvgElementForSingleIcon(responseText: string, config: IconConfig): SVGElement {
     const svg = this._svgElementFromString(responseText);
     this._setSvgAttributes(svg, config);
@@ -224,7 +223,7 @@ export class MdIconProvider {
         svg.getAttribute('viewBox') || ('0 0 ' + viewBoxSize + ' ' + viewBoxSize));
     svg.setAttribute('focusable', 'false'); // Disable IE11 default behavior to make SVGs focusable.
   }
-  
+
   private _extractSvgIconFromSet(
       iconSet: SVGElement, iconName: string, config: IconConfig): SVGElement {
     const iconNode = iconSet.querySelector('#' + iconName);

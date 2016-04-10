@@ -70,19 +70,22 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
     return [iconName.substring(0, sepIndex), iconName.substring(sepIndex + 1)];
   }
 
-  ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
-    // TODO: Only refetch icons if the values actually changed.
-    if (this.svgIcon) {
-      const [iconSet, iconName] = this._splitIconName(this.svgIcon);
-      this._mdIconProvider.loadIconFromSetByName(iconSet, iconName)
+  ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+    const changedInputs = Object.keys(changes);
+    // Only update the inline SVG icon if the inputs changed, to avoid unnecessary DOM operations.
+    if (changedInputs.indexOf('svgIcon') != -1 || changedInputs.indexOf('svgSrc') != -1) {
+      if (this.svgIcon) {
+        const [iconSet, iconName] = this._splitIconName(this.svgIcon);
+        this._mdIconProvider.loadIconFromSetByName(iconSet, iconName)
           .subscribe(
-              (svg: SVGElement) => this._setSvgElement(svg),
-              (err: any) => console.log(`Error retrieving icon: ${err}`));
-    } else if (this.svgSrc) {
-      this._mdIconProvider.loadIconFromUrl(this.svgSrc)
-        .subscribe(
-            (svg: SVGElement) => this._setSvgElement(svg),
-            (err: any) => console.log(`Error retrieving icon: ${err}`));
+          (svg: SVGElement) => this._setSvgElement(svg),
+          (err: any) => console.log(`Error retrieving icon: ${err}`));
+      } else if (this.svgSrc) {
+        this._mdIconProvider.loadIconFromUrl(this.svgSrc)
+          .subscribe(
+          (svg: SVGElement) => this._setSvgElement(svg),
+          (err: any) => console.log(`Error retrieving icon: ${err}`));
+      }
     }
     if (this._usingFontIcon()) {
       this._updateFontIconClasses();
