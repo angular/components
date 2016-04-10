@@ -12,14 +12,14 @@ class IconConfig {
 }
 
 @Injectable()
-export class MdIconProvider {
+export class MdIconRegistry {
   // IconConfig objects and cached SVG elements for individual icons.
-  // First level of cache is icon set (which is the empty string for the default set).
-  // Second level is the icon name within the set.
+  // First level of cache is namespace (which is the empty string if not specified).
+  // Second level is the icon name within the namespace.
   private _iconConfigs = new Map<string, Map<string, IconConfig>>();
 
   // IconConfig objects and cached SVG elements for icon sets.
-  // These are stored only by set name, but multiple URLs can be registered under the same name.
+  // Multiple icon sets can be registered under the same namespace.
   private _iconSetConfigs = new Map<string, IconConfig[]>();
 
   // Cache for icons loaded by direct URLs.
@@ -36,15 +36,15 @@ export class MdIconProvider {
   }
 
   public addIcon(iconName: string, url: string, viewBoxSize:number=0): this {
-    return this.addIconInSet('', iconName, url, viewBoxSize);
+    return this.addIconInNamespace('', iconName, url, viewBoxSize);
   }
 
-  public addIconInSet(
-      setName: string, iconName: string, url: string, viewBoxSize:number=0): this {
-    let iconSetMap = this._iconConfigs.get(setName);
+  public addIconInNamespace(
+      namespace: string, iconName: string, url: string, viewBoxSize:number=0): this {
+    let iconSetMap = this._iconConfigs.get(namespace);
     if (!iconSetMap) {
       iconSetMap = new Map<string, IconConfig>();
-      this._iconConfigs.set(setName, iconSetMap);
+      this._iconConfigs.set(namespace, iconSetMap);
     }
     iconSetMap.set(iconName, new IconConfig(url, viewBoxSize || this._defaultViewBoxSize));
     return this;
@@ -83,10 +83,10 @@ export class MdIconProvider {
     return this._defaultFontSetClass;
   }
 
-  loadIconFromSetByName(setName: string, iconName: string): Observable<SVGElement> {
+  loadIconFromNamespaceByName(namespace: string, iconName: string): Observable<SVGElement> {
     // Return (copy of) cached icon if possible.
-    if (this._iconConfigs.has(setName) && this._iconConfigs.get(setName).has(iconName)) {
-      const config = this._iconConfigs.get(setName).get(iconName);
+    if (this._iconConfigs.has(namespace) && this._iconConfigs.get(namespace).has(iconName)) {
+      const config = this._iconConfigs.get(namespace).get(iconName);
       if (config.svgElement) {
         // We already have the SVG element for this icon, return a copy.
         return Observable.of(config.svgElement.cloneNode(true));
@@ -98,7 +98,7 @@ export class MdIconProvider {
       }
     }
     // See if we have any icon sets registered for the set name.
-    const iconSetConfigs = this._iconSetConfigs.get(setName);
+    const iconSetConfigs = this._iconSetConfigs.get(namespace);
     if (iconSetConfigs) {
       // For all the icon set SVG elements we've fetched, see if any contain an icon with the
       // requested name.
@@ -137,12 +137,12 @@ export class MdIconProvider {
         .map((ignoredResults: any) => {
           const foundIcon = this._extractIconWithNameFromAnySet(iconName, iconSetConfigs);
           if (!foundIcon) {
-            throw Error(`Failed to find icon name: ${iconName} in set: ${setName}`);
+            throw Error(`Failed to find icon name: ${iconName} in namespace: ${namespace}`);
           }
           return foundIcon;
         });
     }
-    return Observable.throw(Error(`Unknown icon name: ${iconName} in set: ${setName}`));
+    return Observable.throw(Error(`Unknown icon name: ${iconName} in namespace: ${namespace}`));
   }
 
   private _extractIconWithNameFromAnySet(iconName: string, setConfigs: IconConfig[]): SVGElement {

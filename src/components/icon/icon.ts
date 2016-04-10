@@ -16,8 +16,8 @@ import {
 import {NgClass} from 'angular2/common';
 
 import {
-  MdIconProvider,
-} from './icon-provider';
+  MdIconRegistry,
+} from './icon-registry';
 
 @Component({
   template: '<ng-content></ng-content>',
@@ -35,17 +35,17 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
   @Input() fontSet: string;
   @Input() fontIcon: string;
   @Input() alt: string;
-  
+
   @Input('aria-label') ariaLabelFromParent: string = '';
-  
+
   private _previousFontSetClass: string;
   private _previousFontIconClass: string;
-    
+
   constructor(
       private _element: ElementRef,
       private _renderer: Renderer,
       private _changeDetectorRef: ChangeDetectorRef,
-      private _mdIconProvider: MdIconProvider) {
+      private _mdIconRegistry: MdIconRegistry) {
   }
 
   /**
@@ -75,13 +75,13 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
     // Only update the inline SVG icon if the inputs changed, to avoid unnecessary DOM operations.
     if (changedInputs.indexOf('svgIcon') != -1 || changedInputs.indexOf('svgSrc') != -1) {
       if (this.svgIcon) {
-        const [iconSet, iconName] = this._splitIconName(this.svgIcon);
-        this._mdIconProvider.loadIconFromSetByName(iconSet, iconName)
+        const [namespace, iconName] = this._splitIconName(this.svgIcon);
+        this._mdIconRegistry.loadIconFromNamespaceByName(namespace, iconName)
           .subscribe(
           (svg: SVGElement) => this._setSvgElement(svg),
           (err: any) => console.log(`Error retrieving icon: ${err}`));
       } else if (this.svgSrc) {
-        this._mdIconProvider.loadIconFromUrl(this.svgSrc)
+        this._mdIconRegistry.loadIconFromUrl(this.svgSrc)
           .subscribe(
           (svg: SVGElement) => this._setSvgElement(svg),
           (err: any) => console.log(`Error retrieving icon: ${err}`));
@@ -114,7 +114,7 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
         this._changeDetectorRef.detectChanges();
       }
   }
-  
+
   private _getAriaLabel() {
     // If the parent provided an aria-label attribute value, use it as-is. Otherwise look for a
     // reasonable value from the alt attribute, font icon name, SVG icon name, or (for ligatures)
@@ -141,7 +141,7 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
   private _usingFontIcon(): boolean {
     return !(this.svgIcon || this.svgSrc);
   }
-  
+
   private _setSvgElement(svg: SVGElement) {
     // Can we use Renderer here somehow?
     const layoutElement = this._element.nativeElement;
@@ -155,8 +155,8 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
     }
     const elem = this._element.nativeElement;
     const fontSetClass = this.fontSet ?
-        this._mdIconProvider.classNameForFontAlias(this.fontSet) :
-        this._mdIconProvider.getDefaultFontSetClass();
+        this._mdIconRegistry.classNameForFontAlias(this.fontSet) :
+        this._mdIconRegistry.getDefaultFontSetClass();
     if (fontSetClass != this._previousFontSetClass) {
       if (this._previousFontSetClass) {
         this._renderer.setElementClass(elem, this._previousFontSetClass, false);

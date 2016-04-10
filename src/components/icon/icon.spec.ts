@@ -27,7 +27,7 @@ import {
 } from 'angular2/platform/testing/browser';
 
 import {MdIcon} from './icon';
-import {MdIconProvider} from './icon-provider';
+import {MdIconRegistry} from './icon-registry';
 
 const sortedClassNames = (elem: Element) => elem.className.split(' ').sort();
 
@@ -35,23 +35,23 @@ export function main() {
   describe('MdIcon', () => {
 
     beforeEachProviders(() => [
-      MdIconProvider,
+      MdIconRegistry,
       HTTP_PROVIDERS,
       MockBackend,
       provide(XHRBackend, {useExisting: MockBackend}),
     ]);
 
     let builder: TestComponentBuilder;
-    let mdIconProvider: MdIconProvider;
+    let mdIconRegistry: MdIconRegistry;
     let httpRequestUrls: string[];
 
     beforeEach(
-        inject([TestComponentBuilder, MdIconProvider, MockBackend],
-        (tcb: TestComponentBuilder, mip: MdIconProvider, mockBackend: MockBackend) => {
+        inject([TestComponentBuilder, MdIconRegistry, MockBackend],
+        (tcb: TestComponentBuilder, mir: MdIconRegistry, mockBackend: MockBackend) => {
       builder = tcb;
-      mdIconProvider = mip;
+      mdIconRegistry = mir;
       // Set fake responses for various SVG URLs.
-      // TODO: Keep track of requests so we can verify caching behavior.
+      // Keep track of requests so we can verify caching behavior.
       httpRequestUrls = [];
       mockBackend.connections.subscribe((connection: any) => {
         const url = connection.request.url;
@@ -119,7 +119,7 @@ export function main() {
       });
 
       it('should use alternate icon font if set', (done: () => void) => {
-        mdIconProvider.setDefaultFontSetClass('myfont');
+        mdIconRegistry.setDefaultFontSetClass('myfont');
         return builder.createAsync(MdIconLigatureTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
@@ -180,8 +180,8 @@ export function main() {
       });
 
       it('should register icon URLs by name', (done: () => void) => {
-        mdIconProvider.addIcon('fluffy', 'cat.svg');
-        mdIconProvider.addIcon('fido', 'dog.svg');
+        mdIconRegistry.addIcon('fluffy', 'cat.svg');
+        mdIconRegistry.addIcon('fido', 'dog.svg');
         return builder.createAsync(MdIconFromSvgNameTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
@@ -227,7 +227,7 @@ export function main() {
       });
 
       it('should extract icon from SVG icon set', (done: () => void) => {
-        mdIconProvider.addIconSet('farm', 'farm-set-1.svg');
+        mdIconRegistry.addIconSet('farm', 'farm-set-1.svg');
         return builder.createAsync(MdIconFromSvgNameTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
@@ -272,9 +272,9 @@ export function main() {
       });
 
       it('should allow multiple icon sets in a namespace', (done: () => void) => {
-        mdIconProvider.addIconSet('farm', 'farm-set-1.svg');
-        mdIconProvider.addIconSet('farm', 'farm-set-2.svg');
-        mdIconProvider.addIconSet('arrows', 'arrow-set.svg');
+        mdIconRegistry.addIconSet('farm', 'farm-set-1.svg');
+        mdIconRegistry.addIconSet('farm', 'farm-set-2.svg');
+        mdIconRegistry.addIconSet('arrows', 'arrow-set.svg');
         return builder.createAsync(MdIconFromSvgNameTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
@@ -327,8 +327,8 @@ export function main() {
 
     describe('custom fonts', () => {
       it('should apply CSS classes for custom font and icon', (done: () => void) => {
-        mdIconProvider.registerFontSet('f1', 'font1');
-        mdIconProvider.registerFontSet('f2');
+        mdIconRegistry.registerFontSet('f1', 'font1');
+        mdIconRegistry.registerFontSet('f2');
         return builder.createAsync(MdIconCustomFontCssTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
