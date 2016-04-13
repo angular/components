@@ -1,6 +1,6 @@
-import {Injectable, Renderer} from 'angular2/core';
-import {Http, Response, HTTP_PROVIDERS} from 'angular2/http';
-import {AsyncSubject, Observer, Observable} from 'rxjs/Rx';
+import {Injectable} from 'angular2/core';
+import {Http} from 'angular2/http';
+import {Observable} from 'rxjs/Rx';
 
 /**
   *  Configuration for an icon, possibly including the cached SVG element.
