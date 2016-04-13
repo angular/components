@@ -172,26 +172,20 @@ export class MdIconRegistry {
   }
 
   private _fetchUrl(url: string): Observable<string> {
-    // FIXME: This is trying to avoid sending a duplicate request for a URL when there is already
-    // a request in progress for that URL. But it's not working; even though we return the cached
-    // Observable, a second request is still sent.
-    // Observable.share seems like it should work, but doesn't seem to have any effect.
-    // (http://xgrommx.github.io/rx-book/content/observable/observable_instance_methods/share.html)
-    console.log('*** fetchUrl: ' + url);
+    // Store in-progress fetches to avoid sending a duplicate request for a URL when there is
+    // already a request in progress for that URL. It's necessary to call share() on the
+    // Observable returned by http.get() so that multiple subscribers don't cause multiple XHRs.
     if (this._inProgressUrlFetches.has(url)) {
-      console.log("*** Using existing request");
       return this._inProgressUrlFetches.get(url);
     }
-    console.log(`*** Sending request for ${url}`);
     const req = this._http.get(url)
-        .do((response) => {
-          console.log(`*** Got response for ${url}`);
-          console.log('*** Removing request: ' + url);
+        .map((response) => response.text())
+        .finally(() => {
           this._inProgressUrlFetches.delete(url);
         })
-        .map((response) => response.text());
+        .share();
     this._inProgressUrlFetches.set(url, req);
-    return req.share();
+    return req;
   }
 
   private _loadIconFromConfig(config: IconConfig): Observable<SVGElement> {
@@ -235,7 +229,8 @@ export class MdIconRegistry {
     // have to create an empty SVG node using innerHTML and append its content.
     // http://stackoverflow.com/questions/23003278/svg-innerhtml-in-firefox-can-not-display
     const svg = this._svgElementFromString('<svg></svg>');
-    svg.appendChild(iconNode);
+    // Clone the node so we don't remove it from the parent icon set element.
+    svg.appendChild(iconNode.cloneNode(true));
     this._setSvgAttributes(svg, config);
     return svg;
   }

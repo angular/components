@@ -76,15 +76,13 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
     if (changedInputs.indexOf('svgIcon') != -1 || changedInputs.indexOf('svgSrc') != -1) {
       if (this.svgIcon) {
         const [namespace, iconName] = this._splitIconName(this.svgIcon);
-        this._mdIconRegistry.loadIconFromNamespaceByName(namespace, iconName)
-          .subscribe(
-          (svg: SVGElement) => this._setSvgElement(svg),
-          (err: any) => console.log(`Error retrieving icon: ${err}`));
+        this._mdIconRegistry.loadIconFromNamespaceByName(namespace, iconName).subscribe(
+            (svg: SVGElement) => this._setSvgElement(svg),
+            (err: any) => console.log(`Error retrieving icon: ${err}`));
       } else if (this.svgSrc) {
-        this._mdIconRegistry.loadIconFromUrl(this.svgSrc)
-          .subscribe(
-          (svg: SVGElement) => this._setSvgElement(svg),
-          (err: any) => console.log(`Error retrieving icon: ${err}`));
+        this._mdIconRegistry.loadIconFromUrl(this.svgSrc).subscribe(
+            (svg: SVGElement) => this._setSvgElement(svg),
+            (err: any) => console.log(`Error retrieving icon: ${err}`));
       }
     }
     if (this._usingFontIcon()) {
