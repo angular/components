@@ -50,12 +50,12 @@ export class MdIconRegistry {
     return this;
   }
 
-  public addIconSet(setName: string, url: string, viewBoxSize=0): this {
+  public addIconSet(namespace: string, url: string, viewBoxSize=0): this {
     const config = new IconConfig(url, viewBoxSize || this._defaultViewBoxSize);
-    if (this._iconSetConfigs.has(setName)) {
-      this._iconSetConfigs.get(setName).push(config);
+    if (this._iconSetConfigs.has(namespace)) {
+      this._iconSetConfigs.get(namespace).push(config);
     } else {
-      this._iconSetConfigs.set(setName, [config]);
+      this._iconSetConfigs.set(namespace, [config]);
     }
     return this;
   }
@@ -107,7 +107,7 @@ export class MdIconRegistry {
         // We could cache namedSvg in _iconConfigs, but since we have to make a copy every
         // time anyway, there's probably not much advantage compared to just always extracting
         // it from the icon set.
-        return Observable.of(namedIcon.cloneNode(true));
+        return Observable.of(namedIcon);
       }
       // Not found in any cached icon sets. If there are icon sets with URLs that we haven't
       // fetched, fetch them now and look for iconName in the results.
