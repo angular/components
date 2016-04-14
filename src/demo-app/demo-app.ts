@@ -16,6 +16,7 @@ import {ListDemo} from './list/list-demo';
 import {InputDemo} from './input/input-demo';
 import {LiveAnnouncerDemo} from './live-announcer/live-announcer-demo';
 import {GesturesDemo} from './gestures/gestures-demo';
+import {InteractionDemo} from './interaction/interaction-demo';
 
 @Component({
   selector: 'home',
@@ -46,6 +47,7 @@ export class Home {}
   new Route({path: '/toolbar', name: 'ToolbarDemo', component: ToolbarDemo}),
   new Route({path: '/list', name: 'ListDemo', component: ListDemo}),
   new Route({path: '/live-announcer', name: 'LiveAnnouncerDemo', component: LiveAnnouncerDemo}),
-  new Route({path: '/gestures', name: 'GesturesDemo', component: GesturesDemo})
+  new Route({path: '/gestures', name: 'GesturesDemo', component: GesturesDemo}),
+  new Route({path: '/interaction', name: 'InteractionDemo', component: InteractionDemo}),
 ])
 export class DemoApp { }
