@@ -1,5 +1,5 @@
 # Material Design for Angular 2
-
+[![NPM Version](https://badge.fury.io/js/%40angular2-material%2Fcore.svg)](https://www.npmjs.com/package/%2540angular2-material%2Fcore)
 [![Build Status](https://travis-ci.org/angular/material2.svg?branch=master)](https://travis-ci.org/angular/material2)
 [![Gitter](https://badges.gitter.im/angular/material2.svg)](https://gitter.im/angular/material2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
@@ -13,6 +13,8 @@ Individual components can be installed with `npm`:
 # The core module is required as a peerDependency for other components
 npm install --save @angular2-material/core @angular2-material/checkbox
 ```
+
+You can see our [list of published packages on npm](https://www.npmjs.com/~angular2-material).
 
 If you're using SystemJS as your module loader, your configuration for the angular-material
 packages should look like:

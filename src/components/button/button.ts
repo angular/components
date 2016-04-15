@@ -3,7 +3,6 @@ import {
   ViewEncapsulation,
   Input,
   HostBinding,
-  HostListener,
   ChangeDetectionStrategy,
   ElementRef,
   Renderer,
@@ -15,14 +14,14 @@ import {
 
 
 @Component({
-  selector: '[md-button]:not(a), [md-raised-button]:not(a), [md-icon-button]:not(a), ' +
-            '[md-fab]:not(a), [md-mini-fab]:not(a)',
+  selector: 'button[md-button], button[md-raised-button], button[md-icon-button], ' +
+            'button[md-fab], button[md-mini-fab]',
   inputs: ['color'],
   host: {
     '[class.md-button-focus]': 'isKeyboardFocused',
     '(mousedown)': 'setMousedown()',
     '(focus)': 'setKeyboardFocus()',
-    '(blur)': 'removeKeyboardFocus()'
+    '(blur)': 'removeKeyboardFocus()',
   },
   templateUrl: './components/button/button.html',
   styleUrls: ['./components/button/button.css'],
@@ -85,7 +84,8 @@ export class MdButton {
     '[class.md-button-focus]': 'isKeyboardFocused',
     '(mousedown)': 'setMousedown()',
     '(focus)': 'setKeyboardFocus()',
-    '(blur)': 'removeKeyboardFocus()'
+    '(blur)': 'removeKeyboardFocus()',
+    '(click)': 'haltDisabledEvents($event)',
   },
   templateUrl: './components/button/button.html',
   styleUrls: ['./components/button/button.css'],
@@ -118,7 +118,6 @@ export class MdAnchor extends MdButton {
     this._disabled = (value != null && value != false) ? true : null;
   }
 
-  @HostListener('click', ['$event'])
   haltDisabledEvents(event: Event) {
     // A disabled button shouldn't apply any actions
     if (this.disabled) {

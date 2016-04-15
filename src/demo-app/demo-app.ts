@@ -5,6 +5,7 @@ import {ButtonDemo} from './button/button-demo';
 import {IconDemo} from './icon/icon-demo';
 import {RadioDemo} from './radio/radio-demo';
 import {SidenavDemo} from './sidenav/sidenav-demo';
+import {ProgressBarDemo} from './progress-bar/progress-bar-demo';
 import {ProgressCircleDemo} from './progress-circle/progress-circle-demo';
 import {CheckboxDemo} from './checkbox/checkbox-demo';
 import {Dir} from '../core/rtl/dir';
@@ -15,7 +16,7 @@ import {OverlayDemo} from './overlay/overlay-demo';
 import {ListDemo} from './list/list-demo';
 import {InputDemo} from './input/input-demo';
 import {LiveAnnouncerDemo} from './live-announcer/live-announcer-demo';
-
+import {GesturesDemo} from './gestures/gestures-demo';
 
 @Component({
   selector: 'home',
@@ -38,6 +39,7 @@ export class Home {}
   new Route({path: '/radio', name: 'RadioDemo', component: RadioDemo}),
   new Route({path: '/sidenav', name: 'SidenavDemo', component: SidenavDemo}),
   new Route({path: '/progress-circle', name: 'ProgressCircleDemo', component: ProgressCircleDemo}),
+  new Route({path: '/progress-bar', name: 'ProgressBarDemo', component: ProgressBarDemo}),
   new Route({path: '/portal', name: 'PortalDemo', component: PortalDemo}),
   new Route({path: '/overlay', name: 'OverlayDemo', component: OverlayDemo}),
   new Route({path: '/checkbox', name: 'CheckboxDemo', component: CheckboxDemo}),
@@ -45,6 +47,7 @@ export class Home {}
   new Route({path: '/toolbar', name: 'ToolbarDemo', component: ToolbarDemo}),
   new Route({path: '/icon', name: 'IconDemo', component: IconDemo}),
   new Route({path: '/list', name: 'ListDemo', component: ListDemo}),
-  new Route({path: '/live-announcer', name: 'LiveAnnouncerDemo', component: LiveAnnouncerDemo})
+  new Route({path: '/live-announcer', name: 'LiveAnnouncerDemo', component: LiveAnnouncerDemo}),
+  new Route({path: '/gestures', name: 'GesturesDemo', component: GesturesDemo})
 ])
 export class DemoApp { }
