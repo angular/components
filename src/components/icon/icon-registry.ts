@@ -3,11 +3,11 @@ import {Http} from 'angular2/http';
 import {Observable} from 'rxjs/Rx';
 
 /**
-  *  Configuration for an icon, possibly including the cached SVG element.
+  *  Configuration for an icon, including the URL and possibly the cached SVG element.
   */
 class IconConfig {
   svgElement: SVGElement = null;
-  constructor(public url: string, public viewBoxSize: number) {
+  constructor(public url: string) {
   }
 }
 
@@ -29,29 +29,31 @@ export class MdIconRegistry {
 
   private _inProgressUrlFetches = new Map<string, Observable<string>>();
 
-  private _defaultViewBoxSize = 24;
   private _defaultFontSetClass = 'material-icons';
 
   constructor(private _http: Http) {
   }
 
-  public addIcon(iconName: string, url: string, viewBoxSize:number=0): this {
-    return this.addIconInNamespace('', iconName, url, viewBoxSize);
+  public addIcon(iconName: string, url: string): this {
+    return this.addIconInNamespace('', iconName, url);
   }
 
-  public addIconInNamespace(
-      namespace: string, iconName: string, url: string, viewBoxSize:number=0): this {
+  public addIconInNamespace(namespace: string, iconName: string, url: string): this {
     let iconSetMap = this._iconConfigs.get(namespace);
     if (!iconSetMap) {
       iconSetMap = new Map<string, IconConfig>();
       this._iconConfigs.set(namespace, iconSetMap);
     }
-    iconSetMap.set(iconName, new IconConfig(url, viewBoxSize || this._defaultViewBoxSize));
+    iconSetMap.set(iconName, new IconConfig(url));
     return this;
   }
 
-  public addIconSet(namespace: string, url: string, viewBoxSize=0): this {
-    const config = new IconConfig(url, viewBoxSize || this._defaultViewBoxSize);
+  public addIconSet(url: string): this {
+      return this.addIconSetInNamespace('', url);
+  }
+
+  public addIconSetInNamespace(namespace: string, url: string): this {
+    const config = new IconConfig(url);
     if (this._iconSetConfigs.has(namespace)) {
       this._iconSetConfigs.get(namespace).push(config);
     } else {
@@ -63,15 +65,6 @@ export class MdIconRegistry {
   public registerFontSet(alias: string, className?: string): this {
     this._fontClassNamesByAlias.set(alias, className || alias);
     return this;
-  }
-
-  public setDefaultViewBoxSize(size: number) {
-    this._defaultViewBoxSize = size;
-    return this;
-  }
-
-  public getDefaultViewBoxSize(): number {
-    return this._defaultViewBoxSize;
   }
 
   public setDefaultFontSetClass(className: string) {
@@ -163,7 +156,7 @@ export class MdIconRegistry {
     if (this._cachedIconsByUrl.has(url)) {
       return Observable.of(this._cachedIconsByUrl.get(url).cloneNode(true));
     }
-    return this._loadIconFromConfig(new IconConfig(url, this._defaultViewBoxSize))
+    return this._loadIconFromConfig(new IconConfig(url))
         .do((svg: SVGElement) => this._cachedIconsByUrl.set(url, svg));
   }
 
@@ -205,7 +198,6 @@ export class MdIconRegistry {
   }
 
   private _setSvgAttributes(svg: SVGElement, config: IconConfig) {
-    const viewBoxSize = config.viewBoxSize || this._defaultViewBoxSize;
     if (!svg.getAttribute('xmlns')) {
       svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     }
@@ -213,8 +205,6 @@ export class MdIconRegistry {
     svg.setAttribute('height', '100%');
     svg.setAttribute('width', '100%');
     svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-    svg.setAttribute('viewBox',
-        svg.getAttribute('viewBox') || ('0 0 ' + viewBoxSize + ' ' + viewBoxSize));
     svg.setAttribute('focusable', 'false'); // Disable IE11 default behavior to make SVGs focusable.
   }
 

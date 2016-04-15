@@ -148,7 +148,6 @@ export function main() {
           // Default attributes should be set.
           expect(svgElement.getAttribute('height')).toBe('100%');
           expect(svgElement.getAttribute('height')).toBe('100%');
-          expect(svgElement.getAttribute('viewBox')).toBe('0 0 24 24');
           // Make sure SVG content is taken from response.
           expect(svgElement.children.length).toBe(1);
           pathElement = svgElement.children[0];
@@ -227,7 +226,7 @@ export function main() {
       });
 
       it('should extract icon from SVG icon set', (done: () => void) => {
-        mdIconRegistry.addIconSet('farm', 'farm-set-1.svg');
+        mdIconRegistry.addIconSetInNamespace('farm', 'farm-set-1.svg');
         return builder.createAsync(MdIconFromSvgNameTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
@@ -272,9 +271,9 @@ export function main() {
       });
 
       it('should allow multiple icon sets in a namespace', (done: () => void) => {
-        mdIconRegistry.addIconSet('farm', 'farm-set-1.svg');
-        mdIconRegistry.addIconSet('farm', 'farm-set-2.svg');
-        mdIconRegistry.addIconSet('arrows', 'arrow-set.svg');
+        mdIconRegistry.addIconSetInNamespace('farm', 'farm-set-1.svg');
+        mdIconRegistry.addIconSetInNamespace('farm', 'farm-set-2.svg');
+        mdIconRegistry.addIconSetInNamespace('arrows', 'arrow-set.svg');
         return builder.createAsync(MdIconFromSvgNameTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
