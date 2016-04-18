@@ -86,6 +86,15 @@ export function main() {
         });
     }));
 
+    it('copies a modified id attribute to the inner input', injectAsync([], () => {
+      return builder.createAsync(MdInputIdTestController)
+        .then((fixture) => {
+          fixture.detectChanges();
+          let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+          expect(el.getAttribute('id')).toContain('id-');
+        });
+    }));
+
     it('validates there\'s only one hint label per side', injectAsync([], () => {
       return builder.createAsync(MdInputInvalidHintTestController)
         .then((fixture: ComponentFixture) => {
@@ -179,6 +188,10 @@ export function main() {
             expect(el).not.toBeNull();
             expect(el.nativeElement.textContent).toMatch('Other placeholder');
             expect(el.nativeElement.textContent).not.toMatch(/\*/g);
+
+            let input = fixture.debugElement.query(By.css('input'));
+            expect(input.nativeElement.getAttribute('id')).toContain('md-input-');
+            expect(el.nativeElement.getAttribute('for')).toEqual(input.nativeElement.getAttribute('id'));
           })();
         });
     }));
@@ -351,3 +364,12 @@ class MdInputAriaTestController {
   ariaLabel: string = 'label';
   ariaDisabled: boolean = true;
 }
+
+@Component({
+    selector: 'test-input-controller',
+    template: `
+    <md-input id="id"></md-input>
+  `,
+    directives: [MdInput]
+})
+class MdInputIdTestController {}

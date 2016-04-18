@@ -97,6 +97,7 @@ export class MdHint {
 })
 export class MdInput implements ControlValueAccessor, AfterContentInit, OnChanges {
   private _focused: boolean = false;
+  private _inputId: string = '';
   private _value: any = '';
 
   /** Callback registered via registerOnTouched (ControlValueAccessor) */
@@ -122,7 +123,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   /** Readonly properties. */
   get focused() { return this._focused; }
   get empty() { return this._value == null || this._value === ''; }
-  get inputId() { return `${this.id || 'md-input'}-${nextUniqueId++}` }
+  get inputId() { return this._inputId }
   get characterCount(): number {
     return this.empty ? 0 : ('' + this._value).length;
   }
@@ -185,6 +186,8 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   }
 
   ngAfterContentInit() {
+    this._inputId = `${this.id || 'md-input'}-${nextUniqueId++}`;
+
     this._validateConstraints();
 
     // Trigger validation when the hint children change.
