@@ -85,8 +85,10 @@ export function main() {
               status: 200,
               body: `
                 <svg>
-                  <g id="cow"><path d="moo moo"></path></g>
-                  <g id="sheep"><path d="baa"></path></g>
+                  <defs>
+                    <g id="cow"><path d="moo moo"></path></g>
+                    <g id="sheep"><path d="baa"></path></g>
+                  </defs>
                 </svg>
               `,
             })));
@@ -96,8 +98,10 @@ export function main() {
               status: 200,
               body: `
                 <svg>
-                  <g id="left"><path d="left"></path></g>
-                  <g id="right"><path d="right"></path></g>
+                  <defs>
+                    <svg id="left"><path d="left"></path></g>
+                    <svg id="right"><path d="right"></path></g>
+                  </defs>
                 </svg>
               `,
             })));
@@ -179,8 +183,8 @@ export function main() {
       });
 
       it('should register icon URLs by name', (done: () => void) => {
-        mdIconRegistry.addIcon('fluffy', 'cat.svg');
-        mdIconRegistry.addIcon('fido', 'dog.svg');
+        mdIconRegistry.addSvgIcon('fluffy', 'cat.svg');
+        mdIconRegistry.addSvgIcon('fido', 'dog.svg');
         return builder.createAsync(MdIconFromSvgNameTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
@@ -226,7 +230,7 @@ export function main() {
       });
 
       it('should extract icon from SVG icon set', (done: () => void) => {
-        mdIconRegistry.addIconSetInNamespace('farm', 'farm-set-1.svg');
+        mdIconRegistry.addSvgIconSetInNamespace('farm', 'farm-set-1.svg');
         return builder.createAsync(MdIconFromSvgNameTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
@@ -271,9 +275,9 @@ export function main() {
       });
 
       it('should allow multiple icon sets in a namespace', (done: () => void) => {
-        mdIconRegistry.addIconSetInNamespace('farm', 'farm-set-1.svg');
-        mdIconRegistry.addIconSetInNamespace('farm', 'farm-set-2.svg');
-        mdIconRegistry.addIconSetInNamespace('arrows', 'arrow-set.svg');
+        mdIconRegistry.addSvgIconSetInNamespace('farm', 'farm-set-1.svg');
+        mdIconRegistry.addSvgIconSetInNamespace('farm', 'farm-set-2.svg');
+        mdIconRegistry.addSvgIconSetInNamespace('arrows', 'arrow-set.svg');
         return builder.createAsync(MdIconFromSvgNameTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
@@ -326,8 +330,8 @@ export function main() {
 
     describe('custom fonts', () => {
       it('should apply CSS classes for custom font and icon', (done: () => void) => {
-        mdIconRegistry.registerFontSet('f1', 'font1');
-        mdIconRegistry.registerFontSet('f2');
+        mdIconRegistry.registerFontClassAlias('f1', 'font1');
+        mdIconRegistry.registerFontClassAlias('f2');
         return builder.createAsync(MdIconCustomFontCssTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
@@ -469,3 +473,9 @@ class MdIconFromSvgNameTestApp {
   ariaLabel: string = null;
   iconName = '';
 }
+
+
+// tests
+// modification of icon doesn't propagate
+// <svg> as icon set children
+// icon name not found

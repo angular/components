@@ -1,5 +1,6 @@
 import {
   AfterContentChecked,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Directive,
@@ -19,6 +20,40 @@ import {
   MdIconRegistry,
 } from './icon-registry';
 
+
+/**
+ * Component to display an icon. It can be used in the following ways:
+ * - Specify the svgSrc input to load an SVG icon from a URL. The SVG content is directly inlined
+ *   as a child of the <md-icon> component, so that CSS styles can easily be applied to it.
+ *   The URL is loaded via an XMLHttpRequest, so it must be on the same domain as the page or its
+ *   server must be configured to allow cross-domain requests.
+ *   Example:
+ *     <md-icon svgSrc="assets/arrow.svg"></md-icon>
+ *
+ * - Specify the svgIcon input to load an SVG icon from a URL previously registered with the
+ *   addSvgIcon, addSvgIconInNamespace, addSvgIconSet, or addSvgIconSetInNamespace methods of
+ *   MdIconRegistry. If the svgIcon value contains a colon it is assumed to be in the format
+ *   "[namespace]:[name]", if not the value will be the name of an icon in the default namespace.
+ *   Examples:
+ *     <md-icon svgIcon="left-arrow"></md-icon>
+ *     <md-icon svgIcon="animals:cat"></md-icon>
+ *
+ * - Use a font ligature as an icon by putting the ligature text in the content of the <md-icon>
+ *   component. By default the Material icons font is used as described at
+ *   http://google.github.io/material-design-icons/#icon-font-for-the-web. You can specify an
+ *   alternate font by setting the fontSet input to either the CSS class to apply to use the
+ *   desired font, or to an alias previously registered with MdIconRegistry.registerFontClassAlias.
+ *   Examples:
+ *     <md-icon>home</md-icon>
+ *     <md-icon fontSet="myfont">sun</md-icon>
+ *
+ * - Specify a font glyph to be included via CSS rules by setting the fontSet input to specify the
+ *   font, and the fontIcon input to specify the icon. (Typically the fontIcon will specify a class
+ *   which causes the icon glyph to be displayed via a :before selector, for example
+ *   <fontawesome URL>
+ *   Example:
+ *     <md-icon fontSet="fa" fontIcon="alarm"></md-icon>
+ */
 @Component({
   template: '<ng-content></ng-content>',
   selector: 'md-icon',
@@ -28,6 +63,7 @@ import {
   },
   directives: [NgClass],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
   @Input() svgSrc: string;
@@ -63,11 +99,11 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
     if (!iconName) {
       return ['', ''];
     }
-    const sepIndex = this.svgIcon.indexOf(':');
-    if (sepIndex == -1) {
+    const separatorIndex = this.svgIcon.indexOf(':');
+    if (separatorIndex == -1) {
       return ['', iconName];
     }
-    return [iconName.substring(0, sepIndex), iconName.substring(sepIndex + 1)];
+    return [iconName.substring(0, separatorIndex), iconName.substring(separatorIndex + 1)];
   }
 
   ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
@@ -76,12 +112,12 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
     if (changedInputs.indexOf('svgIcon') != -1 || changedInputs.indexOf('svgSrc') != -1) {
       if (this.svgIcon) {
         const [namespace, iconName] = this._splitIconName(this.svgIcon);
-        this._mdIconRegistry.loadIconFromNamespaceByName(namespace, iconName).subscribe(
-            (svg: SVGElement) => this._setSvgElement(svg),
+        this._mdIconRegistry.getNamedSvgIcon(iconName, namespace).subscribe(
+            svg => this._setSvgElement(svg),
             (err: any) => console.log(`Error retrieving icon: ${err}`));
       } else if (this.svgSrc) {
-        this._mdIconRegistry.loadIconFromUrl(this.svgSrc).subscribe(
-            (svg: SVGElement) => this._setSvgElement(svg),
+        this._mdIconRegistry.getSvgIconFromUrl(this.svgSrc).subscribe(
+            svg => this._setSvgElement(svg),
             (err: any) => console.log(`Error retrieving icon: ${err}`));
       }
     }

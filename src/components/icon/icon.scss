@@ -9,11 +9,11 @@ This works because we're using ViewEncapsulation.None. If we used the default
 encapsulation, the selector would need to be ":host".
 */
 md-icon {
-    background-repeat: no-repeat;
-    display: inline-block;
-    fill: currentColor;
-    height: $md-icon-size;
-    margin: auto;
-    vertical-align: middle;
-    width: $md-icon-size;
+  background-repeat: no-repeat;
+  display: inline-block;
+  fill: currentColor;
+  height: $md-icon-size;
+  margin: auto;
+  vertical-align: middle;
+  width: $md-icon-size;
 }
