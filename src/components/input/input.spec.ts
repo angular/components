@@ -191,7 +191,8 @@ export function main() {
 
             let input = fixture.debugElement.query(By.css('input'));
             expect(input.nativeElement.getAttribute('id')).toContain('md-input-');
-            expect(el.nativeElement.getAttribute('for')).toEqual(input.nativeElement.getAttribute('id'));
+            expect(el.nativeElement.getAttribute('for'))
+              .toEqual(input.nativeElement.getAttribute('id'));
           })();
         });
     }));
