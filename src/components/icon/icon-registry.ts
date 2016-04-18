@@ -177,7 +177,7 @@ export class MdIconRegistry {
     if (iconSetConfigs) {
       return this._getSvgFromIconSetConfigs(name, this._iconSetConfigs.get(namespace));
     }
-    return Observable.throw(Error(`Unknown icon name: ${name} in namespace: ${namespace}`));
+    return Observable.throw(new MdIconNameNotFoundException(iconKey));
   }
 
   /**
@@ -249,10 +249,11 @@ export class MdIconRegistry {
    * tag matches the specified name. If found, copies the nested element to a new SVG element and
    * returns it. Returns null if no matching element is found.
    */
-  private _extractIconWithNameFromAnySet(iconName: string, setConfigs: SvgIconConfig[]): SVGElement {
+  private _extractIconWithNameFromAnySet(iconName: string, iconSetConfigs: SvgIconConfig[]):
+      SVGElement {
     // Iterate backwards, so icon sets added later have precedence.
-    for (let i = setConfigs.length - 1; i >= 0; i--) {
-      const config = setConfigs[i];
+    for (let i = iconSetConfigs.length - 1; i >= 0; i--) {
+      const config = iconSetConfigs[i];
       if (config.svgElement) {
         const foundIcon = this._extractSvgIconFromSet(config.svgElement, iconName, config);
         if (foundIcon) {

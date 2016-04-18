@@ -9,22 +9,13 @@ import {
 } from 'angular2/testing';
 import {
   HTTP_PROVIDERS,
-  BaseRequestOptions,
   Response,
   ResponseOptions,
-  Http,
   XHRBackend} from 'angular2/http';
-import {
-  MockBackend,
-  MockConnection} from 'angular2/http/testing';
+import {MockBackend} from 'angular2/http/testing';
 import {
   provide,
   Component} from 'angular2/core';
-import {By} from 'angular2/platform/browser';
-import {
-  TEST_BROWSER_PLATFORM_PROVIDERS,
-  TEST_BROWSER_APPLICATION_PROVIDERS
-} from 'angular2/platform/testing/browser';
 
 import {MdIcon} from './icon';
 import {MdIconRegistry} from './icon-registry';
@@ -191,7 +182,7 @@ export function main() {
           let svgElement: any;
           let pathElement: any;
 
-          testComponent.iconName= 'fido';
+          testComponent.iconName = 'fido';
           fixture.detectChanges();
           expect(mdIconElement.children.length).toBe(1);
           svgElement = mdIconElement.children[0];
@@ -202,7 +193,6 @@ export function main() {
           expect(pathElement.getAttribute('d')).toBe('woof');
           // The aria label should be taken from the icon name.
           expect(mdIconElement.getAttribute('aria-label')).toBe('fido');
-
 
           // Change the icon, and the SVG element should be replaced.
           testComponent.iconName = 'fluffy';
@@ -473,9 +463,3 @@ class MdIconFromSvgNameTestApp {
   ariaLabel: string = null;
   iconName = '';
 }
-
-
-// tests
-// modification of icon doesn't propagate
-// <svg> as icon set children
-// icon name not found
