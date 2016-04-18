@@ -7,10 +7,12 @@ import {MdLiveAnnouncer} from './core/live-announcer/live-announcer';
 import {provide} from 'angular2/core';
 import {createOverlayContainer} from './core/overlay/overlay-container';
 import {MdGestureConfig} from './core/gestures/MdGestureConfig';
+import {MdInteraction} from './core/interaction/interaction';
 
 bootstrap(DemoApp, [
   ROUTER_PROVIDERS,
   MdLiveAnnouncer,
+  MdInteraction,
   provide(OVERLAY_CONTAINER_TOKEN, {useValue: createOverlayContainer()}),
   provide(HAMMER_GESTURE_CONFIG, {useClass: MdGestureConfig})
 ]);
