@@ -12,7 +12,7 @@
              [attr.aria-disabled]="ariaDisabled"
              [attr.aria-required]="ariaRequired"
              [attr.aria-invalid]="ariaInvalid"
-             [id]="id"
+             [id]="inputId"
              [disabled]="disabled"
              [required]="required"
              [attr.maxlength]="maxLength"
@@ -22,7 +22,7 @@
              [(ngModel)]="value">
 
       <label class="md-input-placeholder"
-             [attr.for]="id"
+             [attr.for]="inputId"
              [class.md-empty]="empty"
              [class.md-focused]="focused"
              [class.md-float]="floatingPlaceholder"

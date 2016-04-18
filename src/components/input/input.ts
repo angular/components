@@ -122,6 +122,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   /** Readonly properties. */
   get focused() { return this._focused; }
   get empty() { return this._value == null || this._value === ''; }
+  get inputId() { return `${this.id || 'md-input'}-${nextUniqueId++}` }
   get characterCount(): number {
     return this.empty ? 0 : ('' + this._value).length;
   }
@@ -134,7 +135,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   @Input() @BooleanFieldValue() disabled: boolean = false;
   @Input() @BooleanFieldValue() floatingPlaceholder: boolean = true;
   @Input() hintLabel: string = '';
-  @Input() id: string = `md-input-${nextUniqueId++}`;
+  @Input() id: string = '';
   @Input() maxLength: number = -1;
   @Input() placeholder: string;
   @Input() @BooleanFieldValue() required: boolean = false;
