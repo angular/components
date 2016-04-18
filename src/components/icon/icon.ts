@@ -11,12 +11,9 @@ import {
   SimpleChange,
   ViewEncapsulation,
 } from 'angular2/core';
-
 import {NgClass} from 'angular2/common';
 
-import {
-  MdIconRegistry,
-} from './icon-registry';
+import {MdIconRegistry} from './icon-registry';
 
 
 /**
@@ -46,9 +43,9 @@ import {
  *     <md-icon fontSet="myfont">sun</md-icon>
  *
  * - Specify a font glyph to be included via CSS rules by setting the fontSet input to specify the
- *   font, and the fontIcon input to specify the icon. (Typically the fontIcon will specify a class
- *   which causes the icon glyph to be displayed via a :before selector, for example
- *   <fontawesome URL>
+ *   font, and the fontIcon input to specify the icon. Typically the fontIcon will specify a
+ *   CSS class which causes the glyph to be displayed via a :before selector, as in
+ *   https://fortawesome.github.io/Font-Awesome/examples/
  *   Example:
  *     <md-icon fontSet="fa" fontIcon="alarm"></md-icon>
  */

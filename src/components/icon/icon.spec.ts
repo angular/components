@@ -20,7 +20,29 @@ import {
 import {MdIcon} from './icon';
 import {MdIconRegistry} from './icon-registry';
 
+/** Returns the CSS classes assigned to an element as a sorted array. */
 const sortedClassNames = (elem: Element) => elem.className.split(' ').sort();
+
+/**
+ * Verifies that an element contains a single <svg> child element, and returns that child.
+ */
+const verifyAndGetSingleSvgChild = (element: any): any => {
+  expect(element.children.length).toBe(1);
+  const svgChild = element.children[0];
+  expect(svgChild.tagName.toLowerCase()).toBe('svg');
+  return svgChild;
+};
+
+/**
+ * Verifies that an element contains a single <path> child element whose "d" attribute has
+ * the specified value.
+ */
+const verifyPathChildElement = (element: any, attributeValue: string) => {
+  expect(element.children.length).toBe(1);
+  const pathElement = element.children[0];
+  expect(pathElement.tagName.toLowerCase()).toBe('path');
+  expect(pathElement.getAttribute('d')).toBe(attributeValue);
+};
 
 export function main() {
   describe('MdIcon', () => {
@@ -90,8 +112,8 @@ export function main() {
               body: `
                 <svg>
                   <defs>
-                    <svg id="left"><path d="left"></path></g>
-                    <svg id="right"><path d="right"></path></g>
+                    <svg id="left-arrow"><path d="left"></path></svg>
+                    <svg id="right-arrow"><path d="right"></path></svg>
                   </defs>
                 </svg>
               `,
@@ -132,41 +154,29 @@ export function main() {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
           let svgElement: any;
-          let pathElement: any;
 
           testComponent.iconUrl = 'cat.svg';
           fixture.detectChanges();
           // An <svg> element should have been added as a child of <md-icon>.
-          expect(mdIconElement.children.length).toBe(1);
-          svgElement = mdIconElement.children[0];
-          expect(svgElement.tagName.toLowerCase()).toBe('svg');
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
           // Default attributes should be set.
           expect(svgElement.getAttribute('height')).toBe('100%');
           expect(svgElement.getAttribute('height')).toBe('100%');
           // Make sure SVG content is taken from response.
-          expect(svgElement.children.length).toBe(1);
-          pathElement = svgElement.children[0];
-          expect(pathElement.tagName.toLowerCase()).toBe('path');
-          expect(pathElement.getAttribute('d')).toBe('meow');
+          verifyPathChildElement(svgElement, 'meow');
 
           // Change the icon, and the SVG element should be replaced.
           testComponent.iconUrl = 'dog.svg';
           fixture.detectChanges();
-          expect(mdIconElement.children.length).toBe(1);
-          svgElement = mdIconElement.children[0];
-          expect(svgElement.tagName.toLowerCase()).toBe('svg');
-          expect(svgElement.children.length).toBe(1);
-          pathElement = svgElement.children[0];
-          expect(pathElement.tagName.toLowerCase()).toBe('path');
-          expect(pathElement.getAttribute('d')).toBe('woof');
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
+          verifyPathChildElement(svgElement, 'woof');
 
           expect(httpRequestUrls).toEqual(['cat.svg', 'dog.svg']);
           // Using an icon from a previously loaded URL should not cause another HTTP request.
           testComponent.iconUrl = 'cat.svg';
           fixture.detectChanges();
-          expect(mdIconElement.children.length).toBe(1);
-          pathElement = mdIconElement.querySelector('svg path');
-          expect(pathElement.getAttribute('d')).toBe('meow');
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
+          verifyPathChildElement(svgElement, 'meow');
           expect(httpRequestUrls).toEqual(['cat.svg', 'dog.svg']);
 
           done();
@@ -179,40 +189,28 @@ export function main() {
         return builder.createAsync(MdIconFromSvgNameTestApp).then((fixture) => {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
-          let svgElement: any;
-          let pathElement: any;
+          let svgElement: SVGElement;
 
           testComponent.iconName = 'fido';
           fixture.detectChanges();
-          expect(mdIconElement.children.length).toBe(1);
-          svgElement = mdIconElement.children[0];
-          expect(svgElement.tagName.toLowerCase()).toBe('svg');
-          expect(svgElement.children.length).toBe(1);
-          pathElement = svgElement.children[0];
-          expect(pathElement.tagName.toLowerCase()).toBe('path');
-          expect(pathElement.getAttribute('d')).toBe('woof');
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
+          verifyPathChildElement(svgElement, 'woof');
           // The aria label should be taken from the icon name.
           expect(mdIconElement.getAttribute('aria-label')).toBe('fido');
 
           // Change the icon, and the SVG element should be replaced.
           testComponent.iconName = 'fluffy';
           fixture.detectChanges();
-          expect(mdIconElement.children.length).toBe(1);
-          svgElement = mdIconElement.children[0];
-          expect(svgElement.tagName.toLowerCase()).toBe('svg');
-          expect(svgElement.children.length).toBe(1);
-          pathElement = svgElement.children[0];
-          expect(pathElement.tagName.toLowerCase()).toBe('path');
-          expect(pathElement.getAttribute('d')).toBe('meow');
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
+          verifyPathChildElement(svgElement, 'meow');
           expect(mdIconElement.getAttribute('aria-label')).toBe('fluffy');
 
           expect(httpRequestUrls).toEqual(['dog.svg', 'cat.svg']);
           // Using an icon from a previously loaded URL should not cause another HTTP request.
           testComponent.iconName = 'fido';
           fixture.detectChanges();
-          expect(mdIconElement.children.length).toBe(1);
-          pathElement = mdIconElement.querySelector('svg path');
-          expect(pathElement.getAttribute('d')).toBe('woof');
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
+          verifyPathChildElement(svgElement, 'woof');
           expect(httpRequestUrls).toEqual(['dog.svg', 'cat.svg']);
 
           done();
@@ -225,39 +223,31 @@ export function main() {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
           let svgElement: any;
-          let pathElement: any;
           let svgChild: any;
 
           testComponent.iconName = 'farm:pig';
           fixture.detectChanges();
+
           expect(mdIconElement.children.length).toBe(1);
-          svgElement = mdIconElement.children[0];
-          expect(svgElement.tagName.toLowerCase()).toBe('svg');
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
           expect(svgElement.children.length).toBe(1);
           svgChild = svgElement.children[0];
           // The first <svg> child should be the <g id="pig"> element.
           expect(svgChild.tagName.toLowerCase()).toBe('g');
           expect(svgChild.getAttribute('id')).toBe('pig');
-          expect(svgChild.children.length).toBe(1);
-          pathElement = svgChild.children[0];
-          expect(pathElement.tagName.toLowerCase()).toBe('path');
-          expect(pathElement.getAttribute('d')).toBe('oink');
+          verifyPathChildElement(svgChild, 'oink');
           // The aria label should be taken from the icon name (without the icon set portion).
           expect(mdIconElement.getAttribute('aria-label')).toBe('pig');
 
           // Change the icon, and the SVG element should be replaced.
           testComponent.iconName = 'farm:cow';
           fixture.detectChanges();
-          expect(mdIconElement.children.length).toBe(1);
-          svgElement = mdIconElement.children[0];
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
           svgChild = svgElement.children[0];
           // The first <svg> child should be the <g id="cow"> element.
           expect(svgChild.tagName.toLowerCase()).toBe('g');
           expect(svgChild.getAttribute('id')).toBe('cow');
-          expect(svgChild.children.length).toBe(1);
-          pathElement = svgChild.children[0];
-          expect(pathElement.tagName.toLowerCase()).toBe('path');
-          expect(pathElement.getAttribute('d')).toBe('moo');
+          verifyPathChildElement(svgChild, 'moo');
           expect(mdIconElement.getAttribute('aria-label')).toBe('cow');
 
           done();
@@ -272,24 +262,19 @@ export function main() {
           const testComponent = fixture.debugElement.componentInstance;
           const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
           let svgElement: any;
-          let pathElement: any;
           let svgChild: any;
 
           testComponent.iconName = 'farm:pig';
           fixture.detectChanges();
-          expect(mdIconElement.children.length).toBe(1);
-          svgElement = mdIconElement.children[0];
-          expect(svgElement.tagName.toLowerCase()).toBe('svg');
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
           expect(svgElement.children.length).toBe(1);
           svgChild = svgElement.children[0];
-          // The first <svg> child should be the <g id="pig"> element.
+          // The <svg> child should be the <g id="pig"> element.
           expect(svgChild.tagName.toLowerCase()).toBe('g');
           expect(svgChild.getAttribute('id')).toBe('pig');
           expect(svgChild.children.length).toBe(1);
-          pathElement = svgChild.children[0];
-          expect(pathElement.tagName.toLowerCase()).toBe('path');
-          expect(pathElement.getAttribute('d')).toBe('oink');
-          // The aria label should be taken from the icon name (without the icon set portion).
+          verifyPathChildElement(svgChild, 'oink');
+          // The aria label should be taken from the icon name (without the namespace).
           expect(mdIconElement.getAttribute('aria-label')).toBe('pig');
 
           // Both icon sets registered in the 'farm' namespace should have been fetched.
@@ -300,18 +285,95 @@ export function main() {
           // and no additional HTTP request should be made.
           testComponent.iconName = 'farm:cow';
           fixture.detectChanges();
-          expect(mdIconElement.children.length).toBe(1);
-          svgElement = mdIconElement.children[0];
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
           svgChild = svgElement.children[0];
           // The first <svg> child should be the <g id="cow"> element.
           expect(svgChild.tagName.toLowerCase()).toBe('g');
           expect(svgChild.getAttribute('id')).toBe('cow');
           expect(svgChild.children.length).toBe(1);
-          pathElement = svgChild.children[0];
-          expect(pathElement.tagName.toLowerCase()).toBe('path');
-          expect(pathElement.getAttribute('d')).toBe('moo moo');
+          verifyPathChildElement(svgChild, 'moo moo');
           expect(mdIconElement.getAttribute('aria-label')).toBe('cow');
           expect(httpRequestUrls.sort()).toEqual(['farm-set-1.svg', 'farm-set-2.svg']);
+
+          done();
+        });
+      });
+
+      it('should not wrap <svg> elements in icon sets in another svg tag', (done: () => void) => {
+        mdIconRegistry.addSvgIconSet('arrow-set.svg');
+        return builder.createAsync(MdIconFromSvgNameTestApp).then((fixture) => {
+          const testComponent = fixture.debugElement.componentInstance;
+          const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
+          let svgElement: any;
+
+          testComponent.iconName = 'left-arrow';
+          fixture.detectChanges();
+          // arrow-set.svg stores its icons as nested <svg> elements, so they should be used
+          // directly and not wrapped in an outer <svg> tag like the <g> elements in other sets.
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
+          verifyPathChildElement(svgElement, 'left');
+          expect(mdIconElement.getAttribute('aria-label')).toBe('left-arrow');
+
+          done();
+        });
+      });
+
+      it('should return unmodified copies of icons from URLs', (done: () => void) => {
+        return builder.createAsync(MdIconFromSvgUrlTestApp).then((fixture) => {
+          const testComponent = fixture.debugElement.componentInstance;
+          const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
+          let svgElement: any;
+
+          testComponent.iconUrl = 'cat.svg';
+          fixture.detectChanges();
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
+          verifyPathChildElement(svgElement, 'meow');
+          // Modify the SVG element by setting a viewBox attribute.
+          svgElement.setAttribute('viewBox', '0 0 100 100');
+
+          // Switch to a different icon.
+          testComponent.iconUrl = 'dog.svg';
+          fixture.detectChanges();
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
+          verifyPathChildElement(svgElement, 'woof');
+
+          // Switch back to the first icon. The viewBox attribute should not be present.
+          testComponent.iconUrl = 'cat.svg';
+          fixture.detectChanges();
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
+          verifyPathChildElement(svgElement, 'meow');
+          expect(svgElement.getAttribute('viewBox')).toBeFalsy();
+
+          done();
+        });
+      });
+
+      it('should return unmodified copies of icons from icon sets', (done: () => void) => {
+        mdIconRegistry.addSvgIconSet('arrow-set.svg');
+        return builder.createAsync(MdIconFromSvgNameTestApp).then((fixture) => {
+          const testComponent = fixture.debugElement.componentInstance;
+          const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
+          let svgElement: any;
+
+          testComponent.iconName = 'left-arrow';
+          fixture.detectChanges();
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
+          verifyPathChildElement(svgElement, 'left');
+          // Modify the SVG element by setting a viewBox attribute.
+          svgElement.setAttribute('viewBox', '0 0 100 100');
+
+          // Switch to a different icon.
+          testComponent.iconName = 'right-arrow';
+          fixture.detectChanges();
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
+          verifyPathChildElement(svgElement, 'right');
+
+          // Switch back to the first icon. The viewBox attribute should not be present.
+          testComponent.iconName = 'left-arrow';
+          fixture.detectChanges();
+          svgElement = verifyAndGetSingleSvgChild(mdIconElement);
+          verifyPathChildElement(svgElement, 'left');
+          expect(svgElement.getAttribute('viewBox')).toBeFalsy();
 
           done();
         });
