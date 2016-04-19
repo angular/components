@@ -1,7 +1,6 @@
 import {
   AfterContentChecked,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   Input,
@@ -12,9 +11,17 @@ import {
   ViewEncapsulation,
 } from 'angular2/core';
 import {NgClass} from 'angular2/common';
+import {BaseException} from 'angular2/src/facade/exceptions';
 
 import {MdIconRegistry} from './icon-registry';
 
+
+/** Exception thrown when an invalid icon name is passed to an md-icon component. */
+export class MdIconInvalidNameException extends BaseException {
+  constructor(iconName: string) {
+      super(`Invalid icon name: "${name}"`);
+  }
+}
 
 /**
  * Component to display an icon. It can be used in the following ways:
@@ -67,7 +74,7 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
   @Input() fontIcon: string;
   @Input() alt: string;
 
-  @Input('aria-label') ariaLabelFromParent: string = '';
+  @Input('aria-label') hostAriaLabel: string = '';
 
   private _previousFontSetClass: string;
   private _previousFontIconClass: string;
@@ -75,7 +82,6 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
   constructor(
       private _element: ElementRef,
       private _renderer: Renderer,
-      private _changeDetectorRef: ChangeDetectorRef,
       private _mdIconRegistry: MdIconRegistry) {
   }
 
@@ -85,20 +91,27 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
    * The separator for the two fields is ':'. If there is no separator, an empty
    * string is returned for the icon set and the entire value is returned for
    * the icon name. If the argument is falsy, returns an array of two empty strings.
+   * Throws a MdIconInvalidNameException if the name contains two or more ':' separators.
    * Examples:
    *   'social:cake' -> ['social', 'cake']
    *   'penguin' -> ['', 'penguin']
    *   null -> ['', '']
+   *   'a:b:c' -> (throws MdIconInvalidNameException)
    */
   private _splitIconName(iconName: string): [string, string] {
     if (!iconName) {
       return ['', ''];
     }
-    const separatorIndex = this.svgIcon.indexOf(':');
-    if (separatorIndex == -1) {
-      return ['', iconName];
+    const parts = iconName.split(':');
+    switch (parts.length) {
+      case 1:
+        // Use default namespace.
+        return ['', parts[0]];
+      case 2:
+        return <[string, string]>parts;
+      default:
+        throw new MdIconInvalidNameException(iconName);
     }
-    return [iconName.substring(0, separatorIndex), iconName.substring(separatorIndex + 1)];
   }
 
   ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
@@ -140,7 +153,6 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
       const ariaLabel = this._getAriaLabel();
       if (ariaLabel) {
         this._renderer.setElementAttribute(this._element.nativeElement, 'aria-label', ariaLabel);
-        this._changeDetectorRef.detectChanges();
       }
   }
 
@@ -149,7 +161,7 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
     // reasonable value from the alt attribute, font icon name, SVG icon name, or (for ligatures)
     // the text content of the directive.
     const label =
-        this.ariaLabelFromParent ||
+        this.hostAriaLabel ||
         this.alt ||
         this.fontIcon ||
         this._splitIconName(this.svgIcon)[1];
@@ -163,7 +175,7 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
         return text;
       }
     }
-    // Warn here?
+    // TODO: Warn here in dev mode.
     return null;
   }
 

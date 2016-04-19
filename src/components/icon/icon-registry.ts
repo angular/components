@@ -31,6 +31,9 @@ class SvgIconConfig {
   }
 }
 
+/** Returns the cache key to use for an icon namespace and name. */
+const iconKey = (namespace: string, name: string) => namespace + ':' + name;
+
 /**
  * Service to register and display icons used by the <md-icon> component.
  * - Registers icon URLs by namespace and name.
@@ -51,19 +54,13 @@ export class MdIconRegistry {
    */
   private _iconSetConfigs = new Map<string, SvgIconConfig[]>();
 
-  /**
-   * Cache for icons loaded by direct URLs.
-   */
+  /** Cache for icons loaded by direct URLs. */
   private _cachedIconsByUrl = new Map<string, SVGElement>();
 
-  /**
-   * In-progress icon fetches. Used to coalesce multiple requests to the same URL.
-   */
+  /** In-progress icon fetches. Used to coalesce multiple requests to the same URL. */
   private _inProgressUrlFetches = new Map<string, Observable<string>>();
 
-  /**
-   * Map from font identifiers to their CSS class names. Used for icon fonts.
-   */
+  /** Map from font identifiers to their CSS class names. Used for icon fonts. */
   private _fontCssClassesByAlias = new Map<string, string>();
 
   /**
@@ -75,32 +72,24 @@ export class MdIconRegistry {
 
   constructor(private _http: Http) {}
 
-  /**
-   * Registers an icon by URL in the default namespace.
-   */
+  /** Registers an icon by URL in the default namespace. */
   addSvgIcon(iconName: string, url: string): this {
     return this.addSvgIconInNamespace('', iconName, url);
   }
 
-  /**
-   * Registers an icon by URL in the specified namespace.
-   */
+  /** Registers an icon by URL in the specified namespace. */
   addSvgIconInNamespace(namespace: string, iconName: string, url: string): this {
-    const iconKey = namespace + ':' + iconName;
-    this._svgIconConfigs.set(iconKey, new SvgIconConfig(url));
+    const key = iconKey(namespace, iconName);
+    this._svgIconConfigs.set(key, new SvgIconConfig(url));
     return this;
   }
 
-  /**
-   * Registers an icon set by URL in the default namespace.
-   */
+  /** Registers an icon set by URL in the default namespace. */
   addSvgIconSet(url: string): this {
     return this.addSvgIconSetInNamespace('', url);
   }
 
-  /**
-   * Registers an icon set by URL in the specified namespace.
-   */
+  /** Registers an icon set by URL in the specified namespace. */
   addSvgIconSetInNamespace(namespace: string, url: string): this {
     const config = new SvgIconConfig(url);
     if (this._iconSetConfigs.has(namespace)) {
@@ -168,16 +157,16 @@ export class MdIconRegistry {
    */
   getNamedSvgIcon(name: string, namespace = ''): Observable<SVGElement> {
     // Return (copy of) cached icon if possible.
-    const iconKey = namespace + ':' + name;
-    if (this._svgIconConfigs.has(iconKey)) {
-      return this._getSvgFromConfig(this._svgIconConfigs.get(iconKey));
+    const key = iconKey(namespace, name);
+    if (this._svgIconConfigs.has(key)) {
+      return this._getSvgFromConfig(this._svgIconConfigs.get(key));
     }
     // See if we have any icon sets registered for the namespace.
     const iconSetConfigs = this._iconSetConfigs.get(namespace);
     if (iconSetConfigs) {
       return this._getSvgFromIconSetConfigs(name, this._iconSetConfigs.get(namespace));
     }
-    return Observable.throw(new MdIconNameNotFoundException(iconKey));
+    return Observable.throw(new MdIconNameNotFoundException(key));
   }
 
   /**
@@ -190,8 +179,8 @@ export class MdIconRegistry {
     } else {
       // Fetch the icon from the config's URL, cache it, and return a copy.
       return this._loadSvgIconFromConfig(config)
-          .do((svg: SVGElement) => config.svgElement = svg)
-          .map((svg: SVGElement) => svg.cloneNode(true));
+          .do(svg => config.svgElement = svg)
+          .map(svg => svg.cloneNode(true));
     }
   }
 
@@ -226,7 +215,7 @@ export class MdIconRegistry {
                   console.log(`Loading icon set URL: ${iconSetConfig.url} failed: ${err}`);
                   return Observable.of(null);
                 })
-                .do((svg: SVGElement) => {
+                .do(svg => {
                   // Cache SVG element.
                   if (svg) {
                     iconSetConfig.svgElement = svg;
@@ -278,6 +267,7 @@ export class MdIconRegistry {
    * from it.
    */
   private _loadSvgIconSetFromConfig(config: SvgIconConfig): Observable<SVGElement> {
+      // TODO: Document that icons should only be loaded from trusted sources.
     return this._fetchUrl(config.url)
         .map((svgText) => this._svgElementFromString(svgText));
   }
