@@ -27,21 +27,21 @@ const sortedClassNames = (elem: Element) => elem.className.split(' ').sort();
  * Verifies that an element contains a single <svg> child element, and returns that child.
  */
 const verifyAndGetSingleSvgChild = (element: any): any => {
-  expect(element.children.length).toBe(1);
-  const svgChild = element.children[0];
+  expect(element.childNodes.length).toBe(1);
+  const svgChild = element.childNodes[0];
   expect(svgChild.tagName.toLowerCase()).toBe('svg');
   return svgChild;
 };
 
 /**
- * Verifies that an element contains a single <path> child element whose "d" attribute has
+ * Verifies that an element contains a single <path> child element whose "id" attribute has
  * the specified value.
  */
 const verifyPathChildElement = (element: any, attributeValue: string) => {
-  expect(element.children.length).toBe(1);
-  const pathElement = element.children[0];
+  expect(element.childNodes.length).toBe(1);
+  const pathElement = element.childNodes[0];
   expect(pathElement.tagName.toLowerCase()).toBe('path');
-  expect(pathElement.getAttribute('d')).toBe(attributeValue);
+  expect(pathElement.getAttribute('id')).toBe(attributeValue);
 };
 
 export function main() {
@@ -73,13 +73,13 @@ export function main() {
           case 'cat.svg':
             connection.mockRespond(new Response(new ResponseOptions({
               status: 200,
-              body: '<svg><path d="meow"></path></svg>',
+              body: '<svg><path id="meow"></path></svg>',
             })));
             break;
           case 'dog.svg':
             connection.mockRespond(new Response(new ResponseOptions({
               status: 200,
-              body: '<svg><path d="woof"></path></svg>',
+              body: '<svg><path id="woof"></path></svg>',
             })));
             break;
           case 'farm-set-1.svg':
@@ -87,8 +87,8 @@ export function main() {
               status: 200,
               body: `
                 <svg>
-                  <g id="pig"><path d="oink"></path></g>
-                  <g id="cow"><path d="moo"></path></g>
+                  <g id="pig"><path id="oink"></path></g>
+                  <g id="cow"><path id="moo"></path></g>
                 </svg>
               `,
             })));
@@ -99,8 +99,8 @@ export function main() {
               body: `
                 <svg>
                   <defs>
-                    <g id="cow"><path d="moo moo"></path></g>
-                    <g id="sheep"><path d="baa"></path></g>
+                    <g id="cow"><path id="moo moo"></path></g>
+                    <g id="sheep"><path id="baa"></path></g>
                   </defs>
                 </svg>
               `,
@@ -112,8 +112,8 @@ export function main() {
               body: `
                 <svg>
                   <defs>
-                    <svg id="left-arrow"><path d="left"></path></svg>
-                    <svg id="right-arrow"><path d="right"></path></svg>
+                    <svg id="left-arrow"><path id="left"></path></svg>
+                    <svg id="right-arrow"><path id="right"></path></svg>
                   </defs>
                 </svg>
               `,
@@ -228,10 +228,10 @@ export function main() {
           testComponent.iconName = 'farm:pig';
           fixture.detectChanges();
 
-          expect(mdIconElement.children.length).toBe(1);
+          expect(mdIconElement.childNodes.length).toBe(1);
           svgElement = verifyAndGetSingleSvgChild(mdIconElement);
-          expect(svgElement.children.length).toBe(1);
-          svgChild = svgElement.children[0];
+          expect(svgElement.childNodes.length).toBe(1);
+          svgChild = svgElement.childNodes[0];
           // The first <svg> child should be the <g id="pig"> element.
           expect(svgChild.tagName.toLowerCase()).toBe('g');
           expect(svgChild.getAttribute('id')).toBe('pig');
@@ -243,7 +243,7 @@ export function main() {
           testComponent.iconName = 'farm:cow';
           fixture.detectChanges();
           svgElement = verifyAndGetSingleSvgChild(mdIconElement);
-          svgChild = svgElement.children[0];
+          svgChild = svgElement.childNodes[0];
           // The first <svg> child should be the <g id="cow"> element.
           expect(svgChild.tagName.toLowerCase()).toBe('g');
           expect(svgChild.getAttribute('id')).toBe('cow');
@@ -267,12 +267,12 @@ export function main() {
           testComponent.iconName = 'farm:pig';
           fixture.detectChanges();
           svgElement = verifyAndGetSingleSvgChild(mdIconElement);
-          expect(svgElement.children.length).toBe(1);
-          svgChild = svgElement.children[0];
+          expect(svgElement.childNodes.length).toBe(1);
+          svgChild = svgElement.childNodes[0];
           // The <svg> child should be the <g id="pig"> element.
           expect(svgChild.tagName.toLowerCase()).toBe('g');
           expect(svgChild.getAttribute('id')).toBe('pig');
-          expect(svgChild.children.length).toBe(1);
+          expect(svgChild.childNodes.length).toBe(1);
           verifyPathChildElement(svgChild, 'oink');
           // The aria label should be taken from the icon name (without the namespace).
           expect(mdIconElement.getAttribute('aria-label')).toBe('pig');
@@ -281,16 +281,16 @@ export function main() {
           expect(httpRequestUrls.sort()).toEqual(['farm-set-1.svg', 'farm-set-2.svg']);
 
           // Change the icon name to one that appears in both icon sets. The icon from the set that
-          // was registered last should be used (with 'd' attribute of 'moo moo' instead of 'moo'),
+          // was registered last should be used (with id attribute of 'moo moo' instead of 'moo'),
           // and no additional HTTP request should be made.
           testComponent.iconName = 'farm:cow';
           fixture.detectChanges();
           svgElement = verifyAndGetSingleSvgChild(mdIconElement);
-          svgChild = svgElement.children[0];
+          svgChild = svgElement.childNodes[0];
           // The first <svg> child should be the <g id="cow"> element.
           expect(svgChild.tagName.toLowerCase()).toBe('g');
           expect(svgChild.getAttribute('id')).toBe('cow');
-          expect(svgChild.children.length).toBe(1);
+          expect(svgChild.childNodes.length).toBe(1);
           verifyPathChildElement(svgChild, 'moo moo');
           expect(mdIconElement.getAttribute('aria-label')).toBe('cow');
           expect(httpRequestUrls.sort()).toEqual(['farm-set-1.svg', 'farm-set-2.svg']);
