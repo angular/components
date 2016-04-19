@@ -4,7 +4,7 @@ import {Http} from 'angular2/http';
 import {Observable} from 'rxjs/Rx';
 
 
-/** Exception thrown when attmepting to load an icon with a name that cannot be found. */
+/** Exception thrown when attempting to load an icon with a name that cannot be found. */
 export class MdIconNameNotFoundException extends BaseException {
   constructor(iconName: string) {
       super(`Unable to find icon with the name "${name}"`);
@@ -12,7 +12,7 @@ export class MdIconNameNotFoundException extends BaseException {
 }
 
 /**
- * Exception thrown when attmepting to load SVG content that does not contain the expected
+ * Exception thrown when attempting to load SVG content that does not contain the expected
  * <svg> tag.
  */
 export class MdIconSvgTagNotFoundException extends BaseException {
@@ -122,7 +122,7 @@ export class MdIconRegistry {
    * Sets the CSS class name to be used for icon fonts when an <md-icon> component does not
    * have a fontSet input value, and is not loading an icon by name or URL.
    */
-  setDefaultFontSetClass(className: string) {
+  setDefaultFontSetClass(className: string): this {
     this._defaultFontSetClass = className;
     return this;
   }
@@ -164,7 +164,7 @@ export class MdIconRegistry {
     // See if we have any icon sets registered for the namespace.
     const iconSetConfigs = this._iconSetConfigs.get(namespace);
     if (iconSetConfigs) {
-      return this._getSvgFromIconSetConfigs(name, this._iconSetConfigs.get(namespace));
+      return this._getSvgFromIconSetConfigs(name, iconSetConfigs);
     }
     return Observable.throw(new MdIconNameNotFoundException(key));
   }
@@ -198,7 +198,7 @@ export class MdIconRegistry {
     // requested name.
     const namedIcon = this._extractIconWithNameFromAnySet(name, iconSetConfigs);
     if (namedIcon) {
-      // We could cache namedSvg in _svgIconConfigs, but since we have to make a copy every
+      // We could cache namedIcon in _svgIconConfigs, but since we have to make a copy every
       // time anyway, there's probably not much advantage compared to just always extracting
       // it from the icon set.
       return Observable.of(namedIcon);

@@ -26,9 +26,9 @@ const sortedClassNames = (elem: Element) => elem.className.split(' ').sort();
 /**
  * Verifies that an element contains a single <svg> child element, and returns that child.
  */
-const verifyAndGetSingleSvgChild = (element: any): any => {
+const verifyAndGetSingleSvgChild = (element: SVGElement): any => {
   expect(element.childNodes.length).toBe(1);
-  const svgChild = element.childNodes[0];
+  const svgChild = <Element>element.childNodes[0];
   expect(svgChild.tagName.toLowerCase()).toBe('svg');
   return svgChild;
 };
@@ -37,9 +37,9 @@ const verifyAndGetSingleSvgChild = (element: any): any => {
  * Verifies that an element contains a single <path> child element whose "id" attribute has
  * the specified value.
  */
-const verifyPathChildElement = (element: any, attributeValue: string) => {
+const verifyPathChildElement = (element: Element, attributeValue: string) => {
   expect(element.childNodes.length).toBe(1);
-  const pathElement = element.childNodes[0];
+  const pathElement = <Element>element.childNodes[0];
   expect(pathElement.tagName.toLowerCase()).toBe('path');
   expect(pathElement.getAttribute('id')).toBe(attributeValue);
 };

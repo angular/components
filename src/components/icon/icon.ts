@@ -184,10 +184,10 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
   }
 
   private _setSvgElement(svg: SVGElement) {
-    // Can we use Renderer here somehow?
     const layoutElement = this._element.nativeElement;
-    layoutElement.innerHTML = '';
-    layoutElement.appendChild(svg);
+    // Remove existing child nodes and add the new SVG element.
+    this._renderer.detachView(Array.from(layoutElement.childNodes));
+    this._renderer.projectNodes(layoutElement, [svg]);
   }
 
   private _updateFontIconClasses() {
