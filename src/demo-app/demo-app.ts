@@ -10,6 +10,9 @@ import {ProgressCircleDemo} from './progress-circle/progress-circle-demo';
 import {CheckboxDemo} from './checkbox/checkbox-demo';
 import {Dir} from '../core/rtl/dir';
 import {MdButton} from '../components/button/button';
+import {MD_SIDENAV_DIRECTIVES} from '../components/sidenav/sidenav';
+import {MD_LIST_DIRECTIVES} from '../components/list/list';
+import {MdToolbar} from '../components/toolbar/toolbar';
 import {PortalDemo} from './portal/portal-demo';
 import {ToolbarDemo} from './toolbar/toolbar-demo';
 import {OverlayDemo} from './overlay/overlay-demo';
@@ -20,7 +23,10 @@ import {GesturesDemo} from './gestures/gestures-demo';
 
 @Component({
   selector: 'home',
-  template: ''
+  template: `
+    <p>Welcome to the development demos for Angular Material 2!</p>
+    <p>Open the sidenav to select a demo. </p>
+  `
 })
 export class Home {}
 
@@ -29,7 +35,14 @@ export class Home {}
   providers: [],
   templateUrl: 'demo-app/demo-app.html',
   styleUrls: ['demo-app/demo-app.css'],
-  directives: [ROUTER_DIRECTIVES, Dir, MdButton],
+  directives: [
+    ROUTER_DIRECTIVES,
+    Dir,
+    MdButton,
+    MD_SIDENAV_DIRECTIVES,
+    MD_LIST_DIRECTIVES,
+    MdToolbar,
+  ],
   pipes: []
 })
 @RouteConfig([
