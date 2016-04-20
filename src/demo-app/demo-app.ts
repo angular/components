@@ -12,6 +12,7 @@ import {Dir} from '../core/rtl/dir';
 import {MdButton} from '../components/button/button';
 import {MD_SIDENAV_DIRECTIVES} from '../components/sidenav/sidenav';
 import {MD_LIST_DIRECTIVES} from '../components/list/list';
+import {MdIcon} from '../components/icon/icon';
 import {MdToolbar} from '../components/toolbar/toolbar';
 import {PortalDemo} from './portal/portal-demo';
 import {ToolbarDemo} from './toolbar/toolbar-demo';
@@ -39,6 +40,7 @@ export class Home {}
     ROUTER_DIRECTIVES,
     Dir,
     MdButton,
+    MdIcon,
     MD_SIDENAV_DIRECTIVES,
     MD_LIST_DIRECTIVES,
     MdToolbar,
