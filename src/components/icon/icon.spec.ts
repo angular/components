@@ -9,8 +9,6 @@ import {
 } from 'angular2/testing';
 import {
   HTTP_PROVIDERS,
-  Response,
-  ResponseOptions,
   XHRBackend} from 'angular2/http';
 import {MockBackend} from 'angular2/http/testing';
 import {
@@ -19,6 +17,7 @@ import {
 
 import {MdIcon} from './icon';
 import {MdIconRegistry} from './icon-registry';
+import {getFakeSvgHttpResponse} from './fake-svgs';
 
 /** Returns the CSS classes assigned to an element as a sorted array. */
 const sortedClassNames = (elem: Element) => elem.className.split(' ').sort();
@@ -63,63 +62,13 @@ export function main() {
         (tcb: TestComponentBuilder, mir: MdIconRegistry, mockBackend: MockBackend) => {
       builder = tcb;
       mdIconRegistry = mir;
-      // Set fake responses for various SVG URLs.
       // Keep track of requests so we can verify caching behavior.
+      // Return responses for the SVGs defined in fake-svgs.ts.
       httpRequestUrls = [];
       mockBackend.connections.subscribe((connection: any) => {
         const url = connection.request.url;
         httpRequestUrls.push(url);
-        switch (url) {
-          case 'cat.svg':
-            connection.mockRespond(new Response(new ResponseOptions({
-              status: 200,
-              body: '<svg><path id="meow"></path></svg>',
-            })));
-            break;
-          case 'dog.svg':
-            connection.mockRespond(new Response(new ResponseOptions({
-              status: 200,
-              body: '<svg><path id="woof"></path></svg>',
-            })));
-            break;
-          case 'farm-set-1.svg':
-            connection.mockRespond(new Response(new ResponseOptions({
-              status: 200,
-              body: `
-                <svg>
-                  <g id="pig"><path id="oink"></path></g>
-                  <g id="cow"><path id="moo"></path></g>
-                </svg>
-              `,
-            })));
-            break;
-          case 'farm-set-2.svg':
-            connection.mockRespond(new Response(new ResponseOptions({
-              status: 200,
-              body: `
-                <svg>
-                  <defs>
-                    <g id="cow"><path id="moo moo"></path></g>
-                    <g id="sheep"><path id="baa"></path></g>
-                  </defs>
-                </svg>
-              `,
-            })));
-            break;
-          case 'arrow-set.svg':
-            connection.mockRespond(new Response(new ResponseOptions({
-              status: 200,
-              body: `
-                <svg>
-                  <defs>
-                    <svg id="left-arrow"><path id="left"></path></svg>
-                    <svg id="right-arrow"><path id="right"></path></svg>
-                  </defs>
-                </svg>
-              `,
-            })));
-            break;
-        }
+        connection.mockRespond(getFakeSvgHttpResponse(url));
       });
     }));
 
