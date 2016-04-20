@@ -7,7 +7,7 @@ import {Observable} from 'rxjs/Rx';
 /** Exception thrown when attempting to load an icon with a name that cannot be found. */
 export class MdIconNameNotFoundException extends BaseException {
   constructor(iconName: string) {
-      super(`Unable to find icon with the name "${name}"`);
+      super(`Unable to find icon with the name "${iconName}"`);
   }
 }
 
@@ -300,6 +300,7 @@ export class MdIconRegistry {
     // createElement('SVG') doesn't work as expected; the DOM ends up with
     // the correct nodes, but the SVG content doesn't render. Instead we
     // have to create an empty SVG node using innerHTML and append its content.
+    // Elements created using DOMParser.parseFromString have the same problem.
     // http://stackoverflow.com/questions/23003278/svg-innerhtml-in-firefox-can-not-display
     const svg = this._svgElementFromString('<svg></svg>');
     // Clone the node so we don't remove it from the parent icon set element.

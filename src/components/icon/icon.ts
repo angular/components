@@ -187,7 +187,7 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
     const layoutElement = this._element.nativeElement;
     // Remove existing child nodes and add the new SVG element.
     // We would use renderer.detachView(Array.from(layoutElement.childNodes)) here,
-    // but it fails in IE11.
+    // but it fails in IE11: https://github.com/angular/angular/issues/6327
     layoutElement.innerHTML = '';
     this._renderer.projectNodes(layoutElement, [svg]);
   }
