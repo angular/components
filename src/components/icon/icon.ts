@@ -186,7 +186,9 @@ export class MdIcon implements OnChanges, OnInit, AfterContentChecked {
   private _setSvgElement(svg: SVGElement) {
     const layoutElement = this._element.nativeElement;
     // Remove existing child nodes and add the new SVG element.
-    this._renderer.detachView(Array.from(layoutElement.childNodes));
+    // We would use renderer.detachView(Array.from(layoutElement.childNodes)) here,
+    // but it fails in IE11.
+    layoutElement.innerHTML = '';
     this._renderer.projectNodes(layoutElement, [svg]);
   }
 
