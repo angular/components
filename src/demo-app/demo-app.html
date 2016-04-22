@@ -1,10 +1,11 @@
-<md-sidenav-layout>
+<md-sidenav-layout class="demo-root">
   <md-sidenav #start>
     <md-nav-list>
       <a md-list-item [routerLink]="['ButtonDemo']">Button</a>
       <a md-list-item [routerLink]="['CardDemo']">Card</a>
       <a md-list-item [routerLink]="['CheckboxDemo']">Checkbox</a>
       <a md-list-item [routerLink]="['GesturesDemo']">Gestures</a>
+      <a md-list-item [routerLink]="['GridListDemo']">Grid List</a>
       <a md-list-item [routerLink]="['IconDemo']">Icon</a>
       <a md-list-item [routerLink]="['InputDemo']">Input</a>
       <a md-list-item [routerLink]="['ListDemo']">List</a>
@@ -17,9 +18,9 @@
       <a md-list-item [routerLink]="['SidenavDemo']">Sidenav</a>
       <a md-list-item [routerLink]="['ToolbarDemo']">Toolbar</a>
     </md-nav-list>
-    <button md-raised-button (click)="start.close()">CLOSE</button>
+    <button md-button (click)="start.close()">CLOSE</button>
   </md-sidenav>
-  <div class="demo-root">
+  <div>
 
     <md-toolbar color="primary">
       <md-icon (click)="start.open()">menu</md-icon>
