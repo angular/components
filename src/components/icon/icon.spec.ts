@@ -434,7 +434,7 @@ class MdIconLigatureTestApp {
 
 @Component({
   selector: 'test-app',
-  template: `<md-icon aria-label="{{ariaLabel}}" alt="{{altText}}">{{iconName}}</md-icon>`,
+  template: `<md-icon [aria-label]="ariaLabel" [alt]="altText">{{iconName}}</md-icon>`,
   directives: [MdIcon],
 })
 class MdIconLigatureWithAriaBindingTestApp {
@@ -445,7 +445,7 @@ class MdIconLigatureWithAriaBindingTestApp {
 @Component({
   selector: 'test-app',
   template: `
-      <md-icon fontSet="{{fontSet}}" fontIcon="{{fontIcon}}" aria-label="{{ariaLabel}}"></md-icon>
+      <md-icon [fontSet]="fontSet" [fontIcon]="fontIcon" [aria-label]="ariaLabel"></md-icon>
   `,
   directives: [MdIcon],
 })
@@ -457,7 +457,7 @@ class MdIconCustomFontCssTestApp {
 
 @Component({
   selector: 'test-app',
-  template: `<md-icon svgSrc="{{iconUrl}}" aria-label="{{ariaLabel}}"></md-icon>`,
+  template: `<md-icon [svgSrc]="iconUrl" [aria-label]="ariaLabel"></md-icon>`,
   directives: [MdIcon],
 })
 class MdIconFromSvgUrlTestApp {
@@ -467,7 +467,7 @@ class MdIconFromSvgUrlTestApp {
 
 @Component({
   selector: 'test-app',
-  template: `<md-icon svgIcon="{{iconName}}" aria-label="{{ariaLabel}}"></md-icon>`,
+  template: `<md-icon [svgIcon]="iconName" [aria-label]="ariaLabel"></md-icon>`,
   directives: [MdIcon],
 })
 class MdIconFromSvgNameTestApp {
