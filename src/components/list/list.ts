@@ -2,7 +2,7 @@ import {Component, ViewEncapsulation, ContentChildren, ContentChild, QueryList, 
   ElementRef, Renderer, AfterContentInit} from 'angular2/core';
 
 @Component({
-  selector: 'md-list',
+  selector: 'md-list, md-nav-list',
   host: {'role': 'list'},
   template: '<ng-content></ng-content>',
   styleUrls: ['./components/list/list.css'],
@@ -19,7 +19,7 @@ export class MdLine {}
 export class MdListAvatar {}
 
 @Component({
-  selector: 'md-list-item',
+  selector: 'md-list-item, a[md-list-item]',
   host: {'role': 'listitem'},
   templateUrl: './components/list/list-item.html',
   encapsulation: ViewEncapsulation.None

@@ -1,25 +1,39 @@
-<div class="demo-root">
-  <h1>Angular Material2 Demos</h1>
-  <ul>
-    <li><a [routerLink]="['ButtonDemo']">Button demo</a></li>
-    <li><a [routerLink]="['CardDemo']">Card demo</a></li>
-    <li><a [routerLink]="['ProgressCircleDemo']">Progress Circle demo</a></li>
-    <li><a [routerLink]="['ProgressBarDemo']">Progress Bar demo</a></li>
-    <li><a [routerLink]="['PortalDemo']">Portal demo</a></li>
-    <li><a [routerLink]="['OverlayDemo']">Overlay demo</a></li>
-    <li><a [routerLink]="['CheckboxDemo']">Checkbox demo</a></li>
-    <li><a [routerLink]="['InputDemo']">Input demo</a></li>
-    <li><a [routerLink]="['ToolbarDemo']">Toolbar demo</a></li>
-    <li><a [routerLink]="['RadioDemo']">Radio demo</a></li>
-    <li><a [routerLink]="['ListDemo']">List demo</a></li>
-    <li><a [routerLink]="['LiveAnnouncerDemo']">Live Announcer demo</a></li>
-    <li><a [routerLink]="['SidenavDemo']">Sidenav demo</a></li>
-    <li><a [routerLink]="['GesturesDemo']">Gestures demo</a></li>
-  </ul>
-  <button md-raised-button (click)="root.dir = (root.dir == 'rtl' ? 'ltr' : 'rtl')">
-    {{root.dir.toUpperCase()}}
-  </button>
-  <div #root="$implicit" dir="ltr" class="demo-content">
-    <router-outlet></router-outlet>
+<md-sidenav-layout class="demo-root">
+  <md-sidenav #start>
+    <md-nav-list>
+      <a md-list-item [routerLink]="['ButtonDemo']">Button</a>
+      <a md-list-item [routerLink]="['CardDemo']">Card</a>
+      <a md-list-item [routerLink]="['CheckboxDemo']">Checkbox</a>
+      <a md-list-item [routerLink]="['GesturesDemo']">Gestures</a>
+      <a md-list-item [routerLink]="['GridListDemo']">Grid List</a>
+      <a md-list-item [routerLink]="['IconDemo']">Icon</a>
+      <a md-list-item [routerLink]="['InputDemo']">Input</a>
+      <a md-list-item [routerLink]="['ListDemo']">List</a>
+      <a md-list-item [routerLink]="['LiveAnnouncerDemo']">Live Announcer</a>
+      <a md-list-item [routerLink]="['OverlayDemo']">Overlay</a>
+      <a md-list-item [routerLink]="['PortalDemo']">Portal</a>
+      <a md-list-item [routerLink]="['ProgressCircleDemo']">Progress Circle</a>
+      <a md-list-item [routerLink]="['ProgressBarDemo']">Progress Bar</a>
+      <a md-list-item [routerLink]="['RadioDemo']">Radio</a>
+      <a md-list-item [routerLink]="['SidenavDemo']">Sidenav</a>
+      <a md-list-item [routerLink]="['ToolbarDemo']">Toolbar</a>
+    </md-nav-list>
+    <button md-button (click)="start.close()">CLOSE</button>
+  </md-sidenav>
+  <div>
+
+    <md-toolbar color="primary">
+      <md-icon (click)="start.open()">menu</md-icon>
+      <div class="demo-toolbar">
+        <h1>Angular Material 2 Demos</h1>
+        <button md-button (click)="root.dir = (root.dir == 'rtl' ? 'ltr' : 'rtl')" title="Toggle between RTL and LTR">
+          {{root.dir.toUpperCase()}}
+        </button>
+      </div>
+    </md-toolbar>
+
+    <div #root="$implicit" dir="ltr" class="demo-content">
+      <router-outlet></router-outlet>
+    </div>
   </div>
-</div>
+</md-sidenav-layout>

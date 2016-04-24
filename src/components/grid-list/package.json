@@ -1,9 +1,9 @@
 {
-  "name": "@angular2-material/radio",
+  "name": "@angular2-material/grid-list",
   "version": "2.0.0-alpha.3",
-  "description": "Angular 2 Material radio",
-  "main": "./radio.js",
-  "typings": "./radio.d.ts",
+  "description": "Angular 2 Material grid list",
+  "main": "./grid-list.js",
+  "typings": "./grid-list.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/angular/material2.git"
@@ -13,7 +13,9 @@
     "material",
     "material design",
     "components",
-    "radio"
+    "grid-list",
+    "list",
+    "tiles"
   ],
   "license": "MIT",
   "bugs": {
