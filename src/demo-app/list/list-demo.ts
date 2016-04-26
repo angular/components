@@ -1,7 +1,7 @@
 import {Component} from 'angular2/core';
 import {MdButton} from '../../components/button/button';
-import {MdIcon} from '../../components/icon/icon';
 import {MD_LIST_DIRECTIVES} from '../../components/list/list';
+import {MdIcon} from '../../components/icon/icon';
 
 @Component({
   selector: 'list-demo',
