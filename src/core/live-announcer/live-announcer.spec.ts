@@ -4,16 +4,15 @@ import {
   expect,
   beforeEach,
   inject,
-  TestComponentBuilder,
-  ComponentFixture,
   fakeAsync,
   flushMicrotasks,
   tick,
   beforeEachProviders,
   getTestInjector
-} from 'angular2/testing';
-import {Component, provide} from 'angular2/core';
-import {By} from 'angular2/platform/browser';
+} from '@angular/core/testing';
+import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
+import {Component, provide} from '@angular/core';
+import {By} from '@angular/platform-browser';
 import {MdLiveAnnouncer, LIVE_ANNOUNCER_ELEMENT_TOKEN} from './live-announcer';
 
 export function main() {

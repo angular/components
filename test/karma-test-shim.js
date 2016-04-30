@@ -33,6 +33,51 @@ System.config({
       format: 'cjs',
       map: getPathsMap('core')
     },
+    'base/dist/@angular/core': {
+      main: 'index.js',
+      format: 'cjs',
+      defaultExtension: 'js'
+    },
+    'base/dist/@angular/compiler': {
+      main: 'index.js',
+      format: 'cjs',
+      defaultExtension: 'js'
+    },
+    'base/dist/@angular/common': {
+      main: 'index.js',
+      format: 'cjs',
+      defaultExtension: 'js'
+    },
+    'base/dist/@angular/http': {
+      main: 'index.js',
+      format: 'cjs',
+      defaultExtension: 'js'
+    },
+    'base/dist/@angular/router': {
+      main: 'index.js',
+      format: 'cjs',
+      defaultExtension: 'js'
+    },
+    'base/dist/@angular/platform-browser': {
+      main: 'index.js',
+      format: 'cjs',
+      defaultExtension: 'js'
+    },
+    'base/dist/@angular/platform-browser-dynamic': {
+      main: 'index.js',
+      format: 'cjs',
+      defaultExtension: 'js'
+    },
+    'base/dist/@angular/testing': {
+      main: 'index.js',
+      format: 'cjs',
+      defaultExtension: 'js'
+    },
+    'base/dist/@angular/testing/browser': {
+      main: 'index.js',
+      format: 'cjs',
+      defaultExtension: 'js'
+    },
   }
 });
 
@@ -42,8 +87,8 @@ System.config({
  * would be:
  *
  * <code>
- *   import {setBaseTestProviders} from 'angular2/testing';
- *   import * as browser from 'angular2/platform/testing/browser';
+ *   import {setBaseTestProviders} from '@angular/core/testing';
+ *   import * as browser from '@angular/platform-browser-dynamic/testing';
  *
  *   setBaseTestProviders(browser.TEST_BROWSER_PLATFORM_PROVIDERS,
  *                        browser.TEST_BROWSER_APPLICATION_PROVIDERS);
@@ -54,8 +99,8 @@ System.config({
  * Followed by the normal import of all spec files, then bootstrap Karma.
  */
 Promise.all([
-  System.import('angular2/testing'),
-  System.import('angular2/platform/testing/browser'),
+  System.import('@angular/core/testing'),
+  System.import('@angular/platform-browser-dynamic/testing'),
 ]).then(function(imports) {
   var testing = imports[0];
   var browser = imports[1];

@@ -4,17 +4,16 @@ import {
   expect,
   beforeEach,
   inject,
-  ComponentFixture,
-  TestComponentBuilder,
-} from 'angular2/testing';
-import {Component, ViewChildren, QueryList, ViewContainerRef} from 'angular2/core';
+} from '@angular/core/testing';
+import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
+import {Component, ViewChildren, QueryList, ViewContainerRef} from '@angular/core';
 import {TemplatePortalDirective} from './portal-directives';
 import {Portal} from './portal';
 import {ComponentPortal} from './portal';
 import {PortalHostDirective} from './portal-directives';
-import {fakeAsync} from 'angular2/testing';
-import {flushMicrotasks} from 'angular2/testing';
-import {DynamicComponentLoader} from 'angular2/core';
+import {fakeAsync} from '@angular/core/testing';
+import {flushMicrotasks} from '@angular/core/testing';
+import {DynamicComponentLoader} from '@angular/core';
 import {DomPortalHost} from './dom-portal-host';
 
 

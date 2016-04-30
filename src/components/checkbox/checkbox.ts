@@ -8,13 +8,14 @@ import {
   Provider,
   Renderer,
   ViewEncapsulation,
-  forwardRef
-} from 'angular2/core';
-
+  forwardRef,
+} from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
-  ControlValueAccessor
-} from 'angular2/src/common/forms/directives/control_value_accessor';
+  ControlValueAccessor,
+} from '@angular/common';
+
+
 
 /**
  * Monotonically increasing integer used to auto-generate unique ids for checkbox components.

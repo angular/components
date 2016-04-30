@@ -3,21 +3,20 @@ import {
   describe,
   expect,
   beforeEach,
-  ComponentFixture,
-  TestComponentBuilder,
   fakeAsync,
   inject,
   injectAsync,
   tick
-} from 'angular2/testing';
-import {XHR} from 'angular2/src/compiler/xhr';
+} from '@angular/core/testing';
+import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
+import {XHR} from '@angular/compiler';
 import {
   Component,
   Type,
   ViewMetadata
-} from 'angular2/core';
+} from '@angular/core';
 
-import {By} from 'angular2/platform/browser';
+import {By} from '@angular/platform-browser';
 import {MdSidenav, MdSidenavLayout, MD_SIDENAV_DIRECTIVES} from './sidenav';
 
 

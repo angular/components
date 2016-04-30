@@ -1,6 +1,6 @@
-import {TemplateRef, Type, ViewContainerRef} from 'angular2/core';
-import {ElementRef} from 'angular2/core';
-import {ComponentRef} from 'angular2/core';
+import {TemplateRef, Type, ViewContainerRef} from '@angular/core';
+import {ElementRef} from '@angular/core';
+import {ComponentRef} from '@angular/core';
 
 import {
   MdNullPortalHostException,
@@ -86,7 +86,7 @@ export class ComponentPortal extends Portal<ComponentRef> {
  */
 export class TemplatePortal extends Portal<Map<string, any>> {
   /** The embedded template that will be used to instantiate an embedded View in the host. */
-  templateRef: TemplateRef;
+  templateRef: TemplateRef<any>;
 
   /** Reference to the ViewContainer into which the template will be stamped out. */
   viewContainerRef: ViewContainerRef;
@@ -99,7 +99,7 @@ export class TemplatePortal extends Portal<Map<string, any>> {
    */
   locals: Map<string, any> = new Map<string, any>();
 
-  constructor(template: TemplateRef, viewContainerRef: ViewContainerRef) {
+  constructor(template: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
     super();
     this.templateRef = template;
     this.viewContainerRef = viewContainerRef;

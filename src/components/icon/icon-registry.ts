@@ -1,7 +1,7 @@
-import {Injectable} from 'angular2/core';
-import {BaseException} from 'angular2/src/facade/exceptions';
-import {Http} from 'angular2/http';
+import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
 import {Observable} from 'rxjs/Rx';
+import {BaseException} from '../../core/errors/base-exception';
 
 
 /** Exception thrown when attempting to load an icon with a name that cannot be found. */

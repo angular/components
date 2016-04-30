@@ -6,11 +6,10 @@ import {
   fakeAsync,
   inject,
   tick,
-  ComponentFixture,
-  TestComponentBuilder,
-} from 'angular2/testing';
-import {Component, DebugElement, EventEmitter} from 'angular2/core';
-import {By} from 'angular2/platform/browser';
+} from '@angular/core/testing';
+import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
+import {Component, DebugElement, EventEmitter} from '@angular/core';
+import {By} from '@angular/platform-browser';
 
 import {MdCheckbox} from './checkbox';
 

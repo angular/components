@@ -1,23 +1,23 @@
 import {
-  AfterContentInit,
-  Component,
-  ContentChildren,
-  ElementRef,
-  Host,
-  HostBinding,
-  HostListener,
-  Input,
-  Optional,
-  Output,
-  QueryList,
-  Type,
-  ChangeDetectionStrategy,
-  EventEmitter,
-  Renderer
-} from 'angular2/core';
-import {BaseException} from 'angular2/src/facade/exceptions';
+    AfterContentInit,
+    Component,
+    ContentChildren,
+    ElementRef,
+    Host,
+    HostBinding,
+    HostListener,
+    Input,
+    Optional,
+    Output,
+    QueryList,
+    Type,
+    ChangeDetectionStrategy,
+    EventEmitter,
+    Renderer
+} from '@angular/core';
 import {Dir} from '../../core/rtl/dir';
-import {PromiseCompleter} from 'angular2/src/facade/promise';
+import {BaseException} from '../../core/errors/base-exception';
+import {PromiseCompleter} from '../../core/async/promise-completer';
 
 
 /**
@@ -351,8 +351,8 @@ export class MdSidenavLayout implements AfterContentInit {
   /**
    * Return the width of the sidenav, if it's in the proper mode and opened.
    * This may relayout the view, so do not call this often.
-   * @param MdSidenav
-   * @private
+   * @param sidenav
+   * @param mode
    */
   private _getSidenavEffectiveWidth(sidenav: MdSidenav, mode: string): number {
     return (this._isSidenavOpen(sidenav) && sidenav.mode == mode) ? sidenav._width : 0;

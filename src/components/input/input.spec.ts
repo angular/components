@@ -5,11 +5,11 @@ import {
   beforeEach,
   fakeAsync,
   inject,
-  TestComponentBuilder,
   tick,
-} from 'angular2/testing';
-import {Component} from 'angular2/core';
-import {By} from 'angular2/platform/browser';
+} from '@angular/core/testing';
+import {TestComponentBuilder} from '@angular/compiler/testing';
+import {Component} from '@angular/core';
+import {By} from '@angular/platform-browser';
 import {
   MdInput,
   MD_INPUT_DIRECTIVES,

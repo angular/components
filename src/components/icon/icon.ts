@@ -9,9 +9,9 @@ import {
     SimpleChange,
     ViewEncapsulation,
     AfterViewChecked
-} from 'angular2/core';
-import {BaseException} from 'angular2/src/facade/exceptions';
+} from '@angular/core';
 import {MdIconRegistry} from './icon-registry';
+import {BaseException} from '../../core/errors/base-exception';
 
 
 

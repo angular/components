@@ -24,6 +24,7 @@ module.exports = function(defaults) {
   });
 
   const ngTree = angularAppTree.toTree();
+  const ngNewPackagesRelease = new Funnel('node_modules/@angular', {destDir: '@angular'});
   const cssAutoprefixed = autoPrefixerTree(new Funnel(ngTree, {
     include: [ '**/*.css' ]
   }));
@@ -31,6 +32,7 @@ module.exports = function(defaults) {
   return new MergeTree([
     new Funnel('src', { include: ['**/*.scss']}),
     angularAppTree.toTree(),
-    cssAutoprefixed
+    cssAutoprefixed,
+    ngNewPackagesRelease,
   ], { overwrite: true });
 };

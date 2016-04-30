@@ -1,4 +1,4 @@
-import {BaseException} from 'angular2/src/facade/exceptions';
+import {BaseException} from '../errors/base-exception';
 
 
 /** Exception thrown when a ComponentPortal is attached to a DomPortalHost without an origin. */
