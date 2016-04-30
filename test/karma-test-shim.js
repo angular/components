@@ -21,18 +21,37 @@ function getPathsMap(dir) {
     }, {});
 }
 
+
+// All of the @angular packages use the same config, so re-use it for all of them.
+const angularPackageConfig = {
+  main: 'index.js',
+  format: 'cjs',
+  defaultExtension: 'js',
+};
+
 System.config({
+  baseURL: '/base/dist',
   packages: {
-    'base/dist/components': {
-      defaultExtension: false,
+    'components': {
       format: 'cjs',
-      map: getPathsMap('components')
+      map: getPathsMap('components'),
+      defaultExtension: 'js'
     },
-    'base/dist/core': {
-      defaultExtension: false,
+    'core': {
       format: 'cjs',
-      map: getPathsMap('core')
+      map: getPathsMap('core'),
+      defaultExtension: 'js'
     },
+    'rxjs': {
+      defaultExtension: 'js'
+    },
+    '@angular/core': angularPackageConfig,
+    '@angular/compiler': angularPackageConfig,
+    '@angular/common': angularPackageConfig,
+    '@angular/http': angularPackageConfig,
+    '@angular/router': angularPackageConfig,
+    '@angular/platform-browser': angularPackageConfig,
+    '@angular/platform-browser-dynamic': angularPackageConfig,
   }
 });
 
@@ -42,8 +61,8 @@ System.config({
  * would be:
  *
  * <code>
- *   import {setBaseTestProviders} from 'angular2/testing';
- *   import * as browser from 'angular2/platform/testing/browser';
+ *   import {setBaseTestProviders} from '@angular/core/testing';
+ *   import * as browser from '@angular/platform-browser-dynamic/testing';
  *
  *   setBaseTestProviders(browser.TEST_BROWSER_PLATFORM_PROVIDERS,
  *                        browser.TEST_BROWSER_APPLICATION_PROVIDERS);
@@ -54,13 +73,13 @@ System.config({
  * Followed by the normal import of all spec files, then bootstrap Karma.
  */
 Promise.all([
-  System.import('angular2/testing'),
-  System.import('angular2/platform/testing/browser'),
+  System.import('@angular/core/testing'),
+  System.import('@angular/platform-browser-dynamic/testing'),
 ]).then(function(imports) {
   var testing = imports[0];
   var browser = imports[1];
-  testing.setBaseTestProviders(browser.TEST_BROWSER_PLATFORM_PROVIDERS,
-                               browser.TEST_BROWSER_APPLICATION_PROVIDERS);
+  testing.setBaseTestProviders(browser.TEST_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
+                               browser.TEST_BROWSER_DYNAMIC_APPLICATION_PROVIDERS);
 
   return Promise.all(
     Object.keys(window.__karma__.files)
