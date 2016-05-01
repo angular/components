@@ -27,7 +27,7 @@ export function main() {
     }));
 
     describe('PortalHostDirective', () => {
-      it('should load a component into the portal', fakeAsyncTest(() => {
+      it('should load a component into the portal', fakeAsync(() => {
         let appFixture: ComponentFixture;
 
         builder.createAsync(PortalTestApp).then(fixture => {
@@ -50,7 +50,7 @@ export function main() {
         expect(hostContainer.textContent).toContain('Pizza');
       }));
 
-      it('should load a <template> portal', fakeAsyncTest(() => {
+      it('should load a <template> portal', fakeAsync(() => {
         let appFixture: ComponentFixture;
 
         builder.createAsync(PortalTestApp).then(fixture => {
@@ -77,7 +77,7 @@ export function main() {
         expect(hostContainer.textContent).toContain('Cake');
       }));
 
-      it('should load a <template> portal with the `*` sugar', fakeAsyncTest(() => {
+      it('should load a <template> portal with the `*` sugar', fakeAsync(() => {
         let appFixture: ComponentFixture;
 
         builder.createAsync(PortalTestApp).then(fixture => {
@@ -104,7 +104,7 @@ export function main() {
         expect(hostContainer.textContent).toContain('Pie');
       }));
 
-      it('should load a <template> portal with a binding', fakeAsyncTest(() => {
+      it('should load a <template> portal with a binding', fakeAsync(() => {
         let appFixture: ComponentFixture;
 
         builder.createAsync(PortalTestApp).then(fixture => {
@@ -142,44 +142,7 @@ export function main() {
         expect(hostContainer.textContent).toContainError('Mango');
       }));
 
-      it('should load a <template> portal with extra locals', fakeAsyncTest(() => {
-        let appFixture: ComponentFixture;
-
-        builder.createAsync(PortalTestApp).then(fixture => {
-          appFixture = fixture;
-        });
-
-        // Flush the async creation of the PortalTestApp.
-        flushMicrotasks();
-
-        let testAppComponent = appFixture.debugElement.componentInstance;
-
-        // Detect changes initially so that the component's ViewChildren are resolved.
-        appFixture.detectChanges();
-
-        let locals = new Map<string, string>();
-        locals.set('appetizer', 'Samosa');
-
-        let templatePortal = testAppComponent.portalWithLocals;
-        templatePortal.locals = locals;
-
-        // Set the selectedHost to be a TemplatePortal.
-        testAppComponent.selectedPortal = templatePortal;
-        appFixture.detectChanges();
-
-        // Flush the attachment of the Portal.
-        flushMicrotasks();
-
-        // Now that the portal is attached, change detection has to happen again in order
-        // for the bindings to update.
-        appFixture.detectChanges();
-
-        // Expect that the content of the attached portal is present.
-        let hostContainer = appFixture.nativeElement.querySelector('.portal-container');
-        expect(hostContainer.textContent).toContain('Samosa');
-      }));
-
-      it('should change the attached portal', fakeAsyncTest(() => {
+      it('should change the attached portal', fakeAsync(() => {
         let appFixture: ComponentFixture;
 
         builder.createAsync(PortalTestApp).then(fixture => {
@@ -221,21 +184,22 @@ export function main() {
       let someDomElement: HTMLElement;
       let host: DomPortalHost;
 
-      beforeEach(inject(
-          [DynamicComponentLoader],
-          fakeAsync((dcl: DynamicComponentLoader) => {
+      beforeEach(inject([DynamicComponentLoader], (dcl: DynamicComponentLoader) => {
         componentLoader = dcl;
+      }));
+
+      beforeEach(() => {
         someDomElement = document.createElement('div');
         host = new DomPortalHost(someDomElement, componentLoader);
+      });
 
+      it('should attach and detach a component portal', fakeAsync(() => {
         builder.createAsync(ArbitraryViewContainerRefComponent).then(fixture => {
           someViewContainerRef = fixture.componentInstance.viewContainerRef;
         });
 
         flushMicrotasks();
-      })));
 
-      it('should attach and detach a component portal', fakeAsyncTest(() => {
         let portal = new ComponentPortal(PizzaMsg, someViewContainerRef);
 
         let componentInstance: PizzaMsg;
@@ -254,7 +218,7 @@ export function main() {
         expect(someDomElement.innerHTML).toBe('');
       }));
 
-      it('should attach and detach a template portal', fakeAsyncTest(() => {
+      it('should attach and detach a template portal', fakeAsync(() => {
         let appFixture: ComponentFixture;
 
         builder.createAsync(PortalTestApp).then(fixture => {
@@ -271,9 +235,8 @@ export function main() {
         expect(someDomElement.textContent).toContain('Cake');
       }));
 
-      it('should attach and detach a template portal with a binding', fakeAsyncTest(() => {
+      it('should attach and detach a template portal with a binding', fakeAsync(() => {
         let appFixture: ComponentFixture;
-
         builder.createAsync(PortalTestApp).then(fixture => {
           appFixture = fixture;
         });
@@ -311,7 +274,13 @@ export function main() {
         expect(someDomElement.innerHTML).toBe('');
       }));
 
-      it('should change the attached portal', fakeAsyncTest(() => {
+      it('should change the attached portal', fakeAsync(() => {
+        builder.createAsync(ArbitraryViewContainerRefComponent).then(fixture => {
+          someViewContainerRef = fixture.componentInstance.viewContainerRef;
+        });
+
+        flushMicrotasks();
+
         let appFixture: ComponentFixture;
 
         builder.createAsync(PortalTestApp).then(fixture => {
@@ -370,8 +339,6 @@ class ArbitraryViewContainerRefComponent {
   <div *portal>Pie</div>
 
   <template portal> {{fruit}} </template>
-
-  <template portal let-yum="appetizer">{{yum}}</template>
   `,
   directives: [PortalHostDirective, TemplatePortalDirective],
 })
@@ -391,12 +358,4 @@ class PortalTestApp {
   get portalWithBinding() {
     return this.portals.toArray()[2];
   }
-
-  get portalWithLocals() {
-    return this.portals.last;
-  }
-}
-
-function fakeAsyncTest(fn: () => void) {
-  return inject([], fakeAsync(fn));
 }

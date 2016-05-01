@@ -21,6 +21,9 @@ export function config(config) {
     files: [
       {pattern: 'node_modules/es6-shim/es6-shim.min.js', included: true, watched: false},
       {pattern: 'node_modules/systemjs/dist/system-polyfills.js', included: true, watched: false},
+      // RxJs.
+      {pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false},
+      {pattern: 'node_modules/rxjs/**/*.js.map', included: false, watched: false},
       //'node_modules/angular2/es6/dev/src/testing/shims_for_IE.js',
 
       // Zone polyfills *must* be loaded after es6-shim and system-polyfills in order to
@@ -31,7 +34,7 @@ export function config(config) {
       {pattern: 'node_modules/zone.js/dist/async-test.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/fake-async-test.js', included: true, watched: false},
       {pattern: 'node_modules/systemjs/dist/system.src.js', included: true, watched: false},
-      {pattern: 'node_modules/rxjs/bundles/Rx.js', included: true, watched: false},
+      // {pattern: 'node_modules/rxjs/bundles/Rx.js', included: true, watched: false},
       'node_modules/reflect-metadata/Reflect.js',
 
 

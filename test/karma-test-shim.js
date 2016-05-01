@@ -22,62 +22,66 @@ function getPathsMap(dir) {
 }
 
 System.config({
+  baseURL: '/base/dist',
   packages: {
-    'base/dist/components': {
-      defaultExtension: false,
+    'components': {
       format: 'cjs',
-      map: getPathsMap('components')
+      map: getPathsMap('components'),
+      defaultExtension: 'js'
     },
-    'base/dist/core': {
-      defaultExtension: false,
+    'core': {
       format: 'cjs',
-      map: getPathsMap('core')
+      map: getPathsMap('core'),
+      defaultExtension: 'js'
     },
-    'base/dist/@angular/core': {
+    '@angular/core': {
+      main: 'index.js',
+      format: 'cjs',
+      defaultExtension: 'js',
+    },
+    '@angular/compiler': {
       main: 'index.js',
       format: 'cjs',
       defaultExtension: 'js'
     },
-    'base/dist/@angular/compiler': {
+    '@angular/common': {
       main: 'index.js',
       format: 'cjs',
       defaultExtension: 'js'
     },
-    'base/dist/@angular/common': {
+    '@angular/http': {
       main: 'index.js',
       format: 'cjs',
       defaultExtension: 'js'
     },
-    'base/dist/@angular/http': {
+    '@angular/router': {
       main: 'index.js',
       format: 'cjs',
       defaultExtension: 'js'
     },
-    'base/dist/@angular/router': {
+    '@angular/platform-browser': {
       main: 'index.js',
       format: 'cjs',
       defaultExtension: 'js'
     },
-    'base/dist/@angular/platform-browser': {
+    '@angular/platform-browser-dynamic': {
       main: 'index.js',
       format: 'cjs',
       defaultExtension: 'js'
     },
-    'base/dist/@angular/platform-browser-dynamic': {
+    '@angular/testing': {
       main: 'index.js',
       format: 'cjs',
       defaultExtension: 'js'
     },
-    'base/dist/@angular/testing': {
+    '@angular/testing/browser': {
       main: 'index.js',
       format: 'cjs',
       defaultExtension: 'js'
     },
-    'base/dist/@angular/testing/browser': {
-      main: 'index.js',
-      format: 'cjs',
+    'rxjs': {
       defaultExtension: 'js'
-    },
+    }
   }
 });
 

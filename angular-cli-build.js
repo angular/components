@@ -25,6 +25,7 @@ module.exports = function(defaults) {
 
   const ngTree = angularAppTree.toTree();
   const ngNewPackagesRelease = new Funnel('node_modules/@angular', {destDir: '@angular'});
+  const rxjs = new Funnel('node_modules/rxjs', {destDir: 'rxjs'});
   const cssAutoprefixed = autoPrefixerTree(new Funnel(ngTree, {
     include: [ '**/*.css' ]
   }));
@@ -34,5 +35,6 @@ module.exports = function(defaults) {
     angularAppTree.toTree(),
     cssAutoprefixed,
     ngNewPackagesRelease,
+    rxjs,
   ], { overwrite: true });
 };

@@ -111,6 +111,9 @@ export class MdCheckbox implements ControlValueAccessor {
   /** Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor. */
   onTouched: () => any = () => {};
 
+  /** Whether the `checked` state has been set to its initial value. */
+  private _isInitialized: boolean = false;
+
   private _currentAnimationClass: string = '';
 
   private _currentCheckState: TransitionCheckState = TransitionCheckState.Init;
@@ -132,11 +135,20 @@ export class MdCheckbox implements ControlValueAccessor {
   }
 
   set checked(checked: boolean) {
-    this._indeterminate = false;
-    this._checked = checked;
-    this._transitionCheckState(
-        this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
-    this.change.emit(this._checked);
+    let wasAlreadyInitialized = this._isInitialized;
+    this._isInitialized = true;
+
+    if (checked != this.checked) {
+      this._indeterminate = false;
+      this._checked = checked;
+      this._transitionCheckState(
+          this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+
+      // Only fire a change event if this isn't the first time the checked property is ever set.
+      if (wasAlreadyInitialized) {
+        this.change.emit(this._checked);
+      }
+    }
   }
 
   /**
@@ -209,7 +221,11 @@ export class MdCheckbox implements ControlValueAccessor {
     if (this._changeSubscription) {
       this._changeSubscription.unsubscribe();
     }
-    this._changeSubscription = <{unsubscribe: () => any}>this.change.subscribe(fn);
+    this._changeSubscription = <{unsubscribe: () => any}>this.change.subscribe(() => {
+      debugger;
+      console.log('CHANGE FN INVOKED');
+      fn();
+    });
   }
 
   /** Implemented as part of ControlValueAccessor. */
