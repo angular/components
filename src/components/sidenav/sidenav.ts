@@ -16,14 +16,13 @@ import {
     Renderer
 } from '@angular/core';
 import {Dir} from '../../core/rtl/dir';
-import {BaseException} from '../../core/errors/base-exception';
 import {PromiseCompleter} from '../../core/async/promise-completer';
 
 
 /**
  * Exception thrown when two MdSidenav are matching the same side.
  */
-export class MdDuplicatedSidenavException extends BaseException {
+export class MdDuplicatedSidenavError extends Error {
   constructor(align: string) {
     super(`A sidenav was already declared for 'align="${align}"'`);
   }
@@ -307,12 +306,12 @@ export class MdSidenavLayout implements AfterContentInit {
     this._sidenavs.forEach(sidenav => {
       if (sidenav.align == 'end') {
         if (this._end != null) {
-          throw new MdDuplicatedSidenavException('end');
+          throw new MdDuplicatedSidenavError('end');
         }
         this._end = sidenav;
       } else {
         if (this._start != null) {
-          throw new MdDuplicatedSidenavException('start');
+          throw new MdDuplicatedSidenavError('start');
         }
         this._start = sidenav;
       }

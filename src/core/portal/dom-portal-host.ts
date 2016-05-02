@@ -1,6 +1,6 @@
 import {DynamicComponentLoader, ComponentRef, EmbeddedViewRef} from '@angular/core';
 import {BasePortalHost, ComponentPortal, TemplatePortal} from './portal';
-import {MdComponentPortalAttachedToDomWithoutOriginException} from './portal-exceptions';
+import {MdComponentPortalAttachedToDomWithoutOriginError} from './portal-errors';
 
 
 /**
@@ -19,7 +19,7 @@ export class DomPortalHost extends BasePortalHost {
   /** Attach the given ComponentPortal to DOM element using the DynamicComponentLoader. */
   attachComponentPortal(portal: ComponentPortal): Promise<ComponentRef> {
     if (portal.viewContainerRef == null) {
-      throw new MdComponentPortalAttachedToDomWithoutOriginException();
+      throw new MdComponentPortalAttachedToDomWithoutOriginError();
     }
 
     return this._componentLoader.loadNextToLocation(

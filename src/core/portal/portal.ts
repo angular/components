@@ -3,13 +3,13 @@ import {ElementRef} from '@angular/core';
 import {ComponentRef} from '@angular/core';
 
 import {
-  MdNullPortalHostException,
-  MdPortalAlreadyAttachedException,
-  MdNoPortalAttachedException,
-  MdNullPortalException,
-  MdPortalHostAlreadyDisposedException,
-  MdUnknownPortalTypeException
-} from './portal-exceptions';
+  MdNullPortalHostError,
+  MdPortalAlreadyAttachedError,
+  MdNoPortalAttachedErron,
+  MdNullPortalError,
+  MdPortalHostAlreadyDisposedError,
+  MdUnknownPortalTypeErron
+} from './portal-errors';
 
 
 /**
@@ -22,11 +22,11 @@ export abstract class Portal<T> {
   /** Attach this portal to a host. */
   attach(host: PortalHost): Promise<T> {
     if (host == null) {
-      throw new MdNullPortalHostException();
+      throw new MdNullPortalHostError();
     }
 
     if (host.hasAttached()) {
-      throw new MdPortalAlreadyAttachedException();
+      throw new MdPortalAlreadyAttachedError();
     }
 
     this._attachedHost = host;
@@ -37,7 +37,7 @@ export abstract class Portal<T> {
   detach(): Promise<void> {
     let host = this._attachedHost;
     if (host == null) {
-      throw new MdNoPortalAttachedException();
+      throw new MdNoPortalAttachedErron();
     }
 
     this._attachedHost = null;
@@ -156,15 +156,15 @@ export abstract class BasePortalHost implements PortalHost {
 
   attach(portal: Portal<any>): Promise<any> {
     if (portal == null) {
-      throw new MdNullPortalException();
+      throw new MdNullPortalError();
     }
 
     if (this.hasAttached()) {
-      throw new MdPortalAlreadyAttachedException();
+      throw new MdPortalAlreadyAttachedError();
     }
 
     if (this._isDisposed) {
-      throw new MdPortalHostAlreadyDisposedException();
+      throw new MdPortalHostAlreadyDisposedError();
     }
 
     if (portal instanceof ComponentPortal) {
@@ -175,7 +175,7 @@ export abstract class BasePortalHost implements PortalHost {
       return this.attachTemplatePortal(portal);
     }
 
-    throw new MdUnknownPortalTypeException();
+    throw new MdUnknownPortalTypeErron();
   }
 
   abstract attachComponentPortal(portal: ComponentPortal): Promise<ComponentRef>;

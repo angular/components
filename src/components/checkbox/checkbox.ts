@@ -61,7 +61,6 @@ enum TransitionCheckState {
   host: {
     'role': 'checkbox',
     '[id]': 'id',
-    '[class.md-checkbox]': 'true',
     '[class.md-checkbox-indeterminate]': 'indeterminate',
     '[class.md-checkbox-checked]': 'checked',
     '[class.md-checkbox-disabled]': 'disabled',
@@ -221,11 +220,7 @@ export class MdCheckbox implements ControlValueAccessor {
     if (this._changeSubscription) {
       this._changeSubscription.unsubscribe();
     }
-    this._changeSubscription = <{unsubscribe: () => any}>this.change.subscribe(() => {
-      debugger;
-      console.log('CHANGE FN INVOKED');
-      fn();
-    });
+    this._changeSubscription = <{unsubscribe: () => any}>this.change.subscribe(fn);
   }
 
   /** Implemented as part of ControlValueAccessor. */
