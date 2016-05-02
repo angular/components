@@ -7,7 +7,8 @@
   <base href="/">
   <script src="vendor/es6-shim/es6-shim.js"></script>
   <script src="vendor/systemjs/dist/system-polyfills.js"></script>
-  <script src="vendor/angular2/bundles/angular2-polyfills.js"></script>
+  <script src="zonejs/dist/zone.js"></script>
+  <script src="reflect-metadata/Reflect.js"></script>
   {{content-for 'head'}}
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -19,10 +20,7 @@
   <demo-app>Loading...</demo-app>
 
   <script src="vendor/systemjs/dist/system.src.js"></script>
-  <script src="vendor/rxjs/bundles/Rx.js"></script>
-  <script src="vendor/angular2/bundles/angular2.dev.js"></script>
-  <script src="vendor/angular2/bundles/http.dev.js"></script>
-  <script src="vendor/angular2/bundles/router.dev.js"></script>
+  <script src="rxjs/bundles/Rx.js"></script>
 
   <script src="https://ajax.googleapis.com/ajax/libs/hammerjs/2.0.8/hammer.min.js"></script>
   <script>
@@ -40,6 +38,42 @@
           format: 'cjs',
           defaultExtension: 'js'
         },
+        '@angular/core': {
+          format: 'cjs',
+          defaultExtension: 'js',
+          main: 'index.js'
+        },
+        '@angular/compiler': {
+          format: 'cjs',
+          defaultExtension: 'js',
+          main: 'index.js'
+        },
+        '@angular/common': {
+          format: 'cjs',
+          defaultExtension: 'js',
+          main: 'index.js'
+        },
+        '@angular/platform-browser': {
+          format: 'cjs',
+          defaultExtension: 'js',
+          main: 'index.js'
+        },
+        '@angular/platform-browser-dynamic': {
+          format: 'cjs',
+          defaultExtension: 'js',
+          main: 'index.js'
+        },
+        '@angular/http': {
+          format: 'cjs',
+          defaultExtension: 'js',
+          main: 'http.js',
+          main: 'index.js'
+        },
+        '@angular/router': {
+          format: 'cjs',
+          defaultExtension: 'js',
+          main: 'index.js'
+        }
       }
     });
     System.import('main.js').then(null, console.error.bind(console));

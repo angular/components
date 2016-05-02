@@ -24,6 +24,10 @@ module.exports = function(defaults) {
   });
 
   const ngTree = angularAppTree.toTree();
+  const ngNewPackagesRelease = new Funnel('node_modules/@angular', {destDir: '@angular'});
+  const rxjs = new Funnel('node_modules/rxjs', {destDir: 'rxjs'});
+  const zonejs = new Funnel('node_modules/zone.js', {destDir: 'zonejs'});
+  const reflectMetadata = new Funnel('node_modules/reflect-metadata', {destDir: 'reflect-metadata'});
   const cssAutoprefixed = autoPrefixerTree(new Funnel(ngTree, {
     include: [ '**/*.css' ]
   }));
@@ -31,6 +35,10 @@ module.exports = function(defaults) {
   return new MergeTree([
     new Funnel('src', { include: ['**/*.scss']}),
     angularAppTree.toTree(),
-    cssAutoprefixed
+    cssAutoprefixed,
+    ngNewPackagesRelease,
+    rxjs,
+    zonejs,
+    reflectMetadata,
   ], { overwrite: true });
 };
