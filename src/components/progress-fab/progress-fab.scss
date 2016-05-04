@@ -1,0 +1,34 @@
+@import "../button/button-base";
+
+$md-fab-progress-stroke: 6px;
+
+// Subtract 1px to avoid the ugly space between FAB button and progress circle.
+$md-fab-progress-rectangle: ($md-fab-size + $md-fab-padding + $md-fab-progress-stroke / 2) - 1px;
+
+:host {
+  @include md-fab($md-fab-size, $md-fab-padding);
+
+  margin: $md-fab-progress-stroke;
+
+  .md-progress-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    transform: translate3d(-50%, -50%, 0);
+
+    md-progress-circle {
+      width: $md-fab-progress-rectangle;
+      height: $md-fab-progress-rectangle;
+
+      svg {
+        overflow: visible;
+
+        circle {
+          stroke-width: $md-fab-progress-stroke;
+        }
+      }
+    }
+  }
+
+}

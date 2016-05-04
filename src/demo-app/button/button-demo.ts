@@ -11,4 +11,14 @@ import {MdIcon} from '../../components/icon/icon';
 export class ButtonDemo {
   isDisabled: boolean = false;
   clickCounter: number = 0;
+  fabProgressValue: number = 0;
+
+  constructor() {
+
+    setInterval(() => this.increaseFabProgress(), 200);
+  }
+
+  increaseFabProgress() {
+    this.fabProgressValue += 7;
+  }
 }

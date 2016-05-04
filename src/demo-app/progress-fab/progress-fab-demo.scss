@@ -1,0 +1,26 @@
+.demo-progress-fab {
+
+  .demo-progress-card {
+    padding: 0;
+    margin: 16px;
+
+    .demo-content {
+      padding: 7px;
+
+      .demo-determinate-progress.hide-progress {
+        .md-progress-wrap {
+          md-progress-circle {
+            transition-duration: 0.7s;
+            transition-property: transform, opacity;
+            transition-timing-function: ease-out;
+
+            transform: scale(0.8);
+            opacity: 0;
+          }
+        }
+      }
+
+    }
+  }
+
+}

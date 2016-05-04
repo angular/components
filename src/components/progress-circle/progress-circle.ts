@@ -56,7 +56,7 @@ export class MdProgressCircle {
     // total circumference.
 
     // The total circumference is calculated based on the radius we use, 45.
-    // PI * 2 * 45
+    // PI * 2 * 40
     return 251.3274 * (100 - this._value) / 100;
   }
 
