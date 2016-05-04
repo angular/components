@@ -20,25 +20,24 @@ module.exports = function(defaults) {
         'src/core/style'
       ]
     },
-    vendorNpmFiles: []
+    vendorNpmFiles: [
+      'systemjs/dist/system-polyfills.js',
+      'systemjs/dist/system.src.js',
+      'zone.js/dist/*.js',
+      'es6-shim/es6-shim.js',
+      'reflect-metadata/*.js',
+      'rxjs/**/*.js',
+      '@angular/**/*.js',
+    ]
   });
 
-  const ngTree = angularAppTree.toTree();
-  const ngNewPackagesRelease = new Funnel('node_modules/@angular', {destDir: '@angular'});
-  const rxjs = new Funnel('node_modules/rxjs', {destDir: 'rxjs'});
-  const zonejs = new Funnel('node_modules/zone.js', {destDir: 'zonejs'});
-  const reflectMetadata = new Funnel('node_modules/reflect-metadata', {destDir: 'reflect-metadata'});
-  const cssAutoprefixed = autoPrefixerTree(new Funnel(ngTree, {
+  const cssAutoprefixed = autoPrefixerTree(new Funnel(angularAppTree, {
     include: [ '**/*.css' ]
   }));
 
   return new MergeTree([
     new Funnel('src', { include: ['**/*.scss']}),
-    angularAppTree.toTree(),
+    angularAppTree,
     cssAutoprefixed,
-    ngNewPackagesRelease,
-    rxjs,
-    zonejs,
-    reflectMetadata,
   ], { overwrite: true });
 };
