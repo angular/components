@@ -1,14 +1,39 @@
+<md-sidenav-layout class="demo-root" fullscreen>
+  <md-sidenav #start>
+    <md-nav-list>
+      <a md-list-item [routerLink]="['button']">Button</a>
+      <a md-list-item [routerLink]="['card']">Card</a>
+      <a md-list-item [routerLink]="['checkbox']">Checkbox</a>
+      <a md-list-item [routerLink]="['gestures']">Gestures</a>
+      <a md-list-item [routerLink]="['grid-list']">Grid List</a>
+      <a md-list-item [routerLink]="['icon']">Icon</a>
+      <a md-list-item [routerLink]="['input']">Input</a>
+      <a md-list-item [routerLink]="['list']">List</a>
+      <a md-list-item [routerLink]="['live-announcer']">Live Announcer</a>
+      <a md-list-item [routerLink]="['overlay']">Overlay</a>
+      <a md-list-item [routerLink]="['portal']">Portal</a>
+      <a md-list-item [routerLink]="['progress-circle']">Progress Circle</a>
+      <a md-list-item [routerLink]="['progress-bar']">Progress Bar</a>
+      <a md-list-item [routerLink]="['radio']">Radio</a>
+      <a md-list-item [routerLink]="['sidenav']">Sidenav</a>
+      <a md-list-item [routerLink]="['toolbar']">Toolbar</a>
+    </md-nav-list>
+    <button md-button (click)="start.close()">CLOSE</button>
+  </md-sidenav>
+  <div>
 
-<h1 class="title">Angular Material2 Demos</h1>
-<ul>
-  <li><a [routerLink]="['ButtonDemo']">Button demo</a></li>
-  <li><a [routerLink]="['CardDemo']">Card demo</a></li>
-  <li><a [routerLink]="['SidenavDemo']">Sidenav demo</a></li>
-  <li><a [routerLink]="['ProgressCircleDemo']">Progress Circle demo</a></li>
-</ul>
-<button md-raised-button (click)="root.dir = (root.dir == 'rtl' ? 'ltr' : 'rtl')">
-  {{root.dir.toUpperCase()}}
-</button>
-<div #root="$implicit" dir="ltr">
-  <router-outlet></router-outlet>
-</div>
+    <md-toolbar color="primary">
+      <md-icon (click)="start.open()">menu</md-icon>
+      <div class="demo-toolbar">
+        <h1>Angular Material 2 Demos</h1>
+        <button md-button (click)="root.dir = (root.dir == 'rtl' ? 'ltr' : 'rtl')" title="Toggle between RTL and LTR">
+          {{root.dir.toUpperCase()}}
+        </button>
+      </div>
+    </md-toolbar>
+
+    <div #root="$implicit" dir="ltr" class="demo-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</md-sidenav-layout>

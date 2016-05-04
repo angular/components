@@ -1,17 +1,21 @@
 {
   "compilerOptions": {
-    "declaration": false,
+    "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "mapRoot": "",
-    "module": "system",
+    "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
     "noImplicitAny": true,
     "outDir": "../dist/",
     "rootDir": ".",
     "sourceMap": true,
-    "sourceRoot": "/",
-    "target": "es5"
-  }
+    "target": "es5",
+    "inlineSources": true
+  },
+  "files": [
+    "main.ts",
+    "typings.d.ts"
+  ]
 }

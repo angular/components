@@ -3,10 +3,10 @@ import {
   ViewEncapsulation,
   Input,
   HostBinding,
-  HostListener,
   ChangeDetectionStrategy,
-} from 'angular2/core';
-import {TimerWrapper} from 'angular2/src/facade/async';
+  ElementRef,
+  Renderer,
+} from '@angular/core';
 
 // TODO(jelbourn): Ink ripples.
 // TODO(jelbourn): Make the `isMouseDown` stuff done with one global listener.
@@ -14,14 +14,14 @@ import {TimerWrapper} from 'angular2/src/facade/async';
 
 
 @Component({
-  selector: '[md-button]:not(a), [md-raised-button]:not(a), [md-fab]:not(a), [md-mini-fab]:not(a)',
+  selector: 'button[md-button], button[md-raised-button], button[md-icon-button], ' +
+            'button[md-fab], button[md-mini-fab]',
   inputs: ['color'],
   host: {
     '[class.md-button-focus]': 'isKeyboardFocused',
-    '[class]': 'setClassList()',
     '(mousedown)': 'setMousedown()',
     '(focus)': 'setKeyboardFocus()',
-    '(blur)': 'removeKeyboardFocus()'
+    '(blur)': 'removeKeyboardFocus()',
   },
   templateUrl: './components/button/button.html',
   styleUrls: ['./components/button/button.css'],
@@ -29,7 +29,7 @@ import {TimerWrapper} from 'angular2/src/facade/async';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdButton {
-  color: string;
+  private _color: string;
 
   /** Whether the button has focus from the keyboard (not the mouse). Used for class binding. */
   isKeyboardFocused: boolean = false;
@@ -37,7 +37,15 @@ export class MdButton {
   /** Whether a mousedown has occurred on this element in the last 100ms. */
   isMouseDown: boolean = false;
 
-  setClassList() {return `md-${this.color}`;}
+  constructor(private elementRef: ElementRef, private renderer: Renderer) { }
+
+  get color(): string {
+    return this._color;
+  }
+
+  set color(value: string) {
+    this._updateColor(value);
+  }
 
   setMousedown() {
     // We only *show* the focus style when focus has come to the button via the keyboard.
@@ -45,7 +53,19 @@ export class MdButton {
     // button continues to look :active after clicking.
     // @see http://marcysutton.com/button-focus-hell/
     this.isMouseDown = true;
-    TimerWrapper.setTimeout(() => { this.isMouseDown = false; }, 100);
+    setTimeout(() => { this.isMouseDown = false; }, 100);
+  }
+
+  _updateColor(newColor: string) {
+    this._setElementColor(this._color, false);
+    this._setElementColor(newColor, true);
+    this._color = newColor;
+  }
+
+  _setElementColor(color: string, isAdd: boolean) {
+    if (color != null && color != '') {
+      this.renderer.setElementClass(this.elementRef.nativeElement, `md-${color}`, isAdd);
+    }
   }
 
   setKeyboardFocus($event: any) {
@@ -58,24 +78,28 @@ export class MdButton {
 }
 
 @Component({
-  selector: 'a[md-button], a[md-raised-button], a[md-fab], a[md-mini-fab]',
+  selector: 'a[md-button], a[md-raised-button], a[md-icon-button], a[md-fab], a[md-mini-fab]',
   inputs: ['color'],
   host: {
     '[class.md-button-focus]': 'isKeyboardFocused',
-    '[class]': 'setClassList()',
     '(mousedown)': 'setMousedown()',
     '(focus)': 'setKeyboardFocus()',
-    '(blur)': 'removeKeyboardFocus()'
+    '(blur)': 'removeKeyboardFocus()',
+    '(click)': 'haltDisabledEvents($event)',
   },
   templateUrl: './components/button/button.html',
   styleUrls: ['./components/button/button.css'],
   encapsulation: ViewEncapsulation.None
 })
 export class MdAnchor extends MdButton {
-  disabled_: boolean = null;
+  _disabled: boolean = null;
+
+  constructor(elementRef: ElementRef, renderer: Renderer) {
+    super(elementRef, renderer);
+  }
 
   @HostBinding('tabIndex')
-  get tabIndex():number {
+  get tabIndex(): number {
     return this.disabled ? -1 : 0;
   }
 
@@ -87,14 +111,13 @@ export class MdAnchor extends MdButton {
 
   @HostBinding('attr.disabled')
   @Input('disabled')
-  get disabled() { return this.disabled_; }
+  get disabled() { return this._disabled; }
 
   set disabled(value: boolean) {
     // The presence of *any* disabled value makes the component disabled, *except* for false.
-    this.disabled_ = (value != null && value != false) ? true : null;
+    this._disabled = (value != null && value != false) ? true : null;
   }
 
-  @HostListener('click', ['$event'])
   haltDisabledEvents(event: Event) {
     // A disabled button shouldn't apply any actions
     if (this.disabled) {

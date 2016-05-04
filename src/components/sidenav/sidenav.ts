@@ -1,35 +1,28 @@
 import {
-  AfterContentInit,
-  Component,
-  ContentChildren,
-  ElementRef,
-  Host,
-  HostBinding,
-  HostListener,
-  Input,
-  Optional,
-  Output,
-  QueryList,
-  Type,
-  ChangeDetectionStrategy
-} from 'angular2/core';
-import {PromiseWrapper, ObservableWrapper, EventEmitter} from 'angular2/src/facade/async';
-import {iterateListLike} from 'angular2/src/facade/collection';
-import {BaseException} from 'angular2/src/facade/exceptions';
-import {CONST_EXPR, isPresent} from 'angular2/src/facade/lang';
-import {Dir} from '../../directives/dir/dir';
-import {OneOf} from '../../core/annotations/one-of';
+    AfterContentInit,
+    Component,
+    ContentChildren,
+    ElementRef,
+    Host,
+    HostBinding,
+    HostListener,
+    Input,
+    Optional,
+    Output,
+    QueryList,
+    Type,
+    ChangeDetectionStrategy,
+    EventEmitter,
+    Renderer
+} from '@angular/core';
+import {Dir} from '../../core/rtl/dir';
+import {PromiseCompleter} from '../../core/async/promise-completer';
 
-
-/**
- * Exception thrown when a MdSidenavLayout is missing both sidenavs.
- */
-export class MdMissingSidenavException extends BaseException {}
 
 /**
  * Exception thrown when two MdSidenav are matching the same side.
  */
-export class MdDuplicatedSidenavException extends BaseException {
+export class MdDuplicatedSidenavError extends Error {
   constructor(align: string) {
     super(`A sidenav was already declared for 'align="${align}"'`);
   }
@@ -50,38 +43,38 @@ export class MdDuplicatedSidenavException extends BaseException {
 })
 export class MdSidenav {
   /** Alignment of the sidenav (direction neutral); whether 'start' or 'end'. */
-  @Input() @OneOf(['start', 'end']) align: string = 'start';
+  @Input() align: 'start' | 'end' = 'start';
 
   /** Mode of the sidenav; whether 'over' or 'side'. */
-  @Input() @OneOf(['over', 'push', 'side']) mode: string = 'over';
+  @Input() mode: 'over' | 'push' | 'side' = 'over';
 
   /** Whether the sidenav is opened. */
-  @Input('opened') private opened_: boolean;
+  @Input('opened') private _opened: boolean = false;
 
   /** Event emitted when the sidenav is being opened. Use this to synchronize animations. */
-  @Output('open-start') onOpenStart = new EventEmitter<Object>();
+  @Output('open-start') onOpenStart = new EventEmitter<void>();
 
   /** Event emitted when the sidenav is fully opened. */
-  @Output('open') onOpen = new EventEmitter<Object>();
+  @Output('open') onOpen = new EventEmitter<void>();
 
   /** Event emitted when the sidenav is being closed. Use this to synchronize animations. */
-  @Output('close-start') onCloseStart = new EventEmitter<Object>();
+  @Output('close-start') onCloseStart = new EventEmitter<void>();
 
   /** Event emitted when the sidenav is fully closed. */
-  @Output('close') onClose = new EventEmitter<Object>();
+  @Output('close') onClose = new EventEmitter<void>();
 
 
   /**
-   * @param elementRef_ The DOM element reference. Used for transition and width calculation.
+   * @param _elementRef The DOM element reference. Used for transition and width calculation.
    *     If not available we do not hook on transitions.
    */
-  constructor(private elementRef_: ElementRef) {}
+  constructor(private _elementRef: ElementRef) {}
 
   /**
    * Whether the sidenav is opened. We overload this because we trigger an event when it
    * starts or end.
    */
-  get opened(): boolean { return this.opened_; }
+  get opened(): boolean { return this._opened; }
   set opened(v: boolean) {
     this.toggle(v);
   }
@@ -106,21 +99,18 @@ export class MdSidenav {
    * close() when it's closed.
    * @param isOpen
    */
-  toggle(isOpen?: boolean): Promise<void> {
-    if (!isPresent(isOpen)) {
-      isOpen = !this.opened;
-    }
+  toggle(isOpen: boolean = !this.opened): Promise<void> {
     // Shortcut it if we're already opened.
     if (isOpen === this.opened) {
-      if (!this.transition_) {
-        return PromiseWrapper.resolve(null);
+      if (!this._transition) {
+        return Promise.resolve();
       } else {
-        return isOpen ? this.openPromise_ : this.closePromise_;
+        return isOpen ? this._openPromise : this._closePromise;
       }
     }
 
-    this.opened_ = isOpen;
-    this.transition_ = true;
+    this._opened = isOpen;
+    this._transition = true;
 
     if (isOpen) {
       this.onOpenStart.emit(null);
@@ -129,21 +119,21 @@ export class MdSidenav {
     }
 
     if (isOpen) {
-      if (this.openPromise_ == null) {
-        let completer = PromiseWrapper.completer();
-        this.openPromise_ = completer.promise;
-        this.openPromiseReject_ = completer.reject;
-        this.openPromiseResolve_ = completer.resolve;
+      if (this._openPromise == null) {
+        let completer = new PromiseCompleter<void>();
+        this._openPromise = completer.promise;
+        this._openPromiseReject = completer.reject;
+        this._openPromiseResolve = completer.resolve;
       }
-      return this.openPromise_;
+      return this._openPromise;
     } else {
-      if (this.closePromise_ == null) {
-        let completer = PromiseWrapper.completer();
-        this.closePromise_ = completer.promise;
-        this.closePromiseReject_ = completer.reject;
-        this.closePromiseResolve_ = completer.resolve;
+      if (this._closePromise == null) {
+        let completer = new PromiseCompleter<void>();
+        this._closePromise = completer.promise;
+        this._closePromiseReject = completer.reject;
+        this._closePromiseResolve = completer.resolve;
       }
-      return this.closePromise_;
+      return this._closePromise;
     }
   }
 
@@ -155,58 +145,58 @@ export class MdSidenav {
    * @param e The event.
    * @private
    */
-  @HostListener('transitionend', ['$event']) private onTransitionEnd_(e: any) {
-    if (e.target == this.elementRef_.nativeElement
+  @HostListener('transitionend', ['$event']) onTransitionEnd(e: any) {
+    if (e.target == this._elementRef.nativeElement
         // Simpler version to check for prefixes.
         && e.propertyName.endsWith('transform')) {
-      this.transition_ = false;
-      if (this.opened_) {
-        if (this.openPromise_ != null) {
-          this.openPromiseResolve_();
+      this._transition = false;
+      if (this._opened) {
+        if (this._openPromise != null) {
+          this._openPromiseResolve();
         }
-        if (this.closePromise_ != null) {
-          this.closePromiseReject_();
+        if (this._closePromise != null) {
+          this._closePromiseReject();
         }
 
         this.onOpen.emit(null);
       } else {
-        if (this.closePromise_ != null) {
-          this.closePromiseResolve_();
+        if (this._closePromise != null) {
+          this._closePromiseResolve();
         }
-        if (this.openPromise_ != null) {
-          this.openPromiseReject_();
+        if (this._openPromise != null) {
+          this._openPromiseReject();
         }
 
         this.onClose.emit(null);
       }
 
-      this.openPromise_ = null;
-      this.closePromise_ = null;
+      this._openPromise = null;
+      this._closePromise = null;
     }
   }
 
-  @HostBinding('class.md-sidenav-closing') private get isClosing_() {
-    return !this.opened_ && this.transition_;
+  @HostBinding('class.md-sidenav-closing') private get _isClosing() {
+    return !this._opened && this._transition;
   }
-  @HostBinding('class.md-sidenav-opening') private get isOpening_() {
-    return this.opened_ && this.transition_;
+  @HostBinding('class.md-sidenav-opening') private get _isOpening() {
+    return this._opened && this._transition;
   }
-  @HostBinding('class.md-sidenav-closed') private get isClosed_() {
-    return !this.opened_ && !this.transition_;
+  @HostBinding('class.md-sidenav-closed') private get _isClosed() {
+    return !this._opened && !this._transition;
   }
-  @HostBinding('class.md-sidenav-opened') private get isOpened_() {
-    return this.opened_ && !this.transition_;
+  @HostBinding('class.md-sidenav-opened') private get _isOpened() {
+    return this._opened && !this._transition;
   }
-  @HostBinding('class.md-sidenav-end') private get isEnd_() {
+  @HostBinding('class.md-sidenav-end') private get _isEnd() {
     return this.align == 'end';
   }
-  @HostBinding('class.md-sidenav-side') private get modeSide_() {
+  @HostBinding('class.md-sidenav-side') private get _modeSide() {
     return this.mode == 'side';
   }
-  @HostBinding('class.md-sidenav-over') private get modeOver_() {
+  @HostBinding('class.md-sidenav-over') private get _modeOver() {
     return this.mode == 'over';
   }
-  @HostBinding('class.md-sidenav-push') private get modePush_() {
+  @HostBinding('class.md-sidenav-push') private get _modePush() {
     return this.mode == 'push';
   }
 
@@ -215,20 +205,20 @@ export class MdSidenav {
    * not be used outside.
    * @private
    */
-  public get width_() {
-    if (this.elementRef_.nativeElement) {
-      return this.elementRef_.nativeElement.offsetWidth;
+  public get _width() {
+    if (this._elementRef.nativeElement) {
+      return this._elementRef.nativeElement.offsetWidth;
     }
     return 0;
   }
 
-  private transition_: boolean = false;
-  private openPromise_: Promise<void>;
-  private openPromiseResolve_: () => void;
-  private openPromiseReject_: () => void;
-  private closePromise_: Promise<void>;
-  private closePromiseResolve_: () => void;
-  private closePromiseReject_: () => void;
+  private _transition: boolean = false;
+  private _openPromise: Promise<void>;
+  private _openPromiseResolve: () => void;
+  private _openPromiseReject: () => void;
+  private _closePromise: Promise<void>;
+  private _closePromiseResolve: () => void;
+  private _closePromiseReject: () => void;
 }
 
 
@@ -241,127 +231,148 @@ export class MdSidenav {
  */
 @Component({
   selector: 'md-sidenav-layout',
-  directives: [MdSidenav],
-  templateUrl: './components/sidenav/sidenav.html',
-  styleUrls: ['./components/sidenav/sidenav.css'],
   // Do not use ChangeDetectionStrategy.OnPush. It does not work for this component because
   // technically it is a sibling of MdSidenav (on the content tree) and isn't updated when MdSidenav
   // changes its state.
+  directives: [MdSidenav],
+  templateUrl: './components/sidenav/sidenav.html',
+  styleUrls: [
+    './components/sidenav/sidenav.css',
+    './components/sidenav/sidenav-transitions.css',
+  ],
 })
 export class MdSidenavLayout implements AfterContentInit {
-  @ContentChildren(MdSidenav) private sidenavs_: QueryList<MdSidenav>;
+  @ContentChildren(MdSidenav) private _sidenavs: QueryList<MdSidenav>;
 
-  get start() { return this.start_; }
-  get end() { return this.end_; }
+  get start() { return this._start; }
+  get end() { return this._end; }
 
-  constructor(@Optional() @Host() private dir_: Dir) {
+  constructor(@Optional() @Host() private _dir: Dir, private _element: ElementRef,
+              private _renderer: Renderer) {
     // If a `Dir` directive exists up the tree, listen direction changes and update the left/right
     // properties to point to the proper start/end.
-    if (dir_ != null) {
-      dir_.dirChange.add(() => this.validateDrawers_());
+    if (_dir != null) {
+      _dir.dirChange.add(() => this._validateDrawers());
     }
   }
 
   ngAfterContentInit() {
     // On changes, assert on consistency.
-    ObservableWrapper.subscribe(this.sidenavs_.changes, () => this.validateDrawers_());
-    this.validateDrawers_();
+    this._sidenavs.changes.subscribe(() => this._validateDrawers());
+    this._sidenavs.forEach((sidenav: MdSidenav) => this._watchSidenavToggle(sidenav));
+    this._validateDrawers();
+  }
+
+  /*
+  * Subscribes to sidenav events in order to set a class on the main layout element when the sidenav
+  * is open and the backdrop is visible. This ensures any overflow on the layout element is properly
+  * hidden.
+  * */
+  private _watchSidenavToggle(sidenav: MdSidenav): void {
+    if (!sidenav || sidenav.mode === 'side') { return; }
+    sidenav.onOpen.subscribe(() => this._setLayoutClass(sidenav, true));
+    sidenav.onClose.subscribe(() => this._setLayoutClass(sidenav, false));
+  }
+
+  /*
+  * Toggles the 'md-sidenav-opened' class on the main 'md-sidenav-layout' element.
+  * */
+  private _setLayoutClass(sidenav: MdSidenav, bool: boolean): void {
+    this._renderer.setElementClass(this._element.nativeElement, 'md-sidenav-opened', bool);
   }
 
 
-
   /** The sidenav at the start/end alignment, independent of direction. */
-  private start_: MdSidenav;
-  private end_: MdSidenav;
+  private _start: MdSidenav;
+  private _end: MdSidenav;
+
   /**
    * The sidenav at the left/right. When direction changes, these will change as well.
    * They're used as aliases for the above to set the left/right style properly.
-   * In LTR, left_ == start_ and right_ == end_.
-   * In RTL, left_ == end_ and right_ == start_.
+   * In LTR, _left == _start and _right == _end.
+   * In RTL, _left == _end and _right == _start.
    */
-  private left_: MdSidenav;
-  private right_: MdSidenav;
+  private _left: MdSidenav;
+  private _right: MdSidenav;
 
   /**
    * Validate the state of the sidenav children components.
    * @private
    */
-  private validateDrawers_() {
-    this.start_ = this.end_ = null;
-    if (this.sidenavs_.length === 0) {
-      throw new MdMissingSidenavException();
-    }
+  private _validateDrawers() {
+    this._start = this._end = null;
 
     // Ensure that we have at most one start and one end sidenav.
-    iterateListLike(this.sidenavs_, (sidenav: any) => {
+    this._sidenavs.forEach(sidenav => {
       if (sidenav.align == 'end') {
-        if (this.end_ != null) {
-          throw new MdDuplicatedSidenavException('end');
+        if (this._end != null) {
+          throw new MdDuplicatedSidenavError('end');
         }
-        this.end_ = sidenav;
+        this._end = sidenav;
       } else {
-        if (this.start_ != null) {
-          throw new MdDuplicatedSidenavException('start');
+        if (this._start != null) {
+          throw new MdDuplicatedSidenavError('start');
         }
-        this.start_ = sidenav;
+        this._start = sidenav;
       }
     });
 
-    this.right_ = this.left_ = null;
+    this._right = this._left = null;
 
     // Detect if we're LTR or RTL.
-    if (this.dir_ == null || this.dir_.value == 'ltr') {
-      this.left_ = this.start_;
-      this.right_ = this.end_;
+    if (this._dir == null || this._dir.value == 'ltr') {
+      this._left = this._start;
+      this._right = this._end;
     } else {
-      this.left_ = this.end_;
-      this.right_ = this.start_;
+      this._left = this._end;
+      this._right = this._start;
     }
   }
 
-  private closeModalSidenav_() {
-    if (this.start_ != null && this.start_.mode != 'side') {
-      this.start_.close();
+  closeModalSidenav() {
+    if (this._start != null && this._start.mode != 'side') {
+      this._start.close();
     }
-    if (this.end_ != null && this.end_.mode != 'side') {
-      this.end_.close();
+    if (this._end != null && this._end.mode != 'side') {
+      this._end.close();
     }
   }
 
-  private isShowingBackdrop_() {
-    return (this.start_ != null && this.start_.mode != 'side' && this.start_.opened)
-        || (this.end_ != null && this.end_.mode != 'side' && this.end_.opened);
+  isShowingBackdrop(): boolean {
+    return (this._isSidenavOpen(this._start) && this._start.mode != 'side')
+        || (this._isSidenavOpen(this._end) && this._end.mode != 'side');
+  }
+
+  private _isSidenavOpen(side: MdSidenav): boolean {
+    return side != null && side.opened;
   }
 
   /**
    * Return the width of the sidenav, if it's in the proper mode and opened.
    * This may relayout the view, so do not call this often.
-   * @param MdSidenav
-   * @private
+   * @param sidenav
+   * @param mode
    */
-  private getSidenavEffectiveWidth_(sidenav: MdSidenav, mode: string): number {
-    if (sidenav != null && sidenav.mode == mode && sidenav.opened) {
-      return sidenav.width_;
-    }
-    return 0;
+  private _getSidenavEffectiveWidth(sidenav: MdSidenav, mode: string): number {
+    return (this._isSidenavOpen(sidenav) && sidenav.mode == mode) ? sidenav._width : 0;
   }
 
-  private getMarginLeft_() {
-    return this.getSidenavEffectiveWidth_(this.left_, 'side');
+  getMarginLeft() {
+    return this._getSidenavEffectiveWidth(this._left, 'side');
   }
 
-  private getMarginRight_() {
-    return this.getSidenavEffectiveWidth_(this.right_, 'side');
+  getMarginRight() {
+    return this._getSidenavEffectiveWidth(this._right, 'side');
   }
 
-  private getPositionLeft_() {
-    return this.getSidenavEffectiveWidth_(this.left_, 'push');
+  getPositionLeft() {
+    return this._getSidenavEffectiveWidth(this._left, 'push');
   }
 
-  private getPositionRight_() {
-    return this.getSidenavEffectiveWidth_(this.right_, 'push');
+  getPositionRight() {
+    return this._getSidenavEffectiveWidth(this._right, 'push');
   }
 }
 
 
-export const MD_SIDENAV_DIRECTIVES: Type[] = CONST_EXPR([MdSidenavLayout, MdSidenav]);
+export const MD_SIDENAV_DIRECTIVES: Type[] = [MdSidenavLayout, MdSidenav];

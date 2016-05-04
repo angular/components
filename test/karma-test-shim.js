@@ -1,74 +1,57 @@
+/*global jasmine, __karma__, window*/
 Error.stackTraceLimit = Infinity;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 2000;
+__karma__.loaded = function () {
+};
 
-__karma__.loaded = function() {};
+var distPath = '/base/dist/';
 
-
-/**
- * Gets map of module alias to location or package.
- * @param dir Directory name under `src/` for create a map for.
- */
-function getPathsMap(dir) {
-  return Object.keys(window.__karma__.files)
-    .filter(not(isSpecFile))
-    .filter(function(x) { return new RegExp('^/base/dist/' + dir + '/.*\\.js$').test(x); })
-    .reduce(function(pathsMapping, appPath) {
-      var pathToReplace = new RegExp('^/base/dist/' + dir + '/');
-      var moduleName = appPath.replace(pathToReplace, './').replace(/\.js$/, '');
-      pathsMapping[moduleName] = appPath + '?' + window.__karma__.files[appPath];
-      return pathsMapping;
-    }, {});
+function isJsFile(path) {
+  return path.slice(-3) == '.js';
 }
-
-System.config({
-  packages: {
-    'base/dist/components': {
-      defaultExtension: false,
-      format: 'register',
-      map: getPathsMap('components')
-    },
-    'base/dist/core': {
-      defaultExtension: false,
-      format: 'register',
-      map: getPathsMap('core')
-    },
-    'base/dist/directives': {
-      defaultExtension: false,
-      format: 'register',
-      map: getPathsMap('directives')
-    },
-  }
-});
-
-System.import('angular2/platform/browser').then(function(browser_adapter) {
-  // TODO: once beta is out we should change this code to use a "test platform"
-  browser_adapter.BrowserDomAdapter.makeCurrent();
-}).then(function() {
-  return Promise.all(
-    Object.keys(window.__karma__.files)
-      .filter(isSpecFile)
-      .map(function(moduleName) {
-        return System.import(moduleName).then(function(module) {
-          if (module.hasOwnProperty('main')) {
-            return module.main();
-          } else {
-            return module;
-          }
-        });
-      }));
-}).then(function() {
-  __karma__.start();
-}, function(error) {
-  __karma__.error(error.stack || error);
-});
 
 function isSpecFile(path) {
-  return /\.spec\.js$/.test(path);
+  return path.slice(-8) == '.spec.js';
 }
 
-function not(fn) {
-  return function() {
-    return !fn.apply(this, arguments);
-  };
+function isMaterialFile(path) {
+  return isJsFile(path) && path.indexOf('vendor') == -1;
 }
+
+var allSpecFiles = Object.keys(window.__karma__.files)
+  .filter(isSpecFile)
+  .filter(isMaterialFile);
+
+// Load our SystemJS configuration.
+System.config({
+  baseURL: distPath
+});
+
+System.import('system-config.js').then(function() {
+  // Load and configure the TestComponentBuilder.
+  return Promise.all([
+    System.import('@angular/core/testing'),
+    System.import('@angular/platform-browser-dynamic/testing')
+  ]).then(function (providers) {
+    var testing = providers[0];
+    var testingBrowser = providers[1];
+
+    testing.setBaseTestProviders(testingBrowser.TEST_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
+      testingBrowser.TEST_BROWSER_DYNAMIC_APPLICATION_PROVIDERS);
+  });
+}).then(function() {
+  // Finally, load all spec files.
+  // This will run the tests directly.
+  return Promise.all(
+    allSpecFiles.map(function (moduleName) {
+      return System.import(moduleName).then(function(module) {
+        // TODO(jelbourn): remove `main` method from tests and this check.
+        if (module.hasOwnProperty('main')) {
+          return module.main();
+        } else {
+          return module;
+        }
+      });
+    }));
+}).then(__karma__.start, __karma__.error);

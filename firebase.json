@@ -1,0 +1,16 @@
+{
+  "firebase": "material2-test",
+  "public": "dist",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**",
+    "tmp",
+    "deploy",
+    "typings"
+  ],
+  "rewrites": [{
+    "source": "/**/!(*.@(js|ts|html|css|json|svg|png|jpg|jpeg))",
+    "destination": "/index.html"
+  }]
+}
