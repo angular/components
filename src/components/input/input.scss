@@ -33,6 +33,15 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
   }
 }
 
+/**
+ * Applies a floating placeholder above the input before chrome's and safari's auto-fill commits.
+ * Firefox has selector issues for :-webkit-autofill, thats why this mixin is duplicated and is used seperately below 
+ */
+%md-input-placeholder-floating-autofill {
+  visibility: visible;
+  padding-bottom: 5px;
+  transform: translateY(-100%) scale(0.75);
+}
 
 :host {
   display: inline-block;
@@ -143,7 +152,7 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
   // Once the autofill is committed, a change event happen and the regular md-input
   // classes take over to fulfill this behaviour.
   input:-webkit-autofill + .md-input-placeholder {
-    @extend %md-input-placeholder-floating;
+    @extend %md-input-placeholder-floating-autofill;
   }
 
   // The underline is what's shown under the input, its prefix and its suffix.
