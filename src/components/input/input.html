@@ -40,7 +40,7 @@
     <div class="md-input-suffix"><ng-content select="[md-suffix]"></ng-content></div>
   </div>
 
-  <div class="md-input-underline"
+  <div *ngIf="textDivider" class="md-input-underline"
        [class.md-disabled]="disabled">
     <span class="md-input-ripple"
           [class.md-focused]="focused"

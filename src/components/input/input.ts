@@ -139,6 +139,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   @Input() @BooleanFieldValue() required: boolean = false;
   @Input() @BooleanFieldValue() spellcheck: boolean = false;
   @Input() type: string = 'text';
+  @Input() @BooleanFieldValue() textDivider: boolean = true;
 
   get value(): any { return this._value; };
   @Input() set value(v: any) {

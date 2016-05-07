@@ -239,6 +239,14 @@ export function main() {
           expect(typeof fixture.componentInstance.value).toBe('number');
         });
     });
+
+    it('should NOT display text divider under input', () => {
+      return builder.createAsync(MdInputNoTextDividerTestController)
+        .then(fixture => {
+          fixture.detectChanges();
+          expect(fixture.debugElement.query(By.css('.md-input-underline'))).toBeFalsy();
+        });
+    });
   });
 }
 
@@ -387,3 +395,15 @@ class MdInputAriaTestController {
   ariaLabel: string = 'label';
   ariaDisabled: boolean = true;
 }
+
+@Component({
+  selector: 'text-input-controller',
+  template: `
+    <md-input [textDivider]="false">
+    </md-input>
+  `,
+  directives: [MdInput]
+})
+class MdInputNoTextDividerTestController {
+}
+

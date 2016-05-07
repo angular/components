@@ -15,6 +15,18 @@ At the time of writing this README, the `[type]` attribute is copied to the actu
 
 The valid `type` attribute values are any supported by your browser, with the exception of `file`, `checkbox` and `radio`. File inputs aren't supported for now, while check boxes and radio buttons have their own components.
 
+## Text Divider
+
+You can choose to show or hide the text divider line under the `<input>`. By default the text divider will always be `true`.
+
+To hide the text divider:
+
+#### Example
+
+```html
+<md-input placeholder="Hiding the text divider" [textDivider]="false">
+</md-input>
+```
 
 
 ## Prefix and Suffix
