@@ -19,11 +19,12 @@ $md-input-underline-focused-color: md-color($md-primary);
 $md-input-underline-disabled-background-image: linear-gradient(to right,
         rgba(0,0,0,0.26) 0%, rgba(0,0,0,0.26) 33%, transparent 0%);
 
-/**
- * Removes firefox box-shadow on required fields...
+/** 
+ * Undo the red box-shadow glow added by Firefox on invalid inputs.
+ * See https://developer.mozilla.org/en-US/docs/Web/CSS/:-moz-ui-invalid
  */
 :-moz-ui-invalid {
-    box-shadow: none;
+  box-shadow: none;
 }
 
 /**
