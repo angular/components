@@ -27,6 +27,16 @@
 </md-card>
 
 <md-card class="demo-card demo-basic">
+  <md-toolbar color="primary">Text Divider</md-toolbar>
+  <md-card-content>
+    <md-input class="demo-full-width" placeholder="Example 1 (with text divider)">
+    </md-input>
+    <md-input class="demo-full-width" placeholder="Example 2 (no text divider)" [textDivider]="false">
+    </md-input>
+  </md-card-content>
+</md-card>
+
+<md-card class="demo-card demo-basic">
   <md-toolbar color="primary">Prefix + Suffix</md-toolbar>
   <md-card-content>
     <md-input placeholder="amount" align="end">
