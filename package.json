@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "add-stream": "^1.0.0",
-    "angular-cli": "0.0.37",
+    "angular-cli": "^1.0.0-beta.4",
     "broccoli-autoprefixer": "^4.1.0",
     "broccoli-funnel": "^1.0.1",
     "broccoli-merge-trees": "^1.1.1",
@@ -68,7 +68,7 @@
     "symlink-or-copy": "^1.0.1",
     "ts-node": "^0.5.5",
     "tslint": "^3.5.0",
-    "typescript": "^1.8.0",
+    "typescript": "^1.9.0-dev",
     "typings": "^0.8.1",
     "which": "^1.2.4"
   }
