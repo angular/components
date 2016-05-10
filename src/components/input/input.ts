@@ -95,7 +95,7 @@ export class MdHint {
   templateUrl: 'components/input/input.html',
   styleUrls: ['components/input/input.css'],
   providers: [MD_INPUT_CONTROL_VALUE_ACCESSOR],
-  host:{'(click)':'focus()'}
+  host: {'(click)' : 'focus()'}
 })
 export class MdInput implements ControlValueAccessor, AfterContentInit, OnChanges {
   private _focused: boolean = false;
@@ -158,10 +158,10 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   @HostBinding('attr.align') private get _align(): any { return null; }
 
 
-  @ViewChild('input') private _inputElement : ElementRef;
-  
+  @ViewChild('input') private _inputElement: ElementRef;
+
   /** Set focus on input */
-  focus(){
+  focus() {
     this._inputElement.nativeElement.focus();
   }
 
