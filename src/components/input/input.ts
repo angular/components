@@ -9,6 +9,8 @@ import {
   ContentChild,
   SimpleChange,
   ContentChildren,
+  ViewChild,
+  ElementRef,
   QueryList,
   OnChanges,
 } from '@angular/core';
@@ -17,6 +19,7 @@ import {
   ControlValueAccessor
 } from '@angular/common';
 import {BooleanFieldValue} from '../../core/annotations/field-value';
+import {MdError} from '../../core/errors/error';
 
 
 const noop = () => {};
@@ -38,19 +41,19 @@ const MD_INPUT_INVALID_INPUT_TYPE = [
 let nextUniqueId = 0;
 
 
-export class MdInputPlaceholderConflictError extends Error {
+export class MdInputPlaceholderConflictError extends MdError {
   constructor() {
     super('Placeholder attribute and child element were both specified.');
   }
 }
 
-export class MdInputUnsupportedTypeError extends Error {
+export class MdInputUnsupportedTypeError extends MdError {
   constructor(type: string) {
     super(`Input type "${type}" isn't supported by md-input.`);
   }
 }
 
-export class MdInputDuplicatedHintError extends Error {
+export class MdInputDuplicatedHintError extends MdError {
   constructor(align: string) {
     super(`A hint was already declared for 'align="${align}"'.`);
   }
@@ -93,6 +96,7 @@ export class MdHint {
   templateUrl: 'components/input/input.html',
   styleUrls: ['components/input/input.css'],
   providers: [MD_INPUT_CONTROL_VALUE_ACCESSOR],
+  host: {'(click)' : 'focus()'}
 })
 export class MdInput implements ControlValueAccessor, AfterContentInit, OnChanges {
   private _focused: boolean = false;
@@ -153,6 +157,14 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   // might place it as RTL when we don't want to. We still want to use `align` as an
   // Input though, so we use HostBinding.
   @HostBinding('attr.align') private get _align(): any { return null; }
+
+
+  @ViewChild('input') private _inputElement: ElementRef;
+
+  /** Set focus on input */
+  focus() {
+    this._inputElement.nativeElement.focus();
+  }
 
   /** @internal */
   onFocus() {
