@@ -399,7 +399,8 @@ class TestAppWithInitialValue {
 }
 
 
-// TODO(trik): remove eveything below when Angular supports faking events. - copy & paste from checkbox.spec.ts
+// TODO(trik): remove eveything below when Angular supports faking events.
+// copy & paste from checkbox.spec.ts
 
 
 var BROWSER_SUPPORTS_EVENT_CONSTRUCTORS: boolean = (function() {

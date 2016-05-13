@@ -230,8 +230,9 @@ export class MdRadioButton implements OnInit {
   name: string;
 
   /**
-   * The tabindex attribute for the radio button. Note that when the checkbox is disabled, the attribute
-   * on the host element will be removed. It will be placed back when the radio button is re-enabled.
+   * The tabindex attribute for the radio button. Note that when the checkbox is disabled,
+   * the attribute on the host element will be removed. It will be placed back when the
+   * radio button is re-enabled.
    */
   @Input() tabindex: number = 0;
 
