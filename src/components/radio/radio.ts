@@ -206,7 +206,11 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   styleUrls: ['./components/radio/radio.css'],
   encapsulation: ViewEncapsulation.None,
   host: {
-    '(click)': 'onClick($event)'
+    '[id]': 'id',
+    '[attr.tabindex]': 'disabled ? null : tabindex',
+    '(keydown.space)': 'onSpaceDown($event)',
+    '(keyup.space)': 'onInteractionEvent($event)',
+    '(click)': 'onInteractionEvent($event)'
   }
 })
 export class MdRadioButton implements OnInit {
@@ -224,6 +228,12 @@ export class MdRadioButton implements OnInit {
   /** Analog to HTML 'name' attribute used to group radios for unique selection. */
   @Input()
   name: string;
+
+  /**
+   * The tabindex attribute for the radio button. Note that when the checkbox is disabled, the attribute
+   * on the host element will be removed. It will be placed back when the radio button is re-enabled.
+   */
+  @Input() tabindex: number = 0;
 
   /** Whether this radio is disabled. */
   private _disabled: boolean;
@@ -335,7 +345,15 @@ export class MdRadioButton implements OnInit {
     this._disabled = (value != null && value !== false) ? true : null;
   }
 
-  onClick(event: Event) {
+  /**
+   * Event handler used for (keydown.space) events. Used to prevent spacebar events from bubbling
+   * when the component is focused, which prevents side effects like page scrolling from happening.
+   */
+  onSpaceDown(evt: Event) {
+    evt.preventDefault();
+  }
+
+  onInteractionEvent(event: Event) {
     if (this.disabled) {
       event.preventDefault();
       event.stopPropagation();
