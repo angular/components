@@ -150,7 +150,10 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
       });
 
       if (matched.length == 0) {
-        // Didn't find a button that matches this value, return early without setting.
+        // Didn't find a button that matches this value, deselecting all buttons.
+        if (this._value == null) {
+          this.selected = null;
+        }
         return;
       }
 

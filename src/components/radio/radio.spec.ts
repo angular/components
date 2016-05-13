@@ -352,7 +352,28 @@ export function main() {
           });
         }).then(done);
     });
+    it('should deselect all buttons when model is null or undefined', (done: () => void) => {
+      builder
+        .overrideTemplate(TestAppWithInitialValue, `
+          <md-radio-group  [(ngModel)]="choice">
+            <md-radio-button [value]="0"></md-radio-button>
+            <md-radio-button [value]="1"></md-radio-button>
+          </md-radio-group>`)
+        .createAsync(TestAppWithInitialValue)
+        .then(fixture => {
+          fakeAsync(function() {
+            let buttons = fixture.debugElement.queryAll(By.css('md-radio-button'));
 
+            fixture.detectChanges();
+            fixture.componentInstance.choice = 0;
+            expect(isSinglySelected(buttons[0], buttons)).toBe(true);
+
+            fixture.detectChanges();
+            fixture.componentInstance.choice = null;
+            expect(allDeselected(buttons)).toBe(true);
+          });
+        }).then(done);
+    });
   });
 }
 
@@ -363,6 +384,13 @@ function isSinglySelected(button: DebugElement, buttons: DebugElement[]): boolea
       buttons.filter((e: DebugElement) =>
           e.componentInstance != component && e.componentInstance.checked);
   return component.checked && otherSelectedButtons.length == 0;
+}
+
+/** Checks whether no button is selected from a group of buttons. */
+function allDeselected(buttons: DebugElement[]): boolean {
+    let selectedButtons =
+        buttons.filter((e: DebugElement) => e.componentInstance.checked);
+    return selectedButtons.length == 0;
 }
 
 /** Browser-agnostic function for creating an event. */
