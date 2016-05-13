@@ -166,11 +166,16 @@ export function main() {
     });
     it('should make the host element a tab stop', (done: () => void) => {
       builder
-        .overrideTemplate(TestApp, '<md-radio-button></md-radio-button>')
+        .overrideTemplate(TestApp, `
+            <md-radio-group name="my_group">
+                <md-radio-button></md-radio-button>
+            </md-radio-group>
+        `)
         .createAsync(TestApp)
         .then(fixture => {
           let button = fixture.debugElement.query(By.css('md-radio-button'));
-          expect(button.tabIndex).toBe(0);
+          fixture.detectChanges();
+          expect(button.nativeElement.tabIndex).toBe(0);
         }).then(done);
     });
   });
