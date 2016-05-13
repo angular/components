@@ -61,9 +61,11 @@ export function main() {
         .createAsync(TestApp)
         .then(fixture => {
           let button = fixture.debugElement.query(By.css('md-radio-button'));
+          let input = button.query(By.css('input'));
 
           fixture.detectChanges();
           expect(button.componentInstance.disabled).toBe(true);
+          expect(input.nativeElement.hasAttribute('tabindex')).toBe(false);
         }).then(done);
     });
 
@@ -147,6 +149,33 @@ export function main() {
           input.nativeElement.dispatchEvent(event);
           fixture.detectChanges();
           expect(button.nativeElement.classList.contains('md-radio-focused')).toBe(false);
+        }).then(done);
+    });
+    it('should not scroll when pressing space on the checkbox', (done: () => void) => {
+      builder
+        .overrideTemplate(TestApp, '<md-radio-button></md-radio-button>')
+        .createAsync(TestApp)
+        .then(fixture => {
+          let button = fixture.debugElement.query(By.css('md-radio-button'));
+
+          let keyboardEvent = dispatchKeyboardEvent('keydown', button.nativeElement, ' ');
+          fixture.detectChanges();
+
+          expect(keyboardEvent.preventDefault).toHaveBeenCalled();
+        }).then(done);
+    });
+    it('should make the host element a tab stop', (done: () => void) => {
+      builder
+        .overrideTemplate(TestApp, `
+            <md-radio-group name="my_group">
+                <md-radio-button></md-radio-button>
+            </md-radio-group>
+        `)
+        .createAsync(TestApp)
+        .then(fixture => {
+          let button = fixture.debugElement.query(By.css('md-radio-button'));
+          fixture.detectChanges();
+          expect(button.nativeElement.tabIndex).toBe(0);
         }).then(done);
     });
   });
@@ -323,7 +352,28 @@ export function main() {
           });
         }).then(done);
     });
+    it('should deselect all buttons when model is null or undefined', (done: () => void) => {
+      builder
+        .overrideTemplate(TestAppWithInitialValue, `
+          <md-radio-group  [(ngModel)]="choice">
+            <md-radio-button [value]="0"></md-radio-button>
+            <md-radio-button [value]="1"></md-radio-button>
+          </md-radio-group>`)
+        .createAsync(TestAppWithInitialValue)
+        .then(fixture => {
+          fakeAsync(function() {
+            let buttons = fixture.debugElement.queryAll(By.css('md-radio-button'));
 
+            fixture.detectChanges();
+            fixture.componentInstance.choice = 0;
+            expect(isSinglySelected(buttons[0], buttons)).toBe(true);
+
+            fixture.detectChanges();
+            fixture.componentInstance.choice = null;
+            expect(allDeselected(buttons)).toBe(true);
+          });
+        }).then(done);
+    });
   });
 }
 
@@ -334,6 +384,13 @@ function isSinglySelected(button: DebugElement, buttons: DebugElement[]): boolea
       buttons.filter((e: DebugElement) =>
           e.componentInstance != component && e.componentInstance.checked);
   return component.checked && otherSelectedButtons.length == 0;
+}
+
+/** Checks whether no button is selected from a group of buttons. */
+function allDeselected(buttons: DebugElement[]): boolean {
+    let selectedButtons =
+        buttons.filter((e: DebugElement) => e.componentInstance.checked);
+    return selectedButtons.length == 0;
 }
 
 /** Browser-agnostic function for creating an event. */
@@ -367,4 +424,51 @@ class TestApp {
 })
 class TestAppWithInitialValue {
   choice: number = 1;
+}
+
+
+// TODO(trik): remove eveything below when Angular supports faking events.
+// copy & paste from checkbox.spec.ts
+
+
+var BROWSER_SUPPORTS_EVENT_CONSTRUCTORS: boolean = (function() {
+    // See: https://github.com/rauschma/event_constructors_check/blob/gh-pages/index.html#L39
+    try {
+        return new Event('submit', { bubbles: false }).bubbles === false &&
+            new Event('submit', { bubbles: true }).bubbles === true;
+    } catch (e) {
+        return false;
+    }
+})();
+
+/**
+ * Dispatches a keyboard event from an element.
+ * @param eventName The name of the event to dispatch, such as "keydown".
+ * @param element The element from which the event will be dispatched.
+ * @param key The key tied to the KeyboardEvent.
+ * @returns The artifically created keyboard event.
+ */
+function dispatchKeyboardEvent(eventName: string, element: HTMLElement, key: string): Event {
+    let keyboardEvent: Event;
+    if (BROWSER_SUPPORTS_EVENT_CONSTRUCTORS) {
+        keyboardEvent = new KeyboardEvent(eventName);
+    } else {
+        keyboardEvent = document.createEvent('Event');
+        keyboardEvent.initEvent(eventName, true, true);
+    }
+
+    // Hack DOM Level 3 Events "key" prop into keyboard event.
+    Object.defineProperty(keyboardEvent, 'key', {
+        value: key,
+        enumerable: false,
+        writable: false,
+        configurable: true,
+    });
+
+    // Using spyOn seems to be the *only* way to determine if preventDefault is called, since it
+    // seems that `defaultPrevented` does not get set with the technique.
+    spyOn(keyboardEvent, 'preventDefault').and.callThrough();
+
+    element.dispatchEvent(keyboardEvent);
+    return keyboardEvent;
 }
