@@ -1,0 +1,42 @@
+<div class="demo-progress-fab">
+
+  <md-card class="demo-progress-card">
+    <md-toolbar color="primary">Basic</md-toolbar>
+    <md-card-content>
+      <div class="demo-content">
+        <button md-progress-fab color="accent">
+          <i class="material-icons md-24">favorite</i>
+        </button>
+
+        <button md-progress-fab
+                color="primary"
+                progressColor="warn"
+                mode="determinate"
+                [value]="fabProgressValue">
+
+          <i class="material-icons md-24">feedback</i>
+        </button>
+      </div>
+    </md-card-content>
+  </md-card>
+
+  <md-card class="demo-progress-card">
+    <md-toolbar color="primary">Determinate</md-toolbar>
+    <md-card-content>
+      <div class="demo-content">
+
+        <button md-progress-fab
+                class="demo-determinate-progress"
+                [color]="determinateColor"
+                progressColor="warn"
+                mode="determinate"
+                [value]="fabProgressValue"
+                [class.hide-progress]="determinateHidden">
+
+          <i class="material-icons md-24">feedback</i>
+        </button>
+      </div>
+    </md-card-content>
+  </md-card>
+
+</div>

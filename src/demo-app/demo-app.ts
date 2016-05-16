@@ -22,6 +22,7 @@ import {InputDemo} from './input/input-demo';
 import {LiveAnnouncerDemo} from './live-announcer/live-announcer-demo';
 import {GesturesDemo} from './gestures/gestures-demo';
 import {GridListDemo} from './grid-list/grid-list-demo';
+import {ProgressFabDemo} from './progress-fab/progress-fab-demo';
 
 @Component({
   selector: 'home',
@@ -56,6 +57,7 @@ export class Home {}
   new Route({path: '/sidenav', component: SidenavDemo}),
   new Route({path: '/progress-circle', component: ProgressCircleDemo}),
   new Route({path: '/progress-bar', component: ProgressBarDemo}),
+  new Route({path: '/progress-fab', component: ProgressFabDemo}),
   new Route({path: '/portal', component: PortalDemo}),
   new Route({path: '/overlay', component: OverlayDemo}),
   new Route({path: '/checkbox', component: CheckboxDemo}),
