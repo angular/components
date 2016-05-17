@@ -335,7 +335,7 @@ export class MdRadioButton implements OnInit {
     this._disabled = (value != null && value !== false) ? true : null;
   }
 
-  onClick(event: Event) {
+  onClick(event: any /* Event */) {
     if (this.disabled) {
       event.preventDefault();
       event.stopPropagation();
