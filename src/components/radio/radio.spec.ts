@@ -324,6 +324,25 @@ export function main() {
         }).then(done);
     });
 
+    it('should work without a name', () => {
+      return builder
+          .overrideTemplate(TestAppWithInitialValue, `
+            <md-radio-group [(ngModel)]="choice">
+              <md-radio-button *ngFor="let option of options" [value]="option">
+                {{option}}
+              </md-radio-button>
+          `)
+          .createAsync(TestAppWithInitialValue)
+          .then(fixture => {
+            const component = fixture.componentInstance;
+            component.options = [ 0, 1, 2, 3, 4 ];
+
+            // 2 rounds of change detection are necessary to trigger the error "Expression has
+            // changed after it was checked."
+            fixture.detectChanges();
+            fixture.detectChanges();
+          });
+    });
   });
 }
 
