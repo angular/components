@@ -282,6 +282,22 @@ export function main() {
           expect(testComponent.onBlur).toHaveBeenCalledWith(fakeEvent);
         })();
       });
+
+    it('supports min and max attributes for number fields', () => {
+      return builder
+          .overrideTemplate(MdInputNumberTypeConservedTestComponent, `
+            <md-input type="number" [(ngModel)]="value" min="0" max="10">
+            </md-input>
+          `)
+          .createAsync(MdInputNumberTypeConservedTestComponent)
+          .then(fixture => {
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input'))
+                .nativeElement;
+
+            fixture.detectChanges();
+            expect(inputElement.getAttribute('min')).toBe('0');
+            expect(inputElement.getAttribute('max')).toBe('10');
+          });
     });
   });
 }
