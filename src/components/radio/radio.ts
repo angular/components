@@ -4,6 +4,7 @@ import {
   ContentChildren,
   Directive,
   EventEmitter,
+  ChangeDetectorRef,
   HostBinding,
   Input,
   OnInit,
@@ -63,7 +64,7 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   private _value: any = null;
 
   /** The HTML name attribute applied to radio buttons in this group. */
-  private _name: string = null;
+  private _name: string = `md-radio-group-${_uniqueIdCounter++}`;
 
   /** Disables all individual radio buttons assigned to this group. */
   private _disabled: boolean = false;
@@ -84,16 +85,14 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   @ContentChildren(forwardRef(() => MdRadioButton))
   private _radios: QueryList<MdRadioButton> = null;
 
+  constructor(private _changeDetectionRef: ChangeDetectorRef) {}
+
   /**
    * Initialize properties once content children are available.
    * This allows us to propagate relevant attributes to associated buttons.
    */
   ngAfterContentInit() {
-    if (this._name == null) {
-      this.name = `md-radio-group-${_uniqueIdCounter++}`;
-    } else {
-      this._updateChildRadioNames();
-    }
+    this._updateChildRadioNames();
   }
 
   @Input()
@@ -261,6 +260,10 @@ export class MdRadioButton implements OnInit {
   ngOnInit() {
     if (this.id == null) {
       this.id = `md-radio-${_uniqueIdCounter++}`;
+    }
+
+    if (this.radioGroup) {
+      this.name = this.radioGroup.name;
     }
 
     if (this.radioGroup && this._value == this.radioGroup.value) {
