@@ -16,7 +16,7 @@
     "typings": "typings install --ambient",
     "postinstall": "npm run typings",
     "e2e": "protractor test/protractor.conf.js",
-    "inline-resources": "gulp inline-resources",
+    "inline-resources": "node ./scripts/release/inline-resources.js ./dist/components",
     "deploy": "firebase deploy"
   },
   "version": "2.0.0-alpha.4",
@@ -51,8 +51,6 @@
     "firebase-tools": "^2.2.1",
     "fs-extra": "^0.26.5",
     "glob": "^6.0.4",
-    "gulp": "^3.9.1",
-    "gulp-inline-ng2-template": "^1.1.2",
     "jasmine-core": "^2.4.1",
     "js-yaml": "^3.5.2",
     "karma": "^0.13.15",
