@@ -289,7 +289,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
@@ -310,7 +310,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
@@ -327,7 +327,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
@@ -344,7 +344,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
@@ -365,7 +365,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
@@ -382,7 +382,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.componentInstance.disabled = false;
             fixture.detectChanges();
@@ -404,7 +404,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
@@ -421,7 +421,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.componentInstance.disabled = false;
             fixture.detectChanges();
@@ -443,7 +443,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.componentInstance.disabled = false;
             fixture.detectChanges();
@@ -469,7 +469,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.componentInstance.disabled = false;
             fixture.detectChanges();
@@ -495,7 +495,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
@@ -516,7 +516,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
@@ -533,7 +533,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
@@ -554,7 +554,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
@@ -571,7 +571,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
@@ -592,7 +592,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
@@ -609,7 +609,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
@@ -630,7 +630,7 @@ export function main() {
 
       return builder.overrideTemplate(MdInputOptionalAttributeController, template)
         .createAsync(MdInputOptionalAttributeController)
-        .then((fixture) => {
+        .then(fixture => {
           fakeAsync(() => {
             fixture.detectChanges();
 
