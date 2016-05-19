@@ -85,9 +85,19 @@ $md-mini-fab-padding: 8px !default;
     @include md-elevation(8);
   }
 
-  &.md-button-focus {
-    background-color: md-color($md-foreground, base, 0.12);
-    @include md-button-theme('background-color', 600);
+  &.md-button-focus:after {
+    // The button spec calls for focus on raised buttons (and FABs) to be indicated with a
+    // black, 12% opacity shade over the normal color (for both light and dark themes).
+    // We do this by placing an :after psuedo-element with the appropriate shade over the button.
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    content: '';
+    background-color: rgba(black, 0.12);
+    border-radius: inherit;
+    pointer-events: none;
   }
 
   &[disabled] {
@@ -109,9 +119,5 @@ $md-mini-fab-padding: 8px !default;
 
   i, md-icon {
     padding: $padding 0;
-  }
-
-  &.md-button-focus {
-    background-color: md-color($md-accent, 600);
   }
 }
