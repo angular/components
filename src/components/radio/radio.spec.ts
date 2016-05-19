@@ -175,27 +175,30 @@ describe('MdRadio', () => {
       expect(radioNativeElements[0].classList).not.toContain('md-radio-focused');
     });
 
-    it('should update the group and radios when updating the group value', () => {
+    it('should update the group and radios when updating the group value', async(() => {
       expect(groupInstance.value).toBeFalsy();
 
       testComponent.groupValue = 'fire';
       fixture.detectChanges();
 
-      expect(groupInstance.value).toBe('fire');
-      expect(groupInstance.selected).toBe(radioInstances[0]);
-      expect(radioInstances[0].checked).toBe(true);
-      expect(radioInstances[1].checked).toBe(false);
+      fixture.whenStable().then(() => {
+        expect(groupInstance.value).toBe('fire');
+        expect(groupInstance.selected).toBe(radioInstances[0]);
+        expect(radioInstances[0].checked).toBe(true);
+        expect(radioInstances[1].checked).toBe(false);
 
-      testComponent.groupValue = 'water';
-      fixture.detectChanges();
+        testComponent.groupValue = 'water';
+        fixture.detectChanges();
+        return fixture.whenStable();
+      }).then(() => {
+        expect(groupInstance.value).toBe('water');
+        expect(groupInstance.selected).toBe(radioInstances[1]);
+        expect(radioInstances[0].checked).toBe(false);
+        expect(radioInstances[1].checked).toBe(true);
+      });
+    }));
 
-      expect(groupInstance.value).toBe('water');
-      expect(groupInstance.selected).toBe(radioInstances[1]);
-      expect(radioInstances[0].checked).toBe(false);
-      expect(radioInstances[1].checked).toBe(true);
-    });
-
-    it('should deselect all of the checkboxes when the group value is cleared', () => {
+    it('should deselect all of the checkboxes when the group value is cleared', fakeAsync(() => {
       radioInstances[0].checked = true;
       fixture.detectChanges();
 
@@ -203,8 +206,10 @@ describe('MdRadio', () => {
 
       groupInstance.value = null;
       fixture.detectChanges();
+      tick();
+
       expect(radioInstances.every(radio => !radio.checked)).toBe(true);
-    });
+    }));
   });
 
   describe('group with ngModel', () => {
@@ -365,21 +370,26 @@ class StandaloneRadioButtons { }
   directives: [MD_RADIO_DIRECTIVES, FORM_DIRECTIVES],
   template: `
   <md-radio-group [(ngModel)]="modelValue">
-    <md-radio-button value="vanilla">Vanilla</md-radio-button>
-    <md-radio-button value="chocolate">Chocolate</md-radio-button>
-    <md-radio-button value="strawberry">Strawberry</md-radio-button>
+    <md-radio-button *ngFor="let option of options" [value]="option.value">
+      {{option.label}}
+    </md-radio-button>
   </md-radio-group>
   `
 })
 class RadioGroupWithNgModel {
   modelValue: string;
+  options = [
+    {label: 'Vanilla', value: 'vanilla'},
+    {label: 'Chocolate', value: 'chocolate'},
+    {label: 'Strawberry', value: 'strawberry'},
+  ];
 }
 
 // TODO(jelbourn): remove eveything below when Angular supports faking events.
 
 
 /**
- * Dispatches a focus change event from an element. 
+ * Dispatches a focus change event from an element.
  * @param eventName Name of the event, either 'focus' or 'blur'.
  * @param element The element from which the event will be dispatched.
  */
