@@ -175,41 +175,35 @@ describe('MdRadio', () => {
       expect(radioNativeElements[0].classList).not.toContain('md-radio-focused');
     });
 
-    it('should update the group and radios when updating the group value', async(() => {
+    it('should update the group and radios when updating the group value', () => {
       expect(groupInstance.value).toBeFalsy();
 
       testComponent.groupValue = 'fire';
       fixture.detectChanges();
 
-      fixture.whenStable().then(() => {
-        expect(groupInstance.value).toBe('fire');
-        expect(groupInstance.selected).toBe(radioInstances[0]);
-        expect(radioInstances[0].checked).toBe(true);
-        expect(radioInstances[1].checked).toBe(false);
+      expect(groupInstance.value).toBe('fire');
+      expect(groupInstance.selected).toBe(radioInstances[0]);
+      expect(radioInstances[0].checked).toBe(true);
+      expect(radioInstances[1].checked).toBe(false);
 
-        testComponent.groupValue = 'water';
-        fixture.detectChanges();
-        return fixture.whenStable();
-      }).then(() => {
-        expect(groupInstance.value).toBe('water');
-        expect(groupInstance.selected).toBe(radioInstances[1]);
-        expect(radioInstances[0].checked).toBe(false);
-        expect(radioInstances[1].checked).toBe(true);
-      });
-    }));
-
-    it('should deselect all of the checkboxes when the group value is cleared', fakeAsync(() => {
-      radioInstances[0].checked = true;
+      testComponent.groupValue = 'water';
       fixture.detectChanges();
+
+      expect(groupInstance.value).toBe('water');
+      expect(groupInstance.selected).toBe(radioInstances[1]);
+      expect(radioInstances[0].checked).toBe(false);
+      expect(radioInstances[1].checked).toBe(true);
+    });
+
+    it('should deselect all of the checkboxes when the group value is cleared', () => {
+      radioInstances[0].checked = true;
 
       expect(groupInstance.value).toBeTruthy();
 
       groupInstance.value = null;
-      fixture.detectChanges();
-      tick();
 
       expect(radioInstances.every(radio => !radio.checked)).toBe(true);
-    }));
+    });
   });
 
   describe('group with ngModel', () => {
@@ -240,6 +234,31 @@ describe('MdRadio', () => {
         radioInstances = radioDebugElements.map(debugEl => debugEl.componentInstance);
       });
     }));
+
+    it('should set individual radio names based on the group name', () => {
+      expect(groupInstance.name).toBeTruthy();
+      for (let radio of radioInstances) {
+        expect(radio.name).toBe(groupInstance.name);
+      }
+
+      groupInstance.name = 'new name';
+      for (let radio of radioInstances) {
+        expect(radio.name).toBe(groupInstance.name);
+      }
+    });
+
+    it('should check the corresponding radio button on group value change', () => {
+      expect(groupInstance.value).toBeFalsy();
+      for (let radio of radioInstances) {
+        expect(radio.checked).toBeFalsy();
+      }
+
+      groupInstance.value = 'vanilla';
+      for (let radio of radioInstances) {
+        expect(radio.checked).toBe(groupInstance.value === radio.value);
+      }
+      expect(groupInstance.selected.value).toBe(groupInstance.value);
+    });
 
     it('should have the correct ngControl state initially and after interaction', fakeAsync(() => {
       // The control should start off valid, pristine, and untouched.
@@ -338,7 +357,7 @@ describe('MdRadio', () => {
 @Component({
   directives: [MD_RADIO_DIRECTIVES],
   template: `
-  <md-radio-group [disabled]="isGroupDisabled" [value]="groupValue">
+  <md-radio-group [disabled]="isGroupDisabled" [value]="groupValue" name="test-name">
     <md-radio-button value="fire">Charmander</md-radio-button>
     <md-radio-button value="water">Squirtle</md-radio-button>
     <md-radio-button value="leaf">Bulbasaur</md-radio-button>

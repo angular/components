@@ -101,14 +101,7 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
 
   set name(value: string) {
     this._name = value;
-    this._updateChildRadioNames();
-  }
-
-  /** Propagate name attribute to radio buttons. */
-  private _updateChildRadioNames(): void {
-    (this._radios || []).forEach(radio => {
-      radio.name = this._name;
-    });
+    this._updateRadioButtonNames();
   }
 
   @Input()
@@ -177,6 +170,12 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
     }
   }
 
+  private _updateRadioButtonNames(): void {
+    (this._radios || []).forEach(radio => {
+      radio.name = this.name;
+    });
+  }
+
   /** Updates the `selected` radio button from the internal _value state. */
   private _updateSelectedRadioFromValue(): void {
     // If the value already matches the selected radio, do nothing.
@@ -202,7 +201,7 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
     this.change.emit(event);
   }
 
-   /**
+  /**
     * Implemented as part of ControlValueAccessor.
     * @internal
     */
@@ -279,23 +278,10 @@ export class MdRadioButton implements OnInit {
 
     this.radioGroup = radioGroup;
 
-    if (this.radioGroup) {
-      this._listenToRadioGroup();
-    }
-
     radioDispatcher.listen((id: string, name: string) => {
       if (id != this.id && name == this.name) {
         this.checked = false;
       }
-    });
-  }
-  private _listenToRadioGroup() {
-    // name from `md-radio-group` overrides button name
-    this.name = this.radioGroup.name;
-
-    // listen to value changes on parent
-    this.radioGroup.change.subscribe((change: MdRadioChange) => {
-      this._checked = change.value == this.value;
     });
   }
 
@@ -354,10 +340,11 @@ export class MdRadioButton implements OnInit {
 
   /** @internal */
   ngOnInit() {
-    // If the radio is inside of a radio group and it matches that group's value upon
-    // initialization, start off as checked.
-    if (this.radioGroup && this.radioGroup.value === this._value) {
-      this.checked = true;
+    if (this.radioGroup) {
+      // If the radio is inside a radio group, determine if it should be checked
+      this.checked = this.radioGroup.value === this._value;
+      // Copy name from parent radio group
+      this.name = this.radioGroup.name;
     }
   }
 
