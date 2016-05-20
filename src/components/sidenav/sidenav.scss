@@ -60,7 +60,7 @@ $md-sidenav-push-background-color: md-color($md-background, dialog) !default;
   @include md-stacking-context();
 
   box-sizing: border-box;
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 
   // TODO(hansl): Update this with a more robust solution.
