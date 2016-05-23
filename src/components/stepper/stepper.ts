@@ -2,13 +2,9 @@ import {
   Component,
   Input,
   ViewEncapsulation,
-  ContentChild,
-  Renderer,
-  ElementRef
 } from '@angular/core';
 import { BooleanFieldValue } from '@angular2-material/core/annotations/field-value';
 import { MdIcon, MdIconRegistry } from '@angular2-material/icon/icon';
-import { NgFormModel } from '@angular/common';
 
 @Component({
   selector: 'md-stepper',
@@ -25,14 +21,16 @@ export class MdStepper {
   @Input() mode: 'linear' | 'nonlinear' = 'nonlinear';
 
   addStep(step: MdStep): void {
-    if (this.steps.length === 0) step.active = true;
+    if (this.steps.length === 0) {
+      step.active = true;
+    }
     this.steps.push(step);
   }
 
-  //To check if all steps are completed before a specific step
+  // To check if all steps are completed before a specific step
   allStepsBeforeCompleted(step: MdStep): boolean {
     for (var i = this.steps.indexOf(this.currentStep); i < this.steps.indexOf(step); i++) {
-      if (!this.steps[i].completed && !this.steps[i].optional) return false;
+      if (!this.steps[i].completed && !this.steps[i].optional) { return false; }
     }
     return true;
   }
@@ -40,12 +38,12 @@ export class MdStepper {
   selectStep(step: MdStep): void {
     this.currentStep.completed = this.currentStep.valid ? true : false;
     if (this.mode === 'linear') {
-      if (!this.currentStep.valid) return;
-      if (!this.allStepsBeforeCompleted) return;
+      if (!this.currentStep.valid) { return; }
+      if (!this.allStepsBeforeCompleted) { return; }
     }
-    if (step.completed && !step.editable) return;
-    this.steps.forEach((step) => {
-      step.active = false;
+    if (step.completed && !step.editable) { return; }
+    this.steps.forEach((step1) => {
+      step1.active = false;
     });
     step.active = true;
   }
@@ -56,27 +54,31 @@ export class MdStepper {
 
   selectNextStep(step: MdStep): void {
     var nextEditableStep = this.getNextEditableStep(step);
-    if (nextEditableStep) this.selectStep(nextEditableStep);
+    if (nextEditableStep) {
+      this.selectStep(nextEditableStep);
+    }
   }
 
   selectPreviousStep(step: MdStep): void {
     var previousEditableStep = this.getPreviousEditableStep(step);
-    if (previousEditableStep) this.selectStep(previousEditableStep);
+    if (previousEditableStep) {
+      this.selectStep(previousEditableStep);
+    }
   }
 
 
   getNextEditableStep(step: MdStep): MdStep {
-    if (this.steps.indexOf(this.currentStep) === this.steps.length - 1) return undefined;
+    if (this.steps.indexOf(this.currentStep) === this.steps.length - 1) { return; }
     for (var i = this.steps.indexOf(this.currentStep) + 1; i < this.steps.length; i++) {
       if (this.steps[i].isTargetable) {
         return this.steps[i];
       }
     }
-    return undefined;
+    return;
   }
 
   getPreviousEditableStep(step: MdStep): MdStep {
-    if (this.steps.indexOf(this.currentStep) === 0) return;
+    if (this.steps.indexOf(this.currentStep) === 0) { return; }
     for (var i = this.steps.indexOf(this.currentStep) - 1; i >= 0; i--) {
       if (this.steps[i].isTargetable) {
         return this.steps[i];

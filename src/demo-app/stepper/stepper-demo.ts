@@ -16,8 +16,15 @@ import { MdSlideToggle } from '@angular2-material/slide-toggle/slide-toggle';
 export class StepperDemo {
 
   steps = [
-    { label: 'Step Two', optional: 'false', editable: 'false', content: 'This is the content of the second step. ATTENTION: This step is not editable after it is completed!' },
-    { label: 'Step Three', optional: 'true', editable: 'true', content: 'This is the content of the third step.' },
-    { label: 'Step Four', optional: 'false', editable: 'true', content: 'This is the content of the fourth step' }
+    { label: 'Step Two', optional: 'false', editable: 'false',
+      content: 'This is the content of the second step.' +
+        'ATTENTION: This step is not editable after it is completed!'
+    },
+    { label: 'Step Three', optional: 'true', editable: 'true',
+      content: 'This is the content of the third step.'
+    },
+    { label: 'Step Four', optional: 'false', editable: 'true',
+      content: 'This is the content of the fourth step'
+    }
   ];
 }
