@@ -21,6 +21,7 @@ import {SidenavDemo} from '../sidenav/sidenav-demo';
 import {RadioDemo} from '../radio/radio-demo';
 import {CardDemo} from '../card/card-demo';
 import {MenuDemo} from '../menu/menu-demo';
+import {DialogDemo} from '../dialog/dialog-demo';
 
 
 
@@ -47,6 +48,7 @@ export const routes: RouterConfig = [
   {path: 'tabs', component: TabsDemo},
   {path: 'button-toggle', component: ButtonToggleDemo},
   {path: 'baseline', component: BaselineDemo},
+  {path: 'dialog', component: DialogDemo},
 ];
 
 export const DEMO_APP_ROUTE_PROVIDER = provideRouter(routes);
