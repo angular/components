@@ -1,0 +1,32 @@
+<div class="md-step-header">
+  <div class="md-steps">
+    <div *ngFor="let step of steps" class="md-step" (click)="selectStep(step)">
+      <div class="md-stepper-item-container">
+        <div class="md-stepper-circle-container">
+          <div *ngIf="!step.completed" class="md-step-circle" [class.md-active]="step.active || step.completed">
+            {{ steps.indexOf(step) + 1 }}
+          </div>
+          <div *ngIf="step.completed" class="md-step-circle" [class.md-active]="step.active || step.completed">
+            <md-icon class="md-step-icon">{{ step._stepperIconLigature }}</md-icon>
+          </div>
+        </div>
+        <div class="md-step-label">
+          <span class="md-step-title" [class.md-active]="step.active || step.completed">{{ step.label }}</span>
+          <br>
+          <span *ngIf="step.optional" class="md-step-optional">Optional</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="md-step-content-container">
+  <ng-content></ng-content>
+</div>
+<div class="md-navigation-buttons">
+  <button md-button [disabled]="!currentStep.valid || !getPreviousEditableStep(currentStep)" (click)="selectPreviousStep()">
+    BACK
+  </button>
+  <button md-button color="primary" [disabled]="!currentStep.valid || !getNextEditableStep(currentStep)" (click)="selectNextStep()">
+    CONTINUE
+  </button>
+</div>
