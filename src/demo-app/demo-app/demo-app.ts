@@ -26,6 +26,7 @@ import {GesturesDemo} from '../gestures/gestures-demo';
 import {GridListDemo} from '../grid-list/grid-list-demo';
 import {TabGroupDemo} from '../tab-group/tab-group-demo';
 import {SlideToggleDemo} from '../slide-toggle/slide-toggle-demo';
+import {StepperDemo} from '../stepper/stepper-demo';
 
 @Component({
   selector: 'home',
@@ -60,6 +61,7 @@ export class Home {}
   new Route({path: '/radio', component: RadioDemo}),
   new Route({path: '/sidenav', component: SidenavDemo}),
   new Route({path: '/slide-toggle', component: SlideToggleDemo}),
+  new Route({path: '/stepper', component: StepperDemo}),
   new Route({path: '/progress-circle', component: ProgressCircleDemo}),
   new Route({path: '/progress-bar', component: ProgressBarDemo}),
   new Route({path: '/portal', component: PortalDemo}),

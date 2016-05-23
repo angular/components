@@ -1,0 +1,31 @@
+<h1>Stepper Demo</h1>
+<h3>Linear stepper</h3>
+<div class="demo-stepper-layout">
+  <md-stepper mode="linear">
+    <md-step label="Step one" [valid]="slideToggleLinear">
+      <md-slide-toggle [(ngModel)]="slideToggleLinear">
+        Toggle the slider to finish this step
+      </md-slide-toggle>
+    </md-step>
+    <md-step *ngFor="let step of steps" label="{{ step.label }}" optional="{{ step.optional }}" editable="{{ step.editable }}">
+      <div>
+        {{ step.content }}
+      </div>
+    </md-step>
+  </md-stepper>
+</div>
+<h3>Non-linear stepper</h3>
+<div class="demo-stepper-layout">
+  <md-stepper mode="nonlinear">
+    <md-step label="Step one" [valid]="slideToggleNonlinear">
+      <md-slide-toggle [(ngModel)]="slideToggleNonlinear">
+        Toggle the slider to finish this step
+      </md-slide-toggle>
+    </md-step>
+    <md-step *ngFor="let step of steps" label="{{ step.label }}" optional="{{ step.optional }}" editable="{{ step.editable }}">
+      <div>
+        {{ step.content }}
+      </div>
+    </md-step>
+  </md-stepper>
+</div>

@@ -18,6 +18,7 @@ const components = [
   'radio',
   'sidenav',
   'slide-toggle',
+  'stepper',
   'tab-group',
   'toolbar'
 ];

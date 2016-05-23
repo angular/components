@@ -1,0 +1,27 @@
+.md-step-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: auto;
+  opacity: 0;
+  will-change: transform;
+  transition-duration: 0.5s;
+  transition-property: opacity, transform;
+  width: 100%;
+  padding: 24px;
+
+  &.md-active {
+    opacity: 1;
+    position: relative;
+  }
+
+  &.md-right {
+    transform: translate3d(120%, 0, 0);
+    opacity: 0;
+  }
+
+  &.md-left {
+    transform: translate3d(-120%, 0, 0);
+    opacity: 0;
+  }
+}

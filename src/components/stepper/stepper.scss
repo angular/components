@@ -1,0 +1,114 @@
+//TODO(): Just added temporarily
+@import "default-theme";
+
+$md-step-circle-size: 24px !default;
+$md-step-line-height: 1px !default;
+
+.md-stepper {
+  display: block;
+  margin: 0;
+  overflow: hidden;
+}
+
+.md-step-header {
+  position: relative;
+  overflow: hidden;
+  height: 72px;
+  display: block;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.38);
+}
+
+.md-steps {
+  display: flex;
+  min-width: 100%;
+  align-content: stretch;
+}
+
+.md-stepper-item-container {
+  display: flex;
+  cursor: pointer;
+}
+
+//Before and after create the connection lines between the components
+.md-step {
+  display: inline-flex;
+  flex-basis: 100%;
+
+  &::before {
+    background: rgba(0, 0, 0, 0.38);
+    display: inline-flex;
+    height: $md-step-line-height;
+    content: '';
+    flex-grow: 1;
+    align-self: center;
+  }
+
+  &:first-child::before {
+    display: none;
+  }
+
+  &::after {
+    background: rgba(0, 0, 0, 0.38);
+    display: inline-flex;
+    height: $md-step-line-height;
+    content: '';
+    flex-grow: 1;
+    align-self: center;
+  }
+
+  &:last-child::after {
+    display: none;
+  }
+}
+
+.md-stepper-circle-container {
+  padding: 24px 8px 24px 24px;
+}
+
+.md-step-circle {
+  display: block;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.38);
+  width: $md-step-circle-size;
+  height: $md-step-circle-size;
+  color: rgba(255, 255, 255, 1);
+  background-clip: content-box;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+
+  &.md-active {
+    background-color: md-color($md-primary);
+  }
+}
+
+.md-step-label {
+  padding-right: 8px;
+  align-self: center;
+}
+
+.md-step-title {
+  font-size: 14px;
+
+  &.md-active {
+    font-weight: bold;
+  }
+}
+
+.md-step-optional {
+  align-self: center;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.md-step-content-container {
+  position: relative;
+  display: block;
+}
+
+.md-navigation-buttons {
+  width: 100%;
+  height: auto;
+  display: inline-flex;
+  justify-content: space-between;
+}
