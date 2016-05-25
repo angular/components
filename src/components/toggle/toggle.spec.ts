@@ -12,16 +12,18 @@ import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing'
 import {Component, DebugElement, provide} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MD_TOGGLE_DIRECTIVES, MdToggleGroup, MdToggle, MdToggleGroupMultiple} from './toggle';
-import {MdToggleDispatcher} from './toggle_dispatcher';
+import {
+  MdUniqueSelectionDispatcher
+} from '@angular2-material/core/coordination/unique-selection-dispatcher';
 
 
 describe('MdToggle', () => {
   let builder: TestComponentBuilder;
-  let dispatcher: MdToggleDispatcher;
+  let dispatcher: MdUniqueSelectionDispatcher;
 
   beforeEachProviders(() => [
-    provide(MdToggleDispatcher, {useFactory: () => {
-      dispatcher = new MdToggleDispatcher();
+    provide(MdUniqueSelectionDispatcher, {useFactory: () => {
+      dispatcher = new MdUniqueSelectionDispatcher();
       return dispatcher;
     }})
   ]);

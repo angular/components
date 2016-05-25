@@ -14,11 +14,10 @@ import {
   ViewEncapsulation,
   forwardRef
 } from '@angular/core';
-import {MdToggleDispatcher} from './toggle_dispatcher';
 import {Observable} from 'rxjs/Observable';
-
-
-export {MdToggleDispatcher} from './toggle_dispatcher';
+import {
+  MdUniqueSelectionDispatcher
+} from '@angular2-material/core/coordination/unique-selection-dispatcher';
 
 
 
@@ -214,13 +213,13 @@ export class MdToggle implements OnInit {
 
   constructor(@Optional() toggleGroup: MdToggleGroup,
               @Optional() toggleGroupMultiple: MdToggleGroupMultiple,
-              public toggleDispatcher: MdToggleDispatcher) {
+              public toggleDispatcher: MdUniqueSelectionDispatcher) {
     this.toggleGroup = toggleGroup;
 
     this.toggleGroupMultiple = toggleGroupMultiple;
 
-    toggleDispatcher.listen((name: string) => {
-      if (name == this.name) {
+    toggleDispatcher.listen((id: string, name: string) => {
+      if (id != this.id && name == this.name) {
         this.checked = false;
       }
     });
@@ -257,7 +256,7 @@ export class MdToggle implements OnInit {
   set checked(value: boolean) {
     if (value && (this.toggleGroup)) {
       // Notify all toggles with the same name (in the same group) to un-check.
-      this.toggleDispatcher.notify(this.name);
+      this.toggleDispatcher.notify(this.id, this.name);
 
       if (!this._checked) {
         this._emitChangeEvent();
