@@ -42,4 +42,4 @@ my-comp {
 The md-color function lets the user reference a specific color from the theme palette, 
 either by a semantic name (e.g., "primary, lighter"), or directly by numbered hue 
 (e.g., "accent, A700"). For each hue, a "-contrast" version is also present in the theme palette. 
-The function also allows the user to specify an opacity.
+The function also allows the user to specify an opacity change.
