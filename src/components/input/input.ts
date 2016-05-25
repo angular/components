@@ -112,10 +112,18 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
    * Aria related inputs.
    */
   @Input('aria-label') ariaLabel: string;
-  @Input('aria-labelledby') ariaLabelledBy: string;
   @Input('aria-disabled') @BooleanFieldValue() ariaDisabled: boolean;
   @Input('aria-required') @BooleanFieldValue() ariaRequired: boolean;
   @Input('aria-invalid') @BooleanFieldValue() ariaInvalid: boolean;
+
+  private _ariaLabelledBy: string;
+  @Input('aria-labelledby')
+  get ariaLabelledBy(): string {
+    return this._ariaLabelledBy || this.labelId || null;
+  }
+  set ariaLabelledBy(value: string) {
+    this._ariaLabelledBy = value;
+  }
 
   /**
    * Content directives.
@@ -130,6 +138,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
     return this.empty ? 0 : ('' + this._value).length;
   }
   get inputId(): string { return `${this.id}-input`; }
+  get labelId(): string { return `${this.id}-label`; }
 
   /**
    * Bindings.

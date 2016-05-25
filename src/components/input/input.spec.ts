@@ -186,6 +186,7 @@ describe('MdInput', function () {
         fakeAsync(() => {
           fixture.detectChanges();
 
+          let inputEl = fixture.debugElement.query(By.css('input'));
           let el = fixture.debugElement.query(By.css('label'));
           expect(el).toBeNull();
 
@@ -195,6 +196,10 @@ describe('MdInput', function () {
           expect(el).not.toBeNull();
           expect(el.nativeElement.textContent).toMatch('Other placeholder');
           expect(el.nativeElement.textContent).not.toMatch(/\*/g);
+
+          // When placeholder is present, input should be labelled by the label element
+          expect(inputEl.nativeElement.getAttribute('aria-labelledby')).toBeTruthy();
+          expect(inputEl.nativeElement.getAttribute('aria-labelledby')).toBe(el.nativeElement.id);
         })();
       });
   });
