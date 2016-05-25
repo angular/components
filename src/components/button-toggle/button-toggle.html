@@ -1,5 +1,5 @@
-<label [attr.for]="inputId" class="md-toggle-label">
-  <input #input class="md-toggle-input"
+<label [attr.for]="inputId" class="md-button-toggle-label">
+  <input #input class="md-button-toggle-input"
          [type]="type"
          [id]="inputId"
          [checked]="checked"
@@ -7,7 +7,7 @@
          [name]="name"
          (change)="onClick()">
 
-  <div class="md-toggle-label-content">
+  <div class="md-button-toggle-label-content">
     <ng-content></ng-content>
   </div>
 </label>
