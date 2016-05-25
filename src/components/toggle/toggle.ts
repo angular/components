@@ -15,6 +15,7 @@ import {
   forwardRef
 } from '@angular/core';
 import {MdToggleDispatcher} from './toggle_dispatcher';
+import {Observable} from 'rxjs/Observable';
 
 
 export {MdToggleDispatcher} from './toggle_dispatcher';
@@ -50,8 +51,10 @@ export class MdToggleGroup implements AfterContentInit {
   private _selected: MdToggle = null;
 
   /** Event emitted when the group's value changes. */
-  @Output()
-  change: EventEmitter<MdToggleChange> = new EventEmitter<MdToggleChange>();
+  private _change: EventEmitter<MdToggleChange> = new EventEmitter<MdToggleChange>();
+  @Output() get change(): Observable<MdToggleChange> {
+    return this._change.asObservable();
+  }
 
   /** Child toggle buttons. */
   @ContentChildren(forwardRef(() => MdToggle))
@@ -132,7 +135,7 @@ export class MdToggleGroup implements AfterContentInit {
     let event = new MdToggleChange();
     event.source = this._selected;
     event.value = this._value;
-    this.change.emit(event);
+    this._change.emit(event);
   }
 
   @Input()

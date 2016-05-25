@@ -3,15 +3,15 @@
 @import "palette";
 @import "mixins";
 
-$md-padding: 0 16px !default;
-$md-line-height: 36px !default;
-$md-border-radius: 3px !default;
+$md-button-toggle-padding: 0 16px !default;
+$md-button-toggle-line-height: 36px !default;
+$md-button-toggle-border-radius: 3px !default;
 
 md-toggle-group {
   @include md-elevation(2);
   position: relative;
   display: inline-flex;
-  border-radius: $md-border-radius;
+  border-radius: $md-button-toggle-border-radius;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -28,15 +28,15 @@ md-toggle-group {
 
 md-toggle {
   white-space: nowrap;
+}
 
-  .md-toggle-input {
-    @include md-visually-hidden;
-  }
+.md-toggle-input {
+  @include md-visually-hidden;
+}
 
-  .md-toggle-label-content {
-    display: inline-block;
-    line-height: $md-line-height;
-    padding: $md-padding;
-    cursor: pointer;
-  }
+.md-toggle-label-content {
+  display: inline-block;
+  line-height: $md-button-toggle-line-height;
+  padding: $md-button-toggle-padding;
+  cursor: pointer;
 }

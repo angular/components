@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MdToggle, MdToggleGroup, MdToggleGroupMultiple} from '@angular2-material/toggle/toggle';
+import {MD_TOGGLE_DIRECTIVES} from '@angular2-material/toggle/toggle';
 import {MdToggleDispatcher} from '@angular2-material/toggle/toggle_dispatcher';
 
 @Component({
@@ -7,6 +7,6 @@ import {MdToggleDispatcher} from '@angular2-material/toggle/toggle_dispatcher';
   selector: 'toggle-demo',
   templateUrl: 'toggle-demo.html',
   providers: [MdToggleDispatcher],
-  directives: [MdToggle, MdToggleGroup, MdToggleGroupMultiple]
+  directives: [MD_TOGGLE_DIRECTIVES]
 })
 export class ToggleDemo { }
