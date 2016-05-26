@@ -18,6 +18,7 @@ wait_for_tunnel
 if is_lint; then
   npm run tslint
   npm run ci:forbidden-identifiers
+  npm run ci:style-linter
 elif is_e2e; then
   MD_APP=e2e ng serve &
   sleep 20
