@@ -9,6 +9,7 @@
   },
   "scripts": {
     "ci:forbidden-identifiers": "node ./scripts/ci/forbidden-identifiers.js",
+    "ci:style-linter": "node ./scripts/ci/style-linter.js",
     "build": "ng build",
     "demo-app": "ng serve",
     "test": "karma start test/karma.conf.js",
