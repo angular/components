@@ -227,6 +227,7 @@ export class MdButtonToggle implements OnInit {
     // toggled on or off.
     if (this.buttonToggleGroup) {
       this._type = 'radio';
+      this.name = this.buttonToggleGroup.name;
     } else {
       this._type = 'checkbox';
     }

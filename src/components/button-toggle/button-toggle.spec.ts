@@ -271,7 +271,7 @@ describe('MdButtonToggle', () => {
 @Component({
   directives: [MD_BUTTON_TOGGLE_DIRECTIVES],
   template: `
-  <md-button-toggle-group[disabled]="isGroupDisabled" [value]="groupValue">
+  <md-button-toggle-group [disabled]="isGroupDisabled" [value]="groupValue">
     <md-button-toggle value="test1">Test1</md-button-toggle>
     <md-button-toggle value="test2">Test2</md-button-toggle>
     <md-button-toggle value="test3">Test3</md-button-toggle>
