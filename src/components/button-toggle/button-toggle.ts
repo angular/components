@@ -248,17 +248,23 @@ export class MdButtonToggle implements OnInit {
     return this._checked;
   }
 
-  set checked(value: boolean) {
-    if (value && this.isSingleSelector) {
-      // Notify all button toggles with the same name (in the same group) to un-check.
-      this.buttonToggleDispatcher.notify(this.id, this.name);
+  set checked(newCheckedState: boolean) {
+    if (this.isSingleSelector) {
+      if (newCheckedState) {
+        // Notify all button toggles with the same name (in the same group) to un-check.
+        this.buttonToggleDispatcher.notify(this.id, this.name);
+      }
 
-      if (!this._checked) {
+      if (newCheckedState != this._checked) {
         this._emitChangeEvent();
       }
     }
 
-    this._checked = value;
+    this._checked = newCheckedState;
+
+    if (newCheckedState && this.isSingleSelector && this.buttonToggleGroup.value != this.value) {
+      this.buttonToggleGroup.selected = this;
+    }
   }
 
   get type(): ToggleType {
@@ -323,14 +329,24 @@ export class MdButtonToggle implements OnInit {
       // Propagate the change one-way via the group, which will in turn mark this
       // button toggle as checked.
       this.buttonToggleGroup.selected = this;
-    } else {
-      this._toggle();
     }
   }
 
   /** Toggle the state of the current button toggle. */
   private _toggle(): void {
     this.checked = !this.checked;
+  }
+
+  /**
+   * Checks the button toggle due to an interaction with the underlying native input.
+   * @internal
+   */
+  onInputChange() {
+    if (this.isSingleSelector) {
+      this.checked = true;
+    } else {
+      this._toggle();
+    }
   }
 }
 
