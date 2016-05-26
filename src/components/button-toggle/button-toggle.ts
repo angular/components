@@ -319,17 +319,6 @@ export class MdButtonToggle implements OnInit {
 
   /** @internal */
   onClick(event: Event) {
-    if (this.disabled) {
-      event.preventDefault();
-      event.stopPropagation();
-      return;
-    }
-
-    if (this.buttonToggleGroup != null) {
-      // Propagate the change one-way via the group, which will in turn mark this
-      // button toggle as checked.
-      this.buttonToggleGroup.selected = this;
-    }
   }
 
   /** Toggle the state of the current button toggle. */
@@ -343,7 +332,10 @@ export class MdButtonToggle implements OnInit {
    */
   onInputChange() {
     if (this.isSingleSelector) {
+      // Propagate the change one-way via the group, which will in turn mark this
+      // button toggle as checked.
       this.checked = true;
+      this.buttonToggleGroup.selected = this;
     } else {
       this._toggle();
     }

@@ -82,8 +82,10 @@ describe('MdButtonToggle', () => {
 
     it('should update the group value when one of the toggles changes', () => {
       expect(groupInstance.value).toBeFalsy();
+      let nativeCheckboxLabel =
+          <HTMLLabelElement> buttonToggleNativeElements[0].querySelector('label');
 
-      buttonToggleNativeElements[0].click();
+      nativeCheckboxLabel.click();
       fixture.detectChanges();
 
       expect(groupInstance.value).toBe('test1');
@@ -92,8 +94,10 @@ describe('MdButtonToggle', () => {
 
     it('should update the group and toggles when one of the button toggles is clicked', () => {
       expect(groupInstance.value).toBeFalsy();
+      let nativeCheckboxLabel =
+          <HTMLLabelElement> buttonToggleNativeElements[0].querySelector('label');
 
-      buttonToggleNativeElements[0].click();
+      nativeCheckboxLabel.click();
       fixture.detectChanges();
 
       expect(groupInstance.value).toBe('test1');
@@ -101,7 +105,10 @@ describe('MdButtonToggle', () => {
       expect(buttonToggleInstances[0].checked).toBe(true);
       expect(buttonToggleInstances[1].checked).toBe(false);
 
-      buttonToggleNativeElements[1].click();
+      let nativeCheckboxLabel2 =
+          <HTMLLabelElement> buttonToggleNativeElements[1].querySelector('label');
+
+      nativeCheckboxLabel2.click();
       fixture.detectChanges();
 
       expect(groupInstance.value).toBe('test2');
