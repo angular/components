@@ -18,6 +18,7 @@ import {
   MdUniqueSelectionDispatcher
 } from '@angular2-material/core/coordination/unique-selection-dispatcher';
 
+export type ToggleType = 'checkbox' | 'radio';
 
 
 var _uniqueIdCounter = 0;
@@ -28,7 +29,7 @@ export class MdButtonToggleChange {
   value: any;
 }
 
-/** Exclusive selection button toggle group. */
+/** Exclusive selection button toggle group that behaves like a radio-button group. */
 @Directive({
   selector: 'md-button-toggle-group:not([multiple])',
   host: {
@@ -146,10 +147,6 @@ export class MdButtonToggleGroupMultiple {
   /** Disables all toggles in the group. */
   private _disabled: boolean = null;
 
-  /** Child button toggles. */
-  @ContentChildren(forwardRef(() => MdButtonToggle))
-  private _buttonToggles: QueryList<MdButtonToggle> = null;
-
   @Input()
   get disabled(): boolean {
     return this._disabled;
@@ -172,10 +169,10 @@ export class MdButtonToggle implements OnInit {
   private _checked: boolean = false;
 
   /** Type of the button toggle. Either 'radio' or 'checkbox'. */
-  private _type: string = null;
+  private _type: ToggleType;
 
   /** The unique ID for this button toggle. */
-  @HostBinding('id')
+  @HostBinding()
   @Input()
   id: string;
 
@@ -188,6 +185,9 @@ export class MdButtonToggle implements OnInit {
 
   /** Value assigned to this button toggle. */
   private _value: any = null;
+
+  /** Whether or not the button toggle is a single selection. */
+  private _isSingleSelector: boolean = null;
 
   /** The parent button toggle group (exclusive selection). Optional. */
   buttonToggleGroup: MdButtonToggleGroup;
@@ -206,13 +206,25 @@ export class MdButtonToggle implements OnInit {
 
     this.buttonToggleGroupMultiple = toggleGroupMultiple;
 
-    buttonToggleDispatcher.listen((id: string, name: string) => {
-      if (id != this.id && name == this.name) {
-        this.checked = false;
-      }
-    });
+    if (this.buttonToggleGroup) {
+      buttonToggleDispatcher.listen((id: string, name: string) => {
+        if (id != this.id && name == this.name) {
+          this.checked = false;
+        }
+      });
+
+      this._type = 'radio';
+      this.name = this.buttonToggleGroup.name;
+      this.isSingleSelector = true;
+    } else {
+      // Even if there is no group at all, treat the button toggle as a checkbox so it can be
+      // toggled on or off.
+      this._type = 'checkbox';
+      this.isSingleSelector = false;
+    }
   }
 
+  /** @internal */
   ngOnInit() {
     if (this.id == null) {
       this.id = `md-button-toggle-${_uniqueIdCounter++}`;
@@ -222,14 +234,6 @@ export class MdButtonToggle implements OnInit {
       this._checked = true;
     }
 
-    // Even if there is no group at all, treat the button toggle as a checkbox so it can be
-    // toggled on or off.
-    if (this.buttonToggleGroup) {
-      this._type = 'radio';
-      this.name = this.buttonToggleGroup.name;
-    } else {
-      this._type = 'checkbox';
-    }
   }
 
   get inputId(): string {
@@ -243,7 +247,7 @@ export class MdButtonToggle implements OnInit {
   }
 
   set checked(value: boolean) {
-    if (value && (this.buttonToggleGroup)) {
+    if (value && this.isSingleSelector) {
       // Notify all button toggles with the same name (in the same group) to un-check.
       this.buttonToggleDispatcher.notify(this.id, this.name);
 
@@ -255,11 +259,11 @@ export class MdButtonToggle implements OnInit {
     this._checked = value;
   }
 
-  get type(): string {
+  get type(): ToggleType {
     return this._type;
   }
 
-  set type(value: string) {
+  set type(value: ToggleType) {
     this._type = value;
   }
 
@@ -295,6 +299,14 @@ export class MdButtonToggle implements OnInit {
 
   set disabled(value: boolean) {
     this._disabled = (value != null && value !== false) ? true : null;
+  }
+
+  get isSingleSelector(): boolean {
+    return this._isSingleSelector;
+  }
+
+  set isSingleSelector(value: boolean) {
+    this._isSingleSelector = value;
   }
 
   @HostListener('click', ['$event'])
