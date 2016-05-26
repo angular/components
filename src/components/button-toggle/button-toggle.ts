@@ -1,5 +1,4 @@
 import {
-  AfterContentInit,
   Component,
   ContentChildren,
   Directive,
@@ -125,7 +124,7 @@ export class MdButtonToggleGroup {
         this.selected = matchingButtonToggle;
       } else if (this.value == null) {
         this.selected = null;
-        this._buttonToggles.forEach(buttonToggle => {buttonToggle.checked == false; })
+        this._buttonToggles.forEach(buttonToggle => {buttonToggle.checked = false; });
       }
     }
   }

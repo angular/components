@@ -11,7 +11,12 @@ import {
 import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {Component, DebugElement, provide} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MD_BUTTON_TOGGLE_DIRECTIVES, MdButtonToggleGroup, MdButtonToggle, MdButtonToggleGroupMultiple} from './button-toggle';
+import {
+  MD_BUTTON_TOGGLE_DIRECTIVES,
+  MdButtonToggleGroup,
+  MdButtonToggle,
+  MdButtonToggleGroupMultiple
+} from './button-toggle';
 import {
   MdUniqueSelectionDispatcher
 } from '@angular2-material/core/coordination/unique-selection-dispatcher';
@@ -54,7 +59,8 @@ describe('MdButtonToggle', () => {
         groupInstance = groupDebugElement.injector.get(MdButtonToggleGroup);
 
         buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MdButtonToggle));
-        buttonToggleNativeElements = buttonToggleDebugElements.map(debugEl => debugEl.nativeElement);
+        buttonToggleNativeElements =
+            buttonToggleDebugElements.map(debugEl => debugEl.nativeElement);
         buttonToggleInstances = buttonToggleDebugElements.map(debugEl => debugEl.componentInstance);
       });
     }));
@@ -84,7 +90,7 @@ describe('MdButtonToggle', () => {
       expect(groupInstance.selected).toBe(buttonToggleInstances[0]);
     });
 
-    it('should update the group and toggles when one of the button toggles is clicked',() => {
+    it('should update the group and toggles when one of the button toggles is clicked', () => {
       expect(groupInstance.value).toBeFalsy();
 
       buttonToggleNativeElements[0].click();
@@ -104,7 +110,7 @@ describe('MdButtonToggle', () => {
       expect(buttonToggleInstances[1].checked).toBe(true);
     });
 
-    it('should check a button toggle upon interaction with the underlying native radio button', () => {
+    it('should check a button toggle upon interaction with underlying native radio button', () => {
       let nativeRadioInput = <HTMLElement> buttonToggleNativeElements[0].querySelector('input');
 
       nativeRadioInput.click();
@@ -191,7 +197,8 @@ describe('MdButtonToggle', () => {
         groupInstance = groupDebugElement.injector.get(MdButtonToggleGroupMultiple);
 
         buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MdButtonToggle));
-        buttonToggleNativeElements = buttonToggleDebugElements.map(debugEl => debugEl.nativeElement);
+        buttonToggleNativeElements =
+            buttonToggleDebugElements.map(debugEl => debugEl.nativeElement);
         buttonToggleInstances = buttonToggleDebugElements.map(debugEl => debugEl.componentInstance);
       });
     }));
