@@ -4,7 +4,6 @@ import {
   Directive,
   EventEmitter,
   HostBinding,
-  HostListener,
   Input,
   OnInit,
   Optional,
@@ -162,7 +161,10 @@ export class MdButtonToggleGroupMultiple {
   selector: 'md-button-toggle',
   templateUrl: 'button-toggle.html',
   styleUrls: ['button-toggle.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    '(click)': 'onClick($event)'
+  }
 })
 export class MdButtonToggle implements OnInit {
   /** Whether or not this button toggle is checked. */
@@ -309,7 +311,7 @@ export class MdButtonToggle implements OnInit {
     this._isSingleSelector = value;
   }
 
-  @HostListener('click', ['$event'])
+  /** @internal */
   onClick(event: Event) {
     if (this.disabled) {
       event.preventDefault();
