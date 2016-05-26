@@ -36,12 +36,12 @@ export class MdButtonToggleChange {
     'role': 'radiogroup',
   },
 })
-export class MdButtonToggleGroup implements AfterContentInit {
+export class MdButtonToggleGroup {
   /** The value for the button toggle group. Should match currently selected button toggle. */
   private _value: any = null;
 
   /** The HTML name attribute applied to toggles in this group. */
-  private _name: string = null;
+  private _name: string = `md-radio-group-${_uniqueIdCounter++}`;
 
   /** Disables all toggles in the group. */
   private _disabled: boolean = null;
@@ -57,19 +57,7 @@ export class MdButtonToggleGroup implements AfterContentInit {
 
   /** Child button toggle buttons. */
   @ContentChildren(forwardRef(() => MdButtonToggle))
-  private _toggles: QueryList<MdButtonToggle> = null;
-
-  /**
-   * Initializes the names once content children are available.
-   * This allows us to propagate relevant attributes to associated toggles.
-   */
-  ngAfterContentInit() {
-    if (this.name == null) {
-      this.name = `md-button-toggle-group-${_uniqueIdCounter++}`;
-    } else {
-      this._updateChildToggleNames();
-    }
-  }
+  private _buttonToggles: QueryList<MdButtonToggle> = null;
 
   @Input()
   get name(): string {
@@ -79,16 +67,7 @@ export class MdButtonToggleGroup implements AfterContentInit {
   set name(value: string) {
     this._name = value;
 
-    this._updateChildToggleNames();
-  }
-
-  /** Propagate name attribute to toggles. */
-  private _updateChildToggleNames(): void {
-    if (this._toggles != null) {
-      this._toggles.forEach((toggle) => {
-        toggle.name = this._name;
-      });
-    }
+    this._updateButtonToggleNames();
   }
 
   @Input()
@@ -109,32 +88,9 @@ export class MdButtonToggleGroup implements AfterContentInit {
     if (this._value != newValue) {
       this._value = newValue;
 
-      this._updateSelectedToggleFromValue();
+      this._updateSelectedButtonToggleFromValue();
       this._emitChangeEvent();
     }
-  }
-
-  private _updateSelectedToggleFromValue(): void {
-    let isAlreadySelected = this._selected != null && this._selected.value == this._value;
-    if (this._toggles != null && !isAlreadySelected) {
-      let matched = this._toggles.filter((toggle) => {
-        return toggle.value == this._value;
-      });
-
-      if (matched.length == 0) {
-        return;
-      }
-
-      this.selected = matched[0];
-    }
-  }
-
-  /** Dispatch change event with current selection and group value. */
-  private _emitChangeEvent(): void {
-    let event = new MdButtonToggleChange();
-    event.source = this._selected;
-    event.value = this._value;
-    this._change.emit(event);
   }
 
   @Input()
@@ -144,9 +100,42 @@ export class MdButtonToggleGroup implements AfterContentInit {
 
   set selected(selected: MdButtonToggle) {
     this._selected = selected;
-    this.value = selected.value;
+    this.value = selected ? selected.value : null;
 
-    selected.checked = true;
+    if (selected && !selected.checked) {
+      selected.checked = true;
+    }
+  }
+
+  private _updateButtonToggleNames(): void {
+    (this._buttonToggles || []).forEach((toggle) => {
+      toggle.name = this._name;
+    });
+  }
+
+  // TODO: Refactor into shared code with radio.
+  private _updateSelectedButtonToggleFromValue(): void {
+    let isAlreadySelected = this._selected != null && this._selected.value == this._value;
+
+    if (this._buttonToggles != null && !isAlreadySelected) {
+      let matchingButtonToggle = this._buttonToggles.filter(
+          buttonToggle => buttonToggle.value == this._value)[0];
+
+      if (matchingButtonToggle) {
+        this.selected = matchingButtonToggle;
+      } else if (this.value == null) {
+        this.selected = null;
+        this._buttonToggles.forEach(buttonToggle => {buttonToggle.checked == false; })
+      }
+    }
+  }
+
+  /** Dispatch change event with current selection and group value. */
+  private _emitChangeEvent(): void {
+    let event = new MdButtonToggleChange();
+    event.source = this._selected;
+    event.value = this._value;
+    this._change.emit(event);
   }
 }
 
@@ -160,7 +149,7 @@ export class MdButtonToggleGroupMultiple {
 
   /** Child button toggles. */
   @ContentChildren(forwardRef(() => MdButtonToggle))
-  private _toggles: QueryList<MdButtonToggle> = null;
+  private _buttonToggles: QueryList<MdButtonToggle> = null;
 
   @Input()
   get disabled(): boolean {
