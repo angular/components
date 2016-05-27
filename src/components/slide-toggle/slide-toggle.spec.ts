@@ -4,8 +4,7 @@ import {
   expect,
   beforeEach,
   inject,
-  async,
-  fakeAsync,
+  async
 } from '@angular/core/testing';
 import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {By} from '@angular/platform-browser';

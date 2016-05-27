@@ -65,7 +65,9 @@ export class MdSlideToggle implements ControlValueAccessor {
   @Input() ariaLabel: string = null;
   @Input() ariaLabelledby: string = null;
 
-  @Output('change') private _change: EventEmitter<MdSlideToggleChange> = new EventEmitter<MdSlideToggleChange>();
+  @Output('change')
+  private _change: EventEmitter<MdSlideToggleChange> = new EventEmitter<MdSlideToggleChange>();
+
   change: Observable<MdSlideToggleChange> = this._change.asObservable();
 
   // Returns the unique id for the visual hidden input.

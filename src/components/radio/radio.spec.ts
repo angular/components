@@ -336,7 +336,6 @@ describe('MdRadio', () => {
 
       tick();
       expect(testComponent.modelValue).toBe('chocolate');
-      
       expect(testComponent.lastEvent.value).toBe('chocolate');
     }));
   });
