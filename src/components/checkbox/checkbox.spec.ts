@@ -285,7 +285,7 @@ describe('MdCheckbox', () => {
 
       tick();
 
-      expect(testComponent.lastEvent.value).toBe(true);
+      expect(testComponent.lastEvent.checked).toBe(true);
     }));
 
     it('should not emit a DOM event to the change output', async(() => {
@@ -301,7 +301,7 @@ describe('MdCheckbox', () => {
         // We're checking the arguments type / emitted value to be a boolean, because sometimes the
         // emitted value can be a DOM Event, which is not valid.
         // See angular/angular#4059
-        expect(testComponent.lastEvent.value).toBe(true);
+        expect(testComponent.lastEvent.checked).toBe(true);
       });
 
     }));

@@ -45,7 +45,7 @@ enum TransitionCheckState {
 // A simple change event emitted by the MdCheckbox component.
 export class MdCheckboxChange {
   source: MdCheckbox;
-  value: boolean;
+  checked: boolean;
 }
 
 /**
@@ -234,7 +234,7 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
   private _emitChangeEvent() {
     let event = new MdCheckboxChange();
     event.source = this;
-    event.value = this.checked;
+    event.checked = this.checked;
 
     this.change.emit(event);
   }
