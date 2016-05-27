@@ -167,8 +167,11 @@ export class MdButtonToggle implements OnInit {
   /** Whether or not this button toggle is checked. */
   private _checked: boolean = false;
 
-  /** Type of the button toggle. Either 'radio' or 'checkbox'. */
-  private _type: ToggleType;
+  /**
+   * @internal
+   * Type of the button toggle. Either 'radio' or 'checkbox'.
+   */
+  type: ToggleType;
 
   /** The unique ID for this button toggle. */
   @HostBinding()
@@ -212,14 +215,14 @@ export class MdButtonToggle implements OnInit {
         }
       });
 
-      this._type = 'radio';
+      this.type = 'radio';
       this.name = this.buttonToggleGroup.name;
-      this.isSingleSelector = true;
+      this._isSingleSelector = true;
     } else {
       // Even if there is no group at all, treat the button toggle as a checkbox so it can be
       // toggled on or off.
-      this._type = 'checkbox';
-      this.isSingleSelector = false;
+      this.type = 'checkbox';
+      this._isSingleSelector = false;
     }
   }
 
@@ -246,7 +249,7 @@ export class MdButtonToggle implements OnInit {
   }
 
   set checked(newCheckedState: boolean) {
-    if (this.isSingleSelector) {
+    if (this._isSingleSelector) {
       if (newCheckedState) {
         // Notify all button toggles with the same name (in the same group) to un-check.
         this.buttonToggleDispatcher.notify(this.id, this.name);
@@ -259,17 +262,9 @@ export class MdButtonToggle implements OnInit {
 
     this._checked = newCheckedState;
 
-    if (newCheckedState && this.isSingleSelector && this.buttonToggleGroup.value != this.value) {
+    if (newCheckedState && this._isSingleSelector && this.buttonToggleGroup.value != this.value) {
       this.buttonToggleGroup.selected = this;
     }
-  }
-
-  get type(): ToggleType {
-    return this._type;
-  }
-
-  set type(value: ToggleType) {
-    this._type = value;
   }
 
   /** MdButtonToggleGroup reads this to assign its own value. */
@@ -306,14 +301,6 @@ export class MdButtonToggle implements OnInit {
     this._disabled = (value != null && value !== false) ? true : null;
   }
 
-  get isSingleSelector(): boolean {
-    return this._isSingleSelector;
-  }
-
-  set isSingleSelector(value: boolean) {
-    this._isSingleSelector = value;
-  }
-
   /** Toggle the state of the current button toggle. */
   private _toggle(): void {
     this.checked = !this.checked;
@@ -326,7 +313,7 @@ export class MdButtonToggle implements OnInit {
   onInputChange(event: Event) {
     event.stopPropagation();
 
-    if (this.isSingleSelector) {
+    if (this._isSingleSelector) {
       // Propagate the change one-way via the group, which will in turn mark this
       // button toggle as checked.
       this.checked = true;
