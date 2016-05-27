@@ -40,3 +40,7 @@ md-button-toggle {
   padding: $md-button-toggle-padding;
   cursor: pointer;
 }
+
+md-button-toggle md-icon {
+  vertical-align: middle;
+}

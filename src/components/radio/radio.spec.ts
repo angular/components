@@ -12,7 +12,7 @@ import {FORM_DIRECTIVES, NgControl} from '@angular/common';
 import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {Component, DebugElement, provide} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MD_RADIO_DIRECTIVES, MdRadioGroup, MdRadioButton} from './radio';
+import {MD_RADIO_DIRECTIVES, MdRadioGroup, MdRadioButton, MdRadioChange} from './radio';
 import {
   MdUniqueSelectionDispatcher
 } from '@angular2-material/core/coordination/unique-selection-dispatcher';
