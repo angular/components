@@ -10,7 +10,7 @@ import {
 import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {By} from '@angular/platform-browser';
 import {Component} from '@angular/core';
-import {MdSlideToggle} from './slide-toggle';
+import {MdSlideToggle, MdSlideToggleChange} from './slide-toggle';
 import {NgControl} from '@angular/common';
 
 describe('MdSlideToggle', () => {
@@ -162,21 +162,21 @@ describe('MdSlideToggle', () => {
       expect(slideToggleElement.classList).not.toContain('ng-dirty');
     });
 
-    it('should emit the new values properly', fakeAsync(() => {
-      spyOn(testComponent, 'onValueChange');
-
+    it('should emit the new values properly', async(() => {
       labelElement.click();
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
-        expect(testComponent.onValueChange).toHaveBeenCalledTimes(1);
-        expect(testComponent.onValueChange).toHaveBeenCalledWith(true);
+        // We're checking the arguments type / emitted value to be a boolean, because sometimes the
+        // emitted value can be a DOM Event, which is not valid.
+        // See angular/angular#4059
+        expect(testComponent.lastEvent.value).toBe(true);
       });
     }));
 
     it('should support subscription on the change observable', () => {
-      slideToggle.change.subscribe(value => {
-        expect(value).toBe(true);
+      slideToggle.change.subscribe((event: MdSlideToggleChange) => {
+        expect(event.value).toBe(true);
       });
 
       slideToggle.toggle();
@@ -269,7 +269,7 @@ function dispatchFocusChangeEvent(eventName: string, element: HTMLElement): void
     <md-slide-toggle [(ngModel)]="slideModel" [disabled]="isDisabled" [color]="slideColor" 
                      [id]="slideId" [checked]="slideChecked" [name]="slideName" 
                      [aria-label]="slideLabel" [ariaLabel]="slideLabel" 
-                     [ariaLabelledby]="slideLabelledBy" (change)="onValueChange($event)">
+                     [ariaLabelledby]="slideLabelledBy" (change)="lastEvent = $event">
       <span>Test Slide Toggle</span>
     </md-slide-toggle>
   `,
@@ -284,6 +284,5 @@ class SlideToggleTestApp {
   slideName: string;
   slideLabel: string;
   slideLabelledBy: string;
-
-  onValueChange(value: boolean): void {};
+  lastEvent: MdSlideToggleChange;
 }
