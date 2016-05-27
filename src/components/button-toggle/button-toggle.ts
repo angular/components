@@ -162,9 +162,6 @@ export class MdButtonToggleGroupMultiple {
   templateUrl: 'button-toggle.html',
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
-  host: {
-    '(click)': 'onClick($event)'
-  }
 })
 export class MdButtonToggle implements OnInit {
   /** Whether or not this button toggle is checked. */
@@ -317,10 +314,6 @@ export class MdButtonToggle implements OnInit {
     this._isSingleSelector = value;
   }
 
-  /** @internal */
-  onClick(event: Event) {
-  }
-
   /** Toggle the state of the current button toggle. */
   private _toggle(): void {
     this.checked = !this.checked;
@@ -330,7 +323,9 @@ export class MdButtonToggle implements OnInit {
    * Checks the button toggle due to an interaction with the underlying native input.
    * @internal
    */
-  onInputChange() {
+  onInputChange(event: Event) {
+    event.stopPropagation();
+
     if (this.isSingleSelector) {
       // Propagate the change one-way via the group, which will in turn mark this
       // button toggle as checked.
