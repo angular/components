@@ -3,7 +3,7 @@ import {MD_BUTTON_TOGGLE_DIRECTIVES} from '@angular2-material/button-toggle/butt
 import {
   MdUniqueSelectionDispatcher
 } from '@angular2-material/core/coordination/unique-selection-dispatcher';
-import {MdIcon} from '@angular2-material/icon/icon'
+import {MdIcon} from '@angular2-material/icon/icon';
 
 @Component({
   moduleId: module.id,
