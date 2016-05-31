@@ -82,8 +82,7 @@ describe('MdButtonToggle', () => {
 
     it('should update the group value when one of the toggles changes', () => {
       expect(groupInstance.value).toBeFalsy();
-      let nativeCheckboxLabel =
-          <HTMLLabelElement> buttonToggleNativeElements[0].querySelector('label');
+      let nativeCheckboxLabel = buttonToggleDebugElements[0].query(By.css('label')).nativeElement;
 
       nativeCheckboxLabel.click();
       fixture.detectChanges();
@@ -94,8 +93,7 @@ describe('MdButtonToggle', () => {
 
     it('should update the group and toggles when one of the button toggles is clicked', () => {
       expect(groupInstance.value).toBeFalsy();
-      let nativeCheckboxLabel =
-          <HTMLLabelElement> buttonToggleNativeElements[0].querySelector('label');
+      let nativeCheckboxLabel = buttonToggleDebugElements[0].query(By.css('label')).nativeElement;
 
       nativeCheckboxLabel.click();
       fixture.detectChanges();
@@ -105,8 +103,7 @@ describe('MdButtonToggle', () => {
       expect(buttonToggleInstances[0].checked).toBe(true);
       expect(buttonToggleInstances[1].checked).toBe(false);
 
-      let nativeCheckboxLabel2 =
-          <HTMLLabelElement> buttonToggleNativeElements[1].querySelector('label');
+      let nativeCheckboxLabel2 = buttonToggleDebugElements[1].query(By.css('label')).nativeElement;
 
       nativeCheckboxLabel2.click();
       fixture.detectChanges();
@@ -118,7 +115,7 @@ describe('MdButtonToggle', () => {
     });
 
     it('should check a button toggle upon interaction with underlying native radio button', () => {
-      let nativeRadioInput = <HTMLElement> buttonToggleNativeElements[0].querySelector('input');
+      let nativeRadioInput = buttonToggleDebugElements[0].query(By.css('input')).nativeElement;
 
       nativeRadioInput.click();
       fixture.detectChanges();
@@ -231,8 +228,7 @@ describe('MdButtonToggle', () => {
     it('should check a button toggle when clicked', () => {
       expect(buttonToggleInstances.every(buttonToggle => !buttonToggle.checked)).toBe(true);
 
-      let nativeCheckboxLabel =
-          <HTMLLabelElement> buttonToggleNativeElements[0].querySelector('label');
+      let nativeCheckboxLabel = buttonToggleDebugElements[0].query(By.css('label')).nativeElement;
 
       nativeCheckboxLabel.click();
       expect(buttonToggleInstances[0].checked).toBe(true);
@@ -250,7 +246,7 @@ describe('MdButtonToggle', () => {
     });
 
     it('should check a button toggle upon interaction with underlying native checkbox', () => {
-      let nativeCheckboxInput = <HTMLElement> buttonToggleNativeElements[0].querySelector('input');
+      let nativeCheckboxInput = buttonToggleDebugElements[0].query(By.css('input')).nativeElement;
 
       nativeCheckboxInput.click();
       fixture.detectChanges();
@@ -290,8 +286,7 @@ describe('MdButtonToggle', () => {
     }));
 
     it('should toggle when clicked', () => {
-      let nativeCheckboxLabel =
-          <HTMLLabelElement> buttonToggleNativeElement.querySelector('label');
+      let nativeCheckboxLabel = buttonToggleDebugElement.query(By.css('label')).nativeElement;
 
       nativeCheckboxLabel.click();
 
