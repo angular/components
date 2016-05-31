@@ -258,10 +258,10 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
   onInteractionEvent(event: Event) {
     // We always have to stop propagation on the change event.
     // Otherwise the change event, from the input element, will bubble up and
-    // emit its event object to the `change` output. 
+    // emit its event object to the `change` output.     
     event.stopPropagation();
 
-    if (!this.disabled) {
+    if (!this.disabled && event.type === 'change') {
       this.toggle();
     }
   }
