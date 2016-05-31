@@ -198,8 +198,10 @@ export class MdButtonToggle implements OnInit {
   buttonToggleGroupMultiple: MdButtonToggleGroupMultiple;
 
   /** Event emitted when the group value changes. */
-  @Output()
-  change: EventEmitter<MdButtonToggleChange> = new EventEmitter<MdButtonToggleChange>();
+  private _change: EventEmitter<MdButtonToggleChange> = new EventEmitter<MdButtonToggleChange>();
+  @Output() get change(): Observable<MdButtonToggleChange> {
+    return this._change.asObservable();
+  }
 
   constructor(@Optional() toggleGroup: MdButtonToggleGroup,
               @Optional() toggleGroupMultiple: MdButtonToggleGroupMultiple,
@@ -287,7 +289,7 @@ export class MdButtonToggle implements OnInit {
     let event = new MdButtonToggleChange();
     event.source = this;
     event.value = this._value;
-    this.change.emit(event);
+    this._change.emit(event);
   }
 
   @HostBinding('class.md-button-toggle-disabled')
