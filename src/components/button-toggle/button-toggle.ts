@@ -16,6 +16,7 @@ import {Observable} from 'rxjs/Observable';
 import {
   MdUniqueSelectionDispatcher
 } from '@angular2-material/core/coordination/unique-selection-dispatcher';
+import {BooleanFieldValue} from '@angular2-material/core/annotations/field-value';
 
 export type ToggleType = 'checkbox' | 'radio';
 
@@ -70,6 +71,7 @@ export class MdButtonToggleGroup {
   }
 
   @Input()
+  @BooleanFieldValue()
   get disabled(): boolean {
     return this._disabled;
   }
@@ -168,8 +170,8 @@ export class MdButtonToggle implements OnInit {
   private _checked: boolean = false;
 
   /**
-   * @internal
    * Type of the button toggle. Either 'radio' or 'checkbox'.
+   * @internal
    */
   type: ToggleType;
 
