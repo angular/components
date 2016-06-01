@@ -124,7 +124,7 @@ describe('MdButtonToggle', () => {
       expect(groupInstance.value);
     });
 
-    it('should emit a change even from button toggles', fakeAsync(() => {
+    it('should emit a change event from button toggles', fakeAsync(() => {
       expect(buttonToggleInstances[0].checked).toBe(false);
 
       let changeSpy = jasmine.createSpy('button-toggle change listener');
