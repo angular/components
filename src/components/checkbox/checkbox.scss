@@ -270,7 +270,7 @@ md-checkbox {
   opacity: 0;
   display: inline-flex;
   justify-content: center;
-  transition: background-color $md-checkbox-transition-duration
+  transition-timing-function: background-color $md-checkbox-transition-duration
                   $md-linear-out-slow-in-timing-function,
               opacity $md-checkbox-transition-duration $md-linear-out-slow-in-timing-function;
   will-change: background-color, opacity;
