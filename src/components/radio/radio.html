@@ -15,7 +15,9 @@
           [name]="name"
           (change)="onInputChange($event)"
           (focus)="onInputFocus()"
-          (blur)="onInputBlur()" />
+          (blur)="onInputBlur()" 
+          [attr.aria-label]="ariaLabel"
+          [attr.aria-labelledby]="ariaLabelledby"/>
 
   <!-- The label content for radio control. -->
   <div class="md-radio-label-content">

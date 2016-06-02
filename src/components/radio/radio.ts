@@ -239,6 +239,17 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   }
 })
 export class MdRadioButton implements OnInit {
+   /**
+   * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
+   * take precedence so this may be omitted.
+   */
+  @Input('aria-label') ariaLabel: string = '';
+
+  /**
+   * Users can specify the `aria-labelledby` attribute which will be forwarded to the input element
+   */
+  @Input('aria-labelledby') ariaLabelledby: string = null;
+  
   @HostBinding('class.md-radio-focused')
   private _isFocused: boolean;
 
