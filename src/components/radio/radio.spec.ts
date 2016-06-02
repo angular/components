@@ -195,7 +195,7 @@ describe('MdRadio', () => {
       expect(radioInstances[1].checked).toBe(true);
     });
 
-    it('should deselect all of the radioButtones when the group value is cleared', () => {
+    it('should deselect all of the checkboxes when the group value is cleared', () => {
       radioInstances[0].checked = true;
 
       expect(groupInstance.value).toBeTruthy();
@@ -204,56 +204,6 @@ describe('MdRadio', () => {
 
       expect(radioInstances.every(radio => !radio.checked)).toBe(true);
     });
-  });
-
- describe('with provided aria-label ', () => {
-    let fixture: ComponentFixture<any>;
-    let radioButtonDebugElement: DebugElement;
-    let radioButtonNativeElement: HTMLElement;
-    let inputElement: HTMLInputElement;
-
-    it('should use the provided aria-label', async(() => {
-      builder.createAsync(RadioButtonWithAriaLabel).then(f => {
-        fixture = f;
-        radioButtonDebugElement = fixture.debugElement.query(By.directive(MdRadioButton));
-        radioButtonNativeElement = radioButtonDebugElement.nativeElement;
-        inputElement = <HTMLInputElement>radioButtonNativeElement.querySelector('input');
-
-        fixture.detectChanges();
-        expect(inputElement.getAttribute('aria-label')).toBe('superRadio');
-      });
-    }));
-  });
-
-  describe('with provided aria-labelledby ', () => {
-    let fixture: ComponentFixture<any>;
-    let radioButtonDebugElement: DebugElement;
-    let radioButtonNativeElement: HTMLElement;
-    let inputElement: HTMLInputElement;
-
-    it('should use the provided aria-labelledby', async(() => {
-      builder.createAsync(RadioButtonWithAriaLabelledby).then(f => {
-        fixture = f;
-        radioButtonDebugElement = fixture.debugElement.query(By.directive(MdRadioButton));
-        radioButtonNativeElement = radioButtonDebugElement.nativeElement;
-        inputElement = <HTMLInputElement>radioButtonNativeElement.querySelector('input');
-
-        fixture.detectChanges();
-        expect(inputElement.getAttribute('aria-labelledby')).toBe('superByRadio');
-      });
-    }));
-
-    it('should not assign aria-labelledby if none is provided', async(() => {
-      builder.createAsync(SingleRadioButton).then(f => {
-        fixture = f;
-        radioButtonDebugElement = fixture.debugElement.query(By.directive(MdRadioButton));
-        radioButtonNativeElement = radioButtonDebugElement.nativeElement;
-        inputElement = <HTMLInputElement>radioButtonNativeElement.querySelector('input');
-
-        fixture.detectChanges();
-        expect(inputElement.getAttribute('aria-labelledby')).toBe(null);
-      });
-    }));
   });
 
   describe('group with ngModel', () => {
@@ -497,27 +447,6 @@ class RadioGroupWithNgModel {
   ];
   lastEvent: MdRadioChange;
 }
-
-/** Simple test component with an aria-label set. */
-@Component({
-  directives: [MdRadioButton],
-  template: `<md-radio-button name="season" value="spring" aria-label="superRadio">Spring</md-radio-button>`
-})
-class RadioButtonWithAriaLabel { }
-
-/** Simple test component with an aria-label set. */
-@Component({
-  directives: [MdRadioButton],
-  template: `<md-radio-button name="season" value="spring" aria-labelledby="superByRadio">Spring</md-radio-button>`
-})
-class RadioButtonWithAriaLabelledby {}
-
-/** Simple test component with an aria-label set. */
-@Component({
-  directives: [MdRadioButton],
-  template: `<md-radio-button name="season" value="spring" >Spring</md-radio-button>`
-})
-class SingleRadioButton {}
 
 // TODO(jelbourn): remove eveything below when Angular supports faking events.
 
