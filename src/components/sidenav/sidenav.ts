@@ -12,6 +12,7 @@ import {
     EventEmitter,
     Renderer
 } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 import {Dir} from '@angular2-material/core/rtl/dir';
 import {PromiseCompleter} from '@angular2-material/core/async/promise-completer';
 import {MdError} from '@angular2-material/core/errors/error';
@@ -51,16 +52,28 @@ export class MdSidenav {
   @Input('opened') @BooleanFieldValue() private _opened: boolean = false;
 
   /** Event emitted when the sidenav is being opened. Use this to synchronize animations. */
-  @Output('open-start') onOpenStart = new EventEmitter<void>();
+  @Output('open-start') get onOpenStart(): Observable<void> {
+    return this._onOpenStart.asObservable();
+  }
+  private _onOpenStart: EventEmitter<void> = new EventEmitter<void>();
 
   /** Event emitted when the sidenav is fully opened. */
-  @Output('open') onOpen = new EventEmitter<void>();
+  @Output('open') get onOpen(): Observable<void> {
+    return this._onOpen.asObservable();
+  }
+  private _onOpen: EventEmitter<void> = new EventEmitter<void>();
 
   /** Event emitted when the sidenav is being closed. Use this to synchronize animations. */
-  @Output('close-start') onCloseStart = new EventEmitter<void>();
+  @Output('close-start') get onCloseStart(): Observable<void> {
+    return this._onCloseStart.asObservable();
+  }
+  private _onCloseStart: EventEmitter<void> = new EventEmitter<void>();
 
   /** Event emitted when the sidenav is fully closed. */
-  @Output('close') onClose = new EventEmitter<void>();
+  @Output('close') get onClose(): Observable<void> {
+    return this._onClose.asObservable();
+  }
+  private _onClose: EventEmitter<void> = new EventEmitter<void>();
 
 
   /**
@@ -112,9 +125,9 @@ export class MdSidenav {
     this._transition = true;
 
     if (isOpen) {
-      this.onOpenStart.emit(null);
+      this._onOpenStart.emit(null);
     } else {
-      this.onCloseStart.emit(null);
+      this._onCloseStart.emit(null);
     }
 
     if (isOpen) {
@@ -156,7 +169,7 @@ export class MdSidenav {
           this._closePromiseReject();
         }
 
-        this.onOpen.emit(null);
+        this._onOpen.emit(null);
       } else {
         if (this._closePromise != null) {
           this._closePromiseResolve();
@@ -165,7 +178,7 @@ export class MdSidenav {
           this._openPromiseReject();
         }
 
-        this.onClose.emit(null);
+        this._onClose.emit(null);
       }
 
       this._openPromise = null;

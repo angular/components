@@ -1,5 +1,7 @@
 import {Directive, HostBinding, Output, Input, EventEmitter} from '@angular/core';
 
+import {Observable} from 'rxjs/Rx';
+
 export type LayoutDirection = 'ltr' | 'rtl';
 
 /**
@@ -16,7 +18,8 @@ export type LayoutDirection = 'ltr' | 'rtl';
 export class Dir {
   @Input('dir') private _dir: LayoutDirection = 'ltr';
 
-  @Output() dirChange = new EventEmitter<void>();
+  private _dirChange: EventEmitter<void> = new EventEmitter<void>();
+  @Output() get dirChange(): Observable<void> { return this._dirChange.asObservable(); };
 
   @HostBinding('attr.dir')
   get dir(): LayoutDirection {
@@ -26,7 +29,7 @@ export class Dir {
     let old = this._dir;
     this._dir = v;
     if (old != this._dir) {
-      this.dirChange.emit(null);
+      this._dirChange.emit(null);
     }
   }
 

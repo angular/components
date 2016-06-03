@@ -12,6 +12,7 @@ import {
     AfterContentInit
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/common';
+import { Observable } from 'rxjs/Rx';
 
 /**
  * Monotonically increasing integer used to auto-generate unique ids for checkbox components.
@@ -111,7 +112,8 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
   @Input() name: string = null;
 
   /** Event emitted when the checkbox's `checked` value changes. */
-  @Output() change: EventEmitter<MdCheckboxChange> = new EventEmitter<MdCheckboxChange>();
+  private _change: EventEmitter<MdCheckboxChange> = new EventEmitter<MdCheckboxChange>();
+  @Output() get change(): Observable<MdCheckboxChange> { return this._change.asObservable(); };
 
   /** Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor. */
   onTouched: () => any = () => {};
@@ -131,7 +133,7 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
 
   hasFocus: boolean = false;
 
-  constructor(private _renderer: Renderer, private _elementRef: ElementRef) {}
+  constructor(private _renderer: Renderer, private _elementRef: ElementRef) { }
 
   /**
    * Whether the checkbox is checked. Note that setting `checked` will immediately set
@@ -236,7 +238,7 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
     event.source = this;
     event.checked = this.checked;
 
-    this.change.emit(event);
+    this._change.emit(event);
   }
 
   /**
@@ -273,9 +275,9 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
     // We always have to stop propagation on the change event.
     // Otherwise the change event, from the input element, will bubble up and
     // emit its event object to the `change` output.
-    event.stopPropagation();
-
-    if (!this.disabled) {
+    if (this.disabled) {
+      event.stopPropagation();
+    } else {
       this.toggle();
     }
   }

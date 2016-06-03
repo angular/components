@@ -18,6 +18,7 @@ import {
   NG_VALUE_ACCESSOR,
   ControlValueAccessor
 } from '@angular/common';
+import { Observable } from 'rxjs/Rx';
 import {MdRadioDispatcher} from './radio_dispatcher';
 
 
@@ -87,8 +88,8 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   onTouched: () => any = () => {};
 
   /** Event emitted when the group value changes. */
-  @Output()
-  change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
+  private _change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
+  @Output() get change(): Observable<MdRadioChange> { return this._change.asObservable(); };
 
   /** Child radio buttons. */
   @ContentChildren(forwardRef(() => MdRadioButton))
@@ -199,7 +200,7 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
     event.source = this._selected;
     event.value = this._value;
     this._controlValueAccessorChangeFn(event.value);
-    this.change.emit(event);
+    this._change.emit(event);
   }
 
   /**
@@ -270,8 +271,8 @@ export class MdRadioButton implements OnInit {
   radioGroup: MdRadioGroup;
 
   /** Event emitted when the group value changes. */
-  @Output()
-  change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
+  private _change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
+  @Output() get change(): Observable<MdRadioChange> { return this._change.asObservable(); };
 
   constructor(@Optional() radioGroup: MdRadioGroup, public radioDispatcher: MdRadioDispatcher) {
     // Assertions. Ideally these should be stripped out by the compiler.
@@ -354,7 +355,7 @@ export class MdRadioButton implements OnInit {
     let event = new MdRadioChange();
     event.source = this;
     event.value = this._value;
-    this.change.emit(event);
+    this._change.emit(event);
   }
 
   /** @internal */
