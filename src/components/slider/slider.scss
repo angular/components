@@ -51,16 +51,16 @@ md-slider *, md-slider *:after {
   z-index: 1;
   left: -10px;
   top: 14px;
-  transform: scale(0.7);
+  transform: scale(1);
   transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .md-slider-thumb:after {
   content: '';
   position: absolute;
-  width: 34px;
-  height: 34px;
-  border-radius: 34px;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
   border-width: 3px;
   border-style: solid;
   transition: inherit;
