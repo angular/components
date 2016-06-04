@@ -67,3 +67,7 @@ md-slider *, md-slider *:after {
   background-color: blue;
   border-color: blue;
 }
+
+.md-slider-dragging {
+  transition: none;
+}

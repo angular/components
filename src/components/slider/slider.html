@@ -3,8 +3,11 @@
     <div class="md-slider-track-container">
       <div class="md-slider-track"></div>
     </div>
-    <div class="md-slider-thumb-container">
-      <div class="md-slider-thumb" [ngStyle]="primaryTransform()"></div>
+    <div class="md-slider-thumb-container" [class.md-slider-dragging]="isDragging">
+      <div class="md-slider-thumb"
+           [ngStyle]="primaryTransform()"
+           [class.md-slider-dragging]="isDragging">
+      </div>
     </div>
   </div>
 </div>

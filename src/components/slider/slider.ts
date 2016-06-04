@@ -11,6 +11,8 @@ import {
   host: {
     '(click)': 'onClick($event)',
     '(drag)': 'onDrag($event)',
+    '(dragstart)': 'onDragStart($event)',
+    '(dragend)': 'onDragEnd()',
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -28,6 +30,8 @@ export class MdSlider implements AfterContentInit {
   private _maxValue: number = 100;
 
   private _percent: number = 0;
+
+  public isDragging: boolean = false;
 
   get value() {
     return this._value;
@@ -51,6 +55,15 @@ export class MdSlider implements AfterContentInit {
 
   onDrag(event: HammerInput) {
     this.updatePosition(event.center.x);
+  }
+
+  onDragStart(event: HammerInput) {
+    this.isDragging = true;
+    this.updatePosition(event.center.x);
+  }
+
+  onDragEnd() {
+    this.isDragging = false;
   }
 
   updatePosition(pos: number) {
