@@ -12,7 +12,7 @@ import {
     AfterContentInit
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/common';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * Monotonically increasing integer used to auto-generate unique ids for checkbox components.
@@ -275,9 +275,9 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
     // We always have to stop propagation on the change event.
     // Otherwise the change event, from the input element, will bubble up and
     // emit its event object to the `change` output.
-    if (this.disabled) {
-      event.stopPropagation();
-    } else {
+    event.stopPropagation();
+
+    if (!this.disabled) {
       this.toggle();
     }
   }

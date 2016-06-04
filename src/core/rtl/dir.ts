@@ -1,6 +1,6 @@
 import {Directive, HostBinding, Output, Input, EventEmitter} from '@angular/core';
 
-import {Observable} from 'rxjs/Rx';
+import {Observable} from 'rxjs/Observable';
 
 export type LayoutDirection = 'ltr' | 'rtl';
 

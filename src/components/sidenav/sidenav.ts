@@ -12,7 +12,7 @@ import {
     EventEmitter,
     Renderer
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import {Dir} from '@angular2-material/core/rtl/dir';
 import {PromiseCompleter} from '@angular2-material/core/async/promise-completer';
 import {MdError} from '@angular2-material/core/errors/error';

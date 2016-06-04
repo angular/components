@@ -1,11 +1,11 @@
 import {
-  it,
-  beforeEach,
-  inject,
-  async,
-  fakeAsync,
-  flushMicrotasks,
-  tick
+    it,
+    beforeEach,
+    inject,
+    async,
+    fakeAsync,
+    flushMicrotasks,
+    tick
 } from '@angular/core/testing';
 import {FORM_DIRECTIVES, NgModel, NgControl} from '@angular/common';
 import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
@@ -216,15 +216,15 @@ describe('MdCheckbox', () => {
         fixture.detectChanges();
 
         expect(checkboxNativeElement.classList)
-          .toContain('md-checkbox-anim-unchecked-indeterminate');
+            .toContain('md-checkbox-anim-unchecked-indeterminate');
 
         testComponent.isIndeterminate = false;
         fixture.detectChanges();
 
         expect(checkboxNativeElement.classList)
-          .not.toContain('md-checkbox-anim-unchecked-indeterminate');
+            .not.toContain('md-checkbox-anim-unchecked-indeterminate');
         expect(checkboxNativeElement.classList)
-          .toContain('md-checkbox-anim-indeterminate-unchecked');
+            .toContain('md-checkbox-anim-indeterminate-unchecked');
       });
 
       it('should transition indeterminate -> checked', () => {
@@ -235,7 +235,7 @@ describe('MdCheckbox', () => {
         fixture.detectChanges();
 
         expect(checkboxNativeElement.classList).not.toContain(
-          'md-checkbox-anim-unchecked-indeterminate');
+            'md-checkbox-anim-unchecked-indeterminate');
         expect(checkboxNativeElement.classList).toContain('md-checkbox-anim-indeterminate-checked');
       });
 
@@ -403,7 +403,7 @@ describe('MdCheckbox', () => {
 
     it('should assign a unique id to each checkbox', () => {
       let [firstId, secondId] =
-        fixture.debugElement.queryAll(By.directive(MdCheckbox))
+          fixture.debugElement.queryAll(By.directive(MdCheckbox))
           .map(debugElement => debugElement.nativeElement.querySelector('input').id);
 
       expect(firstId).toBeTruthy();
