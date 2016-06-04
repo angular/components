@@ -1,7 +1,7 @@
 describe('index', () => {
 
   beforeEach(() => {
-    browser.get('/index.html');
+    browser.get('/');
   });
 
   it('should have a title', () => {

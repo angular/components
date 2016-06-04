@@ -17,12 +17,13 @@ const config = {
     package: 'protractor-accessibility-plugin'
   }],
   specs: [ path.join(__dirname, '../e2e/**/*.e2e.ts') ],
-  baseUrl: E2E_BASE_URL
+  baseUrl: E2E_BASE_URL,
 };
 
 
 if (process.env['TRAVIS'] !== undefined) {
   const key = require('../scripts/sauce/sauce_config');
+
   config.sauceUser = process.env['SAUCE_USERNAME'];
   config.sauceKey = key;
   config.capabilities = {
@@ -31,6 +32,12 @@ if (process.env['TRAVIS'] !== undefined) {
     'build': process.env['TRAVIS_JOB_NUMBER'],
     'name': 'Material 2 E2E Tests'
   };
+
+  // Protractors default timeout to wait for the Angular initialization is 10 seconds.
+  // This timeout is sometimes too short for sauce-connect tunnel connections.
+  // For example, a second page request took about 12 seconds.
+  // The timeout is specified in milliseconds.
+  config.getPageTimeout = 1000 * 15
 }
 
 
