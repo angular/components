@@ -1,9 +1,12 @@
-describe('button', function () {
-  describe('disabling behavior', function () {
-    beforeEach(function() {
-      browser.get('/button');
-    });
-    it('should prevent click handlers from executing when disabled', function () {
+describe('button', () => {
+
+  beforeEach(() => {
+    browser.get('/button');
+  });
+
+  describe('disabling behavior', () => {
+
+    it('should prevent click handlers from executing when disabled', () => {
       element(by.id('testButton')).click();
       expect(element(by.id('clickCounter')).getText()).toEqual('1');
 
@@ -11,5 +14,7 @@ describe('button', function () {
       element(by.id('testButton')).click();
       expect(element(by.id('clickCounter')).getText()).toEqual('1');
     });
+
   });
+
 });
