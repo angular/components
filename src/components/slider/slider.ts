@@ -9,7 +9,8 @@ import {
   moduleId: module.id,
   selector: 'md-slider',
   host: {
-    '(click)': 'test($event)'
+    '(click)': 'onClick($event)',
+    '(drag)': 'onDrag($event)',
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -44,10 +45,18 @@ export class MdSlider implements AfterContentInit {
     this._sliderDimensions = this._renderer.getSliderDimensions();
   }
 
-  test(event: MouseEvent) {
+  onClick(event: MouseEvent) {
+    this.updatePosition(event.clientX);
+  }
+
+  onDrag(event: HammerInput) {
+    this.updatePosition(event.center.x);
+  }
+
+  updatePosition(pos: number) {
     let offset = this._sliderDimensions.left;
     let size = this._sliderDimensions.width;
-    this._percent = (event.clientX - offset) / size;
+    this._percent = this.clamp((pos - offset) / size);
     let value = this._minValue + (this._percent * (this._maxValue - this._minValue));
 
     this.value = value;
@@ -56,6 +65,10 @@ export class MdSlider implements AfterContentInit {
   primaryTransform() {
     let position = (this._percent * this._sliderDimensions.width) - 10;
     return {transform: `translateX(${position}px) scale(1)`};
+  }
+
+  clamp(value: number, min = 0, max = 1) {
+    return Math.max(min, Math.min(value, max));
   }
 }
 
