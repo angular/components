@@ -14,6 +14,6 @@
     "target": "es5"
   },
   "files": [
-    "e2e.d.ts"
+    "./typings/index.d.ts"
   ]
 }

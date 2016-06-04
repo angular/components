@@ -32,3 +32,6 @@
 /libpeerconnection.log
 npm-debug.log
 testem.log
+
+# E2E project
+e2e/typings

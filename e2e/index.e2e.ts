@@ -1,8 +1,11 @@
-describe('hello, protractor', function () {
-  describe('index', function () {
+describe('index', () => {
+
+  beforeEach(() => {
     browser.get('/');
-    it('should have a title', function () {
-      expect(browser.getTitle()).toBe('Material2');
-    });
   });
+
+  it('should have a title', () => {
+    expect(browser.getTitle()).toBe('Material2');
+  });
+
 });
