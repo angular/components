@@ -13,6 +13,7 @@ import {
     '(drag)': 'onDrag($event)',
     '(dragstart)': 'onDragStart($event)',
     '(dragend)': 'onDragEnd()',
+    '(window:resize)': 'onResize()',
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -47,9 +48,11 @@ export class MdSlider implements AfterContentInit {
 
   ngAfterContentInit() {
     this._sliderDimensions = this._renderer.getSliderDimensions();
+    this._renderer.updateThumbPosition(this._percent, this._sliderDimensions.width);
   }
 
   onClick(event: MouseEvent) {
+    this.isDragging = false;
     this.updatePosition(event.clientX);
   }
 
@@ -66,6 +69,12 @@ export class MdSlider implements AfterContentInit {
     this.isDragging = false;
   }
 
+  onResize() {
+    this.isDragging = true;
+    this._sliderDimensions = this._renderer.getSliderDimensions();
+    this._renderer.updateThumbPosition(this._percent, this._sliderDimensions.width);
+  }
+
   updatePosition(pos: number) {
     let offset = this._sliderDimensions.left;
     let size = this._sliderDimensions.width;
@@ -73,11 +82,8 @@ export class MdSlider implements AfterContentInit {
     let value = this._minValue + (this._percent * (this._maxValue - this._minValue));
 
     this.value = value;
-  }
 
-  primaryTransform() {
-    let position = (this._percent * this._sliderDimensions.width) - 10;
-    return {transform: `translateX(${position}px) scale(1)`};
+    this._renderer.updateThumbPosition(this._percent, this._sliderDimensions.width);
   }
 
   clamp(value: number, min = 0, max = 1) {
@@ -90,5 +96,14 @@ export class SliderRenderer {
 
   getSliderDimensions() {
     return this._elementRef.nativeElement.getBoundingClientRect();
+  }
+
+  updateThumbPosition(percent: number, width: number) {
+    let thumbElement = this._elementRef.nativeElement.getElementsByClassName('md-slider-thumb')[0];
+    let activeTrackElement =
+        this._elementRef.nativeElement.getElementsByClassName('md-slider-track-fill')[0];
+    let position = Math.max((percent * width) - 10, 0);
+    activeTrackElement.style.width = `${position}px`;
+    thumbElement.style.transform = `translateX(${position}px) scale(1)`;
   }
 }
