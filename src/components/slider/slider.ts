@@ -57,10 +57,12 @@ export class MdSlider implements AfterContentInit {
   }
 
   onDrag(event: HammerInput) {
+    event.preventDefault();
     this.updatePosition(event.center.x);
   }
 
   onDragStart(event: HammerInput) {
+    event.preventDefault();
     this.isDragging = true;
     this.updatePosition(event.center.x);
   }
