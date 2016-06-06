@@ -9,11 +9,13 @@ import {
   moduleId: module.id,
   selector: 'md-slider',
   host: {
+    'tabindex': '0',
     '(click)': 'onClick($event)',
     '(drag)': 'onDrag($event)',
     '(dragstart)': 'onDragStart($event)',
     '(dragend)': 'onDragEnd()',
     '(window:resize)': 'onResize()',
+    '(blur)': 'blurListener()',
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -34,6 +36,8 @@ export class MdSlider implements AfterContentInit {
 
   public isDragging: boolean = false;
 
+  public isActive: boolean = false;
+
   get value() {
     return this._value;
   }
@@ -52,7 +56,10 @@ export class MdSlider implements AfterContentInit {
   }
 
   onClick(event: MouseEvent) {
+    this.isActive = true;
     this.isDragging = false;
+    this._renderer.addFocus();
+
     this.updatePosition(event.clientX);
   }
 
@@ -64,6 +71,8 @@ export class MdSlider implements AfterContentInit {
   onDragStart(event: HammerInput) {
     event.preventDefault();
     this.isDragging = true;
+    this.isActive = true;
+    this._renderer.addFocus();
     this.updatePosition(event.center.x);
   }
 
@@ -75,6 +84,10 @@ export class MdSlider implements AfterContentInit {
     this.isDragging = true;
     this._sliderDimensions = this._renderer.getSliderDimensions();
     this._renderer.updateThumbPosition(this._percent, this._sliderDimensions.width);
+  }
+
+  blurListener() {
+    this.isActive = false;
   }
 
   updatePosition(pos: number) {
@@ -104,8 +117,15 @@ export class SliderRenderer {
     let thumbElement = this._elementRef.nativeElement.getElementsByClassName('md-slider-thumb')[0];
     let activeTrackElement =
         this._elementRef.nativeElement.getElementsByClassName('md-slider-track-fill')[0];
-    let position = Math.max((percent * width) - 10, 0);
+    let thumbWidth = thumbElement.getBoundingClientRect().width;
+
+    let position = percent * width;
+    let thumbPosition = position - (thumbWidth / 2);
     activeTrackElement.style.width = `${position}px`;
-    thumbElement.style.transform = `translateX(${position}px) scale(1)`;
+    thumbElement.style.left = `${thumbPosition}px`;
+  }
+
+  addFocus() {
+    this._elementRef.nativeElement.focus();
   }
 }
