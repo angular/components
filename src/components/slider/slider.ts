@@ -114,9 +114,8 @@ export class SliderRenderer {
   }
 
   updateThumbPosition(percent: number, width: number) {
-    let thumbElement = this._elementRef.nativeElement.getElementsByClassName('md-slider-thumb')[0];
-    let activeTrackElement =
-        this._elementRef.nativeElement.getElementsByClassName('md-slider-track-fill')[0];
+    let thumbElement = this._elementRef.nativeElement.querySelector('.md-slider-thumb');
+    let activeTrackElement = this._elementRef.nativeElement.querySelector('.md-slider-track-fill');
     let thumbWidth = thumbElement.getBoundingClientRect().width;
 
     let position = percent * width;
