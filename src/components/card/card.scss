@@ -38,13 +38,13 @@ md-card-title {
   @extend %md-card-section-base;
   font-size: $md-title-font-size-base;
   font-weight: 400;
-  letter-spacing: .010em;
+  letter-spacing: 0.01em;
 }
 
 md-card-subtitle {
   @extend %md-card-section-base;
   font-size: $md-supporting-font-size-base;
-  letter-spacing: .010em;
+  letter-spacing: 0.01em;
   color: md-color($md-foreground, secondary-text);
 }
 
@@ -52,7 +52,7 @@ md-card-content {
   @extend %md-card-section-base;
   font-size: $md-body-font-size-base;
   font-weight: 400;
-  letter-spacing: 0.010em;
+  letter-spacing: 0.01em;
 }
 
 md-card-actions {
@@ -63,7 +63,7 @@ md-card-actions {
 
   font-size: $md-supporting-font-size-base;
   font-weight: 400;
-  letter-spacing: 0.010em;
+  letter-spacing: 0.01em;
 
   &[align='end'] {
     display: flex;
