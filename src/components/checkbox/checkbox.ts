@@ -277,17 +277,6 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
       this.toggle();
     }
   }
-
-  /**
-   * Event handler for checkbox click event.
-   * To prevent double firing of click event. So always change event is triggered 
-   * @param event
-   * @internal
-   */
-  onClickEvent(event: Event) {
-    event.stopPropagation();
-  }
-
   private _getAnimationClassForCheckStateTransition(
       oldState: TransitionCheckState, newState: TransitionCheckState): string {
     var animSuffix: string;
