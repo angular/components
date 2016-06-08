@@ -2,6 +2,7 @@
   <md-sidenav #start>
     <md-nav-list>
       <a md-list-item [routerLink]="['button']">Button</a>
+      <a md-list-item [routerLink]="['button-toggle']">Button Toggle</a>
       <a md-list-item [routerLink]="['card']">Card</a>
       <a md-list-item [routerLink]="['checkbox']">Checkbox</a>
       <a md-list-item [routerLink]="['gestures']">Gestures</a>
@@ -19,6 +20,8 @@
       <a md-list-item [routerLink]="['slide-toggle']">Slide Toggle</a>
       <a md-list-item [routerLink]="['toolbar']">Toolbar</a>
       <a md-list-item [routerLink]="['tabs']">Tabs</a>
+      <hr>
+      <a md-list-item [routerLink]="['baseline']">Baseline</a>
     </md-nav-list>
     <button md-button (click)="start.close()">CLOSE</button>
   </md-sidenav>

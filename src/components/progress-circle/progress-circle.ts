@@ -3,6 +3,7 @@ import {
   HostBinding,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
+  OnDestroy,
   Input
 } from '@angular/core';
 
@@ -34,19 +35,45 @@ type EasingFn = (currentTime: number, startValue: number,
   selector: 'md-progress-circle',
   host: {
     'role': 'progressbar',
-    'aria-valuemin': '0',
-    'aria-valuemax': '100',
+    '[attr.aria-valuemin]': 'ariaValueMin',
+    '[attr.aria-valuemax]': 'ariaValueMax',
   },
   templateUrl: 'progress-circle.html',
   styleUrls: ['progress-circle.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdProgressCircle {
+export class MdProgressCircle implements OnDestroy {
   /** The id of the last requested animation. */
   private _lastAnimationId: number = 0;
 
   /** The id of the indeterminate interval. */
   private _interdeterminateInterval: number;
+
+  /**
+   * Values for aria max and min are only defined as numbers when in a determinate mode.  We do this
+   * because voiceover does not report the progress indicator as indeterminate if the aria min
+   * and/or max value are number values.
+   *
+   * @internal
+   */
+  get ariaValueMin() {
+    return this.mode == 'determinate' ? 0 : null;
+  }
+
+  /** @internal */
+  get ariaValueMax() {
+    return this.mode == 'determinate' ? 100 : null;
+  }
+
+  /** @internal */
+  get interdeterminateInterval() {
+    return this._interdeterminateInterval;
+  }
+  /** @internal */
+  set interdeterminateInterval(interval: number) {
+    clearInterval(this._interdeterminateInterval);
+    this._interdeterminateInterval = interval;
+  }
 
   /** The current path value, representing the progres circle. */
   private _currentPath: string;
@@ -60,22 +87,29 @@ export class MdProgressCircle {
     this._changeDetectorRef.markForCheck();
   }
 
+  /** Clean up any animations that were running. */
+  ngOnDestroy() {
+    this._cleanupIndeterminateAnimation();
+  }
+
   /**
    * Value of the progress circle.
    *
-   * Input:number, defaults to 0.
+   * Input:number
    * _value is bound to the host as the attribute aria-valuenow.
    */
-  private _value: number = 0;
+  private _value: number;
   @Input()
   @HostBinding('attr.aria-valuenow')
   get value() {
-    return this._value;
+    if (this.mode == 'determinate') {
+      return this._value;
+    }
   }
   set value(v: number) {
-    if (v) {
+    if (v && this.mode == 'determinate') {
       let newValue = clamp(v);
-      this._animateCircle(this.value, newValue, linearEase, DURATION_DETERMINATE, 0);
+      this._animateCircle((this.value || 0), newValue, linearEase, DURATION_DETERMINATE, 0);
       this._value = newValue;
     }
   }
@@ -162,8 +196,8 @@ export class MdProgressCircle {
       end = -temp;
     };
 
-    if (!this._interdeterminateInterval) {
-      this._interdeterminateInterval = setInterval(
+    if (!this.interdeterminateInterval) {
+      this.interdeterminateInterval = setInterval(
         animate, duration + 50, 0, false);
       animate();
     }
@@ -174,10 +208,7 @@ export class MdProgressCircle {
    * Removes interval, ending the animation.
    */
   private _cleanupIndeterminateAnimation() {
-    if (this._interdeterminateInterval) {
-      clearInterval(this._interdeterminateInterval);
-      this._interdeterminateInterval = null;
-    }
+    this.interdeterminateInterval = null;
   }
 }
 
@@ -193,6 +224,7 @@ export class MdProgressCircle {
   selector: 'md-spinner',
   host: {
     'role': 'progressbar',
+    'mode': 'indeterminate',
   },
   templateUrl: 'progress-circle.html',
   styleUrls: ['progress-circle.css'],
@@ -219,7 +251,7 @@ function clamp(v: number) {
  * Returns the current timestamp either based on the performance global or a date object.
  */
 function now() {
-  if (typeof performance !== 'undefined') {
+  if (typeof performance !== 'undefined' && performance.now) {
     return performance.now();
   }
   return Date.now();

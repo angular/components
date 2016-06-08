@@ -18,11 +18,15 @@ import {
   NG_VALUE_ACCESSOR,
   ControlValueAccessor
 } from '@angular/common';
-import {MdRadioDispatcher} from './radio_dispatcher';
+import {
+  MdUniqueSelectionDispatcher
+} from '@angular2-material/core/coordination/unique-selection-dispatcher';
 
 
 // Re-exports.
-export {MdRadioDispatcher} from './radio_dispatcher';
+export {
+  MdUniqueSelectionDispatcher
+} from '@angular2-material/core/coordination/unique-selection-dispatcher';
 
 
 
@@ -103,6 +107,8 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
     this._name = value;
     this._updateRadioButtonNames();
   }
+
+  @Input() align: 'start' | 'end';
 
   @Input()
   get disabled(): boolean {
@@ -254,6 +260,12 @@ export class MdRadioButton implements OnInit {
   @Input()
   name: string;
 
+  /** Used to set the 'aria-label' attribute on the underlying input element. */
+  @Input('aria-label') ariaLabel: string;
+
+  /** The 'aria-labelledby' attribute takes precedence as the element's text alternative. */
+  @Input('aria-labelledby') ariaLabelledby: string;
+
   /** Whether this radio is disabled. */
   private _disabled: boolean;
 
@@ -267,7 +279,8 @@ export class MdRadioButton implements OnInit {
   @Output()
   change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
 
-  constructor(@Optional() radioGroup: MdRadioGroup, public radioDispatcher: MdRadioDispatcher) {
+  constructor(@Optional() radioGroup: MdRadioGroup,
+              public radioDispatcher: MdUniqueSelectionDispatcher) {
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
 
@@ -320,6 +333,17 @@ export class MdRadioButton implements OnInit {
       }
       this._value = value;
     }
+  }
+
+  private _align: 'start' | 'end';
+
+  @Input()
+  get align(): 'start' | 'end' {
+    return this._align || (this.radioGroup != null && this.radioGroup.align) || 'start';
+  }
+
+  set align(value: 'start' | 'end') {
+    this._align = value;
   }
 
   @HostBinding('class.md-radio-disabled')

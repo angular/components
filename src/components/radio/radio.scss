@@ -1,6 +1,6 @@
-@import "default-theme";
-@import "variables";
-@import "mixins";
+@import 'default-theme';
+@import 'variables';
+@import 'mixins';
 
 $md-radio-size: $md-toggle-size !default;
 
@@ -13,7 +13,8 @@ md-radio-button {
 // Enables focus by click.
 .md-radio-label {
   cursor: pointer;
-  display: block;
+  display: inline-flex;
+  align-items: baseline;
   white-space: nowrap;
 }
 
@@ -23,8 +24,8 @@ md-radio-button {
   display: inline-block;
   height: $md-radio-size;
   position: relative;
-  top: 2px;
   width: $md-radio-size;
+  top: 2px;
 }
 
 // The outer circle for the radio, always present.
@@ -37,7 +38,7 @@ md-radio-button {
   left: 0;
   position: absolute;
   top: 0;
-  transition: border-color ease 0.28s;
+  transition: border-color ease 280ms;
   width: $md-radio-size;
 
   .md-radio-checked & {
@@ -58,7 +59,7 @@ md-radio-button {
   left: 0;
   position: absolute;
   top: 0;
-  transition: transform ease 0.28s, background-color ease 0.28s;
+  transition: transform ease 280ms, background-color ease 280ms;
   transform: scale(0);
   width: $md-radio-size;
 
@@ -74,16 +75,26 @@ md-radio-button {
 // Text label next to radio.
 .md-radio-label-content {
   display: inline-block;
-  float: right;
-  line-height: 24px;
+  order: 0;
+  line-height: inherit;
   padding-left: $md-toggle-padding;
-  position: relative;
-  vertical-align: top;
+  padding-right: 0;
 
   [dir='rtl'] & {
-    float: left;
     padding-right: $md-toggle-padding;
     padding-left: 0;
+  }
+}
+
+// Alignment.
+.md-radio-label-content.md-radio-align-end {
+  order: -1;
+  padding-left: 0;
+  padding-right: $md-toggle-padding;
+
+  [dir='rtl'] & {
+    padding-right: 0;
+    padding-left: $md-toggle-padding;
   }
 }
 

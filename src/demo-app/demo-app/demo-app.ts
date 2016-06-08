@@ -9,6 +9,7 @@ import {MdIcon} from '@angular2-material/icon/icon';
 import {MdToolbar} from '@angular2-material/toolbar/toolbar';
 
 import {CardDemo} from '../card/card-demo';
+import {BaselineDemo} from '../baseline/baseline-demo';
 import {ButtonDemo} from '../button/button-demo';
 import {IconDemo} from '../icon/icon-demo';
 import {RadioDemo} from '../radio/radio-demo';
@@ -26,6 +27,7 @@ import {GesturesDemo} from '../gestures/gestures-demo';
 import {GridListDemo} from '../grid-list/grid-list-demo';
 import {TabsDemo} from '../tabs/tab-group-demo';
 import {SlideToggleDemo} from '../slide-toggle/slide-toggle-demo';
+import {ButtonToggleDemo} from '../button-toggle/button-toggle-demo';
 
 @Component({
   selector: 'home',
@@ -72,6 +74,9 @@ export class Home {}
   new Route({path: '/live-announcer', component: LiveAnnouncerDemo}),
   new Route({path: '/gestures', component: GesturesDemo}),
   new Route({path: '/grid-list', component: GridListDemo}),
-  new Route({path: '/tabs', component: TabsDemo})
+  new Route({path: '/tabs', component: TabsDemo}),
+  new Route({path: '/button-toggle', component: ButtonToggleDemo}),
+
+  new Route({path: '/baseline', component: BaselineDemo})
 ])
 export class DemoApp { }
