@@ -15,7 +15,7 @@ import {
     '(dragstart)': 'onDragStart($event)',
     '(dragend)': 'onDragEnd()',
     '(window:resize)': 'onResize()',
-    '(blur)': 'blurListener()',
+    '(blur)': 'onBlur()',
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -86,7 +86,7 @@ export class MdSlider implements AfterContentInit {
     this._renderer.updateThumbPosition(this._percent, this._sliderDimensions.width);
   }
 
-  blurListener() {
+  onBlur() {
     this.isActive = false;
   }
 
