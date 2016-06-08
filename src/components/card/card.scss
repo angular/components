@@ -7,6 +7,7 @@ $md-card-default-padding: 24px !default;
 $md-card-mobile-padding: 24px 16px !default;
 $md-card-border-radius: 2px !default;
 $md-card-header-size: 40px !default;
+$md-card-title-line-height: 32px !default;
 
 md-card {
   @include md-elevation(1);
@@ -35,19 +36,23 @@ md-card:hover {
 
 md-card-title {
   @extend %md-card-section-base;
-  font-size: 24px;
+  font-size: $md-title-font-size-base;
   font-weight: 400;
+  letter-spacing: .010em;
 }
 
 md-card-subtitle {
   @extend %md-card-section-base;
-  font-size: $md-body-font-size-base;
+  font-size: $md-supporting-font-size-base;
+  letter-spacing: .010em;
   color: md-color($md-foreground, secondary-text);
 }
 
 md-card-content {
   @extend %md-card-section-base;
   font-size: $md-body-font-size-base;
+  font-weight: 400;
+  letter-spacing: 0.010em;
 }
 
 md-card-actions {
@@ -55,6 +60,10 @@ md-card-actions {
   margin-left: -16px;
   margin-right: -16px;
   padding: 8px 0;
+
+  font-size: $md-supporting-font-size-base;
+  font-weight: 400;
+  letter-spacing: 0.010em;
 
   &[align='end'] {
     display: flex;
