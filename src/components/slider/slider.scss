@@ -31,7 +31,8 @@ md-slider {
   outline: none;
 }
 
-md-slider *, md-slider *:after {
+md-slider *,
+md-slider *::after {
   box-sizing: border-box;
 }
 
@@ -83,7 +84,7 @@ md-slider *, md-slider *:after {
   transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.md-slider-thumb:after {
+.md-slider-thumb::after {
   content: '';
   position: absolute;
   width: $slider-thumb-width;
