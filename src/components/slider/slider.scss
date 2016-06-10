@@ -1,6 +1,6 @@
 @import 'default-theme';
 
-$slider-size: 48px !default;
+$slider-size: 20px !default;
 $slider-min-size: 128px !default;
 
 $slider-track-height: 2px !default;
@@ -23,12 +23,11 @@ md-slider {
   height: $slider-size;
   min-width: $slider-min-size;
   position: relative;
-  margin-left: 4px;
-  margin-right: 4px;
   padding: 0;
-  display: block;
+  display: inline-block;
   flex-direction: row;
   outline: none;
+  vertical-align: middle;
 }
 
 md-slider *,
@@ -39,6 +38,8 @@ md-slider *::after {
 .md-slider-wrapper {
   width: 100%;
   height: 100%;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .md-slider-container {

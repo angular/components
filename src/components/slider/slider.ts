@@ -110,7 +110,8 @@ export class SliderRenderer {
   constructor(private _elementRef: ElementRef) { }
 
   getSliderDimensions() {
-    return this._elementRef.nativeElement.getBoundingClientRect();
+    let trackElement = this._elementRef.nativeElement.querySelector('.md-slider-track');
+    return trackElement.getBoundingClientRect();
   }
 
   updateThumbPosition(percent: number, width: number) {
