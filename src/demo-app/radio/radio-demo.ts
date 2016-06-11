@@ -17,6 +17,7 @@ export class RadioDemo {
   isDisabled: boolean = false;
   isAlignEnd: boolean = false;
   favoriteSeason: string = 'Autumn';
+  favoriteHero: string = 'Spiderman';
   seasonOptions = [
     'Winter',
     'Spring',
