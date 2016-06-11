@@ -55,8 +55,10 @@ $md-tab-bar-height: 48px !default;
   box-sizing: border-box;
   flex-grow: 1;
   flex-shrink: 1;
+   
   &.md-active {
     display: block;
+    font-size: $md-supporting-font-size-base;
   }
 }
 

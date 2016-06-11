@@ -14,6 +14,13 @@ md-button-toggle-group {
   border-radius: $md-button-toggle-border-radius;
   cursor: pointer;
   white-space: nowrap;
+  
+  // Typography.
+  font-size: $md-body-font-size-base;
+  font-family: $md-font-family;
+  font-weight: 500;
+  color: currentColor;
+  
 }
 
 
