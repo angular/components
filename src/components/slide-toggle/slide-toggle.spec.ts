@@ -97,6 +97,24 @@ describe('MdSlideToggle', () => {
       expect(slideToggle.checked).toBe(true);
     });
 
+    it('should not trigger the click event multiple times', () => {
+      spyOn(testComponent, 'onSlideClick');
+
+      expect(slideToggle.checked).toBe(false);
+      expect(slideToggleElement.classList).not.toContain('md-checked');
+
+      // Mostly the users will click on the slide-toggle container which will emit in some cases the
+      // click event multiple times.
+      (<HTMLElement> labelElement.querySelector('.md-slide-toggle-container')).click();
+
+      fixture.detectChanges();
+
+      expect(slideToggleElement.classList).toContain('md-checked');
+      expect(slideToggle.checked).toBe(true);
+
+      expect(testComponent.onSlideClick).toHaveBeenCalledTimes(1);
+    });
+
     it('should add a suffix to the inputs id', () => {
       testComponent.slideId = 'myId';
       fixture.detectChanges();
@@ -268,7 +286,8 @@ function dispatchFocusChangeEvent(eventName: string, element: HTMLElement): void
     <md-slide-toggle [(ngModel)]="slideModel" [disabled]="isDisabled" [color]="slideColor" 
                      [id]="slideId" [checked]="slideChecked" [name]="slideName" 
                      [aria-label]="slideLabel" [ariaLabel]="slideLabel" 
-                     [ariaLabelledby]="slideLabelledBy" (change)="lastEvent = $event">
+                     [ariaLabelledby]="slideLabelledBy" (change)="lastEvent = $event"
+                     (click)="onSlideClick($event)">
       <span>Test Slide Toggle</span>
     </md-slide-toggle>
   `,
@@ -284,4 +303,6 @@ class SlideToggleTestApp {
   slideLabel: string;
   slideLabelledBy: string;
   lastEvent: MdSlideToggleChange;
+
+  onSlideClick(event: Event) {}
 }
