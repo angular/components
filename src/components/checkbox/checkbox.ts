@@ -67,6 +67,7 @@ export class MdCheckboxChange {
     '[class.md-checkbox-disabled]': 'disabled',
     '[class.md-checkbox-align-end]': 'align == "end"',
     '[class.md-checkbox-focused]': 'hasFocus',
+    '(click)': 'handleClick($event)',
   },
   providers: [MD_CHECKBOX_CONTROL_VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None,
@@ -115,6 +116,15 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
 
   /** Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor. */
   onTouched: () => any = () => {};
+
+  handleClick(event: Event) {
+    event.preventDefault();
+    if (this.disabled) {
+      event.stopPropagation();
+    } else {
+      this.toggle();
+    }
+  }
 
   /** Whether the `checked` state has been set to its initial value. */
   private _isInitialized: boolean = false;
