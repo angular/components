@@ -27,6 +27,7 @@ import {GesturesDemo} from '../gestures/gestures-demo';
 import {GridListDemo} from '../grid-list/grid-list-demo';
 import {TabsDemo} from '../tabs/tab-group-demo';
 import {SlideToggleDemo} from '../slide-toggle/slide-toggle-demo';
+import {RippleDemo} from '../ripple/ripple-demo';
 import {ButtonToggleDemo} from '../button-toggle/button-toggle-demo';
 
 @Component({
@@ -75,6 +76,7 @@ export class Home {}
   new Route({path: '/gestures', component: GesturesDemo}),
   new Route({path: '/grid-list', component: GridListDemo}),
   new Route({path: '/tabs', component: TabsDemo}),
+  new Route({path: '/ripple', component: RippleDemo}),
   new Route({path: '/button-toggle', component: ButtonToggleDemo}),
 
   new Route({path: '/baseline', component: BaselineDemo})
