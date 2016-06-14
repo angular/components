@@ -277,7 +277,6 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
       this.toggle();
     }
   }
-
   private _getAnimationClassForCheckStateTransition(
       oldState: TransitionCheckState, newState: TransitionCheckState): string {
     var animSuffix: string;
