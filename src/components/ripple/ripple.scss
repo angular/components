@@ -1,8 +1,8 @@
-@import "default-theme";
-@import "theme-functions";
+@import 'default-theme';
+@import 'theme-functions';
 
 $md-ink-ripple-focused-opacity: 0.1;
-$md-ink-ripple-background-fade-duration: 0.3s;
+$md-ink-ripple-background-fade-duration: 300ms;
 $md-ink-ripple-background-default-color: rgba(34, 34, 34, 0.1);
 $md-ink-ripple-foreground-initial-opacity: 0.25;
 $md-ink-ripple-foreground-default-color: rgba(34, 34, 34, 0.1);
@@ -59,7 +59,7 @@ md-ink-ripple.focused .md-ripple-background {
   opacity: $md-ink-ripple-foreground-initial-opacity;
   position: absolute;
   // The transition duration is manually set based on the ripple size.
-  transition: all 0s cubic-bezier(0, 0, 0.2, 1);
+  transition: all 0ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .md-ripple-foreground.fade-in {
