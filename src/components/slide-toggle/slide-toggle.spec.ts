@@ -98,15 +98,17 @@ describe('MdSlideToggle', () => {
     });
 
     it('should not trigger the click event multiple times', () => {
+      // By default, when clicking on a label element, a generated click will be dispatched
+      // on the associated input element.
+      // Since we're using a label element and a visual hidden input, this behavior can led
+      // to an issue, where the click events on the slide-toggle are getting executed twice.
+
       spyOn(testComponent, 'onSlideClick');
 
       expect(slideToggle.checked).toBe(false);
       expect(slideToggleElement.classList).not.toContain('md-checked');
 
-      // Mostly the users will click on the slide-toggle container which will emit in some cases the
-      // click event multiple times.
-      (<HTMLElement> labelElement.querySelector('.md-slide-toggle-container')).click();
-
+      labelElement.click();
       fixture.detectChanges();
 
       expect(slideToggleElement.classList).toContain('md-checked');
