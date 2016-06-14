@@ -39,9 +39,4 @@ export class RippleDemo {
       window.setTimeout(() => this.manualRipple.end(0, 0), 500);
     }
   }
-
-  wtf(arg: any): any {
-    console.log(arg);
-    return '';
-  }
 }
