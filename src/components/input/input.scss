@@ -178,13 +178,17 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
       z-index: 1;
       background-color: $md-input-underline-focused-color;
       top: -1px;
-      width: 100%;
-      transform-origin: top;
+      width: 100%;    
       opacity: 0;
       transform: scaleY(0);
       transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
                   opacity $swift-ease-out-duration $swift-ease-out-timing-function;
 
+      -webkit-transform-origin: center center;
+      transform-origin: center center;
+      -webkit-transform: scale3d(0,1,1);
+      transform: scale3d(0,1,1);		
+		
       &.md-accent {
         background-color: $md-input-underline-color-accent;
       }
