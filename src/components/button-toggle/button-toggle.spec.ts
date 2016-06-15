@@ -8,6 +8,7 @@ import {
   fakeAsync,
   tick,
 } from '@angular/core/testing';
+// TODO(iveysaur): Update to @angular/forms when we have rc.2
 import {NgControl} from '@angular/common';
 import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {Component, DebugElement, provide} from '@angular/core';

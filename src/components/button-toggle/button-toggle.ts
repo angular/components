@@ -13,6 +13,7 @@ import {
     ViewEncapsulation,
     forwardRef
 } from '@angular/core';
+// TODO(iveysaur): Update to @angular/forms when we have rc.2
 import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor,
@@ -29,9 +30,9 @@ export type ToggleType = 'checkbox' | 'radio';
 
 /**
  * Provider Expression that allows md-button-toggle-group to register as a ControlValueAccessor.
- * This allows it to support [(ngModel)] and ngControl.
+ * This allows it to support [(ngModel)].
  */
-const MD_BUTTON_TOGGLE_GROUP_CONTROL_VALUE_ACCESSOR = new Provider(
+const MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR = new Provider(
     NG_VALUE_ACCESSOR, {
       useExisting: forwardRef(() => MdButtonToggleGroup),
       multi: true
@@ -48,7 +49,7 @@ export class MdButtonToggleChange {
 /** Exclusive selection button toggle group that behaves like a radio-button group. */
 @Directive({
   selector: 'md-button-toggle-group:not([multiple])',
-  providers: [MD_BUTTON_TOGGLE_GROUP_CONTROL_VALUE_ACCESSOR],
+  providers: [MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
   host: {
     'role': 'radiogroup',
   },
