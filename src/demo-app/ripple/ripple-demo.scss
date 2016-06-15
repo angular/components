@@ -4,7 +4,7 @@
     text-transform: uppercase;
   }
 
-  .manual-ripple-container {
+  .demo-ripple-container {
     box-shadow: rgba(0, 0, 0, 0.118) 0 10px 15px, rgba(0, 0, 0, 0.239) 0 5px 10px;
     cursor: pointer;
     font-size: 24px;
@@ -16,11 +16,11 @@
     width: 200px;
     user-select: none;
 
-    &.disabled {
+    &.demo-ripple-disabled {
       color: rgba(32, 32, 32, 0.4);
     }
 
-    &.rounded {
+    &.demo-ripple-rounded {
       border-radius: 50%;
       overflow: hidden;
       // z-index needed to make clipping to border-radius work correctly.
@@ -29,7 +29,7 @@
     }
   }
 
-  .checkbox-option {
+  .demo-ripple-checkbox-option {
     margin: 10px 0;
   }
 }

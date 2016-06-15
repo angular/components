@@ -12,17 +12,17 @@
   </section>
 
   <section>
-    <div class="checkbox-option"><md-checkbox [(ngModel)]="centered">Centered</md-checkbox></div>
-    <div class="checkbox-option"><md-checkbox [(ngModel)]="disabled">Disabled</md-checkbox></div>
-    <div class="checkbox-option"><md-checkbox [(ngModel)]="rounded">Rounded container (flaky in Firefox)</md-checkbox></div>
+    <div class="demo-ripple-checkbox-option"><md-checkbox [(ngModel)]="centered">Centered</md-checkbox></div>
+    <div class="demo-ripple-checkbox-option"><md-checkbox [(ngModel)]="disabled">Disabled</md-checkbox></div>
+    <div class="demo-ripple-checkbox-option"><md-checkbox [(ngModel)]="rounded">Rounded container (flaky in Firefox)</md-checkbox></div>
   </section>
     <button md-raised-button (click)="doManualRipple()">Manual ripple</button>
   <section>
     Speed
     <md-radio-group [(ngModel)]="rippleSpeed">
-      <md-radio-button name="more_options" value="0.25">Slow</md-radio-button>
-      <md-radio-button name="more_options" value="1">Normal</md-radio-button>
-      <md-radio-button name="more_options" value="4">Fast</md-radio-button>
+      <md-radio-button name="demo-ripple-options" value="0.25">Slow</md-radio-button>
+      <md-radio-button name="demo-ripple-options" value="1">Normal</md-radio-button>
+      <md-radio-button name="demo-ripple-options" value="4">Fast</md-radio-button>
     </md-radio-group>
   </section>
   <section>
@@ -30,9 +30,9 @@
     <md-input placeholder="Ripple background" aria-label="background" [(ngModel)]="rippleBackgroundColor"></md-input>
   </section>
   <section>
-    <div class="manual-ripple-container"
-        [class.disabled]="disabled"
-        [class.rounded]="rounded">
+    <div class="demo-ripple-container"
+        [class.demo-ripple-disabled]="disabled"
+        [class.demo-ripple-rounded]="rounded">
       <md-ink-ripple #manualRipple class="md-ripple-fit-parent"
           [centered]="centered"
           [disabled]="disabled"

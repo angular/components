@@ -29,16 +29,12 @@ const MAX_RIPPLE_FILL_TIME_SECONDS = 0.6;
 
 const sqr = (x: number) => x * x;
 
-const distanceToFurthestCorner = (x: number, y: number, parentRect: any) => {
-  const x1 = parentRect.left;
-  const x2 = x1 + parentRect.width;
-  const y1 = parentRect.top;
-  const y2 = y1 + parentRect.height;
+const distanceToFurthestCorner = (x: number, y: number, rect: ClientRect) => {
   const maxSquaredDistance = Math.max(
-      sqr(x - x1) + sqr(y - y1),
-      sqr(x2 - x) + sqr(y - y1),
-      sqr(x - x1) + sqr(y2 - y),
-      sqr(x2 - x) + sqr(y2 - y));
+      sqr(x - rect.left) + sqr(y - rect.top),
+      sqr(rect.right - x) + sqr(y - rect.top),
+      sqr(x - rect.left) + sqr(rect.bottom - y),
+      sqr(rect.right - x) + sqr(rect.bottom - y));
   return Math.sqrt(maxSquaredDistance);
 };
 
@@ -56,37 +52,42 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
    * The element that triggers the ripple when click events are received. Defaults to the parent
    * of the <md-ink-rippple>.
    */
-  @Input('trigger') _trigger: Element;
+  @Input('trigger') trigger: Element;
   /**
-   * If true, the ripple always originates from the center of the <md-ink-ripple> bounds rather
+   * Whether the ripple always originates from the center of the <md-ink-ripple> bounds rather
    * than originating from the location of the click event.
    */
-  @Input('centered') _centered: boolean;
+  @Input('centered') centered: boolean;
   /**
-   * If true, click events will not trigger the ripple. It can still be triggered by manually
+   * Whether click events will not trigger the ripple. It can still be triggered by manually
    * calling start() and end().
    */
-  @Input('disabled') _disabled: boolean;
+  @Input('disabled') disabled: boolean;
   /**
    * Custom color for ripples.
    */
-  @Input('color') _color: string;
+  @Input('color') color: string;
   /**
    * Custom color for the ripple background.
    */
-  @Input('backgroundColor') _backgroundColor: string;
+  @Input('backgroundColor') backgroundColor: string;
   /**
    * If set, the normal duration of ripple animations is divided by this value. For example,
    * setting it to 0.5 will cause the animations to take twice as long.
    */
-  @Input('speedFactor') _speedFactor: number = 1;
+  @Input('speedFactor') speedFactor: number = 1;
 
   /**
-   * If true, the ripple background will be highlighted to indicated a focused state.
+   * Whether the ripple background will be highlighted to indicated a focused state.
    */
-  @HostBinding('class.focused') @Input('focused') _focused: boolean;
+  @HostBinding('class.md-ripple-focused') @Input('focused') focused: boolean;
 
   private _element: Element;
+  /**
+   * _triggerElement is the actual element that will cause a ripple to be created when clicked.
+   * If the trigger input is set then it is that element, otherwise it is the parent element of
+   * the <md-ink-ripple>.
+   */
   private _triggerElement: Element;
   private _mouseDownHandler = (event: MouseEvent) => this.mouseDown(event);
   private _clickHandler = (event: MouseEvent) => this.click(event);
@@ -122,8 +123,8 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
     // If the trigger element changed (or is being initially set), add event listeners to it.
     const changedInputs = Object.keys(changes);
-    if (changedInputs.indexOf('_trigger') !== -1) {
-      const newTrigger = this._trigger || this._element.parentElement;
+    if (changedInputs.indexOf('trigger') !== -1) {
+      const newTrigger = this.trigger || this._element.parentElement;
       this._updateTriggerElement(newTrigger);
     }
   }
@@ -148,7 +149,7 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
    * Responds to the start of a ripple animation trigger by fading the background in.
    */
   start() {
-    this._rippleManager.showRippleBackground(this._rippleBackground, this._backgroundColor);
+    this._rippleManager.showRippleBackground(this._rippleBackground, this.backgroundColor);
   }
 
   /**
@@ -161,9 +162,9 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
       this._element,
       left,
       top,
-      this._color,
-      this._centered || forceCenter,
-      this._speedFactor,
+      this.color,
+      this.centered || forceCenter,
+      this.speedFactor,
       (ripple: Ripple, event: TransitionEvent) => this._rippleTransitionEnded(ripple, event));
     // Fade out the highlighted background.
     this._rippleManager.hideRippleBackground(this._rippleBackground);
@@ -186,13 +187,13 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
   }
 
   mouseDown(event: MouseEvent) {
-    if (!this._disabled && event.button === 0) {
+    if (!this.disabled && event.button === 0) {
       this.start();
     }
   }
 
   click(event: MouseEvent) {
-    if (!this._disabled && event.button === 0) {
+    if (!this.disabled && event.button === 0) {
       // If screen and page positions are all 0, this was probably triggered by a keypress.
       // In that case, use the center of the bounding rect as the ripple origin.
       // FIXME: This fails on IE11, which still sets pageX/Y and screenX/Y on keyboard clicks.
@@ -212,6 +213,7 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
 
 /**
  * Helper service that performs DOM manipulations. Not intended to be used outside this module.
+ * This will eventually become a custom renderer once Angular support exists.
  */
 class MdInkRippleManager {
   constructor(private _renderer: Renderer) {}
@@ -257,7 +259,7 @@ class MdInkRippleManager {
     // https://timtaubert.de/blog/2012/09/css-transitions-for-dynamically-created-dom-elements/
     window.getComputedStyle(rippleDiv).opacity;
 
-    this._renderer.setElementClass(rippleDiv, 'fade-in', true);
+    this._renderer.setElementClass(rippleDiv, 'md-ripple-fade-in', true);
     // Clearing the transform property causes the ripple to animate to its full size.
     this._renderer.setElementStyle(rippleDiv, 'transform', '');
     const ripple = new Ripple(rippleDiv);
@@ -268,8 +270,8 @@ class MdInkRippleManager {
   }
 
   fadeOutForegroundRipple(ripple: Element) {
-    this._renderer.setElementClass(ripple, 'fade-in', false);
-    this._renderer.setElementClass(ripple, 'fade-out', true);
+    this._renderer.setElementClass(ripple, 'md-ripple-fade-in', false);
+    this._renderer.setElementClass(ripple, 'md-ripple-fade-out', true);
   }
 
   removeRippleFromDom(ripple: Element) {
@@ -277,12 +279,12 @@ class MdInkRippleManager {
   }
 
   showRippleBackground(rippleBackground: Element, color: string) {
-    this._renderer.setElementClass(rippleBackground, 'active', true);
+    this._renderer.setElementClass(rippleBackground, 'md-ripple-active', true);
     // If color is not set, this will default to the background color defined in CSS.
     this._renderer.setElementStyle(rippleBackground, 'background-color', color);
   }
 
   hideRippleBackground(rippleBackground: Element) {
-    this._renderer.setElementClass(rippleBackground, 'active', false);
+    this._renderer.setElementClass(rippleBackground, 'md-ripple-active', false);
   }
 }

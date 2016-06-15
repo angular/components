@@ -43,11 +43,11 @@ md-ink-ripple.md-ripple-fit-parent {
   bottom: 0;
 }
 
-.md-ripple-background.active {
+.md-ripple-background.md-ripple-active {
   opacity: 1;
 }
 
-md-ink-ripple.focused .md-ripple-background {
+md-ink-ripple.md-ripple-focused .md-ripple-background {
   background-color: md-color($md-accent, $md-ink-ripple-focused-opacity);
   opacity: 1;
 }
@@ -59,13 +59,13 @@ md-ink-ripple.focused .md-ripple-background {
   opacity: $md-ink-ripple-foreground-initial-opacity;
   position: absolute;
   // The transition duration is manually set based on the ripple size.
-  transition: all 0ms cubic-bezier(0, 0, 0.2, 1);
+  transition: opacity,transform 0ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.md-ripple-foreground.fade-in {
+.md-ripple-foreground.md-ripple-fade-in {
   opacity: 1;
 }
 
-.md-ripple-foreground.fade-out {
+.md-ripple-foreground.md-ripple-fade-out {
   opacity: 0;
 }

@@ -92,18 +92,18 @@ describe('MdInkRipple', () => {
     }));
 
     it('shows background when parent receives mousedown event', () => {
-      expect(rippleBackground.classList).not.toContain('active');
+      expect(rippleBackground.classList).not.toContain('md-ripple-active');
       const mouseDown = createMouseEvent('mousedown');
       // mousedown on the ripple element itself does nothing.
       rippleElement.dispatchEvent(mouseDown);
-      expect(rippleBackground.classList).not.toContain('active');
+      expect(rippleBackground.classList).not.toContain('md-ripple-active');
       // mousedown on the container activates the background ripple.
       container.dispatchEvent(mouseDown);
-      expect(rippleBackground.classList).toContain('active');
+      expect(rippleBackground.classList).toContain('md-ripple-active');
       // mouseleave on the container removes the background ripple.
       const mouseLeave = createMouseEvent('mouseleave');
       container.dispatchEvent(mouseLeave);
-      expect(rippleBackground.classList).not.toContain('active');
+      expect(rippleBackground.classList).not.toContain('md-ripple-active');
     });
 
     it('creates foreground ripples on click', () => {
@@ -113,23 +113,23 @@ describe('MdInkRipple', () => {
       container.click();
       const ripples = rippleElement.querySelectorAll('.md-ripple-foreground');
       expect(ripples.length).toBe(2);
-      expect(ripples[0].classList).toContain('fade-in');
-      expect(ripples[1].classList).toContain('fade-in');
+      expect(ripples[0].classList).toContain('md-ripple-fade-in');
+      expect(ripples[1].classList).toContain('md-ripple-fade-in');
       // Signal the end of the first ripple's expansion. The second ripple should be unaffected.
       const opacityTransitionEnd = createTransitionEndEvent('opacity');
       ripples[0].dispatchEvent(opacityTransitionEnd);
-      expect(ripples[0].classList).not.toContain('fade-in');
-      expect(ripples[0].classList).toContain('fade-out');
-      expect(ripples[1].classList).toContain('fade-in');
-      expect(ripples[1].classList).not.toContain('fade-out');
+      expect(ripples[0].classList).not.toContain('md-ripple-fade-in');
+      expect(ripples[0].classList).toContain('md-ripple-fade-out');
+      expect(ripples[1].classList).toContain('md-ripple-fade-in');
+      expect(ripples[1].classList).not.toContain('md-ripple-fade-out');
       // Signal the end of the first ripple's fade out. The ripple should be removed from the DOM.
       ripples[0].dispatchEvent(opacityTransitionEnd);
       expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(1);
       expect(rippleElement.querySelectorAll('.md-ripple-foreground')[0]).toBe(ripples[1]);
       // Finish the second ripple.
       ripples[1].dispatchEvent(opacityTransitionEnd);
-      expect(ripples[1].classList).not.toContain('fade-in');
-      expect(ripples[1].classList).toContain('fade-out');
+      expect(ripples[1].classList).not.toContain('md-ripple-fade-in');
+      expect(ripples[1].classList).toContain('md-ripple-fade-out');
       ripples[1].dispatchEvent(opacityTransitionEnd);
       expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(0);
     });
@@ -138,11 +138,11 @@ describe('MdInkRipple', () => {
       const rippleComponent = fixture.debugElement.componentInstance.ripple;
       // start() should show the background, but no foreground ripple yet.
       rippleComponent.start();
-      expect(rippleBackground.classList).toContain('active');
+      expect(rippleBackground.classList).toContain('md-ripple-active');
       expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(0);
       // end() should deactivate the background and show the foreground ripple.
       rippleComponent.end(0, 0);
-      expect(rippleBackground.classList).not.toContain('active');
+      expect(rippleBackground.classList).not.toContain('md-ripple-active');
       expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(1);
     });
 
@@ -232,12 +232,12 @@ describe('MdInkRipple', () => {
       // The background ripple should not respond to mouseDown, and no foreground ripple should be
       // created on a click.
       container.dispatchEvent(mouseDown);
-      expect(rippleBackground.classList).not.toContain('active');
+      expect(rippleBackground.classList).not.toContain('md-ripple-active');
       container.click();
       expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(0);
       // Calling start() and end() should still create a ripple.
       rippleComponent.start();
-      expect(rippleBackground.classList).toContain('active');
+      expect(rippleBackground.classList).toContain('md-ripple-active');
       rippleComponent.end(0, 0);
       expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(1);
     });
@@ -248,7 +248,7 @@ describe('MdInkRipple', () => {
           <HTMLElement>fixture.debugElement.nativeElement.querySelector('.alternateTrigger');
       const mouseDown = createMouseEvent('mousedown');
       alternateTrigger.dispatchEvent(mouseDown);
-      expect(rippleBackground.classList).not.toContain('active');
+      expect(rippleBackground.classList).not.toContain('md-ripple-active');
       alternateTrigger.click();
       expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(0);
 
@@ -256,7 +256,7 @@ describe('MdInkRipple', () => {
       controller.trigger = alternateTrigger;
       fixture.detectChanges();
       alternateTrigger.dispatchEvent(mouseDown);
-      expect(rippleBackground.classList).toContain('active');
+      expect(rippleBackground.classList).toContain('md-ripple-active');
       alternateTrigger.click();
       expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(1);
     });
