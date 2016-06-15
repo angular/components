@@ -34,7 +34,7 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
   visibility: visible;
   padding-bottom: 5px;
   transform: translateY(-100%) scale(0.75);
-  transition: width 0.1s ease-in-out;
+  transition: width 150ms ease-in-out;
   width: 133%; // 100/75 of the original space now available
 	
   .md-placeholder-required {
