@@ -2,13 +2,17 @@ import {
   ElementRef,
 } from '@angular/core';
 
+/** @internal */
 export enum ForegroundRippleState {
   NEW,
   EXPANDING,
   FADING_OUT,
 }
 
-/** Wrapper for a foreground ripple DOM element and its animation state. */
+/**
+ * Wrapper for a foreground ripple DOM element and its animation state.
+ * @internal
+ */
 export class ForegroundRipple {
   state = ForegroundRippleState.NEW;
   constructor(public rippleElement: Element) {}
@@ -37,6 +41,7 @@ const distanceToFurthestCorner = (x: number, y: number, rect: ClientRect) => {
  * The constructor takes a reference to the <md-ink-ripple> element and a map of DOM event handlers
  * to be installed on the element that triggers ripple animations.
  * This will eventually become a custom renderer once Angular support exists.
+ * @internal
  */
 export class MdInkRippleManager {
   private _rippleElement: Element;
