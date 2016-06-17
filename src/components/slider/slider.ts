@@ -1,6 +1,8 @@
 import {
   Component,
   ElementRef,
+  HostBinding,
+  Input,
   ViewEncapsulation,
   AfterContentInit,
 } from '@angular/core';
@@ -26,17 +28,37 @@ export class MdSlider implements AfterContentInit {
 
   private _sliderDimensions: ClientRect = null;
 
-  private _value: number = 0;
+  private _min: number = 0;
 
-  private _minValue: number = 0;
+  @Input()
+  @HostBinding('attr.min')
+  get min() {
+    return this._min;
+  }
 
-  private _maxValue: number = 100;
+  set min(v: number) {
+    this._min = Number(v);
+  }
+
+  private _max: number = 100;
+
+  @Input()
+  @HostBinding('attr.max')
+  get max() {
+    return this._max;
+  }
+
+  set max(v: number) {
+    this._max = Number(v);
+  }
 
   private _percent: number = 0;
 
   public isDragging: boolean = false;
 
   public isActive: boolean = false;
+
+  private _value: number;
 
   get value() {
     return this._value;
@@ -51,6 +73,7 @@ export class MdSlider implements AfterContentInit {
   }
 
   ngAfterContentInit() {
+    this.value = this.min;
     this._sliderDimensions = this._renderer.getSliderDimensions();
     this._renderer.updateThumbPosition(this._percent, this._sliderDimensions.width);
   }
@@ -94,9 +117,7 @@ export class MdSlider implements AfterContentInit {
     let offset = this._sliderDimensions.left;
     let size = this._sliderDimensions.width;
     this._percent = this.clamp((pos - offset) / size);
-    let value = this._minValue + (this._percent * (this._maxValue - this._minValue));
-
-    this.value = value;
+    this.value = this.min + (this._percent * (this.max - this.min));
 
     this._renderer.updateThumbPosition(this._percent, this._sliderDimensions.width);
   }
