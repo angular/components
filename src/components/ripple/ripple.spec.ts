@@ -2,6 +2,7 @@ import {
     describe,
     it,
     beforeEach,
+    afterEach,
     inject,
     async,
     expect,
@@ -68,10 +69,16 @@ describe('MdInkRipple', () => {
   let container: HTMLElement;
   let rippleElement: Element;
   let rippleBackground: Element;
+  let originalBodyMargin: string;
 
   beforeEach(() => {
-    // Clear body margin so it doesn't mess up position calculations.
+    // Set body margin to 0 during tests so it doesn't mess up position calculations.
+    originalBodyMargin = document.body.style.margin;
     document.body.style.margin = '0';
+  });
+
+  afterEach(() => {
+    document.body.style.margin = originalBodyMargin;
   });
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
