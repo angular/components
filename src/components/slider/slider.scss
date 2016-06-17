@@ -12,7 +12,6 @@ $slider-thumb-focus-scale: 1 !default;
 
 @mixin slider-thumb-position($width: $slider-thumb-width, $height: $slider-thumb-height) {
   position: absolute;
-  left: -$width / 2;
   top: ($slider-size / 2) - ($height / 2);
   width: $width;
   height: $height;
@@ -76,13 +75,16 @@ md-slider *::after {
   transition-property: left, bottom;
 }
 
+.md-slider-thumb-position {
+  transition: transform 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
 .md-slider-thumb {
   z-index: 1;
 
   @include slider-thumb-position($slider-thumb-width, $slider-thumb-height);
-
   transform: scale($slider-thumb-default-scale);
-  transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: transform 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .md-slider-thumb::after {
@@ -98,7 +100,7 @@ md-slider *::after {
   border-color: md-color($md-accent);
 }
 
-.md-slider-dragging .md-slider-thumb,
+.md-slider-dragging .md-slider-thumb-position,
 .md-slider-dragging .md-slider-track-fill {
   transition: none;
 }

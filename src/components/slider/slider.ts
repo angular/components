@@ -116,13 +116,15 @@ export class SliderRenderer {
 
   updateThumbPosition(percent: number, width: number) {
     let thumbElement = this._elementRef.nativeElement.querySelector('.md-slider-thumb');
+    let thumbPositionElement =
+        this._elementRef.nativeElement.querySelector('.md-slider-thumb-position');
     let activeTrackElement = this._elementRef.nativeElement.querySelector('.md-slider-track-fill');
     let thumbWidth = thumbElement.getBoundingClientRect().width;
 
     let position = percent * width;
     let thumbPosition = position - (thumbWidth / 2);
     activeTrackElement.style.width = `${position}px`;
-    thumbElement.style.left = `${thumbPosition}px`;
+    thumbPositionElement.style.transform = `translateX(${thumbPosition}px)`;
   }
 
   addFocus() {
