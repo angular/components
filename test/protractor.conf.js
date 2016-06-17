@@ -12,7 +12,10 @@ const config = {
   useAllAngular2AppRoots: true,
   plugins: [{
     chromeA11YDevTools: {
-      treatWarningsAsFailures: true
+      // Temporarily leave a11y checks are *warnings* because the plugin doesn't not currently
+      // support passing configuration through to AXS, which we need to disable the constrast
+      // checks (since the colors are ultimately up to the users of the components).
+      treatWarningsAsFailures: false
     },
     package: 'protractor-accessibility-plugin'
   }],
