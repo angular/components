@@ -2,7 +2,6 @@
 @import 'mixins';
 @import 'variables';
 
-
 // Placeholder colors. Required is used for the `*` star shown in the placeholder.
 $md-input-placeholder-color: md-color($md-foreground, hint-text);
 $md-input-floating-placeholder-color: md-color($md-primary);
@@ -33,9 +32,9 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
 @mixin md-input-placeholder-floating {
   visibility: visible;
   padding-bottom: 5px;
-  transform: translateY(-100%) scale(0.75);
-  width: 133%; // 100/75 of the original space now available
-	
+  transform: translateY(-100%) scale($md-input-floating-placeholder-scale-factor);
+  width: calc(100% / #{$md-input-floating-placeholder-scale-factor});
+
   .md-placeholder-required {
     color: $md-input-required-placeholder-color;
   }
