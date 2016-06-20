@@ -28,6 +28,18 @@ export class MdSlider implements AfterContentInit {
 
   private _sliderDimensions: ClientRect = null;
 
+  private _disabled: boolean = false;
+
+  @HostBinding('class.md-slider-disabled')
+  @Input()
+  get disabled(): boolean {
+    return this._disabled;
+  }
+
+  set disabled(value) {
+    this._disabled = (value != null && value !== false) ? true : null;
+  }
+
   private _min: number = 0;
 
   @Input()
@@ -79,6 +91,9 @@ export class MdSlider implements AfterContentInit {
   }
 
   onClick(event: MouseEvent) {
+    if (this.disabled) {
+      return;
+    }
     this.isActive = true;
     this.isDragging = false;
     this._renderer.addFocus();
@@ -87,11 +102,17 @@ export class MdSlider implements AfterContentInit {
   }
 
   onDrag(event: HammerInput) {
+    if (this.disabled) {
+      return;
+    }
     event.preventDefault();
     this.updatePosition(event.center.x);
   }
 
   onDragStart(event: HammerInput) {
+    if (this.disabled) {
+      return;
+    }
     event.preventDefault();
     this.isDragging = true;
     this.isActive = true;

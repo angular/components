@@ -10,6 +10,11 @@ $slider-thumb-height: $slider-thumb-width !default;
 $slider-thumb-default-scale: 0.7 !default;
 $slider-thumb-focus-scale: 1 !default;
 
+// TODO(iveysaur): Find an implementation to hide the track under a disabled thumb.
+$slider-off-color: rgba(black, 0.26);
+$slider-focused-color: rgba(black, 0.38);
+$slider-disabled-color: rgba(black, 0.26);
+
 @mixin slider-thumb-position($width: $slider-thumb-width, $height: $slider-thumb-height) {
   position: absolute;
   top: ($slider-size / 2) - ($height / 2);
@@ -57,7 +62,7 @@ md-slider *::after {
   left: 0;
   right: 0;
   height: 100%;
-  background-color: md-color($md-foreground, disabled);
+  background-color: $slider-off-color;
 }
 
 .md-slider-track-fill {
@@ -107,4 +112,9 @@ md-slider *::after {
 
 .md-slider-active .md-slider-thumb {
   transform: scale($slider-thumb-focus-scale);
+}
+
+.md-slider-disabled .md-slider-thumb::after {
+  background-color: $slider-disabled-color;
+  border-color: $slider-disabled-color;
 }
