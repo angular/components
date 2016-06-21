@@ -7,6 +7,7 @@ import {
     Output,
     Provider,
     Renderer,
+    ViewChild,
     ViewEncapsulation,
     forwardRef,
     AfterContentInit
@@ -113,6 +114,8 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
   /** Event emitted when the checkbox's `checked` value changes. */
   @Output() change: EventEmitter<MdCheckboxChange> = new EventEmitter<MdCheckboxChange>();
 
+  @ViewChild('input') _inputElement: ElementRef;
+
   /** Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor. */
   onTouched: () => any = () => {};
 
@@ -149,7 +152,7 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
           this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
 
       // Only fire a change event if this isn't the first time the checked property is ever set.
-      if (this._isInitialized) {
+      if (this._isInitialized && this.hasFocus) {
         this._emitChangeEvent();
       }
     }
@@ -177,6 +180,7 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
     this._indeterminate = indeterminate;
     if (this._indeterminate) {
       this._transitionCheckState(TransitionCheckState.Indeterminate);
+      this._checked = false;
     } else {
       this._transitionCheckState(
           this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);

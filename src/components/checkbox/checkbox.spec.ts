@@ -213,6 +213,9 @@ describe('MdCheckbox', () => {
         promiseCompleter.resolve();
       });
 
+      // Events are only triggered when the element has focus
+      checkboxInstance.hasFocus = true;
+
       testComponent.isChecked = true;
       fixture.detectChanges();
 
@@ -296,9 +299,24 @@ describe('MdCheckbox', () => {
       });
     }));
 
+    it('should NOT call the change event when it doesn\'t have focus', fakeAsync(() => {
+      fixture.detectChanges();
+      expect(testComponent.lastEvent).toBeUndefined();
+
+      checkboxInstance.checked = true;
+      fixture.detectChanges();
+
+      tick();
+
+      expect(testComponent.lastEvent).toBeUndefined();
+    }));
+
     it('should call the change event on first change after initialization', fakeAsync(() => {
       fixture.detectChanges();
       expect(testComponent.lastEvent).toBeUndefined();
+
+      // Events are only triggered when the element has focus
+      checkboxInstance.hasFocus = true;
 
       checkboxInstance.checked = true;
       fixture.detectChanges();
@@ -311,6 +329,9 @@ describe('MdCheckbox', () => {
     it('should not emit a DOM event to the change output', async(() => {
       fixture.detectChanges();
       expect(testComponent.lastEvent).toBeUndefined();
+
+      // Events are only triggered when the element has focus
+      checkboxInstance.hasFocus = true;
 
       // Trigger the click on the inputElement, because the input will probably
       // emit a DOM event to the change output.
