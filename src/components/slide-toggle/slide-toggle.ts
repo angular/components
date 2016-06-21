@@ -76,7 +76,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
               private _renderer: Renderer) {
   }
 
-  /** @internal */
+  /** TODO: internal */
   ngAfterContentInit() {
     // Mark this component as initialized in AfterContentInit because the initial checked value can
     // possibly be set by NgModel or the checked attribute. This would cause the change event to
