@@ -30,8 +30,28 @@ export class MdSlider implements AfterContentInit {
 
   private _disabled: boolean = false;
 
-  @HostBinding('class.md-slider-disabled')
+  private _min: number = 0;
+
+  private _max: number = 100;
+
+  private _percent: number = 0;
+
+  /**
+   * @internal
+   */
+  isDragging: boolean = false;
+
+  /**
+   * @internal
+   */
+  isActive: boolean = false;
+
+  private _isValueInitialized: boolean = false;
+
+  private _value: number;
+
   @Input()
+  @HostBinding('class.md-slider-disabled')
   get disabled(): boolean {
     return this._disabled;
   }
@@ -40,22 +60,22 @@ export class MdSlider implements AfterContentInit {
     this._disabled = (value != null && value !== false) ? true : null;
   }
 
-  private _min: number = 0;
-
   @Input()
-  @HostBinding('attr.min')
+  @HostBinding('attr.aria-valuemin')
   get min() {
     return this._min;
   }
 
   set min(v: number) {
     this._min = Number(v);
+
+    if (!this._isValueInitialized) {
+      this.value = this._min;
+    }
   }
 
-  private _max: number = 100;
-
   @Input()
-  @HostBinding('attr.max')
+  @HostBinding('attr.aria-valuemax')
   get max() {
     return this._max;
   }
@@ -64,20 +84,16 @@ export class MdSlider implements AfterContentInit {
     this._max = Number(v);
   }
 
-  private _percent: number = 0;
-
-  public isDragging: boolean = false;
-
-  public isActive: boolean = false;
-
-  private _value: number;
-
+  @Input()
+  @HostBinding('attr.aria-valuenow')
   get value() {
     return this._value;
   }
 
   set value(v: number) {
     this._value = v;
+    this._isValueInitialized = true;
+    this.updatePercentFromValue();
   }
 
   constructor(private _elementRef: ElementRef) {
@@ -85,7 +101,6 @@ export class MdSlider implements AfterContentInit {
   }
 
   ngAfterContentInit() {
-    this.value = this.min;
     this._sliderDimensions = this._renderer.getSliderDimensions();
     this._renderer.updateThumbPosition(this._percent, this._sliderDimensions.width);
   }
@@ -132,6 +147,10 @@ export class MdSlider implements AfterContentInit {
 
   onBlur() {
     this.isActive = false;
+  }
+
+  updatePercentFromValue() {
+    this._percent = (this.value - this.min) / (this.max - this.min);
   }
 
   updatePosition(pos: number) {
