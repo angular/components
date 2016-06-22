@@ -32,7 +32,7 @@ export type ToggleType = 'checkbox' | 'radio';
  * Provider Expression that allows md-button-toggle-group to register as a ControlValueAccessor.
  * This allows it to support [(ngModel)].
  */
-const MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR = new Provider(
+export const MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR = new Provider(
     NG_VALUE_ACCESSOR, {
       useExisting: forwardRef(() => MdButtonToggleGroup),
       multi: true
@@ -128,17 +128,6 @@ export class MdButtonToggleGroup implements ControlValueAccessor {
 
     if (selected && !selected.checked) {
       selected.checked = true;
-    }
-  }
-
-  /**
-   * Mark this group as being "touched" (for ngModel).
-   * Meant to be called by the contained button toggles upon their blur.
-   * @internal
-   */
-  touch() {
-    if (this.onTouched) {
-      this.onTouched();
     }
   }
 
@@ -382,7 +371,7 @@ export class MdButtonToggle implements OnInit {
       // button toggle as checked.
       this.checked = true;
       this.buttonToggleGroup.selected = this;
-      this.buttonToggleGroup.touch();
+      this.buttonToggleGroup.onTouched();
     } else {
       this._toggle();
     }
