@@ -20,6 +20,10 @@ md-ink-ripple {
   pointer-events: none;
 }
 
+md-ink-ripple.md-ripple-unbounded {
+  overflow: visible;
+}
+
 /**
  * Style that can be used by parent elements to specify that the <md-ink-ripple>
  * should have the same bounds as its parent.
@@ -41,6 +45,10 @@ md-ink-ripple.md-ripple-fit-parent {
   top: 0;
   right: 0;
   bottom: 0;
+}
+
+md-ink-ripple.md-ripple-unbounded .md-ripple-background {
+  display: none;
 }
 
 .md-ripple-background.md-ripple-active {

@@ -18,8 +18,10 @@ Properties:
 | Name | Type | Description |
 | --- | --- | --- |
 | `trigger` | Element | The DOM element that triggers the ripple when clicked. Defaults to the parent of the `md-ink-ripple`.
-| `centered` | boolean | If true, the ripple animation originates from the center of the `md-ink-ripple` bounds rather than from the location of the click event.
-| `focused` | boolean | If true, the background ripple is shown using the current theme's accent color to indicate focus.
 | `color` | string | Custom color for foreground ripples
 | `backgroundColor` | string | Custom color for the ripple background
+| `centered` | boolean | If true, the ripple animation originates from the center of the `md-ink-ripple` bounds rather than from the location of the click event.
+| `max-radius` | number | Optional fixed radius of foreground ripples when fully expanded. Mainly used in conjunction with `unbounded` attribute. If not set, ripples will expand from their origin to the most distant corner of the component's bounding rectangle.
+| `unbounded` | boolean | If true, foreground ripples will be visible outside the component's bounds.
+| `focused` | boolean | If true, the background ripple is shown using the current theme's accent color to indicate focus.
 | `disabled` | boolean | If true, click events on the trigger element will not activate ripples. The `start` and `end` methods can still be called to programatically create ripples.

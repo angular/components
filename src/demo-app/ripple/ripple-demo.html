@@ -13,10 +13,10 @@
 
   <section>
     <div class="demo-ripple-checkbox-option"><md-checkbox [(ngModel)]="centered">Centered</md-checkbox></div>
+    <div class="demo-ripple-checkbox-option"><md-checkbox [(ngModel)]="unbounded">Unbounded</md-checkbox></div>
     <div class="demo-ripple-checkbox-option"><md-checkbox [(ngModel)]="disabled">Disabled</md-checkbox></div>
     <div class="demo-ripple-checkbox-option"><md-checkbox [(ngModel)]="rounded">Rounded container (flaky in Firefox)</md-checkbox></div>
   </section>
-    <button md-raised-button (click)="doManualRipple()">Manual ripple</button>
   <section>
     Speed
     <md-radio-group [(ngModel)]="rippleSpeed">
@@ -26,8 +26,12 @@
     </md-radio-group>
   </section>
   <section>
+    <md-input placeholder="Max radius" aria-label="radius" [(ngModel)]="maxRadius"></md-input>
     <md-input placeholder="Ripple color" aria-label="color" [(ngModel)]="rippleColor"></md-input>
     <md-input placeholder="Ripple background" aria-label="background" [(ngModel)]="rippleBackgroundColor"></md-input>
+  </section>
+  <section>
+    <button md-raised-button (click)="doManualRipple()">Manual ripple</button>
   </section>
   <section>
     <div class="demo-ripple-container"
@@ -36,6 +40,8 @@
       <md-ink-ripple #manualRipple class="md-ripple-fit-parent"
           [centered]="centered"
           [disabled]="disabled"
+          [unbounded]="unbounded"
+          [max-radius]="maxRadius"
           [color]="rippleColor"
           [backgroundColor]="rippleBackgroundColor"
           [speedFactor]="rippleSpeed"

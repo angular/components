@@ -95,6 +95,7 @@ export class MdInkRippleManager {
       rippleOriginTop: number,
       color: string,
       centered: boolean,
+      radius: number,
       speedFactor: number,
       transitionEndCallback: (r: ForegroundRipple, e: TransitionEvent) => void) {
     const parentRect = this._rippleElement.getBoundingClientRect();
@@ -106,7 +107,7 @@ export class MdInkRippleManager {
     const startY = centered ? (parentRect.top + parentRect.height / 2) : rippleOriginTop;
     const offsetX = startX - parentRect.left;
     const offsetY = startY - parentRect.top;
-    const maxRadius = distanceToFurthestCorner(startX, startY, parentRect);
+    const maxRadius = radius > 0 ? radius : distanceToFurthestCorner(startX, startY, parentRect);
 
     const rippleDiv = document.createElement('div');
     this._rippleElement.appendChild(rippleDiv);

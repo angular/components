@@ -42,6 +42,12 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
    */
   @Input('disabled') disabled: boolean;
   /**
+   * If set, the radius in pixels of foreground ripples when fully expanded. If unset, the radius
+   * will be the distance from the center of the ripple to the furthest corner of the element's
+   * bounding rectangle.
+   */
+  @Input('max-radius') maxRadius: number = 0;
+  /**
    * If set, the normal duration of ripple animations is divided by this value. For example,
    * setting it to 0.5 will cause the animations to take twice as long.
    */
@@ -53,6 +59,8 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
 
   /** Whether the ripple background will be highlighted to indicated a focused state. */
   @HostBinding('class.md-ripple-focused') @Input('focused') focused: boolean;
+  /** Whether foreground ripples should be visible outside the component's bounds. */
+  @HostBinding('class.md-ripple-unbounded') @Input('unbounded') unbounded: boolean;
 
   private _rippleManager: MdInkRippleManager;
 
@@ -106,6 +114,7 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
       top,
       this.color,
       this.centered || forceCenter,
+      this.maxRadius,
       this.speedFactor,
       (ripple: ForegroundRipple, e: TransitionEvent) => this._rippleTransitionEnded(ripple, e));
     this._rippleManager.fadeOutRippleBackground();

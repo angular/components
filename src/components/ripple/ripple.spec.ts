@@ -38,7 +38,7 @@ const createMouseEvent = (eventType: string, dict: any = {}) => {
   // the MouseEvent constructor, and Edge inexplicably divides clientX and clientY by 100 to get
   // pageX and pageY. (Really. After "e = new MouseEvent('click', {clientX: 200, clientY: 300})",
   // e.clientX is 200, e.pageX is 2, e.clientY is 300, and e.pageY is 3.)
-  // So instead we use the deprecated createEvent/initMouseEvent APIs, which works everywhere.
+  // So instead we use the deprecated createEvent/initMouseEvent API, which works everywhere.
   const event = document.createEvent('MouseEvents');
   event.initMouseEvent(eventType,
       false, /* canBubble */
@@ -185,9 +185,9 @@ describe('MdInkRipple', () => {
       const expectedRadius = Math.sqrt(150 * 150 + 100 * 100);
       const expectedLeft = elementRect.left + (elementRect.width / 2) - expectedRadius;
       const expectedTop = elementRect.top + (elementRect.height / 2) - expectedRadius;
-      const ripple = <HTMLElement>rippleElement.querySelector('.md-ripple-foreground');
       // Note: getBoundingClientRect won't work because there's a transform applied to make the
       // ripple start out tiny.
+      const ripple = <HTMLElement>rippleElement.querySelector('.md-ripple-foreground');
       expect(pxStringToFloat(ripple.style.left)).toBeCloseTo(expectedLeft, 1);
       expect(pxStringToFloat(ripple.style.top)).toBeCloseTo(expectedTop, 1);
       expect(pxStringToFloat(ripple.style.width)).toBeCloseTo(2 * expectedRadius, 1);
@@ -282,12 +282,31 @@ describe('MdInkRipple', () => {
       const expectedRadius = Math.sqrt(150 * 150 + 100 * 100);
       const expectedLeft = elementRect.left + (elementRect.width / 2) - expectedRadius;
       const expectedTop = elementRect.top + (elementRect.height / 2) - expectedRadius;
-      const ripple = <HTMLElement>rippleElement.querySelector('.md-ripple-foreground');
 
+      const ripple = <HTMLElement>rippleElement.querySelector('.md-ripple-foreground');
       expect(pxStringToFloat(ripple.style.left)).toBeCloseTo(expectedLeft, 1);
       expect(pxStringToFloat(ripple.style.top)).toBeCloseTo(expectedTop, 1);
       expect(pxStringToFloat(ripple.style.width)).toBeCloseTo(2 * expectedRadius, 1);
       expect(pxStringToFloat(ripple.style.height)).toBeCloseTo(2 * expectedRadius, 1);
+    });
+
+    it('uses custom radius if set', () => {
+      const customRadius = 42;
+      controller.maxRadius = customRadius;
+      fixture.detectChanges();
+      // Click the container 50 px to the right and 75px down from its upper left.
+      const elementRect = container.getBoundingClientRect();
+      const clickEvent = createMouseEvent('click',
+          {clientX: elementRect.left + 50, clientY: elementRect.top + 75});
+      container.dispatchEvent(clickEvent);
+      const expectedLeft = elementRect.left + 50 - customRadius;
+      const expectedTop = elementRect.top + 75 - customRadius;
+
+      const ripple = <HTMLElement>rippleElement.querySelector('.md-ripple-foreground');
+      expect(pxStringToFloat(ripple.style.left)).toBeCloseTo(expectedLeft, 1);
+      expect(pxStringToFloat(ripple.style.top)).toBeCloseTo(expectedTop, 1);
+      expect(pxStringToFloat(ripple.style.width)).toBeCloseTo(2 * customRadius, 1);
+      expect(pxStringToFloat(ripple.style.height)).toBeCloseTo(2 * customRadius, 1);
     });
   });
 });
@@ -312,6 +331,7 @@ class BasicRippleContainer {
       <md-ink-ripple class="md-ripple-fit-parent"
           [trigger]="trigger"
           [centered]="centered"
+          [max-radius]="maxRadius"
           [disabled]="disabled"
           [color]="color"
           [backgroundColor]="backgroundColor"
@@ -324,6 +344,7 @@ class RippleContainerWithInputBindings {
   trigger: HTMLElement = null;
   centered = false;
   disabled = false;
+  maxRadius = 0;
   color = '';
   backgroundColor = '';
   @ViewChild(MdInkRipple) ripple: MdInkRipple;

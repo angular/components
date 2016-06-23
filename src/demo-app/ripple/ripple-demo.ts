@@ -26,12 +26,14 @@ import {
 export class RippleDemo {
   @ViewChild('manualRipple') manualRipple: MdInkRipple;
 
-  centered: boolean = false;
-  disabled: boolean = false;
-  rounded: boolean = false;
-  rippleSpeed: number = 1;
-  rippleColor: string = '';
-  rippleBackgroundColor: string = '';
+  centered = false;
+  disabled = false;
+  unbounded = false;
+  rounded = false;
+  maxRadius: number = null;
+  rippleSpeed = 1;
+  rippleColor = '';
+  rippleBackgroundColor = '';
 
   doManualRipple() {
     if (this.manualRipple) {
