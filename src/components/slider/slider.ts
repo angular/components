@@ -60,7 +60,7 @@ export class MdSlider implements AfterContentInit {
   private _isValueInitialized: boolean = false;
 
   /** Value of the slider. */
-  private _value: number;
+  private _value: number = 0;
 
   @Input()
   @HostBinding('class.md-slider-disabled')
@@ -140,7 +140,6 @@ export class MdSlider implements AfterContentInit {
     if (this.disabled) {
       return;
     }
-
     // Prevent the drag from selecting anything else.
     event.preventDefault();
     this.updateValueFromPosition(event.center.x);
