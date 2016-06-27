@@ -58,9 +58,10 @@ export class MdTabGroup {
   private _selectedIndex: number = 0;
   @Input()
   set selectedIndex(value: number) {
+    const changed = this._selectedIndex !== value;
     this._selectedIndex = value;
 
-    if (this._isInitialized) {
+    if (this._isInitialized && changed) {
       this._onSelectChange.emit(this._createChangeEvent(value));
     }
   }
