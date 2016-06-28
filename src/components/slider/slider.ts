@@ -105,7 +105,7 @@ export class MdSlider implements AfterContentInit {
   }
 
   set value(v: number) {
-    this._value = v;
+    this._value = Number(v);
     this._isValueInitialized = true;
     this.updatePercentFromValue();
   }
@@ -197,7 +197,7 @@ export class MdSlider implements AfterContentInit {
   }
 
   /**
-   * Return a number between the given or default min and max.
+   * Return a number between two numbers.
    */
   clamp(value: number, min = 0, max = 1) {
     return Math.max(min, Math.min(value, max));
