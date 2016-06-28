@@ -1,11 +1,9 @@
 import {Injectable} from '@angular/core';
-import {MdGestureConfig} from '../../core/gestures/MdGestureConfig';
-// import {MdGestureConfig} from '@angular2-material/core/gestures/MdGestureConfig';
+import {MdGestureConfig} from '@angular2-material/core/gestures/MdGestureConfig';
 
 /**
  * To test the dragging behavior on the slider, we need to be able to access the hammer instances
  * to emit events for a drag.
- *
  */
 @Injectable()
 export class TestGestureConfig extends MdGestureConfig {
