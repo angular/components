@@ -337,10 +337,9 @@ function dispatchClickEvent(element: HTMLElement, percentage: number): void {
   let y = dimensions.top;
   let x = left + (width * percentage);
 
-  let event = new MouseEvent('click', {
-    clientX: x,
-    clientY: y
-  });
+  let event = document.createEvent('MouseEvent');
+  event.initMouseEvent(
+      'click', true, true, window, 0, x, y, x, y, false, false, false, false, 0, null);
   element.dispatchEvent(event);
 }
 
