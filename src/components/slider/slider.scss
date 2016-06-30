@@ -15,9 +15,13 @@ $slider-off-color: rgba(black, 0.26);
 $slider-focused-color: rgba(black, 0.38);
 $slider-disabled-color: rgba(black, 0.26);
 
+@function center-vertically($outerHeight, $innerHeight) {
+  @return ($outerHeight / 2) - ($innerHeight / 2);
+}
+
 @mixin slider-thumb-position($width: $slider-thumb-width, $height: $slider-thumb-height) {
   position: absolute;
-  top: ($slider-size / 2) - ($height / 2);
+  top: center-vertically($slider-size, $height);
   width: $width;
   height: $height;
   border-radius: max($width, $height);
@@ -53,7 +57,7 @@ md-slider *::after {
 .md-slider-track-container {
   width: 100%;
   position: absolute;
-  top: ($slider-size / 2) - ($slider-track-height) / 2;
+  top: center-vertically($slider-size, $slider-track-height);
   height: $slider-track-height;
 }
 
