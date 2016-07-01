@@ -136,6 +136,37 @@ describe('MdSlider', () => {
       expect(difference).toBeLessThan(1);
     });
 
+    it('should update the track fill on drag', () => {
+      let trackFillElement = sliderNativeElement.querySelector('.md-slider-track-fill');
+      let trackFillDimensions = trackFillElement.getBoundingClientRect();
+      let sliderDimensions =
+          sliderNativeElement.querySelector('.md-slider-track').getBoundingClientRect();
+
+      expect(trackFillDimensions.width).toBe(0);
+      dispatchDragEvent(sliderNativeElement, 0, 0.5, gestureConfig);
+
+      trackFillDimensions = trackFillElement.getBoundingClientRect();
+      expect(trackFillDimensions.width).toBe(sliderDimensions.width * 0.5);
+    });
+
+    it('should update the thumb position on drag', () => {
+      let thumbElement = sliderNativeElement.querySelector('.md-slider-thumb-position');
+      let thumbDimensions = thumbElement.getBoundingClientRect();
+      let thumbWidth =
+          sliderNativeElement.querySelector('.md-slider-thumb').getBoundingClientRect().width;
+      let sliderDimensions =
+          sliderNativeElement.querySelector('.md-slider-track').getBoundingClientRect();
+
+      expect(thumbDimensions.left).toBe(sliderDimensions.left - (thumbWidth / 2));
+      dispatchDragEvent(sliderNativeElement, 0, 0.5, gestureConfig);
+
+      thumbDimensions = thumbElement.getBoundingClientRect();
+      // The thumb's offset is expected to be equal to the slider's offset + half the slider's width
+      // (from the click event) - half the thumb width (to center the thumb).
+      let offset = sliderDimensions.left + (sliderDimensions.width * 0.5) - (thumbWidth / 2);
+      expect(thumbDimensions.left).toBe(offset);
+    });
+
     it('should add the md-slider-active class on click', () => {
       let containerElement = sliderNativeElement.querySelector('.md-slider-container');
       expect(containerElement.classList).not.toContain('md-slider-active');
