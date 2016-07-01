@@ -236,6 +236,8 @@ export class SliderRenderer {
 
     fillTrackElement.style.width = `${position}px`;
     thumbPositionElement.style.transform = `translateX(${thumbPosition}px)`;
+    // Mobile Safari 8.0 does not support transform without the webkit prefix.
+    thumbPositionElement.style.webkitTransform = `translateX(${thumbPosition}px)`;
   }
 
   /**
