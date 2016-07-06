@@ -425,7 +425,7 @@ describe('MdGridList', () => {
 })
 class TestGridList {
   tiles: any[];
-  height: string;
+  height: string | number;
   colspan: number;
   rowspan: number;
 }
