@@ -1,7 +1,11 @@
 # Material Design for Angular 2
-[![NPM Version](https://badge.fury.io/js/%40angular2-material%2Fcore.svg)](https://www.npmjs.com/package/%2540angular2-material%2Fcore)
-[![Build Status](https://travis-ci.org/angular/material2.svg?branch=master)](https://travis-ci.org/angular/material2)
-[![Gitter](https://badges.gitter.im/angular/material2.svg)](https://gitter.im/angular/material2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
+[![Gitter][gitter]][gitter-url]
+
+[![NPM Version][npm-badge]][npm-badge-url]
+[![Build Status][travis-badge]][travis-badge-url]
+[![Dependency Status][dependencies-badge]][dependencies-badge-url]
+[![devDependency Status][dev-dependencies-badge]][dev-dependencies-badge-url]
 
 This is the home for the Angular team's Material Design components built on top of Angular 2.
 
@@ -48,3 +52,14 @@ We also aim for great user experience with the following screen readers:
 * NVDA and JAWS with IE / FF / Chrome (on Windows).
 * VoiceOver with Safari on iOS and Safari / Chrome on OSX.
 * TalkBack with Chrome on Android.
+
+[npm-badge]: https://badge.fury.io/js/%40angular2-material%2Fcore.svg
+[npm-badge-url]: https://www.npmjs.com/package/%2540angular2-material%2Fcore
+[travis-badge]: https://travis-ci.org/angular/material2.svg?branch=master
+[travis-badge-url]: https://travis-ci.org/angular/material2
+[gitter]: https://badges.gitter.im/angular/material2.svg
+[gitter-url]: https://gitter.im/angular/material2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
+[dependencies-badge]: https://david-dm.org/angular/material2.svg
+[dependencies-badge-url]: https://david-dm.org/angular/material2
+[dev-dependencies-badge]: https://david-dm.org/angular/material2/dev-status.svg
+[dev-dependencies-badge-url]: https://david-dm.org/angular/material2#info=devDependencies
