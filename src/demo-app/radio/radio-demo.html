@@ -22,7 +22,7 @@
   </md-radio-group>
 </section>
 <h1>Favorite Season Example</h1>
-<h2>Dynamic Example with two-way data-binding</h2>
+<h2>Dynamic Example with two-way data-binding ngModel</h2>
 <section class="demo-section">
   <md-radio-group name="more_options" [(ngModel)]="favoriteSeason">
     <md-radio-button *ngFor="let season of seasonOptions" name="more_options" [value]="season">
@@ -30,4 +30,13 @@
     </md-radio-button>
   </md-radio-group>
   <p>Your favorite season is: {{favoriteSeason}}</p>
+</section>
+<h2>Dynamic Example with two-way data-binding using [(value)]</h2>
+<section class="demo-section">
+  <md-radio-group name="superhero_options" [(value)]="favoriteHero">
+    <md-radio-button value="Spiderman">Spiderman</md-radio-button>
+    <md-radio-button value="Other Spiderman">Other Spiderman</md-radio-button>
+    <md-radio-button value="All the Spidermen">All the Spidermen</md-radio-button>
+  </md-radio-group>
+  <p>Your favorite superhero is: {{favoriteHero}}</p>
 </section>

@@ -12,7 +12,7 @@ import {FORM_DIRECTIVES, NgControl, disableDeprecatedForms, provideForms} from '
 import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {Component, DebugElement, provide} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MD_RADIO_DIRECTIVES, MdRadioGroup, MdRadioButton, MdRadioChange} from './radio';
+import {MD_RADIO_DIRECTIVES, MdRadioGroup, MdRadioButton} from './radio';
 import {
   MdUniqueSelectionDispatcher
 } from '@angular2-material/core/coordination/unique-selection-dispatcher';
@@ -67,6 +67,11 @@ describe('MdRadio', () => {
       for (let radio of radioInstances) {
         expect(radio.name).toBe(groupInstance.name);
       }
+
+      groupInstance.name = 'new name';
+      for (let radio of radioInstances) {
+        expect(radio.name).toBe(groupInstance.name);
+      }
     });
 
     it('should disable click interaction when the group is disabled', () => {
@@ -109,7 +114,6 @@ describe('MdRadio', () => {
       fixture.detectChanges();
 
       expect(groupInstance.value).toBe('fire');
-      expect(groupInstance.selected).toBe(radioInstances[0]);
     });
 
     it('should update the group and radios when one of the radios is clicked', () => {
@@ -119,7 +123,6 @@ describe('MdRadio', () => {
       fixture.detectChanges();
 
       expect(groupInstance.value).toBe('fire');
-      expect(groupInstance.selected).toBe(radioInstances[0]);
       expect(radioInstances[0].checked).toBe(true);
       expect(radioInstances[1].checked).toBe(false);
 
@@ -127,7 +130,6 @@ describe('MdRadio', () => {
       fixture.detectChanges();
 
       expect(groupInstance.value).toBe('water');
-      expect(groupInstance.selected).toBe(radioInstances[1]);
       expect(radioInstances[0].checked).toBe(false);
       expect(radioInstances[1].checked).toBe(true);
     });
@@ -140,14 +142,13 @@ describe('MdRadio', () => {
 
       expect(radioInstances[0].checked).toBe(true);
       expect(groupInstance.value).toBe('fire');
-      expect(groupInstance.selected).toBe(radioInstances[0]);
     });
 
     it('should emit a change event from radio buttons', fakeAsync(() => {
       expect(radioInstances[0].checked).toBe(false);
 
       let changeSpy = jasmine.createSpy('radio change listener');
-      radioInstances[0].change.subscribe(changeSpy);
+      radioInstances[0].valueChange.subscribe(changeSpy);
 
       radioInstances[0].checked = true;
       fixture.detectChanges();
@@ -164,7 +165,7 @@ describe('MdRadio', () => {
       expect(groupInstance.value).toBeFalsy();
 
       let changeSpy = jasmine.createSpy('radio-group change listener');
-      groupInstance.change.subscribe(changeSpy);
+      groupInstance.valueChange.subscribe(changeSpy);
 
       groupInstance.value = 'fire';
       fixture.detectChanges();
@@ -202,7 +203,6 @@ describe('MdRadio', () => {
       fixture.detectChanges();
 
       expect(groupInstance.value).toBe('fire');
-      expect(groupInstance.selected).toBe(radioInstances[0]);
       expect(radioInstances[0].checked).toBe(true);
       expect(radioInstances[1].checked).toBe(false);
 
@@ -210,7 +210,6 @@ describe('MdRadio', () => {
       fixture.detectChanges();
 
       expect(groupInstance.value).toBe('water');
-      expect(groupInstance.selected).toBe(radioInstances[1]);
       expect(radioInstances[0].checked).toBe(false);
       expect(radioInstances[1].checked).toBe(true);
     });
@@ -272,12 +271,6 @@ describe('MdRadio', () => {
       for (let radio of radioInstances) {
         expect(radio.checked).toBeFalsy();
       }
-
-      groupInstance.value = 'vanilla';
-      for (let radio of radioInstances) {
-        expect(radio.checked).toBe(groupInstance.value === radio.value);
-      }
-      expect(groupInstance.selected.value).toBe(groupInstance.value);
     });
 
     it('should have the correct control state initially and after interaction', fakeAsync(() => {
@@ -356,7 +349,7 @@ describe('MdRadio', () => {
 
       tick();
       expect(testComponent.modelValue).toBe('chocolate');
-      expect(testComponent.lastEvent.value).toBe('chocolate');
+      expect(testComponent.lastEvent).toBe('chocolate');
     }));
   });
 
@@ -493,11 +486,11 @@ class RadiosInsideRadioGroup {
     <md-radio-button name="season" value="spring">Spring</md-radio-button>
     <md-radio-button name="season" value="summer">Summer</md-radio-button>
     <md-radio-button name="season" value="autum">Autumn</md-radio-button>
-    
+
     <md-radio-button name="weather" value="warm">Spring</md-radio-button>
     <md-radio-button name="weather" value="hot">Summer</md-radio-button>
     <md-radio-button name="weather" value="cool">Autumn</md-radio-button>
-    
+
     <span id="xyz">Baby Banana<span>
     <md-radio-button name="fruit" value="banana" aria-label="Banana" aria-labelledby="xyz">
     </md-radio-button>
@@ -510,7 +503,7 @@ class StandaloneRadioButtons { }
 @Component({
   directives: [MD_RADIO_DIRECTIVES, FORM_DIRECTIVES],
   template: `
-  <md-radio-group [(ngModel)]="modelValue" (change)="lastEvent = $event">
+  <md-radio-group [(ngModel)]="modelValue" (valueChange)="lastEvent = $event">
     <md-radio-button *ngFor="let option of options" [value]="option.value">
       {{option.label}}
     </md-radio-button>
@@ -524,7 +517,7 @@ class RadioGroupWithNgModel {
     {label: 'Chocolate', value: 'chocolate'},
     {label: 'Strawberry', value: 'strawberry'},
   ];
-  lastEvent: MdRadioChange;
+  lastEvent: any;
 }
 
 // TODO(jelbourn): remove eveything below when Angular supports faking events.
