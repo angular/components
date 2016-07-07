@@ -43,7 +43,7 @@ const componentFolders = fs
 const scopePackages = ['src/core'].concat(componentFolders);
 
 const blockedRegex = new RegExp(blocked_statements.join('|'), 'g');
-const importRegex = /from '(.*)'/g;
+const importRegex = /from\s+'(.*)';/g;
 
 /**
  * Find the fork point between HEAD of the current branch, and master.
