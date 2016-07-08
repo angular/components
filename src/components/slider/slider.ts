@@ -6,6 +6,8 @@ import {
   ViewEncapsulation,
   AfterContentInit,
 } from '@angular/core';
+import {BooleanFieldValue} from '@angular2-material/core/annotations/field-value';
+import {applyCssTransform} from '@angular2-material/core/style/apply-transform';
 
 @Component({
   moduleId: module.id,
@@ -30,8 +32,11 @@ export class MdSlider implements AfterContentInit {
   /** The dimensions of the slider. */
   private _sliderDimensions: ClientRect = null;
 
-  /** Whether or not the slider is disabled. */
-  private _disabled: boolean = false;
+  @Input()
+  @BooleanFieldValue()
+  @HostBinding('class.md-slider-disabled')
+  @HostBinding('attr.aria-disabled')
+  disabled: boolean = false;
 
   /** The miniumum value that the slider can have. */
   private _min: number = 0;
@@ -45,32 +50,22 @@ export class MdSlider implements AfterContentInit {
   /**
    * Whether or not the thumb is currently being dragged.
    * Used to determine if there should be a transition for the thumb and fill track.
-   * @internal
+   * TODO: internal
    */
   isDragging: boolean = false;
 
   /**
    * Whether or not the slider is active (clicked or is being dragged).
    * Used to shrink and grow the thumb as according to the Material Design spec.
-   * @internal
+   * TODO: internal
    */
   isActive: boolean = false;
 
   /** Indicator for if the value has been set or not. */
-  private _isValueInitialized: boolean = false;
+  private _isInitialized: boolean = false;
 
   /** Value of the slider. */
   private _value: number = 0;
-
-  @Input()
-  @HostBinding('class.md-slider-disabled')
-  get disabled(): boolean {
-    return this._disabled;
-  }
-
-  set disabled(value) {
-    this._disabled = (value != null && value !== false) ? true : null;
-  }
 
   @Input()
   @HostBinding('attr.aria-valuemin')
@@ -83,7 +78,7 @@ export class MdSlider implements AfterContentInit {
     this._min = Number(v);
 
     // If the value wasn't explicitly set by the user, set it to the min.
-    if (!this._isValueInitialized) {
+    if (!this._isInitialized) {
       this.value = this._min;
     }
   }
@@ -106,24 +101,25 @@ export class MdSlider implements AfterContentInit {
 
   set value(v: number) {
     this._value = Number(v);
-    this._isValueInitialized = true;
+    this._isInitialized = true;
     this.updatePercentFromValue();
   }
 
-  constructor(private _elementRef: ElementRef) {
-    this._renderer = new SliderRenderer(_elementRef);
+  constructor(elementRef: ElementRef) {
+    this._renderer = new SliderRenderer(elementRef);
   }
 
   /**
    * Once the slider has rendered, grab the dimensions and update the position of the thumb and
    * fill track.
+   * TODO: internal
    */
   ngAfterContentInit() {
     this._sliderDimensions = this._renderer.getSliderDimensions();
     this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
   }
 
-  /** @internal */
+  /** TODO: internal */
   onClick(event: MouseEvent) {
     if (this.disabled) {
       return;
@@ -135,7 +131,7 @@ export class MdSlider implements AfterContentInit {
     this.updateValueFromPosition(event.clientX);
   }
 
-  /** @internal */
+  /** TODO: internal */
   onDrag(event: HammerInput) {
     if (this.disabled) {
       return;
@@ -145,7 +141,7 @@ export class MdSlider implements AfterContentInit {
     this.updateValueFromPosition(event.center.x);
   }
 
-  /** @internal */
+  /** TODO: internal */
   onDragStart(event: HammerInput) {
     if (this.disabled) {
       return;
@@ -158,12 +154,12 @@ export class MdSlider implements AfterContentInit {
     this.updateValueFromPosition(event.center.x);
   }
 
-  /** @internal */
+  /** TODO: internal */
   onDragEnd() {
     this.isDragging = false;
   }
 
-  /** @internal */
+  /** TODO: internal */
   onResize() {
     this.isDragging = true;
     this._sliderDimensions = this._renderer.getSliderDimensions();
@@ -171,7 +167,7 @@ export class MdSlider implements AfterContentInit {
     this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
   }
 
-  /** @internal */
+  /** TODO: internal */
   onBlur() {
     this.isActive = false;
   }
@@ -204,6 +200,9 @@ export class MdSlider implements AfterContentInit {
   }
 }
 
+/**
+ * Renderer class in order to keep all dom manipulation in one place and outside of the main class.
+ */
 export class SliderRenderer {
   constructor(private _elementRef: ElementRef) { }
 
@@ -235,9 +234,7 @@ export class SliderRenderer {
     let thumbPosition = position - (thumbWidth / 2);
 
     fillTrackElement.style.width = `${position}px`;
-    thumbPositionElement.style.transform = `translateX(${thumbPosition}px)`;
-    // Mobile Safari 8.0 does not support transform without the webkit prefix.
-    thumbPositionElement.style.webkitTransform = `translateX(${thumbPosition}px)`;
+    applyCssTransform(thumbPositionElement, `translateX(${thumbPosition}px)`);
   }
 
   /**

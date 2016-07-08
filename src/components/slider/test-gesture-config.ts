@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {MdGestureConfig} from '@angular2-material/core/gestures/MdGestureConfig';
 
 /**
- * To test the dragging behavior on the slider, we need to be able to access the hammer instances
- * to emit events for a drag.
+ * An extension of MdGestureConfig that exposes the underlying HammerManager instances.
+ * Tests can use these instances to emit fake gesture events.
  */
 @Injectable()
 export class TestGestureConfig extends MdGestureConfig {
@@ -29,8 +29,8 @@ export class TestGestureConfig extends MdGestureConfig {
   }
 
   /**
-   * Hammer creates a new instance for every listener so we need to apply our event on all instances
-   * to hit the correct listener.
+   * The Angular event plugin for Hammer creates a new HammerManager instance for each listener,
+   * so we need to apply our event on all instances to hit the correct listener.
    */
   emitEventForElement(eventType: string, element: HTMLElement, eventData: Object) {
     let instances = this.hammerInstances.get(element);
