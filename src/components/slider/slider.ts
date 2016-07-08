@@ -204,7 +204,11 @@ export class MdSlider implements AfterContentInit {
  * Renderer class in order to keep all dom manipulation in one place and outside of the main class.
  */
 export class SliderRenderer {
-  constructor(private _elementRef: ElementRef) { }
+  private _sliderElement: HTMLElement;
+
+  constructor(private _elementRef: ElementRef) {
+    this._sliderElement = this._elementRef.nativeElement;
+  }
 
   /**
    * Get the bounding client rect of the slider track element.
@@ -212,7 +216,7 @@ export class SliderRenderer {
    * take up.
    */
   getSliderDimensions() {
-    let trackElement = this._elementRef.nativeElement.querySelector('.md-slider-track');
+    let trackElement = this._sliderElement.querySelector('.md-slider-track');
     return trackElement.getBoundingClientRect();
   }
 
@@ -221,11 +225,11 @@ export class SliderRenderer {
    */
   updateThumbAndFillPosition(percent: number, width: number) {
     // The actual thumb element. Needed to get the exact width of the thumb for calculations.
-    let thumbElement = this._elementRef.nativeElement.querySelector('.md-slider-thumb');
+    let thumbElement = this._sliderElement.querySelector('.md-slider-thumb');
     // A container element that is used to avoid overwriting the transform on the thumb itself.
     let thumbPositionElement =
-        this._elementRef.nativeElement.querySelector('.md-slider-thumb-position');
-    let fillTrackElement = this._elementRef.nativeElement.querySelector('.md-slider-track-fill');
+        <HTMLElement>this._sliderElement.querySelector('.md-slider-thumb-position');
+    let fillTrackElement = <HTMLElement>this._sliderElement.querySelector('.md-slider-track-fill');
     let thumbWidth = thumbElement.getBoundingClientRect().width;
 
     let position = percent * width;
@@ -242,6 +246,6 @@ export class SliderRenderer {
    * Currently only used to allow a blur event to fire but will be used with keyboard input later.
    */
   addFocus() {
-    this._elementRef.nativeElement.focus();
+    this._sliderElement.focus();
   }
 }

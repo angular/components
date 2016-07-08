@@ -155,8 +155,7 @@ describe('MdSlider', () => {
 
       expect(containerElement.classList).toContain('md-slider-active');
 
-      // The test won't activate the onBlur function. Tried clicking/focusing the body and neither
-      // worked. Should update this if a way is ever found.
+      // Call the `onBlur` handler directly because we cannot simulate a focus event in unit tests.
       sliderInstance.onBlur();
       fixture.detectChanges();
 
