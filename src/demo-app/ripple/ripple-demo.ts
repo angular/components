@@ -2,13 +2,13 @@ import {
   Component,
   ViewChild,
 } from '@angular/core';
-import {MdButton} from '@angular2-material/button/button';
-import {MdCard} from '@angular2-material/card/card';
-import {MdCheckbox} from '@angular2-material/checkbox/checkbox';
-import {MdIcon} from '@angular2-material/icon/icon';
-import {MdInkRipple} from '@angular2-material/ripple/ripple';
-import {MdInput} from '@angular2-material/input/input';
-import {MdRadioButton, MdRadioGroup} from '@angular2-material/radio/radio';
+import {MD_BUTTON_DIRECTIVES} from '@angular2-material/button/button';
+import {MD_CARD_DIRECTIVES} from '@angular2-material/card/card';
+import {MD_CHECKBOX_DIRECTIVES} from '@angular2-material/checkbox/checkbox';
+import {MD_ICON_DIRECTIVES} from '@angular2-material/icon/icon';
+import {MD_RIPPLE_DIRECTIVES, MdInkRipple} from '@angular2-material/ripple/ripple';
+import {MD_INPUT_DIRECTIVES} from '@angular2-material/input/input';
+import {MD_RADIO_DIRECTIVES} from '@angular2-material/radio/radio';
 import {
   MdUniqueSelectionDispatcher
 } from '@angular2-material/core/coordination/unique-selection-dispatcher';
@@ -20,7 +20,13 @@ import {
   styleUrls: ['ripple-demo.css'],
   providers: [MdUniqueSelectionDispatcher],
   directives: [
-      MdButton, MdCard, MdCheckbox, MdIcon, MdInput, MdRadioButton, MdRadioGroup, MdInkRipple,
+    MD_BUTTON_DIRECTIVES,
+    MD_CARD_DIRECTIVES,
+    MD_CHECKBOX_DIRECTIVES,
+    MD_ICON_DIRECTIVES,
+    MD_RIPPLE_DIRECTIVES,
+    MD_INPUT_DIRECTIVES,
+    MD_RADIO_DIRECTIVES,
   ],
 })
 export class RippleDemo {

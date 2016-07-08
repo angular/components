@@ -20,7 +20,7 @@
   <section>
     Speed
     <md-radio-group [(ngModel)]="rippleSpeed">
-      <md-radio-button name="demo-ripple-options" value="0.25">Slow</md-radio-button>
+      <md-radio-button name="demo-ripple-options" value="0.1">Slow</md-radio-button>
       <md-radio-button name="demo-ripple-options" value="1">Normal</md-radio-button>
       <md-radio-button name="demo-ripple-options" value="4">Fast</md-radio-button>
     </md-radio-group>
@@ -41,7 +41,7 @@
           [centered]="centered"
           [disabled]="disabled"
           [unbounded]="unbounded"
-          [max-radius]="maxRadius"
+          [maxRadius]="maxRadius"
           [color]="rippleColor"
           [backgroundColor]="rippleBackgroundColor"
           [speedFactor]="rippleSpeed"

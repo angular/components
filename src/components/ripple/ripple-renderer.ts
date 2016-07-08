@@ -2,7 +2,7 @@ import {
   ElementRef,
 } from '@angular/core';
 
-/** @internal */
+/** TODO: internal */
 export enum ForegroundRippleState {
   NEW,
   EXPANDING,
@@ -11,7 +11,7 @@ export enum ForegroundRippleState {
 
 /**
  * Wrapper for a foreground ripple DOM element and its animation state.
- * @internal
+ * TODO: internal
  */
 export class ForegroundRipple {
   state = ForegroundRippleState.NEW;
@@ -41,9 +41,9 @@ const distanceToFurthestCorner = (x: number, y: number, rect: ClientRect) => {
  * The constructor takes a reference to the <md-ink-ripple> element and a map of DOM event handlers
  * to be installed on the element that triggers ripple animations.
  * This will eventually become a custom renderer once Angular support exists.
- * @internal
+ * TODO: internal
  */
-export class MdInkRippleManager {
+export class RippleRenderer {
   private _rippleElement: Element;
   private _triggerElement: Element;
 
@@ -112,9 +112,9 @@ export class MdInkRippleManager {
     const rippleDiv = document.createElement('div');
     this._rippleElement.appendChild(rippleDiv);
     rippleDiv.classList.add('md-ripple-foreground');
-    rippleDiv.style.left = (offsetX - maxRadius) + 'px';
-    rippleDiv.style.top = (offsetY - maxRadius) + 'px';
-    rippleDiv.style.width = (2 * maxRadius) + 'px';
+    rippleDiv.style.left = `${offsetX - maxRadius}px`;
+    rippleDiv.style.top = `${offsetY - maxRadius}px`;
+    rippleDiv.style.width = `${2 * maxRadius}px`;
     rippleDiv.style.height = rippleDiv.style.width;
     // If color input is not set, this will default to the background color defined in CSS.
     rippleDiv.style.backgroundColor = color;

@@ -11,10 +11,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  MdInkRippleManager,
+  RippleRenderer,
   ForegroundRipple,
   ForegroundRippleState,
-} from './ripple-manager';
+} from './ripple-renderer';
 
 
 @Component({
@@ -30,39 +30,39 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
    * The element that triggers the ripple when click events are received. Defaults to the parent
    * of the <md-ink-rippple>.
    */
-  @Input('trigger') trigger: Element;
+  @Input() trigger: Element;
   /**
    * Whether the ripple always originates from the center of the <md-ink-ripple> bounds, rather
    * than originating from the location of the click event.
    */
-  @Input('centered') centered: boolean;
+  @Input() centered: boolean;
   /**
    * Whether click events will not trigger the ripple. It can still be triggered by manually
    * calling start() and end().
    */
-  @Input('disabled') disabled: boolean;
+  @Input() disabled: boolean;
   /**
    * If set, the radius in pixels of foreground ripples when fully expanded. If unset, the radius
    * will be the distance from the center of the ripple to the furthest corner of the element's
    * bounding rectangle.
    */
-  @Input('max-radius') maxRadius: number = 0;
+  @Input() maxRadius: number = 0;
   /**
    * If set, the normal duration of ripple animations is divided by this value. For example,
    * setting it to 0.5 will cause the animations to take twice as long.
    */
-  @Input('speedFactor') speedFactor: number = 1;
+  @Input() speedFactor: number = 1;
   /** Custom color for ripples. */
-  @Input('color') color: string;
+  @Input() color: string;
   /** Custom color for the ripple background. */
-  @Input('backgroundColor') backgroundColor: string;
+  @Input() backgroundColor: string;
 
   /** Whether the ripple background will be highlighted to indicated a focused state. */
   @HostBinding('class.md-ripple-focused') @Input('focused') focused: boolean;
   /** Whether foreground ripples should be visible outside the component's bounds. */
   @HostBinding('class.md-ripple-unbounded') @Input('unbounded') unbounded: boolean;
 
-  private _rippleManager: MdInkRippleManager;
+  private _rippleRenderer: RippleRenderer;
 
   constructor(_elementRef: ElementRef) {
     // These event handlers are attached to the element that triggers the ripple animations.
@@ -70,21 +70,21 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
     eventHandlers.set('mousedown', (event: MouseEvent) => this._mouseDown(event));
     eventHandlers.set('click', (event: MouseEvent) => this._click(event));
     eventHandlers.set('mouseleave', (event: MouseEvent) => this._mouseLeave(event));
-    this._rippleManager = new MdInkRippleManager(_elementRef, eventHandlers);
+    this._rippleRenderer = new RippleRenderer(_elementRef, eventHandlers);
   }
 
   /** TODO: internal */
   ngOnInit() {
     // If no trigger element was explicity set, use our parent.
     if (!this.trigger) {
-      this._rippleManager.setTriggerElementToParent();
+      this._rippleRenderer.setTriggerElementToParent();
     }
   }
 
   /** TODO: internal */
   ngOnDestroy() {
     // Remove event listeners on the trigger element.
-    this._rippleManager.clearTriggerElement();
+    this._rippleRenderer.clearTriggerElement();
   }
 
   /** TODO: internal */
@@ -92,7 +92,7 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
     // If the trigger element changed (or is being initially set), add event listeners to it.
     const changedInputs = Object.keys(changes);
     if (changedInputs.indexOf('trigger') !== -1) {
-      this._rippleManager.setTriggerElement(this.trigger);
+      this._rippleRenderer.setTriggerElement(this.trigger);
     }
   }
 
@@ -100,7 +100,7 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
    * Responds to the start of a ripple animation trigger by fading the background in.
    */
   start() {
-    this._rippleManager.fadeInRippleBackground(this.backgroundColor);
+    this._rippleRenderer.fadeInRippleBackground(this.backgroundColor);
   }
 
   /**
@@ -109,7 +109,7 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
    * the "centered" property is set or forceCenter is true).
    */
   end(left: number, top: number, forceCenter = true) {
-    this._rippleManager.createForegroundRipple(
+    this._rippleRenderer.createForegroundRipple(
       left,
       top,
       this.color,
@@ -117,7 +117,7 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
       this.maxRadius,
       this.speedFactor,
       (ripple: ForegroundRipple, e: TransitionEvent) => this._rippleTransitionEnded(ripple, e));
-    this._rippleManager.fadeOutRippleBackground();
+    this._rippleRenderer.fadeOutRippleBackground();
   }
 
   private _rippleTransitionEnded(ripple: ForegroundRipple, event: TransitionEvent) {
@@ -126,11 +126,11 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
       // remove it from the DOM.
       switch (ripple.state) {
         case ForegroundRippleState.EXPANDING:
-          this._rippleManager.fadeOutForegroundRipple(ripple.rippleElement);
+          this._rippleRenderer.fadeOutForegroundRipple(ripple.rippleElement);
           ripple.state = ForegroundRippleState.FADING_OUT;
           break;
         case ForegroundRippleState.FADING_OUT:
-          this._rippleManager.removeRippleFromDom(ripple.rippleElement);
+          this._rippleRenderer.removeRippleFromDom(ripple.rippleElement);
           break;
       }
     }
@@ -166,8 +166,10 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
    */
   private _mouseLeave(event: MouseEvent) {
     // We can always fade out the background here; It's a no-op if it was already inactive.
-    this._rippleManager.fadeOutRippleBackground();
+    this._rippleRenderer.fadeOutRippleBackground();
   }
 
   // TODO: Reactivate the background div if the user drags out and back in.
 }
+
+export const MD_RIPPLE_DIRECTIVES = [MdInkRipple];
