@@ -331,7 +331,7 @@ class BasicRippleContainer {
       <md-ink-ripple class="md-ripple-fit-parent"
           [trigger]="trigger"
           [centered]="centered"
-          [max-radius]="maxRadius"
+          [maxRadius]="maxRadius"
           [disabled]="disabled"
           [color]="color"
           [backgroundColor]="backgroundColor"
