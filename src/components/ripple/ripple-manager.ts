@@ -18,9 +18,9 @@ export class ForegroundRipple {
   constructor(public rippleElement: Element) {}
 }
 
-const RIPPLE_SPEED_PX_PER_SECOND = 500;
-const MIN_RIPPLE_FILL_TIME_SECONDS = 0.2;
-const MAX_RIPPLE_FILL_TIME_SECONDS = 0.6;
+const RIPPLE_SPEED_PX_PER_SECOND = 1000;
+const MIN_RIPPLE_FILL_TIME_SECONDS = 0.1;
+const MAX_RIPPLE_FILL_TIME_SECONDS = 0.3;
 
 const sqr = (x: number) => x * x;
 
@@ -118,10 +118,8 @@ export class MdInkRippleManager {
     rippleDiv.style.height = rippleDiv.style.width;
     // If color input is not set, this will default to the background color defined in CSS.
     rippleDiv.style.backgroundColor = color;
-
-    const translateX = offsetX - parentRect.width / 2;
-    const translateY = offsetY - parentRect.height / 2;
-    rippleDiv.style.transform = `scale(0.01) translate(${translateX}px, ${translateY}px)`;
+    // Start the ripple tiny.
+    rippleDiv.style.transform = `scale(0.001)`;
 
     const fadeInSeconds = (1 / (speedFactor || 1)) * Math.max(
         MIN_RIPPLE_FILL_TIME_SECONDS,
