@@ -1,25 +1,42 @@
 import {
-  Component,
-  ContentChildren,
-  Directive,
-  EventEmitter,
-  HostBinding,
-  Input,
-  OnInit,
-  Optional,
-  Output,
-  QueryList,
-  ViewEncapsulation,
-  forwardRef
+    Component,
+    ContentChildren,
+    Directive,
+    EventEmitter,
+    HostBinding,
+    Input,
+    OnInit,
+    Optional,
+    Output,
+    Provider,
+    QueryList,
+    ViewEncapsulation,
+    forwardRef
 } from '@angular/core';
+// TODO(iveysaur): Update to @angular/forms when we have rc.2
+import {
+    NG_VALUE_ACCESSOR,
+    ControlValueAccessor,
+} from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
 import {
-  MdUniqueSelectionDispatcher
+    MdUniqueSelectionDispatcher
 } from '@angular2-material/core/coordination/unique-selection-dispatcher';
 import {BooleanFieldValue} from '@angular2-material/core/annotations/field-value';
 
 export type ToggleType = 'checkbox' | 'radio';
 
+
+
+/**
+ * Provider Expression that allows md-button-toggle-group to register as a ControlValueAccessor.
+ * This allows it to support [(ngModel)].
+ */
+export const MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR = new Provider(
+    NG_VALUE_ACCESSOR, {
+      useExisting: forwardRef(() => MdButtonToggleGroup),
+      multi: true
+    });
 
 var _uniqueIdCounter = 0;
 
@@ -32,11 +49,12 @@ export class MdButtonToggleChange {
 /** Exclusive selection button toggle group that behaves like a radio-button group. */
 @Directive({
   selector: 'md-button-toggle-group:not([multiple])',
+  providers: [MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
   host: {
     'role': 'radiogroup',
   },
 })
-export class MdButtonToggleGroup {
+export class MdButtonToggleGroup implements ControlValueAccessor {
   /** The value for the button toggle group. Should match currently selected button toggle. */
   private _value: any = null;
 
@@ -49,6 +67,12 @@ export class MdButtonToggleGroup {
   /** The currently selected button toggle, should match the value. */
   private _selected: MdButtonToggle = null;
 
+  /** The method to be called in order to update ngModel. */
+  private _controlValueAccessorChangeFn: (value: any) => void = (value) => {};
+
+  /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
+  onTouched: () => any = () => {};
+
   /** Event emitted when the group's value changes. */
   private _change: EventEmitter<MdButtonToggleChange> = new EventEmitter<MdButtonToggleChange>();
   @Output() get change(): Observable<MdButtonToggleChange> {
@@ -57,7 +81,7 @@ export class MdButtonToggleGroup {
 
   /** Child button toggle buttons. */
   @ContentChildren(forwardRef(() => MdButtonToggle))
-  private _buttonToggles: QueryList<MdButtonToggle> = null;
+  _buttonToggles: QueryList<MdButtonToggle> = null;
 
   @Input()
   get name(): string {
@@ -66,7 +90,6 @@ export class MdButtonToggleGroup {
 
   set name(value: string) {
     this._name = value;
-
     this._updateButtonToggleNames();
   }
 
@@ -126,7 +149,9 @@ export class MdButtonToggleGroup {
         this.selected = matchingButtonToggle;
       } else if (this.value == null) {
         this.selected = null;
-        this._buttonToggles.forEach(buttonToggle => {buttonToggle.checked = false; });
+        this._buttonToggles.forEach(buttonToggle => {
+          buttonToggle.checked = false;
+        });
       }
     }
   }
@@ -136,7 +161,32 @@ export class MdButtonToggleGroup {
     let event = new MdButtonToggleChange();
     event.source = this._selected;
     event.value = this._value;
+    this._controlValueAccessorChangeFn(event.value);
     this._change.emit(event);
+  }
+
+  /**
+   * Implemented as part of ControlValueAccessor.
+   * TODO: internal
+   */
+  writeValue(value: any) {
+    this.value = value;
+  }
+
+  /**
+   * Implemented as part of ControlValueAccessor.
+   * TODO: internal
+   */
+  registerOnChange(fn: (value: any) => void) {
+    this._controlValueAccessorChangeFn = fn;
+  }
+
+  /**
+   * Implemented as part of ControlValueAccessor.
+   * TODO: internal
+   */
+  registerOnTouched(fn: any) {
+    this.onTouched = fn;
   }
 }
 
@@ -169,11 +219,8 @@ export class MdButtonToggle implements OnInit {
   /** Whether or not this button toggle is checked. */
   private _checked: boolean = false;
 
-  /**
-   * Type of the button toggle. Either 'radio' or 'checkbox'.
-   * @internal
-   */
-  type: ToggleType;
+  /** Type of the button toggle. Either 'radio' or 'checkbox'. */
+  _type: ToggleType;
 
   /** The unique ID for this button toggle. */
   @HostBinding()
@@ -219,18 +266,17 @@ export class MdButtonToggle implements OnInit {
         }
       });
 
-      this.type = 'radio';
+      this._type = 'radio';
       this.name = this.buttonToggleGroup.name;
       this._isSingleSelector = true;
     } else {
       // Even if there is no group at all, treat the button toggle as a checkbox so it can be
       // toggled on or off.
-      this.type = 'checkbox';
+      this._type = 'checkbox';
       this._isSingleSelector = false;
     }
   }
 
-  /** @internal */
   ngOnInit() {
     if (this.id == null) {
       this.id = `md-button-toggle-${_uniqueIdCounter++}`;
@@ -239,7 +285,6 @@ export class MdButtonToggle implements OnInit {
     if (this.buttonToggleGroup && this._value == this.buttonToggleGroup.value) {
       this._checked = true;
     }
-
   }
 
   get inputId(): string {
@@ -310,11 +355,8 @@ export class MdButtonToggle implements OnInit {
     this.checked = !this.checked;
   }
 
-  /**
-   * Checks the button toggle due to an interaction with the underlying native input.
-   * @internal
-   */
-  onInputChange(event: Event) {
+  /** Checks the button toggle due to an interaction with the underlying native input. */
+  _onInputChange(event: Event) {
     event.stopPropagation();
 
     if (this._isSingleSelector) {
@@ -322,6 +364,7 @@ export class MdButtonToggle implements OnInit {
       // button toggle as checked.
       this.checked = true;
       this.buttonToggleGroup.selected = this;
+      this.buttonToggleGroup.onTouched();
     } else {
       this._toggle();
     }

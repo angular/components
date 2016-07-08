@@ -18,8 +18,10 @@ import {
 } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
-  ControlValueAccessor
-} from '@angular/common';
+  ControlValueAccessor,
+  NgModel,
+} from '@angular/forms';
+import {NgIf} from '@angular/common';
 import {BooleanFieldValue} from '@angular2-material/core/annotations/field-value';
 import {MdError} from '@angular2-material/core/errors/error';
 import {Observable} from 'rxjs/Observable';
@@ -27,7 +29,7 @@ import {Observable} from 'rxjs/Observable';
 
 const noop = () => {};
 
-const MD_INPUT_CONTROL_VALUE_ACCESSOR = new Provider(NG_VALUE_ACCESSOR, {
+export const MD_INPUT_CONTROL_VALUE_ACCESSOR = new Provider(NG_VALUE_ACCESSOR, {
   useExisting: forwardRef(() => MdInput),
   multi: true
 });
@@ -97,6 +99,7 @@ export class MdHint {
   templateUrl: 'input.html',
   styleUrls: ['input.css'],
   providers: [MD_INPUT_CONTROL_VALUE_ACCESSOR],
+  directives: [NgIf, NgModel],
   host: {'(click)' : 'focus()'}
 })
 export class MdInput implements ControlValueAccessor, AfterContentInit, OnChanges {
@@ -120,8 +123,8 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   /**
    * Content directives.
    */
-  @ContentChild(MdPlaceholder) private _placeholderChild: MdPlaceholder;
-  @ContentChildren(MdHint) private _hintChildren: QueryList<MdHint>;
+  @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
+  @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
 
   /** Readonly properties. */
   get focused() { return this._focused; }
@@ -182,37 +185,33 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   // This is to remove the `align` property of the `md-input` itself. Otherwise HTML5
   // might place it as RTL when we don't want to. We still want to use `align` as an
   // Input though, so we use HostBinding.
-  @HostBinding('attr.align') private get _align(): any { return null; }
+  @HostBinding('attr.align') get _align(): any { return null; }
 
 
-  @ViewChild('input') private _inputElement: ElementRef;
+  @ViewChild('input') _inputElement: ElementRef;
 
   /** Set focus on input */
   focus() {
     this._inputElement.nativeElement.focus();
   }
 
-  /** @internal */
-  handleFocus(event: FocusEvent) {
+  _handleFocus(event: FocusEvent) {
     this._focused = true;
     this._focusEmitter.emit(event);
   }
 
-  /** @internal */
-  handleBlur(event: FocusEvent) {
+  _handleBlur(event: FocusEvent) {
     this._focused = false;
     this._onTouchedCallback();
     this._blurEmitter.emit(event);
   }
 
-  /** @internal */
-  handleChange(event: Event) {
+  _handleChange(event: Event) {
     this.value = (<HTMLInputElement>event.target).value;
     this._onTouchedCallback();
   }
 
-  /** @internal */
-  hasPlaceholder(): boolean {
+  _hasPlaceholder(): boolean {
     return !!this.placeholder || this._placeholderChild != null;
   }
 

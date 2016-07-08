@@ -6,10 +6,11 @@ import {
     Output,
     ViewChildren,
     NgZone,
-    EventEmitter
+    EventEmitter,
+    QueryList,
+    ContentChildren
 } from '@angular/core';
-import {QueryList} from '@angular/core';
-import {ContentChildren} from '@angular/core';
+import {NgIf, NgFor} from '@angular/common';
 import {PortalHostDirective} from '@angular2-material/core/portal/portal-directives';
 import {MdTabLabel} from './tab-label';
 import {MdTabContent} from './tab-content';
@@ -17,6 +18,14 @@ import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdInkBar} from './ink-bar';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+
+// Due to a bug in the ChromeDriver, Angular 2 keyboard events are not triggered by `sendKeys`
+// during E2E tests when using dot notation such as `(keydown.rightArrow)`. To get around this,
+// we are temporarily using a single (keydown) handler.
+// See: https://github.com/angular/angular/issues/9419
+const RIGHT_ARROW = 39;
+const LEFT_ARROW = 37;
+const ENTER = 13;
 
 /** Used to generate unique ID's for each tab component */
 let nextId = 0;
@@ -45,24 +54,25 @@ export class MdTab {
   selector: 'md-tab-group',
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
-  directives: [PortalHostDirective, MdTabLabelWrapper, MdInkBar],
+  directives: [PortalHostDirective, MdTabLabelWrapper, MdInkBar, NgIf, NgFor],
 })
 export class MdTabGroup {
-  /** @internal */
-  @ContentChildren(MdTab) tabs: QueryList<MdTab>;
+  @ContentChildren(MdTab) _tabs: QueryList<MdTab>;
 
-  @ViewChildren(MdTabLabelWrapper) private _labelWrappers: QueryList<MdTabLabelWrapper>;
-  @ViewChildren(MdInkBar) private _inkBar: QueryList<MdInkBar>;
+  @ViewChildren(MdTabLabelWrapper) _labelWrappers: QueryList<MdTabLabelWrapper>;
+  @ViewChildren(MdInkBar) _inkBar: QueryList<MdInkBar>;
 
   private _isInitialized: boolean = false;
 
   private _selectedIndex: number = 0;
   @Input()
   set selectedIndex(value: number) {
-    this._selectedIndex = value;
+    if (value != this._selectedIndex) {
+      this._selectedIndex = value;
 
-    if (this._isInitialized) {
-      this._onSelectChange.emit(this._createChangeEvent(value));
+      if (this._isInitialized) {
+        this._onSelectChange.emit(this._createChangeEvent(value));
+      }
     }
   }
   get selectedIndex(): number {
@@ -141,26 +151,34 @@ export class MdTabGroup {
   private _createChangeEvent(index: number): MdTabChangeEvent {
     const event = new MdTabChangeEvent;
     event.index = index;
-    if (this.tabs && this.tabs.length) {
-      event.tab = this.tabs.toArray()[index];
+    if (this._tabs && this._tabs.length) {
+      event.tab = this._tabs.toArray()[index];
     }
     return event;
   }
 
-  /**
-   * Returns a unique id for each tab label element
-   * @internal
-   */
-  getTabLabelId(i: number): string {
+  /** Returns a unique id for each tab label element */
+  _getTabLabelId(i: number): string {
     return `md-tab-label-${this._groupId}-${i}`;
   }
 
-  /**
-   * Returns a unique id for each tab content element
-   * @internal
-   */
-  getTabContentId(i: number): string {
+  /** Returns a unique id for each tab content element */
+  _getTabContentId(i: number): string {
     return `md-tab-content-${this._groupId}-${i}`;
+  }
+
+  handleKeydown(event: KeyboardEvent) {
+    switch (event.keyCode) {
+      case RIGHT_ARROW:
+        this.focusNextTab();
+        break;
+      case LEFT_ARROW:
+        this.focusPreviousTab();
+        break;
+      case ENTER:
+        this.selectedIndex = this.focusIndex;
+        break;
+    }
   }
 
   /** Increment the focus index by 1; prevent going over the number of tabs */

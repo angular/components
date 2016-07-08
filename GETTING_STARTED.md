@@ -24,7 +24,7 @@ Now that your project has been created, you can install any Angular Material 2 c
 to use through npm. You can see our [list of published packages here](https://www.npmjs.com/~angular2-material).  
 
 ```bash
-npm install --save @angular2-material/{core,button,card}
+npm install --save @angular2-material/core @angular2-material/button @angular2-material/card
 ```
 Note: the core module is required as a peer dependency of other components.
 
@@ -115,6 +115,37 @@ directives: [MD_CARD_DIRECTIVES, MD_BUTTON_DIRECTIVES]
 - [Puppy Love Mobile (Google IO 2016)](https://github.com/kara/puppy-love-io)
 - [Material 2 Sample App](https://github.com/jelbourn/material2-app)
 
+### Additional steps for using Material components with forms
+
+If you're using Angular Material 2 version alpha.6 or later, you'll need to upgrade to Angular 2's 
+new forms module.  Here's how:
+
+- Install the `@angular/forms` package. If you're on Angular RC.4, install version 0.2.0.
+
+```bash
+npm install @angular/forms
+```
+
+- Change your bootstrap file to disable the old form directives and provide the new form 
+directives.    
+
+**main.ts**
+```ts
+import {disableDeprecatedForms, provideForms} from '@angular/forms'; 
+
+bootstrap(MyAppComponent, [
+  disableDeprecatedForms(),
+  provideForms()
+]);
+```
+
+- Import any and all forms symbols - `NgForm`, `Validators`, etc - from `@angular/forms`. 
+Importing them from `@angular/common` will result in a `No value accessor found` error.
+
+- Update your form code to use the new APIs. See more information about the changes in the proposal 
+doc [here](https://docs.google.com/document/u/1/d/1RIezQqE4aEhBRmArIAS1mRIZtWFf6JxN_7B4meyWK0Y/pub) 
+and the official documentation [here](https://angular.io/docs/ts/latest/guide/forms.html).
+
 ### Additional steps for `md-icon` setup:
 
 - If you want to use Material Design icons, load the Material Design font in your `index.html`.  `md-icon` supports any font icons or svg icons,
@@ -145,7 +176,17 @@ bootstrap(MyAppComponent, [
     directives: [MD_CARD_DIRECTIVES, MD_BUTTON_DIRECTIVES, MdIcon],
     providers: [MdIconRegistry]
  ```
-    
+
+- Add the icon package to the list of Material components in your `system-config.ts`:
+
+**src/system-config.ts**
+```ts
+// put the names of any of your Material components here
+const materialPkgs:string[] = [
+  ...
+  'icon'
+];
+```
     
     
     

@@ -9,19 +9,19 @@ require('ts-node').register({
 
 const E2E_BASE_URL = process.env['E2E_BASE_URL'] || 'http://localhost:4200';
 const config = {
+  // TODO(jelbourn): add back plugin for a11y assersions once it supports specifying AXS options.
   useAllAngular2AppRoots: true,
-  plugins: [{
-    chromeA11YDevTools: {
-      treatWarningsAsFailures: true
-    },
-    package: 'protractor-accessibility-plugin'
-  }],
   specs: [ path.join(__dirname, '../e2e/**/*.e2e.ts') ],
-  baseUrl: E2E_BASE_URL
+  baseUrl: E2E_BASE_URL,
+  allScriptsTimeout: 30000,
+  getPageTimeout: 30000,
+  jasmineNodeOpts: {
+    defaultTimeoutInterval: 60000,
+  }
 };
 
 
-if (process.env['TRAVIS'] !== undefined) {
+if (process.env['TRAVIS']) {
   const key = require('../scripts/sauce/sauce_config');
   config.sauceUser = process.env['SAUCE_USERNAME'];
   config.sauceKey = key;

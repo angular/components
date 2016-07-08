@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
-import {FORM_DIRECTIVES} from '@angular/common';
+import {NgFor} from '@angular/common';
+import {FORM_DIRECTIVES} from '@angular/forms';
 import {MdCheckbox} from '@angular2-material/checkbox/checkbox';
 
-interface Task {
+export interface Task {
   name: string;
   completed: boolean;
   subtasks?: Task[];
@@ -17,9 +18,9 @@ interface Task {
     }
   `],
   templateUrl: 'nested-checklist.html',
-  directives: [MdCheckbox]
+  directives: [MdCheckbox, NgFor]
 })
-class MdCheckboxDemoNestedChecklist {
+export class MdCheckboxDemoNestedChecklist {
   tasks: Task[] = [
     {
       name: 'Reminders',

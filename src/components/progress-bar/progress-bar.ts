@@ -4,7 +4,7 @@ import {
     HostBinding,
     Input,
 } from '@angular/core';
-
+import {NgStyle} from '@angular/common';
 
 // TODO(josephperrott): Benchpress tests.
 // TODO(josephperrott): Add ARIA attributes for progressbar "for".
@@ -24,6 +24,7 @@ import {
   templateUrl: 'progress-bar.html',
   styleUrls: ['progress-bar.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  directives: [NgStyle],
 })
 export class MdProgressBar {
   /** Value of the progressbar. Defaults to zero. Mirrored to aria-valuenow. */
@@ -62,11 +63,8 @@ export class MdProgressBar {
   @HostBinding('attr.mode')
   mode: 'determinate' | 'indeterminate' | 'buffer' | 'query' = 'determinate';
 
-  /**
-   * Gets the current transform value for the progress bar's primary indicator.
-   * @internal
-   */
-  primaryTransform() {
+  /** Gets the current transform value for the progress bar's primary indicator. */
+  _primaryTransform() {
     let scale = this.value / 100;
     return {transform: `scaleX(${scale})`};
   }
@@ -74,9 +72,8 @@ export class MdProgressBar {
   /**
    * Gets the current transform value for the progress bar's buffer indicator.  Only used if the
    * progress mode is set to buffer, otherwise returns an undefined, causing no transformation.
-   * @internal
    */
-  bufferTransform() {
+  _bufferTransform() {
     if (this.mode == 'buffer') {
       let scale = this.bufferValue / 100;
       return {transform: `scaleX(${scale})`};
