@@ -22,18 +22,13 @@ const RIPPLE_SPEED_PX_PER_SECOND = 1000;
 const MIN_RIPPLE_FILL_TIME_SECONDS = 0.1;
 const MAX_RIPPLE_FILL_TIME_SECONDS = 0.3;
 
-const sqr = (x: number) => x * x;
-
 /**
  * Returns the distance from the point (x, y) to the furthest corner of a rectangle.
  */
 const distanceToFurthestCorner = (x: number, y: number, rect: ClientRect) => {
-  const maxSquaredDistance = Math.max(
-      sqr(x - rect.left) + sqr(y - rect.top),
-      sqr(rect.right - x) + sqr(y - rect.top),
-      sqr(x - rect.left) + sqr(rect.bottom - y),
-      sqr(rect.right - x) + sqr(rect.bottom - y));
-  return Math.sqrt(maxSquaredDistance);
+  const distX = Math.max(Math.abs(x - rect.left), Math.abs(x - rect.right));
+  const distY = Math.max(Math.abs(y - rect.top), Math.abs(y - rect.bottom));
+  return Math.sqrt(distX * distX + distY * distY);
 };
 
 /**
