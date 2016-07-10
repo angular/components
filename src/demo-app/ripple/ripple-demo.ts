@@ -30,7 +30,7 @@ import {
   ],
 })
 export class RippleDemo {
-  @ViewChild('manualRipple') manualRipple: MdInkRipple;
+  @ViewChild(MdInkRipple) manualRipple: MdInkRipple;
 
   centered = false;
   disabled = false;
