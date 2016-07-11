@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "add-stream": "^1.0.0",
-    "angular-cli": "^1.0.0-beta.6",
+    "angular-cli": "^1.0.0-beta.9",
     "broccoli-autoprefixer": "^4.1.0",
     "broccoli-funnel": "^1.0.1",
     "broccoli-merge-trees": "^1.1.1",
