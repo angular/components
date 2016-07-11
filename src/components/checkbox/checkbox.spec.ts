@@ -1,6 +1,4 @@
 import {
-    it,
-    beforeEach,
     beforeEachProviders,
     inject,
     async,
@@ -19,7 +17,6 @@ import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing'
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdCheckbox, MdCheckboxChange} from './checkbox';
-import {PromiseCompleter} from '@angular2-material/core/async/promise-completer';
 
 
 
@@ -215,21 +212,14 @@ describe('MdCheckbox', () => {
       expect(testComponent.onCheckboxClick).toHaveBeenCalledTimes(1);
     });
 
-    it('should emit a change event when the `checked` value changes', () => {
-      // TODO(jelbourn): this *should* work with async(), but fixture.whenStable currently doesn't
-      // know to look at pending macro tasks.
-      // See https://github.com/angular/angular/issues/8389
-      // As a short-term solution, use a promise (which jasmine knows how to understand).
-      let promiseCompleter = new PromiseCompleter();
-      checkboxInstance.change.subscribe(() => {
-        promiseCompleter.resolve();
-      });
-
+    it('should emit a change event when the `checked` value changes', async(() => {
       testComponent.isChecked = true;
       fixture.detectChanges();
 
-      return promiseCompleter.promise;
-    });
+      fixture.whenStable().then(() => {
+        expect(fixture.componentInstance.changeCount).toBe(1);
+      });
+    }));
 
     describe('state transition css classes', () => {
       it('should transition unchecked -> checked -> unchecked', () => {
@@ -509,6 +499,7 @@ class SingleCheckbox {
   parentElementClicked: boolean = false;
   parentElementKeyedUp: boolean = false;
   lastKeydownEvent: Event = null;
+  changeCount: number = 0;
 
   onCheckboxClick(event: Event) {}
 }
