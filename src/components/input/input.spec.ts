@@ -299,12 +299,13 @@ describe('MdInput', function () {
         fakeAsync(() => {
           fixture.detectChanges();
 
+          let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
           let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
           expect(el).not.toBeNull();
           expect(el.getAttribute('autocomplete')).toBeNull();
 
-          fixture.componentInstance.autoComplete = 'on';
+          input.autoComplete = 'on';
           fixture.detectChanges();
           expect(el.getAttribute('autocomplete')).toEqual('on');
         })();
@@ -354,12 +355,13 @@ describe('MdInput', function () {
         fakeAsync(() => {
           fixture.detectChanges();
 
+          let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
           let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
           expect(el).not.toBeNull();
           expect(el.getAttribute('autofocus')).toBeNull();
 
-          fixture.componentInstance.autoFocus = true;
+          input.autoFocus = true;
           fixture.detectChanges();
           expect(el.getAttribute('autofocus')).toEqual('');
         })();
@@ -390,15 +392,15 @@ describe('MdInput', function () {
       .createAsync(MdInputOptionalAttributeController)
       .then(fixture => {
         fakeAsync(() => {
-          fixture.componentInstance.disabled = false;
-          fixture.detectChanges();
-
+          let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
           let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-
           expect(el).not.toBeNull();
+
+          input.disabled = false;
+          fixture.detectChanges();
           expect(el.getAttribute('disabled')).toEqual(null);
 
-          fixture.componentInstance.disabled = true;
+          input.disabled = true;
           fixture.detectChanges();
           expect(el.getAttribute('disabled')).toEqual('');
         })();
@@ -429,15 +431,15 @@ describe('MdInput', function () {
       .createAsync(MdInputOptionalAttributeController)
       .then(fixture => {
         fakeAsync(() => {
-          fixture.componentInstance.disabled = false;
-          fixture.detectChanges();
-
+          let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
           let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-
           expect(el).not.toBeNull();
+
+          input.disabled = false;
+          fixture.detectChanges();
           expect(el.getAttribute('list')).toEqual(null);
 
-          fixture.componentInstance.list = 'datalist-id';
+          input.list = 'datalist-id';
           fixture.detectChanges();
           expect(el.getAttribute('list')).toEqual('datalist-id');
         })();
@@ -451,19 +453,19 @@ describe('MdInput', function () {
       .createAsync(MdInputOptionalAttributeController)
       .then(fixture => {
         fakeAsync(() => {
-          fixture.componentInstance.disabled = false;
-          fixture.detectChanges();
-
+          let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
           let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-
           expect(el).not.toBeNull();
+
+          input.disabled = false;
+          fixture.detectChanges();
           expect(el.getAttribute('max')).toEqual(null);
 
-          fixture.componentInstance.max = 10;
+          input.max = 10;
           fixture.detectChanges();
           expect(el.getAttribute('max')).toEqual('10');
 
-          fixture.componentInstance.max = '2000-01-02';
+          input.max = '2000-01-02';
           fixture.detectChanges();
           expect(el.getAttribute('max')).toEqual('2000-01-02');
         })();
@@ -477,19 +479,19 @@ describe('MdInput', function () {
       .createAsync(MdInputOptionalAttributeController)
       .then(fixture => {
         fakeAsync(() => {
-          fixture.componentInstance.disabled = false;
-          fixture.detectChanges();
-
+          let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
           let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-
           expect(el).not.toBeNull();
+
+          input.disabled = false;
+          fixture.detectChanges();
           expect(el.getAttribute('min')).toEqual(null);
 
-          fixture.componentInstance.min = 10;
+          input.min = 10;
           fixture.detectChanges();
           expect(el.getAttribute('min')).toEqual('10');
 
-          fixture.componentInstance.min = '2000-01-02';
+          input.min = '2000-01-02';
           fixture.detectChanges();
           expect(el.getAttribute('min')).toEqual('2000-01-02');
         })();
@@ -505,12 +507,13 @@ describe('MdInput', function () {
         fakeAsync(() => {
           fixture.detectChanges();
 
+          let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
           let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
           expect(el).not.toBeNull();
           expect(el.getAttribute('readonly')).toBeNull();
 
-          fixture.componentInstance.readOnly = true;
+          input.readOnly = true;
           fixture.detectChanges();
           expect(el.getAttribute('readonly')).toEqual('');
         })();
@@ -543,12 +546,13 @@ describe('MdInput', function () {
         fakeAsync(() => {
           fixture.detectChanges();
 
+          let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
           let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
           expect(el).not.toBeNull();
           expect(el.getAttribute('required')).toBeNull();
 
-          fixture.componentInstance.required = true;
+          input.required = true;
           fixture.detectChanges();
           expect(el.getAttribute('required')).toEqual('');
         })();
@@ -581,12 +585,13 @@ describe('MdInput', function () {
         fakeAsync(() => {
           fixture.detectChanges();
 
+          let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
           let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
           expect(el).not.toBeNull();
           expect(el.getAttribute('spellcheck')).toEqual('false');
 
-          fixture.componentInstance.spellCheck = true;
+          input.spellCheck = true;
           fixture.detectChanges();
           expect(el.getAttribute('spellcheck')).toEqual('true');
         })();
@@ -619,12 +624,13 @@ describe('MdInput', function () {
         fakeAsync(() => {
           fixture.detectChanges();
 
+          let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
           let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
           expect(el).not.toBeNull();
           expect(el.getAttribute('step')).toEqual(null);
 
-          fixture.componentInstance.step = 0.5;
+          input.step = 0.5;
           fixture.detectChanges();
           expect(el.getAttribute('step')).toEqual('0.5');
         })();
@@ -640,12 +646,13 @@ describe('MdInput', function () {
         fakeAsync(() => {
           fixture.detectChanges();
 
+          let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
           let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
           expect(el).not.toBeNull();
           expect(el.getAttribute('tabindex')).toEqual(null);
 
-          fixture.componentInstance.tabIndex = 1;
+          input.tabIndex = 1;
           fixture.detectChanges();
           expect(el.getAttribute('tabindex')).toEqual('1');
         })();
