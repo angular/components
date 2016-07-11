@@ -49,13 +49,18 @@ export class MdCheckboxDemoNestedChecklist {
         : task.completed;
   }
 
-  someComplete(tasks: Task[]): boolean {
-    const numComplete = tasks.filter(t => t.completed).length;
-    return numComplete > 0 && numComplete < tasks.length;
+  someComplete(task: Task): boolean {
+    const subtasks = task.subtasks;
+    const numComplete = subtasks.filter(t => t.completed).length;
+    return numComplete > 0 && numComplete < subtasks.length;
   }
 
-  setAllCompleted(tasks: Task[], completed: boolean) {
-    tasks.forEach(t => t.completed = completed);
+  setAllCompleted(task: Task) {
+    task.subtasks.forEach(t => t.completed = task.completed);
+  }
+
+  resetParent(task: Task) {
+    task.completed = this.allComplete(task);
   }
 }
 
