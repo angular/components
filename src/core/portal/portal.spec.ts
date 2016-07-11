@@ -140,7 +140,7 @@ describe('Portals', () => {
       appFixture.detectChanges();
 
       // Expect the new value to be reflected in the rendered output.
-      expect(hostContainer.textContent).toContainError('Mango');
+      expect(hostContainer.textContent).toContain('Mango');
     }));
 
     it('should change the attached portal', fakeAsync(() => {
@@ -210,7 +210,7 @@ describe('Portals', () => {
 
       flushMicrotasks();
 
-      expect(componentInstance).toBeAnInstanceOf(PizzaMsg);
+      expect(componentInstance).toEqual(jasmine.any(PizzaMsg));
       expect(someDomElement.textContent).toContain('Pizza');
 
       host.detach();
@@ -269,7 +269,7 @@ describe('Portals', () => {
       appFixture.detectChanges();
 
       // Expect the new value to be reflected in the rendered output.
-      expect(someDomElement.textContent).toContainError('Mango');
+      expect(someDomElement.textContent).toContain('Mango');
 
       host.detach();
       expect(someDomElement.innerHTML).toBe('');

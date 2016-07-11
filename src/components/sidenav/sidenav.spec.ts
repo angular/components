@@ -1,18 +1,17 @@
 import {
-  it,
+  it, iit,
   describe,
   expect,
   beforeEach,
   fakeAsync,
+  async,
   inject,
-  injectAsync,
   tick
 } from '@angular/core/testing';
 import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {XHR} from '@angular/compiler';
 import {
   Component,
-  Type,
   ViewMetadata
 } from '@angular/core';
 
@@ -28,14 +27,14 @@ function fakeAsyncAdaptor(fn: () => void) {
 /**
  * Create a ComponentFixture from the builder. This takes a template and a style for sidenav.
  */
-function createFixture(appType: Type, builder: TestComponentBuilder,
+function createFixture(appType: any, builder: TestComponentBuilder,
                        template: string, style: string): ComponentFixture<any> {
   let fixture: ComponentFixture<any> = null;
   // Remove the styles (which remove the animations/transitions).
   builder
     .overrideView(MdSidenavLayout, new ViewMetadata({
       template: template,
-      styles: [style],
+      styles: [style || ''],
       directives: [MdSidenav],
     }))
     .createAsync(appType).then((f: ComponentFixture<any>) => {
@@ -61,6 +60,12 @@ describe('MdSidenav', () => {
   let template: string;
   let style: string;
   let builder: TestComponentBuilder;
+  let xhr: XHR;
+
+  beforeEach(inject([TestComponentBuilder, XHR], (tcb: TestComponentBuilder, x: XHR) => {
+    builder = tcb;
+    xhr = x;
+  }));
 
   /**
    * We need to get the template and styles for the sidenav in an Async test.
@@ -69,14 +74,12 @@ describe('MdSidenav', () => {
    * We do some style verification so styles have to match.
    * But we remove the transitions so we only set the regular `sidenav.css` styling.
    */
-  beforeEach(injectAsync([TestComponentBuilder, XHR], (tcb: TestComponentBuilder, xhr: XHR) => {
-    builder = tcb;
-
+  beforeEach(async(() => {
     return Promise.all([
-      xhr.get('./components/sidenav/sidenav.html').then((t) => {
+      xhr.get('./components/sidenav/sidenav.html').then(t => {
         template = t;
       }),
-      xhr.get('./components/sidenav/sidenav.css').then((css) => {
+      xhr.get('./components/sidenav/sidenav.css').then(css => {
         style = css;
       })
     ]).catch((err: any) => {
