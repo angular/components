@@ -1,5 +1,5 @@
 import {
-    beforeEachProviders,
+    addProviders,
     inject,
     async,
     fakeAsync,
@@ -26,10 +26,12 @@ describe('MdCheckbox', () => {
   let builder: TestComponentBuilder;
   let fixture: ComponentFixture<any>;
 
-  beforeEachProviders(() => [
-    disableDeprecatedForms(),
-    provideForms(),
-  ]);
+  beforeEach(() => {
+    addProviders([
+      disableDeprecatedForms(),
+      provideForms(),
+    ]);
+  });
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
     builder = tcb;

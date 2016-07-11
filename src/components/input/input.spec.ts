@@ -1,5 +1,5 @@
 import {
-  beforeEachProviders,
+  addProviders,
   fakeAsync,
   inject,
   tick,
@@ -17,10 +17,12 @@ import {
 describe('MdInput', function () {
   var builder: TestComponentBuilder;
 
-  beforeEachProviders(() => [
-    disableDeprecatedForms(),
-    provideForms(),
-  ]);
+  beforeEach(() => {
+    addProviders([
+      disableDeprecatedForms(),
+      provideForms(),
+    ]);
+  });
 
   beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
     builder = tcb;

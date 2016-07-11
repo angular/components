@@ -1,11 +1,11 @@
 import {
-    beforeEachProviders,
+    addProviders,
     inject,
 } from '@angular/core/testing';
 import {TestComponentBuilder} from '@angular/compiler/testing';
 import {HTTP_PROVIDERS, XHRBackend} from '@angular/http';
 import {MockBackend} from '@angular/http/testing';
-import {provide, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MdIcon} from './icon';
 import {MdIconRegistry} from './icon-registry';
 import {getFakeSvgHttpResponse} from './fake-svgs';
@@ -38,12 +38,15 @@ const verifyPathChildElement = (element: Element, attributeValue: string) => {
 
 describe('MdIcon', () => {
 
-  beforeEachProviders(() => [
-    MdIconRegistry,
-    HTTP_PROVIDERS,
-    MockBackend,
-    provide(XHRBackend, {useExisting: MockBackend}),
-  ]);
+  beforeEach(() => {
+    addProviders([
+      MdIconRegistry,
+      HTTP_PROVIDERS,
+      MockBackend,
+      {provide: XHRBackend, useExisting: MockBackend},
+    ]);
+  });
+
 
   let builder: TestComponentBuilder;
   let mdIconRegistry: MdIconRegistry;

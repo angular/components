@@ -1,5 +1,5 @@
 import {
-  beforeEachProviders,
+  addProviders,
   inject,
   async
 } from '@angular/core/testing';
@@ -12,10 +12,12 @@ import {NgControl, disableDeprecatedForms, provideForms} from '@angular/forms';
 describe('MdSlideToggle', () => {
   let builder: TestComponentBuilder;
 
-  beforeEachProviders(() => [
-    disableDeprecatedForms(),
-    provideForms(),
-  ]);
+  beforeEach(() => {
+    addProviders([
+      disableDeprecatedForms(),
+      provideForms(),
+    ]);
+  });
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
     builder = tcb;
