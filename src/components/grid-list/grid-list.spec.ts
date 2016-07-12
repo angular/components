@@ -1,6 +1,6 @@
 import {inject, async} from '@angular/core/testing';
 import {TestComponentBuilder} from '@angular/compiler/testing';
-import {Component} from '@angular/core';
+import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 
 import {MD_GRID_LIST_DIRECTIVES, MdGridList} from './grid-list';
@@ -160,7 +160,7 @@ describe('MdGridList', () => {
 
         // check horizontal gutter
         expect(getProp(tiles[0], 'width')).toBe('99.5px');
-        expect(getProp(tiles[1], 'left')).toBe('100.5px');
+        expect(getComputedLeft(tiles[1])).toBe(100.5);
 
         // check vertical gutter
         expect(getProp(tiles[0], 'height')).toBe('100px');
@@ -186,7 +186,7 @@ describe('MdGridList', () => {
 
         // check horizontal gutter
         expect(getProp(tiles[0], 'width')).toBe('99px');
-        expect(getProp(tiles[1], 'left')).toBe('101px');
+        expect(getComputedLeft(tiles[1])).toBe(101);
 
         // check vertical gutter
         expect(getProp(tiles[0], 'height')).toBe('100px');
@@ -212,7 +212,7 @@ describe('MdGridList', () => {
 
         // check horizontal gutter
         expect(getProp(tiles[0], 'width')).toBe('99px');
-        expect(getProp(tiles[1], 'left')).toBe('101px');
+        expect(getComputedLeft(tiles[1])).toBe(101);
 
         // check vertical gutter
         expect(getProp(tiles[0], 'height')).toBe('100px');
@@ -317,22 +317,22 @@ describe('MdGridList', () => {
 
         expect(getProp(tiles[0], 'width')).toBe('299.75px');
         expect(getProp(tiles[0], 'height')).toBe('100px');
-        expect(getProp(tiles[0], 'left')).toBe('0px');
+        expect(getComputedLeft(tiles[0])).toBe(0);
         expect(getProp(tiles[0], 'top')).toBe('0px');
 
         expect(getProp(tiles[1], 'width')).toBe('99.25px');
         expect(getProp(tiles[1], 'height')).toBe('201px');
-        expect(getProp(tiles[1], 'left')).toBe('300.75px');
+        expect(getComputedLeft(tiles[1])).toBe(300.75);
         expect(getProp(tiles[1], 'top')).toBe('0px');
 
         expect(getProp(tiles[2], 'width')).toBe('99.25px');
         expect(getProp(tiles[2], 'height')).toBe('100px');
-        expect(getProp(tiles[2], 'left')).toBe('0px');
+        expect(getComputedLeft(tiles[2])).toBe(0);
         expect(getProp(tiles[2], 'top')).toBe('101px');
 
         expect(getProp(tiles[3], 'width')).toBe('199.5px');
         expect(getProp(tiles[3], 'height')).toBe('100px');
-        expect(getProp(tiles[3], 'left')).toBe('100.25px');
+        expect(getComputedLeft(tiles[3])).toBe(100.25);
         expect(getProp(tiles[3], 'top')).toBe('101px');
       });
     });
@@ -389,6 +389,18 @@ class TestGridList {
   rowspan: number;
 }
 
-function getProp(el: any, prop: string): string {
+function getProp(el: DebugElement, prop: string): string {
   return getComputedStyle(el.nativeElement).getPropertyValue(prop);
+}
+
+/** Gets the `left` position of an element. */
+function getComputedLeft(element: DebugElement): number {
+  // While the other properties in this test use `getComputedStyle`, we use `getBoundingClientRect`
+  // for left because iOS Safari doesn't support using `getComputedStyle` to get the calculated
+  // `left` balue when using CSS `calc`. We subtract the `left` of the document body because
+  // browsers, by default, add a margin to the body (typically 8px).
+  let elementRect = element.nativeElement.getBoundingClientRect();
+  let bodyRect = document.body.getBoundingClientRect();
+
+  return elementRect.left - bodyRect.left;
 }
