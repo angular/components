@@ -9,11 +9,15 @@ if [ "${NPM_USER}" != "angular2-material" ]; then
   exit
 fi
 
+NPM_TAG="latest"
+if [ "$1" ] ; then
+  NPM_TAG=${1}
+fi
+
 set -ex
 
-for package in ./deploy/*
-do
-  npm publish --access public ${package}
+for package in ./deploy/* ; do
+  npm publish --access public ${package} --tag ${NPM_TAG}
 done
 
 # Always log out of npm when publish is complete.

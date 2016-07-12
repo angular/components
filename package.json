@@ -43,6 +43,7 @@
     "zone.js": "0.6.12"
   },
   "devDependencies": {
+    "@angular/compiler-cli": "^0.4.1",
     "add-stream": "^1.0.0",
     "angular-cli": "^1.0.0-beta.9",
     "broccoli-autoprefixer": "^4.1.0",
