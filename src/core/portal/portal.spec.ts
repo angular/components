@@ -268,7 +268,7 @@ describe('Portals', () => {
       flushMicrotasks();
       appFixture.detectChanges();
 
-      expect(componentInstance).toBeAnInstanceOf(PizzaMsg);
+      expect(componentInstance).toEqual(jasmine.any(PizzaMsg));
       expect(someDomElement.textContent).toContain('Pizza');
       expect(someDomElement.textContent).toContain('Chocolate');
 

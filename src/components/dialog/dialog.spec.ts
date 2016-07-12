@@ -1,19 +1,14 @@
 import {
-  it,
-  describe,
-  expect,
-  beforeEach,
   inject,
   fakeAsync,
   async,
-  beforeEachProviders,
+  addProviders,
 } from '@angular/core/testing';
 import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {
   Component,
   Directive,
   ViewChild,
-  provide,
   ViewContainerRef,
   ChangeDetectorRef,
 } from '@angular/core';
@@ -32,16 +27,16 @@ describe('MdDialog', () => {
   let testViewContainerRef: ViewContainerRef;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
 
-  beforeEachProviders(() => [
-    OVERLAY_PROVIDERS,
-    MdDialog,
-    provide(OVERLAY_CONTAINER_TOKEN, {
-      useFactory: () => {
+  beforeEach(() => {
+    addProviders([
+      OVERLAY_PROVIDERS,
+      MdDialog,
+      {provide: OVERLAY_CONTAINER_TOKEN, useFactory: () => {
         overlayContainerElement = document.createElement('div');
         return overlayContainerElement;
-      }
-    })
-  ]);
+      }}
+    ]);
+  });
 
   let deps = [TestComponentBuilder, MdDialog];
   beforeEach(inject(deps, fakeAsync((tcb: TestComponentBuilder, d: MdDialog) => {
