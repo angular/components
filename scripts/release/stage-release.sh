@@ -18,26 +18,21 @@ mkdir deploy
 # Start off by building normally.
 ng build
 
-## FOR OFFLINE COMPILE
-
 # We need to remove moduleId for the ngc build. We do this by simply commenting out with a
 # distinguishing marker and then undoing those lines after we've generated the .metadata.json files.
 grep -lr "moduleId:" ./src/ | xargs sed -i 's|moduleId:|//MODULE moduleId:|g'
 
-# Run tsc directly first so that the output directories match what ngc is expecting (since it's
-# different from what the CLI will output for demo-app, which we don't care about).
+# Run tsc directly first so that the output directories match what ngc is expecting. This is
+# different from what the CLI will output for *demo-app*, but we don't care about the output for
+# demo-app when we're staging a release (only components/ and core/).
 tsc -p ./src/demo-app
 
-# Now run ngc to generate the .metadata.json files. We exclude outputting the factories since we
-# don't publish those.
-# TODO(jelbourn): set --skipTemplateCodegen once it is supported on the command line.
+# Now run ngc to generate the .metadata.json files. Our tsconfig is configred with
+# skipTemplateCodegen, so only the metadata files are actually generated.
 ./node_modules/.bin/ngc -p ./src/demo-app
 
 # Restore the moduleIds.
 grep -lr "//MODULE " ./src/ | xargs sed -i 's|//MODULE ||g'
-
-# Remove the output css files
-find ./src -iname "*.css" | xargs rm
 
 # At this point, we have all of our .metadata.json files, which is all we care about from ngc.
 # Temporarily copy them over to deploy/ so we can cut a clean build.
