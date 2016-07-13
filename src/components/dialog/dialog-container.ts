@@ -7,6 +7,7 @@ import {
 import {PortalHostDirective} from '@angular2-material/core/portal/portal-directives';
 import {PromiseCompleter} from '@angular2-material/core/async/promise-completer';
 import {MdDialogConfig} from './dialog-config';
+import {MdDialogContentAlreadyAttachedError} from './dialog-errors';
 
 
 /**
@@ -49,20 +50,24 @@ export class MdDialogContainer extends BasePortalHost implements AfterViewInit {
 
         this._deferredAttachPortal = null;
         this._deferredAttachCompleter = null;
-      });
+      }, () => this._deferredAttachCompleter.reject());
     }
   }
 
   /** Attach a portal as content to this dialog container. */
   attachComponentPortal<T>(portal: ComponentPortal<T>): Promise<ComponentRef<T>> {
     if (this._portalHost) {
+      if (this._portalHost.hasAttached()) {
+        throw new MdDialogContentAlreadyAttachedError();
+      }
+
       return this._portalHost.attachComponentPortal(portal);
     } else {
       // The @ViewChild query for the portalHost is not resolved until AfterViewInit, but this
       // function may be called before this lifecycle event. As such, we defer the attachment of
       // the portal until AfterViewInit.
       if (this._deferredAttachCompleter) {
-        this._deferredAttachCompleter.reject();
+        throw new MdDialogContentAlreadyAttachedError();
       }
 
       this._deferredAttachPortal = portal;

@@ -89,7 +89,7 @@ describe('MdDialog', () => {
 
 /** Runs the necessary detectChanges for a dialog to complete its opening. */
 function detectChangesForDialogOpen(fixture: ComponentFixture<ComponentWithChildViewContainer>) {
-  // TODO(jelbourn): figure out why the test zone is "stable" when where are still pending
+  // TODO(jelbourn): figure out why the test zone is "stable" when there are still pending
   // tasks, such that we have to use `setTimeout` to run the second round of change detection.
   // Two rounds of change detection are necessary: one to *create* the dialog container, and
   // another to cause the lifecycle events of the container to run and load the dialog content.
