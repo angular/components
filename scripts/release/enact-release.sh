@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Run this script after running `stage-release.sh` to publish the packages staged to deploy/
+# Optionally uses the first argument as the tag for the release (such as "next").
+# This script should be run from the root of the material2 repo.
+
+
 # `npm whoami` errors and dies if you're not logged in,
 # so we redirect the stderr output to /dev/null since we don't care.
 NPM_USER=$(npm whoami 2> /dev/null)
