@@ -61,6 +61,10 @@ export class MdDialogContainer extends BasePortalHost implements AfterViewInit {
       // The @ViewChild query for the portalHost is not resolved until AfterViewInit, but this
       // function may be called before this lifecycle event. As such, we defer the attachment of
       // the portal until AfterViewInit.
+      if (this._deferredAttachCompleter) {
+        this._deferredAttachCompleter.reject();
+      }
+
       this._deferredAttachPortal = portal;
       this._deferredAttachCompleter = new PromiseCompleter();
       return this._deferredAttachCompleter.promise;
