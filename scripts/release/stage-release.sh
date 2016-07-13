@@ -80,4 +80,9 @@ cp -R ./dist/components/* ./deploy/
 # Copy the core/ directory directly into ./deploy
 cp -R ./dist/core/ ./deploy/core/
 
+# Remove test files from deploy/
+find ./deploy -iname "*.spec.d.ts" | xargs rm
+find ./deploy -iname "*.spec.js" | xargs rm
+find ./deploy -iname "*.spec.js.map" | xargs rm
+
 # To test the packages, simply `npm install` the package directories.
