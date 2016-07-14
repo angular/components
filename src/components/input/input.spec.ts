@@ -35,61 +35,53 @@ describe('MdInput', function () {
       });
   }));
 
-  it('should not be treated as empty if type is date', () => {
-    return builder.createAsync(MdInputDateTestController)
+  it('should not be treated as empty if type is date', async(() => {
+    builder.createAsync(MdInputDateTestController)
       .then(fixture => {
-        fakeAsync(() => {
-          fixture.componentInstance.placeholder = 'Placeholder';
-          fixture.detectChanges();
+        fixture.componentInstance.placeholder = 'Placeholder';
+        fixture.detectChanges();
 
-          let el = fixture.debugElement.query(By.css('label')).nativeElement;
-          expect(el).not.toBeNull();
-          expect(el.className.includes('md-empty')).toBe(false);
-        })();
+        let el = fixture.debugElement.query(By.css('label')).nativeElement;
+        expect(el).not.toBeNull();
+        expect(el.className.includes('md-empty')).toBe(false);
       });
-  });
+  }));
 
-  it('should treat text input type as empty at init', () => {
-    return builder.createAsync(MdInputTextTestController)
+  it('should treat text input type as empty at init', async(() => {
+    builder.createAsync(MdInputTextTestController)
       .then(fixture => {
-        fakeAsync(() => {
-          fixture.componentInstance.placeholder = 'Placeholder';
-          fixture.detectChanges();
+        fixture.componentInstance.placeholder = 'Placeholder';
+        fixture.detectChanges();
 
-          let el = fixture.debugElement.query(By.css('label')).nativeElement;
-          expect(el).not.toBeNull();
-          expect(el.className.includes('md-empty')).toBe(true);
-        })();
+        let el = fixture.debugElement.query(By.css('label')).nativeElement;
+        expect(el).not.toBeNull();
+        expect(el.className.includes('md-empty')).toBe(true);
       });
-  });
+  }));
 
-  it('should treat password input type as empty at init', () => {
-    return builder.createAsync(MdInputPasswordTestController)
+  it('should treat password input type as empty at init', async(() => {
+    builder.createAsync(MdInputPasswordTestController)
       .then(fixture => {
-        fakeAsync(() => {
-          fixture.componentInstance.placeholder = 'Placeholder';
-          fixture.detectChanges();
+        fixture.componentInstance.placeholder = 'Placeholder';
+        fixture.detectChanges();
 
-          let el = fixture.debugElement.query(By.css('label')).nativeElement;
-          expect(el).not.toBeNull();
-          expect(el.className.includes('md-empty')).toBe(true);
-        })();
+        let el = fixture.debugElement.query(By.css('label')).nativeElement;
+        expect(el).not.toBeNull();
+        expect(el.className.includes('md-empty')).toBe(true);
       });
-  });
+  }));
 
-  it('should treat number input type as empty at init', () => {
-    return builder.createAsync(MdInputNumberTestController)
+  it('should treat number input type as empty at init', async(() => {
+    builder.createAsync(MdInputNumberTestController)
       .then(fixture => {
-        fakeAsync(() => {
-          fixture.componentInstance.placeholder = 'Placeholder';
-          fixture.detectChanges();
+        fixture.componentInstance.placeholder = 'Placeholder';
+        fixture.detectChanges();
 
-          let el = fixture.debugElement.query(By.css('label')).nativeElement;
-          expect(el).not.toBeNull();
-          expect(el.className.includes('md-empty')).toBe(true);
-        })();
+        let el = fixture.debugElement.query(By.css('label')).nativeElement;
+        expect(el).not.toBeNull();
+        expect(el.className.includes('md-empty')).toBe(true);
       });
-  });
+  }));
 
   it('support ngModel', async(() => {
     builder.createAsync(MdInputBaseTestController)
