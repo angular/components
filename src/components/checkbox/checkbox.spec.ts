@@ -213,7 +213,7 @@ describe('MdCheckbox', () => {
       expect(testComponent.onCheckboxClick).toHaveBeenCalledTimes(1);
     });
 
-    it('should trigger the change event properly', async(() => {
+    it('should trigger a change event when the native input does', async(() => {
       spyOn(testComponent, 'onCheckboxChange');
 
       expect(inputElement.checked).toBe(false);
