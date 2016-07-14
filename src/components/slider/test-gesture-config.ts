@@ -19,10 +19,10 @@ export class TestGestureConfig extends MdGestureConfig {
   buildHammer(element: HTMLElement) {
     let mc = super.buildHammer(element);
 
-    if (!this.hammerInstances.get(element)) {
-      this.hammerInstances.set(element, [mc]);
-    } else {
+    if (this.hammerInstances.get(element)) {
       this.hammerInstances.get(element).push(mc);
+    } else {
+      this.hammerInstances.set(element, [mc]);
     }
 
     return mc;

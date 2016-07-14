@@ -9,7 +9,7 @@ import {
 import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {Component, DebugElement, provide, ViewEncapsulation} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdSlider} from './slider';
+import {MdSlider, MD_SLIDER_DIRECTIVES} from './slider';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {TestGestureConfig} from './test-gesture-config';
 
@@ -317,7 +317,7 @@ describe('MdSlider', () => {
 
 // The transition has to be removed in order to test the updated positions without setTimeout.
 @Component({
-  directives: [[MdSlider]],
+  directives: [MD_SLIDER_DIRECTIVES],
   template: `<md-slider></md-slider>`,
   styles: [`
     .md-slider-track-fill, .md-slider-thumb-position {
@@ -329,19 +329,19 @@ describe('MdSlider', () => {
 class StandardSlider { }
 
 @Component({
-  directives: [[MdSlider]],
+  directives: [MD_SLIDER_DIRECTIVES],
   template: `<md-slider disabled></md-slider>`
 })
 class DisabledSlider { }
 
 @Component({
-  directives: [[MdSlider]],
+  directives: [MD_SLIDER_DIRECTIVES],
   template: `<md-slider min="5" max="15"></md-slider>`
 })
 class SliderWithMinAndMax { }
 
 @Component({
-  directives: [[MdSlider]],
+  directives: [MD_SLIDER_DIRECTIVES],
   template: `<md-slider value="26"></md-slider>`
 })
 class SliderWithValue { }

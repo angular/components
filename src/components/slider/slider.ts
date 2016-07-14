@@ -206,8 +206,8 @@ export class MdSlider implements AfterContentInit {
 export class SliderRenderer {
   private _sliderElement: HTMLElement;
 
-  constructor(private _elementRef: ElementRef) {
-    this._sliderElement = this._elementRef.nativeElement;
+  constructor(elementRef: ElementRef) {
+    this._sliderElement = elementRef.nativeElement;
   }
 
   /**
@@ -249,3 +249,5 @@ export class SliderRenderer {
     this._sliderElement.focus();
   }
 }
+
+export const MD_SLIDER_DIRECTIVES = [MdSlider];
