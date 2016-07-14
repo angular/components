@@ -61,12 +61,6 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   private _isInitialized: boolean = false;
   private _slideRenderer: SlideToggleRenderer = null;
 
-  // State of the current drag, which holds required variables for the drag.
-  private _dragState: {
-    barWidth: number;
-    percentage?: number;
-  };
-
   @Input() @BooleanFieldValue() disabled: boolean = false;
   @Input() name: string = null;
   @Input() id: string = this._uniqueId;
@@ -242,7 +236,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
 }
 
 /**
- * Renderer for the Slide Toggle component, which separates DOM modification in it's own class
+ * Renderer for the Slide Toggle component, which separates DOM modification in its own class
  */
 class SlideToggleRenderer {
 
