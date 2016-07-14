@@ -35,6 +35,62 @@ describe('MdInput', function () {
       });
   }));
 
+  it('should not be treated as empty if type is date', () => {
+    return builder.createAsync(MdInputDateTestController)
+      .then(fixture => {
+        fakeAsync(() => {
+          fixture.componentInstance.placeholder = 'Placeholder';
+          fixture.detectChanges();
+
+          let el = fixture.debugElement.query(By.css('label')).nativeElement;
+          expect(el).not.toBeNull();
+          expect(el.className.includes('md-empty')).toBe(false);
+        })();
+      });
+  });
+
+  it('should treat text input type as empty at init', () => {
+    return builder.createAsync(MdInputTextTestController)
+      .then(fixture => {
+        fakeAsync(() => {
+          fixture.componentInstance.placeholder = 'Placeholder';
+          fixture.detectChanges();
+
+          let el = fixture.debugElement.query(By.css('label')).nativeElement;
+          expect(el).not.toBeNull();
+          expect(el.className.includes('md-empty')).toBe(true);
+        })();
+      });
+  });
+
+  it('should treat password input type as empty at init', () => {
+    return builder.createAsync(MdInputPasswordTestController)
+      .then(fixture => {
+        fakeAsync(() => {
+          fixture.componentInstance.placeholder = 'Placeholder';
+          fixture.detectChanges();
+
+          let el = fixture.debugElement.query(By.css('label')).nativeElement;
+          expect(el).not.toBeNull();
+          expect(el.className.includes('md-empty')).toBe(true);
+        })();
+      });
+  });
+
+  it('should treat number input type as empty at init', () => {
+    return builder.createAsync(MdInputNumberTestController)
+      .then(fixture => {
+        fakeAsync(() => {
+          fixture.componentInstance.placeholder = 'Placeholder';
+          fixture.detectChanges();
+
+          let el = fixture.debugElement.query(By.css('label')).nativeElement;
+          expect(el).not.toBeNull();
+          expect(el.className.includes('md-empty')).toBe(true);
+        })();
+      });
+  });
+
   it('support ngModel', async(() => {
     builder.createAsync(MdInputBaseTestController)
       .then(fixture => {
@@ -817,3 +873,39 @@ class MdInputOptionalAttributeController {}
   directives: [MdInput]
 })
 class MdInputWithNameTestController {}
+
+@Component({
+  selector: 'test-input-controller',
+  template: `
+    <md-input type="date" [placeholder]="placeholder"></md-input>
+  `,
+  directives: [MdInput]
+})
+class MdInputDateTestController {}
+
+@Component({
+  selector: 'test-input-controller',
+  template: `
+    <md-input type="text" [placeholder]="placeholder"></md-input>
+  `,
+  directives: [MdInput]
+})
+class MdInputTextTestController {}
+
+@Component({
+  selector: 'test-input-controller',
+  template: `
+    <md-input type="password" [placeholder]="placeholder"></md-input>
+  `,
+  directives: [MdInput]
+})
+class MdInputPasswordTestController {}
+
+@Component({
+  selector: 'test-input-controller',
+  template: `
+    <md-input type="number" [placeholder]="placeholder"></md-input>
+  `,
+  directives: [MdInput]
+})
+class MdInputNumberTestController {}
