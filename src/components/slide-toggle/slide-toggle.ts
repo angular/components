@@ -59,7 +59,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   private _hasFocus: boolean = false;
   private _isMousedown: boolean = false;
   private _isInitialized: boolean = false;
-  private _slideRenderer: MdSlideToggleRenderer = null;
+  private _slideRenderer: SlideToggleRenderer = null;
 
   // State of the current drag, which holds required variables for the drag.
   private _dragState: {
@@ -80,13 +80,12 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   // Returns the unique id for the visual hidden input.
   getInputId = () => `${this.id || this._uniqueId}-input`;
 
-  constructor(private _elementRef: ElementRef,
-              private _renderer: Renderer) {
-    this._slideRenderer = new MdSlideToggleRenderer(this._elementRef);
-  }
+  constructor(private _elementRef: ElementRef, private _renderer: Renderer) {}
 
   /** TODO: internal */
   ngAfterContentInit() {
+    this._slideRenderer = new SlideToggleRenderer(this._elementRef);
+
     // Mark this component as initialized in AfterContentInit because the initial checked value can
     // possibly be set by NgModel or the checked attribute. This would cause the change event to
     // be emitted, before the component is actually initialized.
@@ -105,7 +104,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
     event.stopPropagation();
 
     // Once a drag is currently in progress, we do not want to toggle the slide-toggle on a click.
-    if (!this.disabled && !this._dragState) {
+    if (!this.disabled && !this._slideRenderer.isDragging()) {
       this.toggle();
     }
   }
@@ -223,53 +222,21 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
 
   /** TODO: internal */
   _onDragStart() {
-    if (this._dragState) {
-      return;
-    }
-
-    let thumbBarRect = this._slideRenderer.getThumbBarClientRect();
-    let thumbRect = this._slideRenderer.getThumbClientRect();
-
-    this._dragState = {
-      barWidth: thumbBarRect.width - thumbRect.width
-    };
-
-    this._slideRenderer.toggleDragging(true);
+    this._slideRenderer.startThumbDrag(this.checked);
   }
 
   /** TODO: internal */
   _onDrag(event: HammerInput) {
-    if (!this._dragState) {
-      return;
-    }
-
-    let percentage = (event.deltaX / this._dragState.barWidth) * 100;
-
-    // When the slide-toggle was initially checked, then we have to start the drag at 100%
-    if (this.checked) {
-      percentage += 100;
-    }
-
-    percentage = Math.max(0, Math.min(percentage, 100));
-
-    this._slideRenderer.updateThumbPosition(percentage);
-    this._dragState.percentage = percentage;
+    this._slideRenderer.updateThumbPosition(event.deltaX);
   }
 
   /** TODO: internal */
   _onDragEnd() {
-    if (!this._dragState) {
-      return;
-    }
-
-    this.checked = this._dragState.percentage > 50;
-
-    this._slideRenderer.updateThumbPosition(null);
-    this._slideRenderer.toggleDragging(false);
-
-    // We have to clear the drag after one tick, because otherwise
-    // the click event will fire and toggle the slide-toggle again.
-    setTimeout(() => { this._dragState = null; }, 0);
+    // Notice that we have to stop outside of the current event handler,
+    // because otherwise the click event will be fired and will reset the new checked variable.
+    setTimeout(() => {
+      this.checked = this._slideRenderer.stopThumbDrag();
+    }, 0);
   }
 
 }
@@ -277,35 +244,64 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
 /**
  * Renderer for the Slide Toggle component, which separates DOM modification in it's own class
  */
-export class MdSlideToggleRenderer {
+class SlideToggleRenderer {
 
-  constructor(private _elementRef: ElementRef) {}
+  private _thumbEl: HTMLElement;
+  private _thumbBarEl: HTMLElement;
+  private _thumbBarWidth: number;
+  private _checked: boolean;
+  private _percentage: number;
 
-  getThumbClientRect(): ClientRect {
-    let thumbEl = this._elementRef.nativeElement.querySelector('.md-slide-toggle-thumb-container');
-    return thumbEl.getBoundingClientRect();
+  constructor(private _elementRef: ElementRef) {
+    this._thumbEl = _elementRef.nativeElement.querySelector('.md-slide-toggle-thumb-container');
+    this._thumbBarEl = _elementRef.nativeElement.querySelector('.md-slide-toggle-bar');
   }
 
-  getThumbBarClientRect(): ClientRect {
-    let thumbBarEl = this._elementRef.nativeElement.querySelector('.md-slide-toggle-bar');
-    return thumbBarEl.getBoundingClientRect();
+  /** Whether the slide-toggle is currently dragging. */
+  isDragging(): boolean {
+    return !!this._thumbBarWidth;
   }
 
-  /**
-   * Updates the thumb containers position by using the specified percentage.
-   * When the percentage is set to `null`, the custom thumb position will be removed.
-   */
-  updateThumbPosition(percentage: number) {
-    let thumbEl = this._elementRef.nativeElement.querySelector('.md-slide-toggle-thumb-container');
-    applyCssTransform(thumbEl, percentage === null ? '' : `translate3d(${percentage}%, 0, 0)`);
+  /** Initializes the drag of the slide-toggle. */
+  startThumbDrag(checked: boolean) {
+    if (!this._thumbBarWidth) {
+      this._thumbBarWidth = this._thumbBarEl.clientWidth - this._thumbEl.clientWidth;
+      this._checked = checked;
+      this._thumbEl.classList.add('md-dragging');
+    }
   }
 
-  /** Toggles the dragging class for the thumb container to toggle the transition duration. */
-  toggleDragging(isDragging: boolean) {
-    let thumbEl = this._elementRef.nativeElement.querySelector('.md-slide-toggle-thumb-container');
-    thumbEl.classList.toggle('md-dragging', isDragging);
+  /** Stops the current drag and returns the new checked value. */
+  stopThumbDrag(): boolean {
+    if (this._thumbBarWidth) {
+      this._thumbBarWidth = null;
+      this._thumbEl.classList.remove('md-dragging');
+
+      applyCssTransform(this._thumbEl, '');
+
+      return this._percentage > 50;
+    }
   }
 
+  /** Updates the thumb containers position from the specified distance. */
+  updateThumbPosition(distance: number) {
+    if (this._thumbBarWidth) {
+      this._percentage = this._getThumbPercentage(distance);
+      applyCssTransform(this._thumbEl, `translate3d(${this._percentage}%, 0, 0)`);
+    }
+  }
+
+  /** Retrieves the percentage of thumb from the moved distance. */
+  private _getThumbPercentage(distance: number) {
+    let percentage = (distance / this._thumbBarWidth) * 100;
+
+    // When the toggle was initially checked, then we have to start the drag at the end.
+    if (this._checked) {
+      percentage += 100;
+    }
+
+    return Math.max(0, Math.min(percentage, 100));
+  }
 
 }
 
