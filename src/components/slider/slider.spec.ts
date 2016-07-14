@@ -1,13 +1,10 @@
 import {
-    it,
-    describe,
-    beforeEach,
-    beforeEachProviders,
+    addProviders,
     inject,
     async,
 } from '@angular/core/testing';
 import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
-import {Component, DebugElement, provide, ViewEncapsulation} from '@angular/core';
+import {Component, DebugElement, ViewEncapsulation} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdSlider, MD_SLIDER_DIRECTIVES} from './slider';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
@@ -17,12 +14,14 @@ describe('MdSlider', () => {
   let builder: TestComponentBuilder;
   let gestureConfig: TestGestureConfig;
 
-  beforeEachProviders(() => [
-    provide(HAMMER_GESTURE_CONFIG, {useFactory: () => {
-      gestureConfig = new TestGestureConfig();
-      return gestureConfig;
-    }})
-  ]);
+  beforeEach(() => {
+    addProviders([
+      {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
+        gestureConfig = new TestGestureConfig();
+        return gestureConfig;
+      }}
+    ]);
+  });
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
     builder = tcb;
