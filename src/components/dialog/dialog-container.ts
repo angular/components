@@ -50,7 +50,11 @@ export class MdDialogContainer extends BasePortalHost implements AfterViewInit {
 
         this._deferredAttachPortal = null;
         this._deferredAttachCompleter = null;
-      }, () => this._deferredAttachCompleter.reject());
+      }, () => {
+        this._deferredAttachCompleter.reject();
+        this._deferredAttachCompleter = null;
+        this._deferredAttachPortal = null;
+      });
     }
   }
 
