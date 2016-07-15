@@ -47,7 +47,7 @@ let nextId = 0;
   providers: [MD_SLIDE_TOGGLE_VALUE_ACCESSOR],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdSlideToggle implements AfterContentInit,  ControlValueAccessor {
+export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
 
   private onChange = (_: any) => {};
   private onTouched = () => {};
