@@ -162,6 +162,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   @Input() tabIndex: number = null;
   @Input() type: string = 'text';
   @Input() name: string = null;
+  @Input() pattern: string = null;
 
   private _blurEmitter: EventEmitter<FocusEvent> = new EventEmitter<FocusEvent>();
   private _focusEmitter: EventEmitter<FocusEvent> = new EventEmitter<FocusEvent>();
