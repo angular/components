@@ -335,7 +335,6 @@ $md-light-theme-background: (
   hover:      rgba(black, 0.04), // TODO(kara): check style with Material Design UX
   card:       white,
   dialog:     white,
-  menu:       white,
   disabled-button:   rgba(black, 0.12)
 );
 
@@ -347,7 +346,6 @@ $md-dark-theme-background: (
   hover:      rgba(white, 0.04), // TODO(kara): check style with Material Design UX
   card:       map_get($md-grey, 800),
   dialog:     map_get($md-grey, 800),
-  menu:       map_get($md-grey, 800),
   disabled-button: rgba(white, 0.12)
 );
 

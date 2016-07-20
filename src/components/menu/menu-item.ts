@@ -1,4 +1,4 @@
-import {Directive, Input, HostBinding, HostListener} from '@angular/core';
+import {Directive, Input, HostBinding} from '@angular/core';
 
 /**
  * This directive is intended to be used inside an md-menu tag.
@@ -16,7 +16,10 @@ export class MdMenuItem {}
  */
 @Directive({
   selector: 'a[md-menu-item]',
-  host: {'role': 'menuitem'}
+  host: {
+    'role': 'menuitem',
+    '(click)': 'checkDisabled($event)'
+  }
 })
 export class MdMenuAnchor {
   _disabled: boolean;
@@ -33,7 +36,7 @@ export class MdMenuAnchor {
 
   @HostBinding('attr.aria-disabled')
   get isAriaDisabled(): string {
-    return this.disabled ? 'true' : 'false';
+    return String(this.disabled);
   }
 
   @HostBinding('tabIndex')
@@ -41,8 +44,7 @@ export class MdMenuAnchor {
     return this.disabled ? -1 : 0;
   }
 
-  @HostListener('click', ['$event'])
-  checkDisabled(event: any) {
+  checkDisabled(event: Event) {
     if (this.disabled) {
       event.preventDefault();
       event.stopPropagation();

@@ -29,7 +29,7 @@ export class MdMenu {
   /**
    * This function toggles the display of the menu's click catcher element.
    * This element covers the viewport when the menu is open to detect clicks outside the menu.
-   * @internal
+   * TODO: internal
    */
   _setClickCatcher(bool: boolean): void {
     this._showClickCatcher = bool;

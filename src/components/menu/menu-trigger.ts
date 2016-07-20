@@ -35,14 +35,14 @@ import {
 })
 export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   private _portal: TemplatePortal;
-  private _overlay: OverlayRef;
+  private _overlayRef: OverlayRef;
   menuOpen: boolean = false;
 
   @Input('md-menu-trigger-for') menu: MdMenu;
   @Output() onMenuOpen = new EventEmitter();
   @Output() onMenuClose = new EventEmitter();
 
-  constructor(private _overlayBuilder: Overlay, private _element: ElementRef,
+  constructor(private _overlay: Overlay, private _element: ElementRef,
               private _viewContainerRef: ViewContainerRef) {}
 
   ngAfterViewInit() {
@@ -59,46 +59,63 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   }
 
   openMenu(): Promise<void> {
-    return this._overlay.attach(this._portal)
-      .then(() => this._setMenuState(true));
+    return this._overlayRef.attach(this._portal)
+      .then(() => this._setIsMenuOpen(true));
   }
 
   closeMenu(): Promise<void> {
-    return this._overlay.detach()
-        .then(() => this._setMenuState(false));
+    return this._overlayRef.detach()
+        .then(() => this._setIsMenuOpen(false));
   }
 
   destroyMenu(): void {
-    this._overlay.dispose();
+    this._overlayRef.dispose();
   }
 
   // set state rather than toggle to support triggers sharing a menu
-  private _setMenuState(bool: boolean): void {
-    this.menuOpen = bool;
-    this.menu._setClickCatcher(bool);
+  private _setIsMenuOpen(isOpen: boolean): void {
+    this.menuOpen = isOpen;
+    this.menu._setClickCatcher(isOpen);
     this.menuOpen ? this.onMenuOpen.emit(null) : this.onMenuClose.emit(null);
   }
 
+  /**
+   *  This method checks that a valid instance of MdMenu has been passed into
+   *  md-menu-trigger-for.  If not, an exception is thrown.
+   */
   private _checkMenu() {
     if (!this.menu || !(this.menu instanceof MdMenu)) {
       throw new MdMenuMissingError();
     }
   }
 
+  /**
+   *  This method creates the overlay from the provided menu's template and saves its
+   *  OverlayRef so that it can be attached to the DOM when openMenu is called.
+   */
   private _createOverlay(): void {
     this._portal = new TemplatePortal(this.menu.templateRef, this._viewContainerRef);
-    this._overlayBuilder.create(this._getOverlayConfig())
-        .then(overlay => this._overlay = overlay);
+    this._overlay.create(this._getOverlayConfig())
+        .then(overlay => this._overlayRef = overlay);
   }
 
+  /**
+   * This method builds the configuration object needed to create the overlay, the OverlayState.
+   * @returns OverlayState
+   */
   private _getOverlayConfig(): OverlayState {
     const overlayState = new OverlayState();
     overlayState.positionStrategy = this._getPosition();
     return overlayState;
   }
 
+  /**
+   * This method builds the position strategy for the overlay, so the menu is properly connected
+   * to the trigger.
+   * @returns ConnectedPositionStrategy
+   */
   private _getPosition(): ConnectedPositionStrategy  {
-    return this._overlayBuilder.position().connectedTo(
+    return this._overlay.position().connectedTo(
       this._element,
       {originX: 'start', originY: 'top'},
       {overlayX: 'start', overlayY: 'top'}

@@ -25,7 +25,7 @@ $md-menu-side-padding: 16px !default;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;   // for momentum scroll on mobile
 
-  background: md-color($md-background, 'menu');
+  background: md-color($md-background, 'card');
 }
 
 [md-menu-item] {
