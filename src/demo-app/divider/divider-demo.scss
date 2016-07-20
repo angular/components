@@ -1,0 +1,27 @@
+.demo-card {
+    margin: 16px;
+    padding: 0;
+
+    md-card-content {
+        padding: 16px;
+
+        input[type=text], textarea {
+            font-family: 'Roboto', sans-serif;
+            margin: 16px 0;
+            width: 100%;
+            
+            &.no-border {                                
+                border: none;
+                background: transparent;
+
+                &:focus, &:active {
+                    outline: none;
+                }
+            }
+        }
+
+        textarea {
+            resize: none;
+        }
+    }
+}
