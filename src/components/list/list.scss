@@ -153,12 +153,6 @@ md-list[dense], md-nav-list[dense] {
 
 }
 
-md-divider {
-  display: block;
-  border-top: 1px solid md-color($md-foreground, divider);
-  margin: 0;
-}
-
 md-nav-list {
   a {
     text-decoration: none;

@@ -1,0 +1,34 @@
+<md-card class="demo-card">
+    <md-toolbar color="primary">
+        Basic
+    </md-toolbar>
+    <md-card-content>
+        <form>
+            <input class="no-border" type="text" name="from" placeholder="From" />
+            <md-divider></md-divider>
+            <input class="no-border" type="text" name="to" placeholder="To" />
+            <md-divider></md-divider>
+            <textarea class="no-border" name="message" placeholder="Message"></textarea>
+        </form>
+    </md-card-content>
+</md-card>
+
+<md-card class="demo-card">
+    <md-toolbar color="primary">
+        Inset
+    </md-toolbar>
+    <md-card-content>
+        <md-list>
+            <h3 md-subheader>Today</h3>
+            <md-list-item *ngFor="let message of messages">
+                <img md-list-avatar [src]="message.image" alt="Image of {{message.from}}">
+                <h4 md-line>{{message.from}}</h4>
+                <p md-line>
+                    <span>{{message.subject}} -- </span>
+                    <span class="demo-secondary-text">{{message.message}}</span>
+                </p>
+                <md-divider md-inset></md-divider>
+            </md-list-item>
+        </md-list>
+    </md-card-content>
+</md-card>

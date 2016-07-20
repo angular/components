@@ -1,0 +1,15 @@
+@import 'variables';
+@import 'default-theme';
+
+md-divider {
+  display: block;  
+  border-top: 1px solid md-color($md-foreground, divider);
+  margin: 0;
+
+  &[md-inset] {
+    //16px list-item padding-left
+    //40px image width
+    //16px text padding-left
+    margin-left: 72px;
+  }
+}
