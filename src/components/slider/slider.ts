@@ -47,6 +47,9 @@ export class MdSlider implements AfterContentInit {
   /** The percentage of the slider that coincides with the value. */
   private _percent: number = 0;
 
+  /** The values at which the thumb will snap to. */
+  @Input() step: number = 1;
+
   /**
    * Whether or not the thumb is currently being dragged.
    * Used to determine if there should be a transition for the thumb and fill track.
@@ -186,8 +189,14 @@ export class MdSlider implements AfterContentInit {
   updateValueFromPosition(pos: number) {
     let offset = this._sliderDimensions.left;
     let size = this._sliderDimensions.width;
-    this._percent = this.clamp((pos - offset) / size);
-    this.value = this.min + (this._percent * (this.max - this.min));
+
+    // We get the exact value from the event and use it to calculate the closest value to snap to.
+    let exactPercent = this.clamp((pos - offset) / size);
+    let exactValue = this.min + (exactPercent * (this.max - this.min));
+
+    // The value and percent are updated to the snapped value and corresponding percent.
+    this.value = Math.round((exactValue - this.min) / this.step) * this.step + this.min;
+    this.updatePercentFromValue();
 
     this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
   }
@@ -224,21 +233,15 @@ export class SliderRenderer {
    * Update the physical position of the thumb and fill track on the slider.
    */
   updateThumbAndFillPosition(percent: number, width: number) {
-    // The actual thumb element. Needed to get the exact width of the thumb for calculations.
-    let thumbElement = this._sliderElement.querySelector('.md-slider-thumb');
     // A container element that is used to avoid overwriting the transform on the thumb itself.
     let thumbPositionElement =
         <HTMLElement>this._sliderElement.querySelector('.md-slider-thumb-position');
     let fillTrackElement = <HTMLElement>this._sliderElement.querySelector('.md-slider-track-fill');
-    let thumbWidth = thumbElement.getBoundingClientRect().width;
 
     let position = percent * width;
-    // The thumb needs to be shifted to the left by half of the width of itself so that it centers
-    // on the value.
-    let thumbPosition = position - (thumbWidth / 2);
 
     fillTrackElement.style.width = `${position}px`;
-    applyCssTransform(thumbPositionElement, `translateX(${thumbPosition}px)`);
+    applyCssTransform(thumbPositionElement, `translateX(${position}px)`);
   }
 
   /**
