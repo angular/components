@@ -17,10 +17,12 @@ import {PortalDemo} from '../portal/portal-demo';
 import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
 import {ProgressCircleDemo} from '../progress-circle/progress-circle-demo';
 import {SlideToggleDemo} from '../slide-toggle/slide-toggle-demo';
+import {SliderDemo} from '../slider/slider-demo';
 import {SidenavDemo} from '../sidenav/sidenav-demo';
 import {RadioDemo} from '../radio/radio-demo';
 import {CardDemo} from '../card/card-demo';
 import {MenuDemo} from '../menu/menu-demo';
+import {DialogDemo} from '../dialog/dialog-demo';
 
 
 
@@ -31,6 +33,7 @@ export const routes: RouterConfig = [
   {path: 'radio', component: RadioDemo},
   {path: 'sidenav', component: SidenavDemo},
   {path: 'slide-toggle', component: SlideToggleDemo},
+  {path: 'slider', component: SliderDemo},
   {path: 'progress-circle', component: ProgressCircleDemo},
   {path: 'progress-bar', component: ProgressBarDemo},
   {path: 'portal', component: PortalDemo},
@@ -47,6 +50,7 @@ export const routes: RouterConfig = [
   {path: 'tabs', component: TabsDemo},
   {path: 'button-toggle', component: ButtonToggleDemo},
   {path: 'baseline', component: BaselineDemo},
+  {path: 'dialog', component: DialogDemo},
 ];
 
 export const DEMO_APP_ROUTE_PROVIDER = provideRouter(routes);

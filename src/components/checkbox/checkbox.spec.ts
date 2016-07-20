@@ -1,12 +1,9 @@
 import {
-    it,
-    beforeEach,
-    beforeEachProviders,
+    addProviders,
     inject,
     async,
     fakeAsync,
-    flushMicrotasks,
-    tick
+    flushMicrotasks
 } from '@angular/core/testing';
 import {
     FORM_DIRECTIVES,
@@ -19,7 +16,6 @@ import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing'
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdCheckbox, MdCheckboxChange} from './checkbox';
-import {PromiseCompleter} from '@angular2-material/core/async/promise-completer';
 
 
 
@@ -29,10 +25,12 @@ describe('MdCheckbox', () => {
   let builder: TestComponentBuilder;
   let fixture: ComponentFixture<any>;
 
-  beforeEachProviders(() => [
-    disableDeprecatedForms(),
-    provideForms(),
-  ]);
+  beforeEach(() => {
+    addProviders([
+      disableDeprecatedForms(),
+      provideForms(),
+    ]);
+  });
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
     builder = tcb;
@@ -215,21 +213,48 @@ describe('MdCheckbox', () => {
       expect(testComponent.onCheckboxClick).toHaveBeenCalledTimes(1);
     });
 
-    it('should emit a change event when the `checked` value changes', () => {
-      // TODO(jelbourn): this *should* work with async(), but fixture.whenStable currently doesn't
-      // know to look at pending macro tasks.
-      // See https://github.com/angular/angular/issues/8389
-      // As a short-term solution, use a promise (which jasmine knows how to understand).
-      let promiseCompleter = new PromiseCompleter();
-      checkboxInstance.change.subscribe(() => {
-        promiseCompleter.resolve();
+    it('should trigger a change event when the native input does', async(() => {
+      spyOn(testComponent, 'onCheckboxChange');
+
+      expect(inputElement.checked).toBe(false);
+      expect(checkboxNativeElement.classList).not.toContain('md-checkbox-checked');
+
+      labelElement.click();
+      fixture.detectChanges();
+
+      expect(inputElement.checked).toBe(true);
+      expect(checkboxNativeElement.classList).toContain('md-checkbox-checked');
+
+      // Wait for the fixture to become stable, because the EventEmitter for the change event,
+      // will only fire after the zone async change detection has finished.
+      fixture.whenStable().then(() => {
+        // The change event shouldn't fire, because the value change was not caused
+        // by any interaction.
+        expect(testComponent.onCheckboxChange).toHaveBeenCalledTimes(1);
       });
+    }));
+
+    it('should not trigger the change event by changing the native value', async(() => {
+      spyOn(testComponent, 'onCheckboxChange');
+
+      expect(inputElement.checked).toBe(false);
+      expect(checkboxNativeElement.classList).not.toContain('md-checkbox-checked');
 
       testComponent.isChecked = true;
       fixture.detectChanges();
 
-      return promiseCompleter.promise;
-    });
+      expect(inputElement.checked).toBe(true);
+      expect(checkboxNativeElement.classList).toContain('md-checkbox-checked');
+
+      // Wait for the fixture to become stable, because the EventEmitter for the change event,
+      // will only fire after the zone async change detection has finished.
+      fixture.whenStable().then(() => {
+        // The change event shouldn't fire, because the value change was not caused
+        // by any interaction.
+        expect(testComponent.onCheckboxChange).not.toHaveBeenCalled();
+      });
+
+    }));
 
     describe('state transition css classes', () => {
       it('should transition unchecked -> checked -> unchecked', () => {
@@ -308,17 +333,21 @@ describe('MdCheckbox', () => {
       });
     }));
 
-    it('should call the change event on first change after initialization', fakeAsync(() => {
+    it('should emit the event to the change observable', () => {
+      let changeSpy = jasmine.createSpy('onChangeObservable');
+
+      checkboxInstance.change.subscribe(changeSpy);
+
       fixture.detectChanges();
-      expect(testComponent.lastEvent).toBeUndefined();
+      expect(changeSpy).not.toHaveBeenCalled();
 
-      checkboxInstance.checked = true;
+      // When changing the native `checked` property the checkbox will not fire a change event,
+      // because the element is not focused and it's not the native behavior of the input element.
+      labelElement.click();
       fixture.detectChanges();
 
-      tick();
-
-      expect(testComponent.lastEvent.checked).toBe(true);
-    }));
+      expect(changeSpy).toHaveBeenCalledTimes(1);
+    });
 
     it('should not emit a DOM event to the change output', async(() => {
       fixture.detectChanges();
@@ -496,7 +525,8 @@ describe('MdCheckbox', () => {
         [indeterminate]="isIndeterminate" 
         [disabled]="isDisabled"
         (change)="changeCount = changeCount + 1"
-        (click)="onCheckboxClick($event)">
+        (click)="onCheckboxClick($event)"
+        (change)="onCheckboxChange($event)">
       Simple checkbox
     </md-checkbox>
   </div>`
@@ -509,8 +539,10 @@ class SingleCheckbox {
   parentElementClicked: boolean = false;
   parentElementKeyedUp: boolean = false;
   lastKeydownEvent: Event = null;
+  changeCount: number = 0;
 
   onCheckboxClick(event: Event) {}
+  onCheckboxChange(event: MdCheckboxChange) {}
 }
 
 /** Simple component for testing an MdCheckbox with ngModel. */

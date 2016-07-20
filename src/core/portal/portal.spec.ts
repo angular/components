@@ -1,8 +1,4 @@
 import {
-  it,
-  describe,
-  expect,
-  beforeEach,
   inject,
   fakeAsync,
   flushMicrotasks
@@ -13,7 +9,9 @@ import {
   ViewChildren,
   QueryList,
   ViewContainerRef,
-  ComponentResolver
+  ComponentResolver,
+  Optional,
+  Injector,
 } from '@angular/core';
 import {TemplatePortalDirective, PortalHostDirective} from './portal-directives';
 import {Portal, ComponentPortal} from './portal';
@@ -49,6 +47,34 @@ describe('Portals', () => {
       // Expect that the content of the attached portal is present.
       let hostContainer = appFixture.nativeElement.querySelector('.portal-container');
       expect(hostContainer.textContent).toContain('Pizza');
+    }));
+
+    it('should load a component into the portal with a given injector', fakeAsync(() => {
+      let appFixture: ComponentFixture<PortalTestApp>;
+
+      builder.createAsync(PortalTestApp).then(fixture => {
+        appFixture = fixture;
+      });
+
+      // Flush the async creation of the PortalTestApp.
+      flushMicrotasks();
+
+      // Create a custom injector for the component.
+      let chocolateInjector = new ChocolateInjector(appFixture.componentInstance.injector);
+
+      // Set the selectedHost to be a ComponentPortal.
+      let testAppComponent = appFixture.debugElement.componentInstance;
+      testAppComponent.selectedPortal = new ComponentPortal(PizzaMsg, null, chocolateInjector);
+      appFixture.detectChanges();
+
+      // Flush the attachment of the Portal.
+      flushMicrotasks();
+      appFixture.detectChanges();
+
+      // Expect that the content of the attached portal is present.
+      let hostContainer = appFixture.nativeElement.querySelector('.portal-container');
+      expect(hostContainer.textContent).toContain('Pizza');
+      expect(hostContainer.textContent).toContain('Chocolate');
     }));
 
     it('should load a <template> portal', fakeAsync(() => {
@@ -140,7 +166,7 @@ describe('Portals', () => {
       appFixture.detectChanges();
 
       // Expect the new value to be reflected in the rendered output.
-      expect(hostContainer.textContent).toContainError('Mango');
+      expect(hostContainer.textContent).toContain('Mango');
     }));
 
     it('should change the attached portal', fakeAsync(() => {
@@ -182,6 +208,7 @@ describe('Portals', () => {
   describe('DomPortalHost', function () {
     let componentLoader: ComponentResolver;
     let someViewContainerRef: ViewContainerRef;
+    let someInjector: Injector;
     let someDomElement: HTMLElement;
     let host: DomPortalHost;
 
@@ -210,8 +237,40 @@ describe('Portals', () => {
 
       flushMicrotasks();
 
-      expect(componentInstance).toBeAnInstanceOf(PizzaMsg);
+      expect(componentInstance).toEqual(jasmine.any(PizzaMsg));
       expect(someDomElement.textContent).toContain('Pizza');
+
+      host.detach();
+      flushMicrotasks();
+
+      expect(someDomElement.innerHTML).toBe('');
+    }));
+
+    it('should attach and detach a component portal with a given injector', fakeAsync(() => {
+      let appFixture: ComponentFixture<ArbitraryViewContainerRefComponent>;
+      builder.createAsync(ArbitraryViewContainerRefComponent).then(fixture => {
+        appFixture = fixture;
+        someViewContainerRef = fixture.componentInstance.viewContainerRef;
+        someInjector = fixture.componentInstance.injector;
+      });
+
+      flushMicrotasks();
+
+
+      let chocolateInjector = new ChocolateInjector(someInjector);
+      let portal = new ComponentPortal(PizzaMsg, someViewContainerRef, chocolateInjector);
+
+      let componentInstance: PizzaMsg;
+      portal.attach(host).then(ref => {
+        componentInstance = ref.instance;
+      });
+
+      flushMicrotasks();
+      appFixture.detectChanges();
+
+      expect(componentInstance).toEqual(jasmine.any(PizzaMsg));
+      expect(someDomElement.textContent).toContain('Pizza');
+      expect(someDomElement.textContent).toContain('Chocolate');
 
       host.detach();
       flushMicrotasks();
@@ -269,7 +328,7 @@ describe('Portals', () => {
       appFixture.detectChanges();
 
       // Expect the new value to be reflected in the rendered output.
-      expect(someDomElement.textContent).toContainError('Mango');
+      expect(someDomElement.textContent).toContain('Mango');
 
       host.detach();
       expect(someDomElement.innerHTML).toBe('');
@@ -309,12 +368,27 @@ describe('Portals', () => {
 });
 
 
+class Chocolate {
+  toString() {
+    return 'Chocolate';
+  }
+}
+
+class ChocolateInjector {
+  constructor(public parentInjector: Injector) { }
+
+  get(token: any) {
+    return token === Chocolate ? new Chocolate() : this.parentInjector.get(token);
+  }
+}
+
 /** Simple component for testing ComponentPortal. */
 @Component({
   selector: 'pizza-msg',
-  template: '<p>Pizza</p>',
+  template: '<p>Pizza</p><p>{{snack}}</p>',
 })
 class PizzaMsg {
+  constructor(@Optional() public snack: Chocolate) { }
 }
 
 /** Simple component to grab an arbitrary ViewContainerRef */
@@ -323,8 +397,7 @@ class PizzaMsg {
   template: '<p>Hello</p>'
 })
 class ArbitraryViewContainerRefComponent {
-  constructor(public viewContainerRef: ViewContainerRef) {
-  }
+  constructor(public viewContainerRef: ViewContainerRef, public injector: Injector) { }
 }
 
 
@@ -348,6 +421,8 @@ class PortalTestApp {
   @ViewChildren(TemplatePortalDirective) portals: QueryList<TemplatePortalDirective>;
   selectedPortal: Portal<any>;
   fruit: string = 'Banana';
+
+  constructor(public injector: Injector) { }
 
   get cakePortal() {
     return this.portals.first;

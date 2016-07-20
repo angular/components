@@ -5,11 +5,9 @@ import {
     EventEmitter,
     Input,
     Output,
-    Provider,
     Renderer,
     ViewEncapsulation,
-    forwardRef,
-    AfterContentInit
+    forwardRef
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 
@@ -22,11 +20,11 @@ let nextId = 0;
  * Provider Expression that allows md-checkbox to register as a ControlValueAccessor. This allows it
  * to support [(ngModel)].
  */
-export const MD_CHECKBOX_CONTROL_VALUE_ACCESSOR = new Provider(
-    NG_VALUE_ACCESSOR, {
-      useExisting: forwardRef(() => MdCheckbox),
-      multi: true
-    });
+export const MD_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => MdCheckbox),
+  multi: true
+};
 
 /**
  * Represents the different states that require custom transitions between them.
@@ -72,7 +70,7 @@ export class MdCheckboxChange {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
+export class MdCheckbox implements ControlValueAccessor {
   /**
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
    * take precedence so this may be omitted.
@@ -116,9 +114,6 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
   /** Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor. */
   onTouched: () => any = () => {};
 
-  /** Whether the `checked` state has been set to its initial value. */
-  private _isInitialized: boolean = false;
-
   private _currentAnimationClass: string = '';
 
   private _currentCheckState: TransitionCheckState = TransitionCheckState.Init;
@@ -147,17 +142,7 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
       this._checked = checked;
       this._transitionCheckState(
           this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
-
-      // Only fire a change event if this isn't the first time the checked property is ever set.
-      if (this._isInitialized) {
-        this._emitChangeEvent();
-      }
     }
-  }
-
-  /** TODO: internal */
-  ngAfterContentInit() {
-    this._isInitialized = true;
   }
 
   /**
@@ -268,6 +253,11 @@ export class MdCheckbox implements AfterContentInit, ControlValueAccessor {
 
     if (!this.disabled) {
       this.toggle();
+
+      // Emit our custom change event if the native input emitted one.
+      // It is important to only emit it, if the native input triggered one, because
+      // we don't want to trigger a change event, when the `checked` variable changes for example.
+      this._emitChangeEvent();
     }
   }
 

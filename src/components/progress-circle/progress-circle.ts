@@ -16,9 +16,9 @@ const DURATION_INDETERMINATE = 667;
 /** Duration of the indeterminate animation. */
 const DURATION_DETERMINATE = 225;
 /** Start animation value of the indeterminate animation */
-let startIndeterminate = 3;
+const startIndeterminate = 3;
 /** End animation value of the indeterminate animation */
-let endIndeterminate = 80;
+const endIndeterminate = 80;
 
 
 export type ProgressCircleMode = 'determinate' | 'indeterminate';
@@ -151,7 +151,7 @@ export class MdProgressCircle implements OnDestroy {
   private _animateCircle(animateFrom: number, animateTo: number, ease: EasingFn,
                         duration: number, rotation: number) {
     let id = ++this._lastAnimationId;
-    let startTime = now();
+    let startTime = Date.now();
     let changeInValue = animateTo - animateFrom;
 
     // No need to animate it if the values are the same
@@ -160,7 +160,7 @@ export class MdProgressCircle implements OnDestroy {
     } else {
       let animation = (currentTime: number) => {
         let elapsedTime = Math.max(
-          0, Math.min((currentTime || now()) - startTime, duration));
+          0, Math.min((currentTime || Date.now()) - startTime, duration));
 
         this.currentPath = getSvgArc(
           ease(elapsedTime, animateFrom, changeInValue, duration),
@@ -184,7 +184,7 @@ export class MdProgressCircle implements OnDestroy {
   private _startIndeterminateAnimation() {
     let rotationStartPoint = 0;
     let start = startIndeterminate;
-    let end =  endIndeterminate;
+    let end = endIndeterminate;
     let duration = DURATION_INDETERMINATE;
     let animate = () => {
       this._animateCircle(start, end, materialEase, duration, rotationStartPoint);
@@ -243,17 +243,6 @@ export class MdSpinner extends MdProgressCircle {
 /** Clamps a value to be between 0 and 100. */
 function clamp(v: number) {
   return Math.max(0, Math.min(100, v));
-}
-
-
-/**
- * Returns the current timestamp either based on the performance global or a date object.
- */
-function now() {
-  if (window.performance && window.performance.now) {
-    return window.performance.now();
-  }
-  return Date.now();
 }
 
 
