@@ -47,7 +47,6 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this._checkMenu();
-    this._createOverlay();
     this.menu.close.subscribe(() => this.closeMenu());
   }
 
@@ -59,11 +58,14 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   }
 
   openMenu(): Promise<void> {
-    return this._overlayRef.attach(this._portal)
+    return this._createOverlay()
+      .then(() => this._overlayRef.attach(this._portal))
       .then(() => this._setIsMenuOpen(true));
   }
 
   closeMenu(): Promise<void> {
+    if (!this._overlayRef) { return Promise.resolve(); }
+
     return this._overlayRef.detach()
         .then(() => this._setIsMenuOpen(false));
   }
@@ -93,9 +95,11 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    *  This method creates the overlay from the provided menu's template and saves its
    *  OverlayRef so that it can be attached to the DOM when openMenu is called.
    */
-  private _createOverlay(): void {
+  private _createOverlay(): Promise<any> {
+    if (this._overlayRef) { return Promise.resolve(); }
+
     this._portal = new TemplatePortal(this.menu.templateRef, this._viewContainerRef);
-    this._overlay.create(this._getOverlayConfig())
+    return this._overlay.create(this._getOverlayConfig())
         .then(overlay => this._overlayRef = overlay);
   }
 
