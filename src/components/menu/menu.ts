@@ -3,13 +3,15 @@
 // TODO(kara): set position of menu
 
 import {
+    Attribute,
     Component,
-    ViewEncapsulation,
+    EventEmitter,
     Output,
-    ViewChild,
     TemplateRef,
-    EventEmitter
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
+import {MdMenuInvalidPositionX, MdMenuInvalidPositionY} from './menu-errors';
 
 @Component({
   moduleId: module.id,
@@ -22,9 +24,20 @@ import {
 })
 export class MdMenu {
   private _showClickCatcher: boolean = false;
+  private _classList: Object;
+  positionX: 'before' | 'after' = 'after';
+  positionY: 'above' | 'below' = 'below';
 
   @Output() close = new EventEmitter;
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+
+  constructor(@Attribute('x-position') posX: 'before' | 'after',
+              @Attribute('y-position') posY: 'above' | 'below',
+              @Attribute('class') classes: string) {
+    if (posX) { this._setPositionX(posX); }
+    if (posY) { this._setPositionY(posY); }
+    this._mirrorHostClasses(classes);
+  }
 
   /**
    * This function toggles the display of the menu's click catcher element.
@@ -33,6 +46,35 @@ export class MdMenu {
    */
   _setClickCatcher(bool: boolean): void {
     this._showClickCatcher = bool;
+  }
+
+  /**
+   * This method takes classes set on the host md-menu element and applies them on the
+   * menu template that displays in the overlay container.  Otherwise, it's difficult
+   * to style the containing menu from outside the component.
+   * @param classes: list of class names
+   */
+  private _mirrorHostClasses(classes: string): void {
+    if (!classes) { return; }
+
+    this._classList = classes.split(' ').reduce((obj: any, className: string) => {
+      obj[className] = true;
+      return obj;
+    }, {});
+  }
+
+  private _setPositionX(pos: 'before' | 'after'): void {
+    if ( pos !== 'before' && pos !== 'after') {
+      throw new MdMenuInvalidPositionX();
+    }
+    this.positionX = pos;
+  }
+
+  private _setPositionY(pos: 'above' | 'below'): void {
+    if ( pos !== 'above' && pos !== 'below') {
+      throw new MdMenuInvalidPositionY();
+    }
+    this.positionY = pos;
   }
 
   private _emitCloseEvent(): void {

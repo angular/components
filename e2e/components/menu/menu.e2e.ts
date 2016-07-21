@@ -1,81 +1,113 @@
+import { MenuPage } from './menu-page';
+
 describe('menu', function () {
+  let page: MenuPage;
+
   beforeEach(function() {
-    browser.get('/menu');
+    page = new MenuPage();
   });
 
   it('should open menu when the trigger is clicked', function () {
-    expectMenuPresent(false);
-    element(by.id('trigger')).click();
+    page.expectMenuPresent(false);
+    page.trigger().click();
 
-    expectMenuPresent(true);
-    expect(element(by.css('.md-menu')).getText()).toEqual("One\nTwo\nThree");
-  });
-
-  it('should align menu when open', function() {
-    element(by.id('trigger')).click();
-    expectMenuAlignedWith('trigger');
+    page.expectMenuPresent(true);
+    expect(page.menu().getText()).toEqual("One\nTwo\nThree");
   });
 
   it('should close menu when area outside menu is clicked', function () {
-    element(by.id('trigger')).click();
-    element(by.tagName('body')).click();
-    expectMenuPresent(false);
+    page.trigger().click();
+    page.body().click();
+    page.expectMenuPresent(false);
   });
 
   it('should close menu when menu item is clicked', function () {
-    element(by.id('trigger')).click();
-    element(by.id('one')).click();
-    expectMenuPresent(false);
+    page.trigger().click();
+    page.firstItem().click();
+    page.expectMenuPresent(false);
   });
 
   it('should run click handlers on regular menu items', function() {
-    element(by.id('trigger')).click();
-    element(by.id('one')).click();
-    expect(element(by.id('text')).getText()).toEqual('one');
+    page.trigger().click();
+    page.firstItem().click();
+    expect(page.getResultText()).toEqual('one');
 
-    element(by.id('trigger')).click();
-    element(by.id('two')).click();
-    expect(element(by.id('text')).getText()).toEqual('two');
+    page.trigger().click();
+    page.secondItem().click();
+    expect(page.getResultText()).toEqual('two');
   });
 
   it('should run not run click handlers on disabled menu items', function() {
-    element(by.id('trigger')).click();
-    element(by.id('three')).click();
-    expect(element(by.id('text')).getText()).toEqual('');
+    page.trigger().click();
+    page.thirdItem().click();
+    expect(page.getResultText()).toEqual('');
   });
 
   it('should support multiple triggers opening the same menu', function() {
-    element(by.id('trigger-two')).click();
-    expect(element(by.css('.md-menu')).getText()).toEqual("One\nTwo\nThree");
-    expectMenuAlignedWith('trigger-two');
+    page.triggerTwo().click();
+    expect(page.menu().getText()).toEqual("One\nTwo\nThree");
+    page.expectMenuAlignedWith(page.menu(), 'trigger-two');
 
-    element(by.tagName('body')).click();
-    expectMenuPresent(false);
+    page.body().click();
+    page.expectMenuPresent(false);
 
-    element(by.id('trigger')).click();
-    expect(element(by.css('.md-menu')).getText()).toEqual("One\nTwo\nThree");
-    expectMenuAlignedWith('trigger');
+    page.trigger().click();
+    expect(page.menu().getText()).toEqual("One\nTwo\nThree");
+    page.expectMenuAlignedWith(page.menu(), 'trigger');
 
-    element(by.tagName('body')).click();
-    expectMenuPresent(false);
+    page.body().click();
+    page.expectMenuPresent(false);
   });
 
-  function expectMenuPresent(bool: boolean) {
-    return browser.isElementPresent(by.css('.md-menu')).then((isPresent) => {
-      expect(isPresent).toBe(bool);
+  it('should mirror classes on host to menu template in overlay', () => {
+    page.trigger().click();
+    page.menu().getAttribute('class').then((classes) => {
+      expect(classes).toEqual('md-menu custom');
     });
-  }
+  });
 
-  function expectMenuAlignedWith(id: string) {
-    element(by.id(id)).getLocation().then((loc) => {
-      expectMenuLocation({x: loc.x, y: loc.y});
-    });
-  }
+  describe('position - ', () => {
 
-  function expectMenuLocation({x,y}: {x: number, y: number}) {
-    element(by.css('.md-menu')).getLocation().then((loc) => {
-      expect(loc.x).toEqual(x);
-      expect(loc.y).toEqual(y);
+    it('should default menu alignment to "after below" when not set', function() {
+      page.trigger().click();
+
+      // menu.x should equal trigger.x, menu.y should equal trigger.y
+      page.expectMenuAlignedWith(page.menu(), 'trigger');
     });
-  }
+
+    it('should align overlay end to origin end when x-position is "before"', () => {
+      page.beforeTrigger().click();
+      page.beforeTrigger().getLocation().then((trigger) => {
+
+        // the menu's right corner must be attached to the trigger's right corner.
+        // menu = 112px wide. trigger = 60px wide.  112 - 60 =  52px of menu to the left of trigger.
+        // trigger.x (left corner) - 52px (menu left of trigger) = expected menu.x (left corner)
+        // menu.y should equal trigger.y because only x position has changed.
+        page.expectMenuLocation(page.beforeMenu(), {x: trigger.x - 52, y: trigger.y});
+      });
+    });
+
+    it('should align overlay bottom to origin bottom when y-position is "above"', () => {
+      page.aboveTrigger().click();
+      page.aboveTrigger().getLocation().then((trigger) => {
+
+        // the menu's bottom corner must be attached to the trigger's bottom corner.
+        // menu.x should equal trigger.x because only y position has changed.
+        // menu = 64px high. trigger = 20px high. 64 - 20 = 44px of menu extending up past trigger.
+        // trigger.y (top corner) - 44px (menu above trigger) = expected menu.y (top corner)
+        page.expectMenuLocation(page.aboveMenu(), {x: trigger.x, y: trigger.y - 44});
+      });
+    });
+
+    it('should align menu to top left of trigger when "below" and "above"', () => {
+      page.combinedTrigger().click();
+      page.combinedTrigger().getLocation().then((trigger) => {
+
+        // trigger.x (left corner) - 52px (menu left of trigger) = expected menu.x
+        // trigger.y (top corner) - 44px (menu above trigger) = expected menu.y
+        page.expectMenuLocation(page.combinedMenu(), {x: trigger.x - 52, y: trigger.y - 44});
+      });
+    });
+
+  });
 });
