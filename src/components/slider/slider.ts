@@ -105,7 +105,6 @@ export class MdSlider implements AfterContentInit {
   set value(v: number) {
     this._value = Number(v);
     this._isInitialized = true;
-    this.updatePercentFromValue();
   }
 
   constructor(elementRef: ElementRef) {
@@ -119,6 +118,7 @@ export class MdSlider implements AfterContentInit {
    */
   ngAfterContentInit() {
     this._sliderDimensions = this._renderer.getSliderDimensions();
+    this.updatePercentFromValue();
     this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
   }
 
@@ -132,6 +132,11 @@ export class MdSlider implements AfterContentInit {
     this.isDragging = false;
     this._renderer.addFocus();
     this.updateValueFromPosition(event.clientX);
+
+    // Once the click is over the thumb has to snap to its new physical location.
+    // This fires at the end of a drag as well.
+    this.updatePercentFromValue();
+    this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
   }
 
   /** TODO: internal */
@@ -139,6 +144,7 @@ export class MdSlider implements AfterContentInit {
     if (this.disabled) {
       return;
     }
+
     // Prevent the drag from selecting anything else.
     event.preventDefault();
     this.updateValueFromPosition(event.center.x);
@@ -160,6 +166,10 @@ export class MdSlider implements AfterContentInit {
   /** TODO: internal */
   onDragEnd() {
     this.isDragging = false;
+    // Once the click is over the thumb has to snap to its new physical location.
+    // This fires at the end of a drag as well.
+    this.updatePercentFromValue();
+    this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
   }
 
   /** TODO: internal */
@@ -178,26 +188,24 @@ export class MdSlider implements AfterContentInit {
   /**
    * When the value changes without a physical position, the percentage needs to be recalculated
    * independent of the physical location.
+   * This is also used to move the thumb to a snapped value once dragging is done.
    */
   updatePercentFromValue() {
     this._percent = (this.value - this.min) / (this.max - this.min);
   }
 
   /**
-   * Calculate the new value from the new physical location.
+   * Calculate the new value from the new physical location. The value will always be snapped.
    */
   updateValueFromPosition(pos: number) {
     let offset = this._sliderDimensions.left;
     let size = this._sliderDimensions.width;
 
-    // We get the exact value from the event and use it to calculate the closest value to snap to.
-    let exactPercent = this.clamp((pos - offset) / size);
-    let exactValue = this.min + (exactPercent * (this.max - this.min));
+    // The exact value is calculated from the event and used to find the closest snap value.
+    this._percent = this.clamp((pos - offset) / size);
+    let exactValue = this.min + (this._percent * (this.max - this.min));
 
-    // The value and percent are updated to the snapped value and corresponding percent.
     this.value = Math.round((exactValue - this.min) / this.step) * this.step + this.min;
-    this.updatePercentFromValue();
-
     this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
   }
 

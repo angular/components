@@ -270,6 +270,9 @@ describe('MdSlider', () => {
     let sliderNativeElement: HTMLElement;
     let sliderInstance: MdSlider;
     let sliderTrackElement: HTMLElement;
+    let sliderDimensions: ClientRect;
+    let trackFillElement: HTMLElement;
+    let thumbElement: HTMLElement;
 
     beforeEach(async(() => {
       builder.createAsync(SliderWithMinAndMax).then(f => {
@@ -280,20 +283,23 @@ describe('MdSlider', () => {
         sliderNativeElement = sliderDebugElement.nativeElement;
         sliderInstance = sliderDebugElement.injector.get(MdSlider);
         sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track');
+        sliderDimensions = sliderTrackElement.getBoundingClientRect();
+        trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track-fill');
+        thumbElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-thumb-position');
       });
     }));
 
     it('should set the default values from the attributes', () => {
-      expect(sliderInstance.value).toBe(5);
-      expect(sliderInstance.min).toBe(5);
-      expect(sliderInstance.max).toBe(15);
+      expect(sliderInstance.value).toBe(4);
+      expect(sliderInstance.min).toBe(4);
+      expect(sliderInstance.max).toBe(6);
     });
 
     it('should set the correct value on click', () => {
       dispatchClickEvent(sliderTrackElement, 0.09);
       // Computed by multiplying the difference between the min and the max by the percentage from
       // the click and adding that to the minimum.
-      let value = Math.round(5 + (0.09 * (15 - 5)));
+      let value = Math.round(4 + (0.09 * (6 - 4)));
       expect(sliderInstance.value).toBe(value);
     });
 
@@ -301,8 +307,35 @@ describe('MdSlider', () => {
       dispatchDragEvent(sliderTrackElement, sliderNativeElement, 0, 0.62, gestureConfig);
       // Computed by multiplying the difference between the min and the max by the percentage from
       // the click and adding that to the minimum.
-      let value = Math.round(5 + (0.62 * (15 - 5)));
+      let value = Math.round(4 + (0.62 * (6 - 4)));
       expect(sliderInstance.value).toBe(value);
+    });
+
+    it('should snap the thumb and fill to the nearest value on click', () => {
+      dispatchClickEvent(sliderTrackElement, 0.68);
+      fixture.detectChanges();
+
+      let trackFillDimensions = trackFillElement.getBoundingClientRect();
+      let thumbDimensions = thumbElement.getBoundingClientRect();
+      let thumbPosition = thumbDimensions.left - trackFillDimensions.left;
+
+      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
+      expect(thumbDimensions.left).toBe(sliderDimensions.width * 0.5 + sliderDimensions.left);
+    });
+
+    it('should snap the thumb and fill to the nearest value on drag', () => {
+      dispatchDragStartEvent(sliderNativeElement, 0, gestureConfig);
+      fixture.detectChanges();
+
+      dispatchDragEndEvent(sliderNativeElement, 0.22, gestureConfig);
+      fixture.detectChanges();
+
+      let trackFillDimensions = trackFillElement.getBoundingClientRect();
+      let thumbDimensions = thumbElement.getBoundingClientRect();
+      let thumbPosition = thumbDimensions.left - trackFillDimensions.left;
+
+      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
+      expect(thumbDimensions.left).toBe(sliderDimensions.left);
     });
   });
 
@@ -364,7 +397,13 @@ class DisabledSlider { }
 
 @Component({
   directives: [MD_SLIDER_DIRECTIVES],
-  template: `<md-slider min="5" max="15"></md-slider>`
+  template: `<md-slider min="4" max="6"></md-slider>`,
+  styles: [`
+    .md-slider-track-fill, .md-slider-thumb-position {
+        transition: none !important;
+    }
+  `],
+  encapsulation: ViewEncapsulation.None
 })
 class SliderWithMinAndMax { }
 
