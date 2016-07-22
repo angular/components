@@ -33,7 +33,7 @@ export class MdGestureConfig extends HammerGestureConfig {
    * TODO: Confirm threshold numbers with Material Design UX Team
    * */
   buildHammer(element: HTMLElement) {
-    var mc = new Hammer(element);
+    const mc = new Hammer(element);
 
     // Default Hammer Recognizers.
     let pan = new Hammer.Pan();
