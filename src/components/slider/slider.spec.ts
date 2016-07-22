@@ -138,37 +138,6 @@ describe('MdSlider', () => {
       expect(thumbDimensions.left).toBe(sliderDimensions.width * 0.5 + sliderDimensions.left);
     });
 
-    it('should update the track fill on drag', () => {
-      let trackFillElement = sliderNativeElement.querySelector('.md-slider-track-fill');
-      let trackFillDimensions = trackFillElement.getBoundingClientRect();
-      let sliderDimensions =
-          sliderNativeElement.querySelector('.md-slider-track').getBoundingClientRect();
-
-      expect(trackFillDimensions.width).toBe(0);
-      dispatchDragEvent(sliderNativeElement, 0, 0.5, gestureConfig);
-
-      trackFillDimensions = trackFillElement.getBoundingClientRect();
-      expect(trackFillDimensions.width).toBe(sliderDimensions.width * 0.5);
-    });
-
-    it('should update the thumb position on drag', () => {
-      let thumbElement = sliderNativeElement.querySelector('.md-slider-thumb-position');
-      let thumbDimensions = thumbElement.getBoundingClientRect();
-      let thumbWidth =
-          sliderNativeElement.querySelector('.md-slider-thumb').getBoundingClientRect().width;
-      let sliderDimensions =
-          sliderNativeElement.querySelector('.md-slider-track').getBoundingClientRect();
-
-      expect(thumbDimensions.left).toBe(sliderDimensions.left - (thumbWidth / 2));
-      dispatchDragEvent(sliderNativeElement, 0, 0.5, gestureConfig);
-
-      thumbDimensions = thumbElement.getBoundingClientRect();
-      // The thumb's offset is expected to be equal to the slider's offset + half the slider's width
-      // (from the click event) - half the thumb width (to center the thumb).
-      let offset = sliderDimensions.left + (sliderDimensions.width * 0.5) - (thumbWidth / 2);
-      expect(thumbDimensions.left).toBe(offset);
-    });
-
     it('should add the md-slider-active class on click', () => {
       let containerElement = sliderNativeElement.querySelector('.md-slider-container');
       expect(containerElement.classList).not.toContain('md-slider-active');
@@ -319,8 +288,9 @@ describe('MdSlider', () => {
       let thumbDimensions = thumbElement.getBoundingClientRect();
       let thumbPosition = thumbDimensions.left - trackFillDimensions.left;
 
-      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
+      // The closest snap is halfway on the slider.
       expect(thumbDimensions.left).toBe(sliderDimensions.width * 0.5 + sliderDimensions.left);
+      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
     });
 
     it('should snap the thumb and fill to the nearest value on drag', () => {
@@ -334,8 +304,10 @@ describe('MdSlider', () => {
       let thumbDimensions = thumbElement.getBoundingClientRect();
       let thumbPosition = thumbDimensions.left - trackFillDimensions.left;
 
-      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
+      // The closest snap is at the beginning of the slider.
       expect(thumbDimensions.left).toBe(sliderDimensions.left);
+      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
+
     });
   });
 
@@ -372,6 +344,77 @@ describe('MdSlider', () => {
     it('should set the correct value on drag', () => {
       dispatchDragEvent(sliderTrackElement, sliderNativeElement, 0, 0.32, gestureConfig);
       expect(sliderInstance.value).toBe(32);
+    });
+  });
+
+  describe('slider with set step', () => {
+    let fixture: ComponentFixture<SliderWithStep>;
+    let sliderDebugElement: DebugElement;
+    let sliderNativeElement: HTMLElement;
+    let sliderInstance: MdSlider;
+    let sliderTrackElement: HTMLElement;
+    let sliderDimensions: ClientRect;
+    let trackFillElement: HTMLElement;
+    let thumbElement: HTMLElement;
+
+    beforeEach(async(() => {
+      builder.createAsync(SliderWithStep).then(f => {
+        fixture = f;
+        fixture.detectChanges();
+
+        sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+        sliderNativeElement = sliderDebugElement.nativeElement;
+        sliderInstance = sliderDebugElement.injector.get(MdSlider);
+        sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track');
+        sliderDimensions = sliderTrackElement.getBoundingClientRect();
+        trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track-fill');
+        thumbElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-thumb-position');
+      });
+    }));
+
+    it('should set the correct step value on click', () => {
+      expect(sliderInstance.value).toBe(0);
+
+      dispatchClickEvent(sliderTrackElement, 0.13);
+      fixture.detectChanges();
+
+      expect(sliderInstance.value).toBe(25);
+    });
+
+    it('should snap the thumb and fill to a step on click', () => {
+      dispatchClickEvent(sliderNativeElement, 0.66);
+      fixture.detectChanges();
+
+      let trackFillDimensions = trackFillElement.getBoundingClientRect();
+      let thumbDimensions = thumbElement.getBoundingClientRect();
+      let thumbPosition = thumbDimensions.left - trackFillDimensions.left;
+
+      // The closest step is at 75% of the slider.
+      expect(thumbDimensions.left).toBe(sliderDimensions.width * 0.75 + sliderDimensions.left);
+      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
+    });
+
+    it('should set the correct step value on drag', () => {
+      dispatchDragEvent(sliderTrackElement, sliderNativeElement, 0, 0.07, gestureConfig);
+      fixture.detectChanges();
+
+      expect(sliderInstance.value).toBe(0);
+    });
+
+    it('should snap the thumb and fill to a step on drag', () => {
+      dispatchDragStartEvent(sliderNativeElement, 0, gestureConfig);
+      fixture.detectChanges();
+
+      dispatchDragEndEvent(sliderNativeElement, 0.88, gestureConfig);
+      fixture.detectChanges();
+
+      let trackFillDimensions = trackFillElement.getBoundingClientRect();
+      let thumbDimensions = thumbElement.getBoundingClientRect();
+      let thumbPosition = thumbDimensions.left - trackFillDimensions.left;
+
+      // The closest snap is at the beginning of the slider.
+      expect(thumbDimensions.left).toBe(sliderDimensions.width + sliderDimensions.left);
+      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
     });
   });
 });
@@ -412,6 +455,18 @@ class SliderWithMinAndMax { }
   template: `<md-slider value="26"></md-slider>`
 })
 class SliderWithValue { }
+
+@Component({
+  directives: [MD_SLIDER_DIRECTIVES],
+  template: `<md-slider step="25"></md-slider>`,
+  styles: [`
+    .md-slider-track-fill, .md-slider-thumb-position {
+        transition: none !important;
+    }
+  `],
+  encapsulation: ViewEncapsulation.None
+})
+class SliderWithStep { }
 
 /**
  * Dispatches a click event from an element.
