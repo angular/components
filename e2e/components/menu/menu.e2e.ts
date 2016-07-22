@@ -1,13 +1,13 @@
 import { MenuPage } from './menu-page';
 
-describe('menu', function () {
+describe('menu', () => {
   let page: MenuPage;
 
   beforeEach(function() {
     page = new MenuPage();
   });
 
-  it('should open menu when the trigger is clicked', function () {
+  it('should open menu when the trigger is clicked', () => {
     page.expectMenuPresent(false);
     page.trigger().click();
 
@@ -15,35 +15,35 @@ describe('menu', function () {
     expect(page.menu().getText()).toEqual("One\nTwo\nThree");
   });
 
-  it('should close menu when area outside menu is clicked', function () {
+  it('should close menu when area outside menu is clicked', () => {
     page.trigger().click();
     page.body().click();
     page.expectMenuPresent(false);
   });
 
-  it('should close menu when menu item is clicked', function () {
+  it('should close menu when menu item is clicked', () => {
     page.trigger().click();
-    page.firstItem().click();
+    page.items(0).click();
     page.expectMenuPresent(false);
   });
 
-  it('should run click handlers on regular menu items', function() {
+  it('should run click handlers on regular menu items', () => {
     page.trigger().click();
-    page.firstItem().click();
+    page.items(0).click();
     expect(page.getResultText()).toEqual('one');
 
     page.trigger().click();
-    page.secondItem().click();
+    page.items(1).click();
     expect(page.getResultText()).toEqual('two');
   });
 
-  it('should run not run click handlers on disabled menu items', function() {
+  it('should run not run click handlers on disabled menu items', () => {
     page.trigger().click();
-    page.thirdItem().click();
+    page.items(2).click();
     expect(page.getResultText()).toEqual('');
   });
 
-  it('should support multiple triggers opening the same menu', function() {
+  it('should support multiple triggers opening the same menu', () => {
     page.triggerTwo().click();
     expect(page.menu().getText()).toEqual("One\nTwo\nThree");
     page.expectMenuAlignedWith(page.menu(), 'trigger-two');
@@ -68,7 +68,7 @@ describe('menu', function () {
 
   describe('position - ', () => {
 
-    it('should default menu alignment to "after below" when not set', function() {
+    it('should default menu alignment to "after below" when not set', () => {
       page.trigger().click();
 
       // menu.x should equal trigger.x, menu.y should equal trigger.y

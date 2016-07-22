@@ -6,11 +6,13 @@ import {
     Attribute,
     Component,
     EventEmitter,
+    Input,
     Output,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {MdMenuInvalidPositionX, MdMenuInvalidPositionY} from './menu-errors';
 
 @Component({
@@ -24,20 +26,36 @@ import {MdMenuInvalidPositionX, MdMenuInvalidPositionY} from './menu-errors';
 })
 export class MdMenu {
   private _showClickCatcher: boolean = false;
-  private _classList: Object;
-  positionX: 'before' | 'after' = 'after';
-  positionY: 'above' | 'below' = 'below';
 
-  @Output() close = new EventEmitter;
+  // config object to be passed into the menu's ngClass
+  private _classList: Object;
+
+  positionX: MenuPositionX = 'after';
+  positionY: MenuPositionY = 'below';
+
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
 
-  constructor(@Attribute('x-position') posX: 'before' | 'after',
-              @Attribute('y-position') posY: 'above' | 'below',
-              @Attribute('class') classes: string) {
+  constructor(@Attribute('x-position') posX: MenuPositionX,
+              @Attribute('y-position') posY: MenuPositionY) {
     if (posX) { this._setPositionX(posX); }
     if (posY) { this._setPositionY(posY); }
-    this._mirrorHostClasses(classes);
   }
+
+  /**
+   * This method takes classes set on the host md-menu element and applies them on the
+   * menu template that displays in the overlay container.  Otherwise, it's difficult
+   * to style the containing menu from outside the component.
+   * @param classes list of class names
+   */
+  @Input('class')
+  set classList(classes: string) {
+    this._classList = classes.split(' ').reduce((obj: any, className: string) => {
+      obj[className] = true;
+      return obj;
+    }, {});
+  }
+
+  @Output() close = new EventEmitter;
 
   /**
    * This function toggles the display of the menu's click catcher element.
@@ -48,29 +66,14 @@ export class MdMenu {
     this._showClickCatcher = bool;
   }
 
-  /**
-   * This method takes classes set on the host md-menu element and applies them on the
-   * menu template that displays in the overlay container.  Otherwise, it's difficult
-   * to style the containing menu from outside the component.
-   * @param classes: list of class names
-   */
-  private _mirrorHostClasses(classes: string): void {
-    if (!classes) { return; }
-
-    this._classList = classes.split(' ').reduce((obj: any, className: string) => {
-      obj[className] = true;
-      return obj;
-    }, {});
-  }
-
-  private _setPositionX(pos: 'before' | 'after'): void {
+  private _setPositionX(pos: MenuPositionX): void {
     if ( pos !== 'before' && pos !== 'after') {
       throw new MdMenuInvalidPositionX();
     }
     this.positionX = pos;
   }
 
-  private _setPositionY(pos: 'above' | 'below'): void {
+  private _setPositionY(pos: MenuPositionY): void {
     if ( pos !== 'above' && pos !== 'below') {
       throw new MdMenuInvalidPositionY();
     }

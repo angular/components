@@ -14,11 +14,9 @@ export class MenuPage {
 
   body() { return element(by.tagName('body')); }
 
-  firstItem() { return element(by.id('one')); }
-
-  secondItem() { return element(by.id('two')); }
-
-  thirdItem() { return element(by.id('three')); }
+  items(index: number) {
+    return element.all(by.css('[md-menu-item]')).get(index);
+  }
 
   textArea() { return element(by.id('text')); }
 

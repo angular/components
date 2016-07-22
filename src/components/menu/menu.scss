@@ -23,7 +23,7 @@ $md-menu-vertical-padding: 8px !default;
 
   // max height must be 100% of the viewport height + one row height
   max-height: calc(100vh + 48px);
-  overflow: scroll;
+  overflow: auto;
   -webkit-overflow-scrolling: touch;   // for momentum scroll on mobile
 
   background: md-color($md-background, 'card');
