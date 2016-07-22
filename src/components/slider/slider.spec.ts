@@ -294,18 +294,18 @@ describe('MdSlider', () => {
     });
 
     it('should snap the thumb and fill to the nearest value on drag', () => {
-      dispatchDragStartEvent(sliderNativeElement, 0, gestureConfig);
+      dispatchDragEvent(sliderTrackElement, sliderNativeElement, 0, 0.74, gestureConfig);
       fixture.detectChanges();
 
-      dispatchDragEndEvent(sliderNativeElement, 0.22, gestureConfig);
+      dispatchDragEndEvent(sliderNativeElement, 0.74, gestureConfig);
       fixture.detectChanges();
 
       let trackFillDimensions = trackFillElement.getBoundingClientRect();
       let thumbDimensions = thumbElement.getBoundingClientRect();
       let thumbPosition = thumbDimensions.left - trackFillDimensions.left;
 
-      // The closest snap is at the beginning of the slider.
-      expect(thumbDimensions.left).toBe(sliderDimensions.left);
+      // The closest snap is at the halfway point on the slider.
+      expect(thumbDimensions.left).toBe(sliderDimensions.left + sliderDimensions.width * 0.5);
       expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
 
     });
@@ -402,7 +402,7 @@ describe('MdSlider', () => {
     });
 
     it('should snap the thumb and fill to a step on drag', () => {
-      dispatchDragStartEvent(sliderNativeElement, 0, gestureConfig);
+      dispatchDragEvent(sliderTrackElement, sliderNativeElement, 0, 0.88, gestureConfig);
       fixture.detectChanges();
 
       dispatchDragEndEvent(sliderNativeElement, 0.88, gestureConfig);
@@ -412,7 +412,7 @@ describe('MdSlider', () => {
       let thumbDimensions = thumbElement.getBoundingClientRect();
       let thumbPosition = thumbDimensions.left - trackFillDimensions.left;
 
-      // The closest snap is at the beginning of the slider.
+      // The closest snap is at the end of the slider.
       expect(thumbDimensions.left).toBe(sliderDimensions.width + sliderDimensions.left);
       expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
     });
