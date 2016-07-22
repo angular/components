@@ -1,6 +1,5 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
+  Directive,
   ElementRef,
   HostBinding,
   Input,
@@ -8,7 +7,6 @@ import {
   OnDestroy,
   OnInit,
   SimpleChange,
-  ViewEncapsulation,
 } from '@angular/core';
 import {
   RippleRenderer,
@@ -17,50 +15,45 @@ import {
 } from './ripple-renderer';
 
 
-@Component({
-  moduleId: module.id,
-  template: `<div class="md-ripple-background"></div>`,
-  selector: 'md-ink-ripple',
-  styleUrls: ['ripple.css'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Directive({
+  selector: '[md-ink-ripple]',
 })
 export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
   /**
    * The element that triggers the ripple when click events are received. Defaults to the parent
    * of the <md-ink-rippple>.
    */
-  @Input() trigger: Element;
+  @Input('md-ink-ripple-trigger') trigger: HTMLElement;
   /**
    * Whether the ripple always originates from the center of the <md-ink-ripple> bounds, rather
    * than originating from the location of the click event.
    */
-  @Input() centered: boolean;
+  @Input('md-ink-ripple-centered') centered: boolean;
   /**
    * Whether click events will not trigger the ripple. It can still be triggered by manually
    * calling start() and end().
    */
-  @Input() disabled: boolean;
+  @Input('md-ink-ripple-disabled') disabled: boolean;
   /**
    * If set, the radius in pixels of foreground ripples when fully expanded. If unset, the radius
    * will be the distance from the center of the ripple to the furthest corner of the element's
    * bounding rectangle.
    */
-  @Input() maxRadius: number = 0;
+  @Input('md-ink-ripple-max-radius') maxRadius: number = 0;
   /**
    * If set, the normal duration of ripple animations is divided by this value. For example,
    * setting it to 0.5 will cause the animations to take twice as long.
    */
-  @Input() speedFactor: number = 1;
+  @Input('md-ink-ripple-speed-factor') speedFactor: number = 1;
   /** Custom color for ripples. */
-  @Input() color: string;
+  @Input('md-ink-ripple-color') color: string;
   /** Custom color for the ripple background. */
-  @Input() backgroundColor: string;
+  @Input('md-ink-ripple-background-color') backgroundColor: string;
 
   /** Whether the ripple background will be highlighted to indicated a focused state. */
-  @HostBinding('class.md-ripple-focused') @Input('focused') focused: boolean;
+  @HostBinding('class.md-ripple-focused') @Input('md-ink-ripple-focused') focused: boolean;
   /** Whether foreground ripples should be visible outside the component's bounds. */
-  @HostBinding('class.md-ripple-unbounded') @Input('unbounded') unbounded: boolean;
+  @HostBinding('class.md-ripple-unbounded') @Input('md-ink-ripple-unbounded') unbounded: boolean;
 
   private _rippleRenderer: RippleRenderer;
 
@@ -75,9 +68,9 @@ export class MdInkRipple implements OnInit, OnDestroy, OnChanges {
 
   /** TODO: internal */
   ngOnInit() {
-    // If no trigger element was explicity set, use our parent.
+    // If no trigger element was explicity set, use the host element
     if (!this.trigger) {
-      this._rippleRenderer.setTriggerElementToParent();
+      this._rippleRenderer.setTriggerElementToHost();
     }
   }
 

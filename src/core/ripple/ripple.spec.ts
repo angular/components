@@ -66,8 +66,7 @@ const pxStringToFloat = (s: string) => {
 describe('MdInkRipple', () => {
   let builder: TestComponentBuilder;
   let fixture: ComponentFixture<any>;
-  let container: HTMLElement;
-  let rippleElement: Element;
+  let rippleElement: HTMLElement;
   let rippleBackground: Element;
   let originalBodyMargin: string;
 
@@ -91,8 +90,7 @@ describe('MdInkRipple', () => {
         fixture = f;
         fixture.detectChanges();
 
-        container = fixture.debugElement.nativeElement.querySelector('#container');
-        rippleElement = container.querySelector('md-ink-ripple');
+        rippleElement = fixture.debugElement.nativeElement.querySelector('[md-ink-ripple]');
         rippleBackground = rippleElement.querySelector('.md-ripple-background');
         expect(rippleBackground).toBeTruthy();
       });
@@ -101,23 +99,20 @@ describe('MdInkRipple', () => {
     it('shows background when parent receives mousedown event', () => {
       expect(rippleBackground.classList).not.toContain('md-ripple-active');
       const mouseDown = createMouseEvent('mousedown');
-      // mousedown on the ripple element itself does nothing.
+      // mousedown on the ripple element activates the background ripple.
       rippleElement.dispatchEvent(mouseDown);
-      expect(rippleBackground.classList).not.toContain('md-ripple-active');
-      // mousedown on the container activates the background ripple.
-      container.dispatchEvent(mouseDown);
       expect(rippleBackground.classList).toContain('md-ripple-active');
       // mouseleave on the container removes the background ripple.
       const mouseLeave = createMouseEvent('mouseleave');
-      container.dispatchEvent(mouseLeave);
+      rippleElement.dispatchEvent(mouseLeave);
       expect(rippleBackground.classList).not.toContain('md-ripple-active');
     });
 
     it('creates foreground ripples on click', () => {
-      container.click();
+      rippleElement.click();
       expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(1);
       // Second click should create another ripple.
-      container.click();
+      rippleElement.click();
       const ripples = rippleElement.querySelectorAll('.md-ripple-foreground');
       expect(ripples.length).toBe(2);
       expect(ripples[0].classList).toContain('md-ripple-fade-in');
@@ -154,11 +149,11 @@ describe('MdInkRipple', () => {
     });
 
     it('sizes ripple to cover element', () => {
-      // Click the container 50 px to the right and 75px down from its upper left.
-      const elementRect = container.getBoundingClientRect();
+      // Click the ripple element 50 px to the right and 75px down from its upper left.
+      const elementRect = rippleElement.getBoundingClientRect();
       const clickEvent = createMouseEvent('click',
           {clientX: elementRect.left + 50, clientY: elementRect.top + 75});
-      container.dispatchEvent(clickEvent);
+      rippleElement.dispatchEvent(clickEvent);
       // At this point the foreground ripple should be created with a div centered at the click
       // location, and large enough to reach the furthest corner, which is 250px to the right
       // and 125px down relative to the click position.
@@ -175,11 +170,11 @@ describe('MdInkRipple', () => {
     });
 
     it('expands ripple from center on click event triggered by keyboard', () => {
-      const elementRect = container.getBoundingClientRect();
+      const elementRect = rippleElement.getBoundingClientRect();
       // Simulate a keyboard-triggered click by setting event coordinates to 0.
       const clickEvent = createMouseEvent('click',
           {clientX: 0, clientY: 0, screenX: 0, screenY: 0});
-      container.dispatchEvent(clickEvent);
+      rippleElement.dispatchEvent(clickEvent);
       // The foreground ripple should be centered in the middle of the bounding rect, and large
       // enough to reach the corners, which are all 150px horizontally and 100px vertically away.
       const expectedRadius = Math.sqrt(150 * 150 + 100 * 100);
@@ -206,8 +201,7 @@ describe('MdInkRipple', () => {
 
         controller = fixture.debugElement.componentInstance;
         rippleComponent = controller.ripple;
-        container = fixture.debugElement.nativeElement.querySelector('#container');
-        rippleElement = container.querySelector('md-ink-ripple');
+        rippleElement = fixture.debugElement.nativeElement.querySelector('[md-ink-ripple]');
         rippleBackground = rippleElement.querySelector('.md-ripple-background');
         expect(rippleBackground).toBeTruthy();
       });
@@ -227,7 +221,7 @@ describe('MdInkRipple', () => {
       const color = 'rgba(12, 34, 56, 0.8)';
       controller.color = color;
       fixture.detectChanges();
-      container.click();
+      rippleElement.click();
       const ripple = rippleElement.querySelector('.md-ripple-foreground');
       expect(window.getComputedStyle(ripple).backgroundColor).toBe(color);
     });
@@ -238,9 +232,9 @@ describe('MdInkRipple', () => {
       const mouseDown = createMouseEvent('mousedown');
       // The background ripple should not respond to mouseDown, and no foreground ripple should be
       // created on a click.
-      container.dispatchEvent(mouseDown);
+      rippleElement.dispatchEvent(mouseDown);
       expect(rippleBackground.classList).not.toContain('md-ripple-active');
-      container.click();
+      rippleElement.click();
       expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(0);
       // Calling start() and end() should still create a ripple.
       rippleComponent.start();
@@ -271,11 +265,11 @@ describe('MdInkRipple', () => {
     it('expands ripple from center if centered input is set', () => {
       controller.centered = true;
       fixture.detectChanges();
-      // Click the container 50 px to the right and 75px down from its upper left.
-      const elementRect = container.getBoundingClientRect();
+      // Click the ripple element 50 px to the right and 75px down from its upper left.
+      const elementRect = rippleElement.getBoundingClientRect();
       const clickEvent = createMouseEvent('click',
           {clientX: elementRect.left + 50, clientY: elementRect.top + 75});
-      container.dispatchEvent(clickEvent);
+      rippleElement.dispatchEvent(clickEvent);
       // Because the centered input is true, the center of the ripple should be the midpoint of the
       // bounding rect. The ripple should expand to cover the rect corners, which are 150px
       // horizontally and 100px vertically from the midpoint.
@@ -294,11 +288,11 @@ describe('MdInkRipple', () => {
       const customRadius = 42;
       controller.maxRadius = customRadius;
       fixture.detectChanges();
-      // Click the container 50 px to the right and 75px down from its upper left.
-      const elementRect = container.getBoundingClientRect();
+      // Click the ripple element 50 px to the right and 75px down from its upper left.
+      const elementRect = rippleElement.getBoundingClientRect();
       const clickEvent = createMouseEvent('click',
           {clientX: elementRect.left + 50, clientY: elementRect.top + 75});
-      container.dispatchEvent(clickEvent);
+      rippleElement.dispatchEvent(clickEvent);
       const expectedLeft = elementRect.left + 50 - customRadius;
       const expectedTop = elementRect.top + 75 - customRadius;
 
@@ -314,9 +308,7 @@ describe('MdInkRipple', () => {
 @Component({
   directives: [MdInkRipple],
   template: `
-    <div id="container" style="position: relative; width:300px; height:200px;">
-      <md-ink-ripple class="md-ripple-fit-parent">
-      </md-ink-ripple>
+    <div id="container" md-ink-ripple style="position: relative; width:300px; height:200px;">
     </div>
   `,
 })
@@ -327,15 +319,14 @@ class BasicRippleContainer {
 @Component({
   directives: [MdInkRipple],
   template: `
-    <div id="container" style="position: relative; width:300px; height:200px;">
-      <md-ink-ripple class="md-ripple-fit-parent"
-          [trigger]="trigger"
-          [centered]="centered"
-          [maxRadius]="maxRadius"
-          [disabled]="disabled"
-          [color]="color"
-          [backgroundColor]="backgroundColor"
-      ></md-ink-ripple>
+    <div id="container" style="position: relative; width:300px; height:200px;"
+      md-ink-ripple
+      [md-ink-ripple-trigger]="trigger"
+      [md-ink-ripple-centered]="centered"
+      [md-ink-ripple-max-radius]="maxRadius"
+      [md-ink-ripple-disabled]="disabled"
+      [md-ink-ripple-color]="color"
+      [md-ink-ripple-background-color]="backgroundColor">
     </div>
     <div class="alternateTrigger"></div>
   `,

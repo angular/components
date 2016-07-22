@@ -6,12 +6,12 @@ import {MD_BUTTON_DIRECTIVES} from '@angular2-material/button/button';
 import {MD_CARD_DIRECTIVES} from '@angular2-material/card/card';
 import {MD_CHECKBOX_DIRECTIVES} from '@angular2-material/checkbox/checkbox';
 import {MD_ICON_DIRECTIVES} from '@angular2-material/icon/icon';
-import {MD_RIPPLE_DIRECTIVES, MdInkRipple} from '@angular2-material/ripple/ripple';
 import {MD_INPUT_DIRECTIVES} from '@angular2-material/input/input';
 import {MD_RADIO_DIRECTIVES} from '@angular2-material/radio/radio';
 import {
   MdUniqueSelectionDispatcher
 } from '@angular2-material/core/coordination/unique-selection-dispatcher';
+import {MD_RIPPLE_DIRECTIVES, MdInkRipple} from '@angular2-material/core/core';
 
 @Component({
   moduleId: module.id,
@@ -24,9 +24,9 @@ import {
     MD_CARD_DIRECTIVES,
     MD_CHECKBOX_DIRECTIVES,
     MD_ICON_DIRECTIVES,
-    MD_RIPPLE_DIRECTIVES,
     MD_INPUT_DIRECTIVES,
     MD_RADIO_DIRECTIVES,
+    MD_RIPPLE_DIRECTIVES,
   ],
 })
 export class RippleDemo {

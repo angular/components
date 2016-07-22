@@ -29,6 +29,9 @@ export {
 // Gestures
 export {MdGestureConfig} from './gestures/MdGestureConfig';
 
+// Ripple
+export {MD_RIPPLE_DIRECTIVES, MdInkRipple} from './ripple/ripple';
+
 // a11y
 export {
   AriaLivePoliteness,

@@ -39,18 +39,24 @@ const distanceToFurthestCorner = (x: number, y: number, rect: ClientRect) => {
  * TODO: internal
  */
 export class RippleRenderer {
-  private _rippleElement: Element;
-  private _triggerElement: Element;
+  private _backgroundDiv: HTMLElement;
+  private _rippleElement: HTMLElement;
+  private _triggerElement: HTMLElement;
 
   constructor(_elementRef: ElementRef, private _eventHandlers: Map<string, (e: Event) => void>) {
     this._rippleElement = _elementRef.nativeElement;
+    // It might be nice to delay creating the background until it's needed, but doing this in
+    // fadeInRippleBackground causes the first click event to not be handled reliably.
+    this._backgroundDiv = document.createElement('div');
+    this._backgroundDiv.classList.add('md-ripple-background');
+    this._rippleElement.appendChild(this._backgroundDiv);
   }
 
   /**
    * Installs event handlers on the given trigger element, and removes event handlers from the
    * previous trigger if needed.
    */
-  setTriggerElement(newTrigger: Element) {
+  setTriggerElement(newTrigger: HTMLElement) {
     if (this._triggerElement !== newTrigger) {
       if (this._triggerElement) {
         this._eventHandlers.forEach((eventHandler, eventName) => {
@@ -67,10 +73,10 @@ export class RippleRenderer {
   }
 
   /**
-   * Installs event handlers on the parent of the <md-ink-ripple> element.
+   * Installs event handlers on the host element of the md-ink-ripple directive.
    */
-  setTriggerElementToParent() {
-    this.setTriggerElement(this._rippleElement.parentElement);
+  setTriggerElementToHost() {
+    this.setTriggerElement(this._rippleElement);
   }
 
   /**
@@ -153,17 +159,17 @@ export class RippleRenderer {
    * Fades in the <md-ink-ripple> background.
    */
   fadeInRippleBackground(color: string) {
-    const background = <HTMLElement>this._rippleElement.querySelector('.md-ripple-background');
-    background.classList.add('md-ripple-active');
+    this._backgroundDiv.classList.add('md-ripple-active');
     // If color is not set, this will default to the background color defined in CSS.
-    background.style.backgroundColor = color;
+    this._backgroundDiv.style.backgroundColor = color;
   }
 
   /**
    * Fades out the <md-ink-ripple> background.
    */
   fadeOutRippleBackground() {
-    const background = <HTMLElement>this._rippleElement.querySelector('.md-ripple-background');
-    background.classList.remove('md-ripple-active');
+    if (this._backgroundDiv) {
+      this._backgroundDiv.classList.remove('md-ripple-active');
+    }
   }
 }

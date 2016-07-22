@@ -36,16 +36,15 @@
   <section>
     <div class="demo-ripple-container"
         [class.demo-ripple-disabled]="disabled"
-        [class.demo-ripple-rounded]="rounded">
-      <md-ink-ripple class="md-ripple-fit-parent"
-          [centered]="centered"
-          [disabled]="disabled"
-          [unbounded]="unbounded"
-          [maxRadius]="maxRadius"
-          [color]="rippleColor"
-          [backgroundColor]="rippleBackgroundColor"
-          [speedFactor]="rippleSpeed"
-      ></md-ink-ripple>
+        [class.demo-ripple-rounded]="rounded"
+        md-ink-ripple
+        [md-ink-ripple-centered]="centered"
+        [md-ink-ripple-disabled]="disabled"
+        [md-ink-ripple-unbounded]="unbounded"
+        [md-ink-ripple-max-radius]="maxRadius"
+        [md-ink-ripple-color]="rippleColor"
+        [md-ink-ripple-background-color]="rippleBackgroundColor"
+        [md-ink-ripple-speed-factor]="rippleSpeed">
       Click me
     </div>
   </section>

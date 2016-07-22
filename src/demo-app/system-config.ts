@@ -15,7 +15,6 @@ const components = [
   'progress-bar',
   'progress-circle',
   'radio',
-  'ripple',
   'sidenav',
   'slider',
   'slide-toggle',
