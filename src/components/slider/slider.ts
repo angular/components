@@ -203,6 +203,8 @@ export class MdSlider implements AfterContentInit {
     this._percent = this.clamp((pos - offset) / size);
     let exactValue = this.min + (this._percent * (this.max - this.min));
 
+    // This calculation finds the closest step by finding the closest whole number divisible by the
+    // step relative to the min.
     this.value = Math.round((exactValue - this.min) / this.step) * this.step + this.min;
     this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
   }
