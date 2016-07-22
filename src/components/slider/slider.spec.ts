@@ -101,13 +101,13 @@ describe('MdSlider', () => {
       // offset relative to the track, subtract the offset on the track fill.
       let thumbPosition = thumbDimensions.left - trackFillDimensions.left;
       // The track fill width should be equal to the thumb's position.
-      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
+      expect(Math.round(trackFillDimensions.width)).toBe(Math.round(thumbPosition));
     });
 
     it('should update the thumb position on click', () => {
       expect(thumbDimensions.left).toBe(sliderDimensions.left);
       // 50% is used here because the click event that is dispatched truncates the position and so
-      // a value had to be used that would not be affected by the truncation.
+      // a value had to be used that would not be truncated.
       dispatchClickEvent(sliderTrackElement, 0.5);
 
       thumbDimensions = thumbElement.getBoundingClientRect();
@@ -127,11 +127,13 @@ describe('MdSlider', () => {
       // offset relative to the track, subtract the offset on the track fill.
       let thumbPosition = thumbDimensions.left - trackFillDimensions.left;
       // The track fill width should be equal to the thumb's position.
-      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
+      expect(Math.round(trackFillDimensions.width)).toBe(Math.round(thumbPosition));
     });
 
     it('should update the thumb position on drag', () => {
       expect(thumbDimensions.left).toBe(sliderDimensions.left);
+      // The drag event also truncates the position passed in, so 50% is used here as well to
+      // ensure the ability to calculate the expected position.
       dispatchDragEvent(sliderTrackElement, sliderNativeElement, 0, 0.5, gestureConfig);
 
       thumbDimensions = thumbElement.getBoundingClientRect();
@@ -290,7 +292,7 @@ describe('MdSlider', () => {
 
       // The closest snap is halfway on the slider.
       expect(thumbDimensions.left).toBe(sliderDimensions.width * 0.5 + sliderDimensions.left);
-      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
+      expect(Math.round(trackFillDimensions.width)).toBe(Math.round(thumbPosition));
     });
 
     it('should snap the thumb and fill to the nearest value on drag', () => {
@@ -306,7 +308,7 @@ describe('MdSlider', () => {
 
       // The closest snap is at the halfway point on the slider.
       expect(thumbDimensions.left).toBe(sliderDimensions.left + sliderDimensions.width * 0.5);
-      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
+      expect(Math.round(trackFillDimensions.width)).toBe(Math.round(thumbPosition));
 
     });
   });
@@ -391,7 +393,7 @@ describe('MdSlider', () => {
 
       // The closest step is at 75% of the slider.
       expect(thumbDimensions.left).toBe(sliderDimensions.width * 0.75 + sliderDimensions.left);
-      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
+      expect(Math.round(trackFillDimensions.width)).toBe(Math.round(thumbPosition));
     });
 
     it('should set the correct step value on drag', () => {
@@ -414,7 +416,7 @@ describe('MdSlider', () => {
 
       // The closest snap is at the end of the slider.
       expect(thumbDimensions.left).toBe(sliderDimensions.width + sliderDimensions.left);
-      expect(Math.round(trackFillDimensions.width)).toEqual(Math.round(thumbPosition));
+      expect(Math.round(trackFillDimensions.width)).toBe(Math.round(thumbPosition));
     });
   });
 });

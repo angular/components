@@ -134,7 +134,6 @@ export class MdSlider implements AfterContentInit {
     this.updateValueFromPosition(event.clientX);
 
     // Once the click is over the thumb has to snap to its new physical location.
-    // This fires at the end of a drag as well.
     this.updatePercentFromValue();
     this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
   }
@@ -166,8 +165,7 @@ export class MdSlider implements AfterContentInit {
   /** TODO: internal */
   onDragEnd() {
     this.isDragging = false;
-    // Once the click is over the thumb has to snap to its new physical location.
-    // This fires at the end of a drag as well.
+    // Once the drag is over the thumb has to snap to its new physical location.
     this.updatePercentFromValue();
     this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
   }
