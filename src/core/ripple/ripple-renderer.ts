@@ -33,8 +33,8 @@ const distanceToFurthestCorner = (x: number, y: number, rect: ClientRect) => {
 
 /**
  * Helper service that performs DOM manipulations. Not intended to be used outside this module.
- * The constructor takes a reference to the <md-ink-ripple> element and a map of DOM event handlers
- * to be installed on the element that triggers ripple animations.
+ * The constructor takes a reference to the ripple directive's host element and a map of DOM
+ * event handlers to be installed on the element that triggers ripple animations.
  * This will eventually become a custom renderer once Angular support exists.
  * TODO: internal
  */
@@ -73,7 +73,7 @@ export class RippleRenderer {
   }
 
   /**
-   * Installs event handlers on the host element of the md-ink-ripple directive.
+   * Installs event handlers on the host element of the md-ripple directive.
    */
   setTriggerElementToHost() {
     this.setTriggerElement(this._rippleElement);
@@ -88,7 +88,7 @@ export class RippleRenderer {
 
   /**
    * Creates a foreground ripple and sets its animation to expand and fade in from the position
-   * given by rippleOriginLeft and rippleOriginTop (or from the center of the <md-ink-ripple>
+   * given by rippleOriginLeft and rippleOriginTop (or from the center of the <md-ripple>
    * bounding rect if centered is true).
    */
   createForegroundRipple(
@@ -156,7 +156,7 @@ export class RippleRenderer {
   }
 
   /**
-   * Fades in the <md-ink-ripple> background.
+   * Fades in the ripple background.
    */
   fadeInRippleBackground(color: string) {
     this._backgroundDiv.classList.add('md-ripple-active');
@@ -165,7 +165,7 @@ export class RippleRenderer {
   }
 
   /**
-   * Fades out the <md-ink-ripple> background.
+   * Fades out the ripple background.
    */
   fadeOutRippleBackground() {
     if (this._backgroundDiv) {

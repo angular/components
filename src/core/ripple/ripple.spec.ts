@@ -9,7 +9,7 @@ import {
 } from '@angular/core/testing';
 import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {Component, ViewChild} from '@angular/core';
-import {MdInkRipple} from './ripple';
+import {MdRipple} from './ripple';
 
 /** Creates a DOM event to indicate that a CSS transition for the given property ended. */
 const createTransitionEndEvent = (propertyName: string) => {
@@ -63,7 +63,7 @@ const pxStringToFloat = (s: string) => {
   return parseFloat(s.replace('px', ''));
 };
 
-describe('MdInkRipple', () => {
+describe('MdRipple', () => {
   let builder: TestComponentBuilder;
   let fixture: ComponentFixture<any>;
   let rippleElement: HTMLElement;
@@ -90,7 +90,7 @@ describe('MdInkRipple', () => {
         fixture = f;
         fixture.detectChanges();
 
-        rippleElement = fixture.debugElement.nativeElement.querySelector('[md-ink-ripple]');
+        rippleElement = fixture.debugElement.nativeElement.querySelector('[md-ripple]');
         rippleBackground = rippleElement.querySelector('.md-ripple-background');
         expect(rippleBackground).toBeTruthy();
       });
@@ -192,7 +192,7 @@ describe('MdInkRipple', () => {
 
   describe('configuring behavior', () => {
     let controller: RippleContainerWithInputBindings;
-    let rippleComponent: MdInkRipple;
+    let rippleComponent: MdRipple;
 
     beforeEach(async(() => {
       builder.createAsync(RippleContainerWithInputBindings).then(f => {
@@ -201,7 +201,7 @@ describe('MdInkRipple', () => {
 
         controller = fixture.debugElement.componentInstance;
         rippleComponent = controller.ripple;
-        rippleElement = fixture.debugElement.nativeElement.querySelector('[md-ink-ripple]');
+        rippleElement = fixture.debugElement.nativeElement.querySelector('[md-ripple]');
         rippleBackground = rippleElement.querySelector('.md-ripple-background');
         expect(rippleBackground).toBeTruthy();
       });
@@ -306,27 +306,27 @@ describe('MdInkRipple', () => {
 });
 
 @Component({
-  directives: [MdInkRipple],
+  directives: [MdRipple],
   template: `
-    <div id="container" md-ink-ripple style="position: relative; width:300px; height:200px;">
+    <div id="container" md-ripple style="position: relative; width:300px; height:200px;">
     </div>
   `,
 })
 class BasicRippleContainer {
-  @ViewChild(MdInkRipple) ripple: MdInkRipple;
+  @ViewChild(MdRipple) ripple: MdRipple;
 }
 
 @Component({
-  directives: [MdInkRipple],
+  directives: [MdRipple],
   template: `
     <div id="container" style="position: relative; width:300px; height:200px;"
-      md-ink-ripple
-      [md-ink-ripple-trigger]="trigger"
-      [md-ink-ripple-centered]="centered"
-      [md-ink-ripple-max-radius]="maxRadius"
-      [md-ink-ripple-disabled]="disabled"
-      [md-ink-ripple-color]="color"
-      [md-ink-ripple-background-color]="backgroundColor">
+      md-ripple
+      [md-ripple-trigger]="trigger"
+      [md-ripple-centered]="centered"
+      [md-ripple-max-radius]="maxRadius"
+      [md-ripple-disabled]="disabled"
+      [md-ripple-color]="color"
+      [md-ripple-background-color]="backgroundColor">
     </div>
     <div class="alternateTrigger"></div>
   `,
@@ -338,5 +338,5 @@ class RippleContainerWithInputBindings {
   maxRadius = 0;
   color = '';
   backgroundColor = '';
-  @ViewChild(MdInkRipple) ripple: MdInkRipple;
+  @ViewChild(MdRipple) ripple: MdRipple;
 }

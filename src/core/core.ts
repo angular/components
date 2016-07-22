@@ -30,7 +30,7 @@ export {
 export {MdGestureConfig} from './gestures/MdGestureConfig';
 
 // Ripple
-export {MD_RIPPLE_DIRECTIVES, MdInkRipple} from './ripple/ripple';
+export {MD_RIPPLE_DIRECTIVES, MdRipple} from './ripple/ripple';
 
 // a11y
 export {

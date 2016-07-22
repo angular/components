@@ -11,7 +11,7 @@ import {MD_RADIO_DIRECTIVES} from '@angular2-material/radio/radio';
 import {
   MdUniqueSelectionDispatcher
 } from '@angular2-material/core/coordination/unique-selection-dispatcher';
-import {MD_RIPPLE_DIRECTIVES, MdInkRipple} from '@angular2-material/core/core';
+import {MD_RIPPLE_DIRECTIVES, MdRipple} from '@angular2-material/core/core';
 
 @Component({
   moduleId: module.id,
@@ -30,7 +30,7 @@ import {MD_RIPPLE_DIRECTIVES, MdInkRipple} from '@angular2-material/core/core';
   ],
 })
 export class RippleDemo {
-  @ViewChild(MdInkRipple) manualRipple: MdInkRipple;
+  @ViewChild(MdRipple) manualRipple: MdRipple;
 
   centered = false;
   disabled = false;
