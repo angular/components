@@ -1,9 +1,17 @@
-
-
+/**
+ * The OverlayContainer is the container in which all overlays will load.
+ * It should be provided in the root component to ensure it is properly shared.
+ */
 export class OverlayContainer {
-  private _containerElement: Element;
+  private _containerElement: HTMLElement;
 
-  getContainerElement(): Element {
+  /**
+   * This method returns the overlay container element.  It will lazily
+   * create the element the first time  it is called to facilitate using
+   * the container in non-browser environments.
+   * @returns {HTMLElement} the container element
+   */
+  getContainerElement(): HTMLElement {
     if (!this._containerElement) { this._createContainer(); }
     return this._containerElement;
   }
