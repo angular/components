@@ -53,6 +53,8 @@ export class MdSlider implements AfterContentInit {
   /** The values at which the thumb will snap. */
   @Input() step: number = 1;
 
+  @Input('tick-interval') _tickInterval: 'auto' | number = 1;
+
   /**
    * Whether or not the thumb is sliding.
    * Used to determine if there should be a transition for the thumb and fill track.
