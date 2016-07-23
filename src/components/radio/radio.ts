@@ -401,6 +401,7 @@ export class MdRadioButton implements OnInit {
   /**
    * Triggered when the radio button received a click or the input recognized any change.
    * Clicking on a label element, will trigger a change event on the associated input.
+   * TODO: internal
    */
   _onInputChange(event: Event) {
     // We always have to stop propagation on the change event.
