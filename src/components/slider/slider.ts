@@ -53,7 +53,8 @@ export class MdSlider implements AfterContentInit {
   /** The values at which the thumb will snap. */
   @Input() step: number = 1;
 
-  @Input('tick-interval') _tickInterval: 'auto' | number = 1;
+  /** How often to show ticks. Defaults to auto which calculates how many to show. */
+  @Input('tick-interval') _tickInterval: 'auto' | number = 'auto';
 
   /**
    * Whether or not the thumb is sliding.
@@ -124,6 +125,7 @@ export class MdSlider implements AfterContentInit {
   ngAfterContentInit() {
     this._sliderDimensions = this._renderer.getSliderDimensions();
     this.snapToValue();
+    this.calculateTickSeparation();
   }
 
   /** TODO: internal */
@@ -188,7 +190,7 @@ export class MdSlider implements AfterContentInit {
    * This is also used to move the thumb to a snapped value once sliding is done.
    */
   updatePercentFromValue() {
-    this._percent = (this.value - this.min) / (this.max - this.min);
+    this._percent = this.calculatePercentage(this.value);
   }
 
   /**
@@ -200,7 +202,7 @@ export class MdSlider implements AfterContentInit {
 
     // The exact value is calculated from the event and used to find the closest snap value.
     this._percent = this.clamp((pos - offset) / size);
-    let exactValue = this.min + (this._percent * (this.max - this.min));
+    let exactValue = this.calculateValue(this._percent);
 
     // This calculation finds the closest step by finding the closest whole number divisible by the
     // step relative to the min.
@@ -217,6 +219,53 @@ export class MdSlider implements AfterContentInit {
   snapToValue() {
     this.updatePercentFromValue();
     this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
+  }
+
+  /**
+   * Calculates the separation of tick marks by starting with the assumption every step needs a tick
+   * and eliminating the number of ticks until there is a distance of at least 30px between each
+   * tick.
+   * This is only used when the tickInterval is set to 'auto'.
+   */
+  calculateTickSeparation() {
+    let tickSeparation = 0;
+    // Keeps track of how many steps to multiply the slider's step by.
+    let stepCounter = 1;
+
+    // Visually, a 30px separation between tick marks looks best. This is very subjective but it is
+    // the default separation we chose.
+    while (tickSeparation < 30) {
+      // Multiplying the counter and step together determines which step we want to use. This starts
+      // at the first step and moves to second, then third, etc. until we find a good distance.
+      let tickValue = (this.step * stepCounter) + this.min;
+
+      // The percentage of the step on the slider is needed in order to calculate the pixel offset
+      // from the beginning of the slider. This offset is the tick separation.
+      let tickPercentage = this.calculatePercentage(tickValue);
+      tickSeparation = this._sliderDimensions.width * tickPercentage;
+      stepCounter++;
+    }
+
+    // Once a suitable separation for the ticks is found, draw them on the slider.
+    this._renderer.drawTicks(tickSeparation);
+  }
+
+  /**
+   * Calculates the percentage of the slider that a value is.
+   * @param value The value a percentage is needed for.
+   * @returns {number} The percentage.
+   */
+  calculatePercentage(value: number) {
+    return (value - this.min) / (this.max - this.min);
+  }
+
+  /**
+   * Calculates the value a percentage of the slider corresponds to.
+   * @param percentage The percentage a value is needed for.
+   * @returns {number} The corresponding value.
+   */
+  calculateValue(percentage: number) {
+    return this.min + (percentage * (this.max - this.min));
   }
 
   /**
@@ -268,6 +317,19 @@ export class SliderRenderer {
    */
   addFocus() {
     this._sliderElement.focus();
+  }
+
+  /**
+   * Draws ticks onto the tick container.
+   * @param tickSeparation How far apart to draw the ticks.
+   */
+  drawTicks(tickSeparation: number) {
+    let tickContainer = <HTMLElement>this._sliderElement.querySelector('.md-slider-tick-container');
+    // A linear gradient background is used to draw the ticks as it performs better than using
+    // canvas or creating many small divs.
+    // Subtract 1 from the tick separation to center the tick.
+    tickContainer.style.background = `repeating-linear-gradient(90deg, #000000, #000000 2px,
+    transparent 2px, transparent ${tickSeparation - 1}px)`;
   }
 }
 

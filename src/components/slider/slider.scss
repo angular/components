@@ -100,9 +100,6 @@ md-slider *::after {
   left: 0;
   right: 0;
   height: 100%;
-  background: repeating-linear-gradient(
-    90deg, #000000, #000000 2px, transparent 2px, transparent 30px
-  );
 }
 
 .md-slider-thumb-container {
