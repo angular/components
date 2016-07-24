@@ -15,6 +15,7 @@
     "tslint": "tslint -c tslint.json 'src/**/*.ts'",
     "stylelint": "stylelint 'src/**/*.scss' --config stylelint-config.json --syntax scss",
     "check-circular-deps": "madge --circular ./dist",
+    "update-plunker": "node ./scripts/ci/create-plunker-bundle.js",
     "typings": "typings install --global",
     "postinstall": "npm run typings",
     "e2e": "protractor",
