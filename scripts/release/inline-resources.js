@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const glob = require('glob');
+const inlineResources = require('../../tools/inline-resources-tools');
 
 /**
  * Simple Promiseify function that takes a Node API and return a version that supports promises.
@@ -28,7 +29,6 @@ function promiseify(fn) {
 const readFile = promiseify(fs.readFile);
 const writeFile = promiseify(fs.writeFile);
 
-
 /**
  * For every argument, inline the templates and styles under it and write the new file.
  */
@@ -44,66 +44,13 @@ for (let arg of process.argv.slice(2)) {
   // Generate all files content with inlined templates.
   files.forEach(filePath => {
     readFile(filePath, 'utf-8')
-      .then(content => inlineTemplate(filePath, content))
-      .then(content => inlineStyle(filePath, content))
-      .then(content => removeModuleIds(content))
+      .then(content => inlineResources.inlineTemplate(filePath, content))
+      .then(content => inlineResources.inlineStyle(filePath, content))
+      .then(content => inlineResources.removeModuleIds(content))
       .then(content => writeFile(filePath, content))
       .catch(err => {
         console.error('An error occured: ', err);
       });
   });
-}
 
-
-/**
- * Inline the templates for a source file. Simply search for instances of `templateUrl: ...` and
- * replace with `template: ...` (with the content of the file included).
- * @param filePath {string} The path of the source file.
- * @param content {string} The source file's content.
- * @return {string} The content with all templates inlined.
- */
-function inlineTemplate(filePath, content) {
-  return content.replace(/templateUrl:\s*'([^']+?\.html)'/g, function(m, templateUrl) {
-    const templateFile = path.join(path.dirname(filePath), templateUrl);
-    const templateContent = fs.readFileSync(templateFile, 'utf-8');
-    const shortenedTemplate = templateContent
-      .replace(/([\n\r]\s*)+/gm, ' ')
-      .replace(/"/g, '\\"');
-    return `template: "${shortenedTemplate}"`;
-  });
-}
-
-
-/**
- * Inline the styles for a source file. Simply search for instances of `styleUrls: [...]` and
- * replace with `styles: [...]` (with the content of the file included).
- * @param filePath {string} The path of the source file.
- * @param content {string} The source file's content.
- * @return {string} The content with all styles inlined.
- */
-function inlineStyle(filePath, content) {
-  return content.replace(/styleUrls:\s*(\[[\s\S]*?\])/gm, function(m, styleUrls) {
-    const urls = eval(styleUrls);
-    return 'styles: ['
-      + urls.map(styleUrl => {
-          const styleFile = path.join(path.dirname(filePath), styleUrl);
-          const styleContent = fs.readFileSync(styleFile, 'utf-8');
-          const shortenedStyle = styleContent
-            .replace(/([\n\r]\s*)+/gm, ' ')
-            .replace(/"/g, '\\"');
-          return `"${shortenedStyle}"`;
-        })
-        .join(',\n')
-      + ']';
-  });
-}
-
-/**
- * Removes the module ids of the component metadata.
- * Since the templates and styles are now inlined, the module id has become unnecessary and
- * can cause unexpected issues.
- */
-function removeModuleIds(content) {
-  // Match the line feeds as well, because we want to get rid of that line.
-  return content.replace(/^\W+moduleId:\W+module\.id,?[\n|\r]+/gm, '');
 }
