@@ -69,12 +69,9 @@ function inlineBundle() {
 }
 
 function buildProject() {
-  // Resolve the Angular CLI entry point from the installed node modules.
-  var ngBinary = path.join(ROOT, 'node_modules', 'angular-cli', 'bin', 'ng');
-
-  let out = exec(`node ${ngBinary} build -prod`, {
-    cwd: ROOT
-  }).toString();
+  // Note: We can't use spawnSync here, because on some environments the Angular CLI
+  // is not added to the System Paths and is only available in the locals.
+  let out = exec('npm run build:production').toString();
 
   return out.indexOf('successfully') !== -1;
 }

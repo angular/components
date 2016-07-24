@@ -43,7 +43,7 @@ env:
     - MODE=browserstack_required
     - MODE=saucelabs_optional
     - MODE=browserstack_optional
-    - MODE=plunker
+#    - MODE=plunker
 
 matrix:
   fast_finish: true

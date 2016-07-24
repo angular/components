@@ -10,6 +10,7 @@
   "scripts": {
     "ci:forbidden-identifiers": "node ./scripts/ci/forbidden-identifiers.js",
     "build": "ng build",
+    "build:production": "ng build -prod",
     "demo-app": "ng serve",
     "test": "karma start test/karma.conf.js",
     "tslint": "tslint -c tslint.json 'src/**/*.ts'",
