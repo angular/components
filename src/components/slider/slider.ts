@@ -47,7 +47,7 @@ export class MdSlider implements AfterContentInit {
   /** The percentage of the slider that coincides with the value. */
   private _percent: number = 0;
 
-  /** The values at which the thumb will snap to. */
+  /** The values at which the thumb will snap. */
   @Input() step: number = 1;
 
   /**
@@ -118,8 +118,7 @@ export class MdSlider implements AfterContentInit {
    */
   ngAfterContentInit() {
     this._sliderDimensions = this._renderer.getSliderDimensions();
-    this.updatePercentFromValue();
-    this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
+    this.snapToValue();
   }
 
   /** TODO: internal */
@@ -132,10 +131,7 @@ export class MdSlider implements AfterContentInit {
     this.isDragging = false;
     this._renderer.addFocus();
     this.updateValueFromPosition(event.clientX);
-
-    // Once the click is over the thumb has to snap to its new physical location.
-    this.updatePercentFromValue();
-    this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
+    this.snapToValue();
   }
 
   /** TODO: internal */
@@ -165,9 +161,7 @@ export class MdSlider implements AfterContentInit {
   /** TODO: internal */
   onDragEnd() {
     this.isDragging = false;
-    // Once the drag is over the thumb has to snap to its new physical location.
-    this.updatePercentFromValue();
-    this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
+    this.snapToValue();
   }
 
   /** TODO: internal */
@@ -208,6 +202,15 @@ export class MdSlider implements AfterContentInit {
     let closestValue = Math.round((exactValue - this.min) / this.step) * this.step + this.min;
     // The value needs to snap to the min and max.
     this.value = this.clamp(closestValue, this.min, this.max);
+    this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
+  }
+
+  /**
+   * Snaps the thumb to the current value.
+   * Called after a click or drag event is over.
+   */
+  snapToValue() {
+    this.updatePercentFromValue();
     this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
   }
 
