@@ -1,12 +1,13 @@
 <!-- Use <md-card>? -->
 <div class="demo-ripple">
   <section>
-    <button md-button>flat</button>
-    <button md-raised-button>raised</button>
-    <button md-fab>
+    <md-checkbox [(ngModel)]="disableButtonRipples">Disable button ripples</md-checkbox>
+    <button md-button [md-ripple-disabled]="disableButtonRipples">flat</button>
+    <button md-raised-button [md-ripple-disabled]="disableButtonRipples">raised</button>
+    <button md-fab [md-ripple-disabled]="disableButtonRipples">
       <md-icon>check</md-icon>
     </button>
-    <button md-mini-fab>
+    <button md-mini-fab [md-ripple-disabled]="disableButtonRipples">
       <md-icon>check</md-icon>
     </button>
   </section>
