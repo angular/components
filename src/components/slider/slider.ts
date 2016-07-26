@@ -110,7 +110,7 @@ export class MdSlider implements AfterContentInit {
   set tickInterval(v: 'auto' | number) {
     if (v == 'auto') {
       this._tickInterval = v;
-    } else if (typeof this.tickInterval == 'number') {
+    } else {
       this._tickInterval = Number(v);
     }
   }
@@ -367,12 +367,24 @@ export class SliderRenderer {
    */
   drawTicks(tickSeparation: number) {
     let tickContainer = <HTMLElement>this._sliderElement.querySelector('.md-slider-tick-container');
+    let tickContainerWidth = tickContainer.getBoundingClientRect().width;
+    let lastTickContainer =
+        <HTMLElement>this._sliderElement.querySelector('.md-slider-last-tick-container');
     // A linear gradient background is used to draw the ticks as it performs better than using
     // canvas or creating many small divs.
     // Subtract 1 from the tick separation to center the tick.
     // TODO: Perf test this.
-    tickContainer.style.background = `repeating-linear-gradient(90deg, #000000, #000000 2px,
+    tickContainer.style.background = `repeating-linear-gradient(to right, #000000, #000000 2px,
     transparent 2px, transparent ${tickSeparation - 1}px)`;
+    // Add a tick to the very end by starting on the right side and adding a 2px black line.
+    lastTickContainer.style.background = `linear-gradient(to left, #000000, #000000 2px,
+    transparent 2px, transparent`;
+
+    // If the second to last tick is too close (a separation of less than half the normal
+    // separation), don't show it by decreasing the width of the tick container element.
+    if (tickContainerWidth % tickSeparation < (tickSeparation / 2)) {
+      tickContainer.style.width = tickContainerWidth - tickSeparation + 'px';
+    }
   }
 }
 
