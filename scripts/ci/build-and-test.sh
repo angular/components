@@ -45,8 +45,10 @@ elif is_extract_metadata; then
   # Run `tsc` first so that the directory structure in dist/ matches what ngc expects.
   ./node_modules/.bin/tsc -p ./src/demo-app/
   ./node_modules/.bin/ngc -p ./src/demo-app/
-elif is_plunker && [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
-  npm run update-plunker
+elif is_plunker; then
+  if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
+    npm run update-plunker
+  fi
 else
   # Unit tests
   npm run build
