@@ -370,6 +370,7 @@ export class SliderRenderer {
     // A linear gradient background is used to draw the ticks as it performs better than using
     // canvas or creating many small divs.
     // Subtract 1 from the tick separation to center the tick.
+    // TODO: Perf test this.
     tickContainer.style.background = `repeating-linear-gradient(90deg, #000000, #000000 2px,
     transparent 2px, transparent ${tickSeparation - 1}px)`;
   }
