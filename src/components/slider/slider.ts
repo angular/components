@@ -53,7 +53,11 @@ export class MdSlider implements AfterContentInit {
   /** The values at which the thumb will snap. */
   @Input() step: number = 1;
 
-  /** How often to show ticks. Defaults to auto which calculates how many to show. */
+  /**
+   * How often to show ticks. Defaults to auto which calculates how many to show.
+   * Relative to the step so that a tick always appears on a step.
+   * Ex: Tick interval of 4 with a step of 3 will draw a tick every 4 steps (every 12 values).
+   */
   private _tickInterval: 'auto' | number;
 
   /**
