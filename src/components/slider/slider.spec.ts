@@ -479,7 +479,7 @@ describe('MdSlider', () => {
     });
   });
 
-  fdescribe('slider with set tick interval', () => {
+  describe('slider with set tick interval', () => {
     let fixture: ComponentFixture<SliderWithSetTickInterval>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
