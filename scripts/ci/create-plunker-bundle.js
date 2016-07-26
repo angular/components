@@ -42,8 +42,8 @@ fse.mkdirp(DEPLOY_ROOT);
 fse.copySync(mainFile, path.join(DEPLOY_ROOT, `${baseName}_bundle.js`));
 
 firebase.deploy({
-  firebase: 'material-plunker',
-  token: process.env.MATERIAL_FIREBASE_TOKEN,
+  firebase: 'material2-plnkr',
+  token: process.env.MATERIAL2_PLNKR_TOKEN,
   public: 'dist/plunker-deploy'
 }).then(() => {
   console.log('Firebase: Successfully deployed bundle to firebase.');
