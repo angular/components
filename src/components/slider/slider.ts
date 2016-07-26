@@ -54,7 +54,7 @@ export class MdSlider implements AfterContentInit {
   @Input() step: number = 1;
 
   /** How often to show ticks. Defaults to auto which calculates how many to show. */
-  @Input('tick-interval') _tickInterval: 'auto' | number = 'auto';
+  private _tickInterval: 'auto' | number;
 
   /**
    * Whether or not the thumb is sliding.
@@ -102,6 +102,19 @@ export class MdSlider implements AfterContentInit {
     this._max = Number(v);
   }
 
+  @Input('tick-interval')
+  get tickInterval() {
+    return this._tickInterval;
+  }
+
+  set tickInterval(v: 'auto' | number) {
+    if (v == 'auto') {
+      this._tickInterval = v;
+    } else if (typeof this.tickInterval == 'number') {
+      this._tickInterval = Number(v);
+    }
+  }
+
   @Input()
   @HostBinding('attr.aria-valuenow')
   get value() {
@@ -125,7 +138,7 @@ export class MdSlider implements AfterContentInit {
   ngAfterContentInit() {
     this._sliderDimensions = this._renderer.getSliderDimensions();
     this.snapToValue();
-    this.calculateTickSeparation();
+    this._calculateTickSeparation();
   }
 
   /** TODO: internal */
@@ -222,12 +235,25 @@ export class MdSlider implements AfterContentInit {
   }
 
   /**
-   * Calculates the separation of tick marks by starting with the assumption every step needs a tick
-   * and eliminating the number of ticks until there is a distance of at least 30px between each
-   * tick.
-   * This is only used when the tickInterval is set to 'auto'.
+   * Calls the appropriate method for calculating the tick separation depending on what the tick
+   * interval is. If there is no tick interval or the interval is set to something other than a
+   * number or 'auto', nothing happens.
    */
-  calculateTickSeparation() {
+  private _calculateTickSeparation() {
+    if (this.tickInterval == 'auto') {
+      this._calculateAutoTickSeparation();
+    } else if (typeof this.tickInterval == 'number') {
+      this._calculateTickSeparationFromInterval();
+    }
+  }
+
+  /**
+   * Calculates the separation in pixels of tick marks by starting with the assumption every step
+   * needs a tick and eliminating the number of ticks until there is a distance of at least 30px
+   * between each tick.
+   */
+  private _calculateAutoTickSeparation() {
+    // The pixel value for how far apart the ticks should be.
     let tickSeparation = 0;
     // Keeps track of how many steps to multiply the slider's step by.
     let stepCounter = 1;
@@ -248,6 +274,22 @@ export class MdSlider implements AfterContentInit {
 
     // Once a suitable separation for the ticks is found, draw them on the slider.
     this._renderer.drawTicks(tickSeparation);
+  }
+
+  /**
+   * Calculates the separation of tick marks by finding the pixel value of the tickInterval.
+   */
+  private _calculateTickSeparationFromInterval() {
+    // Force tickInterval to be a number so it can be used in calculations.
+    let interval: number = <number> this.tickInterval;
+    // Calculate the first value a tick will be located at by getting the step at which the interval
+    // lands and adding that to the min.
+    let tickValue = (this.step * interval) + this.min;
+
+    // The percentage of the step on the slider is needed in order to calculate the pixel offset
+    // from the beginning of the slider. This offset is the tick separation.
+    let tickPercentage = this.calculatePercentage(tickValue);
+    this._renderer.drawTicks(this._sliderDimensions.width * tickPercentage);
   }
 
   /**
