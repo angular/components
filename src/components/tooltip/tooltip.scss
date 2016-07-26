@@ -19,4 +19,27 @@ $md-tooltip-padding: 8px;
   margin: $md-tooltip-margin;
   height: $md-tooltip-height;
   line-height: $md-tooltip-height;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0);
+}
+.md-tooltip-initialized {
+  transition: $swift-ease-out-duration $swift-ease-out-timing-function;
+  transition-property: opacity, transform;
+}
+.md-tooltip-below {
+  transform-origin: 50% 0;
+}
+.md-tooltip-above {
+  transform-origin: 50% 100%;
+}
+.md-tooltip-before {
+  transform-origin: 100% 50%;
+}
+.md-tooltip-after {
+  transform-origin: 0 50%;
+}
+.md-tooltip-visible {
+  opacity: 1;
+  transform: scale(1);
 }

@@ -54,6 +54,7 @@ export class MdTooltip {
   }
 
   private _overlayRef: OverlayRef;
+  private _tooltipContainer: TooltipContainer;
 
   constructor(private _overlay: Overlay, private _elementRef: ElementRef,
       private _viewContainerRef: ViewContainerRef,
@@ -139,10 +140,11 @@ export class MdTooltip {
   show(): Promise<any> {
     if (!this.visible && this._overlayRef && !this._overlayRef.hasAttached()) {
       this.visible = true;
-      let promise = this._overlayRef.attach(new ComponentPortal(TooltipComponent,
+      let promise = this._overlayRef.attach(new ComponentPortal(TooltipContainer,
           this._viewContainerRef));
-      promise.then((ref: ComponentRef<TooltipComponent>) => {
-        ref.instance.message = this.message;
+      promise.then((ref: ComponentRef<TooltipContainer>) => {
+        this._tooltipContainer = ref.instance;
+        ref.instance.tooltip = this;
         this._updatePosition();
       });
       return promise;
@@ -153,6 +155,19 @@ export class MdTooltip {
    * Hides the tooltip and returns a promise that will resolve when the tooltip is hidden
    */
   hide(): Promise<any> {
+    if (this._tooltipContainer) {
+      let tooltipContainer = this._tooltipContainer;
+      // Reset _tooltipContainer to prevent duplicate calls to `hide()`
+      this._tooltipContainer = null;
+      return tooltipContainer.remove().then(() => this.destroy());
+    }
+  }
+
+  /**
+   * Removes the tooltip from the DOM and returns a promise that resolves once the element is fully
+   * removed.
+   */
+  destroy(): Promise<any> {
     if (this.visible && this._overlayRef && this._overlayRef.hasAttached()) {
       this.visible = false;
       return this._overlayRef.detach();
@@ -184,11 +199,42 @@ export class MdTooltip {
 @Component({
   moduleId: module.id,
   selector: 'md-tooltip-component',
-  template: `<div class="md-tooltip">{{message}}</div>`,
+  template: `<div class="md-tooltip {{positionClass}}"
+                [class.md-tooltip-initialized]="initialized"
+                [class.md-tooltip-visible]="visible">{{message}}</div>`,
   styleUrls: ['tooltip.css'],
 })
-export class TooltipComponent {
-  message: string;
+class TooltipContainer {
+  tooltip: MdTooltip;
+  visible = false;
+  initialized = false;
+
+  constructor(private _elementRef: ElementRef) {}
+
+  get message() {
+    return this.tooltip.message;
+  }
+
+  get positionClass() {
+    return `md-tooltip-${this.tooltip.position}`;
+  }
+
+  /** Once the view is rendered, add the `visible` class to trigger enter animation */
+  ngAfterViewInit() {
+    // transitions are only enabled after the view is initialized
+    this.initialized = true;
+    // with animations enabled, we can make the tooltip visible
+    this.visible = true;
+  }
+
+  /** Trigger the leave animation and returns a promise that resolves when the animation is done */
+  remove(): Promise<any> {
+    this.visible = false;
+    return new Promise(done => {
+      // Note: This only works if all transitions have the same duration
+      this._elementRef.nativeElement.addEventListener('transitionend', () => done());
+    });
+  }
 }
 
 /** @deprecated */
@@ -197,8 +243,8 @@ export const MD_TOOLTIP_DIRECTIVES = [MdTooltip];
 
 @NgModule({
   imports: [OverlayModule],
-  exports: [MD_TOOLTIP_DIRECTIVES, TooltipComponent],
-  declarations: [MD_TOOLTIP_DIRECTIVES, TooltipComponent],
-  entryComponents: [TooltipComponent],
+  exports: [MD_TOOLTIP_DIRECTIVES, TooltipContainer],
+  declarations: [MD_TOOLTIP_DIRECTIVES, TooltipContainer],
+  entryComponents: [TooltipContainer],
 })
 export class MdTooltipModule { }
