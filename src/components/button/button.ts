@@ -8,8 +8,8 @@ import {
   Renderer,
   Type,
 } from '@angular/core';
-
 import {MD_RIPPLE_DIRECTIVES} from '@angular2-material/core/core';
+import {BooleanFieldValue} from '@angular2-material/core/annotations/field-value';
 
 // TODO(jelbourn): Make the `isMouseDown` stuff done with one global listener.
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
@@ -42,7 +42,7 @@ export class MdButton {
   _isMouseDown: boolean = false;
 
   /** Whether the ripple effect on click should be disabled. */
-  @Input('md-ripple-disabled') _rippleDisabled = false;
+  @Input() @BooleanFieldValue() disableRipple: boolean = false;
 
   constructor(private _elementRef: ElementRef, private _renderer: Renderer) { }
 
@@ -88,7 +88,7 @@ export class MdButton {
     this._elementRef.nativeElement.focus();
   }
 
-  topLevelElement() {
+  getHostElement() {
     return this._elementRef.nativeElement;
   }
 
@@ -99,8 +99,8 @@ export class MdButton {
         el.hasAttribute('md-mini-fab');
   }
 
-  enableRipple() {
-    return !this._rippleDisabled;
+  isRippleEnabled() {
+    return !this.disableRipple;
   }
 }
 

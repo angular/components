@@ -112,4 +112,4 @@ Properties:
 | --- | --- | --- |
 | `color` | `"primary"|"accent"|"warn"` | The color palette of the button
 | `disabled` | boolean | Whether or not the button is disabled
-| `md-ripple-disabled` | boolean | Whether the ripple effect should be disabled when the button is clicked
+| `disableRipple` | boolean | Whether the ripple effect when the button is clicked should be disabled

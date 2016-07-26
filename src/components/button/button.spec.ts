@@ -1,4 +1,4 @@
-import {inject} from '@angular/core/testing';
+import {async, inject} from '@angular/core/testing';
 import {TestComponentBuilder} from '@angular/compiler/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -133,8 +133,8 @@ describe('MdButton', () => {
 
   // Ripple tests.
   describe('button ripples', () => {
-    it('should remove ripple if md-ripple-disabled input is set', (done: () => void) => {
-      return builder.createAsync(TestApp).then(fixture => {
+    it('should remove ripple if md-ripple-disabled input is set', async(() => {
+      builder.createAsync(TestApp).then(fixture => {
         let testComponent = fixture.debugElement.componentInstance;
         let buttonDebugElement = fixture.debugElement.query(By.css('button'));
 
@@ -144,9 +144,8 @@ describe('MdButton', () => {
         testComponent.rippleDisabled = true;
         fixture.detectChanges();
         expect(buttonDebugElement.nativeElement.querySelectorAll('[md-ripple]').length).toBe(0);
-        done();
       });
-    });
+    }));
   });
 });
 
@@ -155,7 +154,7 @@ describe('MdButton', () => {
   selector: 'test-app',
   template: `
     <button md-button type="button" (click)="increment()"
-      [disabled]="isDisabled" [color]="buttonColor" [md-ripple-disabled]="rippleDisabled">
+      [disabled]="isDisabled" [color]="buttonColor" [disableRipple]="rippleDisabled">
       Go
     </button>
     <a href="http://www.google.com" md-button [disabled]="isDisabled" [color]="buttonColor">Link</a>

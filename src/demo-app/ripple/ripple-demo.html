@@ -2,12 +2,12 @@
 <div class="demo-ripple">
   <section>
     <md-checkbox [(ngModel)]="disableButtonRipples">Disable button ripples</md-checkbox>
-    <button md-button [md-ripple-disabled]="disableButtonRipples">flat</button>
-    <button md-raised-button [md-ripple-disabled]="disableButtonRipples">raised</button>
-    <button md-fab [md-ripple-disabled]="disableButtonRipples">
+    <button md-button [disableRipple]="disableButtonRipples">flat</button>
+    <button md-raised-button [disableRipple]="disableButtonRipples">raised</button>
+    <button md-fab [disableRipple]="disableButtonRipples">
       <md-icon>check</md-icon>
     </button>
-    <button md-mini-fab [md-ripple-disabled]="disableButtonRipples">
+    <button md-mini-fab [disableRipple]="disableButtonRipples">
       <md-icon>check</md-icon>
     </button>
   </section>
