@@ -63,7 +63,7 @@ export class MdSlider implements AfterContentInit {
    * How often to show ticks. Relative to the step so that a tick always appears on a step.
    * Ex: Tick interval of 4 with a step of 3 will draw a tick every 4 steps (every 12 values).
    */
-  private _tickInterval: 'auto' | number;
+  @Input('tick-interval') private _tickInterval: 'auto' | number;
 
   /**
    * Whether or not the thumb is sliding.
@@ -109,19 +109,6 @@ export class MdSlider implements AfterContentInit {
 
   set max(v: number) {
     this._max = Number(v);
-  }
-
-  @Input('tick-interval')
-  get tickInterval() {
-    return this._tickInterval;
-  }
-
-  set tickInterval(v: 'auto' | number) {
-    if (v == 'auto') {
-      this._tickInterval = v;
-    } else {
-      this._tickInterval = Number(v);
-    }
   }
 
   @Input()
@@ -249,9 +236,9 @@ export class MdSlider implements AfterContentInit {
    * number or 'auto', nothing happens.
    */
   private _calculateTickSeparation() {
-    if (this.tickInterval == 'auto') {
+    if (this._tickInterval == 'auto') {
       this._calculateAutoTickSeparation();
-    } else if (typeof this.tickInterval == 'number') {
+    } else if (Number(this._tickInterval)) {
       this._calculateTickSeparationFromInterval();
     }
   }
@@ -288,7 +275,7 @@ export class MdSlider implements AfterContentInit {
    */
   private _calculateTickSeparationFromInterval() {
     // Force tickInterval to be a number so it can be used in calculations.
-    let interval: number = <number> this.tickInterval;
+    let interval: number = <number> this._tickInterval;
     // Calculate the first value a tick will be located at by getting the step at which the interval
     // lands and adding that to the min.
     let tickValue = (this.step * interval) + this.min;
