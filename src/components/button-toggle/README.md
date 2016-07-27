@@ -36,7 +36,7 @@ Adding providers and directives:
 
 Output:
 
-<img src="https://material.angularjs.org/material2_assets/button-toggle/basic-toggle.png">
+![Basic Toggle Button Example](https://material.angularjs.org/material2_assets/button-toggle/basic-toggle.png)
 
 ### Exclusive Selection
 
@@ -55,7 +55,7 @@ group of button toggles and allows only one button toggle to be selected at a ti
 
 Output:
 
-<img src="https://material.angularjs.org/material2_assets/button-toggle/exclusive-toggle.png">
+![Exclusive Toggle Button Example](https://material.angularjs.org/material2_assets/button-toggle/exclusive-toggle.png)
 
 ### Multiple Selection
 
@@ -74,7 +74,7 @@ group of button toggles.
 
 Output:
 
-<img src="https://material.angularjs.org/material2_assets/button-toggle/multi-toggle.png">
+![Multiple Toggle Button Example](https://material.angularjs.org/material2_assets/button-toggle/multi-toggle.png)
 
 ## Dynamic Exclusive Selection
 
