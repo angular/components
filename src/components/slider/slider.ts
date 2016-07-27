@@ -12,6 +12,12 @@ import {BooleanFieldValue} from '@angular2-material/core/annotations/field-value
 import {applyCssTransform} from '@angular2-material/core/style/apply-transform';
 import {MdGestureConfig} from '@angular2-material/core/core';
 
+/**
+ * Visually, a 30px separation between tick marks looks best. This is very subjective but it is
+ * the default separation we chose.
+ */
+const MIN_AUTO_TICK_SEPARATION = 30;
+
 @Component({
   moduleId: module.id,
   selector: 'md-slider',
@@ -262,9 +268,7 @@ export class MdSlider implements AfterContentInit {
     // Keeps track of how many steps to multiply the slider's step by.
     let stepCounter = 1;
 
-    // Visually, a 30px separation between tick marks looks best. This is very subjective but it is
-    // the default separation we chose.
-    while (tickSeparation < 30) {
+    while (tickSeparation < MIN_AUTO_TICK_SEPARATION) {
       // Multiplying the counter and step together determines which step we want to use. This starts
       // at the first step and moves to second, then third, etc. until we find a good distance.
       let tickValue = (this.step * stepCounter) + this.min;
@@ -374,8 +378,6 @@ export class SliderRenderer {
     let tickContainerWidth = tickContainer.getBoundingClientRect().width;
     let lastTickContainer =
         <HTMLElement>this._sliderElement.querySelector('.md-slider-last-tick-container');
-    // A linear gradient background is used to draw the ticks as it performs better than using
-    // canvas or creating many small divs.
     // Subtract 1 from the tick separation to center the tick.
     // TODO: Perf test this.
     tickContainer.style.background = `repeating-linear-gradient(to right, #000000, #000000 2px,
