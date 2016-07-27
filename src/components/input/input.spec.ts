@@ -13,7 +13,7 @@ import {
 } from './input';
 
 function isInternetExplorer11() {
-    return !(window.ActiveXObject) && "ActiveXObject" in window
+    return 'ActiveXObject' in window;
 }
 
 describe('MdInput', function () {
