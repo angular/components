@@ -1,21 +1,9 @@
-import {Component, Directive, ViewEncapsulation} from '@angular/core';
+import { MdMenu } from './menu-directive';
+import { MdMenuItem, MdMenuAnchor } from './menu-item';
+import { MdMenuTrigger } from './menu-trigger';
 
-@Component({
-  moduleId: module.id,
-  selector: 'md-menu',
-  host: {'role': 'menu'},
-  templateUrl: 'menu.html',
-  styleUrls: ['menu.css'],
-  encapsulation: ViewEncapsulation.None,
-  exportAs: 'mdMenu'
-})
-export class MdMenu {}
+export { MdMenu } from './menu-directive';
+export { MdMenuItem, MdMenuAnchor } from './menu-item';
+export { MdMenuTrigger } from './menu-trigger';
 
-@Directive({
-  selector: '[md-menu-item]',
-  host: {'role': 'menuitem'}
-})
-export class MdMenuItem {}
-
-export const MD_MENU_DIRECTIVES = [MdMenu, MdMenuItem];
-
+export const MD_MENU_DIRECTIVES = [MdMenu, MdMenuItem, MdMenuTrigger, MdMenuAnchor];

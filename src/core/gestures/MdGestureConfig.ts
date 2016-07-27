@@ -33,32 +33,34 @@ export class MdGestureConfig extends HammerGestureConfig {
    * TODO: Confirm threshold numbers with Material Design UX Team
    * */
   buildHammer(element: HTMLElement) {
-    var mc = new Hammer(element);
+    const mc = new Hammer(element);
 
-    // Create custom gesture recognizers
-    let drag = this._createRecognizer(Hammer.Pan, {event: 'drag', threshold: 6}, Hammer.Swipe);
-    let slide = this._createRecognizer(Hammer.Pan, {event: 'slide', threshold: 0}, Hammer.Swipe);
-    let longpress = this._createRecognizer(Hammer.Press, {event: 'longpress', time: 500});
-
+    // Default Hammer Recognizers.
     let pan = new Hammer.Pan();
     let swipe = new Hammer.Swipe();
+    let press = new Hammer.Press();
+
+    // Notice that a HammerJS recognizer can only depend on one other recognizer once.
+    // Otherwise the previous `recognizeWith` will be dropped.
+    let slide = this._createRecognizer(pan, {event: 'slide', threshold: 0}, swipe);
+    let drag = this._createRecognizer(slide, {event: 'drag', threshold: 6}, swipe);
+    let longpress = this._createRecognizer(press, {event: 'longpress', time: 500});
 
     // Overwrite the default `pan` event to use the swipe event.
     pan.recognizeWith(swipe);
 
     // Add customized gestures to Hammer manager
-    mc.add([drag, slide, pan, longpress]);
+    mc.add([swipe, press, pan, drag, slide, longpress]);
 
     return mc;
   }
 
   /** Creates a new recognizer, without affecting the default recognizers of HammerJS */
-  private _createRecognizer(type: RecognizerStatic, options: any, ...extra: RecognizerStatic[]) {
-    let recognizer = new type(options);
+  private _createRecognizer(base: Recognizer, options: any, ...inheritances: Recognizer[]) {
+    let recognizer = new (<RecognizerStatic> base.constructor)(options);
 
-    // Add the default recognizer to the new custom recognizer.
-    extra.push(type);
-    extra.forEach(entry => recognizer.recognizeWith(new entry()));
+    inheritances.push(base);
+    inheritances.forEach((item) => recognizer.recognizeWith(item));
 
     return recognizer;
   }
