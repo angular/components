@@ -46,7 +46,8 @@ elif is_extract_metadata; then
   ./node_modules/.bin/tsc -p ./src/demo-app/
   ./node_modules/.bin/ngc -p ./src/demo-app/
 elif is_plunker; then
-  if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
+  # Only update the plunker when the firebase access token is available.
+  if [ "$MATERIAL2_PLNKR_TOKEN" = "false" ]; then
     npm run update-plunker
   fi
 else
