@@ -461,13 +461,13 @@ describe('MdSlider', () => {
       // both sides. The value 30 will be located at the position 33.6px, and 1px is removed from
       // the tick mark location in order to center the tick. Therefore, the tick separation should
       // be 32.6px.
-      expect(tickContainer.style.background).toBe('repeating-linear-gradient(to right, ' +
+      expect(tickContainer.style.background).toContain('repeating-linear-gradient(to right, ' +
       'rgb(0, 0, 0), rgb(0, 0, 0) 2px, transparent 2px, transparent 32.6px)');
     });
 
     it('should draw a tick mark on the end of the track', () => {
-      expect(lastTickContainer.style.background).toBe('linear-gradient(to left, rgb(0, 0, 0), ' +
-          'rgb(0, 0, 0) 2px, transparent 2px, transparent)');
+      expect(lastTickContainer.style.background).toContain('linear-gradient(to left, rgb(0, 0, 0), '
+          + 'rgb(0, 0, 0) 2px, transparent 2px, transparent)');
     });
 
     it('should not draw the second to last tick when it is too close to the last tick', () => {
@@ -503,13 +503,13 @@ describe('MdSlider', () => {
       // The slider width is 112px, the first step is at value 18 (step of 3 * tick interval of 6),
       // which is at the position 20.16px and 1px is subtracted to center, giving a tick
       // separation of 19.16px.
-      expect(tickContainer.style.background).toBe('repeating-linear-gradient(to right, ' +
+      expect(tickContainer.style.background).toContain('repeating-linear-gradient(to right, ' +
           'rgb(0, 0, 0), rgb(0, 0, 0) 2px, transparent 2px, transparent 19.16px)');
     });
 
     it('should draw a tick mark on the end of the track', () => {
-      expect(lastTickContainer.style.background).toBe('linear-gradient(to left, rgb(0, 0, 0), ' +
-          'rgb(0, 0, 0) 2px, transparent 2px, transparent)');
+      expect(lastTickContainer.style.background).toContain('linear-gradient(to left, rgb(0, 0, 0), '
+          + 'rgb(0, 0, 0) 2px, transparent 2px, transparent)');
     });
   });
 });
