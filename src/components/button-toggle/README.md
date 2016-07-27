@@ -1,8 +1,94 @@
-# MdButtonToggle
+# md-button-toggle
 
-`MdButtonToggle` is a group of buttons that can be toggled. There are two modes, `multiple` and
-`exclusive`. `Multiple` is a group in which multiple buttons can be toggled at once. `Exclusive` is
-a group in which only one button can be toggled at once.
+`MdButtonToggle` is a group of buttons that can be toggled.
+There are two modes, `multiple` and `exclusive`.
+When in 'multiple' mode, multiple buttons can be selected at once.
+When in 'exclusive'mode, only one button can be selected at a time.
+You can read more about button toggles in the
+[Material Design spec](https://material.google.com/components/buttons.html#buttons-toggle-buttons).
+
+## Usage
+
+### Setup
+
+Importing the symbols:
+```typescript
+import { MdUniqueSelectionDispatcher } from '@angular2-material/core';
+import { MD_BUTTON_TOGGLE_DIRECTIVES } from '@angular2-material/button-toggle'
+```
+
+Adding providers and directives:
+```typescript
+@Component({
+  ...
+  directives: [MD_BUTTON_TOGGLE_DIRECTIVES],
+  providers: [MdUniqueSelectionDispatcher]
+})
+```
+
+### Basic Usage
+
+`md-button-toggle` can be used on its own and acts as a checkbox.
+
+```html
+<md-button-toggle>Bold</md-button-toggle>
+```
+
+Output:
+
+<img src="">
+
+### Exclusive Selection
+
+`md-button-toggle` can be used in an exclusive selection group when surrounded by
+`md-button-toggle-group`. This styles all buttons within the group to appear as a single
+group of button toggles and allows only one button toggle to be selected at a time.
+
+```html
+<md-button-toggle-group name="alignment">
+    <md-button-toggle value="left"><md-icon>format_align_left</md-icon></md-button-toggle>
+    <md-button-toggle value="center"><md-icon>format_align_center</md-icon></md-button-toggle>
+    <md-button-toggle value="right"><md-icon>format_align_right</md-icon></md-button-toggle>
+    <md-button-toggle value="justify" disabled><md-icon>format_align_justify</md-icon></md-button-toggle>
+</md-button-toggle-group>
+```
+
+Output:
+
+<img src="">
+
+### Multiple Selection
+
+`md-button-toggle` can be used in a multiple selection group when surrounded by
+`md-button-toggle-group multiple`. This styles all buttons within the group to appear as a single
+group of button toggles.
+
+```html
+<md-button-toggle-group multiple>
+    <md-button-toggle>Flour</md-button-toggle>
+    <md-button-toggle>Eggs</md-button-toggle>
+    <md-button-toggle>Sugar</md-button-toggle>
+    <md-button-toggle>Milk</md-button-toggle>
+</md-button-toggle-group>
+```
+
+Output:
+
+<img src="">
+
+## Dynamic Exclusive Selection
+
+`md-button-toggle`s can be used with `ngModel` to dynamically create groups and update the value for
+a group.
+
+```html
+<md-button-toggle-group name="pies" [(ngModel)]="favoritePie">
+    <md-button-toggle *ngFor="let pie of pieOptions" [value]="pie">
+        {{pie}}
+    </md-button-toggle>
+</md-button-toggle-group>
+<p>Your favorite type of pie is: {{favoritePie}}</p>
+```
 
 ## `<md-button-toggle>`
 
@@ -44,54 +130,3 @@ a group in which only one button can be toggled at once.
 | Name | Description |
 | --- | --- |
 | `change` | Emitted when the `value` of the group changes. |
-
-## Usage
-
-### Basic Usage
-
-`md-button-toggle` can be used on its own and acts as a checkbox.
-
-```html
-<md-button-toggle>Bold</md-button-toggle>
-```
-
-### Multiple Selection
-
-`md-button-toggle` can be used in a multiple selection group when surrounded by
-`md-button-toggle-group multiple`. This styles all buttons within the group to appear as a single
-group of button toggles.
-
-```html
-<md-button-toggle-group multiple>
-    <md-button-toggle>Flour</md-button-toggle>
-    <md-button-toggle>Eggs</md-button-toggle>
-    <md-button-toggle>Sugar</md-button-toggle>
-    <md-button-toggle>Milk</md-button-toggle>
-</md-button-toggle-group>
-```
-
-### Exclusive Selection
-
-`md-button-toggle` can be used in an exclusive selection group when surrounded by
-`md-button-toggle-group`. This styles all buttons within the group to appear as a single
-group of button toggles and allows only one button toggle to be selected at a time.
-
-```html
-<md-button-toggle-group name="alignment">
-    <md-button-toggle value="left"><md-icon>format_align_left</md-icon></md-button-toggle>
-    <md-button-toggle value="center"><md-icon>format_align_center</md-icon></md-button-toggle>
-    <md-button-toggle value="right"><md-icon>format_align_right</md-icon></md-button-toggle>
-    <md-button-toggle value="justify" disabled><md-icon>format_align_justify</md-icon></md-button-toggle>
-</md-button-toggle-group>
-```
-
-## Dynamic Exclusive Selection
-
-```html
-<md-button-toggle-group name="pies" [(ngModel)]="favoritePie">
-    <md-button-toggle *ngFor="let pie of pieOptions" [value]="pie">
-        {{pie}}
-    </md-button-toggle>
-</md-button-toggle-group>
-<p>Your favorite type of pie is: {{favoritePie}}</p>
-```
