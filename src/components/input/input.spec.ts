@@ -12,6 +12,10 @@ import {
   MD_INPUT_DIRECTIVES,
 } from './input';
 
+function isInternetExplorer11() {
+    return !(window.ActiveXObject) && "ActiveXObject" in window
+}
+
 
 describe('MdInput', function () {
   var builder: TestComponentBuilder;
@@ -36,6 +40,9 @@ describe('MdInput', function () {
   }));
 
   it('should not be treated as empty if type is date', async(() => {
+    if (isInternetExplorer11()) {
+        return;
+    }
     builder.createAsync(MdInputDateTestController)
       .then(fixture => {
         fixture.componentInstance.placeholder = 'Placeholder';
@@ -48,6 +55,9 @@ describe('MdInput', function () {
   }));
 
   it('should treat text input type as empty at init', async(() => {
+    if (isInternetExplorer11()) {
+        return;
+    }
     builder.createAsync(MdInputTextTestController)
       .then(fixture => {
         fixture.componentInstance.placeholder = 'Placeholder';
@@ -60,6 +70,9 @@ describe('MdInput', function () {
   }));
 
   it('should treat password input type as empty at init', async(() => {
+    if (isInternetExplorer11()) {
+        return;
+    }
     builder.createAsync(MdInputPasswordTestController)
       .then(fixture => {
         fixture.componentInstance.placeholder = 'Placeholder';
@@ -72,6 +85,9 @@ describe('MdInput', function () {
   }));
 
   it('should treat number input type as empty at init', async(() => {
+    if (isInternetExplorer11()) {
+        return;
+    }
     builder.createAsync(MdInputNumberTestController)
       .then(fixture => {
         fixture.componentInstance.placeholder = 'Placeholder';
