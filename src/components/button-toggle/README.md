@@ -84,3 +84,14 @@ group of button toggles and allows only one button toggle to be selected at a ti
     <md-button-toggle value="justify" disabled><md-icon>format_align_justify</md-icon></md-button-toggle>
 </md-button-toggle-group>
 ```
+
+## Dynamic Exclusive Selection
+
+```html
+<md-button-toggle-group name="pies" [(ngModel)]="favoritePie">
+    <md-button-toggle *ngFor="let pie of pieOptions" [value]="pie">
+        {{pie}}
+    </md-button-toggle>
+</md-button-toggle-group>
+<p>Your favorite type of pie is: {{favoritePie}}</p>
+```
