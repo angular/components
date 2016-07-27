@@ -16,7 +16,6 @@ function isInternetExplorer11() {
     return !(window.ActiveXObject) && "ActiveXObject" in window
 }
 
-
 describe('MdInput', function () {
   var builder: TestComponentBuilder;
 
@@ -99,21 +98,24 @@ describe('MdInput', function () {
       });
   }));
 
+  // TODO(kara): update when core/testing adds fix
   it('support ngModel', async(() => {
     builder.createAsync(MdInputBaseTestController)
       .then(fixture => {
         fixture.detectChanges();
         let instance = fixture.componentInstance;
-        let component = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
         let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
         instance.model = 'hello';
         fixture.detectChanges();
-        expect(el.value).toEqual('hello');
+        fixture.whenStable().then(() => {
 
-        component.value = 'world';
-        fixture.detectChanges();
-        expect(el.value).toEqual('world');
+          // this workaround is temp, see https://github.com/angular/angular/issues/10148
+          fixture.detectChanges();
+          fixture.whenStable().then(() => {
+            expect(el.value).toBe('hello');
+          });
+        });
       });
   }));
 
@@ -144,7 +146,9 @@ describe('MdInput', function () {
 
       instance.model = 'hello';
       fixture.detectChanges();
-      expect(inputInstance.characterCount).toEqual(5);
+      fixture.whenStable().then(() => {
+        expect(inputInstance.characterCount).toEqual(5);
+      });
     });
   }));
 
