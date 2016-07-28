@@ -49,7 +49,7 @@ group of button toggles and allows only one button toggle to be selected at a ti
     <md-button-toggle value="left"><md-icon>format_align_left</md-icon></md-button-toggle>
     <md-button-toggle value="center"><md-icon>format_align_center</md-icon></md-button-toggle>
     <md-button-toggle value="right"><md-icon>format_align_right</md-icon></md-button-toggle>
-    <md-button-toggle value="justify" disabled><md-icon>format_align_justify</md-icon></md-button-toggle>
+    <md-button-toggle value="justify"><md-icon>format_align_justify</md-icon></md-button-toggle>
 </md-button-toggle-group>
 ```
 
@@ -89,6 +89,29 @@ a group.
 </md-button-toggle-group>
 <p>Your favorite type of pie is: {{favoritePie}}</p>
 ```
+
+### Disabled Button Toggle
+
+`md-button-toggle-group` and `md-button-toggle` can both be disabled by adding a `disabled`
+attribute to either one. Adding `disabled` to an exclusive group or a multiple group will disable
+the entire group. Adding `disabled` to a single toggle will disable that toggle.
+
+```html
+<md-button-toggle-group disabled>
+    <md-button-toggle value="one">One</md-button-toggle>
+    <md-button-toggle value="two">Two</md-button-toggle>
+    <md-button-toggle value="three">Three</md-button-toggle>
+</md-button-toggle-group>
+
+<md-button-toggle-group>
+    <md-button-toggle value="red" disabled>Red</md-button-toggle>
+    <md-button-toggle value="blue">Blue</md-button-toggle>
+</md-button-toggle-group>
+```
+
+Output:
+
+![Disabled Toggle Button Example](https://material.angularjs.org/material2_assets/button-toggle/disabled-toggle.png)
 
 ## `<md-button-toggle>`
 
