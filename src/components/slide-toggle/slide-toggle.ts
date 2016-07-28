@@ -7,9 +7,11 @@ import {
   Input,
   Output,
   EventEmitter,
-  AfterContentInit
+  AfterContentInit,
+  NgModule,
 } from '@angular/core';
 import {
+  FormsModule,
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
@@ -249,6 +251,7 @@ class SlideToggleRenderer {
     return !!this._thumbBarWidth;
   }
 
+
   /** Initializes the drag of the slide-toggle. */
   startThumbDrag(checked: boolean) {
     if (!this._thumbBarWidth) {
@@ -293,3 +296,11 @@ class SlideToggleRenderer {
 }
 
 export const MD_SLIDE_TOGGLE_DIRECTIVES = [MdSlideToggle];
+
+
+@NgModule({
+  imports: [FormsModule],
+  exports: MD_SLIDE_TOGGLE_DIRECTIVES,
+  declarations: MD_SLIDE_TOGGLE_DIRECTIVES,
+})
+export class MdSlideToggleModule { }

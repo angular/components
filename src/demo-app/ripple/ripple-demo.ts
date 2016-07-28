@@ -19,15 +19,6 @@ import {MD_RIPPLE_DIRECTIVES, MdRipple} from '@angular2-material/core/core';
   templateUrl: 'ripple-demo.html',
   styleUrls: ['ripple-demo.css'],
   providers: [MdUniqueSelectionDispatcher],
-  directives: [
-    MD_BUTTON_DIRECTIVES,
-    MD_CARD_DIRECTIVES,
-    MD_CHECKBOX_DIRECTIVES,
-    MD_ICON_DIRECTIVES,
-    MD_INPUT_DIRECTIVES,
-    MD_RADIO_DIRECTIVES,
-    MD_RIPPLE_DIRECTIVES,
-  ],
 })
 export class RippleDemo {
   @ViewChild(MdRipple) manualRipple: MdRipple;

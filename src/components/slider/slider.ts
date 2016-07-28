@@ -1,4 +1,5 @@
 import {
+  NgModule,
   Component,
   ElementRef,
   HostBinding,
@@ -267,3 +268,10 @@ export class SliderRenderer {
 }
 
 export const MD_SLIDER_DIRECTIVES = [MdSlider];
+
+
+@NgModule({
+  exports: MD_SLIDER_DIRECTIVES,
+  declarations: MD_SLIDER_DIRECTIVES,
+})
+export class MdSliderModule { }

@@ -7,7 +7,6 @@ import {MdProgressCircle, MdSpinner} from '@angular2-material/progress-circle/pr
   selector: 'progress-circle-demo',
   templateUrl: 'progress-circle-demo.html',
   styleUrls: ['progress-circle-demo.css'],
-  directives: [MdProgressCircle, MdSpinner, MdButton]
 })
 export class ProgressCircleDemo {
   progressValue: number = 40;

@@ -3,6 +3,7 @@
  **********************************************************************************************/
 
 const components = [
+  'all',
   'button',
   'card',
   'checkbox',
@@ -28,7 +29,7 @@ const components = [
 const map: any = {
   '@angular2-material/core': 'core',
 };
-components.forEach(name => map[`@angular2-material/${name}`] = `components/${name}`);
+components.forEach(name => {map[`@angular2-material/${name}`] = `components/${name}`; console.log(name)});
 
 
 /** User packages configuration. */

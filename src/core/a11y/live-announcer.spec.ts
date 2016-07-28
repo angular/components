@@ -4,9 +4,9 @@ import {
   flushMicrotasks,
   tick,
   addProviders,
-  getTestInjector
+  TestComponentBuilder,
+  ComponentFixture,
 } from '@angular/core/testing';
-import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdLiveAnnouncer, LIVE_ANNOUNCER_ELEMENT_TOKEN} from './live-announcer';
@@ -16,102 +16,110 @@ describe('MdLiveAnnouncer', () => {
   let builder: TestComponentBuilder;
   let liveEl: Element;
 
-  beforeEach(() => {
-    addProviders([
-      MdLiveAnnouncer,
-    ]);
-  });
+  describe('with default element', () => {
+    beforeEach(() => {
+      addProviders([MdLiveAnnouncer]);
+    });
 
-  beforeEach(inject([TestComponentBuilder, MdLiveAnnouncer],
-    (tcb: TestComponentBuilder, _live: MdLiveAnnouncer) => {
-      builder = tcb;
-      live = _live;
-      liveEl = getLiveElement();
+    beforeEach(inject([TestComponentBuilder, MdLiveAnnouncer],
+      (tcb: TestComponentBuilder, _live: MdLiveAnnouncer) => {
+        builder = tcb;
+        live = _live;
+        liveEl = getLiveElement();
+      }));
+
+    afterEach(() => {
+      // In our tests we always remove the current live element, because otherwise we would have
+      // multiple live elements due multiple service instantiations.
+      liveEl.parentNode.removeChild(liveEl);
+    });
+
+    it('should correctly update the announce text', fakeAsyncTest(() => {
+      let appFixture: ComponentFixture<TestApp> = null;
+
+      builder.createAsync(TestApp).then(fixture => {
+        appFixture = fixture;
+      });
+
+      flushMicrotasks();
+
+      let buttonElement = appFixture.debugElement
+        .query(By.css('button')).nativeElement;
+
+      buttonElement.click();
+
+      // This flushes our 100ms timeout for the screenreaders.
+      tick(100);
+
+      expect(liveEl.textContent).toBe('Test');
     }));
 
-  afterEach(() => {
-    // In our tests we always remove the current live element, because otherwise we would have
-    // multiple live elements due multiple service instantiations.
-    liveEl.parentNode.removeChild(liveEl);
+    it('should correctly update the politeness attribute', fakeAsyncTest(() => {
+      let appFixture: ComponentFixture<TestApp> = null;
+
+      builder.createAsync(TestApp).then(fixture => {
+        appFixture = fixture;
+      });
+
+      flushMicrotasks();
+
+      live.announce('Hey Google', 'assertive');
+
+      // This flushes our 100ms timeout for the screenreaders.
+      tick(100);
+
+      expect(liveEl.textContent).toBe('Hey Google');
+      expect(liveEl.getAttribute('aria-live')).toBe('assertive');
+    }));
+
+    it('should apply the aria-live value polite by default', fakeAsyncTest(() => {
+      let appFixture: ComponentFixture<TestApp> = null;
+
+      builder.createAsync(TestApp).then(fixture => {
+        appFixture = fixture;
+      });
+
+      flushMicrotasks();
+
+      live.announce('Hey Google');
+
+      // This flushes our 100ms timeout for the screenreaders.
+      tick(100);
+
+      expect(liveEl.textContent).toBe('Hey Google');
+      expect(liveEl.getAttribute('aria-live')).toBe('polite');
+    }));
   });
 
-  it('should correctly update the announce text', fakeAsyncTest(() => {
-    let appFixture: ComponentFixture<TestApp> = null;
+  describe('with a custom element', () => {
+    let customLiveElement: HTMLElement;
 
-    builder.createAsync(TestApp).then(fixture => {
-      appFixture = fixture;
+    beforeEach(() => {
+      customLiveElement = document.createElement('div');
+
+      addProviders([
+        {provide: LIVE_ANNOUNCER_ELEMENT_TOKEN, useValue: customLiveElement},
+        MdLiveAnnouncer,
+      ]);
     });
 
-    flushMicrotasks();
+    beforeEach(inject([TestComponentBuilder, MdLiveAnnouncer],
+      (tcb: TestComponentBuilder, _live: MdLiveAnnouncer) => {
+        builder = tcb;
+        live = _live;
+        liveEl = getLiveElement();
+      }));
 
-    let buttonElement = appFixture.debugElement
-      .query(By.css('button')).nativeElement;
 
-    buttonElement.click();
+    it('should allow to use a custom live element', fakeAsyncTest(() => {
+      live.announce('Custom Element');
 
-    // This flushes our 100ms timeout for the screenreaders.
-    tick(100);
+      // This flushes our 100ms timeout for the screenreaders.
+      tick(100);
 
-    expect(liveEl.textContent).toBe('Test');
-  }));
-
-  it('should correctly update the politeness attribute', fakeAsyncTest(() => {
-    let appFixture: ComponentFixture<TestApp> = null;
-
-    builder.createAsync(TestApp).then(fixture => {
-      appFixture = fixture;
-    });
-
-    flushMicrotasks();
-
-    live.announce('Hey Google', 'assertive');
-
-    // This flushes our 100ms timeout for the screenreaders.
-    tick(100);
-
-    expect(liveEl.textContent).toBe('Hey Google');
-    expect(liveEl.getAttribute('aria-live')).toBe('assertive');
-  }));
-
-  it('should apply the aria-live value polite by default', fakeAsyncTest(() => {
-    let appFixture: ComponentFixture<TestApp> = null;
-
-    builder.createAsync(TestApp).then(fixture => {
-      appFixture = fixture;
-    });
-
-    flushMicrotasks();
-
-    live.announce('Hey Google');
-
-    // This flushes our 100ms timeout for the screenreaders.
-    tick(100);
-
-    expect(liveEl.textContent).toBe('Hey Google');
-    expect(liveEl.getAttribute('aria-live')).toBe('polite');
-  }));
-
-  it('should allow to use a custom live element', fakeAsyncTest(() => {
-    let customLiveEl = document.createElement('div');
-
-    // We need to reset our test injector here, because it is already instantiated above.
-    getTestInjector().reset();
-
-    getTestInjector().addProviders([
-      {provide: LIVE_ANNOUNCER_ELEMENT_TOKEN, useValue: customLiveEl},
-      MdLiveAnnouncer
-    ]);
-
-    let injector = getTestInjector().createInjector();
-    let liveService: MdLiveAnnouncer = injector.get(MdLiveAnnouncer);
-
-    liveService.announce('Custom Element');
-
-    // This flushes our 100ms timeout for the screenreaders.
-    tick(100);
-
-    expect(customLiveEl.textContent).toBe('Custom Element');
-  }));
+      expect(customLiveElement.textContent).toBe('Custom Element');
+    }));
+  });
 
 });
 

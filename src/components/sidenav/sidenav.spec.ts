@@ -2,9 +2,12 @@ import {
   fakeAsync,
   async,
   inject,
-  tick
+  tick,
+  TestComponentBuilder,
+  ComponentFixture,
+  configureModule,
+  doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
-import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {XHR} from '@angular/compiler';
 import {
   Component,
@@ -12,7 +15,7 @@ import {
 } from '@angular/core';
 
 import {By} from '@angular/platform-browser';
-import {MdSidenav, MdSidenavLayout, MD_SIDENAV_DIRECTIVES} from './sidenav';
+import {MdSidenav, MdSidenavLayout, MD_SIDENAV_DIRECTIVES, MdSidenavModule} from './sidenav';
 
 
 /**
@@ -26,7 +29,6 @@ function createFixture(appType: any, builder: TestComponentBuilder,
     .overrideView(MdSidenavLayout, new ViewMetadata({
       template: template,
       styles: [style || ''],
-      directives: [MdSidenav],
     }))
     .createAsync(appType).then((f: ComponentFixture<any>) => {
     fixture = f;
@@ -52,6 +54,16 @@ describe('MdSidenav', () => {
   let style: string;
   let builder: TestComponentBuilder;
   let xhr: XHR;
+
+  beforeEach(async(() => {
+    configureModule({
+      imports: [MdSidenavModule],
+      declarations: TEST_COMPONENTS,
+      entryComponents: TEST_COMPONENTS,
+    });
+
+    doAsyncEntryPointCompilation();
+  }));
 
   beforeEach(inject([TestComponentBuilder, XHR], (tcb: TestComponentBuilder, x: XHR) => {
     builder = tcb;
@@ -290,7 +302,6 @@ describe('MdSidenav', () => {
 /** Test component that contains an MdSidenavLayout but no MdSidenav. */
 @Component({
   selector: 'test-app',
-  directives: [MD_SIDENAV_DIRECTIVES],
   template: `
     <md-sidenav-layout>
     </md-sidenav-layout>
@@ -303,7 +314,6 @@ class SidenavLayoutNoSidenavTestApp {
 /** Test component that contains an MdSidenavLayout and 2 MdSidenav on the same side. */
 @Component({
   selector: 'test-app',
-  directives: [MD_SIDENAV_DIRECTIVES],
   template: `
     <md-sidenav-layout>
       <md-sidenav> </md-sidenav>
@@ -318,7 +328,6 @@ class SidenavLayoutTwoSidenavTestApp {
 /** Test component that contains an MdSidenavLayout and one MdSidenav. */
 @Component({
   selector: 'test-app',
-  directives: [MD_SIDENAV_DIRECTIVES],
   template: `
     <md-sidenav-layout>
       <md-sidenav #sidenav align="start"
@@ -355,3 +364,10 @@ class BasicTestApp {
     this.closeCount++;
   }
 }
+
+
+const TEST_COMPONENTS = [
+  BasicTestApp,
+  SidenavLayoutTwoSidenavTestApp,
+  SidenavLayoutNoSidenavTestApp,
+];

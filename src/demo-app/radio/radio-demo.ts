@@ -13,7 +13,6 @@ import {
   templateUrl: 'radio-demo.html',
   styleUrls: ['radio-demo.css'],
   providers: [MdUniqueSelectionDispatcher],
-  directives: [MdCheckbox, MD_RADIO_DIRECTIVES, FORM_DIRECTIVES, NgFor]
 })
 export class RadioDemo {
   isDisabled: boolean = false;

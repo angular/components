@@ -9,7 +9,6 @@ import {MdIcon} from '@angular2-material/icon/icon';
   selector: 'list-demo',
   templateUrl: 'list-demo.html',
   styleUrls: ['list-demo.css'],
-  directives: [MD_LIST_DIRECTIVES, MdButton, MdIcon, NgIf, NgFor]
 })
 export class ListDemo {
   items: string[] = [

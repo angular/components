@@ -1,27 +1,28 @@
 import {
-  addProviders,
   async,
   inject,
+  TestComponentBuilder,
+  configureModule,
+  doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
-import {TestComponentBuilder} from '@angular/compiler/testing';
 import {Component} from '@angular/core';
-import {disableDeprecatedForms, provideForms} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {
-  MdInput,
-  MD_INPUT_DIRECTIVES,
-} from './input';
+import {MdInput, MdInputModule} from './input';
 
 
 describe('MdInput', function () {
   var builder: TestComponentBuilder;
 
-  beforeEach(() => {
-    addProviders([
-      disableDeprecatedForms(),
-      provideForms(),
-    ]);
-  });
+  beforeEach(async(() => {
+    configureModule({
+      imports: [MdInputModule, FormsModule],
+      declarations: TEST_COMPONENTS,
+      entryComponents: TEST_COMPONENTS,
+    });
+
+    doAsyncEntryPointCompilation();
+  }));
 
   beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
     builder = tcb;
@@ -653,8 +654,7 @@ describe('MdInput', function () {
   template: `
     <md-input type="number" [(ngModel)]="value">
     </md-input>
-  `,
-  directives: [MD_INPUT_DIRECTIVES]
+  `
 })
 class MdInputNumberTypeConservedTestComponent {
   value: number = 0;
@@ -665,8 +665,7 @@ class MdInputNumberTypeConservedTestComponent {
   template: `
     <md-input required placeholder="hello">
     </md-input>
-  `,
-  directives: [MD_INPUT_DIRECTIVES]
+  `
 })
 class MdInputPlaceholderRequiredTestComponent {
 }
@@ -677,8 +676,7 @@ class MdInputPlaceholderRequiredTestComponent {
     <md-input>
       <md-placeholder>{{placeholder}}</md-placeholder>
     </md-input>
-  `,
-  directives: [MD_INPUT_DIRECTIVES]
+  `
 })
 class MdInputPlaceholderElementTestComponent {
   placeholder: string = 'Default Placeholder';
@@ -689,8 +687,7 @@ class MdInputPlaceholderElementTestComponent {
   template: `
     <md-input [placeholder]="placeholder">
     </md-input>
-  `,
-  directives: [MD_INPUT_DIRECTIVES]
+  `
 })
 class MdInputPlaceholderAttrTestComponent {
   placeholder: string = '';
@@ -702,8 +699,7 @@ class MdInputPlaceholderAttrTestComponent {
     <md-input>
       <md-hint>{{label}}</md-hint>
     </md-input>
-  `,
-  directives: [MD_INPUT_DIRECTIVES]
+  `
 })
 class MdInputHintLabel2TestController {
   label: string = '';
@@ -714,8 +710,7 @@ class MdInputHintLabel2TestController {
   template: `
     <md-input [hintLabel]="label">
     </md-input>
-  `,
-  directives: [MD_INPUT_DIRECTIVES]
+  `
 })
 class MdInputHintLabelTestController {
   label: string = '';
@@ -726,8 +721,7 @@ class MdInputHintLabelTestController {
   template: `
     <md-input type="file">
     </md-input>
-  `,
-  directives: [MD_INPUT_DIRECTIVES]
+  `
 })
 class MdInputInvalidTypeTestController {
 }
@@ -738,8 +732,7 @@ class MdInputInvalidTypeTestController {
     <md-input placeholder="Hello">
       <md-placeholder>World</md-placeholder>
     </md-input>
-  `,
-  directives: [MD_INPUT_DIRECTIVES]
+  `
 })
 class MdInputInvalidPlaceholderTestController {
 }
@@ -750,8 +743,7 @@ class MdInputInvalidPlaceholderTestController {
     <md-input hintLabel="Hello">
       <md-hint>World</md-hint>
     </md-input>
-  `,
-  directives: [MD_INPUT_DIRECTIVES]
+  `
 })
 class MdInputInvalidHint2TestController {
 }
@@ -763,8 +755,7 @@ class MdInputInvalidHint2TestController {
       <md-hint>Hello</md-hint>
       <md-hint>World</md-hint>
     </md-input>
-  `,
-  directives: [MD_INPUT_DIRECTIVES]
+  `
 })
 class MdInputInvalidHintTestController {
 }
@@ -774,8 +765,7 @@ class MdInputInvalidHintTestController {
   template: `
     <md-input [(ngModel)]="model">
     </md-input>
-  `,
-  directives: [MdInput]
+  `
 })
 class MdInputBaseTestController {
   model: any = '';
@@ -786,8 +776,7 @@ class MdInputBaseTestController {
   template: `
     <md-input [aria-label]="ariaLabel" [aria-disabled]="ariaDisabled">
     </md-input>
-  `,
-  directives: [MdInput]
+  `
 })
 class MdInputAriaTestController {
   ariaLabel: string = 'label';
@@ -798,8 +787,7 @@ class MdInputAriaTestController {
   selector: 'test-input-controller',
   template: `
     <md-input (focus)="onFocus($event)" (blur)="onBlur($event)"></md-input>
-  `,
-  directives: [MdInput]
+  `
 })
 class MdInputWithBlurAndFocusEvents {
   onBlur(event: FocusEvent) {}
@@ -810,16 +798,34 @@ class MdInputWithBlurAndFocusEvents {
   selector: 'test-input-controller',
   template: `
     <md-input></md-input>
-  `,
-  directives: [MdInput]
+  `
 })
-class MdInputOptionalAttributeController {}
+class MdInputOptionalAttributeController {
+  disabled: boolean = false;
+}
 
 @Component({
   selector: 'test-input-controller',
   template: `
     <md-input name="some-name"></md-input>
-  `,
-  directives: [MdInput]
+  `
 })
 class MdInputWithNameTestController {}
+
+const TEST_COMPONENTS = [
+  MdInputNumberTypeConservedTestComponent,
+  MdInputPlaceholderRequiredTestComponent,
+  MdInputPlaceholderElementTestComponent,
+  MdInputPlaceholderAttrTestComponent,
+  MdInputHintLabel2TestController,
+  MdInputHintLabelTestController,
+  MdInputInvalidTypeTestController,
+  MdInputInvalidPlaceholderTestController,
+  MdInputInvalidHint2TestController,
+  MdInputInvalidHintTestController,
+  MdInputBaseTestController,
+  MdInputAriaTestController,
+  MdInputWithBlurAndFocusEvents,
+  MdInputOptionalAttributeController,
+  MdInputWithNameTestController,
+];

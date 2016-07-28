@@ -1,11 +1,25 @@
-import {inject} from '@angular/core/testing';
-import {TestComponentBuilder} from '@angular/compiler/testing';
+import {
+  inject,
+  TestComponentBuilder,
+  configureModule,
+  doAsyncEntryPointCompilation,
+  async,
+} from '@angular/core/testing';
 import {Component} from '@angular/core';
-
-import {MD_MENU_DIRECTIVES} from './menu';
+import {MD_MENU_DIRECTIVES, MdMenuModule} from './menu';
 
 describe('MdMenu', () => {
   let builder: TestComponentBuilder;
+
+  beforeEach(async(() => {
+    configureModule({
+      imports: [MdMenuModule],
+      declarations: [TestList],
+      entryComponents: [TestList],
+    });
+
+    doAsyncEntryPointCompilation();
+  }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
     builder = tcb;
@@ -23,7 +37,6 @@ describe('MdMenu', () => {
 
 @Component({
   selector: 'test-menu',
-  template: ``,
-  directives: [MD_MENU_DIRECTIVES]
+  template: ``
 })
 class TestList {}

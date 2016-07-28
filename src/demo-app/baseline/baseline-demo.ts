@@ -18,15 +18,6 @@ import {
   templateUrl: 'baseline-demo.html',
   styleUrls: ['baseline-demo.css'],
   providers: [MdUniqueSelectionDispatcher],
-  directives: [
-    MD_BUTTON_DIRECTIVES,
-    MD_CARD_DIRECTIVES,
-    MD_CHECKBOX_DIRECTIVES,
-    MD_RADIO_DIRECTIVES,
-    MD_INPUT_DIRECTIVES,
-    MdIcon,
-    MdToolbar
-  ]
 })
 export class BaselineDemo {
   name: string;

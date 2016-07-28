@@ -16,16 +16,6 @@ let max = 5;
   selector: 'input-demo',
   templateUrl: 'input-demo.html',
   styleUrls: ['input-demo.css'],
-  directives: [
-    MdCard,
-    MdCheckbox,
-    MdButton,
-    MdIcon,
-    MdToolbar,
-    MD_INPUT_DIRECTIVES,
-    FORM_DIRECTIVES,
-    NgFor,
-  ]
 })
 export class InputDemo {
   dividerColor: boolean;

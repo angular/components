@@ -18,7 +18,6 @@ export interface Task {
     }
   `],
   templateUrl: 'nested-checklist.html',
-  directives: [MdCheckbox, NgFor]
 })
 export class MdCheckboxDemoNestedChecklist {
   tasks: Task[] = [
@@ -64,7 +63,6 @@ export class MdCheckboxDemoNestedChecklist {
   selector: 'md-checkbox-demo',
   templateUrl: 'checkbox-demo.html',
   styleUrls: ['checkbox-demo.css'],
-  directives: [MdCheckbox, MdCheckboxDemoNestedChecklist, FORM_DIRECTIVES]
 })
 export class CheckboxDemo {
   isIndeterminate: boolean = false;

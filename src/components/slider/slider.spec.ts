@@ -2,11 +2,14 @@ import {
     addProviders,
     inject,
     async,
+    TestComponentBuilder,
+    ComponentFixture,
+    configureModule,
+    doAsyncEntryPointCompilation
 } from '@angular/core/testing';
-import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {Component, DebugElement, ViewEncapsulation} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdSlider, MD_SLIDER_DIRECTIVES} from './slider';
+import {MdSlider, MdSliderModule} from './slider';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {TestGestureConfig} from './test-gesture-config';
 
@@ -14,14 +17,22 @@ describe('MdSlider', () => {
   let builder: TestComponentBuilder;
   let gestureConfig: TestGestureConfig;
 
-  beforeEach(() => {
+  beforeEach(async(() => {
+    configureModule({
+      imports: [MdSliderModule],
+      declarations: TEST_COMPONENTS,
+      entryComponents: TEST_COMPONENTS,
+    });
+
     addProviders([
       {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
         gestureConfig = new TestGestureConfig();
         return gestureConfig;
       }}
     ]);
-  });
+
+    doAsyncEntryPointCompilation();
+  }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
     builder = tcb;
@@ -423,7 +434,6 @@ describe('MdSlider', () => {
 
 // The transition has to be removed in order to test the updated positions without setTimeout.
 @Component({
-  directives: [MD_SLIDER_DIRECTIVES],
   template: `<md-slider></md-slider>`,
   styles: [`
     .md-slider-track-fill, .md-slider-thumb-position {
@@ -435,13 +445,11 @@ describe('MdSlider', () => {
 class StandardSlider { }
 
 @Component({
-  directives: [MD_SLIDER_DIRECTIVES],
   template: `<md-slider disabled></md-slider>`
 })
 class DisabledSlider { }
 
 @Component({
-  directives: [MD_SLIDER_DIRECTIVES],
   template: `<md-slider min="4" max="6"></md-slider>`,
   styles: [`
     .md-slider-track-fill, .md-slider-thumb-position {
@@ -453,13 +461,11 @@ class DisabledSlider { }
 class SliderWithMinAndMax { }
 
 @Component({
-  directives: [MD_SLIDER_DIRECTIVES],
   template: `<md-slider value="26"></md-slider>`
 })
 class SliderWithValue { }
 
 @Component({
-  directives: [MD_SLIDER_DIRECTIVES],
   template: `<md-slider step="25"></md-slider>`,
   styles: [`
     .md-slider-track-fill, .md-slider-thumb-position {
@@ -469,6 +475,14 @@ class SliderWithValue { }
   encapsulation: ViewEncapsulation.None
 })
 class SliderWithStep { }
+
+const TEST_COMPONENTS = [
+  StandardSlider,
+  DisabledSlider,
+  SliderWithMinAndMax,
+  SliderWithValue,
+  SliderWithStep,
+];
 
 /**
  * Dispatches a click event from an element.

@@ -4,8 +4,9 @@ import {
     fakeAsync,
     flushMicrotasks,
     addProviders,
+    TestComponentBuilder,
+    ComponentFixture,
 } from '@angular/core/testing';
-import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {Component, ViewChild} from '@angular/core';
 import {ConnectedOverlayDirective, OverlayOrigin} from './overlay-directives';
 import {Overlay} from './overlay';
@@ -78,7 +79,6 @@ describe('Overlay directives', () => {
   <template connected-overlay [origin]="trigger">
     <p>Menu content</p>
   </template>`,
-  directives: [ConnectedOverlayDirective, OverlayOrigin],
 })
 class ConnectedOverlayDirectiveTest {
   @ViewChild(ConnectedOverlayDirective) connectedOverlayDirective: ConnectedOverlayDirective;

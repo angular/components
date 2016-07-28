@@ -9,7 +9,6 @@ import {MdProgressBar} from '@angular2-material/progress-bar/progress-bar';
   selector: 'progress-bar-demo',
   templateUrl: 'progress-bar-demo.html',
   styleUrls: ['progress-bar-demo.css'],
-  directives: [MdProgressBar, MdButton]
 })
 export class ProgressBarDemo {
   determinateProgressValue: number = 30;

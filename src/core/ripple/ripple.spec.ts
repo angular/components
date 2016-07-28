@@ -1,15 +1,12 @@
 import {
-    describe,
-    it,
-    beforeEach,
-    afterEach,
+    configureModule,
     inject,
     async,
-    expect,
+    TestComponentBuilder,
+    ComponentFixture,
 } from '@angular/core/testing';
-import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {Component, ViewChild} from '@angular/core';
-import {MdRipple} from './ripple';
+import {MdRipple, MdRippleModule} from './ripple';
 
 /** Creates a DOM event to indicate that a CSS transition for the given property ended. */
 const createTransitionEndEvent = (propertyName: string) => {
@@ -69,6 +66,14 @@ describe('MdRipple', () => {
   let rippleElement: HTMLElement;
   let rippleBackground: Element;
   let originalBodyMargin: string;
+
+  beforeEach(async(() => {
+    configureModule({
+      imports: [MdRippleModule],
+      declarations: TEST_COMPONENTS,
+      entryComponents: TEST_COMPONENTS,
+    });
+  }));
 
   beforeEach(() => {
     // Set body margin to 0 during tests so it doesn't mess up position calculations.
@@ -306,7 +311,6 @@ describe('MdRipple', () => {
 });
 
 @Component({
-  directives: [MdRipple],
   template: `
     <div id="container" md-ripple style="position: relative; width:300px; height:200px;">
     </div>
@@ -317,7 +321,6 @@ class BasicRippleContainer {
 }
 
 @Component({
-  directives: [MdRipple],
   template: `
     <div id="container" style="position: relative; width:300px; height:200px;"
       md-ripple
@@ -340,3 +343,5 @@ class RippleContainerWithInputBindings {
   backgroundColor = '';
   @ViewChild(MdRipple) ripple: MdRipple;
 }
+
+const TEST_COMPONENTS = [BasicRippleContainer, RippleContainerWithInputBindings];

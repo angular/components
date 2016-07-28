@@ -25,7 +25,6 @@ import {
   selector: 'overlay-demo',
   templateUrl: 'overlay-demo.html',
   styleUrls: ['overlay-demo.css'],
-  directives: [PORTAL_DIRECTIVES, OVERLAY_DIRECTIVES, NgIf],
   providers: [OVERLAY_PROVIDERS],
   encapsulation: ViewEncapsulation.None,
 })
@@ -91,7 +90,7 @@ export class OverlayDemo {
   selector: 'rotini-panel',
   template: '<p class="demo-rotini">Rotini {{value}}</p>'
 })
-class RotiniPanel {
+export class RotiniPanel {
   value: number = 9000;
 }
 
@@ -100,6 +99,6 @@ class RotiniPanel {
   selector: 'spagetti-panel',
   template: '<div class="demo-spagetti">Spagetti {{value}}</div>'
 })
-class SpagettiPanel {
+export class SpagettiPanel {
   value: string = 'Omega';
 }

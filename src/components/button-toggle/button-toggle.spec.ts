@@ -1,20 +1,22 @@
 import {
-  addProviders,
   inject,
   async,
   fakeAsync,
   tick,
+  TestComponentBuilder,
+  ComponentFixture,
+  doAsyncEntryPointCompilation,
+  configureModule,
 } from '@angular/core/testing';
-import {NgControl, disableDeprecatedForms, provideForms} from '@angular/forms';
-import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
+import {NgControl, FormsModule} from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
-  MD_BUTTON_TOGGLE_DIRECTIVES,
-  MdButtonToggleGroup,
-  MdButtonToggle,
-  MdButtonToggleGroupMultiple,
-  MdButtonToggleChange,
+    MD_BUTTON_TOGGLE_DIRECTIVES,
+    MdButtonToggleGroup,
+    MdButtonToggle,
+    MdButtonToggleGroupMultiple,
+    MdButtonToggleChange, MdButtonToggleModule,
 } from './button-toggle';
 import {
   MdUniqueSelectionDispatcher
@@ -25,16 +27,15 @@ describe('MdButtonToggle', () => {
   let builder: TestComponentBuilder;
   let dispatcher: MdUniqueSelectionDispatcher;
 
-  beforeEach(() => {
-    addProviders([
-      disableDeprecatedForms(),
-      provideForms(),
-      {provide: MdUniqueSelectionDispatcher, useFactory: () => {
-        dispatcher = new MdUniqueSelectionDispatcher();
-        return dispatcher;
-      }}
-    ]);
-  });
+  beforeEach(async(() => {
+    configureModule({
+      imports: [MdButtonToggleModule, FormsModule],
+      declarations: TEST_COMPONENTS,
+      entryComponents: TEST_COMPONENTS,
+    });
+
+    doAsyncEntryPointCompilation();
+  }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
     builder = tcb;
@@ -439,7 +440,6 @@ describe('MdButtonToggle', () => {
 
 
 @Component({
-  directives: [MD_BUTTON_TOGGLE_DIRECTIVES],
   template: `
   <md-button-toggle-group [disabled]="isGroupDisabled" [value]="groupValue">
     <md-button-toggle value="test1">Test1</md-button-toggle>
@@ -454,7 +454,6 @@ class ButtonTogglesInsideButtonToggleGroup {
 }
 
 @Component({
-  directives: [MD_BUTTON_TOGGLE_DIRECTIVES],
   template: `
   <md-button-toggle-group [(ngModel)]="modelValue" (change)="lastEvent = $event">
     <md-button-toggle *ngFor="let option of options" [value]="option.value">
@@ -474,7 +473,6 @@ class ButtonToggleGroupWithNgModel {
 }
 
 @Component({
-  directives: [MD_BUTTON_TOGGLE_DIRECTIVES],
   template: `
   <md-button-toggle-group [disabled]="isGroupDisabled" multiple>
     <md-button-toggle value="eggs">Eggs</md-button-toggle>
@@ -488,9 +486,15 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
 }
 
 @Component({
-  directives: [MD_BUTTON_TOGGLE_DIRECTIVES],
   template: `
   <md-button-toggle>Yes</md-button-toggle>
   `
 })
 class StandaloneButtonToggle { }
+
+const TEST_COMPONENTS = [
+  ButtonTogglesInsideButtonToggleGroup,
+  ButtonToggleGroupWithNgModel,
+  ButtonTogglesInsideButtonToggleGroupMultiple,
+  StandaloneButtonToggle,
+];

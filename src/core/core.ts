@@ -12,7 +12,8 @@ export {
 export {
   PortalHostDirective,
   TemplatePortalDirective,
-  PORTAL_DIRECTIVES
+  PORTAL_DIRECTIVES,
+  PortalModule,
 } from './portal/portal-directives';
 export {DomPortalHost} from './portal/dom-portal-host';
 
@@ -24,8 +25,13 @@ export {OverlayState} from './overlay/overlay-state';
 export {
   ConnectedOverlayDirective,
   OverlayOrigin,
-  OVERLAY_DIRECTIVES
+  OVERLAY_DIRECTIVES,
+  OverlayModule,
 } from './overlay/overlay-directives';
+export {
+  OverlayConnectionPosition,
+  OriginConnectionPosition
+} from './overlay/position/connected-position';
 
 // Gestures
 export {MdGestureConfig} from './gestures/MdGestureConfig';

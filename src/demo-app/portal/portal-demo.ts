@@ -13,7 +13,6 @@ import {
   selector: 'portal-demo',
   templateUrl: 'portal-demo.html',
   styleUrls: ['portal-demo.css'],
-  directives: [TemplatePortalDirective, PortalHostDirective, NgFor]
 })
 export class PortalDemo {
   @ViewChildren(TemplatePortalDirective) templatePortals: QueryList<Portal<any>>;

@@ -1,13 +1,10 @@
 import {
-    it,
-    describe,
-    expect,
-    beforeEach,
     inject,
     async,
-    beforeEachProviders,
+    addProviders,
+    TestComponentBuilder,
+    ComponentFixture,
 } from '@angular/core/testing';
-import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MD_TOOLTIP_DIRECTIVES, TooltipPosition, MdTooltip} from
@@ -19,17 +16,20 @@ describe('MdTooltip', () => {
   let builder: TestComponentBuilder;
   let overlayContainerElement: HTMLElement;
 
-  beforeEachProviders(() => [
-    OVERLAY_PROVIDERS,
-    {provide: OverlayContainer, useFactory: () => {
-      return {
-        getContainerElement: () => {
-          overlayContainerElement = document.createElement('div');
-          return overlayContainerElement;
-        }
-      };
-    }},
-  ]);
+  beforeEach(() => {
+    addProviders([
+      OVERLAY_PROVIDERS,
+      {provide: OverlayContainer, useFactory: () => {
+        return {
+          getContainerElement: () => {
+            if (overlayContainerElement) { return overlayContainerElement; }
+            overlayContainerElement = document.createElement('div');
+            return overlayContainerElement;
+          }
+        };
+      }},
+    ]);
+  });
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
     builder = tcb;
@@ -96,7 +96,6 @@ describe('MdTooltip', () => {
 
 @Component({
   selector: 'app',
-  directives: [MD_TOOLTIP_DIRECTIVES],
   template: `<button md-tooltip="some message" [tooltip-position]="position">Button</button>`
 })
 class BasicTooltipDemo {

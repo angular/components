@@ -5,6 +5,5 @@ import {MD_SLIDER_DIRECTIVES} from '@angular2-material/slider/slider';
   moduleId: module.id,
   selector: 'slider-demo',
   templateUrl: 'slider-demo.html',
-  directives: [MD_SLIDER_DIRECTIVES],
 })
 export class SliderDemo { }

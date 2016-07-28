@@ -11,7 +11,6 @@ import {Observable} from 'rxjs/Observable';
   selector: 'tab-group-demo',
   templateUrl: 'tab-group-demo.html',
   styleUrls: ['tab-group-demo.css'],
-  directives: [MD_TABS_DIRECTIVES, MdToolbar, MdInput, NgIf, FORM_DIRECTIVES, NgFor],
   pipes: [AsyncPipe],
   encapsulation: ViewEncapsulation.None,
 })

@@ -11,8 +11,6 @@ import {MD_BUTTON_DIRECTIVES} from '@angular2-material/button/button';
   selector: 'tooltip-demo',
   templateUrl: 'tooltip-demo.html',
   styleUrls: ['tooltip-demo.css'],
-  directives: [MD_TOOLTIP_DIRECTIVES, MD_RADIO_DIRECTIVES, MD_BUTTON_DIRECTIVES],
-  providers: [OVERLAY_PROVIDERS, MdUniqueSelectionDispatcher],
 })
 export class TooltipDemo {
   position: TooltipPosition = 'below';

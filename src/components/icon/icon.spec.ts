@@ -1,12 +1,17 @@
-import {addProviders, inject, async} from '@angular/core/testing';
-import {TestComponentBuilder} from '@angular/compiler/testing';
-import {HTTP_PROVIDERS, XHRBackend} from '@angular/http';
+import {
+  addProviders,
+  inject,
+  async,
+  TestComponentBuilder,
+  configureModule,
+  doAsyncEntryPointCompilation,
+} from '@angular/core/testing';
+import {XHRBackend} from '@angular/http';
 import {MockBackend} from '@angular/http/testing';
 import {Component} from '@angular/core';
-import {MdIcon} from './icon';
+import {MdIcon, MdIconModule} from './icon';
 import {MdIconRegistry} from './icon-registry';
 import {getFakeSvgHttpResponse} from './fake-svgs';
-
 
 
 /** Returns the CSS classes assigned to an element as a sorted array. */
@@ -35,15 +40,20 @@ const verifyPathChildElement = (element: Element, attributeValue: string) => {
 
 describe('MdIcon', () => {
 
-  beforeEach(() => {
+  beforeEach(async(() => {
+    configureModule({
+      imports: [MdIconModule],
+      declarations: TEST_COMPONENTS,
+      entryComponents: TEST_COMPONENTS,
+    });
+
     addProviders([
-      MdIconRegistry,
-      HTTP_PROVIDERS,
       MockBackend,
       {provide: XHRBackend, useExisting: MockBackend},
     ]);
-  });
 
+    doAsyncEntryPointCompilation();
+  }));
 
   let builder: TestComponentBuilder;
   let mdIconRegistry: MdIconRegistry;
@@ -394,7 +404,6 @@ describe('MdIcon', () => {
 @Component({
   selector: 'test-app',
   template: `<md-icon>{{iconName}}</md-icon>`,
-  directives: [MdIcon],
 })
 class MdIconLigatureTestApp {
   ariaLabel: string = null;
@@ -404,7 +413,6 @@ class MdIconLigatureTestApp {
 @Component({
   selector: 'test-app',
   template: `<md-icon [aria-label]="ariaLabel" [alt]="altText">{{iconName}}</md-icon>`,
-  directives: [MdIcon],
 })
 class MdIconLigatureWithAriaBindingTestApp {
   ariaLabel: string = null;
@@ -416,7 +424,6 @@ class MdIconLigatureWithAriaBindingTestApp {
   template: `
       <md-icon [fontSet]="fontSet" [fontIcon]="fontIcon" [aria-label]="ariaLabel"></md-icon>
   `,
-  directives: [MdIcon],
 })
 class MdIconCustomFontCssTestApp {
   ariaLabel: string = null;
@@ -427,7 +434,6 @@ class MdIconCustomFontCssTestApp {
 @Component({
   selector: 'test-app',
   template: `<md-icon [svgSrc]="iconUrl" [aria-label]="ariaLabel"></md-icon>`,
-  directives: [MdIcon],
 })
 class MdIconFromSvgUrlTestApp {
   ariaLabel: string = null;
@@ -437,9 +443,16 @@ class MdIconFromSvgUrlTestApp {
 @Component({
   selector: 'test-app',
   template: `<md-icon [svgIcon]="iconName" [aria-label]="ariaLabel"></md-icon>`,
-  directives: [MdIcon],
 })
 class MdIconFromSvgNameTestApp {
   ariaLabel: string = null;
   iconName = '';
 }
+
+const TEST_COMPONENTS = [
+  MdIconLigatureTestApp ,
+  MdIconLigatureWithAriaBindingTestApp,
+  MdIconCustomFontCssTestApp,
+  MdIconFromSvgUrlTestApp,
+  MdIconFromSvgNameTestApp,
+];

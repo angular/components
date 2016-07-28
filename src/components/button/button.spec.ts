@@ -1,12 +1,27 @@
-import {inject} from '@angular/core/testing';
-import {TestComponentBuilder} from '@angular/compiler/testing';
+import {
+  inject,
+  TestComponentBuilder,
+  configureModule,
+  doAsyncEntryPointCompilation,
+  async,
+} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdButton, MdAnchor} from './button';
+import {MdButtonModule} from './button';
 
 
 describe('MdButton', () => {
   let builder: TestComponentBuilder;
+
+  beforeEach(async(() => {
+    configureModule({
+      imports: [MdButtonModule],
+      declarations: [TestApp],
+      entryComponents: [TestApp],
+    });
+
+    doAsyncEntryPointCompilation();
+  }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
     builder = tcb;
@@ -141,8 +156,7 @@ describe('MdButton', () => {
       Go
     </button>
     <a href="http://www.google.com" md-button [disabled]="isDisabled" [color]="buttonColor">Link</a>
-  `,
-  directives: [MdButton, MdAnchor]
+  `
 })
 class TestApp {
   clickCount: number = 0;

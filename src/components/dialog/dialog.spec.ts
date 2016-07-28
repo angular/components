@@ -3,8 +3,11 @@ import {
   fakeAsync,
   async,
   addProviders,
+  TestComponentBuilder,
+  ComponentFixture,
+  configureModule,
+  doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
-import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {
   Component,
   Directive,
@@ -12,7 +15,7 @@ import {
   ViewContainerRef,
   ChangeDetectorRef,
 } from '@angular/core';
-import {MdDialog} from './dialog';
+import {MdDialog, MdDialogModule} from './dialog';
 import {OVERLAY_PROVIDERS} from '@angular2-material/core/overlay/overlay';
 import {OverlayContainer} from '@angular2-material/core/overlay/overlay-container';
 import {MdDialogConfig} from './dialog-config';
@@ -27,6 +30,29 @@ describe('MdDialog', () => {
 
   let testViewContainerRef: ViewContainerRef;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
+
+  beforeEach(async(() => {
+    configureModule({
+      imports: [MdDialogModule],
+      declarations: TEST_DIRECTIVES,
+      entryComponents: TEST_DIRECTIVES,
+    });
+
+    addProviders([
+      {provide: OverlayContainer, useFactory: () => {
+        return {
+          getContainerElement: () => {
+            if (overlayContainerElement) { return overlayContainerElement; }
+            overlayContainerElement = document.createElement('div');
+            return overlayContainerElement;
+          }
+        };
+      }}
+    ])
+
+    doAsyncEntryPointCompilation();
+  }));
+
 
   beforeEach(() => {
     addProviders([
@@ -133,7 +159,6 @@ class DirectiveWithViewContainer {
 @Component({
   selector: 'arbitrary-component',
   template: `<dir-with-view-container></dir-with-view-container>`,
-  directives: [DirectiveWithViewContainer],
 })
 class ComponentWithChildViewContainer {
   @ViewChild(DirectiveWithViewContainer) childWithViewContainer: DirectiveWithViewContainer;
@@ -153,3 +178,6 @@ class ComponentWithChildViewContainer {
 class PizzaMsg {
   constructor(public dialogRef: MdDialogRef<PizzaMsg>) { }
 }
+
+
+const TEST_DIRECTIVES = [PizzaMsg, ComponentWithChildViewContainer, DirectiveWithViewContainer];

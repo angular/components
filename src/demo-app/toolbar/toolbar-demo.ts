@@ -7,7 +7,6 @@ import {MdToolbar} from '@angular2-material/toolbar/toolbar';
   selector: 'toolbar-demo',
   templateUrl: 'toolbar-demo.html',
   styleUrls: ['toolbar-demo.css'],
-  directives: [MdToolbar, MdIcon]
 })
 export class ToolbarDemo {
 

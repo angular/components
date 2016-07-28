@@ -18,7 +18,6 @@ import {MdDialogContentAlreadyAttachedError} from './dialog-errors';
   selector: 'md-dialog-container',
   templateUrl: 'dialog-container.html',
   styleUrls: ['dialog-container.css'],
-  directives: [PortalHostDirective],
   host: {
     'class': 'md-dialog-container',
     '[attr.role]': 'dialogConfig?.role'

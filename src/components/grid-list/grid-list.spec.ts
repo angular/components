@@ -1,13 +1,27 @@
-import {inject, async} from '@angular/core/testing';
-import {TestComponentBuilder} from '@angular/compiler/testing';
+import {
+  inject,
+  async,
+  TestComponentBuilder,
+  configureModule,
+  doAsyncEntryPointCompilation,
+} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-
-import {MD_GRID_LIST_DIRECTIVES, MdGridList} from './grid-list';
+import {MD_GRID_LIST_DIRECTIVES, MdGridList, MdGridListModule} from './grid-list';
 import {MdGridTile, MdGridTileText} from './grid-tile';
 
 describe('MdGridList', () => {
   let builder: TestComponentBuilder;
+
+  beforeEach(async(() => {
+    configureModule({
+      imports: [MdGridListModule],
+      declarations: [TestGridList],
+      entryComponents: [TestGridList],
+    });
+
+    doAsyncEntryPointCompilation();
+  }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
     builder = tcb;
@@ -379,8 +393,7 @@ describe('MdGridList', () => {
 
 @Component({
   selector: 'test-grid-list',
-  template: ``,
-  directives: [MD_GRID_LIST_DIRECTIVES]
+  template: ``
 })
 class TestGridList {
   tiles: any[];

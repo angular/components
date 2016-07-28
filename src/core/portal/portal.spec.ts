@@ -1,9 +1,10 @@
 import {
   inject,
   fakeAsync,
-  flushMicrotasks
+  flushMicrotasks,
+  TestComponentBuilder,
+  ComponentFixture,
 } from '@angular/core/testing';
-import {TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import {
   Component,
   ViewChildren,
@@ -413,9 +414,7 @@ class ArbitraryViewContainerRefComponent {
 
   <div *portal>Pie</div>
 
-  <template portal> {{fruit}} </template>
-  `,
-  directives: [PortalHostDirective, TemplatePortalDirective],
+  <template portal> {{fruit}} </template>`,
 })
 class PortalTestApp {
   @ViewChildren(TemplatePortalDirective) portals: QueryList<TemplatePortalDirective>;
