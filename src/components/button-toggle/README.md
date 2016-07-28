@@ -111,7 +111,7 @@ the entire group. Adding `disabled` to a single toggle will disable that toggle.
 
 Output:
 
-![Disabled Toggle Button Example](https://material.angularjs.org/material2_assets/button-toggle/disabled-toggle.png)
+![Disabled Toggle Buttons Example](https://material.angularjs.org/material2_assets/button-toggle/disabled-toggles.png)
 
 ## `<md-button-toggle>`
 
