@@ -2,8 +2,8 @@
 
 `MdButtonToggle` is a group of buttons that can be toggled.
 There are two modes, `multiple` and `exclusive`.
-When in 'multiple' mode, multiple buttons can be selected at once.
-When in 'exclusive'mode, only one button can be selected at a time.
+When in 'exclusive'mode, only one button can be selected at a time (like radio buttons).
+When in 'multiple' mode, multiple buttons can be selected at once (like checkboxes).
 You can read more about button toggles in the
 [Material Design spec](https://material.google.com/components/buttons.html#buttons-toggle-buttons).
 
@@ -12,13 +12,13 @@ You can read more about button toggles in the
 ### Setup
 
 Importing the symbols:
-```typescript
+```ts
 import { MdUniqueSelectionDispatcher } from '@angular2-material/core';
 import { MD_BUTTON_TOGGLE_DIRECTIVES } from '@angular2-material/button-toggle'
 ```
 
 Adding providers and directives:
-```typescript
+```ts
 @Component({
   ...
   directives: [MD_BUTTON_TOGGLE_DIRECTIVES],
