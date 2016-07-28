@@ -157,7 +157,7 @@ export const MD_GRID_LIST_DIRECTIVES: any[] = [MdGridList, MdGridTile, MdGridTil
 
 @NgModule({
   imports: [MdLineModule],
-  exports: MD_GRID_LIST_DIRECTIVES,
+  exports: [MD_GRID_LIST_DIRECTIVES, MdLineModule],
   declarations: MD_GRID_LIST_DIRECTIVES,
 })
 export class MdGridListModule { }

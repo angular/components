@@ -70,7 +70,7 @@ export const MD_LIST_DIRECTIVES = [MdList, MdListItem, MdListAvatar];
 
 @NgModule({
   imports: [MdLineModule],
-  exports: MD_LIST_DIRECTIVES,
+  exports: [MD_LIST_DIRECTIVES, MdLineModule],
   declarations: MD_LIST_DIRECTIVES,
 })
 export class MdListModule { }
