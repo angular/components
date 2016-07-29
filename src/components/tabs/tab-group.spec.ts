@@ -13,6 +13,7 @@ import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 
+
 describe('MdTabGroup', () => {
   let builder: TestComponentBuilder;
 
@@ -39,11 +40,11 @@ describe('MdTabGroup', () => {
       });
     }));
 
-    it('should default to the first tab', () => {
+    it('should default to the first tab', async(() => {
       checkSelectedIndex(1, fixture);
-    });
+    }));
 
-    it('should change selected index on click', () => {
+    it('should change selected index on click', async(() => {
       let component = fixture.debugElement.componentInstance;
       component.selectedIndex = 0;
       checkSelectedIndex(0, fixture);
@@ -57,7 +58,7 @@ describe('MdTabGroup', () => {
       tabLabel = fixture.debugElement.queryAll(By.css('.md-tab-label'))[2];
       tabLabel.nativeElement.click();
       checkSelectedIndex(2, fixture);
-    });
+    }));
 
     it('should support two-way binding for selectedIndex', async(() => {
       let component = fixture.componentInstance;
@@ -156,7 +157,6 @@ describe('MdTabGroup', () => {
       builder.createAsync(AsyncTabsTestApp).then(f => fixture = f);
     }));
 
-    // HERE
     it('should show tabs when they are available', async(() => {
       let labels = fixture.debugElement.queryAll(By.css('.md-tab-label'));
 
@@ -246,7 +246,8 @@ class AsyncTabsTestApp {
 
   tabs: Observable<any>;
 
-  constructor() {
+  // Use ngOnInit because there is some issue with scheduling the async task in the constructor.
+  ngOnInit() {
     this.tabs = Observable.create((observer: any) => {
       requestAnimationFrame(() => observer.next(this._tabs));
     });
