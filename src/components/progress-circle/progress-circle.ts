@@ -170,10 +170,14 @@ export class MdProgressCircle implements OnDestroy {
         // Prevent overlapping animations by checking if a new animation has been called for and
         // if the animation has lasted long than the animation duration.
         if (id === this._lastAnimationId && elapsedTime < duration) {
-          requestAnimationFrame(animation);
+          if (typeof requestAnimationFrame === 'function') {
+            requestAnimationFrame(animation);  
+          }
         }
       };
-      requestAnimationFrame(animation);
+      if (typeof requestAnimationFrame === 'function') {
+        requestAnimationFrame(animation);  
+      }
     }
   }
 
