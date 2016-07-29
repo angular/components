@@ -2,8 +2,8 @@ import {
   inject,
   async,
   TestComponentBuilder,
-  configureModule,
-  doAsyncEntryPointCompilation,
+  TestBed,
+  //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -14,13 +14,13 @@ describe('MdGridList', () => {
   let builder: TestComponentBuilder;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdGridListModule],
       declarations: [TestGridList],
-      entryComponents: [TestGridList],
+      //entryComponents: [TestGridList],
     });
 
-    doAsyncEntryPointCompilation();
+    //doAsyncEntryPointCompilation();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

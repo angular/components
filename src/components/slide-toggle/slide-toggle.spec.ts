@@ -3,8 +3,8 @@ import {
   async,
   TestComponentBuilder,
   ComponentFixture,
-  configureModule,
-  doAsyncEntryPointCompilation,
+  TestBed,
+  //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Component} from '@angular/core';
@@ -15,13 +15,13 @@ describe('MdSlideToggle', () => {
   let builder: TestComponentBuilder;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdSlideToggleModule, FormsModule],
       declarations: [SlideToggleTestApp],
-      entryComponents: [SlideToggleTestApp],
+      //entryComponents: [SlideToggleTestApp],
     });
 
-    doAsyncEntryPointCompilation();
+    //doAsyncEntryPointCompilation();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

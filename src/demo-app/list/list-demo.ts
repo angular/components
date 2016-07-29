@@ -5,7 +5,7 @@ import {MD_LIST_DIRECTIVES} from '@angular2-material/list/list';
 import {MdIcon} from '@angular2-material/icon/icon';
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'list-demo',
   templateUrl: 'list-demo.html',
   styleUrls: ['list-demo.css'],

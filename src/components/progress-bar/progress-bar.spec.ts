@@ -1,8 +1,8 @@
 import {
   inject,
   TestComponentBuilder,
-  configureModule,
-  doAsyncEntryPointCompilation,
+  TestBed,
+  //doAsyncEntryPointCompilation,
   async,
 } from '@angular/core/testing';
 import {Component} from '@angular/core';
@@ -14,13 +14,13 @@ describe('MdProgressBar', () => {
   let builder: TestComponentBuilder;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdProgressBarModule],
       declarations: [TestApp],
-      entryComponents: [TestApp],
+      //entryComponents: [TestApp],
     });
 
-    doAsyncEntryPointCompilation();
+    //doAsyncEntryPointCompilation();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

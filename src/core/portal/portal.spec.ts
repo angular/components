@@ -4,7 +4,7 @@ import {
   flushMicrotasks,
   TestComponentBuilder,
   ComponentFixture,
-  configureModule,
+  TestBed,
   async,
 } from '@angular/core/testing';
 import {
@@ -25,10 +25,10 @@ describe('Portals', () => {
   let builder: TestComponentBuilder;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [PortalModule],
       declarations: TEST_COMPONENTS,
-      entryComponents: TEST_COMPONENTS,
+      //entryComponents: TEST_COMPONENTS,
     });
   }));
 

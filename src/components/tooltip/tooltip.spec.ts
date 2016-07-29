@@ -4,8 +4,8 @@ import {
     addProviders,
     TestComponentBuilder,
     ComponentFixture,
-    configureModule,
-    doAsyncEntryPointCompilation,
+    TestBed,
+    //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -20,10 +20,10 @@ describe('MdTooltip', () => {
   let overlayContainerElement: HTMLElement;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdTooltipModule],
       declarations: [BasicTooltipDemo],
-      entryComponents: [BasicTooltipDemo],
+      //entryComponents: [BasicTooltipDemo],
     });
 
     addProviders([
@@ -33,7 +33,7 @@ describe('MdTooltip', () => {
       }}
     ]);
 
-    doAsyncEntryPointCompilation();
+    //doAsyncEntryPointCompilation();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

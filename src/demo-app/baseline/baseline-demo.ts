@@ -13,7 +13,7 @@ import {
 
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'baseline-demo',
   templateUrl: 'baseline-demo.html',
   styleUrls: ['baseline-demo.css'],

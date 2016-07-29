@@ -2,8 +2,8 @@ import {
   inject,
   async,
   TestComponentBuilder,
-  configureModule,
-  doAsyncEntryPointCompilation,
+  TestBed,
+  //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -13,13 +13,13 @@ describe('MdList', () => {
   let builder: TestComponentBuilder;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdListModule],
       declarations: [TestList],
-      entryComponents: [TestList],
+      //entryComponents: [TestList],
     });
 
-    doAsyncEntryPointCompilation();
+    //doAsyncEntryPointCompilation();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

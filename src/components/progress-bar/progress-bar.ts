@@ -15,7 +15,7 @@ import {CommonModule} from '@angular/common';
  * <md-progress-bar> component.
  */
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'md-progress-bar',
   host: {
     'role': 'progressbar',

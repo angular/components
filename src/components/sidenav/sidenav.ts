@@ -222,7 +222,7 @@ export class MdSidenav {
  * and coordinate the backdrop and content styling.
  */
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'md-sidenav-layout',
   // Do not use ChangeDetectionStrategy.OnPush. It does not work for this component because
   // technically it is a sibling of MdSidenav (on the content tree) and isn't updated when MdSidenav

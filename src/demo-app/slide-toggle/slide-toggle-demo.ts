@@ -3,7 +3,7 @@ import {FORM_DIRECTIVES} from '@angular/forms';
 import {MdSlideToggle} from '@angular2-material/slide-toggle/slide-toggle';
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'switch-demo',
   templateUrl: 'slide-toggle-demo.html',
   styleUrls: ['slide-toggle-demo.css'],

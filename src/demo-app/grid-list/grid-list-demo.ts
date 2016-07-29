@@ -7,7 +7,7 @@ import {MD_CARD_DIRECTIVES} from '@angular2-material/card/card';
 import {MdIcon, MdIconRegistry} from '@angular2-material/icon/icon';
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'grid-list-demo',
   templateUrl: 'grid-list-demo.html',
   styleUrls: ['grid-list-demo.css'],

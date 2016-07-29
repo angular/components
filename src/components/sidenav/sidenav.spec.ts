@@ -5,8 +5,8 @@ import {
   tick,
   TestComponentBuilder,
   ComponentFixture,
-  configureModule,
-  doAsyncEntryPointCompilation,
+  TestBed,
+  //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {XHR} from '@angular/compiler';
 import {
@@ -56,13 +56,13 @@ describe('MdSidenav', () => {
   let xhr: XHR;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdSidenavModule],
       declarations: TEST_COMPONENTS,
-      entryComponents: TEST_COMPONENTS,
+      //entryComponents: TEST_COMPONENTS,
     });
 
-    doAsyncEntryPointCompilation();
+    //doAsyncEntryPointCompilation();
   }));
 
   beforeEach(inject([TestComponentBuilder, XHR], (tcb: TestComponentBuilder, x: XHR) => {

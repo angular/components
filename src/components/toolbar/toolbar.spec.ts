@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 import {
   inject,
   TestComponentBuilder,
-  configureModule,
-  doAsyncEntryPointCompilation,
+  TestBed,
+  //doAsyncEntryPointCompilation,
   async,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -13,13 +13,13 @@ describe('MdToolbar', () => {
   let builder: TestComponentBuilder;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdToolbarModule],
       declarations: [TestApp],
-      entryComponents: [TestApp],
+      //entryComponents: [TestApp],
     });
 
-    doAsyncEntryPointCompilation();
+    //doAsyncEntryPointCompilation();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

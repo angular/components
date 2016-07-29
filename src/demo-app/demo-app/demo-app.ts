@@ -11,7 +11,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
 export class Home {}
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'demo-app',
   providers: [],
   templateUrl: 'demo-app.html',

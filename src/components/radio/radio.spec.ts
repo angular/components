@@ -5,8 +5,8 @@ import {
   tick,
   TestComponentBuilder,
   ComponentFixture,
-  configureModule,
-  doAsyncEntryPointCompilation,
+  TestBed,
+  //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {FORM_DIRECTIVES, NgControl, FormsModule} from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
@@ -25,13 +25,13 @@ describe('MdRadio', () => {
   let dispatcher: MdUniqueSelectionDispatcher;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdRadioModule, FormsModule],
       declarations: TEST_COMPONENTS,
-      entryComponents: TEST_COMPONENTS,
+      //entryComponents: TEST_COMPONENTS,
     });
 
-    doAsyncEntryPointCompilation();
+    //doAsyncEntryPointCompilation();
   }));
 
   let injectDeps = [TestComponentBuilder, MdUniqueSelectionDispatcher];

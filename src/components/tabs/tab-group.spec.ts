@@ -5,8 +5,8 @@ import {
     tick,
     TestComponentBuilder,
     ComponentFixture,
-    configureModule,
-    doAsyncEntryPointCompilation,
+    TestBed,
+    //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {MdTabGroup, MdTabsModule} from './tabs';
 import {Component} from '@angular/core';
@@ -18,13 +18,13 @@ describe('MdTabGroup', () => {
   let builder: TestComponentBuilder;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdTabsModule],
       declarations: TEST_COMPONENTS,
-      entryComponents: TEST_COMPONENTS,
+      //entryComponents: TEST_COMPONENTS,
     });
 
-    doAsyncEntryPointCompilation();
+    //doAsyncEntryPointCompilation();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

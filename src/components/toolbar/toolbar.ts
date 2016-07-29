@@ -9,7 +9,7 @@ import {Renderer} from '@angular/core';
 import {ElementRef} from '@angular/core';
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'md-toolbar',
   templateUrl: 'toolbar.html',
   styleUrls: ['toolbar.css'],

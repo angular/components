@@ -4,8 +4,8 @@ import {
     async,
     TestComponentBuilder,
     ComponentFixture,
-    configureModule,
-    doAsyncEntryPointCompilation
+    TestBed,
+    //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {Component, DebugElement, ViewEncapsulation} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -18,10 +18,10 @@ describe('MdSlider', () => {
   let gestureConfig: TestGestureConfig;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdSliderModule],
       declarations: TEST_COMPONENTS,
-      entryComponents: TEST_COMPONENTS,
+      //entryComponents: TEST_COMPONENTS,
     });
 
     addProviders([
@@ -31,7 +31,7 @@ describe('MdSlider', () => {
       }}
     ]);
 
-    doAsyncEntryPointCompilation();
+    //doAsyncEntryPointCompilation();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

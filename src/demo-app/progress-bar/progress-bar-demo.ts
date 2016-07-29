@@ -5,7 +5,7 @@ import {MdProgressBar} from '@angular2-material/progress-bar/progress-bar';
 // TODO(josephperrott): Add an automatically filling example progress bar.
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'progress-bar-demo',
   templateUrl: 'progress-bar-demo.html',
   styleUrls: ['progress-bar-demo.css'],

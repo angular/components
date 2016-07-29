@@ -5,8 +5,8 @@ import {
   tick,
   TestComponentBuilder,
   ComponentFixture,
-  doAsyncEntryPointCompilation,
-  configureModule,
+  //doAsyncEntryPointCompilation,
+  TestBed,
 } from '@angular/core/testing';
 import {NgControl, FormsModule} from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
@@ -28,13 +28,14 @@ describe('MdButtonToggle', () => {
   let dispatcher: MdUniqueSelectionDispatcher;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdButtonToggleModule, FormsModule],
       declarations: TEST_COMPONENTS,
-      entryComponents: TEST_COMPONENTS,
+      //entryComponents: TEST_COMPONENTS,
     });
 
-    doAsyncEntryPointCompilation();
+
+    //doAsyncEntryPointCompilation();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

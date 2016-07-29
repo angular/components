@@ -10,7 +10,7 @@ import {ROUTER_DIRECTIVES} from '@angular/router';
 export class Home {}
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'e2e-app',
   providers: [],
   templateUrl: 'e2e-app.html',

@@ -4,7 +4,7 @@ import {
 } from '@angular2-material/core/coordination/unique-selection-dispatcher';
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'button-toggle-demo',
   templateUrl: 'button-toggle-demo.html',
   providers: [MdUniqueSelectionDispatcher],

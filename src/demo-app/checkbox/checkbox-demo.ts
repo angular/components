@@ -10,7 +10,7 @@ export interface Task {
 }
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'md-checkbox-demo-nested-checklist',
   styles: [`
     li {
@@ -59,7 +59,7 @@ export class MdCheckboxDemoNestedChecklist {
 }
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'md-checkbox-demo',
   templateUrl: 'checkbox-demo.html',
   styleUrls: ['checkbox-demo.css'],

@@ -7,7 +7,7 @@ import {MdUniqueSelectionDispatcher} from
 import {MD_BUTTON_DIRECTIVES} from '@angular2-material/button/button';
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'tooltip-demo',
   templateUrl: 'tooltip-demo.html',
   styleUrls: ['tooltip-demo.css'],

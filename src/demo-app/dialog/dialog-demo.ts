@@ -3,7 +3,7 @@ import {MdDialog, MdDialogConfig, MdDialogRef} from '@angular2-material/dialog/d
 import {OVERLAY_PROVIDERS} from '@angular2-material/core/overlay/overlay';
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'dialog-demo',
   templateUrl: 'dialog-demo.html',
   styleUrls: ['dialog-demo.css'],

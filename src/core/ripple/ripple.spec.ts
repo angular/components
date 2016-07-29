@@ -1,5 +1,5 @@
 import {
-    configureModule,
+    TestBed,
     inject,
     async,
     TestComponentBuilder,
@@ -68,10 +68,10 @@ describe('MdRipple', () => {
   let originalBodyMargin: string;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdRippleModule],
       declarations: TEST_COMPONENTS,
-      entryComponents: TEST_COMPONENTS,
+      //entryComponents: TEST_COMPONENTS,
     });
   }));
 

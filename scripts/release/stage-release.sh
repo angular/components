@@ -30,8 +30,6 @@ sleep 1
 # demo-app when we're staging a release (only components/ and core/).
 tsc -p ./src/demo-app
 
-exit 0
-
 # Now run ngc to generate the .metadata.json files. Our tsconfig is configred with
 # skipTemplateCodegen, so only the metadata files are actually generated.
 ./node_modules/.bin/ngc -p ./src/demo-app

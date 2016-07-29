@@ -58,7 +58,7 @@ export class MdIconInvalidNameError extends MdError {
  *     <md-icon fontSet="fa" fontIcon="alarm"></md-icon>
  */
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   template: '<ng-content></ng-content>',
   selector: 'md-icon',
   styleUrls: ['icon.css'],

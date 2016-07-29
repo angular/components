@@ -3,8 +3,8 @@ import {
   inject,
   async,
   TestComponentBuilder,
-  configureModule,
-  doAsyncEntryPointCompilation,
+  TestBed,
+  //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {XHRBackend} from '@angular/http';
 import {MockBackend} from '@angular/http/testing';
@@ -41,10 +41,10 @@ const verifyPathChildElement = (element: Element, attributeValue: string) => {
 describe('MdIcon', () => {
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdIconModule],
       declarations: TEST_COMPONENTS,
-      entryComponents: TEST_COMPONENTS,
+      //entryComponents: TEST_COMPONENTS,
     });
 
     addProviders([
@@ -52,7 +52,7 @@ describe('MdIcon', () => {
       {provide: XHRBackend, useExisting: MockBackend},
     ]);
 
-    doAsyncEntryPointCompilation();
+    //doAsyncEntryPointCompilation();
   }));
 
   let builder: TestComponentBuilder;

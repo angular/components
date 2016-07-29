@@ -6,7 +6,7 @@ import {
   addProviders,
   TestComponentBuilder,
   ComponentFixture,
-  configureModule,
+  TestBed,
 } from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -18,9 +18,9 @@ describe('MdLiveAnnouncer', () => {
   let liveEl: Element;
 
   describe('with default element', () => {
-    beforeEach(() => configureModule({
+    beforeEach(() => TestBed.configureTestingModule({
       declarations: [TestApp],
-      entryComponents: [TestApp],
+      //entryComponents: [TestApp],
       providers: [MdLiveAnnouncer]
     }));
 

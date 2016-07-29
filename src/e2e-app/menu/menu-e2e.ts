@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {MD_MENU_DIRECTIVES} from '@angular2-material/menu/menu';
 
 @Component({
-  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
+  moduleId: module.id,
   selector: 'menu-e2e',
   templateUrl: 'menu-e2e.html',
   directives: [MD_MENU_DIRECTIVES],

@@ -5,8 +5,8 @@ import {
     flushMicrotasks,
     TestComponentBuilder,
     ComponentFixture,
-    configureModule,
-    doAsyncEntryPointCompilation,
+    TestBed,
+    //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {
     FORM_DIRECTIVES,
@@ -26,13 +26,13 @@ describe('MdCheckbox', () => {
   let fixture: ComponentFixture<any>;
 
   beforeEach(async(() => {
-    configureModule({
+    TestBed.configureTestingModule({
       imports: [MdCheckboxModule, FormsModule],
       declarations: TEST_COMPONENTS,
-      entryComponents: TEST_COMPONENTS,
+      //entryComponents: TEST_COMPONENTS,
     });
 
-    doAsyncEntryPointCompilation();
+    //doAsyncEntryPointCompilation();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
