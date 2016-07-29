@@ -182,7 +182,7 @@ export class MdTooltip {
 }
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'md-tooltip-component',
   template: `<div class="md-tooltip">{{message}}</div>`,
   styleUrls: ['tooltip.css'],

@@ -15,7 +15,7 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {MdMenuInvalidPositionX, MdMenuInvalidPositionY} from './menu-errors';
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'md-menu',
   host: {'role': 'menu'},
   templateUrl: 'menu.html',

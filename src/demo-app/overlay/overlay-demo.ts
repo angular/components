@@ -21,7 +21,7 @@ import {
 
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'overlay-demo',
   templateUrl: 'overlay-demo.html',
   styleUrls: ['overlay-demo.css'],
@@ -86,7 +86,7 @@ export class OverlayDemo {
 
 /** Simple component to load into an overlay */
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'rotini-panel',
   template: '<p class="demo-rotini">Rotini {{value}}</p>'
 })

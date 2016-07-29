@@ -12,7 +12,7 @@ import {MdToolbar} from '@angular2-material/toolbar/toolbar';
 let max = 5;
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'input-demo',
   templateUrl: 'input-demo.html',
   styleUrls: ['input-demo.css'],

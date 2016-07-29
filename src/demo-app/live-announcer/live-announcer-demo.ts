@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {MdLiveAnnouncer} from '@angular2-material/core/a11y/live-announcer';
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'toolbar-demo',
   templateUrl: 'live-announcer-demo.html',
 })

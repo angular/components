@@ -35,7 +35,7 @@ export class MdSlideToggleChange {
 let nextId = 0;
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'md-slide-toggle',
   host: {
     '[class.md-checked]': 'checked',

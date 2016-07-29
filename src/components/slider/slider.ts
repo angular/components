@@ -11,7 +11,7 @@ import {BooleanFieldValue} from '@angular2-material/core/annotations/field-value
 import {applyCssTransform} from '@angular2-material/core/style/apply-transform';
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'md-slider',
   host: {
     'tabindex': '0',

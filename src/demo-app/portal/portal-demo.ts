@@ -9,7 +9,7 @@ import {
 
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'portal-demo',
   templateUrl: 'portal-demo.html',
   styleUrls: ['portal-demo.css'],
@@ -34,7 +34,7 @@ export class PortalDemo {
 
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'science-joke',
   template: `<p> 100 kilopascals go into a bar. </p>`
 })

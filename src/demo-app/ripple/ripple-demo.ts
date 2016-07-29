@@ -14,7 +14,7 @@ import {
 import {MD_RIPPLE_DIRECTIVES, MdRipple} from '@angular2-material/core/core';
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'ripple-demo',
   templateUrl: 'ripple-demo.html',
   styleUrls: ['ripple-demo.css'],

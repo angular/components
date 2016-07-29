@@ -7,7 +7,7 @@ import {MdInput} from '@angular2-material/input/input';
 import {Observable} from 'rxjs/Observable';
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'tab-group-demo',
   templateUrl: 'tab-group-demo.html',
   styleUrls: ['tab-group-demo.css'],

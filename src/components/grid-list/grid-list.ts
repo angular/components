@@ -31,7 +31,7 @@ import {coerceToString, coerceToNumber} from './grid-list-measure';
 const MD_FIT_MODE = 'fit';
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'md-grid-list',
   templateUrl: 'grid-list.html',
   styleUrls: ['grid-list.css'],

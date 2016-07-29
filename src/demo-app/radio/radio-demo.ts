@@ -8,7 +8,7 @@ import {
 } from '@angular2-material/core/coordination/unique-selection-dispatcher';
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'radio-demo',
   templateUrl: 'radio-demo.html',
   styleUrls: ['radio-demo.css'],

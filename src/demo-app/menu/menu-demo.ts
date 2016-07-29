@@ -5,7 +5,7 @@ import {MD_BUTTON_DIRECTIVES} from '@angular2-material/button/button';
 import {MD_TOOLBAR_DIRECTIVES} from '@angular2-material/toolbar/toolbar';
 
 @Component({
-  moduleId: module.id,
+  //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE //MODULE moduleId: module.id,
   selector: 'menu-demo',
   templateUrl: 'menu-demo.html',
   styleUrls: ['menu-demo.css'],

@@ -4,7 +4,6 @@ import {NgModule, ApplicationRef} from '@angular/core';
 import {HAMMER_GESTURE_CONFIG, BrowserModule} from '@angular/platform-browser';
 import {HttpModule} from '@angular/http';
 import {FormsModule} from '@angular/forms';
-import {CommonModule} from '@angular/common';
 import {MdLiveAnnouncer} from '@angular2-material/core/a11y/live-announcer';
 import {MdGestureConfig} from '@angular2-material/core/gestures/MdGestureConfig';
 import {MdIconRegistry} from '@angular2-material/icon/icon-registry';

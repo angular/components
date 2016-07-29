@@ -22,10 +22,15 @@ ng build
 # distinguishing marker and then undoing those lines after we've generated the .metadata.json files.
 grep -lr "moduleId:" ./src/ | xargs sed -i 's|moduleId:|//MODULE moduleId:|g'
 
+
+sleep 1
+
 # Run tsc directly first so that the output directories match what ngc is expecting. This is
 # different from what the CLI will output for *demo-app*, but we don't care about the output for
 # demo-app when we're staging a release (only components/ and core/).
 tsc -p ./src/demo-app
+
+exit 0
 
 # Now run ngc to generate the .metadata.json files. Our tsconfig is configred with
 # skipTemplateCodegen, so only the metadata files are actually generated.
