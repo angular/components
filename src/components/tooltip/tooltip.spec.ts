@@ -4,6 +4,8 @@ import {
     addProviders,
     TestComponentBuilder,
     ComponentFixture,
+    configureModule,
+    doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -11,25 +13,28 @@ import {MD_TOOLTIP_DIRECTIVES, TooltipPosition, MdTooltip} from
     '@angular2-material/tooltip/tooltip';
 import {OVERLAY_PROVIDERS} from '@angular2-material/core/overlay/overlay';
 import {OverlayContainer} from '@angular2-material/core/overlay/overlay-container';
+import {MdTooltipModule} from './tooltip';
 
 describe('MdTooltip', () => {
   let builder: TestComponentBuilder;
   let overlayContainerElement: HTMLElement;
 
-  beforeEach(() => {
+  beforeEach(async(() => {
+    configureModule({
+      imports: [MdTooltipModule],
+      declarations: [BasicTooltipDemo],
+      entryComponents: [BasicTooltipDemo],
+    });
+
     addProviders([
-      OVERLAY_PROVIDERS,
       {provide: OverlayContainer, useFactory: () => {
-        return {
-          getContainerElement: () => {
-            if (overlayContainerElement) { return overlayContainerElement; }
-            overlayContainerElement = document.createElement('div');
-            return overlayContainerElement;
-          }
-        };
-      }},
+        overlayContainerElement = document.createElement('div');
+        return {getContainerElement: () => overlayContainerElement};
+      }}
     ]);
-  });
+
+    doAsyncEntryPointCompilation();
+  }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
     builder = tcb;

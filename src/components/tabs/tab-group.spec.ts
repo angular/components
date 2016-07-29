@@ -74,7 +74,7 @@ describe('MdTabGroup', () => {
       });
     }));
 
-    xit('should cycle tab focus with focusNextTab/focusPreviousTab functions', fakeAsync(() => {
+    it('should cycle tab focus with focusNextTab/focusPreviousTab functions', fakeAsync(() => {
       let testComponent = fixture.componentInstance;
       let tabComponent = fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
 
@@ -156,6 +156,7 @@ describe('MdTabGroup', () => {
       builder.createAsync(AsyncTabsTestApp).then(f => fixture = f);
     }));
 
+    // HERE
     it('should show tabs when they are available', async(() => {
       let labels = fixture.debugElement.queryAll(By.css('.md-tab-label'));
 

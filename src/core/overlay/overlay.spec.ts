@@ -8,15 +8,13 @@ import {
   async,
 } from '@angular/core/testing';
 import {Component, ViewChild, ViewContainerRef} from '@angular/core';
-import {TemplatePortalDirective} from '../portal/portal-directives';
+import {TemplatePortalDirective, PortalModule} from '../portal/portal-directives';
 import {TemplatePortal, ComponentPortal} from '../portal/portal';
 import {Overlay} from './overlay';
 import {OverlayContainer} from './overlay-container';
 import {OverlayRef} from './overlay-ref';
 import {OverlayState} from './overlay-state';
 import {PositionStrategy} from './position/position-strategy';
-import {OverlayPositionBuilder} from './position/overlay-position-builder';
-import {ViewportRuler} from './position/viewport-ruler';
 import {OverlayModule} from './overlay-directives';
 
 
@@ -29,25 +27,16 @@ describe('Overlay', () => {
 
   beforeEach(async(() => {
     configureModule({
-      imports: [OverlayModule],
+      imports: [OverlayModule, PortalModule],
       declarations: TEST_COMPONENTS,
       entryComponents: TEST_COMPONENTS,
+      providers: [
+        {provide: OverlayContainer, useFactory: () => {
+          overlayContainerElement = document.createElement('div');
+          return {getContainerElement: () => overlayContainerElement};
+        }}
+      ]
     });
-
-    addProviders([
-      Overlay,
-      OverlayPositionBuilder,
-      ViewportRuler,
-      {provide: OverlayContainer, useFactory: () => {
-        return {
-          getContainerElement: () => {
-            if (overlayContainerElement) { return overlayContainerElement; }
-            overlayContainerElement = document.createElement('div');
-            return overlayContainerElement;
-          }
-        };
-      }}
-    ])
   }));
 
 
@@ -82,7 +71,7 @@ describe('Overlay', () => {
     expect(overlayContainerElement.textContent).toBe('');
   }));
 
-  xit('should load a template portal into an overlay', fakeAsync(() => {
+  it('should load a template portal into an overlay', fakeAsync(() => {
     let overlayRef: OverlayRef;
 
     overlay.create().then(ref => {
@@ -99,7 +88,7 @@ describe('Overlay', () => {
     expect(overlayContainerElement.textContent).toBe('');
   }));
 
-  xit('should open multiple overlays', fakeAsync(() => {
+  it('should open multiple overlays', fakeAsync(() => {
     let pizzaOverlayRef: OverlayRef;
     let cakeOverlayRef: OverlayRef;
 

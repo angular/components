@@ -34,40 +34,19 @@ describe('MdDialog', () => {
   beforeEach(async(() => {
     configureModule({
       imports: [MdDialogModule],
-      declarations: TEST_DIRECTIVES,
-      entryComponents: TEST_DIRECTIVES,
+      declarations: [TEST_COMPONENTS, DirectiveWithViewContainer],
+      entryComponents: TEST_COMPONENTS,
     });
 
     addProviders([
       {provide: OverlayContainer, useFactory: () => {
-        return {
-          getContainerElement: () => {
-            if (overlayContainerElement) { return overlayContainerElement; }
-            overlayContainerElement = document.createElement('div');
-            return overlayContainerElement;
-          }
-        };
+        overlayContainerElement = document.createElement('div');
+        return {getContainerElement: () => overlayContainerElement};
       }}
-    ])
+    ]);
 
     doAsyncEntryPointCompilation();
   }));
-
-
-  beforeEach(() => {
-    addProviders([
-      OVERLAY_PROVIDERS,
-      MdDialog,
-      {provide: OverlayContainer, useFactory: () => {
-        return {
-          getContainerElement: () => {
-            overlayContainerElement = document.createElement('div');
-            return overlayContainerElement;
-          }
-        };
-      }},
-    ]);
-  });
 
   let deps = [TestComponentBuilder, MdDialog];
   beforeEach(inject(deps, fakeAsync((tcb: TestComponentBuilder, d: MdDialog) => {
@@ -148,7 +127,7 @@ function detectChangesForDialogOpen(fixture: ComponentFixture<ComponentWithChild
   // Two rounds of change detection are necessary: one to *create* the dialog container, and
   // another to cause the lifecycle events of the container to run and load the dialog content.
   fixture.detectChanges();
-  setTimeout(() => fixture.detectChanges(), 50);
+  setTimeout(() => fixture.detectChanges(), 150);
 }
 
 @Directive({selector: 'dir-with-view-container'})
@@ -180,4 +159,4 @@ class PizzaMsg {
 }
 
 
-const TEST_DIRECTIVES = [PizzaMsg, ComponentWithChildViewContainer, DirectiveWithViewContainer];
+const TEST_COMPONENTS = [PizzaMsg, ComponentWithChildViewContainer];

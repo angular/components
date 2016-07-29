@@ -1,5 +1,4 @@
 import {
-  NgModule,
   ComponentResolver,
   Injectable,
 } from '@angular/core';
@@ -10,7 +9,6 @@ import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {ViewportRuler} from './position/viewport-ruler';
 import {OverlayContainer} from './overlay-container';
-import {PortalModule} from '../portal/portal-directives';
 
 /** Next overlay unique ID. */
 let nextUniqueId = 0;

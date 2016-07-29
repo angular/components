@@ -6,7 +6,7 @@ import {
   async,
 } from '@angular/core/testing';
 import {Component} from '@angular/core';
-import {MD_MENU_DIRECTIVES, MdMenuModule} from './menu';
+import {MdMenuModule} from './menu';
 
 describe('MdMenu', () => {
   let builder: TestComponentBuilder;

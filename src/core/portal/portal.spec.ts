@@ -4,6 +4,8 @@ import {
   flushMicrotasks,
   TestComponentBuilder,
   ComponentFixture,
+  configureModule,
+  async,
 } from '@angular/core/testing';
 import {
   Component,
@@ -14,13 +16,21 @@ import {
   Optional,
   Injector,
 } from '@angular/core';
-import {TemplatePortalDirective, PortalHostDirective} from './portal-directives';
+import {TemplatePortalDirective, PortalHostDirective, PortalModule} from './portal-directives';
 import {Portal, ComponentPortal} from './portal';
 import {DomPortalHost} from './dom-portal-host';
 
 
 describe('Portals', () => {
   let builder: TestComponentBuilder;
+
+  beforeEach(async(() => {
+    configureModule({
+      imports: [PortalModule],
+      declarations: TEST_COMPONENTS,
+      entryComponents: TEST_COMPONENTS,
+    });
+  }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
     builder = tcb;
@@ -435,3 +445,6 @@ class PortalTestApp {
     return this.portals.toArray()[2];
   }
 }
+
+
+const TEST_COMPONENTS = [PortalTestApp, ArbitraryViewContainerRefComponent, PizzaMsg];

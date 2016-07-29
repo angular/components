@@ -6,6 +6,7 @@ import {
   addProviders,
   TestComponentBuilder,
   ComponentFixture,
+  configureModule,
 } from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -17,9 +18,11 @@ describe('MdLiveAnnouncer', () => {
   let liveEl: Element;
 
   describe('with default element', () => {
-    beforeEach(() => {
-      addProviders([MdLiveAnnouncer]);
-    });
+    beforeEach(() => configureModule({
+      declarations: [TestApp],
+      entryComponents: [TestApp],
+      providers: [MdLiveAnnouncer]
+    }));
 
     beforeEach(inject([TestComponentBuilder, MdLiveAnnouncer],
       (tcb: TestComponentBuilder, _live: MdLiveAnnouncer) => {
@@ -137,8 +140,7 @@ function getLiveElement(): Element {
 })
 class TestApp {
 
-  constructor(private live: MdLiveAnnouncer) {
-  };
+  constructor(private live: MdLiveAnnouncer) { };
 
   announceText(message: string) {
     this.live.announce(message);
