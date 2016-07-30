@@ -15,9 +15,9 @@ import {applyCssTransform} from '@angular2-material/core/style/apply-transform';
   host: {
     'tabindex': '0',
     '(click)': 'onClick($event)',
-    '(drag)': 'onDrag($event)',
-    '(dragstart)': 'onDragStart($event)',
-    '(dragend)': 'onDragEnd()',
+    '(slide)': 'onSlide($event)',
+    '(slidestart)': 'onSlideStart($event)',
+    '(slideend)': 'onSlideEnd()',
     '(window:resize)': 'onResize()',
     '(blur)': 'onBlur()',
   },
@@ -47,15 +47,18 @@ export class MdSlider implements AfterContentInit {
   /** The percentage of the slider that coincides with the value. */
   private _percent: number = 0;
 
+  /** The values at which the thumb will snap. */
+  @Input() step: number = 1;
+
   /**
-   * Whether or not the thumb is currently being dragged.
+   * Whether or not the thumb is sliding.
    * Used to determine if there should be a transition for the thumb and fill track.
    * TODO: internal
    */
-  isDragging: boolean = false;
+  isSliding: boolean = false;
 
   /**
-   * Whether or not the slider is active (clicked or is being dragged).
+   * Whether or not the slider is active (clicked or sliding).
    * Used to shrink and grow the thumb as according to the Material Design spec.
    * TODO: internal
    */
@@ -102,7 +105,6 @@ export class MdSlider implements AfterContentInit {
   set value(v: number) {
     this._value = Number(v);
     this._isInitialized = true;
-    this.updatePercentFromValue();
   }
 
   constructor(elementRef: ElementRef) {
@@ -116,7 +118,7 @@ export class MdSlider implements AfterContentInit {
    */
   ngAfterContentInit() {
     this._sliderDimensions = this._renderer.getSliderDimensions();
-    this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
+    this.snapToValue();
   }
 
   /** TODO: internal */
@@ -126,42 +128,45 @@ export class MdSlider implements AfterContentInit {
     }
 
     this.isActive = true;
-    this.isDragging = false;
+    this.isSliding = false;
     this._renderer.addFocus();
     this.updateValueFromPosition(event.clientX);
+    this.snapToValue();
   }
 
   /** TODO: internal */
-  onDrag(event: HammerInput) {
+  onSlide(event: HammerInput) {
     if (this.disabled) {
       return;
     }
-    // Prevent the drag from selecting anything else.
+
+    // Prevent the slide from selecting anything else.
     event.preventDefault();
     this.updateValueFromPosition(event.center.x);
   }
 
   /** TODO: internal */
-  onDragStart(event: HammerInput) {
+  onSlideStart(event: HammerInput) {
     if (this.disabled) {
       return;
     }
 
     event.preventDefault();
-    this.isDragging = true;
+    this.isSliding = true;
     this.isActive = true;
     this._renderer.addFocus();
     this.updateValueFromPosition(event.center.x);
   }
 
   /** TODO: internal */
-  onDragEnd() {
-    this.isDragging = false;
+  onSlideEnd() {
+    this.isSliding = false;
+      this.snapToValue();
   }
 
   /** TODO: internal */
   onResize() {
-    this.isDragging = true;
+    this.isSliding = true;
     this._sliderDimensions = this._renderer.getSliderDimensions();
     // Skip updating the value and position as there is no new placement.
     this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
@@ -175,20 +180,37 @@ export class MdSlider implements AfterContentInit {
   /**
    * When the value changes without a physical position, the percentage needs to be recalculated
    * independent of the physical location.
+   * This is also used to move the thumb to a snapped value once sliding is done.
    */
   updatePercentFromValue() {
     this._percent = (this.value - this.min) / (this.max - this.min);
   }
 
   /**
-   * Calculate the new value from the new physical location.
+   * Calculate the new value from the new physical location. The value will always be snapped.
    */
   updateValueFromPosition(pos: number) {
     let offset = this._sliderDimensions.left;
     let size = this._sliderDimensions.width;
-    this._percent = this.clamp((pos - offset) / size);
-    this.value = this.min + (this._percent * (this.max - this.min));
 
+    // The exact value is calculated from the event and used to find the closest snap value.
+    this._percent = this.clamp((pos - offset) / size);
+    let exactValue = this.min + (this._percent * (this.max - this.min));
+
+    // This calculation finds the closest step by finding the closest whole number divisible by the
+    // step relative to the min.
+    let closestValue = Math.round((exactValue - this.min) / this.step) * this.step + this.min;
+    // The value needs to snap to the min and max.
+    this.value = this.clamp(closestValue, this.min, this.max);
+    this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
+  }
+
+  /**
+   * Snaps the thumb to the current value.
+   * Called after a click or drag event is over.
+   */
+  snapToValue() {
+    this.updatePercentFromValue();
     this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
   }
 
@@ -224,21 +246,15 @@ export class SliderRenderer {
    * Update the physical position of the thumb and fill track on the slider.
    */
   updateThumbAndFillPosition(percent: number, width: number) {
-    // The actual thumb element. Needed to get the exact width of the thumb for calculations.
-    let thumbElement = this._sliderElement.querySelector('.md-slider-thumb');
     // A container element that is used to avoid overwriting the transform on the thumb itself.
     let thumbPositionElement =
         <HTMLElement>this._sliderElement.querySelector('.md-slider-thumb-position');
     let fillTrackElement = <HTMLElement>this._sliderElement.querySelector('.md-slider-track-fill');
-    let thumbWidth = thumbElement.getBoundingClientRect().width;
 
     let position = percent * width;
-    // The thumb needs to be shifted to the left by half of the width of itself so that it centers
-    // on the value.
-    let thumbPosition = position - (thumbWidth / 2);
 
     fillTrackElement.style.width = `${position}px`;
-    applyCssTransform(thumbPositionElement, `translateX(${thumbPosition}px)`);
+    applyCssTransform(thumbPositionElement, `translateX(${position}px)`);
   }
 
   /**
