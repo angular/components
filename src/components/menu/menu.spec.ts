@@ -17,6 +17,7 @@ describe('MdMenu', () => {
     });
 
     TestBed.compileComponents();
+    console.log('COMPIELD COMPONNETS FOR MENU');
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
@@ -24,6 +25,7 @@ describe('MdMenu', () => {
   }));
 
   it('should add and remove focus class on focus/blur', async(() => {
+    console.log('TRYING TO RUN THE MENU TEST');
     var template = ``;
     builder.overrideTemplate(TestList, template).createAsync(TestList).then(fixture => {
        expect(true).toBe(true);
