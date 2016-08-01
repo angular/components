@@ -243,30 +243,23 @@ export class MdSlider implements AfterContentInit {
   }
 
   /**
-   * Calculates the separation in pixels of tick marks by starting with the assumption every step
-   * needs a tick and eliminating the number of ticks until there is a distance of at least 30px
-   * between each tick.
+   * Calculates the optimal separation in pixels of tick marks based on the minimum auto tick
+   * separation constant.
    */
   private _updateAutoTickSeparation() {
-    // The pixel value for how far apart the ticks should be.
-    let tickSeparation = 0;
-    // Keeps track of how many steps to multiply the slider's step by.
-    let stepCounter = 1;
+    let width = this._sliderDimensions.width;
 
-    while (tickSeparation < MIN_AUTO_TICK_SEPARATION) {
-      // Multiplying the counter and step together determines which step we want to use. This starts
-      // at the first step and moves to second, then third, etc. until we find a good distance.
-      let tickValue = (this.step * stepCounter) + this.min;
+    // This calculates which step is far enough away from the beginning of the slider to draw a tick
+    // at. This value will then be used to draw ticks at every tickStep steps.
+    let tickStep =
+        Math.ceil(MIN_AUTO_TICK_SEPARATION * (this.max - this.min) / (width * this.step));
 
-      // The percentage of the step on the slider is needed in order to calculate the pixel offset
-      // from the beginning of the slider. This offset is the tick separation.
-      let tickPercentage = this.calculatePercentage(tickValue);
-      tickSeparation = this._sliderDimensions.width * tickPercentage;
-      stepCounter++;
-    }
+    // The percentage of the slider where the first tick should go.
+    let tickPercentage = this.calculatePercentage((this.step * tickStep) + this.min);
 
-    // Once a suitable separation for the ticks is found, draw them on the slider.
-    this._renderer.drawTicks(tickSeparation);
+    // The pixel value of the tick is the percentage * the width of the slider. Use this to draw
+    // the ticks on the slider.
+    this._renderer.drawTicks(width * tickPercentage);
   }
 
   /**
