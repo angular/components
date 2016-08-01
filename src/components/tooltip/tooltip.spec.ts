@@ -5,7 +5,6 @@ import {
     TestComponentBuilder,
     ComponentFixture,
     TestBed,
-    //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -23,7 +22,6 @@ describe('MdTooltip', () => {
     TestBed.configureTestingModule({
       imports: [MdTooltipModule],
       declarations: [BasicTooltipDemo],
-      //entryComponents: [BasicTooltipDemo],
     });
 
     addProviders([
@@ -33,7 +31,7 @@ describe('MdTooltip', () => {
       }}
     ]);
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

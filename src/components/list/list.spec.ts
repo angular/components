@@ -3,7 +3,6 @@ import {
   async,
   TestComponentBuilder,
   TestBed,
-  //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -16,10 +15,9 @@ describe('MdList', () => {
     TestBed.configureTestingModule({
       imports: [MdListModule],
       declarations: [TestList],
-      //entryComponents: [TestList],
     });
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

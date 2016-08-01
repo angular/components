@@ -2,7 +2,6 @@ import {
   inject,
   TestComponentBuilder,
   TestBed,
-  //doAsyncEntryPointCompilation,
   async,
 } from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
@@ -17,10 +16,9 @@ describe('MdProgressCircular', () => {
     TestBed.configureTestingModule({
       imports: [MdProgressCircleModule],
       declarations: [TestApp],
-      //entryComponents: [TestApp],
     });
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

@@ -20,7 +20,6 @@ describe('MdLiveAnnouncer', () => {
   describe('with default element', () => {
     beforeEach(() => TestBed.configureTestingModule({
       declarations: [TestApp],
-      //entryComponents: [TestApp],
       providers: [MdLiveAnnouncer]
     }));
 

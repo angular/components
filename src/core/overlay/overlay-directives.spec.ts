@@ -23,7 +23,6 @@ describe('Overlay directives', () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule],
       declarations: [ConnectedOverlayDirectiveTest],
-      //entryComponents: [ConnectedOverlayDirectiveTest],
     });
 
     addProviders([

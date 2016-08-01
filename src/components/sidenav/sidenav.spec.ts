@@ -6,7 +6,6 @@ import {
   TestComponentBuilder,
   ComponentFixture,
   TestBed,
-  //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {XHR} from '@angular/compiler';
 import {
@@ -59,10 +58,9 @@ describe('MdSidenav', () => {
     TestBed.configureTestingModule({
       imports: [MdSidenavModule],
       declarations: TEST_COMPONENTS,
-      //entryComponents: TEST_COMPONENTS,
     });
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   beforeEach(inject([TestComponentBuilder, XHR], (tcb: TestComponentBuilder, x: XHR) => {

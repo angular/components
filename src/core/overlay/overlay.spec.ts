@@ -29,7 +29,6 @@ describe('Overlay', () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, PortalModule],
       declarations: TEST_COMPONENTS,
-      //entryComponents: TEST_COMPONENTS,
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');

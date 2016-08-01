@@ -28,7 +28,6 @@ describe('Portals', () => {
     TestBed.configureTestingModule({
       imports: [PortalModule],
       declarations: TEST_COMPONENTS,
-      //entryComponents: TEST_COMPONENTS,
     });
   }));
 

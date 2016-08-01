@@ -3,7 +3,6 @@ import {
   inject,
   TestComponentBuilder,
   TestBed,
-  //doAsyncEntryPointCompilation,
   async,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -16,10 +15,9 @@ describe('MdToolbar', () => {
     TestBed.configureTestingModule({
       imports: [MdToolbarModule],
       declarations: [TestApp],
-      //entryComponents: [TestApp],
     });
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

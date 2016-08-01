@@ -5,7 +5,6 @@ import {
     TestComponentBuilder,
     ComponentFixture,
     TestBed,
-    //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {Component, DebugElement, ViewEncapsulation} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -21,7 +20,6 @@ describe('MdSlider', () => {
     TestBed.configureTestingModule({
       imports: [MdSliderModule],
       declarations: TEST_COMPONENTS,
-      //entryComponents: TEST_COMPONENTS,
     });
 
     addProviders([
@@ -31,7 +29,7 @@ describe('MdSlider', () => {
       }}
     ]);
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

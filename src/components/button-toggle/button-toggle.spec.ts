@@ -5,14 +5,12 @@ import {
   tick,
   TestComponentBuilder,
   ComponentFixture,
-  //doAsyncEntryPointCompilation,
   TestBed,
 } from '@angular/core/testing';
 import {NgControl, FormsModule} from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
-    MD_BUTTON_TOGGLE_DIRECTIVES,
     MdButtonToggleGroup,
     MdButtonToggle,
     MdButtonToggleGroupMultiple,
@@ -25,17 +23,15 @@ import {
 
 describe('MdButtonToggle', () => {
   let builder: TestComponentBuilder;
-  let dispatcher: MdUniqueSelectionDispatcher;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdButtonToggleModule, FormsModule],
       declarations: TEST_COMPONENTS,
-      //entryComponents: TEST_COMPONENTS,
     });
 
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

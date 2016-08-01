@@ -2,7 +2,6 @@ import {
   inject,
   TestComponentBuilder,
   TestBed,
-  //doAsyncEntryPointCompilation,
   async,
 } from '@angular/core/testing';
 import {Component} from '@angular/core';
@@ -15,10 +14,9 @@ describe('MdMenu', () => {
     TestBed.configureTestingModule({
       imports: [MdMenuModule],
       declarations: [TestList],
-      //entryComponents: [TestList],
     });
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

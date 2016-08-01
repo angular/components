@@ -3,7 +3,6 @@ import {
   inject,
   TestComponentBuilder,
   TestBed,
-  //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
@@ -18,10 +17,9 @@ describe('MdInput', function () {
     TestBed.configureTestingModule({
       imports: [MdInputModule, FormsModule],
       declarations: TEST_COMPONENTS,
-      //entryComponents: TEST_COMPONENTS,
     });
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {

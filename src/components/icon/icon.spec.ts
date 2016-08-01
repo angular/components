@@ -4,7 +4,6 @@ import {
   async,
   TestComponentBuilder,
   TestBed,
-  //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {XHRBackend} from '@angular/http';
 import {MockBackend} from '@angular/http/testing';
@@ -44,7 +43,6 @@ describe('MdIcon', () => {
     TestBed.configureTestingModule({
       imports: [MdIconModule],
       declarations: TEST_COMPONENTS,
-      //entryComponents: TEST_COMPONENTS,
     });
 
     addProviders([
@@ -52,7 +50,7 @@ describe('MdIcon', () => {
       {provide: XHRBackend, useExisting: MockBackend},
     ]);
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   let builder: TestComponentBuilder;

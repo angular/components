@@ -71,7 +71,6 @@ describe('MdRipple', () => {
     TestBed.configureTestingModule({
       imports: [MdRippleModule],
       declarations: TEST_COMPONENTS,
-      //entryComponents: TEST_COMPONENTS,
     });
   }));
 

@@ -6,7 +6,6 @@ import {
   TestComponentBuilder,
   ComponentFixture,
   TestBed,
-  //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {
   Component,
@@ -35,7 +34,6 @@ describe('MdDialog', () => {
     TestBed.configureTestingModule({
       imports: [MdDialogModule],
       declarations: [TEST_COMPONENTS, DirectiveWithViewContainer],
-      //entryComponents: TEST_COMPONENTS,
     });
 
     addProviders([
@@ -45,7 +43,7 @@ describe('MdDialog', () => {
       }}
     ]);
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   let deps = [TestComponentBuilder, MdDialog];

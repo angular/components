@@ -6,11 +6,8 @@ import {
     TestComponentBuilder,
     ComponentFixture,
     TestBed,
-    //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {
-    FORM_DIRECTIVES,
-    NgModel,
     NgControl,
     FormsModule,
 } from '@angular/forms';
@@ -29,10 +26,9 @@ describe('MdCheckbox', () => {
     TestBed.configureTestingModule({
       imports: [MdCheckboxModule, FormsModule],
       declarations: TEST_COMPONENTS,
-      //entryComponents: TEST_COMPONENTS,
     });
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

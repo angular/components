@@ -6,7 +6,6 @@ import {
   TestComponentBuilder,
   ComponentFixture,
   TestBed,
-  //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {FORM_DIRECTIVES, NgControl, FormsModule} from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
@@ -28,10 +27,9 @@ describe('MdRadio', () => {
     TestBed.configureTestingModule({
       imports: [MdRadioModule, FormsModule],
       declarations: TEST_COMPONENTS,
-      //entryComponents: TEST_COMPONENTS,
     });
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   let injectDeps = [TestComponentBuilder, MdUniqueSelectionDispatcher];

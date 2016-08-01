@@ -1,7 +1,6 @@
 import {
   inject,
   TestComponentBuilder,
-  //doAsyncEntryPointCompilation,
   async,
   TestBed,
 } from '@angular/core/testing';
@@ -10,18 +9,16 @@ import {By} from '@angular/platform-browser';
 import {MdButtonModule} from './button';
 
 
-fdescribe('MdButton', () => {
+describe('MdButton', () => {
   let builder: TestComponentBuilder;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdButtonModule],
       declarations: [TestApp],
-      //entryComponents: [TestApp],
     });
 
     TestBed.compileComponents();
-    //doAsyncEntryPointCompilation();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {

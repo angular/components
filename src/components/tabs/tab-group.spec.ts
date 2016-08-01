@@ -6,7 +6,6 @@ import {
     TestComponentBuilder,
     ComponentFixture,
     TestBed,
-    //doAsyncEntryPointCompilation,
 } from '@angular/core/testing';
 import {MdTabGroup, MdTabsModule} from './tabs';
 import {Component} from '@angular/core';
@@ -21,10 +20,9 @@ describe('MdTabGroup', () => {
     TestBed.configureTestingModule({
       imports: [MdTabsModule],
       declarations: TEST_COMPONENTS,
-      //entryComponents: TEST_COMPONENTS,
     });
 
-    //doAsyncEntryPointCompilation();
+    TestBed.compileComponents();
   }));
 
   beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
@@ -154,7 +152,7 @@ describe('MdTabGroup', () => {
     let fixture: ComponentFixture<AsyncTabsTestApp>;
 
     beforeEach(async(() => {
-      builder.createAsync(AsyncTabsTestApp).then(f => fixture = f);
+      fixture = TestBed.createComponent(AsyncTabsTestApp);
     }));
 
     it('should show tabs when they are available', async(() => {
