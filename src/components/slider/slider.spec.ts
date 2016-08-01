@@ -464,12 +464,12 @@ describe('MdSlider', () => {
       // toContain is used rather than toBe because FireFox adds 'transparent' to the beginning
       // of the background before the repeating linear gradient.
       expect(tickContainer.style.background).toContain('repeating-linear-gradient(to right, ' +
-      'rgb(0, 0, 0), rgb(0, 0, 0) 2px, transparent 2px, transparent 32.6px)');
+          'black, black 2px, transparent 2px, transparent 32.6px)');
     });
 
     it('should draw a tick mark on the end of the track', () => {
-      expect(lastTickContainer.style.background).toContain('linear-gradient(to left, rgb(0, 0, 0), '
-          + 'rgb(0, 0, 0) 2px, transparent 2px, transparent)');
+      expect(lastTickContainer.style.background).toContain('linear-gradient(to left, black, black' +
+          ' 2px, transparent 2px, transparent)');
     });
 
     it('should not draw the second to last tick when it is too close to the last tick', () => {
@@ -506,12 +506,12 @@ describe('MdSlider', () => {
       // which is at the position 20.16px and 1px is subtracted to center, giving a tick
       // separation of 19.16px.
       expect(tickContainer.style.background).toContain('repeating-linear-gradient(to right, ' +
-          'rgb(0, 0, 0), rgb(0, 0, 0) 2px, transparent 2px, transparent 19.16px)');
+          'black, black 2px, transparent 2px, transparent 19.16px)');
     });
 
     it('should draw a tick mark on the end of the track', () => {
-      expect(lastTickContainer.style.background).toContain('linear-gradient(to left, rgb(0, 0, 0), '
-          + 'rgb(0, 0, 0) 2px, transparent 2px, transparent)');
+      expect(lastTickContainer.style.background).toContain('linear-gradient(to left, black, '
+          + 'black 2px, transparent 2px, transparent)');
     });
   });
 });

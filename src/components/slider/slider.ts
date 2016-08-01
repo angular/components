@@ -363,11 +363,11 @@ export class SliderRenderer {
         <HTMLElement>this._sliderElement.querySelector('.md-slider-last-tick-container');
     // Subtract 1 from the tick separation to center the tick.
     // TODO: Evaluate the rendering performance of using repeating background gradients.
-    tickContainer.style.background = `repeating-linear-gradient(to right, #000000, #000000 2px,
-    transparent 2px, transparent ${tickSeparation - 1}px)`;
+    tickContainer.style.background = `repeating-linear-gradient(to right, black, black 2px, ` +
+        `transparent 2px, transparent ${tickSeparation - 1}px)`;
     // Add a tick to the very end by starting on the right side and adding a 2px black line.
-    lastTickContainer.style.background = `linear-gradient(to left, #000000, #000000 2px,
-    transparent 2px, transparent)`;
+    lastTickContainer.style.background = `linear-gradient(to left, black, black 2px, transparent ` +
+        `2px, transparent)`;
 
     // If the second to last tick is too close (a separation of less than half the normal
     // separation), don't show it by decreasing the width of the tick container element.
