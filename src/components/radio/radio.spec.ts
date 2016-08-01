@@ -1,19 +1,16 @@
 import {
-  inject,
-  async,
-  fakeAsync,
-  tick,
-  TestComponentBuilder,
-  ComponentFixture,
-  TestBed,
+    inject,
+    async,
+    fakeAsync,
+    tick,
+    TestComponentBuilder,
+    ComponentFixture,
+    TestBed,
 } from '@angular/core/testing';
-import {FORM_DIRECTIVES, NgControl, FormsModule} from '@angular/forms';
+import {NgControl, FormsModule} from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {
-  MD_RADIO_DIRECTIVES, MdRadioGroup, MdRadioButton, MdRadioChange,
-  MdRadioModule
-} from './radio';
+import {MdRadioGroup, MdRadioButton, MdRadioChange, MdRadioModule} from './radio';
 import {
   MdUniqueSelectionDispatcher
 } from '@angular2-material/core/coordination/unique-selection-dispatcher';

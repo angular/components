@@ -1,10 +1,6 @@
 import {Component} from '@angular/core';
-import {NgFor} from '@angular/common';
-import {FORM_DIRECTIVES} from '@angular/forms';
-import {MD_GRID_LIST_DIRECTIVES} from '@angular2-material/grid-list/grid-list';
-import {MdButton} from '@angular2-material/button/button';
-import {MD_CARD_DIRECTIVES} from '@angular2-material/card/card';
-import {MdIcon, MdIconRegistry} from '@angular2-material/icon/icon';
+import {MdIconRegistry} from '@angular2-material/icon/icon';
+
 
 @Component({
   moduleId: module.id,

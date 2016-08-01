@@ -6,7 +6,7 @@ import {
   async,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {MdToolbar, MdToolbarModule} from './toolbar';
+import {MdToolbarModule} from './toolbar';
 
 describe('MdToolbar', () => {
   let builder: TestComponentBuilder;

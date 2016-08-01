@@ -1,10 +1,8 @@
 import {Component, ViewChildren, QueryList} from '@angular/core';
-import {NgFor} from '@angular/common';
 import {
     Portal,
     ComponentPortal,
     TemplatePortalDirective,
-    PortalHostDirective
 } from '@angular2-material/core/core';
 
 

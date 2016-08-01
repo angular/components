@@ -8,7 +8,7 @@ import {
 import {XHRBackend} from '@angular/http';
 import {MockBackend} from '@angular/http/testing';
 import {Component} from '@angular/core';
-import {MdIcon, MdIconModule} from './icon';
+import {MdIconModule} from './icon';
 import {MdIconRegistry} from './icon-registry';
 import {getFakeSvgHttpResponse} from './fake-svgs';
 

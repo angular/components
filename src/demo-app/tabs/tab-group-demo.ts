@@ -1,10 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {NgIf, NgFor, AsyncPipe} from '@angular/common';
-import {FORM_DIRECTIVES} from '@angular/forms';
-import {MD_TABS_DIRECTIVES} from '@angular2-material/tabs/tabs';
-import {MdToolbar} from '@angular2-material/toolbar/toolbar';
-import {MdInput} from '@angular2-material/input/input';
+import {AsyncPipe} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
+
 
 @Component({
   moduleId: module.id,

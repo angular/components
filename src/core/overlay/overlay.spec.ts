@@ -2,7 +2,6 @@ import {
   inject,
   fakeAsync,
   flushMicrotasks,
-  addProviders,
   TestComponentBuilder,
   TestBed,
   async,

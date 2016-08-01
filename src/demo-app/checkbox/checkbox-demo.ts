@@ -1,7 +1,5 @@
 import {Component} from '@angular/core';
-import {NgFor} from '@angular/common';
-import {FORM_DIRECTIVES} from '@angular/forms';
-import {MdCheckbox} from '@angular2-material/checkbox/checkbox';
+
 
 export interface Task {
   name: string;

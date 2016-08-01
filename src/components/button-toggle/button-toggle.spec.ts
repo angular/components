@@ -16,9 +16,6 @@ import {
     MdButtonToggleGroupMultiple,
     MdButtonToggleChange, MdButtonToggleModule,
 } from './button-toggle';
-import {
-  MdUniqueSelectionDispatcher
-} from '@angular2-material/core/coordination/unique-selection-dispatcher';
 
 
 describe('MdButtonToggle', () => {

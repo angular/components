@@ -1,12 +1,7 @@
-import {
-  inject,
-  TestComponentBuilder,
-  TestBed,
-  async,
-} from '@angular/core/testing';
+import {inject, TestComponentBuilder, TestBed, async} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdProgressCircle, MdProgressCircleModule} from './progress-circle';
+import {MdProgressCircleModule} from './progress-circle';
 
 
 describe('MdProgressCircular', () => {

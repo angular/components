@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
-import {MdButton, MdAnchor} from '@angular2-material/button/button';
-import {MdIcon} from '@angular2-material/icon/icon';
+
 
 @Component({
   moduleId: module.id,

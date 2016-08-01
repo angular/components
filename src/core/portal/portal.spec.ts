@@ -16,7 +16,7 @@ import {
   Optional,
   Injector,
 } from '@angular/core';
-import {TemplatePortalDirective, PortalHostDirective, PortalModule} from './portal-directives';
+import {TemplatePortalDirective, PortalModule} from './portal-directives';
 import {Portal, ComponentPortal} from './portal';
 import {DomPortalHost} from './dom-portal-host';
 

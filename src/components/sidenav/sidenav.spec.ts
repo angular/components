@@ -1,20 +1,16 @@
 import {
-  fakeAsync,
-  async,
-  inject,
-  tick,
-  TestComponentBuilder,
-  ComponentFixture,
-  TestBed,
+    fakeAsync,
+    async,
+    inject,
+    tick,
+    TestComponentBuilder,
+    ComponentFixture,
+    TestBed,
 } from '@angular/core/testing';
 import {XHR} from '@angular/compiler';
-import {
-  Component,
-  ViewMetadata
-} from '@angular/core';
-
+import {Component, ViewMetadata} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdSidenav, MdSidenavLayout, MD_SIDENAV_DIRECTIVES, MdSidenavModule} from './sidenav';
+import {MdSidenav, MdSidenavLayout, MdSidenavModule} from './sidenav';
 
 
 /**

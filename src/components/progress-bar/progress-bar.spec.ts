@@ -6,7 +6,7 @@ import {
 } from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdProgressBar, MdProgressBarModule} from './progress-bar';
+import {MdProgressBarModule} from './progress-bar';
 
 
 describe('MdProgressBar', () => {

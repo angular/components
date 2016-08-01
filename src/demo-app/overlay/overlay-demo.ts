@@ -4,19 +4,16 @@ import {
     QueryList,
     ViewEncapsulation,
     ViewChild,
-    ViewContainerRef
+    ViewContainerRef,
 } from '@angular/core';
-import {NgIf} from '@angular/common';
 import {
     Overlay,
     OverlayState,
     OverlayOrigin,
     OVERLAY_PROVIDERS,
-    OVERLAY_DIRECTIVES,
     ComponentPortal,
     Portal,
-    PORTAL_DIRECTIVES,
-    TemplatePortalDirective
+    TemplatePortalDirective,
 } from '@angular2-material/core/core';
 
 

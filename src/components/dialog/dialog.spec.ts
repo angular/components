@@ -15,7 +15,6 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import {MdDialog, MdDialogModule} from './dialog';
-import {OVERLAY_PROVIDERS} from '@angular2-material/core/overlay/overlay';
 import {OverlayContainer} from '@angular2-material/core/overlay/overlay-container';
 import {MdDialogConfig} from './dialog-config';
 import {MdDialogRef} from './dialog-ref';

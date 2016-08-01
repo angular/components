@@ -8,11 +8,10 @@ import {
 } from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MD_TOOLTIP_DIRECTIVES, TooltipPosition, MdTooltip} from
-    '@angular2-material/tooltip/tooltip';
-import {OVERLAY_PROVIDERS} from '@angular2-material/core/overlay/overlay';
+import {TooltipPosition, MdTooltip} from '@angular2-material/tooltip/tooltip';
 import {OverlayContainer} from '@angular2-material/core/overlay/overlay-container';
 import {MdTooltipModule} from './tooltip';
+
 
 describe('MdTooltip', () => {
   let builder: TestComponentBuilder;

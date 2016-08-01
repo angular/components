@@ -1,13 +1,9 @@
-import {
-  inject,
-  async,
-  TestComponentBuilder,
-  TestBed,
-} from '@angular/core/testing';
+import {inject, async, TestComponentBuilder, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MD_GRID_LIST_DIRECTIVES, MdGridList, MdGridListModule} from './grid-list';
+import {MdGridList, MdGridListModule} from './grid-list';
 import {MdGridTile, MdGridTileText} from './grid-tile';
+
 
 describe('MdGridList', () => {
   let builder: TestComponentBuilder;
