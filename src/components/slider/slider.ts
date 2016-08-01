@@ -134,7 +134,7 @@ export class MdSlider implements AfterContentInit {
   ngAfterContentInit() {
     this._sliderDimensions = this._renderer.getSliderDimensions();
     this.snapToValue();
-    this._calculateTickSeparation();
+    this._updateTickSeparation();
   }
 
   /** TODO: internal */
@@ -231,15 +231,14 @@ export class MdSlider implements AfterContentInit {
   }
 
   /**
-   * Calls the appropriate method for calculating the tick separation depending on what the tick
-   * interval is. If there is no tick interval or the interval is set to something other than a
-   * number or 'auto', nothing happens.
+   * Calculates the separation in pixels of tick marks. If there is no tick interval or the interval
+   * is set to something other than a number or 'auto', nothing happens.
    */
-  private _calculateTickSeparation() {
+  private _updateTickSeparation() {
     if (this._tickInterval == 'auto') {
-      this._calculateAutoTickSeparation();
+      this._updateAutoTickSeparation();
     } else if (Number(this._tickInterval)) {
-      this._calculateTickSeparationFromInterval();
+      this._updateTickSeparationFromInterval();
     }
   }
 
@@ -248,7 +247,7 @@ export class MdSlider implements AfterContentInit {
    * needs a tick and eliminating the number of ticks until there is a distance of at least 30px
    * between each tick.
    */
-  private _calculateAutoTickSeparation() {
+  private _updateAutoTickSeparation() {
     // The pixel value for how far apart the ticks should be.
     let tickSeparation = 0;
     // Keeps track of how many steps to multiply the slider's step by.
@@ -273,7 +272,7 @@ export class MdSlider implements AfterContentInit {
   /**
    * Calculates the separation of tick marks by finding the pixel value of the tickInterval.
    */
-  private _calculateTickSeparationFromInterval() {
+  private _updateTickSeparationFromInterval() {
     // Force tickInterval to be a number so it can be used in calculations.
     let interval: number = <number> this._tickInterval;
     // Calculate the first value a tick will be located at by getting the step at which the interval
@@ -288,8 +287,6 @@ export class MdSlider implements AfterContentInit {
 
   /**
    * Calculates the percentage of the slider that a value is.
-   * @param value The value a percentage is needed for.
-   * @returns {number} The percentage.
    */
   calculatePercentage(value: number) {
     return (value - this.min) / (this.max - this.min);
@@ -297,8 +294,6 @@ export class MdSlider implements AfterContentInit {
 
   /**
    * Calculates the value a percentage of the slider corresponds to.
-   * @param percentage The percentage a value is needed for.
-   * @returns {number} The corresponding value.
    */
   calculateValue(percentage: number) {
     return this.min + (percentage * (this.max - this.min));
@@ -357,15 +352,17 @@ export class SliderRenderer {
 
   /**
    * Draws ticks onto the tick container.
-   * @param tickSeparation How far apart to draw the ticks.
    */
   drawTicks(tickSeparation: number) {
     let tickContainer = <HTMLElement>this._sliderElement.querySelector('.md-slider-tick-container');
     let tickContainerWidth = tickContainer.getBoundingClientRect().width;
+    // An extra element for the last tick is needed because the linear gradient cannot be told to
+    // always draw a tick at the end of the gradient. To get around this, there is a second
+    // container for ticks that has a single tick mark on the very right edge.
     let lastTickContainer =
         <HTMLElement>this._sliderElement.querySelector('.md-slider-last-tick-container');
     // Subtract 1 from the tick separation to center the tick.
-    // TODO: Perf test this.
+    // TODO: Evaluate the rendering performance of using repeating background gradients.
     tickContainer.style.background = `repeating-linear-gradient(to right, #000000, #000000 2px,
     transparent 2px, transparent ${tickSeparation - 1}px)`;
     // Add a tick to the very end by starting on the right side and adding a 2px black line.

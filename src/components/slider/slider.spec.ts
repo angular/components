@@ -461,6 +461,8 @@ describe('MdSlider', () => {
       // both sides. The value 30 will be located at the position 33.6px, and 1px is removed from
       // the tick mark location in order to center the tick. Therefore, the tick separation should
       // be 32.6px.
+      // toContain is used rather than toBe because FireFox adds 'transparent' to the beginning
+      // of the background before the repeating linear gradient.
       expect(tickContainer.style.background).toContain('repeating-linear-gradient(to right, ' +
       'rgb(0, 0, 0), rgb(0, 0, 0) 2px, transparent 2px, transparent 32.6px)');
     });
