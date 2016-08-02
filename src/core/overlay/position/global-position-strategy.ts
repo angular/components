@@ -96,18 +96,29 @@ export class GlobalPositionStrategy implements PositionStrategy {
     element.style.bottom = this._bottom;
     element.style.right = this._right;
 
-    // TODO(jelbourn): we don't want to always overwrite the transform property here,
-    // because it will need to be used for animations.
-    let tranlateX = this._reduceTranslateValues('translateX', this._translateX);
-    let translateY = this._reduceTranslateValues('translateY', this._translateY);
+    // Wait one frame for the content to be updated so that we can calculate the correct offset
+    requestAnimationFrame(() => {
+      // TODO(jelbourn): we don't want to always overwrite the transform property here,
+      // because it will need to be used for animations.
 
-    applyCssTransform(element, `${tranlateX} ${translateY}`);
+      let translateX = this._reduceTranslateValues('translateX', this._translateX, element);
+      let translateY = this._reduceTranslateValues('translateY', this._translateY, element);
+
+      applyCssTransform(element, `${translateX} ${translateY}`);
+    });
 
     return Promise.resolve(null);
   }
 
   /** Reduce a list of translate values to a string that can be used in the transform property */
-  private _reduceTranslateValues(translateFn: string, values: string[]) {
-    return values.map(t => `${translateFn}(${t})`).join(' ');
+  private _reduceTranslateValues(translateFn: string, values: string[], element: HTMLElement) {
+    return values.map(t => {
+      // TODO: Replace hard-coded check with percent-to-pixel conversion
+      if (t == '-50%') {
+        let offsetValue = translateFn == 'translateX' ? element.offsetWidth : element.offsetHeight;
+        t = Math.round(offsetValue * -0.5) + 'px';
+      }
+      return `${translateFn}(${t})`;
+    }).join(' ');
   }
 }
