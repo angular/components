@@ -152,7 +152,6 @@ describe('MdTabGroup', () => {
     let fixture: ComponentFixture<AsyncTabsTestApp>;
 
     beforeEach(async(() => {
-      console.log('BEFORE EACH TABS TEST');
       fixture = TestBed.createComponent(AsyncTabsTestApp);
     }));
 
@@ -164,7 +163,6 @@ describe('MdTabGroup', () => {
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
-        console.log('TABS TEST IS STABLE');
         fixture.detectChanges();
         labels = fixture.debugElement.queryAll(By.css('.md-tab-label'));
         expect(labels.length).toBe(2);
@@ -249,10 +247,7 @@ class AsyncTabsTestApp {
   // Use ngOnInit because there is some issue with scheduling the async task in the constructor.
   ngOnInit() {
     this.tabs = Observable.create((observer: any) => {
-      requestAnimationFrame(() => {
-        console.log('RAF RUNNING');
-        return observer.next(this._tabs);
-      });
+      requestAnimationFrame(() => observer.next(this._tabs));
     });
   }
 }
