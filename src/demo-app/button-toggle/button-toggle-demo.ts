@@ -7,7 +7,6 @@ import {
   moduleId: module.id,
   selector: 'button-toggle-demo',
   templateUrl: 'button-toggle-demo.html',
-  styleUrls: ['demo-button-styles.css'],
   providers: [MdUniqueSelectionDispatcher],
 })
 export class ButtonToggleDemo {

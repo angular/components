@@ -18,6 +18,9 @@ mkdir deploy
 # Start off by building normally.
 ng build
 
+# `ng build` does not complete synchronously, so wait a moment for it.
+sleep 3
+
 # We need to remove moduleId for the ngc build. We do this by simply commenting out with a
 # distinguishing marker and then undoing those lines after we've generated the .metadata.json files.
 grep -lr "moduleId:" ./src/ | xargs sed -i 's|moduleId:|//MODULE moduleId:|g'
