@@ -1,22 +1,19 @@
 import {
-  it,
-  describe,
-  expect,
-  beforeEach,
   inject,
   fakeAsync,
   flushMicrotasks,
-  beforeEachProviders,
+  addProviders,
 } from '@angular/core/testing';
 import {TestComponentBuilder} from '@angular/compiler/testing';
 import {
   Component,
   ViewChild,
-  provide, ViewContainerRef,
+  ViewContainerRef,
 } from '@angular/core';
 import {TemplatePortalDirective} from '../portal/portal-directives';
 import {TemplatePortal, ComponentPortal} from '../portal/portal';
-import {Overlay, OVERLAY_CONTAINER_TOKEN} from './overlay';
+import {Overlay} from './overlay';
+import {OverlayContainer} from './overlay-container';
 import {OverlayRef} from './overlay-ref';
 import {OverlayState} from './overlay-state';
 import {PositionStrategy} from './position/position-strategy';
@@ -27,21 +24,26 @@ import {ViewportRuler} from './position/viewport-ruler';
 describe('Overlay', () => {
   let builder: TestComponentBuilder;
   let overlay: Overlay;
-  let componentPortal: ComponentPortal;
+  let componentPortal: ComponentPortal<PizzaMsg>;
   let templatePortal: TemplatePortal;
   let overlayContainerElement: HTMLElement;
 
-  beforeEachProviders(() => [
-    Overlay,
-    OverlayPositionBuilder,
-    ViewportRuler,
-    provide(OVERLAY_CONTAINER_TOKEN, {
-      useFactory: () => {
-        overlayContainerElement = document.createElement('div');
-        return overlayContainerElement;
-      }
-    })
-  ]);
+  beforeEach(() => {
+    addProviders([
+      Overlay,
+      OverlayPositionBuilder,
+      ViewportRuler,
+      {provide: OverlayContainer, useFactory: () => {
+        return {
+          getContainerElement: () => {
+            if (overlayContainerElement) { return overlayContainerElement; }
+            overlayContainerElement = document.createElement('div');
+            return overlayContainerElement;
+          }
+        };
+      }}
+    ]);
+  });
 
   let deps = [TestComponentBuilder, Overlay];
   beforeEach(inject(deps, fakeAsync((tcb: TestComponentBuilder, o: Overlay) => {

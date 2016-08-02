@@ -12,9 +12,15 @@ export class OverlayRef implements PortalHost {
       private _state: OverlayState) { }
 
   attach(portal: Portal<any>): Promise<any> {
-    return this._portalHost.attach(portal).then(() => {
-      this._updatePosition();
+    let attachPromise = this._portalHost.attach(portal);
+
+    // Don't chain the .then() call in the return because we want the result of portalHost.attach
+    // to be returned from this method.
+    attachPromise.then(() => {
+      this.updatePosition();
     });
+
+    return attachPromise;
   }
 
   detach(): Promise<any> {
@@ -35,7 +41,7 @@ export class OverlayRef implements PortalHost {
   }
 
   /** Updates the position of the overlay based on the position strategy. */
-  private _updatePosition() {
+  updatePosition() {
     if (this._state.positionStrategy) {
       this._state.positionStrategy.apply(this._pane);
     }

@@ -1,1 +1,63 @@
-menu
+<div class="demo-menu">
+  <div class="menu-section">
+    <p>You clicked on: {{ selected }}</p>
+
+    <md-toolbar>
+      <button md-icon-button [md-menu-trigger-for]="menu">
+        <md-icon>more_vert</md-icon>
+      </button>
+    </md-toolbar>
+
+    <md-menu #menu="mdMenu">
+      <button md-menu-item *ngFor="let item of items" (click)="select(item.text)" [disabled]="item.disabled">
+        {{ item.text }}
+      </button>
+    </md-menu>
+  </div>
+  <div class="menu-section">
+    <p> Clicking these will navigate:</p>
+    <md-toolbar>
+      <button md-icon-button [md-menu-trigger-for]="anchorMenu">
+        <md-icon>more_vert</md-icon>
+      </button>
+    </md-toolbar>
+
+    <md-menu #anchorMenu="mdMenu">
+      <a md-menu-item *ngFor="let item of items" href="http://www.google.com" [disabled]="item.disabled">
+        {{ item.text }}
+      </a>
+    </md-menu>
+  </div>
+  <div class="menu-section">
+    <p>
+      Position x: before
+    </p>
+    <md-toolbar class="end-icon">
+      <button md-icon-button [md-menu-trigger-for]="posXMenu">
+        <md-icon>more_vert</md-icon>
+      </button>
+    </md-toolbar>
+
+    <md-menu x-position="before" #posXMenu="mdMenu" class="before">
+      <button md-menu-item *ngFor="let item of items" [disabled]="item.disabled">
+        {{ item.text }}
+      </button>
+    </md-menu>
+  </div>
+  <div class="menu-section">
+    <p>
+      Position y: above
+    </p>
+    <md-toolbar>
+      <button md-icon-button [md-menu-trigger-for]="posYMenu">
+        <md-icon>more_vert</md-icon>
+      </button>
+    </md-toolbar>
+
+    <md-menu y-position="above" #posYMenu="mdMenu">
+      <button md-menu-item *ngFor="let item of items" [disabled]="item.disabled">
+        {{ item.text }}
+      </button>
+    </md-menu>
+  </div>
+</div>

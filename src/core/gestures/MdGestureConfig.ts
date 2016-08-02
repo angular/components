@@ -4,6 +4,7 @@ import {HammerGestureConfig} from '@angular/platform-browser';
 /* Adjusts configuration of our gesture library, Hammer. */
 @Injectable()
 export class MdGestureConfig extends HammerGestureConfig {
+
   /* List of new event names to add to the gesture support list */
   events: string[] = [
     'drag',
@@ -12,6 +13,11 @@ export class MdGestureConfig extends HammerGestureConfig {
     'dragright',
     'dragleft',
     'longpress',
+    'slide',
+    'slidestart',
+    'slideend',
+    'slideright',
+    'slideleft'
   ];
 
   /*
@@ -27,24 +33,36 @@ export class MdGestureConfig extends HammerGestureConfig {
    * TODO: Confirm threshold numbers with Material Design UX Team
    * */
   buildHammer(element: HTMLElement) {
-    var mc = new Hammer(element);
+    const mc = new Hammer(element);
 
-    // create custom gesture recognizers
-    var drag = new Hammer.Pan({event: 'drag', threshold: 6});
-    var longpress = new Hammer.Press({event: 'longpress', time: 500});
+    // Default Hammer Recognizers.
+    let pan = new Hammer.Pan();
+    let swipe = new Hammer.Swipe();
+    let press = new Hammer.Press();
 
-    // ensure custom recognizers can coexist with the default gestures (i.e. pan, press, swipe)
-    var pan = new Hammer.Pan();
-    var press = new Hammer.Press();
-    var swipe = new Hammer.Swipe();
-    drag.recognizeWith(pan);
-    drag.recognizeWith(swipe);
+    // Notice that a HammerJS recognizer can only depend on one other recognizer once.
+    // Otherwise the previous `recognizeWith` will be dropped.
+    let slide = this._createRecognizer(pan, {event: 'slide', threshold: 0}, swipe);
+    let drag = this._createRecognizer(slide, {event: 'drag', threshold: 6}, swipe);
+    let longpress = this._createRecognizer(press, {event: 'longpress', time: 500});
+
+    // Overwrite the default `pan` event to use the swipe event.
     pan.recognizeWith(swipe);
-    longpress.recognizeWith(press);
 
-    // add customized gestures to Hammer manager
-    mc.add([drag, pan, swipe, press, longpress]);
+    // Add customized gestures to Hammer manager
+    mc.add([swipe, press, pan, drag, slide, longpress]);
+
     return mc;
+  }
+
+  /** Creates a new recognizer, without affecting the default recognizers of HammerJS */
+  private _createRecognizer(base: Recognizer, options: any, ...inheritances: Recognizer[]) {
+    let recognizer = new (<RecognizerStatic> base.constructor)(options);
+
+    inheritances.push(base);
+    inheritances.forEach((item) => recognizer.recognizeWith(item));
+
+    return recognizer;
   }
 
 }
