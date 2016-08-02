@@ -10,6 +10,7 @@ import {
   AfterContentInit,
   NgModule,
 } from '@angular/core';
+import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {
   FormsModule,
   ControlValueAccessor,
@@ -18,6 +19,8 @@ import {
 import {BooleanFieldValue} from '@angular2-material/core/annotations/field-value';
 import {Observable} from 'rxjs/Observable';
 import {applyCssTransform} from '@angular2-material/core/style/apply-transform';
+import {MdGestureConfig} from '@angular2-material/core/core';
+
 
 export const MD_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -302,5 +305,8 @@ export const MD_SLIDE_TOGGLE_DIRECTIVES = [MdSlideToggle];
   imports: [FormsModule],
   exports: MD_SLIDE_TOGGLE_DIRECTIVES,
   declarations: MD_SLIDE_TOGGLE_DIRECTIVES,
+  providers: [
+    {provide: HAMMER_GESTURE_CONFIG, useClass: MdGestureConfig},
+  ],
 })
 export class MdSlideToggleModule { }
