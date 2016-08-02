@@ -23,8 +23,6 @@ ng build
 grep -lr "moduleId:" ./src/ | xargs sed -i 's|moduleId:|//MODULE moduleId:|g'
 
 
-sleep 1
-
 # Run tsc directly first so that the output directories match what ngc is expecting. This is
 # different from what the CLI will output for *demo-app*, but we don't care about the output for
 # demo-app when we're staging a release (only components/ and core/).
