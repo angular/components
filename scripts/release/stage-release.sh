@@ -25,6 +25,11 @@ sleep 3
 # distinguishing marker and then undoing those lines after we've generated the .metadata.json files.
 grep -lr "moduleId:" ./src/ | xargs sed -i 's|moduleId:|//MODULE moduleId:|g'
 
+# Blech
+( cd dist ; find ./components/ -iname "*.css" | xargs -i rsync -Rq {} ../src )
+( cd dist ; find ./core/ -iname "*.css" | xargs -i rsync -Rq {} ../src )
+( cd dist ; find ./ -iname "*.css" -not -path ./components -not -path ./core | xargs -i rsync -Rq {} ../src/demo-app )
+
 
 # Run tsc directly first so that the output directories match what ngc is expecting. This is
 # different from what the CLI will output for *demo-app*, but we don't care about the output for
@@ -61,6 +66,9 @@ cp -R ./dist/components/* ./deploy/
 
 # Copy the core/ directory directly into ./deploy
 cp -R ./dist/core/ ./deploy/core/
+
+# Remove css files from src/
+find ./src -iname "*.css" | xargs rm
 
 # Remove test files from deploy/
 find ./deploy -iname "*.spec.d.ts" | xargs rm

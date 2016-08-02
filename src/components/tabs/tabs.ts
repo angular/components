@@ -197,7 +197,7 @@ export class MdTabGroup {
 }
 
 export const MD_TABS_DIRECTIVES = [MdTabGroup, MdTabLabel, MdTabContent, MdTab];
-const TABS_INTERNAL_DIRECTIVES = [MdInkBar, MdTabLabelWrapper];
+export const TABS_INTERNAL_DIRECTIVES = [MdInkBar, MdTabLabelWrapper];
 
 @NgModule({
   imports: [CommonModule, PortalModule],

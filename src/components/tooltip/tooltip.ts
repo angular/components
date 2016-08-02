@@ -187,7 +187,7 @@ export class MdTooltip {
   template: `<div class="md-tooltip">{{message}}</div>`,
   styleUrls: ['tooltip.css'],
 })
-class TooltipComponent {
+export class TooltipComponent {
   message: string;
 }
 
