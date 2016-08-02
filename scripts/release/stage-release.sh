@@ -19,17 +19,11 @@ mkdir deploy
 ng build
 
 # `ng build` does not complete synchronously, so wait a moment for it.
-sleep 3
+sleep 2
 
 # We need to remove moduleId for the ngc build. We do this by simply commenting out with a
 # distinguishing marker and then undoing those lines after we've generated the .metadata.json files.
 grep -lr "moduleId:" ./src/ | xargs sed -i 's|moduleId:|//MODULE moduleId:|g'
-
-# Blech
-( cd dist ; find ./components/ -iname "*.css" | xargs -i rsync -Rq {} ../src )
-( cd dist ; find ./core/ -iname "*.css" | xargs -i rsync -Rq {} ../src )
-( cd dist ; find ./ -iname "*.css" -not -path ./components -not -path ./core | xargs -i rsync -Rq {} ../src/demo-app )
-
 
 # Run tsc directly first so that the output directories match what ngc is expecting. This is
 # different from what the CLI will output for *demo-app*, but we don't care about the output for

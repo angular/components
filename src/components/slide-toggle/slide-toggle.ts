@@ -61,7 +61,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   private _uniqueId = `md-slide-toggle-${++nextId}`;
   private _checked: boolean = false;
   private _color: string;
-  private _hasFocus: boolean = false;
+  _hasFocus: boolean = false;
   private _isMousedown: boolean = false;
   private _slideRenderer: SlideToggleRenderer = null;
 
