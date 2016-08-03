@@ -4,31 +4,32 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": ["es6", "es2015", "dom"],
-    "mapRoot": "/",
+    "mapRoot": "",
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
     "noImplicitAny": true,
-    "outDir": "../../dist/",
+    "outDir": "../../dist/@angular2-material",
+    "rootDir": ".",
     "sourceMap": true,
     "target": "es5",
+    "inlineSources": true,
     "stripInternal": true,
     "baseUrl": "",
-    "typeRoots": [
-      "../../node_modules/@types",
-      "../../node_modules"
-    ],
     "paths": {
-      "@angular2-material/*": [
-        "../../dist/@angular2-material/*"
+      "@angular2-material/core/*": [
+        "./core/*"
       ]
     },
+    "typeRoots": [
+      "../../node_modules/@types"
+    ],
     "types": [
-      "hammerjs"
+      "jasmine"
     ]
   },
   "angularCompilerOptions": {
-    "genDir": "../../dist",
+    "genDir": "../dist",
     "skipTemplateCodegen": true,
     "debug": true
   }

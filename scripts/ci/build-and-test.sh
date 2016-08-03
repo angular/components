@@ -14,7 +14,7 @@ start_tunnel
 
 wait_for_tunnel
 if is_lint; then
-  npm run tslint  
+  npm run tslint
   npm run ci:forbidden-identifiers
   npm run stylelint
 elif is_circular_deps_check; then
@@ -43,6 +43,7 @@ elif is_e2e; then
   ng e2e
 elif is_extract_metadata; then
   # Run `tsc` first so that the directory structure in dist/ matches what ngc expects.
+  ./node_modules/.bin/tsc -p ./src/lib/
   ./node_modules/.bin/tsc -p ./src/demo-app/
   ./node_modules/.bin/ngc -p ./src/demo-app/
 else

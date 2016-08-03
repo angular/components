@@ -25,12 +25,6 @@ const components = [
   'tooltip',
 ];
 
-/** Map relative paths to URLs. */
-const map: any = {
-  '@angular2-material/core': 'core',
-};
-components.forEach(name => map[`@angular2-material/${name}`] = `components/${name}`);
-
 
 /** User packages configuration. */
 const packages: any = {

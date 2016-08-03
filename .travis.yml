@@ -51,7 +51,6 @@ matrix:
 
 install:
   - npm install
-  - npm run typings
 
 before_script:
   - mkdir -p $LOGS_DIR
