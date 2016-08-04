@@ -27,7 +27,8 @@
     }
   },
   "angularCompilerOptions": {
-    "genDir": "../generated",
+    "genDir": "../../dist",
+    "skipTemplateCodegen": true,
     "debug": true
   },
   "files": [
