@@ -41,6 +41,8 @@ export class RippleDemo {
   rippleColor = '';
   rippleBackgroundColor = '';
 
+  disableButtonRipples = false;
+
   doManualRipple() {
     if (this.manualRipple) {
       window.setTimeout(() => this.manualRipple.start(), 10);
