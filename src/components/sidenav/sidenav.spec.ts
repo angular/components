@@ -59,10 +59,10 @@ describe('MdSidenav', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([TestComponentBuilder, XHR], (tcb: TestComponentBuilder, x: XHR) => {
+  beforeEach(fakeAsync(inject([TestComponentBuilder, XHR], (tcb: TestComponentBuilder, x: XHR) => {
     builder = tcb;
     xhr = x;
-  }));
+  })));
 
   /**
    * We need to get the template and styles for the sidenav in an Async test.

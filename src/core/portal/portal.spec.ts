@@ -31,9 +31,13 @@ describe('Portals', () => {
     });
   }));
 
-  beforeEach(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+  beforeEach(fakeAsync(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
     builder = tcb;
-  }));
+  })));
+
+  // beforeEach(inject([TestComponentBuilder], fakeAsync((tcb: TestComponentBuilder) => {
+  //   builder = tcb;
+  // })));
 
   describe('PortalHostDirective', () => {
     it('should load a component into the portal', fakeAsync(() => {

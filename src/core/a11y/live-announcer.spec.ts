@@ -23,12 +23,12 @@ describe('MdLiveAnnouncer', () => {
       providers: [MdLiveAnnouncer]
     }));
 
-    beforeEach(inject([TestComponentBuilder, MdLiveAnnouncer],
+    beforeEach(fakeAsync(inject([TestComponentBuilder, MdLiveAnnouncer],
       (tcb: TestComponentBuilder, _live: MdLiveAnnouncer) => {
         builder = tcb;
         live = _live;
         liveEl = getLiveElement();
-      }));
+      })));
 
     afterEach(() => {
       // In our tests we always remove the current live element, because otherwise we would have
@@ -36,7 +36,7 @@ describe('MdLiveAnnouncer', () => {
       liveEl.parentNode.removeChild(liveEl);
     });
 
-    it('should correctly update the announce text', fakeAsyncTest(() => {
+    it('should correctly update the announce text', fakeAsync(() => {
       let appFixture: ComponentFixture<TestApp> = null;
 
       builder.createAsync(TestApp).then(fixture => {
@@ -56,7 +56,7 @@ describe('MdLiveAnnouncer', () => {
       expect(liveEl.textContent).toBe('Test');
     }));
 
-    it('should correctly update the politeness attribute', fakeAsyncTest(() => {
+    it('should correctly update the politeness attribute', fakeAsync(() => {
       let appFixture: ComponentFixture<TestApp> = null;
 
       builder.createAsync(TestApp).then(fixture => {
@@ -74,7 +74,7 @@ describe('MdLiveAnnouncer', () => {
       expect(liveEl.getAttribute('aria-live')).toBe('assertive');
     }));
 
-    it('should apply the aria-live value polite by default', fakeAsyncTest(() => {
+    it('should apply the aria-live value polite by default', fakeAsync(() => {
       let appFixture: ComponentFixture<TestApp> = null;
 
       builder.createAsync(TestApp).then(fixture => {
@@ -113,7 +113,7 @@ describe('MdLiveAnnouncer', () => {
       }));
 
 
-    it('should allow to use a custom live element', fakeAsyncTest(() => {
+    it('should allow to use a custom live element', fakeAsync(() => {
       live.announce('Custom Element');
 
       // This flushes our 100ms timeout for the screenreaders.
@@ -125,9 +125,6 @@ describe('MdLiveAnnouncer', () => {
 
 });
 
-function fakeAsyncTest(fn: () => void) {
-  return inject([], fakeAsync(fn));
-}
 
 function getLiveElement(): Element {
   return document.body.querySelector('.md-live-announcer');

@@ -39,7 +39,7 @@ describe('Overlay', () => {
 
 
   let deps = [TestComponentBuilder, Overlay];
-  beforeEach(inject(deps, fakeAsync((tcb: TestComponentBuilder, o: Overlay) => {
+  beforeEach(fakeAsync(inject(deps, (tcb: TestComponentBuilder, o: Overlay) => {
     builder = tcb;
     overlay = o;
 
