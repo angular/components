@@ -247,19 +247,31 @@ export class MdSlider implements AfterContentInit {
    * separation constant.
    */
   private _updateAutoTickSeparation() {
-    let width = this._sliderDimensions.width;
+    // We're looking for the multiple of step for which the separation between is greater than the
+    // minimum tick separation.
+    let sliderWidth = this._sliderDimensions.width;
 
-    // This calculates which step is far enough away from the beginning of the slider to draw a tick
-    // at. This value will then be used to draw ticks at every tickStep steps.
-    let tickStep =
-        Math.ceil(MIN_AUTO_TICK_SEPARATION * (this.max - this.min) / (width * this.step));
+    // This is the total "width" of the slider in terms of values.
+    let valueWidth = this.max - this.min;
 
-    // The percentage of the slider where the first tick should go.
-    let tickPercentage = this.calculatePercentage((this.step * tickStep) + this.min);
+    // Calculate how many values exist within 1px on the slider.
+    let valuePerPixel = valueWidth / sliderWidth;
+
+    // Calculate how many values exist in the minimum tick separation (px).
+    let valuePerSeparation = valuePerPixel  * MIN_AUTO_TICK_SEPARATION;
+
+    // Calculate how many steps exist in this separation. This will be the lowest value you can
+    // multiply step by to get a separation that is greater than or equal to the minimum tick
+    // separation.
+    let stepsPerSeparation = Math.ceil(valuePerSeparation / this.step);
+
+    // Get the percentage of the slider for which this tick would be located so we can then draw
+    // it on the slider.
+    let tickPercentage = this.calculatePercentage((this.step * stepsPerSeparation) + this.min);
 
     // The pixel value of the tick is the percentage * the width of the slider. Use this to draw
     // the ticks on the slider.
-    this._renderer.drawTicks(width * tickPercentage);
+    this._renderer.drawTicks(sliderWidth * tickPercentage);
   }
 
   /**
