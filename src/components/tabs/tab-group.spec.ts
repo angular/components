@@ -151,11 +151,9 @@ describe('MdTabGroup', () => {
   describe('async tabs', () => {
     let fixture: ComponentFixture<AsyncTabsTestApp>;
 
-    beforeEach(async(() => {
-      fixture = TestBed.createComponent(AsyncTabsTestApp);
-    }));
-
     it('should show tabs when they are available', async(() => {
+      fixture = TestBed.createComponent(AsyncTabsTestApp);
+
       let labels = fixture.debugElement.queryAll(By.css('.md-tab-label'));
 
       expect(labels.length).toBe(0);
