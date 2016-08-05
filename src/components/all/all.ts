@@ -22,9 +22,6 @@ import {OverlayModule} from '@angular2-material/core/overlay/overlay-directives'
 import {MdMenuModule} from '@angular2-material/menu/menu';
 import {MdDialogModule} from '@angular2-material/dialog/dialog';
 import {RtlModule} from '@angular2-material/core/rtl/dir';
-import {
-  MdUniqueSelectionDispatcher
-} from '@angular2-material/core/coordination/unique-selection-dispatcher';
 import {MdLiveAnnouncer} from '@angular2-material/core/a11y/live-announcer';
 
 
