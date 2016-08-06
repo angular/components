@@ -1,5 +1,13 @@
+import {NgModule} from '@angular/core';
+import {MdLineModule} from './line/line';
+import {RtlModule} from './rtl/dir';
+import {MdRippleModule} from './ripple/ripple';
+import {PortalModule} from './portal/portal-directives';
+import {OverlayModule} from './overlay/overlay-directives';
+import {MdLiveAnnouncer} from './a11y/live-announcer';
+
 // RTL
-export {Dir, LayoutDirection} from './rtl/dir';
+export {Dir, LayoutDirection, RtlModule} from './rtl/dir';
 
 // Portals
 export {
@@ -37,16 +45,34 @@ export {
 export {MdGestureConfig} from './gestures/MdGestureConfig';
 
 // Ripple
-export {MD_RIPPLE_DIRECTIVES, MdRipple} from './ripple/ripple';
+export {MD_RIPPLE_DIRECTIVES, MdRipple, MdRippleModule} from './ripple/ripple';
 
 // a11y
 export {
   AriaLivePoliteness,
   MdLiveAnnouncer,
-  LIVE_ANNOUNCER_ELEMENT_TOKEN
+  LIVE_ANNOUNCER_ELEMENT_TOKEN,
 } from './a11y/live-announcer';
 
 export {
   MdUniqueSelectionDispatcher,
   MdUniqueSelectionDispatcherListener
 } from './coordination/unique-selection-dispatcher';
+
+export {MdLineModule, MdLine, MdLineSetter} from './line/line';
+
+
+let coreModules = [
+  MdLineModule,
+  RtlModule,
+  MdRippleModule,
+  PortalModule,
+  OverlayModule,
+];
+
+@NgModule({
+  imports: coreModules,
+  exports: coreModules,
+  providers: [MdLiveAnnouncer],
+})
+export class MdCoreModule { }
