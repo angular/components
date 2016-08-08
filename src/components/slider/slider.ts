@@ -47,6 +47,10 @@ export class MdSlider implements AfterContentInit {
   @HostBinding('attr.aria-disabled')
   disabled: boolean = false;
 
+  @Input('thumb-label')
+  @BooleanFieldValue()
+  private _thumbLabel: boolean = false;
+
   /** The miniumum value that the slider can have. */
   private _min: number = 0;
 
