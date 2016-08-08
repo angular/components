@@ -423,6 +423,7 @@ export class MdRadioButton implements OnInit {
   }
 }
 
+/** @deprecated */
 export const MD_RADIO_DIRECTIVES = [MdRadioGroup, MdRadioButton];
 
 

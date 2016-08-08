@@ -157,6 +157,7 @@ export class MdAnchor extends MdButton {
 }
 
 
+/** @deprecated */
 export const MD_BUTTON_DIRECTIVES: Type[] = [MdButton, MdAnchor];
 
 

@@ -371,6 +371,7 @@ export class MdButtonToggle implements OnInit {
   }
 }
 
+/** @deprecated */
 export const MD_BUTTON_TOGGLE_DIRECTIVES = [
   MdButtonToggleGroup,
   MdButtonToggleGroupMultiple,
