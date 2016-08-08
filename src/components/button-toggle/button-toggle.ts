@@ -369,6 +369,7 @@ export class MdButtonToggle implements OnInit {
     this._emitChangeEvent();
   }
 
+  /** TODO: internal */
   _onInputClick(event: Event) {
 
     // We have to stop propagation for click events on the visual hidden input element.

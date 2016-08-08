@@ -2,7 +2,6 @@ import {
     inject,
     async,
     fakeAsync,
-    tick,
     TestComponentBuilder,
     ComponentFixture,
     TestBed,
