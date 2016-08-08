@@ -39,10 +39,7 @@ elif is_e2e; then
   echo "Starting e2e tests"
   npm run e2e
 elif is_extract_metadata; then
-  # Run `tsc` first so that the directory structure in dist/ matches what ngc expects.
-  ./node_modules/.bin/tsc -p ./src/lib/
-  ./node_modules/.bin/tsc -p ./src/demo-app/
-  ./node_modules/.bin/ngc -p ./src/demo-app/
+  $(npm bin)/gulp build:components:ngc
 else
   # Unit tests
   npm run build
