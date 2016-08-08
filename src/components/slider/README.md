@@ -35,10 +35,6 @@ These can be set individually and do not need to both be set.
 <md-slider min="1" max="5"></md-slider>
 ```
 
-Output:
-
-![Slider with Min and Max Defined]()
-
 ### Disabled Slider
 
 `md-slider` can be disabled so that the value cannot be changed and the thumb cannot be moved.
@@ -86,6 +82,6 @@ which is the same as every `12` values.
 | `min` | number | Optional, the minimum number for the slider. Default = `0`. |
 | `max` | number | Optional, the maximum number for the slider. Default = `100`. |
 | `value` | number | Optional, the value to start the slider at. |
-| `tick-interval` | `"auto"|number` | Optional, how many steps between tick marks. |
-| `step` | number | Optional, declares where the thumb will snap to. Default = 1. |
-| `disabled` | boolean | Optional, whether or not the slider is disabled. Default = false. |
+| `tick-interval` | `"auto" | number` | Optional, how many steps between tick marks. |
+| `step` | number | Optional, declares where the thumb will snap to. Default = `1`. |
+| `disabled` | boolean | Optional, whether or not the slider is disabled. Default = `false`. |
