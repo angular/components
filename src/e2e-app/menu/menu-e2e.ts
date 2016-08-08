@@ -13,7 +13,7 @@ import {Component} from '@angular/core';
 
     .bottom-row {
       position: absolute;
-      top: 100px;
+      top: 200px;
     }
   `]
 })
