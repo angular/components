@@ -53,7 +53,7 @@ These can be set individually and do not need to both be set.
 <md-slider disabled></md-slider>
 ```
 
-### Slider with Value Defined
+### Slider with Value
 
 `md-slider` can have a value defined so that it starts at a specific value on the slider.
 
@@ -61,7 +61,7 @@ These can be set individually and do not need to both be set.
 <md-slider value="24"></md-slider>
 ```
 
-### Slider with Step Defined
+### Slider with Step
 
 `md-slider` can have the step defined which declares where the thumb can snap to.
 
@@ -69,7 +69,7 @@ These can be set individually and do not need to both be set.
 <md-slider step="5"></md-slider>
 ```
 
-### Slider with Tick Interval Defined
+### Slider with Tick Interval
 
 `md-slider` can have a tick interval set to a number or to `auto`.
 `auto` will automatically draw tick marks on steps that are at least 30px apart and will always draw
