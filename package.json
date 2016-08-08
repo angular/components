@@ -15,8 +15,7 @@
     "tslint": "tslint -c tslint.json 'src/**/*.ts'",
     "stylelint": "stylelint 'src/**/*.scss' --config stylelint-config.json --syntax scss",
     "check-circular-deps": "madge --circular ./dist",
-    "e2e": "protractor",
-    "inline-resources": "",
+    "e2e": "protractor test/protractor.conf.js",
     "deploy": "firebase deploy",
     "webdriver-manager": "webdriver-manager"
   },

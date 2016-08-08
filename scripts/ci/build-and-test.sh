@@ -19,12 +19,12 @@ if is_lint; then
   npm run stylelint
 elif is_circular_deps_check; then
   # Build first because madge needs the JavaScript output.
-  ng build
+  $(npm bin)/gulp build
   npm run check-circular-deps
 elif is_e2e; then
   # Start up the e2e app. This will take some time.
   echo "Starting e2e app"
-  MD_APP=e2e ng serve &
+  $(npm bin)/gulp serve:e2eapp &
   sleep 1
 
   # Wait until the dist/ directory is created, indicating that the e2e app is ready.
@@ -40,7 +40,7 @@ elif is_e2e; then
 
   # Run the e2e tests on the served e2e app.
   echo "Starting e2e tests"
-  ng e2e
+  npm run e2e
 elif is_extract_metadata; then
   # Run `tsc` first so that the directory structure in dist/ matches what ngc expects.
   ./node_modules/.bin/tsc -p ./src/lib/
