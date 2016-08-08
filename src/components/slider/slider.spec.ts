@@ -25,6 +25,8 @@ describe('MdSlider', () => {
         SliderWithMinAndMax,
         SliderWithValue,
         SliderWithStep,
+        SliderWithAutoTickInterval,
+        SliderWithSetTickInterval
       ],
     });
 
@@ -561,13 +563,11 @@ class SliderWithValue { }
 class SliderWithStep { }
 
 @Component({
-  directives: [MD_SLIDER_DIRECTIVES],
   template: `<md-slider step="5" tick-interval="auto"></md-slider>`
 })
 class SliderWithAutoTickInterval { }
 
 @Component({
-  directives: [MD_SLIDER_DIRECTIVES],
   template: `<md-slider step="3" tick-interval="6"></md-slider>`
 })
 class SliderWithSetTickInterval { }
