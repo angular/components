@@ -35,9 +35,6 @@ elif is_e2e; then
     echo -n ".."
   done
 
-  echo "\nInlining resources"
-  npm run inline-resources
-
   # Run the e2e tests on the served e2e app.
   echo "Starting e2e tests"
   npm run e2e
@@ -49,7 +46,6 @@ elif is_extract_metadata; then
 else
   # Unit tests
   npm run build
-  npm run inline-resources
 
   karma start test/karma.conf.js --single-run --no-auto-watch --reporters='dots'
 fi

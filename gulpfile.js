@@ -3,20 +3,23 @@
  * This file needs to be JavaScript and is read by gulp.
  */
 // Global imports.
+const child_process = require('child_process');
 const fs = require('fs');
 const gulp = require('gulp');
 const path = require('path');
+const resolveBin = require('resolve-bin');
 
 // Other imports.
 const inlineResources = require('./scripts/release/inline-resources');
 
 // Gulp plugins.
 const gulpClean = require('gulp-clean');
-const gulpTs = require('gulp-typescript');
+const gulpLiveServer = require('gulp-live-server');
 const gulpMerge = require('merge2');
+const gulpRunSequence = require('run-sequence');
 const gulpSass = require('gulp-sass');
 const gulpSourcemaps = require('gulp-sourcemaps');
-const gulpLiveServer = require('gulp-live-server');
+const gulpTs = require('gulp-typescript');
 
 
 // Directories.
@@ -48,15 +51,12 @@ function makeTsBuildTask(options) {
       .pipe(gulpTs(tsProject));
     let dts = pipe.dts.pipe(gulp.dest(dest));
 
-    if (tsConfig.compilerOptions.sourceMap) {
-      if (!tsConfig.compilerOptions.inlineSources) {
-        pipe = pipe.pipe(gulpSourcemaps.write(dest));
-      } else {
-        pipe = pipe.pipe(gulpSourcemaps.write());
-      }
-    }
-
-    return gulpMerge([dts, pipe.pipe(gulp.dest(dest))]);
+    return gulpMerge([
+      dts,
+      pipe
+        .pipe(gulpSourcemaps.write('.'))
+        .pipe(gulp.dest(dest))
+    ]);
   };
 }
 
@@ -107,6 +107,24 @@ gulp.task('build:components', [
   'build:components:scss'
 ], function() {
   inlineResources([outLibDir]);
+});
+gulp.task('build:components:ngc', ['build:components'], function(done) {
+  resolveBin('@angular/compiler-cli', { executable: 'ngc' }, function(err, cliPath) {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+
+    child_process.exec(`${cliPath} -p ${path.relative(__dirname, componentsDir)}`, function(error) {
+      console.log(arguments);
+      if (error) {
+        console.error(error);
+        process.exit(1);
+      }
+
+      done();
+    });
+  });
 });
 
 /***************************************************************************************************
@@ -189,10 +207,22 @@ gulp.task('build:e2eapp', [
 /***************************************************************************************************
  * Global tasks.
  */
+gulp.task('default', function() {
+  console.log(`You're probably looking for "build" or "serve:devapp".`);
+});
+
 gulp.task('build', ['build:devapp']);
 
-gulp.task('clean', function () {
+gulp.task('clean', function() {
   return gulp.src('dist', { read: false })
+    .pipe(gulpClean());
+});
+gulp.task('clean:spec', function() {
+  return gulp.src('dist/**/*.spec.*', { read: false })
+    .pipe(gulpClean());
+});
+gulp.task('clean:assets', function() {
+  return gulp.src('dist/**/*+(.html|.css)', { read: false })
     .pipe(gulpClean());
 });
 
@@ -242,4 +272,17 @@ gulp.task('serve:e2eapp', ['build:e2eapp'], function() {
   gulp.watch(path.join(e2eAppDir, '**/*.ts'), ['build:e2eapp:ts'], reload);
   gulp.watch(path.join(e2eAppDir, '**/*.scss'), ['build:e2eapp:scss'], reload);
   gulp.watch(path.join(e2eAppDir, '**/*.html'), ['build:e2eapp:assets'], reload);
+});
+
+/***************************************************************************************************
+ * Release builds.
+ */
+gulp.task('build:release', function(done) {
+  // Synchronously run those tasks.
+  gulpRunSequence(
+    'clean',
+    'build:components:ngc',
+    ['clean:spec', 'clean:assets'],
+    done
+  );
 });
