@@ -32,7 +32,7 @@ describe('MdDialog', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdDialogModule],
-      declarations: [TEST_COMPONENTS, DirectiveWithViewContainer],
+      declarations: [PizzaMsg, ComponentWithChildViewContainer, DirectiveWithViewContainer],
     });
 
     addProviders([
@@ -155,5 +155,3 @@ class PizzaMsg {
   constructor(public dialogRef: MdDialogRef<PizzaMsg>) { }
 }
 
-
-const TEST_COMPONENTS = [PizzaMsg, ComponentWithChildViewContainer];

@@ -16,7 +16,23 @@ describe('MdInput', function () {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdInputModule, FormsModule],
-      declarations: TEST_COMPONENTS,
+      declarations: [
+        MdInputNumberTypeConservedTestComponent,
+        MdInputPlaceholderRequiredTestComponent,
+        MdInputPlaceholderElementTestComponent,
+        MdInputPlaceholderAttrTestComponent,
+        MdInputHintLabel2TestController,
+        MdInputHintLabelTestController,
+        MdInputInvalidTypeTestController,
+        MdInputInvalidPlaceholderTestController,
+        MdInputInvalidHint2TestController,
+        MdInputInvalidHintTestController,
+        MdInputBaseTestController,
+        MdInputAriaTestController,
+        MdInputWithBlurAndFocusEvents,
+        MdInputOptionalAttributeController,
+        MdInputWithNameTestController,
+      ],
     });
 
     TestBed.compileComponents();
@@ -809,21 +825,3 @@ class MdInputOptionalAttributeController {
   `
 })
 class MdInputWithNameTestController {}
-
-const TEST_COMPONENTS = [
-  MdInputNumberTypeConservedTestComponent,
-  MdInputPlaceholderRequiredTestComponent,
-  MdInputPlaceholderElementTestComponent,
-  MdInputPlaceholderAttrTestComponent,
-  MdInputHintLabel2TestController,
-  MdInputHintLabelTestController,
-  MdInputInvalidTypeTestController,
-  MdInputInvalidPlaceholderTestController,
-  MdInputInvalidHint2TestController,
-  MdInputInvalidHintTestController,
-  MdInputBaseTestController,
-  MdInputAriaTestController,
-  MdInputWithBlurAndFocusEvents,
-  MdInputOptionalAttributeController,
-  MdInputWithNameTestController,
-];

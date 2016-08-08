@@ -23,7 +23,11 @@ describe('MdRadio', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdRadioModule, FormsModule],
-      declarations: TEST_COMPONENTS,
+      declarations: [
+        RadiosInsideRadioGroup,
+        RadioGroupWithNgModel,
+        StandaloneRadioButtons,
+      ],
     });
 
     TestBed.compileComponents();
@@ -536,9 +540,3 @@ function dispatchFocusChangeEvent(eventName: string, element: HTMLElement): void
   event.initEvent(eventName, true, true);
   element.dispatchEvent(event);
 }
-
-const TEST_COMPONENTS = [
-  RadiosInsideRadioGroup,
-  RadioGroupWithNgModel,
-  StandaloneRadioButtons,
-];

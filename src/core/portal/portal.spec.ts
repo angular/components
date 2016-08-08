@@ -27,7 +27,7 @@ describe('Portals', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [PortalModule],
-      declarations: TEST_COMPONENTS,
+      declarations: [PortalTestApp, ArbitraryViewContainerRefComponent, PizzaMsg],
     });
   }));
 
@@ -448,6 +448,3 @@ class PortalTestApp {
     return this.portals.toArray()[2];
   }
 }
-
-
-const TEST_COMPONENTS = [PortalTestApp, ArbitraryViewContainerRefComponent, PizzaMsg];

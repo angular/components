@@ -19,7 +19,10 @@ describe('MdTabGroup', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdTabsModule],
-      declarations: TEST_COMPONENTS,
+      declarations: [
+        SimpleTabsTestApp,
+        AsyncTabsTestApp,
+      ],
     });
 
     TestBed.compileComponents();
@@ -249,8 +252,3 @@ class AsyncTabsTestApp {
     });
   }
 }
-
-const TEST_COMPONENTS = [
-  SimpleTabsTestApp,
-  AsyncTabsTestApp,
-];

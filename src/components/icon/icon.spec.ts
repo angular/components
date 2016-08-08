@@ -42,7 +42,13 @@ describe('MdIcon', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdIconModule],
-      declarations: TEST_COMPONENTS,
+      declarations: [
+        MdIconLigatureTestApp,
+        MdIconLigatureWithAriaBindingTestApp,
+        MdIconCustomFontCssTestApp,
+        MdIconFromSvgUrlTestApp,
+        MdIconFromSvgNameTestApp,
+      ],
     });
 
     addProviders([
@@ -446,11 +452,3 @@ class MdIconFromSvgNameTestApp {
   ariaLabel: string = null;
   iconName = '';
 }
-
-const TEST_COMPONENTS = [
-  MdIconLigatureTestApp ,
-  MdIconLigatureWithAriaBindingTestApp,
-  MdIconCustomFontCssTestApp,
-  MdIconFromSvgUrlTestApp,
-  MdIconFromSvgNameTestApp,
-];

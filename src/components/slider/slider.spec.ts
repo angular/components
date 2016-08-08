@@ -19,7 +19,13 @@ describe('MdSlider', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdSliderModule],
-      declarations: TEST_COMPONENTS,
+      declarations: [
+        StandardSlider,
+        DisabledSlider,
+        SliderWithMinAndMax,
+        SliderWithValue,
+        SliderWithStep,
+      ],
     });
 
     addProviders([
@@ -473,14 +479,6 @@ class SliderWithValue { }
   encapsulation: ViewEncapsulation.None
 })
 class SliderWithStep { }
-
-const TEST_COMPONENTS = [
-  StandardSlider,
-  DisabledSlider,
-  SliderWithMinAndMax,
-  SliderWithValue,
-  SliderWithStep,
-];
 
 /**
  * Dispatches a click event from an element.

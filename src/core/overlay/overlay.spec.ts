@@ -27,7 +27,7 @@ describe('Overlay', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, PortalModule],
-      declarations: TEST_COMPONENTS,
+      declarations: [TestComponentWithTemplatePortals, PizzaMsg],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
@@ -157,8 +157,6 @@ class TestComponentWithTemplatePortals {
 
   constructor(public viewContainerRef: ViewContainerRef) { }
 }
-
-const TEST_COMPONENTS = [TestComponentWithTemplatePortals, PizzaMsg];
 
 class FakePositionStrategy implements PositionStrategy {
   apply(element: Element): Promise<void> {

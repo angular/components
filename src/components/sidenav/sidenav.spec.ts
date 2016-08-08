@@ -53,7 +53,11 @@ describe('MdSidenav', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdSidenavModule],
-      declarations: TEST_COMPONENTS,
+      declarations: [
+        BasicTestApp,
+        SidenavLayoutTwoSidenavTestApp,
+        SidenavLayoutNoSidenavTestApp,
+      ],
     });
 
     TestBed.compileComponents();
@@ -359,9 +363,3 @@ class BasicTestApp {
   }
 }
 
-
-const TEST_COMPONENTS = [
-  BasicTestApp,
-  SidenavLayoutTwoSidenavTestApp,
-  SidenavLayoutNoSidenavTestApp,
-];

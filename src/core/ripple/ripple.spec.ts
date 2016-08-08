@@ -70,7 +70,7 @@ describe('MdRipple', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdRippleModule],
-      declarations: TEST_COMPONENTS,
+      declarations: [BasicRippleContainer, RippleContainerWithInputBindings],
     });
   }));
 
@@ -342,5 +342,3 @@ class RippleContainerWithInputBindings {
   backgroundColor = '';
   @ViewChild(MdRipple) ripple: MdRipple;
 }
-
-const TEST_COMPONENTS = [BasicRippleContainer, RippleContainerWithInputBindings];

@@ -25,7 +25,16 @@ describe('MdCheckbox', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdCheckboxModule, FormsModule],
-      declarations: TEST_COMPONENTS,
+      declarations: [
+        SingleCheckbox,
+        CheckboxWithFormDirectives,
+        MultipleCheckboxes,
+        CheckboxWithTabIndex,
+        CheckboxWithAriaLabel,
+        CheckboxWithAriaLabelledby,
+        CheckboxWithNameAttribute,
+        CheckboxWithChangeEvent,
+      ],
     });
 
     TestBed.compileComponents();
@@ -602,14 +611,3 @@ class CheckboxWithChangeEvent {
   lastEvent: MdCheckboxChange;
 }
 
-
-const TEST_COMPONENTS = [
-  SingleCheckbox,
-  CheckboxWithFormDirectives,
-  MultipleCheckboxes,
-  CheckboxWithTabIndex,
-  CheckboxWithAriaLabel,
-  CheckboxWithAriaLabelledby,
-  CheckboxWithNameAttribute,
-  CheckboxWithChangeEvent,
-];

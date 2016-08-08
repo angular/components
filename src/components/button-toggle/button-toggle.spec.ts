@@ -24,7 +24,12 @@ describe('MdButtonToggle', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdButtonToggleModule, FormsModule],
-      declarations: TEST_COMPONENTS,
+      declarations: [
+        ButtonTogglesInsideButtonToggleGroup,
+        ButtonToggleGroupWithNgModel,
+        ButtonTogglesInsideButtonToggleGroupMultiple,
+        StandaloneButtonToggle,
+      ],
     });
 
 
@@ -485,10 +490,3 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
   `
 })
 class StandaloneButtonToggle { }
-
-const TEST_COMPONENTS = [
-  ButtonTogglesInsideButtonToggleGroup,
-  ButtonToggleGroupWithNgModel,
-  ButtonTogglesInsideButtonToggleGroupMultiple,
-  StandaloneButtonToggle,
-];
