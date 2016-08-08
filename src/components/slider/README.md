@@ -26,7 +26,7 @@ Importing the module:
 <md-slider></md-slider>
 ```
 
-### Slider with Min and Max Defined
+### Slider with Minimum and Maximum Values
 
 The min and max on a `md-slider` can be set to give a different range of values.
 These can be set individually and do not need to both be set.
