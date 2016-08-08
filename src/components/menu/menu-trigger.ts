@@ -7,7 +7,8 @@ import {
     HostListener,
     ViewContainerRef,
     AfterViewInit,
-    OnDestroy
+    OnDestroy,
+    Renderer
 } from '@angular/core';
 import {MdMenu} from './menu-directive';
 import {MdMenuMissingError} from './menu-errors';
@@ -25,6 +26,7 @@ import {
   HorizontalConnectionPos,
   VerticalConnectionPos
 } from '@angular2-material/core/overlay/position/connected-position';
+import {ENTER} from '@angular2-material/core/keyboard/keycodes';
 
 /**
  * This directive is intended to be used in conjunction with an md-menu tag.  It is
@@ -32,7 +34,10 @@ import {
  */
 @Directive({
   selector: '[md-menu-trigger-for]',
-  host: {'aria-haspopup': 'true'},
+  host: {
+    'aria-haspopup': 'true',
+    '(keydown)': '_handleKeydown($event)'
+  },
   providers: [OVERLAY_PROVIDERS],
   exportAs: 'mdMenuTrigger'
 })
@@ -41,12 +46,16 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   private _overlayRef: OverlayRef;
   private _menuOpen: boolean = false;
 
+  // tracking input type is necessary so it's possible to only auto-focus
+  // the first item of the list when the menu is opened via the keyboard
+  private _openedFromKeyboard: boolean = false;
+
   @Input('md-menu-trigger-for') menu: MdMenu;
   @Output() onMenuOpen = new EventEmitter();
   @Output() onMenuClose = new EventEmitter();
 
   constructor(private _overlay: Overlay, private _element: ElementRef,
-              private _viewContainerRef: ViewContainerRef) {}
+              private _viewContainerRef: ViewContainerRef, private _renderer: Renderer) {}
 
   ngAfterViewInit() {
     this._checkMenu();
@@ -65,20 +74,49 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   openMenu(): Promise<void> {
     return this._createOverlay()
       .then(() => this._overlayRef.attach(this._portal))
-      .then(() => this._setIsMenuOpen(true));
+      .then(() => this._initMenu());
   }
 
   closeMenu(): Promise<void> {
     if (!this._overlayRef) { return Promise.resolve(); }
 
     return this._overlayRef.detach()
-        .then(() => this._setIsMenuOpen(false));
+        .then(() => this._resetMenu());
   }
 
   destroyMenu(): void {
     if (this._overlayRef) {
       this._overlayRef.dispose();
       this._overlayRef = null;
+    }
+  }
+
+  focus() {
+    this._renderer.invokeElementMethod(this._element.nativeElement, 'focus');
+  }
+
+  /**
+   * This method sets the menu state to open and focuses the first item if
+   * the menu was opened via the keyboard.
+   */
+  private _initMenu(): void {
+    this._setIsMenuOpen(true);
+
+    if (this._openedFromKeyboard) {
+      this.menu._focusFirstItem();
+    }
+  };
+
+  /**
+   * This method resets the menu when it's closed, most importantly restoring
+   * focus to the menu trigger if the menu was opened via the keyboard.
+   */
+  private _resetMenu(): void {
+    this._setIsMenuOpen(false);
+
+    if (this._openedFromKeyboard) {
+      this.focus();
+      this._openedFromKeyboard = false;
     }
   }
 
@@ -136,4 +174,10 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
       {overlayX: positionX, overlayY: positionY}
     );
   }
+
+  // TODO: internal
+  _handleKeydown(event: KeyboardEvent): void {
+    if (event.keyCode === ENTER) { this._openedFromKeyboard = true; }
+  }
+
 }
