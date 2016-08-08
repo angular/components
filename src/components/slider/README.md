@@ -5,6 +5,16 @@ thumb.
 You can read more about the slider in the
 [Material Design spec](https://material.google.com/components/sliders.html).
 
+## Not Yet Implemented
+
+* Thumb Label
+* Color
+* Invert
+* NgModel
+* Keyboard Movement
+* Focus Ring
+* Smaller/grey thumb at minimum value
+
 ## Usage
 
 ### Setup
