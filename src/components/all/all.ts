@@ -51,9 +51,9 @@ const MATERIAL_MODULES = [
   RtlModule,
 ];
 
-@NgModule(({
+@NgModule({
   imports: MATERIAL_MODULES,
   exports: MATERIAL_MODULES,
   providers: [MdLiveAnnouncer]
-}))
+})
 export class MaterialModule { }

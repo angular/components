@@ -124,7 +124,7 @@ function detectChangesForDialogOpen(fixture: ComponentFixture<ComponentWithChild
   // Two rounds of change detection are necessary: one to *create* the dialog container, and
   // another to cause the lifecycle events of the container to run and load the dialog content.
   fixture.detectChanges();
-  setTimeout(() => fixture.detectChanges(), 150);
+  setTimeout(() => fixture.detectChanges(), 50);
 }
 
 @Directive({selector: 'dir-with-view-container'})

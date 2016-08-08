@@ -62,7 +62,7 @@ export {
 export {MdLineModule, MdLine, MdLineSetter} from './line/line';
 
 
-let coreModules = [
+const coreModules = [
   MdLineModule,
   RtlModule,
   MdRippleModule,

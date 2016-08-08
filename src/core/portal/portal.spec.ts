@@ -35,10 +35,6 @@ describe('Portals', () => {
     builder = tcb;
   })));
 
-  // beforeEach(inject([TestComponentBuilder], fakeAsync((tcb: TestComponentBuilder) => {
-  //   builder = tcb;
-  // })));
-
   describe('PortalHostDirective', () => {
     it('should load a component into the portal', fakeAsync(() => {
       let appFixture: ComponentFixture<PortalTestApp>;
