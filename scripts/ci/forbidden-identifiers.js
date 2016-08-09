@@ -34,7 +34,7 @@ const blockedRegex = new RegExp(blocked_statements.join('|'), 'g');
 const importRegex = /from\s+'(.*)';/g;
 
 /*
- * Verify that the current PR is not adding any forbidden identifier.
+ * Verify that the current PR is not adding any forbidden identifiers.
  * Run the forbidden identifiers check against all sources when not verifying a PR.
  */
 
