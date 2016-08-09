@@ -21,12 +21,11 @@ $md-slider-disabled-color: rgba(black, 0.26);
 $md-slider-thumb-arrow-height: 16px !default;
 $md-slider-thumb-arrow-width: 28px !default;
 
-$md-slider-thumb-label-height: 28px !default;
-$md-slider-thumb-label-width: 28px !default;
+$md-slider-thumb-label-size: 28px !default;
 // The thumb has to be moved down so that it appears right over the slider track when visible and
 // on the slider track when not.
 $md-slider-thumb-label-top: ($md-slider-thickness / 2) -
-    ($md-slider-thumb-default-scale * $md-slider-thumb-size / 2) - $md-slider-thumb-label-height -
+    ($md-slider-thumb-default-scale * $md-slider-thumb-size / 2) - $md-slider-thumb-label-size -
     $md-slider-thumb-arrow-height + 10px !default;
 
 /**
@@ -154,33 +153,17 @@ md-slider *::after {
   justify-content: center;
 
   position: absolute;
-  left: -($md-slider-thumb-label-height / 2);
+  left: -($md-slider-thumb-label-size / 2);
   top: $md-slider-thumb-label-top;
-  width: $md-slider-thumb-label-width;
-  height: $md-slider-thumb-label-height;
-  border-radius: max($md-slider-thumb-label-height, $md-slider-thumb-label-width);
+  width: $md-slider-thumb-label-size;
+  height: $md-slider-thumb-label-size;
+  border-radius: 50%;
 
-  transform: scale(0.4) translate3d(0, (-$md-slider-thumb-label-top + 10) / 0.4, 0);
+  transform: scale(0.4) translate3d(0, (-$md-slider-thumb-label-top + 10) / 0.4, 0) rotate(45deg);
   transition: 300ms $swift-ease-in-out-timing-function;
+  transition-property: transform, border-radius;
 
   background-color: md-color($md-accent);
-}
-
-.md-slider-thumb-label::after {
-  position: absolute;
-  content: '';
-  border-radius: $md-slider-thumb-arrow-height;
-  top: 19px;
-  border-left: $md-slider-thumb-arrow-width / 2 solid transparent;
-  border-right: $md-slider-thumb-arrow-width / 2 solid transparent;
-  border-top-width: $md-slider-thumb-arrow-height;
-  border-top-style: solid;
-
-  opacity: 0;
-  transform: translate3d(0, -8px, 0);
-  transition: 200ms $swift-ease-in-out-timing-function;
-
-  border-top-color: md-color($md-accent);
 }
 
 .md-slider-thumb-label-text {
@@ -188,7 +171,8 @@ md-slider *::after {
   font-size: 12px;
   font-weight: bold;
   opacity: 0;
-  transition: 300ms $swift-ease-in-out-timing-function;
+  transform: rotate(-45deg);
+  transition: opacity 300ms $swift-ease-in-out-timing-function;
   color: white;
 }
 
@@ -210,14 +194,11 @@ md-slider *::after {
   transform: scale($md-slider-thumb-focus-scale);
 }
 
-.md-slider-active .md-slider-thumb-label,
-.md-slider-active .md-slider-thumb-label::after,
-.md-slider-active .md-slider-thumb-label-text {
-  opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1);
+.md-slider-active .md-slider-thumb-label {
+  border-radius: 50% 50% 0;
+  transform: rotate(45deg);
 }
 
-.md-slider-disabled .md-slider-thumb::after {
-  background-color: $md-slider-disabled-color;
-  border-color: $md-slider-disabled-color;
+.md-slider-active .md-slider-thumb-label-text {
+  opacity: 1;
 }
