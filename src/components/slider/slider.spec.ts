@@ -119,7 +119,7 @@ describe('MdSlider', () => {
       // offset relative to the track, subtract the offset on the track fill.
       let thumbPosition = thumbDimensions.left - trackFillDimensions.left;
       // The track fill width should be equal to the thumb's position.
-      expect(Math.round(trackFillDimensions.width)).toBe(Math.round(thumbPosition));
+      expect(trackFillDimensions.width).toBe(thumbPosition);
     });
 
     it('should update the thumb position on click', () => {
@@ -145,7 +145,7 @@ describe('MdSlider', () => {
       // offset relative to the track, subtract the offset on the track fill.
       let thumbPosition = thumbDimensions.left - trackFillDimensions.left;
       // The track fill width should be equal to the thumb's position.
-      expect(Math.round(trackFillDimensions.width)).toBe(Math.round(thumbPosition));
+      expect(trackFillDimensions.width).toBe(thumbPosition);
     });
 
     it('should update the thumb position on slide', () => {
@@ -310,7 +310,7 @@ describe('MdSlider', () => {
 
       // The closest snap is halfway on the slider.
       expect(thumbDimensions.left).toBe(sliderDimensions.width * 0.5 + sliderDimensions.left);
-      expect(Math.round(trackFillDimensions.width)).toBe(Math.round(thumbPosition));
+      expect(trackFillDimensions.width).toBe(thumbPosition);
     });
 
     it('should snap the thumb and fill to the nearest value on slide', () => {
@@ -326,7 +326,7 @@ describe('MdSlider', () => {
 
       // The closest snap is at the halfway point on the slider.
       expect(thumbDimensions.left).toBe(sliderDimensions.left + sliderDimensions.width * 0.5);
-      expect(Math.round(trackFillDimensions.width)).toBe(Math.round(thumbPosition));
+      expect(trackFillDimensions.width).toBe(thumbPosition);
 
     });
   });
@@ -411,7 +411,7 @@ describe('MdSlider', () => {
 
       // The closest step is at 75% of the slider.
       expect(thumbDimensions.left).toBe(sliderDimensions.width * 0.75 + sliderDimensions.left);
-      expect(Math.round(trackFillDimensions.width)).toBe(Math.round(thumbPosition));
+      expect(trackFillDimensions.width).toBe(thumbPosition);
     });
 
     it('should set the correct step value on slide', () => {
@@ -434,7 +434,7 @@ describe('MdSlider', () => {
 
       // The closest snap is at the end of the slider.
       expect(thumbDimensions.left).toBe(sliderDimensions.width + sliderDimensions.left);
-      expect(Math.round(trackFillDimensions.width)).toBe(Math.round(thumbPosition));
+      expect(trackFillDimensions.width).toBe(thumbPosition);
     });
   });
 
