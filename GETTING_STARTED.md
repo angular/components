@@ -128,10 +128,10 @@ The slide-toggle and slider components have a dependency on [HammerJS](http://ha
 1) Add HammerJS to your application via [npm](https://www.npmjs.com/package/hammerjs), a CDN 
    (such as the [Google CDN](https://developers.google.com/speed/libraries/#hammerjs)), 
    or served directly from your app.
-2) Include the typings for HammerJS in your typescript build.
+2) Include the typings for HammerJS in your typescript build ([more info on @types](https://blogs.msdn.microsoft.com/typescript/2016/06/15/the-future-of-declaration-files))
 
 
-### Additional setup for `md-icon` setup:
+### Additional setup for `md-icon`:
 
 - If you want to use Material Design icons, load the Material Design font in your `index.html`.  
 `md-icon` supports any font icons or svg icons, so this is only one potential option.
