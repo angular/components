@@ -35,7 +35,7 @@ const verifyPathChildElement = (element: Element, attributeValue: string) => {
   expect(pathElement.getAttribute('id')).toBe(attributeValue);
 };
 
-fdescribe('MdIcon', () => {
+describe('MdIcon', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

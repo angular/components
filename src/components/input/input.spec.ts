@@ -10,7 +10,7 @@ import {By} from '@angular/platform-browser';
 import {MdInput, MdInputModule} from './input';
 
 
-describe('MdInput', function () {
+fdescribe('MdInput', function () {
   var builder: TestComponentBuilder;
 
   beforeEach(async(() => {
@@ -32,6 +32,7 @@ describe('MdInput', function () {
         MdInputWithBlurAndFocusEvents,
         MdInputOptionalAttributeController,
         MdInputWithNameTestController,
+        MdInputWithId,
       ],
     });
 
@@ -42,124 +43,106 @@ describe('MdInput', function () {
     builder = tcb;
   }));
 
-  it('creates a native <input> element', async(() => {
-    builder.createAsync(MdInputBaseTestController)
-      .then(fixture => {
-        fixture.detectChanges();
-        expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
-      });
-  }));
+  it('creates a native <input> element', () => {
+    let fixture = TestBed.createComponent(MdInputBaseTestController);
+    fixture.detectChanges();
 
+    expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
+  });
 
   // TODO(kara): update when core/testing adds fix
   it('support ngModel', async(() => {
-    builder.createAsync(MdInputBaseTestController)
-      .then(fixture => {
-        fixture.detectChanges();
-        let instance = fixture.componentInstance;
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    let fixture = TestBed.createComponent(MdInputBaseTestController);
 
-        instance.model = 'hello';
-        fixture.detectChanges();
-        fixture.whenStable().then(() => {
+    fixture.detectChanges();
+    let instance = fixture.componentInstance;
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-          // this workaround is temp, see https://github.com/angular/angular/issues/10148
-          fixture.detectChanges();
-          fixture.whenStable().then(() => {
-            expect(el.value).toBe('hello');
-          });
-        });
-      });
-  }));
-
-  it('should have a different ID for outer element and internal input', async(() => {
-    builder
-        .overrideTemplate(MdInputBaseTestController, `
-          <md-input id="test-id"></md-input>
-        `)
-        .createAsync(MdInputBaseTestController)
-        .then(fixture => {
-          fixture.detectChanges();
-          const componentElement: HTMLElement = fixture.debugElement
-              .query(By.directive(MdInput)).nativeElement;
-          const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input'))
-              .nativeElement;
-          expect(componentElement.id).toBe('test-id');
-          expect(inputElement.id).toBeTruthy();
-          expect(inputElement.id).not.toBe(componentElement.id);
-        });
-  }));
-
-  it('counts characters', async(() => {
-    builder.createAsync(MdInputBaseTestController).then(fixture => {
-      let instance = fixture.componentInstance;
-      fixture.detectChanges();
-      let inputInstance = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-      expect(inputInstance.characterCount).toEqual(0);
-
-      instance.model = 'hello';
+    instance.model = 'hello';
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      // Temporary workaround, see https://github.com/angular/angular/issues/10148
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(inputInstance.characterCount).toEqual(5);
+        expect(el.value).toBe('hello');
       });
     });
   }));
 
-  it('copies aria attributes to the inner input', async(() => {
-    builder.createAsync(MdInputAriaTestController)
-      .then(fixture => {
-        let instance = fixture.componentInstance;
-        fixture.detectChanges();
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-        expect(el.getAttribute('aria-label')).toEqual('label');
-        instance.ariaLabel = 'label 2';
-        fixture.detectChanges();
-        expect(el.getAttribute('aria-label')).toEqual('label 2');
+  it('should have a different ID for outer element and internal input', () => {
+    let fixture = TestBed.createComponent(MdInputWithId);
+    fixture.detectChanges();
 
-        expect(el.getAttribute('aria-disabled')).toBeTruthy();
-      });
+    const componentElement: HTMLElement =
+        fixture.debugElement.query(By.directive(MdInput)).nativeElement;
+    const inputElement: HTMLInputElement =
+        fixture.debugElement.query(By.css('input')).nativeElement;
+
+    expect(componentElement.id).toBe('test-id');
+    expect(inputElement.id).toBeTruthy();
+    expect(inputElement.id).not.toBe(componentElement.id);
+  });
+
+  it('counts characters', async(() => {
+    let fixture = TestBed.createComponent(MdInputBaseTestController);
+    let instance = fixture.componentInstance;
+    fixture.detectChanges();
+    let inputInstance = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    expect(inputInstance.characterCount).toEqual(0);
+
+    instance.model = 'hello';
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(inputInstance.characterCount).toEqual(5);
+    });
   }));
 
-  it('validates there\'s only one hint label per side', async(() => {
+  it('copies aria attributes to the inner input', () => {
+    let fixture = TestBed.createComponent(MdInputAriaTestController);
+    let instance = fixture.componentInstance;
+    fixture.detectChanges();
 
-    builder.createAsync(MdInputInvalidHintTestController)
-      .then(fixture => {
-          expect(() => fixture.detectChanges())
-            .toThrow();
-            // TODO(jelbourn): .toThrow(new MdInputDuplicatedHintError('start'));
-            // See https://github.com/angular/angular/issues/8348
-      });
-  }));
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el.getAttribute('aria-label')).toEqual('label');
+    instance.ariaLabel = 'label 2';
+    fixture.detectChanges();
+    expect(el.getAttribute('aria-label')).toEqual('label 2');
 
-  it(`validates there's only one hint label per side (attribute)`, async(() => {
-    builder.createAsync(MdInputInvalidHint2TestController)
-      .then(fixture => {
-        expect(() => fixture.detectChanges())
-          .toThrow();
-          // TODO(jelbourn): .toThrow(new MdInputDuplicatedHintError('start'));
-          // See https://github.com/angular/angular/issues/8348
-      });
-  }));
+    expect(el.getAttribute('aria-disabled')).toBeTruthy();
+  });
+
+  it(`validates there's only one hint label per side`, () => {
+    let fixture = TestBed.createComponent(MdInputInvalidHintTestController);
+
+    expect(() => fixture.detectChanges()).toThrow();
+    // TODO(jelbourn): .toThrow(new MdInputDuplicatedHintError('start'));
+    // See https://github.com/angular/angular/issues/8348
+  });
+
+  it(`validates there's only one hint label per side (attribute)`, () => {
+    let fixture = TestBed.createComponent(MdInputInvalidHint2TestController);
+
+    expect(() => fixture.detectChanges()).toThrow();
+    // TODO(jelbourn): .toThrow(new MdInputDuplicatedHintError('start'));
+    // See https://github.com/angular/angular/issues/8348
+  });
 
   it('validates there\'s only one placeholder', async(() => {
-    builder.createAsync(MdInputInvalidPlaceholderTestController)
-      .then(fixture => {
-        expect(() => fixture.detectChanges())
-          .toThrow();
-          // TODO(jelbourn): .toThrow(new MdInputPlaceholderConflictError());
-          // See https://github.com/angular/angular/issues/8348
-      });
+    let fixture = TestBed.createComponent(MdInputInvalidPlaceholderTestController);
+
+    expect(() => fixture.detectChanges()).toThrow();
+    // TODO(jelbourn): .toThrow(new MdInputPlaceholderConflictError());
+    // See https://github.com/angular/angular/issues/8348
   }));
 
   it('validates the type', async(() => {
-    builder.createAsync(MdInputInvalidTypeTestController).then(fixture => {
-      // Technically this throws during the OnChanges detection phase,
-      // so the error is really a ChangeDetectionError and it becomes
-      // hard to build a full exception to compare with.
-      // We just check for any exception in this case.
-      expect(() => fixture.detectChanges())
-        .toThrow(/* new MdInputUnsupportedTypeError('file') */);
-    });
+    let fixture = TestBed.createComponent(MdInputInvalidTypeTestController);
+
+    // Technically this throws during the OnChanges detection phase,
+    // so the error is really a ChangeDetectionError and it becomes
+    // hard to build a full exception to compare with.
+    // We just check for any exception in this case.
+    expect(() => fixture.detectChanges()).toThrow(/* new MdInputUnsupportedTypeError('file') */);
   }));
 
   it('supports hint labels attribute', async(() => {
@@ -663,165 +646,90 @@ describe('MdInput', function () {
   }));
 });
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input type="number" [(ngModel)]="value">
-    </md-input>
-  `
-})
+@Component({template: `<md-input id="test-id"></md-input>`})
+class MdInputWithId {
+  value: number = 0;
+}
+
+@Component({template: `<md-input type="number" [(ngModel)]="value"></md-input>`})
 class MdInputNumberTypeConservedTestComponent {
   value: number = 0;
 }
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input required placeholder="hello">
-    </md-input>
-  `
-})
+@Component({template: `<md-input required placeholder="hello"></md-input>`})
 class MdInputPlaceholderRequiredTestComponent {
 }
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input>
-      <md-placeholder>{{placeholder}}</md-placeholder>
-    </md-input>
-  `
-})
+@Component({template: `<md-input> <md-placeholder>{{placeholder}}</md-placeholder> </md-input>`})
 class MdInputPlaceholderElementTestComponent {
   placeholder: string = 'Default Placeholder';
 }
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input [placeholder]="placeholder">
-    </md-input>
-  `
-})
+@Component({template: `<md-input [placeholder]="placeholder"></md-input>`})
 class MdInputPlaceholderAttrTestComponent {
   placeholder: string = '';
 }
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input>
-      <md-hint>{{label}}</md-hint>
-    </md-input>
-  `
-})
+@Component({template: `<md-input> <md-hint>{{label}}</md-hint> </md-input>`})
 class MdInputHintLabel2TestController {
   label: string = '';
 }
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input [hintLabel]="label">
-    </md-input>
-  `
-})
+@Component({template: `<md-input [hintLabel]="label"></md-input>`})
 class MdInputHintLabelTestController {
   label: string = '';
 }
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input type="file">
-    </md-input>
-  `
-})
-class MdInputInvalidTypeTestController {
-}
+@Component({template: `<md-input type="file"></md-input>`})
+class MdInputInvalidTypeTestController { }
 
 @Component({
-  selector: 'test-input-controller',
   template: `
     <md-input placeholder="Hello">
       <md-placeholder>World</md-placeholder>
-    </md-input>
-  `
+    </md-input>`
 })
-class MdInputInvalidPlaceholderTestController {
-}
+class MdInputInvalidPlaceholderTestController { }
 
 @Component({
-  selector: 'test-input-controller',
   template: `
     <md-input hintLabel="Hello">
       <md-hint>World</md-hint>
-    </md-input>
-  `
+    </md-input>`
 })
-class MdInputInvalidHint2TestController {
-}
+class MdInputInvalidHint2TestController { }
 
 @Component({
-  selector: 'test-input-controller',
   template: `
     <md-input>
       <md-hint>Hello</md-hint>
       <md-hint>World</md-hint>
-    </md-input>
-  `
+    </md-input>`
 })
-class MdInputInvalidHintTestController {
-}
+class MdInputInvalidHintTestController { }
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input [(ngModel)]="model">
-    </md-input>
-  `
-})
+@Component({template: `<md-input [(ngModel)]="model"></md-input>`})
 class MdInputBaseTestController {
   model: any = '';
 }
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input [aria-label]="ariaLabel" [aria-disabled]="ariaDisabled">
-    </md-input>
-  `
-})
+@Component({template:
+    `<md-input [aria-label]="ariaLabel" [aria-disabled]="ariaDisabled"></md-input>`})
 class MdInputAriaTestController {
   ariaLabel: string = 'label';
   ariaDisabled: boolean = true;
 }
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input (focus)="onFocus($event)" (blur)="onBlur($event)"></md-input>
-  `
-})
+@Component({template: `<md-input (focus)="onFocus($event)" (blur)="onBlur($event)"></md-input>`})
 class MdInputWithBlurAndFocusEvents {
   onBlur(event: FocusEvent) {}
   onFocus(event: FocusEvent) {}
 }
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input></md-input>
-  `
-})
+@Component({template: `<md-input></md-input>`})
 class MdInputOptionalAttributeController {
   disabled: boolean = false;
 }
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input name="some-name"></md-input>
-  `
-})
-class MdInputWithNameTestController {}
+@Component({template: `<md-input name="some-name"></md-input>`})
+class MdInputWithNameTestController { }
