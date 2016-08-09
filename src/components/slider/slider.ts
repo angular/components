@@ -47,6 +47,7 @@ export class MdSlider implements AfterContentInit {
   @HostBinding('attr.aria-disabled')
   disabled: boolean = false;
 
+  /** Whether or not to show the thumb label. */
   @Input('thumb-label')
   @BooleanFieldValue()
   private _thumbLabel: boolean = false;
@@ -345,7 +346,7 @@ export class SliderRenderer {
         <HTMLElement>this._sliderElement.querySelector('.md-slider-thumb-position');
     let fillTrackElement = <HTMLElement>this._sliderElement.querySelector('.md-slider-track-fill');
 
-    let position = percent * width;
+    let position = Math.round(percent * width);
 
     fillTrackElement.style.width = `${position}px`;
     applyCssTransform(thumbPositionElement, `translateX(${position}px)`);

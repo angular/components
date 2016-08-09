@@ -196,7 +196,7 @@ md-slider *::after {
   display: none;
 }
 
-.md-slider-container.md-slider-active.md-slider-thumb-label-showing .md-slider-thumb {
+.md-slider-active.md-slider-thumb-label-showing .md-slider-thumb {
   transform: scale(0);
 }
 
