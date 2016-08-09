@@ -136,7 +136,7 @@ function findChangedFiles() {
           //         A   => Added
           return line.match(/([CR][0-9]*|[AM])\s+/);
         })
-        .map(() => line => line.split(/\s+/, 2)[1]);
+        .map(line => line.split(/\s+/, 2)[1]);
     });
 }
 
