@@ -18,7 +18,7 @@ const npmVersion = require('../../package.json').version;
  */
 const isForce = process.argv.indexOf('--force') !== -1;
 const inStream = fs.createReadStream('CHANGELOG.md');
-const gitTags = getTags();
+const gitTags = getAvailableTags();
 const currentTag = npmVersion === gitTags[1] ? gitTags[0] : npmVersion;
 const previousTag = npmVersion === gitTags[0] ? gitTags[1] : gitTags[0];
 
@@ -61,6 +61,6 @@ function getOutputStream() {
  * Resolves available tags over all branches from the repository metadata.
  * @returns {Array.<String>} Array of available tags.
  */
-function getTags() {
+function getAvailableTags() {
   return spawnSync('git', ['tag']).stdout.toString().trim().split('\n').reverse();
 }
