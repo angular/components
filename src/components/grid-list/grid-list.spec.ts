@@ -5,7 +5,7 @@ import {MdGridList, MdGridListModule} from './grid-list';
 import {MdGridTile, MdGridTileText} from './grid-tile';
 
 
-fdescribe('MdGridList', () => {
+describe('MdGridList', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdGridListModule],
