@@ -7,7 +7,7 @@
 
 ### Setup
 
-Impor the MdMenu module.
+Import the MdMenu module.
 
 *my-app-module.ts*
 ```ts
