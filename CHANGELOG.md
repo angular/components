@@ -22,7 +22,7 @@
 
 * Add NgModules ([#950](https://github.com/angular/material2/issues/950)) ([ca351b2](https://github.com/angular/material2/commit/ca351b2))
 
-Note that NgModules are not the supported way of including the Material components in your app.
+Note that NgModules are now the supported way of including the Material components in your app.
 The MD_XXX_DIRECTIVES constants are now deprecated and will be removed in alpha.8.
 
 
