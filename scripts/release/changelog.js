@@ -19,8 +19,13 @@ const npmVersion = require('../../package.json').version;
 const isForce = process.argv.indexOf('--force') !== -1;
 const inStream = fs.createReadStream('CHANGELOG.md');
 const gitTags = getAvailableTags();
-const currentTag = npmVersion === gitTags[1] ? gitTags[0] : npmVersion;
-const previousTag = npmVersion === gitTags[0] ? gitTags[1] : gitTags[0];
+
+// Whether the npm version is later than the most recent tag.
+const isNpmLatest = npmVersion !== gitTags[0];
+// When the npm version is the latest, use the npm version, otherwise use the latest tag.
+const currentTag = isNpmLatest ? npmVersion : gitTags[0];
+// When the npm version is the latest use the most recent tag. Otherwise use the previous tag.
+const previousTag = isNpmLatest ? gitTags[0] : gitTags[1];
 
 inStream.on('error', function(err) {
   console.error('An error occurred, while reading the previous changelog file.\n' +
