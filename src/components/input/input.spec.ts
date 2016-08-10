@@ -146,17 +146,15 @@ fdescribe('MdInput', function () {
   }));
 
   it('supports hint labels attribute', async(() => {
-    builder.createAsync(MdInputHintLabelTestController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let fixture = TestBed.createComponent(MdInputHintLabelTestController);
+    fixture.detectChanges();
 
-        // If the hint label is empty, expect no label.
-        expect(fixture.debugElement.query(By.css('.md-hint'))).toBeNull();
+    // If the hint label is empty, expect no label.
+    expect(fixture.debugElement.query(By.css('.md-hint'))).toBeNull();
 
-        fixture.componentInstance.label = 'label';
-        fixture.detectChanges();
-        expect(fixture.debugElement.query(By.css('.md-hint'))).not.toBeNull();
-      });
+    fixture.componentInstance.label = 'label';
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.css('.md-hint'))).not.toBeNull();
   }));
 
   it('supports hint labels elements', async(() => {
