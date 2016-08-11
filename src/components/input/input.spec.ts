@@ -127,15 +127,15 @@ fdescribe('MdInput', function () {
     // See https://github.com/angular/angular/issues/8348
   });
 
-  it('validates there\'s only one placeholder', async(() => {
+  it('validates there\'s only one placeholder', () => {
     let fixture = TestBed.createComponent(MdInputInvalidPlaceholderTestController);
 
     expect(() => fixture.detectChanges()).toThrow();
     // TODO(jelbourn): .toThrow(new MdInputPlaceholderConflictError());
     // See https://github.com/angular/angular/issues/8348
-  }));
+  });
 
-  it('validates the type', async(() => {
+  it('validates the type', () => {
     let fixture = TestBed.createComponent(MdInputInvalidTypeTestController);
 
     // Technically this throws during the OnChanges detection phase,
@@ -143,9 +143,9 @@ fdescribe('MdInput', function () {
     // hard to build a full exception to compare with.
     // We just check for any exception in this case.
     expect(() => fixture.detectChanges()).toThrow(/* new MdInputUnsupportedTypeError('file') */);
-  }));
+  });
 
-  it('supports hint labels attribute', async(() => {
+  it('supports hint labels attribute', () => {
     let fixture = TestBed.createComponent(MdInputHintLabelTestController);
     fixture.detectChanges();
 
@@ -155,105 +155,97 @@ fdescribe('MdInput', function () {
     fixture.componentInstance.label = 'label';
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('.md-hint'))).not.toBeNull();
-  }));
+  });
 
-  it('supports hint labels elements', async(() => {
-    builder.createAsync(MdInputHintLabel2TestController).then(fixture => {
-      fixture.detectChanges();
+  it('supports hint labels elements', () => {
+    let fixture = TestBed.createComponent(MdInputHintLabel2TestController);
+    fixture.detectChanges();
 
-      // In this case, we should have an empty <md-hint>.
-      let el = fixture.debugElement.query(By.css('md-hint')).nativeElement;
-      expect(el.textContent).toBeFalsy();
+    // In this case, we should have an empty <md-hint>.
+    let el = fixture.debugElement.query(By.css('md-hint')).nativeElement;
+    expect(el.textContent).toBeFalsy();
 
-      fixture.componentInstance.label = 'label';
-      fixture.detectChanges();
-      el = fixture.debugElement.query(By.css('md-hint')).nativeElement;
-      expect(el.textContent).toBe('label');
-      });
-  }));
+    fixture.componentInstance.label = 'label';
+    fixture.detectChanges();
+    el = fixture.debugElement.query(By.css('md-hint')).nativeElement;
+    expect(el.textContent).toBe('label');
+  });
 
-  it('supports placeholder attribute', async(() => {
-    builder.createAsync(MdInputPlaceholderAttrTestComponent).then(fixture => {
-      fixture.detectChanges();
+  it('supports placeholder attribute', () => {
+    let fixture = TestBed.createComponent(MdInputPlaceholderAttrTestComponent);
+    fixture.detectChanges();
 
-      let el = fixture.debugElement.query(By.css('label'));
-      expect(el).toBeNull();
+    let el = fixture.debugElement.query(By.css('label'));
+    expect(el).toBeNull();
 
-      fixture.componentInstance.placeholder = 'Other placeholder';
-      fixture.detectChanges();
-      el = fixture.debugElement.query(By.css('label'));
-      expect(el).not.toBeNull();
-      expect(el.nativeElement.textContent).toMatch('Other placeholder');
-      expect(el.nativeElement.textContent).not.toMatch(/\*/g);
-    });
-  }));
+    fixture.componentInstance.placeholder = 'Other placeholder';
+    fixture.detectChanges();
+    el = fixture.debugElement.query(By.css('label'));
+    expect(el).not.toBeNull();
+    expect(el.nativeElement.textContent).toMatch('Other placeholder');
+    expect(el.nativeElement.textContent).not.toMatch(/\*/g);
+  });
 
-  it('supports placeholder element', async(() => {
-    builder.createAsync(MdInputPlaceholderElementTestComponent).then(fixture => {
-      fixture.detectChanges();
+  it('supports placeholder element', () => {
+    let fixture = TestBed.createComponent(MdInputPlaceholderElementTestComponent);
+    fixture.detectChanges();
 
-      let el = fixture.debugElement.query(By.css('label'));
-      expect(el).not.toBeNull();
-      expect(el.nativeElement.textContent).toMatch('Default Placeholder');
+    let el = fixture.debugElement.query(By.css('label'));
+    expect(el).not.toBeNull();
+    expect(el.nativeElement.textContent).toMatch('Default Placeholder');
 
-      fixture.componentInstance.placeholder = 'Other placeholder';
-      fixture.detectChanges();
-      el = fixture.debugElement.query(By.css('label'));
-      expect(el).not.toBeNull();
-      expect(el.nativeElement.textContent).toMatch('Other placeholder');
-      expect(el.nativeElement.textContent).not.toMatch(/\*/g);
-    });
-  }));
+    fixture.componentInstance.placeholder = 'Other placeholder';
+    fixture.detectChanges();
+    el = fixture.debugElement.query(By.css('label'));
+    expect(el).not.toBeNull();
+    expect(el.nativeElement.textContent).toMatch('Other placeholder');
+    expect(el.nativeElement.textContent).not.toMatch(/\*/g);
+  });
 
-  it('supports placeholder required star', async(() => {
-    builder.createAsync(MdInputPlaceholderRequiredTestComponent).then(fixture => {
-      fixture.detectChanges();
+  it('supports placeholder required star', () => {
+    let fixture = TestBed.createComponent(MdInputPlaceholderRequiredTestComponent);
+    fixture.detectChanges();
 
-      let el = fixture.debugElement.query(By.css('label'));
-      expect(el).not.toBeNull();
-      expect(el.nativeElement.textContent).toMatch(/hello\s+\*/g);
-    });
-  }));
+    let el = fixture.debugElement.query(By.css('label'));
+    expect(el).not.toBeNull();
+    expect(el.nativeElement.textContent).toMatch(/hello\s+\*/g);
+  });
 
-  it('supports number types and conserved its value type from Angular', async(() => {
-    builder.createAsync(MdInputNumberTypeConservedTestComponent).then(fixture => {
-      fixture.detectChanges();
+  it('supports number types and conserved its value type from Angular', () => {
+    let fixture = TestBed.createComponent(MdInputNumberTypeConservedTestComponent);
+    fixture.detectChanges();
 
-      const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
-      inputEl.value = '3';
+    const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+    inputEl.value = '3';
 
-      // Manually trigger an onchange event.
-      var evt = document.createEvent('HTMLEvents');
-      evt.initEvent('change', true, true);
-      inputEl.dispatchEvent(evt);
+    // Manually trigger an onchange event.
+    var evt = document.createEvent('HTMLEvents');
+    evt.initEvent('change', true, true);
+    inputEl.dispatchEvent(evt);
 
-      fixture.detectChanges();
-      fixture.whenStable().then(() => {
-        expect(fixture.componentInstance.value).toBe(3);
-        expect(typeof fixture.componentInstance.value).toBe('number');
-      });
-    });
-  }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.value).toBe(3);
+    expect(typeof fixture.componentInstance.value).toBe('number');
+  });
 
-  it('supports blur and focus events', async(() => {
-    builder.createAsync(MdInputWithBlurAndFocusEvents).then(fixture => {
-      const testComponent = fixture.componentInstance;
-      const inputComponent = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-      const fakeEvent = <FocusEvent>{};
+  it('supports blur and focus events', () => {
+    let fixture = TestBed.createComponent(MdInputWithBlurAndFocusEvents);
+    const testComponent = fixture.componentInstance;
+    const inputComponent = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    const fakeEvent = <FocusEvent>{};
 
-      spyOn(testComponent, 'onFocus');
-      spyOn(testComponent, 'onBlur');
+    spyOn(testComponent, 'onFocus');
+    spyOn(testComponent, 'onBlur');
 
-      expect(testComponent.onFocus).not.toHaveBeenCalled();
-      expect(testComponent.onBlur).not.toHaveBeenCalled();
+    expect(testComponent.onFocus).not.toHaveBeenCalled();
+    expect(testComponent.onBlur).not.toHaveBeenCalled();
 
-      inputComponent._handleFocus(fakeEvent);
-      expect(testComponent.onFocus).toHaveBeenCalledWith(fakeEvent);
+    inputComponent._handleFocus(fakeEvent);
+    expect(testComponent.onFocus).toHaveBeenCalledWith(fakeEvent);
 
-      inputComponent._handleBlur(fakeEvent);
-      expect(testComponent.onBlur).toHaveBeenCalledWith(fakeEvent);
-    });
-  }));
+    inputComponent._handleBlur(fakeEvent);
+    expect(testComponent.onBlur).toHaveBeenCalledWith(fakeEvent);
+  });
 
   it('supports the autoComplete attribute', async(() => {
     var template = '<md-input [autoComplete]="autoComplete"></md-input>';
