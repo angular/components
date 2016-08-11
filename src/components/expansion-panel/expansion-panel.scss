@@ -1,0 +1,118 @@
+@import 'variables';
+@import 'elevation';
+@import 'default-theme';
+
+md-expansion-panel {
+  font-family: $md-font-family;
+  display: block;
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+  transition-property: margin, box-shadow;
+  transition-duration: $swift-ease-out-duration;
+  transition-timing-function: $swift-ease-out-timing-function;
+
+  &.md-expanded {
+    margin: 16px 0;
+    @include md-elevation(1);
+
+    .md-expansion-panel-header-container md-icon {
+      transform: rotate(180deg);
+    }
+  }
+
+  &.md-disabled {
+    .md-expansion-panel-header-container {
+      cursor: default;
+    }
+
+    md-icon {
+      display: none;
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:not(.md-expanded):not(.md-disabled) {
+    &:focus, &:hover {
+      background-color: md-color($md-grey, 200);
+    }
+  }
+}
+
+.md-expansion-panel-header-container {
+    padding: 0 24px;
+    height: 48px;
+    line-height: 48px;
+    position: relative;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.54);
+
+    .md-expansion-panel-header-label {
+        min-width: 200px;
+    }
+
+    .md-expansion-panel-header-label,
+    .md-expansion-panel-header-content {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 16px;
+    }
+    .md-expansion-panel-header-label-primary,
+    .md-expansion-panel-header-label-secondary {
+        display: block;
+        line-height: 15px;
+    }
+
+    .md-expansion-panel-header-label-primary {
+        color: rgba(0, 0, 0, 0.87);
+        font-size: 15px;
+    }
+
+    .md-expansion-panel-header-label-secondary {
+        color: rgba(0, 0, 0, 0.54);
+        font-size: 12px;
+    }
+
+    md-icon {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background-repeat: no-repeat no-repeat;
+        display: block;
+        fill: currentColor;
+        height: 24px;
+        width: 24px;
+        min-height: 24px;
+        min-width: 24px;
+        color: rgba(black, 0.50);
+        transition-property: transform;
+        transition-duration: $swift-ease-out-duration;
+        transition-timing-function: $swift-ease-out-timing-function;
+    }
+}
+
+.md-expansion-panel-content-container {
+    overflow: hidden;
+    height: 0;
+    transition-property: height;
+    transition-duration: $swift-ease-out-duration;
+    transition-timing-function: $swift-ease-out-timing-function;
+}
+
+.md-expansion-panel-content {
+    padding: 16px 24px;
+}
+
+.md-expansion-panel-actions {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 16px 0;
+    text-align: right;
+
+    [md-button] {
+        margin-left: auto;
+        margin-right: 8px;
+    }
+}

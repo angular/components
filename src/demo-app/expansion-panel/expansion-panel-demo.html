@@ -1,0 +1,65 @@
+<h1>Expansion Panel Demo</h1>
+
+<md-expansion-panel-group>
+    <md-expansion-panel #userInfoPanel>
+        <div class="md-expansion-panel-header">
+            <div class="md-expansion-panel-header-label">
+                <span class="md-expansion-panel-header-label-primary"><b>User info</b></span>
+            </div>
+            <div class="md-expansion-panel-header-content" *ngIf="!userInfoPanel.expanded">
+                <span *ngIf="firstName.value"><b>First name:</b> {{ firstName.value }} </span>
+                <span *ngIf="lastName.value"><b>Last name:</b> {{ lastName.value }}</span>
+            </div>
+        </div>
+        <div class="md-expansion-panel-content">
+            <md-input placeholder="First name" style="width: 100%" #firstName></md-input>
+            <br />
+            <md-input placeholder="Last name" style="width: 100%" #lastName></md-input>
+        </div>
+        <div class="md-expansion-panel-actions">
+            <button md-button (click)="userInfoPanel.collapse()">CLOSE</button>
+            <button md-button color="primary" (click)="userInfoPanel.collapse()">SAVE</button>
+        </div>
+    </md-expansion-panel>
+    <md-expansion-panel>
+        <div class="md-expansion-panel-header">
+            <div class="md-expansion-panel-header-label">
+                <span class="md-expansion-panel-header-label-primary">Header (Click me!)</span>
+                <span class="md-expansion-panel-header-label-secondary">Optional</span>
+            </div>
+        </div>
+        <div class="md-expansion-panel-content">
+            A custom content within the panel
+        </div>
+    </md-expansion-panel>
+    <md-expansion-panel md-disabled="true">
+        <div class="md-expansion-panel-header">
+            <div class="md-expansion-panel-header-label">
+                <span class="md-expansion-panel-header-label-primary">Disabled</span>
+            </div>
+        </div>
+        <div class="md-expansion-panel-content">
+            A custom content within the panel
+        </div>
+    </md-expansion-panel>
+    <md-expansion-panel #periodPanel>
+        <div class="md-expansion-panel-header">
+            <div class="md-expansion-panel-header-label">
+                <span class="md-expansion-panel-header-label-primary"><b>Period</b></span>
+            </div>
+            <div class="md-expansion-panel-header-content" *ngIf="!periodPanel.expanded">
+                <span><b>Start date:</b> {{ starDate.value }}</span>
+                <span> | </span>
+                <span><b>End date:</b> {{ endDate.value }}</span>
+            </div>
+        </div>
+        <div class="md-expansion-panel-content">
+            <md-input placeholder="First name" style="width: 100%" value="19/07/16" #starDate></md-input>
+            <br />
+            <md-input placeholder="Last name" style="width: 100%" value="22/07/16" #endDate></md-input>
+        </div>
+    </md-expansion-panel>
+</md-expansion-panel-group>
+
+<button md-button (click)="periodPanel.expand()">Expand last expansion panel manually</button>
+<button md-button (click)="periodPanel.collapse()">Collapse last expansion panel manually</button>
