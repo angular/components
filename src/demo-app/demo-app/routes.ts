@@ -25,7 +25,7 @@ import {MenuDemo} from '../menu/menu-demo';
 import {RippleDemo} from '../ripple/ripple-demo';
 import {DialogDemo} from '../dialog/dialog-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
-
+import {ExpansionPanelDemo} from '../expansion-panel/expansion-panel-demo';
 
 export const routes: Routes = [
   {path: '', component: Home},
@@ -54,6 +54,7 @@ export const routes: Routes = [
   {path: 'ripple', component: RippleDemo},
   {path: 'dialog', component: DialogDemo},
   {path: 'tooltip', component: TooltipDemo},
+  {path: 'expansion-panel', component: ExpansionPanelDemo},
 ];
 
 export const DEMO_APP_ROUTE_PROVIDER = provideRouter(routes);

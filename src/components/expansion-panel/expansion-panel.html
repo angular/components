@@ -1,0 +1,7 @@
+<div class="md-expansion-panel-header-container" #header md-ripple [md-ripple-disabled]="disabled">
+    <ng-content select=".md-expansion-panel-header"></ng-content>
+    <md-icon>keyboard_arrow_down</md-icon>
+</div>
+<div class="md-expansion-panel-content-container" #content>
+    <ng-content select=".md-expansion-panel-content, .md-expansion-panel-actions"></ng-content>
+</div>
