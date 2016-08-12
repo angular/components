@@ -68,7 +68,8 @@ export class PortalHostDirective extends BasePortalHost {
         portal.viewContainerRef :
         this._viewContainerRef;
 
-    let componentFactory =  this._componentFactoryResolver.resolveComponentFactory(portal.component)
+    let componentFactory =
+        this._componentFactoryResolver.resolveComponentFactory(portal.component);
     let ref = viewContainerRef.createComponent(
         componentFactory, viewContainerRef.length,
         portal.injector || viewContainerRef.parentInjector);

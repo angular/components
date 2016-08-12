@@ -364,10 +364,11 @@ class PortalTestApp {
 
 // Create a real (non-test) NgModule as a workaround for
 // https://github.com/angular/angular/issues/10760
+const TEST_COMPONENTS = [PortalTestApp, ArbitraryViewContainerRefComponent, PizzaMsg];
 @NgModule({
   imports: [PortalModule],
-  exports: [PortalTestApp, ArbitraryViewContainerRefComponent, PizzaMsg],
-  declarations: [PortalTestApp, ArbitraryViewContainerRefComponent, PizzaMsg],
-  entryComponents: [PortalTestApp, ArbitraryViewContainerRefComponent, PizzaMsg],
+  exports: TEST_COMPONENTS,
+  declarations: TEST_COMPONENTS,
+  entryComponents: TEST_COMPONENTS,
 })
 class PortalTestModule { }

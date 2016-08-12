@@ -143,11 +143,12 @@ class TestComponentWithTemplatePortals {
 
 // Create a real (non-test) NgModule as a workaround for
 // https://github.com/angular/angular/issues/10760
+const TEST_COMPONENTS = [PizzaMsg, TestComponentWithTemplatePortals];
 @NgModule({
   imports: [OverlayModule, PortalModule],
-  exports: [PizzaMsg, TestComponentWithTemplatePortals],
-  declarations: [PizzaMsg, TestComponentWithTemplatePortals],
-  entryComponents: [PizzaMsg, TestComponentWithTemplatePortals],
+  exports: TEST_COMPONENTS,
+  declarations: TEST_COMPONENTS,
+  entryComponents: TEST_COMPONENTS,
 })
 class OverlayTestModule { }
 
