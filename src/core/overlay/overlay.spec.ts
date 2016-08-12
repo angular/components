@@ -1,5 +1,5 @@
 import {inject, fakeAsync, flushMicrotasks, TestBed, async} from '@angular/core/testing';
-import {Component, ViewChild, ViewContainerRef} from '@angular/core';
+import {NgModule, Component, ViewChild, ViewContainerRef} from '@angular/core';
 import {TemplatePortalDirective, PortalModule} from '../portal/portal-directives';
 import {TemplatePortal, ComponentPortal} from '../portal/portal';
 import {Overlay} from './overlay';
@@ -10,7 +10,7 @@ import {PositionStrategy} from './position/position-strategy';
 import {OverlayModule} from './overlay-directives';
 
 
-fdescribe('Overlay', () => {
+describe('Overlay', () => {
   let overlay: Overlay;
   let componentPortal: ComponentPortal<PizzaMsg>;
   let templatePortal: TemplatePortal;
@@ -18,8 +18,7 @@ fdescribe('Overlay', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule],
-      declarations: [TestComponentWithTemplatePortals, PizzaMsg],
+      imports: [OverlayModule, PortalModule, OverlayTestModule],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
@@ -30,7 +29,6 @@ fdescribe('Overlay', () => {
 
     TestBed.compileComponents();
   }));
-
 
   beforeEach(fakeAsync(inject([Overlay], (o: Overlay) => {
     overlay = o;
@@ -43,7 +41,7 @@ fdescribe('Overlay', () => {
     flushMicrotasks();
   })));
 
-  fit('should load a component into an overlay', fakeAsync(() => {
+  it('should load a component into an overlay', fakeAsync(() => {
     let overlayRef: OverlayRef;
 
     overlay.create().then(ref => {
@@ -142,6 +140,16 @@ class TestComponentWithTemplatePortals {
 
   constructor(public viewContainerRef: ViewContainerRef) { }
 }
+
+// Create a real (non-test) NgModule as a workaround for
+// https://github.com/angular/angular/issues/10760
+@NgModule({
+  imports: [OverlayModule, PortalModule],
+  exports: [PizzaMsg, TestComponentWithTemplatePortals],
+  declarations: [PizzaMsg, TestComponentWithTemplatePortals],
+  entryComponents: [PizzaMsg, TestComponentWithTemplatePortals],
+})
+class OverlayTestModule { }
 
 class FakePositionStrategy implements PositionStrategy {
   apply(element: Element): Promise<void> {
