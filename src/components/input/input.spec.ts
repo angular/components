@@ -260,7 +260,7 @@ describe('MdInput', function () {
     expect(testComponent.onBlur).toHaveBeenCalledWith(fakeEvent);
   });
 
-  it('supports the autoComplete attribute', async(() => {
+  it('supports the autoComplete attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithAutocomplete);
     fixture.detectChanges();
 
@@ -273,9 +273,9 @@ describe('MdInput', function () {
     input.autoComplete = 'on';
     fixture.detectChanges();
     expect(el.getAttribute('autocomplete')).toEqual('on');
-  }));
+  });
 
-  it('supports the autoCorrect attribute', async(() => {
+  it('supports the autoCorrect attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithAutocorrect);
     fixture.detectChanges();
 
@@ -288,9 +288,9 @@ describe('MdInput', function () {
     input.autoCorrect = 'on';
     fixture.detectChanges();
     expect(el.getAttribute('autocorrect')).toEqual('on');
-  }));
+  });
 
-  it('supports the autoCapitalize attribute', async(() => {
+  it('supports the autoCapitalize attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithAutocapitalize);
     fixture.detectChanges();
 
@@ -303,9 +303,9 @@ describe('MdInput', function () {
     input.autoCapitalize = 'on';
     fixture.detectChanges();
     expect(el.getAttribute('autocapitalize')).toEqual('on');
-  }));
+  });
 
-  it('supports the autoComplete attribute as an unbound attribute', async(() => {
+  it('supports the autoComplete attribute as an unbound attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithUnboundAutocomplete);
     fixture.detectChanges();
 
@@ -313,9 +313,9 @@ describe('MdInput', function () {
 
     expect(el).not.toBeNull();
     expect(el.getAttribute('autocomplete')).toEqual('');
-  }));
+  });
 
-  it('supports the autoComplete attribute as an unbound value attribute', async(() => {
+  it('supports the autoComplete attribute as an unbound value attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithUnboundAutocompleteWithValue);
     fixture.detectChanges();
 
@@ -323,9 +323,9 @@ describe('MdInput', function () {
 
     expect(el).not.toBeNull();
     expect(el.getAttribute('autocomplete')).toEqual('name');
-  }));
+  });
 
-  it('supports the autoFocus attribute', async(() => {
+  it('supports the autoFocus attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithAutofocus);
     fixture.detectChanges();
 
@@ -338,9 +338,9 @@ describe('MdInput', function () {
     input.autoFocus = true;
     fixture.detectChanges();
     expect(el.getAttribute('autofocus')).toEqual('');
-  }));
+  });
 
-  it('supports the autoFocus attribute as an unbound attribute', async(() => {
+  it('supports the autoFocus attribute as an unbound attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithUnboundAutofocus);
     fixture.detectChanges();
 
@@ -348,9 +348,9 @@ describe('MdInput', function () {
 
     expect(el).not.toBeNull();
     expect(el.getAttribute('autofocus')).toEqual('');
-  }));
+  });
 
-  it('supports the disabled attribute', async(() => {
+  it('supports the disabled attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithDisabled);
     let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
     input.disabled = false;
@@ -365,9 +365,9 @@ describe('MdInput', function () {
     fixture.componentInstance.disabled = true;
     fixture.detectChanges();
     expect(el.getAttribute('disabled')).toEqual('');
-  }));
+  });
 
-  it('supports the disabled attribute as an unbound attribute', async(() => {
+  it('supports the disabled attribute as an unbound attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithUnboundDisabled);
     fixture.detectChanges();
 
@@ -375,9 +375,9 @@ describe('MdInput', function () {
 
     expect(el).not.toBeNull();
     expect(el.getAttribute('disabled')).toEqual('');
-  }));
+  });
 
-  it('supports the list attribute', async(() => {
+  it('supports the list attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithList);
     let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
     input.disabled = false;
@@ -390,9 +390,9 @@ describe('MdInput', function () {
     input.list = 'datalist-id';
     fixture.detectChanges();
     expect(el.getAttribute('list')).toEqual('datalist-id');
-  }));
+  });
 
-  it('supports the max attribute', async(() => {
+  it('supports the max attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithMax);
     let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
     input.disabled = false;
@@ -411,9 +411,9 @@ describe('MdInput', function () {
     input.max = '2000-01-02';
     fixture.detectChanges();
     expect(el.getAttribute('max')).toEqual('2000-01-02');
-  }));
+  });
 
-  it('supports the min attribute', async(() => {
+  it('supports the min attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithMin);
     let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
     input.disabled = false;
@@ -431,9 +431,9 @@ describe('MdInput', function () {
     input.min = '2000-01-02';
     fixture.detectChanges();
     expect(el.getAttribute('min')).toEqual('2000-01-02');
-  }));
+  });
 
-  it('supports the readOnly attribute', async(() => {
+  it('supports the readOnly attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithReadonly);
     fixture.detectChanges();
 
@@ -446,9 +446,9 @@ describe('MdInput', function () {
     input.readOnly = true;
     fixture.detectChanges();
     expect(el.getAttribute('readonly')).toEqual('');
-  }));
+  });
 
-  it('supports the readOnly attribute as an unbound attribute', async(() => {
+  it('supports the readOnly attribute as an unbound attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithUnboundReadonly);
     fixture.detectChanges();
 
@@ -456,9 +456,9 @@ describe('MdInput', function () {
 
     expect(el).not.toBeNull();
     expect(el.getAttribute('readonly')).toEqual('');
-  }));
+  });
 
-  it('supports the required attribute', async(() => {
+  it('supports the required attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithRequired);
     fixture.detectChanges();
 
@@ -471,9 +471,9 @@ describe('MdInput', function () {
     input.required = true;
     fixture.detectChanges();
     expect(el.getAttribute('required')).toEqual('');
-  }));
+  });
 
-  it('supports the required attribute as an unbound attribute', async(() => {
+  it('supports the required attribute as an unbound attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithUnboundRequired);
     fixture.detectChanges();
 
@@ -481,9 +481,9 @@ describe('MdInput', function () {
 
     expect(el).not.toBeNull();
     expect(el.getAttribute('required')).toEqual('');
-  }));
+  });
 
-  it('supports the spellCheck attribute', async(() => {
+  it('supports the spellCheck attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithSpellcheck);
     fixture.detectChanges();
 
@@ -496,9 +496,9 @@ describe('MdInput', function () {
     input.spellCheck = true;
     fixture.detectChanges();
     expect(el.getAttribute('spellcheck')).toEqual('true');
-  }));
+  });
 
-  it('supports the spellCheck attribute as an unbound attribute', async(() => {
+  it('supports the spellCheck attribute as an unbound attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithUnboundSpellcheck);
     fixture.detectChanges();
 
@@ -506,9 +506,9 @@ describe('MdInput', function () {
 
     expect(el).not.toBeNull();
     expect(el.getAttribute('spellcheck')).toEqual('true');
-  }));
+  });
 
-  it('supports the step attribute', async(() => {
+  it('supports the step attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithStep);
     fixture.detectChanges();
 
@@ -521,9 +521,9 @@ describe('MdInput', function () {
     input.step = 0.5;
     fixture.detectChanges();
     expect(el.getAttribute('step')).toEqual('0.5');
-  }));
+  });
 
-  it('supports the tabIndex attribute', async(() => {
+  it('supports the tabIndex attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithTabindex);
     fixture.detectChanges();
 
@@ -536,16 +536,16 @@ describe('MdInput', function () {
     input.tabIndex = 1;
     fixture.detectChanges();
     expect(el.getAttribute('tabindex')).toEqual('1');
-  }));
+  });
 
-  it('supports a name attribute', async(() => {
+  it('supports a name attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithNameTestController);
     const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input'))
         .nativeElement;
     fixture.detectChanges();
 
     expect(inputElement.name).toBe('some-name');
-  }));
+  });
 });
 
 @Component({template: `<md-input id="test-id"></md-input>`})
