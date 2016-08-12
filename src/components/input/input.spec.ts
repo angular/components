@@ -228,13 +228,12 @@ describe('MdInput', function () {
     let fixture = TestBed.createComponent(MdInputNumberTypeConservedTestComponent);
     fixture.detectChanges();
 
-    const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
-    inputEl.value = '3';
+    const input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    const inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-    // Manually trigger an onchange event.
-    var evt = document.createEvent('HTMLEvents');
-    evt.initEvent('change', true, true);
-    inputEl.dispatchEvent(evt);
+    // Fake a `change` event being triggered.
+    inputElement.value = '3';
+    input._handleChange(<any> {target: inputElement});
 
     fixture.detectChanges();
     expect(fixture.componentInstance.value).toBe(3);
