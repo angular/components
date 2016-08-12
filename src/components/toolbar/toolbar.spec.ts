@@ -18,29 +18,29 @@ describe('MdToolbar', () => {
   it('should apply class based on color attribute', () => {
     let fixture = TestBed.createComponent(TestApp);
     let testComponent = fixture.debugElement.componentInstance;
-    let toolbarDebugElement = fixture.debugElement.query(By.css('md-toolbar'));
+    let toolbarElement = fixture.debugElement.query(By.css('md-toolbar')).nativeElement;
 
     testComponent.toolbarColor = 'primary';
     fixture.detectChanges();
 
-    expect(toolbarDebugElement.nativeElement.classList.contains('md-primary')).toBe(true);
+    expect(toolbarElement.classList.contains('md-primary')).toBe(true);
 
     testComponent.toolbarColor = 'accent';
     fixture.detectChanges();
 
-    expect(toolbarDebugElement.nativeElement.classList.contains('md-primary')).toBe(false);
-    expect(toolbarDebugElement.nativeElement.classList.contains('md-accent')).toBe(true);
+    expect(toolbarElement.classList.contains('md-primary')).toBe(false);
+    expect(toolbarElement.classList.contains('md-accent')).toBe(true);
 
     testComponent.toolbarColor = 'warn';
     fixture.detectChanges();
 
-    expect(toolbarDebugElement.nativeElement.classList.contains('md-accent')).toBe(false);
-    expect(toolbarDebugElement.nativeElement.classList.contains('md-warn')).toBe(true);
+    expect(toolbarElement.classList.contains('md-accent')).toBe(false);
+    expect(toolbarElement.classList.contains('md-warn')).toBe(true);
   });
 });
 
 
-@Component({template: `<md-toolbar [color]="toolbarColor"><span>Test Toolbar</span></md-toolbar>`})
+@Component({template: `<md-toolbar [color]="toolbarColor">Test Toolbar</md-toolbar>`})
 class TestApp {
   toolbarColor: string;
 }
