@@ -630,6 +630,24 @@ describe('MdSlider', () => {
 
       expect(testComponent.control.value).toBe(76);
     });
+
+    it('should update the control on slide', () => {
+      expect(testComponent.control.value).toBe(0);
+
+      dispatchSlideEvent(sliderTrackElement, sliderNativeElement, 0, 0.19, gestureConfig);
+      fixture.detectChanges();
+
+      expect(testComponent.control.value).toBe(19);
+    });
+
+    it('should update the value when the control is set', () => {
+      expect(sliderInstance.value).toBe(0);
+
+      testComponent.control.setValue(7);
+      fixture.detectChanges();
+
+      expect(sliderInstance.value).toBe(7);
+    })
   });
 });
 
