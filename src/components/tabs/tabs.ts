@@ -18,6 +18,7 @@ import {MdTabContent} from './tab-content';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdInkBar} from './ink-bar';
 import {Observable} from 'rxjs/Observable';
+import {MdTabBar, MdTabLink} from './tab-nav-bar/tab-nav-bar';
 import 'rxjs/add/operator/map';
 
 // Due to a bug in the ChromeDriver, Angular 2 keyboard events are not triggered by `sendKeys`
@@ -233,7 +234,7 @@ export class MdTabGroup {
 }
 
 /** @deprecated */
-export const MD_TABS_DIRECTIVES = [MdTabGroup, MdTabLabel, MdTabContent, MdTab];
+export const MD_TABS_DIRECTIVES = [MdTabGroup, MdTabLabel, MdTabContent, MdTab, MdTabBar, MdTabLink];
 export const TABS_INTERNAL_DIRECTIVES = [MdInkBar, MdTabLabelWrapper];
 
 @NgModule({

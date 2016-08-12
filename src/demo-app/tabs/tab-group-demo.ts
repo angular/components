@@ -18,6 +18,7 @@ export class TabsDemo {
     { label: 'Tab Three', content: 'This is the body of the third tab' },
   ];
   asyncTabs: Observable<any>;
+  selectedIndex = 0;
   constructor() {
     this.asyncTabs = Observable.create((observer: any) => {
       setTimeout(() => {
