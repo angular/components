@@ -12,7 +12,7 @@ import {
   ViewChildren,
   QueryList,
   ViewContainerRef,
-  ComponentResolver,
+  ComponentFactoryResolver,
   Optional,
   Injector,
 } from '@angular/core';
@@ -29,6 +29,8 @@ describe('Portals', () => {
       imports: [PortalModule],
       declarations: [PortalTestApp, ArbitraryViewContainerRefComponent, PizzaMsg],
     });
+
+    TestBed.compileComponents();
   }));
 
   beforeEach(fakeAsync(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
@@ -216,19 +218,19 @@ describe('Portals', () => {
   });
 
   describe('DomPortalHost', function () {
-    let componentLoader: ComponentResolver;
+    let componentFactoryResolver: ComponentFactoryResolver;
     let someViewContainerRef: ViewContainerRef;
     let someInjector: Injector;
     let someDomElement: HTMLElement;
     let host: DomPortalHost;
 
-    beforeEach(inject([ComponentResolver], (dcl: ComponentResolver) => {
-      componentLoader = dcl;
+    beforeEach(inject([ComponentFactoryResolver], (dcl: ComponentFactoryResolver) => {
+      componentFactoryResolver = dcl;
     }));
 
     beforeEach(() => {
       someDomElement = document.createElement('div');
-      host = new DomPortalHost(someDomElement, componentLoader);
+      host = new DomPortalHost(someDomElement, componentFactoryResolver);
     });
 
     it('should attach and detach a component portal', fakeAsync(() => {

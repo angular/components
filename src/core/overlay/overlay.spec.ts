@@ -1,11 +1,4 @@
-import {
-  inject,
-  fakeAsync,
-  flushMicrotasks,
-  TestComponentBuilder,
-  TestBed,
-  async,
-} from '@angular/core/testing';
+import {inject, fakeAsync, flushMicrotasks, TestBed, async} from '@angular/core/testing';
 import {Component, ViewChild, ViewContainerRef} from '@angular/core';
 import {TemplatePortalDirective, PortalModule} from '../portal/portal-directives';
 import {TemplatePortal, ComponentPortal} from '../portal/portal';
@@ -17,8 +10,7 @@ import {PositionStrategy} from './position/position-strategy';
 import {OverlayModule} from './overlay-directives';
 
 
-describe('Overlay', () => {
-  let builder: TestComponentBuilder;
+fdescribe('Overlay', () => {
   let overlay: Overlay;
   let componentPortal: ComponentPortal<PizzaMsg>;
   let templatePortal: TemplatePortal;
@@ -35,24 +27,23 @@ describe('Overlay', () => {
         }}
       ]
     });
+
+    TestBed.compileComponents();
   }));
 
 
-  let deps = [TestComponentBuilder, Overlay];
-  beforeEach(fakeAsync(inject(deps, (tcb: TestComponentBuilder, o: Overlay) => {
-    builder = tcb;
+  beforeEach(fakeAsync(inject([Overlay], (o: Overlay) => {
     overlay = o;
 
-    builder.createAsync(TestComponentWithTemplatePortals).then(fixture => {
-      fixture.detectChanges();
-      templatePortal = fixture.componentInstance.templatePortal;
-      componentPortal = new ComponentPortal(PizzaMsg, fixture.componentInstance.viewContainerRef);
-    });
+    let fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
+    fixture.detectChanges();
+    templatePortal = fixture.componentInstance.templatePortal;
+    componentPortal = new ComponentPortal(PizzaMsg, fixture.componentInstance.viewContainerRef);
 
     flushMicrotasks();
   })));
 
-  it('should load a component into an overlay', fakeAsync(() => {
+  fit('should load a component into an overlay', fakeAsync(() => {
     let overlayRef: OverlayRef;
 
     overlay.create().then(ref => {
@@ -140,18 +131,12 @@ describe('Overlay', () => {
 
 
 /** Simple component for testing ComponentPortal. */
-@Component({
-  selector: 'pizza-msg',
-  template: '<p>Pizza</p>',
-})
+@Component({template: '<p>Pizza</p>'})
 class PizzaMsg { }
 
 
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
-@Component({
-  selector: 'portal-test',
-  template: `<template portal>Cake</template>`,
-})
+@Component({template: `<template portal>Cake</template>`})
 class TestComponentWithTemplatePortals {
   @ViewChild(TemplatePortalDirective) templatePortal: TemplatePortalDirective;
 
