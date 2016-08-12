@@ -24,7 +24,7 @@ describe('MdList', () => {
     TestBed.compileComponents();
   }));
 
-  it('should add and remove focus class on focus/blur', async(() => {
+  it('should add and remove focus class on focus/blur', () => {
     let fixture = TestBed.createComponent(ListWithOneAnchorItem);
     let listItem = fixture.debugElement.query(By.directive(MdListItem));
     let listItemDiv = fixture.debugElement.query(By.css('.md-list-item'));
@@ -38,51 +38,51 @@ describe('MdList', () => {
     listItem.componentInstance._handleBlur();
     fixture.detectChanges();
     expect(listItemDiv.nativeElement.classList).not.toContain('md-list-item-focus');
-  }));
+  });
 
-  it('should not apply any class to a list without lines', async(() => {
+  it('should not apply any class to a list without lines', () => {
     let fixture = TestBed.createComponent(ListWithOneItem);
     let listItem = fixture.debugElement.query(By.css('md-list-item'));
     fixture.detectChanges();
     expect(listItem.nativeElement.className).toBe('');
-  }));
+  });
 
-  it('should apply md-2-line class to lists with two lines', async(() => {
+  it('should apply md-2-line class to lists with two lines', () => {
     let fixture = TestBed.createComponent(ListWithTwoLineItem);
     fixture.detectChanges();
 
     let listItems = fixture.debugElement.children[0].queryAll(By.css('md-list-item'));
     expect(listItems[0].nativeElement.className).toBe('md-2-line');
     expect(listItems[1].nativeElement.className).toBe('md-2-line');
-  }));
+  });
 
-  it('should apply md-3-line class to lists with three lines', async(() => {
+  it('should apply md-3-line class to lists with three lines', () => {
     let fixture = TestBed.createComponent(ListWithThreeLineItem);
     fixture.detectChanges();
 
     let listItems = fixture.debugElement.children[0].queryAll(By.css('md-list-item'));
     expect(listItems[0].nativeElement.className).toBe('md-3-line');
     expect(listItems[1].nativeElement.className).toBe('md-3-line');
-  }));
+  });
 
-  it('should apply md-list-avatar class to list items with avatars', async(() => {
+  it('should apply md-list-avatar class to list items with avatars', () => {
     let fixture = TestBed.createComponent(ListWithAvatar);
     fixture.detectChanges();
 
     let listItems = fixture.debugElement.children[0].queryAll(By.css('md-list-item'));
     expect(listItems[0].nativeElement.className).toBe('md-list-avatar');
     expect(listItems[1].nativeElement.className).toBe('');
-  }));
+  });
 
-  it('should not clear custom classes provided by user', async(() => {
+  it('should not clear custom classes provided by user', () => {
     let fixture = TestBed.createComponent(ListWithItemWithCssClass);
     fixture.detectChanges();
 
     let listItems = fixture.debugElement.children[0].queryAll(By.css('md-list-item'));
     expect(listItems[0].nativeElement.classList.contains('test-class')).toBe(true);
-  }));
+  });
 
-  it('should update classes if number of lines change', async(() => {
+  it('should update classes if number of lines change', () => {
     let fixture = TestBed.createComponent(ListWithDynamicNumberOfLines);
     fixture.debugElement.componentInstance.showThirdLine = false;
     fixture.detectChanges();
@@ -93,9 +93,9 @@ describe('MdList', () => {
     fixture.debugElement.componentInstance.showThirdLine = true;
     fixture.detectChanges();
     expect(listItem.nativeElement.className).toBe('md-3-line');
-  }));
+  });
 
-  it('should add aria roles properly', async(() => {
+  it('should add aria roles properly', () => {
     let fixture = TestBed.createComponent(ListWithMultipleItems);
     fixture.detectChanges();
 
@@ -103,8 +103,7 @@ describe('MdList', () => {
     let listItem = fixture.debugElement.children[0].query(By.css('md-list-item'));
     expect(list.nativeElement.getAttribute('role')).toBe('list');
     expect(listItem.nativeElement.getAttribute('role')).toBe('listitem');
-  }));
-
+  });
 });
 
 
