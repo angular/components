@@ -10,7 +10,6 @@ import {
   Directive,
   ViewChild,
   ViewContainerRef,
-  ChangeDetectorRef,
 } from '@angular/core';
 import {MdDialog, MdDialogModule} from './dialog';
 import {OverlayContainer} from '@angular2-material/core/overlay/overlay-container';

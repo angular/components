@@ -1,7 +1,5 @@
 import {
   async,
-  inject,
-  TestComponentBuilder,
   TestBed,
 } from '@angular/core/testing';
 import {Component} from '@angular/core';
@@ -10,9 +8,7 @@ import {By} from '@angular/platform-browser';
 import {MdInput, MdInputModule} from './input';
 
 
-fdescribe('MdInput', function () {
-  var builder: TestComponentBuilder;
-
+describe('MdInput', function () {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdInputModule, FormsModule],
@@ -30,17 +26,34 @@ fdescribe('MdInput', function () {
         MdInputBaseTestController,
         MdInputAriaTestController,
         MdInputWithBlurAndFocusEvents,
-        MdInputOptionalAttributeController,
         MdInputWithNameTestController,
         MdInputWithId,
+        MdInputWithAutocomplete,
+        MdInputWithUnboundAutocomplete,
+        MdInputWithUnboundAutocompleteWithValue,
+        MdInputWithAutocorrect,
+        MdInputWithUnboundAutocorrect,
+        MdInputWithAutocapitalize,
+        MdInputWithUnboundAutocapitalize,
+        MdInputWithAutofocus,
+        MdInputWithUnboundAutofocus,
+        MdInputWithReadonly,
+        MdInputWithUnboundReadonly,
+        MdInputWithSpellcheck,
+        MdInputWithUnboundSpellcheck,
+        MdInputWithDisabled,
+        MdInputWithUnboundDisabled,
+        MdInputWithRequired,
+        MdInputWithUnboundRequired,
+        MdInputWithList,
+        MdInputWithMax,
+        MdInputWithMin,
+        MdInputWithStep,
+        MdInputWithTabindex,
       ],
     });
 
     TestBed.compileComponents();
-  }));
-
-  beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
-    builder = tcb;
   }));
 
   it('creates a native <input> element', () => {
@@ -248,391 +261,290 @@ fdescribe('MdInput', function () {
   });
 
   it('supports the autoComplete attribute', async(() => {
-    var template = '<md-input [autoComplete]="autoComplete"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithAutocomplete);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('autocomplete')).toBeNull();
 
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('autocomplete')).toBeNull();
-
-        input.autoComplete = 'on';
-        fixture.detectChanges();
-        expect(el.getAttribute('autocomplete')).toEqual('on');
-      });
+    input.autoComplete = 'on';
+    fixture.detectChanges();
+    expect(el.getAttribute('autocomplete')).toEqual('on');
   }));
 
   it('supports the autoCorrect attribute', async(() => {
-    var template = '<md-input [autoCorrect]="autoCorrect"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithAutocorrect);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('autocorrect')).toBeNull();
 
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('autocorrect')).toBeNull();
-
-        input.autoCorrect = 'on';
-        fixture.detectChanges();
-        expect(el.getAttribute('autocorrect')).toEqual('on');
-      });
+    input.autoCorrect = 'on';
+    fixture.detectChanges();
+    expect(el.getAttribute('autocorrect')).toEqual('on');
   }));
 
   it('supports the autoCapitalize attribute', async(() => {
-    var template = '<md-input [autoCapitalize]="autoCapitalize"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithAutocapitalize);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('autocapitalize')).toBeNull();
 
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('autocapitalize')).toBeNull();
-
-        input.autoCapitalize = 'on';
-        fixture.detectChanges();
-        expect(el.getAttribute('autocapitalize')).toEqual('on');
-      });
+    input.autoCapitalize = 'on';
+    fixture.detectChanges();
+    expect(el.getAttribute('autocapitalize')).toEqual('on');
   }));
 
   it('supports the autoComplete attribute as an unbound attribute', async(() => {
-    var template = '<md-input autoComplete></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithUnboundAutocomplete);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('autocomplete')).toEqual('');
-      });
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('autocomplete')).toEqual('');
   }));
 
   it('supports the autoComplete attribute as an unbound value attribute', async(() => {
-    var template = '<md-input autoComplete="name"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithUnboundAutocompleteWithValue);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('autocomplete')).toEqual('name');
-      });
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('autocomplete')).toEqual('name');
   }));
 
   it('supports the autoFocus attribute', async(() => {
-    var template = '<md-input [autoFocus]="autoFocus"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithAutofocus);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('autofocus')).toBeNull();
 
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('autofocus')).toBeNull();
-
-        input.autoFocus = true;
-        fixture.detectChanges();
-        expect(el.getAttribute('autofocus')).toEqual('');
-      });
+    input.autoFocus = true;
+    fixture.detectChanges();
+    expect(el.getAttribute('autofocus')).toEqual('');
   }));
 
   it('supports the autoFocus attribute as an unbound attribute', async(() => {
-    var template = '<md-input autoFocus></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithUnboundAutofocus);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('autofocus')).toEqual('');
-      });
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('autofocus')).toEqual('');
   }));
 
   it('supports the disabled attribute', async(() => {
-    var template = '<md-input [disabled]="disabled"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithDisabled);
+    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    input.disabled = false;
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-        input.disabled = false;
-        fixture.detectChanges();
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el).not.toBeNull();
 
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-        expect(el).not.toBeNull();
+    fixture.detectChanges();
+    expect(el.getAttribute('disabled')).toEqual(null);
 
-        fixture.detectChanges();
-        expect(el.getAttribute('disabled')).toEqual(null);
-
-        fixture.componentInstance.disabled = true;
-        fixture.detectChanges();
-        expect(el.getAttribute('disabled')).toEqual('');
-      });
+    fixture.componentInstance.disabled = true;
+    fixture.detectChanges();
+    expect(el.getAttribute('disabled')).toEqual('');
   }));
 
   it('supports the disabled attribute as an unbound attribute', async(() => {
-    var template = '<md-input disabled></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithUnboundDisabled);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('disabled')).toEqual('');
-      });
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('disabled')).toEqual('');
   }));
 
   it('supports the list attribute', async(() => {
-    var template = '<md-input [list]="list"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithList);
+    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    input.disabled = false;
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-        input.disabled = false;
-        fixture.detectChanges();
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    fixture.detectChanges();
+    expect(el.getAttribute('list')).toEqual(null);
 
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-        fixture.detectChanges();
-        expect(el.getAttribute('list')).toEqual(null);
-
-        input.list = 'datalist-id';
-        fixture.detectChanges();
-        expect(el.getAttribute('list')).toEqual('datalist-id');
-      });
+    input.list = 'datalist-id';
+    fixture.detectChanges();
+    expect(el.getAttribute('list')).toEqual('datalist-id');
   }));
 
   it('supports the max attribute', async(() => {
-    var template = '<md-input [max]="max"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithMax);
+    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    input.disabled = false;
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-        input.disabled = false;
-        fixture.detectChanges();
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el).not.toBeNull();
 
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-        expect(el).not.toBeNull();
+    fixture.detectChanges();
+    expect(el.getAttribute('max')).toEqual(null);
 
-        fixture.detectChanges();
-        expect(el.getAttribute('max')).toEqual(null);
+    input.max = 10;
+    fixture.detectChanges();
+    expect(el.getAttribute('max')).toEqual('10');
 
-        input.max = 10;
-        fixture.detectChanges();
-        expect(el.getAttribute('max')).toEqual('10');
-
-        input.max = '2000-01-02';
-        fixture.detectChanges();
-        expect(el.getAttribute('max')).toEqual('2000-01-02');
-      });
+    input.max = '2000-01-02';
+    fixture.detectChanges();
+    expect(el.getAttribute('max')).toEqual('2000-01-02');
   }));
 
   it('supports the min attribute', async(() => {
-    var template = '<md-input [min]="min"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithMin);
+    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    input.disabled = false;
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-        input.disabled = false;
-        fixture.detectChanges();
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el).not.toBeNull();
+    fixture.detectChanges();
+    expect(el.getAttribute('min')).toEqual(null);
 
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-        expect(el).not.toBeNull();
-        fixture.detectChanges();
-        expect(el.getAttribute('min')).toEqual(null);
+    input.min = 10;
+    fixture.detectChanges();
+    expect(el.getAttribute('min')).toEqual('10');
 
-        input.min = 10;
-        fixture.detectChanges();
-        expect(el.getAttribute('min')).toEqual('10');
-
-        input.min = '2000-01-02';
-        fixture.detectChanges();
-        expect(el.getAttribute('min')).toEqual('2000-01-02');
-      });
+    input.min = '2000-01-02';
+    fixture.detectChanges();
+    expect(el.getAttribute('min')).toEqual('2000-01-02');
   }));
 
   it('supports the readOnly attribute', async(() => {
-    var template = '<md-input [readOnly]="readOnly"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithReadonly);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
 
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-        let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('readonly')).toBeNull();
 
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('readonly')).toBeNull();
-
-        input.readOnly = true;
-        fixture.detectChanges();
-        expect(el.getAttribute('readonly')).toEqual('');
-      });
+    input.readOnly = true;
+    fixture.detectChanges();
+    expect(el.getAttribute('readonly')).toEqual('');
   }));
 
   it('supports the readOnly attribute as an unbound attribute', async(() => {
-    var template = '<md-input readOnly></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithUnboundReadonly);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('readonly')).toEqual('');
-      });
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('readonly')).toEqual('');
   }));
 
   it('supports the required attribute', async(() => {
-    var template = '<md-input [required]="required"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithRequired);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('required')).toBeNull();
 
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('required')).toBeNull();
-
-        input.required = true;
-        fixture.detectChanges();
-        expect(el.getAttribute('required')).toEqual('');
-      });
+    input.required = true;
+    fixture.detectChanges();
+    expect(el.getAttribute('required')).toEqual('');
   }));
 
   it('supports the required attribute as an unbound attribute', async(() => {
-    var template = '<md-input required></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithUnboundRequired);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('required')).toEqual('');
-      });
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('required')).toEqual('');
   }));
 
   it('supports the spellCheck attribute', async(() => {
-    var template = '<md-input [spellCheck]="spellCheck"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithSpellcheck);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('spellcheck')).toEqual('false');
 
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('spellcheck')).toEqual('false');
-
-        input.spellCheck = true;
-        fixture.detectChanges();
-        expect(el.getAttribute('spellcheck')).toEqual('true');
-      });
+    input.spellCheck = true;
+    fixture.detectChanges();
+    expect(el.getAttribute('spellcheck')).toEqual('true');
   }));
 
   it('supports the spellCheck attribute as an unbound attribute', async(() => {
-    var template = '<md-input spellCheck></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithUnboundSpellcheck);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('spellcheck')).toEqual('true');
-      });
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('spellcheck')).toEqual('true');
   }));
 
   it('supports the step attribute', async(() => {
-    var template = '<md-input [step]="step"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithStep);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('step')).toEqual(null);
 
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('step')).toEqual(null);
-
-        input.step = 0.5;
-        fixture.detectChanges();
-        expect(el.getAttribute('step')).toEqual('0.5');
-      });
+    input.step = 0.5;
+    fixture.detectChanges();
+    expect(el.getAttribute('step')).toEqual('0.5');
   }));
 
   it('supports the tabIndex attribute', async(() => {
-    var template = '<md-input [tabIndex]="tabIndex"></md-input>';
+    let fixture = TestBed.createComponent(MdInputWithTabindex);
+    fixture.detectChanges();
 
-    builder.overrideTemplate(MdInputOptionalAttributeController, template)
-      .createAsync(MdInputOptionalAttributeController)
-      .then(fixture => {
-        fixture.detectChanges();
+    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-        let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
-        let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('tabindex')).toEqual(null);
 
-        expect(el).not.toBeNull();
-        expect(el.getAttribute('tabindex')).toEqual(null);
-
-        input.tabIndex = 1;
-        fixture.detectChanges();
-        expect(el.getAttribute('tabindex')).toEqual('1');
-      });
+    input.tabIndex = 1;
+    fixture.detectChanges();
+    expect(el.getAttribute('tabindex')).toEqual('1');
   }));
 
   it('supports a name attribute', async(() => {
-    builder.createAsync(MdInputWithNameTestController).then(fixture => {
-      const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input'))
-          .nativeElement;
-      fixture.detectChanges();
+    let fixture = TestBed.createComponent(MdInputWithNameTestController);
+    const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input'))
+        .nativeElement;
+    fixture.detectChanges();
 
-      expect(inputElement.name).toBe('some-name');
-    });
+    expect(inputElement.name).toBe('some-name');
   }));
 });
 
@@ -716,10 +628,73 @@ class MdInputWithBlurAndFocusEvents {
   onFocus(event: FocusEvent) {}
 }
 
-@Component({template: `<md-input></md-input>`})
-class MdInputOptionalAttributeController {
-  disabled: boolean = false;
-}
-
 @Component({template: `<md-input name="some-name"></md-input>`})
 class MdInputWithNameTestController { }
+
+@Component({template: `<md-input [autoComplete]="autoComplete"></md-input>`})
+class MdInputWithAutocomplete { }
+
+@Component({template: `<md-input autoComplete></md-input>`})
+class MdInputWithUnboundAutocomplete { }
+
+@Component({template: `<md-input autoComplete="name"></md-input>`})
+class MdInputWithUnboundAutocompleteWithValue { }
+
+@Component({template: `<md-input [autoCorrect]="autoCorrect"></md-input>`})
+class MdInputWithAutocorrect { }
+
+@Component({template: `<md-input autoCorrect></md-input>`})
+class MdInputWithUnboundAutocorrect { }
+
+@Component({template: `<md-input [autoCapitalize]="autoCapitalize"></md-input>`})
+class MdInputWithAutocapitalize { }
+
+@Component({template: `<md-input autoCapitalize></md-input>`})
+class MdInputWithUnboundAutocapitalize { }
+
+@Component({template: `<md-input [autoFocus]="autoFocus"></md-input>`})
+class MdInputWithAutofocus { }
+
+@Component({template: `<md-input autoFocus></md-input>`})
+class MdInputWithUnboundAutofocus { }
+
+@Component({template: `<md-input [readOnly]="readOnly"></md-input>`})
+class MdInputWithReadonly { }
+
+@Component({template: `<md-input readOnly></md-input>`})
+class MdInputWithUnboundReadonly { }
+
+@Component({template: `<md-input [spellCheck]="spellcheck"></md-input>`})
+class MdInputWithSpellcheck { }
+
+@Component({template: `<md-input spellCheck></md-input>`})
+class MdInputWithUnboundSpellcheck { }
+
+@Component({template: `<md-input [disabled]="disabled"></md-input>`})
+class MdInputWithDisabled {
+  disabled: boolean;
+}
+
+@Component({template: `<md-input disabled></md-input>`})
+class MdInputWithUnboundDisabled { }
+
+@Component({template: `<md-input [required]="required"></md-input>`})
+class MdInputWithRequired { }
+
+@Component({template: `<md-input required></md-input>`})
+class MdInputWithUnboundRequired { }
+
+@Component({template: `<md-input [list]="list"></md-input>`})
+class MdInputWithList { }
+
+@Component({template: `<md-input [max]="max"></md-input>`})
+class MdInputWithMax { }
+
+@Component({template: `<md-input [min]="min"></md-input>`})
+class MdInputWithMin { }
+
+@Component({template: `<md-input [step]="step"></md-input>`})
+class MdInputWithStep { }
+
+@Component({template: `<md-input [tabIndex]="tabIndex"></md-input>`})
+class MdInputWithTabindex { }
