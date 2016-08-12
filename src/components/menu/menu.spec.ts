@@ -14,10 +14,10 @@ describe('MdMenu', () => {
     TestBed.compileComponents();
   }));
 
-  it('should add and remove focus class on focus/blur', async(() => {
+  it('should add and remove focus class on focus/blur', () => {
     let fixture = TestBed.createComponent(TestMenu);
     expect(fixture).toBeTruthy();
-  }));
+  });
 });
 
 @Component({template: ``})
