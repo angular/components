@@ -661,6 +661,16 @@ describe('MdInput', function () {
       expect(inputElement.name).toBe('some-name');
     });
   }));
+
+  it('supports a pattern attribute', async(() => {
+    builder.createAsync(MdInputWithPatternTestController).then(fixture => {
+      const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input'))
+          .nativeElement;
+      fixture.detectChanges();
+
+      expect(inputElement.pattern).toBe('some-pattern');
+    });
+  }));
 });
 
 @Component({
@@ -825,3 +835,12 @@ class MdInputOptionalAttributeController {
   `
 })
 class MdInputWithNameTestController {}
+
+@Component({
+  selector: 'test-input-controller',
+  template: `
+    <md-input pattern="some-pattern"></md-input>
+  `,
+  directives: [MdInput]
+})
+class MdInputWithPatternTestController {}
