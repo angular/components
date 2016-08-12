@@ -50,7 +50,7 @@ export class MdSlider implements AfterContentInit {
   /** Whether or not to show the thumb label. */
   @Input('thumb-label')
   @BooleanFieldValue()
-  private _thumbLabel: boolean = false;
+  thumbLabel: boolean = false;
 
   /** The miniumum value that the slider can have. */
   private _min: number = 0;

@@ -27,7 +27,7 @@ describe('MdSlider', () => {
         SliderWithStep,
         SliderWithAutoTickInterval,
         SliderWithSetTickInterval,
-        SliderWithThumbLabel
+        SliderWithThumbLabel,
       ],
     });
 
@@ -548,11 +548,11 @@ describe('MdSlider', () => {
     it('should update the thumb label text on click', () => {
       expect(thumbLabelTextElement.textContent).toBe('0');
 
-      dispatchClickEvent(sliderTrackElement, 0.49);
+      dispatchClickEvent(sliderTrackElement, 0.13);
       fixture.detectChanges();
 
       // The thumb label text is set to the slider's value. These should always be the same.
-      expect(thumbLabelTextElement.textContent).toBe(`${sliderInstance.value}`);
+      expect(thumbLabelTextElement.textContent).toBe('13');
     });
 
     it('should update the thumb label text on slide', () => {
