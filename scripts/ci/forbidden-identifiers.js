@@ -38,22 +38,13 @@ const importRegex = /from\s+'(.*)';/g;
  * Run the forbidden identifiers check against all sources when not verifying a PR.
  */
 
-resolveFiles()
+findTestFiles()
 
   /* Only match .js or .ts, and remove .d.ts files. */
-  .then(fileList => {
-    return fileList.filter(name => name.match(/\.(js|ts)$/) && !name.match(/\.d\.ts$/));
-  })
+  .then(files => files.filter(name => /\.(js|ts)$/.test(name) && !/\.d\.ts$/.test(name)))
 
   /* Read content of the filtered files */
-  .then(fileList => {
-    return fileList.map(fileName => {
-      return {
-        name: fileName,
-        content: fs.readFileSync(fileName, 'utf-8')
-      };
-    });
-  })
+  .then(files => files.map(name => ({ name, content: fs.readFileSync(name, 'utf-8') })))
 
   /* Run checks against content of the filtered files. */
   .then(diffList => {
@@ -96,7 +87,7 @@ resolveFiles()
   /* Print the resolved errors to the console */
   .then(errors => {
     if (errors.length > 0) {
-      console.error('Error: You are using a statement in your commit, which is not allowed.\n');
+      console.error('Error: You are using one or more blocked statements:\n');
 
       errors.forEach(entry => {
         if (entry.messages) {
@@ -116,6 +107,23 @@ resolveFiles()
     console.error(err.stack || err);
     process.exit(2);
   });
+
+
+/**
+ * Resolves all files, which should run against the forbidden identifiers check.
+ * @return {Promise.<Array.<string>>} Files to be checked.
+ */
+function findTestFiles() {
+  if (process.env['TRAVIS_PULL_REQUEST']) {
+    return findChangedFiles();
+  }
+
+  var files = sourceFolders.map(folder => {
+    return glob(`${folder}/**/*.ts`);
+  }).reduce((files, fileSet) => files.concat(fileSet), []);
+
+  return Promise.resolve(files);
+}
 
 /**
  * List all the files that have been changed or added in the last commit range.
@@ -138,22 +146,6 @@ function findChangedFiles() {
         })
         .map(line => line.split(/\s+/, 2)[1]);
     });
-}
-
-/**
- * Resolves all files, which should run against the forbidden identifiers check.
- * @return {Promise.<Array.<string>>} Files to be checked.
- */
-function resolveFiles() {
-  if (process.env['TRAVIS_PULL_REQUEST']) {
-    return findChangedFiles();
-  }
-
-  var files = sourceFolders.map(folder => {
-    return glob(`${folder}/**/*.ts`);
-  }).reduce((files, fileSet) => files.concat(fileSet), []);
-
-  return Promise.resolve(files);
 }
 
 /**
