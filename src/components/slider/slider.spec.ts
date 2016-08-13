@@ -591,7 +591,7 @@ describe('MdSlider', () => {
     });
   });
 
-  describe('slider with two-way binding', () => {
+  describe('slider as a custom form control', () => {
     let fixture: ComponentFixture<SliderWithTwoWayBinding>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
@@ -647,7 +647,9 @@ describe('MdSlider', () => {
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(7);
-    })
+    });
+
+    // TODO: Add tests for ng-pristine, ng-touched, ng-invalid.
   });
 });
 

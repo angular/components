@@ -9,9 +9,9 @@ import {
   forwardRef,
 } from '@angular/core';
 import {
-    NG_VALUE_ACCESSOR,
-    ControlValueAccessor,
-    FormsModule,
+  NG_VALUE_ACCESSOR,
+  ControlValueAccessor,
+  FormsModule,
 } from '@angular/forms';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {BooleanFieldValue} from '@angular2-material/core/annotations/field-value';
@@ -167,6 +167,8 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
    */
   ngAfterContentInit() {
     this._sliderDimensions = this._renderer.getSliderDimensions();
+    // This needs to be called after content init because the value can be set to the min if the
+    // value itself isn't set. If this happens, the control value accessor needs to be updated.
     this._controlValueAccessorChangeFn(this.value);
     this.snapThumbToValue();
     this._updateTickSeparation();
@@ -226,6 +228,7 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
   /** TODO: internal */
   onBlur() {
     this.isActive = false;
+    this.onTouched();
   }
 
   /**

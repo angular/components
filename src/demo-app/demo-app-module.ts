@@ -1,7 +1,7 @@
 import {NgModule, ApplicationRef} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpModule} from '@angular/http';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import {DemoApp, Home} from './demo-app/demo-app';
 import {DEMO_APP_ROUTE_PROVIDER} from './demo-app/routes';
 import {RouterModule} from '@angular/router';
@@ -37,7 +37,6 @@ import {TabsDemo} from './tabs/tab-group-demo';
   imports: [
     BrowserModule,
     FormsModule,
-    ReactiveFormsModule,
     HttpModule,
     MaterialModule,
     RouterModule,
