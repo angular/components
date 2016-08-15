@@ -45,7 +45,6 @@
     "@types/jasmine": "^2.2.31",
     "browserstacktunnel-wrapper": "^1.4.2",
     "conventional-changelog": "^1.1.0",
-    "ember-cli-inject-live-reload": "^1.4.0",
     "express": "^4.14.0",
     "firebase-tools": "^2.2.1",
     "fs-extra": "^0.26.5",

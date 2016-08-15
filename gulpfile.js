@@ -11,6 +11,7 @@ const resolveBin = require('resolve-bin');
 
 // Other imports.
 const inlineResources = require('./scripts/release/inline-resources');
+const karma = require('karma');
 
 // Gulp plugins.
 const gulpClean = require('gulp-clean');
@@ -273,6 +274,23 @@ gulp.task('serve:e2eapp', ['build:e2eapp'], function() {
   gulp.watch(path.join(e2eAppDir, '**/*.scss'), ['build:e2eapp:scss'], reload);
   gulp.watch(path.join(e2eAppDir, '**/*.html'), ['build:e2eapp:assets'], reload);
 });
+
+
+/***************************************************************************************************
+ * Release builds.
+ */
+gulp.task('test', function(done) {
+  new karma.Server({
+    configFile: path.join(__dirname, 'test/karma.conf.js')
+  }, done).start();
+});
+gulp.task('test:single-run', function(done) {
+  new karma.Server({
+    configFile: path.join(__dirname, 'test/karma.conf.js'),
+    singleRun: true
+  }, done).start();
+});
+
 
 /***************************************************************************************************
  * Release builds.
