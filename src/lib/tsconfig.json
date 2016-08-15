@@ -17,8 +17,8 @@
     "stripInternal": true,
     "baseUrl": "",
     "paths": {
-      "@angular2-material/core/*": [
-        "./core/*"
+      "@angular2-material/*": [
+        "./*"
       ]
     },
     "typeRoots": [
