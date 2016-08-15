@@ -1,4 +1,4 @@
-import {TestBed, async, ComponentFixture} from '@angular/core/testing';
+import {TestBed, ComponentFixture} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {MdRipple, MdRippleModule} from './ripple';
 
@@ -61,12 +61,12 @@ describe('MdRipple', () => {
   let rippleBackground: Element;
   let originalBodyMargin: string;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MdRippleModule],
       declarations: [BasicRippleContainer, RippleContainerWithInputBindings],
     });
-  }));
+  });
 
   beforeEach(() => {
     // Set body margin to 0 during tests so it doesn't mess up position calculations.
