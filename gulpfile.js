@@ -15,7 +15,7 @@ const karma = require('karma');
 
 // Gulp plugins.
 const gulpClean = require('gulp-clean');
-const gulpLiveServer = require('gulp-live-server');
+const gulpServer = require('gulp-server-livereload');
 const gulpMerge = require('merge2');
 const gulpRunSequence = require('run-sequence');
 const gulpSass = require('gulp-sass');
@@ -81,15 +81,37 @@ function makeSassBuildTask(options) {
 }
 
 
+/**
+ * Create a Gulp task that executes a process.
+ */
+function makeExecTask(packageName, executable, args) {
+  if (!args) {
+    args = executable;
+    executable = undefined;
+  }
+  return function(done) {
+    resolveBin(packageName, { executable: executable }, function (err, binPath) {
+      child_process.exec(`${binPath} ${args.join(' ')}`, function (error) {
+        if (error) {
+          console.error(error);
+          throw error;
+        } else {
+          done();
+        }
+      });
+    });
+  }
+}
+
 /***************************************************************************************************
  * Components Build Tasks.
  */
-gulp.task('build:components:ts', makeTsBuildTask({ tsConfigPath: componentsDir }));
-gulp.task('build:components:assets', function() {
+gulp.task(':build:components:ts', makeTsBuildTask({ tsConfigPath: componentsDir }));
+gulp.task(':build:components:assets', function() {
   return gulp.src(path.join(componentsDir, '*/**/*.!(ts|spec.ts)'))
     .pipe(gulp.dest(outLibDir));
 });
-gulp.task('build:components:scss', function() {
+gulp.task(':build:components:scss', function() {
   const cssTask = makeSassBuildTask({
     dest: outLibDir,
     root: componentsDir,
@@ -103,36 +125,22 @@ gulp.task('build:components:scss', function() {
   ]);
 });
 gulp.task('build:components', [
-  'build:components:ts',
-  'build:components:assets',
-  'build:components:scss'
+  ':build:components:ts',
+  ':build:components:assets',
+  ':build:components:scss'
 ], function() {
   inlineResources([outLibDir]);
 });
-gulp.task('build:components:ngc', ['build:components'], function(done) {
-  resolveBin('@angular/compiler-cli', { executable: 'ngc' }, function(err, cliPath) {
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    }
+gulp.task(':build:components:ngc', ['build:components'], makeExecTask(
+  '@angular/compiler-cli', 'ngc', ['-p', path.relative(__dirname, componentsDir)]
+));
 
-    child_process.exec(`${cliPath} -p ${path.relative(__dirname, componentsDir)}`, function(error) {
-      console.log(arguments);
-      if (error) {
-        console.error(error);
-        process.exit(1);
-      }
-
-      done();
-    });
-  });
-});
 
 /***************************************************************************************************
  * DevApp Build Tasks.
  */
-gulp.task('build:devapp:ts', ['build:components:ts'], makeTsBuildTask({ tsConfigPath: devAppDir }));
-gulp.task('build:devapp:scss', ['build:components:scss'], makeSassBuildTask({
+gulp.task(':build:devapp:ts', [':build:components:ts'], makeTsBuildTask({ tsConfigPath: devAppDir }));
+gulp.task(':build:devapp:scss', [':build:components:scss'], makeSassBuildTask({
   dest: outDir,
   root: devAppDir,
   // Change this once we have a better strategy for releasing SCSS files.
@@ -141,11 +149,11 @@ gulp.task('build:devapp:scss', ['build:components:scss'], makeSassBuildTask({
     componentsDir
   ]
 }));
-gulp.task('build:devapp:assets', function() {
+gulp.task(':build:devapp:assets', function() {
   return gulp.src(path.join(devAppDir, '**/*'))
     .pipe(gulp.dest(outDir));
 });
-gulp.task('build:devapp:vendor', function() {
+gulp.task(':build:devapp:vendor', function() {
   const npmVendorFiles = [
     'core-js/client', 'zone.js/dist', 'hammerjs', 'systemjs/dist', 'rxjs', '@angular', 'hammerjs'
   ];
@@ -160,17 +168,17 @@ gulp.task('build:devapp:vendor', function() {
 
 gulp.task('build:devapp', [
   'build:components',
-  'build:devapp:vendor',
-  'build:devapp:ts',
-  'build:devapp:scss',
-  'build:devapp:assets'
+  ':build:devapp:vendor',
+  ':build:devapp:ts',
+  ':build:devapp:scss',
+  ':build:devapp:assets'
 ]);
 
 /***************************************************************************************************
  * DevApp Build Tasks.
  */
-gulp.task('build:e2eapp:ts', ['build:components:ts'], makeTsBuildTask({ tsConfigPath: e2eAppDir }));
-gulp.task('build:e2eapp:scss', ['build:components:scss'], makeSassBuildTask({
+gulp.task(':build:e2eapp:ts', [':build:components:ts'], makeTsBuildTask({ tsConfigPath: e2eAppDir }));
+gulp.task(':build:e2eapp:scss', [':build:components:scss'], makeSassBuildTask({
   dest: outDir,
   root: e2eAppDir,
   // Change this once we have a better strategy for releasing SCSS files.
@@ -179,11 +187,11 @@ gulp.task('build:e2eapp:scss', ['build:components:scss'], makeSassBuildTask({
     componentsDir
   ]
 }));
-gulp.task('build:e2eapp:assets', function() {
+gulp.task(':build:e2eapp:assets', function() {
   return gulp.src(path.join(e2eAppDir, '**/*'))
     .pipe(gulp.dest(outDir));
 });
-gulp.task('build:e2eapp:vendor', function() {
+gulp.task(':build:e2eapp:vendor', function() {
   const npmVendorFiles = [
     'core-js/client', 'zone.js/dist', 'hammerjs', 'systemjs/dist', 'rxjs', '@angular', 'hammerjs'
   ];
@@ -198,18 +206,26 @@ gulp.task('build:e2eapp:vendor', function() {
 
 gulp.task('build:e2eapp', [
   'build:components',
-  'build:e2eapp:vendor',
-  'build:e2eapp:ts',
-  'build:e2eapp:scss',
-  'build:e2eapp:assets'
+  ':build:e2eapp:vendor',
+  ':build:e2eapp:ts',
+  ':build:e2eapp:scss',
+  ':build:e2eapp:assets'
 ]);
 
 
 /***************************************************************************************************
  * Global tasks.
  */
-gulp.task('default', function() {
-  console.log(`You're probably looking for "build" or "serve:devapp".`);
+gulp.task('default', ['help']);
+
+gulp.task('help', function() {
+  const tasks = Object.keys(gulp.tasks)
+    .filter(x => !x.startsWith(':'))
+    .filter(x => x != 'default')
+    .sort();
+
+  console.log(`\nHere's a list of supported tasks:\n   `, tasks.join('\n    '));
+  console.log(`\nYou're probably looking for "test" or "serve:devapp".\n\n`);
 });
 
 gulp.task('build', ['build:devapp']);
@@ -218,11 +234,11 @@ gulp.task('clean', function() {
   return gulp.src('dist', { read: false })
     .pipe(gulpClean());
 });
-gulp.task('clean:spec', function() {
+gulp.task(':clean:spec', function() {
   return gulp.src('dist/**/*.spec.*', { read: false })
     .pipe(gulpClean());
 });
-gulp.task('clean:assets', function() {
+gulp.task(':clean:assets', function() {
   return gulp.src('dist/**/*+(.html|.css)', { read: false })
     .pipe(gulpClean());
 });
@@ -231,12 +247,8 @@ gulp.task('clean:assets', function() {
 /***************************************************************************************************
  * Watch Tasks.
  */
-gulp.task('watch:components', ['build:components'], function() {
-  gulp.watch(path.join(componentsDir, '**/*'), ['build:components']);
-});
-
-gulp.task('watch:devapp', ['watch:components', 'build:devapp'], function() {
-  gulp.watch(path.join(devAppDir, '**/*'), ['build:devapp']);
+gulp.task(':watch:components', ['build:components'], function() {
+  return gulp.watch(path.join(componentsDir, '**/*'), ['build:components']);
 });
 
 
@@ -244,51 +256,94 @@ gulp.task('watch:devapp', ['watch:components', 'build:devapp'], function() {
  * Serve Tasks.
  */
 gulp.task('serve:devapp', ['build:devapp'], function() {
-  const server = gulpLiveServer('scripts/serve-dist.js');
+  const stream = gulp.src('dist')
+    .pipe(gulpServer({
+      livereload: true,
+      fallback: 'index.html',
+      port: 4200
+    }));
 
-  server.start();
-  function reload(file) {
-    server.notify(file);
-  }
+  gulp.watch(path.join(componentsDir, '**/*.ts'), [':build:components:ts']);
+  gulp.watch(path.join(componentsDir, '**/*.scss'), [':build:components:scss']);
+  gulp.watch(path.join(componentsDir, '**/*.html'), [':build:components:assets']);
+  gulp.watch(path.join(devAppDir, '**/*.ts'), [':build:devapp:ts']);
+  gulp.watch(path.join(devAppDir, '**/*.scss'), [':build:devapp:scss']);
+  gulp.watch(path.join(devAppDir, '**/*.html'), [':build:devapp:assets']);
 
-  gulp.watch(path.join(componentsDir, '**/*.ts'), ['build:components:ts'], reload);
-  gulp.watch(path.join(componentsDir, '**/*.scss'), ['build:components:scss'], reload);
-  gulp.watch(path.join(componentsDir, '**/*.html'), ['build:components:assets'], reload);
-  gulp.watch(path.join(devAppDir, '**/*.ts'), ['build:devapp:ts'], reload);
-  gulp.watch(path.join(devAppDir, '**/*.scss'), ['build:devapp:scss'], reload);
-  gulp.watch(path.join(devAppDir, '**/*.html'), ['build:devapp:assets'], reload);
+  return stream;
 });
 
-gulp.task('serve:e2eapp', ['build:e2eapp'], function() {
-  const server = gulpLiveServer('scripts/serve-dist.js');
 
-  server.start();
-  function reload(file) {
-    server.notify.apply(server, [file]);
+let stopE2eServer = null;
+gulp.task('serve:e2eapp', ['build:e2eapp'], function(done) {
+  const stream = gulp.src('dist')
+    .pipe(gulpServer({
+      livereload: false,
+      fallback: 'index.html',
+      port: 4200
+    }));
+
+  gulp.watch(path.join(componentsDir, '**/*.ts'), [':build:components:ts']);
+  gulp.watch(path.join(componentsDir, '**/*.scss'), [':build:components:scss']);
+  gulp.watch(path.join(componentsDir, '**/*.html'), [':build:components:assets']);
+  gulp.watch(path.join(e2eAppDir, '**/*.ts'), [':build:devapp:ts']);
+  gulp.watch(path.join(e2eAppDir, '**/*.scss'), [':build:devapp:scss']);
+  gulp.watch(path.join(e2eAppDir, '**/*.html'), [':build:devapp:assets']);
+
+  stopE2eServer = function() {
+    stream.emit('kill');
+    done();
+  };
+});
+
+gulp.task(':serve:e2eapp:stop', function() {
+  if (stopE2eServer) {
+    stopE2eServer();
   }
-
-  gulp.watch(path.join(componentsDir, '**/*.ts'), ['build:components:ts'], reload);
-  gulp.watch(path.join(componentsDir, '**/*.scss'), ['build:components:scss'], reload);
-  gulp.watch(path.join(componentsDir, '**/*.html'), ['build:components:assets'], reload);
-  gulp.watch(path.join(e2eAppDir, '**/*.ts'), ['build:e2eapp:ts'], reload);
-  gulp.watch(path.join(e2eAppDir, '**/*.scss'), ['build:e2eapp:scss'], reload);
-  gulp.watch(path.join(e2eAppDir, '**/*.html'), ['build:e2eapp:assets'], reload);
 });
 
 
 /***************************************************************************************************
- * Release builds.
+ * Tests.
  */
 gulp.task('test', function(done) {
   new karma.Server({
     configFile: path.join(__dirname, 'test/karma.conf.js')
   }, done).start();
 });
+
 gulp.task('test:single-run', function(done) {
   new karma.Server({
     configFile: path.join(__dirname, 'test/karma.conf.js'),
     singleRun: true
   }, done).start();
+});
+
+gulp.task(':test:protractor:setup', makeExecTask('protractor', 'webdriver-manager', ['update']));
+
+gulp.task(':test:protractor', makeExecTask(
+  'protractor', [path.join(__dirname, 'test/protractor.conf.js')]
+));
+
+gulp.task(':test:protractor:and-stop', function(done) {
+  gulpRunSequence(
+    ':test:protractor',
+    ':serve:e2eapp:stop',
+    done
+  );
+});
+
+gulp.task(':e2e:done', function() {
+  process.exit(0);
+});
+
+gulp.task('e2e', function(done) {
+  gulpRunSequence(
+    ':test:protractor:setup',
+    ['serve:e2eapp', ':test:protractor:and-stop'],
+    ':e2e:done',
+    done
+  );
 });
 
 
@@ -299,8 +354,8 @@ gulp.task('build:release', function(done) {
   // Synchronously run those tasks.
   gulpRunSequence(
     'clean',
-    'build:components:ngc',
-    ['clean:spec', 'clean:assets'],
+    ':build:components:ngc',
+    [':clean:spec', ':clean:assets'],
     done
   );
 });
