@@ -91,13 +91,26 @@ function createExecTask(packageName, executable, args) {
   }
   return function(done) {
     resolveBin(packageName, { executable: executable }, function (err, binPath) {
-      child_process.exec(`${binPath} ${args.join(' ')}`, function (error) {
-        if (error) {
-          console.error(error);
-          throw error;
-        } else {
-          done();
+      if (err) {
+        console.error(err);
+        throw err;
+      }
+
+      const process = child_process.spawn(binPath, args);
+
+      process.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+      });
+
+      process.stderr.on('data', (data) => {
+        console.log(`stderr: ${data}`);
+      });
+
+      process.on('close', (code) => {
+        if (code != 0) {
+          throw new Error('Process failed with code ' + code);
         }
+        done();
       });
     });
   }
@@ -141,7 +154,7 @@ gulp.task(':build:components:ngc', ['build:components'], createExecTask(
  */
 gulp.task(':build:vendor', function() {
   const npmVendorFiles = [
-    'core-js/client', 'zone.js/dist', 'hammerjs', 'systemjs/dist', 'rxjs', '@angular', 'hammerjs'
+    '@angular', 'core-js/client', 'hammerjs', 'rxjs', 'systemjs/dist', 'zone.js/dist'
   ];
 
   return gulpMerge(
@@ -290,8 +303,9 @@ gulp.task('serve:e2eapp', ['build:e2eapp'], function(done) {
 
   stopE2eServer = function() {
     stream.emit('kill');
-    done();
   };
+
+  return stream;
 });
 
 gulp.task(':serve:e2eapp:stop', function() {
@@ -323,14 +337,6 @@ gulp.task(':test:protractor', createExecTask(
   'protractor', [path.join(__dirname, 'test/protractor.conf.js')]
 ));
 
-gulp.task(':test:protractor:and-stop', function(done) {
-  gulpRunSequence(
-    ':test:protractor',
-    ':serve:e2eapp:stop',
-    done
-  );
-});
-
 gulp.task(':e2e:done', function() {
   process.exit(0);
 });
@@ -338,7 +344,9 @@ gulp.task(':e2e:done', function() {
 gulp.task('e2e', function(done) {
   gulpRunSequence(
     ':test:protractor:setup',
-    ['serve:e2eapp', ':test:protractor:and-stop'],
+    'serve:e2eapp',
+    ':test:protractor',
+    ':serve:e2eapp:stop',
     ':e2e:done',
     done
   );
@@ -363,7 +371,9 @@ gulp.task('build:release', function(done) {
  * Continuous Integration.
  */
 gulp.task('ci:lint', ['lint', 'stylelint']);
-gulp.task('ci:test', ['test:single-run']);
+gulp.task('ci:test', ['test:single-run'], function() {
+  process.exit(0);
+});
 gulp.task('ci:e2e', ['e2e']);
 gulp.task('ci:extract-metadata', [':build:components:ngc']);
 gulp.task('ci:forbidden-identifiers', function() {
