@@ -29,7 +29,7 @@ const blocked_statements = [
 ];
 
 const sourceFolders = ['./src', './e2e'];
-const scopePackages = glob(['src/lib/*']);
+const scopePackages = glob('src/lib/*');
 const blockedRegex = new RegExp(blocked_statements.join('|'), 'g');
 const importRegex = /from\s+'(.*)';/g;
 

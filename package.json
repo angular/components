@@ -8,14 +8,13 @@
     "url": "https://github.com/angular/material2.git"
   },
   "scripts": {
-    "ci:forbidden-identifiers": "node ./scripts/ci/forbidden-identifiers.js",
     "build": "gulp build",
     "demo-app": "gulp serve:devapp",
-    "test": "karma start test/karma.conf.js",
-    "tslint": "tslint -c tslint.json 'src/**/*.ts'",
-    "stylelint": "stylelint 'src/**/*.scss' --config stylelint-config.json --syntax scss",
+    "test": "gulp test",
+    "tslint": "gulp lint",
+    "stylelint": "gulp lint",
     "check-circular-deps": "madge --circular ./dist",
-    "e2e": "protractor test/protractor.conf.js",
+    "e2e": "gulp e2e",
     "deploy": "firebase deploy",
     "webdriver-manager": "webdriver-manager"
   },

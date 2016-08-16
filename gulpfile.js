@@ -36,7 +36,7 @@ const outLibDir = path.join(outDir, '@angular2-material');
 /**
  * Create a TS Build Task, based on the options.
  */
-function makeTsBuildTask(options) {
+function createTsBuildTask(options) {
   const tsConfigDir = options.tsConfigPath;
   const tsConfigPath = path.join(tsConfigDir, 'tsconfig.json');
   const tsConfig = JSON.parse(fs.readFileSync(tsConfigPath, 'utf-8'));
@@ -64,7 +64,7 @@ function makeTsBuildTask(options) {
 /**
  * Create a SASS Build Task.
  */
-function makeSassBuildTask(options) {
+function createSassBuildTask(options) {
   const dest = options.dest;
   const glob = path.join(options.root, '**/*.scss');
   const sassOptions = {
@@ -84,7 +84,7 @@ function makeSassBuildTask(options) {
 /**
  * Create a Gulp task that executes a process.
  */
-function makeExecTask(packageName, executable, args) {
+function createExecTask(packageName, executable, args) {
   if (!args) {
     args = executable;
     executable = undefined;
@@ -106,13 +106,13 @@ function makeExecTask(packageName, executable, args) {
 /***************************************************************************************************
  * Components Build Tasks.
  */
-gulp.task(':build:components:ts', makeTsBuildTask({ tsConfigPath: componentsDir }));
+gulp.task(':build:components:ts', createTsBuildTask({ tsConfigPath: componentsDir }));
 gulp.task(':build:components:assets', function() {
   return gulp.src(path.join(componentsDir, '*/**/*.!(ts|spec.ts)'))
     .pipe(gulp.dest(outLibDir));
 });
 gulp.task(':build:components:scss', function() {
-  const cssTask = makeSassBuildTask({
+  const cssTask = createSassBuildTask({
     dest: outLibDir,
     root: componentsDir,
     includePaths: path.join(componentsDir, 'core/style')
@@ -131,7 +131,7 @@ gulp.task('build:components', [
 ], function() {
   inlineResources([outLibDir]);
 });
-gulp.task(':build:components:ngc', ['build:components'], makeExecTask(
+gulp.task(':build:components:ngc', ['build:components'], createExecTask(
   '@angular/compiler-cli', 'ngc', ['-p', path.relative(__dirname, componentsDir)]
 ));
 
@@ -139,8 +139,8 @@ gulp.task(':build:components:ngc', ['build:components'], makeExecTask(
 /***************************************************************************************************
  * DevApp Build Tasks.
  */
-gulp.task(':build:devapp:ts', [':build:components:ts'], makeTsBuildTask({ tsConfigPath: devAppDir }));
-gulp.task(':build:devapp:scss', [':build:components:scss'], makeSassBuildTask({
+gulp.task(':build:devapp:ts', [':build:components:ts'], createTsBuildTask({ tsConfigPath: devAppDir }));
+gulp.task(':build:devapp:scss', [':build:components:scss'], createSassBuildTask({
   dest: outDir,
   root: devAppDir,
   // Change this once we have a better strategy for releasing SCSS files.
@@ -177,8 +177,8 @@ gulp.task('build:devapp', [
 /***************************************************************************************************
  * DevApp Build Tasks.
  */
-gulp.task(':build:e2eapp:ts', [':build:components:ts'], makeTsBuildTask({ tsConfigPath: e2eAppDir }));
-gulp.task(':build:e2eapp:scss', [':build:components:scss'], makeSassBuildTask({
+gulp.task(':build:e2eapp:ts', [':build:components:ts'], createTsBuildTask({ tsConfigPath: e2eAppDir }));
+gulp.task(':build:e2eapp:scss', [':build:components:scss'], createSassBuildTask({
   dest: outDir,
   root: e2eAppDir,
   // Change this once we have a better strategy for releasing SCSS files.
@@ -221,6 +221,7 @@ gulp.task('default', ['help']);
 gulp.task('help', function() {
   const tasks = Object.keys(gulp.tasks)
     .filter(x => !x.startsWith(':'))
+    .filter(x => !x.startsWith('ci:'))
     .filter(x => x != 'default')
     .sort();
 
@@ -243,6 +244,10 @@ gulp.task(':clean:assets', function() {
     .pipe(gulpClean());
 });
 
+gulp.task('lint', createExecTask('tslint', ['-c', 'tslint.json', '\'src/**/*.ts\'']));
+gulp.task('stylelint', createExecTask(
+  'stylelint', ['stylelint', '\'src/**/*.scss\'', '--config stylelint-config.json', '--syntax scss']
+));
 
 /***************************************************************************************************
  * Watch Tasks.
@@ -319,9 +324,9 @@ gulp.task('test:single-run', function(done) {
   }, done).start();
 });
 
-gulp.task(':test:protractor:setup', makeExecTask('protractor', 'webdriver-manager', ['update']));
+gulp.task(':test:protractor:setup', createExecTask('protractor', 'webdriver-manager', ['update']));
 
-gulp.task(':test:protractor', makeExecTask(
+gulp.task(':test:protractor', createExecTask(
   'protractor', [path.join(__dirname, 'test/protractor.conf.js')]
 ));
 
@@ -358,4 +363,16 @@ gulp.task('build:release', function(done) {
     [':clean:spec', ':clean:assets'],
     done
   );
+});
+
+
+/***************************************************************************************************
+ * Continuous Integration.
+ */
+gulp.task('ci:lint', ['lint', 'stylelint']);
+gulp.task('ci:test', ['test:single-run']);
+gulp.task('ci:e2e', ['e2e']);
+gulp.task('ci:extract-metadata', [':build:components:ngc']);
+gulp.task('ci:forbidden-identifiers', function() {
+  require('./scripts/ci/forbidden-identifiers.js');
 });
