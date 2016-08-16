@@ -284,9 +284,9 @@ gulp.task('serve:e2eapp', ['build:e2eapp'], function(done) {
   gulp.watch(path.join(componentsDir, '**/*.ts'), [':build:components:ts']);
   gulp.watch(path.join(componentsDir, '**/*.scss'), [':build:components:scss']);
   gulp.watch(path.join(componentsDir, '**/*.html'), [':build:components:assets']);
-  gulp.watch(path.join(e2eAppDir, '**/*.ts'), [':build:devapp:ts']);
-  gulp.watch(path.join(e2eAppDir, '**/*.scss'), [':build:devapp:scss']);
-  gulp.watch(path.join(e2eAppDir, '**/*.html'), [':build:devapp:assets']);
+  gulp.watch(path.join(e2eAppDir, '**/*.ts'), [':build:e2eapp:ts']);
+  gulp.watch(path.join(e2eAppDir, '**/*.scss'), [':build:e2eapp:scss']);
+  gulp.watch(path.join(e2eAppDir, '**/*.html'), [':build:e2eapp:assets']);
 
   stopE2eServer = function() {
     stream.emit('kill');
