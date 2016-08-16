@@ -137,6 +137,23 @@ gulp.task(':build:components:ngc', ['build:components'], createExecTask(
 
 
 /***************************************************************************************************
+ * Vendor files Build Tasks.
+ */
+gulp.task(':build:vendor', function() {
+  const npmVendorFiles = [
+    'core-js/client', 'zone.js/dist', 'hammerjs', 'systemjs/dist', 'rxjs', '@angular', 'hammerjs'
+  ];
+
+  return gulpMerge(
+    npmVendorFiles.map(function(root) {
+      const glob = path.join(root, '**/*.+(js|js.map)');
+      return gulp.src(path.join('node_modules', glob))
+        .pipe(gulp.dest(path.join('dist/vendor', root)));
+    }));
+});
+
+
+/***************************************************************************************************
  * DevApp Build Tasks.
  */
 gulp.task(':build:devapp:ts', [':build:components:ts'], createTsBuildTask({ tsConfigPath: devAppDir }));
@@ -153,22 +170,10 @@ gulp.task(':build:devapp:assets', function() {
   return gulp.src(path.join(devAppDir, '**/*'))
     .pipe(gulp.dest(outDir));
 });
-gulp.task(':build:devapp:vendor', function() {
-  const npmVendorFiles = [
-    'core-js/client', 'zone.js/dist', 'hammerjs', 'systemjs/dist', 'rxjs', '@angular', 'hammerjs'
-  ];
-
-  return gulpMerge(
-    npmVendorFiles.map(function(root) {
-      const glob = path.join(root, '**/*.+(js|js.map)');
-      return gulp.src(path.join('node_modules', glob))
-        .pipe(gulp.dest(path.join('dist/vendor', root)));
-    }));
-});
 
 gulp.task('build:devapp', [
   'build:components',
-  ':build:devapp:vendor',
+  ':build:vendor',
   ':build:devapp:ts',
   ':build:devapp:scss',
   ':build:devapp:assets'
@@ -191,22 +196,10 @@ gulp.task(':build:e2eapp:assets', function() {
   return gulp.src(path.join(e2eAppDir, '**/*'))
     .pipe(gulp.dest(outDir));
 });
-gulp.task(':build:e2eapp:vendor', function() {
-  const npmVendorFiles = [
-    'core-js/client', 'zone.js/dist', 'hammerjs', 'systemjs/dist', 'rxjs', '@angular', 'hammerjs'
-  ];
-
-  return gulpMerge(
-    npmVendorFiles.map(function(root) {
-      const glob = path.join(root, '**/*.+(js|js.map)');
-      return gulp.src(path.join('node_modules', glob))
-        .pipe(gulp.dest(path.join('dist/vendor', root)));
-    }));
-});
 
 gulp.task('build:e2eapp', [
   'build:components',
-  ':build:e2eapp:vendor',
+  ':build:vendor',
   ':build:e2eapp:ts',
   ':build:e2eapp:scss',
   ':build:e2eapp:assets'
@@ -311,13 +304,13 @@ gulp.task(':serve:e2eapp:stop', function() {
 /***************************************************************************************************
  * Tests.
  */
-gulp.task('test', function(done) {
+gulp.task('test', [':build:vendor', 'build:components'], function(done) {
   new karma.Server({
     configFile: path.join(__dirname, 'test/karma.conf.js')
   }, done).start();
 });
 
-gulp.task('test:single-run', function(done) {
+gulp.task('test:single-run', [':build:vendor', 'build:components'], function(done) {
   new karma.Server({
     configFile: path.join(__dirname, 'test/karma.conf.js'),
     singleRun: true
