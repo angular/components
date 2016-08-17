@@ -231,23 +231,23 @@ describe('MdSidenav', () => {
 
 
 /** Test component that contains an MdSidenavLayout but no MdSidenav. */
-@Component({template: `<md-sidenav-layout></md-sidenav-layout>`})
+@Component({template: `<md-sidenav-container></md-sidenav-container>`})
 class SidenavLayoutNoSidenavTestApp { }
 
 /** Test component that contains an MdSidenavLayout and 2 MdSidenav on the same side. */
 @Component({
   template: `
-    <md-sidenav-layout>
+    <md-sidenav-container>
       <md-sidenav> </md-sidenav>
       <md-sidenav> </md-sidenav>
-    </md-sidenav-layout>`,
+    </md-sidenav-container>`,
 })
 class SidenavLayoutTwoSidenavTestApp { }
 
 /** Test component that contains an MdSidenavLayout and one MdSidenav. */
 @Component({
   template: `
-    <md-sidenav-layout>
+    <md-sidenav-container>
       <md-sidenav #sidenav align="start"
                   (open-start)="openStart()"
                   (open)="open()"
@@ -257,7 +257,7 @@ class SidenavLayoutTwoSidenavTestApp { }
       </md-sidenav>
       <button (click)="sidenav.open()" class="open"></button>
       <button (click)="sidenav.close()" class="close"></button>
-    </md-sidenav-layout>`,
+    </md-sidenav-container>`,
 })
 class BasicTestApp {
   openStartCount: number = 0;
@@ -284,20 +284,20 @@ class BasicTestApp {
 
 @Component({
   template: `
-    <md-sidenav-layout>
+    <md-sidenav-container>
       <md-sidenav #sidenav mode="side" opened="false">
         Closed Sidenav.
       </md-sidenav>
-    </md-sidenav-layout>`,
+    </md-sidenav-container>`,
 })
 class SidenavSetToOpenedFalse { }
 
 @Component({
   template: `
-    <md-sidenav-layout>
+    <md-sidenav-container>
       <md-sidenav #sidenav mode="side" opened="true">
         Closed Sidenav.
       </md-sidenav>
-    </md-sidenav-layout>`,
+    </md-sidenav-container>`,
 })
 class SidenavSetToOpenedTrue { }
