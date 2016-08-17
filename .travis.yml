@@ -43,9 +43,12 @@ env:
     - MODE=browserstack_required
     - MODE=saucelabs_optional
     - MODE=browserstack_optional
+    - MODE=plunker
 
 matrix:
+  fast_finish: true
   allow_failures:
+  - env: "MODE=plunker"
   - env: "MODE=saucelabs_optional"
   - env: "MODE=browserstack_optional"
 

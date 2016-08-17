@@ -16,3 +16,7 @@ is_circular_deps_check() {
 is_extract_metadata() {
   [[ "$MODE" = extract_metadata ]]
 }
+
+is_plunker() {
+  [[ "$MODE" = plunker ]]
+}
