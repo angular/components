@@ -96,17 +96,17 @@ function createExecTask(packageName, executable, args) {
         throw err;
       }
 
-      const process = child_process.spawn(binPath, args);
+      const spawn = child_process.spawn(binPath, args);
 
-      process.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
+      spawn.stdout.on('data', (data) => {
+        process.stdout.write(data);
       });
 
-      process.stderr.on('data', (data) => {
-        console.log(`stderr: ${data}`);
+      spawn.stderr.on('data', (data) => {
+        process.stderr.write(data);
       });
 
-      process.on('close', (code) => {
+      spawn.on('close', (code) => {
         if (code != 0) {
           throw new Error('Process failed with code ' + code);
         }
@@ -250,9 +250,9 @@ gulp.task(':clean:assets', function() {
     .pipe(gulpClean());
 });
 
-gulp.task('lint', createExecTask('tslint', ['-c', 'tslint.json', '\'src/**/*.ts\'']));
+gulp.task('lint', createExecTask('tslint', ['-c', 'tslint.json', 'src/**/*.ts']));
 gulp.task('stylelint', createExecTask(
-  'stylelint', ['stylelint', '\'src/**/*.scss\'', '--config stylelint-config.json', '--syntax scss']
+  'stylelint', ['src/**/*.scss', '--config', 'stylelint-config.json', '--syntax', 'scss']
 ));
 
 /***************************************************************************************************
