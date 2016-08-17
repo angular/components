@@ -1,13 +1,13 @@
 # MdSidenav
 
-MdSidenav is the side navigation component for Material 2. It is composed of two components; `<md-sidenav-layout>` and `<md-sidenav>`.
+MdSidenav is the side navigation component for Material 2. It is composed of two components; `<md-sidenav-container>` and `<md-sidenav>`.
 
 ## Screenshots
 
 <img src="https://material.angularjs.org/material2_assets/sidenav-example.png">
 
 
-## `<md-sidenav-layout>`
+## `<md-sidenav-container>`
 
 The parent component. Contains the code necessary to coordinate one or two sidenav and the backdrop.
 
@@ -27,7 +27,7 @@ The sidenav panel.
 | Name | Type | Description |
 | --- | --- | --- |
 | `align` | `"start"|"end"` | The alignment of this sidenav. In LTR direction, `"start"` will be shown on the left, `"end"` on the right. In RTL, it is reversed. `"start"` is used by default. An exception will be thrown if there are more than 1 sidenav on either side. |
-| `mode` | `"over"|"push"|"side"` | The mode or styling of the sidenav, default being `"over"`. With `"over"` the sidenav will appear above the content, and a backdrop will be shown. With `"push"` the sidenav will push the content of the `<md-sidenav-layout>` to the side, and show a backdrop over it. `"side"` will resize the content and keep the sidenav opened. Clicking the backdrop will close sidenavs that do not have `mode="side"`. |
+| `mode` | `"over"|"push"|"side"` | The mode or styling of the sidenav, default being `"over"`. With `"over"` the sidenav will appear above the content, and a backdrop will be shown. With `"push"` the sidenav will push the content of the `<md-sidenav-container>` to the side, and show a backdrop over it. `"side"` will resize the content and keep the sidenav opened. Clicking the backdrop will close sidenavs that do not have `mode="side"`. |
 | `opened` | `boolean` | Whether or not the sidenav is opened. Use this binding to open/close the sidenav. |
 
 ### Events
@@ -65,7 +65,7 @@ Here's a simple example of using the sidenav:
 
 ```html
 <app>
-  <md-sidenav-layout>
+  <md-sidenav-container>
     <md-sidenav #start (open)="mybutton.focus()">
       Start Sidenav.
       <br>
@@ -77,7 +77,7 @@ Here's a simple example of using the sidenav:
     </md-sidenav>
 
     My regular content. This will be moved into the proper DOM at runtime.
-  </md-sidenav-layout>
+  </md-sidenav-container>
 </app>
 ```
 

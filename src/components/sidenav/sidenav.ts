@@ -216,14 +216,14 @@ export class MdSidenav {
 }
 
 /**
- * <md-sidenav-layout> component.
+ * <md-sidenav-container> component.
  *
  * This is the parent component to one or two <md-sidenav>s that validates the state internally
  * and coordinate the backdrop and content styling.
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-sidenav-layout',
+  selector: 'md-sidenav-container',
   // Do not use ChangeDetectionStrategy.OnPush. It does not work for this component because
   // technically it is a sibling of MdSidenav (on the content tree) and isn't updated when MdSidenav
   // changes its state.
@@ -280,7 +280,7 @@ export class MdSidenavLayout implements AfterContentInit {
     sidenav.onClose.subscribe(() => this._setLayoutClass(sidenav, false));
   }
 
-  /* Toggles the 'md-sidenav-opened' class on the main 'md-sidenav-layout' element. */
+  /* Toggles the 'md-sidenav-opened' class on the main 'md-sidenav-container' element. */
   private _setLayoutClass(sidenav: MdSidenav, bool: boolean): void {
     this._renderer.setElementClass(this._element.nativeElement, 'md-sidenav-opened', bool);
   }
