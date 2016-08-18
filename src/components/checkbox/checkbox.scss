@@ -252,6 +252,9 @@ md-checkbox {
 // TODO(kara): Remove this style when fixing vertical baseline
 .md-checkbox-layout .md-checkbox-label {
   line-height: 24px;
+  :empty::after {
+    content: '\00a0';
+  }
 }
 
 .md-checkbox-frame {
