@@ -20,7 +20,8 @@
     "e2e": "protractor",
     "inline-resources": "node ./scripts/release/inline-resources.js ./dist/components",
     "deploy": "firebase deploy",
-    "webdriver-manager": "webdriver-manager"
+    "webdriver-manager": "webdriver-manager",
+    "release": "node ./scripts/release/stage-release.js"
   },
   "version": "2.0.0-alpha.7-3",
   "license": "MIT",
@@ -51,6 +52,7 @@
     "broccoli-merge-trees": "^1.1.1",
     "browserstacktunnel-wrapper": "^1.4.2",
     "conventional-changelog": "^1.1.0",
+    "cpy": "^4.0.1",
     "ember-cli-inject-live-reload": "^1.4.0",
     "firebase-tools": "^2.2.1",
     "fs-extra": "^0.26.5",
@@ -67,6 +69,7 @@
     "node-sass": "^3.4.2",
     "protractor": "^3.3.0",
     "protractor-accessibility-plugin": "0.1.1",
+    "rimraf": "^2.5.3",
     "sass": "^0.5.0",
     "strip-ansi": "^3.0.0",
     "stylelint": "^6.9.0",
