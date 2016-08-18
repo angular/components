@@ -48,10 +48,15 @@ describe('MdTooltip', () => {
       whenStable([
         () => {
           expect(overlayContainerElement.textContent).toBe('some message');
+        },
+        () => {
+          expect(overlayContainerElement.querySelector('.md-tooltip').classList
+              .contains('md-tooltip-visible')).toBeTruthy();
           tooltipDirective._handleMouseLeave(null);
         },
         () => {
-          expect(overlayContainerElement.textContent).toBe('');
+          // Query for md-tooltip-visible class rather than waiting for CSS transitions to finish
+          expect(overlayContainerElement.classList.contains('md-tooltip-visible')).toBeFalsy();
         }
       ]);
     }));
