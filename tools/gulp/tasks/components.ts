@@ -4,6 +4,8 @@ import gulpMerge = require('merge2');
 
 import {srcDir, DIST_COMPONENTS_ROOT, PROJECT_ROOT} from '../constants';
 import {sassBuildTask, tsBuildTask, execTask, copyTask} from '../task_helpers';
+
+// No typings for this.
 const inlineResources = require('../../../scripts/release/inline-resources');
 
 const componentsDir = path.join(srcDir, 'lib');
