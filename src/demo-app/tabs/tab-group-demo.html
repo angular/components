@@ -1,7 +1,15 @@
+<h1>Tab Nav Bar</h1>
+
+<md-tab-nav-bar class="demo-tab-group">
+  <a md-tab-link (click)="selectedIndex = 0" [selected]="selectedIndex == 0">One</a>
+  <a md-tab-link (click)="selectedIndex = 1" [selected]="selectedIndex == 1">Two</a>
+  <a md-tab-link (click)="selectedIndex = 2" [selected]="selectedIndex == 2">Three</a>
+</md-tab-nav-bar>
+
 <h1>Tab Group Demo</h1>
 
-<md-tab-group class="demo-tab-group">
-  <md-tab *ngFor="let tab of tabs; let i = index" [disabled]="i == 1">
+<md-tab-group class="demo-tab-group" [(selectedIndex)]="selectedIndex">
+  <md-tab *ngFor="let tab of tabs; let i = index">
     <template md-tab-label>{{tab.label}}</template>
     <template md-tab-content>
       {{tab.content}}

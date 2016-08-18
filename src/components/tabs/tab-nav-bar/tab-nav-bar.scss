@@ -1,0 +1,13 @@
+@import '../tabs-common';
+
+:host {
+  display: block;
+}
+
+.md-tab-header {
+  @include tab-header;
+}
+
+md-ink-bar {
+
+}
