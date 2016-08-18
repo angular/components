@@ -160,7 +160,7 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
   // The underline is what's shown under the input, its prefix and its suffix.
   // The ripple is the blue animation coming on top of it.
   .md-input-underline {
-    position: absolute;
+    position: relative;
     height: 1px;
     width: 100%;
     margin-top: 4px;
