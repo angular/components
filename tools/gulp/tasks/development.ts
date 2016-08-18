@@ -4,11 +4,12 @@ import * as path from 'path';
 import gulpMerge = require('merge2');
 const gulpServer = require('gulp-server-livereload');
 
+import {DIST_ROOT, NPM_VENDOR_FILES, SOURCE_ROOT} from '../constants';
 import {sassBuildTask, tsBuildTask, copyTask, buildAppTask} from '../task_helpers';
-import {DIST_ROOT, srcDir} from '../constants';
 import {watchComponents} from './components';
 
-const appDir = path.join(srcDir, 'demo-app');
+
+const appDir = path.join(SOURCE_ROOT, 'demo-app');
 const outDir = DIST_ROOT;
 
 
@@ -20,12 +21,8 @@ export function watchDevelopmentApp() {
 
 
 gulp.task(':build:devapp:vendor', function() {
-  const npmVendorFiles = [
-    '@angular', 'core-js/client', 'hammerjs', 'rxjs', 'systemjs/dist', 'zone.js/dist'
-  ];
-
   return gulpMerge(
-    npmVendorFiles.map(function(root) {
+    NPM_VENDOR_FILES.map(function(root) {
       const glob = path.join(root, '**/*.+(js|js.map)');
       return gulp.src(path.join('node_modules', glob))
         .pipe(gulp.dest(path.join('dist/vendor', root)));

@@ -65,7 +65,40 @@ export function sassBuildTask(dest: string, root: string, includePaths: string[]
 
 
 /** Create a Gulp task that executes a process. */
-export function execTask(packageName: string, executable: string[] | string, args?: string[]) {
+export interface ExecTaskOptions {
+  silent?: boolean;
+  errMessage?: string;
+}
+
+export function execTask(binPath: string, args: string[], options: ExecTaskOptions = {}) {
+  return (done: (err?: string) => void) => {
+    const childProcess = child_process.spawn(binPath, args);
+
+    if (!options.silent) {
+      childProcess.stdout.on('data', (data: string) => {
+        process.stdout.write(data);
+      });
+
+      childProcess.stderr.on('data', (data: string) => {
+        process.stderr.write(data);
+      });
+    }
+
+    childProcess.on('close', (code: number) => {
+      if (code != 0) {
+        if (options.errMessage === undefined) {
+          done('Process failed with code ' + code);
+        } else {
+          done(options.errMessage);
+        }
+        return;
+      }
+      done();
+    });
+  }
+}
+
+export function execNodeTask(packageName: string, executable: string[] | string, args?: string[]) {
   if (!args) {
     args = <string[]>executable;
     executable = undefined;
@@ -78,22 +111,8 @@ export function execTask(packageName: string, executable: string[] | string, arg
         throw err;
       }
 
-      const childProcess = child_process.spawn(binPath, args);
-
-      childProcess.stdout.on('data', (data: string) => {
-        process.stdout.write(data);
-      });
-
-      childProcess.stderr.on('data', (data: string) => {
-        process.stderr.write(data);
-      });
-
-      childProcess.on('close', (code: number) => {
-        if (code != 0) {
-          throw new Error('Process failed with code ' + code);
-        }
-        done();
-      });
+      // Forward to execTask.
+      execTask(binPath, args)(done);
     });
   }
 }

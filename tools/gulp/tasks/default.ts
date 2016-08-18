@@ -5,9 +5,9 @@ task('default', ['help']);
 
 task('help', function() {
   const taskList = Object.keys(gulp.tasks)
-    .filter(x => !x.startsWith(':'))
-    .filter(x => !x.startsWith('ci:'))
-    .filter(x => x != 'default')
+    .filter(taskName => !taskName.startsWith(':'))
+    .filter(taskName => !taskName.startsWith('ci:'))
+    .filter(taskName => taskName != 'default')
     .sort();
 
   console.log(`\nHere's a list of supported tasks:\n   `, taskList.join('\n    '));

@@ -3,14 +3,14 @@ import * as path from 'path';
 import gulpMerge = require('merge2');
 import gulpRunSequence = require('run-sequence');
 
-import {srcDir, DIST_ROOT, PROJECT_ROOT} from '../constants';
-import {tsBuildTask, sassBuildTask, copyTask, buildAppTask, execTask} from '../task_helpers';
+import {SOURCE_ROOT, DIST_ROOT, PROJECT_ROOT, NPM_VENDOR_FILES} from '../constants';
+import {tsBuildTask, sassBuildTask, copyTask, buildAppTask, execNodeTask} from '../task_helpers';
 import {watchComponents} from './components';
 
 const gulpServer = require('gulp-server-livereload');
 
 
-const appDir = path.join(srcDir, 'e2e-app');
+const appDir = path.join(SOURCE_ROOT, 'e2e-app');
 const outDir = DIST_ROOT;
 
 
@@ -21,12 +21,8 @@ export function watchE2eApp() {
 }
 
 gulp.task(':build:e2eapp:vendor', function() {
-  const npmVendorFiles = [
-    '@angular', 'core-js/client', 'hammerjs', 'rxjs', 'systemjs/dist', 'zone.js/dist'
-  ];
-
   return gulpMerge(
-    npmVendorFiles.map(function(root) {
+    NPM_VENDOR_FILES.map(function(root) {
       const glob = path.join(root, '**/*.+(js|js.map)');
       return gulp.src(path.join('node_modules', glob))
         .pipe(gulp.dest(path.join('dist/vendor', root)));
@@ -62,9 +58,9 @@ gulp.task(':serve:e2eapp:stop', function() {
   }
 });
 
-gulp.task(':test:protractor:setup', execTask('protractor', 'webdriver-manager', ['update']));
+gulp.task(':test:protractor:setup', execNodeTask('protractor', 'webdriver-manager', ['update']));
 
-gulp.task(':test:protractor', execTask(
+gulp.task(':test:protractor', execNodeTask(
   'protractor', [path.join(PROJECT_ROOT, 'test/protractor.conf.js')]
 ));
 

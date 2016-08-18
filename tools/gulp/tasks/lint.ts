@@ -1,11 +1,10 @@
 import gulp = require('gulp');
-import {execTask} from '../task_helpers';
+import {execNodeTask} from '../task_helpers';
 
 
 gulp.task('lint', ['tslint', 'stylelint']);
-
-gulp.task('tslint', execTask('tslint', ['-c', 'tslint.json', 'src/**/*.ts']));
-
-gulp.task('stylelint', execTask(
+gulp.task('madge', ['build:release'], execNodeTask('madge', ['--circular', './dist']));
+gulp.task('stylelint', execNodeTask(
   'stylelint', ['src/**/*.scss', '--config', 'stylelint-config.json', '--syntax', 'scss']
 ));
+gulp.task('tslint', execNodeTask('tslint', ['-c', 'tslint.json', 'src/**/*.ts']));

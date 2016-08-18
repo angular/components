@@ -2,13 +2,13 @@ import * as gulp from 'gulp';
 import * as path from 'path';
 import gulpMerge = require('merge2');
 
-import {srcDir, DIST_COMPONENTS_ROOT, PROJECT_ROOT} from '../constants';
-import {sassBuildTask, tsBuildTask, execTask, copyTask} from '../task_helpers';
+import {SOURCE_ROOT, DIST_COMPONENTS_ROOT, PROJECT_ROOT} from '../constants';
+import {sassBuildTask, tsBuildTask, execNodeTask, copyTask} from '../task_helpers';
 
 // No typings for this.
 const inlineResources = require('../../../scripts/release/inline-resources');
 
-const componentsDir = path.join(srcDir, 'lib');
+const componentsDir = path.join(SOURCE_ROOT, 'lib');
 
 
 export function watchComponents() {
@@ -35,6 +35,6 @@ gulp.task('build:components', [
   inlineResources([DIST_COMPONENTS_ROOT]);
 });
 
-gulp.task(':build:components:ngc', ['build:components'], execTask(
+gulp.task(':build:components:ngc', ['build:components'], execNodeTask(
   '@angular/compiler-cli', 'ngc', ['-p', path.relative(PROJECT_ROOT, componentsDir)]
 ));
