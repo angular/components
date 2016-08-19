@@ -15,8 +15,6 @@ start_tunnel
 wait_for_tunnel
 if is_lint; then
   $(npm bin)/gulp ci:lint
-elif is_circular_deps_check; then
-  $(npm bin)/gulp ci:check-circular-deps
 elif is_e2e; then
   $(npm bin)/gulp ci:e2e
 elif is_extract_metadata; then
