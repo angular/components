@@ -43,8 +43,6 @@ export class MdDialog {
     let overlayRef = this._createOverlay(config);
     let dialogContainer = this._attachDialogContainer(overlayRef, config);
 
-    // TODO: probably need to wait for dialogContainer ngOnInit before attaching.
-
     return this._attachDialogContent(component, dialogContainer, overlayRef);
   }
 
