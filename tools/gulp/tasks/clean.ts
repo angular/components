@@ -1,16 +1,7 @@
-import {src, task} from 'gulp';
-const gulpClean = require('gulp-clean');
+import {task} from 'gulp';
+import {cleanTask} from '../task_helpers';
 
 
-task('clean', function() {
-  return src('dist', { read: false })
-    .pipe(gulpClean());
-});
-task(':clean:spec', function() {
-  return src('dist/**/*.spec.*', { read: false })
-    .pipe(gulpClean());
-});
-task(':clean:assets', function() {
-  return src('dist/**/*+(.html|.css)', { read: false })
-    .pipe(gulpClean());
-});
+task('clean', cleanTask('dist'));
+task(':clean:spec', cleanTask('dist/**/*.spec.*'));
+task(':clean:assets', cleanTask('dist/**/*+(.html|.css)'));

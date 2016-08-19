@@ -4,11 +4,15 @@ import * as gulp from 'gulp';
 import * as gulpTs from 'gulp-typescript';
 import * as path from 'path';
 
+import {NPM_VENDOR_FILES, PROJECT_ROOT, DIST_ROOT} from './constants';
+
 
 /** Those imports lack typings. */
+const gulpClean = require('gulp-clean');
 const gulpMerge = require('merge2');
 const gulpRunSequence = require('run-sequence');
 const gulpSass = require('gulp-sass');
+const gulpServer = require('gulp-server-livereload');
 const gulpSourcemaps = require('gulp-sourcemaps');
 const resolveBin = require('resolve-bin');
 
@@ -104,11 +108,11 @@ export function execNodeTask(packageName: string, executable: string[] | string,
     executable = undefined;
   }
 
-  return (done: () => void) => {
-    resolveBin(packageName, { executable: executable }, function (err: any, binPath: string) {
+  return (done: (err: any) => void) => {
+    resolveBin(packageName, { executable: executable }, (err: any, binPath: string) => {
       if (err) {
         console.error(err);
-        throw err;
+        return done(err);
       }
 
       // Forward to execTask.
@@ -121,8 +125,14 @@ export function execNodeTask(packageName: string, executable: string[] | string,
 /** Copy files from a glob to a destination. */
 export function copyTask(srcGlobOrDir: string, outRoot: string) {
   return () => {
-    return gulp.src(path.join(_globify(srcGlobOrDir))).pipe(gulp.dest(outRoot));
+    return gulp.src(_globify(srcGlobOrDir)).pipe(gulp.dest(outRoot));
   }
+}
+
+
+/** Delete files. */
+export function cleanTask(glob: string) {
+  return () => gulp.src(glob, { read: false }).pipe(gulpClean(null));
 }
 
 
@@ -138,4 +148,43 @@ export function buildAppTask(appName: string) {
       done
     );
   };
+}
+
+
+/** Create a task that copies vendor files in the proper destination. */
+export function vendorTask() {
+  return () => gulpMerge(
+    NPM_VENDOR_FILES.map(root => {
+      const glob = path.join(PROJECT_ROOT, 'node_modules', root, '**/*.+(js|js.map)');
+      return gulp.src(glob).pipe(gulp.dest(path.join(DIST_ROOT, 'vendor', root)));
+    }));
+}
+
+
+/** Create a task that serves the dist folder. */
+export function serverTask(liveReload: boolean = true,
+                           streamCallback: (stream: NodeJS.ReadWriteStream) => void = null) {
+  return () => {
+    const stream = gulp.src('dist').pipe(gulpServer({
+      livereload: liveReload,
+      fallback: 'index.html',
+      port: 4200
+    }));
+
+    if (streamCallback) {
+      streamCallback(stream);
+    }
+    return stream;
+  }
+}
+
+
+/** Create a task that's a sequence of other tasks. */
+export function sequenceTask(...args: any[]) {
+  return (done: any) => {
+    gulpRunSequence(
+      ...args,
+      done
+    );
+  }
 }

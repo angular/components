@@ -48,7 +48,7 @@ before_script:
   - mkdir -p $LOGS_DIR
 
 script:
-- ./scripts/ci/build-and-test.sh
+  - ./scripts/ci/build-and-test.sh
 
 cache:
   directories:

@@ -21,8 +21,5 @@
     "types": [
       "node"
     ]
-  },
-  "files": [
-    "gulpfile.ts"
-  ]
+  }
 }

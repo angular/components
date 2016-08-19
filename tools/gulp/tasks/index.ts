@@ -6,4 +6,5 @@ import './development';
 import './e2e';
 import './lint';
 import './release';
+import './serve';
 import './spec';
