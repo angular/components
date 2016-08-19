@@ -32,6 +32,9 @@ task('build:e2eapp', buildAppTask('e2eapp'));
 
 task(':test:protractor:setup', execNodeTask('protractor', 'webdriver-manager', ['update']));
 task(':test:protractor', execNodeTask('protractor', [PROTRACTOR_CONFIG_PATH]));
+// This task is used because, in some cases, protractor will block and not exit the process,
+// causing Travis to timeout. This task should always be used in a synchronous sequence as
+// the last step.
 task(':e2e:done', () => process.exit(0));
 
 let stopE2eServer: () => void = null;
