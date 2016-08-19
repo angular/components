@@ -28,6 +28,8 @@ task(':publish:whoami', execTask('npm', ['whoami'], {
 task(':publish:logout', execTask('npm', ['logout']));
 
 task(':publish', function() {
+  const label = process.argv.slice(2)[1];  // [0] would be ':publish'
+  const labelArg = label ? `--tag ${label}` : '';
   const currentDir = process.cwd();
 
   readdirSync(DIST_COMPONENTS_ROOT)
@@ -40,7 +42,7 @@ task(':publish', function() {
       }
 
       process.chdir(componentPath);
-      execSync('npm publish');
+      execSync(`npm publish --access public ${labelArg}`);
     });
   process.chdir(currentDir);
 });

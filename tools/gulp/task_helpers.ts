@@ -68,12 +68,15 @@ export function sassBuildTask(dest: string, root: string, includePaths: string[]
 }
 
 
-/** Create a Gulp task that executes a process. */
+/** Options that can be passed to execTask or execNodeTask. */
 export interface ExecTaskOptions {
+  // Whether to output to STDERR and STDOUT.
   silent?: boolean;
+  // If an error happens, this will replace the standard error.
   errMessage?: string;
 }
 
+/** Create a task that executes a binary as if from the command line. */
 export function execTask(binPath: string, args: string[], options: ExecTaskOptions = {}) {
   return (done: (err?: string) => void) => {
     const childProcess = child_process.spawn(binPath, args);
@@ -95,14 +98,20 @@ export function execTask(binPath: string, args: string[], options: ExecTaskOptio
         } else {
           done(options.errMessage);
         }
-        return;
+      } else {
+        done();
       }
-      done();
     });
   }
 }
 
-export function execNodeTask(packageName: string, executable: string[] | string, args?: string[]) {
+/**
+ * Create a task that executes an NPM Bin, by resolving the binary path then executing it. These are
+ * binaries that are normally in the `./node_modules/.bin` directory, but their name might differ
+ * from the package. Examples are typescript, ngc and gulp itself.
+ */
+export function execNodeTask(packageName: string, executable: string | string[], args?: string[],
+                             options: ExecTaskOptions = {}) {
   if (!args) {
     args = <string[]>executable;
     executable = undefined;
@@ -111,12 +120,11 @@ export function execNodeTask(packageName: string, executable: string[] | string,
   return (done: (err: any) => void) => {
     resolveBin(packageName, { executable: executable }, (err: any, binPath: string) => {
       if (err) {
-        console.error(err);
-        return done(err);
+        done(err);
+      } else {
+        // Forward to execTask.
+        execTask(binPath, args, options)(done);
       }
-
-      // Forward to execTask.
-      execTask(binPath, args)(done);
     });
   }
 }
