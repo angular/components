@@ -6,6 +6,7 @@ import {DemoApp, Home} from './demo-app/demo-app';
 import {DEMO_APP_ROUTE_PROVIDER} from './demo-app/routes';
 import {RouterModule} from '@angular/router';
 import {MaterialModule} from '@angular2-material/all/all';
+import {AccordionDemo} from './accordion/accordion-demo';
 import {ProgressBarDemo} from './progress-bar/progress-bar-demo';
 import {JazzDialog, DialogDemo} from './dialog/dialog-demo';
 import {RippleDemo} from './ripple/ripple-demo';
@@ -45,6 +46,7 @@ import {TabsDemo} from './tabs/tab-group-demo';
     DEMO_APP_ROUTE_PROVIDER,
   ],
   declarations: [
+    AccordionDemo,
     BaselineDemo,
     ButtonDemo,
     ButtonToggleDemo,

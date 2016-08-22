@@ -1,5 +1,6 @@
 import {provideRouter, Routes} from '@angular/router';
 import {Home} from './demo-app';
+import {AccordionDemo} from '../accordion/accordion-demo';
 import {ButtonDemo} from '../button/button-demo';
 import {BaselineDemo} from '../baseline/baseline-demo';
 import {ButtonToggleDemo} from '../button-toggle/button-toggle-demo';
@@ -28,7 +29,8 @@ import {TooltipDemo} from '../tooltip/tooltip-demo';
 
 
 export const routes: Routes = [
-  {path: '', component: Home},
+  { path: '', component: Home },
+  { path: 'accordion', component: AccordionDemo },
   {path: 'button', component: ButtonDemo},
   {path: 'card', component: CardDemo},
   {path: 'radio', component: RadioDemo},
