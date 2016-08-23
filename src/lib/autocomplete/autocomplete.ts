@@ -45,6 +45,7 @@ export const MD_AUTOCOMPLETE_CONTROL_VALUE_ACCESSOR: any = {
 };
 
 @Component({
+  moduleId: module.id,
   selector: 'md-autocomplete',
   template: `
     <div class="md-autocomplete-wrap">

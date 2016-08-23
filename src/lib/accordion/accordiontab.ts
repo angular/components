@@ -2,6 +2,7 @@ import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { MdAccordion } from './accordionpanel';
 
 @Component({
+  moduleId: module.id,
   selector: 'md-accordion-tab',
   template: `
     <div class="md-accordion-header" (click)="toggle($event)">

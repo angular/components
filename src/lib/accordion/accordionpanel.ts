@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angu
 import { MdAccordionTab } from './accordiontab';
 
 @Component({
+  moduleId: module.id,
   selector: 'md-accordion',
   template: `<ng-content></ng-content>`,
   host: {
