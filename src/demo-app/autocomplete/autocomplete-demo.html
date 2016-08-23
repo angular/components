@@ -1,0 +1,21 @@
+<section class="demo-card demo-basic">
+  <h2>Autocomplete</h2>
+  <hr />
+  <div>
+    <md-autocomplete [items]="items"
+                      item-text="name"
+                      [(ngModel)]="item"
+                      [disabled]="disabled"
+                      (change)="change($event)"
+                      placeholder="No city selected">
+    </md-autocomplete>
+    <pre>{{item | json}}</pre>
+    <md-autocomplete [items]="items"
+                      item-text="name"
+                      [(ngModel)]="item"
+                      [disabled]="disabled"
+                      (change)="change($event)"
+                      placeholder="No city selected">
+    </md-autocomplete>
+  </div>
+</section>

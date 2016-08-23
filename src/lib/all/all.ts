@@ -1,5 +1,8 @@
 import {NgModule} from '@angular/core';
 import {MdAccordionModule} from '@angular2-material/accordion/accordion';
+import {MdAutocompleteModule} from '@angular2-material/autocomplete/autocomplete';
+import {MdCollapseModule} from '@angular2-material/collapse/collapse';
+
 import {MdButtonToggleModule} from '@angular2-material/button-toggle/button-toggle';
 import {MdButtonModule} from '@angular2-material/button/button';
 import {MdCheckboxModule} from '@angular2-material/checkbox/checkbox';
@@ -28,6 +31,9 @@ import {MdLiveAnnouncer} from '@angular2-material/core/a11y/live-announcer';
 
 const MATERIAL_MODULES = [
   MdAccordionModule,
+  MdAutocompleteModule,
+  MdCollapseModule,
+
   MdButtonModule,
   MdButtonToggleModule,
   MdCardModule,

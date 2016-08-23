@@ -4,6 +4,9 @@
 
 const components = [
   'all',
+  'accordion',
+  'autocomplete',
+  'collapse',
   'button',
   'card',
   'checkbox',
