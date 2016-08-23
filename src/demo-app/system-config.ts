@@ -9,6 +9,7 @@ const components = [
   'collapse',
   'multiselect',
   'select',
+  'tags',
 
   'button',
   'card',

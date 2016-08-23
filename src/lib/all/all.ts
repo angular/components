@@ -4,6 +4,7 @@ import {MdAutocompleteModule} from '@angular2-material/autocomplete/autocomplete
 import {MdCollapseModule} from '@angular2-material/collapse/collapse';
 import {MdMultiselectModule} from '@angular2-material/multiselect/multiselect';
 import {MdSelectModule} from '@angular2-material/select/select';
+import {MdTagsModule} from '@angular2-material/tags/tags';
 
 import {MdButtonToggleModule} from '@angular2-material/button-toggle/button-toggle';
 import {MdButtonModule} from '@angular2-material/button/button';
@@ -37,6 +38,7 @@ const MATERIAL_MODULES = [
   MdCollapseModule,
   MdMultiselectModule,
   MdSelectModule,
+  MdTagsModule,
 
   MdButtonModule,
   MdButtonToggleModule,

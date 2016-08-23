@@ -1,0 +1,19 @@
+<section class="demo-card demo-basic">
+  <h2>Tags</h2>
+  <hr />
+  <div>
+    <md-tags [md-tags]="tags"
+              md-tag-text="name"
+              [(ngModel)]="tag"
+              (change)="change($event)"
+              placeholder="+Tag">
+    </md-tags>
+    <pre>{{tag | json}}</pre>
+    <md-tags [md-tags]="tags"
+              md-tag-text="name"
+              [(ngModel)]="tag"
+              (change)="change($event)"
+              placeholder="+Tag">
+    </md-tags>
+  </div>
+</section>

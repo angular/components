@@ -5,6 +5,7 @@ import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
 import {CollapseDemo} from '../collapse/collapse-demo';
 import {MultiselectDemo} from '../multiselect/multiselect-demo';
 import {SelectDemo} from '../select/select-demo';
+import {TagsDemo} from '../tags/tags-demo';
 
 import {ButtonDemo} from '../button/button-demo';
 import {BaselineDemo} from '../baseline/baseline-demo';
@@ -40,6 +41,7 @@ export const routes: Routes = [
   { path: 'collapse', component: CollapseDemo },
   { path: 'multiselect', component: MultiselectDemo },
   { path: 'select', component: SelectDemo },
+  { path: 'tags', component: TagsDemo },
 
   { path: 'button', component: ButtonDemo },
   { path: 'card', component: CardDemo },
