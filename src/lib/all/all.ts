@@ -1,4 +1,5 @@
 import {NgModule} from '@angular/core';
+import {MdAccordionModule} from '@angular2-material/accordion/accordion';
 import {MdButtonToggleModule} from '@angular2-material/button-toggle/button-toggle';
 import {MdButtonModule} from '@angular2-material/button/button';
 import {MdCheckboxModule} from '@angular2-material/checkbox/checkbox';
@@ -26,6 +27,7 @@ import {MdLiveAnnouncer} from '@angular2-material/core/a11y/live-announcer';
 
 
 const MATERIAL_MODULES = [
+  MdAccordionModule,
   MdButtonModule,
   MdButtonToggleModule,
   MdCardModule,

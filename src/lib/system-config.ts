@@ -4,6 +4,7 @@
 
 const components = [
   'all',
+  'accordion',
   'button',
   'card',
   'checkbox',
