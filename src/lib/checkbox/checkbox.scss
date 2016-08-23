@@ -240,6 +240,7 @@ md-checkbox {
   vertical-align: middle;
   white-space: nowrap;
   width: $md-checkbox-size;
+  flex: 0 0 $md-checkbox-size;
 
   [dir='rtl'] & {
     margin: {
