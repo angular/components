@@ -1,0 +1,21 @@
+<section class="demo-card demo-basic">
+  <h2>Multiselect</h2>
+  <hr />
+  <div>
+    <md-multiselect [items]="items"
+                    [item-text]="'name'"
+                    [(ngModel)]="item"
+                    [disabled]="disabled"
+                    (change)="change($event)"
+                    placeholder="No city selected">
+    </md-multiselect>
+    <pre>{{item | json}}</pre>
+    <md-multiselect [items]="items"
+                    [item-text]="'name'"
+                    [(ngModel)]="item"
+                    [disabled]="disabled"
+                    (change)="change($event)"
+                    placeholder="No city selected">
+    </md-multiselect>
+  </div>
+</section>

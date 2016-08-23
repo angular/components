@@ -2,6 +2,8 @@ import {NgModule} from '@angular/core';
 import {MdAccordionModule} from '@angular2-material/accordion/accordion';
 import {MdAutocompleteModule} from '@angular2-material/autocomplete/autocomplete';
 import {MdCollapseModule} from '@angular2-material/collapse/collapse';
+import {MdMultiselectModule} from '@angular2-material/multiselect/multiselect';
+import {MdSelectModule} from '@angular2-material/select/select';
 
 import {MdButtonToggleModule} from '@angular2-material/button-toggle/button-toggle';
 import {MdButtonModule} from '@angular2-material/button/button';
@@ -33,6 +35,8 @@ const MATERIAL_MODULES = [
   MdAccordionModule,
   MdAutocompleteModule,
   MdCollapseModule,
+  MdMultiselectModule,
+  MdSelectModule,
 
   MdButtonModule,
   MdButtonToggleModule,

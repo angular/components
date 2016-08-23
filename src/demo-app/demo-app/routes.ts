@@ -3,6 +3,9 @@ import {Home} from './demo-app';
 import {AccordionDemo} from '../accordion/accordion-demo';
 import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
 import {CollapseDemo} from '../collapse/collapse-demo';
+import {MultiselectDemo} from '../multiselect/multiselect-demo';
+import {SelectDemo} from '../select/select-demo';
+
 import {ButtonDemo} from '../button/button-demo';
 import {BaselineDemo} from '../baseline/baseline-demo';
 import {ButtonToggleDemo} from '../button-toggle/button-toggle-demo';
@@ -35,6 +38,9 @@ export const routes: Routes = [
   { path: 'accordion', component: AccordionDemo },
   { path: 'autocomplete', component: AutocompleteDemo },
   { path: 'collapse', component: CollapseDemo },
+  { path: 'multiselect', component: MultiselectDemo },
+  { path: 'select', component: SelectDemo },
+
   { path: 'button', component: ButtonDemo },
   { path: 'card', component: CardDemo },
   { path: 'radio', component: RadioDemo },

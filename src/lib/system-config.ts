@@ -7,6 +7,9 @@ const components = [
   'accordion',
   'autocomplete',
   'collapse',
+  'multiselect',
+  'select',
+
   'button',
   'card',
   'checkbox',
@@ -73,7 +76,7 @@ const barrels: string[] = [
 
 const _cliSystemConfig = {};
 barrels.forEach((barrelName: string) => {
-  (<any> _cliSystemConfig)[barrelName] = { main: 'index' };
+  (<any>_cliSystemConfig)[barrelName] = { main: 'index' };
 });
 
 /** Type declaration for ambient System. */

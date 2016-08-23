@@ -10,6 +10,8 @@ import {MaterialModule} from '@angular2-material/all/all';
 import {AccordionDemo} from './accordion/accordion-demo';
 import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
 import {CollapseDemo} from './collapse/collapse-demo';
+import {MultiselectDemo} from './multiselect/multiselect-demo';
+import {SelectDemo} from './select/select-demo';
 
 import {ProgressBarDemo} from './progress-bar/progress-bar-demo';
 import {JazzDialog, DialogDemo} from './dialog/dialog-demo';
@@ -53,6 +55,8 @@ import {TabsDemo} from './tabs/tab-group-demo';
     AccordionDemo,
     AutocompleteDemo,
     CollapseDemo,
+    MultiselectDemo,
+    SelectDemo,
 
     BaselineDemo,
     ButtonDemo,

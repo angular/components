@@ -1,0 +1,13 @@
+<section class="demo-card demo-basic">
+  <h2>Select</h2>
+  <hr />
+  <div>
+    <select [(ngModel)]="item" (change)="change($event)" placeholder="placeholder">
+      <option [value]="i.value" *ngFor="let i of items">{{i.name}}</option>
+    </select>
+    <pre>{{item | json}}</pre>
+    <md-select [(ngModel)]="item" (change)="change($event)" [disabled]="disabled" placeholder="Hint text">
+      <md-option *ngFor="let i of items" [value]="i.value" [disabled]="i.disabled">{{i.name}}</md-option>
+    </md-select>
+  </div>
+</section>
