@@ -3,7 +3,6 @@ import {NgModule, Component, ViewChild, ViewContainerRef} from '@angular/core';
 import {TemplatePortalDirective, PortalModule} from '../portal/portal-directives';
 import {TemplatePortal, ComponentPortal} from '../portal/portal';
 import {Overlay} from './overlay';
-import {OverlayRef} from './overlay-ref';
 import {OverlayContainer} from './overlay-container';
 import {OverlayState} from './overlay-state';
 import {PositionStrategy} from './position/position-strategy';
@@ -38,6 +37,7 @@ describe('Overlay', () => {
     fixture.detectChanges();
     templatePortal = fixture.componentInstance.templatePortal;
     componentPortal = new ComponentPortal(PizzaMsg, fixture.componentInstance.viewContainerRef);
+    viewContainerFixture = fixture;
   }));
 
   it('should load a component into an overlay', () => {
@@ -103,20 +103,19 @@ describe('Overlay', () => {
       let config = new OverlayState();
       config.hasBackdrop = true;
 
-      let overlayRef = overlay.create(config).attach(componentPortal);
+      let overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
 
-      viewContainerFixture.whenStable().then(() => {
-        viewContainerFixture.detectChanges();
-        let backdrop = <HTMLElement> overlayContainerElement.querySelector('.md-overlay-backdrop');
-        expect(backdrop).toBeTruthy();
-        expect(backdrop.classList).not.toContain('.md-overlay-backdrop-showing');
+      viewContainerFixture.detectChanges();
+      let backdrop = <HTMLElement> overlayContainerElement.querySelector('.md-overlay-backdrop');
+      expect(backdrop).toBeTruthy();
+      expect(backdrop.classList).not.toContain('.md-overlay-backdrop-showing');
 
-        let backdropClickHandler = jasmine.createSpy('backdropClickHander');
-        overlayRef.backdropClick().subscribe(backdropClickHandler);
+      let backdropClickHandler = jasmine.createSpy('backdropClickHander');
+      overlayRef.backdropClick().subscribe(backdropClickHandler);
 
-        backdrop.click();
-        expect(backdropClickHandler).toHaveBeenCalled();
-      });
+      backdrop.click();
+      expect(backdropClickHandler).toHaveBeenCalled();
     });
   });
 });
