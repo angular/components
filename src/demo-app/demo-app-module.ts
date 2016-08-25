@@ -10,6 +10,7 @@ import {MaterialModule} from '@angular2-material/all/all';
 import {AccordionDemo} from './accordion/accordion-demo';
 import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
 import {CollapseDemo} from './collapse/collapse-demo';
+import {DatepickerDemo} from './datepicker/datepicker-demo';
 import {MultiselectDemo} from './multiselect/multiselect-demo';
 import {SelectDemo} from './select/select-demo';
 import {TagsDemo} from './tags/tags-demo';
@@ -56,6 +57,7 @@ import {TabsDemo} from './tabs/tab-group-demo';
     AccordionDemo,
     AutocompleteDemo,
     CollapseDemo,
+    DatepickerDemo,
     MultiselectDemo,
     SelectDemo,
     TagsDemo,

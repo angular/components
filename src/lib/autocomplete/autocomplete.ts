@@ -345,4 +345,3 @@ export const MD_AUTOCOMPLETE_DIRECTIVES = [MdAutocomplete, HightlightPipe];
   exports: MD_AUTOCOMPLETE_DIRECTIVES,
 })
 export class MdAutocompleteModule { }
-
