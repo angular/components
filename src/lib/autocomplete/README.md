@@ -1,4 +1,4 @@
-# md2-autocomplete
+# md-autocomplete
 
 Native Angular2 Material Autocomplete component
 
@@ -8,13 +8,13 @@ Example:
  
 HTML sample code
  ```html
-<md2-autocomplete [items]="items"
+<md-autocomplete [items]="items"
                   item-text="name"
                   item-value="value"
                   [(ngModel)]="item"
                   (change)="selected($event)"
                   placeholder="Placeholder Text">
-</md2-autocomplete>
+</md-autocomplete>
  ```
 
 TS sample code
@@ -22,11 +22,11 @@ TS sample code
 
 ...
 
-import {Md2Autocomplete} from 'md2/autocomplete';
+import {MdAutocomplete} from 'md/autocomplete';
 
 @Component({
     selector: "...",
-    directives: [Md2Autocomplete]
+    directives: [MdAutocomplete]
 })
 
 export class ... {

@@ -1,4 +1,4 @@
-# md2-collapse
+# md-collapse
 
 Native Angular2 Material Collapse directive
 
@@ -18,11 +18,11 @@ TS sample code
 
 ...
 
-import {Md2Collapse} from 'md2/collapse';
+import {MdCollapse} from 'md/collapse';
 
 @Component({
     selector: "...",
-    directives: [Md2Collapse]
+    directives: [MdCollapse]
 })
 
 export class ... {

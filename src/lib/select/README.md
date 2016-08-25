@@ -1,4 +1,4 @@
-# md2-select
+# md-select
 
 Native Angular2 Material Select component
 
@@ -7,20 +7,20 @@ Native Angular2 Material Select component
 Example:
  
  ```html
-<md2-select [(ngModel)]="item" (change)="change($event)" [disabled]="disabled">
-  <md2-option *ngFor="let i of items" [value]="i.value" [disabled]="i.disabled">{{i.name}}</md2-option>
-</md2-select>
+<md-select [(ngModel)]="item" (change)="change($event)" [disabled]="disabled">
+  <md-option *ngFor="let i of items" [value]="i.value" [disabled]="i.disabled">{{i.name}}</md-option>
+</md-select>
  ```
  ```ts
 
 ...
 
-import { SELECT_DIRECTIVES, Md2SelectDispatcher } from 'md2/select';
+import { SELECT_DIRECTIVES, MdSelectDispatcher } from 'md/select';
 
 @Component({
   selector: "...",
   directives: [SELECT_DIRECTIVES],
-  providers: [Md2SelectDispatcher]
+  providers: [MdSelectDispatcher]
 })
 
 export class ... {

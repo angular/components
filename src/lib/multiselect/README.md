@@ -1,4 +1,4 @@
-# md2-multiselect
+# md-multiselect
 
 Native Angular2 Material Multiselect component
 
@@ -7,23 +7,23 @@ Native Angular2 Material Multiselect component
 Example:
  
  ```html
-<md2-multiselect [items]="items"
+<md-multiselect [items]="items"
                  item-text="name"
                  item-value="value"
                  [(ngModel)]="item"
                  (change)="selected($event)"
                  placeholder="Placeholder Text">
-</md2-multiselect>
+</md-multiselect>
  ```
  ```ts
 
 ...
 
-import {Md2Multiselect} from 'md2/multiselect';
+import {MdMultiselect} from 'md/multiselect';
 
 @Component({
     selector: "...",
-    directives: [Md2Multiselect]
+    directives: [MdMultiselect]
 })
 
 export class ... {

@@ -1,4 +1,4 @@
-# md2-tags
+# md-tags
 
 Native Angular2 Material Tags component
 
@@ -7,23 +7,23 @@ Native Angular2 Material Tags component
 Example:
  
  ```html
-<md2-tags [md-tags]="tags"
+<md-tags [md-tags]="tags"
           md-tag-text="name"
           md-tag-value="value"
           [(ngModel)]="tag"
           (change)="change($event)"
           placeholder="+Tag">
-</md2-tags>
+</md-tags>
  ```
  ```ts
 
 ...
 
-import {Md2Tags} from 'md2/tags';
+import {MdTags} from 'md/tags';
 
 @Component({
   selector: "...",
-  directives: [Md2Tags]
+  directives: [MdTags]
 })
 
 export class ... {
