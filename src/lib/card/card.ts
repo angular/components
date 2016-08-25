@@ -74,12 +74,9 @@ TODO(kara): update link to demo site when it exists
 })
 export class MdCardTitleGroup {}
 
-/** @deprecated */
-export const MD_CARD_DIRECTIVES: any[] = [MdCard, MdCardHeader, MdCardTitleGroup];
-
 
 @NgModule({
-  exports: MD_CARD_DIRECTIVES,
-  declarations: MD_CARD_DIRECTIVES,
+  exports: [MdCard, MdCardHeader, MdCardTitleGroup],
+  declarations: [MdCard, MdCardHeader, MdCardTitleGroup],
 })
 export class MdCardModule { }
