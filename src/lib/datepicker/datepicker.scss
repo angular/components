@@ -1,0 +1,36 @@
+.ng-datepicker-input { position: relative; width: 100%; cursor: pointer; }
+.ng-datepicker { position: absolute; z-index: 99; width: 250px; background: #fff; font-size: 12px; color: #565a5c; display: inline-block; border: 1px solid #c4c4c4; border-radius: 2px; margin: 0; padding: 0;
+  & > .controls { width: 250px; display: inline-block; padding: 5px 0 0 0;
+    & i { font-size: 25px; cursor: pointer; }
+    & > .left { width: 40px; display: inline-block; float: left; margin: 5px 0 0 3px;
+      & > i.prev-year-btn { float: left; display: block; font-size: 14px; opacity: 0.4; margin: -2px 0 0 2px; }
+      & > i.prev-month-btn { float: left; margin: -10px 0 0 9px; display: block; }
+    }
+    & > span.date { width: 160px; text-align: center; font-size: 14px; color: #565a5c; font-weight: bold; float: left; padding: 3px 0 0 0; }
+    & > .right { width: 40px; display: inline-block; float: right; margin: 5px 0 0 0;
+      & > i.next-year-btn { float: left; display: block; font-size: 14px; opacity: 0.4; margin: -2px 2px 0 0; }
+      & > i.next-month-btn { float: left; margin: -10px 9px 0 0; }
+    }
+  }
+  & > .day-names { width: 250px; border-bottom: 1px solid #c4c4c4; display: inline-block;
+    & > span { width: calc(250px / 7); text-align: center; color: #82888a; float: left; display: block; }
+  }
+  & > .calendar { width: 250px; display: inline-block; margin: -5px 0 -6px -1px; padding: 0;
+    & > span > span.day { width: calc(250px / 7); height: 35px; border-left: 1px solid #c4c4c4; border-bottom: 1px solid #c4c4c4; float: left; display: block; color: #565a5c; text-align: center; font-weight: bold; line-height: 35px; margin: 0; padding: 0; font-size: 14px; cursor: pointer; }
+    & > span:last-child > span.day { border-right: 1px solid #c4c4c4; }
+    & > span:nth-child(7n) > span.day { border-right: none; }
+    & > span > span.day.disabled { border-left: 1px solid transparent; cursor: default; pointer-events: none; }
+    & > span > span.day:hover { background: rgba(0, 0, 0, 0.4); color: #fff; }
+    & > span > span.day.selected { background: rgba(0, 0, 0, 0.8); cursor: default; pointer-events: none; color: #fff; }
+  }
+  &.static { position: relative; width: 100%; box-sizing: border-box;
+    & > .controls { width: 100%; text-align: center; background-color: #eee; padding: 5px 0;
+      & > .left > i.prev-month-btn { margin-top: -6px; }
+      & > span.date { width: auto; float: none; display: inline-block; padding-top: 4px; }
+    }
+    & > .day-names { width: 100%; background-color: #f9f9f9; }
+    & > .day-names > span { width: calc(100%/7); }
+    & > .calendar { width: 100%; }
+    & > .calendar > span > span.day { width: calc(100%/7 - 1px); height: 50px; line-height: 50px; }
+  }
+}
