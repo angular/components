@@ -1,12 +1,4 @@
-import {NgModule} from '@angular/core';
-import {MdAccordionModule} from '@angular2-material/accordion/accordion';
-import {MdAutocompleteModule} from '@angular2-material/autocomplete/autocomplete';
-import {MdCollapseModule} from '@angular2-material/collapse/collapse';
-import {MdDatepickerModule} from '@angular2-material/datepicker/datepicker';
-import {MdMultiselectModule} from '@angular2-material/multiselect/multiselect';
-import {MdSelectModule} from '@angular2-material/select/select';
-import {MdTagsModule} from '@angular2-material/tags/tags';
-
+import {NgModule, ModuleWithProviders} from '@angular/core';
 import {MdButtonToggleModule} from '@angular2-material/button-toggle/button-toggle';
 import {MdButtonModule} from '@angular2-material/button/button';
 import {MdCheckboxModule} from '@angular2-material/checkbox/checkbox';
@@ -34,14 +26,6 @@ import {MdLiveAnnouncer} from '@angular2-material/core/a11y/live-announcer';
 
 
 const MATERIAL_MODULES = [
-  MdAccordionModule,
-  MdAutocompleteModule,
-  MdCollapseModule,
-  MdDatepickerModule,
-  MdMultiselectModule,
-  MdSelectModule,
-  MdTagsModule,
-
   MdButtonModule,
   MdButtonToggleModule,
   MdCardModule,
@@ -68,8 +52,45 @@ const MATERIAL_MODULES = [
 ];
 
 @NgModule({
-  imports: MATERIAL_MODULES,
+  imports: [
+    MdButtonModule,
+    MdCardModule,
+    MdCheckboxModule,
+    MdGridListModule,
+    MdInputModule,
+    MdListModule,
+    MdProgressBarModule,
+    MdProgressCircleModule,
+    MdRippleModule,
+    MdSidenavModule,
+    MdSliderModule,
+    MdSlideToggleModule,
+    MdTabsModule,
+    MdToolbarModule,
+    PortalModule,
+    RtlModule,
+
+    // These modules include providers.
+    MdButtonToggleModule.forRoot(),
+    MdDialogModule.forRoot(),
+    MdIconModule.forRoot(),
+    MdMenuModule.forRoot(),
+    MdRadioModule.forRoot(),
+    MdTooltipModule.forRoot(),
+    OverlayModule.forRoot(),
+  ],
   exports: MATERIAL_MODULES,
   providers: [MdLiveAnnouncer]
 })
-export class MaterialModule { }
+export class MaterialRootModule { }
+
+
+@NgModule({
+  imports: MATERIAL_MODULES,
+  exports: MATERIAL_MODULES,
+})
+export class MaterialModule {
+  static forRoot(): ModuleWithProviders {
+    return {ngModule: MaterialRootModule};
+  }
+}

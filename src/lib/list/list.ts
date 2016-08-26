@@ -12,6 +12,11 @@ import {
 } from '@angular/core';
 import {MdLine, MdLineSetter, MdLineModule} from '@angular2-material/core/line/line';
 
+@Directive({
+  selector: 'md-divider'
+})
+export class MdListDivider {}
+
 @Component({
   moduleId: module.id,
   selector: 'md-list, md-nav-list',
@@ -65,13 +70,10 @@ export class MdListItem implements AfterContentInit {
   }
 }
 
-/** @deprecated */
-export const MD_LIST_DIRECTIVES = [MdList, MdListItem, MdListAvatar];
-
 
 @NgModule({
   imports: [MdLineModule],
-  exports: [MD_LIST_DIRECTIVES, MdLineModule],
-  declarations: MD_LIST_DIRECTIVES,
+  exports: [MdList, MdListItem, MdListDivider, MdListAvatar, MdLineModule],
+  declarations: [MdList, MdListItem, MdListDivider, MdListAvatar],
 })
 export class MdListModule { }

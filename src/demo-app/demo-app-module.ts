@@ -3,18 +3,9 @@ import {BrowserModule} from '@angular/platform-browser';
 import {HttpModule} from '@angular/http';
 import {FormsModule} from '@angular/forms';
 import {DemoApp, Home} from './demo-app/demo-app';
-import {DEMO_APP_ROUTE_PROVIDER} from './demo-app/routes';
 import {RouterModule} from '@angular/router';
 import {MaterialModule} from '@angular2-material/all/all';
-
-import {AccordionDemo} from './accordion/accordion-demo';
-import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
-import {CollapseDemo} from './collapse/collapse-demo';
-import {DatepickerDemo} from './datepicker/datepicker-demo';
-import {MultiselectDemo} from './multiselect/multiselect-demo';
-import {SelectDemo} from './select/select-demo';
-import {TagsDemo} from './tags/tags-demo';
-
+import {DEMO_APP_ROUTES} from './demo-app/routes';
 import {ProgressBarDemo} from './progress-bar/progress-bar-demo';
 import {JazzDialog, DialogDemo} from './dialog/dialog-demo';
 import {RippleDemo} from './ripple/ripple-demo';
@@ -42,26 +33,16 @@ import {MenuDemo} from './menu/menu-demo';
 import {TabsDemo} from './tabs/tab-group-demo';
 
 
+
 @NgModule({
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule,
-    RouterModule,
-  ],
-  providers: [
-    DEMO_APP_ROUTE_PROVIDER,
+    RouterModule.forRoot(DEMO_APP_ROUTES),
+    MaterialModule.forRoot(),
   ],
   declarations: [
-    AccordionDemo,
-    AutocompleteDemo,
-    CollapseDemo,
-    DatepickerDemo,
-    MultiselectDemo,
-    SelectDemo,
-    TagsDemo,
-
     BaselineDemo,
     ButtonDemo,
     ButtonToggleDemo,
