@@ -1,4 +1,11 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
+import {MdAccordionModule} from '@angular2-material/accordion/accordion';
+import {MdAutocompleteModule} from '@angular2-material/autocomplete/autocomplete';
+import {MdCollapseModule} from '@angular2-material/collapse/collapse';
+import {MdDatepickerModule} from '@angular2-material/datepicker/datepicker';
+import {MdMultiselectModule} from '@angular2-material/multiselect/multiselect';
+import {MdSelectModule} from '@angular2-material/select/select';
+import {MdTagsModule} from '@angular2-material/tags/tags';
 import {MdButtonToggleModule} from '@angular2-material/button-toggle/button-toggle';
 import {MdButtonModule} from '@angular2-material/button/button';
 import {MdCheckboxModule} from '@angular2-material/checkbox/checkbox';
@@ -26,6 +33,13 @@ import {MdLiveAnnouncer} from '@angular2-material/core/a11y/live-announcer';
 
 
 const MATERIAL_MODULES = [
+  MdAccordionModule,
+  MdAutocompleteModule,
+  MdCollapseModule,
+  MdDatepickerModule,
+  MdMultiselectModule,
+  MdSelectModule,
+  MdTagsModule,
   MdButtonModule,
   MdButtonToggleModule,
   MdCardModule,
@@ -53,6 +67,13 @@ const MATERIAL_MODULES = [
 
 @NgModule({
   imports: [
+    MdAccordionModule,
+    MdAutocompleteModule,
+    MdCollapseModule,
+    MdDatepickerModule,
+    MdMultiselectModule,
+    MdSelectModule,
+    MdTagsModule,
     MdButtonModule,
     MdCardModule,
     MdCheckboxModule,
@@ -91,6 +112,6 @@ export class MaterialRootModule { }
 })
 export class MaterialModule {
   static forRoot(): ModuleWithProviders {
-    return {ngModule: MaterialRootModule};
+    return { ngModule: MaterialRootModule };
   }
 }

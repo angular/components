@@ -1,5 +1,12 @@
 import {Routes} from '@angular/router';
 import {Home} from './demo-app';
+import {AccordionDemo} from '../accordion/accordion-demo';
+import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
+import {CollapseDemo} from '../collapse/collapse-demo';
+import {DatepickerDemo} from '../datepicker/datepicker-demo';
+import {MultiselectDemo} from '../multiselect/multiselect-demo';
+import {SelectDemo} from '../select/select-demo';
+import {TagsDemo} from '../tags/tags-demo';
 import {ButtonDemo} from '../button/button-demo';
 import {BaselineDemo} from '../baseline/baseline-demo';
 import {ButtonToggleDemo} from '../button-toggle/button-toggle-demo';
@@ -28,30 +35,37 @@ import {TooltipDemo} from '../tooltip/tooltip-demo';
 
 
 export const DEMO_APP_ROUTES: Routes = [
-  {path: '', component: Home},
-  {path: 'button', component: ButtonDemo},
-  {path: 'card', component: CardDemo},
-  {path: 'radio', component: RadioDemo},
-  {path: 'sidenav', component: SidenavDemo},
-  {path: 'slide-toggle', component: SlideToggleDemo},
-  {path: 'slider', component: SliderDemo},
-  {path: 'progress-circle', component: ProgressCircleDemo},
-  {path: 'progress-bar', component: ProgressBarDemo},
-  {path: 'portal', component: PortalDemo},
-  {path: 'overlay', component: OverlayDemo},
-  {path: 'checkbox', component: CheckboxDemo},
-  {path: 'input', component: InputDemo},
-  {path: 'toolbar', component: ToolbarDemo},
-  {path: 'icon', component: IconDemo},
-  {path: 'list', component: ListDemo},
-  {path: 'menu', component: MenuDemo},
-  {path: 'live-announcer', component: LiveAnnouncerDemo},
-  {path: 'gestures', component: GesturesDemo},
-  {path: 'grid-list', component: GridListDemo},
-  {path: 'tabs', component: TabsDemo},
-  {path: 'button-toggle', component: ButtonToggleDemo},
-  {path: 'baseline', component: BaselineDemo},
-  {path: 'ripple', component: RippleDemo},
-  {path: 'dialog', component: DialogDemo},
-  {path: 'tooltip', component: TooltipDemo},
+  { path: '', component: Home },
+  { path: 'accordion', component: AccordionDemo },
+  { path: 'autocomplete', component: AutocompleteDemo },
+  { path: 'collapse', component: CollapseDemo },
+  { path: 'datepicker', component: DatepickerDemo },
+  { path: 'multiselect', component: MultiselectDemo },
+  { path: 'select', component: SelectDemo },
+  { path: 'tags', component: TagsDemo },
+  { path: 'button', component: ButtonDemo },
+  { path: 'card', component: CardDemo },
+  { path: 'radio', component: RadioDemo },
+  { path: 'sidenav', component: SidenavDemo },
+  { path: 'slide-toggle', component: SlideToggleDemo },
+  { path: 'slider', component: SliderDemo },
+  { path: 'progress-circle', component: ProgressCircleDemo },
+  { path: 'progress-bar', component: ProgressBarDemo },
+  { path: 'portal', component: PortalDemo },
+  { path: 'overlay', component: OverlayDemo },
+  { path: 'checkbox', component: CheckboxDemo },
+  { path: 'input', component: InputDemo },
+  { path: 'toolbar', component: ToolbarDemo },
+  { path: 'icon', component: IconDemo },
+  { path: 'list', component: ListDemo },
+  { path: 'menu', component: MenuDemo },
+  { path: 'live-announcer', component: LiveAnnouncerDemo },
+  { path: 'gestures', component: GesturesDemo },
+  { path: 'grid-list', component: GridListDemo },
+  { path: 'tabs', component: TabsDemo },
+  { path: 'button-toggle', component: ButtonToggleDemo },
+  { path: 'baseline', component: BaselineDemo },
+  { path: 'ripple', component: RippleDemo },
+  { path: 'dialog', component: DialogDemo },
+  { path: 'tooltip', component: TooltipDemo },
 ];

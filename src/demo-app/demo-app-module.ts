@@ -5,6 +5,15 @@ import {FormsModule} from '@angular/forms';
 import {DemoApp, Home} from './demo-app/demo-app';
 import {RouterModule} from '@angular/router';
 import {MaterialModule} from '@angular2-material/all/all';
+
+import {AccordionDemo} from './accordion/accordion-demo';
+import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
+import {CollapseDemo} from './collapse/collapse-demo';
+import {DatepickerDemo} from './datepicker/datepicker-demo';
+import {MultiselectDemo} from './multiselect/multiselect-demo';
+import {SelectDemo} from './select/select-demo';
+import {TagsDemo} from './tags/tags-demo';
+
 import {DEMO_APP_ROUTES} from './demo-app/routes';
 import {ProgressBarDemo} from './progress-bar/progress-bar-demo';
 import {JazzDialog, DialogDemo} from './dialog/dialog-demo';
@@ -43,6 +52,14 @@ import {TabsDemo} from './tabs/tab-group-demo';
     MaterialModule.forRoot(),
   ],
   declarations: [
+    AccordionDemo,
+    AutocompleteDemo,
+    CollapseDemo,
+    DatepickerDemo,
+    MultiselectDemo,
+    SelectDemo,
+    TagsDemo,
+
     BaselineDemo,
     ButtonDemo,
     ButtonToggleDemo,
