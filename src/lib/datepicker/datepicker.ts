@@ -78,7 +78,7 @@ export class MdDatepicker implements ControlValueAccessor, AfterViewInit, OnInit
   }
 
   ngOnInit() {
-    this.date = moment(this.initDate);
+    //this.date = moment(this.initDate);
     this.generateCalendar(this.date);
   }
 
@@ -111,56 +111,56 @@ export class MdDatepicker implements ControlValueAccessor, AfterViewInit, OnInit
   }
 
   public selectDate(e: MouseEvent, date: CalendarDate): void {
-    e.preventDefault();
-    if (this.isSelected(date)) return;
+    //e.preventDefault();
+    //if (this.isSelected(date)) return;
 
-    let selectedDate = moment(date.day + '.' + date.month + '.' + date.year, 'DD.MM.YYYY');
-    this.setValue(selectedDate);
-    this.closeDatepicker();
-    this.changed.emit(selectedDate.toDate());
+    //let selectedDate = moment(date.day + '.' + date.month + '.' + date.year, 'DD.MM.YYYY');
+    //this.setValue(selectedDate);
+    //this.closeDatepicker();
+    //this.changed.emit(selectedDate.toDate());
   }
 
-  private generateCalendar(date: moment.Moment): void {
-    let lastDayOfMonth = date.endOf('month').date();
-    let month = date.month();
-    let year = date.year();
-    let n = 1;
-    let firstWeekDay: number = null;
+  private generateCalendar(date: Date): void {
+    //let lastDayOfMonth = date.endOf('month').date();
+    //let month = date.month();
+    //let year = date.year();
+    //let n = 1;
+    //let firstWeekDay: number = null;
 
-    this.dateValue = date.format('MMMM YYYY');
-    this.days = [];
+    //this.dateValue = date.format('MMMM YYYY');
+    //this.days = [];
 
-    if (this.firstWeekDaySunday === true) {
-      firstWeekDay = date.date(2).day();
-    } else {
-      firstWeekDay = date.date(1).day();
-    }
+    //if (this.firstWeekDaySunday === true) {
+    //  firstWeekDay = date.date(2).day();
+    //} else {
+    //  firstWeekDay = date.date(1).day();
+    //}
 
-    if (firstWeekDay !== 1) {
-      n -= (firstWeekDay + 6) % 7;
-    }
+    //if (firstWeekDay !== 1) {
+    //  n -= (firstWeekDay + 6) % 7;
+    //}
 
-    for (let i = n; i <= lastDayOfMonth; i += 1) {
-      if (i > 0) {
-        this.days.push({ day: i, month: month + 1, year: year, enabled: true });
-      } else {
-        this.days.push({ day: null, month: null, year: null, enabled: false });
-      }
-    }
+    //for (let i = n; i <= lastDayOfMonth; i += 1) {
+    //  if (i > 0) {
+    //    this.days.push({ day: i, month: month + 1, year: year, enabled: true });
+    //  } else {
+    //    this.days.push({ day: null, month: null, year: null, enabled: false });
+    //  }
+    //}
   }
 
   isSelected(date: CalendarDate) {
-    let selectedDate = moment(date.day + '.' + date.month + '.' + date.year, 'DD.MM.YYYY');
-    return selectedDate.toDate().getTime() === this.cannonical;
+    //let selectedDate = moment(date.day + '.' + date.month + '.' + date.year, 'DD.MM.YYYY');
+    //return selectedDate.toDate().getTime() === this.cannonical;
   }
 
   private generateDayNames(): void {
-    this.dayNames = [];
-    let date = this.firstWeekDaySunday === true ? moment('2015-06-07') : moment('2015-06-01');
-    for (let i = 0; i < 7; i += 1) {
-      this.dayNames.push(date.format('ddd'));
-      date.add('1', 'd');
-    }
+    //this.dayNames = [];
+    //let date = this.firstWeekDaySunday === true ? moment('2015-06-07') : moment('2015-06-01');
+    //for (let i = 0; i < 7; i += 1) {
+    //  this.dayNames.push(date.format('ddd'));
+    //  date.add('1', 'd');
+    //}
   }
 
   private initMouseEvents(): void {
@@ -175,20 +175,20 @@ export class MdDatepicker implements ControlValueAccessor, AfterViewInit, OnInit
   }
 
   private setValue(value: any): void {
-    let val = moment(value, this.modelFormat || 'YYYY-MM-DD');
-    this.viewValue = val.format(this.viewFormat || 'Do MMMM YYYY');
-    this.cd.viewToModelUpdate(val.format(this.modelFormat || 'YYYY-MM-DD'));
-    this.cannonical = val.toDate().getTime();
+    //let val = moment(value, this.modelFormat || 'YYYY-MM-DD');
+    //this.viewValue = val.format(this.viewFormat || 'Do MMMM YYYY');
+    //this.cd.viewToModelUpdate(val.format(this.modelFormat || 'YYYY-MM-DD'));
+    //this.cannonical = val.toDate().getTime();
   }
 
   private initValue(): void {
-    setTimeout(() => {
-      if (!this.initDate) {
-        this.setValue(moment().format(this.modelFormat || 'YYYY-MM-DD'));
-      } else {
-        this.setValue(moment(this.initDate, this.modelFormat || 'YYYY-MM-DD'));
-      }
-    });
+    //setTimeout(() => {
+    //  if (!this.initDate) {
+    //    this.setValue(moment().format(this.modelFormat || 'YYYY-MM-DD'));
+    //  } else {
+    //    this.setValue(moment(this.initDate, this.modelFormat || 'YYYY-MM-DD'));
+    //  }
+    //});
   }
 
   writeValue(value: string): void {
