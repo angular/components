@@ -1,9 +1,9 @@
 {
-  "name": "md-accordion",
+  "name": "md-autocomplete",
   "version": "0.0.1-alpha.1",
-  "description": "Angular 2 Material accordion",
-  "main": "./accordion.js",
-  "typings": "./accordion.d.ts",
+  "description": "Angular 2 Material autocomplete",
+  "main": "./autocomplete.js",
+  "typings": "./autocomplete.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/Promact/material2.git"
@@ -13,8 +13,7 @@
     "material",
     "material design",
     "components",
-    "accordion",
-    "collapse"
+    "autocomplete"
   ],
   "license": "MIT",
   "bugs": {
