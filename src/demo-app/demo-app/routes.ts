@@ -3,6 +3,7 @@ import {Home} from './demo-app';
 import {AccordionDemo} from '../accordion/accordion-demo';
 import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
 import {CollapseDemo} from '../collapse/collapse-demo';
+import {ColorpickerDemo} from '../colorpicker/colorpicker-demo';
 import {DatepickerDemo} from '../datepicker/datepicker-demo';
 import {MultiselectDemo} from '../multiselect/multiselect-demo';
 import {SelectDemo} from '../select/select-demo';
@@ -39,6 +40,7 @@ export const DEMO_APP_ROUTES: Routes = [
   { path: 'accordion', component: AccordionDemo },
   { path: 'autocomplete', component: AutocompleteDemo },
   { path: 'collapse', component: CollapseDemo },
+  { path: 'colorpicker', component: ColorpickerDemo },
   { path: 'datepicker', component: DatepickerDemo },
   { path: 'multiselect', component: MultiselectDemo },
   { path: 'select', component: SelectDemo },

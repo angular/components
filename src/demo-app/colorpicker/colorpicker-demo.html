@@ -1,0 +1,22 @@
+<section class="demo-card demo-basic">
+  <h2>colorpicker</h2>
+  <hr />
+  <div class="row">
+    <div class="col-sm-6">
+      <h4>Bind on Input Textbox</h4>
+      
+     <md-colorpicker [(ngModel)]="color" position="bottom" (change)="change($event)">
+
+	 </md-colorpicker>
+    </div>
+    <div class="col-sm-6">
+      <p>The <strong>colorpicker component</strong> is to color selecton functionality.</p>
+      <h3>md2-colorpicker settings</h3>
+      <ul>
+        <li><code>[(colorpicker)]</code> <em>- string - (Default: <code>null</code>)</em> To bind color value with colorpicker.</li>
+        <li><code>[position]</code> <em>- string - (Default: <code>bottom</code>)(Optional)</em> - position of colorpicker dialog, supported positions: 'right', 'left', 'top', 'bottom'.</li>
+        <li><code>[format]</code> <em>- string - (Default: <code>hex</code>)(Optional)</em> - color format, supported formats: 'hex', 'rgba', 'hsla'.</li>
+      </ul>
+    </div>
+  </div>
+</section>
