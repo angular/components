@@ -72,7 +72,7 @@ const MATERIAL_MODULES = [
     MdAccordionModule,
     MdAutocompleteModule,
     MdCollapseModule,
-	MdColorpickerModule,
+    MdColorpickerModule,
     MdDatepickerModule,
     MdMultiselectModule,
     MdSelectModule,
