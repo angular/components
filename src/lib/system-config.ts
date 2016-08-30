@@ -7,6 +7,7 @@ const components = [
   'accordion',
   'autocomplete',
   'collapse',
+  'colorpicker',
   'datepicker',
   'multiselect',
   'select',

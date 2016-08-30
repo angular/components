@@ -8,7 +8,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
     <p>Open the sidenav to select a demo. </p>
   `
 })
-export class Home {}
+export class Home { }
 
 @Component({
   moduleId: module.id,
