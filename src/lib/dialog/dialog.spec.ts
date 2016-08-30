@@ -91,7 +91,7 @@ describe('MdDialog', () => {
     let config = new MdDialogConfig();
     config.viewContainerRef = testViewContainerRef;
 
-    let dialogRef = dialog.open(PizzaMsg, config);
+    dialog.open(PizzaMsg, config);
 
     viewContainerFixture.detectChanges();
 
