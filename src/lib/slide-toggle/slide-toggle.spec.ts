@@ -364,8 +364,6 @@ describe('MdSlideToggle', () => {
 
     it('should prevent the form from submit when being required', async(() => {
 
-      let fixture = TestBed.createComponent(SlideToggleFormsTestApp);
-
       fixture.detectChanges();
 
       buttonElement.click();
@@ -379,7 +377,7 @@ describe('MdSlideToggle', () => {
       expect(testComponent.isSubmitted).toBe(true);
     }));
 
-  })
+  });
 
 });
 
