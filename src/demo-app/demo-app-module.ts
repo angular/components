@@ -56,7 +56,7 @@ import {TabsDemo} from './tabs/tab-group-demo';
     AccordionDemo,
     AutocompleteDemo,
     CollapseDemo,
-	ColorpickerDemo,
+    ColorpickerDemo,
     DatepickerDemo,
     MultiselectDemo,
     SelectDemo,

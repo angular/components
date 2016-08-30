@@ -9,34 +9,32 @@ Example:
  ```html
 //HTML
 
-<input [(colorpicker)]="color"
-       position="right"
-       offset="0"
-       format="hex"
-       [style.background]="color"
-       [value]="color"
-       (change)="change($event)" />
+<md-colorpicker [(ngModel)]="color" 
+                position="bottom" 
+                (change)="change($event)">
+</md-colorpicker>
 
-//--- or ---
-
-<div [(colorpicker)]="color"
-     position="right"
-     offset="0"
-     format="hex"
-     [style.background]="color"
-     (change)="change($event)">
-</div>
  ```
  ```ts
-//TypeScript
-...
+//app-module.ts
 
-import {Md2Colorpicker,Md2ColorpickerService} from 'md2/colorpicker';
+import {ColorpickerModule} from 'md-colorpicker/colorpicker';
+
+@NgModule({
+  imports: [
+    ColorpickerModule,
+  ],
+  declarations: [
+    ...
+  ]  
+})
+
+//component.ts
+...
 
 @Component({
   selector: "...",
-  directives: [Md2Colorpicker],
-  providers: [Md2ColorpickerService]
+  templateUrl: 'component.html'
 })
 
 export class ... {
@@ -57,7 +55,6 @@ export class ... {
 
 ### Properties
 
-  - `[(colorpicker)]` _- string - (Default: `null`)_ To bind color value with colorpicker.
-  - `[position]` _- string - (Default: `bottom`)(Optional)_ - position of colorpicker dialog, supported positions: 'right', 'left', 'top', 'bottom'.
-  - `[offset]` _- string - (Default: `0`)(Optional)_ - offset of colorpicker dialog.
+  - `[(ngModel)]` - string - (Default: `#000`)- Two way data binding - It would be 'value' of color.
+  - `[position]` _- string - (Default: `bottom`)(Optional)_ - position of colorpicker dialog, supported positions: 'right', 'left', 'top', 'bottom'.  
   - `[format]` _- string - (Default: `hex`)(Optional)_ - color format, supported formats: 'hex', 'rgba', 'hsla'.

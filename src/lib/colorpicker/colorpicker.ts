@@ -44,7 +44,6 @@ export const MD_COLORPICKER_CONTROL_VALUE_ACCESSOR: any = {
 })
 
 export class MdColorpicker implements OnInit, ControlValueAccessor {
-  //@Input('colorpicker') colorpicker: string;
   @Input('position') cPosition: string = 'bottom';
   @Input('format') format: string = 'hex';
   @Output('colorpickerChange') colorpickerChange = new EventEmitter<string>();
@@ -52,11 +51,7 @@ export class MdColorpicker implements OnInit, ControlValueAccessor {
   private colorpickerDialog: any;
   private created: boolean;
 
-  //The internal data model
   private innerValue: any = '';
-
-  //Placeholders for the callbacks which are later provided
-  //by the Control Value Accessor
   private onTouchedCallback: () => void = noop;
   private onChangeCallback: (_: any) => void = noop;
 
@@ -64,7 +59,9 @@ export class MdColorpicker implements OnInit, ControlValueAccessor {
     return this.innerValue;
   };
 
-  //set accessor including call the onchange callback
+  /**
+   * set accessor including call the onchange callback
+   */
   set value(v: any) {
     if (v !== this.innerValue) {
       this.innerValue = v;
@@ -75,7 +72,7 @@ export class MdColorpicker implements OnInit, ControlValueAccessor {
   constructor(private dcl: DynamicComponentLoader, private vcRef: ViewContainerRef, private el: ElementRef, private service: ColorpickerService) {
     this.created = false;
   }
- 
+
   ngOnInit() {
     if (!this.innerValue) { this.innerValue = '#000'; }
     let hsva: any = this.service.stringToHsva(this.innerValue);
@@ -123,19 +120,16 @@ export class MdColorpicker implements OnInit, ControlValueAccessor {
     this.change.emit(value);
   }
 
-  //From ControlValueAccessor interface
   writeValue(value: any) {
     if (value !== this.innerValue) {
       this.innerValue = value;
     }
   }
 
-  //From ControlValueAccessor interface
   registerOnChange(fn: any) {
     this.onChangeCallback = fn;
   }
 
-  //From ControlValueAccessor interface
   registerOnTouched(fn: any) {
     this.onTouchedCallback = fn;
   }
