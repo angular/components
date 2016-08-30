@@ -9,7 +9,7 @@ describe('MdSlideToggle', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdSlideToggleModule.forRoot(), FormsModule],
-      declarations: [SlideToggleTestApp],
+      declarations: [SlideToggleTestApp, SlideToggleFormsTestApp],
     });
 
     TestBed.compileComponents();
@@ -318,6 +318,18 @@ describe('MdSlideToggle', () => {
       expect(slideToggleElement.classList).toContain('md-slide-toggle-focused');
     });
 
+    it('should forward the required attribute', () => {
+      testComponent.isRequired = true;
+      fixture.detectChanges();
+
+      expect(inputElement.required).toBe(true);
+
+      testComponent.isRequired = false;
+      fixture.detectChanges();
+
+      expect(inputElement.required).toBe(false);
+    });
+
   });
 
   describe('custom template', () => {
@@ -330,6 +342,44 @@ describe('MdSlideToggle', () => {
       expect(fixture.componentInstance.lastEvent).toBeFalsy();
     }));
   });
+
+  describe('with forms', () => {
+
+    let fixture: ComponentFixture<any>;
+    let testComponent: SlideToggleFormsTestApp;
+    let buttonElement: HTMLButtonElement;
+    let labelElement: HTMLLabelElement;
+
+    // This initialization is async() because it needs to wait for ngModel to set the initial value.
+    beforeEach(async(() => {
+      fixture = TestBed.createComponent(SlideToggleFormsTestApp);
+
+      testComponent = fixture.debugElement.componentInstance;
+
+      fixture.detectChanges();
+
+      buttonElement = fixture.debugElement.query(By.css('button')).nativeElement;
+      labelElement = fixture.debugElement.query(By.css('label')).nativeElement;
+    }));
+
+    it('should prevent the form from submit when being required', async(() => {
+
+      let fixture = TestBed.createComponent(SlideToggleFormsTestApp);
+
+      fixture.detectChanges();
+
+      buttonElement.click();
+      expect(testComponent.isSubmitted).toBe(false);
+
+      // Make the form valid by setting the slide-toggle to true.
+      labelElement.click();
+      fixture.detectChanges();
+
+      buttonElement.click();
+      expect(testComponent.isSubmitted).toBe(true);
+    }));
+
+  })
 
 });
 
@@ -347,16 +397,25 @@ function dispatchFocusChangeEvent(eventName: string, element: HTMLElement): void
 @Component({
   selector: 'slide-toggle-test-app',
   template: `
-    <md-slide-toggle [(ngModel)]="slideModel" [disabled]="isDisabled" [color]="slideColor" 
-                     [id]="slideId" [checked]="slideChecked" [name]="slideName" 
-                     [ariaLabel]="slideLabel" [ariaLabelledby]="slideLabelledBy" 
-                     (change)="onSlideChange($event)"
+    <md-slide-toggle [(ngModel)]="slideModel" 
+                     [required]="isRequired"
+                     [disabled]="isDisabled" 
+                     [color]="slideColor" 
+                     [id]="slideId" 
+                     [checked]="slideChecked" 
+                     [name]="slideName" 
+                     [ariaLabel]="slideLabel"
+                     [ariaLabelledby]="slideLabelledBy" 
+                     (change)="onSlideChange($event)" 
                      (click)="onSlideClick($event)">
+                     
       <span>Test Slide Toggle</span>
+      
     </md-slide-toggle>`,
 })
 class SlideToggleTestApp {
   isDisabled: boolean = false;
+  isRequired: boolean = false;
   slideModel: boolean = false;
   slideChecked: boolean = false;
   slideColor: string;
@@ -370,4 +429,17 @@ class SlideToggleTestApp {
   onSlideChange(event: MdSlideToggleChange) {
     this.lastEvent = event;
   }
+}
+
+
+@Component({
+  selector: 'slide-toggle-forms-test-app',
+  template: `
+    <form (ngSubmit)="isSubmitted = true">
+      <md-slide-toggle name="slideToggle" ngModel required>Required</md-slide-toggle>
+      <button type="submit"></button>
+    </form>`
+})
+class SlideToggleFormsTestApp {
+  isSubmitted: boolean = false;
 }
