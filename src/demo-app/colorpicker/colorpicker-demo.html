@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-sm-6">
       <h4>Bind on Input Textbox</h4>
-      <md-colorpicker position="bottom" (change)="change($event)">
+      <md-colorpicker [(ngModel)]="color" position="bottom" (change)="change($event)">
       </md-colorpicker>
     </div>
     <div class="col-sm-6">

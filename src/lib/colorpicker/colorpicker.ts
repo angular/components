@@ -121,7 +121,7 @@ export class MdColorpicker implements OnInit, ControlValueAccessor {
   }
 
   writeValue(value: any) {
-    if (value !== this.innerValue) {
+    if (value !== this.innerValue && value) {
       this.innerValue = value;
     }
   }
