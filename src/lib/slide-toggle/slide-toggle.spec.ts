@@ -363,17 +363,21 @@ describe('MdSlideToggle', () => {
     }));
 
     it('should prevent the form from submit when being required', async(() => {
+      testComponent.isRequired = true;
 
       fixture.detectChanges();
 
       buttonElement.click();
+      fixture.detectChanges();
+
       expect(testComponent.isSubmitted).toBe(false);
 
-      // Make the form valid by setting the slide-toggle to true.
-      labelElement.click();
+      testComponent.isRequired = false;
       fixture.detectChanges();
 
       buttonElement.click();
+      fixture.detectChanges();
+
       expect(testComponent.isSubmitted).toBe(true);
     }));
 
@@ -434,10 +438,11 @@ class SlideToggleTestApp {
   selector: 'slide-toggle-forms-test-app',
   template: `
     <form (ngSubmit)="isSubmitted = true">
-      <md-slide-toggle name="slideToggle" ngModel required>Required</md-slide-toggle>
+      <md-slide-toggle name="slide" ngModel [required]="isRequired">Required</md-slide-toggle>
       <button type="submit"></button>
     </form>`
 })
 class SlideToggleFormsTestApp {
   isSubmitted: boolean = false;
+  isRequired: boolean = false;
 }
