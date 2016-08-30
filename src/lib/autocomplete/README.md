@@ -2,6 +2,9 @@
 
 Native Angular2 Material Autocomplete component
 
+## Installation
+`npm install --save md-autocomplete`
+
 ## API
 
 Example:
@@ -19,14 +22,25 @@ HTML sample code
 
 TS sample code
  ```ts
+//app-module.ts
+
+import {MdAutocompleteModule} from 'md-autocomplete/autocomplete';
+
+@NgModule({
+  imports: [
+    MdAutocompleteModule,
+  ],
+  declarations: [
+    ...
+  ]  
+})
+
+//component.ts
 
 ...
 
-import {MdAutocomplete} from 'md/autocomplete';
-
 @Component({
-    selector: "...",
-    directives: [MdAutocomplete]
+    selector: "..."
 })
 
 export class ... {

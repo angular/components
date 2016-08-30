@@ -2,6 +2,9 @@
 
 Native Angular2 Material Collapse directive
 
+## Installation
+`npm install --save md-collapse`
+
 ## API
 
 Example:
@@ -15,14 +18,25 @@ HTML sample code
 
 TS sample code
  ```ts
+//app-module.ts
+
+import {MdCollapseModule} from 'md-collapse/collapse';
+
+@NgModule({
+  imports: [
+    MdCollapseModule,
+  ],
+  declarations: [
+    ...
+  ]  
+})
+
+//component.ts
 
 ...
 
-import {MdCollapse} from 'md/collapse';
-
 @Component({
-    selector: "...",
-    directives: [MdCollapse]
+    selector: "..."
 })
 
 export class ... {

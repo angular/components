@@ -7,11 +7,11 @@ import {MdAccordionTab } from './accordiontab';
 export {MdAccordion} from './accordionpanel';
 export {MdAccordionTab} from './accordiontab';
 
-export const ACCORDION_DIRECTIVES: any[] = [MdAccordion, MdAccordionTab];
+export const MD_ACCORDION_DIRECTIVES: any[] = [MdAccordion, MdAccordionTab];
 
 @NgModule({
   imports: [CommonModule],
-  exports: ACCORDION_DIRECTIVES,
-  declarations: ACCORDION_DIRECTIVES,
+  exports: MD_ACCORDION_DIRECTIVES,
+  declarations: MD_ACCORDION_DIRECTIVES,
 })
 export class MdAccordionModule { }

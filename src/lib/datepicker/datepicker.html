@@ -1,4 +1,48 @@
-<input type="text"
+<div class="md-datepicker-calendar-icon" (click)="openCalendarPane($event)">
+  <svg width="100%" height="100%" viewBox="0 0 24 24">
+    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"></path>
+  </svg>
+</div>
+<div class="md-datepicker-input-container" [class.focused]="isFocused">
+  <input class="md-datepicker-input" (focus)="setFocused(true)" (blur)="setFocused(false)">
+  <div class="md-datepicker-triangle-button" (click)="openCalendarPane($event)">
+    <div class="md-datepicker-expand-triangle"></div>
+  </div>
+</div>
+<div class="md-datepicker-calendar-pane">
+  <!--<md-calendar class="md-datepicker-calendar" aria-label="{{::ctrl.dateLocale.msgCalendar}}"
+               md-current-view="{{::ctrl.currentView}}"
+               md-min-date="ctrl.minDate"
+               md-max-date="ctrl.maxDate"
+               md-date-filter="ctrl.dateFilter"
+               ng-model="ctrl.date" ng-if="ctrl.isCalendarOpen">
+  </md-calendar>-->
+</div>
+
+
+
+
+<!--<div class="md-datepicker-block" (click)="onFieldFocus()" (blur)="onFieldBlur()" (keydown)="inputKeydown($event)" tabindex="0">-->
+<!--<div class="md-datepicker-container">
+  <div class="md-datepicker-btn"></div>
+  <div class="md-datepicker-input">
+    <span class="md-datepicker-value">{{ activeDate | date:'shortDate'}}</span>
+    <span class="md-datepicker-triangle-btn"></span>
+  </div>
+</div>
+<div class="md-datepicker" *ngIf="isDatepickerVisible">
+  <datepicker-inner [activeDate]="activeDate"
+                    (update)="onUpdate($event)"
+                    [initDate]="initDate"
+                    [minDate]="minDate"
+                    [maxDate]="maxDate"
+                    [showWeeks]="showWeeks"
+                    [dateDisabled]="dateDisabled"
+                    [onlyCurrentMonth]="onlyCurrentMonth">
+    <daypicker></daypicker>
+  </datepicker-inner>
+</div>-->
+<!--<input type="text"
        class="ng-datepicker-input"
        (focus)="openDatepicker()"
        [value]="viewValue"
@@ -30,4 +74,5 @@
       </span>
     </span>
   </div>
-</div>
+</div>-->
+<!--<md-calendar-month></md-calendar-month>-->
