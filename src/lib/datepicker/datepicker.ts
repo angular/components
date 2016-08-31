@@ -27,7 +27,7 @@ export const MD_DATEPICKER_CONTROL_VALUE_ACCESSOR: any = {
 
 @Component({
   moduleId: module.id,
-  selector: 'md-datepicker',
+  selector: 'md2-datepicker',
   templateUrl: 'datepicker.html',
   styleUrls: ['datepicker.css'],
   providers: [MD_DATEPICKER_CONTROL_VALUE_ACCESSOR],
@@ -85,4 +85,4 @@ export const MD_DATEPICKER_DIRECTIVES = [MdDatepicker, MdCalendar];
   imports: [CommonModule, FormsModule],
   exports: MD_DATEPICKER_DIRECTIVES,
 })
-export class MdDatepickerModule { }
+export class Md2DatepickerModule { }
