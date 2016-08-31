@@ -2,6 +2,9 @@
 
 Native Angular2 Material Multiselect component
 
+## Installation
+`npm install --save md-multiselect`
+
 ## API
 
 Example:
@@ -16,14 +19,24 @@ Example:
 </md-multiselect>
  ```
  ```ts
+//app-module.ts
 
+import {MdMultiselectModule} from 'md-multiselect/multiselect';
+
+@NgModule({
+  imports: [
+    MdMultiselectModule,
+  ],
+  declarations: [
+    ...
+  ]  
+})
+
+//component.ts
 ...
 
-import {MdMultiselect} from 'md/multiselect';
-
 @Component({
-    selector: "...",
-    directives: [MdMultiselect]
+    selector: "..."
 })
 
 export class ... {

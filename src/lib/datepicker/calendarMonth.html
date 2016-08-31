@@ -14,87 +14,47 @@
   </tbody>
 </table>-->
 
+<div class="dtp-picker-month">{{month.name}}</div>
+<table class="table dtp-picker-days">
+  <!--<thead>
+    <tr>
+      <th ng-repeat="day in cal.week">{{cal.toDay(day)}}</th>
+    </tr>
+  </thead>-->
+  <tbody>
+    <tr *ngFor="let week of month.days">
+      <td *ngFor="let day of week">
+        <!--if (weekDay) {
+        var aOrSpan;
+        if (calendar.isInRange(weekDay)) {
+        //build a
+        var scopeRef = 'month["days"][' + i + '][' + j + ']';
+        aOrSpan = angular.element("<a href='#' mdc-dtp-noclick></a>")
+        .attr('ng-class', '{selected: cal.isSelectedDay(' + scopeRef + ')}')
+        .attr('ng-click', 'cal.selectDate(' + scopeRef + ')')
+        ;
+        } else {
+        aOrSpan = angular.element('<span></span>')
+        }
+        aOrSpan
+        .addClass('dtp-select-day')
+        .html(weekDay.format('D'));
+        }-->
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 
-<div id="title">{{_getTitle(month, i18n.monthNames)}}</div>
+
+
+
+<!--<div id="title">{{_getTitle(month, i18n.monthNames)}}</div>
 <div>
   <div *ngFor="let item of _getWeekDayNames(i18n.weekdaysShort, i18n.firstDayOfWeek)">
     <div class="weekday">{{item}}</div>
   </div>
-  <div *ngFor="let item of _getDays(month, i18n.firstDayOfWeek)">
-    <div [class.today]="_isToday(item)" [class.selected]="_dateEquals(item, selectedDate)" [class.focused]="_dateEquals(item, focusedDate)" [date]="item">{{_getDate(item)}}</div>
+  <div *ngFor="let day of _getDays(month, i18n.firstDayOfWeek)">
+    <div [class.today]="_isToday(day)" [class.selected]="_dateEquals(day, selectedDate)" [class.focused]="_dateEquals(day, focusedDate)">{{_getDate(day)}}</div>
   </div>
-</div>
-
-<!--<style>
-  :host {
-    display: block;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    font: inherit;
-    @apply(--paper-font-common-base);
-    @apply(--vaadin-date-picker-calendar);
-  }
-
-  #title {
-    color: var(--primary-text-color);
-    text-align: center;
-    padding: 6px 0;
-    @apply(--paper-font-subhead);
-    @apply(--vaadin-date-picker-calendar-title);
-  }
-
-  #monthGrid { display: flex; flex-wrap: wrap; }
-
-  #monthGrid div {
-    text-align: center;
-    width: 14.285714286%;
-    box-sizing: border-box;
-    padding: 6px 0;
-    @apply(--paper-font-body1);
-    @apply(--vaadin-date-picker-calendar-cell);
-  }
-
-  #monthGrid div:not(:empty) {
-    cursor: pointer;
-    color: var(--primary-text-color);
-    @apply(--vaadin-date-picker-calendar-date-cell);
-  }
-
-  #monthGrid div.weekday {
-    text-transform: uppercase;
-    color: var(--secondary-text-color);
-    cursor: default;
-    padding: 8px 0;
-    @apply(--paper-font-caption);
-    @apply(--vaadin-date-picker-calendar-weekday-cell);
-  }
-
-  #monthGrid div[today] {
-    position: relative;
-    color: var(--primary-color);
-    @apply(--vaadin-date-picker-calendar-cell-today);
-  }
-
-  #monthGrid div[today][selected] {
-    color: var(--dark-theme-text-color);
-    @apply(--vaadin-date-picker-calendar-cell-today-selected);
-  }
-
-  #monthGrid div[focused] {
-    background: var(--light-primary-color);
-    box-sizing: border-box;
-    border-radius: 2px;
-    @apply(--vaadin-date-picker-calendar-cell-focused);
-  }
-
-  #monthGrid div[selected] {
-    color: var(--light-primary-color);
-    background: var(--primary-color);
-    box-sizing: border-box;
-    border-radius: 2px;
-    @apply(--vaadin-date-picker-calendar-cell-selected);
-  }
-</style>-->
+</div>-->

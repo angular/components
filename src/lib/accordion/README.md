@@ -2,6 +2,9 @@
 
 Native Angular2 Material Accordion component
 
+## Installation
+`npm install --save md-accordion`
+
 ## API
 
 Example:
@@ -20,14 +23,24 @@ HTML sample code
 
 TS sample code
  ```ts
+//app-module.ts
 
+import {MdAccordionModule} from 'md-accordion/accordion';
+
+@NgModule({
+  imports: [
+    MdAccordionModule,
+  ],
+  declarations: [
+    ...
+  ]  
+})
+
+//component.ts
 ...
 
-import {ACCORDION_DIRECTIVES} from 'md/accordion';
-
 @Component({
-    selector: "...",
-    directives: [ACCORDION_DIRECTIVES]
+    selector: "..."
 })
 
 export class ... {

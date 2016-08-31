@@ -2,6 +2,9 @@
 
 Native Angular2 Material Select component
 
+## Installation
+`npm install --save md-select`
+
 ## API
 
 Example:
@@ -12,15 +15,24 @@ Example:
 </md-select>
  ```
  ```ts
+//app-module.ts
 
+import {MdSelectModule} from 'md-select/select';
+
+@NgModule({
+  imports: [
+    MdSelectModule,
+  ],
+  declarations: [
+    ...
+  ]  
+})
+
+//component.ts
 ...
 
-import { SELECT_DIRECTIVES, MdSelectDispatcher } from 'md/select';
-
 @Component({
-  selector: "...",
-  directives: [SELECT_DIRECTIVES],
-  providers: [MdSelectDispatcher]
+  selector: "..."
 })
 
 export class ... {

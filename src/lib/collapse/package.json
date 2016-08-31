@@ -1,0 +1,23 @@
+{
+  "name": "md-collapse",
+  "version": "0.0.1-alpha.1",
+  "description": "Angular 2 Material collapse",
+  "main": "./collapse.js",
+  "typings": "./collapse.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Promact/material2.git"
+  },
+  "keywords": [
+    "angular",
+    "material",
+    "material design",
+    "components",
+    "collapse"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/angular/material2/issues"
+  },
+  "homepage": "https://github.com/Promact/material2#readme"
+}

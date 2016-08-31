@@ -2,6 +2,9 @@
 
 Native Angular2 Material Tags component
 
+## Installation
+`npm install --save md-tags`
+
 ## API
 
 Example:
@@ -16,14 +19,25 @@ Example:
 </md-tags>
  ```
  ```ts
+//app-module.ts
+
+import {MdTagsModule} from 'md-tags/tags';
+
+@NgModule({
+  imports: [
+    MdTagsModule,
+  ],
+  declarations: [
+    ...
+  ]  
+})
+
+//component.ts
 
 ...
 
-import {MdTags} from 'md/tags';
-
 @Component({
-  selector: "...",
-  directives: [MdTags]
+  selector: "..."
 })
 
 export class ... {
