@@ -349,6 +349,7 @@ describe('MdSlideToggle', () => {
     let testComponent: SlideToggleFormsTestApp;
     let buttonElement: HTMLButtonElement;
     let labelElement: HTMLLabelElement;
+    let inputElement: HTMLInputElement;
 
     // This initialization is async() because it needs to wait for ngModel to set the initial value.
     beforeEach(async(() => {
@@ -360,9 +361,17 @@ describe('MdSlideToggle', () => {
 
       buttonElement = fixture.debugElement.query(By.css('button')).nativeElement;
       labelElement = fixture.debugElement.query(By.css('label')).nativeElement;
+      inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
     }));
 
-    it('should prevent the form from submit when being required', async(() => {
+    it('should prevent the form from submit when being required', () => {
+
+      if ('reportValidity' in inputElement === false) {
+        // If the browser does not report the validity then the tests will break.
+        // e.g Safari 8 on Mobile.
+        return;
+      }
+
       testComponent.isRequired = true;
 
       fixture.detectChanges();
@@ -379,7 +388,7 @@ describe('MdSlideToggle', () => {
       fixture.detectChanges();
 
       expect(testComponent.isSubmitted).toBe(true);
-    }));
+    });
 
   });
 
