@@ -1,6 +1,6 @@
 {
-  "name": "md-colorpicker",
-  "version": "0.0.1-alpha.1",
+  "name": "md2-colorpicker",
+  "version": "0.0.1-alpha.0",
   "description": "Angular 2 Material colorpicker",
   "main": "./colorpicker.js",
   "typings": "./colorpicker.d.ts",
