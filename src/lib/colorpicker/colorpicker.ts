@@ -22,14 +22,14 @@ import {ColorpickerService} from './colorpicker.service';
 const noop = () => {
 };
 
-export const MD_COLORPICKER_CONTROL_VALUE_ACCESSOR: any = {
+export const MD2_COLORPICKER_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdColorpicker),
+  useExisting: forwardRef(() => Md2Colorpicker),
   multi: true
 };
 
 @Component({
-  selector: 'md-colorpicker',
+  selector: 'md2-colorpicker',
   template: `
         <div class="color-picker-selector">
             <div class="color-div" [style.background-color]="innerValue" (click)="onClick()"> </div>
@@ -40,10 +40,10 @@ export const MD_COLORPICKER_CONTROL_VALUE_ACCESSOR: any = {
     .color-picker-selector .color-div{height:30px;width:30px;display:inline-block;overflow:hidden;cursor:pointer;border-radius:50%;vertical-align: middle;    box-shadow: 0 1px 1px 0px rgba(0,0,0,.2),0 1px 1px 1px rgba(0,0,0,.14),0 1px 1px 1px rgba(0,0,0,.12);}
     .color-picker-selector .color-text{display:inline-block;margin-left:5px;vertical-align:middle;cursor:pointer;vertical-align: middle;line-height:30px;}
   `],
-  providers: [MD_COLORPICKER_CONTROL_VALUE_ACCESSOR]
+  providers: [MD2_COLORPICKER_CONTROL_VALUE_ACCESSOR]
 })
 
-export class MdColorpicker implements OnInit, ControlValueAccessor {
+export class Md2Colorpicker implements OnInit, ControlValueAccessor {
   @Input('position') cPosition: string = 'bottom';
   @Input('format') format: string = 'hex';
   @Output('colorpickerChange') colorpickerChange = new EventEmitter<string>();
@@ -606,12 +606,12 @@ export class SliderDimension {
   constructor(public h: number, public s: number, public v: number, public a: number) { }
 }
 
-export const MD_COLORPICKER_DIRECTIVES: any[] = [MdColorpicker];
+export const MD2_COLORPICKER_DIRECTIVES: any[] = [Md2Colorpicker];
 
 @NgModule({
   imports: [CommonModule],
-  exports: MD_COLORPICKER_DIRECTIVES,
-  declarations: MD_COLORPICKER_DIRECTIVES,
+  exports: MD2_COLORPICKER_DIRECTIVES,
+  declarations: MD2_COLORPICKER_DIRECTIVES,
   providers: [ColorpickerService],
 })
-export class MdColorpickerModule { }
+export class Md2ColorpickerModule { }
