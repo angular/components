@@ -1,4 +1,4 @@
-# md2-tooltip
+# md-tooltip
 
 Native Angular2 Material Tooltip directive
 

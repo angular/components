@@ -16,6 +16,10 @@ export class DialogDemo {
     dialog.show();
   }
 
+  private close(dialog: any) {
+    dialog.close();
+  }
+
   private showAlert(event: Event) { }
   private showConfirm(event: Event) { }
   private showPrompt(event: Event) { }

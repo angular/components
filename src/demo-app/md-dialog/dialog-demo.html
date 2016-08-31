@@ -2,23 +2,23 @@
   <h2>Dialog</h2>
   <hr />
   <div>
-    <button class="btn btn-primary" (click)="showAlert($event)">Alert Dialog</button>
-    <button class="btn btn-primary" (click)="showConfirm($event)">Confirm Dialog</button>
-    <button class="btn btn-primary" (click)="showPrompt($event)">Prompt Dialog</button>
-    <button class="btn btn-primary" (click)="showAdvanced($event)">Custom Dialog</button>
-    <button class="btn btn-primary" (click)="showTabDialog($event)">Tab Dialog</button>
+    <!--<button md-raised-button color="primary" (click)="showAlert($event)">Alert Dialog</button>
+    <button md-raised-button color="primary" (click)="showConfirm($event)">Confirm Dialog</button>
+    <button md-raised-button color="primary" (click)="showPrompt($event)">Prompt Dialog</button>
+    <button md-raised-button color="primary" (click)="showAdvanced($event)">Custom Dialog</button>
+    <button md-raised-button color="primary" (click)="showTabDialog($event)">Tab Dialog</button>-->
     <md-dialog #alert>
       Clicking the button will close this dialog
       <md-dialog-footer>
-        <button (click)="alert.colse()">Got it</button>
+        <button md-raised-button (click)="close(alert)">Got it</button>
       </md-dialog-footer>
     </md-dialog>
-    <button class="btn btn-primary" (click)="show(alert)">Alert Dialog</button>
+    <button md-raised-button color="primary" (click)="show(alert)">Alert Dialog</button>
     <md-dialog #confirm>
       <md-dialog-title>Would you like to delete your debt?</md-dialog-title>
       All of the banks have agreed to forgive you your debts.
     </md-dialog>
-    <button class="btn btn-primary" (click)="confirm.show()">
+    <button md-raised-button color="primary" (click)="confirm.show()">
       Confirm Dialog
     </button>
     <pre>{{dialogHeader}}</pre>
@@ -49,7 +49,7 @@
     </md-dialog>
     <md-dialog #custom title="{{dialogHeader}}">
       <div>
-        <button md-raised-button class="md-primary" flex="auto" (click)="custom1.show()">
+        <button md-raised-button color="primary" flex="auto" (click)="custom1.show()">
           Custom Dialog
         </button>
         <input [(ngModel)]="dialogHeader" />
@@ -75,7 +75,7 @@
         </p>
       </div>
     </md-dialog>
-    <button class="btn btn-primary" (click)="custom.show()">
+    <button md-raised-button color="primary" (click)="custom.show()">
       Custom Dialog
     </button>
   </div>

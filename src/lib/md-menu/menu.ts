@@ -93,4 +93,4 @@ export const MD_MENU_DIRECTIVES: any[] = [MdMenuNotClosable, MdMenu, MdMenuOpen]
   exports: MD_MENU_DIRECTIVES,
   declarations: MD_MENU_DIRECTIVES,
 })
-export class MdAccordionModule { }
+export class MdMenuModule { }

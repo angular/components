@@ -1,4 +1,4 @@
-# md2-dialog
+# md-dialog
 
 Native Angular2 Material Dialog component
 
@@ -8,7 +8,7 @@ Native Angular2 Material Dialog component
 ### Selector
 
 ```html
-<md2-dialog></md2-dialog>
+<md-dialog></md-dialog>
 ```
 
 ## API
@@ -16,10 +16,10 @@ Native Angular2 Material Dialog component
 Example:
  
  ```html
-<md2-dialog #confirm>
-	<md2-dialog-title>Confirm Title</md2-dialog-title>
+<md-dialog #confirm>
+	<md-dialog-title>Confirm Title</md-dialog-title>
 	Body Content...
-</md2-dialog>
+</md-dialog>
 <button (click)="confirm.show()">Open Confirm Dialog</button>
  ```
  ```ts

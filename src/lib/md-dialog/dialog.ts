@@ -34,6 +34,7 @@ export class MdDialogPortal extends TemplatePortal {
 // TODO(jd): backdrop and clickToClose options
 
 @Component({
+  moduleId: module.id,
   selector: 'md-dialog',
   encapsulation: ViewEncapsulation.None,
   template: `
@@ -45,7 +46,9 @@ export class MdDialogPortal extends TemplatePortal {
             <h2 *ngIf="dialogTitle" class="md-dialog-title" id="myDialogLabel" [innerHtml]="dialogTitle"></h2>
             <ng-content select="md-dialog-title"></ng-content>
           </div>
-          <ng-content></ng-content>
+          <div class="md-dialog-body">
+            <ng-content></ng-content>
+          </div>
           <ng-content select="md-dialog-footer"></ng-content>
         </div>
       </div>
@@ -67,10 +70,10 @@ export class MdDialogPortal extends TemplatePortal {
     .md-dialog-header .close::before {-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-ms-transform: rotate(45deg);-o-transform: rotate(45deg);transform: rotate(45deg);}
     .md-dialog-header .close::after {-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);-o-transform: rotate(-45deg);transform: rotate(-45deg);}
     .md-dialog-header .close:hover { opacity: 1; }
-    .md-dialog-header .md-dialog-title { margin: 0; font-size: 25px; line-height: 60px; font-weight: 500; }
+    .md-dialog-header md-dialog-title, .md-dialog-header .md-dialog-title { margin: 0; font-size: 25px; line-height: 60px; font-weight: 500; }
     .md-dialog-header dialog-header { line-height: 33px; }
     .md-dialog-body { position: relative; padding: 16px; }
-    .md-dialog-footer, md-dialog-footer { padding: 16px; text-align: right; border-top: 1px solid rgba(0,0,0,0.12); }
+    .md-dialog-footer, md-dialog-footer { display: block; padding: 16px; text-align: right; border-top: 1px solid rgba(0,0,0,0.12); }
   `],
   host: {
     'tabindex': '0',

@@ -27,10 +27,11 @@ export class MdTabLabel {
 }
 
 @Component({
+  moduleId: module.id,
   selector: 'md-tab',
   template: `<ng-content></ng-content>`,
   host: {
-    '[ngClass]': 'mdClass',
+    '[class]': 'mdClass',
     '[class.md-tab]': 'true',
     '[class.active]': 'active'
   }
@@ -54,6 +55,7 @@ export class MdTab {
 }
 
 @Component({
+  moduleId: module.id,
   selector: 'md-tabs',
   template: `
     <div class="md-tabs-header-wrapper">
@@ -102,7 +104,7 @@ export class MdTab {
     .md-tab.active { display: block; position: relative; }
   `],
   host: {
-    '[ngClass]': 'mdClass',
+    '[class]': 'mdClass',
     '[class.md-tabs]': 'true',
     '(window:resize)': 'onWindowResize($event)'
   },
@@ -344,7 +346,7 @@ export class MdTabs implements AfterContentInit {
 
 export const TABS_DIRECTIVES = [MdTabs, MdTab, MdTabLabel];
 
-export const MD_TABS_DIRECTIVES: any[] = [MdTabs, MdTab, MdTabLabel];
+export const MD_TABS_DIRECTIVES: any[] = [MdTabs, MdTab, MdTabLabel, MdTransclude, MdTransclude];
 
 @NgModule({
   imports: [CommonModule],

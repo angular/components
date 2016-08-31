@@ -19,7 +19,11 @@ export class MdToast {
 
   container: ComponentRef<any>;
 
-  constructor(private loader: DynamicComponentLoader, private appRef: ApplicationRef) { }
+  private appRef: any;
+
+  constructor(private loader: DynamicComponentLoader, appRef: ApplicationRef) {
+    this.appRef = appRef;
+  }
 
   /**
    * show toast

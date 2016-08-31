@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Md2Toast} from '@angular2-material/toast/toast';
+import {MdToast} from '@angular2-material/toast/toast';
 
 @Component({
   moduleId: module.id,
@@ -7,7 +7,7 @@ import {Md2Toast} from '@angular2-material/toast/toast';
   templateUrl: 'toast-demo.html'
 })
 export class ToastDemo {
-  constructor(private toast: Md2Toast) { }
+  constructor(private toast: MdToast) { }
   toastMe() {
     this.toast.show('test message...');
   }

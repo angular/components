@@ -1,4 +1,4 @@
-# md2-toast
+# md-toast
 
 Native Angular2 Material Toast service
 
@@ -27,17 +27,16 @@ import {MdToastModule} from 'md-toast/toast';
 
 ...
 
-import {Md2Toast} from 'md2/toast';
+import {MdToast} from 'md/toast';
 
 @Component({
-    selector: "...",
-    providers: [Md2Toast]
+    selector: "..."
 })
 
 export class ... {
     
     ...
-    
+    constructor(private toast: MdToast) { }
     toastMe() {
       this.toast.show('Toast message...');
 

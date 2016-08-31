@@ -1,4 +1,16 @@
-import { ApplicationRef, ComponentRef, Directive, DynamicComponentLoader, HostListener, Input, Provider, ReflectiveInjector, ViewContainerRef } from '@angular/core';
+import {
+  ApplicationRef,
+  ComponentRef,
+  Directive,
+  DynamicComponentLoader,
+  HostListener,
+  Input,
+  Provider,
+  ReflectiveInjector,
+  ViewContainerRef,
+  NgModule
+} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import { ViewContainerRef_ } from '@angular/core/src/linker/view_container_ref';
 import { MdTooltipComponent } from './tooltip.component';
 import { MdTooltipOptions } from './tooltip.options';
@@ -20,9 +32,12 @@ export class MdTooltip {
 
   private tooltip: Promise<ComponentRef<any>>;
 
-  constructor(viewContainerRef: ViewContainerRef, loader: DynamicComponentLoader, private appRef: ApplicationRef) {
+  private appRef: any;
+
+  constructor(viewContainerRef: ViewContainerRef, loader: DynamicComponentLoader, appRef: ApplicationRef) {
     this.viewContainerRef = viewContainerRef;
     this.loader = loader;
+    this.appRef = appRef;
   }
 
   /**
@@ -78,4 +93,11 @@ export class MdTooltip {
   }
 }
 
-export const TOOLTIP_DIRECTIVES: Array<any> = [MdTooltip, MdTooltipComponent];
+export const MD_TOOLTIP_DIRECTIVES: any[] = [MdTooltip, MdTooltipComponent];
+
+@NgModule({
+  imports: [CommonModule],
+  exports: MD_TOOLTIP_DIRECTIVES,
+  declarations: MD_TOOLTIP_DIRECTIVES
+})
+export class MdTooltipModule { }

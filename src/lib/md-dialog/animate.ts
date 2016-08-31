@@ -97,7 +97,7 @@ export class Animate {
     return -1;
   }
 
-  static setTransitionDuration(element: HTMLElement, delayMs: number) {
+  static setTransitionDuration(element: any, delayMs: number) {
     element.style['transition-duration'] = `${delayMs}ms`;
   }
 
@@ -125,7 +125,7 @@ export class Animate {
   /**
    * Set CSS styles immediately by turning off transition duration and restoring it afterward
    */
-  static setStyles(element: HTMLElement, styles: { [style: string]: string | number }): Promise<void> {
+  static setStyles(element: any, styles: { [style: string]: string | number }): Promise<void> {
     let saveDuration = Animate.getTransitionDuration(element, false);
     Animate.setTransitionDuration(element, 0);
     return new Promise<void>((resolve: any, reject: any) => {
@@ -148,7 +148,7 @@ export class Animate {
    * @returns {Promise<void>|Promise} A promise that resolves after a period of time.
    */
   static wait(milliseconds: number = 10): Promise<void> {
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve: any) => {
       setTimeout(() => resolve(), milliseconds);
     });
   }
