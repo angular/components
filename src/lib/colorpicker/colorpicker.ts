@@ -73,8 +73,7 @@ export class MdColorpicker implements OnInit, ControlValueAccessor {
     this.created = false;
   }
 
-  ngOnInit() {
-    if (!this.innerValue) { this.innerValue = '#000'; }
+  ngOnInit() {    
     let hsva: any = this.service.stringToHsva(this.innerValue);
     if (hsva !== null) {
       this.colorpickerChange.emit(this.service.outputFormat(hsva, this.format));
@@ -121,6 +120,7 @@ export class MdColorpicker implements OnInit, ControlValueAccessor {
   }
 
   writeValue(value: any) {
+    if (!this.innerValue) { this.innerValue = '#000'; }
     if (value !== this.innerValue && value) {
       this.innerValue = value;
     }
