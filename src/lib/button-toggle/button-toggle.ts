@@ -12,8 +12,7 @@ import {
     Output,
     QueryList,
     ViewEncapsulation,
-    forwardRef,
-    AfterViewInit
+    forwardRef
 } from '@angular/core';
 import {
     NG_VALUE_ACCESSOR,
@@ -56,7 +55,7 @@ export class MdButtonToggleChange {
     'role': 'radiogroup',
   },
 })
-export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor {
+export class MdButtonToggleGroup implements OnInit, ControlValueAccessor {
   /** The value for the button toggle group. Should match currently selected button toggle. */
   private _value: any = null;
 
@@ -89,7 +88,7 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
   _buttonToggles: QueryList<MdButtonToggle> = null;
 
   /** TODO: internal */
-  ngAfterViewInit() {
+  ngOnInit() {
     this._isInitialized = true;
   }
 
