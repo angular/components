@@ -9,20 +9,20 @@ Example:
  ```html
 //HTML
 
-<md-colorpicker [(ngModel)]="color" 
+<md2-colorpicker [(ngModel)]="color" 
                 position="bottom" 
                 (change)="change($event)">
-</md-colorpicker>
+</md2-colorpicker>
 
  ```
  ```ts
 //app-module.ts
 
-import {ColorpickerModule} from 'md-colorpicker/colorpicker';
+import {Md2ColorpickerModule} from 'md2-colorpicker/colorpicker';
 
 @NgModule({
   imports: [
-    ColorpickerModule,
+    Md2ColorpickerModule,
   ],
   declarations: [
     ...
