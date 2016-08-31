@@ -346,7 +346,7 @@ export class MdTabs implements AfterContentInit {
 
 export const TABS_DIRECTIVES = [MdTabs, MdTab, MdTabLabel];
 
-export const MD_TABS_DIRECTIVES: any[] = [MdTabs, MdTab, MdTabLabel, MdTransclude, MdTransclude];
+export const MD_TABS_DIRECTIVES: any[] = [MdTabs, MdTab, MdTabLabel, MdTransclude];
 
 @NgModule({
   imports: [CommonModule],

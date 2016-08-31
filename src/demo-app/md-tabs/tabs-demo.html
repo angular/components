@@ -4,10 +4,12 @@
   <div>
     <md-tabs class="test" selectedIndex="3" (change)="change($event)">
       <md-tab class="test" label="Static title">Static content</md-tab>
-      <!--<md-tab *ngFor="let tab of tabs"
-              [label]="tab.title">
+      <md-tab *ngFor="let tab of tabs"
+              [label]="tab.title"
+              [active]="tab.active"
+              [disabled]="tab.disabled">
         {{tab.content}}
-      </md-tab>-->
+      </md-tab>
       <md-tab active="true">
         <template md-tab-label>
           Static title211
