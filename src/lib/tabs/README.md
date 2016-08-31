@@ -44,4 +44,4 @@ It is also possible to specifiy the active tab by using the `selectedIndex` prop
 </md-tab-group>
 ```
 
-Notice that the `index` starts counting from `zero`.
+**Note**: The index always starts counting from `zero`.
