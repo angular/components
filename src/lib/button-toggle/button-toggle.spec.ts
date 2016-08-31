@@ -25,6 +25,7 @@ describe('MdButtonToggle', () => {
         ButtonTogglesInsideButtonToggleGroup,
         ButtonToggleGroupWithNgModel,
         ButtonTogglesInsideButtonToggleGroupMultiple,
+        ButtonToggleGroupWithInitialValue,
         StandaloneButtonToggle,
       ],
     });
@@ -305,11 +306,11 @@ describe('MdButtonToggle', () => {
       buttonToggleNativeElements =
           buttonToggleDebugElements.map(debugEl => debugEl.nativeElement);
       buttonToggleInstances = buttonToggleDebugElements.map(debugEl => debugEl.componentInstance);
-
-      fixture.detectChanges();
     }));
 
     it('should update the model before firing change event', fakeAsync(() => {
+      fixture.detectChanges();
+
       expect(testComponent.modelValue).toBeUndefined();
       expect(testComponent.lastEvent).toBeUndefined();
 
@@ -320,6 +321,29 @@ describe('MdButtonToggle', () => {
       expect(testComponent.modelValue).toBe('red');
       expect(testComponent.lastEvent.value).toBe('red');
     }));
+
+  });
+
+  describe('with initial value and change event', () => {
+
+    it('should not fire an initial change event', async(() => {
+      let fixture = TestBed.createComponent(ButtonToggleGroupWithInitialValue);
+      let testComponent = fixture.debugElement.componentInstance;
+      let groupDebugElement = fixture.debugElement.query(By.directive(MdButtonToggleGroup));
+      let groupInstance: MdButtonToggleGroup = groupDebugElement.injector.get(MdButtonToggleGroup);
+
+      fixture.detectChanges();
+
+      expect(groupInstance.value).toBe('red');
+      expect(testComponent.lastEvent).toBeFalsy();
+
+      groupInstance.value = 'green';
+      fixture.detectChanges();
+
+      expect(groupInstance.value).toBe('green');
+      expect(testComponent.lastEvent.value).toBe('green');
+    }));
+
   });
 
   describe('inside of a multiple selection group', () => {
@@ -532,3 +556,15 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
   `
 })
 class StandaloneButtonToggle { }
+
+@Component({
+  template: `
+  <md-button-toggle-group (change)="lastEvent = $event" value="red">
+    <md-button-toggle value="red">Value Red</md-button-toggle>
+    <md-button-toggle value="green">Value Green</md-button-toggle>
+  </md-button-toggle-group>
+  `
+})
+class ButtonToggleGroupWithInitialValue {
+  lastEvent: MdButtonToggleChange;
+}
