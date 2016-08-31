@@ -37,29 +37,29 @@ const noop = () => { };
 
 let nextId = 0;
 
-export const MD_MULTISELECT_CONTROL_VALUE_ACCESSOR: any = {
+export const MD2_MULTISELECT_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdMultiselect),
+  useExisting: forwardRef(() => Md2Multiselect),
   multi: true
 };
 
 @Component({
   moduleId: module.id,
-  selector: 'md-multiselect',
+  selector: 'md2-multiselect',
   template: `
-    <div class="md-multiselect-container">
-      <span *ngIf="items.length < 1" class="md-multiselect-placeholder">{{placeholder}}</span>
-      <div class="md-multiselect-value">
-        <div *ngFor="let v of items; let last = last" class="md-multiselect-value-item">
-          <span class="md-multiselect-text">{{v.text}}</span><span *ngIf="!last">,&nbsp;</span>
+    <div class="md2-multiselect-container">
+      <span *ngIf="items.length < 1" class="md2-multiselect-placeholder">{{placeholder}}</span>
+      <div class="md2-multiselect-value">
+        <div *ngFor="let v of items; let last = last" class="md2-multiselect-value-item">
+          <span class="md2-multiselect-text">{{v.text}}</span><span *ngIf="!last">,&nbsp;</span>
         </div>
       </div>
-      <em class="md-multiselect-icon"></em>
+      <em class="md2-multiselect-icon"></em>
     </div>
-    <ul *ngIf="isMenuVisible" class="md-multiselect-menu">
-      <li class="md-option" *ngFor="let l of list; let i = index;" [class.active]="isActive(i)" [class.focus]="focusedOption === i" (click)="toggleOption($event, i)">
-        <div class="md-option-icon"></div>
-        <div class="md-option-text" [innerHtml]="l.text"></div>
+    <ul *ngIf="isMenuVisible" class="md2-multiselect-menu">
+      <li class="md2-option" *ngFor="let l of list; let i = index;" [class.active]="isActive(i)" [class.focus]="focusedOption === i" (click)="toggleOption($event, i)">
+        <div class="md2-option-icon"></div>
+        <div class="md2-option-text" [innerHtml]="l.text"></div>
       </li>
     </ul>
   `,
@@ -84,16 +84,16 @@ export const MD_MULTISELECT_CONTROL_VALUE_ACCESSOR: any = {
   host: {
     'role': 'select',
     '[id]': 'id',
-    '[class.md-multiselect]': 'true',
-    '[class.md-multiselect-disabled]': 'disabled',
+    '[class.md2-multiselect]': 'true',
+    '[class.md2-multiselect-disabled]': 'disabled',
     '[tabindex]': 'disabled ? -1 : tabindex',
     '[attr.aria-disabled]': 'disabled'
   },
-  providers: [MD_MULTISELECT_CONTROL_VALUE_ACCESSOR],
+  providers: [MD2_MULTISELECT_CONTROL_VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None
 })
 
-export class MdMultiselect implements AfterContentInit, ControlValueAccessor {
+export class Md2Multiselect implements AfterContentInit, ControlValueAccessor {
 
   constructor(private element: ElementRef) { }
 
@@ -116,7 +116,7 @@ export class MdMultiselect implements AfterContentInit, ControlValueAccessor {
   private focusedOption: number = 0;
   private isFocused: boolean = false;
 
-  @Input() id: string = 'md-multiselect-' + (++nextId);
+  @Input() id: string = 'md2-multiselect-' + (++nextId);
   @Input() disabled: boolean = false;
   @Input() tabindex: number = 0;
   @Input() placeholder: string = '';
@@ -188,10 +188,10 @@ export class MdMultiselect implements AfterContentInit, ControlValueAccessor {
    */
   private updateScroll() {
     if (this.focusedOption < 0) { return; }
-    let menuContainer = this.element.nativeElement.querySelector('.md-multiselect-menu');
+    let menuContainer = this.element.nativeElement.querySelector('.md2-multiselect-menu');
     if (!menuContainer) { return; }
 
-    let choices = menuContainer.querySelectorAll('.md-option');
+    let choices = menuContainer.querySelectorAll('.md2-option');
     if (choices.length < 1) { return; }
 
     let highlighted: any = choices[this.focusedOption];
@@ -351,11 +351,11 @@ export class MdMultiselect implements AfterContentInit, ControlValueAccessor {
   registerOnTouched(fn: any) { this._onTouchedCallback = fn; }
 }
 
-export const MD_MULTISELECT_DIRECTIVES = [MdMultiselect];
+export const MD2_MULTISELECT_DIRECTIVES = [Md2Multiselect];
 
 @NgModule({
-  declarations: MD_MULTISELECT_DIRECTIVES,
   imports: [CommonModule, FormsModule],
-  exports: MD_MULTISELECT_DIRECTIVES,
+  exports: MD2_MULTISELECT_DIRECTIVES,
+  declarations: MD2_MULTISELECT_DIRECTIVES,
 })
-export class MdMultiselectModule { }
+export class Md2MultiselectModule { }

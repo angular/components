@@ -18,7 +18,7 @@ import {
 } from '@angular/forms';
 import {CommonModule} from '@angular/common';
 //import { HightlightPipe } from '../autocomplete/autocomplete.pipe';
-import {MdAutocompleteModule} from '@angular2-material/autocomplete/autocomplete';
+import {Md2AutocompleteModule} from '@angular2-material/autocomplete/autocomplete';
 
 const noop = () => { };
 
@@ -39,72 +39,72 @@ class Tag {
   }
 }
 
-export const MD_TAGS_CONTROL_VALUE_ACCESSOR: any = {
+export const MD2_TAGS_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdTags),
+  useExisting: forwardRef(() => Md2Tags),
   multi: true
 };
 
 @Component({
   moduleId: module.id,
-  selector: 'md-tags',
+  selector: 'md2-tags',
   template: `
-    <div class="md-tags-container">
-      <span *ngFor="let t of items; let i = index;" class="md-tag" [class.active]="selectedTag === i" (click)="selectTag(i)">
-        <span class="md-tag-text">{{t.text}}</span>
-        <span class="md-remove-icon" (click)="removeTagAndFocusInput(i)"></span>
+    <div class="md2-tags-container">
+      <span *ngFor="let t of items; let i = index;" class="md2-tag" [class.active]="selectedTag === i" (click)="selectTag(i)">
+        <span class="md2-tag-text">{{t.text}}</span>
+        <span class="md2-remove-icon" (click)="removeTagAndFocusInput(i)"></span>
       </span>
-      <span class="md-tag-add">
-        <input [(ngModel)]="tagBuffer" type="text" tabs="false" autocomplete="off" tabindex="-1" [disabled]="disabled" class="md-tags-input" [placeholder]="placeholder" (focus)="onInputFocus()" (blur)="onInputBlur()" (keydown)="inputKeydown($event)" (change)="$event.stopPropagation()" />
-        <ul *ngIf="isMenuVisible" class="md-tags-menu" (mouseenter)="listEnter()" (mouseleave)="listLeave()">
-          <li class="md-option" *ngFor="let l of list; let i = index;" [class.focused]="focusedTag === i" (click)="addTag($event, i)">
-            <span class="md-option-text" [innerHtml]="l.text | hightlight:tagBuffer"></span>
+      <span class="md2-tag-add">
+        <input [(ngModel)]="tagBuffer" type="text" tabs="false" autocomplete="off" tabindex="-1" [disabled]="disabled" class="md2-tags-input" [placeholder]="placeholder" (focus)="onInputFocus()" (blur)="onInputBlur()" (keydown)="inputKeydown($event)" (change)="$event.stopPropagation()" />
+        <ul *ngIf="isMenuVisible" class="md2-tags-menu" (mouseenter)="listEnter()" (mouseleave)="listLeave()">
+          <li class="md2-option" *ngFor="let l of list; let i = index;" [class.focused]="focusedTag === i" (click)="addTag($event, i)">
+            <span class="md2-option-text" [innerHtml]="l.text | hightlight:tagBuffer"></span>
           </li>
         </ul>
       </span>
     </div>
   `,
   styles: [`
-    .md-tags { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -moz-backface-visibility: hidden; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-    .md-tags:focus { outline: none; }
-    .md-tags .md-tags-container { position: relative; display: block; max-width: 100%; padding: 2px 3px 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.38); -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; min-width: 64px; min-height: 26px; cursor: text; }
-    .md-tags .md-tags-container:before, .md-tags .md-tags-container:after { display: table; content: " "; }
-    .md-tags .md-tags-container:after { clear: both; }
-    .md-tags.focus .md-tags-container { padding-bottom: 7px; border-bottom: 2px solid #106cc8; }
-    .md-tags.md-tags-disabled .md-tags-container { color: rgba(0,0,0,0.38); cursor: default; }
-    .md-tags.md-tags-disabled.focus .md-tags-container { padding-bottom: 1px; border-bottom: 1px solid rgba(0, 0, 0, 0.38); }
-    .md-tags .md-tags-container .md-tag { position: relative; cursor: default; border-radius: 16px; display: block; height: 32px; line-height: 32px; margin: 8px 8px 0 0; padding: 0 26px 0 12px; float: left; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; max-width: 100%; background: rgb(224,224,224); color: rgb(66,66,66); white-space: nowrap; overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
-    .md-tags .md-tags-container .md-tag.active { background: #106cc8; color: rgba(255,255,255,0.87); }
-    .md-tags .md-tags-container .md-tag .md-remove-icon { position: absolute; top: 8px; right: 1px; cursor: pointer; display: inline-block; width: 16px; height: 16px; margin: 0 4px; overflow: hidden; }
-    .md-tags .md-tag .md-remove-icon::before,
-    .md-tags .md-tag .md-remove-icon::after { content: ''; position: absolute; height: 2px; width: 100%; top: 50%; left: 0; margin-top: -1px; background: #888; border-radius: 2px; }
-    .md-tags .md-tag.active .md-remove-icon::before,
-    .md-tags .md-tag.active .md-remove-icon::after { background: rgba(255,255,255,0.87); }
-    .md-tags .md-tag .md-remove-icon::before { -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); }
-    .md-tags .md-tag .md-remove-icon::after { -webkit-transform: rotate(-45deg); -moz-transform: rotate(-45deg); -ms-transform: rotate(-45deg); -o-transform: rotate(-45deg); transform: rotate(-45deg); }
-    .md-tags .md-tag-add { position: relative; display: inline-block; }
-    .md-tags input { border: 0; outline: 0; margin-top: 8px; height: 32px; line-height: 32px; padding: 0; color: rgba(0,0,0,0.87); background: 0 0; }
-    .md-tags .md-tags-container .md-tags-placeholder { color: rgba(0, 0, 0, 0.38); }
-    .md-tags .md-tags-menu { position: absolute; left: 0; top: 100%; display: block; z-index: 10; -ms-flex-direction: column; -webkit-flex-direction: column; flex-direction: column; width: 100%; margin: 6px 0 0; padding: 8px 0; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12); max-height: 256px; min-height: 48px; overflow-y: auto; -moz-transform: scale(1); -ms-transform: scale(1); -o-transform: scale(1); -webkit-transform: scale(1); transform: scale(1); background: #fff; }
-    .md-tags .md-tags-menu .md-option { cursor: pointer; position: relative; display: block; align-items: center; width: auto; -moz-transition: background 0.15s linear; -o-transition: background 0.15s linear; -webkit-transition: background 0.15s linear; transition: background 0.15s linear; padding: 0 16px; height: 48px; line-height: 48px; }
-    .md-tags .md-tags-menu .md-option:hover, .md-tags .md-tags-menu .md-option.focused { background: #eeeeee; }
-    .md-tags .md-tags-menu .md-option .md-option-text { width: auto; white-space: nowrap; overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; font-size: 16px; }
-    .md-tags .highlight { color: #757575; }
+    .md2-tags { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -moz-backface-visibility: hidden; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+    .md2-tags:focus { outline: none; }
+    .md2-tags .md2-tags-container { position: relative; display: block; max-width: 100%; padding: 2px 3px 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.38); -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; min-width: 64px; min-height: 26px; cursor: text; }
+    .md2-tags .md2-tags-container:before, .md2-tags .md2-tags-container:after { display: table; content: " "; }
+    .md2-tags .md2-tags-container:after { clear: both; }
+    .md2-tags.focus .md2-tags-container { padding-bottom: 7px; border-bottom: 2px solid #106cc8; }
+    .md2-tags.md2-tags-disabled .md2-tags-container { color: rgba(0,0,0,0.38); cursor: default; }
+    .md2-tags.md2-tags-disabled.focus .md2-tags-container { padding-bottom: 1px; border-bottom: 1px solid rgba(0, 0, 0, 0.38); }
+    .md2-tags .md2-tags-container .md2-tag { position: relative; cursor: default; border-radius: 16px; display: block; height: 32px; line-height: 32px; margin: 8px 8px 0 0; padding: 0 26px 0 12px; float: left; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; max-width: 100%; background: rgb(224,224,224); color: rgb(66,66,66); white-space: nowrap; overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
+    .md2-tags .md2-tags-container .md2-tag.active { background: #106cc8; color: rgba(255,255,255,0.87); }
+    .md2-tags .md2-tags-container .md2-tag .md2-remove-icon { position: absolute; top: 8px; right: 1px; cursor: pointer; display: inline-block; width: 16px; height: 16px; margin: 0 4px; overflow: hidden; }
+    .md2-tags .md2-tag .md2-remove-icon::before,
+    .md2-tags .md2-tag .md2-remove-icon::after { content: ''; position: absolute; height: 2px; width: 100%; top: 50%; left: 0; margin-top: -1px; background: #888; border-radius: 2px; }
+    .md2-tags .md2-tag.active .md2-remove-icon::before,
+    .md2-tags .md2-tag.active .md2-remove-icon::after { background: rgba(255,255,255,0.87); }
+    .md2-tags .md2-tag .md2-remove-icon::before { -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); }
+    .md2-tags .md2-tag .md2-remove-icon::after { -webkit-transform: rotate(-45deg); -moz-transform: rotate(-45deg); -ms-transform: rotate(-45deg); -o-transform: rotate(-45deg); transform: rotate(-45deg); }
+    .md2-tags .md2-tag-add { position: relative; display: inline-block; }
+    .md2-tags input { border: 0; outline: 0; margin-top: 8px; height: 32px; line-height: 32px; padding: 0; color: rgba(0,0,0,0.87); background: 0 0; }
+    .md2-tags .md2-tags-container .md2-tags-placeholder { color: rgba(0, 0, 0, 0.38); }
+    .md2-tags .md2-tags-menu { position: absolute; left: 0; top: 100%; display: block; z-index: 10; -ms-flex-direction: column; -webkit-flex-direction: column; flex-direction: column; width: 100%; margin: 6px 0 0; padding: 8px 0; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12); max-height: 256px; min-height: 48px; overflow-y: auto; -moz-transform: scale(1); -ms-transform: scale(1); -o-transform: scale(1); -webkit-transform: scale(1); transform: scale(1); background: #fff; }
+    .md2-tags .md2-tags-menu .md2-option { cursor: pointer; position: relative; display: block; align-items: center; width: auto; -moz-transition: background 0.15s linear; -o-transition: background 0.15s linear; -webkit-transition: background 0.15s linear; transition: background 0.15s linear; padding: 0 16px; height: 48px; line-height: 48px; }
+    .md2-tags .md2-tags-menu .md2-option:hover, .md2-tags .md2-tags-menu .md2-option.focused { background: #eeeeee; }
+    .md2-tags .md2-tags-menu .md2-option .md2-option-text { width: auto; white-space: nowrap; overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; font-size: 16px; }
+    .md2-tags .highlight { color: #757575; }
   `],
   host: {
     'role': 'tags',
     '[id]': 'id',
-    '[class.md-tags]': 'true',
+    '[class.md2-tags]': 'true',
     '[class.focus]': 'inputFocused || selectedTag >= 0',
-    '[class.md-tags-disabled]': 'disabled',
+    '[class.md2-tags-disabled]': 'disabled',
     '[tabindex]': 'disabled ? -1 : tabindex',
     '[attr.aria-disabled]': 'disabled'
   },
-  providers: [MD_TAGS_CONTROL_VALUE_ACCESSOR],
+  providers: [MD2_TAGS_CONTROL_VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None
 })
 
-export class MdTags implements AfterContentInit, ControlValueAccessor {
+export class Md2Tags implements AfterContentInit, ControlValueAccessor {
 
   constructor(private element: ElementRef) { }
 
@@ -129,14 +129,14 @@ export class MdTags implements AfterContentInit, ControlValueAccessor {
   private inputFocused: boolean = false;
   private noBlur: boolean = true;
 
-  @Input() id: string = 'md-tags-' + (++nextId);
+  @Input() id: string = 'md2-tags-' + (++nextId);
   @Input() disabled: boolean = false;
   @Input() tabindex: number = 0;
   @Input() placeholder: string = '';
-  @Input('md-tag-text') textKey: string = 'text';
-  @Input('md-tag-value') valueKey: string = null;
+  @Input('md2-tag-text') textKey: string = 'text';
+  @Input('md2-tag-value') valueKey: string = null;
 
-  @Input('md-tags') set tags(value: Array<any>) {
+  @Input('md2-tags') set tags(value: Array<any>) {
     this._tags = value;
   }
 
@@ -202,10 +202,10 @@ export class MdTags implements AfterContentInit, ControlValueAccessor {
    */
   private updateScroll() {
     if (this.focusedTag < 0) { return; }
-    let menuContainer = this.element.nativeElement.querySelector('.md-tags-menu');
+    let menuContainer = this.element.nativeElement.querySelector('.md2-tags-menu');
     if (!menuContainer) { return; }
 
-    let choices = menuContainer.querySelectorAll('.md-option');
+    let choices = menuContainer.querySelectorAll('.md2-option');
     if (choices.length < 1) { return; }
 
     let highlighted: any = choices[this.focusedTag];
@@ -431,11 +431,11 @@ export class MdTags implements AfterContentInit, ControlValueAccessor {
   registerOnTouched(fn: any) { this._onTouchedCallback = fn; }
 }
 
-export const MD_TAGS_DIRECTIVES = [MdTags];
+export const MD2_TAGS_DIRECTIVES = [Md2Tags];
 
 @NgModule({
-  declarations: MD_TAGS_DIRECTIVES,
-  imports: [CommonModule, FormsModule, MdAutocompleteModule],
-  exports: MD_TAGS_DIRECTIVES,
+  declarations: MD2_TAGS_DIRECTIVES,
+  imports: [CommonModule, FormsModule, Md2AutocompleteModule],
+  exports: MD2_TAGS_DIRECTIVES,
 })
-export class MdTagsModule { }
+export class Md2TagsModule { }

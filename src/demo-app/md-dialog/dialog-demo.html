@@ -7,22 +7,22 @@
     <button md-raised-button color="primary" (click)="showPrompt($event)">Prompt Dialog</button>
     <button md-raised-button color="primary" (click)="showAdvanced($event)">Custom Dialog</button>
     <button md-raised-button color="primary" (click)="showTabDialog($event)">Tab Dialog</button>-->
-    <md-dialog #alert>
+    <md2-dialog #alert>
       Clicking the button will close this dialog
-      <md-dialog-footer>
+      <md2-dialog-footer>
         <button md-raised-button (click)="close(alert)">Got it</button>
-      </md-dialog-footer>
-    </md-dialog>
+      </md2-dialog-footer>
+    </md2-dialog>
     <button md-raised-button color="primary" (click)="show(alert)">Alert Dialog</button>
-    <md-dialog #confirm>
-      <md-dialog-title>Would you like to delete your debt?</md-dialog-title>
+    <md2-dialog #confirm>
+      <md2-dialog-title>Would you like to delete your debt?</md2-dialog-title>
       All of the banks have agreed to forgive you your debts.
-    </md-dialog>
+    </md2-dialog>
     <button md-raised-button color="primary" (click)="confirm.show()">
       Confirm Dialog
     </button>
     <pre>{{dialogHeader}}</pre>
-    <md-dialog #custom1 title="{{dialogHeader}}">
+    <md2-dialog #custom1 title="{{dialogHeader}}">
       <div>
         <input [(ngModel)]="dialogHeader" />
         <p>
@@ -46,8 +46,8 @@
           decorations at weddings, public celebrations, and religious ceremonies.
         </p>
       </div>
-    </md-dialog>
-    <md-dialog #custom title="{{dialogHeader}}">
+    </md2-dialog>
+    <md2-dialog #custom title="{{dialogHeader}}">
       <div>
         <button md-raised-button color="primary" flex="auto" (click)="custom1.show()">
           Custom Dialog
@@ -74,7 +74,7 @@
           decorations at weddings, public celebrations, and religious ceremonies.
         </p>
       </div>
-    </md-dialog>
+    </md2-dialog>
     <button md-raised-button color="primary" (click)="custom.show()">
       Custom Dialog
     </button>

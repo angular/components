@@ -13,7 +13,7 @@ import {CommonModule} from '@angular/common';
   }
 })
 
-export class MdCollapse {
+export class Md2Collapse {
   private height: string;
   private isExpanded: boolean = true;
   private isCollapsing: boolean = false;
@@ -54,11 +54,11 @@ export class MdCollapse {
   }
 }
 
-export const MD_COLLAPSE_DIRECTIVES: any[] = [MdCollapse];
+export const MD2_COLLAPSE_DIRECTIVES: any[] = [Md2Collapse];
 
 @NgModule({
   imports: [CommonModule],
-  exports: MD_COLLAPSE_DIRECTIVES,
-  declarations: MD_COLLAPSE_DIRECTIVES,
+  exports: MD2_COLLAPSE_DIRECTIVES,
+  declarations: MD2_COLLAPSE_DIRECTIVES,
 })
-export class MdCollapseModule { }
+export class Md2CollapseModule { }

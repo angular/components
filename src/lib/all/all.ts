@@ -1,17 +1,17 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
-import {MdAccordionModule} from '@angular2-material/accordion/accordion';
-import {MdAutocompleteModule} from '@angular2-material/autocomplete/autocomplete';
-import {MdCollapseModule} from '@angular2-material/collapse/collapse';
-import {MdColorpickerModule} from '@angular2-material/colorpicker/colorpicker';
-import {MdDatepickerModule} from '@angular2-material/datepicker/datepicker';
-import {MdDialogModule} from '@angular2-material/md-dialog/dialog';
-import {MdMenuModule} from '@angular2-material/md-menu/menu';
-import {MdMultiselectModule} from '@angular2-material/multiselect/multiselect';
-import {MdSelectModule} from '@angular2-material/select/select';
-import {MdTabsModule} from '@angular2-material/md-tabs/tabs';
-import {MdTagsModule} from '@angular2-material/tags/tags';
-import {MdToastModule} from '@angular2-material/toast/toast';
-import {MdTooltipModule} from '@angular2-material/md-tooltip/tooltip';
+import {Md2AccordionModule} from '@angular2-material/accordion/accordion';
+import {Md2AutocompleteModule} from '@angular2-material/autocomplete/autocomplete';
+import {Md2CollapseModule} from '@angular2-material/collapse/collapse';
+import {Md2ColorpickerModule} from '@angular2-material/colorpicker/colorpicker';
+import {Md2DatepickerModule} from '@angular2-material/datepicker/datepicker';
+import {Md2DialogModule} from '@angular2-material/md-dialog/dialog';
+import {Md2MenuModule} from '@angular2-material/md-menu/menu';
+import {Md2MultiselectModule} from '@angular2-material/multiselect/multiselect';
+import {Md2SelectModule} from '@angular2-material/select/select';
+import {Md2TabsModule} from '@angular2-material/md-tabs/tabs';
+import {Md2TagsModule} from '@angular2-material/tags/tags';
+import {Md2ToastModule} from '@angular2-material/toast/toast';
+import {Md2TooltipModule} from '@angular2-material/md-tooltip/tooltip';
 //import {MdButtonToggleModule} from '@angular2-material/button-toggle/button-toggle';
 import {MdButtonModule} from '@angular2-material/button/button';
 //import {MdCheckboxModule} from '@angular2-material/checkbox/checkbox';
@@ -39,19 +39,19 @@ import {RtlModule} from '@angular2-material/core/rtl/dir';
 
 
 const MATERIAL_MODULES = [
-  MdAccordionModule,
-  MdAutocompleteModule,
-  MdCollapseModule,
-  MdColorpickerModule,
-  MdDatepickerModule,
-  MdDialogModule,
-  MdMenuModule,
-  MdMultiselectModule,
-  MdSelectModule,
-  MdTabsModule,
-  MdTagsModule,
-  MdToastModule,
-  MdTooltipModule,
+  Md2AccordionModule,
+  Md2AutocompleteModule,
+  Md2CollapseModule,
+  Md2ColorpickerModule,
+  Md2DatepickerModule,
+  Md2DialogModule,
+  Md2MenuModule,
+  Md2MultiselectModule,
+  Md2SelectModule,
+  Md2TabsModule,
+  Md2TagsModule,
+  Md2ToastModule,
+  Md2TooltipModule,
   MdButtonModule,
   //MdButtonToggleModule,
   //MdCardModule,
@@ -79,19 +79,19 @@ const MATERIAL_MODULES = [
 
 @NgModule({
   imports: [
-    MdAccordionModule,
-    MdAutocompleteModule,
-    MdCollapseModule,
-    MdColorpickerModule,
-    MdDatepickerModule,
-    MdDialogModule,
-    MdMenuModule,
-    MdMultiselectModule,
-    MdSelectModule,
-    MdTabsModule,
-    MdTagsModule,
-    MdToastModule,
-    MdTooltipModule,
+    Md2AccordionModule,
+    Md2AutocompleteModule,
+    Md2CollapseModule,
+    Md2ColorpickerModule,
+    Md2DatepickerModule,
+    Md2DialogModule,
+    Md2MenuModule,
+    Md2MultiselectModule,
+    Md2SelectModule,
+    Md2TabsModule,
+    Md2TagsModule,
+    Md2ToastModule,
+    Md2TooltipModule,
     MdButtonModule,
     //MdCardModule,
     //MdCheckboxModule,

@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 
-@Directive({ selector: '[md-menu-not-closable]' })
-export class MdMenuNotClosable {
+@Directive({ selector: '[md2-menu-not-closable]' })
+export class Md2MenuNotClosable {
 
   constructor(private elementRef: ElementRef) { }
 
@@ -25,18 +25,18 @@ export class MdMenuNotClosable {
 }
 
 @Directive({
-  selector: '[md-menu]',
+  selector: '[md2-menu]',
   host: {
     'role': 'menu',
-    '[class.md-menu]': 'true',
+    '[class.md2-menu]': 'true',
     '[class.open]': 'isVisible'
   }
 })
-export class MdMenu {
+export class Md2Menu {
 
   private isVisible: boolean = false;
 
-  @ContentChild(MdMenuNotClosable) notClosable: MdMenuNotClosable;
+  @ContentChild(Md2MenuNotClosable) notClosable: Md2MenuNotClosable;
 
   constructor(private elementRef: ElementRef) { }
 
@@ -61,8 +61,8 @@ export class MdMenu {
 
 }
 
-@Directive({ selector: '[md-menu-open]' })
-export class MdMenuOpen implements OnDestroy {
+@Directive({ selector: '[md2-menu-open]' })
+export class Md2MenuOpen implements OnDestroy {
 
   private close = (event: MouseEvent) => {
     if (!this.menu.isInClosableZone(<HTMLElement>event.target) &&
@@ -72,7 +72,7 @@ export class MdMenuOpen implements OnDestroy {
     }
   };
 
-  constructor( @Host() private menu: MdMenu, private elementRef: ElementRef) { }
+  constructor( @Host() private menu: Md2Menu, private elementRef: ElementRef) { }
 
   @HostListener('click')
   private open() {
@@ -86,11 +86,11 @@ export class MdMenuOpen implements OnDestroy {
 
 }
 
-export const MD_MENU_DIRECTIVES: any[] = [MdMenuNotClosable, MdMenu, MdMenuOpen];
+export const MD2_MENU_DIRECTIVES: any[] = [Md2MenuNotClosable, Md2Menu, Md2MenuOpen];
 
 @NgModule({
   imports: [CommonModule],
-  exports: MD_MENU_DIRECTIVES,
-  declarations: MD_MENU_DIRECTIVES,
+  exports: MD2_MENU_DIRECTIVES,
+  declarations: MD2_MENU_DIRECTIVES,
 })
-export class MdMenuModule { }
+export class Md2MenuModule { }

@@ -1,14 +1,14 @@
-# md-dialog
+# md2-dialog
 
 Native Angular2 Material Dialog component
 
 ## Installation
-`npm install --save md-dialog`
+`npm install --save md2-dialog`
 
 ### Selector
 
 ```html
-<md-dialog></md-dialog>
+<md2-dialog></md2-dialog>
 ```
 
 ## API
@@ -16,20 +16,20 @@ Native Angular2 Material Dialog component
 Example:
  
  ```html
-<md-dialog #confirm>
-	<md-dialog-title>Confirm Title</md-dialog-title>
+<md2-dialog #confirm>
+	<md2-dialog-title>Confirm Title</md2-dialog-title>
 	Body Content...
-</md-dialog>
+</md2-dialog>
 <button (click)="confirm.show()">Open Confirm Dialog</button>
  ```
  ```ts
 //app-module.ts
 
-import {MdDialogModule} from 'md-dialog/dialog';
+import {Md2DialogModule} from 'md2-dialog/dialog';
 
 @NgModule({
   imports: [
-    MdDialogModule,
+    Md2DialogModule,
   ],
   declarations: [
     ...

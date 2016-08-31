@@ -2,18 +2,18 @@
   <h2>Tags</h2>
   <hr />
   <div>
-    <md-tags [md-tags]="tags"
-              md-tag-text="name"
+    <md2-tags [md2-tags]="tags"
+              md2-tag-text="name"
               [(ngModel)]="tag"
               (change)="change($event)"
               placeholder="+Tag">
-    </md-tags>
+    </md2-tags>
     <pre>{{tag | json}}</pre>
-    <md-tags [md-tags]="tags"
-              md-tag-text="name"
+    <md2-tags [md2-tags]="tags"
+              md2-tag-text="name"
               [(ngModel)]="tag"
               (change)="change($event)"
               placeholder="+Tag">
-    </md-tags>
+    </md2-tags>
   </div>
 </section>

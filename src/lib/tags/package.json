@@ -1,9 +1,9 @@
 {
-  "name": "md2-autocomplete",
+  "name": "md2-tags",
   "version": "0.0.1-alpha.0",
-  "description": "Angular 2 Material autocomplete",
-  "main": "./autocomplete.js",
-  "typings": "./autocomplete.d.ts",
+  "description": "Angular 2 Material tags",
+  "main": "./tags.js",
+  "typings": "./tags.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/Promact/material2.git"
@@ -13,7 +13,7 @@
     "material",
     "material design",
     "components",
-    "autocomplete"
+    "tags"
   ],
   "license": "MIT",
   "bugs": {

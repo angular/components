@@ -14,31 +14,31 @@ import {
   NgModule
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import { MdTransclude } from './transclude';
+import { Md2Transclude } from './transclude';
 
-export class MdTabChangeEvent {
+export class Md2TabChangeEvent {
   index: number;
-  tab: MdTab;
+  tab: Md2Tab;
 }
 
-@Directive({ selector: '[md-tab-label]' })
-export class MdTabLabel {
+@Directive({ selector: '[md2-tab-label]' })
+export class Md2TabLabel {
   constructor(public templateRef: TemplateRef<any>) { }
 }
 
 @Component({
   moduleId: module.id,
-  selector: 'md-tab',
+  selector: 'md2-tab',
   template: `<ng-content></ng-content>`,
   host: {
     '[class]': 'mdClass',
-    '[class.md-tab]': 'true',
+    '[class.md2-tab]': 'true',
     '[class.active]': 'active'
   }
 })
-export class MdTab {
+export class Md2Tab {
 
-  @ContentChild(MdTabLabel) tabLabel: MdTabLabel;
+  @ContentChild(Md2TabLabel) tabLabel: Md2TabLabel;
 
   @Input() label: string;
 
@@ -56,63 +56,63 @@ export class MdTab {
 
 @Component({
   moduleId: module.id,
-  selector: 'md-tabs',
+  selector: 'md2-tabs',
   template: `
-    <div class="md-tabs-header-wrapper">
-      <div role="button" class="md-prev-button" [class.disabled]="!canPageBack()" *ngIf="shouldPaginate" (click)="previousPage()">
+    <div class="md2-tabs-header-wrapper">
+      <div role="button" class="md2-prev-button" [class.disabled]="!canPageBack()" *ngIf="shouldPaginate" (click)="previousPage()">
         <em class="prev-icon">Prev</em>
       </div>
-      <div role="button" class="md-next-button" [class.disabled]="!canPageForward()" *ngIf="shouldPaginate" (click)="nextPage()">
+      <div role="button" class="md2-next-button" [class.disabled]="!canPageForward()" *ngIf="shouldPaginate" (click)="nextPage()">
         <em class="next-icon">Next</em>
       </div>
-      <div class="md-tabs-canvas" [class.md-paginated]="shouldPaginate" role="tablist" tabindex="0" (keydown.arrowRight)="focusNextTab()" (keydown.arrowLeft)="focusPreviousTab()" (keydown.enter)="selectedIndex = focusIndex" (mousewheel)="scroll($event)">
-        <div class="md-tabs-header" [style.marginLeft]="-offsetLeft + 'px'">
-          <div class="md-tab-label" role="tab" *ngFor="let tab of tabs; let i = index" [class.focus]="focusIndex === i" [class.active]="selectedIndex === i" [class.disabled]="tab.disabled" (click)="focusIndex = selectedIndex = i">
-            <span [mdTransclude]="tab.labelTemplate">{{tab.label}}</span>
+      <div class="md2-tabs-canvas" [class.md2-paginated]="shouldPaginate" role="tablist" tabindex="0" (keydown.arrowRight)="focusNextTab()" (keydown.arrowLeft)="focusPreviousTab()" (keydown.enter)="selectedIndex = focusIndex" (mousewheel)="scroll($event)">
+        <div class="md2-tabs-header" [style.marginLeft]="-offsetLeft + 'px'">
+          <div class="md2-tab-label" role="tab" *ngFor="let tab of tabs; let i = index" [class.focus]="focusIndex === i" [class.active]="selectedIndex === i" [class.disabled]="tab.disabled" (click)="focusIndex = selectedIndex = i">
+            <span [md2Transclude]="tab.labelTemplate">{{tab.label}}</span>
           </div>
-          <div class="md-tab-ink-bar" [style.left]="inkBarLeft" [style.width]="inkBarWidth"></div>
+          <div class="md2-tab-ink-bar" [style.left]="inkBarLeft" [style.width]="inkBarWidth"></div>
         </div>
       </div>
     </div>
-    <div class="md-tabs-body-wrapper">
+    <div class="md2-tabs-body-wrapper">
       <ng-content></ng-content>
     </div>
   `,
   styles: [`
-    .md-tabs { position: relative; overflow: hidden; display: block; margin: 0; border: 1px solid #e1e1e1; border-radius: 2px; }
-    .md-tabs-header-wrapper { position: relative; display: block; height: 48px; background: white; border-width: 0 0 1px; border-style: solid; border-color: rgba(0,0,0,0.12); display: block; margin: 0; padding: 0; list-style: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-    .md-tabs-header-wrapper:after { content: ''; display: table; clear: both; }
-    .md-prev-button,
-    .md-next-button { position: absolute; top: 0; height: 100%; width: 32px; padding: 8px 0; z-index: 2; cursor: pointer; }
-    .md-prev-button { left: 0; }
-    .md-next-button { right: 0; }
-    .md-prev-button.disabled,
-    .md-next-button.disabled { opacity: .25; cursor: default; }
-    .md-prev-button .prev-icon,
-    .md-next-button .next-icon { display: block; width: 12px; height: 12px; font-size: 0; border-width: 0 0 2px 2px; border-style: solid; border-color: #757575; border-radius: 1px; transform: rotate(45deg); margin: 10px; }
-    .md-next-button .next-icon { border-width: 2px 2px 0 0; }
-    .md-tabs-canvas { position: relative; height: 100%; overflow: hidden; display: block; outline: none; }
-    .md-tabs-canvas.md-paginated { margin: 0 32px; }
-    .md-tabs-header { position: relative; display: inline-block; height: 100%; white-space: nowrap; -moz-transition: 0.5s cubic-bezier(0.35,0,0.25,1); -o-transition: 0.5s cubic-bezier(0.35,0,0.25,1); -webkit-transition: 0.5s cubic-bezier(0.35,0,0.25,1); transition: 0.5s cubic-bezier(0.35,0,0.25,1); }
-    .md-tab-label { position: relative; height: 100%; color: rgba(0,0,0,0.54); font-size: 14px; text-align: center; line-height: 24px; padding: 12px 24px; -moz-transition: background-color .35s cubic-bezier(.35,0,.25,1); -o-transition: background-color .35s cubic-bezier(.35,0,.25,1); -webkit-transition: background-color .35s cubic-bezier(.35,0,.25,1); transition: background-color .35s cubic-bezier(.35,0,.25,1); cursor: pointer; white-space: nowrap; text-transform: uppercase; display: inline-block; font-weight: 500; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
-    .md-tab-label.active { color: rgb(16,108,200); }
-    .md-tabs-canvas:focus .md-tab-label.focus { background: rgba(0,0,0,0.05); }
-    .md-tab-label.disabled { color: rgba(0,0,0,0.26); pointer-events: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -webkit-user-drag: none; opacity: 0.5; cursor: default; }
-    .md-tab-ink-bar { position: absolute; bottom: 0; height: 2px; background: rgb(255,82,82); transition: .25s cubic-bezier(.35,0,.25,1); }
-    .md-tabs-body-wrapper { position: relative; min-height: 0; display: block; clear: both; }
-    .md-tab { padding: 16px; display: none; position: relative; }
-    .md-tab.active { display: block; position: relative; }
+    .md2-tabs { position: relative; overflow: hidden; display: block; margin: 0; border: 1px solid #e1e1e1; border-radius: 2px; }
+    .md2-tabs-header-wrapper { position: relative; display: block; height: 48px; background: white; border-width: 0 0 1px; border-style: solid; border-color: rgba(0,0,0,0.12); display: block; margin: 0; padding: 0; list-style: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+    .md2-tabs-header-wrapper:after { content: ''; display: table; clear: both; }
+    .md2-prev-button,
+    .md2-next-button { position: absolute; top: 0; height: 100%; width: 32px; padding: 8px 0; z-index: 2; cursor: pointer; }
+    .md2-prev-button { left: 0; }
+    .md2-next-button { right: 0; }
+    .md2-prev-button.disabled,
+    .md2-next-button.disabled { opacity: .25; cursor: default; }
+    .md2-prev-button .prev-icon,
+    .md2-next-button .next-icon { display: block; width: 12px; height: 12px; font-size: 0; border-width: 0 0 2px 2px; border-style: solid; border-color: #757575; border-radius: 1px; transform: rotate(45deg); margin: 10px; }
+    .md2-next-button .next-icon { border-width: 2px 2px 0 0; }
+    .md2-tabs-canvas { position: relative; height: 100%; overflow: hidden; display: block; outline: none; }
+    .md2-tabs-canvas.md2-paginated { margin: 0 32px; }
+    .md2-tabs-header { position: relative; display: inline-block; height: 100%; white-space: nowrap; -moz-transition: 0.5s cubic-bezier(0.35,0,0.25,1); -o-transition: 0.5s cubic-bezier(0.35,0,0.25,1); -webkit-transition: 0.5s cubic-bezier(0.35,0,0.25,1); transition: 0.5s cubic-bezier(0.35,0,0.25,1); }
+    .md2-tab-label { position: relative; height: 100%; color: rgba(0,0,0,0.54); font-size: 14px; text-align: center; line-height: 24px; padding: 12px 24px; -moz-transition: background-color .35s cubic-bezier(.35,0,.25,1); -o-transition: background-color .35s cubic-bezier(.35,0,.25,1); -webkit-transition: background-color .35s cubic-bezier(.35,0,.25,1); transition: background-color .35s cubic-bezier(.35,0,.25,1); cursor: pointer; white-space: nowrap; text-transform: uppercase; display: inline-block; font-weight: 500; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
+    .md2-tab-label.active { color: rgb(16,108,200); }
+    .md2-tabs-canvas:focus .md2-tab-label.focus { background: rgba(0,0,0,0.05); }
+    .md2-tab-label.disabled { color: rgba(0,0,0,0.26); pointer-events: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -webkit-user-drag: none; opacity: 0.5; cursor: default; }
+    .md2-tab-ink-bar { position: absolute; bottom: 0; height: 2px; background: rgb(255,82,82); transition: .25s cubic-bezier(.35,0,.25,1); }
+    .md2-tabs-body-wrapper { position: relative; min-height: 0; display: block; clear: both; }
+    .md2-tab { padding: 16px; display: none; position: relative; }
+    .md2-tab.active { display: block; position: relative; }
   `],
   host: {
-    '[class]': 'mdClass',
-    '[class.md-tabs]': 'true',
+    '[class]': 'md2Class',
+    '[class.md2-tabs]': 'true',
     '(window:resize)': 'onWindowResize($event)'
   },
   encapsulation: ViewEncapsulation.None
 })
-export class MdTabs implements AfterContentInit {
+export class Md2Tabs implements AfterContentInit {
 
-  @ContentChildren(MdTab) tabs: QueryList<MdTab>;
+  @ContentChildren(Md2Tab) tabs: QueryList<Md2Tab>;
 
   private _isInitialized: boolean = false;
   private _focusIndex: number = 0;
@@ -122,7 +122,7 @@ export class MdTabs implements AfterContentInit {
   private inkBarLeft: string = '0';
   private inkBarWidth: string = '0';
 
-  @Input('class') mdClass: string;
+  @Input('class') md2Class: string;
 
   @Input()
   set selectedIndex(value: any) {
@@ -153,14 +153,14 @@ export class MdTabs implements AfterContentInit {
 
   get element() {
     const elements: any = { root: this.elementRef.nativeElement, wrapper: null, canvas: null, paging: null, tabs: null };
-    elements.wrapper = elements.root.querySelector('.md-tabs-header-wrapper');
-    elements.canvas = elements.wrapper.querySelector('.md-tabs-canvas');
-    elements.paging = elements.canvas.querySelector('.md-tabs-header');
-    elements.tabs = elements.paging.querySelectorAll('.md-tab-label');
+    elements.wrapper = elements.root.querySelector('.md2-tabs-header-wrapper');
+    elements.canvas = elements.wrapper.querySelector('.md2-tabs-canvas');
+    elements.paging = elements.canvas.querySelector('.md2-tabs-header');
+    elements.tabs = elements.paging.querySelectorAll('.md2-tab-label');
     return elements;
   }
 
-  @Output() change: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();
+  @Output() change: EventEmitter<Md2TabChangeEvent> = new EventEmitter<Md2TabChangeEvent>();
 
   constructor(private elementRef: ElementRef) { }
 
@@ -204,10 +204,10 @@ export class MdTabs implements AfterContentInit {
   /**
    * Create Change Event
    * @param index
-   * @return event of MdTabChangeEvent
+   * @return event of Md2TabChangeEvent
    */
-  private _createChangeEvent(index: number): MdTabChangeEvent {
-    const event = new MdTabChangeEvent;
+  private _createChangeEvent(index: number): Md2TabChangeEvent {
+    const event = new Md2TabChangeEvent;
     event.index = index;
     if (this.tabs && this.tabs.length) {
       event.tab = this.tabs.toArray()[index];
@@ -344,13 +344,13 @@ export class MdTabs implements AfterContentInit {
 
 }
 
-export const TABS_DIRECTIVES = [MdTabs, MdTab, MdTabLabel];
+export const TABS_DIRECTIVES = [Md2Tabs, Md2Tab, Md2TabLabel];
 
-export const MD_TABS_DIRECTIVES: any[] = [MdTabs, MdTab, MdTabLabel, MdTransclude];
+export const MD2_TABS_DIRECTIVES: any[] = [Md2Tabs, Md2Tab, Md2TabLabel, Md2Transclude];
 
 @NgModule({
   imports: [CommonModule],
-  exports: MD_TABS_DIRECTIVES,
-  declarations: MD_TABS_DIRECTIVES,
+  exports: MD2_TABS_DIRECTIVES,
+  declarations: MD2_TABS_DIRECTIVES,
 })
-export class MdTabsModule { }
+export class Md2TabsModule { }

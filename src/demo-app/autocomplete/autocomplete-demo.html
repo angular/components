@@ -2,20 +2,20 @@
   <h2>Autocomplete</h2>
   <hr />
   <div>
-    <md-autocomplete [items]="items"
+    <md2-autocomplete [items]="items"
                       item-text="name"
                       [(ngModel)]="item"
                       [disabled]="disabled"
                       (change)="change($event)"
                       placeholder="No city selected">
-    </md-autocomplete>
+    </md2-autocomplete>
     <pre>{{item | json}}</pre>
-    <md-autocomplete [items]="items"
+    <md2-autocomplete [items]="items"
                       item-text="name"
                       [(ngModel)]="item"
                       [disabled]="disabled"
                       (change)="change($event)"
                       placeholder="No city selected">
-    </md-autocomplete>
+    </md2-autocomplete>
   </div>
 </section>

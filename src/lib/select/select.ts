@@ -24,19 +24,19 @@ import {
 } from '@angular/forms';
 import {CommonModule} from '@angular/common';
 
-export const MD_SELECT_CONTROL_VALUE_ACCESSOR: any = {
+export const MD2_SELECT_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdSelect),
+  useExisting: forwardRef(() => Md2Select),
   multi: true
 };
 
 var _uniqueIdCounter = 0;
 
-export type MdSelectDispatcherListener = (id: string, name: string) => void;
+export type Md2SelectDispatcherListener = (id: string, name: string) => void;
 
 @Injectable()
-export class MdSelectDispatcher {
-  private _listeners: MdSelectDispatcherListener[] = [];
+export class Md2SelectDispatcher {
+  private _listeners: Md2SelectDispatcherListener[] = [];
 
   notify(id: string, name: string) {
     for (let listener of this._listeners) {
@@ -44,57 +44,57 @@ export class MdSelectDispatcher {
     }
   }
 
-  listen(listener: MdSelectDispatcherListener) {
+  listen(listener: Md2SelectDispatcherListener) {
     this._listeners.push(listener);
   }
 }
 
-export class MdOptionChange {
-  source: MdOption;
+export class Md2OptionChange {
+  source: Md2Option;
   value: any;
 }
 
 @Component({
   moduleId: module.id,
-  selector: 'md-select',
+  selector: 'md2-select',
   template: `
-    <div class="md-select-container">
-      <span *ngIf="selectedValue.length < 1" class="md-select-placeholder">{{placeholder}}</span>
-      <span *ngIf="selectedValue.length > 0" class="md-select-value" [innerHtml]="selectedValue"></span>
-      <em class="md-select-icon"></em>
+    <div class="md2-select-container">
+      <span *ngIf="selectedValue.length < 1" class="md2-select-placeholder">{{placeholder}}</span>
+      <span *ngIf="selectedValue.length > 0" class="md2-select-value" [innerHtml]="selectedValue"></span>
+      <em class="md2-select-icon"></em>
     </div>
-    <div class="md-select-menu" [class.open]="isMenuVisible">
+    <div class="md2-select-menu" [class.open]="isMenuVisible">
       <ng-content></ng-content>
     </div>
   `,
   styles: [`
-    md-select { position: relative; display: block; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -moz-backface-visibility: hidden; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-    md-select:focus { outline: none; }
-    md-select .md-select-container { display: flex; width: 100%; align-items: center; padding: 2px 0 1px; border-bottom: 1px solid rgba(0, 0, 0, 0.38); position: relative; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; min-width: 64px; min-height: 26px; flex-grow: 1; cursor: pointer; }
-    md-select:focus .md-select-container { padding-bottom: 0; border-bottom: 2px solid #106cc8; }
-    md-select.md-select-disabled .md-select-container { color: rgba(0,0,0,0.38); }
-    md-select.md-select-disabled:focus .md-select-container { padding-bottom: 1px; border-bottom: 1px solid rgba(0, 0, 0, 0.38); }
-    md-select .md-select-container > span:not(.md-select-icon) { max-width: 100%; -ms-flex: 1 1 auto; -webkit-flex: 1 1 auto; flex: 1 1 auto; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; overflow: hidden; }
-    md-select .md-select-container .md-select-icon { display: block; -webkit-align-items: flex-end; -ms-flex-align: end; align-items: flex-end; text-align: end; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid rgba(0, 0, 0, 0.60); margin: 0 4px; }
-    md-select .md-select-container .md-select-placeholder { color: rgba(0, 0, 0, 0.38); }
-    md-select .md-select-container .md-select-value { white-space: nowrap; }
-    md-select .md-select-menu { position: absolute; left: 0; top: 100%; display: none; z-index: 10; -ms-flex-direction: column; -webkit-flex-direction: column; flex-direction: column; width: 100%; margin: 0; padding: 8px 0; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12); max-height: 256px; min-height: 48px; overflow-y: auto; -moz-transform: scale(1); -ms-transform: scale(1); -o-transform: scale(1); -webkit-transform: scale(1); transform: scale(1); background: #fff; }
-    md-select .md-select-menu.open { display: block; }
+    md2-select { position: relative; display: block; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -moz-backface-visibility: hidden; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+    md2-select:focus { outline: none; }
+    md2-select .md2-select-container { display: flex; width: 100%; align-items: center; padding: 2px 0 1px; border-bottom: 1px solid rgba(0, 0, 0, 0.38); position: relative; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; min-width: 64px; min-height: 26px; flex-grow: 1; cursor: pointer; }
+    md2-select:focus .md2-select-container { padding-bottom: 0; border-bottom: 2px solid #106cc8; }
+    md2-select.md2-select-disabled .md2-select-container { color: rgba(0,0,0,0.38); }
+    md2-select.md2-select-disabled:focus .md2-select-container { padding-bottom: 1px; border-bottom: 1px solid rgba(0, 0, 0, 0.38); }
+    md2-select .md2-select-container > span:not(.md2-select-icon) { max-width: 100%; -ms-flex: 1 1 auto; -webkit-flex: 1 1 auto; flex: 1 1 auto; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; overflow: hidden; }
+    md2-select .md2-select-container .md2-select-icon { display: block; -webkit-align-items: flex-end; -ms-flex-align: end; align-items: flex-end; text-align: end; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid rgba(0, 0, 0, 0.60); margin: 0 4px; }
+    md2-select .md2-select-container .md2-select-placeholder { color: rgba(0, 0, 0, 0.38); }
+    md2-select .md2-select-container .md2-select-value { white-space: nowrap; }
+    md2-select .md2-select-menu { position: absolute; left: 0; top: 100%; display: none; z-index: 10; -ms-flex-direction: column; -webkit-flex-direction: column; flex-direction: column; width: 100%; margin: 0; padding: 8px 0; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12); max-height: 256px; min-height: 48px; overflow-y: auto; -moz-transform: scale(1); -ms-transform: scale(1); -o-transform: scale(1); -webkit-transform: scale(1); transform: scale(1); background: #fff; }
+    md2-select .md2-select-menu.open { display: block; }
   `],
   host: {
     'role': 'select',
     '[tabindex]': 'disabled ? -1 : tabindex',
     '[attr.aria-disabled]': 'disabled'
   },
-  providers: [MD_SELECT_CONTROL_VALUE_ACCESSOR],
+  providers: [MD2_SELECT_CONTROL_VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None
 })
-export class MdSelect implements AfterContentInit, AfterContentChecked, ControlValueAccessor {
+export class Md2Select implements AfterContentInit, AfterContentChecked, ControlValueAccessor {
 
   private _value: any = null;
-  private _name: string = 'md-select-' + _uniqueIdCounter++;
+  private _name: string = 'md2-select-' + _uniqueIdCounter++;
   private _disabled: boolean = false;
-  private _selected: MdOption = null;
+  private _selected: Md2Option = null;
   private _isInitialized: boolean = false;
 
   private isOpenable: boolean = true;
@@ -106,10 +106,10 @@ export class MdSelect implements AfterContentInit, AfterContentChecked, ControlV
   private _controlValueAccessorChangeFn: (value: any) => void = (value) => { };
   onTouched: () => any = () => { };
 
-  @Output() change: EventEmitter<MdOptionChange> = new EventEmitter<MdOptionChange>();
+  @Output() change: EventEmitter<Md2OptionChange> = new EventEmitter<Md2OptionChange>();
 
-  @ContentChildren(forwardRef(() => MdOption))
-  public _options: QueryList<MdOption> = null;
+  @ContentChildren(forwardRef(() => Md2Option))
+  public _options: QueryList<Md2Option> = null;
 
   @Input() get name(): string { return this._name; }
   set name(value: string) {
@@ -120,7 +120,7 @@ export class MdSelect implements AfterContentInit, AfterContentChecked, ControlV
   @Input() tabindex: number = 0;
   @Input() placeholder: string = '';
 
-  @HostBinding('class.md-select-disabled')
+  @HostBinding('class.md2-select-disabled')
   @Input() get disabled(): boolean { return this._disabled; }
   set disabled(value) {
     this._disabled = (value !== null && value !== false) ? true : null;
@@ -138,7 +138,7 @@ export class MdSelect implements AfterContentInit, AfterContentChecked, ControlV
   }
 
   @Input() get selected() { return this._selected; }
-  set selected(selected: MdOption) {
+  set selected(selected: Md2Option) {
     this._selected = selected;
     this.value = selected ? selected.value : null;
     if (selected) {
@@ -190,10 +190,10 @@ export class MdSelect implements AfterContentInit, AfterContentChecked, ControlV
    */
   private updateScroll() {
     if (this.focusIndex < 0) { return; }
-    let menuContainer = this.element.nativeElement.querySelector('.md-select-menu');
+    let menuContainer = this.element.nativeElement.querySelector('.md2-select-menu');
     if (!menuContainer) { return; }
 
-    let choices = menuContainer.querySelectorAll('md-option');
+    let choices = menuContainer.querySelectorAll('md2-option');
     if (choices.length < 1) { return; }
 
     let highlighted: any = choices[this.focusIndex];
@@ -352,7 +352,7 @@ export class MdSelect implements AfterContentInit, AfterContentChecked, ControlV
   }
 
   private _emitChangeEvent(): void {
-    let event = new MdOptionChange();
+    let event = new Md2OptionChange();
     event.source = this._selected;
     event.value = this._value;
     this._controlValueAccessorChangeFn(event.value);
@@ -368,14 +368,14 @@ export class MdSelect implements AfterContentInit, AfterContentChecked, ControlV
 
 @Component({
   moduleId: module.id,
-  selector: 'md-option',
-  template: '<div class="md-option-text"><ng-content></ng-content></div>',
+  selector: 'md2-option',
+  template: '<div class="md2-option-text"><ng-content></ng-content></div>',
   styles: [`
-    md-option { cursor: pointer; position: relative; display: block; align-items: center; width: auto; -moz-transition: background 0.15s linear; -o-transition: background 0.15s linear; -webkit-transition: background 0.15s linear; transition: background 0.15s linear; padding: 0 16px; height: 48px; line-height: 48px; }
-    md-option.md-option-selected { color: #106cc8; }
-    md-option:hover, md-option.md-option-focused { background: #eeeeee; }
-    md-option.md-option-disabled, md-option.md-option-disabled:hover { color: rgba(189,189,189,0.87); cursor: default; background: transparent; }
-    md-option .md-option-text { width: auto; white-space: nowrap; overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; font-size: 16px; }
+    md2-option { cursor: pointer; position: relative; display: block; align-items: center; width: auto; -moz-transition: background 0.15s linear; -o-transition: background 0.15s linear; -webkit-transition: background 0.15s linear; transition: background 0.15s linear; padding: 0 16px; height: 48px; line-height: 48px; }
+    md2-option.md2-option-selected { color: #106cc8; }
+    md2-option:hover, md2-option.md2-option-focused { background: #eeeeee; }
+    md2-option.md2-option-disabled, md2-option.md2-option-disabled:hover { color: rgba(189,189,189,0.87); cursor: default; background: transparent; }
+    md2-option .md2-option-text { width: auto; white-space: nowrap; overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; font-size: 16px; }
   `],
   host: {
     'role': 'option',
@@ -383,13 +383,13 @@ export class MdSelect implements AfterContentInit, AfterContentChecked, ControlV
   },
   encapsulation: ViewEncapsulation.None
 })
-export class MdOption implements OnInit {
+export class Md2Option implements OnInit {
 
-  @HostBinding('class.md-option-focused') focused: boolean = false;
+  @HostBinding('class.md2-option-focused') focused: boolean = false;
 
   private _selected: boolean = false;
 
-  @HostBinding('id') @Input() id: string = `md-option-${_uniqueIdCounter++}`;
+  @HostBinding('id') @Input() id: string = `md2-option-${_uniqueIdCounter++}`;
 
   name: string;
 
@@ -398,9 +398,9 @@ export class MdOption implements OnInit {
 
   public content: any = null;
 
-  select: MdSelect;
+  select: Md2Select;
 
-  constructor(select: MdSelect, private selectDispatcher: MdSelectDispatcher, private element: ElementRef) {
+  constructor(select: Md2Select, private selectDispatcher: Md2SelectDispatcher, private element: ElementRef) {
     this.select = select;
     selectDispatcher.listen((id: string, name: string) => {
       if (id !== this.id && name === this.name) {
@@ -409,7 +409,7 @@ export class MdOption implements OnInit {
     });
   }
 
-  @HostBinding('class.md-option-selected') @Input() get selected(): boolean { return this._selected; }
+  @HostBinding('class.md2-option-selected') @Input() get selected(): boolean { return this._selected; }
   set selected(selected: boolean) {
     if (selected) { this.selectDispatcher.notify(this.id, this.name); }
 
@@ -430,7 +430,7 @@ export class MdOption implements OnInit {
     }
   }
 
-  @HostBinding('class.md-option-disabled')
+  @HostBinding('class.md2-option-disabled')
   @Input() get disabled(): boolean {
     return this._disabled || (this.select.disabled);
   }
@@ -465,12 +465,12 @@ export class MdOption implements OnInit {
   }
 }
 
-export const MD_SELECT_DIRECTIVES = [MdSelect, MdOption];
+export const MD2_SELECT_DIRECTIVES = [Md2Select, Md2Option];
 
 @NgModule({
-  declarations: MD_SELECT_DIRECTIVES,
+  declarations: MD2_SELECT_DIRECTIVES,
   imports: [CommonModule, FormsModule],
-  exports: MD_SELECT_DIRECTIVES,
-  providers: [MdSelectDispatcher],
+  exports: MD2_SELECT_DIRECTIVES,
+  providers: [Md2SelectDispatcher],
 })
-export class MdSelectModule { }
+export class Md2SelectModule { }

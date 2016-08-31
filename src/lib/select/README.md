@@ -1,27 +1,27 @@
-# md-select
+# md2-select
 
 Native Angular2 Material Select component
 
 ## Installation
-`npm install --save md-select`
+`npm install --save md2-select`
 
 ## API
 
 Example:
  
  ```html
-<md-select [(ngModel)]="item" (change)="change($event)" [disabled]="disabled">
-  <md-option *ngFor="let i of items" [value]="i.value" [disabled]="i.disabled">{{i.name}}</md-option>
-</md-select>
+<md2-select [(ngModel)]="item" (change)="change($event)" [disabled]="disabled">
+  <md2-option *ngFor="let i of items" [value]="i.value" [disabled]="i.disabled">{{i.name}}</md2-option>
+</md2-select>
  ```
  ```ts
 //app-module.ts
 
-import {MdSelectModule} from 'md-select/select';
+import {Md2SelectModule} from 'md2-select/select';
 
 @NgModule({
   imports: [
-    MdSelectModule,
+    Md2SelectModule,
   ],
   declarations: [
     ...

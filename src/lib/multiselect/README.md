@@ -1,31 +1,31 @@
-# md-multiselect
+# md2-multiselect
 
 Native Angular2 Material Multiselect component
 
 ## Installation
-`npm install --save md-multiselect`
+`npm install --save md2-multiselect`
 
 ## API
 
 Example:
  
  ```html
-<md-multiselect [items]="items"
+<md2-multiselect [items]="items"
                  item-text="name"
                  item-value="value"
                  [(ngModel)]="item"
                  (change)="selected($event)"
                  placeholder="Placeholder Text">
-</md-multiselect>
+</md2-multiselect>
  ```
  ```ts
 //app-module.ts
 
-import {MdMultiselectModule} from 'md-multiselect/multiselect';
+import {Md2MultiselectModule} from 'md2-multiselect/multiselect';
 
 @NgModule({
   imports: [
-    MdMultiselectModule,
+    Md2MultiselectModule,
   ],
   declarations: [
     ...

@@ -38,55 +38,55 @@ const noop = () => { };
 
 let nextId = 0;
 
-export const MD_AUTOCOMPLETE_CONTROL_VALUE_ACCESSOR: any = {
+export const MD2_AUTOCOMPLETE_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdAutocomplete),
+  useExisting: forwardRef(() => Md2Autocomplete),
   multi: true
 };
 
 @Component({
   moduleId: module.id,
-  selector: 'md-autocomplete',
+  selector: 'md2-autocomplete',
   template: `
-    <div class="md-autocomplete-wrap">
-      <input [(ngModel)]="inputBuffer" type="text" tabs="false" autocomplete="off" [tabindex]="disabled ? -1 : tabindex" [disabled]="disabled" class="md-autocomplete-input" [placeholder]="placeholder" (focus)="onInputFocus()" (blur)="onInputBlur()" (keydown)="inputKeydown($event)" (change)="$event.stopPropagation()" />
-      <em *ngIf="inputBuffer" (click)="onClear()" class="md-autocomplete-clear-icon"></em>
+    <div class="md2-autocomplete-wrap">
+      <input [(ngModel)]="inputBuffer" type="text" tabs="false" autocomplete="off" [tabindex]="disabled ? -1 : tabindex" [disabled]="disabled" class="md2-autocomplete-input" [placeholder]="placeholder" (focus)="onInputFocus()" (blur)="onInputBlur()" (keydown)="inputKeydown($event)" (change)="$event.stopPropagation()" />
+      <em *ngIf="inputBuffer" (click)="onClear()" class="md2-autocomplete-clear-icon"></em>
     </div>
-    <ul *ngIf="isMenuVisible" class="md-autocomplete-menu" (mouseenter)="listEnter()" (mouseleave)="listLeave()">
-      <li class="md-option" *ngFor="let l of list; let i = index;" [class.focus]="focusedOption === i" (click)="select($event, i)">
-        <div class="md-text" [innerHtml]="l.text | hightlight:inputBuffer"></div>
+    <ul *ngIf="isMenuVisible" class="md2-autocomplete-menu" (mouseenter)="listEnter()" (mouseleave)="listLeave()">
+      <li class="md2-option" *ngFor="let l of list; let i = index;" [class.focus]="focusedOption === i" (click)="select($event, i)">
+        <div class="md2-text" [innerHtml]="l.text | hightlight:inputBuffer"></div>
       </li>
     </ul>
   `,
   styles: [`
-    .md-autocomplete { position: relative; display: block; outline: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -moz-backface-visibility: hidden; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-    .md-autocomplete .md-autocomplete-wrap { position: relative; display: block; width: 100%; padding: 2px 0 1px; border-bottom: 1px solid rgba(0, 0, 0, 0.38); -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; min-width: 64px; min-height: 26px; max-height: 90px; cursor: pointer; }
-    .md-autocomplete.disabled .md-autocomplete-wrap { color: rgba(0,0,0,0.38); }
-    .md-autocomplete-wrap .md-autocomplete-input { width: 100%; height: 26px; outline: none; background: transparent; border: 0; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
-    .md-autocomplete-wrap .md-autocomplete-clear-icon { position: absolute; top: 50%; right: 0; display: inline-block; width: 18px; height: 18px; margin: -9px 2px 0; overflow: hidden; }
-    .md-autocomplete-wrap .md-autocomplete-clear-icon::before,
-    .md-autocomplete-wrap .md-autocomplete-clear-icon::after { content: ''; position: absolute; height: 2px; width: 100%; top: 50%; left: 0; margin-top: -1px; background: #888; border-radius: 2px; height: 2px; }
-    .md-autocomplete-wrap .md-autocomplete-clear-icon::before { -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); }
-    .md-autocomplete-wrap .md-autocomplete-clear-icon::after { -webkit-transform: rotate(-45deg); -moz-transform: rotate(-45deg); -ms-transform: rotate(-45deg); -o-transform: rotate(-45deg); transform: rotate(-45deg); }
-    .md-autocomplete-menu { position: absolute; left: 0; top: 100%; display: block; z-index: 10; width: 100%; margin: 0; padding: 8px 0; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12); max-height: 256px; min-height: 48px; overflow-y: auto; background: #fff; }
-    .md-autocomplete-menu .md-option { position: relative; display: block; cursor: pointer; width: auto; padding: 0 16px; height: 48px; line-height: 48px; -moz-transition: background 0.15s linear; -o-transition: background 0.15s linear; -webkit-transition: background 0.15s linear; transition: background 0.15s linear; }
-    .md-autocomplete-menu .md-option:hover,
-    .md-autocomplete-menu .md-option.focus { background: #eeeeee; }
-    .md-autocomplete-menu .md-option .md-text { width: auto; white-space: nowrap; overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; font-size: 16px; }
-    .md-autocomplete-menu .highlight { color: #757575; }
+    .md2-autocomplete { position: relative; display: block; outline: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -moz-backface-visibility: hidden; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+    .md2-autocomplete .md2-autocomplete-wrap { position: relative; display: block; width: 100%; padding: 2px 0 1px; border-bottom: 1px solid rgba(0, 0, 0, 0.38); -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; min-width: 64px; min-height: 26px; max-height: 90px; cursor: pointer; }
+    .md2-autocomplete.disabled .md2-autocomplete-wrap { color: rgba(0,0,0,0.38); }
+    .md2-autocomplete-wrap .md2-autocomplete-input { width: 100%; height: 26px; outline: none; background: transparent; border: 0; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
+    .md2-autocomplete-wrap .md2-autocomplete-clear-icon { position: absolute; top: 50%; right: 0; display: inline-block; width: 18px; height: 18px; margin: -9px 2px 0; overflow: hidden; }
+    .md2-autocomplete-wrap .md2-autocomplete-clear-icon::before,
+    .md2-autocomplete-wrap .md2-autocomplete-clear-icon::after { content: ''; position: absolute; height: 2px; width: 100%; top: 50%; left: 0; margin-top: -1px; background: #888; border-radius: 2px; height: 2px; }
+    .md2-autocomplete-wrap .md2-autocomplete-clear-icon::before { -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); }
+    .md2-autocomplete-wrap .md2-autocomplete-clear-icon::after { -webkit-transform: rotate(-45deg); -moz-transform: rotate(-45deg); -ms-transform: rotate(-45deg); -o-transform: rotate(-45deg); transform: rotate(-45deg); }
+    .md2-autocomplete-menu { position: absolute; left: 0; top: 100%; display: block; z-index: 10; width: 100%; margin: 0; padding: 8px 0; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12); max-height: 256px; min-height: 48px; overflow-y: auto; background: #fff; }
+    .md2-autocomplete-menu .md2-option { position: relative; display: block; cursor: pointer; width: auto; padding: 0 16px; height: 48px; line-height: 48px; -moz-transition: background 0.15s linear; -o-transition: background 0.15s linear; -webkit-transition: background 0.15s linear; transition: background 0.15s linear; }
+    .md2-autocomplete-menu .md2-option:hover,
+    .md2-autocomplete-menu .md2-option.focus { background: #eeeeee; }
+    .md2-autocomplete-menu .md2-option .md2-text { width: auto; white-space: nowrap; overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; font-size: 16px; }
+    .md2-autocomplete-menu .highlight { color: #757575; }
   `],
   host: {
     'role': 'autocomplete',
     '[id]': 'id',
-    '[class.md-autocomplete]': 'true',
-    '[class.md-autocomplete-disabled]': 'disabled',
+    '[class.md2-autocomplete]': 'true',
+    '[class.md2-autocomplete-disabled]': 'disabled',
     '[attr.aria-disabled]': 'disabled'
   },
-  providers: [MD_AUTOCOMPLETE_CONTROL_VALUE_ACCESSOR],
+  providers: [MD2_AUTOCOMPLETE_CONTROL_VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None
 })
 
-export class MdAutocomplete implements AfterContentInit, ControlValueAccessor {
+export class Md2Autocomplete implements AfterContentInit, ControlValueAccessor {
 
   constructor(private element: ElementRef) { }
 
@@ -108,7 +108,7 @@ export class MdAutocomplete implements AfterContentInit, ControlValueAccessor {
   private inputFocused: boolean = false;
   private noBlur: boolean = true;
 
-  @Input() id: string = 'md-autocomplete-' + (++nextId);
+  @Input() id: string = 'md2-autocomplete-' + (++nextId);
   @Input() disabled: boolean = false;
   @Input() tabindex: number = 0;
   @Input() placeholder: string = '';
@@ -181,10 +181,10 @@ export class MdAutocomplete implements AfterContentInit, ControlValueAccessor {
    */
   private updateScroll() {
     if (this.focusedOption < 0) { return; }
-    let menuContainer = this.element.nativeElement.querySelector('.md-autocomplete-menu');
+    let menuContainer = this.element.nativeElement.querySelector('.md2-autocomplete-menu');
     if (!menuContainer) { return; }
 
-    let choices = menuContainer.querySelectorAll('.md-option');
+    let choices = menuContainer.querySelectorAll('.md2-option');
     if (choices.length < 1) { return; }
 
     let highlighted: any = choices[this.focusedOption];
@@ -337,11 +337,11 @@ export class MdAutocomplete implements AfterContentInit, ControlValueAccessor {
   registerOnTouched(fn: any) { this._onTouchedCallback = fn; }
 }
 
-export const MD_AUTOCOMPLETE_DIRECTIVES = [MdAutocomplete, HightlightPipe];
+export const MD2_AUTOCOMPLETE_DIRECTIVES = [Md2Autocomplete, HightlightPipe];
 
 @NgModule({
-  declarations: MD_AUTOCOMPLETE_DIRECTIVES,
+  declarations: MD2_AUTOCOMPLETE_DIRECTIVES,
   imports: [CommonModule, FormsModule],
-  exports: MD_AUTOCOMPLETE_DIRECTIVES,
+  exports: MD2_AUTOCOMPLETE_DIRECTIVES,
 })
-export class MdAutocompleteModule { }
+export class Md2AutocompleteModule { }

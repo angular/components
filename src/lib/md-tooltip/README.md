@@ -1,9 +1,9 @@
-# md-tooltip
+# md2-tooltip
 
 Native Angular2 Material Tooltip directive
 
 ## Installation
-`npm install --save md-tooltip`
+`npm install --save md2-tooltip`
 
 ## API
 
@@ -19,11 +19,11 @@ Example:
  ```ts
 //app-module.ts
 
-import {MdTooltipModule} from 'md-tooltip/tooltip';
+import {Md2TooltipModule} from 'md2-tooltip/tooltip';
 
 @NgModule({
   imports: [
-    MdTooltipModule,
+    Md2TooltipModule,
   ],
   declarations: [
     ...

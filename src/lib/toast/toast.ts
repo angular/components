@@ -10,10 +10,10 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import { ViewContainerRef_ } from '@angular/core/src/linker/view_container_ref';
-import { MdToastComponent } from './toast.component';
+import { Md2ToastComponent } from './toast.component';
 
 @Injectable()
-export class MdToast {
+export class Md2Toast {
   private hideDelay: number = 3000;
   private index: number = 0;
 
@@ -41,7 +41,7 @@ export class MdToast {
       if (!this.container) {
         let appElement: ViewContainerRef = new ViewContainerRef_(this.appRef['_rootComponents'][0]._hostElement);
         let bindings = ReflectiveInjector.resolve([]);
-        this.loader.loadNextToLocation(MdToastComponent, appElement, bindings).then((ref: any) => {
+        this.loader.loadNextToLocation(Md2ToastComponent, appElement, bindings).then((ref: any) => {
           this.container = ref;
           this.setupToast(toast);
         });
@@ -98,12 +98,12 @@ export class Toast {
   constructor(message: string) { this.message = message; }
 }
 
-export const ACCORDION_DIRECTIVES: any[] = [MdToastComponent];
+export const ACCORDION_DIRECTIVES: any[] = [Md2ToastComponent];
 
 @NgModule({
   imports: [CommonModule],
   exports: ACCORDION_DIRECTIVES,
   declarations: ACCORDION_DIRECTIVES,
-  providers: [MdToast]
+  providers: [Md2Toast]
 })
-export class MdToastModule { }
+export class Md2ToastModule { }

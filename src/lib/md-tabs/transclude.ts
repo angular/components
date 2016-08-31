@@ -5,23 +5,23 @@ import {
 } from '@angular/core';
 
 @Directive({
-  selector: '[mdTransclude]',
-  properties: ['mdTransclude']
+  selector: '[md2Transclude]',
+  properties: ['md2Transclude']
 })
-export class MdTransclude {
+export class Md2Transclude {
 
-  private _mdTransclude: TemplateRef<any>;
+  private _md2Transclude: TemplateRef<any>;
 
   constructor(public viewRef: ViewContainerRef) { }
 
-  private set mdTransclude(templateRef: TemplateRef<any>) {
-    this._mdTransclude = templateRef;
+  private set md2Transclude(templateRef: TemplateRef<any>) {
+    this._md2Transclude = templateRef;
     if (templateRef) {
       this.viewRef.createEmbeddedView(templateRef);
     }
   }
 
-  private get mdTransclude() {
-    return this._mdTransclude;
+  private get md2Transclude() {
+    return this._md2Transclude;
   }
 }

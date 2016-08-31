@@ -1,9 +1,9 @@
-# md-toast
+# md2-toast
 
 Native Angular2 Material Toast service
 
 ## Installation
-`npm install --save md-toast`
+`npm install --save md2-toast`
 
 ## API
 
@@ -12,11 +12,11 @@ Example:
  ```ts
 //app-module.ts
 
-import {MdToastModule} from 'md-toast/toast';
+import {Md2ToastModule} from 'md2-toast/toast';
 
 @NgModule({
   imports: [
-    MdToastModule,
+    Md2ToastModule,
   ],
   declarations: [
     ...
@@ -27,7 +27,7 @@ import {MdToastModule} from 'md-toast/toast';
 
 ...
 
-import {MdToast} from 'md/toast';
+import {Md2Toast} from 'md2/toast';
 
 @Component({
     selector: "..."
@@ -36,7 +36,7 @@ import {MdToast} from 'md/toast';
 export class ... {
     
     ...
-    constructor(private toast: MdToast) { }
+    constructor(private toast: Md2Toast) { }
     toastMe() {
       this.toast.show('Toast message...');
 

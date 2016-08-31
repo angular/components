@@ -1,9 +1,9 @@
-# md-accordion
+# md2-accordion
 
 Native Angular2 Material Accordion component
 
 ## Installation
-`npm install --save md-accordion`
+`npm install --save md2-accordion`
 
 ## API
 
@@ -11,25 +11,25 @@ Example:
  
 HTML sample code
  ```html
-<md-accordion [multiple]="multiple">
-  <md-accordion-tab *ngFor="let tab of accordions" 
+<md2-accordion [multiple]="multiple">
+  <md2-accordion-tab *ngFor="let tab of accordions" 
                      [header]="tab.title" 
                      [active]="tab.active" 
                      [disabled]="tab.disabled">
     {{tab.content}}
-  </md-accordion-tab>
-</md-accordion>
+  </md2-accordion-tab>
+</md2-accordion>
  ```
 
 TS sample code
  ```ts
 //app-module.ts
 
-import {MdAccordionModule} from 'md-accordion/accordion';
+import {Md2AccordionModule} from 'md2-accordion/accordion';
 
 @NgModule({
   imports: [
-    MdAccordionModule,
+    Md2AccordionModule,
   ],
   declarations: [
     ...
@@ -59,17 +59,17 @@ export class ... {
 }
  ```
 
-### Properties of md-accordion
+### Properties of md2-accordion
 
   - `multiple` - (`?boolean=false`) - Control whether expanding an item will cause the other items to close.
-  - `class` (`?string=''`) - To set custom class on `md-accordion` element.
+  - `class` (`?string=''`) - To set custom class on `md2-accordion` element.
 
-### Properties of md-accordion-tab
+### Properties of md2-accordion-tab
 
   - `header` - (`?string=''`) - The clickable text on the tab's header. You need one to be able to click on the header for toggling.
   - `disabled` (`?boolean=false`) - Whether the accordion tab is disabled or not.
   - `active` (`?boolean=false`) - Whether accordion tab is open or closed.
-  - `class` (`?string=''`) - To set custom class on `md-accordion-tab` element.
+  - `class` (`?string=''`) - To set custom class on `md2-accordion-tab` element.
 
 ### Events
 

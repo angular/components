@@ -5,30 +5,30 @@ import { AfterViewInit,
   HostBinding,
   ViewEncapsulation
 } from '@angular/core';
-import { MdTooltipOptions } from './tooltip.options';
+import { Md2TooltipOptions } from './tooltip.options';
 
 @Component({
   moduleId: module.id,
-  selector: 'md-tooltip',
+  selector: 'md2-tooltip',
   template: `
-    <div class="md-tooltip" [class.md-show]="show" [ngClass]="direction" [ngStyle]="{top: top, left: left}">
-      <div class="md-tooltip-inner">{{content}}</div>
+    <div class="md2-tooltip" [class.md2-show]="show" [ngClass]="direction" [ngStyle]="{top: top, left: left}">
+      <div class="md2-tooltip-inner">{{content}}</div>
     </div>
   `,
   styles: [`
-    .md-tooltip { position: fixed; z-index: 1070; overflow: hidden; pointer-events: none; border-radius: 4px; font-weight: 500; font-style: normal; font-size: 10px; display: block; color: rgb(255,255,255); -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -moz-backface-visibility: hidden; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-    .md-tooltip .md-tooltip-inner { position: relative; color: #fff; text-align: center; opacity: 0; max-width: 200px; background-color: rgba(0,0,0,0.8); border-radius: 4px; line-height: 1.5; padding: 4px 12px; -moz-transition: all .2s cubic-bezier(.25,.8,.25,1); -o-transition: all .2s cubic-bezier(.25,.8,.25,1); -webkit-transition: all .2s cubic-bezier(.25,.8,.25,1); transition: all .2s cubic-bezier(.25,.8,.25,1); -moz-transform-origin: center top; -ms-transform-origin: center top; -o-transform-origin: center top; -webkit-transform-origin: center top; transform-origin: center top; -moz-transform: scale(0); -ms-transform: scale(0); -o-transform: scale(0); -webkit-transform: scale(0); transform: scale(0); }
-    .md-tooltip.top .md-tooltip-inner { -moz-transform-origin: center bottom; -ms-transform-origin: center bottom; -o-transform-origin: center bottom; -webkit-transform-origin: center bottom; transform-origin: center bottom; }
-    .md-tooltip.right .md-tooltip-inner { -moz-transform-origin: center left; -ms-transform-origin: center left; -o-transform-origin: center left; -webkit-transform-origin: center left; transform-origin: center left; }
-    .md-tooltip.left .md-tooltip-inner { -moz-transform-origin: center right; -ms-transform-origin: center right; -o-transform-origin: center right; -webkit-transform-origin: center right; transform-origin: center right; }
-    .md-show .md-tooltip-inner { opacity: 1; -moz-transform: scale(1); -ms-transform: scale(1); -o-transform: scale(1); -webkit-transform: scale(1); transform: scale(1); }
+    .md2-tooltip { position: fixed; z-index: 1070; overflow: hidden; pointer-events: none; border-radius: 4px; font-weight: 500; font-style: normal; font-size: 10px; display: block; color: rgb(255,255,255); -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -moz-backface-visibility: hidden; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+    .md2-tooltip .md2-tooltip-inner { position: relative; color: #fff; text-align: center; opacity: 0; max-width: 200px; background-color: rgba(0,0,0,0.8); border-radius: 4px; line-height: 1.5; padding: 4px 12px; -moz-transition: all .2s cubic-bezier(.25,.8,.25,1); -o-transition: all .2s cubic-bezier(.25,.8,.25,1); -webkit-transition: all .2s cubic-bezier(.25,.8,.25,1); transition: all .2s cubic-bezier(.25,.8,.25,1); -moz-transform-origin: center top; -ms-transform-origin: center top; -o-transform-origin: center top; -webkit-transform-origin: center top; transform-origin: center top; -moz-transform: scale(0); -ms-transform: scale(0); -o-transform: scale(0); -webkit-transform: scale(0); transform: scale(0); }
+    .md2-tooltip.top .md2-tooltip-inner { -moz-transform-origin: center bottom; -ms-transform-origin: center bottom; -o-transform-origin: center bottom; -webkit-transform-origin: center bottom; transform-origin: center bottom; }
+    .md2-tooltip.right .md2-tooltip-inner { -moz-transform-origin: center left; -ms-transform-origin: center left; -o-transform-origin: center left; -webkit-transform-origin: center left; transform-origin: center left; }
+    .md2-tooltip.left .md2-tooltip-inner { -moz-transform-origin: center right; -ms-transform-origin: center right; -o-transform-origin: center right; -webkit-transform-origin: center right; transform-origin: center right; }
+    .md2-show .md2-tooltip-inner { opacity: 1; -moz-transform: scale(1); -ms-transform: scale(1); -o-transform: scale(1); -webkit-transform: scale(1); transform: scale(1); }
   `],
   host: {
     'role': 'tooltip'
   },
   encapsulation: ViewEncapsulation.None
 })
-export class MdTooltipComponent implements AfterViewInit {
+export class Md2TooltipComponent implements AfterViewInit {
   private show: boolean;
   private top: string = '-1000px';
   private left: string = '-1000px';
@@ -38,7 +38,7 @@ export class MdTooltipComponent implements AfterViewInit {
   private element: ElementRef;
   private cdr: ChangeDetectorRef;
 
-  constructor(element: ElementRef, cdr: ChangeDetectorRef, options: MdTooltipOptions) {
+  constructor(element: ElementRef, cdr: ChangeDetectorRef, options: Md2TooltipOptions) {
     this.element = element;
     this.cdr = cdr;
     Object.assign(this, options);

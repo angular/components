@@ -1,0 +1,50 @@
+{
+  "name": "md2",
+  "version": "0.0.1-alpha.0",
+  "description": "Angular 2 Material Components are Accordion, Autocomplete, Collapse, Colorpicker, Datepicker, Dialog, Menu, Multiselect, Select, Tabs, Tags, Toast, Tooltip",
+  "main": "./all.js",
+  "typings": "./all.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Promact/material2.git"
+  },
+  "keywords": [
+    "angular",
+    "material",
+    "material design",
+    "components",
+    "accordion",
+    "autocomplete",
+    "collapse",
+    "colorpicker",
+    "datepicker",
+    "dialog",
+    "menu",
+    "multiselect",
+    "telect",
+    "tabs",
+    "tags",
+    "toast",
+    "tooltip"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/angular/material2/issues"
+  },
+  "homepage": "https://github.com/Promact/material2#readme",
+  "peerDependencies": {
+    "md2-accordion": "0.0.1-alpha.0",
+    "md2-autocomplete": "0.0.1-alpha.0",
+    "md2-collapse": "0.0.1-alpha.0",
+    "md2-colorpicker": "0.0.1-alpha.0",
+    "md2-datepicker": "0.0.1-alpha.0",
+    "md2-dialog": "0.0.1-alpha.0",
+    "md2-menu": "0.0.1-alpha.0",
+    "md2-multiselect": "0.0.1-alpha.0",
+    "md2-select": "0.0.1-alpha.0",
+    "md2-tabs": "0.0.1-alpha.0",
+    "md2-tags": "0.0.1-alpha.0",
+    "md2-toast": "0.0.1-alpha.0",
+    "md2-tooltip": "0.0.1-alpha.0"
+  }
+}

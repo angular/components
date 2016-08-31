@@ -1,21 +1,21 @@
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
-import { MdAccordionTab } from './accordiontab';
+import { Md2AccordionTab } from './accordiontab';
 
 @Component({
   moduleId: module.id,
-  selector: 'md-accordion',
+  selector: 'md2-accordion',
   template: `<ng-content></ng-content>`,
   host: {
     '[class]': 'mdClass',
-    '[class.md-accordion]': 'true'
+    '[class.md2-accordion]': 'true'
   },
   styles: [`
-    .md-accordion { display: block; }
+    .md2-accordion { display: block; }
   `],
   encapsulation: ViewEncapsulation.None
 })
 
-export class MdAccordion {
+export class Md2Accordion {
 
   @Input() multiple: boolean;
 
@@ -25,13 +25,13 @@ export class MdAccordion {
 
   @Output() open: EventEmitter<any> = new EventEmitter<any>();
 
-  public tabs: MdAccordionTab[] = [];
+  public tabs: Md2AccordionTab[] = [];
 
   /**
    * Add or append tab in accordion
-   * @param tab object of MdAccordionTab
+   * @param tab object of Md2AccordionTab
    */
-  addTab(tab: MdAccordionTab) {
+  addTab(tab: Md2AccordionTab) {
     this.tabs.push(tab);
   }
 }

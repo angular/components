@@ -1,32 +1,32 @@
-# md-tabs
+# md2-tabs
 
 Native Angular2 Material Tabs component
 
 ## Installation
-`npm install --save md-tabs`
+`npm install --save md2-tabs`
 
 ## API
 
 Example:
  
  ```html
-<md-tabs selectedIndex="0">
-  <md-tab label="title1">Test content 1</md-tab>
-  <md-tab label="title2">Test content 2</md-tab>
-  <md-tab>
-    <template md-tab-label>Test content 3</template>
+<md2-tabs selectedIndex="0">
+  <md2-tab label="title1">Test content 1</md2-tab>
+  <md2-tab label="title2">Test content 2</md2-tab>
+  <md2-tab>
+    <template md2-tab-label>Test content 3</template>
     Test content 3
-  </md-tab>
-</md-tabs>
+  </md2-tab>
+</md2-tabs>
  ```
  ```ts
 //app-module.ts
 
-import {MdTabsModule} from 'md-tabs/tabs';
+import {Md2TabsModule} from 'md2-tabs/tabs';
 
 @NgModule({
   imports: [
-    MdTabsModule,
+    Md2TabsModule,
   ],
   declarations: [
     ...
@@ -47,17 +47,17 @@ export class ... {
 }
  ```
 
-### Properties of md-tabs
+### Properties of md2-tabs
 
   - `selectedIndex` (`?number=0`) - Index of the active/selected tab.
-  - `class` (`?string=''`) - To set custom class on `md-tabs` element.
+  - `class` (`?string=''`) - To set custom class on `md2-tabs` element.
 
-### Properties of md-tab
+### Properties of md2-tab
 
   - `label` (`?string=''`) - Optional attribute to specify a simple string as the tab label.
   - `active` (`?boolean='false'`) - To set as an active a tab.
   - `disabled` (`?boolean='false'`) - To set as an disabled a tab.
-  - `class` (`?string=''`) - To set custom class on `md-tab` element.
+  - `class` (`?string=''`) - To set custom class on `md2-tab` element.
 
 ### Events
 
