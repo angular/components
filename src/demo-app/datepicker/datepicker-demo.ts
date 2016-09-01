@@ -5,4 +5,10 @@ import {Component} from '@angular/core';
   selector: 'datepicker-demo',
   templateUrl: 'datepicker-demo.html',
 })
-export class DatepickerDemo { }
+export class DatepickerDemo {
+  private disabled: boolean = false;
+  private date: any = '2015-12-25';
+  private change(value: any) {
+    console.log('Changed data: ', value);
+  }
+}

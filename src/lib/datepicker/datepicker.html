@@ -76,3 +76,29 @@
   </div>
 </div>-->
 <!--<md-calendar-month></md-calendar-month>-->
+
+
+<input [(ngModel)]="value"
+       [type]="type"
+       [disabled]="disabled"
+       [readonly]="readonly"
+       [name]="name"
+       [id]="id"
+       [min]="min"
+       [max]="max"
+       [placeholder]="placeholder"
+       [tabindex]="tabindex" />
+
+
+
+@Input() type: 'date' | 'time' | 'datetime' | 'month' = 'date';
+  @Input() disabled: boolean;
+  @Input() readonly: boolean;
+  @Input() required: boolean;
+  @Input() name: string = '';
+  @Input() id: string = 'md2-datepicker-' + (++nextId);
+  @Input() min: number;
+  @Input() max: number;
+  @Input() placeholder: string;
+  @Input() format: string;
+  @Input() tabindex: number = 0;

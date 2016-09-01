@@ -2,6 +2,10 @@
   <h2>Date Picker</h2>
   <hr />
   <div>
-    <md2-datepicker></md2-datepicker>
+    <md2-datepicker [(ngModel)]="date"
+                    [disabled]="disabled"
+                    (change)="change($event)">
+    </md2-datepicker>
+    <pre>{{date}}</pre>
   </div>
 </section>

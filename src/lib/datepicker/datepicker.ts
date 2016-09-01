@@ -13,27 +13,37 @@ import {
   FormsModule
 } from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {MdCalendar} from './calendar';
+//import {Md2Calendar} from './calendar';
 
 const noop = () => { };
 
 let nextId = 0;
 
-export const MD_DATEPICKER_CONTROL_VALUE_ACCESSOR: any = {
+export const MD2_DATEPICKER_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdDatepicker),
+  useExisting: forwardRef(() => Md2Datepicker),
   multi: true
 };
 
 @Component({
   moduleId: module.id,
   selector: 'md2-datepicker',
-  templateUrl: 'datepicker.html',
+  template: `<input [(ngModel)]="value"
+                    [type]="type"
+                    [disabled]="disabled"
+                    [readonly]="readonly"
+                    [name]="name"
+                    [id]="id"
+                    [min]="min"
+                    [max]="max"
+                    [placeholder]="placeholder"
+                    [tabindex]="tabindex" />
+  `,
   styleUrls: ['datepicker.css'],
-  providers: [MD_DATEPICKER_CONTROL_VALUE_ACCESSOR],
+  providers: [MD2_DATEPICKER_CONTROL_VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None
 })
-export class MdDatepicker implements ControlValueAccessor {
+export class Md2Datepicker implements ControlValueAccessor {
 
   constructor() { }
 
@@ -44,27 +54,30 @@ export class MdDatepicker implements ControlValueAccessor {
   private _onTouchedCallback: () => void = noop;
   private _onChangeCallback: (_: any) => void = noop;
 
-  @Input() id: string = 'md-datepicker-' + (++nextId);
-  @Input() disabled: boolean = false;
+  @Input() type: 'date' | 'time' | 'datetime' | 'month' = 'date';
+  @Input() disabled: boolean;
+  @Input() readonly: boolean;
+  @Input() required: boolean;
+  @Input() name: string = '';
+  @Input() id: string = 'md2-datepicker-' + (++nextId);
+  @Input() min: number;
+  @Input() max: number;
+  @Input() placeholder: string;
+  @Input() format: string;
   @Input() tabindex: number = 0;
-  @Input() placeholder: string = '';
 
   get value(): any { return this._value; }
-  @Input() set value(value: any) { this._value = value; }
+  @Input() set value(value: any) {
+    if (this._value !== value) {
+      this._value = value;
+      this.updateValue();
+    }
+  }
 
-
-  //private updateValue() {
-  //  this._value = this.selectedItem ? this.selectedItem.value : this.selectedItem;
-  //  this._onChangeCallback(this._value);
-  //  this.change.emit(this._value);
-  //  this.onFocus();
-  //}
-
-
-
-
-
-
+  private updateValue() {
+    this._onChangeCallback(this._value);
+    this.change.emit(this._value);
+  }
 
   private isFocused: boolean;
   private openCalendarPane(event: Event) { }
@@ -78,11 +91,11 @@ export class MdDatepicker implements ControlValueAccessor {
 
 }
 
-export const MD_DATEPICKER_DIRECTIVES = [MdDatepicker, MdCalendar];
+export const MD2_DATEPICKER_DIRECTIVES = [Md2Datepicker];
 
 @NgModule({
-  declarations: MD_DATEPICKER_DIRECTIVES,
+  declarations: MD2_DATEPICKER_DIRECTIVES,
   imports: [CommonModule, FormsModule],
-  exports: MD_DATEPICKER_DIRECTIVES,
+  exports: MD2_DATEPICKER_DIRECTIVES,
 })
 export class Md2DatepickerModule { }
