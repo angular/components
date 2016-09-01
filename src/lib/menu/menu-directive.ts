@@ -100,15 +100,6 @@ export class MdMenu {
     this.close.emit(null);
   }
 
-  // When focus would shift past the start or end of the menu, wrap back to the beginning or end
-  private _wrapIfFocusLeavesMenu(): void {
-    if (this._focusedItemIndex >= this.items.length) {
-      this._focusedItemIndex = 0;
-    } else if (this._focusedItemIndex < 0) {
-      this._focusedItemIndex = this.items.length - 1;
-    }
-  }
-
   private _focusNextItem(): void {
     this._updateFocusedItemIndex(1);
     this.items.toArray()[this._focusedItemIndex].focus();
@@ -130,8 +121,9 @@ export class MdMenu {
    * @private
      */
   private _updateFocusedItemIndex(delta: number, menuItems: MdMenuItem[] = this.items.toArray()) {
-    this._focusedItemIndex += delta;
-    this._wrapIfFocusLeavesMenu();
+    // when focus would leave menu, wrap to beginning or end
+    this._focusedItemIndex = (this._focusedItemIndex + delta + this.items.length)
+                              % this.items.length;
 
     // skip all disabled menu items recursively until an active one
     // is reached or the menu closes for overreaching bounds
