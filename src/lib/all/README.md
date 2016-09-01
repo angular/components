@@ -10,11 +10,11 @@ Example:
   ```ts
 //app-module.ts
 
-import {MaterialModule} from 'md2/all';
+import {Md2Module} from 'md2/all';
 
 @NgModule({
   imports: [
-    MaterialModule,
+    Md2Module.forRoot(),
   ],
   declarations: [
     ...

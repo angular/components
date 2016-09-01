@@ -4,7 +4,7 @@ import {HttpModule} from '@angular/http';
 import {FormsModule} from '@angular/forms';
 import {DemoApp, Home} from './demo-app/demo-app';
 import {RouterModule} from '@angular/router';
-import {MaterialModule} from 'md2/all/all';
+import {Md2Module} from 'md2/all/all';
 import {MdButtonModule} from 'md2/button/button';
 import {MdSidenavModule} from 'md2/sidenav/sidenav';
 import {MdListModule} from 'md2/list/list';
@@ -64,7 +64,7 @@ import {DEMO_APP_ROUTES} from './demo-app/routes';
     FormsModule,
     HttpModule,
     RouterModule.forRoot(DEMO_APP_ROUTES),
-    MaterialModule.forRoot(),
+    Md2Module.forRoot(),
     MdButtonModule,
     MdListModule,
     MdSidenavModule,
