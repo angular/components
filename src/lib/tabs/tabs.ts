@@ -19,7 +19,7 @@ import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdInkBar} from './ink-bar';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import {RIGHT_ARROW, LEFT_ARROW, ENTER} from '@angular2-material/core/keyboard/keycodes';
+import {RIGHT_ARROW, LEFT_ARROW, ENTER} from '@angular2-material/core';
 
 /** Used to generate unique ID's for each tab component */
 let nextId = 0;
