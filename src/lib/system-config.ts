@@ -64,7 +64,9 @@ const angularPackages = {
   '@angular/platform-browser': { main: 'bundles/platform-browser.umd.js'},
   '@angular/platform-browser/testing': { main: '../bundles/platform-browser-testing.umd.js'},
   '@angular/platform-browser-dynamic': { main: 'bundles/platform-browser-dynamic.umd.js'},
-  '@angular/platform-browser-dynamic/testing': { main: '../bundles/platform-browser-dynamic-testing.umd.js'},
+  '@angular/platform-browser-dynamic/testing': {
+    main: '../bundles/platform-browser-dynamic-testing.umd.js'
+  },
 };
 
 const barrels: string[] = [
