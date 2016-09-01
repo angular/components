@@ -18,7 +18,7 @@ import {
 } from '@angular/forms';
 import {CommonModule} from '@angular/common';
 //import { HightlightPipe } from '../autocomplete/autocomplete.pipe';
-import {Md2AutocompleteModule} from '@angular2-material/autocomplete/autocomplete';
+import {Md2AutocompleteModule} from 'md2/autocomplete/autocomplete';
 
 const noop = () => { };
 

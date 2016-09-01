@@ -3,13 +3,13 @@
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": ["es6", "es2015", "dom"],
+    "lib": [ "es6", "es2015", "dom" ],
     "mapRoot": "",
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
     "noImplicitAny": true,
-    "outDir": "../../dist/@angular2-material",
+    "outDir": "../../dist/md2",
     "rootDir": ".",
     "sourceMap": true,
     "target": "es5",
@@ -17,7 +17,7 @@
     "stripInternal": true,
     "baseUrl": "",
     "paths": {
-      "@angular2-material/*": [
+      "md2/*": [
         "./*"
       ]
     },
