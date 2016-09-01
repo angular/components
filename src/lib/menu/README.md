@@ -131,8 +131,8 @@ The menu adds `role="menu"` to the main menu element and `role="menuitem"` to ea
 also adds `aria-hasPopup="true"` to the trigger element.
 
 #### Keyboard events:
-- <kbd>DOWN_ARROW</kbd> or <kbd>TAB</kbd>: Focus next menu item
-- <kbd>UP_ARROW</kbd> or <kbd>SHIFT_TAB</kbd>: Focus previous menu item
+- <kbd>DOWN_ARROW</kbd>: Focus next menu item
+- <kbd>UP_ARROW</kbd>: Focus previous menu item
 - <kbd>ENTER</kbd>: Select focused item
 
 ### Menu attributes
