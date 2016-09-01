@@ -5,6 +5,15 @@ import {FormsModule} from '@angular/forms';
 import {DemoApp, Home} from './demo-app/demo-app';
 import {RouterModule} from '@angular/router';
 import {MaterialModule} from 'md2/all/all';
+import {MdButtonModule} from 'md2/button/button';
+import {MdSidenavModule} from 'md2/sidenav/sidenav';
+import {MdListModule} from 'md2/list/list';
+import {MdIconModule} from 'md2/icon/icon';
+import {MdToolbarModule} from 'md2/toolbar/toolbar';
+import {MdRippleModule} from 'md2/core/ripple/ripple';
+import {PortalModule} from 'md2/core/portal/portal-directives';
+import {OverlayModule} from 'md2/core/overlay/overlay-directives';
+import {RtlModule} from 'md2/core/rtl/dir';
 
 import {AccordionDemo} from './accordion/accordion-demo';
 import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
@@ -56,6 +65,15 @@ import {DEMO_APP_ROUTES} from './demo-app/routes';
     HttpModule,
     RouterModule.forRoot(DEMO_APP_ROUTES),
     MaterialModule.forRoot(),
+    MdButtonModule,
+    MdListModule,
+    MdSidenavModule,
+    MdRippleModule,
+    MdToolbarModule,
+    PortalModule,
+    RtlModule,
+    MdIconModule.forRoot(),
+    OverlayModule.forRoot(),
   ],
   declarations: [
     AccordionDemo,
