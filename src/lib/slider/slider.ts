@@ -15,9 +15,9 @@ import {
   FormsModule,
 } from '@angular/forms';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-import {BooleanFieldValue} from '@angular2-material/core/annotations/field-value';
-import {applyCssTransform} from '@angular2-material/core/style/apply-transform';
-import {MdGestureConfig} from '@angular2-material/core/core';
+import {BooleanFieldValue} from 'md2/core/annotations/field-value';
+import {applyCssTransform} from 'md2/core/style/apply-transform';
+import {MdGestureConfig} from 'md2/core/core';
 import {Input as HammerInput} from 'hammerjs';
 
 /**

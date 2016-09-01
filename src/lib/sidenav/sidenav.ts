@@ -15,10 +15,10 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Dir} from '@angular2-material/core/rtl/dir';
-import {PromiseCompleter} from '@angular2-material/core/async/promise-completer';
-import {MdError} from '@angular2-material/core/errors/error';
-import { BooleanFieldValue } from '@angular2-material/core/annotations/field-value';
+import {Dir} from 'md2/core/rtl/dir';
+import {PromiseCompleter} from 'md2/core/async/promise-completer';
+import {MdError} from 'md2/core/errors/error';
+import { BooleanFieldValue } from 'md2/core/annotations/field-value';
 
 /** Exception thrown when two MdSidenav are matching the same side. */
 export class MdDuplicatedSidenavError extends MdError {

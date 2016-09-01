@@ -22,8 +22,8 @@ import {
 import {Observable} from 'rxjs/Observable';
 import {
     MdUniqueSelectionDispatcher
-} from '@angular2-material/core/coordination/unique-selection-dispatcher';
-import {BooleanFieldValue} from '@angular2-material/core/annotations/field-value';
+} from 'md2/core/coordination/unique-selection-dispatcher';
+import {BooleanFieldValue} from 'md2/core/annotations/field-value';
 
 export type ToggleType = 'checkbox' | 'radio';
 

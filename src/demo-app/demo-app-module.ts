@@ -4,7 +4,7 @@ import {HttpModule} from '@angular/http';
 import {FormsModule} from '@angular/forms';
 import {DemoApp, Home} from './demo-app/demo-app';
 import {RouterModule} from '@angular/router';
-import {MaterialModule} from '@angular2-material/all/all';
+import {MaterialModule} from 'md2/all/all';
 
 import {AccordionDemo} from './accordion/accordion-demo';
 import {AutocompleteDemo} from './autocomplete/autocomplete-demo';

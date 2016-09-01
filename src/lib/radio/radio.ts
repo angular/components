@@ -21,13 +21,13 @@ import {
 } from '@angular/forms';
 import {
   MdUniqueSelectionDispatcher
-} from '@angular2-material/core/coordination/unique-selection-dispatcher';
+} from 'md2/core/coordination/unique-selection-dispatcher';
 
 
 // Re-exports.
 export {
   MdUniqueSelectionDispatcher
-} from '@angular2-material/core/coordination/unique-selection-dispatcher';
+} from 'md2/core/coordination/unique-selection-dispatcher';
 
 
 

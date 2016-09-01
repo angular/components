@@ -42,7 +42,7 @@ const components = [
 
 /** User packages configuration. */
 const packages: any = {
-  '@angular2-material/core': {
+  'md2/core': {
     format: 'cjs',
     defaultExtension: 'js'
   },
@@ -54,7 +54,7 @@ const packages: any = {
 };
 
 components.forEach(name => {
-  packages[`@angular2-material/${name}`] = {
+  packages[`md2/${name}`] = {
     format: 'cjs',
     defaultExtension: 'js'
   };

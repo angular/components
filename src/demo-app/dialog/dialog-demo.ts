@@ -1,5 +1,5 @@
 import {Component, ViewContainerRef} from '@angular/core';
-import {MdDialog, MdDialogConfig, MdDialogRef} from '@angular2-material/dialog/dialog';
+import {MdDialog, MdDialogConfig, MdDialogRef} from 'md2/dialog/dialog';
 
 @Component({
   moduleId: module.id,

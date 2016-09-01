@@ -16,14 +16,14 @@ import {
     OverlayState,
     OverlayRef,
     TemplatePortal
-} from '@angular2-material/core/core';
+} from 'md2/core/core';
 import {
     ConnectedPositionStrategy
-} from '@angular2-material/core/overlay/position/connected-position-strategy';
+} from 'md2/core/overlay/position/connected-position-strategy';
 import {
   HorizontalConnectionPos,
   VerticalConnectionPos
-} from '@angular2-material/core/overlay/position/connected-position';
+} from 'md2/core/overlay/position/connected-position';
 
 /**
  * This directive is intended to be used in conjunction with an md-menu tag.  It is

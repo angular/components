@@ -3,8 +3,8 @@ import {
   BasePortalHost,
   ComponentPortal,
   TemplatePortal
-} from '@angular2-material/core/portal/portal';
-import {PortalHostDirective} from '@angular2-material/core/portal/portal-directives';
+} from 'md2/core/portal/portal';
+import {PortalHostDirective} from 'md2/core/portal/portal-directives';
 import {MdDialogConfig} from './dialog-config';
 import {MdDialogContentAlreadyAttachedError} from './dialog-errors';
 

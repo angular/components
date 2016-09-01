@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {
   MdUniqueSelectionDispatcher
-} from '@angular2-material/core/coordination/unique-selection-dispatcher';
+} from 'md2/core/coordination/unique-selection-dispatcher';
 
 @Component({
   moduleId: module.id,
