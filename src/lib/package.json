@@ -31,20 +31,5 @@
   "bugs": {
     "url": "https://github.com/angular/material2/issues"
   },
-  "homepage": "https://github.com/Promact/material2#readme",
-  "peerDependencies": {
-    "md2-accordion": "0.0.1-alpha.0",
-    "md2-autocomplete": "0.0.1-alpha.0",
-    "md2-collapse": "0.0.1-alpha.0",
-    "md2-colorpicker": "0.0.1-alpha.0",
-    "md2-datepicker": "0.0.1-alpha.0",
-    "md2-dialog": "0.0.1-alpha.0",
-    "md2-menu": "0.0.1-alpha.0",
-    "md2-multiselect": "0.0.1-alpha.0",
-    "md2-select": "0.0.1-alpha.0",
-    "md2-tabs": "0.0.1-alpha.0",
-    "md2-tags": "0.0.1-alpha.0",
-    "md2-toast": "0.0.1-alpha.0",
-    "md2-tooltip": "0.0.1-alpha.0"
-  }
+  "homepage": "https://github.com/Promact/material2#readme"
 }
