@@ -12,7 +12,7 @@ import {
     ContentChildren
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PortalModule} from '@angular2-material/core/portal/portal-directives';
+import {PortalModule} from '@angular2-material/core';
 import {MdTabLabel} from './tab-label';
 import {MdTabContent} from './tab-content';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
