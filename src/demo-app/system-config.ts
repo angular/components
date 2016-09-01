@@ -50,17 +50,19 @@ components.forEach(name => {
 /***********************************************************************************************
  * Everything underneath this line is managed by the CLI.
  **********************************************************************************************/
-const barrels: string[] = [
+const angularPackages = {
   // Angular specific barrels.
-  '@angular/core',
-  '@angular/common',
-  '@angular/compiler',
-  '@angular/http',
-  '@angular/forms',
-  '@angular/router',
-  '@angular/platform-browser',
-  '@angular/platform-browser-dynamic',
+  '@angular/core': { main: 'bundles/core.umd.js'},
+  '@angular/common': { main: 'bundles/common.umd.js'},
+  '@angular/compiler': { main: 'bundles/compiler.umd.js'},
+  '@angular/http': { main: 'bundles/http.umd.js'},
+  '@angular/forms': { main: 'bundles/forms.umd.js'},
+  '@angular/router': { main: 'bundles/router.umd.js'},
+  '@angular/platform-browser': { main: 'bundles/platform-browser.umd.js'},
+  '@angular/platform-browser-dynamic': { main: 'bundles/platform-browser-dynamic.umd.js'},
+};
 
+const barrels: string[] = [
   // Thirdparty barrels.
   'rxjs',
 
@@ -75,7 +77,7 @@ const barrels: string[] = [
   /** @cli-barrel */
 ];
 
-const _cliSystemConfig = {};
+const _cliSystemConfig = angularPackages;
 barrels.forEach((barrelName: string) => {
   (<any> _cliSystemConfig)[barrelName] = { main: 'index' };
 });
