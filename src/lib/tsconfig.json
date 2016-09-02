@@ -3,13 +3,13 @@
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": [ "es6", "es2015", "dom" ],
+    "lib": ["es6", "es2015", "dom"],
     "mapRoot": "",
     "module": "umd",
     "moduleResolution": "node",
     "noEmitOnError": true,
     "noImplicitAny": true,
-    "outDir": "../../dist/md2",
+    "outDir": "../../dist/@angular2-material",
     "rootDir": ".",
     "sourceMap": true,
     "target": "es5",
@@ -17,7 +17,7 @@
     "stripInternal": true,
     "baseUrl": "",
     "paths": {
-      "md2/*": [
+      "@angular2-material/*": [
         "./*"
       ]
     },

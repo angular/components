@@ -19,11 +19,11 @@ import {
   NG_VALUE_ACCESSOR,
   ControlValueAccessor
 } from '@angular/forms';
-import {MdUniqueSelectionDispatcher} from 'md2/core';
+import {MdUniqueSelectionDispatcher} from '@angular2-material/core';
 
 
 // Re-exports.
-export {MdUniqueSelectionDispatcher} from 'md2/core';
+export {MdUniqueSelectionDispatcher} from '@angular2-material/core';
 
 
 

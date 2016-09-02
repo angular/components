@@ -15,7 +15,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Dir, MdError, BooleanFieldValue} from 'md2/core';
+import {Dir, MdError, BooleanFieldValue} from '@angular2-material/core';
 
 /** Exception thrown when two MdSidenav are matching the same side. */
 export class MdDuplicatedSidenavError extends MdError {
