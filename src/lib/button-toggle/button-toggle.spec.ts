@@ -306,11 +306,11 @@ describe('MdButtonToggle', () => {
       buttonToggleNativeElements =
           buttonToggleDebugElements.map(debugEl => debugEl.nativeElement);
       buttonToggleInstances = buttonToggleDebugElements.map(debugEl => debugEl.componentInstance);
+
+      fixture.detectChanges();
     }));
 
     it('should update the model before firing change event', fakeAsync(() => {
-      fixture.detectChanges();
-
       expect(testComponent.modelValue).toBeUndefined();
       expect(testComponent.lastEvent).toBeUndefined();
 
