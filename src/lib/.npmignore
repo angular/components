@@ -1,0 +1,41 @@
+# dependencies
+/node_modules
+/bower_components
+
+# IDEs
+/.idea
+/.vscode
+
+# misc
+.DS_Store
+/.sass-cache
+/connect.lock
+npm-debug.log
+
+/all
+/button
+/button-toggle
+/card
+/checkbox
+/core
+/dialog
+/grid-list
+/icon
+/input
+/list
+/menu
+/progress-bar
+/progress-circle
+/radio
+/sidenav
+/slide-toggle
+/slider
+/tabs
+/toolbar
+/tooltip
+/module.d.ts
+/system-config.ts
+/system-config.d.ts
+/system-config.js
+/system-config.js.map
+/tsconfig.json
