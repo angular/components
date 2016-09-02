@@ -17,32 +17,12 @@ const components = [
   'tags',
   'toast',
   'tooltip',
-
-  //'button',
-  //'card',
-  //'checkbox',
-  //'dialog',
-  //'grid-list',
-  //'icon',
-  //'input',
-  //'list',
-  //'menu',
-  //'progress-bar',
-  //'progress-circle',
-  //'radio',
-  //'sidenav',
-  //'slider',
-  //'slide-toggle',
-  //'button-toggle',
-  //'tabs',
-  //'toolbar',
-  //'tooltip',
 ];
 
 
 /** User packages configuration. */
 const packages: any = {
-  'md2/core': {
+  '@angular2-material/core': {
     format: 'cjs',
     defaultExtension: 'js',
     main: 'index'
@@ -54,7 +34,7 @@ const packages: any = {
   }
 };
 components.forEach(name => {
-  packages[`md2/${name}`] = {
+  packages[`@angular2-material/${name}`] = {
     format: 'cjs',
     defaultExtension: 'js',
     main: 'index'
@@ -68,18 +48,18 @@ components.forEach(name => {
  **********************************************************************************************/
 const angularPackages = {
   // Angular specific barrels.
-  '@angular/core': { main: 'bundles/core.umd.js'},
-  '@angular/core/testing': { main: '../bundles/core-testing.umd.js'},
-  '@angular/common': { main: 'bundles/common.umd.js'},
-  '@angular/compiler': { main: 'bundles/compiler.umd.js'},
-  '@angular/compiler/testing': { main: '../bundles/compiler-testing.umd.js'},
-  '@angular/http': { main: 'bundles/http.umd.js'},
-  '@angular/http/testing': { main: '../bundles/http-testing.umd.js'},
-  '@angular/forms': { main: 'bundles/forms.umd.js'},
-  '@angular/router': { main: 'bundles/router.umd.js'},
-  '@angular/platform-browser': { main: 'bundles/platform-browser.umd.js'},
-  '@angular/platform-browser/testing': { main: '../bundles/platform-browser-testing.umd.js'},
-  '@angular/platform-browser-dynamic': { main: 'bundles/platform-browser-dynamic.umd.js'},
+  '@angular/core': { main: 'bundles/core.umd.js' },
+  '@angular/core/testing': { main: '../bundles/core-testing.umd.js' },
+  '@angular/common': { main: 'bundles/common.umd.js' },
+  '@angular/compiler': { main: 'bundles/compiler.umd.js' },
+  '@angular/compiler/testing': { main: '../bundles/compiler-testing.umd.js' },
+  '@angular/http': { main: 'bundles/http.umd.js' },
+  '@angular/http/testing': { main: '../bundles/http-testing.umd.js' },
+  '@angular/forms': { main: 'bundles/forms.umd.js' },
+  '@angular/router': { main: 'bundles/router.umd.js' },
+  '@angular/platform-browser': { main: 'bundles/platform-browser.umd.js' },
+  '@angular/platform-browser/testing': { main: '../bundles/platform-browser-testing.umd.js' },
+  '@angular/platform-browser-dynamic': { main: 'bundles/platform-browser-dynamic.umd.js' },
   '@angular/platform-browser-dynamic/testing': {
     main: '../bundles/platform-browser-dynamic-testing.umd.js'
   },
