@@ -1,20 +1,6 @@
 # MdTabGroup
 Tab groups allow the user to organize their content by labels such that only one tab is visible at any given time.
 
-## `<md-tab-group>`
-### Properties
-
-| Name | Type | Description |
-| --- | --- | --- |
-| `selectedIndex` | `number` | The index of the currently active tab. |
-
-### Events
-
-| Name | Type | Description |
-| --- | --- | --- |
-| `focusChange` | `Event` | Fired when focus changes from one label to another |
-| `selectChange` | `Event` | Fired when the selected tab changes |
-
 ### Examples
 A basic tab group would have the following markup.
 ```html
@@ -36,12 +22,17 @@ A basic tab group would have the following markup.
 </md-tab-group>
 ```
 
-It is also possible to specifiy the active tab by using the `selectedIndex` property.
+## `<md-tab-group>`
+### Properties
 
-```html
-<md-tab-group [selectedIndex]="1">
-  ...
-</md-tab-group>
-```
+| Name | Type | Description |
+| --- | --- | --- |
+| `selectedIndex` | `number` | The index of the currently active tab. |
+| `focusIndex` | `number` | The index of the currently active tab. |
 
-**Note**: The index always starts counting from `zero`.
+### Events
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `focusChange` | `Event` | Fired when focus changes from one label to another |
+| `selectChange` | `Event` | Fired when the selected tab changes |

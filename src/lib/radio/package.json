@@ -1,10 +1,9 @@
 {
   "name": "@angular2-material/radio",
-  "version": "2.0.0-alpha.7-12",
+  "version": "2.0.0-alpha.7-9",
   "description": "Angular 2 Material radio",
-  "main": "./radio.umd.js",
-  "module": "./index.js",
-  "typings": "./index.d.ts",
+  "main": "./radio.js",
+  "typings": "./radio.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/angular/material2.git"
@@ -22,7 +21,7 @@
   },
   "homepage": "https://github.com/angular/material2#readme",
   "peerDependencies": {
-    "@angular2-material/core": "2.0.0-alpha.7-12",
-    "@angular/forms": "2.0.0-rc.6"
+    "@angular2-material/core": "2.0.0-alpha.7-9",
+    "@angular/forms": "^0.3.0"
   }
 }

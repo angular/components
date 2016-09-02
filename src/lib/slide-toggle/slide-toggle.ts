@@ -17,9 +17,10 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import {BooleanFieldValue, applyCssTransform} from '@angular2-material/core';
+import {BooleanFieldValue} from 'md2/core/annotations/field-value';
 import {Observable} from 'rxjs/Observable';
-import {MdGestureConfig} from '@angular2-material/core';
+import {applyCssTransform} from 'md2/core/style/apply-transform';
+import {MdGestureConfig} from 'md2/core/core';
 
 
 export const MD_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {

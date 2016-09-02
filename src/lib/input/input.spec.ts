@@ -363,9 +363,7 @@ describe('MdInput', function () {
 
     fixture.componentInstance.disabled = true;
     fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(el.getAttribute('disabled')).toEqual('');
-    });
+    expect(el.getAttribute('disabled')).toEqual('');
   });
 
   it('supports the disabled attribute as an unbound attribute', () => {
@@ -375,9 +373,7 @@ describe('MdInput', function () {
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(el).not.toBeNull();
-    fixture.whenStable().then(() => {
-      expect(el.getAttribute('disabled')).toEqual('');
-    });
+    expect(el.getAttribute('disabled')).toEqual('');
   });
 
   it('supports the list attribute', () => {

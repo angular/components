@@ -5,6 +5,7 @@
 
 ### Not yet implemented
 
+- Keyboard events: up arrow, down arrow, enter
 - `prevent-close` option, to turn off automatic menu close when clicking outside the menu
 - Custom offset support
 - Menu groupings (which menus are allowed to open together)
@@ -128,12 +129,7 @@ Output:
 ### Accessibility
 
 The menu adds `role="menu"` to the main menu element and `role="menuitem"` to each menu item. It 
-also adds `aria-hasPopup="true"` to the trigger element.
-
-#### Keyboard events:
-- <kbd>DOWN_ARROW</kbd>: Focus next menu item
-- <kbd>UP_ARROW</kbd>: Focus previous menu item
-- <kbd>ENTER</kbd>: Select focused item
+also adds `aria-hasPopup="true"` to the trigger element. 
 
 ### Menu attributes
 
@@ -161,4 +157,5 @@ also adds `aria-hasPopup="true"` to the trigger element.
 | `toggleMenu()` | `Promise<void>` | Toggles the menu. Returns a promise that will resolve when the menu has completed opening or closing. |  
 | `destroyMenu()` | `Promise<void>` | Destroys the menu overlay completely. 
   
+
 

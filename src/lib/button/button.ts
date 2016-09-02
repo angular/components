@@ -9,8 +9,8 @@ import {
   NgModule,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {BooleanFieldValue} from '@angular2-material/core';
-import {MdRippleModule} from '@angular2-material/core';
+import {BooleanFieldValue} from 'md2/core/annotations/field-value';
+import {MdRippleModule} from 'md2/core/ripple/ripple';
 
 // TODO(jelbourn): Make the `isMouseDown` stuff done with one global listener.
 // TODO(kara): Convert attribute selectors to classes when attr maps become available

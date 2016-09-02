@@ -20,7 +20,10 @@ import {
     FormsModule,
 } from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
-import {BooleanFieldValue, MdUniqueSelectionDispatcher} from '@angular2-material/core';
+import {
+    MdUniqueSelectionDispatcher
+} from 'md2/core/coordination/unique-selection-dispatcher';
+import {BooleanFieldValue} from 'md2/core/annotations/field-value';
 
 export type ToggleType = 'checkbox' | 'radio';
 

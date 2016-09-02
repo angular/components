@@ -1,28 +1,29 @@
-import {Directive, ElementRef, Input, HostBinding, Renderer} from '@angular/core';
+import {Directive, Input, HostBinding} from '@angular/core';
 
 /**
  * This directive is intended to be used inside an md-menu tag.
  * It exists mostly to set the role attribute.
  */
 @Directive({
-  selector: '[md-menu-item]',
+  selector: 'button[md-menu-item]',
+  host: {'role': 'menuitem'}
+})
+export class MdMenuItem {}
+
+/**
+ * This directive is intended to be used inside an md-menu tag.
+ * It sets the role attribute and adds support for the disabled property to anchors.
+ */
+@Directive({
+  selector: 'a[md-menu-item]',
   host: {
     'role': 'menuitem',
-    '(click)': '_checkDisabled($event)',
-    'tabindex': '-1'
-  },
-  exportAs: 'mdMenuItem'
+    '(click)': 'checkDisabled($event)'
+  }
 })
-export class MdMenuItem {
+export class MdMenuAnchor {
   _disabled: boolean;
 
-  constructor(private _renderer: Renderer, private _elementRef: ElementRef) {}
-
-  focus(): void {
-    this._renderer.invokeElementMethod(this._elementRef.nativeElement, 'focus');
-  }
-
-  // this is necessary to support anchors
   @HostBinding('attr.disabled')
   @Input()
   get disabled(): boolean {
@@ -38,11 +39,15 @@ export class MdMenuItem {
     return String(this.disabled);
   }
 
-  private _checkDisabled(event: Event) {
+  @HostBinding('tabIndex')
+  get tabIndex(): number {
+    return this.disabled ? -1 : 0;
+  }
+
+  checkDisabled(event: Event) {
     if (this.disabled) {
       event.preventDefault();
       event.stopPropagation();
     }
   }
 }
-

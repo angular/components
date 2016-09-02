@@ -1,10 +1,9 @@
 {
   "name": "@angular2-material/icon",
-  "version": "2.0.0-alpha.7-12",
+  "version": "2.0.0-alpha.7-9",
   "description": "Angular 2 Material icon",
-  "main": "./icon.umd.js",
-  "module": "./index.js",
-  "typings": "./index.d.ts",
+  "main": "./icon.js",
+  "typings": "./icon.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/angular/material2.git"
@@ -22,7 +21,7 @@
   },
   "homepage": "https://github.com/angular/material2#readme",
   "peerDependencies": {
-    "@angular/http": "2.0.0-rc.6",
-    "@angular2-material/core": "2.0.0-alpha.7-12"
+    "@angular/http": "2.0.0-rc.5",
+    "@angular2-material/core": "2.0.0-alpha.7-9"
   }
 }
