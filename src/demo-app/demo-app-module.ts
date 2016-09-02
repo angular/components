@@ -4,16 +4,16 @@ import {HttpModule} from '@angular/http';
 import {FormsModule} from '@angular/forms';
 import {DemoApp, Home} from './demo-app/demo-app';
 import {RouterModule} from '@angular/router';
-import {Md2Module} from '@angular2-material/all';
-import {MdButtonModule} from '@angular2-material/button/button';
-import {MdSidenavModule} from '@angular2-material/sidenav/sidenav';
-import {MdListModule} from '@angular2-material/list/list';
-import {MdIconModule} from '@angular2-material/icon/icon';
-import {MdToolbarModule} from '@angular2-material/toolbar/toolbar';
-import {MdRippleModule} from '@angular2-material/core/ripple/ripple';
-import {PortalModule} from '@angular2-material/core/portal/portal-directives';
-import {OverlayModule} from '@angular2-material/core/overlay/overlay-directives';
-import {RtlModule} from '@angular2-material/core/rtl/dir';
+import {Md2Module} from 'md2/all/all';
+import {MdButtonModule} from 'md2/button/button';
+import {MdSidenavModule} from 'md2/sidenav/sidenav';
+import {MdListModule} from 'md2/list/list';
+import {MdIconModule} from 'md2/icon/icon';
+import {MdToolbarModule} from 'md2/toolbar/toolbar';
+import {MdRippleModule} from 'md2/core/ripple/ripple';
+import {PortalModule} from 'md2/core/portal/portal-directives';
+import {OverlayModule} from 'md2/core/overlay/overlay-directives';
+import {RtlModule} from 'md2/core/rtl/dir';
 
 import {AccordionDemo} from './accordion/accordion-demo';
 import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
@@ -56,6 +56,8 @@ import {DEMO_APP_ROUTES} from './demo-app/routes';
 //import {MenuDemo} from './menu/menu-demo';
 //import {TabsDemo} from './tabs/tab-group-demo';
 
+
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -79,25 +81,32 @@ import {DEMO_APP_ROUTES} from './demo-app/routes';
     CollapseDemo,
     ColorpickerDemo,
     DatepickerDemo,
+    DialogDemo,
+    MenuDemo,
+    MultiselectDemo,
+    SelectDemo,
+    TabsDemo,
+    TagsDemo,
+    ToastDemo,
+    TooltipDemo,
+
     //BaselineDemo,
     //ButtonDemo,
     //ButtonToggleDemo,
     //CardDemo,
     //CheckboxDemo,
-    DemoApp,
-    DialogDemo,
+    //DemoApp,
+    //DialogDemo,
     //GesturesDemo,
     //GridListDemo,
-    Home,
+    //Home,
     //IconDemo,
     //InputDemo,
     //JazzDialog,
     //ListDemo,
     //LiveAnnouncerDemo,
     //MdCheckboxDemoNestedChecklist,
-    MenuDemo,
-    MultiselectDemo,
-    SelectDemo,
+    //MenuDemo,
     //OverlayDemo,
     //PortalDemo,
     //ProgressBarDemo,
@@ -110,11 +119,9 @@ import {DEMO_APP_ROUTES} from './demo-app/routes';
     //SliderDemo,
     //SlideToggleDemo,
     //SpagettiPanel,
-    TabsDemo,
-    TagsDemo,
-    ToastDemo,
+    //TabsDemo,
     //ToolbarDemo,
-    TooltipDemo,
+    //TooltipDemo,
   ],
   entryComponents: [
     DemoApp,

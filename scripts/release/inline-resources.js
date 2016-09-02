@@ -47,7 +47,6 @@ function inlineResources(globs) {
       readFile(filePath, 'utf-8')
         .then(content => inlineTemplate(filePath, content))
         .then(content => inlineStyle(filePath, content))
-        .then(content => removeModuleId(filePath, content))
         .then(content => writeFile(filePath, content))
         .catch(err => {
           console.error('An error occured: ', err);
@@ -102,17 +101,6 @@ function inlineStyle(filePath, content) {
         .join(',\n')
       + ']';
   });
-}
-
-
-/**
- * Remove every mention of `moduleId: module.id`.
- * @param _ {string} The file path of the source file, currently ignored.
- * @param content {string} The source file's content.
- * @returns {string} The content with all moduleId: mentions removed.
- */
-function removeModuleId(_, content) {
-  return content.replace(/\s*moduleId:\s*module\.id\s*,?\s*/gm, '');
 }
 
 
