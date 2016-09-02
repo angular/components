@@ -1,4 +1,7 @@
-import {Directive, NgModule} from '@angular/core';
+import {
+  Directive,
+  Input,
+  NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Directive({
@@ -17,6 +20,7 @@ export class Md2Collapse {
   private isExpanded: boolean = true;
   private isCollapsing: boolean = false;
 
+  @Input()
   get collapse(): boolean { return this.isExpanded; }
   set collapse(value: boolean) {
     this.isExpanded = value;

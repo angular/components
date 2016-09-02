@@ -331,16 +331,18 @@ export class Md2Select implements AfterContentInit, AfterContentChecked, Control
   }
 
   private _updateOptions(): void {
-    (this._options || []).forEach(option => {
-      option.name = this.name;
-    });
+    if (this._options) {
+      this._options.forEach((option: any) => {
+        option.name = this.name;
+      });
+    }
   }
 
   private _updateSelectedOptionValue(): void {
     let isAlreadySelected = this._selected !== null && this._selected.value === this._value;
 
     if (this._options !== null && !isAlreadySelected) {
-      let matchingOption = this._options.filter(option => option.value === this._value)[0];
+      let matchingOption = this._options.filter((option: any) => option.value === this._value)[0];
 
       if (matchingOption) {
         this.selected = matchingOption;
