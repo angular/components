@@ -1,17 +1,19 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
-import {Md2AccordionModule} from 'md2/accordion/accordion';
-import {Md2AutocompleteModule} from 'md2/autocomplete/autocomplete';
-import {Md2CollapseModule} from 'md2/collapse/collapse';
-import {Md2ColorpickerModule} from 'md2/colorpicker/colorpicker';
-import {Md2DatepickerModule} from 'md2/datepicker/datepicker';
-import {Md2DialogModule} from 'md2/md-dialog/dialog';
-import {Md2MenuModule} from 'md2/md-menu/menu';
-import {Md2MultiselectModule} from 'md2/multiselect/multiselect';
-import {Md2SelectModule} from 'md2/select/select';
-import {Md2TabsModule} from 'md2/md-tabs/tabs';
-import {Md2TagsModule} from 'md2/tags/tags';
-import {Md2ToastModule} from 'md2/toast/toast';
-import {Md2TooltipModule} from 'md2/md-tooltip/tooltip';
+import {MdButtonToggleModule} from '@angular2-material/button-toggle';
+import {Md2AccordionModule} from '@angular2-material/accordion/accordion';
+import {Md2AutocompleteModule} from '@angular2-material/autocomplete/autocomplete';
+import {Md2CollapseModule} from '@angular2-material/collapse/collapse';
+import {Md2ColorpickerModule} from '@angular2-material/colorpicker/colorpicker';
+import {Md2DatepickerModule} from '@angular2-material/datepicker/datepicker';
+import {Md2DialogModule} from '@angular2-material/md-dialog/dialog';
+import {Md2MenuModule} from '@angular2-material/md-menu/menu';
+import {Md2MultiselectModule} from '@angular2-material/multiselect/multiselect';
+import {Md2SelectModule} from '@angular2-material/select/select';
+import {Md2TabsModule} from '@angular2-material/md-tabs/tabs';
+import {Md2TagsModule} from '@angular2-material/tags/tags';
+import {Md2ToastModule} from '@angular2-material/toast/toast';
+import {Md2TooltipModule} from '@angular2-material/md-tooltip/tooltip';
+
 
 const MATERIAL_MODULES = [
   Md2AccordionModule,
@@ -45,7 +47,7 @@ const MATERIAL_MODULES = [
     Md2ToastModule,
     Md2TooltipModule,
   ],
-  exports: MATERIAL_MODULES,
+  exports: MATERIAL_MODULES
 })
 export class Md2RootModule { }
 
