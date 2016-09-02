@@ -25,12 +25,10 @@ function _globify(maybeGlob: string, suffix = '**/*') {
 
 /** Create a TS Build Task, based on the options. */
 export function tsBuildTask(tsConfigPath: string) {
-  let tsConfigDir = tsConfigPath;
+  const tsConfigDir = tsConfigPath;
   if (fs.existsSync(path.join(tsConfigDir, 'tsconfig.json'))) {
     // Append tsconfig.json
     tsConfigPath = path.join(tsConfigDir, 'tsconfig.json');
-  } else {
-    tsConfigDir = path.dirname(tsConfigDir);
   }
 
   return () => {

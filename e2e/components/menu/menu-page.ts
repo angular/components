@@ -8,8 +8,6 @@ export class MenuPage {
 
   menu() { return element(by.css('.md-menu')); }
 
-  start() { return element(by.id('start')); }
-
   trigger() { return element(by.id('trigger')); }
 
   triggerTwo() { return element(by.id('trigger-two')); }
@@ -33,17 +31,6 @@ export class MenuPage {
   aboveMenu() { return element(by.css('.md-menu.above')); }
 
   combinedMenu() { return element(by.css('.md-menu.combined')); }
-
-  // TODO(kara): move to common testing utility
-  pressKey(key: any): void {
-    browser.actions().sendKeys(key).perform();
-  }
-
-  // TODO(kara): move to common testing utility
-  expectFocusOn(el: ElementFinder): void {
-    expect(browser.driver.switchTo().activeElement().getInnerHtml())
-        .toBe(el.getInnerHtml());
-  }
 
   expectMenuPresent(expected: boolean) {
     return browser.isElementPresent(by.css('.md-menu')).then((isPresent) => {
