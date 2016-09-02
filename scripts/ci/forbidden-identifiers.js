@@ -185,7 +185,7 @@ function isRelativeScopeImport(fileName, line) {
 
     // Creates a valid import statement, which uses the correct scope package.
     let importFilePath = path.relative(importScope.path, importPath);
-    let validImportPath = `md2/${importScope.name}/${importFilePath}`;
+    let validImportPath = `@angular2-material/${importScope.name}/${importFilePath}`;
 
     return {
       fileScope: fileScope.name,

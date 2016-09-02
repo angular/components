@@ -60,7 +60,7 @@ task(':build:components:rollup', [':build:components:ts'], () => {
     'rxjs/Observable': 'Rx'
   };
   components.forEach(name => {
-    globals[`md2/${name}`] = `md.${camelCase(name)}`
+    globals[`@angular2-material/${name}`] = `md.${camelCase(name)}`
   });
 
   // Build all of them asynchronously.
@@ -72,7 +72,7 @@ task(':build:components:rollup', [':build:components:ts'], () => {
           context: 'window',
           external: [
             ...Object.keys(globals),
-            ...components.map(name => `md2/${name}`)
+            ...components.map(name => `@angular2-material/${name}`)
           ]
         });
       })
