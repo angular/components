@@ -19,8 +19,8 @@
       "../../node_modules"
     ],
     "paths": {
-      "md2/*": [
-        "../../dist/md2/*"
+      "@angular2-material/*": [
+        "../../dist/@angular2-material/*"
       ]
     },
     "types": [
