@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MdLiveAnnouncer} from '@angular2-material/core';
+import {MdLiveAnnouncer} from 'md2/core';
 
 @Component({
   moduleId: module.id,

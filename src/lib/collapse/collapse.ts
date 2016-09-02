@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 
 @Directive({
   selector: '[collapse]',
-  properties: ['collapse'],
   host: {
     '[class.in]': 'isExpanded',
     '[class.collapse]': 'true',
