@@ -1,5 +1,5 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {MdIconRegistry} from 'md2/icon/icon';
+import {MdIconRegistry} from '@angular2-material/icon';
 
 @Component({
   moduleId: module.id,

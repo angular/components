@@ -13,7 +13,7 @@ import {
     ComponentPortal,
     Portal,
     TemplatePortalDirective,
-} from 'md2/core/core';
+} from '@angular2-material/core';
 
 
 @Component({

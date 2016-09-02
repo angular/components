@@ -1,4 +1,4 @@
-import {OverlayRef} from 'md2/core/overlay/overlay-ref';
+import {OverlayRef} from '@angular2-material/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 

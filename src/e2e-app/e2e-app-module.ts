@@ -6,7 +6,7 @@ import {IconE2E} from './icon/icon-e2e';
 import {ButtonE2E} from './button/button-e2e';
 import {MenuE2E} from './menu/menu-e2e';
 import {BasicTabs} from './tabs/tabs-e2e';
-import {Md2Module} from 'md2/all/all';
+import {MaterialModule} from '@angular2-material/all';
 import {E2E_APP_ROUTES} from './e2e-app/routes';
 
 
@@ -14,7 +14,7 @@ import {E2E_APP_ROUTES} from './e2e-app/routes';
   imports: [
     BrowserModule,
     RouterModule.forRoot(E2E_APP_ROUTES),
-    Md2Module.forRoot(),
+    MaterialModule.forRoot(),
   ],
   declarations: [
     E2EApp,

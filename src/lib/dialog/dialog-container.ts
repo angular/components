@@ -2,9 +2,9 @@ import {Component, ComponentRef, ViewChild} from '@angular/core';
 import {
   BasePortalHost,
   ComponentPortal,
+  PortalHostDirective,
   TemplatePortal
-} from 'md2/core/portal/portal';
-import {PortalHostDirective} from 'md2/core/portal/portal-directives';
+} from '@angular2-material/core';
 import {MdDialogConfig} from './dialog-config';
 import {MdDialogContentAlreadyAttachedError} from './dialog-errors';
 

@@ -13,7 +13,7 @@ import {
     AfterViewChecked
 } from '@angular/core';
 import {HttpModule} from '@angular/http';
-import {MdError} from 'md2/core/errors/error';
+import {MdError} from '@angular2-material/core';
 import {MdIconRegistry} from './icon-registry';
 export {MdIconRegistry} from './icon-registry';
 
