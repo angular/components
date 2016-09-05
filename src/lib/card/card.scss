@@ -76,7 +76,10 @@ md-card-actions {
 
 md-card-footer {
   position: absolute;
-  bottom: 0;
+  min-height: 5px;
+  width: 100%;
+  bottom: 0; 
+  left: 0;
 }
 
 md-card-actions {
