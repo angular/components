@@ -1,6 +1,0 @@
-<template>
-  <div class="md-menu" [ngClass]="_classList" (click)="_emitCloseEvent()">
-    <ng-content></ng-content>
-  </div>
-</template>
-<div class="md-menu-click-catcher" *ngIf="_showClickCatcher" (click)="_emitCloseEvent()"></div>
