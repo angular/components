@@ -1,0 +1,14 @@
+<label [attr.for]="inputId" class="md-button-toggle-label">
+  <input #input class="md-button-toggle-input"
+         [type]="_type"
+         [id]="inputId"
+         [checked]="checked"
+         [disabled]="disabled"
+         [name]="name"
+         (change)="_onInputChange($event)"
+         (click)="_onInputClick($event)">
+
+  <div class="md-button-toggle-label-content">
+    <ng-content></ng-content>
+  </div>
+</label>

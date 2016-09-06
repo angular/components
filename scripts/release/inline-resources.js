@@ -29,28 +29,35 @@ const readFile = promiseify(fs.readFile);
 const writeFile = promiseify(fs.writeFile);
 
 
-/**
- * For every argument, inline the templates and styles under it and write the new file.
- */
-for (let arg of process.argv.slice(2)) {
-  if (arg.indexOf('*') < 0) {
-    // Argument is a directory target, add glob patterns to include every files.
-    arg = path.join(arg, '**', '*');
+function inlineResources(globs) {
+  /**
+   * For every argument, inline the templates and styles under it and write the new file.
+   */
+  for (let pattern of globs) {
+    if (pattern.indexOf('*') < 0) {
+      // Argument is a directory target, add glob patterns to include every files.
+      pattern = path.join(pattern, '**', '*');
+    }
+
+    const files = glob.sync(pattern, {})
+      .filter(name => /\.js$/.test(name));  // Matches only JavaScript files.
+
+    // Generate all files content with inlined templates.
+    files.forEach(filePath => {
+      readFile(filePath, 'utf-8')
+        .then(content => inlineTemplate(filePath, content))
+        .then(content => inlineStyle(filePath, content))
+        .then(content => removeModuleId(filePath, content))
+        .then(content => writeFile(filePath, content))
+        .catch(err => {
+          console.error('An error occured: ', err);
+        });
+    });
   }
+}
 
-  const files = glob.sync(arg, {})
-    .filter(name => /\.js$/.test(name));  // Matches only JavaScript files.
-
-  // Generate all files content with inlined templates.
-  files.forEach(filePath => {
-    readFile(filePath, 'utf-8')
-      .then(content => inlineTemplate(filePath, content))
-      .then(content => inlineStyle(filePath, content))
-      .then(content => writeFile(filePath, content))
-      .catch(err => {
-        console.error('An error occured: ', err);
-      });
-  });
+if (require.main === module) {
+  inlineResources(process.argv.slice(2));
 }
 
 
@@ -96,3 +103,17 @@ function inlineStyle(filePath, content) {
       + ']';
   });
 }
+
+
+/**
+ * Remove every mention of `moduleId: module.id`.
+ * @param _ {string} The file path of the source file, currently ignored.
+ * @param content {string} The source file's content.
+ * @returns {string} The content with all moduleId: mentions removed.
+ */
+function removeModuleId(_, content) {
+  return content.replace(/\s*moduleId:\s*module\.id\s*,?\s*/gm, '');
+}
+
+
+module.exports = inlineResources;

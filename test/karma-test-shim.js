@@ -1,6 +1,6 @@
 /*global jasmine, __karma__, window*/
 Error.stackTraceLimit = Infinity;
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 3000;
 
 __karma__.loaded = function () {
 };
@@ -28,7 +28,7 @@ System.config({
   baseURL: distPath
 });
 
-System.import('system-config.js').then(function() {
+System.import(distPath + '@angular2-material/system-config-spec.js').then(function() {
   // Load and configure the TestComponentBuilder.
   return Promise.all([
     System.import('@angular/core/testing'),
@@ -37,8 +37,9 @@ System.import('system-config.js').then(function() {
     var testing = providers[0];
     var testingBrowser = providers[1];
 
-    testing.setBaseTestProviders(testingBrowser.TEST_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
-      testingBrowser.TEST_BROWSER_DYNAMIC_APPLICATION_PROVIDERS);
+    testing.TestBed.initTestEnvironment(
+        testingBrowser.BrowserDynamicTestingModule,
+        testingBrowser.platformBrowserDynamicTesting());
   });
 }).then(function() {
   // Finally, load all spec files.
