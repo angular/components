@@ -53,6 +53,10 @@ describe('MdInput', function () {
         MdInputWithMin,
         MdInputWithStep,
         MdInputWithTabindex,
+        MdInputDateTestController,
+        MdInputTextTestController,
+        MdInputPasswordTestController,
+        MdInputNumberTestController,
       ],
     });
 
@@ -70,60 +74,52 @@ describe('MdInput', function () {
     if (isInternetExplorer11()) {
       return;
     }
-    builder.createAsync(MdInputDateTestController)
-      .then(fixture => {
-        fixture.componentInstance.placeholder = 'Placeholder';
-        fixture.detectChanges();
+    let fixture = TestBed.createComponent(MdInputDateTestController);
+    fixture.componentInstance.placeholder = 'Placeholder';
+    fixture.detectChanges();
 
-        let el = fixture.debugElement.query(By.css('label')).nativeElement;
-        expect(el).not.toBeNull();
-        expect(el.className.includes('md-empty')).toBe(false);
-      });
+    let el = fixture.debugElement.query(By.css('label')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.className.includes('md-empty')).toBe(false);
   }));
 
   it('should treat text input type as empty at init', async(() => {
     if (isInternetExplorer11()) {
       return;
     }
-    builder.createAsync(MdInputTextTestController)
-      .then(fixture => {
-        fixture.componentInstance.placeholder = 'Placeholder';
-        fixture.detectChanges();
+    let fixture = TestBed.createComponent(MdInputTextTestController);
+    fixture.componentInstance.placeholder = 'Placeholder';
+    fixture.detectChanges();
 
-        let el = fixture.debugElement.query(By.css('label')).nativeElement;
-        expect(el).not.toBeNull();
-        expect(el.className.includes('md-empty')).toBe(true);
-      });
+    let el = fixture.debugElement.query(By.css('label')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.className.includes('md-empty')).toBe(true);
   }));
 
   it('should treat password input type as empty at init', async(() => {
     if (isInternetExplorer11()) {
       return;
     }
-    builder.createAsync(MdInputPasswordTestController)
-      .then(fixture => {
-        fixture.componentInstance.placeholder = 'Placeholder';
-        fixture.detectChanges();
+    let fixture = TestBed.createComponent(MdInputPasswordTestController);
+    fixture.componentInstance.placeholder = 'Placeholder';
+    fixture.detectChanges();
 
-        let el = fixture.debugElement.query(By.css('label')).nativeElement;
-        expect(el).not.toBeNull();
-        expect(el.className.includes('md-empty')).toBe(true);
-      });
+    let el = fixture.debugElement.query(By.css('label')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.className.includes('md-empty')).toBe(true);
   }));
 
   it('should treat number input type as empty at init', async(() => {
     if (isInternetExplorer11()) {
       return;
     }
-    builder.createAsync(MdInputNumberTestController)
-      .then(fixture => {
-        fixture.componentInstance.placeholder = 'Placeholder';
-        fixture.detectChanges();
+    let fixture = TestBed.createComponent(MdInputNumberTestController);
+    fixture.componentInstance.placeholder = 'Placeholder';
+    fixture.detectChanges();
 
-        let el = fixture.debugElement.query(By.css('label')).nativeElement;
-        expect(el).not.toBeNull();
-        expect(el.className.includes('md-empty')).toBe(true);
-      });
+    let el = fixture.debugElement.query(By.css('label')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.className.includes('md-empty')).toBe(true);
   }));
 
   // TODO(kara): update when core/testing adds fix
@@ -765,38 +761,22 @@ class MdInputWithStep { }
 @Component({template: `<md-input [tabindex]="tabIndex"></md-input>`})
 class MdInputWithTabindex { }
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input type="date" [placeholder]="placeholder"></md-input>
-  `,
-  directives: [MdInput]
-})
-class MdInputDateTestController {}
+@Component({template: `<md-input type="date" [placeholder]="placeholder"></md-input>`})
+class MdInputDateTestController {
+  placeholder: string = '';
+}
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input type="text" [placeholder]="placeholder"></md-input>
-  `,
-  directives: [MdInput]
-})
-class MdInputTextTestController {}
+@Component({template: `<md-input type="text" [placeholder]="placeholder"></md-input>`})
+class MdInputTextTestController {
+  placeholder: string = '';
+}
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input type="password" [placeholder]="placeholder"></md-input>
-  `,
-  directives: [MdInput]
-})
-class MdInputPasswordTestController {}
+@Component({template: `<md-input type="password" [placeholder]="placeholder"></md-input>`})
+class MdInputPasswordTestController {
+  placeholder: string = '';
+}
 
-@Component({
-  selector: 'test-input-controller',
-  template: `
-    <md-input type="number" [placeholder]="placeholder"></md-input>
-  `,
-  directives: [MdInput]
-})
-class MdInputNumberTestController {}
+@Component({template: `<md-input type="number" [placeholder]="placeholder"></md-input>`})
+class MdInputNumberTestController {
+  placeholder: string = '';
+}
