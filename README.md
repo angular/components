@@ -65,6 +65,7 @@ High level items planned for September 2016:
 | select           |                         Not started |           -  |   [#118][0118] |
 | textarea         |                         Not started |           -  |   [#546][0546] |
 | autocomplete     |                         Not started |           -  |   [#117][0117] |
+| content          |                         Not started |           -  |                |
 | chips            |                         Not started |           -  |   [#120][0120] |
 | theming          |               Designed, no code yet |           -  |   [#123][0123] |
 | prod build       |                         Not started |           -  |              - |
