@@ -39,6 +39,8 @@ more information.
 });
 ```
 
+* all: material now depends on TypeScript 2.0
+
 * input: `md-input` attributes now match the casing of native attributes. Previously they were camel-cased; now they are all lowercase. 
 Example: `autoComplete` is now `autocomplete`.   See [#1066](https://github.com/angular/material2/pull/1066) for a full list.
 
