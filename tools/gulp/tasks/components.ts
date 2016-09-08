@@ -60,7 +60,7 @@ task(':build:components:rollup', [':build:components:ts'], () => {
     'rxjs/Observable': 'Rx'
   };
   components.forEach(name => {
-    globals[`@angular2-material/${name}`] = `md.${camelCase(name)}`
+    globals[`@angular2-material/${name}`] = `mat.${camelCase(name)}`
   });
 
   // Build all of them asynchronously.
@@ -78,7 +78,7 @@ task(':build:components:rollup', [':build:components:ts'], () => {
       })
       .then((bundle: any) => {
         const result = bundle.generate({
-          moduleName: `md.${camelCase(name)}`,
+          moduleName: `mat.${camelCase(name)}`,
           format: 'umd',
           globals
         });
