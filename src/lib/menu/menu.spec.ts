@@ -1,13 +1,13 @@
 import {TestBed, async} from '@angular/core/testing';
 import {Component} from '@angular/core';
-import {MdMenuModule} from './menu';
+import {MatMenuModule} from './menu';
 
 
-describe('MdMenu', () => {
+describe('MatMenu', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdMenuModule.forRoot()],
+      imports: [MatMenuModule.forRoot()],
       declarations: [TestMenu],
     });
 

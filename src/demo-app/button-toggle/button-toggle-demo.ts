@@ -1,11 +1,11 @@
 import {Component} from '@angular/core';
-import {MdUniqueSelectionDispatcher} from '@angular2-material/core';
+import {MatUniqueSelectionDispatcher} from '@angular2-material/core';
 
 @Component({
   moduleId: module.id,
   selector: 'button-toggle-demo',
   templateUrl: 'button-toggle-demo.html',
-  providers: [MdUniqueSelectionDispatcher],
+  providers: [MatUniqueSelectionDispatcher],
 })
 export class ButtonToggleDemo {
   favoritePie = 'Apple';

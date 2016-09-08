@@ -2,16 +2,16 @@
 @import 'variables';
 @import 'mixins';
 
-$md-radio-size: $md-toggle-size !default;
+$mat-radio-size: $mat-toggle-size !default;
 
 // Top-level host container.
-md-radio-button {
+mat-radio-button {
   display: inline-block;
 }
 
 // Inner label container, wrapping entire element.
 // Enables focus by click.
-.md-radio-label {
+.mat-radio-label {
   cursor: pointer;
   display: inline-flex;
   align-items: baseline;
@@ -19,94 +19,94 @@ md-radio-button {
 }
 
 // Container for radio circles and ripple.
-.md-radio-container {
+.mat-radio-container {
   box-sizing: border-box;
   display: inline-block;
-  height: $md-radio-size;
+  height: $mat-radio-size;
   position: relative;
-  width: $md-radio-size;
+  width: $mat-radio-size;
   top: 2px;
 }
 
 // The outer circle for the radio, always present.
-.md-radio-outer-circle {
-  border-color: md-color($md-foreground, secondary-text);
+.mat-radio-outer-circle {
+  border-color: mat-color($mat-foreground, secondary-text);
   border: solid 2px;
   border-radius: 50%;
   box-sizing: border-box;
-  height: $md-radio-size;
+  height: $mat-radio-size;
   left: 0;
   position: absolute;
   top: 0;
   transition: border-color ease 280ms;
-  width: $md-radio-size;
+  width: $mat-radio-size;
 
-  .md-radio-checked & {
-    border-color: md-color($md-accent);
+  .mat-radio-checked & {
+    border-color: mat-color($mat-accent);
   }
 
-  .md-radio-disabled & {
-    border-color: md-color($md-foreground, disabled);
+  .mat-radio-disabled & {
+    border-color: mat-color($mat-foreground, disabled);
   }
 }
 
 // The inner circle for the radio, shown when checked.
-.md-radio-inner-circle {
-  background-color: md-color($md-accent);
+.mat-radio-inner-circle {
+  background-color: mat-color($mat-accent);
   border-radius: 50%;
   box-sizing: border-box;
-  height: $md-radio-size;
+  height: $mat-radio-size;
   left: 0;
   position: absolute;
   top: 0;
   transition: transform ease 280ms, background-color ease 280ms;
   transform: scale(0);
-  width: $md-radio-size;
+  width: $mat-radio-size;
 
-  .md-radio-checked & {
+  .mat-radio-checked & {
     transform: scale(0.5);
   }
 
-  .md-radio-disabled & {
-    background-color: md-color($md-foreground, disabled);
+  .mat-radio-disabled & {
+    background-color: mat-color($mat-foreground, disabled);
   }
 }
 
 // Text label next to radio.
-.md-radio-label-content {
+.mat-radio-label-content {
   display: inline-block;
   order: 0;
   line-height: inherit;
-  padding-left: $md-toggle-padding;
+  padding-left: $mat-toggle-padding;
   padding-right: 0;
 
   [dir='rtl'] & {
-    padding-right: $md-toggle-padding;
+    padding-right: $mat-toggle-padding;
     padding-left: 0;
   }
 }
 
 // Alignment.
-.md-radio-label-content.md-radio-align-end {
+.mat-radio-label-content.mat-radio-align-end {
   order: -1;
   padding-left: 0;
-  padding-right: $md-toggle-padding;
+  padding-right: $mat-toggle-padding;
 
   [dir='rtl'] & {
     padding-right: 0;
-    padding-left: $md-toggle-padding;
+    padding-left: $mat-toggle-padding;
   }
 }
 
 // Underlying native input element.
 // Visually hidden but still able to respond to focus.
-.md-radio-input {
-  @include md-visually-hidden;
+.mat-radio-input {
+  @include mat-visually-hidden;
 }
 
 // Basic disabled state.
-.md-radio-disabled, .md-radio-disabled .md-radio-label {
+.mat-radio-disabled, .mat-radio-disabled .mat-radio-label {
   cursor: default;
 }
 
-@include md-temporary-ink-ripple(radio);
+@include mat-temporary-ink-ripple(radio);

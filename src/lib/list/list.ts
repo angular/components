@@ -11,30 +11,30 @@ import {
     NgModule,
     ModuleWithProviders,
 } from '@angular/core';
-import {MdLine, MdLineSetter, MdLineModule} from '@angular2-material/core';
+import {MatLine, MatLineSetter, MatLineModule} from '@angular2-material/core';
 
 @Directive({
-  selector: 'md-divider'
+  selector: 'mat-divider'
 })
-export class MdListDivider {}
+export class MatListDivider {}
 
 @Component({
   moduleId: module.id,
-  selector: 'md-list, md-nav-list',
+  selector: 'mat-list, mat-nav-list',
   host: {'role': 'list'},
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class MdList {}
+export class MatList {}
 
 /* Need directive for a ContentChild query in list-item */
-@Directive({ selector: '[md-list-avatar]' })
-export class MdListAvatar {}
+@Directive({ selector: '[mat-list-avatar]' })
+export class MatListAvatar {}
 
 @Component({
   moduleId: module.id,
-  selector: 'md-list-item, a[md-list-item]',
+  selector: 'mat-list-item, a[mat-list-item]',
   host: {
     'role': 'listitem',
     '(focus)': '_handleFocus()',
@@ -43,23 +43,23 @@ export class MdListAvatar {}
   templateUrl: 'list-item.html',
   encapsulation: ViewEncapsulation.None
 })
-export class MdListItem implements AfterContentInit {
+export class MatListItem implements AfterContentInit {
   _hasFocus: boolean = false;
 
-  private _lineSetter: MdLineSetter;
+  private _lineSetter: MatLineSetter;
 
-  @ContentChildren(MdLine) _lines: QueryList<MdLine>;
+  @ContentChildren(MatLine) _lines: QueryList<MatLine>;
 
-  @ContentChild(MdListAvatar)
-  set _hasAvatar(avatar: MdListAvatar) {
-    this._renderer.setElementClass(this._element.nativeElement, 'md-list-avatar', avatar != null);
+  @ContentChild(MatListAvatar)
+  set _hasAvatar(avatar: MatListAvatar) {
+    this._renderer.setElementClass(this._element.nativeElement, 'mat-list-avatar', avatar != null);
   }
 
   constructor(private _renderer: Renderer, private _element: ElementRef) {}
 
   /** TODO: internal */
   ngAfterContentInit() {
-    this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
+    this._lineSetter = new MatLineSetter(this._lines, this._renderer, this._element);
   }
 
   _handleFocus() {
@@ -73,14 +73,14 @@ export class MdListItem implements AfterContentInit {
 
 
 @NgModule({
-  imports: [MdLineModule],
-  exports: [MdList, MdListItem, MdListDivider, MdListAvatar, MdLineModule],
-  declarations: [MdList, MdListItem, MdListDivider, MdListAvatar],
+  imports: [MatLineModule],
+  exports: [MatList, MatListItem, MatListDivider, MatListAvatar, MatLineModule],
+  declarations: [MatList, MatListItem, MatListDivider, MatListAvatar],
 })
-export class MdListModule {
+export class MatListModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdListModule,
+      ngModule: MatListModule,
       providers: []
     };
   }

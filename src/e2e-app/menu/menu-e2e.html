@@ -2,35 +2,35 @@
   <div style="float:left">
     <div id="text">{{ selected }}</div>
     <button id="start">START</button>
-    <button [md-menu-trigger-for]="menu" id="trigger">TRIGGER</button>
-    <button [md-menu-trigger-for]="menu" id="trigger-two">TRIGGER 2</button>
+    <button [mat-menu-trigger-for]="menu" id="trigger">TRIGGER</button>
+    <button [mat-menu-trigger-for]="menu" id="trigger-two">TRIGGER 2</button>
 
-    <md-menu #menu="mdMenu" class="custom">
-      <button md-menu-item (click)="selected='one'">One</button>
-      <button md-menu-item (click)="selected='two'">Two</button>
-      <button md-menu-item (click)="selected='three'" disabled>Three</button>
-      <button md-menu-item>Four</button>
-    </md-menu>
+    <mat-menu #menu="matMenu" class="custom">
+      <button mat-menu-item (click)="selected='one'">One</button>
+      <button mat-menu-item (click)="selected='two'">Two</button>
+      <button mat-menu-item (click)="selected='three'" disabled>Three</button>
+      <button mat-menu-item>Four</button>
+    </mat-menu>
 
-    <button [md-menu-trigger-for]="beforeMenu" id="before-t">
+    <button [mat-menu-trigger-for]="beforeMenu" id="before-t">
       BEFORE
     </button>
-    <md-menu x-position="before" class="before" #beforeMenu="mdMenu">
-      <button md-menu-item>Item</button>
-    </md-menu>
+    <mat-menu x-position="before" class="before" #beforeMenu="matMenu">
+      <button mat-menu-item>Item</button>
+    </mat-menu>
 
     <div class="bottom-row">
-      <button [md-menu-trigger-for]="aboveMenu" id="above-t">ABOVE</button>
-      <md-menu y-position="above" class="above" #aboveMenu="mdMenu">
-        <button md-menu-item>Item</button>
-      </md-menu>
+      <button [mat-menu-trigger-for]="aboveMenu" id="above-t">ABOVE</button>
+      <mat-menu y-position="above" class="above" #aboveMenu="matMenu">
+        <button mat-menu-item>Item</button>
+      </mat-menu>
 
-      <button [md-menu-trigger-for]="combined" id="combined-t">
+      <button [mat-menu-trigger-for]="combined" id="combined-t">
         BOTH
       </button>
-      <md-menu x-position="before" y-position="above" class="combined" #combined="mdMenu">
-        <button md-menu-item>Item</button>
-      </md-menu>
+      <mat-menu x-position="before" y-position="above" class="combined" #combined="matMenu">
+        <button mat-menu-item>Item</button>
+      </mat-menu>
 
     </div>
   </div>

@@ -8,15 +8,15 @@ import {
 
 /**
  * Shared directive to count lines inside a text area, such as a list item.
- * Line elements can be extracted with a @ContentChildren(MdLine) query, then
+ * Line elements can be extracted with a @ContentChildren(MatLine) query, then
  * counted by checking the query list's length.
  */
-@Directive({ selector: '[md-line]' })
-export class MdLine {}
+@Directive({ selector: '[mat-line]' })
+export class MatLine {}
 
 /* Helper that takes a query list of lines and sets the correct class on the host */
-export class MdLineSetter {
-  constructor(private _lines: QueryList<MdLine>, private _renderer: Renderer,
+export class MatLineSetter {
+  constructor(private _lines: QueryList<MatLine>, private _renderer: Renderer,
               private _element: ElementRef) {
     this._setLineClass(this._lines.length);
 
@@ -29,13 +29,13 @@ export class MdLineSetter {
   private _setLineClass(count: number): void {
     this._resetClasses();
     if (count === 2 || count === 3) {
-      this._setClass(`md-${count}-line`, true);
+      this._setClass(`mat-${count}-line`, true);
     }
   }
 
   private _resetClasses(): void {
-    this._setClass('md-2-line', false);
-    this._setClass('md-3-line', false);
+    this._setClass('mat-2-line', false);
+    this._setClass('mat-3-line', false);
   }
 
   private _setClass(className: string, bool: boolean): void {
@@ -45,7 +45,7 @@ export class MdLineSetter {
 }
 
 @NgModule({
-  exports: [MdLine],
-  declarations: [MdLine],
+  exports: [MatLine],
+  declarations: [MatLine],
 })
-export class MdLineModule { }
+export class MatLineModule { }

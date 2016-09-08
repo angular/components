@@ -19,18 +19,18 @@ import {
 } from '@angular/forms';
 import {BooleanFieldValue, applyCssTransform} from '@angular2-material/core';
 import {Observable} from 'rxjs/Observable';
-import {MdGestureConfig} from '@angular2-material/core';
+import {MatGestureConfig} from '@angular2-material/core';
 
 
-export const MD_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {
+export const MAT_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdSlideToggle),
+  useExisting: forwardRef(() => MatSlideToggle),
   multi: true
 };
 
-// A simple change event emitted by the MdSlideToggle component.
-export class MdSlideToggleChange {
-  source: MdSlideToggle;
+// A simple change event emitted by the MatSlideToggle component.
+export class MatSlideToggleChange {
+  source: MatSlideToggle;
   checked: boolean;
 }
 
@@ -39,26 +39,26 @@ let nextId = 0;
 
 @Component({
   moduleId: module.id,
-  selector: 'md-slide-toggle',
+  selector: 'mat-slide-toggle',
   host: {
-    '[class.md-checked]': 'checked',
-    '[class.md-disabled]': 'disabled',
-    // This md-slide-toggle prefix will change, once the temporary ripple is removed.
-    '[class.md-slide-toggle-focused]': '_hasFocus',
+    '[class.mat-checked]': 'checked',
+    '[class.mat-disabled]': 'disabled',
+    // This mat-slide-toggle prefix will change, once the temporary ripple is removed.
+    '[class.mat-slide-toggle-focused]': '_hasFocus',
     '(mousedown)': '_setMousedown()'
   },
   templateUrl: 'slide-toggle.html',
   styleUrls: ['slide-toggle.css'],
-  providers: [MD_SLIDE_TOGGLE_VALUE_ACCESSOR],
+  providers: [MAT_SLIDE_TOGGLE_VALUE_ACCESSOR],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
+export class MatSlideToggle implements AfterContentInit, ControlValueAccessor {
 
   private onChange = (_: any) => {};
   private onTouched = () => {};
 
   // A unique id for the slide-toggle. By default the id is auto-generated.
-  private _uniqueId = `md-slide-toggle-${++nextId}`;
+  private _uniqueId = `mat-slide-toggle-${++nextId}`;
   private _checked: boolean = false;
   private _color: string;
   _hasFocus: boolean = false;
@@ -72,8 +72,8 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   @Input() ariaLabel: string = null;
   @Input() ariaLabelledby: string = null;
 
-  private _change: EventEmitter<MdSlideToggleChange> = new EventEmitter<MdSlideToggleChange>();
-  @Output() change: Observable<MdSlideToggleChange> = this._change.asObservable();
+  private _change: EventEmitter<MatSlideToggleChange> = new EventEmitter<MatSlideToggleChange>();
+  @Output() change: Observable<MatSlideToggleChange> = this._change.asObservable();
 
   // Returns the unique id for the visual hidden input.
   getInputId = () => `${this.id || this._uniqueId}-input`;
@@ -199,13 +199,13 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
 
   private _setElementColor(color: string, isAdd: boolean) {
     if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `md-${color}`, isAdd);
+      this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
     }
   }
 
   /** Emits the change event to the `change` output EventEmitter */
   private _emitChangeEvent() {
-    let event = new MdSlideToggleChange();
+    let event = new MatSlideToggleChange();
     event.source = this;
     event.checked = this.checked;
     this._change.emit(event);
@@ -245,8 +245,8 @@ class SlideToggleRenderer {
   private _percentage: number;
 
   constructor(private _elementRef: ElementRef) {
-    this._thumbEl = _elementRef.nativeElement.querySelector('.md-slide-toggle-thumb-container');
-    this._thumbBarEl = _elementRef.nativeElement.querySelector('.md-slide-toggle-bar');
+    this._thumbEl = _elementRef.nativeElement.querySelector('.mat-slide-toggle-thumb-container');
+    this._thumbBarEl = _elementRef.nativeElement.querySelector('.mat-slide-toggle-bar');
   }
 
   /** Whether the slide-toggle is currently dragging. */
@@ -260,7 +260,7 @@ class SlideToggleRenderer {
     if (!this._thumbBarWidth) {
       this._thumbBarWidth = this._thumbBarEl.clientWidth - this._thumbEl.clientWidth;
       this._checked = checked;
-      this._thumbEl.classList.add('md-dragging');
+      this._thumbEl.classList.add('mat-dragging');
     }
   }
 
@@ -268,7 +268,7 @@ class SlideToggleRenderer {
   stopThumbDrag(): boolean {
     if (this._thumbBarWidth) {
       this._thumbBarWidth = null;
-      this._thumbEl.classList.remove('md-dragging');
+      this._thumbEl.classList.remove('mat-dragging');
 
       applyCssTransform(this._thumbEl, '');
 
@@ -301,14 +301,14 @@ class SlideToggleRenderer {
 
 @NgModule({
   imports: [FormsModule],
-  exports: [MdSlideToggle],
-  declarations: [MdSlideToggle],
+  exports: [MatSlideToggle],
+  declarations: [MatSlideToggle],
 })
-export class MdSlideToggleModule {
+export class MatSlideToggleModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdSlideToggleModule,
-      providers: [{provide: HAMMER_GESTURE_CONFIG, useClass: MdGestureConfig}]
+      ngModule: MatSlideToggleModule,
+      providers: [{provide: HAMMER_GESTURE_CONFIG, useClass: MatGestureConfig}]
     };
   }
 }

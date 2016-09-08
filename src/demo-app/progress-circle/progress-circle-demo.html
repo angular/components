@@ -1,21 +1,21 @@
 <h1>Determinate</h1>
 <div class="demo-progress-circle">
-  <md-progress-circle mode="determinate"
+  <mat-progress-circle mode="determinate"
                       [value]="progressValue"
-                      class="md-primary"></md-progress-circle>
-  <md-progress-circle [value]="progressValue"
-                      color="accent"></md-progress-circle>
+                      class="mat-primary"></mat-progress-circle>
+  <mat-progress-circle [value]="progressValue"
+                      color="accent"></mat-progress-circle>
 </div>
 <span>Value: {{progressValue}}</span>
-<button md-raised-button (click)="step(10)">Increase</button>
-<button md-raised-button (click)="step(-10)">Decrease</button>
+<button mat-raised-button (click)="step(10)">Increase</button>
+<button mat-raised-button (click)="step(-10)">Decrease</button>
 
 
 
 <h1>Indeterminate</h1>
 <div class="demo-progress-circle">
-  <md-progress-circle mode="indeterminate"></md-progress-circle>
-  <md-progress-circle mode="indeterminate"
-                      color="accent"></md-progress-circle>
-  <md-spinner></md-spinner>
+  <mat-progress-circle mode="indeterminate"></mat-progress-circle>
+  <mat-progress-circle mode="indeterminate"
+                      color="accent"></mat-progress-circle>
+  <mat-spinner></mat-spinner>
 </div>

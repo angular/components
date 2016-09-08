@@ -2,22 +2,22 @@
 @import 'mixins';
 @import 'variables';
 
-$md-input-floating-placeholder-scale-factor: 0.75 !default;
+$mat-input-floating-placeholder-scale-factor: 0.75 !default;
 
 // Placeholder colors. Required is used for the `*` star shown in the placeholder.
-$md-input-placeholder-color: md-color($md-foreground, hint-text);
-$md-input-floating-placeholder-color: md-color($md-primary);
-$md-input-required-placeholder-color: md-color($md-accent);
+$mat-input-placeholder-color: mat-color($mat-foreground, hint-text);
+$mat-input-floating-placeholder-color: mat-color($mat-primary);
+$mat-input-required-placeholder-color: mat-color($mat-accent);
 
 // Underline colors.
-$md-input-underline-color: md-color($md-foreground, hint-text);
-$md-input-underline-color-accent: md-color($md-accent);
-$md-input-underline-color-warn: md-color($md-warn);
-$md-input-underline-disabled-color: md-color($md-foreground, hint-text);
-$md-input-underline-focused-color: md-color($md-primary);
+$mat-input-underline-color: mat-color($mat-foreground, hint-text);
+$mat-input-underline-color-accent: mat-color($mat-accent);
+$mat-input-underline-color-warn: mat-color($mat-warn);
+$mat-input-underline-disabled-color: mat-color($mat-foreground, hint-text);
+$mat-input-underline-focused-color: mat-color($mat-primary);
 
 // Gradient for showing the dashed line when the input is disabled.
-$md-input-underline-disabled-background-image: linear-gradient(to right,
+$mat-input-underline-disabled-background-image: linear-gradient(to right,
         rgba(0, 0, 0, 0.26) 0%, rgba(0, 0, 0, 0.26) 33%, transparent 0%);
 
 /**
@@ -31,28 +31,28 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
 /**
  * Applies a floating placeholder above the input itself.
  */
-@mixin md-input-placeholder-floating {
+@mixin mat-input-placeholder-floating {
   display: block;
   padding-bottom: 5px;
-  transform: translateY(-100%) scale($md-input-floating-placeholder-scale-factor);
-  width: 100% / $md-input-floating-placeholder-scale-factor;
+  transform: translateY(-100%) scale($mat-input-floating-placeholder-scale-factor);
+  width: 100% / $mat-input-floating-placeholder-scale-factor;
 
-  .md-placeholder-required {
-    color: $md-input-required-placeholder-color;
+  .mat-placeholder-required {
+    color: $mat-input-required-placeholder-color;
   }
 }
 
 :host {
   display: inline-block;
   position: relative;
-  font-family: $md-font-family;
+  font-family: $mat-font-family;
 
   // To avoid problems with text-align.
   text-align: left;
 
   // Global wrapper. We need to apply margin to the element for spacing, but
   // cannot apply it to the host element directly.
-  .md-input-wrapper {
+  .mat-input-wrapper {
     margin: 16px 0;
   }
 
@@ -61,7 +61,7 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
   // this table.
   // Flex does not respect the baseline. What we really want is akin to a table
   // as want an inline-block where elements don't wrap.
-  .md-input-table {
+  .mat-input-table {
     display: inline-table;
     flex-flow: column;
     vertical-align: bottom;
@@ -73,7 +73,7 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
   }
 
   // The Input element proper.
-  .md-input-element {
+  .mat-input-element {
     // Font needs to be inherited, because by default <input> has a system font.
     font: inherit;
 
@@ -86,19 +86,19 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
     padding: 0;
     width: 100%;
 
-    &.md-end {
+    &.mat-end {
       text-align: right;
     }
   }
 
-  .md-input-infix {
+  .mat-input-infix {
     position: relative;
   }
 
   // The placeholder label. This is invisible unless it is. The logic to show it is
   // basically `empty || (float && (!empty || focused))`. Float is dependent on the
   // `floatingPlaceholder` input.
-  .md-input-placeholder {
+  .mat-input-placeholder {
     // The placeholder is after the <input>, but needs to be aligned top-left of the
     // infix <div>.
     position: absolute;
@@ -107,7 +107,7 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
 
     font-size: 100%;
     pointer-events: none;  // We shouldn't catch mouse events (let them through).
-    color: $md-input-placeholder-color;
+    color: $mat-input-placeholder-color;
     z-index: 1;
 
     // Put ellipsis text overflow.
@@ -124,26 +124,26 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
                 color $swift-ease-out-duration $swift-ease-out-timing-function,
                 width $swift-ease-out-duration $swift-ease-out-timing-function;
 
-    &.md-empty {
+    &.mat-empty {
       display: block;
       cursor: text;
     }
 
     // Show the placeholder above the input when it's not empty, or focused.
-    &.md-float:not(.md-empty), &.md-float.md-focused {
-      @include md-input-placeholder-floating;
+    &.mat-float:not(.mat-empty), &.mat-float.mat-focused {
+      @include mat-input-placeholder-floating;
     }
 
-    // :focus is applied to the input, but we apply md-focused to the other elements
+    // :focus is applied to the input, but we apply mat-focused to the other elements
     // that need to listen to it.
-    &.md-focused {
-      color: $md-input-floating-placeholder-color;
+    &.mat-focused {
+      color: $mat-input-floating-placeholder-color;
 
-      &.md-accent {
-        color: $md-input-underline-color-accent;
+      &.mat-accent {
+        color: $mat-input-underline-color-accent;
       }
-      &.md-warn {
-        color: $md-input-underline-color-warn;
+      &.mat-warn {
+        color: $mat-input-underline-color-warn;
       }
     }
   }
@@ -151,34 +151,34 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
   // Pseudo-class for Chrome and Safari auto-fill to move the placeholder to
   // the floating position. This is necessary because these browsers do not actually
   // fire any events when a form auto-fill is occurring.
-  // Once the autofill is committed, a change event happen and the regular md-input
+  // Once the autofill is committed, a change event happen and the regular mat-input
   // classes take over to fulfill this behaviour.
-  input:-webkit-autofill + .md-input-placeholder {
-    @include md-input-placeholder-floating;
+  input:-webkit-autofill + .mat-input-placeholder {
+    @include mat-input-placeholder-floating;
   }
 
   // The underline is what's shown under the input, its prefix and its suffix.
   // The ripple is the blue animation coming on top of it.
-  .md-input-underline {
+  .mat-input-underline {
     position: absolute;
     height: 1px;
     width: 100%;
     margin-top: 4px;
-    border-top: 1px solid $md-input-underline-color;
+    border-top: 1px solid $mat-input-underline-color;
 
-    &.md-disabled {
+    &.mat-disabled {
       border-top: 0;
-      background-image: $md-input-underline-disabled-background-image;
+      background-image: $mat-input-underline-disabled-background-image;
       background-position: 0;
       background-size: 4px 1px;
       background-repeat: repeat-x;
     }
 
-    .md-input-ripple {
+    .mat-input-ripple {
       position: absolute;
       height: 2px;
       z-index: 1;
-      background-color: $md-input-underline-focused-color;
+      background-color: $mat-input-underline-focused-color;
       top: -1px;
       width: 100%;
       transform-origin: top;
@@ -187,14 +187,14 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
       transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
                   opacity $swift-ease-out-duration $swift-ease-out-timing-function;
 
-      &.md-accent {
-        background-color: $md-input-underline-color-accent;
+      &.mat-accent {
+        background-color: $mat-input-underline-color-accent;
       }
-      &.md-warn {
-        background-color: $md-input-underline-color-warn;
+      &.mat-warn {
+        background-color: $mat-input-underline-color-warn;
       }
 
-      &.md-focused {
+      &.mat-focused {
         opacity: 1;
         transform: scaleY(1);
       }
@@ -203,12 +203,12 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
 
   // The hint is shown below the underline. There can be more than one; one at the start
   // and one at the end.
-  .md-hint {
+  .mat-hint {
     position: absolute;
     font-size: 75%;
     bottom: -0.5em;
 
-    &.md-right {
+    &.mat-right {
       right: 0;
     }
   }
@@ -219,19 +219,19 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
 :host-context([dir='rtl']) {
   text-align: right;
 
-  .md-input-placeholder {
+  .mat-input-placeholder {
     transform-origin: bottom right;
   }
 
-  .md-input-element.md-end {
+  .mat-input-element.mat-end {
     text-align: left;
   }
 
-  .md-hint {
+  .mat-hint {
     right: 0;
     left: auto;
 
-    &.md-right {
+    &.mat-right {
       right: auto;
       left: 0;
     }

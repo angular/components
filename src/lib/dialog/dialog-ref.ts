@@ -8,9 +8,9 @@ import {Subject} from 'rxjs/Subject';
 
 
 /**
- * Reference to a dialog opened via the MdDialog service.
+ * Reference to a dialog opened via the MatDialog service.
  */
-export class MdDialogRef<T> {
+export class MatDialogRef<T> {
   /** The instance of component opened into the dialog. */
   componentInstance: T;
 

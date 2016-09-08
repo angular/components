@@ -1,13 +1,13 @@
 import {inject, async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {NgModule, Component, Directive, ViewChild, ViewContainerRef} from '@angular/core';
-import {MdDialog, MdDialogModule} from './dialog';
+import {MatDialog, MatDialogModule} from './dialog';
 import {OverlayContainer} from '@angular2-material/core';
-import {MdDialogConfig} from './dialog-config';
-import {MdDialogRef} from './dialog-ref';
+import {MatDialogConfig} from './dialog-config';
+import {MatDialogRef} from './dialog-ref';
 
 
-describe('MdDialog', () => {
-  let dialog: MdDialog;
+describe('MatDialog', () => {
+  let dialog: MatDialog;
   let overlayContainerElement: HTMLElement;
 
   let testViewContainerRef: ViewContainerRef;
@@ -15,7 +15,7 @@ describe('MdDialog', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdDialogModule.forRoot(), DialogTestModule],
+      imports: [MatDialogModule.forRoot(), DialogTestModule],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
@@ -27,7 +27,7 @@ describe('MdDialog', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([MdDialog], (d: MdDialog) => {
+  beforeEach(inject([MatDialog], (d: MatDialog) => {
     dialog = d;
   }));
 
@@ -39,7 +39,7 @@ describe('MdDialog', () => {
   });
 
   it('should open a dialog with a component', () => {
-    let config = new MdDialogConfig();
+    let config = new MatDialogConfig();
     config.viewContainerRef = testViewContainerRef;
 
     let dialogRef = dialog.open(PizzaMsg, config);
@@ -51,12 +51,12 @@ describe('MdDialog', () => {
     expect(dialogRef.componentInstance.dialogRef).toBe(dialogRef);
 
     viewContainerFixture.detectChanges();
-    let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container');
+    let dialogContainerElement = overlayContainerElement.querySelector('mat-dialog-container');
     expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
   });
 
   it('should apply the configured role to the dialog element', () => {
-    let config = new MdDialogConfig();
+    let config = new MatDialogConfig();
     config.viewContainerRef = testViewContainerRef;
     config.role = 'alertdialog';
 
@@ -64,12 +64,12 @@ describe('MdDialog', () => {
 
     viewContainerFixture.detectChanges();
 
-    let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container');
+    let dialogContainerElement = overlayContainerElement.querySelector('mat-dialog-container');
     expect(dialogContainerElement.getAttribute('role')).toBe('alertdialog');
   });
 
   it('should close a dialog and get back a result', () => {
-    let config = new MdDialogConfig();
+    let config = new MatDialogConfig();
     config.viewContainerRef = testViewContainerRef;
 
     let dialogRef = dialog.open(PizzaMsg, config);
@@ -86,7 +86,7 @@ describe('MdDialog', () => {
     dialogRef.close('Charmander');
 
     expect(afterCloseResult).toBe('Charmander');
-    expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
+    expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
   });
 });
 
@@ -111,14 +111,14 @@ class ComponentWithChildViewContainer {
 /** Simple component for testing ComponentPortal. */
 @Component({template: '<p>Pizza</p>'})
 class PizzaMsg {
-  constructor(public dialogRef: MdDialogRef<PizzaMsg>) { }
+  constructor(public dialogRef: MatDialogRef<PizzaMsg>) { }
 }
 
 // Create a real (non-test) NgModule as a workaround for
 // https://github.com/angular/angular/issues/10760
 const TEST_DIRECTIVES = [ComponentWithChildViewContainer, PizzaMsg, DirectiveWithViewContainer];
 @NgModule({
-  imports: [MdDialogModule],
+  imports: [MatDialogModule],
   exports: TEST_DIRECTIVES,
   declarations: TEST_DIRECTIVES,
   entryComponents: [ComponentWithChildViewContainer, PizzaMsg],

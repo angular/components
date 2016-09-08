@@ -5,12 +5,12 @@ import {
   Inject
 } from '@angular/core';
 
-export const LIVE_ANNOUNCER_ELEMENT_TOKEN  = new OpaqueToken('mdLiveAnnouncerElement');
+export const LIVE_ANNOUNCER_ELEMENT_TOKEN  = new OpaqueToken('matLiveAnnouncerElement');
 
 export type AriaLivePoliteness = 'off' | 'polite' | 'assertive';
 
 @Injectable()
-export class MdLiveAnnouncer {
+export class MatLiveAnnouncer {
 
   private _liveElement: Element;
 
@@ -43,7 +43,7 @@ export class MdLiveAnnouncer {
   private _createLiveElement(): Element {
     let liveEl = document.createElement('div');
 
-    liveEl.classList.add('md-live-announcer');
+    liveEl.classList.add('mat-live-announcer');
     liveEl.setAttribute('aria-atomic', 'true');
     liveEl.setAttribute('aria-live', 'polite');
 

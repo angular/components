@@ -1,6 +1,6 @@
 import {ComponentFactoryResolver, ComponentRef, EmbeddedViewRef} from '@angular/core';
 import {BasePortalHost, ComponentPortal, TemplatePortal} from './portal';
-import {MdComponentPortalAttachedToDomWithoutOriginError} from './portal-errors';
+import {MatComponentPortalAttachedToDomWithoutOriginError} from './portal-errors';
 
 
 /**
@@ -19,7 +19,7 @@ export class DomPortalHost extends BasePortalHost {
   /** Attach the given ComponentPortal to DOM element using the ComponentFactoryResolver. */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     if (portal.viewContainerRef == null) {
-      throw new MdComponentPortalAttachedToDomWithoutOriginError();
+      throw new MatComponentPortalAttachedToDomWithoutOriginError();
     }
 
     let componentFactory = this._componentFactoryResolver.resolveComponentFactory(portal.component);

@@ -5,8 +5,8 @@ import {
   PortalHostDirective,
   TemplatePortal
 } from '@angular2-material/core';
-import {MdDialogConfig} from './dialog-config';
-import {MdDialogContentAlreadyAttachedError} from './dialog-errors';
+import {MatDialogConfig} from './dialog-config';
+import {MatDialogContentAlreadyAttachedError} from './dialog-errors';
 
 
 /**
@@ -14,25 +14,25 @@ import {MdDialogContentAlreadyAttachedError} from './dialog-errors';
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-dialog-container',
+  selector: 'mat-dialog-container',
   templateUrl: 'dialog-container.html',
   styleUrls: ['dialog-container.css'],
   host: {
-    'class': 'md-dialog-container',
+    'class': 'mat-dialog-container',
     '[attr.role]': 'dialogConfig?.role'
   }
 })
-export class MdDialogContainer extends BasePortalHost {
+export class MatDialogContainer extends BasePortalHost {
   /** The portal host inside of this container into which the dialog content will be loaded. */
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
   /** The dialog configuration. */
-  dialogConfig: MdDialogConfig;
+  dialogConfig: MatDialogConfig;
 
   /** Attach a portal as content to this dialog container. */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     if (this._portalHost.hasAttached()) {
-      throw new MdDialogContentAlreadyAttachedError();
+      throw new MatDialogContentAlreadyAttachedError();
     }
 
     return this._portalHost.attachComponentPortal(portal);

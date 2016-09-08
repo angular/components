@@ -1,7 +1,7 @@
-import {MdError} from '../errors/error';
+import {MatError} from '../errors/error';
 
 /** Exception thrown when a ComponentPortal is attached to a DomPortalHost without an origin. */
-export class MdComponentPortalAttachedToDomWithoutOriginError extends MdError {
+export class MatComponentPortalAttachedToDomWithoutOriginError extends MatError {
   constructor() {
       super(
           'A ComponentPortal must have an origin set when attached to a DomPortalHost ' +
@@ -10,28 +10,28 @@ export class MdComponentPortalAttachedToDomWithoutOriginError extends MdError {
 }
 
 /** Exception thrown when attempting to attach a null portal to a host. */
-export class MdNullPortalError extends MdError {
+export class MatNullPortalError extends MatError {
   constructor() {
       super('Must provide a portal to attach');
   }
 }
 
 /** Exception thrown when attempting to attach a portal to a host that is already attached. */
-export class MdPortalAlreadyAttachedError extends MdError {
+export class MatPortalAlreadyAttachedError extends MatError {
   constructor() {
       super('Host already has a portal attached');
   }
 }
 
 /** Exception thrown when attempting to attach a portal to an already-disposed host. */
-export class MdPortalHostAlreadyDisposedError extends MdError {
+export class MatPortalHostAlreadyDisposedError extends MatError {
   constructor() {
       super('This PortalHost has already been disposed');
   }
 }
 
 /** Exception thrown when attempting to attach an unknown portal type. */
-export class MdUnknownPortalTypeError extends MdError {
+export class MatUnknownPortalTypeError extends MatError {
   constructor() {
       super(
         'Attempting to attach an unknown Portal type. ' +
@@ -40,14 +40,14 @@ export class MdUnknownPortalTypeError extends MdError {
 }
 
 /** Exception thrown when attempting to attach a portal to a null host. */
-export class MdNullPortalHostError extends MdError {
+export class MatNullPortalHostError extends MatError {
   constructor() {
       super('Attempting to attach a portal to a null PortalHost');
   }
 }
 
 /** Exception thrown when attempting to detach a portal that is not attached. */
-export class MdNoPortalAttachedError extends MdError {
+export class MatNoPortalAttachedError extends MatError {
   constructor() {
       super('Attempting to detach a portal that is not attached to a host');
   }

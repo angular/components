@@ -1,15 +1,15 @@
-import {MdError} from '@angular2-material/core';
+import {MatError} from '@angular2-material/core';
 
 /**
- * Exception thrown when menu trigger doesn't have a valid md-menu instance
+ * Exception thrown when menu trigger doesn't have a valid mat-menu instance
  */
-export class MdMenuMissingError extends MdError {
+export class MatMenuMissingError extends MatError {
   constructor() {
-    super(`md-menu-trigger: must pass in an md-menu instance.
+    super(`mat-menu-trigger: must pass in an mat-menu instance.
 
     Example:
-      <md-menu #menu="mdMenu"></md-menu>
-      <button [md-menu-trigger-for]="menu"></button>
+      <mat-menu #menu="matMenu"></mat-menu>
+      <button [mat-menu-trigger-for]="menu"></button>
     `);
   }
 }
@@ -18,10 +18,10 @@ export class MdMenuMissingError extends MdError {
  * Exception thrown when menu's x-position value isn't valid.
  * In other words, it doesn't match 'before' or 'after'.
  */
-export class MdMenuInvalidPositionX extends MdError {
+export class MatMenuInvalidPositionX extends MatError {
   constructor() {
     super(`x-position value must be either 'before' or after'.
-      Example: <md-menu x-position="before" #menu="mdMenu"></md-menu>
+      Example: <mat-menu x-position="before" #menu="matMenu"></mat-menu>
     `);
   }
 }
@@ -30,10 +30,10 @@ export class MdMenuInvalidPositionX extends MdError {
  * Exception thrown when menu's y-position value isn't valid.
  * In other words, it doesn't match 'above' or 'below'.
  */
-export class MdMenuInvalidPositionY extends MdError {
+export class MatMenuInvalidPositionY extends MatError {
   constructor() {
     super(`y-position value must be either 'above' or below'.
-      Example: <md-menu y-position="above" #menu="mdMenu"></md-menu>
+      Example: <mat-menu y-position="above" #menu="matMenu"></mat-menu>
     `);
   }
 }

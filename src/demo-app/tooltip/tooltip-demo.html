@@ -2,19 +2,19 @@
   <h1>Tooltip Demo</h1>
   <p class="centered">
     <button
-        md-raised-button
+        mat-raised-button
         color="primary"
-        md-tooltip="to see a tooltip"
+        mat-tooltip="to see a tooltip"
         [tooltip-position]="position">
       Mouse over this link
     </button>
   </p>
   <p>
-    <md-radio-group [(ngModel)]="position">
-      <md-radio-button value="below">Below</md-radio-button>
-      <md-radio-button value="above">Above</md-radio-button>
-      <md-radio-button value="before">Before</md-radio-button>
-      <md-radio-button value="after">After</md-radio-button>
-    </md-radio-group>
+    <mat-radio-group [(ngModel)]="position">
+      <mat-radio-button value="below">Below</mat-radio-button>
+      <mat-radio-button value="above">Above</mat-radio-button>
+      <mat-radio-button value="before">Before</mat-radio-button>
+      <mat-radio-button value="after">After</mat-radio-button>
+    </mat-radio-group>
   </p>
 </div>

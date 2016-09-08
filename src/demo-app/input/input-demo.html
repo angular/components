@@ -1,140 +1,140 @@
-<md-card class="demo-card demo-basic">
-  <md-toolbar color="primary">Basic</md-toolbar>
-  <md-card-content>
+<mat-card class="demo-card demo-basic">
+  <mat-toolbar color="primary">Basic</mat-toolbar>
+  <mat-card-content>
     <form>
-      <md-input class="demo-full-width" placeholder="Company (disabled)" disabled value="Google">
-      </md-input>
+      <mat-input class="demo-full-width" placeholder="Company (disabled)" disabled value="Google">
+      </mat-input>
 
       <table style="width: 100%" cellspacing="0"><tr>
-        <td><md-input placeholder="First name" style="width: 100%"></md-input></td>
-        <td><md-input placeholder="Long Last Name That Will Be Truncated" style="width: 100%"></md-input></td>
+        <td><mat-input placeholder="First name" style="width: 100%"></mat-input></td>
+        <td><mat-input placeholder="Long Last Name That Will Be Truncated" style="width: 100%"></mat-input></td>
       </tr></table>
       <p>
-        <md-input class="demo-full-width" placeholder="Address" value="1600 Amphitheatre Pkway"></md-input>
-        <md-input class="demo-full-width" placeholder="Address 2"></md-input>
+        <mat-input class="demo-full-width" placeholder="Address" value="1600 Amphitheatre Pkway"></mat-input>
+        <mat-input class="demo-full-width" placeholder="Address 2"></mat-input>
       </p>
       <table style="width: 100%" cellspacing="0"><tr>
-        <td><md-input class="demo-full-width" placeholder="City" value="Mountain View"></md-input></td>
-        <td><md-input class="demo-full-width" placeholder="State" maxLength="2" value="CA"></md-input></td>
-        <td><md-input #postalCode class="demo-full-width" maxLength="5"
+        <td><mat-input class="demo-full-width" placeholder="City" value="Mountain View"></mat-input></td>
+        <td><mat-input class="demo-full-width" placeholder="State" maxLength="2" value="CA"></mat-input></td>
+        <td><mat-input #postalCode class="demo-full-width" maxLength="5"
                       placeholder="Postal Code"
                       value="94043">
-          <md-hint align="end">{{postalCode.characterCount}} / 5</md-hint>
-        </md-input></td>
+          <mat-hint align="end">{{postalCode.characterCount}} / 5</mat-hint>
+        </mat-input></td>
       </tr></table>
     </form>
-  </md-card-content>
-</md-card>
+  </mat-card-content>
+</mat-card>
 
-<md-card class="demo-card demo-basic">
-  <md-toolbar color="primary">Prefix + Suffix</md-toolbar>
-  <md-card-content>
-    <md-input placeholder="amount" align="end">
-      <span md-prefix>$&nbsp;</span>
-      <span md-suffix>.00</span>
-    </md-input>
-  </md-card-content>
-</md-card>
+<mat-card class="demo-card demo-basic">
+  <mat-toolbar color="primary">Prefix + Suffix</mat-toolbar>
+  <mat-card-content>
+    <mat-input placeholder="amount" align="end">
+      <span mat-prefix>$&nbsp;</span>
+      <span mat-suffix>.00</span>
+    </mat-input>
+  </mat-card-content>
+</mat-card>
 
-<md-card class="demo-card demo-basic">
-  <md-toolbar color="primary">Divider Colors</md-toolbar>
-  <md-card-content>
-    <md-input dividerColor="primary" placeholder="Default Color" value="example"></md-input>
-    <md-input dividerColor="accent" placeholder="Accent Color" value="example"></md-input>
-    <md-input dividerColor="warn" placeholder="Warn Color" value="example"></md-input>
-  </md-card-content>
-</md-card>
+<mat-card class="demo-card demo-basic">
+  <mat-toolbar color="primary">Divider Colors</mat-toolbar>
+  <mat-card-content>
+    <mat-input dividerColor="primary" placeholder="Default Color" value="example"></mat-input>
+    <mat-input dividerColor="accent" placeholder="Accent Color" value="example"></mat-input>
+    <mat-input dividerColor="warn" placeholder="Warn Color" value="example"></mat-input>
+  </mat-card-content>
+</mat-card>
 
-<md-card class="demo-card demo-basic">
-  <md-toolbar color="primary">Hints</md-toolbar>
-  <md-card-content>
+<mat-card class="demo-card demo-basic">
+  <mat-toolbar color="primary">Hints</mat-toolbar>
+  <mat-card-content>
     <p>
-      <md-input placeholder="Character count (100 max)" maxLength="100" class="demo-full-width"
+      <mat-input placeholder="Character count (100 max)" maxLength="100" class="demo-full-width"
                 value="Hello world. How are you?"
                 #characterCountHintExample>
-        <md-hint align="end">{{characterCountHintExample.characterCount}} / 100</md-hint>
-      </md-input>
+        <mat-hint align="end">{{characterCountHintExample.characterCount}} / 100</mat-hint>
+      </mat-input>
     </p>
-  </md-card-content>
-</md-card>
+  </mat-card-content>
+</mat-card>
 
-<md-card class="demo-card">
-  <md-card-title>
-    Hello <md-input [(ngModel)]="name" type="text" placeholder="First name"></md-input>,
+<mat-card class="demo-card">
+  <mat-card-title>
+    Hello <mat-input [(ngModel)]="name" type="text" placeholder="First name"></mat-input>,
     how are you?
-  </md-card-title>
-  <md-card-content>
+  </mat-card-title>
+  <mat-card-content>
     <p>
-      <md-input disabled placeholder="Disabled field" value="Value"></md-input>
-      <md-input required placeholder="Required field"></md-input>
+      <mat-input disabled placeholder="Disabled field" value="Value"></mat-input>
+      <mat-input required placeholder="Required field"></mat-input>
     </p>
     <p>
-      <md-input placeholder="100% width placeholder" style="width: 100%"></md-input>
+      <mat-input placeholder="100% width placeholder" style="width: 100%"></mat-input>
     </p>
     <p>
-      <md-input placeholder="Character count (100 max)" maxLength="100" style="width: 100%"
+      <mat-input placeholder="Character count (100 max)" maxLength="100" style="width: 100%"
                 #input>
-        <md-hint align="end">{{input.characterCount}} / 100</md-hint>
-      </md-input>
+        <mat-hint align="end">{{input.characterCount}} / 100</mat-hint>
+      </mat-input>
     </p>
     <p>
-      <md-input placeholder="Show Hint Label" style="width: 100%"
-                hintLabel="Hint label"></md-input>
-    </p>
-
-    <p>
-      <md-input>
-        <md-placeholder>
-          I <md-icon class="demo-icons">favorite</md-icon> <b>bold</b> placeholder
-        </md-placeholder>
-        <md-hint>
-          I also <md-icon class="demo-icons">home</md-icon> <i>italic</i> hint labels
-        </md-hint>
-      </md-input>
-    </p>
-    <p>
-      <md-input placeholder="Show Hint Label With Character Count" style="width: 100%"
-                hintLabel="Hint label" characterCounter></md-input>
-    </p>
-    <p>
-      <md-checkbox [(ngModel)]="dividerColor">Check to change the divider color:</md-checkbox>
-      <md-input [dividerColor]="dividerColor ? 'primary' : 'accent'"
-                [placeholder]="dividerColor ? 'Primary color' : 'Accent color'"></md-input>
-    </p>
-    <p>
-      <md-checkbox [(ngModel)]="requiredField"> Check to make required:</md-checkbox>
-      <md-input [required]="requiredField"
-                [placeholder]="requiredField ? 'Required field' : 'Not required field'"></md-input>
-    </p>
-    <p>
-      <md-checkbox [(ngModel)]="floatingLabel"> Check to make floating label:</md-checkbox>
-      <md-input [floatingPlaceholder]="floatingLabel"
-                [placeholder]="floatingLabel ? 'Floating label' : 'Not floating label'"></md-input>
+      <mat-input placeholder="Show Hint Label" style="width: 100%"
+                hintLabel="Hint label"></mat-input>
     </p>
 
     <p>
-      <md-input placeholder="Prefixed" value="example">
-        <div md-prefix>Example:&nbsp;</div>
-      </md-input>
-      <md-input placeholder="Suffixed" value="123" align="end">
-        <span md-suffix>.00 €</span>
-      </md-input>
+      <mat-input>
+        <mat-placeholder>
+          I <mat-icon class="demo-icons">favorite</mat-icon> <b>bold</b> placeholder
+        </mat-placeholder>
+        <mat-hint>
+          I also <mat-icon class="demo-icons">home</mat-icon> <i>italic</i> hint labels
+        </mat-hint>
+      </mat-input>
+    </p>
+    <p>
+      <mat-input placeholder="Show Hint Label With Character Count" style="width: 100%"
+                hintLabel="Hint label" characterCounter></mat-input>
+    </p>
+    <p>
+      <mat-checkbox [(ngModel)]="dividerColor">Check to change the divider color:</mat-checkbox>
+      <mat-input [dividerColor]="dividerColor ? 'primary' : 'accent'"
+                [placeholder]="dividerColor ? 'Primary color' : 'Accent color'"></mat-input>
+    </p>
+    <p>
+      <mat-checkbox [(ngModel)]="requiredField"> Check to make required:</mat-checkbox>
+      <mat-input [required]="requiredField"
+                [placeholder]="requiredField ? 'Required field' : 'Not required field'"></mat-input>
+    </p>
+    <p>
+      <mat-checkbox [(ngModel)]="floatingLabel"> Check to make floating label:</mat-checkbox>
+      <mat-input [floatingPlaceholder]="floatingLabel"
+                [placeholder]="floatingLabel ? 'Floating label' : 'Not floating label'"></mat-input>
+    </p>
+
+    <p>
+      <mat-input placeholder="Prefixed" value="example">
+        <div mat-prefix>Example:&nbsp;</div>
+      </mat-input>
+      <mat-input placeholder="Suffixed" value="123" align="end">
+        <span mat-suffix>.00 €</span>
+      </mat-input>
       <br/>
       Both:
-      <md-input #email placeholder="Email Address" value="angular-core" align="end">
-        <span md-prefix><md-icon [class.primary]="email.focused" class="demo-icons demo-transform">email</md-icon>&nbsp;</span>
-        <span md-suffix class="demo-transform" [class.primary]="email.focused">&nbsp;@gmail.com</span>
-      </md-input>
+      <mat-input #email placeholder="Email Address" value="angular-core" align="end">
+        <span mat-prefix><mat-icon [class.primary]="email.focused" class="demo-icons demo-transform">email</mat-icon>&nbsp;</span>
+        <span mat-suffix class="demo-transform" [class.primary]="email.focused">&nbsp;@gmail.com</span>
+      </mat-input>
     </p>
 
     <p>
-      Empty: <md-input></md-input>
-      <label>Label: <md-input></md-input></label>
+      Empty: <mat-input></mat-input>
+      <label>Label: <mat-input></mat-input></label>
     </p>
-  </md-card-content>
-</md-card>
+  </mat-card-content>
+</mat-card>
 
-<md-card class="demo-card">
+<mat-card class="demo-card">
   <table width="100%">
     <thead>
       <td>Table</td>
@@ -148,7 +148,7 @@
     <tr *ngFor="let item of items; let i = index">
       <td>{{i+1}}</td>
       <td>
-        <md-input type="number" placeholder="value" aria-label="hello" [(ngModel)]="items[i].value"></md-input>
+        <mat-input type="number" placeholder="value" aria-label="hello" [(ngModel)]="items[i].value"></mat-input>
       </td>
       <td>
         <input type="number" [(ngModel)]="items[i].value">
@@ -156,4 +156,4 @@
       <td>{{item.value}}</td>
     </tr>
   </table>
-</md-card>
+</mat-card>

@@ -1,11 +1,11 @@
 import {Directive, ElementRef} from '@angular/core';
 
 
-/** Used in the `md-tab-group` view to display tab labels */
+/** Used in the `mat-tab-group` view to display tab labels */
 @Directive({
-  selector: '[md-tab-label-wrapper]'
+  selector: '[mat-tab-label-wrapper]'
 })
-export class MdTabLabelWrapper {
+export class MatTabLabelWrapper {
   constructor(public elementRef: ElementRef) {}
 
   /**

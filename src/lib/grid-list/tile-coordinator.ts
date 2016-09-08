@@ -1,5 +1,5 @@
-import {MdGridTile} from './grid-tile';
-import {MdGridTileTooWideError} from './grid-list-errors';
+import {MatGridTile} from './grid-tile';
+import {MatGridTileTooWideError} from './grid-list-errors';
 
 /**
  * Class for determining, from a list of tiles, the (row, col) position of each of those tiles
@@ -41,7 +41,7 @@ export class TileCoordinator {
   /** The computed (row, col) position of each tile (the output). */
   positions: TilePosition[];
 
-  constructor(numColumns: number, tiles: MdGridTile[]) {
+  constructor(numColumns: number, tiles: MatGridTile[]) {
     this.tracker = new Array(numColumns);
     this.tracker.fill(0, 0, this.tracker.length);
 
@@ -49,7 +49,7 @@ export class TileCoordinator {
   }
 
   /** Calculates the row and col position of a tile. */
-  private _trackTile(tile: MdGridTile): TilePosition {
+  private _trackTile(tile: MatGridTile): TilePosition {
     // Find a gap large enough for this tile.
     let gapStartIndex = this._findMatchingGap(tile.colspan);
 
@@ -66,7 +66,7 @@ export class TileCoordinator {
   /** Finds the next available space large enough to fit the tile. */
   private _findMatchingGap(tileCols: number): number {
     if (tileCols > this.tracker.length) {
-      throw new MdGridTileTooWideError(tileCols, this.tracker.length);
+      throw new MatGridTileTooWideError(tileCols, this.tracker.length);
     }
 
     // Start index is inclusive, end index is exclusive.
@@ -127,7 +127,7 @@ export class TileCoordinator {
   }
 
   /** Update the tile tracker to account for the given tile in the given space. */
-  private _markTilePosition(start: number, tile: MdGridTile): void {
+  private _markTilePosition(start: number, tile: MatGridTile): void {
     for (let i = 0; i < tile.colspan; i++) {
       this.tracker[start + i] = tile.rowspan;
     }

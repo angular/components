@@ -3,7 +3,7 @@
  * Mixin that creates a new stacking context.
  * see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
  */
-@mixin md-stacking-context() {
+@mixin mat-stacking-context() {
   position: relative;
 
   // Use a transform to create a new stacking context.
@@ -14,7 +14,7 @@
  * This mixin hides an element visually.
  * That means it's still accessible for screen-readers but not visible in view.
  */
-@mixin md-visually-hidden {
+@mixin mat-visually-hidden {
   border: 0;
   clip: rect(0 0 0 0);
   height: 1px;
@@ -30,7 +30,7 @@
  * Forces an element to grow to fit floated contents; used as as an alternative to
  * `overflow: hidden;` because it doesn't cut off contents.
  */
-@mixin md-clearfix {
+@mixin mat-clearfix {
   &::before, &::after {
     content: '';
     clear: both;
@@ -45,10 +45,10 @@
  * It is also possible to specify the color palette of the temporary ripple. By default it uses the
  * accent palette for its background.
  */
-@mixin md-temporary-ink-ripple($component, $bindToParent: false, $palette: $md-accent) {
+@mixin mat-temporary-ink-ripple($component, $bindToParent: false, $palette: $mat-accent) {
   // TODO(mtlin): Replace when ink ripple component is implemented.
   // A placeholder ink ripple, shown when keyboard focused.
-  .md-ink-ripple {
+  .mat-ink-ripple {
     border-radius: 50%;
     opacity: 0;
     height: 48px;
@@ -63,14 +63,14 @@
   }
 
   // Fade in when radio focused.
-  #{if($bindToParent, '&', '')}.md-#{$component}-focused .md-ink-ripple {
+  #{if($bindToParent, '&', '')}.mat-#{$component}-focused .mat-ink-ripple {
     opacity: 1;
-    background-color: md-color($palette, 0.26);
+    background-color: mat-color($palette, 0.26);
   }
 
   // TODO(mtlin): This corresponds to disabled focus state, but it's unclear how to enter into
   // this state.
-  #{if($bindToParent, '&', '')}.md-#{$component}-disabled .md-ink-ripple {
+  #{if($bindToParent, '&', '')}.mat-#{$component}-disabled .mat-ink-ripple {
     background-color: #000;
   }
 }

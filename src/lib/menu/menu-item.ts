@@ -1,19 +1,19 @@
 import {Directive, ElementRef, Input, HostBinding, Renderer} from '@angular/core';
 
 /**
- * This directive is intended to be used inside an md-menu tag.
+ * This directive is intended to be used inside an mat-menu tag.
  * It exists mostly to set the role attribute.
  */
 @Directive({
-  selector: '[md-menu-item]',
+  selector: '[mat-menu-item]',
   host: {
     'role': 'menuitem',
     '(click)': '_checkDisabled($event)',
     'tabindex': '-1'
   },
-  exportAs: 'mdMenuItem'
+  exportAs: 'matMenuItem'
 })
-export class MdMenuItem {
+export class MatMenuItem {
   _disabled: boolean;
 
   constructor(private _renderer: Renderer, private _elementRef: ElementRef) {}

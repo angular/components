@@ -6,9 +6,9 @@
 
 // We use invert() here to have the darken the background color expected to be used. If the
 // background is light, we use a dark backdrop. If the background is dark, we use a light backdrop.
-$md-sidenav-backdrop-color: invert(md-color($md-background, card, 0.6)) !default;
-$md-sidenav-background-color: md-color($md-background, dialog) !default;
-$md-sidenav-push-background-color: md-color($md-background, dialog) !default;
+$mat-sidenav-backdrop-color: invert(mat-color($mat-background, card, 0.6)) !default;
+$mat-sidenav-background-color: mat-color($mat-background, dialog) !default;
+$mat-sidenav-push-background-color: mat-color($mat-background, dialog) !default;
 
 
 /**
@@ -16,38 +16,38 @@ $md-sidenav-push-background-color: md-color($md-background, dialog) !default;
  * @param $open The translation value when the sidenav is opened.
  * @param $close The translation value when the sidenav is closed.
  */
-@mixin md-sidenav-transition($open, $close) {
+@mixin mat-sidenav-transition($open, $close) {
   transform: translate3d($close, 0, 0);
 
-  &.md-sidenav-closed {
+  &.mat-sidenav-closed {
     // We use 'visibility: hidden | visible' because 'display: none' will not animate any
     // transitions, while visibility will interpolate transitions properly.
     // see https://developer.mozilla.org/en-US/docs/Web/CSS/visibility, the Interpolation
     // section.
     visibility: hidden;
   }
-  &.md-sidenav-closing {
+  &.mat-sidenav-closing {
     transform: translate3d($close, 0, 0);
     will-change: transform;
   }
-  &.md-sidenav-opening {
-    @include md-elevation(1);
+  &.mat-sidenav-opening {
+    @include mat-elevation(1);
     visibility: visible;
     transform: translate3d($open, 0, 0);
     will-change: transform;
   }
-  &.md-sidenav-opened {
-    @include md-elevation(1);
+  &.mat-sidenav-opened {
+    @include mat-elevation(1);
     transform: translate3d($open, 0, 0);
   }
 }
 
-md-sidenav-layout {
+mat-sidenav-layout {
   // We need a stacking context here so that the backdrop and drawers are clipped to the
-  // MdSidenavLayout. This creates a new z-index stack so we use low numbered z-indices.
-  // We create another stacking context in the '.md-sidenav-content' and in each sidenav so that
+  // MatSidenavLayout. This creates a new z-index stack so we use low numbered z-indices.
+  // We create another stacking context in the '.mat-sidenav-content' and in each sidenav so that
   // the application content does not get messed up with our own CSS.
-  @include md-stacking-context();
+  @include mat-stacking-context();
 
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
@@ -60,16 +60,16 @@ md-sidenav-layout {
 
   // TODO(hansl): Update this with a more robust solution.
   &[fullscreen] {
-    @include md-fullscreen();
+    @include mat-fullscreen();
 
-    &.md-sidenav-opened {
+    &.mat-sidenav-opened {
       overflow: hidden;
     }
   }
 }
 
-.md-sidenav-backdrop {
-  @include md-fullscreen();
+.mat-sidenav-backdrop {
+  @include mat-fullscreen();
 
   display: block;
 
@@ -83,22 +83,22 @@ md-sidenav-layout {
   // section.
   visibility: hidden;
 
-  &.md-sidenav-shown {
+  &.mat-sidenav-shown {
     visibility: visible;
-    background-color: $md-sidenav-backdrop-color;
+    background-color: $mat-sidenav-backdrop-color;
   }
 }
 
-.md-sidenav-content {
-  @include md-stacking-context();
+.mat-sidenav-content {
+  @include mat-stacking-context();
 
   display: block;
   height: 100%;
   overflow: auto;
 }
 
-md-sidenav {
-  @include md-stacking-context();
+mat-sidenav {
+  @include mat-stacking-context();
 
   display: block;
   position: absolute;
@@ -110,32 +110,32 @@ md-sidenav {
   // TODO(kara): revisit scrolling behavior for sidenavs
   overflow-y: auto;
 
-  background-color: $md-sidenav-background-color;
+  background-color: $mat-sidenav-background-color;
 
-  @include md-sidenav-transition(0, -100%);
+  @include mat-sidenav-transition(0, -100%);
 
-  &.md-sidenav-push {
-    background-color: $md-sidenav-push-background-color;
+  &.mat-sidenav-push {
+    background-color: $mat-sidenav-push-background-color;
   }
 
-  &.md-sidenav-side {
+  &.mat-sidenav-side {
     z-index: 1;
   }
 
-  &.md-sidenav-end {
+  &.mat-sidenav-end {
     right: 0;
 
-    @include md-sidenav-transition(0, 100%);
+    @include mat-sidenav-transition(0, 100%);
   }
 
   [dir='rtl'] & {
-    @include md-sidenav-transition(0, 100%);
+    @include mat-sidenav-transition(0, 100%);
 
-    &.md-sidenav-end {
+    &.mat-sidenav-end {
       left: 0;
       right: auto;
 
-      @include md-sidenav-transition(0, -100%);
+      @include mat-sidenav-transition(0, -100%);
     }
   }
 }

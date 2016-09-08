@@ -13,11 +13,11 @@ import {CommonModule} from '@angular/common';
 
 
 /**
- * <md-progress-bar> component.
+ * <mat-progress-bar> component.
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-progress-bar',
+  selector: 'mat-progress-bar',
   host: {
     'role': 'progressbar',
     'aria-valuemin': '0',
@@ -27,7 +27,7 @@ import {CommonModule} from '@angular/common';
   styleUrls: ['progress-bar.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdProgressBar {
+export class MatProgressBar {
   /** Value of the progressbar. Defaults to zero. Mirrored to aria-valuenow. */
   private _value: number = 0;
 
@@ -90,13 +90,13 @@ function clamp(v: number, min = 0, max = 100) {
 
 @NgModule({
   imports: [CommonModule],
-  exports: [MdProgressBar],
-  declarations: [MdProgressBar],
+  exports: [MatProgressBar],
+  declarations: [MatProgressBar],
 })
-export class MdProgressBarModule {
+export class MatProgressBarModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdProgressBarModule,
+      ngModule: MatProgressBarModule,
       providers: []
     };
   }

@@ -54,8 +54,8 @@ export class Overlay {
    */
   private _createPaneElement(): HTMLElement {
     var pane = document.createElement('div');
-    pane.id = `md-overlay-${nextUniqueId++}`;
-    pane.classList.add('md-overlay-pane');
+    pane.id = `mat-overlay-${nextUniqueId++}`;
+    pane.classList.add('mat-overlay-pane');
 
     this._overlayContainer.getContainerElement().appendChild(pane);
 

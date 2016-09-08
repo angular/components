@@ -22,13 +22,13 @@ import {
 export type TooltipPosition = 'before' | 'after' | 'above' | 'below';
 
 @Directive({
-  selector: '[md-tooltip]',
+  selector: '[mat-tooltip]',
   host: {
     '(mouseenter)': '_handleMouseEnter($event)',
     '(mouseleave)': '_handleMouseLeave($event)',
   }
 })
-export class MdTooltip {
+export class MatTooltip {
   visible: boolean = false;
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
@@ -46,7 +46,7 @@ export class MdTooltip {
 
   /** The message to be displayed in the tooltip */
   private _message: string;
-  @Input('md-tooltip') get message() {
+  @Input('mat-tooltip') get message() {
     return this._message;
   }
   set message(value: string) {
@@ -182,8 +182,8 @@ export class MdTooltip {
 
 @Component({
   moduleId: module.id,
-  selector: 'md-tooltip-component',
-  template: `<div class="md-tooltip">{{message}}</div>`,
+  selector: 'mat-tooltip-component',
+  template: `<div class="mat-tooltip">{{message}}</div>`,
   styleUrls: ['tooltip.css'],
 })
 export class TooltipComponent {
@@ -193,14 +193,14 @@ export class TooltipComponent {
 
 @NgModule({
   imports: [OverlayModule],
-  exports: [MdTooltip, TooltipComponent],
-  declarations: [MdTooltip, TooltipComponent],
+  exports: [MatTooltip, TooltipComponent],
+  declarations: [MatTooltip, TooltipComponent],
   entryComponents: [TooltipComponent],
 })
-export class MdTooltipModule {
+export class MatTooltipModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdTooltipModule,
+      ngModule: MatTooltipModule,
       providers: OVERLAY_PROVIDERS,
     };
   }

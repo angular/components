@@ -1,51 +1,51 @@
-<!-- Use <md-card>? -->
+<!-- Use <mat-card>? -->
 <div class="demo-ripple">
   <section>
-    <md-checkbox [(ngModel)]="disableButtonRipples">Disable button ripples</md-checkbox>
-    <button md-button [disableRipple]="disableButtonRipples">flat</button>
-    <button md-raised-button [disableRipple]="disableButtonRipples">raised</button>
-    <button md-fab [disableRipple]="disableButtonRipples">
-      <md-icon>check</md-icon>
+    <mat-checkbox [(ngModel)]="disableButtonRipples">Disable button ripples</mat-checkbox>
+    <button mat-button [disableRipple]="disableButtonRipples">flat</button>
+    <button mat-raised-button [disableRipple]="disableButtonRipples">raised</button>
+    <button mat-fab [disableRipple]="disableButtonRipples">
+      <mat-icon>check</mat-icon>
     </button>
-    <button md-mini-fab [disableRipple]="disableButtonRipples">
-      <md-icon>check</md-icon>
+    <button mat-mini-fab [disableRipple]="disableButtonRipples">
+      <mat-icon>check</mat-icon>
     </button>
   </section>
 
   <section>
-    <div class="demo-ripple-checkbox-option"><md-checkbox [(ngModel)]="centered">Centered</md-checkbox></div>
-    <div class="demo-ripple-checkbox-option"><md-checkbox [(ngModel)]="unbounded">Unbounded</md-checkbox></div>
-    <div class="demo-ripple-checkbox-option"><md-checkbox [(ngModel)]="disabled">Disabled</md-checkbox></div>
-    <div class="demo-ripple-checkbox-option"><md-checkbox [(ngModel)]="rounded">Rounded container (flaky in Firefox)</md-checkbox></div>
+    <div class="demo-ripple-checkbox-option"><mat-checkbox [(ngModel)]="centered">Centered</mat-checkbox></div>
+    <div class="demo-ripple-checkbox-option"><mat-checkbox [(ngModel)]="unbounded">Unbounded</mat-checkbox></div>
+    <div class="demo-ripple-checkbox-option"><mat-checkbox [(ngModel)]="disabled">Disabled</mat-checkbox></div>
+    <div class="demo-ripple-checkbox-option"><mat-checkbox [(ngModel)]="rounded">Rounded container (flaky in Firefox)</mat-checkbox></div>
   </section>
   <section>
     Speed
-    <md-radio-group [(ngModel)]="rippleSpeed">
-      <md-radio-button name="demo-ripple-options" value="0.1">Slow</md-radio-button>
-      <md-radio-button name="demo-ripple-options" value="1">Normal</md-radio-button>
-      <md-radio-button name="demo-ripple-options" value="4">Fast</md-radio-button>
-    </md-radio-group>
+    <mat-radio-group [(ngModel)]="rippleSpeed">
+      <mat-radio-button name="demo-ripple-options" value="0.1">Slow</mat-radio-button>
+      <mat-radio-button name="demo-ripple-options" value="1">Normal</mat-radio-button>
+      <mat-radio-button name="demo-ripple-options" value="4">Fast</mat-radio-button>
+    </mat-radio-group>
   </section>
   <section>
-    <md-input placeholder="Max radius" aria-label="radius" [(ngModel)]="maxRadius"></md-input>
-    <md-input placeholder="Ripple color" aria-label="color" [(ngModel)]="rippleColor"></md-input>
-    <md-input placeholder="Ripple background" aria-label="background" [(ngModel)]="rippleBackgroundColor"></md-input>
+    <mat-input placeholder="Max radius" aria-label="radius" [(ngModel)]="maxRadius"></mat-input>
+    <mat-input placeholder="Ripple color" aria-label="color" [(ngModel)]="rippleColor"></mat-input>
+    <mat-input placeholder="Ripple background" aria-label="background" [(ngModel)]="rippleBackgroundColor"></mat-input>
   </section>
   <section>
-    <button md-raised-button (click)="doManualRipple()">Manual ripple</button>
+    <button mat-raised-button (click)="doManualRipple()">Manual ripple</button>
   </section>
   <section>
     <div class="demo-ripple-container"
         [class.demo-ripple-disabled]="disabled"
         [class.demo-ripple-rounded]="rounded"
-        md-ripple
-        [md-ripple-centered]="centered"
-        [md-ripple-disabled]="disabled"
-        [md-ripple-unbounded]="unbounded"
-        [md-ripple-max-radius]="maxRadius"
-        [md-ripple-color]="rippleColor"
-        [md-ripple-background-color]="rippleBackgroundColor"
-        [md-ripple-speed-factor]="rippleSpeed">
+        mat-ripple
+        [mat-ripple-centered]="centered"
+        [mat-ripple-disabled]="disabled"
+        [mat-ripple-unbounded]="unbounded"
+        [mat-ripple-max-radius]="maxRadius"
+        [mat-ripple-color]="rippleColor"
+        [mat-ripple-background-color]="rippleBackgroundColor"
+        [mat-ripple-speed-factor]="rippleSpeed">
       Click me
     </div>
   </section>

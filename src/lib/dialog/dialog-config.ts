@@ -6,9 +6,9 @@ export type DialogRole = 'dialog' | 'alertdialog'
 
 
 /**
- * Configuration for opening a modal dialog with the MdDialog service.
+ * Configuration for opening a modal dialog with the MatDialog service.
  */
-export class MdDialogConfig {
+export class MatDialogConfig {
   viewContainerRef: ViewContainerRef;
 
   /** The ARIA role of the dialog element. */

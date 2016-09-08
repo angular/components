@@ -1,7 +1,7 @@
 // Color palettes from the Material Design spec.
 // See https://www.google.com/design/spec/style/color.html
 
-$md-red: (
+$mat-red: (
   50: #ffebee,
   100: #ffcdd2,
   200: #ef9a9a,
@@ -18,7 +18,7 @@ $md-red: (
   A700: #d50000,
 );
 
-$md-pink: (
+$mat-pink: (
   50: #fce4ec,
   100: #f8bbd0,
   200: #f48fb1,
@@ -35,7 +35,7 @@ $md-pink: (
   A700: #c51162,
 );
 
-$md-purple: (
+$mat-purple: (
   50: #f3e5f5,
   100: #e1bee7,
   200: #ce93d8,
@@ -52,7 +52,7 @@ $md-purple: (
   A700: #aa00ff,
 );
 
-$md-deep-purple: (
+$mat-deep-purple: (
   50: #ede7f6,
   100: #d1c4e9,
   200: #b39ddb,
@@ -69,7 +69,7 @@ $md-deep-purple: (
   A700: #6200ea,
 );
 
-$md-indigo: (
+$mat-indigo: (
   50: #e8eaf6,
   100: #c5cae9,
   200: #9fa8da,
@@ -86,7 +86,7 @@ $md-indigo: (
   A700: #304ffe,
 );
 
-$md-blue: (
+$mat-blue: (
   50: #e3f2fd,
   100: #bbdefb,
   200: #90caf9,
@@ -103,7 +103,7 @@ $md-blue: (
   A700: #2962ff,
 );
 
-$md-light-blue: (
+$mat-light-blue: (
   50: #e1f5fe,
   100: #b3e5fc,
   200: #81d4fa,
@@ -120,7 +120,7 @@ $md-light-blue: (
   A700: #0091ea,
 );
 
-$md-cyan: (
+$mat-cyan: (
   50: #e0f7fa,
   100: #b2ebf2,
   200: #80deea,
@@ -137,7 +137,7 @@ $md-cyan: (
   A700: #00b8d4,
 );
 
-$md-teal: (
+$mat-teal: (
   50: #e0f2f1,
   100: #b2dfdb,
   200: #80cbc4,
@@ -154,7 +154,7 @@ $md-teal: (
   A700: #00bfa5,
 );
 
-$md-green: (
+$mat-green: (
   50: #e8f5e9,
   100: #c8e6c9,
   200: #a5d6a7,
@@ -171,7 +171,7 @@ $md-green: (
   A700: #00c853,
 );
 
-$md-light-green: (
+$mat-light-green: (
   50: #f1f8e9,
   100: #dcedc8,
   200: #c5e1a5,
@@ -188,7 +188,7 @@ $md-light-green: (
   A700: #64dd17,
 );
 
-$md-lime: (
+$mat-lime: (
   50: #f9fbe7,
   100: #f0f4c3,
   200: #e6ee9c,
@@ -205,7 +205,7 @@ $md-lime: (
   A700: #aeea00,
 );
 
-$md-yellow: (
+$mat-yellow: (
   50: #fffde7,
   100: #fff9c4,
   200: #fff59d,
@@ -222,7 +222,7 @@ $md-yellow: (
   A700: #ffd600,
 );
 
-$md-amber: (
+$mat-amber: (
   50: #fff8e1,
   100: #ffecb3,
   200: #ffe082,
@@ -239,7 +239,7 @@ $md-amber: (
   A700: #ffab00,
 );
 
-$md-orange: (
+$mat-orange: (
   50: #fff3e0,
   100: #ffe0b2,
   200: #ffcc80,
@@ -256,7 +256,7 @@ $md-orange: (
   A700: #ff6d00,
 );
 
-$md-deep-orange: (
+$mat-deep-orange: (
   50: #fbe9e7,
   100: #ffccbc,
   200: #ffab91,
@@ -273,7 +273,7 @@ $md-deep-orange: (
   A700: #dd2c00,
 );
 
-$md-brown: (
+$mat-brown: (
   50: #efebe9,
   100: #d7ccc8,
   200: #bcaaa4,
@@ -290,7 +290,7 @@ $md-brown: (
   A700: #5d4037,
 );
 
-$md-grey: (
+$mat-grey: (
   0: #ffffff,
   50: #fafafa,
   100: #f5f5f5,
@@ -309,7 +309,7 @@ $md-grey: (
   A700: #616161,
 );
 
-$md-blue-grey: (
+$mat-blue-grey: (
   50: #eceff1,
   100: #cfd8dc,
   200: #b0bec5,
@@ -328,10 +328,10 @@ $md-blue-grey: (
 
 
 // Background palette for light themes.
-$md-light-theme-background: (
-  status-bar: map_get($md-grey, 300),
-  app-bar:    map_get($md-grey, 100),
-  background: map_get($md-grey, 50),
+$mat-light-theme-background: (
+  status-bar: map_get($mat-grey, 300),
+  app-bar:    map_get($mat-grey, 100),
+  background: map_get($mat-grey, 50),
   hover:      rgba(black, 0.04), // TODO(kara): check style with Material Design UX
   card:       white,
   dialog:     white,
@@ -339,18 +339,18 @@ $md-light-theme-background: (
 );
 
 // Background palette for dark themes.
-$md-dark-theme-background: (
+$mat-dark-theme-background: (
   status-bar: black,
-  app-bar:    map_get($md-grey, 900),
+  app-bar:    map_get($mat-grey, 900),
   background: #303030,
   hover:      rgba(white, 0.04), // TODO(kara): check style with Material Design UX
-  card:       map_get($md-grey, 800),
-  dialog:     map_get($md-grey, 800),
+  card:       map_get($mat-grey, 800),
+  dialog:     map_get($mat-grey, 800),
   disabled-button: rgba(white, 0.12)
 );
 
 // Foreground palette for light themes.
-$md-light-theme-foreground: (
+$mat-light-theme-foreground: (
   base:            black,
   divider:         rgba(black, 0.12),
   dividers:        rgba(black, 0.12),
@@ -365,7 +365,7 @@ $md-light-theme-foreground: (
 );
 
 // Foreground palette for dark themes.
-$md-dark-theme-foreground: (
+$mat-dark-theme-foreground: (
   base:            white,
   divider:         rgba(white, 0.12),
   dividers:        rgba(white, 0.12),
@@ -390,8 +390,8 @@ $md-dark-theme-foreground: (
 $black-87-opacity: rgba(black, 0.870588);
 $white-87-opacity: rgba(white, 0.870588);
 
-$md-contrast-palettes: (
-  $md-red: (
+$mat-contrast-palettes: (
+  $mat-red: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -407,7 +407,7 @@ $md-contrast-palettes: (
     A400: white,
     A700: white,
   ),
-  $md-pink: (
+  $mat-pink: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -423,7 +423,7 @@ $md-contrast-palettes: (
     A400: white,
     A700: white,
   ),
-  $md-purple: (
+  $mat-purple: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -439,7 +439,7 @@ $md-contrast-palettes: (
     A400: white,
     A700: white,
   ),
-  $md-deep-purple: (
+  $mat-deep-purple: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -455,7 +455,7 @@ $md-contrast-palettes: (
     A400: $white-87-opacity,
     A700: $white-87-opacity,
   ),
-  $md-indigo: (
+  $mat-indigo: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -471,7 +471,7 @@ $md-contrast-palettes: (
     A400: white,
     A700: $white-87-opacity,
   ),
-  $md-blue: (
+  $mat-blue: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -487,7 +487,7 @@ $md-contrast-palettes: (
     A400: white,
     A700: white,
   ),
-  $md-light-blue: (
+  $mat-light-blue: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -503,7 +503,7 @@ $md-contrast-palettes: (
     A400: $black-87-opacity,
     A700: white,
   ),
-  $md-cyan: (
+  $mat-cyan: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -519,7 +519,7 @@ $md-contrast-palettes: (
     A400: $black-87-opacity,
     A700: $black-87-opacity,
   ),
-  $md-teal: (
+  $mat-teal: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -535,7 +535,7 @@ $md-contrast-palettes: (
     A400: $black-87-opacity,
     A700: $black-87-opacity,
   ),
-  $md-green: (
+  $mat-green: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -551,7 +551,7 @@ $md-contrast-palettes: (
     A400: $black-87-opacity,
     A700: $black-87-opacity,
   ),
-  $md-light-green: (
+  $mat-light-green: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -567,7 +567,7 @@ $md-contrast-palettes: (
     A400: $black-87-opacity,
     A700: $black-87-opacity,
   ),
-  $md-lime: (
+  $mat-lime: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -583,7 +583,7 @@ $md-contrast-palettes: (
     A400: $black-87-opacity,
     A700: $black-87-opacity,
   ),
-  $md-yellow: (
+  $mat-yellow: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -599,7 +599,7 @@ $md-contrast-palettes: (
     A400: $black-87-opacity,
     A700: $black-87-opacity,
   ),
-  $md-amber: (
+  $mat-amber: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -615,7 +615,7 @@ $md-contrast-palettes: (
     A400: $black-87-opacity,
     A700: $black-87-opacity,
   ),
-  $md-orange: (
+  $mat-orange: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -631,7 +631,7 @@ $md-contrast-palettes: (
     A400: $black-87-opacity,
     A700: black,
   ),
-  $md-deep-orange: (
+  $mat-deep-orange: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -647,7 +647,7 @@ $md-contrast-palettes: (
     A400: white,
     A700: white,
   ),
-  $md-brown: (
+  $mat-brown: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -663,7 +663,7 @@ $md-contrast-palettes: (
     A400: white,
     A700: $white-87-opacity,
   ),
-  $md-grey: (
+  $mat-grey: (
     0: $black-87-opacity,
     50: $black-87-opacity,
     100: $black-87-opacity,
@@ -681,7 +681,7 @@ $md-contrast-palettes: (
     A400: $black-87-opacity,
     A700: $white-87-opacity,
   ),
-  $md-blue-grey: (
+  $mat-blue-grey: (
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,

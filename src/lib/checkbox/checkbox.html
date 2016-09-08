@@ -1,6 +1,6 @@
-<label class="md-checkbox-layout">
-  <div class="md-checkbox-inner-container">
-    <input class="md-checkbox-input" type="checkbox"
+<label class="mat-checkbox-layout">
+  <div class="mat-checkbox-inner-container">
+    <input class="mat-checkbox-input" type="checkbox"
            [id]="inputId"
            [checked]="checked"
            [disabled]="disabled"
@@ -13,24 +13,24 @@
            (blur)="_onInputBlur()"
            (change)="_onInteractionEvent($event)"
            (click)="_onInputClick($event)">
-    <div class="md-ink-ripple"></div>
-    <div class="md-checkbox-frame"></div>
-    <div class="md-checkbox-background">
+    <div class="mat-ink-ripple"></div>
+    <div class="mat-checkbox-frame"></div>
+    <div class="mat-checkbox-background">
       <svg version="1.1"
-           class="md-checkbox-checkmark"
+           class="mat-checkbox-checkmark"
            xmlns="http://www.w3.org/2000/svg"
            viewBox="0 0 24 24"
            xml:space="preserve">
-        <path class="md-checkbox-checkmark-path"
+        <path class="mat-checkbox-checkmark-path"
               fill="none"
               stroke="white"
               d="M4.1,12.7 9,17.6 20.3,6.3"/>
       </svg>
       <!-- Element for rendering the indeterminate state checkbox. -->
-      <div class="md-checkbox-mixedmark"></div>
+      <div class="mat-checkbox-mixedmark"></div>
     </div>
   </div>
-  <span class="md-checkbox-label">
+  <span class="mat-checkbox-label">
     <ng-content></ng-content>
   </span>
 </label>

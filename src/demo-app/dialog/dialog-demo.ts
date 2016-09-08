@@ -1,5 +1,5 @@
 import {Component, ViewContainerRef} from '@angular/core';
-import {MdDialog, MdDialogConfig, MdDialogRef} from '@angular2-material/dialog';
+import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular2-material/dialog';
 
 @Component({
   moduleId: module.id,
@@ -8,15 +8,15 @@ import {MdDialog, MdDialogConfig, MdDialogRef} from '@angular2-material/dialog';
   styleUrls: ['dialog-demo.css'],
 })
 export class DialogDemo {
-  dialogRef: MdDialogRef<JazzDialog>;
+  dialogRef: MatDialogRef<JazzDialog>;
   lastCloseResult: string;
 
   constructor(
-      public dialog: MdDialog,
+      public dialog: MatDialog,
       public viewContainerRef: ViewContainerRef) { }
 
   open() {
-    let config = new MdDialogConfig();
+    let config = new MatDialogConfig();
     config.viewContainerRef = this.viewContainerRef;
 
     this.dialogRef = this.dialog.open(JazzDialog, config);
@@ -37,5 +37,5 @@ export class DialogDemo {
   <button type="button" (click)="dialogRef.close(howMuch.value)">Close dialog</button>`
 })
 export class JazzDialog {
-  constructor(public dialogRef: MdDialogRef<JazzDialog>) { }
+  constructor(public dialogRef: MatDialogRef<JazzDialog>) { }
 }

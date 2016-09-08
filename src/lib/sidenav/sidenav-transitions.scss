@@ -3,14 +3,14 @@
  */
 @import 'variables';
 
-md-sidenav {
+mat-sidenav {
   transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;
 }
 
-.md-sidenav-content {
+.mat-sidenav-content {
   transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;
 }
 
-.md-sidenav-backdrop.md-sidenav-shown {
+.mat-sidenav-backdrop.mat-sidenav-shown {
   transition: background-color $swift-ease-out-duration $swift-ease-out-timing-function;
 }

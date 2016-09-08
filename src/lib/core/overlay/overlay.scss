@@ -1,9 +1,9 @@
-// TODO(jelbourn): change from the `md` prefix to something else for everything in the toolkit.
+// TODO(jelbourn): change from the `mat` prefix to something else for everything in the toolkit.
 
 @import 'variables';
 
 /** The overlay-container is an invisible element which contains all individual overlays. */
-.md-overlay-container {
+.mat-overlay-container {
   position: absolute;
 
   // Disable events from being captured on the overlay container.
@@ -17,7 +17,7 @@
 }
 
 /** A single overlay pane. */
-.md-overlay-pane {
+.mat-overlay-pane {
   position: absolute;
   pointer-events: auto;
   box-sizing: border-box;

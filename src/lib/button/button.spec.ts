@@ -4,14 +4,14 @@ import {
 } from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdButtonModule} from './button';
+import {MatButtonModule} from './button';
 
 
-describe('MdButton', () => {
+describe('MatButton', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdButtonModule.forRoot()],
+      imports: [MatButtonModule.forRoot()],
       declarations: [TestApp],
     });
 
@@ -28,13 +28,13 @@ describe('MdButton', () => {
 
     testComponent.buttonColor = 'primary';
     fixture.detectChanges();
-    expect(buttonDebugElement.nativeElement.classList.contains('md-primary')).toBe(true);
-    expect(aDebugElement.nativeElement.classList.contains('md-primary')).toBe(true);
+    expect(buttonDebugElement.nativeElement.classList.contains('mat-primary')).toBe(true);
+    expect(aDebugElement.nativeElement.classList.contains('mat-primary')).toBe(true);
 
     testComponent.buttonColor = 'accent';
     fixture.detectChanges();
-    expect(buttonDebugElement.nativeElement.classList.contains('md-accent')).toBe(true);
-    expect(aDebugElement.nativeElement.classList.contains('md-accent')).toBe(true);
+    expect(buttonDebugElement.nativeElement.classList.contains('mat-accent')).toBe(true);
+    expect(aDebugElement.nativeElement.classList.contains('mat-accent')).toBe(true);
   });
 
   it('should should not clear previous defined classes', () => {
@@ -47,20 +47,20 @@ describe('MdButton', () => {
     testComponent.buttonColor = 'primary';
     fixture.detectChanges();
 
-    expect(buttonDebugElement.nativeElement.classList.contains('md-primary')).toBe(true);
+    expect(buttonDebugElement.nativeElement.classList.contains('mat-primary')).toBe(true);
     expect(buttonDebugElement.nativeElement.classList.contains('custom-class')).toBe(true);
 
     testComponent.buttonColor = 'accent';
     fixture.detectChanges();
 
-    expect(buttonDebugElement.nativeElement.classList.contains('md-primary')).toBe(false);
-    expect(buttonDebugElement.nativeElement.classList.contains('md-accent')).toBe(true);
+    expect(buttonDebugElement.nativeElement.classList.contains('mat-primary')).toBe(false);
+    expect(buttonDebugElement.nativeElement.classList.contains('mat-accent')).toBe(true);
     expect(buttonDebugElement.nativeElement.classList.contains('custom-class')).toBe(true);
 
   });
 
   // Regular button tests
-  describe('button[md-button]', () => {
+  describe('button[mat-button]', () => {
     it('should handle a click on the button', () => {
       let fixture = TestBed.createComponent(TestApp);
       let testComponent = fixture.debugElement.componentInstance;
@@ -86,7 +86,7 @@ describe('MdButton', () => {
   });
 
   // Anchor button tests
-  describe('a[md-button]', () => {
+  describe('a[mat-button]', () => {
     it('should not redirect if disabled', () => {
       let fixture = TestBed.createComponent(TestApp);
       let testComponent = fixture.debugElement.componentInstance;
@@ -124,15 +124,17 @@ describe('MdButton', () => {
   });
 });
 
-/** Test component that contains an MdButton. */
+/** Test component that contains an MatButton. */
 @Component({
   selector: 'test-app',
   template: `
-    <button md-button type="button" (click)="increment()"
+    <button mat-button type="button" (click)="increment()"
       [disabled]="isDisabled" [color]="buttonColor" [disableRipple]="rippleDisabled">
       Go
     </button>
-    <a href="http://www.google.com" md-button [disabled]="isDisabled" [color]="buttonColor">Link</a>
+    <a href="http://www.google.com" mat-button [disabled]="isDisabled" [color]="buttonColor">
+      Link
+    </a>
   `
 })
 class TestApp {

@@ -1,17 +1,17 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {TooltipPosition, MdTooltip} from '@angular2-material/tooltip';
+import {TooltipPosition, MatTooltip} from '@angular2-material/tooltip';
 import {OverlayContainer} from '@angular2-material/core';
-import {MdTooltipModule} from './tooltip';
+import {MatTooltipModule} from './tooltip';
 
 
-describe('MdTooltip', () => {
+describe('MatTooltip', () => {
   let overlayContainerElement: HTMLElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdTooltipModule.forRoot()],
+      imports: [MatTooltipModule.forRoot()],
       declarations: [BasicTooltipDemo],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -28,14 +28,14 @@ describe('MdTooltip', () => {
     let fixture: ComponentFixture<BasicTooltipDemo>;
     let buttonDebugElement: DebugElement;
     let buttonElement: HTMLButtonElement;
-    let tooltipDirective: MdTooltip;
+    let tooltipDirective: MatTooltip;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
       buttonDebugElement = fixture.debugElement.query(By.css('button'));
       buttonElement = <HTMLButtonElement> buttonDebugElement.nativeElement;
-      tooltipDirective = buttonDebugElement.injector.get(MdTooltip);
+      tooltipDirective = buttonDebugElement.injector.get(MatTooltip);
     });
 
     it('should show/hide on mouse enter/leave', () => {
@@ -55,7 +55,7 @@ describe('MdTooltip', () => {
 
 @Component({
   selector: 'app',
-  template: `<button md-tooltip="some message" [tooltip-position]="position">Button</button>`
+  template: `<button mat-tooltip="some message" [tooltip-position]="position">Button</button>`
 })
 class BasicTooltipDemo {
   position: TooltipPosition = 'below';

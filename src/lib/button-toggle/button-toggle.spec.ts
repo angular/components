@@ -9,18 +9,18 @@ import {NgControl, FormsModule} from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
-    MdButtonToggleGroup,
-    MdButtonToggle,
-    MdButtonToggleGroupMultiple,
-    MdButtonToggleChange, MdButtonToggleModule,
+    MatButtonToggleGroup,
+    MatButtonToggle,
+    MatButtonToggleGroupMultiple,
+    MatButtonToggleChange, MatButtonToggleModule,
 } from './button-toggle';
 
 
-describe('MdButtonToggle', () => {
+describe('MatButtonToggle', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdButtonToggleModule.forRoot(), FormsModule],
+      imports: [MatButtonToggleModule.forRoot(), FormsModule],
       declarations: [
         ButtonTogglesInsideButtonToggleGroup,
         ButtonToggleGroupWithNgModel,
@@ -42,8 +42,8 @@ describe('MdButtonToggle', () => {
     let buttonToggleDebugElements: DebugElement[];
     let buttonToggleNativeElements: HTMLElement[];
     let buttonToggleLabelElements: HTMLLabelElement[];
-    let groupInstance: MdButtonToggleGroup;
-    let buttonToggleInstances: MdButtonToggle[];
+    let groupInstance: MatButtonToggleGroup;
+    let buttonToggleInstances: MatButtonToggle[];
     let testComponent: ButtonTogglesInsideButtonToggleGroup;
 
     beforeEach(async(() => {
@@ -52,11 +52,11 @@ describe('MdButtonToggle', () => {
 
       testComponent = fixture.debugElement.componentInstance;
 
-      groupDebugElement = fixture.debugElement.query(By.directive(MdButtonToggleGroup));
+      groupDebugElement = fixture.debugElement.query(By.directive(MatButtonToggleGroup));
       groupNativeElement = groupDebugElement.nativeElement;
-      groupInstance = groupDebugElement.injector.get(MdButtonToggleGroup);
+      groupInstance = groupDebugElement.injector.get(MatButtonToggleGroup);
 
-      buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MdButtonToggle));
+      buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MatButtonToggle));
 
       buttonToggleNativeElements = buttonToggleDebugElements
         .map(debugEl => debugEl.nativeElement);
@@ -201,8 +201,8 @@ describe('MdButtonToggle', () => {
     let groupNativeElement: HTMLElement;
     let buttonToggleDebugElements: DebugElement[];
     let buttonToggleNativeElements: HTMLElement[];
-    let groupInstance: MdButtonToggleGroup;
-    let buttonToggleInstances: MdButtonToggle[];
+    let groupInstance: MatButtonToggleGroup;
+    let buttonToggleInstances: MatButtonToggle[];
     let testComponent: ButtonToggleGroupWithNgModel;
     let groupNgControl: NgControl;
 
@@ -212,12 +212,12 @@ describe('MdButtonToggle', () => {
 
       testComponent = fixture.debugElement.componentInstance;
 
-      groupDebugElement = fixture.debugElement.query(By.directive(MdButtonToggleGroup));
+      groupDebugElement = fixture.debugElement.query(By.directive(MatButtonToggleGroup));
       groupNativeElement = groupDebugElement.nativeElement;
-      groupInstance = groupDebugElement.injector.get(MdButtonToggleGroup);
+      groupInstance = groupDebugElement.injector.get(MatButtonToggleGroup);
       groupNgControl = groupDebugElement.injector.get(NgControl);
 
-      buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MdButtonToggle));
+      buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MatButtonToggle));
       buttonToggleNativeElements =
           buttonToggleDebugElements.map(debugEl => debugEl.nativeElement);
       buttonToggleInstances = buttonToggleDebugElements.map(debugEl => debugEl.componentInstance);
@@ -287,8 +287,8 @@ describe('MdButtonToggle', () => {
     let groupNativeElement: HTMLElement;
     let buttonToggleDebugElements: DebugElement[];
     let buttonToggleNativeElements: HTMLElement[];
-    let groupInstance: MdButtonToggleGroup;
-    let buttonToggleInstances: MdButtonToggle[];
+    let groupInstance: MatButtonToggleGroup;
+    let buttonToggleInstances: MatButtonToggle[];
     let testComponent: ButtonToggleGroupWithNgModel;
     let groupNgControl: NgControl;
 
@@ -297,12 +297,12 @@ describe('MdButtonToggle', () => {
 
       testComponent = fixture.debugElement.componentInstance;
 
-      groupDebugElement = fixture.debugElement.query(By.directive(MdButtonToggleGroup));
+      groupDebugElement = fixture.debugElement.query(By.directive(MatButtonToggleGroup));
       groupNativeElement = groupDebugElement.nativeElement;
-      groupInstance = groupDebugElement.injector.get(MdButtonToggleGroup);
+      groupInstance = groupDebugElement.injector.get(MatButtonToggleGroup);
       groupNgControl = groupDebugElement.injector.get(NgControl);
 
-      buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MdButtonToggle));
+      buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MatButtonToggle));
       buttonToggleNativeElements =
           buttonToggleDebugElements.map(debugEl => debugEl.nativeElement);
       buttonToggleInstances = buttonToggleDebugElements.map(debugEl => debugEl.componentInstance);
@@ -329,8 +329,9 @@ describe('MdButtonToggle', () => {
     it('should not fire an initial change event', async(() => {
       let fixture = TestBed.createComponent(ButtonToggleGroupWithInitialValue);
       let testComponent = fixture.debugElement.componentInstance;
-      let groupDebugElement = fixture.debugElement.query(By.directive(MdButtonToggleGroup));
-      let groupInstance: MdButtonToggleGroup = groupDebugElement.injector.get(MdButtonToggleGroup);
+      let groupDebugElement = fixture.debugElement.query(By.directive(MatButtonToggleGroup));
+      let groupInstance: MatButtonToggleGroup = groupDebugElement.injector
+        .get(MatButtonToggleGroup);
 
       fixture.detectChanges();
 
@@ -353,8 +354,8 @@ describe('MdButtonToggle', () => {
     let buttonToggleDebugElements: DebugElement[];
     let buttonToggleNativeElements: HTMLElement[];
     let buttonToggleLabelElements: HTMLLabelElement[];
-    let groupInstance: MdButtonToggleGroupMultiple;
-    let buttonToggleInstances: MdButtonToggle[];
+    let groupInstance: MatButtonToggleGroupMultiple;
+    let buttonToggleInstances: MatButtonToggle[];
     let testComponent: ButtonTogglesInsideButtonToggleGroupMultiple;
 
     beforeEach(async(() => {
@@ -363,11 +364,11 @@ describe('MdButtonToggle', () => {
 
       testComponent = fixture.debugElement.componentInstance;
 
-      groupDebugElement = fixture.debugElement.query(By.directive(MdButtonToggleGroupMultiple));
+      groupDebugElement = fixture.debugElement.query(By.directive(MatButtonToggleGroupMultiple));
       groupNativeElement = groupDebugElement.nativeElement;
-      groupInstance = groupDebugElement.injector.get(MdButtonToggleGroupMultiple);
+      groupInstance = groupDebugElement.injector.get(MatButtonToggleGroupMultiple);
 
-      buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MdButtonToggle));
+      buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MatButtonToggle));
       buttonToggleNativeElements = buttonToggleDebugElements
         .map(debugEl => debugEl.nativeElement);
       buttonToggleLabelElements = fixture.debugElement.queryAll(By.css('label'))
@@ -451,7 +452,7 @@ describe('MdButtonToggle', () => {
     let buttonToggleDebugElement: DebugElement;
     let buttonToggleNativeElement: HTMLElement;
     let buttonToggleLabelElement: HTMLLabelElement;
-    let buttonToggleInstance: MdButtonToggle;
+    let buttonToggleInstance: MatButtonToggle;
     let testComponent: StandaloneButtonToggle;
 
     beforeEach(async(() => {
@@ -460,7 +461,7 @@ describe('MdButtonToggle', () => {
 
       testComponent = fixture.debugElement.componentInstance;
 
-      buttonToggleDebugElement = fixture.debugElement.query(By.directive(MdButtonToggle));
+      buttonToggleDebugElement = fixture.debugElement.query(By.directive(MatButtonToggle));
       buttonToggleNativeElement = buttonToggleDebugElement.nativeElement;
       buttonToggleLabelElement = fixture.debugElement.query(By.css('label')).nativeElement;
       buttonToggleInstance = buttonToggleDebugElement.componentInstance;
@@ -506,11 +507,11 @@ describe('MdButtonToggle', () => {
 
 @Component({
   template: `
-  <md-button-toggle-group [disabled]="isGroupDisabled" [value]="groupValue">
-    <md-button-toggle value="test1">Test1</md-button-toggle>
-    <md-button-toggle value="test2">Test2</md-button-toggle>
-    <md-button-toggle value="test3">Test3</md-button-toggle>
-  </md-button-toggle-group>
+  <mat-button-toggle-group [disabled]="isGroupDisabled" [value]="groupValue">
+    <mat-button-toggle value="test1">Test1</mat-button-toggle>
+    <mat-button-toggle value="test2">Test2</mat-button-toggle>
+    <mat-button-toggle value="test3">Test3</mat-button-toggle>
+  </mat-button-toggle-group>
   `
 })
 class ButtonTogglesInsideButtonToggleGroup {
@@ -520,11 +521,11 @@ class ButtonTogglesInsideButtonToggleGroup {
 
 @Component({
   template: `
-  <md-button-toggle-group [(ngModel)]="modelValue" (change)="lastEvent = $event">
-    <md-button-toggle *ngFor="let option of options" [value]="option.value">
+  <mat-button-toggle-group [(ngModel)]="modelValue" (change)="lastEvent = $event">
+    <mat-button-toggle *ngFor="let option of options" [value]="option.value">
       {{option.label}}
-    </md-button-toggle>
-  </md-button-toggle-group>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
   `
 })
 class ButtonToggleGroupWithNgModel {
@@ -534,16 +535,16 @@ class ButtonToggleGroupWithNgModel {
     {label: 'Green', value: 'green'},
     {label: 'Blue', value: 'blue'},
   ];
-  lastEvent: MdButtonToggleChange;
+  lastEvent: MatButtonToggleChange;
 }
 
 @Component({
   template: `
-  <md-button-toggle-group [disabled]="isGroupDisabled" multiple>
-    <md-button-toggle value="eggs">Eggs</md-button-toggle>
-    <md-button-toggle value="flour">Flour</md-button-toggle>
-    <md-button-toggle value="sugar">Sugar</md-button-toggle>
-  </md-button-toggle-group>
+  <mat-button-toggle-group [disabled]="isGroupDisabled" multiple>
+    <mat-button-toggle value="eggs">Eggs</mat-button-toggle>
+    <mat-button-toggle value="flour">Flour</mat-button-toggle>
+    <mat-button-toggle value="sugar">Sugar</mat-button-toggle>
+  </mat-button-toggle-group>
   `
 })
 class ButtonTogglesInsideButtonToggleGroupMultiple {
@@ -552,19 +553,19 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
 
 @Component({
   template: `
-  <md-button-toggle>Yes</md-button-toggle>
+  <mat-button-toggle>Yes</mat-button-toggle>
   `
 })
 class StandaloneButtonToggle { }
 
 @Component({
   template: `
-  <md-button-toggle-group (change)="lastEvent = $event" value="red">
-    <md-button-toggle value="red">Value Red</md-button-toggle>
-    <md-button-toggle value="green">Value Green</md-button-toggle>
-  </md-button-toggle-group>
+  <mat-button-toggle-group (change)="lastEvent = $event" value="red">
+    <mat-button-toggle value="red">Value Red</mat-button-toggle>
+    <mat-button-toggle value="green">Value Green</mat-button-toggle>
+  </mat-button-toggle-group>
   `
 })
 class ButtonToggleGroupWithInitialValue {
-  lastEvent: MdButtonToggleChange;
+  lastEvent: MatButtonToggleChange;
 }

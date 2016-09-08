@@ -1,14 +1,14 @@
 <!-- TODO(jelbourn): render the radio on either side of the content -->
 <!-- TODO(mtlin): Evaluate trade-offs of using native radio vs. cost of additional bindings. -->
-<label [attr.for]="inputId" class="md-radio-label">
+<label [attr.for]="inputId" class="mat-radio-label">
   <!-- The actual 'radio' part of the control. -->
-  <div class="md-radio-container">
-    <div class="md-radio-outer-circle"></div>
-    <div class="md-radio-inner-circle"></div>
-    <div class="md-ink-ripple"></div>
+  <div class="mat-radio-container">
+    <div class="mat-radio-outer-circle"></div>
+    <div class="mat-radio-inner-circle"></div>
+    <div class="mat-ink-ripple"></div>
   </div>
 
-  <input #input class="md-radio-input" type="radio"
+  <input #input class="mat-radio-input" type="radio"
           [id]="inputId"
           [checked]="checked"
           [disabled]="disabled"
@@ -21,7 +21,7 @@
           (click)="_onInputClick($event)">
 
   <!-- The label content for radio control. -->
-  <div class="md-radio-label-content" [class.md-radio-align-end]="align == 'end'">
+  <div class="mat-radio-label-content" [class.mat-radio-align-end]="align == 'end'">
     <ng-content></ng-content>
   </div>
 </label>

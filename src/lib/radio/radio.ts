@@ -19,21 +19,21 @@ import {
   NG_VALUE_ACCESSOR,
   ControlValueAccessor
 } from '@angular/forms';
-import {MdUniqueSelectionDispatcher} from '@angular2-material/core';
+import {MatUniqueSelectionDispatcher} from '@angular2-material/core';
 
 
 // Re-exports.
-export {MdUniqueSelectionDispatcher} from '@angular2-material/core';
+export {MatUniqueSelectionDispatcher} from '@angular2-material/core';
 
 
 
 /**
- * Provider Expression that allows md-radio-group to register as a ControlValueAccessor. This
+ * Provider Expression that allows mat-radio-group to register as a ControlValueAccessor. This
  * allows it to support [(ngModel)] and ngControl.
  */
-export const MD_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
+export const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdRadioGroup),
+  useExisting: forwardRef(() => MatRadioGroup),
   multi: true
 };
 
@@ -47,20 +47,20 @@ export const MD_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
 
 var _uniqueIdCounter = 0;
 
-/** A simple change event emitted by either MdRadioButton or MdRadioGroup. */
-export class MdRadioChange {
-  source: MdRadioButton;
+/** A simple change event emitted by either MatRadioButton or MatRadioGroup. */
+export class MatRadioChange {
+  source: MatRadioButton;
   value: any;
 }
 
 @Directive({
-  selector: 'md-radio-group',
-  providers: [MD_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
+  selector: 'mat-radio-group',
+  providers: [MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
   host: {
     'role': 'radiogroup',
   },
 })
-export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
+export class MatRadioGroup implements AfterContentInit, ControlValueAccessor {
   /**
    * Selected value for group. Should equal the value of the selected radio button if there *is*
    * a corresponding radio button with a matching value. If there is *not* such a corresponding
@@ -70,13 +70,13 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   private _value: any = null;
 
   /** The HTML name attribute applied to radio buttons in this group. */
-  private _name: string = `md-radio-group-${_uniqueIdCounter++}`;
+  private _name: string = `mat-radio-group-${_uniqueIdCounter++}`;
 
   /** Disables all individual radio buttons assigned to this group. */
   private _disabled: boolean = false;
 
   /** The currently selected radio button. Should match value. */
-  private _selected: MdRadioButton = null;
+  private _selected: MatRadioButton = null;
 
   /** Whether the `value` has been set to its initial value. */
   private _isInitialized: boolean = false;
@@ -89,11 +89,11 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
 
   /** Event emitted when the group value changes. */
   @Output()
-  change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
+  change: EventEmitter<MatRadioChange> = new EventEmitter<MatRadioChange>();
 
   /** Child radio buttons. */
-  @ContentChildren(forwardRef(() => MdRadioButton))
-  _radios: QueryList<MdRadioButton> = null;
+  @ContentChildren(forwardRef(() => MatRadioButton))
+  _radios: QueryList<MatRadioButton> = null;
 
   @Input()
   get name(): string {
@@ -141,7 +141,7 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
     return this._selected;
   }
 
-  set selected(selected: MdRadioButton) {
+  set selected(selected: MatRadioButton) {
     this._selected = selected;
     this.value = selected ? selected.value : null;
 
@@ -157,8 +157,8 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
    */
   ngAfterContentInit() {
     // Mark this component as initialized in AfterContentInit because the initial value can
-    // possibly be set by NgModel on MdRadioGroup, and it is possible that the OnInit of the
-    // NgModel occurs *after* the OnInit of the MdRadioGroup.
+    // possibly be set by NgModel on MatRadioGroup, and it is possible that the OnInit of the
+    // NgModel occurs *after* the OnInit of the MatRadioGroup.
     this._isInitialized = true;
   }
 
@@ -199,7 +199,7 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
 
   /** Dispatch change event with current selection and group value. */
   private _emitChangeEvent(): void {
-    let event = new MdRadioChange();
+    let event = new MatRadioChange();
     event.source = this._selected;
     event.value = this._value;
     this._controlValueAccessorChangeFn(event.value);
@@ -234,14 +234,14 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
 
 @Component({
   moduleId: module.id,
-  selector: 'md-radio-button',
+  selector: 'mat-radio-button',
   templateUrl: 'radio.html',
   styleUrls: ['radio.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class MdRadioButton implements OnInit {
+export class MatRadioButton implements OnInit {
 
-  @HostBinding('class.md-radio-focused')
+  @HostBinding('class.mat-radio-focused')
   _isFocused: boolean;
 
   /** Whether this radio is checked. */
@@ -250,7 +250,7 @@ export class MdRadioButton implements OnInit {
   /** The unique ID for the radio button. */
   @HostBinding('id')
   @Input()
-  id: string = `md-radio-${_uniqueIdCounter++}`;
+  id: string = `mat-radio-${_uniqueIdCounter++}`;
 
   /** Analog to HTML 'name' attribute used to group radios for unique selection. */
   @Input()
@@ -269,14 +269,14 @@ export class MdRadioButton implements OnInit {
   private _value: any = null;
 
   /** The parent radio group. May or may not be present. */
-  radioGroup: MdRadioGroup;
+  radioGroup: MatRadioGroup;
 
   /** Event emitted when the group value changes. */
   @Output()
-  change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
+  change: EventEmitter<MatRadioChange> = new EventEmitter<MatRadioChange>();
 
-  constructor(@Optional() radioGroup: MdRadioGroup,
-              public radioDispatcher: MdUniqueSelectionDispatcher) {
+  constructor(@Optional() radioGroup: MatRadioGroup,
+              public radioDispatcher: MatUniqueSelectionDispatcher) {
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
 
@@ -293,7 +293,7 @@ export class MdRadioButton implements OnInit {
     return `${this.id}-input`;
   }
 
-  @HostBinding('class.md-radio-checked')
+  @HostBinding('class.mat-radio-checked')
   @Input()
   get checked(): boolean {
     return this._checked;
@@ -312,7 +312,7 @@ export class MdRadioButton implements OnInit {
     }
   }
 
-  /** MdRadioGroup reads this to assign its own value. */
+  /** MatRadioGroup reads this to assign its own value. */
   @Input()
   get value(): any {
     return this._value;
@@ -338,7 +338,7 @@ export class MdRadioButton implements OnInit {
     this._align = value;
   }
 
-  @HostBinding('class.md-radio-disabled')
+  @HostBinding('class.mat-radio-disabled')
   @Input()
   get disabled(): boolean {
     return this._disabled || (this.radioGroup != null && this.radioGroup.disabled);
@@ -361,7 +361,7 @@ export class MdRadioButton implements OnInit {
 
   /** Dispatch change event with current value. */
   private _emitChangeEvent(): void {
-    let event = new MdRadioChange();
+    let event = new MatRadioChange();
     event.source = this;
     event.value = this._value;
     this.change.emit(event);
@@ -419,14 +419,14 @@ export class MdRadioButton implements OnInit {
 
 
 @NgModule({
-  exports: [MdRadioGroup, MdRadioButton],
-  declarations: [MdRadioGroup, MdRadioButton],
+  exports: [MatRadioGroup, MatRadioButton],
+  declarations: [MatRadioGroup, MatRadioButton],
 })
-export class MdRadioModule {
+export class MatRadioModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdRadioModule,
-      providers: [MdUniqueSelectionDispatcher],
+      ngModule: MatRadioModule,
+      providers: [MatUniqueSelectionDispatcher],
     };
   }
 }

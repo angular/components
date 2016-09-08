@@ -1,14 +1,14 @@
 import {Component} from '@angular/core';
 import {TestBed, async} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {MdToolbarModule} from './toolbar';
+import {MatToolbarModule} from './toolbar';
 
 
-describe('MdToolbar', () => {
+describe('MatToolbar', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdToolbarModule.forRoot()],
+      imports: [MatToolbarModule.forRoot()],
       declarations: [TestApp],
     });
 
@@ -18,29 +18,29 @@ describe('MdToolbar', () => {
   it('should apply class based on color attribute', () => {
     let fixture = TestBed.createComponent(TestApp);
     let testComponent = fixture.debugElement.componentInstance;
-    let toolbarElement = fixture.debugElement.query(By.css('md-toolbar')).nativeElement;
+    let toolbarElement = fixture.debugElement.query(By.css('mat-toolbar')).nativeElement;
 
     testComponent.toolbarColor = 'primary';
     fixture.detectChanges();
 
-    expect(toolbarElement.classList.contains('md-primary')).toBe(true);
+    expect(toolbarElement.classList.contains('mat-primary')).toBe(true);
 
     testComponent.toolbarColor = 'accent';
     fixture.detectChanges();
 
-    expect(toolbarElement.classList.contains('md-primary')).toBe(false);
-    expect(toolbarElement.classList.contains('md-accent')).toBe(true);
+    expect(toolbarElement.classList.contains('mat-primary')).toBe(false);
+    expect(toolbarElement.classList.contains('mat-accent')).toBe(true);
 
     testComponent.toolbarColor = 'warn';
     fixture.detectChanges();
 
-    expect(toolbarElement.classList.contains('md-accent')).toBe(false);
-    expect(toolbarElement.classList.contains('md-warn')).toBe(true);
+    expect(toolbarElement.classList.contains('mat-accent')).toBe(false);
+    expect(toolbarElement.classList.contains('mat-warn')).toBe(true);
   });
 });
 
 
-@Component({template: `<md-toolbar [color]="toolbarColor">Test Toolbar</md-toolbar>`})
+@Component({template: `<mat-toolbar [color]="toolbarColor">Test Toolbar</mat-toolbar>`})
 class TestApp {
   toolbarColor: string;
 }
