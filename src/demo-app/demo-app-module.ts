@@ -25,7 +25,7 @@ import {OverlayDemo, SpagettiPanel, RotiniPanel} from './overlay/overlay-demo';
 import {SlideToggleDemo} from './slide-toggle/slide-toggle-demo';
 import {ToolbarDemo} from './toolbar/toolbar-demo';
 import {ButtonDemo} from './button/button-demo';
-import {MdCheckboxDemoNestedChecklist, CheckboxDemo} from './checkbox/checkbox-demo';
+import {MatCheckboxDemoNestedChecklist, CheckboxDemo} from './checkbox/checkbox-demo';
 import {SliderDemo} from './slider/slider-demo';
 import {SidenavDemo} from './sidenav/sidenav-demo';
 import {PortalDemo, ScienceJoke} from './portal/portal-demo';
@@ -58,7 +58,7 @@ import {TabsDemo} from './tabs/tab-group-demo';
     JazzDialog,
     ListDemo,
     LiveAnnouncerDemo,
-    MdCheckboxDemoNestedChecklist,
+    MatCheckboxDemoNestedChecklist,
     MenuDemo,
     OverlayDemo,
     PortalDemo,

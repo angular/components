@@ -1,21 +1,21 @@
 import {inject, fakeAsync, tick, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdLiveAnnouncer, LIVE_ANNOUNCER_ELEMENT_TOKEN} from './live-announcer';
+import {MatLiveAnnouncer, LIVE_ANNOUNCER_ELEMENT_TOKEN} from './live-announcer';
 
 
-describe('MdLiveAnnouncer', () => {
-  let announcer: MdLiveAnnouncer;
+describe('MatLiveAnnouncer', () => {
+  let announcer: MatLiveAnnouncer;
   let ariaLiveElement: Element;
   let fixture: ComponentFixture<TestApp>;
 
   describe('with default element', () => {
     beforeEach(() => TestBed.configureTestingModule({
       declarations: [TestApp],
-      providers: [MdLiveAnnouncer]
+      providers: [MatLiveAnnouncer]
     }));
 
-    beforeEach(fakeAsync(inject([MdLiveAnnouncer], (la: MdLiveAnnouncer) => {
+    beforeEach(fakeAsync(inject([MatLiveAnnouncer], (la: MatLiveAnnouncer) => {
       announcer = la;
       ariaLiveElement = getLiveElement();
       fixture = TestBed.createComponent(TestApp);
@@ -68,12 +68,12 @@ describe('MdLiveAnnouncer', () => {
         declarations: [TestApp],
         providers: [
           {provide: LIVE_ANNOUNCER_ELEMENT_TOKEN, useValue: customLiveElement},
-          MdLiveAnnouncer,
+          MatLiveAnnouncer,
         ],
       });
     });
 
-    beforeEach(inject([MdLiveAnnouncer], (la: MdLiveAnnouncer) => {
+    beforeEach(inject([MatLiveAnnouncer], (la: MatLiveAnnouncer) => {
         announcer = la;
         ariaLiveElement = getLiveElement();
       }));
@@ -92,12 +92,12 @@ describe('MdLiveAnnouncer', () => {
 
 
 function getLiveElement(): Element {
-  return document.body.querySelector('.md-live-announcer');
+  return document.body.querySelector('.mat-live-announcer');
 }
 
 @Component({template: `<button (click)="announceText('Test')">Announce</button>`})
 class TestApp {
-  constructor(public live: MdLiveAnnouncer) { };
+  constructor(public live: MatLiveAnnouncer) { };
 
   announceText(message: string) {
     this.live.announce(message);

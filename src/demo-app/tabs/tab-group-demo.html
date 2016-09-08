@@ -1,29 +1,29 @@
 <h1>Tab Group Demo</h1>
 
-<md-tab-group class="demo-tab-group">
-  <md-tab *ngFor="let tab of tabs; let i = index" [disabled]="i == 1">
-    <template md-tab-label>{{tab.label}}</template>
-    <template md-tab-content>
+<mat-tab-group class="demo-tab-group">
+  <mat-tab *ngFor="let tab of tabs; let i = index" [disabled]="i == 1">
+    <template mat-tab-label>{{tab.label}}</template>
+    <template mat-tab-content>
       {{tab.content}}
       <br>
       <br>
       <br>
-      <md-input placeholder="Tab Label" [(ngModel)]="tab.label"></md-input>
+      <mat-input placeholder="Tab Label" [(ngModel)]="tab.label"></mat-input>
     </template>
-  </md-tab>
-</md-tab-group>
+  </mat-tab>
+</mat-tab-group>
 
 <h1>Async Tabs</h1>
 
-<md-tab-group class="demo-tab-group">
-  <md-tab *ngFor="let tab of asyncTabs | async; let i = index" [disabled]="i == 1">
-    <template md-tab-label>{{tab.label}}</template>
-    <template md-tab-content>
+<mat-tab-group class="demo-tab-group">
+  <mat-tab *ngFor="let tab of asyncTabs | async; let i = index" [disabled]="i == 1">
+    <template mat-tab-label>{{tab.label}}</template>
+    <template mat-tab-content>
       {{tab.content}}
       <br>
       <br>
       <br>
-      <md-input placeholder="Tab Label" [(ngModel)]="tab.label"></md-input>
+      <mat-input placeholder="Tab Label" [(ngModel)]="tab.label"></mat-input>
     </template>
-  </md-tab>
-</md-tab-group>
+  </mat-tab>
+</mat-tab-group>

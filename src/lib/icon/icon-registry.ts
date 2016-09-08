@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
-import {MdError} from '@angular2-material/core';
+import {MatError} from '@angular2-material/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
@@ -13,7 +13,7 @@ import 'rxjs/add/operator/catch';
 
 
 /** Exception thrown when attempting to load an icon with a name that cannot be found. */
-export class MdIconNameNotFoundError extends MdError {
+export class MatIconNameNotFoundError extends MatError {
   constructor(iconName: string) {
       super(`Unable to find icon with the name "${iconName}"`);
   }
@@ -23,7 +23,7 @@ export class MdIconNameNotFoundError extends MdError {
  * Exception thrown when attempting to load SVG content that does not contain the expected
  * <svg> tag.
  */
-export class MdIconSvgTagNotFoundError extends MdError {
+export class MatIconSvgTagNotFoundError extends MatError {
   constructor() {
       super('<svg> tag not found');
   }
@@ -39,14 +39,14 @@ class SvgIconConfig {
 const iconKey = (namespace: string, name: string) => namespace + ':' + name;
 
 /**
- * Service to register and display icons used by the <md-icon> component.
+ * Service to register and display icons used by the <mat-icon> component.
  * - Registers icon URLs by namespace and name.
  * - Registers icon set URLs by namespace.
  * - Registers aliases for CSS classes, for use with icon fonts.
  * - Loads icons from URLs and extracts individual icons from icon sets.
  */
 @Injectable()
-export class MdIconRegistry {
+export class MatIconRegistry {
   /**
    * URLs and cached SVG elements for individual icons. Keys are of the format "[namespace]:[icon]".
    */
@@ -68,7 +68,7 @@ export class MdIconRegistry {
   private _fontCssClassesByAlias = new Map<string, string>();
 
   /**
-   * The CSS class to apply when an <md-icon> component has no icon name, url, or font specified.
+   * The CSS class to apply when an <mat-icon> component has no icon name, url, or font specified.
    * The default 'material-icons' value assumes that the material icon font has been loaded as
    * described at http://google.github.io/material-design-icons/#icon-font-for-the-web
    */
@@ -105,9 +105,9 @@ export class MdIconRegistry {
   }
 
   /**
-   * Defines an alias for a CSS class name to be used for icon fonts. Creating an mdIcon
+   * Defines an alias for a CSS class name to be used for icon fonts. Creating an matIcon
    * component with the alias as the fontSet input will cause the class name to be applied
-   * to the <md-icon> element.
+   * to the <mat-icon> element.
    */
   registerFontClassAlias(alias: string, className = alias): this {
     this._fontCssClassesByAlias.set(alias, className);
@@ -123,7 +123,7 @@ export class MdIconRegistry {
   }
 
   /**
-   * Sets the CSS class name to be used for icon fonts when an <md-icon> component does not
+   * Sets the CSS class name to be used for icon fonts when an <mat-icon> component does not
    * have a fontSet input value, and is not loading an icon by name or URL.
    */
   setDefaultFontSetClass(className: string): this {
@@ -132,7 +132,7 @@ export class MdIconRegistry {
   }
 
   /**
-   * Returns the CSS class name to be used for icon fonts when an <md-icon> component does not
+   * Returns the CSS class name to be used for icon fonts when an <mat-icon> component does not
    * have a fontSet input value, and is not loading an icon by name or URL.
    */
   getDefaultFontSetClass(): string {
@@ -157,7 +157,7 @@ export class MdIconRegistry {
   /**
    * Returns an Observable that produces the icon (as an <svg> DOM element) with the given name
    * and namespace. The icon must have been previously registered with addIcon or addIconSet;
-   * if not, the Observable will throw an MdIconNameNotFoundError.
+   * if not, the Observable will throw an MatIconNameNotFoundError.
    */
   getNamedSvgIcon(name: string, namespace = ''): Observable<SVGElement> {
     // Return (copy of) cached icon if possible.
@@ -170,7 +170,7 @@ export class MdIconRegistry {
     if (iconSetConfigs) {
       return this._getSvgFromIconSetConfigs(name, iconSetConfigs);
     }
-    return Observable.throw(new MdIconNameNotFoundError(key));
+    return Observable.throw(new MatIconNameNotFoundError(key));
   }
 
   /**
@@ -194,7 +194,7 @@ export class MdIconRegistry {
    * if found copies the element to a new <svg> element. If not found, fetches all icon sets
    * that have not been cached, and searches again after all fetches are completed.
    * The returned Observable produces the SVG element if possible, and throws
-   * MdIconNameNotFoundError if no icon with the specified name can be found.
+   * MatIconNameNotFoundError if no icon with the specified name can be found.
    */
   private _getSvgFromIconSetConfigs(name: string, iconSetConfigs: SvgIconConfig[]):
       Observable<SVGElement> {
@@ -231,7 +231,7 @@ export class MdIconRegistry {
         .map((ignoredResults: any) => {
           const foundIcon = this._extractIconWithNameFromAnySet(name, iconSetConfigs);
           if (!foundIcon) {
-            throw new MdIconNameNotFoundError(name);
+            throw new MatIconNameNotFoundError(name);
           }
           return foundIcon;
         });
@@ -322,7 +322,7 @@ export class MdIconRegistry {
     div.innerHTML = str;
     const svg = <SVGElement>div.querySelector('svg');
     if (!svg) {
-      throw new MdIconSvgTagNotFoundError();
+      throw new MatIconSvgTagNotFoundError();
     }
     return svg;
   }

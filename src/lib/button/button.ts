@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BooleanFieldValue} from '@angular2-material/core';
-import {MdRippleModule} from '@angular2-material/core';
+import {MatRippleModule} from '@angular2-material/core';
 
 // TODO(jelbourn): Make the `isMouseDown` stuff done with one global listener.
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
@@ -19,11 +19,11 @@ import {MdRippleModule} from '@angular2-material/core';
 
 @Component({
   moduleId: module.id,
-  selector: 'button[md-button], button[md-raised-button], button[md-icon-button], ' +
-            'button[md-fab], button[md-mini-fab]',
+  selector: 'button[mat-button], button[mat-raised-button], button[mat-icon-button], ' +
+            'button[mat-fab], button[mat-mini-fab]',
   inputs: ['color'],
   host: {
-    '[class.md-button-focus]': '_isKeyboardFocused',
+    '[class.mat-button-focus]': '_isKeyboardFocused',
     '(mousedown)': '_setMousedown()',
     '(focus)': '_setKeyboardFocus()',
     '(blur)': '_removeKeyboardFocus()',
@@ -33,7 +33,7 @@ import {MdRippleModule} from '@angular2-material/core';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdButton {
+export class MatButton {
   private _color: string;
 
   /** Whether the button has focus from the keyboard (not the mouse). Used for class binding. */
@@ -72,7 +72,7 @@ export class MdButton {
 
   _setElementColor(color: string, isAdd: boolean) {
     if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `md-${color}`, isAdd);
+      this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
     }
   }
 
@@ -95,9 +95,9 @@ export class MdButton {
 
   isRoundButton() {
     const el = this._elementRef.nativeElement;
-    return el.hasAttribute('md-icon-button') ||
-        el.hasAttribute('md-fab') ||
-        el.hasAttribute('md-mini-fab');
+    return el.hasAttribute('mat-icon-button') ||
+        el.hasAttribute('mat-fab') ||
+        el.hasAttribute('mat-mini-fab');
   }
 
   isRippleEnabled() {
@@ -107,10 +107,10 @@ export class MdButton {
 
 @Component({
   moduleId: module.id,
-  selector: 'a[md-button], a[md-raised-button], a[md-icon-button], a[md-fab], a[md-mini-fab]',
+  selector: 'a[mat-button], a[mat-raised-button], a[mat-icon-button], a[mat-fab], a[mat-mini-fab]',
   inputs: ['color'],
   host: {
-    '[class.md-button-focus]': '_isKeyboardFocused',
+    '[class.mat-button-focus]': '_isKeyboardFocused',
     '(mousedown)': '_setMousedown()',
     '(focus)': '_setKeyboardFocus()',
     '(blur)': '_removeKeyboardFocus()',
@@ -120,7 +120,7 @@ export class MdButton {
   styleUrls: ['button.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class MdAnchor extends MdButton {
+export class MatAnchor extends MatButton {
   _disabled: boolean = null;
 
   constructor(elementRef: ElementRef, renderer: Renderer) {
@@ -158,14 +158,14 @@ export class MdAnchor extends MdButton {
 
 
 @NgModule({
-  imports: [CommonModule, MdRippleModule],
-  exports: [MdButton, MdAnchor],
-  declarations: [MdButton, MdAnchor],
+  imports: [CommonModule, MatRippleModule],
+  exports: [MatButton, MatAnchor],
+  declarations: [MatButton, MatAnchor],
 })
-export class MdButtonModule {
+export class MatButtonModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdButtonModule,
+      ngModule: MatButtonModule,
       providers: []
     };
   }

@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {MdGestureConfig} from '@angular2-material/core';
+import {MatGestureConfig} from '@angular2-material/core';
 
 /**
- * An extension of MdGestureConfig that exposes the underlying HammerManager instances.
+ * An extension of MatGestureConfig that exposes the underlying HammerManager instances.
  * Tests can use these instances to emit fake gesture events.
  */
 @Injectable()
-export class TestGestureConfig extends MdGestureConfig {
+export class TestGestureConfig extends MatGestureConfig {
   /**
    * A map of Hammer instances to element.
    * Used to emit events over instances for an element.

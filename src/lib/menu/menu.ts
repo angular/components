@@ -1,23 +1,23 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {OverlayModule, OVERLAY_PROVIDERS} from '@angular2-material/core';
-import {MdMenu} from './menu-directive';
-import {MdMenuItem} from './menu-item';
-import {MdMenuTrigger} from './menu-trigger';
-export {MdMenu} from './menu-directive';
-export {MdMenuItem} from './menu-item';
-export {MdMenuTrigger} from './menu-trigger';
+import {MatMenu} from './menu-directive';
+import {MatMenuItem} from './menu-item';
+import {MatMenuTrigger} from './menu-trigger';
+export {MatMenu} from './menu-directive';
+export {MatMenuItem} from './menu-item';
+export {MatMenuTrigger} from './menu-trigger';
 
 
 @NgModule({
   imports: [OverlayModule, CommonModule],
-  exports: [MdMenu, MdMenuItem, MdMenuTrigger],
-  declarations: [MdMenu, MdMenuItem, MdMenuTrigger],
+  exports: [MatMenu, MatMenuItem, MatMenuTrigger],
+  declarations: [MatMenu, MatMenuItem, MatMenuTrigger],
 })
-export class MdMenuModule {
+export class MatMenuModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdMenuModule,
+      ngModule: MatMenuModule,
       providers: OVERLAY_PROVIDERS,
     };
   }

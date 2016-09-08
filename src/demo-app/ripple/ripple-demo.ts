@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {MdRipple} from '@angular2-material/core';
+import {MatRipple} from '@angular2-material/core';
 
 
 @Component({
@@ -9,7 +9,7 @@ import {MdRipple} from '@angular2-material/core';
   styleUrls: ['ripple-demo.css'],
 })
 export class RippleDemo {
-  @ViewChild(MdRipple) manualRipple: MdRipple;
+  @ViewChild(MatRipple) manualRipple: MatRipple;
 
   centered = false;
   disabled = false;

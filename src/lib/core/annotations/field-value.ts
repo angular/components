@@ -15,7 +15,7 @@
 function booleanFieldValueFactory() {
   return function booleanFieldValueMetadata(target: any, key: string): void {
     const defaultValue = target[key];
-    const localKey = `__md_private_symbol_${key}`;
+    const localKey = `__mat_private_symbol_${key}`;
     target[localKey] = defaultValue;
 
     Object.defineProperty(target, key, {

@@ -14,10 +14,10 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PortalModule} from '@angular2-material/core';
-import {MdTabLabel} from './tab-label';
-import {MdTabContent} from './tab-content';
-import {MdTabLabelWrapper} from './tab-label-wrapper';
-import {MdInkBar} from './ink-bar';
+import {MatTabLabel} from './tab-label';
+import {MatTabContent} from './tab-content';
+import {MatTabLabelWrapper} from './tab-label-wrapper';
+import {MatInkBar} from './ink-bar';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {RIGHT_ARROW, LEFT_ARROW, ENTER} from '@angular2-material/core';
@@ -26,17 +26,17 @@ import {RIGHT_ARROW, LEFT_ARROW, ENTER} from '@angular2-material/core';
 let nextId = 0;
 
 /** A simple change event emitted on focus or selection changes. */
-export class MdTabChangeEvent {
+export class MatTabChangeEvent {
   index: number;
-  tab: MdTab;
+  tab: MatTab;
 }
 
 @Directive({
-  selector: 'md-tab'
+  selector: 'mat-tab'
 })
-export class MdTab {
-  @ContentChild(MdTabLabel) label: MdTabLabel;
-  @ContentChild(MdTabContent) content: MdTabContent;
+export class MatTab {
+  @ContentChild(MatTabLabel) label: MatTabLabel;
+  @ContentChild(MatTabContent) content: MatTabContent;
 
   // TODO: Replace this when BooleanFieldValue is removed.
   private _disabled = false;
@@ -56,15 +56,15 @@ export class MdTab {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-tab-group',
+  selector: 'mat-tab-group',
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
 })
-export class MdTabGroup {
-  @ContentChildren(MdTab) _tabs: QueryList<MdTab>;
+export class MatTabGroup {
+  @ContentChildren(MatTab) _tabs: QueryList<MatTab>;
 
-  @ViewChildren(MdTabLabelWrapper) _labelWrappers: QueryList<MdTabLabelWrapper>;
-  @ViewChildren(MdInkBar) _inkBar: QueryList<MdInkBar>;
+  @ViewChildren(MatTabLabelWrapper) _labelWrappers: QueryList<MatTabLabelWrapper>;
+  @ViewChildren(MatInkBar) _inkBar: QueryList<MatInkBar>;
 
   private _isInitialized: boolean = false;
 
@@ -101,13 +101,13 @@ export class MdTabGroup {
     return this.selectChange.map(event => event.index);
   }
 
-  private _onFocusChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();
-  @Output('focusChange') get focusChange(): Observable<MdTabChangeEvent> {
+  private _onFocusChange: EventEmitter<MatTabChangeEvent> = new EventEmitter<MatTabChangeEvent>();
+  @Output('focusChange') get focusChange(): Observable<MatTabChangeEvent> {
     return this._onFocusChange.asObservable();
   }
 
-  private _onSelectChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();
-  @Output('selectChange') get selectChange(): Observable<MdTabChangeEvent> {
+  private _onSelectChange: EventEmitter<MatTabChangeEvent> = new EventEmitter<MatTabChangeEvent>();
+  @Output('selectChange') get selectChange(): Observable<MatTabChangeEvent> {
     return this._onSelectChange.asObservable();
   }
 
@@ -167,8 +167,8 @@ export class MdTabGroup {
     }
   }
 
-  private _createChangeEvent(index: number): MdTabChangeEvent {
-    const event = new MdTabChangeEvent;
+  private _createChangeEvent(index: number): MatTabChangeEvent {
+    const event = new MatTabChangeEvent;
     event.index = index;
     if (this._tabs && this._tabs.length) {
       event.tab = this._tabs.toArray()[index];
@@ -178,12 +178,12 @@ export class MdTabGroup {
 
   /** Returns a unique id for each tab label element */
   _getTabLabelId(i: number): string {
-    return `md-tab-label-${this._groupId}-${i}`;
+    return `mat-tab-label-${this._groupId}-${i}`;
   }
 
   /** Returns a unique id for each tab content element */
   _getTabContentId(i: number): string {
-    return `md-tab-content-${this._groupId}-${i}`;
+    return `mat-tab-content-${this._groupId}-${i}`;
   }
 
   handleKeydown(event: KeyboardEvent) {
@@ -205,7 +205,7 @@ export class MdTabGroup {
    */
   moveFocus(offset: number) {
     if (this._labelWrappers) {
-      const tabs: MdTab[] = this._tabs.toArray();
+      const tabs: MatTab[] = this._tabs.toArray();
       for (let i = this.focusIndex + offset; i < tabs.length && i >= 0; i += offset) {
         if (this.isValidIndex(i)) {
           this.focusIndex = i;
@@ -229,14 +229,14 @@ export class MdTabGroup {
 
 @NgModule({
   imports: [CommonModule, PortalModule],
-  // Don't export MdInkBar or MdTabLabelWrapper, as they are internal implementatino details.
-  exports: [MdTabGroup, MdTabLabel, MdTabContent, MdTab],
-  declarations: [MdTabGroup, MdTabLabel, MdTabContent, MdTab, MdInkBar, MdTabLabelWrapper],
+  // Don't export MatInkBar or MatTabLabelWrapper, as they are internal implementatino details.
+  exports: [MatTabGroup, MatTabLabel, MatTabContent, MatTab],
+  declarations: [MatTabGroup, MatTabLabel, MatTabContent, MatTab, MatInkBar, MatTabLabelWrapper],
 })
-export class MdTabsModule {
+export class MatTabsModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdTabsModule,
+      ngModule: MatTabsModule,
       providers: []
     };
   }

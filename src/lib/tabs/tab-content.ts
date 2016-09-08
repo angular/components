@@ -3,9 +3,9 @@ import {TemplatePortalDirective} from '@angular2-material/core';
 
 /** Used to flag tab contents for use with the portal directive */
 @Directive({
-  selector: '[md-tab-content]'
+  selector: '[mat-tab-content]'
 })
-export class MdTabContent extends TemplatePortalDirective {
+export class MatTabContent extends TemplatePortalDirective {
   constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
     super(templateRef, viewContainerRef);
   }

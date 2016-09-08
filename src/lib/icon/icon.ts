@@ -13,13 +13,13 @@ import {
     AfterViewChecked
 } from '@angular/core';
 import {HttpModule} from '@angular/http';
-import {MdError} from '@angular2-material/core';
-import {MdIconRegistry} from './icon-registry';
-export {MdIconRegistry} from './icon-registry';
+import {MatError} from '@angular2-material/core';
+import {MatIconRegistry} from './icon-registry';
+export {MatIconRegistry} from './icon-registry';
 
 
-/** Exception thrown when an invalid icon name is passed to an md-icon component. */
-export class MdIconInvalidNameError extends MdError {
+/** Exception thrown when an invalid icon name is passed to an mat-icon component. */
+export class MatIconInvalidNameError extends MatError {
   constructor(iconName: string) {
       super(`Invalid icon name: "${iconName}"`);
   }
@@ -28,40 +28,40 @@ export class MdIconInvalidNameError extends MdError {
 /**
  * Component to display an icon. It can be used in the following ways:
  * - Specify the svgSrc input to load an SVG icon from a URL. The SVG content is directly inlined
- *   as a child of the <md-icon> component, so that CSS styles can easily be applied to it.
+ *   as a child of the <mat-icon> component, so that CSS styles can easily be applied to it.
  *   The URL is loaded via an XMLHttpRequest, so it must be on the same domain as the page or its
  *   server must be configured to allow cross-domain requests.
  *   Example:
- *     <md-icon svgSrc="assets/arrow.svg"></md-icon>
+ *     <mat-icon svgSrc="assets/arrow.svg"></mat-icon>
  *
  * - Specify the svgIcon input to load an SVG icon from a URL previously registered with the
  *   addSvgIcon, addSvgIconInNamespace, addSvgIconSet, or addSvgIconSetInNamespace methods of
- *   MdIconRegistry. If the svgIcon value contains a colon it is assumed to be in the format
+ *   MatIconRegistry. If the svgIcon value contains a colon it is assumed to be in the format
  *   "[namespace]:[name]", if not the value will be the name of an icon in the default namespace.
  *   Examples:
- *     <md-icon svgIcon="left-arrow"></md-icon>
- *     <md-icon svgIcon="animals:cat"></md-icon>
+ *     <mat-icon svgIcon="left-arrow"></mat-icon>
+ *     <mat-icon svgIcon="animals:cat"></mat-icon>
  *
- * - Use a font ligature as an icon by putting the ligature text in the content of the <md-icon>
+ * - Use a font ligature as an icon by putting the ligature text in the content of the <mat-icon>
  *   component. By default the Material icons font is used as described at
  *   http://google.github.io/material-design-icons/#icon-font-for-the-web. You can specify an
  *   alternate font by setting the fontSet input to either the CSS class to apply to use the
- *   desired font, or to an alias previously registered with MdIconRegistry.registerFontClassAlias.
+ *   desired font, or to an alias previously registered with MatIconRegistry.registerFontClassAlias.
  *   Examples:
- *     <md-icon>home</md-icon>
- *     <md-icon fontSet="myfont">sun</md-icon>
+ *     <mat-icon>home</mat-icon>
+ *     <mat-icon fontSet="myfont">sun</mat-icon>
  *
  * - Specify a font glyph to be included via CSS rules by setting the fontSet input to specify the
  *   font, and the fontIcon input to specify the icon. Typically the fontIcon will specify a
  *   CSS class which causes the glyph to be displayed via a :before selector, as in
  *   https://fortawesome.github.io/Font-Awesome/examples/
  *   Example:
- *     <md-icon fontSet="fa" fontIcon="alarm"></md-icon>
+ *     <mat-icon fontSet="fa" fontIcon="alarm"></mat-icon>
  */
 @Component({
   moduleId: module.id,
   template: '<ng-content></ng-content>',
-  selector: 'md-icon',
+  selector: 'mat-icon',
   styleUrls: ['icon.css'],
   host: {
     'role': 'img',
@@ -69,7 +69,7 @@ export class MdIconInvalidNameError extends MdError {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
+export class MatIcon implements OnChanges, OnInit, AfterViewChecked {
   @Input() svgSrc: string;
   @Input() svgIcon: string;
   @Input() fontSet: string;
@@ -84,7 +84,7 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
   constructor(
       private _element: ElementRef,
       private _renderer: Renderer,
-      private _mdIconRegistry: MdIconRegistry) { }
+      private _matIconRegistry: MatIconRegistry) { }
 
   /**
    * Splits an svgIcon binding value into its icon set and icon name components.
@@ -92,12 +92,12 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
    * The separator for the two fields is ':'. If there is no separator, an empty
    * string is returned for the icon set and the entire value is returned for
    * the icon name. If the argument is falsy, returns an array of two empty strings.
-   * Throws a MdIconInvalidNameError if the name contains two or more ':' separators.
+   * Throws a MatIconInvalidNameError if the name contains two or more ':' separators.
    * Examples:
    *   'social:cake' -> ['social', 'cake']
    *   'penguin' -> ['', 'penguin']
    *   null -> ['', '']
-   *   'a:b:c' -> (throws MdIconInvalidNameError)
+   *   'a:b:c' -> (throws MatIconInvalidNameError)
    */
   private _splitIconName(iconName: string): [string, string] {
     if (!iconName) {
@@ -111,7 +111,7 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
       case 2:
         return <[string, string]>parts;
       default:
-        throw new MdIconInvalidNameError(iconName);
+        throw new MatIconInvalidNameError(iconName);
     }
   }
 
@@ -122,11 +122,11 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
     if (changedInputs.indexOf('svgIcon') != -1 || changedInputs.indexOf('svgSrc') != -1) {
       if (this.svgIcon) {
         const [namespace, iconName] = this._splitIconName(this.svgIcon);
-        this._mdIconRegistry.getNamedSvgIcon(iconName, namespace).subscribe(
+        this._matIconRegistry.getNamedSvgIcon(iconName, namespace).subscribe(
             svg => this._setSvgElement(svg),
             (err: any) => console.log(`Error retrieving icon: ${err}`));
       } else if (this.svgSrc) {
-        this._mdIconRegistry.getSvgIconFromUrl(this.svgSrc).subscribe(
+        this._matIconRegistry.getSvgIconFromUrl(this.svgSrc).subscribe(
             svg => this._setSvgElement(svg),
             (err: any) => console.log(`Error retrieving icon: ${err}`));
       }
@@ -140,7 +140,8 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
   /** TODO: internal */
   ngOnInit() {
     // Update font classes because ngOnChanges won't be called if none of the inputs are present,
-    // e.g. <md-icon>arrow</md-icon>. In this case we need to add a CSS class for the default font.
+    // e.g. <mat-icon>arrow</mat-icon>. In this case we need to add a CSS class for the default
+    // font.
     if (this._usingFontIcon()) {
       this._updateFontIconClasses();
     }
@@ -149,7 +150,7 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
   /** TODO: internal */
   ngAfterViewChecked() {
     // Update aria label here because it may depend on the projected text content.
-    // (e.g. <md-icon>home</md-icon> should use 'home').
+    // (e.g. <mat-icon>home</mat-icon> should use 'home').
     this._updateAriaLabel();
   }
 
@@ -202,8 +203,8 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
     }
     const elem = this._element.nativeElement;
     const fontSetClass = this.fontSet ?
-        this._mdIconRegistry.classNameForFontAlias(this.fontSet) :
-        this._mdIconRegistry.getDefaultFontSetClass();
+        this._matIconRegistry.classNameForFontAlias(this.fontSet) :
+        this._matIconRegistry.getDefaultFontSetClass();
     if (fontSetClass != this._previousFontSetClass) {
       if (this._previousFontSetClass) {
         this._renderer.setElementClass(elem, this._previousFontSetClass, false);
@@ -229,14 +230,14 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
 
 @NgModule({
   imports: [HttpModule],
-  exports: [MdIcon],
-  declarations: [MdIcon],
+  exports: [MatIcon],
+  declarations: [MatIcon],
 })
-export class MdIconModule {
+export class MatIconModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdIconModule,
-      providers: [MdIconRegistry],
+      ngModule: MatIconModule,
+      providers: [MatIconRegistry],
     };
   }
 }

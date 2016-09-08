@@ -13,20 +13,20 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
-import {MdMenuInvalidPositionX, MdMenuInvalidPositionY} from './menu-errors';
-import {MdMenuItem} from './menu-item';
+import {MatMenuInvalidPositionX, MatMenuInvalidPositionY} from './menu-errors';
+import {MatMenuItem} from './menu-item';
 import {UP_ARROW, DOWN_ARROW, TAB} from '@angular2-material/core';
 
 @Component({
   moduleId: module.id,
-  selector: 'md-menu',
+  selector: 'mat-menu',
   host: {'role': 'menu'},
   templateUrl: 'menu.html',
   styleUrls: ['menu.css'],
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'mdMenu'
+  exportAs: 'matMenu'
 })
-export class MdMenu {
+export class MatMenu {
   _showClickCatcher: boolean = false;
   private _focusedItemIndex: number = 0;
 
@@ -37,7 +37,7 @@ export class MdMenu {
   positionY: MenuPositionY = 'below';
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
-  @ContentChildren(MdMenuItem) items: QueryList<MdMenuItem>;
+  @ContentChildren(MatMenuItem) items: QueryList<MatMenuItem>;
 
   constructor(@Attribute('x-position') posX: MenuPositionX,
               @Attribute('y-position') posY: MenuPositionY) {
@@ -46,7 +46,7 @@ export class MdMenu {
   }
 
   /**
-   * This method takes classes set on the host md-menu element and applies them on the
+   * This method takes classes set on the host mat-menu element and applies them on the
    * menu template that displays in the overlay container.  Otherwise, it's difficult
    * to style the containing menu from outside the component.
    * @param classes list of class names
@@ -120,7 +120,7 @@ export class MdMenu {
    * @param menuItems the menu items that should be focused
    * @private
      */
-  private _updateFocusedItemIndex(delta: number, menuItems: MdMenuItem[] = this.items.toArray()) {
+  private _updateFocusedItemIndex(delta: number, menuItems: MatMenuItem[] = this.items.toArray()) {
     // when focus would leave menu, wrap to beginning or end
     this._focusedItemIndex = (this._focusedItemIndex + delta + this.items.length)
                               % this.items.length;
@@ -134,14 +134,14 @@ export class MdMenu {
 
   private _setPositionX(pos: MenuPositionX): void {
     if ( pos !== 'before' && pos !== 'after') {
-      throw new MdMenuInvalidPositionX();
+      throw new MatMenuInvalidPositionX();
     }
     this.positionX = pos;
   }
 
   private _setPositionY(pos: MenuPositionY): void {
     if ( pos !== 'above' && pos !== 'below') {
-      throw new MdMenuInvalidPositionY();
+      throw new MatMenuInvalidPositionY();
     }
     this.positionY = pos;
   }

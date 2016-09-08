@@ -10,8 +10,8 @@ import {
     OnDestroy,
     Renderer
 } from '@angular/core';
-import {MdMenu} from './menu-directive';
-import {MdMenuMissingError} from './menu-errors';
+import {MatMenu} from './menu-directive';
+import {MatMenuMissingError} from './menu-errors';
 import {
     ENTER,
     Overlay,
@@ -24,18 +24,18 @@ import {
 } from '@angular2-material/core';
 
 /**
- * This directive is intended to be used in conjunction with an md-menu tag.  It is
+ * This directive is intended to be used in conjunction with an mat-menu tag.  It is
  * responsible for toggling the display of the provided menu instance.
  */
 @Directive({
-  selector: '[md-menu-trigger-for]',
+  selector: '[mat-menu-trigger-for]',
   host: {
     'aria-haspopup': 'true',
     '(keydown)': '_handleKeydown($event)'
   },
-  exportAs: 'mdMenuTrigger'
+  exportAs: 'matMenuTrigger'
 })
-export class MdMenuTrigger implements AfterViewInit, OnDestroy {
+export class MatMenuTrigger implements AfterViewInit, OnDestroy {
   private _portal: TemplatePortal;
   private _overlayRef: OverlayRef;
   private _menuOpen: boolean = false;
@@ -44,7 +44,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   // the first item of the list when the menu is opened via the keyboard
   private _openedFromKeyboard: boolean = false;
 
-  @Input('md-menu-trigger-for') menu: MdMenu;
+  @Input('mat-menu-trigger-for') menu: MatMenu;
   @Output() onMenuOpen = new EventEmitter();
   @Output() onMenuClose = new EventEmitter();
 
@@ -122,12 +122,12 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   }
 
   /**
-   *  This method checks that a valid instance of MdMenu has been passed into
-   *  md-menu-trigger-for.  If not, an exception is thrown.
+   *  This method checks that a valid instance of MatMenu has been passed into
+   *  mat-menu-trigger-for.  If not, an exception is thrown.
    */
   private _checkMenu() {
-    if (!this.menu || !(this.menu instanceof MdMenu)) {
-      throw new MdMenuMissingError();
+    if (!this.menu || !(this.menu instanceof MatMenu)) {
+      throw new MatMenuMissingError();
     }
   }
 

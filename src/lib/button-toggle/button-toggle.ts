@@ -21,50 +21,50 @@ import {
     FormsModule,
 } from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
-import {BooleanFieldValue, MdUniqueSelectionDispatcher} from '@angular2-material/core';
+import {BooleanFieldValue, MatUniqueSelectionDispatcher} from '@angular2-material/core';
 
 export type ToggleType = 'checkbox' | 'radio';
 
 
 
 /**
- * Provider Expression that allows md-button-toggle-group to register as a ControlValueAccessor.
+ * Provider Expression that allows mat-button-toggle-group to register as a ControlValueAccessor.
  * This allows it to support [(ngModel)].
  */
-export const MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any = {
+export const MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdButtonToggleGroup),
+  useExisting: forwardRef(() => MatButtonToggleGroup),
   multi: true
 };
 
 var _uniqueIdCounter = 0;
 
-/** A simple change event emitted by either MdButtonToggle or MdButtonToggleGroup. */
-export class MdButtonToggleChange {
-  source: MdButtonToggle;
+/** A simple change event emitted by either MatButtonToggle or MatButtonToggleGroup. */
+export class MatButtonToggleChange {
+  source: MatButtonToggle;
   value: any;
 }
 
 /** Exclusive selection button toggle group that behaves like a radio-button group. */
 @Directive({
-  selector: 'md-button-toggle-group:not([multiple])',
-  providers: [MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
+  selector: 'mat-button-toggle-group:not([multiple])',
+  providers: [MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
   host: {
     'role': 'radiogroup',
   },
 })
-export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor {
+export class MatButtonToggleGroup implements AfterViewInit, ControlValueAccessor {
   /** The value for the button toggle group. Should match currently selected button toggle. */
   private _value: any = null;
 
   /** The HTML name attribute applied to toggles in this group. */
-  private _name: string = `md-radio-group-${_uniqueIdCounter++}`;
+  private _name: string = `mat-radio-group-${_uniqueIdCounter++}`;
 
   /** Disables all toggles in the group. */
   private _disabled: boolean = null;
 
   /** The currently selected button toggle, should match the value. */
-  private _selected: MdButtonToggle = null;
+  private _selected: MatButtonToggle = null;
 
   /** Whether the button toggle group is initialized or not. */
   private _isInitialized: boolean = false;
@@ -76,14 +76,14 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
   onTouched: () => any = () => {};
 
   /** Event emitted when the group's value changes. */
-  private _change: EventEmitter<MdButtonToggleChange> = new EventEmitter<MdButtonToggleChange>();
-  @Output() get change(): Observable<MdButtonToggleChange> {
+  private _change: EventEmitter<MatButtonToggleChange> = new EventEmitter<MatButtonToggleChange>();
+  @Output() get change(): Observable<MatButtonToggleChange> {
     return this._change.asObservable();
   }
 
   /** Child button toggle buttons. */
-  @ContentChildren(forwardRef(() => MdButtonToggle))
-  _buttonToggles: QueryList<MdButtonToggle> = null;
+  @ContentChildren(forwardRef(() => MatButtonToggle))
+  _buttonToggles: QueryList<MatButtonToggle> = null;
 
   /** TODO: internal */
   ngAfterViewInit() {
@@ -134,7 +134,7 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
     return this._selected;
   }
 
-  set selected(selected: MdButtonToggle) {
+  set selected(selected: MatButtonToggle) {
     this._selected = selected;
     this.value = selected ? selected.value : null;
 
@@ -172,7 +172,7 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
 
   /** Dispatch change event with current selection and group value. */
   private _emitChangeEvent(): void {
-    let event = new MdButtonToggleChange();
+    let event = new MatButtonToggleChange();
     event.source = this._selected;
     event.value = this._value;
     this._controlValueAccessorChangeFn(event.value);
@@ -206,9 +206,9 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
 
 /** Multiple selection button-toggle group. */
 @Directive({
-  selector: 'md-button-toggle-group[multiple]',
+  selector: 'mat-button-toggle-group[multiple]',
 })
-export class MdButtonToggleGroupMultiple {
+export class MatButtonToggleGroupMultiple {
   /** Disables all toggles in the group. */
   private _disabled: boolean = null;
 
@@ -224,12 +224,12 @@ export class MdButtonToggleGroupMultiple {
 
 @Component({
   moduleId: module.id,
-  selector: 'md-button-toggle',
+  selector: 'mat-button-toggle',
   templateUrl: 'button-toggle.html',
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class MdButtonToggle implements OnInit {
+export class MatButtonToggle implements OnInit {
   /** Whether or not this button toggle is checked. */
   private _checked: boolean = false;
 
@@ -255,20 +255,20 @@ export class MdButtonToggle implements OnInit {
   private _isSingleSelector: boolean = null;
 
   /** The parent button toggle group (exclusive selection). Optional. */
-  buttonToggleGroup: MdButtonToggleGroup;
+  buttonToggleGroup: MatButtonToggleGroup;
 
   /** The parent button toggle group (multiple selection). Optional. */
-  buttonToggleGroupMultiple: MdButtonToggleGroupMultiple;
+  buttonToggleGroupMultiple: MatButtonToggleGroupMultiple;
 
   /** Event emitted when the group value changes. */
-  private _change: EventEmitter<MdButtonToggleChange> = new EventEmitter<MdButtonToggleChange>();
-  @Output() get change(): Observable<MdButtonToggleChange> {
+  private _change: EventEmitter<MatButtonToggleChange> = new EventEmitter<MatButtonToggleChange>();
+  @Output() get change(): Observable<MatButtonToggleChange> {
     return this._change.asObservable();
   }
 
-  constructor(@Optional() toggleGroup: MdButtonToggleGroup,
-              @Optional() toggleGroupMultiple: MdButtonToggleGroupMultiple,
-              public buttonToggleDispatcher: MdUniqueSelectionDispatcher) {
+  constructor(@Optional() toggleGroup: MatButtonToggleGroup,
+              @Optional() toggleGroupMultiple: MatButtonToggleGroupMultiple,
+              public buttonToggleDispatcher: MatUniqueSelectionDispatcher) {
     this.buttonToggleGroup = toggleGroup;
 
     this.buttonToggleGroupMultiple = toggleGroupMultiple;
@@ -293,7 +293,7 @@ export class MdButtonToggle implements OnInit {
 
   ngOnInit() {
     if (this.id == null) {
-      this.id = `md-button-toggle-${_uniqueIdCounter++}`;
+      this.id = `mat-button-toggle-${_uniqueIdCounter++}`;
     }
 
     if (this.buttonToggleGroup && this._value == this.buttonToggleGroup.value) {
@@ -305,7 +305,7 @@ export class MdButtonToggle implements OnInit {
     return `${this.id}-input`;
   }
 
-  @HostBinding('class.md-button-toggle-checked')
+  @HostBinding('class.mat-button-toggle-checked')
   @Input()
   get checked(): boolean {
     return this._checked;
@@ -326,7 +326,7 @@ export class MdButtonToggle implements OnInit {
     }
   }
 
-  /** MdButtonToggleGroup reads this to assign its own value. */
+  /** MatButtonToggleGroup reads this to assign its own value. */
   @Input()
   get value(): any {
     return this._value;
@@ -343,13 +343,13 @@ export class MdButtonToggle implements OnInit {
 
   /** Dispatch change event with current value. */
   private _emitChangeEvent(): void {
-    let event = new MdButtonToggleChange();
+    let event = new MatButtonToggleChange();
     event.source = this;
     event.value = this._value;
     this._change.emit(event);
   }
 
-  @HostBinding('class.md-button-toggle-disabled')
+  @HostBinding('class.mat-button-toggle-disabled')
   @Input()
   get disabled(): boolean {
     return this._disabled || (this.buttonToggleGroup != null && this.buttonToggleGroup.disabled) ||
@@ -400,14 +400,14 @@ export class MdButtonToggle implements OnInit {
 
 @NgModule({
   imports: [FormsModule],
-  exports: [MdButtonToggleGroup, MdButtonToggleGroupMultiple, MdButtonToggle],
-  declarations: [MdButtonToggleGroup, MdButtonToggleGroupMultiple, MdButtonToggle],
+  exports: [MatButtonToggleGroup, MatButtonToggleGroupMultiple, MatButtonToggle],
+  declarations: [MatButtonToggleGroup, MatButtonToggleGroupMultiple, MatButtonToggle],
 })
-export class MdButtonToggleModule {
+export class MatButtonToggleModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdButtonToggleModule,
-      providers: [MdUniqueSelectionDispatcher]
+      ngModule: MatButtonToggleModule,
+      providers: [MatUniqueSelectionDispatcher]
     };
   }
 }

@@ -48,7 +48,7 @@ export class RippleRenderer {
     // It might be nice to delay creating the background until it's needed, but doing this in
     // fadeInRippleBackground causes the first click event to not be handled reliably.
     this._backgroundDiv = document.createElement('div');
-    this._backgroundDiv.classList.add('md-ripple-background');
+    this._backgroundDiv.classList.add('mat-ripple-background');
     this._rippleElement.appendChild(this._backgroundDiv);
   }
 
@@ -73,7 +73,7 @@ export class RippleRenderer {
   }
 
   /**
-   * Installs event handlers on the host element of the md-ripple directive.
+   * Installs event handlers on the host element of the mat-ripple directive.
    */
   setTriggerElementToHost() {
     this.setTriggerElement(this._rippleElement);
@@ -88,7 +88,7 @@ export class RippleRenderer {
 
   /**
    * Creates a foreground ripple and sets its animation to expand and fade in from the position
-   * given by rippleOriginLeft and rippleOriginTop (or from the center of the <md-ripple>
+   * given by rippleOriginLeft and rippleOriginTop (or from the center of the <mat-ripple>
    * bounding rect if centered is true).
    */
   createForegroundRipple(
@@ -112,7 +112,7 @@ export class RippleRenderer {
 
     const rippleDiv = document.createElement('div');
     this._rippleElement.appendChild(rippleDiv);
-    rippleDiv.classList.add('md-ripple-foreground');
+    rippleDiv.classList.add('mat-ripple-foreground');
     rippleDiv.style.left = `${offsetX - maxRadius}px`;
     rippleDiv.style.top = `${offsetY - maxRadius}px`;
     rippleDiv.style.width = `${2 * maxRadius}px`;
@@ -130,7 +130,7 @@ export class RippleRenderer {
     // https://timtaubert.de/blog/2012/09/css-transitions-for-dynamically-created-dom-elements/
     window.getComputedStyle(rippleDiv).opacity;
 
-    rippleDiv.classList.add('md-ripple-fade-in');
+    rippleDiv.classList.add('mat-ripple-fade-in');
     // Clearing the transform property causes the ripple to animate to its full size.
     rippleDiv.style.transform = '';
     const ripple = new ForegroundRipple(rippleDiv);
@@ -144,8 +144,8 @@ export class RippleRenderer {
    * Fades out a foreground ripple after it has fully expanded and faded in.
    */
   fadeOutForegroundRipple(ripple: Element) {
-    ripple.classList.remove('md-ripple-fade-in');
-    ripple.classList.add('md-ripple-fade-out');
+    ripple.classList.remove('mat-ripple-fade-in');
+    ripple.classList.add('mat-ripple-fade-out');
   }
 
   /**
@@ -159,7 +159,7 @@ export class RippleRenderer {
    * Fades in the ripple background.
    */
   fadeInRippleBackground(color: string) {
-    this._backgroundDiv.classList.add('md-ripple-active');
+    this._backgroundDiv.classList.add('mat-ripple-active');
     // If color is not set, this will default to the background color defined in CSS.
     this._backgroundDiv.style.backgroundColor = color;
   }
@@ -169,7 +169,7 @@ export class RippleRenderer {
    */
   fadeOutRippleBackground() {
     if (this._backgroundDiv) {
-      this._backgroundDiv.classList.remove('md-ripple-active');
+      this._backgroundDiv.classList.remove('mat-ripple-active');
     }
   }
 }

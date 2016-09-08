@@ -3,7 +3,7 @@
 /**
  * Wrapper around Error that sets the error message.
  */
-export class MdError extends Error {
+export class MatError extends Error {
   constructor(value: string) {
     super();
     this.message = value;

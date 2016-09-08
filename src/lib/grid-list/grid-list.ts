@@ -12,7 +12,7 @@ import {
   ElementRef,
   Optional
 } from '@angular/core';
-import {MdGridTile, MdGridTileText} from './grid-tile';
+import {MatGridTile, MatGridTileText} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
 import {
     TileStyler,
@@ -20,24 +20,24 @@ import {
     RatioTileStyler,
     FixedTileStyler
 } from './tile-styler';
-import {MdGridListColsError} from './grid-list-errors';
-import {Dir, MdLineModule} from '@angular2-material/core';
+import {MatGridListColsError} from './grid-list-errors';
+import {Dir, MatLineModule} from '@angular2-material/core';
 import {coerceToString, coerceToNumber} from './grid-list-measure';
 
 // TODO(kara): Conditional (responsive) column count / row size.
 // TODO(kara): Re-layout on window resize / media change (debounced).
 // TODO(kara): gridTileHeader and gridTileFooter.
 
-const MD_FIT_MODE = 'fit';
+const MAT_FIT_MODE = 'fit';
 
 @Component({
   moduleId: module.id,
-  selector: 'md-grid-list',
+  selector: 'mat-grid-list',
   templateUrl: 'grid-list.html',
   styleUrls: ['grid-list.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class MdGridList implements OnInit, AfterContentChecked {
+export class MatGridList implements OnInit, AfterContentChecked {
   /** Number of columns being rendered. */
   private _cols: number;
 
@@ -56,7 +56,7 @@ export class MdGridList implements OnInit, AfterContentChecked {
   private _tileStyler: TileStyler;
 
   /** Query list of tiles that are being rendered. */
-  @ContentChildren(MdGridTile) _tiles: QueryList<MdGridTile>;
+  @ContentChildren(MatGridTile) _tiles: QueryList<MatGridTile>;
 
   constructor(
       private _renderer: Renderer,
@@ -106,7 +106,7 @@ export class MdGridList implements OnInit, AfterContentChecked {
   /** Throw a friendly error if cols property is missing */
   private _checkCols() {
     if (!this.cols) {
-      throw new MdGridListColsError();
+      throw new MatGridListColsError();
     }
   }
 
@@ -119,7 +119,7 @@ export class MdGridList implements OnInit, AfterContentChecked {
 
   /** Creates correct Tile Styler subtype based on rowHeight passed in by user */
   private _setTileStyler(): void {
-    if (this._rowHeight === MD_FIT_MODE) {
+    if (this._rowHeight === MAT_FIT_MODE) {
       this._tileStyler = new FitTileStyler();
     } else if (this._rowHeight && this._rowHeight.match(/:/g)) {
       this._tileStyler = new RatioTileStyler(this._rowHeight);
@@ -153,14 +153,14 @@ export class MdGridList implements OnInit, AfterContentChecked {
 
 
 @NgModule({
-  imports: [MdLineModule],
-  exports: [MdGridList, MdGridTile, MdGridTileText, MdLineModule],
-  declarations: [MdGridList, MdGridTile, MdGridTileText],
+  imports: [MatLineModule],
+  exports: [MatGridList, MatGridTile, MatGridTileText, MatLineModule],
+  declarations: [MatGridList, MatGridTile, MatGridTileText],
 })
-export class MdGridListModule {
+export class MatGridListModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdGridListModule,
+      ngModule: MatGridListModule,
       providers: []
     };
   }

@@ -1,10 +1,10 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
-import {MdLineModule} from './line/line';
+import {MatLineModule} from './line/line';
 import {RtlModule} from './rtl/dir';
-import {MdRippleModule} from './ripple/ripple';
+import {MatRippleModule} from './ripple/ripple';
 import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/overlay-directives';
-import {MdLiveAnnouncer} from './a11y/live-announcer';
+import {MatLiveAnnouncer} from './a11y/live-announcer';
 
 // RTL
 export {Dir, LayoutDirection, RtlModule} from './rtl/dir';
@@ -38,30 +38,30 @@ export * from './overlay/position/connected-position-strategy';
 export * from './overlay/position/connected-position';
 
 // Gestures
-export {MdGestureConfig} from './gestures/MdGestureConfig';
+export {MatGestureConfig} from './gestures/gesture-config';
 
 // Ripple
-export {MdRipple, MdRippleModule} from './ripple/ripple';
+export {MatRipple, MatRippleModule} from './ripple/ripple';
 
 // a11y
 export {
   AriaLivePoliteness,
-  MdLiveAnnouncer,
+  MatLiveAnnouncer,
   LIVE_ANNOUNCER_ELEMENT_TOKEN,
 } from './a11y/live-announcer';
 
 export {
-  MdUniqueSelectionDispatcher,
-  MdUniqueSelectionDispatcherListener
+  MatUniqueSelectionDispatcher,
+  MatUniqueSelectionDispatcherListener
 } from './coordination/unique-selection-dispatcher';
 
-export {MdLineModule, MdLine, MdLineSetter} from './line/line';
+export {MatLineModule, MatLine, MatLineSetter} from './line/line';
 
 // Style
 export {applyCssTransform} from './style/apply-transform';
 
 // Error
-export {MdError} from './errors/error';
+export {MatError} from './errors/error';
 
 // Annotations.
 export {BooleanFieldValue} from './annotations/field-value';
@@ -74,14 +74,14 @@ export * from './keyboard/keycodes';
 
 
 @NgModule({
-  imports: [MdLineModule, RtlModule, MdRippleModule, PortalModule, OverlayModule],
-  exports: [MdLineModule, RtlModule, MdRippleModule, PortalModule, OverlayModule],
+  imports: [MatLineModule, RtlModule, MatRippleModule, PortalModule, OverlayModule],
+  exports: [MatLineModule, RtlModule, MatRippleModule, PortalModule, OverlayModule],
 })
-export class MdCoreModule {
+export class MatCoreModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdCoreModule,
-      providers: [MdLiveAnnouncer]
+      ngModule: MatCoreModule,
+      providers: [MatLiveAnnouncer]
     };
   }
 }

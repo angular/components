@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MdLiveAnnouncer} from '@angular2-material/core';
+import {MatLiveAnnouncer} from '@angular2-material/core';
 
 @Component({
   moduleId: module.id,
@@ -8,7 +8,7 @@ import {MdLiveAnnouncer} from '@angular2-material/core';
 })
 export class LiveAnnouncerDemo {
 
-  constructor(private live: MdLiveAnnouncer) {}
+  constructor(private live: MatLiveAnnouncer) {}
 
   announceText(message: string) {
     this.live.announce(message);

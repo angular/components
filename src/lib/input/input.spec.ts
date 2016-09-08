@@ -5,58 +5,58 @@ import {
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {MdInput, MdInputModule} from './input';
+import {MatInput, MatInputModule} from './input';
 
 function isInternetExplorer11() {
     return 'ActiveXObject' in window;
 }
 
-describe('MdInput', function () {
+describe('MatInput', function () {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdInputModule.forRoot(), FormsModule],
+      imports: [MatInputModule.forRoot(), FormsModule],
       declarations: [
-        MdInputNumberTypeConservedTestComponent,
-        MdInputPlaceholderRequiredTestComponent,
-        MdInputPlaceholderElementTestComponent,
-        MdInputPlaceholderAttrTestComponent,
-        MdInputHintLabel2TestController,
-        MdInputHintLabelTestController,
-        MdInputInvalidTypeTestController,
-        MdInputInvalidPlaceholderTestController,
-        MdInputInvalidHint2TestController,
-        MdInputInvalidHintTestController,
-        MdInputBaseTestController,
-        MdInputAriaTestController,
-        MdInputWithBlurAndFocusEvents,
-        MdInputWithNameTestController,
-        MdInputWithId,
-        MdInputWithAutocomplete,
-        MdInputWithUnboundAutocomplete,
-        MdInputWithUnboundAutocompleteWithValue,
-        MdInputWithAutocorrect,
-        MdInputWithUnboundAutocorrect,
-        MdInputWithAutocapitalize,
-        MdInputWithUnboundAutocapitalize,
-        MdInputWithAutofocus,
-        MdInputWithUnboundAutofocus,
-        MdInputWithReadonly,
-        MdInputWithUnboundReadonly,
-        MdInputWithSpellcheck,
-        MdInputWithUnboundSpellcheck,
-        MdInputWithDisabled,
-        MdInputWithUnboundDisabled,
-        MdInputWithRequired,
-        MdInputWithUnboundRequired,
-        MdInputWithList,
-        MdInputWithMax,
-        MdInputWithMin,
-        MdInputWithStep,
-        MdInputWithTabindex,
-        MdInputDateTestController,
-        MdInputTextTestController,
-        MdInputPasswordTestController,
-        MdInputNumberTestController,
+        MatInputNumberTypeConservedTestComponent,
+        MatInputPlaceholderRequiredTestComponent,
+        MatInputPlaceholderElementTestComponent,
+        MatInputPlaceholderAttrTestComponent,
+        MatInputHintLabel2TestController,
+        MatInputHintLabelTestController,
+        MatInputInvalidTypeTestController,
+        MatInputInvalidPlaceholderTestController,
+        MatInputInvalidHint2TestController,
+        MatInputInvalidHintTestController,
+        MatInputBaseTestController,
+        MatInputAriaTestController,
+        MatInputWithBlurAndFocusEvents,
+        MatInputWithNameTestController,
+        MatInputWithId,
+        MatInputWithAutocomplete,
+        MatInputWithUnboundAutocomplete,
+        MatInputWithUnboundAutocompleteWithValue,
+        MatInputWithAutocorrect,
+        MatInputWithUnboundAutocorrect,
+        MatInputWithAutocapitalize,
+        MatInputWithUnboundAutocapitalize,
+        MatInputWithAutofocus,
+        MatInputWithUnboundAutofocus,
+        MatInputWithReadonly,
+        MatInputWithUnboundReadonly,
+        MatInputWithSpellcheck,
+        MatInputWithUnboundSpellcheck,
+        MatInputWithDisabled,
+        MatInputWithUnboundDisabled,
+        MatInputWithRequired,
+        MatInputWithUnboundRequired,
+        MatInputWithList,
+        MatInputWithMax,
+        MatInputWithMin,
+        MatInputWithStep,
+        MatInputWithTabindex,
+        MatInputDateTestController,
+        MatInputTextTestController,
+        MatInputPasswordTestController,
+        MatInputNumberTestController,
       ],
     });
 
@@ -64,7 +64,7 @@ describe('MdInput', function () {
   }));
 
   it('creates a native <input> element', () => {
-    let fixture = TestBed.createComponent(MdInputBaseTestController);
+    let fixture = TestBed.createComponent(MatInputBaseTestController);
     fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
@@ -74,57 +74,57 @@ describe('MdInput', function () {
     if (isInternetExplorer11()) {
       return;
     }
-    let fixture = TestBed.createComponent(MdInputDateTestController);
+    let fixture = TestBed.createComponent(MatInputDateTestController);
     fixture.componentInstance.placeholder = 'Placeholder';
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
     expect(el).not.toBeNull();
-    expect(el.className.includes('md-empty')).toBe(false);
+    expect(el.className.includes('mat-empty')).toBe(false);
   }));
 
   it('should treat text input type as empty at init', async(() => {
     if (isInternetExplorer11()) {
       return;
     }
-    let fixture = TestBed.createComponent(MdInputTextTestController);
+    let fixture = TestBed.createComponent(MatInputTextTestController);
     fixture.componentInstance.placeholder = 'Placeholder';
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
     expect(el).not.toBeNull();
-    expect(el.className.includes('md-empty')).toBe(true);
+    expect(el.className.includes('mat-empty')).toBe(true);
   }));
 
   it('should treat password input type as empty at init', async(() => {
     if (isInternetExplorer11()) {
       return;
     }
-    let fixture = TestBed.createComponent(MdInputPasswordTestController);
+    let fixture = TestBed.createComponent(MatInputPasswordTestController);
     fixture.componentInstance.placeholder = 'Placeholder';
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
     expect(el).not.toBeNull();
-    expect(el.className.includes('md-empty')).toBe(true);
+    expect(el.className.includes('mat-empty')).toBe(true);
   }));
 
   it('should treat number input type as empty at init', async(() => {
     if (isInternetExplorer11()) {
       return;
     }
-    let fixture = TestBed.createComponent(MdInputNumberTestController);
+    let fixture = TestBed.createComponent(MatInputNumberTestController);
     fixture.componentInstance.placeholder = 'Placeholder';
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
     expect(el).not.toBeNull();
-    expect(el.className.includes('md-empty')).toBe(true);
+    expect(el.className.includes('mat-empty')).toBe(true);
   }));
 
   // TODO(kara): update when core/testing adds fix
   it('support ngModel', async(() => {
-    let fixture = TestBed.createComponent(MdInputBaseTestController);
+    let fixture = TestBed.createComponent(MatInputBaseTestController);
 
     fixture.detectChanges();
     let instance = fixture.componentInstance;
@@ -142,11 +142,11 @@ describe('MdInput', function () {
   }));
 
   it('should have a different ID for outer element and internal input', () => {
-    let fixture = TestBed.createComponent(MdInputWithId);
+    let fixture = TestBed.createComponent(MatInputWithId);
     fixture.detectChanges();
 
     const componentElement: HTMLElement =
-        fixture.debugElement.query(By.directive(MdInput)).nativeElement;
+        fixture.debugElement.query(By.directive(MatInput)).nativeElement;
     const inputElement: HTMLInputElement =
         fixture.debugElement.query(By.css('input')).nativeElement;
 
@@ -156,10 +156,10 @@ describe('MdInput', function () {
   });
 
   it('counts characters', async(() => {
-    let fixture = TestBed.createComponent(MdInputBaseTestController);
+    let fixture = TestBed.createComponent(MatInputBaseTestController);
     let instance = fixture.componentInstance;
     fixture.detectChanges();
-    let inputInstance = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let inputInstance = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     expect(inputInstance.characterCount).toEqual(0);
 
     instance.model = 'hello';
@@ -170,7 +170,7 @@ describe('MdInput', function () {
   }));
 
   it('copies aria attributes to the inner input', () => {
-    let fixture = TestBed.createComponent(MdInputAriaTestController);
+    let fixture = TestBed.createComponent(MatInputAriaTestController);
     let instance = fixture.componentInstance;
     fixture.detectChanges();
 
@@ -184,67 +184,67 @@ describe('MdInput', function () {
   });
 
   it(`validates there's only one hint label per side`, () => {
-    let fixture = TestBed.createComponent(MdInputInvalidHintTestController);
+    let fixture = TestBed.createComponent(MatInputInvalidHintTestController);
 
     expect(() => fixture.detectChanges()).toThrow();
-    // TODO(jelbourn): .toThrow(new MdInputDuplicatedHintError('start'));
+    // TODO(jelbourn): .toThrow(new MatInputDuplicatedHintError('start'));
     // See https://github.com/angular/angular/issues/8348
   });
 
   it(`validates there's only one hint label per side (attribute)`, () => {
-    let fixture = TestBed.createComponent(MdInputInvalidHint2TestController);
+    let fixture = TestBed.createComponent(MatInputInvalidHint2TestController);
 
     expect(() => fixture.detectChanges()).toThrow();
-    // TODO(jelbourn): .toThrow(new MdInputDuplicatedHintError('start'));
+    // TODO(jelbourn): .toThrow(new MatInputDuplicatedHintError('start'));
     // See https://github.com/angular/angular/issues/8348
   });
 
   it('validates there\'s only one placeholder', () => {
-    let fixture = TestBed.createComponent(MdInputInvalidPlaceholderTestController);
+    let fixture = TestBed.createComponent(MatInputInvalidPlaceholderTestController);
 
     expect(() => fixture.detectChanges()).toThrow();
-    // TODO(jelbourn): .toThrow(new MdInputPlaceholderConflictError());
+    // TODO(jelbourn): .toThrow(new MatInputPlaceholderConflictError());
     // See https://github.com/angular/angular/issues/8348
   });
 
   it('validates the type', () => {
-    let fixture = TestBed.createComponent(MdInputInvalidTypeTestController);
+    let fixture = TestBed.createComponent(MatInputInvalidTypeTestController);
 
     // Technically this throws during the OnChanges detection phase,
     // so the error is really a ChangeDetectionError and it becomes
     // hard to build a full exception to compare with.
     // We just check for any exception in this case.
-    expect(() => fixture.detectChanges()).toThrow(/* new MdInputUnsupportedTypeError('file') */);
+    expect(() => fixture.detectChanges()).toThrow(/* new MatInputUnsupportedTypeError('file') */);
   });
 
   it('supports hint labels attribute', () => {
-    let fixture = TestBed.createComponent(MdInputHintLabelTestController);
+    let fixture = TestBed.createComponent(MatInputHintLabelTestController);
     fixture.detectChanges();
 
     // If the hint label is empty, expect no label.
-    expect(fixture.debugElement.query(By.css('.md-hint'))).toBeNull();
+    expect(fixture.debugElement.query(By.css('.mat-hint'))).toBeNull();
 
     fixture.componentInstance.label = 'label';
     fixture.detectChanges();
-    expect(fixture.debugElement.query(By.css('.md-hint'))).not.toBeNull();
+    expect(fixture.debugElement.query(By.css('.mat-hint'))).not.toBeNull();
   });
 
   it('supports hint labels elements', () => {
-    let fixture = TestBed.createComponent(MdInputHintLabel2TestController);
+    let fixture = TestBed.createComponent(MatInputHintLabel2TestController);
     fixture.detectChanges();
 
-    // In this case, we should have an empty <md-hint>.
-    let el = fixture.debugElement.query(By.css('md-hint')).nativeElement;
+    // In this case, we should have an empty <mat-hint>.
+    let el = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
     expect(el.textContent).toBeFalsy();
 
     fixture.componentInstance.label = 'label';
     fixture.detectChanges();
-    el = fixture.debugElement.query(By.css('md-hint')).nativeElement;
+    el = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
     expect(el.textContent).toBe('label');
   });
 
   it('supports placeholder attribute', () => {
-    let fixture = TestBed.createComponent(MdInputPlaceholderAttrTestComponent);
+    let fixture = TestBed.createComponent(MatInputPlaceholderAttrTestComponent);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label'));
@@ -259,7 +259,7 @@ describe('MdInput', function () {
   });
 
   it('supports placeholder element', () => {
-    let fixture = TestBed.createComponent(MdInputPlaceholderElementTestComponent);
+    let fixture = TestBed.createComponent(MatInputPlaceholderElementTestComponent);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label'));
@@ -275,7 +275,7 @@ describe('MdInput', function () {
   });
 
   it('supports placeholder required star', () => {
-    let fixture = TestBed.createComponent(MdInputPlaceholderRequiredTestComponent);
+    let fixture = TestBed.createComponent(MatInputPlaceholderRequiredTestComponent);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label'));
@@ -284,10 +284,10 @@ describe('MdInput', function () {
   });
 
   it('supports number types and conserved its value type from Angular', () => {
-    let fixture = TestBed.createComponent(MdInputNumberTypeConservedTestComponent);
+    let fixture = TestBed.createComponent(MatInputNumberTypeConservedTestComponent);
     fixture.detectChanges();
 
-    const input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    const input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     const inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
     // Fake a `change` event being triggered.
@@ -300,9 +300,9 @@ describe('MdInput', function () {
   });
 
   it('supports blur and focus events', () => {
-    let fixture = TestBed.createComponent(MdInputWithBlurAndFocusEvents);
+    let fixture = TestBed.createComponent(MatInputWithBlurAndFocusEvents);
     const testComponent = fixture.componentInstance;
-    const inputComponent = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    const inputComponent = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     const fakeEvent = <FocusEvent>{};
 
     spyOn(testComponent, 'onFocus');
@@ -319,10 +319,10 @@ describe('MdInput', function () {
   });
 
   it('supports the autoComplete attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithAutocomplete);
+    let fixture = TestBed.createComponent(MatInputWithAutocomplete);
     fixture.detectChanges();
 
-    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(el).not.toBeNull();
@@ -334,10 +334,10 @@ describe('MdInput', function () {
   });
 
   it('supports the autoCorrect attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithAutocorrect);
+    let fixture = TestBed.createComponent(MatInputWithAutocorrect);
     fixture.detectChanges();
 
-    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(el).not.toBeNull();
@@ -349,10 +349,10 @@ describe('MdInput', function () {
   });
 
   it('supports the autoCapitalize attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithAutocapitalize);
+    let fixture = TestBed.createComponent(MatInputWithAutocapitalize);
     fixture.detectChanges();
 
-    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(el).not.toBeNull();
@@ -364,7 +364,7 @@ describe('MdInput', function () {
   });
 
   it('supports the autoComplete attribute as an unbound attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithUnboundAutocomplete);
+    let fixture = TestBed.createComponent(MatInputWithUnboundAutocomplete);
     fixture.detectChanges();
 
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -374,7 +374,7 @@ describe('MdInput', function () {
   });
 
   it('supports the autoComplete attribute as an unbound value attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithUnboundAutocompleteWithValue);
+    let fixture = TestBed.createComponent(MatInputWithUnboundAutocompleteWithValue);
     fixture.detectChanges();
 
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -384,10 +384,10 @@ describe('MdInput', function () {
   });
 
   it('supports the autoFocus attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithAutofocus);
+    let fixture = TestBed.createComponent(MatInputWithAutofocus);
     fixture.detectChanges();
 
-    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(el).not.toBeNull();
@@ -399,7 +399,7 @@ describe('MdInput', function () {
   });
 
   it('supports the autoFocus attribute as an unbound attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithUnboundAutofocus);
+    let fixture = TestBed.createComponent(MatInputWithUnboundAutofocus);
     fixture.detectChanges();
 
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -409,8 +409,8 @@ describe('MdInput', function () {
   });
 
   it('supports the disabled attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithDisabled);
-    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let fixture = TestBed.createComponent(MatInputWithDisabled);
+    let input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     input.disabled = false;
     fixture.detectChanges();
 
@@ -428,7 +428,7 @@ describe('MdInput', function () {
   });
 
   it('supports the disabled attribute as an unbound attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithUnboundDisabled);
+    let fixture = TestBed.createComponent(MatInputWithUnboundDisabled);
     fixture.detectChanges();
 
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -440,8 +440,8 @@ describe('MdInput', function () {
   });
 
   it('supports the list attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithList);
-    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let fixture = TestBed.createComponent(MatInputWithList);
+    let input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     input.disabled = false;
     fixture.detectChanges();
 
@@ -455,8 +455,8 @@ describe('MdInput', function () {
   });
 
   it('supports the max attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithMax);
-    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let fixture = TestBed.createComponent(MatInputWithMax);
+    let input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     input.disabled = false;
     fixture.detectChanges();
 
@@ -476,8 +476,8 @@ describe('MdInput', function () {
   });
 
   it('supports the min attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithMin);
-    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let fixture = TestBed.createComponent(MatInputWithMin);
+    let input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     input.disabled = false;
     fixture.detectChanges();
 
@@ -496,11 +496,11 @@ describe('MdInput', function () {
   });
 
   it('supports the readOnly attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithReadonly);
+    let fixture = TestBed.createComponent(MatInputWithReadonly);
     fixture.detectChanges();
 
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
 
     expect(el).not.toBeNull();
     expect(el.getAttribute('readonly')).toBeNull();
@@ -511,7 +511,7 @@ describe('MdInput', function () {
   });
 
   it('supports the readOnly attribute as an unbound attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithUnboundReadonly);
+    let fixture = TestBed.createComponent(MatInputWithUnboundReadonly);
     fixture.detectChanges();
 
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -521,10 +521,10 @@ describe('MdInput', function () {
   });
 
   it('supports the required attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithRequired);
+    let fixture = TestBed.createComponent(MatInputWithRequired);
     fixture.detectChanges();
 
-    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(el).not.toBeNull();
@@ -536,7 +536,7 @@ describe('MdInput', function () {
   });
 
   it('supports the required attribute as an unbound attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithUnboundRequired);
+    let fixture = TestBed.createComponent(MatInputWithUnboundRequired);
     fixture.detectChanges();
 
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -546,10 +546,10 @@ describe('MdInput', function () {
   });
 
   it('supports the spellCheck attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithSpellcheck);
+    let fixture = TestBed.createComponent(MatInputWithSpellcheck);
     fixture.detectChanges();
 
-    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(el).not.toBeNull();
@@ -561,7 +561,7 @@ describe('MdInput', function () {
   });
 
   it('supports the spellCheck attribute as an unbound attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithUnboundSpellcheck);
+    let fixture = TestBed.createComponent(MatInputWithUnboundSpellcheck);
     fixture.detectChanges();
 
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -571,10 +571,10 @@ describe('MdInput', function () {
   });
 
   it('supports the step attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithStep);
+    let fixture = TestBed.createComponent(MatInputWithStep);
     fixture.detectChanges();
 
-    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(el).not.toBeNull();
@@ -586,10 +586,10 @@ describe('MdInput', function () {
   });
 
   it('supports the tabIndex attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithTabindex);
+    let fixture = TestBed.createComponent(MatInputWithTabindex);
     fixture.detectChanges();
 
-    let input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    let input: MatInput = fixture.debugElement.query(By.directive(MatInput)).componentInstance;
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(el).not.toBeNull();
@@ -601,7 +601,7 @@ describe('MdInput', function () {
   });
 
   it('supports a name attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWithNameTestController);
+    let fixture = TestBed.createComponent(MatInputWithNameTestController);
     const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input'))
         .nativeElement;
     fixture.detectChanges();
@@ -610,173 +610,175 @@ describe('MdInput', function () {
   });
 });
 
-@Component({template: `<md-input id="test-id"></md-input>`})
-class MdInputWithId {
+@Component({template: `<mat-input id="test-id"></mat-input>`})
+class MatInputWithId {
   value: number = 0;
 }
 
-@Component({template: `<md-input type="number" [(ngModel)]="value"></md-input>`})
-class MdInputNumberTypeConservedTestComponent {
+@Component({template: `<mat-input type="number" [(ngModel)]="value"></mat-input>`})
+class MatInputNumberTypeConservedTestComponent {
   value: number = 0;
 }
 
-@Component({template: `<md-input required placeholder="hello"></md-input>`})
-class MdInputPlaceholderRequiredTestComponent {
+@Component({template: `<mat-input required placeholder="hello"></mat-input>`})
+class MatInputPlaceholderRequiredTestComponent {
 }
 
-@Component({template: `<md-input> <md-placeholder>{{placeholder}}</md-placeholder> </md-input>`})
-class MdInputPlaceholderElementTestComponent {
+@Component({template: `
+  <mat-input> <mat-placeholder>{{placeholder}}</mat-placeholder> </mat-input>
+`})
+class MatInputPlaceholderElementTestComponent {
   placeholder: string = 'Default Placeholder';
 }
 
-@Component({template: `<md-input [placeholder]="placeholder"></md-input>`})
-class MdInputPlaceholderAttrTestComponent {
+@Component({template: `<mat-input [placeholder]="placeholder"></mat-input>`})
+class MatInputPlaceholderAttrTestComponent {
   placeholder: string = '';
 }
 
-@Component({template: `<md-input> <md-hint>{{label}}</md-hint> </md-input>`})
-class MdInputHintLabel2TestController {
+@Component({template: `<mat-input> <mat-hint>{{label}}</mat-hint> </mat-input>`})
+class MatInputHintLabel2TestController {
   label: string = '';
 }
 
-@Component({template: `<md-input [hintLabel]="label"></md-input>`})
-class MdInputHintLabelTestController {
+@Component({template: `<mat-input [hintLabel]="label"></mat-input>`})
+class MatInputHintLabelTestController {
   label: string = '';
 }
 
-@Component({template: `<md-input type="file"></md-input>`})
-class MdInputInvalidTypeTestController { }
+@Component({template: `<mat-input type="file"></mat-input>`})
+class MatInputInvalidTypeTestController { }
 
 @Component({
   template: `
-    <md-input placeholder="Hello">
-      <md-placeholder>World</md-placeholder>
-    </md-input>`
+    <mat-input placeholder="Hello">
+      <mat-placeholder>World</mat-placeholder>
+    </mat-input>`
 })
-class MdInputInvalidPlaceholderTestController { }
+class MatInputInvalidPlaceholderTestController { }
 
 @Component({
   template: `
-    <md-input hintLabel="Hello">
-      <md-hint>World</md-hint>
-    </md-input>`
+    <mat-input hintLabel="Hello">
+      <mat-hint>World</mat-hint>
+    </mat-input>`
 })
-class MdInputInvalidHint2TestController { }
+class MatInputInvalidHint2TestController { }
 
 @Component({
   template: `
-    <md-input>
-      <md-hint>Hello</md-hint>
-      <md-hint>World</md-hint>
-    </md-input>`
+    <mat-input>
+      <mat-hint>Hello</mat-hint>
+      <mat-hint>World</mat-hint>
+    </mat-input>`
 })
-class MdInputInvalidHintTestController { }
+class MatInputInvalidHintTestController { }
 
-@Component({template: `<md-input [(ngModel)]="model"></md-input>`})
-class MdInputBaseTestController {
+@Component({template: `<mat-input [(ngModel)]="model"></mat-input>`})
+class MatInputBaseTestController {
   model: any = '';
 }
 
 @Component({template:
-    `<md-input [aria-label]="ariaLabel" [aria-disabled]="ariaDisabled"></md-input>`})
-class MdInputAriaTestController {
+    `<mat-input [aria-label]="ariaLabel" [aria-disabled]="ariaDisabled"></mat-input>`})
+class MatInputAriaTestController {
   ariaLabel: string = 'label';
   ariaDisabled: boolean = true;
 }
 
-@Component({template: `<md-input (focus)="onFocus($event)" (blur)="onBlur($event)"></md-input>`})
-class MdInputWithBlurAndFocusEvents {
+@Component({template: `<mat-input (focus)="onFocus($event)" (blur)="onBlur($event)"></mat-input>`})
+class MatInputWithBlurAndFocusEvents {
   onBlur(event: FocusEvent) {}
   onFocus(event: FocusEvent) {}
 }
 
-@Component({template: `<md-input name="some-name"></md-input>`})
-class MdInputWithNameTestController { }
+@Component({template: `<mat-input name="some-name"></mat-input>`})
+class MatInputWithNameTestController { }
 
-@Component({template: `<md-input [autocomplete]="autoComplete"></md-input>`})
-class MdInputWithAutocomplete { }
+@Component({template: `<mat-input [autocomplete]="autoComplete"></mat-input>`})
+class MatInputWithAutocomplete { }
 
-@Component({template: `<md-input autocomplete></md-input>`})
-class MdInputWithUnboundAutocomplete { }
+@Component({template: `<mat-input autocomplete></mat-input>`})
+class MatInputWithUnboundAutocomplete { }
 
-@Component({template: `<md-input autocomplete="name"></md-input>`})
-class MdInputWithUnboundAutocompleteWithValue { }
+@Component({template: `<mat-input autocomplete="name"></mat-input>`})
+class MatInputWithUnboundAutocompleteWithValue { }
 
-@Component({template: `<md-input [autocorrect]="autoCorrect"></md-input>`})
-class MdInputWithAutocorrect { }
+@Component({template: `<mat-input [autocorrect]="autoCorrect"></mat-input>`})
+class MatInputWithAutocorrect { }
 
-@Component({template: `<md-input autocorrect></md-input>`})
-class MdInputWithUnboundAutocorrect { }
+@Component({template: `<mat-input autocorrect></mat-input>`})
+class MatInputWithUnboundAutocorrect { }
 
-@Component({template: `<md-input [autocapitalize]="autoCapitalize"></md-input>`})
-class MdInputWithAutocapitalize { }
+@Component({template: `<mat-input [autocapitalize]="autoCapitalize"></mat-input>`})
+class MatInputWithAutocapitalize { }
 
-@Component({template: `<md-input autocapitalize></md-input>`})
-class MdInputWithUnboundAutocapitalize { }
+@Component({template: `<mat-input autocapitalize></mat-input>`})
+class MatInputWithUnboundAutocapitalize { }
 
-@Component({template: `<md-input [autofocus]="autoFocus"></md-input>`})
-class MdInputWithAutofocus { }
+@Component({template: `<mat-input [autofocus]="autoFocus"></mat-input>`})
+class MatInputWithAutofocus { }
 
-@Component({template: `<md-input autofocus></md-input>`})
-class MdInputWithUnboundAutofocus { }
+@Component({template: `<mat-input autofocus></mat-input>`})
+class MatInputWithUnboundAutofocus { }
 
-@Component({template: `<md-input [readonly]="readOnly"></md-input>`})
-class MdInputWithReadonly { }
+@Component({template: `<mat-input [readonly]="readOnly"></mat-input>`})
+class MatInputWithReadonly { }
 
-@Component({template: `<md-input readonly></md-input>`})
-class MdInputWithUnboundReadonly { }
+@Component({template: `<mat-input readonly></mat-input>`})
+class MatInputWithUnboundReadonly { }
 
-@Component({template: `<md-input [spellcheck]="spellcheck"></md-input>`})
-class MdInputWithSpellcheck { }
+@Component({template: `<mat-input [spellcheck]="spellcheck"></mat-input>`})
+class MatInputWithSpellcheck { }
 
-@Component({template: `<md-input spellcheck></md-input>`})
-class MdInputWithUnboundSpellcheck { }
+@Component({template: `<mat-input spellcheck></mat-input>`})
+class MatInputWithUnboundSpellcheck { }
 
-@Component({template: `<md-input [disabled]="disabled"></md-input>`})
-class MdInputWithDisabled {
+@Component({template: `<mat-input [disabled]="disabled"></mat-input>`})
+class MatInputWithDisabled {
   disabled: boolean;
 }
 
-@Component({template: `<md-input disabled></md-input>`})
-class MdInputWithUnboundDisabled { }
+@Component({template: `<mat-input disabled></mat-input>`})
+class MatInputWithUnboundDisabled { }
 
-@Component({template: `<md-input [required]="required"></md-input>`})
-class MdInputWithRequired { }
+@Component({template: `<mat-input [required]="required"></mat-input>`})
+class MatInputWithRequired { }
 
-@Component({template: `<md-input required></md-input>`})
-class MdInputWithUnboundRequired { }
+@Component({template: `<mat-input required></mat-input>`})
+class MatInputWithUnboundRequired { }
 
-@Component({template: `<md-input [list]="list"></md-input>`})
-class MdInputWithList { }
+@Component({template: `<mat-input [list]="list"></mat-input>`})
+class MatInputWithList { }
 
-@Component({template: `<md-input [max]="max"></md-input>`})
-class MdInputWithMax { }
+@Component({template: `<mat-input [max]="max"></mat-input>`})
+class MatInputWithMax { }
 
-@Component({template: `<md-input [min]="min"></md-input>`})
-class MdInputWithMin { }
+@Component({template: `<mat-input [min]="min"></mat-input>`})
+class MatInputWithMin { }
 
-@Component({template: `<md-input [step]="step"></md-input>`})
-class MdInputWithStep { }
+@Component({template: `<mat-input [step]="step"></mat-input>`})
+class MatInputWithStep { }
 
-@Component({template: `<md-input [tabindex]="tabIndex"></md-input>`})
-class MdInputWithTabindex { }
+@Component({template: `<mat-input [tabindex]="tabIndex"></mat-input>`})
+class MatInputWithTabindex { }
 
-@Component({template: `<md-input type="date" [placeholder]="placeholder"></md-input>`})
-class MdInputDateTestController {
+@Component({template: `<mat-input type="date" [placeholder]="placeholder"></mat-input>`})
+class MatInputDateTestController {
   placeholder: string = '';
 }
 
-@Component({template: `<md-input type="text" [placeholder]="placeholder"></md-input>`})
-class MdInputTextTestController {
+@Component({template: `<mat-input type="text" [placeholder]="placeholder"></mat-input>`})
+class MatInputTextTestController {
   placeholder: string = '';
 }
 
-@Component({template: `<md-input type="password" [placeholder]="placeholder"></md-input>`})
-class MdInputPasswordTestController {
+@Component({template: `<mat-input type="password" [placeholder]="placeholder"></mat-input>`})
+class MatInputPasswordTestController {
   placeholder: string = '';
 }
 
-@Component({template: `<md-input type="number" [placeholder]="placeholder"></md-input>`})
-class MdInputNumberTestController {
+@Component({template: `<mat-input type="number" [placeholder]="placeholder"></mat-input>`})
+class MatInputNumberTestController {
   placeholder: string = '';
 }

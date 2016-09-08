@@ -1,15 +1,15 @@
 import {async, fakeAsync, tick, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MdTabGroup, MdTabsModule} from './tabs';
+import {MatTabGroup, MatTabsModule} from './tabs';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 
 
-describe('MdTabGroup', () => {
+describe('MatTabGroup', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdTabsModule.forRoot()],
+      imports: [MatTabsModule.forRoot()],
       declarations: [
         SimpleTabsTestApp,
         AsyncTabsTestApp,
@@ -37,12 +37,12 @@ describe('MdTabGroup', () => {
       checkSelectedIndex(0, fixture);
 
       // select the second tab
-      let tabLabel = fixture.debugElement.queryAll(By.css('.md-tab-label'))[1];
+      let tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
       tabLabel.nativeElement.click();
       checkSelectedIndex(1, fixture);
 
       // select the third tab
-      tabLabel = fixture.debugElement.queryAll(By.css('.md-tab-label'))[2];
+      tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[2];
       tabLabel.nativeElement.click();
       checkSelectedIndex(2, fixture);
     }));
@@ -53,7 +53,7 @@ describe('MdTabGroup', () => {
 
       fixture.detectChanges();
 
-      let tabLabel = fixture.debugElement.queryAll(By.css('.md-tab-label'))[1];
+      let tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
       tabLabel.nativeElement.click();
 
       fixture.detectChanges();
@@ -64,7 +64,7 @@ describe('MdTabGroup', () => {
 
     it('should cycle tab focus with focusNextTab/focusPreviousTab functions', fakeAsync(() => {
       let testComponent = fixture.componentInstance;
-      let tabComponent = fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
+      let tabComponent = fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
 
       spyOn(testComponent, 'handleFocus').and.callThrough();
       fixture.detectChanges();
@@ -121,7 +121,7 @@ describe('MdTabGroup', () => {
 
     it('should change tabs based on selectedIndex', fakeAsync(() => {
       let component = fixture.componentInstance;
-      let tabComponent = fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
+      let tabComponent = fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
 
       spyOn(component, 'handleSelection').and.callThrough();
 
@@ -146,13 +146,13 @@ describe('MdTabGroup', () => {
     }));
 
     it('should disable the second tab', () => {
-      let labels = fixture.debugElement.queryAll(By.css('.md-tab-label'));
+      let labels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
 
-      expect(labels[1].nativeElement.classList.contains('md-tab-disabled')).toBeTruthy();
+      expect(labels[1].nativeElement.classList.contains('mat-tab-disabled')).toBeTruthy();
     });
 
     it('should skip over disabled tabs when navigating by keyboard', () => {
-      let component: MdTabGroup = fixture.debugElement.query(By.css('md-tab-group'))
+      let component: MatTabGroup = fixture.debugElement.query(By.css('mat-tab-group'))
           .componentInstance;
 
       component.focusIndex = 0;
@@ -171,7 +171,7 @@ describe('MdTabGroup', () => {
     });
 
     it('should ignore attempts to select a disabled tab', () => {
-      let component: MdTabGroup = fixture.debugElement.query(By.css('md-tab-group'))
+      let component: MatTabGroup = fixture.debugElement.query(By.css('mat-tab-group'))
           .componentInstance;
 
       component.selectedIndex = 0;
@@ -182,7 +182,7 @@ describe('MdTabGroup', () => {
     });
 
     it('should ignore attempts to focus a disabled tab', () => {
-      let component: MdTabGroup = fixture.debugElement.query(By.css('md-tab-group'))
+      let component: MatTabGroup = fixture.debugElement.query(By.css('mat-tab-group'))
           .componentInstance;
 
       component.focusIndex = 0;
@@ -193,7 +193,7 @@ describe('MdTabGroup', () => {
     });
 
     it('should ignore attempts to set invalid selectedIndex', () => {
-      let component: MdTabGroup = fixture.debugElement.query(By.css('md-tab-group'))
+      let component: MatTabGroup = fixture.debugElement.query(By.css('mat-tab-group'))
           .componentInstance;
 
       component.selectedIndex = 0;
@@ -207,7 +207,7 @@ describe('MdTabGroup', () => {
     });
 
     it('should ignore attempts to set invalid focusIndex', () => {
-      let component: MdTabGroup = fixture.debugElement.query(By.css('md-tab-group'))
+      let component: MatTabGroup = fixture.debugElement.query(By.css('mat-tab-group'))
           .componentInstance;
 
       component.focusIndex = 0;
@@ -227,7 +227,7 @@ describe('MdTabGroup', () => {
     it('should show tabs when they are available', async(() => {
       fixture = TestBed.createComponent(AsyncTabsTestApp);
 
-      let labels = fixture.debugElement.queryAll(By.css('.md-tab-label'));
+      let labels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
 
       expect(labels.length).toBe(0);
 
@@ -235,7 +235,7 @@ describe('MdTabGroup', () => {
 
       fixture.whenStable().then(() => {
         fixture.detectChanges();
-        labels = fixture.debugElement.queryAll(By.css('.md-tab-label'));
+        labels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
         expect(labels.length).toBe(2);
       });
     }));
@@ -243,45 +243,45 @@ describe('MdTabGroup', () => {
 
   /**
    * Checks that the `selectedIndex` has been updated; checks that the label and body have the
-   * `md-tab-active` class
+   * `mat-tab-active` class
    */
   function checkSelectedIndex(index: number, fixture: ComponentFixture<any>) {
     fixture.detectChanges();
 
-    let tabComponent: MdTabGroup = fixture.debugElement
-        .query(By.css('md-tab-group')).componentInstance;
+    let tabComponent: MatTabGroup = fixture.debugElement
+        .query(By.css('mat-tab-group')).componentInstance;
     expect(tabComponent.selectedIndex).toBe(index);
 
     let tabLabelElement = fixture.debugElement
-        .query(By.css(`.md-tab-label:nth-of-type(${index + 1})`)).nativeElement;
-    expect(tabLabelElement.classList.contains('md-tab-active')).toBe(true);
+        .query(By.css(`.mat-tab-label:nth-of-type(${index + 1})`)).nativeElement;
+    expect(tabLabelElement.classList.contains('mat-tab-active')).toBe(true);
 
     let tabContentElement = fixture.debugElement
         .query(By.css(`#${tabLabelElement.id}`)).nativeElement;
-    expect(tabContentElement.classList.contains('md-tab-active')).toBe(true);
+    expect(tabContentElement.classList.contains('mat-tab-active')).toBe(true);
   }
 });
 
 @Component({
   selector: 'test-app',
   template: `
-    <md-tab-group class="tab-group"
+    <mat-tab-group class="tab-group"
         [(selectedIndex)]="selectedIndex"
         (focusChange)="handleFocus($event)"
         (selectChange)="handleSelection($event)">
-      <md-tab>
-        <template md-tab-label>Tab One</template>
-        <template md-tab-content>Tab one content</template>
-      </md-tab>
-      <md-tab>
-        <template md-tab-label>Tab Two</template>
-        <template md-tab-content>Tab two content</template>
-      </md-tab>
-      <md-tab>
-        <template md-tab-label>Tab Three</template>
-        <template md-tab-content>Tab three content</template>
-      </md-tab>
-    </md-tab-group>
+      <mat-tab>
+        <template mat-tab-label>Tab One</template>
+        <template mat-tab-content>Tab one content</template>
+      </mat-tab>
+      <mat-tab>
+        <template mat-tab-label>Tab Two</template>
+        <template mat-tab-content>Tab two content</template>
+      </mat-tab>
+      <mat-tab>
+        <template mat-tab-label>Tab Three</template>
+        <template mat-tab-content>Tab three content</template>
+      </mat-tab>
+    </mat-tab-group>
   `
 })
 class SimpleTabsTestApp {
@@ -299,20 +299,20 @@ class SimpleTabsTestApp {
 @Component({
   selector: 'test-app',
   template: `
-    <md-tab-group class="tab-group">
-      <md-tab>
-        <template md-tab-label>Tab One</template>
-        <template md-tab-content>Tab one content</template>
-      </md-tab>
-      <md-tab disabled>
-        <template md-tab-label>Tab Two</template>
-        <template md-tab-content>Tab two content</template>
-      </md-tab>
-      <md-tab>
-        <template md-tab-label>Tab Three</template>
-        <template md-tab-content>Tab three content</template>
-      </md-tab>
-    </md-tab-group>
+    <mat-tab-group class="tab-group">
+      <mat-tab>
+        <template mat-tab-label>Tab One</template>
+        <template mat-tab-content>Tab one content</template>
+      </mat-tab>
+      <mat-tab disabled>
+        <template mat-tab-label>Tab Two</template>
+        <template mat-tab-content>Tab two content</template>
+      </mat-tab>
+      <mat-tab>
+        <template mat-tab-label>Tab Three</template>
+        <template mat-tab-content>Tab three content</template>
+      </mat-tab>
+    </mat-tab-group>
   `,
 })
 class DisabledTabsTestApp {}
@@ -320,12 +320,12 @@ class DisabledTabsTestApp {}
 @Component({
   selector: 'test-app',
   template: `
-    <md-tab-group class="tab-group">
-      <md-tab *ngFor="let tab of tabs | async">
-        <template md-tab-label>{{ tab.label }}</template>
-        <template md-tab-content>{{ tab.content }}</template>
-      </md-tab>
-   </md-tab-group>
+    <mat-tab-group class="tab-group">
+      <mat-tab *ngFor="let tab of tabs | async">
+        <template mat-tab-label>{{ tab.label }}</template>
+        <template mat-tab-content>{{ tab.content }}</template>
+      </mat-tab>
+   </mat-tab-group>
   `
 })
 class AsyncTabsTestApp {

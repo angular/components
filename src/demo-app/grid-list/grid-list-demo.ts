@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MdIconRegistry} from '@angular2-material/icon';
+import {MatIconRegistry} from '@angular2-material/icon';
 
 
 @Component({
@@ -7,7 +7,7 @@ import {MdIconRegistry} from '@angular2-material/icon';
   selector: 'grid-list-demo',
   templateUrl: 'grid-list-demo.html',
   styleUrls: ['grid-list-demo.css'],
-  providers: [MdIconRegistry]
+  providers: [MatIconRegistry]
 })
 export class GridListDemo {
   tiles: any[] = [

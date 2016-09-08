@@ -1,11 +1,11 @@
 import {fakeAsync, async, tick, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdSidenav, MdSidenavModule} from './sidenav';
+import {MatSidenav, MatSidenavModule} from './sidenav';
 
 
 function endSidenavTransition(fixture: ComponentFixture<any>) {
-  let sidenav: any = fixture.debugElement.query(By.directive(MdSidenav)).componentInstance;
+  let sidenav: any = fixture.debugElement.query(By.directive(MatSidenav)).componentInstance;
   sidenav._onTransitionEnd(<any> {
     target: (<any>sidenav)._elementRef.nativeElement,
     propertyName: 'transform'
@@ -14,11 +14,11 @@ function endSidenavTransition(fixture: ComponentFixture<any>) {
 }
 
 
-describe('MdSidenav', () => {
+describe('MatSidenav', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSidenavModule.forRoot()],
+      imports: [MatSidenavModule.forRoot()],
       declarations: [
         BasicTestApp,
         SidenavLayoutTwoSidenavTestApp,
@@ -52,8 +52,8 @@ describe('MdSidenav', () => {
       expect(testComponent.closeStartCount).toBe(0);
       expect(testComponent.closeCount).toBe(0);
 
-      let sidenavElement = fixture.debugElement.query(By.css('md-sidenav'));
-      let sidenavBackdropElement = fixture.debugElement.query(By.css('.md-sidenav-backdrop'));
+      let sidenavElement = fixture.debugElement.query(By.css('mat-sidenav'));
+      let sidenavBackdropElement = fixture.debugElement.query(By.css('.mat-sidenav-backdrop'));
       expect(getComputedStyle(sidenavElement.nativeElement).visibility).toEqual('visible');
       expect(getComputedStyle(sidenavBackdropElement.nativeElement).visibility)
         .toEqual('visible');
@@ -83,8 +83,8 @@ describe('MdSidenav', () => {
 
     it('open/close() return a promise that resolves after animation end', fakeAsync(() => {
       let fixture = TestBed.createComponent(BasicTestApp);
-      let sidenav: MdSidenav = fixture.debugElement
-        .query(By.directive(MdSidenav)).componentInstance;
+      let sidenav: MatSidenav = fixture.debugElement
+        .query(By.directive(MatSidenav)).componentInstance;
       let called = false;
 
       sidenav.open().then(() => {
@@ -110,8 +110,8 @@ describe('MdSidenav', () => {
 
     it('open/close() twice returns the same promise', fakeAsync(() => {
       let fixture = TestBed.createComponent(BasicTestApp);
-      let sidenav: MdSidenav = fixture.debugElement
-        .query(By.directive(MdSidenav)).componentInstance;
+      let sidenav: MatSidenav = fixture.debugElement
+        .query(By.directive(MatSidenav)).componentInstance;
 
       let promise = sidenav.open();
       expect(sidenav.open()).toBe(promise);
@@ -125,8 +125,8 @@ describe('MdSidenav', () => {
 
     it('open() then close() cancel animations when called too fast', fakeAsync(() => {
       let fixture = TestBed.createComponent(BasicTestApp);
-      let sidenav: MdSidenav = fixture.debugElement
-        .query(By.directive(MdSidenav)).componentInstance;
+      let sidenav: MatSidenav = fixture.debugElement
+        .query(By.directive(MatSidenav)).componentInstance;
 
       let openCalled = false;
       let openCancelled = false;
@@ -154,8 +154,8 @@ describe('MdSidenav', () => {
 
     it('close() then open() cancel animations when called too fast', fakeAsync(() => {
       let fixture = TestBed.createComponent(BasicTestApp);
-      let sidenav: MdSidenav = fixture.debugElement
-        .query(By.directive(MdSidenav)).componentInstance;
+      let sidenav: MatSidenav = fixture.debugElement
+        .query(By.directive(MatSidenav)).componentInstance;
 
       let closeCalled = false;
       let closeCancelled = false;
@@ -209,20 +209,20 @@ describe('MdSidenav', () => {
       let fixture = TestBed.createComponent(SidenavSetToOpenedFalse);
       fixture.detectChanges();
 
-      let sidenavEl = fixture.debugElement.query(By.css('md-sidenav')).nativeElement;
+      let sidenavEl = fixture.debugElement.query(By.css('mat-sidenav')).nativeElement;
 
-      expect(sidenavEl.classList).toContain('md-sidenav-closed');
-      expect(sidenavEl.classList).not.toContain('md-sidenav-opened');
+      expect(sidenavEl.classList).toContain('mat-sidenav-closed');
+      expect(sidenavEl.classList).not.toContain('mat-sidenav-opened');
     });
 
     it('should correctly parse opened="true"', () => {
       let fixture = TestBed.createComponent(SidenavSetToOpenedTrue);
       fixture.detectChanges();
 
-      let sidenavEl = fixture.debugElement.query(By.css('md-sidenav')).nativeElement;
+      let sidenavEl = fixture.debugElement.query(By.css('mat-sidenav')).nativeElement;
 
-      expect(sidenavEl.classList).not.toContain('md-sidenav-closed');
-      expect(sidenavEl.classList).toContain('md-sidenav-opened');
+      expect(sidenavEl.classList).not.toContain('mat-sidenav-closed');
+      expect(sidenavEl.classList).toContain('mat-sidenav-opened');
     });
 
   });
@@ -230,34 +230,34 @@ describe('MdSidenav', () => {
 });
 
 
-/** Test component that contains an MdSidenavLayout but no MdSidenav. */
-@Component({template: `<md-sidenav-layout></md-sidenav-layout>`})
+/** Test component that contains an MatSidenavLayout but no MatSidenav. */
+@Component({template: `<mat-sidenav-layout></mat-sidenav-layout>`})
 class SidenavLayoutNoSidenavTestApp { }
 
-/** Test component that contains an MdSidenavLayout and 2 MdSidenav on the same side. */
+/** Test component that contains an MatSidenavLayout and 2 MatSidenav on the same side. */
 @Component({
   template: `
-    <md-sidenav-layout>
-      <md-sidenav> </md-sidenav>
-      <md-sidenav> </md-sidenav>
-    </md-sidenav-layout>`,
+    <mat-sidenav-layout>
+      <mat-sidenav> </mat-sidenav>
+      <mat-sidenav> </mat-sidenav>
+    </mat-sidenav-layout>`,
 })
 class SidenavLayoutTwoSidenavTestApp { }
 
-/** Test component that contains an MdSidenavLayout and one MdSidenav. */
+/** Test component that contains an MatSidenavLayout and one MatSidenav. */
 @Component({
   template: `
-    <md-sidenav-layout>
-      <md-sidenav #sidenav align="start"
+    <mat-sidenav-layout>
+      <mat-sidenav #sidenav align="start"
                   (open-start)="openStart()"
                   (open)="open()"
                   (close-start)="closeStart()"
                   (close)="close()">
         Content.
-      </md-sidenav>
+      </mat-sidenav>
       <button (click)="sidenav.open()" class="open"></button>
       <button (click)="sidenav.close()" class="close"></button>
-    </md-sidenav-layout>`,
+    </mat-sidenav-layout>`,
 })
 class BasicTestApp {
   openStartCount: number = 0;
@@ -284,20 +284,20 @@ class BasicTestApp {
 
 @Component({
   template: `
-    <md-sidenav-layout>
-      <md-sidenav #sidenav mode="side" opened="false">
+    <mat-sidenav-layout>
+      <mat-sidenav #sidenav mode="side" opened="false">
         Closed Sidenav.
-      </md-sidenav>
-    </md-sidenav-layout>`,
+      </mat-sidenav>
+    </mat-sidenav-layout>`,
 })
 class SidenavSetToOpenedFalse { }
 
 @Component({
   template: `
-    <md-sidenav-layout>
-      <md-sidenav #sidenav mode="side" opened="true">
+    <mat-sidenav-layout>
+      <mat-sidenav #sidenav mode="side" opened="true">
         Closed Sidenav.
-      </md-sidenav>
-    </md-sidenav-layout>`,
+      </mat-sidenav>
+    </mat-sidenav-layout>`,
 })
 class SidenavSetToOpenedTrue { }

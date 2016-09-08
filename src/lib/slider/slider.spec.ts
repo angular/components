@@ -2,17 +2,17 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {ReactiveFormsModule, FormControl} from '@angular/forms';
 import {Component, DebugElement, ViewEncapsulation} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdSlider, MdSliderModule} from './slider';
+import {MatSlider, MatSliderModule} from './slider';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {TestGestureConfig} from './test-gesture-config';
 
 
-describe('MdSlider', () => {
+describe('MatSlider', () => {
   let gestureConfig: TestGestureConfig;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSliderModule.forRoot(), ReactiveFormsModule],
+      imports: [MatSliderModule.forRoot(), ReactiveFormsModule],
       declarations: [
         StandardSlider,
         DisabledSlider,
@@ -39,7 +39,7 @@ describe('MdSlider', () => {
     let fixture: ComponentFixture<StandardSlider>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderInstance: MdSlider;
+    let sliderInstance: MatSlider;
     let trackFillElement: HTMLElement;
     let trackFillDimensions: ClientRect;
     let sliderTrackElement: HTMLElement;
@@ -51,16 +51,16 @@ describe('MdSlider', () => {
       fixture = TestBed.createComponent(StandardSlider);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
 
-      trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track-fill');
+      trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
       trackFillDimensions = trackFillElement.getBoundingClientRect();
-      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track');
+      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track');
       sliderDimensions = sliderTrackElement.getBoundingClientRect();
 
-      thumbElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-thumb-position');
+      thumbElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-thumb-position');
       thumbDimensions = thumbElement.getBoundingClientRect();
     });
 
@@ -146,44 +146,44 @@ describe('MdSlider', () => {
       expect(thumbDimensions.left).toBe(sliderDimensions.width * 0.5 + sliderDimensions.left);
     });
 
-    it('should add the md-slider-active class on click', () => {
-      let containerElement = sliderNativeElement.querySelector('.md-slider-container');
-      expect(containerElement.classList).not.toContain('md-slider-active');
+    it('should add the mat-slider-active class on click', () => {
+      let containerElement = sliderNativeElement.querySelector('.mat-slider-container');
+      expect(containerElement.classList).not.toContain('mat-slider-active');
 
       dispatchClickEvent(sliderNativeElement, 0.23);
       fixture.detectChanges();
 
-      expect(containerElement.classList).toContain('md-slider-active');
+      expect(containerElement.classList).toContain('mat-slider-active');
     });
 
-    it('should remove the md-slider-active class on blur', () => {
-      let containerElement = sliderNativeElement.querySelector('.md-slider-container');
+    it('should remove the mat-slider-active class on blur', () => {
+      let containerElement = sliderNativeElement.querySelector('.mat-slider-container');
 
       dispatchClickEvent(sliderNativeElement, 0.95);
       fixture.detectChanges();
 
-      expect(containerElement.classList).toContain('md-slider-active');
+      expect(containerElement.classList).toContain('mat-slider-active');
 
       // Call the `onBlur` handler directly because we cannot simulate a focus event in unit tests.
       sliderInstance.onBlur();
       fixture.detectChanges();
 
-      expect(containerElement.classList).not.toContain('md-slider-active');
+      expect(containerElement.classList).not.toContain('mat-slider-active');
     });
 
-    it('should add and remove the md-slider-sliding class when sliding', () => {
-      let containerElement = sliderNativeElement.querySelector('.md-slider-container');
-      expect(containerElement.classList).not.toContain('md-slider-sliding');
+    it('should add and remove the mat-slider-sliding class when sliding', () => {
+      let containerElement = sliderNativeElement.querySelector('.mat-slider-container');
+      expect(containerElement.classList).not.toContain('mat-slider-sliding');
 
       dispatchSlideStartEvent(sliderNativeElement, 0, gestureConfig);
       fixture.detectChanges();
 
-      expect(containerElement.classList).toContain('md-slider-sliding');
+      expect(containerElement.classList).toContain('mat-slider-sliding');
 
       dispatchSlideEndEvent(sliderNativeElement, 0.34, gestureConfig);
       fixture.detectChanges();
 
-      expect(containerElement.classList).not.toContain('md-slider-sliding');
+      expect(containerElement.classList).not.toContain('mat-slider-sliding');
     });
   });
 
@@ -191,13 +191,13 @@ describe('MdSlider', () => {
     let fixture: ComponentFixture<StandardSlider>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderInstance: MdSlider;
+    let sliderInstance: MatSlider;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(DisabledSlider);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
     });
@@ -218,24 +218,24 @@ describe('MdSlider', () => {
       expect(sliderInstance.value).toBe(0);
     });
 
-    it('should not add the md-slider-active class on click when disabled', () => {
-      let containerElement = sliderNativeElement.querySelector('.md-slider-container');
-      expect(containerElement.classList).not.toContain('md-slider-active');
+    it('should not add the mat-slider-active class on click when disabled', () => {
+      let containerElement = sliderNativeElement.querySelector('.mat-slider-container');
+      expect(containerElement.classList).not.toContain('mat-slider-active');
 
       dispatchClickEvent(sliderNativeElement, 0.43);
       fixture.detectChanges();
 
-      expect(containerElement.classList).not.toContain('md-slider-active');
+      expect(containerElement.classList).not.toContain('mat-slider-active');
     });
 
-    it('should not add the md-slider-sliding class on slide when disabled', () => {
-      let containerElement = sliderNativeElement.querySelector('.md-slider-container');
-      expect(containerElement.classList).not.toContain('md-slider-sliding');
+    it('should not add the mat-slider-sliding class on slide when disabled', () => {
+      let containerElement = sliderNativeElement.querySelector('.mat-slider-container');
+      expect(containerElement.classList).not.toContain('mat-slider-sliding');
 
       dispatchSlideStartEvent(sliderNativeElement, 0.46, gestureConfig);
       fixture.detectChanges();
 
-      expect(containerElement.classList).not.toContain('md-slider-sliding');
+      expect(containerElement.classList).not.toContain('mat-slider-sliding');
     });
   });
 
@@ -243,7 +243,7 @@ describe('MdSlider', () => {
     let fixture: ComponentFixture<SliderWithMinAndMax>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderInstance: MdSlider;
+    let sliderInstance: MatSlider;
     let sliderTrackElement: HTMLElement;
     let sliderDimensions: ClientRect;
     let trackFillElement: HTMLElement;
@@ -253,13 +253,13 @@ describe('MdSlider', () => {
       fixture = TestBed.createComponent(SliderWithMinAndMax);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
-      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track');
+      sliderInstance = sliderDebugElement.injector.get(MatSlider);
+      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track');
       sliderDimensions = sliderTrackElement.getBoundingClientRect();
-      trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track-fill');
-      thumbElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-thumb-position');
+      trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
+      thumbElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-thumb-position');
     });
 
     it('should set the default values from the attributes', () => {
@@ -319,17 +319,17 @@ describe('MdSlider', () => {
     let fixture: ComponentFixture<SliderWithValue>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderInstance: MdSlider;
+    let sliderInstance: MatSlider;
     let sliderTrackElement: HTMLElement;
 
     beforeEach(async(() => {
       fixture = TestBed.createComponent(SliderWithValue);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
-      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track');
+      sliderInstance = sliderDebugElement.injector.get(MatSlider);
+      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track');
     }));
 
     it('should set the default value from the attribute', () => {
@@ -353,7 +353,7 @@ describe('MdSlider', () => {
     let fixture: ComponentFixture<SliderWithStep>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderInstance: MdSlider;
+    let sliderInstance: MatSlider;
     let sliderTrackElement: HTMLElement;
     let sliderDimensions: ClientRect;
     let trackFillElement: HTMLElement;
@@ -363,13 +363,13 @@ describe('MdSlider', () => {
       fixture = TestBed.createComponent(SliderWithStep);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
-      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track');
+      sliderInstance = sliderDebugElement.injector.get(MatSlider);
+      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track');
       sliderDimensions = sliderTrackElement.getBoundingClientRect();
-      trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track-fill');
-      thumbElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-thumb-position');
+      trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
+      thumbElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-thumb-position');
     });
 
     it('should set the correct step value on click', () => {
@@ -429,11 +429,11 @@ describe('MdSlider', () => {
       fixture = TestBed.createComponent(SliderWithAutoTickInterval);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      tickContainer = <HTMLElement>sliderNativeElement.querySelector('.md-slider-tick-container');
+      tickContainer = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-tick-container');
       lastTickContainer =
-          <HTMLElement>sliderNativeElement.querySelector('.md-slider-last-tick-container');
+          <HTMLElement>sliderNativeElement.querySelector('.mat-slider-last-tick-container');
     }));
 
     it('should set the correct tick separation', () => {
@@ -473,11 +473,11 @@ describe('MdSlider', () => {
       fixture = TestBed.createComponent(SliderWithSetTickInterval);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      tickContainer = <HTMLElement>sliderNativeElement.querySelector('.md-slider-tick-container');
+      tickContainer = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-tick-container');
       lastTickContainer =
-          <HTMLElement>sliderNativeElement.querySelector('.md-slider-last-tick-container');
+          <HTMLElement>sliderNativeElement.querySelector('.mat-slider-last-tick-container');
     });
 
     it('should set the correct tick separation', () => {
@@ -498,7 +498,7 @@ describe('MdSlider', () => {
     let fixture: ComponentFixture<SliderWithThumbLabel>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderInstance: MdSlider;
+    let sliderInstance: MatSlider;
     let sliderTrackElement: HTMLElement;
     let sliderContainerElement: Element;
     let thumbLabelTextElement: Element;
@@ -507,16 +507,16 @@ describe('MdSlider', () => {
       fixture = TestBed.createComponent(SliderWithThumbLabel);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
-      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track');
-      sliderContainerElement = sliderNativeElement.querySelector('.md-slider-container');
-      thumbLabelTextElement = sliderNativeElement.querySelector('.md-slider-thumb-label-text');
+      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track');
+      sliderContainerElement = sliderNativeElement.querySelector('.mat-slider-container');
+      thumbLabelTextElement = sliderNativeElement.querySelector('.mat-slider-thumb-label-text');
     });
 
     it('should add the thumb label class to the slider container', () => {
-      expect(sliderContainerElement.classList).toContain('md-slider-thumb-label-showing');
+      expect(sliderContainerElement.classList).toContain('mat-slider-thumb-label-showing');
     });
 
     it('should update the thumb label text on click', () => {
@@ -540,26 +540,26 @@ describe('MdSlider', () => {
     });
 
     it('should show the thumb label on click', () => {
-      expect(sliderContainerElement.classList).not.toContain('md-slider-active');
-      expect(sliderContainerElement.classList).toContain('md-slider-thumb-label-showing');
+      expect(sliderContainerElement.classList).not.toContain('mat-slider-active');
+      expect(sliderContainerElement.classList).toContain('mat-slider-thumb-label-showing');
 
       dispatchClickEvent(sliderNativeElement, 0.49);
       fixture.detectChanges();
 
-      // The thumb label appears when the slider is active and the 'md-slider-thumb-label-showing'
+      // The thumb label appears when the slider is active and the 'mat-slider-thumb-label-showing'
       // class is applied.
-      expect(sliderContainerElement.classList).toContain('md-slider-thumb-label-showing');
-      expect(sliderContainerElement.classList).toContain('md-slider-active');
+      expect(sliderContainerElement.classList).toContain('mat-slider-thumb-label-showing');
+      expect(sliderContainerElement.classList).toContain('mat-slider-active');
     });
 
     it('should show the thumb label on slide', () => {
-      expect(sliderContainerElement.classList).not.toContain('md-slider-active');
+      expect(sliderContainerElement.classList).not.toContain('mat-slider-active');
 
       dispatchSlideEvent(sliderTrackElement, sliderNativeElement, 0, 0.91, gestureConfig);
       fixture.detectChanges();
 
-      expect(sliderContainerElement.classList).toContain('md-slider-thumb-label-showing');
-      expect(sliderContainerElement.classList).toContain('md-slider-active');
+      expect(sliderContainerElement.classList).toContain('mat-slider-thumb-label-showing');
+      expect(sliderContainerElement.classList).toContain('mat-slider-active');
     });
   });
 
@@ -567,7 +567,7 @@ describe('MdSlider', () => {
     let fixture: ComponentFixture<SliderWithTwoWayBinding>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderInstance: MdSlider;
+    let sliderInstance: MatSlider;
     let sliderTrackElement: HTMLElement;
     let testComponent: SliderWithTwoWayBinding;
 
@@ -577,10 +577,10 @@ describe('MdSlider', () => {
 
       testComponent = fixture.debugElement.componentInstance;
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
-      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track');
+      sliderInstance = sliderDebugElement.injector.get(MatSlider);
+      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track');
     });
 
     it('should update the control when the value is updated', () => {
@@ -625,54 +625,54 @@ describe('MdSlider', () => {
 
 // The transition has to be removed in order to test the updated positions without setTimeout.
 const noTransitionStyle =
-    '.md-slider-track-fill, .md-slider-thumb-position { transition: none !important; }';
+    '.mat-slider-track-fill, .mat-slider-thumb-position { transition: none !important; }';
 
 @Component({
-  template: `<md-slider></md-slider>`,
+  template: `<mat-slider></mat-slider>`,
   styles: [noTransitionStyle],
   encapsulation: ViewEncapsulation.None
 })
 class StandardSlider { }
 
 @Component({
-  template: `<md-slider disabled></md-slider>`
+  template: `<mat-slider disabled></mat-slider>`
 })
 class DisabledSlider { }
 
 @Component({
-  template: `<md-slider min="4" max="6"></md-slider>`,
+  template: `<mat-slider min="4" max="6"></mat-slider>`,
   styles: [noTransitionStyle],
   encapsulation: ViewEncapsulation.None
 })
 class SliderWithMinAndMax { }
 
 @Component({
-  template: `<md-slider value="26"></md-slider>`
+  template: `<mat-slider value="26"></mat-slider>`
 })
 class SliderWithValue { }
 
 @Component({
-  template: `<md-slider step="25"></md-slider>`,
+  template: `<mat-slider step="25"></mat-slider>`,
   styles: [noTransitionStyle],
   encapsulation: ViewEncapsulation.None
 })
 class SliderWithStep { }
 
-@Component({template: `<md-slider step="5" tick-interval="auto"></md-slider>`})
+@Component({template: `<mat-slider step="5" tick-interval="auto"></mat-slider>`})
 class SliderWithAutoTickInterval { }
 
-@Component({template: `<md-slider step="3" tick-interval="6"></md-slider>`})
+@Component({template: `<mat-slider step="3" tick-interval="6"></mat-slider>`})
 class SliderWithSetTickInterval { }
 
 @Component({
-  template: `<md-slider thumb-label></md-slider>`,
+  template: `<mat-slider thumb-label></mat-slider>`,
   styles: [noTransitionStyle],
   encapsulation: ViewEncapsulation.None
 })
 class SliderWithThumbLabel { }
 
 @Component({
-  template: `<md-slider [formControl]="control"></md-slider>`
+  template: `<mat-slider [formControl]="control"></mat-slider>`
 })
 class SliderWithTwoWayBinding {
   control = new FormControl('');

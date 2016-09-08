@@ -23,20 +23,20 @@ import {
   FormsModule,
 } from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {BooleanFieldValue, MdError} from '@angular2-material/core';
+import {BooleanFieldValue, MatError} from '@angular2-material/core';
 import {Observable} from 'rxjs/Observable';
 
 
 const noop = () => {};
 
-export const MD_INPUT_CONTROL_VALUE_ACCESSOR: any = {
+export const MAT_INPUT_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdInput),
+  useExisting: forwardRef(() => MatInput),
   multi: true
 };
 
-// Invalid input type. Using one of these will throw an MdInputUnsupportedTypeError.
-const MD_INPUT_INVALID_INPUT_TYPE = [
+// Invalid input type. Using one of these will throw an MatInputUnsupportedTypeError.
+const MAT_INPUT_INVALID_INPUT_TYPE = [
   'file',
   'radio',
   'checkbox',
@@ -46,19 +46,19 @@ const MD_INPUT_INVALID_INPUT_TYPE = [
 let nextUniqueId = 0;
 
 
-export class MdInputPlaceholderConflictError extends MdError {
+export class MatInputPlaceholderConflictError extends MatError {
   constructor() {
     super('Placeholder attribute and child element were both specified.');
   }
 }
 
-export class MdInputUnsupportedTypeError extends MdError {
+export class MatInputUnsupportedTypeError extends MatError {
   constructor(type: string) {
-    super(`Input type "${type}" isn't supported by md-input.`);
+    super(`Input type "${type}" isn't supported by mat-input.`);
   }
 }
 
-export class MdInputDuplicatedHintError extends MdError {
+export class MatInputDuplicatedHintError extends MatError {
   constructor(align: string) {
     super(`A hint was already declared for 'align="${align}"'.`);
   }
@@ -71,20 +71,20 @@ export class MdInputDuplicatedHintError extends MdError {
  * complex placeholders.
  */
 @Directive({
-  selector: 'md-placeholder'
+  selector: 'mat-placeholder'
 })
-export class MdPlaceholder {}
+export class MatPlaceholder {}
 
 
 /** The hint directive, used to tag content as hint labels (going under the input). */
 @Directive({
-  selector: 'md-hint',
+  selector: 'mat-hint',
   host: {
-    '[class.md-right]': 'align == "end"',
-    '[class.md-hint]': 'true'
+    '[class.mat-right]': 'align == "end"',
+    '[class.mat-hint]': 'true'
   }
 })
-export class MdHint {
+export class MatHint {
   // Whether to align the hint label at the start or end of the line.
   @Input() align: 'start' | 'end' = 'start';
 }
@@ -96,13 +96,13 @@ export class MdHint {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-input',
+  selector: 'mat-input',
   templateUrl: 'input.html',
   styleUrls: ['input.css'],
-  providers: [MD_INPUT_CONTROL_VALUE_ACCESSOR],
+  providers: [MAT_INPUT_CONTROL_VALUE_ACCESSOR],
   host: {'(click)' : 'focus()'}
 })
-export class MdInput implements ControlValueAccessor, AfterContentInit, OnChanges {
+export class MatInput implements ControlValueAccessor, AfterContentInit, OnChanges {
   private _focused: boolean = false;
   private _value: any = '';
 
@@ -123,8 +123,8 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   /**
    * Content directives.
    */
-  @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
-  @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
+  @ContentChild(MatPlaceholder) _placeholderChild: MatPlaceholder;
+  @ContentChildren(MatHint) _hintChildren: QueryList<MatHint>;
 
   /** Readonly properties. */
   get focused() { return this._focused; }
@@ -147,7 +147,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   @Input() autocapitalize: string;
   @Input() @BooleanFieldValue() autofocus: boolean = false;
   @Input() @BooleanFieldValue() disabled: boolean = false;
-  @Input() id: string = `md-input-${nextUniqueId++}`;
+  @Input() id: string = `mat-input-${nextUniqueId++}`;
   @Input() list: string = null;
   @Input() max: string | number = null;
   @Input() maxlength: number = null;
@@ -184,7 +184,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
     }
   }
 
-  // This is to remove the `align` property of the `md-input` itself. Otherwise HTML5
+  // This is to remove the `align` property of the `mat-input` itself. Otherwise HTML5
   // might place it as RTL when we don't want to. We still want to use `align` as an
   // Input though, so we use HostBinding.
   @HostBinding('attr.align') get _align(): any { return null; }
@@ -257,7 +257,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   }
 
   /**
-   * Convert the value passed in to a value that is expected from the type of the md-input.
+   * Convert the value passed in to a value that is expected from the type of the mat-input.
    * This is normally performed by the *_VALUE_ACCESSOR in forms, but since the type is bound
    * on our internal input it won't work locally.
    * @private
@@ -272,33 +272,33 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   /**
    * Ensure that all constraints defined by the API are validated, or throw errors otherwise.
    * Constraints for now:
-   *   - placeholder attribute and <md-placeholder> are mutually exclusive.
+   *   - placeholder attribute and <mat-placeholder> are mutually exclusive.
    *   - type attribute is not one of the forbidden types (see constant at the top).
-   *   - Maximum one of each `<md-hint>` alignment specified, with the attribute being
+   *   - Maximum one of each `<mat-hint>` alignment specified, with the attribute being
    *     considered as align="start".
    * @private
    */
   private _validateConstraints() {
     if (this.placeholder != '' && this.placeholder != null && this._placeholderChild != null) {
-      throw new MdInputPlaceholderConflictError();
+      throw new MatInputPlaceholderConflictError();
     }
-    if (MD_INPUT_INVALID_INPUT_TYPE.indexOf(this.type) != -1) {
-      throw new MdInputUnsupportedTypeError(this.type);
+    if (MAT_INPUT_INVALID_INPUT_TYPE.indexOf(this.type) != -1) {
+      throw new MatInputUnsupportedTypeError(this.type);
     }
 
     if (this._hintChildren) {
       // Validate the hint labels.
-      let startHint: MdHint = null;
-      let endHint: MdHint = null;
-      this._hintChildren.forEach((hint: MdHint) => {
+      let startHint: MatHint = null;
+      let endHint: MatHint = null;
+      this._hintChildren.forEach((hint: MatHint) => {
         if (hint.align == 'start') {
           if (startHint || this.hintLabel) {
-            throw new MdInputDuplicatedHintError('start');
+            throw new MatInputDuplicatedHintError('start');
           }
           startHint = hint;
         } else if (hint.align == 'end') {
           if (endHint) {
-            throw new MdInputDuplicatedHintError('end');
+            throw new MatInputDuplicatedHintError('end');
           }
           endHint = hint;
         }
@@ -309,14 +309,14 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
 
 
 @NgModule({
-  declarations: [MdPlaceholder, MdInput, MdHint],
+  declarations: [MatPlaceholder, MatInput, MatHint],
   imports: [CommonModule, FormsModule],
-  exports: [MdPlaceholder, MdInput, MdHint],
+  exports: [MatPlaceholder, MatInput, MatHint],
 })
-export class MdInputModule {
+export class MatInputModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdInputModule,
+      ngModule: MatInputModule,
       providers: []
     };
   }

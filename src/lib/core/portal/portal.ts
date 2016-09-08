@@ -6,12 +6,12 @@ import {
     Injector
 } from '@angular/core';
 import {
-    MdNullPortalHostError,
-    MdPortalAlreadyAttachedError,
-    MdNoPortalAttachedError,
-    MdNullPortalError,
-    MdPortalHostAlreadyDisposedError,
-    MdUnknownPortalTypeError
+    MatNullPortalHostError,
+    MatPortalAlreadyAttachedError,
+    MatNoPortalAttachedError,
+    MatNullPortalError,
+    MatPortalHostAlreadyDisposedError,
+    MatUnknownPortalTypeError
 } from './portal-errors';
 import {ComponentType} from '../overlay/generic-component-type';
 
@@ -27,11 +27,11 @@ export abstract class Portal<T> {
   /** Attach this portal to a host. */
   attach(host: PortalHost): T {
     if (host == null) {
-      throw new MdNullPortalHostError();
+      throw new MatNullPortalHostError();
     }
 
     if (host.hasAttached()) {
-      throw new MdPortalAlreadyAttachedError();
+      throw new MatPortalAlreadyAttachedError();
     }
 
     this._attachedHost = host;
@@ -42,7 +42,7 @@ export abstract class Portal<T> {
   detach(): void {
     let host = this._attachedHost;
     if (host == null) {
-      throw new MdNoPortalAttachedError();
+      throw new MatNoPortalAttachedError();
     }
 
     this._attachedHost = null;
@@ -168,15 +168,15 @@ export abstract class BasePortalHost implements PortalHost {
 
   attach(portal: Portal<any>): any {
     if (portal == null) {
-      throw new MdNullPortalError();
+      throw new MatNullPortalError();
     }
 
     if (this.hasAttached()) {
-      throw new MdPortalAlreadyAttachedError();
+      throw new MatPortalAlreadyAttachedError();
     }
 
     if (this._isDisposed) {
-      throw new MdPortalHostAlreadyDisposedError();
+      throw new MatPortalHostAlreadyDisposedError();
     }
 
     if (portal instanceof ComponentPortal) {
@@ -187,7 +187,7 @@ export abstract class BasePortalHost implements PortalHost {
       return this.attachTemplatePortal(portal);
     }
 
-    throw new MdUnknownPortalTypeError();
+    throw new MatUnknownPortalTypeError();
   }
 
   abstract attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;

@@ -16,25 +16,25 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Dir, MdError, BooleanFieldValue} from '@angular2-material/core';
+import {Dir, MatError, BooleanFieldValue} from '@angular2-material/core';
 
-/** Exception thrown when two MdSidenav are matching the same side. */
-export class MdDuplicatedSidenavError extends MdError {
+/** Exception thrown when two MatSidenav are matching the same side. */
+export class MatDuplicatedSidenavError extends MatError {
   constructor(align: string) {
     super(`A sidenav was already declared for 'align="${align}"'`);
   }
 }
 
 /**
- * <md-sidenav> component.
+ * <mat-sidenav> component.
  *
  * This component corresponds to the drawer of the sidenav.
  *
- * Please refer to README.md for examples on how to use it.
+ * Please refer to README.mat for examples on how to use it.
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-sidenav',
+  selector: 'mat-sidenav',
   template: '<ng-content></ng-content>',
   host: {
     '(transitionend)': '_onTransitionEnd($event)',
@@ -42,7 +42,7 @@ export class MdDuplicatedSidenavError extends MdError {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MdSidenav {
+export class MatSidenav {
   /** Alignment of the sidenav (direction neutral); whether 'start' or 'end'. */
   @Input() align: 'start' | 'end' = 'start';
 
@@ -174,32 +174,32 @@ export class MdSidenav {
     }
   }
 
-  @HostBinding('class.md-sidenav-closing') get _isClosing() {
+  @HostBinding('class.mat-sidenav-closing') get _isClosing() {
     return !this._opened && this._transition;
   }
-  @HostBinding('class.md-sidenav-opening') get _isOpening() {
+  @HostBinding('class.mat-sidenav-opening') get _isOpening() {
     return this._opened && this._transition;
   }
-  @HostBinding('class.md-sidenav-closed') get _isClosed() {
+  @HostBinding('class.mat-sidenav-closed') get _isClosed() {
     return !this._opened && !this._transition;
   }
-  @HostBinding('class.md-sidenav-opened') get _isOpened() {
+  @HostBinding('class.mat-sidenav-opened') get _isOpened() {
     return this._opened && !this._transition;
   }
-  @HostBinding('class.md-sidenav-end') get _isEnd() {
+  @HostBinding('class.mat-sidenav-end') get _isEnd() {
     return this.align == 'end';
   }
-  @HostBinding('class.md-sidenav-side') get _modeSide() {
+  @HostBinding('class.mat-sidenav-side') get _modeSide() {
     return this.mode == 'side';
   }
-  @HostBinding('class.md-sidenav-over') get _modeOver() {
+  @HostBinding('class.mat-sidenav-over') get _modeOver() {
     return this.mode == 'over';
   }
-  @HostBinding('class.md-sidenav-push') get _modePush() {
+  @HostBinding('class.mat-sidenav-push') get _modePush() {
     return this.mode == 'push';
   }
 
-  /** TODO: internal (needed by MdSidenavLayout). */
+  /** TODO: internal (needed by MatSidenavLayout). */
   get _width() {
     if (this._elementRef.nativeElement) {
       return this._elementRef.nativeElement.offsetWidth;
@@ -217,17 +217,17 @@ export class MdSidenav {
 }
 
 /**
- * <md-sidenav-layout> component.
+ * <mat-sidenav-layout> component.
  *
- * This is the parent component to one or two <md-sidenav>s that validates the state internally
+ * This is the parent component to one or two <mat-sidenav>s that validates the state internally
  * and coordinate the backdrop and content styling.
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-sidenav-layout',
+  selector: 'mat-sidenav-layout',
   // Do not use ChangeDetectionStrategy.OnPush. It does not work for this component because
-  // technically it is a sibling of MdSidenav (on the content tree) and isn't updated when MdSidenav
-  // changes its state.
+  // technically it is a sibling of MatSidenav (on the content tree) and isn't updated when
+  // MatSidenav changes its state.
   templateUrl: 'sidenav.html',
   styleUrls: [
     'sidenav.css',
@@ -235,15 +235,15 @@ export class MdSidenav {
   ],
   encapsulation: ViewEncapsulation.None,
 })
-export class MdSidenavLayout implements AfterContentInit {
-  @ContentChildren(MdSidenav) _sidenavs: QueryList<MdSidenav>;
+export class MatSidenavLayout implements AfterContentInit {
+  @ContentChildren(MatSidenav) _sidenavs: QueryList<MatSidenav>;
 
   get start() { return this._start; }
   get end() { return this._end; }
 
   /** The sidenav at the start/end alignment, independent of direction. */
-  private _start: MdSidenav;
-  private _end: MdSidenav;
+  private _start: MatSidenav;
+  private _end: MatSidenav;
 
   /**
    * The sidenav at the left/right. When direction changes, these will change as well.
@@ -251,8 +251,8 @@ export class MdSidenavLayout implements AfterContentInit {
    * In LTR, _left == _start and _right == _end.
    * In RTL, _left == _end and _right == _start.
    */
-  private _left: MdSidenav;
-  private _right: MdSidenav;
+  private _left: MatSidenav;
+  private _right: MatSidenav;
 
   constructor(@Optional() private _dir: Dir, private _element: ElementRef,
               private _renderer: Renderer) {
@@ -267,7 +267,7 @@ export class MdSidenavLayout implements AfterContentInit {
   ngAfterContentInit() {
     // On changes, assert on consistency.
     this._sidenavs.changes.subscribe(() => this._validateDrawers());
-    this._sidenavs.forEach((sidenav: MdSidenav) => this._watchSidenavToggle(sidenav));
+    this._sidenavs.forEach((sidenav: MatSidenav) => this._watchSidenavToggle(sidenav));
     this._validateDrawers();
   }
 
@@ -276,15 +276,15 @@ export class MdSidenavLayout implements AfterContentInit {
   * is open and the backdrop is visible. This ensures any overflow on the layout element is properly
   * hidden.
   */
-  private _watchSidenavToggle(sidenav: MdSidenav): void {
+  private _watchSidenavToggle(sidenav: MatSidenav): void {
     if (!sidenav || sidenav.mode === 'side') { return; }
     sidenav.onOpen.subscribe(() => this._setLayoutClass(sidenav, true));
     sidenav.onClose.subscribe(() => this._setLayoutClass(sidenav, false));
   }
 
-  /* Toggles the 'md-sidenav-opened' class on the main 'md-sidenav-layout' element. */
-  private _setLayoutClass(sidenav: MdSidenav, bool: boolean): void {
-    this._renderer.setElementClass(this._element.nativeElement, 'md-sidenav-opened', bool);
+  /* Toggles the 'mat-sidenav-opened' class on the main 'mat-sidenav-layout' element. */
+  private _setLayoutClass(sidenav: MatSidenav, bool: boolean): void {
+    this._renderer.setElementClass(this._element.nativeElement, 'mat-sidenav-opened', bool);
   }
 
   /** Validate the state of the sidenav children components. */
@@ -295,12 +295,12 @@ export class MdSidenavLayout implements AfterContentInit {
     this._sidenavs.forEach(sidenav => {
       if (sidenav.align == 'end') {
         if (this._end != null) {
-          throw new MdDuplicatedSidenavError('end');
+          throw new MatDuplicatedSidenavError('end');
         }
         this._end = sidenav;
       } else {
         if (this._start != null) {
-          throw new MdDuplicatedSidenavError('start');
+          throw new MatDuplicatedSidenavError('start');
         }
         this._start = sidenav;
       }
@@ -332,7 +332,7 @@ export class MdSidenavLayout implements AfterContentInit {
         || (this._isSidenavOpen(this._end) && this._end.mode != 'side');
   }
 
-  private _isSidenavOpen(side: MdSidenav): boolean {
+  private _isSidenavOpen(side: MatSidenav): boolean {
     return side != null && side.opened;
   }
 
@@ -342,7 +342,7 @@ export class MdSidenavLayout implements AfterContentInit {
    * @param sidenav
    * @param mode
    */
-  private _getSidenavEffectiveWidth(sidenav: MdSidenav, mode: string): number {
+  private _getSidenavEffectiveWidth(sidenav: MatSidenav, mode: string): number {
     return (this._isSidenavOpen(sidenav) && sidenav.mode == mode) ? sidenav._width : 0;
   }
 
@@ -387,13 +387,13 @@ export class MdSidenavLayout implements AfterContentInit {
 
 @NgModule({
   imports: [CommonModule],
-  exports: [MdSidenavLayout, MdSidenav],
-  declarations: [MdSidenavLayout, MdSidenav],
+  exports: [MatSidenavLayout, MatSidenav],
+  declarations: [MatSidenavLayout, MatSidenav],
 })
-export class MdSidenavModule {
+export class MatSidenavModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdSidenavModule,
+      ngModule: MatSidenavModule,
       providers: []
     };
   }

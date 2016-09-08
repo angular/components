@@ -11,19 +11,19 @@ import {Renderer} from '@angular/core';
 import {ElementRef} from '@angular/core';
 
 @Directive({
-  selector: 'md-toolbar-row'
+  selector: 'mat-toolbar-row'
 })
-export class MdToolbarRow {}
+export class MatToolbarRow {}
 
 @Component({
   moduleId: module.id,
-  selector: 'md-toolbar',
+  selector: 'mat-toolbar',
   templateUrl: 'toolbar.html',
   styleUrls: ['toolbar.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class MdToolbar {
+export class MatToolbar {
 
   private _color: string;
 
@@ -46,7 +46,7 @@ export class MdToolbar {
 
   private _setElementColor(color: string, isAdd: boolean) {
     if (color != null && color != '') {
-      this.renderer.setElementClass(this.elementRef.nativeElement, `md-${color}`, isAdd);
+      this.renderer.setElementClass(this.elementRef.nativeElement, `mat-${color}`, isAdd);
     }
   }
 
@@ -54,13 +54,13 @@ export class MdToolbar {
 
 
 @NgModule({
-  exports: [MdToolbar, MdToolbarRow],
-  declarations: [MdToolbar, MdToolbarRow],
+  exports: [MatToolbar, MatToolbarRow],
+  declarations: [MatToolbar, MatToolbarRow],
 })
-export class MdToolbarModule {
+export class MatToolbarModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdToolbarModule,
+      ngModule: MatToolbarModule,
       providers: []
     };
   }

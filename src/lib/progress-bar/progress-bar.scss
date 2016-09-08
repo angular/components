@@ -1,9 +1,9 @@
 @import 'variables';
 @import 'default-theme';
 
-$md-progress-bar-height: 5px !default;
-$md-progress-bar-full-animation-duration: 2000ms !default;
-$md-progress-bar-piece-animation-duration: 250ms !default;
+$mat-progress-bar-height: 5px !default;
+$mat-progress-bar-full-animation-duration: 2000ms !default;
+$mat-progress-bar-piece-animation-duration: 250ms !default;
 
 // TODO(josephperrott): Find better way to inline svgs.
 /** In buffer mode a repeated SVG object is used as a background.  Each of the following defines the SVG object for each
@@ -18,39 +18,39 @@ $md-progress-bar-piece-animation-duration: 250ms !default;
     </svg>
 
     */
-$md-buffer-bubbles-primary-url: url(
+$mat-buffer-bubbles-primary-url: url(
   'data:image/svg+xml;charset=UTF-8,%3Csvg%20version%3D%271.1%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27' +
   '%20xmlns%3Axlink%3D%27http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%27%20x%3D%270px%27%20y%3D%270px%27%20enable-backgroun' +
   'd%3D%27new%200%200%205%202%27%20xml%3Aspace%3D%27preserve%27%20viewBox%3D%270%200%205%202%27%20preserveAspectRatio' +
   '%3D%27none%20slice%27%3E%3Ccircle%20cx%3D%271%27%20cy%3D%271%27%20r%3D%271%27%20fill%3D%27' +
-  md-color($md-primary, 100) + '%27%2F%3E%3C%2Fsvg%3E') !default;
-$md-buffer-bubbles-accent-url: url(
+  mat-color($mat-primary, 100) + '%27%2F%3E%3C%2Fsvg%3E') !default;
+$mat-buffer-bubbles-accent-url: url(
   'data:image/svg+xml;charset=UTF-8,%3Csvg%20version%3D%271.1%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27' +
   '%20xmlns%3Axlink%3D%27http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%27%20x%3D%270px%27%20y%3D%270px%27%20enable-backgroun' +
   'd%3D%27new%200%200%205%202%27%20xml%3Aspace%3D%27preserve%27%20viewBox%3D%270%200%205%202%27%20preserveAspectRatio' +
   '%3D%27none%20slice%27%3E%3Ccircle%20cx%3D%271%27%20cy%3D%271%27%20r%3D%271%27%20fill%3D%27' +
-  md-color($md-accent, 100) + '%27%2F%3E%3C%2Fsvg%3E') !default;
-$md-buffer-bubbles-warn-url: url(
+  mat-color($mat-accent, 100) + '%27%2F%3E%3C%2Fsvg%3E') !default;
+$mat-buffer-bubbles-warn-url: url(
   'data:image/svg+xml;charset=UTF-8,%3Csvg%20version%3D%271.1%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27' +
   '%20xmlns%3Axlink%3D%27http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%27%20x%3D%270px%27%20y%3D%270px%27%20enable-backgroun' +
   'd%3D%27new%200%200%205%202%27%20xml%3Aspace%3D%27preserve%27%20viewBox%3D%270%200%205%202%27%20preserveAspectRatio' +
   '%3D%27none%20slice%27%3E%3Ccircle%20cx%3D%271%27%20cy%3D%271%27%20r%3D%271%27%20fill%3D%27' +
-  md-color($md-warn, 100) + '%27%2F%3E%3C%2Fsvg%3E') !default;
+  mat-color($mat-warn, 100) + '%27%2F%3E%3C%2Fsvg%3E') !default;
 
 :host {
   display: block;
-  // Height is provided for md-progress-bar to act as a default.
-  height: $md-progress-bar-height;
+  // Height is provided for mat-progress-bar to act as a default.
+  height: $mat-progress-bar-height;
   overflow: hidden;
   position: relative;
-  // translateZ is added to force the md-progress-bar into its own GPU layer.
+  // translateZ is added to force the mat-progress-bar into its own GPU layer.
   transform: translateZ(0);
-  transition: opacity $md-progress-bar-piece-animation-duration linear;
+  transition: opacity $mat-progress-bar-piece-animation-duration linear;
   width: 100%;
 
   // The progress bar background is used to show the bubble animation scrolling behind a buffering progress bar.
-  .md-progress-bar-background {
-    background: $md-buffer-bubbles-primary-url;
+  .mat-progress-bar-background {
+    background: $mat-buffer-bubbles-primary-url;
     background-repeat: repeat-x;
     background-size: 10px 4px;
     height: 100%;
@@ -63,40 +63,40 @@ $md-buffer-bubbles-warn-url: url(
    * The progress bar buffer is the bar indicator showing the buffer value and is only visible beyond the current value
    * of the primary progress bar.
    */
-  .md-progress-bar-buffer {
-    background-color: md-color($md-primary, 100);
+  .mat-progress-bar-buffer {
+    background-color: mat-color($mat-primary, 100);
     height: 100%;
     position: absolute;
     transform-origin: top left;
-    transition: transform $md-progress-bar-piece-animation-duration ease;
+    transition: transform $mat-progress-bar-piece-animation-duration ease;
     width: 100%;
   }
 
   /**
    * The secondary progress bar is only used in the indeterminate animation, because of this it is hidden in other uses.
    */
-  .md-progress-bar-secondary {
+  .mat-progress-bar-secondary {
     visibility: hidden;
   }
 
   /**
   * The progress bar fill fills the progress bar with the indicator color.
   */
-  .md-progress-bar-fill {
+  .mat-progress-bar-fill {
     animation: none;
     height: 100%;
     position: absolute;
     transform-origin: top left;
-    transition: transform $md-progress-bar-piece-animation-duration ease;
+    transition: transform $mat-progress-bar-piece-animation-duration ease;
     width: 100%;
   }
 
   /**
   * A pseudo element is created for each progress bar bar that fills with the indicator color.
   */
-  .md-progress-bar-fill::after {
+  .mat-progress-bar-fill::after {
     animation: none;
-    background-color: md-color($md-primary, 600);
+    background-color: mat-color($mat-primary, 600);
     content: '';
     display: inline-block;
     height: 100%;
@@ -105,30 +105,30 @@ $md-buffer-bubbles-warn-url: url(
   }
 
   &[color='accent'] {
-    .md-progress-bar-background {
-      background: $md-buffer-bubbles-accent-url;
+    .mat-progress-bar-background {
+      background: $mat-buffer-bubbles-accent-url;
       background-repeat: repeat-x;
       background-size: 10px 4px;
     }
-    .md-progress-bar-buffer {
-      background-color: md-color($md-accent, 100);
+    .mat-progress-bar-buffer {
+      background-color: mat-color($mat-accent, 100);
     }
-    .md-progress-bar-fill::after {
-      background-color: md-color($md-accent, 600);
+    .mat-progress-bar-fill::after {
+      background-color: mat-color($mat-accent, 600);
     }
   }
 
   &[color='warn'] {
-    .md-progress-bar-background {
-      background: $md-buffer-bubbles-warn-url;
+    .mat-progress-bar-background {
+      background: $mat-buffer-bubbles-warn-url;
       background-repeat: repeat-x;
       background-size: 10px 4px;
     }
-    .md-progress-bar-buffer {
-      background-color: md-color($md-warn, 100);
+    .mat-progress-bar-buffer {
+      background-color: mat-color($mat-warn, 100);
     }
-    .md-progress-bar-fill::after {
-      background-color: md-color($md-warn, 600);
+    .mat-progress-bar-fill::after {
+      background-color: mat-color($mat-warn, 600);
     }
   }
 
@@ -138,29 +138,29 @@ $md-buffer-bubbles-warn-url: url(
 
   &[mode='indeterminate'],
   &[mode='query'] {
-    .md-progress-bar-fill {
+    .mat-progress-bar-fill {
       transition: none;
     }
-    .md-progress-bar-primary {
-      animation: md-progress-bar-primary-indeterminate-translate $md-progress-bar-full-animation-duration infinite linear;
+    .mat-progress-bar-primary {
+      animation: mat-progress-bar-primary-indeterminate-translate $mat-progress-bar-full-animation-duration infinite linear;
       left: -145.166611%;
     }
-    .md-progress-bar-primary.md-progress-bar-fill::after {
-      animation: md-progress-bar-primary-indeterminate-scale $md-progress-bar-full-animation-duration infinite linear;
+    .mat-progress-bar-primary.mat-progress-bar-fill::after {
+      animation: mat-progress-bar-primary-indeterminate-scale $mat-progress-bar-full-animation-duration infinite linear;
     }
-    .md-progress-bar-secondary {
-      animation: md-progress-bar-secondary-indeterminate-translate $md-progress-bar-full-animation-duration infinite linear;
+    .mat-progress-bar-secondary {
+      animation: mat-progress-bar-secondary-indeterminate-translate $mat-progress-bar-full-animation-duration infinite linear;
       left: -54.888891%;
       visibility: visible;
     }
-    .md-progress-bar-secondary.md-progress-bar-fill::after {
-      animation: md-progress-bar-secondary-indeterminate-scale $md-progress-bar-full-animation-duration infinite linear;
+    .mat-progress-bar-secondary.mat-progress-bar-fill::after {
+      animation: mat-progress-bar-secondary-indeterminate-scale $mat-progress-bar-full-animation-duration infinite linear;
     }
   }
 
   &[mode='buffer'] {
-    .md-progress-bar-background {
-      animation: md-progress-bar-background-scroll $md-progress-bar-piece-animation-duration infinite linear;
+    .mat-progress-bar-background {
+      animation: mat-progress-bar-background-scroll $mat-progress-bar-piece-animation-duration infinite linear;
       visibility: visible;
     }
   }
@@ -173,7 +173,7 @@ $md-buffer-bubbles-warn-url: url(
 }
 
 
-/** The values used for animations in md-progress-bar, both timing and transformation, can be considered magic values.
+/** The values used for animations in mat-progress-bar, both timing and transformation, can be considered magic values.
     They are sourced from the Material Design example spec and duplicate the values of the original designers
     definitions.
 
@@ -195,38 +195,38 @@ $md-buffer-bubbles-warn-url: url(
 */
 
 // Progress Bar Timing functions:
-// $md-progress-bar-primary-indeterminate-translate-step-1 has no timing function.
-$md-progress-bar-primary-indeterminate-translate-step-2: cubic-bezier(0.5, 0, 0.701732, 0.495819) !default;
-$md-progress-bar-primary-indeterminate-translate-step-3: cubic-bezier(0.302435, 0.381352, 0.55, 0.956352) !default;
-// $md-progress-bar-primary-indeterminate-translate-step-4 has no timing function.
+// $mat-progress-bar-primary-indeterminate-translate-step-1 has no timing function.
+$mat-progress-bar-primary-indeterminate-translate-step-2: cubic-bezier(0.5, 0, 0.701732, 0.495819) !default;
+$mat-progress-bar-primary-indeterminate-translate-step-3: cubic-bezier(0.302435, 0.381352, 0.55, 0.956352) !default;
+// $mat-progress-bar-primary-indeterminate-translate-step-4 has no timing function.
 
-// $md-progress-bar-primary-indeterminate-scale-step-1 has no timing function
-$md-progress-bar-primary-indeterminate-scale-step-2: cubic-bezier(0.334731, 0.12482, 0.785844, 1) !default;
-$md-progress-bar-primary-indeterminate-scale-step-3: cubic-bezier(0.06, 0.11, 0.6, 1) !default;
-// $md-progress-bar-primary-indeterminate-scale-step-4 has no timing function
+// $mat-progress-bar-primary-indeterminate-scale-step-1 has no timing function
+$mat-progress-bar-primary-indeterminate-scale-step-2: cubic-bezier(0.334731, 0.12482, 0.785844, 1) !default;
+$mat-progress-bar-primary-indeterminate-scale-step-3: cubic-bezier(0.06, 0.11, 0.6, 1) !default;
+// $mat-progress-bar-primary-indeterminate-scale-step-4 has no timing function
 
-$md-progress-bar-secondary-indeterminate-translate-step-1: cubic-bezier(0.15, 0, 0.515058, 0.409685) !default;
-$md-progress-bar-secondary-indeterminate-translate-step-2: cubic-bezier(0.31033, 0.284058, 0.8, 0.733712) !default;
-$md-progress-bar-secondary-indeterminate-translate-step-3: cubic-bezier(0.4, 0.627035, 0.6, 0.902026) !default;
-// $md-progress-bar-secondary-indeterminate-translate-step-4 has no timing function
+$mat-progress-bar-secondary-indeterminate-translate-step-1: cubic-bezier(0.15, 0, 0.515058, 0.409685) !default;
+$mat-progress-bar-secondary-indeterminate-translate-step-2: cubic-bezier(0.31033, 0.284058, 0.8, 0.733712) !default;
+$mat-progress-bar-secondary-indeterminate-translate-step-3: cubic-bezier(0.4, 0.627035, 0.6, 0.902026) !default;
+// $mat-progress-bar-secondary-indeterminate-translate-step-4 has no timing function
 
-$md-progress-bar-secondary-indeterminate-scale-step-1: cubic-bezier(0.15, 0, 0.515058, 0.409685) !default;
-$md-progress-bar-secondary-indeterminate-scale-step-2: cubic-bezier(0.31033, 0.284058, 0.8, 0.733712) !default;
-$md-progress-bar-secondary-indeterminate-scale-step-3: cubic-bezier(0.4, 0.627035, 0.6, 0.902026) !default;
-// $md-progress-bar-secondary-indeterminate-scale-step-4 has no timing function
+$mat-progress-bar-secondary-indeterminate-scale-step-1: cubic-bezier(0.15, 0, 0.515058, 0.409685) !default;
+$mat-progress-bar-secondary-indeterminate-scale-step-2: cubic-bezier(0.31033, 0.284058, 0.8, 0.733712) !default;
+$mat-progress-bar-secondary-indeterminate-scale-step-3: cubic-bezier(0.4, 0.627035, 0.6, 0.902026) !default;
+// $mat-progress-bar-secondary-indeterminate-scale-step-4 has no timing function
 
 /** Animations for indeterminate and query mode. */
 // Primary indicator.
-@keyframes md-progress-bar-primary-indeterminate-translate {
+@keyframes mat-progress-bar-primary-indeterminate-translate {
   0% {
     transform: translateX(0);
   }
   20% {
-    animation-timing-function: $md-progress-bar-primary-indeterminate-translate-step-2;
+    animation-timing-function: $mat-progress-bar-primary-indeterminate-translate-step-2;
     transform: translateX(0);
   }
   59.15% {
-    animation-timing-function: $md-progress-bar-primary-indeterminate-translate-step-3;
+    animation-timing-function: $mat-progress-bar-primary-indeterminate-translate-step-3;
     transform: translateX(83.67142%);
   }
   100% {
@@ -234,16 +234,16 @@ $md-progress-bar-secondary-indeterminate-scale-step-3: cubic-bezier(0.4, 0.62703
   }
 }
 
-@keyframes md-progress-bar-primary-indeterminate-scale {
+@keyframes mat-progress-bar-primary-indeterminate-scale {
   0% {
     transform: scaleX(0.08);
   }
   36.65% {
-    animation-timing-function: $md-progress-bar-primary-indeterminate-scale-step-2;
+    animation-timing-function: $mat-progress-bar-primary-indeterminate-scale-step-2;
     transform: scaleX(0.08);
   }
   69.15% {
-    animation-timing-function: $md-progress-bar-primary-indeterminate-scale-step-3;
+    animation-timing-function: $mat-progress-bar-primary-indeterminate-scale-step-3;
     transform: scaleX(0.661479);
   }
   100% {
@@ -252,18 +252,18 @@ $md-progress-bar-secondary-indeterminate-scale-step-3: cubic-bezier(0.4, 0.62703
 }
 
 // Secondary indicator.
-@keyframes md-progress-bar-secondary-indeterminate-translate {
+@keyframes mat-progress-bar-secondary-indeterminate-translate {
   0% {
-    animation-timing-function: $md-progress-bar-secondary-indeterminate-translate-step-1;
+    animation-timing-function: $mat-progress-bar-secondary-indeterminate-translate-step-1;
     transform: translateX(0);
   }
   25% {
-    animation-timing-function: $md-progress-bar-secondary-indeterminate-translate-step-2;
+    animation-timing-function: $mat-progress-bar-secondary-indeterminate-translate-step-2;
 
     transform: translateX(37.651913%);
   }
   48.35% {
-    animation-timing-function: $md-progress-bar-secondary-indeterminate-translate-step-3;
+    animation-timing-function: $mat-progress-bar-secondary-indeterminate-translate-step-3;
     transform: translateX(84.386165%);
   }
   100% {
@@ -271,17 +271,17 @@ $md-progress-bar-secondary-indeterminate-scale-step-3: cubic-bezier(0.4, 0.62703
   }
 }
 
-@keyframes md-progress-bar-secondary-indeterminate-scale {
+@keyframes mat-progress-bar-secondary-indeterminate-scale {
   0% {
-    animation-timing-function: $md-progress-bar-secondary-indeterminate-scale-step-1;
+    animation-timing-function: $mat-progress-bar-secondary-indeterminate-scale-step-1;
     transform: scaleX(0.08);
   }
   19.15% {
-    animation-timing-function: $md-progress-bar-secondary-indeterminate-scale-step-2;
+    animation-timing-function: $mat-progress-bar-secondary-indeterminate-scale-step-2;
     transform: scaleX(0.457104);
   }
   44.15% {
-    animation-timing-function: $md-progress-bar-secondary-indeterminate-scale-step-3;
+    animation-timing-function: $mat-progress-bar-secondary-indeterminate-scale-step-3;
     transform: scaleX(0.72796);
   }
   100% {
@@ -290,7 +290,7 @@ $md-progress-bar-secondary-indeterminate-scale-step-3: cubic-bezier(0.4, 0.62703
 }
 
 /** Animation for buffer mode. */
-@keyframes md-progress-bar-background-scroll {
+@keyframes mat-progress-bar-background-scroll {
   to {
     transform: translateX(-10px);
   }

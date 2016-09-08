@@ -1,50 +1,50 @@
-<md-sidenav-layout class="demo-root" fullscreen>
-  <md-sidenav #start>
-    <md-nav-list>
-      <a md-list-item [routerLink]="['button']">Button</a>
-      <a md-list-item [routerLink]="['button-toggle']">Button Toggle</a>
-      <a md-list-item [routerLink]="['card']">Card</a>
-      <a md-list-item [routerLink]="['checkbox']">Checkbox</a>
-      <a md-list-item [routerLink]="['dialog']">Dialog</a>
-      <a md-list-item [routerLink]="['gestures']">Gestures</a>
-      <a md-list-item [routerLink]="['grid-list']">Grid List</a>
-      <a md-list-item [routerLink]="['icon']">Icon</a>
-      <a md-list-item [routerLink]="['input']">Input</a>
-      <a md-list-item [routerLink]="['list']">List</a>
-      <a md-list-item [routerLink]="['menu']">Menu</a>
-      <a md-list-item [routerLink]="['live-announcer']">Live Announcer</a>
-      <a md-list-item [routerLink]="['overlay']">Overlay</a>
-      <a md-list-item [routerLink]="['portal']">Portal</a>
-      <a md-list-item [routerLink]="['progress-bar']">Progress Bar</a>
-      <a md-list-item [routerLink]="['progress-circle']">Progress Circle</a>
-      <a md-list-item [routerLink]="['radio']">Radio</a>
-      <a md-list-item [routerLink]="['ripple']">Ripple</a>
-      <a md-list-item [routerLink]="['sidenav']">Sidenav</a>
-      <a md-list-item [routerLink]="['slider']">Slider</a>
-      <a md-list-item [routerLink]="['slide-toggle']">Slide Toggle</a>
-      <a md-list-item [routerLink]="['tabs']">Tabs</a>
-      <a md-list-item [routerLink]="['toolbar']">Toolbar</a>
-      <a md-list-item [routerLink]="['tooltip']">Tooltip</a>
+<mat-sidenav-layout class="demo-root" fullscreen>
+  <mat-sidenav #start>
+    <mat-nav-list>
+      <a mat-list-item [routerLink]="['button']">Button</a>
+      <a mat-list-item [routerLink]="['button-toggle']">Button Toggle</a>
+      <a mat-list-item [routerLink]="['card']">Card</a>
+      <a mat-list-item [routerLink]="['checkbox']">Checkbox</a>
+      <a mat-list-item [routerLink]="['dialog']">Dialog</a>
+      <a mat-list-item [routerLink]="['gestures']">Gestures</a>
+      <a mat-list-item [routerLink]="['grid-list']">Grid List</a>
+      <a mat-list-item [routerLink]="['icon']">Icon</a>
+      <a mat-list-item [routerLink]="['input']">Input</a>
+      <a mat-list-item [routerLink]="['list']">List</a>
+      <a mat-list-item [routerLink]="['menu']">Menu</a>
+      <a mat-list-item [routerLink]="['live-announcer']">Live Announcer</a>
+      <a mat-list-item [routerLink]="['overlay']">Overlay</a>
+      <a mat-list-item [routerLink]="['portal']">Portal</a>
+      <a mat-list-item [routerLink]="['progress-bar']">Progress Bar</a>
+      <a mat-list-item [routerLink]="['progress-circle']">Progress Circle</a>
+      <a mat-list-item [routerLink]="['radio']">Radio</a>
+      <a mat-list-item [routerLink]="['ripple']">Ripple</a>
+      <a mat-list-item [routerLink]="['sidenav']">Sidenav</a>
+      <a mat-list-item [routerLink]="['slider']">Slider</a>
+      <a mat-list-item [routerLink]="['slide-toggle']">Slide Toggle</a>
+      <a mat-list-item [routerLink]="['tabs']">Tabs</a>
+      <a mat-list-item [routerLink]="['toolbar']">Toolbar</a>
+      <a mat-list-item [routerLink]="['tooltip']">Tooltip</a>
       <hr>
-      <a md-list-item [routerLink]="['baseline']">Baseline</a>
-    </md-nav-list>
-    <button md-button (click)="start.close()">CLOSE</button>
-  </md-sidenav>
+      <a mat-list-item [routerLink]="['baseline']">Baseline</a>
+    </mat-nav-list>
+    <button mat-button (click)="start.close()">CLOSE</button>
+  </mat-sidenav>
   <div>
-    <md-toolbar color="primary">
-      <button md-icon-button (click)="start.open()">
-        <md-icon class="md-24" >menu</md-icon>
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="start.open()">
+        <mat-icon class="mat-24" >menu</mat-icon>
       </button>
       <div class="demo-toolbar">
         <h1>Angular Material 2 Demos</h1>
-        <button md-button (click)="root.dir = (root.dir == 'rtl' ? 'ltr' : 'rtl')" title="Toggle between RTL and LTR">
+        <button mat-button (click)="root.dir = (root.dir == 'rtl' ? 'ltr' : 'rtl')" title="Toggle between RTL and LTR">
           {{root.dir.toUpperCase()}}
         </button>
       </div>
-    </md-toolbar>
+    </mat-toolbar>
 
     <div #root="$implicit" dir="ltr" class="demo-content">
       <router-outlet></router-outlet>
     </div>
   </div>
-</md-sidenav-layout>
+</mat-sidenav-layout>

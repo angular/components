@@ -19,12 +19,12 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 let nextId = 0;
 
 /**
- * Provider Expression that allows md-checkbox to register as a ControlValueAccessor. This allows it
- * to support [(ngModel)].
+ * Provider Expression that allows mat-checkbox to register as a ControlValueAccessor. This allows
+ * it to support [(ngModel)].
  */
-export const MD_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
+export const MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdCheckbox),
+  useExisting: forwardRef(() => MatCheckbox),
   multi: true
 };
 
@@ -42,15 +42,15 @@ export enum TransitionCheckState {
   Indeterminate
 }
 
-// A simple change event emitted by the MdCheckbox component.
-export class MdCheckboxChange {
-  source: MdCheckbox;
+// A simple change event emitted by the MatCheckbox component.
+export class MatCheckboxChange {
+  source: MatCheckbox;
   checked: boolean;
 }
 
 /**
  * A material design checkbox component. Supports all of the functionality of an HTML5 checkbox,
- * and exposes a similar API. An MdCheckbox can be either checked, unchecked, indeterminate, or
+ * and exposes a similar API. An MatCheckbox can be either checked, unchecked, indeterminate, or
  * disabled. Note that all additional accessibility attributes are taken care of by the component,
  * so there is no need to provide them yourself. However, if you want to omit a label and still
  * have the checkbox be accessible, you may supply an [aria-label] input.
@@ -58,21 +58,21 @@ export class MdCheckboxChange {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-checkbox',
+  selector: 'mat-checkbox',
   templateUrl: 'checkbox.html',
   styleUrls: ['checkbox.css'],
   host: {
-    '[class.md-checkbox-indeterminate]': 'indeterminate',
-    '[class.md-checkbox-checked]': 'checked',
-    '[class.md-checkbox-disabled]': 'disabled',
-    '[class.md-checkbox-align-end]': 'align == "end"',
-    '[class.md-checkbox-focused]': 'hasFocus',
+    '[class.mat-checkbox-indeterminate]': 'indeterminate',
+    '[class.mat-checkbox-checked]': 'checked',
+    '[class.mat-checkbox-disabled]': 'disabled',
+    '[class.mat-checkbox-align-end]': 'align == "end"',
+    '[class.mat-checkbox-focused]': 'hasFocus',
   },
-  providers: [MD_CHECKBOX_CONTROL_VALUE_ACCESSOR],
+  providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdCheckbox implements ControlValueAccessor {
+export class MatCheckbox implements ControlValueAccessor {
   /**
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
    * take precedence so this may be omitted.
@@ -85,7 +85,7 @@ export class MdCheckbox implements ControlValueAccessor {
   @Input('aria-labelledby') ariaLabelledby: string = null;
 
   /** A unique id for the checkbox. If one is not supplied, it is auto-generated. */
-  @Input() id: string = `md-checkbox-${++nextId}`;
+  @Input() id: string = `mat-checkbox-${++nextId}`;
 
   /** ID to be applied to the `input` element */
   get inputId(): string {
@@ -111,7 +111,7 @@ export class MdCheckbox implements ControlValueAccessor {
   @Input() name: string = null;
 
   /** Event emitted when the checkbox's `checked` value changes. */
-  @Output() change: EventEmitter<MdCheckboxChange> = new EventEmitter<MdCheckboxChange>();
+  @Output() change: EventEmitter<MatCheckboxChange> = new EventEmitter<MatCheckboxChange>();
 
   /** Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor. */
   onTouched: () => any = () => {};
@@ -216,7 +216,7 @@ export class MdCheckbox implements ControlValueAccessor {
   }
 
   private _emitChangeEvent() {
-    let event = new MdCheckboxChange();
+    let event = new MatCheckboxChange();
     event.source = this;
     event.checked = this.checked;
 
@@ -301,19 +301,19 @@ export class MdCheckbox implements ControlValueAccessor {
           'indeterminate-checked' : 'indeterminate-unchecked';
     }
 
-    return `md-checkbox-anim-${animSuffix}`;
+    return `mat-checkbox-anim-${animSuffix}`;
   }
 }
 
 
 @NgModule({
-  exports: [MdCheckbox],
-  declarations: [MdCheckbox],
+  exports: [MatCheckbox],
+  declarations: [MatCheckbox],
 })
-export class MdCheckboxModule {
+export class MatCheckboxModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdCheckboxModule,
+      ngModule: MatCheckboxModule,
       providers: []
     };
   }

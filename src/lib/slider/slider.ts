@@ -15,7 +15,7 @@ import {
   FormsModule,
 } from '@angular/forms';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-import {BooleanFieldValue, MdGestureConfig, applyCssTransform} from '@angular2-material/core';
+import {BooleanFieldValue, MatGestureConfig, applyCssTransform} from '@angular2-material/core';
 import {Input as HammerInput} from 'hammerjs';
 
 /**
@@ -25,19 +25,19 @@ import {Input as HammerInput} from 'hammerjs';
 const MIN_AUTO_TICK_SEPARATION = 30;
 
 /**
- * Provider Expression that allows md-slider to register as a ControlValueAccessor.
+ * Provider Expression that allows mat-slider to register as a ControlValueAccessor.
  * This allows it to support [(ngModel)] and [formControl].
  */
-export const MD_SLIDER_VALUE_ACCESSOR: any = {
+export const MAT_SLIDER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdSlider),
+  useExisting: forwardRef(() => MatSlider),
   multi: true
 };
 
 @Component({
   moduleId: module.id,
-  selector: 'md-slider',
-  providers: [MD_SLIDER_VALUE_ACCESSOR],
+  selector: 'mat-slider',
+  providers: [MAT_SLIDER_VALUE_ACCESSOR],
   host: {
     'tabindex': '0',
     '(click)': 'onClick($event)',
@@ -51,7 +51,7 @@ export const MD_SLIDER_VALUE_ACCESSOR: any = {
   styleUrls: ['slider.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class MdSlider implements AfterContentInit, ControlValueAccessor {
+export class MatSlider implements AfterContentInit, ControlValueAccessor {
   /** A renderer to handle updating the slider's thumb and fill track. */
   private _renderer: SliderRenderer = null;
 
@@ -60,7 +60,7 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
 
   @Input()
   @BooleanFieldValue()
-  @HostBinding('class.md-slider-disabled')
+  @HostBinding('class.mat-slider-disabled')
   @HostBinding('attr.aria-disabled')
   disabled: boolean = false;
 
@@ -394,7 +394,7 @@ export class SliderRenderer {
    * take up.
    */
   getSliderDimensions() {
-    let trackElement = this._sliderElement.querySelector('.md-slider-track');
+    let trackElement = this._sliderElement.querySelector('.mat-slider-track');
     return trackElement.getBoundingClientRect();
   }
 
@@ -404,8 +404,8 @@ export class SliderRenderer {
   updateThumbAndFillPosition(percent: number, width: number) {
     // A container element that is used to avoid overwriting the transform on the thumb itself.
     let thumbPositionElement =
-        <HTMLElement>this._sliderElement.querySelector('.md-slider-thumb-position');
-    let fillTrackElement = <HTMLElement>this._sliderElement.querySelector('.md-slider-track-fill');
+        <HTMLElement>this._sliderElement.querySelector('.mat-slider-thumb-position');
+    let fillTrackElement = <HTMLElement>this._sliderElement.querySelector('.mat-slider-track-fill');
 
     let position = Math.round(percent * width);
 
@@ -425,13 +425,14 @@ export class SliderRenderer {
    * Draws ticks onto the tick container.
    */
   drawTicks(tickSeparation: number) {
-    let tickContainer = <HTMLElement>this._sliderElement.querySelector('.md-slider-tick-container');
+    let tickContainer = <HTMLElement>this._sliderElement
+      .querySelector('.mat-slider-tick-container');
     let tickContainerWidth = tickContainer.getBoundingClientRect().width;
     // An extra element for the last tick is needed because the linear gradient cannot be told to
     // always draw a tick at the end of the gradient. To get around this, there is a second
     // container for ticks that has a single tick mark on the very right edge.
     let lastTickContainer =
-        <HTMLElement>this._sliderElement.querySelector('.md-slider-last-tick-container');
+        <HTMLElement>this._sliderElement.querySelector('.mat-slider-last-tick-container');
     // Subtract 1 from the tick separation to center the tick.
     // TODO: Evaluate the rendering performance of using repeating background gradients.
     tickContainer.style.background = `repeating-linear-gradient(to right, black, black 2px, ` +
@@ -451,17 +452,17 @@ export class SliderRenderer {
 
 @NgModule({
   imports: [FormsModule],
-  exports: [MdSlider],
-  declarations: [MdSlider],
+  exports: [MatSlider],
+  declarations: [MatSlider],
   providers: [
-    {provide: HAMMER_GESTURE_CONFIG, useClass: MdGestureConfig},
+    {provide: HAMMER_GESTURE_CONFIG, useClass: MatGestureConfig},
   ],
 })
-export class MdSliderModule {
+export class MatSliderModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdSliderModule,
-      providers: [{provide: HAMMER_GESTURE_CONFIG, useClass: MdGestureConfig}]
+      ngModule: MatSliderModule,
+      providers: [{provide: HAMMER_GESTURE_CONFIG, useClass: MatGestureConfig}]
     };
   }
 }

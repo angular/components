@@ -8,59 +8,59 @@
 @import 'list-shared';
 
 // menu width must be a multiple of 56px
-$md-menu-overlay-min-width: 112px !default;   // 56 * 2
-$md-menu-overlay-max-width: 280px !default;   // 56 * 5
+$mat-menu-overlay-min-width: 112px !default;   // 56 * 2
+$mat-menu-overlay-max-width: 280px !default;   // 56 * 5
 
-$md-menu-item-height: 48px !default;
-$md-menu-font-size: 16px !default;
-$md-menu-side-padding: 16px !default;
-$md-menu-vertical-padding: 8px !default;
+$mat-menu-item-height: 48px !default;
+$mat-menu-font-size: 16px !default;
+$mat-menu-side-padding: 16px !default;
+$mat-menu-vertical-padding: 8px !default;
 
-.md-menu {
-  @include md-elevation(2);
-  min-width: $md-menu-overlay-min-width;
-  max-width: $md-menu-overlay-max-width;
+.mat-menu {
+  @include mat-elevation(2);
+  min-width: $mat-menu-overlay-min-width;
+  max-width: $mat-menu-overlay-max-width;
 
   // max height must be 100% of the viewport height + one row height
   max-height: calc(100vh + 48px);
   overflow: auto;
   -webkit-overflow-scrolling: touch;   // for momentum scroll on mobile
 
-  background: md-color($md-background, 'card');
-  padding-top: $md-menu-vertical-padding;
-  padding-bottom: $md-menu-vertical-padding;
+  background: mat-color($mat-background, 'card');
+  padding-top: $mat-menu-vertical-padding;
+  padding-bottom: $mat-menu-vertical-padding;
 }
 
-[md-menu-item] {
-  @include md-button-reset();
-  @include md-truncate-line();
+[mat-menu-item] {
+  @include mat-button-reset();
+  @include mat-truncate-line();
 
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: $md-menu-item-height;
-  padding: 0 $md-menu-side-padding;
+  height: $mat-menu-item-height;
+  padding: 0 $mat-menu-side-padding;
 
-  font-size: $md-menu-font-size;
-  font-family: $md-font-family;
+  font-size: $mat-menu-font-size;
+  font-family: $mat-font-family;
   text-align: start;
   text-decoration: none;   // necessary to reset anchor tags
-  color: md-color($md-foreground, 'text');
+  color: mat-color($mat-foreground, 'text');
 
   &[disabled] {
-    color: md-color($md-foreground, 'disabled');
+    color: mat-color($mat-foreground, 'disabled');
     cursor: default;
   }
 
   &:hover:not([disabled]), &:focus:not([disabled]) {
-    background: md-color($md-background, 'hover');
+    background: mat-color($mat-background, 'hover');
   }
 }
 
-button[md-menu-item] {
+button[mat-menu-item] {
   width: 100%;
 }
 
-.md-menu-click-catcher {
-  @include md-fullscreen();
+.mat-menu-click-catcher {
+  @include mat-fullscreen();
 }

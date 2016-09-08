@@ -1,25 +1,25 @@
-/** Applies a property to an md-button element for each of the supported palettes. */
-@mixin md-button-theme($property, $color: 'default', $opacity: 1) {
-  &.md-primary {
-    #{$property}: md-color($md-primary, $color, $opacity);
+/** Applies a property to an mat-button element for each of the supported palettes. */
+@mixin mat-button-theme($property, $color: 'default', $opacity: 1) {
+  &.mat-primary {
+    #{$property}: mat-color($mat-primary, $color, $opacity);
   }
-  &.md-accent {
-    #{$property}: md-color($md-accent, $color, $opacity);
+  &.mat-accent {
+    #{$property}: mat-color($mat-accent, $color, $opacity);
   }
-  &.md-warn {
-    #{$property}: md-color($md-warn, $color, $opacity);
+  &.mat-warn {
+    #{$property}: mat-color($mat-warn, $color, $opacity);
   }
 
-  &.md-primary, &.md-accent, &.md-warn, &[disabled] {
+  &.mat-primary, &.mat-accent, &.mat-warn, &[disabled] {
     &[disabled] {
-      $palette: if($property == 'color', $md-foreground, $md-background);
-      #{$property}: md-color($palette, disabled-button);
+      $palette: if($property == 'color', $mat-foreground, $mat-background);
+      #{$property}: mat-color($palette, disabled-button);
     }
   }
 }
 
-/** Applies a focus style to an md-button element for each of the supported palettes. */
-@mixin md-button-focus {
+/** Applies a focus style to an mat-button element for each of the supported palettes. */
+@mixin mat-button-focus {
   &::after {
     // The button spec calls for focus on raised buttons (and FABs) to be indicated with a
     // black, 12% opacity shade over the normal color (for both light and dark themes).
@@ -35,15 +35,15 @@
     pointer-events: none;
   }
 
-  &.md-primary::after {
-    background-color: md-color($md-primary, 0.12);
+  &.mat-primary::after {
+    background-color: mat-color($mat-primary, 0.12);
   }
 
-  &.md-accent::after {
-    background-color: md-color($md-accent, 0.12);
+  &.mat-accent::after {
+    background-color: mat-color($mat-accent, 0.12);
   }
 
-  &.md-warn::after {
-    background-color: md-color($md-warn, 0.12);
+  &.mat-warn::after {
+    background-color: mat-color($mat-warn, 0.12);
   }
 }

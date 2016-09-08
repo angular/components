@@ -1,24 +1,24 @@
-<div class="md-tab-header" role="tablist"
+<div class="mat-tab-header" role="tablist"
      (keydown)="handleKeydown($event)">
-  <div class="md-tab-label" role="tab" md-tab-label-wrapper
+  <div class="mat-tab-label" role="tab" mat-tab-label-wrapper
        *ngFor="let tab of _tabs; let i = index"
        [id]="_getTabLabelId(i)"
        [tabIndex]="selectedIndex == i ? 0 : -1"
        [attr.aria-controls]="_getTabContentId(i)"
        [attr.aria-selected]="selectedIndex == i"
-       [class.md-tab-active]="selectedIndex == i"
-       [class.md-tab-disabled]="tab.disabled"
+       [class.mat-tab-active]="selectedIndex == i"
+       [class.mat-tab-disabled]="tab.disabled"
        (click)="focusIndex = selectedIndex = i">
     <template [portalHost]="tab.label"></template>
   </div>
-  <md-ink-bar></md-ink-bar>
+  <mat-ink-bar></mat-ink-bar>
 </div>
-<div class="md-tab-body-wrapper">
-  <div class="md-tab-body"
+<div class="mat-tab-body-wrapper">
+  <div class="mat-tab-body"
        role="tabpanel"
        *ngFor="let tab of _tabs; let i = index"
        [id]="_getTabContentId(i)"
-       [class.md-tab-active]="selectedIndex == i"
+       [class.mat-tab-active]="selectedIndex == i"
        [attr.aria-labelledby]="_getTabLabelId(i)">
     <template [ngIf]="selectedIndex == i">
       <template [portalHost]="tab.content"></template>

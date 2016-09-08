@@ -30,11 +30,11 @@ type EasingFn = (currentTime: number, startValue: number,
 
 
 /**
- * <md-progress-circle> component.
+ * <mat-progress-circle> component.
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-progress-circle',
+  selector: 'mat-progress-circle',
   host: {
     'role': 'progressbar',
     '[attr.aria-valuemin]': '_ariaValueMin',
@@ -44,7 +44,7 @@ type EasingFn = (currentTime: number, startValue: number,
   styleUrls: ['progress-circle.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdProgressCircle implements OnDestroy {
+export class MatProgressCircle implements OnDestroy {
   /** The id of the last requested animation. */
   private _lastAnimationId: number = 0;
 
@@ -214,14 +214,14 @@ export class MdProgressCircle implements OnDestroy {
 
 
 /**
- * <md-spinner> component.
+ * <mat-spinner> component.
  *
  * This is a component definition to be used as a convenience reference to create an
- * indeterminate <md-progress-circle> instance.
+ * indeterminate <mat-progress-circle> instance.
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-spinner',
+  selector: 'mat-spinner',
   host: {
     'role': 'progressbar',
     'mode': 'indeterminate',
@@ -229,7 +229,7 @@ export class MdProgressCircle implements OnDestroy {
   templateUrl: 'progress-circle.html',
   styleUrls: ['progress-circle.css'],
 })
-export class MdSpinner extends MdProgressCircle {
+export class MatSpinner extends MatProgressCircle {
   constructor(changeDetectorRef: ChangeDetectorRef) {
     super(changeDetectorRef);
     this.mode = 'indeterminate';
@@ -316,13 +316,13 @@ function getSvgArc(currentValue: number, rotation: number) {
 
 
 @NgModule({
-  exports: [MdProgressCircle, MdSpinner],
-  declarations: [MdProgressCircle, MdSpinner],
+  exports: [MatProgressCircle, MatSpinner],
+  declarations: [MatProgressCircle, MatSpinner],
 })
-export class MdProgressCircleModule {
+export class MatProgressCircleModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdProgressCircleModule,
+      ngModule: MatProgressCircleModule,
       providers: []
     };
   }
