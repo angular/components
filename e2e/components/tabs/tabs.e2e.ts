@@ -9,9 +9,9 @@ describe('tabs', () => {
 
     beforeEach(() => {
       browser.get('/tabs');
-      tabGroup = element(by.css('md-tab-group'));
-      tabLabels = element.all(by.css('.md-tab-label'));
-      tabBodies = element.all(by.css('.md-tab-body'));
+      tabGroup = element(by.css('mat-tab-group'));
+      tabLabels = element.all(by.css('.mat-tab-label'));
+      tabBodies = element.all(by.css('.mat-tab-body'));
     });
 
     it('should change tabs when the label is clicked', () => {
@@ -78,7 +78,7 @@ function getFocusStates(elements: ElementArrayFinder) {
  * @returns {webdriver.promise.Promise<Promise<boolean>[]>|webdriver.promise.Promise<T[]>}
  */
 function getActiveStates(elements: ElementArrayFinder) {
-  return getClassStates(elements, 'md-tab-active');
+  return getClassStates(elements, 'mat-tab-active');
 }
 
 /**
