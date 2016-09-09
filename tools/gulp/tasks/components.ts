@@ -25,6 +25,12 @@ task(':watch:components', () => {
   watch(path.join(componentsDir, '**/*.html'), [':build:components:assets']);
 });
 
+task(':watch:components:spec', () => {
+  watch(path.join(componentsDir, '**/*.ts'), [':build:components:spec']);
+  watch(path.join(componentsDir, '**/*.scss'), [':build:components:scss']);
+  watch(path.join(componentsDir, '**/*.html'), [':build:components:assets']);
+});
+
 
 task(':build:components:ts', tsBuildTask(componentsDir));
 task(':build:components:spec', tsBuildTask(path.join(componentsDir, 'tsconfig-spec.json')));
