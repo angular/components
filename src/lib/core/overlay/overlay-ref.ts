@@ -64,7 +64,7 @@ export class OverlayRef implements PortalHost {
     this._backdropElement.classList.add('md-overlay-backdrop');
     this._pane.parentElement.appendChild(this._backdropElement);
 
-    // Forward backdrop clicks that that the consumer of the overlay can perform whatever
+    // Forward backdrop clicks such that the consumer of the overlay can perform whatever
     // action desired when such a click occurs (usually closing the overlay).
     this._backdropElement.addEventListener('click', () => {
       this._backdropClick.next(null);
@@ -86,7 +86,7 @@ export class OverlayRef implements PortalHost {
         backdropToDetach.parentNode.removeChild(backdropToDetach);
 
         // It is possible that a new portal has been attached to this overlay since we started
-        // removing the backdrop. If that is the case, only clear our the backdrop reference if it
+        // removing the backdrop. If that is the case, only clear the backdrop reference if it
         // is still the same instance that we started to remove.
         if (this._backdropElement == backdropToDetach) {
           this._backdropElement = null;

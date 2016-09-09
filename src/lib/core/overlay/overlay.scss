@@ -19,8 +19,7 @@ $md-backdrop-color: md-color($md-grey, 900);
   left: 0;
   height: 100%;
   width: 100%;
-
-  z-index: 1;
+  z-index: $md-z-index-overlay-container;
 }
 
 /** A single overlay pane. */
@@ -32,6 +31,7 @@ $md-backdrop-color: md-color($md-grey, 900);
 }
 
 .md-overlay-backdrop {
+  // TODO(jelbourn): reuse sidenav fullscreen mixin.
   position: absolute;
   top: 0;
   bottom: 0;
