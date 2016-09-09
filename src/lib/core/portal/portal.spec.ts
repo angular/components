@@ -1,11 +1,4 @@
-import {
-  inject,
-  fakeAsync,
-  flushMicrotasks,
-  ComponentFixture,
-  TestBed,
-  async,
-} from '@angular/core/testing';
+import {inject, ComponentFixture, TestBed, async} from '@angular/core/testing';
 import {
   NgModule,
   Component,
