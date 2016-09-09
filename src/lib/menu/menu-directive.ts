@@ -49,7 +49,7 @@ export class MdMenu {
    * This method takes classes set on the host md-menu element and applies them on the
    * menu template that displays in the overlay container.  Otherwise, it's difficult
    * to style the containing menu from outside the component.
-   * @param classes list of class names
+   * param classes list of class names
    */
   @Input('class')
   set classList(classes: string) {
