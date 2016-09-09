@@ -229,6 +229,15 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   registerOnTouched(fn: any) {
     this.onTouched = fn;
   }
+
+  /**
+   * Implemented as part of ControlValueAccessor.
+   * TODO: internal
+   */
+  setDisabledState(isDisabled: boolean): void {
+      this.disabled = isDisabled;
+    }
+
 }
 
 
