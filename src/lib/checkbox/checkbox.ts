@@ -193,6 +193,14 @@ export class MdCheckbox implements ControlValueAccessor {
   registerOnTouched(fn: any) {
     this.onTouched = fn;
   }
+  
+  /**
+   * Implemented as part of ControlValueAccessor.
+   * TODO: internal
+   */
+  setDisabledState(isDisabled: boolean): void {
+      this.disabled = isDisabled;
+  }
 
   private _transitionCheckState(newState: TransitionCheckState) {
     let oldState = this._currentCheckState;
