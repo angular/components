@@ -1,7 +1,7 @@
 /**
- * We separate transitions to be able to disable them in unit tests, by simply not loading this file.
+ * Separate transitions to be able to disable them in unit tests by omitting this file.
  */
-@import 'variables';
+@import '../core/style/variables';
 
 md-sidenav {
   transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;

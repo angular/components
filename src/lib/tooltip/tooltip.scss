@@ -1,6 +1,7 @@
-@import 'variables';
-@import 'theme-functions';
-@import 'palette';
+@import '../core/style/variables';
+@import '../core/theming/theming';
+@import '../core/theming/palette';
+
 
 $md-tooltip-height: 22px;
 $md-tooltip-margin: 14px;

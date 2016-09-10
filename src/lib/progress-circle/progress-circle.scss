@@ -1,6 +1,5 @@
-@import 'variables';
+@import '../core/style/variables';
 
-@import 'default-theme';
 
 /* Animation Durations */
 $md-progress-circle-duration: 5250ms !default;
@@ -33,18 +32,9 @@ $md-progress-circle-viewport-size: 100px !default;
 
   path {
     fill: transparent;
-    stroke: md-color($md-primary, 600);
-    /** Stroke width of 10px defines stroke as 10% of the viewBox */
+
+    // Stroke width of 10px defines stroke as 10% of the viewBox.
     stroke-width: $md-progress-circle-stroke-width;
-  }
-
-  &[color='accent'] path {
-    stroke: md-color($md-accent, 600);
-  }
-
-
-  &[color='warn'] path {
-    stroke: md-color($md-warn, 600);
   }
 
 

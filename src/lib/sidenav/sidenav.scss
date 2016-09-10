@@ -1,14 +1,7 @@
-@import 'default-theme';
-@import 'mixins';
-@import 'variables';
-@import 'elevation';
-@import 'sidenav-mixins';
-
-// We use invert() here to have the darken the background color expected to be used. If the
-// background is light, we use a dark backdrop. If the background is dark, we use a light backdrop.
-$md-sidenav-backdrop-color: invert(md-color($md-background, card, 0.6)) !default;
-$md-sidenav-background-color: md-color($md-background, dialog) !default;
-$md-sidenav-push-background-color: md-color($md-background, dialog) !default;
+@import '../core/style/mixins';
+@import '../core/style/variables';
+@import '../core/style/elevation';
+@import '../core/style/sidenav-mixins';
 
 
 /**
@@ -85,7 +78,6 @@ md-sidenav-layout {
 
   &.md-sidenav-shown {
     visibility: visible;
-    background-color: $md-sidenav-backdrop-color;
   }
 }
 
@@ -110,13 +102,7 @@ md-sidenav {
   // TODO(kara): revisit scrolling behavior for sidenavs
   overflow-y: auto;
 
-  background-color: $md-sidenav-background-color;
-
   @include md-sidenav-transition(0, -100%);
-
-  &.md-sidenav-push {
-    background-color: $md-sidenav-push-background-color;
-  }
 
   &.md-sidenav-side {
     z-index: 1;

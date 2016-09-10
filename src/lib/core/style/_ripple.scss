@@ -1,5 +1,4 @@
-@import 'default-theme';
-@import 'theme-functions';
+@import '../core/theming/theming';
 
 $md-ripple-focused-opacity: 0.1;
 $md-ripple-background-fade-duration: 300ms;

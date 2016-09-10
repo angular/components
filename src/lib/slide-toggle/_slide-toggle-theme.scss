@@ -1,0 +1,29 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+
+@mixin md-slide-toggle-theme($theme) {
+
+  @mixin switch-checked($palette) {
+    &.md-checked {
+      .md-slide-toggle-thumb {
+        background-color: md-color($palette);
+      }
+
+      .md-slide-toggle-bar {
+        background-color: md-color($palette, 0.5);
+      }
+    }
+  }
+
+  @mixin switch-ripple($palette) {
+    &.md-slide-toggle-focused {
+      &:not(.md-checked) .md-ink-ripple {
+        // When the slide-toggle is not checked and it shows its focus indicator, it should use a 12% opacity
+        // of black in light themes and 12% of white in dark themes.
+        background-color: md-color($md-foreground, divider);
+      }
+    }
+  }
+
+}

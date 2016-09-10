@@ -1,7 +1,6 @@
+@import '../core/style/variables';
+@import '../core/style/elevation';
 
-@import 'variables';
-@import 'elevation';
-@import 'default-theme';   // TODO: Remove this
 
 $md-card-default-padding: 24px !default;
 $md-card-mobile-padding: 24px 16px !default;
@@ -16,8 +15,6 @@ md-card {
   padding: $md-card-default-padding;
   border-radius: $md-card-border-radius;
   font-family: $md-font-family;
-  background: md-color($md-background, card);
-  color: md-color($md-foreground, base);
 }
 
 md-card:hover {
@@ -43,7 +40,6 @@ md-card-title {
 md-card-subtitle {
   @extend %md-card-section-base;
   font-size: $md-body-font-size-base;
-  color: md-color($md-foreground, secondary-text);
 }
 
 md-card-content {

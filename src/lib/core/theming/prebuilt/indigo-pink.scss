@@ -1,0 +1,9 @@
+@import '../theming';
+@import '../palette';
+
+$primary: md-palette($md-indigo);
+$accent:  md-palette($md-pink, A200, A100, A400);
+$warn:    md-palette($md-red);
+
+$theme: md-light-theme($primary, $accent, $warn);
+

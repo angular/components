@@ -1,20 +1,8 @@
-@import 'default-theme';
-@import 'mixins';
-@import 'variables';
+@import '../core/style/variables';
+@import '../core/style/mixins';
+
 
 $md-input-floating-placeholder-scale-factor: 0.75 !default;
-
-// Placeholder colors. Required is used for the `*` star shown in the placeholder.
-$md-input-placeholder-color: md-color($md-foreground, hint-text);
-$md-input-floating-placeholder-color: md-color($md-primary);
-$md-input-required-placeholder-color: md-color($md-accent);
-
-// Underline colors.
-$md-input-underline-color: md-color($md-foreground, hint-text);
-$md-input-underline-color-accent: md-color($md-accent);
-$md-input-underline-color-warn: md-color($md-warn);
-$md-input-underline-disabled-color: md-color($md-foreground, hint-text);
-$md-input-underline-focused-color: md-color($md-primary);
 
 // Gradient for showing the dashed line when the input is disabled.
 $md-input-underline-disabled-background-image: linear-gradient(to right,
@@ -36,10 +24,6 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
   padding-bottom: 5px;
   transform: translateY(-100%) scale($md-input-floating-placeholder-scale-factor);
   width: 100% / $md-input-floating-placeholder-scale-factor;
-
-  .md-placeholder-required {
-    color: $md-input-required-placeholder-color;
-  }
 }
 
 :host {
@@ -107,7 +91,6 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
 
     font-size: 100%;
     pointer-events: none;  // We shouldn't catch mouse events (let them through).
-    color: $md-input-placeholder-color;
     z-index: 1;
 
     // Put ellipsis text overflow.
@@ -133,19 +116,6 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
     &.md-float:not(.md-empty), &.md-float.md-focused {
       @include md-input-placeholder-floating;
     }
-
-    // :focus is applied to the input, but we apply md-focused to the other elements
-    // that need to listen to it.
-    &.md-focused {
-      color: $md-input-floating-placeholder-color;
-
-      &.md-accent {
-        color: $md-input-underline-color-accent;
-      }
-      &.md-warn {
-        color: $md-input-underline-color-warn;
-      }
-    }
   }
 
   // Pseudo-class for Chrome and Safari auto-fill to move the placeholder to
@@ -164,7 +134,7 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
     height: 1px;
     width: 100%;
     margin-top: 4px;
-    border-top: 1px solid $md-input-underline-color;
+    border-top: 1px solid;
 
     &.md-disabled {
       border-top: 0;
@@ -178,7 +148,6 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
       position: absolute;
       height: 2px;
       z-index: 1;
-      background-color: $md-input-underline-focused-color;
       top: -1px;
       width: 100%;
       transform-origin: top;
@@ -186,13 +155,6 @@ $md-input-underline-disabled-background-image: linear-gradient(to right,
       transform: scaleY(0);
       transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
                   opacity $swift-ease-out-duration $swift-ease-out-timing-function;
-
-      &.md-accent {
-        background-color: $md-input-underline-color-accent;
-      }
-      &.md-warn {
-        background-color: $md-input-underline-color-warn;
-      }
 
       &.md-focused {
         opacity: 1;

@@ -1,11 +1,11 @@
-@import 'variables';
-@import 'palette';
+@import '../style/variables';
+@import '../theming/palette';
+@import '../theming/theming';
+
 
 $md-backdrop-color: md-color($md-grey, 900);
 
 // TODO(jelbourn): change from the `md` prefix to something else for everything in the toolkit.
-
-@import 'variables';
 
 /** The overlay-container is an invisible element which contains all individual overlays. */
 .md-overlay-container {

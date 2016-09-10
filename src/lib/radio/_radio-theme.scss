@@ -1,0 +1,31 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+
+@mixin md-radio-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .md-radio-outer-circle {
+    border-color: md-color($foreground, secondary-text);
+
+    .md-radio-checked & {
+      border-color: md-color($accent);
+    }
+
+    .md-radio-disabled & {
+      border-color: md-color($foreground, disabled);
+    }
+  }
+
+  .md-radio-inner-circle {
+    background-color: md-color($accent);
+
+    .md-radio-disabled & {
+      background-color: md-color($foreground, disabled);
+    }
+  }
+}

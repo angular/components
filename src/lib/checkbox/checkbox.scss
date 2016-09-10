@@ -1,7 +1,7 @@
-@import 'default-theme';
-@import 'theme-functions';
-@import 'variables';
-@import 'mixins';
+@import '../core/theming/theming';
+@import '../core/style/variables';
+@import '../core/style/mixins';
+
 
 /** The width/height of the checkbox element. */
 $md-checkbox-size: $md-toggle-size !default;
@@ -9,12 +9,6 @@ $md-checkbox-size: $md-toggle-size !default;
 $md-checkbox-mark-stroke-size: 2/15 * $md-checkbox-size !default;
 /** The width of the checkbox border shown when the checkbox is unchecked. */
 $md-checkbox-border-width: 2px;
-/** The color of the checkbox border. */
-$md-checkbox-border-color: if($md-is-dark-theme, rgba(white, 0.7), rgba(black, 0.54)) !default;
-/** The color of the checkbox's checkmark / mixedmark. */
-$md-checkbox-mark-color: md-color($md-background, background);
-/** The color that is used as the checkbox background when it is checked. */
-$md-checkbox-background-color: md-color($md-accent, 500);
 /** The base duration used for the majority of transitions for the checkbox. */
 $md-checkbox-transition-duration: 90ms;
 /** The amount of spacing between the checkbox and its label. */
@@ -258,7 +252,7 @@ md-checkbox {
   @extend %md-checkbox-outer-box;
 
   background-color: transparent;
-  border: $md-checkbox-border-width solid $md-checkbox-border-color;
+  border: $md-checkbox-border-width solid;
   transition: border-color $md-checkbox-transition-duration $md-linear-out-slow-in-timing-function;
   will-change: border-color;
 }
@@ -279,14 +273,10 @@ md-checkbox {
   @extend %md-checkbox-cover-element;
   @extend %md-checkbox-mark;
 
-  fill: $md-checkbox-mark-color;
   width: 100%;
 }
 
 .md-checkbox-checkmark-path {
-  // !important is needed here because a stroke must be set as an attribute on the SVG in order
-  // for line animation to work properly.
-  stroke: $md-checkbox-mark-color !important;
   stroke: {
     dashoffset: $_md-checkbox-mark-path-length;
     dasharray: $_md-checkbox-mark-path-length;
@@ -297,7 +287,6 @@ md-checkbox {
 .md-checkbox-mixedmark {
   @extend %md-checkbox-mark;
 
-  background-color: $md-checkbox-mark-color;
   height: floor($md-checkbox-mark-stroke-size);
   opacity: 0;
   transform: scaleX(0) rotate(0deg);
@@ -332,17 +321,9 @@ md-checkbox {
   .md-checkbox-mixedmark {
     transform: scaleX(1) rotate(-45deg);
   }
-
-  .md-checkbox-background {
-    background-color: $md-checkbox-background-color;
-  }
 }
 
 .md-checkbox-indeterminate {
-  .md-checkbox-background {
-    background-color: $md-checkbox-background-color;
-  }
-
   .md-checkbox-checkmark {
     opacity: 0;
     transform: rotate(45deg);
@@ -366,28 +347,7 @@ md-checkbox {
 }
 
 .md-checkbox-disabled {
-  // NOTE(traviskaufman): While the spec calls for translucent blacks/whites for disabled colors,
-  // this does not work well with elements layered on top of one another. To get around this we
-  // blend the colors together based on the base color and the theme background.
-  $white-30pct-opacity-on-dark-theme: #686868;
-  $black-26pct-opacity-on-light-theme: #b0b0b0;
-  $disabled-color: if(
-      $md-is-dark-theme, $white-30pct-opacity-on-dark-theme, $black-26pct-opacity-on-light-theme);
-
   cursor: default;
-
-  &.md-checkbox-checked,
-  &.md-checkbox-indeterminate {
-    .md-checkbox-background {
-      background-color: $disabled-color;
-    }
-  }
-
-  &:not(.md-checkbox-checked) {
-    .md-checkbox-frame {
-      border-color: $disabled-color;
-    }
-  }
 }
 
 .md-checkbox-anim {
