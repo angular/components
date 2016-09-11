@@ -1,84 +1,184 @@
-<div class="md-datepicker-calendar-icon" (click)="openCalendarPane($event)">
+﻿<div class="md2-datepicker-calendar-icon" (click)="openCalendarPane($event)">
   <svg width="100%" height="100%" viewBox="0 0 24 24">
     <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"></path>
   </svg>
 </div>
-<div class="md-datepicker-input-container" [class.focused]="isFocused">
-  <input class="md-datepicker-input" (focus)="setFocused(true)" (blur)="setFocused(false)">
-  <div class="md-datepicker-triangle-button" (click)="openCalendarPane($event)">
-    <div class="md-datepicker-expand-triangle"></div>
+<div class="md2-datepicker-wrapper">
+  <div class="md2-datepicker-container">
+    <div class="md2-datepicker-header"></div>
+    <div class="md2-datepicker-body">
+      <div class="md2-calendar">
+        <div class="md2-calendar-controls">
+          <div class="md2-calendar-prev-month">
+            <svg viewBox="0 0 24 24" width="100%" height="100%">
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+            </svg>
+          </div>
+          <div class="md2-calendar-month-year">
+            Sep-2015
+          </div>
+          <div class="md2-calendar-next-month">
+            <svg viewBox="0 0 24 24" width="100%" height="100%">
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="md2-calendar-weekdays">
+          <span *ngFor="let day of dayNames" class="md2-calendar-weekday">{{day}}</span>
+        </div>
+        <!--<div class="md2-calendar-month">
+          <div class="md2-calendar-week" >
+            < !--<span class="md2-calendar-not-day"></span>-- >
+            <span class="md2-calendar-day" >
+              <span style="z-index: 1;display: block;position: relative;">{{d}}</span>
+            </span>
+          </div>
+        </div>-->
+        <table class="md2-calendar-month">
+          <thead>
+            <tr>
+              <th *ngFor="let d of weekDays">{{d}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let w of dates">
+              <td *ngFor="let d of w">
+                <span class="md2-calendar-day">{{d}}</span>
+              </td>
+              <!--<td *ngFor="let d of w" [ngClass]="{'currmonth':d.cmo===CURR_MONTH&&!d.disabled, 'currday':d.currDay, 'selectedday':selectedDate.day===d.dateObj.day && selectedDate.month===d.dateObj.month && selectedDate.year===d.dateObj.year && d.cmo===CURR_MONTH, 'disabled': d.disabled}" (click)="$event.stopPropagation();!d.disabled && cellClicked(d)">
+                <div style="background-color:inherit" [ngClass]="{'prevmonth':d.cmo===PREV_MONTH,'currmonth':d.cmo===CURR_MONTH,'nextmonth':d.cmo===NEXT_MONTH,'sunday':d.dayNbr === 0 && sunHighlight}">{{d.dateObj.day}}</div>
+              </td>-->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="md2-timer">
+        <div class="md2-clock-hours">
+
+        </div>
+        <div class="md2-clock-minutes">
+
+        </div>
+      </div>
+    </div>
+    <div class="md2-datepicker-footer"></div>
+    <!--<div class="md2-timer">
+      Timer
+    </div>-->
   </div>
 </div>
-<div class="md-datepicker-calendar-pane">
-  <!--<md-calendar class="md-datepicker-calendar" aria-label="{{::ctrl.dateLocale.msgCalendar}}"
-               md-current-view="{{::ctrl.currentView}}"
-               md-min-date="ctrl.minDate"
-               md-max-date="ctrl.maxDate"
-               md-date-filter="ctrl.dateFilter"
-               ng-model="ctrl.date" ng-if="ctrl.isCalendarOpen">
-  </md-calendar>-->
-</div>
 
 
 
-
-<!--<div class="md-datepicker-block" (click)="onFieldFocus()" (blur)="onFieldBlur()" (keydown)="inputKeydown($event)" tabindex="0">-->
-<!--<div class="md-datepicker-container">
-  <div class="md-datepicker-btn"></div>
-  <div class="md-datepicker-input">
-    <span class="md-datepicker-value">{{ activeDate | date:'shortDate'}}</span>
-    <span class="md-datepicker-triangle-btn"></span>
+<div class="popover clockpicker-popover bottom clockpicker-align-left" style="display: block; top: 601.594px; left: 8px;">
+  <div class="clockpicker-plate">
+    <div class="clockpicker-canvas">
+      <svg class="clockpicker-svg" width="200" height="200"><g transform="translate(100,100)"><line x1="0" y1="0" x2="-54" y2="9.91963907309356e-15"></line><circle class="clockpicker-canvas-fg" r="3.5" cx="-54" cy="9.91963907309356e-15"></circle><circle class="clockpicker-canvas-bg" r="13" cx="-54" cy="9.91963907309356e-15"></circle><circle class="clockpicker-canvas-bearing" cx="0" cy="0" r="2"></circle></g></svg>
+    </div>
+    <div class="clockpicker-dial clockpicker-hours" style="visibility: visible;">
+      <div class="clockpicker-tick" style="left: 87px; top: 7px;">00</div><div class="clockpicker-tick" style="left: 114px; top: 40.2346px; font-size: 120%;">1</div><div class="clockpicker-tick" style="left: 133.765px; top: 60px; font-size: 120%;">2</div><div class="clockpicker-tick" style="left: 141px; top: 87px; font-size: 120%;">3</div><div class="clockpicker-tick" style="left: 133.765px; top: 114px; font-size: 120%;">4</div><div class="clockpicker-tick" style="left: 114px; top: 133.765px; font-size: 120%;">5</div><div class="clockpicker-tick" style="left: 87px; top: 141px; font-size: 120%;">6</div><div class="clockpicker-tick" style="left: 60px; top: 133.765px; font-size: 120%;">7</div><div class="clockpicker-tick" style="left: 40.2346px; top: 114px; font-size: 120%;">8</div><div class="clockpicker-tick" style="left: 33px; top: 87px; font-size: 120%;">9</div><div class="clockpicker-tick" style="left: 40.2346px; top: 60px; font-size: 120%;">10</div><div class="clockpicker-tick" style="left: 60px; top: 40.2346px; font-size: 120%;">11</div><div class="clockpicker-tick" style="left: 87px; top: 33px; font-size: 120%;">12</div><div class="clockpicker-tick" style="left: 127px; top: 17.718px;">13</div><div class="clockpicker-tick" style="left: 156.282px; top: 47px;">14</div><div class="clockpicker-tick" style="left: 167px; top: 87px;">15</div><div class="clockpicker-tick" style="left: 156.282px; top: 127px;">16</div><div class="clockpicker-tick" style="left: 127px; top: 156.282px;">17</div><div class="clockpicker-tick" style="left: 87px; top: 167px;">18</div><div class="clockpicker-tick" style="left: 47px; top: 156.282px;">19</div><div class="clockpicker-tick" style="left: 17.718px; top: 127px;">20</div><div class="clockpicker-tick" style="left: 7px; top: 87px;">21</div><div class="clockpicker-tick" style="left: 17.718px; top: 47px;">22</div><div class="clockpicker-tick" style="left: 47px; top: 17.718px;">23</div>
+    </div>
+    <div class="clockpicker-dial clockpicker-minutes clockpicker-dial-out" style="visibility: hidden;">
+      <div class="clockpicker-tick" style="left: 87px; top: 7px; font-size: 120%;">00</div><div class="clockpicker-tick" style="left: 127px; top: 17.718px; font-size: 120%;">05</div><div class="clockpicker-tick" style="left: 156.282px; top: 47px; font-size: 120%;">10</div><div class="clockpicker-tick" style="left: 167px; top: 87px; font-size: 120%;">15</div><div class="clockpicker-tick" style="left: 156.282px; top: 127px; font-size: 120%;">20</div><div class="clockpicker-tick" style="left: 127px; top: 156.282px; font-size: 120%;">25</div><div class="clockpicker-tick" style="left: 87px; top: 167px; font-size: 120%;">30</div><div class="clockpicker-tick" style="left: 47px; top: 156.282px; font-size: 120%;">35</div><div class="clockpicker-tick" style="left: 17.718px; top: 127px; font-size: 120%;">40</div><div class="clockpicker-tick" style="left: 7px; top: 87px; font-size: 120%;">45</div><div class="clockpicker-tick" style="left: 17.718px; top: 47px; font-size: 120%;">50</div><div class="clockpicker-tick" style="left: 47px; top: 17.718px; font-size: 120%;">55</div>
+    </div>
   </div>
 </div>
-<div class="md-datepicker" *ngIf="isDatepickerVisible">
-  <datepicker-inner [activeDate]="activeDate"
-                    (update)="onUpdate($event)"
-                    [initDate]="initDate"
-                    [minDate]="minDate"
-                    [maxDate]="maxDate"
-                    [showWeeks]="showWeeks"
-                    [dateDisabled]="dateDisabled"
-                    [onlyCurrentMonth]="onlyCurrentMonth">
-    <daypicker></daypicker>
-  </datepicker-inner>
+
+
+<!--<div style="color: rgba(0, 0, 0, 0.870588); width: 310px; -webkit-user-select: none;">
+  <div style="width: 100%; height: auto; float: none; font-weight: 700; display: inline-block; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-left-radius: 0px; color: rgb(255, 255, 255); padding: 20px; box-sizing: border-box; background-color: rgb(0, 151, 167);">
+    <div style="position: relative; overflow: hidden; height: 16px; margin: 0px 0px 10px; font-size: 16px; font-weight: 500; line-height: 16px; opacity: 0.7; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+      <div direction="down" style="position: absolute; height: 100%; width: 100%; top: 0px; left: 0px; transition: transform 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms, opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+        <div style="cursor: pointer;">2115</div>
+      </div>
+    </div>
+    <div style="position: relative; overflow: hidden; height: 38px; display: block; font-size: 36px; line-height: 36px; opacity: 1; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; width: 100%; font-weight: 500;">
+      <div direction="down" style="position: absolute; height: 100%; width: 100%; top: 0px; left: 0px; transition: transform 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms, opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; opacity: 1; transform: translate(0px, 0px);">
+        <div style="cursor: default; width: 100%; display: block;">Thu, Sep 5</div>
+      </div>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: column;">
+    <div style="display: flex; align-content: space-between; justify-content: space-between; flex-direction: column; font-size: 12px; font-weight: 400; padding: 0px 8px; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+      <div style="display: flex; justify-content: space-between; height: 48px; background-color: inherit;">
+        <button tabindex="0" type="button" style="border: 10px; box-sizing: border-box; display: inline-block; font-family: Roboto, sans-serif; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); cursor: pointer; text-decoration: none; margin: 0px; padding: 12px; outline: none; font-size: 0px; font-weight: inherit; transform: translate(0px, 0px); position: relative; overflow: visible; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; width: 48px; height: 48px; background: none;">
+          <div>
+            <svg viewBox="0 0 24 24" style="display: inline-block; color: rgba(0, 0, 0, 0.870588); fill: currentcolor; height: 24px; width: 24px; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; -webkit-user-select: none;">
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+            </svg>
+          </div>
+        </button>
+        <div style="position: relative; overflow: hidden; height: 100%; font-size: 14px; font-weight: 500; text-align: center; width: 100%;">
+          <div direction="right" style="position: absolute; height: 100%; width: 100%; top: 0px; left: 0px; transition: transform 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms, opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+            <div style="height: inherit; padding-top: 12px;">September 2115</div>
+          </div>
+        </div>
+        <button tabindex="0" type="button" style="border: 10px; box-sizing: border-box; display: inline-block; font-family: Roboto, sans-serif; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); cursor: pointer; text-decoration: none; margin: 0px; padding: 12px; outline: none; font-size: 0px; font-weight: inherit; transform: translate(0px, 0px); position: relative; overflow: visible; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; width: 48px; height: 48px; background: none;">
+          <div>
+            <svg viewBox="0 0 24 24" style="display: inline-block; color: rgba(0, 0, 0, 0.870588); fill: currentcolor; height: 24px; width: 24px; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; -webkit-user-select: none;">
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+            </svg>
+          </div>
+        </button>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: row; justify-content: flex-end; margin: 0px; max-height: 48px; padding: 0px;">
+      <button tabindex="0" type="button" style="border: 10px; box-sizing: border-box; display: inline-block; font-family: Roboto, sans-serif; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); cursor: pointer; text-decoration: none; margin: 4px 8px 8px 0px; padding: 0px; outline: none; font-size: inherit; font-weight: inherit; transform: translate(0px, 0px); height: 36px; line-height: 36px; min-width: 64px; color: rgb(0, 188, 212); transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; border-radius: 2px; position: relative; overflow: hidden; text-align: center; max-height: 36px; -webkit-user-select: none; background-color: rgba(0, 0, 0, 0);"><div><span style="position: relative; padding-left: 16px; padding-right: 16px; vertical-align: middle; letter-spacing: 0px; text-transform: uppercase; font-weight: 500; font-size: 14px;">Cancel</span></div></button><button tabindex="0" type="button" style="border: 10px; box-sizing: border-box; display: inline-block; font-family: Roboto, sans-serif; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); cursor: pointer; text-decoration: none; margin: 4px 8px 8px 0px; padding: 0px; outline: none; font-size: inherit; font-weight: inherit; transform: translate(0px, 0px); height: 36px; line-height: 36px; min-width: 64px; color: rgb(0, 188, 212); transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; border-radius: 2px; position: relative; overflow: hidden; text-align: center; max-height: 36px; -webkit-user-select: none; background-color: rgba(0, 0, 0, 0);"><div><span style="position: relative; padding-left: 16px; padding-right: 16px; vertical-align: middle; letter-spacing: 0px; text-transform: uppercase; font-weight: 500; font-size: 14px;">OK</span></div></button>
+    </div>
+  </div>
 </div>-->
-<!--<input type="text"
-       class="ng-datepicker-input"
-       (focus)="openDatepicker()"
-       [value]="viewValue"
-       [hidden]="isStatic"
-       readonly>
-<div class="ng-datepicker" *ngIf="isStatic || isOpened" [ngClass]="{ static: isStatic }">
-  <div class="controls">
-    <div class="left">
-      <i class="ion-arrow-left-b prev-year-btn" (click)="prevYear()"></i>
-      <i class="ion-arrow-left-a prev-month-btn" (click)="prevMonth()"></i>
-    </div>
-    <span class="date">
-      {{ dateValue }}
-    </span>
-    <div class="right">
-      <i class="ion-arrow-right-a next-month-btn" (click)="nextMonth()"></i>
-      <i class="ion-arrow-right-b next-year-btn" (click)="nextYear()"></i>
-    </div>
+<!--<div class="md2-datepicker-input-container" [class.focused]="isFocused">
+  <input class="md2-datepicker-input" (focus)="setFocused(true)" (blur)="setFocused(false)">
+  <div class="md2-datepicker-input"></div>
+  <div class="md2-datepicker-triangle-button" (click)="openCalendarPane($event)">
+    <div class="md2-datepicker-expand-triangle"></div>
   </div>
-  <div class="day-names">
-    <span *ngFor="let dn of dayNames">
-      <span>{{ dn }}</span>
-    </span>
-  </div>
-  <div class="calendar">
-    <span *ngFor="let d of days; let i = index">
-      <span class="day" [ngClass]="{'disabled': !d.enabled, 'selected': isSelected(d)}" (click)="selectDate($event, d)">
-        {{ d.day }}
+</div>-->
+<!--<div class="md2-datepicker-calendar-pane">
+  <div class="mydp" [ngStyle]="{'height': height, 'width': width, 'border': inline ? 'none' : '1px solid #AAA'}">
+    <div class="selectiongroup" *ngIf="!inline">
+      <span class="selection" [ngStyle]="{'height': height, 'line-height': height}" (click)="openBtnClicked()">{{selectionDayTxt}}</span>
+      <span class="selbtngroup" [style.height]="height">
+        <button type="button" class="btnclear" *ngIf="selectionDayTxt.length>0" (click)="removeBtnClicked()"><span class="icon icon-cross"></span></button>
+        <button type="button" class="btnpicker" (click)="openBtnClicked()"><span class="icon icon-calendar"></span></button>
       </span>
-    </span>
+    </div>
+    <div class="selector" *ngIf="showSelector||inline" [ngClass]="{'inlinedp': inline}">
+      <table class="header">
+        <tr>
+          <td>
+            <div style="float:left">
+              <div class="headerbtn" (click)="prevMonth()"><span class="icon icon-left"></span></div>
+              <div class="headermonthtxt"><span>{{visibleMonth.monthTxt}}</span></div>
+              <div class="headerbtn" (click)="nextMonth()"><span class="icon icon-right"></span></div>
+            </div>
+          </td>
+          <td>
+            <button type="button" class="headertodaybtn" (click)="todayClicked()">{{todayBtnTxt}}</button>
+          </td>
+          <td>
+            <div style="float:right">
+              <div class="headerbtn" (click)="prevYear()"><span class="icon icon-left"></span></div>
+              <div class="headeryeartxt"><span>{{visibleMonth.year}}</span></div>
+              <div class="headerbtn" (click)="nextYear()"><span class="icon icon-right"></span></div>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <table class="caltable">
+        <thead><tr><th *ngFor="let d of weekDays">{{d}}</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let w of dates">
+            <td *ngFor="let d of w" [ngClass]="{'currmonth':d.cmo===CURR_MONTH&&!d.disabled, 'currday':d.currDay, 'selectedday':selectedDate.day===d.dateObj.day && selectedDate.month===d.dateObj.month && selectedDate.year===d.dateObj.year && d.cmo===CURR_MONTH, 'disabled': d.disabled}" (click)="$event.stopPropagation();!d.disabled && cellClicked(d)">
+              <div style="background-color:inherit" [ngClass]="{'prevmonth':d.cmo===PREV_MONTH,'currmonth':d.cmo===CURR_MONTH,'nextmonth':d.cmo===NEXT_MONTH,'sunday':d.dayNbr === 0 && sunHighlight}">{{d.dateObj.day}}</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>-->
-<!--<md-calendar-month></md-calendar-month>-->
-
-
-<input [(ngModel)]="value"
+<!--<input [(ngModel)]="value"
        [type]="type"
        [disabled]="disabled"
        [readonly]="readonly"
@@ -87,11 +187,8 @@
        [min]="min"
        [max]="max"
        [placeholder]="placeholder"
-       [tabindex]="tabindex" />
-
-
-
-@Input() type: 'date' | 'time' | 'datetime' | 'month' = 'date';
+       [tabindex]="tabindex" />-->
+<!--@Input() type: 'date' | 'time' | 'datetime' | 'month' = 'date';
   @Input() disabled: boolean;
   @Input() readonly: boolean;
   @Input() required: boolean;
@@ -101,4 +198,15 @@
   @Input() max: number;
   @Input() placeholder: string;
   @Input() format: string;
-  @Input() tabindex: number = 0;
+  @Input() tabindex: number = 0;-->
+<!--`<input [(ngModel)]="value"
+        [type]="type"
+        [disabled]="disabled"
+        [readonly]="readonly"
+        [name]="name"
+        [id]="id"
+        [min]="min"
+        [max]="max"
+        [placeholder]="placeholder"
+        [tabindex]="tabindex" />
+  `-->
