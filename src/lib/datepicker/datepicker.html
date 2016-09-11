@@ -52,12 +52,22 @@
           </tbody>
         </table>
       </div>
-      <div class="md2-timer">
+      <div class="md2-clock">
+        <div class="md2-clock-hand">
+          <svg class="md2-clock-svg" width="200" height="200">
+            <g transform="translate(100,100)">
+              <circle class="md2-clock-bg" r="13" cx="64.7213595499958" cy="47.02282018339784"></circle>
+              <circle class="md2-clock-fg" r="3.5" cx="64.7213595499958" cy="47.02282018339784"></circle>
+              <line x1="0" y1="0" x2="64.7213595499958" y2="47.02282018339784"></line>
+              <circle class="md2-clock-bearing" cx="0" cy="0" r="2"></circle>
+            </g>
+          </svg>
+        </div>
         <div class="md2-clock-hours">
-
+          <div *ngFor="let h of hours" class="md2-clock-hour">{{h}}</div>
         </div>
         <div class="md2-clock-minutes">
-
+          <div class="md2-clock-minute"></div>
         </div>
       </div>
     </div>
