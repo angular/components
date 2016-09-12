@@ -15,7 +15,6 @@ $md-tab-bar-height: 48px !default;
   position: relative;
   display: flex;
   flex-direction: row;
-  border-bottom: 1px solid md-color($md-background, status-bar);
   flex-shrink: 0;
 }
 
@@ -36,7 +35,6 @@ $md-tab-bar-height: 48px !default;
   &:focus {
     outline: none;
     opacity: 1;
-    background-color: md-color($md-primary, 100, 0.3);
   }
 }
 
@@ -70,6 +68,5 @@ md-ink-bar {
   position: absolute;
   bottom: 0;
   height: 2px;
-  background-color: md-color($md-primary, 500);
   transition: 350ms ease-out;
 }

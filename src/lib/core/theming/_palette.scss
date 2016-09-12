@@ -1,11 +1,10 @@
-/**
- * Color palettes from the Material Design spec.
- * See https://www.google.com/design/spec/style/color.html
- *
- * Contrast colors are hard-coded because it is too difficult (probably impossible) to
- * calculate them. These contrast colors are pulled from the public Material Design spec swatches.
- * While the contrast colors in the spec are not perscriptive, we use them for convenience.
- */
+// Color palettes from the Material Design spec.
+// See https://www.google.com/design/spec/style/color.html
+//
+// Contrast colors are hard-coded because it is too difficult (probably impossible) to
+// calculate them. These contrast colors are pulled from the public Material Design spec swatches.
+// While the contrast colors in the spec are not perscriptive, we use them for convenience.
+
 
 $black-87-opacity: rgba(black, 0.87);
 $white-87-opacity: rgba(white, 0.87);

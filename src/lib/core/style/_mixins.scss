@@ -1,8 +1,5 @@
-
-/**
- * Mixin that creates a new stacking context.
- * see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
- */
+// Mixin that creates a new stacking context.
+// see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
 @mixin md-stacking-context() {
   position: relative;
 
@@ -10,10 +7,8 @@
   transform: translate3d(0, 0, 0);
 }
 
-/**
- * This mixin hides an element visually.
- * That means it's still accessible for screen-readers but not visible in view.
- */
+// This mixin hides an element visually.
+// That means it's still accessible for screen-readers but not visible in view.
 @mixin md-visually-hidden {
   border: 0;
   clip: rect(0 0 0 0);
@@ -26,10 +21,8 @@
   width: 1px;
 }
 
-/**
- * Forces an element to grow to fit floated contents; used as as an alternative to
- * `overflow: hidden;` because it doesn't cut off contents.
- */
+// Forces an element to grow to fit floated contents; used as as an alternative to
+// `overflow: hidden;` because it doesn't cut off contents.
 @mixin md-clearfix {
   &::before, &::after {
     content: '';
@@ -38,14 +31,12 @@
   }
 }
 
-/**
- * A mixin, which generates temporary ink ripple on a given component.
- * When $bindToParent is set to true, it will check for the focused class on the same selector as you included
- * that mixin.
- * It is also possible to specify the color palette of the temporary ripple. By default it uses the
- * accent palette for its background.
- */
-@mixin md-temporary-ink-ripple($component, $bindToParent: false, $palette: $md-accent) {
+// A mixin, which generates temporary ink ripple on a given component.
+// When $bindToParent is set to true, it will check for the focused class on the same selector as you included
+// that mixin.
+// It is also possible to specify the color palette of the temporary ripple. By default it uses the
+// accent palette for its background.
+@mixin md-temporary-ink-ripple($component, $bindToParent: false) {
   // TODO(mtlin): Replace when ink ripple component is implemented.
   // A placeholder ink ripple, shown when keyboard focused.
   .md-ink-ripple {
@@ -65,7 +56,6 @@
   // Fade in when radio focused.
   #{if($bindToParent, '&', '')}.md-#{$component}-focused .md-ink-ripple {
     opacity: 1;
-    background-color: md-color($palette, 0.26);
   }
 
   // TODO(mtlin): This corresponds to disabled focus state, but it's unclear how to enter into

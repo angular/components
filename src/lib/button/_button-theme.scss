@@ -1,6 +1,51 @@
 @import '../core/theming/theming';
 
 
+/** Applies a focus style to an md-button element for each of the supported palettes. */
+@mixin _md-button-focus-color($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+
+  &.md-primary::after {
+    background-color: md-color($primary, 0.12);
+  }
+
+  &.md-accent::after {
+    background-color: md-color($accent, 0.12);
+  }
+
+  &.md-warn::after {
+    background-color: md-color($warn, 0.12);
+  }
+}
+
+/** Applies a property to an md-button element for each of the supported palettes. */
+@mixin _md-button-theme-color($theme, $property, $color: 'default') {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  &.md-primary {
+    #{$property}: md-color($primary, $color);
+  }
+  &.md-accent {
+    #{$property}: md-color($accent, $color);
+  }
+  &.md-warn {
+    #{$property}: md-color($warn, $color);
+  }
+
+  &.md-primary, &.md-accent, &.md-warn, &[disabled] {
+    &[disabled] {
+      $palette: if($property == 'color', $foreground, $background);
+      #{$property}: md-color($palette, disabled-button);
+    }
+  }
+}
+
 @mixin md-button-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
@@ -8,61 +53,25 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  /** Applies a focus style to an md-button element for each of the supported palettes. */
-  @mixin button-focus-color() {
-    &.md-primary::after {
-      background-color: md-color($primary, 0.12);
-    }
-
-    &.md-accent::after {
-      background-color: md-color($accent, 0.12);
-    }
-
-    &.md-warn::after {
-      background-color: md-color($warn, 0.12);
-    }
-  }
-
-  /** Applies a property to an md-button element for each of the supported palettes. */
-  @mixin button-theme-color($property, $color: 'default', $opacity: 1) {
-    &.md-primary {
-      #{$property}: md-color($primary, $color, $opacity);
-    }
-    &.md-accent {
-      #{$property}: md-color($accent, $color, $opacity);
-    }
-    &.md-warn {
-      #{$property}: md-color($warn, $color, $opacity);
-    }
-
-    &.md-primary, &.md-accent, &.md-warn, &[disabled] {
-      &[disabled] {
-        $palette: if($property == 'color', $foreground, $background);
-        #{$property}: md-color($palette, disabled-button);
-      }
-    }
-  }
-
-
   [md-button], [md-icon-button], [md-raised-button], [md-fab], [md-mini-fab] {
     &.md-button-focus {
-      @include md-button-focus-color();
+      @include _md-button-focus-color($theme);
     }
   }
 
   [md-button], [md-icon-button] {
-    @include button-theme-color('color');
+    @include _md-button-theme-color($theme, 'color');
 
     // Only flat buttons and icon buttons (not raised or fabs) have a hover style.
     // Use the same visual treatment for hover as for focus.
     &:hover {
-      @include md-button-focus-color();
+      @include _md-button-focus-color($theme);
     }
   }
 
   [md-raised-button], [md-fab], [md-mini-fab] {
-    @include button-theme-color('color', default-contrast);
-    @include button-theme-color('background-color');
+    @include _md-button-theme-color($theme, 'color', default-contrast);
+    @include _md-button-theme-color($theme, 'background-color');
     background-color: md-color($background, background);
   }
 

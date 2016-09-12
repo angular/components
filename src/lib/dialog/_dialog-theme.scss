@@ -6,6 +6,6 @@
   $background: map-get($theme, background);
 
   md-dialog-container {
-    background: md-color($md-background, dialog);
+    background: md-color($background, dialog);
   }
 }

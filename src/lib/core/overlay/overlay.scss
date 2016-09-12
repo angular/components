@@ -7,7 +7,7 @@ $md-backdrop-color: md-color($md-grey, 900);
 
 // TODO(jelbourn): change from the `md` prefix to something else for everything in the toolkit.
 
-/** The overlay-container is an invisible element which contains all individual overlays. */
+// The overlay-container is an invisible element which contains all individual overlays.
 .md-overlay-container {
   position: absolute;
 
@@ -22,7 +22,7 @@ $md-backdrop-color: md-color($md-grey, 900);
   z-index: $md-z-index-overlay-container;
 }
 
-/** A single overlay pane. */
+// A single overlay pane.
 .md-overlay-pane {
   position: absolute;
   pointer-events: auto;
