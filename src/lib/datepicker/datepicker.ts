@@ -8,7 +8,7 @@ import {
   ViewEncapsulation,
   NgModule,
   //OnChanges,
-  //ElementRef,
+  ElementRef,
   //SimpleChanges
 } from '@angular/core';
 import {
@@ -18,50 +18,50 @@ import {
 } from '@angular/forms';
 import {CommonModule} from '@angular/common';
 //import {Md2Calendar} from './calendar';
-//import {LocaleService} from './dateLocaleProvider';
+import {LocaleService} from './dateLocaleProvider';
+import {MdDateUtil} from './dateUtil';
 
 
-//export interface IMyMonthLabels {
-//  [month: number]: string;
-//}
-//export interface IMyOptions {
-//  dayLabels?: IMyDayLabels;
-//  monthLabels?: IMyMonthLabels;
-//  dateFormat?: string;
-//  firstDayOfWeek?: string;
-//  sunHighlight?: boolean;
-//  disabledUntil?: IMyDate;
-//  disabledSince?: IMyDate;
-//  disableWeekends?: boolean;
-//  height?: string;
-//  width?: string;
-//  inline?: boolean;
-//}
+export interface IMyMonthLabels {
+  [month: number]: string;
+}
+export interface IMyOptions {
+  dayLabels?: IMyDayLabels;
+  monthLabels?: IMyMonthLabels;
+  dateFormat?: string;
+  firstDayOfWeek?: string;
+  sunHighlight?: boolean;
+  disabledUntil?: IMyDate;
+  disabledSince?: IMyDate;
+  disableWeekends?: boolean;
+}
 
-//export interface IMyLocales {
-//  [lang: string]: IMyOptions;
-//}
+export interface IMyLocales {
+  [lang: string]: IMyOptions;
+}
 
-//export interface IMyDayLabels {
-//  [day: string]: string;
-//}export interface IMyDate {
-//  year: number;
-//  month: number;
-//  day: number;
-//}
+export interface IMyDayLabels {
+  [day: string]: string;
+}
 
-//export interface IMyWeek {
-//  dateObj: IMyDate;
-//  cmo: number;
-//  currDay: boolean;
-//  dayNbr: number;
-//  disabled: boolean;
-//}
-//export interface IMyMonth {
-//  monthTxt: string;
-//  monthNbr: number;
-//  year: number;
-//}
+export interface IMyDate {
+  year: number;
+  month: number;
+  day: number;
+}
+
+export interface IMyWeek {
+  dateObj: IMyDate;
+  cmo: number;
+  currDay: boolean;
+  dayNbr: number;
+  disabled: boolean;
+}
+export interface IMyMonth {
+  monthTxt: string;
+  monthNbr: number;
+  year: number;
+}
 
 const noop = () => { };
 
@@ -90,27 +90,61 @@ export const MD2_DATEPICKER_CONTROL_VALUE_ACCESSOR: any = {
 })
 export class Md2Datepicker implements ControlValueAccessor {
 
-  //constructor() { }
+  constructor(private dateUtil: MdDateUtil, private localeService: LocaleService) {
+    this.buildCalendarForMonth(new Date());
+  }
+
+
+  //constructor(public elem: ElementRef, ) {
+  //  let defaultOptions = this.localeService.getLocaleOptions('en');
+  //  for (let propname in defaultOptions) {
+  //    if (defaultOptions.hasOwnProperty(propname)) {
+  //      (<any>this)[propname] = (<any>defaultOptions)[propname];
+  //    }
+  //  }
+
+  //  
+  //  let doc = document.getElementsByTagName('html')[0];
+  //  doc.addEventListener('click', (event) => {
+  //    if (this.showSelector && event.target && this.elem.nativeElement !== event.target && !this.elem.nativeElement.contains(event.target)) {
+  //      this.showSelector = false;
+  //    }
+  //  }, false);
+  //}
 
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
 
   private _value: any = '';
-  private _isinitialized: boolean = false;
-  private _ontouchedcallback: () => void = noop;
-  private _onchangecallback: (_: any) => void = noop;
+  private _isInitialized: boolean = false;
+  private _onTouchedCallback: () => void = noop;
+  private _onChangeCallback: (_: any) => void = noop;
 
-  private isFocused: boolean;
+
+  private isDatepickerVisible: boolean;
+  private isCalendarVisible: boolean;
   private weekDays: Array<string> = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  private monthNames: Array<string> = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  private dates: Array<Object> = [[1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11, 12, 13, 14], [15, 16, 17, 18, 19, 20, 21], [22, 23, 24, 25, 26, 27, 28], [29, 30]];
-  private hours: Array<string> = ['00', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
-  private minutes: Array<string> = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
+  //private months: Array<string> = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  //private currentMonth;
+  //private dates: Array<Object> = [[1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11, 12, 13, 14], [15, 16, 17, 18, 19, 20, 21], [22, 23, 24, 25, 26, 27, 28], [29, 30]];
+  //private hours: Array<Object> = [
+  //  {
+  //    hour: '00',
+  //    top: '0px',
+  //    left: '0px'
+  //  }, , '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
+  //private minutes: Array<string> = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
   //private weeks = [];
+
+  private selected: Object = { day: '', month: '', year: '', hour: '', minute: '' };
+  private today: Date = new Date();
+  private date: Date = null;
+  private displayDate: Date = null;
+
 
   @Input() type: 'date' | 'time' | 'datetime' | 'month' = 'date';
   @Input() disabled: boolean;
-  @Input() readonly: boolean;
-  @Input() required: boolean;
+  //@Input() readonly: boolean;
+  //@Input() required: boolean;
   @Input() name: string = '';
   @Input() id: string = 'md2-datepicker-' + (++nextId);
   @Input() min: number;
@@ -127,49 +161,99 @@ export class Md2Datepicker implements ControlValueAccessor {
     }
   }
 
-  @HostListener('click', ['$event'])
-  private onClick(event: MouseEvent) {
-    if (this.disabled) {
-      event.stopPropagation();
-      event.preventDefault();
-      return;
-    }
-  }
+  //@HostListener('click', ['$event'])
+  //private onClick(event: MouseEvent) {
+  //  if (this.disabled) {
+  //    event.stopPropagation();
+  //    event.preventDefault();
+  //    return;
+  //  }
+  //}
 
   @HostListener('keydown', ['$event'])
   private onKeyDown(event: KeyboardEvent) {
     // check enabled
     if (this.disabled) { return; }
 
-    //// Tab Key
-    //if (event.keyCode === 9) {
-    //  if (this.isMenuVisible) {
-    //    this.onBlur();
-    //    event.preventDefault();
-    //  }
-    //  return;
-    //}
+    // Tab Key
+    if (event.keyCode === 9) {
+      if (this.isDatepickerVisible) {
+        this.onBlur();
+        event.preventDefault();
+      }
+      return;
+    }
 
-    //// Escape Key
-    //if (event.keyCode === 27) {
-    //  this.onBlur();
-    //  event.stopPropagation();
-    //  event.preventDefault();
-    //  return;
-    //}
+    // Escape Key
+    if (event.keyCode === 27) {
+      this.onBlur();
+      event.stopPropagation();
+      event.preventDefault();
+      return;
+    }
 
-    //// Down Arrow
-    //if (event.keyCode === 40) {
-    //  if (this.isMenuVisible) {
-    //    this.focusedOption = (this.focusedOption === this.list.length - 1) ? 0 : Math.min(this.focusedOption + 1, this.list.length - 1);
-    //    this.updateScroll();
+
+    //case keyCode.ENTER: return 'select';
+
+    //  case keyCode.RIGHT_ARROW: return 'move-right';
+    //  case keyCode.LEFT_ARROW: return 'move-left';
+
+    //  // TODO(crisbeto): Might want to reconsider using metaKey, because it maps
+    //  // to the "Windows" key on PC, which opens the start menu or resizes the browser.
+    //  case keyCode.DOWN_ARROW: return event.metaKey ? 'move-page-down' : 'move-row-down';
+    //  case keyCode.UP_ARROW: return event.metaKey ? 'move-page-up' : 'move-row-up';
+
+    //  case keyCode.PAGE_DOWN: return 'move-page-down';
+    //  case keyCode.PAGE_UP: return 'move-page-up';
+
+    //  case keyCode.HOME: return 'start';
+    //  case keyCode.END: return 'end';
+
+    //  default: return null;
+
+    //handleKeyEvent = function (event, action) {
+    //  var calendarCtrl = this.calendarCtrl;
+    //  var displayDate = calendarCtrl.displayDate;
+
+    //  if (action === 'select') {
+    //    calendarCtrl.setNgModelValue(displayDate);
     //  } else {
-    //    this.updateOptions();
+    //    var date = null;
+    //    var dateUtil = this.dateUtil;
+
+    //    switch (action) {
+    //      case 'move-right': date = dateUtil.incrementDays(displayDate, 1); break;
+    //      case 'move-left': date = dateUtil.incrementDays(displayDate, -1); break;
+
+    //      case 'move-page-down': date = dateUtil.incrementMonths(displayDate, 1); break;
+    //      case 'move-page-up': date = dateUtil.incrementMonths(displayDate, -1); break;
+
+    //      case 'move-row-down': date = dateUtil.incrementDays(displayDate, 7); break;
+    //      case 'move-row-up': date = dateUtil.incrementDays(displayDate, -7); break;
+
+    //      case 'start': date = dateUtil.getFirstDateOfMonth(displayDate); break;
+    //      case 'end': date = dateUtil.getLastDateOfMonth(displayDate); break;
+    //    }
+
+    //    if (date) {
+    //      date = this.dateUtil.clampDate(date, calendarCtrl.minDate, calendarCtrl.maxDate);
+
+    //      this.changeDisplayDate(date).then(function () {
+    //        calendarCtrl.focus(date);
+    //      });
+    //    }
     //  }
-    //  event.stopPropagation();
-    //  event.preventDefault();
-    //  return;
-    //}
+    //};
+
+    // Down Arrow
+    if (event.keyCode === 40) {
+      if (this.isDatepickerVisible && this.isCalendarVisible) {
+
+      }
+      event.stopPropagation();
+      event.preventDefault();
+      return;
+    }
 
     //// Up Arrow
     //if (event.keyCode === 38) {
@@ -199,93 +283,294 @@ export class Md2Datepicker implements ControlValueAccessor {
   /**
    * on focus current component
    */
-  private onFocus() {
-    this.isFocused = true;
-  }
-
-  @HostListener('blur')
-  private onBlur() { this.isFocused = false; }
-
-  get isDatepickerVisible(): boolean {
-    return this.isFocused ? true : false;
-  }
-
-  //get isTimepickerVisible(): boolean {
-  //  return this.isFocused ? true : false;
+  //private onFocus() {
+  //  this.isDatepickerVisible = true;
   //}
 
-  private opencalendarpane(event: Event) { }
-  private setfocused(value: boolean) { }
+  @HostListener('blur')
+  private onBlur() { this.isDatepickerVisible = false; }
+
+  //get isTimepickerVisible(): boolean {
+  //  return this.isDatepickerVisible ? true : false;
+  //}
+
+  private openCalendar(event: Event) {
+
+  }
+
+  /**
+   * Builds a `tr` element for the calendar grid.
+   * @param rowNumber The week number within the month.
+   * @returns {HTMLElement}
+   */
+  //private buildDateRow(rowNumber: number) {
+  //  var row = document.createElement('tr');
+  //  row.setAttribute('role', 'row');
+
+  //  // Because of an NVDA bug (with Firefox), the row needs an aria-label in order
+  //  // to prevent the entire row being read aloud when the user moves between rows.
+  //  // See http://community.nvda-project.org/ticket/4643.
+  //  row.setAttribute('aria-label', this.dateLocale.weekNumberFormatter(rowNumber));
+
+  //  return row;
+  //};
+
+  //private buildCalendarForMonth(opt_dateInMonth: Date) {
+
+  //  var date = this.isValidDate(opt_dateInMonth) ? opt_dateInMonth : new Date();
+
+
+  //  var firstDayOfMonth = this.getFirstDateOfMonth(date);
+  //  var firstDayOfTheWeek = this.getLocaleDay_(firstDayOfMonth);
+  //  var numberOfDaysInMonth = this.getNumberOfDaysInMonth(date);
+
+  //  // Store rows for the month in a document fragment so that we can append them all at once.
+  //  var monthBody = document.createDocumentFragment();
+
+  //  var rowNumber = 1;
+  //  var row = this.buildDateRow(rowNumber);
+  //  monthBody.appendChild(row);
+
+  //  // If this is the final month in the list of items, only the first week should render,
+  //  // so we should return immediately after the first row is complete and has been
+  //  // attached to the body.
+  //  var isFinalMonth = this.offset === this.monthCtrl.items.length - 1;
+
+  //  // Add a label for the month. If the month starts on a Sun/Mon/Tues, the month label
+  //  // goes on a row above the first of the month. Otherwise, the month label takes up the first
+  //  // two cells of the first row.
+  //  var blankCellOffset = 0;
+  //  var monthLabelCell = document.createElement('td');
+  //  var monthLabelCellContent = document.createElement('span');
+
+  //  monthLabelCellContent.textContent = this.dateLocale.monthHeaderFormatter(date);
+  //  monthLabelCell.appendChild(monthLabelCellContent);
+  //  monthLabelCell.classList.add('md-calendar-month-label');
+  //  // If the entire month is after the max date, render the label as a disabled state.
+  //  if (this.max && firstDayOfMonth > this.max) {
+  //    monthLabelCell.classList.add('md-calendar-month-label-disabled');
+  //  } else {
+  //    monthLabelCell.addEventListener('click', this.monthCtrl.headerClickHandler);
+  //    monthLabelCell.setAttribute('data-timestamp', firstDayOfMonth.getTime());
+  //    monthLabelCell.setAttribute('aria-label', this.dateLocale.monthFormatter(date));
+  //    monthLabelCell.appendChild(this.arrowIcon.cloneNode(true));
+  //  }
+
+  //  if (firstDayOfTheWeek <= 2) {
+  //    monthLabelCell.setAttribute('colspan', '7');
+
+  //    var monthLabelRow = this.buildDateRow();
+  //    monthLabelRow.appendChild(monthLabelCell);
+  //    monthBody.insertBefore(monthLabelRow, row);
+
+  //    if (isFinalMonth) {
+  //      return monthBody;
+  //    }
+  //  } else {
+  //    blankCellOffset = 3;
+  //    monthLabelCell.setAttribute('colspan', '3');
+  //    row.appendChild(monthLabelCell);
+  //  }
+
+  //  // Add a blank cell for each day of the week that occurs before the first of the month.
+  //  // For example, if the first day of the month is a Tuesday, add blank cells for Sun and Mon.
+  //  // The blankCellOffset is needed in cases where the first N cells are used by the month label.
+  //  for (var i = blankCellOffset; i < firstDayOfTheWeek; i++) {
+  //    row.appendChild(this.buildDateCell());
+  //  }
+
+  //  // Add a cell for each day of the month, keeping track of the day of the week so that
+  //  // we know when to start a new row.
+  //  var dayOfWeek = firstDayOfTheWeek;
+  //  var iterationDate = firstDayOfMonth;
+  //  for (var d = 1; d <= numberOfDaysInMonth; d++) {
+  //    // If we've reached the end of the week, start a new row.
+  //    if (dayOfWeek === 7) {
+  //      // We've finished the first row, so we're done if this is the final month.
+  //      if (isFinalMonth) {
+  //        return monthBody;
+  //      }
+  //      dayOfWeek = 0;
+  //      rowNumber++;
+  //      row = this.buildDateRow(rowNumber);
+  //      monthBody.appendChild(row);
+  //    }
+
+  //    iterationDate.setDate(d);
+  //    var cell = this.buildDateCell(iterationDate);
+  //    row.appendChild(cell);
+
+  //    dayOfWeek++;
+  //  }
+
+  //  // Ensure that the last row of the month has 7 cells.
+  //  while (row.childNodes.length < 7) {
+  //    row.appendChild(this.buildDateCell());
+  //  }
+
+  //  // Ensure that all months have 6 rows. This is necessary for now because the virtual-repeat
+  //  // requires that all items have exactly the same height.
+  //  while (monthBody.childNodes.length < 6) {
+  //    var whitespaceRow = this.buildDateRow();
+  //    for (var j = 0; j < 7; j++) {
+  //      whitespaceRow.appendChild(this.buildDateCell());
+  //    }
+  //    monthBody.appendChild(whitespaceRow);
+  //  }
+
+  //  return monthBody;
+  //}
+
+  private buildCalendarForMonth = function (opt_dateInMonth: Date) {
+    var date = this.dateUtil.isValidDate(opt_dateInMonth) ? opt_dateInMonth : new Date();
+
+    var firstDayOfMonth = this.dateUtil.getFirstDateOfMonth(date);
+    var firstDayOfTheWeek = this.getLocaleDay_(firstDayOfMonth);
+    var numberOfDaysInMonth = this.dateUtil.getNumberOfDaysInMonth(date);
+
+    // Store rows for the month in a document fragment so that we can append them all at once.
+    var monthBody = document.createDocumentFragment();
+
+    var isFinalMonth = this.offset === this.monthCtrl.items.length - 1;
+
+    // Add a label for the month. If the month starts on a Sun/Mon/Tues, the month label
+    // goes on a row above the first of the month. Otherwise, the month label takes up the first
+    // two cells of the first row.
+    var blankCellOffset = 0;
+    var monthLabelCell = document.createElement('td');
+    var monthLabelCellContent = document.createElement('span');
+
+    monthLabelCellContent.textContent = this.dateLocale.monthHeaderFormatter(date);
+    monthLabelCell.appendChild(monthLabelCellContent);
+    monthLabelCell.classList.add('md-calendar-month-label');
+    // If the entire month is after the max date, render the label as a disabled state.
+    if (this.calendarCtrl.maxDate && firstDayOfMonth > this.calendarCtrl.maxDate) {
+      monthLabelCell.classList.add('md-calendar-month-label-disabled');
+    } else {
+      monthLabelCell.addEventListener('click', this.monthCtrl.headerClickHandler);
+      monthLabelCell.setAttribute('data-timestamp', firstDayOfMonth.getTime());
+      monthLabelCell.setAttribute('aria-label', this.dateLocale.monthFormatter(date));
+      monthLabelCell.appendChild(this.arrowIcon.cloneNode(true));
+    }
+
+    if (firstDayOfTheWeek <= 2) {
+      monthLabelCell.setAttribute('colspan', '7');
+
+      var monthLabelRow = this.buildDateRow();
+      monthLabelRow.appendChild(monthLabelCell);
+      monthBody.insertBefore(monthLabelRow);
+
+      if (isFinalMonth) {
+        return monthBody;
+      }
+    } else {
+      blankCellOffset = 3;
+      monthLabelCell.setAttribute('colspan', '3');
+      //row.appendChild(monthLabelCell);
+    }
+
+    // Add a blank cell for each day of the week that occurs before the first of the month.
+    // For example, if the first day of the month is a Tuesday, add blank cells for Sun and Mon.
+    // The blankCellOffset is needed in cases where the first N cells are used by the month label.
+    for (var i = blankCellOffset; i < firstDayOfTheWeek; i++) {
+      console.log(i);
+      //row.appendChild(this.buildDateCell());
+    }
+
+    // Add a cell for each day of the month, keeping track of the day of the week so that
+    // we know when to start a new row.
+    var dayOfWeek = firstDayOfTheWeek;
+    var iterationDate = firstDayOfMonth;
+    for (var d = 1; d <= numberOfDaysInMonth; d++) {
+      // If we've reached the end of the week, start a new row.
+      if (dayOfWeek === 7) {
+        // We've finished the first row, so we're done if this is the final month.
+        if (isFinalMonth) {
+          return monthBody;
+        }
+        dayOfWeek = 0;
+        //rowNumber++;
+        //row = this.buildDateRow(rowNumber);
+        //monthBody.appendChild(row);
+      }
+
+      iterationDate.setDate(d);
+      var cell = this.buildDateCell(iterationDate);
+      //row.appendChild(cell);
+
+      dayOfWeek++;
+    }
+
+    // Ensure that the last row of the month has 7 cells.
+
+    //while (row.childNodes.length < 7) {
+    //  row.appendChild(this.buildDateCell());
+    //}
+
+    // Ensure that all months have 6 rows. This is necessary for now because the virtual-repeat
+    // requires that all items have exactly the same height.
+    while (monthBody.childNodes.length < 6) {
+      var whitespaceRow = this.buildDateRow();
+      for (var j = 0; j < 7; j++) {
+        whitespaceRow.appendChild(this.buildDateCell());
+      }
+      monthBody.appendChild(whitespaceRow);
+    }
+
+    return monthBody;
+  }
 
   private updateValue() {
-    this._onchangecallback(this._value);
+    this._onChangeCallback(this._value);
     this.change.emit(this._value);
   }
 
   writeValue(value: any): void { this._value = value; }
 
-  registerOnChange(fn: any) { this._onchangecallback = fn; }
+  registerOnChange(fn: any) { this._onChangeCallback = fn; }
 
-  registerOnTouched(fn: any) { this._ontouchedcallback = fn; }
+  registerOnTouched(fn: any) { this._onTouchedCallback = fn; }
 
 
 
-  //@Input() options: any;
-  //@Input() locale: string;
-  //@Input() defaultMonth: string;
-  //@Input() selDate: string;
-  //@Output() dateChanged: EventEmitter<Object> = new EventEmitter();
+  @Input() options: any;
+  @Input() locale: string;
+  @Input() defaultMonth: string;
+  @Input() selDate: string;
+  @Output() dateChanged: EventEmitter<Object> = new EventEmitter();
 
-  //showSelector: boolean = false;
-  //visibleMonth: IMyMonth = { monthTxt: '', monthNbr: 0, year: 0 };
-  //selectedMonth: IMyMonth = { monthTxt: '', monthNbr: 0, year: 0 };
-  //selectedDate: IMyDate = { year: 0, month: 0, day: 0 };
-  //weekDays: Array<string> = [];
-  //dates: Array<Object> = [];
-  //selectionDayTxt: string = '';
-  //dayIdx: number = 0;
-  //today: Date = null;
+  showSelector: boolean = false;
+  visibleMonth: IMyMonth = { monthTxt: '', monthNbr: 0, year: 0 };
+  selectedMonth: IMyMonth = { monthTxt: '', monthNbr: 0, year: 0 };
+  selectedDate: IMyDate = { year: 0, month: 0, day: 0 };
 
-  //PREV_MONTH: number = 1;
-  //CURR_MONTH: number = 2;
-  //NEXT_MONTH: number = 3;
+  dates: Array<Object> = [];
+  selectionDayTxt: string = '';
+  dayIdx: number = 0;
 
-  //dayLabels: IMyDayLabels = {};
-  //monthLabels: IMyMonthLabels = {};
-  //dateFormat: string = ''
-  //firstDayOfWeek: string = '';
-  //sunHighlight: boolean = true;
 
-  //height: string = '34px';
-  //width: string = '100%';
-  //disableUntil: IMyDate = { year: 0, month: 0, day: 0 };
-  //disableSince: IMyDate = { year: 0, month: 0, day: 0 };
-  //disableWeekends: boolean = false;
-  //inline: boolean = false;
+  PREV_MONTH: number = 1;
+  CURR_MONTH: number = 2;
+  NEXT_MONTH: number = 3;
 
-  //constructor(public elem: ElementRef, private localeService: LocaleService) {
-  //  let defaultOptions = this.localeService.getLocaleOptions('en');
-  //  for (let propname in defaultOptions) {
-  //    if (defaultOptions.hasOwnProperty(propname)) {
-  //      (<any>this)[propname] = (<any>defaultOptions)[propname];
-  //    }
-  //  }
+  dayLabels: IMyDayLabels = {};
+  monthLabels: IMyMonthLabels = {};
+  dateFormat: string = ''
+  firstDayOfWeek: string = '';
+  sunHighlight: boolean = true;
 
-  //  this.today = new Date();
-  //  let doc = document.getElementsByTagName('html')[0];
-  //  doc.addEventListener('click', (event) => {
-  //    if (this.showSelector && event.target && this.elem.nativeElement !== event.target && !this.elem.nativeElement.contains(event.target)) {
-  //      this.showSelector = false;
-  //    }
-  //  }, false);
-  //}
+  disableUntil: IMyDate = { year: 0, month: 0, day: 0 };
+  disableSince: IMyDate = { year: 0, month: 0, day: 0 };
+  disableWeekends: boolean = false;
+
+
 
   //parseOptions() {
   //  let localeOptions = this.localeService.getLocaleOptions(this.locale);
 
   //  // the relatively ugly casts to any in this loop are needed to
   //  // avoid tsc errors when noImplicitAny is true.
-  //  let optionprops = ['dayLabels', 'monthLabels', 'dateFormat',  'firstDayOfWeek', 'sunHighlight', 'disableUntil', 'disableSince', 'disableWeekends', 'height', 'width', 'inline'];
+  //  let optionprops = ['dayLabels', 'monthLabels', 'dateFormat', 'firstDayOfWeek', 'sunHighlight', 'disableUntil', 'disableSince', 'disableWeekends'];
   //  for (let i = 0; i < optionprops.length; i++) {
   //    let propname = optionprops[i];
   //    if (localeOptions.hasOwnProperty(propname)) {
@@ -296,19 +581,16 @@ export class Md2Datepicker implements ControlValueAccessor {
   //    }
   //  }
 
-  //  let days = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
-  //  this.dayIdx = days.indexOf(this.firstDayOfWeek);
-  //  if (this.dayIdx !== -1) {
-  //    let idx = this.dayIdx;
-  //    for (var i = 0; i < days.length; i++) {
-  //      this.weekDays.push(this.dayLabels[days[idx]]);
-  //      idx = days[idx] === 'sa' ? 0 : idx + 1;
-  //    }
-  //  }
+  //  //let days = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
+  //  //this.dayIdx = days.indexOf(this.firstDayOfWeek);
+  //  //if (this.dayIdx !== -1) {
+  //  //  let idx = this.dayIdx;
+  //  //  for (var i = 0; i < days.length; i++) {
+  //  //    this.weekDays.push(this.dayLabels[days[idx]]);
+  //  //    idx = days[idx] === 'sa' ? 0 : idx + 1;
+  //  //  }
+  //  //}
 
-  //  if (this.inline) {
-  //    this.openBtnClicked();
-  //  }
   //}
 
   //ngOnChanges(changes: SimpleChanges) {
@@ -339,257 +621,254 @@ export class Md2Datepicker implements ControlValueAccessor {
   //  this.dateChanged.emit({ date: {}, formatted: this.selectionDayTxt, epoc: 0 });
   //}
 
-  //openBtnClicked(): void {
-  //  this.showSelector = !this.showSelector;
+  openBtnClicked(): void {
+    this.showSelector = !this.showSelector;
 
-  //  if (this.showSelector || this.inline) {
-  //    let y = 0, m = 0;
-  //    if (this.selectedDate.year === 0 && this.selectedDate.month === 0 && this.selectedDate.day === 0) {
-  //      if (this.selectedMonth.year === 0 && this.selectedMonth.monthNbr === 0) {
-  //        y = this.today.getFullYear();
-  //        m = this.today.getMonth() + 1;
-  //      } else {
-  //        y = this.selectedMonth.year;
-  //        m = this.selectedMonth.monthNbr;
-  //      }
-  //    }
-  //    else {
-  //      y = this.selectedDate.year;
-  //      m = this.selectedDate.month;
-  //    }
-  //    // Set current month
-  //    this.visibleMonth = { monthTxt: this.monthLabels[m], monthNbr: m, year: y };
+    if (this.showSelector) {
+      let y = 0, m = 0;
+      if (this.selectedDate.year === 0 && this.selectedDate.month === 0 && this.selectedDate.day === 0) {
+        if (this.selectedMonth.year === 0 && this.selectedMonth.monthNbr === 0) {
+          y = this.today.getFullYear();
+          m = this.today.getMonth() + 1;
+        } else {
+          y = this.selectedMonth.year;
+          m = this.selectedMonth.monthNbr;
+        }
+      }
+      else {
+        y = this.selectedDate.year;
+        m = this.selectedDate.month;
+      }
+      // Set current month
+      this.visibleMonth = { monthTxt: this.monthLabels[m], monthNbr: m, year: y };
 
-  //    // Create current month
-  //    this.generateCalendar(m, y);
-  //  }
-  //}
+      // Create current month
+      this.generateCalendar(m, y);
+    }
+  }
 
-  //prevMonth(): void {
-  //  let m = this.visibleMonth.monthNbr;
-  //  let y = this.visibleMonth.year;
-  //  if (m === 1) {
-  //    m = 12;
-  //    y--;
-  //  }
-  //  else {
-  //    m--;
-  //  }
-  //  this.visibleMonth = { monthTxt: this.monthText(m), monthNbr: m, year: y };
-  //  this.generateCalendar(m, y);
-  //}
+  prevMonth(): void {
+    let m = this.visibleMonth.monthNbr;
+    let y = this.visibleMonth.year;
+    if (m === 1) {
+      m = 12;
+      y--;
+    }
+    else {
+      m--;
+    }
+    this.visibleMonth = { monthTxt: this.monthText(m), monthNbr: m, year: y };
+    this.generateCalendar(m, y);
+  }
 
-  //nextMonth(): void {
-  //  let m = this.visibleMonth.monthNbr;
-  //  let y = this.visibleMonth.year;
-  //  if (m === 12) {
-  //    m = 1;
-  //    y++;
-  //  }
-  //  else {
-  //    m++;
-  //  }
-  //  this.visibleMonth = { monthTxt: this.monthText(m), monthNbr: m, year: y };
-  //  this.generateCalendar(m, y);
-  //}
+  nextMonth(): void {
+    let m = this.visibleMonth.monthNbr;
+    let y = this.visibleMonth.year;
+    if (m === 12) {
+      m = 1;
+      y++;
+    }
+    else {
+      m++;
+    }
+    this.visibleMonth = { monthTxt: this.monthText(m), monthNbr: m, year: y };
+    this.generateCalendar(m, y);
+  }
 
-  //prevYear(): void {
-  //  this.visibleMonth.year--;
-  //  this.generateCalendar(this.visibleMonth.monthNbr, this.visibleMonth.year);
-  //}
+  prevYear(): void {
+    this.visibleMonth.year--;
+    this.generateCalendar(this.visibleMonth.monthNbr, this.visibleMonth.year);
+  }
 
-  //nextYear(): void {
-  //  this.visibleMonth.year++;
-  //  this.generateCalendar(this.visibleMonth.monthNbr, this.visibleMonth.year);
-  //}
+  nextYear(): void {
+    this.visibleMonth.year++;
+    this.generateCalendar(this.visibleMonth.monthNbr, this.visibleMonth.year);
+  }
 
   //todayClicked(): void {
   //  // Today selected
   //  let m = this.today.getMonth() + 1;
   //  let y = this.today.getFullYear();
   //  this.selectDate({ day: this.today.getDate(), month: m, year: y });
-  //  if (this.inline) {
-  //    this.visibleMonth = { monthTxt: this.monthLabels[m], monthNbr: m, year: y };
-  //    this.generateCalendar(m, y);
-  //  }
   //}
 
-  //cellClicked(cell: any): void {
-  //  // Cell clicked in the selector
-  //  if (cell.cmo === this.PREV_MONTH) {
-  //    // Previous month of day
-  //    this.prevMonth();
-  //  }
-  //  else if (cell.cmo === this.CURR_MONTH) {
-  //    // Current month of day
-  //    this.selectDate(cell.dateObj);
-  //  }
-  //  else if (cell.cmo === this.NEXT_MONTH) {
-  //    // Next month of day
-  //    this.nextMonth();
-  //  }
-  //}
+  cellClicked(cell: any): void {
+    // Cell clicked in the selector
+    if (cell.cmo === this.PREV_MONTH) {
+      // Previous month of day
+      this.prevMonth();
+    }
+    else if (cell.cmo === this.CURR_MONTH) {
+      // Current month of day
+      this.selectDate(cell.dateObj);
+    }
+    else if (cell.cmo === this.NEXT_MONTH) {
+      // Next month of day
+      this.nextMonth();
+    }
+  }
 
-  //selectDate(date: any): void {
-  //  this.selectedDate = { day: date.day, month: date.month, year: date.year };
-  //  this.selectionDayTxt = this.formatDate(this.selectedDate);
-  //  this.showSelector = false;
-  //  let epoc = new Date(this.selectedDate.year, this.selectedDate.month, this.selectedDate.day, 0, 0, 0, 0).getTime() / 1000.0;
-  //  this.dateChanged.emit({ date: this.selectedDate, formatted: this.selectionDayTxt, epoc: epoc });
-  //}
+  selectDate(date: any): void {
+    this.selectedDate = { day: date.day, month: date.month, year: date.year };
+    this.selectionDayTxt = this.formatDate(this.selectedDate);
+    this.showSelector = false;
+    let epoc = new Date(this.selectedDate.year, this.selectedDate.month, this.selectedDate.day, 0, 0, 0, 0).getTime() / 1000.0;
+    this.dateChanged.emit({ date: this.selectedDate, formatted: this.selectionDayTxt, epoc: epoc });
+  }
 
-  //preZero(val: string): string {
-  //  // Prepend zero if smaller than 10
-  //  return parseInt(val) < 10 ? '0' + val : val;
-  //}
+  preZero(val: string): string {
+    // Prepend zero if smaller than 10
+    return parseInt(val) < 10 ? '0' + val : val;
+  }
 
-  //formatDate(val: any): string {
-  //  return this.dateFormat.replace('yyyy', val.year)
-  //    .replace('mm', this.preZero(val.month))
-  //    .replace('dd', this.preZero(val.day));
-  //}
+  formatDate(val: any): string {
+    return this.dateFormat.replace('yyyy', val.year)
+      .replace('mm', this.preZero(val.month))
+      .replace('dd', this.preZero(val.day));
+  }
 
-  //monthText(m: number): string {
-  //  // Returns mont as a text
-  //  return this.monthLabels[m];
-  //}
+  monthText(m: number): string {
+    // Returns mont as a text
+    return this.monthLabels[m];
+  }
 
-  //monthStartIdx(y: number, m: number): number {
-  //  // Month start index
-  //  let d = new Date();
-  //  d.setDate(1);
-  //  d.setMonth(m - 1);
-  //  d.setFullYear(y);
-  //  let idx = d.getDay() + this.sundayIdx();
-  //  return idx >= 7 ? idx - 7 : idx;
-  //}
+  monthStartIdx(y: number, m: number): number {
+    // Month start index
+    let d = new Date();
+    d.setDate(1);
+    d.setMonth(m - 1);
+    d.setFullYear(y);
+    let idx = d.getDay() + this.sundayIdx();
+    return idx >= 7 ? idx - 7 : idx;
+  }
 
-  //daysInMonth(m: number, y: number): number {
-  //  // Return number of days of current month
-  //  return new Date(y, m, 0).getDate();
-  //}
+  daysInMonth(m: number, y: number): number {
+    // Return number of days of current month
+    return new Date(y, m, 0).getDate();
+  }
 
-  //daysInPrevMonth(m: number, y: number): number {
-  //  // Return number of days of the previous month
-  //  if (m === 1) {
-  //    m = 12;
-  //    y--;
-  //  }
-  //  else {
-  //    m--;
-  //  }
-  //  return this.daysInMonth(m, y);
-  //}
+  daysInPrevMonth(m: number, y: number): number {
+    // Return number of days of the previous month
+    if (m === 1) {
+      m = 12;
+      y--;
+    }
+    else {
+      m--;
+    }
+    return this.daysInMonth(m, y);
+  }
 
-  //isCurrDay(d: number, m: number, y: number, cmo: any): boolean {
-  //  // Check is a given date the current date
-  //  return d === this.today.getDate() && m === this.today.getMonth() + 1 && y === this.today.getFullYear() && cmo === 2;
-  //}
+  isCurrDay(d: number, m: number, y: number, cmo: any): boolean {
+    // Check is a given date the current date
+    return d === this.today.getDate() && m === this.today.getMonth() + 1 && y === this.today.getFullYear() && cmo === 2;
+  }
 
-  //isDisabledDay(date: IMyDate): boolean {
-  //  // Check is a given date <= disabledUntil or given date >= disabledSince or disabled weekend
-  //  let givenDate = this.getTimeInMilliseconds(date);
-  //  if (this.disableUntil.year !== 0 && this.disableUntil.month !== 0 && this.disableUntil.day !== 0 && givenDate <= this.getTimeInMilliseconds(this.disableUntil)) {
-  //    return true;
-  //  }
-  //  if (this.disableSince.year !== 0 && this.disableSince.month !== 0 && this.disableSince.day !== 0 && givenDate >= this.getTimeInMilliseconds(this.disableSince)) {
-  //    return true;
-  //  }
-  //  if (this.disableWeekends) {
-  //    let dayNbr = this.getDayNumber(date);
-  //    if (dayNbr === 0 || dayNbr === 6) {
-  //      return true;
-  //    }
-  //  }
-  //  return false;
-  //}
+  isDisabledDay(date: IMyDate): boolean {
+    // Check is a given date <= disabledUntil or given date >= disabledSince or disabled weekend
+    let givenDate = this.getTimeInMilliseconds(date);
+    if (this.disableUntil.year !== 0 && this.disableUntil.month !== 0 && this.disableUntil.day !== 0 && givenDate <= this.getTimeInMilliseconds(this.disableUntil)) {
+      return true;
+    }
+    if (this.disableSince.year !== 0 && this.disableSince.month !== 0 && this.disableSince.day !== 0 && givenDate >= this.getTimeInMilliseconds(this.disableSince)) {
+      return true;
+    }
+    if (this.disableWeekends) {
+      let dayNbr = this.getDayNumber(date);
+      if (dayNbr === 0 || dayNbr === 6) {
+        return true;
+      }
+    }
+    return false;
+  }
 
-  //getTimeInMilliseconds(date: IMyDate): number {
-  //  return new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0).getTime();
-  //}
+  getTimeInMilliseconds(date: IMyDate): number {
+    return new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0).getTime();
+  }
 
-  //getDayNumber(date: IMyDate): number {
-  //  // Get day number: sun=0, mon=1, tue=2, wed=3 ...
-  //  let d = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
-  //  return d.getDay();
-  //}
+  getDayNumber(date: IMyDate): number {
+    // Get day number: sun=0, mon=1, tue=2, wed=3 ...
+    let d = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
+    return d.getDay();
+  }
 
-  //sundayIdx(): number {
-  //  // Index of Sunday day
-  //  return this.dayIdx > 0 ? 7 - this.dayIdx : 0;
-  //}
+  sundayIdx(): number {
+    // Index of Sunday day
+    return this.dayIdx > 0 ? 7 - this.dayIdx : 0;
+  }
 
-  //generateCalendar(m: number, y: number): void {
-  //  this.dates.length = 0;
-  //  let monthStart = this.monthStartIdx(y, m);
-  //  let dInThisM = this.daysInMonth(m, y);
-  //  let dInPrevM = this.daysInPrevMonth(m, y);
+  generateCalendar(m: number, y: number): void {
+    this.dates.length = 0;
+    let monthStart = this.monthStartIdx(y, m);
+    let dInThisM = this.daysInMonth(m, y);
+    let dInPrevM = this.daysInPrevMonth(m, y);
 
-  //  let dayNbr = 1;
-  //  let cmo = this.PREV_MONTH;
-  //  for (let i = 1; i < 7; i++) {
-  //    let week: IMyWeek[] = [];
-  //    if (i === 1) {
-  //      // First week
-  //      var pm = dInPrevM - monthStart + 1;
-  //      // Previous month
-  //      for (var j = pm; j <= dInPrevM; j++) {
-  //        let date: IMyDate = { year: y, month: m - 1, day: j };
-  //        week.push({ dateObj: date, cmo: cmo, currDay: this.isCurrDay(j, m, y, cmo), dayNbr: this.getDayNumber(date), disabled: this.isDisabledDay(date) });
-  //      }
+    let dayNbr = 1;
+    let cmo = this.PREV_MONTH;
+    for (let i = 1; i < 7; i++) {
+      let week: IMyWeek[] = [];
+      if (i === 1) {
+        // First week
+        var pm = dInPrevM - monthStart + 1;
+        // Previous month
+        for (var j = pm; j <= dInPrevM; j++) {
+          let date: IMyDate = { year: y, month: m - 1, day: j };
+          week.push({ dateObj: date, cmo: cmo, currDay: this.isCurrDay(j, m, y, cmo), dayNbr: this.getDayNumber(date), disabled: this.isDisabledDay(date) });
+        }
 
-  //      cmo = this.CURR_MONTH;
-  //      // Current month
-  //      var daysLeft = 7 - week.length;
-  //      for (var j = 0; j < daysLeft; j++) {
-  //        let date: IMyDate = { year: y, month: m, day: dayNbr };
-  //        week.push({ dateObj: date, cmo: cmo, currDay: this.isCurrDay(dayNbr, m, y, cmo), dayNbr: this.getDayNumber(date), disabled: this.isDisabledDay(date) });
-  //        dayNbr++;
-  //      }
-  //    }
-  //    else {
-  //      // Rest of the weeks
-  //      for (var j = 1; j < 8; j++) {
-  //        if (dayNbr > dInThisM) {
-  //          // Next month
-  //          dayNbr = 1;
-  //          cmo = this.NEXT_MONTH;
-  //        }
-  //        let date: IMyDate = { year: y, month: cmo === this.CURR_MONTH ? m : m + 1, day: dayNbr };
-  //        week.push({ dateObj: date, cmo: cmo, currDay: this.isCurrDay(dayNbr, m, y, cmo), dayNbr: this.getDayNumber(date), disabled: this.isDisabledDay(date) });
-  //        dayNbr++;
-  //      }
-  //    }
-  //    this.dates.push(week);
-  //  }
-  //}
+        cmo = this.CURR_MONTH;
+        // Current month
+        var daysLeft = 7 - week.length;
+        for (var j = 0; j < daysLeft; j++) {
+          let date: IMyDate = { year: y, month: m, day: dayNbr };
+          week.push({ dateObj: date, cmo: cmo, currDay: this.isCurrDay(dayNbr, m, y, cmo), dayNbr: this.getDayNumber(date), disabled: this.isDisabledDay(date) });
+          dayNbr++;
+        }
+      }
+      else {
+        // Rest of the weeks
+        for (var j = 1; j < 8; j++) {
+          if (dayNbr > dInThisM) {
+            // Next month
+            dayNbr = 1;
+            cmo = this.NEXT_MONTH;
+          }
+          let date: IMyDate = { year: y, month: cmo === this.CURR_MONTH ? m : m + 1, day: dayNbr };
+          week.push({ dateObj: date, cmo: cmo, currDay: this.isCurrDay(dayNbr, m, y, cmo), dayNbr: this.getDayNumber(date), disabled: this.isDisabledDay(date) });
+          dayNbr++;
+        }
+      }
+      this.dates.push(week);
+    }
+  }
 
-  //parseSelectedDate(ds: string): IMyDate {
-  //  let date: IMyDate = { day: 0, month: 0, year: 0 };
-  //  if (ds !== '') {
-  //    let fmt = this.options && this.options.dateFormat !== undefined ? this.options.dateFormat : this.dateFormat;
-  //    let dpos = fmt.indexOf('dd');
-  //    if (dpos >= 0) {
-  //      date.day = parseInt(ds.substring(dpos, dpos + 2));
-  //    }
-  //    let mpos = fmt.indexOf('mm');
-  //    if (mpos >= 0) {
-  //      date.month = parseInt(ds.substring(mpos, mpos + 2));
-  //    }
-  //    let ypos = fmt.indexOf('yyyy');
-  //    if (ypos >= 0) {
-  //      date.year = parseInt(ds.substring(ypos, ypos + 4));
-  //    }
-  //  }
-  //  return date;
-  //}
+  parseSelectedDate(ds: string): IMyDate {
+    let date: IMyDate = { day: 0, month: 0, year: 0 };
+    if (ds !== '') {
+      let fmt = this.options && this.options.dateFormat !== undefined ? this.options.dateFormat : this.dateFormat;
+      let dpos = fmt.indexOf('dd');
+      if (dpos >= 0) {
+        date.day = parseInt(ds.substring(dpos, dpos + 2));
+      }
+      let mpos = fmt.indexOf('mm');
+      if (mpos >= 0) {
+        date.month = parseInt(ds.substring(mpos, mpos + 2));
+      }
+      let ypos = fmt.indexOf('yyyy');
+      if (ypos >= 0) {
+        date.year = parseInt(ds.substring(ypos, ypos + 4));
+      }
+    }
+    return date;
+  }
 
-  //parseSelectedMonth(ms: string): IMyMonth {
-  //  let split = ms.split(ms.match(/[^0-9]/)[0]);
-  //  return (parseInt(split[0]) > parseInt(split[1])) ?
-  //    { monthTxt: '', monthNbr: parseInt(split[1]), year: parseInt(split[0]) } :
-  //    { monthTxt: '', monthNbr: parseInt(split[0]), year: parseInt(split[1]) };
-  //}
+  parseSelectedMonth(ms: string): IMyMonth {
+    let split = ms.split(ms.match(/[^0-9]/)[0]);
+    return (parseInt(split[0]) > parseInt(split[1])) ?
+      { monthTxt: '', monthNbr: parseInt(split[1]), year: parseInt(split[0]) } :
+      { monthTxt: '', monthNbr: parseInt(split[0]), year: parseInt(split[1]) };
+  }
+
 
 }
 
@@ -599,12 +878,12 @@ export const MD2_DATEPICKER_DIRECTIVES = [Md2Datepicker];
   declarations: MD2_DATEPICKER_DIRECTIVES,
   imports: [CommonModule, FormsModule],
   exports: MD2_DATEPICKER_DIRECTIVES,
-  //providers: [LocaleService]
+  providers: [LocaleService, MdDateUtil]
 })
 export class Md2DatepickerModule { }
 
 
-
+//=======================================================================================================================
 ///*!
 // * ClockPicker v{package.version} (http://weareoutman.github.io/clockpicker/)
 // * Copyright 2014 Wang Shenwei.

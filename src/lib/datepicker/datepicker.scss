@@ -4,28 +4,27 @@ md2-datepicker { position: relative; display: block; outline: none; }
 
 .md2-datepicker-wrapper { position: absolute; top: 100%; left: 0; display: inline-block; width: 310px; border-radius: 2px; background-color: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
 .md2-datepicker-container { }
-.md2-datepicker-header { }
-.md2-datepicker-actual-date { }
+.md2-datepicker-header { display: block; padding: 20px; color: #fff; font-size: 24px; line-height: 24px; font-weight: 500; background: #2196f3; box-sizing: border-box; }
+.md2-datepicker-year { display: block; height: 16px; margin: 0 0 10px; font-size: 16px; line-height: 16px; }
+.md2-datepicker-date { }
+.md2-datepicker-time { display: inline-block; padding-left: 10px; }
+/*.md2-datepicker-actual-date { }
 .md2-datepicker-actual-day { }
 .md2-datepicker-actual-month { }
 .md2-datepicker-actual-year { }
-.md2-datepicker-actual-time { }
+.md2-datepicker-actual-time { }*/
 
 .md2-datepicker-body { padding: 0 8px; }
 .md2-datepicker-footer { }
 
 
 
-/*.md2-calendar {  }
-.md2-calendar-controls { position: relative; display: block; height: 48px; text-align: left; }
-.md2-calendar-month-year { position: absolute; top: 0; left: 48px; right: 48px; padding-top: 16px; font-size: 14px; font-weight: 500; text-align: center; }
+/*
+
+
 
 .md2-calendar-next-month { float: right; }
 .md2-calendar-week-days {  }
-.md2-calendar-week-day {  }
-.md2-calendar-month { }
-.md2-calendar-week {  }
-.md2-calendar-day {  }
 .md2-calendar-day:hover,
 .md2-calendar-day.active { color: #fff; }
 .md2-calendar-day:before { content: ''; position: absolute; top: 0; left: 4px; display: block; height: 34px; width: 34px; border-radius: 50%; opacity: 0; transform: scale(0); transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1); background-color: #0097a7; }
@@ -34,20 +33,22 @@ md2-datepicker { position: relative; display: block; outline: none; }
 
 
 .md2-calendar { position: relative; display: block; font-size: 12px; font-weight: 400; text-align: center; }
+.md2-calendar-controls { position: relative; display: block; height: 48px; text-align: left; }
+.md2-calendar-header { display: block; width: 198px; float: left; padding-top: 16px; font-size: 14px; font-weight: 500; text-align: center; }
 .md2-calendar-prev-month,
-.md2-calendar-next-month { display: inline-block; width: 48px; height: 48px; margin: 0px; padding: 12px; border: 10px; box-sizing: border-box; cursor: pointer; }
+.md2-calendar-next-month { display: inline-block; width: 48px; height: 48px; float: left; margin: 0px; padding: 12px; border: 10px; box-sizing: border-box; cursor: pointer; }
 .md2-calendar-month { width: 100%; }
 .md2-calendar-month th { width: 42px; height: 20px; font-weight: 500; line-height: 15px; opacity: 0.5; }
 /*.md2-calendar-week { height: 34px; margin-bottom: 2px; text-align: left; }*/
 .md2-calendar-month td { padding: 0; }
-.md2-calendar-day { position: relative; border: 10px; display: inline-block; width: 34px; height: 34px; margin: 0px; padding: 4px 0px; text-align: center; cursor: pointer; line-height: 26px; box-sizing: border-box; }
-.md2-calendar-day.today { }
+.md2-calendar-day { position: relative; display: inline-block; width: 34px; height: 34px; border-radius: 50%; text-align: center; cursor: pointer; line-height: 34px; box-sizing: border-box; }
+.md2-calendar-day.today { color: #2196f3; }
 .md2-calendar-day:hover,
-.md2-calendar-day.focus { }
-.md2-calendar-day.disabled,
-.md2-calendar-day.disabled:hover { }
+.md2-calendar-day.focus { color: #fff; background: rgba(33, 150, 243, 0.6); }
 .md2-calendar-day.active,
-.md2-calendar-day.active:hover { }
+.md2-calendar-day.active:hover { color: #fff; background: #2196f3; }
+.md2-calendar-day.disabled,
+.md2-calendar-day.disabled:hover { color: #999999; background: transparent; pointer-events: none; }
 
 
 
@@ -60,6 +61,7 @@ md2-datepicker { position: relative; display: block; outline: none; }
 .md2-clock-minute { position: absolute; width: 26px; height: 26px; color: #666; line-height: 26px; text-align: center; border-radius: 50%; cursor: pointer; }
 .md2-clock-hand { }
 .md2-clock-svg { }
+.md2-clock-center { }
 
 
 
