@@ -315,113 +315,7 @@ export class Md2Datepicker implements ControlValueAccessor {
   //  return row;
   //};
 
-  //private buildCalendarForMonth(opt_dateInMonth: Date) {
-
-  //  var date = this.isValidDate(opt_dateInMonth) ? opt_dateInMonth : new Date();
-
-
-  //  var firstDayOfMonth = this.getFirstDateOfMonth(date);
-  //  var firstDayOfTheWeek = this.getLocaleDay_(firstDayOfMonth);
-  //  var numberOfDaysInMonth = this.getNumberOfDaysInMonth(date);
-
-  //  // Store rows for the month in a document fragment so that we can append them all at once.
-  //  var monthBody = document.createDocumentFragment();
-
-  //  var rowNumber = 1;
-  //  var row = this.buildDateRow(rowNumber);
-  //  monthBody.appendChild(row);
-
-  //  // If this is the final month in the list of items, only the first week should render,
-  //  // so we should return immediately after the first row is complete and has been
-  //  // attached to the body.
-  //  var isFinalMonth = this.offset === this.monthCtrl.items.length - 1;
-
-  //  // Add a label for the month. If the month starts on a Sun/Mon/Tues, the month label
-  //  // goes on a row above the first of the month. Otherwise, the month label takes up the first
-  //  // two cells of the first row.
-  //  var blankCellOffset = 0;
-  //  var monthLabelCell = document.createElement('td');
-  //  var monthLabelCellContent = document.createElement('span');
-
-  //  monthLabelCellContent.textContent = this.dateLocale.monthHeaderFormatter(date);
-  //  monthLabelCell.appendChild(monthLabelCellContent);
-  //  monthLabelCell.classList.add('md-calendar-month-label');
-  //  // If the entire month is after the max date, render the label as a disabled state.
-  //  if (this.max && firstDayOfMonth > this.max) {
-  //    monthLabelCell.classList.add('md-calendar-month-label-disabled');
-  //  } else {
-  //    monthLabelCell.addEventListener('click', this.monthCtrl.headerClickHandler);
-  //    monthLabelCell.setAttribute('data-timestamp', firstDayOfMonth.getTime());
-  //    monthLabelCell.setAttribute('aria-label', this.dateLocale.monthFormatter(date));
-  //    monthLabelCell.appendChild(this.arrowIcon.cloneNode(true));
-  //  }
-
-  //  if (firstDayOfTheWeek <= 2) {
-  //    monthLabelCell.setAttribute('colspan', '7');
-
-  //    var monthLabelRow = this.buildDateRow();
-  //    monthLabelRow.appendChild(monthLabelCell);
-  //    monthBody.insertBefore(monthLabelRow, row);
-
-  //    if (isFinalMonth) {
-  //      return monthBody;
-  //    }
-  //  } else {
-  //    blankCellOffset = 3;
-  //    monthLabelCell.setAttribute('colspan', '3');
-  //    row.appendChild(monthLabelCell);
-  //  }
-
-  //  // Add a blank cell for each day of the week that occurs before the first of the month.
-  //  // For example, if the first day of the month is a Tuesday, add blank cells for Sun and Mon.
-  //  // The blankCellOffset is needed in cases where the first N cells are used by the month label.
-  //  for (var i = blankCellOffset; i < firstDayOfTheWeek; i++) {
-  //    row.appendChild(this.buildDateCell());
-  //  }
-
-  //  // Add a cell for each day of the month, keeping track of the day of the week so that
-  //  // we know when to start a new row.
-  //  var dayOfWeek = firstDayOfTheWeek;
-  //  var iterationDate = firstDayOfMonth;
-  //  for (var d = 1; d <= numberOfDaysInMonth; d++) {
-  //    // If we've reached the end of the week, start a new row.
-  //    if (dayOfWeek === 7) {
-  //      // We've finished the first row, so we're done if this is the final month.
-  //      if (isFinalMonth) {
-  //        return monthBody;
-  //      }
-  //      dayOfWeek = 0;
-  //      rowNumber++;
-  //      row = this.buildDateRow(rowNumber);
-  //      monthBody.appendChild(row);
-  //    }
-
-  //    iterationDate.setDate(d);
-  //    var cell = this.buildDateCell(iterationDate);
-  //    row.appendChild(cell);
-
-  //    dayOfWeek++;
-  //  }
-
-  //  // Ensure that the last row of the month has 7 cells.
-  //  while (row.childNodes.length < 7) {
-  //    row.appendChild(this.buildDateCell());
-  //  }
-
-  //  // Ensure that all months have 6 rows. This is necessary for now because the virtual-repeat
-  //  // requires that all items have exactly the same height.
-  //  while (monthBody.childNodes.length < 6) {
-  //    var whitespaceRow = this.buildDateRow();
-  //    for (var j = 0; j < 7; j++) {
-  //      whitespaceRow.appendChild(this.buildDateCell());
-  //    }
-  //    monthBody.appendChild(whitespaceRow);
-  //  }
-
-  //  return monthBody;
-  //}
-
-  private buildCalendarForMonth = function (opt_dateInMonth: Date) {
+  private buildCalendarForMonth(opt_dateInMonth: Date) {
     var date = this.dateUtil.isValidDate(opt_dateInMonth) ? opt_dateInMonth : new Date();
 
     var firstDayOfMonth = this.dateUtil.getFirstDateOfMonth(date);
@@ -431,7 +325,7 @@ export class Md2Datepicker implements ControlValueAccessor {
     // Store rows for the month in a document fragment so that we can append them all at once.
     var monthBody = document.createDocumentFragment();
 
-    var isFinalMonth = this.offset === this.monthCtrl.items.length - 1;
+    //var isFinalMonth = this.offset === this.monthCtrl.items.length - 1;
 
     // Add a label for the month. If the month starts on a Sun/Mon/Tues, the month label
     // goes on a row above the first of the month. Otherwise, the month label takes up the first
@@ -440,29 +334,26 @@ export class Md2Datepicker implements ControlValueAccessor {
     var monthLabelCell = document.createElement('td');
     var monthLabelCellContent = document.createElement('span');
 
-    monthLabelCellContent.textContent = this.dateLocale.monthHeaderFormatter(date);
+    monthLabelCellContent.textContent = date.toString();
     monthLabelCell.appendChild(monthLabelCellContent);
     monthLabelCell.classList.add('md-calendar-month-label');
     // If the entire month is after the max date, render the label as a disabled state.
-    if (this.calendarCtrl.maxDate && firstDayOfMonth > this.calendarCtrl.maxDate) {
-      monthLabelCell.classList.add('md-calendar-month-label-disabled');
-    } else {
-      monthLabelCell.addEventListener('click', this.monthCtrl.headerClickHandler);
-      monthLabelCell.setAttribute('data-timestamp', firstDayOfMonth.getTime());
-      monthLabelCell.setAttribute('aria-label', this.dateLocale.monthFormatter(date));
-      monthLabelCell.appendChild(this.arrowIcon.cloneNode(true));
-    }
+    //if (this.calendarCtrl.maxDate && firstDayOfMonth > this.calendarCtrl.maxDate) {
+    //  monthLabelCell.classList.add('md-calendar-month-label-disabled');
+    //} else {
+    //  monthLabelCell.addEventListener('click', this.monthCtrl.headerClickHandler);
+    //  monthLabelCell.setAttribute('data-timestamp', firstDayOfMonth.getTime());
+    //  monthLabelCell.setAttribute('aria-label', this.dateLocale.monthFormatter(date));
+    //  monthLabelCell.appendChild(this.arrowIcon.cloneNode(true));
+    //}
 
     if (firstDayOfTheWeek <= 2) {
       monthLabelCell.setAttribute('colspan', '7');
 
-      var monthLabelRow = this.buildDateRow();
-      monthLabelRow.appendChild(monthLabelCell);
-      monthBody.insertBefore(monthLabelRow);
+      //var monthLabelRow = this.buildDateRow();
+      //monthLabelRow.appendChild(monthLabelCell);
+      //monthBody.insertBefore(monthLabelRow);
 
-      if (isFinalMonth) {
-        return monthBody;
-      }
     } else {
       blankCellOffset = 3;
       monthLabelCell.setAttribute('colspan', '3');
@@ -485,9 +376,6 @@ export class Md2Datepicker implements ControlValueAccessor {
       // If we've reached the end of the week, start a new row.
       if (dayOfWeek === 7) {
         // We've finished the first row, so we're done if this is the final month.
-        if (isFinalMonth) {
-          return monthBody;
-        }
         dayOfWeek = 0;
         //rowNumber++;
         //row = this.buildDateRow(rowNumber);
@@ -495,7 +383,7 @@ export class Md2Datepicker implements ControlValueAccessor {
       }
 
       iterationDate.setDate(d);
-      var cell = this.buildDateCell(iterationDate);
+      //var cell = this.buildDateCell(iterationDate);
       //row.appendChild(cell);
 
       dayOfWeek++;
@@ -509,15 +397,19 @@ export class Md2Datepicker implements ControlValueAccessor {
 
     // Ensure that all months have 6 rows. This is necessary for now because the virtual-repeat
     // requires that all items have exactly the same height.
-    while (monthBody.childNodes.length < 6) {
-      var whitespaceRow = this.buildDateRow();
-      for (var j = 0; j < 7; j++) {
-        whitespaceRow.appendChild(this.buildDateCell());
-      }
-      monthBody.appendChild(whitespaceRow);
-    }
+    //while (monthBody.childNodes.length < 6) {
+    //  var whitespaceRow = this.buildDateRow();
+    //  for (var j = 0; j < 7; j++) {
+    //    whitespaceRow.appendChild(this.buildDateCell());
+    //  }
+    //  monthBody.appendChild(whitespaceRow);
+    //}
 
     return monthBody;
+  }
+
+  private getLocaleDay_(date: Date) {
+    return (date.getDay() + (7)) % 7;
   }
 
   private updateValue() {
