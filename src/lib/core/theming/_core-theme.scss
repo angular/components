@@ -1,8 +1,8 @@
 // Core styles that can be used to apply material design treatments to any element.
 @import '../a11y/live-announcer';
-@import 'elevation';
+@import '../style/elevation';
 @import '../overlay/overlay';
-@import 'ripple';
+@import '../style/ripple';
 
 @mixin md-core-theme($theme) {
   // Provides external CSS classes for each elevation value. Each CSS class is formatted as

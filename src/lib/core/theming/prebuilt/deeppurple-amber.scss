@@ -4,8 +4,8 @@
 @import '../../../all/all_theme';
 
 
-$primary: md-palette($md-indigo);
-$accent:  md-palette($md-pink, A200, A100, A400);
+$primary: md-palette($md-deep-purple);
+$accent:  md-palette($md-amber, A200, A100, A400);
 $warn:    md-palette($md-red);
 
 $theme: md-light-theme($primary, $accent, $warn);
