@@ -13,11 +13,6 @@ $md-slider-thumb-size: 20px !default;
 $md-slider-thumb-default-scale: 0.7 !default;
 $md-slider-thumb-focus-scale: 1 !default;
 
-// TODO(iveysaur): Find an implementation to hide the track under a disabled thumb.
-$md-slider-off-color: rgba(black, 0.26);
-$md-slider-focused-color: rgba(black, 0.38);
-$md-slider-disabled-color: rgba(black, 0.26);
-
 $md-slider-thumb-arrow-height: 16px !default;
 $md-slider-thumb-arrow-width: 28px !default;
 
@@ -95,7 +90,6 @@ md-slider *::after {
   left: 0;
   right: 0;
   height: 100%;
-  background-color: $md-slider-off-color;
 }
 
 .md-slider-track-fill {
@@ -169,7 +163,6 @@ md-slider *::after {
   opacity: 0;
   transform: rotate(-45deg);
   transition: opacity 300ms $swift-ease-in-out-timing-function;
-  color: white;
 }
 
 .md-slider-container:not(.md-slider-thumb-label-showing) .md-slider-thumb-label {
