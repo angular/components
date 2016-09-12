@@ -203,7 +203,7 @@ export class ColorpickerService {
     if (hexText[1] === hexText[2] && hexText[3] === hexText[4] && hexText[5] === hexText[6]) {
       hexText = '#' + hexText[1] + hexText[3] + hexText[5];
     }
-    return hexText;
+    return hexText.toUpperCase();
   }
 
   denormalizeRGBA(rgba: Rgba) {
