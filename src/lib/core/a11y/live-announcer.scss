@@ -1,4 +1,5 @@
-@import 'mixins';
+@import '../style/mixins';
+
 
 .md-live-announcer {
   @include md-visually-hidden();
