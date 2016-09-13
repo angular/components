@@ -8,13 +8,13 @@
   $background: map-get($theme, background);
 
 
-  /** The color of the checkbox border. */
+  // The color of the checkbox border.
   $checkbox-border-color: if($is-dark-theme, rgba(white, 0.7), rgba(black, 0.54)) !default;
 
-  /** The color of the checkbox's checkmark / mixedmark. */
+  // The color of the checkbox's checkmark / mixedmark.
   $checkbox-mark-color: md-color($background, background);
 
-  /** The color that is used as the checkbox background when it is checked. */
+  // The color that is used as the checkbox background when it is checked.
   $checkbox-background-color: md-color($accent, 500);
 
   // NOTE(traviskaufman): While the spec calls for translucent blacks/whites for disabled colors,

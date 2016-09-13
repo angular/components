@@ -28,10 +28,8 @@ $md-progress-bar-piece-animation-duration: 250ms !default;
     width: 100%;
   }
 
-  /**
-   * The progress bar buffer is the bar indicator showing the buffer value and is only visible
-   * beyond the current value of the primary progress bar.
-   */
+  // The progress bar buffer is the bar indicator showing the buffer value and is only visible
+  // beyond the current value of the primary progress bar.
   .md-progress-bar-buffer {
     height: 100%;
     position: absolute;
@@ -40,15 +38,13 @@ $md-progress-bar-piece-animation-duration: 250ms !default;
     width: 100%;
   }
 
-  /**
-   * The secondary progress bar is only used in the indeterminate animation, because of this it
-   * is hidden in other uses.
-   */
+   // The secondary progress bar is only used in the indeterminate animation, because of this it
+   // is hidden in other uses.
   .md-progress-bar-secondary {
     visibility: hidden;
   }
 
-  /** The progress bar fill fills the progress bar with the indicator color. */
+  // The progress bar fill fills the progress bar with the indicator color.
   .md-progress-bar-fill {
     animation: none;
     height: 100%;
@@ -58,7 +54,7 @@ $md-progress-bar-piece-animation-duration: 250ms !default;
     width: 100%;
   }
 
-  /** A pseudo element is created for each progress bar bar that fills with the indicator color. */
+  // A pseudo element is created for each progress bar bar that fills with the indicator color.
   .md-progress-bar-fill::after {
     animation: none;
     content: '';
@@ -108,27 +104,25 @@ $md-progress-bar-piece-animation-duration: 250ms !default;
   transform: rotateY(180deg);
 }
 
+// The values used for animations in md-progress-bar, both timing and transformation, can be
+// considered magic values. They are sourced from the Material Design example spec and duplicate
+// the values of the original designers definitions.
+//
+// The indeterminate state is essentially made up of two progress bars, one primary (the one that
+// is shown in both the determinate and indeterminate states) and one secondary, which essentially
+// mirrors the primary progress bar in appearance but is only shown to assist with the
+// indeterminate animations.
 
-/** The values used for animations in md-progress-bar, both timing and transformation, can be considered magic values.
-    They are sourced from the Material Design example spec and duplicate the values of the original designers
-    definitions.
+// KEYFRAME BLOCK	                   DESCRIPTION
+// primary-indeterminate-translate     Translation of the primary progressbar across the screen
+// primary-indeterminate-scale         Scaling of the primary bar as it's being translated across the screen
+// secondary-indeterminate-translate   Translation of the secondary bar across the screen
+// secondary-indeterminate-scale       Scaling of the secondary bar as it's being translated across the screen
+//
+// Because two different transform animations need to be applied at once, the translation is
+// applied to the outer element and the scaling is applied to the inner element, which provides the
+// illusion necessary to make the animation work.
 
-
-    The indeterminate state is essentially made up of two progress bars, one primary (the one that is shown in both the
-    determinate and indeterminate states) and one secondary, which essentially mirrors the primary progress bar in
-    appearance but is only shown to assist with the indeterminate animations.
-
-
-    KEYFRAME BLOCK	                    DESCRIPTION
-    primary-indeterminate-translate     Translation of the primary progressbar across the screen
-    primary-indeterminate-scale         Scaling of the primary progressbar as it's being translated across the screen
-    secondary-indeterminate-translate   Translation of the secondary progressbar across the screen
-    secondary-indeterminate-scale       Scaling of the secondary progressbar as it's being translated across the screen
-
-    Because two different transform animations need to be applied at once, the translation is applied to the outer
-    element and the scaling is applied to the inner element, which provides the illusion necessary to make the animation
-    work.
-*/
 
 // Progress Bar Timing functions:
 // $md-progress-bar-primary-indeterminate-translate-step-1 has no timing function.
@@ -151,7 +145,9 @@ $md-progress-bar-secondary-indeterminate-scale-step-2: cubic-bezier(0.31033, 0.2
 $md-progress-bar-secondary-indeterminate-scale-step-3: cubic-bezier(0.4, 0.627035, 0.6, 0.902026) !default;
 // $md-progress-bar-secondary-indeterminate-scale-step-4 has no timing function
 
-/** Animations for indeterminate and query mode. */
+
+// Animations for indeterminate and query mode.
+
 // Primary indicator.
 @keyframes md-progress-bar-primary-indeterminate-translate {
   0% {
@@ -225,7 +221,7 @@ $md-progress-bar-secondary-indeterminate-scale-step-3: cubic-bezier(0.4, 0.62703
   }
 }
 
-/** Animation for buffer mode. */
+// Animation for buffer mode.
 @keyframes md-progress-bar-background-scroll {
   to {
     transform: translateX(-10px);

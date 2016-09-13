@@ -1,4 +1,4 @@
-@import '../core/theming/core-theme';
+@import '../core/core';
 @import '../button/button-theme';
 @import '../button-toggle/button-toggle-theme';
 @import '../card/card-theme';
@@ -21,6 +21,7 @@
 
 
 @mixin angular-material-theme($theme) {
+  @include md-core-theme($theme);
   @include md-button-theme($theme);
   @include md-button-toggle-theme($theme);
   @include md-card-theme($theme);

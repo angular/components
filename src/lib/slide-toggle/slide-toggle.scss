@@ -1,5 +1,5 @@
 @import '../core/style/variables';
-@import '../core/style/mixins';
+@import '../core/ripple/ripple';
 @import '../core/style/elevation';
 
 
@@ -8,7 +8,6 @@ $md-slide-toggle-height: 24px !default;
 $md-slide-toggle-bar-height: 14px !default;
 $md-slide-toggle-thumb-size: 20px !default;
 $md-slide-toggle-margin: 16px !default;
-
 
 
 @mixin md-switch-ripple() {
@@ -122,13 +121,6 @@ $md-slide-toggle-margin: 16px !default;
   height: $md-slide-toggle-bar-height;
 
   border-radius: 8px;
-}
-
-// The slide toggle shows a visually hidden checkbox inside of the component.
-// This checkbox allows us to take advantage of the browsers support.
-// Like accessibility and keyboard interaction.
-.md-slide-toggle-checkbox {
-  @include md-visually-hidden();
 }
 
 .md-slide-toggle-bar,

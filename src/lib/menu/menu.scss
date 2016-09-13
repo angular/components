@@ -2,9 +2,9 @@
 // TODO(kara): animation for menu opening
 @import '../core/style/variables';
 @import '../core/style/elevation';
-@import '../core/style/button-mixins';
+@import '../core/style/button-common';
 @import '../core/style/sidenav-mixins';
-@import '../core/style/list-shared';
+@import '../core/style/list-common';
 
 
 // menu width must be a multiple of 56px

@@ -1,9 +1,9 @@
 @import '../core/style/variables';
 @import '../core/style/elevation';
-@import '../core/style/button-mixins';
+@import '../core/style/button-common';
 
 
-/** Applies a focus style to an md-button element. */
+// Applies a focus style to an md-button element.
 @mixin md-button-focus {
   &::after {
     // The button spec calls for focus on raised buttons (and FABs) to be indicated with a

@@ -1,5 +1,4 @@
 @import '../core/style/elevation';
-@import '../core/style/mixins';
 
 
 $md-button-toggle-padding: 0 16px !default;
@@ -21,10 +20,6 @@ md-button-toggle-group {
 
 md-button-toggle {
   white-space: nowrap;
-}
-
-.md-button-toggle-input {
-  @include md-visually-hidden;
 }
 
 .md-button-toggle-label-content {
