@@ -37,68 +37,11 @@ Next, you'll need to build the `@angular2-material` folder out of `node_modules`
 editing the `angular-cli-build.js` file in the root of your project.  Simply add a glob for all 
 @angular2-material files to the end of the existing `vendorNpmFiles` array.
 
-**angular-cli-build.js**
-```js
-module.exports = function(defaults) {
-  return new Angular2App(defaults, {
-    vendorNpmFiles: [
-      'systemjs/dist/system-polyfills.js',
-      'systemjs/dist/system.src.js',
-      'zone.js/dist/**/*.+(js|js.map)',
-      'es6-shim/es6-shim.js',
-      'reflect-metadata/**/*.+(js|js.map)',
-      'rxjs/**/*.+(js|js.map)',
-      '@angular/**/*.+(js|js.map)',
-      '@angular2-material/**/*'
-    ]
-  });
-};
-```
-
-You can see an example `angular-cli-build.js` file [here](https://github.com/kara/puppy-love/blob/master/angular-cli-build.js).
-
-### Configure SystemJS
-
-First, you need to let SystemJS know where to look when you import `@angular2-material`. You can do 
-this by adding the path to the Material folder to the `maps` object. 
-
-**src/system-config.ts**
-```ts
-const map: any = {
-  '@angular2-material': 'vendor/@angular2-material'
-};
-```
-
-This says something like "when you look for an @angular2-material import, look inside the vendor 
-folder" (the base folder will already be `dist`).
-
-Next, you need to let SystemJS know how to process the new modules.  Specifically, you need to point 
-to the main files of each of the packages. You can also set the format to `cjs` and the 
-defaultExtension to `js`, but it's not required.
-
-**src/system-config.ts**
-```ts
-const packages:any = {};
-
-// put the names of any of your Material components here
-const materialPkgs:string[] = [
-  'core',
-  'button',
-  'card',
-];
-
-materialPkgs.forEach((pkg) => {
-  packages[`@angular2-material/${pkg}`] = {main: `${pkg}.js`};
-});
-```
-
-You can see an example `system-config.ts` [here](https://github.com/kara/puppy-love-io/blob/master/src/system-config.ts).
-
 ### Import and use the components
 
 Now you should be able to import the components normally wherever you'd like to use them.
   
-**src/app/my-project.component.ts**
+**src/app/my-app-module.ts**
 ```ts
 import { MdCardModule } from '@angular2-material/card';
 import { MdButtonModule } from '@angular2-material/button';
