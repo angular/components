@@ -1,11 +1,12 @@
 md2-datepicker { position: relative; display: block; outline: none; }
-.md2-datepicker-input { }
+.md2-datepicker-input { display: block; margin: 0; padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.12); }
+.md2-datepicker-input-text { display: inline-block; margin-left: 10px; font-size: 14px; vertical-align: middle; }
 .md2-datepicker-calendar-icon { margin: auto; display: inline-block; vertical-align: middle; fill: currentColor; height: 24px; width: 24px; min-height: 24px; min-width: 24px; color: rgba(0,0,0,0.54); }
 
 .md2-datepicker-wrapper { position: absolute; top: 100%; left: 0; display: inline-block; width: 270px; border-radius: 2px; background-color: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
 .md2-datepicker-container { }
 .md2-datepicker-header { display: block; padding: 20px; color: #fff; font-size: 24px; line-height: 24px; font-weight: 500; background: #2196f3; box-sizing: border-box; }
-.md2-datepicker-year { display: block; height: 16px; margin: 0 0 10px; font-size: 16px; line-height: 16px; }
+.md2-datepicker-year { display: block; height: 16px; margin: 0 0 10px; font-size: 16px; line-height: 16px; opacity: 0.7; }
 .md2-datepicker-date { cursor: pointer; }
 .md2-datepicker-time { display: inline-block; padding-left: 10px; cursor: pointer; opacity: 0.7; }
 /*.md2-datepicker-actual-date { }
@@ -37,14 +38,15 @@ md2-datepicker { position: relative; display: block; outline: none; }
 /*.md2-calendar-week { height: 34px; margin-bottom: 2px; text-align: left; }*/
 .md2-calendar-month td { padding: 0; }
 .md2-calendar-day { position: relative; display: inline-block; width: 34px; height: 34px; border-radius: 50%; text-align: center; cursor: pointer; line-height: 34px; box-sizing: border-box; }
-.md2-calendar-day.today { color: #2196f3; }
+.md2-calendar-day.today { border: 1px solid #2196f3; }
 .md2-calendar-day:hover,
 .md2-calendar-day.focus { color: #fff; background: rgba(33, 150, 243, 0.6); }
 .md2-calendar-day.active,
 .md2-calendar-day.active:hover { color: #fff; background: #2196f3; }
 .md2-calendar-day.disabled,
 .md2-calendar-day.disabled:hover { color: rgba(0,0,0,0.45); background: transparent; pointer-events: none; }
-
+.md2-calendar-day.prev-month,
+.md2-calendar-day.next-month { visibility: hidden; }
 
 
 

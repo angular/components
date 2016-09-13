@@ -11,14 +11,14 @@
     </svg>-->
   </div>
   <span class="md2-datepicker-placeholder" [class.md2-has-value]="value">{{placeholder}}</span>
-  <span>{{selectionDayTxt}}</span>
+  <span class="md2-datepicker-input-text">{{selectionDayTxt}}</span>
 
 </div>
 <div class="md2-datepicker-wrapper">
   <div class="md2-datepicker-container">
     <div class="md2-datepicker-header">
-      <!--<span class="md2-datepicker-year">2016</span>-->
-      <span class="md2-datepicker-date">{{displayDay.dayOfWeek}}, {{displayDay.day}} {{displayDay.fullMonth}}</span>
+      <span class="md2-datepicker-year">{{displayDay.year}}</span>
+      <span class="md2-datepicker-date">{{displayDay.day.shortName}}, {{displayDay.day.number}} {{displayDay.month.shortName}}</span>
       <span class="md2-datepicker-time">{{displayDay.hour}}:{{displayDay.minute}}</span>
     </div>
     <div class="md2-datepicker-body">
@@ -29,7 +29,7 @@
               <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
             </svg>
           </div>
-          <div class="md2-calendar-header">{{displayDay.fullMonth}} {{displayDay.year}}</div>
+          <div class="md2-calendar-header">{{displayDay.month.name}} {{displayDay.year}}</div>
           <div class="md2-calendar-next-month" (click)="updateMonth(1)">
             <svg viewBox="0 0 24 24" width="100%" height="100%">
               <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
@@ -54,9 +54,9 @@
                      [class.today]="d.today"
                      [class.active]="selectedDate.day===d.dateObj.day && selectedDate.month===d.dateObj.month && selectedDate.year===d.dateObj.year && d.cmo===CURR_MONTH"
                      [class.disabled]="d.disabled"
-                     [class.prevmonth]="d.cmo===PREV_MONTH"
+                     [class.prev-month]="d.cmo===PREV_MONTH"
                      [class.currmonth]="d.cmo===CURR_MONTH"
-                     [class.nextmonth]="d.cmo===NEXT_MONTH"
+                     [class.next-month]="d.cmo===NEXT_MONTH"
                      [class.sunday]="d.dayNbr === 0 && sunHighlight"
                      (click)="selectDate($event,d)">{{d.dateObj.day}}</div>
               </td>

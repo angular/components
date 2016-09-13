@@ -68,15 +68,21 @@ export const MD2_DATEPICKER_CONTROL_VALUE_ACCESSOR: any = {
 export class Md2Datepicker implements ControlValueAccessor {
 
   constructor(private dateUtil: MdDateUtil) {
-    //this.generateCalendar(8, 2016);
     this.displayDate = this.today;
     //this.displayDate.getFullYear()
     this.displayDay = {
       date: this.displayDate,
       year: this.displayDate.getFullYear(),
-      month: this.displayDate.getMonth(),
-      fullMonth: this.months[this.displayDate.getMonth()].substr(0, 3),
-      day: this.displayDate.getDate(),
+      month: {
+        number: this.displayDate.getMonth(),
+        name: this.months[this.displayDate.getMonth()],
+        shortName: this.months[this.displayDate.getMonth()].substr(0, 3)
+      },
+      day: {
+        number: this.displayDate.getDate(),
+        name: this.days[this.displayDate.getDay()],
+        shortName: this.days[this.displayDate.getDay()].substr(0, 3)
+      },
       dayOfWeek: this.days[this.displayDate.getDay()].substr(0, 3),
       hour: this.displayDate.getHours(),
       minute: this.displayDate.getMinutes()
@@ -95,7 +101,6 @@ export class Md2Datepicker implements ControlValueAccessor {
 
   private months: Array<string> = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   private days: Array<string> = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  private shortDays: Array<string> = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   private dates: Array<Object> = [];
   private today: Date = new Date();
@@ -137,18 +142,23 @@ export class Md2Datepicker implements ControlValueAccessor {
       if (this.selectedDate.year === 0 && this.selectedDate.month === 0 && this.selectedDate.day === 0) {
         if (this.selectedMonth.year === 0 && this.selectedMonth.monthNbr === 0) {
           y = this.today.getFullYear();
-          m = this.today.getMonth() + 1;
+          m = this.today.getMonth();
         } else {
           y = this.selectedMonth.year;
-          m = this.selectedMonth.monthNbr;
+          m = this.selectedMonth.monthNbr - 1;
         }
       }
       else {
         y = this.selectedDate.year;
-        m = this.selectedDate.month;
+        m = this.selectedDate.month - 1;
       }
       // Set current month
-      this.visibleMonth = { monthTxt: this.months[m - 1], monthNbr: m, year: y };
+      this.displayDay.month = {
+        number: m,
+        name: this.months[m],
+        shortName: this.months[m].substr(0, 3)
+      };
+      this.displayDay.year = y;
 
       // Create current month
       this.generateCalendar(m, y);
@@ -183,14 +193,20 @@ export class Md2Datepicker implements ControlValueAccessor {
   }
 
   private updateMonth(month: number) {
-    //this.generateCalendar(month + month, 2016);
-    let m = this.visibleMonth.monthNbr;
-    let y = this.visibleMonth.year;
+    let m = this.displayDay.month.number;
+    let y = this.displayDay.year;
 
     m += month;
     y = m > 11 ? y + 1 : m < 0 ? y - 1 : y;
     m = (m + 12) % 12;
-    this.visibleMonth = { monthTxt: this.monthText(m), monthNbr: m, year: y };
+
+    this.displayDay.month = {
+      number: m,
+      name: this.months[m],
+      shortName: this.months[m].substr(0, 3)
+    };
+    this.displayDay.year = y;
+
     this.generateCalendar(m, y);
   }
 
@@ -202,7 +218,6 @@ export class Md2Datepicker implements ControlValueAccessor {
   @Input() defaultMonth: string;
   @Input() selDate: string;
 
-  visibleMonth: IMyMonth = { monthTxt: '', monthNbr: 0, year: 0 };
   selectedMonth: IMyMonth = { monthTxt: '', monthNbr: 0, year: 0 };
   selectionDayTxt: string = '';
 
@@ -239,15 +254,15 @@ export class Md2Datepicker implements ControlValueAccessor {
 
   //}
 
-  prevYear(): void {
-    this.visibleMonth.year--;
-    this.generateCalendar(this.visibleMonth.monthNbr, this.visibleMonth.year);
-  }
+  //prevYear(): void {
+  //  this.displayDay.year--;
+  //  this.generateCalendar(this.displayDay.month.number, this.displayDay.year);
+  //}
 
-  nextYear(): void {
-    this.visibleMonth.year++;
-    this.generateCalendar(this.visibleMonth.monthNbr, this.visibleMonth.year);
-  }
+  //nextYear(): void {
+  //  this.displayDay.year++;
+  //  this.generateCalendar(this.displayDay.month.number, this.displayDay.year);
+  //}
 
 
 
@@ -264,10 +279,10 @@ export class Md2Datepicker implements ControlValueAccessor {
       .replace('dd', this.preZero(val.day));
   }
 
-  monthText(m: number): string {
-    // Returns mont as a text
-    return this.months[m - 1];
-  }
+  //monthText(m: number): string {
+  //  // Returns mont as a text
+  //  return this.months[m - 1];
+  //}
 
   monthStartIdx(y: number, m: number): number {
     // Month start index
@@ -334,6 +349,7 @@ export class Md2Datepicker implements ControlValueAccessor {
   //}
 
   generateCalendar(m: number, y: number): void {
+    m += 1;
     this.dates.length = 0;
     let monthStart = this.monthStartIdx(y, m);
     let dInThisM = this.daysInMonth(m, y);
