@@ -7,9 +7,6 @@ import {
   forwardRef,
   ViewEncapsulation,
   NgModule,
-  //OnChanges,
-  ElementRef,
-  //SimpleChanges
 } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
@@ -17,43 +14,21 @@ import {
   FormsModule
 } from '@angular/forms';
 import {CommonModule} from '@angular/common';
-//import {Md2Calendar} from './calendar';
-import {LocaleService} from './dateLocaleProvider';
 import {MdDateUtil} from './dateUtil';
 
-
-export interface IMyMonthLabels {
-  [month: number]: string;
-}
-export interface IMyOptions {
-  dayLabels?: IMyDayLabels;
-  monthLabels?: IMyMonthLabels;
-  dateFormat?: string;
-  firstDayOfWeek?: string;
-  sunHighlight?: boolean;
-  disabledUntil?: IMyDate;
-  disabledSince?: IMyDate;
-  disableWeekends?: boolean;
-}
-
-export interface IMyLocales {
-  [lang: string]: IMyOptions;
-}
-
-export interface IMyDayLabels {
-  [day: string]: string;
-}
 
 export interface IMyDate {
   year: number;
   month: number;
   day: number;
+  hour: number;
+  minute: number;
 }
 
 export interface IMyWeek {
   dateObj: IMyDate;
   cmo: number;
-  currDay: boolean;
+  today: boolean;
   dayNbr: number;
   disabled: boolean;
 }
@@ -62,6 +37,8 @@ export interface IMyMonth {
   monthNbr: number;
   year: number;
 }
+
+
 
 const noop = () => { };
 
@@ -90,402 +67,159 @@ export const MD2_DATEPICKER_CONTROL_VALUE_ACCESSOR: any = {
 })
 export class Md2Datepicker implements ControlValueAccessor {
 
-  constructor(private dateUtil: MdDateUtil, private localeService: LocaleService) {
-    this.buildCalendarForMonth(new Date());
+  constructor(private dateUtil: MdDateUtil) {
+    //this.generateCalendar(8, 2016);
+    this.displayDate = this.today;
+    //this.displayDate.getFullYear()
+    this.displayDay = {
+      date: this.displayDate,
+      year: this.displayDate.getFullYear(),
+      month: this.displayDate.getMonth(),
+      fullMonth: this.months[this.displayDate.getMonth()].substr(0, 3),
+      day: this.displayDate.getDate(),
+      dayOfWeek: this.days[this.displayDate.getDay()].substr(0, 3),
+      hour: this.displayDate.getHours(),
+      minute: this.displayDate.getMinutes()
+    }
   }
-
-
-  //constructor(public elem: ElementRef, ) {
-  //  let defaultOptions = this.localeService.getLocaleOptions('en');
-  //  for (let propname in defaultOptions) {
-  //    if (defaultOptions.hasOwnProperty(propname)) {
-  //      (<any>this)[propname] = (<any>defaultOptions)[propname];
-  //    }
-  //  }
-
-  //  
-  //  let doc = document.getElementsByTagName('html')[0];
-  //  doc.addEventListener('click', (event) => {
-  //    if (this.showSelector && event.target && this.elem.nativeElement !== event.target && !this.elem.nativeElement.contains(event.target)) {
-  //      this.showSelector = false;
-  //    }
-  //  }, false);
-  //}
 
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
 
   private _value: any = '';
-  private _isInitialized: boolean = false;
+  //private _isInitialized: boolean = false;
   private _onTouchedCallback: () => void = noop;
   private _onChangeCallback: (_: any) => void = noop;
 
-
   private isDatepickerVisible: boolean;
-  private isCalendarVisible: boolean;
-  private weekDays: Array<string> = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  //private months: Array<string> = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  //private currentMonth;
-  //private dates: Array<Object> = [[1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11, 12, 13, 14], [15, 16, 17, 18, 19, 20, 21], [22, 23, 24, 25, 26, 27, 28], [29, 30]];
-  //private hours: Array<Object> = [
-  //  {
-  //    hour: '00',
-  //    top: '0px',
-  //    left: '0px'
-  //  }, , '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
-  //private minutes: Array<string> = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
-  //private weeks = [];
+  //private isCalendarVisible: boolean;
 
-  private selected: Object = { day: '', month: '', year: '', hour: '', minute: '' };
+  private months: Array<string> = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  private days: Array<string> = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  private shortDays: Array<string> = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
+  private dates: Array<Object> = [];
   private today: Date = new Date();
-  private date: Date = null;
   private displayDate: Date = null;
-
+  private displayDay: any = null;
+  private selectedDate: IMyDate = { year: 0, month: 0, day: 0, hour: 0, minute: 0 };
 
   @Input() type: 'date' | 'time' | 'datetime' | 'month' = 'date';
   @Input() disabled: boolean;
-  //@Input() readonly: boolean;
-  //@Input() required: boolean;
   @Input() name: string = '';
   @Input() id: string = 'md2-datepicker-' + (++nextId);
   @Input() min: number;
   @Input() max: number;
   @Input() placeholder: string;
-  @Input() format: string;
+  @Input() format: string = 'dd/mm/yyyy';
   @Input() tabindex: number = 0;
 
   get value(): any { return this._value; }
   @Input() set value(value: any) {
     if (this._value !== value) {
       this._value = value;
-      this.updateValue();
+      //if (this._isInitialized) {
+      //  this._onChangeCallback(value);
+      this.change.emit(value);
+      //}
     }
   }
 
-  //@HostListener('click', ['$event'])
-  //private onClick(event: MouseEvent) {
-  //  if (this.disabled) {
-  //    event.stopPropagation();
-  //    event.preventDefault();
-  //    return;
-  //  }
-  //}
+  private showDatepicker() {
+    //this.displayDate = this.value;
+    this.isDatepickerVisible = true;
 
-  @HostListener('keydown', ['$event'])
-  private onKeyDown(event: KeyboardEvent) {
-    // check enabled
-    if (this.disabled) { return; }
+    //====
 
-    // Tab Key
-    if (event.keyCode === 9) {
-      if (this.isDatepickerVisible) {
-        this.onBlur();
-        event.preventDefault();
+    this.isDatepickerVisible = true;
+
+    if (this.isDatepickerVisible) {
+      let y = 0, m = 0;
+      if (this.selectedDate.year === 0 && this.selectedDate.month === 0 && this.selectedDate.day === 0) {
+        if (this.selectedMonth.year === 0 && this.selectedMonth.monthNbr === 0) {
+          y = this.today.getFullYear();
+          m = this.today.getMonth() + 1;
+        } else {
+          y = this.selectedMonth.year;
+          m = this.selectedMonth.monthNbr;
+        }
       }
-      return;
-    }
-
-    // Escape Key
-    if (event.keyCode === 27) {
-      this.onBlur();
-      event.stopPropagation();
-      event.preventDefault();
-      return;
-    }
-
-
-    //case keyCode.ENTER: return 'select';
-
-    //  case keyCode.RIGHT_ARROW: return 'move-right';
-    //  case keyCode.LEFT_ARROW: return 'move-left';
-
-    //  // TODO(crisbeto): Might want to reconsider using metaKey, because it maps
-    //  // to the "Windows" key on PC, which opens the start menu or resizes the browser.
-    //  case keyCode.DOWN_ARROW: return event.metaKey ? 'move-page-down' : 'move-row-down';
-    //  case keyCode.UP_ARROW: return event.metaKey ? 'move-page-up' : 'move-row-up';
-
-    //  case keyCode.PAGE_DOWN: return 'move-page-down';
-    //  case keyCode.PAGE_UP: return 'move-page-up';
-
-    //  case keyCode.HOME: return 'start';
-    //  case keyCode.END: return 'end';
-
-    //  default: return null;
-
-    //handleKeyEvent = function (event, action) {
-    //  var calendarCtrl = this.calendarCtrl;
-    //  var displayDate = calendarCtrl.displayDate;
-
-    //  if (action === 'select') {
-    //    calendarCtrl.setNgModelValue(displayDate);
-    //  } else {
-    //    var date = null;
-    //    var dateUtil = this.dateUtil;
-
-    //    switch (action) {
-    //      case 'move-right': date = dateUtil.incrementDays(displayDate, 1); break;
-    //      case 'move-left': date = dateUtil.incrementDays(displayDate, -1); break;
-
-    //      case 'move-page-down': date = dateUtil.incrementMonths(displayDate, 1); break;
-    //      case 'move-page-up': date = dateUtil.incrementMonths(displayDate, -1); break;
-
-    //      case 'move-row-down': date = dateUtil.incrementDays(displayDate, 7); break;
-    //      case 'move-row-up': date = dateUtil.incrementDays(displayDate, -7); break;
-
-    //      case 'start': date = dateUtil.getFirstDateOfMonth(displayDate); break;
-    //      case 'end': date = dateUtil.getLastDateOfMonth(displayDate); break;
-    //    }
-
-    //    if (date) {
-    //      date = this.dateUtil.clampDate(date, calendarCtrl.minDate, calendarCtrl.maxDate);
-
-    //      this.changeDisplayDate(date).then(function () {
-    //        calendarCtrl.focus(date);
-    //      });
-    //    }
-    //  }
-    //};
-
-    // Down Arrow
-    if (event.keyCode === 40) {
-      if (this.isDatepickerVisible && this.isCalendarVisible) {
-
+      else {
+        y = this.selectedDate.year;
+        m = this.selectedDate.month;
       }
-      event.stopPropagation();
-      event.preventDefault();
-      return;
+      // Set current month
+      this.visibleMonth = { monthTxt: this.months[m - 1], monthNbr: m, year: y };
+
+      // Create current month
+      this.generateCalendar(m, y);
     }
-
-    //// Up Arrow
-    //if (event.keyCode === 38) {
-    //  if (this.isMenuVisible) {
-    //    this.focusedOption = (this.focusedOption === 0) ? this.list.length - 1 : Math.max(0, this.focusedOption - 1);
-    //    this.updateScroll();
-    //  } else {
-    //    this.updateOptions();
-    //  }
-    //  event.stopPropagation();
-    //  event.preventDefault();
-    //  return;
-    //}
-
-    //// Enter / Space
-    //if (event.keyCode === 13 || event.keyCode === 32) {
-    //  if (this.isMenuVisible) {
-    //    this.toggleOption(event, this.focusedOption);
-    //  } else {
-    //    this.updateOptions();
-    //  }
-    //  event.preventDefault();
-    //  return;
-    //}
   }
 
-  /**
-   * on focus current component
-   */
-  //private onFocus() {
+  //private hideDatepicker() {
   //  this.isDatepickerVisible = true;
   //}
 
-  @HostListener('blur')
-  private onBlur() { this.isDatepickerVisible = false; }
-
-  //get isTimepickerVisible(): boolean {
-  //  return this.isDatepickerVisible ? true : false;
-  //}
-
-  private openCalendar(event: Event) {
-
-  }
-
-  /**
-   * Builds a `tr` element for the calendar grid.
-   * @param rowNumber The week number within the month.
-   * @returns {HTMLElement}
-   */
-  //private buildDateRow(rowNumber: number) {
-  //  var row = document.createElement('tr');
-  //  row.setAttribute('role', 'row');
-
-  //  // Because of an NVDA bug (with Firefox), the row needs an aria-label in order
-  //  // to prevent the entire row being read aloud when the user moves between rows.
-  //  // See http://community.nvda-project.org/ticket/4643.
-  //  row.setAttribute('aria-label', this.dateLocale.weekNumberFormatter(rowNumber));
-
-  //  return row;
-  //};
-
-  private buildCalendarForMonth(opt_dateInMonth: Date) {
-    var date = this.dateUtil.isValidDate(opt_dateInMonth) ? opt_dateInMonth : new Date();
-
-    var firstDayOfMonth = this.dateUtil.getFirstDateOfMonth(date);
-    var firstDayOfTheWeek = this.getLocaleDay_(firstDayOfMonth);
-    var numberOfDaysInMonth = this.dateUtil.getNumberOfDaysInMonth(date);
-
-    // Store rows for the month in a document fragment so that we can append them all at once.
-    var monthBody = document.createDocumentFragment();
-
-    //var isFinalMonth = this.offset === this.monthCtrl.items.length - 1;
-
-    // Add a label for the month. If the month starts on a Sun/Mon/Tues, the month label
-    // goes on a row above the first of the month. Otherwise, the month label takes up the first
-    // two cells of the first row.
-    var blankCellOffset = 0;
-    var monthLabelCell = document.createElement('td');
-    var monthLabelCellContent = document.createElement('span');
-
-    monthLabelCellContent.textContent = date.toString();
-    monthLabelCell.appendChild(monthLabelCellContent);
-    monthLabelCell.classList.add('md-calendar-month-label');
-    // If the entire month is after the max date, render the label as a disabled state.
-    //if (this.calendarCtrl.maxDate && firstDayOfMonth > this.calendarCtrl.maxDate) {
-    //  monthLabelCell.classList.add('md-calendar-month-label-disabled');
-    //} else {
-    //  monthLabelCell.addEventListener('click', this.monthCtrl.headerClickHandler);
-    //  monthLabelCell.setAttribute('data-timestamp', firstDayOfMonth.getTime());
-    //  monthLabelCell.setAttribute('aria-label', this.dateLocale.monthFormatter(date));
-    //  monthLabelCell.appendChild(this.arrowIcon.cloneNode(true));
-    //}
-
-    if (firstDayOfTheWeek <= 2) {
-      monthLabelCell.setAttribute('colspan', '7');
-
-      //var monthLabelRow = this.buildDateRow();
-      //monthLabelRow.appendChild(monthLabelCell);
-      //monthBody.insertBefore(monthLabelRow);
-
-    } else {
-      blankCellOffset = 3;
-      monthLabelCell.setAttribute('colspan', '3');
-      //row.appendChild(monthLabelCell);
+  private selectDate(e: Event, d: any) {
+    e.stopPropagation();
+    if (d.disabled) { return; }
+    if (d.cmo === this.PREV_MONTH) {
+      // Previous month of day
+      this.updateMonth(-1);
     }
-
-    // Add a blank cell for each day of the week that occurs before the first of the month.
-    // For example, if the first day of the month is a Tuesday, add blank cells for Sun and Mon.
-    // The blankCellOffset is needed in cases where the first N cells are used by the month label.
-    for (var i = blankCellOffset; i < firstDayOfTheWeek; i++) {
-      console.log(i);
-      //row.appendChild(this.buildDateCell());
+    else if (d.cmo === this.CURR_MONTH) {
+      // Current month of day
+      //this.selectDate1(d.dateObj);
+      this.selectedDate = { day: d.dateObj.day, month: d.dateObj.month, year: d.dateObj.year, hour: 0, minute: 0 };
+      this.selectionDayTxt = this.formatDate(this.selectedDate);
+      this.isDatepickerVisible = false;
+      let epoc = new Date(this.selectedDate.year, this.selectedDate.month, this.selectedDate.day, 0, 0, 0, 0).getTime() / 1000.0;
+      //this.dateChanged.emit({ date: this.selectedDate, formatted: this.selectionDayTxt, epoc: epoc });
+      this.value = { date: this.selectedDate, formatted: this.selectionDayTxt, epoc: epoc };
     }
-
-    // Add a cell for each day of the month, keeping track of the day of the week so that
-    // we know when to start a new row.
-    var dayOfWeek = firstDayOfTheWeek;
-    var iterationDate = firstDayOfMonth;
-    for (var d = 1; d <= numberOfDaysInMonth; d++) {
-      // If we've reached the end of the week, start a new row.
-      if (dayOfWeek === 7) {
-        // We've finished the first row, so we're done if this is the final month.
-        dayOfWeek = 0;
-        //rowNumber++;
-        //row = this.buildDateRow(rowNumber);
-        //monthBody.appendChild(row);
-      }
-
-      iterationDate.setDate(d);
-      //var cell = this.buildDateCell(iterationDate);
-      //row.appendChild(cell);
-
-      dayOfWeek++;
+    else if (d.cmo === this.NEXT_MONTH) {
+      // Next month of day
+      this.updateMonth(1);
     }
-
-    // Ensure that the last row of the month has 7 cells.
-
-    //while (row.childNodes.length < 7) {
-    //  row.appendChild(this.buildDateCell());
-    //}
-
-    // Ensure that all months have 6 rows. This is necessary for now because the virtual-repeat
-    // requires that all items have exactly the same height.
-    //while (monthBody.childNodes.length < 6) {
-    //  var whitespaceRow = this.buildDateRow();
-    //  for (var j = 0; j < 7; j++) {
-    //    whitespaceRow.appendChild(this.buildDateCell());
-    //  }
-    //  monthBody.appendChild(whitespaceRow);
-    //}
-
-    return monthBody;
   }
 
-  private getLocaleDay_(date: Date) {
-    return (date.getDay() + (7)) % 7;
+  private updateMonth(month: number) {
+    //this.generateCalendar(month + month, 2016);
+    let m = this.visibleMonth.monthNbr;
+    let y = this.visibleMonth.year;
+
+    m += month;
+    y = m > 11 ? y + 1 : m < 0 ? y - 1 : y;
+    m = (m + 12) % 12;
+    this.visibleMonth = { monthTxt: this.monthText(m), monthNbr: m, year: y };
+    this.generateCalendar(m, y);
   }
 
-  private updateValue() {
-    this._onChangeCallback(this._value);
-    this.change.emit(this._value);
-  }
-
-  writeValue(value: any): void { this._value = value; }
-
-  registerOnChange(fn: any) { this._onChangeCallback = fn; }
-
-  registerOnTouched(fn: any) { this._onTouchedCallback = fn; }
 
 
 
-  @Input() options: any;
+
   @Input() locale: string;
   @Input() defaultMonth: string;
   @Input() selDate: string;
-  @Output() dateChanged: EventEmitter<Object> = new EventEmitter();
 
-  showSelector: boolean = false;
   visibleMonth: IMyMonth = { monthTxt: '', monthNbr: 0, year: 0 };
   selectedMonth: IMyMonth = { monthTxt: '', monthNbr: 0, year: 0 };
-  selectedDate: IMyDate = { year: 0, month: 0, day: 0 };
-
-  dates: Array<Object> = [];
   selectionDayTxt: string = '';
-  dayIdx: number = 0;
-
 
   PREV_MONTH: number = 1;
   CURR_MONTH: number = 2;
   NEXT_MONTH: number = 3;
 
-  dayLabels: IMyDayLabels = {};
-  monthLabels: IMyMonthLabels = {};
-  dateFormat: string = ''
   firstDayOfWeek: string = '';
   sunHighlight: boolean = true;
 
-  disableUntil: IMyDate = { year: 0, month: 0, day: 0 };
-  disableSince: IMyDate = { year: 0, month: 0, day: 0 };
-  disableWeekends: boolean = false;
+  height: string = '34px';
+  width: string = '100%';
+  selectionTxtFontSize: string = '18px';
+  minDate: IMyDate = { year: 0, month: 0, day: 0, hour: 0, minute: 0 };
+  maxDate: IMyDate = { year: 0, month: 0, day: 0, hour: 0, minute: 0 };
 
-
-
-  //parseOptions() {
-  //  let localeOptions = this.localeService.getLocaleOptions(this.locale);
-
-  //  // the relatively ugly casts to any in this loop are needed to
-  //  // avoid tsc errors when noImplicitAny is true.
-  //  let optionprops = ['dayLabels', 'monthLabels', 'dateFormat', 'firstDayOfWeek', 'sunHighlight', 'disableUntil', 'disableSince', 'disableWeekends'];
-  //  for (let i = 0; i < optionprops.length; i++) {
-  //    let propname = optionprops[i];
-  //    if (localeOptions.hasOwnProperty(propname)) {
-  //      (<any>this)[propname] = (<any>localeOptions)[propname];
-  //    }
-  //    else if (this.options && (<any>this.options)[propname] !== undefined) {
-  //      (<any>this)[propname] = (<any>this.options)[propname];
-  //    }
-  //  }
-
-  //  //let days = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
-  //  //this.dayIdx = days.indexOf(this.firstDayOfWeek);
-  //  //if (this.dayIdx !== -1) {
-  //  //  let idx = this.dayIdx;
-  //  //  for (var i = 0; i < days.length; i++) {
-  //  //    this.weekDays.push(this.dayLabels[days[idx]]);
-  //  //    idx = days[idx] === 'sa' ? 0 : idx + 1;
-  //  //  }
-  //  //}
-
-  //}
-
-  //ngOnChanges(changes: SimpleChanges) {
+  //ngOnChanges(changes: SimpleChanges): void {
   //  if (changes.hasOwnProperty('selDate')) {
   //    this.selectionDayTxt = changes['selDate'].currentValue;
   //    this.selectedDate = this.parseSelectedDate(this.selectionDayTxt);
@@ -503,69 +237,7 @@ export class Md2Datepicker implements ControlValueAccessor {
   //    this.options = changes['options'].currentValue;
   //  }
 
-  //  //this.weekDays.length = 0;
-  //  this.parseOptions();
   //}
-
-  //removeBtnClicked(): void {
-  //  this.selectionDayTxt = '';
-  //  this.selectedDate = { year: 0, month: 0, day: 0 };
-  //  this.dateChanged.emit({ date: {}, formatted: this.selectionDayTxt, epoc: 0 });
-  //}
-
-  openBtnClicked(): void {
-    this.showSelector = !this.showSelector;
-
-    if (this.showSelector) {
-      let y = 0, m = 0;
-      if (this.selectedDate.year === 0 && this.selectedDate.month === 0 && this.selectedDate.day === 0) {
-        if (this.selectedMonth.year === 0 && this.selectedMonth.monthNbr === 0) {
-          y = this.today.getFullYear();
-          m = this.today.getMonth() + 1;
-        } else {
-          y = this.selectedMonth.year;
-          m = this.selectedMonth.monthNbr;
-        }
-      }
-      else {
-        y = this.selectedDate.year;
-        m = this.selectedDate.month;
-      }
-      // Set current month
-      this.visibleMonth = { monthTxt: this.monthLabels[m], monthNbr: m, year: y };
-
-      // Create current month
-      this.generateCalendar(m, y);
-    }
-  }
-
-  prevMonth(): void {
-    let m = this.visibleMonth.monthNbr;
-    let y = this.visibleMonth.year;
-    if (m === 1) {
-      m = 12;
-      y--;
-    }
-    else {
-      m--;
-    }
-    this.visibleMonth = { monthTxt: this.monthText(m), monthNbr: m, year: y };
-    this.generateCalendar(m, y);
-  }
-
-  nextMonth(): void {
-    let m = this.visibleMonth.monthNbr;
-    let y = this.visibleMonth.year;
-    if (m === 12) {
-      m = 1;
-      y++;
-    }
-    else {
-      m++;
-    }
-    this.visibleMonth = { monthTxt: this.monthText(m), monthNbr: m, year: y };
-    this.generateCalendar(m, y);
-  }
 
   prevYear(): void {
     this.visibleMonth.year--;
@@ -577,36 +249,9 @@ export class Md2Datepicker implements ControlValueAccessor {
     this.generateCalendar(this.visibleMonth.monthNbr, this.visibleMonth.year);
   }
 
-  //todayClicked(): void {
-  //  // Today selected
-  //  let m = this.today.getMonth() + 1;
-  //  let y = this.today.getFullYear();
-  //  this.selectDate({ day: this.today.getDate(), month: m, year: y });
-  //}
 
-  cellClicked(cell: any): void {
-    // Cell clicked in the selector
-    if (cell.cmo === this.PREV_MONTH) {
-      // Previous month of day
-      this.prevMonth();
-    }
-    else if (cell.cmo === this.CURR_MONTH) {
-      // Current month of day
-      this.selectDate(cell.dateObj);
-    }
-    else if (cell.cmo === this.NEXT_MONTH) {
-      // Next month of day
-      this.nextMonth();
-    }
-  }
 
-  selectDate(date: any): void {
-    this.selectedDate = { day: date.day, month: date.month, year: date.year };
-    this.selectionDayTxt = this.formatDate(this.selectedDate);
-    this.showSelector = false;
-    let epoc = new Date(this.selectedDate.year, this.selectedDate.month, this.selectedDate.day, 0, 0, 0, 0).getTime() / 1000.0;
-    this.dateChanged.emit({ date: this.selectedDate, formatted: this.selectionDayTxt, epoc: epoc });
-  }
+
 
   preZero(val: string): string {
     // Prepend zero if smaller than 10
@@ -614,14 +259,14 @@ export class Md2Datepicker implements ControlValueAccessor {
   }
 
   formatDate(val: any): string {
-    return this.dateFormat.replace('yyyy', val.year)
+    return this.format.replace('yyyy', val.year)
       .replace('mm', this.preZero(val.month))
       .replace('dd', this.preZero(val.day));
   }
 
   monthText(m: number): string {
     // Returns mont as a text
-    return this.monthLabels[m];
+    return this.months[m - 1];
   }
 
   monthStartIdx(y: number, m: number): number {
@@ -630,8 +275,7 @@ export class Md2Datepicker implements ControlValueAccessor {
     d.setDate(1);
     d.setMonth(m - 1);
     d.setFullYear(y);
-    let idx = d.getDay() + this.sundayIdx();
-    return idx >= 7 ? idx - 7 : idx;
+    return (d.getDay() + 7) % 7;
   }
 
   daysInMonth(m: number, y: number): number {
@@ -651,26 +295,26 @@ export class Md2Datepicker implements ControlValueAccessor {
     return this.daysInMonth(m, y);
   }
 
-  isCurrDay(d: number, m: number, y: number, cmo: any): boolean {
-    // Check is a given date the current date
-    return d === this.today.getDate() && m === this.today.getMonth() + 1 && y === this.today.getFullYear() && cmo === 2;
-  }
+  //isCurrDay(d: number, m: number, y: number, cmo: any): boolean {
+  //  // Check is a given date the current date
+  //  return d === this.today.getDate() && m === this.today.getMonth() + 1 && y === this.today.getFullYear() && cmo === 2;
+  //}
 
   isDisabledDay(date: IMyDate): boolean {
     // Check is a given date <= disabledUntil or given date >= disabledSince or disabled weekend
     let givenDate = this.getTimeInMilliseconds(date);
-    if (this.disableUntil.year !== 0 && this.disableUntil.month !== 0 && this.disableUntil.day !== 0 && givenDate <= this.getTimeInMilliseconds(this.disableUntil)) {
+    if (this.minDate.year !== 0 && this.minDate.month !== 0 && this.minDate.day !== 0 && givenDate <= this.getTimeInMilliseconds(this.minDate)) {
       return true;
     }
-    if (this.disableSince.year !== 0 && this.disableSince.month !== 0 && this.disableSince.day !== 0 && givenDate >= this.getTimeInMilliseconds(this.disableSince)) {
+    if (this.maxDate.year !== 0 && this.maxDate.month !== 0 && this.maxDate.day !== 0 && givenDate >= this.getTimeInMilliseconds(this.maxDate)) {
       return true;
     }
-    if (this.disableWeekends) {
-      let dayNbr = this.getDayNumber(date);
-      if (dayNbr === 0 || dayNbr === 6) {
-        return true;
-      }
-    }
+    //if (this.disableWeekends) {
+    //  let dayNbr = this.getDayNumber(date);
+    //  if (dayNbr === 0 || dayNbr === 6) {
+    //    return true;
+    //  }
+    //}
     return false;
   }
 
@@ -684,10 +328,10 @@ export class Md2Datepicker implements ControlValueAccessor {
     return d.getDay();
   }
 
-  sundayIdx(): number {
-    // Index of Sunday day
-    return this.dayIdx > 0 ? 7 - this.dayIdx : 0;
-  }
+  //sundayIdx(): number {
+  //  // Index of Sunday day
+  //  return this.dayIdx > 0 ? 7 - this.dayIdx : 0;
+  //}
 
   generateCalendar(m: number, y: number): void {
     this.dates.length = 0;
@@ -704,16 +348,28 @@ export class Md2Datepicker implements ControlValueAccessor {
         var pm = dInPrevM - monthStart + 1;
         // Previous month
         for (var j = pm; j <= dInPrevM; j++) {
-          let date: IMyDate = { year: y, month: m - 1, day: j };
-          week.push({ dateObj: date, cmo: cmo, currDay: this.isCurrDay(j, m, y, cmo), dayNbr: this.getDayNumber(date), disabled: this.isDisabledDay(date) });
+          let date: IMyDate = { year: y, month: m - 1, day: j, hour: 0, minute: 0 };
+          week.push({
+            dateObj: date,
+            cmo: cmo,
+            today: this.dateUtil.isSameDay(this.today, new Date(y, m - 1, j)),//this.isCurrDay(j, m, y, cmo),
+            dayNbr: this.getDayNumber(date),
+            disabled: this.isDisabledDay(date)
+          });
         }
 
         cmo = this.CURR_MONTH;
         // Current month
         var daysLeft = 7 - week.length;
         for (var j = 0; j < daysLeft; j++) {
-          let date: IMyDate = { year: y, month: m, day: dayNbr };
-          week.push({ dateObj: date, cmo: cmo, currDay: this.isCurrDay(dayNbr, m, y, cmo), dayNbr: this.getDayNumber(date), disabled: this.isDisabledDay(date) });
+          let date: IMyDate = { year: y, month: m, day: dayNbr, hour: 0, minute: 0 };
+          week.push({
+            dateObj: date,
+            cmo: cmo,
+            today: this.dateUtil.isSameDay(this.today, new Date(y, m - 1, dayNbr)),//this.isCurrDay(dayNbr, m, y, cmo),
+            dayNbr: this.getDayNumber(date),
+            disabled: this.isDisabledDay(date)
+          });
           dayNbr++;
         }
       }
@@ -725,8 +381,14 @@ export class Md2Datepicker implements ControlValueAccessor {
             dayNbr = 1;
             cmo = this.NEXT_MONTH;
           }
-          let date: IMyDate = { year: y, month: cmo === this.CURR_MONTH ? m : m + 1, day: dayNbr };
-          week.push({ dateObj: date, cmo: cmo, currDay: this.isCurrDay(dayNbr, m, y, cmo), dayNbr: this.getDayNumber(date), disabled: this.isDisabledDay(date) });
+          let date: IMyDate = { year: y, month: cmo === this.CURR_MONTH ? m : m + 1, day: dayNbr, hour: 0, minute: 0 };
+          week.push({
+            dateObj: date,
+            cmo: cmo,
+            today: this.dateUtil.isSameDay(this.today, new Date(y, m - 1, dayNbr)),//this.isCurrDay(dayNbr, m, y, cmo),
+            dayNbr: this.getDayNumber(date),
+            disabled: this.isDisabledDay(date)
+          });
           dayNbr++;
         }
       }
@@ -735,9 +397,9 @@ export class Md2Datepicker implements ControlValueAccessor {
   }
 
   parseSelectedDate(ds: string): IMyDate {
-    let date: IMyDate = { day: 0, month: 0, year: 0 };
+    let date: IMyDate = { day: 0, month: 0, year: 0, hour: 0, minute: 0 };
     if (ds !== '') {
-      let fmt = this.options && this.options.dateFormat !== undefined ? this.options.dateFormat : this.dateFormat;
+      let fmt = this.format;
       let dpos = fmt.indexOf('dd');
       if (dpos >= 0) {
         date.day = parseInt(ds.substring(dpos, dpos + 2));
@@ -762,6 +424,12 @@ export class Md2Datepicker implements ControlValueAccessor {
   }
 
 
+  writeValue(value: any): void { this._value = value; }
+
+  registerOnChange(fn: any) { this._onChangeCallback = fn; }
+
+  registerOnTouched(fn: any) { this._onTouchedCallback = fn; }
+
 }
 
 export const MD2_DATEPICKER_DIRECTIVES = [Md2Datepicker];
@@ -770,711 +438,6 @@ export const MD2_DATEPICKER_DIRECTIVES = [Md2Datepicker];
   declarations: MD2_DATEPICKER_DIRECTIVES,
   imports: [CommonModule, FormsModule],
   exports: MD2_DATEPICKER_DIRECTIVES,
-  providers: [LocaleService, MdDateUtil]
+  providers: [MdDateUtil]
 })
 export class Md2DatepickerModule { }
-
-
-//=======================================================================================================================
-///*!
-// * ClockPicker v{package.version} (http://weareoutman.github.io/clockpicker/)
-// * Copyright 2014 Wang Shenwei.
-// * Licensed under MIT (https://github.com/weareoutman/clockpicker/blob/master/LICENSE)
-// */
-
-//; (function () {
-//  var $ = window.jQuery,
-//    $win = $(window),
-//    $doc = $(document),
-//    $body;
-
-//  // Can I use inline svg ?
-//  var svgNS = 'http://www.w3.org/2000/svg',
-//    svgSupported = 'SVGAngle' in window && (function () {
-//      var supported,
-//        el = document.createElement('div');
-//      el.innerHTML = '<svg/>';
-//      supported = (el.firstChild && el.firstChild.namespaceURI) == svgNS;
-//      el.innerHTML = '';
-//      return supported;
-//    })();
-
-//  // Can I use transition ?
-//  var transitionSupported = (function () {
-//    var style = document.createElement('div').style;
-//    return 'transition' in style ||
-//      'WebkitTransition' in style ||
-//      'MozTransition' in style ||
-//      'msTransition' in style ||
-//      'OTransition' in style;
-//  })();
-
-//  // Listen touch events in touch screen device, instead of mouse events in desktop.
-//  var touchSupported = 'ontouchstart' in window,
-//    mousedownEvent = 'mousedown' + (touchSupported ? ' touchstart' : ''),
-//    mousemoveEvent = 'mousemove.clockpicker' + (touchSupported ? ' touchmove.clockpicker' : ''),
-//    mouseupEvent = 'mouseup.clockpicker' + (touchSupported ? ' touchend.clockpicker' : '');
-
-//  // Vibrate the device if supported
-//  var vibrate = navigator.vibrate ? 'vibrate' : navigator.webkitVibrate ? 'webkitVibrate' : null;
-
-//  function createSvgElement(name) {
-//    return document.createElementNS(svgNS, name);
-//  }
-
-//  function leadingZero(num) {
-//    return (num < 10 ? '0' : '') + num;
-//  }
-
-//  // Get a unique id
-//  var idCounter = 0;
-//  function uniqueId(prefix) {
-//    var id = ++idCounter + '';
-//    return prefix ? prefix + id : id;
-//  }
-
-//  // Clock size
-//  var dialRadius = 100,
-//    outerRadius = 80,
-//    // innerRadius = 80 on 12 hour clock
-//    innerRadius = 54,
-//    tickRadius = 13,
-//    diameter = dialRadius * 2,
-//    duration = transitionSupported ? 350 : 1;
-
-//  // Popover template
-//  var tpl = [
-//    '<div class="popover clockpicker-popover">',
-//    '<div class="arrow"></div>',
-//    '<div class="popover-title">',
-//				'<span class="clockpicker-span-hours text-primary"></span>',
-//				' : ',
-//				'<span class="clockpicker-span-minutes"></span>',
-//				'<span class="clockpicker-span-am-pm"></span>',
-//    '</div>',
-//    '<div class="popover-content">',
-//				'<div class="clockpicker-plate">',
-//    '<div class="clockpicker-canvas"></div>',
-//    '<div class="clockpicker-dial clockpicker-hours"></div>',
-//    '<div class="clockpicker-dial clockpicker-minutes clockpicker-dial-out"></div>',
-//				'</div>',
-//				'<span class="clockpicker-am-pm-block">',
-//				'</span>',
-//    '</div>',
-//    '</div>'
-//  ].join('');
-
-//  // ClockPicker
-//  function ClockPicker(element, options) {
-//    var popover = $(tpl),
-//      plate = popover.find('.clockpicker-plate'),
-//      hoursView = popover.find('.clockpicker-hours'),
-//      minutesView = popover.find('.clockpicker-minutes'),
-//      amPmBlock = popover.find('.clockpicker-am-pm-block'),
-//      isInput = element.prop('tagName') === 'INPUT',
-//      input = isInput ? element : element.find('input'),
-//      addon = element.find('.input-group-addon'),
-//      self = this,
-//      timer;
-
-//    this.id = uniqueId('cp');
-//    this.element = element;
-//    this.options = options;
-//    this.isAppended = false;
-//    this.isShown = false;
-//    this.currentView = 'hours';
-//    this.isInput = isInput;
-//    this.input = input;
-//    this.addon = addon;
-//    this.popover = popover;
-//    this.plate = plate;
-//    this.hoursView = hoursView;
-//    this.minutesView = minutesView;
-//    this.amPmBlock = amPmBlock;
-//    this.spanHours = popover.find('.clockpicker-span-hours');
-//    this.spanMinutes = popover.find('.clockpicker-span-minutes');
-//    this.spanAmPm = popover.find('.clockpicker-span-am-pm');
-//    this.amOrPm = "PM";
-
-//    // Setup for for 12 hour clock if option is selected
-//    if (options.twelvehour) {
-
-//      var amPmButtonsTemplate = ['<div class="clockpicker-am-pm-block">',
-//        '<button type="button" class="btn btn-sm btn-default clockpicker-button clockpicker-am-button">',
-//        'AM</button>',
-//        '<button type="button" class="btn btn-sm btn-default clockpicker-button clockpicker-pm-button">',
-//        'PM</button>',
-//        '</div>'].join('');
-
-//      var amPmButtons = $(amPmButtonsTemplate);
-//      //amPmButtons.appendTo(plate);
-
-//      ////Not working b/c they are not shown when this runs
-//      //$('clockpicker-am-button')
-//      //    .on("click", function() {
-//      //        self.amOrPm = "AM";
-//      //        $('.clockpicker-span-am-pm').empty().append('AM');
-//      //    });
-//      //    
-//      //$('clockpicker-pm-button')
-//      //    .on("click", function() {
-//      //         self.amOrPm = "PM";
-//      //        $('.clockpicker-span-am-pm').empty().append('PM');
-//      //    });
-
-//      $('<button type="button" class="btn btn-sm btn-default clockpicker-button am-button">' + "AM" + '</button>')
-//        .on("click", function () {
-//          self.amOrPm = "AM";
-//          $('.clockpicker-span-am-pm').empty().append('AM');
-//        }).appendTo(this.amPmBlock);
-
-
-//      $('<button type="button" class="btn btn-sm btn-default clockpicker-button pm-button">' + "PM" + '</button>')
-//        .on("click", function () {
-//          self.amOrPm = "PM";
-//          $('.clockpicker-span-am-pm').empty().append('PM');
-//        }).appendTo(this.amPmBlock);
-
-//    }
-
-//    if (!options.autoclose) {
-//      // If autoclose is not setted, append a button
-//      $('<button type="button" class="btn btn-sm btn-default btn-block clockpicker-button">' + options.donetext + '</button>')
-//        .click($.proxy(this.done, this))
-//        .appendTo(popover);
-//    }
-
-//    // Placement and arrow align - make sure they make sense.
-//    if ((options.placement === 'top' || options.placement === 'bottom') && (options.align === 'top' || options.align === 'bottom')) options.align = 'left';
-//    if ((options.placement === 'left' || options.placement === 'right') && (options.align === 'left' || options.align === 'right')) options.align = 'top';
-
-//    popover.addClass(options.placement);
-//    popover.addClass('clockpicker-align-' + options.align);
-
-//    this.spanHours.click($.proxy(this.toggleView, this, 'hours'));
-//    this.spanMinutes.click($.proxy(this.toggleView, this, 'minutes'));
-
-//    // Show or toggle
-//    input.on('focus.clockpicker click.clockpicker', $.proxy(this.show, this));
-//    addon.on('click.clockpicker', $.proxy(this.toggle, this));
-
-//    // Build ticks
-//    var tickTpl = $('<div class="clockpicker-tick"></div>'),
-//      i, tick, radian;
-
-//    // Hours view
-//    if (options.twelvehour) {
-//      for (i = 1; i < 13; i += 1) {
-//        tick = tickTpl.clone();
-//        radian = i / 6 * Math.PI;
-//        var radius = outerRadius;
-//        tick.css('font-size', '120%');
-//        tick.css({
-//          left: dialRadius + Math.sin(radian) * radius - tickRadius,
-//          top: dialRadius - Math.cos(radian) * radius - tickRadius
-//        });
-//        tick.html(i === 0 ? '00' : i);
-//        hoursView.append(tick);
-//        tick.on(mousedownEvent, mousedown);
-//      }
-//    }
-//    else {
-//      for (i = 0; i < 24; i += 1) {
-//        tick = tickTpl.clone();
-//        radian = i / 6 * Math.PI;
-//        var inner = i > 0 && i < 13,
-//          radius = inner ? innerRadius : outerRadius;
-//        tick.css({
-//          left: dialRadius + Math.sin(radian) * radius - tickRadius,
-//          top: dialRadius - Math.cos(radian) * radius - tickRadius
-//        });
-//        if (inner) {
-//          tick.css('font-size', '120%');
-//        }
-//        tick.html(i === 0 ? '00' : i);
-//        hoursView.append(tick);
-//        tick.on(mousedownEvent, mousedown);
-//      }
-//    }
-
-//    // Minutes view
-//    for (i = 0; i < 60; i += 5) {
-//      tick = tickTpl.clone();
-//      radian = i / 30 * Math.PI;
-//      tick.css({
-//        left: dialRadius + Math.sin(radian) * outerRadius - tickRadius,
-//        top: dialRadius - Math.cos(radian) * outerRadius - tickRadius
-//      });
-//      tick.css('font-size', '120%');
-//      tick.html(leadingZero(i));
-//      minutesView.append(tick);
-//      tick.on(mousedownEvent, mousedown);
-//    }
-
-//    // Clicking on minutes view space
-//    plate.on(mousedownEvent, function (e) {
-//      if ($(e.target).closest('.clockpicker-tick').length === 0) {
-//        mousedown(e, true);
-//      }
-//    });
-
-//    // Mousedown or touchstart
-//    function mousedown(e, space) {
-//      var offset = plate.offset(),
-//        isTouch = /^touch/.test(e.type),
-//        x0 = offset.left + dialRadius,
-//        y0 = offset.top + dialRadius,
-//        dx = (isTouch ? e.originalEvent.touches[0] : e).pageX - x0,
-//        dy = (isTouch ? e.originalEvent.touches[0] : e).pageY - y0,
-//        z = Math.sqrt(dx * dx + dy * dy),
-//        moved = false;
-
-//      // When clicking on minutes view space, check the mouse position
-//      if (space && (z < outerRadius - tickRadius || z > outerRadius + tickRadius)) {
-//        return;
-//      }
-//      e.preventDefault();
-
-//      // Set cursor style of body after 200ms
-//      var movingTimer = setTimeout(function () {
-//        $body.addClass('clockpicker-moving');
-//      }, 200);
-
-//      // Place the canvas to top
-//      if (svgSupported) {
-//        plate.append(self.canvas);
-//      }
-
-//      // Clock
-//      self.setHand(dx, dy, !space, true);
-
-//      // Mousemove on document
-//      $doc.off(mousemoveEvent).on(mousemoveEvent, function (e) {
-//        e.preventDefault();
-//        var isTouch = /^touch/.test(e.type),
-//          x = (isTouch ? e.originalEvent.touches[0] : e).pageX - x0,
-//          y = (isTouch ? e.originalEvent.touches[0] : e).pageY - y0;
-//        if (!moved && x === dx && y === dy) {
-//          // Clicking in chrome on windows will trigger a mousemove event
-//          return;
-//        }
-//        moved = true;
-//        self.setHand(x, y, false, true);
-//      });
-
-//      // Mouseup on document
-//      $doc.off(mouseupEvent).on(mouseupEvent, function (e) {
-//        $doc.off(mouseupEvent);
-//        e.preventDefault();
-//        var isTouch = /^touch/.test(e.type),
-//          x = (isTouch ? e.originalEvent.changedTouches[0] : e).pageX - x0,
-//          y = (isTouch ? e.originalEvent.changedTouches[0] : e).pageY - y0;
-//        if ((space || moved) && x === dx && y === dy) {
-//          self.setHand(x, y);
-//        }
-//        if (self.currentView === 'hours') {
-//          self.toggleView('minutes', duration / 2);
-//        } else {
-//          if (options.autoclose) {
-//            self.minutesView.addClass('clockpicker-dial-out');
-//            setTimeout(function () {
-//              self.done();
-//            }, duration / 2);
-//          }
-//        }
-//        plate.prepend(canvas);
-
-//        // Reset cursor style of body
-//        clearTimeout(movingTimer);
-//        $body.removeClass('clockpicker-moving');
-
-//        // Unbind mousemove event
-//        $doc.off(mousemoveEvent);
-//      });
-//    }
-
-//    if (svgSupported) {
-//      // Draw clock hands and others
-//      var canvas = popover.find('.clockpicker-canvas'),
-//        svg = createSvgElement('svg');
-//      svg.setAttribute('class', 'clockpicker-svg');
-//      svg.setAttribute('width', diameter);
-//      svg.setAttribute('height', diameter);
-//      var g = createSvgElement('g');
-//      g.setAttribute('transform', 'translate(' + dialRadius + ',' + dialRadius + ')');
-//      var bearing = createSvgElement('circle');
-//      bearing.setAttribute('class', 'clockpicker-canvas-bearing');
-//      bearing.setAttribute('cx', 0);
-//      bearing.setAttribute('cy', 0);
-//      bearing.setAttribute('r', 2);
-//      var hand = createSvgElement('line');
-//      hand.setAttribute('x1', 0);
-//      hand.setAttribute('y1', 0);
-//      var bg = createSvgElement('circle');
-//      bg.setAttribute('class', 'clockpicker-canvas-bg');
-//      bg.setAttribute('r', tickRadius);
-//      var fg = createSvgElement('circle');
-//      fg.setAttribute('class', 'clockpicker-canvas-fg');
-//      fg.setAttribute('r', 3.5);
-//      g.appendChild(hand);
-//      g.appendChild(bg);
-//      g.appendChild(fg);
-//      g.appendChild(bearing);
-//      svg.appendChild(g);
-//      canvas.append(svg);
-
-//      this.hand = hand;
-//      this.bg = bg;
-//      this.fg = fg;
-//      this.bearing = bearing;
-//      this.g = g;
-//      this.canvas = canvas;
-//    }
-//  }
-
-//  // Default options
-//  ClockPicker.DEFAULTS = {
-//    'default': '',       // default time, 'now' or '13:14' e.g.
-//    fromnow: 0,          // set default time to * milliseconds from now (using with default = 'now')
-//    placement: 'bottom', // clock popover placement
-//    align: 'left',       // popover arrow align
-//    donetext: 'ok',    // done button text
-//    autoclose: false,    // auto close when minute is selected
-//    twelvehour: false, // change to 12 hour AM/PM clock from 24 hour
-//    vibrate: true        // vibrate the device when dragging clock hand
-//  };
-
-//  // Show or hide popover
-//  ClockPicker.prototype.toggle = function () {
-//    this[this.isShown ? 'hide' : 'show']();
-//  };
-
-//  // Set popover position
-//  ClockPicker.prototype.locate = function () {
-//    var element = this.element,
-//      popover = this.popover,
-//      offset = element.offset(),
-//      width = element.outerWidth(),
-//      height = element.outerHeight(),
-//      placement = this.options.placement,
-//      align = this.options.align,
-//      styles = {},
-//      self = this;
-
-//    popover.show();
-
-//    // Place the popover
-//    switch (placement) {
-//      case 'bottom':
-//        styles.top = offset.top + height;
-//        break;
-//      case 'right':
-//        styles.left = offset.left + width;
-//        break;
-//      case 'top':
-//        styles.top = offset.top - popover.outerHeight();
-//        break;
-//      case 'left':
-//        styles.left = offset.left - popover.outerWidth();
-//        break;
-//    }
-
-//    // Align the popover arrow
-//    switch (align) {
-//      case 'left':
-//        styles.left = offset.left;
-//        break;
-//      case 'right':
-//        styles.left = offset.left + width - popover.outerWidth();
-//        break;
-//      case 'top':
-//        styles.top = offset.top;
-//        break;
-//      case 'bottom':
-//        styles.top = offset.top + height - popover.outerHeight();
-//        break;
-//    }
-
-//    popover.css(styles);
-//  };
-
-//  // Show popover
-//  ClockPicker.prototype.show = function (e) {
-//    // Not show again
-//    if (this.isShown) {
-//      return;
-//    }
-
-//    var self = this;
-
-//    // Initialize
-//    if (!this.isAppended) {
-//      // Append popover to body
-//      $body = $(document.body).append(this.popover);
-
-//      // Reset position when resize
-//      $win.on('resize.clockpicker' + this.id, function () {
-//        if (self.isShown) {
-//          self.locate();
-//        }
-//      });
-
-//      this.isAppended = true;
-//    }
-
-//    // Get the time
-//    var value = ((this.input.prop('value') || this.options['default'] || '') + '').split(':');
-//    if (value[0] === 'now') {
-//      var now = new Date(+ new Date() + this.options.fromnow);
-//      value = [
-//        now.getHours(),
-//        now.getMinutes()
-//      ];
-//    }
-//    this.hours = + value[0] || 0;
-//    this.minutes = + value[1] || 0;
-//    this.spanHours.html(leadingZero(this.hours));
-//    this.spanMinutes.html(leadingZero(this.minutes));
-
-//    // Toggle to hours view
-//    this.toggleView('hours');
-
-//    // Set position
-//    this.locate();
-
-//    this.isShown = true;
-
-//    // Hide when clicking or tabbing on any element except the clock, input and addon
-//    $doc.on('click.clockpicker.' + this.id + ' focusin.clockpicker.' + this.id, function (e) {
-//      var target = $(e.target);
-//      if (target.closest(self.popover).length === 0 &&
-//        target.closest(self.addon).length === 0 &&
-//        target.closest(self.input).length === 0) {
-//        self.hide();
-//      }
-//    });
-
-//    // Hide when ESC is pressed
-//    $doc.on('keyup.clockpicker.' + this.id, function (e) {
-//      if (e.keyCode === 27) {
-//        self.hide();
-//      }
-//    });
-//  };
-
-//  // Hide popover
-//  ClockPicker.prototype.hide = function () {
-//    this.isShown = false;
-
-//    // Unbinding events on document
-//    $doc.off('click.clockpicker.' + this.id + ' focusin.clockpicker.' + this.id);
-//    $doc.off('keyup.clockpicker.' + this.id);
-
-//    this.popover.hide();
-//  };
-
-//  // Toggle to hours or minutes view
-//  ClockPicker.prototype.toggleView = function (view, delay) {
-//    var isHours = view === 'hours',
-//      nextView = isHours ? this.hoursView : this.minutesView,
-//      hideView = isHours ? this.minutesView : this.hoursView;
-
-//    this.currentView = view;
-
-//    this.spanHours.toggleClass('text-primary', isHours);
-//    this.spanMinutes.toggleClass('text-primary', !isHours);
-
-//    // Let's make transitions
-//    hideView.addClass('clockpicker-dial-out');
-//    nextView.css('visibility', 'visible').removeClass('clockpicker-dial-out');
-
-//    // Reset clock hand
-//    this.resetClock(delay);
-
-//    // After transitions ended
-//    clearTimeout(this.toggleViewTimer);
-//    this.toggleViewTimer = setTimeout(function () {
-//      hideView.css('visibility', 'hidden');
-//    }, duration);
-//  };
-
-//  // Reset clock hand
-//  ClockPicker.prototype.resetClock = function (delay) {
-//    var view = this.currentView,
-//      value = this[view],
-//      isHours = view === 'hours',
-//      unit = Math.PI / (isHours ? 6 : 30),
-//      radian = value * unit,
-//      radius = isHours && value > 0 && value < 13 ? innerRadius : outerRadius,
-//      x = Math.sin(radian) * radius,
-//      y = - Math.cos(radian) * radius,
-//      self = this;
-//    if (svgSupported && delay) {
-//      self.canvas.addClass('clockpicker-canvas-out');
-//      setTimeout(function () {
-//        self.canvas.removeClass('clockpicker-canvas-out');
-//        self.setHand(x, y);
-//      }, delay);
-//    } else {
-//      this.setHand(x, y);
-//    }
-//  };
-
-//  // Set clock hand to (x, y)
-//  ClockPicker.prototype.setHand = function (x, y, roundBy5, dragging) {
-//    var radian = Math.atan2(x, - y),
-//      isHours = this.currentView === 'hours',
-//      unit = Math.PI / (isHours || roundBy5 ? 6 : 30),
-//      z = Math.sqrt(x * x + y * y),
-//      options = this.options,
-//      inner = isHours && z < (outerRadius + innerRadius) / 2,
-//      radius = inner ? innerRadius : outerRadius,
-//      value;
-
-//    if (options.twelvehour) {
-//      radius = outerRadius;
-//    }
-
-//    // Radian should in range [0, 2PI]
-//    if (radian < 0) {
-//      radian = Math.PI * 2 + radian;
-//    }
-
-//    // Get the round value
-//    value = Math.round(radian / unit);
-
-//    // Get the round radian
-//    radian = value * unit;
-
-//    // Correct the hours or minutes
-//    if (options.twelvehour) {
-//      if (isHours) {
-//        if (value === 0) {
-//          value = 12;
-//        }
-//      } else {
-//        if (roundBy5) {
-//          value *= 5;
-//        }
-//        if (value === 60) {
-//          value = 0;
-//        }
-//      }
-//	   } else {
-//      if (isHours) {
-//        if (value === 12) {
-//          value = 0;
-//        }
-//        value = inner ? (value === 0 ? 12 : value) : value === 0 ? 0 : value + 12;
-//      } else {
-//        if (roundBy5) {
-//          value *= 5;
-//        }
-//        if (value === 60) {
-//          value = 0;
-//        }
-//      }
-//    }
-
-//    // Once hours or minutes changed, vibrate the device
-//    if (this[this.currentView] !== value) {
-//      if (vibrate && this.options.vibrate) {
-//        // Do not vibrate too frequently
-//        if (!this.vibrateTimer) {
-//          navigator[vibrate](10);
-//          this.vibrateTimer = setTimeout($.proxy(function () {
-//            this.vibrateTimer = null;
-//          }, this), 100);
-//        }
-//      }
-//    }
-
-//    this[this.currentView] = value;
-//    this[isHours ? 'spanHours' : 'spanMinutes'].html(leadingZero(value));
-
-//    // If svg is not supported, just add an active class to the tick
-//    if (!svgSupported) {
-//      this[isHours ? 'hoursView' : 'minutesView'].find('.clockpicker-tick').each(function () {
-//        var tick = $(this);
-//        tick.toggleClass('active', value === + tick.html());
-//      });
-//      return;
-//    }
-
-//    // Place clock hand at the top when dragging
-//    if (dragging || (!isHours && value % 5)) {
-//      this.g.insertBefore(this.hand, this.bearing);
-//      this.g.insertBefore(this.bg, this.fg);
-//      this.bg.setAttribute('class', 'clockpicker-canvas-bg clockpicker-canvas-bg-trans');
-//    } else {
-//      // Or place it at the bottom
-//      this.g.insertBefore(this.hand, this.bg);
-//      this.g.insertBefore(this.fg, this.bg);
-//      this.bg.setAttribute('class', 'clockpicker-canvas-bg');
-//    }
-
-//    // Set clock hand and others' position
-//    var cx = Math.sin(radian) * radius,
-//      cy = - Math.cos(radian) * radius;
-//    this.hand.setAttribute('x2', cx);
-//    this.hand.setAttribute('y2', cy);
-//    this.bg.setAttribute('cx', cx);
-//    this.bg.setAttribute('cy', cy);
-//    this.fg.setAttribute('cx', cx);
-//    this.fg.setAttribute('cy', cy);
-//  };
-
-//  // Hours and minutes are selected
-//  ClockPicker.prototype.done = function () {
-//    this.hide();
-//    var last = this.input.prop('value'),
-//      value = leadingZero(this.hours) + ':' + leadingZero(this.minutes);
-//    if (this.options.twelvehour) {
-//      value = value + this.amOrPm;
-//    }
-
-//    this.input.prop('value', value);
-//    if (value !== last) {
-//      this.input.triggerHandler('change');
-//      if (!this.isInput) {
-//        this.element.trigger('change');
-//      }
-//    }
-
-//    if (this.options.autoclose) {
-//      this.input.trigger('blur');
-//    }
-//  };
-
-//  // Remove clockpicker from input
-//  ClockPicker.prototype.remove = function () {
-//    this.element.removeData('clockpicker');
-//    this.input.off('focus.clockpicker click.clockpicker');
-//    this.addon.off('click.clockpicker');
-//    if (this.isShown) {
-//      this.hide();
-//    }
-//    if (this.isAppended) {
-//      $win.off('resize.clockpicker' + this.id);
-//      this.popover.remove();
-//    }
-//  };
-
-//  // Extends $.fn.clockpicker
-//  $.fn.clockpicker = function (option) {
-//    var args = Array.prototype.slice.call(arguments, 1);
-//    return this.each(function () {
-//      var $this = $(this),
-//        data = $this.data('clockpicker');
-//      if (!data) {
-//        var options = $.extend({}, ClockPicker.DEFAULTS, $this.data(), typeof option == 'object' && option);
-//        $this.data('clockpicker', new ClockPicker($this, options));
-//      } else {
-//        // Manual operatsions. show, hide, remove, e.g.
-//        if (typeof data[option] === 'function') {
-//          data[option].apply(data, args);
-//        }
-//      }
-//    });
-//  };
-//} ());

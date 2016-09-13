@@ -1,4 +1,4 @@
-﻿<div class="md2-datepicker-input" (click)="openCalendar()">
+﻿<div class="md2-datepicker-input" (click)="showDatepicker()">
   <div class="md2-datepicker-calendar-icon">
     <svg width="100%" height="100%" viewBox="0 0 24 24">
       <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"></path>
@@ -10,44 +10,31 @@
       <path d="M15,13H16.5V15.82L18.94,17.23L18.19,18.53L15,16.69V13M19,8H5V19H9.67C9.24,18.09 9,17.07 9,16A7,7 0 0,1 16,9C17.07,9 18.09,9.24 19,9.67V8M5,21C3.89,21 3,20.1 3,19V5C3,3.89 3.89,3 5,3H6V1H8V3H16V1H18V3H19A2,2 0 0,1 21,5V11.1C22.24,12.36 23,14.09 23,16A7,7 0 0,1 16,23C14.09,23 12.36,22.24 11.1,21H5M16,11.15A4.85,4.85 0 0,0 11.15,16C11.15,18.68 13.32,20.85 16,20.85A4.85,4.85 0 0,0 20.85,16C20.85,13.32 18.68,11.15 16,11.15Z"></path>
     </svg>-->
   </div>
-  {{selectionDayTxt}}
+  <span class="md2-datepicker-placeholder" [class.md2-has-value]="value">{{placeholder}}</span>
+  <span>{{selectionDayTxt}}</span>
+
 </div>
 <div class="md2-datepicker-wrapper">
-
-  <table class="caltable">
-    <thead><tr><th *ngFor="let d of weekDays">{{d}}</th></tr></thead>
-    <tbody>
-      <tr *ngFor="let w of dates">
-        <td *ngFor="let d of w" [ngClass]="{'currmonth':d.cmo===CURR_MONTH&&!d.disabled, 'currday':d.currDay, 'selectedday':selectedDate.day===d.dateObj.day && selectedDate.month===d.dateObj.month && selectedDate.year===d.dateObj.year && d.cmo===CURR_MONTH, 'disabled': d.disabled}" (click)="$event.stopPropagation();!d.disabled && cellClicked(d)">
-          <div style="background-color:inherit" [ngClass]="{'prevmonth':d.cmo===PREV_MONTH,'currmonth':d.cmo===CURR_MONTH,'nextmonth':d.cmo===NEXT_MONTH,'sunday':d.dayNbr === 0 && sunHighlight}">{{d.dateObj.day}}</div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
   <div class="md2-datepicker-container">
     <div class="md2-datepicker-header">
       <!--<span class="md2-datepicker-year">2016</span>-->
-      <span class="md2-datepicker-date">Sep 12, 2016</span>
-      <span class="md2-datepicker-time">15:30</span>
+      <span class="md2-datepicker-date">{{displayDay.dayOfWeek}}, {{displayDay.day}} {{displayDay.fullMonth}}</span>
+      <span class="md2-datepicker-time">{{displayDay.hour}}:{{displayDay.minute}}</span>
     </div>
     <div class="md2-datepicker-body">
       <div class="md2-calendar">
         <div class="md2-calendar-controls">
-          <div class="md2-calendar-prev-month" (click)="prevMonth()">
+          <div class="md2-calendar-prev-month" (click)="updateMonth(-1)">
             <svg viewBox="0 0 24 24" width="100%" height="100%">
               <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
             </svg>
           </div>
-          <div class="md2-calendar-header">{{visibleMonth.monthTxt}} {{visibleMonth.year}}</div>
-          <div class="md2-calendar-next-month" (click)="nextMonth()">
+          <div class="md2-calendar-header">{{displayDay.fullMonth}} {{displayDay.year}}</div>
+          <div class="md2-calendar-next-month" (click)="updateMonth(1)">
             <svg viewBox="0 0 24 24" width="100%" height="100%">
               <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
             </svg>
           </div>
-        </div>
-        <div class="md2-calendar-weekdays">
-          <span *ngFor="let day of dayNames" class="md2-calendar-weekday">{{day}}</span>
         </div>
         <!--<div class="md2-calendar-month">
           <div class="md2-calendar-week" >
@@ -58,20 +45,30 @@
           </div>
         </div>-->
         <table class="md2-calendar-month">
-          <thead>
-            <tr>
-              <th *ngFor="let d of weekDays">{{d}}</th>
-            </tr>
-          </thead>
+          <thead><tr><th *ngFor="let d of days">{{d.substr(0, 1)}}</th></tr></thead>
           <tbody>
             <tr *ngFor="let w of dates">
+              <td *ngFor="let d of w"
+                  [class.currmonth]="d.cmo===CURR_MONTH&&!d.disabled">
+                <div class="md2-calendar-day"
+                     [class.today]="d.today"
+                     [class.active]="selectedDate.day===d.dateObj.day && selectedDate.month===d.dateObj.month && selectedDate.year===d.dateObj.year && d.cmo===CURR_MONTH"
+                     [class.disabled]="d.disabled"
+                     [class.prevmonth]="d.cmo===PREV_MONTH"
+                     [class.currmonth]="d.cmo===CURR_MONTH"
+                     [class.nextmonth]="d.cmo===NEXT_MONTH"
+                     [class.sunday]="d.dayNbr === 0 && sunHighlight"
+                     (click)="selectDate($event,d)">{{d.dateObj.day}}</div>
+              </td>
+            </tr>
+            <!-- <tr *ngFor="let w of days">
               <td *ngFor="let d of w">
                 <span class="md2-calendar-day">{{d}}</span>
               </td>
               <!--<td *ngFor="let d of w" [ngClass]="{'currmonth':d.cmo===CURR_MONTH&&!d.disabled, 'currday':d.currDay, 'selectedday':selectedDate.day===d.dateObj.day && selectedDate.month===d.dateObj.month && selectedDate.year===d.dateObj.year && d.cmo===CURR_MONTH, 'disabled': d.disabled}" (click)="$event.stopPropagation();!d.disabled && cellClicked(d)">
                 <div style="background-color:inherit" [ngClass]="{'prevmonth':d.cmo===PREV_MONTH,'currmonth':d.cmo===CURR_MONTH,'nextmonth':d.cmo===NEXT_MONTH,'sunday':d.dayNbr === 0 && sunHighlight}">{{d.dateObj.day}}</div>
-              </td>-->
-            </tr>
+              </td>-- >
+            </tr> -->
           </tbody>
         </table>
       </div>
