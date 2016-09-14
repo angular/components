@@ -87,6 +87,8 @@ export class Md2Datepicker implements ControlValueAccessor {
 
   private months: Array<string> = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   private days: Array<string> = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  private hours: Array<Object> = [];
+  private minutes: Array<Object> = [];
 
   private prevMonth: number = 1;
   private currMonth: number = 2;
@@ -472,6 +474,26 @@ export class Md2Datepicker implements ControlValueAccessor {
         }
       }
       this.dates.push(week);
+    }
+  }
+
+  generateHours() {
+    this.hours.length = 0;
+
+    let dialRadius = 120,
+      outerRadius = 80,
+      innerRadius = 54,
+      tickRadius = 13;
+
+    for (let i = 0; i < 24; i++) {
+      let radian = i / 6 * Math.PI;
+      let inner = i > 0 && i < 13,
+        radius = inner ? innerRadius : outerRadius;
+      this.hours.push({
+        hour: i === 0 ? '00' : i,
+        top: dialRadius - Math.cos(radian) * radius - tickRadius,
+        left: dialRadius + Math.sin(radian) * radius - tickRadius
+      });
     }
   }
 

@@ -52,11 +52,12 @@ md2-datepicker { position: relative; display: block; outline: none; }
 
 
 .md2-clock { position: relative; display: block; font-size: 12px; font-weight: 400; text-align: center; padding: 12px; background-color: #fff; border: 1px solid #ccc; border-radius: 50%; width: 200px; height: 200px; }
+.md2-clock-wrapper { position: relative; width: 240px; height: 240px; }
 .md2-clock-hours,
-.md2-clock-minutes { position: relative; width: 200px; height: 200px; }
+.md2-clock-minutes { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 .md2-clock-hour,
 .md2-clock-minute { position: absolute; width: 26px; height: 26px; color: #666; line-height: 26px; text-align: center; border-radius: 50%; cursor: pointer; }
-.md2-clock-hand { }
+.md2-clock-hand { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 .md2-clock-svg { }
 .md2-clock-center { }
 
