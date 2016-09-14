@@ -57,7 +57,7 @@
                      [class.prev-month]="d.calMonth===prevMonth"
                      [class.currmonth]="d.calMonth===currMonth"
                      [class.next-month]="d.calMonth===nextMonth"
-                     (click)="setDate($event,d)">{{d.dateObj.day}}</div>
+                     (click)="onClickDate($event,d)">{{d.dateObj.day}}</div>
               </td>
             </tr>
           </tbody>

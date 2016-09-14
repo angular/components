@@ -40,7 +40,7 @@ md2-datepicker { position: relative; display: block; outline: none; }
 .md2-calendar-day { position: relative; display: inline-block; width: 34px; height: 34px; border-radius: 50%; text-align: center; cursor: pointer; line-height: 34px; box-sizing: border-box; }
 .md2-calendar-day.today { border: 1px solid #2196f3; }
 .md2-calendar-day:hover,
-.md2-calendar-day.focus { color: #fff; background: rgba(33, 150, 243, 0.6); }
+.md2-calendar-day.focus { background: #e0e0e0; }
 .md2-calendar-day.selected,
 .md2-calendar-day.selected:hover { color: #fff; background: #2196f3; }
 .md2-calendar-day.disabled,

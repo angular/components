@@ -205,61 +205,29 @@ export class Md2Datepicker implements ControlValueAccessor {
       return;
     }
 
-
-
-    //handleKeyEvent = function (event, action) {
-    //  var calendarCtrl = this.calendarCtrl;
-    //  var displayDate = calendarCtrl.displayDate;
-
-    //  if (action === 'select') {
-    //    calendarCtrl.setNgModelValue(displayDate);
-    //  } else {
-    //    var date = null;
-    //    var dateUtil = this.dateUtil;
-
-    //    switch (action) {
-    //      case 'move-right': date = dateUtil.incrementDays(displayDate, 1); break;
-    //      case 'move-left': date = dateUtil.incrementDays(displayDate, -1); break;
-
-    //      case 'move-page-down': date = dateUtil.incrementMonths(displayDate, 1); break;
-    //      case 'move-page-up': date = dateUtil.incrementMonths(displayDate, -1); break;
-
-    //      case 'move-row-down': date = dateUtil.incrementDays(displayDate, 7); break;
-    //      case 'move-row-up': date = dateUtil.incrementDays(displayDate, -7); break;
-
-    //      case 'start': date = dateUtil.getFirstDateOfMonth(displayDate); break;
-    //      case 'end': date = dateUtil.getLastDateOfMonth(displayDate); break;
-    //    }
-
-    //    if (date) {
-    //      date = this.dateUtil.clampDate(date, calendarCtrl.minDate, calendarCtrl.maxDate);
-
-    //      this.changeDisplayDate(date).then(function () {
-    //        calendarCtrl.focus(date);
-    //      });
-    //    }
-    //  }
-    //};
-
     if (this.isDatepickerVisible) {
       event.preventDefault();
       event.stopPropagation();
       if (this.isCalendarVisible) {
+        let displayDate = this.displayDate;
         switch (event.keyCode) {
-          case 13: break;
-          case 32: break;
+          case 13:
+          case 32: this.setDate(this.displayDate); break;
 
-          case 39: this.displayDate = this.dateUtil.incrementDays(this.displayDate, 1); break;
-          case 37: this.displayDate = this.dateUtil.incrementDays(this.displayDate, -1); break;
+          case 39: this.displayDate = this.dateUtil.incrementDays(displayDate, 1); break;
+          case 37: this.displayDate = this.dateUtil.incrementDays(displayDate, -1); break;
 
-          case 34: this.displayDate = this.dateUtil.incrementMonths(this.displayDate, 1); break;
-          case 33: this.displayDate = this.dateUtil.incrementMonths(this.displayDate, -1); break;
+          case 34: this.displayDate = this.dateUtil.incrementMonths(displayDate, 1); break;
+          case 33: this.displayDate = this.dateUtil.incrementMonths(displayDate, -1); break;
 
-          case 40: this.displayDate = this.dateUtil.incrementDays(this.displayDate, 7); break;
-          case 38: this.displayDate = this.dateUtil.incrementDays(this.displayDate, -7); break;
+          case 40: this.displayDate = this.dateUtil.incrementDays(displayDate, 7); break;
+          case 38: this.displayDate = this.dateUtil.incrementDays(displayDate, -7); break;
 
-          case 36: this.displayDate = this.dateUtil.getFirstDateOfMonth(this.displayDate); break;
-          case 35: this.displayDate = this.dateUtil.getLastDateOfMonth(this.displayDate); break;
+          case 36: this.displayDate = this.dateUtil.getFirstDateOfMonth(displayDate); break;
+          case 35: this.displayDate = this.dateUtil.getLastDateOfMonth(displayDate); break;
+        }
+        if (!this.dateUtil.isSameMonthAndYear(displayDate, this.displayDate)) {
+          this.generateCalendar();
         }
       } else {
         switch (event.keyCode) {
@@ -269,6 +237,15 @@ export class Md2Datepicker implements ControlValueAccessor {
           //case 40: this.displayDate = this.dateUtil.incrementHours(this.displayDate, 1); break;
           //case 38: this.displayDate = this.dateUtil.incrementHours(this.displayDate, -1); break;
         }
+      }
+    } else {
+      switch (event.keyCode) {
+        case 13:
+        case 32:
+          event.preventDefault();
+          event.stopPropagation();
+          this.showDatepicker();
+          break;
       }
     }
   }
@@ -281,8 +258,12 @@ export class Md2Datepicker implements ControlValueAccessor {
   private onBlur() { this.isDatepickerVisible = false; }
 
   private showDatepicker() {
-    //this.displayDate = this.value;
     this.isDatepickerVisible = true;
+    if (this.type === 'date' || this.type === 'datetime') {
+      this.isCalendarVisible = true;
+    } else {
+      this.isCalendarVisible = false
+    }
     if (!this.selectedDate) {
       this.selectedDate = this.today;
     }
@@ -314,24 +295,29 @@ export class Md2Datepicker implements ControlValueAccessor {
   //  this.isDatepickerVisible = true;
   //}
 
-  private setDate(e: Event, d: any) {
-    e.stopPropagation();
+  private onClickDate(event: Event, d: any) {
+    event.preventDefault();
+    event.stopPropagation();
     if (d.disabled) { return; }
     if (d.calMonth === this.prevMonth) {
       this.updateMonth(-1);
     }
     else if (d.calMonth === this.currMonth) {
-      this.selectedDate = new Date(d.dateObj.year, d.dateObj.month, d.dateObj.day);
-      this.displayInputDate = this.formatDate(this.selectedDate);
-      //this.isDatepickerVisible = false;
-      //let epoc = this.selectedDate.getTime() / 1000.0;
-      //this.dateChanged.emit({ date: this.selectedDate, formatted: this.selectionDayTxt, epoc: epoc });
-      this.displayDate = this.selectedDate;
-      this.value = this.selectedDate;//{ date: this.selectedDate, formatted: this.selectionDayTxt, epoc: epoc };
+      this.setDate(new Date(d.dateObj.year, d.dateObj.month, d.dateObj.day));
     }
     else if (d.calMonth === this.nextMonth) {
       this.updateMonth(1);
     }
+  }
+
+  private setDate(date: Date) {
+    this.selectedDate = date;
+    this.isDatepickerVisible = false;
+    if (this.type === 'date') {
+      this.displayInputDate = this.formatDate(date);
+      this.value = this.selectedDate;
+    }
+    //this.displayDate = this.selectedDate;
   }
 
   private updateMonth(noOfMonths: number) {
