@@ -11,6 +11,7 @@
   }
 
   [md-menu-item] {
+    background: transparent;
     color: md-color($foreground, 'text');
 
     &[disabled] {

@@ -56,7 +56,7 @@
     }
     .md-progress-bar-fill::after {
       background-color: md-color($accent, 600);
-    }    
+    }
   }
   
   md-progress-bar[color='warn'] {
@@ -69,7 +69,7 @@
     }
     .md-progress-bar-fill::after {
       background-color: md-color($warn, 600);
-    }    
+    }
   }
 
   .md-progress-bar-fill::after {

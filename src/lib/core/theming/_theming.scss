@@ -5,7 +5,7 @@
 // @param $color-map
 // @param $hue
 @function md-contrast($palette, $hue) {
-  @return map-get(map-get($palette, contrast), $hue)
+  @return map-get(map-get($palette, contrast), $hue);
 }
 
 
@@ -67,7 +67,7 @@
     is-dark: false,
     foreground: $md-light-theme-foreground,
     background: $md-light-theme-background,
-  )
+  );
 }
 
 
@@ -80,5 +80,5 @@
     is-dark: true,
     foreground: $md-dark-theme-foreground,
     background: $md-dark-theme-background,
-  )
+  );
 }

@@ -18,6 +18,7 @@
 
   @include md-ripple();
   @include md-a11y();
+  @include md-overlay();
 }
 
 // Mixin that renders all of the core styles that depend on the theme.

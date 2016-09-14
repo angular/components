@@ -61,6 +61,7 @@
 
   [md-button], [md-icon-button] {
     @include _md-button-theme-color($theme, 'color');
+    background: transparent;
 
     // Only flat buttons and icon buttons (not raised or fabs) have a hover style.
     // Use the same visual treatment for hover as for focus.
