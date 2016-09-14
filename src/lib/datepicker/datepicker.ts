@@ -73,6 +73,7 @@ export class Md2Datepicker implements ControlValueAccessor {
 
   constructor(private dateUtil: MdDateUtil) {
     this.displayDate = this.today;
+    this.generateClock();
   }
 
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
@@ -293,6 +294,10 @@ export class Md2Datepicker implements ControlValueAccessor {
     }
   }
 
+  private showCalendar() { this.isCalendarVisible = true; }
+
+  private showClock() { this.isCalendarVisible = false; }
+
   //private hideDatepicker() {
   //  this.isDatepickerVisible = true;
   //}
@@ -477,12 +482,16 @@ export class Md2Datepicker implements ControlValueAccessor {
     }
   }
 
-  generateHours() {
+  private setHour() { }
+
+  private setMinute() { }
+
+  private generateClock() {
     this.hours.length = 0;
 
     let dialRadius = 120,
-      outerRadius = 80,
-      innerRadius = 54,
+      outerRadius = 96,
+      innerRadius = 60,
       tickRadius = 13;
 
     for (let i = 0; i < 24; i++) {
@@ -493,6 +502,15 @@ export class Md2Datepicker implements ControlValueAccessor {
         hour: i === 0 ? '00' : i,
         top: dialRadius - Math.cos(radian) * radius - tickRadius,
         left: dialRadius + Math.sin(radian) * radius - tickRadius
+      });
+    }
+
+    for (let i = 0; i < 60; i += 5) {
+      let radian = i / 30 * Math.PI;
+      this.minutes.push({
+        minute: i === 0 ? '00' : i,
+        top: dialRadius - Math.cos(radian) * outerRadius - tickRadius,
+        left: dialRadius + Math.sin(radian) * outerRadius - tickRadius
       });
     }
   }

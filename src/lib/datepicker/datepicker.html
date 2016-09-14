@@ -18,23 +18,23 @@
   <div class="md2-datepicker-container">
     <div class="md2-datepicker-header">
       <span class="md2-datepicker-year">{{displayDay.year}}</span>
-      <span class="md2-datepicker-date">{{displayDay.day.substr(0, 3)}}, {{displayDay.date}} {{displayDay.month.substr(0, 3)}}</span>
-      <span class="md2-datepicker-time">{{displayDay.hour}}:{{displayDay.minute}}</span>
+      <span class="md2-datepicker-date" (click)="showCalendar()" [class.active]="isCalendarVisible">{{displayDay.day.substr(0, 3)}}, {{displayDay.date}} {{displayDay.month.substr(0, 3)}}</span>
+      <span class="md2-datepicker-time" (click)="showClock()" [class.active]="!isCalendarVisible">{{displayDay.hour}}:{{displayDay.minute}}</span>
     </div>
     <div class="md2-datepicker-body">
-      <div class="md2-calendar">
+      <div class="md2-calendar" [class.active]="isCalendarVisible">
         <div class="md2-calendar-controls">
           <div class="md2-calendar-prev-month" (click)="updateMonth(-1)">
             <svg viewBox="0 0 24 24" width="100%" height="100%">
               <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
             </svg>
           </div>
-          <div class="md2-calendar-header">{{displayDay.month}} {{displayDay.year}}</div>
           <div class="md2-calendar-next-month" (click)="updateMonth(1)">
             <svg viewBox="0 0 24 24" width="100%" height="100%">
               <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
             </svg>
           </div>
+          <div class="md2-calendar-header">{{displayDay.month}} {{displayDay.year}}</div>
         </div>
         <!--<div class="md2-calendar-month">
           <div class="md2-calendar-week" >
@@ -63,25 +63,22 @@
           </tbody>
         </table>
       </div>
-
-      <div class="md2-clock">
-        <div class="md2-clock-wrapper">
-          <div class="md2-clock-hand">
-            <svg class="md2-clock-svg" width="200" height="200">
-              <g transform="translate(100,100)">
-                <circle class="md2-clock-bg" r="13" cx="64.7213595499958" cy="47.02282018339784"></circle>
-                <circle class="md2-clock-fg" r="3.5" cx="64.7213595499958" cy="47.02282018339784"></circle>
-                <line x1="0" y1="0" x2="64.7213595499958" y2="47.02282018339784"></line>
-                <circle class="md2-clock-bearing" cx="0" cy="0" r="2"></circle>
-              </g>
-            </svg>
-          </div>
-          <div class="md2-clock-hours">
-            <div *ngFor="let h of hours" class="md2-clock-hour" [style.top]="h.top" [style.left]="h.left">{{h.hour}}</div>
-          </div>
-          <div class="md2-clock-minutes">
-            <div class="md2-clock-minute"></div>
-          </div>
+      <div class="md2-clock" [class.active]="!isCalendarVisible">
+        <div class="md2-clock-hand">
+          <svg class="md2-clock-svg" width="240" height="240">
+            <g transform="translate(120,120)">
+              <!--<circle class="md2-clock-bg" r="17" cx="64.7213595499958" cy="47.02282018339784"></circle>
+              <circle class="md2-clock-fg" r="3.5" cx="64.7213595499958" cy="47.02282018339784"></circle>
+              <line x1="0" y1="0" x2="64.7213595499958" y2="47.02282018339784"></line>-->
+              <circle class="md2-clock-center" cx="0" cy="0" r="3"></circle>
+            </g>
+          </svg>
+        </div>
+        <div class="md2-clock-hours active">
+          <div *ngFor="let h of hours" class="md2-clock-hour" [style.top]="h.top + 'px'" [style.left]="h.left + 'px'">{{h.hour}}</div>
+        </div>
+        <div class="md2-clock-minutes">
+          <div *ngFor="let m of minutes" class="md2-clock-minute" [style.top]="m.top + 'px'" [style.left]="m.left + 'px'">{{m.minute}}</div>
         </div>
       </div>
     </div>
