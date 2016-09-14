@@ -65,7 +65,7 @@ export class MdDateUtil {
    * @returns {boolean}
    */
   isInNextMonth(startDate: Date, endDate: Date) {
-    var nextMonth = this.getDateInNextMonth(startDate);
+    let nextMonth = this.getDateInNextMonth(startDate);
     return this.isSameMonthAndYear(nextMonth, endDate);
   }
 
@@ -76,7 +76,7 @@ export class MdDateUtil {
    * @returns {boolean}
    */
   isInPreviousMonth(startDate: Date, endDate: Date) {
-    var previousMonth = this.getDateInPreviousMonth(startDate);
+    let previousMonth = this.getDateInPreviousMonth(startDate);
     return this.isSameMonthAndYear(endDate, previousMonth);
   }
 
@@ -96,7 +96,7 @@ export class MdDateUtil {
    * @returns {number} Index of the week of the month (zero-based).
    */
   getWeekOfMonth(date: Date) {
-    var firstDayOfMonth = this.getFirstDateOfMonth(date);
+    let firstDayOfMonth = this.getFirstDateOfMonth(date);
     return Math.floor((firstDayOfMonth.getDay() + date.getDate() - 1) / 7);
   }
 
@@ -123,8 +123,8 @@ export class MdDateUtil {
     // automatically advance *another* month by the number of missing days.
     // For example, if you try to go from Jan. 30 to Feb. 30, you'll end up on March 2.
     // So, we check if the month overflowed and go to the last day of the target month instead.
-    var dateInTargetMonth = new Date(date.getFullYear(), date.getMonth() + numberOfMonths, 1);
-    var numberOfDaysInMonth = this.getNumberOfDaysInMonth(dateInTargetMonth);
+    let dateInTargetMonth = new Date(date.getFullYear(), date.getMonth() + numberOfMonths, 1);
+    let numberOfDaysInMonth = this.getNumberOfDaysInMonth(dateInTargetMonth);
     if (numberOfDaysInMonth < date.getDate()) {
       dateInTargetMonth.setDate(numberOfDaysInMonth);
     } else {
@@ -203,9 +203,9 @@ export class MdDateUtil {
    * @param {Date} maxDate
    */
   isDateWithinRange(date: Date, minDate: Date, maxDate: Date) {
-    var dateAtMidnight = this.createDateAtMidnight(date);
-    var minDateAtMidnight = this.isValidDate(minDate) ? this.createDateAtMidnight(minDate) : null;
-    var maxDateAtMidnight = this.isValidDate(maxDate) ? this.createDateAtMidnight(maxDate) : null;
+    let dateAtMidnight = this.createDateAtMidnight(date);
+    let minDateAtMidnight = this.isValidDate(minDate) ? this.createDateAtMidnight(minDate) : null;
+    let maxDateAtMidnight = this.isValidDate(maxDate) ? this.createDateAtMidnight(maxDate) : null;
     return (!minDateAtMidnight || minDateAtMidnight <= dateAtMidnight) &&
       (!maxDateAtMidnight || maxDateAtMidnight >= dateAtMidnight);
   }
@@ -242,7 +242,7 @@ export class MdDateUtil {
    * @return {Date}
    */
   clampDate(date: Date, minDate: Date, maxDate: Date) {
-    var boundDate = date;
+    let boundDate = date;
     if (minDate && date < minDate) {
       boundDate = new Date(minDate.getTime());
     }
@@ -271,8 +271,8 @@ export class MdDateUtil {
    * @param {Date} maxDate
    */
   isMonthWithinRange(date: Date, minDate: Date, maxDate: Date) {
-    var month = date.getMonth();
-    var year = date.getFullYear();
+    let month = date.getMonth();
+    let year = date.getFullYear();
 
     return (!minDate || minDate.getFullYear() < year || minDate.getMonth() <= month) &&
       (!maxDate || maxDate.getFullYear() > year || maxDate.getMonth() >= month);

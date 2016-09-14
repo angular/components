@@ -11,14 +11,14 @@
     </svg>-->
   </div>
   <span class="md2-datepicker-placeholder" [class.md2-has-value]="value">{{placeholder}}</span>
-  <span class="md2-datepicker-input-text">{{selectionDayTxt}}</span>
+  <span class="md2-datepicker-input-text">{{displayInputDate}}</span>
 
 </div>
 <div class="md2-datepicker-wrapper">
   <div class="md2-datepicker-container">
     <div class="md2-datepicker-header">
       <span class="md2-datepicker-year">{{displayDay.year}}</span>
-      <span class="md2-datepicker-date">{{displayDay.day.shortName}}, {{displayDay.day.number}} {{displayDay.month.shortName}}</span>
+      <span class="md2-datepicker-date">{{displayDay.day.substr(0, 3)}}, {{displayDay.date}} {{displayDay.month.substr(0, 3)}}</span>
       <span class="md2-datepicker-time">{{displayDay.hour}}:{{displayDay.minute}}</span>
     </div>
     <div class="md2-datepicker-body">
@@ -29,7 +29,7 @@
               <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
             </svg>
           </div>
-          <div class="md2-calendar-header">{{displayDay.month.name}} {{displayDay.year}}</div>
+          <div class="md2-calendar-header">{{displayDay.month}} {{displayDay.year}}</div>
           <div class="md2-calendar-next-month" (click)="updateMonth(1)">
             <svg viewBox="0 0 24 24" width="100%" height="100%">
               <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
@@ -48,27 +48,18 @@
           <thead><tr><th *ngFor="let d of days">{{d.substr(0, 1)}}</th></tr></thead>
           <tbody>
             <tr *ngFor="let w of dates">
-              <td *ngFor="let d of w"
-                  [class.currmonth]="d.cmo===CURR_MONTH&&!d.disabled">
+              <td *ngFor="let d of w">
                 <div class="md2-calendar-day"
                      [class.today]="d.today"
-                     [class.active]="selectedDate.day===d.dateObj.day && selectedDate.month===d.dateObj.month && selectedDate.year===d.dateObj.year && d.cmo===CURR_MONTH"
+                     [class.focus]="dateUtil.isSameDay(displayDate, d.date)"
+                     [class.selected]="dateUtil.isSameDay(selectedDate, d.date)"
                      [class.disabled]="d.disabled"
-                     [class.prev-month]="d.cmo===PREV_MONTH"
-                     [class.currmonth]="d.cmo===CURR_MONTH"
-                     [class.next-month]="d.cmo===NEXT_MONTH"
-                     [class.sunday]="d.dayNbr === 0 && sunHighlight"
-                     (click)="selectDate($event,d)">{{d.dateObj.day}}</div>
+                     [class.prev-month]="d.calMonth===prevMonth"
+                     [class.currmonth]="d.calMonth===currMonth"
+                     [class.next-month]="d.calMonth===nextMonth"
+                     (click)="setDate($event,d)">{{d.dateObj.day}}</div>
               </td>
             </tr>
-            <!-- <tr *ngFor="let w of days">
-              <td *ngFor="let d of w">
-                <span class="md2-calendar-day">{{d}}</span>
-              </td>
-              <!--<td *ngFor="let d of w" [ngClass]="{'currmonth':d.cmo===CURR_MONTH&&!d.disabled, 'currday':d.currDay, 'selectedday':selectedDate.day===d.dateObj.day && selectedDate.month===d.dateObj.month && selectedDate.year===d.dateObj.year && d.cmo===CURR_MONTH, 'disabled': d.disabled}" (click)="$event.stopPropagation();!d.disabled && cellClicked(d)">
-                <div style="background-color:inherit" [ngClass]="{'prevmonth':d.cmo===PREV_MONTH,'currmonth':d.cmo===CURR_MONTH,'nextmonth':d.cmo===NEXT_MONTH,'sunday':d.dayNbr === 0 && sunHighlight}">{{d.dateObj.day}}</div>
-              </td>-- >
-            </tr> -->
           </tbody>
         </table>
       </div>
