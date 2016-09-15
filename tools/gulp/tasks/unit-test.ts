@@ -6,7 +6,7 @@ import {PROJECT_ROOT, DIST_COMPONENTS_ROOT} from '../constants';
 import {sequenceTask} from '../task_helpers';
 
 const karma = require('karma');
-const inlineResources = require('../../../scripts/release/inline-resources');
+const runSequence = require('run-sequence');
 
 gulp.task(':build:test:vendor', function() {
   const npmVendorFiles = [
@@ -39,10 +39,12 @@ gulp.task('test', [':test:deps'], (done: () => void) => {
 });
 
 gulp.task('test:single-run', [':test:deps'], (done: () => void) => {
-  inlineResources([DIST_COMPONENTS_ROOT]);
-
-  new karma.Server({
-    configFile: path.join(PROJECT_ROOT, 'test/karma.conf.js'),
-    singleRun: true
-  }, done).start();
+  runSequence(
+    ':inline-resources',
+    () => {
+      new karma.Server({
+        configFile: path.join(PROJECT_ROOT, 'test/karma.conf.js'),
+        singleRun: true
+    }, done).start();
+  });
 });
