@@ -257,6 +257,14 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   }
 
   /**
+   * Implemented as part of ControlValueAccessor.
+   * TODO: internal
+   */
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  /**
    * Convert the value passed in to a value that is expected from the type of the md-input.
    * This is normally performed by the *_VALUE_ACCESSOR in forms, but since the type is bound
    * on our internal input it won't work locally.
