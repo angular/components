@@ -8,7 +8,7 @@ export class MdDateUtil {
    * @returns {Date}
    */
   getFirstDateOfMonth(date: Date) {
-    return new Date(date.getFullYear(), date.getMonth(), 1);
+    return new Date(date.getFullYear(), date.getMonth(), 1, date.getHours(), date.getMinutes());
   }
 
   /**
@@ -26,7 +26,7 @@ export class MdDateUtil {
    * @returns {Date}
    */
   getDateInNextMonth(date: Date) {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+    return new Date(date.getFullYear(), date.getMonth() + 1, 1, date.getHours(), date.getMinutes());
   }
 
   /**
@@ -35,7 +35,7 @@ export class MdDateUtil {
    * @returns {Date}
    */
   getDateInPreviousMonth(date: Date) {
-    return new Date(date.getFullYear(), date.getMonth() - 1, 1);
+    return new Date(date.getFullYear(), date.getMonth() - 1, 1, date.getHours(), date.getMinutes());
   }
 
   /**
@@ -107,7 +107,7 @@ export class MdDateUtil {
    * @returns {Date}
    */
   incrementDays(date: Date, numberOfDays: number) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + numberOfDays);
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + numberOfDays, date.getHours(), date.getMinutes());
   }
 
   /**
@@ -123,7 +123,7 @@ export class MdDateUtil {
     // automatically advance *another* month by the number of missing days.
     // For example, if you try to go from Jan. 30 to Feb. 30, you'll end up on March 2.
     // So, we check if the month overflowed and go to the last day of the target month instead.
-    let dateInTargetMonth = new Date(date.getFullYear(), date.getMonth() + numberOfMonths, 1);
+    let dateInTargetMonth = new Date(date.getFullYear(), date.getMonth() + numberOfMonths, 1, date.getHours(), date.getMinutes());
     let numberOfDaysInMonth = this.getNumberOfDaysInMonth(dateInTargetMonth);
     if (numberOfDaysInMonth < date.getDate()) {
       dateInTargetMonth.setDate(numberOfDaysInMonth);
@@ -153,7 +153,7 @@ export class MdDateUtil {
    * @returns {Date}
    */
   getLastDateOfMonth(date: Date) {
-    return new Date(date.getFullYear(), date.getMonth(), this.getNumberOfDaysInMonth(date));
+    return new Date(date.getFullYear(), date.getMonth(), this.getNumberOfDaysInMonth(date), date.getHours(), date.getMinutes());
   }
 
   /**

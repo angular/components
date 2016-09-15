@@ -1,4 +1,5 @@
 import {
+  AfterContentInit,
   Component,
   HostListener,
   Input,
@@ -20,10 +21,10 @@ import {MdDateUtil} from './dateUtil';
 export interface IDay {
   year: number;
   month: string;
-  date: number;
+  date: string;
   day: string;
-  hour: number;
-  minute: number;
+  hour: string;
+  minute: string;
 }
 
 export interface IDate {
@@ -38,11 +39,9 @@ export interface IWeek {
   dateObj: IDate;
   date: Date;
   calMonth: number;
-  //day: number;
   today: boolean;
   disabled: boolean;
 }
-
 
 const noop = () => { };
 
@@ -69,22 +68,26 @@ export const MD2_DATEPICKER_CONTROL_VALUE_ACCESSOR: any = {
   providers: [MD2_DATEPICKER_CONTROL_VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None
 })
-export class Md2Datepicker implements ControlValueAccessor {
+export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
 
   constructor(private dateUtil: MdDateUtil) {
     this.displayDate = this.today;
     this.generateClock();
+    this.isCalendarVisible = this.type !== 'time' ? true : false;
   }
+
+  ngAfterContentInit() { this._isInitialized = true; }
 
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
 
   private _value: any = '';
-  //private _isInitialized: boolean = false;
+  private _isInitialized: boolean = false;
   private _onTouchedCallback: () => void = noop;
   private _onChangeCallback: (_: any) => void = noop;
 
   private isDatepickerVisible: boolean;
   private isCalendarVisible: boolean;
+  private isHoursVisible: boolean = true;
 
   private months: Array<string> = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   private days: Array<string> = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -99,30 +102,22 @@ export class Md2Datepicker implements ControlValueAccessor {
   private today: Date = new Date();
   private _displayDate: Date = null;
   private selectedDate: Date = null;
-  private displayDay: IDay = { year: 0, month: '', date: 0, day: '', hour: 0, minute: 0 };
+  private displayDay: IDay = { year: 0, month: '', date: '', day: '', hour: '', minute: '' };
   private displayInputDate: string = '';
-  //private selectedDate: IDate = { year: 0, month: 0, day: 0, hour: 0, minute: 0 };
 
-  @Input() type: 'date' | 'time' | 'datetime' | 'month' = 'date';
+  @Input() type: 'date' | 'time' | 'datetime' = 'datetime';//'date';
   @Input() disabled: boolean;
   @Input() name: string = '';
   @Input() id: string = 'md2-datepicker-' + (++nextId);
   @Input() min: number;
   @Input() max: number;
   @Input() placeholder: string;
-  @Input() format: string = 'dd/mm/yyyy';
+  @Input() format: string = this.type === 'date' ? 'dd/mm/yyyy' : this.type === 'time' ? 'hh:mm' : this.type === 'datetime' ? 'dd/mm/yyyy hh:mm' : 'dd/mm/yyyy';
   @Input() tabindex: number = 0;
 
   get value(): any { return this._value; }
   @Input() set value(value: any) {
-    //if (this._value !== value) {
     this.setValue(value);
-    //this._value = value;
-    //if (this._isInitialized) {
-    //  this._onChangeCallback(value);
-    //this.change.emit(value);
-    //}
-    //}
   }
 
   /**
@@ -131,27 +126,21 @@ export class Md2Datepicker implements ControlValueAccessor {
    */
   private setValue(value: any) {
     if (value !== this._value) {
-      this._value = value;
-      //if (value && this.dateUtil.isValidDate(value)) {
-      //} else { }
-      //  let date = new Date(value);
-      //  //this.selectedDate = {
-      //  //  year: date.getFullYear(),
-      //  //  month: date.getMonth(),
-      //  //  day: date.getDate(),
-      //  //  hour: date.getHours(),
-      //  //  minute: date.getMinutes()
-      //  //};
-
-
-      //  this.displayDate = this.selectedDate;
-      //} else {
-      //  this._value = this.today;
-      //}
-      //if (this._isInitialized) {
-      //  this._onChangeCallback(this._value);
-      //  this.change.emit(this._value);
-      //}
+      if (value) {
+        if (this.dateUtil.isValidDate(value)) {
+          this._value = value;
+        }
+        else {
+          this._value = new Date(value);
+        }
+      } else {
+        this._value = new Date();
+      }
+      this.displayInputDate = this.formatDate(this._value);
+      if (this._isInitialized) {
+        this._onChangeCallback(this._value);
+        this.change.emit(this._value);
+      }
     }
   }
 
@@ -163,17 +152,16 @@ export class Md2Datepicker implements ControlValueAccessor {
     }
   }
   set displayDate(date: Date) {
-    if (date && this.dateUtil.isValidDate(date)) {// && !this.dateUtil.isSameDay(this._displayDate, date)
+    if (date && this.dateUtil.isValidDate(date)) {
       this._displayDate = date;
       this.displayDay = {
         year: date.getFullYear(),
         month: this.months[date.getMonth()],
-        date: date.getDate(),
+        date: this.prependZero(date.getDate() + ''),
         day: this.days[date.getDay()],
-        hour: date.getHours(),
-        minute: date.getMinutes()
+        hour: this.prependZero(date.getHours() + ''),
+        minute: this.prependZero(date.getMinutes() + '')
       };
-      //this.generateCalendar();
     }
   }
 
@@ -191,26 +179,15 @@ export class Md2Datepicker implements ControlValueAccessor {
     // check enabled
     if (this.disabled) { return; }
 
-    // Tab Key
-    if (event.keyCode === 9) {
-      if (this.isDatepickerVisible) {
-        this.onBlur();
-        event.preventDefault();
-      }
-      return;
-    }
-
-    // Escape Key
-    if (event.keyCode === 27) {
-      this.onBlur();
-      event.stopPropagation();
-      event.preventDefault();
-      return;
-    }
-
     if (this.isDatepickerVisible) {
       event.preventDefault();
       event.stopPropagation();
+
+      switch (event.keyCode) {
+        case 9:
+        case 27: this.onBlur(); break;
+      }
+
       if (this.isCalendarVisible) {
         let displayDate = this.displayDate;
         switch (event.keyCode) {
@@ -253,54 +230,32 @@ export class Md2Datepicker implements ControlValueAccessor {
     }
   }
 
-  private onFocus() {
-    this.isDatepickerVisible = true;
+  @HostListener('blur')
+  private onBlur() {
+    this.isDatepickerVisible = false;
+    this.isCalendarVisible = this.type !== 'time' ? true : false;
+    this.isHoursVisible = true;
   }
 
-  @HostListener('blur')
-  private onBlur() { this.isDatepickerVisible = false; }
-
   private showDatepicker() {
+    if (this.disabled) { return; }
     this.isDatepickerVisible = true;
-    if (this.type === 'date' || this.type === 'datetime') {
-      this.isCalendarVisible = true;
-    } else {
-      this.isCalendarVisible = false
-    }
-    if (!this.selectedDate) {
-      this.selectedDate = this.today;
-    }
-    if (!this.displayDate) {
-      this.displayDate = this.today;//this.selectedDate || this.today;
-    }
-    //====
-
-    this.isDatepickerVisible = true;
-
-    if (this.isDatepickerVisible) {
-      let y = 0, m = 0;
-      if (!this.selectedDate) {
-        y = this.today.getFullYear();
-        m = this.today.getMonth();
-      }
-      else {
-        y = this.selectedDate.getFullYear();
-        m = this.selectedDate.getMonth();
-      }
-      // Set current month
-      this.displayDate = new Date(y, m, this.displayDate.getDate());
-
-      this.generateCalendar();
-    }
+    this.selectedDate = this.value || new Date(1, 0, 1);
+    this.displayDate = this.value || this.today;
+    this.generateCalendar();
   }
 
   private showCalendar() { this.isCalendarVisible = true; }
 
-  private showClock() { this.isCalendarVisible = false; }
+  private showHours() {
+    this.isCalendarVisible = false;
+    this.isHoursVisible = true;
+  }
 
-  //private hideDatepicker() {
-  //  this.isDatepickerVisible = true;
-  //}
+  private showMinutes() {
+    this.isCalendarVisible = false;
+    this.isHoursVisible = false;
+  }
 
   private onClickDate(event: Event, d: any) {
     event.preventDefault();
@@ -310,7 +265,7 @@ export class Md2Datepicker implements ControlValueAccessor {
       this.updateMonth(-1);
     }
     else if (d.calMonth === this.currMonth) {
-      this.setDate(new Date(d.dateObj.year, d.dateObj.month, d.dateObj.day));
+      this.setDate(new Date(d.dateObj.year, d.dateObj.month, d.dateObj.day, this.displayDate.getHours(), this.displayDate.getMinutes()));
     }
     else if (d.calMonth === this.nextMonth) {
       this.updateMonth(1);
@@ -318,13 +273,15 @@ export class Md2Datepicker implements ControlValueAccessor {
   }
 
   private setDate(date: Date) {
-    this.selectedDate = date;
-    this.isDatepickerVisible = false;
+    this.displayDate = date;
     if (this.type === 'date') {
-      this.displayInputDate = this.formatDate(date);
-      this.value = this.selectedDate;
+      this.value = this.displayDate;
+      this.onBlur();
+    } else {
+      this.selectedDate = this.displayDate;
+      this.isCalendarVisible = false;
+      this.isHoursVisible = true;
     }
-    //this.displayDate = this.selectedDate;
   }
 
   private updateMonth(noOfMonths: number) {
@@ -346,23 +303,6 @@ export class Md2Datepicker implements ControlValueAccessor {
   minDate: IDate = { year: 0, month: 0, day: 0, hour: 0, minute: 0 };
   maxDate: IDate = { year: 0, month: 0, day: 0, hour: 0, minute: 0 };
 
-  preZero(val: string): string {
-    // Prepend zero if smaller than 10
-    return parseInt(val) < 10 ? '0' + val : val;
-  }
-
-  formatDate(d: Date): string {
-    return this.format
-      .replace('yyyy', d.getFullYear() + '')
-      .replace('mm', (d.getMonth() + 1) + '')
-      .replace('dd', d.getDate() + '');
-  }
-
-  //monthText(m: number): string {
-  //  // Returns mont as a text
-  //  return this.months[m - 1];
-  //}
-
   monthStartIdx(y: number, m: number): number {
     // Month start index
     let d = new Date();
@@ -371,11 +311,6 @@ export class Md2Datepicker implements ControlValueAccessor {
     d.setFullYear(y);
     return (d.getDay() + 7) % 7;
   }
-
-  //isCurrDay(d: number, m: number, y: number, calMonth: any): boolean {
-  //  // Check is a given date the current date
-  //  return d === this.today.getDate() && m === this.today.getMonth() + 1 && y === this.today.getFullYear() && calMonth === 2;
-  //}
 
   isDisabledDay(date: IDate): boolean {
     // Check is a given date <= disabledUntil or given date >= disabledSince or disabled weekend
@@ -400,15 +335,9 @@ export class Md2Datepicker implements ControlValueAccessor {
   }
 
   getDayNumber(date: IDate): number {
-    // Get day number: sun=0, mon=1, tue=2, wed=3 ...
     let d = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
     return d.getDay();
   }
-
-  //sundayIdx(): number {
-  //  // Index of Sunday day
-  //  return this.dayIdx > 0 ? 7 - this.dayIdx : 0;
-  //}
 
   generateCalendar(): void {
     let year = this.displayDate.getFullYear();
@@ -482,26 +411,52 @@ export class Md2Datepicker implements ControlValueAccessor {
     }
   }
 
-  private setHour() { }
+  private onClickHour(event: Event, hour: number) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.setHour(hour);
+  }
 
-  private setMinute() { }
+  private onClickMinute(event: Event, minute: number) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.setMinute(minute);
+  }
+
+  private setHour(hour: number) {
+    let date = this.displayDate;
+    this.isHoursVisible = false;
+    this.displayDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hour, date.getMinutes());
+    this.setDisplayDate();
+  }
+
+  private setMinute(minute: number) {
+    let date = this.displayDate;
+    this.displayDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), minute);
+    this.setDisplayDate();
+    this.selectedDate = this.displayDate;
+    this.value = this.selectedDate;
+    this.onBlur();
+  }
+
+  private clockOptions: any = {
+    dialRadius: 120,
+    outerRadius: 99,
+    innerRadius: 66,
+    tickRadius: 17
+  }
 
   private generateClock() {
     this.hours.length = 0;
 
-    let dialRadius = 120,
-      outerRadius = 96,
-      innerRadius = 60,
-      tickRadius = 13;
-
     for (let i = 0; i < 24; i++) {
       let radian = i / 6 * Math.PI;
       let inner = i > 0 && i < 13,
-        radius = inner ? innerRadius : outerRadius;
+        radius = inner ? this.clockOptions.innerRadius : this.clockOptions.outerRadius;
       this.hours.push({
         hour: i === 0 ? '00' : i,
-        top: dialRadius - Math.cos(radian) * radius - tickRadius,
-        left: dialRadius + Math.sin(radian) * radius - tickRadius
+        top: this.clockOptions.dialRadius - Math.cos(radian) * radius - this.clockOptions.tickRadius,
+        left: this.clockOptions.dialRadius + Math.sin(radian) * radius - this.clockOptions.tickRadius
       });
     }
 
@@ -509,10 +464,28 @@ export class Md2Datepicker implements ControlValueAccessor {
       let radian = i / 30 * Math.PI;
       this.minutes.push({
         minute: i === 0 ? '00' : i,
-        top: dialRadius - Math.cos(radian) * outerRadius - tickRadius,
-        left: dialRadius + Math.sin(radian) * outerRadius - tickRadius
+        top: this.clockOptions.dialRadius - Math.cos(radian) * this.clockOptions.outerRadius - this.clockOptions.tickRadius,
+        left: this.clockOptions.dialRadius + Math.sin(radian) * this.clockOptions.outerRadius - this.clockOptions.tickRadius
       });
     }
+  }
+
+  private setDisplayDate() {
+    let date = this.displayDate;
+    this.displayDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
+  }
+
+  private formatDate(d: Date): string {
+    return this.format
+      .replace('yyyy', d.getFullYear() + '')
+      .replace('mm', this.prependZero((d.getMonth() + 1) + ''))
+      .replace('dd', this.prependZero(d.getDate() + ''))
+      .replace('hh', this.prependZero(d.getHours() + ''))
+      .replace('mm', this.prependZero(d.getMinutes() + ''));
+  }
+
+  private prependZero(value: string): string {
+    return parseInt(value) < 10 ? '0' + value : value;
   }
 
   writeValue(value: any): void { this.setValue(value); }
