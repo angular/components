@@ -17,7 +17,6 @@ import {
 import {CommonModule} from '@angular/common';
 import {MdDateUtil} from './dateUtil';
 
-
 export interface IDay {
   year: number;
   month: string;
@@ -105,14 +104,14 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
   private displayDay: IDay = { year: 0, month: '', date: '', day: '', hour: '', minute: '' };
   private displayInputDate: string = '';
 
-  @Input() type: 'date' | 'time' | 'datetime' = 'datetime';//'date';
+  @Input() type: 'date' | 'time' | 'datetime' = 'date';
   @Input() disabled: boolean;
   @Input() name: string = '';
   @Input() id: string = 'md2-datepicker-' + (++nextId);
   @Input() min: number;
   @Input() max: number;
   @Input() placeholder: string;
-  @Input() format: string = this.type === 'date' ? 'dd/mm/yyyy' : this.type === 'time' ? 'hh:mm' : this.type === 'datetime' ? 'dd/mm/yyyy hh:mm' : 'dd/mm/yyyy';
+  @Input() format: string = this.type === 'date' ? 'DD/MM/YYYY' : this.type === 'time' ? 'HH:mm' : this.type === 'datetime' ? 'DD/MM/YYYY HH:mm' : 'DD/MM/YYYY';
   @Input() tabindex: number = 0;
 
   get value(): any { return this._value; }
@@ -176,7 +175,6 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
 
   @HostListener('keydown', ['$event'])
   private onKeyDown(event: KeyboardEvent) {
-    // check enabled
     if (this.disabled) { return; }
 
     if (this.isDatepickerVisible) {
@@ -477,10 +475,10 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
 
   private formatDate(d: Date): string {
     return this.format
-      .replace('yyyy', d.getFullYear() + '')
-      .replace('mm', this.prependZero((d.getMonth() + 1) + ''))
-      .replace('dd', this.prependZero(d.getDate() + ''))
-      .replace('hh', this.prependZero(d.getHours() + ''))
+      .replace('YYYY', d.getFullYear() + '')
+      .replace('MM', this.prependZero((d.getMonth() + 1) + ''))
+      .replace('DD', this.prependZero(d.getDate() + ''))
+      .replace('HH', this.prependZero(d.getHours() + ''))
       .replace('mm', this.prependZero(d.getMinutes() + ''));
   }
 
