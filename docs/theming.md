@@ -9,7 +9,7 @@ In Angular Material, a theme is created by composing multiple palettes. In parti
 a theme consists of:
 * A primary palette: colors most widely used across all screens and components.
 * An accent palette: colors used for the floating action button and interactive elements.
-* A "warn" palette: colors used to convey error state.
+* A warn palette: colors used to convey error state.
 * A foreground palette: colors for text and icons.
 * A background palette: colors used for element backgrounds.
 
@@ -62,7 +62,7 @@ $primary: md-palette($md-indigo);
 $accent:  md-palette($md-pink, A200, A100, A400);
 $warn:    md-palette($md-red);
 
-// Create the theme object (a sass map containing all of the palettes).
+// Create the theme object (a Sass map containing all of the palettes).
 $theme: md-light-theme($primary, $accent, $warn);
 
 // Include theme styles for core and each component used in your app.
@@ -77,7 +77,7 @@ If you are using the Angular CLI, support for compiling Sass to css is built-in;
 add a new entry to the `"styles"` list in `angular-cli.json` pointing to the theme 
 file (e.g., `unicorn-app-theme.scss`).
 
-If you're not using the Angular CLI, you can use any existing sass tooling to build the file (such
+If you're not using the Angular CLI, you can use any existing Sass tooling to build the file (such
 as gulp-sass or grunt-sass). The simplest approach is to use the `node-sass` CLI; you simply run:
 ```
 node-sass src/unicorn-app-theme.scss dist/unicorn-app-theme.css
@@ -120,7 +120,7 @@ You can use the `md-color` function to extract a specific color from a palette. 
 ```
 
 ### Future work
-* When the "all" package is release, there will be a mixin that captures all of the component's
+* When the "all" package is released, there will be a mixin that captures all of the component's
   theme styles so that you don't have to include them all individually.
 * Once CSS variables (custom properties) are available in all the browsers we support,
   we will explore how to take advantage of them to make theming even simpler.
