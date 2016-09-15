@@ -1,5 +1,12 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {NgControl, FormsModule} from '@angular/forms';
+import {
+    NgControl,
+    FormsModule,
+    FormControl,
+    FormBuilder,
+    FormGroup,
+    ReactiveFormsModule
+} from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdRadioGroup, MdRadioButton, MdRadioChange, MdRadioModule} from './radio';
@@ -9,11 +16,12 @@ describe('MdRadio', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdRadioModule.forRoot(), FormsModule],
+      imports: [MdRadioModule.forRoot(), FormsModule, ReactiveFormsModule],
       declarations: [
         RadiosInsideRadioGroup,
         RadioGroupWithNgModel,
         StandaloneRadioButtons,
+        RadioGroupWithReactiveForms,
       ],
     });
 
@@ -424,6 +432,48 @@ describe('MdRadio', () => {
       expect(fruitRadioNativeInputs[0].getAttribute('aria-labelledby')).toBe('uvw');
     });
   });
+
+  describe('with reactive forms', () => {
+    let fixture: ComponentFixture<RadioGroupWithReactiveForms>;
+    let formControl: FormControl;
+    let radioInputs: Array<MdRadioButton> = [];
+    let nativeRadioInputs: Array<HTMLInputElement> = [];
+
+    beforeEach(async(() => {
+      fixture = TestBed.createComponent(RadioGroupWithReactiveForms);
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        let inputs = fixture.debugElement.queryAll(By.directive(MdRadioButton));
+
+        for (let element of inputs) {
+          radioInputs.push(element.componentInstance);
+          nativeRadioInputs.push(<HTMLInputElement> element.nativeElement.querySelector('input'));
+        }
+
+        formControl = <FormControl> fixture.componentInstance.form.controls['radio'];
+      });
+    }));
+
+    it('should be disabled when the form-control is set disabled', async(() => {
+      radioInputs.forEach(input => expect(input.disabled).toBeFalsy());
+      nativeRadioInputs.forEach(input => expect(input.disabled).toBeFalsy());
+
+      formControl.disable();
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        // Temporary workaround, see https://github.com/angular/angular/issues/10148
+        fixture.detectChanges();
+        fixture.whenStable().then(() => {
+          radioInputs.forEach(input =>
+              expect(input.disabled).toBeTruthy(input.value + ' should be disabled'));
+          nativeRadioInputs.forEach(input =>
+              expect(input.disabled).toBeTruthy('Native ' + input.id + ' should be disabled'));
+        });
+      });
+    }));
+  });
 });
 
 
@@ -482,6 +532,33 @@ class RadioGroupWithNgModel {
     {label: 'Strawberry', value: 'strawberry'},
   ];
   lastEvent: MdRadioChange;
+}
+
+@Component({
+  template: `
+  <form [formGroup]="form">
+    <md-radio-group formControlName="radio">
+      <md-radio-button *ngFor="let option of options" [value]="option.value">
+        {{option.label}}
+      </md-radio-button>
+    </md-radio-group>
+  </form>
+  `
+})
+class RadioGroupWithReactiveForms {
+  options = [
+    {label: 'Vanilla', value: 'vanilla'},
+    {label: 'Chocolate', value: 'chocolate'},
+    {label: 'Strawberry', value: 'strawberry'},
+  ];
+
+  form: FormGroup;
+
+  constructor(builder: FormBuilder) {
+    this.form = builder.group({
+      radio: [{value: '', disabled: false}]
+    });
+  }
 }
 
 // TODO(jelbourn): remove eveything below when Angular supports faking events.
