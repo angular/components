@@ -36,6 +36,7 @@ Alternatively, you can just reference the file directly. This would look somethi
 ```html
 <link href="node_modules/@angular2-material/core/theming/prebuilt/indigo-pink.css" rel="stylesheet">
 ``` 
+The actual path will depend on your server setup. 
 
 You can also concatenate the file with the rest of your application's css.
 
