@@ -437,6 +437,110 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
     this.onBlur();
   }
 
+  private setClockHand() {
+    //let x: any, y: any, roundBy5: any, dragging: any;
+    //var radian = Math.atan2(x, - y),
+    //  isHours = this.currentView === 'hours',
+    //  unit = Math.PI / (isHours || roundBy5 ? 6 : 30),
+    //  z = Math.sqrt(x * x + y * y),
+    //  options = this.options,
+    //  inner = isHours && z < (outerRadius + innerRadius) / 2,
+    //  radius = inner ? innerRadius : outerRadius,
+    //  value;
+
+    //if (options.twelvehour) {
+    //  radius = outerRadius;
+    //}
+
+    //// Radian should in range [0, 2PI]
+    //if (radian < 0) {
+    //  radian = Math.PI * 2 + radian;
+    //}
+
+    //// Get the round value
+    //value = Math.round(radian / unit);
+
+    //// Get the round radian
+    //radian = value * unit;
+
+    //// Correct the hours or minutes
+    //if (options.twelvehour) {
+    //  if (isHours) {
+    //    if (value === 0) {
+    //      value = 12;
+    //    }
+    //  } else {
+    //    if (roundBy5) {
+    //      value *= 5;
+    //    }
+    //    if (value === 60) {
+    //      value = 0;
+    //    }
+    //  }
+    //} else {
+    //  if (isHours) {
+    //    if (value === 12) {
+    //      value = 0;
+    //    }
+    //    value = inner ? (value === 0 ? 12 : value) : value === 0 ? 0 : value + 12;
+    //  } else {
+    //    if (roundBy5) {
+    //      value *= 5;
+    //    }
+    //    if (value === 60) {
+    //      value = 0;
+    //    }
+    //  }
+    //}
+
+    //// Once hours or minutes changed, vibrate the device
+    //if (this[this.currentView] !== value) {
+    //  if (vibrate && this.options.vibrate) {
+    //    // Do not vibrate too frequently
+    //    if (!this.vibrateTimer) {
+    //      navigator[vibrate](10);
+    //      this.vibrateTimer = setTimeout($.proxy(function () {
+    //        this.vibrateTimer = null;
+    //      }, this), 100);
+    //    }
+    //  }
+    //}
+
+    //this[this.currentView] = value;
+    //this[isHours ? 'spanHours' : 'spanMinutes'].html(leadingZero(value));
+
+    //// If svg is not supported, just add an active class to the tick
+    //if (!svgSupported) {
+    //  this[isHours ? 'hoursView' : 'minutesView'].find('.clockpicker-tick').each(function () {
+    //    var tick = $(this);
+    //    tick.toggleClass('active', value === + tick.html());
+    //  });
+    //  return;
+    //}
+
+    //// Place clock hand at the top when dragging
+    //if (dragging || (!isHours && value % 5)) {
+    //  this.g.insertBefore(this.hand, this.bearing);
+    //  this.g.insertBefore(this.bg, this.fg);
+    //  this.bg.setAttribute('class', 'clockpicker-canvas-bg clockpicker-canvas-bg-trans');
+    //} else {
+    //  // Or place it at the bottom
+    //  this.g.insertBefore(this.hand, this.bg);
+    //  this.g.insertBefore(this.fg, this.bg);
+    //  this.bg.setAttribute('class', 'clockpicker-canvas-bg');
+    //}
+
+    //// Set clock hand and others' position
+    //var cx = Math.sin(radian) * radius,
+    //  cy = - Math.cos(radian) * radius;
+    //this.hand.setAttribute('x2', cx);
+    //this.hand.setAttribute('y2', cy);
+    //this.bg.setAttribute('cx', cx);
+    //this.bg.setAttribute('cy', cy);
+    //this.fg.setAttribute('cx', cx);
+    //this.fg.setAttribute('cy', cy);
+  }
+
   private clockOptions: any = {
     dialRadius: 120,
     outerRadius: 99,
