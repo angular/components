@@ -8,6 +8,9 @@ import {
 import {
     NgControl,
     FormsModule,
+    FormBuilder,
+    FormGroup,
+    ReactiveFormsModule, FormControl,
 } from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -21,10 +24,11 @@ describe('MdCheckbox', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdCheckboxModule.forRoot(), FormsModule],
+      imports: [MdCheckboxModule.forRoot(), FormsModule, ReactiveFormsModule],
       declarations: [
         SingleCheckbox,
         CheckboxWithFormDirectives,
+        CheckboxWithReactiveFormsDirectives,
         MultipleCheckboxes,
         CheckboxWithTabIndex,
         CheckboxWithAriaLabel,
@@ -494,6 +498,42 @@ describe('MdCheckbox', () => {
       expect(inputElement.getAttribute('name')).toBe('test-name');
     });
   });
+
+  describe('with reactive forms', () => {
+    let checkboxElement: MdCheckbox;
+    let formControl: FormControl;
+    let inputElement: HTMLInputElement;
+
+    beforeEach(async(() => {
+      fixture = TestBed.createComponent(CheckboxWithReactiveFormsDirectives);
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        checkboxElement = fixture.debugElement.query(By.directive(MdCheckbox)).componentInstance;
+        formControl = <FormControl> fixture.componentInstance.form.controls['checker'];
+        inputElement = <HTMLInputElement>fixture.nativeElement.querySelector('input');
+      });
+    }));
+
+    it('should be disabled when the form-control is set disabled', async(() => {
+      expect(inputElement.disabled).toBeFalsy();
+      expect(checkboxElement.disabled).toBeFalsy();
+
+      formControl.disable();
+
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        // Temporary workaround, see https://github.com/angular/angular/issues/10148
+        fixture.detectChanges();
+        fixture.whenStable().then(() => {
+          expect(checkboxElement.disabled).toBeTruthy('Component should be disabled');
+          // Somehow fails :-/
+          expect(inputElement.disabled).toBeTruthy('InputElement should be disabled');
+        });
+      });
+    }));
+  });
 });
 
 /** Simple component for testing a single checkbox. */
@@ -537,6 +577,24 @@ class SingleCheckbox {
 })
 class CheckboxWithFormDirectives {
   isGood: boolean = false;
+}
+
+/** Simple component for testing an MdCheckbox with ReactiveForms. */
+@Component({
+  template: `
+    <form [formGroup]="form">
+      <md-checkbox formControlName="checker">Check me</md-checkbox>
+    </form>
+  `,
+})
+class CheckboxWithReactiveFormsDirectives {
+  form: FormGroup;
+
+  constructor(builder: FormBuilder) {
+    this.form = builder.group({
+      checker: [{value: '', disabled: false}]
+    });
+  }
 }
 
 /** Simple test component with multiple checkboxes. */
