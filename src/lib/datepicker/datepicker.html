@@ -16,140 +16,92 @@
   </div>
 </div>
 <div class="md2-datepicker-wrapper" [class.active]="isDatepickerVisible">
-  <div class="md2-datepicker-container">
-    <div class="md2-datepicker-header">
-      <span *ngIf="type==='time'"
-            class="md2-datepicker-year"
-            [class.hidden]="type==='time'">{{displayDay.year}}</span>
-      <span class="md2-datepicker-date"
-            [class.active]="isCalendarVisible"
-            [class.hidden]="type==='time'"
-            (click)="showCalendar()">{{displayDay.day.substr(0, 3)}},&nbsp;{{displayDay.month.substr(0, 3)}}&nbsp;{{displayDay.date}}</span>
-      <span class="md2-datepicker-time"
-            [class.active]="!isCalendarVisible"
-            [class.hidden]="type==='date'">
-        <span class="md2-datepicker-hour"
-              [class.active]="isHoursVisible"
-              (click)="showHours()">{{displayDay.hour}}</span>:<span class="md2-datepicker-minute"
-                                                                     [class.active]="!isHoursVisible"
-                                                                     (click)="showMinutes()">{{displayDay.minute}}</span>
-      </span>
-    </div>
-    <div class="md2-datepicker-body">
-      <div class="md2-calendar" [class.active]="isCalendarVisible">
-        <div class="md2-calendar-controls">
-          <div class="md2-calendar-prev-month" (click)="updateMonth(-1)">
-            <svg viewBox="0 0 24 24" width="100%" height="100%">
-              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
-            </svg>
-          </div>
-          <div class="md2-calendar-next-month" (click)="updateMonth(1)">
-            <svg viewBox="0 0 24 24" width="100%" height="100%">
-              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
-            </svg>
-          </div>
-          <div class="md2-calendar-header">{{displayDay.month}} {{displayDay.year}}</div>
-        </div>
-        <!--<div class="md2-calendar-month">
-          <div class="md2-calendar-week" >
-            < !--<span class="md2-calendar-not-day"></span>-- >
-            <span class="md2-calendar-day" >
-              <span style="z-index: 1;display: block;position: relative;">{{d}}</span>
-            </span>
-          </div>
-        </div>-->
-        <table class="md2-calendar-month">
-          <thead><tr><th *ngFor="let d of days">{{d.substr(0, 1)}}</th></tr></thead>
-          <tbody>
-            <tr *ngFor="let w of dates">
-              <td *ngFor="let d of w">
-                <div class="md2-calendar-day"
-                     [class.today]="d.today"
-                     [class.focus]="dateUtil.isSameDay(displayDate, d.date)"
-                     [class.selected]="dateUtil.isSameDay(selectedDate, d.date)"
-                     [class.disabled]="d.disabled"
-                     [class.prev-month]="d.calMonth===prevMonth"
-                     [class.currmonth]="d.calMonth===currMonth"
-                     [class.next-month]="d.calMonth===nextMonth"
-                     (click)="onClickDate($event,d)">{{d.dateObj.day}}</div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="md2-clock" [class.active]="!isCalendarVisible">
-        <div class="md2-clock-hand">
-          <svg class="md2-clock-svg" width="240" height="240">
-            <g transform="translate(120,120)">
-              <!--<circle class="md2-clock-bg" r="17" cx="64.7213595499958" cy="47.02282018339784"></circle>
-              <circle class="md2-clock-fg" r="3.5" cx="64.7213595499958" cy="47.02282018339784"></circle>
-              <line x1="0" y1="0" x2="64.7213595499958" y2="47.02282018339784"></line>-->
-              <circle class="md2-clock-center" cx="0" cy="0" r="2"></circle>
-            </g>
+  <div class="md2-datepicker-header">
+    <span *ngIf="type==='time'"
+          class="md2-datepicker-year"
+          [class.hidden]="type==='time'">{{displayDay.year}}</span>
+    <span class="md2-datepicker-date"
+          [class.active]="isCalendarVisible"
+          [class.hidden]="type==='time'"
+          (click)="showCalendar()">{{displayDay.day.substr(0, 3)}},&nbsp;{{displayDay.month.substr(0, 3)}}&nbsp;{{displayDay.date}}</span>
+    <span class="md2-datepicker-time"
+          [class.active]="!isCalendarVisible"
+          [class.hidden]="type==='date'">
+      <span class="md2-datepicker-hour"
+            [class.active]="isHoursVisible"
+            (click)="showHours()">{{displayDay.hour}}</span>:<span class="md2-datepicker-minute"
+                                                                   [class.active]="!isHoursVisible"
+                                                                   (click)="showMinutes()">{{displayDay.minute}}</span>
+    </span>
+  </div>
+  <div class="md2-datepicker-body">
+    <div class="md2-calendar" [class.active]="isCalendarVisible">
+      <div class="md2-calendar-controls">
+        <div class="md2-calendar-prev-month" (click)="updateMonth(-1)">
+          <svg viewBox="0 0 24 24" width="100%" height="100%">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
           </svg>
         </div>
-        <div class="md2-clock-hours" [class.active]="isHoursVisible">
-          <div *ngFor="let h of hours"
-               class="md2-clock-hour"
-               [style.top]="h.top + 'px'"
-               [style.left]="h.left + 'px'"
-               (click)="onClickHour($event,h.hour)">{{h.hour}}</div>
+        <div class="md2-calendar-next-month" (click)="updateMonth(1)">
+          <svg viewBox="0 0 24 24" width="100%" height="100%">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+          </svg>
         </div>
-        <div class="md2-clock-minutes" [class.active]="!isHoursVisible">
-          <!--(mousedown)="onMouseDownMinute($event)"-->
-          <div *ngFor="let m of minutes"
-               class="md2-clock-minute"
-               [style.top]="m.top + 'px'"
-               [style.left]="m.left + 'px'"
-               (click)="onClickMinute($event,m.minute)">{{m.minute}}</div>
-        </div>
+        <div class="md2-calendar-header">{{displayDay.month}} {{displayDay.year}}</div>
+      </div>
+      <table class="md2-calendar-month">
+        <thead><tr><th *ngFor="let d of days">{{d.substr(0, 1)}}</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let w of dates">
+            <td *ngFor="let d of w">
+              <div class="md2-calendar-day"
+                   [class.today]="d.today"
+                   [class.focus]="dateUtil.isSameDay(displayDate, d.date)"
+                   [class.selected]="dateUtil.isSameDay(selectedDate, d.date)"
+                   [class.disabled]="d.disabled"
+                   [class.prev-month]="d.calMonth===prevMonth"
+                   [class.currmonth]="d.calMonth===currMonth"
+                   [class.next-month]="d.calMonth===nextMonth"
+                   (click)="onClickDate($event,d)">{{d.dateObj.day}}</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="md2-clock" [class.active]="!isCalendarVisible">
+      <div class="md2-clock-hand">
+        <svg class="md2-clock-svg" width="240" height="240">
+          <g transform="translate(120,120)">
+            <line x1="0" y1="0" [attr.x2]="clockHand.x" [attr.y2]="clockHand.y"></line>
+            <circle class="md2-clock-bg" r="17" [attr.cx]="clockHand.x" [attr.cy]="clockHand.y"></circle>
+            <circle class="md2-clock-fg" r="3.5" [attr.cx]="clockHand.x" [attr.cy]="clockHand.y"></circle>
+            <circle class="md2-clock-center" cx="0" cy="0" r="2"></circle>
+          </g>
+        </svg>
+      </div>
+      <div class="md2-clock-hours" [class.active]="isHoursVisible">
+        <div *ngFor="let h of hours"
+             class="md2-clock-hour"
+             [style.top]="h.top + 'px'"
+             [style.left]="h.left + 'px'"
+             (click)="onClickHour($event,h.hour)">{{h.hour}}</div>
+      </div>
+      <div class="md2-clock-minutes" [class.active]="!isHoursVisible">
+        <!--(mousedown)="onMouseDownMinute($event)"-->
+        <div *ngFor="let m of minutes"
+             class="md2-clock-minute"
+             [style.top]="m.top + 'px'"
+             [style.left]="m.left + 'px'"
+             (click)="onClickMinute($event,m.minute)">{{m.minute}}</div>
       </div>
     </div>
-    <div class="md2-datepicker-footer"></div>
-    <!--<div class="md2-timer">
-      Timer
-    </div>-->
   </div>
+  <div class="md2-datepicker-footer"></div>
 </div>
-
-
-
-
-
-<!--<div class="popover clockpicker-popover bottom clockpicker-align-left" style="display: block; top: 601.594px; left: 8px;">
-  <div class="clockpicker-plate">
-    <div class="clockpicker-canvas">
-      <svg class="clockpicker-svg" width="200" height="200"><g transform="translate(100,100)"><line x1="0" y1="0" x2="-54" y2="9.91963907309356e-15"></line><circle class="clockpicker-canvas-fg" r="3.5" cx="-54" cy="9.91963907309356e-15"></circle><circle class="clockpicker-canvas-bg" r="13" cx="-54" cy="9.91963907309356e-15"></circle><circle class="clockpicker-canvas-bearing" cx="0" cy="0" r="2"></circle></g></svg>
-    </div>
-    <div class="clockpicker-dial clockpicker-hours" style="visibility: visible;">
-      <div class="clockpicker-tick" style="left: 87px; top: 7px;">00</div><div class="clockpicker-tick" style="left: 114px; top: 40.2346px; font-size: 120%;">1</div><div class="clockpicker-tick" style="left: 133.765px; top: 60px; font-size: 120%;">2</div><div class="clockpicker-tick" style="left: 141px; top: 87px; font-size: 120%;">3</div><div class="clockpicker-tick" style="left: 133.765px; top: 114px; font-size: 120%;">4</div><div class="clockpicker-tick" style="left: 114px; top: 133.765px; font-size: 120%;">5</div><div class="clockpicker-tick" style="left: 87px; top: 141px; font-size: 120%;">6</div><div class="clockpicker-tick" style="left: 60px; top: 133.765px; font-size: 120%;">7</div><div class="clockpicker-tick" style="left: 40.2346px; top: 114px; font-size: 120%;">8</div><div class="clockpicker-tick" style="left: 33px; top: 87px; font-size: 120%;">9</div><div class="clockpicker-tick" style="left: 40.2346px; top: 60px; font-size: 120%;">10</div><div class="clockpicker-tick" style="left: 60px; top: 40.2346px; font-size: 120%;">11</div><div class="clockpicker-tick" style="left: 87px; top: 33px; font-size: 120%;">12</div><div class="clockpicker-tick" style="left: 127px; top: 17.718px;">13</div><div class="clockpicker-tick" style="left: 156.282px; top: 47px;">14</div><div class="clockpicker-tick" style="left: 167px; top: 87px;">15</div><div class="clockpicker-tick" style="left: 156.282px; top: 127px;">16</div><div class="clockpicker-tick" style="left: 127px; top: 156.282px;">17</div><div class="clockpicker-tick" style="left: 87px; top: 167px;">18</div><div class="clockpicker-tick" style="left: 47px; top: 156.282px;">19</div><div class="clockpicker-tick" style="left: 17.718px; top: 127px;">20</div><div class="clockpicker-tick" style="left: 7px; top: 87px;">21</div><div class="clockpicker-tick" style="left: 17.718px; top: 47px;">22</div><div class="clockpicker-tick" style="left: 47px; top: 17.718px;">23</div>
-    </div>
-    <div class="clockpicker-dial clockpicker-minutes clockpicker-dial-out" style="visibility: hidden;">
-      <div class="clockpicker-tick" style="left: 87px; top: 7px; font-size: 120%;">00</div><div class="clockpicker-tick" style="left: 127px; top: 17.718px; font-size: 120%;">05</div><div class="clockpicker-tick" style="left: 156.282px; top: 47px; font-size: 120%;">10</div><div class="clockpicker-tick" style="left: 167px; top: 87px; font-size: 120%;">15</div><div class="clockpicker-tick" style="left: 156.282px; top: 127px; font-size: 120%;">20</div><div class="clockpicker-tick" style="left: 127px; top: 156.282px; font-size: 120%;">25</div><div class="clockpicker-tick" style="left: 87px; top: 167px; font-size: 120%;">30</div><div class="clockpicker-tick" style="left: 47px; top: 156.282px; font-size: 120%;">35</div><div class="clockpicker-tick" style="left: 17.718px; top: 127px; font-size: 120%;">40</div><div class="clockpicker-tick" style="left: 7px; top: 87px; font-size: 120%;">45</div><div class="clockpicker-tick" style="left: 17.718px; top: 47px; font-size: 120%;">50</div><div class="clockpicker-tick" style="left: 47px; top: 17.718px; font-size: 120%;">55</div>
-    </div>
-  </div>
-</div>-->
-<!--<input [(ngModel)]="value"
-       [type]="type"
-       [disabled]="disabled"
-       [readonly]="readonly"
-       [name]="name"
-       [id]="id"
-       [min]="min"
-       [max]="max"
-       [placeholder]="placeholder"
-       [tabindex]="tabindex" />-->
-<!--@Input() type: 'date' | 'time' | 'datetime' | 'month' = 'date';
-  @Input() disabled: boolean;
+<!--
   @Input() readonly: boolean;
   @Input() required: boolean;
-  @Input() name: string = '';
-  @Input() id: string = 'md2-datepicker-' + (++nextId);
-  @Input() min: number;
-  @Input() max: number;
-  @Input() placeholder: string;
-  @Input() format: string;
-  @Input() tabindex: number = 0;-->
+-->
 <!--`<input [(ngModel)]="value"
         [type]="type"
         [disabled]="disabled"

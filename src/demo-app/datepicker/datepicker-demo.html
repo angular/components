@@ -3,8 +3,10 @@
   <hr />
   <div>
     <md2-datepicker [(ngModel)]="date"
-                    type="datetime"
+                    type="time"
                     [disabled]="disabled"
+                    [min]="minDate"
+                    [max]="maxDate"
                     placeholder="Date Time"
                     format="DD/MM/YYYY HH:mm"
                     (change)="change($event)">

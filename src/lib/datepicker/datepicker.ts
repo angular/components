@@ -72,14 +72,17 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
   constructor(private dateUtil: MdDateUtil) {
     this.displayDate = this.today;
     this.generateClock();
+    this.isCalendarVisible;
+  }
+
+  ngAfterContentInit() {
+    this._isInitialized = true;
     this.isCalendarVisible = this.type !== 'time' ? true : false;
   }
 
-  ngAfterContentInit() { this._isInitialized = true; }
-
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
 
-  private _value: any = '';
+  private _value: Date = null;
   private _isInitialized: boolean = false;
   private _onTouchedCallback: () => void = noop;
   private _onChangeCallback: (_: any) => void = noop;
@@ -124,22 +127,27 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
    * @param value of ngModel
    */
   private setValue(value: any) {
-    if (value !== this._value) {
-      if (value) {
-        if (this.dateUtil.isValidDate(value)) {
-          this._value = value;
-        }
-        else {
-          this._value = new Date(value);
-        }
-      } else {
-        this._value = new Date();
+    if (this.dateUtil.isValidDate(value)) {
+      this._value = value;
+    } else if (value) {
+      this._value = new Date(value);
+    } else {
+      this._value = new Date();
+    }
+    this.displayInputDate = this.formatDate(this._value);
+    if (this._isInitialized) {
+      let date = '';
+      if (this.type !== 'time') {
+        date += this._value.getFullYear() + '-' + (this._value.getMonth() + 1) + '-' + this._value.getDate();
       }
-      this.displayInputDate = this.formatDate(this._value);
-      if (this._isInitialized) {
-        this._onChangeCallback(this._value);
-        this.change.emit(this._value);
+      if (this.type === 'datetime') {
+        date += ' ';
       }
+      if (this.type !== 'date') {
+        date += this._value.getHours() + ':' + this._value.getMinutes();
+      }
+      this._onChangeCallback(date);
+      this.change.emit(date);
     }
   }
 
@@ -230,7 +238,7 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
 
   @HostListener('blur')
   private onBlur() {
-    this.isDatepickerVisible = false;
+    //this.isDatepickerVisible = false;
     this.isCalendarVisible = this.type !== 'time' ? true : false;
     this.isHoursVisible = true;
   }
@@ -241,6 +249,7 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
     this.selectedDate = this.value || new Date(1, 0, 1);
     this.displayDate = this.value || this.today;
     this.generateCalendar();
+    this.resetClock();
   }
 
   private showCalendar() { this.isCalendarVisible = true; }
@@ -437,89 +446,103 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
     this.onBlur();
   }
 
-  private setClockHand() {
+  //private onMouseDownClock(event: MouseEvent) {
+  //  event.preventDefault();
+  //  event.stopPropagation();
+  //  document.addEventListener('mousemove', this.onMouseMoveClock, true);
+  //  document.addEventListener('mouseup', this.onMouseUpClock, true);
+
+
+  //}
+
+  //private onMouseMoveClock(event: MouseEvent) {
+  //  event.preventDefault();
+  //  event.stopPropagation();
+
+  //  let x = event.pageX - x0,
+  //    y = event.pageY - y0;
+		//		if (!moved && x === dx && y === dy) {
+  //    return;
+		//		}
+		//		moved = true;
+		//		self.setHand(x, y, false, true);
+  //}
+
+  //private onMouseUpClock(event: MouseEvent) {
+  //  event.preventDefault();
+  //  event.stopPropagation();
+  //  document.removeEventListener('mousemove', this.onMouseMoveClock);
+  //  document.removeEventListener('mouseup', this.onMouseUpClock);
+  //}
+
+  private resetClock() {
+    let hour = this.displayDate.getHours();
+    let minute = this.displayDate.getMinutes();
+
+    let value = this.isHoursVisible ? hour : minute,
+      unit = Math.PI / (this.isHoursVisible ? 6 : 30),
+      radian = value * unit,
+      radius = this.isHoursVisible && value > 0 && value < 13 ? this.clockOptions.innerRadius : this.clockOptions.outerRadius,
+      x = Math.sin(radian) * radius,
+      y = - Math.cos(radian) * radius;
+    this.setClockHand(x, y);
+  }
+
+  private setClockHand(x: number, y: number) {
+    let hour = this.displayDate.getHours();
+    let minute = this.displayDate.getMinutes();
+    let value = this.isHoursVisible ? hour : minute;
+
     //let x: any, y: any, roundBy5: any, dragging: any;
-    //var radian = Math.atan2(x, - y),
-    //  isHours = this.currentView === 'hours',
-    //  unit = Math.PI / (isHours || roundBy5 ? 6 : 30),
-    //  z = Math.sqrt(x * x + y * y),
-    //  options = this.options,
-    //  inner = isHours && z < (outerRadius + innerRadius) / 2,
-    //  radius = inner ? innerRadius : outerRadius,
-    //  value;
+    let roundBy5 = false;
+    let dragging = false;
+    let radian = Math.atan2(x, - y),
+      unit = Math.PI / (this.isHoursVisible || roundBy5 ? 6 : 30),
+      z = Math.sqrt(x * x + y * y),
+      inner = this.isHoursVisible && z < (this.clockOptions.outerRadius + this.clockOptions.innerRadius) / 2,
+      radius = inner ? this.clockOptions.innerRadius : this.clockOptions.outerRadius;
 
-    //if (options.twelvehour) {
-    //  radius = outerRadius;
-    //}
 
-    //// Radian should in range [0, 2PI]
-    //if (radian < 0) {
-    //  radian = Math.PI * 2 + radian;
-    //}
+    // Radian should in range [0, 2PI]
+    if (radian < 0) {
+      radian = Math.PI * 2 + radian;
+    }
 
-    //// Get the round value
-    //value = Math.round(radian / unit);
+    // Get the round value
+    value = Math.round(radian / unit);
 
-    //// Get the round radian
-    //radian = value * unit;
+    // Get the round radian
+    radian = value * unit;
 
-    //// Correct the hours or minutes
-    //if (options.twelvehour) {
-    //  if (isHours) {
-    //    if (value === 0) {
-    //      value = 12;
-    //    }
-    //  } else {
-    //    if (roundBy5) {
-    //      value *= 5;
-    //    }
-    //    if (value === 60) {
-    //      value = 0;
-    //    }
-    //  }
-    //} else {
-    //  if (isHours) {
-    //    if (value === 12) {
-    //      value = 0;
-    //    }
-    //    value = inner ? (value === 0 ? 12 : value) : value === 0 ? 0 : value + 12;
-    //  } else {
-    //    if (roundBy5) {
-    //      value *= 5;
-    //    }
-    //    if (value === 60) {
-    //      value = 0;
-    //    }
-    //  }
-    //}
-
-    //// Once hours or minutes changed, vibrate the device
-    //if (this[this.currentView] !== value) {
-    //  if (vibrate && this.options.vibrate) {
-    //    // Do not vibrate too frequently
-    //    if (!this.vibrateTimer) {
-    //      navigator[vibrate](10);
-    //      this.vibrateTimer = setTimeout($.proxy(function () {
-    //        this.vibrateTimer = null;
-    //      }, this), 100);
-    //    }
-    //  }
-    //}
+    // Correct the hours or minutes
+    if (this.isHoursVisible) {
+      if (value === 12) {
+        value = 0;
+      }
+      value = inner ? (value === 0 ? 12 : value) : value === 0 ? 0 : value + 12;
+    } else {
+      if (roundBy5) {
+        value *= 5;
+      }
+      if (value === 60) {
+        value = 0;
+      }
+    }
 
     //this[this.currentView] = value;
-    //this[isHours ? 'spanHours' : 'spanMinutes'].html(leadingZero(value));
+    //this[this.isHoursVisible ? 'spanHours' : 'spanMinutes'].html(leadingZero(value));
 
-    //// If svg is not supported, just add an active class to the tick
+    // If svg is not supported, just add an active class to the tick
     //if (!svgSupported) {
-    //  this[isHours ? 'hoursView' : 'minutesView'].find('.clockpicker-tick').each(function () {
+    //  this[this.isHoursVisible ? 'hoursView' : 'minutesView'].find('.clockpicker-tick').each(function () {
     //    var tick = $(this);
     //    tick.toggleClass('active', value === + tick.html());
     //  });
     //  return;
     //}
 
-    //// Place clock hand at the top when dragging
-    //if (dragging || (!isHours && value % 5)) {
+    // Place clock hand at the top when dragging
+    //if (dragging || (!this.isHoursVisible && value % 5)) {
     //  this.g.insertBefore(this.hand, this.bearing);
     //  this.g.insertBefore(this.bg, this.fg);
     //  this.bg.setAttribute('class', 'clockpicker-canvas-bg clockpicker-canvas-bg-trans');
@@ -530,15 +553,10 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
     //  this.bg.setAttribute('class', 'clockpicker-canvas-bg');
     //}
 
-    //// Set clock hand and others' position
-    //var cx = Math.sin(radian) * radius,
-    //  cy = - Math.cos(radian) * radius;
-    //this.hand.setAttribute('x2', cx);
-    //this.hand.setAttribute('y2', cy);
-    //this.bg.setAttribute('cx', cx);
-    //this.bg.setAttribute('cy', cy);
-    //this.fg.setAttribute('cx', cx);
-    //this.fg.setAttribute('cy', cy);
+    this.clockHand = {
+      x: Math.sin(radian) * radius,
+      y: Math.cos(radian) * radius
+    }
   }
 
   private clockOptions: any = {
@@ -546,7 +564,10 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
     outerRadius: 99,
     innerRadius: 66,
     tickRadius: 17
-  }
+  };
+
+  private clockHand: any = { x: 0, y: 0 };
+  private clockEvent: any = { x: 0, y: 0 };
 
   private generateClock() {
     this.hours.length = 0;

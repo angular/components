@@ -1,8 +1,8 @@
-md2-datepicker { position: relative; display: block; outline: none; }
+md2-datepicker { position: relative; display: block; max-width: 300px; outline: none; }
 md2-datepicker.md2-datepicker-disabled { pointer-events: none; cursor: default; }
-.md2-datepicker-input-container { display: block; min-width: 160px; max-width: 300px; white-space: nowrap; cursor: pointer; }
-.md2-datepicker-calendar-icon { margin: auto; display: inline-block; vertical-align: middle; fill: currentColor; height: 24px; width: 24px; min-height: 24px; min-width: 24px; color: rgba(0,0,0,0.54); }
-.md2-datepicker-input { position: relative; display: inline-block; height: 30px; padding: 2px 2px 1px; margin: 18px 0; line-height: 26px; color: rgba(0,0,0,0.87); vertical-align: middle; box-sizing: border-box; border-bottom: 1px solid rgba(0,0,0,0.12); }
+.md2-datepicker-input-container { display: block; min-width: 160px; max-width: 300px; padding: 18px 0 18px 28px; white-space: nowrap; cursor: pointer; }
+.md2-datepicker-calendar-icon { position: absolute; top: 21px; left: 0; display: block; height: 24px; width: 24px; vertical-align: middle; fill: currentColor; color: rgba(0,0,0,0.54); }
+.md2-datepicker-input { position: relative; display: block; height: 30px; padding: 2px 2px 1px; margin: 0; line-height: 26px; color: rgba(0,0,0,0.87); vertical-align: middle; box-sizing: border-box; border-bottom: 1px solid rgba(0,0,0,0.12); }
 md2-datepicker.md2-datepicker-disabled .md2-datepicker-input { color: rgba(0,0,0,0.26); }
 md2-datepicker.md2-datepicker-disabled .md2-datepicker-input { border-bottom-style: dotted; }
 .md2-datepicker-placeholder { position: absolute; bottom: 100%; left: 3px; font-size: 16px; line-height: 18px; color: rgba(0,0,0,0.26); transform: translate3d(0,28px,0) scale(1); transition: 250ms cubic-bezier(.25,.8,.25,1); transform-origin: left top; pointer-events: none; }
@@ -13,7 +13,6 @@ md2-datepicker.md2-datepicker-disabled:focus .md2-datepicker-placeholder { color
 .md2-datepicker-input-text { display: inline-block; font-size: 15px; padding: 3px; }
 .md2-datepicker-wrapper { position: absolute; top: 0; left: 0; display: inline-block; width: 300px; border-radius: 2px; background-color: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); transform: scale(0); transform-origin: left top; transition: 150ms; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
 .md2-datepicker-wrapper.active { transform: scale(1); }
-.md2-datepicker-container { }
 .md2-datepicker-header { display: block; padding: 20px; color: #fff; font-size: 24px; line-height: 24px; font-weight: 500; background: #2196f3; box-sizing: border-box; }
 .md2-datepicker-year { display: block; height: 16px; margin: 0 0 10px; font-size: 16px; line-height: 16px; opacity: 0.7; }
 .md2-datepicker-year.active { opacity: 1; }
@@ -73,7 +72,7 @@ md2-datepicker.md2-datepicker-disabled:focus .md2-datepicker-placeholder { color
 
 
 
-.md2-clock { position: absolute; left: 100%; display: block; width: 240px; height: 240px; margin: 30px; font-size: 12px; font-weight: 400; text-align: center; background-color: #e0e0e0; border-radius: 50%; transition: 300ms; }
+.md2-clock { position: absolute; left: 100%; display: block; width: 240px; height: 240px; margin: 30px; font-size: 14px; font-weight: 400; text-align: center; background-color: #e0e0e0; border-radius: 50%; transition: 300ms; }
 .md2-clock.active { left: 0; }
 .md2-clock-hours,
 .md2-clock-minutes { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden; transition: 350ms; transform: scale(1.2); }
@@ -83,45 +82,10 @@ md2-datepicker.md2-datepicker-disabled:focus .md2-datepicker-placeholder { color
 .md2-clock-hour,
 .md2-clock-minute { position: absolute; width: 34px; height: 34px; line-height: 34px; text-align: center; border-radius: 50%; cursor: pointer; }
 .md2-clock-hour:hover,
-.md2-clock-minute:hover { background: #fff; }
+.md2-clock-minute:hover { background: #5aaced; }
 .md2-clock-hand { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 .md2-clock-svg { }
+.md2-clock-hand line { stroke: #2196f3; stroke-width: 1; stroke-linecap: round; }
+.md2-clock-bg { fill: #5aaced; }
+.md2-clock-fg { stroke: none; fill: #2196f3; }
 .md2-clock-center { stroke: none; fill: #2196f3; }
-/*.md2-clock-hand-line { stroke: none; fill: #2196f3; }
-.md2-clock-select { stroke: none; fill: #2196f3; }*/
-
-
-
-.clockpicker .input-group-addon { cursor: pointer; }
-.clockpicker-moving { cursor: move; }
-.clockpicker-align-left.popover > .arrow { left: 25px; }
-.clockpicker-align-top.popover > .arrow { top: 17px; }
-.clockpicker-align-right.popover > .arrow { left: auto; right: 25px; }
-.clockpicker-align-bottom.popover > .arrow { top: auto; bottom: 6px; }
-.clockpicker-popover .popover-title { background-color: #fff; color: #999; font-size: 24px; font-weight: bold; line-height: 30px; text-align: center; }
-.clockpicker-popover .popover-title span { cursor: pointer; }
-.clockpicker-popover .popover-content { background-color: #f8f8f8; padding: 12px; }
-.popover-content:last-child { border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
-.clockpicker-plate { background-color: #fff; border: 1px solid #ccc; border-radius: 50%; width: 200px; height: 200px; overflow: visible; position: relative; /* Disable text selection highlighting. Thanks to Hermanya */ -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-.clockpicker-canvas,
-.clockpicker-dial { width: 200px; height: 200px; position: absolute; left: -1px; top: -1px; }
-.clockpicker-minutes { visibility: hidden; }
-.clockpicker-tick { border-radius: 50%; color: #666; line-height: 26px; text-align: center; width: 26px; height: 26px; position: absolute; cursor: pointer; }
-.clockpicker-tick.active,
-.clockpicker-tick:hover { background-color: rgb(192, 229, 247); background-color: rgba(0, 149, 221, .25); }
-.clockpicker-button { background-image: none; background-color: #fff; border-width: 1px 0 0; border-top-left-radius: 0; border-top-right-radius: 0; margin: 0; padding: 10px 0; }
-.clockpicker-button:hover { background-image: none; background-color: #ebebeb; }
-.clockpicker-button:focus { outline: none !important; }
-.clockpicker-dial { -webkit-transition: -webkit-transform 350ms, opacity 350ms; -moz-transition: -moz-transform 350ms, opacity 350ms; -ms-transition: -ms-transform 350ms, opacity 350ms; -o-transition: -o-transform 350ms, opacity 350ms; transition: transform 350ms, opacity 350ms; }
-.clockpicker-dial-out { opacity: 0; }
-.clockpicker-hours.clockpicker-dial-out { -webkit-transform: scale(1.2, 1.2); -moz-transform: scale(1.2, 1.2); -ms-transform: scale(1.2, 1.2); -o-transform: scale(1.2, 1.2); transform: scale(1.2, 1.2); }
-.clockpicker-minutes.clockpicker-dial-out { -webkit-transform: scale(.8, .8); -moz-transform: scale(.8, .8); -ms-transform: scale(.8, .8); -o-transform: scale(.8, .8); transform: scale(.8, .8); }
-.clockpicker-canvas { -webkit-transition: opacity 175ms; -moz-transition: opacity 175ms; -ms-transition: opacity 175ms; -o-transition: opacity 175ms; transition: opacity 175ms; }
-.clockpicker-canvas-out { opacity: 0.25; }
-.clockpicker-canvas-bearing,
-.clockpicker-canvas-fg { stroke: none; fill: rgb(0, 149, 221); }
-.clockpicker-canvas-bg { stroke: none; fill: rgb(192, 229, 247); }
-.clockpicker-canvas-bg-trans { fill: rgba(0, 149, 221, .25); }
-.clockpicker-canvas line { stroke: rgb(0, 149, 221); stroke-width: 1; stroke-linecap: round; /*shape-rendering: crispEdges;*/ }
-.clockpicker-button.am-button { margin: 1px; padding: 5px; border: 1px solid rgba(0, 0, 0, .2); border-radius: 4px; }
-.clockpicker-button.pm-button { margin: 1px 1px 1px 136px; padding: 5px; border: 1px solid rgba(0, 0, 0, .2); border-radius: 4px; }
