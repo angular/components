@@ -1,4 +1,4 @@
-md2-datepicker { position: relative; display: block; max-width: 300px; outline: none; }
+md2-datepicker { position: relative; display: block; max-width: 300px; outline: none; -moz-backface-visibility: hidden; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
 md2-datepicker.md2-datepicker-disabled { pointer-events: none; cursor: default; }
 .md2-datepicker-input-container { display: block; min-width: 160px; max-width: 300px; padding: 18px 0 18px 28px; white-space: nowrap; cursor: pointer; }
 .md2-datepicker-calendar-icon { position: absolute; top: 21px; left: 0; display: block; height: 24px; width: 24px; vertical-align: middle; fill: currentColor; color: rgba(0,0,0,0.54); }
@@ -11,7 +11,8 @@ md2-datepicker:focus .md2-datepicker-placeholder { transform: translate3d(0,6px,
 md2-datepicker:focus .md2-datepicker-placeholder { color: #2196f3; }
 md2-datepicker.md2-datepicker-disabled:focus .md2-datepicker-placeholder { color: rgba(0,0,0,0.26); }
 .md2-datepicker-input-text { display: inline-block; font-size: 15px; padding: 3px; }
-.md2-datepicker-wrapper { position: absolute; top: 0; left: 0; display: inline-block; width: 300px; border-radius: 2px; background-color: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); transform: scale(0); transform-origin: left top; transition: 150ms; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+
+.md2-datepicker-wrapper { position: absolute; top: 0; left: 0; display: inline-block; width: 300px; border-radius: 2px; background-color: #fff; z-index: 10; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); transform: scale(0); transform-origin: left top; transition: 150ms; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
 .md2-datepicker-wrapper.active { transform: scale(1); }
 .md2-datepicker-header { display: block; padding: 20px; color: #fff; font-size: 24px; line-height: 24px; font-weight: 500; background: #2196f3; box-sizing: border-box; }
 .md2-datepicker-year { display: block; height: 16px; margin: 0 0 10px; font-size: 16px; line-height: 16px; opacity: 0.7; }

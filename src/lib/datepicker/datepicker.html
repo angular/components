@@ -17,8 +17,7 @@
 </div>
 <div class="md2-datepicker-wrapper" [class.active]="isDatepickerVisible">
   <div class="md2-datepicker-header">
-    <span *ngIf="type==='time'"
-          class="md2-datepicker-year"
+    <span class="md2-datepicker-year"
           [class.hidden]="type==='time'">{{displayDay.year}}</span>
     <span class="md2-datepicker-date"
           [class.active]="isCalendarVisible"
@@ -69,12 +68,13 @@
       </table>
     </div>
     <div class="md2-clock" [class.active]="!isCalendarVisible">
+      <!-- (mousedown)="onMouseDownClock($event)"-->
       <div class="md2-clock-hand">
         <svg class="md2-clock-svg" width="240" height="240">
           <g transform="translate(120,120)">
-            <line x1="0" y1="0" [attr.x2]="clockHand.x" [attr.y2]="clockHand.y"></line>
-            <circle class="md2-clock-bg" r="17" [attr.cx]="clockHand.x" [attr.cy]="clockHand.y"></circle>
-            <circle class="md2-clock-fg" r="3.5" [attr.cx]="clockHand.x" [attr.cy]="clockHand.y"></circle>
+            <line x1="0" y1="0" [attr.x2]="clock.hand.x" [attr.y2]="clock.hand.y"></line>
+            <circle class="md2-clock-bg" r="17" [attr.cx]="clock.hand.x" [attr.cy]="clock.hand.y"></circle>
+            <circle class="md2-clock-fg" r="3.5" [attr.cx]="clock.hand.x" [attr.cy]="clock.hand.y"></circle>
             <circle class="md2-clock-center" cx="0" cy="0" r="2"></circle>
           </g>
         </svg>
@@ -87,7 +87,6 @@
              (click)="onClickHour($event,h.hour)">{{h.hour}}</div>
       </div>
       <div class="md2-clock-minutes" [class.active]="!isHoursVisible">
-        <!--(mousedown)="onMouseDownMinute($event)"-->
         <div *ngFor="let m of minutes"
              class="md2-clock-minute"
              [style.top]="m.top + 'px'"

@@ -2,15 +2,47 @@
   <h2>Date Picker</h2>
   <hr />
   <div>
-    <md2-datepicker [(ngModel)]="date"
-                    type="time"
-                    [disabled]="disabled"
-                    [min]="minDate"
-                    [max]="maxDate"
+    <h4>Date Time Picker</h4>
+    <md2-datepicker [(ngModel)]="datetime"
+                    type="datetime"
                     placeholder="Date Time"
                     format="DD/MM/YYYY HH:mm"
                     (change)="change($event)">
     </md2-datepicker>
-    <pre>{{date}}</pre>
+
+    <h4>Date Picker</h4>
+    <md2-datepicker [(ngModel)]="date"
+                    type="date"
+                    placeholder="Date"
+                    format="DD/MM/YYYY"
+                    (change)="change($event)">
+    </md2-datepicker>
+
+    <h4>Time Picker</h4>
+    <md2-datepicker [(ngModel)]="time"
+                    type="time"
+                    placeholder="Time"
+                    format="HH:mm"
+                    (change)="change($event)">
+    </md2-datepicker>
+
+    <h4>Disabled</h4>
+    <md2-datepicker [(ngModel)]="date"
+                    type="date"
+                    [disabled]="disabled"
+                    placeholder="Date"
+                    format="DD/MM/YYYY"
+                    (change)="change($event)">
+    </md2-datepicker>
+
+    <h4>Date Range</h4>
+    <md2-datepicker [(ngModel)]="date"
+                    type="date"
+                    [min]="minDate"
+                    [max]="maxDate"
+                    placeholder="Date Time"
+                    format="DD/MM/YYYY"
+                    (change)="change($event)">
+    </md2-datepicker>
   </div>
 </section>
