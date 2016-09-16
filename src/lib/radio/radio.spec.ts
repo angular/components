@@ -439,40 +439,32 @@ describe('MdRadio', () => {
     let radioInputs: Array<MdRadioButton> = [];
     let nativeRadioInputs: Array<HTMLInputElement> = [];
 
-    beforeEach(async(() => {
+    beforeEach(() => {
       fixture = TestBed.createComponent(RadioGroupWithReactiveForms);
       fixture.detectChanges();
 
-      fixture.whenStable().then(() => {
-        let inputs = fixture.debugElement.queryAll(By.directive(MdRadioButton));
+      let inputs = fixture.debugElement.queryAll(By.directive(MdRadioButton));
 
-        for (let element of inputs) {
-          radioInputs.push(element.componentInstance);
-          nativeRadioInputs.push(<HTMLInputElement> element.nativeElement.querySelector('input'));
-        }
+      for (let element of inputs) {
+        radioInputs.push(element.componentInstance);
+        nativeRadioInputs.push(<HTMLInputElement> element.nativeElement.querySelector('input'));
+      }
 
-        formControl = <FormControl> fixture.componentInstance.form.controls['radio'];
-      });
-    }));
+      formControl = <FormControl> fixture.componentInstance.form.controls['radio'];
+    });
 
-    it('should be disabled when the form-control is set disabled', async(() => {
+    it('should be disabled when the form-control is set disabled', () => {
       radioInputs.forEach(input => expect(input.disabled).toBeFalsy());
       nativeRadioInputs.forEach(input => expect(input.disabled).toBeFalsy());
 
       formControl.disable();
       fixture.detectChanges();
 
-      fixture.whenStable().then(() => {
-        // Temporary workaround, see https://github.com/angular/angular/issues/10148
-        fixture.detectChanges();
-        fixture.whenStable().then(() => {
-          radioInputs.forEach(input =>
-              expect(input.disabled).toBeTruthy(input.value + ' should be disabled'));
-          nativeRadioInputs.forEach(input =>
-              expect(input.disabled).toBeTruthy('Native ' + input.id + ' should be disabled'));
-        });
-      });
-    }));
+      radioInputs.forEach(input =>
+          expect(input.disabled).toBeTruthy(`${input.value} should be disabled`));
+      nativeRadioInputs.forEach(input =>
+          expect(input.disabled).toBeTruthy(`Native ${input.id} should be disabled`));
+    });
   });
 });
 
