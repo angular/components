@@ -36,12 +36,16 @@
   <div class="md2-datepicker-body">
     <div class="md2-calendar" [class.active]="isCalendarVisible">
       <div class="md2-calendar-controls">
-        <div class="md2-calendar-prev-month" (click)="updateMonth(-1)">
+        <div class="md2-calendar-prev-month"
+             [class.disabled]="!isBeforeMonth()"
+             (click)="isBeforeMonth() && updateMonth(-1)">
           <svg viewBox="0 0 24 24" width="100%" height="100%">
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
           </svg>
         </div>
-        <div class="md2-calendar-next-month" (click)="updateMonth(1)">
+        <div class="md2-calendar-next-month"
+             [class.disabled]="!isAfterMonth()"
+             (click)="isAfterMonth() && updateMonth(1)">
           <svg viewBox="0 0 24 24" width="100%" height="100%">
             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
           </svg>

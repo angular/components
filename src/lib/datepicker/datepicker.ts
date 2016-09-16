@@ -71,7 +71,7 @@ export const MD2_DATEPICKER_CONTROL_VALUE_ACCESSOR: any = {
 export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueAccessor {
 
   constructor(private dateUtil: MdDateUtil) {
-    this.displayDate = this.today;
+    //this.displayDate = this.today;
     this.generateClock();
     this.isCalendarVisible;
   }
@@ -127,11 +127,21 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
   @Input() disabled: boolean;
   @Input() name: string = '';
   @Input() id: string = 'md2-datepicker-' + (++nextId);
-  @Input() min: number;
-  @Input() max: number;
   @Input() placeholder: string;
   @Input() format: string = this.type === 'date' ? 'DD/MM/YYYY' : this.type === 'time' ? 'HH:mm' : this.type === 'datetime' ? 'DD/MM/YYYY HH:mm' : 'DD/MM/YYYY';
   @Input() tabindex: number = 0;
+
+  private minDate: Date = null;
+  private maxDate: Date = null;
+
+  @Input() set min(value: string) {
+    this.minDate = new Date(value);
+    this.minDate.setHours(0, 0, 0, 0);
+  }
+  @Input() set max(value: string) {
+    this.maxDate = new Date(value);
+    this.maxDate.setHours(0, 0, 0, 0);
+  }
 
   get value(): any { return this._value; }
   @Input() set value(value: any) {
@@ -181,6 +191,12 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
   }
   set displayDate(date: Date) {
     if (date && this.dateUtil.isValidDate(date)) {
+      if (this.minDate && this.minDate > date) {
+        date = this.minDate;
+      }
+      if (this.maxDate && this.maxDate < date) {
+        date = this.maxDate;
+      }
       this._displayDate = date;
       this.displayDay = {
         year: date.getFullYear(),
@@ -301,12 +317,12 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
   }
 
   private setDate(date: Date) {
-    this.displayDate = date;
     if (this.type === 'date') {
-      this.value = this.displayDate;
+      this.value = date;
       this.onBlur();
     } else {
-      this.selectedDate = this.displayDate;
+      this.selectedDate = date;
+      this.displayDate = date;
       this.isCalendarVisible = false;
       this.isHoursVisible = true;
       this.resetClock();
@@ -318,19 +334,33 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
     this.generateCalendar();
   }
 
+  private isBeforeMonth() {
+    return !this.minDate ? true : this.minDate && this.dateUtil.getMonthDistance(this.displayDate, this.minDate) < 0;
+  }
+  private isAfterMonth() {
+    return !this.maxDate ? true : this.maxDate && this.dateUtil.getMonthDistance(this.displayDate, this.maxDate) > 0;
+  }
 
+  private isDisabledDate(date: Date): boolean {
+    if (this.minDate && this.maxDate) {
+      return (this.minDate > date) || (this.maxDate < date);
+    } else if (this.minDate) {
+      return (this.minDate > date);
+    } else if (this.maxDate) {
+      return (this.maxDate < date);
+    } else {
+      return false;
+    }
 
+    //if (this.disableWeekends) {
+    //  let dayNbr = this.getDayNumber(date);
+    //  if (dayNbr === 0 || dayNbr === 6) {
+    //    return true;
+    //  }
+    //}
+    //return false;
+  }
 
-
-  @Input() defaultMonth: string;
-  @Input() selDate: string;
-
-
-
-
-
-  minDate: IDate = { year: 0, month: 0, day: 0, hour: 0, minute: 0 };
-  maxDate: IDate = { year: 0, month: 0, day: 0, hour: 0, minute: 0 };
 
   monthStartIdx(y: number, m: number): number {
     // Month start index
@@ -341,27 +371,9 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
     return (d.getDay() + 7) % 7;
   }
 
-  isDisabledDay(date: IDate): boolean {
-    // Check is a given date <= disabledUntil or given date >= disabledSince or disabled weekend
-    let givenDate = this.getTimeInMilliseconds(date);
-    if (this.minDate.year !== 0 && this.minDate.month !== 0 && this.minDate.day !== 0 && givenDate <= this.getTimeInMilliseconds(this.minDate)) {
-      return true;
-    }
-    if (this.maxDate.year !== 0 && this.maxDate.month !== 0 && this.maxDate.day !== 0 && givenDate >= this.getTimeInMilliseconds(this.maxDate)) {
-      return true;
-    }
-    //if (this.disableWeekends) {
-    //  let dayNbr = this.getDayNumber(date);
-    //  if (dayNbr === 0 || dayNbr === 6) {
-    //    return true;
-    //  }
-    //}
-    return false;
-  }
 
-  getTimeInMilliseconds(date: IDate): number {
-    return new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0).getTime();
-  }
+
+
 
   getDayNumber(date: IDate): number {
     let d = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
@@ -373,12 +385,9 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
     let month = this.displayDate.getMonth();
     let date = this.displayDate.getDate();
 
-    //m += 1;
-
     this.dates.length = 0;
 
     let firstDayOfMonth = this.dateUtil.getFirstDateOfMonth(this.displayDate);
-    //let firstDayOfTheWeek = this.getLocaleDay_(firstDayOfMonth);
     let numberOfDaysInMonth = this.dateUtil.getNumberOfDaysInMonth(this.displayDate);
     let numberOfDaysInPrevMonth = this.dateUtil.getNumberOfDaysInMonth(this.dateUtil.incrementMonths(this.displayDate, -1));
 
@@ -395,8 +404,7 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
             dateObj: date,
             calMonth: calMonth,
             today: this.dateUtil.isSameDay(this.today, new Date(year, month - 1, j)),
-            //day: this.getDayNumber(date),
-            disabled: this.isDisabledDay(date)
+            disabled: this.isDisabledDate(new Date(year, month - 1, j))
           });
         }
 
@@ -410,8 +418,7 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
             calMonth: calMonth,
             //selected: this.dateUtil.isSameDay(this.selectedDate, new Date(y, m, dayNbr)),
             today: this.dateUtil.isSameDay(this.today, new Date(year, month, dayNbr)),
-            //day: this.getDayNumber(date),
-            disabled: this.isDisabledDay(date)
+            disabled: this.isDisabledDate(new Date(year, month, dayNbr))
           });
           dayNbr++;
         }
@@ -430,8 +437,7 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
             dateObj: date,
             calMonth: calMonth,
             today: this.dateUtil.isSameDay(this.today, new Date(year, date.month, dayNbr)),
-            //day: this.getDayNumber(date),
-            disabled: this.isDisabledDay(date)
+            disabled: this.isDisabledDate(new Date(year, date.month, dayNbr))
           });
           dayNbr++;
         }

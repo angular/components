@@ -13,8 +13,8 @@ md2-datepicker.md2-datepicker-disabled:focus .md2-datepicker-placeholder { color
 
 .md2-datepicker-wrapper { position: absolute; top: 0; left: 0; display: inline-block; width: 300px; border-radius: 2px; background-color: #fff; z-index: 10; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); transform: scale(0); transform-origin: left top; transition: 150ms; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
 .md2-datepicker-wrapper.active { transform: scale(1); }
-.md2-datepicker-header { display: block; padding: 20px; color: #fff; font-size: 24px; line-height: 24px; font-weight: 500; background: #2196f3; box-sizing: border-box; }
-.md2-datepicker-year { display: block; height: 16px; margin: 0 0 10px; font-size: 16px; line-height: 16px; opacity: 0.7; }
+.md2-datepicker-header { display: block; padding: 20px; color: #fff; font-size: 30px; line-height: 30px; font-weight: 500; background: #2196f3; box-sizing: border-box; }
+.md2-datepicker-year { display: block; height: 14px; margin: 0 0 10px; font-size: 14px; line-height: 14px; opacity: 0.7; }
 .md2-datepicker-year.active { opacity: 1; }
 .md2-datepicker-year.hidden { display: none; }
 .md2-datepicker-date { cursor: pointer; opacity: 0.7; }
@@ -29,24 +29,8 @@ md2-datepicker.md2-datepicker-disabled:focus .md2-datepicker-placeholder { color
 .md2-datepicker-time.active .md2-datepicker-minute { opacity: 0.7; }
 .md2-datepicker-time.active .md2-datepicker-hour.active,
 .md2-datepicker-time.active .md2-datepicker-minute.active { opacity: 1; }
-/*.md2-datepicker-actual-date { }
-.md2-datepicker-actual-day { }
-.md2-datepicker-actual-month { }
-.md2-datepicker-actual-year { }
-.md2-datepicker-actual-time { }*/
-
 .md2-datepicker-body { position: relative; width: 100%; height: 300px; overflow: hidden; }
 .md2-datepicker-footer { }
-
-
-
-/*
-.md2-calendar-day:hover,
-.md2-calendar-day.active { color: #fff; }
-.md2-calendar-day:before { content: ''; position: absolute; top: 0; left: 4px; display: block; height: 35px; width: 35px; border-radius: 50%; opacity: 0; transform: scale(0); transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1); background-color: #0097a7; }
-.md2-calendar-day:hover:before { opacity: 0.6; transform: scale(1); }
-.md2-calendar-day.active:before { opacity: 1; transform: scale(1); }*/
-
 
 .md2-calendar { position: absolute; right: 100%; display: block; width: 100%; font-size: 12px; font-weight: 400; text-align: center; transition: 300ms; }
 .md2-calendar.active { right: 0; }
@@ -55,6 +39,8 @@ md2-datepicker.md2-datepicker-disabled:focus .md2-datepicker-placeholder { color
 .md2-calendar-prev-month,
 .md2-calendar-next-month { position: absolute; display: inline-block; width: 48px; height: 48px; padding: 12px; margin: 0 12px; box-sizing: border-box; cursor: pointer; }
 .md2-calendar-next-month { right: 0; }
+.md2-calendar-prev-month.disabled,
+.md2-calendar-next-month.disabled { opacity: 0.25; cursor: default; pointer-events: none; }
 .md2-calendar-month { margin: 0 20px; }
 .md2-calendar-month th { width: 35px; height: 20px; font-weight: 500; line-height: 15px; opacity: 0.5; }
 .md2-calendar-month td { padding: 0; }
@@ -68,9 +54,6 @@ md2-datepicker.md2-datepicker-disabled:focus .md2-datepicker-placeholder { color
 .md2-calendar-day.disabled:hover { color: rgba(0,0,0,0.45); background: transparent; pointer-events: none; }
 .md2-calendar-day.prev-month,
 .md2-calendar-day.next-month { visibility: hidden; }
-
-
-
 
 .md2-clock { position: absolute; left: 100%; display: block; width: 240px; height: 240px; margin: 30px; font-size: 14px; font-weight: 400; text-align: center; background-color: #e0e0e0; border-radius: 50%; transition: 300ms; }
 .md2-clock.active { left: 0; }
