@@ -143,18 +143,16 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
    * @param value of ngModel
    */
   private setValue(value: any) {
-    if (value !== this._value) {
+    if (value && value !== this._value) {
       if (this.dateUtil.isValidDate(value)) {
         this._value = value;
-      } else if (value) {
+      } else {
         if (this.type === 'time') {
           this._value = new Date('1-1-1 ' + value);
-        } else {
+        }
+        else {
           this._value = new Date(value);
         }
-
-      } else {
-        this._value = new Date();
       }
       this.displayInputDate = this.formatDate(this._value);
       if (this._isInitialized) {

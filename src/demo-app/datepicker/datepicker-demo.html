@@ -10,6 +10,13 @@
                     (change)="change($event)">
     </md2-datepicker>
 
+    <md2-datepicker [(ngModel)]="datetime1"
+                    type="datetime"
+                    placeholder="Date Time"
+                    format="DD/MM/YYYY HH:mm"
+                    (change)="change($event)">
+    </md2-datepicker>
+
     <h4>Date Picker</h4>
     <md2-datepicker [(ngModel)]="date"
                     type="date"
