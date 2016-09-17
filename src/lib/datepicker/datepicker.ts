@@ -377,21 +377,6 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
     //return false;
   }
 
-
-  monthStartIdx(y: number, m: number): number {
-    // Month start index
-    let d = new Date();
-    d.setDate(1);
-    d.setMonth(m - 1);
-    d.setFullYear(y);
-    return (d.getDay() + 7) % 7;
-  }
-
-  getDayNumber(date: IDate): number {
-    let d = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
-    return d.getDay();
-  }
-
   generateCalendar(): void {
     let year = this.displayDate.getFullYear();
     let month = this.displayDate.getMonth();
@@ -574,8 +559,6 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
     //this[this.currentView] = value;
 
   }
-
-
 
   private generateClock() {
     this.hours.length = 0;
