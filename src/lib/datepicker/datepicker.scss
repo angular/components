@@ -13,7 +13,7 @@ md2-datepicker.md2-datepicker-disabled:focus .md2-datepicker-placeholder { color
 
 .md2-datepicker-wrapper { position: absolute; top: 0; left: 0; display: inline-block; width: 300px; border-radius: 2px; background-color: #fff; z-index: 10; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); transform: scale(0); transform-origin: left top; transition: 150ms; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
 .md2-datepicker-wrapper.active { transform: scale(1); }
-.md2-datepicker-header { display: block; padding: 20px; color: #fff; font-size: 30px; line-height: 30px; font-weight: 500; background: #2196f3; box-sizing: border-box; }
+.md2-datepicker-header { display: block; padding: 20px; color: #fff; font-size: 28px; line-height: 28px; font-weight: 500; background: #2196f3; box-sizing: border-box; }
 .md2-datepicker-year { display: block; height: 14px; margin: 0 0 10px; font-size: 14px; line-height: 14px; opacity: 0.7; }
 .md2-datepicker-year.active { opacity: 1; }
 .md2-datepicker-year.hidden { display: none; }

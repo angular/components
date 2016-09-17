@@ -294,11 +294,13 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
   private showHours() {
     this.isCalendarVisible = false;
     this.isHoursVisible = true;
+    this.resetClock();
   }
 
   private showMinutes() {
     this.isCalendarVisible = false;
     this.isHoursVisible = false;
+    this.resetClock();
   }
 
   private onClickDate(event: Event, d: any) {
