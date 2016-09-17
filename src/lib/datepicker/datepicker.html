@@ -1,18 +1,22 @@
 ﻿<div class="md2-datepicker-input-container" (click)="showDatepicker()">
   <div class="md2-datepicker-calendar-icon">
-    <svg *ngIf="type==='date'" width="100%" height="100%" viewBox="0 0 24 24">
+    <svg *ngIf="type==='date'" width="24" height="24" viewBox="0 0 24 24">
       <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"></path>
     </svg>
-    <svg *ngIf="type==='time'" width="100%" height="100%" viewBox="0 0 24 24">
+    <svg *ngIf="type==='time'" width="24" height="24" viewBox="0 0 24 24">
       <path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"></path>
     </svg>
-    <svg *ngIf="type==='datetime'" width="100%" height="100%" viewBox="0 0 24 24">
+    <svg *ngIf="type==='datetime'" width="24" height="24" viewBox="0 0 24 24">
       <path d="M15,13H16.5V15.82L18.94,17.23L18.19,18.53L15,16.69V13M19,8H5V19H9.67C9.24,18.09 9,17.07 9,16A7,7 0 0,1 16,9C17.07,9 18.09,9.24 19,9.67V8M5,21C3.89,21 3,20.1 3,19V5C3,3.89 3.89,3 5,3H6V1H8V3H16V1H18V3H19A2,2 0 0,1 21,5V11.1C22.24,12.36 23,14.09 23,16A7,7 0 0,1 16,23C14.09,23 12.36,22.24 11.1,21H5M16,11.15A4.85,4.85 0 0,0 11.15,16C11.15,18.68 13.32,20.85 16,20.85A4.85,4.85 0 0,0 20.85,16C20.85,13.32 18.68,11.15 16,11.15Z"></path>
     </svg>
   </div>
   <div class="md2-datepicker-input">
     <span class="md2-datepicker-placeholder" [class.has-value]="value">{{placeholder}}</span>
     <span class="md2-datepicker-input-text">{{displayInputDate}}</span>
+    <svg width="24" height="24" viewBox="0 0 24 24">
+      <path d="M7 10l5 5 5-5z" />
+      <path d="M0 0h24v24H0z" fill="none" />
+    </svg>
   </div>
 </div>
 <div class="md2-datepicker-wrapper" [class.active]="isDatepickerVisible">
@@ -39,14 +43,14 @@
         <div class="md2-calendar-prev-month"
              [class.disabled]="!isBeforeMonth()"
              (click)="isBeforeMonth() && updateMonth(-1)">
-          <svg viewBox="0 0 24 24" width="100%" height="100%">
+          <svg viewBox="0 0 24 24" width="24" height="24">
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
           </svg>
         </div>
         <div class="md2-calendar-next-month"
              [class.disabled]="!isAfterMonth()"
              (click)="isAfterMonth() && updateMonth(1)">
-          <svg viewBox="0 0 24 24" width="100%" height="100%">
+          <svg viewBox="0 0 24 24" width="24" height="24">
             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
           </svg>
         </div>
@@ -99,7 +103,10 @@
       </div>
     </div>
   </div>
-  <div class="md2-datepicker-footer"></div>
+  <div class="md2-datepicker-footer">
+    <div class="md2-button" (click)="onBlur()">Cancel</div>
+    <div class="md2-button" (click)="onClickOk()">Ok</div>
+  </div>
 </div>
 <!--
   @Input() readonly: boolean;

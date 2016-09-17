@@ -61,6 +61,7 @@ export const MD2_DATEPICKER_CONTROL_VALUE_ACCESSOR: any = {
   host: {
     'role': 'datepicker',
     '[id]': 'id',
+    '[class]': 'class',
     '[class.md2-datepicker-disabled]': 'disabled',
     '[tabindex]': 'disabled ? -1 : tabindex',
     '[attr.aria-disabled]': 'disabled'
@@ -127,6 +128,7 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
   @Input() disabled: boolean;
   @Input() name: string = '';
   @Input() id: string = 'md2-datepicker-' + (++nextId);
+  @Input() class: string;
   @Input() placeholder: string;
   @Input() format: string = this.type === 'date' ? 'DD/MM/YYYY' : this.type === 'time' ? 'HH:mm' : this.type === 'datetime' ? 'DD/MM/YYYY HH:mm' : 'DD/MM/YYYY';
   @Input() tabindex: number = 0;
@@ -303,6 +305,18 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
     this.resetClock();
   }
 
+  private onClickOk() {
+    if (this.isCalendarVisible) {
+      this.setDate(this.displayDate);
+    } else if (this.isHoursVisible) {
+      this.isHoursVisible = false;
+      this.resetClock();
+    } else {
+      this.value = this.displayDate;
+      this.onBlur();
+    }
+  }
+
   private onClickDate(event: Event, d: any) {
     event.preventDefault();
     event.stopPropagation();
@@ -372,10 +386,6 @@ export class Md2Datepicker implements AfterContentInit, OnDestroy, ControlValueA
     d.setFullYear(y);
     return (d.getDay() + 7) % 7;
   }
-
-
-
-
 
   getDayNumber(date: IDate): number {
     let d = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
