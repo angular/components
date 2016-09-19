@@ -26,6 +26,7 @@ import {MultiselectDemo} from './multiselect/multiselect-demo';
 import {SelectDemo} from './select/select-demo';
 import {TabsDemo} from './md-tabs/tabs-demo';
 import {TagsDemo} from './tags/tags-demo';
+import {TextareaDemo} from './textarea/textarea-demo';
 import {ToastDemo} from './toast/toast-demo';
 import {TooltipDemo} from './md-tooltip/tooltip-demo';
 
@@ -87,6 +88,7 @@ import {DEMO_APP_ROUTES} from './demo-app/routes';
     SelectDemo,
     TabsDemo,
     TagsDemo,
+    TextareaDemo,
     ToastDemo,
     TooltipDemo,
 
