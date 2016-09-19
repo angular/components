@@ -10,6 +10,7 @@ import {Md2MultiselectModule} from 'md2/multiselect/multiselect';
 import {Md2SelectModule} from 'md2/select/select';
 import {Md2TabsModule} from 'md2/md-tabs/tabs';
 import {Md2TagsModule} from 'md2/tags/tags';
+import {MdTextareaModule} from 'md2/textarea/textarea';
 import {Md2ToastModule} from 'md2/toast/toast';
 import {Md2TooltipModule} from 'md2/md-tooltip/tooltip';
 
@@ -25,6 +26,7 @@ const MATERIAL_MODULES = [
   Md2SelectModule,
   Md2TabsModule,
   Md2TagsModule,
+  MdTextareaModule,
   Md2ToastModule,
   Md2TooltipModule,
 ];
@@ -42,6 +44,7 @@ const MATERIAL_MODULES = [
     Md2SelectModule,
     Md2TabsModule,
     Md2TagsModule,
+    MdTextareaModule,
     Md2ToastModule,
     Md2TooltipModule,
   ],

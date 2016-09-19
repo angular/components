@@ -1,0 +1,53 @@
+<div class="md-textarea-wrapper">
+  <div class="md-textarea-table">
+    <div class="md-textarea-infix">
+      <textarea #textarea
+             aria-target
+             class="md-textarea-element"
+             [class.md-end]="align == 'end'"
+             [attr.aria-label]="ariaLabel"
+             [attr.aria-labelledby]="ariaLabelledBy"
+             [attr.aria-disabled]="ariaDisabled"
+             [attr.aria-required]="ariaRequired"
+             [attr.aria-invalid]="ariaInvalid"
+             [autofocus]="autofocus"
+             [disabled]="disabled"
+             [id]="textareaId"
+             [attr.maxlength]="maxlength"
+             [readonly]="readonly"
+             [required]="required"
+             [attr.tabindex]="tabindex"
+             [attr.name]="name"
+             [attr.rows]="rows"
+             [attr.cols]="cols"
+             (focus)="_handleFocus($event)"
+             (blur)="_handleBlur($event)"
+             [(ngModel)]="value"
+             (change)="_handleChange($event)"></textarea>
+
+      <label class="md-textarea-placeholder"
+             [attr.for]="textareaId"
+             [class.md-empty]="empty"
+             [class.md-focused]="focused"
+             [class.md-float]="floatingPlaceholder"
+             [class.md-accent]="dividerColor == 'accent'"
+             [class.md-warn]="dividerColor == 'warn'"
+             *ngIf="_hasPlaceholder()">
+        <ng-content select="md-placeholder"></ng-content>
+        {{placeholder}}
+        <span class="md-placeholder-required" *ngIf="required">*</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="md-textarea-underline"
+       [class.md-disabled]="disabled">
+    <span class="md-textarea-ripple"
+          [class.md-focused]="focused"
+          [class.md-accent]="dividerColor == 'accent'"
+          [class.md-warn]="dividerColor == 'warn'"></span>
+  </div>
+
+  <div *ngIf="hintLabel != ''" class="md-hint">{{hintLabel}}</div>
+  <ng-content select="md-hint"></ng-content>
+</div>
