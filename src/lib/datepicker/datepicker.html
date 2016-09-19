@@ -32,9 +32,9 @@
           [class.hidden]="type==='date'">
       <span class="md2-datepicker-hour"
             [class.active]="isHoursVisible"
-            (click)="showHours()">{{displayDay.hour}}</span>:<span class="md2-datepicker-minute"
-                                                                   [class.active]="!isHoursVisible"
-                                                                   (click)="showMinutes()">{{displayDay.minute}}</span>
+            (click)="toggleHours(true)">{{displayDay.hour}}</span>:<span class="md2-datepicker-minute"
+                                                                         [class.active]="!isHoursVisible"
+                                                                         (click)="toggleHours(false)">{{displayDay.minute}}</span>
     </span>
   </div>
   <div class="md2-datepicker-body">
@@ -67,7 +67,7 @@
                    [class.selected]="dateUtil.isSameDay(selectedDate, d.date)"
                    [class.disabled]="d.disabled"
                    [class.prev-month]="d.calMonth===prevMonth"
-                   [class.currmonth]="d.calMonth===currMonth"
+                   [class.curr-month]="d.calMonth===currMonth"
                    [class.next-month]="d.calMonth===nextMonth"
                    (click)="onClickDate($event,d)">{{d.dateObj.day}}</div>
             </td>
@@ -108,18 +108,3 @@
     <div class="md2-button" (click)="onClickOk()">Ok</div>
   </div>
 </div>
-<!--
-  @Input() readonly: boolean;
-  @Input() required: boolean;
--->
-<!--`<input [(ngModel)]="value"
-        [type]="type"
-        [disabled]="disabled"
-        [readonly]="readonly"
-        [name]="name"
-        [id]="id"
-        [min]="min"
-        [max]="max"
-        [placeholder]="placeholder"
-        [tabindex]="tabindex" />
-  `-->

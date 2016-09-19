@@ -4,13 +4,13 @@ md2-datepicker.md2-datepicker-disabled { pointer-events: none; cursor: default; 
 .md2-datepicker-calendar-icon { position: absolute; top: 21px; left: 0; display: block; height: 24px; width: 24px; vertical-align: middle; fill: currentColor; color: rgba(0,0,0,0.54); }
 .md2-datepicker-input { position: relative; display: block; height: 30px; padding: 2px 26px 1px 2px; margin: 0; line-height: 26px; color: rgba(0,0,0,0.87); vertical-align: middle; box-sizing: border-box; border-bottom: 1px solid rgba(0,0,0,0.12); }
 .md2-datepicker-input svg { position: absolute; right: 0; top: 2px; fill: currentColor; color: rgba(0,0,0,0.54); }
-md2-datepicker.md2-datepicker-disabled .md2-datepicker-input { color: rgba(0,0,0,0.26); border-bottom-style: dotted; }
-.md2-datepicker-placeholder { position: absolute; bottom: 100%; left: 3px; font-size: 16px; line-height: 18px; color: rgba(0,0,0,0.26); transform: translate3d(0,26px,0) scale(1); transition: 250ms cubic-bezier(.25,.8,.25,1); transform-origin: left top; pointer-events: none; }
+md2-datepicker.md2-datepicker-disabled .md2-datepicker-input { color: rgba(0,0,0,0.38); border-color: transparent; background-image: linear-gradient(to right, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.38) 33%, transparent 0%); background-position: bottom -1px left 0; background-size: 4px 1px; background-repeat: repeat-x; }
+.md2-datepicker-placeholder { position: absolute; bottom: 100%; font-size: 16px; line-height: 18px; color: rgba(0,0,0,0.26); transform: translate3d(0,26px,0) scale(1); transition: 250ms cubic-bezier(.25,.8,.25,1); transform-origin: left top; pointer-events: none; }
 .md2-datepicker-placeholder.has-value,
 md2-datepicker:focus .md2-datepicker-placeholder { transform: translate3d(0,6px,0) scale(.75); }
 md2-datepicker:focus .md2-datepicker-placeholder { color: #2196f3; }
 md2-datepicker.md2-datepicker-disabled:focus .md2-datepicker-placeholder { color: rgba(0,0,0,0.26); }
-.md2-datepicker-input-text { display: inline-block; font-size: 15px; padding: 3px; line-height: 22px; }
+.md2-datepicker-input-text { display: inline-block; font-size: 15px; padding: 3px 0; line-height: 22px; }
 
 .md2-datepicker-wrapper { position: absolute; top: 0; left: 0; display: inline-block; width: 300px; border-radius: 2px; background-color: #fff; z-index: 10; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); transform: scale(0); transform-origin: left top; transition: 150ms; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
 .md2-datepicker-wrapper.active { transform: scale(1); }
