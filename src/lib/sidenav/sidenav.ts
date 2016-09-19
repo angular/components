@@ -50,7 +50,7 @@ export class MdSidenav {
   @Input() mode: 'over' | 'push' | 'side' = 'over';
 
   /** Whether the sidenav is opened. */
-  @Input('opened') @BooleanFieldValue() private _opened: boolean = false;
+  @BooleanFieldValue() private _opened: boolean = false;
 
   /** Event emitted when the sidenav is being opened. Use this to synchronize animations. */
   @Output('open-start') onOpenStart = new EventEmitter<void>();
@@ -75,6 +75,7 @@ export class MdSidenav {
    * Whether the sidenav is opened. We overload this because we trigger an event when it
    * starts or end.
    */
+  @Input()
   get opened(): boolean { return this._opened; }
   set opened(v: boolean) {
     this.toggle(v);
