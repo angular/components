@@ -21,8 +21,8 @@
            [attr.name]="name"
            [attr.aria-label]="ariaLabel"
            [attr.aria-labelledby]="ariaLabelledby"
-           (blur)="_onInputBlur()"
-           (focus)="_onInputFocus()"
+           (blur)="_onInputBlur($event)"
+           (focus)="_onInputFocus($event)"
            (change)="_onChangeEvent($event)"
            (click)="_onInputClick($event)">
   </div>

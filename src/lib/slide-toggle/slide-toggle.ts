@@ -61,7 +61,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   private _uniqueId = `md-slide-toggle-${++nextId}`;
   private _checked: boolean = false;
   private _color: string;
-  _hasFocus: boolean = false;
+  private _hasFocus: boolean = false;
   private _isMousedown: boolean = false;
   private _slideRenderer: SlideToggleRenderer = null;
 
@@ -129,17 +129,21 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
     setTimeout(() => this._isMousedown = false, 100);
   }
 
-  _onInputFocus() {
+  _onInputFocus(event: Event) {
     // Only show the focus / ripple indicator when the focus was not triggered by a mouse
     // interaction on the component.
     if (!this._isMousedown) {
       this._hasFocus = true;
     }
+
+    this._forwardEvent(event);
   }
 
-  _onInputBlur() {
+  _onInputBlur(event: Event) {
     this._hasFocus = false;
+
     this.onTouched();
+    this._forwardEvent(event);
   }
 
   /**
@@ -211,6 +215,11 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
     this._change.emit(event);
   }
 
+  /** Forwards a given element to the component element */
+  private _forwardEvent(event: Event) {
+    // We need a timeout here, because the event is still being dispatched right now.
+    setTimeout(() => this._elementRef.nativeElement.dispatchEvent(event));
+  }
 
   /** TODO: internal */
   _onDragStart() {

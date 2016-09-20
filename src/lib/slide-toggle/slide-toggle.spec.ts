@@ -318,6 +318,22 @@ describe('MdSlideToggle', () => {
       expect(slideToggleElement.classList).toContain('md-slide-toggle-focused');
     });
 
+    it('should forward the focus event', () => {
+      spyOn(testComponent, 'onSlideFocus');
+
+      dispatchFocusChangeEvent('focus', inputElement);
+
+      expect(testComponent.onSlideFocus).toHaveBeenCalledTimes(1);
+    });
+
+    it('should forward the blur event', () => {
+      spyOn(testComponent, 'onSlideBlur');
+
+      dispatchFocusChangeEvent('blur', inputElement);
+
+      expect(testComponent.onSlideBlur).toHaveBeenCalledTimes(1);
+    });
+
   });
 
   describe('custom template', () => {
@@ -350,7 +366,9 @@ function dispatchFocusChangeEvent(eventName: string, element: HTMLElement): void
     <md-slide-toggle [(ngModel)]="slideModel" [disabled]="isDisabled" [color]="slideColor" 
                      [id]="slideId" [checked]="slideChecked" [name]="slideName" 
                      [ariaLabel]="slideLabel" [ariaLabelledby]="slideLabelledBy" 
-                     (change)="onSlideChange($event)"
+                     (change)="onSlideChange($event)" 
+                     (focus)="onSlideFocus($event)"
+                     (blur)="onSlideBlur($event)"
                      (click)="onSlideClick($event)">
       <span>Test Slide Toggle</span>
     </md-slide-toggle>`,
@@ -366,6 +384,8 @@ class SlideToggleTestApp {
   slideLabelledBy: string;
   lastEvent: MdSlideToggleChange;
 
+  onSlideFocus(event: FocusEvent) {}
+  onSlideBlur(event: FocusEvent) {}
   onSlideClick(event: Event) {}
   onSlideChange(event: MdSlideToggleChange) {
     this.lastEvent = event;
