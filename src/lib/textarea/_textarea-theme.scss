@@ -1,0 +1,64 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+
+@mixin md-textarea-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  
+  // Placeholder colors. Required is used for the `*` star shown in the placeholder.
+  $textarea-placeholder-color: md-color($foreground, hint-text);
+  $textarea-floating-placeholder-color: md-color($primary);
+  $textarea-required-placeholder-color: md-color($accent);
+  
+  // Underline colors.
+  $textarea-underline-color: md-color($foreground, hint-text);
+  $textarea-underline-color-accent: md-color($accent);
+  $textarea-underline-color-warn: md-color($warn);
+  $textarea-underline-disabled-color: md-color($foreground, hint-text);
+  $textarea-underline-focused-color: md-color($primary);
+
+  .md-textarea-placeholder {
+    color: $textarea-placeholder-color;
+
+    // :focus is applied to the textarea, but we apply md-focused to the other elements
+    // that need to listen to it.
+    &.md-focused {
+      color: $textarea-floating-placeholder-color;
+
+      &.md-accent {
+        color: $textarea-underline-color-accent;
+      }
+      &.md-warn {
+        color: $textarea-underline-color-warn;
+      }
+    }
+  }
+
+  // See md-textarea-placeholder-floating mixin in textarea.scss
+  md-textarea textarea:-webkit-autofill + .md-textarea-placeholder,
+  .md-textarea-placeholder.md-float:not(.md-empty), .md-textarea-placeholder.md-float.md-focused {
+
+    .md-placeholder-required {
+      color: $textarea-required-placeholder-color;
+    }
+  }
+
+  .md-textarea-underline {
+    border-color: $textarea-underline-color;
+
+    .md-textarea-ripple {
+      background-color: $textarea-underline-focused-color;
+
+      &.md-accent {
+        background-color: $textarea-underline-color-accent;
+      }
+      &.md-warn {
+        background-color: $textarea-underline-color-warn;
+      }
+    }
+  }
+}

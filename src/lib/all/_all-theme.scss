@@ -16,6 +16,7 @@
 @import '../slide-toggle/slide-toggle-theme';
 @import '../slider/slider-theme';
 @import '../tabs/tabs-theme';
+@import '../textarea/textarea-theme';
 @import '../toolbar/toolbar-theme';
 @import '../tooltip/tooltip-theme';
 
@@ -39,6 +40,7 @@
   @include md-slide-toggle-theme($theme);
   @include md-slider-theme($theme);
   @include md-tabs-theme($theme);
+  @include md-textarea-theme($theme);
   @include md-toolbar-theme($theme);
   @include md-tooltip-theme($theme);
 }

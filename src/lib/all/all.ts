@@ -14,6 +14,7 @@ import {MdIconModule} from '@angular2-material/icon';
 import {MdProgressCircleModule} from '@angular2-material/progress-circle';
 import {MdProgressBarModule} from '@angular2-material/progress-bar';
 import {MdInputModule} from '@angular2-material/input';
+import {MdTextareaModule} from '@angular2-material/textarea';
 import {MdTabsModule} from '@angular2-material/tabs';
 import {MdToolbarModule} from '@angular2-material/toolbar';
 import {MdTooltipModule} from '@angular2-material/tooltip';
@@ -48,6 +49,7 @@ const MATERIAL_MODULES = [
   MdSliderModule,
   MdSlideToggleModule,
   MdTabsModule,
+  MdTextareaModule,
   MdToolbarModule,
   MdTooltipModule,
   OverlayModule,
@@ -69,6 +71,7 @@ const MATERIAL_MODULES = [
     MdSelectModule.forRoot(),
     MdSidenavModule.forRoot(),
     MdTabsModule.forRoot(),
+    MdTextareaModule.forRoot(),
     MdToolbarModule.forRoot(),
     PortalModule.forRoot(),
     RtlModule.forRoot(),
