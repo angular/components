@@ -22,6 +22,7 @@ const components = [
   'slide-toggle',
   'button-toggle',
   'tabs',
+  'textarea',
   'toolbar',
   'tooltip',
 ];
