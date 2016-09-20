@@ -97,11 +97,15 @@ task(':build:components:rollup', [':build:components:ts'], () => {
 task('build:components', sequenceTask(
   ':build:components:rollup',
   ':build:components:assets',
-  ':build:components:scss',
-  ':inline-resources',
+  ':build:components:scss'
 ));
 
-task(':build:components:ngc', ['build:components'], execNodeTask(
+task(':build:components:inline', sequenceTask(
+  'build:components',
+  ':inline-resources'
+));
+
+task(':build:components:ngc', [':build:components:inline'], execNodeTask(
   '@angular/compiler-cli', 'ngc', ['-p', path.relative(PROJECT_ROOT, path.join(componentsDir, 'tsconfig.json'))]
 ));
 

@@ -147,14 +147,18 @@ export function cleanTask(glob: string) {
 
 
 /** Build an task that depends on all application build tasks. */
-export function buildAppTask(appName: string) {
+export function buildAppTask(appName: string, inlineResources = false) {
   const buildTasks = ['vendor', 'ts', 'scss', 'assets']
     .map(taskName => `:build:${appName}:${taskName}`);
+
+  const baseTasks = [
+    inlineResources ? ':build:components:inline' : 'build:components'
+  ];
 
   return (done: () => void) => {
     gulpRunSequence(
       'clean',
-      ['build:components', ...buildTasks],
+      [...baseTasks, ...buildTasks],
       done
     );
   };
