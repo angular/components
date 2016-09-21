@@ -222,6 +222,29 @@ describe('InteractivityChecker', () => {
       expect(checker.isFocusable(element))
           .toBe(true, `Expected element with contenteditable to be focusable`);
     });
+
+
+    it('should return false for inert div and span', () => {
+      let elements = createElements('div', 'span');
+      appendElements(elements);
+
+      elements.forEach(el => {
+        expect(checker.isFocusable(el))
+            .toBe(false, `Expected <${el.nodeName}> not to be focusable`);
+      });
+    });
+
+    it('should return true for div and span with tabindex == 0', () => {
+      let elements = createElements('div', 'span');
+
+      elements.forEach(el => el.setAttribute('tabindex', '0'));
+      appendElements(elements);
+
+      elements.forEach(el => {
+        expect(checker.isFocusable(el))
+            .toBe(true, `Expected <${el.nodeName} tabindex="0"> to be focusable`);
+      });
+    });
   });
 
   describe('isTabbable', () => {
@@ -243,15 +266,6 @@ describe('InteractivityChecker', () => {
       elements.forEach(el => {
         expect(checker.isTabbable(el))
             .toBe(false, `Expected <${el.nodeName} tabindex="-1"> not to be tabbable`);
-      });
-    });
-
-    it('should return false for inert div and span', () => {
-      let elements = createElements('div', 'span');
-      appendElements(elements);
-
-      elements.forEach(el => {
-        expect(checker.isTabbable(el)).toBe(false, `Expected <${el.nodeName}> not to be tabbable`);
       });
     });
 
