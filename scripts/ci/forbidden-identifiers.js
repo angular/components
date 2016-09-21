@@ -28,10 +28,12 @@ const blocked_statements = [
   'from \\\'rxjs/Rx\\\'',
 ];
 
+const SCOPE_PACKAGE = '@angular2-material';
 const sourceFolders = ['./src', './e2e'];
-const scopePackages = glob('src/lib/*');
+const packageFolders = glob('src/lib/*/');
 const blockedRegex = new RegExp(blocked_statements.join('|'), 'g');
 const importRegex = /from\s+'(.*)';/g;
+const importScopes = packageFolders.map(_createScopeFromPath);
 
 /*
  * Verify that the current PR is not adding any forbidden identifiers.
@@ -58,20 +60,23 @@ findTestFiles()
         lineCount++;
 
         let matches = line.match(blockedRegex);
-        let scopeImport = isRelativeScopeImport(fileName, line);
+        let invalidImport = isInvalidImport(fileName, line);
 
-        if (matches || scopeImport) {
+        if (matches || invalidImport) {
 
           let error = {
             fileName: fileName,
             lineNumber: lineCount,
-            statement: matches && matches[0] || scopeImport.invalidStatement
+            statement: matches && matches[0] || invalidImport.statement
           };
 
-          if (scopeImport) {
+          if (invalidImport) {
             error.messages = [
-              'You are using an import statement, which imports a file from another scope package.',
-              `Please import the file by using the following path: ${scopeImport.scopeImportPath}`
+              invalidImport.deep ?
+                'You are using an import statement, which imports a file by using its full path (deep import).' :
+                'You are using an import statement, which imports a file from another scope package.'
+              ,
+              `Please import the file by using the following path: ${invalidImport.corrected}`
             ];
           }
 
@@ -154,7 +159,7 @@ function findChangedFiles() {
  * @param fileName Filename to validate the path
  * @param line Line to be checked.
  */
-function isRelativeScopeImport(fileName, line) {
+function isInvalidImport(fileName, line) {
   let importMatch = importRegex.exec(line);
 
   // We have to reset the last index of the import regex, otherwise we
@@ -167,50 +172,84 @@ function isRelativeScopeImport(fileName, line) {
   }
 
   let importPath = importMatch[1];
+  let isMaterialImport = importPath.startsWith(SCOPE_PACKAGE);
 
-  // Skip the check when the import doesn't start with a dot, because the line
-  // isn't importing any file relatively. Also applies to scope packages starting
-  // with `@`.
-  if (!importPath.startsWith('.')) {
+  // Skip the check when the import doesn't start with a dot and also is not
+  // a Angular Material 2 scope import.
+  if (!importPath.startsWith('.') && !isMaterialImport) {
     return false;
   }
 
-  // Transform the relative import path into an absolute path.
-  importPath = path.resolve(path.dirname(fileName), importPath);
+  var fromScope = getScopeFromPath(fileName);
+  var importScope = null;
+  var isInvalid = false;
 
-  let fileScope = findScope(fileName);
-  let importScope = findScope(importPath);
+  /*
+   * Resolve from the import statement the associated scope definition and source file path.
+   * Also determine whether the import statement is invalid or not.
+   */
+  if (isMaterialImport) {
+    importScope = getScopeFromName(importPath);
+    importPath = path.resolve(importScope.path, path.relative(importScope.name, importPath));
 
-  if (fileScope.path !== importScope.path) {
+    isInvalid = importScope && importPath !== path.resolve(importScope.path);
+  } else {
+    importPath = path.resolve(path.dirname(fileName), importPath);
+    importScope = getScopeFromPath(importPath);
 
-    // Creates a valid import statement, which uses the correct scope package.
-    let importFilePath = path.relative(importScope.path, importPath);
-    let validImportPath = `@angular2-material/${importScope.name}/${importFilePath}`;
+    isInvalid = fromScope && importScope && fromScope.path !== importScope.path;
+  }
 
+  if (isInvalid) {
     return {
-      fileScope: fileScope.name,
-      importScope: importScope.name,
-      invalidStatement: importMatch[0],
-      scopeImportPath: validImportPath
+      fromScope: fromScope,
+      importScope: importScope,
+      importPath: importPath,
+      
+      statement: importMatch[0],
+      corrected: importScope.name,
+      deep: isMaterialImport
     }
   }
 
-  function findScope(filePath) {
-    // Normalize the filePath, to avoid issues with the different environments path delimiter.
-    filePath = path.normalize(filePath);
+}
 
-    // Iterate through all scope paths and try to find them inside of the file path.
-    var scopePath = scopePackages
-      .filter(scope => filePath.indexOf(path.normalize(scope)) !== -1)
-      .pop();
+/**
+ * Finds the associated scope definition from an scoped import.
+ * @param scopeName
+ * @returns {ScopeDef}
+ */
+function getScopeFromName(scopeName) {
+  return importScopes.filter(scope => scopeName.startsWith(scope.name))[0];
+}
 
-    // Return an object containing the name of the scope and the associated path.
-    return {
-      name: path.basename(scopePath),
-      path: scopePath
-    }
+/**
+ * Finds the associated scope definition from an file path.
+ * @param filePath
+ * @returns {ScopeDef}
+ */
+function getScopeFromPath(filePath) {
+  // Normalize the file path to avoid deviations with the import delimiters.
+  filePath = path.normalize(filePath);
+
+  return importScopes.filter(scope => filePath.indexOf(path.normalize(scope.path)) !== -1)[0];
+}
+
+/**
+ * Creates a scope definition from the specified path.
+ * @param scopePath
+ * @returns {ScopeDef}
+ */
+function _createScopeFromPath(scopePath) {
+
+  var scopeBase = path.basename(scopePath);
+
+  /** @typedef {{base: string, path: string, name: string}} ScopeDef */
+  return {
+    base: scopeBase,
+    path: scopePath,
+    name: `${SCOPE_PACKAGE}/${scopeBase}`
   }
-
 }
 
 /**
