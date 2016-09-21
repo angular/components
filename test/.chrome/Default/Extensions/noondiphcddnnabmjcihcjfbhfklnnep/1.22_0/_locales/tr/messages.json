@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Bu site için her zaman yoksay"
+   },
+   "always_ignore_confirmation": {
+      "message": "Şifre Uyarısı'nın bu web sitesini her zaman yoksaymasını istiyor musunuz?"
+   },
+   "back": {
+      "message": "Geri"
+   },
+   "contact_security": {
+      "message": "Güvenliğe Başvurun"
+   },
+   "extension_description": {
+      "message": "Şifre Uyarısı, kimlik avı saldırılarına karşı korunmanıza yardımcı olur."
+   },
+   "extension_detailed_description": {
+      "message": "Gmail veya Google for Work şifrenizi accounts.google.com dışında bir yere girerseniz bir uyarı alırsınız, böylece gerekirse şifrenizi değiştirebilirsiniz.\n\nŞifre Uyarısı, şifrenizi yazmadan önce sizi uyarmak için sahte Google giriş sayfalarını tespit etmeye de çalışır. Bunu yapmak için Şifre Uyarısı, ziyaret ettiğiniz her bir sayfanın HTML'sini kontrol ederek sayfanın bir Google giriş sayfasının kimliğine bürünüp bürünmediğine bakar.\n\nSSS\n-- Şifre Uyarısı ne zaman yürürlüğe girer?\nŞifre Uyarısı, accounts.google.com'da şifrenizi bir sonraki girişinizde kendisini başlatır.\n\n-- Şifre Uyarısı şifremi veya tuş vuruşlarımı depolar mı?\nHayır. Şifre Uyarısı şifrenizi veya tuş vuruşlarınızı depolamaz. Bunun yerine, şifrenizin güvenli bir küçük resmini saklar ve bunu Chrome'daki en son tuş vuruşlarınızın bir küçük resmiyle karşılaştırır.\n\n-- Şifre Uyarısı verileri nereye gönderir?\nŞifre Uyarısı'nı bir Gmail hesabında kullanıyorsanız Şifre Uyarısı, yerel bilgisayarınızdan hiç veri göndermez. Google for Work yöneticiniz Şifre Uyarısı'nı alanınızın geneline dağıtmayı seçerse yönetici, Şifre Uyarısı tetiklendiğinde uyarılar alır.\n\n-- Şifre Uyarısı'nın sınırları nelerdir?\nŞifre Uyarısı gizli pencereleri, Chrome Uygulamalarını veya Chrome Uzantılarını korumaz. Google harici hizmetlerin şifrelerini de korumaz. Şifre Uyarısı yalnızca Javascript etkinleştirildiğinde Chrome web tarayıcısının içinde çalışır.\n\n-- Daha ayrıntılı bilgiyi nereden bulabilirim?\nLINK_TBD adresindeki tam SSS bölümünü ziyaret edin veya https://github.com/google/password-alert adresindeki tüm açık kaynak kod tabanına bakabilirsiniz. \n\nBu öğeyi yükleyerek Google Hizmet Şartları'nı ve www.google.com/policies/ adresinde bulunan Gizlilik Politikası'nı kabul etmiş olursunuz.\n"
+   },
+   "extension_name": {
+      "message": "Şifre Uyarısı"
+   },
+   "ignore": {
+      "message": "Bu sefer yoksay"
+   },
+   "initialization_message": {
+      "message": "Şifre Uyarısı'nın etkili olması için lütfen hesabınızda oturum açın."
+   },
+   "initialization_thank_you_message": {
+      "message": "Teşekkürler. Şifre Uyarısı artık etkin."
+   },
+   "learn_more": {
+      "message": "Daha fazla bilgi edinin"
+   },
+   "password_warning_banner_body": {
+      "message": "Biraz önce Google'a ait olmayan bir oturum açma sayfasında, Google Hesabınızın şifresini girdiniz. Hesabınızı korumak için şifrenizi hemen sıfırlayın. Ve lütfen şifrenizi başka uygulamalar ve siteler için tekrar kullanmadığınızdan emin olun."
+   },
+   "password_warning_banner_header": {
+      "message": "Google Hesabınızın şifresini sıfırlama"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Bu sitenin, şifrenizi çalmak amacıyla Google'ın giriş sayfasının sahte bir sürümünü kullandığı anlaşıldığından, site engellendi. Bu sitenin bilgisayarınıza zarar verebileceğini anlıyorsanız siteyi ziyaret edebilirsiniz, ancak yazdığınız bilgiler konusunda lütfen dikkatli olun."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Bu site engellendi."
+   },
+   "report_phishing": {
+      "message": "Bu Siteyi Bildir"
+   },
+   "reset_password": {
+      "message": "Şifreyi Sıfırla"
+   },
+   "sign_in": {
+      "message": "Oturum Aç"
+   },
+   "visit_this_site": {
+      "message": "Siteyi Ziyaret Et"
+   }
+}

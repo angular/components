@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "properties": {
+    "corp_email_domain": {"type": "string"},
+    "display_user_alert": {"type": "boolean"},
+    "corp_html": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "corp_html_tight": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "security_email_address": {"type": "string"},
+    "sso_form_selector": {"type": "string"},
+    "sso_password_selector": {"type": "string"},
+    "sso_url": {"type": "string"},
+    "sso_username_selector": {"type": "string"},
+    "whitelist_top_domains": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "report_url": {"type": "string"},
+    "should_initialize_password": {"type": "boolean"},
+    "domain_auth_secret": {"type": "string"}
+  }
+}

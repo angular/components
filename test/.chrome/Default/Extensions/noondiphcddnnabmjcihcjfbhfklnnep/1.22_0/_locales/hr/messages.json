@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Uvijek ignoriraj za ovu web-lokaciju"
+   },
+   "always_ignore_confirmation": {
+      "message": "Želite li da Zaštita zaporke uvijek ignorira ovu web-lokaciju?"
+   },
+   "back": {
+      "message": "Natrag"
+   },
+   "contact_security": {
+      "message": "Kontaktirajte administratore za sigurnost"
+   },
+   "extension_description": {
+      "message": "Zaštita zaporke štiti od napada čiji je cilj krađa identiteta."
+   },
+   "extension_detailed_description": {
+      "message": "Ako unesete zaporku za Gmail ili Google for Work na bilo koje drugo mjesto osim accounts.google.com, primit ćete upozorenje kako biste mogli promijeniti zaporku ako to bude potrebno.\n\nZaštita zaporke pokušava otkriti i lažne stranice za prijavu na Google kako bi vas upozorila prije nego što unesete zaporku. Da bi to učinila, Zaštita zaporke provjerava HTML svake stranice koju posjetite da bi vidjela oponaša li ona stranicu za prijavu na Google.\n\nČesta pitanja\n– Kada će Zaštita zaporke početi djelovati?\nZaštita zaporke pokrenut će se sljedeći put kada unesete zaporku na accounts.google.com.\n\n– Pohranjuje li Zaštita zaporke moju zaporku i pritisnute tipke?\nNe. Zaštita zaporke ne pohranjuje zaporke ni pritisnute tipke, već pohranjuje sigurnosnu minijaturu zaporke koju uspoređuje s minijaturom posljednjih pritisnutih tipki u Chromeu.\n\n– Kamo Zaštita zaporke šalje podatke?\nAko upotrebljavate Zaštitu zaporke u Gmail računu, ona ne šalje nikakve podatke s lokalnog računala. Ako vaš administrator za Google for Work primijeni Zaštitu zaporke na cijelu domenu, on će primati upozorenja kada se Zaštita zaporke pokrene.\n\n– Koja su ograničenja Zaštite zaporke?\nZaštita zaporke ne štiti anonimne prozore, Chromeove aplikacije i Chromeova proširenja. Ne štiti ni zaporke s usluga izvan Googlea. Zaštita zaporke funkcionira u web-pregledniku Chrome samo kada je omogućen Javascript.\n\n– Gdje mogu pronaći više pojedinosti?\nPogledajte sva česta pitanja na LINK_TBD ili cijelu bazu otvorenog izvornog koda na https://github.com/google/password-alert.\n\nInstaliranjem ove stavke prihvaćate Googleove uvjete pružanja usluge i pravila o privatnosti na www.google.com/policies/.\n"
+   },
+   "extension_name": {
+      "message": "Zaštita zaporke"
+   },
+   "ignore": {
+      "message": "Zanemari ovaj put"
+   },
+   "initialization_message": {
+      "message": "Da biste aktivirali Zaštitu zaporke, prijavite se na svoj račun.."
+   },
+   "initialization_thank_you_message": {
+      "message": "Hvala. Zaštita zaporke sada je aktivirana."
+   },
+   "learn_more": {
+      "message": "Saznajte više"
+   },
+   "password_warning_banner_body": {
+      "message": "Upravo ste unijeli zaporku Google računa na stranicu za prijavu izvan Googlea. Odmah poništite zaporku da biste zaštitili račun i nemojte upotrebljavati tu zaporku za druge aplikacije ili web-lokacije."
+   },
+   "password_warning_banner_header": {
+      "message": "Poništite zaporku Google računa"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Izgleda da ova web-lokacija upotrebljava lažnu verziju Googleove stranice za prijavu da bi vam ukrala zaporku, pa je blokirana. Ako želite otvoriti tu web-lokaciju iako razumijete da bi mogla naštetiti vašem računalu, pazite koje podatke unosite."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Web-lokacija je blokirana."
+   },
+   "report_phishing": {
+      "message": "Prijavite ovu web-lokaciju"
+   },
+   "reset_password": {
+      "message": "Poništite zaporku"
+   },
+   "sign_in": {
+      "message": "Prijava"
+   },
+   "visit_this_site": {
+      "message": "Otvorite web-lokaciju"
+   }
+}

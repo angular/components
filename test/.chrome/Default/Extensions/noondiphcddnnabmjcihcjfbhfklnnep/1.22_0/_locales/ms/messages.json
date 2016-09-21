@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Sentiasa abaikan untuk tapak ini"
+   },
+   "always_ignore_confirmation": {
+      "message": "Adakah anda mahu Amaran Kata Laluan sentiasa mengabaikan tapak web ini?"
+   },
+   "back": {
+      "message": "Kembali"
+   },
+   "contact_security": {
+      "message": "Hubungi Keselamatan"
+   },
+   "extension_description": {
+      "message": "Amaran Kata Laluan membantu melindungi daripada serangan pancingan data."
+   },
+   "extension_detailed_description": {
+      "message": "Jika anda memasukkan kata laluan Gmail atau Google for Work ke mana-mana selain daripada accounts.google.com, anda akan menerima makluman, jadi anda boleh menukar kata laluan anda jika perlu.\n\nAmaran Kata Laluan juga cuba untuk mengesan halaman log masuk Google palsu untuk memberi anda amaran sebelum anda menaipkan kata laluan anda. Untuk berbuat demikian, Amaran Kata Laluan memeriksa HTML setiap halaman yang anda lawati untuk melihat jika halaman itu menyamar sebagai halaman log masuk Google.\n\nsOALAN LAZIM\n-- Bilakah Amaran Kata Laluan akan mula berfungsi?\nAmaran Kata Laluan akan bermula sendiri pada kali seterusnya anda memasukkan kata laluan anda di accounts.google.com.\n\n-- Adakah Amaran Kata Laluan menyimpan kata laluan atau tekanan kekunci saya?\nTidak. Amaran Kata Laluan tidak menyimpan kata laluan atau tekanan kekunci anda -- sebaliknya, Amaran Kata Laluan menyimpan lakaran kecil kata laluan anda yang selamat, yang dibandingkan dengan lakaran kecil tekanan kekunci anda yang paling terkini dalam Chrome.\n\n-- Ke manakah Amaran Kata Laluan menghantar data?\nJika anda menggunakan Amaran Kata Laluan dalam akaun Gmail, Amaran Kata Laluan tidak menghantar sebarang data daripada komputer tempatan anda. Jika pentadbir Google for Work anda memilih untuk mengatur letak Amaran Kata Laluan di seluruh domain anda, pendtabir akan menerima maklumat apabila Amaran Kata Laluan dicetuskan.\n\n-- Apakah had Amaran Kata Laluan?\nAmaran Kata Laluan tidak melindungi tetingkap inkognito, Apl Chrome atau Sambungan Chrome. Apl itu  juga tidak melindungi kata laluan bagi perkhidmatan bukan Google. Amaran Kata Laluan hanya beroperasi di dalam penyemak imbas web Chrome apabila Javascript didayakan.\n\n-- Di manakah saya boleh mendapatkan maklumat lanjut?\nLawati Soalan Lazim penuh di LINK_TBD atau anda boleh melihat seluruh pangkalan kod sumber terbuka di https://github.com/google/password-alert\n\nApabila anda memasang item ini, anda bersetuju menerima Syarat Perkhidmatan dan Dasar Privasi Google di www.google.com/policies/"
+   },
+   "extension_name": {
+      "message": "Amaran Kata Laluan"
+   },
+   "ignore": {
+      "message": "Abaikan kali ini"
+   },
+   "initialization_message": {
+      "message": "Untuk Amaran Kata Laluan mula berkuat kuasa, sila log masuk ke akaun anda."
+   },
+   "initialization_thank_you_message": {
+      "message": "Terima kasih. Amaran Kata Laluan kini berkuat kuasa."
+   },
+   "learn_more": {
+      "message": "Ketahui lebih lanjut"
+   },
+   "password_warning_banner_body": {
+      "message": "Anda baru sahaja memasukkan kata laluan Akaun Google anda pada halaman log masuk bukan milik Google. Tetapkan semula kata laluan anda dengan serta-merta untuk melindungi akaun anda. Selain itu, pastikan anda tidak menggunakan semula kata laluan itu untuk apl dan tapak lain."
+   },
+   "password_warning_banner_header": {
+      "message": "Tetapkan semula kata laluan Akaun Google anda"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Tapak ini nampaknya menggunakan versi palsu halaman log masuk Google untuk mencuri kata laluan anda, jadi halaman itu telah disekat. Jika anda memahami bahawa tapak ini boleh membahayakan komputer anda, anda boleh melawati tapak ini tetapi sila berhati-hati mengenai maklumat yang anda taip."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Tapak ini telah disekat."
+   },
+   "report_phishing": {
+      "message": "Laporkan Tapak Ini"
+   },
+   "reset_password": {
+      "message": "Ttpkan Semula Kata Laluan"
+   },
+   "sign_in": {
+      "message": "Log Masuk"
+   },
+   "visit_this_site": {
+      "message": "Lawati Tapak Ini"
+   }
+}

@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Vienmēr ignorēt šai vietnei"
+   },
+   "always_ignore_confirmation": {
+      "message": "Vai vēlaties, lai Paroles aizsardzība vienmēr ignorētu šo tīmekļa vietni?"
+   },
+   "back": {
+      "message": "Atpakaļ"
+   },
+   "contact_security": {
+      "message": "Sazinieties ar drošības administratoru"
+   },
+   "extension_description": {
+      "message": "Paroles aizsardzība palīdz aizsargāt pret pikšķerēšanas uzbrukumiem."
+   },
+   "extension_detailed_description": {
+      "message": "Ja ievadīsiet savu Gmail vai Google for Work paroli jebkur citur, izņemot vietni accounts.google.com, tiks parādīts brīdinājums, lai jūs nepieciešamības gadījumā varētu mainīt savu paroli.\n\nIzmantojot paplašinājumu Paroles aizsardzība, tiek arī mēģināts noteikt viltotas Google pieteikšanās lapas, lai jūs brīdinātu pirms paroles ievadīšanas. Šajā nolūkā paplašinājumā Paroles aizsardzība tiek pārbaudīts katras apmeklētās lapas HTML kods, lai noteiktu, vai tas atbilst Google pieteikšanās lapai.\n\nBieži uzdotie jautājumi\n- Kad paplašinājums Paroles aizsardzība sāks darboties?\nPaplašinājums Paroles aizsardzība sāks automātiski darboties, kad nākamreiz ievadīsiet savu paroli vietnē accounts.google.com.\n\n- Vai paplašinājumā Paroles aizsardzība tiek glabāta mana parole vai taustiņsitieni?\nNē. Paplašinājumā Paroles aizsardzība netiek glabāta ne parole, ne taustiņsitieni. Tā vietā tiek izmantots drošs paroles sīktēls, kas tiek salīdzināts ar pēdējiem taustiņsitieniem pārlūkā Chrome.\n\n- Uz kurieni tiek sūtīti dati no paplašinājuma Paroles aizsardzība?\nJa paplašinājumu Paroles aizsardzība izmantojat Gmail kontā, no šī paplašinājuma netiek sūtīti nekādi lokālā datora dati. Ja Google for Work administrators izvieto paplašinājumu Paroles aizsardzība jūsu domēnā, administrators saņem šī paplašinājuma aktivizētos brīdinājumus.\n\n- Kādi ir paplašinājuma Paroles aizsardzība darbības ierobežojumi?\nPaplašinājums Paroles aizsardzība nedarbojas inkognito režīma logos, Chrome lietotnēs un Chrome paplašinājumos. Turklāt paroles netiek aizsargātas pakalpojumos, kas nav Google pakalpojumi. Paplašinājums Paroles aizsardzība darbojas tikai tīmekļa pārlūkā Chrome ar iespējotu valodu Javascript.\n\n- Kur var iegūt plašāku informāciju?\nApmeklējiet bieži uzdoto jautājumu pilno sadaļu vietnē LINK_TBD. Varat arī skatīt visu atvērtā pirmkoda kodu bāzi vietnē https://github.com/google/password-alert.\n\nInstalējot šo vienumu, jūs piekrītat Google pakalpojumu sniegšanas noteikumiem un konfidencialitātes politikai (vietnē www.google.com/policies/).\n"
+   },
+   "extension_name": {
+      "message": "Paroles aizsardzība"
+   },
+   "ignore": {
+      "message": "Šoreiz ignorēt"
+   },
+   "initialization_message": {
+      "message": "Lai Paroles aizsardzība stātos spēkā, lūdzu, pierakstieties savā kontā."
+   },
+   "initialization_thank_you_message": {
+      "message": "Paldies! Tagad Paroles aizsardzība ir spēkā."
+   },
+   "learn_more": {
+      "message": "Uzziniet vairāk"
+   },
+   "password_warning_banner_body": {
+      "message": "Jūs tikko ievadījāt Google konta paroli pierakstīšanās lapā, kas nav Google lapa. Nekavējoties atiestatiet paroli, lai aizsargātu savu kontu. Lūdzu, arī neizmantojiet atkārtoti savu paroli citās lietotnēs un vietnēs."
+   },
+   "password_warning_banner_header": {
+      "message": "Atiestatiet savu Google konta paroli"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Šķiet, ka šajā vietnē tiek izmantota viltota Google pieteikšanās lapas versija, lai nozagtu jūsu paroli, tādēļ šī vietne ir bloķēta. Šī vietne var kaitēt jūsu datoram. Ja tomēr to apmeklējat, rūpīgi izvērtējiet, kādu informāciju tajā ievadīt."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Šī vietne ir bloķēta."
+   },
+   "report_phishing": {
+      "message": "Ziņot par šo vietni"
+   },
+   "reset_password": {
+      "message": "Atiestatiet paroli"
+   },
+   "sign_in": {
+      "message": "Pierakstieties"
+   },
+   "visit_this_site": {
+      "message": "Apmeklējiet šo vietni"
+   }
+}

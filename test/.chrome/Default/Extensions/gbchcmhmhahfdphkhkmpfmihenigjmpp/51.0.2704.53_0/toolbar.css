@@ -1,0 +1,94 @@
+/* Copyright (c) 2012 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+.toolbar-container {
+  position: fixed;
+  top: -48px;
+  width: 640px;
+  -webkit-transition: top 0.15s ease;
+  font-size: 13px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.toolbar-visible {
+  top: -8px;
+}
+
+.toolbar-stub {
+  position: absolute;
+  width: 134px;
+  height: 7px;
+  left: 243px;
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+  background-color: #4695ff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  pointer-events: all;
+  clip: rect(0, 999px, 999px, -999px);
+  -webkit-transition: height 0.15s ease;
+}
+
+.toolbar-stub-extended,
+.toolbar-visible .toolbar-stub {
+  height: 14px;
+}
+
+.toolbar-border {
+  border-radius: 7px;
+  border: 3px solid #4695ff;
+  width: 620px;
+  padding: 10px 7px 5px 7px;
+  background-color: #e9e9e9;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  pointer-events: all;
+  display: -webkit-flex;
+}
+
+.toolbar-border > div {
+  margin: 5px 4px;
+}
+
+/* Ensure that the 'connected to' string doesn't make the tool-bar overflow */
+#connected-to {
+  max-width: 260px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#new-window {
+  margin-__MSG_@@bidi_start_edge__: 0;
+}
+
+.end-align {
+  float: __MSG_@@bidi_end_edge__;
+}
+
+.arrow-down {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid white;
+  left: 62px;
+  bottom: 2px;
+  opacity: 0.5;
+  -webkit-transition: bottom 0.15s ease, opacity 0.1s linear;
+}
+
+.toolbar-stub-extended .arrow-down,
+.toolbar-visible .arrow-down {
+  bottom: 6px;
+}
+
+
+.toolbar-stub:hover .arrow-down {
+  opacity: 1.0;
+}
+
+.toolbar-visible .arrow-down {
+  -webkit-transform: rotate(180deg);
+}

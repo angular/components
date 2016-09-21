@@ -1,0 +1,18 @@
+/* Copyright (c) 2012 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+#statistics {
+  background-color: white;
+  left: 0;
+  bottom: 0;
+  border-top: 1px solid black;
+  height: 15px;
+  margin: 0;
+  opacity: 0.85;
+  padding: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+}

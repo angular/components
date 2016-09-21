@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Pro tento web vždy ignorovat"
+   },
+   "always_ignore_confirmation": {
+      "message": "Chcete, aby Ochrana hesla tento web vždy ignorovala?"
+   },
+   "back": {
+      "message": "Zpět"
+   },
+   "contact_security": {
+      "message": "Kontaktovat bezpečnostní tým"
+   },
+   "extension_description": {
+      "message": "Rozšíření Ochrana hesla pomáhá s ochranou proti phishingovým útokům."
+   },
+   "extension_detailed_description": {
+      "message": "Pokud své heslo služby Gmail nebo Google for Work zadáte kamkoli jinam než na stránky accounts.google.com, obdržíte upozornění, abyste heslo v případě potřeby mohli změnit.\n\nOchrana hesla se také snaží zjišťovat falešné přihlašovací stránky Google, aby vás na ně mohla upozornit dříve, než na nich zadáte heslo. Za tímto účelem Ochrana hesla kontroluje kód HTML každé stránky, kterou navštívíte, aby zjistila, zda se náhodou nevydává za přihlašovací stránku Google.\n\nČasté dotazy\n– Kdy Ochrana hesla začne fungovat?\nOchrana hesla se inicializuje při příštím zadání hesla na stránce accounts.google.com.\n\n– Ukládá Ochrana hesla heslo nebo informace o stisknutých klávesách?\nNe. Ochrana hesla heslo ani informace o stisknutých klávesách neukládá. Namísto toho ukládá bezpečnou miniaturu hesla, kterou porovnává s miniaturou posledních stisknutých kláves v Chromu.\n\n– Kam Ochrana hesla odesílá data?\nPokud Ochranu hesla používáte v účtu Gmail, žádná data z vašeho místního počítače neodesílá. Pokud administrátor služby Google for Work implementoval Ochranu hesla v celé doméně, dostane při spuštění Ochrany hesla upozornění.\n\n– Jaká má Ochrana hesla omezení?\nOchrana hesla neposkytuje ochranu v anonymních oknech ani v aplikacích a rozšířeních pro Chrome. Nechrání také hesla služeb, které nespadají pod Google. Ochrana hesla ve webovém prohlížeči Chrome funguje jen v případě, že je povolen JavaScript.\n\n– Kde získám další informace?\nPodívejte se na úplný seznam častých dotazů na stránce LINK_TBD. Případně se můžete podívat na celou databázi otevřeného zdrojového kódu na stránce https://github.com/google/password-alert.\n\nInstalací této položky vyjadřujete souhlas se smluvními podmínkami a zásadami ochrany soukromí společnosti Google, které jsou uvedeny na stránkách www.google.com/policies/.\n"
+   },
+   "extension_name": {
+      "message": "Ochrana hesla"
+   },
+   "ignore": {
+      "message": "Tentokrát ignorovat"
+   },
+   "initialization_message": {
+      "message": "Za účelem aktivace rozšíření Ochrana hesla se přihlaste ke svému účtu."
+   },
+   "initialization_thank_you_message": {
+      "message": "Děkujeme. Rozšíření Ochrana hesla je nyní aktivní."
+   },
+   "learn_more": {
+      "message": "Další informace"
+   },
+   "password_warning_banner_body": {
+      "message": "Právě jste zadali heslo účtu Google na přihlašovací stránce, která nesouvisí s žádnou službou Google. Za účelem ochrany účtu heslo neprodleně resetujte. Heslo účtu Google nikdy nepoužívejte pro jiné aplikace ani weby."
+   },
+   "password_warning_banner_header": {
+      "message": "Resetujte heslo účtu Google"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Zdá se, že tento web se pomocí falešné verze přihlašovací stránky Google snaží odcizit vaše heslo. Byl proto zablokován. Pokud si uvědomujete, že tento web může poškodit váš počítač, můžete jej navštívit, avšak při zadávání jakýchkoli informací buďte opatrní."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Tento web byl zablokován."
+   },
+   "report_phishing": {
+      "message": "Nahlásit tento web"
+   },
+   "reset_password": {
+      "message": "Resetovat heslo"
+   },
+   "sign_in": {
+      "message": "Přihlásit se"
+   },
+   "visit_this_site": {
+      "message": "Navštívit tento web"
+   }
+}

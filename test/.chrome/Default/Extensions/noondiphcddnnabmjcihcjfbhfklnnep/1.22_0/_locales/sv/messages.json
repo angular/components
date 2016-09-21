@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Ignorera alltid för den här webbplatsen"
+   },
+   "always_ignore_confirmation": {
+      "message": "Vill du att Lösenordsskyddet alltid ska ignorera den här webbplatsen?"
+   },
+   "back": {
+      "message": "Tillbaka"
+   },
+   "contact_security": {
+      "message": "Kontakta säkerhetsansvarig"
+   },
+   "extension_description": {
+      "message": "Med Lösenordsskydd är du bättre skyddad mot nätfiskeattacker."
+   },
+   "extension_detailed_description": {
+      "message": "Om du anger ditt lösenord för Gmail eller Google for Work någon annanstans än på accounts.google.com kommer du att få en avisering så att du kan ändra lösenordet om det behövs.\n\nLösenordsskyddet försöker även identifiera falska inloggningssidor för Google och varna dig innan du skriver in ditt lösenord. Därför kontrollerar Lösenordsskyddet HTML-koden på varje sida du besöker för att se om den försöker efterlikna Googles inloggningssida.\n\nVanliga frågor\n– När träder Lösenordsskyddet i kraft?\nLösenordsskyddet startar automatiskt nästa gång du anger ditt lösenord på accounts.google.com.\n\n– Sparas mitt lösenord eller tangentnedslag i Lösenordsskyddet?\nNej. Lösenord eller tangentnedslag sparas inte i Lösenordsskyddet. Däremot sparas en säker miniatyr av lösenordet som jämförs med en miniatyr av dina senaste tangentnedslag i Chrome.\n\n– Vart skickar Lösenordsskyddet data?\nOm du använder Lösenordsskyddet i ett Gmail-konto skickas ingen data från din lokala dator. Om administratören för Google for Work väljer att använda Lösenordsskyddet på domänen kommer administratören att få aviseringar när det aktiveras.\n\n– Finns det några begränsningar i Lösenordsskyddet?\nLösenordsskyddet skyddar inte i inkognitofönster, Chrome-appar eller Chrome-tillägg. Det skyddar inte heller lösenord för tjänster som inte kommer från Google. Lösenordsskyddet fungerar endast i webbläsaren Chrome när Javascript är aktiverat.\n\n– Var hittar jag mer information?\nBesök våra vanliga frågor på LINK_TBD eller visa hela databasen med öppen källkod på https://github.com/google/password-alert\n\nNär du installerar det här objektet godkänner du Googles användarvillkor och sekretesspolicy på www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Lösenordskydd"
+   },
+   "ignore": {
+      "message": "Ignorera den här gången"
+   },
+   "initialization_message": {
+      "message": "För att Lösenordsskyddet ska aktiveras måste du logga in på ditt konto."
+   },
+   "initialization_thank_you_message": {
+      "message": "Tack. Lösenordsskyddet är nu aktiverat."
+   },
+   "learn_more": {
+      "message": "Läs mer"
+   },
+   "password_warning_banner_body": {
+      "message": "Du har precis angett ett lösenord till ett Google-konto på in inloggningssida som inte tillhör Google. Skydda kontot genom att återställa lösenordet omedelbart. Kontrollera även att du inte återanvänder lösenordet för andra appar och webbplatser."
+   },
+   "password_warning_banner_header": {
+      "message": "Återställ lösenordet till Google-kontot"
+   },
+   "phishing_warning_banner_body": {
+      "message": "På den här webbplatsen verkar en falsk version av en inloggningssida från Google användas i syfte att stjäla ditt lösenord, och webbplatsen har därför blockerats. Om du är införstådd med att webbplatsen kan skada din dator kan du besöka den, men var försiktig med vilka uppgifter du anger."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Webbplatsen har blockerats."
+   },
+   "report_phishing": {
+      "message": "Rapportera webbplatsen"
+   },
+   "reset_password": {
+      "message": "Återställ lösenord"
+   },
+   "sign_in": {
+      "message": "Logga in"
+   },
+   "visit_this_site": {
+      "message": "Besök webbplatsen"
+   }
+}

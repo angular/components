@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Puuza kwa tovuti hii wakati wowote"
+   },
+   "always_ignore_confirmation": {
+      "message": "Je, ungependa Kilinda Nenosiri kipuuze tovuti hii kila wakati?"
+   },
+   "back": {
+      "message": "Nyuma"
+   },
+   "contact_security": {
+      "message": "Wasiliana na Wasimamizi wa Usalama"
+   },
+   "extension_description": {
+      "message": "Kilinda Nenosiri husaidia kukinga dhidi ya uvamizi wa kuhadaa ili kupata maelezo ya kibinafsi."
+   },
+   "extension_detailed_description": {
+      "message": "Ukiweka nenosiri lako la Gmail au Google for Work mahali popote ambapo si accounts.google.com, utapokea arifa, ili ubadilishe nenosiri lako ikihitajika.\n\nKilinda nenosiri pia hujaribu kutambua kurasa bandia za kuingia kwenye Google ili kukuarifu kabla hujacharaza nenosiri lako. Ili kufanya hivyo, Kilinda Nenosiri hukagua HTML ya kila ukurasa unaotembelea kuona ikiwa inaiga ukurasa wa kuingia kwenye Google.\n\nMaswali Yanayoulizwa Sana\n-- Je, Kilinda Nenosiri kitaanza kufanya kazi lini?\nKilinda nenosiri kitajianzisha wakati ujao utakapoweka nenosiri lako katika accounts.google.com.\n\n-- Je, Kilinda nenosiri kinahifadhi nenosiri langu au mibonyezo ya vitufe? \nLa. Kilinda Nenosiri hakihifadhi nenosiri lako au mibonyezo ya vitufe -- badala yake, kinahifadhi kijipicha salama cha nenosiri lako, ambacho kinalinganisha na kijipicha cha mibonyezo yako ya vitufe ya hivi majuzi ndani ya Chrome.\n\n-- Je, Kilinda nenosiri kinatuma data wapi?\nIkiwa unatumia Kilinda Nenosiri katika akaunti ya Gmail, Kilinda Nenosiri hakitumi data yoyote kutoka kwenye kompyuta yako ya karibu nawe. Ikiwa msimamizi wako wa Google for Work ataamua kutumia Kilinda nenosiri kwenye kikoa chako, msimamizi atapokea arifa Kilinda nenosiri kikianzisha.\n\n-- Vikomo vya Kilinda Nenosiri ni gani?\nKilinda Nenosiri hakilindi madirisha fiche, Programu za Chrome, au Viendelezi vya Chrome. Pia hakilindi manenosiri kwa huduma zisizo za Google. Kilinda nenosiri kinafanya kazi ndani ya kivinjari cha wavuti wa Chrome pekee Javascript ikiwashwa.\n\n-- Ni wapi ninapoweza kupata maelezo zaidi?\nTembelea Maswali Yanayoulizwa Sana kwenye LINK_TBD, au unaweza kuangalia mkusanyiko mzima wa programu huria kwenye https://github.com/google/password-alert\n\nKwa kusakinisha kipengee hiki, unakubali Sheria na Masharti na Sera ya Faragha ya Google kwenye www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Kilinda Nenosiri"
+   },
+   "ignore": {
+      "message": "Puuza sasa"
+   },
+   "initialization_message": {
+      "message": "Ili Kilinda Nenosiri kianze kufanya kazi, tafadhali ingia katika akaunti yako."
+   },
+   "initialization_thank_you_message": {
+      "message": "Asante. Kilinda Nenosiri sasa kinafanya kazi."
+   },
+   "learn_more": {
+      "message": "Pata maelezo zaidi"
+   },
+   "password_warning_banner_body": {
+      "message": "Umeweka nenosiri lako la Akaunti ya Google kwenye ukurasa wa kuingia katika akaunti ambao si wa Google. Weka upya nenosiri mara moja ili ulinde akaunti yako. Na tafadhali hakikisha kuwa hutumii tena nenosiri lako kwa programu na tovuti nyingine."
+   },
+   "password_warning_banner_header": {
+      "message": "Weka upya nenosiri lako la Akaunti ya Google"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Ni kama tovuti hii inatumia toleo bandia la ukurasa wa kuingia kwenye Google ili kuiba nenosiri lako, kwa hivyo imezuiwa. Ikiwa unaelewa kuwa tovuti hii inaweza kudhuru kompyuta yako, unaweza kutembelea tovuti hii lakini tafadhali tahadhari kuhusu maelezo unayocharaza."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Tovuti hii imezuiwa."
+   },
+   "report_phishing": {
+      "message": "Ripoti Tovuti Hii"
+   },
+   "reset_password": {
+      "message": "Weka Upya Nenosiri"
+   },
+   "sign_in": {
+      "message": "Ingia Katika Akaunti"
+   },
+   "visit_this_site": {
+      "message": "Tembelea Tovuti Hii"
+   }
+}

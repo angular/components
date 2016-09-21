@@ -1,0 +1,798 @@
+/* Copyright (c) 2012 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
+blockquote, a, abbr, acronym, address, big, cite, code, del, dfn, em,
+font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl,
+dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody,
+tfoot, thead, tr, th, td, button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: 100%;
+  font-family: inherit;
+  vertical-align: baseline;
+}
+
+.inset {
+  padding: 20px 20px 0 20px;
+  position: relative;
+}
+
+body {
+  font-family: "Arial", "Helvetica", sans-serif;
+  color: #222;
+  font-size: 13px;
+  margin: 0;
+  direction: __MSG_@@bidi_dir__;
+}
+
+
+/*
+* The "app-v2" class is added to the <html> node by remoting.init if it's
+* running as a V2 app.
+*/
+html.apps-v2 .apps-v1-only {
+  display: none !important;
+}
+
+html:not(.apps-v2) .apps-v2-only {
+  display: none !important;
+}
+
+a {
+  text-decoration: none;
+  color: #15c;
+  cursor: pointer;
+}
+
+a:active {
+  color: #d14836;
+}
+
+strong, b {
+  color: #000;
+}
+
+/*------------------------------------------------------------------
+Component: Buttons
+------------------------------------------------------------------*/
+button {
+  min-width: 72px;
+  border:1px solid #DCDCDC;
+  color: #444;
+  font-size: 11px;
+  font-weight: bold;
+  height: 27px;
+  padding: 0 8px;
+  line-height: 27px;
+  border-radius:2px;
+  -webkit-transition: all 0.218s;
+  background-image: -webkit-gradient(linear, left top, left bottom,
+                                     from(#f5f5f5), to(#f1f1f1));
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+  border: 1px solid #C6C6C6;
+  color: #222;
+  transition: all 0.0s;
+  background-image: -webkit-gradient(linear, left top, left bottom,
+                                     from(#f8f8f8), to(#f1f1f1));
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+button:active {
+  background: #f6f6f6 -webkit-gradient(linear,left top,left bottom,
+                                       from(#f6f6f6),to(#f1f1f1));
+  box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+button:focus {
+  outline: none;
+  border: 1px solid #4d90fe;
+}
+
+button[disabled], button[disabled]:hover, button[disabled]:active {
+  background: linear-gradient(#fafafa, #f4f4f4 40%, #e5e5e5);
+  border-color: #aaa;
+  color: #888;
+  box-shadow: none;
+}
+
+/* Colored Buttons */
+.kd-button-share,
+.kd-button-default {
+  color: #fff !important;
+  text-shadow: 0px 1px rgba(0,0,0,0.1);
+}
+
+.kd-button-share:active, .kd-button-share:focus:active,
+.kd-button-default:active, .kd-button-default:focus:active {
+  box-shadow: inset 0px 1px 2px rgba(0,0,0,0.3);
+}
+
+.kd-button-share:hover,
+.kd-button-default:hover {
+  border: 1px solid #404040;
+  text-shadow: 0px 1px rgba(0,0,0,0.3);
+}
+
+.kd-button-share:focus,
+.kd-button-default:focus {
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.5);
+}
+
+.kd-button-share:focus:hover,
+.kd-button-default:focus:hover {
+  box-shadow:inset 0 0 0 1px #fff, 0px 1px 1px rgba(0,0,0,0.1);
+}
+
+.kd-button-share[disabled],
+.kd-button-share[disabled]:hover,
+.kd-button-share[disabled]:active,
+.kd-button-default[disabled],
+.kd-button-default[disabled]:hover,
+.kd-button-default[disabled]:active {
+  border: 1px solid #505050;
+  opacity: 0.5;
+  text-shadow: 0px 1px rgba(0,0,0,0.1);
+}
+
+.kd-button-share {
+  border: 1px solid #29691d;
+  background-image: linear-gradient(#3d9400, #398a00);
+}
+
+.kd-button-share:hover,
+.kd-button-share:active,
+.kd-button-share:focus:active {
+  background-image: linear-gradient(#3d9400, #368200);
+}
+
+.kd-button-share:focus {
+  border-color:#29691d;
+}
+
+.kd-button-share[disabled], .kd-button-share[disabled]:hover,
+.kd-button-share[disabled]:active {
+  background-image: linear-gradient(#3d9400, #398a00);
+}
+
+.kd-button-default {
+  border: 1px solid #076bd2;
+  text-shadow: 0px 1px rgba(0,0,0,0.1);
+  background-image: linear-gradient(#008dfd 0,#0370ea 100%);
+}
+
+.kd-button-default:hover,
+.kd-button-default:active,
+.kd-button-default:focus:active {
+  background: linear-gradient(#008dfd 30%, #0370ea 100%);
+}
+
+.kd-button-default:focus {
+  border-color:#1d2969;
+}
+
+.kd-button-default[disabled], .kd-button-default[disabled]:hover,
+.kd-button-default[disabled]:active {
+  background-image: linear-gradient(#003d94, #00398a);
+}
+
+::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+}
+
+::-webkit-scrollbar-button {
+    height: 0px;
+    width: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+    min-height: 28px;
+    padding-top:100px;
+    background-clip:padding-box;
+    background-color: rgba(0,0,0,0.2);
+    box-shadow: inset 1px 1px 0px rgba(0,0,0,0.10),
+                inset 0px -1px 0px  rgba(0,0,0,0.07);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0,0,0,0.4);
+    box-shadow: inset 1px 1px 1px rgba(0,0,0,0.25);
+}
+
+::-webkit-scrollbar-thumb:active {
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.35);
+    background-color: rgba(0,0,0,0.5);
+}
+
+::-webkit-scrollbar-track:hover {
+  background-color:rgba(0,0,0,0.05);
+   box-shadow: inset 1px 0px 0px  rgba(0,0,0,0.10);
+}
+
+::-webkit-scrollbar-track:active {
+  background-color:rgba(0,0,0,0.05);
+  box-shadow: inset 1px 0px 0px  rgba(0,0,0,0.14),
+              inset -1px -1px 0px  rgba(0,0,0,0.07);
+}
+
+::-webkit-scrollbar-track-piece {
+  background: white;
+}
+
+/*------------------------------------------------------------------
+Component: Text Field
+------------------------------------------------------------------*/
+input[type=text],
+input[type=password] {
+    height: 29px;
+    padding-__MSG_@@bidi_start_edge__: 8px;
+    color: #333;
+    border: 1px solid #d9d9d9;
+    border-top: 1px solid #c0c0c0;
+    vertical-align: top;
+    -webkit-border-radius: 1px;
+}
+input[type=text]:hover,
+input[type=password]:hover {
+    border: 1px solid #b9b9b9;
+    border-top: 1px solid #a0a0a0;
+    box-shadow: inset 0px 1px 2px rgba(0,0,0,0.1);
+}
+input[type=text]:focus,
+input[type=password]:focus {
+    box-shadow: inset 0px 1px 2px rgba(0,0,0,0.3);
+    outline: none;
+    border: 1px solid #4d90fe;
+}
+
+/*------------------------------------------------------------------
+Component: Modal Dialog
+------------------------------------------------------------------*/
+.kd-modaldialog:not([hidden]) {
+  opacity: 1.0;
+  -webkit-transform: scale(1.0);
+}
+
+.kd-modaldialog {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  background: white;
+  outline:1px solid rgba(0,0,0,0.2);
+  padding:30px 42px;
+  width: 500px;
+  height: auto;
+  overflow: hidden;
+  z-index: 100;
+  opacity: 0.0;
+  margin: auto;
+  -webkit-transform: scale(1.05);
+  -webkit-transition: all 0.218s;
+}
+
+h1.icon-label {
+  vertical-align: 14px;
+  margin-bottom: 60px;
+  font-size: 28px;
+  font-weight: 300;
+  color: #999;
+  font-family: "Open sans", "Ariel", sans-serif;
+  line-height: 24px;
+  display: inline-block;
+  margin-__MSG_@@bidi_start_edge__: 10px;
+}
+
+h2 {
+  font-size: 16px;
+  line-height:24px;
+  font-weight: normal;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.h2-secondary {
+  float: __MSG_@@bidi_end_edge__;
+}
+
+#host-list-loading-indicator:not(.loading) #host-list-loading,
+#host-list-loading-indicator.loading #host-list-reload {
+  display: none;
+}
+
+.icon-black > img {
+  opacity: 0.3;
+}
+
+.icon-black:hover > img {
+  opacity: 0.4;
+}
+
+section h2 {
+  color: #666;
+}
+
+header {
+  display: flex;
+  width: 100%;
+}
+
+html {
+  -webkit-user-select: none;
+  cursor: default;
+}
+
+section {
+  width: 690px;
+  margin: 30px auto;
+}
+
+section {
+  border: 1px solid #e5e5e5;
+  background: #f9f9f9;
+  padding: 20px 30px 20px 30px;
+  border-radius: 3px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+  position: relative;
+}
+
+.access-code-digit-group {
+  /*
+    Used for each of the four-digit components of the access code as
+    displayed by the host.
+  */
+  padding: 0px 6px;
+}
+
+.box-spacer {
+  flex: 1;
+}
+
+.centered {
+  margin: auto;
+}
+
+.button-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.button-row button {
+  margin-left: 5px;
+}
+
+.button-row span:first-child {
+  width: 100%;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.box {
+  display: flex;
+}
+
+.host-list-empty-instructions {
+  padding-__MSG_@@bidi_start_edge__: 36px;
+  color: #666;
+  background-image: url(host_setup_instructions.webp);
+  background-repeat: no-repeat;
+  background-position: -3px -2px;
+}
+
+.selectable {
+  -webkit-user-select: text;
+  cursor: text;
+}
+
+.section-row {
+  display: flex;
+  -webkit-align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #EBEBEB;
+}
+
+.section-row button {
+  margin-__MSG_@@bidi_start_edge__: 20px;
+}
+
+.daemon-control .section-row {
+  border-bottom: none;
+}
+
+.editbox-label {
+  line-height: 29px;
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+.error-state {
+  background-image: url(icon_warning.webp);
+  background-repeat: no-repeat;
+  background-position: top __MSG_@@bidi_start_edge__;
+  padding-__MSG_@@bidi_start_edge__: 30px;
+  color: #900;
+
+  /* Vertical align the text*/
+  display: table-cell;
+  vertical-align: middle;
+  height: 24px;
+}
+
+.expiring {
+  color: #900 !important;
+}
+
+.infographic {
+  position: absolute;
+  __MSG_@@bidi_end_edge__: 22px;
+  top: 24px;
+}
+
+.infographic-description {
+  height: 80px;
+  width: 400px;
+  padding-top: 2em;
+}
+
+.information-box {
+  background-color: #f9edbe;
+  border: 1px solid #f0c36d;
+  -webkit-border-radius: 2px;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+  color: #222;
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 12px;
+  margin-top: 30px;
+}
+
+.message {
+  margin-bottom: 24px;
+}
+
+.mode-select-button-column {
+  text-align: __MSG_@@bidi_end_edge__;
+}
+
+.mode-select-button-column button {
+  min-width: 72px;
+}
+
+td {
+  vertical-align: middle;
+}
+
+thead {
+  font-weight: bold;
+}
+
+#this-host-connect:hover,
+.host-online.clickable:hover,
+.host-online.clickable.child-focused {
+  background-color: #f2f2f2;
+}
+
+.host-list-rename-icon,
+.host-list-remove-icon {
+  opacity: 0;
+}
+
+.section-row:hover .host-list-rename-icon,
+.section-row.child-focused .host-list-rename-icon {
+  opacity: 0.6;
+}
+
+.section-row:hover .host-list-remove-icon,
+.section-row.child-focused .host-list-remove-icon {
+  opacity: 0.3;
+}
+
+.host-list-rename-icon:hover {
+  opacity: 1 !important;
+}
+
+.host-list-remove-icon:hover {
+  opacity: 0.5 !important;
+}
+
+.host-list-edit {
+  padding: 0 5px;
+}
+
+.host-list-clip {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+.host-name-label, .host-name-label:visited, .host-name-label:active {
+  color: inherit;
+  cursor: inherit;
+}
+
+.host-list-main-icon {
+  margin-__MSG_@@bidi_end_edge__: 10px;
+  vertical-align: middle;
+  position: relative;
+}
+
+.host-list-main-icon > span {
+  background-image: url(icon_warning.webp);
+  background-repeat: no-repeat;
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  bottom: -5px;
+  right: -10px;
+}
+
+.host-offline .host-name-label,
+.host-offline .host-list-main-icon {
+  opacity: 0.5;
+}
+
+#this-host-connect,
+.host-enabled-other-account {
+  -webkit-align-items: center;
+  display: flex;
+}
+
+#this-host-connect .host-entry {
+  flex: 1;
+}
+
+button {
+  white-space:nowrap;
+}
+
+.small-print {
+  font-size: 13px;
+  color: #AAA;
+}
+
+.waiting {
+  background-image: url(spinner.gif);
+  background-repeat: no-repeat;
+  background-position: __MSG_@@bidi_start_edge__ 3px;
+  padding: 5px 30px;
+  color: rgb(180, 180, 180);
+}
+
+.prominent {
+  color: #222;
+}
+
+#access-code-countdown-container {
+  height: 50px;
+  text-align: center;
+}
+
+#access-code-display {
+  margin-top: 50px;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  font-size: 26px;
+  text-align: center;
+}
+
+#access-code-entry-row {
+  margin-top: 24px;
+}
+
+#ask-pin-form .table-label {
+  min-width: 120px;
+  text-align: __MSG_@@bidi_end_edge__;
+  display: inline-block;
+}
+
+#ask-pin-form > div {
+  margin-bottom: 8px;
+}
+
+.checkbox-label {
+  display: block;
+  padding-__MSG_@@bidi_start_edge__: 20px;
+  margin-top: 12px;
+}
+
+.checkbox-label.disabled {
+  color: #888;
+}
+
+.checkbox-label input[type=checkbox] {
+  float: __MSG_@@bidi_start_edge__;
+  margin-__MSG_@@bidi_start_edge__: -20px;
+  margin-__MSG_@@bidi_end_edge__: 0;
+  width: 20px;
+  margin-top: 2px;
+}
+
+.checkbox-indent {
+  margin-left: 18px;
+}
+
+#current-email {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.dialog-container {
+  position: absolute;
+  top: 200px;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+.dialog-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  opacity: 0.75;
+  z-index: 1;
+}
+
+/* TODO(jamiewalch): crbug.com/252796: Remove these once crbug.com/240772
+ * is fixed. */
+.no-horizontal-scroll {
+  overflow-x: hidden !important;
+}
+
+.no-vertical-scroll {
+  overflow-y: hidden !important;
+}
+
+html.apps-v2.scrollable {
+  overflow: scroll;
+}
+
+/* TODO(jamiewalch): Reinstate this if we're able to get translations for
+ *     "Why is this safe?" that don't overflow in any language.
+#host-setup-dialog {
+  width: 460px;
+}
+*/
+
+/* The NAT traversal state is independent of the app mode, and both need
+ * to be combined to determine the visibility of the butter bar. We use
+ * a style for the former and the 'hidden' property for the latter. */
+#nat-box.traversal-enabled {
+  display: none;
+}
+
+#remember-pin {
+  width: 315px;
+}
+
+#session-client-plugin {
+  box-shadow: 0 0 8px 0 black;
+  -webkit-user-select: none;
+  display: block;
+  flex-shrink: 0;
+  z-index: 2;  /* Show above the dialog screen so that click-to-play works. */
+}
+
+.session-client-inactive {
+  -webkit-filter: grayscale(70%);
+  transition: -webkit-filter 0.218s;
+}
+
+#set-pin-table td {
+  border-bottom: 6px solid transparent;
+}
+
+#webapp-description {
+  margin-bottom: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/*
+ * Setting hidden on elements that match some rule overriding 'display' doesn't
+ * do what you would expect unless this is made explicit (and !important).
+ */
+[hidden] {
+  display: none !important;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.horizontally-centered {
+  display: flex;
+  align-items: center;
+}
+
+.vertically-centered {
+  display: flex;
+  flex-direction: column;
+  height: 100%
+}
+
+.horizontally-centered::before,
+.horizontally-centered::after,
+.vertically-centered::before,
+.vertically-centered::after {
+  content: "";
+  flex: 1;
+}
+
+/* Bump-scrolling is currently implemented by adjusting the margins, which is
+ * easier to implement with "position: fixed". In full-screen mode there are
+ * no scroll-bars, so the advantages of flex-box layout to achieve centering
+ * (ie, the DOM is easier to measure to determine when scroll-bars are needed)
+ * don't apply */
+.fullscreen #session-mode {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+/* Override full-height class until connected, otherwise it takes up 100% of
+ * the window height in addition to the home-screen UI. */
+body:not(.connected) #session-mode {
+  height: auto;
+}
+
+.debug-region-container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  pointer-events: none;
+}
+
+.debug-region-rect {
+  position: absolute;
+  background-color: rgba(255, 0, 255, 0.5);
+  border-color: #000000;
+  border-style: solid;
+  border-width: 2px;
+  box-sizing: border-box;
+}
+
+#client-container {
+  /* The mouse-cursor-overlay is positioned relative to the client plugin,
+   * which is contained within this element. */
+  position: relative;
+}
+
+.mouse-cursor-overlay {
+  position: absolute;
+  pointer-events: none;
+}
+
+#connection-dropped-dialog .restart-timer {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+}
+
+.h2-supplemental {
+  color: gray;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  font-size: 80%;
+}
+
+body:not(.os-windows) .windows-only,
+body:not(.os-mac) .mac-only {
+  display: none;
+}

@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "ተቀበልና ጫን"
+   },
+   "ACCESS_CODE": {
+      "message": "የመዳረሻ ኮድ"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "ይህ የመዳረሻ ኮድ በ$1$ ውስጥ ጊዜው ያበቃል",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "ግብረ መልስ"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "ሁሉም ግንኙነቶች"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "ፒኑን ዳግም ይተይቡ"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "ፒን"
+   },
+   "CANCEL": {
+      "message": "ይቅር"
+   },
+   "CLEAR_HISTORY": {
+      "message": "ታሪክ አጽዳ"
+   },
+   "CLOSE": {
+      "message": "ዝጋ"
+   },
+   "CLOSE_PROMPT": {
+      "message": "ከዚህ ገጽ መውጣት የChrome ርቀት ዴስክቶፕ ክፍለ-ጊዜዎን ያጠናቅቀዋል።"
+   },
+   "CLOSE_WINDOW": {
+      "message": "መስኮት ዝጋ"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "እርግጠኛ ነዎት ከ$1$ ጋር ያሉትን የርቀት ግንኙነቶች ማሰናከል ይፈልጋሉ? ሐሳብዎን ከቀየሩ ግንኙነቶችን ዳግም ለማንቃት ያንን ኮምፒውተር መጎብኘት ይኖርብዎታል።",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "ግንኙነት አልተሳካም"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "ከ"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "የግንኙነት ታሪክ"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "ደህና"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "ጥሩ"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "ደካማ"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "ለ"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "ለማንኛውም ተገናኝ"
+   },
+   "CONNECT_BUTTON": {
+      "message": "ይገናኙ"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "ቀጥል"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "በአሁኑ ጊዜ ይህንን ማሽን ከሌላ ተጠቃሚ ጋር እየተጋሩ ነዎት። ማጋራቱን መቀጠል ይፈልጋሉ?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Chrome የርቀት ዴስክቶፕ አስተናጋጅ ምርጫዎች መቆጣጠሪያ"
+   },
+   "COPYRIGHT": {
+      "message": "የቅጂ መብት 2013 Google Inc. ሁሉም መብቶች የተጠበቁ ናቸው።"
+   },
+   "CREDITS": {
+      "message": "ክሬዲቶች"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "ሁሉንም ይሰርዙ"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "ሰርዝ"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "ለመቀጠል በመጀመሪያ ለኮሚውተርዎ ተጨማሪ የመዳረሻ ፍቃዶችን መስጠት አለብዎት። ይህንን አንድ ጊዜ ብቻ ነው ማድረግ የሚኖርብዎት።"
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "«$1$» ጠቅ ለማድረግ ለመድረስ የሚፈልጉትን ኮምፒዩተር ተጠቃሚ ይጠይቁ እና የመድረሻ ኮድ ይሰጡዎታል።",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Chrome የርቀት ዴስክቶፕ ኮምፒውተርዎን ደህንነቱ በተጠበቀ መልኩ ድሩ ላይ እንዲያጋሩት ያስችልዎታል። ሁለቱም ተጠቃሚዎች የChrome ርቀት ዴስክቶፕ መተግበሪያውን ማሄድ አለባቸው፣ እሱም $1$ ላይ ሊገኝ ይችላል።",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "የርቀት አስተናጋጁ ለሶስተኛ ወገን ድር ጣቢያ እንዲያረጋግጡ ይፈልጋል። ለመቀጠል Chrome የርቀት ዴስክቶፕ ይህን አድራሻ እንዲደርስበት ተጨማሪ ፍቃዶችን መስጠት አለብዎት፦"
+   },
+   "DISABLE_HOST": {
+      "message": "አሰናክል"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "ግንኙነት አቋርጥ"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Chrome የርቀት ዴስክቶፕ አገልግሎት"
+   },
+   "DURATION_HEADER": {
+      "message": "ጊዜ"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "ይህን መተግበሪያ ለማሄድ ፍቃድ የለዎትም።"
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "ማረጋገጥ አልተሳካም። እባክዎ እንደገና ወደ Chrome ይግቡ።"
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "አንዳንድ የሚያስፈልጉ ክፍሎች ይጎድላሉ። እባክዎ የሶፍትዌሩ የቅርብ ጊዜውን ስሪት መጫንዎን ያረጋግጡና እንደገና ይሞክሩ።"
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "አንድ የአውታረ መረብ ስህተት ተከስቷል። መሣሪያዎችዎ ዳግም መስመር ላይ ሲሆኑ መተግበሪያውን ዳግም እናስጀምረዋለን።"
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "የርቀት ኮምፒውተሩ ክፍለጊዜውን ለመጀመር ተስኖታል። ችግሩ ከቀጠለ እባክዎን አስተናጋጁን በድጋሚ ለማዋቀር ይሞክሩ።"
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "የርቀት ኮምፒውተሩ ለግንኙነት ጥያቄዎች ምላሽ እየሰጠ አይደለም። እባክዎ መስመር ላይ መሆኑን ያረጋግጡና እንደገና ይሞክሩ።"
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "የሆነ ሰው ልክ ባልሆነ ፒን ለመገናኘት ስለሞከረ ከርቀት ኮምፒውተሩ ጋር የነበሩ ግንኙነቶች በጊዜያዊነት ታግደዋል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "ይህንን ኮምፒውተር መመዝገብ አልተሳካም።"
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "ተኳሃኝ ያልሆነ የፕሮቶኮል ስሪት ተገኝቷል። እባክዎ በሁለቱም ኮምፒውተሮች ላይ የሶፍትዌሩ የቅርብ ጊዜ ስሪት እንዳለዎት ያረጋግጡና እንደገና ይሞክሩ።"
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "የመዳረሻ ኮዱ ልክ ያልሆነ ነው። እባክዎ እንደገና ይሞክሩ።"
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "የመምሪያ ቅንብሮች ይህን ኮምፒውተር እንደ የChrome ርቀት ዴስክቶፕ አስተናጋጅ አድርጎ ማጋራት አይፈቅዱም። እርዳታ እንዲያገኙ የስርዓት አስተዳዳሪዎን ያግኙ።"
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "የርቀት ክፍለጊዜውን ጊዜው አልፎበታል።"
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "አንዳንድ የሚያስፈልጉ ክፍሎች ይጎድላሉ። እባክዎ የቅርብ ጊዜውን የChrome ስሪት መጫንዎን ያረጋግጡና እንደገና ይሞክሩ።"
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "አንዳንድ አስፈላጊ ክፍላተ አካላት ይጎድላሉ። እባክዎ ወደ chrome://plugins ይሂዱ እና ቤተኛ ደንበኝ እንደነቃ ያረጋግጡ።"
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "የሚያስፈልግ ክፍለ-አካል መሥራቱን አቁሟል። እባክዎ ይህን ችግር ለገንቢዎቹ ሪፖርት ያድርጉት።"
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "ከአውታረ መረቡ ጋር መገናኘት አልተቻለም። እባክዎ መሥሪያዎ መስመር ላይ መሆኑን ያረጋግጡ።"
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "ወደ Chrome በመለያ አልገቡም። እባክዎ ይግቡ እና እንደገና ይሞክሩ።"
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "ያንን እርምጃ የማከናወን ፍቃድ የለዎትም።"
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "የተጠየቀው ነገር አይገኝም።"
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "አስተናጋጁን መድረስ አልተቻለም። ይሄ በሚጠቀሙት አውታረ መረብ ላይ ባለ ውቅር ምክንያት ሳይሆን አይቀርም።"
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "አገልግሎቱ ለጊዜው አይገኝም። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "ያልተጠበቀ ስህተት ተከስቷል። እባክዎ ይህንን ችግር ለገንቢዎች ሪፖርት ያድርጉት።"
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "ከሙሉ ማሳያ መስኮት ይውጡ"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "መተግበሪያውን ዳግም ማስጀመር አልተቻለም። አሁንም የሳንካ ሪፖርት መላክ ይችላሉ።"
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "መተግበሪያውን ዳግም ያስጀምሩት። ማንኛውም ያልተቀመጠ ስራ ያጣሉ።"
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "መተግበሪያውን መክፈት አልችልም።"
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "መተግበሪያው ከልክ በላይ ቀርፋፋ ነው።"
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "የእኔን የGoogle አንጻፊ ፋይሎች መክፈት አልችልም።"
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "የእኔን በGoogle አንጻፊ ላይ የተቀመጡ ፋይሎች ማየት አልችልም።"
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "ከእኔ ቁልፍ ሰሌዳ ወይም መዳፊት ጋር ችግር እያጋጠመኝ ነው።"
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "የእርስዎን ችግር እንድንፈታ እኛን ለማገዝ፣ ምን እንደተሳሳተ እባክዎ ለእኛ ይንገሩን፦"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "ሌላ ነገር።"
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "ይምረጡ…"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "ለተጨማሪ መረጃ እርስዎን እንድናነጋግር ለማስቻል የኢሜይል አድራሻዎ በሚያቀርቡት ማንኛውም ግብረመልስ ውስጥ ይካተታል።"
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "ችግር ሪፖርት አድርግ"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "ችግርዎን እንድንቀርፍ ለማገዝ የመተግበሪያ ምዝግብ ማስታወሻዎችን ያካትቱ (የምዝግብ ማስታወሻዎች የግል መረጃን ሊያካትቱ ይችላሉ)።"
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "የመተግበሪያ ምዝግብ ማስታወሻዎች እንደ የእርስዎ ማንነት (የኢሜይል አድራሻ) እና በGoogle Drive ውስጥ ያሉ የፋይሎች እና አቃፊዎች ስሞችን እና አቃፊዎችን ጨምሮ የግል መረጃን ሊያካትቱ ይችላሉ።"
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "ይህ መረጃ ጥቅም ላይ የሚውለው ሪፖርት የሚያደርጉትን ችግር ለመመርመር ብቻ ነው፣ የሚገኘው ሪፖርትዎን ለሚመረምረው ሰው ብቻ ነው፣ እና ከ30 ቀኖች በላይ አይቆይም።"
+   },
+   "FOOTER_CONNECTING": {
+      "message": "በመገናኘት ላይ..."
+   },
+   "FOOTER_WAITING": {
+      "message": "ግንኙነትን በመጠበቅ ላይ…"
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "ለMac (OS X 10.6 እና ከዚያ በላይ)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "ለWindows (XP እና ከዚያ በላይ)"
+   },
+   "FULL_SCREEN": {
+      "message": "ሙሉ ማያ ገጽ"
+   },
+   "GET_STARTED": {
+      "message": "ይጀምሩ"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "ይቀበሉ"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "አትቀበል"
+   },
+   "HELP": {
+      "message": "እገዛ"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "መዳረሻ"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "አንድ የተጋራ ኮምፒውተር ይመልከቱ እና ይቆጣጠሩ።"
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "Chrome የርቀት ዴስክቶፕን ተጠቅመው ይህንን ኮምፒውተር ደህንነቱ በተጠበቀ መልኩ ሊደርሱበት ይችላሉ።"
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "ፒን ይቀይሩ"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "ይህ ኮምፒውተር በተለየ መለያ ስር አሁን ላይ ተጋርቷል።"
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "ይመልከቱ/አርትዕ ያድርጉ"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "ይህ ኮምፒውተር አንድ ወይም ከዚያ በላይ ደንበኞችን ፒን ሳያስገቡ እንዲገናኙ እንዲፈቅድ ተደርጎ ተዋቅሯል።"
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "የርቀት ግንኙነቶችን አንቃ"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "Chrome የርቀት ዴስክቶፕን ተጠቅመው ይህንን ኮምፒውተር መድረስ ከፈለጉ የርቀት ግንኙነቶችን ማንቃት አለብዎት።"
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "የርቀት ግንኙነቶችን አሰናክል"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "አጋራ"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "ሌላ ተጠቃሚ ይህን ኮምፒውተር እንዲያየውና እንዲቆጣጠረው ያጋሩት።"
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(ይህ ባህሪ ገና ለኮምፒውተርዎ አይገኝም)"
+   },
+   "HOST_CATEGORY": {
+      "message": "አስተናጋጅ"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "ለደንበኛ መዳረሻ ተከልክሏል፦ %1።"
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "የተገናኘው ደንበኛ፦ %1።"
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "የደንበኛው ግንኙነት ተቋርጧል፦ %1።"
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "የሰርጥ አይ ፒ ለደንበኛ፦ %1 አይ ፒ=«%2» የአስተናጋጅ አይ ፒ=«%3» ሰርጥ=«%4» ግንኙነት=«%5»።"
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "ከአንድ ሌላ ኮምፒውተር ጋር የርቀት ግንኙነቶችን ለማንቃት Chrome የርቀት ዴስክቶፕን እዚያው ይጫኑና «$1$»ን ይጫኑ።",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "ምንም የተመዘገቡ ኮምፒውተሮች የለዎትም። ከአንድ ኮምፒውተር ጋር የርቀት ግንኙነቶችን ለማንቃት Chrome የርቀት ዴስክቶፕን እዚያው ይጫኑና «$1$»ን ይጫኑ።",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "ከዚህ ቀደም እንደ $1$ ($2$) ሆነው ገብተዋል። በዚያ መለያ ውስጥ የእርስዎን ኮምፒውተሮች ለመድረስ በዚያ መለያ $3$ወደ Google Chrome ይግቡ$4$ና የChrome ርቀት ዴስክቶፕን ዳግም ይጫኑት።",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "የሶፍትዌር ዝማኔዎች አብዛኛውን ጊዜ በራስ-ሰር ነው የሚከናወኑት፣ ነገር ግን ከስንት አንዴ ላይሳኩ ይችላሉ። ሶፍትዌሩን ማዘመን ከጥቂት ደቂቃዎች በላይ መውሰድ የለበትም፣ እና ከኮምፒውተርዎ ጋር በርቀት ተገናኝተው ሳለ ሊደረግ ይችላል።"
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "Chrome የርቀት ዴስክቶፕ በ$1$ ላይ ጊዜው ያለፈበት እና መዘመን የሚያስፈልገው ነው።",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "የአጠቃቀም ስታትስቲክስ እና የብልሽት ሪፖርቶችን እንድንሰበስብ በመፍቀድ Chrome የርቀት ዴስክቶፕ እንድናሻሽል ያግዙን።"
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "ይህንን ኮምፒውተር በተጠበቀ መዳረሻ ለመድረስ እባክዎ $1$ቢያንስ ስድስት አኃዞች$2$ የሆነ ፒን ይምረጡ። ይሄ ፒን ከሌላ ቦታ ሆኖ ሲገናኙ ያስፈልጋል።",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "የርቀት መዳረሻ አገልግሎትን መጀመር አልተሳካም።"
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome የChrome የርቀት ዴስክቶፕ አስተናጋጅ ጫኚውን እያወረደ ነው። ውርዱ አንዴ ከተጠናቀቀ በኋላ እባክዎ ከመቀጠልዎ በፊት ጫኚውን ያሂዱት።"
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "ከመቀጠልዎ በፊት እባክዎ ጫኚውን ያስሂዱት።"
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "ለዚህ ኮምፒውተር የርቀት ግንኙነቶች ነቅተዋል።"
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "እባክዎ የኮምፒውተርዎ የኃይል አስተዳደር ቅንብሮችን ያረጋግጡና ስራ ሲፈታ እንዲተኛ አለመዋቀሩን ያረጋግጡ።"
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "ለዚህ ኮምፒውተር የርቀት ግንኙነቶችን በማንቃት ላይ…"
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "ለዚህ ኮምፒውተር የርቀት ግንኙነቶች ተሰናክለዋል።"
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "ለዚህ ኮምፒውተር የርቀት ግንኙነቶችን በማሰናከል ላይ…"
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "የዚህን ኮምፒውተር የርቀት መዳረሻ ማሰናከል አልተሳካም። እባክዎ እንደገና ይሞክሩ።"
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "የChrome የርቀት ዴስክቶፕ አስተናጋጅ ጫኚውን በማውረድዎ በGoogle $1$የአገልግሎት ውል$4ይስማማሉ።",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "የእርስዎ ፒን ተዘምኗል።"
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "ፒኑን ማዘመን አልተሳካም። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "የዚህ ኮምፒውተር ፒን እየተዘመነ ነው…"
+   },
+   "HOST_STARTED": {
+      "message": "አስተናጋጅ ለተጠቃሚ ተጀምሯል፦ %1።"
+   },
+   "HOST_STOPPED": {
+      "message": "አስተናጋጅ ቆሟል።"
+   },
+   "IDLE_CONTINUE": {
+      "message": "ቀጥል"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "አሁን አቋርጥ"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "የእርስዎ የ$1$ ክፍለ-ጊዜ ለተወሰነ ጊዜ ቦዝኗል፣ እና በቅርብ ይቋረጣል።",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "ከዚህ ኮምፒውተር ጋር"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Chrome የርቀት ዴስክቶፕ አስተናጋጅ ጫኚ ያውርዱ"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "ዴስክቶፕዎን ማጋራት ለመጀመር ከታች ያለውን የመዳረሻ ኮድ ለሚረዳዎ ሰው ይስጡት።"
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "ኮዱን አንዴ ካስገቡት በኋላ የማጋራት ክፍለ-ጊዜዎ ይጀምራል።"
+   },
+   "INVALID_PIN": {
+      "message": "እባክዎ ስድስት ወይም ከዚያ በላይ የሆነ አኃዝ ያለው ፒን ያስገቡ።"
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "የተጠቃሚ-ለተጠቃሚ ማያ ገጽ ማጋራት፣ ለርቀት ቴክኒካዊ ድጋፍ ምርጥ የሆነ።"
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "የቁልፍ ሰሌዳ አቀማመጦች"
+   },
+   "LABEL_CONNECTED": {
+      "message": "ተገናኝቷል፦"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (መስመር ላይ የነበረበት $2$ መጨረሻ ጊዜ)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "እንዴት እንደሆነ ይወቁ።"
+   },
+   "LEARN_MORE": {
+      "message": "ተጨማሪ ለመረዳት።"
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Chrome የርቀት ዴስክቶፕ አስተናጋጅ ምርጫዎች"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Chrome የርቀት\nዴስክቶፕ አስተናጋጅ"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Chrome የርቀት ዴስክቶፕ አስተናጋጅ ማራገፊያ"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "ለWin ቁልፍ Ctrlን ይጠቀሙ (Mac ላይ ⌘)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "መስኮቱን ያስፉት"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "የእራስዎን ኮምፒውተር ከማንኛውም ቦታ ይድረሱበት።"
+   },
+   "MESSAGE_GENERATING": {
+      "message": "የመዳረሻ ኮድ በማመንጨት ላይ…"
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "የChrome የርቀት ዴስክቶፕ ክፍለ-ጊዜው ተጠናቅቋል።"
+   },
+   "MESSAGE_SHARED": {
+      "message": "ዴስክቶፕዎ በአሁኑ ጊዜ ከ$1$ ጋር ተጋርቷል።",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "መስኮትን ያሳንሱት"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "ፈቀዳ ይስጡ"
+   },
+   "MODE_IT2ME": {
+      "message": "የርቀት እርዳታ"
+   },
+   "MODE_ME2ME": {
+      "message": "የእኔ ኮምፒውተሮች"
+   },
+   "NEW_WINDOW": {
+      "message": "አዲሰ መስኮት…"
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "ሁሉም የተጣመሩ ደንበኞች ተሰርዘዋል።"
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "የዴስክቶፕ ውህደት በዚህ የመሣሪያ ስርዓት ላይ አይደገፍም። አሁንም መተግበሪያውን መጠቀም ይችላሉ፣ ነገር ግን የተጠቃሚ ተሞክሮው የወረደ ይሆናል።"
+   },
+   "OFFLINE": {
+      "message": "$1$ (ከመስመር ውጪ)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "አስተናጋጅን ማስጀመር አልተሳካም።"
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "ልክ ያልሆነ የአስተናጋጅ ውቅር።"
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "ልክ ያልሆነ የአስተናጋጅ ባለቤት ጎራ።"
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "ልክ ያልሆነ የአስተናጋጅ መታወቂያ።"
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "አስተናጋጅ ልክ ባልሆኑ የOAuth ምስክርነቶች ነው የተዋቀረው።"
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "በመሥሪያ አመክንዮ ማያ ገጽ ላይ አያሄደ ያለው አስተናጋጅ በተጠቃሚ-ተኮር ክፍለ-ጊዜ ውስጥ በማሄድ የመጋረጃ ሁነታን ለመደገፍ ተዘግቷል።"
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "የመመሪያ ለውጥን ከግምት ለማስገባት፣ አስተናጋጅ ዳግም እየጀመረ ነው።"
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "አስተናጋጅ መመሪያውን ለማንበብ አልተሳካም።"
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "አስተናጋጅ ተዘግቷል።"
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "ያልታወቀ የአስተናጋጅ ስህተት፦ $1$።",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "ልክ ያልሆነ የአስተናጋጅ ባለቤት።"
+   },
+   "OK": {
+      "message": "ይሁን"
+   },
+   "OPTIONS_MENU": {
+      "message": "አማራጮች"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "ከዚህ ኮምፒውተር"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "የሚከተሉት ደንበኞች ከዚህ ኮምፒውተር ጋር የተጣመሩ ሲሆን ፒን ሳያስገቡ መገናኘት ይችላሉ። ይህንን ፈቃድ በማንኛውም ጊዜ በተናጠል ወይም ለሁሉም ደንበኞች መሻር ይችላሉ።"
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "የተጣመረበት ቀን"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "ደንበኛ"
+   },
+   "PIN": {
+      "message": "ፒን"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "እባክዎ ተመሳሳዩን ፒን በሁለቱም ሳጥኖች ውስጥ ያስገቡ።"
+   },
+   "PIN_MESSAGE": {
+      "message": "እባክዎ ለ$1$ ፒንዎን ያስገቡ።",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "እባክዎ የእርስዎን ፒን ለርቀት ኮምፒውተር ያስገቡ"
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "ሌሎች ኮምፒውተሮችን ይድረሱ ወይም ሌላ ተጠቃሚ ኮምፒውተርዎን ደህንነቱ በተጠበቀ መልኩ በበይነመረቡ ላይ እንዲደርስበት ይፍቀዱለት።"
+   },
+   "PRODUCT_NAME": {
+      "message": "Chrome የርቀት ዴስክቶፕ"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "የChrome መተግበሪያ ዥረት"
+   },
+   "RECONNECT": {
+      "message": "ዳግም ያገናኙ"
+   },
+   "REMEMBER_PIN": {
+      "message": "ከዚህ መሣሪያ ሆኜ ከዚህ አስተናጋጅ ጋር ስገናኝ ዳግም ፒን አትጠይቅ።"
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "ዋና ቤተ መጽሐፍት"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "ዴስክቶፕ የማዋሃድ ሂደት"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "ለChrome የርቀት ዴስክቶፕ አስተናጋጅ ትዕዛዞችን የሚሰጥ መተግበሪያ።"
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "የአስተናጋጅ ሂደት"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "ቤተኛ የመልዕክት መላኪያ አስተናጋጅ ለርቀት አስተናጋጅ አስተዳደር"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "ቤተኛ የመልዕክት መላኪያ አስተናጋጅ ለርቀት እርዳታ"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "የደህንነት ቁልፍ በርቀት የመጠቀም ሂደት"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "እንዲመጣጠን የዴስክቶፑን መጠን ይቀይሩ"
+   },
+   "RESTART_BUTTON": {
+      "message": "አሁን ዳግም አስጀምር"
+   },
+   "RESTORE_WINDOW": {
+      "message": "መስኮት ወደነበረበት ይመልሱ"
+   },
+   "RETRY": {
+      "message": "እንደገና ሞክር"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "የማያ ገጽ አማራጮች"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Ctrl-Alt-Del ላክ"
+   },
+   "SEND_FEEDBACK": {
+      "message": "አንድ ችግር ሪፖርት አድርግ…"
+   },
+   "SEND_KEYS": {
+      "message": "የመላኪያ ቁልፎች"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "PrtScn ላክ"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "ይህ አገልግሎት ከChrome የርቀት ዴስክቶፕ ደንበኞች ገቢ ግንኙነቶችን ያነቃል።"
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "ይህ ቅንብር በጎራ መመሪያዎ ነው የሚቀናበረው።"
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "አጋራ"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "ይቅር"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "ሌላ ተጠቃሚ ይህን ኮምፒውተር እንዲመለከት እና እንዲቆጣጠር ማጋራት ይፈልጋሉ?"
+   },
+   "SHOW_STATS": {
+      "message": "ስታቲስቲክስን አሳይ"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "ስታቲስቲክስን አሳይ (ግንኙነት፦ $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "ለማመጣጠን አሳንስ"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "ይግቡ"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "ዘግተህ ውጣ"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "ማጋራት አቁም"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Chrome የርቀት ዴስክቶፕን ማሻሻል ላይ ማገዝ ይፈልጋሉ? $1$የዳሰሳ ጥናቱን ይውሰዱ።$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "ሰዓት"
+   },
+   "TOGGLE_STATS": {
+      "message": "ስታቲስቲክስን አሳይ"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "ከ$1$ ጋር ይገናኙ",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "ከዚህ ኮምፒውተር ጋር ያሉ የርቀት ግንኙነቶችን ያሰናክሉ"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "የአስተናጋጆች ዝርዝር ያድሱ"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "የኮምፒውተር ስም ያርትዑ"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (ቀኑ ያለፈበት)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "መለያ"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "እባክዎ በChrome የርቀት ዴስክቶፕ መዳረሻ ለመፍቀድ መለያዎን እና ፒንዎን ከዚህ በታች ያረጋግጡ።"
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "ማሳሰቢያ፦ የመምሪያ ቅንብሮች በአውታረ መረብዎ ውስጥ ባሉ ኮምፒውተሮች የሚኖሩ ግንኙነቶችን ብቻ ነው የሚፈቅዱት።"
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "ማሳሰቢያ፦ ሁሉም የቁልፍ ሰሌዳ አቋራጮች የሚገኙ መሆናቸውን ለማረጋገጥ Chrome የርቀት ዴስክቶፕ ወደ «እንደ መስኮት ክፈት» ማዋቀር ይችላሉ።"
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "ይሄ ለምንድነው ደህንነቱ የተጠበቀ የሆነው?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Windows"
+   },
+   "WORKING": {
+      "message": "በመስራት ላይ…"
+   }
+}

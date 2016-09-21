@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Ignorar sempre para este site"
+   },
+   "always_ignore_confirmation": {
+      "message": "Pretende que o Alerta de palavra-passe ignore sempre este site?"
+   },
+   "back": {
+      "message": "Anterior"
+   },
+   "contact_security": {
+      "message": "Contactar a segurança"
+   },
+   "extension_description": {
+      "message": "O Alerta de palavra-passe ajuda a proteger contra ataques de phishing."
+   },
+   "extension_detailed_description": {
+      "message": "Se introduzir a palavra-passe do Gmail ou do Google for Work sem que seja em accounts.google.com, recebe um alerta para poder alterar a palavra-passe se necessário.\n\nO Alerta de palavra-passe também tenta detetar páginas de início de sessão do Google falsas para o alertar antes de introduzir a palavra-passe. Para isso, o Alerta de palavra-passe verifica o HTML de cada página que visitar para se certificar de que não se trata de uma tentativa de roubo de identidade da página de início de sessão do Google.\n\nPerguntas frequentes\n– Quando é que o Alerta de palavra-passe entra em vigor?\nO Alerta de palavra-passe inicializa-se da próxima vez que introduzir a sua palavra-passe em accounts.google.com.\n\n– O Alerta de palavra-passe armazena a minha palavra-passe ou as teclas utilizadas?\nNão. O Alerta de palavra-passe não armazena a sua palavra-passe nem as teclas utilizadas. Em vez disso, armazena uma miniatura segura da sua palavra-passe, que compara com uma miniatura das teclas utilizadas mais recentemente no Chrome.\n\n– Para onde é que o Alerta de palavra-passe envia os dados?\nSe estiver a utilizar o Alerta de palavra-passe numa conta do Gmail, o Alerta de palavra-passe não envia quaisquer dados do seu computador local. Se o seu administrador do Google for Work optar por implementar o Alerta de palavra-passe no seu domínio, o administrador recebe alertas quando o Alerta de palavra-passe for acionado.\n\n– Quais são os limites do Alerta de palavra-passe?\nO Alerta de palavra-passe não protege janelas de navegação anónima, Aplicações do Chrome ou extensões do Chrome. Também não protege palavras-passe que não sejam de serviços Google. O Alerta de palavra-passe apenas funciona no âmbito do navegador de Internet Chrome quando o Javascript está ativado.\n\n– Onde posso encontrar mais detalhes?\nVisite todas as Perguntas frequentes em LINK_TBD ou pode ver a base de código aberto completa em https://github.com/google/password-alert\n\nAo instalar este item, aceita os Termos de Utilização do Google e a Política de Privacidade enunciados em www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Alerta de palavra-passe"
+   },
+   "ignore": {
+      "message": "Ignorar desta vez"
+   },
+   "initialization_message": {
+      "message": "Para que o Alerta de palavra-passe seja ativado, inicie sessão na sua conta."
+   },
+   "initialization_thank_you_message": {
+      "message": "Obrigado. O Alerta de palavra-passe já se encontra ativado."
+   },
+   "learn_more": {
+      "message": "Saiba mais"
+   },
+   "password_warning_banner_body": {
+      "message": "Introduziu a palavra-passe da sua Conta Google numa página de início de sessão que não pertence à Google. Reponha imediatamente a sua palavra-passe para proteger a sua conta. Certifique-se de que não volta a utilizar a sua palavra-passe para outras aplicações e sites."
+   },
+   "password_warning_banner_header": {
+      "message": "Repor a palavra-passe da Conta Google"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Este site parece estar a utilizar uma versão falsa da página de início de sessão do Google com o intuito de roubar a sua palavra-passe, pelo que foi bloqueado. Se acreditar que este site pode danificar o seu computador, pode visitá-lo, mas tenha cuidado com as informações que introduzir."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Este site foi bloqueado."
+   },
+   "report_phishing": {
+      "message": "Denunciar este site"
+   },
+   "reset_password": {
+      "message": "Repor palavra-passe"
+   },
+   "sign_in": {
+      "message": "Iniciar sessão"
+   },
+   "visit_this_site": {
+      "message": "Visitar este site"
+   }
+}

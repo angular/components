@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "Aceitar e instalar"
+   },
+   "ACCESS_CODE": {
+      "message": "Código de acesso"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "Este código de acesso irá expirar em $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "Comentários"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "Todas as ligações"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "Voltar a introduzir o PIN"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN"
+   },
+   "CANCEL": {
+      "message": "Cancelar"
+   },
+   "CLEAR_HISTORY": {
+      "message": "Limpar histórico"
+   },
+   "CLOSE": {
+      "message": "Fechar"
+   },
+   "CLOSE_PROMPT": {
+      "message": "Se sair desta página, terminará a sessão do Ambiente de Trabalho Remoto do Chrome."
+   },
+   "CLOSE_WINDOW": {
+      "message": "Fechar janela"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "Tem a certeza de que pretende desativar as ligações remotas a $1$? Se mudar de ideias, será necessário aceder a esse computador e voltar a ativar as ligações.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "Falha na ligação"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "De"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "Histórico de Ligações"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "Razoável"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "Boa"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "Má"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "Para"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "Estabelecer ligação mesmo assim"
+   },
+   "CONNECT_BUTTON": {
+      "message": "Ligar"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "Continuar"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "Está atualmente a partilhar este computador com outro utilizador. Pretende continuar a partilhar?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Controlador do Anfitrião do Ambiente de Trabalho Remoto do Chrome"
+   },
+   "COPYRIGHT": {
+      "message": "Copyright 2013 Google Inc. Todos os Direitos Reservados."
+   },
+   "CREDITS": {
+      "message": "Créditos"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "Eliminar todos"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "Eliminar"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "Para continuar, precisa primeiro de conceder autorizações de acesso alargadas ao computador. Apenas tem de efetuar esta operação uma vez."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "Solicite ao utilizador a cujo computador pretende aceder para clicar em \"$1$\" e dar-lhe o código de acesso.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "O Ambiente de Trabalho Remoto do Chrome permite partilhar o computador de forma segura através da Web. Ambos os utilizadores devem ter em execução a aplicação Ambiente de Trabalho Remoto do Chrome, que pode ser encontrada em $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "O anfitrião remoto requer que efetue a autenticação num Website de terceiros. Para continuar, necessita de conceder permissões adicionais ao Ambiente de Trabalho Remoto do Chrome para aceder a este endereço:"
+   },
+   "DISABLE_HOST": {
+      "message": "Desactivar"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "Desligar"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Serviço Ambiente de Trabalho Remoto do Chrome"
+   },
+   "DURATION_HEADER": {
+      "message": "Duração"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "Não tem autorização para executar esta aplicação."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "Falha na autenticação. Inicie sessão novamente no Chrome."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "Faltam alguns componentes necessários. Certifique-se de que tem a versão mais recente do software instalada e tente novamente."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "Ocorreu um erro de rede. Quando o dispositivo estiver online novamente, reiniciamos a aplicação."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "O computador remoto não conseguiu inicializar a sessão. Se o problema persistir, experimente configurar o anfitrião novamente."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "O computador remoto não está a responder aos pedidos de ligação. Verifique se está online e tente novamente."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "As ligações ao computador remoto estão temporariamente bloqueadas, porque alguém tentou estabelecer ligação com um PIN inválido. Volte a tentar mais tarde."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "Falha ao registar o computador."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "Foi detetada uma versão de protocolo incompatível. Certifique-se de que tem a versão mais recente do software instalada em ambos os computadores e tente novamente."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "O código de acesso é inválido. Tente novamente."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "As definições da política não permitem a partilha deste computador como um anfitrião do Ambiente de Trabalho Remoto do Chrome. Contacte o administrador do sistema para obter assistência."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "A sessão remota expirou."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "Faltam alguns componentes necessários. Certifique-se de que está a executar a versão mais recente do Chrome e tente novamente."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "Faltam alguns componentes necessários. Aceda a chrome://plugins e certifique-se de que o Native Client está ativado."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "Um componente necessário deixou de funcionar. Comunique este problema aos programadores."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "Não foi possível estabelecer ligação à rede. Verifique se o dispositivo está online."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "Não tem sessão iniciada no Chrome. Inicie sessão e tente novamente."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "Não tem autorização para executar essa ação."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "O objeto solicitado não existe."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "Não é possível contactar o anfitrião. Provavelmente, isso deve-se à configuração da rede que está a utilizar."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "O serviço está temporariamente indisponível. Tente novamente mais tarde."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "Ocorreu um erro inesperado. Comunique este problema aos programadores."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "Sair do modo de ecrã inteiro"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "Não foi possível repor a aplicação. Ainda pode enviar um relatório de erros."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "Reponha a aplicação. O trabalho não guardado é perdido."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "Não consigo abrir a aplicação."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "A aplicação está demasiado lenta."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "Não consigo abrir os meus ficheiros do Google Drive."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "Não consigo ver os ficheiros guardados online no Google Drive."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "Estou a ter problemas com o teclado ou o rato."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "Para nos ajudar a resolver o problema, diga-nos o que correu mal:"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "Outro."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "Selecionar..."
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "Para que o(a) possamos contactar para mais informações, o seu endereço de email é incluído em quaisquer comentários que enviar."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "Comunicar um problema"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "Inclua registos da aplicação para nos ajudar a resolver o problema (os registos podem incluir informações privadas)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "Os registos da aplicação podem incluir informações privadas, incluindo a sua identidade (endereço de email) e os nomes e as propriedades dos ficheiros e das pastas no Google Drive."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "Estas informações apenas são utilizadas para diagnosticar o problema que está a comunicar, apenas estão disponíveis para quem está a investigar o relatório e não são mantidas por mais de 30 dias."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "A ligar..."
+   },
+   "FOOTER_WAITING": {
+      "message": "a aguardar ligação..."
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "Para Mac (OS X 10.6 e superior)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "Para Windows (XP e superior)"
+   },
+   "FULL_SCREEN": {
+      "message": "Ecrã inteiro"
+   },
+   "GET_STARTED": {
+      "message": "Começar"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "Aceitar"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "Recusar"
+   },
+   "HELP": {
+      "message": "Ajuda"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "Acesso"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "Ver e controlar um computador partilhado."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "Pode aceder com segurança ao computador utilizando o Ambiente de Trabalho Remoto do Chrome."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "Alterar PIN"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "Atualmente, este computador é partilhado através de outra conta."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "Ver/editar"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "Este computador está configurado para permitir que um ou mais clientes se liguem sem introduzir um PIN."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "Ativar ligações remotas"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "Se pretende utilizar o Ambiente de Trabalho Remoto do Chrome para aceder ao computador, é necessário ativar as ligações remotas."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "Desativar ligações remotas"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "Partilhar"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "Partilhar este computador para que outro utilizador o possa ver e controlar."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(esta funcionalidade ainda não está disponível para o seu computador)"
+   },
+   "HOST_CATEGORY": {
+      "message": "Anfitrião"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "Acesso negado ao cliente: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "Cliente ligado: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "Cliente desligado: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "IP do canal para o cliente: %1 ip=\"%2\" ip_anfitrião=\"%3\" canal=\"%4\" ligação=\"%5\"."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "Para ativar as ligações remotas a outro computador, instale o Ambiente de Trabalho Remoto do Chrome aí e clique em \"$1$\".",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "Não existem computadores registados. Para ativar as ligações remotas a um computador, instale o Ambiente de Trabalho Remoto do Chrome aí e clique em “$1$”.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "Iniciou sessão anteriormente como $1$ ($2$). Para aceder aos computadores nessa conta, $3$inicie sessão no Google Chrome$4$ com essa conta e reinstale o Ambiente de Trabalho Remoto do Chrome.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "As atualizações de software normalmente ocorrem automaticamente, embora possam falhar nalguns casos raros. A atualização de software não deve demorar mais do que alguns minutos e pode ser feita através do acesso remoto ao seu computador."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "O Ambiente de Trabalho Remoto em $1$ está desatualizado e necessita de atualização.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "Ajude-nos a melhorar o Ambiente de Trabalho Remoto do Chrome, permitindo-nos recolher estatísticas de utilização e relatórios de falhas."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "Para proteger o acesso a este computador, escolha um PIN de $1$pelo menos seis dígitos$2$. Este PIN será necessário quando ligar a partir de outra localização.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "Falha ao iniciar o serviço de acesso remoto."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "O Chrome está a transferir o ficheiro de instalação do Anfitrião do Ambiente de Trabalho Remoto do Chrome. Concluída a transferência, execute o ficheiro de instalação antes de continuar."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "Execute o ficheiro de instalação antes de continuar."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "Foram ativadas as ligações remotas neste computador."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "Verifique as definições de gestão de energia do computador e certifique-se de que não está configurado para suspender quando inativo."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "A ativar as ligações remotas neste computador…"
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "Foram desativadas as ligações remotas neste computador."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "A desativar as ligações remotas neste computador…"
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "Falha ao desativar o acesso remoto a este computador. Tente novamente mais tarde."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "Ao transferir o instalador do anfitrião do Ambiente de Trabalho Remoto do Chrome, aceita os $1$Termos de Utilização$4 do Google.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "O seu PIN foi atualizado."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "Falha ao atualizar o PIN. Tente novamente mais tarde."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "O PIN para este computador está a ser atualizado..."
+   },
+   "HOST_STARTED": {
+      "message": "O anfitrião começou para o utilizador: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "O anfitrião parou."
+   },
+   "IDLE_CONTINUE": {
+      "message": "Continuar"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "Desligar agora"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "A sua sessão de $1$ está inativa há algum tempo e será desligada dentro de momentos.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "A este computador"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Transferir o instalador do anfitrião do Ambiente de Trabalho Remoto do Chrome"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "Para começar a partilhar o seu ambiente de trabalho, forneça o código de acesso abaixo à pessoa que o irá ajudar."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "A sessão de partilha começa assim que introduzirem o código."
+   },
+   "INVALID_PIN": {
+      "message": "Introduza um PIN com seis ou mais dígitos."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "Partilha de ecrã entre utilizadores, ideal para suporte técnico remoto."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "Esquemas do teclado"
+   },
+   "LABEL_CONNECTED": {
+      "message": "Ligado:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (última vez online em $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "Saiba como."
+   },
+   "LEARN_MORE": {
+      "message": "Saiba mais."
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Preferências do Anfitrião do Ambiente de Trabalho Remoto do Chrome"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Anfitrião do Ambiente de Trabalho\nRemoto do Chrome"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Desinstalador do Anfitrião do Ambiente de Trabalho Remoto do Chrome"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Utilizar a tecla Ctrl direita para a tecla Win (⌘ no Mac)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "Maximizar janela"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "Aceda ao seu computador a partir de qualquer lugar."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "A gerar código de acesso..."
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "A sessão do Ambiente de Trabalho Remoto do Chrome terminou."
+   },
+   "MESSAGE_SHARED": {
+      "message": "O seu ambiente de trabalho está a ser atualmente partilhado com $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "Minimizar janela"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "Autorizar"
+   },
+   "MODE_IT2ME": {
+      "message": "Assistência Remota"
+   },
+   "MODE_ME2ME": {
+      "message": "Os Meus Computadores"
+   },
+   "NEW_WINDOW": {
+      "message": "Nova janela…"
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "Todos os clientes sincronizados foram eliminados."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "A integração do ambiente de trabalho não é suportada nesta plataforma. Pode continuar a utilizar a aplicação, mas a experiência de utilizador não é a ideal."
+   },
+   "OFFLINE": {
+      "message": "$1$ (offline)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "Falha ao inicializar o anfitrião."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "Configuração de anfitrião inválida."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "Domínio do proprietário do anfitrião inválido."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "ID de anfitrião inválido."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "O anfitrião está configurado com credenciais OAuth inválidas."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "O anfitrião em execução no ecrã de início de sessão da consola foi encerrado para suportar o modo de cortina ao alternar para um anfitrião em execução numa sessão específica de utilizador."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "O anfitrião está a reiniciar para incorporar uma alteração de política."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "O anfitrião não conseguiu ler a política."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "O anfitrião foi desligado."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "Erro de anfitrião não reconhecido: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "Proprietário do anfitrião inválido."
+   },
+   "OK": {
+      "message": "OK"
+   },
+   "OPTIONS_MENU": {
+      "message": "Opções"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "A partir deste computador"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "Os seguintes clientes foram sincronizados com este computador e podem ligar-se sem fornecer um PIN. É possível revogar esta autorização em qualquer altura, individualmente ou para todos os clientes."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "Data da sincronização"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "Cliente"
+   },
+   "PIN": {
+      "message": "PIN"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "Introduza o mesmo PIN em ambas as caixas."
+   },
+   "PIN_MESSAGE": {
+      "message": "Introduza o PIN para $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "Introduza o PIN para o computador remoto."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "Aceder a outros computadores ou permitir que outro utilizador aceda ao seu computador de forma segura através da Internet."
+   },
+   "PRODUCT_NAME": {
+      "message": "Ambiente de Trabalho Remoto do Chrome"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome App Streaming"
+   },
+   "RECONNECT": {
+      "message": "Restabelecer ligação"
+   },
+   "REMEMBER_PIN": {
+      "message": "Não voltar a pedir um PIN ao ligar a este anfitrião a partir deste dispositivo."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "Biblioteca Principal"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "Processo de Integração do Ambiente de Trabalho"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "Aplicação para emitir comandos para o anfitrião do Ambiente de Trabalho Remoto do Chrome."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "Processo do Anfitrião"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "Anfitrião de mensagens nativo para gestão de anfitrião remota"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "Anfitrião de mensagens nativo para assistência remota"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "Processo de comunicação remota da chave de segurança"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "Redimensionar o ambiente de trabalho para ajustar ao tamanho"
+   },
+   "RESTART_BUTTON": {
+      "message": "Reiniciar agora"
+   },
+   "RESTORE_WINDOW": {
+      "message": "Restaurar janela"
+   },
+   "RETRY": {
+      "message": "Repetir"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "Opções de ecrã"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Enviar Ctrl-Alt-Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "Comunicar um problema..."
+   },
+   "SEND_KEYS": {
+      "message": "Enviar teclas"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "Enviar PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "Este serviço permite receber ligações de clientes do Ambiente de Trabalho Remoto do Chrome."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "Esta definição é gerida pela política do seu domínio."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "Partilhar"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "Cancelar"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "Pretende partilhar este computador e permitir que outro utilizador o veja e controle?"
+   },
+   "SHOW_STATS": {
+      "message": "Mostrar estatísticas"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "Mostrar estatísticas (ligação: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "Ajustar texto"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "Iniciar sessão"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "Terminar sessão"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "Terminar Partilha"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Pretende ajudar a melhorar o Ambiente de Trabalho Remoto do Chrome? $1$Responda ao inquérito.$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "Tempo"
+   },
+   "TOGGLE_STATS": {
+      "message": "Mostrar estatísticas"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "Ligar a $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "Desativar as ligações remotas a este computador"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "Atualizar a lista de anfitriões"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "Editar nome do computador"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (desatualizado)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "Conta"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Confirme a sua conta e PIN abaixo para permitir o acesso do Ambiente de Trabalho Remoto do Chrome."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "NOTA: as definições da política permitem ligações apenas entre computadores da sua rede."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "NOTA: Para garantir que todos os atalhos de teclado estão disponíveis, pode configurar o Ambiente de Trabalho Remoto do Chrome para \"Abrir como janela\"."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "Porque é que isto é seguro?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Windows"
+   },
+   "WORKING": {
+      "message": "Em execução..."
+   }
+}

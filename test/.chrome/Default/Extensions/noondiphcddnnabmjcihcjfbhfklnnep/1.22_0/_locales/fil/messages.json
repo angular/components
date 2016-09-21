@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Palaging balewalain para sa site na ito"
+   },
+   "always_ignore_confirmation": {
+      "message": "Gusto mo bang palaging huwag pansinin ng Alerto sa Password ang website na ito?"
+   },
+   "back": {
+      "message": "Bumalik"
+   },
+   "contact_security": {
+      "message": "Makipag-ugnayan sa Seguridad"
+   },
+   "extension_description": {
+      "message": "Tumutulong ang Alerto sa Password sa pagprotekta laban sa mga phishing attack."
+   },
+   "extension_detailed_description": {
+      "message": "Kung inilagay mo ang iyong password sa Gmail o Google for Work saanman bukod sa accounts.google.com, makakatanggap ka ng alerto, upang mabago mo ang iyong password kung kailangan.\n\nSinusubukan din ng Password Alert na makahanap ng mga pekeng page sa pag-login sa Google upang i-alerto ka bago mo i-type ang iyong password. Upang magawa ito, sinusuri ng Password Alert ang HTML ng bawat page na binibisita mo upang tingnan kung nagpapanggap ito bilang isang page sa pag-login sa Google.\n\nFAQ\n-- Kailan magkakabisa ang Password Alert?\nIlulunsad ng Password Alert ang sarili nito sa susunod na beses na ilagay mo ang iyong password sa accounts.google.com.\n\n-- Iniimbak ba ng Password Alert ang aking password o mga keystroke?\nHindi. Hindi iniimbak ng Password Alert ang iyong password o mga keystroke -- sa halip, nag-iimbak ito ng isang secure na thumbnail ng iyong password, na ikinukumpara nito sa isang thumbnail ng iyong mga pinakakamakailang keystroke sa Chrome.\n\n-- Saan nagpapadala ng data ang Password Alert?\nKung gumagamit ka ng Password Alert sa isang Gmail account, hindi magpapadala ang Password Alert ng anumang data mula sa iyong lokal na computer. Kung pinili ng iyong administrator sa Google for Work na paganahin ang Password Alert sa iyong domain, makakatanggap ang administrator ng mga alerto kapag na-trigger ang Password Alert.\n\n-- Ano ang mga limitasyon ng Password Alert?\nHindi nagbibigay ng proteksyon ang Password Alert sa mga incognito window, Chrome Apps o Extension ng Chrome. Hindi rin ito nagbibigay ng proteksyon sa mga password para sa mga serbisyong hindi sa Google. Gagana lang ang Password Alert sa Chrome web browser kapag naka-enable ang Javascript.\n\n-- Saan ako makakahanap ng higit pang mga detalye?\nBisitahin ang buong FAQ sa LINK_TBD, o maaari mong makita ang buong open-source na codebase sa https://github.com/google/password-alert\n\nSa pamamagitan ng pag-i-install sa item na ito, sumasang-ayon ka sa Mga Tuntunin ng Serbisyo ng Google at Patakaran sa Privacy sa www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Alerto sa Password"
+   },
+   "ignore": {
+      "message": "Huwag pansinin sa ngayon"
+   },
+   "initialization_message": {
+      "message": "Upang gumana ang Alerto sa Password, mangyaring mag-sign in sa iyong account."
+   },
+   "initialization_thank_you_message": {
+      "message": "Salamat. Gumagana na ngayon ang Alerto sa Password."
+   },
+   "learn_more": {
+      "message": "Matuto nang higit pa"
+   },
+   "password_warning_banner_body": {
+      "message": "Inilagay mo ang password ng iyong Google Account sa isang page sa pag-sign-in na hindi Google. I-reset kaagad ang iyong password upang maprotektahan ang iyong account. Pakitiyak na hindi mo gagamiting muli ang iyong password para sa iba pang mga app at site."
+   },
+   "password_warning_banner_header": {
+      "message": "I-reset ang password ng iyong Google Account"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Lumalabas na gumagamit ang site na ito ng isang pekeng bersyon ng page ng pag-log in ng Google upang nakawin ang iyong password, kaya ito naka-block. Kung nauunawaan mong maaaring makapinsala sa iyong computer ang site na ito, maaari mong bisitahin ang site na ito ngunit mangyaring mag-ingat sa mga impormasyon na iyong ita-type."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Naka-block ang site na ito."
+   },
+   "report_phishing": {
+      "message": "Iulat ang Site na Ito"
+   },
+   "reset_password": {
+      "message": "I-reset ang Password"
+   },
+   "sign_in": {
+      "message": "Mag-sign In"
+   },
+   "visit_this_site": {
+      "message": "Bisitahin ang Site na Ito"
+   }
+}

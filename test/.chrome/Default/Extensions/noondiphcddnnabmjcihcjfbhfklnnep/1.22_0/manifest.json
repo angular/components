@@ -1,0 +1,34 @@
+{
+   "background": {
+      "persistent": false,
+      "scripts": [ "background_compiled.js" ]
+   },
+   "content_scripts": [ {
+      "all_frames": true,
+      "js": [ "content_script_compiled.js" ],
+      "match_about_blank": true,
+      "matches": [ "\u003Call_urls>" ],
+      "run_at": "document_start"
+   } ],
+   "content_security_policy": "default-src 'none'; script-src 'self'; style-src 'self'; connect-src https://*",
+   "default_locale": "en",
+   "description": "__MSG_extension_description__",
+   "icons": {
+      "128": "icon128.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtWG8kCjgt1zCd6YJvHJZAMZqHVndSoz6DSQJ+5/6LF/qmXPtZnpbrfUwFhkAQ64kS27faNhahcRBWEAdUjUB6J4UV8fHWM1GaUlVyJLHDixtDNZ6mbpPReTndOl9y70f9KJnuFyztr4w06Zw3fAJAIO4K+sROlij+xDMoHk+ijFA+FtZM9z3J+c/xF6rjhBxAt+aFJuO8kxirh5AQLWSrgwcALebsGi7kbvPal/RykNL1dBz6bWb6MPpCzTsR+Hp1nMMB+t9bletjLGbr/KEGcSgKPrk9vL8GKebbs1/OG2J6xhy/tHk4W41R2WXR8rBB2iTif4WNboG85am+7BURwIDAQAB",
+   "manifest_version": 2,
+   "minimum_chrome_version": "46",
+   "name": "__MSG_extension_name__",
+   "oauth2": {
+      "client_id": "897749729682-2j2fjtnfde4kgi40fvjrp7ude48ooh4n.apps.googleusercontent.com",
+      "scopes": [ "email" ]
+   },
+   "permissions": [ "identity", "identity.email", "notifications", "storage", "tabs", "\u003Call_urls>" ],
+   "storage": {
+      "managed_schema": "managed_policy_schema.json"
+   },
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.22",
+   "web_accessible_resources": [ "logo_password_alert.png", "password_warning.js", "phishing_warning.js", "warning.css" ]
+}

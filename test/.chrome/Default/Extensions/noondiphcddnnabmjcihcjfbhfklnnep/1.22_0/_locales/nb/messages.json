@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Ignorer alltid for dette nettstedet"
+   },
+   "always_ignore_confirmation": {
+      "message": "Vil du at Passordvarsel alltid skal ignorere dette nettstedet?"
+   },
+   "back": {
+      "message": "Tilbake"
+   },
+   "contact_security": {
+      "message": "Kontakt sikkerhetsavd."
+   },
+   "extension_description": {
+      "message": "Passordvarsel beskytter mot nettfisking."
+   },
+   "extension_detailed_description": {
+      "message": "Hvis du skriver inn passordet ditt for Gmail eller Google for Work noe annet sted enn på accounts.google.com, får du et varsel, slik at du kan endre passordet om nødvendig.\n\nPassordvarsel prøver også å gjenkjenne falske Google-påloggingssider for å varsle deg før du har skrevet inn passordet. Passordvarsel gjør dette ved å sjekke HTML-koden på alle sider du besøker, for se om de imiterer en Google-påloggingsside. \n\nVanlige spørsmål\n– Når blir Passordvarsel slått på?\nPassordvarsel initialiseres neste gang du skriver inn passordet ditt på accounts.google.com.\n\n– Blir passordet mitt eller tastetrykkene mine lagret av Passordvarsel?\nNei. Passordvarsel lagrer ikke passordet ditt eller tastetrykkene dine. I stedet lagres en sikker miniatyrversjon av passordet, som så sammenlignes med en miniatyrversjon av de siste tastetrykkene dine i Chrome.\n\n– Hvor sender Passordvarsel dataene?\nHvis du bruker Passordvarsel på en Gmail-konto, sendes ingen data fra den lokale datamaskinen. Hvis Google for Work-administratoren din velger å implementere Passordvarsel på hele domenet, får administratoren varsler når Passordvarsel utløses.\n\n– Hva er begrensningene ved Passordvarsel?\nPassordvarsel beskytter ikke inkognitovinduer, Chrome-apper eller Chrome-utvidelser. Passord for tjenester som ikke tilhører Google, beskyttes heller ikke. Passordvarsel fungerer bare i Chrome-nettleseren med JavaScript slått på.\n\n– Hvor finner jeg mer informasjon?\nGå til den fullstendige listen over vanlige spørsmål på LINK_TBD, eller du kan se hele den åpne kildekodebasen på https://github.com/google/password-alert\n\nVed å installere dette samtykker du i Googles vilkår for bruk og personvernregler på www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Passordvarsel"
+   },
+   "ignore": {
+      "message": "Ignorer denne gangen"
+   },
+   "initialization_message": {
+      "message": "Du må logge på kontoen din før Passordvarsel begynner å fungere."
+   },
+   "initialization_thank_you_message": {
+      "message": "Takk. Nå er Passordvarsel aktiv."
+   },
+   "learn_more": {
+      "message": "Finn ut mer"
+   },
+   "password_warning_banner_body": {
+      "message": "Du skrev nettopp inn passordet til Google-kontoen din på en påloggingsside som ikke tilhører Google. Du bør tilbakestille passordet ditt umiddelbart for å beskytte kontoen din. Pass også på at du ikke gjenbruker passord for andre apper og nettsteder."
+   },
+   "password_warning_banner_header": {
+      "message": "Tilbakestill passordet for Google-kontoen din"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Dette nettstedet ser ut til å bruke en falsk versjon av Google-påloggingssiden for å stjele passordet ditt, så det har blitt blokkert. Hvis du er innforstått med at dette nettstedet kan skade datamaskinen din, kan du besøke det, men vær forsiktig med informasjonen du skriver inn."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Dette nettstedet er blokkert."
+   },
+   "report_phishing": {
+      "message": "Rapportér dette nettstedet"
+   },
+   "reset_password": {
+      "message": "Tilbakestill passordet"
+   },
+   "sign_in": {
+      "message": "Logg på"
+   },
+   "visit_this_site": {
+      "message": "Besøk dette nettstedet"
+   }
+}

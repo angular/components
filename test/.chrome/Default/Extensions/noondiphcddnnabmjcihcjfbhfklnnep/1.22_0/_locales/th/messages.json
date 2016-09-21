@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "ไม่ต้องเตือนอีกสำหรับเว็บไซต์นี้"
+   },
+   "always_ignore_confirmation": {
+      "message": "ไม่ต้องการให้ Password Alert ส่งคำเตือนอีกสำหรับเว็บไซต์นี้ใช่ไหม"
+   },
+   "back": {
+      "message": "กลับ"
+   },
+   "contact_security": {
+      "message": "ติดต่อผู้ดูแลความปลอดภัย"
+   },
+   "extension_description": {
+      "message": "Password Alert จะช่วยป้องกันการโจมตีแบบฟิชชิง"
+   },
+   "extension_detailed_description": {
+      "message": "หากคุณป้อนรหัสผ่าน Gmail หรือ Google for Work ในที่อื่นที่ไม่ใช่ accounts.google.com  คุณจะได้รับการแจ้งเตือน เพื่อให้คุณสามารถเปลี่ยนรหัสผ่านได้ถ้าจำเป็น\n\nนอกจากนี้ Password Alert จะพยายามตรวจหาหน้าการเข้าสู่ระบบ Google ปลอมก่อนที่คุณจะพิมพ์รหัสผ่านของคุณ วิธีการทำงานของ Password Alert คือจะตรวจสอบ HTML ของแต่ละหน้าที่คุณเข้าชมเพื่อดูว่ามีการปลอมแปลงหน้าการเข้าสู่ระบบ Google ไหม\n\nคำถามที่พบบ่อย\n-- Password Alertจะทำงานเมื่อใด\nPassword Alert จะเริ่มต้นเองเมื่อคุณป้อนรหัสผ่านที่ accounts.google.com ในครั้งถัดไป\n\n- Password Alert เก็บรหัสผ่านหรือการเคาะแป้นพิมพ์ของฉันไหม\nไม่ Password Alert จะไม่เก็บรหัสผ่านหรือการเคาะแป้นพิมพ์ แต่จะเก็บภาพขนาดย่อของรหัสผ่านที่มีความปลอดภัยแทน ซึ่งจะใช้เปรียบเทียบกับภาพขนาดย่อของการเคาะแป้นพิมพ์ล่าสุดของคุณภายใน Chrome\n\n- Password Alert ส่งข้อมูลไปที่ใด\nหากคุณใช้ Password Alert ในบัญชี Gmail อยู่ Password Alert จะไม่ส่งข้อมูลใดๆ จากคอมพิวเตอร์ของคุณ หากผู้ดูแลระบบ Google for Work เลือกที่จะใช้ Password Alert ในโดเมนของคุณ เขาจะได้รับการแจ้งเตือนเมื่อ Password Alert เริ่มทำงาน\n\n- ข้อจำกัดของ Password Alert คืออะไร\nPassword Alert ไม่ปกป้องหน้าต่างที่ไม่ระบุตัวตน, แอป Chrome หรือส่วนขยาย Chrome และจะไม่ปกป้องรหัสผ่านสำหรับบริการที่ไม่ใช่ของ Google ด้วย Password Alert จะทำงานภายในเว็บเบราว์เซอร์ Chrome เมื่อมีการเปิดใช้ JavaScript ไว้เท่านั้น\n\n- ฉันสามารถดูรายละเอียดเพิ่มเติมได้จากที่ใด\nไปที่คำถามที่พบบ่อยทั้งหมดที่ LINK_TBD หรือดูโค้ดเบสแบบโอเพนซอร์สได้ที่ https://github.com/google/password-alert\n\nในการติดตั้งรายการนี้ แสดงว่าคุณยอมรับข้อกำหนดในการให้บริการและนโยบายส่วนบุคคลของ Google ที่ www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Password Alert"
+   },
+   "ignore": {
+      "message": "ครั้งนี้ข้ามไปก่อน"
+   },
+   "initialization_message": {
+      "message": "โปรดลงชื่อเข้าใช้บัญชีของคุณเพื่อให้ Password Alert มีผลใช้งาน"
+   },
+   "initialization_thank_you_message": {
+      "message": "ขอขอบคุณ ขณะนี้ Password Alert มีผลใช้งานแล้ว"
+   },
+   "learn_more": {
+      "message": "เรียนรู้เพิ่มเติม"
+   },
+   "password_warning_banner_body": {
+      "message": "คุณเพิ่งป้อนรหัสผ่านของบัญชี Google ในหน้าลงชื่อเข้าใช้ที่ไม่ใช่ของ Google โปรดรีเซ็ตรหัสผ่านทันทีเพื่อปกป้องบัญชี และโปรดตรวจสอบว่าคุณไม่ได้นำรหัสผ่านไปใช้ซ้ำกับแอปหรือเว็บไซต์อื่นๆ"
+   },
+   "password_warning_banner_header": {
+      "message": "รีเซ็ตรหัสผ่านของบัญชี Google"
+   },
+   "phishing_warning_banner_body": {
+      "message": "ดูเหมือนว่าไซต์นี้ใช้หน้าการเข้าสู่ระบบ Google ที่ปลอมขึ้นมาเพื่อขโมยรหัสผ่านของคุณ ดังนั้นจึงมีการบล็อกไซต์นี้ไว้ หากคุณเข้าใจแล้วว่าไซต์นี้อาจเป็นอันตรายต่อคอมพิวเตอร์ของคุณ คุณอาจไปที่ไซต์นี้ได้ แต่โปรดระมัดระวังเกี่ยวกับข้อมูลที่คุณจะพิมพ์"
+   },
+   "phishing_warning_banner_header": {
+      "message": "ไซต์นี้ถูกบล็อก"
+   },
+   "report_phishing": {
+      "message": "รายงานไซต์นี้"
+   },
+   "reset_password": {
+      "message": "รีเซ็ตรหัสผ่าน"
+   },
+   "sign_in": {
+      "message": "ลงชื่อเข้าใช้"
+   },
+   "visit_this_site": {
+      "message": "ไปที่ไซต์นี้"
+   }
+}

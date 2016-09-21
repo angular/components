@@ -1,0 +1,153 @@
+<!doctype html>
+<!--
+Copyright (c) 2012 The Chromium Authors. All rights reserved.
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+-->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="chromoting16.webp">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="open_sans.css">
+    <link rel="stylesheet" href="public_session.css">
+
+    <script src="activity.js"></script>
+    <script src="application.js"></script>
+    <script src="auth_init.js"></script>
+    <script src="base.js"></script>
+    <script src="callstack.js"></script>
+    <script src="chromoting_event.js"></script>
+    <script src="client_plugin.js"></script>
+    <script src="client_plugin_host_desktop_impl.js"></script>
+    <script src="client_plugin_impl.js"></script>
+    <script src="client_session.js"></script>
+    <script src="client_session_factory.js"></script>
+    <script src="clipboard.js"></script>
+    <script src="connected_view.js"></script>
+    <script src="connection_dropped_dialog.js"></script>
+    <script src="connection_info.js"></script>
+    <script src="connection_stats.js"></script>
+    <script src="console_wrapper.js"></script>
+    <script src="crd_auth_dialog.js"></script>
+    <script src="credentials_provider.js"></script>
+    <script src="dns_blackhole_checker.js"></script>
+    <script src="error.js"></script>
+    <script src="experiments.js"></script>
+    <script src="fallback_signal_strategy.js"></script>
+    <script src="format_iq.js"></script>
+    <script src="host.js"></script>
+    <script src="host_desktop.js"></script>
+    <script src="host_install_dialog.js"></script>
+    <script src="host_installer.js"></script>
+    <script src="host_options.js"></script>
+    <script src="host_screen.js"></script>
+    <script src="host_session.js"></script>
+    <script src="identity.js"></script>
+    <script src="ipc.js"></script>
+    <script src="it2me_host_facade.js"></script>
+    <script src="l10n.js"></script>
+    <script src="modal_dialogs.js"></script>
+    <script src="native_message_host_log_message_handler.js"></script>
+    <script src="network_connectivity_detector.js"></script>
+    <script src="oauth2.js"></script>
+    <script src="oauth2_api.js"></script>
+    <script src="oauth2_api_impl.js"></script>
+    <script src="platform.js"></script>
+    <script src="plugin_settings.js"></script>
+    <script src="protocol_extension.js"></script>
+    <script src="protocol_extension_manager.js"></script>
+    <script src="public_session_main.js"></script>
+    <script src="session_logger.js"></script>
+    <script src="signal_strategy.js"></script>
+    <script src="stats_accumulator.js"></script>
+    <script src="suspend_detector.js"></script>
+    <script src="tcp_socket.js"></script>
+    <script src="telemetry_event_writer.js"></script>
+    <script src="typecheck.js"></script>
+    <script src="ui_mode.js"></script>
+    <script src="viewport.js"></script>
+    <script src="wcs_adapter.js"></script>
+    <script src="wcs_sandbox_container.js"></script>
+    <script src="window_message_dispatcher.js"></script>
+    <script src="window_shape.js"></script>
+    <script src="xhr.js"></script>
+    <script src="xhr_event_writer.js"></script>
+    <script src="xmpp_connection.js"></script>
+    <script src="xmpp_error_cache.js"></script>
+    <script src="xmpp_login_handler.js"></script>
+    <script src="xmpp_stream_parser.js"></script>
+    <title i18n-content="PRODUCT_NAME"></title>
+  </head>
+
+  <body class="public-session">
+    <section id="loading-mode" data-ui-mode="">
+      <em>Loading&hellip;</em>
+    </section>
+    <div data-ui-mode="home.host" hidden>
+      <!-- It2Me Sharing -->
+      <div id="host-dialog"
+           class="kd-modaldialog"
+           data-ui-mode="home.host">
+
+        <div data-ui-mode="home.host.waiting-for-code" class="message"
+             i18n-content="MESSAGE_GENERATING">
+        </div> <!-- host.waiting-for-code -->
+
+        <div data-ui-mode="home.host.waiting-for-connection">
+          <div i18n-content="INSTRUCTIONS_SHARE_ABOVE"></div>
+          <div id="access-code-display" dir="ltr" class="selectable"></div>
+          <div id="access-code-countdown-container">
+            <div id="access-code-countdown" class="expiring" hidden>
+              <span id="seconds-remaining"
+                    i18n-content="ACCESS_CODE_TIMER"></span>
+            </div>
+          </div>
+          <div i18n-content="INSTRUCTIONS_SHARE_BELOW"></div>
+        </div> <!-- host.waiting-for-connection -->
+
+        <div data-ui-mode="home.host.shared">
+          <div id="host-shared-message" class="message"
+               i18n-content="MESSAGE_SHARED"></div>
+          <div class="button-row">
+            <button id="stop-sharing-button"
+                    type="button"
+                    i18n-content="STOP_SHARING_BUTTON">
+            </button>
+          </div>
+        </div> <!-- host.shared -->
+
+        <div data-ui-mode="home.host.share-failed" class="message">
+          <span id="host-plugin-error" class="error-state"></span>
+        </div> <!-- host.share-failed -->
+
+        <div data-ui-mode="home.host.share-finished" class="message"
+             i18n-content="MESSAGE_SESSION_FINISHED">
+        </div> <!-- host.share-finished -->
+
+        <div data-ui-mode="home.host.share-failed home.host.share-finished"
+             class="button-row">
+          <button id="host-finished-button"
+                  type="button"
+                  autofocus="autofocus"
+                  i18n-content="OK">
+          </button>
+        </div>
+
+        <div id="nat-box"
+             class="information-box"
+             data-ui-mode="home.host.waiting-for-connection"
+             i18n-content="WARNING_NAT_DISABLED">
+        </div> <!-- nat-box -->
+
+        <div data-ui-mode="home.host.waiting-for-connection home.host.waiting-for-code"
+             class="button-row">
+          <span class="waiting" i18n-content="FOOTER_WAITING"></span>
+          <button id="cancel-share-button" i18n-content="CANCEL"></button>
+        </div>
+
+      </div> <!-- host dialog -->
+    </div>
+  </body>
+</html>

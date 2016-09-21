@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Selalu abaikan untuk situs ini"
+   },
+   "always_ignore_confirmation": {
+      "message": "Ingin Lansiran Sandi selalu mengabaikan situs web ini?"
+   },
+   "back": {
+      "message": "Kembali"
+   },
+   "contact_security": {
+      "message": "Hubungi Keamanan"
+   },
+   "extension_description": {
+      "message": "Lansiran Sandi membantu melindungi Anda dari serangan phishing."
+   },
+   "extension_detailed_description": {
+      "message": "Jika Anda memasukkan sandi Gmail atau Google for Work selain di accounts.google.com, Anda akan menerima lansiran sehingga Anda dapat mengubah sandi jika perlu.\n\nLansiran Sandi juga mencoba mendeteksi laman masuk Google palsu untuk memperingatkan Anda sebelum mengetikkan sandi. Untuk melakukan hal ini, Lansiran Sandi memeriksa HTML tiap laman yang Anda kunjungi untuk melihat apakah laman tersebut meniru laman masuk Google.\n\nFAQ\n-- Kapan Lansiran Sandi aktif?\nLansiran Sandi akan aktif secara otomatis saat Anda memasukkan sandi di accounts.google.com.\n\n-- Apakah Lansiran Sandi menyimpan sandi atau ketukan keyboard saya?\nTidak. Lansiran Sandi tidak menyimpan sandi atau ketukan keyboard Anda -- sebagai gantinya, Lansiran Sandi menyimpan gambar mini aman sandi Anda dan membandingkannya dengan gambar mini ketukan keyboard yang Anda lakukan baru-baru ini di Chrome.\n\n-- Ke mana Lansiran Sandi mengirim data?\nJika Anda menggunakan Lansiran Sandi di akun Gmail, Lansiran Sandi tidak mengirimkan data dari komputer lokal. Jika administrator Google for Work Anda memilih untuk menggunakan Lansiran Sandi di seluruh domain, administrator tersebut akan menerima lansiran saat Lansiran Sandi dipicu.\n\n-- Apakah batasan Lansiran Sandi?\nLansiran Sandi tidak melindungi jendela penyamaran, Aplikasi Chrome, atau Ekstensi Chrome. Lansiran Sandi juga tidak melindungi sandi untuk layanan selain Google. Lansiran Sandi hanya beroperasi di dalam browser web Chrome jika Javascript diaktifkan.\n\n-- Di mana saya dapat memperoleh detail selengkapnya?\nKunjungi FAQ selengkapnya di LINK_TBD, atau lihat seluruh basis kode sumber terbuka di https://github.com/google/password-alert\n\nDengan memasang item ini, Anda menyetujui Persyaratan Layanan dan Kebijakan Privasi Google di www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Lansiran Sandi"
+   },
+   "ignore": {
+      "message": "Abaikan untuk saat ini"
+   },
+   "initialization_message": {
+      "message": "Masuk ke akun untuk mengaktifkan Lansiran Sandi."
+   },
+   "initialization_thank_you_message": {
+      "message": "Terima kasih. Lansiran Sandi telah diaktifkan."
+   },
+   "learn_more": {
+      "message": "Pelajari lebih lanjut"
+   },
+   "password_warning_banner_body": {
+      "message": "Anda baru saja memasukkan sandi Akun Google di laman masuk yang bukan milik Google. Segera setel ulang sandi untuk melindungi akun. Selain itu, pastikan Anda tidak menggunakan sandi untuk aplikasi dan situs lain."
+   },
+   "password_warning_banner_header": {
+      "message": "Setel ulang sandi Akun Google"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Situs ini tampaknya menggunakan laman masuk Google palsu untuk mencuri sandi Anda, jadi laman telah diblokir. Jika Anda mengerti bahwa situs ini dapat membahayakan komputer, kunjungi situs ini namun berhati-hatilah dengan informasi yang Anda masukkan."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Situs ini telah diblokir."
+   },
+   "report_phishing": {
+      "message": "Laporkan Situs Iini"
+   },
+   "reset_password": {
+      "message": "Setel Ulang Sandi"
+   },
+   "sign_in": {
+      "message": "Masuk"
+   },
+   "visit_this_site": {
+      "message": "Kunjungi Situs Ini"
+   }
+}

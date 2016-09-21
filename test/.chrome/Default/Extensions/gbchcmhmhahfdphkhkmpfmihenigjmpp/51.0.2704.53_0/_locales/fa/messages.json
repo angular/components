@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "پذیرفتن و نصب"
+   },
+   "ACCESS_CODE": {
+      "message": "کد دسترسی"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "این کد دسترسی در $1$ منقضی میشود",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "بازخورد"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "تمام اتصالات"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "تایپ مجدد پین"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "پین"
+   },
+   "CANCEL": {
+      "message": "لغو"
+   },
+   "CLEAR_HISTORY": {
+      "message": "پاک کردن سابقه"
+   },
+   "CLOSE": {
+      "message": "بستن"
+   },
+   "CLOSE_PROMPT": {
+      "message": "‏با خارج شدن از این صفحه، جلسه کنترل دسک‌تاپ از راه دور Chrome تمام می‌شود."
+   },
+   "CLOSE_WINDOW": {
+      "message": "بستن پنجره"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "آیا مطمئنید که می‌خواهید اتصالات راه دور به $1$ را غیرفعال کنید؟ اگر نظرتان عوض شود، باید از همان رایانه اتصالات را مجدداً فعال کنید.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "اتصال ناموفق بود"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "از"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "سابقه اتصال"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "متوسط"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "خوب"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "ضعیف"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "به"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "در هر حال متصل شود"
+   },
+   "CONNECT_BUTTON": {
+      "message": "اتصال"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "ادامه"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "‏شما در حال اشتراک‌گذاری این سیستم با کاربر دیگری هستید. آیا می‎خواهید اشتراک‎گذاری ادامه یابد؟"
+   },
+   "CONTROLLER_NAME": {
+      "message": "‏کنترل‌کننده برنامه میزبان کنترل دسک‌تاپ از راه دور Chrome"
+   },
+   "COPYRIGHT": {
+      "message": "‏حق نسخه‌برداری ۲۰۱۳ Google Inc. کلیه حقوق محفوظ است."
+   },
+   "CREDITS": {
+      "message": "دست‌اندرکاران"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "حذف همه"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "حذف"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "برای ادامه باید مجوزهای دسترسی گسترش یافته به رایانه‌تان را بدهید. این کار فقط یک بار لازم است انجام شود."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "از کاربری که می‌خواهید به رایانه‌اش دسترسی داشته باشید بخواهید روی «$1$» کلیک کند و کد دسترسی را به شما بدهد.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "‏کنترل دسک‌تاپ از راه دور Chrome به شما اجازه می‎دهد به‌طور امن رایانه خود را در وب به اشتراک بگذارید. هر دو کاربر باید برنامه کنترل دسک‌تاپ از راه دور Chrome را اجرا کنند، این برنامه در $1$ یافت می‎شود.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "‏میزبان راه دور از شما می‌خواهد که در وب سایت شخص ثالثی تأیید هویت شوید. برای ادامه، باید با مجوزهای اضافی «‏‫کنترل کامپیوتر از راه دور Chrome‬» برای دستیابی به این آدرس موافقت کنید:"
+   },
+   "DISABLE_HOST": {
+      "message": "غیر فعال کردن"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "قطع اتصال"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "‏سرویس کنترل دسک‌تاپ از راه دور Chrome"
+   },
+   "DURATION_HEADER": {
+      "message": "مدت زمان"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "مجوز اجرای این برنامه را ندارید."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "‏احراز هویت انجام نشد. لطفاً دوباره وارد سیستم Chrome شوید."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "برخی از بخش‌ها از بین رفته‌اند. لطفاً مطمئن شوید آخرین نسخه نرم‌افزار را دارید و دوباره امتحان کنید."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "یک خطای شبکه روی داد. وقتی دستگاهتان دوباره آنلاین شد، برنامه را راه‌اندازی مجدد می‌کنیم."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "رایانه راه دور نتوانست جلسه را مقداردهی اولیه کند. اگر مشکل ادامه داشت، لطفاً میزبان را دوباره پیکربندی کنید."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "‏رایانه راه دور به درخواست اتصال پاسخ نمی‌‎دهد. لطفاً بررسی کنید این رایانه آنلاین باشد و دوباره امتحان کنید."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "اتصالات به رایانه راه دور به صورت موقت مسدود می‌شود زیرا شخصی سعی داشت با پین نامعتبر به آن متصل شود. لطفاً در فرصت دیگری دوباره سعی کنید."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "این رایانه ثبت نشد."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "نسخه ناسازگار پروتکل شناسایی شد. لطفاً مطمئن شوید جدیدترین نسخه نرم‌افزار روی هر دو رایانه نصب شده است و دوباره امتحان کنید."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "کد دسترسی نامعتبر است. لطفاً دوباره امتحان کنید."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "‏تنظیمات خط‌مشی اجازه نمی‌دهد این رایانه به‌ عنوان یک میزبان کنترل دسک‌تاپ از راه دور Chrome اشتراک‌گذاری شود. برای دریافت راهنمایی با سرپرست سیستم خود تماس بگیرید."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "وقت جلسه راه دور تمام شد."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "‏برخی از بخش‌ها از بین رفته‌اند. لطفاً مطمئن شوید آخرین نسخه Chrome را دارید و دوباره امتحان کنید."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "‏بعضی از اجزای لازم وجود ندارند. لطفاً به chrome://plugins بروید و مطمئن شوید Native Client فعال است."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "یکی از مؤلفه‌های ضروری دیگر کار نمی‌کند. لطفاً این مشکل را به برنامه‌نویسان گزارش دهید."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "اتصال به شبکه انجام نشد. لطفاً بررسی کنید که دستگاه شما به اینترنت وصل باشد."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "‏وارد سیستم Chrome نشدید. لطفاً وارد سیستم شوید و دوباره امتحان کنید."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "مجوز انجام این عمل را ندارید."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "شئ درخواست شده وجود ندارد."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "دسترسی به میزبان امکان‌پذیر نیست. این احتمالاً به دلیل پیکربندی شبکه‌ای است که استفاده می‌کنید."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "سرویس موقتاً در دسترس نیست. لطفاً بعداً دوباره امتحان کنید."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "یک خطای غیرمنتظره روی داد. لطفاً این مشکل را به برنامه‌نویسان گزارش دهید."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "خروج از حالت تمام صفحه"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "برنامه بازنشانی نمی‌شود. همچنان می‌توانید یک گزارش اشکال ارسال کنید."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "بازنشانی برنامه. کارهای ذخیره نشده از بین می‌روند."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "نمی‌توانم برنامه را باز کنم."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "برنامه بیش از حد کند است."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "‏نمی‌توانم فایل‌های Google Drive خودم را باز کنم."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "‏نمی‌توانم فایل‌های ذخیره شده‌ام را آنلاین در Google Drive ببینم."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "با صفحه‌کلید یا موشواره‌ام مشکل دارم."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "برای کمک به ما در رفع مشکلتان، لطفاً به ما بگویید چه مشکلی پیش آمد:"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "مورد دیگر."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "انتخاب..."
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "برای اینکه بتوانیم برای اطلاعات بیشتر با شما تماس بگیریم، آدرس ایمیل شما در تمام بازخوردهای ارسالی شما قرار می‌گیرد."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "گزارش یک مشکل"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "قرار دادن گزارش‌های برنامه برای کمک به رفع مشکلتان (گزارش‌ها ممکن است شامل اطلاعات خصوصی باشند)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "‏گزارش‌های برنامه ممکن است دارای اطلاعات شخصی شامل هویت (ایمیل) و نام و مشخصات فایل‌ها و پوشه‌های Google Drive باشد."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "این اطلاعات فقط برای عیب‌یابی مشکل گزارش شده به کار می‌روند و فقط برای فردی که گزارش را بررسی می‌کند قابل دسترس هستند، و بیش از ۳۰ روز نگهداری نمی‌شوند."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "در حال اتصال..."
+   },
+   "FOOTER_WAITING": {
+      "message": "در انتظار برقراری اتصال..."
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "‏برای Mac‏ (OS X نسخه ۱۰٫۶ و بالاتر)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "‏برای Windows‏ (XP و بالاتر)"
+   },
+   "FULL_SCREEN": {
+      "message": "تمام صفحه"
+   },
+   "GET_STARTED": {
+      "message": "شروع به کار"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "می‌پذیرم"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "رد کردن"
+   },
+   "HELP": {
+      "message": "راهنما"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "دسترسی"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "‏رایانه اشتراک‎گذاری ‎شده را مشاهده و کنترل کنید."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "‏می‌توانید با استفاده از کنترل دسک‌تاپ از راه دور Chrome به این رایانه به صورت امن دسترسی پیدا کنید."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "تغییر دادن پین"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "این رایانه در حال حاضر تحت یک حساب دیگر اشتراک‌گذاری شده است."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "مشاهده/ویرایش"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "این رایانه پیکربندی شده است تا به یک یا چند کلاینت اجازه دهد بدون وارد کردن پین وصل شوند."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "فعال کردن اتصالات راه دور"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "‏اگر می‌خواهید از کنترل دسک‌تاپ از راه‌ دور Chrome برای دسترسی به این رایانه استفاده کنید٬ باید اتصالات راه دور را فعال کنید."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "غیر فعال کردن اتصالات راه دور"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "اشتراک‌گذاری"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "این رایانه را جهت مشاهده و کنترل برای شخص دیگری به اشتراک بگذارید."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(این ویژگی هنوز برای رایانه شما موجود نیست)"
+   },
+   "HOST_CATEGORY": {
+      "message": "میزبان"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "دسترسی برای کلاینت ممنوع شده است: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "کلاینت وصل شد: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "کلاینت قطع شد: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "‏IP کانال برای کلاینت: %1 ip=«%2» host_ip=«%3» کانال=«%4» اتصال=«%5»."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "‏برای فعال کردن اتصالات راه دور به یک رایانه دیگر، کنترل دسک‌تاپ از راه دور Chrome را نصب کنید و سپس روی «$1$» کلیک کنید.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "‏رایانه ثبت‌شده‌ای وجود ندارد. برای فعال کردن اتصالات راه‌دور به رایانه، کنترل دسک‌تاپ از راه دور Chrome را نصب کنید و روی «$1$» کلیک کنید.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "‏قبلاً با $1$ ($2$) وارد سیستم شده بودید. برای دسترسی به رایانه‌های آن حساب، با آن حساب $3$وارد Google Chrome شوید$4$ و کنترل دسک تاپ از راه دور Chrome را دوباره نصب کنید.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "معمولاً به‌روزرسانی نرم‌افزار به‌طور خودکار انجام می‌شود، اما در بعضی موارد نادر ممکن است این کار ناموفق باشد. به‌روزرسانی نرم‌افزار نباید بیشتر از چند دقیقه زمان ببرد و انجام آن باید هنگام اتصال از راه دور به رایانه نیز ممکن باشد."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "‏کنترل دسک‌تاپ از راه دور Chrome در $1$ به‌ روز نیست و باید به‌روزرسانی شود.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "‏با اجازه به ما جهت جمع‌آوری آمار مربوط به استفاده و گزارش‌های خرابی، کمک کنید تا کنترل دسک تاپ از راه دور Chrome را ارتقا دهیم."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "برای حفاظت از دسترسی به این رایانه، لطفاً پینی را که $1$حداقل شش رقم$2$ دارد انتخاب کنید. این پین هنگام اتصال از مکان دیگر لازم است.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "راه‌اندازی دسترسی راه دور به سرویس انجام نشد."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "‏Chrome در حال بارگیری نصب‌‌کننده میزبان کنترل دسک‌تاپ از راه دور Chrome است. بعد از اینکه دانلود انجام شد٬ قبل از ادامه٬ نصب‌کننده را اجرا کنید."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "لطفاً قبل از ادامه٬ نصب‌کننده را اجرا کنید."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "اتصالات راه دور برای این رایانه فعال شد."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "لطفاً تنظیمات مدیریت نیروی رایانهٔ خود را بررسی کنید و مطمئن شوید که بر روی خواب در هنگام عدم استفاده پیکربندی نشده باشد."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "در حال فعال کردن اتصالات راه دور برای این رایانه…"
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "اتصالات راه دور برای این رایانه غیرفعال شد."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "در حال غیرفعال کردن اتصالات راه دور برای این رایانه…"
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "دسترسی راه دور به این رایانه غیرفعال نشد. لطفاً بعداً دوباره امتحان کنید."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "‏با دانلود «نصب‌کننده میزبان کنترل دسک‌تاپ از راه دور Chrome»، موافقتتان را با $1$شرایط خدمات$4 Google اعلام می‌کنید.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "پین شما به‌روز شد."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "به‌روزرسانی پین انجام نشد. لطفاً بعداً دوباره امتحان کنید."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "پین برای این رایانه در حال به‌روزرسانی شدن است..."
+   },
+   "HOST_STARTED": {
+      "message": "میزبان برای کاربر آغاز شد: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "میزبان متوقف شد."
+   },
+   "IDLE_CONTINUE": {
+      "message": "ادامه"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "قطع ارتباط"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "جلسه $1$ شما برای مدتی بیکار بوده است و به زودی قطع می‌شود.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "به این رایانه"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "‏دانلود نصب‌کننده میزبان کنترل دسک‌تاپ از راه دور Chrome"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "‏برای شروع اشتراک‎گذاری دسک‎تاپ خود، کد دسترسی زیر را به شخصی بدهید که به شما کمک می‎کند."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "‏پس از اینکه کد را وارد کرد، جلسه اشتراک‌‎گذاری شما شروع می‌شود."
+   },
+   "INVALID_PIN": {
+      "message": "لطفاً پینی وارد کنید که دارای شش رقم یا بیشتر باشد."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "اشتراک‌گذاری صفحه کاربر به کاربر٬ برای پشتیبانی فنی راه دور مناسب است."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "چیدمان‌های صفحه‌کلید"
+   },
+   "LABEL_CONNECTED": {
+      "message": "متصل شد:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (آخرین حضور آنلاین $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "اطلاعاتی درباره نحوه انجام کار کسب کنید."
+   },
+   "LEARN_MORE": {
+      "message": "بیشتر بیاموزید."
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "‏ترجیحات برنامه میزبان کنترل دسک‌تاپ از راه دور Chrome"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "‏برنامه میزبان کنترل\nدسک‌تاپ از راه دور Chrome"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "‏حذف‌ نصب‌کننده میزبان کنترل دسک‌تاپ از راه دور Chrome"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "‏استفاده از کلید Ctrl راست برای کلید Win (‏⌘ در Mac)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "بازکردن پنجره در حداکثر اندازه"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "از همه جا به رایانه شخصی خود دسترسی داشته باشید."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "در حال ایجاد کد دسترسی..."
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "‏جلسه \"کنترل دسک‌تاپ از راه دور Chrome\" تمام شد."
+   },
+   "MESSAGE_SHARED": {
+      "message": "دسک‌تاپ شما در حال حاضر با $1$ به‌ اشتراک گذاشته شده است.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "بازکردن پنجره در حداقل اندازه"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "ارائهٔ مجوز"
+   },
+   "MODE_IT2ME": {
+      "message": "راهنمایی از راه دور"
+   },
+   "MODE_ME2ME": {
+      "message": "رایانه‌های من"
+   },
+   "NEW_WINDOW": {
+      "message": "پنجره جدید..."
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "همه کلاینت‌های مرتبط حذف شده‌اند."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "هماهنگی با دسکتاپ در این پلتفورم پشتیبانی نمی‌شود. همچنان می‌توانید از این برنامه استفاده کنید اما تجربه کاربری مناسبی نخواهید داشت."
+   },
+   "OFFLINE": {
+      "message": "$1$ (آفلاین)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "مقداردهی اولیه میزبان انجام نشد."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "پیکربندی میزبان نامعتبر است."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "دامنه مالک میزبان نامعتبر است."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "شناسه میزبان نامعتبر است."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "‏میزبان با اعتبارنامه OAuth نامعتبری پیکربندی شده است."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "میزبانی که در صفحه کنسول منطقی اجرا می‌شود خاموش شده است تا با جابه‌جایی به یک میزبان در حال اجرا در یک جلسه خاص کاربر، «حالت پرده‌ای» را پشتیبانی کند."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "میزبان در حال راه‌اندازی مجدد است تا یک تغییر در خط‌مشی را اعمال کند."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "میزبان نتوانست خط‌مشی را بخواند."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "میزبان خاموش شد."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "خطای نامشخص میزبان: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "مالک میزبان نامعتبر است."
+   },
+   "OK": {
+      "message": "تأیید"
+   },
+   "OPTIONS_MENU": {
+      "message": "گزینه‌ها"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "از این رایانه"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "کلاینت‌های زیر با این کامپیوتر مرتبط شده‌اند و می‌توانند بدون ارائه پین وصل شوند. شما می‌توانید این اجازه را در هر زمان به‌صورت جداگانه یا برای تمام کلاینت‌ها باطل کنید."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "تاریخ مرتبط‌سازی"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "کلاینت"
+   },
+   "PIN": {
+      "message": "پین"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "لطفاً یک پین یکسان را در هر دو کادر وارد کنید."
+   },
+   "PIN_MESSAGE": {
+      "message": "لطفاً پین خود را برای $1$ وارد کنید.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "لطفاً پین خودتان را برای رایانه راه دور وارد کنید."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "‏به رایانه‎‌های دیگر دسترسی داشته باشید یا به دیگر کاربران اجازه دهید تا به‌طور امن به رایانهٔ شما در اینترنت دسترسی داشته باشند."
+   },
+   "PRODUCT_NAME": {
+      "message": "‏کنترل دسک‌تاپ از راه دور Chrome"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "‏اجرای جریانی برنامه Chrome"
+   },
+   "RECONNECT": {
+      "message": "اتصال مجدد"
+   },
+   "REMEMBER_PIN": {
+      "message": "هنگام اتصال به میزبان از این دستگاه، پین دوباره درخواست نشود."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "کتابخانه اصلی"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "فرآیند یکپارچگی با دسک‌تاپ"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "‏برنامه‌ای که دستورها را به میزبان کنترل دسک تاپ از راه دور Chrome ارسال می‌کند."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "فرآیند میزبان"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "میزبان پیام‌رسانی بومی برای کنترل از راه دور مدیریت میزبان"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "میزبان پیام‌رسانی بومی برای کمک از راه دور"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "فرایند برقراری ارتباط از راه دور کلید امنیتی"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "تغییر اندازه دسک‌تاپ جهت تناسب"
+   },
+   "RESTART_BUTTON": {
+      "message": "راه‌اندازی مجدد در این لحظه"
+   },
+   "RESTORE_WINDOW": {
+      "message": "بازگرداندن پنجره"
+   },
+   "RETRY": {
+      "message": "سعی مجدد"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "گزینه‌های صفحه"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "‏ارسال Ctrl-Alt-Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "گزارش مشکل..."
+   },
+   "SEND_KEYS": {
+      "message": "ارسال کلیدها"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "‏ارسال PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "‏این سرویس اتصالات ورودی از کلاینت‌های کنترل دسک‌تاپ از راه دور Chrome را فعال می‌کند."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "این تنظیم براساس خط‌مشی دامنه‌تان مدیریت می‌شود."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "اشتراک‌گذاری"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "لغو"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "می‌خواهید این رایانه را برای کاربر دیگر جهت مشاهده و کنترل به اشتراک بگذارید؟"
+   },
+   "SHOW_STATS": {
+      "message": "نمایش آمار"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "نمایش آمار (ارتباط: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "کاهش اندازه"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "ورود به سیستم"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "خروج از سیستم"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "توقف اشتراک‌گذاری"
+   },
+   "SURVEY_INVITATION": {
+      "message": "‏آیا می‌خواهید به بهبود کنترل دسک‌تاپ راه دور Chrome کمک کنید؟ $1$در نظرسنجی شرکت کنید.$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "زمان"
+   },
+   "TOGGLE_STATS": {
+      "message": "نمایش آمار"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "اتصال به $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "غیرفعال کردن اتصالات راه دور به این رایانه"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "بازخوانی فهرست میزبان‌ها"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "ویرایش نام رایانه"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (تاریخ گذشته)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "حساب"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "‏برای اجازه دسترسی توسط برنامه کنترل دسک‌تاپ از راه دور Chrome، لطفاً حساب و پین خود را در زیر تأیید کنید."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "‏توجه: تنظیمات خط‌ مشی فقط اجازه اتصال بین رایانه‎های داخل شبکه شما را می‎دهد."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "‏توجه: برای اطمینان از اینکه همه میان‌برهای صفحه‌کلید در دسترس هستند، می‌توانید کنترل دسک‌تاپ از راه دور Chrome را روی «بازکردن به عنوان پنجره» پیکربندی کنید."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "چرا این امن است؟"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Windows"
+   },
+   "WORKING": {
+      "message": "در حال انجام..."
+   }
+}

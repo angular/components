@@ -15,8 +15,9 @@ import {
   FormsModule,
 } from '@angular/forms';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-import {BooleanFieldValue, MdGestureConfig, applyCssTransform} from '../core';
+import {MdGestureConfig, applyCssTransform} from '../core';
 import {Input as HammerInput} from 'hammerjs';
+import {coerceBooleanProperty} from '../core/coersion/boolean-property';
 
 /**
  * Visually, a 30px separation between tick marks looks best. This is very subjective but it is
@@ -58,16 +59,20 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
   /** The dimensions of the slider. */
   private _sliderDimensions: ClientRect = null;
 
+  private _disabled: boolean = false;
+
   @Input()
-  @BooleanFieldValue()
   @HostBinding('class.md-slider-disabled')
   @HostBinding('attr.aria-disabled')
-  disabled: boolean = false;
+  get disabled(): boolean { return this._disabled; }
+  set disabled(value) { this._disabled = coerceBooleanProperty(value); }
 
   /** Whether or not to show the thumb label. */
+  private _thumbLabel: boolean = false;
+
   @Input('thumb-label')
-  @BooleanFieldValue()
-  thumbLabel: boolean = false;
+  get thumbLabel(): boolean { return this._thumbLabel; }
+  set thumbLabel(value) { this._thumbLabel = coerceBooleanProperty(value); }
 
   /** The miniumum value that the slider can have. */
   private _min: number = 0;

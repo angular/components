@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Always ignore for this site"
+   },
+   "always_ignore_confirmation": {
+      "message": "Do you want Password Alert to always ignore this website?"
+   },
+   "back": {
+      "message": "Back"
+   },
+   "contact_security": {
+      "message": "Contact Security"
+   },
+   "extension_description": {
+      "message": "Password Alert helps protect against phishing attacks."
+   },
+   "extension_detailed_description": {
+      "message": "If you enter your Gmail or Google for Work password into anywhere other than accounts.google.com, you’ll receive an alert so that you can change your password if needed.\n\nPassword Alert also tries to detect fake Google login pages to alert you before you’ve typed in your password. To do so, Password Alert checks the HTML of each page that you visit to see if it’s impersonating a Google login page.\n\nFAQ\n– When will Password Alert take effect?\nPassword Alert will initialise itself the next time you enter your password into accounts.google.com.\n\n– Does Password Alert store my password or keystrokes?\nNo. Password Alert doesn’t store your password or keystrokes – instead, it stores a secure thumbnail of your password, which it compares against a thumbnail of your most recent keystrokes within Chrome.\n\n– Where does Password Alert send data?\nIf you are using Password Alert in a Gmail account, Password Alert does not send any data from your local computer. If your Google for Work administrator chooses to deploy Password Alert across your domain, the administrator will receive alerts when Password Alert triggers.\n\n– What are Password Alert's limits?\nPassword Alert doesn't protect incognito windows, Chrome Apps or Chrome Extensions. It also does not protect passwords for non-Google services. Password Alert only operates inside the Chrome web browser when Javascript is enabled.\n\n– Where can I find more details?\nVisit the full FAQ at LINK_TBD, or you can view the entire open-source code base at https://github.com/google/password-alert\n\nBy installing this item, you agree to the Google Terms of Service and Privacy Policy at www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Password Alert"
+   },
+   "ignore": {
+      "message": "Ignore this time"
+   },
+   "initialization_message": {
+      "message": "For Password Alert to take effect, please sign in to your account."
+   },
+   "initialization_thank_you_message": {
+      "message": "Thank you. Password Alert is now in effect."
+   },
+   "learn_more": {
+      "message": "Learn more"
+   },
+   "password_warning_banner_body": {
+      "message": "You just entered your Google Account password on a sign-in page that's not one of Google's. Reset your password immediately to protect your account; and please make sure that you don't re-use your password for other apps and sites."
+   },
+   "password_warning_banner_header": {
+      "message": "Reset your Google Account password"
+   },
+   "phishing_warning_banner_body": {
+      "message": "This site appears to be using a fake version of the Google login page to steal your password, so it has been blocked. If you understand that this site may harm your computer, you may visit this site, but please be careful about the information that you type."
+   },
+   "phishing_warning_banner_header": {
+      "message": "This site has been blocked."
+   },
+   "report_phishing": {
+      "message": "Report this site"
+   },
+   "reset_password": {
+      "message": "Reset password"
+   },
+   "sign_in": {
+      "message": "Sign in"
+   },
+   "visit_this_site": {
+      "message": "Visit this site"
+   }
+}

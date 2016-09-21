@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Ignorer altid for dette website"
+   },
+   "always_ignore_confirmation": {
+      "message": "Ønsker du altid, at Password Alert skal ignorere dette website?"
+   },
+   "back": {
+      "message": "Tilbage"
+   },
+   "contact_security": {
+      "message": "Kontakt sikkerhedsadministratorerne"
+   },
+   "extension_description": {
+      "message": "Password Alert hjælper med at beskytte mod phishingangreb."
+   },
+   "extension_detailed_description": {
+      "message": "Hvis du angiver din adgangskode til Gmail eller Google for Work nogen andre steder end på accounts.google.com, modtager du en advarsel, så du om nødvendigt kan ændre din adgangskode.\n\nPassword Alert forsøger også at opdage falske Google-loginsider og advare dig, inden du indtaster din adgangskode. Det gør Password Alert ved at kontrollere HTML-koden på hver side, som du besøger, for at afgøre, om den udgiver sig for at være en Google loginside.\n\nOfte stillede spørgsmål\n-- Hvornår træder Password Alert i kraft?\nPassword Alert starter af sig selv, næste gang du indtaster din adgangskode på account.google.com.\n\n-- Gemmer Password Alert min adgangskode eller mine tastetryk?\nNej. Password Alert gemmer ikke din adgangskode eller dine tastetryk – i stedet gemmer funktionen et sikkert miniaturebilleder af din adgangskode, som den sammenligner med et miniaturebillede af dine seneste tastetryk i Chrome.\n\n-- Hvor sender Password Alert data hen?\nHvis du bruger Password Alert i en Gmail-konto, sender Password Alert ikke nogen data fra din lokale computer. Hvis din Google for Work-administrator vælger at implementere Password Alert på hele dit domæne, vil administratoren få underretninger, når Password Alert aktiveres.\n\n-- Hvornår fungerer Password Alert ikke?\nPassword Alert beskytter ikke inkognitovinduer, Chrome Apps eller Chrome-udvidelser. Den beskytter heller ikke adgangskoder for tjenester uden for Google. Password Alert fungerer kun i Chromes webbrowser, når Javascript er aktiveret.\n\n-- Hvor kan jeg finde flere oplysninger?\nSe alle ofte stillede spørgsmål på LINK_TBD. Du kan også se hele open source-kodebasen på https://github.com/google/password-alert.\n\nVed at installere dette element accepterer du Googles servicevilkår og privatlivspolitik på www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Password Alert"
+   },
+   "ignore": {
+      "message": "Ignorer denne gang"
+   },
+   "initialization_message": {
+      "message": "Du skal logge ind på din konto, for at Password Alert kan aktiveres."
+   },
+   "initialization_thank_you_message": {
+      "message": "Tak. Password Alert er nu aktiveret."
+   },
+   "learn_more": {
+      "message": "Få flere oplysninger"
+   },
+   "password_warning_banner_body": {
+      "message": "Du lige har indtastet adgangskoden til din Google-konto på en loginside, der ikke tilhører Google. Du bør nulstille din adgangskode med det samme for at beskytte din konto. Sørg også for, at du ikke bruger den samme adgangskode til andre apps og websites."
+   },
+   "password_warning_banner_header": {
+      "message": "Nulstil adgangskoden til din Google-konto"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Dette website er blevet blokeret, da det ser ud til at benytte en falsk version af Googles loginside til at stjæle din adgangskode. Hvis du er indforstået med, at dette website kan skade din computer, kan du besøge websitet, men vær forsigtig med, hvilke oplysninger du indtaster."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Dette website er blevet blokeret."
+   },
+   "report_phishing": {
+      "message": "Rapportér dette website"
+   },
+   "reset_password": {
+      "message": "Nulstil adgangskode"
+   },
+   "sign_in": {
+      "message": "Log ind"
+   },
+   "visit_this_site": {
+      "message": "Besøg dette website"
+   }
+}

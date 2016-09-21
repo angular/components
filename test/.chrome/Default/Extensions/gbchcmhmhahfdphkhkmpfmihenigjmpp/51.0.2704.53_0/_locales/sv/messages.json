@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "Godkänn och installera"
+   },
+   "ACCESS_CODE": {
+      "message": "Åtkomstkod"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "Åtkomstkoden upphör att gälla om $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "Feedback"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "Alla anslutningar"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "Ange PIN-koden igen"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN-kod"
+   },
+   "CANCEL": {
+      "message": "Avbryt"
+   },
+   "CLEAR_HISTORY": {
+      "message": "Rensa historik"
+   },
+   "CLOSE": {
+      "message": "Stäng"
+   },
+   "CLOSE_PROMPT": {
+      "message": "Om du lämnar sidan avslutas sessionen i Chrome Remote Desktop."
+   },
+   "CLOSE_WINDOW": {
+      "message": "Stäng fönstret"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "Är du säker på att du vill inaktivera fjärranslutningar till $1$? Om du ångrar dig måste du besöka datorn för att kunna aktivera anslutningar igen.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "Anslutningen misslyckades"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "Från"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "Anslutningshistorik"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "OK"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "Bra"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "Dålig"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "Till"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "Anslut ändå"
+   },
+   "CONNECT_BUTTON": {
+      "message": "Ansluta"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "Fortsätt"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "Du delar nu den här datorn med en annan användare. Vill du fortsätta att dela?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Chrome Remote Desktop Host Controller"
+   },
+   "COPYRIGHT": {
+      "message": "Upphovsrätt 2013 Google Inc. Med ensamrätt."
+   },
+   "CREDITS": {
+      "message": "Medverkande"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "Ta bort alla"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "Radera"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "Innan du kan fortsätta måste du bevilja utökad åtkomstbehörighet till datorn. Du behöver bara göra det en gång."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "Be användaren vars dator du vill använda att klicka på $1$ och ge dig åtkomstkoden.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Med Chrome Remote Desktop kan du dela din dator via internet på ett säkert sätt. Båda användarna måste köra appen Chrome Remote Desktop som du hittar på $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "Fjärrvärden kräver att du autentiserar via en tredje parts webbplats. Om du vill fortsätta måste du ge Chrome Remote Desktop ytterligare behörigheter att komma åt den här adressen:"
+   },
+   "DISABLE_HOST": {
+      "message": "Inaktivera"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "Koppla från"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Tjänsten Chrome Remote Desktop"
+   },
+   "DURATION_HEADER": {
+      "message": "Varaktighet"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "Du har inte behörighet att köra den här appen."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "Autentiseringen misslyckades. Logga in i Chrome igen."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "Vissa obligatoriska komponenter saknas. Kontrollera att du har installerat den senaste versionen av programvaran och försök igen."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "Det uppstod ett nätverksfel. Vi startar om appen när enheten är online igen."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "Fjärrdatorn har misslyckats med att starta sessionen. Konfigurera värden på nytt om problemet kvarstår."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "Fjärrdatorn svarar inte på anslutningsbegäran. Kontrollera att den är ansluten till Internet och försök igen."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "Anslutningar till fjärrdatorn är tillfälligt blockerade eftersom någon försökt ansluta till fjärrdatorn med en ogiltig PIN-kod. Försök igen senare."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "Det gick inte att registrera datorn."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "En inkompatibel version av protokollet upptäcktes. Kontrollera att du har den senaste versionen av programvaran på båda datorerna och försök igen."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "Koden är ogiltig. Försök igen."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "Enligt policyinställningarna får du inte dela den här datorn som en Chrome Remote Desktop-värd. Kontakta systemadministratören om du behöver hjälp."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "Fjärrsessionen har avslutats."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "Vissa obligatoriska komponenter saknas. Kontrollera att du kör den senaste versionen av Chrome och försök igen."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "Vissa obligatoriska komponenter saknas. Öppna chrome://plugins och kontrollera att Native Client har aktiverats."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "En obligatorisk komponent har slutat fungera. Rapportera problemet till utvecklarna."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "Det gick inte att ansluta till nätverket. Kontrollera att enheten är online."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "Du är inte inloggad i Chrome. Logga in och försök igen."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "Du har inte behörighet att utföra den åtgärden."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "Det begärda objektet finns inte."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "Det går inte att nå värden. Detta beror troligen på konfigurationen av nätverket som du använder."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "Tjänsten är inte tillgänglig för närvarande. Försök igen senare."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "Ett oväntat fel uppstod. Rapportera problemet till utvecklarna."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "Avsluta helskärmsläge"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "Det gick inte att återställa programmet. Du kan fortfarande skicka en felrapport."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "Återställ programmet. Ändringar som inte har sparats går förlorade."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "Jag kan inte öppna appen."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "Appen är för långsam."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "Jag kan inte öppna mina Google Drive-filer."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "Jag ser inte mina sparade filer online på Google Drive."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "Jag har problem med tangentbordet eller musen."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "Hjälp oss att lösa problemet och berätta vad som har gått fel."
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "Något annat."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "Välj …"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "Din e-postadress skickas tillsammans med din feedback så att vi kan kontakta dig om vi behöver mer information."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "Rapportera ett problem"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "Bifoga programloggar som en hjälp för oss att åtgärda problemet (loggar kan innehålla privata uppgifter)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "Programloggar kan innehålla privata uppgifter, som din identitet (e-postadress) och namn på och egenskaper hos filer och mappar på Google Drive."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "Den här informationen används bara för att diagnostisera det som felrapporten gäller. Bara den som arbetar med ärendet kan se den och den sparas i högst 30 dagar."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "Anslutningen upprättas …"
+   },
+   "FOOTER_WAITING": {
+      "message": "väntar på anslutning ..."
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "För Mac (OS X 10.6 eller senare)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "För Windows (XP eller senare)"
+   },
+   "FULL_SCREEN": {
+      "message": "Helskärm"
+   },
+   "GET_STARTED": {
+      "message": "Kom igång"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "Acceptera"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "Godkänn inte"
+   },
+   "HELP": {
+      "message": "Hjälp"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "Åtkomst"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "Visa och styra en delad dator."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "Du kan få säker åtkomst till den här datorn med Chrome Remote Desktop."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "Byt PIN"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "Datorn delas under ett annat konto."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "Visa/redigera"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "Den här datorn är konfigurerad för att tillåta att en eller flera klienter ansluter utan att en pinkod måste anges."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "Aktivera fjärranslutningar"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "Du måste aktivera fjärranslutningar om du vill använda Chrome Remote Desktop för att få åtkomst till den här datorn."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "Inaktivera fjärranslutningar"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "Dela"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "Dela den här datorn så att en annan användare kan visa och styra den."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(den här funktionen är ännu inte tillgänglig för din dator)"
+   },
+   "HOST_CATEGORY": {
+      "message": "Värd"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "Åtkomst nekad för klient: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "Klient ansluten: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "Klient frånkopplad: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "IP-adress för kanal för klient: %1 ip='%2' host_ip='%3' channel='%4' connection='%5'."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "Om du vill aktivera fjärranslutning till en annan dator installerar du Chrome Remote Desktop på den och klickar på $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "Du har inte registrerat några datorer. Om du vill aktivera fjärranslutningar till en dator installerar du Chrome Remote Desktop på datorn och klickar på $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "Du har tidigare loggat in som $1$ ($2$). Om du vill kunna ansluta till de datorer som sparats i det kontot $3$loggar du in i Google Chrome$4$ med det kontot och installerar om Chrome Remote Desktop.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "Programuppdateringar sker oftast automatiskt, men kan ibland misslyckas. Uppdateringen av programvaran bör inte ta mer än några minuter och du kan göra den när du är fjärransluten till datorn."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "Chrome Remote Desktop på $1$ är inaktuellt och måste uppdateras.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "Hjälp oss att förbättra Chrome Remote Desktop genom att låta oss samla in användningsstatistik och felrapporter."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "Om du vill skydda åtkomsten till den här datorn väljer du en PIN-kod som består av $1$minst sex siffror$2$. PIN-koden krävs när du ansluter från en annan plats.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "Det gick inte att starta fjärråtkomsttjänsten."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome laddar ned installationsprogrammet för fjärranslutningsvärden Chrome Remote Desktop Host. Kör installationsprogrammet så fort nedladdningen är klar."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "Kör installationsprogrammet innan du fortsätter."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "Fjärranslutningar har aktiverats för den här datorn."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "Kontrollera datorns inställningar för energisparfunktioner och se till att den inte försätts i viloläge vid inaktivitet."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "Fjärranslutningar aktiveras för den här datorn ..."
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "Fjärranslutningar har inaktiverats för den här datorn."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "Fjärranslutningar inaktiveras för den här datorn ..."
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "Det gick inte att inaktivera fjärråtkomst till den här datorn. Försök igen senare."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "När du laddar ned installationsprogrammet för fjärranslutningsvärden Chrome Remote Desktop godkänner du Googles $1$användarvillkor$4.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "PIN-koden har uppdaterats."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "Det gick inte att uppdatera PIN-koden. Försök igen senare."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "PIN-koden för den här datorn uppdateras …"
+   },
+   "HOST_STARTED": {
+      "message": "Värd startad för användaren: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "Värden stoppades."
+   },
+   "IDLE_CONTINUE": {
+      "message": "Fortsätt"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "Koppla från nu"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "Sessionen med $1$ har varit inaktiv en stund och kommer snart att kopplas från.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "Till den här datorn"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Ladda ned installationsprogrammet för fjärranslutningsvärden Chrome Remote Desktop"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "Om du vill dela ditt skrivbord ger du åtkomstkoden nedan till den som ska hjälpa dig."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "När koden anges startar delningssessionen."
+   },
+   "INVALID_PIN": {
+      "message": "Ange en PIN-kod som består av minst sex siffror."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "Skärmdelning mellan användare är perfekt för fjärrstyrd teknisk support."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "Tangentbordslayouter"
+   },
+   "LABEL_CONNECTED": {
+      "message": "Ansluten:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (senast online $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "Läs mer."
+   },
+   "LEARN_MORE": {
+      "message": "Läs mer."
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Chrome Remote Desktop Host Preferences"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Chrome Remote\nDesktop Host"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Chrome Remote Desktop Host Uninstaller"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Använd höger Ctrl-tangent för Windows-tangenten (⌘ på Mac)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "Maximera fönstret"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "Få åtkomst till din egen dator var du än är."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "Åtkomstkod genereras ..."
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "Chrome Remote Desktop-sessionen har avslutats."
+   },
+   "MESSAGE_SHARED": {
+      "message": "Ditt skrivbord delas just nu med $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "Minimera fönstret"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "Auktorisera"
+   },
+   "MODE_IT2ME": {
+      "message": "Fjärrhjälp"
+   },
+   "MODE_ME2ME": {
+      "message": "Mina datorer"
+   },
+   "NEW_WINDOW": {
+      "message": "Nytt fönster ..."
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "Alla kopplade klienter har tagits bort."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "Integrering med skrivbordet stöds inte på den här plattformen. Du kan använda appen ändå, men användarupplevelsen försämras."
+   },
+   "OFFLINE": {
+      "message": "$1$ (offline)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "Värdinitieringen misslyckades."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "Ogiltig värdkonfiguration."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "Ogiltig domän för värdens ägare."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "Ogiltigt värd-id."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "Värden konfigurerades med ogiltiga användaruppgifter för OAuth."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "Värden som kördes på konsolens inloggningsskärm har avslutats för att stödja Curtain Mode genom att byta till en värd som körs i en användarspecifik session."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "Värdenheten startar om för att implementera en ändring i policyn."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "Värdenheten kunde inte läsa policyn."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "Värdenheten har stängts av."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "Okänt värdfel: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "Ogiltig ägare till värden."
+   },
+   "OK": {
+      "message": "OK"
+   },
+   "OPTIONS_MENU": {
+      "message": "Alternativ"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "Från den här datorn"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "Följande klienter har kopplats ihop med den här datorn och kan ansluta utan att en pinkod behöver anges. Du kan återkalla behörigheten när som helst, antingen individuellt eller för alla klienter."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "Kopplade den"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "Klient"
+   },
+   "PIN": {
+      "message": "PIN-kod"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "Ange samma PIN-kod i båda rutorna."
+   },
+   "PIN_MESSAGE": {
+      "message": "Ange din PIN-kod för $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "Ange din pinkod för fjärrdatorn."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "Få åtkomst till andra datorer eller ge andra åtkomst till din dator över internet på ett säkert sätt."
+   },
+   "PRODUCT_NAME": {
+      "message": "Chrome Remote Desktop"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome App Streaming"
+   },
+   "RECONNECT": {
+      "message": "Återanslut"
+   },
+   "REMEMBER_PIN": {
+      "message": "Be inte om en pinkod igen när du ansluter till den här värden från den här enheten."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "Huvudbibliotek"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "Integreringsprocess för Desktop"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "Program som används för att skicka kommandon till värddatorn för Chrome Remote Desktop."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "Värdprocess"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "Lokal meddelandevärd för fjärrvärdshantering"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "Lokal meddelandevärd för fjärrhjälp"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "Fjärrkommunikationsprocess för säkerhetsnyckel"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "Anpassa skrivbordets storlek"
+   },
+   "RESTART_BUTTON": {
+      "message": "Starta om nu"
+   },
+   "RESTORE_WINDOW": {
+      "message": "Återställ fönstret"
+   },
+   "RETRY": {
+      "message": "Försök igen"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "Skärmalternativ"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Skicka Ctrl-Alt-Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "Rapportera ett problem …"
+   },
+   "SEND_KEYS": {
+      "message": "Skicka tangenter"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "Skicka PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "Med den här tjänsten aktiveras inkommande anslutningar från Chrome Remote Desktop-klienter."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "Den här inställningen hanteras enligt domänprincipen."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "Dela"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "Avbryt"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "Vill du dela den här datorn så att en annan användare kan visa och styra den?"
+   },
+   "SHOW_STATS": {
+      "message": "Visa statistik"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "Visa statistik (anslutning: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "Krymp den så att den passar in"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "Logga in"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "Logga ut"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "Sluta dela"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Vill du hjälpa till att förbättra Chrome Remote Desktop? $1$Fyll i enkäten.$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "Tid"
+   },
+   "TOGGLE_STATS": {
+      "message": "Visa statistik"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "Anslut till $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "Inaktivera fjärranslutningar till den här datorn"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "Uppdatera listan med värdar"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "Ändra datorns namn"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (inaktuellt)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "Konto"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Bekräfta ditt konto och pinkoden nedan för att tillåta åtkomst via Chrome Remote Desktop."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "OBS! Enligt policyinställningarna tillåts endast anslutning mellan datorer i ditt nätverk."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "Obs! Om du vill vara säker på att alla kortkommandon är tillgängliga kan du ställa in Chrome Remote Desktop på Öppna som fönster."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "Varför är det säkert?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Fönster"
+   },
+   "WORKING": {
+      "message": "Arbetar ..."
+   }
+}

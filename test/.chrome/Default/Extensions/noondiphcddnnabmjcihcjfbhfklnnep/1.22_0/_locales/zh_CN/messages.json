@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "对于此网站，始终忽略"
+   },
+   "always_ignore_confirmation": {
+      "message": "您希望密码防护警示功能始终忽略此网站吗？"
+   },
+   "back": {
+      "message": "返回"
+   },
+   "contact_security": {
+      "message": "与安全管理员联系"
+   },
+   "extension_description": {
+      "message": "密码防护警示功能有助于防范网上诱骗攻击。"
+   },
+   "extension_detailed_description": {
+      "message": "如果您在 accounts.google.com 以外的任何位置输入 Gmail 或 Google for Work 密码，都会收到提醒（这样一来，您可以根据需要更改自己的密码）。\n\n此外，密码防护警示扩展程序还会努力检测假冒的 Google 登录页面，以便在您输入密码之前提醒您。为此，该扩展程序会检查您访问的每个页面的 HTML，以便判断其是否为假冒的 Google 登录页面。\n\n常见问题解答\n-- 密码防护警示扩展程序何时开始发挥作用？\n下次您在 accounts.google.com 中输入密码时，密码防护警示扩展程序将会进行初始化。\n\n-- 密码防护警示扩展程序会存储我的密码或按键动作吗？\n不会。密码防护警示扩展程序不会存储您的密码或按键动作。它只会存储您密码的安全缩略图，并会将这个安全的缩略图与您最近在 Chrome 中的按键动作对应的缩略图进行比较。\n\n-- 密码防护警示扩展程序会将数据发送到哪里？\n如果您在 Gmail 帐户中使用密码防护警示扩展程序，那么该扩展程序不会发送您本地计算机中的任何数据。如果 Google for Work 管理员为您所在的整个网域部署了该扩展程序，那么该管理员将会在密码防护警示扩展程序触发时收到提醒。\n\n-- 密码防护警示扩展程序有何限制？\n密码防护警示扩展程序不会保护隐身窗口、Chrome 应用或 Chrome 扩展程序，也不会保护非 Google 服务的密码。该扩展程序只能在启用了 JavaScript 的 Chrome 网络浏览器中发挥作用。\n\n-- 我可以在哪里找到更多详细信息？\n您可以在 LINK_TBD 上找到完整的常见问题解答，还可以在 https://github.com/google/password-alert 上看到整个开源代码库\n\n安装该扩展程序即表示您同意 www.google.com/policies/ 上所列的 Google 服务条款和隐私权政策\n"
+   },
+   "extension_name": {
+      "message": "密码防护警示"
+   },
+   "ignore": {
+      "message": "此次忽略"
+   },
+   "initialization_message": {
+      "message": "为使密码防护警示功能生效，请登录您的帐户。"
+   },
+   "initialization_thank_you_message": {
+      "message": "谢谢！密码防护警示功能现已生效。"
+   },
+   "learn_more": {
+      "message": "了解详情"
+   },
+   "password_warning_banner_body": {
+      "message": "您刚刚在非 Google 所有的登录页面中输入了自己的 Google 帐户密码。建议您立即重置密码，以便保护您的帐户。切勿将您的密码用于其他应用或网站。"
+   },
+   "password_warning_banner_header": {
+      "message": "请重置您的 Google 帐户密码"
+   },
+   "phishing_warning_banner_body": {
+      "message": "此网站好像会使用假冒的 Google 登录页面来窃取您的密码，因此已被屏蔽。如果您了解此网站可能会危害您的计算机，仍可以访问此网站，但在输入信息时请务必谨慎。"
+   },
+   "phishing_warning_banner_header": {
+      "message": "此网站已被屏蔽。"
+   },
+   "report_phishing": {
+      "message": "举报此网站"
+   },
+   "reset_password": {
+      "message": "重置密码"
+   },
+   "sign_in": {
+      "message": "登录"
+   },
+   "visit_this_site": {
+      "message": "访问此网站"
+   }
+}

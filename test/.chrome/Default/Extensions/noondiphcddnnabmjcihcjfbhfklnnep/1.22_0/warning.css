@@ -1,0 +1,138 @@
+/**
+ * @license
+ * Copyright 2015 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#warning_banner {
+  background-color: #EFEFEF;
+  position: fixed;
+  z-index: 2147483647;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#warning_banner_inner_container {
+  background-color: #EFEFEF;
+  position: relative;
+  top: 40%;
+  left: 50%;
+  width: 700px;
+  height: 300px;
+  margin-top: -150px;
+  margin-left: -300px;
+}
+
+#warning_banner_icon {
+  width: 88px;
+  height: auto;
+  position: absolute;
+  top: -10%;
+  left: 7%;
+}
+
+#warning_banner_header {
+  /* emulate h1 properties */
+  position: absolute;
+  top: 20%;
+  left: 0%;
+  font-family: Arial, sans-serif;
+  font-size: 24px;
+  font-weight: normal;
+  line-height: 32px;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+  margin-left: 7%;
+  margin-right: 7%;
+  color: #607D8B;
+}
+
+#warning_banner_body {
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 24px;
+  color: #607D8B;
+  position: absolute;
+  top: 42%;
+  left: 7%;
+  right: 7%;
+  text-align: left;
+}
+
+#warning_banner_body a:link {
+  color: #607D8B;
+  text-decoration: underline;
+}
+
+#always_ignore {
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 150%;
+  color: #607D8B;
+  position: absolute;
+  width: 160px;
+  height: 80px;
+  top: 95%;
+  left: 33%;
+  text-align: top;
+  text-align: center;
+  cursor: pointer;
+}
+
+
+#warning_banner_inner_container .warning_banner_button {
+  font-family: Arial;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 78%;
+  width: 160px;
+  height: 44px;
+  background-color: #D7DBDD;
+  background-image: none;
+  border-radius: 2px;
+  display: inline-block;
+  color: #607D8B;
+  text-align: center;
+  text-indent: initial;
+  text-transform: none;
+}
+
+#warning_banner_inner_container .warning_banner_button_primary {
+  background-color: #607D8B;
+  color: white;
+  left: 7%;
+}
+
+#warning_banner_inner_container .warning_banner_button_secondary {
+  left: 33%;
+}
+
+#warning_banner_inner_container .warning_banner_button_tertiary {
+  left: 59%;
+}

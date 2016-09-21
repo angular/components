@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Ignora sempre per questo sito"
+   },
+   "always_ignore_confirmation": {
+      "message": "Vuoi che Password Alert ignori sempre questo sito web?"
+   },
+   "back": {
+      "message": "Indietro"
+   },
+   "contact_security": {
+      "message": "Contatta la sicurezza"
+   },
+   "extension_description": {
+      "message": "Password Alert aiuta a proteggere dagli attacchi di phishing."
+   },
+   "extension_detailed_description": {
+      "message": "Se inserisci la tua password di Gmail o Google for Work in pagine diverse da accounts.google.com, ricevi un avviso affinché tu possa cambiare la password se necessario.\n\nPassword Alert tenta inoltre di individuare le pagine di accesso Google false per avvisarti prima che digiti la tua password. A tale scopo, Password Alert controlla il codice HTML di tutte le pagine visitate per verificare se si spacciano per pagine di accesso di Google.\n\nFAQ\n-- Quando viene attivata l'estensione Password Alert?\nPassword Alert viene inizializzata automaticamente la volta successiva che inserisci la tua password su accounts.google.com.\n\n-- Password Alert memorizza la mia password o i tasti premuti?\nNo. Password Alert non memorizza password o tasti premuti; memorizza una miniatura protetta della tua password, che confronta con una miniatura dei tasti premuti di recente in Chrome.\n\n-- Dove vengono inviati i dati di Password Alert?\nSe utilizzi Password Alert in un account Gmail, non viene inviato alcun dato dal tuo computer locale. Se il tuo amministratore di Google for Work decide di implementare Password Alert in tutto il tuo dominio, riceverà avvisi all'attivazione di Password Alert.\n\n-- Quali sono i limiti di Password Alert?\nPassword Alert non protegge finestre di navigazione in incognito, app ed estensioni di Chrome. Non protegge, inoltre, le password di servizi non appartenenti a Google. Password Alert funziona soltanto all'interno dei browser web Chrome in cui è attivo JavaScript.\n\n-- Dove posso trovare ulteriori informazioni?\nVisita la pagina completa delle domande frequenti (FAQ) all'indirizzo LINK_TBD. Puoi anche accedere all'intero codebase open source all'indirizzo https://github.com/google/password-alert\n\nSe installi il componente, accetti i Termini di servizio e le Norme sulla privacy di Google all'indirizzo www.google.com/policies/.\n"
+   },
+   "extension_name": {
+      "message": "Password Alert"
+   },
+   "ignore": {
+      "message": "Ignora questa volta"
+   },
+   "initialization_message": {
+      "message": "Per attivare Password Alert, accedi al tuo account."
+   },
+   "initialization_thank_you_message": {
+      "message": "Grazie. Password Alert è ora attiva."
+   },
+   "learn_more": {
+      "message": "Ulteriori informazioni"
+   },
+   "password_warning_banner_body": {
+      "message": "Hai appena inserito la password del tuo account Google in una pagina di accesso di terze parti. Reimposta subito la password per proteggere il tuo account e assicurati di non riutilizzarla per altri siti e app."
+   },
+   "password_warning_banner_header": {
+      "message": "Reimposta la password del tuo account Google"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Sembra che in questo sito venga utilizzata una falsa versione della pagina di accesso di Google per rubare la tua password, pertanto il sito è stato bloccato. Se sei consapevole del fatto che questo sito potrebbe danneggiare il computer, visitalo ma presta attenzione alle informazioni che inserisci."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Questo sito è stato bloccato."
+   },
+   "report_phishing": {
+      "message": "Segnala il sito"
+   },
+   "reset_password": {
+      "message": "Reimposta la password"
+   },
+   "sign_in": {
+      "message": "Accedi"
+   },
+   "visit_this_site": {
+      "message": "Visita questo sito"
+   }
+}

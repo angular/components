@@ -1,0 +1,60 @@
+/* Copyright (c) 2012 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+body {
+  overflow: auto;
+}
+
+body.show-only-selected .product:not(.selected) {
+  display: none;
+}
+
+.page-title {
+  font-size: 164%;
+  font-weight: bold;
+}
+
+.entries {
+  margin: 8px;
+}
+
+.product {
+  background-color: #c3d9ff;
+  border-radius: 5px;
+  margin-top: 16px;
+  overflow: auto;
+  padding: 2px;
+}
+
+.product .title {
+  float: left;
+  font-size: 110%;
+  font-weight: bold;
+  margin: 3px;
+}
+
+.right-align {
+  float: right;
+  margin: 3px 6px;
+}
+
+.licence {
+  background-color: #e8eef7;
+  border-radius: 3px;
+  clear: both;
+  padding: 16px;
+}
+
+.product:not(.selected) .licence {
+  display: none;
+}
+
+.licence h3 {
+  margin-top: 0;
+}
+
+.licence pre {
+  white-space: pre-wrap;
+}

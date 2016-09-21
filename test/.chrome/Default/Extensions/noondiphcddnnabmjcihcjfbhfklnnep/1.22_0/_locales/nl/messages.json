@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Altijd negeren voor deze site"
+   },
+   "always_ignore_confirmation": {
+      "message": "Wil je dat Password Alert deze website altijd negeert?"
+   },
+   "back": {
+      "message": "Terug"
+   },
+   "contact_security": {
+      "message": "Neem contact op met Beveiliging"
+   },
+   "extension_description": {
+      "message": "Password Alert helpt beschermen tegen phishingaanvallen."
+   },
+   "extension_detailed_description": {
+      "message": "Als je op andere pagina's dan accounts.google.com je wachtwoord voor Gmail of Google for Work opgeeft, ontvang je een melding, zodat je zo nodig je wachtwoord kunt wijzigen.\n\nPassword Alert probeert ook vervalste Google-inlogpagina's te detecteren om je te waarschuwen voordat je je wachtwoord typt. Password Alert controleert daarom de HTML van elke pagina die je bezoekt om te kijken of deze een Google-inlogpagina nabootst.\n\nVeelgestelde vragen\n-- Wanneer wordt Password Alert gestart?\nPassword Alert wordt automatisch gestart wanneer je je wachtwoord weer opgeeft op accounts.google.com.\n\n-- Slaat Password Alert mijn wachtwoord of toetsaanslagen op?\nNee. Password Alert slaat je wachtwoord of toetsaanslagen niet op, maar gebruikt een beveiligde thumbnail van je wachtwoord. Deze wordt vergeleken met je recente toetsaanslagen in Chrome.\n\n-- Waar stuurt Password Alert gegevens naartoe?\nAls je Password Alert gebruikt in een Gmail-account, verzendt Password Alert geen gegevens van je lokale computer. Als je Google for Work-beheerder Password Alert implementeert voor alle beheerde Chrome-browsers in je domein, ontvangt de beheerder meldingen wanneer Password Alert wordt geactiveerd.\n\n-- Wat doet Password Alert niet?\nPassword Alert beschermt je niet in incognitovensters, Chrome-apps of Chrome-extensies en beveiligt geen wachtwoorden voor services die niet van Google zijn. Password Alert werkt alleen in de Chrome-webbrowser wanneer JavaScript is ingeschakeld.\n\n-- Waar kan ik meer informatie vinden?\nBekijk de volledige versie van de Veelgestelde vragen op LINK_TBD. Je kunt de hele open-sourcecodebasis bekijken op https://github.com/google/password-alert.\n\nAls je dit item installeert, ga je akkoord met de Servicevoorwaarden en het Privacybeleid van Google (beschikbaar op www.google.com/policies/).\n"
+   },
+   "extension_name": {
+      "message": "Password Alert"
+   },
+   "ignore": {
+      "message": "Deze keer negeren"
+   },
+   "initialization_message": {
+      "message": "Log in op je account om Password Alert te activeren."
+   },
+   "initialization_thank_you_message": {
+      "message": "Password Alert is nu actief."
+   },
+   "learn_more": {
+      "message": "Meer informatie"
+   },
+   "password_warning_banner_body": {
+      "message": "Je hebt zojuist het wachtwoord van je Google-account ingevoerd op een inlogpagina die niet van Google is. Wijzig meteen je wachtwoord om je account te beschermen en zorg ervoor dat je je wachtwoord niet opnieuw gebruikt voor andere apps en sites."
+   },
+   "password_warning_banner_header": {
+      "message": "Het wachtwoord van je Google-account wijzigen"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Deze site lijkt een vervalste versie van de Google-inlogpagina te gebruiken om je wachtwoord te stelen. De pagina is daarom geblokkeerd. Je kunt deze site bezoeken, maar houd er rekening mee dat deze site schadelijk kan zijn voor je computer en dat je voorzichtig moet zijn met de informatie die je typt."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Deze site is geblokkeerd."
+   },
+   "report_phishing": {
+      "message": "Deze site melden"
+   },
+   "reset_password": {
+      "message": "Wachtwoord opnieuw instellen"
+   },
+   "sign_in": {
+      "message": "Inloggen"
+   },
+   "visit_this_site": {
+      "message": "Deze site bezoeken"
+   }
+}

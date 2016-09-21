@@ -1,0 +1,1015 @@
+<!doctype html>
+<!--
+Copyright (c) 2012 The Chromium Authors. All rights reserved.
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+-->
+
+<html class="full-height">
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="chromoting16.webp">
+    <link rel="stylesheet" href="butter_bar.css">
+    <link rel="stylesheet" href="connection_stats.css">
+    <link rel="stylesheet" href="crd_main.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="menu_button.css">
+    <link rel="stylesheet" href="open_sans.css">
+    <link rel="stylesheet" href="toolbar.css">
+    <link rel="stylesheet" href="window_frame.css">
+
+    <script src="activity.js"></script>
+    <script src="application.js"></script>
+    <script src="apps_v2_migration.js"></script>
+    <script src="auth_init.js"></script>
+    <script src="base.js"></script>
+    <script src="bump_scroller.js"></script>
+    <script src="butter_bar.js"></script>
+    <script src="callstack.js"></script>
+    <script src="chromoting_event.js"></script>
+    <script src="client_plugin.js"></script>
+    <script src="client_plugin_host_desktop_impl.js"></script>
+    <script src="client_plugin_impl.js"></script>
+    <script src="client_session.js"></script>
+    <script src="client_session_factory.js"></script>
+    <script src="clipboard.js"></script>
+    <script src="combined_host_list_api.js"></script>
+    <script src="connected_view.js"></script>
+    <script src="connection_dropped_dialog.js"></script>
+    <script src="connection_info.js"></script>
+    <script src="connection_stats.js"></script>
+    <script src="console_wrapper.js"></script>
+    <script src="crd_auth_dialog.js"></script>
+    <script src="crd_event_handlers.js"></script>
+    <script src="crd_experimental.js"></script>
+    <script src="crd_main.js"></script>
+    <script src="credentials_provider.js"></script>
+    <script src="desktop_connected_view.js"></script>
+    <script src="desktop_remoting.js"></script>
+    <script src="desktop_remoting_activity.js"></script>
+    <script src="desktop_viewport.js"></script>
+    <script src="dns_blackhole_checker.js"></script>
+    <script src="error.js"></script>
+    <script src="event_handlers.js"></script>
+    <script src="experiments.js"></script>
+    <script src="fallback_signal_strategy.js"></script>
+    <script src="feedback.js"></script>
+    <script src="format_iq.js"></script>
+    <script src="fullscreen.js"></script>
+    <script src="fullscreen_v1.js"></script>
+    <script src="fullscreen_v2.js"></script>
+    <script src="gcd_client.js"></script>
+    <script src="gcd_host_list_api.js"></script>
+    <script src="gnubby_auth_handler.js"></script>
+    <script src="host.js"></script>
+    <script src="host_controller.js"></script>
+    <script src="host_daemon_facade.js"></script>
+    <script src="host_desktop.js"></script>
+    <script src="host_install_dialog.js"></script>
+    <script src="host_installer.js"></script>
+    <script src="host_list.js"></script>
+    <script src="host_list_api.js"></script>
+    <script src="host_options.js"></script>
+    <script src="host_screen.js"></script>
+    <script src="host_session.js"></script>
+    <script src="host_setup_dialog.js"></script>
+    <script src="host_table_entry.js"></script>
+    <script src="identity.js"></script>
+    <script src="ipc.js"></script>
+    <script src="it2me_activity.js"></script>
+    <script src="it2me_host_facade.js"></script>
+    <script src="l10n.js"></script>
+    <script src="legacy_host_list_api.js"></script>
+    <script src="local_host_section.js"></script>
+    <script src="me2me_activity.js"></script>
+    <script src="menu_button.js"></script>
+    <script src="modal_dialogs.js"></script>
+    <script src="native_message_host_log_message_handler.js"></script>
+    <script src="network_connectivity_detector.js"></script>
+    <script src="oauth2.js"></script>
+    <script src="oauth2_api.js"></script>
+    <script src="oauth2_api_impl.js"></script>
+    <script src="options_menu.js"></script>
+    <script src="paired_client_manager.js"></script>
+    <script src="platform.js"></script>
+    <script src="plugin_settings.js"></script>
+    <script src="protocol_extension.js"></script>
+    <script src="protocol_extension_manager.js"></script>
+    <script src="session_logger.js"></script>
+    <script src="signal_strategy.js"></script>
+    <script src="stats_accumulator.js"></script>
+    <script src="suspend_detector.js"></script>
+    <script src="tcp_socket.js"></script>
+    <script src="telemetry_event_writer.js"></script>
+    <script src="third_party_host_permissions.js"></script>
+    <script src="third_party_token_fetcher.js"></script>
+    <script src="toolbar.js"></script>
+    <script src="typecheck.js"></script>
+    <script src="ui_mode.js"></script>
+    <script src="viewport.js"></script>
+    <script src="wcs_adapter.js"></script>
+    <script src="wcs_sandbox_container.js"></script>
+    <script src="window_frame.js"></script>
+    <script src="window_message_dispatcher.js"></script>
+    <script src="window_shape.js"></script>
+    <script src="xhr.js"></script>
+    <script src="xhr_event_writer.js"></script>
+    <script src="xmpp_connection.js"></script>
+    <script src="xmpp_error_cache.js"></script>
+    <script src="xmpp_login_handler.js"></script>
+    <script src="xmpp_stream_parser.js"></script>
+
+    <title i18n-content="PRODUCT_NAME"></title>
+  </head>
+
+  <body class="full-height">
+
+    <div id="title-bar" class="title-bar apps-v2-only">
+      <div class="window-controls-and-title">
+        <span i18n-title="OPTIONS_MENU"
+              class="window-control window-options menu-button">
+          <span class="menu-button-activator">
+            <img src="icon_options.webp">
+          </span>
+          <ul class="window-options-menu right-align">
+            <li class="menu-send-ctrl-alt-del connected-only"
+                i18n-content="SEND_CTRL_ALT_DEL"></li>
+            <li class="menu-send-print-screen connected-only"
+                i18n-content="SEND_PRINT_SCREEN"></li>
+            <li class="menu-map-right-ctrl-to-meta connected-only"
+                i18n-content="MAP_RIGHT_CTRL_TO_META"></li>
+            <li class="menu-separator connected-only"></li>
+            <li class="menu-resize-to-client connected-only"
+                i18n-content="RESIZE_TO_CLIENT"></li>
+            <li class="menu-shrink-to-fit connected-only"
+                i18n-content="SHRINK_TO_FIT"></li>
+            <li class="menu-separator connected-only"></li>
+            <li class="menu-new-window"
+                i18n-content="NEW_WINDOW"></li>
+            <li class="menu-separator"></li>
+            <li class="menu-toggle-connection-stats connected-only"
+                i18n-content="TOGGLE_STATS"></li>
+            <li class="menu-help"
+                i18n-content="HELP"></li>
+            <li class="menu-feedback"
+                i18n-content="ACTIONBAR_FEEDBACK"></li>
+            <li class="menu-credits"
+                i18n-content="CREDITS"></li>
+          </ul>
+        </span>
+        <span i18n-title="DISCONNECT_MYSELF_BUTTON"
+              class="window-control window-disconnect connected-only">
+          <img src="icon_disconnect.webp">
+        </span>
+        <span class="window-title">&nbsp;</span>
+        <span i18n-title="MINIMIZE_WINDOW"
+              class="window-control window-minimize">
+          <img src="icon_minimize.webp">
+        </span>
+        <span i18n-title="MAXIMIZE_WINDOW"
+              class="window-control window-maximize-restore">
+          <img src="icon_maximize_restore.webp">
+        </span>
+        <span i18n-title="FULL_SCREEN"
+              class="window-control window-fullscreen">
+          <img src="icon_fullscreen.webp">
+        </span>
+        <span i18n-title="CLOSE_WINDOW"
+              class="window-control window-close">
+          <img src="icon_close.webp">
+        </span>
+      </div>
+      <div class="window-controls-stub">&nbsp;</div>
+    </div>  <!-- title-bar -->
+
+    <div class="window-body full-height">
+
+      <!-- loading-mode is initially visible, but becomes hidden as soon as an
+           AppMode is selected by remoting.init. All other divs are initially
+           hidden, but are shown appropriately when the mode changes. -->
+      <section id="loading-mode" data-ui-mode="">
+        <em>Loading&hellip;</em>
+        <div id="browser-test-deferred-init" hidden>
+        <p>
+          Running in test mode. If you are seeing this message in any other
+          context, please <a href="http://crbug.com" target="_blank">file a
+          bug</a>.
+        </p>
+        <p>
+          <button id="browser-test-continue-init">Continue</button>
+        </p>
+      </section>
+
+      <iframe id="wcs-sandbox" src="wcs_sandbox.html" hidden></iframe>
+
+      <div id="scroller">
+        <div class="inset home-screen full-height"
+             data-ui-mode="home"
+             hidden>
+
+          <header>
+
+            <div>
+              <img src="chromoting48.webp">
+              <h1 class="icon-label" i18n-content="PRODUCT_NAME"></h1>
+            </div>
+
+            <div class="box-spacer"></div>
+
+            <div data-ui-mode="home">
+              <span id="current-email"></span>
+              <a id="sign-out" href="#"
+                 i18n-content="SIGN_OUT_BUTTON"
+                 class="apps-v1-only"></a>
+            </div>
+
+          </header>
+          <div data-ui-mode="home">
+            <div id="butter-bar" hidden>
+              <p>
+                <span id="butter-bar-message"></span>
+                <a id="butter-bar-dismiss" href="#">
+                  <img src="icon_cross.webp" class="close-icon">
+                </a>
+              </p>
+            </div>
+          </div>
+          <section>
+
+            <h2 i18n-content="MODE_IT2ME"></h2>
+
+            <div id="it2me-first-run">
+              <div>
+                <p class="infographic-description"
+                   i18n-content="IT2ME_FIRST_RUN"></p>
+                <button id="get-started-it2me"
+                        i18n-content="GET_STARTED"
+                        disabled></button>
+              </div>
+              <div class="infographic">
+                <img src="infographic_remote_assistance.webp">
+              </div>
+            </div>
+
+            <div id="it2me-content">
+              <p id="webapp-description"
+                 i18n-content="DESCRIPTION_HOME"
+                 i18n-value-1="<a href='https://chrome.google.com/remotedesktop' target='_blank'>chrome.google.com/remotedesktop</a>"></p>
+              <div>
+                <div class="section-row">
+                  <div class="box-spacer">
+                    <div i18n-content="HOME_SHARE_DESCRIPTION"></div>
+                    <div id="unsupported-platform-message"
+                         i18n-content="HOME_SHARE_DESCRIPTION_UNSUPPORTED"
+                         class="small-print"></div>
+                  </div>
+                  <div>
+                    <button id="share-button"
+                            i18n-content="HOME_SHARE_BUTTON"
+                            class="kd-button-share"
+                            type="button">
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="section-row">
+                <div i18n-content="HOME_ACCESS_DESCRIPTION"
+                     class="box-spacer"></div>
+                <div>
+                  <button id="access-mode-button"
+                          i18n-content="HOME_ACCESS_BUTTON"
+                          type="button">
+                  </button>
+                </div>
+              </div>
+            </div> <!-- it2me-content -->
+
+          </section> <!-- Remote Assistance -->
+          <section id="host-list-div" class="host-list-container">
+
+            <div id="me2me-first-run">
+              <h2 i18n-content="MODE_ME2ME"></h2>
+              <div>
+                <p class="infographic-description"
+                   i18n-content="ME2ME_FIRST_RUN"></p>
+                <button id="get-started-me2me"
+                        i18n-content="GET_STARTED"
+                        disabled></button>
+              </div>
+              <div class="infographic">
+                <img src="infographic_my_computers.webp">
+              </div>
+            </div>
+
+            <div id="me2me-content">
+              <h2>
+                <span i18n-content="MODE_ME2ME"></span>
+                <span class="h2-secondary" id="host-list-loading-indicator">
+                  <a href="#" id="host-list-reload"
+                     class="icon-black"
+                     i18n-title="TOOLTIP_REFRESH">
+                    <img src="reload.webp">
+                  </a>
+                  <img src="spinner.gif" id="host-list-loading">
+                </span>
+              </h2>
+
+              <div id="host-list" hidden></div>
+
+              <div id="host-list-error" class="box" hidden>
+                <div id="host-list-error-message" class="error-state"></div>
+                <div class="box-spacer"></div>
+                <button type="button"
+                        id="host-list-refresh-failed-button"></button>
+              </div>
+
+              <div id="host-list-empty"
+                   class="host-list-empty-instructions" hidden>
+              </div>
+
+              <div class="daemon-control"
+                   data-daemon-state="enabled disabled enabled-other-account" hidden>
+                <div class="section-row daemon-disabled"
+                     data-daemon-state="disabled">
+                  <img src="icon_host.webp" class="host-list-main-icon">
+                  <div class="box-spacer"
+                       class="no-daemon-message"
+                       i18n-content="HOME_DAEMON_START_MESSAGE"></div>
+                  <button type="button"
+                          class="start-daemon"
+                          i18n-content="HOME_DAEMON_START_BUTTON">
+                  </button>
+                </div> <!-- disabled -->
+                <div class="section-row host-enabled-other-account"
+                     data-daemon-state="enabled-other-account">
+                  <img src="icon_host.webp" class="host-list-main-icon">
+                  <div class="box-spacer"
+                       i18n-content="HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT"></div>
+                  <button type="button"
+                          class="stop-daemon"
+                          i18n-content="HOME_DAEMON_STOP_BUTTON">
+                  </button>
+                </div> <!-- enabled-other-account -->
+                <div id="this-host-connect"
+                     data-daemon-state="enabled">
+                  <div class="host-entry"></div>
+                  <button type="button"
+                          class="stop-local-daemon"
+                          i18n-content="HOME_DAEMON_STOP_BUTTON">
+                  </button>
+                </div> <!-- this-host-connect -->
+                <div data-daemon-state="enabled">
+                  <div>
+                    <span i18n-content="HOME_DAEMON_ACTIVE_MESSAGE"></span>
+                    <a class="change-daemon-pin"
+                       href="#"
+                       i18n-content="HOME_DAEMON_CHANGE_PIN_LINK"></a>
+                  </div>
+                  <div id="paired-client-manager-message" hidden>
+                    <span i18n-content="HOME_DAEMON_PAIRED_MESSAGE"></span>
+                    <a href="#"
+                       id="open-paired-client-manager-dialog"
+                       i18n-content="HOME_DAEMON_MANAGE_PAIRINGS"></a>
+                  </div>
+                </div> <!-- enabled -->
+              </div> <!-- daemon-control -->
+
+            </div> <!-- me2me-content -->
+
+          </section> <!-- host-list-div -->
+
+          <!-- The bottom-marker div is used to verify scroll-bar correctness
+               in browser tests; it is not rendered. -->
+          <div id="bottom-marker"></div>
+
+        </div>  <!-- inset -->
+
+        <div id="session-mode"
+             data-ui-mode="in-session home.client"
+             class="full-height"
+             hidden>
+
+          <div id="session-toolbar"
+               data-ui-mode="in-session"
+               class="toolbar-container apps-v1-only"
+               hidden>
+
+            <div class="toolbar-border">
+
+              <div id="session-status-message"
+                   i18n-content="LABEL_CONNECTED"></div>
+
+              <div id="connected-to"></div>
+
+              <div id="new-window" class="icon-black apps-v2-only">
+                <img src="plus.webp" i18n-title="NEW_WINDOW">
+              </div>
+
+              <div class="box-spacer"></div>
+
+              <button id="toolbar-disconnect"
+                      type="button"
+                      i18n-content="DISCONNECT_MYSELF_BUTTON"
+                      class="apps-v1-only">
+              </button>
+
+              <span class="menu-button" id="send-keys-menu">
+                <button class="menu-button-activator">
+                  <span i18n-content="SEND_KEYS"></span>
+                  <img src="disclosure_arrow_down.webp"
+                       class="kd-disclosureindicator">
+                </button>
+                <ul>
+                  <li id="send-ctrl-alt-del" i18n-content="SEND_CTRL_ALT_DEL"></li>
+                  <li id="send-print-screen" i18n-content="SEND_PRINT_SCREEN"></li>
+                  <li id="map-right-ctrl-to-meta" i18n-content="MAP_RIGHT_CTRL_TO_META">
+                  </li>
+                </ul>
+              </span>
+
+              <span class="menu-button" id="screen-options-menu">
+                <button class="menu-button-activator">
+                  <span i18n-content="SCREEN_OPTIONS"></span>
+                  <img src="disclosure_arrow_down.webp"
+                       class="kd-disclosureindicator">
+                </button>
+                <ul>
+                  <li id="screen-resize-to-client"
+                      i18n-content="RESIZE_TO_CLIENT"></li>
+                  <li id="screen-shrink-to-fit"
+                      i18n-content="SHRINK_TO_FIT"></li>
+                  <li class="menu-separator apps-v1-only"></li>
+                  <li id="toggle-full-screen"
+                      i18n-content="FULL_SCREEN"
+                      class="apps-v1-only"></li>
+                </ul>
+              </span>
+
+            </div>
+
+            <div class="toolbar-stub" id="toolbar-stub">
+              <div class="arrow-down"></div>
+            </div>
+
+          </div> <!-- session-toolbar -->
+          <div class="vertically-centered">
+            <div class="full-width">
+              <div class="horizontally-centered">
+                <div id="client-container">
+                  <div class="client-plugin-container"></div>
+                  <div class="debug-region-container"></div>
+                  <img class="mouse-cursor-overlay" hidden>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>  <!-- session-mode -->
+
+        <div id="statistics" dir="ltr" class="selectable" hidden>
+        </div>
+
+      </div>  <!-- scroller -->
+
+      <div id="auth-dialog" hidden>
+
+        <div class="dialog-screen"></div>
+
+        <div class="dialog-container">
+          <div id="auth-dialog-border" class="kd-modaldialog">
+            <h2 i18n-content="MODE_AUTHORIZE"></h2>
+            <p id="auth-error-message"
+               i18n-content="DESCRIPTION_AUTHORIZE"
+               class="message"></p>
+            <div class="button-row">
+              <button id="auth-button"
+                      type="button"
+                      autofocus="autofocus"
+                      i18n-content="CONTINUE_BUTTON">
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div> <!-- auth-dialog -->
+
+      <div class="dialog-screen"
+           data-ui-mode="home.host home.client home.history home.confirm-host-delete home.host-setup home.token-refresh-failed home.manage-pairings home.host-setup home.host-install"
+           hidden></div>
+
+      <div class="dialog-container"
+           data-ui-mode="home.host home.client home.history home.confirm-host-delete home.host-install home.host-setup home.token-refresh-failed home.manage-pairings"
+           hidden>
+
+        <!-- TODO(jamiewalch): Refactor the various error-state divs -->
+        <div class="kd-modaldialog" data-ui-mode="home.token-refresh-failed">
+
+          <div class="message">
+            <span id="token-refresh-error-message" class="error-state"></span>
+          </div>
+
+          <div id="token-refresh-auth-failed" class="button-row">
+            <button id="token-refresh-error-sign-in"
+                    type="button"
+                    i18n-content="SIGN_IN_BUTTON"></button>
+          </div>
+
+          <div id="token-refresh-other-error" class="button-row">
+            <button id="token-refresh-error-ok"
+                    type="button"
+                    i18n-content="OK"></button>
+          </div>
+
+        </div> <!-- home.token-refresh-failed -->
+        <div id="host-setup-dialog"
+             class="kd-modaldialog"
+             data-ui-mode="home.host-setup">
+
+          <form id="ask-pin-form"
+                data-ui-mode="home.host-setup.ask-pin"
+                action="">
+
+            <p class="message">
+              <span i18n-content="HOST_SETUP_DIALOG_DESCRIPTION"
+                    i18n-value-1="<b>"
+                    i18n-value-2="</b>"></span>
+              <a href="https://support.google.com/chrome/answer/1649523"
+                 target="_blank"
+                 i18n-content="WHY_IS_THIS_SAFE"></a>
+            </p>
+
+            <table id="set-pin-table">
+              <tr>
+                <td class="table-label">
+                  <label for="daemon-pin-entry"
+                         i18n-content="ASK_PIN_DIALOG_LABEL"
+                         class="editbox-label"></label>
+                </td>
+                <td>
+                  <input id="daemon-pin-entry"
+                         autofocus="autofocus"
+                         type="password">
+                </td>
+              </tr>
+              <tr>
+                <td class="table-label">
+                  <label for="daemon-pin-confirm"
+                         i18n-content="ASK_PIN_DIALOG_CONFIRM_LABEL"
+                         class="editbox-label"></label>
+                </td>
+                <td>
+                  <input id="daemon-pin-confirm" type="password">
+                </td>
+              <tr>
+            </table>
+
+            <div id="daemon-pin-error-div" class="message" hidden>
+              <span id="daemon-pin-error-message" class="error-state">
+              </span>
+            </div>
+
+            <div id="usagestats-consent" hidden>
+              <label class="checkbox-label">
+                <input id="usagestats-consent-checkbox" type="checkbox">
+                <span i18n-content="HOST_SETUP_CRASH_REPORTING_MESSAGE"></span>
+              </label>
+            </div>
+
+            <div class="button-row">
+              <button id="daemon-pin-ok" type="submit" i18n-content="OK">
+              </button>
+              <button id="daemon-pin-cancel" type="button" i18n-content="CANCEL">
+              </button>
+            </div>
+
+          </form>
+
+          <div data-ui-mode="home.host-setup.processing"
+               class="box"
+               hidden>
+            <span class="waiting prominent"
+                  id="host-setup-processing-message">
+            </span>
+          </div>
+
+          <div data-ui-mode="home.host-setup.done" hidden>
+            <div id="host-setup-done-message" class="message"></div>
+            <div id="host-setup-done-message-2" class="message"></div>
+            <div class="button-row">
+              <button id="host-config-done-dismiss"
+                      autofocus="autofocus"
+                      i18n-content="OK"></button>
+            </div>
+          </div>
+
+          <div data-ui-mode="home.host-setup.error" hidden>
+            <div id="host-setup-error-message" class="error-state"></div>
+            <div class="button-row">
+              <button id="host-config-error-dismiss"
+                      autofocus="autofocus"
+                      i18n-content="OK"></button>
+            </div>
+          </div>
+
+        </div> <!-- host-setup-dialog -->
+        <div id="host-install-dialog"
+             class="kd-modaldialog"
+             data-ui-mode="home.host-install">
+          <h2 i18n-content="INSTALLER_DOWNLOAD"></h2>
+          <div class="h2-supplemental windows-only"
+               i18n-content="FOR_PLATFORM_WINDOWS">
+          </div>
+          <div class="h2-supplemental mac-only"
+               i18n-content="FOR_PLATFORM_MAC">
+          </div>
+          <div data-ui-mode="home.host-install.tos" hidden>
+            <div id="tos-message"
+                 class="message"
+                 i18n-content="HOST_SETUP_TERMS_OF_SERVICE">
+            </div>
+            <div class="button-row">
+              <button id="host-install-tos-accept"
+                      class="kd-button-default"
+                      autofocus="autofocus"
+                      i18n-content="ACCEPT_AND_INSTALL"></button>
+              <button id="host-install-tos-reject"
+                      i18n-content="CANCEL"></button>
+            </div>
+          </div>
+          <div data-ui-mode="home.host-install.prompt" hidden>
+            <div class="message" i18n-content="HOST_SETUP_INSTALL"></div>
+            <div class="button-row">
+              <button id="host-install-continue"
+                      autofocus="autofocus"
+                      i18n-content="OK"></button>
+              <button id="host-install-dismiss"
+                      i18n-content="CANCEL"></button>
+            </div>
+          </div>
+          <div data-ui-mode="home.host-install.pending" hidden>
+            <div class="message"
+                 i18n-content="HOST_SETUP_INSTALL_PENDING"></div>
+            <div class="button-row">
+              <button id="host-install-retry"
+                      autofocus="autofocus"
+                      i18n-content="OK"></button>
+            </div>
+          </div>
+        </div> <!-- host-install-dialog -->
+        <!-- It2Me Sharing -->
+        <div id="host-dialog"
+             class="kd-modaldialog"
+             data-ui-mode="home.host">
+
+          <div data-ui-mode="home.host.waiting-for-code" class="message"
+               i18n-content="MESSAGE_GENERATING">
+          </div> <!-- host.waiting-for-code -->
+
+          <div data-ui-mode="home.host.waiting-for-connection">
+            <div i18n-content="INSTRUCTIONS_SHARE_ABOVE"></div>
+            <div id="access-code-display" dir="ltr" class="selectable"></div>
+            <div id="access-code-countdown-container">
+              <div id="access-code-countdown" class="expiring" hidden>
+                <span id="seconds-remaining"
+                      i18n-content="ACCESS_CODE_TIMER"></span>
+              </div>
+            </div>
+            <div i18n-content="INSTRUCTIONS_SHARE_BELOW"></div>
+          </div> <!-- host.waiting-for-connection -->
+
+          <div data-ui-mode="home.host.shared">
+            <div id="host-shared-message" class="message"
+                 i18n-content="MESSAGE_SHARED"></div>
+            <div class="button-row">
+              <button id="stop-sharing-button"
+                      type="button"
+                      i18n-content="STOP_SHARING_BUTTON">
+              </button>
+            </div>
+          </div> <!-- host.shared -->
+
+          <div data-ui-mode="home.host.share-failed" class="message">
+            <span id="host-plugin-error" class="error-state"></span>
+          </div> <!-- host.share-failed -->
+
+          <div data-ui-mode="home.host.share-finished" class="message"
+               i18n-content="MESSAGE_SESSION_FINISHED">
+          </div> <!-- host.share-finished -->
+
+          <div data-ui-mode="home.host.share-failed home.host.share-finished"
+               class="button-row">
+            <button id="host-finished-button"
+                    type="button"
+                    autofocus="autofocus"
+                    i18n-content="OK">
+            </button>
+          </div>
+
+          <div id="nat-box"
+               class="information-box"
+               data-ui-mode="home.host.waiting-for-connection"
+               i18n-content="WARNING_NAT_DISABLED">
+          </div> <!-- nat-box -->
+
+          <div data-ui-mode="home.host.waiting-for-connection home.host.waiting-for-code"
+               class="button-row">
+            <span class="waiting" i18n-content="FOOTER_WAITING"></span>
+            <button id="cancel-share-button" i18n-content="CANCEL"></button>
+          </div>
+
+        </div> <!-- host dialog -->
+
+        <div id="client-dialog"
+             class="kd-modaldialog"
+             data-ui-mode="home.client">
+
+          <div data-ui-mode="home.client.unconnected">
+
+            <div i18n-content="DESCRIPTION_CONNECT" i18n-value-name-1="HOME_SHARE_BUTTON">
+            </div>
+
+            <div id="access-code-entry-row">
+              <form id="access-code-form" action="">
+                <div class="box">
+                  <div class="box-spacer"></div>
+                  <label for="access-code-entry"
+                         i18n-content="ACCESS_CODE"
+                         class="editbox-label">
+                  </label>
+                  <input id="access-code-entry"
+                         type="text"
+                         autofocus="autofocus"
+                         autocomplete="off"/>
+                  <div class="box-spacer"></div>
+                </div>
+                <div class="button-row">
+                  <button id="connect-button"
+                          type="submit"
+                          i18n-content="CONNECT_BUTTON">
+                  </button>
+                  <button id="cancel-access-code-button"
+                          type="button"
+                          i18n-content="CANCEL">
+                  </button>
+                </div>
+              </form>
+            </div> <!-- code-entry-row -->
+
+            <div id="startup-mode-box-it2me" class="information-box" hidden>
+              <span i18n-content="WARNING_NOT_WINDOWED"></span>
+              <a href="https://support.google.com/chrome/answer/1649523"
+                 target="_blank"
+                 i18n-content="LEARN_HOW"></a>
+            </div> <!-- startup-mode-box-it2me -->
+
+          </div> <!-- client.unconnected -->
+          <div data-ui-mode="home.client.connecting" class="box">
+            <span class="waiting prominent"
+                  i18n-content="FOOTER_CONNECTING"></span>
+            <div class="box-spacer"></div>
+            <button id="cancel-connect-button" i18n-content="CANCEL"></button>
+          </div>
+          <div data-ui-mode="home.client.host-needs-upgrade" id="host-needs-update-dialog">
+            <div class="message">
+              <div class="host-needs-update-message error-state"></div>
+            </div>
+            <div class="message">
+              <span i18n-content="HOST_NEEDS_UPDATE_DETAIL"></span>
+              <a href="https://support.google.com/chrome/answer/1649523"
+                 target="_blank"
+                 i18n-content="LEARN_HOW"></a>
+            </div>
+            <div class="button-row">
+              <button id="host-needs-update-connect-button"
+                      class="connect-button"
+                      type="button"
+                      i18n-content="CONNECT_ANYWAY"
+                      autofocus="autofocus">
+              </button>
+              <button class="cancel-button"
+                      type="button"
+                      i18n-content="CANCEL">
+              </button>
+            </div>
+          </div> <!-- home.client.host-needs-upgrade -->
+          <div data-ui-mode="home.client.pin-prompt" id="pin-dialog">
+            <div i18n-content="PIN_MESSAGE"
+                 class="pin-message message"></div>
+
+            <!-- using a form so that the PIN can be submitted on ENTER -->
+            <form id="pin-form">
+              <table class="centered">
+                <tr>
+                  <td>
+                    <label for="pin-entry"
+                           i18n-content="PIN"
+                           class="editbox-label"></label>
+                  </td>
+                  <td>
+                    <input id="pin-entry"
+                           type="password"
+                           class="pin-inputField"
+                           autofocus="autofocus"
+                           autocomplete="off"/>
+                    <button id="pin-connect-button"
+                            class="connect-button"
+                            i18n-content="CONNECT_BUTTON">
+                    </button>
+                    <button class="cancel-button"
+                            type="button"
+                            i18n-content="CANCEL">
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <!-- Empty cell to align the checkbox and PIN entry. -->
+                  </td>
+                  <td>
+                    <label id="remember-pin" class="pairing-section checkbox-label">
+                      <input id="remember-pin-checkbox"
+                             class="pairing-checkbox"
+                             type="checkbox">
+                      <span i18n-content="REMEMBER_PIN"></span>
+                    </label>
+                  </td>
+                </tr>
+              </table>
+            </form>
+
+            <div id="startup-mode-box-me2me"
+                 class="information-box centered"
+                 hidden>
+              <span i18n-content="WARNING_NOT_WINDOWED"></span>
+              <a href="https://support.google.com/chrome/answer/1649523"
+                 target="_blank"
+                 i18n-content="LEARN_HOW"></a>
+            </div> <!-- startup-mode-box-it2me -->
+
+          </div> <!-- client.pin-prompt -->
+          <div data-ui-mode="home.client.third-party-auth" class="centered">
+            <div id="third-party-auth-message"
+                 i18n-content="DESCRIPTION_THIRD_PARTY_AUTH"
+                 class="message"></div>
+            <div id="third-party-auth-url"
+                 class="message"></div>
+            <div class="button-row">
+              <button id="third-party-auth-button"
+                      type="button"
+                      autofocus="autofocus"
+                      i18n-content="CONTINUE_BUTTON">
+              </button>
+            </div>
+          </div> <!-- third-party-auth-dialog -->
+          <div data-ui-mode="home.client.connect-failed"
+               class="message">
+            <span id="connect-error-message" class="error-state"></span>
+          </div>
+          <div data-ui-mode="home.client.session-finished"
+               class="message" i18n-content="MESSAGE_SESSION_FINISHED">
+          </div> <!-- client.session-finished -->
+
+          <div data-ui-mode="home.client.connect-failed.it2me home.client.session-finished.it2me"
+               class="button-row">
+            <button id="client-finished-it2me-button"
+                    type="button"
+                    i18n-content="OK"
+                    autofocus="autofocus">
+            </button>
+          </div> <!-- connect-failed.it2me session-finished.it2me -->
+
+          <div data-ui-mode="home.client.connect-failed.me2me home.client.session-finished.me2me"
+               class="button-row">
+            <button id="client-reconnect-button"
+                    type="button"
+                    i18n-content="RECONNECT">
+            </button>
+            <button id="client-finished-me2me-button"
+                    type="button"
+                    autofocus="autofocus"
+                    i18n-content="OK">
+            </button>
+          </div> <!-- connect-failed.me2me session-finished.me2me -->
+        </div>
+
+        <div id="connection-history-dialog"
+             class="kd-modaldialog"
+             data-ui-mode="home.history"
+             hidden>
+
+          <div class="internal-frame-of-reference">
+
+            <h2 i18n-content="CONNECTION_HISTORY_TITLE"></h2>
+
+            <div id="connection-history-options">
+              <div class="link-list">
+                <a id="history-view-all"
+                   i18n-content="ALL_CONNECTIONS"
+                   class="no-link"></a>
+                <a id="history-view-outgoing"
+                   i18n-content="OUTGOING_CONNECTIONS"></a>
+                <a id="history-view-incoming"
+                   i18n-content="INCOMING_CONNECTIONS"></a>
+              </div>
+              <div class="box-spacer"></div>
+              <a id="clear-connection-history" i18n-content="CLEAR_HISTORY"></a>
+            </div>
+
+            <div id="connection-history-scroller">
+              <table id="connection-history-table">
+                <thead>
+                  <tr>
+                    <td></td>
+                    <td i18n-content="TIME_HEADER"></td>
+                    <td></td>
+                    <td i18n-content="CONNECTION_FROM_HEADER"></td>
+                    <td i18n-content="CONNECTION_TO_HEADER"></td>
+                    <td i18n-content="DURATION_HEADER"></td>
+                  </tr>
+                </thead>
+                <tbody id="connection-history-entries" class="selectable">
+                </tbody>
+              </table>
+            </div>
+
+            <button id="close-connection-history"
+                    i18n-content="CLOSE"
+                    type="button"></button>
+
+          </div>
+
+        </div> <!-- connection-history-dialog -->
+        <div id="confirm-host-delete-dialog"
+             class="kd-modaldialog"
+             data-ui-mode="home.confirm-host-delete"
+             hidden>
+
+          <p id="confirm-host-delete-message"
+             i18n-content="CONFIRM_HOST_DELETE"
+             class="message">
+          </p>
+
+          <div class="button-row">
+            <button id="confirm-host-delete"
+                    i18n-content="DISABLE_HOST"
+                    type="button">
+            </button>
+            <button id="cancel-host-delete"
+                    i18n-content="CANCEL"
+                    autofocus="autofocus"
+                    type="button">
+            </button>
+          </div>
+
+        </div> <!-- home.confirm-host-delete -->
+        <div id="paired-client-manager-dialog"
+             class="kd-modaldialog"
+             data-ui-mode="home.manage-pairings"
+             hidden>
+
+          <p i18n-content="PAIRED_CLIENTS_INTRODUCTION"
+             class="message">
+          </p>
+
+          <div id="paired-clients-list">
+            <table>
+              <thead>
+                <tr>
+                  <td i18n-content="PAIRED_CLIENT_DATE"></td>
+                  <td i18n-content="PAIRED_CLIENT_NAME"></td>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+            <p id="no-paired-clients">
+              <em i18n-content="NO_PAIRED_CLIENTS"></em>
+            </p>
+          </div> <!-- paired-clients-list -->
+
+          <p id="paired-client-manager-dialog-error"
+             class="error-state"
+             hidden>
+          </p>
+
+          <div class="button-row">
+            <span id="paired-client-manager-dialog-working"
+                  class="waiting"
+                  i18n-content="WORKING"
+                  hidden></span>
+            <button id="delete-all-paired-clients"
+                    i18n-content="DELETE_ALL_PAIRED_CLIENTS">
+            </button>
+            <button id="close-paired-client-manager-dialog"
+                    i18n-content="CLOSE">
+            </button>
+          </div>
+
+        </div> <!-- home.manage-pairings -->
+
+      </div>  <!-- dialog-container -->
+
+    </div>  <!-- window-body -->
+
+  </body>
+</html>

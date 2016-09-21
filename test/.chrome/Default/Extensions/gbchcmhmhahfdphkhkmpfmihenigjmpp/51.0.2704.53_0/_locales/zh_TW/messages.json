@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "接受並安裝"
+   },
+   "ACCESS_CODE": {
+      "message": "存取碼"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "這個存取碼將於 $1$ 後失效",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "意見回饋"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "所有連線"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "重新輸入 PIN"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN"
+   },
+   "CANCEL": {
+      "message": "取消"
+   },
+   "CLEAR_HISTORY": {
+      "message": "清除紀錄"
+   },
+   "CLOSE": {
+      "message": "關閉"
+   },
+   "CLOSE_PROMPT": {
+      "message": "如果離開這個頁面，您的 Chrome 遠端桌面工作階段也會結束。"
+   },
+   "CLOSE_WINDOW": {
+      "message": "關閉視窗"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "您是否確定要停用與 $1$ 之間的遠端連線？如果之後改變心意的話，您必須親身前往該電腦所在位置並修改設定後，才能重新啟用連線。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "連線失敗"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "來源電腦"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "連線紀錄"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "普通"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "良好"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "不佳"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "目標電腦"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "繼續連線"
+   },
+   "CONNECT_BUTTON": {
+      "message": "連線"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "繼續"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "您目前正與另一位使用者共用這台電腦，您要繼續共用嗎？"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Chrome 遠端桌面主機控制器"
+   },
+   "COPYRIGHT": {
+      "message": "Copyright 2013 Google Inc. 保留所有權利。"
+   },
+   "CREDITS": {
+      "message": "製作人員名單"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "全部刪除"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "刪除"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "您必須先授予電腦的延伸存取權限，才能繼續操作 (只需執行一次)。"
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "請您要存取的電腦的使用者點選 [$1$]，並提供存取碼給您。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Chrome 遠端桌面提供了安全的連線機制，可讓您透過網路與他人共用自己的電腦。您和共用對象都必須執行 Chrome 遠端桌面應用程式，請前往 $1$ 安裝。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "遠端主機要求您向第三方網站進行驗證。如要繼續，您必須授予額外權限，讓 Chrome 遠端桌面能夠存取這個位址："
+   },
+   "DISABLE_HOST": {
+      "message": "停用"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "中斷連線"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Chrome 遠端桌面服務"
+   },
+   "DURATION_HEADER": {
+      "message": "持續時間"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "您沒有執行這個應用程式的權限。"
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "驗證失敗，請重新登入 Chrome。"
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "找不到部分必要元件。請確認您已安裝最新版本的軟體，然後再試一次。"
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "發生網路錯誤。系統將在您的裝置恢復網路連線後重新啟動應用程式。"
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "遠端電腦無法初始化工作階段。如果問題持續發生，請嘗試重新設定主機。"
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "遠端電腦未回應您的連線要求。請確認遠端電腦已在線上，然後再試一次。"
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "由於有人嘗試使用無效的 PIN 連線到遠端電腦，因此您的連線暫時遭到封鎖。請稍後再試。"
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "無法註冊這台電腦。"
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "偵測到不相容的通訊協定版本。請確認兩台電腦都安裝了最新版本的軟體，然後再試一次。"
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "存取碼無效，請再試一次。"
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "政策設定不允許以 Chrome 遠端桌面主機的形式共用這台電腦。如需協助，請與您的系統管理員聯絡。"
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "遠端工作階段已逾時。"
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "找不到部分必要元件。請確認您執行的是最新版本的 Chrome，然後再試一次。"
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "找不到部分必要元件。請開啟 chrome://plugins 頁面，確認您已啟用 Native Client。"
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "必要的元件已停止運作，請向開發人員回報這個問題。"
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "無法連上網路，請確認裝置是否處於上線狀態。"
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "您尚未登入 Chrome，請登入並再試一次。"
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "您沒有執行這項操作的權限。"
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "要求的物件不存在。"
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "無法連線到主機，原因可能與您使用的網路設定有關。"
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "服務暫時無法使用，請稍後再試。"
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "發生未預期的錯誤，請向開發人員回報這個問題。"
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "退出全螢幕模式"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "無法重設應用程式。您仍然可以傳送錯誤報告。"
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "重設應用程式。所有未儲存的變更都會遺失。"
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "我無法開啟應用程式。"
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "應用程式的運作速度過慢。"
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "我無法開啟自己的 Google 雲端硬碟檔案。"
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "我已儲存的檔案未顯示在線上 Google 雲端硬碟中。"
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "我無法順利使用鍵盤或滑鼠。"
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "請將您遇到的問題告訴我們，以協助我們為您解決問題："
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "其他。"
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "選取…"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "如果您允許我們要求您提供更進一步的資訊，凡是您提交的意見回饋都會包含您的電子郵件地址。"
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "回報問題"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "包括應用程式紀錄，以協助我們解決您的問題 (紀錄可能含有私人資訊)。"
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "應用程式紀錄可能含有私人資訊，包括您的身分 (電子郵件地址)，以及 Google 雲端硬碟檔案與資料夾的名稱和屬性。"
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "這些資訊只會用於診斷您所回報的問題，並且僅供相關調查人員存取。此外，系統會在 30 天後刪除這些資訊。"
+   },
+   "FOOTER_CONNECTING": {
+      "message": "連線中..."
+   },
+   "FOOTER_WAITING": {
+      "message": "正在等待連線..."
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "適用於 Mac (OS X 10.6 以上版本)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "適用於 Windows (XP 以上版本)"
+   },
+   "FULL_SCREEN": {
+      "message": "全螢幕"
+   },
+   "GET_STARTED": {
+      "message": "開始使用"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "接受"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "拒絕"
+   },
+   "HELP": {
+      "message": "說明"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "存取"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "瀏覽及操作共用的電腦。"
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "您可以透過 Chrome 遠端桌面安全地存取這台電腦。"
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "變更 PIN"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "您目前登入的帳戶不是這台電腦的共用帳戶。"
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "檢視/編輯"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "這台電腦已設為允許一或多個用戶端可不輸入 PIN 進行連線。"
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "啟用遠端連線"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "您必須啟用遠端連線，才能透過 Chrome 遠端桌面存取這台電腦。"
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "停用遠端連線"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "分享"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "共用這台電腦，開放給其他使用者瀏覽及操作。"
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(您的電腦目前暫不支援這項功能)"
+   },
+   "HOST_CATEGORY": {
+      "message": "主機"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "用戶端遭拒絕存取：%1。"
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "已連線至用戶端：%1。"
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "已中斷連線至用戶端：%1。"
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "用戶端版本 IP：%1 ip='%2' host_ip='%3' channel='%4' connection='%5'。"
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "如要為其他電腦啟用遠端連線，請在您想要連線的電腦上安裝 Chrome 遠端桌面，然後按一下 [$1$]。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "您尚未註冊任何電腦。如要為電腦啟用遠端連線，請在電腦上安裝 Chrome 遠端桌面，然後按一下 [$1$]。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "您先前曾以$1$ ($2$) 身分登入。如要透過該帳戶存取您的電腦，請使用該帳戶$3$登入 Google Chrome$4$，並重新安裝 Chrome 遠端桌面。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "系統通常會自動執行軟體更新，但在極少數情況下，更新可能會失敗。更新軟體的時間應該僅需數分鐘，而且可透過從遠端連線至電腦的方式完成。"
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "$1$ 上的 Chrome 遠端桌面版本過舊，必須更新。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "允許我們收集使用統計資料和當機報告，協助我們改善 Chrome 遠端桌面。"
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "如要保護這台電腦，避免不明人士入侵，請選擇一個$1$至少 6 位數$2$的 PIN。當使用者從其他位置連線時，必須先輸入這個 PIN 驗證身分。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "無法啟動遠端存取服務。"
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome 正在下載 Chrome 遠端桌面主機安裝程式。下載完成後，請先執行安裝程式，然後再繼續操作。"
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "請先執行安裝程式，然後再繼續操作。"
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "這台電腦的遠端連線已啟用。"
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "請檢查電腦的電源管理設定，確認電腦在閒置時不會進入休眠狀態。"
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "正在啟用這台電腦的遠端連線..."
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "這台電腦的遠端連線已停用。"
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "正在停用這台電腦的遠端連線..."
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "無法停用這台電腦的遠端存取功能，請稍後再試。"
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "下載 Chrome 遠端桌面主機安裝程式即表示您同意 Google 的《$1$服務條款$4》。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "您的 PIN 已更新。"
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "無法更新 PIN，請稍後再試。"
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "正在更新這台電腦的 PIN..."
+   },
+   "HOST_STARTED": {
+      "message": "已為下列使用者啟動主機：%1。"
+   },
+   "HOST_STOPPED": {
+      "message": "主機已停止。"
+   },
+   "IDLE_CONTINUE": {
+      "message": "繼續"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "立即中斷連線"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "您的「$1$」工作階段已閒置一段時間，且即將中斷連線。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "與這台電腦"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "下載 Chrome 遠端桌面主機安裝程式"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "如要開始共用您的電腦，請將下方的存取碼告知要協助您的人員。"
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "對方輸入存取碼之後，共用工作階段即會開始。"
+   },
+   "INVALID_PIN": {
+      "message": "請輸入一個至少 6 位數的 PIN。"
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "讓兩端的使用者都能看到同一個螢幕畫面，是遠端技術支援作業的利器。"
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "鍵盤配置"
+   },
+   "LABEL_CONNECTED": {
+      "message": "已連線的電腦："
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (上次上線時間：$2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "瞭解詳情"
+   },
+   "LEARN_MORE": {
+      "message": "瞭解詳情"
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Chrome 遠端桌面主機偏好設定"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Chrome 遠端\n桌面主機"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Chrome 遠端桌面主機端解除安裝程式"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "使用右邊的 Ctrl 做為 Windows 鍵 (Mac 上為 ⌘ 鍵)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "將視窗放到最大"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "無論您人在哪裡，都能存取自己的電腦。"
+   },
+   "MESSAGE_GENERATING": {
+      "message": "正在產生存取碼..."
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "您的 Chrome 遠端桌面工作階段已結束。"
+   },
+   "MESSAGE_SHARED": {
+      "message": "您目前正與 $1$ 共用電腦。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "將視窗縮到最小"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "授權"
+   },
+   "MODE_IT2ME": {
+      "message": "遠端協助"
+   },
+   "MODE_ME2ME": {
+      "message": "我的電腦"
+   },
+   "NEW_WINDOW": {
+      "message": "新增視窗…"
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "已刪除所有配對的用戶端。"
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "這個平台不支援桌面整合。您仍然可以使用該應用程式，但使用者體驗可能不如預期。"
+   },
+   "OFFLINE": {
+      "message": "$1$ (離線)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "主機初始化失敗。"
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "主機設定無效。"
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "主機擁有者網域無效。"
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "主機 ID 無效。"
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "用於設定主機的 OAuth 憑證無效。"
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "在控制台登入畫面執行的主機已關閉。這樣才能切換成在個別使用者工作階段中執行的主機，以支援帷幕模式。"
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "主機正在重新啟動，以便套用政策變更。"
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "主機無法讀取政策。"
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "主機已關閉。"
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "不明主機錯誤：$1$。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "主機擁有者無效。"
+   },
+   "OK": {
+      "message": "確定"
+   },
+   "OPTIONS_MENU": {
+      "message": "選項"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "從這台電腦"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "下列用戶端已與這台電腦配對，連線時可需不提供 PIN。您隨時可以為個別或所有用戶端撤銷這項權限。"
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "配對日期"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "用戶端"
+   },
+   "PIN": {
+      "message": "PIN"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "請在兩個方塊中輸入相同的 PIN。"
+   },
+   "PIN_MESSAGE": {
+      "message": "請輸入 $1$ 的 PIN。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "請為遠端電腦輸入您的 PIN。"
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "在安全的連線機制下，透過網際網路存取其他電腦，或是允許其他使用者存取您的電腦。"
+   },
+   "PRODUCT_NAME": {
+      "message": "Chrome 遠端桌面"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome 應用程式串流"
+   },
+   "RECONNECT": {
+      "message": "重新連線"
+   },
+   "REMEMBER_PIN": {
+      "message": "此裝置連線至這個主機時，不必再次詢問 PIN。"
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "核心資料庫"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "桌面整合處理序"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "要對 Chrome 遠端桌面主機發出指令的應用程式。"
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "主機處理序"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "用於遠端處理主機管理的內建訊息傳遞主機"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "用於遠端協助的內建訊息傳遞主機"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "遠端處理安全金鑰"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "將桌面調整為合適大小"
+   },
+   "RESTART_BUTTON": {
+      "message": "立即重新啟動"
+   },
+   "RESTORE_WINDOW": {
+      "message": "還原視窗"
+   },
+   "RETRY": {
+      "message": "重試"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "螢幕選項"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "傳送 Ctrl-Alt-Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "回報問題…"
+   },
+   "SEND_KEYS": {
+      "message": "送出按鍵訊號"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "傳送 PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "這項服務允許來自 Chrome 遠端桌面用戶端的連線。"
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "這項設定受到您的網域政策管理。"
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "分享"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "取消"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "您要與其他使用者分享這台電腦的瀏覽及控制權限嗎？"
+   },
+   "SHOW_STATS": {
+      "message": "顯示統計資料"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "顯示統計資料 (連線品質：$1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "縮小以符合視窗大小"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "登入"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "登出"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "停止共用"
+   },
+   "SURVEY_INVITATION": {
+      "message": "想要協助改善 Chrome 遠端桌面嗎？$1$請填寫我們的問卷調查$2$。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "時間"
+   },
+   "TOGGLE_STATS": {
+      "message": "顯示統計資料"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "連線至 $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "停用與這台電腦的遠端連線"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "重新整理主機清單"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "編輯電腦名稱"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (版本過舊)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "帳戶"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "請在下方確認您的帳戶和 PIN，以便授予 Chrome 遠端桌面存取權限。"
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "注意：政策設定僅允許您網路中的電腦相互連線。"
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "注意：如要確保所有鍵盤快捷鍵都能正常使用，請將 Chrome 遠端桌面設定為 [在視窗中開啟]。"
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "為什麼這項操作是安全的？"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "視窗"
+   },
+   "WORKING": {
+      "message": "運作中…"
+   }
+}

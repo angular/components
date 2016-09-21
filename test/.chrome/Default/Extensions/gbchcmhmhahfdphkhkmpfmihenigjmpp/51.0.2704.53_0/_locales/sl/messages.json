@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "Sprejmite in namestite"
+   },
+   "ACCESS_CODE": {
+      "message": "Koda za dostop"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "Ta koda za dostop bo potekla čez $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "Povratne informacije"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "Vse povezave"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "Znova vnesite PIN"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN"
+   },
+   "CANCEL": {
+      "message": "Prekliči"
+   },
+   "CLEAR_HISTORY": {
+      "message": "Počisti zgodovino"
+   },
+   "CLOSE": {
+      "message": "Zapri"
+   },
+   "CLOSE_PROMPT": {
+      "message": "Če zapustite to stran, se bo seja Oddaljenega namizja za Chrome končala."
+   },
+   "CLOSE_WINDOW": {
+      "message": "Zapre okno"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "Ali ste prepričani, da želite onemogočiti oddaljene povezave z gostiteljem $1$? Če si premislite, boste morali v tistem računalniku znova omogočiti povezave.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "Vzpostavitev povezave ni uspela"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "Od"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "Zgodovina povezav"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "Zadovoljiva"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "Dobra"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "Slaba"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "Za"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "Vseeno vzpostavi povezavo"
+   },
+   "CONNECT_BUTTON": {
+      "message": "Povezovanje"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "Nadaljuj"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "Trenutno imate to napravo v skupni rabi z drugim uporabnikom. Ali želite nadaljevati skupno rabo?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Krmilnik gostitelja za Oddaljeno namizje za Chrome"
+   },
+   "COPYRIGHT": {
+      "message": "Copyright 2013 Google Inc. Vse pravice pridržane."
+   },
+   "CREDITS": {
+      "message": "Seznam sodelujočih"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "Izbriši vse"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "Izbriši"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "Če želite nadaljevati, morate računalniku najprej odobriti dovoljenja za razširjen dostop. To je treba narediti samo enkrat."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "Uporabnika, do čigar računalnika želite dostopati, prosite, da klikne »$1$« in vam da kodo za dostop.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Oddaljeno namizje za Chrome omogoča varno skupno rabo računalnika v spletu. Oba uporabnika morata uporabljati aplikacijo Oddaljeno namizje za Chrome, ki je na voljo na $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "Oddaljeni gostitelj zahteva, da previte pristnost na spletnem mestu tretje osebe. Če želite nadaljevati, morate Oddaljenemu namizju za Chrome dodeliti dodatna dovoljenja za dostop do tega naslova:"
+   },
+   "DISABLE_HOST": {
+      "message": "Onemogoči"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "Prekini povezavo"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Storitev Oddaljeno namizje za Chrome"
+   },
+   "DURATION_HEADER": {
+      "message": "Trajanje"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "Nimate dovoljenja za izvajanje te aplikacije."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "Preverjanje pristnosti ni uspelo. Še enkrat se prijavite v Chrome."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "Ni nekaterih zahtevanih delov. Preverite, ali imate najnovejšo različico programske opreme in poskusite znova."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "Prišlo je do napake v omrežju. Ko bo naprava spet dosegljiva, bo aplikacija znova zagnana."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "Oddaljeni računalnik ni inicializiral seje. Če se težava ponovi, poskusite znova konfigurirati gostitelja."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "Oddaljeni računalnik se ne odziva na zahteve za povezavo. Preverite, ali ima vzpostavljeno povezavo, in poskusite znova."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "Povezave z oddaljenim računalnikom so začasno onemogočene, ker je nekdo poskušal vzpostaviti povezavo z njim z neveljavno kodo PIN. Poskusite znova pozneje."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "Računalnika ni bilo mogoče registrirati."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "Zaznana je bila nezdružljiva različica protokola. Poskrbite, da ste v obeh računalnikih nameščeni najnovejši različici, in poskusite znova."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "Koda za dostop je neveljavna. Poskusite znova."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "Nastavitve pravilnika ne dovoljujejo skupne rabe tega računalnika kot gostitelja Oddaljenega namizja za Chrome. Če želite pomoč, se obrnite na sistemskega skrbnika."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "Oddaljena seja je potekla."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "Ni nekaterih zahtevanih delov. Preverite, ali imate najnovejšo različico Chroma in poskusite znova."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "Ni nekaterih zahtevanih delov. Na chrome://plugins preverite, ali je omogočena tehnologija Native Client."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "Zahtevana komponenta je nehala delovati. O tem obvestite razvijalce."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "Povezana z omrežjem ni uspela. Preverite, ali je naprava povezana v omrežje."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "Niste prijavljeni v Chrome. Prijavite se in poskusite znova."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "Nimate dovoljenja za izvedbo tega dejanja."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "Zahtevani predmet ne obstaja."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "Ni mogoče vzpostaviti povezave z gostiteljem; verjetno zaradi konfiguracije omrežja, ki ga uporabljate."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "Ta storitev začasno ni na voljo. Poskusite znova pozneje."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "Nepričakovana napaka. O tem obvestite razvijalce."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "Izhod iz celozaslonskega načina"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "Aplikacije ni bilo mogoče ponastaviti. Kljub temu lahko pošljete poročilo o napakah."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "Ponastavite aplikacijo. Delo, ki ga niste shranili, bo izgubljeno."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "Ne morem odpreti aplikacije."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "Ta aplikacija je prepočasna."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "Ne morem odpreti datotek v Googlu Drive."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "V spletu ne vidim shranjenih datotek v Googlu Drive."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "Imam težave s tipkovnico ali miško."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "Pomagajte nam odpraviti težave, tako da nam sporočite, kaj je narobe."
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "Nekaj drugega."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "Izberite …"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "V povratnih informacijah, ki nam jih pošljete, bo vključen vaš e-poštni naslov, da se lahko obrnemo na vas glede dodatnih informacij."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "Prijavite težavo"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "Vključite dnevnike aplikacije, da bomo lažje razrešili vašo težavo (dnevniki morda vključujejo zasebne podatke)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "Dnevniki aplikacij morda vsebujejo zasebne podatke, vključno z vašo identiteto (e-poštni naslov), in imena ter lastnosti datotek in map v Googlu Drive."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "Te informacije uporabljamo samo za diagnosticiranje težave, ki ste jo prijavili, na voljo so samo osebi, ki preučuje vašo prijavo, in hranimo jih največ 30 dni."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "Vzpostavljanje povezave ..."
+   },
+   "FOOTER_WAITING": {
+      "message": "čakanje na povezavo ..."
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "Za Mac OS (OS X 10.6 in novejši)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "Za sistem Windows (XP in novejše različice)"
+   },
+   "FULL_SCREEN": {
+      "message": "Celozaslonsko"
+   },
+   "GET_STARTED": {
+      "message": "Kako začeti"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "Sprejmi"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "Zavrni"
+   },
+   "HELP": {
+      "message": "Pomoč"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "Dostop"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "Ogled in nadziranje računalnika v skupni rabi."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "Oddaljeno namizje za Chrome omogoča varen dostop do tega računalnika."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "Spremeni PIN"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "Ta računalnik je trenutno v skupni rabi z uporabo drugega računa."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "Ogled/urejanje"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "Ta računalnik je nastavljen tako, da enemu ali več odjemalcem dovoli povezovanje brez vnosa kode PIN."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "Omogoči oddaljene povezave"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "Če želite do računalnika dostopati z Oddaljenim namizjem za Chrome, omogočite oddaljene povezave."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "Onemogoči oddaljene povezave"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "Skupna raba"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "Dajte ta računalnik v skupno rabo, da ga lahko drug uporabnik vidi in nadzira."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(ta funkcija še ni na voljo za vaš računalnik)"
+   },
+   "HOST_CATEGORY": {
+      "message": "Gostitelj"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "Dostop zavrnjen za odjemalca: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "Odjemalec povezan: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "Povezava z odjemalcem prekinjena: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "IP kanala za odjemalca: %1 ip='%2' host_ip='%3' channel='%4' connection='%5'."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "Če želite omogočiti oddaljene povezave z drugim računalnikom, vanj namestite Oddaljeno namizje za Chrome in kliknite »$1$«.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "Nimate registriranih računalnikov. Če želite omogočiti oddaljene povezave z računalnikom, vanj namestite Oddaljeno namizje za Chrome in kliknite »$1$«.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "V preteklosti ste se prijavljali kot $1$ ($2$). Če želite dostopati do računalnikov v tistem računu, $3$se prijavite v Google Chrome$4$ s tistim računom in znova namestite Oddaljeno namizje za Chrome.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "Posodobitve programske opreme se običajno izvedejo samodejno, vendar v redkih primerih posodobitev ni uspešna. Posodabljanje naj bi trajalo samo nekaj minut in se lahko izvaja, medtem ko ste s svojim računalnikom povezani oddaljeno."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "Oddaljeno namizje za Chrome pri gostitelju $1$ je zastarelo in ga je treba posodobiti.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "Pomagajte nam izboljšati Oddaljeno namizje za Chrome, tako da nam dovolite zbiranje statističnih podatkov o uporabi in poročil o zrušitvah."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "Če želite zaščititi dostop do tega računalnika, izberite vsaj $1$šestmestni$2$ PIN. Ta bo zahtevan pri povezovanju z drugega mesta.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "Storitve oddaljenega dostopa ni bilo mogoče zagnati."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome prenaša namestitveni program za gostitelja Oddaljenega namizja za Chrome. Po končanem prenosu zaženite namestitveni program, preden nadaljujete."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "Zaženite namestitveni program, preden nadaljujete."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "Oddaljene povezave za računalnik so omogočene."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "Preverite nastavitve računalnika za upravljanje porabe in zagotovite, da za čas nedejavnosti ni določeno stanje pripravljenosti."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "Omogočanje oddaljenih povezav za ta računalnik ..."
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "Oddaljene povezave za ta računalnik so onemogočene."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "Onemogočanje oddaljenih povezav za ta računalnik ..."
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "Oddaljenega dostopa za računalnik ni bilo mogoče onemogočiti. Poskusite znova pozneje."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "Če prenesete namestitveni program za gostitelja za oddaljeno namizje za Chrome, sprejemate Googlove $1$pogoje storitve$4.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "PIN je posodobljen."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "Kode PIN ni bilo mogoče posodobiti. Poskusite znova pozneje."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "PIN za ta računalnik se posodablja ..."
+   },
+   "HOST_STARTED": {
+      "message": "Gostitelj zagnan za uporabnika: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "Gostitelj se je ustavil."
+   },
+   "IDLE_CONTINUE": {
+      "message": "Nadaljuj"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "Prekini povezavo"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "Seja aplikacije $1$ je že nekaj časa nedejavna, zato bo povezava kmalu prekinjena.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "S tem računalnikom"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Prenos namestitvenega programa za gostitelja za Oddaljeno namizje za Chrome"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "Če želite začeti skupno rabo namizja, pošljite spodnjo kodo za dostop osebi, ki vam bo pomagala."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "Ko je koda vnesena, se seja skupne rabe začne."
+   },
+   "INVALID_PIN": {
+      "message": "Vnesite kodo PIN, ki mora biti vsaj šestmestna."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "Skupna raba zaslona je odlična rešitev za oddaljeno tehnično pomoč."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "Postavitve tipkovnice"
+   },
+   "LABEL_CONNECTED": {
+      "message": "Povezava vzpostavljena:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (nazadnje s povezavo: $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "Več o tem."
+   },
+   "LEARN_MORE": {
+      "message": "Več o tem"
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Nastavitve gostitelja za Oddaljeno namizje za Chrome"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Gostitelj za Oddaljeno\nnamizje za Chrome"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Odstranitveni program gostitelja za Oddaljeno namizje za Chrome"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Uporabi desno tipko Ctrl kot tipko Windows (⌘ v sistemu Mac OS)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "Povečanje okna"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "Do računalnika lahko dostopate od kjer koli."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "Ustvarjanje kode za dostop ..."
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "Seja Oddaljenega namizja za Chrome je končana."
+   },
+   "MESSAGE_SHARED": {
+      "message": "Vaše namizje je trenutno v skupni rabi z uporabnikom $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "Pomanjšanje olna"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "Pooblasti"
+   },
+   "MODE_IT2ME": {
+      "message": "Oddaljena pomoč"
+   },
+   "MODE_ME2ME": {
+      "message": "Moji računalniki"
+   },
+   "NEW_WINDOW": {
+      "message": "Novo okno …"
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "Vsi seznanjeni odjemalci so izbrisani."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "Integracija namizja v tem okolju ni podprta. Aplikacijo lahko še vedno uporabljate, vendar bo uporabniška izkušnja okrnjena."
+   },
+   "OFFLINE": {
+      "message": "$1$ (brez povezave)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "Inicializacija gostitelja ni uspela."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "Neveljavna konfiguracija gostitelja."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "Neveljavna domena lastnika gostitelja."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "Neveljaven ID gostitelja."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "Gostitelj je konfiguriran z neveljavnimi poverilnicami OAuth."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "Gostitelj, ki se je izvajal na zaslonu za prijavo v konzolo, se je zaustavil zaradi podpore načinu zavese, tako da je preklopil na gostitelja, ki se izvaja v seji uporabnika."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "Gostitelj se znova zaganja zaradi uveljavitve spremembe pravilnika."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "Gostitelj ni mogel prebrati pravilnika."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "Gostitelj se je zaustavil."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "Neprepoznana napaka gostitelja: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "Neveljavni lastnik gostitelja."
+   },
+   "OK": {
+      "message": "V redu"
+   },
+   "OPTIONS_MENU": {
+      "message": "Možnosti"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "Iz tega računalnika"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "Ti odjemalci so bili seznanjeni s tem računalnikom in se lahko povežejo, ne da bi bilo treba vnesti PIN. To dovoljenje lahko kadar koli umaknete za vsakega posameznega odjemalca ali za vse."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "Datum seznanjenja"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "Odjemalec"
+   },
+   "PIN": {
+      "message": "PIN"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "V polji vnesite isto kodo PIN."
+   },
+   "PIN_MESSAGE": {
+      "message": "Vnesite kodo PIN za gostitelja $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "Vnesite PIN za oddaljeni računalnik."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "Dostopajte do drugih računalnikov ali omogočite drugemu uporabniku, da varno dostopa do vašega računalnika prek interneta."
+   },
+   "PRODUCT_NAME": {
+      "message": "Oddaljeno namizje za Chrome"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome App Streaming"
+   },
+   "RECONNECT": {
+      "message": "Znova poveži"
+   },
+   "REMEMBER_PIN": {
+      "message": "Pri povezovanju s tem gostiteljem iz tega računalnika ne zahtevaj več kode PIN."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "Knjižnica jedra"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "Postopek vključitve namizja"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "Aplikacija naj pošilja ukaze gostitelju Oddaljenega namizja za Chrome."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "Gostiteljski postopek"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "Izvorni gostitelj za sporočanje za upravljanje komunikacije na daljavo"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "Izvorni gostitelj za sporočanje za pomoč na daljavo"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "Postopek oddaljenega delovanja varnostnega ključa"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "Prilagodi velikost namizja"
+   },
+   "RESTART_BUTTON": {
+      "message": "Znova zaženi"
+   },
+   "RESTORE_WINDOW": {
+      "message": "Obnovi okno"
+   },
+   "RETRY": {
+      "message": "Poskusi znova"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "Možnosti zaslona"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Pošlji Ctrl + Alt + Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "Prijava težave …"
+   },
+   "SEND_KEYS": {
+      "message": "Pošlji tipke"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "Pošlji PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "Ta storitev omogoča dohodne povezave iz odjemalcev za Oddaljeno namizje za Chrome."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "To nastavitev upravlja pravilnik vaše domene."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "Skupna raba"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "Prekliči"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "Ali želite ta računalnik deliti z drugimi, tako da bo imel drug uporabnik do njega dostop in ga bo lahko nadziral?"
+   },
+   "SHOW_STATS": {
+      "message": "Prikaži statistične podatke"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "Prikaži statistične podatke (povezava: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "Skrči na ustrezno velikost"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "Prijava"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "Odjava"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "Prekliči skupno rabo"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Želite pomagati izboljšati oddaljeno namizje za Chrome? $1$Sodelujte v anketi.$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "Čas"
+   },
+   "TOGGLE_STATS": {
+      "message": "Prikaži statistične podatke"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "Vzpostavljanje povezave z gostiteljem $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "Onemogočanje oddaljenih povezav za računalnik"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "Osveži seznam gostiteljev"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "Urejanje imena računalnika"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (zastarelo)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "Račun"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Če želite dovoliti dostop prek Oddaljenega namizja za Chrome, spodaj potrdite račun in PIN."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "OPOMBA: Nastavitve na podlagi pravilnika dovoljujejo povezave samo med računalniki v vašem omrežju."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "OPOMBA: Če želite zagotoviti, da bodo na voljo vse bližnjične tipke, lahko Oddaljeno namizje za Chrome konfigurirate na »Odpri kot okno«."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "Zakaj je to varno?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Windows"
+   },
+   "WORKING": {
+      "message": "Obdelava …"
+   }
+}

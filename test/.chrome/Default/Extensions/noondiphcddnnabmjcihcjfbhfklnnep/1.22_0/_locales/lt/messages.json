@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Visada nepaisyti šioje svetainėje"
+   },
+   "always_ignore_confirmation": {
+      "message": "Ar norite, kad slaptažodžio apsauga visada nepaisytų šios svetainės?"
+   },
+   "back": {
+      "message": "Atgal"
+   },
+   "contact_security": {
+      "message": "Susisiek. su saug. tarnyba"
+   },
+   "extension_description": {
+      "message": "Slaptažodžio apsauga padeda apsisaugoti nuo sukčiavimo atakų."
+   },
+   "extension_detailed_description": {
+      "message": "Jei „Gmail“ arba „Google for Work“ slaptažodį įvesite bet kur kitur, o ne svetainėje adresu accounts.google.com, bus pateiktas įspėjimas, kad prireikus galėtumėte pakeisti slaptažodį.\n\nSlaptažodžio apsauga taip pat bando aptikti svetaines, apsimetančias „Google“ prisijungimo puslapiais, kad įspėtų jus prieš įvedant slaptažodį. Kad tai būtų atliekama, Slaptažodžio apsauga patikrina kiekvieno lankomo puslapio HTML, kad sužinotų, ar jame nėra apsimetinėjama „Google“ prisijungimo puslapiu.\n\nDUK\n– Kada pradės veikti Slaptažodžio apsauga?\nSlaptažodžio apsauga bus inicijuota, kai kitą kartą įvesite slaptažodį svetainėje adresu accounts.google.com.\n\n– Ar Slaptažodžio apsauga saugo slaptažodžius arba klavišų paspaudimus?\nNe. Slaptažodžio apsauga nesaugo slaptažodžių ar klavišų paspaudimų. Saugoma saugi slaptažodžio miniatiūra, kuri palyginama su naujausių klavišų paspaudimų naršyklėje „Chrome“ miniatiūra.\n\n– Kur Slaptažodžio apsauga siunčia duomenis?\nJei „Gmail“ paskyroje naudojate Slaptažodžio apsaugą, ji nesiunčia duomenų iš vietinio kompiuterio. Jei „Google for Work“ administratorius pasirenka domene pritaikyti Slaptažodžio apsaugą, jis gaus įspėjimus, kai bus suaktyvinama Slaptažodžio apsauga.\n\n– Kokie Slaptažodžio apsaugos apribojimai?\nSlaptažodžio apsauga neapsaugo veiklos inkognito languose, „Chrome“ programose ar „Chrome“ plėtiniuose. Ji taip pat neapsaugo slaptažodžių ne „Google“ paslaugose. Slaptažodžio apsauga „Chrome“ žiniatinklio naršyklėje veikia, tik kai įgalinta „JavaScript“.\n\n– Kur galima gauti daugiau informacijos?\nVisą DUK sąrašą galite rasti apsilankę adresu LINK_TBD arba visą atvirojo šaltinio kodų bazę galite peržiūrėti adresu https://github.com/google/password-alert\n\nĮdiegdami šį elementą sutinkate su „Google“ paslaugų teikimo sąlygomis ir privatumo politika, pasiekiama adresu www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Slaptažodžio apsauga"
+   },
+   "ignore": {
+      "message": "Šįkart nepaisyti"
+   },
+   "initialization_message": {
+      "message": "Kad veiktų slaptažodžio apsauga, prisijunkite prie savo paskyros."
+   },
+   "initialization_thank_you_message": {
+      "message": "Ačiū. Slaptažodžio apsauga veikia."
+   },
+   "learn_more": {
+      "message": "Sužinokite daugiau"
+   },
+   "password_warning_banner_body": {
+      "message": "Ką tik įvedėte „Google“ paskyros slaptažodį prisijungimo puslapyje, kuris nepriklauso „Google“. Nedelsdami iš naujo nustatykite slaptažodį, kad apsaugotumėte paskyrą. Nenaudokite slaptažodžio kitose programose ir svetainėse."
+   },
+   "password_warning_banner_header": {
+      "message": "Iš naujo nustatykite „Google“ paskyros slaptažodį"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Panašu, kad šioje svetainėje naudojama suklastota „Google“ prisijungimo puslapio versija, siekiant pavogti jūsų slaptažodį, todėl ji buvo užblokuota. Jei suprantate, kad ši svetainė gali pažeisti jūsų kompiuterį, galite apsilankyti šioje svetainėje, bet būkite atidūs vesdami informaciją."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Ši svetainė užblokuota."
+   },
+   "report_phishing": {
+      "message": "Pranešti apie šią svetainę"
+   },
+   "reset_password": {
+      "message": "Iš naujo nustatyk. slapt."
+   },
+   "sign_in": {
+      "message": "Prisijunkite"
+   },
+   "visit_this_site": {
+      "message": "Apsilankyk. šioje svetain."
+   }
+}

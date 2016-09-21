@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Ignoreeri selle saidi puhul alati"
+   },
+   "always_ignore_confirmation": {
+      "message": "Kas soovite, et paroolialarm ignoreeriks seda veebisaiti alati?"
+   },
+   "back": {
+      "message": "Tagasi"
+   },
+   "contact_security": {
+      "message": "Võtke ühendust turvaülemaga"
+   },
+   "extension_description": {
+      "message": "Paroolialarm aitab kaitsta andmepüügirünnakute eest."
+   },
+   "extension_detailed_description": {
+      "message": "Kui sisestate Gmaili või Google for Worki parooli mujal kui aadressil accounts.google.com, saate hoiatuse, et saaksite vajaduse korral parooli muuta.\n\nParoolialarm püüab tuvastada ka võltsitud Google'i sisselogimislehti, et hoiatada teid enne, kui sisestate oma parooli. Selleks kontrollib paroolialarm iga külastatava lehe HTML-koodi ja veendub, et see ei esineks Google'i sisselogimislehena.\n\nKKK\n\n– Millal paroolialarm tööle hakkab?\nParoolialarm lähtestab end järgmisel korral, kui sisestate parooli aadressile accounts.google.com.\n\n– Kas paroolialarm salvestab mu parooli või klahvivajutused?\nEi. Paroolialarm ei salvesta teie paroole ega klahvivajutusi, vaid talletab parooli turvalise pisipildi ja võrdleb seda Chrome'is teie hiljutiste klahvivajutuste pisipildiga.\n\n– Kuhu paroolialarm andmed saadab?\n\nKui kasutate paroolialarmi Gmaili kontol, ei saada paroolialarm teie kohalikust arvutist andmeid. Kui teie Google for Worki administraator otsustab juurutada paroolialarmi teie domeenil, saab paroolialarmi aktiveerumisel hoiatuse administraator.\n\n– Millised on paroolialarmi piirangud?\nParoolialarm ei kaitse inkognito aknaid, Chrome'i rakendusi ega Chrome'i laiendusi. Samuti kaitseb see ainult Google'i teenuste paroole. Paroolialarm töötab Chrome'i veebibrauseris vaid juhul, kui JavaScript on lubatud.\n\n– Kust leida üksikasjalikumat teavet?\nVaadake täielikku KKK-d aadressil LINK_TBD. Samuti võite vaadata tervet avatud lähtekoodi aadressil https://github.com/google/password-alert\n\nKui installite selle üksuse, nõustute Google'i teenusetingimuste ja privaatsuseeskirjadega, mis on saadaval aadressil www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Paroolialarm"
+   },
+   "ignore": {
+      "message": "Ignoreeri seekord"
+   },
+   "initialization_message": {
+      "message": "Paroolialarmi rakendamiseks logige sisse oma kontole."
+   },
+   "initialization_thank_you_message": {
+      "message": "Aitäh. Paroolialarm on nüüd rakendatud."
+   },
+   "learn_more": {
+      "message": "Lisateave"
+   },
+   "password_warning_banner_body": {
+      "message": "Äsja sisestasite oma Google'i konto parooli sisselogimislehel, mis ei kuulu Google'ile. Konto kaitsmiseks lähtestage oma parool kohe. Veenduge ka, et te ei kasutaks parooli uuesti teiste rakenduste ja saitide puhul."
+   },
+   "password_warning_banner_header": {
+      "message": "Lähtestate oma Google'i konto parooli"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Tundub, et see sait kasutab teie parooli varastamiseks Google'i sisselogimislehe võltsversiooni, seetõttu on see blokeeritud. Kui mõistate, et see sait võib teie arvutile ohtlik olla, võite saiti külastada, kuid olge seal teabe sisestamisel ettevaatlik."
+   },
+   "phishing_warning_banner_header": {
+      "message": "See sait on blokeeritud."
+   },
+   "report_phishing": {
+      "message": "Teavitage sellest saidist"
+   },
+   "reset_password": {
+      "message": "Lähtestage parool"
+   },
+   "sign_in": {
+      "message": "Logige sisse"
+   },
+   "visit_this_site": {
+      "message": "Külastage seda saiti"
+   }
+}

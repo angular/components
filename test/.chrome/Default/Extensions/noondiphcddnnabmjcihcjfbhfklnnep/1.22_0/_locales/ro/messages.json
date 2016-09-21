@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Ignoră întotdeauna pentru acest site"
+   },
+   "always_ignore_confirmation": {
+      "message": "Vrei ca Alertă privind parola să ignore întotdeauna acest site?"
+   },
+   "back": {
+      "message": "Înapoi"
+   },
+   "contact_security": {
+      "message": "Contactează administratorii"
+   },
+   "extension_description": {
+      "message": "Alertă privind parola ajută la protejarea împotriva atacurilor de tip phishing."
+   },
+   "extension_detailed_description": {
+      "message": "Dacă introduci parola Gmail sau Google for Work oriunde altundeva decât pe accounts.google.com, vei primi o alertă, pentru a schimba parola dacă este necesar.\n\nExtensia „Alertă privind parola” încearcă să detecteze paginile de conectare Google false pentru a te alerta înainte de a introduce parola. În acest scop, „Alertă privind parola” verifică codul HTML al fiecărei pagini pe care o accesezi pentru a vedea dacă folosește identitatea unei pagini de conectare Google.\n\nÎntrebări frecvente\n– Când devine activă extensia „Alertă privind parola”?\n„Alertă privind parola” se va activa data viitoare când introduci parola la accounts.google.com.\n\n– Extensia „Alertă privind parola” stochează parola sau apăsările de taste?\nNu. „Alertă privind parola” nu stochează parola sau apăsările de taste. Stochează o miniatură securizată a parolei, pe care o compară cu o miniatură a celor mai recente apăsări de taste din Chrome.\n\n– Unde trimite datele extensia „Alertă privind parola”?\nDacă folosești „Alertă privind parola” într-un cont Gmail, „Alertă privind parola” nu trimite date de pe computerul local. Dacă administratorul Google for Work decide să activeze „Alertă privind parola” pentru domeniul tău, administratorul va primi alerte atunci când „Alertă privind parola” se declanșează.\n\n– Care sunt limitele extensiei „Alertă privind parola”?\n„Alertă privind parola” nu protejează ferestrele incognito, aplicațiile sau extensiile Chrome. De asemenea, nu protejează parolele pentru serviciile non-Google. „Alertă privind parola” funcționează doar în browserul web Chrome atunci când JavaScript este activat.\n\n– Unde pot găsi mai multe detalii?\nAccesează toate întrebările frecvente la LINK_TBD sau întreaga bază de cod open-source la https://github.com/google/password-alert\n\nInstalând acest articol, accepți Termenii și condițiile Google și Politica de confidențialitate de la www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Alertă privind parola"
+   },
+   "ignore": {
+      "message": "Ignoră de această dată"
+   },
+   "initialization_message": {
+      "message": "Pentru ca Alertă privind parola să se activeze, conectează-te la contul tău."
+   },
+   "initialization_thank_you_message": {
+      "message": "Mulțumim. Alerta privind parola este activată."
+   },
+   "learn_more": {
+      "message": "Află mai multe"
+   },
+   "password_warning_banner_body": {
+      "message": "Tocmai ai introdus parola Contului Google pe o pagină de conectare non-Google. Resetează imediat parola pentru a proteja contul. Asigură-te că nu folosești aceeași parolă pentru alte aplicații și site-uri."
+   },
+   "password_warning_banner_header": {
+      "message": "Resetează parola Contului Google"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Acest site pare să folosească o versiune falsă a paginii de conectare Google pentru a-ți fura parola și din acest motiv a fost blocat. Dacă înțelegi că acest site poate dăuna computerului, dar totuși dorești să îl accesezi, ai grijă ce informații introduci."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Acest site a fost blocat."
+   },
+   "report_phishing": {
+      "message": "Raportează acest site"
+   },
+   "reset_password": {
+      "message": "Resetează parola"
+   },
+   "sign_in": {
+      "message": "Conectează-te"
+   },
+   "visit_this_site": {
+      "message": "Accesează acest site"
+   }
+}

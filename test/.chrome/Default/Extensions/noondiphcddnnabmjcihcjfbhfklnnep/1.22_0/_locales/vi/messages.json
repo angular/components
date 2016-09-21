@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Luôn bỏ qua cho trang web này"
+   },
+   "always_ignore_confirmation": {
+      "message": "Bạn có muốn Cảnh báo mật khẩu luôn bỏ qua trang web này không?"
+   },
+   "back": {
+      "message": "Quay lại"
+   },
+   "contact_security": {
+      "message": "Liên hệ Bộ phận bảo mật"
+   },
+   "extension_description": {
+      "message": "Cảnh báo mật khẩu giúp bảo vệ chống lại các cuộc tấn công lừa đảo."
+   },
+   "extension_detailed_description": {
+      "message": "Nếu bạn nhập mật khẩu Gmail hoặc Google for Work vào bất cứ đâu không phải là accounts.google.com, bạn sẽ nhận được thông báo, do đó bạn có thể thay đổi mật khẩu nếu cần.\n\nCảnh báo mật khẩu cũng cố gắng phát hiện các trang đăng nhập Google giả để cảnh báo cho bạn trước khi bạn nhập mật khẩu của mình. Để làm điều này, Cảnh báo mật khẩu kiểm tra HTML của từng trang bạn truy cập để xem liệu trang đó có đang giả mạo một trang đăng nhập Google hay không.\n\nCâu hỏi thường gặp\n-- Cảnh báo bảo mật có hiệu lực khi nào?\nCảnh báo bảo mật sẽ tự khởi chạy vào lần tiếp theo bạn nhập mật khẩu vào accounts.google.com.\n\n-- Cảnh báo bảo mật có lưu trữ mật khẩu hoặc động tác bấm phím của tôi không?\nKhông. Cảnh báo bảo mật không lưu trữ mật khẩu hoặc động tác bấm phím của bạn -- thay vào đó, tính năng này lưu trữ hình thu nhỏ an toàn của mật khẩu của bạn, tính năng sẽ so sánh hình thu nhỏ này với hình thu nhỏ của các động tác bấm phím gần đây nhất của bạn trong Chrome.\n\n-- Khi nào Cảnh báo bảo mật gửi dữ liệu?\nNếu bạn đang sử dụng Cảnh báo bảo mật trong tài khoản Gmail, Cảnh báo bảo mật không gửi bất kỳ dữ liệu nào từ máy tính cục bộ của bạn. Nếu quản trị viên Google for Work chọn triển khai Cảnh báo bảo mật trên miền của bạn, quản trị viên sẽ nhận được thông báo khi Cảnh báo bảo mật kích hoạt.\n\n-- Giới hạn của Cảnh báo bảo mật là gì?\nCảnh báo bảo mật không bảo vệ cửa sổ ẩn danh, Ứng dụng Chrome hoặc Tiện ích của Chrome. Tính năng này cũng không bảo vệ mật khẩu cho dịch vụ không phải của Google. Cảnh báo bảo mật chỉ hoạt động bên trong trình duyệt web Chrome khi Javascript bật.\n\n-- Tôi có thể tìm thêm thông tin chi tiết ở đâu?\nTruy cập Câu hỏi thường gặp đầy đủ tại LINK_TBD hoặc bạn có thể xem toàn bộ cơ sở mã nguồn mở tại https://github.com/google/password-alert\n\nBằng cách cài đặt mục này, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của Google tại www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Cảnh báo mật khẩu"
+   },
+   "ignore": {
+      "message": "Bỏ qua lần này"
+   },
+   "initialization_message": {
+      "message": "Để Cảnh báo mật khẩu có hiệu lực, vui lòng đăng nhập vào tài khoản của bạn."
+   },
+   "initialization_thank_you_message": {
+      "message": "Cảm ơn. Cảnh báo mật khẩu đang có hiệu lực."
+   },
+   "learn_more": {
+      "message": "Tìm hiểu thêm"
+   },
+   "password_warning_banner_body": {
+      "message": "Bạn vừa nhập mật khẩu Tài khoản Google trên trang đăng nhập không phải của Google. Hãy đặt lại mật khẩu ngay lập tức để bảo vệ tài khoản của bạn. Và vui lòng đảm bảo không sử dụng lại mật khẩu của bạn cho các ứng dụng và trang web khác."
+   },
+   "password_warning_banner_header": {
+      "message": "Đặt lại mật khẩu Tài khoản Google của bạn"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Trang web này có vẻ như đang sử dụng phiên bản trang đăng nhập Google giả mạo để ăn cắp mật khẩu của bạn nên trang đã bị chặn. Nếu bạn hiểu rằng trang web này có thể gây hại cho máy tính của mình, bạn có thể truy cập trang web này nhưng hãy cẩn thận về những thông tin mà bạn nhập."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Trang web này đã bị chặn."
+   },
+   "report_phishing": {
+      "message": "Báo cáo trang web này"
+   },
+   "reset_password": {
+      "message": "Đặt lại mật khẩu"
+   },
+   "sign_in": {
+      "message": "Đăng nhập"
+   },
+   "visit_this_site": {
+      "message": "Truy cập trang web này"
+   }
+}

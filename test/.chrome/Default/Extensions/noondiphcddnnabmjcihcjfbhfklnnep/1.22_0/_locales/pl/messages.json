@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Zawsze ignoruj w tej witrynie"
+   },
+   "always_ignore_confirmation": {
+      "message": "Czy chcesz, by Ochrona hasła zawsze ignorowała tę witrynę?"
+   },
+   "back": {
+      "message": "Wstecz"
+   },
+   "contact_security": {
+      "message": "Skontaktuj się z administratorem"
+   },
+   "extension_description": {
+      "message": "Ochrona hasła pomaga chronić przed phishingiem."
+   },
+   "extension_detailed_description": {
+      "message": "Jeśli podasz swoje hasło do Gmaila lub Google for Work gdziekolwiek indziej niż na accounts.google.com, otrzymasz alert, tak by można było je w razie potrzeby zmienić.\n\nOchrona hasła próbuje także wykrywać fałszywe strony logowania Google i ostrzegać Cię, zanim wpiszesz hasło. W tym celu sprawdza kod HTML każdej odwiedzanej strony, by upewnić się, że nie podszywa się ona pod stronę logowania Google.\n\nNajczęstsze pytania\n-- Kiedy Ochrona hasła zacznie działać?\nOchrona hasła uruchomi się, gdy następnym razem wpiszesz hasło na accounts.google.com\n\n-- Czy Ochrona hasła zapisuje moje hasło lub rejestruje naciśnięcia klawiszy?\nNie. Ochrona hasła nie zapisuje haseł ani nie rejestruje naciśnięć klawiszy. Zamiast tego zapisuje bezpieczny skrót Twojego hasła, który porównuje potem z wzorcem ostatnich naciśnięć klawiszy w Chrome.\n\n-- Dokąd Ochrona hasła wysyła dane?\nJeśli używasz Ochrony hasła na koncie Gmail, nie wysyła ona z komputera lokalnego żadnych danych. Jeśli administrator Google for Work wdroży ją w domenie, będzie otrzymywać uruchamiane przez nią alerty.\n\n-- Jakie są ograniczenia Ochrony hasła?\nOchrona hasła nie działa w oknach incognito, aplikacjach Chrome ani rozszerzeniach do Chrome. Nie chroni też haseł do usług innych niż Google. Ochrona hasła działa tylko w przeglądarce Chrome, gdy jest włączona obsługa JavaScriptu.\n\n-- Gdzie mogę znaleźć więcej informacji?\nNajczęstsze pytania znajdziesz na LINK_TBD. Na stronie https://github.com/google/password-alert możesz też zapoznać się z całym kodem, który udostępniamy na zasadach open source.\n\nInstalując ten element, zgadzasz się na Warunki korzystania z usług i Politykę prywatności Google (www.google.com/policies).\n"
+   },
+   "extension_name": {
+      "message": "Ochrona hasła"
+   },
+   "ignore": {
+      "message": "Zignoruj tym razem"
+   },
+   "initialization_message": {
+      "message": "Aby korzystać z Ochrony hasła, zaloguj się na konto."
+   },
+   "initialization_thank_you_message": {
+      "message": "Dziękuję. Ochrona hasła zaczęła działać."
+   },
+   "learn_more": {
+      "message": "Więcej informacji"
+   },
+   "password_warning_banner_body": {
+      "message": "Wpisałeś hasło do konta Google na stronie logowania, która nie należy do Google. Niezwłocznie zmień hasło do swojego konta, by je chronić. Pamiętaj, by nie używać swojego hasła w innych witrynach i aplikacjach."
+   },
+   "password_warning_banner_header": {
+      "message": "Zresetuj hasło do swojego konta Google"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Wygląda na to, że ta witryna używa fałszywej wersji strony logowania Google, by wykraść Twoje hasło – dlatego została zablokowana. Jeśli rozumiesz, że może ona być szkodliwa dla Twojego komputera, możesz na nią wejść, ale zachowaj ostrożność w razie wpisywania jakichkolwiek informacji."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Ta strona została zablokowana."
+   },
+   "report_phishing": {
+      "message": "Zgłoś tę witrynę"
+   },
+   "reset_password": {
+      "message": "Zresetuj hasło"
+   },
+   "sign_in": {
+      "message": "Zaloguj się"
+   },
+   "visit_this_site": {
+      "message": "Wejdź na tę stronę"
+   }
+}

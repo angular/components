@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Ignorar siempre para este sitio"
+   },
+   "always_ignore_confirmation": {
+      "message": "¿Quieres que Alerta de protección de contraseña ignore siempre este sitio web?"
+   },
+   "back": {
+      "message": "Atrás"
+   },
+   "contact_security": {
+      "message": "Contacta con los administradores de seguridad"
+   },
+   "extension_description": {
+      "message": "Alerta de protección de contraseña te ayuda a protegerte contra ataques de phishing."
+   },
+   "extension_detailed_description": {
+      "message": "Si introduces la contraseña de tu cuenta de Gmail o de Google for Work en una página distinta de accounts.google.com, recibirás una alerta para que puedas cambiar la contraseña si es necesario.\n\nAlerta de protección de contraseña también intenta detectar páginas de inicio de sesión de Google falsas para avisarte antes de que introduzcas tu contraseña. Para ello, Alerta de protección de contraseña comprueba el código HTML de cada página que visitas para ver si se trata de una suplantación de una página de inicio de sesión de Google.\n\nPreguntas frecuentes\n-- ¿Cuándo empieza a funcionar Alerta de protección de contraseña?\nAlerta de protección de contraseña se activará la próxima vez que introduzcas tu contraseña en la página accounts.google.com.\n\n-- ¿Alerta de protección de contraseña almacena mi contraseña o mis pulsaciones de teclas?\nNo. Alerta de protección de contraseña no almacena tu contraseña ni tus pulsaciones de teclas. En su lugar, guarda una miniatura segura de tu contraseña, que compara con una miniatura de tus pulsaciones de teclas más recientes en Chrome.\n\n-- ¿Adónde envía datos Alerta de protección de contraseña?\nSi utilizas Alerta de protección de contraseña en una cuenta de Gmail, la aplicación no enviará datos desde tu ordenador local. Si tu administrador de Google for Work decide implementar Alerta de protección de contraseña en tu dominio, el administrador recibirá alertas cuando se active la aplicación.\n\n-- ¿Cuáles son los límites de Alerta de protección de contraseña?\nAlerta de protección de contraseña no protege ventanas de incógnito ni aplicaciones o extensiones de Chrome. Tampoco protege contraseñas de servicios que no son de Google y solo funciona en el navegador web Chrome si JavaScript está habilitado.\n\n-- ¿Dónde puedo consultar más información?\nAccede a la página LINK_TBD para consultar todas las Preguntas frecuentes. O, si lo prefieres, puedes ver todo el repositorio de código abierto en la página https://github.com/google/password-alert\n\nAl instalar este elemento, aceptas las Condiciones de servicio y la Política de privacidad de Google, disponible en la página www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Alerta de protección de contraseña"
+   },
+   "ignore": {
+      "message": "Ignorar esta vez"
+   },
+   "initialization_message": {
+      "message": "Para que Alerta de protección de contraseña pueda funcionar, inicia sesión en tu cuenta."
+   },
+   "initialization_thank_you_message": {
+      "message": "Gracias. Alerta de protección de contraseña ahora está activa."
+   },
+   "learn_more": {
+      "message": "Más información"
+   },
+   "password_warning_banner_body": {
+      "message": "Acabas de introducir la contraseña de tu cuenta de Google en una página de inicio de sesión que no es de Google. Restablece tu contraseña inmediatamente para proteger tu cuenta y no vuelvas a utilizarla para otros sitios y aplicaciones."
+   },
+   "password_warning_banner_header": {
+      "message": "Restablece la contraseña de tu cuenta de Google"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Parece que este sitio está usando una versión falsa de la página de inicio de sesión de Google para robarte la contraseña, por lo que se ha bloqueado. Si entiendes que este sitio puede dañar el ordenador, puedes visitar este sitio, pero ten cuidado con los datos que introduces."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Este sitio se ha bloqueado."
+   },
+   "report_phishing": {
+      "message": "Informar sobre este sitio"
+   },
+   "reset_password": {
+      "message": "Restablecer la contraseña"
+   },
+   "sign_in": {
+      "message": "Iniciar sesión"
+   },
+   "visit_this_site": {
+      "message": "Visitar el sitio"
+   }
+}

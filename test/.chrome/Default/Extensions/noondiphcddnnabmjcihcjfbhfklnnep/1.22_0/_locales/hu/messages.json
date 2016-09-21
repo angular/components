@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Mindig hagyja figyelmen kívül ezen a webhelyen"
+   },
+   "always_ignore_confirmation": {
+      "message": "Szeretné, hogy a Jelszóriasztás mindig hagyja figyelmen kívül ezt a weboldalt?"
+   },
+   "back": {
+      "message": "Vissza"
+   },
+   "contact_security": {
+      "message": "Hívja a rendszergazdát"
+   },
+   "extension_description": {
+      "message": "A Jelszóriasztás védelmet nyújt az adathalász támadások ellen."
+   },
+   "extension_detailed_description": {
+      "message": "Ha Gmail- vagy Google for Work-jelszavával az accounts.google.com webhelyen kívül máshová próbál meg belépni, értesítést fog kapni, hogy szükség esetén módosíthassa jelszavát.\n\nA Jelszóriasztás megpróbálja észlelni a hamis Google-bejelentkezési oldalakat is, hogy még a jelszó beírása előtt figyelmeztetni tudja Önt. Ennek érdekében a Jelszóriasztás ellenőrzi minden Ön által felkeresett oldal HTML-kódját annak kiderítése érdekében, hogy nem egy hamis Google bejelentkezési oldalról van-e szó.\n\nGYIK\n– Mikor lesz engedélyezve a Jelszóriasztás?\nA Jelszóriasztás akkor kezdi meg a működést, amikor Ön a következő alkalommal megadja jelszavát az accounts.google.com webhelyen.\n\n– A Jelszóriasztás tárolja a jelszavamat és a billentyűleütéseket?\nNem. A Jelszóriasztás nem tárolja sem a jelszavát, sem a billentyűleütéseket. Egy biztonságos indexképet hoz létre a jelszóból, amelyet összehasonlít a legutóbb leütött billentyűkkel a Chrome-ban.\n\n– Hová küldi a Jelszóriasztás az adatokat?\nHa a Jelszóriasztást Gmail-fiókjához használja, az semmilyen adatot nem küld az Ön számítógépéről. Ha Google for Work-rendszergazdája telepíti a Jelszóriasztás funkciót az Ön domainjén, a rendszergazda értesítést kap, amikor a Jelszóriasztás aktiválódik.\n\n– Mik a Jelszóriasztás korlátai?\nA Jelszóriasztás nem jelent védelmet az inkognitóablakokra, a Chrome-alkalmazásokra vagy a Chrome-bővítményekre nézve. Továbbá nem nyújt védelmet a nem Google-szolgáltatásokhoz kapcsolódó jelszavak esetén sem. A Jelszóriasztás csak a Chrome böngészőn belül működik, ha a JavaScript engedélyezve van.\n\n– Hol találhatok további információkat?\nOlvassa el a teljes GYIK részt (LINK_TBD), vagy nézze meg a nyílt forrású kódot itt: https://github.com/google/password-alert\n\nAz elem telepítésével elfogadja a Google Általános Szerződési Feltételeit és Adatvédelmi irányelveit: www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "message": "Jelszóriasztás"
+   },
+   "ignore": {
+      "message": "Elem mellőzése"
+   },
+   "initialization_message": {
+      "message": "A Jelszóriasztás bekapcsolásához jelentkezzen be fiókjába."
+   },
+   "initialization_thank_you_message": {
+      "message": "Köszönjük! A Jelszóriasztás mostantól működik."
+   },
+   "learn_more": {
+      "message": "További információ"
+   },
+   "password_warning_banner_body": {
+      "message": "Olyan bejelentkezési oldalon írta be Google-fiókjának jelszavát, amely nem a Google-é. Fiókja megvédése érdekében azonnal állítson be új jelszót. Ügyeljen arra, hogy ne használja ugyanazt a jelszót más alkalmazásoknál és webhelyeknél is."
+   },
+   "password_warning_banner_header": {
+      "message": "Google-fiók jelszavának átállítása"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Úgy tűnik, hogy ez a webhely hamis Google-bejelentkezési oldalt használ, hogy ellopja az Ön jelszavát, ezért letiltottuk. Ha tudomásul vette, hogy a webhely ártalmas lehet számítógépére nézve, felkeresheti a webhelyet, de legyen óvatos a begépelt információkkal kapcsolatban."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Ezt a webhelyet letiltottuk."
+   },
+   "report_phishing": {
+      "message": "Webhely bejelentése"
+   },
+   "reset_password": {
+      "message": "Jelszó visszaállítása"
+   },
+   "sign_in": {
+      "message": "Bejelentkezés"
+   },
+   "visit_this_site": {
+      "message": "Webhely felkeresése"
+   }
+}

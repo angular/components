@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "이 사이트에 대해 항상 무시"
+   },
+   "always_ignore_confirmation": {
+      "message": "비밀번호 경보에서 이 웹사이트를 항상 무시하도록 하시겠습니까?"
+   },
+   "back": {
+      "message": "뒤로"
+   },
+   "contact_security": {
+      "message": "보안 관리자에 문의"
+   },
+   "extension_description": {
+      "message": "비밀번호 경보는 피싱 공격으로부터 사용자를 보호합니다."
+   },
+   "extension_detailed_description": {
+      "message": "Gmail 또는 Google for Work 비밀번호를 accounts.google.com이 아닌 다른 곳에 입력하면 알림이 전송되어 필요한 경우 비밀번호를 변경할 수 있습니다.\n\n비밀번호 경보는 또한 Google 로그인 페이지가 가짜인 경우 미리 감지하여 사용자가 비밀번호를 입력하기 전에 알립니다. 이를 위해 비밀번호 경보는 사용자가 방문하는 각 페이지의 HTML을 보고 Google 로그인 페이지로 위장한 페이지인지 확인합니다.\n\nFAQ\n-- 비밀번호 경보는 언제 적용되나요?\n비밀번호 경보는 다음번에 비밀번호를 accounts.google.com에 입력하면 저절로 시작됩니다.\n\n-- 비밀번호 경보가 내 비밀번호나 키 입력을 저장하나요?\n아니요. 비밀번호 경보는 비밀번호나 키 입력을 저장하지 않습니다. 대신 비밀번호의 보안 썸네일 이미지를 저장하여 Chrome에서의 최근 키 입력과 비교합니다.\n\n-- 비밀번호 경보는 데이터를 어디로 전송하나요?\nGmail 계정에서 비밀번호 경보를 사용하는 경우 비밀번호 경보는 로컬 컴퓨터의 데이터를 전송하지 않습니다. Google for Work의 관리자가 내 도메인 전체에 비밀번호 경보를 배포한 경우 비밀번호 경보가 실행되면 관리자에게 알림이 전송됩니다.\n\n-- 비밀번호 경보에는 어떤 한계가 있나요?\n비밀번호 경보는 시크릿 창이나 Chrome 앱, Chrome 확장 프로그램을 지원하지 않습니다. 또한 타사 서비스의 비밀번호를 보호하지 않습니다. 비밀번호 경보는 자바스크립트가 사용 설정된 Chrome 웹브라우저 내에서만 작동합니다.\n\n-- 더 자세한 정보는 어디에서 확인할 수 있나요?\nLINK_TBD의 전체 FAQ를 방문하세요. 오픈소스 코드베이스 전체는 https://github.com/google/password-alert에서 확인할 수 있습니다.\n\n이 항목을 설치함으로써 Google 서비스 약관 및 개인정보취급방침(www.google.com/policies/)에 동의하게 됩니다.\n"
+   },
+   "extension_name": {
+      "message": "비밀번호 경보"
+   },
+   "ignore": {
+      "message": "이번만 무시"
+   },
+   "initialization_message": {
+      "message": "비밀번호 경보를 사용하려면 계정에 로그인하세요."
+   },
+   "initialization_thank_you_message": {
+      "message": "감사합니다. 비밀번호 경보 기능이 시작되었습니다."
+   },
+   "learn_more": {
+      "message": "자세히 알아보기"
+   },
+   "password_warning_banner_body": {
+      "message": "방금 Google이 아닌 다른 로그인 페이지에서 Google 계정 비밀번호를 입력했습니다. 계정을 안전하게 보호하려면 비밀번호를 즉시 재설정하세요. 또한 다른 앱과 사이트에서 비밀번호를 재사용하면 안 됩니다."
+   },
+   "password_warning_banner_header": {
+      "message": "Google 계정 비밀번호 재설정"
+   },
+   "phishing_warning_banner_body": {
+      "message": "이 사이트는 비밀번호를 도용하기 위해 Google 로그인 페이지로 위장한 것으로 보여 차단되었습니다. 이 사이트가 컴퓨터에 유해할 수 있음을 이해하셨다면 이 사이트를 방문하더라도 정보 입력에 주의하시기 바랍니다."
+   },
+   "phishing_warning_banner_header": {
+      "message": "이 사이트는 차단되었습니다."
+   },
+   "report_phishing": {
+      "message": "이 사이트 신고"
+   },
+   "reset_password": {
+      "message": "비밀번호 재설정"
+   },
+   "sign_in": {
+      "message": "로그인"
+   },
+   "visit_this_site": {
+      "message": "이 사이트 방문"
+   }
+}

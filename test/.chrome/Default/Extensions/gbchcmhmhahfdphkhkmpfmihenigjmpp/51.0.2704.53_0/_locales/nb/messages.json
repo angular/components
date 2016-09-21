@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "Godta og installer"
+   },
+   "ACCESS_CODE": {
+      "message": "Tilgangskode"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "Denne tilgangskoden utløper om $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "Google Feedback"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "Alle tilkoblinger"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "Tast inn PIN-koden på nytt"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN"
+   },
+   "CANCEL": {
+      "message": "Avbryt"
+   },
+   "CLEAR_HISTORY": {
+      "message": "Tøm logg"
+   },
+   "CLOSE": {
+      "message": "Lukk"
+   },
+   "CLOSE_PROMPT": {
+      "message": "Hvis du forlater denne siden, avsluttes Chrome Eksternt skrivebord-økten."
+   },
+   "CLOSE_WINDOW": {
+      "message": "Lukk vindu"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "Er du sikker på at du vil deaktivere eksterne tilkoblinger til $1$? Hvis du ombestemmer deg, må du tilbake til datamaskinen for å gjenopprette tilkoblingene.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "Tilkobling mislyktes"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "Fra"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "Tilkoblingslogg"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "Akseptabel"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "God"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "Dårlig"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "Til"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "Koble til likevel"
+   },
+   "CONNECT_BUTTON": {
+      "message": "Koble til"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "Fortsett"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "Du deler denne datamaskinen med en annen bruker. Vil du fortsette å dele?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Kontroller for Chrome Eksternt skrivebord-vert"
+   },
+   "COPYRIGHT": {
+      "message": "Copyright 2013 Google Inc. Med enerett."
+   },
+   "CREDITS": {
+      "message": "Medvirkende"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "Slett alle"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "Slett"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "Før du kan fortsette, må du gi datamaskinen utvidede tilgangstillatelser. Det er bare nødvendig å gjøre dette én gang."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "Be brukeren av datamaskinen du vil ha tilgang til, om å klikke på «$1$» og gi deg tilgangskoden.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Med Chrome Eksternt skrivebord kan du trygt dele datamaskinen din på nettet. Begge brukerne må installere Chrome Eksternt skrivebord-appen, som er å finne på $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "Den eksterne verten krever at du godkjenner via et tredjepartsnettsted. For å fortsette må du gi Chrome Eksternt skrivebord ytterligere tillatelser til å åpne denne adressen:"
+   },
+   "DISABLE_HOST": {
+      "message": "Slå av"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "Koble fra"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Chrome Eksternt skrivebord-tjeneste"
+   },
+   "DURATION_HEADER": {
+      "message": "Varighet"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "Du har ikke tillatelse til å kjøre dette programmet."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "Autentiseringen mislyktes. Logg på Chrome på nytt."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "Det mangler noen nødvendige komponenter. Kontrollér at du kjører den nyeste versjonen av programvaren, og prøv på nytt."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "En nettverksfeil oppsto. Appen blir startet på nytt når enheten din er på nettet igjen."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "Den eksterne datamaskinen kunne ikke initialisere økten. Hvis problemet vedvarer, kan du prøve å konfigurere verten på nytt."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "Den eksterne datamaskinen svarer ikke på tilkoblingsforespørsler. Kontrollér at datamaskinen er koblet til Internett, og prøv på nytt."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "Tilkoblinger til den eksterne datamaskinen er midlertidig blokkert fordi noen prøvde å koble seg til med en ugyldig PIN-kode. Prøv på nytt senere."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "Kunne ikke registrere denne datamaskinen."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "Det ble oppdaget en ikke-kompatibel protokollversjon. Kontrollér at du har nyeste programvareversjon installert på begge datamaskinene, og prøv igjen."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "Tilgangskoden er ugyldig. Prøv på nytt."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "Innstillingene tillater ikke at denne datamaskinen deles som vert for Chrome Eksternt skrivebord. Ta kontakt med systemadministratoren for å få hjelp."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "Den eksterne økten er utløpt."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "Det mangler noen nødvendige komponenter. Kontrollér at du kjører den nyeste versjonen av Chrome, og prøv på nytt."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "Det mangler noen nødvendige komponenter. Gå til chrome://plugins og sjekk at Native Client er slått på."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "En nødvendig komponent har sluttet å fungere. Vennligst rapportér dette problemet til utviklerne."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "Kunne ikke koble til nettverket. Ssjekk at enheten har nettilkobling."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "Du er ikke logget på Chrome. Logg på, og prøv på nytt."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "Du har ikke tillatelse til å utføre denne handlingen."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "Det forespurte elementet finnes ikke."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "Kunne ikke nå verten. Dette er sannsynligvis på grunn av innstillingene for nettverket du bruker."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "Tjenesten er ikke tilgjengelig for øyeblikket. Prøv på nytt senere."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "Det oppsto en uventet feil. Rapportér dette problemet til utviklerne."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "Avslutt fullskjerm"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "Programmet kunne ikke tilbakestilles. Du kan likevel sende inn en feilrapport."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "Tilbakestill programmet. Du mister alt arbeid som ikke er lagret."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "Jeg kan ikke åpne appen."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "Appen er for langsom."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "Jeg kan ikke åpne Google Disk-filene mine."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "Jeg ser ikke de lagrede filene mine på nettet i Google Disk."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "Jeg har problemer med tastaturet eller musen."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "Fortell oss hva som gikk galt, slik at vi kan prøve å løse problemet ditt."
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "Noe annet."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "Velg"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "Hvis du gir oss tillatelse til å kontakte deg for å be om ytterligere informasjon, blir e-postadressen din inkludert i eventuelle tilbakemeldinger du sender inn."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "Rapportér et problem"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "Inkluder programlogger for å hjelpe oss med å løse problemet ditt (loggene kan inneholde privat informasjon)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "Programlogger kan inneholde privat informasjon, deriblant identiteten din (e-postadressen) og navnene og egenskapene til filer og mapper i Google Disk."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "Denne informasjonen brukes bare til å diagnostisere problemet du rapporterer om. Informasjonen er bare tilgjengelig for personer som går gjennom rapporten, og den slettes etter maksimalt 30 dager."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "Kobler til …"
+   },
+   "FOOTER_WAITING": {
+      "message": "venter på tilkobling …"
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "For Mac (OS X 10.6 og høyere)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "For Windows (XP og nyere)"
+   },
+   "FULL_SCREEN": {
+      "message": "Full skjerm"
+   },
+   "GET_STARTED": {
+      "message": "Kom i gang"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "Godta"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "Avvis"
+   },
+   "HELP": {
+      "message": "Hjelp"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "Tilgang"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "Se og kontrollér en delt datamaskin."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "Du kan få sikker tilgang til denne datamaskinen ved å bruke Chrome Eksternt skrivebord."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "Endre personlig kode"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "Denne datamaskinen er for øyeblikket delt under en annen konto."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "Se/rediger"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "Denne datamaskinen er konfigurer for å la én eller flere klienter koble til uten å skrive inn noen PIN-kode."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "Slå på eksterne tilkoblinger"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "Du må aktivere eksterne tilkoblinger hvis du vil ha tilgang til denne datamaskinen gjennom Chrome Eksternt skrivebord."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "Deaktiver eksterne tilkoblinger"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "Del"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "Del denne datamaskinen slik at en annen bruker kan se og kontrollere den."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(Denne funksjonen er ikke tilgjengelig for datamaskinen din ennå.)"
+   },
+   "HOST_CATEGORY": {
+      "message": "Vert"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "Klienten ble nektet tilgang: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "Klienten ble tilknyttet: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "Klienten koblet fra: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "Kanal-IP for klienten: %1 ip='%2' host_ip='%3' channel='%4' connection='%5'."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "For å muliggjøre ekstern tilkobling til en annen datamaskin må du installere Chrome Eksternt skrivebord på maskinen, og klikke på «$1$».",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "Du har ikke registrert noen datamaskiner. For å aktivere ekstern tilkobling til en datamaskin må du installere Chrome Eksternt skrivebord på maskinen, og klikke på «$1$».",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "Du har tidligere logget på som $1$ ($2$). Hvis du vil ha tilgang til datamaskiner på den kontoen, må du bruke den til å $3$logge på Chrome$4$ og deretter installere Chrome Eksternt skriverbord på nytt.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "Programvareoppdateringer skjer vanligvis automatisk, men kan i noen sjeldne tilfeller mislykkes. Oppdateringen av programvare bør ikke ta mer enn noen få minutter og kan gjøres via ekstern tilgang."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "Chrome Eksternt skrivebord på $1$ er utdatert og må oppdateres.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "Hjelp oss med å forbedre Chrome Eksternt skrivebord ved å gi oss tillatelse til å samle bruksstatistikk og programstopprapporter."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "For å beskytte tilgangen til denne datamaskinen må du velge en PIN-kode bestående av $1$minst seks tall$2$. Denne PIN-koden kreves når man kobler til fra en annen posisjon.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "Kunne ikke starte tjenesten for ekstern tilgang."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome laster ned installasjonsprogrammet for Chrome Eksternt skrivebord-vert. Når nedlastingen er ferdig må du kjøre installasjonsprogrammet før du fortsetter."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "Kjør installasjonsprogrammet før du fortsetter."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "Eksterne tilkoblinger for denne datamaskinen er slått på."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "Kontrollér datamaskinens strøminnstillinger og sørg for at den ikke er konfigurert til å gå i dvale når den ikke er i bruk."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "Slår på eksterne tilkoblinger for denne datamaskinen …"
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "Eksterne tilkoblinger for denne datamaskinen er slått av."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "Slår av eksterne tilkoblinger for denne datamaskinen …"
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "Kunne ikke deaktivere fjerntilgang til denne datamaskinen. Prøv på nytt senere."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "Ved å laste ned installasjonsprogrammet for verten for Chrome Eksternt skrivebord samtykker du i Googles $1$vilkår for bruk$4.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "PIN-koden din er oppdatert."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "Kunne ikke oppdatere PIN-koden. Prøv på nytt senere."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "PIN-koden for denne datamaskinen oppdateres …"
+   },
+   "HOST_STARTED": {
+      "message": "Vert startet for brukeren: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "Verten stoppet."
+   },
+   "IDLE_CONTINUE": {
+      "message": "Fortsett"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "Koble fra nå"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "$1$-økten din har vært inaktiv en stund og kommer snart til å bli koblet fra.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "Til denne datamaskinen"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Last ned installasjonsprogrammet for verten for Chrome Eksternt skrivebord"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "Kom i gang med deling av skrivebordet ved å gi adgangskoden nedenfor til personen som skal hjelpe deg."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "Når brukeren har skrevet inn koden, starter delingsøkten."
+   },
+   "INVALID_PIN": {
+      "message": "Skriv inn en PIN-kode på seks sifre eller fler."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "Skjermdeling bruker-til-bruker, perfekt for ekstern teknisk støttte."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "Tastaturoppsett"
+   },
+   "LABEL_CONNECTED": {
+      "message": "Tilkoblet:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (sist på nettet $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "Finn ut hvordan."
+   },
+   "LEARN_MORE": {
+      "message": "Finn ut mer"
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Alternativer for Chrome Eksternt skrivebord-vert"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Chrome Eksternt\nskrivebord-vert"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Avinstalleringsprogram for Chrome Eksternt skrivebord-vert"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Bruk høyre Ctrl som Win-tast (⌘ på Mac)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "Maksimerer vinduet"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "Bruk din egen datamaskin uansett hvor du er."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "Genererer tilgangskode …"
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "Chrome Eksternt skrivebord-økten din er avsluttet."
+   },
+   "MESSAGE_SHARED": {
+      "message": "Skrivebordet ditt deles for øyeblikket med $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "Minimerer vinduet"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "Autoriser"
+   },
+   "MODE_IT2ME": {
+      "message": "Fjernhjelp"
+   },
+   "MODE_ME2ME": {
+      "message": "Mine datamaskiner"
+   },
+   "NEW_WINDOW": {
+      "message": "Nytt vindu"
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "Alle tilknyttede klienter har blitt slettet."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "Denne plattformen har ikke støtte for skrivebordsintegrasjon. Du kan fortsatt bruke programmet, men brukeropplevelsen blir redusert."
+   },
+   "OFFLINE": {
+      "message": "$1$ (ikke på nett)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "Vertsinitialiseringen mislyktes."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "Ugyldig vertskonfigurasjon."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "Ugyldig domene for vertseieren."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "Ugyldig verts-ID."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "Verten er konfigurert med ugyldig OAuth-legitimasjon."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "Verten som kjører på skjermen for konsollpålogging, har blitt avsluttet for å støtte gardinmodus ved å bytte til en vert som kjører i en brukerspesifikk økt."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "Verten startes på nytt for å implementere en policy-endring."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "Verten kunne ikke lese policyen."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "Verten har slått seg av."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "Ukjent vertsfeil: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "Ugyldig vertseier."
+   },
+   "OK": {
+      "message": "OK"
+   },
+   "OPTIONS_MENU": {
+      "message": "Alternativer"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "Fra denne datamaskinen"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "Følgende kunder har blitt tilknyttet denne datamaskinen og kan koble til uten å måtte oppgi PIN-kode. Du kan trekke tilbake denne tillatelsen når som helst, både individuelt og for alle klienter."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "Tilknytningsdato"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "Klient"
+   },
+   "PIN": {
+      "message": "PIN"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "Skriv inn samme PIN-kode i begge feltene."
+   },
+   "PIN_MESSAGE": {
+      "message": "Skriv inn PIN-koden for $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "Skriv inn PIN-koden for den eksterne datamaskinen."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "Få tilgang til andre datamaskiner eller gi en annen bruker sikker tilgang til datamaskinen din via Internett."
+   },
+   "PRODUCT_NAME": {
+      "message": "Chrome Eksternt skrivebord"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome-appstrømming"
+   },
+   "RECONNECT": {
+      "message": "Koble til på nytt"
+   },
+   "REMEMBER_PIN": {
+      "message": "Ikke be om PIN-kode igjen når du kobler til denne verten fra denne enheten."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "Core-bibliotek"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "Integrasjonsprosess for skrivebord"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "Program som brukes til å sende kommandoer til verten for Chrome Eksternt skriverbord."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "Vertsprosess"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "Innebygd meldingsvert for administrasjon av ekstern vert"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "Innebygd meldingsvert for ekstern hjelp"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "Prosess for ekstern sikkerhetsnøkkel"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "Tilpass størrelsen på skrivebordet"
+   },
+   "RESTART_BUTTON": {
+      "message": "Start på nytt nå"
+   },
+   "RESTORE_WINDOW": {
+      "message": "Gjenopprett vinduet"
+   },
+   "RETRY": {
+      "message": "Prøv på nytt"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "Skjermalternativer"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Send Ctrl-Alt-Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "Rapportér et problem"
+   },
+   "SEND_KEYS": {
+      "message": "Send nøkler"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "Send PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "Med denne tjenesten kan du motta innkommende tilkoblinger fra Chrome Eksternt skrivebord-klienter."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "Denne innstillingen administreres av domeneretningslinjene dine."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "Del"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "Avbryt"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "Har du lyst til å dele denne datamaskinen slik at en annen bruker kan se og kontrollere den?"
+   },
+   "SHOW_STATS": {
+      "message": "Vis statistikk"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "Vis statistikk (tilkobling: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "Forminsk til den passer"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "Logg på"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "Logg av"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "Stopp deling"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Vil du være med på å forbedre Chrome Eksternt skrivebord? $1$Delta i spørreundersøkelsen.$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "Klokkeslett"
+   },
+   "TOGGLE_STATS": {
+      "message": "Vis statistikk"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "Koble til $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "Deaktiver eksterne tilkoblinger til denne datamaskinen."
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "Oppdater vertslisten"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "Rediger datamaskinnavnet"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (utdatert)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "Konto"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Bekreft kontoen og PIN-koden din nedenfor for å tillate tilgang via Chrome Eksternt skrivebord."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "MERK: I henhold til lokale retningslinjer er tilkobling tillatt bare mellom datamaskiner i nettverket ditt."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "MERK: For å sikre at alle hurtigtastene er tilgjengelige, kan du konfigurere Chrome Eksternt skrivebord til «Åpne som vindu»."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "Hvorfor er dette trygt?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Vinduer"
+   },
+   "WORKING": {
+      "message": "Behandler …"
+   }
+}

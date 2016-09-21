@@ -21,6 +21,8 @@ import {MdInkBar} from './ink-bar';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {RIGHT_ARROW, LEFT_ARROW, ENTER} from '../core';
+import {coerceBooleanProperty} from '../core/coersion/boolean-property';
+
 
 /** Used to generate unique ID's for each tab component */
 let nextId = 0;
@@ -38,11 +40,10 @@ export class MdTab {
   @ContentChild(MdTabLabel) label: MdTabLabel;
   @ContentChild(MdTabContent) content: MdTabContent;
 
-  // TODO: Replace this when BooleanFieldValue is removed.
   private _disabled = false;
   @Input('disabled')
   set disabled(value: boolean) {
-    this._disabled = (value != null && `${value}` !== 'false');
+    this._disabled = coerceBooleanProperty(value);
   }
   get disabled(): boolean {
     return this._disabled;

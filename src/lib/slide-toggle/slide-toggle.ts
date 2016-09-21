@@ -18,8 +18,9 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import {BooleanFieldValue, applyCssTransform} from '../core';
+import {applyCssTransform} from '../core';
 import {Observable} from 'rxjs/Observable';
+import {coerceBooleanProperty} from '../core/coersion/boolean-property';
 import {MdGestureConfig} from '../core';
 
 
@@ -69,13 +70,17 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   // Needs to be public to support AOT compilation (as host binding).
   _hasFocus: boolean = false;
 
-  @Input() @BooleanFieldValue() disabled: boolean = false;
-  @Input() @BooleanFieldValue() required: boolean = false;
   @Input() name: string = null;
   @Input() id: string = this._uniqueId;
   @Input() tabIndex: number = 0;
   @Input() ariaLabel: string = null;
   @Input() ariaLabelledby: string = null;
+
+  private _disabled: boolean = false;
+
+  @Input()
+  get disabled(): boolean { return this._disabled; }
+  set disabled(value) { this._disabled = coerceBooleanProperty(value); }
 
   private _change: EventEmitter<MdSlideToggleChange> = new EventEmitter<MdSlideToggleChange>();
   @Output() change: Observable<MdSlideToggleChange> = this._change.asObservable();

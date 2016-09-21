@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "Piekrist un instalēt"
+   },
+   "ACCESS_CODE": {
+      "message": "Piekļuves kods"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "Šī piekļuves koda derīguma termiņš beigsies pēc $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "Atsauksmes"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "Visi savienojumi"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "Atkārtoti ievadiet PIN."
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN"
+   },
+   "CANCEL": {
+      "message": "Atcelt"
+   },
+   "CLEAR_HISTORY": {
+      "message": "Notīrīt vēsturi"
+   },
+   "CLOSE": {
+      "message": "Aizvērt"
+   },
+   "CLOSE_PROMPT": {
+      "message": "Aizverot šo lapu, Chrome attālās darbvirsmas sesija tiks pārtraukta."
+   },
+   "CLOSE_WINDOW": {
+      "message": "Aizvērt logu"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "Vai tiešām vēlaties atspējot attālos savienojumus ar saimniekdatoru $1$? Ja pārdomāsiet, savienojumus ar šo datoru varēsiet iespējot tikai klātienē.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "Savienojuma kļūme"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "No"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "Savienojumu vēsture"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "viduvējs"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "labs"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "vājš"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "Ar"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "Izveidot savienojumu jebkurā gadījumā"
+   },
+   "CONNECT_BUTTON": {
+      "message": "Pievienošana"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "Turpināt"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "Šobrīd jūs koplietojat šo ierīci ar citu lietotāju. Vai vēlaties turpināt koplietošanu?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Chrome attālās darbvirsmas saimniekdatora kontrolleris"
+   },
+   "COPYRIGHT": {
+      "message": "Autortiesības © 2013 Google Inc. Visas tiesības paturētas."
+   },
+   "CREDITS": {
+      "message": "Titri"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "Dzēst visu"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "Dzēst"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "Lai turpinātu, jums vispirms ir jāpiešķir paplašinātas piekļuves atļaujas savam datoram. Tas ir jādara tikai vienreiz."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "Palūdziet lietotājam, kura datoru vēlaties lietot, noklikšķināt uz “$1$” un piešķirt jums piekļuves kodu.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Izmantojot Chrome attālo darbvirsmu, varat droši koplietot savu datoru tīmeklī. Abiem lietotājiem ir jāizmanto lietotne Chrome attālā darbvirsma, kas ir pieejama vietnē $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "Attālajā saimniekdatorā tiek pieprasīts, lai veicat autentificēšanu trešās puses vietnē. Lai turpinātu, jums jāpiešķir Chrome attālajai darbvirsmai papildu atļaujas piekļūt šai adresei:"
+   },
+   "DISABLE_HOST": {
+      "message": "Atspējot"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "Atvienot"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Chrome attālās darbvirsmas pakalpojums"
+   },
+   "DURATION_HEADER": {
+      "message": "Ilgums"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "Jums nav atļauju, lai palaistu šo lietojumprogrammu."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "Autentificēšana neizdevās. Lūdzu, vēlreiz pierakstieties pārlūkā Chrome."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "Trūkst dažu nepieciešamo komponentu. Pārbaudiet, vai ir instalēta programmatūras jaunākā versija, un mēģiniet vēlreiz."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "Radās tīkla kļūda. Kad ierīce atkal darbosies tiešsaistē, lietotne tiks restartēta."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "Attālajam datoram neizdevās inicializēt sesiju. Ja problēma atkārtojas, lūdzu, mēģiniet vēlreiz konfigurēt saimniekdatoru."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "Attālais dators nereaģē uz savienojuma pieprasījumiem. Pārbaudiet, vai tam ir savienojums ar internetu, un mēģiniet vēlreiz."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "Savienojumi ar attālo datoru īslaicīgi ir bloķēti, jo kāda persona mēģināja izveidot savienojumu, izmantojot nederīgu PIN. Lūdzu, vēlāk mēģiniet vēlreiz."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "Neizdevās reģistrēt šo datoru."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "Tika konstatēta nesaderīga protokola versija. Lūdzu, pārbaudiet, vai abos datoros ir instalēta programmatūras jaunākā versija, un mēģiniet vēlreiz."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "Piekļuves kods nav derīgs. Lūdzu, mēģiniet vēlreiz."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "Saskaņā ar politikas iestatījumiem šo datoru nevar koplietot kā Chrome attālās darbvirsmas saimniekdatoru. Lai saņemtu palīdzību, sazinieties ar sistēmas administratoru."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "Attālās sesijas termiņš ir beidzies."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "Trūkst dažu nepieciešamo komponentu. Pārbaudiet, vai izmantojat jaunāko Chrome versiju un mēģiniet vēlreiz."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "Trūkst dažu nepieciešamo komponentu. Lūdzu, atveriet lapu chrome://plugins un pārbaudiet, vai tehnoloģija Native Client ir iespējota."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "Tika pārtraukta obligātā komponenta darbība. Lūdzu, ziņojiet par šo problēmu izstrādātājiem."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "Nevarēja izveidot savienojumu ar tīklu. Lūdzu, pārbaudiet, vai ierīce darbojas tiešsaistes režīmā."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "Jūs neesat pierakstījies pārlūkā Chrome. Lūdzu, pierakstieties un mēģiniet vēlreiz."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "Jums nav atļauju, lai veiktu šo darbību."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "Pieprasītais objekts nepastāv."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "Nevar sasniegt saimniekdatoru. Iespējamais iemesls var būt tīkla konfigurācija, kuru izmantojat."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "Šobrīd pakalpojums nav pieejams. Lūdzu, vēlāk mēģiniet vēlreiz."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "Radās neparedzēta kļūda. Lūdzu, ziņojiet par šo problēmu izstrādātājiem."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "Iziet no pilnekrāna režīma"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "Nevarēja atiestatīt lietojumprogrammu. Jūs joprojām varat nosūtīt kļūdu pārskatu."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "Atiestatīt lietojumprogrammu. Tiks zaudēts viss nesaglabātais saturs."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "Nevaru atvērt lietojumprogrammu."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "Lietojumprogramma ir pārāk lēna."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "Nevaru atvērt savus Google diska failus."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "Google diskā neredzu savus tiešsaistē saglabātos failus."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "Man radušās problēmas ar tastatūru vai peli."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "Lai mēs varētu novērst problēmu, lūdzu, aprakstiet to:"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "Cita problēma."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "Atlasīt..."
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "Lai mēs varētu ar jums sazināties un iegūt papildu informāciju, iesniegtajās atsauksmēs tiks ietverta jūsu e-pasta adrese."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "Ziņot par problēmu"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "Ietvert lietojumprogrammu žurnālus, lai palīdzētu novērst problēmu (žurnālos var būt ietverta privāta informācija)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "Lietojumprogrammu žurnālos var būt ietverta privāta informācija, tostarp jūsu identitāte (e-pasta adrese) un Google diska failu un mapju nosaukumi un rekvizīti."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "Šī informācija tiek izmantota tikai tās problēmas diagnosticēšanai, par kuru ziņojat, un tā ir pieejama tikai personai, kura izskata jūsu ziņojumu, kā arī tiek saglabāta ne ilgāk kā 30 dienas."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "Notiek savienojuma izveide…"
+   },
+   "FOOTER_WAITING": {
+      "message": "tiek gaidīta savienojuma izveide..."
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "Operētājsistēmai Mac (OS X 10.6 un jaunākas versijas)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "Operētājsistēmai Windows (XP un jaunākas versijas)"
+   },
+   "FULL_SCREEN": {
+      "message": "Pilnekrāna režīms"
+   },
+   "GET_STARTED": {
+      "message": "Sākt darbu"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "Pieņemt"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "Noraidīt"
+   },
+   "HELP": {
+      "message": "Palīdzība"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "Piekļūt"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "Skatiet un kontrolējiet kopīgotu datoru."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "Varat izveidot drošu savienojumu ar šo datoru, izmantojot Chrome attālo darbvirsmu."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "Mainīt PIN"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "Šis dators šobrīd tiek koplietots, izmantojot citu kontu."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "Skatīt/rediģēt"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "Šajā datorā ir konfigurēta atļauja vienam vai vairākiem klientiem izveidot savienojumu, neievadot PIN kodu."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "Iespējot attālos savienojumus"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "Ja vēlaties piekļūt šim datoram, izmantojot Chrome attālo darbvirsmu, ir jāiespējo attālie savienojumi."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "Atspējot attālos savienojumus"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "Kopīgot"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "Koplietojiet šo datoru, lai cits lietotājs redzētu un kontrolētu tā darbvirsmu."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(šī funkcija vēl nav pieejama jūsu datoram)"
+   },
+   "HOST_CATEGORY": {
+      "message": "Saimniekdators"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "Piekļuve liegta šim klientam: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "Klients, kas izveidojis savienojumu: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "Atvienotais klients: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "Klienta kanāla IP: %1 ip='%2' host_ip='%3' channel='%4' connection='%5'."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "Lai iespējotu attālus savienojumus ar citu datoru, instalējiet Chrome attālo darbvirsmu attiecīgajā datorā un noklikšķiniet uz $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "Jums nav neviena reģistrēta datora. Lai iespējotu attālus savienojumus ar kādu datoru, instalējiet Chrome attālo darbvirsmu attiecīgajā datorā un noklikšķiniet uz $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "Iepriekš bijāt pierakstījies kā $1$ ($2$). Lai piekļūtu datoriem šajā kontā, $3$pierakstieties pārlūkā Google Chrome$4$, izmantojot šo kontu, un atkārtoti instalējiet Chrome attālo darbvirsmu.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "Programmatūras atjauninājumi parasti tiek veikti automātiski, taču dažkārt šis process var neizdoties. Programmatūras atjaunināšana ilgst ne vairāk kā dažas minūtes un var tikt veikta, kamēr esat izveidojis attālu savienojumu ar datoru."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "Chrome attālā darbvirsma saimniekdatorā $1$ ir novecojusi un ir jāatjaunina.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "Palīdziet mums uzlabot Chrome attālo darbvirsmu, ļaujot mums apkopot lietojuma statistiku un avāriju pārskatus."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "Lai izveidotu drošu savienojumu ar šo datoru, lūdzu, izvēlieties tādu PIN, kura garums ir $1$vismaz seši cipari$2$. Šis PIN būs nepieciešams, lai izveidotu savienojumu no citas atrašanās vietas.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "Neizdevās sākt attālās piekļuves pakalpojumu."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "No pārlūka Chrome tiek lejupielādēta Chrome attālās darbvirsmas saimniekdatoram paredzētā instalēšanas programma. Kad lejupielāde būs pabeigta, lūdzu, vispirms palaidiet instalēšanas programmu."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "Lūdzu, vispirms palaidiet instalēšanas programmu."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "Šim datoram tika iespējoti attālie savienojumi."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "Lūdzu, pārbaudiet datora barošanas pārvaldības iestatījumus: datoram ir jābūt konfigurētam tā, lai netiktu aktivizēts miega režīms, kad dators netiek lietots."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "Notiek attālo savienojumu iespējošana šim datoram…"
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "Šim datoram tika atspējoti attālie savienojumi."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "Notiek attālo savienojumu atspējošana šim datoram…"
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "Šim datoram neizdevās atspējot attālo piekļuvi. Lūdzu, vēlāk mēģiniet vēlreiz."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "Lejupielādējot Chrome attālās darbvirsmas saimniekdatora instalēšanas programmu, jūs piekrītat Google $1$pakalpojumu sniegšanas noteikumiem$4.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "Jūsu PIN ir atjaunināts."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "Neizdevās atjaunināt PIN. Lūdzu, vēlāk mēģiniet vēlreiz."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "Notiek šī datora PIN atjaunināšana…"
+   },
+   "HOST_STARTED": {
+      "message": "Saimniekdators startēts šādam lietotājam: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "Saimniekdatora darbība ir apturēta."
+   },
+   "IDLE_CONTINUE": {
+      "message": "Turpināt"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "Atvienot tūlīt"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "Jūsu $1$ sesija jau kādu laiku nav aktīva, un drīzumā tiks pārtraukts savienojums.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "Ar šo datoru"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Chrome attālās darbvirsmas saimniekdatora instalēšanas programmas lejupielāde"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "Lai koplietotu savu darbvirsmu, paziņojiet tālāk redzamo piekļuves kodu lietotājam, kurš jums palīdzēs."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "Tiklīdz kods ir ievadīts, tiek sākta koplietošanas sesija."
+   },
+   "INVALID_PIN": {
+      "message": "Lūdzu, ievadiet PIN, kura garums ir vismaz seši cipari."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "Ekrāna koplietošana — ideāli piemērota, lai saņemtu attālo tehnisko atbalstu."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "Tastatūras izkārtojumi"
+   },
+   "LABEL_CONNECTED": {
+      "message": "Savienojums ir izveidots:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (pēdējoreiz tiešsaistē: $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "Uzziniet vairāk"
+   },
+   "LEARN_MORE": {
+      "message": "Uzziniet vairāk."
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Chrome attālās darbvirsmas saimniekdatora preferences"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Chrome attālās\ndarbvirsmas saimniekdators"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Chrome attālās darbvirsmas saimniekdatora atinstalēšanas programma"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Win datorā izmantot labās puses Ctrl taustiņu (Mac datorā — ⌘)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "Maksimizēt logu"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "Piekļūstiet savam datoram, atrodoties jebkurā vietā."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "Notiek piekļuves koda ģenerēšana..."
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "Jūsu Chrome attālās darbvirsmas sesija ir pārtraukta."
+   },
+   "MESSAGE_SHARED": {
+      "message": "Jūsu darbvirsma šobrīd tiek koplietota ar lietotāju $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "Minimizēt logu"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "Autorizēšana"
+   },
+   "MODE_IT2ME": {
+      "message": "Attālā palīdzība"
+   },
+   "MODE_ME2ME": {
+      "message": "Mani datori"
+   },
+   "NEW_WINDOW": {
+      "message": "Jauns logs..."
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "Visi pārī savienotie klienti ir dzēsti."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "Šajā platformā netiek atbalstīta darbvirsmas integrācija. Jūs joprojām varat izmantot lietojumprogrammu, taču lietotāja pieredze nebūs pietiekami laba."
+   },
+   "OFFLINE": {
+      "message": "$1$ (bezsaistē)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "Neizdevās inicializēt saimniekdatoru."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "Saimniekdatora konfigurācija nav derīga."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "Saimniekdatora īpašnieka domēns nav derīgs."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "Saimniekdatora ID nav derīgs."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "Saimniekdators ir konfigurēts ar nederīgiem OAuth akreditācijas datiem."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "Saimniekdators, kas darbojas konsoles pieteikšanās ekrānā, ir izslēgts, lai atbalstītu aizkara režīmu, pārslēdzoties uz saimniekdatoru, kurš darbojas noteikta lietotāja sesijā."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "Saimniekdators tiek restartēts, lai tiktu ņemtas vērā politikas izmaiņas."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "Saimniekdatoram neizdevās nolasīt politiku."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "Saimniekdators tika izslēgts."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "Neatpazīta saimniekdatora kļūda: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "Saimniekdatora īpašnieka vārds nav derīgs."
+   },
+   "OK": {
+      "message": "Labi"
+   },
+   "OPTIONS_MENU": {
+      "message": "Opcijas"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "No šī datora"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "Tālāk norādītie klienti ir savienoti pārī ar šo datoru un var izveidot savienojumu, nenorādot PIN kodu. Varat atsaukt šo atļauju jebkurā brīdī (individuāli vai visiem klientiem)."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "Datums, kad savienots pārī"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "Klients"
+   },
+   "PIN": {
+      "message": "PIN"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "Lūdzu, ievadiet vienu un to pašu PIN abos lodziņos."
+   },
+   "PIN_MESSAGE": {
+      "message": "Lūdzu, ievadiet saimniekdatora $1$ PIN.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "Lūdzu, ievadiet attālā datora PIN."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "Droši piekļūstiet citiem datoriem vai ļaujiet citam lietotājam piekļūt jūsu datoram, izmantojot interneta savienojumu."
+   },
+   "PRODUCT_NAME": {
+      "message": "Chrome attālā darbvirsma"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome lietotnes straumēšana"
+   },
+   "RECONNECT": {
+      "message": "Atkārtoti savienot"
+   },
+   "REMEMBER_PIN": {
+      "message": "Nepieprasīt PIN kodu vēlreiz, kad no šīs ierīces izveidoju savienojumu ar šo saimniekdatoru."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "Galvenā bibliotēka"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "Darbvirsmas integrācijas process"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "Lietojumprogramma, kas paredzēta komandu sniegšanai Chrome attālās darbvirsmas saimniekdatoram."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "Saimniekdatora process"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "Vietējais ziņojumapmaiņas saimniekdators attālai saimniekdatora pārvaldībai"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "Vietējais ziņojumapmaiņas saimniekdators attālai palīdzībai"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "Drošības atslēgas tālvadības process"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "Mainīt darbvirsmas izmērus, lai tā atbilstu"
+   },
+   "RESTART_BUTTON": {
+      "message": "Restartēt tūlīt"
+   },
+   "RESTORE_WINDOW": {
+      "message": "Atjaunot logu"
+   },
+   "RETRY": {
+      "message": "Mēģināt vēlreiz"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "Ekrāna opcijas"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Sūtīt Ctrl-Alt-Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "Ziņot par problēmu..."
+   },
+   "SEND_KEYS": {
+      "message": "Sūtīt taustiņus"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "Sūtīt PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "Izmantojot šo pakalpojumu, tiek iespējota ienākošo savienojumu izveide no Chrome attālās darbvirsmas klientiem."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "Uz šo iestatījumu attiecas jūsu domēna politika."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "Kopīgot"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "Atcelt"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "Vai vēlaties koplietot šo datoru ar citu lietotāju, lai viņš varētu skatīt un pārvaldīt tajā esošo saturu?"
+   },
+   "SHOW_STATS": {
+      "message": "Rādīt statistiku"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "Rādīt statistiku (savienojums: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "Samazināt, lai ietilptu"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "Pierakstīties"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "Izrakstīties"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "Pārtraukt koplietošanu"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Vai vēlaties palīdzēt uzlabot Chrome attālo darbvirsmu? $1$Atbildiet uz aptaujas jautājumiem!$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "Laiks"
+   },
+   "TOGGLE_STATS": {
+      "message": "Rādīt statistiku"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "Izveidojiet savienojumu ar $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "Atspējojiet attālos savienojumus ar šo datoru."
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "Atsvaidzināt saimniekdatoru sarakstu"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "Rediģējiet datora nosaukumu."
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (novecojis)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "Konts"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Lai atļautu piekļuvi, izmantojot Chrome attālo darbvirsmu, lūdzu, apstipriniet kontu un PIN kodu."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "PIEZĪME. Saskaņā ar politikas iestatījumiem savienojumus ir atļauts veidot tikai starp jūsu tīkla datoriem."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "PIEZĪME. Lai būtu pieejami visi īsinājumtaustiņi, Chrome attālo darbvirsmu varat konfigurēt šādi: “Atvērt kā logu”."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "Kāpēc tas ir droši?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Logi"
+   },
+   "WORKING": {
+      "message": "Notiek apstrāde..."
+   }
+}

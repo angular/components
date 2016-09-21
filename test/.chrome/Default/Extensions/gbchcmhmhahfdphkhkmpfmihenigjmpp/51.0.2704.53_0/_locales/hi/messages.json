@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "स्वीकार करें और इंस्टॉल करें"
+   },
+   "ACCESS_CODE": {
+      "message": "पहुंच कोड"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "यह एक्सेस कोड $1$ में समाप्त हो जाएगा",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "सुझाव"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "सभी कनेक्‍शन"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "पिन फिर से लिखें"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "पिन"
+   },
+   "CANCEL": {
+      "message": "अभी नहीं"
+   },
+   "CLEAR_HISTORY": {
+      "message": "इतिहास साफ़ करें"
+   },
+   "CLOSE": {
+      "message": "बंद करें"
+   },
+   "CLOSE_PROMPT": {
+      "message": "इस पृष्ठ को छोड़ देने पर आपका Chrome दूरस्थ डेस्कटॉप सत्र समाप्त हो जाएगा."
+   },
+   "CLOSE_WINDOW": {
+      "message": "विंडो बंद करें"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "क्‍या आप वाकई $1$ से दूरस्थ कनेक्‍शन अक्षम करना चाहते हैं? यदि आप अपना विचार बदलते हैं, तो आपको कनेक्‍शन को पुन: सक्षम करने के लिए उस कंप्‍यूटर पर जाना होगा.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "कनेक्‍शन विफल रहा"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "प्रेषक"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "कनेक्शन इतिहास"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "ठीक"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "अच्छा"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "खराब"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "प्रति"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "किसी भी तरह कनेक्ट करें"
+   },
+   "CONNECT_BUTTON": {
+      "message": "कनेक्ट करें"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "जारी रखें"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "आप वर्तमान में किसी अन्य उपयोगकर्ता के साथ इस मशीन को साझा कर रहे हैं. क्या आप साझाकरण जारी रखना चाहते हैं?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Chrome दूरस्थ डेस्क टॉप होस्ट नियंत्रक"
+   },
+   "COPYRIGHT": {
+      "message": "कॉपीराइट 2013 Google Inc. सर्वाधिकार सुरक्षित."
+   },
+   "CREDITS": {
+      "message": "क्रेडिट"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "सभी हटाएं"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "हटाएं"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "जारी रखने के लिए सबसे पहले आपको अपने कंप्‍यूटर को विस्तृत एक्‍सेस अनुमतियां देनी होंगी. आपको ऐसा केवल एक बार करना है."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "जिस उपयोगकर्ता का कंप्यूटर आप ऐक्सेस करना चाहते हैं, उसे “$1$” क्लिक करने और आपको ऐक्सेस कोड देने के लिए कहें.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Chrome दूरस्थ डेस्कटॉप आपको वेब पर आपका कंप्‍यूटर सुरक्षित रूप से साझा करने देता है. दोनों उपयोगकर्ताओं के पास Chrome दूरस्थ डेस्कटॉप ऐप्स अवश्‍य चलना चाहिए, जो कि $1$ पर मिल सकता है.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "दूरस्थ होस्ट के लिए आवश्यक है कि आप किसी तृतीय-पक्ष की वेबसाइट प्रमाणीकृत करें. जारी रखने के लिए, आपको Chrome दूरस्थ डेस्कटॉप को इस पते को एक्सेस करने के लिए अतिरिक्त अनुमतियां देनी होंगी:"
+   },
+   "DISABLE_HOST": {
+      "message": "अक्षम करें"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "डिस्कनेक्ट करें"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Chrome दूरस्‍थ डेस्‍कटॉप सेवा"
+   },
+   "DURATION_HEADER": {
+      "message": "अवधि"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "आपको इस ऐप्‍लिकेशन को चलाने की अनुमति नहीं है."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "प्रमाणीकरण विफल रहा. कृपया Chrome में पुन: प्रवेश करें."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "कुछ आवश्‍यक घटक अनुपलब्‍ध हैं. कृपया सुनिश्‍चित करें कि आप सॉफ़्टवेयर का नवीनतम वर्शन चला रहे हैं और पुन: प्रयास करें."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "नेटवर्क त्रुटि हुई. आपके डिवाइस के फिर से ऑन-लाइन होने पर हम ऐप को पुनः प्रारंभ करेंगे."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "दूरस्थ कंप्यूटर सत्र आरंभ करने में असफल रहा. यदि समस्या बनी रहती है, तो कृपया होस्ट को पुनः कॉन्फ़िगर करने का प्रयास करें."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "दूरस्थ कंप्‍यूटर, कनेक्शन अनुरोधों के लिए प्रतिक्रिया नहीं दे रहा है. कृपया सत्यापित करें कि यह ऑनलाइन है और फिर से प्रयास करें."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "किसी व्‍यक्ति के द्वारा अमान्‍य पिन के साथ दूरस्‍थ कंप्‍यूटर से कनेक्‍ट करने का प्रयास किए जाने के कारण कनेक्‍शन अस्‍थायी रूप से अवरोधित हैं. कृपया बाद में पुन: प्रयास करें."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "इस कंप्‍यूटर को पंजीकृत करने में विफल."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "असंगत प्रोटोकॉल वर्शन का पता लगा था. कृपया सुनिश्‍चित करें कि आपके पास दोनों कंप्‍यूटरों पर सॉफ़्टवेयर का नवीनतम वर्शन इंस्‍टॉल किया हुआ है और पुन: प्रयास करें."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "पहुंच कोड अमान्य है. कृपया फिर से प्रयास करें."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "नीति सेटिंग इस कंप्यूटर को एक Chrome दूरस्थ डेस्कटॉप होस्ट के रूप में साझा करने की अनुमति नहीं देतीं. सहायता के लिए अपने सिस्टम व्यवस्थापक से संपर्क करें."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "दूरस्थ सत्र समाप्त हो चुका है."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "कुछ आवश्‍यक घटक अनुपलब्‍ध है. कृपया सुनिश्‍चित करें कि आप Chrome का नवीनतम वर्शन चला रहे हैं और पुन: प्रयास करें."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "कुछ आवश्‍यक घटक अनुपलब्‍ध हैं. कृपया chrome://plugins पर जाएं और सुनिश्‍चित करें कि स्‍थानीय क्‍लाइंट सक्षम है."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "किसी आवश्यक घटक ने काम करना बंद कर दिया है. कृपया इस समस्या की रिपोर्ट डेवलपर से करें."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "नेटवर्क से कनेक्ट नहीं किया जा सका. कृपया जांचें कि आपका डिवाइस ऑन-लाइन है."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "आपने Chrome में प्रवेश नहीं किया है. कृपया प्रवेश करें और पुन: प्रयास करें."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "आपको यह कार्यवाही करने की अनुमति नहीं है."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "अनुरोधित ऑब्‍जेक्‍ट मौजूद नहीं है."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "होस्‍ट तक पहुंचने में असमर्थ. यह संभवत: आपके द्वारा उपयोग किए जाने वाले नेटवर्क के कॉन्फ़िगरेशन के कारण है."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "सेवा अस्थायी रूप से अनुपलब्ध है. कृपया बाद में पुन: प्रयास करें."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "एक अनपेक्षित त्रुटि आई. कृपया इस समस्या की रिपोर्ट डेवलपर से करें."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "पूर्ण स्क्रीन से बाहर निकलें"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "ऐप्‍लिकेशन को रीसेट नहीं किया जा सका. फिर भी आप बग रिपोर्ट भेज सकते हैं."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "ऐप्‍लिकेशन को रीसेट करें. आप किसी भी नहीं सहेजे गए कार्य को खो देंगे."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "मैं ऐप्लिकेशन को खोल नहीं सकता/सकती."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "ऐप्लिकेशन बहुत धीमा है."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "मैं अपनी Google डिस्क फ़ाइलें नहीं खोल सकता/सकती."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "मैं Google डिस्क में अपनी सहेजी गई फ़ाइलों को ऑनलाइन नहीं देख सकता/सकती."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "मुझे अपने कीबोर्ड या माउस के साथ समस्या आ रही है."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "आपकी समस्या को सुलझाने में हमारी सहायता करने के लिए, कृपया हमें बताएं कि क्या गड़बड़ी हुई:"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "कुछ और."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "चुनें…"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "हमें अतिरिक्‍त जानकारी हेतु आपसे संपर्क करने देने के लिए, आपके द्वारा सबमिट किए जाने वाले किसी भी फ़ीडबैक में आपका ईमेल पता शामिल किया जाएगा."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "किसी समस्या की रिपोर्ट करें"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "आपकी समस्‍या का समाधान करने में हमारी सहायता के लिए ऐप्‍लिकेशन लॉग शामिल करें (लॉग में निजी जानकारी शामिल हो सकती है)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "ऐप्‍लिकेशन लॉग में आपकी पहचान (ईमेल पता) और Google डिस्‍क में आपकी फ़ाइलों तथा फ़ोल्‍डर के नाम और गुण सहित, निजी जानकारी शामिल हो सकती है."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "इस जानकारी का उपयोग आपके द्वारा रिपोर्ट की जा रही समस्‍या का निदान करने के लिए ही किया जाता है, यह आपकी रिपोर्ट की जांच कर रहे व्‍यक्‍ति के लिए ही उपलब्‍ध होती है, और इसे 30 दिन से अधिक समय तक नहीं रखा जाता."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "कनेक्ट हो रहा है..."
+   },
+   "FOOTER_WAITING": {
+      "message": "कनेक्शन के लिए प्रतीक्षारत…"
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "Mac के लिए (OS X 10.6 और बाद वाले वर्शन)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "Windows के लिए (XP और बाद वाले वर्शन)"
+   },
+   "FULL_SCREEN": {
+      "message": "पूर्ण स्‍क्रीन"
+   },
+   "GET_STARTED": {
+      "message": "आरंभ करें"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "स्वीकार करें"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "अस्वीकार करें"
+   },
+   "HELP": {
+      "message": "सहायता"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "एक्सेस करें"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "साझा किया गया कंप्‍यूटर देखें और नियंत्रित करें."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "आप Chrome दूरस्थ डेस्कटॉप का उपयोग करके सुरक्षित रूप से इस कंप्यूटर को एक्सेस कर सकते हैं."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "पिन बदलें"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "यह कंप्‍यूटर वर्तमान में किसी भिन्‍न खाते के अंतर्गत साझा किया गया है."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "देखें/संपादित करें"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "इस कंप्यूटर को PIN डाले बिना एक या इससे अधिक क्लाइंट से कनेक्ट करने देने के लिए कॉन्फ़िगर किया गया है."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "दूरस्‍थ कनेक्‍शन सक्षम करें"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "यदि आप इस कंप्यूटर को एक्सेस करने के लिए Chrome दूरस्थ डेस्कटॉप का उपयोग करना चाहते हैं, तो आपको दूरस्थ कनेक्शन सक्षम करने होंगे."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "दूरस्‍थ कनेक्‍शन अक्षम करें"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "साझा करें"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "किसी अन्‍य उपयोगकर्ता द्वारा देखने और नियंत्रित करने के लिए यह कंप्‍यूटर साझा करें."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(यह सुविधा अभी तक आपके कंप्‍यूटर के लिए उपलब्‍ध नहीं है)"
+   },
+   "HOST_CATEGORY": {
+      "message": "होस्ट"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "क्लाइंट की एक्सेस अस्वीकार की गई: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "क्लाइंट कनेक्ट किया गया: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "क्लाइंट डिस्कनेक्ट किया गया: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "क्लाइंट के लिए चैनल IP: %1 ip='%2' host_ip='%3' channel='%4' connection='%5'."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "किसी भिन्न कंप्यूटर के लिए दूरस्थ कनेक्शन सक्षम करने के लिए, वहां Chrome दूरस्थ डेस्कटॉप इंस्टॉल करें और “$1$” क्लिक करें.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "आपके पास कोई पंजीकृत कंप्यूटर नहीं हैं. किसी कंप्यूटर पर दूरस्थ कनेक्शन सक्षम करने के लिए, Chrome दूरस्थ डेस्कटॉप इंस्टॉल करें और “$1$” क्लिक करें.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "आपने पूर्व में $1$ ($2$) के रूप में प्रवेश किया था.  उस खाते में अपने कंप्‍यूटर एक्‍सेस करने के लिए, उस खाते से $3$Google Chrome में प्रवेश करें$4$ और Chrome दूरस्‍थ डेस्‍कटॉप को पुन: इंस्‍टॉल करें.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "सॉफ़्टवेयर अपडेट आमतौर पर स्वचालित रूप से ही होते हैं, लेकिन कुछ दुर्लभ मामलों में वे असफल भी हो सकते हैं. सॉफ़्टवेयर को अपडेट होने में कुछ ही मिनट लगेंगे और इसे अपने कंप्यूटर से दूरस्थ रूप से कनेक्ट रहते हुए भी पूर्ण किया जा सकता है."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "$1$ पर Chrome दूरस्थ डेस्कटॉप पुराना हो गया है और इसे अपडेट किया जाना आवश्यक है.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "हमें उपयोग आंकड़े और क्रैश रिपोर्ट एकत्रित करने की अनुमति देते हुए Chrome दूरस्थ डेस्कटॉप को सुधारने में हमारी सहायता करें."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "इस कंप्यूटर की पहुंच सुरक्षित करने के लिए, कृपया $1$कम से कम छ: अंक$2$ का पिन चुनें. यह पिन किसी अन्य स्थान से कनेक्ट करते समय आवश्यक होगा.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "दूरस्‍थ पहुंच सेवा प्रारंभ करने में विफल."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome, Chrome दूरस्थ डेस्कटॉप होस्ट इंस्टॉलर को डाउनलोड कर रहा है. डाउनलोड पूर्ण हो जाने पर, कृपया आगे बढने से पहले इंस्टॉलर चलाएं."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "कृपया जारी रखने से पहले इंस्टॉलर चलाएं."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "इस कंप्‍यूटर के लिए दूरस्‍थ कनेक्‍शन सक्षम कर दिए गए हैं."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "कृपया अपने कंप्‍यूटर की शक्ति प्रबंधन सेटिंग जांचें और सुनिश्चित करें कि उसे प्रयोग में नहीं रहते समय सुप्त रहने के लिए कॉन्‍फ़िगर नहीं किया गया है."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "इस कंप्‍यूटर के लिए दूरस्‍थ कनेक्‍शन सक्षम किए जा रहे हैं…"
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "इस कंप्‍यूटर के लिए दूरस्‍थ कनेक्‍शन अक्षम कर दिए गए हैं."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "इस कंप्‍यूटर के लिए दूरस्‍थ कनेक्‍शन अक्षम किए जा रहे हैं…"
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "इस कंप्‍यूटर के लिए दूरस्‍थ पहुंच अक्षम करने में विफल. कृपया बाद में पुन: प्रयास करें."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "Chrome दूरस्थ डेस्कटॉप होस्ट इंस्टॉलर को डाउनलोड करके, आप Google की $1$सेवा की शर्तों$4 से सहमत होते हैं.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "आपका पिन अपडेट कर दिया गया है."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "पिन अपडेट करने में विफल. कृपया बाद में पुन: प्रयास करें."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "इस कंप्‍यूटर का पिन अपडेट किया जा रहा है…"
+   },
+   "HOST_STARTED": {
+      "message": "होस्ट, इस उपयोगकर्ता के लिए प्रारंभ किया गया: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "होस्‍ट बंद हो गया है."
+   },
+   "IDLE_CONTINUE": {
+      "message": "जारी रखें"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "अभी डिस्‍कनेक्‍ट करें"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "आपका $1$ सत्र कुछ समय से निष्‍क्रिय है और जल्‍दी ही डिस्‍कनेक्‍ट कर दिया जाएगा.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "इस कंप्‍यूटर से"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Chrome दूरस्थ डेस्कटॉप होस्ट इंस्टॉलर डाउनलोड करना"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "अपने डेस्कटॉप को साझा करना प्रारंभ करने के लिए, नीचे दिया गया पहुंच कोड आपकी सहायता करने वाले व्यक्ति को दें."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "उसके द्वारा कोड दर्ज करने के बाद आपका साझाकरण सत्र प्रारंभ हो जाएगा."
+   },
+   "INVALID_PIN": {
+      "message": "कृपया छः या अधिक अंकों वाला पिन दर्ज करें."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "उपयोगकर्ता-से-उपयोगकर्ता स्‍क्रीन साझाकरण, दूरस्‍थ तकनीकी सहायता के लिए उपयुक्त."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "कीबोर्ड लेआउट"
+   },
+   "LABEL_CONNECTED": {
+      "message": "कनेक्‍ट किया गया:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (पिछली बार $2$ को ऑनलाइन)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "जानें कैसे."
+   },
+   "LEARN_MORE": {
+      "message": "अधिक जानें."
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Chrome दूरस्थ डेस्कटॉप होस्ट प्राथमिकताएं"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Chrome दूरस्थ\nडेस्कटॉप होस्ट"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Chrome दूरस्थ डेस्कटॉप होस्ट अनइंस्टॉलर"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Win कुंजी के लिए राइट Ctrl का उपयोग करें (Mac पर ⌘)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "विंडो को बड़ा करें"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "अपने कंप्यूटर पर कहीं से भी पहुंचें."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "पहुंच कोड जनरेट किया जा रहा है…"
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "आपका Chrome दूरस्थ डेस्कटॉप सत्र समाप्त हो चुका है."
+   },
+   "MESSAGE_SHARED": {
+      "message": "आपका डेस्कटॉप वर्तमान में $1$ के साथ साझा किया गया है.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "विंडो को छोटा करें"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "अधिकृत करें"
+   },
+   "MODE_IT2ME": {
+      "message": "दूरस्थ सहायता"
+   },
+   "MODE_ME2ME": {
+      "message": "मेरे कंप्यूटर"
+   },
+   "NEW_WINDOW": {
+      "message": "नई विंडो..."
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "सभी युग्मित क्लाइंट हटा दिए गए हैं."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "डेस्‍कटॉप एकीकरण इस प्‍लेटफ़ॉर्म पर समर्थित नहीं है. फिर भी आप ऐप्‍लिकेशन का उपयोग कर सकते हैं, लेकिन उपयोगकर्ता अनुभव कम हो जाएगा."
+   },
+   "OFFLINE": {
+      "message": "$1$ (ऑफ़लाइन)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "होस्‍ट आरंभ करना विफल रहा."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "अमान्‍य होस्‍ट कॉन्‍फ़िगरेशन."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "अमान्‍य होस्‍ट स्‍वामी डोमेन."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "अमान्‍य होस्‍ट आईडी."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "होस्‍ट को अमान्‍य OAuth प्रमाणिकता से कॉन्‍फ़िगर किया गया है."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "कर्टन मोड का समर्थन करने के लिए, कंसोल लॉजिक स्‍क्रीन पर चल रहा होस्‍ट किसी उपयोगकर्ता द्वारा निर्दिष्‍ट सत्र में चल रहे होस्‍ट पर स्‍विच होकर बंद हो गया है."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "खाते में नीतिगत बदलाव करने के लिए, होस्‍ट पुन: प्रारंभ हो रहा है."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "होस्‍ट, नीति को पढ़ने में विफल रहा."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "होस्‍ट बंद हो गया है."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "अपरिचित होस्‍ट त्रुटि: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "अमान्‍य होस्‍ट स्‍वामी."
+   },
+   "OK": {
+      "message": "ठीक"
+   },
+   "OPTIONS_MENU": {
+      "message": "विकल्प"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "इस कंप्यूटर से"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "निम्न क्लाइंट इस कंप्यूटर से युग्मित कर दिए गए हैं और वे PIN प्रदान किए बिना कनेक्ट कर सकते हैं. आप किसी भी समय, अलग-अलग या सभी क्लाइंट के लिए इस अनुमति को निरस्त कर सकते हैं."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "युग्मन दिनांक"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "क्लाइंट"
+   },
+   "PIN": {
+      "message": "पिन"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "कृपया दोनों बॉक्‍स में समान पिन दर्ज करें."
+   },
+   "PIN_MESSAGE": {
+      "message": "कृपया $1$ के लिए अपना पिन दर्ज करें.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "कृपया दूरस्थ कंप्यूटर के लिए अपना पिन डालें."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "सुरक्षित रूप से इंटरनेट पर अन्य कंप्यूटर तक पहुंचें या किसी अन्य उपयोगकर्ता को अपने कंप्यूटर तक पहुंचने दें."
+   },
+   "PRODUCT_NAME": {
+      "message": "Chrome दूरस्थ डेस्कटॉप"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome ऐप स्‍ट्रीमिंग"
+   },
+   "RECONNECT": {
+      "message": "पुन: कनेक्‍ट करें"
+   },
+   "REMEMBER_PIN": {
+      "message": "इस डिवाइस से इस होस्ट को कनेक्ट करते समय दोबारा पिन न मांगें."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "मुख्य लाइब्रेरी"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "डेस्कटॉप एकीकरण प्रोसेस"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "ऐप्‍लिकेशन, Chrome दूरस्‍थ डेस्‍कटॉप होस्‍ट को आदेश जारी करेगा."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "होस्ट प्रोसेस"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "होस्ट प्रबंधन को दूरस्थ बनाने के लिए स्थानीय संदेश सेवा होस्ट"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "दूरस्थ सहायता के लिए स्थानीय संदेश सेवा होस्ट"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "सुरक्षा कुंजी दूरस्थ प्रक्रिया"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "डेस्कटॉप को सटीक आकार में बदलें"
+   },
+   "RESTART_BUTTON": {
+      "message": "अभी पुनः प्रारंभ करें"
+   },
+   "RESTORE_WINDOW": {
+      "message": "विंडो पुनर्स्थापित करें"
+   },
+   "RETRY": {
+      "message": "पुन: प्रयास करें"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "स्‍क्रीन विकल्‍प"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Ctrl-Alt-Del भेजें"
+   },
+   "SEND_FEEDBACK": {
+      "message": "समस्या की रिपोर्ट करें…"
+   },
+   "SEND_KEYS": {
+      "message": "भेजें कुंजियां"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "PrtScn भेजें"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "यह सेवा Chrome दूरस्थ डेस्कटॉप क्लाइंट के इनकमिंग कनेक्शन सक्षम करती है."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "यह सेटिंग आपकी डोमेन नीति द्वारा प्रबंधित है."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "साझा करें"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "अभी नहीं"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "क्‍या आप किसी अन्‍य उपयोगकर्ता द्वारा देखने और नियंत्रित करने के लिए इस कंप्‍यूटर को साझा करना चाहते हैं?"
+   },
+   "SHOW_STATS": {
+      "message": "आंकड़े दिखाएं"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "आंकड़े दिखाएं (कनेक्‍शन: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "‍फ़िट करने के लिए सिकोड़ें"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "प्रवेश करें"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "प्रस्थान करें"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "साझाकरण रोकें"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Chrome दूरस्थ डेस्कटॉप को बेहतर बनाने में सहायता करना चाहते हैं? $1$सर्वेक्षण में भाग लें.$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "समय"
+   },
+   "TOGGLE_STATS": {
+      "message": "आंकड़े दिखाएं"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "$1$ से कनेक्ट करें",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "इस कंप्‍यूटर से दूरस्‍थ कनेक्शन अक्षम करें"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "होस्ट की सूची रीफ्रेश करें"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "कंप्‍यूटर का नाम संपादित करें"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (पुराना)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "खाता"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Chrome दूरस्थ डेस्कटॉप द्वारा एक्सेस की अनुमति देने के लिए कृपया नीचे अपने खाते और PIN की दुबारा पूछें."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "ध्‍यान दें: नीति सेटिंग केवल आपके नेटवर्क के कंप्‍यूटर के बीच कनेक्शन की अनुमति देती है."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "ध्यान दें: सभी कीबोर्ड शॉर्टकट की उपलब्धता सुनिश्चित करने के लिए, आप Chrome रिमोट डेस्कटॉप को ‘विंडो के रूप में खोलें’ पर कॉन्फ़िगर कर सकते हैं."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "यह सुरक्षित क्यों है?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Windows"
+   },
+   "WORKING": {
+      "message": "कार्य कर रहा है…"
+   }
+}

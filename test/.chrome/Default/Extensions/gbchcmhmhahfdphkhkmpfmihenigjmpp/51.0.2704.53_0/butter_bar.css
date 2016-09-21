@@ -1,0 +1,40 @@
+/* Copyright 2014 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+#butter-bar {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  display: -webkit-box;
+  width: 100%;
+}
+
+#butter-bar-dismiss img {
+  vertical-align: top;
+  opacity: 0.4;
+  margin-__MSG_@@bidi_start_edge__: 2px;
+  margin-__MSG_@@bidi_end_edge__: -12px;
+}
+
+#butter-bar-dimiss:hover {
+  opacity: 0.7;
+}
+
+#butter-bar > p {
+  background-color: #f9edbe;
+  border: 1px solid #f0c36d;
+  border-radius: 2px;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+  color: #222;
+  font-size: 12px;
+  padding: 4px 16px;
+  margin: auto;
+}
+
+#butter-bar a {
+  color: inherit;
+  text-decoration: underline;
+  padding-__MSG_@@bidi_start_edge__: 2px;
+}

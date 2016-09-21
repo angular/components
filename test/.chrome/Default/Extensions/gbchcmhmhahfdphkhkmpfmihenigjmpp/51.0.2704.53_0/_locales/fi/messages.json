@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "Hyväksy ja asenna"
+   },
+   "ACCESS_CODE": {
+      "message": "Käyttökoodi"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "Tämä käyttökoodi vanhenee $1$ kuluttua.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "Palaute"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "Kaikki yhteydet"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "Kirjoita PIN-koodi uudelleen"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN-koodi"
+   },
+   "CANCEL": {
+      "message": "Peruuta"
+   },
+   "CLEAR_HISTORY": {
+      "message": "Tyhjennä historia"
+   },
+   "CLOSE": {
+      "message": "Sulje"
+   },
+   "CLOSE_PROMPT": {
+      "message": "Vaihtamalla sivua päätät Chrome-etäkäyttökerran."
+   },
+   "CLOSE_WINDOW": {
+      "message": "Sulje ikkuna"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "Haluatko varmasti poistaa käytöstä etäyhteydet kohteeseen $1$? Jos muutat mieltäsi, yhteydet täytyy palauttaa käyttöön kyseisellä tietokoneella.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "Yhteyden muodostaminen epäonnistui."
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "Lähde"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "Yhteyshistoria"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "Kohtalainen"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "Hyvä"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "Huono"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "Kohde"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "Yhdistä silti"
+   },
+   "CONNECT_BUTTON": {
+      "message": "Muodosta yhteys"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "Jatka"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "Jaat tällä hetkellä tämän tietokoneen toisen käyttäjän kanssa. Haluatko jatkaa jakamista?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Chrome-etäkäytön isännän hallinta"
+   },
+   "COPYRIGHT": {
+      "message": "Copyright 2013 Google Inc. Kaikki oikeudet pidätetään."
+   },
+   "CREDITS": {
+      "message": "Tekijät"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "Poista kaikki"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "Poista"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "Jotta voit jatkaa, sinun on annettava laajennetut käyttöoikeudet tietokoneeseesi. Tämä täytyy tehdä vain kerran."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "Ota yhteyttä käyttäjään, jonka tietokonetta haluat käyttää. Pyydä häntä klikkaamaan $1$ ja antamaan käyttökoodi sinulle.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Chrome-etäkäyttösovelluksen avulla voit jakaa tietokoneesi suojatun verkkoyhteyden kautta. Molempien käyttäjien täytyy käyttää osoitteesta $1$ löytyvää Chrome-etäkäyttösovellusta.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "Etäisäntä edellyttää todennusta kolmannen osapuolen sivustossa. Jos haluat jatkaa, anna Chrome-etäkäytölle lisäkäyttölupia tämän osoitteen avaamiseksi:"
+   },
+   "DISABLE_HOST": {
+      "message": "Poista käytöstä"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "Katkaise yhteys"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Chrome-etäkäyttöpalvelu"
+   },
+   "DURATION_HEADER": {
+      "message": "Kesto"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "Sinulla ei ole lupaa suorittaa tätä sovellusta."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "Todennus epäonnistui. Kirjaudu uudelleen sisään Chromeen."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "Joitakin vaadittavia komponentteja puuttuu. Varmista, että olet asentanut ohjelmiston uusimman version, ja yritä uudelleen."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "Verkkovirhe. Käynnistämme sovelluksen uudelleen, kun laitteesi on seuraavan kerran yhteydessä verkkoon."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "Etätietokone ei alustanut istuntoa oikein. Jos ongelma ei ratkea, yritä määrittää isäntäkoneen asetukset uudelleen."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "Etätietokone ei vastaa yhteyspyyntöihin. Vahvista, että se on online-tilassa, ja yritä uudelleen."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "Yhteydet etätietokoneeseen on väliaikaisesti estetty, sillä siihen yritettiin ottaa yhteys virheellisellä PIN-koodilla. Yritä myöhemmin uudelleen."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "Tietokoneen rekisteröinti epäonnistui."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "Havaittiin yhteensopimaton protokollaversio. Varmista, että molemmissa tietokoneissa on ohjelman uusimmat versiot, ja yritä uudelleen."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "Käyttökoodi on virheellinen. Yritä uudelleen."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "Käytäntöasetukset eivät salli tämän tietokoneen jakamista Chrome-etäkäyttöisäntänä. Ota yhteyttä järjestelmänvalvojaan."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "Etäistunto on vanhentunut."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "Jotkin vaadittavat komponentit puuttuvat. Varmista, että käytät uusinta Chrome-versiota, ja yritä uudelleen."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "Joitakin pakollisia komponentteja puuttuu. Avaa osoite chrome://plugins ja varmista, että Native Client on käytössä."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "Tarvittava osa ei toimi enää. Ilmoita tästä ongelmasta kehittäjille."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "Verkkoon yhdistäminen ei onnistu. Varmista, että laitteesi on online-tilassa."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "Et ole kirjautunut Chromeen. Kirjaudu sisään ja yritä uudelleen."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "Sinulla ei ole lupaa suorittaa tätä toimintoa."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "Pyydettyä kohdetta ei ole olemassa."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "Isäntään ei saatu yhteyttä. Tämä johtuu luultavasti käyttämäsi verkon määrityksistä."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "Palvelu ei ole tällä hetkellä käytettävissä. Yritä myöhemmin uudelleen."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "Odottamaton virhe. Ilmoita tästä ongelmasta kehittäjille."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "Poistu koko näytön tilasta"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "Sovelluksen nollaus epäonnistui. Voit silti lähettää vikailmoituksen."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "Nollaa sovellus. Menetät kaikki tallentamattomat työt."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "Sovellus ei aukea."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "Sovellus on liian hidas."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "Google Drive -tiedostoni eivät aukea."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "Tallennetut Google Drive -tiedostoni eivät näy verkossa."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "Näppäimistö tai hiiri tuottaa ongelmia."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "Auta ratkaisemaan ongelma kertomalla, mikä on vialla:"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "Jokin muu syy."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "Valitse…"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "Jotta voimme kysyä sinulta lisätietoja, sähköpostiosoitteesi liitetään kaikkeen lähettämääsi palautteeseen."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "Ilmoita ongelmasta"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "Sisällytä sovelluslokeja, jotka voivat auttaa ongelmanratkaisussa (lokit voivat sisältää yksityisiä tietoja)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "Sovelluslokeissa voi olla yksityisiä tietoja, kuten henkilöllisyytesi (sähköpostiosoite) ja Google Drivessa olevien tiedostojen ja kansioiden nimet ja ominaisuudet."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "Näitä tietoja käytetään vain ilmoittamasi ongelman diagnosointiin, näytetään vain ongelmaasi selvittävälle henkilölle ja säilytetään korkeintaan 30 päivää."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "Yhdistetään…"
+   },
+   "FOOTER_WAITING": {
+      "message": "odotetaan yhteyttä..."
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "Mac (OS X 10.6 ja uudemmat versiot)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "Windows (XP ja uudemmat versiot)"
+   },
+   "FULL_SCREEN": {
+      "message": "Koko näyttö"
+   },
+   "GET_STARTED": {
+      "message": "Aloita"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "Hyväksy"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "Hylkää"
+   },
+   "HELP": {
+      "message": "Ohje"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "Käyttöoikeudet"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "Tarkastele ja hallinnoi jaettua tietokonetta."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "Tähän tietokoneeseen voi muodostaa suojatun yhteyden Chrome-etäkäytön avulla."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "Vaihda PIN-koodi"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "Tämä tietokone on jaettu eri tilille."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "Tarkastele/muokkaa"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "Tämä tietokone on määritetty sallimaan vähintään yhden asiakkaan yhteys ilman PIN-koodia."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "Ota etäyhteydet käyttöön"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "Etäyhteydet on otettava käyttöön, jotta tietokonetta voidaan käyttää Chrome-etäkäytön avulla."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "Poista etäyhteydet käytöstä"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "Jaa"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "Jaa tämä tietokone toisen käyttäjän nähtäväksi ja hallinnoitavaksi."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(Tämä ominaisuus ei ole vielä saatavilla tietokoneellesi.)"
+   },
+   "HOST_CATEGORY": {
+      "message": "Isäntä"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "Käyttöoikeus kiellettiin asiakkaalta %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "Asiakas %1 yhdistettiin."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "Asiakkaan %1 yhteys katkaistiin."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "Asiakkaan kanavan IP-osoite: %1 ip='%2' host_ip='%3' channel='%4' connection='%5'."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "Ota etäyhteys käyttöön asentamalla toiselle tietokoneelle Chrome-etäkäyttö ja valitsemalla $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "Käyttöösi ei ole rekisteröity tietokoneita. Ota käyttöön etäyhteys asentamalla toiselle tietokoneelle Chrome-etäkäyttö ja klikkaamalla painiketta $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "Olet aiemmin kirjautunut sisään käyttäjänä $1$ ($2$). Jos haluat käyttää tietokoneitasi tämän tilin kautta, $3$kirjaudu Google Chromeen$4$ kyseisellä tilillä ja asenna Chrome-etäkäyttö uudelleen.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "Ohjelmistopäivitykset tapahtuvat yleensä automaattisesti, mutta voivat epäonnistua joissakin harvinaisissa tapauksissa. Ohjelmiston päivittäminen kestää yleensä vain muutaman minuutin, ja se voidaan suorittaa etäyhteyden välityksellä."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "Chrome-etäkäyttö kohteessa $1$ on vanhentunut ja vaatii päivityksen.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "Auta meitä parantamaan Chrome-etäkäyttöä antamalla meidän kerätä käyttötilastoja ja virheraportteja."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "Suojaa tämän tietokoneen käyttöä valitsemalla $1$vähintään kuusinumeroinen$2$ PIN-koodi. Tarvitset PIN-koodin muodostaessasi yhteyden toiselta koneelta.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "Etäkäyttöpalvelun käynnistäminen epäonnistui."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome lataa Chrome-etäkäytön isäntäsovelluksen asennusohjelmaa. Suorita asennusohjelma, kun lataus on valmis."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "Suorita asennusohjelma ennen kuin jatkat."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "Tietokoneen etäyhteydet on otettu käyttöön."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "Tarkista tietokoneen virranhallinta-asetukset ja varmista, että sitä ei ole määritetty siirtymään virransäästötilaan, kun sitä ei käytetä."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "Otetaan tietokoneen etäyhteyksiä käyttöön…"
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "Tietokoneen etäyhteydet on poistettu käytöstä."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "Poistetaan tietokoneen etäyhteyksiä käytöstä…"
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "Etäyhteyksien poistaminen käytöstä epäonnistui. Yritä myöhemmin uudelleen."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "Lataamalla Chrome-etäkäytön isännän asennusohjelman hyväksyt Googlen $1$käyttöehdot$4.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "PIN-koodi on päivitetty."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "PIN-koodin päivitys epäonnistui. Yritä myöhemmin uudelleen."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "Tietokoneen PIN-koodia päivitetään…"
+   },
+   "HOST_STARTED": {
+      "message": "Käyttäjän %1 isäntä käynnistettiin."
+   },
+   "HOST_STOPPED": {
+      "message": "Isäntä pysähtyi."
+   },
+   "IDLE_CONTINUE": {
+      "message": "Jatka"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "Katkaise yhteys nyt"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "$1$ -istuntosi on ollut epäaktiivinen jonkin aikaa, ja se katkaistaan pian.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "Tähän tietokoneeseen"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Lataa Chrome-etäkäytön isännän asennusohjelma"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "Aloita työpöydän jakaminen antamalla käyttökoodi sinua avustavalle henkilölle."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "Tietokoneen jakaminen aloitetaan käyttäjän annettua käyttökoodin."
+   },
+   "INVALID_PIN": {
+      "message": "Anna PIN-koodi, jossa on vähintään kuusi numeroa."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "Ruudun jakaminen käyttäjien välillä sopii hyvin teknisen etätuen antamiseen."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "Näppäinasettelut"
+   },
+   "LABEL_CONNECTED": {
+      "message": "Yhdistetty:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (viimeksi online-tilassa $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "Lisätietoja."
+   },
+   "LEARN_MORE": {
+      "message": "Lisätietoja"
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Chrome-etäkäytön isäntäasetukset"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Chrome-etäkäytön\nisäntä"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Chrome-etäkäytön isännän asennuksen poisto"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Käytä oikeanpuoleista Ctrl-painiketta Win-painikkeena (⌘ Macilla)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "Suurenna ikkuna"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "Käytä tietokonettasi mistä haluat."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "Luodaan käyttökoodia..."
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "Chrome-etäkäyttökerta on päättynyt."
+   },
+   "MESSAGE_SHARED": {
+      "message": "Tietokoneesi on jaettu käyttäjän $1$ kanssa.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "Pienennä ikkuna"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "Valtuuta"
+   },
+   "MODE_IT2ME": {
+      "message": "Etätuki"
+   },
+   "MODE_ME2ME": {
+      "message": "Omat tietokoneet"
+   },
+   "NEW_WINDOW": {
+      "message": "Uusi ikkuna…"
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "Kaikki laitepareiksi yhdistetyt asiakkaat on poistettu."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "Tämä alusta ei tue työpöydän integraatiota. Voit silti käyttää sovellusta, mutta käyttökokemus on heikompi."
+   },
+   "OFFLINE": {
+      "message": "$1$ (offline)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "Isännän alustus epäonnistui."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "Isännän omistajan määritykset ovat virheelliset."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "Isännän omistajan verkkotunnus on virheellinen."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "Isännän tunnus on virheellinen."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "Isännälle on määritetty virheelliset OAuth-kirjautumistiedot."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "Konsolin logiikkaruudussa käynnissä ollut isäntä sulkeutui tukeakseen verhotilaa. Vaihdetaan käyttäjäkohtaisessa istunnossa käynnissä olevaan isäntään."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "Isäntä käynnistyy uudelleen ja ottaa käyttöön käytäntöihin tehdyn muutoksen."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "Isäntä ei voinut lukea käytäntöä."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "Isäntä on offline-tilassa."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "Tuntematon isäntävirhe: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "Isännän omistaja on virheellinen."
+   },
+   "OK": {
+      "message": "OK"
+   },
+   "OPTIONS_MENU": {
+      "message": "Asetukset"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "Tältä tietokoneelta"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "Seuraavat asiakkaat on yhdistetty tämän tietokoneen laitepareiksi, ja ne voivat muodostaa yhteyden ilman PIN-koodia. Voit peruuttaa luvan milloin tahansa joko yksitellen tai kaikille asiakkaille yhtä aikaa."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "Laiteparin muodostamispäivä"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "Asiakas"
+   },
+   "PIN": {
+      "message": "PIN-koodi"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "Kirjoita sama PIN-koodi molempiin ruutuihin."
+   },
+   "PIN_MESSAGE": {
+      "message": "Anna kohteen $1$ PIN-koodi.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "Anna etätietokoneen PIN-koodi."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "Käytä muita tietokoneita tai salli toisen käyttäjän käyttää tietokonettasi suojatun internetyhteyden kautta."
+   },
+   "PRODUCT_NAME": {
+      "message": "Chrome-etäkäyttö"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome-sovellusten suoratoisto"
+   },
+   "RECONNECT": {
+      "message": "Yhdistä uudelleen"
+   },
+   "REMEMBER_PIN": {
+      "message": "Älä kysy PIN-koodia uudelleen yhdistettäessä tähän isäntään tältä laitteelta."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "Ydinkirjasto"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "Tietokoneen integrointiprosessi"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "Sovellus, joka antaa komentoja Chromen etätyöpöytäisännälle."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "Isäntäprosessi"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "Viestiliikenteen alkuperäinen isäntä etäisännän hallinnalle"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "Viestiliikenteen alkuperäinen isäntä etäavustukselle"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "Suojausavaimen etäkäyttöprosessi"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "Sovita työpöydän koko"
+   },
+   "RESTART_BUTTON": {
+      "message": "Käynnistä uudelleen"
+   },
+   "RESTORE_WINDOW": {
+      "message": "Palauta ikkuna"
+   },
+   "RETRY": {
+      "message": "Yritä uudelleen"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "Ruudun asetukset"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Lähetä Ctrl-Alt-Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "Ilmoita ongelmasta…"
+   },
+   "SEND_KEYS": {
+      "message": "Lähetä näppäinvalinta"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "Lähetä PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "Tämä palvelu mahdollistaa Chrome-etäkäytön asiakkaiden muodostamat yhteydet."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "Verkkotunnuksesi käytäntö määrittää tämän asetuksen."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "Jaa"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "Peruuta"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "Haluatko jakaa tämän tietokoneen niin, että toinen käyttäjä voi käyttää ja valvoa sitä?"
+   },
+   "SHOW_STATS": {
+      "message": "Näytä tilastot"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "Näytä tilastot (yhteys: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "Sovita ikkunaan"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "Kirjaudu sisään"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "Kirjaudu ulos"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "Lopeta jakaminen"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Haluatko parantaa Chromen etäkäyttöä? $1$Osallistu kyselyyn.$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "Aika"
+   },
+   "TOGGLE_STATS": {
+      "message": "Näytä tilastot"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "Yhdistä kohteeseen $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "Poista käytöstä etäyhteydet tähän tietokoneeseen"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "Päivitä isäntäluettelo"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "Muokkaa tietokoneen nimeä"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (vanhentunut)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "Tili"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Myönnä käyttöoikeus Chrome-etäkäytön kautta vahvistamalla tilisi ja PIN-koodisi alla."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "HUOMAA: käytäntöasetusten vuoksi vain verkossasi olevien tietokoneiden väliset yhteydet sallitaan."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "Huomaa: voit varmistaa kaikkien pikanäppäinten käytettävyyden, kun määrität Chrome-etäkäytön avautumaan ikkunassa."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "Miksi tämä on turvallista?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Windows"
+   },
+   "WORKING": {
+      "message": "Käsitellään…"
+   }
+}

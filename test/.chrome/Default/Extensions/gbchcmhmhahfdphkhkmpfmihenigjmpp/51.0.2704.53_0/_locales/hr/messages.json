@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "Prihvati i instaliraj"
+   },
+   "ACCESS_CODE": {
+      "message": "Pristupni kôd"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "Ovaj pristupni kôd isteći će za $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "Povratne informacije"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "Sve veze"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "Ponovo upišite PIN"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN"
+   },
+   "CANCEL": {
+      "message": "Odustani"
+   },
+   "CLEAR_HISTORY": {
+      "message": "Izbriši povijest"
+   },
+   "CLOSE": {
+      "message": "Zatvori"
+   },
+   "CLOSE_PROMPT": {
+      "message": "Ako napustite ovu stranicu, završit će vaša sesija u aplikaciji Udaljena radna površina Chrome."
+   },
+   "CLOSE_WINDOW": {
+      "message": "Zatvori prozor"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "Jeste li sigurni da želite onemogućiti daljinske veze s hostom $1$? Ako se predomislite, morat ćete se spojiti na to računalo da biste ponovo omogućili veze.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "Povezivanje nije uspjelo"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "Od"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "Povijest veza"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "Solidna"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "Dobra"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "Slaba"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "Prima"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "Svejedno poveži"
+   },
+   "CONNECT_BUTTON": {
+      "message": "Povežite se"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "Nastavi"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "Ovaj uređaj trenutačno dijelite s drugim korisnikom. Želite li nastaviti dijeljenje?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Kontroler Udaljene radne površine Chrome"
+   },
+   "COPYRIGHT": {
+      "message": "Autorska prava 2013. Google Inc. Sva prava pridržana."
+   },
+   "CREDITS": {
+      "message": "Sudjelovali"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "Izbriši sve"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "Izbriši"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "Da biste nastavili, morate odobriti dopuštenja za prošireni pristup svojem računalu. To morate učiniti samo jednom."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "Zamolite korisnika čijem računalu želite pristupiti da klikne \"$1$\" i da vam pristupni kôd.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Udaljena radna površina Chrome omogućuje vam da svoje računalo sigurno dijelite putem weba. Na računalima oba korisnika mora biti pokrenuta aplikacija Udaljena radna površina Chrome koju možete pronaći na web-lokaciji $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "Udaljeni host zahtijeva autentifikaciju web-lokacije treće strane. Da biste nastavili, morate dati Udaljenoj radnoj površini Chrome dodatne dozvole za pristup ovoj adresi:"
+   },
+   "DISABLE_HOST": {
+      "message": "Onemogući"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "Prekini vezu"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Usluga Udaljena radna površina Chrome"
+   },
+   "DURATION_HEADER": {
+      "message": "Trajanje"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "Nemate dopuštenje za pokretanje te aplikacije."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "Autentifikacija nije uspjela. Prijavite se ponovo u Chrome."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "Nedostaju neke obavezne komponente. Provjerite jeste li instalirali najnoviju verziju softvera i pokušajte ponovo."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "Došlo je mrežne pogreške. Ponovo ćemo pokrenuti aplikaciju kad se vaš uređaj opet poveže s mrežom."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "Udaljeno računalo nije uspjelo inicijalizirati sesiju. Ako se problem ne riješi, pokušajte ponovo konfigurirati host."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "Udaljeno računalo ne odgovara na zahtjev za povezivanje. Provjerite je li na mreži i pokušajte ponovo."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "Veze s udaljenim računalom privremeno su blokirane jer se na njih pokušava spojiti korisnik s PIN-om koji nije važeći. Pokušajte ponovo kasnije."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "Nisam uspio registrirati ovo računalo."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "Otkrivena je nekompatibilna verzija protokola. Provjerite je li na oba računala instalirana najnovija verzija softvera pa pokušajte ponovo."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "Pristupni je kôd nevažeći. Pokušajte ponovo."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "Postavke pravila ne dopuštaju dijeljenje ovog računala kao hosta za Udaljenu radnu površinu Chrome. Obratite se administratoru sustava za pomoć."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "Daljinska je sesija istekla."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "Nedostaju neke obavezne komponente. Provjerite jeste li pokrenuli najnoviju verziju Chromea i pokušajte ponovo."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "Nedostaju neke obavezne komponente. Otvorite chrome://plugins i provjerite je li omogućen Lokalni klijent."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "Obavezna je komponenta prestala funkcionirati. Prijavite problem razvojnim programerima."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "Nije bilo moguće povezati se s mrežom. Provjerite je li uređaj na mreži."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "Niste prijavljeni u Chrome. Prijavite se i pokušajte ponovo."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "Nemate dopuštenje za izvršavanje te radnje."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "Traženi objekt ne postoji."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "Nije moguće pristupiti hostu. To je vjerojatno zbog konfiguracije mreže koju upotrebljavate."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "Usluga je privremeno nedostupna. Pokušajte ponovo kasnije."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "Pojavila se neočekivana pogreška. Prijavite taj problem razvojnim programerima."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "Izađi iz cijelog zaslona"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "Vraćanje aplikacije na zadano nije uspjelo. I dalje možete poslati izvješće o programskim pogreškama."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "Vratite aplikaciju na zadano. Izgubit ćete sav rad koji niste spremili."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "Ne mogu otvoriti aplikaciju."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "Aplikacija je prespora."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "Ne mogu otvoriti svoje datoteke na Google disku."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "Ne vidim svoje spremljene datoteke na mreži na Google disku."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "Imam problema s tipkovnicom ili mišem."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "Da bismo lakše riješili vaš problem, recite nam što nije u redu:"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "Nešto drugo."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "Odaberite…"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "Da bi smo vam mogli poslati daljnje informacije, u povratnim informacijama koje pošaljete bit će vaša e-adresa."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "Prijavite poteškoću"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "Uključite zapisnike aplikacije da bismo lakše riješili vaš problem (zapisnici mogu uključivati osobne podatke)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "Zapisnici aplikacija mogu uključivati osobne podatke, uključujući vaš identitet (e-adresu) te nazive i svojstva datoteka i mapa na Google disku."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "Informacije se upotrebljavaju samo za dijagnosticiranje problema koji prijavljujete, dostupne su samo osobi koja istražuje vaše izvješće i ne zadržavaju se dulje od 30 dana."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "Povezivanje…"
+   },
+   "FOOTER_WAITING": {
+      "message": "čekanje na vezu..."
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "Za Mac (OS X 10.6 i novije verzije)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "Za Windows (XP i novije verzije)"
+   },
+   "FULL_SCREEN": {
+      "message": "Cijeli zaslon"
+   },
+   "GET_STARTED": {
+      "message": "Početak korištenja"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "Prihvati"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "Odbijam"
+   },
+   "HELP": {
+      "message": "Pomoć"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "Pristup"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "Gledajte dijeljeno računalo i upravljajte njime."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "Ovom računalu možete sigurno pristupiti pomoću Udaljene radne površine Chrome."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "Promijeni PIN"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "To se računalo trenutačno dijeli pod drugim računom."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "Prikaz/uređivanje"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "To je računalo konfigurirano tako da dozvoljava povezivanje jednog ili više klijenata bez unosa PIN-a."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "Omogući daljinske veze"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "Morate omogućiti daljinske veze ako želite pristupati računalu pomoću Udaljene radne površine Chrome."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "Onemogući daljinske veze"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "Podijeli"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "Dijelite ovo računalo kako bi ga drugi korisnik mogao vidjeti i upravljati njime."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(ta značajka još nije dostupna za vaše računalo)"
+   },
+   "HOST_CATEGORY": {
+      "message": "Host:"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "Pristup je odbijen za klijenta: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "Povezani klijent: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "Prekinuta veza s klijentom: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "IP kanal za klijenta: %1 ip='%2' host_ip='%3' channel='%4' connection='%5'."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "Da biste omogućili povezivanje s različitim udaljenim računalima, na njima instalirajte Udaljenu radnu površinu Chrome pa kliknite gumb \"$1$\".",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "Nije registrirano nijedno računalo. Da biste omogućili daljinske veze s računalom, instalirajte Udaljenu radnu površinu Chrome pa kliknite \"$1$\".",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "Prethodno ste se prijavili kao $1$ ($2$). Da biste pristupali svojim računalima putem tog računa, $3$prijavite se na Google Chrome$4$ tim računom i ponovo instalirajte Udaljenu radnu površinu Chrome.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "Softver se obično ažurira automatski, ali u nekim rijetkim slučajevima ažuriranja možda neće uspjeti. Ažuriranje softvera ne bi smjelo trajati dulje od nekoliko minuta te se može izvršiti dok ste daljinski povezani s računalom."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "Udaljena radna površina Chrome na hostu $1$ zastarjela je i mora se ažurirati.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "Pomognite nam poboljšati Udaljenu radnu površinu Chrome, dopustite nam prikupljanje statistike upotrebe i izvješća o padu programa."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "Da biste zaštitili pristup ovom računalu, odaberite PIN s $1$najmanje šest brojeva$2$. Taj će PIN biti potreban pri povezivanju s druge lokacije.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "Nisam uspio pokrenuti uslugu daljinskog pristupa."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome preuzima instalacijski program Udaljene radne površine Chrome. Nakon završetka preuzimanja pokrenite alat za instalaciju prije nego što nastavite."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "Ponovo pokrenite instalacijski program prije nastavka."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "Na ovom su računalu omogućene daljinske veze."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "Provjerite postavke upravljanja potrošnjom energije svojeg računala i provjerite da nije konfigurirano tako da prelazi u stanje mirovanja kad je neaktivno."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "Omogućavanje daljinskih veza za ovo računalo…"
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "Na ovom su računalu onemogućene daljinske veze."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "Onemogućavanje daljinskih veza za ovo računalo…"
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "Onemogućavanje daljinskog pristupa ovom računalu nije uspjelo. Pokušajte ponovo kasnije."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "Preuzimanjem programa za instalaciju hosta Udaljene radne površine Chrome prihvaćate Googleove $1$Uvjete pružanja usluge$4.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "Ažuriran je PIN."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "PIN nije uspješno ažuriran. Pokušajte ponovo kasnije."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "U tijeku je ažuriranje PIN-a za ovo računalo…"
+   },
+   "HOST_STARTED": {
+      "message": "Host je pokrenut za korisnika: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "Host je zaustavljen."
+   },
+   "IDLE_CONTINUE": {
+      "message": "Nastavi"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "Prekini vezu odmah"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "Vaša sesija u aplikaciji $1$ nije aktivna već neko vrijeme, pa će se uskoro prekinuti veza.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "Na ovo računalo"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Preuzimanje programa za instalaciju hosta Udaljene radne površine Chrome"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "Da biste započeli dijeliti radnu površinu, pošaljite pristupni kôd u nastavku osobi koja će vam pomagati."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "Nakon što se unese kôd, počet će sesija dijeljenja."
+   },
+   "INVALID_PIN": {
+      "message": "Unesite PIN koji se sastoji od šest ili više znamenki."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "Dijeljenje zaslona između korisnika savršeno je za daljinsku tehničku podršku."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "Rasporedi tipkovnice"
+   },
+   "LABEL_CONNECTED": {
+      "message": "Povezan:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (posljednji put na mreži $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "Saznajte kako."
+   },
+   "LEARN_MORE": {
+      "message": "Saznajte više."
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Postavke hosta Udaljene radne površine Chrome"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Host Udaljene radne\npovršine Chrome"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Program za deinstaliranje hosta Udaljene radne površine Chrome"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Upotrijebite desni Ctrl za tipku Win (⌘ na Macu)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "Maksimiziranje prozora"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "Pristupite svojem računalu s bilo kojeg mjesta."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "Generiranje pristupnog koda..."
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "Završila je vaša sesija u aplikaciji Udaljena radna površina Chrome."
+   },
+   "MESSAGE_SHARED": {
+      "message": "Vaša se radna površina trenutačno dijeli s korisnikom $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "Minimiziranje prozora"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "Autoriziraj"
+   },
+   "MODE_IT2ME": {
+      "message": "Daljinska pomoć"
+   },
+   "MODE_ME2ME": {
+      "message": "Moja računala"
+   },
+   "NEW_WINDOW": {
+      "message": "Novi prozor…"
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "Svi su upareni klijenti izbrisani."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "Ova platforma ne podržava integraciju radne površine. Aplikacija se može upotrebljavati, ali uz lošiji korisnički doživljaj."
+   },
+   "OFFLINE": {
+      "message": "$1$ (van mreže)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "Inicijalizacija hosta nije uspjela."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "Nevažeća konfiguracija hosta."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "Nevažeća domena vlasnika hosta."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "Nevažeći ID hosta."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "Host je konfiguriran s nevažećim vjerodajnicama za OAuth."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "Host koji je pokrenut na zaslonu za prijavu na konzolu isključio se radi podrške za način zavjese prelaskom na host koji je pokrenut u sesiji korisnika."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "Host se ponovo pokreće radi primjene promijenjenih pravila."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "Host nije uspio pročitati pravila."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "Host je isključen."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "Nepoznata pogreška hosta: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "Nevažeći vlasnik hosta."
+   },
+   "OK": {
+      "message": "U redu"
+   },
+   "OPTIONS_MENU": {
+      "message": "Opcije"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "S ovog računala"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "Sljedeći klijenti upareni su s ovim računalom i mogu se povezati bez unosa PIN-a. Možete opozvati tu dozvolu u bilo kojem trenutku za pojedinačne ili sve klijente."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "Datum uparivanja"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "Klijent"
+   },
+   "PIN": {
+      "message": "PIN"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "Unesite isti PIN u oba polja."
+   },
+   "PIN_MESSAGE": {
+      "message": "Unesite svoj PIN za host $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "Unesite PIN za udaljeno računalo."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "Putem interneta pristupajte drugim računalima ili drugim korisnicima omogućite siguran pristup svojem računalu."
+   },
+   "PRODUCT_NAME": {
+      "message": "Udaljena radna površine Chrome"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome App Streaming"
+   },
+   "RECONNECT": {
+      "message": "Ponovno povezivanje"
+   },
+   "REMEMBER_PIN": {
+      "message": "Nemoj ponovo tražiti PIN prilikom povezivanja s tim hostom s ovog uređaja."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "Središnja biblioteka"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "Postupak integracije radne površine"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "Aplikacija za izdavanje naredbi hostu Udaljene radne površine Chrome."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "Postupak hosta"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "Lokalni host za slanje poruka za upravljanje udaljenim hostom"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "Lokalni host za slanje poruka za udaljenu pomoć"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "Postupak daljinskog postavljanja sigurnosnog ključa"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "Prilagodi veličinu radne površine"
+   },
+   "RESTART_BUTTON": {
+      "message": "Ponovo pokreni sad"
+   },
+   "RESTORE_WINDOW": {
+      "message": "Vraćanje prozora"
+   },
+   "RETRY": {
+      "message": "Pokušaj ponovo"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "Opcije zaslona"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Pošalji Ctrl-Alt-Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "Prijavi problem…"
+   },
+   "SEND_KEYS": {
+      "message": "Tipke za slanje"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "Pošalji PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "Ta usluga omogućuje dolazne veze s klijenata Udaljene radne površine Chrome."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "Tom postavkom upravljaju pravila vaše domene."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "Podijeli"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "Odustani"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "Želite li dijeliti ovo računalo tako da ga neki drugi korisnik može vidjeti i upravljati njime?"
+   },
+   "SHOW_STATS": {
+      "message": "Prikaži statistiku"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "Prikaži statistiku (veza: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "Smanji da stane u prozor"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "Prijava"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "Odjava"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "Zaustavi dijeljenje"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Želite li pomoći poboljšati Udaljenu radnu površinu Chrome? $1$Ispunite upitnik.$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "Vrijeme"
+   },
+   "TOGGLE_STATS": {
+      "message": "Prikaži statistiku"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "Povezivanje s hostom $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "Onemogući daljinske veze na ovom računalu"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "Osvježi popis hostova"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "Uredi naziv računala"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (zastarjelo)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "Račun"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Potvrdite svoj račun i PIN u nastavku da biste usluzi Udaljena radna površina Chrome dozvolili pristup."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "NAPOMENA: postavke pravila dopuštaju jedino veze između računala u vašoj mreži."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "NAPOMENA: kako biste osigurali dostupnost svih tipkovničkih prečaca, možete konfigurirati udaljenu radnu površinu Chrome da se otvara kao prozor."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "Zašto je ovo sigurno?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Windows"
+   },
+   "WORKING": {
+      "message": "Obrada…"
+   }
+}

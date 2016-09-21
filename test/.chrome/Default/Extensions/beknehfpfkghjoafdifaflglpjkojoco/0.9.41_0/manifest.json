@@ -1,0 +1,36 @@
+{
+   "app": {
+      "background": {
+         "persistent": false,
+         "scripts": [ "external_libraries_compiled.js", "util.js", "b64.js", "sha256.js", "timer.js", "countdown.js", "countdowntimer.js", "devicestatuscodes.js", "approvedorigins.js", "errorcodes.js", "webrequest.js", "messagetypes.js", "factoryregistry.js", "closeable.js", "requesthelper.js", "enroller.js", "requestqueue.js", "signer.js", "origincheck.js", "textfetcher.js", "appid.js", "watchdog.js", "logging.js", "webrequestsender.js", "window-timer.js", "gstaticorigincheck.js", "googleappid.js", "googleapprovedorigins.js", "debug.js", "gnubbydevice.js", "hidgnubbydevice.js", "usbgnubbydevice.js", "gnubbies.js", "gnubby.js", "gnubby-u2f.js", "gnubbyfactory.js", "singlesigner.js", "multiplesigner.js", "generichelper.js", "inherits.js", "individualattest.js", "devicefactoryregistry.js", "usbhelper.js", "usbenrollhandler.js", "usbsignhandler.js", "gnubby-cardmanager.js", "gnubby-firmware.js", "gnubbydeviceidcache.js", "appletgnubbyfactory.js", "googlecorpindividualattest.js", "chainedhelper.js", "delegatinghelper.js", "externalhelper.js", "registeringhelper.js", "helperwhitelist.js", "gnubby-ssh.js", "aes.js", "blob.js", "ssh2.js", "ssh-agent-ui.js", "ssh-agent.js", "sshforwardhelper.js", "options-versions.js", "options-handlers.js", "enrollresponse.js", "manual-tests.js", "background.js" ]
+      }
+   },
+   "description": "Javascript gnubbyd",
+   "externally_connectable": {
+      "accepts_tls_channel_id": true,
+      "ids": [ "*" ],
+      "matches": [ "https://accounts.google.com/*", "https://myaccount.google.com/*", "https://security.google.com/*", "https://login.corp.google.com/*", "https://ca-service.corp.google.com/*", "https://ca-service-extended.corp.google.com/*", "https://bej.r.ext.google.com:8022/*", "https://cbf.r.ext.google.com:8022/*", "https://eem.r.ext.google.com:8022/*", "https://fra.r.ext.google.com:8022/*", "https://hfa.r.ext.google.com:8022/*", "https://hot.r.ext.google.com:8022/*", "https://hyd.r.ext.google.com:8022/*", "https://msk.r.ext.google.com:8022/*", "https://mtv.r.ext.google.com:8022/*", "https://nyc.r.ext.google.com:8022/*", "https://sha.r.ext.google.com:8022/*", "https://syd.r.ext.google.com:8022/*", "https://twd.r.ext.google.com:8022/*", "https://login-canary.corp.google.com/*", "https://login-dev.corp.google.com/*", "https://login-stable.corp.google.com/*", "https://login-test.corp.google.com/*", "https://ac-autopush-myaccount.corp.google.com/*", "https://ac-daily-0-myaccount.corp.google.com/*", "https://ac-daily-1-myaccount.corp.google.com/*", "https://ac-daily-2-myaccount.corp.google.com/*", "https://ac-daily-3-myaccount.corp.google.com/*", "https://ac-daily-4-myaccount.corp.google.com/*", "https://ac-daily-5-myaccount.corp.google.com/*", "https://ac-daily-6-myaccount.corp.google.com/*", "https://ac-dev-myaccount.corp.google.com/*", "https://ac-fake-myaccount.corp.google.com/*", "https://ac-autopush-security.corp.google.com/*", "https://ac-daily-0-security.corp.google.com/*", "https://ac-daily-1-security.corp.google.com/*", "https://ac-daily-2-security.corp.google.com/*", "https://ac-daily-3-security.corp.google.com/*", "https://ac-daily-4-security.corp.google.com/*", "https://ac-daily-5-security.corp.google.com/*", "https://ac-daily-6-security.corp.google.com/*", "https://ac-dev-security.corp.google.com/*", "https://ac-fake-security.corp.google.com/*", "https://gaiastaging.corp.google.com/*", "https://accounts.sandbox.google.com/*" ]
+   },
+   "icons": {
+      "128": "gnubby-128.ico",
+      "16": "gnubby-16.ico",
+      "32": "gnubby-32.ico",
+      "48": "gnubby-48.ico"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDSDppGY6HFiqKeQaAWVkBqewnt5MxZDFPGNTjtfML9IAH0MC30wrj2ZCD20++KKWwbM8ZLr3BBbTucTGV9EbCv1coVqEXwauSi+rju6O3epFGVxkr1KysCiOIf0zU4iu3BNXVpYvAExycmIGnGPQSA0A/gem46G4kL/kQZymve7QIDAQAB",
+   "kiosk_enabled": true,
+   "manifest_version": 2,
+   "minimum_chrome_version": "39.0.2171.99",
+   "name": "gnubbyd",
+   "permissions": [ "hid", "u2fDevices", "usb", "notifications", "storage", "nativeMessaging", "https://www.gstatic.com/", "https://googleapis.com/", "https://gnubby-update.corp.google.com/", "https://r.cert.corp.google.com/", "https://static.corp.google.com/", "https://up.corp.google.com/", {
+      "usbDevices": [ {
+         "productId": 529,
+         "vendorId": 4176
+      }, {
+         "productId": 512,
+         "vendorId": 4176
+      } ]
+   } ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "0.9.41"
+}

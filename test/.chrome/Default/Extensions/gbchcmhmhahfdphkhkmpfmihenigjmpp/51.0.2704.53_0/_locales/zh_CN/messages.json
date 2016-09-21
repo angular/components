@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "接受并安装"
+   },
+   "ACCESS_CODE": {
+      "message": "访问代码"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "此访问代码将在 $1$ 后失效。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "反馈"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "所有连接"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "重新输入 PIN"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN"
+   },
+   "CANCEL": {
+      "message": "取消"
+   },
+   "CLEAR_HISTORY": {
+      "message": "清除历史记录"
+   },
+   "CLOSE": {
+      "message": "关闭"
+   },
+   "CLOSE_PROMPT": {
+      "message": "如果您离开此页，那么您的 Chrome 远程桌面会话就会结束。"
+   },
+   "CLOSE_WINDOW": {
+      "message": "关闭窗口"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "您确定要停用与“$1$”的远程连接吗？如果您日后想要重新启用连接，需要访问该计算机。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "连接失败"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "来自"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "连接历史记录"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "一般"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "良好"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "较差"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "指向"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "仍然连接"
+   },
+   "CONNECT_BUTTON": {
+      "message": "连接"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "继续"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "您目前正在与其他用户共享此计算机。您希望继续共享吗？"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Chrome 远程桌面主机控制器"
+   },
+   "COPYRIGHT": {
+      "message": "版权所有2013 Google Inc。保留所有权利。"
+   },
+   "CREDITS": {
+      "message": "鸣谢"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "全部删除"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "删除"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "要继续，您必须先为该应用授予对您的计算机的扩展访问权限（该操作只需执行一次）。"
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "请让您想访问其计算机的用户点击“$1$”，然后向您提供访问代码。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Chrome 远程桌面可让您通过网络安全地共享自己的计算机。双方用户必须同时运行 Chrome 远程桌面应用（下载地址为 $1$）。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "远程主机要求您对第三方网站进行身份验证。要继续操作，您必须向 Chrome 远程桌面授予访问以下地址的额外权限："
+   },
+   "DISABLE_HOST": {
+      "message": "停用"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "断开连接"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Chrome 远程桌面服务"
+   },
+   "DURATION_HEADER": {
+      "message": "持续时间"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "您无权运行该应用。"
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "身份验证失败。请重新登录 Chrome。"
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "缺少某些必需的组件。请确保您已安装该软件的最新版本，然后重试。"
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "出现网络错误。当您的设备重新联网后，系统将重新启动该应用。"
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "远程计算机未能将该会话初始化。如果问题仍然存在，请尝试重新配置主机。"
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "远程计算机没有对连接请求做出响应。请确保其在线，然后重试。"
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "与远程计算机的连接已被暂时阻止，因为有人试图使用无效 PIN 连接到该计算机。请稍后重试。"
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "无法注册此计算机。"
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "检测到不兼容的协议版本。请确保两台计算机上都已安装该软件的最新版本，然后重试。"
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "访问代码无效，请重试。"
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "策略设置不允许以 Chrome 远程桌面主机的形式共享此计算机。请与您的系统管理员联系寻求帮助。"
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "远程会话已过期。"
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "缺少某些必需的组件。请确保您运行的是最新版本的 Chrome，然后重试。"
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "缺少某些必需的组件。请前往 chrome://plugins，确保 Native Client 处于启用状态。"
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "某个必要的组件已停止运行。请将此问题报告给开发者。"
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "无法连接到网络。请检查您的设备是否已连接到网络。"
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "您尚未登录 Chrome。请登录，然后重试。"
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "您无权执行该操作。"
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "请求的对象不存在。"
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "无法连接到主机，这可能是由您所使用网络的配置导致的。"
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "此服务暂时无法使用。请稍后再试。"
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "发生意外错误。请将此问题报告给开发者。"
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "退出全屏模式"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "无法重置该应用。您仍可以发送错误报告。"
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "重置该应用。所有未保存的工作都将会丢失。"
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "我无法打开此应用。"
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "此应用的运行速度太慢。"
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "我无法打开自己在 Google 云端硬盘中的文件。"
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "我无法在 Google 云端硬盘中在线查看自己保存的文件。"
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "我的键盘或鼠标无法正常使用。"
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "请将您遇到的问题告诉我们，以便我们为您解决："
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "其他。"
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "请选择…"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "为了便于我们与您联系（以便了解更多信息），您的电子邮件地址将包含在您提交的所有反馈中。"
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "报告问题"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "包含应用日志，以便我们解决您的问题（日志中可能包含私人信息）。"
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "应用日志可能包含私人信息，其中包括您的身份信息（电子邮件地址）以及 Google 云端硬盘中的文件和文件夹的名称及属性。"
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "这些信息仅用于诊断您报告的问题，并且只有负责对您报告的问题进行调查的人员才可使用。这些信息的保留时间不会超过 30 天。"
+   },
+   "FOOTER_CONNECTING": {
+      "message": "正在连接…"
+   },
+   "FOOTER_WAITING": {
+      "message": "正在等待建立连接…"
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "适用于 Mac（OS X 10.6 及更高版本）"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "适用于 Windows（XP 及更高版本）"
+   },
+   "FULL_SCREEN": {
+      "message": "全屏"
+   },
+   "GET_STARTED": {
+      "message": "开始使用"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "接受"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "拒绝"
+   },
+   "HELP": {
+      "message": "帮助"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "访问"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "查看和控制共享的计算机。"
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "您可使用 Chrome 远程桌面安全地访问此计算机。"
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "更改 PIN"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "目前，此计算机只能通过另一帐户进行共享。"
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "查看/修改"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "此计算机已配置为允许一个或多个客户端无需输入 PIN 即可进行连接。"
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "启用远程连接"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "如果您想使用 Chrome 远程桌面来访问此计算机，就必须启用远程连接。"
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "停用远程连接"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "分享"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "共享此计算机以供其他用户查看和控制。"
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "（您的计算机尚不支持该功能）"
+   },
+   "HOST_CATEGORY": {
+      "message": "主机"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "%1 访问客户端的请求遭拒。"
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "已连接客户端：%1。"
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "与下列客户端的连接已中断：%1。"
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "客户端信道 IP：%1 ip='%2' host_ip='%3' channel='%4' connection='%5'。"
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "要启用到另一台计算机的远程连接，请在该计算机上安装 Chrome 远程桌面并点击“$1$”。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "您未注册任何计算机。要启用到某台计算机的远程连接，请在该计算机上安装 Chrome 远程桌面并点击“$1$”。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "您之前曾使用 $1$ ($2$) 登录。要访问该帐户名下的计算机，请使用该帐户$3$登录 Google Chrome$4$，然后重新安装 Chrome 远程桌面。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "系统通常会自动执行软件更新，但在极少数情况下，更新可能会失败。更新软件应该只需要几分钟，而且可在远程连接到计算机时执行。"
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "$1$上的 Chrome 远程桌面已过期，需要更新。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "允许我们收集使用情况统计信息和崩溃报告，以帮助改进 Chrome 远程桌面。"
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "为防止他人擅自访问此计算机，请选用一个$1$至少 6 位数$2$的 PIN。当从其他位置连接时，将需要输入此 PIN。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "无法启动远程访问服务。"
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome 正在下载 Chrome 远程桌面主机安装程序。下载完成后，请先运行该安装程序，再继续操作。"
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "请先运行该安装程序，再继续操作。"
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "此计算机的远程连接已启用。"
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "请检查您的计算机电源管理设置，确保未将该设置配置为无操作时进入休眠模式。"
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "正在对此计算机启用远程连接…"
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "此计算机的远程连接已停用。"
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "正在对此计算机停用远程连接…"
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "无法停用对此计算机的远程访问。请稍后重试。"
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "下载 Chrome 远程桌面主机安装程序，即表示您同意遵守 Google $1$服务条款$4。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "您的 PIN 已更新。"
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "无法更新 PIN。请稍后重试。"
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "正在更新此计算机的 PIN…"
+   },
+   "HOST_STARTED": {
+      "message": "已为用户%1启动主机。"
+   },
+   "HOST_STOPPED": {
+      "message": "主机已停止运行。"
+   },
+   "IDLE_CONTINUE": {
+      "message": "继续"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "立即断开"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "您的$1$会话已经有一段时间没有活动了，连接即将断开。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "指向此计算机"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "下载 Chrome 远程桌面主机安装程序"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "要开始共享您的桌面，请将下面的访问代码提供给协助您的人员。"
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "他们输入访问代码后，您的共享会话就会立即开始。"
+   },
+   "INVALID_PIN": {
+      "message": "请输入至少包含 6 位数的 PIN。"
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "用户对用户的屏幕共享功能，尤其适用于远程技术支持。"
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "键盘布局"
+   },
+   "LABEL_CONNECTED": {
+      "message": "已连接："
+   },
+   "LAST_ONLINE": {
+      "message": "$1$（上次联网时间：$2$）",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "了解详情。"
+   },
+   "LEARN_MORE": {
+      "message": "了解详情。"
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Chrome 远程桌面主机偏好设置"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Chrome 远程\n桌面主机"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Chrome 远程桌面主机卸载程序"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "使用右侧的 Ctrl 键执行 Win 键功能（在 Mac 上则使用 ⌘ 键）"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "最大化窗口"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "从任何地方访问您自己的计算机。"
+   },
+   "MESSAGE_GENERATING": {
+      "message": "正在生成访问代码…"
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "您的 Chrome 远程桌面会话已结束。"
+   },
+   "MESSAGE_SHARED": {
+      "message": "您目前正与 $1$ 共享您的桌面。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "最小化窗口"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "授权"
+   },
+   "MODE_IT2ME": {
+      "message": "远程协助"
+   },
+   "MODE_ME2ME": {
+      "message": "我的计算机"
+   },
+   "NEW_WINDOW": {
+      "message": "打开新的窗口…"
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "已删除所有配对的客户端。"
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "该平台不支持桌面集成。您仍可以使用该应用，但用户体验将会受到影响。"
+   },
+   "OFFLINE": {
+      "message": "$1$（离线）",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "主机初始化失败。"
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "主机配置无效。"
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "主机所有者所在网域无效。"
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "主机 ID 无效。"
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "为主机指定的 OAuth 凭据无效。"
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "在控制台逻辑屏幕运行的主机已关闭。这是为了切换到在用户特定会话中运行的主机，以便为 Curtain 模式提供支持。"
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "由于发生了政策变更，主机正在重新启动。"
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "主机无法读取政策。"
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "主机已关机。"
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "无法识别的主机错误：$1$。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "主机所有者无效。"
+   },
+   "OK": {
+      "message": "确定"
+   },
+   "OPTIONS_MENU": {
+      "message": "选项"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "来自此计算机"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "下列客户端已与此计算机配对，无需提供 PIN 即可连接。您随时可以撤消个别或所有客户端的这项权限。"
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "配对日期"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "客户端"
+   },
+   "PIN": {
+      "message": "PIN"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "请在两个框中输入相同的 PIN。"
+   },
+   "PIN_MESSAGE": {
+      "message": "请输入您用于“$1$”的 PIN。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "请为远程计算机输入PIN码。"
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "通过互联网安全访问其他计算机，或允许其他用户通过互联网安全访问您的计算机。"
+   },
+   "PRODUCT_NAME": {
+      "message": "Chrome 远程桌面"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome App Streaming"
+   },
+   "RECONNECT": {
+      "message": "重新连接"
+   },
+   "REMEMBER_PIN": {
+      "message": "从这台设备连接到此主机时不再要求输入PIN码。"
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "核心数据库"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "桌面集成进程"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "向 Chrome 远程桌面主机发出命令的应用。"
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "主机进程"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "用于远程主机管理的本地消息传递主机"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "用于远程协助的本地消息传递主机"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "安全密钥远程处理"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "将桌面调整为合适大小"
+   },
+   "RESTART_BUTTON": {
+      "message": "立即重新启动"
+   },
+   "RESTORE_WINDOW": {
+      "message": "恢复窗口"
+   },
+   "RETRY": {
+      "message": "重试"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "屏幕选项"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "发送Ctrl-Alt-Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "报告问题…"
+   },
+   "SEND_KEYS": {
+      "message": "发送按键"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "发送PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "此服务允许来自 Chrome 远程桌面客户端的连接。"
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "此设置受您的网域政策管理。"
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "分享"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "取消"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "您要与其他用户共享此计算机的查看和控制权限吗？"
+   },
+   "SHOW_STATS": {
+      "message": "显示统计信息"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "显示统计信息（连接：$1$）",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "缩小以适合浏览器窗口大小"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "登录"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "退出"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "停止共享"
+   },
+   "SURVEY_INVITATION": {
+      "message": "愿意帮忙改进 Chrome 远程桌面吗？$1$请参与调查$2$。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "时间"
+   },
+   "TOGGLE_STATS": {
+      "message": "显示统计信息"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "连接到“$1$”",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "停用与此计算机的远程连接"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "刷新主机列表"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "修改计算机名称"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$（已过期）",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "帐户"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "请在下方确认您的帐户和 PIN，以便允许通过 Chrome 远程桌面进行访问。"
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "注意：策略设置仅允许您网络内的计算机之间建立连接。"
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "注意：为确保所有键盘快捷键都能正常使用，请将 Chrome 远程桌面配置为“在窗口中打开”。"
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "此操作为什么是安全的？"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "窗口"
+   },
+   "WORKING": {
+      "message": "运行中…"
+   }
+}

@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "Zaakceptuj i zainstaluj"
+   },
+   "ACCESS_CODE": {
+      "message": "Kod dostępu"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "Ten kod dostępu wygasa za $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "Twoja opinia"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "Wszystkie połączenia"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "Ponownie wpisz PIN"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN"
+   },
+   "CANCEL": {
+      "message": "Anuluj"
+   },
+   "CLEAR_HISTORY": {
+      "message": "Wyczyść historię"
+   },
+   "CLOSE": {
+      "message": "Zamknij"
+   },
+   "CLOSE_PROMPT": {
+      "message": "Jeśli opuścisz tę stronę, sesja Pulpitu zdalnego Chrome zostanie zakończona."
+   },
+   "CLOSE_WINDOW": {
+      "message": "Zamknij okno"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "Na pewno chcesz wyłączyć połączenia zdalne z: $1$? Jeśli zmienisz zdanie, połączenia będzie trzeba włączyć na tamtym komputerze.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "Połączenie się nie udało"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "Od"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "Historia połączeń"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "Średnia"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "Dobra"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "Słaba"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "Do"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "Połącz mimo to"
+   },
+   "CONNECT_BUTTON": {
+      "message": "Połącz"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "Kontynuuj"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "Obecnie udostępniasz ten komputer innemu użytkownikowi. Czy chcesz kontynuować udostępnianie?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Kontroler hosta Pulpitu zdalnego Chrome"
+   },
+   "COPYRIGHT": {
+      "message": "Copyright 2013 Google Inc. Wszelkie prawa zastrzeżone."
+   },
+   "CREDITS": {
+      "message": "Autorzy"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "Usuń wszystkie"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "Usuń"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "Aby przejść dalej, musisz najpierw przyznać rozszerzone uprawnienia dostępu do swojego komputera. Trzeba to zrobić tylko raz."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "Poproś użytkownika, z którego komputera chcesz korzystać, by kliknął „$1$” i udostępnił Ci kod dostępu.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Pulpit zdalny Chrome pozwala na bezpieczne udostępnianie komputera przez internet. Obaj użytkownicy muszą mieć uruchomioną aplikację Pulpit zdalny Chrome, którą można znaleźć na $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "Host zdalny wymaga uwierzytelnienia w witrynie innej firmy. Aby kontynuować, musisz udzielić Pulpitowi zdalnemu Chrome dodatkowych uprawnień dostępu do tego adresu:"
+   },
+   "DISABLE_HOST": {
+      "message": "Wyłącz"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "Rozłącz"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Usługa Pulpitu zdalnego Chrome"
+   },
+   "DURATION_HEADER": {
+      "message": "Czas trwania"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "Nie masz uprawnień do uruchamiania tej aplikacji."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "Uwierzytelnianie nie powiodło się. Zaloguj się ponownie do Chrome."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "Brak niektórych wymaganych komponentów. Upewnij się, że masz zainstalowaną najnowszą wersję oprogramowania, i spróbuj ponownie."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "Wystąpił błąd sieci. Uruchomimy ponownie aplikację, gdy urządzenie znów będzie online."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "Komputerowi zdalnemu nie udało się zainicjować sesji. Jeśli problem nie zniknie, spróbuj ponownie skonfigurować hosta."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "Komputer zdalny nie odpowiada na żądania połączenia. Sprawdź, czy jest on podłączony do internetu i spróbuj ponownie."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "Połączenia z komputerem zdalnym są chwilowo zablokowane, bo ktoś próbował się z nim połączyć, podając nieprawidłowy PIN. Spróbuj ponownie później."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "Nie udało się zarejestrować tego komputera."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "Wykryto niezgodną wersję protokołu. Upewnij się, że na obu komputerach masz zainstalowaną najnowszą wersję oprogramowania, i spróbuj ponownie."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "Kod dostępu jest nieprawidłowy. Spróbuj ponownie."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "Ustawienia zasad nie zezwalają na udostępnianie tego komputera jako hosta Pulpitu zdalnego Chrome. Aby uzyskać pomoc, skontaktuj się z administratorem systemu."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "Sesja zdalna wygasła."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "Brak niektórych wymaganych komponentów. Upewnij się, że korzystasz z najnowszej wersji Chrome, i spróbuj ponownie."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "Brak niektórych wymaganych komponentów. Otwórz stronę chrome://plugins i upewnij się, że jest włączony Klient natywny."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "Przestał działać wymagany komponent. Zgłoś ten problem programistom."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "Nie można połączyć się z siecią. Sprawdź, czy urządzenie jest online."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "Nie jesteś zalogowany do Chrome. Zaloguj się i spróbuj ponownie."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "Nie masz uprawnień do wykonywania tej czynności."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "Żądany obiekt nie istnieje."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "Nie można połączyć się z hostem. Problem prawdopodobnie wynika z konfiguracji Twojej sieci."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "Usługa jest tymczasowo niedostępna. Spróbuj ponownie później."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "Wystąpił nieoczekiwany błąd. Zgłoś ten problem programistom."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "Zamknij pełny ekran"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "Nie można zresetować aplikacji. Wciąż możesz przesłać zgłoszenie błędu."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "Zresetuj aplikację. Niezapisane dane zostaną utracone."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "Nie mogę otworzyć aplikacji."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "Aplikacja działa za wolno."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "Nie mogę otworzyć moich plików na Dysku Google."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "Nie widzę moich plików zapisanych na Dysku Google, gdy jestem online."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "Mam problem z klawiaturą lub myszą."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "Aby pomóc nam w rozwiązaniu problemu, opisz, na czym on polega:"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "Inny problem."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "Wybierz…"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "Aby umożliwić nam skontaktowanie się z Tobą w sprawie dodatkowych informacji, Twój adres e-mail zostanie dołączony do każdego zgłoszenia, które prześlesz."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "Zgłoś problem"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "Dołącz dzienniki aplikacji, by pomóc nam rozwiązać ten problem (dzienniki mogą zawierać informacje prywatne)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "Dzienniki aplikacji mogą zawierać informacje prywatne, w tym Twoje dane osobowe (adres e-mail) oraz nazwy i właściwości plików i folderów na Dysku Google."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "Użyjemy tych informacji jedynie do zdiagnozowania zgłoszonego problemu, udostępnimy je tylko osobie sprawdzającej zgłoszenie i usuniemy w ciągu 30 dni."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "Łączę…"
+   },
+   "FOOTER_WAITING": {
+      "message": "czekam na połączenie…"
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "Mac (OS X 10.6 lub nowszy)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "Windows (XP lub nowszy)"
+   },
+   "FULL_SCREEN": {
+      "message": "Pełny ekran"
+   },
+   "GET_STARTED": {
+      "message": "Rozpocznij"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "Akceptuj"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "Odrzuć"
+   },
+   "HELP": {
+      "message": "Pomoc"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "Połącz"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "Zobacz i kontroluj udostępniony komputer."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "Możesz bezpiecznie korzystać z tego komputera przez Pulpit zdalny Chrome."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "Zmień kod PIN"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "Ten komputer jest obecnie udostępniany na innym koncie."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "Wyświetl/edytuj"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "Ten komputer jest skonfigurowany do zezwalania jednemu lub wielu klientom na łączenie się bez podawania kodu PIN."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "Włącz połączenia zdalne"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "Jeśli chcesz korzystać z tego komputera przez Pulpit zdalny Chrome, musisz włączyć połączenia zdalne."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "Wyłącz połączenia zdalne"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "Udostępnij"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "Udostępnij ten komputer innemu użytkownikowi, by mógł go widzieć i kontrolować."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(ta funkcja nie jest jeszcze dostępna na tym komputerze)"
+   },
+   "HOST_CATEGORY": {
+      "message": "Host"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "Odmowa dostępu dla klienta: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "Podłączył się klient: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "Rozłączył się klient: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "Adres IP kanału dla klienta: %1 ip='%2' host_ip='%3' channel='%4' connection='%5'."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "Aby umożliwić zdalne połączenia z innym komputerem, zainstaluj na nim Pulpit zdalny Chrome i kliknij „$1$”.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "Nie masz zarejestrowanych komputerów. Aby umożliwić zdalne połączenia z komputerem, zainstaluj na nim Pulpit zdalny Chrome i kliknij „$1$”.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "Poprzednio logowałeś się jako $1$ ($2$). Aby uzyskać dostęp do swoich komputerów na tym koncie, $3$zaloguj się na to konto w Google Chrome$4$ i ponownie zainstaluj Pulpit zdalny Chrome.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "Aktualizacje oprogramowania są zwykle instalowane automatycznie, ale w niektórych rzadkich przypadkach kończą się niepowodzeniem. Aktualizacja oprogramowania nie powinna trwać dłużej niż kilka minut i można ją wykonać przy zdalnym połączeniu z komputerem."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "Pulpit zdalny Chrome na komputerze $1$ jest nieaktualny i wymaga aktualizacji.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "Pomóż nam udoskonalić Pulpit zdalny Chrome, zezwalając na gromadzenie przez nas statystyk użytkowania i raportów o awariach."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "Aby zabezpieczyć dostęp do tego komputera, wybierz PIN złożony z $1$co najmniej sześciu cyfr$2$. Będzie on wymagany przy łączeniu się z innej lokalizacji.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "Nie udało się uruchomić usługi dostępu zdalnego."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome pobiera instalatora hosta Pulpitu zdalnego Chrome. Po zakończeniu pobierania uruchom instalatora."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "Najpierw uruchom instalatora."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "Połączenia zdalne z tym komputerem zostały włączone."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "Sprawdź ustawienia zarządzania zasilaniem komputera i upewnij się, że nie jest on skonfigurowany do przechodzenia podczas bezczynności w tryb uśpienia."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "Włączam połączenia zdalne z tym komputerem…"
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "Połączenia zdalne z tym komputerem zostały wyłączone."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "Wyłączam połączenia zdalne z tym komputerem…"
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "Nie udało się wyłączyć dostępu zdalnego do tego komputera. Spróbuj ponownie później."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "Pobierając instalatora hosta Pulpitu zdalnego Chrome, akceptujesz $1$Warunki korzystania z usług$4 Google.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "PIN został zaktualizowany."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "Nie udało się zaktualizować PIN-u. Spróbuj ponownie później."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "Aktualizuję PIN tego komputera…"
+   },
+   "HOST_STARTED": {
+      "message": "Uruchomiono host dla użytkownika: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "Host został zatrzymany."
+   },
+   "IDLE_CONTINUE": {
+      "message": "Kontynuuj"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "Odłącz teraz"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "Sesja aplikacji $1$ jest od jakiegoś czasu nieaktywna i zostanie wkrótce zakończona.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "Z tym komputerem"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Pobierz instalatora hosta Pulpitu zdalnego Chrome"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "Aby udostępnić pulpit, podaj poniższy kod dostępu osobie, która będzie Ci pomagać."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "Po wprowadzeniu kodu przez drugą stronę rozpocznie się sesja udostępniania."
+   },
+   "INVALID_PIN": {
+      "message": "Wpisz PIN złożony z co najmniej sześciu cyfr."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "Dzielenie się ekranem z innym użytkownikiem – doskonałe do zdalnej pomocy technicznej."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "Układy klawiatury"
+   },
+   "LABEL_CONNECTED": {
+      "message": "Połączono:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (ostatnio online $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "Dowiedz się jak."
+   },
+   "LEARN_MORE": {
+      "message": "Więcej informacji."
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Ustawienia hosta Pulpitu zdalnego Chrome"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Host Pulpitu\nzdalnego Chrome"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Program do odinstalowywania hosta Pulpitu zdalnego Chrome"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Użyj prawego klawisza Ctrl w systemie Windows (⌘ na Macu)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "Maksymalizuj okno"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "Dostęp do własnego komputera z dowolnego miejsca."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "Generuję kod dostępu…"
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "Sesja Pulpitu zdalnego Chrome została zakończona."
+   },
+   "MESSAGE_SHARED": {
+      "message": "Twój pulpit jest obecnie udostępniany użytkownikowi: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "Minimalizuj okno"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "Autoryzuj"
+   },
+   "MODE_IT2ME": {
+      "message": "Pomoc zdalna"
+   },
+   "MODE_ME2ME": {
+      "message": "Moje komputery"
+   },
+   "NEW_WINDOW": {
+      "message": "Nowe okno..."
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "Wszystkie sparowane klienty zostały usunięte."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "Integracja pulpitu jest niedostępna na tej platformie. Wciąż możesz używać aplikacji, jednak praca będzie mniej wygodna."
+   },
+   "OFFLINE": {
+      "message": "$1$ (offline)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "Nie udało się zainicjować hosta."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "Nieprawidłowa konfiguracja hosta."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "Nieprawidłowa domena właściciela hosta."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "Nieprawidłowy identyfikator hosta."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "Host został skonfigurowany z nieprawidłowymi danymi logowania protokołu OAuth."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "Host uruchomiony na ekranie logowania konsoli został zamknięty, by umożliwić włączenie trybu kurtyny, przełączając się na hosta uruchomionego w sesji danego użytkownika."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "Host uruchamia się ponownie, by uwzględnić zmianę zasad."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "Host nie może odczytać zasad."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "Host został wyłączony."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "Nieznany błąd hosta: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "Nieprawidłowy właściciel hosta."
+   },
+   "OK": {
+      "message": "OK"
+   },
+   "OPTIONS_MENU": {
+      "message": "Opcje"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "Z tego komputera"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "Te klienty zostały sparowane z tym komputerem i mogą łączyć się bez podawania kodu PIN. Możesz anulować to uprawnienie w dowolnym momencie – pojedynczo lub dla wszystkich klientów."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "Data parowania"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "Klient"
+   },
+   "PIN": {
+      "message": "PIN"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "Wpisz ten sam PIN w obu polach."
+   },
+   "PIN_MESSAGE": {
+      "message": "Wpisz PIN dla: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "Wpisz kod PIN komputera zdalnego."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "Uzyskuj dostęp do innych komputerów lub zezwalaj innym użytkownikom na bezpieczny dostęp do swojego komputera przez internet."
+   },
+   "PRODUCT_NAME": {
+      "message": "Pulpit zdalny Chrome"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome App Streaming"
+   },
+   "RECONNECT": {
+      "message": "Połącz ponownie"
+   },
+   "REMEMBER_PIN": {
+      "message": "Nie pytaj ponownie o kod PIN, gdy bieżące urządzenie będzie łączyć się z tym hostem."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "Biblioteka główna"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "Proces integracji pulpitu"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "Aplikacja do wysyłania poleceń do hosta Pulpitu zdalnego Chrome."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "Proces hosta"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "Host natywnego przesyłania komunikatów do zdalnego zarządzania hostem"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "Host natywnego przesyłania komunikatów do pomocy zdalnej"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "Proces zdalnego stosowania klucza bezpieczeństwa"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "Dopasuj pulpit"
+   },
+   "RESTART_BUTTON": {
+      "message": "Uruchom ponownie teraz"
+   },
+   "RESTORE_WINDOW": {
+      "message": "Przywróć okno"
+   },
+   "RETRY": {
+      "message": "Ponów próbę"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "Opcje ekranu"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Wyślij Ctrl-Alt-Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "Zgłoś problem…"
+   },
+   "SEND_KEYS": {
+      "message": "Wyślij naciśnięcia klawiszy"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "Wyślij PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "Ta usługa umożliwia obsługę połączeń przychodzących z klientów Pulpitu zdalnego Chrome."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "Tym ustawieniem zarządzają zasady domeny."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "Udostępnij"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "Anuluj"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "Chcesz udostępnić ten komputer innemu użytkownikowi, by mógł przeglądać jego zawartość i sterować nim?"
+   },
+   "SHOW_STATS": {
+      "message": "Pokaż statystyki"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "Pokaż statystyki (jakość połączenia: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "Zmniejsz, by dopasować"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "Zaloguj się"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "Wyloguj się"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "Zatrzymaj udostępnianie"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Chcesz pomóc w ulepszeniu Pulpitu zdalnego Chrome? $1$Wypełnij ankietę$2$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "Godzina"
+   },
+   "TOGGLE_STATS": {
+      "message": "Pokaż statystyki"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "Połącz z: $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "Wyłącz połączenia zdalne z tym komputerem"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "Odśwież listę hostów"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "Edytuj nazwę komputera"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (nieaktualne)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "Konto"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Potwierdź poniżej swoje konto i kod PIN, by pozwolić na dostęp przez Pulpit zdalny Chrome."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "UWAGA: ustawienia zasad zezwalają wyłącznie na połączenia między komputerami w Twojej sieci."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "UWAGA: aby wszystkie skróty klawiszowe były dostępne, ustaw Pulpit zdalny Chrome na „Otwórz jako okno”."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "Dlaczego to bezpieczne?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Okna"
+   },
+   "WORKING": {
+      "message": "Przetwarzam…"
+   }
+}

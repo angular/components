@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "同意してインストール"
+   },
+   "ACCESS_CODE": {
+      "message": "アクセス コード"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "このアクセス コードは $1$ で期限切れとなります。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "フィードバック"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "すべての接続"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "PIN を再入力"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN"
+   },
+   "CANCEL": {
+      "message": "キャンセル"
+   },
+   "CLEAR_HISTORY": {
+      "message": "履歴をクリア"
+   },
+   "CLOSE": {
+      "message": "閉じる"
+   },
+   "CLOSE_PROMPT": {
+      "message": "このページを閉じると、Chrome リモート デスクトップ セッションが終了します。"
+   },
+   "CLOSE_WINDOW": {
+      "message": "ウィンドウを閉じる"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "$1$ へのリモート接続を無効にしてもよろしいですか？元に戻す場合は、該当のパソコンにアクセスして接続を再び有効にする必要があります。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "接続失敗"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "接続元"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "接続履歴"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "中程度"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "良い"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "悪い"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "接続先"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "このまま接続する"
+   },
+   "CONNECT_BUTTON": {
+      "message": "接続"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "続行"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "現在このパソコンを別のユーザーと共有しています。共有を継続しますか？"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Chrome リモート デスクトップ ホスト コントローラ"
+   },
+   "COPYRIGHT": {
+      "message": "Copyright 2013 Google Inc. All Rights Reserved."
+   },
+   "CREDITS": {
+      "message": "クレジット"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "すべて削除"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "削除"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "続行するには、このパソコンに拡張アクセス許可を付与する必要があります。この作業は 1 回だけ必要です。"
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "接続先のパソコンのユーザーに、[$1$] をクリックしてアクセスコードを付与してもらってください。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Chrome リモート デスクトップを使用すると、パソコンをウェブ経由で安全に共有できます。共有するには両方のユーザーが Chrome リモート デスクトップ アプリを実行している必要があります。このアプリは $1$ から入手できます。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "リモート ホストで、サードパーティ ウェブサイトへの認証が求められています。続行するには、次のアドレスにアクセスできるように Chrome リモート デスクトップに追加の権限を与える必要があります:"
+   },
+   "DISABLE_HOST": {
+      "message": "無効にする"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "切断"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Chrome リモート デスクトップ サービス"
+   },
+   "DURATION_HEADER": {
+      "message": "接続時間"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "このアプリケーションを実行する権限がありません。"
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "認証できませんでした。Chrome にもう一度ログインしてください。"
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "必要なコンポーネントが見つかりません。インストールしているソフトウェアのバージョンが最新であることを確認し、もう一度お試しください。"
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "ネットワーク エラーが発生しました。デバイスが再度オンラインになったときにアプリを再開します。"
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "リモート パソコンでセッションを初期化できませんでした。引き続き問題が発生する場合は、ホストを設定し直してみてください。"
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "リモートのパソコンが接続リクエストに応答しません。リモートのパソコンがネットワークに接続していることを確認して、もう一度お試しください。"
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "無効な PIN を使用した接続が試みられたため、リモートのパソコンへの接続が一時的にブロックされています。しばらくしてからもう一度お試しください。"
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "このパソコンを登録できませんでした。"
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "互換性のないプロトコル バージョンが検出されました。両方のパソコンにインストールしているソフトウェアのバージョンが最新であることを確認し、もう一度お試しください。"
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "アクセス コードが無効です。もう一度入力してください。"
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "ポリシー設定により、Chrome リモート デスクトップのホストとしてこのパソコンを共有することはできません。詳しくはシステム管理者にお問い合わせください。"
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "リモート セッションが時間切れとなりました。"
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "必要なコンポーネントが見つかりません。実行している Chrome のバージョンが最新であることを確認し、もう一度お試しください。"
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "必要なコンポーネントが見つかりません。chrome://plugins にアクセスして、ネイティブ クライアントが有効になっていることを確認してください。"
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "必須コンポーネントが停止しました。デベロッパーにこの問題を報告してください。"
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "ネットワークに接続できませんでした。デバイスがインターネットに接続されているか確認してください。"
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "Chrome にログインしていません。ログインしてもう一度お試しください。"
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "この操作を実行する権限がありません。"
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "リクエストしたオブジェクトは存在しません。"
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "ホストにアクセスできません。お使いのネットワークの設定が原因であることが考えられます。"
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "このサービスは一時的に利用できなくなっています。しばらくしてからもう一度お試しください。"
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "予期しないエラーが発生しました。この問題をデベロッパーに報告してください。"
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "全画面表示を終了"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "アプリケーションをリセットできませんでした。バグレポートの送信は可能です。"
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "アプリケーションをリセットします。保存されていない作業は失われます。"
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "アプリケーションを開けない。"
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "アプリケーションの動作が遅すぎる。"
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "Google ドライブのファイルを開けない。"
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "Google ドライブに保存したファイルをオンラインで表示できない。"
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "キーボードまたはマウスに関連した問題がある。"
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "どのような問題が起こっているかお知らせください。"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "その他の問題。"
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "選択してください…"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "後で詳しい情報をお知らせするために、送信いただくフィードバックにはお客様のメールアドレスが記載されますのでご了承ください。"
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "問題を報告"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "問題解決に協力するためにアプリケーション ログを含める（ログには個人情報が含まれる可能性があります）。"
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "アプリケーション ログには、メールアドレスのような個人情報をはじめ、Google ドライブのファイルやフォルダの名前、プロパティといったプライバシーにかかわる情報が含まれる可能性があります。"
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "この情報は、報告していただいた問題を診断する目的にのみ使用され、調査担当者のみに利用可能となります。この情報が 30 日間を過ぎて保持されることはありません。"
+   },
+   "FOOTER_CONNECTING": {
+      "message": "接続しています..."
+   },
+   "FOOTER_WAITING": {
+      "message": "接続を待機しています..."
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "Mac 版（OS X 10.6 以上）"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "Windows 版（XP 以上）"
+   },
+   "FULL_SCREEN": {
+      "message": "全画面表示"
+   },
+   "GET_STARTED": {
+      "message": "利用を開始"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "承諾"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "同意しない"
+   },
+   "HELP": {
+      "message": "ヘルプ"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "アクセス"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "共有パソコンの画面を見ながら操作します。"
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "Chrome リモート デスクトップを使用して、このパソコンに安全にアクセスできます。"
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "PIN を変更"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "このパソコンは現在、別のアカウントで共有されています。"
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "表示/編集"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "このパソコンは、1 つ以上のクライアントが PIN の入力なしで接続できるように設定されています。"
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "リモート接続を有効にする"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "Chrome リモート デスクトップを使用してこのパソコンにアクセスするには、リモート接続を有効にする必要があります。"
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "リモート接続を無効にする"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "共有"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "このパソコンが共有され、他のユーザーがこのパソコンの画面を見ながら操作できるようになります。"
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "（お使いのパソコンはこの機能に未対応です）"
+   },
+   "HOST_CATEGORY": {
+      "message": "ホスト"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "次のクライアントのアクセスを拒否しました: %1。"
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "次のクライアントが接続しました: %1。"
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "次のクライアントが切断しました: %1。"
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "クライアントのチャンネル IP: %1 ip='%2' host_ip='%3' channel='%4' connection='%5'"
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "別のパソコンへのリモート接続を有効にするには、対象となるパソコンに Chrome リモート デスクトップをインストールし、[$1$] をクリックしてください。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "パソコンが登録されていません。パソコンへのリモート接続を有効にするには、対象となるパソコンに Chrome リモート デスクトップをインストールし、[$1$] をクリックしてください。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "以前に $1$（$2$）としてログインしています。このアカウントでパソコンにアクセスするには、このアカウントで $3$Google Chrome にログイン$4$し、Chrome リモート デスクトップを再インストールしてください。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "通常、ソフトウェアの更新は自動的に行われますが、まれに失敗することがあります。ソフトウェアの更新にかかる時間は数分以内です。パソコンにリモート接続している場合も更新は可能です。"
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "$1$ の Chrome リモート デスクトップは最新ではないため、更新する必要があります。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "Chrome リモート デスクトップの改善のため、使用統計情報とクラッシュ レポートの収集に協力する"
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "このパソコンへのアクセスを保護するには、$1$6 桁以上$2$の PIN を選択してください。この PIN は別の場所から接続するときに必要となります。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "リモート アクセス サービスを開始できませんでした。"
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome リモート デスクトップ ホスト インストーラをダウンロードしています。ダウンロードが完了したら、続行する前にインストーラを実行してください。"
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "続行する前にインストーラを実行してください。"
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "このパソコンのリモート接続が有効になりました。"
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "お使いのパソコンの電源管理設定で、アイドル状態のときにスリープにならないように設定されていることをご確認ください。"
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "このパソコンのリモート接続を有効にしています..."
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "このパソコンのリモート接続が無効になりました。"
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "このパソコンのリモート接続を無効にしています..."
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "このパソコンへのリモート アクセスを無効にできませんでした。しばらくしてからもう一度お試しください。"
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "Chrome リモート デスクトップ ホスト インストーラをダウンロードすると、Google の$1$利用規約$4に同意したことになります。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "PIN を更新しました。"
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "PIN を更新できませんでした。しばらくしてからもう一度お試しください。"
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "このパソコン用の PIN を更新しています..."
+   },
+   "HOST_STARTED": {
+      "message": "次のユーザーのホストを開始しました: %1。"
+   },
+   "HOST_STOPPED": {
+      "message": "ホストが停止しました。"
+   },
+   "IDLE_CONTINUE": {
+      "message": "続行"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "切断"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "$1$ のセッションでしばらく操作がありませんでした。セッションを間もなく切断します。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "このパソコンへの接続"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Chrome リモート デスクトップ ホスト インストーラのダウンロード"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "デスクトップの共有を開始するには、共有するユーザーに以下のアクセス コードをお知らせください。"
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "共有するユーザーがこのコードを入力すると、共有セッションが開始されます。"
+   },
+   "INVALID_PIN": {
+      "message": "PIN は 6 桁以上で入力してください。"
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "リモート テクニカル サポートに最適な、ユーザー同士の画面共有。"
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "キーボード配列"
+   },
+   "LABEL_CONNECTED": {
+      "message": "接続済み:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$（前回のオンライン接続: $2$）",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "詳細を見る。"
+   },
+   "LEARN_MORE": {
+      "message": "詳細"
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Chrome リモート デスクトップ ホストの設定"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Chrome リモート\nデスクトップ ホスト"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Chrome リモート デスクトップ ホストのアンインストーラ"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "右 Ctrl キーを Win キー（Mac の場合は ⌘）として使用"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "ウィンドウを最大化"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "どこからでも自分のパソコンにアクセスできます。"
+   },
+   "MESSAGE_GENERATING": {
+      "message": "アクセス コードを生成しています..."
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "Chrome リモート デスクトップ セッションが終了しました。"
+   },
+   "MESSAGE_SHARED": {
+      "message": "デスクトップは現在 $1$ と共有されています。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "ウィンドウを最小化"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "承認"
+   },
+   "MODE_IT2ME": {
+      "message": "リモート サポート"
+   },
+   "MODE_ME2ME": {
+      "message": "マイ パソコン"
+   },
+   "NEW_WINDOW": {
+      "message": "新しいウィンドウ..."
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "ペア設定されたすべてのクライアントを削除しました。"
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "このプラットフォームでデスクトップの統合はサポートされていません。アプリケーションは引き続き使用できますが、ユーザー エクスペリエンスは低下します。"
+   },
+   "OFFLINE": {
+      "message": "$1$（オフライン）",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "ホストを初期化できませんでした。"
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "ホストの設定が無効です。"
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "ホストの所有者ドメインが無効です。"
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "ホスト ID が無効です。"
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "ホストの設定で無効な OAuth 認証情報が指定されています。"
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "コンソールのログイン画面で実行されるホストは、カーテンモードをサポートするために終了されました（ユーザー固有のセッションで実行されるホストに切り替えられました）。"
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "ポリシーの変更を有効にするため、ホストを再起動しています。"
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "ホストでポリシーを読み取れませんでした。"
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "ホストはシャットダウンしました。"
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "不明なホストエラー: $1$。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "ホストの所有者が無効です。"
+   },
+   "OK": {
+      "message": "OK"
+   },
+   "OPTIONS_MENU": {
+      "message": "オプション"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "このパソコンからの接続"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "次のクライアントはこのパソコンとペア設定されており、PIN を指定しなくても接続できます。この権限は、個々のクライアントまたはすべてのクライアントに対していつでも取り消すことができます。"
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "ペア設定された日付"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "クライアント"
+   },
+   "PIN": {
+      "message": "PIN"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "両方のボックスに同じ PIN を入力してください。"
+   },
+   "PIN_MESSAGE": {
+      "message": "$1$ の PIN を入力してください。",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "リモート パソコンの PIN を入力してください。"
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "このパソコンから他のパソコンに、または他のパソコンからこのパソコンに、インターネットを経由して安全にアクセスできるようになります。"
+   },
+   "PRODUCT_NAME": {
+      "message": "Chrome リモート デスクトップ"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome App Streaming"
+   },
+   "RECONNECT": {
+      "message": "再接続"
+   },
+   "REMEMBER_PIN": {
+      "message": "このデバイスからこのホストに接続するときに PIN の再入力を要求しない。"
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "コア ライブラリ"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "デスクトップ統合プロセス"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "Chrome リモート デスクトップのホストにコマンドを発行するアプリケーション。"
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "ホスト プロセス"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "リモート ホスト管理用のネイティブ·メッセージング·ホスト"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "リモート アシスタンス用のネイティブ·メッセージング·ホスト"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "セキュリティ キーのリモーティング プロセス"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "デスクトップを画面に合わせてサイズ変更する"
+   },
+   "RESTART_BUTTON": {
+      "message": "今すぐ再起動"
+   },
+   "RESTORE_WINDOW": {
+      "message": "ウィンドウを元のサイズに戻す"
+   },
+   "RETRY": {
+      "message": "再読み込み"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "画面のオプション"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Ctrl-Alt-Del を送信"
+   },
+   "SEND_FEEDBACK": {
+      "message": "問題を報告…"
+   },
+   "SEND_KEYS": {
+      "message": "キーを送信"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "PrtScn を送信"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "このサービスにより、Chrome リモート デスクトップ クライアントからの着信接続が有効になります。"
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "この設定はドメイン ポリシーによって管理されます。"
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "共有"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "キャンセル"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "このパソコンの閲覧と制御の権限を別のユーザーと共有しますか？"
+   },
+   "SHOW_STATS": {
+      "message": "統計情報を表示"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "統計情報を表示（接続状態: $1$）",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "ウィンドウに合わせて縮小"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "ログイン"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "ログアウト"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "共有を停止"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Chrome リモート デスクトップの品質向上にご協力ください。$1$アンケートに回答する$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "時間"
+   },
+   "TOGGLE_STATS": {
+      "message": "統計情報を表示"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "$1$ に接続",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "このパソコンへのリモート接続を無効にする"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "ホストのリストを更新します"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "パソコン名を編集"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$（最新ではありません）",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "アカウント"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Chrome リモート デスクトップによるアクセスを許可するには、下記でアカウントと PIN の確認を行ってください。"
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "注: ポリシー設定に基づき、接続が許可されるのはこのネットワーク内のパソコン間のみとなります。"
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "注: すべてのキーボード ショートカットを使用できるようにするには、Chrome リモート デスクトップを [ウィンドウとして開く] に設定してください。"
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "この操作が安全な理由"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "ウィンドウ"
+   },
+   "WORKING": {
+      "message": "処理しています..."
+   }
+}

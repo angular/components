@@ -1,0 +1,78 @@
+{
+   "always_ignore": {
+      "description": "This is used to tell the user to always ignore this website from further warnings.",
+      "message": "Always ignore for this site"
+   },
+   "always_ignore_confirmation": {
+      "description": "This is used to tell the user to confirm that he/she always wants to ignore this website from further warnings.",
+      "message": "Do you want Password Alert to always ignore this website?"
+   },
+   "back": {
+      "description": "This is used to tell the user that they can navigate back to the previous webpage. [CHAR LIMIT = 25]",
+      "message": "Back"
+   },
+   "contact_security": {
+      "description": "This is used to tell the user to contact the security administrators. [CHAR LIMIT = 25]",
+      "message": "Contact Security"
+   },
+   "extension_description": {
+      "description": "This is used for the general description that is displayed in chrome web store.",
+      "message": "Password Alert helps protect against phishing attacks."
+   },
+   "extension_detailed_description": {
+      "description": "This is used for the detailed (long) description that is displayed in chrome web store.",
+      "message": "If you enter your Gmail or Google for Work password into anywhere other than accounts.google.com, you’ll receive an alert, so you can change your password if needed.\n\nPassword Alert also tries to detect fake Google login pages to alert you before you’ve typed in your password. To do so, Password Alert checks the HTML of each page you visit to see if it’s impersonating a Google login page.\n\nFAQ\n-- When will Password Alert take effect?\nPassword Alert will initialize itself the next time you enter your password into accounts.google.com.\n\n-- Does Password Alert store my password or keystrokes?\nNo. Password Alert doesn’t store your password or keystrokes -- instead, it stores a secure thumbnail of your password, which it compares against a thumbnail of your most recent keystrokes within Chrome.\n\n-- Where does Password Alert send data?\nIf you are using Password Alert in a Gmail account, Password Alert does not send any data from your local computer. If your Google for Work administrator chooses to deploy Password Alert across your domain, the administrator will receive alerts when Password Alert triggers.\n\n-- What are Password Alert's limits?\nPassword Alert doesn't protect incognito windows, Chrome Apps, or Chrome Extensions. It also does not protect passwords for non-Google services. Password Alert only operates inside the Chrome web browser when Javascript is enabled.\n\n-- Where can I find more details?\nVisit the full FAQ at LINK_TBD, or you can see the entire open-source codebase at https://github.com/google/password-alert\n\nBy installing this item, you agree to the Google Terms of Service and Privacy Policy at www.google.com/policies/\n"
+   },
+   "extension_name": {
+      "description": "This extension will alert when user's password is being phished.",
+      "message": "Password Alert"
+   },
+   "ignore": {
+      "description": "This is used to tell the user that they can ignore the warning for this time only. [CHAR LIMIT = 25]",
+      "message": "Ignore this time"
+   },
+   "initialization_message": {
+      "description": "This is used to prompt the user to type their password to properly initialized Password Alert.",
+      "message": "For Password Alert to take effect, please sign into your account."
+   },
+   "initialization_thank_you_message": {
+      "description": "This is used to thank the user after they have typed their password to properly initialized Password Alert.",
+      "message": "Thank you. Password Alert is now in effect."
+   },
+   "learn_more": {
+      "description": "This is used for the warning banner's learn more link, which the user can click to open a page to learn more information.",
+      "message": "Learn more"
+   },
+   "password_warning_banner_body": {
+      "description": "This is used for the warning banner to warn users that they have typed their password. [CHAR LIMIT = 300]",
+      "message": "You just entered your Google Account password on a sign-in page that's not Google's. Immediately reset your password to protect your account. And please make sure you don't reuse your password for other apps and sites."
+   },
+   "password_warning_banner_header": {
+      "description": "This is used for the warning banner to warn users that they have typed their password. [CHAR LIMIT = 50]",
+      "message": "Reset your Google Account password"
+   },
+   "phishing_warning_banner_body": {
+      "description": "This is used for the warning banner to warn users that they are visiting a phishing website. [CHAR LIMIT = 300]",
+      "message": "This site appears to be using a fake version of the Google login page to steal your password, so it has been blocked. If you understand that this site may harm your computer, you may visit this site but please be careful about the information you type."
+   },
+   "phishing_warning_banner_header": {
+      "description": "This is used for the warning banner to warn users that they are visiting a phishing website. [CHAR LIMIT = 50]",
+      "message": "This site has been blocked."
+   },
+   "report_phishing": {
+      "description": "This is used to tell the user to report this potentially malicious website to Google. [CHAR LIMIT = 25]",
+      "message": "Report This Site"
+   },
+   "reset_password": {
+      "description": "This is used to tell the user to reset their passord. [CHAR LIMIT = 25]",
+      "message": "Reset Password"
+   },
+   "sign_in": {
+      "description": "This is used to prompt the user to sign into their Google account.",
+      "message": "Sign In"
+   },
+   "visit_this_site": {
+      "description": "This is used to tell the user that they can visit the current website. [CHAR LIMIT = 25]",
+      "message": "Visit This Site"
+   }
+}

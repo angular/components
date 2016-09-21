@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "このサイトでは常に無視する"
+   },
+   "always_ignore_confirmation": {
+      "message": "パスワード アラートでこのウェブサイトを常に無視してもよろしいですか？"
+   },
+   "back": {
+      "message": "戻る"
+   },
+   "contact_security": {
+      "message": "セキュリティ管理者に問い合わせる"
+   },
+   "extension_description": {
+      "message": "パスワード アラートは、フィッシング攻撃からの保護に役立ちます。"
+   },
+   "extension_detailed_description": {
+      "message": "「accounts.google.com」以外の場所で Gmail や Google for Work のパスワードを入力した場合、アラートが表示されます。その場合、必要であればパスワードを変更できます。\n\nパスワード アラートでは、Google のログインページになりすましたページについても検出が試みられ、そうしたページでユーザーがパスワードを入力しようとしたときにアラートが表示されます。具体的には、ユーザーがアクセスする各ページの HTML を基に、Google のログインページになりすましていないかが確認されます。\n\nよくある質問\n-- パスワード アラートが有効になるのはいつですか？\n次回 accounts.google.com にパスワードを入力すると、パスワード アラートが自動的に初期化されます。\n\n-- パスワード アラートでパスワードやキー入力は保存されますか？\nいいえ。パスワード アラートではパスワードやキー入力は保存されず、代わりにパスワードのサムネイル（保護されたもの）が保存されます。この保護されたサムネイルと、ユーザーが Chrome で最近行ったキー入力のサムネイルとが照合されます。\n\n-- パスワード アラートからのデータはどこに送信されますか？\nパスワード アラートを Gmail アカウントで使用している場合、ローカルのパソコンからデータが送信されることはありません。Google for Work の管理者がドメイン内のすべての管理対象 Chrome ブラウザにパスワード アラートを導入している場合は、管理者がパスワード アラートからのアラートを受信します。\n\n-- パスワード アラートにはどのような制約がありますか？\nパスワード アラートは、シークレット ウィンドウ、Chrome アプリ、Chrome 拡張機能には対応していません。また、Google 以外のサービスのパスワードを保護することもできません。パスワード アラートが動作するのは、Javascript が有効になっている Chrome ウェブブラウザ内のみです。\n\n-- 詳細はどこで確認できますか？\nよくある質問の全文は LINK_TBD をご覧ください。またオープンソースのコードベース全体については https://github.com/google/password-alert をご覧ください。\n\nパスワード アラートをインストールすると Google の利用規約とプライバシー ポリシー（www.google.com/policies/）に同意したことになります。\n"
+   },
+   "extension_name": {
+      "message": "パスワード アラート"
+   },
+   "ignore": {
+      "message": "今回は無視する"
+   },
+   "initialization_message": {
+      "message": "パスワード アラートの使用を開始するには、アカウントにログインしてください。"
+   },
+   "initialization_thank_you_message": {
+      "message": "ご利用ありがとうございます。パスワード アラートが有効になりました。"
+   },
+   "learn_more": {
+      "message": "詳細"
+   },
+   "password_warning_banner_body": {
+      "message": "GoogleのページではないログインページでGoogleアカウントのパスワードを入力しました。アカウントを保護するために、すぐにパスワードを再設定してください。他のアプリやサイトでこのパスワードを使用しないようにしてください。"
+   },
+   "password_warning_banner_header": {
+      "message": "Googleアカウントのパスワードを再設定してください"
+   },
+   "phishing_warning_banner_body": {
+      "message": "このサイトは、Google ログインページになりすましてパスワードを取得しようとしている可能性があるため、ブロックされました。このサイトがお使いのパソコンに危害を与える可能性があることを理解したうえで、このサイトにアクセスする場合は、入力する情報にご注意ください。"
+   },
+   "phishing_warning_banner_header": {
+      "message": "このサイトはブロックされました。"
+   },
+   "report_phishing": {
+      "message": "このサイトを報告する"
+   },
+   "reset_password": {
+      "message": "パスワードを再設定"
+   },
+   "sign_in": {
+      "message": "ログイン"
+   },
+   "visit_this_site": {
+      "message": "このサイトにアクセス"
+   }
+}

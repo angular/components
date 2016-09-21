@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "Prijať a inštalovať"
+   },
+   "ACCESS_CODE": {
+      "message": "Prístupový kód"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "Platnosť prístupového kódu vyprší o $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "Spätná väzba"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "Všetky pripojenia"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "Znova zadajte kód PIN"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "Kód PIN"
+   },
+   "CANCEL": {
+      "message": "Zrušiť"
+   },
+   "CLEAR_HISTORY": {
+      "message": "Vymazať históriu"
+   },
+   "CLOSE": {
+      "message": "Zatvoriť"
+   },
+   "CLOSE_PROMPT": {
+      "message": "Ak opustíte túto stránku, relácia Vzdialenej plochy Chrome sa ukončí."
+   },
+   "CLOSE_WINDOW": {
+      "message": "Zavrieť okno"
+   },
+   "COMPANY_NAME": {
+      "message": "Spoločnosť Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "Naozaj chcete zakázať vzdialené pripojenia k počítaču $1$? Ak zmeníte názor, pripojenie budete musieť znova povoliť priamo z uvedeného počítača.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "Pripojenie zlyhalo"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "Klient"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "História pripojení"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "Priemerné"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "Dobré"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "Slabé"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "Komu"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "Pripojiť"
+   },
+   "CONNECT_BUTTON": {
+      "message": "Pripojenie"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "Pokračovať"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "Momentálne zdieľate tento počítač s iným používateľom. Chcete pokračovať v zdieľaní?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Ovládač hostiteľa Vzdialenej plochy Chrome"
+   },
+   "COPYRIGHT": {
+      "message": "Copyright 2013 Google Inc. Všetky práva vyhradené."
+   },
+   "CREDITS": {
+      "message": "Poďakovanie"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "Odstrániť všetko"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "Odstrániť"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "Ak chcete pokračovať, musíte najprv udeliť rozšírené povolenia na prístup k vášmu počítaču. Stačí to urobiť len raz."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "Požiadajte používateľa s počítačom, do ktorého chcete získať prístup, aby klikol na tlačidlo $1$ a poskytol vám prístupový kód.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Vzdialená plocha Chrome vám umožňuje bezpečne zdieľať váš počítač cez internet. Obaja používatelia musia mať spustenú aplikáciu Vzdialená plocha Chrome, ktorú nájdete na adrese $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "Vzdialený hostiteľ od vás vyžaduje overenie na webových stránkach tretej strany. Ak chcete pokračovať, musíte vzdialenej ploche Chrome udeliť dodatočné oprávnenie na prístup k tejto adrese:"
+   },
+   "DISABLE_HOST": {
+      "message": "Zakázať"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "Odpojiť"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Služba Vzdialená plocha Chrome"
+   },
+   "DURATION_HEADER": {
+      "message": "Trvanie"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "Nemáte povolenie spustiť túto aplikáciu."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "Overenie zlyhalo. Prihláste sa do prehliadača Chrome a skúste to znova."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "Niektoré potrebné komponenty chýbajú. Uistite sa, že máte nainštalovanú najnovšiu verziu príslušného softvéru a skúste to znova."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "Vyskytla sa chyba siete. Keď bude vaše zariadenie znova online, aplikáciu reštartujeme."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "Inicializácia relácie vzdialeným počítačom sa nepodarila. Ak problém pretrváva, skúste opätovne nakonfigurovať hostiteľa."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "Vzdialený počítač nereaguje na žiadosti o pripojenie. Skontrolujte, či je online a skúste to znova."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "Pripojenia k vzdialenému počítaču sú dočasne zablokované, pretože sa k nemu niekto snažil pripojiť pomocou neplatného kódu PIN. Skúste to znova neskôr."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "Registrácia tohto počítača zlyhala."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "Bola zistená nekompatibilná verzia protokolu. Uistite sa, že máte na oboch počítačoch nainštalovanú najnovšiu verziu príslušného softvéru a skúste to znova."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "Prístupový kód je neplatný. Skúste to znova."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "Nastavenia pravidiel nepovoľujú zdieľanie tohto počítača ako hostiteľa Vzdialenej plochy Chrome. Požiadajte o pomoc svojho správcu systému."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "Vzdialená relácia vypršala."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "Niektoré potrebné komponenty chýbajú. Uistite sa, že používate najnovšiu verziu prehliadača Chrome a skúste to znova."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "Niektoré potrebné komponenty chýbajú. Prejdite na adresu chrome://plugins a uistite sa, že je aktivovaný doplnok Native Client."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "Prestal fungovať požadovaný komponent. Nahláste tento problém vývojárom."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "Nepodarilo sa pripojiť k sieti. Skontrolujte, či je vaše zariadenie online."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "Nie ste prihlásený/-á do prehliadača Chrome. Prihláste sa a skúste to znova."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "Nemáte povolenie vykonať túto akciu."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "Požadovaný objekt neexistuje"
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "Hostiteľa sa nepodarilo nájsť. Pravdepodobne je to spôsobené konfiguráciou siete, ktorú používate."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "Služba je dočasne nedostupná. Skúste to znova neskôr."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "Vyskytla sa neočakávaná chyba. Nahláste tento problém vývojárom."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "Ukončiť zobrazenie na celú obrazovku"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "Aplikáciu sa nepodarilo resetovať. Stále však môžete odoslať hlásenie o chybách."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "Resetovať aplikáciu. Prídete o všetku neuloženú prácu."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "Aplikáciu nemôžem spustiť."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "Aplikácia je príliš pomalá."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "Nemôžem otvoriť svoje súbory na Disku Google."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "Nevidím svoje uložené súbory online na Disku Google."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "Mám problémy s klávesnicou alebo myšou."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "Pomôžte nám vyriešiť váš problém. Dajte nám vedieť, čo sa stalo:"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "Niečo iné."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "Vyberte…"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "Vaša e-mailová adresa bude uvedená v každej spätnej väzbe, ktorú odošlete. Umožní nám to kontaktovať vás v prípade potreby ďalších informácií."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "Nahlásiť problém"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "Zahrnúť denníky aplikácie s cieľom pomôcť pri riešení tohto problému (denníky môžu obsahovať osobné informácie)"
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "Denníky aplikácie môžu obsahovať osobné informácie vrátane vašej totožnosti (e-mailovej adresy), názvov a vlastností súborov a priečinkov na Disku Google."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "K týmto informáciám, ktoré sa používajú iba na diagnostiku vami nahláseného problému, má prístup výhradne osoba prešetrujúca vaše hlásenie. Tieto informácie budú uchovávané maximálne 30 dní."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "Prebieha pripájanie..."
+   },
+   "FOOTER_WAITING": {
+      "message": "čaká sa na pripojenie..."
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "Pre počítače Mac (OS X 10.6 a novší)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "Pre systém Windows (XP a novší)"
+   },
+   "FULL_SCREEN": {
+      "message": "Celá obrazovka"
+   },
+   "GET_STARTED": {
+      "message": "Začíname"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "Prijať"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "Odmietnuť"
+   },
+   "HELP": {
+      "message": "Pomocník"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "Prístup"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "Zobrazte a ovládajte zdieľaný počítač."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "K tomuto počítaču môžete bezpečne pristupovať pomocou Vzdialenej plochy Chrome."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "Zmeniť PIN"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "Tento počítač je momentálne zdieľaný pod iným účtom"
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "Zobraziť/upraviť"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "Tento počítač je nakonfigurovaný tak, aby povolil pripojenie jedného alebo viacerých klientov bez zadania kódu PIN."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "Povoliť vzdialené pripojenia"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "Ak chcete na prístup k tomuto počítaču použiť Vzdialenú plochu Chrome, musíte povoliť vzdialené pripojenia."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "Zakázať vzdialené pripojenia"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "Zdieľať"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "Zdieľať tento počítač, aby ho mohol iný používateľ zobraziť a ovládať."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(táto funkcia zatiaľ nie je k dispozícii pre váš počítač)"
+   },
+   "HOST_CATEGORY": {
+      "message": "Hostiteľ"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "Prístup bol odmietnutý klientskemu programu: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "Klient je pripojený: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "Klient bol odpojený: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "Adresa IP kanála pre klient: %1 ip='%2' host_ip='%3' channel='%4' connection='%5'."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "Ak chcete povoliť vzdialené pripojenie k inému počítaču, nainštalujte na ňom Vzdialenú plochu Chrome a potom kliknite na tlačidlo $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "Nie sú zaregistrované žiadne počítače. Ak chcete povoliť vzdialené pripojenie k inému počítaču, nainštalujte na ňom Vzdialenú plochu Chrome a potom kliknite na tlačidlo $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "Predtým ste sa prihlásili ako používateľ $1$ ($2$).  Ak chcete získať prístup k počítačom v danom účte, musíte sa $3$prihlásiť do prehliadača Google Chrome$4$ pomocou daného účtu a znova nainštalovať aplikáciu Vzdialená plocha Chrome.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "Aktualizácie systému zvyčajne prebiehajú automaticky, ale v zriedkavých prípadoch môžu zlyhať. Aktualizácia softvéru by nemala trvať dlhšie ako niekoľko sekúnd a dá sa vykonať prostredníctvom vzdialeného pripojenia k počítaču."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "Vzdialená plocha Chrome na počítači $1$ je zastaraná a vyžaduje aktualizáciu.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "Pomôžte nám vylepšiť službu Vzdialená plocha Chrome tým, že nám umožníte zhromažďovať štatistiky používania a správy o zlyhaní."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "Ak chcete ochrániť tento počítač pred neautorizovaným prístupom, nastavte si kód PIN obsahujúci $1$najmenej šesť číslic$2$. Tento kód PIN budete musieť zadať pri pokuse o pripojenie z iného miesta.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "Spustenie služby vzdialeného prístupu zlyhalo."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome sťahuje inštalátor hostiteľa Vzdialenej plochy Chrome. Inštalátor po stiahnutí najprv spustite a pokračujte až potom."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "Pred pokračovaním spustite inštalátor."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "Vzdialené pripojenia k tomuto počítaču boli povolené."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "Skontrolujte nastavenia správy napájania svojho počítača a uistite sa, že nie je nakonfigurovaný prechod do režimu spánku pri nečinnosti."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "Prebieha povoľovanie vzdialených pripojení pre tento počítač..."
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "Vzdialené pripojenia k tomuto počítaču boli zakázané."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "Prebieha zakazovanie vzdialených pripojení pre tento počítač..."
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "Vzdialený prístup k tomuto počítaču sa nepodarilo zakázať. Skúste to znova neskôr."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "Stiahnutím nástroja na inštaláciu hostiteľa Vzdialenej plochy Chrome vyjadrujete súhlas so $1$zmluvnými podmienkami$4 Google.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "Váš kód PIN bol aktualizovaný."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "Aktualizácia kódu PIN sa nepodarila. Skúste to znova neskôr."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "Prebieha aktualizácia kódu PIN pre tento počítač..."
+   },
+   "HOST_STARTED": {
+      "message": "Hostiteľ bol spustený pre používateľa: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "Hostenie bolo zastavené."
+   },
+   "IDLE_CONTINUE": {
+      "message": "Pokračovať"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "Odpojiť"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "Relácia vašej aplikácie $1$ je už istý čas neaktívna a čoskoro bude odpojená.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "K tomuto počítaču"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Stiahnutie nástroja na inštaláciu hostiteľa Vzdialenej plochy Chrome"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "Ak chcete začať zdieľať svoju pracovnú plochu, poskytnite nižšie uvedený prístupový kód osobe, ktorá vám bude pomáhať."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "Vaša relácia zdieľania začne okamžite po zadaní kódu."
+   },
+   "INVALID_PIN": {
+      "message": "Zadajte kód PIN obsahujúci 6 alebo viac číslic."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "Zdieľanie obrazovky medzi používateľmi – ideálne pre vzdialenú technickú podporu."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "Rozloženia klávesnice"
+   },
+   "LABEL_CONNECTED": {
+      "message": "Pripojený:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (naposledy online $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "Ďalšie informácie."
+   },
+   "LEARN_MORE": {
+      "message": "Prečítajte si viac informácií."
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Predvoľby hostiteľa Vzdialenej plochy Chrome"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Vzdialená plocha Chrome\nHostiteľ pracovnej plochy"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Nástroj na odinštalovanie hostiteľa Vzdialenej plochy Chrome"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Použitím pravého klávesa Ctrl vyvoláte kláves Win (kláves ⌘ na počítači Mac)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "Maximalizovať okno"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "Pristupujte k svojmu počítaču odkiaľkoľvek."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "Prebieha generovanie prístupového kódu..."
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "Vaša relácia Vzdialenej plochy Chrome bola ukončená."
+   },
+   "MESSAGE_SHARED": {
+      "message": "Pracovnú plochu momentálne zdieľate s používateľom $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "Minimalizovať okno"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "Autorizácia"
+   },
+   "MODE_IT2ME": {
+      "message": "Pomoc na diaľku"
+   },
+   "MODE_ME2ME": {
+      "message": "Moje počítače"
+   },
+   "NEW_WINDOW": {
+      "message": "Nové okno…"
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "Všetky spárované klientske programy boli odstránené."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "Táto platforma nepodporuje integráciu stolných počítačov. Aplikáciu môžete stále používať, avšak používateľské prostredie bude znehodnotené."
+   },
+   "OFFLINE": {
+      "message": "$1$ (offline)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "Nepodarilo sa inicializovať hostiteľa"
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "Neplatná konfigurácia hostiteľa"
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "Neplatná doména vlastníka hostiteľa"
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "Neplatný identifikátor hostiteľa"
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "Hostiteľ bol nakonfigurovaný pomocou neplatných poverení protokolu OAuth"
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "Hostiteľ spustený na obrazovke logiky konzoly bol ukončený, aby sa tým zaistil režim opony (curtain mode), a to prepnutím na hostiteľa spúšťaného v relácii konkrétneho používateľa"
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "Hostiteľ sa reštartuje, aby zohľadnil zmenu v pravidlách"
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "Hostiteľovi sa nepodarilo prečítať pravidlá"
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "Hostiteľ je vypnutý"
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "Nerozpoznaná chyba hostiteľa: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "Neplatný vlastník hostiteľa"
+   },
+   "OK": {
+      "message": "OK"
+   },
+   "OPTIONS_MENU": {
+      "message": "Možnosti"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "Z tohto počítača"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "S týmto počítačom boli spárované nasledujúce klientske programy a môžu sa pripojiť bez kódu PIN. Toto povolenie môžete kedykoľvek odvolať buď pre jednotlivé programy, alebo pre všetky programy naraz."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "Dátum párovania"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "Klient"
+   },
+   "PIN": {
+      "message": "Kód PIN"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "Do obidvoch polí zadajte rovnaký kód PIN."
+   },
+   "PIN_MESSAGE": {
+      "message": "Zadajte kód PIN pre počítač $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "Zadajte číslo PIN pre vzdialený počítač."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "Pristupujte k iným počítačom alebo umožnite ďalšiemu používateľovi pristupovať k vášmu počítaču bezpečne cez internet."
+   },
+   "PRODUCT_NAME": {
+      "message": "Vzdialená plocha Chrome"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome App Streaming"
+   },
+   "RECONNECT": {
+      "message": "Znova pripojiť"
+   },
+   "REMEMBER_PIN": {
+      "message": "Pri pripojení k tomuto hostiteľovi z tohto zariadenia nepožadovať znova kód PIN."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "Základná knižnica"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "Proces integrácie pracovnej plochy"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "Aplikácia na zadávanie príkazov hostiteľovi Vzdialenej plochy Chrome."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "Proces hostiteľa"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "Natívna hostiteľská aplikácia určená na odosielanie správ v rámci správy vzdialených hostiteľov"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "Natívna hostiteľská aplikácia určená na odosielanie správ v rámci vzdialenej pomoci"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "Proces vzdialeného prístupu bezpečnostného kľúča"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "Prispôsobiť veľkosť pracovnej plochy obrazovke klienta"
+   },
+   "RESTART_BUTTON": {
+      "message": "Reštartovať"
+   },
+   "RESTORE_WINDOW": {
+      "message": "Obnovenie okna"
+   },
+   "RETRY": {
+      "message": "Skúsiť znova"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "Možnosti obrazovky"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Odoslať akciu Ctrl-Alt-Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "Nahlásiť problém..."
+   },
+   "SEND_KEYS": {
+      "message": "Odoslať kombináciu klávesov"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "Odoslať akciu PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "Táto služba povoľuje prichádzajúce pripojenia od klientov Vzdialenej plochy Chrome."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "Toto nastavenie je spravované pravidlami domény."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "Zdieľať"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "Zrušiť"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "Chcete tento počítač zdieľať s ďalším používateľom, aby ho mohol zobraziť a ovládať?"
+   },
+   "SHOW_STATS": {
+      "message": "Zobraziť štatistiky"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "Zobraziť štatistiky (pripojenie: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "Zmenšiť a prispôsobiť"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "Prihlásiť sa"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "Odhlásiť sa"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "Prestať zdieľať"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Chcete pomôcť vylepšiť funkciu Vzdialená plocha Chrome? $1$Zúčastnite sa prieskumu.$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "Čas"
+   },
+   "TOGGLE_STATS": {
+      "message": "Zobraziť štatistiky"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "Pripojiť k počítaču $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "Zakázať vzdialené pripojenia k tomuto počítaču"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "Obnoviť zoznam hostiteľov"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "Upraviť názov počítača"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (zastarané)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "Účet"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Ak chcete povoliť prístup k Vzdialenej ploche Chrome, potvrďte svoj účet a kód PIN nižšie."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "Poznámka: Nastavenia pravidiel umožňujú pripojenie len medzi počítačmi v rámci vašej siete."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "POZNÁMKA: Ak chcete mať k dispozícii všetky klávesové skratky, povoľte v konfigurácii Vzdialenej plochy Chrome možnosť Otvoriť ako okno."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "Prečo je to bezpečné?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Windows"
+   },
+   "WORKING": {
+      "message": "Spracúva sa…"
+   }
+}

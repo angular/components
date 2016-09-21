@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Ignorar siempre para este sitio"
+   },
+   "always_ignore_confirmation": {
+      "message": "¿Deseas que Alerta de contraseña ignore este sitio web siempre?"
+   },
+   "back": {
+      "message": "Atrás"
+   },
+   "contact_security": {
+      "message": "Contacto con seguridad"
+   },
+   "extension_description": {
+      "message": "Alerta de contraseña ayuda a protegerte contra ataques de suplantación de identidad."
+   },
+   "extension_detailed_description": {
+      "message": "Si ingresas tu contraseña de Gmail o de Google for Work en un lugar que no sea accounts.google.com, recibirás una alerta para que, si es necesario, modifiques tu contraseña.\n\nAlerta de contraseña también intenta detectar las páginas de acceso para alertarte antes de que ingreses tu contraseña. Para hacerlo, Alerta de contraseña verifica el HTML de cada página que visitas a fin de determinar si suplanta una página de acceso de Google.\n\nPreguntas frecuentes\n-- ¿Cuándo entrará en vigencia Alerta de contraseña?\nAlerta de contraseña se inicializará la próxima vez que ingreses tu contraseña en accounts.google.com.\n\n-- ¿Alerta de contraseña almacena mi contraseña o las teclas que pulso?\nNo, Alerta de contraseña no almacena tu contraseña ni las teclas que pulsas. Alerta de contraseña almacena una miniatura segura de tu contraseña y la compara con una miniatura de las últimas teclas que pulsaste en Chrome.\n\n-- ¿Adónde envía los datos Alerta de contraseña?\nSi usas Alerta de contraseña en una cuenta de Gmail, no envía ningún dato desde tu computadora local. Si tu administrador de Google for Work implementa Alerta de contraseña en todo tu dominio, recibirá alertas cuando se active Alerta de contraseña.\n\n-- ¿Qué son los límites de Alerta de contraseña?\nAlerta de contraseña no protege las ventanas de incógnito, las Apps de Chrome ni las extensiones de Chrome. Tampoco protege las contraseñas de servicios ajenos a Google. Alerta de contraseña funciona únicamente en el navegador web de Chrome cuando Javascript está habilitado.\n\n-- ¿Dónde puedo encontrar más detalles?\nVisita las preguntas frecuentes completas en LINK_TBD, o bien, puedes ver toda la base de código abierto en https://github.com/google/password-alert.\n\nAl instalar este elemento, aceptas las Condiciones del servicio y la Política de privacidad de Google ubicadas en www.google.com/policies/.\n"
+   },
+   "extension_name": {
+      "message": "Alerta de contraseña"
+   },
+   "ignore": {
+      "message": "Ignorar por esta vez"
+   },
+   "initialization_message": {
+      "message": "Para que Alerta de contraseña funcione, accede a la cuenta."
+   },
+   "initialization_thank_you_message": {
+      "message": "Gracias. Alerta de contraseña está habilitada."
+   },
+   "learn_more": {
+      "message": "Más información"
+   },
+   "password_warning_banner_body": {
+      "message": "Ingresaste la contraseña de tu cuenta de Google en una página de acceso ajena a Google. Restablece de inmediato tu contraseña para proteger tu cuenta. Además, asegúrate de no volver a usar la misma contraseña para otros sitios y apps."
+   },
+   "password_warning_banner_header": {
+      "message": "Restablece la contraseña de tu cuenta de Google."
+   },
+   "phishing_warning_banner_body": {
+      "message": "Parece que este sitio usa una versión falsa de la página de acceso de Google para robar tu contraseña. Por lo tanto, se lo bloqueó. Si piensas que este sitio puede causar daños en el equipo, puedes visitarlo, pero ten cuidado con la información que ingresas."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Se bloqueó el sitio."
+   },
+   "report_phishing": {
+      "message": "Denunciar este sitio"
+   },
+   "reset_password": {
+      "message": "Restablecer contraseña"
+   },
+   "sign_in": {
+      "message": "Acceder"
+   },
+   "visit_this_site": {
+      "message": "Visitar este sitio"
+   }
+}

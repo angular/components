@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Toujours ignorer pour ce site"
+   },
+   "always_ignore_confirmation": {
+      "message": "Souhaitez-vous qu'Alerte mot de passe ignore toujours ce site Web ?"
+   },
+   "back": {
+      "message": "Retour"
+   },
+   "contact_security": {
+      "message": "Contacter sécurité"
+   },
+   "extension_description": {
+      "message": "Alerte mot de passe vous aide à vous protéger des attaques de phishing."
+   },
+   "extension_detailed_description": {
+      "message": "Si vous saisissez votre mot de passe Gmail ou Google for Work ailleurs que sur accounts.google.com, vous recevrez un message d'alerte. Vous pourrez alors modifier votre mot de passe, si besoin.\n\nNous avons également configuré l'extension Alerte mot de passe pour essayer de détecter les fausses pages de connexion Google, de sorte à pouvoir vous avertir avant que vous ne saisissiez votre mot de passe. Pour cela, l'extension Alerte mot de passe vérifie le code HTML de chaque page que vous consultez afin de s'assurer qu'il ne s'agit pas d'une fausse page de connexion Google.\n\nQuestions fréquentes\n– Quand l'extension Alerte mot de passe sera-t-elle opérationnelle ?\nL'extension Alerte mot de passe sera initialisée la prochaine fois que vous saisirez votre mot de passe à l'adresse accounts.google.com.\n\n– L'extension Alerte mot de passe enregistre-t-elle mon mot de passe ou ce que je saisis au clavier ?\nNon. L'extension Alerte mot de passe n'enregistre ni votre mot de passe, ni votre saisie. Elle conserve simplement une image miniature sécurisée de votre mot de passe, qu'elle compare à la miniature correspondant à votre saisie la plus récente dans Chrome.\n\n– Où l'extension Alerte mot de passe envoie-t-elle les données ?\nSi vous utilisez l'extension Alerte mot de passe avec un compte Gmail, elle n'envoie aucune donnée depuis votre ordinateur. Si votre administrateur Google for Work décide de déployer cette extension sur votre domaine, il recevra des messages d'alerte si l'extension se déclenche.\n\n– Quelles sont les limites de l'extension Alerte mot de passe ?\nL'extension Alerte mot de passe n'offre aucune protection pour les fenêtres de navigation privée, ni pour les applications et extensions Chrome. Elle ne protège pas non plus les mots de passe que vous définissez pour des services autres que ceux de Google. Par ailleurs, l'extension Alerte mot de passe ne fonctionne que dans le navigateur Web Chrome, si vous avez activé JavaScript.\n\n– Où puis-je trouver plus d'informations sur cette extension ?\nVous trouverez la liste complète des questions fréquentes à l'adresse LINK_TBD. Vous pouvez également consulter l'intégralité du code de ce projet Open Source sur le site https://github.com/google/password-alert.\n\nEn installant cette extension, vous acceptez les conditions d'utilisation de Google ainsi que nos règles de confidentialité, décrites à l'adresse www.google.com/policies/.\n"
+   },
+   "extension_name": {
+      "message": "Alerte mot de passe"
+   },
+   "ignore": {
+      "message": "Ignorer pour cette fois"
+   },
+   "initialization_message": {
+      "message": "Pour activer Alerte mot de passe, veuillez vous connecter à votre compte."
+   },
+   "initialization_thank_you_message": {
+      "message": "Merci. Alerte mot de passe est désormais activée."
+   },
+   "learn_more": {
+      "message": "En savoir plus"
+   },
+   "password_warning_banner_body": {
+      "message": "Vous venez de saisir votre mot de passe Google sur une page de connexion autre que Google. Veuillez réinitialiser immédiatement votre mot de passe pour protéger votre compte. Assurez-vous en outre de ne pas réutiliser ce mot de passe pour d'autres applications et sites."
+   },
+   "password_warning_banner_header": {
+      "message": "Réinitialiser votre mot de passe Google"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Il semblerait que ce site utilise une fausse version de la page de connexion Google afin de dérober votre mot de passe. Il a donc été bloqué. Si vous comprenez que ce site risque d'endommager votre ordinateur, vous pouvez le consulter, mais soyez prudent quant aux informations que vous saisissez."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Ce site a été bloqué."
+   },
+   "report_phishing": {
+      "message": "Signaler ce site"
+   },
+   "reset_password": {
+      "message": "Réinitialiser mot de passe"
+   },
+   "sign_in": {
+      "message": "Se connecter"
+   },
+   "visit_this_site": {
+      "message": "Consulter ce site"
+   }
+}

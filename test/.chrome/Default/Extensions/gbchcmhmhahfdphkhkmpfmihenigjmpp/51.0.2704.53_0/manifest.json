@@ -1,0 +1,38 @@
+{
+   "app": {
+      "background": {
+         "page": "background.html"
+      }
+   },
+   "default_locale": "en",
+   "description": "__MSG_PRODUCT_DESCRIPTION__",
+   "icons": {
+      "128": "chromoting128.webp",
+      "16": "chromoting16.webp",
+      "48": "chromoting48.webp"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgVjdI82ic/GxyyEX5ZlBOqfzQqq05XkHH6LXn4i5IMKbBLfd8Pr7nlmedbSoWkWnG70JMqgFP44HmNeXHob1DXxZxJoQ1/u9bH6fpibmLNrbQ606EnaCyzuz+PkztQxGtuvqzZRFVYE745hi6MnVWfYIii3+NgS2zDdjqZGFmgQIDAQAB",
+   "manifest_version": 2,
+   "minimum_chrome_version": "32",
+   "name": "__MSG_PRODUCT_NAME__",
+   "oauth2": {
+      "client_id": "45833509441-41flc5qj3bha53cs0luji5vt7e4n8i4f.apps.googleusercontent.com",
+      "scopes": [ "https://www.googleapis.com/auth/chromoting", "https://www.googleapis.com/auth/googletalk", "https://www.googleapis.com/auth/userinfo#email" ]
+   },
+   "optional_permissions": [ "\u003Call_urls>" ],
+   "permissions": [ "https://accounts.google.com/*", "https://www.googleapis.com/oauth2/*", "https://www.googleapis.com/chromoting/v1/*", "https://remoting-pa.googleapis.com/v1/events/*", "https://*.talkgadget.google.com/talkgadget/*", "https://relay.google.com/*", "clipboardRead", "clipboardWrite", "contextMenus", {
+      "fileSystem": [ "write" ]
+   }, "fullscreen", "identity", "metricsPrivate", "nativeMessaging", "overrideEscFullscreen", "storage", {
+      "socket": [ "udp-send-to", "udp-bind", "udp-multicast-membership", "resolve-host", "network-state" ]
+   } ],
+   "sandbox": {
+      "pages": [ "wcs_sandbox.html" ]
+   },
+   "sockets": {
+      "tcp": {
+         "connect": "talk.google.com:443"
+      }
+   },
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "51.0.2704.53"
+}

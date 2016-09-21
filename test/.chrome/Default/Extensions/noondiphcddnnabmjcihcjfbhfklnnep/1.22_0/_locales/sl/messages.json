@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Vedno prezri za to spletno mesto"
+   },
+   "always_ignore_confirmation": {
+      "message": "Ali želite, da zaščita gesla vedno prezre to spletno mesto?"
+   },
+   "back": {
+      "message": "Nazaj"
+   },
+   "contact_security": {
+      "message": "Obrnite se na skrbnika"
+   },
+   "extension_description": {
+      "message": "Zaščita gesla vas ščiti pred lažnim predstavljanjem."
+   },
+   "extension_detailed_description": {
+      "message": "Če vnesete geslo za Gmail ali Google for Work kjer koli drugje kot na accounts.google.com, prejmete opozorilo, da lahko po potrebi spremenite geslo.\n\nPassword Alert prav tako poskuša zaznati lažne Googlove strani za prijavo, da vas opozori, še preden vnesete geslo. V ta namen Password Alert preveri HTML vsake strani, ki jo obiščete, da ugotovi, ali se lažno predstavlja za Googlovo stran za prijavo.\n\nPogosta vprašanja\n– Kdaj bo Password Alert začel delovati?\nPassword Alert se bo inicializiral, ko naslednjič vnesete geslo na accounts.google.com.\n\n– Ali Password Alert shrani moje geslo ali pritiske tipk?\nNe. Password Alert ne shrani vašega gesla ali pritiskov tipk. Namesto tega shrani varno sličico vašega gesla, ki jo primerja s sličico zadnjih pritiskov tipk v Chromu.\n\n– Kam Password Alert pošilja podatke?\nČe uporabljate razširitev Password Alert z Gmailovim računom, Password Alert ne pošilja podatkov iz lokalnega računalnika. Če skrbnik za Google for Work namesti razširitev za celotno domeno, skrbnik prejme opozorila, ko se sproži Password Alert.\n\n– Kakšne omejitve ima Password Alert?\nPassword Alert ne varuje oken brez beleženja zgodovine, aplikacij za Chrome in razširitev za Chrome. Prav tako ne varuje gesel za storitve, ki niso Googlove. Password Alert v brskalniku Chrome deluje samo, če je omogočen JavaScript.\n\n– Kje lahko najdem več podrobnosti?\nPreberite vsa pogosta vprašanja na LINK_TBD ali si oglejte celotno odprtokodno osnovno kodo na https://github.com/google/password-alert.\n\nČe namestite ta izdelek, se strinjate z Googlovimi pogoji storitve in pravilnikom o zasebnosti na www.google.com/policies/.\n"
+   },
+   "extension_name": {
+      "message": "Zaščita gesla"
+   },
+   "ignore": {
+      "message": "Tokrat prezri"
+   },
+   "initialization_message": {
+      "message": "Če želite omogočiti zaščito gesla, se prijavite v svoj račun."
+   },
+   "initialization_thank_you_message": {
+      "message": "Hvala. Zaščita gesla je zdaj omogočena."
+   },
+   "learn_more": {
+      "message": "Več o tem"
+   },
+   "password_warning_banner_body": {
+      "message": "Pravkar ste vnesli geslo za Google Račun na strani za prijavo, ki ni Googlova. Takoj ponastavite geslo, če želite zavarovati račun. Gesla ne uporabljajte za druge aplikacije ali spletna mesta."
+   },
+   "password_warning_banner_header": {
+      "message": "Ponastavite geslo za Google Račun"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Videti je, da to spletno mesto uporablja lažno različico Googlove strani za prijavo z namenom kraje vašega gesla, zato je blokirano. Če razumete, da lahko to spletno mesto škoduje vašemu računalniku, ga lahko obiščete, vendar bodite previdni pri vnašanju podatkov."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Spletno mesto je blokirano."
+   },
+   "report_phishing": {
+      "message": "Prijavite to spletno mesto"
+   },
+   "reset_password": {
+      "message": "Ponastavite geslo"
+   },
+   "sign_in": {
+      "message": "Prijava"
+   },
+   "visit_this_site": {
+      "message": "Obiščite to mesto"
+   }
+}

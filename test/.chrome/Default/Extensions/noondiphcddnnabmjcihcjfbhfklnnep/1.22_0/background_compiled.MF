@@ -1,0 +1,12 @@
+javascript/closure/base.js
+javascript/closure/deps.js
+javascript/closure/debug/error.js
+javascript/closure/dom/nodetype.js
+javascript/closure/string/string.js
+javascript/closure/asserts/asserts.js
+javascript/closure/array/array.js
+javascript/closure/crypt/crypt.js
+javascript/closure/crypt/hash.js
+javascript/closure/crypt/sha1.js
+third_party/javascript/password_alert/chrome/keydown.js
+third_party/javascript/password_alert/chrome/background.js

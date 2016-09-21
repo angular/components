@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Ohita aina varoitukset tästä sivustosta"
+   },
+   "always_ignore_confirmation": {
+      "message": "Haluatko, että salasanavaroitus ohittaa tämän sivun aina?"
+   },
+   "back": {
+      "message": "Edellinen"
+   },
+   "contact_security": {
+      "message": "Ota yhteyttä suojauksenhallintaan"
+   },
+   "extension_description": {
+      "message": "Salasanavaroitus auttaa suojautumaan kalasteluhyökkäyksiltä."
+   },
+   "extension_detailed_description": {
+      "message": "Jos annat Gmailin tai Google for Workin salasanasi missään muualla kuin osoitteessa accounts.google.com, sinulle lähetetään aihetta koskeva ilmoitus ja voit tarvittaessa vaihtaa salasanasi.\n\nSalasanavaroitus pyrkii myös tunnistamaan väärennetyt Google-kirjautumissivut ennen kuin kirjoitat salasanasi niille. Salasanavaroitus tarkistaa jokaisen avaamasi sivun HTML-koodin havaitakseen mahdolliset väärennetyt Google-sivut.\n\nUKK\n-- Milloin Salasanavaroitus otetaan käyttöön?\nSalasanavaroitus käynnistyy, kun annat seuraavan kerran salasanasi osoitteessa accounts.google.com.\n\n-- Tallentaako Salasanavaroitus salasanaani tai painamiani näppäimiä?\nEi, Salasanavaroitus ei tallenna salasanaasi tai tietoja painamistasi näppäimistä. Niiden sijaan se tallentaa salasanastasi suojatun viitteen, jota verrataan Chromessa viimeksi painamistasi näppäimistä luotuun viitteeseen.\n\n-- Minne Salasanavaroitus lähettää tietoja?\nJos käytät Salasanavaroitusta Gmail-tilillä, tietokoneeltasi ei lähetetä tietoja. Jos Google for Workin järjestelmänvalvojasi ottaa Salasanavaroituksen käyttöön koko verkkotunnuksesi alueella, hänelle lähetetään ilmoitus jokaisesta Salasanavaroituksen tapahtumasta.\n\n-- Mitä rajoituksia Salasanavaroituksella on?\nSalasanavaroitus ei suojaa incognito-ikkunoita, Chrome-sovelluksia tai Chrome-laajennuksia. Se ei myöskään suojaa kolmannen osapuolen palvelujen salasanoja. Salasanavaroitus toimii Chrome-verkkoselaimessa vain, kun JavaScript on käytössä.\n\n-- Missä voin tutustua lisätietoihin?\nKoko UKK on saatavilla osoitteessa LINK_TBD. Voit myös tarkastella avoimen koodin koodikantaa kokonaisuudessaan osoitteessa https://github.com/google/password-alert.\n\nAsentamalla tämän kohteen hyväksyt Googlen käyttöehdot ja tietosuojakäytännön: www.google.com/policies/.\n"
+   },
+   "extension_name": {
+      "message": "Salasanavaroitus"
+   },
+   "ignore": {
+      "message": "Ohita tällä kertaa"
+   },
+   "initialization_message": {
+      "message": "Ota salasanavaroitus käyttöön kirjautumalla tilillesi."
+   },
+   "initialization_thank_you_message": {
+      "message": "Kiitos. Salasanavaroitus on nyt käytössä."
+   },
+   "learn_more": {
+      "message": "Lisätietoja"
+   },
+   "password_warning_banner_body": {
+      "message": "Annoit juuri Google-tilisi salasanan kirjautumissivulla, joka ei kuulu Googlelle. Suojaa tilisi vaihtamalla salasanasi heti. Älä jatkossa käytä samaa salasanaa muissa sovelluksissa tai sivustoissa."
+   },
+   "password_warning_banner_header": {
+      "message": "Vaihda Google-tilisi salasana"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Vaikuttaa siltä, että tämä sivusto yrittää kaapata salasanasi väärennetyn Google-kirjautumissivun avulla. Estimme sivuston käytön. Jos ymmärrät, että sivusto voi yrittää vahingoittaa tietokonettasi, voit siirtyä sivustoon, mutta mieti tarkkaan, ennen kuin kirjoitat sivustoon tietoja."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Tämän sivuston käyttö estettiin."
+   },
+   "report_phishing": {
+      "message": "Tee ilmoitus tästä sivustosta"
+   },
+   "reset_password": {
+      "message": "Pyydä uusi salasana"
+   },
+   "sign_in": {
+      "message": "Kirjaudu sisään"
+   },
+   "visit_this_site": {
+      "message": "Siirry sivustoon"
+   }
+}

@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Toujours ignorer pour ce site"
+   },
+   "always_ignore_confirmation": {
+      "message": "Souhaitez-vous que la fonction Alerte mot de passe ignore toujours ce site Web?"
+   },
+   "back": {
+      "message": "Précédent"
+   },
+   "contact_security": {
+      "message": "Contacter les administrateurs de la sécurité"
+   },
+   "extension_description": {
+      "message": "La fonction Alerte mot de passe vous aide à vous protéger des attaques de hameçonnage."
+   },
+   "extension_detailed_description": {
+      "message": "Si vous entrez votre mot de passe Gmail ou Google for Work ailleurs que sur accounts.google.com, vous recevrez une alerte et pourrez, si besoin, modifier votre mot de passe.\n\nL'extension Alerte mot de passe permet aussi de détecter les fausses pages de connexion Google et de vous alerter avant que vous ne tapiez votre mot de passe. Pour ce faire, l'Alerte mot de passe vérifie le code HTML de chaque page que vous consultez pour déceler une page de connexion qui usurperait l'identité de Google.\n\nFAQ\n-- Quand l'Alerte mot de passe prend-elle effet?\nL'extension Alerte mot de passe s'initialisera la prochaine fois que vous entrerez votre mot de passe sur accounts.google.com.\n\n-- L'Alerte mot de passe enregistre-t-elle mon mot de passe et mes frappes?\nNon. L'Alerte mot de passe ne stocke pas votre mot de passe ni vos frappes. Elle enregistre, néanmoins, une miniature sécurisée de votre mot de passe, qu'elle compare avec la miniature de vos frappes les plus récentes dans Chrome.\n\n-- Où l'Alerte mot de passe envoie-t-elle les données?\nSi vous utilisez l'Alerte mot de passe dans un compte Gmail, l'extension n'envoie pas de données depuis votre ordinateur local. Si votre administrateur Google for Work choisit de déployer l'Alerte mot de passe dans votre domaine, il recevra lui-même les alertes relatives aux mots de passe.\n\n-- Quelles sont les limites de l'Alerte mot de passe?\nL'Alerte mot de passe ne protège pas les fenêtres de navigation privée, ni les applications et extensions Chrome. Elle ne protège pas non plus les mots de passe de services autres que Google. L'Alerte mot de passe s'utilise uniquement dans le navigateur Web Chrome quand JavaScript est activé.\n\n-- Où puis-je trouver plus de détails?\nConsultez l'intégralité de la FAQ à LINK_TBD, ou affichez la base de code libre dans son ensemble à https://github.com/google/password-alert.\n\nEn installant cette extension, vous acceptez les conditions d'utilisation et la politique de confidentialité de Google qui se trouvent ici : https://www.google.com/intl/fr-ca/policies/.\n"
+   },
+   "extension_name": {
+      "message": "Alerte mot de passe"
+   },
+   "ignore": {
+      "message": "Ignorer cette fois"
+   },
+   "initialization_message": {
+      "message": "Pour activer la fonction Alerte mot de passe, veuillez vous connecter à votre compte."
+   },
+   "initialization_thank_you_message": {
+      "message": "Merci. La fonction Alerte mot de passe est désormais activée."
+   },
+   "learn_more": {
+      "message": "En savoir plus"
+   },
+   "password_warning_banner_body": {
+      "message": "Vous venez d'entrer le mot de passe de votre compte Google sur une page de connexion qui n'appartient pas à Google. Réinitialisez immédiatement votre mot de passe pour protéger votre compte. Assurez-vous de ne pas réutiliser ce mot de passe pour d'autres applications et sites."
+   },
+   "password_warning_banner_header": {
+      "message": "Réinitialisez le mot de passe de votre compte Google"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Il semblerait que ce site utilise une fausse version de la page de connexion Google afin de dérober votre mot de passe. Il a donc été bloqué. Si vous comprenez que ce site risque d'endommager votre ordinateur, vous pouvez le consulter, mais soyez prudent quant aux données que vous saisissez."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Ce site a été bloqué."
+   },
+   "report_phishing": {
+      "message": "Signaler ce site"
+   },
+   "reset_password": {
+      "message": "Réinitialiser votre mot de passe"
+   },
+   "sign_in": {
+      "message": "Se connecter"
+   },
+   "visit_this_site": {
+      "message": "Consulter ce site"
+   }
+}

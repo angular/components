@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "Прихвати и инсталирај"
+   },
+   "ACCESS_CODE": {
+      "message": "Приступни кôд"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "Овај приступни кôд ће истећи за $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "Повратне информације"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "Све везе"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "Поново унесите PIN"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN"
+   },
+   "CANCEL": {
+      "message": "Откажи"
+   },
+   "CLEAR_HISTORY": {
+      "message": "Обриши историју"
+   },
+   "CLOSE": {
+      "message": "Затвори"
+   },
+   "CLOSE_PROMPT": {
+      "message": "Напуштањем ове странице завршићете сесију Chrome удаљеног рачунара."
+   },
+   "CLOSE_WINDOW": {
+      "message": "Затварање прозора"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "Желите ли стварно да онемогућите даљинско повезивање са хостом $1$? Ако се предомислите, треба да посетите тај рачунар да бисте поново омогућили везе.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "Повезивање није успело"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "Од"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "Историја повезивања"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "Задовољавајућа"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "Добра"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "Лоша"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "Коме"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "Ипак повежи"
+   },
+   "CONNECT_BUTTON": {
+      "message": "Повезивање"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "Настави"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "Тренутно делите овај уређај са још једним корисником. Да ли желите да наставите дељење?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Контролер хоста за Chrome удаљени рачунар"
+   },
+   "COPYRIGHT": {
+      "message": "Ауторска права 2013. Google Inc. Сва права су задржана."
+   },
+   "CREDITS": {
+      "message": "Заслуге"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "Избриши све"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "Избриши"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "Да бисте наставили, морате да одобрите дозволе за шири приступ рачунару. То треба да урадите само једанпут."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "Затражите од корисника чијем рачунару желите да приступите да кликне на „$1$“ и да вам да приступни кôд.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Chrome удаљени рачунар вам омогућава да безбедно делите рачунар на вебу. Потребно је да оба корисника покрену апликацију Chrome удаљени рачунар, која може да се пронађе на $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "Удаљени хост захтева да потврдите аутентичност на веб-сајту треће стране. Да бисте наставили, морате да дате Chrome удаљеном рачунару додатне дозволе за приступ овој адреси:"
+   },
+   "DISABLE_HOST": {
+      "message": "Онемогући"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "Прекини везу"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Услуга Chrome удаљени рачунар"
+   },
+   "DURATION_HEADER": {
+      "message": "Трајање"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "Немате дозволу за покретање ове апликације."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "Потврда аутентичности није успела. Пријавите се поново у Chrome."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "Недостају неке неопходне компоненте. Проверите да ли сте инсталирали најновију верзију софтвера и покушајте поново."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "Дошло је до грешке на мрежи. Поново ћемо покренути апликацију када уређај поново буде онлајн."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "Удаљени рачунар није успео да покрене сесију. Ако се проблем настави, покушајте да поново конфигуришете хост."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "Удаљени рачунар не одговара на захтеве за повезивање. Проверите да ли је на мрежи и покушајте поново."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "Повезивање са удаљеним рачунаром је привремено блокирано зато што је неко покушавао да се повеже са њим помоћу неважећег PIN-а. Покушајте поново касније."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "Регистровање овог рачунара није успело."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "Откривена је некомпатибилна верзија протокола. Проверите да ли је на оба рачунара инсталирана најновија верзија софтвера и покушајте поново."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "Приступни кôд је неважећи. Покушајте поново."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "Подешавања смерница не дозвољавају да се овај рачунар дели као хост Chrome удаљеног рачунара. Потражите помоћ од администратора система."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "Даљинска сесија је истекла."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "Недостају неке неопходне компоненте. Проверите да ли користите најновију верзију Chrome-а и покушајте поново."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "Недостају неке неопходне компоненте. Идите на chrome://plugins и уверите се да је Native Client омогућен."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "Обавезна компонента је престала да функционише. Пријавите овај проблем програмерима."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "Није могуће повезати се са мрежом. Проверите да ли је уређај онлајн."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "Нисте пријављени у Chrome. Пријавите се и покушајте поново."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "Немате дозволу за обављање те радње."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "Захтевани објекат не постоји."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "Није могуће успоставити везу са хостом. До овога је вероватно дошло због конфигурације мреже коју користите."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "Услуга је привремено недоступна. Покушајте поново касније."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "Дошло је до неочекиване грешке. Пријавите овај проблем програмерима."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "Изађи из режима целог екрана"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "Ресетовање апликације није успело. И даље можете да пошаљете извештај о грешци."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "Ресетујте апликацију. Изгубићете све податке које нисте сачували."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "Не могу да отворим апликацију."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "Апликација је преспора."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "Не могу да отворим датотеке на Google диску."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "Не могу да видим сачуване датотеке онлајн на Google диску."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "Имам проблема са тастатуром или мишем."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "Да бисте нам помогли да решимо проблем, реците нам шта није у реду:"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "Нешто друго."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "Изаберите..."
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "Да бисмо могли да вас контактирамо ради додатних информација, имејл адреса ће бити уврштена у све повратне информације које пошаљете."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "Пријави проблем"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "Уврсти евиденције апликација ради помоћи у решавању проблема (евиденције могу да садрже приватне информације)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "Евиденције апликације могу да садрже приватне информације, укључујући идентитет (имејл адресу) и називе и својства датотека и директоријума на Google диску."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "Ови подаци се користе само за откривање проблема који пријављујете, доступни су само особи која истражује извештај и не задржавамо их дуже од 30 дана."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "Повезивање…"
+   },
+   "FOOTER_WAITING": {
+      "message": "чека се успостављање везе…"
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "За Mac (OS X 10.6 и новији)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "За Windows (XP и новији)"
+   },
+   "FULL_SCREEN": {
+      "message": "Цео екран"
+   },
+   "GET_STARTED": {
+      "message": "Започнимо"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "Прихвати"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "Одбиј"
+   },
+   "HELP": {
+      "message": "Помоћ"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "Приступи"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "Прегледајте и контролишите дељени рачунар."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "Овом рачунару можете безбедно да приступите помоћу Chrome удаљеног рачунара."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "Промени PIN"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "Овај рачунар се тренутно дели у склопу другог налога."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "Прикажи/измени"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "Овај рачунар је конфигурисан тако да омогућава да се један клијент или више њих повезују без уношења PIN-а."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "Омогући даљинско повезивање"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "Морате да омогућите даљинско повезивање ако желите да користите Chrome удаљени рачунар да бисте приступали овом рачунару."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "Онемогући даљинско повезивање"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "Дели"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "Делите овај рачунар да би други корисник могао да га прегледа и контролише."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(ова функција још увек није доступна за ваш рачунар)"
+   },
+   "HOST_CATEGORY": {
+      "message": "Хост"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "Приступ је одбијен за клијента: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "Повезани клијент: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "Клијент чија је веза прекинута: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "IP адреса канала за клијента: %1 ip=„%2“ host_ip=„%3“ channel=„%4“ connection=„%5“."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "Да бисте омогућили даљинско повезивање са неким другим рачунаром, инсталирајте Chrome удаљени рачунар на њега и кликните на „$1$“.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "Немате регистрованих рачунара. Да бисте омогућили даљинско повезивање са рачунаром, инсталирајте Chrome удаљени рачунар на њега и кликните на „$1$“.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "Претходно сте се пријавили као $1$ ($2$). Да бисте приступили рачунарима преко тог налога, $3$пријавите се у Google Chrome$4$ помоћу тог налога и поново инсталирајте Chrome удаљени рачунар.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "Ажурирања софтвера се обично обављају аутоматски, али могу да буду неуспешна у неким ретким случајевима. Ажурирање софтвера не би требало да траје дуже од неколико минута и може да се обавља док сте даљински повезани са рачунаром."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "Chrome удаљени рачунар на хосту $1$ је застарео и треба да га ажурирате.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "Помозите нам да побољшамо Chrome удаљени рачунар тако што ћете нам дозволити да прикупљамо статистику коришћења и извештаје о отказивању."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "Да бисте заштитили приступ овом рачунару, изаберите PIN од $1$најмање шест цифара$2$. Тај PIN ће бити потребан при повезивању са друге локације.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "Покретање услуге даљинског приступа није успело."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome преузима инсталациони програм Хост за Chrome удаљени рачунар. Када се преузимање заврши, покрените инсталациони програм пре него што наставите."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "Покрените инсталациони програм пре него што наставите."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "Даљинско повезивање за овај рачунар је омогућено."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "Проверите подешавања за управљање напајањем рачунара и уверите се да није конфигурисан тако да прелази у режим спавања када је неактиван."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "Омогућавање даљинског повезивања за овај рачунар…"
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "Даљинско повезивање за овај рачунар је онемогућено."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "Онемогућавање даљинског повезивања за овај рачунар…"
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "Онемогућавање даљинског приступа овом рачунару није успело. Покушајте поново касније."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "Преузимањем програма за инсталацију хоста за Chrome удаљени рачунар прихватате Google $1$услове коришћења$4.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "PIN је ажуриран."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "Ажурирање PIN-а није успело. Покушајте поново касније."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "PIN за овај рачунар се ажурира…"
+   },
+   "HOST_STARTED": {
+      "message": "Хост је покренут за корисника: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "Хост је заустављен."
+   },
+   "IDLE_CONTINUE": {
+      "message": "Настави"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "Прекини везу одмах"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "Сесија апликације $1$ је неактивна неко време и веза ће ускоро бити прекинута.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "Са овим рачунаром"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Преузмите програм за инсталацију хоста за Chrome удаљени рачунар"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "Да бисте почели да делите рачунар, у наставку дајте приступни кôд особи која ће вам помагати."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "Када унесе кôд, почеће сесија дељења."
+   },
+   "INVALID_PIN": {
+      "message": "Унесите PIN који се састоји од шест или више цифара."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "Дељење екрана између корисника, савршено за даљинску техничку подршку."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "Распоред тастера на тастатури"
+   },
+   "LABEL_CONNECTED": {
+      "message": "Повезани са:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (последњи пут онлајн $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "Сазнајте како."
+   },
+   "LEARN_MORE": {
+      "message": "Сазнајте више."
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Подешавања хоста за Chrome удаљени рачунар"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Хост за Chrome удаљени рачунар"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Алатка за деинсталацију хоста за Chrome удаљени рачунар"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Користи десни тастер Ctrl као тастер Windows (⌘ на Mac-у)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "Повећавање прозора"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "Приступите сопственом рачунару са било које локације."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "Генерисање приступног кода…"
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "Сесија Chrome удаљеног рачунара је завршена."
+   },
+   "MESSAGE_SHARED": {
+      "message": "Рачунар тренутно делите са корисником $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "Смањивање прозора"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "Одобравање"
+   },
+   "MODE_IT2ME": {
+      "message": "Даљинска помоћ"
+   },
+   "MODE_ME2ME": {
+      "message": "Моји рачунари"
+   },
+   "NEW_WINDOW": {
+      "message": "Нови прозор..."
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "Сви упарени клијенти су избрисани."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "Интеграција са рачунаром и даље није подржана на овој платформи. И даље можете да користите апликацију, али ће кориснички доживљај бити лошији."
+   },
+   "OFFLINE": {
+      "message": "$1$ (ван мреже)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "Покретање хоста није успело."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "Конфигурација хоста је неважећа."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "Домен власника хоста је неважећи."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "ИД хоста је неважећи."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "Хост је конфигурисан помоћу неважећих OAuth акредитива."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "Хост који је покренут на екрану за пријављивање на конзолу је искључен да би подржао режим завесе преласком на хоста који је покренут у сесији одређеног корисника."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "Хост се рестартује да би усвојио промену смерница."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "Хост није успео да прочита смернице."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "Хост се искључио."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "Непозната грешка у вези са хостом: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "Власник хоста је неважећи."
+   },
+   "OK": {
+      "message": "Потврди"
+   },
+   "OPTIONS_MENU": {
+      "message": "Опције"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "Са овог рачунара"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "Следећи клијенти су упарени са овим рачунаром и могу да се повезују без навођења PIN-а. Можете да опозовете ову дозволу у било ком тренутку, било појединачно или за све клијенте."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "Датум упаривања"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "Клијент"
+   },
+   "PIN": {
+      "message": "PIN"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "Унесите исти PIN у оба оквира."
+   },
+   "PIN_MESSAGE": {
+      "message": "Унесите PIN за $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "Унесите PIN за удаљени рачунар."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "Приступајте другим рачунарима или омогућите другом кориснику да безбедно приступа вашем рачунару преко интернета."
+   },
+   "PRODUCT_NAME": {
+      "message": "Chrome удаљени рачунар"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Стримовање Chrome апликација"
+   },
+   "RECONNECT": {
+      "message": "Поново се повежи"
+   },
+   "REMEMBER_PIN": {
+      "message": "Не тражи поново PIN при повезивању са овим хостом са овог уређаја."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "Основна библиотека"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "Процес интеграције рачунара"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "Апликација издаје команде хосту за Chrome удаљени рачунар."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "Процес хоста"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "Матични хост за размену порука за омогућавање даљинског управљања хостом"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "Матични хост за размену порука за даљинску помоћ"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "Даљински процес за безбедносни кључ"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "Промени величину радне површине да би се уклопила"
+   },
+   "RESTART_BUTTON": {
+      "message": "Поново покрени одмах"
+   },
+   "RESTORE_WINDOW": {
+      "message": "Вратите прозор"
+   },
+   "RETRY": {
+      "message": "Покушај поново"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "Опције екрана"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Пошаљи Ctrl-Alt-Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "Пријави проблем..."
+   },
+   "SEND_KEYS": {
+      "message": "Пошаљи тастере"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "Пошаљи PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "Ова услуга омогућава долазне везе клијената Chrome удаљеног рачунара."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "Овим подешавањем управљају смернице за домен."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "Дели"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "Откажи"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "Желите ли да делите овај рачунар да би други корисник могао да га види и контролише?"
+   },
+   "SHOW_STATS": {
+      "message": "Прикажи статистику"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "Прикажи статистику (веза: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "Умањи према величини прозора"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "Пријави ме"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "Одјави ме"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "Заустави дељење"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Желите да нам помогнете да побољшамо Chrome удаљени рачунар? $1$Попуните анкету.$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "Време"
+   },
+   "TOGGLE_STATS": {
+      "message": "Прикажи статистику"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "Повежите се са хостом $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "Онемогућите даљинско повезивање са овим рачунаром"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "Освежите листу хостова"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "Измените назив рачунара"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (застарело)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "Налог"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Потврдите налог и PIN у наставку да бисте омогућили приступ за Chrome удаљени рачунар."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "НАПОМЕНА: Подешавања смерница дозвољавају везе само између рачунара у оквиру ваше мреже."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "НАПОМЕНА: Да бисте обезбедили доступност свих тастерских пречица, можете да конфигуришете Chrome удаљени рачунар на „Отвори као прозор“."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "Зашто је ово безбедно?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Windows"
+   },
+   "WORKING": {
+      "message": "Обрада..."
+   }
+}

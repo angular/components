@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "સ્વીકારો અને ઇન્સ્ટૉલ કરો"
+   },
+   "ACCESS_CODE": {
+      "message": "ઍક્સેસ કોડ"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "આ ઍક્સેસ કોડની સમયસીમા $1$ માં સમાપ્ત થશે",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "પ્રતિસાદ"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "બધા કનેક્શન્સ"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "PIN ફરીથી લખો"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN"
+   },
+   "CANCEL": {
+      "message": "રદ કરો"
+   },
+   "CLEAR_HISTORY": {
+      "message": "ઇતિહાસ સાફ કરો"
+   },
+   "CLOSE": {
+      "message": "બંધ કરો"
+   },
+   "CLOSE_PROMPT": {
+      "message": "આ પૃષ્ઠ છોડવું તમારા Chrome રીમોટ ડેસ્કટૉપ સત્રને સમાપ્ત કરશે."
+   },
+   "CLOSE_WINDOW": {
+      "message": "વિન્ડો બંધ કરો"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "શું તમે ખરેખર $1$ પર રીમોટ કનેક્શન્સ અક્ષમ કરવા માંગો છો? જો તમે તમારો વિચાર બદલો, તો તમને કનેક્શન્સને ફરીથી સક્ષમ કરવા માટે તે કમ્પ્યુટરની મુલાકાત લેવાની જરૂર પડશે.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "કનેક્શન નિષ્ફળ થયું"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "પ્રેષક:"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "કનેક્શન ઇતિહાસ"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "સારી"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "સારી"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "ખરાબ"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "થી"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "કોઈપણ રીતે કનેક્ટ કરો"
+   },
+   "CONNECT_BUTTON": {
+      "message": "કનેક્ટ કરો"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "ચાલુ રાખો"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "હાલમાં તમે આ મશીનને બીજા વપરાશકર્તા સાથે શેર કરી રહ્યાં છો. શું તમે શેર કરવાનું ચાલુ રાખવા માગો છો?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Chrome રીમોટ ડેસ્કટૉપ હોસ્ટ નિયંત્રક"
+   },
+   "COPYRIGHT": {
+      "message": "Copyright 2013 Google Inc. સર્વાધિકાર સુરક્ષિત."
+   },
+   "CREDITS": {
+      "message": "ક્રેડિટ્સ"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "બધુ કાઢી નાખો"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "કાઢી નાખો"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "ચાલુ રાખવા માટે, તમારે સૌ પ્રથમ તમારા કમ્પ્યુટરને વિસ્તૃત ઍક્સેસ પરવાનગીઓ આપવી પડશે. તમારે આ ફક્ત એકજ વાર કરવું પડશે."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "તમે જે વપરાશકર્તાનું કમ્પ્યુટર ઍક્સેસ કરવા માંગતા હોવ તેને “$1$” પર ક્લિક કરવાનું અને તમને ઍક્સેસ કોડ આપવાનું કહો.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Chrome રીમોટ ડેસ્કટૉપ તમને વેબ પર તમારા કમ્પ્યુટરને સુરક્ષિત રીતે શેર કરવાની મંજૂરી આપે છે. બંને વપરાશકર્તાઓ Chrome રીમોટ ડેસ્કટોપ એપ્લિકેશન ચલાવી શકે છે, જે $1$ પર મેળવી શકાય છે.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "રીમોટ હોસ્ટને તમે તૃતીય-પક્ષ વેબસાઇટને અધિકૃત કરો તેની આવશ્યકતા છે. ચાલુ રાખવા માટે, તમારે આ સરનામાંને ઍક્સેસ કરવા માટે Chrome રીમોટ ડેસ્કટૉપને અતિરિક્ત પરવાનગીઓ આપવી પડશે:"
+   },
+   "DISABLE_HOST": {
+      "message": "અક્ષમ કરો"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "ડિસ્કનેક્ટ કરો"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Chrome રીમોટ ડેસ્કટૉપ સેવા"
+   },
+   "DURATION_HEADER": {
+      "message": "અવધિ"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "તમને આ એપ્લિકેશનને શરૂ કરવાની પરવાનગી નથી."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "પ્રમાણીકરણ નિષ્ફળ થયું. કૃપા કરીને Chrome પર ફરીથી સાઇન ઇન કરો."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "કેટલાક આવશ્યક ઘટકો ખૂટે છે. કૃપા કરીને ખાતરી કરો કે તમે સોફ્ટવેરનું નવીનતમ સંસ્કરણ ઇન્સ્ટોલ કરેલું છે અને ફરી પ્રયાસ કરો."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "નેટવર્ક ભૂલ આવી. જ્યારે તમારું ડિવાઇસ ઓન-લાઇન થાય ત્યારે અમે એપ્લિકેશનને પુનઃપ્રારંભ કરીશું."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "રિમોટ કમ્પ્યુટર સત્રને શરૂ કરવામાં નિષ્ફળ થયું. જો સમસ્યા યથાવત્ રહે છે, તો કૃપા કરીને હોસ્ટને ફરીથી ગોઠવવાનો પ્રયાસ કરો."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "રીમોટ કમ્પ્યુટર કનેક્શન વિનંતિઓને પ્રતિસાદ આપી રહ્યું નથી. કૃપા કરીને ચકાસો કે તે ઑનલાઇન છે અને ફરી પ્રયાસ કરો."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "રીમોટ કમ્પ્યુટરથી કનેક્શન્સ અસ્થાયી રૂપે અવરોધિત કરવામાં આવ્યા છે કારણ કે તેની સાથે કોઈએ અમાન્ય PIN સાથે કનેક્ટ કરવાનો પ્રયાસ કર્યો હતો. કૃપા કરીને થોડીવાર પછી ફરી પ્રયાસ કરો."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "આ કમ્પ્યુટરની નોંધણી કરવામાં નિષ્ફળ."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "અસંગત પ્રોટોકોલ સંસ્કરણ મળ્યું હતું. કૃપા કરીને ખાતરી કરો કે તમારી પાસે બન્ને કમ્પ્યુટર્સ પર સૉફ્ટવેરનું નવીનતમ સંસ્કરણ ઇન્સ્ટોલ કરેલ છે અને ફરી પ્રયાસ કરો."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "ઍક્સેસ કોડ અમાન્ય છે. કૃપા કરીને ફરીથી પ્રયાસ કરો."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "નીતિ સેટિંગ્સ આ કમ્પ્યુટરને Chrome રીમોટ ડેસ્કટૉપ હોસ્ટ તરીકે શેર કરવાની મંજૂરી આપતી નથી. સહાયતા માટે તમારા સિસ્ટમ વ્યવસ્થાપકનો સંપર્ક કરો."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "રિમોટ સત્ર સમાપ્ત થયું."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "કેટલાક આવશ્યક ઘટકો ખૂટે છે. કૃપા કરીને ખાતરી કરો કે તમે Chrome નું નવીનતમ સંસ્કરણ ચલાવી રહ્યાં છો અને ફરીથી પ્રયાસ કરો."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "કેટલાક આવશ્યક ઘટકો ખૂટે છે. કૃપા કરીને chrome://plugins પર જાઓ અને ખાતરી કરો કે મૂળ ક્લાઇન્ટ સક્ષમ કરેલ છે."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "આવશ્યક ઘટકે કાર્ય કરવાનું બંધ કરી દીધું છે. કૃપા કરીને વિકાસકર્તાઓને આ સમસ્યાની જાણ કરો."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "નેટવર્ક સાથે કનેક્ટ કરી શકાયું નથી. કૃપા કરીને તપાસો કે તમારું ઉપકરણ ઓન-લાઇન છે."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "તમે Chrome માં સાઇન ઇન થયા નથી. કૃપા કરીને સાઇન ઇન કરી અને ફરી પ્રયાસ કરો."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "તમને તે ક્રિયા કરવાની પરવાનગી નથી."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "વિનંતિ કરેલો ઑબ્જેક્ટ અસ્તિત્વમાં નથી."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "હોસ્ટ સુધી પહોંચવામાં અક્ષમ. આ કદાચ તમે ઉપયોગ કરી રહ્યાં છો એ નેટવર્કની ગોઠવણીનાં કારણે છે."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "અમારી સેવા અસ્થાયી રીતે અનુપલબ્ધ છે. કૃપા કરીને પછીથી ફરી પ્રયાસ કરો."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "અનપેક્ષિત ભૂલ આવી. કૃપા કરીને વિકાસકર્તાઓને આ સમસ્યાની જાણ કરો."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "પૂર્ણ સ્ક્રીનથી બહાર નીકળો"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "એપ્લિકેશન ફરીથી સેટ કરી શકાઈ નથી. તમે હજી પણ બગ રિપોર્ટ મોકલી શકો છો."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "એપ્લિકેશન ફરીથી સેટ કરો. તમે કોઈપણ વણસાચવેલ કાર્ય ગુમાવશો."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "મારાથી એપ્લિકેશન ખોલી શકાતી નથી."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "આ એપ્લિકેશન ખૂબ ધીમી છે."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "મારાથી મારી Google ડ્રાઇવ ફાઇલો ખોલી શકાતી નથી."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "મને Google ડ્રાઇવમાં મારી સાચવેલી ફાઇલો ઓન-લાઇન દેખાતી નથી."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "મને મારા કીબોર્ડ અથવા માઉસમાં સમસ્યાઓ આવી રહી છે."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "અમને તમારી સમસ્યા ઉકેલવામાં સહાય કરવા માટે, કૃપા કરીને શું ખોટું થયું તે અમને જણાવો:"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "અન્ય કોઈ."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "પસંદ કરો…"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "વધુ માહિતી માટે તમારો સંપર્ક કરવાની અમને મંજૂરી આપવા માટે, તમે સબમિટ કરો છો તે કોઈપણ પ્રતિસાદમાં તમારું ઇમેઇલ સરનામું શામેલ કરવામાં આવશે."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "સમસ્યાની જાણ કરો"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "તમારી સમસ્યા ઉકેલવામાં અમારી સહાય માટે એપ્લિકેશન લૉગ્સ શામેલ કરો (લૉગ્સમાં ખાનગી માહિતી શામેલ હોઈ શકે છે)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "એપ્લિકેશન લૉગ્સમાં તમારી ઓળખ (ઇમેઇલ સરનામું) અને Google ડ્રાઇવમાં ફાઇલો અને ફોલ્ડર્સના નામો અને પ્રોપર્ટીઝ સહિત ખાનગી માહિતી શામેલ હોઈ શકે છે."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "આ માહિતીનો ઉપયોગ ફક્ત તમે જાણ કરી રહ્યાં છો તે સમસ્યાનું નિદાન કરવા માટે થાય છે, તે ફક્ત તમારી રિપોર્ટની તપાસ કરી રહેલ વ્યક્તિને ઉપલબ્ધ રહે છે અને તે 30 કરતાં વધુ દિવસ સુધી જાળવી રખાતી નથી."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "કનેક્ટ કરી રહ્યું છે..."
+   },
+   "FOOTER_WAITING": {
+      "message": "કનેક્શનની પ્રતીક્ષા કરવામાં આવી રહી છે..."
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "Mac (OS X 10.6 અને એ પછીના સંસ્કરણ) માટે"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "Windows (XP અને એ પછીના સંસ્કરણ) માટે"
+   },
+   "FULL_SCREEN": {
+      "message": "પૂર્ણ સ્ક્રીન"
+   },
+   "GET_STARTED": {
+      "message": "પ્રારંભ કરો"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "સ્વીકારો"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "નકારો"
+   },
+   "HELP": {
+      "message": "સહાય"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "ઍક્સેસ"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "શેર કરેલા કમ્ય્યુટરને જુઓ અને નિયંત્રિત કરો"
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "તમે Chrome રીમોટ ડેસ્કટૉપનો ઉપયોગ કરીને આ કમ્પ્યુટરને સુરક્ષિત રીતે ઍક્સેસ કરી શકો છો."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "PIN બદલો"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "આ કોમ્પ્યુટર હાલમાં અન્ય એકાઉન્ટ હેઠળ શેર થયેલું છે."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "જુઓ/સંપાદિત કરો"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "આ કમ્પ્યુટર પિન દાખલ કર્યા વગર એક અથવા વધુ ક્લાઇન્ટ્સ સાથે કનેક્ટ થવાની મંજૂરી આપવા માટે ગોઠવાયેલા છે."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "રીમોટ કનેક્શન્સ સક્ષમ કરો"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "જો તમે Chrome રીમોટ ડેસ્કટોપનો ઉપયોગ કરીને આ કમ્પ્યુટરને ઍક્સેસ કરવા માગો છો તો તમારે રીમોટ કનેક્શન્સ સક્ષમ કરવું પડશે."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "રીમોટ કનેક્શન્સ અક્ષમ કરો"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "શેર કરો"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "આ કમ્પ્યુટરને બીજા વપરાશકર્તાને જોવા અને નિયંત્રિત કરવા માટે શેર કરો"
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(આ સુવિધા હજુ સુધી તમારા કમ્પ્યુટર માટે ઉપલબ્ધ નથી)"
+   },
+   "HOST_CATEGORY": {
+      "message": "હોસ્ટ:"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "ક્લાઇન્ટ માટે ઍક્સેસ નકારી: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "ક્લાઇન્ટ કનેક્ટ થયાં: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "ક્લાઇન્ટ ડિસ્કનેક્ટ થયાં: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "ક્લાઇન્ટ માટે ચેનલ IP: %1 ip='%2' host_ip='%3' ચેનલ='%4' કનેક્શન='%5'."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "એક અલગ કમ્પ્યૂટર પર રીમોટ કનેક્શન્સ સક્રિય કરવા માટે, ત્યા Chrome રીમોટ ડેસ્કટોપ ઇન્સ્ટોલ કરો અને \"$1$” ને ક્લિક કરો.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "તમે કોઈ કમ્પ્યુટરની નોંધણી કરી નથી.કમ્પ્યુટર પર રીમોટ કનેક્શન્સ સક્રિય કરવા માટે, ત્યાં Chrome રીમોટ ડેસ્કટૉપને ઇન્સ્ટોલ કરો અને \"$1$” પર ક્લિક કરો.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "તમે પૂર્વમાં $1$ ($2$) તરીકે સાઇન ઇન થયેલા.  તે એકાઉન્ટમાં તમારા કમ્પ્યુટર્સને ઍક્સેસ કરવા માટે, તે એકાઉન્ટ વડે $3$Google Chrome માં સાઇન ઇન કરો$4$ અને Chrome રીમોટ ડેસ્કટૉપ ફરીથી ઇન્સ્ટોલ કરો.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "સૉફ્ટવેર અપડેટ્સ સુધારાઓ સામાન્ય રીતે આપમેળે થાય છે, પરંતુ કેટલાક કિસ્સાઓમાં ભાગ્યે જ નિષ્ફળ થાય છે. સૉફ્ટવેરને અપડેટ કરવામાં થોડી મિનિટથી વધુ સમય લાગતો નથી અને તમારું કમ્પ્યુટર રીમોટલી કનેક્ટ કરેલું હોય ત્યારે થઈ શકે છે."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "$1$ પર Chrome રીમોટ ડેસ્કટૉપ જૂનું છે અને તેને અપડેટ કરવાની જરૂર છે.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "અમને ઉપયોગનાં આંકડા અને ક્રેશ રિપોર્ટ્સ એકત્રિત કરવાની મંજૂરી આપીને Chrome રીમોટ ડેસ્કટૉપમાં સુધારો કરવામાં અમને સહાય કરો."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "આ કમ્પ્યુટરનાં ઍક્સેસને રક્ષણ આપવા માટે, કૃપા કરીને $1$ઓછામાં ઓછા છ અંકો$2$નો એક PIN પસંદ કરો. જ્યારે બીજા સ્થાનેથી કનેક્ટ થઇ રહ્યાં હોવ ત્યારે આ PIN ની જરૂર પડશે.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "રીમોટ ઍક્સેસ સેવા શરૂ કરવામાં નિષ્ફળ."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome એ Chrome રીમોટ ડેસ્કટૉપ હોસ્ટ ઇન્સ્ટોલરને ડાઉનલોડ કરે છે. એકવાર ડાઉનલોડ પૂર્ણ થઈ જાય તે પછી, કૃપા કરીને ચાલુ રાખતાં પહેલાં એક વાર ઇન્સ્ટોલરને ચલાવો."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "કૃપા કરીને ચાલુ કરતા પહેલાં એક વાર ઇન્સ્ટોલરને ચલાવો."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "આ કમ્પ્યુટર માટે રીમોટ કનેક્શન્સ સક્ષમ કરવામાં આવ્યું છે."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "કૃપા કરી તમારા કમ્પ્યુટરની પાવર સંચાલન સેટિંગ્સ જુઓ અને સુનિશ્ચિત કરો કે તેને નિષ્ક્રિય હોવા પર સ્લીપ માટે ગોઠવેલી નથી."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "આ કમ્પ્યુટર માટે રીમોટ કનેક્શન્સ સક્ષમ કરવામાં આવી રહ્યાં છે..."
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "આ કમ્પ્યુટર માટે રીમોટ કનેક્શન્સ અક્ષમ કરવામાં આવ્યું છે."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "આ કમ્પ્યુટર માટે રીમોટ કનેક્શન્સ અક્ષમ કરી રહ્યાં છે..."
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "આ કમ્પ્યુટર પર રીમોટ ઍક્સેસ કરવામાં નિષ્ફળ. કૃપા કરીને થોડીવાર પછી ફરી પ્રયાસ કરો."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "Chrome રીમોટ ડેસ્કટૉપ હોસ્ટ ઇન્સ્ટોલરને ડાઉનલોડ કરીને, તમે Google $1$સેવાની શરતો$4થી સંમત થાઓ છો.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "તમારા PIN અપડેટ કરવામાં આવ્યો છે."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "PIN અપડેટ કરવામાં નિષ્ફળ. કૃપા કરીને થોડીવાર પછી ફરી પ્રયાસ કરો."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "આ કમ્પ્યુટર માટે PIN અપડેટ થઈ રહ્યો છે ..."
+   },
+   "HOST_STARTED": {
+      "message": "આ વપરાશકર્તા માટે હોસ્ટ શરૂ: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "હોસ્ટ રોક્યું."
+   },
+   "IDLE_CONTINUE": {
+      "message": "ચાલુ રાખો"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "હવે ડિસ્કનેક્ટ કરો"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "તમારું $1$ સત્ર થોડીવાર માટે નિષ્ક્રિય થઈ ગયું છે અને ટૂંક સમયમાં ડિસ્કનેક્ટ થઈ જશે.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "આ કમ્પ્યુટર પર"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Chrome રીમોટ ડેસ્કટૉપ હોસ્ટ ઇન્સ્ટોલર ડાઉનલોડ કરો"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "તમારા ડેસ્કટૉપને શેર કરવાનું પ્રારંભ કરવા માટે, જે વ્યક્તિ તમારી પાસે સહાય કરશે તેને નીચે આપેલો ઍક્સેસ કોડ આપો."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "એકવાર તેઓ કોડ દાખલ કરશે પછી તમારું શેરિંગ સત્ર પ્રારંભ થશે."
+   },
+   "INVALID_PIN": {
+      "message": "કૃપા કરીને છ અથવા વધુ અંકોવાળો PIN દાખલ કરો."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "વપરાશકર્તા-થી-વપરાશકર્તા સ્ક્રીન શેરિંગ, રીમોટ ટેક્નિકલ સપોર્ટ માટે પરિપૂર્ણ."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "કીબોર્ડ લેઆઉટ્સ"
+   },
+   "LABEL_CONNECTED": {
+      "message": "કનેક્ટેડ:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (છેલ્લે ઓનલાઇન $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "કેવી રીતે જાણો."
+   },
+   "LEARN_MORE": {
+      "message": "વધુ જાણો."
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Chrome રીમોટ ડેસ્કટૉપ હોસ્ટ પસંદગીઓ"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Chrome રીમોટ\nડેસ્કટૉપ હોસ્ટ"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Chrome રીમોટ ડેસ્કટૉપ હોસ્ટ અનઇન્સ્ટોલર"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Win કી (Mac પર ⌘) માટે જમણા Ctrl નો ઉપયોગ કરો"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "વિંડો મોટી કરો"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "ગમે ત્યાંથી તમારું પોતાનું કમ્પ્યુટર ઍક્સેસ કરો."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "ઍક્સેસ કોડ જનરેટ કરી રહ્યું છે..."
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "તમારું Chrome રીમોટ ડેસ્કટૉપ સત્ર સમાપ્ત થયું."
+   },
+   "MESSAGE_SHARED": {
+      "message": "તમારું ડેસ્કટૉપ હાલમાં $1$ સાથે શેર કરવામાં આવી રહ્યું છે.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "વિંડો નાની કરો"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "અધિકૃત કરો"
+   },
+   "MODE_IT2ME": {
+      "message": "રીમોટ સહાય"
+   },
+   "MODE_ME2ME": {
+      "message": "મારા કમ્પ્યુટર્સ"
+   },
+   "NEW_WINDOW": {
+      "message": "નવી વિંડો…"
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "બધા જોડી થયેલા ક્લાઇન્ટો કાઢી નાખવામાં આવ્યા છે."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "આ પ્લેટફોર્મ પર ડેસ્કટૉપ સમેકન સમર્થિત નથી. તમે હજી પણ આ એપ્લિકેશનનો ઉપયોગ કરી શકો છો, પરંતુ વપરાશકર્તા અનુભવ ન્યૂન થઈ જશે."
+   },
+   "OFFLINE": {
+      "message": "$1$ (ઑફલાઇન)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "હોસ્ટ આરંભ નિષ્ફળ રહ્યું."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "અમાન્ય હોસ્ટ ગોઠવણી."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "અમાન્ય હોસ્ટ માલિક ડોમેન."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "અમાન્ય હોસ્ટ id."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "હોસ્ટ અમાન્ય OAuth ઓળખપત્રો સાથે ગોઠવાયું છે."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "કર્ટન મોડને સમર્થન આપવા માટે વપરાશકર્તા-વિશિષ્ટ સત્રમાં ચલાત હોસ્ટ પર સ્વિચ કરીને કન્સોલ લોજિક સ્ક્રીન પર ચાલતા હોસ્ટને શટડાઉન કર્યું છે."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "નીતિ ફેરફારને ધ્યાનમાં લેવા માટે, હોસ્ટ પુનઃપ્રારંભ થઇ રહ્યું છે."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "હોસ્ટ નીતિ વાંચવામાં નિષ્ફળ ગયું."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "હોસ્ટ શટ ડાઉન થયું છે."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "ન ઓળખાયેલ હોસ્ટ ભૂલ: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "અમાન્ય હોસ્ટ માલિક."
+   },
+   "OK": {
+      "message": "ઓકે"
+   },
+   "OPTIONS_MENU": {
+      "message": "વિકલ્પો"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "આ કમ્પ્યુટરથી"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "નીચેના ક્લાઇન્ટ્સ આ કમ્પ્યુટર સાથે જોડી બનાવેલ છે અને પિન દાખલ કર્યા વગર જોડાઇ શકે છે. તમે ક્યાં તો વ્યક્તિગત અથવા બધા ક્લાઇન્ટ માટે કોઇપણ સમયે આ પરવાનગી રદ કરી શકો છો."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "જોડી કર્યાની તારીખ"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "ક્લાઇન્ટ"
+   },
+   "PIN": {
+      "message": "PIN"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "કૃપા કરીને બંને બૉક્સમાં સમાન PIN દાખલ કરો."
+   },
+   "PIN_MESSAGE": {
+      "message": "કૃપા કરીને $1$ માટે તમારો PIN દાખલ કરો.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "રિમોટ કમ્પ્યુટર માટે કૃપા કરીને તમારો PIN દાખલ કરો."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "અન્ય કમ્પ્યુટર્સ ઍક્સેસ કરો અથવા બીજા વપરાશકર્તાને તમારું કમ્પ્યુટર ઇન્ટરનેટ પર સુરક્ષિતપણે ઍક્સેસ કરવાની મંજૂરી આપો."
+   },
+   "PRODUCT_NAME": {
+      "message": "Chrome રીમોટ ડેસ્કટૉપ"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome એપ્લિકેશન સ્ટ્રીમિંગ"
+   },
+   "RECONNECT": {
+      "message": "ફરીથી કનેક્ટ કરો"
+   },
+   "REMEMBER_PIN": {
+      "message": "આ ઉપકરણથી આ હોસ્ટ સાથે કનેક્ટ કરતી વખતે ફરીથી PIN માટે પૂછશો નહીં."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "મુખ્ય લાઇબ્રેરી"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "ડેસ્કટોપ ઇન્ટીગ્રેશન પ્રક્રિયા"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "Chrome રીમોટ ડેસ્કટૉપ હોસ્ટને આદેશો રજૂ કરવા માટેની એપ્લિકેશન."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "હોસ્ટ પ્રક્રિયા"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "હોસ્ટ સંચાલનને રિમોટ કરવા માટે મૂળ મેસેજિંગ હોસ્ટ"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "રિમોટ સહાયતા માટે મૂળ મેસેજિંગ હોસ્ટ"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "સુરક્ષા કી રીમોટિંગ પ્રક્રિયા"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "ફિટ કરવા માટે ડેસ્કટૉપનું કદ બદલો"
+   },
+   "RESTART_BUTTON": {
+      "message": "હવે ફરીથી પ્રારંભ કરો"
+   },
+   "RESTORE_WINDOW": {
+      "message": "વિંડો પુનર્સ્થાપિત કરો"
+   },
+   "RETRY": {
+      "message": "ફરી પ્રયાસ કરો"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "સ્ક્રીન વિકલ્પો"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Ctrl-Alt-Del મોકલો"
+   },
+   "SEND_FEEDBACK": {
+      "message": "સમસ્યાની જાણ કરો…"
+   },
+   "SEND_KEYS": {
+      "message": "કી મોકલો"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "PrtScn મોકલો"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "આ સેવા Chrome રીમોટ ડેસ્કટૉપ ક્લાઇન્ટ્સ પાસેથી આવતા કનેક્શન્સ સક્ષમ કરે છે."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "આ સેટિંગ તમારી ડોમેન નીતિ દ્વારા સંચાલિત થાય છે."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "શેર કરો"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "રદ કરો"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "શું તમે આ કમ્પ્યુટર બીજા વપરાશકર્તા માટે જોવા અને નિયંત્રિત કરવા માટે શેર કરવા માંગો છો?"
+   },
+   "SHOW_STATS": {
+      "message": "આંકડા દર્શાવો"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "આંકડા દર્શાવો (કનેક્શન: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "ફીટ કરવા માટે સંકોચો"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "સાઇન ઇન"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "સાઇન આઉટ"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "શેર કરવાનું રોકો"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Chrome રીમોટ ડેસ્કટૉપને બહેતર બનાવવામાં સહાય જોઇએ છે? $1$સર્વેક્ષણ લો.$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "સમય"
+   },
+   "TOGGLE_STATS": {
+      "message": "આંકડા દર્શાવો"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "$1$ થી કનેક્ટ થાઓ",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "આ કમ્પ્યુટર પર રીમોટ કનેક્શન્સ અક્ષમ કરો"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "હોસ્ટ્સની સૂચિ તાજી કરો"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "કમ્પ્યુટર નામ સંપાદિત કરો"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (જૂનું)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "એકાઉન્ટ"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Chrome રીમોટ ડેસ્કટૉપ દ્વારા ઍક્સેસની મંજૂરી આપવા માટે કૃપા કરીને નીચે તમારા એકાઉન્ટ અને પિનની પુષ્ટિ કરો."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "નોંધ: નીતિ સેટિંગ્સ ફક્ત તમારા નેટવર્કની અંતર્ગત રહેલા કમ્પ્યુટર્સ વચ્ચે જ કનેક્શન્સને પરવાનગી આપે છે."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "નોંધ: બધા કીબોર્ડ શોર્ટકટ્સ ઉપલબ્ધ છે તેની ખાતરી કરવા, તમે Chrome રીમોટ ડેસ્કટૉપને 'વિંડો તરીકે ખોલો' પર ગોઠવી શકો છો."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "આ કેમ સલામત છે?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Windows"
+   },
+   "WORKING": {
+      "message": "કાર્ય કરી રહ્યું છે..."
+   }
+}

@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Diese Website immer ignorieren"
+   },
+   "always_ignore_confirmation": {
+      "message": "Soll die Passwort-Warnung diese Website immer ignorieren?"
+   },
+   "back": {
+      "message": "Zurück"
+   },
+   "contact_security": {
+      "message": "Sicherheit kontaktieren"
+   },
+   "extension_description": {
+      "message": "Passwort-Warnung schützt vor Phishing-Attacken."
+   },
+   "extension_detailed_description": {
+      "message": "Wenn Sie Ihr Passwort für Gmail oder Google for Work auf einer anderen Website als accounts.google.com eingeben, erhalten Sie eine Warnung, sodass Sie Ihr Passwort gegebenenfalls ändern können.\n\nDie Passwort-Warnung versucht auch, fingierte Google-Anmeldeseiten zu erkennen, und warnt Sie, bevor Sie Ihr Passwort eingeben. Hierzu prüft die Passwort-Warnung anhand des HTML jeder von Ihnen aufgerufenen Seite, ob diese sich als Google-Anmeldeseite tarnt.\n\nHäufig gestellte Fragen\n-- Wann wird die Passwort-Warnung wirksam?\nDie Passwort-Warnung wird automatisch initialisiert, wenn Sie das nächste Mal Ihr Passwort unter accounts.google.com eingeben.\n\n-- Speichert die Passwort-Warnung mein Passwort oder meine Tastenanschläge?\nNein. Die Passwort-Warnung speichert weder Ihr Passwort noch Ihre Tastenanschläge, sondern eine sichere Miniaturansicht Ihres Passworts, die mit der Miniaturansicht Ihrer letzten Tastenanschläge in Chrome verglichen wird.\n\n-- Wohin sendet die Passwort-Warnung ihre Daten?\nWenn Sie die Passwort-Warnung in einem Gmail-Konto verwenden, sendet die Passwort-Warnung keine Daten von Ihrem lokalen Computer. Wenn Ihr Google for Work-Administrator die Passwort-Warnung in Ihrer gesamten Domain implementiert hat, erhält der Administrator die Benachrichtigungen der Passwort-Warnung.\n\n-- Was kann die Passwort-Warnung nicht?\nDie Passwort-Warnung bietet keinen Schutz für Inkognitofenster, Chrome-Apps und Chrome-Erweiterungen. Außerdem werden auch Passwörter für Dienste, die nicht von Google sind, nicht geschützt. Die Passwort-Warnung funktioniert nur innerhalb des Chrome-Webbrowsers, wenn JavaScript aktiviert ist.\n\n-- Wo erhalte ich genauere Informationen?\nSie können alle häufig gestellten Fragen unter LINK_TBD aufrufen oder den gesamten Open-Source-Code unter https://github.com/google/password-alert einsehen.\n\nDurch die Installation dieses Artikels stimmen Sie den Nutzungsbedingungen und der Datenschutzerklärung von Google unter www.google.com/policies/ zu.\n"
+   },
+   "extension_name": {
+      "message": "Passwort-Warnung"
+   },
+   "ignore": {
+      "message": "Dieses Mal ignorieren"
+   },
+   "initialization_message": {
+      "message": "Melden Sie sich in Ihrem Konto an, um die Passwort-Warnung zu aktivieren."
+   },
+   "initialization_thank_you_message": {
+      "message": "Danke. Die Passwort-Warnung ist nun wirksam."
+   },
+   "learn_more": {
+      "message": "Weitere Informationen"
+   },
+   "password_warning_banner_body": {
+      "message": "Sie haben das Passwort für Ihr Google-Konto soeben auf einer Anmeldeseite eingegeben, die nicht zu Google gehört. Setzen Sie Ihr Passwort zum Schutz Ihres Kontos umgehend zurück. Verwenden Sie nicht dasselbe Passwort für andere Apps und Websites."
+   },
+   "password_warning_banner_header": {
+      "message": "Passwort für Ihr Google-Konto zurücksetzen"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Diese Website verwendet offenbar eine gefälschte Version der Google-Anmeldeseite, um Ihr Passwort zu stehlen, und wurde daher blockiert. Wenn Ihnen bewusst ist, dass der Besuch dieser Website Schäden auf Ihrem Computer verursachen kann, können Sie diese Website besuchen, sollten jedoch auf die Informationen achten, die Sie eingeben."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Diese Website wurde blockiert."
+   },
+   "report_phishing": {
+      "message": "Diese Website melden"
+   },
+   "reset_password": {
+      "message": "Passwort zurücksetzen"
+   },
+   "sign_in": {
+      "message": "Anmelden"
+   },
+   "visit_this_site": {
+      "message": "Diese Website besuchen"
+   }
+}

@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Ignora sempre per a aquest lloc"
+   },
+   "always_ignore_confirmation": {
+      "message": "Voleu que Alerta de protecció de contrasenya ignori sempre aquest lloc web?"
+   },
+   "back": {
+      "message": "Enrere"
+   },
+   "contact_security": {
+      "message": "Contacteu amb seguretat"
+   },
+   "extension_description": {
+      "message": "Alerta de protecció de contrasenya us ajuda a protegir-vos contra els atacs de suplantació d’identitat."
+   },
+   "extension_detailed_description": {
+      "message": "Si introduïu la vostra contrasenya de Gmail o de Google for Work a qualsevol altre lloc que no sigui accounts.google.com, rebreu una alerta mitjançant la qual podreu canviar la contrasenya, si cal.\n\nAlerta de protecció de contrasenya també intenta detectar pàgines falses d'inici de sessió de Google abans que hi introduïu la contrasenya. Per fer-ho, Alerta de protecció de contrasenya comprova l'HTML de les pàgines que visiteu per veure si es fan passar per una pàgina d'inici de sessió de Google.\n\nPreguntes freqüents\n-- Quan s'activa Alerta de protecció de contrasenya?\nAlerta de protecció de contrasenya s'inicialitzarà la propera vegada que introduïu la contrasenya a accounts.google.com.\n\n-- Alerta de protecció de contrasenya desa la contrasenya o les pulsacions de teclat?\nNo. Alerta de protecció de contrasenya no desa ni la contrasenya ni les pulsacions de teclat. Això sí, desa una miniatura segura de la contrasenya que compara amb una miniatura de les tecles premudes recentment a Chrome.\n\n-- On envia dades Alerta de protecció de contrasenya?\nSi la feu servir amb un compte de Gmail, Alerta de protecció de contrasenya no envia dades des de l'ordinador local. Si l'administrador de Google for Work decideix implementar Alerta de protecció de contrasenya al vostre domini, la funció li enviarà una alerta cada cop que s'activi.\n\n-- Quins són els límits d'Alerta de protecció de contrasenya?\nAlerta de protecció de contrasenya no protegeix les finestres d'incògnit, les aplicacions ni les extensions de Chrome. Tampoc no protegeix les contrasenyes de serveis que no siguin de Google. Alerta de protecció de contrasenya només funciona al navegador web Chrome si JavaScript està activat.\n\n-- On puc llegir més informació?\nPodeu anar a la secció de Preguntes freqüents a LINK_TBD. També podeu veure la base de codi lliure completa a https://github.com/google/password-alert\n\nEn instal·lar aquest element, accepteu les Condicions del servei i la Política de privadesa de Google de la pàgina www.google.com/policies/.\n"
+   },
+   "extension_name": {
+      "message": "Alerta de protecció de contrasenya"
+   },
+   "ignore": {
+      "message": "Ignora per ara"
+   },
+   "initialization_message": {
+      "message": "Per activar Alerta de protecció de contrasenya, inicieu la sessió al vostre compte."
+   },
+   "initialization_thank_you_message": {
+      "message": "Gràcies. Alerta de protecció de contrasenya ara està activada."
+   },
+   "learn_more": {
+      "message": "Més informació"
+   },
+   "password_warning_banner_body": {
+      "message": "Acabeu d'introduir la contrasenya del compte de Google en una pàgina d'inici de sessió que no és de Google. Restabliu-la ara mateix per protegir el compte. No utilitzeu la contrasenya per a altres aplicacions ni altres llocs."
+   },
+   "password_warning_banner_header": {
+      "message": "Restabliu la contrasenya del compte de Google"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Sembla que aquest lloc està fent servir una versió falsa de la pàgina d'inici de sessió de Google per robar-vos la contrasenya; per tant, s'ha bloquejat. Si enteneu que aquest lloc pot malmetre el vostre ordinador, podeu visitar-lo, però aneu amb compte amb les dades que hi escrigueu."
+   },
+   "phishing_warning_banner_header": {
+      "message": "S'ha bloquejat aquest lloc web."
+   },
+   "report_phishing": {
+      "message": "Informeu d'aquest lloc"
+   },
+   "reset_password": {
+      "message": "Restabliu la contrasenya"
+   },
+   "sign_in": {
+      "message": "Inicieu la sessió"
+   },
+   "visit_this_site": {
+      "message": "Visiteu aquest lloc"
+   }
+}

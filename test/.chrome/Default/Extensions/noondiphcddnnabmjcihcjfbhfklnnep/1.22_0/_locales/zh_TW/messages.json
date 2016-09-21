@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "一律略過這個網站"
+   },
+   "always_ignore_confirmation": {
+      "message": "您想讓密碼防護警示功能一律忽略這個網站嗎？"
+   },
+   "back": {
+      "message": "返回"
+   },
+   "contact_security": {
+      "message": "請與安全管理員聯絡"
+   },
+   "extension_description": {
+      "message": "密碼防護警示功能有助於防範網路詐騙行為。"
+   },
+   "extension_detailed_description": {
+      "message": "如果您在 accounts.google.com 以外的地方輸入 Gmail 或 Google for Work 密碼，您會收到一則快訊，提醒您是否需要變更個人密碼。\n\n「密碼防護警示」也會嘗試偵測偽造的 Google 登入頁面，讓您在輸入密碼之前收到警示。「密碼防護警示」偵測的方式是檢查您造訪過的每個網頁的 HTML，辨識該網頁是不是假冒的 Google 登入頁面。\n\n常見問題\n--「密碼防護警示」何時會生效？\n當您下次在 accounts.google.com 輸入密碼時，「密碼防護警示」就會自動初始化。\n\n--「密碼防護警示」會儲存我的密碼或按鍵輸入動作嗎？\n不會。「密碼防護警示」不會儲存您的密碼或按鍵輸入動作，而會儲存您密碼的安全縮圖，並將縮圖與您最近在 Chrome 中的按鍵輸入動作比對。\n\n--「密碼防護警示」會將資料傳送到哪裡？\n如果您透過 Gmail 帳戶使用「密碼防護警示」，「密碼防護警示」不會從您的本機傳送任何資料。如果您的 Google for Work 管理員為您網域中所有受管理的 Chrome 瀏覽器部署「密碼防護警示」，則管理員會在「密碼防護警示」觸發後收到警示。\n\n-- 何者不在「密碼防護警示」的防禦範圍內？\n「密碼防護警示」無法防禦無痕式視窗、Chrome 應用程式以及 Chrome 擴充功能，也無法保護 Google 以外服務所使用的密碼。提醒您，「密碼防護警示」只能在啟用了 JavaScript 的 Chrome 網路瀏覽器中發揮作用。\n\n-- 哪裡有更多詳細資料？\n您可以前往 LINK_TBD 查看所有常見問題，也可以前往 https://github.com/google/password-alert 參閱完整的開放原始碼程式碼基底\n\n安裝這個項目即表示您同意 Google 的《服務條款》和《隱私權政策》(www.google.com/policies/)\n"
+   },
+   "extension_name": {
+      "message": "密碼防護警示"
+   },
+   "ignore": {
+      "message": "只略過這次"
+   },
+   "initialization_message": {
+      "message": "您必須登入帳戶，密碼防護警示功能才會生效。"
+   },
+   "initialization_thank_you_message": {
+      "message": "謝謝！密碼防護警示功能已開始生效。"
+   },
+   "learn_more": {
+      "message": "瞭解詳情"
+   },
+   "password_warning_banner_body": {
+      "message": "您剛在非 Google 登入網頁輸入了您的 Google 帳戶密碼。請立即重設您的密碼，以確保帳戶安全。此外，請確認您並未將密碼重複用於其他應用程式和網站。"
+   },
+   "password_warning_banner_header": {
+      "message": "重設您的 Google 帳戶密碼"
+   },
+   "phishing_warning_banner_body": {
+      "message": "這個網站疑似冒充 Google 登入頁面，意圖竊取您的密碼，因此已遭封鎖。如果您知道這個網站可能會損害您的電腦，您還是可以造訪該網站，但請留意您所輸入的資訊。"
+   },
+   "phishing_warning_banner_header": {
+      "message": "這個網站已遭封鎖。"
+   },
+   "report_phishing": {
+      "message": "檢舉這個網站"
+   },
+   "reset_password": {
+      "message": "重設密碼"
+   },
+   "sign_in": {
+      "message": "登入"
+   },
+   "visit_this_site": {
+      "message": "您可以造訪這個網站"
+   }
+}

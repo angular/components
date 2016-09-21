@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "Accepteren en installeren"
+   },
+   "ACCESS_CODE": {
+      "message": "Toegangscode"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "Deze toegangscode verloopt over $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "Feedback"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "Alle verbindingen"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "Pincode nogmaals opgeven"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "Pincode"
+   },
+   "CANCEL": {
+      "message": "Annuleren"
+   },
+   "CLEAR_HISTORY": {
+      "message": "Geschiedenis wissen"
+   },
+   "CLOSE": {
+      "message": "Sluiten"
+   },
+   "CLOSE_PROMPT": {
+      "message": "Als je deze pagina verlaat, wordt je Chrome Remote Desktop-sessie beëindigd."
+   },
+   "CLOSE_WINDOW": {
+      "message": "Venster sluiten"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "Weet je zeker dat je externe verbindingen met $1$ wilt uitschakelen? Als je van gedachten verandert, moet je naar die computer gaan om de verbindingen weer in te schakelen.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "Verbinding mislukt"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "Van"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "Verbindingsgeschiedenis"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "Redelijk"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "Goed"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "Slecht"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "Aan"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "Toch verbinding maken"
+   },
+   "CONNECT_BUTTON": {
+      "message": "Verbinding maken"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "Doorgaan"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "Je deelt deze computer momenteel met een andere gebruiker. Wil je doorgaan met delen?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Controller voor Chrome Remote Desktop-host"
+   },
+   "COPYRIGHT": {
+      "message": "Copyright 2013 Google Inc. Alle rechten voorbehouden."
+   },
+   "CREDITS": {
+      "message": "Credits"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "Alles verwijderen"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "Verwijderen"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "Als je wilt doorgaan, moet je eerst uitgebreide toegangsrechten voor je computer verlenen. Je hoeft dit slechts één keer te doen."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "Vraag de gebruiker tot wiens computer je toegang wilt hebben, op $1$ te klikken en je de toegangscode te geven.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Met Chrome Remote Desktop kun je je computer veilig delen via internet. Beide gebruikers moeten hiervoor de app Chrome Remote Desktop uitvoeren, die beschikbaar is op $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "De externe host vereist dat je op een website van derden wordt geverifieerd. Als je wilt doorgaan, moet je Chrome Remote Desktop aanvullende machtigingen geven om toegang tot dit adres te krijgen:"
+   },
+   "DISABLE_HOST": {
+      "message": "Uitschakelen"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "Verbinding verbreken"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Chrome Remote Desktop-service"
+   },
+   "DURATION_HEADER": {
+      "message": "Duur"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "Je hebt geen toestemming om deze app uit te voeren."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "Verificatie mislukt. Log opnieuw in bij Chrome."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "Er ontbreken enkele vereiste componenten. Controleer of de nieuwste versie van de software is geïnstalleerd en probeer het opnieuw."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "Er is een netwerkfout opgetreden. We starten de app opnieuw wanneer je apparaat weer online is."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "De externe computer kan de sessie niet initialiseren. Als het probleem blijft optreden, configureer je de host opnieuw."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "De externe computer reageert niet op verbindingsverzoeken. Controleer of deze online is en probeer het opnieuw."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "Verbindingen met de externe computer zijn tijdelijk geblokkeerd omdat iemand heeft geprobeerd met een ongeldige pincode verbinding te maken met de computer. Probeer het later opnieuw."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "Kan deze computer niet registreren."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "Er is een incompatibele versie gedetecteerd. Controleer of de nieuwste versie van de software is geïnstalleerd op beide computers en probeer het opnieuw."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "De toegangscode is ongeldig. Probeer het opnieuw."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "De beleidsinstellingen staan het delen van deze computer als host voor Chrome Remote Desktop niet toe. Neem contact op met je systeembeheerder voor hulp."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "De externe sessie is verlopen."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "Er ontbreken enkele vereiste componenten. Controleer of je de nieuwste versie van Chrome gebruikt en probeer het opnieuw."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "Er ontbreken enkele vereiste componenten. Ga naar chrome://plugins en zorg ervoor dat Native Client is ingeschakeld."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "Een vereiste component werkt niet meer. Meld dit probleem aan de ontwikkelaars."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "Kan geen verbinding maken met het netwerk. Controleer of je apparaat online is."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "Je bent niet ingelogd bij Chrome. Log in en probeer het opnieuw."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "Je hebt geen toestemming om die actie uit te voeren."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "Het gevraagde object bestaat niet."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "Kan de host niet bereiken. Dit komt waarschijnlijk door de configuratie van het netwerk dat je gebruikt."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "De service is tijdelijk niet beschikbaar. Probeer het later opnieuw."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "Er is een onverwachte fout opgetreden. Meld dit probleem aan de ontwikkelaars."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "Volledig scherm sluiten"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "Kan de app niet opnieuw instellen. Je kunt nog steeds een foutmelding verzenden."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "De app opnieuw instellen. Al je niet-opgeslagen werk gaat verloren."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "Ik kan de app niet openen."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "De app is te langzaam."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "Ik kan mijn Google Drive-bestanden niet openen."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "Ik kan mijn opgeslagen bestanden niet online zien in Google Drive."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "Ik ondervind problemen met mijn toetsenbord of muis."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "Vertel ons wat er is misgegaan zodat we je probleem kunnen oplossen:"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "Iets anders."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "Selecteren…"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "Je e-mailadres wordt opgenomen in alle feedback die je verzendt zodat we contact met je kunnen opnemen voor meer informatie."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "Een probleem melden"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "App-logboeken toevoegen om ons te helpen je probleem op te lossen (logboeken bevatten mogelijk privégegevens)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "App-logboeken bevatten mogelijk privégegevens, inclusief je identiteit (e-mailadres) en de namen en eigenschappen van bestanden en mappen in Google Drive."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "Deze informatie wordt alleen gebruikt voor een diagnose van het probleem dat je meldt, is alleen beschikbaar voor iemand die je melding onderzoekt en wordt maximaal 30 dagen bewaard."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "Verbinding maken…"
+   },
+   "FOOTER_WAITING": {
+      "message": "wachten op verbinding…"
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "Voor Mac (OS X 10.6 en hoger)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "Voor Windows (XP en hoger)"
+   },
+   "FULL_SCREEN": {
+      "message": "Volledig scherm"
+   },
+   "GET_STARTED": {
+      "message": "Aan de slag"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "Accepteren"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "Afwijzen"
+   },
+   "HELP": {
+      "message": "Help"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "Verbinding maken"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "Een gedeelde computer bekijken en beheren."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "Je kunt veilig toegang krijgen tot deze computer via Chrome Remote Desktop."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "Pincode wijzigen"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "Deze computer wordt momenteel via een ander account gedeeld."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "Weergeven/bewerken"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "Deze computer is geconfigureerd om een of meer clients toestemming te geven verbinding te maken zonder een pincode op te geven."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "Externe verbindingen inschakelen"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "Je moet externe verbindingen inschakelen als je Chrome Remote Desktop wilt gebruiken voor toegang tot deze computer."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "Externe verbindingen uitschakelen"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "Delen"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "De computer delen zodat een andere gebruiker deze kan bekijken en beheren."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(deze functie is nog niet beschikbaar voor je computer)"
+   },
+   "HOST_CATEGORY": {
+      "message": "Host"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "Toegang geweigerd voor client: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "Client verbonden: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "Verbinding met client verbroken: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "Kanaal-IP voor client: %1 ip='%2' host_ip='%3' channel='%4' connection='%5'."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "Als je externe verbindingen met een andere computer mogelijk wilt maken, installeer je Chrome Remote Desktop op die computer en klik je op '$1$'.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "Je hebt geen geregistreerde computers. Als je externe verbindingen met een computer mogelijk wilt maken, installeer je Chrome Remote Desktop op die computer en klik je op '$1$'.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "Je bent eerder ingelogd als $1$ ($2$). Als je toegang wilt tot je computers met dat account, $3$log je in bij Google Chrome$4$ met dat account en installeer je Chrome Remote Desktop opnieuw.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "Software-updates worden gewoonlijk automatisch uitgevoerd, maar kunnen in zeldzame gevallen mislukken. Het bijwerken van de software duurt slechts een paar minuten en kan worden gedaan terwijl je extern bent verbonden met je computer."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "Chrome Remote Desktop op $1$ is verouderd en moet worden bijgewerkt.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "Help ons Chrome Remote Desktop te verbeteren door ons toestemming te geven gebruiksstatistieken en crashrapporten te verzamelen."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "Om de toegang tot deze computer te beschermen, kies je een pincode van $1$ten minste zes cijfers$2$. Je moet deze pincode opgeven wanneer je verbinding maakt vanaf een andere locatie.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "Kan de service voor externe toegang niet starten."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome downloadt het installatieprogramma voor de Chrome Remote Desktop-host. Zodra het downloaden is voltooid, voer je het installatieprogramma uit voordat je doorgaat."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "Voer het installatieprogramma uit voordat je doorgaat."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "Externe verbindingen voor deze computer zijn ingeschakeld."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "Controleer de instellingen voor energiebeheer van je computer en zorg ervoor dat de slaapstand niet wordt geactiveerd wanneer de computer inactief is."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "Externe verbindingen voor deze computer inschakelen…"
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "Externe verbindingen voor deze computer zijn uitgeschakeld."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "Externe verbindingen voor deze computer uitschakelen…"
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "Kan externe toegang tot deze computer niet uitschakelen. Probeer het later opnieuw."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "Door het installatieprogramma voor de Chrome Remote Desktop-host te downloaden, ga je akkoord met de $1$Servicevoorwaarden$4 van Google.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "Je pincode is bijgewerkt."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "Kan pincode niet updaten. Probeer het later opnieuw."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "De pincode voor deze computer wordt bijgewerkt…"
+   },
+   "HOST_STARTED": {
+      "message": "Host gestart voor gebruiker: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "Host is gestopt."
+   },
+   "IDLE_CONTINUE": {
+      "message": "Doorgaan"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "Nu verbinding verbreken"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "Je $1$-sessie is al enige tijd inactief. Binnenkort wordt de verbinding verbroken.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "Naar deze computer"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Installatieprogramma voor Chrome Remote Desktop-host downloaden"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "Om je bureaublad te delen, geef je de onderstaande toegangscode aan de persoon die je gaat helpen."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "Zodra deze persoon de code opgeeft, wordt je deelsessie gestart."
+   },
+   "INVALID_PIN": {
+      "message": "Geef een pincode van zes of meer cijfers op."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "Schermen delen tussen gebruikers, perfect voor externe ondersteuning."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "Toetsenbordindeling"
+   },
+   "LABEL_CONNECTED": {
+      "message": "Verbonden:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (laatst online: $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "Meer informatie."
+   },
+   "LEARN_MORE": {
+      "message": "Meer informatie."
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Voorkeuren voor Chrome Remote Desktop-host"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Chrome Remote\nDesktop-host"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Verwijderprogramma voor Chrome Remote Desktop-host"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Gebruik rechter Ctrl-toets als Windows-toets (⌘ op Mac)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "Venster maximaliseren"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "Krijg overal toegang tot je eigen computer."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "Toegangscode genereren…"
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "Je Chrome Remote Desktop-sessie is beëindigd."
+   },
+   "MESSAGE_SHARED": {
+      "message": "Je bureaublad wordt momenteel gedeeld met $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "Venster minimaliseren"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "Autoriseren"
+   },
+   "MODE_IT2ME": {
+      "message": "Externe ondersteuning"
+   },
+   "MODE_ME2ME": {
+      "message": "Mijn computers"
+   },
+   "NEW_WINDOW": {
+      "message": "Nieuw venster…"
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "Alle gekoppelde clients zijn verwijderd."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "Bureaubladintegratie wordt niet ondersteund op dit platform. Je kunt de app nog steeds gebruiken, maar de gebruikerservaring is beperkt."
+   },
+   "OFFLINE": {
+      "message": "$1$ (offline)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "Initialisatie van host mislukt."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "Ongeldige hostconfiguratie."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "Ongeldig domein voor hosteigenaar."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "Ongeldige host-ID."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "Host is geconfigureerd met ongeldige OAuth-inloggegevens."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "De host die werd uitgevoerd op het console-inlogscherm, is uitgeschakeld om de gordijnmodus te ondersteunen door over te schakelen naar een host die in een gebruikersspecifieke sessie wordt uitgevoerd."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "Host wordt opnieuw gestart om een beleidswijziging toe te passen."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "Host kan het beleid niet lezen."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "Host is afgesloten."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "Onbekende hostfout: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "Ongeldige hosteigenaar."
+   },
+   "OK": {
+      "message": "OK"
+   },
+   "OPTIONS_MENU": {
+      "message": "Opties"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "Vanaf deze computer"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "De volgende clients zijn gekoppeld met deze computer en kunnen verbinding maken zonder een pincode op te geven. Je kunt deze toestemming op elk gewenst moment intrekken, voor afzonderlijke clients of voor alle clients."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "Koppelingsdatum"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "Client"
+   },
+   "PIN": {
+      "message": "Pincode"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "Geef dezelfde pincode in beide vakken op."
+   },
+   "PIN_MESSAGE": {
+      "message": "Geef je pincode voor $1$ op.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "Voer je pincode voor de externe computer in."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "Toegang krijgen tot andere computers of andere gebruikers toestemming geven veilig toegang te krijgen tot je computer via internet."
+   },
+   "PRODUCT_NAME": {
+      "message": "Chrome Remote Desktop"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Streaming via Chrome-app"
+   },
+   "RECONNECT": {
+      "message": "Opnieuw verbinding maken"
+   },
+   "REMEMBER_PIN": {
+      "message": "Niet meer vragen naar een pincode bij het aansluiten van dit apparaat op deze host."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "Basisbibliotheek"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "Desktopintegratieproces"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "App die opdrachten geeft aan de Chrome Remote Desktop-host."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "Hostproces"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "Systeemeigen berichthost voor extern hostbeheer"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "Systeemeigen berichthost voor externe ondersteuning"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "Proces voor externe toegang tot beveiligingssleutel"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "Formaat van bureaublad aanpassen"
+   },
+   "RESTART_BUTTON": {
+      "message": "Nu opnieuw starten"
+   },
+   "RESTORE_WINDOW": {
+      "message": "Venster herstellen"
+   },
+   "RETRY": {
+      "message": "Opnieuw proberen"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "Schermopties"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Ctrl-Alt-Del verzenden"
+   },
+   "SEND_FEEDBACK": {
+      "message": "Een probleem melden…"
+   },
+   "SEND_KEYS": {
+      "message": "Toetsen verzenden"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "PrtScn verzenden"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "Met deze service worden inkomende verbindingen van Chrome Remote Desktop-clients ingeschakeld."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "Deze instelling wordt beheerd door je domeinbeleid."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "Delen"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "Annuleren"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "Wil je deze computer delen zodat een andere gebruiker deze kan bekijken en bedienen?"
+   },
+   "SHOW_STATS": {
+      "message": "Statistieken weergeven"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "Statistieken weergeven (verbinding: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "Aanpassen aan venster"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "Inloggen"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "Uitloggen"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "Delen stoppen"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Wil je ons helpen Chrome Remote Desktop te verbeteren? $1$Vul de enquête in.$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "Tijd"
+   },
+   "TOGGLE_STATS": {
+      "message": "Statistieken weergeven"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "Verbinding maken met $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "Externe verbindingen naar deze computer uitschakelen"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "Lijst met hosts vernieuwen"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "Computernaam bewerken"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (verouderd)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "Account"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Bevestig je account en pincode hieronder om toegang door Chrome Remote Desktop toe te staan."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "OPMERKING: beleidsinstellingen staan alleen verbindingen tussen computers binnen je netwerk toe."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "Opmerking: als je er zeker van wilt zijn dat alle sneltoetsen beschikbaar zijn, kun je Chrome Remote Desktop configureren om de modus 'Openen als venster' te gebruiken."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "Waarom is dit veilig?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Vensters"
+   },
+   "WORKING": {
+      "message": "Bezig…"
+   }
+}

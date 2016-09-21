@@ -1,0 +1,792 @@
+{
+   "ACCEPT_AND_INSTALL": {
+      "message": "Accept and Install"
+   },
+   "ACCESS_CODE": {
+      "message": "Access code"
+   },
+   "ACCESS_CODE_TIMER": {
+      "message": "This access code will expire in $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "ACTIONBAR_FEEDBACK": {
+      "message": "Feedback"
+   },
+   "ALL_CONNECTIONS": {
+      "message": "All connections"
+   },
+   "ASK_PIN_DIALOG_CONFIRM_LABEL": {
+      "message": "Re-type PIN"
+   },
+   "ASK_PIN_DIALOG_LABEL": {
+      "message": "PIN"
+   },
+   "CANCEL": {
+      "message": "Cancel"
+   },
+   "CLEAR_HISTORY": {
+      "message": "Clear history"
+   },
+   "CLOSE": {
+      "message": "Close"
+   },
+   "CLOSE_PROMPT": {
+      "message": "Leaving this page will end your Chrome Remote Desktop session."
+   },
+   "CLOSE_WINDOW": {
+      "message": "Close window"
+   },
+   "COMPANY_NAME": {
+      "message": "Google Inc."
+   },
+   "CONFIRM_HOST_DELETE": {
+      "message": "Are you sure you want to disable remote connections to $1$? If you change your mind, you'll need to visit that computer to re-enable connections.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "CONNECTION_FAILED": {
+      "message": "Connection failed"
+   },
+   "CONNECTION_FROM_HEADER": {
+      "message": "From"
+   },
+   "CONNECTION_HISTORY_TITLE": {
+      "message": "Connection History"
+   },
+   "CONNECTION_QUALITY_FAIR": {
+      "message": "Fair"
+   },
+   "CONNECTION_QUALITY_GOOD": {
+      "message": "Good"
+   },
+   "CONNECTION_QUALITY_POOR": {
+      "message": "Poor"
+   },
+   "CONNECTION_TO_HEADER": {
+      "message": "To"
+   },
+   "CONNECT_ANYWAY": {
+      "message": "Connect anyway"
+   },
+   "CONNECT_BUTTON": {
+      "message": "Connect"
+   },
+   "CONTINUE_BUTTON": {
+      "message": "Continue"
+   },
+   "CONTINUE_PROMPT": {
+      "message": "You are currently sharing this machine with another user. Do you want to continue sharing?"
+   },
+   "CONTROLLER_NAME": {
+      "message": "Chrome Remote Desktop Host Controller"
+   },
+   "COPYRIGHT": {
+      "message": "Copyright 2013 Google Inc. All Rights Reserved."
+   },
+   "CREDITS": {
+      "message": "Credits"
+   },
+   "DELETE_ALL_PAIRED_CLIENTS": {
+      "message": "Delete all"
+   },
+   "DELETE_PAIRED_CLIENT": {
+      "message": "Delete"
+   },
+   "DESCRIPTION_AUTHORIZE": {
+      "message": "To continue you must first grant extended access permissions to your computer. You only have to do this once."
+   },
+   "DESCRIPTION_CONNECT": {
+      "message": "Ask the user whose computer you wish to access to click “$1$” and give you the access code.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_HOME": {
+      "message": "Chrome Remote Desktop allows you to securely share your computer over the Web. Both users must be running the Chrome Remote Desktop app, which can be found at $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "DESCRIPTION_THIRD_PARTY_AUTH": {
+      "message": "The remote host requires you to authenticate to a third-party website. To continue, you must grant Chrome Remote Desktop additional permissions to access this address:"
+   },
+   "DISABLE_HOST": {
+      "message": "Disable"
+   },
+   "DISCONNECT_MYSELF_BUTTON": {
+      "message": "Disconnect"
+   },
+   "DISPLAY_SERVICE_NAME": {
+      "message": "Chrome Remote Desktop Service"
+   },
+   "DURATION_HEADER": {
+      "message": "Duration"
+   },
+   "ERROR_APP_NOT_AUTHORIZED": {
+      "message": "You do not have permission to run this application."
+   },
+   "ERROR_AUTHENTICATION_FAILED": {
+      "message": "Authentication failed. Please sign in to Chrome again."
+   },
+   "ERROR_BAD_PLUGIN_VERSION": {
+      "message": "Some required components are missing. Please make sure you have installed the latest version of the software and try again."
+   },
+   "ERROR_CONNECTION_DROPPED": {
+      "message": "A network error occurred. We will restart the app when your device is on-line again."
+   },
+   "ERROR_HOST_CONFIGURATION_ERROR": {
+      "message": "The remote computer has failed to initialize the session. If problem persist please try to configure the host again."
+   },
+   "ERROR_HOST_IS_OFFLINE": {
+      "message": "The remote computer is not responding to connection requests. Please verify that it is online and try again."
+   },
+   "ERROR_HOST_OVERLOAD": {
+      "message": "Connections to the remote computer are temporarily blocked because somebody was trying to connect to it with invalid PIN. Please try again later."
+   },
+   "ERROR_HOST_REGISTRATION_FAILED": {
+      "message": "Failed to register this computer."
+   },
+   "ERROR_INCOMPATIBLE_PROTOCOL": {
+      "message": "An incompatible protocol version was detected. Please make sure that you have the latest version of the software installed on both computers and try again."
+   },
+   "ERROR_INVALID_ACCESS_CODE": {
+      "message": "The access code is invalid. Please try again."
+   },
+   "ERROR_INVALID_HOST_DOMAIN": {
+      "message": "Policy settings do not permit sharing this computer as a Chrome Remote Desktop host. Contact your system administrator for assistance."
+   },
+   "ERROR_MAX_SESSION_LENGTH": {
+      "message": "The remote session has expired."
+   },
+   "ERROR_MISSING_PLUGIN": {
+      "message": "Some required components are missing. Please make sure you're running the latest version of Chrome and try again."
+   },
+   "ERROR_NACL_DISABLED": {
+      "message": "Some required components are missing. Please go to chrome://plugins and make sure Native Client is enabled."
+   },
+   "ERROR_NACL_PLUGIN_CRASHED": {
+      "message": "A required component has stopped working. Please report this problem to the developers."
+   },
+   "ERROR_NETWORK_FAILURE": {
+      "message": "Could not connect to the network. Please check that your device is on-line."
+   },
+   "ERROR_NOT_AUTHENTICATED": {
+      "message": "You are not signed in to Chrome. Please sign in and try again."
+   },
+   "ERROR_NOT_AUTHORIZED": {
+      "message": "You do not have permission to perform that action."
+   },
+   "ERROR_NOT_FOUND": {
+      "message": "The requested object does not exist."
+   },
+   "ERROR_P2P_FAILURE": {
+      "message": "Unable to reach the host. This is probably due to the configuration of the network you are using."
+   },
+   "ERROR_SERVICE_UNAVAILABLE": {
+      "message": "The service is temporarily unavailable. Please try again later."
+   },
+   "ERROR_UNEXPECTED": {
+      "message": "An unexpected error occurred. Please report this problem to the developers."
+   },
+   "EXIT_FULL_SCREEN": {
+      "message": "Exit full screen"
+   },
+   "FEEDBACK_ABANDON_FAILED": {
+      "message": "Could not reset the application. You can still send a bug report."
+   },
+   "FEEDBACK_ABANDON_HOST": {
+      "message": "Reset the application. You will lose any unsaved work."
+   },
+   "FEEDBACK_CATEGORY_APP_LAUNCH": {
+      "message": "I can't open the application."
+   },
+   "FEEDBACK_CATEGORY_APP_PERFORMANCE": {
+      "message": "The application is too slow."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_DOWNLOAD": {
+      "message": "I can't open my Google Drive files."
+   },
+   "FEEDBACK_CATEGORY_DRIVE_UPLOAD": {
+      "message": "I can't see my saved files on-line in Google Drive."
+   },
+   "FEEDBACK_CATEGORY_INPUT": {
+      "message": "I'm having problems with my keyboard or mouse."
+   },
+   "FEEDBACK_CATEGORY_INSTRUCTIONS": {
+      "message": "To help us solve your problem, please tell us what went wrong:"
+   },
+   "FEEDBACK_CATEGORY_OTHER": {
+      "message": "Something else."
+   },
+   "FEEDBACK_CATEGORY_SELECT": {
+      "message": "Select…"
+   },
+   "FEEDBACK_CONSENT_EMAIL": {
+      "message": "To allow us to contact you for further information, your email address will be included in any feedback you submit."
+   },
+   "FEEDBACK_CONSENT_TITLE": {
+      "message": "Report an issue"
+   },
+   "FEEDBACK_INCLUDE_LOGS": {
+      "message": "Include application logs to help us resolve your problem (logs may include private information)."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION1": {
+      "message": "Application logs may include private information, including your identity (email address) and the names and properties of files and folders in Google Drive."
+   },
+   "FEEDBACK_PRIVACY_INFORMATION2": {
+      "message": "This information is used only for diagnosing the problem you are reporting, is available only to someone investigating your report, and is retained for no more than 30 days."
+   },
+   "FOOTER_CONNECTING": {
+      "message": "Connecting…"
+   },
+   "FOOTER_WAITING": {
+      "message": "waiting for connection…"
+   },
+   "FOR_PLATFORM_MAC": {
+      "message": "For Mac (OS X 10.6 and above)"
+   },
+   "FOR_PLATFORM_WINDOWS": {
+      "message": "For Windows (XP and above)"
+   },
+   "FULL_SCREEN": {
+      "message": "Full screen"
+   },
+   "GET_STARTED": {
+      "message": "Get started"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_ACCEPT": {
+      "message": "Accept"
+   },
+   "HANGOUTS_CONFIRM_DIALOG_DECLINE": {
+      "message": "Decline"
+   },
+   "HELP": {
+      "message": "Help"
+   },
+   "HOME_ACCESS_BUTTON": {
+      "message": "Access"
+   },
+   "HOME_ACCESS_DESCRIPTION": {
+      "message": "See and control a shared computer."
+   },
+   "HOME_DAEMON_ACTIVE_MESSAGE": {
+      "message": "You may securely access this computer using Chrome Remote Desktop."
+   },
+   "HOME_DAEMON_CHANGE_PIN_LINK": {
+      "message": "Change PIN"
+   },
+   "HOME_DAEMON_HOST_ENABLED_OTHER_ACCOUNT": {
+      "message": "This computer is currently shared under a different account."
+   },
+   "HOME_DAEMON_MANAGE_PAIRINGS": {
+      "message": "View/edit"
+   },
+   "HOME_DAEMON_PAIRED_MESSAGE": {
+      "message": "This computer is configured to allow one or more clients to connect without entering a PIN."
+   },
+   "HOME_DAEMON_START_BUTTON": {
+      "message": "Enable remote connections"
+   },
+   "HOME_DAEMON_START_MESSAGE": {
+      "message": "You must enable remote connections if you want to use Chrome Remote Desktop to access this computer."
+   },
+   "HOME_DAEMON_STOP_BUTTON": {
+      "message": "Disable remote connections"
+   },
+   "HOME_SHARE_BUTTON": {
+      "message": "Share"
+   },
+   "HOME_SHARE_DESCRIPTION": {
+      "message": "Share this computer for another user to see and control."
+   },
+   "HOME_SHARE_DESCRIPTION_UNSUPPORTED": {
+      "message": "(this feature is not yet available for your computer)"
+   },
+   "HOST_CATEGORY": {
+      "message": "Host"
+   },
+   "HOST_CLIENT_ACCESS_DENIED": {
+      "message": "Access denied for client: %1."
+   },
+   "HOST_CLIENT_CONNECTED": {
+      "message": "Client connected: %1."
+   },
+   "HOST_CLIENT_DISCONNECTED": {
+      "message": "Client disconnected: %1."
+   },
+   "HOST_CLIENT_ROUTING_CHANGED": {
+      "message": "Channel IP for client: %1 ip='%2' host_ip='%3' channel='%4' connection='%5'."
+   },
+   "HOST_LIST_EMPTY_HOSTING_SUPPORTED": {
+      "message": "To enable remote connections to a different computer, install Chrome Remote Desktop there and click “$1$”.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_HOSTING_UNSUPPORTED": {
+      "message": "You have no computers registered. To enable remote connections to a computer, install Chrome Remote Desktop there and click “$1$”.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_LIST_EMPTY_V2_MIGRATION": {
+      "message": "You have previously signed in as $1$ ($2$).  To access your computers in that account, $3$sign in to Google Chrome$4$ with that account and re-install Chrome Remote Desktop.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         },
+         "3": {
+            "content": "$3"
+         },
+         "4": {
+            "content": "$4"
+         }
+      }
+   },
+   "HOST_NEEDS_UPDATE_DETAIL": {
+      "message": "Software updates usually happen automatically, but can fail in some rare cases. Updating the software should take no more than a few minutes and can be done while connected to your computer remotely."
+   },
+   "HOST_NEEDS_UPDATE_TITLE": {
+      "message": "Chrome Remote Desktop on $1$ is out-of-date and needs to be updated.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_CRASH_REPORTING_MESSAGE": {
+      "message": "Help us improve Chrome Remote Desktop by allowing us to collect usage statistics and crash reports."
+   },
+   "HOST_SETUP_DIALOG_DESCRIPTION": {
+      "message": "To protect access to this computer, please choose a PIN of $1$at least six digits$2$. This PIN will be required when connecting from another location.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "HOST_SETUP_HOST_FAILED": {
+      "message": "Failed to start remote access service."
+   },
+   "HOST_SETUP_INSTALL": {
+      "message": "Chrome is downloading the Chrome Remote Desktop Host installer.  Once the download is complete, please run the installer before continuing."
+   },
+   "HOST_SETUP_INSTALL_PENDING": {
+      "message": "Please run the installer before continuing."
+   },
+   "HOST_SETUP_STARTED": {
+      "message": "Remote connections for this computer have been enabled."
+   },
+   "HOST_SETUP_STARTED_DISABLE_SLEEP": {
+      "message": "Please check your computer's power management settings and ensure that it is not configured to sleep when idle."
+   },
+   "HOST_SETUP_STARTING": {
+      "message": "Enabling remote connections for this computer…"
+   },
+   "HOST_SETUP_STOPPED": {
+      "message": "Remote connections for this computer have been disabled."
+   },
+   "HOST_SETUP_STOPPING": {
+      "message": "Disabling remote connections for this computer…"
+   },
+   "HOST_SETUP_STOP_FAILED": {
+      "message": "Failed to disable remote access to this computer. Please try again later."
+   },
+   "HOST_SETUP_TERMS_OF_SERVICE": {
+      "message": "By downloading the Chrome Remote Desktop Host Installer, you are agreeing to the Google $1$Terms of Service$4.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "HOST_SETUP_UPDATED_PIN": {
+      "message": "Your PIN has been updated."
+   },
+   "HOST_SETUP_UPDATE_PIN_FAILED": {
+      "message": "Failed to update the PIN. Please try again later."
+   },
+   "HOST_SETUP_UPDATING_PIN": {
+      "message": "The PIN for this computer is being updated…"
+   },
+   "HOST_STARTED": {
+      "message": "Host started for user: %1."
+   },
+   "HOST_STOPPED": {
+      "message": "Host stopped."
+   },
+   "IDLE_CONTINUE": {
+      "message": "Continue"
+   },
+   "IDLE_DISCONNECT": {
+      "message": "Disconnect now"
+   },
+   "IDLE_TIMEOUT_WARNING": {
+      "message": "Your $1$ session has been inactive for a while and will be disconnected shortly.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "INCOMING_CONNECTIONS": {
+      "message": "To this computer"
+   },
+   "INSTALLER_DOWNLOAD": {
+      "message": "Download Chrome Remote Desktop Host Installer"
+   },
+   "INSTRUCTIONS_SHARE_ABOVE": {
+      "message": "To begin sharing your desktop, give the access code below to the person who will be assisting you."
+   },
+   "INSTRUCTIONS_SHARE_BELOW": {
+      "message": "Once they enter the code your sharing session will begin."
+   },
+   "INVALID_PIN": {
+      "message": "Please enter a PIN consisting of six or more digits."
+   },
+   "IT2ME_FIRST_RUN": {
+      "message": "User-to-user screen sharing, perfect for remote technical support."
+   },
+   "KEYBOARD_LAYOUTS_SUBMENU_TITLE": {
+      "message": "Keyboard layouts"
+   },
+   "LABEL_CONNECTED": {
+      "message": "Connected:"
+   },
+   "LAST_ONLINE": {
+      "message": "$1$ (last online $2$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "LEARN_HOW": {
+      "message": "Learn how."
+   },
+   "LEARN_MORE": {
+      "message": "Learn more."
+   },
+   "MAC_PREFPANE_BUNDLE_NAME": {
+      "message": "Chrome Remote Desktop Host Preferences"
+   },
+   "MAC_PREFPANE_ICON_LABEL": {
+      "message": "Chrome Remote\nDesktop Host"
+   },
+   "MAC_UNINSTALLER_BUNDLE_NAME": {
+      "message": "Chrome Remote Desktop Host Uninstaller"
+   },
+   "MAP_RIGHT_CTRL_TO_META": {
+      "message": "Use right Ctrl for Win key (⌘ on Mac)"
+   },
+   "MAXIMIZE_WINDOW": {
+      "message": "Maximize window"
+   },
+   "ME2ME_FIRST_RUN": {
+      "message": "Access your own computer from anywhere."
+   },
+   "MESSAGE_GENERATING": {
+      "message": "Generating access code…"
+   },
+   "MESSAGE_SESSION_FINISHED": {
+      "message": "Your Chrome Remote Desktop session has ended."
+   },
+   "MESSAGE_SHARED": {
+      "message": "Your desktop is currently shared with $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "MINIMIZE_WINDOW": {
+      "message": "Minimize window"
+   },
+   "MODE_AUTHORIZE": {
+      "message": "Authorize"
+   },
+   "MODE_IT2ME": {
+      "message": "Remote Assistance"
+   },
+   "MODE_ME2ME": {
+      "message": "My Computers"
+   },
+   "NEW_WINDOW": {
+      "message": "New window…"
+   },
+   "NO_PAIRED_CLIENTS": {
+      "message": "All paired clients have been deleted."
+   },
+   "NO_TRANSPARENCY_WARNING": {
+      "message": "Desktop integration is not supported on this platform. You can still use the application, but the user experience will be degraded."
+   },
+   "OFFLINE": {
+      "message": "$1$ (offline)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_INITIALIZATION_FAILED": {
+      "message": "Host initialization failed."
+   },
+   "OFFLINE_REASON_INVALID_HOST_CONFIGURATION": {
+      "message": "Invalid host configuration."
+   },
+   "OFFLINE_REASON_INVALID_HOST_DOMAIN": {
+      "message": "Invalid host owner domain."
+   },
+   "OFFLINE_REASON_INVALID_HOST_ID": {
+      "message": "Invalid host id."
+   },
+   "OFFLINE_REASON_INVALID_OAUTH_CREDENTIALS": {
+      "message": "Host is configured with invalid OAuth credentials."
+   },
+   "OFFLINE_REASON_LOGIN_SCREEN_NOT_SUPPORTED": {
+      "message": "Host running at the console logic screen has shutdown to support curtain mode by switching to a host running in a user-specific session."
+   },
+   "OFFLINE_REASON_POLICY_CHANGE_REQUIRES_RESTART": {
+      "message": "Host is restarting, to take into account a policy change."
+   },
+   "OFFLINE_REASON_POLICY_READ_ERROR": {
+      "message": "Host failed to read the policy."
+   },
+   "OFFLINE_REASON_SUCCESS_EXIT": {
+      "message": "Host has shut down."
+   },
+   "OFFLINE_REASON_UNKNOWN": {
+      "message": "Unrecognized host error: $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "OFFLINE_REASON_USERNAME_MISMATCH": {
+      "message": "Invalid host owner."
+   },
+   "OK": {
+      "message": "OK"
+   },
+   "OPTIONS_MENU": {
+      "message": "Options"
+   },
+   "OUTGOING_CONNECTIONS": {
+      "message": "From this computer"
+   },
+   "PAIRED_CLIENTS_INTRODUCTION": {
+      "message": "The following clients have been paired with this computer and can connect without supplying a PIN. You can revoke this permission at any time, either individually, or for all clients."
+   },
+   "PAIRED_CLIENT_DATE": {
+      "message": "Pairing date"
+   },
+   "PAIRED_CLIENT_NAME": {
+      "message": "Client"
+   },
+   "PIN": {
+      "message": "PIN"
+   },
+   "PINS_NOT_EQUAL": {
+      "message": "Please enter the same PIN in both boxes."
+   },
+   "PIN_MESSAGE": {
+      "message": "Please enter your PIN for $1$.",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "PIN_MESSAGE_ANDROID": {
+      "message": "Please enter your PIN for the remote computer."
+   },
+   "PRODUCT_DESCRIPTION": {
+      "message": "Access other computers or allow another user to access your computer securely over the Internet."
+   },
+   "PRODUCT_NAME": {
+      "message": "Chrome Remote Desktop"
+   },
+   "PRODUCT_NAME_APP_STREAMING": {
+      "message": "Chrome App Streaming"
+   },
+   "RECONNECT": {
+      "message": "Reconnect"
+   },
+   "REMEMBER_PIN": {
+      "message": "Don't ask for a PIN again when connecting to this host from this device."
+   },
+   "REMOTING_CORE_DESCRIPTION": {
+      "message": "Core Library"
+   },
+   "REMOTING_DESKTOP_DESCRIPTION": {
+      "message": "Desktop Integration Process"
+   },
+   "REMOTING_HOST_COMMAND_DESCRIPTION": {
+      "message": "Application to issue commands to Chrome remote desktop host."
+   },
+   "REMOTING_HOST_DESCRIPTION": {
+      "message": "Host Process"
+   },
+   "REMOTING_NATIVE_MESSAGING_HOST_DESCRIPTION": {
+      "message": "Native messaging host for remoting host management"
+   },
+   "REMOTING_REMOTE_ASSISTANCE_HOST_DESCRIPTION": {
+      "message": "Native messaging host for remote assistance"
+   },
+   "REMOTING_REMOTE_SECURITY_KEY_DESCRIPTION": {
+      "message": "Security Key Remoting Process"
+   },
+   "RESIZE_TO_CLIENT": {
+      "message": "Resize desktop to fit"
+   },
+   "RESTART_BUTTON": {
+      "message": "Restart now"
+   },
+   "RESTORE_WINDOW": {
+      "message": "Restore window"
+   },
+   "RETRY": {
+      "message": "Retry"
+   },
+   "SCREEN_OPTIONS": {
+      "message": "Screen options"
+   },
+   "SEND_CTRL_ALT_DEL": {
+      "message": "Send Ctrl-Alt-Del"
+   },
+   "SEND_FEEDBACK": {
+      "message": "Report an issue…"
+   },
+   "SEND_KEYS": {
+      "message": "Send keys"
+   },
+   "SEND_PRINT_SCREEN": {
+      "message": "Send PrtScn"
+   },
+   "SERVICE_DESCRIPTION": {
+      "message": "This service enables incoming connections from Chrome Remote Desktop clients."
+   },
+   "SETTING_MANAGED_BY_POLICY": {
+      "message": "This setting is managed by your domain policy."
+   },
+   "SHARE_CONFIRM_DIALOG_CONFIRM": {
+      "message": "Share"
+   },
+   "SHARE_CONFIRM_DIALOG_DECLINE": {
+      "message": "Cancel"
+   },
+   "SHARE_CONFIRM_DIALOG_MESSAGE": {
+      "message": "Would you like to share this computer for another user to see and control?"
+   },
+   "SHOW_STATS": {
+      "message": "Show statistics"
+   },
+   "SHOW_STATS_WITH_RTT": {
+      "message": "Show statistics (connection: $1$)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "SHRINK_TO_FIT": {
+      "message": "Shrink to fit"
+   },
+   "SIGN_IN_BUTTON": {
+      "message": "Sign in"
+   },
+   "SIGN_OUT_BUTTON": {
+      "message": "Sign out"
+   },
+   "STOP_SHARING_BUTTON": {
+      "message": "Stop Sharing"
+   },
+   "SURVEY_INVITATION": {
+      "message": "Want to help improve Chrome Remote Desktop? $1$Take the survey.$2$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         },
+         "2": {
+            "content": "$2"
+         }
+      }
+   },
+   "TIME_HEADER": {
+      "message": "Time"
+   },
+   "TOGGLE_STATS": {
+      "message": "Show statistics"
+   },
+   "TOOLTIP_CONNECT": {
+      "message": "Connect to $1$",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "TOOLTIP_DELETE": {
+      "message": "Disable remote connections to this computer"
+   },
+   "TOOLTIP_REFRESH": {
+      "message": "Refresh the list of hosts"
+   },
+   "TOOLTIP_RENAME": {
+      "message": "Edit computer name"
+   },
+   "UPDATE_REQUIRED": {
+      "message": "$1$ (out-of-date)",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "VERIFY_PIN_DIALOG_EMAIL_LABEL": {
+      "message": "Account"
+   },
+   "VERIFY_PIN_DIALOG_MESSAGE": {
+      "message": "Please confirm your account and PIN below to allow access by Chrome Remote Desktop."
+   },
+   "WARNING_NAT_DISABLED": {
+      "message": "NOTE: Policy settings permit connections only between computers within your network."
+   },
+   "WARNING_NOT_WINDOWED": {
+      "message": "NOTE: To ensure that all keyboard shortcuts are available, you can configure Chrome Remote Desktop to ‘Open as window’."
+   },
+   "WHY_IS_THIS_SAFE": {
+      "message": "Why is this safe?"
+   },
+   "WINDOWS_SUBMENU_TITLE": {
+      "message": "Windows"
+   },
+   "WORKING": {
+      "message": "Working…"
+   }
+}

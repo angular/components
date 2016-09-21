@@ -1,0 +1,59 @@
+{
+   "always_ignore": {
+      "message": "Sempre ignorar para este site"
+   },
+   "always_ignore_confirmation": {
+      "message": "Deseja que o \"Alerta de senha\" sempre ignore este site?"
+   },
+   "back": {
+      "message": "Voltar"
+   },
+   "contact_security": {
+      "message": "Cont. admin. de segurança"
+   },
+   "extension_description": {
+      "message": "O \"Alerta de senha\" ajuda a proteger contra ataques de phishing."
+   },
+   "extension_detailed_description": {
+      "message": "Se você digitar sua senha do Gmail ou Google for Work em qualquer lugar que não seja accounts.google.com.br, receberá um alerta para que possa alterar sua senha caso seja necessário.\n\nO Alerta de senha também tenta detectar páginas de login falsas do Google para alertar você antes que sua senha seja digitada. Para isso, o Alerta de senha verifica o HTML de cada página que você visita para ver se ele está falsificando uma página de login do Google.\n\nPerguntas frequentes\n-- Quando o Alerta de senha entrará em vigor?\nO Alerta de senha será inicializado na próxima vez que você digitar sua senha em accounts.google.com.br.\n\n-- O Alerta de senha armazena minha senha ou meus toques de tecla?\nNão. O Alerta de senha não armazena sua senha ou seus toques de tecla. Em vez disso, esse recurso armazena uma miniatura segura da sua senha, a qual ele compara com uma miniatura dos seus toques de tecla mais recentes no Chrome.\n\n-- Para onde o Alerta de senha envia os dados?\nSe você usa um Alerta de senha em uma conta do Gmail, o recurso não envia nenhum dado do seu computador local. Se seu administrador do Google for Work escolher implantar o Alerta de senha no seu domínio, o administrador receberá alertas quando o Alerta de senha for acionado.\n\n-- Quais são os limites do Alerta de senha?\nO Alerta de senha não protege janelas anônimas, aplicativos do Google Chrome ou extensões do Chrome. Ele também não protege senhas de serviços que não sejam do Google. O Alerta de senha opera apenas no navegador da Web Chrome quando o JavaScript está ativado.\n\n-- Onde posso encontrar mais detalhes?\nVeja todas as Perguntas frequentes em LINK_TBD. Também é possível ver a base de código aberto completa em https://github.com/google/password-alert\n\nAo instalar esse item você concorda com os Termos de Serviço e com a Política de Privacidade do Google disponíveis em www.google.com.br/policies/\n"
+   },
+   "extension_name": {
+      "message": "Alerta de senha"
+   },
+   "ignore": {
+      "message": "Ignorar desta vez"
+   },
+   "initialization_message": {
+      "message": "Entre em sua conta para o \"Alerta de senha\" entrar em vigor."
+   },
+   "initialization_thank_you_message": {
+      "message": "O \"Alerta de senha\" já está em vigor."
+   },
+   "learn_more": {
+      "message": "Saiba mais"
+   },
+   "password_warning_banner_body": {
+      "message": "Você acabou de informar sua senha da Conta do Google em uma página de login que não é do Google. Redefina sua senha imediatamente para proteger sua conta. Não use a mesma senha em outros aplicativos e sites."
+   },
+   "password_warning_banner_header": {
+      "message": "Redefina sua senha da Conta do Google"
+   },
+   "phishing_warning_banner_body": {
+      "message": "Este site parece estar usando uma versão falsa da página de login do Google para roubar sua senha. Por esse motivo, ele foi bloqueado. Se você acha que este site pode danificar seu computador, você pode visitá-lo, mas tenha cuidado com as informações que digitar."
+   },
+   "phishing_warning_banner_header": {
+      "message": "Este site foi bloqueado."
+   },
+   "report_phishing": {
+      "message": "Denunciar este site"
+   },
+   "reset_password": {
+      "message": "Redefinir senha"
+   },
+   "sign_in": {
+      "message": "Faça login"
+   },
+   "visit_this_site": {
+      "message": "Visite o site"
+   }
+}
