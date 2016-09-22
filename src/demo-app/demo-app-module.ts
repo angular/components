@@ -12,6 +12,7 @@ import {RippleDemo} from './ripple/ripple-demo';
 import {IconDemo} from './icon/icon-demo';
 import {GesturesDemo} from './gestures/gestures-demo';
 import {InputDemo} from './input/input-demo';
+import {TextareaDemo} from './textarea/textarea-demo';
 import {CardDemo} from './card/card-demo';
 import {RadioDemo} from './radio/radio-demo';
 import {ButtonToggleDemo} from './button-toggle/button-toggle-demo';
@@ -56,6 +57,7 @@ import {TabsDemo} from './tabs/tab-group-demo';
     Home,
     IconDemo,
     InputDemo,
+    TextareaDemo,
     JazzDialog,
     ListDemo,
     LiveAnnouncerDemo,

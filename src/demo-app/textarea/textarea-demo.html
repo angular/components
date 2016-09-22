@@ -1,0 +1,53 @@
+<md-card class="demo-card demo-basic">
+  <md-toolbar color="primary">Basic</md-toolbar>
+  <md-card-content>
+    <form>
+      <p><md-textarea class="demo-full-width" placeholder="Simple Textarea"></md-textarea></p>
+      <p><md-textarea class="demo-full-width" placeholder="Textarea (cols)" cols="50"></md-textarea></p>
+      <md-textarea class="demo-full-width" placeholder="Textarea (rows)" rows="5"></md-textarea>
+      <md-textarea class="demo-full-width" placeholder="Textarea (Disabled)" disabled value="Disabled Field Example"></md-textarea>
+      <md-textarea class="demo-full-width" placeholder="Textarea (Required)" required value="Required Field Example"></md-textarea>
+      <p>
+        <md-textarea class="demo-full-width" name="binding" [(ngModel)]="binding" placeholder="Textarea (Binding)"></md-textarea>
+        <span>{{binding}}</span>
+      </p>
+    </form>
+  </md-card-content>
+</md-card>
+
+<md-card class="demo-card demo-basic">
+  <md-toolbar color="primary">Divider Colors</md-toolbar>
+  <md-card-content>
+    <p>
+      <md-textarea class="demo-full-width" dividerColor="primary" placeholder="Default Color"></md-textarea>
+      <md-textarea class="demo-full-width" dividerColor="accent" placeholder="Accent Color"></md-textarea>
+      <md-textarea class="demo-full-width" dividerColor="warn" placeholder="Warn Color"></md-textarea>
+    </p>
+  </md-card-content>
+</md-card>
+
+<md-card class="demo-card demo-basic">
+  <md-toolbar color="primary">Hints</md-toolbar>
+  <md-card-content>
+    <p>
+      <md-textarea class="demo-full-width" placeholder="Character count (100 max)" maxlength="100" #characterCountHintExample>
+        <md-hint align="end">{{characterCountHintExample.characterCount}} / 100</md-hint>
+      </md-textarea>
+    </p>
+    <p>
+      <md-textarea class="demo-full-width">
+        <md-placeholder>
+          I <md-icon class="demo-icons">favorite</md-icon> <b>bold</b> placeholder
+        </md-placeholder>
+        <md-hint>
+          I also <md-icon class="demo-icons">home</md-icon> <i>italic</i> hint labels
+        </md-hint>
+      </md-textarea>
+    </p>
+    <p>
+      <md-textarea placeholder="Show Hint Label With Character Count" style="width: 100%" hintLabel="Hint label" #characterCounter>
+        <md-hint align="end">{{characterCounter.characterCount}}</md-hint>
+      </md-textarea>
+    </p>
+  </md-card-content>
+</md-card>
