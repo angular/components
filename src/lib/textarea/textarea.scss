@@ -71,6 +71,8 @@ md-textarea {
   padding: 0;
   width: 100%;
 
+  resize: vertical;
+
   &.md-end {
     text-align: right;
 
