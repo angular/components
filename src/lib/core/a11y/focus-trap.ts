@@ -11,8 +11,12 @@ import {InteractivityChecker} from './interactivity-checker';
  * This will be replaced with a more intelligent solution before the library is considered stable.
  */
 @Component({
+  moduleId: module.id,
   selector: 'focus-trap',
-  templateUrl: 'focus-trap.html',
+  template: `
+  <div tabindex="0" (focus)="reverseWrapFocus()"></div>
+  <div #trappedContent><ng-content></ng-content></div>
+  <div tabindex="0" (focus)="wrapFocus()"></div>`,
   encapsulation: ViewEncapsulation.None,
 })
 export class FocusTrap {
@@ -22,12 +26,18 @@ export class FocusTrap {
 
   /** Wrap focus from the end of the trapped region to the beginning. */
   wrapFocus() {
-    this._getFirstTabbableElement(this.trappedContent.nativeElement).focus();
+    let redirectToElement = this._getFirstTabbableElement(this.trappedContent.nativeElement);
+    if (redirectToElement) {
+      redirectToElement.focus();
+    }
   }
 
   /** Wrap focus from the beginning of the trapped region to the end. */
   reverseWrapFocus() {
-    this._getLastTabbableElement(this.trappedContent.nativeElement).focus();
+    let redirectToElement = this._getLastTabbableElement(this.trappedContent.nativeElement);
+    if (redirectToElement) {
+      redirectToElement.focus();
+    }
   }
 
   /** Get the first tabbable element from a DOM subtree (inclusive). */
@@ -39,19 +49,29 @@ export class FocusTrap {
     // Iterate in DOM order.
     let childCount = root.children.length;
     for (let i = 0; i < childCount; i++) {
-      return this._getFirstTabbableElement(root.children[i] as HTMLElement);
+      let tabbableChild = this._getFirstTabbableElement(root.children[i] as HTMLElement);
+      if (tabbableChild) {
+        return tabbableChild;
+      }
     }
+
+    return null;
   }
 
   /** Get the last tabbable element from a DOM subtree (inclusive). */
-  private _getLastTabbableElement(root: HTMLElement) {
+  private _getLastTabbableElement(root: HTMLElement): HTMLElement {
     if (this._checker.isFocusable(root) && this._checker.isTabbable(root)) {
       return root;
     }
 
     // Iterate in reverse DOM order.
     for (let i = root.children.length - 1; i >= 0; i--) {
-      return this._getFirstTabbableElement(root.children[i] as HTMLElement);
+      let tabbableChild = this._getLastTabbableElement(root.children[i] as HTMLElement);
+      if (tabbableChild) {
+        return tabbableChild;
+      }
     }
+
+    return null;
   }
 }
