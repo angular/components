@@ -13,6 +13,7 @@ import {InteractivityChecker} from './interactivity-checker';
 @Component({
   moduleId: module.id,
   selector: 'focus-trap',
+  // TODO(jelbourn): move this to a separate file.
   template: `
   <div tabindex="0" (focus)="reverseWrapFocus()"></div>
   <div #trappedContent><ng-content></ng-content></div>
