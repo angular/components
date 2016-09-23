@@ -9,15 +9,10 @@ import {
   AfterContentInit,
   forwardRef,
 } from '@angular/core';
-import {
-  NG_VALUE_ACCESSOR,
-  ControlValueAccessor,
-  FormsModule,
-} from '@angular/forms';
+import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-import {MdGestureConfig, applyCssTransform} from '../core';
+import {MdGestureConfig, applyCssTransform, coerceBooleanProperty} from '../core';
 import {Input as HammerInput} from 'hammerjs';
-import {coerceBooleanProperty} from '../core/coersion/boolean-property';
 
 /**
  * Visually, a 30px separation between tick marks looks best. This is very subjective but it is

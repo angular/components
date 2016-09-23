@@ -81,6 +81,9 @@ export * from './compatibility/style-compatibility';
 // Animation
 export * from './animation/animation';
 
+// Coersion
+export {coerceBooleanProperty} from './coersion/boolean-property';
+
 
 @NgModule({
   imports: [MdLineModule, RtlModule, MdRippleModule, PortalModule, OverlayModule, A11yModule],

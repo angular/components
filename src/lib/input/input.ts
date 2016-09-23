@@ -18,15 +18,10 @@ import {
   ModuleWithProviders,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  NG_VALUE_ACCESSOR,
-  ControlValueAccessor,
-  FormsModule,
-} from '@angular/forms';
+import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {MdError} from '../core';
+import {MdError, coerceBooleanProperty} from '../core';
 import {Observable} from 'rxjs/Observable';
-import {coerceBooleanProperty} from '../core/coersion/boolean-property';
 
 
 const noop = () => {};

@@ -13,15 +13,9 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-import {
-  FormsModule,
-  ControlValueAccessor,
-  NG_VALUE_ACCESSOR
-} from '@angular/forms';
-import {applyCssTransform} from '../core';
+import {FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {applyCssTransform, coerceBooleanProperty, MdGestureConfig} from '../core';
 import {Observable} from 'rxjs/Observable';
-import {coerceBooleanProperty} from '../core/coersion/boolean-property';
-import {MdGestureConfig} from '../core';
 
 
 export const MD_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {

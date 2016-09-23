@@ -16,8 +16,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Dir, MdError} from '../core';
-import {coerceBooleanProperty} from '../core/coersion/boolean-property';
+import {Dir, MdError, coerceBooleanProperty} from '../core';
 
 
 /** Exception thrown when two MdSidenav are matching the same side. */

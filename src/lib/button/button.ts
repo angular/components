@@ -10,8 +10,7 @@ import {
   ModuleWithProviders,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MdRippleModule} from '../core';
-import {coerceBooleanProperty} from '../core/coersion/boolean-property';
+import {MdRippleModule, coerceBooleanProperty} from '../core';
 
 // TODO(jelbourn): Make the `isMouseDown` stuff done with one global listener.
 // TODO(kara): Convert attribute selectors to classes when attr maps become available

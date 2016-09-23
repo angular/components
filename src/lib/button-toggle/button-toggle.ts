@@ -15,14 +15,9 @@ import {
     forwardRef,
     AfterViewInit
 } from '@angular/core';
-import {
-    NG_VALUE_ACCESSOR,
-    ControlValueAccessor,
-    FormsModule,
-} from '@angular/forms';
+import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
-import {MdUniqueSelectionDispatcher} from '../core';
-import {coerceBooleanProperty} from '../core/coersion/boolean-property';
+import {MdUniqueSelectionDispatcher, coerceBooleanProperty} from '../core';
 
 export type ToggleType = 'checkbox' | 'radio';
 
