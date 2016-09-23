@@ -75,6 +75,9 @@ export {ComponentType} from './overlay/generic-component-type';
 // Keybindings
 export * from './keyboard/keycodes';
 
+// Animation
+export * from './animation/animation';
+
 
 @NgModule({
   imports: [MdLineModule, RtlModule, MdRippleModule, PortalModule, OverlayModule],
