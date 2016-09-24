@@ -128,7 +128,7 @@ describe('MdDialog', () => {
       flushMicrotasks();
 
       expect(document.activeElement.tagName)
-          .toBe('INPUT', 'Expected the first tabbale element (input) in the dialog to be focused.');
+          .toBe('INPUT', 'Expected first tabbable element (input) in the dialog to be focused.');
     }));
 
     it('should re-focus trigger element when dialog closes', fakeAsync(() => {
