@@ -4,6 +4,7 @@
 
 $md-card-default-padding: 24px !default;
 $md-card-mobile-padding: 24px 16px !default;
+$md-card-mobile-margin: 8px 8px 0 !default;  // avoid doubling margins between cards by setting bottom-margin to 0
 $md-card-border-radius: 2px !default;
 $md-card-header-size: 40px !default;
 
@@ -144,6 +145,7 @@ md-card-title-group {
 @media ($md-xsmall) {
   md-card {
     padding: $md-card-mobile-padding;
+    margin: $md-card-mobile-margin;
   }
 
   [md-card-image] {

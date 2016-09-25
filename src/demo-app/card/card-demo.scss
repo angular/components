@@ -2,9 +2,11 @@
   display: flex;
   flex-flow: column nowrap;
 
-  md-card {
-    margin: 0 16px 16px 0;
-    width: 350px;
+  @media ('min-width: 600px') {
+    md-card {
+      margin: 0 16px 16px 0;
+      width: 350px;
+    }
   }
 
   img {
