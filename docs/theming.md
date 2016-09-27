@@ -46,10 +46,7 @@ When you want more customization than a pre-built theme offers, you can create y
 A theme file is a simple Sass file that defines your palettes and passes them to mixins that output
 the corresponding styles. A typical theme file will look something like this:
 ```scss
-@import '~@angular2-material/core/theming/theming';
-@import '~@angular2-material/core/theming/palette';
-@import '~@angular2-material/core/core';
-@import '~@angular2-material/button/button-theme';
+@import '~@angular2-material/core/theming/all-theme';
 // Plus imports for other components in your app.
 
 // Include the base styles for Angular Material core. We include this here so that you only
@@ -61,15 +58,17 @@ the corresponding styles. A typical theme file will look something like this:
 // hue.
 $primary: md-palette($md-indigo);
 $accent:  md-palette($md-pink, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
 $warn:    md-palette($md-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $theme: md-light-theme($primary, $accent, $warn);
 
 // Include theme styles for core and each component used in your app.
-@include md-core-theme($theme);
-@include md-button-theme($theme);
-// Plus includes for other components in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($theme);
 ```
 
 You only need this single Sass file; you do not need to use Sass to style the rest of your app.
@@ -99,8 +98,7 @@ secondary dark theme:
 
   $dark-theme: md-dark-theme($dark-primary, $dark-accent, $dark-warn);
   
-  @include md-core-theme($dark-theme);
-  @include md-button-theme($dark-theme);    
+@include angular-material-theme($dark-theme);   
 }
 ```
 
@@ -121,7 +119,5 @@ You can use the `md-color` function to extract a specific color from a palette. 
 ```
 
 ### Future work
-* When the "all" package is released, there will be a mixin that captures all of the component's
-  theme styles so that you don't have to include them all individually.
 * Once CSS variables (custom properties) are available in all the browsers we support,
   we will explore how to take advantage of them to make theming even simpler.
