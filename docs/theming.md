@@ -24,17 +24,17 @@ include all of the styles for core (styles common to all components), so you onl
 single css file for Angular Material in your app. 
 
 You can include a theme file directly into your application from 
-`@angular2-material/core/theming/prebuilt`
+`@angular/material/core/theming/prebuilt`
 
 If you're using Angular CLI, this is as simple as including one line
 in your `style.css`  file:
 ```css
-@import '~@angular2-material/core/theming/prebuilt/deeppurple-amber.css';
+@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
 ```
 
 Alternatively, you can just reference the file directly. This would look something like
 ```html
-<link href="node_modules/@angular2-material/core/theming/prebuilt/indigo-pink.css" rel="stylesheet">
+<link href="node_modules/@angular/material/core/theming/prebuilt/indigo-pink.css" rel="stylesheet">
 ``` 
 The actual path will depend on your server setup. 
 
@@ -46,7 +46,7 @@ When you want more customization than a pre-built theme offers, you can create y
 A theme file is a simple Sass file that defines your palettes and passes them to mixins that output
 the corresponding styles. A typical theme file will look something like this:
 ```scss
-@import '~@angular2-material/core/theming/all-theme';
+@import '~@angular/material/core/theming/all-theme';
 // Plus imports for other components in your app.
 
 // Include the base styles for Angular Material core. We include this here so that you only
@@ -109,7 +109,7 @@ dark theme.
 In order to style your own components with our tooling, the component's styles must be defined 
 with Sass. 
 
-You can consume the theming functions and variables from the `@angular2-material/core/theming`.
+You can consume the theming functions and variables from the `@angular/material/core/theming`.
 You can use the `md-color` function to extract a specific color from a palette. For example:
 ```scss
 .unicorn-carousel {
