@@ -13,7 +13,7 @@ import {MdDialogConfig} from './dialog-config';
 import {MdDialogRef} from './dialog-ref';
 import {DialogInjector} from './dialog-injector';
 import {MdDialogContainer} from './dialog-container';
-import {A11yModule, InteractivityChecker, FocusTrap} from '../core';
+import {A11yModule, InteractivityChecker} from '../core';
 
 export {MdDialogConfig} from './dialog-config';
 export {MdDialogRef} from './dialog-ref';
