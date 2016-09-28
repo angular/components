@@ -1,6 +1,5 @@
 @import '../core/style/variables';
 
-
 $md-tab-bar-height: 48px !default;
 
 :host {
@@ -18,7 +17,7 @@ $md-tab-bar-height: 48px !default;
   flex-shrink: 0;
 }
 
-// Wraps each tab label 
+// Wraps each tab label
 .md-tab-label {
   line-height: $md-tab-bar-height;
   height: $md-tab-bar-height;
@@ -38,12 +37,18 @@ $md-tab-bar-height: 48px !default;
   }
 }
 
+// fixed tabs grow to the boundaries of their parent
+:host[md-tabs-fixed] .md-tab-label {
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
 .md-tab-disabled {
   cursor: default;
   pointer-events: none;
 }
 
-// The bottom section of the view; contains the tab bodies 
+// The bottom section of the view; contains the tab bodies
 .md-tab-body-wrapper {
   position: relative;
   overflow: hidden;
@@ -51,7 +56,7 @@ $md-tab-bar-height: 48px !default;
   display: flex;
 }
 
-// Wraps each tab body 
+// Wraps each tab body
 .md-tab-body {
   display: none;
   overflow: auto;
@@ -63,7 +68,7 @@ $md-tab-bar-height: 48px !default;
   }
 }
 
-// The colored bar that underlines the active tab 
+// The colored bar that underlines the active tab
 md-ink-bar {
   position: absolute;
   bottom: 0;
