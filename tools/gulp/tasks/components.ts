@@ -21,7 +21,7 @@ const rollup = require('rollup').rollup;
 const componentsDir = path.join(SOURCE_ROOT, 'lib');
 
 /** Path to the tsconfig used for ESM output. */
-const tsconigPath = path.relative(PROJECT_ROOT, path.join(componentsDir, 'tsconfig.json'));
+const tsconfigPath = path.relative(PROJECT_ROOT, path.join(componentsDir, 'tsconfig.json'));
 
 
 /** [Watch task] Rebuilds (ESM output) whenever ts, scss, or html sources change. */
@@ -121,5 +121,5 @@ task('build:components', [':build:components:rollup']);
 
 /** Generates metadata.json files for all of the components. */
 task(':build:components:ngc', ['build:components'], execNodeTask(
-  '@angular/compiler-cli', 'ngc', ['-p', tsconigPath]
+  '@angular/compiler-cli', 'ngc', ['-p', tsconfigPath]
 ));
