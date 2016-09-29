@@ -35,6 +35,7 @@ task(':build:components:assets', copyTask([
 task(':build:components:scss', sassBuildTask(
   DIST_COMPONENTS_ROOT, componentsDir, [path.join(componentsDir, 'core/style')]
 ));
+
 task(':build:components:rollup', [':build:components:inline'], () => {
   const globals: {[name: string]: string} = {
     // Angular dependencies
@@ -85,12 +86,16 @@ task(':build:components:rollup', [':build:components:inline'], () => {
   });
 });
 
-task(':build:components:inline', [
-  ':build:components:ts',
-  ':build:components:scss',
-  ':build:components:assets'
-], () => {
-  return inlineResources(DIST_COMPONENTS_ROOT);
+task(':build:components:inline', sequenceTask(
+  [':build:components:ts', ':build:components:scss', ':build:components:assets'],
+  ':inline-resources',
+));
+
+// Inlining resources should not be baked into another task because it must
+// be able to be applied to both the ES6 module output and the CommonJS module
+// output.
+task(':inline-resources', () => {
+  inlineResources([DIST_COMPONENTS_ROOT]);
 });
 
 task('build:components', sequenceTask(

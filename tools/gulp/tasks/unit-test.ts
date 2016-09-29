@@ -26,19 +26,25 @@ gulp.task(':test:deps', sequenceTask(
   [
     ':build:test:vendor',
     ':build:components:assets',
+    ':build:components:scss',
     ':build:components:spec',
-    ':build:components:inline',
-    ':watch:components:spec',
   ]
 ));
 
-gulp.task('test', [':test:deps'], (done: () => void) => {
+gulp.task(':test:watch', sequenceTask(':test:deps', ':watch:components:spec'));
+
+gulp.task(':test:deps:inline', sequenceTask(':test:deps', ':inline-resources'));
+
+// Use `gulp test` when running unit tests locally. This uses watch mode to recompile
+// tests and does not inline resources.
+gulp.task('test', [':test:watch'], (done: () => void) => {
   new karma.Server({
     configFile: path.join(PROJECT_ROOT, 'test/karma.conf.js')
   }, done).start();
 });
 
-gulp.task('test:single-run', [':test:deps'], (done: () => void) => {
+// Use `gulp test:single-run` for ci. This will not watch sources and will incline resources.
+gulp.task('test:single-run', [':test:deps:inline'], (done: () => void) => {
   new karma.Server({
     configFile: path.join(PROJECT_ROOT, 'test/karma.conf.js'),
     singleRun: true
