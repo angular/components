@@ -4,9 +4,8 @@ import {RtlModule} from './rtl/dir';
 import {MdRippleModule} from './ripple/ripple';
 import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/overlay-directives';
-import {A11yModule, A11Y_PROVIDERS, MdLiveAnnouncer, InteractivityChecker} from './a11y/index';
+import {A11yModule, A11Y_PROVIDERS} from './a11y/index';
 import {OVERLAY_PROVIDERS} from './overlay/overlay';
-import {MdUniqueSelectionDispatcher} from './coordination/unique-selection-dispatcher';
 
 
 // RTL
