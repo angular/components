@@ -24,14 +24,6 @@ import {E2E_APP_ROUTES} from './e2e-app/routes';
     BasicTabs,
     Home,
   ],
-  entryComponents: [
-    E2EApp,
-  ],
+  bootstrap: [E2EApp],
 })
-export class E2eAppModule {
-  constructor(private _appRef: ApplicationRef) { }
-
-  ngDoBootstrap() {
-    this._appRef.bootstrap(E2EApp);
-  }
-}
+export class E2eAppModule { }
