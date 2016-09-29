@@ -114,17 +114,10 @@ task(':build:components:inline', sequenceTask(
 ));
 
 /** Inlines resources (html, css) into the JS output (for either ESM or CJS output). */
-task(':inline-resources', () => {
-  // Inlining resources should not be baked into another task because it must
-  // be able to be applied to both the ES6 module output and the CommonJS module
-  // output.
-  inlineResources([DIST_COMPONENTS_ROOT]);
-});
+task(':inline-resources', () => inlineResources(DIST_COMPONENTS_ROOT));
 
 /** Builds components to ESM output and UMD bundle. */
-task('build:components', sequenceTask(
-  ':build:components:rollup',
-));
+task('build:components', [':build:components:rollup']);
 
 /** Generates metadata.json files for all of the components. */
 task(':build:components:ngc', ['build:components'], execNodeTask(

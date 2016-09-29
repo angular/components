@@ -59,7 +59,7 @@ task(':serve:e2eapp', serverTask(false, (stream) => { stopE2eServer = () => stre
 task(':serve:e2eapp:stop', () => stopE2eServer());
 
 /** Builds and serves the e2e app. */
-task('serve:e2eapp', sequenceTask('build:e2eapp', ':serve:e2eapp'));
+task('serve:e2eapp', sequenceTask('build:components', 'build:e2eapp', ':serve:e2eapp'));
 
 /**
  * [Watch task] Builds and serves e2e app, rebuilding whenever the sources change.
@@ -81,14 +81,13 @@ task('e2e', sequenceTask(
 ));
 
 /**
- * Runs the e2e once with inlined resources. Does not watch for changes.
+ * Runs the e2e once. Does not watch for changes.
  *
  * This task should be used when running tests on the CI server.
  */
 task('e2e:single-run', sequenceTask(
   ':test:protractor:setup',
   'serve:e2eapp',
-  ':inline-resources',
   ':test:protractor',
   ':serve:e2eapp:stop',
   ':e2e:done',

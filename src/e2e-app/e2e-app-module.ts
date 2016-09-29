@@ -1,4 +1,4 @@
-import {NgModule, ApplicationRef} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
 import {E2EApp, Home} from './e2e-app/e2e-app';
