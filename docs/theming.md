@@ -110,11 +110,71 @@ In order to style your own components with our tooling, the component's styles m
 with Sass. 
 
 You can consume the theming functions and variables from the `@angular/material/core/theming`.
-You can use the `md-color` function to extract a specific color from a palette. For example:
+You can use the `map-get` function to extract the theming variables and `md-color` function to extract a specific color from a palette. For example:
 ```scss
-.unicorn-carousel {
-  background-color: md-color($primary);
-  color: md-color($primary, default-contrast);
+custom-input.component.scss
+
+@import '~@angular/material/core/theming/theming';
+
+@mixin custom-input-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  
+  // Placeholder colors. Required is used for the `*` star shown in the placeholder.
+  $input-placeholder-color: md-color($foreground, hint-text);
+  $input-floating-placeholder-color: md-color($primary);
+  $input-required-placeholder-color: md-color($accent);
+  
+  // Underline colors.
+  $input-underline-color: md-color($foreground, hint-text);
+  $input-underline-color-accent: md-color($accent);
+  $input-underline-color-warn: md-color($warn);
+  $input-underline-disabled-color: md-color($foreground, hint-text);
+  $input-underline-focused-color: md-color($primary);
+
+  .md-input-placeholder {
+    color: $input-placeholder-color;
+
+    // :focus is applied to the input, but we apply md-focused to the other elements
+    // that need to listen to it.
+    &.md-focused {
+      color: $input-floating-placeholder-color;
+
+      &.md-accent {
+        color: $input-underline-color-accent;
+      }
+      &.md-warn {
+        color: $input-underline-color-warn;
+      }
+    }
+  }
+
+  // See md-input-placeholder-floating mixin in input.scss
+  md-input input:-webkit-autofill + .md-input-placeholder,
+  .md-input-placeholder.md-float:not(.md-empty), .md-input-placeholder.md-float.md-focused {
+
+    .md-placeholder-required {
+      color: $input-required-placeholder-color;
+    }
+  }
+
+  .md-input-underline {
+    border-color: $input-underline-color;
+
+    .md-input-ripple {
+      background-color: $input-underline-focused-color;
+
+      &.md-accent {
+        background-color: $input-underline-color-accent;
+      }
+      &.md-warn {
+        background-color: $input-underline-color-warn;
+      }
+    }
+  }
 }
 ```
 
