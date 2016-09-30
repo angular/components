@@ -111,9 +111,10 @@ with Sass.
 
 You can consume the theming functions and variables from the `@angular/material/core/theming`.
 You can use the `map-get` function to extract the theming variables and `md-color` function to extract a specific color from a palette. For example:
-```scss
+
 custom-input.component.scss
 
+```scss
 @import '~@angular/material/core/theming/theming';
 
 @mixin custom-input-theme($theme) {
