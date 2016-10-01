@@ -20,6 +20,12 @@ The new command creates a project with a build system for your Angular app.
 npm install --save @angular/material
 ```
 
+## Install necessary types
+
+```bash
+npm install --save-dev @types/hammerjs
+```
+
 ## Import the Angular Material NgModule
   
 **src/app/app.module.ts**
