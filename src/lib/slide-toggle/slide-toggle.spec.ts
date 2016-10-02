@@ -408,18 +408,11 @@ describe('MdSlideToggle', () => {
     let slideToggleControl: NgControl;
     let slideThumbContainer: HTMLElement;
 
-    // This initialization is async() because it needs to wait for ngModel to set the initial value.
     beforeEach(async(() => {
       fixture = TestBed.createComponent(SlideToggleTestApp);
 
       testComponent = fixture.debugElement.componentInstance;
 
-      // Enable jasmine spies on event functions, which may trigger at initialization
-      // of the slide-toggle component.
-      spyOn(fixture.debugElement.componentInstance, 'onSlideChange').and.callThrough();
-      spyOn(fixture.debugElement.componentInstance, 'onSlideClick').and.callThrough();
-
-      // Initialize the slide-toggle component, by triggering the first change detection cycle.
       fixture.detectChanges();
 
       let slideToggleDebug = fixture.debugElement.query(By.css('md-slide-toggle'));
@@ -507,7 +500,6 @@ function dispatchFocusChangeEvent(eventName: string, element: HTMLElement): void
   event.initEvent(eventName, true, true);
   element.dispatchEvent(event);
 }
-
 
 @Component({
   selector: 'slide-toggle-test-app',
