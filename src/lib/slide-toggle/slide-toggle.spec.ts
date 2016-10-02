@@ -1,15 +1,21 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
+import {async, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {Component} from '@angular/core';
 import {MdSlideToggle, MdSlideToggleChange, MdSlideToggleModule} from './slide-toggle';
 import {FormsModule, NgControl} from '@angular/forms';
+import {TestGestureConfig} from '../slider/test-gesture-config';
 
 describe('MdSlideToggle', () => {
+
+  let gestureConfig: TestGestureConfig;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdSlideToggleModule.forRoot(), FormsModule],
       declarations: [SlideToggleTestApp, SlideToggleFormsTestApp],
+      providers: [
+        {provide: HAMMER_GESTURE_CONFIG, useFactory: () => gestureConfig = new TestGestureConfig()}
+      ]
     });
 
     TestBed.compileComponents();
@@ -392,6 +398,103 @@ describe('MdSlideToggle', () => {
 
   });
 
+  describe('with dragging', () => {
+
+    let fixture: ComponentFixture<any>;
+
+    let testComponent: SlideToggleTestApp;
+    let slideToggle: MdSlideToggle;
+    let slideToggleElement: HTMLElement;
+    let slideToggleControl: NgControl;
+    let slideThumbContainer: HTMLElement;
+
+    // This initialization is async() because it needs to wait for ngModel to set the initial value.
+    beforeEach(async(() => {
+      fixture = TestBed.createComponent(SlideToggleTestApp);
+
+      testComponent = fixture.debugElement.componentInstance;
+
+      // Enable jasmine spies on event functions, which may trigger at initialization
+      // of the slide-toggle component.
+      spyOn(fixture.debugElement.componentInstance, 'onSlideChange').and.callThrough();
+      spyOn(fixture.debugElement.componentInstance, 'onSlideClick').and.callThrough();
+
+      // Initialize the slide-toggle component, by triggering the first change detection cycle.
+      fixture.detectChanges();
+
+      let slideToggleDebug = fixture.debugElement.query(By.css('md-slide-toggle'));
+      let thumbContainerDebug = slideToggleDebug.query(By.css('.md-slide-toggle-thumb-container'));
+
+      slideToggle = slideToggleDebug.componentInstance;
+      slideToggleElement = slideToggleDebug.nativeElement;
+      slideToggleControl = slideToggleDebug.injector.get(NgControl);
+      slideThumbContainer = thumbContainerDebug.nativeElement;
+    }));
+
+    it('should drag from start to end', fakeAsync(() => {
+      expect(slideToggle.checked).toBe(false);
+
+      gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
+
+      expect(slideThumbContainer.classList).toContain('md-dragging');
+
+      gestureConfig.emitEventForElement('slide', slideThumbContainer, {
+        deltaX: 200 // Use a random number which will be clamped.
+      });
+
+      gestureConfig.emitEventForElement('slideend', slideThumbContainer);
+
+      // Flush the timeout for the slide ending.
+      tick();
+
+      expect(slideToggle.checked).toBe(true);
+      expect(slideThumbContainer.classList).not.toContain('md-dragging');
+    }));
+
+    it('should drag from end to start', fakeAsync(() => {
+      slideToggle.checked = true;
+
+      gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
+
+      expect(slideThumbContainer.classList).toContain('md-dragging');
+
+      gestureConfig.emitEventForElement('slide', slideThumbContainer, {
+        deltaX: -200 // Use a random negative number which will be clamped.
+      });
+
+      gestureConfig.emitEventForElement('slideend', slideThumbContainer);
+
+      // Flush the timeout for the slide ending.
+      tick();
+
+      expect(slideToggle.checked).toBe(false);
+      expect(slideThumbContainer.classList).not.toContain('md-dragging');
+    }));
+
+    it('should not drag when disbaled', fakeAsync(() => {
+      slideToggle.disabled = true;
+
+      expect(slideToggle.checked).toBe(false);
+
+      gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
+
+      expect(slideThumbContainer.classList).not.toContain('md-dragging');
+
+      gestureConfig.emitEventForElement('slide', slideThumbContainer, {
+        deltaX: 200 // Use a random number which will be clamped.
+      });
+
+      gestureConfig.emitEventForElement('slideend', slideThumbContainer);
+
+      // Flush the timeout for the slide ending.
+      tick();
+
+      expect(slideToggle.checked).toBe(false);
+      expect(slideThumbContainer.classList).not.toContain('md-dragging');
+    }));
+
+  });
+
 });
 
 /**
@@ -404,6 +507,7 @@ function dispatchFocusChangeEvent(eventName: string, element: HTMLElement): void
   event.initEvent(eventName, true, true);
   element.dispatchEvent(event);
 }
+
 
 @Component({
   selector: 'slide-toggle-test-app',
