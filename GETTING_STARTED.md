@@ -20,12 +20,6 @@ The new command creates a project with a build system for your Angular app.
 npm install --save @angular/material
 ```
 
-## Install necessary types
-
-```bash
-npm install --save-dev @types/hammerjs
-```
-
 ## Import the Angular Material NgModule
   
 **src/app/app.module.ts**
@@ -49,6 +43,12 @@ The slide-toggle and slider components have a dependency on [HammerJS](http://ha
 Add HammerJS to your application via [npm](https://www.npmjs.com/package/hammerjs), a CDN 
 (such as the [Google CDN](https://developers.google.com/speed/libraries/#hammerjs)), or served 
 directly from your app.
+
+For example, if you want to add it via npm:
+
+```bash
+npm install --save-dev @types/hammerjs
+```
 
 ### [Optional] Using Material Design icons with `md-icon`:
 
