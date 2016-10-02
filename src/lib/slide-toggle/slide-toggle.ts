@@ -60,12 +60,21 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   // A unique id for the slide-toggle. By default the id is auto-generated.
   private _uniqueId = `md-slide-toggle-${++nextId}`;
   private _checked: boolean = false;
+  private _disabled: boolean = false;
   private _color: string;
   _hasFocus: boolean = false;
   private _isMousedown: boolean = false;
   private _slideRenderer: SlideToggleRenderer = null;
 
-  @Input() @BooleanFieldValue() disabled: boolean = false;
+  @Input()
+  @BooleanFieldValue()
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(value) {
+    this._disabled = (value != null && value !== false) ? true : null;
+  }
+
   @Input() @BooleanFieldValue() required: boolean = false;
   @Input() name: string = null;
   @Input() id: string = this._uniqueId;

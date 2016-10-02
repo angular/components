@@ -58,11 +58,18 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
   /** The dimensions of the slider. */
   private _sliderDimensions: ClientRect = null;
 
+  private _disabled: boolean = false;
+
   @Input()
   @BooleanFieldValue()
   @HostBinding('class.md-slider-disabled')
   @HostBinding('attr.aria-disabled')
-  disabled: boolean = false;
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(value) {
+    this._disabled = (value != null && value !== false) ? true : null;
+  }
 
   /** Whether or not to show the thumb label. */
   @Input('thumb-label')

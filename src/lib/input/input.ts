@@ -107,6 +107,7 @@ export class MdHint {
 export class MdInput implements ControlValueAccessor, AfterContentInit, OnChanges {
   private _focused: boolean = false;
   private _value: any = '';
+  private _disabled: boolean = false;
 
   /** Callback registered via registerOnTouched (ControlValueAccessor) */
   private _onTouchedCallback: () => void = noop;
@@ -148,7 +149,16 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   @Input() autocorrect: string;
   @Input() autocapitalize: string;
   @Input() @BooleanFieldValue() autofocus: boolean = false;
-  @Input() @BooleanFieldValue() disabled: boolean = false;
+
+  @Input()
+  @BooleanFieldValue()
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(value) {
+    this._disabled = (value != null && value !== false) ? true : null;
+  }
+
   @Input() id: string = `md-input-${nextUniqueId++}`;
   @Input() list: string = null;
   @Input() max: string | number = null;

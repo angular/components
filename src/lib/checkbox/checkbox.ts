@@ -103,7 +103,13 @@ export class MdCheckbox implements ControlValueAccessor {
    * Whether the checkbox is disabled. When the checkbox is disabled it cannot be interacted with.
    * The correct ARIA attributes are applied to denote this to assistive technology.
    */
-  @Input() disabled: boolean = false;
+  @Input()
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(value) {
+    this._disabled = (value != null && value !== false) ? true : null;
+  }
 
   /**
    * The tabindex attribute for the checkbox. Note that when the checkbox is disabled, the attribute
@@ -125,6 +131,8 @@ export class MdCheckbox implements ControlValueAccessor {
   private _currentCheckState: TransitionCheckState = TransitionCheckState.Init;
 
   private _checked: boolean = false;
+
+  private _disabled: boolean = false;
 
   private _indeterminate: boolean = false;
 
