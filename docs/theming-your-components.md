@@ -2,16 +2,18 @@
 
 In order to style your own components with our tooling, the component's styles must be defined with Sass.
 
-You can consume the theming functions and variables from the @angular/material/core/theming. You can use the `map-get` function to extract the theming variables and `md-color` function to extract a specific color from a palette. For example, to theming a custom form input:
+You can consume the theming functions and variables from the @angular/material/core/theming. You can use the `map-get` function to extract the theming variables and `md-color` function to extract a specific color from a palette.
+For example, to theming a custom form input we can use the same approach used for theming the Angular 2 Material `md-input` component, as ou can see in `@angular/material/input/_input-theme.scss` file:
 
-Create a css file for your custom input with the `@mixin custom-input-theme` function that will be responsible for applying the theme to your custom component:
+Create a scss file for your custom input with a function that will be responsible for applying the theme to your custom component. In this example, we will call this function `custom-input-theme($theme)`.
 
 app/custom-input/custom-input-theme.scss
 
 ```sass
-@import '~@angular/material/core/theming/theming';
+// Import all the tools needed to customize the theme and extract parts of it
+@import '~@angular/material/core/theming/all-theme';
 
-@mixin custom-input-theme($theme) {
+@mixin custom-input-theme($theme) { // here is the function responsible for applying the theme to your custom component.
   // Extract theme variables
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
@@ -74,19 +76,21 @@ app/custom-input/custom-input-theme.scss
 }
 ```
 
-And in the unicorn-app-theme.scss you have to call this scss function `custom-input-theme($theme)` to apply the custom theme to your custom component:
+Now you have to apply the theme to the custom component. For that, we can create a theme file with a custom theme or a pre-built one. We will use a pre-built one to show you how to do this.
+In the src/app-theme.scss you have to call this scss function `custom-input-theme($theme)` to apply the custom theme to your custom component:
 
 ```sass
-@import 'app/custom-input/custom-input-theme.scss';
+// Import all the tools needed to customize the theme and extract parts of it
 @import '~@angular/material/core/theming/all-theme';
+// Import a pre-built theme
+@import '~@angular/material/core/theming/prebuilt/deep-purple-amber';
+// Import your custom input theme file so you can call the custom-input-theme function
+@import 'app/custom-input/custom-input-theme.scss';
 
 @include md-core();
-$primary: md-palette($md-indigo);
-$accent:  md-palette($md-pink, A200, A100, A400);
-$warn:    md-palette($md-red);
-$theme: md-light-theme($primary, $accent, $warn);
 
+$theme: md-light-theme($primary, $accent, $warn); // $primary, $accent, $warn comes from the prebuilt theme
 
-@include angular-material-theme($theme);
-@include custom-input-theme($theme); // Here ou apply the theme to your custom component
+@include angular-material-theme($theme); // Apply the theme to the material design components
+@include custom-input-theme($theme); // Here you apply the theme to your custom component
 ```
