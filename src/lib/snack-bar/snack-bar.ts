@@ -21,9 +21,6 @@ import {MdSnackBarRef} from './snack-bar-ref';
 import {MdSnackBarContainer} from './snack-bar-container';
 import {SimpleSnackBar} from './simple-snack-bar';
 
-export {MdSnackBarRef} from './snack-bar-ref';
-export {MdSnackBarConfig} from './snack-bar-config';
-
 // TODO(josephperrott): Automate dismiss after timeout.
 
 
