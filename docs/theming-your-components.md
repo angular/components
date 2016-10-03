@@ -52,7 +52,8 @@ app/custom-input/custom-input-theme.scss
 
   // See md-input-placeholder-floating mixin in input.scss
   custom-input input:-webkit-autofill + .custom-input-placeholder,
-  .custom-input-placeholder.md-float:not(.md-empty), .custom-input-placeholder.md-float.md-focused {
+  .custom-input-placeholder.md-float:not(.md-empty),
+  .custom-input-placeholder.md-float.md-focused {
 
     .custom-placeholder-required {
       color: $input-required-placeholder-color;
