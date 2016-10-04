@@ -148,9 +148,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   @Input() autocorrect: string;
   @Input() autocapitalize: string;
   @Input() @BooleanFieldValue() autofocus: boolean = false;
-
   @Input() @BooleanFieldValue() disabled: boolean = false;
-
   @Input() id: string = `md-input-${nextUniqueId++}`;
   @Input() list: string = null;
   @Input() max: string | number = null;
