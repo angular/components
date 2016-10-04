@@ -62,7 +62,7 @@ High level items planned for October 2016:
 | tooltip          | Initial version, needs enhancements | [README][18] |              - |
 | ripples          |  Available, but needs to be applied | [README][19] |   [#108][0108] |
 | dialog           |  Started, not yet ready for release |           -  |   [#114][0114] |
-| snackbar / toast | Initial version, needs enhancements	| [README][19] |   [#115][0115] |
+| snackbar / toast | Initial version, needs enhancements	| [README][21] |   [#115][0115] |
 | select           |                      Design started |           -  |   [#118][0118] |
 | textarea         |                         Not started |           -  |   [#546][0546] |
 | autocomplete     |                         Not started |           -  |   [#117][0117] |
