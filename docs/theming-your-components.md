@@ -47,11 +47,9 @@ All you need is to create a @mixin function in the custom-component-theme.scss
 }
 ```
 
-Now you have to apply a theme to the custom component. We have to call the @mixin function to apply the custom theme:
+Now you just have have to call the @mixin function to apply the theme:
 
 ```sass
-// Import theming functions and variables
-@import '~@angular/material/core/theming/all-theme';
 // Import a pre-built theme
 @import '~@angular/material/core/theming/prebuilt/deep-purple-amber';
 // Import your custom input theme file so you can call the custom-input-theme function
