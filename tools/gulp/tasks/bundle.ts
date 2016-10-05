@@ -6,7 +6,6 @@ import {
 import * as path from 'path';
 
 const systemjsBuilder = require('systemjs-builder');
-const firebase = require('firebase-tools');
 
 const ANGULAR_PACKAGES = [
   '@angular/core/',
@@ -35,15 +34,20 @@ task('build:bundle', ['build:components', ':build:devapp:vendor', ':build:devapp
 
 
 task('deploy:bundle:plunker', ['build:bundle'], () => {
+
+  // Import the Firebase CLI inside of the task, because the CLI would keep the gulp process alive.
+  const firebase = require('firebase-tools');
+
   return firebase.deploy({
     firebase: PLUNKER_FIREBASE_NAME,
     token: PLUNKER_FIREBASE_TOKEN,
     public: path.relative(PROJECT_ROOT, DIST_BUNDLES_ROOT)
   }).then(() => {
     console.log('Firebase: Successfully deployed bundle to firebase.');
-    process.exit(0); // Manually exit the process, because the CLI keeps the process alive.
+    process.exit(0); // Manually exit the process, because the firebase CLI keeps the process alive.
   }).catch((error: any) => {
     console.error(error.message || error);
-    process.exit(1); // Manually exit the process, because the CLI keeps the process alive.
+    process.exit(1); // Manually exit the process, because the firebase CLI keeps the process alive.
   });
+
 });
