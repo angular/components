@@ -102,7 +102,6 @@ describe('MdSnackBar', () => {
     expect(messageElement.tagName).toBe('SPAN', 'Expected snack bar message element to be <span>');
     expect(messageElement.textContent)
         .toBe(simpleMessage, `Expected the snack bar message to be '${simpleMessage}''`);
-
     expect(overlayContainerElement.querySelector('button.md-simple-snackbar-action'))
         .toBeNull('Expected the query selection for action label to be null');
   });

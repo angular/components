@@ -46,9 +46,9 @@ export type SnackBarState = 'initial' | 'visible' | 'complete' | 'void';
       state('visible', style({transform: 'translateY(0%)'})),
       state('complete', style({transform: 'translateY(100%)'})),
       transition('visible => complete',
-                 animate(`${AnimationDurations.exiting} ${AnimationCurves.decelerationCurve}`)),
+                 animate(`${AnimationDurations.EXITING} ${AnimationCurves.DECELERATION_CURVE}`)),
       transition('initial => visible, void => visible',
-                 animate(`${AnimationDurations.entering} ${AnimationCurves.accelerationCurve}`)),
+                 animate(`${AnimationDurations.ENTERING} ${AnimationCurves.ACCELERATION_CURVE}`)),
     ])
   ],
 })
