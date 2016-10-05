@@ -147,8 +147,14 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    * @returns OverlayState
    */
   private _getOverlayConfig(): OverlayState {
-    const overlayState = new OverlayState();
+    let overlayState: OverlayState = new OverlayState();
     overlayState.positionStrategy = this._getPosition();
+
+    // check if custom paneClassName is set on menu and pass it to overlay config
+    if (this.menu.paneClassName) {
+      overlayState.paneClassName = this.menu.paneClassName;
+    }
+
     return overlayState;
   }
 

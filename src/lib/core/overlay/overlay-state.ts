@@ -7,10 +7,13 @@ import {PositionStrategy} from './position/position-strategy';
  */
 export class OverlayState {
   /** Strategy with which to position the overlay. */
-  positionStrategy: PositionStrategy;
+  positionStrategy: PositionStrategy
 
   /** Whether the overlay has a backdrop. */
   hasBackdrop: boolean = false;
+
+  /** Optional custom class to be added to the pane. */
+  paneClassName: string | Array<string>;
 
   // TODO(jelbourn): configuration still to add
   // - overlay size

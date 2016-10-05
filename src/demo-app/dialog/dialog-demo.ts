@@ -1,11 +1,11 @@
-import {Component, ViewContainerRef} from '@angular/core';
+import {Component, ViewContainerRef,ViewEncapsulation} from '@angular/core';
 import {MdDialog, MdDialogConfig, MdDialogRef} from '@angular/material';
 
 @Component({
   moduleId: module.id,
   selector: 'dialog-demo',
   templateUrl: 'dialog-demo.html',
-  styleUrls: ['dialog-demo.css'],
+  styleUrls: ['dialog-demo.css']
 })
 export class DialogDemo {
   dialogRef: MdDialogRef<JazzDialog>;
@@ -18,6 +18,7 @@ export class DialogDemo {
   open() {
     let config = new MdDialogConfig();
     config.viewContainerRef = this.viewContainerRef;
+    config.paneClassName = 'jazz-dialog';
 
     this.dialogRef = this.dialog.open(JazzDialog, config);
 

@@ -1,3 +1,10 @@
 .demo-dialog {
   color: rebeccapurple;
 }
+
+// apply custom z-index
+/deep/ .md-overlay-pane {
+  &.jazz-dialog {
+    z-index: 9999;
+  }
+}
