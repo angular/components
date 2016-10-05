@@ -7,7 +7,7 @@ import {PositionStrategy} from './position/position-strategy';
  */
 export class OverlayState {
   /** Strategy with which to position the overlay. */
-  positionStrategy: PositionStrategy
+  positionStrategy: PositionStrategy;
 
   /** Whether the overlay has a backdrop. */
   hasBackdrop: boolean = false;
