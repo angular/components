@@ -109,7 +109,7 @@ dark theme.
 In order to style your own components with our tooling, the component's styles must be defined 
 with Sass. 
 
-You can consume the theming functions and variables from the @angular/material/core/theming. You can use the `map-get` function to extract the theming variables and `md-color` function to extract a specific color from a palette. For example:
+You can consume the theming functions and variables from the @angular/material/core/theming. You can use the `md-color` function to extract a specific color from a palette. For example:
 
 ```scss
 // Import theming functions and variables
