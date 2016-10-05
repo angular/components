@@ -2,7 +2,7 @@
 
 In order to style your own components with our tooling, the component's styles must be defined with Sass.
 
-You can consume the theming functions from the `@angular/material/core/theming/all-theme` and theming variables from a pre-built theme or a custom one. You can use the `map-get` function to extract the theming variables and `md-color` function to extract a specific color from a palette.
+You can consume the theming functions from the `@angular/material/core/theming/all-theme` and theming variables from a pre-built theme or a custom one. You can use the `md-color` function to extract a specific color from a palette.
 For example:
 
 app/candy-carousel/candy-carousel-theme.scss
@@ -12,10 +12,6 @@ app/candy-carousel/candy-carousel-theme.scss
 @import '~@angular/material/core/theming/all-theme';
 // Import a pre-built theme
 @import '~@angular/material/core/theming/prebuilt/deep-purple-amber';
-
-// Extract whichever individual palettes you need from the pre-built theme.
-$primary: map-get($theme, primary);
-$accent: map-get($theme, accent);
 
 // Use md-color to extract individual colors from a palette as necessary.
 .candy-carousel {
