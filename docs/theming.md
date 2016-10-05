@@ -98,7 +98,7 @@ secondary dark theme:
 
   $dark-theme: md-dark-theme($dark-primary, $dark-accent, $dark-warn);
   
-@include angular-material-theme($dark-theme);   
+  @include angular-material-theme($dark-theme);   
 }
 ```
 
@@ -112,21 +112,23 @@ with Sass.
 You can consume the theming functions and variables from the @angular/material/core/theming. You can use the `map-get` function to extract the theming variables and `md-color` function to extract a specific color from a palette. For example:
 
 ```scss
-// Define a mixin that accepts a theme and outputs the color styles for the component.
-@mixin candy-carousel-theme($theme) {
-  // Extract whichever individual palettes you need from the theme.
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
+// Import theming functions and variables
+@import '~@angular/material/core/theming/all-theme';
+// Import a pre-built theme
+@import '~@angular/material/core/theming/prebuilt/deep-purple-amber';
 
-  // Use md-color to extract individual colors from a palette as necessary.
-  .candy-carousel {
-    background-color: md-color($primary);
-    border-color: md-color($accent, A400);
-  }
+// Extract whichever individual palettes you need from the pre-built theme.
+$primary: map-get($theme, primary);
+$accent: map-get($theme, accent);
+
+// Use md-color to extract individual colors from a palette as necessary.
+.candy-carousel {
+  background-color: md-color($primary);
+  border-color: md-color($accent, A400);
 }
 ```
 
-You can see a complete example in [theming-your-components.md][2]
+You can see a more complete example in [theming-your-components.md][2]
 
 [2]: https://github.com/angular/material2/blob/master/docs/theming-your-components.md
 
