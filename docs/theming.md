@@ -117,10 +117,6 @@ You can consume the theming functions and variables from the @angular/material/c
 // Import a pre-built theme
 @import '~@angular/material/core/theming/prebuilt/deep-purple-amber';
 
-// Extract whichever individual palettes you need from the pre-built theme.
-$primary: map-get($theme, primary);
-$accent: map-get($theme, accent);
-
 // Use md-color to extract individual colors from a palette as necessary.
 .candy-carousel {
   background-color: md-color($primary);
