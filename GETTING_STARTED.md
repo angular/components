@@ -44,6 +44,12 @@ Add HammerJS to your application via [npm](https://www.npmjs.com/package/hammerj
 (such as the [Google CDN](https://developers.google.com/speed/libraries/#hammerjs)), or served 
 directly from your app.
 
+For example, if you want to add it via npm:
+
+```bash
+npm install --save-dev @types/hammerjs
+```
+
 ### [Optional] Using Material Design icons with `md-icon`:
 
 - If you want to use Material Design icons, load the Material Design font in your `index.html`.  
