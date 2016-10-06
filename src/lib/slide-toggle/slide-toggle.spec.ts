@@ -486,6 +486,27 @@ describe('MdSlideToggle', () => {
       expect(slideThumbContainer.classList).not.toContain('md-dragging');
     }));
 
+    it('should should emit a change event after drag', fakeAsync(() => {
+      expect(slideToggle.checked).toBe(false);
+
+      gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
+
+      expect(slideThumbContainer.classList).toContain('md-dragging');
+
+      gestureConfig.emitEventForElement('slide', slideThumbContainer, {
+        deltaX: 200 // Use a random number which will be clamped.
+      });
+
+      gestureConfig.emitEventForElement('slideend', slideThumbContainer);
+
+      // Flush the timeout for the slide ending.
+      tick();
+
+      expect(slideToggle.checked).toBe(true);
+      expect(slideThumbContainer.classList).not.toContain('md-dragging');
+      expect(testComponent.lastEvent.checked).toBe(true);
+    }));
+
   });
 
 });
