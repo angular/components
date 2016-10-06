@@ -1,4 +1,4 @@
-import {Component, ViewContainerRef,ViewEncapsulation} from '@angular/core';
+import {Component, ViewContainerRef} from '@angular/core';
 import {MdDialog, MdDialogConfig, MdDialogRef} from '@angular/material';
 
 @Component({
