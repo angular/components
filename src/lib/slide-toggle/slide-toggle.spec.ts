@@ -494,7 +494,7 @@ describe('MdSlideToggle', () => {
       expect(slideThumbContainer.classList).toContain('md-dragging');
 
       gestureConfig.emitEventForElement('slide', slideThumbContainer, {
-        deltaX: 200 // Use a random number which will be clamped.
+        deltaX: 200 // Arbitrary, large delta that will be clamped to the end of the slide-toggle.
       });
 
       gestureConfig.emitEventForElement('slideend', slideThumbContainer);
