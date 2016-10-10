@@ -33,9 +33,21 @@ import { MaterialModule } from '@angular/material';
 export class PizzaPartyAppModule { }
 ```
 
-### Including core and theme styles:
-See the [theming guide](docs/theming.md) for more information.
+## Include core and theme styles
 
+To ensure the components display correctly, you'll need to include Material's core style rules and 
+your desired theme. The easiest way to do this is to use one of the pre-built theme files that comes 
+with Angular Material (it already includes the core styles for you). 
+
+Select a theme file from `@angular/material/core/theming/prebuilt` and import it at the top of your 
+global `styles.css` file. 
+
+**src/styles.css**
+```
+@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
+```
+
+See our [theming guide](docs/theming.md) for more information.
 
 ### Additional setup for `md-slide-toggle` and `md-slider`:
 The slide-toggle and slider components have a dependency on [HammerJS](http://hammerjs.github.io/).
