@@ -64,6 +64,7 @@ $md-dense-three-line-height: 76px;
   }
 
   [md-list-avatar] {
+    flex-shrink: 0;
     width: $md-list-avatar-size;
     height: $md-list-avatar-size;
     border-radius: 50%;
