@@ -69,6 +69,8 @@ export class MdTabGroup {
   private _isInitialized: boolean = false;
 
   private _selectedIndex: number = 0;
+
+  @Input() hideTabs: boolean = false;
   @Input()
   set selectedIndex(value: number) {
     if (value != this._selectedIndex && this.isValidIndex(value)) {
