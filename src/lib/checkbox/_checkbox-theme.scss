@@ -15,11 +15,6 @@
   // The color of the checkbox's checkmark / mixedmark.
   $checkbox-mark-color: md-color($background, background);
 
-  // The color that is used as the checkbox background when it is checked.
-  $checkbox-background-color-primary: md-color($primary, 500);
-  $checkbox-background-color-accent: md-color($accent, 500);
-  $checkbox-background-color-warn: md-color($warn, 500);
-
   // NOTE(traviskaufman): While the spec calls for translucent blacks/whites for disabled colors,
   // this does not work well with elements layered on top of one another. To get around this we
   // blend the colors together based on the base color and the theme background.
@@ -46,22 +41,16 @@
   }
 
   .md-checkbox-indeterminate, .md-checkbox-checked {
-    &.md-primary {
-      .md-checkbox-background {
-        background-color: $checkbox-background-color-primary;
-      }
+    &.md-primary .md-checkbox-background {
+      background-color: md-color($primary, 500);
     }
 
-    &.md-accent {
-      .md-checkbox-background {
-        background-color: $checkbox-background-color-accent;
-      }
+    &.md-accent .md-checkbox-background {
+      background-color: md-color($accent, 500);
     }
 
-    &.md-warn {
-      .md-checkbox-background {
-        background-color: $checkbox-background-color-warn;
-      }
+    &.md-warn .md-checkbox-background {
+      background-color: md-color($warn, 500);
     }
   }
 
@@ -81,22 +70,16 @@
 
   // TODO(jelbourn): remove style for temporary ripple once the real ripple is applied.
   .md-checkbox-focused {
-    &.md-primary {
-      .md-ink-ripple {
-        background-color: md-color($primary, 0.26);
-      }
+    &.md-primary .md-ink-ripple {
+      background-color: md-color($primary, 0.26);
     }
 
-    &.md-accent {
-      .md-ink-ripple {
-        background-color: md-color($accent, 0.26);
-      }
+    &.md-accent .md-ink-ripple {
+      background-color: md-color($accent, 0.26);
     }
 
-    &.md-warn {
-      .md-ink-ripple {
-        background-color: md-color($warn, 0.26);
-      }
+    &.md-warn .md-ink-ripple {
+      background-color: md-color($warn, 0.26);
     }
   }
 }
