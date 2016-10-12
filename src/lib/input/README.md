@@ -85,15 +85,15 @@ You can put the focus on an input component using the `focus()` method.
 ### Example
 
 ```html
-<md-input #nameinput placeholder="name"></md-input>
+<md-input #nameInput placeholder="name"></md-input>
 ```
 
 ```ts
 export class MyComponent implements OnInit {
-  @ViewChild(MdInput) nameinput: MdInput;
+  @ViewChild(MdInput) nameInput: MdInput;
 
   ngOnInit() {
-    this.nameinput.focus();
+    this.nameInput.focus();
   }
 }
 ```
