@@ -6,7 +6,7 @@ export class MenuPage {
     browser.get('/menu');
   }
 
-  menu() { return element(by.css('.md-menu')); }
+  menu() { return element(by.css('.md-menu-panel')); }
 
   start() { return element(by.id('start')); }
 
@@ -46,7 +46,7 @@ export class MenuPage {
   }
 
   expectMenuPresent(expected: boolean) {
-    return browser.isElementPresent(by.css('.md-menu')).then((isPresent) => {
+    return browser.isElementPresent(by.css('.md-menu-panel')).then(isPresent => {
       expect(isPresent).toBe(expected);
     });
   }
