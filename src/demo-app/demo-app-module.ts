@@ -15,7 +15,7 @@ import {InputDemo} from './input/input-demo';
 import {CardDemo} from './card/card-demo';
 import {RadioDemo} from './radio/radio-demo';
 import {ButtonToggleDemo} from './button-toggle/button-toggle-demo';
-import {ProgressCircleDemo} from './progress-circle/progress-circle-demo';
+import {ProgressSpinnerDemo} from './progress-spinner/progress-spinner-demo';
 import {TooltipDemo} from './tooltip/tooltip-demo';
 import {ListDemo} from './list/list-demo';
 import {BaselineDemo} from './baseline/baseline-demo';
@@ -66,7 +66,7 @@ import {TabsDemo} from './tabs/tab-group-demo';
     OverlayDemo,
     PortalDemo,
     ProgressBarDemo,
-    ProgressCircleDemo,
+    ProgressSpinnerDemo,
     RadioDemo,
     RippleDemo,
     RotiniPanel,
