@@ -1,14 +1,14 @@
 import {TestBed, async} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdProgressCircleModule} from './progress-circle';
+import {MdProgressSpinnerModule} from './progress-spinner';
 
 
 describe('MdProgressCircular', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdProgressCircleModule.forRoot()],
+      imports: [MdProgressSpinnerModule.forRoot()],
       declarations: [
         BasicProgressSpinner,
         IndeterminateProgressSpinner,
@@ -24,7 +24,7 @@ describe('MdProgressCircular', () => {
     let fixture = TestBed.createComponent(BasicProgressSpinner);
       fixture.detectChanges();
 
-      let progressElement = fixture.debugElement.query(By.css('md-progress-circle'));
+      let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
       expect(progressElement.componentInstance.mode).toBe('determinate');
   });
 
@@ -32,7 +32,7 @@ describe('MdProgressCircular', () => {
     let fixture = TestBed.createComponent(IndeterminateProgressSpinner);
     fixture.detectChanges();
 
-    let progressElement = fixture.debugElement.query(By.css('md-progress-circle'));
+    let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
     expect(progressElement.componentInstance.mode).toBe('indeterminate');
   });
 
@@ -40,13 +40,13 @@ describe('MdProgressCircular', () => {
     let fixture = TestBed.createComponent(BasicProgressSpinner);
     fixture.detectChanges();
 
-    let progressElement = fixture.debugElement.query(By.css('md-progress-circle'));
+    let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
     expect(progressElement.componentInstance.value).toBeUndefined();
   });
 
   it('should set the value to undefined when the mode is set to indeterminate', () => {
     let fixture = TestBed.createComponent(ProgressSpinnerWithValueAndBoundMode);
-    let progressElement = fixture.debugElement.query(By.css('md-progress-circle'));
+    let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
     fixture.debugElement.componentInstance.mode = 'determinate';
     fixture.detectChanges();
 
@@ -60,7 +60,7 @@ describe('MdProgressCircular', () => {
     let fixture = TestBed.createComponent(BasicProgressSpinner);
     fixture.detectChanges();
 
-    let progressElement = fixture.debugElement.query(By.css('md-progress-circle'));
+    let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
     let progressComponent = progressElement.componentInstance;
 
     progressComponent.value = 50;
@@ -77,7 +77,7 @@ describe('MdProgressCircular', () => {
     let fixture = TestBed.createComponent(IndeterminateProgressSpinnerWithNgIf);
     fixture.detectChanges();
 
-    let progressElement = fixture.debugElement.query(By.css('md-progress-circle'));
+    let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
     expect(progressElement.componentInstance.interdeterminateInterval).toBeTruthy();
 
     fixture.debugElement.componentInstance.isHidden = true;
@@ -87,15 +87,15 @@ describe('MdProgressCircular', () => {
 });
 
 
-@Component({template: '<md-progress-circle></md-progress-circle>'})
+@Component({template: '<md-progress-spinner></md-progress-spinner>'})
 class BasicProgressSpinner { }
 
-@Component({template: '<md-progress-circle mode="indeterminate"></md-progress-circle>'})
+@Component({template: '<md-progress-spinner mode="indeterminate"></md-progress-spinner>'})
 class IndeterminateProgressSpinner { }
 
-@Component({template: '<md-progress-circle value="50" [mode]="mode"></md-progress-circle>'})
+@Component({template: '<md-progress-spinner value="50" [mode]="mode"></md-progress-spinner>'})
 class ProgressSpinnerWithValueAndBoundMode { }
 
 @Component({template: `
-    <md-progress-circle mode="indeterminate" *ngIf="!isHidden"></md-progress-circle>`})
+    <md-progress-spinner mode="indeterminate" *ngIf="!isHidden"></md-progress-spinner>`})
 class IndeterminateProgressSpinnerWithNgIf { }

@@ -23,28 +23,28 @@ const startIndeterminate = 3;
 const endIndeterminate = 80;
 
 
-export type ProgressCircleMode = 'determinate' | 'indeterminate';
+export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
 
 type EasingFn = (currentTime: number, startValue: number,
                  changeInValue: number, duration: number) => number
 
 
 /**
- * <md-progress-circle> component.
+ * <md-progress-spinner> component.
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-progress-circle',
+  selector: 'md-progress-spinner',
   host: {
     'role': 'progressbar',
     '[attr.aria-valuemin]': '_ariaValueMin',
     '[attr.aria-valuemax]': '_ariaValueMax',
   },
-  templateUrl: 'progress-circle.html',
-  styleUrls: ['progress-circle.css'],
+  templateUrl: 'progress-spinner.html',
+  styleUrls: ['progress-spinner.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdProgressCircle implements OnDestroy {
+export class MdProgressSpinner implements OnDestroy {
   /** The id of the last requested animation. */
   private _lastAnimationId: number = 0;
 
@@ -74,7 +74,7 @@ export class MdProgressCircle implements OnDestroy {
     this._interdeterminateInterval = interval;
   }
 
-  /** The current path value, representing the progress circle. */
+  /** The current path value, representing the progress spinner. */
   private _currentPath: string;
 
   /** TODO: internal */
@@ -94,7 +94,7 @@ export class MdProgressCircle implements OnDestroy {
   }
 
   /**
-   * Value of the progress circle.
+   * Value of the progress spinner.
    *
    * Input:number
    * _value is bound to the host as the attribute aria-valuenow.
@@ -116,7 +116,7 @@ export class MdProgressCircle implements OnDestroy {
   }
 
   /**
-   * Mode of the progress circle
+   * Mode of the progress spinner
    *
    * Input must be one of the values from ProgressMode, defaults to 'determinate'.
    * mode is bound to the host as the attribute host.
@@ -126,7 +126,7 @@ export class MdProgressCircle implements OnDestroy {
   get mode() {
     return this._mode;
   }
-  set mode(m: ProgressCircleMode) {
+  set mode(m: ProgressSpinnerMode) {
     if (m == 'indeterminate') {
       this._startIndeterminateAnimation();
     } else {
@@ -134,7 +134,7 @@ export class MdProgressCircle implements OnDestroy {
     }
     this._mode = m;
   }
-  private _mode: ProgressCircleMode = 'determinate';
+  private _mode: ProgressSpinnerMode = 'determinate';
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {
   }
@@ -217,7 +217,7 @@ export class MdProgressCircle implements OnDestroy {
  * <md-spinner> component.
  *
  * This is a component definition to be used as a convenience reference to create an
- * indeterminate <md-progress-circle> instance.
+ * indeterminate <md-progress-spinner> instance.
  */
 @Component({
   moduleId: module.id,
@@ -226,10 +226,10 @@ export class MdProgressCircle implements OnDestroy {
     'role': 'progressbar',
     'mode': 'indeterminate',
   },
-  templateUrl: 'progress-circle.html',
-  styleUrls: ['progress-circle.css'],
+  templateUrl: 'progress-spinner.html',
+  styleUrls: ['progress-spinner.css'],
 })
-export class MdSpinner extends MdProgressCircle {
+export class MdSpinner extends MdProgressSpinner {
   constructor(changeDetectorRef: ChangeDetectorRef) {
     super(changeDetectorRef);
     this.mode = 'indeterminate';
@@ -316,13 +316,13 @@ function getSvgArc(currentValue: number, rotation: number) {
 
 
 @NgModule({
-  exports: [MdProgressCircle, MdSpinner],
-  declarations: [MdProgressCircle, MdSpinner],
+  exports: [MdProgressSpinner, MdSpinner],
+  declarations: [MdProgressSpinner, MdSpinner],
 })
-export class MdProgressCircleModule {
+export class MdProgressSpinnerModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdProgressCircleModule,
+      ngModule: MdProgressSpinnerModule,
       providers: []
     };
   }

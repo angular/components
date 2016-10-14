@@ -11,7 +11,7 @@
 @import '../../list/list-theme';
 @import '../../menu/menu-theme';
 @import '../../progress-bar/progress-bar-theme';
-@import '../../progress-circle/progress-circle-theme';
+@import '../../progress-spinner/progress-spinner-theme';
 @import '../../radio/radio-theme';
 @import '../../sidenav/sidenav-theme';
 @import '../../slide-toggle/slide-toggle-theme';
@@ -35,7 +35,7 @@
   @include md-list-theme($theme);
   @include md-menu-theme($theme);
   @include md-progress-bar-theme($theme);
-  @include md-progress-circle-theme($theme);
+  @include md-progress-spinner-theme($theme);
   @include md-radio-theme($theme);
   @include md-sidenav-theme($theme);
   @include md-slide-toggle-theme($theme);
