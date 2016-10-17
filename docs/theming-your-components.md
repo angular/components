@@ -49,7 +49,7 @@ When using `@mixin`, the theme file should only contain the definitions that are
 
 All styles that are not affected by the theme should be placed in a `candy-carousel.scss` file. This file should contain everything that is not affected by the theme like sizes, transitions...
 
-Styles that are affected by the theme should have a `_` before the name and should be placed in a separated theming file as `_candy-carousel-theme.scss`. This file should contain the `@mixin` function responsible for applying the theme to the component.
+Styles that are affected by the theme should be placed in a separated theming file as `_candy-carousel-theme.scss` and the file should have a `_` before the name. This file should contain the `@mixin` function responsible for applying the theme to the component.
 
 
 ## Using colors from a pallete
