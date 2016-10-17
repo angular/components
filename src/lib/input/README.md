@@ -90,7 +90,7 @@ You can put the focus on an input component using the `focus()` method.
 
 ```ts
 export class MyComponent implements OnInit {
-  @ViewChild(MdInput) nameInput: MdInput;
+  @ViewChild('nameInput') nameInput: MdInput;
 
   ngOnInit() {
     this.nameInput.focus();
