@@ -28,11 +28,11 @@ export class MenuPage {
 
   combinedTrigger() { return element(by.id('combined-t')); }
 
-  beforeMenu() { return element(by.css('.md-menu.before')); }
+  beforeMenu() { return element(by.css('.md-menu-panel.before')); }
 
-  aboveMenu() { return element(by.css('.md-menu.above')); }
+  aboveMenu() { return element(by.css('.md-menu-panel.above')); }
 
-  combinedMenu() { return element(by.css('.md-menu.combined')); }
+  combinedMenu() { return element(by.css('.md-menu-panel.combined')); }
 
   // TODO(kara): move to common testing utility
   pressKey(key: any): void {
