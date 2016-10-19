@@ -60,4 +60,20 @@
       </button>
     </md-menu>
   </div>
+  <div class="menu-section">
+    <p>Custom classes on menu' overlay pane</p>
+
+    <md-toolbar>
+      <button md-icon-button [md-menu-trigger-for]="menuCustomClassName">
+        <md-icon>more_vert</md-icon>
+      </button>
+    </md-toolbar>
+
+    <md-menu #menuCustomClassName="mdMenu" [paneClassName]="['foo', 'bar']">
+
+      <button md-menu-item *ngFor="let item of items" (click)="select(item.text)" [disabled]="item.disabled">
+        {{ item.text }}
+      </button>
+    </md-menu>
+  </div>
 </div>

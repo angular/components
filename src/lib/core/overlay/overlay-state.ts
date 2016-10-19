@@ -12,6 +12,9 @@ export class OverlayState {
   /** Whether the overlay has a backdrop. */
   hasBackdrop: boolean = false;
 
+  /** Optional custom class to be added to the pane. */
+  paneClassName: string | Array<string>;
+
   // TODO(jelbourn): configuration still to add
   // - overlay size
   // - focus trap

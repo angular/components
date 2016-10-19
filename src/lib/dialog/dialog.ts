@@ -120,6 +120,10 @@ export class MdDialog {
         .centerHorizontally()
         .centerVertically();
 
+    if (dialogConfig.paneClassName) {
+      state.paneClassName = dialogConfig.paneClassName;
+    }
+
     return state;
   }
 }
