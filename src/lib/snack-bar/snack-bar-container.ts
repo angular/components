@@ -15,8 +15,6 @@ import {
   ComponentPortal,
   TemplatePortal,
   PortalHostDirective,
-  AnimationCurves,
-  AnimationDurations,
 } from '../core';
 import {MdSnackBarConfig} from './snack-bar-config';
 import {MdSnackBarContentAlreadyAttached} from './snack-bar-errors';
