@@ -216,6 +216,21 @@ describe('MdRadio', () => {
 
       expect(radioInstances.every(radio => !radio.checked)).toBe(true);
     });
+
+    fit('should remove ripple if md-ripple-disabled input is set', async(() => {
+      fixture.detectChanges();
+      for (let radioNativeElement of radioNativeElements)
+      {
+        expect(radioNativeElement.querySelectorAll('[md-ripple]').length).toBe(1);
+      }
+
+      /*testComponent.disableRipple = true;
+      fixture.detectChanges();
+      for (let radioNativeElement of radioNativeElements)
+      {
+        expect(radioNativeElement.querySelectorAll('[md-ripple]').length).toBe(0);
+      }*/
+    }));
   });
 
   describe('group with ngModel', () => {
@@ -246,7 +261,7 @@ describe('MdRadio', () => {
       radioInstances = radioDebugElements.map(debugEl => debugEl.componentInstance);
 
       radioLabelElements = radioDebugElements
-        .map(debugEl => debugEl.query(By.css('label')).nativeElement);
+          .map(debugEl => debugEl.query(By.css('label')).nativeElement);
     });
 
     it('should set individual radio names based on the group name', () => {
@@ -426,25 +441,31 @@ describe('MdRadio', () => {
   });
 });
 
-
 @Component({
   template: `
   <md-radio-group [disabled]="isGroupDisabled"
                   [align]="alignment"
                   [value]="groupValue"
                   name="test-name">
-    <md-radio-button value="fire">Charmander</md-radio-button>
-    <md-radio-button value="water">Squirtle</md-radio-button>
-    <md-radio-button value="leaf">Bulbasaur</md-radio-button>
+    <div><md-radio-button value="fire" [disableRipple]="disableRipple">Charmander</md-radio-button>
+    <md-radio-button value="water" [disableRipple]="disableRipple">Squirtle</md-radio-button>
+    <md-radio-button value="leaf" [disableRipple]="disableRipple">Bulbasaur</md-radio-button></div>
   </md-radio-group>
   `
 })
 class RadiosInsideRadioGroup {
+  disableRipple: boolean = false;
   alignment: string;
   isGroupDisabled: boolean = false;
   groupValue: string = null;
 }
 
+@Component({
+  template: `
+    <div><md-radio-button [disableRipple]="rippleDisabled" name="season" value="spring">Spring</md-radio-button></div>
+  `
+})
+class StandaloneRadioButton { }
 
 @Component({
   template: `
@@ -463,7 +484,6 @@ class RadiosInsideRadioGroup {
   `
 })
 class StandaloneRadioButtons { }
-
 
 @Component({
   template: `

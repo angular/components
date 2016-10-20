@@ -11,11 +11,13 @@ import {
   Optional,
   Output,
   QueryList,
+  ViewChild,
   ViewEncapsulation,
   forwardRef,
   NgModule,
   ModuleWithProviders,
 } from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {
   NG_VALUE_ACCESSOR,
   ControlValueAccessor
@@ -418,8 +420,7 @@ export class MdRadioButton implements OnInit {
   }
 
   getHostElement() {
-    const el = this._elementRef.nativeElement;
-    return el;
+    return this._elementRef.nativeElement;
   }
 
   isRippleEnabled() {
@@ -429,7 +430,7 @@ export class MdRadioButton implements OnInit {
 
 
 @NgModule({
-  imports: [MdRippleModule],
+  imports: [CommonModule, MdRippleModule],
   exports: [MdRadioGroup, MdRadioButton],
   declarations: [MdRadioGroup, MdRadioButton],
 })

@@ -124,7 +124,7 @@ describe('MdButton', () => {
 
   // Ripple tests.
   describe('button ripples', () => {
-    it('should remove ripple if md-ripple-disabled input is set', () => {
+    fit('should remove ripple if md-ripple-disabled input is set', () => {
       let fixture = TestBed.createComponent(TestApp);
       let testComponent = fixture.debugElement.componentInstance;
       let buttonDebugElement = fixture.debugElement.query(By.css('button'));
