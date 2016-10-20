@@ -224,12 +224,12 @@ describe('MdRadio', () => {
         expect(radioNativeElement.querySelectorAll('[md-ripple]').length).toBe(1);
       }
 
-      /*testComponent.disableRipple = true;
+      testComponent.disableRipple = true;
       fixture.detectChanges();
       for (let radioNativeElement of radioNativeElements)
       {
         expect(radioNativeElement.querySelectorAll('[md-ripple]').length).toBe(0);
-      }*/
+      }
     }));
   });
 
@@ -447,9 +447,9 @@ describe('MdRadio', () => {
                   [align]="alignment"
                   [value]="groupValue"
                   name="test-name">
-    <div><md-radio-button value="fire" [disableRipple]="disableRipple">Charmander</md-radio-button>
+    <md-radio-button value="fire" [disableRipple]="disableRipple">Charmander</md-radio-button>
     <md-radio-button value="water" [disableRipple]="disableRipple">Squirtle</md-radio-button>
-    <md-radio-button value="leaf" [disableRipple]="disableRipple">Bulbasaur</md-radio-button></div>
+    <md-radio-button value="leaf" [disableRipple]="disableRipple">Bulbasaur</md-radio-button>
   </md-radio-group>
   `
 })
@@ -459,13 +459,6 @@ class RadiosInsideRadioGroup {
   isGroupDisabled: boolean = false;
   groupValue: string = null;
 }
-
-@Component({
-  template: `
-    <div><md-radio-button [disableRipple]="rippleDisabled" name="season" value="spring">Spring</md-radio-button></div>
-  `
-})
-class StandaloneRadioButton { }
 
 @Component({
   template: `
