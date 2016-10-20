@@ -5,6 +5,7 @@ import {
   Input,
   Directive,
   AfterContentInit,
+  OnDestroy,
   ContentChild,
   SimpleChange,
   ContentChildren,
@@ -26,6 +27,7 @@ import {
 import {CommonModule} from '@angular/common';
 import {BooleanFieldValue, MdError} from '../core';
 import {Observable} from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
 
 
 const noop = () => {};
@@ -104,7 +106,7 @@ export class MdHint {
   host: {'(click)' : 'focus()'},
   encapsulation: ViewEncapsulation.None,
 })
-export class MdInput implements ControlValueAccessor, AfterContentInit, OnChanges {
+export class MdInput implements ControlValueAccessor, AfterContentInit, OnChanges, OnDestroy {
   private _focused: boolean = false;
   private _value: any = '';
 
@@ -166,6 +168,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
 
   private _blurEmitter: EventEmitter<FocusEvent> = new EventEmitter<FocusEvent>();
   private _focusEmitter: EventEmitter<FocusEvent> = new EventEmitter<FocusEvent>();
+  private _hintChildrenChangesSubscription: Subscription;
 
   @Output('blur')
   get onBlur(): Observable<FocusEvent> {
@@ -248,7 +251,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
     this._validateConstraints();
 
     // Trigger validation when the hint children change.
-    this._hintChildren.changes.subscribe(() => {
+    this._hintChildrenChangesSubscription = this._hintChildren.changes.subscribe(() => {
       this._validateConstraints();
     });
   }
@@ -256,6 +259,10 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   /** TODO: internal */
   ngOnChanges(changes: {[key: string]: SimpleChange}) {
     this._validateConstraints();
+  }
+
+  ngOnDestroy() {
+    this._hintChildrenChangesSubscription.unsubscribe();
   }
 
   /**
