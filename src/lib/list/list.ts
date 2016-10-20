@@ -8,7 +8,6 @@ import {
     ElementRef,
     Renderer,
     AfterContentInit,
-    OnDestroy,
     NgModule,
     ModuleWithProviders,
 } from '@angular/core';
@@ -61,10 +60,6 @@ export class MdListItem implements AfterContentInit {
   /** TODO: internal */
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
-  }
-
-  ngOnDestroy() {
-    this._lineSetter.destroy();
   }
 
   _handleFocus() {
