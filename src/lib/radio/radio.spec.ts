@@ -217,7 +217,7 @@ describe('MdRadio', () => {
       expect(radioInstances.every(radio => !radio.checked)).toBe(true);
     });
 
-    fit('should remove ripple if md-ripple-disabled input is set', async(() => {
+    it('should remove ripple if md-ripple-disabled input is set', async(() => {
       fixture.detectChanges();
       for (let radioNativeElement of radioNativeElements)
       {
