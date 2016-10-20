@@ -2,7 +2,6 @@ import {
     NgModule,
     ModuleWithProviders,
     AfterContentInit,
-    OnDestroy,
     Component,
     ContentChildren,
     ElementRef,
@@ -18,7 +17,6 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Dir, MdError} from '../core';
-import {Subscription} from 'rxjs/Subscription';
 
 /** Exception thrown when two MdSidenav are matching the same side. */
 export class MdDuplicatedSidenavError extends MdError {
@@ -241,13 +239,11 @@ export class MdSidenav {
   ],
   encapsulation: ViewEncapsulation.None,
 })
-export class MdSidenavLayout implements AfterContentInit, OnDestroy {
+export class MdSidenavLayout implements AfterContentInit {
   @ContentChildren(MdSidenav) _sidenavs: QueryList<MdSidenav>;
 
   get start() { return this._start; }
   get end() { return this._end; }
-
-  private _sidenavChangesSubscription: Subscription;
 
   /** The sidenav at the start/end alignment, independent of direction. */
   private _start: MdSidenav;
@@ -274,14 +270,9 @@ export class MdSidenavLayout implements AfterContentInit, OnDestroy {
   /** TODO: internal */
   ngAfterContentInit() {
     // On changes, assert on consistency.
-    this._sidenavChangesSubscription = this._sidenavs.changes
-      .subscribe(() => this._validateDrawers());
+    this._sidenavs.changes.subscribe(() => this._validateDrawers());
     this._sidenavs.forEach((sidenav: MdSidenav) => this._watchSidenavToggle(sidenav));
     this._validateDrawers();
-  }
-
-  ngOnDestroy() {
-    this._sidenavChangesSubscription.unsubscribe();
   }
 
   /*

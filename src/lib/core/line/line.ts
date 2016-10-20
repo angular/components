@@ -6,7 +6,6 @@ import {
     QueryList
 } from '@angular/core';
 
-import { Subscription  } from 'rxjs/Subscription';
 /**
  * Shared directive to count lines inside a text area, such as a list item.
  * Line elements can be extracted with a @ContentChildren(MdLine) query, then
@@ -17,19 +16,13 @@ export class MdLine {}
 
 /* Helper that takes a query list of lines and sets the correct class on the host */
 export class MdLineSetter {
-  private _changesSubscription: Subscription;
-
   constructor(private _lines: QueryList<MdLine>, private _renderer: Renderer,
               private _element: ElementRef) {
     this._setLineClass(this._lines.length);
 
-    this._changesSubscription = this._lines.changes.subscribe(() => {
+    this._lines.changes.subscribe(() => {
       this._setLineClass(this._lines.length);
     });
-  }
-
-  public destroy() {
-    this._changesSubscription.unsubscribe();
   }
 
   private _setLineClass(count: number): void {
