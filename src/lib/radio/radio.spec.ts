@@ -261,7 +261,7 @@ describe('MdRadio', () => {
       radioInstances = radioDebugElements.map(debugEl => debugEl.componentInstance);
 
       radioLabelElements = radioDebugElements
-          .map(debugEl => debugEl.query(By.css('label')).nativeElement);
+        .map(debugEl => debugEl.query(By.css('label')).nativeElement);
     });
 
     it('should set individual radio names based on the group name', () => {

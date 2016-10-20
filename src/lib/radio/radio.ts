@@ -22,7 +22,7 @@ import {
   NG_VALUE_ACCESSOR,
   ControlValueAccessor
 } from '@angular/forms';
-import {BooleanFieldValue, MdUniqueSelectionDispatcher, MdRippleModule} from '../core';
+import {BooleanFieldValue, MdRippleModule, MdUniqueSelectionDispatcher} from '../core';
 
 
 
