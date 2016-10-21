@@ -1,9 +1,16 @@
 import {
-  async,
-  TestBed,
+    async,
+    TestBed,
+    ComponentFixture,
 } from '@angular/core/testing';
 import {Component} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {
+    FormsModule,
+    FormGroup,
+    FormBuilder,
+    ReactiveFormsModule,
+    FormControl
+} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {MdInput, MdInputModule} from './input';
 
@@ -14,7 +21,7 @@ function isInternetExplorer11() {
 describe('MdInput', function () {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdInputModule.forRoot(), FormsModule],
+      imports: [MdInputModule.forRoot(), FormsModule, ReactiveFormsModule],
       declarations: [
         MdInputNumberTypeConservedTestComponent,
         MdInputPlaceholderRequiredTestComponent,
@@ -57,6 +64,7 @@ describe('MdInput', function () {
         MdInputTextTestController,
         MdInputPasswordTestController,
         MdInputNumberTestController,
+        MdInputReactiveFormsTestController,
       ],
     });
 
@@ -608,6 +616,39 @@ describe('MdInput', function () {
 
     expect(inputElement.name).toBe('some-name');
   });
+
+  describe('with reactive forms', () => {
+    let fixture: ComponentFixture<MdInputReactiveFormsTestController>;
+    let inputElement: HTMLInputElement;
+    let mdInput: MdInput;
+    let formControl: FormControl;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(MdInputReactiveFormsTestController);
+      inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+      fixture.detectChanges();
+
+      mdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+      formControl = <FormControl> fixture.componentInstance.form.controls['text'];
+    });
+
+    it('should be disabled when the form-control is set disabled', async(() => {
+      expect(inputElement.disabled).toBeFalsy();
+      expect(mdInput.disabled).toBeFalsy();
+
+      formControl.disable();
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        // Temporary workaround, see https://github.com/angular/angular/issues/10148
+        fixture.detectChanges();
+        fixture.whenStable().then(() => {
+          expect(inputElement.disabled).toBeTruthy('InputElement should be disabled');
+          expect(mdInput.disabled).toBeTruthy('Component should be disabled');
+        });
+      });
+    }));
+  });
 });
 
 @Component({template: `<md-input id="test-id"></md-input>`})
@@ -779,4 +820,19 @@ class MdInputPasswordTestController {
 @Component({template: `<md-input type="number" [placeholder]="placeholder"></md-input>`})
 class MdInputNumberTestController {
   placeholder: string = '';
+}
+
+@Component({template: `
+  <form [formGroup]="form">
+    <md-input type="text" formControlName="text"></md-input>
+  </form>
+`})
+class MdInputReactiveFormsTestController {
+  form: FormGroup;
+
+  constructor(builder: FormBuilder) {
+    this.form = builder.group({
+      text: [{value: '', disabled: false}]
+    });
+  }
 }
