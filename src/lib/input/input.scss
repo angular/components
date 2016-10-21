@@ -15,7 +15,7 @@ $md-input-underline-disabled-background-image:
   width: 100% / $md-input-floating-placeholder-scale-factor;
 }
 
-md-input {
+md-input, md-textarea {
   display: inline-block;
   position: relative;
   font-family: $md-font-family;
@@ -93,6 +93,10 @@ md-input {
   &:-webkit-autofill + .md-input-placeholder {
     @include md-input-placeholder-floating;
   }
+}
+
+.md-input-element--textarea {
+  min-height: 60px;
 }
 
 // The placeholder label. This is invisible unless it is. The logic to show it is

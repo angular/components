@@ -5,7 +5,9 @@ import {
   Input,
   Directive,
   AfterContentInit,
+  OnInit,
   ContentChild,
+  HostListener,
   SimpleChange,
   ContentChildren,
   ViewChild,
@@ -25,6 +27,9 @@ import {Observable} from 'rxjs/Observable';
 
 
 const noop = () => {};
+
+const MD_INPUT_SELECTOR = 'md-input';
+const MD_TEXTAREA_SELECTOR = 'md-textarea';
 
 export const MD_INPUT_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -86,6 +91,38 @@ export class MdHint {
   @Input() align: 'start' | 'end' = 'start';
 }
 
+/**
+ * Enables auto expanding behaviour for the textarea
+ */
+@Directive({
+  selector: 'textarea[mdAutosize]'
+})
+export class MdAutosize implements OnInit {
+  @HostListener('input', ['$event.target'])
+  public onChange() {
+    if (this._isActive) {
+      this._adjust();
+    }
+  }
+
+  @Input('mdAutosize')
+  private _isActive: boolean;
+
+  constructor(private _elRef: ElementRef) {}
+
+  ngOnInit() {
+    if (this._isActive) {
+      this._adjust();
+    }
+  }
+
+  private _adjust() {
+    this._elRef.nativeElement.style.overflow = 'hidden';
+    this._elRef.nativeElement.style.height = 'auto';
+    this._elRef.nativeElement.style.height = `${this._elRef.nativeElement.scrollHeight}px`;
+  }
+}
+
 
 /**
  * Component that represents a text input. It encapsulates the <input> HTMLElement and
@@ -93,7 +130,7 @@ export class MdHint {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-input',
+  selector: `${MD_INPUT_SELECTOR}, ${MD_TEXTAREA_SELECTOR}`,
   templateUrl: 'input.html',
   styleUrls: ['input.css'],
   providers: [MD_INPUT_CONTROL_VALUE_ACCESSOR],
@@ -229,6 +266,10 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
 
   @ViewChild('input') _inputElement: ElementRef;
 
+  public elementType: 'input' | 'textarea' = undefined;
+
+  constructor(private _elRef: ElementRef) { }
+
   /** Set focus on input */
   focus() {
     this._inputElement.nativeElement.focus();
@@ -281,6 +322,13 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   /** TODO: internal */
   ngAfterContentInit() {
     this._validateConstraints();
+
+    // Set the element type depending on normalized selector used(md-input / md-textarea)
+    if (this._elRef.nativeElement.tagName.toLowerCase() === MD_INPUT_SELECTOR.toLowerCase()) {
+      this.elementType = 'input';
+    } else {
+      this.elementType = 'textarea';
+    }
 
     // Trigger validation when the hint children change.
     this._hintChildren.changes.subscribe(() => {
@@ -346,9 +394,9 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
 
 
 @NgModule({
-  declarations: [MdPlaceholder, MdInput, MdHint],
+  declarations: [MdPlaceholder, MdInput, MdHint, MdAutosize],
   imports: [CommonModule, FormsModule],
-  exports: [MdPlaceholder, MdInput, MdHint],
+  exports: [MdPlaceholder, MdInput, MdHint, MdAutosize],
 })
 export class MdInputModule {
   static forRoot(): ModuleWithProviders {
