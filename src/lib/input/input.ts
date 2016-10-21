@@ -101,7 +101,10 @@ export class MdHint {
   templateUrl: 'input.html',
   styleUrls: ['input.css'],
   providers: [MD_INPUT_CONTROL_VALUE_ACCESSOR],
-  host: {'(click)' : 'focus()'},
+  host: {
+    '(click)' : 'focus()',
+    '[class.focused]' : 'focused'
+},
   encapsulation: ViewEncapsulation.None,
 })
 export class MdInput implements ControlValueAccessor, AfterContentInit, OnChanges {
