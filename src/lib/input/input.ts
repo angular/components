@@ -168,7 +168,7 @@ export class MdAutosize implements OnInit {
     // if line height is explicitly set(to a pixel value), use that
     if (computedStyles.lineHeight && computedStyles.lineHeight.toLowerCase().indexOf('px') >= 0) {
       // return stripped of the "px" and as a number
-      return +computedStyles.lineHeight.replace('px', '');
+      return parseFloat(computedStyles.lineHeight);
     }
 
     // create temporary element
