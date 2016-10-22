@@ -5,7 +5,6 @@ import {
   Input,
   Directive,
   AfterContentInit,
-  Attribute,
   OnInit,
   ContentChild,
   HostListener,
