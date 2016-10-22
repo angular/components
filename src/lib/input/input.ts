@@ -28,8 +28,6 @@ import {Observable} from 'rxjs/Observable';
 
 const noop = () => {};
 
-const MD_INPUT_SELECTOR = 'md-input';
-const MD_TEXTAREA_SELECTOR = 'md-textarea';
 
 export const MD_INPUT_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -93,13 +91,14 @@ export class MdHint {
 
 /**
  * Enables auto expanding behaviour for the textarea
+ * based on: https://github.com/stevepapa/angular2-autosize
  */
 @Directive({
   selector: 'textarea[mdAutosize]'
 })
 export class MdAutosize implements OnInit {
-  @HostListener('input', ['$event.target'])
-  public onChange() {
+  @HostListener('input')
+  private _onChange() {
     if (this._isActive) {
       this._adjust();
     }
@@ -112,12 +111,12 @@ export class MdAutosize implements OnInit {
 
   ngOnInit() {
     if (this._isActive) {
+      this._elRef.nativeElement.style.overflow = 'hidden';
       this._adjust();
     }
   }
 
   private _adjust() {
-    this._elRef.nativeElement.style.overflow = 'hidden';
     this._elRef.nativeElement.style.height = 'auto';
     this._elRef.nativeElement.style.height = `${this._elRef.nativeElement.scrollHeight}px`;
   }
@@ -130,7 +129,7 @@ export class MdAutosize implements OnInit {
  */
 @Component({
   moduleId: module.id,
-  selector: `${MD_INPUT_SELECTOR}, ${MD_TEXTAREA_SELECTOR}`,
+  selector: 'md-input, md-textarea',
   templateUrl: 'input.html',
   styleUrls: ['input.css'],
   providers: [MD_INPUT_CONTROL_VALUE_ACCESSOR],
@@ -324,7 +323,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
     this._validateConstraints();
 
     // Set the element type depending on normalized selector used(md-input / md-textarea)
-    if (this._elRef.nativeElement.tagName.toLowerCase() === MD_INPUT_SELECTOR.toLowerCase()) {
+    if (this._elRef.nativeElement.tagName.toLowerCase() === 'md-input') {
       this.elementType = 'input';
     } else {
       this.elementType = 'textarea';
