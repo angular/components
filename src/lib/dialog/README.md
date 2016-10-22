@@ -13,7 +13,7 @@ MdDialog is a service, which opens dialogs components in the view.
 | Key |  Description |
 | --- | --- |
 | `viewContainerRef: ViewContainerRef` | The view container ref to attach the dialog to. |
-| `role: DialogRole = 'dialog'` | The ARIA role of the dialog element. Possible values are `dialog` and `alertdialog`|
+| `role: DialogRole = 'dialog'` | The ARIA role of the dialog element. Possible values are `dialog` and `alertdialog`. |
 
 ## MdDialogRef
 
@@ -25,3 +25,64 @@ A reference to the dialog created by the MdDialog `open` method.
 | --- | --- |
 | `close(dialogResult?: any)` | Closes the dialog, pushing a value to the afterClosed observable. |
 | `afterClosed(): Observable<any>` | Returns an observable which will emit the dialog result, passed to the `close` method above. |
+
+### Example
+The service can be injected in a component.
+
+```ts
+@Component({
+  selector: 'my-component',
+  template: `
+  <button type="button" (click)="openDialog()">Open dialog</button>
+  `
+})
+export class MyComponent {
+
+  dialogRef: MdDialogRef<MyDialog>;
+
+  constructor(
+    public dialog: MdDialog,
+    public viewContainerRef: ViewContainerRef) { }
+
+  openDialog() {
+    let config = new MdDialogConfig();
+    config.viewContainerRef = this.viewContainerRef;
+
+    this.dialogRef = this.dialog.open(MyDialog, config);
+
+    this.dialogRef.afterClosed().subscribe(result => {
+      console.log('result: ' + result);
+      this.dialogRef = null;
+    });
+  }
+}
+
+@Component({
+  selector: 'my-dialog',
+  template: `
+  <button type="button" (click)="dialogRef.close('yes')">Yes</button>
+  <button type="button" (click)="dialogRef.close('no')">No</button>
+  `
+})
+export class MyDialog {
+  constructor(public dialogRef: MdDialogRef<MyDialog>) { }
+}
+```
+
+The dialog component should be declared in the list of entry components of the module:
+
+```ts
+@NgModule({
+  declarations: [
+    ...,
+    MyDialog
+  ],
+  entryComponents: [
+    ...,
+    MyDialog
+  ],
+  ...
+})
+export class AppModule { }
+
+```
