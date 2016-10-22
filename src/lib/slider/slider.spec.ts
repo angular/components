@@ -24,6 +24,9 @@ describe('MdSlider', () => {
         SliderWithThumbLabel,
         SliderWithOneWayBinding,
         SliderWithTwoWayBinding,
+        SliderWithValueSmallerThanMin,
+        SliderWithValueGreaterThanMax,
+        SliderWithValueBetweenMinAndMax
       ],
       providers: [
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
@@ -670,6 +673,66 @@ describe('MdSlider', () => {
       expect(thumbPosition).toBe(sliderDimensions.width * 3 / 4);
     });
   });
+
+  describe('slider with set min and max and a value smaller than min', () => {
+    let fixture: ComponentFixture<SliderWithValueSmallerThanMin>;
+    let sliderDebugElement: DebugElement;
+    let sliderInstance: MdSlider;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SliderWithValueSmallerThanMin);
+      fixture.detectChanges();
+
+      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+    });
+
+    it('should set the value to the min value', () => {
+      expect(sliderInstance.value).toBe(4);
+      expect(sliderInstance.min).toBe(4);
+      expect(sliderInstance.max).toBe(6);
+    });
+  });
+
+  describe('slider with set min and max and a value greater than max', () => {
+    let fixture: ComponentFixture<SliderWithValueGreaterThanMax>;
+    let sliderDebugElement: DebugElement;
+    let sliderInstance: MdSlider;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SliderWithValueGreaterThanMax);
+      fixture.detectChanges();
+
+      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+    });
+
+    it('should set the value to the max value', () => {
+      expect(sliderInstance.value).toBe(6);
+      expect(sliderInstance.min).toBe(4);
+      expect(sliderInstance.max).toBe(6);
+    });
+  });
+
+  describe('slider with set min and max and a value between min and max', () => {
+    let fixture: ComponentFixture<SliderWithValueBetweenMinAndMax>;
+    let sliderDebugElement: DebugElement;
+    let sliderInstance: MdSlider;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SliderWithValueBetweenMinAndMax);
+      fixture.detectChanges();
+
+      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+    });
+
+    it('should set the value to the max value', () => {
+      expect(sliderInstance.value).toBe(5);
+      expect(sliderInstance.min).toBe(4);
+      expect(sliderInstance.max).toBe(6);
+    });
+  });
 });
 
 // The transition has to be removed in order to test the updated positions without setTimeout.
@@ -733,6 +796,27 @@ class SliderWithOneWayBinding {
 class SliderWithTwoWayBinding {
   control = new FormControl('');
 }
+
+@Component({
+  template: `<md-slider value="3" min="4" max="6"></md-slider>`,
+  styles: [noTransitionStyle],
+  encapsulation: ViewEncapsulation.None
+})
+class SliderWithValueSmallerThanMin { }
+
+@Component({
+  template: `<md-slider value="7" min="4" max="6"></md-slider>`,
+  styles: [noTransitionStyle],
+  encapsulation: ViewEncapsulation.None
+})
+class SliderWithValueGreaterThanMax { }
+
+@Component({
+  template: `<md-slider value="5" min="4" max="6"></md-slider>`,
+  styles: [noTransitionStyle],
+  encapsulation: ViewEncapsulation.None
+})
+class SliderWithValueBetweenMinAndMax { }
 
 /**
  * Dispatches a click event from an element.

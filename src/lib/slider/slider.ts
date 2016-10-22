@@ -151,7 +151,7 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
       return;
     }
 
-    this._value = Number(v);
+    this._value = Math.min(Math.max(Number(v), this.min), this.max);
     this._isInitialized = true;
     this._controlValueAccessorChangeFn(this._value);
     this.snapThumbToValue();
