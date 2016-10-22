@@ -160,7 +160,7 @@ export class MdAutosize implements OnInit {
   }
 
   private _getLineHeight(): number {
-    const el: HTMLElement = this._elRef.nativeElement;
+    const el: HTMLTextAreaElement = this._elRef.nativeElement;
 
     // get the actual computed styles for the element
     const computedStyles = window.getComputedStyle(el);
@@ -172,7 +172,7 @@ export class MdAutosize implements OnInit {
     }
 
     // create temporary element
-    const tempEl = document.createElement(el.nodeName);
+    const tempEl = <HTMLTextAreaElement>document.createElement(el.nodeName);
 
     // reset styling, visually hiden the element
     // and set its font styles to match the ones of our textarea
@@ -190,7 +190,7 @@ export class MdAutosize implements OnInit {
     );
 
     // fill in one row
-    tempEl.innerHTML = '-';
+    tempEl.value = '-';
 
     // append to parent element to correctly inherit same values
     // as the actual textarea
