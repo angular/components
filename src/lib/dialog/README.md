@@ -26,7 +26,7 @@ A reference to the dialog created by the MdDialog `open` method.
 | `close(dialogResult?: any)` | Closes the dialog, pushing a value to the afterClosed observable. |
 | `afterClosed(): Observable<any>` | Returns an observable which will emit the dialog result, passed to the `close` method above. |
 
-### Example
+## Example
 The service can be injected in a component.
 
 ```ts
