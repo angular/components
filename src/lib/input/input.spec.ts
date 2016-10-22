@@ -611,9 +611,11 @@ describe('MdInput', function () {
 
   it('supports a name attribute', () => {
     let fixture = TestBed.createComponent(MdInputWithNameTestController);
+
+    fixture.detectChanges();
+
     const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input'))
         .nativeElement;
-    fixture.detectChanges();
 
     expect(inputElement.name).toBe('some-name');
   });
