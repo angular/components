@@ -78,14 +78,25 @@
 <md-card class="demo-card demo-basic">
   <md-toolbar color="primary">Expanding textarea</md-toolbar>
   <md-card-content>
-    <p>
+    <div>
       <md-textarea
         placeholder="Textarea with autosize"
         class="demo-full-width"
         autosize
         value="Hello world. How are you?">
       </md-textarea>
-    </p>
+    </div>
+
+    <h4>With `rows` explicitly set</h4>
+    <div>
+      <md-textarea
+        placeholder="Textarea with autosize"
+        class="demo-full-width"
+        autosize
+        rows="8"
+        value="Hello world. How are you?">
+      </md-textarea>
+    </div>
   </md-card-content>
 </md-card>
 

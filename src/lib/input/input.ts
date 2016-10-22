@@ -5,6 +5,7 @@ import {
   Input,
   Directive,
   AfterContentInit,
+  Attribute,
   OnInit,
   ContentChild,
   HostListener,
@@ -97,30 +98,114 @@ export class MdHint {
   selector: 'textarea[mdAutosize]'
 })
 export class MdAutosize implements OnInit {
+  // public because of AOT
   @HostListener('input')
-  private _onChange() {
+  public _onChange() {
     if (this._isActive) {
       this._adjust();
     }
   }
 
+  // public because of AOT
   @Input('mdAutosize')
-  private _isActive: boolean;
+  public _isActive: boolean;
+
+  // public because of AOT
+  // TODO: change to a setter, to recalculate on change
+  @Input('attr.rows')
+  public _rows: string;
+
+  private _height: number;
+  private _lineHeight: number;
 
   constructor(private _elRef: ElementRef) {}
 
   ngOnInit() {
     if (this._isActive) {
       this._elRef.nativeElement.style.overflow = 'hidden';
+
+      // check is rows is explicitly set, otherwise we don't need to
+      // care about it(and getting the actual line-height) at all
+      if (this._rows) {
+        this._lineHeight = this._getLineHeight();
+        this._elRef.nativeElement.style.minHeight = `${+this._rows * this._lineHeight}px`;
+      }
+
       this._adjust();
     }
   }
 
   private _adjust() {
+    // reset height(and rows if it was set by the user)
+    // to the default values to properly calculate new height
     this._elRef.nativeElement.style.height = 'auto';
-    this._elRef.nativeElement.style.height = `${this._elRef.nativeElement.scrollHeight}px`;
+
+    // only need to do this if user explicitly set rows
+    if (this._rows) {
+      this._elRef.nativeElement.rows = this._rows;
+    }
+
+    this._height = +this._elRef.nativeElement.scrollHeight;
+
+    // only need to do this if user explicitly set rows
+    if (this._rows) {
+      this._elRef.nativeElement.rows = this._getCalculatedRows();
+    }
+
+    this._elRef.nativeElement.style.height = `${this._height}px`;
+  }
+
+  private _getCalculatedRows() {
+    return Math.round(this._height / this._lineHeight);
+  }
+
+  private _getLineHeight(): number {
+    const el: HTMLElement = this._elRef.nativeElement;
+
+    // get the actual computed styles for the element
+    const computedStyles = window.getComputedStyle(el);
+
+    // if line height is explicitly set(to a pixel value), use that
+    if (computedStyles.lineHeight && computedStyles.lineHeight.toLowerCase().indexOf('px') >= 0) {
+      // return stripped of the "px" and as a number
+      return +computedStyles.lineHeight.replace('px', '');
+    }
+
+    // create temporary element
+    const tempEl = document.createElement(el.nodeName);
+
+    // reset styling, visually hiden the element
+    // and set its font styles to match the ones of our textarea
+    tempEl.setAttribute('rows', '1');
+    tempEl.setAttribute(
+      'style',
+      `
+        margin: 0px;
+        padding: 0px;
+        visibility: hidden;
+        opacity: 0;
+        font-family: ${computedStyles.fontFamily};
+        font-size: ${computedStyles.fontSize};
+      `
+    );
+
+    // fill in one row
+    tempEl.innerHTML = '-';
+
+    // append to parent element to correctly inherit same values
+    // as the actual textarea
+    el.parentNode.appendChild(tempEl);
+
+    // get the actual line height
+    const lineHeight = tempEl.clientHeight;
+
+    // cleanup
+    tempEl.parentNode.removeChild(tempEl);
+
+    return lineHeight;
   }
 }
+
 
 
 /**
