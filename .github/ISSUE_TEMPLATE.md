@@ -1,4 +1,5 @@
 #### Bug, feature request, or proposal:
+Note: before requesting a feature, check the README https://github.com/angular/material2/blob/master/README.md#feature-status to see if there is not an existing issue already.
 
 
 #### What is the expected behavior?
