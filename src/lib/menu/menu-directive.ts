@@ -58,6 +58,12 @@ export class MdMenu {
     }, {});
   }
 
+  /**
+   * Takes either a string or array of strins and applies them to the
+   * parent overlay pane, giving consumer control over z-indexes
+   */
+  @Input('overlayClass') overlayClass: string | Array<string>;
+
   @Output() close = new EventEmitter;
 
   /**

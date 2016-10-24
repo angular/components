@@ -120,6 +120,10 @@ export class MdDialog {
         .centerHorizontally()
         .centerVertically();
 
+    if (dialogConfig.overlayClass) {
+      state.overlayClass = dialogConfig.overlayClass;
+    }
+
     return state;
   }
 }

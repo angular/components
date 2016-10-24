@@ -169,10 +169,16 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    * @returns OverlayState
    */
   private _getOverlayConfig(): OverlayState {
-    const overlayState = new OverlayState();
+    let overlayState = new OverlayState();
     overlayState.positionStrategy = this._getPosition();
     overlayState.hasBackdrop = true;
     overlayState.backdropClass = 'md-overlay-transparent-backdrop';
+
+    // check if custom `overlayClass` is set on menu and pass it to overlay config
+    if (this.menu.overlayClass) {
+      overlayState.overlayClass = this.menu.overlayClass;
+    }
+
     return overlayState;
   }
 

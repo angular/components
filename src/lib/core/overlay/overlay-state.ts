@@ -14,6 +14,9 @@ export class OverlayState {
 
   backdropClass: string = 'md-overlay-dark-backdrop';
 
+  /** Optional custom class to be added to dialog's overlay pane. */
+  overlayClass: string | string[];
+
   // TODO(jelbourn): configuration still to add
   // - overlay size
   // - focus trap
