@@ -1,0 +1,6 @@
+@import '../tabs-common';
+
+:host {
+  @include tab-label;
+  text-decoration: none;
+}

@@ -17,6 +17,7 @@ import {PortalModule} from '../core';
 import {MdTabLabel} from './tab-label';
 import {MdTabContent} from './tab-content';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
+import {MdTabNavBar, MdTabLink} from './tab-nav-bar/tab-nav-bar'
 import {MdInkBar} from './ink-bar';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -119,7 +120,7 @@ export class MdTabGroup {
   }
 
   /**
-   * Waits one frame for the view to update, then upates the ink bar
+   * Waits one frame for the view to update, then updates the ink bar
    * Note: This must be run outside of the zone or it will create an infinite change detection loop
    * TODO: internal
    */
@@ -229,9 +230,10 @@ export class MdTabGroup {
 
 @NgModule({
   imports: [CommonModule, PortalModule],
-  // Don't export MdInkBar or MdTabLabelWrapper, as they are internal implementatino details.
-  exports: [MdTabGroup, MdTabLabel, MdTabContent, MdTab],
-  declarations: [MdTabGroup, MdTabLabel, MdTabContent, MdTab, MdInkBar, MdTabLabelWrapper],
+  // Don't export MdInkBar or MdTabLabelWrapper, as they are internal implementation details.
+  exports: [MdTabGroup, MdTabLabel, MdTabContent, MdTab, MdTabNavBar, MdTabLink],
+  declarations: [MdTabGroup, MdTabLabel, MdTabContent, MdTab, MdInkBar, MdTabLabelWrapper,
+    MdTabNavBar, MdTabLink],
 })
 export class MdTabsModule {
   static forRoot(): ModuleWithProviders {
