@@ -149,8 +149,8 @@ describe('Overlay', () => {
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
 
-      let backdrop = <HTMLElement> overlayContainerElement.querySelector('.md-overlay-pane');
-      expect(backdrop.classList).toContain('some-custom-class');
+      let pane = <HTMLElement> overlayContainerElement.querySelector('.md-overlay-pane');
+      expect(pane.classList).toContain('some-custom-class');
     });
 
     it('should apply a custom overlay pane classes', () => {
@@ -160,9 +160,9 @@ describe('Overlay', () => {
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
 
-      let backdrop = <HTMLElement> overlayContainerElement.querySelector('.md-overlay-pane');
-      expect(backdrop.classList).toContain('first-custom-class');
-      expect(backdrop.classList).toContain('second-custom-class');
+      let pane = <HTMLElement> overlayContainerElement.querySelector('.md-overlay-pane');
+      expect(pane.classList).toContain('first-custom-class');
+      expect(pane.classList).toContain('second-custom-class');
     });
 
   });
