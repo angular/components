@@ -37,7 +37,7 @@ export class Overlay {
    * @returns A reference to the created overlay.
    */
   create(state: OverlayState = defaultState): OverlayRef {
-    return this._createOverlayRef(this._createPaneElement(), state);
+    return this._createOverlayRef(this._createPaneElement(state), state);
   }
 
   /**
@@ -52,10 +52,19 @@ export class Overlay {
    * Creates the DOM element for an overlay and appends it to the overlay container.
    * @returns Promise resolving to the created element.
    */
-  private _createPaneElement(): HTMLElement {
-    var pane = document.createElement('div');
-    pane.id = `md-overlay-${nextUniqueId++}`;
+  private _createPaneElement(state: OverlayState): HTMLElement {
+    let pane = document.createElement('div');
+    const id = nextUniqueId++;
+    pane.id = `md-overlay-${id}`;
     pane.classList.add('md-overlay-pane');
+
+    let overlayClass = state.overlayClass;
+    if (overlayClass) {
+      if (typeof overlayClass === 'string') {
+        overlayClass = [overlayClass];
+      }
+      pane.classList.add(...overlayClass);
+    }
 
     this._overlayContainer.getContainerElement().appendChild(pane);
 

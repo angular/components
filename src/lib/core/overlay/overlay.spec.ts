@@ -142,6 +142,29 @@ describe('Overlay', () => {
       expect(backdrop.classList).toContain('md-overlay-transparent-backdrop');
     });
 
+    it('should apply a custom overlay pane class', () => {
+      config.overlayClass = 'some-custom-class';
+
+      let overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+
+      let backdrop = <HTMLElement> overlayContainerElement.querySelector('.md-overlay-pane');
+      expect(backdrop.classList).toContain('some-custom-class');
+    });
+
+    it('should apply a custom overlay pane classes', () => {
+      config.overlayClass = ['first-custom-class', 'second-custom-class'];
+
+      let overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+
+      let backdrop = <HTMLElement> overlayContainerElement.querySelector('.md-overlay-pane');
+      expect(backdrop.classList).toContain('first-custom-class');
+      expect(backdrop.classList).toContain('second-custom-class');
+    });
+
   });
 });
 

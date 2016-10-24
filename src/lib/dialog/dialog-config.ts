@@ -14,6 +14,9 @@ export class MdDialogConfig {
   /** The ARIA role of the dialog element. */
   role: DialogRole = 'dialog';
 
+  /** Optional custom class to be added to dialog's overlay pane. */
+  overlayClass: string | string[];
+
   // TODO(jelbourn): add configuration for size, clickOutsideToClose, lifecycle hooks,
   // ARIA labelling.
 }
