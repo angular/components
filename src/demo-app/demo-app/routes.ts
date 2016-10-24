@@ -27,7 +27,7 @@ import {RippleDemo} from '../ripple/ripple-demo';
 import {DialogDemo} from '../dialog/dialog-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
-import {TABS_DEMO_ROUTE} from '../tabs/routes'
+import {TABS_DEMO_ROUTE} from '../tabs/routes';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: Home},

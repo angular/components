@@ -1,5 +1,4 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MdTabNavBar} from './tab-nav-bar';
 import {MdTabsModule} from '../tabs';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
