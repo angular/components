@@ -13,7 +13,7 @@ MdDialog is a service, which opens dialogs components in the view.
 | Key |  Description |
 | --- | --- |
 | `viewContainerRef: ViewContainerRef` | The view container ref to attach the dialog to. |
-| `role: DialogRole = 'dialog'` | The ARIA role of the dialog element. Possible values are `dialog` and `alertdialog`. |
+| `role: DialogRole = 'dialog'` | The ARIA role of the dialog element. Possible values are `dialog` and `alertdialog`. Defaults to `dialog`. |
 
 ## MdDialogRef
 
@@ -31,14 +31,14 @@ The service can be injected in a component.
 
 ```ts
 @Component({
-  selector: 'my-component',
+  selector: 'pizza-component',
   template: `
   <button type="button" (click)="openDialog()">Open dialog</button>
   `
 })
-export class MyComponent {
+export class PizzaComponent {
 
-  dialogRef: MdDialogRef<MyDialog>;
+  dialogRef: MdDialogRef<PizzaDialog>;
 
   constructor(
     public dialog: MdDialog,
@@ -48,7 +48,7 @@ export class MyComponent {
     let config = new MdDialogConfig();
     config.viewContainerRef = this.viewContainerRef;
 
-    this.dialogRef = this.dialog.open(MyDialog, config);
+    this.dialogRef = this.dialog.open(PizzaDialog, config);
 
     this.dialogRef.afterClosed().subscribe(result => {
       console.log('result: ' + result);
@@ -58,14 +58,14 @@ export class MyComponent {
 }
 
 @Component({
-  selector: 'my-dialog',
+  selector: 'pizza-dialog',
   template: `
   <button type="button" (click)="dialogRef.close('yes')">Yes</button>
   <button type="button" (click)="dialogRef.close('no')">No</button>
   `
 })
-export class MyDialog {
-  constructor(public dialogRef: MdDialogRef<MyDialog>) { }
+export class PizzaDialog {
+  constructor(public dialogRef: MdDialogRef<PizzaDialog>) { }
 }
 ```
 
@@ -75,11 +75,11 @@ The dialog component should be declared in the list of entry components of the m
 @NgModule({
   declarations: [
     ...,
-    MyDialog
+    PizzaDialog
   ],
   entryComponents: [
     ...,
-    MyDialog
+    PizzaDialog
   ],
   ...
 })
