@@ -16,5 +16,18 @@ describe('radio', function () {
         expect(value).toContain('md-radio-checked');
       });
     });
+
+    it('should be disabled when disable the radio group', function () {
+      element(by.id('toggle-disable')).click();
+      element(by.id('water')).click();
+      element(by.id('water')).getAttribute('class').then((value: string) => {
+        expect(value).toContain('md-radio-disabled');
+      });
+
+      element(by.id('leaf')).click();
+      element(by.id('leaf')).getAttribute('class').then((value: string) => {
+        expect(value).toContain('md-radio-disabled');
+      });
+    });
   });
 });
