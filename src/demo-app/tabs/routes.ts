@@ -1,10 +1,10 @@
 import {Routes} from '@angular/router';
 
-import {RoutedContent1, RoutedContent2, RoutedContext3} from '../tabs/tabs-demo';
+import {SunnyTabContent, RainyTabContent, FoggyTabContent} from '../tabs/tabs-demo';
 
 export const TABS_DEMO_ROUTES: Routes = [
-  { path: '', redirectTo: 'content-1', pathMatch: 'full' },
-  { path: 'content-1', component: RoutedContent1 },
-  { path: 'content-2', component: RoutedContent2 },
-  { path: 'content-3', component: RoutedContext3 },
+  { path: '', redirectTo: 'sunny-tab', pathMatch: 'full' },
+  { path: 'sunny-tab', component: SunnyTabContent },
+  { path: 'rainy-tab', component: RainyTabContent },
+  { path: 'foggy-tab', component: FoggyTabContent },
 ];

@@ -11,9 +11,9 @@ import {Observable} from 'rxjs/Observable';
 })
 export class TabsDemo {
   tabLinks = [
-    { label: 'Tab One', link: 'content-1'},
-    { label: 'Tab Two', link: 'content-2'},
-    { label: 'Tab Three', link: 'content-3'},
+    { label: 'Sun', link: 'sunny-tab'},
+    { label: 'Rain', link: 'rainy-tab'},
+    { label: 'Fog', link: 'foggy-tab'},
   ];
   activeLinkIndex = 0;
 
@@ -41,22 +41,22 @@ export class TabsDemo {
 @Component({
   moduleId: module.id,
   selector: 'tabs-demo-routed-content-1',
-  template: 'This is the routed body of the first tab.',
+  template: 'This is the routed body of the sunny tab.',
 })
-export class RoutedContent1 {}
+export class SunnyTabContent {}
 
 
 @Component({
   moduleId: module.id,
   selector: 'tabs-demo-routed-content-2',
-  template: 'This is the routed body of the second tab.',
+  template: 'This is the routed body of the rainy tab.',
 })
-export class RoutedContent2 {}
+export class RainyTabContent {}
 
 
 @Component({
   moduleId: module.id,
   selector: 'tabs-demo-routed-content-3',
-  template: 'This is the routed body of the third tab.',
+  template: 'This is the routed body of the foggy tab.',
 })
-export class RoutedContext3 {}
+export class FoggyTabContent {}

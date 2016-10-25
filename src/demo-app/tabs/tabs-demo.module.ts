@@ -4,7 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
 
-import {TabsDemo, RoutedContent1, RoutedContent2, RoutedContext3} from './tabs-demo';
+import {TabsDemo, SunnyTabContent, RainyTabContent, FoggyTabContent} from './tabs-demo';
 
 @NgModule({
   imports: [
@@ -15,9 +15,9 @@ import {TabsDemo, RoutedContent1, RoutedContent2, RoutedContext3} from './tabs-d
   ],
   declarations: [
     TabsDemo,
-    RoutedContent1,
-    RoutedContent2,
-    RoutedContext3,
+    SunnyTabContent,
+    RainyTabContent,
+    FoggyTabContent,
   ]
 })
 export class TabsDemoModule {}
