@@ -35,7 +35,17 @@ export class PizzaPartyAppModule { }
 
 ## Including core and theme styles:
 This is required to apply all of the core and theme styles to your application.
-See the [theming guide](docs/theming.md) for instructions.
+See the [Theming Guide](docs/theming.md) for instructions.
+
+**From the Theming Guide:**
+
+> If you're using Angular CLI, this is as simple as including one line in your `style.css` file:
+
+> `@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';`
+
+> Alternatively, you can just reference the file directly. This would look something like:
+
+> `<link href="node_modules/@angular/material/core/theming/prebuilt/indigo-pink.css" rel="stylesheet">`
 
 
 ## Additional setup for `md-slide-toggle` and `md-slider`:
