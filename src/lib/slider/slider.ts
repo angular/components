@@ -126,6 +126,7 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
     if (!this._isInitialized) {
       this.value = this._min;
     }
+    this._initTicksAndSlider();
   }
 
   @Input()
@@ -136,6 +137,7 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
 
   set max(v: number) {
     this._max = Number(v);
+    this._initTicksAndSlider();
   }
 
   @Input()
@@ -171,8 +173,7 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
     // This needs to be called after content init because the value can be set to the min if the
     // value itself isn't set. If this happens, the control value accessor needs to be updated.
     this._controlValueAccessorChangeFn(this.value);
-    this.snapThumbToValue();
-    this._updateTickSeparation();
+    this._initTicksAndSlider();
   }
 
   /** TODO: internal */
@@ -272,10 +273,22 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
   }
 
   /**
+   * Initializes the tick and slider positions.
+   * @private
+   */
+  private _initTicksAndSlider() {
+    this.snapThumbToValue();
+    this._updateTickSeparation();
+  }
+
+  /**
    * Calculates the separation in pixels of tick marks. If there is no tick interval or the interval
    * is set to something other than a number or 'auto', nothing happens.
    */
   private _updateTickSeparation() {
+    if (!this._sliderDimensions) {
+      return;
+    }
     if (this._tickInterval == 'auto') {
       this._updateAutoTickSeparation();
     } else if (Number(this._tickInterval)) {
@@ -428,8 +441,10 @@ export class SliderRenderer {
    * Draws ticks onto the tick container.
    */
   drawTicks(tickSeparation: number) {
+    let sliderTrackContainer =
+        <HTMLElement>this._sliderElement.querySelector('.md-slider-track-container');
+    let tickContainerWidth = sliderTrackContainer.getBoundingClientRect().width;
     let tickContainer = <HTMLElement>this._sliderElement.querySelector('.md-slider-tick-container');
-    let tickContainerWidth = tickContainer.getBoundingClientRect().width;
     // An extra element for the last tick is needed because the linear gradient cannot be told to
     // always draw a tick at the end of the gradient. To get around this, there is a second
     // container for ticks that has a single tick mark on the very right edge.
@@ -447,6 +462,8 @@ export class SliderRenderer {
     // separation), don't show it by decreasing the width of the tick container element.
     if (tickContainerWidth % tickSeparation < (tickSeparation / 2)) {
       tickContainer.style.width = tickContainerWidth - tickSeparation + 'px';
+    } else {
+      tickContainer.style.width = '';
     }
   }
 }
