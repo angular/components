@@ -2,11 +2,8 @@ import {Component, Input, ViewChild, ElementRef} from '@angular/core';
 import {MdInkBar} from '../ink-bar';
 
 /**
- * Material design navigation component matching the styles of the tab group header.
+ * Navigation component matching the styles of the tab group header.
  * Provides anchored navigation with animated ink bar.
- * Supports basic tab pairs (label + content) and includes
- * animated ink-bar, keyboard navigation, and screen reader.
- * See: https://www.google.com/design/spec/components/tabs.html
  */
 @Component({
   moduleId: module.id,
