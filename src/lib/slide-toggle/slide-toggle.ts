@@ -71,10 +71,15 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   @Input() ariaLabelledby: string = null;
 
   private _disabled: boolean = false;
+  private _required: boolean = false;
 
   @Input()
   get disabled(): boolean { return this._disabled; }
   set disabled(value) { this._disabled = coerceBooleanProperty(value); }
+
+  @Input()
+  get required(): boolean { return this._required; }
+  set required(value) { this._required = coerceBooleanProperty(value); }
 
   private _change: EventEmitter<MdSlideToggleChange> = new EventEmitter<MdSlideToggleChange>();
   @Output() change: Observable<MdSlideToggleChange> = this._change.asObservable();
