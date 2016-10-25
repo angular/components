@@ -677,40 +677,76 @@ describe('MdSlider', () => {
   describe('slider with set min and max and a value smaller than min', () => {
     let fixture: ComponentFixture<SliderWithValueSmallerThanMin>;
     let sliderDebugElement: DebugElement;
+    let sliderNativeElement: HTMLElement;
     let sliderInstance: MdSlider;
+    let sliderTrackElement: HTMLElement;
+    let sliderDimensions: ClientRect;
+    let thumbElement: HTMLElement;
+    let thumbDimensions: ClientRect;
 
     beforeEach(() => {
+
       fixture = TestBed.createComponent(SliderWithValueSmallerThanMin);
       fixture.detectChanges();
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+      sliderNativeElement = sliderDebugElement.nativeElement;
+      sliderInstance = sliderDebugElement.componentInstance;
+
+      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track');
+      sliderDimensions = sliderTrackElement.getBoundingClientRect();
+
+      thumbElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-thumb-position');
+      thumbDimensions = thumbElement.getBoundingClientRect();
     });
 
-    it('should set the value to the min value', () => {
-      expect(sliderInstance.value).toBe(4);
+    it('should set the value smaller than the min value', () => {
+      expect(sliderInstance.value).toBe(3);
       expect(sliderInstance.min).toBe(4);
       expect(sliderInstance.max).toBe(6);
+    });
+
+    it('should place the thumb on the min value', () => {
+      thumbDimensions = thumbElement.getBoundingClientRect();
+      expect(thumbDimensions.left).toBe(sliderDimensions.width * 0.0 + sliderDimensions.left);
     });
   });
 
   describe('slider with set min and max and a value greater than max', () => {
-    let fixture: ComponentFixture<SliderWithValueGreaterThanMax>;
+    let fixture: ComponentFixture<SliderWithValueSmallerThanMin>;
     let sliderDebugElement: DebugElement;
+    let sliderNativeElement: HTMLElement;
     let sliderInstance: MdSlider;
+    let sliderTrackElement: HTMLElement;
+    let sliderDimensions: ClientRect;
+    let thumbElement: HTMLElement;
+    let thumbDimensions: ClientRect;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SliderWithValueGreaterThanMax);
       fixture.detectChanges();
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+      sliderNativeElement = sliderDebugElement.nativeElement;
+      sliderInstance = sliderDebugElement.componentInstance;
+
+      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track');
+      sliderDimensions = sliderTrackElement.getBoundingClientRect();
+
+      thumbElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-thumb-position');
+      thumbDimensions = thumbElement.getBoundingClientRect();
+
     });
 
-    it('should set the value to the max value', () => {
-      expect(sliderInstance.value).toBe(6);
+    it('should set the value greater than the max value', () => {
+      expect(sliderInstance.value).toBe(7);
       expect(sliderInstance.min).toBe(4);
       expect(sliderInstance.max).toBe(6);
+    });
+
+    it('should place the thumb on the max value', () => {
+      thumbDimensions = thumbElement.getBoundingClientRect();
+      expect(thumbDimensions.left).toBe(sliderDimensions.width * 1.0 + sliderDimensions.left);
     });
   });
 
