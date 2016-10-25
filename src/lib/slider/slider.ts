@@ -126,7 +126,8 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
     if (!this._isInitialized) {
       this.value = this._min;
     }
-    this._initTicksAndSlider();
+    this.snapThumbToValue();
+    this._updateTickSeparation();
   }
 
   @Input()
@@ -137,7 +138,8 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
 
   set max(v: number) {
     this._max = Number(v);
-    this._initTicksAndSlider();
+    this.snapThumbToValue();
+    this._updateTickSeparation();
   }
 
   @Input()
@@ -173,7 +175,8 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
     // This needs to be called after content init because the value can be set to the min if the
     // value itself isn't set. If this happens, the control value accessor needs to be updated.
     this._controlValueAccessorChangeFn(this.value);
-    this._initTicksAndSlider();
+    this.snapThumbToValue();
+    this._updateTickSeparation();
   }
 
   /** TODO: internal */
@@ -270,15 +273,6 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
     if (this._sliderDimensions) {
       this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
     }
-  }
-
-  /**
-   * Initializes the tick and slider positions.
-   * @private
-   */
-  private _initTicksAndSlider() {
-    this.snapThumbToValue();
-    this._updateTickSeparation();
   }
 
   /**
@@ -458,11 +452,13 @@ export class SliderRenderer {
     lastTickContainer.style.background = `linear-gradient(to left, black, black 2px, transparent ` +
         `2px, transparent)`;
 
-    // If the second to last tick is too close (a separation of less than half the normal
-    // separation), don't show it by decreasing the width of the tick container element.
     if (tickContainerWidth % tickSeparation < (tickSeparation / 2)) {
+      // If the second to last tick is too close (a separation of less than half the normal
+      // separation), don't show it by decreasing the width of the tick container element.
       tickContainer.style.width = tickContainerWidth - tickSeparation + 'px';
     } else {
+      // If there is enough space for the second-to-last tick, restore the default width of the
+      // tick container.
       tickContainer.style.width = '';
     }
   }
