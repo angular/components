@@ -60,6 +60,8 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   private _color: string;
   private _isMousedown: boolean = false;
   private _slideRenderer: SlideToggleRenderer = null;
+  private _disabled: boolean = false;
+  private _required: boolean = false;
 
   // Needs to be public to support AOT compilation (as host binding).
   _hasFocus: boolean = false;
@@ -69,9 +71,6 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   @Input() tabIndex: number = 0;
   @Input() ariaLabel: string = null;
   @Input() ariaLabelledby: string = null;
-
-  private _disabled: boolean = false;
-  private _required: boolean = false;
 
   @Input()
   get disabled(): boolean { return this._disabled; }
