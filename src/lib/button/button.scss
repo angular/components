@@ -47,6 +47,7 @@
   }
 }
 
+// The text and icon should be vertical aligned inside a button
 [md-button], [md-raised-button] {
   .md-button-wrapper > * {
     vertical-align: middle;
