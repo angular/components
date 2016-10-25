@@ -151,7 +151,7 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
       return;
     }
 
-    this._value = Math.min(Math.max(Number(v), this.min), this.max);
+    this._value = Number(v);
     this._isInitialized = true;
     this._controlValueAccessorChangeFn(this._value);
   }
@@ -265,7 +265,8 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
    */
   snapThumbToValue() {
     this.updatePercentFromValue();
-    this._renderer.updateThumbAndFillPosition(this._percent, this._sliderDimensions.width);
+    let renderedPercent = this.clamp(this._percent);
+    this._renderer.updateThumbAndFillPosition(renderedPercent, this._sliderDimensions.width);
   }
 
   /**
