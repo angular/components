@@ -4,7 +4,7 @@ import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 
 
-fdescribe('MdTabNavBar', () => {
+describe('MdTabNavBar', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

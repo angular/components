@@ -1,4 +1,4 @@
-import {Component, Input, ViewChild, ElementRef} from '@angular/core';
+import {Component, Input, ViewChild, ElementRef, ViewEncapsulation, Directive} from '@angular/core';
 import {MdInkBar} from '../ink-bar';
 
 /**
@@ -10,6 +10,7 @@ import {MdInkBar} from '../ink-bar';
   selector: 'md-tab-nav-bar',
   templateUrl: 'tab-nav-bar.html',
   styleUrls: ['tab-nav-bar.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MdTabNavBar {
   @ViewChild(MdInkBar) _inkBar: MdInkBar;
@@ -20,11 +21,8 @@ export class MdTabNavBar {
   }
 }
 
-@Component({
-  moduleId: module.id,
+@Directive({
   selector: '[md-tab-link]',
-  template: '<ng-content></ng-content>',
-  styleUrls: ['tab-link.css']
 })
 export class MdTabLink {
   private _isActive: boolean = false;

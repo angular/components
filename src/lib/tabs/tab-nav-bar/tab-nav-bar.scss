@@ -3,3 +3,8 @@
 :host {
   display: block;
 }
+
+a[md-tab-link] {
+  @include tab-label;
+  text-decoration: none;
+}

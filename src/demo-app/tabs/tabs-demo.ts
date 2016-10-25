@@ -32,6 +32,9 @@ export class TabsDemo {
       }, 1000);
     });
 
+    // Initialize the index by checking if a tab link is contained in the url.
+    // This is not an ideal check and can be removed if routerLink exposes if it is active.
+    // https://github.com/angular/angular/pull/12525
     this.activeLinkIndex =
         this.tabLinks.findIndex(routedTab => router.url.indexOf(routedTab.link) != -1);
   }
@@ -40,7 +43,7 @@ export class TabsDemo {
 
 @Component({
   moduleId: module.id,
-  selector: 'tabs-demo-routed-content-1',
+  selector: 'sunny-routed-content',
   template: 'This is the routed body of the sunny tab.',
 })
 export class SunnyTabContent {}
@@ -48,7 +51,7 @@ export class SunnyTabContent {}
 
 @Component({
   moduleId: module.id,
-  selector: 'tabs-demo-routed-content-2',
+  selector: 'rainy-routed-content',
   template: 'This is the routed body of the rainy tab.',
 })
 export class RainyTabContent {}
@@ -56,7 +59,7 @@ export class RainyTabContent {}
 
 @Component({
   moduleId: module.id,
-  selector: 'tabs-demo-routed-content-3',
+  selector: 'foggy-routed-content',
   template: 'This is the routed body of the foggy tab.',
 })
 export class FoggyTabContent {}

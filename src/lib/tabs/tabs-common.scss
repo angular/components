@@ -2,7 +2,7 @@
 
 $md-tab-bar-height: 48px !default;
 
-
+// Mixin styles for labels that are contained within the tab header.
 @mixin tab-label {
   line-height: $md-tab-bar-height;
   height: $md-tab-bar-height;
