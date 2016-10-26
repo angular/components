@@ -82,6 +82,9 @@ export class MdSidenav {
     // TODO(jelbourn): this coercion goes away when BooleanFieldValue is removed.
     let booleanValue = v != null && `${v}` !== 'false';
     this.toggle(booleanValue);
+
+    this._openPromise = null;
+    this._closePromise = null;
   }
 
 
