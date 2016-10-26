@@ -236,9 +236,9 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
 
   _elementType: 'input' | 'textarea';
 
-  constructor(public _elementRef: ElementRef) {
+  constructor(elementRef: ElementRef) {
     // Set the element type depending on normalized selector used(md-input / md-textarea)
-    this._elementType = this._elementRef.nativeElement.nodeName.toLowerCase() === 'md-input' ?
+    this._elementType = elementRef.nativeElement.nodeName.toLowerCase() === 'md-input' ?
         'input' :
         'textarea';
   }
