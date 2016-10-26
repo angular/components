@@ -2,22 +2,22 @@
 @import '../core/theming/theming';
 
 
-@mixin _md-slide-toggle-checked($palette, $thumb-on-hue) {
+@mixin _md-slide-toggle-checked($palette, $thumb-checked-hue) {
   // Do not apply the checked colors if the toggle is disabled, because the specificity would be to high for
   // the disabled styles.
   &.md-checked:not(.md-disabled) {
     .md-slide-toggle-thumb {
-      background-color: md-color($palette, $thumb-on-hue);
+      background-color: md-color($palette, $thumb-checked-hue);
     }
 
     .md-slide-toggle-bar {
-      background-color: md-color($palette, $thumb-on-hue, 0.5);
+      background-color: md-color($palette, $thumb-checked-hue, 0.5);
     }
   }
 }
 
 // TODO(jelbourn): remove this when the real ripple has been applied to slide-toggle.
-@mixin _md-slide-toggle-ripple($palette, $foreground, $thumb-on-hue) {
+@mixin _md-slide-toggle-ripple($palette, $foreground, $thumb-checked-hue) {
 
   &.md-slide-toggle-focused {
     &:not(.md-checked) .md-ink-ripple {
@@ -27,7 +27,7 @@
     }
 
     .md-ink-ripple {
-      background-color: md-color($palette, $thumb-on-hue, 0.26);
+      background-color: md-color($palette, $thumb-checked-hue, 0.26);
     }
   }
 
@@ -41,24 +41,28 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  $thumb-on-hue: if($is-dark, 200, 500);
-  $thumb-off-hue: if($is-dark, 400, 50);
+  // Color hues based on the specs, which prescribe different hues for dark and light themes
+  // https://material.google.com/components/selection-controls.html#selection-controls-switch
+  $thumb-normal-hue: if($is-dark, 400, 50);
+  $thumb-checked-hue: if($is-dark, 200, 500);
   $thumb-disabled-hue: if($is-dark, 800, 400);
+
+  $bar-normal-color: md-color($foreground, disabled);
   $bar-disabled-color: if($is-dark, rgba(white, 0.12), rgba(black, 0.1));
 
   md-slide-toggle {
-    @include _md-slide-toggle-checked($accent, $thumb-on-hue);
-    @include _md-slide-toggle-ripple($accent, $foreground, $thumb-on-hue);
+    @include _md-slide-toggle-checked($accent, $thumb-checked-hue);
+    @include _md-slide-toggle-ripple($accent, $foreground, $thumb-checked-hue);
     
 
     &.md-primary {
-      @include _md-slide-toggle-checked($primary, $thumb-on-hue);
-      @include _md-slide-toggle-ripple($primary, $foreground, $thumb-on-hue);
+      @include _md-slide-toggle-checked($primary, $thumb-checked-hue);
+      @include _md-slide-toggle-ripple($primary, $foreground, $thumb-checked-hue);
     }
   
     &.md-warn {
-      @include _md-slide-toggle-checked($warn, $thumb-on-hue);
-      @include _md-slide-toggle-ripple($warn, $foreground, $thumb-on-hue);
+      @include _md-slide-toggle-checked($warn, $thumb-checked-hue);
+      @include _md-slide-toggle-ripple($warn, $foreground, $thumb-checked-hue);
     }
 
   }
@@ -76,10 +80,10 @@
   }
 
   .md-slide-toggle-thumb {
-    background-color: md-color($md-grey, $thumb-off-hue);
+    background-color: md-color($md-grey, $thumb-normal-hue);
   }
 
   .md-slide-toggle-bar {
-    background-color: md-color($foreground, disabled);
+    background-color: $bar-normal-color;
   }
 }
