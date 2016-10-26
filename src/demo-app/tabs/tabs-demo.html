@@ -1,7 +1,7 @@
 <h1>Tab Nav Bar</h1>
 
 <div class="demo-nav-bar">
-  <md-tab-nav-bar>
+  <nav md-tab-nav-bar aria-label="weather navigation links">
     <a md-tab-link
        *ngFor="let tabLink of tabLinks; let i = index"
        [routerLink]="tabLink.link"
@@ -9,7 +9,7 @@
        (click)="activeLinkIndex = i">
       {{tabLink.label}}
     </a>
-  </md-tab-nav-bar>
+  </nav>
   <router-outlet></router-outlet>
 </div>
 

@@ -7,7 +7,7 @@ import {MdInkBar} from '../ink-bar';
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-tab-nav-bar',
+  selector: '[md-tab-nav-bar]',
   templateUrl: 'tab-nav-bar.html',
   styleUrls: ['tab-nav-bar.css'],
   encapsulation: ViewEncapsulation.None,

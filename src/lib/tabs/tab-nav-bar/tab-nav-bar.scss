@@ -1,8 +1,8 @@
 @import '../tabs-common';
 @import '../../core/style/variables';
 
-// Wraps the heading that contains the anchors
-.md-tab-header {
+// Wraps the bar containing the anchors
+[md-tab-nav-bar] {
   @include tab-header;
 }
 
