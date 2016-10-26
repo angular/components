@@ -167,6 +167,11 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   @Input() type: string = 'text';
   @Input() name: string = null;
 
+  // textarea-specific
+  @Input() rows: number = null;
+  @Input() cols: number = null;
+  @Input() wrap: string = null;
+
   private _floatingPlaceholder: boolean = true;
   private _autofocus: boolean = false;
   private _disabled: boolean = false;
@@ -229,9 +234,14 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
 
   @ViewChild('input') _inputElement: ElementRef;
 
-  public elementType: 'input' | 'textarea' = undefined;
+  elementType: 'input' | 'textarea';
 
-  constructor(private _elRef: ElementRef) { }
+  constructor(public _elementRef: ElementRef) {
+    // Set the element type depending on normalized selector used(md-input / md-textarea)
+    this.elementType = this._elementRef.nativeElement.nodeName.toLowerCase() === 'md-input' ?
+        'input' :
+        'textarea';
+  }
 
   /** Set focus on input */
   focus() {
@@ -285,13 +295,6 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   /** TODO: internal */
   ngAfterContentInit() {
     this._validateConstraints();
-
-    // Set the element type depending on normalized selector used(md-input / md-textarea)
-    if (this._elRef.nativeElement.tagName.toLowerCase() === 'md-input') {
-      this.elementType = 'input';
-    } else {
-      this.elementType = 'textarea';
-    }
 
     // Trigger validation when the hint children change.
     this._hintChildren.changes.subscribe(() => {

@@ -108,11 +108,8 @@ export class MyComponent implements OnInit {
 
 ## Textareas
 
-Supports same attributes as MdInput, except `type`, additionally it support `autosize` attribute
-which enables auto expanding functionality.
-
 ```html
-<md-textarea autosize placeholder="Textarea with autosize"></md-textarea>
+<md-textarea placeholder="Textarea with autosize"></md-textarea>
 ```
 
 ### Example
