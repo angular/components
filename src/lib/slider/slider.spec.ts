@@ -330,7 +330,7 @@ describe('MdSlider', () => {
       expect(tickContainerDimensions.width)
           .toBe(sliderDimensions.width - sliderDimensions.width * 6 / 8);
       expect(tickContainerElement.style.background)
-          .toEqual(`repeating-linear-gradient(to right, black, black 2px, transparent 2px, ` +
+          .toContain(`repeating-linear-gradient(to right, black, black 2px, transparent 2px, ` +
               `transparent ${sliderDimensions.width * 6 / 8 - 1}px)`);
     });
 
@@ -348,7 +348,7 @@ describe('MdSlider', () => {
       expect(tickContainerDimensions.width)
           .toBe(sliderDimensions.width - sliderDimensions.width * 6 / 12);
       expect(tickContainerElement.style.background)
-          .toEqual(`repeating-linear-gradient(to right, black, black 2px, transparent 2px, ` +
+          .toContain(`repeating-linear-gradient(to right, black, black 2px, transparent 2px, ` +
               `transparent ${sliderDimensions.width * 6 / 12 - 1}px)`);
     });
   });
