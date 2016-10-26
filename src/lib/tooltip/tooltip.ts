@@ -6,7 +6,7 @@ import {
     Input,
     ElementRef,
     ViewContainerRef,
-    ChangeDetectorRef
+    ChangeDetectorRef, state, trigger, transition, style, animate
 } from '@angular/core';
 import {
   Overlay,
@@ -180,14 +180,30 @@ export class MdTooltip {
   }
 }
 
+export type TooltipAnimationState = 'hidden' | 'visible';
+
+// TODO(jelbourn): we can't use constants from animation.ts here because you can't use
+// a text interpolation in anything that is analyzed statically with ngc (for AoT compile).
+export const TOOLTIP_SCALE_TRANSITION = '125ms cubic-bezier(0.4,0.0,1,1)';
+export const TOOLTIP_HIDE_ANIMATION = '195ms cubic-bezier(0.0,0.0,0.2,1)';
+
 @Component({
   moduleId: module.id,
   selector: 'md-tooltip-component',
-  template: `<div class="md-tooltip">{{message}}</div>`,
+  template: `<div class="md-tooltip" [@state]="animationState">{{message}}</div>`,
   styleUrls: ['tooltip.css'],
+  animations: [
+    trigger('state', [
+      state('void', style({transform: 'scale(.1)'})),
+      transition(':enter',
+          animate(TOOLTIP_SCALE_TRANSITION, style({transform: 'scale(1)'}))),
+    ])
+  ],
 })
 export class TooltipComponent {
   message: string;
+  animationState: TooltipAnimationState = 'hidden';
+
 }
 
 

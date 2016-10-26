@@ -22,8 +22,8 @@ $md-tab-bar-height: 48px !default;
   }
 }
 
-// The top section of the view; contains the tab labels
-.md-tab-header {
+// Mixin styles for the top section of the view; contains the tab labels.
+@mixin tab-header {
   overflow: hidden;
   position: relative;
   display: flex;
@@ -31,19 +31,8 @@ $md-tab-bar-height: 48px !default;
   flex-shrink: 0;
 }
 
-@media ($md-xsmall) {
-  .md-tab-label {
-    min-width: 72px;
-  }
-}
-
-.md-tab-disabled {
-  cursor: default;
-  pointer-events: none;
-}
-
-// The colored bar that underlines the active tab
-md-ink-bar {
+// Mixin styles for the ink bar that displays near the active tab in the header.
+@mixin ink-bar {
   position: absolute;
   bottom: 0;
   height: 2px;

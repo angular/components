@@ -1,5 +1,5 @@
 @import '../core/style/variables';
-@import './tabs-common';
+@import 'tabs-common';
 
 :host {
   display: flex;
@@ -7,9 +7,25 @@
   font-family: $md-font-family;
 }
 
+// Styling for the heading containing the tab labels
+.md-tab-header {
+  @include tab-header;
+}
+
 // Wraps each tab label
 .md-tab-label {
   @include tab-label;
+}
+
+@media ($md-xsmall) {
+  .md-tab-label {
+    min-width: 72px;
+  }
+}
+
+// The ink bar that displays next to the active tab
+md-ink-bar {
+  @include ink-bar;
 }
 
 // The bottom section of the view; contains the tab bodies 
@@ -30,4 +46,10 @@
   &.md-tab-active {
     display: block;
   }
+}
+
+// Styling for any tab that is marked disabled
+.md-tab-disabled {
+  cursor: default;
+  pointer-events: none;
 }

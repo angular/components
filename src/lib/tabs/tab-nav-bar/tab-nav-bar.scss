@@ -1,10 +1,24 @@
 @import '../tabs-common';
+@import '../../core/style/variables';
 
-:host {
-  display: block;
+// Wraps the heading that contains the anchors
+.md-tab-header {
+  @include tab-header;
 }
 
-a[md-tab-link] {
+// Wraps each link in the header
+[md-tab-link] {
   @include tab-label;
   text-decoration: none;
+}
+
+@media ($md-xsmall) {
+  [md-tab-link] {
+    min-width: 72px;
+  }
+}
+
+// Styling for the ink bar that displays near the activated anchor
+md-ink-bar {
+  @include ink-bar;
 }
