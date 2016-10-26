@@ -43,11 +43,11 @@ describe('MdTabNavBar', () => {
 @Component({
   selector: 'test-app',
   template: `
-    <md-tab-nav-bar>
+    <nav md-tab-nav-bar>
       <a md-tab-link [active]="activeIndex === 0" (click)="activeIndex = 0">Tab One</a>
       <a md-tab-link [active]="activeIndex === 1" (click)="activeIndex = 1">Tab Two</a>
       <a md-tab-link [active]="activeIndex === 2" (click)="activeIndex = 2">Tab Three</a>
-    </md-tab-nav-bar>
+    </nav>
   `
 })
 class SimpleTabNavBarTestApp {
