@@ -23,7 +23,8 @@
     <template [ngIf]="selectedIndex == i && !hideTabs">
       <template [portalHost]="tab.content"></template>
     </template>
-    <div [class.hidden]="selectedIndex !== i && hideTabs">
+    <div [ngIf]="selectedIndex == i && hideTabs"
+         [class.hidden]="selectedIndex !== i && hideTabs">
       <template [portalHost]="tab.content"></template>
     </div>
   </div>
