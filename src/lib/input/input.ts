@@ -90,124 +90,6 @@ export class MdHint {
 }
 
 /**
- * Enables auto expanding behaviour for the textarea
- * based on: https://github.com/stevepapa/angular2-autosize
- */
-@Directive({
-  selector: 'textarea[mdAutosize]'
-})
-export class MdAutosize implements OnInit {
-  // public because of AOT
-  @HostListener('input')
-  public _onChange() {
-    if (this._isActive) {
-      this._adjust();
-    }
-  }
-
-  // public because of AOT
-  @Input('mdAutosize')
-  public _isActive: boolean;
-
-  // public because of AOT
-  // TODO: change to a setter, to recalculate on change
-  @Input('attr.rows')
-  public _rows: string;
-
-  private _height: number;
-  private _lineHeight: number;
-
-  constructor(private _elRef: ElementRef) {}
-
-  ngOnInit() {
-    if (this._isActive) {
-      this._elRef.nativeElement.style.overflow = 'hidden';
-
-      // check is rows is explicitly set, otherwise we don't need to
-      // care about it(and getting the actual line-height) at all
-      if (this._rows) {
-        this._lineHeight = this._getLineHeight();
-        this._elRef.nativeElement.style.minHeight = `${+this._rows * this._lineHeight}px`;
-      }
-
-      this._adjust();
-    }
-  }
-
-  private _adjust() {
-    // reset height(and rows if it was set by the user)
-    // to the default values to properly calculate new height
-    this._elRef.nativeElement.style.height = 'auto';
-
-    // only need to do this if user explicitly set rows
-    if (this._rows) {
-      this._elRef.nativeElement.rows = this._rows;
-    }
-
-    this._height = +this._elRef.nativeElement.scrollHeight;
-
-    // only need to do this if user explicitly set rows
-    if (this._rows) {
-      this._elRef.nativeElement.rows = this._getCalculatedRows();
-    }
-
-    this._elRef.nativeElement.style.height = `${this._height}px`;
-  }
-
-  private _getCalculatedRows() {
-    return Math.round(this._height / this._lineHeight);
-  }
-
-  private _getLineHeight(): number {
-    const el: HTMLTextAreaElement = this._elRef.nativeElement;
-
-    // get the actual computed styles for the element
-    const computedStyles = window.getComputedStyle(el);
-
-    // if line height is explicitly set(to a pixel value), use that
-    if (computedStyles.lineHeight && computedStyles.lineHeight.toLowerCase().indexOf('px') >= 0) {
-      // return stripped of the "px" and as a number
-      return parseFloat(computedStyles.lineHeight);
-    }
-
-    // create temporary element
-    const tempEl = <HTMLTextAreaElement>document.createElement(el.nodeName);
-
-    // reset styling, visually hiden the element
-    // and set its font styles to match the ones of our textarea
-    tempEl.setAttribute('rows', '1');
-    tempEl.setAttribute(
-      'style',
-      `
-        margin: 0px;
-        padding: 0px;
-        visibility: hidden;
-        opacity: 0;
-        font-family: ${computedStyles.fontFamily};
-        font-size: ${computedStyles.fontSize};
-      `
-    );
-
-    // fill in one row
-    tempEl.value = '-';
-
-    // append to parent element to correctly inherit same values
-    // as the actual textarea
-    el.parentNode.appendChild(tempEl);
-
-    // get the actual line height
-    const lineHeight = tempEl.clientHeight;
-
-    // cleanup
-    tempEl.parentNode.removeChild(tempEl);
-
-    return lineHeight;
-  }
-}
-
-
-
-/**
  * Component that represents a text input. It encapsulates the <input> HTMLElement and
  * improve on its behaviour, along with styling it according to the Material Design.
  */
@@ -477,9 +359,9 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
 
 
 @NgModule({
-  declarations: [MdPlaceholder, MdInput, MdHint, MdAutosize],
+  declarations: [MdPlaceholder, MdInput, MdHint],
   imports: [CommonModule, FormsModule],
-  exports: [MdPlaceholder, MdInput, MdHint, MdAutosize],
+  exports: [MdPlaceholder, MdInput, MdHint],
 })
 export class MdInputModule {
   static forRoot(): ModuleWithProviders {
