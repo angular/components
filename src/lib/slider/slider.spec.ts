@@ -708,7 +708,7 @@ describe('MdSlider', () => {
 
     it('should place the thumb on the min value', () => {
       thumbDimensions = thumbElement.getBoundingClientRect();
-      expect(thumbDimensions.left).toBe(sliderDimensions.width * 0.0 + sliderDimensions.left);
+      expect(thumbDimensions.left).toBe(sliderDimensions.left);
     });
   });
 
@@ -746,27 +746,7 @@ describe('MdSlider', () => {
 
     it('should place the thumb on the max value', () => {
       thumbDimensions = thumbElement.getBoundingClientRect();
-      expect(thumbDimensions.left).toBe(sliderDimensions.width * 1.0 + sliderDimensions.left);
-    });
-  });
-
-  describe('slider with set min and max and a value between min and max', () => {
-    let fixture: ComponentFixture<SliderWithValueBetweenMinAndMax>;
-    let sliderDebugElement: DebugElement;
-    let sliderInstance: MdSlider;
-
-    beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithValueBetweenMinAndMax);
-      fixture.detectChanges();
-
-      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
-    });
-
-    it('should set the value to the max value', () => {
-      expect(sliderInstance.value).toBe(5);
-      expect(sliderInstance.min).toBe(4);
-      expect(sliderInstance.max).toBe(6);
+      expect(thumbDimensions.left).toBe(sliderDimensions.right);
     });
   });
 });
