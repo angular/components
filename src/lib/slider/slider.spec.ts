@@ -25,8 +25,7 @@ describe('MdSlider', () => {
         SliderWithOneWayBinding,
         SliderWithTwoWayBinding,
         SliderWithValueSmallerThanMin,
-        SliderWithValueGreaterThanMax,
-        SliderWithValueBetweenMinAndMax
+        SliderWithValueGreaterThanMax
       ],
       providers: [
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
@@ -826,13 +825,6 @@ class SliderWithValueSmallerThanMin { }
   encapsulation: ViewEncapsulation.None
 })
 class SliderWithValueGreaterThanMax { }
-
-@Component({
-  template: `<md-slider value="5" min="4" max="6"></md-slider>`,
-  styles: [noTransitionStyle],
-  encapsulation: ViewEncapsulation.None
-})
-class SliderWithValueBetweenMinAndMax { }
 
 /**
  * Dispatches a click event from an element.
