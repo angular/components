@@ -4,7 +4,7 @@
 
     <div class="md-input-infix">
       <input #input
-             *ngIf="elementType === 'input'"
+             *ngIf="_elementType === 'input'"
              class="md-input-element"
              [class.md-end]="align == 'end'"
              [attr.aria-label]="ariaLabel"
@@ -37,7 +37,7 @@
 
       <textarea
              #input
-             *ngIf="elementType === 'textarea'"
+             *ngIf="_elementType === 'textarea'"
              class="md-input-element  md-input-element-textarea"
              [class.md-end]="align == 'end'"
              [attr.aria-label]="ariaLabel"
