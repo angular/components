@@ -170,7 +170,7 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   // textarea-specific
   @Input() rows: number = null;
   @Input() cols: number = null;
-  @Input() wrap: string = null;
+  @Input() wrap: 'soft' | 'hard' = null;
 
   private _floatingPlaceholder: boolean = true;
   private _autofocus: boolean = false;
