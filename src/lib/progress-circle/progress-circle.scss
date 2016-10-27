@@ -13,7 +13,7 @@ $md-progress-circle-viewport-size: 100px !default;
 
 
 :host {
-  display: block;
+  display: inline-block;
   // Height and width are provided for md-progress-circle to act as a default.
   // The height and width are expected to be overwritten by application css.
   height: $md-progress-circle-viewport-size;
