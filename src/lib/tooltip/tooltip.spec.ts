@@ -1,13 +1,15 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed, tick, fakeAsync} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {TooltipPosition, MdTooltip} from './tooltip';
+import {TooltipPosition, MdTooltip, MATERIAL_TOOLTIP_HIDE_DELAY} from './tooltip';
 import {OverlayContainer} from '../core';
 import {MdTooltipModule} from './tooltip';
 
+const initialTooltipMessage = 'initial tooltip message';
 
-describe('MdTooltip', () => {
+fdescribe('MdTooltip', () => {
   let overlayContainerElement: HTMLElement;
+
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -38,17 +40,57 @@ describe('MdTooltip', () => {
       tooltipDirective = buttonDebugElement.injector.get(MdTooltip);
     });
 
-    it('should show/hide on mouse enter/leave', () => {
-      expect(tooltipDirective.visible).toBeFalsy();
+    it('should show and hide the tooltip', fakeAsync(() => {
+      expect(tooltipDirective._tooltipRef).toBeUndefined();
 
-      tooltipDirective._handleMouseEnter(null);
-      expect(tooltipDirective.visible).toBeTruthy();
+      tooltipDirective.show();
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       fixture.detectChanges();
-      expect(overlayContainerElement.textContent).toBe('some message');
+      expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
 
-      tooltipDirective._handleMouseLeave(null);
-      expect(overlayContainerElement.textContent).toBe('');
+      tooltipDirective.hide();
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+
+      // After hidden, expect that the tooltip is not visible.
+      tick(MATERIAL_TOOLTIP_HIDE_DELAY);
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
+    }));
+
+    it('should remove the tooltip when changing position', () => {
+      const initialPosition: TooltipPosition = 'below';
+      const changedPosition: TooltipPosition = 'above';
+
+      expect(tooltipDirective._tooltipRef).toBeUndefined();
+
+      tooltipDirective.position = initialPosition;
+      tooltipDirective.show();
+      expect(tooltipDirective._tooltipRef).toBeDefined();
+
+      // Same position value should not remove the tooltip
+      tooltipDirective.position = initialPosition;
+      expect(tooltipDirective._tooltipRef).toBeDefined();
+
+      // Different position value should destroy the tooltip
+      tooltipDirective.position = changedPosition;
+      expect(tooltipDirective._tooltipRef).toBeNull();
+      expect(tooltipDirective._overlayRef).toBeNull();
+    });
+
+    it('should be able to modify the tooltip message', () => {
+      expect(tooltipDirective._tooltipRef).toBeUndefined();
+
+      tooltipDirective.show();
+      expect(tooltipDirective._tooltipRef._visibility).toBe('visible');
+
+      fixture.detectChanges();
+      expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
+
+      const newMessage = 'new tooltip message';
+      tooltipDirective.message = newMessage;
+
+      fixture.detectChanges();
+      expect(overlayContainerElement.textContent).toContain(newMessage);
     });
 
     it('should be removed after parent destroyed', () => {
@@ -63,8 +105,9 @@ describe('MdTooltip', () => {
 
 @Component({
   selector: 'app',
-  template: `<button md-tooltip="some message" [tooltip-position]="position">Button</button>`
+  template: `<button [md-tooltip]="message" [tooltip-position]="position">Button</button>`
 })
 class BasicTooltipDemo {
   position: TooltipPosition = 'below';
+  message: string = initialTooltipMessage;
 }
