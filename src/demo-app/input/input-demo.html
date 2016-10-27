@@ -75,6 +75,31 @@
   </md-card-content>
 </md-card>
 
+<md-card class="demo-card demo-basic">
+  <md-toolbar color="primary">Expanding textarea</md-toolbar>
+  <md-card-content>
+    <div>
+      <md-textarea
+        placeholder="Textarea with autosize"
+        class="demo-full-width"
+        autosize
+        value="Hello world. How are you?">
+      </md-textarea>
+    </div>
+
+    <h4>With `rows` explicitly set</h4>
+    <div>
+      <md-textarea
+        placeholder="Textarea with autosize"
+        class="demo-full-width"
+        autosize
+        [rows]="rows"
+        value="Hello world. How are you?">
+      </md-textarea>
+    </div>
+  </md-card-content>
+</md-card>
+
 <md-card class="demo-card">
   <md-card-title>
     Hello <md-input [(ngModel)]="name" type="text" placeholder="First name"></md-input>,
