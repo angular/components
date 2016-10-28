@@ -56,6 +56,12 @@ export class MdSnackBar {
     } else {
       mdSnackBarRef.containerInstance.enter();
     }
+    // Auto dismiss after timeout.
+    if(config.autoHideDuration) {
+      mdSnackBarRef.autoHide = setTimeout(() => {
+        mdSnackBarRef.dismiss();
+      }, config.autoHideDuration);
+    }
     this._live.announce(config.announcementMessage, config.politeness);
     this._snackBarRef = mdSnackBarRef;
     return this._snackBarRef;

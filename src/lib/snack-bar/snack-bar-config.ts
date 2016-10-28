@@ -12,7 +12,10 @@ export class MdSnackBarConfig {
   /** The view container to place the overlay for the snack bar into. */
   viewContainerRef: ViewContainerRef;
 
-  constructor(viewContainerRef: ViewContainerRef) {
+  autoHideDuration: number | boolean;
+
+  constructor(viewContainerRef: ViewContainerRef, autoHideDuration: number | boolean = false) {
     this.viewContainerRef = viewContainerRef;
+    this.autoHideDuration = autoHideDuration;
   }
 }
