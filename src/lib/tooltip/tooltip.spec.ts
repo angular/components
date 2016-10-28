@@ -7,7 +7,7 @@ import {MdTooltipModule} from './tooltip';
 
 const initialTooltipMessage = 'initial tooltip message';
 
-fdescribe('MdTooltip', () => {
+describe('MdTooltip', () => {
   let overlayContainerElement: HTMLElement;
 
 
