@@ -19,8 +19,8 @@ export class SnackBarDemo {
 
   open() {
     let autoHide: number | boolean = false;
-    if(this.autoHide) {
-      autoHide = this.autoHideMs
+    if (this.autoHide) {
+      autoHide = this.autoHideMs;
     }
     let config = new MdSnackBarConfig(this.viewContainerRef, autoHide);
     this.snackBar.open(this.message, this.action && this.actionButtonLabel, config);

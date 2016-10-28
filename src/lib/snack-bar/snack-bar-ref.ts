@@ -39,7 +39,7 @@ export class MdSnackBarRef<T> {
       });
     }
     // Clear autohide interval
-    if(this.autoHide !== false) {
+    if (this.autoHide) {
       clearInterval(this.autoHide);
     }
   }
