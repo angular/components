@@ -55,7 +55,7 @@ export class MdSnackBar {
       mdSnackBarRef.containerInstance.enter();
     }
     // Auto dismiss after timeout.
-    if(config.autoHideDuration) {
+    if( config.autoHideDuration ) {
       mdSnackBarRef.autoHide = setTimeout(() => {
         mdSnackBarRef.dismiss();
       }, config.autoHideDuration);
