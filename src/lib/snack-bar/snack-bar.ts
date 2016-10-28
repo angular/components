@@ -21,8 +21,6 @@ import {MdSnackBarRef} from './snack-bar-ref';
 import {MdSnackBarContainer} from './snack-bar-container';
 import {SimpleSnackBar} from './simple-snack-bar';
 
-// TODO(josephperrott): Automate dismiss after timeout.
-
 
 /**
  * Service to dispatch Material Design snack bar messages.

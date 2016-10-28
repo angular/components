@@ -15,7 +15,7 @@
 | `viewContainerRef: ViewContainerRef` | The view container ref to attach the snack bar to. |
 | `role: AriaLivePoliteness = 'assertive'` | The politeness level to announce the snack bar with. |
 | `announcementMessage: string` | The message to announce with the snack bar. |
-
+| `autoHideDuration: number | boolean` | The number of milliseconds to wait before automatically dismissing. If no value is specified the snackbar will dismiss normally. |
 
 ### Example
 The service can be injected in a component.
@@ -30,7 +30,8 @@ export class MyComponent {
              viewContainerRef: ViewContainerRef) {}
 
  failedAttempt() {
-   config = new MdSnackBarConfig(this.viewContainerRef);
+   // This snackbar will dissmiss after 3s (3000ms)
+   config = new MdSnackBarConfig(this.viewContainerRef, 3000);
    this.snackBar.open('It didn\'t quite work!', 'Try Again', config);
  }
 
