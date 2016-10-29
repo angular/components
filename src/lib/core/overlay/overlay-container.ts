@@ -22,31 +22,27 @@ export class OverlayContainer {
    */
   private _createContainer(): void {
     let container = document.createElement('div');
-    container.classList.add('md-overlay-container');    
-    document.addEventListener("fullscreenchange", () => this._adjustContainerParent());
-    document.addEventListener("webkitfullscreenchange", () => this._adjustContainerParent());
-    document.addEventListener("mozfullscreenchange", () => this._adjustContainerParent());
-    document.addEventListener("msfullscreenchange", () => this._adjustContainerParent());
+    container.classList.add('md-overlay-container');
+    document.addEventListener('fullscreenchange', () => this._adjustContainerParent());
+    document.addEventListener('webkitfullscreenchange', () => this._adjustContainerParent());
+    document.addEventListener('mozfullscreenchange', () => this._adjustContainerParent());
+    document.addEventListener('msfullscreenchange', () => this._adjustContainerParent());
     this._containerElement = container;
-    this._adjustContainerParent();    
+    this._adjustContainerParent();
   }
 
   private _adjustContainerParent() {
     // use any type because document type doesn't declare full screen variables
     let currentDocument: any = document;
-    if (currentDocument.fullscreenElement) {        
-        currentDocument.fullScreenElement.appendChild(this._containerElement);            
-    }
-    else if (currentDocument.mozFullscreenElement) {        
-        currentDocument.mozFullScreenElement.appendChild(this._containerElement);            
-    }
-    else if (currentDocument.webkitFullscreenElement) {        
-        currentDocument.webkitCurrentFullScreenElement.appendChild(this._containerElement);            
-    }
-    else if (currentDocument.msFullscreenElement) {        
-        currentDocument.msCurrentFullScreenElement.appendChild(this._containerElement);            
-    }
-    else {
+    if (currentDocument.fullscreenElement) {
+      currentDocument.fullScreenElement.appendChild(this._containerElement);
+    } else if (currentDocument.mozFullscreenElement) {
+      currentDocument.mozFullScreenElement.appendChild(this._containerElement);
+    } else if (currentDocument.webkitFullscreenElement) {
+      currentDocument.webkitCurrentFullScreenElement.appendChild(this._containerElement);
+    } else if (currentDocument.msFullscreenElement) {
+      currentDocument.msCurrentFullScreenElement.appendChild(this._containerElement);
+    } else {
       document.body.appendChild(this._containerElement);
     }
   }
