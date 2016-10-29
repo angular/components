@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation, ElementRef} from '@angular/core';
 
 
 @Component({
@@ -47,4 +47,24 @@ export class DemoApp {
     {name: 'Toolbar', route: 'toolbar'},
     {name: 'Tooltip', route: 'tooltip'}
   ];
+
+  constructor(private _element: ElementRef) {
+
+  }
+
+  public toggleFullscreen() {
+    let elem = this._element.nativeElement.querySelector('.demo-content');
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    }
+    else if (elem.webkitRequestFullScreen) {
+      elem.webkitRequestFullScreen();
+    }
+    else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen();
+    }
+    else if (elem.msRequestFullScreen) {
+      elem.msRequestFullScreen();
+    }
+  }
 }
