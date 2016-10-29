@@ -56,14 +56,11 @@ export class DemoApp {
     let elem = this._element.nativeElement.querySelector('.demo-content');
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
-    }
-    else if (elem.webkitRequestFullScreen) {
+    } else if (elem.webkitRequestFullScreen) {
       elem.webkitRequestFullScreen();
-    }
-    else if (elem.mozRequestFullScreen) {
+    } else if (elem.mozRequestFullScreen) {
       elem.mozRequestFullScreen();
-    }
-    else if (elem.msRequestFullScreen) {
+    } else if (elem.msRequestFullScreen) {
       elem.msRequestFullScreen();
     }
   }
