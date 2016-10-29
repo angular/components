@@ -36,7 +36,7 @@ export class OverlayContainer {
     let currentDocument: any = document;
     if (currentDocument.fullscreenElement) {
       currentDocument.fullScreenElement.appendChild(this._containerElement);
-    } else if (currentDocument.mozFullscreenElement) {
+    } else if (currentDocument.mozFullScreenElement) {
       currentDocument.mozFullScreenElement.appendChild(this._containerElement);
     } else if (currentDocument.webkitFullscreenElement) {
       currentDocument.webkitCurrentFullScreenElement.appendChild(this._containerElement);
