@@ -26,7 +26,7 @@ export class OverlayContainer {
     document.addEventListener('fullscreenchange', () => this._adjustContainerParent());
     document.addEventListener('webkitfullscreenchange', () => this._adjustContainerParent());
     document.addEventListener('mozfullscreenchange', () => this._adjustContainerParent());
-    document.addEventListener('msfullscreenchange', () => this._adjustContainerParent());
+    document.addEventListener('MSFullscreenChange', () => this._adjustContainerParent());
     this._containerElement = container;
     this._adjustContainerParent();
   }
