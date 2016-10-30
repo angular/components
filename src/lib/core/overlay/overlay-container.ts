@@ -41,7 +41,7 @@ export class OverlayContainer {
     } else if (currentDocument.webkitFullscreenElement) {
       currentDocument.webkitCurrentFullScreenElement.appendChild(this._containerElement);
     } else if (currentDocument.msFullscreenElement) {
-      currentDocument.msCurrentFullScreenElement.appendChild(this._containerElement);
+      currentDocument.msFullscreenElement.appendChild(this._containerElement);
     } else {
       document.body.appendChild(this._containerElement);
     }

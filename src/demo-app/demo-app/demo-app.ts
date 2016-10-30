@@ -60,8 +60,8 @@ export class DemoApp {
       elem.webkitRequestFullScreen();
     } else if (elem.mozRequestFullScreen) {
       elem.mozRequestFullScreen();
-    } else if (elem.msRequestFullScreen) {
-      elem.msRequestFullScreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
     }
   }
 }
