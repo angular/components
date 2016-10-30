@@ -36,7 +36,7 @@ export class OverlayContainer {
     }
     if ((<any>document).msFullscreenEnabled) {
       document.addEventListener('MSFullscreenChange', () => this._adjustContainerParent());
-    }        
+    }
   }
 
   private _adjustContainerParent() {
