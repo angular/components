@@ -23,12 +23,20 @@ export class OverlayContainer {
   private _createContainer(): void {
     let container = document.createElement('div');
     container.classList.add('md-overlay-container');
-    document.addEventListener('fullscreenchange', () => this._adjustContainerParent());
-    document.addEventListener('webkitfullscreenchange', () => this._adjustContainerParent());
-    document.addEventListener('mozfullscreenchange', () => this._adjustContainerParent());
-    document.addEventListener('MSFullscreenChange', () => this._adjustContainerParent());
     this._containerElement = container;
     this._adjustContainerParent();
+    if (document.fullscreenEnabled) {
+      document.addEventListener('fullscreenchange', () => this._adjustContainerParent());
+    }
+    if (document.webkitFullscreenEnabled) {
+      document.addEventListener('webkitfullscreenchange', () => this._adjustContainerParent());
+    }
+    if ((<any>document).mozFullScreenEnabled) {
+      document.addEventListener('mozfullscreenchange', () => this._adjustContainerParent());
+    }
+    if ((<any>document).msFullscreenEnabled) {
+      document.addEventListener('MSFullscreenChange', () => this._adjustContainerParent());
+    }        
   }
 
   private _adjustContainerParent() {
