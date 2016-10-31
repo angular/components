@@ -54,10 +54,16 @@ describe('MdTooltip', () => {
 
       // After the tooltip delay elapses, expect that the tooltip is not visible.
       tick(TOOLTIP_HIDE_DELAY);
+      fixture.detectChanges();
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
+
+      // On animation complete, should expect that the tooltip has been detached.
+      fixture.whenStable().then(() => {
+        expect(tooltipDirective._tooltipInstance).toBeNull();
+      });
     }));
 
-    it('should not follow through with hide if show is called after', fakeAsync(() => {
+    it('should not follow through with hide if show is called after', fakeAsync(() => { 
       tooltipDirective.show();
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 

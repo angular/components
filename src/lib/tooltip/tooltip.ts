@@ -268,6 +268,7 @@ export class TooltipComponent {
   _afterVisibilityAnimation(e: AnimationTransitionEvent): void {
     if (e.toState === 'hidden' && !this.isVisible()) {
       this._onHide.next();
+
     }
   }
 
