@@ -1,9 +1,29 @@
 import {
-    NgModule, ModuleWithProviders, Component, Directive, Input, ElementRef, ViewContainerRef,
-    style, trigger, state, transition, animate, AnimationTransitionEvent, NgZone
+  NgModule,
+  ModuleWithProviders,
+  Component,
+  Directive,
+  Input,
+  ElementRef,
+  ViewContainerRef,
+  style,
+  trigger,
+  state,
+  transition,
+  animate,
+  AnimationTransitionEvent,
+  NgZone,
 } from '@angular/core';
-import {Overlay, OverlayState, OverlayModule, OverlayRef, ComponentPortal,
-    OverlayConnectionPosition, OriginConnectionPosition, OVERLAY_PROVIDERS} from '../core';
+import {
+  Overlay,
+  OverlayState,
+  OverlayModule,
+  OverlayRef,
+  ComponentPortal,
+  OverlayConnectionPosition,
+  OriginConnectionPosition,
+  OVERLAY_PROVIDERS,
+} from '../core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
