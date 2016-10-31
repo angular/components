@@ -63,7 +63,7 @@ describe('MdTooltip', () => {
       });
     }));
 
-    it('should not follow through with hide if show is called after', fakeAsync(() => { 
+    it('should not follow through with hide if show is called after', fakeAsync(() => {
       tooltipDirective.show();
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
