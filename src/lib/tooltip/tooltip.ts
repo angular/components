@@ -10,7 +10,7 @@ import {Subject} from 'rxjs/Subject';
 export type TooltipPosition = 'before' | 'after' | 'above' | 'below';
 
 /** Time in ms to delay before changing the tooltip visibility to hidden */
-export const MATERIAL_TOOLTIP_HIDE_DELAY  = 1500;
+export const TOOLTIP_HIDE_DELAY  = 1500;
 
 /**
  * Directive that attaches a material design tooltip to the host element. Animates the showing and
@@ -83,7 +83,7 @@ export class MdTooltip {
    * Hides the tooltip after the provided delay in ms. Defaults the delay to the material design
    * prescribed delay time
    */
-  hide(delay: number = MATERIAL_TOOLTIP_HIDE_DELAY): void {
+  hide(delay: number = TOOLTIP_HIDE_DELAY): void {
     if (this._tooltipRef) {
       this._tooltipRef.hide(delay);
     }

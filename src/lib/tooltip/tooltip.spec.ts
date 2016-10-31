@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed, tick, fakeAsync} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {TooltipPosition, MdTooltip, MATERIAL_TOOLTIP_HIDE_DELAY} from './tooltip';
+import {TooltipPosition, MdTooltip, TOOLTIP_HIDE_DELAY} from './tooltip';
 import {OverlayContainer} from '../core';
 import {MdTooltipModule} from './tooltip';
 
@@ -53,7 +53,7 @@ describe('MdTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       // After hidden, expect that the tooltip is not visible.
-      tick(MATERIAL_TOOLTIP_HIDE_DELAY);
+      tick(TOOLTIP_HIDE_DELAY);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
     }));
 
