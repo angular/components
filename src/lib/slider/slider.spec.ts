@@ -843,7 +843,7 @@ class SliderWithChangeHandler {
 }
 
 /**
- * Dispatches a click event from an element.
+ * Dispatches a click event sequence (consisting of moueseenter, click) from an element.
  * Note: The mouse event truncates the position for the click.
  * @param sliderElement The md-slider element from which the event will be dispatched.
  * @param percentage The percentage of the slider where the click should occur. Used to find the
@@ -908,6 +908,8 @@ function dispatchSlideStartEvent(sliderElement: HTMLElement, percent: number,
   let trackElement = sliderElement.querySelector('.md-slider-track');
   let dimensions = trackElement.getBoundingClientRect();
   let x = dimensions.left + (dimensions.width * percent);
+
+  dispatchMouseenterEvent(sliderElement);
 
   gestureConfig.emitEventForElement('slidestart', sliderElement, {
     center: { x: x },
