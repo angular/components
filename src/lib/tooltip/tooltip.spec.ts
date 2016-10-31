@@ -41,7 +41,7 @@ describe('MdTooltip', () => {
     });
 
     it('should show and hide the tooltip', fakeAsync(() => {
-      expect(tooltipDirective._tooltipRef).toBeUndefined();
+      expect(tooltipDirective._tooltipInstance).toBeUndefined();
 
       tooltipDirective.show();
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
@@ -61,27 +61,27 @@ describe('MdTooltip', () => {
       const initialPosition: TooltipPosition = 'below';
       const changedPosition: TooltipPosition = 'above';
 
-      expect(tooltipDirective._tooltipRef).toBeUndefined();
+      expect(tooltipDirective._tooltipInstance).toBeUndefined();
 
       tooltipDirective.position = initialPosition;
       tooltipDirective.show();
-      expect(tooltipDirective._tooltipRef).toBeDefined();
+      expect(tooltipDirective._tooltipInstance).toBeDefined();
 
       // Same position value should not remove the tooltip
       tooltipDirective.position = initialPosition;
-      expect(tooltipDirective._tooltipRef).toBeDefined();
+      expect(tooltipDirective._tooltipInstance).toBeDefined();
 
       // Different position value should destroy the tooltip
       tooltipDirective.position = changedPosition;
-      expect(tooltipDirective._tooltipRef).toBeNull();
+      expect(tooltipDirective._tooltipInstance).toBeNull();
       expect(tooltipDirective._overlayRef).toBeNull();
     });
 
     it('should be able to modify the tooltip message', () => {
-      expect(tooltipDirective._tooltipRef).toBeUndefined();
+      expect(tooltipDirective._tooltipInstance).toBeUndefined();
 
       tooltipDirective.show();
-      expect(tooltipDirective._tooltipRef._visibility).toBe('visible');
+      expect(tooltipDirective._tooltipInstance._visibility).toBe('visible');
 
       fixture.detectChanges();
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);

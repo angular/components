@@ -28,7 +28,7 @@ export const TOOLTIP_HIDE_DELAY  = 1500;
 })
 export class MdTooltip {
   _overlayRef: OverlayRef;
-  _tooltipRef: TooltipComponent;
+  _tooltipInstance: TooltipComponent;
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   private _position: TooltipPosition = 'below';
@@ -42,7 +42,7 @@ export class MdTooltip {
 
       // TODO(andrewjs): When the overlay's position can be dynamically changed, do not destroy
       // the tooltip.
-      if (this._tooltipRef) {
+      if (this._tooltipInstance) {
         this._disposeTooltip();
       }
     }
@@ -55,7 +55,7 @@ export class MdTooltip {
   }
   set message(value: string) {
     this._message = value;
-    if (this._tooltipRef) {
+    if (this._tooltipInstance) {
       this._setTooltipMessage(this._message);
     }
   }
@@ -70,12 +70,12 @@ export class MdTooltip {
 
   /** Shows the tooltip */
   show(): void {
-    if (!this._tooltipRef) {
+    if (!this._tooltipInstance) {
       this._createTooltip();
     }
 
     this._setTooltipMessage(this._message);
-    this._tooltipRef.show(this._position);
+    this._tooltipInstance.show(this._position);
   }
 
   /**
@@ -84,33 +84,29 @@ export class MdTooltip {
    * prescribed delay time
    */
   hide(delay: number = TOOLTIP_HIDE_DELAY): void {
-    if (this._tooltipRef) {
-      this._tooltipRef.hide(delay);
+    if (this._tooltipInstance) {
+      this._tooltipInstance.hide(delay);
     }
   }
 
   /** Shows/hides the tooltip */
   toggle(): void {
-    if (this._isTooltipVisible()) {
-      this.hide();
-    } else {
-      this.show();
-    }
+    this._isTooltipVisible() ? this.hide() : this.show();
   }
 
   /** Returns true if the tooltip is currently visible to the user */
   _isTooltipVisible(): boolean {
-    return this._tooltipRef && this._tooltipRef.isVisible();
+    return this._tooltipInstance && this._tooltipInstance.isVisible();
   }
 
   /** Create the tooltip to display */
   private _createTooltip(): void {
     this._createOverlay();
     let portal = new ComponentPortal(TooltipComponent, this._viewContainerRef);
-    this._tooltipRef = this._overlayRef.attach(portal).instance;
+    this._tooltipInstance = this._overlayRef.attach(portal).instance;
 
     // Dispose the overlay when finished the shown tooltip.
-    this._tooltipRef.afterHidden().subscribe(() => {
+    this._tooltipInstance.afterHidden().subscribe(() => {
       this._disposeTooltip();
     });
   }
@@ -130,7 +126,7 @@ export class MdTooltip {
   private _disposeTooltip(): void {
     this._overlayRef.dispose();
     this._overlayRef = null;
-    this._tooltipRef = null;
+    this._tooltipInstance = null;
   }
 
   /** Returns the origin position based on the user's position preference */
@@ -157,9 +153,9 @@ export class MdTooltip {
   private _setTooltipMessage(message: string) {
     // Must wait for the message to be painted to the tooltip so that the overlay can properly
     // calculate the correct positioning based on the size of the text.
-    this._tooltipRef.message = message;
+    this._tooltipInstance.message = message;
     this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
-      if (this._tooltipRef) {
+      if (this._tooltipInstance) {
         this._overlayRef.updatePosition();
       }
     });
@@ -196,7 +192,7 @@ export class TooltipComponent {
   /** Property watched by the animation framework to show or hide the tooltip */
   _visibility: TooltipVisibility;
 
-  /** Set to true when interactions on the page should close the tooltip */
+  /** Whether interactions on the page should close the tooltip */
   _closeOnInteraction: boolean = false;
 
   /** The transform origin used in the animation for showing and hiding the tooltip */
@@ -234,7 +230,7 @@ export class TooltipComponent {
     return this._onHide.asObservable();
   }
 
-  /** Returns true if the tooltip is being displayed */
+  /** Whether the tooltip is being displayed */
   isVisible(): boolean {
     return this._visibility === 'visible';
   }
