@@ -1,9 +1,8 @@
 import {async, ComponentFixture, TestBed, tick, fakeAsync} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {TooltipPosition, MdTooltip, TOOLTIP_HIDE_DELAY} from './tooltip';
+import {TooltipPosition, MdTooltip, TOOLTIP_HIDE_DELAY, MdTooltipModule} from './tooltip';
 import {OverlayContainer} from '../core';
-import {MdTooltipModule} from './tooltip';
 
 const initialTooltipMessage = 'initial tooltip message';
 
