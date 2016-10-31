@@ -314,7 +314,8 @@ const sauceAliases: AliasMap = {
   'BETA': ['SL_CHROMEBETA', 'SL_FIREFOXBETA'],
   'DEV': ['SL_CHROMEDEV', 'SL_FIREFOXDEV'],
   'REQUIRED': buildConfiguration('unitTest', 'SL', true),
-  'OPTIONAL': buildConfiguration('unitTest', 'SL', false)
+  // Disabled for now.
+  //'OPTIONAL': buildConfiguration('unitTest', 'SL', false)
 };
 
 const browserstackAliases: AliasMap = {
@@ -329,7 +330,8 @@ const browserstackAliases: AliasMap = {
   'IOS': ['BS_IOS7', 'BS_IOS8', 'BS_IOS9'],
   'SAFARI': ['BS_SAFARI7', 'BS_SAFARI8', 'BS_SAFARI9'],
   'REQUIRED': buildConfiguration('unitTest', 'BS', true),
-  'OPTIONAL': buildConfiguration('unitTest', 'BS', false)
+  // Disabled for now.
+  //'OPTIONAL': buildConfiguration('unitTest', 'BS', false)
 };
 
 export const platformMap: { [name: string]: AliasMap } = {
