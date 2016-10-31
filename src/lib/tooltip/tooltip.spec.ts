@@ -7,7 +7,7 @@ import {MdTooltipModule} from './tooltip';
 
 const initialTooltipMessage = 'initial tooltip message';
 
-fdescribe('MdTooltip', () => {
+describe('MdTooltip', () => {
   let overlayContainerElement: HTMLElement;
 
 
@@ -58,7 +58,7 @@ fdescribe('MdTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
     }));
 
-    fit('should not follow through with hide if show is called after', fakeAsync(() => {
+    it('should not follow through with hide if show is called after', fakeAsync(() => {
       tooltipDirective.show();
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
