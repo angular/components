@@ -59,6 +59,8 @@ md-slider {
 
 .md-slider-ticks-container {
   position: absolute;
+  left: 0;
+  top: 0;
   height: $md-slider-track-thickness;
   width: 100%;
   overflow: hidden;
