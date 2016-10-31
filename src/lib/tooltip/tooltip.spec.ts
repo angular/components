@@ -7,7 +7,7 @@ import {MdTooltipModule} from './tooltip';
 
 const initialTooltipMessage = 'initial tooltip message';
 
-describe('MdTooltip', () => {
+fdescribe('MdTooltip', () => {
   let overlayContainerElement: HTMLElement;
 
 
@@ -49,12 +49,27 @@ describe('MdTooltip', () => {
       fixture.detectChanges();
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
 
+      // After hide called, a timeout delay is created that will to hide the tooltip.
       tooltipDirective.hide();
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
-      // After hidden, expect that the tooltip is not visible.
+      // After the tooltip delay elapses, expect that the tooltip is not visible.
       tick(TOOLTIP_HIDE_DELAY);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
+    }));
+
+    fit('should not follow through with hide if show is called after', fakeAsync(() => {
+      tooltipDirective.show();
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+
+      // After hide called, a timeout delay is created that will to hide the tooltip.
+      tooltipDirective.hide();
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+
+      // Before delay time has passed, call show which should cancel intent to hide tooltip.
+      tooltipDirective.show();
+      tick(TOOLTIP_HIDE_DELAY);
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
     }));
 
     it('should remove the tooltip when changing position', () => {

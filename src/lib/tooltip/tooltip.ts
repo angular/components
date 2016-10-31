@@ -251,6 +251,11 @@ export class TooltipComponent {
     }
   }
 
+  /**
+   * Interactions on the HTML body should close the tooltip immediately as defined in the
+   * material design spec.
+   * https://material.google.com/components/tooltips.html#tooltips-interaction
+   */
   _handleBodyInteraction(): void {
     if (this._closeOnInteraction) {
       this.hide(0);
