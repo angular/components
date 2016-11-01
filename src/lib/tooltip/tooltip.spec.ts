@@ -9,7 +9,7 @@ import {OverlayContainer} from '../core';
 
 const initialTooltipMessage = 'initial tooltip message';
 
-fdescribe('MdTooltip', () => {
+describe('MdTooltip', () => {
   let overlayContainerElement: HTMLElement;
 
 
