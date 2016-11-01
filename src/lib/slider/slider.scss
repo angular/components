@@ -68,7 +68,11 @@ md-slider {
 
 .md-slider-ticks {
   background: repeating-linear-gradient(to right, $md-slider-tick-color,
-      $md-slider-tick-color $md-slider-tick-size, transparent 0, transparent) repeat-x;
+      $md-slider-tick-color $md-slider-tick-size, transparent 0, transparent) repeat;
+  /* Firefox doesn't draw the gradient correctly with 'to right'
+     (see https://bugzilla.mozilla.org/show_bug.cgi?id=1314319). */
+  background: -moz-repeating-linear-gradient(0.0001deg, $md-slider-tick-color,
+      $md-slider-tick-color $md-slider-tick-size, transparent 0, transparent) repeat;
   height: $md-slider-track-thickness;
   width: 100%;
   opacity: 0;
