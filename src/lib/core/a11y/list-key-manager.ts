@@ -25,6 +25,10 @@ export class ListKeyManager {
 
   constructor(private _items: QueryList<MdFocusable>) {}
 
+  get focusedItemIndex(): number {
+    return this._focusedItemIndex;
+  }
+
   set focusedItemIndex(value: number) {
     this._focusedItemIndex = value;
   }
