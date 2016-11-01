@@ -152,8 +152,8 @@ describe('MdRadio', () => {
       expect(spies[1]).toHaveBeenCalledTimes(1);
     });
 
-    it('should not emit a change event from the radio group when change group value '
-         + 'programmatically', () => {
+    it(`should not emit a change event from the radio group when change group value 
+        programmatically`, () => {
       expect(groupInstance.value).toBeFalsy();
 
       let changeSpy = jasmine.createSpy('radio-group change listener');
@@ -235,22 +235,22 @@ describe('MdRadio', () => {
       }
     }));
 
-    it('should update the group\'s selected radio to null when unchecking that radio '
-        + 'programmatically', () => {
+    it(`should update the group's selected radio to null when unchecking that radio 
+        programmatically`, () => {
       let changeSpy = jasmine.createSpy('radio-group change listener');
       groupInstance.change.subscribe(changeSpy);
       radioInstances[0].checked = true;
 
       fixture.detectChanges();
 
-      expect(changeSpy).toHaveBeenCalledTimes(0);
+      expect(changeSpy).not.toHaveBeenCalled();
       expect(groupInstance.value).toBeTruthy();
 
       radioInstances[0].checked = false;
 
       fixture.detectChanges();
 
-      expect(changeSpy).toHaveBeenCalledTimes(0);
+      expect(changeSpy).not.toHaveBeenCalled();
       expect(groupInstance.value).toBeFalsy();
       expect(radioInstances.every(radio => !radio.checked)).toBe(true);
       expect(groupInstance.selected).toBeNull();
@@ -263,7 +263,7 @@ describe('MdRadio', () => {
 
       fixture.detectChanges();
 
-      expect(changeSpy).toHaveBeenCalledTimes(0);
+      expect(changeSpy).not.toHaveBeenCalled();
       expect(groupInstance.value).toBeTruthy();
       expect(groupInstance.value).toBe('fire');
 
@@ -272,7 +272,7 @@ describe('MdRadio', () => {
       fixture.detectChanges();
 
       expect(groupInstance.value).toBe('water');
-      expect(changeSpy).toHaveBeenCalledTimes(0);
+      expect(changeSpy).not.toHaveBeenCalled();
     });
   });
 

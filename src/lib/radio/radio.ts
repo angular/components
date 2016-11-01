@@ -166,13 +166,6 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
     }
   }
 
-  emitChangeEvent(): void {
-    // Only fire a change event if this isn't the first time the value is ever set.
-    if (this._isInitialized) {
-      this._emitChangeEvent();
-    }
-  }
-
   private _updateRadioButtonNames(): void {
     if (this._radios) {
       this._radios.forEach(radio => {
@@ -199,11 +192,13 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   }
 
   /** Dispatch change event with current selection and group value. */
-  private _emitChangeEvent(): void {
-    let event = new MdRadioChange();
-    event.source = this._selected;
-    event.value = this._value;
-    this.change.emit(event);
+  _emitChangeEvent(): void {
+    if (this._isInitialized) {
+      let event = new MdRadioChange();
+      event.source = this._selected;
+      event.value = this._value;
+      this.change.emit(event);
+    }
   }
 
   /**
@@ -428,7 +423,7 @@ export class MdRadioButton implements OnInit {
       this.radioGroup._controlValueAccessorChangeFn(this.value);
       this.radioGroup._touch();
       if (groupValueChanged) {
-        this.radioGroup.emitChangeEvent();
+        this.radioGroup._emitChangeEvent();
       }
     }
   }
