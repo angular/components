@@ -85,7 +85,9 @@ export class MdTooltip {
 
   /** Dispose the tooltip when destroyed */
   ngOnDestroy() {
-    this._disposeTooltip();
+    if (this._tooltipInstance) {
+      this._disposeTooltip();
+    }
   }
 
   /** Shows the tooltip */

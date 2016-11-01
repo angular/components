@@ -1,4 +1,7 @@
-import {async, ComponentFixture, TestBed, tick, fakeAsync} from '@angular/core/testing';
+import {
+    async, ComponentFixture, TestBed, tick, fakeAsync,
+    flushMicrotasks
+} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {TooltipPosition, MdTooltip, TOOLTIP_HIDE_DELAY, MdTooltipModule} from './tooltip';
@@ -6,7 +9,7 @@ import {OverlayContainer} from '../core';
 
 const initialTooltipMessage = 'initial tooltip message';
 
-describe('MdTooltip', () => {
+fdescribe('MdTooltip', () => {
   let overlayContainerElement: HTMLElement;
 
 
@@ -58,9 +61,8 @@ describe('MdTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
 
       // On animation complete, should expect that the tooltip has been detached.
-      fixture.whenStable().then(() => {
-        expect(tooltipDirective._tooltipInstance).toBeNull();
-      });
+      flushMicrotasks();
+      expect(tooltipDirective._tooltipInstance).toBeNull();
     }));
 
     it('should not follow through with hide if show is called after', fakeAsync(() => {
@@ -114,8 +116,9 @@ describe('MdTooltip', () => {
     });
 
     it('should be removed after parent destroyed', () => {
-      tooltipDirective._handleMouseEnter(null);
-      expect(tooltipDirective.visible).toBeTruthy();
+      tooltipDirective.show();
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+
       fixture.destroy();
       expect(overlayContainerElement.childNodes.length).toBe(0);
       expect(overlayContainerElement.textContent).toBe('');
