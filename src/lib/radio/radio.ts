@@ -420,7 +420,7 @@ export class MdRadioButton implements OnInit {
     // emit its event object to the `change` output.
     event.stopPropagation();
 
-    let groupValueChanged = this.value != this.radioGroup.value;
+    let groupValueChanged = this.radioGroup && this.value != this.radioGroup.value;
     this.checked = true;
     this._emitChangeEvent();
 
