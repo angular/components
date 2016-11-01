@@ -425,4 +425,5 @@ md-checkbox {
   bottom: -$md-checkbox-ripple-size;
   border-radius: 50%;
   z-index: 1;
+  pointer-events: none;
 }
