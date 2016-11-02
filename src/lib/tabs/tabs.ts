@@ -42,6 +42,7 @@ import {MdTabNavBar, MdTabLink} from './tab-nav-bar/tab-nav-bar';
 import {MdInkBar} from './ink-bar';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import {MdRippleModule} from '../core/ripple/ripple';
 
 
 /** Used to generate unique ID's for each tab component */
@@ -375,7 +376,7 @@ export class MdTabBody implements OnInit {
 }
 
 @NgModule({
-  imports: [CommonModule, PortalModule],
+  imports: [CommonModule, PortalModule, MdRippleModule],
   // Don't export MdInkBar or MdTabLabelWrapper, as they are internal implementation details.
   exports: [MdTabGroup, MdTabLabel, MdTab, MdTabNavBar, MdTabLink],
   declarations: [MdTabGroup, MdTabLabel, MdTab, MdInkBar, MdTabLabelWrapper,
