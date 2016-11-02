@@ -1,5 +1,6 @@
 import {Component, Input, ViewChild, ElementRef, ViewEncapsulation, Directive} from '@angular/core';
 import {MdInkBar} from '../ink-bar';
+import {MdRipple} from '../../core/ripple/ripple';
 
 /**
  * Navigation component matching the styles of the tab group header.
@@ -24,7 +25,7 @@ export class MdTabNavBar {
 @Directive({
   selector: '[md-tab-link]',
 })
-export class MdTabLink {
+export class MdTabLink extends MdRipple {
   private _isActive: boolean = false;
 
   @Input()
@@ -39,5 +40,7 @@ export class MdTabLink {
     }
   }
 
-  constructor(private _mdTabNavBar: MdTabNavBar, private _element: ElementRef) {}
+  constructor(private _mdTabNavBar: MdTabNavBar, private _element: ElementRef) {
+    super(_element);
+  }
 }
