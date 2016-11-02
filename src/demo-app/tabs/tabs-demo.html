@@ -2,7 +2,7 @@
 
 <div class="demo-nav-bar">
   <nav md-tab-nav-bar aria-label="weather navigation links">
-    <a md-tab-link
+    <a md-tab-link md-ripple
        *ngFor="let tabLink of tabLinks; let i = index"
        [routerLink]="tabLink.link"
        [active]="activeLinkIndex === i"
