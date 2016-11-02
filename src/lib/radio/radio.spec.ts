@@ -80,13 +80,26 @@ describe('MdRadio', () => {
       }
     });
 
-    it('should set required to each individual radio when the group is requried', () => {
+    it('should set required to each individual radio when the group is required', () => {
       testComponent.isGroupRequired = true;
       fixture.detectChanges();
 
       for (let radio of radioInstances) {
         expect(radio.required).toBe(true);
       }
+    });
+
+    it('should set / unset the required attribute on the underlaying radio input', () => {
+      let nativeRadioInput = <HTMLElement> radioNativeElements[0].querySelector('input');
+      radioInstances[0].required = true;
+      fixture.detectChanges();
+
+      expect(nativeRadioInput.getAttribute('required')).toBeDefined();
+
+      radioInstances[0].required = null;
+      fixture.detectChanges();
+
+      expect(nativeRadioInput.getAttribute('required')).toBeNull();
     });
 
     it('should disable each individual radio when the group is disabled', () => {

@@ -74,14 +74,14 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   /** Disables all individual radio buttons assigned to this group. */
   private _disabled: boolean = false;
 
+  /** Will add required property to all radio buttons in the group */
+  private _required: boolean = false;
+
   /** The currently selected radio button. Should match value. */
   private _selected: MdRadioButton = null;
 
   /** Whether the `value` has been set to its initial value. */
   private _isInitialized: boolean = false;
-
-  /** Wheter this radio is required */
-  private _required: boolean;
 
   /** The method to be called in order to update ngModel */
   _controlValueAccessorChangeFn: (value: any) => void = (value) => {};
@@ -120,6 +120,15 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   }
 
   @Input()
+  get required(): boolean {
+    return this._required;
+  }
+
+  set required(value) {
+    this._required = (value != null && value !== false) ? true : null;
+  }
+
+  @Input()
   get value(): any {
     return this._value;
   }
@@ -152,18 +161,6 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
     }
   }
 
-  @Input()
-  get required(){
-    return this._required;
-  }
-
-  set required(required: boolean) {
-    this._required = required;
-
-    if (this._radios) {
-      this._radios.forEach(radio => radio.required = this.required);
-    }
-  }
   /**
    * Initialize properties once content children are available.
    * This allows us to propagate relevant attributes to associated buttons.
@@ -276,7 +273,7 @@ export class MdRadioButton implements OnInit {
   @Input('aria-labelledby') ariaLabelledby: string;
 
   /** Whether this radio is required. */
-  @Input('required') required: any = null;
+  private _required: boolean;
 
   /** Whether this radio is disabled. */
   private _disabled: boolean;
@@ -347,13 +344,13 @@ export class MdRadioButton implements OnInit {
   }
 
   set value(value: any) {
-    if (this._value != value) {
-      if (this.radioGroup != null && this.checked) {
-        this.radioGroup.value = value;
-      }
-      this._value = value;
+  if (this._value != value) {
+    if (this.radioGroup != null && this.checked) {
+      this.radioGroup.value = value;
     }
+    this._value = value;
   }
+}
 
   private _align: 'start' | 'end';
 
@@ -377,6 +374,15 @@ export class MdRadioButton implements OnInit {
     this._disabled = (value != null && value !== false) ? true : null;
   }
 
+  @Input()
+  get required(): boolean {
+    return this._required || (this.radioGroup != null && this.radioGroup.required);
+  }
+
+  set required(value: boolean) {
+    this._required = (value != null && value !== false) ? true : null;
+  }
+
   /** TODO: internal */
   ngOnInit() {
     if (this.radioGroup) {
@@ -384,7 +390,6 @@ export class MdRadioButton implements OnInit {
       this.checked = this.radioGroup.value === this._value;
       // Copy name from parent radio group
       this.name = this.radioGroup.name;
-      this.required = this.radioGroup.required ? 'true' : null;
     }
   }
 
