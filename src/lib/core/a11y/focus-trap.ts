@@ -1,4 +1,12 @@
-import {Component, ViewEncapsulation, ViewChild, ElementRef} from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  ViewChild,
+  ElementRef,
+  Input,
+  AfterContentInit,
+  NgZone
+} from '@angular/core';
 import {InteractivityChecker} from './interactivity-checker';
 
 
@@ -16,10 +24,39 @@ import {InteractivityChecker} from './interactivity-checker';
   templateUrl: 'focus-trap.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class FocusTrap {
+export class FocusTrap implements AfterContentInit {
   @ViewChild('trappedContent') trappedContent: ElementRef;
 
-  constructor(private _checker: InteractivityChecker) { }
+  @Input()
+  get active(): boolean {
+    return this._active;
+  }
+  set active(val : boolean) {
+    this._active = val;
+    if (val && this._contentReady) {
+      this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+        this.focusFirstTabbableElement();
+      });
+    }
+  }
+
+  /** Whether the DOM content is ready. */
+  private _contentReady : boolean = false;
+
+  /** Whether the focus trap is active. */
+  private _active : boolean = true;
+
+  constructor(private _checker: InteractivityChecker, private _ngZone: NgZone) { }
+
+  ngAfterContentInit() {
+    this._contentReady = true;
+    // Trigger setter behavior.
+    if (this.active) {
+      this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+        this.focusFirstTabbableElement();
+      });
+    }
+  }
 
   /** Focuses the first tabbable element within the focus trap region. */
   focusFirstTabbableElement() {

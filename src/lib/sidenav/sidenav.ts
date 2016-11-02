@@ -16,6 +16,7 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Dir, MdError, coerceBooleanProperty, DefaultStyleCompatibilityModeModule} from '../core';
+import {A11yModule} from "../core/a11y/index";
 
 
 /** Exception thrown when two MdSidenav are matching the same side. */
@@ -42,7 +43,7 @@ export class MdSidenavToggleResult {
 @Component({
   moduleId: module.id,
   selector: 'md-sidenav, mat-sidenav',
-  template: '<ng-content></ng-content>',
+  template: '<focus-trap [active]="focusTrapActive"><ng-content></ng-content></focus-trap>',
   host: {
     '(transitionend)': '_onTransitionEnd($event)',
     // must prevent the browser from aligning text based on value
@@ -121,6 +122,10 @@ export class MdSidenav implements AfterContentInit {
    * `null` if no animation is in progress.
    */
   private _resolveToggleAnimationPromise: (animationFinished: boolean) => void = null;
+
+  get focusTrapActive() {
+    return this.opened && this.mode != 'side';
+  }
 
   /**
    * @param _elementRef The DOM element reference. Used for transition and width calculation.
@@ -456,7 +461,7 @@ export class MdSidenavLayout implements AfterContentInit {
 
 
 @NgModule({
-  imports: [CommonModule, DefaultStyleCompatibilityModeModule],
+  imports: [CommonModule, DefaultStyleCompatibilityModeModule, A11yModule],
   exports: [MdSidenavLayout, MdSidenav, DefaultStyleCompatibilityModeModule],
   declarations: [MdSidenavLayout, MdSidenav],
 })

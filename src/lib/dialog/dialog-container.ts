@@ -10,7 +10,6 @@ import {BasePortalHost, ComponentPortal, PortalHostDirective, TemplatePortal} fr
 import {MdDialogConfig} from './dialog-config';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContentAlreadyAttachedError} from './dialog-errors';
-import {FocusTrap} from '../core/a11y/focus-trap';
 import 'rxjs/add/operator/first';
 
 
@@ -33,9 +32,6 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
   /** The portal host inside of this container into which the dialog content will be loaded. */
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
-  /** The directive that traps and manages focus within the dialog. */
-  @ViewChild(FocusTrap) _focusTrap: FocusTrap;
-
   /** Element that was focused before the dialog was opened. Save this to restore upon close. */
   private _elementFocusedBeforeDialogWasOpened: Element = null;
 
@@ -44,6 +40,9 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
 
   /** Reference to the open dialog. */
   dialogRef: MdDialogRef<any>;
+
+  /** Whether the focus trap is active. */
+  focusTrapActive: boolean = false;
 
   constructor(private _ngZone: NgZone) {
     super();
@@ -57,13 +56,8 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
 
     let attachResult = this._portalHost.attachComponentPortal(portal);
 
-    // If were to attempt to focus immediately, then the content of the dialog would not yet be
-    // ready in instances where change detection has to run first. To deal with this, we simply
-    // wait for the microtask queue to be empty.
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
-      this._elementFocusedBeforeDialogWasOpened = document.activeElement;
-      this._focusTrap.focusFirstTabbableElement();
-    });
+    this._elementFocusedBeforeDialogWasOpened = document.activeElement;
+    this.focusTrapActive = true;
 
     return attachResult;
   }

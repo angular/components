@@ -2,6 +2,7 @@ import {fakeAsync, async, tick, ComponentFixture, TestBed} from '@angular/core/t
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdSidenav, MdSidenavModule, MdSidenavToggleResult} from './sidenav';
+import {A11yModule} from "../core/a11y/index";
 
 
 function endSidenavTransition(fixture: ComponentFixture<any>) {
@@ -18,7 +19,7 @@ describe('MdSidenav', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSidenavModule.forRoot()],
+      imports: [MdSidenavModule.forRoot(), A11yModule.forRoot()],
       declarations: [
         BasicTestApp,
         SidenavLayoutTwoSidenavTestApp,
@@ -26,6 +27,7 @@ describe('MdSidenav', () => {
         SidenavSetToOpenedFalse,
         SidenavSetToOpenedTrue,
         SidenavDynamicAlign,
+        SidenavWitFocusableElements,
       ],
     });
 
@@ -236,7 +238,6 @@ describe('MdSidenav', () => {
   });
 
   describe('attributes', () => {
-
     it('should correctly parse opened="false"', () => {
       let fixture = TestBed.createComponent(SidenavSetToOpenedFalse);
       fixture.detectChanges();
@@ -290,6 +291,55 @@ describe('MdSidenav', () => {
     });
   });
 
+  describe('focus trapping behavior', () => {
+    let fixture: ComponentFixture<SidenavWitFocusableElements>;
+    let testComponent: SidenavWitFocusableElements;
+    let sidenav: MdSidenav;
+    let link1Element: HTMLElement;
+    let link2Element: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SidenavWitFocusableElements);
+      testComponent = fixture.debugElement.componentInstance;
+      sidenav = fixture.debugElement.query(By.directive(MdSidenav)).componentInstance;
+      link1Element = fixture.debugElement.query(By.css('.link1')).nativeElement;
+      link2Element = fixture.debugElement.query(By.css('.link1')).nativeElement;
+      link2Element.focus();
+    });
+
+    it('should trp focus when opened in "over" mode', fakeAsync(() => {
+      testComponent.mode = 'over';
+      link2Element.focus();
+
+      sidenav.open();
+      endSidenavTransition(fixture);
+      tick();
+
+      expect(document.activeElement).toBe(link1Element);
+    }));
+
+    it('should trap tabs when opened in "push" mode', fakeAsync(() => {
+      testComponent.mode = 'push';
+      link2Element.focus();
+
+      sidenav.open();
+      endSidenavTransition(fixture);
+      tick();
+
+      expect(document.activeElement).toBe(link1Element);
+    }));
+
+    it('should not trap tabs when opened in "side" mode', fakeAsync(() => {
+      testComponent.mode = 'side';
+      link2Element.focus();
+
+      sidenav.open();
+      endSidenavTransition(fixture);
+      tick();
+
+      expect(document.activeElement).toBe(link2Element);
+    }));
+  });
 });
 
 
@@ -380,4 +430,17 @@ class SidenavSetToOpenedTrue { }
 class SidenavDynamicAlign {
   sidenav1Align = 'start';
   sidenav2Align = 'end';
+}
+
+@Component({
+  template: `
+    <md-sidenav-layout>
+      <md-sidenav align="start" [mode]="mode">
+        <a class="link1" href="#">link1</a>
+      </md-sidenav>
+      <a class="link2" href="#">link2</a>
+    </md-sidenav-layout>`,
+})
+class SidenavWitFocusableElements {
+  mode: string = 'over';
 }
