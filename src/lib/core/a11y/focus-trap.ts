@@ -31,7 +31,7 @@ export class FocusTrap implements AfterContentInit {
   get active(): boolean {
     return this._active;
   }
-  set active(val : boolean) {
+  set active(val: boolean) {
     this._active = val;
     if (val && this._contentReady) {
       this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
@@ -41,10 +41,10 @@ export class FocusTrap implements AfterContentInit {
   }
 
   /** Whether the DOM content is ready. */
-  private _contentReady : boolean = false;
+  private _contentReady: boolean = false;
 
   /** Whether the focus trap is active. */
-  private _active : boolean = true;
+  private _active: boolean = true;
 
   constructor(private _checker: InteractivityChecker, private _ngZone: NgZone) { }
 

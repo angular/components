@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Dir, MdError, coerceBooleanProperty, DefaultStyleCompatibilityModeModule} from '../core';
-import {A11yModule} from "../core/a11y/index";
+import {A11yModule} from '../core/a11y/index';
 
 
 /** Exception thrown when two MdSidenav are matching the same side. */
