@@ -344,13 +344,13 @@ export class MdRadioButton implements OnInit {
   }
 
   set value(value: any) {
-  if (this._value != value) {
-    if (this.radioGroup != null && this.checked) {
-      this.radioGroup.value = value;
+    if (this._value != value) {
+      if (this.radioGroup != null && this.checked) {
+        this.radioGroup.value = value;
+      }
+      this._value = value;
     }
-    this._value = value;
   }
-}
 
   private _align: 'start' | 'end';
 
