@@ -16,7 +16,7 @@ $md-input-underline-disabled-background-image:
   width: 100% / $md-input-floating-placeholder-scale-factor;
 }
 
-md-input, md-textarea {
+.md-input-wrapper {
   display: inline-block;
   position: relative;
   font-family: $md-font-family;
@@ -57,7 +57,7 @@ md-input, md-textarea {
 }
 
 // The Input element proper.
-.md-input-element {
+input[md-input], textarea[md-input] {
   // Font needs to be inherited, because by default <input> has a system font.
   font: inherit;
 
@@ -73,7 +73,7 @@ md-input, md-textarea {
   padding: 0;
   width: 100%;
 
-  &.md-end {
+  .md-end & {
     text-align: right;
 
     [dir='rtl'] & {
