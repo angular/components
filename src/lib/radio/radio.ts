@@ -289,7 +289,7 @@ export class MdRadioButton implements OnInit {
 
   @Input()
   get disableRipple(): boolean { return this._disableRipple; }
-  set disableRipple(value) { this._disableRipple = coerceBooleanProperty(value); }
+  set disableRipple(value) { this._disableRipple = (value); }
 
   /** Event emitted when the group value changes. */
   @Output()
@@ -371,7 +371,7 @@ export class MdRadioButton implements OnInit {
 
   set disabled(value: boolean) {
     // The presence of *any* disabled value makes the component disabled, *except* for false.
-    this._disabled = (value != null && value !== false) ? true : null;
+    this._disabled = coerceBooleanProperty(value);
   }
 
   @Input()
@@ -380,7 +380,7 @@ export class MdRadioButton implements OnInit {
   }
 
   set required(value: boolean) {
-    this._required = (value != null && value !== false) ? true : null;
+    this._required = coerceBooleanProperty(value);
   }
 
   /** TODO: internal */
