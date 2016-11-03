@@ -29,7 +29,7 @@
     "property-case": "lower",
 
     "declaration-block-no-duplicate-properties": [ true, {
-      "ignore": ["consecutive-duplicates"]
+      "ignore": ["consecutive-duplicates-with-different-values"]
     }],
     "declaration-block-no-ignored-properties": true,
     "declaration-block-trailing-semicolon": "always",

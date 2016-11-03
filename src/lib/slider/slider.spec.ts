@@ -127,7 +127,7 @@ describe('MdSlider', () => {
       expect(sliderNativeElement.classList).toContain('md-slider-active');
 
       // Call the `onBlur` handler directly because we cannot simulate a focus event in unit tests.
-      sliderInstance.onBlur();
+      sliderInstance._onBlur();
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).not.toContain('md-slider-active');

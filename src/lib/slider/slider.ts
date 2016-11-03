@@ -6,12 +6,14 @@ import {
     Input,
     Output,
     ViewEncapsulation,
-    forwardRef, EventEmitter,
+    forwardRef,
+    EventEmitter,
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-import {MdGestureConfig, coerceBooleanProperty} from '../core';
+import {MdGestureConfig, coerceBooleanProperty, coerceNumberProperty} from '../core';
 import {Input as HammerInput} from 'hammerjs';
+import {CommonModule} from '@angular/common';
 
 /**
  * Visually, a 30px separation between tick marks looks best. This is very subjective but it is
@@ -40,25 +42,21 @@ export class MdSliderChange {
   selector: 'md-slider',
   providers: [MD_SLIDER_VALUE_ACCESSOR],
   host: {
-    '(blur)': 'onBlur()',
-    '(click)': 'onClick($event)',
-    '(mouseenter)': 'onMouseenter()',
-    '(slide)': 'onSlide($event)',
-    '(slideend)': 'onSlideEnd()',
-    '(slidestart)': 'onSlideStart($event)',
-    '(window:resize)': 'onResize()',
-
+    '(blur)': '_onBlur()',
+    '(click)': '_onClick($event)',
+    '(mouseenter)': '_onMouseenter()',
+    '(slide)': '_onSlide($event)',
+    '(slideend)': '_onSlideEnd()',
+    '(slidestart)': '_onSlideStart($event)',
     'tabindex': '0',
-
     '[attr.aria-disabled]': 'disabled',
     '[attr.aria-valuemax]': 'max',
     '[attr.aria-valuemin]': 'min',
     '[attr.aria-valuenow]': 'value',
-
-    '[class.md-slider-active]': 'isActive',
+    '[class.md-slider-active]': '_isActive',
     '[class.md-slider-disabled]': 'disabled',
     '[class.md-slider-has-ticks]': 'tickInterval',
-    '[class.md-slider-sliding]': 'isSliding',
+    '[class.md-slider-sliding]': '_isSliding',
     '[class.md-slider-thumb-label-showing]': 'thumbLabel',
   },
   templateUrl: 'slider.html',
@@ -97,32 +95,21 @@ export class MdSlider implements ControlValueAccessor {
   /**
    * Whether or not the thumb is sliding.
    * Used to determine if there should be a transition for the thumb and fill track.
-   * TODO: internal
    */
-  isSliding: boolean = false;
+  _isSliding: boolean = false;
 
   /**
    * Whether or not the slider is active (clicked or sliding).
    * Used to shrink and grow the thumb as according to the Material Design spec.
-   * TODO: internal
    */
-  isActive: boolean = false;
+  _isActive: boolean = false;
 
   /** The values at which the thumb will snap. */
   private _step: number = 1;
 
   @Input()
-  get step() {
-    return this._step;
-  }
-  set step(v) {
-    // Only set the value to a valid number. v is casted to an any as we know it will come in as a
-    // string but it is labeled as a number which causes parseFloat to not accept it.
-    if (isNaN(parseFloat(<any> v))) {
-      return;
-    }
-    this._step = Number(v);
-  }
+  get step() { return this._step; }
+  set step(v) { this._step = coerceNumberProperty(v, this._step); }
 
   /**
    * How often to show ticks. Relative to the step so that a tick always appears on a step.
@@ -132,23 +119,15 @@ export class MdSlider implements ControlValueAccessor {
 
   @Input('tick-interval')
   get tickInterval() { return this._tickInterval; }
-  set tickInterval(v: 'auto' | number) {
-    // Only set the tickInterval to a valid number. v is casted to an any as we know it will come
-    // in as a string but it is labeled as a number which causes parseInt to not accept it.
-    if (v == 'auto') {
-      this._tickInterval = v;
-    } else {
-      let intV = parseInt(<any> v);
-      if (!isNaN(intV)) {
-        this._tickInterval = intV;
-      }
-    }
+  set tickInterval(v) {
+    this._tickInterval = (v == 'auto') ? v : coerceNumberProperty(v, <number>this._tickInterval);
   }
 
   /** The size of a tick interval as a percentage of the size of the track. */
   private _tickIntervalPercent: number = 0;
 
   get tickIntervalPercent() { return this._tickIntervalPercent; }
+  get halfTickIntervalPercent() { return this._tickIntervalPercent / 2; }
 
   /** The percentage of the slider that coincides with the value. */
   private _percent: number = 0;
@@ -167,13 +146,7 @@ export class MdSlider implements ControlValueAccessor {
     return this._value;
   }
   set value(v: number) {
-    // Only set the value to a valid number. v is casted to an any as we know it will come in as a
-    // string but it is labeled as a number which causes parseFloat to not accept it.
-    if (isNaN(parseFloat(<any> v))) {
-      return;
-    }
-
-    this._value = Number(v);
+    this._value = coerceNumberProperty(v, this._value);
     this._percent = this._calculatePercentage(this._value);
     this._controlValueAccessorChangeFn(this._value);
   }
@@ -186,14 +159,7 @@ export class MdSlider implements ControlValueAccessor {
     return this._min;
   }
   set min(v: number) {
-    // Only set the value to a valid number. v is casted to an any as we know it will come in as a
-    // string but it is labeled as a number which causes parseFloat to not accept it.
-    if (isNaN(parseFloat(<any> v))) {
-      return;
-    }
-
-    // This has to be forced as a number to handle the math later.
-    this._min = Number(v);
+    this._min = coerceNumberProperty(v, this._min);
 
     // If the value wasn't explicitly set by the user, set it to the min.
     if (this._value === null) {
@@ -210,7 +176,7 @@ export class MdSlider implements ControlValueAccessor {
     return this._max;
   }
   set max(v: number) {
-    this._max = Number(v);
+    this._max = coerceNumberProperty(v, this._max);
     this._percent = this._calculatePercentage(this.value);
   }
 
@@ -220,31 +186,30 @@ export class MdSlider implements ControlValueAccessor {
     this._renderer = new SliderRenderer(elementRef);
   }
 
-  /** TODO: internal */
-  onMouseenter() {
+  _onMouseenter() {
     if (this.disabled) {
       return;
     }
 
+    // We save the dimensions of the slider here so we can use them to update the spacing of the
+    // ticks and determine where on the slider click and slide events happen.
     this._sliderDimensions = this._renderer.getSliderDimensions();
     this._updateTickIntervalPercent();
   }
 
-  /** TODO: internal */
-  onClick(event: MouseEvent) {
+  _onClick(event: MouseEvent) {
     if (this.disabled) {
       return;
     }
 
-    this.isActive = true;
-    this.isSliding = false;
+    this._isActive = true;
+    this._isSliding = false;
     this._renderer.addFocus();
     this._updateValueFromPosition(event.clientX);
     this._emitValueIfChanged();
   }
 
-  /** TODO: internal */
-  onSlide(event: HammerInput) {
+  _onSlide(event: HammerInput) {
     if (this.disabled) {
       return;
     }
@@ -254,37 +219,25 @@ export class MdSlider implements ControlValueAccessor {
     this._updateValueFromPosition(event.center.x);
   }
 
-  /** TODO: internal */
-  onSlideStart(event: HammerInput) {
+  _onSlideStart(event: HammerInput) {
     if (this.disabled) {
       return;
     }
 
     event.preventDefault();
-    this.isSliding = true;
-    this.isActive = true;
+    this._isSliding = true;
+    this._isActive = true;
     this._renderer.addFocus();
     this._updateValueFromPosition(event.center.x);
   }
 
-  /** TODO: internal */
-  onSlideEnd() {
-    this.isSliding = false;
+  _onSlideEnd() {
+    this._isSliding = false;
     this._emitValueIfChanged();
   }
 
-  /** TODO: internal */
-  onResize() {
-    // Consider the slider to be sliding during resize to prevent animation.
-    this.isSliding = true;
-    setTimeout(() => {
-      this.isSliding = false;
-    }, 0);
-  }
-
-  /** TODO: internal */
-  onBlur() {
-    this.isActive = false;
+  _onBlur() {
+    this._isActive = false;
     this.onTouched();
   }
 
@@ -362,7 +315,6 @@ export class MdSlider implements ControlValueAccessor {
 
   /**
    * Implemented as part of ControlValueAccessor.
-   * TODO: internal
    */
   writeValue(value: any) {
     this.value = value;
@@ -370,7 +322,6 @@ export class MdSlider implements ControlValueAccessor {
 
   /**
    * Implemented as part of ControlValueAccessor.
-   * TODO: internal
    */
   registerOnChange(fn: (value: any) => void) {
     this._controlValueAccessorChangeFn = fn;
@@ -378,7 +329,6 @@ export class MdSlider implements ControlValueAccessor {
 
   /**
    * Implemented as part of ControlValueAccessor.
-   * TODO: internal
    */
   registerOnTouched(fn: any) {
     this.onTouched = fn;
@@ -423,7 +373,7 @@ export class SliderRenderer {
 
 
 @NgModule({
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   exports: [MdSlider],
   declarations: [MdSlider],
   providers: [
