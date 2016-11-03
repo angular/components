@@ -127,7 +127,6 @@ export class MdSlider implements ControlValueAccessor {
   private _tickIntervalPercent: number = 0;
 
   get tickIntervalPercent() { return this._tickIntervalPercent; }
-  get halfTickIntervalPercent() { return this._tickIntervalPercent / 2; }
 
   /** The percentage of the slider that coincides with the value. */
   private _percent: number = 0;
@@ -178,6 +177,22 @@ export class MdSlider implements ControlValueAccessor {
   set max(v: number) {
     this._max = coerceNumberProperty(v, this._max);
     this._percent = this._calculatePercentage(this.value);
+  }
+
+  get trackFillFlexBasis() {
+    return this.percent * 100 + '%';
+  }
+
+  get ticksMarginLeft() {
+    return this.tickIntervalPercent / 2 * 100 + '%';
+  }
+
+  get ticksContainerMarginLeft() {
+    return '-' + this.ticksMarginLeft;
+  }
+
+  get ticksBackgroundSize() {
+    return this.tickIntervalPercent * 100 + '% 2px';
   }
 
   @Output() change = new EventEmitter<MdSliderChange>();
