@@ -1,31 +1,19 @@
 import {
-  NgModule,
-  ModuleWithProviders,
-  Component,
-  ElementRef,
-  Input,
-  Output,
-  ViewEncapsulation,
-  forwardRef,
-  EventEmitter,
-  Optional
+    NgModule,
+    ModuleWithProviders,
+    Component,
+    ElementRef,
+    Input,
+    Output,
+    ViewEncapsulation,
+    forwardRef,
+    EventEmitter,
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MdGestureConfig, coerceBooleanProperty, coerceNumberProperty} from '../core';
 import {Input as HammerInput} from 'hammerjs';
-import {Dir} from '../core/rtl/dir';
 import {CommonModule} from '@angular/common';
-import {
-  PAGE_UP,
-  PAGE_DOWN,
-  END,
-  HOME,
-  LEFT_ARROW,
-  UP_ARROW,
-  RIGHT_ARROW,
-  DOWN_ARROW
-} from '../core/keyboard/keycodes';
 
 /**
  * Visually, a 30px separation between tick marks looks best. This is very subjective but it is
@@ -56,12 +44,10 @@ export class MdSliderChange {
   host: {
     '(blur)': '_onBlur()',
     '(click)': '_onClick($event)',
-    '(keydown)': '_onKeydown($event)',
     '(mouseenter)': '_onMouseenter()',
     '(slide)': '_onSlide($event)',
     '(slideend)': '_onSlideEnd()',
     '(slidestart)': '_onSlideStart($event)',
-    'role': 'slider',
     'tabindex': '0',
     '[attr.aria-disabled]': 'disabled',
     '[attr.aria-valuemax]': 'max',
@@ -70,7 +56,6 @@ export class MdSliderChange {
     '[class.md-slider-active]': '_isActive',
     '[class.md-slider-disabled]': 'disabled',
     '[class.md-slider-has-ticks]': 'tickInterval',
-    '[class.md-slider-inverted]': 'invert',
     '[class.md-slider-sliding]': '_isSliding',
     '[class.md-slider-thumb-label-showing]': 'thumbLabel',
   },
@@ -142,6 +127,7 @@ export class MdSlider implements ControlValueAccessor {
   private _tickIntervalPercent: number = 0;
 
   get tickIntervalPercent() { return this._tickIntervalPercent; }
+  get halfTickIntervalPercent() { return this._tickIntervalPercent / 2; }
 
   /** The percentage of the slider that coincides with the value. */
   private _percent: number = 0;
@@ -193,47 +179,25 @@ export class MdSlider implements ControlValueAccessor {
     this._percent = this._calculatePercentage(this.value);
   }
 
-  /** Whether the slider is inverted. */
-  @Input()
-  get invert() { return this._invert; }
-  set invert(value: boolean) { this._invert = coerceBooleanProperty(value); }
-  private _invert = false;
-
-  /** CSS styles for the track fill element. */
-  get trackFillStyles(): { [key: string]: string } {
-    return {
-      'flexBasis': `${this.percent * 100}%`
-    };
+  get trackFillFlexBasis() {
+    return this.percent * 100 + '%';
   }
 
-  /** CSS styles for the ticks container element. */
-  get ticksContainerStyles(): { [key: string]: string } {
-    return {
-      'marginLeft': `${this.direction == 'rtl' ? '' : '-'}${this.tickIntervalPercent / 2 * 100}%`
-    };
+  get ticksMarginLeft() {
+    return this.tickIntervalPercent / 2 * 100 + '%';
   }
 
-  /** CSS styles for the ticks element. */
-  get ticksStyles() {
-    let styles: { [key: string]: string } = {
-      'backgroundSize': `${this.tickIntervalPercent * 100}% 2px`
-    };
-    if (this.direction == 'rtl') {
-      styles['marginRight'] = `-${this.tickIntervalPercent / 2 * 100}%`;
-    } else {
-      styles['marginLeft'] = `${this.tickIntervalPercent / 2 * 100}%`;
-    }
-    return styles;
+  get ticksContainerMarginLeft() {
+    return '-' + this.ticksMarginLeft;
   }
 
-  /** The language direction for this slider element. */
-  get direction() {
-    return (this._dir && this._dir.value == 'rtl') ? 'rtl' : 'ltr';
+  get ticksBackgroundSize() {
+    return this.tickIntervalPercent * 100 + '% 2px';
   }
 
   @Output() change = new EventEmitter<MdSliderChange>();
 
-  constructor(@Optional() private _dir: Dir, elementRef: ElementRef) {
+  constructor(elementRef: ElementRef) {
     this._renderer = new SliderRenderer(elementRef);
   }
 
@@ -292,53 +256,6 @@ export class MdSlider implements ControlValueAccessor {
     this.onTouched();
   }
 
-  _onKeydown(event: KeyboardEvent) {
-    if (this.disabled) { return; }
-
-    switch (event.keyCode) {
-      case PAGE_UP:
-        this._increment(10);
-        break;
-      case PAGE_DOWN:
-        this._increment(-10);
-        break;
-      case END:
-        this.value = this.max;
-        break;
-      case HOME:
-        this.value = this.min;
-        break;
-      case LEFT_ARROW:
-        this._increment(this._isLeftMin() ? -1 : 1);
-        break;
-      case UP_ARROW:
-        this._increment(1);
-        break;
-      case RIGHT_ARROW:
-        this._increment(this._isLeftMin() ? 1 : -1);
-        break;
-      case DOWN_ARROW:
-        this._increment(-1);
-        break;
-      default:
-        // Return if the key is not one that we explicitly handle to avoid calling preventDefault on
-        // it.
-        return;
-    }
-
-    event.preventDefault();
-  }
-
-  /** Whether the left side of the slider is the minimum value. */
-  private _isLeftMin() {
-    return (this.direction == 'rtl') == this.invert;
-  }
-
-  /** Increments the slider by the given number of steps (negative number decrements). */
-  private _increment(numSteps: number) {
-    this.value = this._clamp(this.value + this.step * numSteps, this.min, this.max);
-  }
-
   /**
    * Calculate the new value from the new physical location. The value will always be snapped.
    */
@@ -352,9 +269,6 @@ export class MdSlider implements ControlValueAccessor {
 
     // The exact value is calculated from the event and used to find the closest snap value.
     let percent = this._clamp((pos - offset) / size);
-    if (!this._isLeftMin()) {
-      percent = 1 - percent;
-    }
     let exactValue = this._calculateValue(percent);
 
     // This calculation finds the closest step by finding the closest whole number divisible by the
@@ -475,7 +389,7 @@ export class SliderRenderer {
 
 
 @NgModule({
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule, CommonModule],
   exports: [MdSlider],
   declarations: [MdSlider],
   providers: [
