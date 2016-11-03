@@ -289,7 +289,7 @@ export class MdRadioButton implements OnInit {
 
   @Input()
   get disableRipple(): boolean { return this._disableRipple; }
-  set disableRipple(value) { this._disableRipple = (value); }
+  set disableRipple(value) { this._disableRipple = coerceBooleanProperty(value); }
 
   /** Event emitted when the group value changes. */
   @Output()
