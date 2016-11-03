@@ -13,6 +13,7 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/for
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MdGestureConfig, coerceBooleanProperty, coerceNumberProperty} from '../core';
 import {Input as HammerInput} from 'hammerjs';
+import {CommonModule} from '@angular/common';
 
 /**
  * Visually, a 30px separation between tick marks looks best. This is very subjective but it is
@@ -126,6 +127,7 @@ export class MdSlider implements ControlValueAccessor {
   private _tickIntervalPercent: number = 0;
 
   get tickIntervalPercent() { return this._tickIntervalPercent; }
+  get halfTickIntervalPercent() { return this._tickIntervalPercent / 2; }
 
   /** The percentage of the slider that coincides with the value. */
   private _percent: number = 0;
@@ -387,7 +389,7 @@ export class SliderRenderer {
 
 
 @NgModule({
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   exports: [MdSlider],
   declarations: [MdSlider],
   providers: [
