@@ -74,8 +74,9 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
 
   /** Handles the user pressing the Escape key. */
   handleEscapeKey() {
-    // TODO(jelbourn): add MdDialogConfig option to disable this behavior.
-    this.dialogRef.close();
+    if (this.dialogConfig.escapeToClose) {
+      this.dialogRef.close();
+    }
   }
 
   ngOnDestroy() {

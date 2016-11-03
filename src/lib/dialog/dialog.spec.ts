@@ -97,22 +97,42 @@ describe('MdDialog', () => {
   });
 
 
-  it('should close a dialog via the escape key', () => {
-    let config = new MdDialogConfig();
-    config.viewContainerRef = testViewContainerRef;
+  describe('escape key functionality', () => {
+    it('should close a dialog via the escape key', () => {
+      let config = new MdDialogConfig();
+      config.viewContainerRef = testViewContainerRef;
 
-    dialog.open(PizzaMsg, config);
+      dialog.open(PizzaMsg, config);
 
-    viewContainerFixture.detectChanges();
+      viewContainerFixture.detectChanges();
 
-    let dialogContainer: MdDialogContainer =
-        viewContainerFixture.debugElement.query(By.directive(MdDialogContainer)).componentInstance;
+      let dialogContainer: MdDialogContainer = viewContainerFixture.debugElement.query(
+          By.directive(MdDialogContainer)).componentInstance;
 
-    // Fake the user pressing the escape key by calling the handler directly.
-    dialogContainer.handleEscapeKey();
+      // Fake the user pressing the escape key by calling the handler directly.
+      dialogContainer.handleEscapeKey();
 
-    expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
+      expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
+    });
+
+    it('should allow disabling the close via the escape key', () => {
+      let config = new MdDialogConfig();
+      config.viewContainerRef = testViewContainerRef;
+      config.escapeToClose = false;
+
+      dialog.open(PizzaMsg, config);
+
+      viewContainerFixture.detectChanges();
+
+      let dialogContainer: MdDialogContainer = viewContainerFixture.debugElement.query(
+          By.directive(MdDialogContainer)).componentInstance;
+
+      dialogContainer.handleEscapeKey();
+
+      expect(overlayContainerElement.querySelector('md-dialog-container')).toBeTruthy();
+    });
   });
+
 
   it('should close when clicking on the overlay backdrop', () => {
     let config = new MdDialogConfig();

@@ -14,6 +14,9 @@ export class MdDialogConfig {
   /** The ARIA role of the dialog element. */
   role: DialogRole = 'dialog';
 
+  /** Whether the escape key should close the dialog. */
+  escapeToClose = true;
+
   // TODO(jelbourn): add configuration for size, clickOutsideToClose, lifecycle hooks,
   // ARIA labelling.
 }
