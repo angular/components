@@ -127,7 +127,6 @@ export class MdSlider implements ControlValueAccessor {
   private _tickIntervalPercent: number = 0;
 
   get tickIntervalPercent() { return this._tickIntervalPercent; }
-  get halfTickIntervalPercent() { return this._tickIntervalPercent / 2; }
 
   /** The percentage of the slider that coincides with the value. */
   private _percent: number = 0;
