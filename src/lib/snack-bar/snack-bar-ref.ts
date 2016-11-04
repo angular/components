@@ -42,7 +42,8 @@ export class MdSnackBarRef<T> {
 
   /** Dismisses the snack bar on user input. */
   dismissOnAction(): void {
-    // TODO(josephperrott): part of this snippet could be shared with the .dismiss() action above, maybe refactor
+    // TODO(josephperrott): part of this snippet could be shared with the
+    // .dismiss() action above, maybe refactor
     if (!this._afterClosed.closed) {
       this.containerInstance.exit().subscribe(() => {
         this._overlayRef.dispose();
