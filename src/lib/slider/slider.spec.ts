@@ -68,35 +68,39 @@ describe('MdSlider', () => {
     it('should update the value on a click', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.19);
+      dispatchClickEventSequence(sliderNativeElement, 0.19);
+
       expect(sliderInstance.value).toBe(19);
     });
 
     it('should update the value on a slide', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchSlideEventSequence(sliderTrackElement, sliderNativeElement, 0, 0.89, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.89, gestureConfig);
+
       expect(sliderInstance.value).toBe(89);
     });
 
     it('should set the value as min when sliding before the track', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchSlideEventSequence(sliderTrackElement, sliderNativeElement, 0, -1.33, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, -1.33, gestureConfig);
+
       expect(sliderInstance.value).toBe(0);
     });
 
     it('should set the value as max when sliding past the track', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchSlideEventSequence(sliderTrackElement, sliderNativeElement, 0, 1.75, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 1.75, gestureConfig);
+
       expect(sliderInstance.value).toBe(100);
     });
 
     it('should update the track fill on click', () => {
       expect(trackFillElement.style.flexBasis).toBe('0%');
 
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.39);
+      dispatchClickEventSequence(sliderNativeElement, 0.39);
       fixture.detectChanges();
 
       expect(trackFillElement.style.flexBasis).toBe('39%');
@@ -105,7 +109,7 @@ describe('MdSlider', () => {
     it('should update the track fill on slide', () => {
       expect(trackFillElement.style.flexBasis).toBe('0%');
 
-      dispatchSlideEventSequence(sliderTrackElement, sliderNativeElement, 0, 0.86, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.86, gestureConfig);
       fixture.detectChanges();
 
       expect(trackFillElement.style.flexBasis).toBe('86%');
@@ -114,14 +118,14 @@ describe('MdSlider', () => {
     it('should add the md-slider-active class on click', () => {
       expect(sliderNativeElement.classList).not.toContain('md-slider-active');
 
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.23);
+      dispatchClickEventSequence(sliderNativeElement, 0.23);
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).toContain('md-slider-active');
     });
 
     it('should remove the md-slider-active class on blur', () => {
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.95);
+      dispatchClickEventSequence(sliderNativeElement, 0.95);
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).toContain('md-slider-active');
@@ -136,12 +140,12 @@ describe('MdSlider', () => {
     it('should add and remove the md-slider-sliding class when sliding', () => {
       expect(sliderNativeElement.classList).not.toContain('md-slider-sliding');
 
-      dispatchSlideStartEvent(sliderTrackElement, sliderNativeElement, 0, gestureConfig);
+      dispatchSlideStartEvent(sliderNativeElement, 0, gestureConfig);
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).toContain('md-slider-sliding');
 
-      dispatchSlideEndEvent(sliderTrackElement, sliderNativeElement, 0.34, gestureConfig);
+      dispatchSlideEndEvent(sliderNativeElement, 0.34, gestureConfig);
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).not.toContain('md-slider-sliding');
@@ -172,7 +176,7 @@ describe('MdSlider', () => {
     it('should not change the value on click when disabled', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.63);
+      dispatchClickEventSequence(sliderNativeElement, 0.63);
 
       expect(sliderInstance.value).toBe(0);
     });
@@ -180,7 +184,7 @@ describe('MdSlider', () => {
     it('should not change the value on slide when disabled', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchSlideEventSequence(sliderNativeElement, sliderNativeElement, 0, 0.5, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.5, gestureConfig);
 
       expect(sliderInstance.value).toBe(0);
     });
@@ -188,7 +192,7 @@ describe('MdSlider', () => {
     it('should not add the md-slider-active class on click when disabled', () => {
       expect(sliderNativeElement.classList).not.toContain('md-slider-active');
 
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.43);
+      dispatchClickEventSequence(sliderNativeElement, 0.43);
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).not.toContain('md-slider-active');
@@ -197,7 +201,7 @@ describe('MdSlider', () => {
     it('should not add the md-slider-sliding class on slide when disabled', () => {
       expect(sliderNativeElement.classList).not.toContain('md-slider-sliding');
 
-      dispatchSlideStartEvent(sliderTrackElement, sliderNativeElement, 0.46, gestureConfig);
+      dispatchSlideStartEvent(sliderNativeElement, 0.46, gestureConfig);
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).not.toContain('md-slider-sliding');
@@ -237,7 +241,7 @@ describe('MdSlider', () => {
     });
 
     it('should set the correct value on click', () => {
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.09);
+      dispatchClickEventSequence(sliderNativeElement, 0.09);
       fixture.detectChanges();
 
       // Computed by multiplying the difference between the min and the max by the percentage from
@@ -247,7 +251,7 @@ describe('MdSlider', () => {
     });
 
     it('should set the correct value on slide', () => {
-      dispatchSlideEventSequence(sliderTrackElement, sliderNativeElement, 0, 0.62, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.62, gestureConfig);
       fixture.detectChanges();
 
       // Computed by multiplying the difference between the min and the max by the percentage from
@@ -257,7 +261,7 @@ describe('MdSlider', () => {
     });
 
     it('should snap the fill to the nearest value on click', () => {
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.68);
+      dispatchClickEventSequence(sliderNativeElement, 0.68);
       fixture.detectChanges();
 
       // The closest snap is halfway on the slider.
@@ -265,7 +269,7 @@ describe('MdSlider', () => {
     });
 
     it('should snap the fill to the nearest value on slide', () => {
-      dispatchSlideEventSequence(sliderTrackElement, sliderNativeElement, 0, 0.74, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.74, gestureConfig);
       fixture.detectChanges();
 
       // The closest snap is at the halfway point on the slider.
@@ -326,7 +330,7 @@ describe('MdSlider', () => {
     });
 
     it('should set the correct value on click', () => {
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.92);
+      dispatchClickEventSequence(sliderNativeElement, 0.92);
       fixture.detectChanges();
 
       // On a slider with default max and min the value should be approximately equal to the
@@ -335,7 +339,7 @@ describe('MdSlider', () => {
     });
 
     it('should set the correct value on slide', () => {
-      dispatchSlideEventSequence(sliderTrackElement, sliderNativeElement, 0, 0.32, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.32, gestureConfig);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(32);
@@ -364,14 +368,14 @@ describe('MdSlider', () => {
     it('should set the correct step value on click', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.13);
+      dispatchClickEventSequence(sliderNativeElement, 0.13);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(25);
     });
 
     it('should snap the fill to a step on click', () => {
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.66);
+      dispatchClickEventSequence(sliderNativeElement, 0.66);
       fixture.detectChanges();
 
       // The closest step is at 75% of the slider.
@@ -379,14 +383,14 @@ describe('MdSlider', () => {
     });
 
     it('should set the correct step value on slide', () => {
-      dispatchSlideEventSequence(sliderTrackElement, sliderNativeElement, 0, 0.07, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.07, gestureConfig);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(0);
     });
 
     it('should snap the thumb and fill to a step on slide', () => {
-      dispatchSlideEventSequence(sliderTrackElement, sliderNativeElement, 0, 0.88, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.88, gestureConfig);
       fixture.detectChanges();
 
       // The closest snap is at the end of the slider.
@@ -481,7 +485,7 @@ describe('MdSlider', () => {
     it('should update the thumb label text on click', () => {
       expect(thumbLabelTextElement.textContent).toBe('0');
 
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.13);
+      dispatchClickEventSequence(sliderNativeElement, 0.13);
       fixture.detectChanges();
 
       // The thumb label text is set to the slider's value. These should always be the same.
@@ -491,7 +495,7 @@ describe('MdSlider', () => {
     it('should update the thumb label text on slide', () => {
       expect(thumbLabelTextElement.textContent).toBe('0');
 
-      dispatchSlideEventSequence(sliderTrackElement, sliderNativeElement, 0, 0.56, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.56, gestureConfig);
       fixture.detectChanges();
 
       // The thumb label text is set to the slider's value. These should always be the same.
@@ -502,7 +506,7 @@ describe('MdSlider', () => {
       expect(sliderNativeElement.classList).not.toContain('md-slider-active');
       expect(sliderNativeElement.classList).toContain('md-slider-thumb-label-showing');
 
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.49);
+      dispatchClickEventSequence(sliderNativeElement, 0.49);
       fixture.detectChanges();
 
       // The thumb label appears when the slider is active and the 'md-slider-thumb-label-showing'
@@ -514,7 +518,7 @@ describe('MdSlider', () => {
     it('should show the thumb label on slide', () => {
       expect(sliderNativeElement.classList).not.toContain('md-slider-active');
 
-      dispatchSlideEventSequence(sliderTrackElement, sliderNativeElement, 0, 0.91, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.91, gestureConfig);
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).toContain('md-slider-thumb-label-showing');
@@ -554,7 +558,7 @@ describe('MdSlider', () => {
     it('should update the control on click', () => {
       expect(testComponent.control.value).toBe(0);
 
-      dispatchClickEventSequence(sliderTrackElement, sliderNativeElement, 0.76);
+      dispatchClickEventSequence(sliderNativeElement, 0.76);
       fixture.detectChanges();
 
       expect(testComponent.control.value).toBe(76);
@@ -563,7 +567,7 @@ describe('MdSlider', () => {
     it('should update the control on slide', () => {
       expect(testComponent.control.value).toBe(0);
 
-      dispatchSlideEventSequence(sliderTrackElement, sliderNativeElement, 0, 0.19, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.19, gestureConfig);
       fixture.detectChanges();
 
       expect(testComponent.control.value).toBe(19);
@@ -839,57 +843,55 @@ class SliderWithChangeHandler {
 }
 
 /**
- * Dispatches a click event sequence (consisting of moueseenter, click) from an element.
+ * Dispatches a click event from an element.
  * Note: The mouse event truncates the position for the click.
- * @param trackElement The track element from which the event location will be calculated.
- * @param containerElement The container element from which the event will be dispatched.
+ * @param sliderElement The md-slider element from which the event will be dispatched.
  * @param percentage The percentage of the slider where the click should occur. Used to find the
  * physical location of the click.
  */
-function dispatchClickEventSequence(trackElement: HTMLElement, containerElement: HTMLElement,
-                                    percentage: number): void {
+function dispatchClickEventSequence(sliderElement: HTMLElement, percentage: number): void {
+  let trackElement = sliderElement.querySelector('.md-slider-track');
   let dimensions = trackElement.getBoundingClientRect();
   let y = dimensions.top;
   let x = dimensions.left + (dimensions.width * percentage);
 
-  dispatchMouseenterEvent(containerElement);
+  dispatchMouseenterEvent(sliderElement);
 
   let event = document.createEvent('MouseEvent');
   event.initMouseEvent(
       'click', true, true, window, 0, x, y, x, y, false, false, false, false, 0, null);
-  containerElement.dispatchEvent(event);
+  sliderElement.dispatchEvent(event);
 }
 
 /**
  * Dispatches a slide event sequence (consisting of slidestart, slide, slideend) from an element.
- * @param trackElement The track element from which the event location will be calculated.
- * @param containerElement The container element from which the event will be dispatched.
+ * @param sliderElement The md-slider element from which the event will be dispatched.
  * @param startPercent The percentage of the slider where the slide will begin.
  * @param endPercent The percentage of the slider where the slide will end.
  * @param gestureConfig The gesture config for the test to handle emitting the slide events.
  */
-function dispatchSlideEventSequence(trackElement: HTMLElement, containerElement: HTMLElement,
-                                    startPercent: number, endPercent: number,
-                                    gestureConfig: TestGestureConfig): void {
-  dispatchSlideStartEvent(trackElement, containerElement, startPercent, gestureConfig);
-  dispatchSlideEvent(trackElement, containerElement, startPercent, gestureConfig);
-  dispatchSlideEvent(trackElement, containerElement, endPercent, gestureConfig);
-  dispatchSlideEndEvent(trackElement, containerElement, endPercent, gestureConfig);
+function dispatchSlideEventSequence(sliderElement: HTMLElement, startPercent: number,
+                                    endPercent: number, gestureConfig: TestGestureConfig): void {
+  dispatchMouseenterEvent(sliderElement);
+  dispatchSlideStartEvent(sliderElement, startPercent, gestureConfig);
+  dispatchSlideEvent(sliderElement, startPercent, gestureConfig);
+  dispatchSlideEvent(sliderElement, endPercent, gestureConfig);
+  dispatchSlideEndEvent(sliderElement, endPercent, gestureConfig);
 }
 
 /**
  * Dispatches a slide event from an element.
- * @param trackElement The track element from which the event location will be calculated.
- * @param containerElement The container element from which the event will be dispatched.
+ * @param sliderElement The md-slider element from which the event will be dispatched.
  * @param percent The percentage of the slider where the slide will happen.
  * @param gestureConfig The gesture config for the test to handle emitting the slide events.
  */
-function dispatchSlideEvent(trackElement: HTMLElement, containerElement: HTMLElement,
-                            percent: number, gestureConfig: TestGestureConfig): void {
+function dispatchSlideEvent(sliderElement: HTMLElement, percent: number,
+                            gestureConfig: TestGestureConfig): void {
+  let trackElement = sliderElement.querySelector('.md-slider-track');
   let dimensions = trackElement.getBoundingClientRect();
   let x = dimensions.left + (dimensions.width * percent);
 
-  gestureConfig.emitEventForElement('slide', containerElement, {
+  gestureConfig.emitEventForElement('slide', sliderElement, {
     center: { x: x },
     srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
   });
@@ -897,19 +899,17 @@ function dispatchSlideEvent(trackElement: HTMLElement, containerElement: HTMLEle
 
 /**
  * Dispatches a slidestart event from an element.
- * @param trackElement The track element from which the event location will be calculated.
- * @param containerElement The container element from which the event will be dispatched.
+ * @param sliderElement The md-slider element from which the event will be dispatched.
  * @param percent The percentage of the slider where the slide will begin.
  * @param gestureConfig The gesture config for the test to handle emitting the slide events.
  */
-function dispatchSlideStartEvent(trackElement: HTMLElement, containerElement: HTMLElement,
-                                 percent: number, gestureConfig: TestGestureConfig): void {
+function dispatchSlideStartEvent(sliderElement: HTMLElement, percent: number,
+                                 gestureConfig: TestGestureConfig): void {
+  let trackElement = sliderElement.querySelector('.md-slider-track');
   let dimensions = trackElement.getBoundingClientRect();
   let x = dimensions.left + (dimensions.width * percent);
 
-  dispatchMouseenterEvent(containerElement);
-
-  gestureConfig.emitEventForElement('slidestart', containerElement, {
+  gestureConfig.emitEventForElement('slidestart', sliderElement, {
     center: { x: x },
     srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
   });
@@ -917,17 +917,17 @@ function dispatchSlideStartEvent(trackElement: HTMLElement, containerElement: HT
 
 /**
  * Dispatches a slideend event from an element.
- * @param trackElement The track element from which the event location will be calculated.
- * @param containerElement The container element from which the event will be dispatched.
+ * @param sliderElement The md-slider element from which the event will be dispatched.
  * @param percent The percentage of the slider where the slide will end.
  * @param gestureConfig The gesture config for the test to handle emitting the slide events.
  */
-function dispatchSlideEndEvent(trackElement: HTMLElement, containerElement: HTMLElement,
-                               percent: number, gestureConfig: TestGestureConfig): void {
+function dispatchSlideEndEvent(sliderElement: HTMLElement, percent: number,
+                               gestureConfig: TestGestureConfig): void {
+  let trackElement = sliderElement.querySelector('.md-slider-track');
   let dimensions = trackElement.getBoundingClientRect();
   let x = dimensions.left + (dimensions.width * percent);
 
-  gestureConfig.emitEventForElement('slideend', containerElement, {
+  gestureConfig.emitEventForElement('slideend', sliderElement, {
     center: { x: x },
     srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
   });
@@ -951,4 +951,3 @@ function dispatchMouseenterEvent(element: HTMLElement): void {
       'mouseenter', true, true, window, 0, x, y, x, y, false, false, false, false, 0, null);
   element.dispatchEvent(event);
 }
-
