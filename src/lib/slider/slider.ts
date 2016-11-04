@@ -43,10 +43,19 @@ export class MdSliderChange {
   host: {
     '(blur)': '_onBlur()',
     '(click)': '_onClick($event)',
+    '(keydown.arrowdown)': '_increment($event, -1)',
+    '(keydown.arrowleft)': '_increment($event, -1)',
+    '(keydown.arrowright)': '_increment($event, 1)',
+    '(keydown.arrowup)': '_increment($event, 1)',
+    '(keydown.end)': '_onEndKeyPressed($event)',
+    '(keydown.home)': '_onHomeKeyPressed($event)',
+    '(keydown.pagedown)': '_increment($event, -10)',
+    '(keydown.pageup)': '_increment($event, 10)',
     '(mouseenter)': '_onMouseenter()',
     '(slide)': '_onSlide($event)',
     '(slideend)': '_onSlideEnd()',
     '(slidestart)': '_onSlideStart($event)',
+    'role': 'slider',
     'tabindex': '0',
     '[attr.aria-disabled]': 'disabled',
     '[attr.aria-valuemax]': 'max',
@@ -252,6 +261,24 @@ export class MdSlider implements ControlValueAccessor {
   _onBlur() {
     this._isActive = false;
     this.onTouched();
+  }
+
+  /** Increments the slider by the given number of steps (negative number decrements. */
+  _increment(event: KeyboardEvent, numSteps: number) {
+    this.value = this._clamp(this.value + this.step * numSteps, this.min, this.max);
+    event.preventDefault();
+  }
+
+  /** Handles end key pressed. */
+  _onEndKeyPressed(event: KeyboardEvent) {
+    this.value = this.max;
+    event.preventDefault();
+  }
+
+  /** Handles home key pressed. */
+  _onHomeKeyPressed(event: KeyboardEvent) {
+    this.value = this.min;
+    event.preventDefault();
   }
 
   /**
