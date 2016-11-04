@@ -332,6 +332,20 @@ describe('MdCheckbox', () => {
         expect(checkboxDebugElement.nativeElement.classList.contains('custom-class')).toBe(true);
 
       });
+
+      it('should activate the ripple focused class when the input is focused', () => {
+        expect(checkboxNativeElement.classList).not.toContain('md-ripple-focused');
+
+        checkboxInstance._onInputFocus();
+        fixture.detectChanges();
+
+        expect(checkboxNativeElement.classList).toContain('md-ripple-focused');
+
+        checkboxInstance._onInputBlur();
+        fixture.detectChanges();
+
+        expect(checkboxNativeElement.classList).not.toContain('md-ripple-focused');
+      });
     });
 
     describe('state transition css classes', () => {
