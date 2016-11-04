@@ -137,6 +137,29 @@ describe('MdSnackBar', () => {
     });
   }));
 
+  it('should dismiss the snack bar on user action and emit to/complete .onAction()', async(() => {
+    let config = new MdSnackBarConfig(testViewContainerRef);
+    let dismissObservableCompleted = false;
+
+    let snackBarRef = snackBar.open(simpleMessage, 'Ok', config);
+    viewContainerFixture.detectChanges();
+    expect(overlayContainerElement.childElementCount)
+        .toBeGreaterThan(0, 'Expected overlay container element to have at least one child');
+
+    snackBarRef.onAction().subscribe(null, null, () => {
+      dismissObservableCompleted = true;
+    });
+
+    snackBarRef.dismissOnAction();
+    viewContainerFixture.detectChanges();  // Run through animations for dismissal
+
+    viewContainerFixture.whenStable().then(() => {
+      expect(dismissObservableCompleted).toBeTruthy('Expected the snack bar to be dismissed');
+      expect(overlayContainerElement.childElementCount)
+          .toBe(0, 'Expected the overlay container element to have no child elements');
+    });
+  }));
+
   it('should open a custom component', () => {
     let config = new MdSnackBarConfig(testViewContainerRef);
     let snackBarRef = snackBar.openFromComponent(BurritosNotification, config);

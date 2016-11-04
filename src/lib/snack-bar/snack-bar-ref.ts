@@ -18,6 +18,8 @@ export class MdSnackBarRef<T> {
 
   /** Subject for notifying the user that the snack bar has closed. */
   private _afterClosed: Subject<any> = new Subject();
+  /** Subject for notifying the user that the action button was clicked. */
+  private _onAction: Subject<any> = new Subject();
 
   constructor(instance: T,
               containerInstance: MdSnackBarContainer,
@@ -38,8 +40,27 @@ export class MdSnackBarRef<T> {
     }
   }
 
+  /** Dismisses the snack bar on user input. */
+  dismissOnAction(): void {
+    // TODO(josephperrott): part of this snippet could be shared with the .dismiss() action above, maybe refactor
+    if (!this._afterClosed.closed) {
+      this.containerInstance.exit().subscribe(() => {
+        this._overlayRef.dispose();
+        this._afterClosed.next();
+        this._afterClosed.complete();
+        this._onAction.next();
+        this._onAction.complete();
+      });
+    }
+  }
+
   /** Gets an observable that is notified when the snack bar is finished closing. */
   afterDismissed(): Observable<void> {
     return this._afterClosed.asObservable();
+  }
+
+  /** Gets an observable that is notified when the snack bar action button is clicked. */
+  onAction(): Observable<void> {
+    return this._onAction.asObservable();
   }
 }
