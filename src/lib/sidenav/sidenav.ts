@@ -5,7 +5,6 @@ import {
     Component,
     ContentChildren,
     ElementRef,
-    HostBinding,
     Input,
     Optional,
     Output,
@@ -40,14 +39,35 @@ export class MdDuplicatedSidenavError extends MdError {
   host: {
     '(transitionend)': '_onTransitionEnd($event)',
     // must prevent the browser from aligning text based on value
-    '[attr.align]': 'null'
+    '[attr.align]': 'null',
+    '[class.md-sidenav-closed]': '_isClosed',
+    '[class.md-sidenav-closing]': '_isClosing',
+    '[class.md-sidenav-end]': '_isEnd',
+    '[class.md-sidenav-opened]': '_isOpened',
+    '[class.md-sidenav-opening]': '_isOpening',
+    '[class.md-sidenav-over]': '_modeOver',
+    '[class.md-sidenav-push]': '_modePush',
+    '[class.md-sidenav-side]': '_modeSide',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MdSidenav implements AfterContentInit {
   /** Alignment of the sidenav (direction neutral); whether 'start' or 'end'. */
-  @Input() align: 'start' | 'end' = 'start';
+  private _align: 'start' | 'end' = 'start';
+
+  @Input()
+  get align() {
+    return this._align;
+  }
+  set align(value) {
+    // Make sure we have a valid value.
+    value = (value == 'end') ? 'start' : 'end';
+    if (value != this._align) {
+      this._align = value;
+      this.onAlignChanged.emit();
+    }
+  }
 
   /** Mode of the sidenav; whether 'over' or 'side'. */
   @Input() mode: 'over' | 'push' | 'side' = 'over';
@@ -66,6 +86,9 @@ export class MdSidenav implements AfterContentInit {
 
   /** Event emitted when the sidenav is fully closed. */
   @Output('close') onClose = new EventEmitter<void>();
+
+  /** Event emitted when the sidenav alignment changes. */
+  @Output('align-changed') onAlignChanged = new EventEmitter<void>();
 
   /**
    * @param _elementRef The DOM element reference. Used for transition and width calculation.
@@ -186,28 +209,28 @@ export class MdSidenav implements AfterContentInit {
     }
   }
 
-  @HostBinding('class.md-sidenav-closing') get _isClosing() {
+  get _isClosing() {
     return !this._opened && this._transition;
   }
-  @HostBinding('class.md-sidenav-opening') get _isOpening() {
+  get _isOpening() {
     return this._opened && this._transition;
   }
-  @HostBinding('class.md-sidenav-closed') get _isClosed() {
+  get _isClosed() {
     return !this._opened && !this._transition;
   }
-  @HostBinding('class.md-sidenav-opened') get _isOpened() {
+  get _isOpened() {
     return this._opened && !this._transition;
   }
-  @HostBinding('class.md-sidenav-end') get _isEnd() {
+  get _isEnd() {
     return this.align == 'end';
   }
-  @HostBinding('class.md-sidenav-side') get _modeSide() {
+  get _modeSide() {
     return this.mode == 'side';
   }
-  @HostBinding('class.md-sidenav-over') get _modeOver() {
+  get _modeOver() {
     return this.mode == 'over';
   }
-  @HostBinding('class.md-sidenav-push') get _modePush() {
+  get _modePush() {
     return this.mode == 'push';
   }
 
@@ -232,7 +255,7 @@ export class MdSidenav implements AfterContentInit {
  * <md-sidenav-layout> component.
  *
  * This is the parent component to one or two <md-sidenav>s that validates the state internally
- * and coordinate the backdrop and content styling.
+ * and coordinates the backdrop and content styling.
  */
 @Component({
   moduleId: module.id,
@@ -328,6 +351,8 @@ export class MdSidenavLayout implements AfterContentInit {
       this._left = this._end;
       this._right = this._start;
     }
+
+    // TODO(mmalerba): Listen for align-changed on _left and _right.
   }
 
   _closeModalSidenav() {
