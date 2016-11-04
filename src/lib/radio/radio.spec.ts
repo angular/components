@@ -574,6 +574,24 @@ describe('MdRadio', () => {
         expect(document.activeElement).toBe(fruitRadioNativeInputs[i]);
       }
     });
+
+    it('should add a ripple when the native input element is focused', () => {
+      let hostElement = seasonRadioInstances[0].getHostElement() as HTMLElement;
+      let input = hostElement.querySelector('input') as HTMLInputElement;
+      let label = hostElement.querySelector('label') as HTMLLabelElement;
+
+      expect(label.classList).not.toContain('md-ripple-focused');
+
+      dispatchEvent('focus', input);
+      fixture.detectChanges();
+
+      expect(label.classList).toContain('md-ripple-focused');
+
+      dispatchEvent('blur', input);
+      fixture.detectChanges();
+
+      expect(label.classList).not.toContain('md-ripple-focused');
+    });
   });
 });
 
