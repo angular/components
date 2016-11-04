@@ -104,7 +104,7 @@ function groupErrors(errors) {
     if (initialError && isSimilarError(error)) {
       previousLine = error.lineNumber;
 
-      // Overwrite the lineNumber with a string representing the range of lines.
+      // Overwrite the lineNumber with a string, which indicates the range of lines.
       initialError.lineNumber = `${initialLine}-${previousLine}`;
 
       return false;
@@ -125,7 +125,7 @@ function groupErrors(errors) {
 }
 
 /**
- * Prints all given errors to the console and terminates the process if errors were present.
+ * Prints all errors to the console and terminates the process if errors were present.
  * @param {{fileName: string, lineNumber: number, statement: string}[]} errors
  */
 function printErrors(errors) {
