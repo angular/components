@@ -13,7 +13,6 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/for
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MdGestureConfig, coerceBooleanProperty, coerceNumberProperty} from '../core';
 import {Input as HammerInput} from 'hammerjs';
-import {CommonModule} from '@angular/common';
 
 /**
  * Visually, a 30px separation between tick marks looks best. This is very subjective but it is
@@ -388,7 +387,7 @@ export class SliderRenderer {
 
 
 @NgModule({
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule],
   exports: [MdSlider],
   declarations: [MdSlider],
   providers: [
