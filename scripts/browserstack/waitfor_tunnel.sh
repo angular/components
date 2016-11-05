@@ -9,6 +9,7 @@ while [ ! -f $BROWSER_PROVIDER_READY_FILE ]; do
   let "counter++"
 
   if [ $counter -gt 240 ]; then
+    echo
     echo "Timed out after 2 minutes waiting for tunnel ready file"
     exit 5
   fi
