@@ -48,11 +48,15 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
         <div class="_header _control">
           <div>{{ days._INI | date: 'MMMM y' }}</div>
           <span (click)="_left(false, days)" class="_left">
-            <svg viewBox="0 0 24 24" style="display: inline-block; fill: rgba(0, 0, 0, 0.870588); height: 24px; width: 24px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+            <svg viewBox="0 0 24 24" style="display: inline-block;
+            fill: rgba(0, 0, 0, 0.870588); height: 24px; width: 24px;
+            user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
           </span>
           <span (click)="_right(false, days)" class="_right">
-            <svg viewBox="0 0 24 24" style="display: inline-block; fill: rgba(0, 0, 0, 0.870588); height: 24px; width: 24px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+            <svg viewBox="0 0 24 24" style="display: inline-block;
+            fill: rgba(0, 0, 0, 0.870588); height: 24px; width: 24px;
+            user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
           </span>
         </div>
@@ -251,7 +255,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     console.log('this.Month(date)', this.Month(date));
     let selector = this.elementRef.nativeElement.querySelector('._picker');
     if(this.stateSELECT == true) {
-      if(e$!=false) {
+      if(e$ != false) {
         this.date2 = dateSelected;
         this.date2Change.emit(dateSelected);
         selector.focus();
@@ -291,12 +295,12 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
   }
 
   ngAfterContentInit() {
-    this.stateSELECT=true;
+    this.stateSELECT = true;
     this._handleClick();
     this._focused = false;
     this.selectDate(this.date2_INT, true);
     console.log('state___---init all', this.date2_INT);
-    this.stateSELECT=false;
+    this.stateSELECT = false;
   }
 
   getMonth(DATESelected:any) {
@@ -318,7 +322,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     let dateEND:any;
     let day_left = 0;
     if(new Date(dateINI).getDay() == 0) {
-      day_left =6;
+      day_left = 6;
     }else{
       day_left = new Date(dateINI).getDay()-1;
     }
