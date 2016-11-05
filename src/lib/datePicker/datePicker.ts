@@ -22,7 +22,7 @@ const noop = () => {};
 
 export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdDatePicker),
+  useExisting: forwardRef(() => MdDatepicker),
   multi: true
 };
 
@@ -66,7 +66,9 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
         <div class="_days">
           <div
             [class._before]="day.date<dateINT"
-            [class._days_selected]="days2.length!=0&&day.date<=_date2_INT&&day.date>INT_DATE(_value)"
+            [class._days_selected]="days2.length!=0&&
+            day.date<=_date2_INT&&
+            day.date>INT_DATE(_value)"
             [class._today]="day.dateActive == dateToday"
             [class._focused]="dayActive == day.dateActive ||
             dayActive2 == day.dateActive && days2!=0"
@@ -113,7 +115,9 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
         <div class="_days">
           <div
             [class._before]="day.date<dateINT"
-            [class._days_selected]="days2.length!=0&&day.date<=_date2_INT&&day.date>INT_DATE(_value)"
+            [class._days_selected]="days2.length!=0&&
+            day.date<=_date2_INT&&
+            day.date>INT_DATE(_value)"
             [class._today]="day.dateActive == dateToday"
             [class._focused]="dayActive == day.dateActive || dayActive2 == day.dateActive"
             [class._parent_S]="dayActive == day.dateActive && !stateSELECT ||
@@ -138,8 +142,7 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
   `,
   providers: [MD_PICKER_CONTROL_VALUE_ACCESSOR],
 })
-export class MdDatePicker implements ControlValueAccessor, AfterContentInit, OnChanges {
-  // ADD other datepicker !important;
+export class MdDatepicker implements ControlValueAccessor, AfterContentInit, OnChanges {
   // select days
   _Date: string = `${new Date()}`;
   stateSELECT: boolean = false;
@@ -367,13 +370,13 @@ export class MdDatePicker implements ControlValueAccessor, AfterContentInit, OnC
 
 @NgModule({
   imports: [CommonModule, FormsModule],
-  exports: [MdDatePicker],
-  declarations: [MdDatePicker],
+  exports: [MdDatepicker],
+  declarations: [MdDatepicker],
 })
-export class MdDatePickerModule {
+export class MdDatepickerModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdDatePicker,
+      ngModule: MdDatepicker,
       providers: []
     };
   }
