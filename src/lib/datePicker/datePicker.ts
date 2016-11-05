@@ -67,7 +67,7 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
           <div
             [class._before]="day.date<dateINT"
             [class._days_selected]="days2.length!=0&&
-            day.date<=_date2_INT&&
+            day.date<=_date2INT&&
             day.date>INT_DATE(_value)"
             [class._today]="day.dateActive == dateToday"
             [class._focused]="dayActive == day.dateActive ||
@@ -89,8 +89,8 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
       </div>
       <div *ngIf="days2.length!=0 && _mode" class="_datePicker-content">
         <div class="_top">
-          <div class="_top_year">{{_date2_INT | date: 'y'}}</div>
-          <div class="_top_date">{{_date2_INT | date: 'EE, MMM d'}}</div>
+          <div class="_top_year">{{_date2INT | date: 'y'}}</div>
+          <div class="_top_date">{{_date2INT | date: 'EE, MMM d'}}</div>
         </div>
         <div class="_header _control">
           <div>{{ days2._INI | date: 'MMMM y' }}</div>
@@ -116,7 +116,7 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
           <div
             [class._before]="day.date<dateINT"
             [class._days_selected]="days2.length!=0&&
-            day.date<=_date2_INT&&
+            day.date<=_date2INT&&
             day.date>INT_DATE(_value)"
             [class._today]="day.dateActive == dateToday"
             [class._focused]="dayActive == day.dateActive || dayActive2 == day.dateActive"
@@ -151,7 +151,7 @@ export class MdDatepicker implements ControlValueAccessor, AfterContentInit, OnC
   dayActive2: any;
   days: any = [];
   days2: any = [];
-  _date2_INT = Date.now();
+  _date2INT = Date.now();
   dateINI: any;
   dateEND: any;
   dateINT: any;
@@ -184,7 +184,7 @@ export class MdDatepicker implements ControlValueAccessor, AfterContentInit, OnC
     if (v ! ==  this.days2) {
       console.warn('datew___2rf', v);
       this.days2 = this.Month(v);
-      this._date2_INT = new Date(v).getTime();
+      this._date2INT = new Date(v).getTime();
     }
   }
   @Output() date2Change: EventEmitter<any> = new EventEmitter<any>();
@@ -312,8 +312,8 @@ export class MdDatepicker implements ControlValueAccessor, AfterContentInit, OnC
     this.stateSELECT = true;
     this._handleClick();
     this._focused = false;
-    this.selectDate(this._date2_INT, true);
-    console.log('state___---init all', this._date2_INT);
+    this.selectDate(this._date2INT, true);
+    console.log('state___---init all', this._date2INT);
     this.stateSELECT = false;
   }
 
@@ -321,7 +321,7 @@ export class MdDatepicker implements ControlValueAccessor, AfterContentInit, OnC
     this.days = this.Month(_slctD);
   }
   get Days() {
-    return (-this.INT_DATE(this._value) + this.INT_DATE(this._date2_INT)) / 60 / 60 / 24 / 1000;
+    return (-this.INT_DATE(this._value) + this.INT_DATE(this._date2INT)) / 60 / 60 / 24 / 1000;
   }
   Month(date: any) {
     let _days: any = {
@@ -334,13 +334,13 @@ export class MdDatepicker implements ControlValueAccessor, AfterContentInit, OnC
     let dateNow = new Date(_slctD.getTime());
     let dateINI = new Date(dateNow.getTime() - dayNow);
     let dateEND: any;
-    let day_left = 0;
+    let dayleft = 0;
     if (new Date(dateINI).getDay() == 0) {
-      day_left = 6;
+      dayleft = 6;
     }else {
-      day_left = new Date(dateINI).getDay() - 1;
+      dayleft = new Date(dateINI).getDay() - 1;
     }
-    for (var i = 0; i < day_left; i++) {
+    for (var i = 0; i < dayleft; i++) {
       _days.data.push({
         index: null,
         date: 0,
