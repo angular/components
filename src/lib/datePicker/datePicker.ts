@@ -48,10 +48,12 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
         <div class="_header _control">
           <div>{{ days._INI | date: 'MMMM y' }}</div>
           <span (click)="_left(false, days)" class="_left">
-            <svg viewBox="0 0 24 24" style="display: inline-block; fill: rgba(0, 0, 0, 0.870588); height: 24px; width: 24px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
+            <svg viewBox="0 0 24 24" style="display: inline-block; fill: rgba(0, 0, 0, 0.870588); height: 24px; width: 24px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
           </span>
           <span (click)="_right(false, days)" class="_right">
-            <svg viewBox="0 0 24 24" style="display: inline-block; fill: rgba(0, 0, 0, 0.870588); height: 24px; width: 24px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+            <svg viewBox="0 0 24 24" style="display: inline-block; fill: rgba(0, 0, 0, 0.870588); height: 24px; width: 24px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
           </span>
         </div>
         <div class="_header">
@@ -61,19 +63,19 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
           <div
             [class._before]="day.date<dateINT"
             [class._days_selected]="days2.length!=0&&day.date<=date2_INT&&day.date>INT_DATE(_value)"
-            [class._today]="day.dateActive==dateToday"
-            [class._focused]="dayActive==day.dateActive || dayActive2==day.dateActive && days2!=0"
-            [class._parent_S]="dayActive==day.dateActive && !stateSELECT && days2!=0
-            || dayActive2==day.dateActive && stateSELECT && days2!=0"
+            [class._today]="day.dateActive == dateToday"
+            [class._focused]="dayActive == day.dateActive || dayActive2 == day.dateActive && days2!=0"
+            [class._parent_S]="dayActive == day.dateActive && !stateSELECT && days2!=0
+            || dayActive2 == day.dateActive && stateSELECT && days2!=0"
             *ngFor="let day of days.data;" class="_day">
               <span
                 (focus)="selectDate(day.date, false, $event); _handleClick();"
                 (blur)="_handleOutFocus()"
                 tabindex="0" *ngIf="day.date!=0">{{day.index}}
                   <div (mouseenter)="stateSELECT=false"
-                  *ngIf="dayActive==day.dateActive && days2!=0"></div>
+                  *ngIf="dayActive == day.dateActive && days2!=0"></div>
                   <div (mouseenter)="stateSELECT=true"
-                  *ngIf="dayActive2==day.dateActive && days2!=0"></div>
+                  *ngIf="dayActive2 == day.dateActive && days2!=0"></div>
                 </span>
           </div>
         </div>
@@ -86,10 +88,18 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
         <div class="_header _control">
           <div>{{ days2._INI | date: 'MMMM y' }}</div>
           <span (click)="_left(true, days2)" class="_left">
-            <svg viewBox="0 0 24 24" style="display: inline-block; fill: rgba(0, 0, 0, 0.870588); height: 24px; width: 24px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
+            <svg viewBox="0 0 24 24"
+            style="display: inline-block; fill: rgba(0, 0, 0, 0.870588);
+            height: 24px; width: 24px; user-select: none;
+            transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
           </span>
           <span (click)="_right(true, days2)" class="_right">
-            <svg viewBox="0 0 24 24" style="display: inline-block; fill: rgba(0, 0, 0, 0.870588); height: 24px; width: 24px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+            <svg viewBox="0 0 24 24"
+            style="display: inline-block; fill: rgba(0, 0, 0, 0.870588);
+            height: 24px; width: 24px; user-select: none;
+            transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
           </span>
         </div>
         <div class="_header">
@@ -99,9 +109,9 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
           <div
             [class._before]="day.date<dateINT"
             [class._days_selected]="days2.length!=0&&day.date<=date2_INT&&day.date>INT_DATE(_value)"
-            [class._today]="day.dateActive==dateToday"
-            [class._focused]="dayActive==day.dateActive || dayActive2==day.dateActive"
-            [class._parent_S]="dayActive==day.dateActive && !stateSELECT || dayActive2==day.dateActive && stateSELECT"
+            [class._today]="day.dateActive == dateToday"
+            [class._focused]="dayActive == day.dateActive || dayActive2 == day.dateActive"
+            [class._parent_S]="dayActive == day.dateActive && !stateSELECT || dayActive2 == day.dateActive && stateSELECT"
             *ngFor="let day of days2.data;"
             class="_day">
               <span
@@ -110,9 +120,9 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
                 tabindex="0"
                 *ngIf="day.date!=0">{{day.index}}
                   <div (mouseenter)="stateSELECT=false"
-                  *ngIf="dayActive==day.dateActive"></div>
+                  *ngIf="dayActive == day.dateActive"></div>
                   <div (mouseenter)="stateSELECT=true"
-                  *ngIf="dayActive2==day.dateActive"></div>
+                  *ngIf="dayActive2 == day.dateActive"></div>
               </span>
           </div>
         </div>
@@ -152,7 +162,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
   @Input()
   set mode(v: string) {
     console.warn('datew___2', v);
-    if (v == 'dual') {
+    if (v  ==  'dual') {
       console.warn('datew___2rf', v);
       this._mode = true;
     }else {
@@ -162,7 +172,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
   @Input()
   set date2(v: any) {
     console.warn('datew___2', v);
-    if (v !== this.days2) {
+    if (v ! ==  this.days2) {
       console.warn('datew___2rf', v);
       this.days2 = this.Month(v);
       this.date2_INT = new Date(v).getTime();
@@ -219,7 +229,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
 
   @Input() set value(v: any) {
     console.warn('out__0', v);
-    if (v !== this._value) {
+    if (v ! ==  this._value) {
       this._value = v;
       this._onChangeCallback(v);
     }
@@ -240,7 +250,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     let dateSelected = new Date(date);
     console.log('this.Month(date)', this.Month(date));
     let selector = this.elementRef.nativeElement.querySelector('._picker');
-    if(this.stateSELECT==true) {
+    if(this.stateSELECT == true) {
       if(e$!=false) {
         this.date2 = dateSelected;
         this.date2Change.emit(dateSelected);
@@ -262,7 +272,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
    * _left.
    */
   _left(_for:any, date:any) {
-    if(_for==false) {
+    if(_for == false) {
       this.days = this.Month(date._INI-60*60*24*1000);
     }else {
       this.days2 = this.Month(date._INI-60*60*24*1000);
@@ -273,7 +283,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
    * Month prev.
    */
   _right(_for:any, date:any) {
-    if(_for==false) {
+    if(_for == false) {
       this.days = this.Month(date._INI.getTime()+(date.dateEND+2)*60*60*24*1000);
     }else{
       this.days2 = this.Month(date._INI.getTime()+(date.dateEND+2)*60*60*24*1000);
@@ -307,7 +317,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     let dateINI = new Date(dateNow.getTime()-dayNow);
     let dateEND:any;
     let day_left = 0;
-    if(new Date(dateINI).getDay()==0) {
+    if(new Date(dateINI).getDay() == 0) {
       day_left =6;
     }else{
       day_left = new Date(dateINI).getDay()-1;
@@ -321,7 +331,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     let dateTemp:any;
     for(var i = 1; i < 32; i++) {
       dateTemp = new Date((dateINI.getTime())+((i-1)*60*60*24*1000));
-      if(i==dateTemp.getDate()){
+      if(i == dateTemp.getDate()){
         dateEND = i;
         _days.data.push({
           index: i,
