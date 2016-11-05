@@ -63,7 +63,8 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
             [class._days_selected]="days2.length!=0&&day.date<=date2_INT&&day.date>INT_DATE(_value)"
             [class._today]="day.dateActive==dateToday"
             [class._focused]="dayActive==day.dateActive || dayActive2==day.dateActive && days2!=0"
-            [class._parent_S]="dayActive==day.dateActive && !stateSELECT && days2!=0 || dayActive2==day.dateActive && stateSELECT && days2!=0"
+            [class._parent_S]="dayActive==day.dateActive && !stateSELECT && days2!=0
+            || dayActive2==day.dateActive && stateSELECT && days2!=0"
             *ngFor="let day of days.data;" class="_day">
               <span
                 (focus)="selectDate(day.date, false, $event); _handleClick();"
@@ -121,10 +122,10 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
   `,
   providers: [MD_PICKER_CONTROL_VALUE_ACCESSOR],
 })
-export class datePicker implements ControlValueAccessor, AfterContentInit, OnChanges{
+export class datePicker implements ControlValueAccessor, AfterContentInit, OnChanges {
   // ADD other datepicker !important;
   // select days
-  public Date: string = `${new Date()}`;
+  Date: string = `${new Date()}`;
   stateSELECT: boolean = false;
   dateNow: any = new Date();
   dayActive: any;
@@ -151,10 +152,10 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
   @Input()
   set mode(v: string) {
     console.warn('datew___2', v);
-    if (v == "dual") {
+    if (v == 'dual') {
       console.warn('datew___2rf', v);
       this._mode = true;
-    }else{
+    }else {
       this._mode = false;
     }
   }
@@ -171,7 +172,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
 
   constructor(
     private elementRef: ElementRef,
-  ){
+  ) {
 
   }
 
@@ -188,7 +189,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
    * OutFocus.
    * TODO: internal
    */
-  _handleOutFocus(state: boolean){
+  _handleOutFocus(state: boolean) {
       this._focused = false;
 
   }
@@ -231,22 +232,22 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     this._value = value;
   }
 
-  private INT_DATE(date:any){
+  private INT_DATE(date:any) {
     return new Date(date).getTime();
   }
 
-  selectDate(date:any, _for: boolean = false, e$: any = false){
+  selectDate(date:any, _for: boolean = false, e$: any = false) {
     let dateSelected = new Date(date);
     console.log('this.Month(date)', this.Month(date));
     let selector = this.elementRef.nativeElement.querySelector('._picker');
-    if(this.stateSELECT==true){
-      if(e$!=false){
+    if(this.stateSELECT==true) {
+      if(e$!=false) {
         this.date2 = dateSelected;
         this.date2Change.emit(dateSelected);
         selector.focus();
       }
       this.dayActive2 = `${dateSelected.getFullYear()}+${dateSelected.getMonth()}+${dateSelected.getDate()}`;
-    }else{
+    }else {
       this.dayActive = `${dateSelected.getFullYear()}+${dateSelected.getMonth()}+${dateSelected.getDate()}`;
       this.value = dateSelected;
       this._value = dateSelected;
@@ -260,10 +261,10 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
   /**
    * _left.
    */
-  _left(_for:any, date:any){
-    if(_for==false){
+  _left(_for:any, date:any) {
+    if(_for==false) {
       this.days = this.Month(date._INI-60*60*24*1000);
-    }else{
+    }else {
       this.days2 = this.Month(date._INI-60*60*24*1000);
     }
   }
@@ -271,15 +272,15 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
   /**
    * Month prev.
    */
-  _right(_for:any, date:any){
-    if(_for==false){
+  _right(_for:any, date:any) {
+    if(_for==false) {
       this.days = this.Month(date._INI.getTime()+(date.dateEND+2)*60*60*24*1000);
     }else{
       this.days2 = this.Month(date._INI.getTime()+(date.dateEND+2)*60*60*24*1000);
     }
   }
 
-  ngAfterContentInit(){
+  ngAfterContentInit() {
     this.stateSELECT=true;
     this._handleClick();
     this._focused = false;
@@ -288,13 +289,13 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     this.stateSELECT=false;
   }
 
-  getMonth(DATESelected:any){
+  getMonth(DATESelected:any) {
     this.days = this.Month(DATESelected);
   }
-  get Days(){
+  get Days() {
     return (-this.INT_DATE(this._value)+this.INT_DATE(this.date2_INT))/60/60/24/1000;
   }
-  Month(date:any){
+  Month(date:any) {
     let _days:any = {
       data: [],
       _INI: '',
@@ -306,19 +307,19 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     let dateINI = new Date(dateNow.getTime()-dayNow);
     let dateEND:any;
     let day_left = 0;
-    if(new Date(dateINI).getDay()==0){
+    if(new Date(dateINI).getDay()==0) {
       day_left =6;
     }else{
       day_left = new Date(dateINI).getDay()-1;
     }
-    for(var i = 0; i < day_left; i++){
+    for(var i = 0; i < day_left; i++) {
       _days.data.push({
         index: null,
         date: 0,
-      })
+      });
     }
     let dateTemp:any;
-    for(var i = 1; i < 32; i++){
+    for(var i = 1; i < 32; i++) {
       dateTemp = new Date((dateINI.getTime())+((i-1)*60*60*24*1000));
       if(i==dateTemp.getDate()){
         dateEND = i;
