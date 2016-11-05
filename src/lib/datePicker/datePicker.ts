@@ -141,7 +141,7 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
 export class datePicker implements ControlValueAccessor, AfterContentInit, OnChanges {
   // ADD other datepicker !important;
   // select days
-  Date: string = `${new Date()}`;
+  _Date: string = `${new Date()}`;
   stateSELECT: boolean = false;
   dateNow: any = new Date();
   dayActive: any;
@@ -194,8 +194,8 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
 
   _handleClick() {
     let selector = this.elementRef.nativeElement.querySelector('._picker');
-    let DatePicker = this.elementRef.nativeElement.querySelector('._datePicker');
-    DatePicker.setAttribute('style', `
+    let _DatePicker = this.elementRef.nativeElement.querySelector('._datePicker');
+    _DatePicker.setAttribute('style', `
       top: ${selector.offsetHeight}px
     `);
     this._focused = true;
@@ -248,15 +248,15 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     this._value = value;
   }
 
-  private INT_DATE(date:any) {
+  private INT_DATE(date: any) {
     return new Date(date).getTime();
   }
 
-  selectDate(date:any, _for = false, e$: any = false) {
+  selectDate(date: any, _for = false, e$: any = false) {
     let _slctD = new Date(date);
     let selector = this.elementRef.nativeElement.querySelector('._picker');
-    if(this.stateSELECT == true) {
-      if(e$ != false) {
+    if (this.stateSELECT == true) {
+      if (e$ != false) {
         this.date2 = _slctD;
         this.date2Change.emit(_slctD);
         selector.focus();
@@ -268,7 +268,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
       this._value = _slctD;
       this._onTouchedCallback();
     }
-    this.Date = `${
+    this._Date = `${
       new Date(date).getDate()
     }-${
       new Date(date).getMonth() + 1
@@ -287,7 +287,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
    * _left.
    */
   _left(_for:any, date:any) {
-    if(_for == false) {
+    if (_for == false) {
       this.days = this.Month(date._INI - 60 * 60 * 24 * 1000);
     }else {
       this.days2 = this.Month(date._INI - 60 * 60 * 24 * 1000);
@@ -298,10 +298,10 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
    * Month prev.
    */
   _right(_for:any, date:any) {
-    if(_for == false) {
-      this.days = this.Month(date._INI.getTime() + (date.dateEND+2) * 60 * 60 * 24 * 1000);
-    }else{
-      this.days2 = this.Month(date._INI.getTime() + (date.dateEND+2) * 60 * 60 * 24 * 1000);
+    if (_for == false) {
+      this.days = this.Month(date._INI.getTime() + (date.dateEND + 2) * 60 * 60 * 24 * 1000);
+    }else {
+      this.days2 = this.Month(date._INI.getTime() + (date.dateEND + 2) * 60 * 60 * 24 * 1000);
     }
   }
 
@@ -332,9 +332,9 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     let dateINI = new Date(dateNow.getTime() - dayNow);
     let dateEND:any;
     let day_left = 0;
-    if(new Date(dateINI).getDay() == 0) {
+    if (new Date(dateINI).getDay() == 0) {
       day_left = 6;
-    }else{
+    }else {
       day_left = new Date(dateINI).getDay() - 1;
     }
     for(var i = 0; i < day_left; i++) {
@@ -346,7 +346,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     let dateTemp:any;
     for(var i = 1; i < 32; i++) {
       dateTemp = new Date((dateINI.getTime()) + ((i - 1) * 60 * 60 * 24 * 1000));
-      if(i == dateTemp.getDate()){
+      if (i == dateTemp.getDate()) {
         dateEND = i;
         _days.data.push({
           index: i,
