@@ -304,7 +304,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     let dayNow = (dateSelected.getDate()-1)*60*60*24*1000;
     let dateNow = new Date(dateSelected.getTime());
     let dateINI = new Date(dateNow.getTime()-dayNow);
-    let dateEND;
+    let dateEND:any;
     let day_left = 0;
     if(new Date(dateINI).getDay()==0){
       day_left =6;
@@ -317,7 +317,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
         date: 0,
       })
     }
-    let dateTemp;
+    let dateTemp:any;
     for(var i = 1; i < 32; i++){
       dateTemp = new Date((dateINI.getTime())+((i-1)*60*60*24*1000));
       if(i==dateTemp.getDate()){

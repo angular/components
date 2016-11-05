@@ -2,38 +2,38 @@
   display: inline-block;
   position: relative;
 }
-._top{
+._top {
   padding: 20px;
   background: #00bcd4;
   border-top-right-radius: 4px;
   border-top-left-radius: 4px;
-  ._top_year{
+  ._top_year {
     font-size: 16px;
     color: #fff;
   }
-  ._top_date{
+  ._top_date {
     font-size: 36px;
     color: #fff;
   }
 }
-._focusedPicker{
-  ._datePicker{
+._focusedPicker {
+  ._datePicker {
     opacity: 1;
     transform: scaleY(1);
   }
 }
-._datePicker-content{
+._datePicker-content {
   position: relative;
   display: inline-block;
   float: left;
-  ._header{
+  ._header {
     padding: 4px 16px;
   }
-  ._days{
+  ._days {
     padding: 8px 16px;
   }
 }
-._control{
+._control {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -41,7 +41,7 @@
   justify-content: space-between;
   position: relative;
   cursor: default;
-  div{
+  div {
     position: absolute;
     top: 0;
     text-align: center;
@@ -50,18 +50,18 @@
     left: 0;
     padding: 4px;
   }
-  span{
+  span {
     position: relative;
     display: flex;
     cursor: pointer;
   }
 }
-._days_selected{
-  span{
+._days_selected {
+  span {
     color: #00bcd4;
   }
 }
-._datePicker{
+._datePicker {
   width: 312px;
   position: absolute;
   top: 0;
@@ -74,23 +74,23 @@
   transform: scaleY(0);
   border-radius: 4px;
   overflow: hidden;
-  &._dual{
+  &._dual {
     width: 624px;
-    ._top{
-      ._top_date, ._top_year{
+    ._top {
+      ._top_date, ._top_year {
         text-align: center;
       }
     }
   }
 }
-._days{
+._days {
   cursor: default;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   width: 280px;
 }
-._DaysName{
+._DaysName {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -100,17 +100,17 @@
   display: inline-block;
   text-align: center;
   line-height: 36px;
-  opacity: .39;
+  opacity: 0.39;
   text-transform: uppercase;
   font-size: 13px;
   margin: 2px;
 }
-._before{
+._before {
   opacity: 1;
 }
-._today{
+._today {
   z-index: 1;
-  span{
+  span {
     //box-shadow: 0 0 0 1px #00bcd4;
     background: rgba(0, 188, 212, 0.22);
     color: #00bcd4;
@@ -118,7 +118,7 @@
 }
 @keyframes stateSELECT{
   0% {
-    opacity: .6;
+    opacity: 0.6;
     //box-shadow: 0 0 0 0 #00bcd4;
   }
   75% {
@@ -138,7 +138,7 @@
     color: #fff;
   }
 }
-._day, ._focused{
+._day, ._focused {
   width: 36px;
   height: 36px;
   display: inline-block;
@@ -147,7 +147,7 @@
   text-align: center;
   font-size: 13px;
   margin: 2px;
-  span{
+  span {
     width: inherit;
     height: inherit;
     position: absolute;
@@ -156,10 +156,10 @@
     outline: none;
     border-radius: 100%;
     cursor: pointer;
-    &:hover{
+    &:hover {
       background: #f4f4f4;
     }
-    div{
+    div {
       position: absolute;
       top: 0;
       bottom: 0;
@@ -169,14 +169,11 @@
   }
 }
 
-._picker{
+._picker {
   pointer-events: auto;
   cursor: text;
   outline: none;
-  ._input{
+  ._input {
     pointer-events: none !important;
   }
-}
-._focused{
-  //opacity: .1;
 }
