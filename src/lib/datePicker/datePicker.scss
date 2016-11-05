@@ -1,4 +1,4 @@
-:host{
+:host {
   display: inline-block;
   position: relative;
 }
@@ -25,7 +25,7 @@
 ._datePicker-content {
   position: relative;
   display: inline-block;
-  float: left;
+  -webkit-float: left;
   ._header {
     padding: 4px 16px;
   }
@@ -46,7 +46,7 @@
     top: 0;
     text-align: center;
     width: 100%;
-    opacity: .7;
+    opacity: 0.7;
     left: 0;
     padding: 4px;
   }
@@ -66,10 +66,10 @@
   position: absolute;
   top: 0;
   background: #fff;
-  box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 6px, rgba(0, 0, 0, 0.1) 0px 1px 4px;
   z-index: 66;
   transition: transform 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms, opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-  transform-origin: left top 0px;
+  transform-origin: left top 0;
   opacity: 0;
   transform: scaleY(0);
   border-radius: 4px;
@@ -116,7 +116,7 @@
     color: #00bcd4;
   }
 }
-@keyframes stateSELECT{
+@keyframes stateSELECT {
   0% {
     opacity: 0.6;
     //box-shadow: 0 0 0 0 #00bcd4;
@@ -126,14 +126,14 @@
     //box-shadow: 0 0 0 16px rgba(255, 255, 255, 0);
   }
 }
-._parent_S{
-  span{
+._parent_S {
+  span {
     animation: 1.2s stateSELECT infinite;
     transition: cubic-bezier(0.23, 1, 0.32, 1);
   }
 }
 ._day._focused{
-  span{
+  span {
     background: #00bcd4 !important;
     color: #fff;
   }
