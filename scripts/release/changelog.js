@@ -30,7 +30,7 @@ const previousTag = isNpmLatest ? gitTags[0] : gitTags[1];
 if (!isForce) {
   previousChangelog.on('error', function(err) {
     console.error('An error occurred, while reading the previous changelog file.\n' +
-      'If there is no previous changelog, then you should create an empty file or use the `--force` flag.\n' + err);
+      'If there is changelog file, you should create an empty file or use the `--force` flag.\n' + err);
 
     process.exit(1);
   });
