@@ -22,7 +22,7 @@ const noop = () => {};
 
 export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => datePicker),
+  useExisting: forwardRef(() => MdDatePicker),
   multi: true
 };
 
@@ -66,7 +66,7 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
         <div class="_days">
           <div
             [class._before]="day.date<dateINT"
-            [class._days_selected]="days2.length!=0&&day.date<=date2_INT&&day.date>INT_DATE(_value)"
+            [class._days_selected]="days2.length!=0&&day.date<=_date2_INT&&day.date>INT_DATE(_value)"
             [class._today]="day.dateActive == dateToday"
             [class._focused]="dayActive == day.dateActive ||
             dayActive2 == day.dateActive && days2!=0"
@@ -87,8 +87,8 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
       </div>
       <div *ngIf="days2.length!=0 && _mode" class="_datePicker-content">
         <div class="_top">
-          <div class="_top_year">{{date2_INT | date: 'y'}}</div>
-          <div class="_top_date">{{date2_INT | date: 'EE, MMM d'}}</div>
+          <div class="_top_year">{{_date2_INT | date: 'y'}}</div>
+          <div class="_top_date">{{_date2_INT | date: 'EE, MMM d'}}</div>
         </div>
         <div class="_header _control">
           <div>{{ days2._INI | date: 'MMMM y' }}</div>
@@ -113,7 +113,7 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
         <div class="_days">
           <div
             [class._before]="day.date<dateINT"
-            [class._days_selected]="days2.length!=0&&day.date<=date2_INT&&day.date>INT_DATE(_value)"
+            [class._days_selected]="days2.length!=0&&day.date<=_date2_INT&&day.date>INT_DATE(_value)"
             [class._today]="day.dateActive == dateToday"
             [class._focused]="dayActive == day.dateActive || dayActive2 == day.dateActive"
             [class._parent_S]="dayActive == day.dateActive && !stateSELECT ||
@@ -138,7 +138,7 @@ export const MD_PICKER_CONTROL_VALUE_ACCESSOR: any = {
   `,
   providers: [MD_PICKER_CONTROL_VALUE_ACCESSOR],
 })
-export class datePicker implements ControlValueAccessor, AfterContentInit, OnChanges {
+export class MdDatePicker implements ControlValueAccessor, AfterContentInit, OnChanges {
   // ADD other datepicker !important;
   // select days
   _Date: string = `${new Date()}`;
@@ -148,7 +148,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
   dayActive2: any;
   days: any = [];
   days2: any = [];
-  date2_INT = Date.now();
+  _date2_INT = Date.now();
   dateINI: any;
   dateEND: any;
   dateINT: any;
@@ -181,7 +181,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     if (v ! ==  this.days2) {
       console.warn('datew___2rf', v);
       this.days2 = this.Month(v);
-      this.date2_INT = new Date(v).getTime();
+      this._date2_INT = new Date(v).getTime();
     }
   }
   @Output() date2Change: EventEmitter<any> = new EventEmitter<any>();
@@ -286,7 +286,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
   /**
    * _left.
    */
-  _left(_for:any, date:any) {
+  _left(_for: any, date: any) {
     if (_for == false) {
       this.days = this.Month(date._INI - 60 * 60 * 24 * 1000);
     }else {
@@ -297,7 +297,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
   /**
    * Month prev.
    */
-  _right(_for:any, date:any) {
+  _right(_for: any, date: any) {
     if (_for == false) {
       this.days = this.Month(date._INI.getTime() + (date.dateEND + 2) * 60 * 60 * 24 * 1000);
     }else {
@@ -309,19 +309,19 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     this.stateSELECT = true;
     this._handleClick();
     this._focused = false;
-    this.selectDate(this.date2_INT, true);
-    console.log('state___---init all', this.date2_INT);
+    this.selectDate(this._date2_INT, true);
+    console.log('state___---init all', this._date2_INT);
     this.stateSELECT = false;
   }
 
-  getMonth(_slctD:any) {
+  getMonth(_slctD: any) {
     this.days = this.Month(_slctD);
   }
   get Days() {
-    return (-this.INT_DATE(this._value) + this.INT_DATE(this.date2_INT)) / 60 / 60 / 24 / 1000;
+    return (-this.INT_DATE(this._value) + this.INT_DATE(this._date2_INT)) / 60 / 60 / 24 / 1000;
   }
-  Month(date:any) {
-    let _days:any = {
+  Month(date: any) {
+    let _days: any = {
       data: [],
       _INI: '',
       dateEND: '',
@@ -330,26 +330,26 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     let dayNow = (_slctD.getDate() - 1) * 60 * 60 * 24 * 1000;
     let dateNow = new Date(_slctD.getTime());
     let dateINI = new Date(dateNow.getTime() - dayNow);
-    let dateEND:any;
+    let dateEND: any;
     let day_left = 0;
     if (new Date(dateINI).getDay() == 0) {
       day_left = 6;
     }else {
       day_left = new Date(dateINI).getDay() - 1;
     }
-    for(var i = 0; i < day_left; i++) {
+    for (var i = 0; i < day_left; i++) {
       _days.data.push({
         index: null,
         date: 0,
       });
     }
-    let dateTemp:any;
-    for(var i = 1; i < 32; i++) {
+    let dateTemp: any;
+    for (var _i = 1; _i < 32; _i++) {
       dateTemp = new Date((dateINI.getTime()) + ((i - 1) * 60 * 60 * 24 * 1000));
-      if (i == dateTemp.getDate()) {
-        dateEND = i;
+      if (_i == dateTemp.getDate()) {
+        dateEND = _i;
         _days.data.push({
-          index: i,
+          index: _i,
           date: dateTemp.getTime(),
           dateActive: `${dateTemp.getFullYear()}+${dateTemp.getMonth()}+${dateTemp.getDate()}`,
         });
@@ -367,13 +367,13 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
 
 @NgModule({
   imports: [CommonModule, FormsModule],
-  exports: [datePicker],
-  declarations: [datePicker],
+  exports: [MdDatePicker],
+  declarations: [MdDatePicker],
 })
 export class MdDatePickerModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: datePicker,
+      ngModule: MdDatePicker,
       providers: []
     };
   }
