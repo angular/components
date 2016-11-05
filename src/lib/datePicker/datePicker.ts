@@ -252,7 +252,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     return new Date(date).getTime();
   }
 
-  selectDate(date:any, _for: boolean = false, e$: any = false) {
+  selectDate(date:any, _for = false, e$: any = false) {
     let _slctD = new Date(date);
     let selector = this.elementRef.nativeElement.querySelector('._picker');
     if(this.stateSELECT == true) {
@@ -271,7 +271,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     this.Date = `${
       new Date(date).getDate()
     }-${
-      new Date(date).getMonth()+1
+      new Date(date).getMonth() + 1
     }-${
       new Date(date).getFullYear()
     }`;
@@ -288,9 +288,9 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
    */
   _left(_for:any, date:any) {
     if(_for == false) {
-      this.days = this.Month(date._INI-60*60*24*1000);
+      this.days = this.Month(date._INI - 60 * 60 * 24 * 1000);
     }else {
-      this.days2 = this.Month(date._INI-60*60*24*1000);
+      this.days2 = this.Month(date._INI - 60 * 60 * 24 * 1000);
     }
   }
 
@@ -299,9 +299,9 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
    */
   _right(_for:any, date:any) {
     if(_for == false) {
-      this.days = this.Month(date._INI.getTime()+(date.dateEND+2)*60*60*24*1000);
+      this.days = this.Month(date._INI.getTime() + (date.dateEND+2) * 60 * 60 * 24 * 1000);
     }else{
-      this.days2 = this.Month(date._INI.getTime()+(date.dateEND+2)*60*60*24*1000);
+      this.days2 = this.Month(date._INI.getTime() + (date.dateEND+2) * 60 * 60 * 24 * 1000);
     }
   }
 
@@ -318,7 +318,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     this.days = this.Month(_slctD);
   }
   get Days() {
-    return (-this.INT_DATE(this._value)+this.INT_DATE(this.date2_INT))/60/60/24/1000;
+    return (-this.INT_DATE(this._value) + this.INT_DATE(this.date2_INT)) / 60 / 60 / 24 / 1000;
   }
   Month(date:any) {
     let _days:any = {
@@ -327,15 +327,15 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
       dateEND: '',
     };
     let _slctD = new Date(date);
-    let dayNow = (_slctD.getDate()-1)*60*60*24*1000;
+    let dayNow = (_slctD.getDate() - 1) * 60 * 60 * 24 * 1000;
     let dateNow = new Date(_slctD.getTime());
-    let dateINI = new Date(dateNow.getTime()-dayNow);
+    let dateINI = new Date(dateNow.getTime() - dayNow);
     let dateEND:any;
     let day_left = 0;
     if(new Date(dateINI).getDay() == 0) {
       day_left = 6;
     }else{
-      day_left = new Date(dateINI).getDay()-1;
+      day_left = new Date(dateINI).getDay() - 1;
     }
     for(var i = 0; i < day_left; i++) {
       _days.data.push({
@@ -345,7 +345,7 @@ export class datePicker implements ControlValueAccessor, AfterContentInit, OnCha
     }
     let dateTemp:any;
     for(var i = 1; i < 32; i++) {
-      dateTemp = new Date((dateINI.getTime())+((i-1)*60*60*24*1000));
+      dateTemp = new Date((dateINI.getTime()) + ((i - 1) * 60 * 60 * 24 * 1000));
       if(i == dateTemp.getDate()){
         dateEND = i;
         _days.data.push({
