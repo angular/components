@@ -16,7 +16,7 @@ import {
   Output,
   NgModule,
   ModuleWithProviders,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
@@ -315,7 +315,9 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
    */
   private _convertValueForInputType(v: any): any {
     switch (this.type) {
-      case 'number': return parseFloat(v);
+      case 'number':
+        let parsedValue = parseFloat(v);
+        return isNaN(parsedValue) ? null : parsedValue;
       default: return v;
     }
   }
