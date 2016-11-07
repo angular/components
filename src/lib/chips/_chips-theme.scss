@@ -16,34 +16,90 @@
 
   // The spec only provides guidance for light-themed chips. When inside of a dark theme, fall back
   // to standard background and foreground colors.
-  $unselected-background: if($is-dark-theme, mat-color($background, card), #e0e0e0);
+  $unselected-background: if($is-dark-theme, #656565, #e0e0e0);
   $unselected-foreground: if($is-dark-theme, mat-color($foreground, text), $light-foreground);
 
   $selected-background: if($is-dark-theme, mat-color($background, app-bar), #808080);
   $selected-foreground: if($is-dark-theme, mat-color($foreground, text), $light-selected-foreground);
 
+  $focus-color: mat-color($foreground, secondary-text);
+
   .mat-chip:not(.mat-basic-chip) {
     background-color: $unselected-background;
     color: $unselected-foreground;
+
+    .mat-chip-focus-border {
+      pointer-events: none;
+    }
+
+    &:focus {
+      outline: none;
+      border: 2px solid $focus-color;
+    }
+
+    .mat-chip-remove {
+      color: $unselected-foreground;
+      opacity: 0.3;
+
+      &:hover {
+        opacity: 0.54;
+      }
+    }
   }
 
   .mat-chip.mat-chip-selected:not(.mat-basic-chip) {
     background-color: $selected-background;
     color: $selected-foreground;
 
+    .mat-chip-remove {
+      color: $selected-foreground;
+      opacity: 0.4;
+
+      &:hover {
+        opacity: 0.54;
+      }
+    }
+
     &.mat-primary {
       background-color: mat-color($primary, 500);
       color: mat-contrast($primary, 500);
+
+      .mat-chip-remove {
+        color: mat-contrast($primary, 500);
+        opacity: 0.4;
+
+        &:hover {
+          opacity: 0.54;
+        }
+      }
     }
 
     &.mat-accent {
       background-color: mat-color($accent, 500);
       color: mat-contrast($accent, 500);
+
+      .mat-chip-remove {
+        color: mat-contrast($accent, 500);
+        opacity: 0.4;
+
+        &:hover {
+          opacity: 0.54;
+        }
+      }
     }
 
     &.mat-warn {
       background-color: mat-color($warn, 500);
       color: mat-contrast($warn, 500);
+
+      .mat-chip-remove {
+        color: mat-contrast($warn, 500);
+        opacity: 0.4;
+
+        &:hover {
+          opacity: 0.54;
+        }
+      }
     }
   }
 }
