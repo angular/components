@@ -265,18 +265,24 @@ export class MdSlider implements ControlValueAccessor {
 
   /** Increments the slider by the given number of steps (negative number decrements. */
   _increment(event: KeyboardEvent, numSteps: number) {
+    if (this.disabled) { return; }
+
     this.value = this._clamp(this.value + this.step * numSteps, this.min, this.max);
     event.preventDefault();
   }
 
   /** Handles end key pressed. */
   _onEndKeyPressed(event: KeyboardEvent) {
+    if (this.disabled) { return; }
+
     this.value = this.max;
     event.preventDefault();
   }
 
   /** Handles home key pressed. */
   _onHomeKeyPressed(event: KeyboardEvent) {
+    if (this.disabled) { return; }
+
     this.value = this.min;
     event.preventDefault();
   }
