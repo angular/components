@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MdChipInputEvent, ENTER, COMMA} from '@angular/material';
 
 export interface Person {
   name: string;
@@ -18,6 +19,12 @@ export interface DemoColor {
 export class ChipsDemo {
   visible: boolean = true;
   color: string = '';
+  selectable: boolean = true;
+  removable: boolean = true;
+  addOnBlur: boolean = true;
+
+  // Enter, comma, semi-colon
+  separatorKeys = [ENTER, COMMA, 186];
 
   people: Person[] = [
     { name: 'Kara' },
@@ -43,6 +50,28 @@ export class ChipsDemo {
     if (input.value && input.value.trim() != '') {
       this.people.push({ name: input.value.trim() });
       input.value = '';
+=======
+  add(event: MdChipInputEvent): void {
+    let input = event.input;
+    let value = event.value;
+
+    // Add our person
+    if (value && value.trim() != '') {
+      this.people.push({ name: value.trim() });
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  remove(person: Person): void {
+    let index = this.people.indexOf(person);
+
+    if (index >= 0) {
+      this.people.splice(index, 1);
+>>>>>>> feat(chips): Add remove functionality/styling.
     }
   }
 

@@ -3,18 +3,69 @@
 $mat-chip-vertical-padding: 8px;
 $mat-chip-horizontal-padding: 12px;
 
-$mat-chips-chip-margin: $mat-chip-horizontal-padding / 4;
+$mat-chip-vertical-padding: 8px - $mat-chip-border-width;
+$mat-chip-horizontal-padding: 12px - $mat-chip-border-width;
+
+$mat-chip-margin: ($mat-chip-horizontal-padding / 4);
+
+$mat-chip-remove-margin: $mat-chip-line-height * 2;
+$mat-chip-remove-icon-offset: 3px;
+$mat-chip-remove-size: 24px;
+$mat-chip-remove-font-size: 18px;
 
 .mat-chip-list-wrapper {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-start;
+
+  /*
+   * Only apply the margins to chips
+   */
+  .mat-chip:not(.mat-basic-chip) {
+    margin: $mat-chip-margin;
+
+    // Do not apply the special margins inside an input container
+    :not(.mat-input-wrapper) & {
+      // Remove the margin from the first element (in both LTR and RTL)
+      &:first-child {
+        margin: {
+          left: 0;
+          right: $mat-chip-margin;
+        }
+
+        [dir='rtl'] & {
+          margin: {
+            left: $mat-chip-margin;
+            right: 0;
+          }
+        }
+      }
+
+      // Remove the margin from the last element (in both LTR and RTL)
+      &:last-child {
+        margin: {
+          left: $mat-chip-margin;
+          right: 0;
+        }
+
+        [dir='rtl'] & {
+          margin: {
+            left: 0;
+            right: $mat-chip-margin;
+          }
+        }
+      }
+    }
+  }
 }
 
 .mat-chip:not(.mat-basic-chip) {
   display: inline-block;
-  padding: $mat-chip-vertical-padding $mat-chip-horizontal-padding $mat-chip-vertical-padding $mat-chip-horizontal-padding;
+  position: relative;
+
+  padding: $mat-chip-vertical-padding $mat-chip-horizontal-padding;
+  border: $mat-chip-border-width solid transparent;
   border-radius: $mat-chip-horizontal-padding * 2;
 
   // Apply a margin to adjacent sibling chips.
@@ -48,4 +99,32 @@ $mat-chips-chip-margin: $mat-chip-horizontal-padding / 4;
       margin-bottom: 0;
     }
   }
+}
+
+.mat-chip-remove {
+  position: absolute;
+  top: $mat-chip-border-width;
+  right: $mat-chip-border-width * 2;
+  width: $mat-chip-remove-size;
+  height: $mat-chip-remove-size - $mat-chip-remove-icon-offset;
+  padding-top: $mat-chip-remove-icon-offset;
+  font-size: $mat-chip-remove-font-size;
+  text-align: center;
+  cursor: default;
+}
+
+.mat-chip-remove.mat-chip-remove-hidden {
+  display: none;
+}
+
+// Override a few styles when inside an mat-input-container
+.mat-input-container .mat-chip-list-wrapper input {
+  width: auto;
+  height: 38px;
+  margin-left: 8px;
+}
+
+// Fix the label offset
+.mat-input-container mat-chip-list ~ label.mat-empty {
+  transform: translateY(22px);
 }
