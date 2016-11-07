@@ -8,5 +8,5 @@ import {Component} from '@angular/core';
   styleUrls: ['sidenav-demo.css'],
 })
 export class SidenavDemo {
-  side = 'end';
+  side = 'start';
 }
