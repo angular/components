@@ -84,7 +84,7 @@ export class MdTab implements OnInit {
   moduleId: module.id,
   selector: 'md-tab-group',
   templateUrl: 'tab-group.html',
-  styleUrls: ['tab-group.css'],
+  styleUrls: ['tab-group.css']
 })
 export class MdTabGroup {
   @ContentChildren(MdTab) _tabs: QueryList<MdTab>;
@@ -96,18 +96,18 @@ export class MdTabGroup {
 
   private _isInitialized: boolean = false;
 
-  private _selectedIndex: number = 0;
-
   /** Snapshot of the height of the tab body wrapper before another tab is activated. */
   private _tabBodyWrapperHeight: number = 0;
 
+  /** Whether the tab group should grow to the size of the active tab */
   private _dynamicHeight: boolean = false;
   @Input('md-dynamic-height') set dynamicHeight(value: boolean) {
     this._dynamicHeight = coerceBooleanProperty(value);
   }
 
-  @Input()
-  set selectedIndex(value: number) {
+  /** The index of the active tab. */
+  private _selectedIndex: number = 0;
+  @Input() set selectedIndex(value: number) {
     this._tabBodyWrapperHeight = this._tabBodyWrapper.nativeElement.clientHeight;
     if (value != this._selectedIndex && this.isValidIndex(value)) {
       this._selectedIndex = value;
