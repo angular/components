@@ -5,7 +5,7 @@ import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 
 
-describe('MdTabGroup', () => {
+fdescribe('MdTabGroup', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -279,7 +279,7 @@ describe('MdTabGroup', () => {
 
   /**
    * Checks that the `selectedIndex` has been updated; checks that the label and body have the
-   * `md-tab-active` class
+   * `active` class
    */
   function checkSelectedIndex(index: number, fixture: ComponentFixture<any>) {
     fixture.detectChanges();
@@ -290,19 +290,19 @@ describe('MdTabGroup', () => {
 
     let tabLabelElement = fixture.debugElement
         .query(By.css(`.md-tab-label:nth-of-type(${index + 1})`)).nativeElement;
-    expect(tabLabelElement.classList.contains('md-tab-active')).toBe(true);
+    expect(tabLabelElement.classList.contains('active')).toBe(true);
 
     let tabContentElement = fixture.debugElement
         .query(By.css(`#${tabLabelElement.id}`)).nativeElement;
-    expect(tabContentElement.classList.contains('md-tab-active')).toBe(true);
+    expect(tabContentElement.classList.contains('active')).toBe(true);
   }
 
   function getSelectedLabel(fixture: ComponentFixture<any>): HTMLElement {
-    return fixture.nativeElement.querySelector('.md-tab-label.md-tab-active');
+    return fixture.nativeElement.querySelector('.md-tab-label.active');
   }
 
   function getSelectedContent(fixture: ComponentFixture<any>): HTMLElement {
-    return fixture.nativeElement.querySelector('.md-tab-body.md-tab-active');
+    return fixture.nativeElement.querySelector('md-tab-body.active');
   }
 });
 

@@ -16,7 +16,7 @@ import {
     OnInit,
     trigger,
     state,
-    style, 
+    style,
     animate,
     transition,
     AnimationTransitionEvent,
@@ -306,17 +306,11 @@ export type MdTabBodyActiveState = 'left' | 'center' | 'right';
       state('right', style({transform: 'translateX(100%)'})),
       transition('* => *', animate('0.5s cubic-bezier(0.35, 0, 0.25, 1)')),
     ])
-  ],
-  host: {
-    '[class.md-tab-active]': "_position === 'center'"
-  }
+  ]
 })
 export class MdTabBody implements OnInit {
   /** The portal host inside of this container into which the tab body content will be loaded. */
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
-
-  /** Logical position of this tab body relative to the active (center) content being displayed. */
-  _position: MdTabBodyActiveState;
 
   /** Event emitted when the tab begins to animate towards the center as the active tab. */
   @Output()
@@ -330,8 +324,8 @@ export class MdTabBody implements OnInit {
   @Input('md-tab-body-content') _content: TemplatePortal;
 
   /** The shifted index position of the tab body, where zero represents the active center tab. */
-  @Input('md-tab-body-position')
-  set position(v: number) {
+  _position: MdTabBodyActiveState;
+  @Input('md-tab-body-position') set position(v: number) {
     if (v < 0) { this._position = 'left'; }
     if (v == 0) { this._position = 'center'; }
     if (v > 0) { this._position = 'right'; }
