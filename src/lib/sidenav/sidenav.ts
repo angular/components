@@ -314,7 +314,7 @@ export class MdSidenavLayout implements AfterContentInit {
       _dir.dirChange.subscribe(() => this._validateDrawers());
     }
   }
-  
+
   ngAfterContentInit() {
     // On changes, assert on consistency.
     this._sidenavs.changes.subscribe(() => this._validateDrawers());
