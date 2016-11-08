@@ -89,14 +89,14 @@ describe('MdRadio', () => {
       }
     });
 
-    it('should set / unset the required attribute on the underlaying radio input', () => {
+    it('should set / unset the required attribute on the underlying radio input', () => {
       let nativeRadioInput = <HTMLElement> radioNativeElements[0].querySelector('input');
       radioInstances[0].required = true;
       fixture.detectChanges();
 
       expect(nativeRadioInput.getAttribute('required')).toBeDefined();
 
-      radioInstances[0].required = null;
+      radioInstances[0].required = false;
       fixture.detectChanges();
 
       expect(nativeRadioInput.getAttribute('required')).toBeNull();

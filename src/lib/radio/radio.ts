@@ -125,7 +125,7 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   }
 
   set required(value) {
-    this._required = (value != null && value !== false) ? true : null;
+    this._required = coerceBooleanProperty(value)
   }
 
   @Input()
