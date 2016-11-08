@@ -329,6 +329,7 @@ export class MdTabBody implements OnInit {
   constructor(private _elementRef: ElementRef) {}
 
   ngOnInit() {
+    this._portalHost.attachTemplatePortal(this._content);
     if (this._position == 'center') {
       this._portalHost.attachTemplatePortal(this._content);
     }
@@ -343,7 +344,7 @@ export class MdTabBody implements OnInit {
   _onAnimationComplete(e: AnimationTransitionEvent) {
     // If the end state is that the tab is not centered, then detach the content.
     if ((e.toState == 'left' || e.toState == 'right') && this._position !== 'center') {
-      this._portalHost.detach();
+      //this._portalHost.detach();
     }
 
     if ((e.toState == 'center') && this._position == 'center') {
