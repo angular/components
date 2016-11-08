@@ -290,19 +290,20 @@ fdescribe('MdTabGroup', () => {
 
     let tabLabelElement = fixture.debugElement
         .query(By.css(`.md-tab-label:nth-of-type(${index + 1})`)).nativeElement;
-    expect(tabLabelElement.classList.contains('active')).toBe(true);
+    expect(tabLabelElement.classList.contains('md-tab-label-active')).toBe(true);
 
     let tabContentElement = fixture.debugElement
-        .query(By.css(`#${tabLabelElement.id}`)).nativeElement;
-    expect(tabContentElement.classList.contains('active')).toBe(true);
+        .query(By.css(`md-tab-body:nth-of-type(${index + 1})`)).nativeElement;
+    debugger;
+    expect(tabContentElement.classList.contains('md-tab-body-active')).toBe(true);
   }
 
   function getSelectedLabel(fixture: ComponentFixture<any>): HTMLElement {
-    return fixture.nativeElement.querySelector('.md-tab-label.active');
+    return fixture.nativeElement.querySelector('.md-tab-label-active');
   }
 
   function getSelectedContent(fixture: ComponentFixture<any>): HTMLElement {
-    return fixture.nativeElement.querySelector('md-tab-body.active');
+    return fixture.nativeElement.querySelector('.md-tab-body-active');
   }
 });
 
