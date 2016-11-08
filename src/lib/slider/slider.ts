@@ -200,6 +200,7 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
 
     this.isActive = true;
     this.isSliding = false;
+    this._sliderDimensions = this._renderer.getSliderDimensions();
     this._renderer.addFocus();
     this.updateValueFromPosition(event.clientX);
     this.snapThumbToValue();
@@ -226,6 +227,7 @@ export class MdSlider implements AfterContentInit, ControlValueAccessor {
     event.preventDefault();
     this.isSliding = true;
     this.isActive = true;
+    this._sliderDimensions = this._renderer.getSliderDimensions();
     this._renderer.addFocus();
     this.updateValueFromPosition(event.center.x);
   }
