@@ -101,6 +101,11 @@ export class MdTabGroup {
   /** Snapshot of the height of the tab body wrapper before another tab is activated. */
   private _tabBodyWrapperHeight: number = 0;
 
+  private _dynamicHeight: boolean = false;
+  @Input('md-dynamic-height') set dynamicHeight(value: boolean) {
+    this._dynamicHeight = coerceBooleanProperty(value);
+  }
+
   @Input()
   set selectedIndex(value: number) {
     this._tabBodyWrapperHeight = this._tabBodyWrapper.nativeElement.clientHeight;
@@ -114,19 +119,6 @@ export class MdTabGroup {
   }
   get selectedIndex(): number {
     return this._selectedIndex;
-  }
-
-  /**
-   * Determines if an index is valid.  If the tabs are not ready yet, we assume that the user is
-   * providing a valid index and return true.
-   */
-  isValidIndex(index: number): boolean {
-    if (this._tabs) {
-      const tab = this._tabs.toArray()[index];
-      return tab && !tab.disabled;
-    } else {
-      return true;
-    }
   }
 
   /** Output to enable support for two-way binding on `selectedIndex`. */
@@ -146,9 +138,8 @@ export class MdTabGroup {
 
   private _focusIndex: number = 0;
   private _groupId: number;
-  private _bodyWrapperHeight: string = 'auto';
 
-  constructor(private _zone: NgZone, private _elementRef: ElementRef, private _renderer: Renderer) {
+  constructor(private _zone: NgZone, private _renderer: Renderer) {
     this._groupId = nextId++;
   }
 
@@ -164,6 +155,19 @@ export class MdTabGroup {
       });
     });
     this._isInitialized = true;
+  }
+
+  /**
+   * Determines if an index is valid.  If the tabs are not ready yet, we assume that the user is
+   * providing a valid index and return true.
+   */
+  isValidIndex(index: number): boolean {
+    if (this._tabs) {
+      const tab = this._tabs.toArray()[index];
+      return tab && !tab.disabled;
+    } else {
+      return true;
+    }
   }
 
   /** Tells the ink-bar to align itself to the current label wrapper */
@@ -199,15 +203,6 @@ export class MdTabGroup {
         this._labelWrappers.toArray()[value].focus();
       }
     }
-  }
-
-  private _createChangeEvent(index: number): MdTabChangeEvent {
-    const event = new MdTabChangeEvent;
-    event.index = index;
-    if (this._tabs && this._tabs.length) {
-      event.tab = this._tabs.toArray()[index];
-    }
-    return event;
   }
 
   handleKeydown(event: KeyboardEvent) {
@@ -249,6 +244,15 @@ export class MdTabGroup {
     this.moveFocus(-1);
   }
 
+  private _createChangeEvent(index: number): MdTabChangeEvent {
+    const event = new MdTabChangeEvent;
+    event.index = index;
+    if (this._tabs && this._tabs.length) {
+      event.tab = this._tabs.toArray()[index];
+    }
+    return event;
+  }
+
   /** Returns a unique id for each tab label element */
   _getTabLabelId(i: number): string {
     return `md-tab-label-${this._groupId}-${i}`;
@@ -259,12 +263,17 @@ export class MdTabGroup {
     return `md-tab-content-${this._groupId}-${i}`;
   }
 
-  /** Sets the height of the body wrapper to the height of the activating tab. */
+  /**
+   * Sets the height of the body wrapper to the height of the activating tab if dynamic
+   * height property is true.
+   */
   _setTabBodyWrapperHeight(e: number) {
+    if (!this._dynamicHeight) { return; }
+
     this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height',
         this._tabBodyWrapperHeight + 'px');
 
-    // This statement is enough to tell the browser to paint the height so that
+    // This statement is enough to tell the browser to force paint the height so that
     // the animation to the new height can have an origin.
     this._tabBodyWrapper.nativeElement.offsetHeight;
 
@@ -329,7 +338,6 @@ export class MdTabBody implements OnInit {
   constructor(private _elementRef: ElementRef) {}
 
   ngOnInit() {
-    this._portalHost.attachTemplatePortal(this._content);
     if (this._position == 'center') {
       this._portalHost.attachTemplatePortal(this._content);
     }
@@ -344,7 +352,7 @@ export class MdTabBody implements OnInit {
   _onAnimationComplete(e: AnimationTransitionEvent) {
     // If the end state is that the tab is not centered, then detach the content.
     if ((e.toState == 'left' || e.toState == 'right') && this._position !== 'center') {
-      //this._portalHost.detach();
+      this._portalHost.detach();
     }
 
     if ((e.toState == 'center') && this._position == 'center') {

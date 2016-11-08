@@ -33,7 +33,12 @@ md-ink-bar {
   position: relative;
   overflow: hidden;
   transition: height 0.5s cubic-bezier(0.35, 0, 0.25, 1);
+  [md-dynamic-height] & {
+    overflow: auto;
+  }
 }
+
+
 
 // Wraps each tab body 
 md-tab-body {
