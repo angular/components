@@ -63,6 +63,8 @@ export class MdSidenav implements AfterContentInit {
   }
   set valid(value) {
     value = coerceBooleanProperty(value);
+    // When the drawers are not in a valid configuration we close them all until they are in a valid
+    // configuration again.
     if (!value) {
       this.close();
     }
