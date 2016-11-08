@@ -13,7 +13,8 @@ import {
     ContentChildren,
     TemplateRef,
     ViewContainerRef,
-    OnInit,
+    OnInit, trigger, state, style, animate, transition, OnChanges, AnimationTransitionEvent,
+    ElementRef, Renderer,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
@@ -30,6 +31,7 @@ import {MdTabNavBar, MdTabLink} from './tab-nav-bar/tab-nav-bar';
 import {MdInkBar} from './ink-bar';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import {PortalHostDirective} from '../core/portal/portal-directives';
 
 
 /** Used to generate unique ID's for each tab component */
@@ -90,11 +92,18 @@ export class MdTabGroup {
   @ViewChildren(MdTabLabelWrapper) _labelWrappers: QueryList<MdTabLabelWrapper>;
   @ViewChildren(MdInkBar) _inkBar: QueryList<MdInkBar>;
 
+  @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
+
   private _isInitialized: boolean = false;
 
   private _selectedIndex: number = 0;
+
+  /** Snapshot of the height of the tab body wrapper before another tab is activated. */
+  private _tabBodyWrapperHeight: number = 0;
+
   @Input()
   set selectedIndex(value: number) {
+    this._tabBodyWrapperHeight = this._tabBodyWrapper.nativeElement.clientHeight;
     if (value != this._selectedIndex && this.isValidIndex(value)) {
       this._selectedIndex = value;
 
@@ -137,8 +146,9 @@ export class MdTabGroup {
 
   private _focusIndex: number = 0;
   private _groupId: number;
+  private _bodyWrapperHeight: string = 'auto';
 
-  constructor(private _zone: NgZone) {
+  constructor(private _zone: NgZone, private _elementRef: ElementRef, private _renderer: Renderer) {
     this._groupId = nextId++;
   }
 
@@ -200,16 +210,6 @@ export class MdTabGroup {
     return event;
   }
 
-  /** Returns a unique id for each tab label element */
-  _getTabLabelId(i: number): string {
-    return `md-tab-label-${this._groupId}-${i}`;
-  }
-
-  /** Returns a unique id for each tab content element */
-  _getTabContentId(i: number): string {
-    return `md-tab-content-${this._groupId}-${i}`;
-  }
-
   handleKeydown(event: KeyboardEvent) {
     switch (event.keyCode) {
       case RIGHT_ARROW:
@@ -248,15 +248,116 @@ export class MdTabGroup {
   focusPreviousTab(): void {
     this.moveFocus(-1);
   }
+
+  /** Returns a unique id for each tab label element */
+  _getTabLabelId(i: number): string {
+    return `md-tab-label-${this._groupId}-${i}`;
+  }
+
+  /** Returns a unique id for each tab content element */
+  _getTabContentId(i: number): string {
+    return `md-tab-content-${this._groupId}-${i}`;
+  }
+
+  /** Sets the height of the body wrapper to the height of the activating tab. */
+  _setTabBodyWrapperHeight(e: number) {
+    this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height',
+        this._tabBodyWrapperHeight + 'px');
+
+    // This statement is enough to tell the browser to paint the height so that
+    // the animation to the new height can have an origin.
+    this._tabBodyWrapper.nativeElement.offsetHeight;
+
+    this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height',
+        e + 'px');
+  }
+
+  /** Removes the height of the tab body wrapper. */
+  _removeTabBodyWrapperHeight() {
+    this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height', '');
+  }
 }
 
+export type MdTabBodyActiveState = 'left' | 'center' | 'right';
+
+@Component({
+  moduleId: module.id,
+  selector: 'md-tab-body',
+  templateUrl: 'tab-body.html',
+  animations: [
+    trigger('position', [
+      state('left', style({transform: 'translateX(-100%)'})),
+      state('center', style({transform: 'translateX(0%)'})),
+      state('right', style({transform: 'translateX(100%)'})),
+      transition('* => *', animate('0.5s cubic-bezier(0.35, 0, 0.25, 1)')),
+    ])
+  ],
+  host: {
+    '[class.md-tab-active]': "_position === 'center'"
+  }
+})
+export class MdTabBody implements OnInit {
+  /** The portal host inside of this container into which the tab body content will be loaded. */
+  @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
+
+  /** Logical position of this tab body relative to the active (center) content being displayed. */
+  _position: MdTabBodyActiveState;
+
+  /** Event emitted when the tab begins to animate towards the center as the active tab. */
+  @Output()
+  onTabBodyCentering: EventEmitter<number> = new EventEmitter<number>();
+
+  /** Event emitted when the tab completes its animation towards the center. */
+  @Output()
+  onTabBodyCentered: EventEmitter<void> = new EventEmitter<void>();
+
+  /** The tab body content to display. */
+  @Input('md-tab-body-content') _content: TemplatePortal;
+
+  /** The shifted index position of the tab body, where zero represents the active center tab. */
+  @Input('md-tab-body-position')
+  set position(v: number) {
+    if (v < 0) { this._position = 'left'; }
+    if (v == 0) { this._position = 'center'; }
+    if (v > 0) { this._position = 'right'; }
+
+    if (this._position === 'center' && this._content) {
+      this._portalHost.attachTemplatePortal(this._content);
+    }
+  }
+
+  constructor(private _elementRef: ElementRef) {}
+
+  ngOnInit() {
+    if (this._position == 'center') {
+      this._portalHost.attachTemplatePortal(this._content);
+    }
+  }
+
+  _onAnimationStarted(e: AnimationTransitionEvent) {
+    if (e.fromState != 'void' && e.toState == 'center') {
+      this.onTabBodyCentering.emit(this._elementRef.nativeElement.clientHeight);
+    }
+  }
+
+  _onAnimationComplete(e: AnimationTransitionEvent) {
+    // If the end state is that the tab is not centered, then detach the content.
+    if ((e.toState == 'left' || e.toState == 'right') && this._position !== 'center') {
+      this._portalHost.detach();
+    }
+
+    if ((e.toState == 'center') && this._position == 'center') {
+      this.onTabBodyCentered.emit();
+    }
+  }
+}
 
 @NgModule({
   imports: [CommonModule, PortalModule],
   // Don't export MdInkBar or MdTabLabelWrapper, as they are internal implementation details.
   exports: [MdTabGroup, MdTabLabel, MdTab, MdTabNavBar, MdTabLink],
   declarations: [MdTabGroup, MdTabLabel, MdTab, MdInkBar, MdTabLabelWrapper,
-    MdTabNavBar, MdTabLink],
+    MdTabNavBar, MdTabLink, MdTabBody],
 })
 export class MdTabsModule {
   static forRoot(): ModuleWithProviders {

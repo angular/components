@@ -19,7 +19,7 @@ export class TabsDemo {
 
   tabs = [
     {label: 'Tab One', content: 'This is the body of the first tab'},
-    {label: 'Tab Two', content: 'This is the body of the second tab'},
+    {label: 'Tab Two', extraContent: true, content: 'This is the body of the second tab'},
     {label: 'Tab Three', content: 'This is the body of the third tab'},
   ];
 

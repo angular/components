@@ -32,19 +32,21 @@ md-ink-bar {
 .md-tab-body-wrapper {
   position: relative;
   overflow: hidden;
-  flex-grow: 1;
-  display: flex;
+  transition: height 0.5s cubic-bezier(0.35, 0, 0.25, 1);
 }
 
 // Wraps each tab body 
-.md-tab-body {
-  display: none;
-  overflow: auto;
-  box-sizing: border-box;
-  flex-grow: 1;
-  flex-shrink: 1;
+md-tab-body {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
   &.md-tab-active {
-    display: block;
+    position: relative;
+    z-index: 1;
   }
 }
 
