@@ -146,7 +146,6 @@ export class MdSlider implements ControlValueAccessor {
   set value(v: number) {
     this._value = coerceNumberProperty(v, this._value);
     this._percent = this._calculatePercentage(this._value);
-    this._controlValueAccessorChangeFn(this._value);
   }
 
   /** The miniumum value that the slider can have. */
@@ -284,6 +283,7 @@ export class MdSlider implements ControlValueAccessor {
       event.source = this;
       event.value = this.value;
       this.change.emit(event);
+      this._controlValueAccessorChangeFn(this.value);
       this._lastEmittedValue = this.value;
     }
   }

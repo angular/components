@@ -546,13 +546,13 @@ describe('MdSlider', () => {
       sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track');
     });
 
-    it('should update the control when the value is updated', () => {
+    it('should not update the control when the value is updated', () => {
       expect(testComponent.control.value).toBe(0);
 
       sliderInstance.value = 11;
       fixture.detectChanges();
 
-      expect(testComponent.control.value).toBe(11);
+      expect(testComponent.control.value).toBe(0);
     });
 
     it('should update the control on click', () => {
@@ -819,7 +819,7 @@ class SliderWithOneWayBinding {
   styles: [styles],
 })
 class SliderWithTwoWayBinding {
-  control = new FormControl('');
+  control = new FormControl(0);
 }
 
 @Component({

@@ -49,6 +49,11 @@ describe('coerceNumberProperty', () => {
     expect(coerceNumberProperty('pink', 111)).toBe(111);
   });
 
+  it('should coerce an arbitrary string prefixed with a number to 0 or default', () => {
+    expect(coerceNumberProperty('123pink')).toBe(0);
+    expect(coerceNumberProperty('123pink', 111)).toBe(111);
+  });
+
   it('should coerce the number 1 to 1', () => {
     expect(coerceNumberProperty(1)).toBe(1);
     expect(coerceNumberProperty(1, 111)).toBe(1);
