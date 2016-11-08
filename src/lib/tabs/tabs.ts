@@ -13,7 +13,13 @@ import {
     ContentChildren,
     TemplateRef,
     ViewContainerRef,
-    OnInit, trigger, state, style, animate, transition, OnChanges, AnimationTransitionEvent,
+    OnInit,
+    trigger,
+    state,
+    style, 
+    animate,
+    transition,
+    AnimationTransitionEvent,
     ElementRef, Renderer,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
