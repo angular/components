@@ -123,19 +123,19 @@ describe('MdTabGroup', () => {
       expect(testComponent.focusEvent.index).toBe(0);
     }));
 
-    it('should change tabs based on selectedIndex and update tab body positions', fakeAsync(() => {
+    it('should change tabs based on selectedIndex', fakeAsync(() => {
       let component = fixture.componentInstance;
       let tabComponent = fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
-      spyOn(component, 'handleSelection').and.callThrough();
 
-      fixture.detectChanges();
+      spyOn(component, 'handleSelection').and.callThrough();
 
       checkSelectedIndex(1, fixture);
 
       tabComponent.selectedIndex = 2;
-      checkSelectedIndex(2, fixture);
 
+      checkSelectedIndex(2, fixture);
       tick();
+
       expect(component.handleSelection).toHaveBeenCalledTimes(1);
       expect(component.selectEvent.index).toBe(2);
     }));
@@ -328,8 +328,8 @@ describe('MdTabGroup', () => {
   });
 
   /**
-   * Checks that the `selectedIndex` has been updated; checks that the label and body have the
-   * `active` class
+   * Checks that the `selectedIndex` has been updated; checks that the label and body have their
+   * respective `active` classes
    */
   function checkSelectedIndex(index: number, fixture: ComponentFixture<any>) {
     fixture.detectChanges();
