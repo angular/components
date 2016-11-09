@@ -14,7 +14,7 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/for
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MdGestureConfig, coerceBooleanProperty, coerceNumberProperty} from '../core';
 import {Input as HammerInput} from 'hammerjs';
-import {Dir} from "../core/rtl/dir";
+import {Dir} from '../core/rtl/dir';
 import {CommonModule} from '@angular/common';
 import {
   PAGE_UP,
@@ -195,28 +195,40 @@ export class MdSlider implements ControlValueAccessor {
 
   /** Whether the slider is inverted. */
   @Input()
-  get invert() { return this._invert };
+  get invert() { return this._invert; }
   set invert(value: boolean) { this._invert = coerceBooleanProperty(value); }
   private _invert = false;
 
+  /** CSS styles for the track fill element. */
   get trackFillStyles(): { [key: string]: string } {
     return {
       'flexBasis': `${this.percent * 100}%`
     };
   }
 
+  /** CSS styles for the ticks container element. */
   get ticksContainerStyles(): { [key: string]: string } {
     return {
-      'marginLeft': `${this._dir.value == 'rtl' ? '' : '-'}${this.tickIntervalPercent / 2 * 100}%`,
+      'marginLeft': `${this.direction == 'rtl' ? '' : '-'}${this.tickIntervalPercent / 2 * 100}%`
     };
   }
 
-  get ticksStyles(): { [key: string]: string } {
-    let direction = this._dir.value == 'rtl' ? 'Right' : 'Left';
-    return {
-      'backgroundSize': `${this.tickIntervalPercent * 100}% 2px`,
-      [`margin${direction}`]: `-${this.tickIntervalPercent / 2 * 100}%`,
+  /** CSS styles for the ticks element. */
+  get ticksStyles() {
+    let styles: { [key: string]: string } = {
+      'backgroundSize': `${this.tickIntervalPercent * 100}% 2px`
     };
+    if (this.direction == 'rtl') {
+      styles['marginRight'] = `-${this.tickIntervalPercent / 2 * 100}%`;
+    } else {
+      styles['marginLeft'] = `${this.tickIntervalPercent / 2 * 100}%`;
+    }
+    return styles;
+  }
+
+  /** The language direction for this slider element. */
+  get direction() {
+    return (this._dir && this._dir.value == 'rtl') ? 'rtl' : 'ltr';
   }
 
   @Output() change = new EventEmitter<MdSliderChange>();
@@ -335,7 +347,7 @@ export class MdSlider implements ControlValueAccessor {
 
     // The exact value is calculated from the event and used to find the closest snap value.
     let percent = this._clamp((pos - offset) / size);
-    if ((this._dir.value == 'rtl') != this.invert) {
+    if ((this.direction == 'rtl') != this.invert) {
       percent = 1 - percent;
     }
     let exactValue = this._calculateValue(percent);
