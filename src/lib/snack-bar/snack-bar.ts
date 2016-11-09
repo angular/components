@@ -40,7 +40,7 @@ export class MdSnackBar {
    * currently opened snack bars.
    */
   openFromComponent<T>(component: ComponentType<T>, config?: MdSnackBarConfig): MdSnackBarRef<T> {
-    config = this._applyConfigDefaults(config);
+    config = _applyConfigDefaults(config);
     let overlayRef = this._createOverlay();
     let snackBarContainer = this._attachSnackBarContainer(overlayRef, config);
     let snackBarRef = this._attachSnackbarContent(component, snackBarContainer, overlayRef);
@@ -73,8 +73,7 @@ export class MdSnackBar {
    * @param config Additional configuration options for the snackbar.
    * @returns {MdSnackBarRef<SimpleSnackBar>}
    */
-  open(message: string, action = '', config?: MdSnackBarConfig): MdSnackBarRef<SimpleSnackBar> {
-    config = config || {};
+  open(message: string, action = '', config: MdSnackBarConfig = {}): MdSnackBarRef<SimpleSnackBar> {
     config.announcementMessage = message;
     let simpleSnackBarRef = this.openFromComponent(SimpleSnackBar, config);
     simpleSnackBarRef.instance.snackBarRef = simpleSnackBarRef;
@@ -117,15 +116,15 @@ export class MdSnackBar {
         .bottom('0');
     return this._overlay.create(state);
   }
+}
 
-  /**
-   * Applies default options to the snackbar config.
-   * @param config The configuration to which the defaults will be applied.
-   * @returns The new configuration object with defaults applied.
-   */
-  private _applyConfigDefaults(config: MdSnackBarConfig): MdSnackBarConfig {
-    return Object.assign(new MdSnackBarConfig(), config);
-  }
+/**
+ * Applies default options to the snackbar config.
+ * @param config The configuration to which the defaults will be applied.
+ * @returns The new configuration object with defaults applied.
+ */
+function _applyConfigDefaults(config: MdSnackBarConfig): MdSnackBarConfig {
+  return Object.assign(new MdSnackBarConfig(), config);
 }
 
 
