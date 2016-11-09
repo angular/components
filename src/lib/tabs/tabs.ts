@@ -330,16 +330,16 @@ export class MdTabBody implements OnInit {
     if (v == 0) { this._position = 'center'; }
     if (v > 0) { this._position = 'right'; }
 
-    if (this._position === 'center' && this._content) {
-      this._portalHost.attachTemplatePortal(this._content);
+    if (this._position === 'center' && !this._portalHost.hasAttached() && this._content) {
+      this._portalHost.attach(this._content);
     }
   }
 
   constructor(private _elementRef: ElementRef) {}
 
   ngOnInit() {
-    if (this._position == 'center') {
-      this._portalHost.attachTemplatePortal(this._content);
+    if (this._position == 'center' && !this._portalHost.hasAttached()) {
+      this._portalHost.attach(this._content);
     }
   }
 
@@ -350,8 +350,8 @@ export class MdTabBody implements OnInit {
   }
 
   _onAnimationComplete(e: AnimationTransitionEvent) {
-    // If the end state is that the tab is not centered, then detach the content.
     if ((e.toState == 'left' || e.toState == 'right') && this._position !== 'center') {
+      // If the end state is that the tab is not centered, then detach the content.
       this._portalHost.detach();
     }
 

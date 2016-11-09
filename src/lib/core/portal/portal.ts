@@ -197,6 +197,7 @@ export abstract class BasePortalHost implements PortalHost {
   detach(): void {
     if (this._attachedPortal) { this._attachedPortal.setAttachedHost(null); }
 
+    debugger;
     this._attachedPortal = null;
     if (this._disposeFn != null) {
       this._disposeFn();
