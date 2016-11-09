@@ -4,3 +4,4 @@
     [md-ripple-trigger]="getHostElement()"
     [md-ripple-color]="isRoundButton() ? 'rgba(255, 255, 255, 0.2)' : ''"
     md-ripple-background-color="rgba(0, 0, 0, 0)"></div>
+<div class="md-button-overlay" (touchstart)="$event.preventDefault()"></div>
