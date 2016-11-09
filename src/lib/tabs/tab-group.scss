@@ -1,4 +1,5 @@
 @import '../core/style/variables';
+@import '../core/style/layout-common';
 @import 'tabs-common';
 
 :host {
@@ -38,12 +39,8 @@ md-ink-bar {
 
 // Wraps each tab body 
 md-tab-body {
+  @include md-fill;
   display: block;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
   overflow: hidden;
   &.md-tab-body-active {
     position: relative;
