@@ -104,7 +104,9 @@ export class OverlayRef implements PortalHost {
       backdropToDetach.classList.remove('md-overlay-backdrop-showing');
       backdropToDetach.classList.remove(this._state.backdropClass);
       backdropToDetach.addEventListener('transitionend', () => {
-        backdropToDetach.parentNode.removeChild(backdropToDetach);
+        if(backdropToDetach.parentNode){
+          backdropToDetach.parentNode.removeChild(backdropToDetach);
+        }
 
         // It is possible that a new portal has been attached to this overlay since we started
         // removing the backdrop. If that is the case, only clear the backdrop reference if it
