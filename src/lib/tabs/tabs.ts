@@ -279,12 +279,11 @@ export class MdTabGroup {
     this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height',
         this._tabBodyWrapperHeight + 'px');
 
-    // This statement is enough to tell the browser to force paint the height so that
+    // This conditional forces the browser to paint the height so that
     // the animation to the new height can have an origin.
-    this._tabBodyWrapper.nativeElement.offsetHeight;
-
-    this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height',
-        e + 'px');
+    if (this._tabBodyWrapper.nativeElement.offsetHeight) {
+      this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height', e + 'px');
+    }
   }
 
   /** Removes the height of the tab body wrapper. */

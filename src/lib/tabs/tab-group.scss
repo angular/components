@@ -33,7 +33,7 @@ md-ink-bar {
   position: relative;
   overflow: hidden;
   display: flex;
-  transition: height 0.5s $ease-in-out-curve-function;
+  transition: height 500ms $ease-in-out-curve-function;
 }
 
 // Wraps each tab body 
