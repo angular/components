@@ -13,10 +13,12 @@ import {
   EventEmitter,
   Renderer,
   ViewEncapsulation,
+  ViewChild,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Dir, MdError, coerceBooleanProperty, DefaultStyleCompatibilityModeModule} from '../core';
 import {A11yModule} from '../core/a11y/index';
+import {FocusTrap} from '../core/a11y/focus-trap';
 
 
 /** Exception thrown when two MdSidenav are matching the same side. */
@@ -62,6 +64,8 @@ export class MdSidenavToggleResult {
   encapsulation: ViewEncapsulation.None,
 })
 export class MdSidenav implements AfterContentInit {
+  @ViewChild(FocusTrap) private _focusTrap: FocusTrap;
+
   /** Alignment of the sidenav (direction neutral); whether 'start' or 'end'. */
   private _align: 'start' | 'end' = 'start';
 
@@ -189,6 +193,10 @@ export class MdSidenav implements AfterContentInit {
       this.onOpenStart.emit();
     } else {
       this.onCloseStart.emit();
+    }
+
+    if (this.focusTrapActive) {
+      this._focusTrap.focusFirstTabbableElementWhenReady();
     }
 
     if (this._toggleAnimationPromise) {

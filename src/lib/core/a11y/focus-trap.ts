@@ -8,6 +8,7 @@ import {
   NgZone
 } from '@angular/core';
 import {InteractivityChecker} from './interactivity-checker';
+import {coerceBooleanProperty} from '../coersion/boolean-property';
 
 
 /**
@@ -28,17 +29,8 @@ export class FocusTrap implements AfterContentInit {
   @ViewChild('trappedContent') trappedContent: ElementRef;
 
   @Input()
-  get active(): boolean {
-    return this._active;
-  }
-  set active(val: boolean) {
-    this._active = val;
-    if (val && this._contentReady) {
-      this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
-        this.focusFirstTabbableElement();
-      });
-    }
-  }
+  get active(): boolean { return this._active; }
+  set active(val: boolean) { this._active = coerceBooleanProperty(val); }
 
   /** Whether the DOM content is ready. */
   private _contentReady: boolean = false;
@@ -52,10 +44,28 @@ export class FocusTrap implements AfterContentInit {
     this._contentReady = true;
     // Trigger setter behavior.
     if (this.active) {
-      this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
-        this.focusFirstTabbableElement();
-      });
+
     }
+  }
+
+  /**
+   * Waits for microtask queue to empty, then focuses the first tabbable element within the focus
+   * trap region.
+   */
+  focusFirstTabbableElementWhenReady() {
+    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+      this.focusFirstTabbableElement();
+    });
+  }
+
+  /**
+   * Waits for microtask queue to empty, then focuses the last tabbable element within the focus
+   * trap region.
+   */
+  focusLastTabbableElementWhenReady() {
+    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+      this.focusLastTabbableElement();
+    });
   }
 
   /** Focuses the first tabbable element within the focus trap region. */
