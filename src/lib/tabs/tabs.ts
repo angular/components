@@ -21,7 +21,8 @@ import {
     transition,
     AnimationTransitionEvent,
     ElementRef,
-    Renderer, Optional,
+    Renderer,
+    Optional,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
