@@ -21,7 +21,7 @@ import {
     transition,
     AnimationTransitionEvent,
     ElementRef,
-    Renderer,
+    Renderer, Optional,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
@@ -32,6 +32,8 @@ import {
     ENTER,
     coerceBooleanProperty,
     PortalHostDirective,
+    Dir,
+    LayoutDirection
 } from '../core';
 import {MdTabLabel} from './tab-label';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
@@ -327,16 +329,19 @@ export class MdTabBody implements OnInit {
   /** The shifted index position of the tab body, where zero represents the active center tab. */
   _position: MdTabBodyActiveState;
   @Input('md-tab-body-position') set position(v: number) {
-    if (v < 0) { this._position = 'left'; }
+    if (v < 0) {
+      this._position = this.getLayoutDirection() == 'ltr' ? 'left' : 'right';
+    } else if (v > 0) {
+      this._position = this.getLayoutDirection() == 'ltr' ? 'right' : 'left';
+    }
     if (v == 0) { this._position = 'center'; }
-    if (v > 0) { this._position = 'right'; }
 
     if (this._position === 'center' && !this._portalHost.hasAttached() && this._content) {
       this._portalHost.attach(this._content);
     }
   }
 
-  constructor(private _elementRef: ElementRef) {}
+  constructor(private _elementRef: ElementRef, @Optional() private _dir: Dir) {}
 
   ngOnInit() {
     if (this._position == 'center' && !this._portalHost.hasAttached()) {
@@ -359,6 +364,11 @@ export class MdTabBody implements OnInit {
     if ((e.toState == 'center') && this._position == 'center') {
       this.onTabBodyCentered.emit();
     }
+  }
+
+  /** The text direction of the containing app. */
+  getLayoutDirection(): LayoutDirection {
+    return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
   }
 }
 
