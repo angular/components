@@ -25,7 +25,7 @@ export class MdTabNavBar {
 @Directive({
   selector: '[md-tab-link]',
 })
-export class MdTabLink extends MdRipple {
+export class MdTabLink {
   private _isActive: boolean = false;
 
   @Input()
@@ -40,7 +40,18 @@ export class MdTabLink extends MdRipple {
     }
   }
 
-  constructor(private _mdTabNavBar: MdTabNavBar, private _element: ElementRef) {
+  constructor(private _mdTabNavBar: MdTabNavBar, private _element: ElementRef) {}
+}
+
+/**
+ * Simple directive that extends the ripple and matches the selector of the MdTabLink. This
+ * adds the ripple behavior to nav bar labels.
+ */
+@Directive({
+  selector: '[md-tab-link]',
+})
+export class MdTabLinkRipple extends MdRipple {
+  constructor(private _element: ElementRef) {
     super(_element);
   }
 }

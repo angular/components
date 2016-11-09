@@ -38,7 +38,7 @@ import {
 } from '../core';
 import {MdTabLabel} from './tab-label';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
-import {MdTabNavBar, MdTabLink} from './tab-nav-bar/tab-nav-bar';
+import {MdTabNavBar, MdTabLink, MdTabLinkRipple} from './tab-nav-bar/tab-nav-bar';
 import {MdInkBar} from './ink-bar';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -47,7 +47,6 @@ import {MdRippleModule} from '../core/ripple/ripple';
 
 /** Used to generate unique ID's for each tab component */
 let nextId = 0;
-
 /** A simple change event emitted on focus or selection changes. */
 export class MdTabChangeEvent {
   index: number;
@@ -378,9 +377,9 @@ export class MdTabBody implements OnInit {
 @NgModule({
   imports: [CommonModule, PortalModule, MdRippleModule],
   // Don't export MdInkBar or MdTabLabelWrapper, as they are internal implementation details.
-  exports: [MdTabGroup, MdTabLabel, MdTab, MdTabNavBar, MdTabLink],
+  exports: [MdTabGroup, MdTabLabel, MdTab, MdTabNavBar, MdTabLink, MdTabLinkRipple],
   declarations: [MdTabGroup, MdTabLabel, MdTab, MdInkBar, MdTabLabelWrapper,
-    MdTabNavBar, MdTabLink, MdTabBody],
+    MdTabNavBar, MdTabLink, MdTabBody, MdTabLinkRipple],
 })
 export class MdTabsModule {
   static forRoot(): ModuleWithProviders {
