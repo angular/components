@@ -300,10 +300,10 @@ export type MdTabBodyActiveState = 'left' | 'center' | 'right';
   templateUrl: 'tab-body.html',
   animations: [
     trigger('position', [
-      state('left', style({transform: 'translateX(-100%)'})),
-      state('center', style({transform: 'translateX(0%)'})),
-      state('right', style({transform: 'translateX(100%)'})),
-      transition('* => *', animate('0.5s cubic-bezier(0.35, 0, 0.25, 1)')),
+      state('left', style({transform: 'translate3d(-100%, 0, 0)'})),
+      state('center', style({transform: 'translate3d(0, 0, 0)'})),
+      state('right', style({transform: 'translate3d(100%, 0, 0)'})),
+      transition('* => *', animate('500ms cubic-bezier(0.35, 0, 0.25, 1)')),
     ])
   ]
 })
