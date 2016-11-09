@@ -47,8 +47,8 @@ md-slider {
   box-shadow: inset (-2 * $md-slider-tick-size) 0 0 (-$md-slider-tick-size) $md-slider-tick-color;
 }
 
-[dir='rtl'] .md-slider-has-ticks.md-slider-active .md-slider-track,
-[dir='rtl'] .md-slider-has-ticks:hover .md-slider-track {
+[dir="rtl"] .md-slider-has-ticks.md-slider-active .md-slider-track,
+[dir="rtl"] .md-slider-has-ticks:hover .md-slider-track {
   box-shadow: inset (2 * $md-slider-tick-size) 0 0 (-$md-slider-tick-size) $md-slider-tick-color;
 }
 
@@ -75,7 +75,7 @@ md-slider {
   overflow: hidden;
 }
 
-[dir='rtl'] .md-slider-ticks-container {
+[dir="rtl"] .md-slider-ticks-container {
   // translateZ(0) prevents chrome bug where overflow: hidden; doesn't work.
   transform: translateZ(0) rotate(180deg);
 }
