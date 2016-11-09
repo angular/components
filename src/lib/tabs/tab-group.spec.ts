@@ -142,7 +142,7 @@ describe('MdTabGroup', () => {
 
     it('should update tab positions and attach content when selected', fakeAsync(() => {
       fixture.detectChanges();
-      let tabComponent = fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
+      const tabComponent = fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
       const tabBodyList = fixture.debugElement.queryAll(By.css('md-tab-body'));
 
       // Begin on the second tab

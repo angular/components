@@ -20,7 +20,8 @@ import {
     animate,
     transition,
     AnimationTransitionEvent,
-    ElementRef, Renderer,
+    ElementRef,
+    Renderer,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
@@ -30,6 +31,7 @@ import {
     LEFT_ARROW,
     ENTER,
     coerceBooleanProperty,
+    PortalHostDirective,
 } from '../core';
 import {MdTabLabel} from './tab-label';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
@@ -37,7 +39,6 @@ import {MdTabNavBar, MdTabLink} from './tab-nav-bar/tab-nav-bar';
 import {MdInkBar} from './ink-bar';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import {PortalHostDirective} from '../core/portal/portal-directives';
 
 
 /** Used to generate unique ID's for each tab component */
@@ -273,7 +274,7 @@ export class MdTabGroup {
    * Sets the height of the body wrapper to the height of the activating tab if dynamic
    * height property is true.
    */
-  _setTabBodyWrapperHeight(e: number) {
+  _setTabBodyWrapperHeight(tabHeight: number): void {
     if (!this._dynamicHeight) { return; }
 
     this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height',
@@ -282,12 +283,13 @@ export class MdTabGroup {
     // This conditional forces the browser to paint the height so that
     // the animation to the new height can have an origin.
     if (this._tabBodyWrapper.nativeElement.offsetHeight) {
-      this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height', e + 'px');
+      this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height',
+          tabHeight + 'px');
     }
   }
 
   /** Removes the height of the tab body wrapper. */
-  _removeTabBodyWrapperHeight() {
+  _removeTabBodyWrapperHeight(): void {
     this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height', '');
   }
 }
@@ -299,7 +301,7 @@ export type MdTabBodyActiveState = 'left' | 'center' | 'right';
   selector: 'md-tab-body',
   templateUrl: 'tab-body.html',
   animations: [
-    trigger('position', [
+    trigger('translateTab', [
       state('left', style({transform: 'translate3d(-100%, 0, 0)'})),
       state('center', style({transform: 'translate3d(0, 0, 0)'})),
       state('right', style({transform: 'translate3d(100%, 0, 0)'})),
@@ -342,13 +344,13 @@ export class MdTabBody implements OnInit {
     }
   }
 
-  _onAnimationStarted(e: AnimationTransitionEvent) {
+  _onTranslateTabStarted(e: AnimationTransitionEvent) {
     if (e.fromState != 'void' && e.toState == 'center') {
       this.onTabBodyCentering.emit(this._elementRef.nativeElement.clientHeight);
     }
   }
 
-  _onAnimationComplete(e: AnimationTransitionEvent) {
+  _onTranslateTabComplete(e: AnimationTransitionEvent) {
     if ((e.toState == 'left' || e.toState == 'right') && this._position !== 'center') {
       // If the end state is that the tab is not centered, then detach the content.
       this._portalHost.detach();

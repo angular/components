@@ -1,6 +1,6 @@
 <div class="md-tab-body-content"
-     [@position]="_position"
-     (@position.start)="_onAnimationStarted($event)"
-     (@position.done)="_onAnimationComplete($event)">
+     [@translateTab]="_position"
+     (@translateTab.start)="_onTranslateTabStarted($event)"
+     (@translateTab.done)="_onTranslateTabComplete($event)">
   <template portalHost></template>
 </div>
