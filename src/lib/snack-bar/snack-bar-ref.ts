@@ -19,6 +19,8 @@ export class MdSnackBarRef<T> {
   /** Subject for notifying the user that the snack bar has closed. */
   private _afterClosed: Subject<any> = new Subject();
 
+  autoHide: number;
+
   constructor(instance: T,
               containerInstance: MdSnackBarContainer,
               private _overlayRef: OverlayRef) {
@@ -35,6 +37,10 @@ export class MdSnackBarRef<T> {
         this._afterClosed.next();
         this._afterClosed.complete();
       });
+    }
+    // Clear autohide interval
+    if (this.autoHide) {
+      clearInterval(this.autoHide);
     }
   }
 
