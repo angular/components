@@ -34,9 +34,6 @@ md-ink-bar {
   overflow: hidden;
   display: flex;
   transition: height 0.5s $ease-in-out-curve-function;
-  :host[md-dynamic-height] & {
-    overflow: hidden;
-  }
 }
 
 // Wraps each tab body 
@@ -50,9 +47,13 @@ md-tab-body {
   overflow: hidden;
   &.md-tab-body-active {
     position: relative;
+    overflow-x: hidden;
     overflow-y: auto;
     z-index: 1;
     flex-grow: 1;
+  }
+  :host[md-dynamic-height] &.md-tab-body-active {
+    overflow-y: hidden;
   }
 }
 
