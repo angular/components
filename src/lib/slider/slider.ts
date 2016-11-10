@@ -1,18 +1,28 @@
 import {
-    NgModule,
-    ModuleWithProviders,
-    Component,
-    ElementRef,
-    Input,
-    Output,
-    ViewEncapsulation,
-    forwardRef,
-    EventEmitter,
+  NgModule,
+  ModuleWithProviders,
+  Component,
+  ElementRef,
+  Input,
+  Output,
+  ViewEncapsulation,
+  forwardRef,
+  EventEmitter
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MdGestureConfig, coerceBooleanProperty, coerceNumberProperty} from '../core';
 import {Input as HammerInput} from 'hammerjs';
+import {
+  PAGE_UP,
+  PAGE_DOWN,
+  END,
+  HOME,
+  LEFT_ARROW,
+  UP_ARROW,
+  RIGHT_ARROW,
+  DOWN_ARROW
+} from '../core/keyboard/keycodes';
 
 /**
  * Visually, a 30px separation between tick marks looks best. This is very subjective but it is
@@ -260,28 +270,28 @@ export class MdSlider implements ControlValueAccessor {
     if (this.disabled) { return; }
 
     switch (event.keyCode) {
-      case 33: /* page up */
+      case PAGE_UP:
         this._increment(10);
         break;
-      case 34: /* page down */
+      case PAGE_DOWN:
         this._increment(-10);
         break;
-      case 35: /* end */
+      case END:
         this.value = this.max;
         break;
-      case 36: /* home */
+      case HOME:
         this.value = this.min;
         break;
-      case 37: /* left arrow */
+      case LEFT_ARROW:
         this._increment(-1);
         break;
-      case 38: /* up arrow */
+      case UP_ARROW:
         this._increment(1);
         break;
-      case 39: /* right arrow */
+      case RIGHT_ARROW:
         this._increment(1);
         break;
-      case 40: /* down arrow */
+      case DOWN_ARROW:
         this._increment(-1);
         break;
       default:
