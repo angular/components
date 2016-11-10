@@ -17,7 +17,7 @@ Some fonts are designed to show icons by using [ligatures](https://en.wikipedia.
 
 By default the [Material icons font](http://google.github.io/material-design-icons/#icon-font-for-the-web) is used. (You will still need to include the HTML to load the font and its CSS, as described in the link). You can specify a different font by setting the `fontSet` input to either the CSS class to apply to use the desired font, or to an alias previously registered with `MdIconRegistry.registerFontClassAlias`, for example:
 ```javascript
-mdIconRegistry.registerFontClassAlias('myfont', 'my-icon-font-class');
+MdIconRegistry.registerFontClassAlias('myfont', 'my-icon-font-class');
 ```
 
 ```html
@@ -49,8 +49,8 @@ SVG icons can be used either by directly specifying the icon's URL, or by associ
 
 To associate a name with an icon URL, use the `addSvgIcon` or `addSvgIconInNamespace` methods of `MdIconRegistry`. After registering an icon, it can be displayed by setting the `svgIcon` input. For an icon in the default namespace, use the name directly. For a non-default namespace, use the format `[namespace]:[name]`. Examples:
 ```javascript
-mdIconRegistry.addSvgIcon('moon', '/assets/moon.svg');
-mdIconRegistry.addSvgIconInNamespace('animals', 'cat', '/assets/cat.svg');
+MdIconRegistry.addSvgIcon('moon', '/assets/moon.svg');
+MdIconRegistry.addSvgIconInNamespace('animals', 'cat', '/assets/cat.svg');
 ```
 
 ```html
@@ -74,7 +74,7 @@ Icon sets allow grouping multiple icons into a single SVG file. The content of a
 
 Icon sets are registered using the `addSvgIconSet` or `addSvgIconSetInNamespace` methods of `MdIconRegistry`. After an icon set is registered, each of its embedded icons can be accessed by their "id" attributes. To display an icon from an icon set, use the `svgIcon` input in the same way as for individually registered icons. Example:
 ```javascript
-mdIconRegistry.addSvgIconSetInNamespace('planets', '/assets/planets.svg');
+MdIconRegistry.addSvgIconSetInNamespace('planets', '/assets/planets.svg');
 ```
 
 ```html
