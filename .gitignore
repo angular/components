@@ -34,3 +34,4 @@
 npm-debug.log
 testem.log
 /.chrome
+.envrc
