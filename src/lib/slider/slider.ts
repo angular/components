@@ -70,9 +70,11 @@ export class MdSliderChange {
     '[class.md-slider-active]': '_isActive',
     '[class.md-slider-disabled]': 'disabled',
     '[class.md-slider-has-ticks]': 'tickInterval',
+    '[class.md-slider-horizontal]': '!vertical',
     '[class.md-slider-inverted]': 'invert',
     '[class.md-slider-sliding]': '_isSliding',
     '[class.md-slider-thumb-label-showing]': 'thumbLabel',
+    '[class.md-slider-vertical]': 'vertical',
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -196,8 +198,14 @@ export class MdSlider implements ControlValueAccessor {
   /** Whether the slider is inverted. */
   @Input()
   get invert() { return this._invert; }
-  set invert(value: boolean) { this._invert = coerceBooleanProperty(value); }
+  set invert(value: any) { this._invert = coerceBooleanProperty(value); }
   private _invert = false;
+
+  /** Whether the slider is vertical. */
+  @Input()
+  get vertical() { return this._vertical; }
+  set vertical(value: any) { this._vertical = coerceBooleanProperty(value); }
+  private _vertical = false;
 
   /** CSS styles for the track fill element. */
   get trackFillStyles(): { [key: string]: string } {

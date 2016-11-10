@@ -42,28 +42,10 @@ md-slider {
   transition: box-shadow $swift-ease-out-duration $swift-ease-out-timing-function;
 }
 
-.md-slider-has-ticks.md-slider-active .md-slider-track,
-.md-slider-has-ticks:hover .md-slider-track {
-  box-shadow: inset (-2 * $md-slider-tick-size) 0 0 (-$md-slider-tick-size) $md-slider-tick-color;
-}
-
-[dir='rtl'] .md-slider-has-ticks.md-slider-active .md-slider-track,
-[dir='rtl'] .md-slider-has-ticks:hover .md-slider-track {
-  box-shadow: inset (2 * $md-slider-tick-size) 0 0 (-$md-slider-tick-size) $md-slider-tick-color;
-}
-
-.md-slider-inverted .md-slider-track {
-  flex-direction: row-reverse;
-}
-
 .md-slider-track-fill {
   flex: 0 0 50%;
   height: $md-slider-track-thickness;
   transition: flex-basis $swift-ease-out-duration $swift-ease-out-timing-function;
-}
-
-.md-slider-sliding .md-slider-track-fill {
-  transition: none;
 }
 
 .md-slider-ticks-container {
@@ -73,11 +55,6 @@ md-slider {
   height: $md-slider-track-thickness;
   width: 100%;
   overflow: hidden;
-}
-
-[dir='rtl'] .md-slider-ticks-container {
-  // translateZ(0) prevents chrome bug where overflow: hidden; doesn't work.
-  transform: translateZ(0) rotate(180deg);
 }
 
 .md-slider-ticks {
@@ -91,11 +68,6 @@ md-slider {
   width: 100%;
   opacity: 0;
   transition: opacity $swift-ease-out-duration $swift-ease-out-timing-function;
-}
-
-.md-slider-has-ticks.md-slider-active .md-slider-ticks,
-.md-slider-has-ticks:hover .md-slider-ticks {
-  opacity: 1;
 }
 
 .md-slider-thumb-container {
@@ -117,16 +89,8 @@ md-slider {
   transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;
 }
 
-.md-slider-active .md-slider-thumb {
-  transform: scale($md-slider-thumb-focus-scale);
-}
-
-.md-slider-active.md-slider-thumb-label-showing .md-slider-thumb {
-  transform: scale(0);
-}
-
 .md-slider-thumb-label {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   position: absolute;
@@ -136,18 +100,9 @@ md-slider {
   height: $md-slider-thumb-label-size;
   border-radius: 50%;
   transform: translateY($md-slider-thumb-label-size / 2 + $md-slider-thumb-arrow-gap)
-      scale(0.4) rotate(45deg);
+  scale(0.4) rotate(45deg);
   transition: 300ms $swift-ease-in-out-timing-function;
   transition-property: transform, border-radius;
-}
-
-.md-slider-active .md-slider-thumb-label {
-  border-radius: 50% 50% 0;
-  transform: rotate(45deg);
-}
-
-md-slider:not(.md-slider-thumb-label-showing) .md-slider-thumb-label {
-  display: none;
 }
 
 .md-slider-thumb-label-text {
@@ -159,6 +114,88 @@ md-slider:not(.md-slider-thumb-label-showing) .md-slider-thumb-label {
   transition: opacity 300ms $swift-ease-in-out-timing-function;
 }
 
-.md-slider-active .md-slider-thumb-label-text {
-  opacity: 1;
+
+// Slider sliding state.
+.md-slider-sliding {
+  .md-slider-track-fill {
+    transition: none;
+  }
+}
+
+
+// Slider with ticks.
+.md-slider-has-ticks {
+  &.md-slider-active,
+  &:hover {
+    .md-slider-track {
+      box-shadow:
+          inset (-2 * $md-slider-tick-size) 0 0 (-$md-slider-tick-size) $md-slider-tick-color;
+    }
+
+    .md-slider-ticks {
+      opacity: 1;
+    }
+  }
+}
+
+
+// Slider with thumb label.
+.md-slider-thumb-label-showing {
+  .md-slider-thumb-label {
+    display: flex;
+  }
+}
+
+
+// Inverted slider.
+.md-slider-inverted {
+  .md-slider-track {
+    flex-direction: row-reverse;
+  }
+}
+
+
+// Active slider.
+.md-slider-active {
+  .md-slider-thumb {
+    transform: scale($md-slider-thumb-focus-scale);
+  }
+
+  &.md-slider-thumb-label-showing .md-slider-thumb {
+    transform: scale(0);
+  }
+
+  .md-slider-thumb-label {
+    border-radius: 50% 50% 0;
+    transform: rotate(45deg);
+  }
+
+  .md-slider-thumb-label-text {
+    opacity: 1;
+  }
+}
+
+
+// Vertical slider.
+.md-slider-vertical {
+
+}
+
+
+// Slider in RTL languages.
+[dir='rtl'] {
+  .md-slider-ticks-container {
+    // translateZ(0) prevents chrome bug where overflow: hidden; doesn't work.
+    transform: translateZ(0) rotate(180deg);
+  }
+
+  .md-slider-has-ticks {
+    &.md-slider-active,
+    &:hover {
+      .md-slider-track {
+        box-shadow:
+            inset (2 * $md-slider-tick-size) 0 0 (-$md-slider-tick-size) $md-slider-tick-color;
+      }
+    }
+  }
 }
