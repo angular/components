@@ -12,8 +12,7 @@ import {
   PAGE_DOWN,
   PAGE_UP,
   END,
-  HOME,
-  LEFT_ARROW
+  HOME, LEFT_ARROW
 } from '../core/keyboard/keycodes';
 
 
@@ -890,71 +889,6 @@ describe('MdSlider', () => {
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(30);
-    });
-
-    it('should decrement inverted slider by 1 on right arrow pressed', () => {
-      testComponent.invert = true;
-      sliderInstance.value = 100;
-      fixture.detectChanges();
-
-      dispatchKeydownEvent(sliderNativeElement, RIGHT_ARROW);
-      fixture.detectChanges();
-
-      expect(sliderInstance.value).toBe(99);
-    });
-
-    it('should increment inverted slider by 1 on left arrow pressed', () => {
-      testComponent.invert = true;
-      fixture.detectChanges();
-
-      dispatchKeydownEvent(sliderNativeElement, LEFT_ARROW);
-      fixture.detectChanges();
-
-      expect(sliderInstance.value).toBe(1);
-    });
-
-    it('should decrement RTL slider by 1 on right arrow pressed', () => {
-      testComponent.dir = 'rtl';
-      sliderInstance.value = 100;
-      fixture.detectChanges();
-
-      dispatchKeydownEvent(sliderNativeElement, RIGHT_ARROW);
-      fixture.detectChanges();
-
-      expect(sliderInstance.value).toBe(99);
-    });
-
-    it('should increment RTL slider by 1 on left arrow pressed', () => {
-      testComponent.dir = 'rtl';
-      fixture.detectChanges();
-
-      dispatchKeydownEvent(sliderNativeElement, LEFT_ARROW);
-      fixture.detectChanges();
-
-      expect(sliderInstance.value).toBe(1);
-    });
-
-    it('should increment inverted RTL slider by 1 on right arrow pressed', () => {
-      testComponent.dir = 'rtl';
-      testComponent.invert = true;
-      fixture.detectChanges();
-
-      dispatchKeydownEvent(sliderNativeElement, RIGHT_ARROW);
-      fixture.detectChanges();
-
-      expect(sliderInstance.value).toBe(1);
-    });
-
-    it('should decrement inverted RTL slider by 1 on left arrow pressed', () => {
-      testComponent.dir = 'rtl';
-      testComponent.invert = true;
-      sliderInstance.value = 100;
-      fixture.detectChanges();
-
-      dispatchKeydownEvent(sliderNativeElement, LEFT_ARROW);
-      fixture.detectChanges();
-
-      expect(sliderInstance.value).toBe(99);
     });
   });
 });
