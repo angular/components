@@ -43,14 +43,7 @@ export class MdSliderChange {
   host: {
     '(blur)': '_onBlur()',
     '(click)': '_onClick($event)',
-    '(keydown.arrowdown)': '_increment($event, -1)',
-    '(keydown.arrowleft)': '_increment($event, -1)',
-    '(keydown.arrowright)': '_increment($event, 1)',
-    '(keydown.arrowup)': '_increment($event, 1)',
-    '(keydown.end)': '_onEndKeyPressed($event)',
-    '(keydown.home)': '_onHomeKeyPressed($event)',
-    '(keydown.pagedown)': '_increment($event, -10)',
-    '(keydown.pageup)': '_increment($event, 10)',
+    '(keydown)': '_onKeydown($event)',
     '(mouseenter)': '_onMouseenter()',
     '(slide)': '_onSlide($event)',
     '(slideend)': '_onSlideEnd()',
@@ -263,28 +256,44 @@ export class MdSlider implements ControlValueAccessor {
     this.onTouched();
   }
 
+  _onKeydown(event: KeyboardEvent) {
+    if (this.disabled) { return; }
+
+    switch (event.keyCode) {
+      case 33: /* page up */
+        this._increment(10);
+        break;
+      case 34: /* page down */
+        this._increment(-10);
+        break;
+      case 35: /* end */
+        this.value = this.max;
+        break;
+      case 36: /* home */
+        this.value = this.min;
+        break;
+      case 37: /* left arrow */
+        this._increment(-1);
+        break;
+      case 38: /* up arrow */
+        this._increment(1);
+        break;
+      case 39: /* right arrow */
+        this._increment(1);
+        break;
+      case 40: /* down arrow */
+        this._increment(-1);
+        break;
+      default:
+        return;
+    }
+
+    event.preventDefault();
+  }
+
   /** Increments the slider by the given number of steps (negative number decrements). */
-  _increment(event: KeyboardEvent, numSteps: number) {
-    if (this.disabled) { return; }
-
+  private _increment(numSteps: number) {
     this.value = this._clamp(this.value + this.step * numSteps, this.min, this.max);
-    event.preventDefault();
-  }
-
-  /** Handles end key pressed. */
-  _onEndKeyPressed(event: KeyboardEvent) {
-    if (this.disabled) { return; }
-
-    this.value = this.max;
-    event.preventDefault();
-  }
-
-  /** Handles home key pressed. */
-  _onHomeKeyPressed(event: KeyboardEvent) {
-    if (this.disabled) { return; }
-
-    this.value = this.min;
-    event.preventDefault();
   }
 
   /**
