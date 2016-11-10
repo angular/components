@@ -1,0 +1,25 @@
+@import '~@angular/material/core/theming/all-theme';
+@import './app-theme';
+
+
+// Include material core styles.
+@include md-core();
+
+// Define the light theme.
+$primary: md-palette($md-cyan);
+$accent:  md-palette($md-amber, A200, A100, A400);
+
+$theme: md-light-theme($primary, $accent);
+@include angular-material-theme($theme);
+@include material-docs-app-theme($theme);
+
+// Define the dark theme.
+.docs-dark-theme {
+  $dark-primary: md-palette($md-cyan, 900, 700, 800);
+  $dark-accent:  md-palette($md-amber, A400, A200, A700);
+  $dark-warn:    md-palette($md-deep-orange);
+
+  $dark-theme: md-dark-theme($dark-primary, $dark-accent, $dark-warn);
+  @include angular-material-theme($dark-theme);
+  @include material-docs-app-theme($dark-theme);
+}
