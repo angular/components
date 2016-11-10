@@ -263,7 +263,7 @@ export class MdSlider implements ControlValueAccessor {
     this.onTouched();
   }
 
-  /** Increments the slider by the given number of steps (negative number decrements. */
+  /** Increments the slider by the given number of steps (negative number decrements). */
   _increment(event: KeyboardEvent, numSteps: number) {
     if (this.disabled) { return; }
 
