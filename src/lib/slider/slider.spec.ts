@@ -1030,7 +1030,10 @@ function dispatchSlideEndEvent(sliderElement: HTMLElement, percent: number,
 /**
  * Dispatches a mouseenter event from an element.
  * Note: The mouse event truncates the position for the click.
- * @param element The element from which the event will be dispatched.
+ * @param trackElement The track element from which the event location will be calculated.
+ * @param containerElement The container element from which the event will be dispatched.
+ * @param percentage The percentage of the slider where the click should occur. Used to find the
+ * physical location of the click.
  */
 function dispatchMouseenterEvent(element: HTMLElement): void {
   let dimensions = element.getBoundingClientRect();
@@ -1043,17 +1046,8 @@ function dispatchMouseenterEvent(element: HTMLElement): void {
   element.dispatchEvent(event);
 }
 
-/**
- * Dispatches a keydown event from an element.
- * @param element The element from which the event will be dispatched.
- * @param keyCode The key code of the key being pressed.
- */
 function dispatchKeydownEvent(element: HTMLElement, keyCode: number): void {
-  let event: any = document.createEvent('KeyboardEvent');
-  (event.initKeyEvent || event.initKeyboardEvent).bind(event)(
-      'keydown', true, true, window, 0, 0, 0, 0, 0, keyCode);
-  Object.defineProperty(event, 'keyCode', {
-    get: function() { return keyCode; }
-  });
+  let event = new Event('keydown');
+  (<any>event).keyCode = keyCode;
   element.dispatchEvent(event);
 }
