@@ -54,6 +54,7 @@ export {
 
 export {FocusTrap} from './a11y/focus-trap';
 export {InteractivityChecker} from './a11y/interactivity-checker';
+export {isFakeMousedownFromScreenReader} from './a11y/fake-mousedown';
 
 export {A11yModule} from './a11y/index';
 
@@ -83,6 +84,7 @@ export * from './animation/animation';
 
 // Coersion
 export {coerceBooleanProperty} from './coersion/boolean-property';
+export {coerceNumberProperty} from './coersion/number-property';
 
 
 @NgModule({

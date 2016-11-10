@@ -1,7 +1,4 @@
-import {
-  async,
-  TestBed,
-} from '@angular/core/testing';
+import {async, TestBed, ComponentFixture} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdButtonModule} from './button';
@@ -83,6 +80,16 @@ describe('MdButton', () => {
       expect(testComponent.clickCount).toBe(0);
     });
 
+    it('should disable the native button element', () => {
+      let fixture = TestBed.createComponent(TestApp);
+      let buttonNativeElement = fixture.nativeElement.querySelector('button');
+      expect(buttonNativeElement.disabled).toBeFalsy('Expected button not to be disabled');
+
+      fixture.componentInstance.isDisabled = true;
+      fixture.detectChanges();
+      expect(buttonNativeElement.disabled).toBeTruthy('Expected button to be disabled');
+    });
+
   });
 
   // Anchor button tests
@@ -124,17 +131,43 @@ describe('MdButton', () => {
 
   // Ripple tests.
   describe('button ripples', () => {
-    it('should remove ripple if md-ripple-disabled input is set', () => {
-      let fixture = TestBed.createComponent(TestApp);
-      let testComponent = fixture.debugElement.componentInstance;
-      let buttonDebugElement = fixture.debugElement.query(By.css('button'));
+    let fixture: ComponentFixture<TestApp>;
+    let testComponent: TestApp;
+    let buttonElement: HTMLButtonElement;
+    let anchorElement: HTMLAnchorElement;
 
+    beforeEach(() => {
+      fixture = TestBed.createComponent(TestApp);
       fixture.detectChanges();
-      expect(buttonDebugElement.nativeElement.querySelectorAll('[md-ripple]').length).toBe(1);
+
+      testComponent = fixture.componentInstance;
+      buttonElement = fixture.nativeElement.querySelector('button[md-button]');
+      anchorElement = fixture.nativeElement.querySelector('a[md-button]');
+    });
+
+    it('should remove ripple if md-ripple-disabled input is set', () => {
+      expect(buttonElement.querySelectorAll('[md-ripple]').length).toBe(1);
 
       testComponent.rippleDisabled = true;
       fixture.detectChanges();
-      expect(buttonDebugElement.nativeElement.querySelectorAll('[md-ripple]').length).toBe(0);
+      expect(buttonElement.querySelectorAll('[md-ripple]').length).toBe(0);
+    });
+
+    it('should not have a ripple when the button is disabled', () => {
+      let buttonRipple = buttonElement.querySelector('[md-ripple]');
+      let anchorRipple = anchorElement.querySelector('[md-ripple]');
+
+      expect(buttonRipple).toBeTruthy('Expected an enabled button[md-button] to have a ripple');
+      expect(anchorRipple).toBeTruthy('Expected an enabled a[md-button] to have a ripple');
+
+      testComponent.isDisabled = true;
+      fixture.detectChanges();
+
+      buttonRipple = buttonElement.querySelector('button [md-ripple]');
+      anchorRipple = anchorElement.querySelector('a [md-ripple]');
+
+      expect(buttonRipple).toBeFalsy('Expected a disabled button[md-button] not to have a ripple');
+      expect(anchorRipple).toBeFalsy('Expected a disabled a[md-button] not to have a ripple');
     });
   });
 });

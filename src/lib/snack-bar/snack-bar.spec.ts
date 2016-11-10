@@ -1,19 +1,15 @@
 import {
-    inject,
-    async,
-    ComponentFixture,
-    TestBed,
+  inject,
+  async,
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  flushMicrotasks,
+  tick,
 } from '@angular/core/testing';
-import {
-  NgModule,
-  Component,
-  Directive,
-  ViewChild,
-  ViewContainerRef
-} from '@angular/core';
+import {NgModule, Component, Directive, ViewChild, ViewContainerRef} from '@angular/core';
 import {MdSnackBar, MdSnackBarModule} from './snack-bar';
 import {OverlayContainer, MdLiveAnnouncer} from '../core';
-import {MdSnackBarConfig} from './snack-bar-config';
 import {SimpleSnackBar} from './simple-snack-bar';
 
 
@@ -61,7 +57,7 @@ describe('MdSnackBar', () => {
   });
 
   it('should have the role of alert', () => {
-    let config = new MdSnackBarConfig(testViewContainerRef);
+    let config = {viewContainerRef: testViewContainerRef};
     snackBar.open(simpleMessage, simpleActionLabel, config);
 
     let containerElement = overlayContainerElement.querySelector('snack-bar-container');
@@ -69,8 +65,25 @@ describe('MdSnackBar', () => {
         .toBe('alert', 'Expected snack bar container to have role="alert"');
    });
 
+   it('should open and close a snackbar without a ViewContainerRef', async(() => {
+     let snackBarRef = snackBar.open('Snack time!', 'CHEW');
+     viewContainerFixture.detectChanges();
+
+     let messageElement = overlayContainerElement.querySelector('.md-simple-snackbar-message');
+     expect(messageElement.textContent)
+         .toBe('Snack time!', 'Expected snack bar to show a message without a ViewContainerRef');
+
+     snackBarRef.dismiss();
+     viewContainerFixture.detectChanges();
+
+     viewContainerFixture.whenStable().then(() => {
+       expect(overlayContainerElement.childNodes.length)
+          .toBe(0, 'Expected snack bar to be dismissed without a ViewContainerRef');
+     });
+   }));
+
   it('should open a simple message with a button', () => {
-    let config = new MdSnackBarConfig(testViewContainerRef);
+    let config = {viewContainerRef: testViewContainerRef};
     let snackBarRef = snackBar.open(simpleMessage, simpleActionLabel, config);
 
     viewContainerFixture.detectChanges();
@@ -95,7 +108,7 @@ describe('MdSnackBar', () => {
   });
 
   it('should open a simple message with no button', () => {
-    let config = new MdSnackBarConfig(testViewContainerRef);
+    let config = {viewContainerRef: testViewContainerRef};
     let snackBarRef = snackBar.open(simpleMessage, null, config);
 
     viewContainerFixture.detectChanges();
@@ -115,7 +128,7 @@ describe('MdSnackBar', () => {
   });
 
   it('should dismiss the snack bar and remove itself from the view', async(() => {
-    let config = new MdSnackBarConfig(testViewContainerRef);
+    let config = {viewContainerRef: testViewContainerRef};
     let dismissObservableCompleted = false;
 
     let snackBarRef = snackBar.open(simpleMessage, null, config);
@@ -161,7 +174,7 @@ describe('MdSnackBar', () => {
   }));
 
   it('should open a custom component', () => {
-    let config = new MdSnackBarConfig(testViewContainerRef);
+    let config = {viewContainerRef: testViewContainerRef};
     let snackBarRef = snackBar.openFromComponent(BurritosNotification, config);
 
     expect(snackBarRef.instance)
@@ -173,7 +186,7 @@ describe('MdSnackBar', () => {
   });
 
   it('should set the animation state to visible on entry', () => {
-    let config = new MdSnackBarConfig(testViewContainerRef);
+    let config = {viewContainerRef: testViewContainerRef};
     let snackBarRef = snackBar.open(simpleMessage, null, config);
 
     viewContainerFixture.detectChanges();
@@ -182,7 +195,7 @@ describe('MdSnackBar', () => {
   });
 
   it('should set the animation state to complete on exit', () => {
-    let config = new MdSnackBarConfig(testViewContainerRef);
+    let config = {viewContainerRef: testViewContainerRef};
     let snackBarRef = snackBar.open(simpleMessage, null, config);
     snackBarRef.dismiss();
 
@@ -193,7 +206,7 @@ describe('MdSnackBar', () => {
 
   it(`should set the old snack bar animation state to complete and the new snack bar animation
       state to visible on entry of new snack bar`, async(() => {
-    let config = new MdSnackBarConfig(testViewContainerRef);
+    let config = {viewContainerRef: testViewContainerRef};
     let snackBarRef = snackBar.open(simpleMessage, null, config);
     let dismissObservableCompleted = false;
 
@@ -201,7 +214,7 @@ describe('MdSnackBar', () => {
     expect(snackBarRef.containerInstance.animationState)
         .toBe('visible', `Expected the animation state would be 'visible'.`);
 
-    let config2 = new MdSnackBarConfig(testViewContainerRef);
+    let config2 = {viewContainerRef: testViewContainerRef};
     let snackBarRef2 = snackBar.open(simpleMessage, null, config2);
 
     viewContainerFixture.detectChanges();
@@ -216,6 +229,58 @@ describe('MdSnackBar', () => {
       expect(snackBarRef2.containerInstance.animationState)
           .toBe('visible', `Expected the animation state would be 'visible'.`);
     });
+  }));
+
+  it('should open a new snackbar after dismissing a previous snackbar', async(() => {
+    let config = {viewContainerRef: testViewContainerRef};
+    let snackBarRef = snackBar.open(simpleMessage, 'DISMISS', config);
+    viewContainerFixture.detectChanges();
+
+    snackBarRef.dismiss();
+    viewContainerFixture.detectChanges();
+
+    // Wait for the snackbar dismiss animation to finish.
+    viewContainerFixture.whenStable().then(() => {
+      snackBarRef = snackBar.open('Second snackbar', 'DISMISS', config);
+      viewContainerFixture.detectChanges();
+
+      // Wait for the snackbar open animation to finish.
+      viewContainerFixture.whenStable().then(() => {
+        expect(snackBarRef.containerInstance.animationState).toBe('visible');
+      });
+    });
+  }));
+
+  it('should remove past snackbars when opening new snackbars', async(() => {
+    snackBar.open('First snackbar');
+    viewContainerFixture.detectChanges();
+
+    snackBar.open('Second snackbar');
+    viewContainerFixture.detectChanges();
+
+    viewContainerFixture.whenStable().then(() => {
+      snackBar.open('Third snackbar');
+      viewContainerFixture.detectChanges();
+
+      viewContainerFixture.whenStable().then(() => {
+        expect(overlayContainerElement.textContent.trim()).toBe('Third snackbar');
+      });
+    });
+  }));
+
+  it('should remove snackbar if another is shown while its still animating open', fakeAsync(() => {
+    snackBar.open('First snackbar');
+    viewContainerFixture.detectChanges();
+
+    snackBar.open('Second snackbar');
+    viewContainerFixture.detectChanges();
+
+    // Flush microtasks to make observables run, but don't tick such that any animations would run.
+    flushMicrotasks();
+    expect(overlayContainerElement.textContent.trim()).toBe('Second snackbar');
+
+    // Let remaining animations run.
+    tick(500);
   }));
 });
 
