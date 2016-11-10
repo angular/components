@@ -45,7 +45,7 @@ export class MdSidenavToggleResult {
 @Component({
   moduleId: module.id,
   selector: 'md-sidenav, mat-sidenav',
-  template: '<focus-trap [active]="focusTrapActive"><ng-content></ng-content></focus-trap>',
+  template: '<focus-trap [disabled]="isFocusTrapDisabled"><ng-content></ng-content></focus-trap>',
   host: {
     '(transitionend)': '_onTransitionEnd($event)',
     // must prevent the browser from aligning text based on value
@@ -127,8 +127,9 @@ export class MdSidenav implements AfterContentInit {
    */
   private _resolveToggleAnimationPromise: (animationFinished: boolean) => void = null;
 
-  get focusTrapActive() {
-    return this.opened && this.mode != 'side';
+  get isFocusTrapDisabled() {
+    // The focus trap is only enabled when the sidenav is open in any mode other than side.
+    return !this.opened || this.mode == 'side';
   }
 
   /**
@@ -195,7 +196,7 @@ export class MdSidenav implements AfterContentInit {
       this.onCloseStart.emit();
     }
 
-    if (this.focusTrapActive) {
+    if (!this.isFocusTrapDisabled) {
       this._focusTrap.focusFirstTabbableElementWhenReady();
     }
 

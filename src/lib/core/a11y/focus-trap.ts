@@ -1,12 +1,4 @@
-import {
-  Component,
-  ViewEncapsulation,
-  ViewChild,
-  ElementRef,
-  Input,
-  AfterContentInit,
-  NgZone
-} from '@angular/core';
+import {Component, ViewEncapsulation, ViewChild, ElementRef, Input, NgZone} from '@angular/core';
 import {InteractivityChecker} from './interactivity-checker';
 import {coerceBooleanProperty} from '../coersion/boolean-property';
 
@@ -25,28 +17,16 @@ import {coerceBooleanProperty} from '../coersion/boolean-property';
   templateUrl: 'focus-trap.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class FocusTrap implements AfterContentInit {
+export class FocusTrap {
   @ViewChild('trappedContent') trappedContent: ElementRef;
 
-  @Input()
-  get active(): boolean { return this._active; }
-  set active(val: boolean) { this._active = coerceBooleanProperty(val); }
-
-  /** Whether the DOM content is ready. */
-  private _contentReady: boolean = false;
-
   /** Whether the focus trap is active. */
-  private _active: boolean = true;
+  @Input()
+  get disabled(): boolean { return this._disabled; }
+  set disabled(val: boolean) { this._disabled = coerceBooleanProperty(val); }
+  private _disabled: boolean = false;
 
   constructor(private _checker: InteractivityChecker, private _ngZone: NgZone) { }
-
-  ngAfterContentInit() {
-    this._contentReady = true;
-    // Trigger setter behavior.
-    if (this.active) {
-
-    }
-  }
 
   /**
    * Waits for microtask queue to empty, then focuses the first tabbable element within the focus

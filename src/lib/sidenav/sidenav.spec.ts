@@ -295,49 +295,49 @@ describe('MdSidenav', () => {
     let fixture: ComponentFixture<SidenavWitFocusableElements>;
     let testComponent: SidenavWitFocusableElements;
     let sidenav: MdSidenav;
-    let link1Element: HTMLElement;
-    let link2Element: HTMLElement;
+    let firstFocusableElement: HTMLElement;
+    let lastFocusableElement: HTMLElement;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SidenavWitFocusableElements);
       testComponent = fixture.debugElement.componentInstance;
       sidenav = fixture.debugElement.query(By.directive(MdSidenav)).componentInstance;
-      link1Element = fixture.debugElement.query(By.css('.link1')).nativeElement;
-      link2Element = fixture.debugElement.query(By.css('.link1')).nativeElement;
-      link2Element.focus();
+      firstFocusableElement = fixture.debugElement.query(By.css('.link1')).nativeElement;
+      lastFocusableElement = fixture.debugElement.query(By.css('.link1')).nativeElement;
+      lastFocusableElement.focus();
     });
 
-    it('should trp focus when opened in "over" mode', fakeAsync(() => {
+    it('should trap focus when opened in "over" mode', fakeAsync(() => {
       testComponent.mode = 'over';
-      link2Element.focus();
+      lastFocusableElement.focus();
 
       sidenav.open();
       endSidenavTransition(fixture);
       tick();
 
-      expect(document.activeElement).toBe(link1Element);
+      expect(document.activeElement).toBe(firstFocusableElement);
     }));
 
-    it('should trap tabs when opened in "push" mode', fakeAsync(() => {
+    it('should trap focus when opened in "push" mode', fakeAsync(() => {
       testComponent.mode = 'push';
-      link2Element.focus();
+      lastFocusableElement.focus();
 
       sidenav.open();
       endSidenavTransition(fixture);
       tick();
 
-      expect(document.activeElement).toBe(link1Element);
+      expect(document.activeElement).toBe(firstFocusableElement);
     }));
 
-    it('should not trap tabs when opened in "side" mode', fakeAsync(() => {
+    it('should not trap focus when opened in "side" mode', fakeAsync(() => {
       testComponent.mode = 'side';
-      link2Element.focus();
+      lastFocusableElement.focus();
 
       sidenav.open();
       endSidenavTransition(fixture);
       tick();
 
-      expect(document.activeElement).toBe(link2Element);
+      expect(document.activeElement).toBe(lastFocusableElement);
     }));
   });
 });
