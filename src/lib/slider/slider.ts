@@ -1,14 +1,14 @@
 import {
-    NgModule,
-    ModuleWithProviders,
-    Component,
-    ElementRef,
-    Input,
-    Output,
-    ViewEncapsulation,
-    forwardRef,
-    EventEmitter,
-    Optional,
+  NgModule,
+  ModuleWithProviders,
+  Component,
+  ElementRef,
+  Input,
+  Output,
+  ViewEncapsulation,
+  forwardRef,
+  EventEmitter,
+  Optional
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
@@ -309,13 +309,13 @@ export class MdSlider implements ControlValueAccessor {
         this.value = this.min;
         break;
       case LEFT_ARROW:
-        this._increment(-1);
+        this._increment(this._isLeftMin() ? -1 : 1);
         break;
       case UP_ARROW:
         this._increment(1);
         break;
       case RIGHT_ARROW:
-        this._increment(1);
+        this._increment(this._isLeftMin() ? 1 : -1);
         break;
       case DOWN_ARROW:
         this._increment(-1);
@@ -327,6 +327,11 @@ export class MdSlider implements ControlValueAccessor {
     }
 
     event.preventDefault();
+  }
+
+  /** Whether the left side of the slider is the minimum value. */
+  private _isLeftMin() {
+    return (this.direction == 'rtl') == this.invert
   }
 
   /** Increments the slider by the given number of steps (negative number decrements). */
@@ -347,7 +352,7 @@ export class MdSlider implements ControlValueAccessor {
 
     // The exact value is calculated from the event and used to find the closest snap value.
     let percent = this._clamp((pos - offset) / size);
-    if ((this.direction == 'rtl') != this.invert) {
+    if (!this._isLeftMin()) {
       percent = 1 - percent;
     }
     let exactValue = this._calculateValue(percent);
