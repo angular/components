@@ -196,13 +196,49 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    * @returns ConnectedPositionStrategy
    */
   private _getPosition(): ConnectedPositionStrategy  {
-    const positionX: HorizontalConnectionPos = this.menu.positionX === 'before' ? 'end' : 'start';
-    const positionY: VerticalConnectionPos = this.menu.positionY === 'above' ? 'bottom' : 'top';
+    let preferredX: HorizontalConnectionPos;
+    let preferredY: VerticalConnectionPos;
+    let fallbackX: HorizontalConnectionPos;
+    let fallbackY: VerticalConnectionPos;
+
+    const start: HorizontalConnectionPos = 'start';
+    const end: HorizontalConnectionPos = 'end';
+    const top: VerticalConnectionPos = 'top';
+    const bottom: VerticalConnectionPos = 'bottom';
+
+    if (this.menu.positionX === 'before') {
+      preferredX = end;
+      fallbackX = start;
+    } else {
+      preferredX = start;
+      fallbackX = end;
+    }
+
+    if (this.menu.positionY === 'above') {
+      preferredY = bottom;
+      fallbackY = top;
+    } else {
+      preferredY = top;
+      fallbackY = bottom;
+    }
 
     return this._overlay.position().connectedTo(
       this._element,
-      {originX: positionX, originY: positionY},
-      {overlayX: positionX, overlayY: positionY}
+      // Start with preferred position.
+      {originX: preferredX, originY: preferredY},
+      {overlayX: preferredX, overlayY: preferredY}
+    ).withFallbackPosition(
+      // Add fallback Y position.
+      {originX: preferredX, originY: fallbackY},
+      {overlayX: preferredX, overlayY: fallbackY}
+    ).withFallbackPosition(
+      // Add fallback X position.
+      {originX: fallbackX, originY: preferredY},
+      {overlayX: fallbackX, overlayY: preferredY}
+    ).withFallbackPosition(
+      // Add fallback X,Y position.
+      {originX: fallbackX, originY: fallbackY},
+      {overlayX: fallbackX, overlayY: fallbackY}
     );
   }
 
