@@ -331,7 +331,7 @@ export class MdSlider implements ControlValueAccessor {
 
   /** Whether the left side of the slider is the minimum value. */
   private _isLeftMin() {
-    return (this.direction == 'rtl') == this.invert
+    return (this.direction == 'rtl') == this.invert;
   }
 
   /** Increments the slider by the given number of steps (negative number decrements). */
