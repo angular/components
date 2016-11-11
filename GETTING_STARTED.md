@@ -33,6 +33,34 @@ import { MaterialModule } from '@angular/material';
 export class PizzaPartyAppModule { }
 ```
 
+## Tell to System loader where Angular Material is located
+This is **required** step. You need to tell to system loader where angular material is located otherwise
+material2 can't be loaded.
+
+```js
+System.config({
+  defaultJSExtensions: true,
+  paths: {
+    'npm:': './'
+  },
+  map: {
+    app: 'app',
+
+    '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
+    '@angular/common': 'npm:@angular/common/bundles/common.umd.js',
+    '@angular/compiler': 'npm:@angular/compiler/bundles/compiler.umd.js',
+    '@angular/platform-browser': 'npm:@angular/platform-browser/bundles/platform-browser.umd.js',
+    '@angular/platform-browser-dynamic': 'npm:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
+    '@angular/http': 'npm:@angular/http/bundles/http.umd.js',
+    '@angular/router': 'npm:@angular/router/bundles/router.umd.js',
+    '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
+    '@angular/material': 'npm:@angular/material/material.umd.js', //Add this line
+
+    'rxjs':                       'npm:rxjs'
+  }
+});
+```
+
 ## Include the core and theme styles:
 This is **required** to apply all of the core and theme styles to your application. You can either
 use a pre-built theme, or define your own custom theme.
