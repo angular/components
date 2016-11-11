@@ -295,6 +295,8 @@ export class MdSlider implements ControlValueAccessor {
         this._increment(-1);
         break;
       default:
+        // Return if the key is not one that we explicitly handle to avoid calling preventDefault on
+        // it.
         return;
     }
 
