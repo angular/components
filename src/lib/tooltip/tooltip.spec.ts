@@ -144,7 +144,8 @@ describe('MdTooltip', () => {
       tooltipInstance._afterVisibilityAnimation(new AnimationTransitionEvent({
         fromState: 'visible',
         toState: 'hidden',
-        totalTime: 150
+        totalTime: 150,
+        phaseName: '',
       }));
     }));
   });
