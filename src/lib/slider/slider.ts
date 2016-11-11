@@ -209,8 +209,9 @@ export class MdSlider implements ControlValueAccessor {
 
   /** CSS styles for the track fill element. */
   get trackFillStyles(): { [key: string]: string } {
+    let axis = this.vertical ? 'Y' : 'X';
     return {
-      'flexBasis': `${this.percent * 100}%`
+      'transform': `scale${axis}(${this.percent})`
     };
   }
 
@@ -232,6 +233,14 @@ export class MdSlider implements ControlValueAccessor {
       styles['marginLeft'] = `${this.tickIntervalPercent / 2 * 100}%`;
     }
     return styles;
+  }
+
+  get thumbContainerStyles(): { [key: string]: string } {
+    let axis = this.vertical ? 'Y' : 'X';
+    let offset = (this._isLeftMin() ? this.percent : 1 - this.percent) * 100;
+    return {
+      'transform': `translate${axis}(${offset}%)`
+    };
   }
 
   /** The language direction for this slider element. */
@@ -264,7 +273,7 @@ export class MdSlider implements ControlValueAccessor {
     this._isActive = true;
     this._isSliding = false;
     this._renderer.addFocus();
-    this._updateValueFromPosition(event.clientX);
+    this._updateValueFromPosition({x: event.clientX, y: event.clientY});
     this._emitValueIfChanged();
   }
 
@@ -275,7 +284,7 @@ export class MdSlider implements ControlValueAccessor {
 
     // Prevent the slide from selecting anything else.
     event.preventDefault();
-    this._updateValueFromPosition(event.center.x);
+    this._updateValueFromPosition({x: event.center.x, y: event.center.y});
   }
 
   _onSlideStart(event: HammerInput) {
@@ -287,7 +296,7 @@ export class MdSlider implements ControlValueAccessor {
     this._isSliding = true;
     this._isActive = true;
     this._renderer.addFocus();
-    this._updateValueFromPosition(event.center.x);
+    this._updateValueFromPosition({x: event.center.x, y: event.center.y});
   }
 
   _onSlideEnd() {
@@ -350,16 +359,17 @@ export class MdSlider implements ControlValueAccessor {
   /**
    * Calculate the new value from the new physical location. The value will always be snapped.
    */
-  private _updateValueFromPosition(pos: number) {
+  private _updateValueFromPosition(pos: {x: number, y: number}) {
     if (!this._sliderDimensions) {
       return;
     }
 
-    let offset = this._sliderDimensions.left;
-    let size = this._sliderDimensions.width;
+    let offset = this.vertical ? this._sliderDimensions.top : this._sliderDimensions.left;
+    let size = this.vertical ? this._sliderDimensions.height : this._sliderDimensions.width;
+    let posComponent = this.vertical ? pos.y : pos.x;
 
     // The exact value is calculated from the event and used to find the closest snap value.
-    let percent = this._clamp((pos - offset) / size);
+    let percent = this._clamp((posComponent - offset) / size);
     if (!this._isLeftMin()) {
       percent = 1 - percent;
     }
