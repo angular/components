@@ -334,8 +334,9 @@ export class MdTabBody implements OnInit {
       this._position = this.getLayoutDirection() == 'ltr' ? 'left' : 'right';
     } else if (v > 0) {
       this._position = this.getLayoutDirection() == 'ltr' ? 'right' : 'left';
+    } else {
+      this._position = 'center';
     }
-    if (v == 0) { this._position = 'center'; }
 
     if (this._position === 'center' && !this._portalHost.hasAttached() && this._content) {
       this._portalHost.attach(this._content);

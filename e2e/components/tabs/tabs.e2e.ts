@@ -49,18 +49,13 @@ describe('tabs', () => {
   });
 });
 
-/**
- * A helper function to perform the sendKey action
- * @param key
- */
+/** A helper function to perform the sendKey action. */
 function pressKey(key: string) {
   browser.actions().sendKeys(key).perform();
 }
 
 /**
- * Returns an array of true/false that represents the focus states of the provided elements
- * @param elements
- * @returns {webdriver.promise.Promise<Promise<boolean>[]>|webdriver.promise.Promise<T[]>}
+ * Returns an array of true/false that represents the focus states of the provided elements.
  */
 function getFocusStates(elements: ElementArrayFinder) {
   return elements.map(element => {
@@ -72,30 +67,19 @@ function getFocusStates(elements: ElementArrayFinder) {
   });
 }
 
-/**
- * Returns an array of true/false that represents the active states for the provided elements
- * @param elements
- * @returns {webdriver.promise.Promise<Promise<boolean>[]>|webdriver.promise.Promise<T[]>}
- */
+/** Returns an array of true/false that represents the active states for the provided elements. */
 function getLabelActiveStates(elements: ElementArrayFinder) {
   return getClassStates(elements, 'md-tab-label-active');
 }
 
-/**
- * Returns an array of true/false that represents the active states for the provided elements
- * @param elements
- * @returns {webdriver.promise.Promise<Promise<boolean>[]>|webdriver.promise.Promise<T[]>}
- */
+/** Returns an array of true/false that represents the active states for the provided elements */
 function getBodyActiveStates(elements: ElementArrayFinder) {
   return getClassStates(elements, 'md-tab-body-active');
 }
 
 /**
  * Returns an array of true/false values that represents whether the provided className is on
- * each element
- * @param elements
- * @param className
- * @returns {webdriver.promise.Promise<Promise<boolean>[]>|webdriver.promise.Promise<T[]>}
+ * each element.
  */
 function getClassStates(elements: ElementArrayFinder, className: string) {
   return elements.map(element => {

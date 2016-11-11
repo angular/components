@@ -6,9 +6,11 @@ import {MdTabGroup, MdTabsModule} from './tabs';
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
+import {LayoutDirection, Dir} from '../core/rtl/dir';
 
 
 describe('MdTabGroup', () => {
+  let dir: LayoutDirection = 'ltr';
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -19,6 +21,11 @@ describe('MdTabGroup', () => {
         DisabledTabsTestApp,
         TabGroupWithSimpleApi,
       ],
+      providers: [
+        {provide: Dir, useFactory: () => {
+          return {value: dir};
+        }}
+      ]
     });
 
     TestBed.compileComponents();
@@ -185,6 +192,40 @@ describe('MdTabGroup', () => {
 
       expect(tabBodyList[2].componentInstance._position).toBe('right');
       expect(tabBodyList[2].componentInstance._content.isAttached).toBe(false);
+    }));
+
+
+    it('should support RTL for the tab positions', fakeAsync(() => {
+      dir = 'rtl';
+      fixture.detectChanges();
+      const tabComponent = fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
+      const tabBodyList = fixture.debugElement.queryAll(By.css('md-tab-body'));
+
+      // Begin on the second tab
+      flushMicrotasks();  // finish animation
+
+      expect(tabBodyList[0].componentInstance._position).toBe('right');
+      expect(tabBodyList[1].componentInstance._position).toBe('center');
+      expect(tabBodyList[2].componentInstance._position).toBe('left');
+
+      // Move to third tab
+      tabComponent.selectedIndex = 2;
+      fixture.detectChanges();
+      flushMicrotasks();  // finish animation
+
+      expect(tabBodyList[0].componentInstance._position).toBe('right');
+      expect(tabBodyList[1].componentInstance._position).toBe('right');
+      expect(tabBodyList[2].componentInstance._position).toBe('center');
+
+      // Move to the first tab
+      tabComponent.selectedIndex = 0;
+      fixture.detectChanges();
+      flushMicrotasks();  // finish animation
+
+      // Check that the tab bodies have correctly positions themselves
+      expect(tabBodyList[0].componentInstance._position).toBe('center');
+      expect(tabBodyList[1].componentInstance._position).toBe('left');
+      expect(tabBodyList[2].componentInstance._position).toBe('left');
     }));
   });
 
