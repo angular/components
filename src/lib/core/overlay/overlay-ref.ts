@@ -103,7 +103,7 @@ export class OverlayRef implements PortalHost {
     let backdropToDetach = this._backdropElement;
 
     if (backdropToDetach) {
-      let onTransitionEnd = () => {
+      let finishDetach = () => {
         // It may not be attached to anything in certain cases (e.g. unit tests).
         if (backdropToDetach && backdropToDetach.parentNode) {
           backdropToDetach.parentNode.removeChild(backdropToDetach);
@@ -119,12 +119,12 @@ export class OverlayRef implements PortalHost {
 
       backdropToDetach.classList.remove('md-overlay-backdrop-showing');
       backdropToDetach.classList.remove(this._state.backdropClass);
-      backdropToDetach.addEventListener('transitionend', onTransitionEnd);
+      backdropToDetach.addEventListener('transitionend', finishDetach);
 
       // If the backdrop doesn't have a transition, the `transitionend` event won't fire.
       // In this case we make it unclickable and we try to remove it after a delay.
       backdropToDetach.style.pointerEvents = 'none';
-      setTimeout(onTransitionEnd, 500);
+      setTimeout(finishDetach, 500);
     }
   }
 }
