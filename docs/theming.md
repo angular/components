@@ -29,12 +29,12 @@ You can include a theme file directly into your application from
 If you're using Angular CLI, this is as simple as including one line
 in your `style.css`  file:
 ```css
-@import '~@angular/material/src/lib/core/theming/prebuilt/deeppurple-amber.css';
+@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
 ```
 
 Alternatively, you can just reference the file directly. This would look something like
 ```html
-<link href="node_modules/@angular/material/src/lib/core/theming/prebuilt/indigo-pink.css" rel="stylesheet">
+<link href="node_modules/@angular/material/core/theming/prebuilt/indigo-pink.css" rel="stylesheet">
 ```
 The actual path will depend on your server setup.
 
