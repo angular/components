@@ -14,7 +14,7 @@ import {Dir, LayoutDirection} from '../core/rtl/dir';
 
 const initialTooltipMessage = 'initial tooltip message';
 
-fdescribe('MdTooltip', () => {
+describe('MdTooltip', () => {
   let overlayContainerElement: HTMLElement;
   let dir: {value: LayoutDirection};
 
