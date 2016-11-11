@@ -8,7 +8,7 @@ import {
 } from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {TooltipPosition, MdTooltip, TOUCHEND_HIDE_DELAY, MdTooltipModule} from './tooltip';
+import {TooltipPosition, MdTooltip, MdTooltipModule} from './tooltip';
 import {OverlayContainer} from '../core';
 
 const initialTooltipMessage = 'initial tooltip message';
