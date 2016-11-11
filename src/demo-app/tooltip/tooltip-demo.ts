@@ -9,6 +9,6 @@ import {TooltipPosition} from '@angular/material';
   styleUrls: ['tooltip-demo.css'],
 })
 export class TooltipDemo {
-  position: TooltipPosition = 'below';
+  position: TooltipPosition = 'bottom';
   message: string = 'Here is the tooltip';
 }
