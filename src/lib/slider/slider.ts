@@ -217,29 +217,41 @@ export class MdSlider implements ControlValueAccessor {
 
   /** CSS styles for the ticks container element. */
   get ticksContainerStyles(): { [key: string]: string } {
-    return {
-      'marginLeft': `${this.direction == 'rtl' ? '' : '-'}${this.tickIntervalPercent / 2 * 100}%`
-    };
+    let sign = this.direction == 'rtl' ? '' : '-';
+    let offset = this.tickIntervalPercent / 2 * 100;
+    if (this.vertical) {
+      return {
+        'transform': `translate3d(0, -${offset}%, 0)`
+      };
+    } else {
+      return {
+        'marginLeft': `${sign}${offset}%`
+      };
+    }
   }
 
   /** CSS styles for the ticks element. */
   get ticksStyles() {
+    let tickSize = this.tickIntervalPercent * 100;
+    let backgroundSize = this.vertical ? `2px ${tickSize}%` : `${tickSize}% 2px`;
+    let marginSide = this.direction == 'rtl' ? 'Right' : 'Left';
+    let marginSign = this.direction == 'rtl' ? '-' : '';
     let styles: { [key: string]: string } = {
-      'backgroundSize': `${this.tickIntervalPercent * 100}% 2px`
+      'backgroundSize': backgroundSize,
     };
-    if (this.direction == 'rtl') {
-      styles['marginRight'] = `-${this.tickIntervalPercent / 2 * 100}%`;
+    if (this.vertical) {
+      styles['transform'] = `translate3d(0, ${tickSize / 2}%, 0)`;
     } else {
-      styles['marginLeft'] = `${this.tickIntervalPercent / 2 * 100}%`;
+      styles[`margin${marginSide}`] = `${marginSign}${tickSize / 2}%`;
     }
     return styles;
   }
 
   get thumbContainerStyles(): { [key: string]: string } {
     let axis = this.vertical ? 'Y' : 'X';
-    let offset = (this._isLeftMin() ? this.percent : 1 - this.percent) * 100;
+    let offset = (this._isLeftMin() ? 1 - this.percent : this.percent) * 100;
     return {
-      'transform': `translate${axis}(${offset}%)`
+      'transform': `translate${axis}(-${offset}%)`
     };
   }
 
@@ -403,10 +415,11 @@ export class MdSlider implements ControlValueAccessor {
     }
 
     if (this.tickInterval == 'auto') {
-      let pixelsPerStep = this._sliderDimensions.width * this.step / (this.max - this.min);
+      let trackSize = this.vertical ? this._sliderDimensions.height : this._sliderDimensions.width;
+      let pixelsPerStep = trackSize * this.step / (this.max - this.min);
       let stepsPerTick = Math.ceil(MIN_AUTO_TICK_SEPARATION / pixelsPerStep);
       let pixelsPerTick = stepsPerTick * this.step;
-      this._tickIntervalPercent = pixelsPerTick / (this._sliderDimensions.width);
+      this._tickIntervalPercent = pixelsPerTick / trackSize;
     } else {
       this._tickIntervalPercent = this.tickInterval * this.step / (this.max - this.min);
     }

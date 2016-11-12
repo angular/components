@@ -46,20 +46,10 @@ md-slider {
   position: absolute;
   left: 0;
   top: 0;
-  height: $md-slider-track-thickness;
-  width: 100%;
   overflow: hidden;
 }
 
 .md-slider-ticks {
-  background: repeating-linear-gradient(to right, $md-slider-tick-color,
-      $md-slider-tick-color $md-slider-tick-size, transparent 0, transparent) repeat;
-  // Firefox doesn't draw the gradient correctly with 'to right'
-  // (see https://bugzilla.mozilla.org/show_bug.cgi?id=1314319).
-  background: -moz-repeating-linear-gradient(0.0001deg, $md-slider-tick-color,
-      $md-slider-tick-color $md-slider-tick-size, transparent 0, transparent) repeat;
-  height: $md-slider-track-thickness;
-  width: 100%;
   opacity: 0;
   transition: opacity $swift-ease-out-duration $swift-ease-out-timing-function;
 }
@@ -71,8 +61,8 @@ md-slider {
 
 .md-slider-thumb {
   position: absolute;
-  left: -$md-slider-thumb-size / 2;
-  top: -$md-slider-thumb-size / 2;
+  right: -$md-slider-thumb-size / 2;
+  bottom: -$md-slider-thumb-size / 2;
   width: $md-slider-thumb-size;
   height: $md-slider-thumb-size;
   border-radius: 50%;
@@ -85,13 +75,9 @@ md-slider {
   align-items: center;
   justify-content: center;
   position: absolute;
-  left: -$md-slider-thumb-label-size / 2;
-  top: -($md-slider-thumb-label-size + $md-slider-thumb-arrow-gap);
   width: $md-slider-thumb-label-size;
   height: $md-slider-thumb-label-size;
   border-radius: 50%;
-  transform: translateY($md-slider-thumb-label-size / 2 + $md-slider-thumb-arrow-gap)
-  scale(0.4) rotate(45deg);
   transition: 300ms $swift-ease-in-out-timing-function;
   transition-property: transform, border-radius;
 }
@@ -101,7 +87,6 @@ md-slider {
   font-size: 12px;
   font-weight: bold;
   opacity: 0;
-  transform: rotate(-45deg);
   transition: opacity 300ms $swift-ease-in-out-timing-function;
 }
 
@@ -119,11 +104,6 @@ md-slider {
 .md-slider-has-ticks {
   &.md-slider-active,
   &:hover {
-    .md-slider-track {
-      box-shadow:
-          inset (-2 * $md-slider-tick-size) 0 0 (-$md-slider-tick-size) $md-slider-tick-color;
-    }
-
     .md-slider-ticks {
       opacity: 1;
     }
@@ -159,7 +139,6 @@ md-slider {
 
   .md-slider-thumb-label {
     border-radius: 50% 50% 0;
-    transform: rotate(45deg);
   }
 
   .md-slider-thumb-label-text {
@@ -183,10 +162,51 @@ md-slider {
     transform: scaleX(0);
   }
 
+  .md-slider-ticks-container {
+    height: $md-slider-track-thickness;
+    width: 100%;
+  }
+
+  .md-slider-ticks {
+    background: repeating-linear-gradient(to right, $md-slider-tick-color,
+        $md-slider-tick-color $md-slider-tick-size, transparent 0, transparent) repeat;
+    // Firefox doesn't draw the gradient correctly with 'to right'
+    // (see https://bugzilla.mozilla.org/show_bug.cgi?id=1314319).
+    background: -moz-repeating-linear-gradient(0.0001deg, $md-slider-tick-color,
+        $md-slider-tick-color $md-slider-tick-size, transparent 0, transparent) repeat;
+    height: $md-slider-track-thickness;
+    width: 100%;
+  }
+
   .md-slider-thumb-container {
     width: 100%;
     height: 0;
     top: 50%;
+  }
+
+  .md-slider-thumb-label {
+    right: -$md-slider-thumb-label-size / 2;
+    top: -($md-slider-thumb-label-size + $md-slider-thumb-arrow-gap);
+    transform: translateY($md-slider-thumb-label-size / 2 + $md-slider-thumb-arrow-gap) scale(0.4) rotate(45deg);
+  }
+
+  .md-slider-thumb-label-text {
+    transform: rotate(-45deg);
+  }
+
+  &.md-slider-active {
+    .md-slider-thumb-label {
+      transform: rotate(45deg);
+    }
+  }
+
+  &.md-slider-has-ticks {
+    &.md-slider-active,
+    &:hover {
+      .md-slider-track {
+        box-shadow: inset (-2 * $md-slider-tick-size) 0 0 (-$md-slider-tick-size) $md-slider-tick-color;
+      }
+    }
   }
 }
 
@@ -207,10 +227,48 @@ md-slider {
     transform: scaleY(0);
   }
 
+  .md-slider-ticks-container {
+    width: $md-slider-track-thickness;
+    height: 100%;
+  }
+
+  .md-slider-ticks {
+    background: repeating-linear-gradient(to bottom, $md-slider-tick-color,
+        $md-slider-tick-color $md-slider-tick-size, transparent 0, transparent) repeat;
+    width: $md-slider-track-thickness;
+    height: 100%;
+  }
+
   .md-slider-thumb-container {
     height: 100%;
     width: 0;
     left: 50%;
+  }
+
+  .md-slider-thumb-label {
+    bottom: -$md-slider-thumb-label-size / 2;
+    left: -($md-slider-thumb-label-size + $md-slider-thumb-arrow-gap);
+    transform: translateX($md-slider-thumb-label-size / 2 + $md-slider-thumb-arrow-gap)
+        scale(0.4) rotate(-45deg);
+  }
+
+  .md-slider-thumb-label-text {
+    transform: rotate(45deg);
+  }
+
+  &.md-slider-active {
+    .md-slider-thumb-label {
+      transform: rotate(-45deg);
+    }
+  }
+
+  &.md-slider-has-ticks {
+    &.md-slider-active,
+    &:hover {
+      .md-slider-track {
+        box-shadow: inset 0 (-2 * $md-slider-tick-size) 0 (-$md-slider-tick-size) $md-slider-tick-color;
+      }
+    }
   }
 }
 
@@ -222,7 +280,7 @@ md-slider {
     transform: translateZ(0) rotate(180deg);
   }
 
-  .md-slider-has-ticks {
+  .md-slider-horizontal.md-slider-has-ticks {
     &.md-slider-active,
     &:hover {
       .md-slider-track {
