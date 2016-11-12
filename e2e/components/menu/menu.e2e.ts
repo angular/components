@@ -75,7 +75,10 @@ describe('menu', () => {
     });
 
     it('should auto-focus the first item when opened with SPACE', () => {
-      page.pressKey(protractor.Key.SPACE);
+      // Due to chromebug https://bugs.chromium.org/p/chromedriver/issues/detail?id=1502,
+      // the space key is not properly working in the latest Chromedriver.
+      // TODO: Revert temporary change to use space key after Chromedriver 2.26 is available.
+      page.pressKey(protractor.Key.ENTER);
       page.expectFocusOn(page.items(0));
     });
 

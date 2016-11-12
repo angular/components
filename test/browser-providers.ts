@@ -65,7 +65,7 @@ export const customLaunchers: { [name: string]: BrowserLauncherInfo } = {
   'SL_CHROME': {
     base: 'SauceLabs',
     browserName: 'chrome',
-    version: '46'
+    version: 'latest'
   },
   'SL_CHROMEBETA': {
     base: 'SauceLabs',
@@ -80,7 +80,7 @@ export const customLaunchers: { [name: string]: BrowserLauncherInfo } = {
   'SL_FIREFOX': {
     base: 'SauceLabs',
     browserName: 'firefox',
-    version: '42'
+    version: 'latest'
   },
   'SL_FIREFOXBETA': {
     base: 'SauceLabs',
