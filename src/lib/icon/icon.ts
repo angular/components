@@ -1,16 +1,16 @@
 import {
-    NgModule,
-    ModuleWithProviders,
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    Input,
-    OnChanges,
-    OnInit,
-    Renderer,
-    SimpleChange,
-    ViewEncapsulation,
-    AfterViewChecked
+  NgModule,
+  ModuleWithProviders,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  Renderer,
+  SimpleChange,
+  ViewEncapsulation,
+  AfterViewChecked,
 } from '@angular/core';
 import {HttpModule} from '@angular/http';
 import {MdError} from '../core';
@@ -72,7 +72,6 @@ export class MdIconInvalidNameError extends MdError {
 export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
   private _color: string;
 
-  @Input() svgSrc: string;
   @Input() svgIcon: string;
   @Input() fontSet: string;
   @Input() fontIcon: string;
@@ -148,10 +147,6 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
         this._mdIconRegistry.getNamedSvgIcon(iconName, namespace).first().subscribe(
             svg => this._setSvgElement(svg),
             (err: any) => console.log(`Error retrieving icon: ${err}`));
-      } else if (this.svgSrc) {
-        this._mdIconRegistry.getSvgIconFromUrl(this.svgSrc).first().subscribe(
-            svg => this._setSvgElement(svg),
-            (err: any) => console.log(`Error retrieving icon: ${err}`));
       }
     }
     if (this._usingFontIcon()) {
@@ -207,7 +202,7 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
   }
 
   private _usingFontIcon(): boolean {
-    return !(this.svgIcon || this.svgSrc);
+    return !this.svgIcon;
   }
 
   private _setSvgElement(svg: SVGElement) {
