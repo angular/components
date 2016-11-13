@@ -45,12 +45,15 @@ export class RippleRenderer {
 
   constructor(_elementRef: ElementRef, private _eventHandlers: Map<string, (e: Event) => void>) {
     this._rippleElement = _elementRef.nativeElement;
-    // It might be nice to delay creating the background until it's needed, but doing this in
-    // fadeInRippleBackground causes the first click event to not be handled reliably.
+    // The background div is created in createBackgroundIfNeeded when the ripple becomes enabled.
+    // This avoids creating unneeded divs when the ripple is always disabled.
     this._backgroundDiv = null;
   }
 
-  initializeIfNeeded() {
+  /**
+   * Creates the div for the ripple background, if it doesn't already exist.
+   */
+  createBackgroundIfNeeded() {
     if (!this._backgroundDiv) {
       this._backgroundDiv = document.createElement('div');
       this._backgroundDiv.classList.add('md-ripple-background');
