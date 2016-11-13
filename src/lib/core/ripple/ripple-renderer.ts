@@ -47,9 +47,15 @@ export class RippleRenderer {
     this._rippleElement = _elementRef.nativeElement;
     // It might be nice to delay creating the background until it's needed, but doing this in
     // fadeInRippleBackground causes the first click event to not be handled reliably.
-    this._backgroundDiv = document.createElement('div');
-    this._backgroundDiv.classList.add('md-ripple-background');
-    this._rippleElement.appendChild(this._backgroundDiv);
+    this._backgroundDiv = null;
+  }
+
+  initializeIfNeeded() {
+    if (!this._backgroundDiv) {
+      this._backgroundDiv = document.createElement('div');
+      this._backgroundDiv.classList.add('md-ripple-background');
+      this._rippleElement.appendChild(this._backgroundDiv);
+    }
   }
 
   /**
