@@ -40,6 +40,18 @@ const MD_INPUT_INVALID_INPUT_TYPE = [
   'checkbox',
 ];
 
+let featureTestInput: HTMLInputElement = document.createElement('input');
+
+/** Native input types, supported by the current browser, that have input masking. */
+export const TYPES_WITH_MASK = [
+  'range', 'date', 'month', 'week', 'time', 'datetime', 'datetime-local'
+].filter(value => {
+  featureTestInput.setAttribute('type', value);
+  return featureTestInput.type === value;
+});
+
+featureTestInput = null;
+
 
 let nextUniqueId = 0;
 
@@ -139,7 +151,10 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
 
   /** Readonly properties. */
   get focused() { return this._focused; }
-  get empty() { return (this._value == null || this._value === '') && this.type !== 'date'; }
+  get empty() {
+    return (this._value == null || this._value === '') &&
+           TYPES_WITH_MASK.indexOf(this.type) === -1;
+  }
   get characterCount(): number {
     return this.empty ? 0 : ('' + this._value).length;
   }

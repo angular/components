@@ -5,7 +5,7 @@ import {
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {MdInput, MdInputModule} from './input';
+import {MdInput, MdInputModule, TYPES_WITH_MASK} from './input';
 
 function isInternetExplorer11() {
     return 'ActiveXObject' in window;
@@ -53,7 +53,7 @@ describe('MdInput', function () {
         MdInputWithMin,
         MdInputWithStep,
         MdInputWithTabindex,
-        MdInputDateTestController,
+        MdInputWithMask,
         MdInputTextTestController,
         MdInputPasswordTestController,
         MdInputNumberTestController,
@@ -80,11 +80,11 @@ describe('MdInput', function () {
         .toBe(true, 'Expected MdInput to default to having floating placeholders turned on');
   });
 
-  it('should not be treated as empty if type is date', () => {
-    if (isInternetExplorer11()) {
+  it('should not be treated as empty if the input has native masking', () => {
+    if (!TYPES_WITH_MASK.length) {
       return;
     }
-    let fixture = TestBed.createComponent(MdInputDateTestController);
+    let fixture = TestBed.createComponent(MdInputWithMask);
     fixture.componentInstance.placeholder = 'Placeholder';
     fixture.detectChanges();
 
@@ -787,8 +787,9 @@ class MdInputWithStep { }
 @Component({template: `<md-input [tabindex]="tabIndex"></md-input>`})
 class MdInputWithTabindex { }
 
-@Component({template: `<md-input type="date" [placeholder]="placeholder"></md-input>`})
-class MdInputDateTestController {
+@Component({template:
+    `<md-input type="${TYPES_WITH_MASK[0] || 'text'}" [placeholder]="placeholder"></md-input>`})
+class MdInputWithMask {
   placeholder: string = '';
 }
 
