@@ -8,7 +8,7 @@ $md-card-border-radius: 2px !default;
 $md-card-header-size: 40px !default;
 
 md-card {
-  @include md-elevation(1);
+  @include md-elevation(2);
   @include md-elevation-transition;
   display: block;
   position: relative;
@@ -18,7 +18,7 @@ md-card {
 }
 
 md-card:hover {
-  @include md-elevation(2);
+  @include md-elevation(8);
 }
 
 .md-card-flat {
