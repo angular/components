@@ -33,30 +33,16 @@ import { MaterialModule } from '@angular/material';
 export class PizzaPartyAppModule { }
 ```
 
-## Tell to System loader where Angular Material is located
-This is **required** step. You need to tell to system loader where angular material is located otherwise
-material2 can't be loaded.
+## Configuring SystemJS
+If your project is using SystemJS for module loading, you will need to add `@angular/material` 
+to the SystemJS configuration:
 
 ```js
 System.config({
-  defaultJSExtensions: true,
-  paths: {
-    'npm:': './'
-  },
+  // existing configuration options
   map: {
-    app: 'app',
-
-    '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
-    '@angular/common': 'npm:@angular/common/bundles/common.umd.js',
-    '@angular/compiler': 'npm:@angular/compiler/bundles/compiler.umd.js',
-    '@angular/platform-browser': 'npm:@angular/platform-browser/bundles/platform-browser.umd.js',
-    '@angular/platform-browser-dynamic': 'npm:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
-    '@angular/http': 'npm:@angular/http/bundles/http.umd.js',
-    '@angular/router': 'npm:@angular/router/bundles/router.umd.js',
-    '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
-    '@angular/material': 'npm:@angular/material/material.umd.js', //Add this line
-
-    'rxjs':                       'npm:rxjs'
+    ...,
+    '@angular/material': 'npm:@angular/material/material.umd.js'
   }
 });
 ```
