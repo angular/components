@@ -109,21 +109,21 @@ describe('MdSlider', () => {
     });
 
     it('should update the track fill on click', () => {
-      expect(trackFillElement.style.flexBasis).toBe('0%');
+      expect(trackFillElement.style.transform).toBe('scaleX(0)');
 
       dispatchClickEventSequence(sliderNativeElement, 0.39);
       fixture.detectChanges();
 
-      expect(trackFillElement.style.flexBasis).toBe('39%');
+      expect(trackFillElement.style.transform).toBe('scaleX(0.39)');
     });
 
     it('should update the track fill on slide', () => {
-      expect(trackFillElement.style.flexBasis).toBe('0%');
+      expect(trackFillElement.style.transform).toBe('scaleX(0)');
 
       dispatchSlideEventSequence(sliderNativeElement, 0, 0.86, gestureConfig);
       fixture.detectChanges();
 
-      expect(trackFillElement.style.flexBasis).toBe('86%');
+      expect(trackFillElement.style.transform).toBe('scaleX(0.86)');
     });
 
     it('should add the md-slider-active class on click', () => {
@@ -276,7 +276,7 @@ describe('MdSlider', () => {
       fixture.detectChanges();
 
       // The closest snap is halfway on the slider.
-      expect(trackFillElement.style.flexBasis).toBe('50%');
+      expect(trackFillElement.style.transform).toBe('scaleX(0.5)');
     });
 
     it('should snap the fill to the nearest value on slide', () => {
@@ -284,7 +284,7 @@ describe('MdSlider', () => {
       fixture.detectChanges();
 
       // The closest snap is at the halfway point on the slider.
-      expect(trackFillElement.style.flexBasis).toBe('50%');
+      expect(trackFillElement.style.transform).toBe('scaleX(0.5)');
     });
 
     it('should adjust fill and ticks on mouse enter when min changes', () => {
@@ -294,11 +294,11 @@ describe('MdSlider', () => {
       dispatchMouseenterEvent(sliderNativeElement);
       fixture.detectChanges();
 
-      expect(trackFillElement.style.flexBasis).toBe('75%');
+      expect(trackFillElement.style.transform).toBe('scaleX(0.75)');
       expect(ticksElement.style.backgroundSize).toBe('75% 2px');
       // Make sure it cuts off the last half tick interval.
-      expect(ticksElement.style.marginLeft).toBe('37.5%');
-      expect(ticksContainerElement.style.marginLeft).toBe('-37.5%');
+      expect(ticksElement.style.transform).toBe('translateZ(0px) translateX(37.5%)');
+      expect(ticksContainerElement.style.transform).toBe('translateX(-37.5%)');
     });
 
     it('should adjust fill and ticks on mouse enter when max changes', () => {
@@ -311,11 +311,11 @@ describe('MdSlider', () => {
       dispatchMouseenterEvent(sliderNativeElement);
       fixture.detectChanges();
 
-      expect(trackFillElement.style.flexBasis).toBe('50%');
+      expect(trackFillElement.style.transform).toBe('scaleX(0.5)');
       expect(ticksElement.style.backgroundSize).toBe('50% 2px');
       // Make sure it cuts off the last half tick interval.
-      expect(ticksElement.style.marginLeft).toBe('25%');
-      expect(ticksContainerElement.style.marginLeft).toBe('-25%');
+      expect(ticksElement.style.transform).toBe('translateZ(0px) translateX(25%)');
+      expect(ticksContainerElement.style.transform).toBe('translateX(-25%)');
     });
   });
 
@@ -390,7 +390,7 @@ describe('MdSlider', () => {
       fixture.detectChanges();
 
       // The closest step is at 75% of the slider.
-      expect(trackFillElement.style.flexBasis).toBe('75%');
+      expect(trackFillElement.style.transform).toBe('scaleX(0.75)');
     });
 
     it('should set the correct step value on slide', () => {
@@ -405,7 +405,7 @@ describe('MdSlider', () => {
       fixture.detectChanges();
 
       // The closest snap is at the end of the slider.
-      expect(trackFillElement.style.flexBasis).toBe('100%');
+      expect(trackFillElement.style.transform).toBe('scaleX(1)');
     });
   });
 
@@ -434,8 +434,8 @@ describe('MdSlider', () => {
       // Ticks should be 30px apart (therefore 30% for a 100px long slider).
       expect(ticksElement.style.backgroundSize).toBe('30% 2px');
       // Make sure it cuts off the last half tick interval.
-      expect(ticksElement.style.marginLeft).toBe('15%');
-      expect(ticksContainerElement.style.marginLeft).toBe('-15%');
+      expect(ticksElement.style.transform).toBe('translateZ(0px) translateX(15%)');
+      expect(ticksContainerElement.style.transform).toBe('translateX(-15%)');
     });
   });
 
@@ -465,8 +465,8 @@ describe('MdSlider', () => {
       // long with 100 values, this is 18%.
       expect(ticksElement.style.backgroundSize).toBe('18% 2px');
       // Make sure it cuts off the last half tick interval.
-      expect(ticksElement.style.marginLeft).toBe('9%');
-      expect(ticksContainerElement.style.marginLeft).toBe('-9%');
+      expect(ticksElement.style.transform).toBe('translateZ(0px) translateX(9%)');
+      expect(ticksContainerElement.style.transform).toBe('translateX(-9%)');
     });
   });
 
@@ -638,7 +638,7 @@ describe('MdSlider', () => {
 
     it('should initialize based on bound value', () => {
       expect(sliderInstance.value).toBe(50);
-      expect(trackFillElement.style.flexBasis).toBe('50%');
+      expect(trackFillElement.style.transform).toBe('scaleX(0.5)');
     });
 
     it('should update when bound value changes', () => {
@@ -646,7 +646,7 @@ describe('MdSlider', () => {
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(75);
-      expect(trackFillElement.style.flexBasis).toBe('75%');
+      expect(trackFillElement.style.transform).toBe('scaleX(0.75)');
     });
   });
 
@@ -676,7 +676,7 @@ describe('MdSlider', () => {
     });
 
     it('should set the fill to the min value', () => {
-      expect(trackFillElement.style.flexBasis).toBe('0%');
+      expect(trackFillElement.style.transform).toBe('scaleX(0)');
     });
   });
 
@@ -706,7 +706,7 @@ describe('MdSlider', () => {
     });
 
     it('should set the fill to the max value', () => {
-      expect(trackFillElement.style.flexBasis).toBe('100%');
+      expect(trackFillElement.style.transform).toBe('scaleX(1)');
     });
   });
 
