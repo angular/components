@@ -217,34 +217,26 @@ export class MdSlider implements ControlValueAccessor {
 
   /** CSS styles for the ticks container element. */
   get ticksContainerStyles(): { [key: string]: string } {
-    let sign = this.direction == 'rtl' ? '' : '-';
+    let axis = this.vertical ? 'Y' : 'X';
+    let sign = !this.vertical && this.direction == 'rtl' ? '' : '-';
     let offset = this.tickIntervalPercent / 2 * 100;
-    if (this.vertical) {
-      return {
-        'transform': `translateY(-${offset}%)`
-      };
-    } else {
-      return {
-        'marginLeft': `${sign}${offset}%`
-      };
-    }
+    return {
+      'transform': `translate${axis}(${sign}${offset}%)`
+    };
   }
 
   /** CSS styles for the ticks element. */
-  get ticksStyles() {
+  get ticksStyles(): { [key: string]: string } {
     let tickSize = this.tickIntervalPercent * 100;
     let backgroundSize = this.vertical ? `2px ${tickSize}%` : `${tickSize}% 2px`;
-    let marginSide = this.direction == 'rtl' ? 'Right' : 'Left';
-    let marginSign = this.direction == 'rtl' ? '-' : '';
-    let styles: { [key: string]: string } = {
+    let axis = this.vertical ? 'Y' : 'X';
+    let sign = !this.vertical && this.direction == 'rtl' ? '-' : '';
+    let rotate = !this.vertical && this.direction == 'rtl' ? ' rotate(180deg)' : '';
+    return {
       'backgroundSize': backgroundSize,
+      // Without translateZ ticks sometimes jitter as the slider moves on Chrome & Firefox.
+      'transform': `translateZ(0) translate${axis}(${sign}${tickSize / 2}%)${rotate}`
     };
-    if (this.vertical) {
-      styles['transform'] = `translateY(${tickSize / 2}%)`;
-    } else {
-      styles[`margin${marginSide}`] = `${marginSign}${tickSize / 2}%`;
-    }
-    return styles;
   }
 
   get thumbContainerStyles(): { [key: string]: string } {
