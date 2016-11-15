@@ -221,7 +221,7 @@ export class MdSlider implements ControlValueAccessor {
     let offset = this.tickIntervalPercent / 2 * 100;
     if (this.vertical) {
       return {
-        'transform': `translate3d(0, -${offset}%, 0)`
+        'transform': `translateY(-${offset}%)`
       };
     } else {
       return {
@@ -240,7 +240,7 @@ export class MdSlider implements ControlValueAccessor {
       'backgroundSize': backgroundSize,
     };
     if (this.vertical) {
-      styles['transform'] = `translate3d(0, ${tickSize / 2}%, 0)`;
+      styles['transform'] = `translateY(${tickSize / 2}%)`;
     } else {
       styles[`margin${marginSide}`] = `${marginSign}${tickSize / 2}%`;
     }

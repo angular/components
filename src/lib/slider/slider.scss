@@ -33,6 +33,10 @@ md-slider {
 .md-slider-track {
   flex: 1;
   position: relative;
+  // Without translateZ Chrome & Firefox display some strange rendering behavior. Firefox doesn't
+  // immediately redraw the track when the slider thumb moves, and Chrome shows ticks that fall
+  // outside of the ticks-container with overflow: hidden.
+  transform: translateZ(0);
   transition: box-shadow $swift-ease-out-duration $swift-ease-out-timing-function;
 }
 
@@ -276,7 +280,8 @@ md-slider {
 // Slider in RTL languages.
 [dir='rtl'] {
   .md-slider-ticks-container {
-    // translateZ(0) prevents chrome bug where overflow: hidden; doesn't work.
+    // Without translateZ Chrome has a rendering bug where the ticks jiggle slightly when the slider
+    // thumb is moving.
     transform: translateZ(0) rotate(180deg);
   }
 
