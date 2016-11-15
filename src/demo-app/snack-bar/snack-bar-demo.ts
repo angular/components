@@ -18,7 +18,7 @@ export class SnackBarDemo {
 
   open() {
     let config = new MdSnackBarConfig();
-    config.autoHide = this.autoHide;
+    config.duration = this.autoHide;
     this.snackBar.open(this.message, this.action && this.actionButtonLabel, config);
   }
 }

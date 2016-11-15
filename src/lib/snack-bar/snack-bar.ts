@@ -63,9 +63,11 @@ export class MdSnackBar {
       snackBarRef.containerInstance.enter();
     }
 
-    // TODO(josephperrott): Set dismiss setTimeout after the snackbar finishes entering the view.
-    if (config.dismiss > 0) {
-      setTimeout(() => snackBarRef.dismiss(), config.dismiss);
+    // If a dismiss timeout is provided, set up dismiss based on after the snackbar is opened.
+    if (config.duration > 0) {
+      snackBarRef.afterOpened().subscribe(() => {
+        setTimeout(() => snackBarRef.dismiss(), config.duration);
+      });
     }
 
     this._live.announce(config.announcementMessage, config.politeness);

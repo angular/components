@@ -15,5 +15,5 @@ export class MdSnackBarConfig {
   viewContainerRef?: ViewContainerRef = null;
 
   /** The length of time in milliseconds to wait before automatically dismissing the snack bar. */
-  dismiss?: number = 0;
+  duration?: number = 0;
 }
