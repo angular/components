@@ -296,6 +296,9 @@ export class MdSlider implements ControlValueAccessor {
       return;
     }
 
+    // Simulate mouseenter in case this is a mobile device.
+    this._onMouseenter();
+
     event.preventDefault();
     this._isSliding = true;
     this._isActive = true;
