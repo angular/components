@@ -297,7 +297,7 @@ describe('MdSlider', () => {
       expect(trackFillElement.style.transform).toBe('scaleX(0.75)');
       expect(ticksElement.style.backgroundSize).toBe('75% 2px');
       // Make sure it cuts off the last half tick interval.
-      expect(ticksElement.style.transform).toBe('translateZ(0px) translateX(37.5%)');
+      expect(ticksElement.style.transform).toContain('translateX(37.5%)');
       expect(ticksContainerElement.style.transform).toBe('translateX(-37.5%)');
     });
 
@@ -314,7 +314,7 @@ describe('MdSlider', () => {
       expect(trackFillElement.style.transform).toBe('scaleX(0.5)');
       expect(ticksElement.style.backgroundSize).toBe('50% 2px');
       // Make sure it cuts off the last half tick interval.
-      expect(ticksElement.style.transform).toBe('translateZ(0px) translateX(25%)');
+      expect(ticksElement.style.transform).toContain('translateX(25%)');
       expect(ticksContainerElement.style.transform).toBe('translateX(-25%)');
     });
   });
@@ -434,7 +434,7 @@ describe('MdSlider', () => {
       // Ticks should be 30px apart (therefore 30% for a 100px long slider).
       expect(ticksElement.style.backgroundSize).toBe('30% 2px');
       // Make sure it cuts off the last half tick interval.
-      expect(ticksElement.style.transform).toBe('translateZ(0px) translateX(15%)');
+      expect(ticksElement.style.transform).toContain('translateX(15%)');
       expect(ticksContainerElement.style.transform).toBe('translateX(-15%)');
     });
   });
@@ -465,7 +465,7 @@ describe('MdSlider', () => {
       // long with 100 values, this is 18%.
       expect(ticksElement.style.backgroundSize).toBe('18% 2px');
       // Make sure it cuts off the last half tick interval.
-      expect(ticksElement.style.transform).toBe('translateZ(0px) translateX(9%)');
+      expect(ticksElement.style.transform).toContain('translateX(9%)');
       expect(ticksContainerElement.style.transform).toBe('translateX(-9%)');
     });
   });
