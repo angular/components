@@ -43,7 +43,7 @@ const MD_INPUT_INVALID_INPUT_TYPE = [
  */
 @Component({
   moduleId: module.id,
-  selector: 'input[md-input], textarea[md-input]',
+  selector: 'input[md-input], textarea[md-textarea]',
   templateUrl: 'input.html',
   styleUrls: ['input.css'],
   encapsulation: ViewEncapsulation.None,

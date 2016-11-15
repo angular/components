@@ -13,6 +13,7 @@ describe('MdInput', function () {
     TestBed.configureTestingModule({
       imports: [MdInputModule.forRoot(), FormsModule, ProjectionModule.forRoot()],
       declarations: [
+        MdInputStyleClassTransferedTestComponent,
         MdInputNumberTypeConservedTestComponent,
         MdInputInvalidTypeTestController,
         MdInputBaseTestController,
@@ -47,6 +48,15 @@ describe('MdInput', function () {
         expect(el.value).toBe('hello');
       });
     });
+  }));
+
+  it('moves the class and style to the outer container', async(() => {
+    let fixture = TestBed.createComponent(MdInputStyleClassTransferedTestComponent);
+    fixture.detectChanges();
+
+    let el = fixture.debugElement.query(By.directive(MdInput)).nativeElement;
+    expect(el.getAttribute('class')).toBeNull();
+    expect(el.getAttribute('style')).toBeNull();
   }));
 
   it('counts characters', async(() => {
@@ -88,6 +98,10 @@ describe('MdInput', function () {
 
 });
 
+@Component({template: `<input md-input type="number" class="test-class" style="color: 123456">`})
+class MdInputStyleClassTransferedTestComponent {
+}
+
 @Component({template: `<input md-input type="number" [(ngModel)]="value">`})
 class MdInputNumberTypeConservedTestComponent {
   value: number = 0;
@@ -103,7 +117,7 @@ class MdInputBaseTestController {
 
 @Component({
   template: `
-    <textarea md-input [rows]="rows" [cols]="cols" [wrap]="wrap" placeholder="Snacks">
+    <textarea md-textarea [rows]="rows" [cols]="cols" [wrap]="wrap" placeholder="Snacks">
     </textarea>
    `})
 class MdTextareaWithBindings {
