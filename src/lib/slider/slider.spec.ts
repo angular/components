@@ -38,6 +38,7 @@ describe('MdSlider', () => {
         SliderWithValueGreaterThanMax,
         SliderWithChangeHandler,
         SliderWithDirAndInvert,
+        VerticalSlider,
       ],
       providers: [
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
@@ -957,12 +958,73 @@ describe('MdSlider', () => {
       expect(sliderInstance.value).toBe(1);
     });
   });
+
+  describe('vertical slider', () => {
+    let fixture: ComponentFixture<VerticalSlider>;
+    let sliderDebugElement: DebugElement;
+    let sliderNativeElement: HTMLElement;
+    let sliderTrackElement: HTMLElement;
+    let trackFillElement: HTMLElement;
+    let sliderInstance: MdSlider;
+    let testComponent: VerticalSlider;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(VerticalSlider);
+      fixture.detectChanges();
+
+      testComponent = fixture.debugElement.componentInstance;
+      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+      sliderNativeElement = sliderDebugElement.nativeElement;
+      sliderTrackElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track');
+      trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-track-fill');
+    });
+
+    it('updates value on click', () => {
+      dispatchClickEventSequence(sliderNativeElement, 0.3);
+      fixture.detectChanges();
+
+      expect(sliderInstance.value).toBe(70);
+    });
+
+    it('updates value on click in inverted mode', () => {
+      testComponent.invert = true;
+      fixture.detectChanges();
+
+      dispatchClickEventSequence(sliderNativeElement, 0.3);
+      fixture.detectChanges();
+
+      expect(sliderInstance.value).toBe(30);
+    });
+
+    it('should update the track fill on click', () => {
+      expect(trackFillElement.style.transform).toBe('scaleY(0)');
+
+      dispatchClickEventSequence(sliderNativeElement, 0.39);
+      fixture.detectChanges();
+
+      expect(trackFillElement.style.transform).toBe('scaleY(0.61)');
+    });
+
+    it('should update the track fill on click in inverted mode', () => {
+      testComponent.invert = true;
+      fixture.detectChanges();
+
+      expect(trackFillElement.style.transform).toBe('scaleY(0)');
+
+      dispatchClickEventSequence(sliderNativeElement, 0.39);
+      fixture.detectChanges();
+
+      expect(trackFillElement.style.transform).toBe('scaleY(0.39)');
+    });
+  });
 });
 
 // Disable animations and make the slider an even 100px (+ 8px padding on either side)
 // so we get nice round values in tests.
 const styles = `
-  md-slider { min-width: 116px !important; }
+  .md-slider-horizontal { min-width: 116px !important; }
+  .md-slider-vertical { min-height: 116px !important; }
   .md-slider-track-fill { transition: none !important; }
 `;
 
@@ -1062,6 +1124,14 @@ class SliderWithDirAndInvert {
   invert = false;
 }
 
+@Component({
+  template: `<md-slider vertical [invert]="invert"></md-slider>`,
+  styles: [styles],
+})
+class VerticalSlider {
+  invert = false;
+}
+
 /**
  * Dispatches a click event sequence (consisting of moueseenter, click) from an element.
  * Note: The mouse event truncates the position for the click.
@@ -1072,8 +1142,8 @@ class SliderWithDirAndInvert {
 function dispatchClickEventSequence(sliderElement: HTMLElement, percentage: number): void {
   let trackElement = sliderElement.querySelector('.md-slider-track');
   let dimensions = trackElement.getBoundingClientRect();
-  let y = dimensions.top;
   let x = dimensions.left + (dimensions.width * percentage);
+  let y = dimensions.top + (dimensions.height * percentage);
 
   dispatchMouseenterEvent(sliderElement);
 
@@ -1110,9 +1180,10 @@ function dispatchSlideEvent(sliderElement: HTMLElement, percent: number,
   let trackElement = sliderElement.querySelector('.md-slider-track');
   let dimensions = trackElement.getBoundingClientRect();
   let x = dimensions.left + (dimensions.width * percent);
+  let y = dimensions.top + (dimensions.height * percent);
 
   gestureConfig.emitEventForElement('slide', sliderElement, {
-    center: { x: x },
+    center: { x: x, y: y },
     srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
   });
 }
@@ -1128,11 +1199,12 @@ function dispatchSlideStartEvent(sliderElement: HTMLElement, percent: number,
   let trackElement = sliderElement.querySelector('.md-slider-track');
   let dimensions = trackElement.getBoundingClientRect();
   let x = dimensions.left + (dimensions.width * percent);
+  let y = dimensions.top + (dimensions.height * percent);
 
   dispatchMouseenterEvent(sliderElement);
 
   gestureConfig.emitEventForElement('slidestart', sliderElement, {
-    center: { x: x },
+    center: { x: x, y: y },
     srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
   });
 }
@@ -1148,9 +1220,10 @@ function dispatchSlideEndEvent(sliderElement: HTMLElement, percent: number,
   let trackElement = sliderElement.querySelector('.md-slider-track');
   let dimensions = trackElement.getBoundingClientRect();
   let x = dimensions.left + (dimensions.width * percent);
+  let y = dimensions.top + (dimensions.height * percent);
 
   gestureConfig.emitEventForElement('slideend', sliderElement, {
-    center: { x: x },
+    center: { x: x, y: y },
     srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
   });
 }
