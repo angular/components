@@ -1,0 +1,56 @@
+// The margin between two sections
+$margin-promotion-sections: 32px;
+
+.docs-header-background {
+  height: 560px;
+}
+
+.docs-header-section {
+  text-align: center;
+  padding-top: 160px;
+}
+
+.docs-homepage-promo {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.docs-homepage-row {
+  display: flex;
+  max-width: 920px;
+  margin: $margin-promotion-sections 0;
+}
+
+.docs-homepage-row  img {
+  max-width: 100%;
+}
+
+.docs-homepage-reverse-row {
+  flex-direction: row-reverse;
+}
+
+.docs-header-start,
+.docs-homepage-bottom-start {
+  text-align: center;
+  margin: $margin-promotion-sections 0;
+}
+
+.docs-homepage-promo-img,
+.docs-homepage-promo-desc {
+  width: 50%;
+}
+
+.docs-homepage-promo-img {
+  text-align: center;
+}
+
+.docs-homepage-promo-desc {
+  line-height: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+

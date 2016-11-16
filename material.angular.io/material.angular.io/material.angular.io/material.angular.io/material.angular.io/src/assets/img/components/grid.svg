@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="62px" height="37px" viewBox="0 0 62 37" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>Grid</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD-Copy" transform="translate(-46.000000, -438.000000)" fill="#00BDD5">
+            <g id="Grid" transform="translate(46.000000, 438.000000)">
+                <rect id="top" x="0" y="0" width="41" height="18"></rect>
+                <rect id="bottomleft" x="0" y="19" width="20" height="18"></rect>
+                <rect id="bottomright" x="21" y="19" width="20" height="18"></rect>
+                <rect id="right" x="42" y="0" width="20" height="37"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

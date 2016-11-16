@@ -1,0 +1,25 @@
+@mixin home-page-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  app-homepage {
+    .docs-header-background {
+      background: url('assets/img/homepage/material_splash.svg') repeat-x bottom center, md-color($primary);
+    }
+
+    .docs-header-headline {
+      color: md-color($primary, default-contrast);
+    }
+
+    .docs-header-start {
+      color: md-color($primary);
+    }
+
+    .docs-homepage-row {
+      color: md-color($primary, 800);
+    }
+  }
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="55px" height="56px" viewBox="0 0 55 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>Menu</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD-Copy" transform="translate(-50.000000, -546.000000)">
+            <g id="Menu" transform="translate(50.000000, 546.000000)">
+                <rect id="card" fill="#00BCD4" x="0" y="0" width="55" height="56" rx="4.4"></rect>
+                <path d="M5,5 C5.55228475,5 6,4.55228475 6,4 C6,3.44771525 5.55228475,3 5,3 C4.44771525,3 4,3.44771525 4,4 C4,4.55228475 4.44771525,5 5,5 Z M5,8 C5.55228475,8 6,7.55228475 6,7 C6,6.44771525 5.55228475,6 5,6 C4.44771525,6 4,6.44771525 4,7 C4,7.55228475 4.44771525,8 5,8 Z M5,11 C5.55228475,11 6,10.5522847 6,10 C6,9.44771525 5.55228475,9 5,9 C4.44771525,9 4,9.44771525 4,10 C4,10.5522847 4.44771525,11 5,11 Z" id="menu" fill="#FFFFFF"></path>
+                <rect id="cardbottom" fill="#FFFFFF" x="0" y="14" width="55" height="42" rx="4.4"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

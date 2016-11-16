@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>Fab</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD-Copy" transform="translate(-51.000000, -91.000000)">
+            <g id="Fab" transform="translate(51.000000, 90.000000)">
+                <circle id="Button" fill="#00BDD5" cx="27" cy="28" r="27"></circle>
+                <text id="+" font-family="Roboto-Regular, Roboto" font-size="39.6" font-weight="normal" fill="#FFFFFF">
+                    <tspan x="15" y="41">+</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

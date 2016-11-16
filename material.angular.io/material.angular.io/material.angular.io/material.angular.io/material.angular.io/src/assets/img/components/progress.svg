@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="56px" height="57px" viewBox="0 0 56 57" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>Progress</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD-Copy" transform="translate(-51.000000, -767.000000)">
+            <g id="Progress" transform="translate(51.000000, 767.000000)">
+                <rect id="card" fill="#00BCD4" x="0" y="0" width="55" height="56" rx="4.4"></rect>
+                <rect id="cardbottom" fill="#DCE0E2" x="0" y="24" width="55" height="33" rx="4.4"></rect>
+                <path d="M20.5357143,10 L34.5054337,10" id="text" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="square"></path>
+                <path d="M20.5357143,10 L34.5054337,10" id="Line" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="square"></path>
+                <g id="progress" transform="translate(1.000000, 22.000000)" stroke-width="2.75" stroke-linecap="square">
+                    <path d="M20,1 L53,1" id="full" stroke="#FFFFFF"></path>
+                    <path d="M0.4,1 L23,1" id="progressed" stroke="#B0EAF2"></path>
+                </g>
+                <circle id="Oval" fill="#FFFFFF" cx="10.5" cy="10.5" r="5.5"></circle>
+            </g>
+        </g>
+    </g>
+</svg>
