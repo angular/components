@@ -37,8 +37,8 @@ $md-tab-bar-height: 48px !default;
   }
 }
 
-// fixed tabs grow to the boundaries of their parent
-:host[md-tabs-fixed] .md-tab-label {
+// stretch-tabs grow to the boundaries of their parent
+:host[md-stretch-tabs] .md-tab-label {
   flex-basis: 0;
   flex-grow: 1;
 }
