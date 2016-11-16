@@ -17,10 +17,6 @@ md-card {
   font-family: $md-font-family;
 }
 
-md-card:hover {
-  @include md-elevation(8);
-}
-
 .md-card-flat {
   box-shadow: none;
 }
