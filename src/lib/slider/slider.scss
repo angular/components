@@ -132,7 +132,7 @@ md-slider {
 
 
 // Inverted slider.
-.md-slider-inverted {
+.md-slider-axis-inverted {
   .md-slider-track-fill {
     transform-origin: 100% 100%;
   }
@@ -287,13 +287,15 @@ md-slider {
     right: auto;
   }
 
-  .md-slider-track-fill {
-    transform-origin: 100% 100%;
-  }
-
-  .md-slider-inverted {
+  .md-slider-horizontal {
     .md-slider-track-fill {
-      transform-origin: 0 0;
+      transform-origin: 100% 100%;
+    }
+
+    &.md-slider-axis-inverted {
+      .md-slider-track-fill {
+        transform-origin: 0 0;
+      }
     }
   }
 }

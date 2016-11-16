@@ -892,25 +892,25 @@ describe('MdSlider', () => {
       expect(sliderInstance.value).toBe(30);
     });
 
-    it('should decrement inverted slider by 1 on right arrow pressed', () => {
+    it('should increment inverted slider by 1 on right arrow pressed', () => {
       testComponent.invert = true;
-      sliderInstance.value = 100;
       fixture.detectChanges();
 
       dispatchKeydownEvent(sliderNativeElement, RIGHT_ARROW);
       fixture.detectChanges();
 
-      expect(sliderInstance.value).toBe(99);
+      expect(sliderInstance.value).toBe(1);
     });
 
-    it('should increment inverted slider by 1 on left arrow pressed', () => {
+    it('should decrement inverted slider by 1 on left arrow pressed', () => {
       testComponent.invert = true;
+      sliderInstance.value = 100;
       fixture.detectChanges();
 
       dispatchKeydownEvent(sliderNativeElement, LEFT_ARROW);
       fixture.detectChanges();
 
-      expect(sliderInstance.value).toBe(1);
+      expect(sliderInstance.value).toBe(99);
     });
 
     it('should decrement RTL slider by 1 on right arrow pressed', () => {
@@ -934,27 +934,27 @@ describe('MdSlider', () => {
       expect(sliderInstance.value).toBe(1);
     });
 
-    it('should increment inverted RTL slider by 1 on right arrow pressed', () => {
-      testComponent.dir = 'rtl';
-      testComponent.invert = true;
-      fixture.detectChanges();
-
-      dispatchKeydownEvent(sliderNativeElement, RIGHT_ARROW);
-      fixture.detectChanges();
-
-      expect(sliderInstance.value).toBe(1);
-    });
-
-    it('should decrement inverted RTL slider by 1 on left arrow pressed', () => {
+    it('should decrement inverted RTL slider by 1 on right arrow pressed', () => {
       testComponent.dir = 'rtl';
       testComponent.invert = true;
       sliderInstance.value = 100;
       fixture.detectChanges();
 
-      dispatchKeydownEvent(sliderNativeElement, LEFT_ARROW);
+      dispatchKeydownEvent(sliderNativeElement, RIGHT_ARROW);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(99);
+    });
+
+    it('should increment inverted RTL slider by 1 on left arrow pressed', () => {
+      testComponent.dir = 'rtl';
+      testComponent.invert = true;
+      fixture.detectChanges();
+
+      dispatchKeydownEvent(sliderNativeElement, LEFT_ARROW);
+      fixture.detectChanges();
+
+      expect(sliderInstance.value).toBe(1);
     });
   });
 });

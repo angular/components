@@ -71,7 +71,7 @@ export class MdSliderChange {
     '[class.md-slider-disabled]': 'disabled',
     '[class.md-slider-has-ticks]': 'tickInterval',
     '[class.md-slider-horizontal]': '!vertical',
-    '[class.md-slider-inverted]': 'invert',
+    '[class.md-slider-axis-inverted]': 'invertAxis',
     '[class.md-slider-sliding]': '_isSliding',
     '[class.md-slider-thumb-label-showing]': 'thumbLabel',
     '[class.md-slider-vertical]': 'vertical',
@@ -207,6 +207,24 @@ export class MdSlider implements ControlValueAccessor {
   set vertical(value: any) { this._vertical = coerceBooleanProperty(value); }
   private _vertical = false;
 
+  /**
+   * Whether the axis of the slider is inverted.
+   * (i.e. whether moving the thumb in the positive x or y direction decreases the slider's value).
+   */
+  get invertAxis() {
+    // Standard non-inverted mode for a vertical slider should be dragging the thumb from bottom to
+    // top. However from a y-axis standpoint this is inverted.
+    return this.vertical ? !this.invert : this.invert;
+  }
+
+  /**
+   * Whether mouse events should be converted to a slider position by calculating their distance
+   * from the right or bottom edge of the slider as opposed to the top or left.
+   */
+  get invertMouseCoords() {
+    return (this.direction == 'rtl' && !this.vertical) ? !this.invertAxis : this.invertAxis;
+  }
+
   /** CSS styles for the track fill element. */
   get trackFillStyles(): { [key: string]: string } {
     let axis = this.vertical ? 'Y' : 'X';
@@ -218,6 +236,8 @@ export class MdSlider implements ControlValueAccessor {
   /** CSS styles for the ticks container element. */
   get ticksContainerStyles(): { [key: string]: string } {
     let axis = this.vertical ? 'Y' : 'X';
+    // For a horizontal slider in RTL languages we push the ticks container off the left edge
+    // instead of the right edge to avoid causing a horizontal scrollbar to appear.
     let sign = !this.vertical && this.direction == 'rtl' ? '' : '-';
     let offset = this.tickIntervalPercent / 2 * 100;
     return {
@@ -230,6 +250,9 @@ export class MdSlider implements ControlValueAccessor {
     let tickSize = this.tickIntervalPercent * 100;
     let backgroundSize = this.vertical ? `2px ${tickSize}%` : `${tickSize}% 2px`;
     let axis = this.vertical ? 'Y' : 'X';
+    // Depending on the direction we pushed the ticks container, push the ticks the opposite
+    // direction to re-center them but clip off the end edge. In RTL languages we need to flip the
+    // ticks 180 degrees so we're really cutting off the end edge abd not the start.
     let sign = !this.vertical && this.direction == 'rtl' ? '-' : '';
     let rotate = !this.vertical && this.direction == 'rtl' ? ' rotate(180deg)' : '';
     return {
@@ -241,7 +264,11 @@ export class MdSlider implements ControlValueAccessor {
 
   get thumbContainerStyles(): { [key: string]: string } {
     let axis = this.vertical ? 'Y' : 'X';
-    let offset = (this._isLeftMin() ? 1 - this.percent : this.percent) * 100;
+    // For a horizontal slider in RTL languages we push the thumb container off the left edge
+    // instead of the right edge to avoid causing a horizontal scrollbar to appear.
+    let invertOffset =
+        (this.direction == 'rtl' && !this.vertical) ? !this.invertAxis : this.invertAxis;
+    let offset = (invertOffset ? this.percent : 1 - this.percent) * 100;
     return {
       'transform': `translate${axis}(-${offset}%)`
     };
@@ -333,13 +360,20 @@ export class MdSlider implements ControlValueAccessor {
         this.value = this.min;
         break;
       case LEFT_ARROW:
-        this._increment(this._isLeftMin() ? -1 : 1);
+        // It's kind of debatable what's the correct thing to do for inverted sliders. For a sighted
+        // user it would make more sense that when they press an arrow key the thumb moves in that
+        // direction. However for a blind user, nothing about the slider indicates that it is
+        // inverted. They will expect left to be decrement, regardless of how it appears on the
+        // screen. For speakers of RTL languages, they probably expect left to mean increment.
+        // Therefore we flip the meaning of the side arrow keys for RTL but not for inverted.
+        this._increment(this.direction == 'rtl' ? 1 : -1);
         break;
       case UP_ARROW:
         this._increment(1);
         break;
       case RIGHT_ARROW:
-        this._increment(this._isLeftMin() ? 1 : -1);
+        // See comment on LEFT_ARROW about the conditions under which we flip the meaning.
+        this._increment(this.direction == 'rtl' ? -1 : 1);
         break;
       case DOWN_ARROW:
         this._increment(-1);
@@ -351,11 +385,6 @@ export class MdSlider implements ControlValueAccessor {
     }
 
     event.preventDefault();
-  }
-
-  /** Whether the left side of the slider is the minimum value. */
-  private _isLeftMin() {
-    return (this.direction == 'rtl') == this.invert;
   }
 
   /** Increments the slider by the given number of steps (negative number decrements). */
@@ -377,7 +406,7 @@ export class MdSlider implements ControlValueAccessor {
 
     // The exact value is calculated from the event and used to find the closest snap value.
     let percent = this._clamp((posComponent - offset) / size);
-    if (!this._isLeftMin()) {
+    if (this.invertMouseCoords) {
       percent = 1 - percent;
     }
     let exactValue = this._calculateValue(percent);
