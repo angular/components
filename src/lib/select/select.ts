@@ -34,8 +34,9 @@ import {coerceBooleanProperty} from '../core/coersion/boolean-property';
     '[attr.aria-label]': 'placeholder',
     '[attr.aria-required]': 'required.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
-    '[class.md-select-disabled]': 'disabled',
     '[attr.aria-invalid]': '_control?.invalid || "false"',
+    '[attr.aria-owns]': '_optionIds',
+    '[class.md-select-disabled]': 'disabled',
     '(keydown)': '_handleKeydown($event)',
     '(blur)': '_onBlur()'
   },
@@ -75,7 +76,10 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   _onChange: (value: any) => void;
 
   /** View -> model callback called when select has been touched */
-  _onTouched: Function;
+  _onTouched = () => {};
+
+  /** The IDs of child options to be passed to the aria-owns attribute. */
+  _optionIds: string = '';
 
   /** This position config ensures that the top left corner of the overlay
    * is aligned with with the top left of the origin (overlapping the trigger
@@ -116,17 +120,15 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   constructor(private _element: ElementRef, private _renderer: Renderer,
               @Optional() private _dir: Dir, @Optional() public _control: NgControl) {
-    this._control.valueAccessor = this;
+    if (this._control) {
+      this._control.valueAccessor = this;
+    }
   }
 
   ngAfterContentInit() {
     this._initKeyManager();
-    this._listenToOptions();
-
-    this._changeSubscription = this.options.changes.subscribe(() => {
-      this._dropSubscriptions();
-      this._listenToOptions();
-    });
+    this._resetOptions();
+    this._changeSubscription = this.options.changes.subscribe(() => this._resetOptions());
   }
 
   ngOnDestroy() {
@@ -182,7 +184,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
    * by the user. Part of the ControlValueAccessor interface required
    * to integrate with Angular's core forms API.
    */
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(fn: () => {}): void {
     this._onTouched = fn;
   }
 
@@ -272,6 +274,13 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     });
   }
 
+  /** Drops current option subscriptions and IDs and resets from scratch. */
+  private _resetOptions(): void {
+    this._dropSubscriptions();
+    this._listenToOptions();
+    this._setOptionIds();
+  }
+
   /** Listens to selection events on each option. */
   private _listenToOptions(): void {
     this.options.forEach((option: MdOption) => {
@@ -289,6 +298,11 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   private _dropSubscriptions(): void {
     this._subscriptions.forEach((sub: Subscription) => sub.unsubscribe());
     this._subscriptions = [];
+  }
+
+  /** Records option IDs to pass to the aria-owns property. */
+  private _setOptionIds() {
+    this._optionIds = this.options.map(option => option.id).join(' ');
   }
 
   /** When a new option is selected, deselects the others and closes the panel. */
