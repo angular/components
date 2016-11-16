@@ -15,7 +15,9 @@
     "stylelint": "gulp lint",
     "e2e": "gulp e2e",
     "deploy": "firebase deploy",
-    "webdriver-manager": "webdriver-manager"
+    "webdriver-manager": "webdriver-manager",
+    "docs": "gulp docs",
+    "api": "gulp api"
   },
   "version": "2.0.0-alpha.10",
   "license": "MIT",
