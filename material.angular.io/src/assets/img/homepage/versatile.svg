@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="402px" height="328px" viewBox="0 0 402 328" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>versatile</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M30.5673436,93.044175 C32.5982298,93.046184 35.8988363,93.0478126 37.9213783,93.0478126 L306.32321,93.0478126 C308.353845,93.0478126 310,94.6868568 310,96.7232993 L310,174.276701 C310,176.306616 308.345752,177.952187 306.32321,177.952187 L37.9213783,177.952187 C35.8907434,177.952187 32.5908986,177.996398 30.5673436,177.955825 C30.5673436,177.955825 -10,181.047593 -10,135.5 C-10,89.952407 30.5673436,93.044175 30.5673436,93.044175 Z" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="320" height="85" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradient-3">
+            <stop stop-color="#00BCD4" offset="0%"></stop>
+            <stop stop-color="#EEFAFC" offset="100%"></stop>
+        </linearGradient>
+        <path d="M45.5673436,53.044175 C47.5982298,53.046184 50.8988363,53.0478126 52.9213783,53.0478126 L321.32321,53.0478126 C323.353845,53.0478126 325,54.6868568 325,56.7232993 L325,134.276701 C325,136.306616 323.345752,137.952187 321.32321,137.952187 L52.9213783,137.952187 C50.8907434,137.952187 47.5908986,137.996398 45.5673436,137.955825 C45.5673436,137.955825 5,141.047593 5,95.5 C5,49.952407 45.5673436,53.044175 45.5673436,53.044175 Z" id="path-4"></path>
+        <mask id="mask-5" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="320" height="85" fill="white">
+            <use xlink:href="#path-4"></use>
+        </mask>
+        <path d="M40.5673436,0.044175024 C42.5982298,0.0461840042 45.8988363,0.0478126045 47.9213783,0.0478126045 L316.32321,0.0478126045 C318.353845,0.0478126045 320,1.68685675 320,3.72329928 L320,81.2767007 C320,83.306616 318.345752,84.9521874 316.32321,84.9521874 L47.9213783,84.9521874 C45.8907434,84.9521874 42.5908986,84.996398 40.5673436,84.955825 C40.5673436,84.955825 -2.34637441e-13,88.047593 -2.45137244e-13,42.5 C-2.45137244e-13,-3.04759304 40.5673436,0.044175024 40.5673436,0.044175024 Z" id="path-6"></path>
+        <mask id="mask-7" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="320" height="85" fill="white">
+            <use xlink:href="#path-6"></use>
+        </mask>
+        <linearGradient x1="3.56146365%" y1="50%" x2="100%" y2="50%" id="linearGradient-8">
+            <stop stop-color="#00BCD4" offset="0%"></stop>
+            <stop stop-color="#EEFAFC" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="versatile">
+            <g transform="translate(172.240426, 165.352608) rotate(11.000000) translate(-172.240426, -165.352608) translate(2.740426, 29.852608)">
+                <g id="bottomswatch" transform="translate(-0.000000, 0.000000)">
+                    <use id="paintswatches" stroke="#00BCD4" mask="url(#mask-2)" stroke-width="2.5289" fill="#FFFFFF" transform="translate(150.000000, 135.500000) rotate(40.000000) translate(-150.000000, -135.500000) " xlink:href="#path-1"></use>
+                    <path d="M45,124 L84.5059858,124 L84.5059858,179 L45,179 L45,124 Z M96.5190304,124 L136.025016,124 L136.025016,179 L96.5190304,179 L96.5190304,124 Z M148.038061,124 L187.544047,124 L187.544047,179 L148.038061,179 L148.038061,124 Z M200.726146,124 L240.232132,124 L240.232132,179 L200.726146,179 L200.726146,124 Z M252.494014,124 L292,124 L292,179 L252.494014,179 L252.494014,124 Z" id="swatch" fill="url(#linearGradient-3)" transform="translate(168.500000, 151.500000) rotate(39.000000) translate(-168.500000, -151.500000) "></path>
+                </g>
+                <g id="middleswatch" transform="translate(9.000000, 5.000000)">
+                    <use id="paintswatches" stroke="#00BCD4" mask="url(#mask-5)" stroke-width="2.5289" fill="#FFFFFF" transform="translate(165.000000, 95.500000) rotate(20.000000) translate(-165.000000, -95.500000) " xlink:href="#path-4"></use>
+                    <path d="M64,74 L103.505986,74 L103.505986,129 L64,129 L64,74 Z M115.51903,74 L155.025016,74 L155.025016,129 L115.51903,129 L115.51903,74 Z M167.038061,74 L206.544047,74 L206.544047,129 L167.038061,129 L167.038061,74 Z M219.726146,74 L259.232132,74 L259.232132,129 L219.726146,129 L219.726146,74 Z M271.494014,74 L311,74 L311,129 L271.494014,129 L271.494014,74 Z" id="swatch" fill="url(#linearGradient-3)" transform="translate(187.500000, 101.500000) rotate(21.000000) translate(-187.500000, -101.500000) "></path>
+                </g>
+                <g id="topswatch" transform="translate(15.000000, 15.000000)">
+                    <use id="paintswatches" stroke="#00BCD4" mask="url(#mask-7)" stroke-width="2.5289" fill="#FFFFFF" xlink:href="#path-6"></use>
+                    <path d="M43,42 C43,48.627058 37.627058,54 31,54 C24.372942,54 19,48.627058 19,42 C19,35.372942 24.372942,30 31,30 C37.627058,30 43,35.372942 43,42 L43,42 Z" id="oval" stroke="#00BCD4" stroke-width="1.26445"></path>
+                    <path d="M59,16 L98.5059858,16 L98.5059858,71 L59,71 L59,16 Z M110.51903,16 L150.025016,16 L150.025016,71 L110.51903,71 L110.51903,16 Z M162.038061,16 L201.544047,16 L201.544047,71 L162.038061,71 L162.038061,16 Z M214.726146,16 L254.232132,16 L254.232132,71 L214.726146,71 L214.726146,16 Z M266.494014,16 L306,16 L306,71 L266.494014,71 L266.494014,16 Z" id="swatch" fill="url(#linearGradient-8)"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

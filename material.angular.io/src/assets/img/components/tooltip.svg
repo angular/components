@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="52px" height="48px" viewBox="0 0 52 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>Tooltip</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD-Copy" transform="translate(-52.000000, -656.000000)">
+            <g id="Tooltip" transform="translate(52.000000, 646.000000)">
+                <text id="+" font-family="Roboto-Regular, Roboto" font-size="22" font-weight="normal" fill="#00BDD5">
+                    <tspan x="17" y="23">+</tspan>
+                </text>
+                <g id="cursor" transform="translate(23.000000, 18.000000)">
+                    <path d="M7.84090909,8.52272727 L11.25,14.6590909" id="line" stroke="#DCE0E2" stroke-width="2.66200006" stroke-linecap="square"></path>
+                    <polygon id="triangle" fill="#DCE0E2" transform="translate(7.436790, 7.318529) rotate(-27.000000) translate(-7.436790, -7.318529) " points="6.865046 1.93428242 12.5504259 12.7027749 7.36077063 10.0585135 2.32315318 12.7027749"></polygon>
+                </g>
+                <rect id="tooltop" fill="#00BCD4" x="0" y="39" width="52" height="19"></rect>
+                <text id="Quick-add" font-family="Roboto-Regular, Roboto" font-size="9.9" font-weight="normal" fill="#FFFFFF">
+                    <tspan x="3" y="51">Quick add</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

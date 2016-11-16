@@ -1,0 +1,28 @@
+<header class="docs-header-background">
+  <div class="docs-header-section">
+    <div class="docs-header-headline">
+      <h1>Angular Material</h1>
+      Material Design components for Angular 2 apps
+    </div>
+    <div class="docs-header-start">
+     <a md-raised-button routerLink="components">Get started</a>
+    </div>
+  </div>
+</header>
+
+<div class="docs-homepage-promo">
+  <div *ngFor="let section of homePageContent"
+       class="docs-homepage-row"
+       [class.docs-homepage-reverse-row]="section.reverse">
+    <div class="docs-homepage-promo-img">
+      <img [src]="getImagePath(section.img)" [alt]="section.title" />
+    </div>
+    <div class="docs-homepage-promo-desc">
+      <h2>{{section.title}}</h2>
+      <p>{{section.content}}</p>
+    </div>
+  </div>
+  <div class="docs-homepage-bottom-start">
+    <button md-raised-button color="primary">Get started</button>
+  </div>
+</div>

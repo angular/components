@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="402px" height="251px" viewBox="0 0 402 251" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>fastandconsistent</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="367" height="218" rx="4"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="367" height="218" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <rect id="path-3" x="0" y="0" width="345" height="180" rx="4"></rect>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="345" height="180" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+        <linearGradient x1="0%" y1="31.3248427%" x2="0%" y2="0%" id="linearGradient-5">
+            <stop stop-color="#FFFFFF" stop-opacity="0.739102129" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="14.6410782%" y1="0%" x2="77.0921526%" y2="79.9305437%" id="linearGradient-6">
+            <stop stop-color="#0CBFD6" offset="0%"></stop>
+            <stop stop-color="#05BED5" stop-opacity="0.152145607" offset="100%"></stop>
+        </linearGradient>
+        <path d="M14.9086677,96.4521086 C25.6707059,108.605753 41.4781442,116.28079 59.0984375,116.28079 C91.5253188,116.28079 117.8125,90.287301 117.8125,58.2227074 C117.8125,26.1581138 91.5253188,0.164624886 59.0984375,0.164624886 C26.6715562,0.164624886 0.384375,26.1581138 0.384375,58.2227074 C0.384375,72.8638695 5.86517103,86.2392251 14.9086677,96.4521086 Z" id="path-7"></path>
+        <mask id="mask-8" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="117.428125" height="116.116165" fill="white">
+            <use xlink:href="#path-7"></use>
+        </mask>
+        <mask id="mask-10" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="117.428125" height="116.116165" fill="white">
+            <use xlink:href="#path-7"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="fastandconsistent">
+            <g transform="translate(16.000000, 19.000000)">
+                <use id="browser" stroke="#00BCD4" mask="url(#mask-2)" stroke-width="2.2" fill="#FFFFFF" xlink:href="#path-1"></use>
+                <path d="M338,18 L352,18 L352,16 L338,16 L338,18 Z M338,14 L352,14 L352,12 L338,12 L338,14 Z M338,8 L338,10 L352,10 L352,8 L338,8 Z" id="menu" fill="#89E0EB"></path>
+                <g id="controls" transform="translate(12.000000, 9.000000)" fill="#89E0EB">
+                    <ellipse id="oval1" cx="2.47058824" cy="2.5" rx="2.47058824" ry="2.5"></ellipse>
+                    <ellipse id="oval2" cx="10.2941176" cy="2.5" rx="2.47058824" ry="2.5"></ellipse>
+                    <ellipse id="oval3" cx="18.5294118" cy="2.5" rx="2.47058824" ry="2.5"></ellipse>
+                </g>
+                <g id="homepage" transform="translate(10.000000, 25.000000)" stroke="#00BCD4" stroke-opacity="0.449247056" stroke-width="2.2" fill="#CCF2F6">
+                    <use id="screen" mask="url(#mask-4)" xlink:href="#path-3"></use>
+                </g>
+                <g id="Speed-gauge-" transform="translate(123.000000, 56.000000)">
+                    <path d="M51.8749228,59.9490812 C51.7688092,59.955008 51.6619003,59.9580117 51.554278,59.9580117 C51.0526371,59.9580117 50.5664965,59.8927528 50.1041567,59.7703974 C49.5643211,59.6848635 48.8934597,59.4740357 48.3296564,58.9463996 C46.912661,57.9542857 45.9884792,56.325729 45.9884792,54.4849132 C45.9884792,51.4622043 48.4803722,49.0118146 51.554278,49.0118146 C51.942069,49.0118146 52.3205972,49.0508132 52.6860277,49.1250398 C62.6126188,49.5636946 96.2157075,55.3466664 96.2157075,55.3466664 C101.263001,56.1922874 101.195468,57.0702877 96.0760992,57.3130817 C96.0760992,57.3130817 58.1630462,59.0171814 52.666034,59.9180677 C52.3730141,59.9660898 52.1079368,59.9670375 51.8749228,59.9490812 Z" id="gauge" fill="#FFFFFF" transform="translate(72.973638, 54.485818) rotate(-32.000000) translate(-72.973638, -54.485818) "></path>
+                    <g id="Lines" transform="translate(58.937500, 6.120482)" stroke="url(#linearGradient-5)" stroke-width="2.86299992" stroke-linecap="square">
+                        <path d="M22.1505833,4.95464887 L18.5221719,14.4069838" id="line4"></path>
+                        <path d="M32.5,9.68674699 L26.8125,18.5662651" id="line3"></path>
+                        <path d="M12.3232712,2.32834203 L10.4029201,12.207692" id="line2"></path>
+                        <path d="M0.977361203,0.624495248 L0.623830109,10.6826231" id="line1"></path>
+                    </g>
+                    <mask id="mask-9" fill="white">
+                        <use xlink:href="#path-7"></use>
+                    </mask>
+                    <g id="speedoutline" stroke="url(#linearGradient-6)" mask="url(#mask-8)" stroke-width="13.041">
+                        <use mask="url(#mask-10)" xlink:href="#path-7"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
