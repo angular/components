@@ -22,8 +22,8 @@ $md-slider-tick-size: 2px !default;
 
 
 md-slider {
-  display: inline-flex;
-  align-items: center;
+  display: inline-block;
+  position: relative;
   box-sizing: border-box;
   padding: $md-slider-padding;
   outline: none;
@@ -31,8 +31,7 @@ md-slider {
 }
 
 .md-slider-track {
-  flex: 1;
-  position: relative;
+  position: absolute;
 }
 
 .md-slider-track-fill {
@@ -166,6 +165,9 @@ md-slider {
 
   .md-slider-track {
     height: $md-slider-track-thickness;
+    top: ($md-slider-thickness - $md-slider-track-thickness) / 2;
+    left: $md-slider-padding;
+    right: $md-slider-padding;
   }
 
   .md-slider-track::after {
@@ -223,12 +225,14 @@ md-slider {
 
 // Vertical slider.
 .md-slider-vertical {
-  flex-direction: column;
   width: $md-slider-thickness;
   min-height: $md-slider-min-size;
 
   .md-slider-track {
     width: $md-slider-track-thickness;
+    top: $md-slider-padding;
+    bottom: $md-slider-padding;
+    left: ($md-slider-thickness - $md-slider-track-thickness) / 2;
   }
 
   .md-slider-track::after {
