@@ -143,6 +143,8 @@ export class RippleRenderer {
 
     rippleDiv.addEventListener('transitionend',
         (event: TransitionEvent) => transitionEndCallback(ripple, event));
+    // Remove the ripple after transitions (fade-in, transform, fade-out)
+    setTimeout(() => this.removeRippleFromDom(ripple.rippleElement), fadeInSeconds * 3 * 1000);
   }
 
   /** Fades out a foreground ripple after it has fully expanded and faded in. */
