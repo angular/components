@@ -1,10 +1,10 @@
-# Generating Docs with Typedoc
+# Generating API Docs with Typedoc
 [Typedoc](http://typedoc.org/) is a documentation generator for TypeScript projects.
 
 Refer to `typedoc.json` for build configuration.
 
 1. `npm install`
-2. `npm run docs`
+2. `npm run api`
 
 TypeDoc will leverage the typings file to generate docs. The output will be located in `/dist/api/api.json`.
 
