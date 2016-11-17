@@ -6,6 +6,8 @@ import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 import {MdTab} from './tab';
+import {LayoutDirection, Dir} from '../core/rtl/dir';
+import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 
 
 describe('MdTabGroup', () => {
@@ -19,6 +21,12 @@ describe('MdTabGroup', () => {
         AsyncTabsTestApp,
         DisabledTabsTestApp,
         TabGroupWithSimpleApi,
+      ],
+      providers: [
+        {provide: Dir, useFactory: () => {
+          return {value: dir};
+        }},
+        {provide: ViewportRuler, useClass: FakeViewportRuler},
       ]
     });
 
@@ -555,4 +563,16 @@ class TabGroupWithSimpleApi {
   otherLabel = 'Fruit';
   otherContent = 'Apples, grapes';
   @ViewChild('legumes') legumes: any;
+}
+
+class FakeViewportRuler {
+  getViewportRect() {
+    return {
+      left: 0, top: 0, width: 1014, height: 686, bottom: 686, right: 1014
+    };
+  }
+
+  getViewportScrollPosition() {
+    return {top: 0, left: 0};
+  }
 }

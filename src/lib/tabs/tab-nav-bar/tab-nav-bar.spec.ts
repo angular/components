@@ -2,6 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MdTabsModule} from '../tab-group';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
+import {ViewportRuler} from '../../core/overlay/position/viewport-ruler';
 
 
 describe('MdTabNavBar', () => {
@@ -13,6 +14,9 @@ describe('MdTabNavBar', () => {
         SimpleTabNavBarTestApp,
         TabLinkWithNgIf,
       ],
+      providers: [
+        {provide: ViewportRuler, useClass: FakeViewportRuler},
+      ]
     });
 
     TestBed.compileComponents();
@@ -83,4 +87,16 @@ class SimpleTabNavBarTestApp {
 })
 class TabLinkWithNgIf {
   isDestroyed = false;
+}
+
+class FakeViewportRuler {
+  getViewportRect() {
+    return {
+      left: 0, top: 0, width: 1014, height: 686, bottom: 686, right: 1014
+    };
+  }
+
+  getViewportScrollPosition() {
+    return {top: 0, left: 0};
+  }
 }

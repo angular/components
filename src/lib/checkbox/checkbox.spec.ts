@@ -14,6 +14,7 @@ import {
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdCheckbox, MdCheckboxChange, MdCheckboxModule} from './checkbox';
+import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 
 
 // TODO: Implement E2E tests for spacebar/click behavior for checking/unchecking
@@ -35,6 +36,9 @@ describe('MdCheckbox', () => {
         CheckboxWithChangeEvent,
         CheckboxWithFormControl,
       ],
+      providers: [
+        {provide: ViewportRuler, useClass: FakeViewportRuler},
+      ]
     });
 
     TestBed.compileComponents();
@@ -718,4 +722,16 @@ class CheckboxWithChangeEvent {
 })
 class CheckboxWithFormControl {
   formControl = new FormControl();
+}
+
+class FakeViewportRuler {
+  getViewportRect() {
+    return {
+      left: 0, top: 0, width: 1014, height: 686, bottom: 686, right: 1014
+    };
+  }
+
+  getViewportScrollPosition() {
+    return {top: 0, left: 0};
+  }
 }

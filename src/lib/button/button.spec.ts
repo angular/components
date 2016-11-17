@@ -2,6 +2,7 @@ import {async, TestBed, ComponentFixture} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdButtonModule} from './button';
+import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 
 
 describe('MdButton', () => {
@@ -10,6 +11,9 @@ describe('MdButton', () => {
     TestBed.configureTestingModule({
       imports: [MdButtonModule.forRoot()],
       declarations: [TestApp],
+      providers: [
+        {provide: ViewportRuler, useClass: FakeViewportRuler},
+      ]
     });
 
     TestBed.compileComponents();
@@ -208,5 +212,17 @@ class TestApp {
 
   increment() {
     this.clickCount++;
+  }
+}
+
+class FakeViewportRuler {
+  getViewportRect() {
+    return {
+      left: 0, top: 0, width: 1014, height: 686, bottom: 686, right: 1014
+    };
+  }
+
+  getViewportScrollPosition() {
+    return {top: 0, left: 0};
   }
 }

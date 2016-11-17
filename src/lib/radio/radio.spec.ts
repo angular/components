@@ -3,6 +3,7 @@ import {NgControl, FormsModule, ReactiveFormsModule, FormControl} from '@angular
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdRadioGroup, MdRadioButton, MdRadioChange, MdRadioModule} from './radio';
+import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 
 
 describe('MdRadio', () => {
@@ -16,6 +17,9 @@ describe('MdRadio', () => {
         RadioGroupWithFormControl,
         StandaloneRadioButtons,
       ],
+      providers: [
+        {provide: ViewportRuler, useClass: FakeViewportRuler},
+      ]
     });
 
     TestBed.compileComponents();
@@ -658,4 +662,16 @@ function dispatchEvent(eventName: string, element: HTMLElement): void {
   let event  = document.createEvent('Event');
   event.initEvent(eventName, true, true);
   element.dispatchEvent(event);
+}
+
+class FakeViewportRuler {
+  getViewportRect() {
+    return {
+      left: 0, top: 0, width: 1014, height: 686, bottom: 686, right: 1014
+    };
+  }
+
+  getViewportScrollPosition() {
+    return {top: 0, left: 0};
+  }
 }
