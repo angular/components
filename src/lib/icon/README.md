@@ -96,6 +96,7 @@ Example:
 <md-icon color="primary">home</md-icon>
 <md-icon color="accent">home</md-icon>
 <md-icon color="warn">home</md-icon>
+```
 
 ### Accessibility
 
