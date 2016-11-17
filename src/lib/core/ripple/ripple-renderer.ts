@@ -155,7 +155,9 @@ export class RippleRenderer {
 
   /** Removes a foreground ripple from the DOM after it has faded out. */
   removeRippleFromDom(ripple: Element) {
-    ripple.parentElement.removeChild(ripple);
+    if (ripple && ripple.parentElement) {
+      ripple.parentElement.removeChild(ripple);
+    }
   }
 
   /** Fades in the ripple background. */

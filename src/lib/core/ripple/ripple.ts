@@ -135,6 +135,7 @@ export class MdRipple implements OnInit, OnDestroy, OnChanges {
           ripple.state = ForegroundRippleState.FADING_OUT;
           break;
         case ForegroundRippleState.FADING_OUT:
+          this._rippleRenderer.removeRippleFromDom(ripple.rippleElement);
           break;
       }
     }
