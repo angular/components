@@ -156,12 +156,12 @@ describe('MdMenu', () => {
       // To find the overlay left, subtract the menu width from the origin's right side.
       const expectedLeft = triggerRect.right - overlayRect.width;
       expect(overlayRect.left)
-          .toEqual(Math.round(expectedLeft),
+          .toBe(Math.round(expectedLeft),
               `Expected menu to open in "before" position if "after" position wouldn't fit.`);
 
       // The y-position of the overlay should be unaffected, as it can already fit vertically
       expect(overlayRect.top)
-          .toEqual(Math.round(triggerRect.top),
+          .toBe(Math.round(triggerRect.top),
               `Expected menu top position to be unchanged if it can fit in the viewport.`);
     });
 
@@ -185,12 +185,12 @@ describe('MdMenu', () => {
       // To find the overlay top, subtract the menu height from the origin's bottom edge.
       const expectedTop = triggerRect.bottom - overlayRect.height;
       expect(overlayRect.top)
-          .toEqual(Math.round(expectedTop),
+          .toBe(Math.round(expectedTop),
               `Expected menu to open in "above" position if "below" position wouldn't fit.`);
 
       // The x-position of the overlay should be unaffected, as it can already fit horizontally
       expect(overlayRect.left)
-          .toEqual(Math.round(triggerRect.left),
+          .toBe(Math.round(triggerRect.left),
               `Expected menu x position to be unchanged if it can fit in the viewport.`);
     });
 
@@ -215,11 +215,11 @@ describe('MdMenu', () => {
       const expectedTop = triggerRect.bottom - overlayRect.height;
 
       expect(overlayRect.left)
-          .toEqual(Math.round(expectedLeft),
+          .toBe(Math.round(expectedLeft),
               `Expected menu to open in "before" position if "after" position wouldn't fit.`);
 
       expect(overlayRect.top)
-          .toEqual(Math.round(expectedTop),
+          .toBe(Math.round(expectedTop),
               `Expected menu to open in "above" position if "below" position wouldn't fit.`);
     });
 
@@ -237,13 +237,13 @@ describe('MdMenu', () => {
       // As designated "before" position won't fit on screen, the menu should fall back
       // to "after" mode, where the left sides of the overlay and trigger are aligned.
       expect(overlayRect.left)
-          .toEqual(Math.round(triggerRect.left),
+          .toBe(Math.round(triggerRect.left),
               `Expected menu to open in "after" position if "before" position wouldn't fit.`);
 
       // As designated "above" position won't fit on screen, the menu should fall back
       // to "below" mode, where the top edges of the overlay and trigger are aligned.
       expect(overlayRect.top)
-          .toEqual(Math.round(triggerRect.top),
+          .toBe(Math.round(triggerRect.top),
               `Expected menu to open in "below" position if "above" position wouldn't fit.`);
     });
 
