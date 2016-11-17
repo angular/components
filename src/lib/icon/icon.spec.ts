@@ -82,7 +82,7 @@ describe('MdIcon', () => {
     testComponent.iconColor = 'primary';
     fixture.detectChanges();
     expect(sortedClassNames(mdIconElement)).toEqual(['material-icons', 'md-primary']);
-	});
+  });
 
   describe('Ligature icons', () => {
     it('should add material-icons class by default', () => {

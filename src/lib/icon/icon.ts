@@ -96,7 +96,7 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
       private _elementRef: ElementRef,
       private _renderer: Renderer,
       private _mdIconRegistry: MdIconRegistry) { }
-  
+
   _updateColor(newColor: string) {
     this._setElementColor(this._color, false);
     this._setElementColor(newColor, true);
