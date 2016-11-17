@@ -79,3 +79,43 @@
 
 
 </md-card>
+
+<md-card class="demo-card demo-basic">
+  <md-toolbar color="primary">Divider Colors</md-toolbar>
+  <md-card-content>
+    <h4>Input</h4>
+    <input md-input dividerColor="primary" placeholder="Default Color">
+    <input md-input dividerColor="accent" placeholder="Accent Color">
+    <input md-input dividerColor="warn" placeholder="Warn Color">
+
+    <h4>Textarea</h4>
+    <textarea md-textarea dividerColor="primary" placeholder="Default Color"></textarea>
+    <textarea md-textarea dividerColor="accent" placeholder="Accent Color"></textarea>
+    <textarea md-textarea dividerColor="warn" placeholder="Warn Color"></textarea>
+
+  </md-card-content>
+</md-card>
+
+<md-card class="demo-card">
+  <md-toolbar color="primary">Placeholder Templates</md-toolbar>
+
+  <md-card-content>
+    <p>
+      <input md-input [placeholder]="placeholderTemplate1">
+
+      <template #placeholderTemplate1>
+        Example of a <b>placeholder</b> template
+      </template>
+    </p>
+
+    <p>
+      <input md-input [placeholder]="placeholderTemplate2">
+      <br/>
+      Value: <input [(ngModel)]="value">
+
+      <template #placeholderTemplate2>
+        Value: {{value}}
+      </template>
+    </p>
+  </md-card-content>
+</md-card>

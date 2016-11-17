@@ -10,6 +10,7 @@ let max = 5;
   styleUrls: ['input-demo.css'],
 })
 export class InputDemo {
+  value: string = 'test';
   dividerColor: boolean;
   requiredField: boolean;
   floatingLabel: boolean;

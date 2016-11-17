@@ -5,22 +5,21 @@ import {
   ViewChild,
   ElementRef,
   OnInit,
-  NgModule,
-  ModuleWithProviders,
   ViewEncapsulation,
   HostListener,
-  TemplateRef,
+  TemplateRef, forwardRef,
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {
-  ProjectionModule,
   DomProjection,
   DomProjectionHost,
   MdError,
   coerceBooleanProperty
 } from '../core';
 import {MdTextareaAutosize} from './autosize';
+import {MD_PLACEHOLDER_HOST_TOKEN, MdPlaceholderHost} from './placeholder';
+import {PortalHost} from '../core/portal/portal';
+import {PortalHostDirective} from '../core/portal/portal-directives';
 
 
 export class MdInputUnsupportedTypeError extends MdError {
@@ -47,6 +46,9 @@ const MD_INPUT_INVALID_INPUT_TYPE = [
   templateUrl: 'input.html',
   styleUrls: ['input.css'],
   encapsulation: ViewEncapsulation.None,
+  providers: [
+    { provide: MD_PLACEHOLDER_HOST_TOKEN, useExisting: forwardRef(() => MdInput) }
+  ],
   host: {
     // This is to remove the properties of the `input md-input` itself. We still want to use them
     // as an @Input though, so we use HostBinding.
@@ -55,10 +57,12 @@ const MD_INPUT_INVALID_INPUT_TYPE = [
     'attr.align': ''
   }
 })
-export class MdInput implements OnInit {
+export class MdInput implements OnInit, MdPlaceholderHost {
   @ViewChild(DomProjectionHost) _host: DomProjectionHost;
   @ViewChild('suffix') _suffix: TemplateRef<any>;
   @ViewChild('prefix') _prefix: TemplateRef<any>;
+
+  @ViewChild('suffixWrapper', { read: PortalHostDirective }) placeholderPortalHost: PortalHost;
   private _focused: boolean = false;
 
   @Input('class') _cssClass: string = '';
@@ -122,7 +126,6 @@ export class MdInput implements OnInit {
   @Input() align: 'start' | 'end' = 'start';
   @Input() mdPrefix: string | TemplateRef<any>;
   @Input() mdSuffix: string | TemplateRef<any>;
-
 
   @HostListener('focus') _onFocus() {
     this._focused = true;

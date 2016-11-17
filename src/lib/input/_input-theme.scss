@@ -21,7 +21,7 @@
   $input-underline-disabled-color: md-color($foreground, hint-text);
   $input-underline-focused-color: md-color($primary);
 
-  .md-input-placeholder {
+  .md-placeholder {
     color: $input-placeholder-color;
 
     // :focus is applied to the input, but we apply md-focused to the other elements
@@ -39,7 +39,7 @@
   }
 
   // See md-input-placeholder-floating mixin in input.scss
-  .md-input-wrapper input:-webkit-autofill + .md-input-placeholder, .md-input-placeholder.md-float.md-focused {
+  .md-input-wrapper input:-webkit-autofill + .md-placeholder, .md-placeholder.md-float.md-focused {
 
     .md-placeholder-required {
       color: $input-required-placeholder-color;

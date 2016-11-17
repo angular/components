@@ -11,7 +11,10 @@
       <dom-projection-host></dom-projection-host>
     </div>
 
-    <div class="md-input-suffix"><template [ngTemplateOutlet]="_suffixTemplate()"></template></div>
+    <div class="md-input-suffix">
+      <template #suffixWrapper portalHost></template>
+      <template [ngTemplateOutlet]="_suffixTemplate()"></template>
+    </div>
     <template #suffix>{{mdSuffix}}</template>
   </div>
 

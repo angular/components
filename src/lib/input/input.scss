@@ -2,18 +2,18 @@
 @import '../core/style/form-common';
 
 
-$md-input-floating-placeholder-scale-factor: 0.75 !default;
+$md-floating-placeholder-scale-factor: 0.75 !default;
 
 // Gradient for showing the dashed line when the input is disabled.
 $md-input-underline-disabled-background-image:
     linear-gradient(to right, rgba(0, 0, 0, 0.26) 0%, rgba(0, 0, 0, 0.26) 33%, transparent 0%);
 
 // Applies a floating placeholder above the input itself.
-@mixin md-input-placeholder-floating {
+@mixin md-placeholder-floating {
   display: block;
   padding-bottom: 5px;
-  transform: translateY(-100%) scale($md-input-floating-placeholder-scale-factor);
-  width: 100% / $md-input-floating-placeholder-scale-factor;
+  transform: translateY(-100%) scale($md-floating-placeholder-scale-factor);
+  width: 100% / $md-floating-placeholder-scale-factor;
 }
 
 .md-input-wrapper {
@@ -57,7 +57,7 @@ $md-input-underline-disabled-background-image:
 }
 
 // The Input element proper.
-input[md-input], textarea[md-input] {
+input[md-input], textarea[md-textarea] {
   // Font needs to be inherited, because by default <input> has a system font.
   font: inherit;
 
@@ -93,15 +93,15 @@ input[md-input], textarea[md-input] {
   // Once the autofill is committed, a change event happen and the regular md-input
   // classes take over to fulfill this behaviour.
   // Assumes the autofill is non-empty.
-  &:-webkit-autofill + .md-input-placeholder.md-float {
-    @include md-input-placeholder-floating;
+  &:-webkit-autofill + .md-placeholder.md-float {
+    @include md-placeholder-floating;
   }
 }
 
 // The placeholder label. This is invisible unless it is. The logic to show it is
 // basically `empty || (float && (!empty || focused))`. Float is dependent on the
 // `floatingPlaceholder` input.
-.md-input-placeholder {
+.md-placeholder {
   // The placeholder is after the <input>, but needs to be aligned top-left of the
   // infix <div>.
   position: absolute;
@@ -133,7 +133,7 @@ input[md-input], textarea[md-input] {
 
   // Show the placeholder above the input when it's not empty, or focused.
   &.md-float:not(.md-empty), &.md-float.md-focused {
-    @include md-input-placeholder-floating;
+    @include md-placeholder-floating;
   }
 
   [dir='rtl'] & {

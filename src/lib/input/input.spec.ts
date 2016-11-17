@@ -5,7 +5,7 @@ import {
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {MdInput, MdInputModule} from './input';
+import {MdInput, MdInputModule} from './index';
 import {ProjectionModule} from '../core/projection/projection';
 
 describe('MdInput', function () {
@@ -34,8 +34,8 @@ describe('MdInput', function () {
   // TODO(kara): update when core/testing adds fix
   it('support ngModel', async(() => {
     let fixture = TestBed.createComponent(MdInputBaseTestController);
-
     fixture.detectChanges();
+
     let instance = fixture.componentInstance;
     let el: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
@@ -61,8 +61,9 @@ describe('MdInput', function () {
 
   it('counts characters', async(() => {
     let fixture = TestBed.createComponent(MdInputBaseTestController);
-    let instance = fixture.componentInstance;
     fixture.detectChanges();
+
+    let instance = fixture.componentInstance;
     let inputInstance = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
     expect(inputInstance.characterCount).toEqual(0);
 
@@ -95,7 +96,6 @@ describe('MdInput', function () {
       expect(textarea.wrap).toBe('hard');
     });
   });
-
 });
 
 @Component({template: `<input md-input type="number" class="test-class" style="color: 123456">`})
@@ -106,6 +106,15 @@ class MdInputStyleClassTransferedTestComponent {
 class MdInputNumberTypeConservedTestComponent {
   value: number = 0;
 }
+
+@Component({template: `<input md-input placeholder="string placeholder">`})
+class MdInputPlaceholderStringTestController { }
+
+@Component({template: `
+  <input md-input [placeholder]="p">
+  <template #p>template placeholder</template>
+`})
+class MdInputPlaceholderTemplateTestController { }
 
 @Component({template: `<input md-input type="file">`})
 class MdInputInvalidTypeTestController { }

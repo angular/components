@@ -1,0 +1,12 @@
+<label class="md-placeholder"
+       [attr.for]="placeholder?.inputId"
+       [class.md-empty]="placeholder?.empty"
+       [class.md-focused]="placeholder?._focused"
+       [class.md-float]="placeholder?._floatingPlaceholder"
+       [class.md-accent]="placeholder?.dividerColor == 'accent'"
+       [class.md-warn]="placeholder?.dividerColor == 'warn'">
+  <template [ngTemplateOutlet]="_template()"></template>
+  <span class="md-placeholder-required" *ngIf="placeholder?._required">*</span>
+</label>
+
+<template #stringTemplate>{{content}}</template>
