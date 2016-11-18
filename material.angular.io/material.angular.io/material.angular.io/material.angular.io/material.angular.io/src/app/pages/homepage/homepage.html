@@ -11,15 +11,43 @@
 </header>
 
 <div class="docs-homepage-promo">
-  <div *ngFor="let section of homePageContent"
-       class="docs-homepage-row"
-       [class.docs-homepage-reverse-row]="section.reverse">
+  <div class="docs-homepage-row">
     <div class="docs-homepage-promo-img">
-      <img [src]="getImagePath(section.img)" [alt]="section.title" />
+      <img src="../assets/img/homepage/sprintzerotoapp.svg" alt="Sprint from Zero to App" />
     </div>
     <div class="docs-homepage-promo-desc">
-      <h2>{{section.title}}</h2>
-      <p>{{section.content}}</p>
+      <h2>Sprint from Zero to App</h2>
+      <p>Hit the ground running with comprehensive, modern UI components that work across
+        the web, mobile and desktop</p>
+    </div>
+  </div>
+  <div class="docs-homepage-row docs-homepage-reverse-row">
+    <div class="docs-homepage-promo-img">
+      <img src="../assets/img/homepage/fastandconsistent.svg" alt="Fast and Consistent" />
+    </div>
+    <div class="docs-homepage-promo-desc">
+      <h2>Fast and Consistent</h2>
+      <p>Finely tunes performance, because every millisecond counts. Fully tested across
+        modern browsers.</p>
+    </div>
+  </div>
+  <div class="docs-homepage-row">
+    <div class="docs-homepage-promo-img">
+      <img src="../assets/img/homepage/versatile.svg" alt="Versatile" />
+    </div>
+    <div class="docs-homepage-promo-desc">
+      <h2>Versatile</h2>
+      <p>Themable, for when you need to stay on brand or just have a facourite color.
+        Accessible and internationalized so that all users are welcome.</p>
+    </div>
+  </div>
+  <div class="docs-homepage-row docs-homepage-reverse-row">
+    <div class="docs-homepage-promo-img">
+      <img src="../assets/img/homepage/optimized.svg" alt="Optimized for Angular" />
+    </div>
+    <div class="docs-homepage-promo-desc">
+      <h2>Optimized for Angular</h2>
+      <p>Built by the Angular team to integrate seamlessly with Angular 2.</p>
     </div>
   </div>
   <div class="docs-homepage-bottom-start">
