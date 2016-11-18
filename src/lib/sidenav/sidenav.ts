@@ -25,6 +25,13 @@ export class MdDuplicatedSidenavError extends MdError {
   }
 }
 
+
+/** Sidenav toggle promise result. */
+export class MdSidenavToggleResult {
+  constructor(public type: 'open' | 'close', public animationFinished: boolean) {}
+}
+
+
 /**
  * <md-sidenav> component.
  *
@@ -107,13 +114,13 @@ export class MdSidenav implements AfterContentInit {
   @Output('align-changed') onAlignChanged = new EventEmitter<void>();
 
   /** The current toggle animation promise. `null` if no animation is in progress. */
-  private _toggleAnimationPromise: Promise<boolean> = null;
+  private _toggleAnimationPromise: Promise<MdSidenavToggleResult> = null;
 
   /**
    * The current toggle animation promise resolution function.
    * `null` if no animation is in progress.
    */
-  private _toggleAnimationPromiseResolve: (value: boolean) => void = null;
+  private _resolveToggleAnimationPromise: (animationFinished: boolean) => void = null;
 
   /**
    * @param _elementRef The DOM element reference. Used for transition and width calculation.
@@ -125,8 +132,8 @@ export class MdSidenav implements AfterContentInit {
     // This can happen when the sidenav is set to opened in the template and the transition
     // isn't ended.
     if (this._toggleAnimationPromise) {
-      this._toggleAnimationPromiseResolve(true);
-      this._toggleAnimationPromise = this._toggleAnimationPromiseResolve = null;
+      this._resolveToggleAnimationPromise(true);
+      this._toggleAnimationPromise = this._resolveToggleAnimationPromise = null;
     }
   }
 
@@ -143,7 +150,7 @@ export class MdSidenav implements AfterContentInit {
 
   /** Open this sidenav, and return a Promise that will resolve when it's fully opened (or get
    * rejected if it didn't). */
-  open(): Promise<boolean> {
+  open(): Promise<MdSidenavToggleResult> {
     return this.toggle(true);
   }
 
@@ -151,7 +158,7 @@ export class MdSidenav implements AfterContentInit {
    * Close this sidenav, and return a Promise that will resolve when it's fully closed (or get
    * rejected if it didn't).
    */
-  close(): Promise<boolean> {
+  close(): Promise<MdSidenavToggleResult> {
     return this.toggle(false);
   }
 
@@ -160,12 +167,15 @@ export class MdSidenav implements AfterContentInit {
    * close() when it's closed.
    * @param isOpen
    */
-  toggle(isOpen: boolean = !this.opened): Promise<boolean> {
-    if (!this.valid) { return Promise.resolve(true); }
+  toggle(isOpen: boolean = !this.opened): Promise<MdSidenavToggleResult> {
+    if (!this.valid) {
+      return Promise.resolve(new MdSidenavToggleResult(isOpen ? 'open' : 'close', true));
+    }
 
     // Shortcut it if we're already opened.
     if (isOpen === this.opened) {
-      return this._toggleAnimationPromise || Promise.resolve(true);
+      return this._toggleAnimationPromise ||
+          Promise.resolve(new MdSidenavToggleResult(isOpen ? 'open' : 'close', true));
     }
 
     this._opened = isOpen;
@@ -177,10 +187,11 @@ export class MdSidenav implements AfterContentInit {
     }
 
     if (this._toggleAnimationPromise) {
-      this._toggleAnimationPromiseResolve(false);
+      this._resolveToggleAnimationPromise(false);
     }
-    this._toggleAnimationPromise = new Promise<boolean>(resolve => {
-      this._toggleAnimationPromiseResolve = resolve;
+    this._toggleAnimationPromise = new Promise<MdSidenavToggleResult>(resolve => {
+      this._resolveToggleAnimationPromise = animationFinished =>
+          resolve(new MdSidenavToggleResult(isOpen ? 'open' : 'close', animationFinished));
     });
     return this._toggleAnimationPromise;
   }
@@ -201,8 +212,8 @@ export class MdSidenav implements AfterContentInit {
       }
 
       if (this._toggleAnimationPromise) {
-        this._toggleAnimationPromiseResolve(true);
-        this._toggleAnimationPromise = this._toggleAnimationPromiseResolve = null;
+        this._resolveToggleAnimationPromise(true);
+        this._toggleAnimationPromise = this._resolveToggleAnimationPromise = null;
       }
     }
   }
