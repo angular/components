@@ -4,11 +4,10 @@ import {
 } from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {By} from '@angular/platform-browser';
 import {MdInputModule} from './index';
 import {ProjectionModule} from '../core/projection/projection';
 
-fdescribe('MdPlaceholder', function () {
+describe('MdPlaceholder', function () {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdInputModule.forRoot(), FormsModule, ProjectionModule.forRoot()],
@@ -29,11 +28,11 @@ fdescribe('MdPlaceholder', function () {
     let el: HTMLElement = fixture.nativeElement;
     let labelEl: HTMLLabelElement = el.querySelector('label');
     expect(labelEl).not.toBeNull();
-    expect(labelEl.innerText).toEqual('string placeholder');
+    expect(labelEl.textContent).toEqual('string placeholder');
 
     instance.required = true;
     fixture.detectChanges();
-    expect(labelEl.innerText).toEqual('string placeholder *');
+    expect(labelEl.textContent).toEqual('string placeholder *');
   });
 
   it('works with template placeholder', () => {
@@ -44,11 +43,13 @@ fdescribe('MdPlaceholder', function () {
     let el: HTMLElement = fixture.nativeElement;
     let labelEl: HTMLLabelElement = el.querySelector('label');
     expect(labelEl).not.toBeNull();
-    expect(labelEl.innerText).toEqual('template placeholder');
+    expect(labelEl.textContent).toEqual('template placeholder');
+    expect(labelEl.querySelector('b')).not.toBeNull();
+    expect(labelEl.querySelector('b').textContent).toEqual('placeholder');
 
     instance.required = true;
     fixture.detectChanges();
-    expect(labelEl.innerText).toEqual('template placeholder *');
+    expect(labelEl.textContent).toEqual('template placeholder *');
   });
 });
 
@@ -59,7 +60,7 @@ class MdPlaceholderStringTestController {
 
 @Component({template: `
   <input md-input [required]="required" [placeholder]="p">
-  <template #p>template placeholder</template>
+  <template #p>template <b>placeholder</b></template>
 `})
 class MdPlaceholderTemplateTestController {
   required: boolean = false;

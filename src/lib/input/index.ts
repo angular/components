@@ -3,6 +3,7 @@ import {ModuleWithProviders, NgModule} from '@angular/core';
 
 import {ProjectionModule, PortalModule} from '../core';
 
+import {MdTextareaAutosize} from './autosize';
 import {MdInput} from './input';
 import {MdPlaceholder, MdPlaceholderContent} from './placeholder';
 
@@ -12,9 +13,9 @@ export * from './placeholder';
 
 
 @NgModule({
-  declarations: [MdPlaceholderContent, MdPlaceholder, MdInput],
+  declarations: [MdPlaceholderContent, MdPlaceholder, MdInput, MdTextareaAutosize],
   imports: [PortalModule, ProjectionModule, CommonModule],
-  exports: [MdPlaceholder, MdInput],
+  exports: [MdPlaceholder, MdInput, MdTextareaAutosize],
   entryComponents: [MdPlaceholderContent]
 })
 export class MdInputModule {

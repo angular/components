@@ -1,18 +1,31 @@
 import {
+  Component,
+  ComponentRef,
   Directive,
+  HostBinding,
+  HostListener,
   Inject,
   Input,
   OpaqueToken,
-  TemplateRef, Component, ViewContainerRef, ComponentRef, HostBinding, ViewChild, HostListener,
-  AfterContentInit, ReflectiveInjector, Injector,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
 } from '@angular/core';
 import {PortalHost} from '../core';
 import {ComponentPortal} from '../core/portal/portal';
 import {coerceBooleanProperty} from '../core/coersion/boolean-property';
 
 
-export const MD_PLACEHOLDER_HOST_TOKEN  = new OpaqueToken('mdPlaceholderHost');
+/**
+ * A token to provide the host interface that MdPlaceholder will use to inject itself in
+ * the View tree. If this token isn't on the host of the directive, an error will be thrown.
+ * @type {OpaqueToken}
+ */
+export const MD_PLACEHOLDER_HOST  = new OpaqueToken('mdPlaceholderHost');
 
+/**
+ * Interface for components that want to host an MdPlaceholder directive.
+ */
 export interface MdPlaceholderHost {
   placeholderPortalHost: PortalHost;
   readonly dividerColor: string;
@@ -68,7 +81,7 @@ export class MdPlaceholder  {
   _required: boolean = false;
   _floatingPlaceholder: boolean = true;
 
-  constructor(@Inject(MD_PLACEHOLDER_HOST_TOKEN) public _host: MdPlaceholderHost,
+  constructor(@Inject(MD_PLACEHOLDER_HOST) public _host: MdPlaceholderHost,
               private _vcr: ViewContainerRef) {}
 
   ngOnInit() {

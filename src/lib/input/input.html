@@ -1,8 +1,8 @@
 <div (click)="focus()"
-     [class]="_cssClass"
+     class="md-input-wrapper"
+     [ngClass]="_cssClass"
      [attr.style]="_safeCssStyle"
-     [class.md-end]="align == 'end'"
-     [class.md-input-wrapper]="true">
+     [class.md-end]="align == 'end'">
   <div class="md-input-table">
     <div class="md-input-prefix"><template [ngTemplateOutlet]="_prefixTemplate()"></template></div>
     <template #prefix>{{mdPrefix}}</template>

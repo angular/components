@@ -1,13 +1,14 @@
 import {
   Component,
-  HostBinding,
-  Input,
-  ViewChild,
   ElementRef,
-  OnInit,
-  ViewEncapsulation,
+  HostBinding,
   HostListener,
-  TemplateRef, forwardRef,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+  forwardRef,
 } from '@angular/core';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {
@@ -16,8 +17,7 @@ import {
   MdError,
   coerceBooleanProperty
 } from '../core';
-import {MdTextareaAutosize} from './autosize';
-import {MD_PLACEHOLDER_HOST_TOKEN, MdPlaceholderHost} from './placeholder';
+import {MD_PLACEHOLDER_HOST, MdPlaceholderHost} from './placeholder';
 import {PortalHost} from '../core/portal/portal';
 import {PortalHostDirective} from '../core/portal/portal-directives';
 
@@ -47,7 +47,7 @@ const MD_INPUT_INVALID_INPUT_TYPE = [
   styleUrls: ['input.css'],
   encapsulation: ViewEncapsulation.None,
   providers: [
-    { provide: MD_PLACEHOLDER_HOST_TOKEN, useExisting: forwardRef(() => MdInput) }
+    { provide: MD_PLACEHOLDER_HOST, useExisting: forwardRef(() => MdInput) }
   ],
   host: {
     // This is to remove the properties of the `input md-input` itself. We still want to use them
@@ -70,7 +70,7 @@ export class MdInput implements OnInit, MdPlaceholderHost {
   get _safeCssStyle(): SafeStyle {
     return this._dom.bypassSecurityTrustStyle(this._cssStyle || '');
   }
-  @HostBinding('attr.class') get _attrClass(): any { return null; }
+  @HostBinding('attr.class') get _attrClass(): any { return 'md-input-element'; }
   @HostBinding('attr.style') get _attrStyle(): any { return null; }
 
   @Input('type') _type: string;
@@ -136,20 +136,5 @@ export class MdInput implements OnInit, MdPlaceholderHost {
 
   focus() {
     this._ref.nativeElement.focus();
-  }
-}
-
-
-@NgModule({
-  declarations: [MdPlaceholder, MdInput, MdHint, MdTextareaAutosize],
-  imports: [CommonModule, FormsModule],
-  exports: [MdPlaceholder, MdInput, MdHint, MdTextareaAutosize],
-})
-export class MdInputModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdInputModule,
-      providers: []
-    };
   }
 }

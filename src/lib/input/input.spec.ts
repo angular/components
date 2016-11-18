@@ -55,7 +55,8 @@ describe('MdInput', function () {
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.directive(MdInput)).nativeElement;
-    expect(el.getAttribute('class')).toBeNull();
+    // We set the input element's class.
+    expect(el.getAttribute('class')).toBe('md-input-element');
     expect(el.getAttribute('style')).toBeNull();
   }));
 

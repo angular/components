@@ -57,7 +57,7 @@ $md-input-underline-disabled-background-image:
 }
 
 // The Input element proper.
-input[md-input], textarea[md-textarea] {
+.md-input-element {
   // Font needs to be inherited, because by default <input> has a system font.
   font: inherit;
 
