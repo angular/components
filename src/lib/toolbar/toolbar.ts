@@ -9,15 +9,17 @@ import {
   ElementRef,
   Renderer
 } from '@angular/core';
+import {DefaultStyleCompatibilityModeModule} from '../core';
+
 
 @Directive({
-  selector: 'md-toolbar-row'
+  selector: 'md-toolbar-row, mat-toolbar-row'
 })
 export class MdToolbarRow {}
 
 @Component({
   moduleId: module.id,
-  selector: 'md-toolbar',
+  selector: 'md-toolbar, mat-toolbar',
   templateUrl: 'toolbar.html',
   styleUrls: ['toolbar.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,6 +56,7 @@ export class MdToolbar {
 
 
 @NgModule({
+  imports: [DefaultStyleCompatibilityModeModule],
   exports: [MdToolbar, MdToolbarRow],
   declarations: [MdToolbar, MdToolbarRow],
 })

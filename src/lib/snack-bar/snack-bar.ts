@@ -14,6 +14,7 @@ import {
   PortalModule,
   OVERLAY_PROVIDERS,
   MdLiveAnnouncer,
+  DefaultStyleCompatibilityModeModule,
 } from '../core';
 import {CommonModule} from '@angular/common';
 import {MdSnackBarConfig} from './snack-bar-config';
@@ -138,7 +139,7 @@ function _applyConfigDefaults(config: MdSnackBarConfig): MdSnackBarConfig {
 
 
 @NgModule({
-  imports: [OverlayModule, PortalModule, CommonModule],
+  imports: [OverlayModule, PortalModule, CommonModule, DefaultStyleCompatibilityModeModule],
   exports: [MdSnackBarContainer],
   declarations: [MdSnackBarContainer, SimpleSnackBar],
   entryComponents: [MdSnackBarContainer, SimpleSnackBar],
