@@ -482,7 +482,7 @@ export class SliderRenderer {
 
 @NgModule({
   imports: [CommonModule, FormsModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdSlider],
+  exports: [MdSlider, DefaultStyleCompatibilityModeModule],
   declarations: [MdSlider],
   providers: [
     {provide: HAMMER_GESTURE_CONFIG, useClass: MdGestureConfig},

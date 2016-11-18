@@ -14,7 +14,7 @@ export {MenuPositionX, MenuPositionY} from './menu-positions';
 
 @NgModule({
   imports: [OverlayModule, CommonModule, MdRippleModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdMenu, MdMenuItem, MdMenuTrigger],
+  exports: [MdMenu, MdMenuItem, MdMenuTrigger, DefaultStyleCompatibilityModeModule],
   declarations: [MdMenu, MdMenuItem, MdMenuTrigger],
 })
 export class MdMenuModule {

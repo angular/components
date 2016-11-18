@@ -57,7 +57,7 @@ export class MdToolbar {
 
 @NgModule({
   imports: [DefaultStyleCompatibilityModeModule],
-  exports: [MdToolbar, MdToolbarRow],
+  exports: [MdToolbar, MdToolbarRow, DefaultStyleCompatibilityModeModule],
   declarations: [MdToolbar, MdToolbarRow],
 })
 export class MdToolbarModule {

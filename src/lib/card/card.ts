@@ -127,8 +127,15 @@ export class MdCardTitleGroup {}
 @NgModule({
   imports: [DefaultStyleCompatibilityModeModule],
   exports: [
-    MdCard, MdCardHeader, MdCardTitleGroup, MdCardContent, MdCardTitle, MdCardSubtitle,
-    MdCardActions, MdCardFooter
+    MdCard,
+    MdCardHeader,
+    MdCardTitleGroup,
+    MdCardContent,
+    MdCardTitle,
+    MdCardSubtitle,
+    MdCardActions,
+    MdCardFooter,
+    DefaultStyleCompatibilityModeModule,
   ],
   declarations: [
     MdCard, MdCardHeader, MdCardTitleGroup, MdCardContent, MdCardTitle, MdCardSubtitle,

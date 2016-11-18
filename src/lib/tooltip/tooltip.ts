@@ -291,7 +291,7 @@ export class TooltipComponent {
 
 @NgModule({
   imports: [OverlayModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdTooltip, TooltipComponent],
+  exports: [MdTooltip, TooltipComponent, DefaultStyleCompatibilityModeModule],
   declarations: [MdTooltip, TooltipComponent],
   entryComponents: [TooltipComponent],
 })

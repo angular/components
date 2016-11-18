@@ -140,7 +140,7 @@ function _applyConfigDefaults(config: MdSnackBarConfig): MdSnackBarConfig {
 
 @NgModule({
   imports: [OverlayModule, PortalModule, CommonModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdSnackBarContainer],
+  exports: [MdSnackBarContainer, DefaultStyleCompatibilityModeModule],
   declarations: [MdSnackBarContainer, SimpleSnackBar],
   entryComponents: [MdSnackBarContainer, SimpleSnackBar],
 })

@@ -251,7 +251,7 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
 
 @NgModule({
   imports: [HttpModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdIcon],
+  exports: [MdIcon, DefaultStyleCompatibilityModeModule],
   declarations: [MdIcon],
 })
 export class MdIconModule {

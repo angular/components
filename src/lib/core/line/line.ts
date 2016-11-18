@@ -50,7 +50,7 @@ export class MdLineSetter {
 
 @NgModule({
   imports: [DefaultStyleCompatibilityModeModule],
-  exports: [MdLine],
+  exports: [MdLine, DefaultStyleCompatibilityModeModule],
   declarations: [MdLine],
 })
 export class MdLineModule { }

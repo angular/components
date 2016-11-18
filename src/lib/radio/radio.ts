@@ -469,7 +469,7 @@ export class MdRadioButton implements OnInit {
 
 @NgModule({
   imports: [CommonModule, MdRippleModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdRadioGroup, MdRadioButton],
+  exports: [MdRadioGroup, MdRadioButton, DefaultStyleCompatibilityModeModule],
   declarations: [MdRadioGroup, MdRadioButton],
 })
 export class MdRadioModule {

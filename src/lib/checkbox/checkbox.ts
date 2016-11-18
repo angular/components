@@ -380,7 +380,7 @@ export class MdCheckbox implements ControlValueAccessor {
 
 @NgModule({
   imports: [CommonModule, MdRippleModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdCheckbox],
+  exports: [MdCheckbox, DefaultStyleCompatibilityModeModule],
   declarations: [MdCheckbox],
 })
 export class MdCheckboxModule {

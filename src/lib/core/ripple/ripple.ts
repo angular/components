@@ -180,7 +180,7 @@ export class MdRipple implements OnInit, OnDestroy, OnChanges {
 
 @NgModule({
   imports: [DefaultStyleCompatibilityModeModule],
-  exports: [MdRipple],
+  exports: [MdRipple, DefaultStyleCompatibilityModeModule],
   declarations: [MdRipple],
 })
 export class MdRippleModule {

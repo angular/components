@@ -159,7 +159,7 @@ export class MdAnchor extends MdButton {
 
 @NgModule({
   imports: [CommonModule, MdRippleModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdButton, MdAnchor],
+  exports: [MdButton, MdAnchor, DefaultStyleCompatibilityModeModule],
   declarations: [MdButton, MdAnchor],
 })
 export class MdButtonModule {

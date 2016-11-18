@@ -91,7 +91,7 @@ function clamp(v: number, min = 0, max = 100) {
 
 @NgModule({
   imports: [CommonModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdProgressBar],
+  exports: [MdProgressBar, DefaultStyleCompatibilityModeModule],
   declarations: [MdProgressBar],
 })
 export class MdProgressBarModule {

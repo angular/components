@@ -153,7 +153,13 @@ export class MdGridList implements OnInit, AfterContentChecked {
 
 @NgModule({
   imports: [MdLineModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdGridList, MdGridTile, MdGridTileText, MdLineModule],
+  exports: [
+    MdGridList,
+    MdGridTile,
+    MdGridTileText,
+    MdLineModule,
+    DefaultStyleCompatibilityModeModule,
+  ],
   declarations: [MdGridList, MdGridTile, MdGridTileText],
 })
 export class MdGridListModule {

@@ -155,7 +155,7 @@ function _applyConfigDefaults(dialogConfig: MdDialogConfig): MdDialogConfig {
 
 @NgModule({
   imports: [OverlayModule, PortalModule, A11yModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdDialogContainer],
+  exports: [MdDialogContainer, DefaultStyleCompatibilityModeModule],
   declarations: [MdDialogContainer],
   entryComponents: [MdDialogContainer],
 })

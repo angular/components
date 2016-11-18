@@ -54,6 +54,14 @@ export class MatPrefixEnforcer {
 }
 
 
+/**
+ * Module that enforces the default "compatibility mode" settings. When this module is loaded
+ * without NoConflictStyleCompatibilityMode also being imported, it will throw an error if
+ * there are any uses of the `mat-` prefix.
+ *
+ * Because the point of this directive is to *not* be used, it will be tree-shaken away by
+ * optimizers when not in compatibility mode.
+ */
 @NgModule({
   declarations: [MatPrefixEnforcer],
   exports: [MatPrefixEnforcer],

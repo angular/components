@@ -457,7 +457,7 @@ export class MdSidenavLayout implements AfterContentInit {
 
 @NgModule({
   imports: [CommonModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdSidenavLayout, MdSidenav],
+  exports: [MdSidenavLayout, MdSidenav, DefaultStyleCompatibilityModeModule],
   declarations: [MdSidenavLayout, MdSidenav],
 })
 export class MdSidenavModule {

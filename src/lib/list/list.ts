@@ -74,7 +74,14 @@ export class MdListItem implements AfterContentInit {
 
 @NgModule({
   imports: [MdLineModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdList, MdListItem, MdListDivider, MdListAvatar, MdLineModule],
+  exports: [
+    MdList,
+    MdListItem,
+    MdListDivider,
+    MdListAvatar,
+    MdLineModule,
+    DefaultStyleCompatibilityModeModule,
+  ],
   declarations: [MdList, MdListItem, MdListDivider, MdListAvatar],
 })
 export class MdListModule {

@@ -4,24 +4,25 @@ import {MdCheckboxModule} from '../../checkbox/checkbox';
 import {NoConflictStyleCompatibilityMode} from './no-conflict-mode';
 
 
-fdescribe('Style compatibility', () => {
+describe('Style compatibility', () => {
 
   describe('in default mode', () => {
     beforeEach(async(() => {
       TestBed.configureTestingModule({
+        // Specifically do *not* directly import the DefaultStyleCompatibilityModeModule
+        // to ensure that it is the default behavior.
         imports: [MdCheckboxModule.forRoot()],
         declarations: [ComponentWithMdCheckbox, ComponentWithMatCheckbox],
       });
 
       TestBed.compileComponents();
     }));
-    
-  
+
     it('should throw an error when trying to use the "mat-" prefix', () => {
       expect(() => {
         TestBed.createComponent(ComponentWithMatCheckbox);
       }).toThrowError(/The "mat-" prefix cannot be used out of ng-material v1 compatibility mode/);
-    });    
+    });
   });
 
   describe('in no-conflict mode', () => {
@@ -33,7 +34,7 @@ fdescribe('Style compatibility', () => {
 
       TestBed.compileComponents();
     }));
-  
+
     it('should not throw an error when trying to use the "mat-" prefix', () => {
       TestBed.createComponent(ComponentWithMatCheckbox);
     });

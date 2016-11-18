@@ -13,7 +13,7 @@ export * from './select';
 
 @NgModule({
   imports: [CommonModule, OverlayModule, MdRippleModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdSelect, MdOption],
+  exports: [MdSelect, MdOption, DefaultStyleCompatibilityModeModule],
   declarations: [MdSelect, MdOption],
 })
 export class MdSelectModule {

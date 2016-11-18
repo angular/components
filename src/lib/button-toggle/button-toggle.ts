@@ -442,7 +442,12 @@ export class MdButtonToggle implements OnInit {
 
 @NgModule({
   imports: [FormsModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdButtonToggleGroup, MdButtonToggleGroupMultiple, MdButtonToggle],
+  exports: [
+    MdButtonToggleGroup,
+    MdButtonToggleGroupMultiple,
+    MdButtonToggle,
+    DefaultStyleCompatibilityModeModule,
+  ],
   declarations: [MdButtonToggleGroup, MdButtonToggleGroupMultiple, MdButtonToggle],
 })
 export class MdButtonToggleModule {

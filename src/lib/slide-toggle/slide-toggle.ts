@@ -336,7 +336,7 @@ class SlideToggleRenderer {
 
 @NgModule({
   imports: [FormsModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdSlideToggle],
+  exports: [MdSlideToggle, DefaultStyleCompatibilityModeModule],
   declarations: [MdSlideToggle],
 })
 export class MdSlideToggleModule {
