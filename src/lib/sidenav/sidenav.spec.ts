@@ -129,27 +129,23 @@ describe('MdSidenav', () => {
       let sidenav: MdSidenav = fixture.debugElement
         .query(By.directive(MdSidenav)).componentInstance;
 
-      let openCalled = false;
-      let openCancelled = false;
-      let closeCalled = false;
+      let openFinished: boolean;
+      let closeFinished: boolean;
 
-      sidenav.open().then(() => {
-        openCalled = true;
-      }, () => {
-        openCancelled = true;
+      sidenav.open().then((finished) => {
+        openFinished = finished;
       });
 
       // We do not call transition end, close directly.
-      sidenav.close().then(() => {
-        closeCalled = true;
+      sidenav.close().then((finished) => {
+        closeFinished = finished;
       });
 
       endSidenavTransition(fixture);
       tick();
 
-      expect(openCalled).toBe(false);
-      expect(openCancelled).toBe(true);
-      expect(closeCalled).toBe(true);
+      expect(openFinished).toBe(false);
+      expect(closeFinished).toBe(true);
       tick();
     }));
 
@@ -158,9 +154,8 @@ describe('MdSidenav', () => {
       let sidenav: MdSidenav = fixture.debugElement
         .query(By.directive(MdSidenav)).componentInstance;
 
-      let closeCalled = false;
-      let closeCancelled = false;
-      let openCalled = false;
+      let closeFinished: boolean;
+      let openFinished: boolean;
 
       // First, open the sidenav completely.
       sidenav.open();
@@ -168,22 +163,19 @@ describe('MdSidenav', () => {
       tick();
 
       // Then close and check behavior.
-      sidenav.close().then(() => {
-        closeCalled = true;
-      }, () => {
-        closeCancelled = true;
+      sidenav.close().then((finished) => {
+        closeFinished = finished;
       });
       // We do not call transition end, open directly.
-      sidenav.open().then(() => {
-        openCalled = true;
+      sidenav.open().then((finished) => {
+        openFinished = finished;
       });
 
       endSidenavTransition(fixture);
       tick();
 
-      expect(closeCalled).toBe(false);
-      expect(closeCancelled).toBe(true);
-      expect(openCalled).toBe(true);
+      expect(closeFinished).toBe(false);
+      expect(openFinished).toBe(true);
       tick();
     }));
 
@@ -219,7 +211,7 @@ describe('MdSidenav', () => {
       expect(sidenavEl.classList).not.toContain('md-sidenav-closed');
       expect(sidenavEl.classList).toContain('md-sidenav-opened');
 
-      expect((testComponent as any)._openPromise).toBeNull();
+      expect((testComponent as any)._toggleAnimationPromise).toBeNull();
     });
 
     it('should remove align attr from DOM', () => {
