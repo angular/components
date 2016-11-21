@@ -44,7 +44,7 @@ export {Platform as MdPlatform} from './platform/platform';
 
 // Overlay
 export {Overlay, OVERLAY_PROVIDERS} from './overlay/overlay';
-export {OverlayContainer} from './overlay/overlay-container';
+export {OverlayContainer, FullscreenFriendlyOverlayContainer} from './overlay/overlay-container';
 export {OverlayRef} from './overlay/overlay-ref';
 export {OverlayState} from './overlay/overlay-state';
 export {
