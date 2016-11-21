@@ -44,6 +44,7 @@ describe('MdTooltip', () => {
 
     beforeEach(() => {
       fixture = TestBed.createComponent(BasicTooltipDemo);
+      fixture.detectChanges();
       buttonDebugElement = fixture.debugElement.query(By.css('button'));
       buttonElement = <HTMLButtonElement> buttonDebugElement.nativeElement;
       tooltipDirective = buttonDebugElement.injector.get(MdTooltip);
