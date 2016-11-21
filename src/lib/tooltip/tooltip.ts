@@ -292,8 +292,8 @@ export class TooltipComponent {
   _setTransformOrigin(value: TooltipPosition) {
     const isDirectionLtr = !this._dir || this._dir.value == 'ltr';
     switch (value) {
-      case 'before':  this._transformOrigin = isDirectionLtr ? 'right' : 'left'; break;
-      case 'after':    this._transformOrigin = isDirectionLtr ? 'left' : 'right'; break;
+      case 'before': this._transformOrigin = isDirectionLtr ? 'right' : 'left'; break;
+      case 'after':  this._transformOrigin = isDirectionLtr ? 'left' : 'right'; break;
       case 'left':   this._transformOrigin = 'right'; break;
       case 'right':  this._transformOrigin = 'left'; break;
       case 'above':    this._transformOrigin = 'bottom'; break;
