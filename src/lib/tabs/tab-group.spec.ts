@@ -9,7 +9,7 @@ import {Observable} from 'rxjs/Observable';
 import {LayoutDirection, Dir} from '../core/rtl/dir';
 
 
-describe('MdTabGroup', () => {
+fdescribe('MdTabGroup', () => {
   let dir: LayoutDirection = 'ltr';
 
   beforeEach(async(() => {
@@ -17,6 +17,7 @@ describe('MdTabGroup', () => {
       imports: [MdTabsModule.forRoot()],
       declarations: [
         SimpleTabsTestApp,
+        BindedTabsTestApp,
         AsyncTabsTestApp,
         DisabledTabsTestApp,
         TabGroupWithSimpleApi,
@@ -59,6 +60,21 @@ describe('MdTabGroup', () => {
     });
 
     it('should support two-way binding for selectedIndex', async(() => {
+      let component = fixture.componentInstance;
+      component.selectedIndex = 0;
+
+      fixture.detectChanges();
+
+      let tabLabel = fixture.debugElement.queryAll(By.css('.md-tab-label'))[1];
+      tabLabel.nativeElement.click();
+
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(component.selectedIndex).toBe(1);
+      });
+    }));
+
+    it('should support adding new tab and setting active', async(() => {
       let component = fixture.componentInstance;
       component.selectedIndex = 0;
 
@@ -227,6 +243,33 @@ describe('MdTabGroup', () => {
       expect(tabBodyList[1].componentInstance._position).toBe('left');
       expect(tabBodyList[2].componentInstance._position).toBe('left');
     }));
+  });
+
+  fdescribe('dynamic binding tabs', () => {
+    let fixture: ComponentFixture<BindedTabsTestApp>;
+
+    beforeEach(async(() => {
+      fixture = TestBed.createComponent(BindedTabsTestApp);
+      fixture.detectChanges();
+    }));
+
+    it('should be able to add a new tab and set as selected', () => {
+      let component: MdTabGroup = fixture.debugElement.query(By.css('md-tab-group'))
+          .componentInstance;
+
+      expect(component._tabs.length).toBe(fixture.componentInstance.tabs.length);
+
+      fixture.componentInstance.addNewActiveTab();
+      fixture.whenStable().then(() => {
+        fixture.whenStable().then(() => {
+          expect(true).toBe(false);
+          expect(component.selectedIndex).toBe(fixture.componentInstance.selectedIndex);
+          expect(component._tabs.length).toBe(fixture.componentInstance.tabs.length);
+        })
+      });
+
+    });
+
   });
 
   describe('disabled tabs', () => {
@@ -427,6 +470,31 @@ class SimpleTabsTestApp {
   }
   handleSelection(event: any) {
     this.selectEvent = event;
+  }
+}
+
+@Component({
+  template: `
+    <md-tab-group class="tab-group" [(selectedIndex)]="selectedIndex">
+      <md-tab *ngFor="let tab of tabs" label="{{tab.label}}">
+        {{tab.content}}
+      </md-tab>
+    </md-tab-group>
+  `
+})
+class BindedTabsTestApp {
+  tabs = [
+    { label: 'one', content: 'one' },
+    { label: 'two', content: 'two' }
+  ];
+  selectedIndex = 0;
+
+  addNewActiveTab(): void {
+    this.tabs.push({
+      label: 'new tab',
+      content: 'new content'
+    });
+    this.selectedIndex = this.tabs.length - 1;
   }
 }
 

@@ -17,20 +17,24 @@ export class TabsDemo {
   ];
   activeLinkIndex = 0;
 
+  selectedIndex = 0;
+  activeTabIndex = 0;
+  addTabPosition = 0;
+  indexAfterAdd = 0;
   tabs = [
     {
-      label: 'Tab One',
-      content: 'This is the body of the first tab'},
-    {
-      label: 'Tab Two',
+      label: 'Tab 1',
+      content: 'This is the body of the first tab'
+    }, {
+      label: 'Tab 2',
       disabled: true,
-      content: 'This is the body of the second tab'},
-    {
-      label: 'Tab Three',
+      content: 'This is the body of the second tab'
+    }, {
+      label: 'Tab 3',
       extraContent: true,
-      content: 'This is the body of the third tab'},
-    {
-      label: 'Tab Four',
+      content: 'This is the body of the third tab'
+    }, {
+      label: 'Tab 4',
       content: 'This is the body of the fourth tab'
     },
   ];
@@ -49,6 +53,19 @@ export class TabsDemo {
     // https://github.com/angular/angular/pull/12525
     this.activeLinkIndex =
         this.tabLinks.indexOf(this.tabLinks.find(tab => router.url.indexOf(tab.link) != -1));
+  }
+
+  addTab(includeExtraContent: boolean): void {
+    this.tabs.splice(3, 0, {
+      label: 'New Tab ' + (this.tabs.length + 1),
+      content: 'New tab contents ' + (this.tabs.length + 1),
+      extraContent: includeExtraContent
+    });
+    this.activeTabIndex = 3;
+  }
+
+  deleteTab(tab: any) {
+    this.tabs.splice(this.tabs.indexOf(tab), 1);
   }
 }
 

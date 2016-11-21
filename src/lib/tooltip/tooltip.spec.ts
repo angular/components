@@ -152,7 +152,6 @@ describe('MdTooltip', () => {
         fromState: 'visible',
         toState: 'hidden',
         totalTime: 150,
-        phaseName: '',
       }));
     }));
   });
