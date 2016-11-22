@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {MdPlatform} from '../platform/platform';
 
 /**
  * Utility for checking the interactivity of an element, such as whether is is focusable or
@@ -16,6 +17,8 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class InteractivityChecker {
 
+  constructor(private platform: MdPlatform) {}
+
   /** Gets whether an element is disabled. */
   isDisabled(element: HTMLElement) {
     // This does not capture some cases, such as a non-form control with a disabled attribute or
@@ -30,18 +33,21 @@ export class InteractivityChecker {
    * being clipped by an `overflow: hidden` parent or being outside the viewport.
    */
   isVisible(element: HTMLElement) {
-    // There are additional special cases that this does not capture, but this will work for
-    // the most common cases.
+    let nodeName = element.nodeName.toLowerCase();
+    let isControlAudio = nodeName === 'audio' && (element as HTMLAudioElement).controls;
 
-    // Use logic from jQuery to check for `display: none`.
-    // See https://github.com/jquery/jquery/blob/master/src/css/hiddenVisibleSelectors.js#L12
-    if (!(element.offsetWidth || element.offsetHeight || element.getClientRects().length)) {
+    // In IE11 audio elements with controls have invalid rectangles, but are still visible.
+    if (!isControlAudio && !checkRectangles()) {
       return false;
     }
 
-    // Check for css `visibility` property.
-    // TODO(jelbourn): do any browsers we support return an empty string instead of 'visible'?
-    return getComputedStyle(element).getPropertyValue('visibility') == 'visible';
+    return getComputedStyle(element).getPropertyValue('visibility') === 'visible';
+
+    function checkRectangles() {
+      // Use logic from jQuery to check for an invisible element.
+      // See https://github.com/jquery/jquery/blob/master/src/css/hiddenVisibleSelectors.js#L12
+      return element.offsetWidth || element.offsetHeight || element.getClientRects().length;
+    }
   }
 
   /**
@@ -49,7 +55,71 @@ export class InteractivityChecker {
    * Assumes that the element has already been checked with isFocusable.
    */
   isTabbable(element: HTMLElement) {
-    // Again, naive approach that does not capture many special cases and browser quirks.
+
+    let nodeName = element.nodeName.toLowerCase();
+    let frameElement = getWindow(element).frameElement as HTMLElement;
+    let frameType = frameElement && frameElement.nodeName.toLowerCase();
+    let tabIndexValue = getTabIndexValue(element);
+
+    if (frameElement) {
+
+      // Frame elements inherit their tabindex onto all child elements.
+      if (getTabIndexValue(frameElement) === -1) {
+        return false;
+      }
+
+      // Webkit and Blink consider anything inside of an <object> element as non-tabbable.
+      if ((this.platform.BLINK || this.platform.WEBKIT) && frameType === 'object') {
+        return false;
+      }
+
+      // Webkit and Blink disable tabbing to an element inside of an invisible frame.
+      if ((this.platform.BLINK || this.platform.WEBKIT) && !this.isVisible(frameElement)) {
+        return false;
+      }
+
+    }
+
+    if (element.hasAttribute('contenteditable')) {
+      return tabIndexValue !== -1;
+    }
+
+    if (nodeName === 'iframe') {
+      // The frames may be tabbable depending on content, but it's not possibly to reliably
+      // investigate the content of the frames.
+      return false;
+    }
+
+    if (nodeName === 'audio') {
+      if (!element.hasAttribute('controls')) {
+        // By default an <audio> element without the controls enabled is not tabbable.
+        return false;
+      } else if (this.platform.BLINK) {
+        // In Blink <audio controls> elements are always tabbable.
+        return true;
+      }
+    }
+
+    if (nodeName === 'video') {
+      if (!element.hasAttribute('controls') && this.platform.TRIDENT) {
+        // In Trident a <video> element without the controls enabled is not tabbable.
+        return false;
+      } else if (this.platform.BLINK || this.platform.FIREFOX) {
+        // In Chrome and Firefox <video controls> elements are always tabbable.
+        return true;
+      }
+    }
+
+    if (nodeName === 'object' && (this.platform.BLINK || this.platform.WEBKIT)) {
+      // In all Blink and WebKit based browsers <object> elements are never tabbable.
+      return false;
+    }
+
+    // In iOS the browser only considers some specific elements as tabbable.
+    if (this.platform.WEBKIT && this.platform.IOS && !isPotentiallyTabbable(element)) {
+      return false;
+    }
+
     return element.tabIndex >= 0;
   }
 
@@ -59,6 +129,7 @@ export class InteractivityChecker {
     // Again, naive approach that does not capture many edge cases and browser quirks.
     return isPotentiallyFocusable(element) && !this.isDisabled(element) && this.isVisible(element);
   }
+
 }
 
 /** Gets whether an element's  */
@@ -106,6 +177,27 @@ function hasValidTabIndex(element: HTMLElement): boolean {
   return !!(tabIndex && !isNaN(parseInt(tabIndex, 10)));
 }
 
+function getTabIndexValue(element: HTMLElement) {
+  if (!hasValidTabIndex(element)) {
+    return null;
+  }
+
+  // See browser issue in Gecko https://bugzilla.mozilla.org/show_bug.cgi?id=1128054
+  const tabIndex = parseInt(element.getAttribute('tabindex'), 10);
+
+  return isNaN(tabIndex) ? -1 : tabIndex;
+}
+
+function isPotentiallyTabbable(element: HTMLElement): boolean {
+  let nodeName = element.nodeName.toLowerCase();
+  let inputType = nodeName === 'input' && (element as HTMLInputElement).type;
+
+  return inputType === 'text'
+      || inputType === 'password'
+      || nodeName === 'select'
+      || nodeName === 'textarea';
+}
+
 /**
  * Gets whether an element is potentially focusable without taking current visible/disabled state
  * into account.
@@ -122,3 +214,7 @@ function isPotentiallyFocusable(element: HTMLElement): boolean {
       hasValidTabIndex(element);
 }
 
+
+function getWindow(node: HTMLElement): Window {
+  return node.ownerDocument.defaultView || window;
+}
