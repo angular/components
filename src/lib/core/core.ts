@@ -47,6 +47,7 @@ export {OverlayContainer} from './overlay/overlay-container';
 export {FullscreenOverlayContainer} from './overlay/fullscreen-overlay-container';
 export {OverlayRef} from './overlay/overlay-ref';
 export {OverlayState} from './overlay/overlay-state';
+export {DisableBodyScroll} from './overlay/disable-body-scroll';
 export {
   ConnectedOverlayDirective,
   OverlayOrigin,
