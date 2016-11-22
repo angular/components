@@ -22,7 +22,7 @@ import {
     AnimationTransitionEvent,
     ElementRef,
     Renderer,
-    Optional, forwardRef,
+    Optional,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
@@ -53,6 +53,8 @@ export class MdTabChangeEvent {
   tab: MdTab;
 }
 
+export type MdTabBodyOriginState = 'left' | 'right';
+
 @Component({
   moduleId: module.id,
   selector: 'md-tab',
@@ -68,20 +70,30 @@ export class MdTab implements OnInit {
   /** The plain text label for the tab, used when there is no template label. */
   @Input('label') textLabel: string = '';
 
+  /** The portal that will be the hosted content of the tab */
   private _contentPortal: TemplatePortal = null;
+  get content(): TemplatePortal { return this._contentPortal; }
 
-  constructor(private _viewContainerRef: ViewContainerRef) { }
+  /**
+   * The relatively indexed position where 0 represents the center, negative is left, and positive
+   * represents the right.
+   */
+  position: number = null;
 
-  ngOnInit() {
-    this._contentPortal = new TemplatePortal(this._content, this._viewContainerRef);
-  }
+  /**
+   * The initial origin of the tab if it was created and selected after there was already a
+   * selected tab. Provides context of what position the tab should originate from.
+   */
+  origin: MdTabBodyOriginState = null;
 
   private _disabled = false;
   @Input() set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
   get disabled(): boolean { return this._disabled; }
 
-  get content(): TemplatePortal {
-    return this._contentPortal;
+  constructor(private _viewContainerRef: ViewContainerRef) { }
+
+  ngOnInit() {
+    this._contentPortal = new TemplatePortal(this._content, this._viewContainerRef);
   }
 }
 
@@ -99,10 +111,8 @@ export class MdTab implements OnInit {
 export class MdTabGroup {
   @ContentChildren(MdTab) _tabs: QueryList<MdTab>;
 
-  @ViewChildren(forwardRef(() => MdTabBody)) _tabBodies: QueryList<MdTabBody>;
   @ViewChildren(MdTabLabelWrapper) _labelWrappers: QueryList<MdTabLabelWrapper>;
-  @ViewChildren(MdInkBar) _inkBar: QueryList<MdInkBar>;
-
+  @ViewChild(MdInkBar) _inkBar: MdInkBar;
   @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
 
   private _isInitialized: boolean = false;
@@ -124,10 +134,6 @@ export class MdTabGroup {
     this.desiredSelectedIndex = value;
   }
   get selectedIndex(): number {
-    if (this._selectedIndex > this._tabs.length - 1) {
-      return this._tabs.length - 1;
-    }
-
     return this._selectedIndex;
   }
 
@@ -154,26 +160,34 @@ export class MdTabGroup {
     this._groupId = nextId++;
   }
 
+  /**
+   * After the content is checked, this component knows what tabs have been defined by the user
+   * and what the selected index should be. This is where we can know exactly what position
+   * each tab should be in according to the new selected index, and additionally we know how
+   * a new selected tab should transition in (from the left or right).
+   */
   ngAfterContentChecked(): void {
+    // Clamp the next selected index to the bounds of 0 and the tabs length.
+    this.desiredSelectedIndex =
+        Math.min(this._tabs.length - 1, Math.max(this.desiredSelectedIndex, 0));
+
+    // If there is a change in selected index, emit a change event.
+    if (this._selectedIndex != this.desiredSelectedIndex) {
+      this._onSelectChange.emit(this._createChangeEvent(this.desiredSelectedIndex));
+    }
+
+    // Setup the position for each tab and optionally setup an origin on the next selected tab.
+    this._tabs.forEach((tab: MdTab, index: number) => {
+      tab.position = index - this.desiredSelectedIndex;
+
+      // If there is already a selected tab, then set up an origin for the next selected tab
+      // if it doesn't have one already.
+      if (this._selectedIndex != null && tab.position == 0 && !tab.origin) {
+        tab.origin = (this.desiredSelectedIndex - this._selectedIndex) <= 0 ? 'left' : 'right';
+      }
+    });
+
     this._selectedIndex = this.desiredSelectedIndex;
-
-    console.log('Content checked - tabs: ', this._tabs.length, '; bodies: ',
-        this._tabBodies ? this._tabBodies.length : 0);
-  }
-
-  ngAfterViewChecked(): void {
-    // Set the position for each tab body based on the selected index
-
-    this._tabBodies.forEach((tabBody, i) => {
-       tabBody.position = i - this.selectedIndex;
-      // tabBody.originPosition = i <= this._selectedIndex ? 'left' : 'right';
-    });
-    this._zone.runOutsideAngular(() => {
-      window.requestAnimationFrame(() => {
-        this._updateInkBar();
-      });
-    });
-    this._isInitialized = true;
   }
 
   /**
@@ -181,21 +195,13 @@ export class MdTabGroup {
    * Note: This must be run outside of the zone or it will create an infinite change detection loop
    * TODO: internal
    */
-  ngAfterViewInit() {
-    this._tabs.changes.forEach((tabs) => {
-      if (this.selectedIndex > tabs.length - 1) {
-        this.selectedIndex = tabs.length - 1;
-      }
+  ngAfterViewChecked(): void {
+    this._zone.runOutsideAngular(() => {
+      window.requestAnimationFrame(() => {
+        this._updateInkBar();
+      });
     });
-  }
-
-
-  _getTabOrigin(index: number): MdTabBodyState {
-    if (index <= this._selectedIndex) {
-      return 'left';
-    } else if (index > this._selectedIndex) {
-      return 'right';
-    }
+    this._isInitialized = true;
   }
 
   /**
@@ -214,7 +220,7 @@ export class MdTabGroup {
   /** Tells the ink-bar to align itself to the current label wrapper */
   private _updateInkBar(): void {
     if (this._currentLabelWrapper) {
-      this._inkBar.toArray()[0].alignToElement(this._currentLabelWrapper);
+      this._inkBar.alignToElement(this._currentLabelWrapper);
     }
   }
 
@@ -332,16 +338,8 @@ export class MdTabGroup {
   }
 }
 
-export type CenteringEvent = {
-  tabHeight: number,
-  tab: MdTabBody
-}
-export type MdTabBodyState = 'left' | 'center' | 'right' |
+export type MdTabBodyPositionState = 'left' | 'center' | 'right' |
     'left-origin-center' | 'right-origin-center';
-export type MdTabBodyPosition = {
-  origin?: MdTabBodyState,
-  state: MdTabBodyState
-}
 
 @Component({
   moduleId: module.id,
@@ -354,7 +352,7 @@ export type MdTabBodyPosition = {
       state('right-origin-center', style({transform: 'translate3d(0, 0, 0)'})),
       state('center', style({transform: 'translate3d(0, 0, 0)'})),
       state('right', style({transform: 'translate3d(100%, 0, 0)'})),
-      transition('left <=> center, right <=> center',
+      transition('* => left, * => right, left => center, right => center',
           animate('500ms cubic-bezier(0.35, 0, 0.25, 1)')),
       transition('void => left-origin-center', [
         style({transform: 'translate3d(-100%, 0, 0)'}),
@@ -373,7 +371,6 @@ export type MdTabBodyPosition = {
 export class MdTabBody implements OnInit {
   /** The portal host inside of this container into which the tab body content will be loaded. */
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
-  @ViewChild('content') _contentElement: ElementRef;
 
   /** Event emitted when the tab begins to animate towards the center as the active tab. */
   @Output()
@@ -386,12 +383,9 @@ export class MdTabBody implements OnInit {
   /** The tab body content to display. */
   @Input('md-tab-body-content') _content: TemplatePortal;
 
-  /** The tab body content to display. */
-  @Input('md-tab-body-index') index: number;
-
   /** The shifted index position of the tab body, where zero represents the active center tab. */
-  _position: MdTabBodyState;
-  set position(position: number) {
+  _position: MdTabBodyPositionState;
+  @Input('md-tab-position') set position(position: number) {
     if (position < 0) {
       this._position = 'left';
     } else if (position > 0) {
@@ -399,46 +393,54 @@ export class MdTabBody implements OnInit {
     } else {
       this._position = 'center';
     }
-
-    if (this.isPositionCenter() && !this._portalHost.hasAttached() && this._content) {
-      this._portalHost.attach(this._content);
-    }
   }
 
-  _centering: boolean;
-  origin: string;
+  /** The origin position from which this tab should appear when it is centered into view. */
+  @Input('md-tab-origin') _origin: MdTabBodyOriginState;
 
-  constructor(private _elementRef: ElementRef,
-              @Optional() private _dir: Dir,
-              private _renderer: Renderer) {}
+  constructor(private _elementRef: ElementRef, @Optional() private _dir: Dir) {}
 
+  /**
+   * After initialized, check if the content is centered and has an origin. If so, set the
+   * special position states that transition the tab from the left or right before centering.
+   */
   ngOnInit() {
-    if (this.isPositionCenter() && !this._portalHost.hasAttached()) {
+    if (this._position == 'center' && this._origin) {
+      this._position = this._origin == 'left' ? 'left-origin-center' : 'right-origin-center';
+    }
+  }
+
+  /**
+   * After the view has been set, check if the tab content is set to the center and attach the
+   * content if it is not already attached.
+   */
+  ngAfterViewChecked() {
+    if (this._isCenterPosition(this._position) && !this._portalHost.hasAttached()) {
       this._portalHost.attach(this._content);
     }
   }
 
-  isPositionCenter(): boolean {
-    return this._position == 'center'  ||
-        this._position == 'left-origin-center' ||
-        this._position == 'right-origin-center';
+  /** Whether the provided position state is considered center, regardless of origin. */
+  private _isCenterPosition(position: MdTabBodyPositionState|string): boolean {
+    return position == 'center' ||
+        position == 'left-origin-center' ||
+        position == 'right-origin-center';
   }
 
   _onTranslateTabStarted(e: AnimationTransitionEvent) {
-    this._centering = true;
-    console.log('Tab animation started, ', e.toState);
-    if (e.fromState != 'void' && e.toState == 'center') {
+    if (e.fromState != 'void' && this._isCenterPosition(e.toState)) {
       this.onTabBodyCentering.emit(this._elementRef.nativeElement.clientHeight);
     }
   }
 
   _onTranslateTabComplete(e: AnimationTransitionEvent) {
-    if ((e.toState == 'left' || e.toState == 'right') && !this.isPositionCenter()) {
-      // If the end state is that the tab is not centered, then detach the content.
+    // If the end state is that the tab is not centered, then detach the content.
+    if (!this._isCenterPosition(e.toState) && !this._isCenterPosition(this._position)) {
       this._portalHost.detach();
     }
 
-    if ((e.toState == 'center') && this.isPositionCenter()) {
+    // If the transition to the center is complete, emit an event.
+    if (this._isCenterPosition(e.toState) && this._isCenterPosition(this._position)) {
       this.onTabBodyCentered.emit();
     }
   }

@@ -56,12 +56,12 @@ export class TabsDemo {
   }
 
   addTab(includeExtraContent: boolean): void {
-    this.tabs.splice(3, 0, {
+    this.tabs.splice(this.addTabPosition, 0, {
       label: 'New Tab ' + (this.tabs.length + 1),
       content: 'New tab contents ' + (this.tabs.length + 1),
       extraContent: includeExtraContent
     });
-    this.activeTabIndex = 3;
+    this.activeTabIndex = this.indexAfterAdd;
   }
 
   deleteTab(tab: any) {

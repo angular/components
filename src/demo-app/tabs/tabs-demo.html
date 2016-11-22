@@ -24,13 +24,12 @@
   Index to select after add: <md-input type="number" [(ngModel)]="indexAfterAdd"></md-input>
 </div>
 <div>
-  Selected index: <md-input type="number" [(ngModel)]="selectedIndex"></md-input>
+  Selected index: <md-input type="number" [(ngModel)]="activeTabIndex"></md-input>
 </div>
 
 <md-tab-group class="demo-tab-group"
               md-dynamic-height
-              [selectedIndex]="activeTabIndex"
-              (selectedIndexChange)="selectedIndex = $event">
+              [(selectedIndex)]="activeTabIndex">
   <md-tab *ngFor="let tab of tabs" [disabled]="tab.disabled">
     <template md-tab-label>{{tab.label}}</template>
     {{tab.content}}
