@@ -77,3 +77,21 @@ Here's a simple example of using the sidenav:
 </app>
 ```
 
+For a fullscreen sidenav, the recommended approach is set up the DOM such that the
+`md-sidenav-layout` can take up the full space:
+
+```angular2html
+<app>
+  <md-sidenav-layout>
+    <md-sidenav mode="side" opened="true">Drawer content</md-sidenav>
+    <div>Main content</div>
+  </md-sidenav-layout>
+</app>
+```
+```css
+html, body, material-app, md-sidenav-layout, .md-sidenav-content {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+```
