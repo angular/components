@@ -78,7 +78,7 @@ Here's a simple example of using the sidenav:
 ```
 
 For a fullscreen sidenav, the recommended approach is set up the DOM such that the
-`md-sidenav-layout` can take up the full space:
+`md-sidenav-layout` can naturally take up the full space:
 
 ```angular2html
 <app>
