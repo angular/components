@@ -82,8 +82,8 @@ export class MdTab implements OnInit {
   position: number = null;
 
   /**
-   * The initial origin of the tab if it was created and selected after there was already a
-   * selected tab. Provides context of what position the tab should originate from.
+   * The initial relatively index origin of the tab if it was created and selected after there
+   * was already a selected tab. Provides context of what position the tab should originate from.
    */
   origin: number = null;
 
@@ -390,16 +390,23 @@ export class MdTabBody implements OnInit {
   _position: MdTabBodyPositionState;
   @Input('md-tab-position') set position(position: number) {
     if (position < 0) {
-      this._position = 'left';
+      this._position = this.getLayoutDirection() == 'ltr' ? 'left' : 'right';
     } else if (position > 0) {
-      this._position = 'right';
+      this._position = this.getLayoutDirection() == 'ltr' ? 'right' : 'left';
     } else {
       this._position = 'center';
     }
   }
 
   /** The origin position from which this tab should appear when it is centered into view. */
-  @Input('md-tab-origin') set origin: MdTabBodyOriginState;
+  _origin: MdTabBodyOriginState;
+  @Input('md-tab-origin') set origin(origin: number) {
+    if (origin <= 0) {
+      this._origin = this.getLayoutDirection() == 'ltr' ? 'left' : 'right';
+    } else {
+      this._origin = this.getLayoutDirection() == 'ltr' ? 'right' : 'left';
+    }
+  }
 
   constructor(private _elementRef: ElementRef, @Optional() private _dir: Dir) {}
 

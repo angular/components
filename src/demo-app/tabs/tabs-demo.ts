@@ -41,7 +41,7 @@ export class TabsDemo {
   selectedIndex = 0;
   activeTabIndex = 0;
   addTabPosition = 0;
-  indexAfterAdd = 0;
+  gotoNewTabAfterAdding = false;
   createWithLongContent = false;
   dynamicTabs = [
     {
@@ -83,7 +83,10 @@ export class TabsDemo {
       content: 'New tab contents ' + (this.dynamicTabs.length + 1),
       extraContent: includeExtraContent
     });
-    this.activeTabIndex = this.indexAfterAdd;
+
+    if (this.gotoNewTabAfterAdding) {
+      this.activeTabIndex = this.addTabPosition;
+    }
   }
 
   deleteTab(tab: any) {

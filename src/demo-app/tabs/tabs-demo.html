@@ -19,20 +19,20 @@
 <md-card>
   <md-card-title>Add New Tab</md-card-title>
   <md-card-content>
-    <div class="new-tab-option">
-      <md-checkbox [(ngModel)]="createWithLongContent">
-        Include extra content
-      </md-checkbox>
-    </div>
-    <div class="new-tab-option">
-      Position index:
+    <md-checkbox [(ngModel)]="createWithLongContent">
+      Include extra content
+    </md-checkbox>
+    <md-checkbox [(ngModel)]="gotoNewTabAfterAdding">
+      Select after adding
+    </md-checkbox>
+    <div>
+      Position:
       <md-input type="number" [(ngModel)]="addTabPosition"></md-input>
     </div>
-    <div class="new-tab-option">
-      Selected index after create:
-      <md-input type="number" [(ngModel)]="indexAfterAdd"></md-input>
-    </div>
-    <button md-raised-button (click)="addTab(createWithLongContent)">Add</button>
+    <button md-raised-button color="primary"
+            (click)="addTab(createWithLongContent)">
+      Add
+    </button>
   </md-card-content>
 </md-card>
 

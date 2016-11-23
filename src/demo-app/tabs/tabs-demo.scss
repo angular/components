@@ -24,5 +24,18 @@
 }
 
 tabs-demo md-card {
-  width: 360px;
+  width: 160px;
+
+  md-checkbox {
+    display: block;
+    margin-top: 8px;
+  }
+
+  md-input {
+    width: 100px;
+  }
+
+  button {
+    width: 100%
+  }
 }
