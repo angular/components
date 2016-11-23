@@ -10,6 +10,7 @@ import {Observable} from 'rxjs/Observable';
   encapsulation: ViewEncapsulation.None,
 })
 export class TabsDemo {
+  // Nav bar demo
   tabLinks = [
     {label: 'Sun', link: 'sunny-tab'},
     {label: 'Rain', link: 'rainy-tab'},
@@ -17,11 +18,32 @@ export class TabsDemo {
   ];
   activeLinkIndex = 0;
 
+  // Standard tabs demo
+  tabs = [
+    {
+      label: 'Tab 1',
+      content: 'This is the body of the first tab'
+    }, {
+      label: 'Tab 2',
+      disabled: true,
+      content: 'This is the body of the second tab'
+    }, {
+      label: 'Tab 3',
+      extraContent: true,
+      content: 'This is the body of the third tab'
+    }, {
+      label: 'Tab 4',
+      content: 'This is the body of the fourth tab'
+    },
+  ];
+  
+  // Dynamic tabs demo
   selectedIndex = 0;
   activeTabIndex = 0;
   addTabPosition = 0;
   indexAfterAdd = 0;
-  tabs = [
+  createWithLongContent = false;
+  dynamicTabs = [
     {
       label: 'Tab 1',
       content: 'This is the body of the first tab'
@@ -56,16 +78,16 @@ export class TabsDemo {
   }
 
   addTab(includeExtraContent: boolean): void {
-    this.tabs.splice(this.addTabPosition, 0, {
-      label: 'New Tab ' + (this.tabs.length + 1),
-      content: 'New tab contents ' + (this.tabs.length + 1),
+    this.dynamicTabs.splice(this.addTabPosition, 0, {
+      label: 'New Tab ' + (this.dynamicTabs.length + 1),
+      content: 'New tab contents ' + (this.dynamicTabs.length + 1),
       extraContent: includeExtraContent
     });
     this.activeTabIndex = this.indexAfterAdd;
   }
 
   deleteTab(tab: any) {
-    this.tabs.splice(this.tabs.indexOf(tab), 1);
+    this.dynamicTabs.splice(this.dynamicTabs.indexOf(tab), 1);
   }
 }
 

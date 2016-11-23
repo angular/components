@@ -38,10 +38,11 @@ import {
 } from '../core';
 import {MdTabLabel} from './tab-label';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
-import {MdTabNavBar, MdTabLink} from './tab-nav-bar/tab-nav-bar';
+import {MdTabNavBar, MdTabLink, MdTabLinkRipple} from './tab-nav-bar/tab-nav-bar';
 import {MdInkBar} from './ink-bar';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import {MdRippleModule} from '../core/ripple/ripple';
 
 
 /** Used to generate unique ID's for each tab component */
@@ -84,7 +85,7 @@ export class MdTab implements OnInit {
    * The initial origin of the tab if it was created and selected after there was already a
    * selected tab. Provides context of what position the tab should originate from.
    */
-  origin: MdTabBodyOriginState = null;
+  origin: number = null;
 
   private _disabled = false;
   @Input() set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
@@ -106,7 +107,7 @@ export class MdTab implements OnInit {
   moduleId: module.id,
   selector: 'md-tab-group',
   templateUrl: 'tab-group.html',
-  styleUrls: ['tab-group.css']
+  styleUrls: ['tab-group.css'],
 })
 export class MdTabGroup {
   @ContentChildren(MdTab) _tabs: QueryList<MdTab>;
@@ -115,9 +116,11 @@ export class MdTabGroup {
   @ViewChild(MdInkBar) _inkBar: MdInkBar;
   @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
 
+  /** Whether this component has been initialized. */
   private _isInitialized: boolean = false;
 
-  desiredSelectedIndex = 0;
+  /** The tab index that should be selected after the content has been checked. */
+  private _indexToSelect = 0;
 
   /** Snapshot of the height of the tab body wrapper before another tab is activated. */
   private _tabBodyWrapperHeight: number = 0;
@@ -131,7 +134,7 @@ export class MdTabGroup {
   /** The index of the active tab. */
   private _selectedIndex: number = null;
   @Input() set selectedIndex(value: number) {
-    this.desiredSelectedIndex = value;
+    this._indexToSelect = value;
   }
   get selectedIndex(): number {
     return this._selectedIndex;
@@ -168,26 +171,26 @@ export class MdTabGroup {
    */
   ngAfterContentChecked(): void {
     // Clamp the next selected index to the bounds of 0 and the tabs length.
-    this.desiredSelectedIndex =
-        Math.min(this._tabs.length - 1, Math.max(this.desiredSelectedIndex, 0));
+    this._indexToSelect =
+        Math.min(this._tabs.length - 1, Math.max(this._indexToSelect, 0));
 
     // If there is a change in selected index, emit a change event.
-    if (this._selectedIndex != this.desiredSelectedIndex) {
-      this._onSelectChange.emit(this._createChangeEvent(this.desiredSelectedIndex));
+    if (this._selectedIndex != this._indexToSelect) {
+      this._onSelectChange.emit(this._createChangeEvent(this._indexToSelect));
     }
 
     // Setup the position for each tab and optionally setup an origin on the next selected tab.
     this._tabs.forEach((tab: MdTab, index: number) => {
-      tab.position = index - this.desiredSelectedIndex;
+      tab.position = index - this._indexToSelect;
 
       // If there is already a selected tab, then set up an origin for the next selected tab
       // if it doesn't have one already.
       if (this._selectedIndex != null && tab.position == 0 && !tab.origin) {
-        tab.origin = (this.desiredSelectedIndex - this._selectedIndex) <= 0 ? 'left' : 'right';
+        tab.origin = this._indexToSelect - this._selectedIndex;
       }
     });
 
-    this._selectedIndex = this.desiredSelectedIndex;
+    this._selectedIndex = this._indexToSelect;
   }
 
   /**
@@ -396,7 +399,7 @@ export class MdTabBody implements OnInit {
   }
 
   /** The origin position from which this tab should appear when it is centered into view. */
-  @Input('md-tab-origin') _origin: MdTabBodyOriginState;
+  @Input('md-tab-origin') set origin: MdTabBodyOriginState;
 
   constructor(private _elementRef: ElementRef, @Optional() private _dir: Dir) {}
 
@@ -452,11 +455,11 @@ export class MdTabBody implements OnInit {
 }
 
 @NgModule({
-  imports: [CommonModule, PortalModule],
+  imports: [CommonModule, PortalModule, MdRippleModule],
   // Don't export MdInkBar or MdTabLabelWrapper, as they are internal implementation details.
-  exports: [MdTabGroup, MdTabLabel, MdTab, MdTabNavBar, MdTabLink],
+  exports: [MdTabGroup, MdTabLabel, MdTab, MdTabNavBar, MdTabLink, MdTabLinkRipple],
   declarations: [MdTabGroup, MdTabLabel, MdTab, MdInkBar, MdTabLabelWrapper,
-    MdTabNavBar, MdTabLink, MdTabBody],
+    MdTabNavBar, MdTabLink, MdTabBody, MdTabLinkRipple],
 })
 export class MdTabsModule {
   static forRoot(): ModuleWithProviders {
