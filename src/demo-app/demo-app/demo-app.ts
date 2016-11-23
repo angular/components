@@ -32,6 +32,7 @@ export class DemoApp {
     {name: 'List', route: 'list'},
     {name: 'Menu', route: 'menu'},
     {name: 'Live Announcer', route: 'live-announcer'},
+    {name: 'Loading Overlay', route: 'loading-overlay'},
     {name: 'Overlay', route: 'overlay'},
     {name: 'Portal', route: 'portal'},
     {name: 'Projection', route: 'projection'},

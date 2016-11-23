@@ -12,6 +12,7 @@ import {IconDemo} from '../icon/icon-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {InputDemo} from '../input/input-demo';
 import {CheckboxDemo} from '../checkbox/checkbox-demo';
+import {LoadingOverlayDemo} from '../loading-overlay/loading-overlay-demo';
 import {OverlayDemo} from '../overlay/overlay-demo';
 import {PortalDemo} from '../portal/portal-demo';
 import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
@@ -42,6 +43,7 @@ export const DEMO_APP_ROUTES: Routes = [
   {path: 'progress-circle', component: ProgressCircleDemo},
   {path: 'progress-bar', component: ProgressBarDemo},
   {path: 'portal', component: PortalDemo},
+  {path: 'loading-overlay', component: LoadingOverlayDemo},
   {path: 'projection', component: ProjectionDemo},
   {path: 'overlay', component: OverlayDemo},
   {path: 'checkbox', component: CheckboxDemo},
