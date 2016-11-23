@@ -2,7 +2,7 @@ import {
     async, fakeAsync, tick, ComponentFixture, TestBed,
     flushMicrotasks
 } from '@angular/core/testing';
-import {MdTabGroup, MdTabsModule} from './tabs';
+import {MdTabGroup, MdTabsModule} from './tab-group';
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';

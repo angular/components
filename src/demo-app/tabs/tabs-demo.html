@@ -40,7 +40,6 @@
   Selected tab index:
   <md-input type="number" [(ngModel)]="activeTabIndex"></md-input>
 </div>
-
 <md-tab-group class="demo-tab-group"
               md-dynamic-height
               [(selectedIndex)]="activeTabIndex">
@@ -80,7 +79,11 @@
     <br>
     <md-input placeholder="Tab Label" [(ngModel)]="tab.label"></md-input>
     <br><br>
-    <button md-raised-button (click)="deleteTab(tab)">Delete Tab</button>
+    <button md-raised-button
+            [disabled]="dynamicTabs.length == 1"
+            (click)="deleteTab(tab)">
+      Delete Tab
+    </button>
   </md-tab>
 </md-tab-group>
 

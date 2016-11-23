@@ -36,9 +36,8 @@ export class TabsDemo {
       content: 'This is the body of the fourth tab'
     },
   ];
-  
+
   // Dynamic tabs demo
-  selectedIndex = 0;
   activeTabIndex = 0;
   addTabPosition = 0;
   gotoNewTabAfterAdding = false;
