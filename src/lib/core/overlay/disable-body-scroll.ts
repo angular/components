@@ -1,4 +1,5 @@
 import {Injectable, Optional, SkipSelf} from '@angular/core';
+import {ViewportRuler} from './position/viewport-ruler';
 
 
 /**
@@ -16,18 +17,23 @@ export class DisableBodyScroll {
     return this._isActive;
   }
 
+  constructor(private _viewportRuler: ViewportRuler) {}
+
   /**
    * Disables scrolling if it hasn't been disabled already and if the body is scrollable.
    */
   activate(): void {
-    if (!this.isActive && document.body.scrollHeight > window.innerHeight) {
-      let body = document.body;
+    let body = document.body;
+    let bodyHeight = body.scrollHeight;
+    let viewportHeight = this._viewportRuler.getViewportRect().height;
+
+    if (!this.isActive && bodyHeight > viewportHeight) {
       let html = document.documentElement;
       let initialBodyWidth = body.clientWidth;
 
       this._htmlStyles = html.style.cssText || '';
       this._bodyStyles = body.style.cssText || '';
-      this._previousScrollPosition = window.scrollY || window.pageYOffset || 0;
+      this._previousScrollPosition = this._viewportRuler.getViewportScrollPosition().top;
 
       body.style.position = 'fixed';
       body.style.width = '100%';
@@ -57,7 +63,7 @@ export class DisableBodyScroll {
 }
 
 export function DISABLE_BODY_SCROLL_PROVIDER_FACTORY(parentDispatcher: DisableBodyScroll) {
-  return parentDispatcher || new DisableBodyScroll();
+  return parentDispatcher || new DisableBodyScroll(new ViewportRuler());
 };
 
 export const DISABLE_BODY_SCROLL_PROVIDER = {
