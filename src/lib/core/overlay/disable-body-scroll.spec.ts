@@ -1,34 +1,69 @@
+import {TestBed, async, inject} from '@angular/core/testing';
+import {OverlayModule} from './overlay-directives';
 import {DisableBodyScroll} from './disable-body-scroll';
 
 
 describe('DisableBodyScroll', () => {
   let service: DisableBodyScroll;
-  let forceScrollElement: HTMLElement;
+  let startingWindowHeight = window.innerHeight;
+  let forceScrollElement: HTMLElement = document.createElement('div');
 
-  beforeEach(() => {
-    forceScrollElement = document.createElement('div');
-    forceScrollElement.style.height = '3000px';
-    document.body.appendChild(forceScrollElement);
-    service = new DisableBodyScroll();
-  });
+  forceScrollElement.style.height = '3000px';
+  forceScrollElement.style.width = '100px';
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [OverlayModule.forRoot()]
+    });
+  }));
+
+  beforeEach(inject([DisableBodyScroll], (disableBodyScroll: DisableBodyScroll) => {
+    service = disableBodyScroll;
+  }));
 
   afterEach(() => {
-    forceScrollElement.parentNode.removeChild(forceScrollElement);
-    forceScrollElement = null;
+    if (forceScrollElement.parentNode) {
+      forceScrollElement.parentNode.removeChild(forceScrollElement);
+    }
+
     service.deactivate();
   });
 
   it('should prevent scrolling', () => {
-    window.scroll(0, 0);
+    document.body.appendChild(forceScrollElement);
+    window.scrollTo(0, 100);
+
+    // In the iOS simulator (BrowserStack & SauceLabs), adding the content to the
+    // body causes karma's iframe for the test to stretch to fit that content once we attempt to
+    // scroll the page. Setting width / height / maxWidth / maxHeight on the iframe does not
+    // successfully constrain its size. As such, skip assertions in environments where the
+    // window size has changed since the start of the test.
+    if (window.innerHeight > startingWindowHeight) {
+      return;
+    }
+
+    window.scrollTo(0, 100);
 
     service.activate();
 
-    window.scroll(0, 500);
+    window.scrollTo(0, 500);
 
     expect(window.pageYOffset).toBe(0);
   });
 
   it('should toggle the isActive property', () => {
+    document.body.appendChild(forceScrollElement);
+    window.scrollTo(0, 100);
+
+    // In the iOS simulator (BrowserStack & SauceLabs), adding the content to the
+    // body causes karma's iframe for the test to stretch to fit that content once we attempt to
+    // scroll the page. Setting width / height / maxWidth / maxHeight on the iframe does not
+    // successfully constrain its size. As such, skip assertions in environments where the
+    // window size has changed since the start of the test.
+    if (window.innerHeight > startingWindowHeight) {
+      return;
+    }
+
     service.activate();
     expect(service.isActive).toBe(true);
 
@@ -37,16 +72,26 @@ describe('DisableBodyScroll', () => {
   });
 
   it('should not disable scrolling if the content is shorter than the viewport height', () => {
-    forceScrollElement.style.height = '0';
     service.activate();
     expect(service.isActive).toBe(false);
   });
 
   it('should add the proper inline styles to the <body> and <html> nodes', () => {
+    document.body.appendChild(forceScrollElement);
+    window.scrollTo(0, 500);
+
+    // In the iOS simulator (BrowserStack & SauceLabs), adding the content to the
+    // body causes karma's iframe for the test to stretch to fit that content once we attempt to
+    // scroll the page. Setting width / height / maxWidth / maxHeight on the iframe does not
+    // successfully constrain its size. As such, skip assertions in environments where the
+    // window size has changed since the start of the test.
+    if (window.innerHeight > startingWindowHeight) {
+      return;
+    }
+
     let bodyCSS = document.body.style;
     let htmlCSS = document.documentElement.style;
 
-    window.scroll(0, 500);
     service.activate();
 
     expect(bodyCSS.position).toBe('fixed');
@@ -59,6 +104,8 @@ describe('DisableBodyScroll', () => {
   it('should revert any previously-set inline styles', () => {
     let bodyCSS = document.body.style;
     let htmlCSS = document.documentElement.style;
+
+    document.body.appendChild(forceScrollElement);
 
     bodyCSS.position = 'static';
     bodyCSS.width = '1000px';
@@ -76,7 +123,17 @@ describe('DisableBodyScroll', () => {
   });
 
   it('should restore the scroll position when enabling scrolling', () => {
-    window.scroll(0, 1000);
+    document.body.appendChild(forceScrollElement);
+    window.scrollTo(0, 1000);
+
+    // In the iOS simulator (BrowserStack & SauceLabs), adding the content to the
+    // body causes karma's iframe for the test to stretch to fit that content once we attempt to
+    // scroll the page. Setting width / height / maxWidth / maxHeight on the iframe does not
+    // successfully constrain its size. As such, skip assertions in environments where the
+    // window size has changed since the start of the test.
+    if (window.innerHeight > startingWindowHeight) {
+      return;
+    }
 
     service.activate();
     service.deactivate();
