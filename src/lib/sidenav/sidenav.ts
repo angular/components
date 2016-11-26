@@ -40,6 +40,7 @@ export class MdSidenavToggleResult {
   template: '<focus-trap [disabled]="isFocusTrapDisabled"><ng-content></ng-content></focus-trap>',
   host: {
     '(transitionend)': '_onTransitionEnd($event)',
+    '(keydown.escape)': 'handleEscapeKey()',
     // must prevent the browser from aligning text based on value
     '[attr.align]': 'null',
     '[class.md-sidenav-closed]': '_isClosed',
@@ -51,6 +52,7 @@ export class MdSidenavToggleResult {
     '[class.md-sidenav-push]': '_modePush',
     '[class.md-sidenav-side]': '_modeSide',
     '[class.md-sidenav-invalid]': '!valid',
+    'tabIndex': '-1'
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -128,7 +130,18 @@ export class MdSidenav implements AfterContentInit {
    * @param _elementRef The DOM element reference. Used for transition and width calculation.
    *     If not available we do not hook on transitions.
    */
-  constructor(private _elementRef: ElementRef) {}
+  constructor(private _elementRef: ElementRef) {
+    this.onOpen.subscribe(() => {
+      this._elementFocusedBeforeSidenavWasOpened = document.activeElement as HTMLElement;
+      this._elementRef.nativeElement.focus();
+    });
+
+    this.onClose.subscribe(() => {
+      if (this._elementFocusedBeforeSidenavWasOpened) {
+        this._elementFocusedBeforeSidenavWasOpened.focus();
+      }
+    });
+  }
 
   ngAfterContentInit() {
     // This can happen when the sidenav is set to opened in the template and the transition
@@ -202,6 +215,13 @@ export class MdSidenav implements AfterContentInit {
     return this._toggleAnimationPromise;
   }
 
+  /** Handles the user pressing the escape key. */
+  handleEscapeKey() {
+    // TODO(crisbeto): this is in a separate method in order to
+    // allow for disabling the behavior later.
+    this.close();
+  }
+
   /**
    * When transition has finished, set the internal state for classes and emit the proper event.
    * The event passed is actually of type TransitionEvent, but that type is not available in
@@ -255,6 +275,16 @@ export class MdSidenav implements AfterContentInit {
     }
     return 0;
   }
+
+
+  private _transition: boolean = false;
+  private _openPromise: Promise<void>;
+  private _openPromiseResolve: () => void;
+  private _openPromiseReject: () => void;
+  private _closePromise: Promise<void>;
+  private _closePromiseResolve: () => void;
+  private _closePromiseReject: () => void;
+  private _elementFocusedBeforeSidenavWasOpened: HTMLElement = null;
 }
 
 /**

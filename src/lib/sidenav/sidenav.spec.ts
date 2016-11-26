@@ -235,6 +235,59 @@ describe('MdSidenav', () => {
       expect(testComponent.backdropClickedCount).toBe(1);
     }));
 
+    it('should close when pressing escape', fakeAsync(() => {
+      let fixture = TestBed.createComponent(BasicTestApp);
+      let testComponent: BasicTestApp = fixture.debugElement.componentInstance;
+      let sidenav: MdSidenav = fixture.debugElement
+        .query(By.directive(MdSidenav)).componentInstance;
+
+      sidenav.open();
+
+      fixture.detectChanges();
+      endSidenavTransition(fixture);
+      tick();
+
+      expect(testComponent.openCount).toBe(1);
+      expect(testComponent.closeCount).toBe(0);
+
+      // Simulate pressing the escape key.
+      sidenav.handleEscapeKey();
+
+      fixture.detectChanges();
+      endSidenavTransition(fixture);
+      tick();
+
+      expect(testComponent.closeCount).toBe(1);
+    }));
+
+    it('should restore focus to the trigger element on close', fakeAsync(() => {
+      let fixture = TestBed.createComponent(BasicTestApp);
+      let sidenav: MdSidenav = fixture.debugElement
+        .query(By.directive(MdSidenav)).componentInstance;
+      let trigger = document.createElement('button');
+
+      document.body.appendChild(trigger);
+      trigger.focus();
+      sidenav.open();
+
+      fixture.detectChanges();
+      endSidenavTransition(fixture);
+      tick();
+
+      expect(document.activeElement)
+          .not.toBe(trigger, 'Expected focus to change when the sidenav was opened.');
+
+      sidenav.close();
+
+      fixture.detectChanges();
+      endSidenavTransition(fixture);
+      tick();
+
+      expect(document.activeElement)
+          .toBe(trigger, 'Expected focus to be restored to the trigger on close.');
+
+      trigger.parentNode.removeChild(trigger);
+    }));
   });
 
   describe('attributes', () => {
