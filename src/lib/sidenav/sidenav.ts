@@ -137,9 +137,13 @@ export class MdSidenav implements AfterContentInit {
     });
 
     this.onClose.subscribe(() => {
-      if (this._elementFocusedBeforeSidenavWasOpened) {
+      if (this._elementFocusedBeforeSidenavWasOpened instanceof HTMLElement) {
         this._elementFocusedBeforeSidenavWasOpened.focus();
+      } else {
+        this._elementRef.nativeElement.blur();
       }
+
+      this._elementFocusedBeforeSidenavWasOpened = null;
     });
   }
 
