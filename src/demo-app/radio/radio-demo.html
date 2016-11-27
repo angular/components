@@ -1,7 +1,7 @@
 <h1>Basic Example</h1>
 <section class="demo-section">
   <md-radio-button name="group1">Option 1</md-radio-button>
-  <md-radio-button name="group1">Option 2</md-radio-button>
+  <md-radio-button name="group1" deselectable="true">Option 2 (deselectable)</md-radio-button>
   <md-radio-button name="group1" disabled="true">Option 3 (disabled)</md-radio-button>
 </section>
 <h1>Dynamic Example</h1>
@@ -13,9 +13,15 @@
     </button>
   </div>
   <div>
+    <span>deselectable: {{isDeselectable}}</span>
+    <button md-raised-button (click)="isDeselectable=!isDeselectable" class="demo-button">
+      Make deselectable
+    </button>
+  </div>
+  <div>
     <span><md-checkbox [(ngModel)]="isAlignEnd">Align end</md-checkbox></span>
   </div>
-  <md-radio-group name="my_options" [disabled]="isDisabled" [align]="isAlignEnd ? 'end' : 'start'">
+  <md-radio-group name="my_options" [deselectable]="isDeselectable" [disabled]="isDisabled" [align]="isAlignEnd ? 'end' : 'start'">
     <md-radio-button value="option_1">Option 1</md-radio-button>
     <md-radio-button value="option_2">Option 2</md-radio-button>
     <md-radio-button value="option_3">Option 3</md-radio-button>
