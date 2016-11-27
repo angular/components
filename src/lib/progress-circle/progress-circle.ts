@@ -36,7 +36,7 @@ type EasingFn = (currentTime: number, startValue: number,
  * <md-progress-circle> component.
  */
 @Component({
-  moduleId: module.id,
+
   selector: 'md-progress-circle',
   host: {
     'role': 'progressbar',
@@ -44,7 +44,7 @@ type EasingFn = (currentTime: number, startValue: number,
     '[attr.aria-valuemax]': '_ariaValueMax',
   },
   templateUrl: 'progress-circle.html',
-  styleUrls: ['progress-circle.css'],
+  styleUrls: ['progress-circle.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdProgressCircle implements OnDestroy {
@@ -52,7 +52,7 @@ export class MdProgressCircle implements OnDestroy {
   private _lastAnimationId: number = 0;
 
   /** The id of the indeterminate interval. */
-  private _interdeterminateInterval: number;
+  private _interdeterminateInterval: NodeJS.Timer;
 
   /** The SVG <path> node that is used to draw the circle. */
   private _path: SVGPathElement;
@@ -75,7 +75,7 @@ export class MdProgressCircle implements OnDestroy {
     return this._interdeterminateInterval;
   }
   /** TODO: internal */
-  set interdeterminateInterval(interval: number) {
+  set interdeterminateInterval(interval: NodeJS.Timer) {
     clearInterval(this._interdeterminateInterval);
     this._interdeterminateInterval = interval;
   }
@@ -235,14 +235,14 @@ export class MdProgressCircle implements OnDestroy {
  * indeterminate <md-progress-circle> instance.
  */
 @Component({
-  moduleId: module.id,
+
   selector: 'md-spinner',
   host: {
     'role': 'progressbar',
     'mode': 'indeterminate',
   },
   templateUrl: 'progress-circle.html',
-  styleUrls: ['progress-circle.css'],
+  styleUrls: ['progress-circle.scss'],
 })
 export class MdSpinner extends MdProgressCircle implements OnDestroy {
   constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef, ngZone: NgZone) {
