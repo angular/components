@@ -106,6 +106,7 @@ $md-dense-three-line-height: 76px;
 md-list, md-nav-list {
   padding-top: $md-list-top-padding;
   display: block;
+  outline: 0;
 
   [md-subheader] {
     @include md-subheader-base(
