@@ -14,5 +14,5 @@ export class ComponentsList {
     {name: 'Menu', src: 'menu'},
     {name: 'Tooltip', src: 'tooltip'},
     {name: 'Progress', src: 'progress'},
-  ]
+  ];
 }

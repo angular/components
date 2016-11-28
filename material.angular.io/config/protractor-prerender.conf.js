@@ -7,7 +7,7 @@ var SpecReporter = require('jasmine-spec-reporter');
 exports.config = {
   allScriptsTimeout: 11000,
   specs: [
-    './tmp/prerender-specs/chunk*.spec.js'
+    '../tmp/prerender-specs/chunk*.spec.js'
   ],
   capabilities: {
     'browserName': 'chrome',
