@@ -124,7 +124,7 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   }
 
   set deselectable(value: boolean) {
-    // The presence of *any* deselectable value makes the component deselectable, *except* for false.
+    // The presence of *any* value makes the component deselectable, *except* for false.
     this._deselectable = (value != null && value !== false) ? true : null;
   }
 
@@ -391,7 +391,7 @@ export class MdRadioButton implements OnInit {
   }
 
   set deselectable(value: boolean) {
-    // The presence of *any* deselectable value makes the component deselectable, *except* for false.
+    // The presence of *any* value makes the component deselectable, *except* for false.
     this._deselectable = (value != null && value !== false) ? true : null;
   }
 
@@ -444,7 +444,7 @@ export class MdRadioButton implements OnInit {
     // The real click event will bubble up, and the generated click event also tries to bubble up.
     // This will lead to multiple click events.
     // Preventing bubbling for the second event will solve that issue.
-    if(this.checked && (this.radioGroup && this.radioGroup.deselectable || this._deselectable)){
+    if (this.checked && (this.radioGroup && this.radioGroup.deselectable || this._deselectable)) {
       this._onInputChange(event);
     }
     event.stopPropagation();
@@ -461,9 +461,10 @@ export class MdRadioButton implements OnInit {
     // emit its event object to the `change` output.
     event.stopPropagation();
 
-    let groupValueChanged = this.radioGroup && (this.value != this.radioGroup.value || this.radioGroup.deselectable);
-
-    this.checked = (this.radioGroup && this.radioGroup.deselectable || this._deselectable) ? !this.checked : true;
+    let groupValueChanged =
+        this.radioGroup && (this.value != this.radioGroup.value || this.radioGroup.deselectable);
+    let deselectable = (this._deselectable || this.radioGroup && this.radioGroup.deselectable);
+    this.checked = deselectable ? !this.checked : true;
 
     this._emitChangeEvent();
 
