@@ -1,6 +1,9 @@
-import { TestBed, async } from '@angular/core/testing';
-import { MaterialDocsApp } from './material-docs-app';
 
-describe('', () => {
+describe('Material Docs', () => {
+
+
+  it('should expect true to be true', () => {
+    expect(true).toBe(true);
+  });
 
 });
