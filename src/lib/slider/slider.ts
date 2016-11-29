@@ -360,12 +360,13 @@ export class MdSlider implements ControlValueAccessor {
         this.value = this.min;
         break;
       case LEFT_ARROW:
-        // It's kind of debatable what's the correct thing to do for inverted sliders. For a sighted
-        // user it would make more sense that when they press an arrow key the thumb moves in that
-        // direction. However for a blind user, nothing about the slider indicates that it is
-        // inverted. They will expect left to be decrement, regardless of how it appears on the
-        // screen. For speakers of RTL languages, they probably expect left to mean increment.
-        // Therefore we flip the meaning of the side arrow keys for RTL but not for inverted.
+        // NOTE: For a sighted user it would make more sense that when they press an arrow key on an
+        // inverted slider the thumb moves in that direction. However for a blind user, nothing
+        // about the slider indicates that it is inverted. They will expect left to be decrement,
+        // regardless of how it appears on the screen. For speakers ofRTL languages, they probably
+        // expect left to mean increment. Therefore we flip the meaning of the side arrow keys for
+        // RTL. For inverted sliders we prefer a good a11y experience to having it "look right" for
+        // sighted users, therefore we do not swap the meaning.
         this._increment(this.direction == 'rtl' ? 1 : -1);
         break;
       case UP_ARROW:
