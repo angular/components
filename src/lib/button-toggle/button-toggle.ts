@@ -47,7 +47,7 @@ export class MdButtonToggleChange {
   providers: [MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
   host: {
     'role': 'radiogroup',
-    '[class.md-vertical]': 'vertical'
+    '[class.md-button-toggle-vertical]': 'vertical'
   },
   exportAs: 'mdButtonToggleGroup',
 })
@@ -221,7 +221,7 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
   selector: 'md-button-toggle-group[multiple]',
   exportAs: 'mdButtonToggleGroup',
   host: {
-    '[class.md-vertical]': 'vertical'
+    '[class.md-button-toggle-vertical]': 'vertical'
   }
 })
 export class MdButtonToggleGroupMultiple {

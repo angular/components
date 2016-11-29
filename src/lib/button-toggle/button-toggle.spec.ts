@@ -127,12 +127,12 @@ describe('MdButtonToggle', () => {
     });
 
     it('should change the vertical state', () => {
-      expect(groupNativeElement.classList).not.toContain('md-vertical');
+      expect(groupNativeElement.classList).not.toContain('md-button-toggle-vertical');
 
       groupInstance.vertical = true;
       fixture.detectChanges();
 
-      expect(groupNativeElement.classList).toContain('md-vertical');
+      expect(groupNativeElement.classList).toContain('md-button-toggle-vertical');
     });
 
     it('should emit a change event from button toggles', fakeAsync(() => {
@@ -422,12 +422,12 @@ describe('MdButtonToggle', () => {
     });
 
     it('should change the vertical state', () => {
-      expect(groupNativeElement.classList).not.toContain('md-vertical');
+      expect(groupNativeElement.classList).not.toContain('md-button-toggle-vertical');
 
       groupInstance.vertical = true;
       fixture.detectChanges();
 
-      expect(groupNativeElement.classList).toContain('md-vertical');
+      expect(groupNativeElement.classList).toContain('md-button-toggle-vertical');
     });
 
     it('should deselect a button toggle when selected twice', () => {
