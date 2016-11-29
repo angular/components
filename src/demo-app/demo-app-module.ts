@@ -5,7 +5,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DemoApp, Home} from './demo-app/demo-app';
 import {RouterModule} from '@angular/router';
 import {MaterialModule, OverlayContainer,
-  FullscreenFriendlyOverlayContainer} from '@angular/material';
+  FullscreenOverlayContainer} from '@angular/material';
 import {DEMO_APP_ROUTES} from './demo-app/routes';
 import {ProgressBarDemo} from './progress-bar/progress-bar-demo';
 import {JazzDialog, ContentElementDialog, DialogDemo} from './dialog/dialog-demo';
@@ -96,7 +96,7 @@ import {InputContainerDemo} from './input/input-container-demo';
     PlatformDemo
   ],
   providers: [
-    {provide: OverlayContainer, useClass: FullscreenFriendlyOverlayContainer}
+    {provide: OverlayContainer, useClass: FullscreenOverlayContainer}
   ],
   entryComponents: [
     DemoApp,
