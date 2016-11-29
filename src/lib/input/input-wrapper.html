@@ -6,21 +6,17 @@
 
     <!--TODO(mmalerba): reimplement this stuff
     <input
-           [class.md-end]="align == 'end'"
-           (focus)="_handleFocus($event)"
-           (blur)="_handleBlur($event)">
+           [class.md-end]="align == 'end'">
 
     <textarea
-        [class.md-end]="align == 'end'"
-        (focus)="_handleFocus($event)"
-        (blur)="_handleBlur($event)"></textarea>
+        [class.md-end]="align == 'end'"></textarea>
     -->
 
 
     <label class="md-input-placeholder"
            [attr.for]="_inputId"
-           [class.md-empty]="empty"
-           [class.md-focused]="focused"
+           [class.md-empty]="_empty"
+           [class.md-focused]="_focused"
            [class.md-float]="floatingPlaceholder"
            [class.md-accent]="dividerColor == 'accent'"
            [class.md-warn]="dividerColor == 'warn'"
@@ -37,7 +33,7 @@
 <div class="md-input-underline"
      [class.md-disabled]="disabled">
   <span class="md-input-ripple"
-        [class.md-focused]="focused"
+        [class.md-focused]="_focused"
         [class.md-accent]="dividerColor == 'accent'"
         [class.md-warn]="dividerColor == 'warn'"></span>
 </div>

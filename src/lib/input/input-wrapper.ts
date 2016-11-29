@@ -1,6 +1,5 @@
 import {
   Component,
-  HostBinding,
   Input,
   Directive,
   AfterContentInit,
@@ -12,8 +11,7 @@ import {
   OnChanges,
   NgModule,
   ModuleWithProviders,
-  ViewEncapsulation,
-  NgZone
+  ViewEncapsulation
 } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
@@ -21,7 +19,7 @@ import {MdError, coerceBooleanProperty} from '../core';
 import {MdTextareaAutosize} from './autosize';
 
 
-// Invalid input type. Using one of these will throw an MdInputUnsupportedTypeErrorNew.
+// Invalid input type. Using one of these will throw an MdInputWrapperUnsupportedTypeError.
 const MD_INPUT_INVALID_INPUT_TYPE = [
   'file',
   'radio',
@@ -32,19 +30,25 @@ const MD_INPUT_INVALID_INPUT_TYPE = [
 let nextUniqueId = 0;
 
 
-export class MdInputPlaceholderConflictErrorNew extends MdError {
+export class MdInputWrapperInputElementCountError extends MdError {
+  constructor(count: number) {
+    super(`md-input-wrapper must contain exactly 1 input or textarea element. Found ${count}.`);
+  }
+}
+
+export class MdInputWrapperPlaceholderConflictError extends MdError {
   constructor() {
     super('Placeholder attribute and child element were both specified.');
   }
 }
 
-export class MdInputUnsupportedTypeErrorNew extends MdError {
+export class MdInputWrapperUnsupportedTypeError extends MdError {
   constructor(type: string) {
-    super(`Input type "${type}" isn't supported by md-input.`);
+    super(`Input type "${type}" isn't supported by md-input-wrapper.`);
   }
 }
 
-export class MdInputDuplicatedHintErrorNew extends MdError {
+export class MdInputWrapperDuplicatedHintError extends MdError {
   constructor(align: string) {
     super(`A hint was already declared for 'align="${align}"'.`);
   }
@@ -85,128 +89,166 @@ export class MdHintNew {
   templateUrl: 'input-wrapper.html',
   styleUrls: ['input-wrapper.css'],
   host: {
-    '(click)' : 'focus()'
+    '(click)' : '_focusInput()',
+    // remove align attribute to prevent it from interfering with layout.
+    '[attr.align]': 'null',
   },
   encapsulation: ViewEncapsulation.None,
 })
 export class MdInputWrapper implements AfterContentInit, OnChanges {
-  private _focused: boolean = false;
-
-  /**
-   * Content directives.
-   */
-  @ContentChild(MdPlaceholderNew) _placeholderChild: MdPlaceholderNew;
-  @ContentChildren(MdHintNew) _hintChildren: QueryList<MdHintNew>;
-
-  /** Readonly properties. */
-  get focused() { return this._focused; }
-  get empty() {
-    return (this._inputValue == null || this._inputValue === '') && this._inputType !== 'date';
-  }
-
-  /**
-   * Bindings.
-   */
   @Input() align: 'start' | 'end' = 'start';
-  @Input() dividerColor: 'primary' | 'accent' | 'warn' = 'primary';
-  @Input() hintLabel: string = '';
 
-  private _floatingPlaceholder: boolean = true;
+  @Input() dividerColor: 'primary' | 'accent' | 'warn' = 'primary';
+
+  @Input() hintLabel: string = '';
 
   @Input()
   get floatingPlaceholder(): boolean { return this._floatingPlaceholder; }
   set floatingPlaceholder(value) { this._floatingPlaceholder = coerceBooleanProperty(value); }
+  private _floatingPlaceholder: boolean = true;
 
-  // This is to remove the `align` property of the `md-input` itself. Otherwise HTML5
-  // might place it as RTL when we don't want to. We still want to use `align` as an
-  // Input though, so we use HostBinding.
-  @HostBinding('attr.align') get _align(): any { return null; }
+  @ContentChild(MdPlaceholderNew) _placeholderChild: MdPlaceholderNew;
 
+  @ContentChildren(MdHintNew) _hintChildren: QueryList<MdHintNew>;
+
+  _focused = false;
+
+  _inputId = '';
+
+  _inputRequired = false;
+
+  /** Whether the `input` or `textarea` is empty. */
+  get _empty(): boolean { return (!this._inputValue) && this._inputType !== 'date'; }
+
+  /** The placeholder attribute of the `input` or `textarea`. */
+  get _inputPlaceholder(): string { return this.__inputPlaceholder; }
+  set _inputPlaceholder(value: string) {
+    this.__inputPlaceholder = value;
+    this._validatePlaceholders();
+  }
+  private __inputPlaceholder = '';
+
+  /** The type attribute of the `input` (or "text" if element is a `textarea`). */
+  private get _inputType(): string { return this.__inputType; }
+  private set _inputType(value: string) {
+    this.__inputType = value || 'text';
+    this._validateInputType();
+  }
+  private __inputType = 'text';
+
+  /** The value of the `input` or `textarea`. */
+  private _inputValue = '';
+
+  /** The native `input` or `textarea` element. */
   private _inputElement: HTMLInputElement | HTMLTextAreaElement;
 
-  // Do these via DOMMutationObserver
-  get _inputId(): string {
-    return this._inputElement && this._inputElement.id || '';
-  }
-  get _inputType(): string {
-    return this._inputElement && this._inputElement.type || 'text';
-  }
-  get _inputPlaceholder(): string {
-    return this._inputElement && this._inputElement.placeholder || '';
-  }
-  get _inputRequired(): boolean {
-    return this._inputElement && this._inputElement.required || false;
-  }
-  get _inputValue(): string {
-    return this._inputElement && this._inputElement.value || '';
-  }
+  /** A `MutationObserver` to observe the `input` or `textarea`. */
+  private _inputObserver = new MutationObserver(mutations => {
+    for (let mutation of mutations) {
+      switch (mutation.attributeName) {
+        case 'id':
+          this._inputId = this._inputElement.id;
+          break;
+        case 'type':
+          this._inputType = this._inputElement.type;
+          break;
+        case 'placeholder':
+          this._inputPlaceholder = this._inputElement.placeholder;
+          break;
+        case 'required':
+          this._inputRequired = this._inputElement.required;
+          break;
+      }
+    }
+  });
 
-  constructor(private _elementRef: ElementRef, private _ngZone: NgZone) {}
+  /** A map of event listeners to install on the `input` or `textarea`. */
+  private _inputListeners: { [key: string]: () => void } = {
+    'blur': () => { this._focused = false; },
+    'focus': () => { this._focused = true; },
+    'input': () => { this._inputValue = this._inputElement.value; }
+  };
 
-  /** Set focus on input */
-  focus() {
-    this._inputElement && this._inputElement.focus();
-  }
+  constructor(private _elementRef: ElementRef) {}
 
-  _handleFocus() {
-    this._focused = true;
-  }
-
-  _handleBlur() {
-    this._focused = false;
-  }
-
-  _hasPlaceholder(): boolean {
-    return !!this._inputPlaceholder || this._placeholderChild != null;
-  }
-
-  /** TODO: internal */
   ngAfterContentInit() {
     this._initInputEl();
-    this._validateConstraints();
+    this._validateHints();
 
     // Trigger validation when the hint children change.
     this._hintChildren.changes.subscribe(() => {
-      this._validateConstraints();
+      this._validateHints();
     });
   }
 
-  /** TODO: internal */
   ngOnChanges(changes: {[key: string]: SimpleChange}) {
-    this._validateConstraints();
+    if (changes['hintLabel']) {
+      this._validateHints();
+    }
   }
 
+  /** Set focus on the input element. */
+  _focusInput() {
+    this._inputElement && this._inputElement.focus();
+  }
+
+  /** Whether the input has a placeholder. */
+  _hasPlaceholder(): boolean {
+    return !!this._inputPlaceholder || !!this._placeholderChild;
+  }
+
+  /** Initialize the `input` or `textarea` element. */
   private _initInputEl() {
+    // Find input or textarea element.
     let inputEls = this._elementRef.nativeElement.querySelectorAll('input, textarea');
     if (inputEls.length != 1) {
-      // TODO throw
+      new MdInputWrapperInputElementCountError(inputEls.length);
     }
     this._inputElement = inputEls[0];
-    // TODO(mmalerba): Revalidate when type changes.
-    if (MD_INPUT_INVALID_INPUT_TYPE.indexOf(this._inputElement.type || 'text') != -1) {
-      throw new MdInputUnsupportedTypeErrorNew(this._inputType);
-    }
-    // TODO(mmalerba): Revalidate when placeholder changes.
-    if (this._inputElement.placeholder && this._placeholderChild != null) {
-      throw new MdInputPlaceholderConflictErrorNew();
+
+    // Install mutation observer and event listeners.
+    this._inputObserver.observe(this._inputElement, {
+      attributes: true,
+      attributeFilter: ['id', 'type', 'placeholder', 'required']
+    });
+    for (let eventType in this._inputListeners) {
+      this._inputElement.addEventListener(eventType, this._inputListeners[eventType]);
     }
 
+    // Add additional classes and attributes.
     this._inputElement.classList.add('md-input-element');
     this._inputElement.id = this._inputElement.id || `md-input-${nextUniqueId++}`;
+
+    // Record initial values for attributes we observe.
+    this._inputId = this._inputElement.id;
+    this._inputType = this._inputElement.type;
+    this._inputRequired = this._inputElement.required;
+    this._inputPlaceholder = this._inputElement.placeholder;
+    this._inputValue = this._inputElement.value;
+  }
+
+  /** Ensure that the type of the input is a supported type. */
+  private _validateInputType() {
+    if (MD_INPUT_INVALID_INPUT_TYPE.indexOf(this._inputType) != -1) {
+      throw new MdInputWrapperUnsupportedTypeError(this._inputType);
+    }
   }
 
   /**
-   * Ensure that all constraints defined by the API are validated, or throw errors otherwise.
-   * Constraints for now:
-   *   - placeholder attribute and <md-placeholder> are mutually exclusive.
-   *   - type attribute is not one of the forbidden types (see constant at the top).
-   *   - Maximum one of each `<md-hint>` alignment specified, with the attribute being
-   *     considered as align="start".
-   * @private
+   * Ensure that there is only one placeholder (either `input` attribute or child element with the
+   * `md-placeholder` attribute.
    */
-  private _validateConstraints() {
+  private _validatePlaceholders() {
+    if (this._inputPlaceholder && this._placeholderChild) {
+      throw new MdInputWrapperPlaceholderConflictError();
+    }
+  }
 
-
+  /**
+   * Ensure that there is a maximum of one of each `<md-hint>` alignment specified, with the
+   * attribute being considered as `align="start"`.
+   */
+  private _validateHints() {
     if (this._hintChildren) {
       // Validate the hint labels.
       let startHint: MdHintNew = null;
@@ -214,12 +256,12 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
       this._hintChildren.forEach((hint: MdHintNew) => {
         if (hint.align == 'start') {
           if (startHint || this.hintLabel) {
-            throw new MdInputDuplicatedHintErrorNew('start');
+            throw new MdInputWrapperDuplicatedHintError('start');
           }
           startHint = hint;
         } else if (hint.align == 'end') {
           if (endHint) {
-            throw new MdInputDuplicatedHintErrorNew('end');
+            throw new MdInputWrapperDuplicatedHintError('end');
           }
           endHint = hint;
         }
