@@ -763,7 +763,6 @@ describe('MdSelect', () => {
             .toEqual((triggerRight + 16).toFixed(2),
                 `Expected trigger to align with the selected option on the x-axis in RTL.`);
       });
-
     });
 
   });
