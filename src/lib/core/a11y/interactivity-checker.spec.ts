@@ -350,7 +350,7 @@ describe('InteractivityChecker', () => {
 
           expect(checker.isTabbable(editableEl)).toBe(false);
 
-        }, 1);
+        }, 0);
 
       }));
 
