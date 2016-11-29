@@ -1,0 +1,54 @@
+<div class="md-input-table">
+  <div class="md-input-prefix"><ng-content select="[md-prefix]"></ng-content></div>
+
+  <div class="md-input-infix">
+    <input #input
+           *ngIf="_elementType === 'input'"
+           class="md-input-element"
+           [class.md-end]="align == 'end'"
+           [id]="inputId"
+           [type]="type"
+           (focus)="_handleFocus($event)"
+           (blur)="_handleBlur($event)"
+           [(ngModel)]="value"
+           (change)="_handleChange($event)">
+
+    <textarea
+        #input
+        *ngIf="_elementType === 'textarea'"
+        class="md-input-element  md-input-element-textarea"
+        [class.md-end]="align == 'end'"
+        [id]="inputId"
+        (focus)="_handleFocus($event)"
+        (blur)="_handleBlur($event)"
+        [(ngModel)]="value"
+        (change)="_handleChange($event)"></textarea>
+
+
+    <label class="md-input-placeholder"
+           [attr.for]="inputId"
+           [class.md-empty]="empty"
+           [class.md-focused]="focused"
+           [class.md-float]="floatingPlaceholder"
+           [class.md-accent]="dividerColor == 'accent'"
+           [class.md-warn]="dividerColor == 'warn'"
+           *ngIf="_hasPlaceholder()">
+      <ng-content select="md-placeholder"></ng-content>
+      {{placeholder}}
+      <span class="md-placeholder-required" *ngIf="required">*</span>
+    </label>
+  </div>
+
+  <div class="md-input-suffix"><ng-content select="[md-suffix]"></ng-content></div>
+</div>
+
+<div class="md-input-underline"
+     [class.md-disabled]="disabled">
+  <span class="md-input-ripple"
+        [class.md-focused]="focused"
+        [class.md-accent]="dividerColor == 'accent'"
+        [class.md-warn]="dividerColor == 'warn'"></span>
+</div>
+
+<div *ngIf="hintLabel != ''" class="md-hint">{{hintLabel}}</div>
+<ng-content select="md-hint"></ng-content>
