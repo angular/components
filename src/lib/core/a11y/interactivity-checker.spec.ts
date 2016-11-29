@@ -246,7 +246,6 @@ describe('InteractivityChecker', () => {
       // Do not run for Blink, Firefox and iOS because those treat video elements
       // with controls different and are covered in other tests.
       runIf(!platform.BLINK && !platform.FIREFOX && !platform.IOS, () => {
-
         let video = createFromTemplate('<video controls>', true);
 
         expect(checker.isTabbable(video)).toBe(true);
@@ -261,7 +260,6 @@ describe('InteractivityChecker', () => {
       // Only run this spec for Blink and Firefox, because those always treat video
       // elements with controls as tabbable.
       runIf(platform.BLINK || platform.FIREFOX, () => {
-
         let video = createFromTemplate('<video controls>', true);
 
         expect(checker.isTabbable(video)).toBe(true);
@@ -293,7 +291,7 @@ describe('InteractivityChecker', () => {
 
         elements.forEach(el => {
           expect(checker.isFocusable(el))
-          .toBe(true, `Expected <${el.nodeName} tabindex="0"> to be focusable`);
+            .toBe(true, `Expected <${el.nodeName} tabindex="0"> to be focusable`);
         });
       });
 
@@ -305,7 +303,7 @@ describe('InteractivityChecker', () => {
 
         elements.forEach(el => {
           expect(checker.isTabbable(el))
-          .toBe(false, `Expected <${el.nodeName} tabindex="-1"> not to be tabbable`);
+            .toBe(false, `Expected <${el.nodeName} tabindex="-1"> not to be tabbable`);
         });
       });
 
@@ -317,7 +315,7 @@ describe('InteractivityChecker', () => {
 
         elements.forEach(el => {
           expect(checker.isTabbable(el))
-          .toBe(true, `Expected <${el.nodeName} tabindex="0"> to be tabbable`);
+            .toBe(true, `Expected <${el.nodeName} tabindex="0"> to be tabbable`);
         });
       });
 
@@ -500,9 +498,9 @@ describe('InteractivityChecker', () => {
   }
 
   function runIf(condition: boolean, runFn: Function): () => void {
-    return function() {
+    return (...args: any[]) => {
       if (condition) {
-        runFn.apply(this, arguments);
+        runFn.apply(this, args);
       }
     };
   }

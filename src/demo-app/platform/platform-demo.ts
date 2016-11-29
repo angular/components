@@ -14,7 +14,5 @@ import {MdPlatform} from '@angular/material';
   `
 })
 export class PlatformDemo {
-
   constructor(public platform: MdPlatform) {}
-
 }

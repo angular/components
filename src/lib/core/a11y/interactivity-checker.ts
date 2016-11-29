@@ -1,23 +1,19 @@
 import {Injectable} from '@angular/core';
 import {MdPlatform} from '../platform/platform';
 
+/* The InteractivityChecker leans heavily on the ally.js accessibility utilities.
+ * Methods like `isTabbable` are only covering specific edge-cases for the browsers which are
+ * supported.
+ */
+
 /**
  * Utility for checking the interactivity of an element, such as whether is is focusable or
  * tabbable.
- *
- * NOTE: Currently does not capture any special element behaviors, browser quirks, or edge cases.
- * This is a basic/naive starting point onto which further behavior will be added.
- *
- * This class uses instance methods instead of static functions so that alternate implementations
- * can be injected.
- *
- * TODO(jelbourn): explore using ally.js directly for its significantly more robust
- * checks (need to evaluate payload size, performance, and compatibility with tree-shaking).
  */
 @Injectable()
 export class InteractivityChecker {
 
-  constructor(private platform: MdPlatform) {}
+  constructor(private _platform: MdPlatform) {}
 
   /** Gets whether an element is disabled. */
   isDisabled(element: HTMLElement) {
@@ -33,21 +29,7 @@ export class InteractivityChecker {
    * being clipped by an `overflow: hidden` parent or being outside the viewport.
    */
   isVisible(element: HTMLElement) {
-    let nodeName = element.nodeName.toLowerCase();
-    let isControlAudio = nodeName === 'audio' && (element as HTMLAudioElement).controls;
-
-    // In IE11 audio elements with controls have invalid rectangles, but are still visible.
-    if (!isControlAudio && !checkRectangles()) {
-      return false;
-    }
-
-    return getComputedStyle(element).getPropertyValue('visibility') === 'visible';
-
-    function checkRectangles() {
-      // Use logic from jQuery to check for an invisible element.
-      // See https://github.com/jquery/jquery/blob/master/src/css/hiddenVisibleSelectors.js#L12
-      return element.offsetWidth || element.offsetHeight || element.getClientRects().length;
-    }
+    return hasGeometry(element) && getComputedStyle(element).visibility === 'visible';
   }
 
   /**
@@ -69,12 +51,12 @@ export class InteractivityChecker {
       }
 
       // Webkit and Blink consider anything inside of an <object> element as non-tabbable.
-      if ((this.platform.BLINK || this.platform.WEBKIT) && frameType === 'object') {
+      if ((this._platform.BLINK || this._platform.WEBKIT) && frameType === 'object') {
         return false;
       }
 
       // Webkit and Blink disable tabbing to an element inside of an invisible frame.
-      if ((this.platform.BLINK || this.platform.WEBKIT) && !this.isVisible(frameElement)) {
+      if ((this._platform.BLINK || this._platform.WEBKIT) && !this.isVisible(frameElement)) {
         return false;
       }
 
@@ -94,29 +76,29 @@ export class InteractivityChecker {
       if (!element.hasAttribute('controls')) {
         // By default an <audio> element without the controls enabled is not tabbable.
         return false;
-      } else if (this.platform.BLINK) {
+      } else if (this._platform.BLINK) {
         // In Blink <audio controls> elements are always tabbable.
         return true;
       }
     }
 
     if (nodeName === 'video') {
-      if (!element.hasAttribute('controls') && this.platform.TRIDENT) {
+      if (!element.hasAttribute('controls') && this._platform.TRIDENT) {
         // In Trident a <video> element without the controls enabled is not tabbable.
         return false;
-      } else if (this.platform.BLINK || this.platform.FIREFOX) {
+      } else if (this._platform.BLINK || this._platform.FIREFOX) {
         // In Chrome and Firefox <video controls> elements are always tabbable.
         return true;
       }
     }
 
-    if (nodeName === 'object' && (this.platform.BLINK || this.platform.WEBKIT)) {
+    if (nodeName === 'object' && (this._platform.BLINK || this._platform.WEBKIT)) {
       // In all Blink and WebKit based browsers <object> elements are never tabbable.
       return false;
     }
 
     // In iOS the browser only considers some specific elements as tabbable.
-    if (this.platform.WEBKIT && this.platform.IOS && !isPotentiallyTabbable(element)) {
+    if (this._platform.WEBKIT && this._platform.IOS && !isPotentiallyTabbableIOS(element)) {
       return false;
     }
 
@@ -130,6 +112,13 @@ export class InteractivityChecker {
     return isPotentiallyFocusable(element) && !this.isDisabled(element) && this.isVisible(element);
   }
 
+}
+
+/** Checks whether the specified element has any geometry / rectangles. */
+function hasGeometry(element: HTMLElement): boolean {
+  // Use logic from jQuery to check for an invisible element.
+  // See https://github.com/jquery/jquery/blob/master/src/css/hiddenVisibleSelectors.js#L12
+  return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
 }
 
 /** Gets whether an element's  */
@@ -177,7 +166,11 @@ function hasValidTabIndex(element: HTMLElement): boolean {
   return !!(tabIndex && !isNaN(parseInt(tabIndex, 10)));
 }
 
-function getTabIndexValue(element: HTMLElement) {
+/**
+ * Returns the parsed tabindex from the element attributes instead of returning the
+ * evaluated tabindex from the browsers defaults.
+ */
+function getTabIndexValue(element: HTMLElement): number {
   if (!hasValidTabIndex(element)) {
     return null;
   }
@@ -188,7 +181,8 @@ function getTabIndexValue(element: HTMLElement) {
   return isNaN(tabIndex) ? -1 : tabIndex;
 }
 
-function isPotentiallyTabbable(element: HTMLElement): boolean {
+/** Checks whether the specified element is potentially tabbable on iOS */
+function isPotentiallyTabbableIOS(element: HTMLElement): boolean {
   let nodeName = element.nodeName.toLowerCase();
   let inputType = nodeName === 'input' && (element as HTMLInputElement).type;
 
@@ -214,7 +208,7 @@ function isPotentiallyFocusable(element: HTMLElement): boolean {
       hasValidTabIndex(element);
 }
 
-
+/** Gets the parent window of a DOM node with regards of being inside of an iframe. */
 function getWindow(node: HTMLElement): Window {
   return node.ownerDocument.defaultView || window;
 }
