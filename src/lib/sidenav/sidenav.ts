@@ -400,9 +400,12 @@ export class MdSidenavLayout implements AfterContentInit {
     this._setDrawersValid(true);
   }
 
-  _closeModalSidenav() {
-    this.onBackdropClicked.emit(null);
+  _onBackdropClicked() {
+    this.onBackdropClicked.emit();
+    this._closeModalSidenav();
+  }
 
+  _closeModalSidenav() {
     if (this._start != null && this._start.mode != 'side') {
       this._start.close();
     }
