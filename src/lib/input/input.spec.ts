@@ -1,9 +1,6 @@
-import {
-  async,
-  TestBed,
-} from '@angular/core/testing';
-import {Component} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {async, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {Component, ViewChild} from '@angular/core';
+import {FormsModule, NgModel} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {MdInput, MdInputModule} from './input';
 
@@ -17,6 +14,7 @@ describe('MdInput', function () {
       imports: [MdInputModule.forRoot(), FormsModule],
       declarations: [
         MdInputNumberTypeConservedTestComponent,
+        MdInputNumberTypeRequiredTestComponent,
         MdInputPlaceholderRequiredTestComponent,
         MdInputPlaceholderElementTestComponent,
         MdInputPlaceholderAttrTestComponent,
@@ -621,6 +619,29 @@ describe('MdInput', function () {
     expect(inputElement.name).toBe('some-name');
   });
 
+  it('supports validating required attribute on number type', fakeAsync(() => {
+    const fixture = TestBed.createComponent(MdInputNumberTypeRequiredTestComponent);
+
+    fixture.detectChanges();
+    tick(); // NgModel is updating changes in a promise
+
+    const ctrl = fixture.componentInstance.ctrl;
+    const input: MdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance;
+    const inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+    expect(ctrl.valid).toBeTruthy();
+    expect(input.value).toEqual(0);
+
+    // Fake a `change` event being triggered.
+    inputElement.value = '';
+    input._handleChange(<any> {target: inputElement});
+
+    fixture.detectChanges();
+
+    expect(ctrl.invalid).toBeTruthy();
+    expect(input.value).toBeNull();
+  }));
+
   describe('md-textarea', () => {
     it('supports the rows, cols, and wrap attributes', () => {
       let fixture = TestBed.createComponent(MdTextareaWithBindings);
@@ -644,6 +665,13 @@ class MdInputWithId {
 @Component({template: `<md-input type="number" [(ngModel)]="value"></md-input>`})
 class MdInputNumberTypeConservedTestComponent {
   value: number = 0;
+}
+
+@Component({template:
+  `<md-input type="number" required #ctrl="ngModel" [(ngModel)]="value"></md-input>` })
+class MdInputNumberTypeRequiredTestComponent {
+  value: number = 0;
+  @ViewChild('ctrl') ctrl: NgModel;
 }
 
 @Component({template: `<md-input required placeholder="hello"></md-input>`})
