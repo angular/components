@@ -3,7 +3,6 @@ import {
   Component,
   HostBinding,
   Input,
-  Directive,
   AfterContentInit,
   ContentChild,
   SimpleChange,
@@ -23,6 +22,8 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/for
 import {CommonModule} from '@angular/common';
 import {MdError, coerceBooleanProperty} from '../core';
 import {Observable} from 'rxjs/Observable';
+import {MdPlaceholder, MdInputWrapper, MdHint} from './input-wrapper';
+import {MdTextareaAutosize} from './autosize';
 
 
 const noop = () => {};
@@ -63,30 +64,6 @@ export class MdInputDuplicatedHintError extends MdError {
   }
 }
 
-
-
-/**
- * The placeholder directive. The content can declare this to implement more
- * complex placeholders.
- */
-@Directive({
-  selector: 'md-placeholder'
-})
-export class MdPlaceholder {}
-
-
-/** The hint directive, used to tag content as hint labels (going under the input). */
-@Directive({
-  selector: 'md-hint',
-  host: {
-    '[class.md-right]': 'align == "end"',
-    '[class.md-hint]': 'true'
-  }
-})
-export class MdHint {
-  // Whether to align the hint label at the start or end of the line.
-  @Input() align: 'start' | 'end' = 'start';
-}
 
 /**
  * Component that represents a text input. It encapsulates the <input> HTMLElement and
@@ -367,10 +344,11 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
 }
 
 
+
 @NgModule({
-  declarations: [MdPlaceholder, MdInput, MdHint],
+  declarations: [MdInput, MdPlaceholder, MdInputWrapper, MdHint, MdTextareaAutosize],
   imports: [CommonModule, FormsModule],
-  exports: [MdPlaceholder, MdInput, MdHint],
+  exports: [MdInput, MdPlaceholder, MdInputWrapper, MdHint, MdTextareaAutosize],
 })
 export class MdInputModule {
   static forRoot(): ModuleWithProviders {

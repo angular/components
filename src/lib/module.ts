@@ -26,7 +26,6 @@ import {MdIconModule} from './icon/index';
 import {MdProgressCircleModule} from './progress-circle/index';
 import {MdProgressBarModule} from './progress-bar/index';
 import {MdInputModule} from './input/index';
-import {MdInputWrapperModule} from './input/index';
 import {MdSnackBarModule} from './snack-bar/snack-bar';
 import {MdTabsModule} from './tabs/index';
 import {MdToolbarModule} from './toolbar/index';
@@ -47,7 +46,6 @@ const MATERIAL_MODULES = [
   MdGridListModule,
   MdIconModule,
   MdInputModule,
-  MdInputWrapperModule,
   MdListModule,
   MdMenuModule,
   MdProgressBarModule,
@@ -80,7 +78,6 @@ const MATERIAL_MODULES = [
     MdCheckboxModule.forRoot(),
     MdGridListModule.forRoot(),
     MdInputModule.forRoot(),
-    MdInputWrapperModule.forRoot(),
     MdListModule.forRoot(),
     MdProgressBarModule.forRoot(),
     MdProgressCircleModule.forRoot(),

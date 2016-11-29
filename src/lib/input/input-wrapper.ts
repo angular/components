@@ -9,14 +9,11 @@ import {
   ElementRef,
   QueryList,
   OnChanges,
-  NgModule,
-  ModuleWithProviders,
   ViewEncapsulation
 } from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {CommonModule} from '@angular/common';
 import {MdError, coerceBooleanProperty} from '../core';
-import {MdTextareaAutosize} from './autosize';
+
+export {} from './input';
 
 
 // Invalid input type. Using one of these will throw an MdInputWrapperUnsupportedTypeError.
@@ -54,8 +51,6 @@ export class MdInputWrapperDuplicatedHintError extends MdError {
   }
 }
 
-
-
 /**
  * The placeholder directive. The content can declare this to implement more
  * complex placeholders.
@@ -63,7 +58,7 @@ export class MdInputWrapperDuplicatedHintError extends MdError {
 @Directive({
   selector: 'md-placeholder'
 })
-export class MdPlaceholderNew {}
+export class MdPlaceholder {}
 
 
 /** The hint directive, used to tag content as hint labels (going under the input). */
@@ -74,10 +69,11 @@ export class MdPlaceholderNew {}
     '[class.md-hint]': 'true'
   }
 })
-export class MdHintNew {
+export class MdHint {
   // Whether to align the hint label at the start or end of the line.
   @Input() align: 'start' | 'end' = 'start';
 }
+
 
 /**
  * Component that represents a text input. It encapsulates the <input> HTMLElement and
@@ -107,14 +103,17 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
   set floatingPlaceholder(value) { this._floatingPlaceholder = coerceBooleanProperty(value); }
   private _floatingPlaceholder: boolean = true;
 
-  @ContentChild(MdPlaceholderNew) _placeholderChild: MdPlaceholderNew;
+  @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
 
-  @ContentChildren(MdHintNew) _hintChildren: QueryList<MdHintNew>;
+  @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
 
+  /** Whether the `input` or `textarea` is focused. */
   _focused = false;
 
+  /** The id attribute of the `input` or `textarea`. */
   _inputId = '';
 
+  /** The required attribute of the `input` or `textarea`. */
   _inputRequired = false;
 
   /** Whether the `input` or `textarea` is empty. */
@@ -251,9 +250,9 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
   private _validateHints() {
     if (this._hintChildren) {
       // Validate the hint labels.
-      let startHint: MdHintNew = null;
-      let endHint: MdHintNew = null;
-      this._hintChildren.forEach((hint: MdHintNew) => {
+      let startHint: MdHint = null;
+      let endHint: MdHint = null;
+      this._hintChildren.forEach((hint: MdHint) => {
         if (hint.align == 'start') {
           if (startHint || this.hintLabel) {
             throw new MdInputWrapperDuplicatedHintError('start');
@@ -267,20 +266,5 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
         }
       });
     }
-  }
-}
-
-
-@NgModule({
-  declarations: [MdPlaceholderNew, MdInputWrapper, MdHintNew, MdTextareaAutosize],
-  imports: [CommonModule, FormsModule],
-  exports: [MdPlaceholderNew, MdInputWrapper, MdHintNew, MdTextareaAutosize],
-})
-export class MdInputWrapperModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdInputWrapperModule,
-      providers: []
-    };
   }
 }
