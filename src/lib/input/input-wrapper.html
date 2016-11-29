@@ -8,16 +8,12 @@
     <input
            [class.md-end]="align == 'end'"
            (focus)="_handleFocus($event)"
-           (blur)="_handleBlur($event)"
-           [(ngModel)]="value"
-           (change)="_handleChange($event)">
+           (blur)="_handleBlur($event)">
 
     <textarea
         [class.md-end]="align == 'end'"
         (focus)="_handleFocus($event)"
-        (blur)="_handleBlur($event)"
-        [(ngModel)]="value"
-        (change)="_handleChange($event)"></textarea>
+        (blur)="_handleBlur($event)"></textarea>
     -->
 
 
@@ -30,8 +26,8 @@
            [class.md-warn]="dividerColor == 'warn'"
            *ngIf="_hasPlaceholder()">
       <ng-content select="md-placeholder"></ng-content>
-      {{placeholder}}
-      <span class="md-placeholder-required" *ngIf="required">*</span>
+      {{_inputPlaceholder}}
+      <span class="md-placeholder-required" *ngIf="_inputRequired">*</span>
     </label>
   </div>
 
