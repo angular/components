@@ -117,8 +117,9 @@ export class MdTabGroup {
     this._indexToSelect =
         Math.min(this._tabs.length - 1, Math.max(this._indexToSelect, 0));
 
-    // If there is a change in selected index, emit a change event.
-    if (this._selectedIndex != this._indexToSelect) {
+    // If there is a change in selected index, emit a change event. Should not trigger if
+    // the selected index has not yet been initialized.
+    if (this._selectedIndex != this._indexToSelect && this._selectedIndex != null) {
       this._onSelectChange.emit(this._createChangeEvent(this._indexToSelect));
     }
 
@@ -286,7 +287,7 @@ export class MdTabGroup {
 
 @NgModule({
   imports: [CommonModule, PortalModule, MdRippleModule],
-  // Don't export MdInkBar or MdTabLabelWrapper, as they are internal implementation details.
+  // Don't export all components because some are only to be used internally.
   exports: [MdTabGroup, MdTabLabel, MdTab, MdTabNavBar, MdTabLink, MdTabLinkRipple],
   declarations: [MdTabGroup, MdTabLabel, MdTab, MdInkBar, MdTabLabelWrapper,
     MdTabNavBar, MdTabLink, MdTabBody, MdTabLinkRipple],

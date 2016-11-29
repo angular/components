@@ -1,31 +1,24 @@
 import {
-    async, fakeAsync, tick, ComponentFixture, TestBed,
-    flushMicrotasks
+    async, fakeAsync, tick, ComponentFixture, TestBed
 } from '@angular/core/testing';
 import {MdTabGroup, MdTabsModule} from './tab-group';
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
-import {LayoutDirection, Dir} from '../core/rtl/dir';
+import {MdTab} from './tab';
 
 
-fdescribe('MdTabGroup', () => {
-  let dir: LayoutDirection = 'ltr';
-
+describe('MdTabGroup', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdTabsModule.forRoot()],
       declarations: [
         SimpleTabsTestApp,
+        SimpleDynamicTabsTestApp,
         BindedTabsTestApp,
         AsyncTabsTestApp,
         DisabledTabsTestApp,
         TabGroupWithSimpleApi,
-      ],
-      providers: [
-        {provide: Dir, useFactory: () => {
-          return {value: dir};
-        }}
       ]
     });
 
@@ -60,21 +53,6 @@ fdescribe('MdTabGroup', () => {
     });
 
     it('should support two-way binding for selectedIndex', async(() => {
-      let component = fixture.componentInstance;
-      component.selectedIndex = 0;
-
-      fixture.detectChanges();
-
-      let tabLabel = fixture.debugElement.queryAll(By.css('.md-tab-label'))[1];
-      tabLabel.nativeElement.click();
-
-      fixture.detectChanges();
-      fixture.whenStable().then(() => {
-        expect(component.selectedIndex).toBe(1);
-      });
-    }));
-
-    it('should support adding new tab and setting active', async(() => {
       let component = fixture.componentInstance;
       component.selectedIndex = 0;
 
@@ -163,111 +141,98 @@ fdescribe('MdTabGroup', () => {
       expect(component.selectEvent.index).toBe(2);
     }));
 
-    it('should update tab positions and attach content when selected', fakeAsync(() => {
+    it('should update tab positions when selected index is changed', () => {
       fixture.detectChanges();
-      const tabComponent = fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
-      const tabBodyList = fixture.debugElement.queryAll(By.css('md-tab-body'));
+      const component: MdTabGroup =
+          fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
+      const tabs: MdTab[] = component._tabs.toArray();
 
-      // Begin on the second tab
-      flushMicrotasks();  // finish animation
-
-      expect(tabBodyList[0].componentInstance._position).toBe('left');
-      expect(tabBodyList[0].componentInstance._content.isAttached).toBe(false);
-
-      expect(tabBodyList[1].componentInstance._position).toBe('center');
-      expect(tabBodyList[1].componentInstance._content.isAttached).toBe(true);
-
-      expect(tabBodyList[2].componentInstance._position).toBe('right');
-      expect(tabBodyList[2].componentInstance._content.isAttached).toBe(false);
+      expect(tabs[0].position).toBeLessThan(0);
+      expect(tabs[1].position).toBe(0);
+      expect(tabs[2].position).toBeGreaterThan(0);
 
       // Move to third tab
-      tabComponent.selectedIndex = 2;
+      component.selectedIndex = 2;
       fixture.detectChanges();
-      flushMicrotasks();  // finish animation
-
-      expect(tabBodyList[0].componentInstance._position).toBe('left');
-      expect(tabBodyList[0].componentInstance._content.isAttached).toBe(false);
-
-      expect(tabBodyList[1].componentInstance._position).toBe('left');
-      expect(tabBodyList[1].componentInstance._content.isAttached).toBe(false);
-
-      expect(tabBodyList[2].componentInstance._position).toBe('center');
-      expect(tabBodyList[2].componentInstance._content.isAttached).toBe(true);
+      expect(tabs[0].position).toBeLessThan(0);
+      expect(tabs[1].position).toBeLessThan(0);
+      expect(tabs[2].position).toBe(0);
 
       // Move to the first tab
-      tabComponent.selectedIndex = 0;
+      component.selectedIndex = 0;
       fixture.detectChanges();
-      flushMicrotasks();  // finish animation
+      expect(tabs[0].position).toBe(0);
+      expect(tabs[1].position).toBeGreaterThan(0);
+      expect(tabs[2].position).toBeGreaterThan(0);
+    });
 
-      // Check that the tab bodies have correctly positions themselves
-      expect(tabBodyList[0].componentInstance._position).toBe('center');
-      expect(tabBodyList[0].componentInstance._content.isAttached).toBe(true);
-
-      expect(tabBodyList[1].componentInstance._position).toBe('right');
-      expect(tabBodyList[1].componentInstance._content.isAttached).toBe(false);
-
-      expect(tabBodyList[2].componentInstance._position).toBe('right');
-      expect(tabBodyList[2].componentInstance._content.isAttached).toBe(false);
-    }));
-
-
-    it('should support RTL for the tab positions', fakeAsync(() => {
-      dir = 'rtl';
+    it('should clamp the selected index to the size of the number of tabs', () => {
       fixture.detectChanges();
-      const tabComponent = fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
-      const tabBodyList = fixture.debugElement.queryAll(By.css('md-tab-body'));
+      const component: MdTabGroup =
+          fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
 
-      // Begin on the second tab
-      flushMicrotasks();  // finish animation
-
-      expect(tabBodyList[0].componentInstance._position).toBe('right');
-      expect(tabBodyList[1].componentInstance._position).toBe('center');
-      expect(tabBodyList[2].componentInstance._position).toBe('left');
-
-      // Move to third tab
-      tabComponent.selectedIndex = 2;
+      // Set the index to be negative, expect first tab selected
+      fixture.componentInstance.selectedIndex = -1;
       fixture.detectChanges();
-      flushMicrotasks();  // finish animation
+      expect(component.selectedIndex).toBe(0);
 
-      expect(tabBodyList[0].componentInstance._position).toBe('right');
-      expect(tabBodyList[1].componentInstance._position).toBe('right');
-      expect(tabBodyList[2].componentInstance._position).toBe('center');
-
-      // Move to the first tab
-      tabComponent.selectedIndex = 0;
+      // Set the index beyond the size of the tabs, expect last tab selected
+      fixture.componentInstance.selectedIndex = 3;
       fixture.detectChanges();
-      flushMicrotasks();  // finish animation
-
-      // Check that the tab bodies have correctly positions themselves
-      expect(tabBodyList[0].componentInstance._position).toBe('center');
-      expect(tabBodyList[1].componentInstance._position).toBe('left');
-      expect(tabBodyList[2].componentInstance._position).toBe('left');
-    }));
+      expect(component.selectedIndex).toBe(2);
+    });
   });
 
-  fdescribe('dynamic binding tabs', () => {
-    let fixture: ComponentFixture<BindedTabsTestApp>;
+  describe('dynamic binding tabs', () => {
+    let fixture: ComponentFixture<SimpleDynamicTabsTestApp>;
 
     beforeEach(async(() => {
-      fixture = TestBed.createComponent(BindedTabsTestApp);
+      fixture = TestBed.createComponent(SimpleDynamicTabsTestApp);
       fixture.detectChanges();
     }));
 
-    it('should be able to add a new tab and set as selected', () => {
-      let component: MdTabGroup = fixture.debugElement.query(By.css('md-tab-group'))
-          .componentInstance;
+    it('should be able to add a new tab, select it, and have correct origin position', () => {
+      fixture.detectChanges();
+      const component: MdTabGroup =
+          fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
 
-      expect(component._tabs.length).toBe(fixture.componentInstance.tabs.length);
+      let tabs: MdTab[] = component._tabs.toArray();
+      expect(tabs[0].origin).toBe(null);
+      expect(tabs[1].origin).toBe(0);
+      expect(tabs[2].origin).toBe(null);
 
-      fixture.componentInstance.addNewActiveTab();
-      fixture.whenStable().then(() => {
-        fixture.whenStable().then(() => {
-          expect(true).toBe(false);
-          expect(component.selectedIndex).toBe(fixture.componentInstance.selectedIndex);
-          expect(component._tabs.length).toBe(fixture.componentInstance.tabs.length);
-        })
-      });
+      // Add a new tab on the right and select it, expect an origin >= than 0 (animate right)
+      fixture.componentInstance.tabs.push({label: 'New tab', content: 'to right of index'});
+      fixture.componentInstance.selectedIndex = 4;
+      fixture.detectChanges();
 
+      tabs = component._tabs.toArray();
+      expect(tabs[3].origin).toBeGreaterThanOrEqual(0);
+
+      // Add a new tab in the beginning and select it, expect an origin < than 0 (animate left)
+      fixture.componentInstance.tabs.push({label: 'New tab', content: 'to left of index'});
+      fixture.componentInstance.selectedIndex = 0;
+      fixture.detectChanges();
+
+      tabs = component._tabs.toArray();
+      expect(tabs[0].origin).toBeLessThan(0);
+    });
+
+
+    it('should update selected index if the last tab removed while selected', () => {
+      fixture.detectChanges();
+      const component: MdTabGroup =
+          fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
+
+      const numberOfTabs = component._tabs.length;
+      fixture.componentInstance.selectedIndex = numberOfTabs - 1;
+      fixture.detectChanges();
+
+      // Remove last tab while last tab is selected, expect next tab over to be selected
+      fixture.componentInstance.tabs.pop();
+      fixture.detectChanges();
+
+      expect(component.selectedIndex).toBe(numberOfTabs - 2);
     });
 
   });
@@ -462,6 +427,36 @@ fdescribe('MdTabGroup', () => {
   `
 })
 class SimpleTabsTestApp {
+  selectedIndex: number = 1;
+  focusEvent: any;
+  selectEvent: any;
+  handleFocus(event: any) {
+    this.focusEvent = event;
+  }
+  handleSelection(event: any) {
+    this.selectEvent = event;
+  }
+}
+
+@Component({
+  template: `
+    <md-tab-group class="tab-group"
+        [(selectedIndex)]="selectedIndex"
+        (focusChange)="handleFocus($event)"
+        (selectChange)="handleSelection($event)">
+      <md-tab *ngFor="let tab of tabs">
+        <template md-tab-label>{{tab.label}}</template>
+        {{tab.content}}
+      </md-tab>
+    </md-tab-group>
+  `
+})
+class SimpleDynamicTabsTestApp {
+  tabs = [
+    {label: 'Label 1', content: 'Content 1'},
+    {label: 'Label 2', content: 'Content 2'},
+    {label: 'Label 3', content: 'Content 3'},
+  ];
   selectedIndex: number = 1;
   focusEvent: any;
   selectEvent: any;

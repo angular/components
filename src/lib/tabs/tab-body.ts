@@ -66,7 +66,7 @@ export class MdTabBody implements OnInit {
 
   /** The shifted index position of the tab body, where zero represents the active center tab. */
   _position: MdTabBodyPositionState;
-  @Input('md-tab-position') set position(position: number) {
+  @Input('md-tab-body-position') set position(position: number) {
     if (position < 0) {
       this._position = this._getLayoutDirection() == 'ltr' ? 'left' : 'right';
     } else if (position > 0) {
@@ -78,13 +78,14 @@ export class MdTabBody implements OnInit {
 
   /** The origin position from which this tab should appear when it is centered into view. */
   _origin: MdTabBodyOriginState;
-  @Input('md-tab-origin') set origin(origin: number) {
+  @Input('md-tab-body-origin') set origin(origin: number) {
     if (origin == null) { return; }
 
-    if (origin <= 0) {
-      this._origin = this._getLayoutDirection() == 'ltr' ? 'left' : 'right';
+    if ((this._getLayoutDirection() == 'ltr' && origin <= 0) ||
+        (this._getLayoutDirection() == 'rtl' && origin > 0)) {
+      this._origin = 'left';
     } else {
-      this._origin = this._getLayoutDirection() == 'ltr' ? 'right' : 'left';
+      this._origin = 'right';
     }
   }
 
@@ -111,7 +112,6 @@ export class MdTabBody implements OnInit {
   }
 
   _onTranslateTabStarted(e: AnimationTransitionEvent) {
-    console.log('Animation began with position ', this._position);
     if (this._isCenterPosition(e.toState)) {
       this.onTabBodyCentering.emit(this._elementRef.nativeElement.clientHeight);
     }
