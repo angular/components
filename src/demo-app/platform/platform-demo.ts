@@ -10,7 +10,6 @@ import {MdPlatform} from '@angular/material';
     <p>Is Webkit: {{ platform.WEBKIT }}</p>
     <p>Is Trident: {{ platform.TRIDENT }}</p>
     <p>Is Edge: {{ platform.EDGE }}</p>
-
   `
 })
 export class PlatformDemo {
