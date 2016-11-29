@@ -20,10 +20,10 @@ touch $TUNNEL_LOG
 
 cd $TUNNEL_DIR
 
-# Download the saucelabs connect binaries.
+# Download the browserstack local binaries.
 curl $TUNNEL_URL -o $TUNNEL_FILE 2> /dev/null 1> /dev/null
 
-# Extract the saucelabs connect binaries from the tarball.
+# Extract the browserstack local binaries from the tarball.
 mkdir -p browserstack-tunnel
 unzip -q $TUNNEL_FILE -d browserstack-tunnel
 
