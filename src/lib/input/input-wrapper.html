@@ -5,23 +5,15 @@
     <ng-content selector="input, textarea"></ng-content>
 
     <!--TODO(mmalerba): reimplement this stuff
-    <input #input
-           *ngIf="_elementType === 'input'"
-           class="md-input-element"
+    <input
            [class.md-end]="align == 'end'"
-           [id]="inputId"
-           [type]="type"
            (focus)="_handleFocus($event)"
            (blur)="_handleBlur($event)"
            [(ngModel)]="value"
            (change)="_handleChange($event)">
 
     <textarea
-        #input
-        *ngIf="_elementType === 'textarea'"
-        class="md-input-element  md-input-element-textarea"
         [class.md-end]="align == 'end'"
-        [id]="inputId"
         (focus)="_handleFocus($event)"
         (blur)="_handleBlur($event)"
         [(ngModel)]="value"
@@ -30,7 +22,7 @@
 
 
     <label class="md-input-placeholder"
-           [attr.for]="inputId"
+           [attr.for]="_inputId"
            [class.md-empty]="empty"
            [class.md-focused]="focused"
            [class.md-float]="floatingPlaceholder"

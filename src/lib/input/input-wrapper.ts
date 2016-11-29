@@ -1,5 +1,4 @@
 import {
-  forwardRef,
   Component,
   HostBinding,
   Input,
@@ -8,7 +7,6 @@ import {
   ContentChild,
   SimpleChange,
   ContentChildren,
-  ViewChild,
   ElementRef,
   QueryList,
   OnChanges,
@@ -18,7 +16,7 @@ import {
   ModuleWithProviders,
   ViewEncapsulation
 } from '@angular/core';
-import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {MdError, coerceBooleanProperty} from '../core';
 import {Observable} from 'rxjs/Observable';
@@ -27,12 +25,6 @@ import {MdTextareaAutosize} from './autosize';
 
 const noop = () => {};
 
-
-export const MD_INPUT_CONTROL_VALUE_ACCESSOR_NEW: any = {
-  provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdInputWrapper),
-  multi: true
-};
 
 // Invalid input type. Using one of these will throw an MdInputUnsupportedTypeErrorNew.
 const MD_INPUT_INVALID_INPUT_TYPE = [
@@ -97,13 +89,12 @@ export class MdHintNew {
   selector: 'md-input-wrapper',
   templateUrl: 'input-wrapper.html',
   styleUrls: ['input-wrapper.css'],
-  providers: [MD_INPUT_CONTROL_VALUE_ACCESSOR_NEW],
   host: {
     '(click)' : 'focus()'
   },
   encapsulation: ViewEncapsulation.None,
 })
-export class MdInputWrapper implements ControlValueAccessor, AfterContentInit, OnChanges {
+export class MdInputWrapper implements AfterContentInit, OnChanges {
   private _focused: boolean = false;
   private _value: any = '';
 
@@ -120,11 +111,10 @@ export class MdInputWrapper implements ControlValueAccessor, AfterContentInit, O
 
   /** Readonly properties. */
   get focused() { return this._focused; }
-  get empty() { return (this._value == null || this._value === '') && this.type !== 'date'; }
+  get empty() { return (this._value == null || this._value === '') && this._inputType !== 'date'; }
   get characterCount(): number {
     return this.empty ? 0 : ('' + this._value).length;
   }
-  get inputId(): string { return `${this.id}-input`; }
 
   /**
    * Bindings.
@@ -132,10 +122,7 @@ export class MdInputWrapper implements ControlValueAccessor, AfterContentInit, O
   @Input() align: 'start' | 'end' = 'start';
   @Input() dividerColor: 'primary' | 'accent' | 'warn' = 'primary';
   @Input() hintLabel: string = '';
-
-  @Input() id: string = `md-input-${nextUniqueId++}`;
   @Input() placeholder: string = null;
-  @Input() type: string = 'text';
 
   private _floatingPlaceholder: boolean = true;
 
@@ -170,21 +157,16 @@ export class MdInputWrapper implements ControlValueAccessor, AfterContentInit, O
   // Input though, so we use HostBinding.
   @HostBinding('attr.align') get _align(): any { return null; }
 
+  private _inputElement: HTMLInputElement | HTMLTextAreaElement;
 
-  @ViewChild('input') _inputElement: ElementRef;
+  get _inputId(): string { return this._inputElement && this._inputElement.id }
+  get _inputType(): string { return this._inputElement && this._inputElement.type || 'text' }
 
-  _elementType: 'input' | 'textarea';
-
-  constructor(elementRef: ElementRef) {
-    // Set the element type depending on normalized selector used(md-input / md-textarea)
-    this._elementType = elementRef.nativeElement.nodeName.toLowerCase() === 'md-input' ?
-        'input' :
-        'textarea';
-  }
+  constructor(private _elementRef: ElementRef) {}
 
   /** Set focus on input */
   focus() {
-    this._inputElement.nativeElement.focus();
+    this._inputElement && this._inputElement.focus();
   }
 
   _handleFocus(event: FocusEvent) {
@@ -207,32 +189,9 @@ export class MdInputWrapper implements ControlValueAccessor, AfterContentInit, O
     return !!this.placeholder || this._placeholderChild != null;
   }
 
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
-  writeValue(value: any) {
-    this._value = value;
-  }
-
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
-  registerOnChange(fn: any) {
-    this._onChangeCallback = fn;
-  }
-
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
-  registerOnTouched(fn: any) {
-    this._onTouchedCallback = fn;
-  }
-
   /** TODO: internal */
   ngAfterContentInit() {
+    this._initInputEl();
     this._validateConstraints();
 
     // Trigger validation when the hint children change.
@@ -246,6 +205,19 @@ export class MdInputWrapper implements ControlValueAccessor, AfterContentInit, O
     this._validateConstraints();
   }
 
+  private _initInputEl() {
+    let inputEls = this._elementRef.nativeElement.querySelectorAll('input, textarea');
+    if (inputEls.length != 1) {
+      // TODO throw
+    }
+    this._inputElement = inputEls[0];
+    if (MD_INPUT_INVALID_INPUT_TYPE.indexOf(this._inputElement.type || 'text') != -1) {
+      throw new MdInputUnsupportedTypeErrorNew(this._inputType);
+    }
+    this._inputElement.classList.add('md-input-element');
+    this._inputElement.id = this._inputElement.id || `md-input-${nextUniqueId++}`;
+  }
+
   /**
    * Convert the value passed in to a value that is expected from the type of the md-input.
    * This is normally performed by the *_VALUE_ACCESSOR in forms, but since the type is bound
@@ -253,7 +225,7 @@ export class MdInputWrapper implements ControlValueAccessor, AfterContentInit, O
    * @private
    */
   private _convertValueForInputType(v: any): any {
-    switch (this.type) {
+    switch (this._inputType) {
       case 'number': return parseFloat(v);
       default: return v;
     }
@@ -271,9 +243,6 @@ export class MdInputWrapper implements ControlValueAccessor, AfterContentInit, O
   private _validateConstraints() {
     if (this.placeholder != '' && this.placeholder != null && this._placeholderChild != null) {
       throw new MdInputPlaceholderConflictErrorNew();
-    }
-    if (MD_INPUT_INVALID_INPUT_TYPE.indexOf(this.type) != -1) {
-      throw new MdInputUnsupportedTypeErrorNew(this.type);
     }
 
     if (this._hintChildren) {
