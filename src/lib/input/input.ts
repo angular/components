@@ -17,13 +17,12 @@ import {
   Output,
   NgModule,
   ModuleWithProviders,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {MdError, coerceBooleanProperty} from '../core';
 import {Observable} from 'rxjs/Observable';
-import {MdTextareaAutosize} from './autosize';
 
 
 const noop = () => {};
@@ -35,7 +34,7 @@ export const MD_INPUT_CONTROL_VALUE_ACCESSOR: any = {
   multi: true
 };
 
-// Invalid input type. Using one of these will throw an MdInputUnsupportedTypeError.
+// Invalid input type. Using one of these will throw an MdInputUnsupportedTypeErrorNew.
 const MD_INPUT_INVALID_INPUT_TYPE = [
   'file',
   'radio',
@@ -369,9 +368,9 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
 
 
 @NgModule({
-  declarations: [MdPlaceholder, MdInput, MdHint, MdTextareaAutosize],
+  declarations: [MdPlaceholder, MdInput, MdHint],
   imports: [CommonModule, FormsModule],
-  exports: [MdPlaceholder, MdInput, MdHint, MdTextareaAutosize],
+  exports: [MdPlaceholder, MdInput, MdHint],
 })
 export class MdInputModule {
   static forRoot(): ModuleWithProviders {

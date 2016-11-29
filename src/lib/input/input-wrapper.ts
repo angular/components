@@ -16,7 +16,7 @@ import {
   Output,
   NgModule,
   ModuleWithProviders,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
@@ -28,13 +28,13 @@ import {MdTextareaAutosize} from './autosize';
 const noop = () => {};
 
 
-export const MD_INPUT_CONTROL_VALUE_ACCESSOR: any = {
+export const MD_INPUT_CONTROL_VALUE_ACCESSOR_NEW: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdInput),
+  useExisting: forwardRef(() => MdInputWrapper),
   multi: true
 };
 
-// Invalid input type. Using one of these will throw an MdInputUnsupportedTypeError.
+// Invalid input type. Using one of these will throw an MdInputUnsupportedTypeErrorNew.
 const MD_INPUT_INVALID_INPUT_TYPE = [
   'file',
   'radio',
@@ -45,19 +45,19 @@ const MD_INPUT_INVALID_INPUT_TYPE = [
 let nextUniqueId = 0;
 
 
-export class MdInputPlaceholderConflictError extends MdError {
+export class MdInputPlaceholderConflictErrorNew extends MdError {
   constructor() {
     super('Placeholder attribute and child element were both specified.');
   }
 }
 
-export class MdInputUnsupportedTypeError extends MdError {
+export class MdInputUnsupportedTypeErrorNew extends MdError {
   constructor(type: string) {
     super(`Input type "${type}" isn't supported by md-input.`);
   }
 }
 
-export class MdInputDuplicatedHintError extends MdError {
+export class MdInputDuplicatedHintErrorNew extends MdError {
   constructor(align: string) {
     super(`A hint was already declared for 'align="${align}"'.`);
   }
@@ -72,7 +72,7 @@ export class MdInputDuplicatedHintError extends MdError {
 @Directive({
   selector: 'md-placeholder'
 })
-export class MdPlaceholder {}
+export class MdPlaceholderNew {}
 
 
 /** The hint directive, used to tag content as hint labels (going under the input). */
@@ -83,7 +83,7 @@ export class MdPlaceholder {}
     '[class.md-hint]': 'true'
   }
 })
-export class MdHint {
+export class MdHintNew {
   // Whether to align the hint label at the start or end of the line.
   @Input() align: 'start' | 'end' = 'start';
 }
@@ -97,13 +97,13 @@ export class MdHint {
   selector: 'md-input-wrapper',
   templateUrl: 'input-wrapper.html',
   styleUrls: ['input-wrapper.css'],
-  providers: [MD_INPUT_CONTROL_VALUE_ACCESSOR],
+  providers: [MD_INPUT_CONTROL_VALUE_ACCESSOR_NEW],
   host: {
     '(click)' : 'focus()'
   },
   encapsulation: ViewEncapsulation.None,
 })
-export class MdInput implements ControlValueAccessor, AfterContentInit, OnChanges {
+export class MdInputWrapper implements ControlValueAccessor, AfterContentInit, OnChanges {
   private _focused: boolean = false;
   private _value: any = '';
 
@@ -115,8 +115,8 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
   /**
    * Content directives.
    */
-  @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
-  @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
+  @ContentChild(MdPlaceholderNew) _placeholderChild: MdPlaceholderNew;
+  @ContentChildren(MdHintNew) _hintChildren: QueryList<MdHintNew>;
 
   /** Readonly properties. */
   get focused() { return this._focused; }
@@ -270,25 +270,25 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
    */
   private _validateConstraints() {
     if (this.placeholder != '' && this.placeholder != null && this._placeholderChild != null) {
-      throw new MdInputPlaceholderConflictError();
+      throw new MdInputPlaceholderConflictErrorNew();
     }
     if (MD_INPUT_INVALID_INPUT_TYPE.indexOf(this.type) != -1) {
-      throw new MdInputUnsupportedTypeError(this.type);
+      throw new MdInputUnsupportedTypeErrorNew(this.type);
     }
 
     if (this._hintChildren) {
       // Validate the hint labels.
-      let startHint: MdHint = null;
-      let endHint: MdHint = null;
-      this._hintChildren.forEach((hint: MdHint) => {
+      let startHint: MdHintNew = null;
+      let endHint: MdHintNew = null;
+      this._hintChildren.forEach((hint: MdHintNew) => {
         if (hint.align == 'start') {
           if (startHint || this.hintLabel) {
-            throw new MdInputDuplicatedHintError('start');
+            throw new MdInputDuplicatedHintErrorNew('start');
           }
           startHint = hint;
         } else if (hint.align == 'end') {
           if (endHint) {
-            throw new MdInputDuplicatedHintError('end');
+            throw new MdInputDuplicatedHintErrorNew('end');
           }
           endHint = hint;
         }
@@ -299,14 +299,14 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
 
 
 @NgModule({
-  declarations: [MdPlaceholder, MdInput, MdHint, MdTextareaAutosize],
+  declarations: [MdPlaceholderNew, MdInputWrapper, MdHintNew, MdTextareaAutosize],
   imports: [CommonModule, FormsModule],
-  exports: [MdPlaceholder, MdInput, MdHint, MdTextareaAutosize],
+  exports: [MdPlaceholderNew, MdInputWrapper, MdHintNew, MdTextareaAutosize],
 })
-export class MdInputModule {
+export class MdInputWrapperModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdInputModule,
+      ngModule: MdInputWrapperModule,
       providers: []
     };
   }
