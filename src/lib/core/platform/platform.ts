@@ -26,6 +26,11 @@ export class MdPlatform {
 
   /** Browsers and Platform Types */
   IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+  // It's difficult to detect the plain Gecko engine, because most of the browsers identify
+  // them self as Gecko-like browsers and modify the userAgent's according to that.
+  // Since we only cover one explicit Firefox case, we can simply check for Firefox
+  // instead of having an unstable check for Gecko.
   FIREFOX = /(firefox|minefield)/i.test(navigator.userAgent);
 
   // Trident on mobile adds the android platform to the userAgent to trick detections.

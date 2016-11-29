@@ -38,12 +38,11 @@ export class InteractivityChecker {
    */
   isTabbable(element: HTMLElement) {
 
-    let nodeName = element.nodeName.toLowerCase();
     let frameElement = getWindow(element).frameElement as HTMLElement;
-    let frameType = frameElement && frameElement.nodeName.toLowerCase();
-    let tabIndexValue = getTabIndexValue(element);
 
     if (frameElement) {
+
+      let frameType = frameElement && frameElement.nodeName.toLowerCase();
 
       // Frame elements inherit their tabindex onto all child elements.
       if (getTabIndexValue(frameElement) === -1) {
@@ -61,6 +60,9 @@ export class InteractivityChecker {
       }
 
     }
+
+    let nodeName = element.nodeName.toLowerCase();
+    let tabIndexValue = getTabIndexValue(element);
 
     if (element.hasAttribute('contenteditable')) {
       return tabIndexValue !== -1;
