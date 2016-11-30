@@ -15,7 +15,7 @@ md-input-wrapper {
 }
 
 .md-input-element {
-  ::placeholder {
+  &::placeholder {
     visibility: hidden;
   }
 
