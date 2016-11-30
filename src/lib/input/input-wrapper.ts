@@ -110,6 +110,9 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
   /** Whether the `input` or `textarea` is focused. */
   _focused = false;
 
+  /** The disabled attribute of the `input` or `textarea`. */
+  _inputDisabled = false;
+
   /** The id attribute of the `input` or `textarea`. */
   _inputId = '';
 
@@ -145,6 +148,9 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
   private _inputObserver = new MutationObserver(mutations => {
     for (let mutation of mutations) {
       switch (mutation.attributeName) {
+        case 'disabled':
+          this._inputDisabled = this._inputElement.disabled;
+          break;
         case 'id':
           this._inputId = this._inputElement.id;
           break;
@@ -219,6 +225,7 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
     this._inputElement.id = this._inputElement.id || `md-input-${nextUniqueId++}`;
 
     // Record initial values for attributes we observe.
+    this._inputDisabled = this._inputElement.disabled;
     this._inputId = this._inputElement.id;
     this._inputType = this._inputElement.type;
     this._inputRequired = this._inputElement.required;
