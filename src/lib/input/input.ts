@@ -35,7 +35,7 @@ export const MD_INPUT_CONTROL_VALUE_ACCESSOR: any = {
   multi: true
 };
 
-// Invalid input type. Using one of these will throw an MdInputUnsupportedTypeErrorNew.
+// Invalid input type. Using one of these will throw an MdInputUnsupportedTypeError.
 const MD_INPUT_INVALID_INPUT_TYPE = [
   'file',
   'radio',

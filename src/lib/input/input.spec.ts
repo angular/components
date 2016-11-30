@@ -78,7 +78,7 @@ describe('MdInput', function () {
 
     let mdInput = fixture.debugElement.query(By.directive(MdInput)).componentInstance as MdInput;
     expect(mdInput.floatingPlaceholder)
-        .toBe(true, 'Expected MdInputWrapper to default to having floating placeholders turned on');
+        .toBe(true, 'Expected MdInput to default to having floating placeholders turned on');
   });
 
   it('should not be treated as empty if type is date', () => {
@@ -198,7 +198,7 @@ describe('MdInput', function () {
     let fixture = TestBed.createComponent(MdInputInvalidHintTestController);
 
     expect(() => fixture.detectChanges()).toThrow();
-    // TODO(jelbourn): .toThrow(new MdInputDuplicatedHintErrorNew('start'));
+    // TODO(jelbourn): .toThrow(new MdInputDuplicatedHintError('start'));
     // See https://github.com/angular/angular/issues/8348
   });
 
@@ -206,7 +206,7 @@ describe('MdInput', function () {
     let fixture = TestBed.createComponent(MdInputInvalidHint2TestController);
 
     expect(() => fixture.detectChanges()).toThrow();
-    // TODO(jelbourn): .toThrow(new MdInputDuplicatedHintErrorNew('start'));
+    // TODO(jelbourn): .toThrow(new MdInputDuplicatedHintError('start'));
     // See https://github.com/angular/angular/issues/8348
   });
 
@@ -214,7 +214,7 @@ describe('MdInput', function () {
     let fixture = TestBed.createComponent(MdInputInvalidPlaceholderTestController);
 
     expect(() => fixture.detectChanges()).toThrow();
-    // TODO(jelbourn): .toThrow(new MdInputPlaceholderConflictErrorNew());
+    // TODO(jelbourn): .toThrow(new MdInputPlaceholderConflictError());
     // See https://github.com/angular/angular/issues/8348
   });
 
@@ -225,7 +225,7 @@ describe('MdInput', function () {
     // so the error is really a ChangeDetectionError and it becomes
     // hard to build a full exception to compare with.
     // We just check for any exception in this case.
-    expect(() => fixture.detectChanges()).toThrow(/* new MdInputUnsupportedTypeErrorNew('file') */);
+    expect(() => fixture.detectChanges()).toThrow(/* new MdInputUnsupportedTypeError('file') */);
   });
 
   it('supports hint labels attribute', () => {
