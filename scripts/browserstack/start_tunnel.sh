@@ -47,7 +47,7 @@ function create_ready_file {
 
   # To be able to exit the tail properly we need to have a sub shell spawned, which is
   # used to track the state of tail.
-  sleep 120 &
+  { sleep 120; touch $BROWSER_PROVIDER_ERROR_FILE; } &
 
   TIMER_PID=$!
 
