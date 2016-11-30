@@ -12,6 +12,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {MdError, coerceBooleanProperty} from '../core';
+import {NgModel} from '@angular/forms';
 
 export {} from './input';
 
@@ -106,6 +107,8 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
   @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
 
   @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
+
+  @ContentChild(NgModel) _ngModelChild: NgModel;
 
   /** Whether the `input` or `textarea` is focused. */
   _focused = false;
@@ -211,13 +214,18 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
     }
     this._inputElement = inputEls[0];
 
-    // Install mutation observer and event listeners.
+    // Install mutation observer and event listeners and subscribe to ngModel changes.
     this._inputObserver.observe(this._inputElement, {
       attributes: true,
       attributeFilter: ['disabled', 'id', 'type', 'placeholder', 'required']
     });
     for (let eventType in this._inputListeners) {
       this._inputElement.addEventListener(eventType, this._inputListeners[eventType]);
+    }
+    if (this._ngModelChild) {
+      this._ngModelChild.valueChanges.subscribe(() => {
+        this._inputValue = this._inputElement.value;
+      });
     }
 
     // Add additional classes and attributes.
