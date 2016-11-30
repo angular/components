@@ -2,8 +2,9 @@
   <md-toolbar color="primary">Basic</md-toolbar>
   <md-card-content>
     <form>
-      <md-input class="demo-full-width" placeholder="Company (disabled)" disabled value="Google">
-      </md-input>
+      <md-input-wrapper class="demo-full-width">
+        <input placeholder="Company (disabled)" disabled value="Google">
+      </md-input-wrapper>
 
       <table style="width: 100%" cellspacing="0"><tr>
         <td><md-input placeholder="First name" style="width: 100%"></md-input></td>
@@ -67,8 +68,8 @@
     <h4>Textarea</h4>
     <p>
       <md-textarea placeholder="Character count (100 max)" maxLength="100" class="demo-full-width"
-                value="Hello world. How are you?"
-                #characterCountHintExample>
+                   value="Hello world. How are you?"
+                   #characterCountHintExample>
         <md-hint align="end">{{characterCountHintExample.characterCount}} / 100</md-hint>
       </md-textarea>
     </p>
@@ -154,13 +155,13 @@
 <md-card class="demo-card">
   <table width="100%">
     <thead>
-      <td>Table</td>
-      <td colspan="3">
-        <button (click)="addABunch(5)">Add 5</button>
-        <button (click)="addABunch(10)">Add 10</button>
-        <button (click)="addABunch(100)">Add 100</button>
-        <button (click)="addABunch(1000)">Add 1000</button>
-      </td>
+    <td>Table</td>
+    <td colspan="3">
+      <button (click)="addABunch(5)">Add 5</button>
+      <button (click)="addABunch(10)">Add 10</button>
+      <button (click)="addABunch(100)">Add 100</button>
+      <button (click)="addABunch(1000)">Add 1000</button>
+    </td>
     </thead>
     <tr *ngFor="let item of items; let i = index">
       <td>{{i+1}}</td>

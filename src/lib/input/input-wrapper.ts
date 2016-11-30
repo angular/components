@@ -83,7 +83,7 @@ export class MdHint {
   moduleId: module.id,
   selector: 'md-input-wrapper',
   templateUrl: 'input-wrapper.html',
-  styleUrls: ['input-wrapper.css'],
+  styleUrls: ['input.css', 'input-wrapper.css'],
   host: {
     '(click)' : '_focusInput()',
     // remove align attribute to prevent it from interfering with layout.
