@@ -174,10 +174,7 @@ describe('MdTabBody', () => {
 @Component({
   template: `
     <template>Tab Body Content</template> 
-    <md-tab-body [md-tab-body-content]="content"
-                 [md-tab-body-position]="position"
-                 [md-tab-body-origin]="origin">
-    </md-tab-body>
+    <md-tab-body [content]="content" [position]="position" [origin]="origin"></md-tab-body>
   `
 })
 class SimpleTabBodyApp {

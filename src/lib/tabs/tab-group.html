@@ -26,10 +26,10 @@
                [id]="_getTabContentId(i)"
                [attr.aria-labelledby]="_getTabLabelId(i)"
                [class.md-tab-body-active]="selectedIndex == i"
-               [md-tab-body-content]="tab.content"
-               [md-tab-body-position]="tab.position"
-               [md-tab-body-origin]="tab.origin"
-               (onTabBodyCentered)="_removeTabBodyWrapperHeight()"
-               (onTabBodyCentering)="_setTabBodyWrapperHeight($event)">
+               [content]="tab.content"
+               [position]="tab.position"
+               [origin]="tab.origin"
+               (onCentered)="_removeTabBodyWrapperHeight()"
+               (onCentering)="_setTabBodyWrapperHeight($event)">
   </md-tab-body>
 </div>

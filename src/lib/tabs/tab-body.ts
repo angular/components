@@ -17,9 +17,25 @@ import {
 import {TemplatePortal, PortalHostDirective, Dir, LayoutDirection} from '../core';
 import 'rxjs/add/operator/map';
 
+/**
+ * These position states are used internally as animation states for the tab body. Setting the
+ * position state to left, right, or center will transition the tab body from its current
+ * position to its respective state. If there is not current position (void, in the case of a new
+ * tab body), then there will be no transition animation to its state.
+ *
+ * In the case of a new tab body that should immediately be centered with an animating transition,
+ * then left-origin-center or right-origin-center can be used, which will use left or right as its
+ * psuedo-prior state.
+ */
 export type MdTabBodyPositionState =
     'left' | 'center' | 'right' | 'left-origin-center' | 'right-origin-center';
 
+/**
+ * The origin state is an internally used state that is set on a new tab body indicating if it
+ * began to the left or right of the prior selected index. For example, if the selected index was
+ * set to 1, and a new tab is created and selected at index 2, then the tab body would have an
+ * origin of right because its index was greater than the prior selected index.
+ */
 export type MdTabBodyOriginState = 'left' | 'right';
 
 @Component({
@@ -44,10 +60,7 @@ export type MdTabBodyOriginState = 'left' | 'right';
         animate('500ms cubic-bezier(0.35, 0, 0.25, 1)')
       ])
     ])
-  ],
-  host: {
-    'md-tab-body-active': "'this._position == 'center'"
-  }
+  ]
 })
 export class MdTabBody implements OnInit {
   /** The portal host inside of this container into which the tab body content will be loaded. */
@@ -55,18 +68,18 @@ export class MdTabBody implements OnInit {
 
   /** Event emitted when the tab begins to animate towards the center as the active tab. */
   @Output()
-  onTabBodyCentering: EventEmitter<number> = new EventEmitter<number>();
+  onCentering: EventEmitter<number> = new EventEmitter<number>();
 
   /** Event emitted when the tab completes its animation towards the center. */
   @Output()
-  onTabBodyCentered: EventEmitter<void> = new EventEmitter<void>(true);
+  onCentered: EventEmitter<void> = new EventEmitter<void>(true);
 
   /** The tab body content to display. */
-  @Input('md-tab-body-content') _content: TemplatePortal;
+  @Input('content') _content: TemplatePortal;
 
   /** The shifted index position of the tab body, where zero represents the active center tab. */
   _position: MdTabBodyPositionState;
-  @Input('md-tab-body-position') set position(position: number) {
+  @Input('position') set position(position: number) {
     if (position < 0) {
       this._position = this._getLayoutDirection() == 'ltr' ? 'left' : 'right';
     } else if (position > 0) {
@@ -78,11 +91,11 @@ export class MdTabBody implements OnInit {
 
   /** The origin position from which this tab should appear when it is centered into view. */
   _origin: MdTabBodyOriginState;
-  @Input('md-tab-body-origin') set origin(origin: number) {
+  @Input('origin') set origin(origin: number) {
     if (origin == null) { return; }
 
-    if ((this._getLayoutDirection() == 'ltr' && origin <= 0) ||
-        (this._getLayoutDirection() == 'rtl' && origin > 0)) {
+    const dir = this._getLayoutDirection();
+    if ((dir == 'ltr' && origin <= 0) || (dir == 'rtl' && origin > 0)) {
       this._origin = 'left';
     } else {
       this._origin = 'right';
@@ -113,7 +126,7 @@ export class MdTabBody implements OnInit {
 
   _onTranslateTabStarted(e: AnimationTransitionEvent) {
     if (this._isCenterPosition(e.toState)) {
-      this.onTabBodyCentering.emit(this._elementRef.nativeElement.clientHeight);
+      this.onCentering.emit(this._elementRef.nativeElement.clientHeight);
     }
   }
 
@@ -125,7 +138,7 @@ export class MdTabBody implements OnInit {
 
     // If the transition to the center is complete, emit an event.
     if (this._isCenterPosition(e.toState) && this._isCenterPosition(this._position)) {
-      this.onTabBodyCentered.emit();
+      this.onCentered.emit();
     }
   }
 
