@@ -25,12 +25,18 @@
   }
 }
 
+// stretched tabs grow to the boundaries of their parent
+:host[md-stretch-tabs] .md-tab-label {
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
 // The ink bar that displays next to the active tab
 md-ink-bar {
   @include ink-bar;
 }
 
-// The bottom section of the view; contains the tab bodies 
+// The bottom section of the view; contains the tab bodies
 .md-tab-body-wrapper {
   position: relative;
   overflow: hidden;
@@ -38,7 +44,7 @@ md-ink-bar {
   transition: height $md-tab-animation-duration $ease-in-out-curve-function;
 }
 
-// Wraps each tab body 
+// Wraps each tab body
 md-tab-body {
   @include md-fill;
   display: block;
