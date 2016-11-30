@@ -26,6 +26,9 @@ export {
 } from './portal/portal-directives';
 export {DomPortalHost} from './portal/dom-portal-host';
 
+// Loading Overlay
+export {LoadingOverlayComponent, MdLoadingOverlay, MdLoadingOverlayModule} from './loading-overlay/loading-overlay';
+
 // Projection
 export * from './projection/projection';
 

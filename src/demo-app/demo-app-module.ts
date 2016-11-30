@@ -34,6 +34,7 @@ import {SnackBarDemo} from './snack-bar/snack-bar-demo';
 import {PortalDemo, ScienceJoke} from './portal/portal-demo';
 import {MenuDemo} from './menu/menu-demo';
 import {TabsDemo, SunnyTabContent, RainyTabContent, FoggyTabContent} from './tabs/tabs-demo';
+import {LoadingOverlayDemo} from "./loading-overlay/loading-overlay-demo";
 import {ProjectionDemo, ProjectionTestComponent} from './projection/projection-demo';
 
 @NgModule({
@@ -62,6 +63,7 @@ import {ProjectionDemo, ProjectionTestComponent} from './projection/projection-d
     JazzDialog,
     ListDemo,
     LiveAnnouncerDemo,
+    LoadingOverlayDemo,
     MdCheckboxDemoNestedChecklist,
     MenuDemo,
     SnackBarDemo,

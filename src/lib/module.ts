@@ -32,6 +32,7 @@ import {MdToolbarModule} from './toolbar/index';
 import {MdTooltipModule} from './tooltip/index';
 import {MdMenuModule} from './menu/index';
 import {MdDialogModule} from './dialog/index';
+import {MdLoadingOverlayModule} from './core/loading-overlay/loading-overlay';
 
 
 const MATERIAL_MODULES = [
@@ -58,6 +59,7 @@ const MATERIAL_MODULES = [
   MdTabsModule,
   MdToolbarModule,
   MdTooltipModule,
+  MdLoadingOverlayModule,
   OverlayModule,
   PortalModule,
   RtlModule,
@@ -85,6 +87,7 @@ const MATERIAL_MODULES = [
     PortalModule.forRoot(),
     ProjectionModule.forRoot(),
     RtlModule.forRoot(),
+    MdLoadingOverlayModule.forRoot(),
 
     // These modules include providers.
     A11yModule.forRoot(),
