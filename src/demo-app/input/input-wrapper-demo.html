@@ -51,10 +51,11 @@
 <md-card class="demo-card demo-basic">
   <md-toolbar color="primary">Prefix + Suffix</md-toolbar>
   <md-card-content>
-    <md-input placeholder="amount" align="end">
+    <md-input-wrapper align="end">
+      <input placeholder="amount">
       <span md-prefix>$&nbsp;</span>
       <span md-suffix>.00</span>
-    </md-input>
+    </md-input-wrapper>
   </md-card-content>
 </md-card>
 
@@ -62,15 +63,26 @@
   <md-toolbar color="primary">Divider Colors</md-toolbar>
   <md-card-content>
     <h4>Input</h4>
-    <md-input dividerColor="primary" placeholder="Default Color" value="example"></md-input>
-    <md-input dividerColor="accent" placeholder="Accent Color" value="example"></md-input>
-    <md-input dividerColor="warn" placeholder="Warn Color" value="example"></md-input>
+    <md-input-wrapper dividerColor="primary" >
+      <input placeholder="Default Color" value="example">
+    </md-input-wrapper>
+    <md-input-wrapper dividerColor="accent">
+      <input placeholder="Accent Color" value="example">
+    </md-input-wrapper>
+    <md-input-wrapper dividerColor="warn">
+      <input placeholder="Warn Color" value="example">
+    </md-input-wrapper>
 
     <h4>Textarea</h4>
-    <md-textarea dividerColor="primary" placeholder="Default Color" value="example"></md-textarea>
-    <md-textarea dividerColor="accent" placeholder="Accent Color" value="example"></md-textarea>
-    <md-textarea dividerColor="warn" placeholder="Warn Color" value="example"></md-textarea>
-
+    <md-input-wrapper dividerColor="primary">
+      <textarea placeholder="Default Color">example</textarea>
+    </md-input-wrapper>
+    <md-input-wrapper dividerColor="accent">
+      <textarea placeholder="Accent Color">example</textarea>
+    </md-input-wrapper>
+    <md-input-wrapper dividerColor="warn">
+      <textarea placeholder="Warn Color">example</textarea>
+    </md-input-wrapper>
   </md-card-content>
 </md-card>
 
@@ -79,126 +91,169 @@
   <md-card-content>
     <h4>Input</h4>
     <p>
-      <md-input placeholder="Character count (100 max)" maxLength="100" class="demo-full-width"
-                value="Hello world. How are you?"
-                #characterCountHintExample>
-        <md-hint align="end">{{characterCountHintExample.characterCount}} / 100</md-hint>
-      </md-input>
+      <md-input-wrapper class="demo-full-width">
+        <input #characterCountInputHintExample
+               placeholder="Character count (100 max)"
+               maxLength="100"
+               value="Hello world. How are you?">
+        <md-hint align="end">{{characterCountInputHintExample.value.length}} / 100</md-hint>
+      </md-input-wrapper>
     </p>
 
     <h4>Textarea</h4>
     <p>
-      <md-textarea placeholder="Character count (100 max)" maxLength="100" class="demo-full-width"
-                   value="Hello world. How are you?"
-                   #characterCountHintExample>
-        <md-hint align="end">{{characterCountHintExample.characterCount}} / 100</md-hint>
-      </md-textarea>
+      <md-input-wrapper class="demo-full-width">
+        <textarea #characterCountTextareaHintExample
+                  placeholder="Character count (100 max)"
+                  maxLength="100">Hello world. How are you?</textarea>
+        <md-hint align="end">{{characterCountTextareaHintExample.value.length}} / 100</md-hint>
+      </md-input-wrapper>
     </p>
   </md-card-content>
 </md-card>
 
-<md-card class="demo-card">
-  <md-card-title>
-    Hello <md-input [(ngModel)]="name" type="text" placeholder="First name"></md-input>,
+<md-card class="demo-card demo-basic">
+  <md-toolbar color="primary">
+    Hello&nbsp;
+    <md-input-wrapper dividerColor="accent">
+      <input [(ngModel)]="name" type="text" placeholder="First name">
+    </md-input-wrapper>,
     how are you?
-  </md-card-title>
+  </md-toolbar>
   <md-card-content>
     <p>
-      <md-input disabled placeholder="Disabled field" value="Value"></md-input>
-      <md-input required placeholder="Required field"></md-input>
+      <md-input-wrapper>
+        <input disabled placeholder="Disabled field" value="Value">
+      </md-input-wrapper>
+      <md-input-wrapper>
+        <input required placeholder="Required field">
+      </md-input-wrapper>
     </p>
     <p>
-      <md-input placeholder="100% width placeholder" style="width: 100%"></md-input>
+      <md-input-wrapper style="width: 100%">
+        <input placeholder="100% width placeholder">
+      </md-input-wrapper>
     </p>
     <p>
-      <md-input placeholder="Character count (100 max)" maxLength="100" style="width: 100%"
-                #input>
-        <md-hint align="end">{{input.characterCount}} / 100</md-hint>
-      </md-input>
+      <md-input-wrapper style="width: 100%">
+        <input #input placeholder="Character count (100 max)" maxLength="100">
+        <md-hint align="end">{{input.value.length}} / 100</md-hint>
+      </md-input-wrapper>
     </p>
     <p>
-      <md-input placeholder="Show Hint Label" style="width: 100%"
-                hintLabel="Hint label"></md-input>
+      <md-input-wrapper hintLabel="Hint label" style="width: 100%">
+        <input placeholder="Show Hint Label">
+      </md-input-wrapper>
     </p>
 
     <p>
-      <md-input>
+      <md-input-wrapper>
+        <input>
         <md-placeholder>
           I <md-icon class="demo-icons">favorite</md-icon> <b>bold</b> placeholder
         </md-placeholder>
         <md-hint>
           I also <md-icon class="demo-icons">home</md-icon> <i>italic</i> hint labels
         </md-hint>
-      </md-input>
+      </md-input-wrapper>
     </p>
     <p>
-      <md-input placeholder="Show Hint Label With Character Count" style="width: 100%"
-                hintLabel="Hint label" characterCounter></md-input>
+      <md-input-wrapper hintLabel="Hint label" style="width: 100%">
+        <input #hintLabelWithCharCount placeholder="Show Hint Label With Character Count">
+        <md-hint align="end">{{hintLabelWithCharCount.value.length}}</md-hint>
+      </md-input-wrapper>
     </p>
     <p>
       <md-checkbox [(ngModel)]="dividerColor">Check to change the divider color:</md-checkbox>
-      <md-input [dividerColor]="dividerColor ? 'primary' : 'accent'"
-                [placeholder]="dividerColor ? 'Primary color' : 'Accent color'"></md-input>
+      <md-input-wrapper [dividerColor]="dividerColor ? 'primary' : 'accent'">
+        <input [placeholder]="dividerColor ? 'Primary color' : 'Accent color'">
+      </md-input-wrapper>
     </p>
     <p>
       <md-checkbox [(ngModel)]="requiredField"> Check to make required:</md-checkbox>
-      <md-input [required]="requiredField"
-                [placeholder]="requiredField ? 'Required field' : 'Not required field'"></md-input>
+      <md-input-wrapper>
+        <input [required]="requiredField"
+               [placeholder]="requiredField ? 'Required field' : 'Not required field'">
+      </md-input-wrapper>
     </p>
     <p>
       <md-checkbox [(ngModel)]="floatingLabel"> Check to make floating label:</md-checkbox>
-      <md-input [floatingPlaceholder]="floatingLabel"
-                [placeholder]="floatingLabel ? 'Floating label' : 'Not floating label'"></md-input>
+      <md-input-wrapper [floatingPlaceholder]="floatingLabel">
+        <input [placeholder]="floatingLabel ? 'Floating label' : 'Not floating label'">
+      </md-input-wrapper>
     </p>
 
     <p>
-      <md-input placeholder="Prefixed" value="example">
+      <md-input-wrapper>
+        <input placeholder="Prefixed" value="example">
         <div md-prefix>Example:&nbsp;</div>
-      </md-input>
-      <md-input placeholder="Suffixed" value="123" align="end">
+      </md-input-wrapper>
+      <md-input-wrapper align="end">
+        <input placeholder="Suffixed" value="123">
         <span md-suffix>.00 €</span>
-      </md-input>
+      </md-input-wrapper>
       <br/>
       Both:
-      <md-input #email placeholder="Email Address" value="angular-core" align="end">
-        <span md-prefix><md-icon [class.primary]="email.focused" class="demo-icons demo-transform">email</md-icon>&nbsp;</span>
-        <span md-suffix class="demo-transform" [class.primary]="email.focused">&nbsp;@gmail.com</span>
-      </md-input>
+      <md-input-wrapper align="end">
+        <input #email placeholder="Email Address" value="angular-core">
+        <span md-prefix>
+          <md-icon [class.primary]="email.focused" class="demo-icons demo-transform">email</md-icon>
+          &nbsp;
+        </span>
+        <span md-suffix class="demo-transform" [class.primary]="email.focused">
+          &nbsp;@gmail.com
+        </span>
+      </md-input-wrapper>
     </p>
 
     <p>
-      Empty: <md-input></md-input>
-      <label>Label: <md-input></md-input></label>
+      Empty: <md-input-wrapper><input></md-input-wrapper>
+      <label>Label: <md-input-wrapper><input></md-input-wrapper></label>
     </p>
   </md-card-content>
 </md-card>
 
-<md-card class="demo-card">
-  <table width="100%">
-    <thead>
-    <td>Table</td>
-    <td colspan="3">
-      <button (click)="addABunch(5)">Add 5</button>
-      <button (click)="addABunch(10)">Add 10</button>
-      <button (click)="addABunch(100)">Add 100</button>
-      <button (click)="addABunch(1000)">Add 1000</button>
-    </td>
-    </thead>
-    <tr *ngFor="let item of items; let i = index">
-      <td>{{i+1}}</td>
-      <td>
-        <md-input type="number" placeholder="value" aria-label="hello" [(ngModel)]="items[i].value"></md-input>
+<md-card class="demo-card demo-basic">
+  <md-toolbar color="primary">Number Inputs</md-toolbar>
+  <md-card-content>
+    <table width="100%">
+      <thead>
+      <td>Table</td>
+      <td colspan="3">
+        <button (click)="addABunch(5)">Add 5</button>
+        <button (click)="addABunch(10)">Add 10</button>
+        <button (click)="addABunch(100)">Add 100</button>
+        <button (click)="addABunch(1000)">Add 1000</button>
       </td>
-      <td>
-        <input type="number" [(ngModel)]="items[i].value">
-      </td>
-      <td>{{item.value}}</td>
-    </tr>
-  </table>
+      </thead>
+      <tr *ngFor="let item of items; let i = index">
+        <td>{{i+1}}</td>
+        <td>
+          <md-input-wrapper>
+            <input type="number"
+                   placeholder="value"
+                   aria-label="hello"
+                   [(ngModel)]="items[i].value">
+          </md-input-wrapper>
+        </td>
+        <td>
+          <input type="number" [(ngModel)]="items[i].value">
+        </td>
+        <td>{{item.value}}</td>
+      </tr>
+    </table>
+  </md-card-content>
 </md-card>
 
 
-<md-card>
-  <h2>textarea autosize</h2>
-  <textarea md-autosize class="demo-textarea"></textarea>
+<md-card class="demo-card demo-basic">
+  <md-toolbar color="primary">Textarea Autosize</md-toolbar>
+  <md-card-content>
+    <textarea md-autosize class="demo-textarea"></textarea>
+    <div>
+      <md-input-wrapper style="width:300px;">
+        <textarea placeholder="Autosized textarea (currently broken)" md-autoresize></textarea>
+      </md-input-wrapper>
+    </div>
+  </md-card-content>
 </md-card>

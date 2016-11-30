@@ -214,7 +214,7 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
     // Install mutation observer and event listeners.
     this._inputObserver.observe(this._inputElement, {
       attributes: true,
-      attributeFilter: ['id', 'type', 'placeholder', 'required']
+      attributeFilter: ['disabled', 'id', 'type', 'placeholder', 'required']
     });
     for (let eventType in this._inputListeners) {
       this._inputElement.addEventListener(eventType, this._inputListeners[eventType]);
