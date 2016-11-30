@@ -19,17 +19,30 @@
         </td>
       </tr></table>
       <p>
-        <md-textarea class="demo-full-width" placeholder="Address" value="1600 Amphitheatre Pkway"></md-textarea>
-        <md-textarea class="demo-full-width" placeholder="Address 2"></md-textarea>
+        <md-input-wrapper class="demo-full-width">
+          <textarea placeholder="Address">1600 Amphitheatre Pkway</textarea>
+        </md-input-wrapper>
+        <md-input-wrapper class="demo-full-width">
+          <textarea placeholder="Address 2"></textarea>
+        </md-input-wrapper>
       </p>
       <table style="width: 100%" cellspacing="0"><tr>
-        <td><md-input class="demo-full-width" placeholder="City" value="Mountain View"></md-input></td>
-        <td><md-input class="demo-full-width" placeholder="State" maxLength="2" value="CA"></md-input></td>
-        <td><md-input #postalCode class="demo-full-width" maxLength="5"
-                      placeholder="Postal Code"
-                      value="94043">
-          <md-hint align="end">{{postalCode.characterCount}} / 5</md-hint>
-        </md-input></td>
+        <td>
+          <md-input-wrapper class="demo-full-width">
+            <input placeholder="City" value="Mountain View">
+          </md-input-wrapper>
+        </td>
+        <td>
+          <md-input-wrapper class="demo-full-width">
+            <input placeholder="State" maxLength="2" value="CA">
+          </md-input-wrapper>
+        </td>
+        <td>
+          <md-input-wrapper class="demo-full-width">
+            <input #postalCode maxLength="5" placeholder="Postal Code" value="94043">
+            <md-hint align="end">{{postalCode.value.length}} / 5</md-hint>
+          </md-input-wrapper>
+        </td>
       </tr></table>
     </form>
   </md-card-content>
