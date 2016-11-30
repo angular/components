@@ -65,3 +65,53 @@ md-tab-body {
   cursor: default;
   pointer-events: none;
 }
+
+.md-tab-label-container {
+  display: flex;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.md-tab-list {
+  display: flex;
+  position: relative;
+  transition: transform .5s cubic-bezier(.35,0,.25,1);
+}
+
+.md-tab-label-pagination {
+  position: relative;
+  width: 32px;
+  cursor: pointer;
+  display: none;
+  z-index: 2;
+
+  .show-pagination & {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  // Left pagination
+  .ltr &.before, .rtl &.after {
+    padding-left: 4px;
+    .md-tab-label-pagination-chevron {
+      transform: rotate(-135deg);
+    }
+  }
+
+  // Right pagination
+  .ltr &.after, .rtl &.before {
+    padding-right: 4px;
+    .md-tab-label-pagination-chevron {
+      transform: rotate(45deg);
+    }
+  }
+}
+
+.md-tab-label-pagination-chevron {
+  border-style: solid;
+  border-width: 2px 2px 0 0;
+  content: '';
+  height: 8px;
+  width: 8px;
+}

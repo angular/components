@@ -1,24 +1,41 @@
-<div class="md-tab-header" role="tablist"
-     (keydown)="handleKeydown($event)">
-  <div class="md-tab-label" role="tab" md-tab-label-wrapper md-ripple
-       *ngFor="let tab of _tabs; let i = index"
-       [id]="_getTabLabelId(i)"
-       [tabIndex]="selectedIndex == i ? 0 : -1"
-       [attr.aria-controls]="_getTabContentId(i)"
-       [attr.aria-selected]="selectedIndex == i"
-       [class.md-tab-label-active]="selectedIndex == i"
-       [class.md-tab-disabled]="tab.disabled"
-       (click)="focusIndex = selectedIndex = i">
+<div class="md-tab-header {{_getLayoutDirection()}}" #tabHeader
+     [ngClass]="{'show-pagination': showPagination()}">
 
-    <!-- If there is a label template, use it. -->
-    <template [ngIf]="tab.templateLabel">
-      <template [portalHost]="tab.templateLabel"></template>
-    </template>
-
-    <!-- If there is not a label template, fall back to the text label. -->
-    <template [ngIf]="!tab.templateLabel">{{tab.textLabel}}</template>
+  <div class="md-tab-label-pagination before" md-ripple
+       (click)="_scrollBefore()">
+    <div class="md-tab-label-pagination-chevron"></div>
   </div>
-  <md-ink-bar></md-ink-bar>
+
+  <div class="md-tab-label-container" #tabListContainer
+       (keydown)="handleKeydown($event)">
+    <div class="md-tab-list" #tabList role="tablist">
+      <div class="md-tab-label" role="tab" md-tab-label-wrapper md-ripple
+           *ngFor="let tab of _tabs; let i = index"
+           [id]="_getTabLabelId(i)"
+           [tabIndex]="selectedIndex == i ? 0 : -1"
+           [attr.aria-controls]="_getTabContentId(i)"
+           [attr.aria-selected]="selectedIndex == i"
+           [class.md-tab-label-active]="selectedIndex == i"
+           [class.md-tab-disabled]="tab.disabled"
+           (click)="focusIndex = selectedIndex = i">
+
+        <!-- If there is a label template, use it. -->
+        <template [ngIf]="tab.templateLabel">
+          <template [portalHost]="tab.templateLabel"></template>
+        </template>
+
+        <!-- If there is not a label template, fall back to the text label. -->
+        <template [ngIf]="!tab.templateLabel">{{tab.textLabel}}</template>
+      </div>
+      <md-ink-bar></md-ink-bar>
+    </div>
+
+  </div>
+
+  <div class="md-tab-label-pagination after" md-ripple
+       (click)="_scrollAfter()">
+    <div class="md-tab-label-pagination-chevron"></div>
+  </div>
 </div>
 <div class="md-tab-body-wrapper" #tabBodyWrapper>
   <md-tab-body role="tabpanel"
