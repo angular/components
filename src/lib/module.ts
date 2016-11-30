@@ -32,6 +32,7 @@ import {MdToolbarModule} from './toolbar/index';
 import {MdTooltipModule} from './tooltip/index';
 import {MdMenuModule} from './menu/index';
 import {MdDialogModule} from './dialog/index';
+import {MdDatepickerModule} from './datePicker/index';
 
 
 const MATERIAL_MODULES = [
@@ -64,6 +65,7 @@ const MATERIAL_MODULES = [
   A11yModule,
   ProjectionModule,
   StyleCompatibilityModule,
+  MdDatepickerModule,
 ];
 
 @NgModule({
@@ -85,6 +87,7 @@ const MATERIAL_MODULES = [
     PortalModule.forRoot(),
     ProjectionModule.forRoot(),
     RtlModule.forRoot(),
+    MdDatepickerModule.forRoot(),
 
     // These modules include providers.
     A11yModule.forRoot(),
