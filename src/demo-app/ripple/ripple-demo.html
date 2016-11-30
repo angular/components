@@ -27,9 +27,17 @@
     </md-radio-group>
   </section>
   <section>
-    <md-input placeholder="Max radius" aria-label="radius" [(ngModel)]="maxRadius"></md-input>
-    <md-input placeholder="Ripple color" aria-label="color" [(ngModel)]="rippleColor"></md-input>
-    <md-input placeholder="Ripple background" aria-label="background" [(ngModel)]="rippleBackgroundColor"></md-input>
+    <md-input-wrapper>
+      <input placeholder="Max radius" aria-label="radius" [(ngModel)]="maxRadius">
+    </md-input-wrapper>
+    <md-input-wrapper>
+      <input placeholder="Ripple color" aria-label="color" [(ngModel)]="rippleColor">
+    </md-input-wrapper>
+    <md-input-wrapper>
+      <input placeholder="Ripple background"
+             aria-label="background"
+             [(ngModel)]="rippleBackgroundColor">
+    </md-input-wrapper>
   </section>
   <section>
     <button md-raised-button (click)="doManualRipple()">Manual ripple</button>
