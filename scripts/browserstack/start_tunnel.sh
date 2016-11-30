@@ -60,6 +60,7 @@ function create_ready_file {
     tail -n0 -f $TUNNEL_LOG --pid $TIMER_PID | { sed '/Ctrl/q' && kill -9 $TIMER_PID; };
   } &> /dev/null
 
+  echo
   echo "BrowserStack Tunnel ready"
 
   touch $BROWSER_PROVIDER_READY_FILE
