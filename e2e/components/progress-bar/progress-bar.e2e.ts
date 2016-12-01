@@ -1,25 +1,24 @@
-import {browser, by, element} from 'protractor';
+import {browser} from 'protractor';
+import {E2EUtils} from '../../utils.e2e';
 
 describe('progress-bar', () => {
+  const utils = new E2EUtils();
+
   beforeEach(() => browser.get('/progress-bar'));
 
   it('should render a determinate progress bar', () => {
-    shouldExist('md-progress-bar[mode="determinate"]');
+    utils.expectToExist('md-progress-bar[mode="determinate"]');
   });
 
   it('should render a buffer progress bar', () => {
-    shouldExist('md-progress-bar[mode="buffer"]');
+    utils.expectToExist('md-progress-bar[mode="buffer"]');
   });
 
   it('should render a query progress bar', () => {
-    shouldExist('md-progress-bar[mode="query"]');
+    utils.expectToExist('md-progress-bar[mode="query"]');
   });
 
   it('should render a indeterminate progress bar', () => {
-    shouldExist('md-progress-bar[mode="indeterminate"]');
+    utils.expectToExist('md-progress-bar[mode="indeterminate"]');
   });
-
-  function shouldExist(selector: string): void {
-    expect(element(by.css(selector)).isPresent()).toBe(true);
-  }
 });
