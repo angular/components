@@ -83,7 +83,7 @@ md-tab-body {
   display: none;
   justify-content: center;
   align-items: center;
-  width: 32px;
+  min-width: 32px;
   cursor: pointer;
   z-index: 2;
 

@@ -1,9 +1,11 @@
-<div class="md-tab-header {{_getLayoutDirection()}}" #tabHeader
-     [class.scroll]="_showPagination()">
+<div class="md-tab-header" #tabHeader
+     [class.scroll]="_isScrollingEnabled()"
+     [class.ltr]="_getLayoutDirection() == 'ltr'"
+     [class.rtl]="_getLayoutDirection() == 'rtl'">
 
   <div class="md-tab-label-pagination before"
-       md-ripple [md-ripple-disabled]="_canScroll('before')"
-       [class.disabled]="_canScroll('before')"
+       md-ripple [md-ripple-disabled]="_scrollDisabled('before')"
+       [class.disabled]="_scrollDisabled('before')"
        (click)="_scrollHeader('before')">
     <div class="md-tab-label-pagination-chevron"></div>
   </div>
@@ -35,8 +37,8 @@
   </div>
 
   <div class="md-tab-label-pagination after"
-       md-ripple [md-ripple-disabled]="_canScroll('after')"
-       [class.disabled]="_canScroll('after')"
+       md-ripple [md-ripple-disabled]="_scrollDisabled('after')"
+       [class.disabled]="_scrollDisabled('after')"
        (click)="_scrollHeader('after')">
     <div class="md-tab-label-pagination-chevron"></div>
   </div>

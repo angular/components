@@ -14,4 +14,12 @@ export class MdTabLabelWrapper {
   focus(): void {
     this._renderer.invokeElementMethod(this.elementRef.nativeElement, 'focus');
   }
+
+  getOffsetLeft(): number {
+    return this.elementRef.nativeElement.offsetLeft;
+  }
+
+  getOffsetWidth(): number {
+    return this.elementRef.nativeElement.offsetWidth;
+  }
 }
