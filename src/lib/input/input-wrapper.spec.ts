@@ -1,6 +1,6 @@
 import {async, TestBed, ComponentFixture} from '@angular/core/testing';
 import {Component} from '@angular/core';
-import {FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {MdInputModule} from './input';
 import {MdInputWrapper} from './input-wrapper';

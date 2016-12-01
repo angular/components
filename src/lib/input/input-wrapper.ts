@@ -124,20 +124,20 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
   get _empty(): boolean { return (!this._inputValue) && this._inputType !== 'date'; }
 
   /** The placeholder attribute of the `input` or `textarea`. */
-  get _inputPlaceholder(): string { return this.__inputPlaceholder; }
+  get _inputPlaceholder(): string { return this._getterSetterOnlyInputPlaceholder; }
   set _inputPlaceholder(value: string) {
-    this.__inputPlaceholder = value;
+    this._getterSetterOnlyInputPlaceholder = value;
     this._validatePlaceholders();
   }
-  private __inputPlaceholder = '';
+  private _getterSetterOnlyInputPlaceholder = '';
 
   /** The type attribute of the `input` (or "text" if element is a `textarea`). */
-  private get _inputType(): string { return this.__inputType; }
+  private get _inputType(): string { return this._getterSetterOnlyInputType; }
   private set _inputType(value: string) {
-    this.__inputType = value || 'text';
+    this._getterSetterOnlyInputType = value || 'text';
     this._validateInputType();
   }
-  private __inputType = 'text';
+  private _getterSetterOnlyInputType = 'text';
 
   /** The value of the `input` or `textarea`. */
   private _inputValue = '';
@@ -195,7 +195,9 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
 
   /** Set focus on the input element. */
   _focusInput() {
-    this._inputElement && this._inputElement.focus();
+    if (this._inputElement) {
+      this._inputElement.focus();
+    }
   }
 
   /** Whether the input has a placeholder. */
