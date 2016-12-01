@@ -14,8 +14,6 @@ import {
 import {MdError, coerceBooleanProperty} from '../core';
 import {NgModel} from '@angular/forms';
 
-export {} from './input';
-
 
 // Invalid input type. Using one of these will throw an MdInputWrapperUnsupportedTypeError.
 const MD_INPUT_INVALID_INPUT_TYPE = [
