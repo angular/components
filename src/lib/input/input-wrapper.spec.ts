@@ -5,9 +5,6 @@ import {By} from '@angular/platform-browser';
 import {MdInputModule} from './input';
 import {MdInputWrapper} from './input-wrapper';
 
-function isInternetExplorer11() {
-  return 'ActiveXObject' in window;
-}
 
 describe('MdInputWrapper', function () {
   beforeEach(async(() => {
@@ -48,9 +45,6 @@ describe('MdInputWrapper', function () {
   });
 
   it('should not be treated as empty if type is date', () => {
-    if (isInternetExplorer11()) {
-      return;
-    }
     let fixture = TestBed.createComponent(MdInputWrapperDateTestController);
     let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
     inputEl.placeholder = 'Placeholder';
@@ -62,9 +56,6 @@ describe('MdInputWrapper', function () {
   });
 
   it('should treat text input type as empty at init', () => {
-    if (isInternetExplorer11()) {
-      return;
-    }
     let fixture = TestBed.createComponent(MdInputWrapperTextTestController);
     fixture.detectChanges();
 
@@ -74,9 +65,6 @@ describe('MdInputWrapper', function () {
   });
 
   it('should treat password input type as empty at init', () => {
-    if (isInternetExplorer11()) {
-      return;
-    }
     let fixture = TestBed.createComponent(MdInputWrapperPasswordTestController);
     let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
     inputEl.placeholder = 'Placeholder';
@@ -88,9 +76,6 @@ describe('MdInputWrapper', function () {
   });
 
   it('should treat number input type as empty at init', () => {
-    if (isInternetExplorer11()) {
-      return;
-    }
     let fixture = TestBed.createComponent(MdInputWrapperNumberTestController);
     let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
     inputEl.placeholder = 'Placeholder';
@@ -102,9 +87,6 @@ describe('MdInputWrapper', function () {
   });
 
   it('should not be empty after input entered', async(() => {
-    if (isInternetExplorer11()) {
-      return;
-    }
     let fixture = TestBed.createComponent(MdInputWrapperTextTestController);
     fixture.detectChanges();
 
