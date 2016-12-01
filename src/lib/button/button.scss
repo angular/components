@@ -97,6 +97,6 @@
 // Add an outline to make it more visible in high contrast mode.
 @include md-high-contrast {
   [md-button], [md-raised-button], [md-icon-button], [md-fab], [md-mini-fab] {
-    border: solid 1px;
+    outline: solid 1px;
   }
 }

@@ -16,7 +16,7 @@ $md-menu-vertical-padding: 8px !default;
   max-height: calc(100vh + 48px);
 
   @include md-high-contrast {
-    border: solid 1px;
+    outline: solid 1px;
   }
 }
 

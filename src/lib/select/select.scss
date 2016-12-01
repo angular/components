@@ -84,7 +84,7 @@ md-select {
   max-height: $md-select-panel-max-height;
 
   @include md-high-contrast {
-    border: solid 1px;
+    outline: solid 1px;
   }
 }
 

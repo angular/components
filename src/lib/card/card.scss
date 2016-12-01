@@ -18,7 +18,7 @@ md-card {
   font-family: $md-font-family;
 
   @include md-high-contrast {
-    border: solid 1px;
+    outline: solid 1px;
   }
 }
 

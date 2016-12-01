@@ -21,6 +21,6 @@ $md-tooltip-padding: 8px;
   line-height: $md-tooltip-height;
 
   @include md-high-contrast {
-    border: solid 1px;
+    outline: solid 1px;
   }
 }
