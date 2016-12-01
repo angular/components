@@ -121,7 +121,7 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
   _inputRequired = false;
 
   /** Whether the `input` or `textarea` is empty. */
-  get _empty(): boolean { return (!this._inputValue) && this._inputType !== 'date'; }
+  get _empty(): boolean { return !this._inputValue && this._inputType !== 'date'; }
 
   /** The placeholder attribute of the `input` or `textarea`. */
   get _inputPlaceholder(): string { return this._getterSetterOnlyInputPlaceholder; }
@@ -156,7 +156,9 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
           this._inputId = this._inputElement.id;
           break;
         case 'type':
-          this._inputType = this._inputElement.type;
+          // We need to use getAttribute since `type="date"` is not supported on Firefox and returns
+          // `"text"` if we just do `inputElement.type`.
+          this._inputType = this._inputElement.getAttribute('type');
           break;
         case 'placeholder':
           this._inputPlaceholder = this._inputElement.placeholder;
@@ -235,7 +237,9 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
     // Record initial values for attributes we observe.
     this._inputDisabled = this._inputElement.disabled;
     this._inputId = this._inputElement.id;
-    this._inputType = this._inputElement.type;
+    // We need to use getAttribute since `type="date"` is not supported on Firefox and returns
+    // `"text"` if we just do `inputElement.type`.
+    this._inputType = this._inputElement.getAttribute('type');
     this._inputRequired = this._inputElement.required;
     this._inputPlaceholder = this._inputElement.placeholder;
     this._inputValue = this._inputElement.value;
