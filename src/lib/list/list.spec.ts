@@ -1,7 +1,8 @@
 import {async, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdListItem, MdListModule} from './list';
+import {MdListModule} from './index';
+import {MdListItem} from './list-item';
 
 
 describe('MdList', () => {
@@ -19,6 +20,7 @@ describe('MdList', () => {
         ListWithDynamicNumberOfLines,
         ListWithMultipleItems,
         ListWithManyLines,
+        ListWithTabIndex,
       ],
     });
 
@@ -113,6 +115,15 @@ describe('MdList', () => {
     let listItem = fixture.debugElement.children[0].query(By.css('md-list-item'));
     expect(list.nativeElement.getAttribute('role')).toBe('list');
     expect(listItem.nativeElement.getAttribute('role')).toBe('listitem');
+  });
+
+  it('should forward the tabindex to the list element', () => {
+    let fixture = TestBed.createComponent(ListWithTabIndex);
+    let list = fixture.debugElement.children[0].nativeElement;
+
+    fixture.detectChanges();
+
+    expect(list.getAttribute('tabindex')).toBe('1');
   });
 });
 
@@ -211,3 +222,11 @@ class ListWithDynamicNumberOfLines extends BaseTestList { }
     </md-list-item>
   </md-list>`})
 class ListWithMultipleItems extends BaseTestList { }
+
+@Component({template: `
+  <md-list tabindex="1">
+    <md-list-item>
+      Paprika
+    </md-list-item>
+  </md-list>`})
+class ListWithTabIndex extends BaseTestList { }

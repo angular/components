@@ -2,86 +2,49 @@ import {
     Component,
     ViewEncapsulation,
     ContentChildren,
-    ContentChild,
     QueryList,
-    Directive,
     ElementRef,
-    Renderer,
     AfterContentInit,
-    NgModule,
-    ModuleWithProviders,
+    Input,
 } from '@angular/core';
-import {MdLine, MdLineSetter, MdLineModule} from '../core';
+import {ListKeyManager} from '../core/a11y/list-key-manager';
+import {DOWN_ARROW} from '../core/keyboard/keycodes';
+import {MdListItem} from './list-item';
 
-@Directive({
-  selector: 'md-divider'
-})
-export class MdListDivider {}
 
 @Component({
   moduleId: module.id,
   selector: 'md-list, md-nav-list',
-  host: {'role': 'list'},
+  host: {
+    'role': 'list',
+    '[attr.tabIndex]': 'tabindex',
+    '(keydown)': '_handleKeydown($event)'
+  },
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class MdList {}
+export class MdList implements AfterContentInit {
+  @ContentChildren(MdListItem) _items: QueryList<MdListItem>;
+  @Input() tabindex: number = 0;
 
-/* Need directive for a ContentChild query in list-item */
-@Directive({ selector: '[md-list-avatar]' })
-export class MdListAvatar {}
+  /** Manages the keyboard events between list items. */
+  private _keyManager: ListKeyManager;
 
-@Component({
-  moduleId: module.id,
-  selector: 'md-list-item, a[md-list-item]',
-  host: {
-    'role': 'listitem',
-    '(focus)': '_handleFocus()',
-    '(blur)': '_handleBlur()',
-  },
-  templateUrl: 'list-item.html',
-  encapsulation: ViewEncapsulation.None
-})
-export class MdListItem implements AfterContentInit {
-  _hasFocus: boolean = false;
+  constructor(private _elementRef: ElementRef) { }
 
-  private _lineSetter: MdLineSetter;
-
-  @ContentChildren(MdLine) _lines: QueryList<MdLine>;
-
-  @ContentChild(MdListAvatar)
-  set _hasAvatar(avatar: MdListAvatar) {
-    this._renderer.setElementClass(this._element.nativeElement, 'md-list-avatar', avatar != null);
-  }
-
-  constructor(private _renderer: Renderer, private _element: ElementRef) {}
-
-  /** TODO: internal */
   ngAfterContentInit() {
-    this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
+    this._keyManager = new ListKeyManager(this._items);
   }
 
-  _handleFocus() {
-    this._hasFocus = true;
-  }
-
-  _handleBlur() {
-    this._hasFocus = false;
-  }
-}
-
-
-@NgModule({
-  imports: [MdLineModule],
-  exports: [MdList, MdListItem, MdListDivider, MdListAvatar, MdLineModule],
-  declarations: [MdList, MdListItem, MdListDivider, MdListAvatar],
-})
-export class MdListModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdListModule,
-      providers: []
-    };
+  /**
+   * Shifts focus to the appropriate list item.
+   */
+  _handleKeydown(event: KeyboardEvent) {
+    if (event.target === this._elementRef.nativeElement && event.keyCode === DOWN_ARROW) {
+      this._keyManager.focusFirstItem();
+    } else {
+      this._keyManager.onKeydown(event);
+    }
   }
 }
