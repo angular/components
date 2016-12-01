@@ -85,6 +85,8 @@ load the Material Design font in your `index.html`.
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 ```
 
+Note: icons require the http package from angular, if you don't have it installed already, do so by doing `npm i @angular/http`
+
 ## Sample Angular Material 2 projects
 - [Material 2 Sample App](https://github.com/jelbourn/material2-app)
 - [Angular Connect 2016 Demo](https://github.com/kara/leashed-in)
