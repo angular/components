@@ -1,8 +1,10 @@
 <div class="md-tab-header {{_getLayoutDirection()}}" #tabHeader
-     [ngClass]="{'show-pagination': showPagination()}">
+     [class.scroll]="_showPagination()">
 
-  <div class="md-tab-label-pagination before" md-ripple
-       (click)="_scrollBefore()">
+  <div class="md-tab-label-pagination before"
+       md-ripple [md-ripple-disabled]="_canScroll('before')"
+       [class.disabled]="_canScroll('before')"
+       (click)="_scrollHeader('before')">
     <div class="md-tab-label-pagination-chevron"></div>
   </div>
 
@@ -32,8 +34,10 @@
 
   </div>
 
-  <div class="md-tab-label-pagination after" md-ripple
-       (click)="_scrollAfter()">
+  <div class="md-tab-label-pagination after"
+       md-ripple [md-ripple-disabled]="_canScroll('after')"
+       [class.disabled]="_canScroll('after')"
+       (click)="_scrollHeader('after')">
     <div class="md-tab-label-pagination-chevron"></div>
   </div>
 </div>

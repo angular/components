@@ -80,15 +80,31 @@ md-tab-body {
 
 .md-tab-label-pagination {
   position: relative;
+  display: none;
+  justify-content: center;
+  align-items: center;
   width: 32px;
   cursor: pointer;
-  display: none;
   z-index: 2;
 
-  .show-pagination & {
+  .scroll & {
     display: flex;
-    justify-content: center;
-    align-items: center;
+  }
+
+  &.disabled {
+    box-shadow: none;
+    cursor: default;
+    .md-tab-label-pagination-chevron {
+      border-color: #CCC;
+    }
+  }
+
+  .md-tab-label-pagination-chevron {
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+    content: '';
+    height: 8px;
+    width: 8px;
   }
 
   // Left pagination
@@ -106,12 +122,4 @@ md-tab-body {
       transform: rotate(45deg);
     }
   }
-}
-
-.md-tab-label-pagination-chevron {
-  border-style: solid;
-  border-width: 2px 2px 0 0;
-  content: '';
-  height: 8px;
-  width: 8px;
 }
