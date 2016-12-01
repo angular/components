@@ -21,14 +21,6 @@ import {A11yModule} from '../core/a11y/index';
 import {FocusTrap} from '../core/a11y/focus-trap';
 
 
-/** Exception thrown when two MdSidenav are matching the same side. */
-export class MdDuplicatedSidenavError extends MdError {
-  constructor(align: string) {
-    super(`A sidenav was already declared for 'align="${align}"'`);
-  }
-}
-
-
 /** Sidenav toggle promise result. */
 export class MdSidenavToggleResult {
   constructor(public type: 'open' | 'close', public animationFinished: boolean) {}

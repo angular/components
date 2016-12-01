@@ -2,7 +2,8 @@ import {fakeAsync, async, tick, ComponentFixture, TestBed} from '@angular/core/t
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdSidenav, MdSidenavModule, MdSidenavToggleResult} from './sidenav';
-import {A11yModule} from "../core/a11y/index";
+import {A11yModule} from '../core/a11y/index';
+import {PlatformModule} from '../core/platform/platform';
 
 
 function endSidenavTransition(fixture: ComponentFixture<any>) {
@@ -16,10 +17,9 @@ function endSidenavTransition(fixture: ComponentFixture<any>) {
 
 
 describe('MdSidenav', () => {
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSidenavModule.forRoot(), A11yModule.forRoot()],
+      imports: [MdSidenavModule.forRoot(), A11yModule.forRoot(), PlatformModule.forRoot()],
       declarations: [
         BasicTestApp,
         SidenavLayoutTwoSidenavTestApp,
