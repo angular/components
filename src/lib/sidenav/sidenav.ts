@@ -16,9 +16,18 @@ import {
   ViewChild
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Dir, coerceBooleanProperty, DefaultStyleCompatibilityModeModule} from '../core';
+import {Dir, MdError, coerceBooleanProperty, DefaultStyleCompatibilityModeModule} from '../core';
 import {A11yModule, A11Y_PROVIDERS} from '../core/a11y/index';
 import {FocusTrap} from '../core/a11y/focus-trap';
+import {ESCAPE} from '../core/keyboard/keycodes';
+
+
+/** Exception thrown when two MdSidenav are matching the same side. */
+export class MdDuplicatedSidenavError extends MdError {
+  constructor(align: string) {
+    super(`A sidenav was already declared for 'align="${align}"'`);
+  }
+}
 
 
 /** Sidenav toggle promise result. */
@@ -40,7 +49,7 @@ export class MdSidenavToggleResult {
   template: '<focus-trap [disabled]="isFocusTrapDisabled"><ng-content></ng-content></focus-trap>',
   host: {
     '(transitionend)': '_onTransitionEnd($event)',
-    '(keydown.escape)': 'handleEscapeKey()',
+    '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
     '[attr.align]': 'null',
     '[class.md-sidenav-closed]': '_isClosed',
@@ -219,11 +228,13 @@ export class MdSidenav implements AfterContentInit {
     return this._toggleAnimationPromise;
   }
 
-  /** Handles the user pressing the escape key. */
-  handleEscapeKey() {
-    // TODO(crisbeto): this is in a separate method in order to
-    // allow for disabling the behavior later.
-    this.close();
+  /**
+   * Handles the keyboard events.
+   */
+  handleyKeydown(event: KeyboardEvent) {
+    if (event.keyCode === ESCAPE) {
+      this.close();
+    }
   }
 
   /**

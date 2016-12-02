@@ -4,6 +4,7 @@ import {By} from '@angular/platform-browser';
 import {MdSidenav, MdSidenavModule, MdSidenavToggleResult} from './sidenav';
 import {A11yModule} from '../core/a11y/index';
 import {PlatformModule} from '../core/platform/platform';
+import {ESCAPE} from '../core/keyboard/keycodes';
 
 
 function endSidenavTransition(fixture: ComponentFixture<any>) {
@@ -251,7 +252,7 @@ describe('MdSidenav', () => {
       expect(testComponent.closeCount).toBe(0);
 
       // Simulate pressing the escape key.
-      sidenav.handleEscapeKey();
+      sidenav.handleyKeydown({ keyCode: ESCAPE } as KeyboardEvent);
 
       fixture.detectChanges();
       endSidenavTransition(fixture);
