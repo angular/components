@@ -1,4 +1,4 @@
-import {TestBed, ComponentFixture, fakeAsync, tick} from '@angular/core/testing';
+import {TestBed, ComponentFixture, async} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {MdRipple, MdRippleModule} from './ripple';
 
@@ -132,12 +132,13 @@ describe('MdRipple', () => {
       expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(0);
     });
 
-    it('removes foreground ripples after timeout', fakeAsync(() => {
+    it('removes foreground ripples after timeout', async(() => {
       rippleElement.click();
       expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(1);
 
-      tick(100);
-      expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(0);
+      setTimeout(() => {
+        expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(0);
+      }, 600);
     }));
 
     it('creates ripples when manually triggered', () => {
