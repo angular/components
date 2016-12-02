@@ -188,10 +188,10 @@ export class MdTooltip {
 export type TooltipVisibility = 'visible' | 'hidden';
 
 @Component({
-  moduleId: module.id,
+
   selector: 'md-tooltip-component',
   templateUrl: 'tooltip.html',
-  styleUrls: ['tooltip.css'],
+  styleUrls: ['tooltip.scss'],
   animations: [
     trigger('state', [
       state('void', style({transform: 'scale(0)'})),
@@ -210,7 +210,7 @@ export class TooltipComponent {
   message: string;
 
   /** The timeout ID of any current timer set to hide the tooltip */
-  _hideTimeoutId: number;
+  _hideTimeoutId: NodeJS.Timer;
 
   /** Property watched by the animation framework to show or hide the tooltip */
   _visibility: TooltipVisibility;
