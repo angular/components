@@ -80,6 +80,12 @@
     background-color: md-color($accent);
     color: md-color($accent, default-contrast);
   }
+
+  .md-button-focus-overlay {
+    @include md-high-contrast {
+      background-color: if(map_get($theme, is-dark), rgba(black, 0.5), rgba(white, 0.5));
+    }
+  }
 }
 
 
