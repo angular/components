@@ -15,7 +15,7 @@ import {
 import {HttpModule} from '@angular/http';
 import {MdError, DefaultStyleCompatibilityModeModule} from '../core';
 import {MdIconRegistry} from './icon-registry';
-
+export {MdIconRegistry} from './icon-registry';
 
 /** Exception thrown when an invalid icon name is passed to an md-icon component. */
 export class MdIconInvalidNameError extends MdError {
