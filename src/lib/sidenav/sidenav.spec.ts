@@ -252,7 +252,7 @@ describe('MdSidenav', () => {
       expect(testComponent.closeCount).toBe(0);
 
       // Simulate pressing the escape key.
-      sidenav.handleyKeydown({ keyCode: ESCAPE } as KeyboardEvent);
+      sidenav.handleKeydown({ keyCode: ESCAPE } as KeyboardEvent);
 
       fixture.detectChanges();
       endSidenavTransition(fixture);

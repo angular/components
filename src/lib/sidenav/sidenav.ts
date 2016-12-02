@@ -139,17 +139,17 @@ export class MdSidenav implements AfterContentInit {
    * @param _elementRef The DOM element reference. Used for transition and width calculation.
    *     If not available we do not hook on transitions.
    */
-  constructor(private _elementRef: ElementRef) {
+  constructor(private _elementRef: ElementRef, private _renderer: Renderer) {
     this.onOpen.subscribe(() => {
       this._elementFocusedBeforeSidenavWasOpened = document.activeElement as HTMLElement;
-      this._elementRef.nativeElement.focus();
+      this._renderer.invokeElementMethod(this._elementRef.nativeElement, 'focus');
     });
 
     this.onClose.subscribe(() => {
       if (this._elementFocusedBeforeSidenavWasOpened instanceof HTMLElement) {
         this._elementFocusedBeforeSidenavWasOpened.focus();
       } else {
-        this._elementRef.nativeElement.blur();
+        this._renderer.invokeElementMethod(this._elementRef.nativeElement, 'blur');
       }
 
       this._elementFocusedBeforeSidenavWasOpened = null;
@@ -231,7 +231,7 @@ export class MdSidenav implements AfterContentInit {
   /**
    * Handles the keyboard events.
    */
-  handleyKeydown(event: KeyboardEvent) {
+  handleKeydown(event: KeyboardEvent) {
     if (event.keyCode === ESCAPE) {
       this.close();
     }
