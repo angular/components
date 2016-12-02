@@ -1,6 +1,6 @@
 <div class="md-tab-label-pagination before class.md-elevation-z4"
-     md-ripple [md-ripple-disabled]="_scrollDisabled('before')"
-     [class.disabled]="_scrollDisabled('before')"
+     md-ripple [md-ripple-disabled]="_disableScrollBefore"
+     [class.disabled]="_disableScrollBefore"
      (click)="_scrollHeader('before')">
   <div class="md-tab-label-pagination-chevron"></div>
 </div>
@@ -13,9 +13,9 @@
   </div>
 </div>
 
-<div class="md-tab-label-pagination after class.md-elevation-z4"
-     md-ripple [md-ripple-disabled]="_scrollDisabled('after')"
-     [class.disabled]="_scrollDisabled('after')"
+<div class="md-tab-label-pagination after md-elevation-z4"
+     md-ripple [md-ripple-disabled]="_disableScrollAfter"
+     [class.disabled]="_disableScrollAfter"
      (click)="_scrollHeader('after')">
   <div class="md-tab-label-pagination-chevron"></div>
 </div>

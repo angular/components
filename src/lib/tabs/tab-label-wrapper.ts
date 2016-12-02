@@ -1,15 +1,23 @@
-<<<<<<< 7c4fabca4851582b2701e6f5dce86e8c8bd867de
 import {Directive, ElementRef, Renderer, Input} from '@angular/core';
+import {coerceBooleanProperty} from '../core/coersion/boolean-property';
 
 
 /** Used in the `md-tab-group` view to display tab labels */
 @Directive({
-  selector: '[md-tab-label-wrapper], [mat-tab-label-wrapper]'
+  selector: '[md-tab-label-wrapper], [mat-tab-label-wrapper]',
+  host: {
+    '[class.md-tab-disabled]': 'disabled'
+  }
 })
 export class MdTabLabelWrapper {
   constructor(public elementRef: ElementRef, private _renderer: Renderer) {}
 
-  @Input() disabled: boolean;
+  /** Whether the tab label is disabled.  */
+  private _disabled: boolean = false;
+
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
 
   /** Sets focus on the wrapper element */
   focus(): void {

@@ -35,19 +35,23 @@ export class MdTabHeader {
   @ViewChild('tabListContainer') _tabListContainer: ElementRef;
   @ViewChild('tabList') _tabList: ElementRef;
 
+  /** The tab index that is focused. */
   private _focusIndex: number = 0;
+
+  /** Index to focus after the view has been checked. */
+  private _indexToFocus: number;
 
   /** The distance in pixels that the tab labels should be translated to the left. */
   private _scrollDistance = 0;
+
+  private _disableScrollAfter = true;
+  private _disableScrollBefore = true;
 
   /** The index of the active tab. */
   private _selectedIndex: number = 0;
   @Input() set selectedIndex(value: number) {
     this._selectedIndex = value;
-    this.focusIndex = value;
-    if (this._isScrollingEnabled()) {
-      this._scrollToLabel(value);
-    }
+    this._indexToFocus = value;
   }
   get selectedIndex(): number {
     return this._selectedIndex;
@@ -55,6 +59,9 @@ export class MdTabHeader {
 
   /** Event emitted when the option is selected. */
   @Output() selectFocusedIndex = new EventEmitter();
+
+  /** Event emitted when a label is focused. */
+  @Output() indexFocused = new EventEmitter();
 
   constructor(private _zone: NgZone,
               private _elementRef: ElementRef,
@@ -71,15 +78,22 @@ export class MdTabHeader {
       window.requestAnimationFrame(() => {
         this._updateInkBar();
         this._updateScrollPosition();
+
+        this._disableScrollBefore = this.scrollDistance == 0;
+        this._disableScrollAfter = this.scrollDistance == this._getMaxScrollDistance();
       });
     });
+
+    if (this._indexToFocus != this.focusIndex) {
+      this.focusIndex = this._indexToFocus;
+    }
   }
 
   /** Tells the ink-bar to align itself to the current label wrapper */
   private _updateInkBar(): void {
     const selectedLabelWrapper = this._labelWrappers && this._labelWrappers.length
         ? this._labelWrappers.toArray()[this.selectedIndex].elementRef.nativeElement
-        : null
+        : null;
     this._inkBar.alignToElement(selectedLabelWrapper);
   }
 
@@ -102,12 +116,10 @@ export class MdTabHeader {
    * providing a valid index and return true.
    */
   isValidIndex(index: number): boolean {
-    if (this._labelWrappers) {
-      const tab = this._labelWrappers.toArray()[index];
-      return tab && !tab.disabled;
-    } else {
-      return true;
-    }
+    if (!this._labelWrappers) { return true; }
+
+    const tab = this._labelWrappers.toArray()[index];
+    return tab && !tab.disabled;
   }
 
   /** Tracks which element has focus; used for keyboard navigation */
@@ -117,9 +129,10 @@ export class MdTabHeader {
 
   /** When the focus index is set, we must manually send focus to the correct label */
   set focusIndex(value: number) {
-    if (!this.isValidIndex(value)) { return; }
+    if (!this.isValidIndex(value) || this._focusIndex == value) { return; }
 
     this._focusIndex = value;
+    this.indexFocused.emit(value);
 
     if (this._isScrollingEnabled()) {
       this._scrollToLabel(value);
@@ -149,7 +162,7 @@ export class MdTabHeader {
       const tabs: MdTabLabelWrapper[] = this._labelWrappers.toArray();
       for (let i = this.focusIndex + offset; i < tabs.length && i >= 0; i += offset) {
         if (this.isValidIndex(i)) {
-          this.focusIndex = i;
+          this._indexToFocus = i;
           return;
         }
       }
@@ -191,14 +204,6 @@ export class MdTabHeader {
     return lengthOfTabList - viewLength;
   }
 
-  _scrollDisabled(scrollDir: ScrollDirection) {
-    if (scrollDir == 'before') {
-      return this.scrollDistance == 0;
-    } else {
-      return this.scrollDistance == this._getMaxScrollDistance();
-    }
-  }
-
   _scrollHeader(scrollDir: ScrollDirection) {
     const viewLength = this._tabListContainer.nativeElement.offsetWidth;
 
@@ -207,8 +212,6 @@ export class MdTabHeader {
     } else {
       this.scrollDistance += viewLength / 3;
     }
-
-    this._updateScrollPosition();
   }
 
   _scrollToLabel(labelIndex: number) {
