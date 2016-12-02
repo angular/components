@@ -234,6 +234,7 @@ export class MdSidenav implements AfterContentInit {
   handleKeydown(event: KeyboardEvent) {
     if (event.keyCode === ESCAPE) {
       this.close();
+      event.stopPropagation();
     }
   }
 
