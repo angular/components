@@ -154,7 +154,7 @@ export class MdCheckbox implements ControlValueAccessor {
 
   constructor(private _renderer: Renderer,
               private _elementRef: ElementRef,
-              private _changeDetectorRef: ChangeDetectorRef,) {
+              private _changeDetectorRef: ChangeDetectorRef) {
     this.color = 'accent';
   }
 
