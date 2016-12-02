@@ -6,7 +6,6 @@ import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 import {MdTab} from './tab';
-import {LayoutDirection, Dir} from '../core/rtl/dir';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 
 
@@ -23,9 +22,6 @@ describe('MdTabGroup', () => {
         TabGroupWithSimpleApi,
       ],
       providers: [
-        {provide: Dir, useFactory: () => {
-          return {value: dir};
-        }},
         {provide: ViewportRuler, useClass: FakeViewportRuler},
       ]
     });

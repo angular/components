@@ -208,34 +208,6 @@ describe('MdRipple', () => {
 
       rippleElement.dispatchEvent(createMouseEvent('mousedown'));
       expect(rippleBackground.classList).not.toContain('md-ripple-active');
-
-    it('create ripple with correct position when page is scrolled', () => {
-      let elementTop = 600;
-      let elementLeft = 750;
-      let pageScrollTop = 500;
-      let pageScrollLeft = 500;
-      let left = 50;
-      let top = 75;
-
-      // Add a very large element to make the page scroll
-      let veryLargeElement = document.createElement('div');
-      veryLargeElement.style.width = '4000px';
-      veryLargeElement.style.height = '4000px';
-      document.body.appendChild(veryLargeElement);
-      document.body.scrollTop = pageScrollTop;
-      document.body.scrollLeft = pageScrollLeft;
-
-      rippleElement.style.position = 'absolute';
-      rippleElement.style.left = `${elementLeft}px`;
-      rippleElement.style.top = `${elementTop}px`;
-
-      // Simulate a keyboard-triggered click by setting event coordinates to 0.
-      const clickEvent = createMouseEvent('click', {
-        clientX: left + elementLeft - pageScrollLeft,
-        clientY: top + elementTop - pageScrollTop,
-        screenX: left + elementLeft,
-        screenY: top + elementTop
-      });
     });
 
     describe('when page is scrolled', () => {
