@@ -291,14 +291,6 @@ export class MdSidenav implements AfterContentInit {
     return 0;
   }
 
-
-  private _transition: boolean = false;
-  private _openPromise: Promise<void>;
-  private _openPromiseResolve: () => void;
-  private _openPromiseReject: () => void;
-  private _closePromise: Promise<void>;
-  private _closePromiseResolve: () => void;
-  private _closePromiseReject: () => void;
   private _elementFocusedBeforeSidenavWasOpened: HTMLElement = null;
 }
 
