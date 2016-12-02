@@ -5,7 +5,6 @@ import {
   Component,
   Input,
   Output,
-  NgZone,
   EventEmitter,
   QueryList,
   ContentChildren,

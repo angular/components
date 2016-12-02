@@ -2,7 +2,6 @@ import {
   ViewChild,
   Component,
   Input,
-  ViewChildren,
   NgZone,
   QueryList,
   ElementRef,

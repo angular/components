@@ -8,11 +8,6 @@
   font-family: $md-font-family;
 }
 
-// Styling for the heading containing the tab labels
-.md-tab-header {
-  @include tab-header;
-}
-
 // Wraps each tab label
 .md-tab-label {
   @include tab-label;
@@ -28,11 +23,6 @@
 :host[md-stretch-tabs] .md-tab-label {
   flex-basis: 0;
   flex-grow: 1;
-}
-
-// The ink bar that displays next to the active tab
-md-ink-bar {
-  @include ink-bar;
 }
 
 // The bottom section of the view; contains the tab bodies 
@@ -64,62 +54,4 @@ md-tab-body {
 .md-tab-disabled {
   cursor: default;
   pointer-events: none;
-}
-
-.md-tab-label-container {
-  display: flex;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.md-tab-list {
-  display: flex;
-  position: relative;
-  transition: transform .5s cubic-bezier(.35,0,.25,1);
-}
-
-.md-tab-label-pagination {
-  position: relative;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  min-width: 32px;
-  cursor: pointer;
-  z-index: 2;
-
-  .scroll & {
-    display: flex;
-  }
-
-  &.disabled {
-    box-shadow: none;
-    cursor: default;
-    .md-tab-label-pagination-chevron {
-      border-color: #CCC;
-    }
-  }
-
-  .md-tab-label-pagination-chevron {
-    border-style: solid;
-    border-width: 2px 2px 0 0;
-    content: '';
-    height: 8px;
-    width: 8px;
-  }
-
-  // Left pagination
-  .ltr &.before, .rtl &.after {
-    padding-left: 4px;
-    .md-tab-label-pagination-chevron {
-      transform: rotate(-135deg);
-    }
-  }
-
-  // Right pagination
-  .ltr &.after, .rtl &.before {
-    padding-right: 4px;
-    .md-tab-label-pagination-chevron {
-      transform: rotate(45deg);
-    }
-  }
 }
