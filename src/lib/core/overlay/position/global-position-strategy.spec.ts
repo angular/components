@@ -163,8 +163,8 @@ describe('GlobalPositonStrategy', () => {
 
     flushMicrotasks();
 
-    expect(element.style.left).toBe('0px');
-    expect(element.style.transform).toBe('');
+    expect(element.style.marginLeft).toBe('0px');
+    expect((element.parentNode as HTMLElement).style.justifyContent).toBe('flex-start');
   }));
 
   it('should reset the vertical position and offset when the height is 100%', fakeAsync(() => {
@@ -172,8 +172,8 @@ describe('GlobalPositonStrategy', () => {
 
     flushMicrotasks();
 
-    expect(element.style.top).toBe('0px');
-    expect(element.style.transform).toBe('');
+    expect(element.style.marginTop).toBe('0px');
+    expect((element.parentNode as HTMLElement).style.alignItems).toBe('flex-start');
   }));
 });
 
