@@ -5,5 +5,5 @@ export interface PositionStrategy {
   apply(element: Element): Promise<void>;
 
   /** Cleans up any DOM modifications made by the position strategy, if necessary. */
-  dispose?(): void;
+  dispose(): void;
 }

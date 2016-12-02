@@ -43,12 +43,7 @@ export class OverlayRef implements PortalHost {
   }
 
   dispose(): void {
-    let strategy = this._state.positionStrategy;
-
-    if (strategy && typeof strategy.dispose === 'function') {
-      strategy.dispose();
-    }
-
+    this._state.positionStrategy.dispose();
     this._detachBackdrop();
     this._portalHost.dispose();
   }
