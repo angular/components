@@ -25,7 +25,10 @@
     z-index: $md-z-index-overlay-container;
   }
 
-  // Wrapper element for the panes that use the GlobalPositionStrategy.
+  // We use an extra wrapper element in order to use make the overlay itself a flex item.
+  // This makes centering the overlay easy without running into the subpixel rendering
+  // problems tied to using `transform` and without interfering with the other position
+  // strategies.
   .md-global-overlay-wrapper {
     display: flex;
     position: absolute;

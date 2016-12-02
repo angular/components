@@ -17,6 +17,8 @@ export class GlobalPositionStrategy implements PositionStrategy {
   private _justifyContent: string = '';
   private _width: string = '';
   private _height: string = '';
+
+  /* A lazily-created wrapper for the overlay element that is used as a flex container.  */
   private _wrapper: HTMLElement;
 
   /** Sets the top position of the overlay. Clears any previously set vertical position. */
