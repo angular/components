@@ -9,7 +9,7 @@ import {
   ElementRef,
   QueryList,
   OnChanges,
-  ViewEncapsulation
+  ViewEncapsulation, HostListener, HostBinding, Optional
 } from '@angular/core';
 import {MdError, coerceBooleanProperty} from '../core';
 import {NgModel} from '@angular/forms';
@@ -71,6 +71,51 @@ export class MdPlaceholder {}
 export class MdHint {
   // Whether to align the hint label at the start or end of the line.
   @Input() align: 'start' | 'end' = 'start';
+}
+
+@Directive({
+  selector: '[md-input]'
+})
+export class MdInputDirective implements AfterContentInit {
+  @Input() disabled = false;
+
+  @Input() @HostBinding()
+  get id() { return this._id; };
+  set id(value: string) { this._id = value || this._uid; }
+  private _id: string;
+
+  @Input() required = false;
+
+  @Input() type = 'text';
+
+  @HostListener('focus') private _onFocus() {
+    this.focused = true;
+  }
+
+  @HostListener('blur') private _onBlur() {
+    this.focused = false;
+  }
+
+  focused = false;
+
+  private get _uid() {
+    return this._existingUid = this._existingUid || `md-input-${nextUniqueId++}`;
+  }
+  private _existingUid: string;
+
+  constructor(@Optional() private _ngModel : NgModel) {
+    // Force setter to be called in case id is not set.
+    this.id = this.id;
+  }
+
+  ngAfterContentInit() {
+    console.log('disabled', this.disabled);
+    console.log('id', this.id);
+    console.log('required', this.required);
+    console.log('type', this.type);
+    console.log('focused', this.focused);
+    console.log('ngModel', this._ngModel);
+  }
 }
 
 
