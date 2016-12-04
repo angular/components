@@ -4,33 +4,46 @@ import {
   Directive,
   AfterContentInit,
   ContentChild,
-  SimpleChange,
   ContentChildren,
   ElementRef,
   QueryList,
-  OnChanges,
-  ViewEncapsulation, HostListener, HostBinding, Optional
-} from '@angular/core';
-import {MdError, coerceBooleanProperty} from '../core';
-import {NgModel} from '@angular/forms';
+  ViewEncapsulation,
+  HostListener,
+  HostBinding,
+  Optional,
+  Output,
+  EventEmitter
+} from "@angular/core";
+import {MdError, coerceBooleanProperty} from "../core";
+import {NgModel} from "@angular/forms";
 
 
 // Invalid input type. Using one of these will throw an MdInputWrapperUnsupportedTypeError.
-const MD_INPUT_INVALID_INPUT_TYPE = [
-  'file',
-  'radio',
+const MD_INPUT_INVALID_TYPES = [
+  'button',
   'checkbox',
+  'color',
+  'file',
+  'hidden',
+  'image',
+  'radio',
+  'range',
+  'reset',
+  'submit'
+];
+
+
+const MD_INPUT_NEVER_EMPTY_TYPES = [
+  'datetime',
+  'datetime-local',
+  'month',
+  'time',
+  'week'
 ];
 
 
 let nextUniqueId = 0;
 
-
-export class MdInputWrapperInputElementCountError extends MdError {
-  constructor(count: number) {
-    super(`md-input-wrapper must contain exactly 1 input or textarea element. Found ${count}.`);
-  }
-}
 
 export class MdInputWrapperPlaceholderConflictError extends MdError {
   constructor() {
@@ -38,17 +51,20 @@ export class MdInputWrapperPlaceholderConflictError extends MdError {
   }
 }
 
+
 export class MdInputWrapperUnsupportedTypeError extends MdError {
   constructor(type: string) {
     super(`Input type "${type}" isn't supported by md-input-wrapper.`);
   }
 }
 
+
 export class MdInputWrapperDuplicatedHintError extends MdError {
   constructor(align: string) {
     super(`A hint was already declared for 'align="${align}"'.`);
   }
 }
+
 
 /**
  * The placeholder directive. The content can declare this to implement more
@@ -62,21 +78,23 @@ export class MdPlaceholder {}
 
 /** The hint directive, used to tag content as hint labels (going under the input). */
 @Directive({
-  selector: 'md-hint',
-  host: {
-    '[class.md-right]': 'align == "end"',
-    '[class.md-hint]': 'true'
-  }
+  selector: 'md-hint'
 })
 export class MdHint {
   // Whether to align the hint label at the start or end of the line.
   @Input() align: 'start' | 'end' = 'start';
+
+  @HostBinding('class.mdHint') private _hintClass = true;
+
+  @HostBinding('class.md-right') private _alignRightClass = this.align == 'end';
 }
 
+
+/** The input directive, used to mark the input that `MdInputWrapper` is wrapping. */
 @Directive({
   selector: '[md-input]'
 })
-export class MdInputDirective implements AfterContentInit {
+export class MdInputDirective {
   @Input() disabled = false;
 
   @Input() @HostBinding()
@@ -84,37 +102,68 @@ export class MdInputDirective implements AfterContentInit {
   set id(value: string) { this._id = value || this._uid; }
   private _id: string;
 
+  @Input()
+  get placeholder() { return this._placeholder; }
+  set placeholder(value: string) {
+    if (this._placeholder != value) {
+      this._placeholder = value;
+      this.placeholderChange.emit(this._placeholder);
+    }
+  }
+  private _placeholder = '';
+
   @Input() required = false;
 
-  @Input() type = 'text';
-
-  @HostListener('focus') private _onFocus() {
-    this.focused = true;
+  @Input()
+  get type() { return this._type; }
+  set type(value: string) {
+    this._type = value || 'text';
+    this._validateType();
   }
+  private _type = 'text';
 
-  @HostListener('blur') private _onBlur() {
-    this.focused = false;
-  }
+  @Output() placeholderChange: EventEmitter<string>;
+
+  @HostBinding('class.md-input-element') private _inputElementClass = true;
+
+  @HostListener('focus') private _onFocus() { this.focused = true; }
+
+  @HostListener('blur') private _onBlur() { this.focused = false; }
+
+  @HostListener('input', ['$event']) private _onInput(event: Event) { this._value = (event.target as any).value; }
+
+  get empty() { return (this._value == null || this._value == '') && !this._isNeverEmpty(); }
 
   focused = false;
 
-  private get _uid() {
-    return this._existingUid = this._existingUid || `md-input-${nextUniqueId++}`;
-  }
-  private _existingUid: string;
+  private get _uid() { return this._cachedUid = this._cachedUid || `md-input-${nextUniqueId++}`; }
+  private _cachedUid: string;
 
-  constructor(@Optional() private _ngModel : NgModel) {
-    // Force setter to be called in case id is not set.
+  private _value: any;
+
+  constructor(private _elementRef: ElementRef, @Optional() private _ngModel: NgModel) {
+    // Force setter to be called in case id was not specified.
     this.id = this.id;
+
+    if (this._ngModel) {
+      this._ngModel.valueChanges.subscribe((value) => {
+        this._value = value;
+      });
+    }
   }
 
-  ngAfterContentInit() {
-    console.log('disabled', this.disabled);
-    console.log('id', this.id);
-    console.log('required', this.required);
-    console.log('type', this.type);
-    console.log('focused', this.focused);
-    console.log('ngModel', this._ngModel);
+  /** Focus the input element. */
+  focus() { this._elementRef.nativeElement.focus(); }
+
+  /** Make sure the input is a supported type. */
+  private _validateType() {
+    if (MD_INPUT_INVALID_TYPES.indexOf(this._type) != -1) {
+      throw new MdInputWrapperUnsupportedTypeError(this._type);
+    }
+  }
+
+  private _isNeverEmpty() {
+    return MD_INPUT_NEVER_EMPTY_TYPES.indexOf(this._type) != -1;
   }
 }
 
@@ -128,181 +177,59 @@ export class MdInputDirective implements AfterContentInit {
   selector: 'md-input-wrapper',
   templateUrl: 'input-wrapper.html',
   styleUrls: ['input.css', 'input-wrapper.css'],
-  host: {
-    '(click)' : '_focusInput()',
-    // remove align attribute to prevent it from interfering with layout.
-    '[attr.align]': 'null',
-  },
   encapsulation: ViewEncapsulation.None,
 })
-export class MdInputWrapper implements AfterContentInit, OnChanges {
+export class MdInputWrapper implements AfterContentInit {
   @Input() align: 'start' | 'end' = 'start';
 
   @Input() dividerColor: 'primary' | 'accent' | 'warn' = 'primary';
 
-  @Input() hintLabel: string = '';
+  @Input()
+  get hintLabel() { return this._hintLabel; }
+  set hintLabel(value: string) {
+    this._hintLabel = value;
+    this._validateHints();
+  }
+  private _hintLabel = '';
 
   @Input()
   get floatingPlaceholder(): boolean { return this._floatingPlaceholder; }
   set floatingPlaceholder(value) { this._floatingPlaceholder = coerceBooleanProperty(value); }
   private _floatingPlaceholder: boolean = true;
 
+  // Remove align attribute to prevent it from interfering with layout.
+  @HostBinding('attr.align') private _align: string = null;
+
+  @HostListener('click') private _focusInput() { this._mdInput.focus(); }
+
+  @ContentChild(MdInputDirective) _mdInput: MdInputDirective;
+
   @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
 
   @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
 
-  @ContentChild(NgModel) _ngModelChild: NgModel;
-
-  /** Whether the `input` or `textarea` is focused. */
-  _focused = false;
-
-  /** The disabled attribute of the `input` or `textarea`. */
-  _inputDisabled = false;
-
-  /** The id attribute of the `input` or `textarea`. */
-  _inputId = '';
-
-  /** The required attribute of the `input` or `textarea`. */
-  _inputRequired = false;
-
-  /** Whether the `input` or `textarea` is empty. */
-  get _empty(): boolean { return !this._inputValue && this._inputType !== 'date'; }
-
-  /** The placeholder attribute of the `input` or `textarea`. */
-  get _inputPlaceholder(): string { return this._getterSetterOnlyInputPlaceholder; }
-  set _inputPlaceholder(value: string) {
-    this._getterSetterOnlyInputPlaceholder = value;
-    this._validatePlaceholders();
-  }
-  private _getterSetterOnlyInputPlaceholder = '';
-
-  /** The type attribute of the `input` (or "text" if element is a `textarea`). */
-  private get _inputType(): string { return this._getterSetterOnlyInputType; }
-  private set _inputType(value: string) {
-    this._getterSetterOnlyInputType = value || 'text';
-    this._validateInputType();
-  }
-  private _getterSetterOnlyInputType = 'text';
-
-  /** The value of the `input` or `textarea`. */
-  private _inputValue = '';
-
-  /** The native `input` or `textarea` element. */
-  private _inputElement: HTMLInputElement | HTMLTextAreaElement;
-
-  /** A `MutationObserver` to observe the `input` or `textarea`. */
-  private _inputObserver = new MutationObserver(mutations => {
-    for (let mutation of mutations) {
-      switch (mutation.attributeName) {
-        case 'disabled':
-          this._inputDisabled = this._inputElement.disabled;
-          break;
-        case 'id':
-          this._inputId = this._inputElement.id;
-          break;
-        case 'type':
-          // We need to use getAttribute since `type="date"` is not supported on Firefox and returns
-          // `"text"` if we just do `inputElement.type`.
-          this._inputType = this._inputElement.getAttribute('type');
-          break;
-        case 'placeholder':
-          this._inputPlaceholder = this._inputElement.placeholder;
-          break;
-        case 'required':
-          this._inputRequired = this._inputElement.required;
-          break;
-      }
-    }
-  });
-
-  /** A map of event listeners to install on the `input` or `textarea`. */
-  private _inputListeners: { [key: string]: () => void } = {
-    'blur': () => { this._focused = false; },
-    'focus': () => { this._focused = true; },
-    'input': () => { this._inputValue = this._inputElement.value; }
-  };
-
-  constructor(private _elementRef: ElementRef) {}
-
   ngAfterContentInit() {
-    this._initInputEl();
     this._validateHints();
+    this._validatePlaceholders();
 
-    // Trigger validation when the hint children change.
+    // Re-validate when things change.
     this._hintChildren.changes.subscribe(() => {
       this._validateHints();
     });
-  }
-
-  ngOnChanges(changes: {[key: string]: SimpleChange}) {
-    if (changes['hintLabel']) {
-      this._validateHints();
-    }
-  }
-
-  /** Set focus on the input element. */
-  _focusInput() {
-    if (this._inputElement) {
-      this._inputElement.focus();
-    }
+    this._mdInput.placeholderChange.subscribe(() => {
+      this._validatePlaceholders();
+    })
   }
 
   /** Whether the input has a placeholder. */
-  _hasPlaceholder(): boolean {
-    return !!this._inputPlaceholder || !!this._placeholderChild;
-  }
-
-  /** Initialize the `input` or `textarea` element. */
-  private _initInputEl() {
-    // Find input or textarea element.
-    let inputEls = this._elementRef.nativeElement.querySelectorAll('input, textarea');
-    if (inputEls.length != 1) {
-      new MdInputWrapperInputElementCountError(inputEls.length);
-    }
-    this._inputElement = inputEls[0];
-
-    // Install mutation observer and event listeners and subscribe to ngModel changes.
-    this._inputObserver.observe(this._inputElement, {
-      attributes: true,
-      attributeFilter: ['disabled', 'id', 'type', 'placeholder', 'required']
-    });
-    for (let eventType in this._inputListeners) {
-      this._inputElement.addEventListener(eventType, this._inputListeners[eventType]);
-    }
-    if (this._ngModelChild) {
-      this._ngModelChild.valueChanges.subscribe(() => {
-        this._inputValue = this._inputElement.value;
-      });
-    }
-
-    // Add additional classes and attributes.
-    this._inputElement.classList.add('md-input-element');
-    this._inputElement.id = this._inputElement.id || `md-input-${nextUniqueId++}`;
-
-    // Record initial values for attributes we observe.
-    this._inputDisabled = this._inputElement.disabled;
-    this._inputId = this._inputElement.id;
-    // We need to use getAttribute since `type="date"` is not supported on Firefox and returns
-    // `"text"` if we just do `inputElement.type`.
-    this._inputType = this._inputElement.getAttribute('type');
-    this._inputRequired = this._inputElement.required;
-    this._inputPlaceholder = this._inputElement.placeholder;
-    this._inputValue = this._inputElement.value;
-  }
-
-  /** Ensure that the type of the input is a supported type. */
-  private _validateInputType() {
-    if (MD_INPUT_INVALID_INPUT_TYPE.indexOf(this._inputType) != -1) {
-      throw new MdInputWrapperUnsupportedTypeError(this._inputType);
-    }
-  }
+  _hasPlaceholder(): boolean { return !!this._mdInput.placeholder || !!this._placeholderChild; }
 
   /**
    * Ensure that there is only one placeholder (either `input` attribute or child element with the
    * `md-placeholder` attribute.
    */
   private _validatePlaceholders() {
-    if (this._inputPlaceholder && this._placeholderChild) {
+    if (this._mdInput.placeholder && this._placeholderChild) {
       throw new MdInputWrapperPlaceholderConflictError();
     }
   }
@@ -312,23 +239,20 @@ export class MdInputWrapper implements AfterContentInit, OnChanges {
    * attribute being considered as `align="start"`.
    */
   private _validateHints() {
-    if (this._hintChildren) {
-      // Validate the hint labels.
-      let startHint: MdHint = null;
-      let endHint: MdHint = null;
-      this._hintChildren.forEach((hint: MdHint) => {
-        if (hint.align == 'start') {
-          if (startHint || this.hintLabel) {
-            throw new MdInputWrapperDuplicatedHintError('start');
-          }
-          startHint = hint;
-        } else if (hint.align == 'end') {
-          if (endHint) {
-            throw new MdInputWrapperDuplicatedHintError('end');
-          }
-          endHint = hint;
+    let startHint: MdHint = null;
+    let endHint: MdHint = null;
+    this._hintChildren.forEach((hint: MdHint) => {
+      if (hint.align == 'start') {
+        if (startHint || this.hintLabel) {
+          throw new MdInputWrapperDuplicatedHintError('start');
         }
-      });
-    }
+        startHint = hint;
+      } else if (hint.align == 'end') {
+        if (endHint) {
+          throw new MdInputWrapperDuplicatedHintError('end');
+        }
+        endHint = hint;
+      }
+    });
   }
 }
