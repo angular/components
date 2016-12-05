@@ -5,7 +5,7 @@ import {
   NgZone,
   QueryList,
   ElementRef,
-  Renderer, ViewEncapsulation, ContentChildren, Output, EventEmitter
+  Renderer, ViewEncapsulation, ContentChildren, Output, EventEmitter, Optional
 } from '@angular/core';
 import {RIGHT_ARROW, LEFT_ARROW, ENTER, Dir, LayoutDirection} from '../core';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
@@ -71,7 +71,7 @@ export class MdTabHeader {
   constructor(private _zone: NgZone,
               private _elementRef: ElementRef,
               private _renderer: Renderer,
-              private _dir: Dir) {}
+              @Optional() private _dir: Dir) {}
 
   /**
    * Waits one frame for the view to update, then updates the ink bar and scroll.

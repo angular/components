@@ -8,7 +8,6 @@ import {Observable} from 'rxjs/Observable';
 import {MdTab} from './tab';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {FakeViewportRuler} from '../core/overlay/position/fake-viewport-ruler';
-import {Dir} from '../core/rtl/dir';
 
 
 describe('MdTabGroup', () => {
@@ -25,8 +24,7 @@ describe('MdTabGroup', () => {
       ],
       providers: [
         {provide: ViewportRuler, useClass: FakeViewportRuler},
-        {provide: Dir, useFactory: () => { return {value: 'ltr'};}
-      }]
+      ]
     });
 
     TestBed.compileComponents();
