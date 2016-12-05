@@ -50,7 +50,7 @@ export class MdTabHeader {
   private _selectedIndex: number = 0;
   @Input() set selectedIndex(value: number) {
     this._selectedIndex = value;
-    this._indexToFocus = value;
+    this._focusIndex = value;
   }
   get selectedIndex(): number {
     return this._selectedIndex;
@@ -82,10 +82,6 @@ export class MdTabHeader {
         this._disableScrollAfter = this.scrollDistance == this._getMaxScrollDistance();
       });
     });
-
-    if (this._indexToFocus != this.focusIndex) {
-      this.focusIndex = this._indexToFocus;
-    }
   }
 
   /** Tells the ink-bar to align itself to the current label wrapper */
@@ -161,7 +157,7 @@ export class MdTabHeader {
       const tabs: MdTabLabelWrapper[] = this._labelWrappers.toArray();
       for (let i = this.focusIndex + offset; i < tabs.length && i >= 0; i += offset) {
         if (this.isValidIndex(i)) {
-          this._indexToFocus = i;
+          this.focusIndex = i;
           return;
         }
       }

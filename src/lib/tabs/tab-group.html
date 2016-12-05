@@ -1,4 +1,4 @@
-<md-tab-header [selectedIndex]="selectedIndex"
+<md-tab-header [selectedIndex]="selectedIndex" #tabHeader
                (indexFocused)="_focusChanged($event)"
                (selectFocusedIndex)="selectedIndex = $event">
   <div class="md-tab-label" role="tab" md-tab-label-wrapper md-ripple
@@ -9,7 +9,7 @@
        [attr.aria-selected]="selectedIndex == i"
        [class.md-tab-label-active]="selectedIndex == i"
        [disabled]="tab.disabled"
-       (click)="selectedIndex = i">
+       (click)="tabHeader.focusIndex = selectedIndex = i">
 
     <!-- If there is a label template, use it. -->
     <template [ngIf]="tab.templateLabel">
