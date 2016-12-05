@@ -56,7 +56,7 @@ export class MdSidenavToggleResult {
   encapsulation: ViewEncapsulation.None,
 })
 export class MdSidenav implements AfterContentInit {
-  @ViewChild(FocusTrap) private _focusTrap: FocusTrap;
+  @ViewChild(FocusTrap) _focusTrap: FocusTrap;
 
   /** Alignment of the sidenav (direction neutral); whether 'start' or 'end'. */
   private _align: 'start' | 'end' = 'start';
