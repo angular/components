@@ -159,7 +159,7 @@ export class MdTooltip {
   /** Returns the origin position based on the user's position preference */
   _getOrigin(): OriginConnectionPosition {
     if (this.position == 'above' || this.position == 'below') {
-      return { originX: 'center', originY: this.position };
+      return { originX: 'center', originY: this.position == 'above' ? 'top' : 'bottom' };
     }
 
     const isDirectionLtr = !this._dir || this._dir.value == 'ltr';
