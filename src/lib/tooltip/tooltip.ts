@@ -159,44 +159,44 @@ export class MdTooltip {
   /** Returns the origin position based on the user's position preference */
   _getOrigin(): OriginConnectionPosition {
     if (this.position == 'above' || this.position == 'below') {
-      return { originX: 'center', originY: this.position == 'above' ? 'top' : 'bottom' };
+      return {originX: 'center', originY: this.position == 'above' ? 'top' : 'bottom'};
     }
 
     const isDirectionLtr = !this._dir || this._dir.value == 'ltr';
     if (this.position == 'left' ||
         this.position == 'before' && isDirectionLtr ||
         this.position == 'after' && !isDirectionLtr) {
-      return { originX: 'start',  originY: 'center' };
+      return {originX: 'start', originY: 'center'};
     }
 
     if (this.position == 'right' ||
         this.position == 'after' && isDirectionLtr ||
         this.position == 'before' && !isDirectionLtr) {
-      return { originX: 'end',    originY: 'center' };
+      return {originX: 'end', originY: 'center'};
     }
   }
 
   /** Returns the overlay position based on the user's preference */
   _getOverlayPosition(): OverlayConnectionPosition {
     if (this.position == 'above') {
-      return { overlayX: 'center', overlayY: 'bottom' };
+      return {overlayX: 'center', overlayY: 'bottom'};
     }
 
     if (this.position == 'below') {
-      return { overlayX: 'center', overlayY: 'top' };
+      return {overlayX: 'center', overlayY: 'top'};
     }
 
     const isLtr = !this._dir || this._dir.value == 'ltr';
     if (this.position == 'left' ||
         this.position == 'before' && isLtr ||
         this.position == 'after' && !isLtr) {
-      return { overlayX: 'end',    overlayY: 'center' };
+      return {overlayX: 'end', overlayY: 'center'};
     }
 
     if (this.position == 'right' ||
         this.position == 'after' && isLtr ||
         this.position == 'before' && !isLtr) {
-      return { overlayX: 'start',  overlayY: 'center' };
+      return {overlayX: 'start', overlayY: 'center'};
     }
   }
 
@@ -290,10 +290,10 @@ export class TooltipComponent {
 
   /** Sets the tooltip transform origin according to the tooltip position */
   _setTransformOrigin(value: TooltipPosition) {
-    const isDirectionLtr = !this._dir || this._dir.value == 'ltr';
+    const isLtr = !this._dir || this._dir.value == 'ltr';
     switch (value) {
-      case 'before': this._transformOrigin = isDirectionLtr ? 'right' : 'left'; break;
-      case 'after':  this._transformOrigin = isDirectionLtr ? 'left' : 'right'; break;
+      case 'before': this._transformOrigin = isLtr ? 'right' : 'left'; break;
+      case 'after':  this._transformOrigin = isLtr ? 'left' : 'right'; break;
       case 'left':   this._transformOrigin = 'right'; break;
       case 'right':  this._transformOrigin = 'left'; break;
       case 'above':    this._transformOrigin = 'bottom'; break;
