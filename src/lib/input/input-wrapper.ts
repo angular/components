@@ -34,6 +34,7 @@ const MD_INPUT_INVALID_TYPES = [
 const MD_INPUT_NEVER_EMPTY_TYPES = (() => {
   let featureTestInput = document.createElement('input');
   return [
+    'date',
     'datetime',
     'datetime-local',
     'month',
@@ -106,7 +107,10 @@ export class MdHint {
   }
 })
 export class MdInputDirective implements AfterContentInit {
-  @Input() disabled = false;
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  private _disabled = false;
 
   @Input()
   get id() { return this._id; };
@@ -123,7 +127,10 @@ export class MdInputDirective implements AfterContentInit {
   }
   private _placeholder = '';
 
-  @Input() required = false;
+  @Input()
+  get required() { return this._required; }
+  set required(value: any) { this._required = coerceBooleanProperty(value); }
+  private _required = false;
 
   @Input()
   get type() { return this._type; }
