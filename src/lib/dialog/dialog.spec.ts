@@ -9,7 +9,8 @@ import {
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {NgModule, Component, Directive, ViewChild, ViewContainerRef} from '@angular/core';
-import {MdDialog, MdDialogModule} from './dialog';
+import {MdDialogModule} from './index';
+import {MdDialog} from './dialog';
 import {OverlayContainer} from '../core';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
@@ -226,6 +227,21 @@ describe('MdDialog', () => {
     expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(0);
   });
 
+  it('should close the top dialog', () => {
+    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsg);
+
+    expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(2);
+
+    dialog.closeTop();
+
+    expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(1);
+
+    dialog.closeTop();
+
+    expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(0);
+  });
+
   describe('disableClose option', () => {
     it('should prevent closing via clicks on the backdrop', () => {
       dialog.open(PizzaMsg, {
@@ -308,6 +324,44 @@ describe('MdDialog', () => {
           .toBe('dialog-trigger', 'Expected that the trigger was refocused after dialog close');
     }));
   });
+
+  describe('dialog content elements', () => {
+    let fixture: ComponentFixture<ContentElementDialog>;
+    let dialogElement: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(ContentElementDialog);
+      dialogElement = fixture.debugElement.nativeElement;
+      dialog.open(ContentElementDialog);
+      fixture.detectChanges();
+    });
+
+    it('close the dialog when clicking on the close button', () => {
+      expect(overlayContainerElement.querySelectorAll('.md-dialog-container').length).toBe(1);
+
+      (dialogElement.querySelector('button[md-dialog-close]') as HTMLElement).click();
+
+      expect(overlayContainerElement.querySelectorAll('.md-dialog-container').length).toBe(0);
+    });
+
+    it('close not close the dialog if [md-dialog-close] is applied on a non-button node', () => {
+      expect(overlayContainerElement.querySelectorAll('.md-dialog-container').length).toBe(1);
+
+      (dialogElement.querySelector('div[md-dialog-close]') as HTMLElement).click();
+
+      expect(overlayContainerElement.querySelectorAll('.md-dialog-container').length).toBe(1);
+    });
+
+    it('should add a role to the dialog title', () => {
+      let header = dialogElement.querySelector('[md-dialog-title]');
+      expect(header.getAttribute('role')).toBe('heading');
+    });
+
+    it('should add a role to the dialog content', () => {
+      let content = dialogElement.querySelector('md-dialog-content');
+      expect(content.getAttribute('role')).toBe('main');
+    });
+  });
 });
 
 
@@ -334,13 +388,31 @@ class PizzaMsg {
   constructor(public dialogRef: MdDialogRef<PizzaMsg>) { }
 }
 
+@Component({
+  template: `
+    <h1 md-dialog-title>This is the title</h1>
+    <md-dialog-content>Lorem ipsum dolor sit amet.</md-dialog-content>
+    <md-dialog-actions>
+      <button md-dialog-close>Close</button>
+      <div md-dialog-close>Should not close</div>
+    </md-dialog-actions>
+  `
+})
+class ContentElementDialog {}
+
 // Create a real (non-test) NgModule as a workaround for
 // https://github.com/angular/angular/issues/10760
-const TEST_DIRECTIVES = [ComponentWithChildViewContainer, PizzaMsg, DirectiveWithViewContainer];
+const TEST_DIRECTIVES = [
+  ComponentWithChildViewContainer,
+  PizzaMsg,
+  DirectiveWithViewContainer,
+  ContentElementDialog
+];
+
 @NgModule({
   imports: [MdDialogModule],
   exports: TEST_DIRECTIVES,
   declarations: TEST_DIRECTIVES,
-  entryComponents: [ComponentWithChildViewContainer, PizzaMsg],
+  entryComponents: [ComponentWithChildViewContainer, PizzaMsg, ContentElementDialog],
 })
 class DialogTestModule { }
