@@ -13,10 +13,10 @@ import {
   EventEmitter,
   Renderer,
   ViewEncapsulation,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Dir, MdError, coerceBooleanProperty, DefaultStyleCompatibilityModeModule} from '../core';
+import {Dir, coerceBooleanProperty, DefaultStyleCompatibilityModeModule} from '../core';
 import {A11yModule} from '../core/a11y/index';
 import {FocusTrap} from '../core/a11y/focus-trap';
 
