@@ -43,69 +43,69 @@ describe('MdTabHeader', () => {
 
     it('should initialize to the selected index', () => {
       fixture.detectChanges();
-      expect(appComponent.focusedIndex).toBe(appComponent.selectedIndex);
+      expect(appComponent.mdTabHeader.focusIndex).toBe(appComponent.selectedIndex);
     });
 
     it('should send focus change event', () => {
       appComponent.mdTabHeader.focusIndex = 2;
       fixture.detectChanges();
-      expect(appComponent.focusedIndex).toBe(2);
+      expect(appComponent.mdTabHeader.focusIndex).toBe(2);
     });
 
     it('should not set focus a disabled tab', () => {
       appComponent.mdTabHeader.focusIndex = 0;
       fixture.detectChanges();
-      expect(appComponent.focusedIndex).toBe(0);
+      expect(appComponent.mdTabHeader.focusIndex).toBe(0);
 
       // Set focus on the disabled tab, but focus should remain 0
       appComponent.mdTabHeader.focusIndex = appComponent.disabledTabIndex;
       fixture.detectChanges();
-      expect(appComponent.focusedIndex).toBe(0);
+      expect(appComponent.mdTabHeader.focusIndex).toBe(0);
     });
 
     it('should move focus right and skip disabled tabs', () => {
       appComponent.mdTabHeader.focusIndex = 0;
       fixture.detectChanges();
-      expect(appComponent.focusedIndex).toBe(0);
+      expect(appComponent.mdTabHeader.focusIndex).toBe(0);
 
       // Move focus right, verify that the disabled tab is 1 and should be skipped
       expect(appComponent.disabledTabIndex).toBe(1);
       appComponent.mdTabHeader._focusNextTab();
       fixture.detectChanges();
-      expect(appComponent.focusedIndex).toBe(2);
+      expect(appComponent.mdTabHeader.focusIndex).toBe(2);
 
       // Move focus right to index 3
       appComponent.mdTabHeader._focusNextTab();
       fixture.detectChanges();
-      expect(appComponent.focusedIndex).toBe(3);
+      expect(appComponent.mdTabHeader.focusIndex).toBe(3);
     });
 
     it('should move focus left and skip disabled tabs', () => {
       appComponent.mdTabHeader.focusIndex = 3;
       fixture.detectChanges();
-      expect(appComponent.focusedIndex).toBe(3);
+      expect(appComponent.mdTabHeader.focusIndex).toBe(3);
 
       // Move focus left to index 3
       appComponent.mdTabHeader._focusPreviousTab();
       fixture.detectChanges();
-      expect(appComponent.focusedIndex).toBe(2);
+      expect(appComponent.mdTabHeader.focusIndex).toBe(2);
 
       // Move focus left, verify that the disabled tab is 1 and should be skipped
       expect(appComponent.disabledTabIndex).toBe(1);
       appComponent.mdTabHeader._focusPreviousTab();
       fixture.detectChanges();
-      expect(appComponent.focusedIndex).toBe(0);
+      expect(appComponent.mdTabHeader.focusIndex).toBe(0);
     });
 
     it('should support key down events to move and select focus', () => {
       appComponent.mdTabHeader.focusIndex = 0;
       fixture.detectChanges();
-      expect(appComponent.focusedIndex).toBe(0);
+      expect(appComponent.mdTabHeader.focusIndex).toBe(0);
 
       // Move focus right to 2
       dispatchKeydownEvent(appComponent.mdTabHeader._tabListContainer.nativeElement, RIGHT_ARROW);
       fixture.detectChanges();
-      expect(appComponent.focusedIndex).toBe(2);
+      expect(appComponent.mdTabHeader.focusIndex).toBe(2);
 
       // Select the focused index 2
       expect(appComponent.selectedIndex).toBe(0);
@@ -116,64 +116,78 @@ describe('MdTabHeader', () => {
       // Move focus right to 0
       dispatchKeydownEvent(appComponent.mdTabHeader._tabListContainer.nativeElement, LEFT_ARROW);
       fixture.detectChanges();
-      expect(appComponent.focusedIndex).toBe(0);
+      expect(appComponent.mdTabHeader.focusIndex).toBe(0);
     });
   });
 
-  fdescribe('pagination', () => {
-    beforeEach(() => {
-      fixture = TestBed.createComponent(SimpleTabHeaderApp);
-      fixture.detectChanges();
+  describe('pagination', () => {
+    describe('ltr', () => {
+      beforeEach(() => {
+        dir = 'ltr';
+        fixture = TestBed.createComponent(SimpleTabHeaderApp);
+        fixture.detectChanges();
 
-      appComponent = fixture.componentInstance;
+        appComponent = fixture.componentInstance;
+      });
+
+      it('should show width when tab list width exceeds container', () => {
+        fixture.detectChanges();
+        expect(appComponent.mdTabHeader._isScrollingEnabled()).toBe(false);
+
+        // Add enough tabs that it will obviously exceed the width
+        appComponent.addTabsForScrolling();
+        fixture.detectChanges();
+
+        expect(appComponent.mdTabHeader._isScrollingEnabled()).toBe(true);
+      });
+
+      it('should scroll to show the focused tab label', () => {
+        appComponent.addTabsForScrolling();
+        fixture.detectChanges();
+        expect(appComponent.mdTabHeader.scrollDistance).toBe(0);
+
+        // Focus on the last tab, expect this to be the maximum scroll distance.
+        appComponent.mdTabHeader.focusIndex = appComponent.tabs.length - 1;
+        fixture.detectChanges();
+        expect(appComponent.mdTabHeader.scrollDistance)
+            .toBe(appComponent.mdTabHeader._getMaxScrollDistance());
+
+        // Focus on the first tab, expect this to be the maximum scroll distance.
+        appComponent.mdTabHeader.focusIndex = 0;
+        fixture.detectChanges();
+        expect(appComponent.mdTabHeader.scrollDistance).toBe(0);
+      });
     });
 
-    it('should show width when tab list width exceeds container', () => {
-      fixture.detectChanges();
-      expect(appComponent.mdTabHeader._isScrollingEnabled()).toBe(false);
+    describe('rtl', () => {
+      beforeEach(() => {
+        dir = 'rtl';
+        fixture = TestBed.createComponent(SimpleTabHeaderApp);
+        fixture.detectChanges();
 
-      // Add enough tabs that it will obviously exceed the width
-      appComponent.addTabsForScrolling();
-      fixture.detectChanges();
+        appComponent = fixture.componentInstance;
+        appComponent.dir = 'rtl';
+      });
 
-      expect(appComponent.mdTabHeader._isScrollingEnabled()).toBe(true);
-    });
+      it('should scroll to show the focused tab label', () => {
+        appComponent.addTabsForScrolling();
+        fixture.detectChanges();
+        expect(appComponent.mdTabHeader.scrollDistance).toBe(0);
 
-    it('should scroll to show the focused tab label in ltr', () => {
-      appComponent.addTabsForScrolling();
-      fixture.detectChanges();
-      expect(appComponent.mdTabHeader.scrollDistance).toBe(0);
+        // Focus on the last tab, expect this to be the maximum scroll distance.
+        appComponent.mdTabHeader.focusIndex = appComponent.tabs.length - 1;
+        fixture.detectChanges();
+        expect(appComponent.mdTabHeader.scrollDistance)
+            .toBe(appComponent.mdTabHeader._getMaxScrollDistance());
 
-      // Focus on the last tab, expect this to be the maximum scroll distance.
-      appComponent.mdTabHeader.focusIndex = appComponent.tabs.length - 1;
-      fixture.detectChanges();
-      expect(appComponent.mdTabHeader.scrollDistance)
-          .toBe(appComponent.mdTabHeader._getMaxScrollDistance());
-
-      // Focus on the first tab, expect this to be the maximum scroll distance.
-      appComponent.mdTabHeader.focusIndex = 0;
-      fixture.detectChanges();
-      expect(appComponent.mdTabHeader.scrollDistance).toBe(0);
-    });
-
-    it('should scroll to show the focused tab label in rtl', () => {
-      dir = 'rtl';
-      appComponent.addTabsForScrolling();
-      fixture.detectChanges();
-      expect(appComponent.mdTabHeader.scrollDistance).toBe(0);
-
-      // Focus on the last tab, expect this to be the maximum scroll distance.
-      appComponent.mdTabHeader.focusIndex = appComponent.tabs.length - 1;
-      fixture.detectChanges();
-      expect(appComponent.mdTabHeader.scrollDistance)
-          .toBe(appComponent.mdTabHeader._getMaxScrollDistance());
-
-      // Focus on the first tab, expect this to be the maximum scroll distance.
-      appComponent.mdTabHeader.focusIndex = 0;
-      fixture.detectChanges();
-      expect(appComponent.mdTabHeader.scrollDistance).toBe(0);
+        // Focus on the first tab, expect this to be the maximum scroll distance.
+        appComponent.mdTabHeader.focusIndex = 0;
+        fixture.detectChanges();
+        expect(appComponent.mdTabHeader.scrollDistance).toBe(0);
+      });
     });
   });
+
 });
 
 
@@ -195,6 +209,7 @@ interface Tab {
 
 @Component({
   template: `
+  <div [dir]="dir">
     <md-tab-header [selectedIndex]="selectedIndex"
                (indexFocused)="focusedIndex = $event"
                (selectFocusedIndex)="selectedIndex = $event">
@@ -205,6 +220,7 @@ interface Tab {
          {{tab.label}}  
       </div>
     </md-tab-header>
+  </div>
   `,
   styles: [`
     :host {
@@ -217,6 +233,7 @@ class SimpleTabHeaderApp {
   focusedIndex: number;
   disabledTabIndex = 1;
   tabs: Tab[] = [{label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'}];
+  dir: LayoutDirection = 'ltr';
 
   @ViewChild(MdTabHeader) mdTabHeader: MdTabHeader;
 
