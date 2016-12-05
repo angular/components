@@ -54,6 +54,8 @@ export class MdTabHeader {
   @Input() set selectedIndex(value: number) {
     this._selectedIndex = value;
     this._focusIndex = value;
+
+    // Scroll to this index on the next view check in case the tab has not yet been created.
     this._scrollToSelectedIndex = true;
   }
   get selectedIndex(): number {
