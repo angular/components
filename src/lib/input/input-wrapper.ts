@@ -8,14 +8,12 @@ import {
   ElementRef,
   QueryList,
   ViewEncapsulation,
-  HostListener,
-  HostBinding,
   Optional,
   Output,
   EventEmitter
-} from "@angular/core";
-import {MdError, coerceBooleanProperty} from "../core";
-import {NgModel} from "@angular/forms";
+} from '@angular/core';
+import {MdError, coerceBooleanProperty} from '../core';
+import {NgModel} from '@angular/forms';
 
 
 // Invalid input type. Using one of these will throw an MdInputWrapperUnsupportedTypeError.
