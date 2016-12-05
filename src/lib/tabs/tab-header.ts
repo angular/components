@@ -43,6 +43,9 @@ export class MdTabHeader {
   /** The distance in pixels that the tab labels should be translated to the left. */
   private _scrollDistance = 0;
 
+  /** Whether the header should scroll to the selected index after the view has been checked. */
+  private _scrollToSelectedIndex = false;
+
   private _disableScrollAfter = true;
   private _disableScrollBefore = true;
 
@@ -51,6 +54,7 @@ export class MdTabHeader {
   @Input() set selectedIndex(value: number) {
     this._selectedIndex = value;
     this._focusIndex = value;
+    this._scrollToSelectedIndex = true;
   }
   get selectedIndex(): number {
     return this._selectedIndex;
@@ -82,6 +86,13 @@ export class MdTabHeader {
         this._disableScrollAfter = this.scrollDistance == this._getMaxScrollDistance();
       });
     });
+
+    if (this._scrollToSelectedIndex) {
+      if (this._isScrollingEnabled()) {
+        this._scrollToLabel(this._selectedIndex);
+      }
+      this._scrollToSelectedIndex = false;
+    }
   }
 
   /** Tells the ink-bar to align itself to the current label wrapper */
@@ -95,10 +106,10 @@ export class MdTabHeader {
   handleKeydown(event: KeyboardEvent) {
     switch (event.keyCode) {
       case RIGHT_ARROW:
-        this.focusNextTab();
+        this._focusNextTab();
         break;
       case LEFT_ARROW:
-        this.focusPreviousTab();
+        this._focusPreviousTab();
         break;
       case ENTER:
         this.selectFocusedIndex.emit(this.focusIndex);
@@ -110,7 +121,7 @@ export class MdTabHeader {
    * Determines if an index is valid.  If the tabs are not ready yet, we assume that the user is
    * providing a valid index and return true.
    */
-  isValidIndex(index: number): boolean {
+  _isValidIndex(index: number): boolean {
     if (!this._labelWrappers) { return true; }
 
     const tab = this._labelWrappers.toArray()[index];
@@ -124,7 +135,7 @@ export class MdTabHeader {
 
   /** When the focus index is set, we must manually send focus to the correct label */
   set focusIndex(value: number) {
-    if (!this.isValidIndex(value) || this._focusIndex == value) { return; }
+    if (!this._isValidIndex(value) || this._focusIndex == value) { return; }
 
     this._focusIndex = value;
     this.indexFocused.emit(value);
@@ -152,11 +163,11 @@ export class MdTabHeader {
   /**
    * Moves the focus before or after depending on the offset provided.  Valid offsets are 1 and -1.
    */
-  moveFocus(offset: number) {
+  _moveFocus(offset: number) {
     if (this._labelWrappers) {
       const tabs: MdTabLabelWrapper[] = this._labelWrappers.toArray();
       for (let i = this.focusIndex + offset; i < tabs.length && i >= 0; i += offset) {
-        if (this.isValidIndex(i)) {
+        if (this._isValidIndex(i)) {
           this.focusIndex = i;
           return;
         }
@@ -165,13 +176,13 @@ export class MdTabHeader {
   }
 
   /** Increment the focus index by 1 until a valid tab is found. */
-  focusNextTab(): void {
-    this.moveFocus(this._getLayoutDirection() == 'ltr' ? 1 : -1);
+  _focusNextTab(): void {
+    this._moveFocus(this._getLayoutDirection() == 'ltr' ? 1 : -1);
   }
 
   /** Decrement the focus index by 1 until a valid tab is found. */
-  focusPreviousTab(): void {
-    this.moveFocus(this._getLayoutDirection() == 'ltr' ? -1 : 1);
+  _focusPreviousTab(): void {
+    this._moveFocus(this._getLayoutDirection() == 'ltr' ? -1 : 1);
   }
 
   /** The layout direction of the containing app. */
@@ -238,8 +249,8 @@ export class MdTabHeader {
     }
   }
 
-  private set scrollDistance(v: number) {
+  set scrollDistance(v: number) {
     this._scrollDistance = Math.max(0, Math.min(this._getMaxScrollDistance(), v));
   }
-  private get scrollDistance(): number { return this._scrollDistance;  }
+  get scrollDistance(): number { return this._scrollDistance;  }
 }

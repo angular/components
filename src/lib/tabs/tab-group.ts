@@ -141,7 +141,6 @@ export class MdTabGroup {
   }
 
   _focusChanged(index: number) {
-    console.log('Focus changed ', index);
     this._onFocusChange.emit(this._createChangeEvent(index));
   }
 
