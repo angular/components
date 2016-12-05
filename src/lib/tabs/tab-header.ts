@@ -37,9 +37,6 @@ export class MdTabHeader {
   /** The tab index that is focused. */
   private _focusIndex: number = 0;
 
-  /** Index to focus after the view has been checked. */
-  private _indexToFocus: number;
-
   /** The distance in pixels that the tab labels should be translated to the left. */
   private _scrollDistance = 0;
 
