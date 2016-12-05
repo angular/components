@@ -22,7 +22,7 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/for
 import {CommonModule} from '@angular/common';
 import {MdError, coerceBooleanProperty} from '../core';
 import {Observable} from 'rxjs/Observable';
-import {MdPlaceholder, MdInputWrapper, MdHint} from './input-wrapper';
+import {MdPlaceholder, MdInputWrapper, MdHint, MdInputDirective} from './input-wrapper';
 import {MdTextareaAutosize} from './autosize';
 
 
@@ -344,11 +344,24 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
 }
 
 
-
 @NgModule({
-  declarations: [MdInput, MdPlaceholder, MdInputWrapper, MdHint, MdTextareaAutosize],
+  declarations: [
+    MdInput,
+    MdPlaceholder,
+    MdInputWrapper,
+    MdHint,
+    MdTextareaAutosize,
+    MdInputDirective
+  ],
   imports: [CommonModule, FormsModule],
-  exports: [MdInput, MdPlaceholder, MdInputWrapper, MdHint, MdTextareaAutosize],
+  exports: [
+    MdInput,
+    MdPlaceholder,
+    MdInputWrapper,
+    MdHint,
+    MdTextareaAutosize,
+    MdInputDirective
+  ],
 })
 export class MdInputModule {
   static forRoot(): ModuleWithProviders {

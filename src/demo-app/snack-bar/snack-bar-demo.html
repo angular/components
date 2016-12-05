@@ -1,11 +1,14 @@
 <h1>SnackBar demo</h1>
 <div>
-  <div>Message: <md-input-wrapper><input type="text" [(ngModel)]="message"></md-input-wrapper></div>
+  <div>
+    Message: <md-input-wrapper><input md-input type="text" [(ngModel)]="message"></md-input-wrapper>
+  </div>
   <div>
     <md-checkbox [(ngModel)]="action">
       <p *ngIf="!action">Show button on snack bar</p>
       <md-input-wrapper *ngIf="action">
-        <input type="text"
+        <input md-input
+               type="text"
                class="demo-button-label-input"
                placeholder="Snack bar action label"
                [(ngModel)]="actionButtonLabel">
@@ -16,7 +19,8 @@
     <md-checkbox [(ngModel)]="setAutoHide">
       <p *ngIf="!setAutoHide">Auto hide after duration</p>
       <md-input-wrapper *ngIf="setAutoHide">
-        <input type="number"
+        <input md-input
+               type="number"
                class="demo-button-label-input"
                placeholder="Auto Hide Duration in ms"
                [(ngModel)]="autoHide">

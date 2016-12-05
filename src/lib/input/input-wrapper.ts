@@ -33,13 +33,19 @@ const MD_INPUT_INVALID_TYPES = [
 ];
 
 
-const MD_INPUT_NEVER_EMPTY_TYPES = [
-  'datetime',
-  'datetime-local',
-  'month',
-  'time',
-  'week'
-];
+const MD_INPUT_NEVER_EMPTY_TYPES = (() => {
+  let featureTestInput = document.createElement('input');
+  return [
+    'datetime',
+    'datetime-local',
+    'month',
+    'time',
+    'week'
+  ].filter(value => {
+    featureTestInput.setAttribute('type', value);
+    return featureTestInput.type === value;
+  });
+})();
 
 
 let nextUniqueId = 0;
@@ -78,26 +84,33 @@ export class MdPlaceholder {}
 
 /** The hint directive, used to tag content as hint labels (going under the input). */
 @Directive({
-  selector: 'md-hint'
+  selector: 'md-hint',
+  host: {
+    'class': 'md-hint',
+    '[class.md-right]': 'align == "end"',
+  }
 })
 export class MdHint {
   // Whether to align the hint label at the start or end of the line.
   @Input() align: 'start' | 'end' = 'start';
-
-  @HostBinding('class.mdHint') private _hintClass = true;
-
-  @HostBinding('class.md-right') private _alignRightClass = this.align == 'end';
 }
 
 
 /** The input directive, used to mark the input that `MdInputWrapper` is wrapping. */
 @Directive({
-  selector: '[md-input]'
+  selector: 'input[md-input], textarea[md-input]',
+  host: {
+    'class': 'md-input-element',
+    '[id]': 'id',
+    '(blur)': '_onBlur()',
+    '(focus)': '_onFocus()',
+    '(input)': '_onInput()',
+  }
 })
-export class MdInputDirective {
+export class MdInputDirective implements AfterContentInit {
   @Input() disabled = false;
 
-  @Input() @HostBinding()
+  @Input()
   get id() { return this._id; };
   set id(value: string) { this._id = value || this._uid; }
   private _id: string;
@@ -122,24 +135,17 @@ export class MdInputDirective {
   }
   private _type = 'text';
 
-  @Output() placeholderChange: EventEmitter<string>;
+  @Input()
+  value: any;
 
-  @HostBinding('class.md-input-element') private _inputElementClass = true;
+  @Output() placeholderChange = new EventEmitter<string>();
 
-  @HostListener('focus') private _onFocus() { this.focused = true; }
-
-  @HostListener('blur') private _onBlur() { this.focused = false; }
-
-  @HostListener('input', ['$event']) private _onInput(event: Event) { this._value = (event.target as any).value; }
-
-  get empty() { return (this._value == null || this._value == '') && !this._isNeverEmpty(); }
+  get empty() { return (this.value == null || this.value == '') && !this._isNeverEmpty(); }
 
   focused = false;
 
   private get _uid() { return this._cachedUid = this._cachedUid || `md-input-${nextUniqueId++}`; }
   private _cachedUid: string;
-
-  private _value: any;
 
   constructor(private _elementRef: ElementRef, @Optional() private _ngModel: NgModel) {
     // Force setter to be called in case id was not specified.
@@ -147,9 +153,13 @@ export class MdInputDirective {
 
     if (this._ngModel) {
       this._ngModel.valueChanges.subscribe((value) => {
-        this._value = value;
+        this.value = value;
       });
     }
+  }
+
+  ngAfterContentInit() {
+    this.value = this._elementRef.nativeElement.value;
   }
 
   /** Focus the input element. */
@@ -162,9 +172,13 @@ export class MdInputDirective {
     }
   }
 
-  private _isNeverEmpty() {
-    return MD_INPUT_NEVER_EMPTY_TYPES.indexOf(this._type) != -1;
-  }
+  private _isNeverEmpty() { return MD_INPUT_NEVER_EMPTY_TYPES.indexOf(this._type) != -1; }
+
+  private _onFocus() { this.focused = true; }
+
+  private _onBlur() { this.focused = false; }
+
+  private _onInput() { this.value = this._elementRef.nativeElement.value; }
 }
 
 
@@ -177,6 +191,11 @@ export class MdInputDirective {
   selector: 'md-input-wrapper',
   templateUrl: 'input-wrapper.html',
   styleUrls: ['input.css', 'input-wrapper.css'],
+  host: {
+    // Remove align attribute to prevent it from interfering with layout.
+    '[attr.align]': 'null',
+    '(click)': '_focusInput()',
+  },
   encapsulation: ViewEncapsulation.None,
 })
 export class MdInputWrapper implements AfterContentInit {
@@ -197,12 +216,7 @@ export class MdInputWrapper implements AfterContentInit {
   set floatingPlaceholder(value) { this._floatingPlaceholder = coerceBooleanProperty(value); }
   private _floatingPlaceholder: boolean = true;
 
-  // Remove align attribute to prevent it from interfering with layout.
-  @HostBinding('attr.align') private _align: string = null;
-
-  @HostListener('click') private _focusInput() { this._mdInput.focus(); }
-
-  @ContentChild(MdInputDirective) _mdInput: MdInputDirective;
+  @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
 
   @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
 
@@ -216,20 +230,22 @@ export class MdInputWrapper implements AfterContentInit {
     this._hintChildren.changes.subscribe(() => {
       this._validateHints();
     });
-    this._mdInput.placeholderChange.subscribe(() => {
+    this._mdInputChild.placeholderChange.subscribe(() => {
       this._validatePlaceholders();
-    })
+    });
   }
 
   /** Whether the input has a placeholder. */
-  _hasPlaceholder(): boolean { return !!this._mdInput.placeholder || !!this._placeholderChild; }
+  _hasPlaceholder(): boolean {
+    return !!this._mdInputChild.placeholder || !!this._placeholderChild;
+  }
 
   /**
    * Ensure that there is only one placeholder (either `input` attribute or child element with the
    * `md-placeholder` attribute.
    */
   private _validatePlaceholders() {
-    if (this._mdInput.placeholder && this._placeholderChild) {
+    if (this._mdInputChild.placeholder && this._placeholderChild) {
       throw new MdInputWrapperPlaceholderConflictError();
     }
   }
@@ -239,20 +255,24 @@ export class MdInputWrapper implements AfterContentInit {
    * attribute being considered as `align="start"`.
    */
   private _validateHints() {
-    let startHint: MdHint = null;
-    let endHint: MdHint = null;
-    this._hintChildren.forEach((hint: MdHint) => {
-      if (hint.align == 'start') {
-        if (startHint || this.hintLabel) {
-          throw new MdInputWrapperDuplicatedHintError('start');
+    if (this._hintChildren) {
+      let startHint: MdHint = null;
+      let endHint: MdHint = null;
+      this._hintChildren.forEach((hint: MdHint) => {
+        if (hint.align == 'start') {
+          if (startHint || this.hintLabel) {
+            throw new MdInputWrapperDuplicatedHintError('start');
+          }
+          startHint = hint;
+        } else if (hint.align == 'end') {
+          if (endHint) {
+            throw new MdInputWrapperDuplicatedHintError('end');
+          }
+          endHint = hint;
         }
-        startHint = hint;
-      } else if (hint.align == 'end') {
-        if (endHint) {
-          throw new MdInputWrapperDuplicatedHintError('end');
-        }
-        endHint = hint;
-      }
-    });
+      });
+    }
   }
+
+  private _focusInput() { this._mdInputChild.focus(); }
 }
