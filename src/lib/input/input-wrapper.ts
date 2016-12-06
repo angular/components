@@ -10,11 +10,17 @@ import {
   ViewEncapsulation,
   Optional,
   Output,
-  EventEmitter
+  EventEmitter,
+  Renderer
 } from '@angular/core';
-import {MdError, coerceBooleanProperty} from '../core';
+import {coerceBooleanProperty} from '../core';
 import {NgModel} from '@angular/forms';
 import {MdFeatureDetector} from '../core/platform/feature-detector';
+import {
+  MdInputWrapperUnsupportedTypeError,
+  MdInputWrapperPlaceholderConflictError,
+  MdInputWrapperDuplicatedHintError
+} from './input-wrapper-errors';
 
 
 // Invalid input type. Using one of these will throw an MdInputWrapperUnsupportedTypeError.
@@ -33,27 +39,6 @@ const MD_INPUT_INVALID_TYPES = [
 
 
 let nextUniqueId = 0;
-
-
-export class MdInputWrapperPlaceholderConflictError extends MdError {
-  constructor() {
-    super('Placeholder attribute and child element were both specified.');
-  }
-}
-
-
-export class MdInputWrapperUnsupportedTypeError extends MdError {
-  constructor(type: string) {
-    super(`Input type "${type}" isn't supported by md-input-wrapper.`);
-  }
-}
-
-
-export class MdInputWrapperDuplicatedHintError extends MdError {
-  constructor(align: string) {
-    super(`A hint was already declared for 'align="${align}"'.`);
-  }
-}
 
 
 /**
@@ -107,7 +92,7 @@ export class MdInputDirective implements AfterContentInit {
   set placeholder(value: string) {
     if (this._placeholder != value) {
       this._placeholder = value;
-      this.placeholderChange.emit(this._placeholder);
+      this._placeholderChange.emit(this._placeholder);
     }
   }
   private _placeholder = '';
@@ -125,10 +110,10 @@ export class MdInputDirective implements AfterContentInit {
   }
   private _type = 'text';
 
-  @Input()
   value: any;
 
-  @Output() placeholderChange = new EventEmitter<string>();
+  /** Emits an event when the placeholder changes so that the `md-input-wrapper` can re-validate. */
+  @Output() _placeholderChange = new EventEmitter<string>();
 
   get empty() { return (this.value == null || this.value == '') && !this._isNeverEmpty(); }
 
@@ -148,6 +133,7 @@ export class MdInputDirective implements AfterContentInit {
 
   constructor(private _featureDetector: MdFeatureDetector,
               private _elementRef: ElementRef,
+              private _renderer: Renderer,
               @Optional() private _ngModel: NgModel) {
     // Force setter to be called in case id was not specified.
     this.id = this.id;
@@ -164,7 +150,7 @@ export class MdInputDirective implements AfterContentInit {
   }
 
   /** Focus the input element. */
-  focus() { this._elementRef.nativeElement.focus(); }
+  focus() { this._renderer.invokeElementMethod(this._elementRef.nativeElement, 'focus'); }
 
   /** Make sure the input is a supported type. */
   private _validateType() {
@@ -231,7 +217,7 @@ export class MdInputWrapper implements AfterContentInit {
     this._hintChildren.changes.subscribe(() => {
       this._validateHints();
     });
-    this._mdInputChild.placeholderChange.subscribe(() => {
+    this._mdInputChild._placeholderChange.subscribe(() => {
       this._validatePlaceholders();
     });
   }

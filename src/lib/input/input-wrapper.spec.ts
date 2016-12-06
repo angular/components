@@ -1,4 +1,4 @@
-import {async, TestBed, ComponentFixture, inject} from '@angular/core/testing';
+import {async, TestBed, inject} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
@@ -218,12 +218,10 @@ describe('MdInputWrapper', function () {
     fixture.componentInstance.placeholder = 'Other placeholder';
     fixture.detectChanges();
 
-    waitForMutationObserver(fixture, () => {
-      el = fixture.debugElement.query(By.css('label'));
-      expect(el).not.toBeNull();
-      expect(el.nativeElement.textContent).toMatch('Other placeholder');
-      expect(el.nativeElement.textContent).not.toMatch(/\*/g);
-    });
+    el = fixture.debugElement.query(By.css('label'));
+    expect(el).not.toBeNull();
+    expect(el.nativeElement.textContent).toMatch('Other placeholder');
+    expect(el.nativeElement.textContent).not.toMatch(/\*/g);
   }));
 
   it('supports placeholder element', async(() => {
@@ -237,12 +235,10 @@ describe('MdInputWrapper', function () {
     fixture.componentInstance.placeholder = 'Other placeholder';
     fixture.detectChanges();
 
-    waitForMutationObserver(fixture, () => {
-      el = fixture.debugElement.query(By.css('label'));
-      expect(el).not.toBeNull();
-      expect(el.nativeElement.textContent).toMatch('Other placeholder');
-      expect(el.nativeElement.textContent).not.toMatch(/\*/g);
-    });
+    el = fixture.debugElement.query(By.css('label'));
+    expect(el).not.toBeNull();
+    expect(el.nativeElement.textContent).toMatch('Other placeholder');
+    expect(el.nativeElement.textContent).not.toMatch(/\*/g);
   }));
 
   it('supports placeholder required star', () => {
@@ -263,9 +259,7 @@ describe('MdInputWrapper', function () {
 
     fixture.componentInstance.disabled = true;
     fixture.detectChanges();
-    waitForMutationObserver(fixture, () => {
-      expect(underlineEl.classList.contains('md-disabled')).toBe(true, 'should be disabled');
-    });
+    expect(underlineEl.classList.contains('md-disabled')).toBe(true, 'should be disabled');
   }));
 
   it('supports textarea', () => {
@@ -408,11 +402,4 @@ class MdTextareaWithBindings {
   rows: number = 4;
   cols: number = 8;
   wrap: string = 'hard';
-}
-
-function waitForMutationObserver<T>(fixture: ComponentFixture<T>, f: () => void) {
-  setTimeout(() => {
-    fixture.detectChanges();
-    f();
-  }, 0);
 }
