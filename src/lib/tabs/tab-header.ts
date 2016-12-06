@@ -5,15 +5,33 @@ import {
   NgZone,
   QueryList,
   ElementRef,
-  Renderer, ViewEncapsulation, ContentChildren, Output, EventEmitter, Optional
+  Renderer, ViewEncapsulation, ContentChildren, Output, EventEmitter, Optional, OnInit
 } from '@angular/core';
 import {RIGHT_ARROW, LEFT_ARROW, ENTER, Dir, LayoutDirection} from '../core';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdInkBar} from './ink-bar';
 import 'rxjs/add/operator/map';
+import {applyCssTransform} from "../core/style/apply-transform";
 
+/**
+ * The directions that scrolling can go in when the header's tabs exceed the header width. 'After'
+ * will scroll the header towards the end of the tabs list and 'before' will scroll towards the
+ * beginning of the list.
+ */
 export type ScrollDirection = 'after' | 'before';
 
+/**
+ * The distance in pixels that will be overshot when scrolling a tab label into view. This helps
+ * provide a small affordance to the label next to it.
+ */
+const EXAGGERATED_OVERSCROLL = 60;
+
+/**
+ * The header of the tab group which displays a list of all the tabs in the tab group. Includes
+ * an ink bar that follows the currently selected tab. When the tabs list's width exceeds the
+ * width of the header container, then arrows will be displayed to allow the user to scroll
+ * left and right across the header.
+ */
 @Component({
   moduleId: module.id,
   selector: 'md-tab-header',
@@ -21,10 +39,9 @@ export type ScrollDirection = 'after' | 'before';
   styleUrls: ['tab-header.css'],
   encapsulation: ViewEncapsulation.None,
   host: {
-    '[class.md-tab-header]': 'true',
-    '[class.scroll]': '_isScrollingEnabled()',
-    '[class.ltr]': "_getLayoutDirection() == 'ltr'",
-    '[class.rtl]': "_getLayoutDirection() == 'rtl'",
+    'class': 'md-tab-header',
+    '[class.md-tab-header-pagination-controls-enabled]': '_showPaginationControls',
+    '[class.md-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
   }
 })
 export class MdTabHeader {
@@ -41,23 +58,35 @@ export class MdTabHeader {
   private _scrollDistance = 0;
 
   /** Whether the header should scroll to the selected index after the view has been checked. */
-  private _scrollToSelectedIndex = false;
+  private _selectedIndexChanged = false;
 
+  /** Whether the controls for pagination should be displayed */
+  _showPaginationControls = false;
+
+  /** Whether the tab list can be scrolled more towards the end of the tab label list. */
   private _disableScrollAfter = true;
+
+  /** Whether the tab list can be scrolled more towards the beginning of the tab label list. */
   private _disableScrollBefore = true;
+
+  /**
+   * The number of tab labels that are displayed on the header. When this changes, the header
+   * should re-evaluate the scroll position.
+   */
+  private _tabLabelCount: number;
+
+  /** Whether the scroll distance has changed and should be applied after the view is checked. */
+  private _scrollDistanceChanged: boolean;
 
   /** The index of the active tab. */
   private _selectedIndex: number = 0;
   @Input() set selectedIndex(value: number) {
+    this._selectedIndexChanged = this._selectedIndex != value;
+
     this._selectedIndex = value;
     this._focusIndex = value;
-
-    // Scroll to this index on the next view check in case the tab has not yet been created.
-    this._scrollToSelectedIndex = true;
   }
-  get selectedIndex(): number {
-    return this._selectedIndex;
-  }
+  get selectedIndex(): number { return this._selectedIndex; }
 
   /** Event emitted when the option is selected. */
   @Output() selectFocusedIndex = new EventEmitter();
@@ -67,8 +96,33 @@ export class MdTabHeader {
 
   constructor(private _zone: NgZone,
               private _elementRef: ElementRef,
-              private _renderer: Renderer,
               @Optional() private _dir: Dir) {}
+
+  ngAfterContentChecked(): void {
+    // If the number of tab labels have changed, check if scrolling should be enabled
+    if (this._tabLabelCount != this._labelWrappers.length) {
+      this._checkPaginationEnabled();
+      this._checkScrollingControls();
+      this._updateTabScrollPosition();
+      this._tabLabelCount = this._labelWrappers.length;
+    }
+
+
+    // If the selected index has changed, scroll to the label and check if the scrolling controls
+    // should be disabled.
+    if (this._selectedIndexChanged) {
+      this._scrollToLabel(this._selectedIndex);
+      this._checkScrollingControls();
+      this._selectedIndexChanged = false;
+    }
+
+    // If the scroll distance has been changed (tab selected, focused, scroll controls activated),
+    // then translate the header to reflect this.
+    if (this._scrollDistanceChanged) {
+      this._updateTabScrollPosition();
+      this._scrollDistanceChanged = false;
+    }
+  }
 
   /**
    * Waits one frame for the view to update, then updates the ink bar and scroll.
@@ -78,31 +132,12 @@ export class MdTabHeader {
   ngAfterViewChecked(): void {
     this._zone.runOutsideAngular(() => {
       window.requestAnimationFrame(() => {
-        this._updateInkBar();
-        this._updateScrollPosition();
-
-        this._disableScrollBefore = this.scrollDistance == 0;
-        this._disableScrollAfter = this.scrollDistance == this._getMaxScrollDistance();
+        this._alignInkBarToSelectedTab();
       });
     });
-
-    if (this._scrollToSelectedIndex) {
-      if (this._isScrollingEnabled()) {
-        this._scrollToLabel(this._selectedIndex);
-      }
-      this._scrollToSelectedIndex = false;
-    }
   }
 
-  /** Tells the ink-bar to align itself to the current label wrapper */
-  private _updateInkBar(): void {
-    const selectedLabelWrapper = this._labelWrappers && this._labelWrappers.length
-        ? this._labelWrappers.toArray()[this.selectedIndex].elementRef.nativeElement
-        : null;
-    this._inkBar.alignToElement(selectedLabelWrapper);
-  }
-
-  handleKeydown(event: KeyboardEvent) {
+  private _handleKeydown(event: KeyboardEvent) {
     switch (event.keyCode) {
       case RIGHT_ARROW:
         this._focusNextTab();
@@ -116,6 +151,19 @@ export class MdTabHeader {
     }
   }
 
+  /** When the focus index is set, we must manually send focus to the correct label */
+  set focusIndex(value: number) {
+    if (!this._isValidIndex(value) || this._focusIndex == value) { return; }
+
+    this._focusIndex = value;
+    this.indexFocused.emit(value);
+
+    this._setTabFocus(value);
+  }
+
+  /** Tracks which element has focus; used for keyboard navigation */
+  get focusIndex(): number { return this._focusIndex; }
+
   /**
    * Determines if an index is valid.  If the tabs are not ready yet, we assume that the user is
    * providing a valid index and return true.
@@ -127,24 +175,17 @@ export class MdTabHeader {
     return tab && !tab.disabled;
   }
 
-  /** Tracks which element has focus; used for keyboard navigation */
-  get focusIndex(): number {
-    return this._focusIndex;
-  }
-
-  /** When the focus index is set, we must manually send focus to the correct label */
-  set focusIndex(value: number) {
-    if (!this._isValidIndex(value) || this._focusIndex == value) { return; }
-
-    this._focusIndex = value;
-    this.indexFocused.emit(value);
-
-    if (this._isScrollingEnabled()) {
-      this._scrollToLabel(value);
+  /**
+   * Sets focus on the HTML element for the label wrapper and scrolls it into the view if
+   * scrolling is enabled.
+   */
+  _setTabFocus(tabIndex: number) {
+    if (this._showPaginationControls) {
+      this._scrollToLabel(tabIndex);
     }
 
     if (this._labelWrappers && this._labelWrappers.length) {
-      this._labelWrappers.toArray()[value].focus();
+      this._labelWrappers.toArray()[tabIndex].focus();
 
       // Do not let the browser manage scrolling to focus the element, this will be handled
       // by using translation. In LTR, the scroll left should be 0. In RTL, the scroll width
@@ -160,7 +201,8 @@ export class MdTabHeader {
   }
 
   /**
-   * Moves the focus before or after depending on the offset provided.  Valid offsets are 1 and -1.
+   * Moves the focus towards the beginning or the end of the list depending on the offset provided.
+   * Valid offsets are 1 and -1.
    */
   _moveFocus(offset: number) {
     if (this._labelWrappers) {
@@ -189,38 +231,54 @@ export class MdTabHeader {
     return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
   }
 
-  _updateScrollPosition() {
+  /** Performs the CSS transformation on the tab list that will cause the list to scroll. */
+  _updateTabScrollPosition() {
     let translateX = this.scrollDistance + 'px';
     if (this._getLayoutDirection() == 'ltr') {
       translateX = '-' + translateX;
     }
 
-    this._renderer.setElementStyle(this._tabList.nativeElement,
-        'transform', `translate3d(${translateX}, 0, 0)`);
+    applyCssTransform(this._tabList.nativeElement, `translate3d(${translateX}, 0, 0)`);
   }
 
-  _isScrollingEnabled(): boolean {
-    return this._tabList.nativeElement.scrollWidth > this._elementRef.nativeElement.offsetWidth;
-  }
+  /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */
+  set scrollDistance(v: number) {
+    this._scrollDistance = Math.max(0, Math.min(this._getMaxScrollDistance(), v));
 
-  _getMaxScrollDistance(): number {
-    const lengthOfTabList = this._tabList.nativeElement.scrollWidth;
-    const viewLength = this._tabListContainer.nativeElement.offsetWidth;
-    return lengthOfTabList - viewLength;
-  }
+    // Mark that the scroll distance has changed so that after the view is checked, the CSS
+    // transformation can move the header.
+    this._scrollDistanceChanged = true;
 
+    this._checkScrollingControls();
+  }
+  get scrollDistance(): number { return this._scrollDistance;  }
+
+  /**
+   * Moves the tab list in the 'before' or 'after' direction (towards the beginning of the list or
+   * the end of the list, respectively). The distance to scroll is computed to be a third of the
+   * length of the tab list view window.
+   *
+   * This is an expensive call that forces a layout reflow to compute box and scroll metrics and
+   * should be called sparingly.
+   */
   _scrollHeader(scrollDir: ScrollDirection) {
     const viewLength = this._tabListContainer.nativeElement.offsetWidth;
 
-    if (scrollDir == 'before') {
-      this.scrollDistance -= viewLength / 3;
-    } else {
-      this.scrollDistance += viewLength / 3;
-    }
+    // Move the scroll distance one-third the length of the tab list's viewport.
+    this.scrollDistance += (scrollDir == 'before' ? -1 : 1) * viewLength / 3;
   }
 
+  /**
+   * Moves the tab list such that the desired tab label (marked by index) is moved into view.
+   *
+   * This is an expensive call that forces a layout reflow to compute box and scroll metrics and
+   * should be called sparingly.
+   */
   _scrollToLabel(labelIndex: number) {
     const selectedLabel = this._labelWrappers.toArray()[labelIndex];
+    if (!selectedLabel) { return; }
+
+    // The view length is the visible width of the tab labels.
     const viewLength = this._tabListContainer.nativeElement.offsetWidth;
 
     let labelBeforePos: number, labelAfterPos: number;
@@ -235,21 +293,65 @@ export class MdTabHeader {
     const beforeVisiblePos = this.scrollDistance;
     const afterVisiblePos = this.scrollDistance + viewLength;
 
-    // If move is required, overscroll by a small amount to provide an affordance to click the
-    // next label.
-    const exaggeratedOverscroll = 60;
-
     if (labelBeforePos < beforeVisiblePos) {
       // Scroll header to move label to the before direction
-      this.scrollDistance -= beforeVisiblePos - labelBeforePos + exaggeratedOverscroll;
+      this.scrollDistance -= beforeVisiblePos - labelBeforePos + EXAGGERATED_OVERSCROLL;
     } else if (labelAfterPos > afterVisiblePos) {
       // Scroll header to move label to the after direction
-      this.scrollDistance += labelAfterPos - afterVisiblePos + exaggeratedOverscroll;
+      this.scrollDistance += labelAfterPos - afterVisiblePos + EXAGGERATED_OVERSCROLL;
     }
   }
 
-  set scrollDistance(v: number) {
-    this._scrollDistance = Math.max(0, Math.min(this._getMaxScrollDistance(), v));
+  /**
+   * Evaluate whether the pagination controls should be displayed. If the scroll width of the
+   * tab list is wider than the size of the header container, then the pagination controls should
+   * be shown.
+   *
+   * This is an expensive call that forces a layout reflow to compute box and scroll metrics and
+   * should be called sparingly.
+   */
+  _checkPaginationEnabled() {
+    this._showPaginationControls =
+        this._tabList.nativeElement.scrollWidth > this._elementRef.nativeElement.offsetWidth;
+
+    if (!this._showPaginationControls) {
+      this.scrollDistance = 0;
+    }
   }
-  get scrollDistance(): number { return this._scrollDistance;  }
+
+  /**
+   * Evaluate whether the before and after controls should be enabled or disabled.
+   * If the header is at the beginning of the list (scroll distance is equal to 0) then disable the
+   * before button. If the header is at the end of the list (scroll distance is equal to the
+   * maximum distance we can scroll), then disable the after button.
+   *
+   * This is an expensive call that forces a layout reflow to compute box and scroll metrics and
+   * should be called sparingly.
+   */
+  _checkScrollingControls() {
+    // Check if the pagination arrows should be activated.
+    this._disableScrollBefore = this.scrollDistance == 0;
+    this._disableScrollAfter = this.scrollDistance == this._getMaxScrollDistance();
+  }
+
+  /**
+   * Determines what is the maximum length in pixels that can be set for the scroll distance. This
+   * is equal to the difference in width between the tab list container and tab header container.
+   *
+   * This is an expensive call that forces a layout reflow to compute box and scroll metrics and
+   * should be called sparingly.
+   */
+  _getMaxScrollDistance(): number {
+    const lengthOfTabList = this._tabList.nativeElement.scrollWidth;
+    const viewLength = this._tabListContainer.nativeElement.offsetWidth;
+    return lengthOfTabList - viewLength;
+  }
+
+  /** Tells the ink-bar to align itself to the current label wrapper */
+  private _alignInkBarToSelectedTab(): void {
+    const selectedLabelWrapper = this._labelWrappers && this._labelWrappers.length
+        ? this._labelWrappers.toArray()[this.selectedIndex].elementRef.nativeElement
+        : null;
+    this._inkBar.alignToElement(selectedLabelWrapper);
+  }
 }

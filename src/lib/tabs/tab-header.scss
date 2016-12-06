@@ -23,7 +23,7 @@ md-ink-bar {
   @include ink-bar;
 }
 
-.md-tab-label-pagination {
+.md-tab-header-pagination {
   position: relative;
   display: none;
   justify-content: center;
@@ -32,40 +32,41 @@ md-ink-bar {
   cursor: pointer;
   z-index: 2;
 
-  .scroll & {
+  .md-tab-header-pagination-controls-enabled & {
     display: flex;
   }
+}
 
-  &.disabled {
-    box-shadow: none;
-    cursor: default;
-    .md-tab-label-pagination-chevron {
-      border-color: #ccc;
-    }
+// The pagination control that is displayed on the left side of the tab header.
+.md-tab-header-pagination-before, .md-tab-header-rtl .md-tab-header-pagination-after {
+  padding-left: 4px;
+  .md-tab-header-pagination-chevron {
+    transform: rotate(-135deg);
   }
+}
 
-  .md-tab-label-pagination-chevron {
-    border-style: solid;
-    border-width: 2px 2px 0 0;
-    content: '';
-    height: 8px;
-    width: 8px;
+// The pagination control that is displayed on the right side of the tab header.
+.md-tab-header-rtl .md-tab-header-pagination-before, .md-tab-header-pagination-after {
+  padding-right: 4px;
+  .md-tab-header-pagination-chevron {
+    transform: rotate(45deg);
   }
+}
 
-  // Left pagination
-  .ltr &.before, .rtl &.after {
-    padding-left: 4px;
-    .md-tab-label-pagination-chevron {
-      transform: rotate(-135deg);
-    }
-  }
+.md-tab-header-pagination-chevron {
+  border-style: solid;
+  border-width: 2px 2px 0 0;
+  content: '';
+  height: 8px;
+  width: 8px;
+}
 
-  // Right pagination
-  .ltr &.after, .rtl &.before {
-    padding-right: 4px;
-    .md-tab-label-pagination-chevron {
-      transform: rotate(45deg);
-    }
+.md-tab-header-pagination-disabled {
+  box-shadow: none;
+  cursor: default;
+
+  .md-tab-header-pagination-chevron {
+    border-color: #ccc;
   }
 }
 
