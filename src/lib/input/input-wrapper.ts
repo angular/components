@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import {MdError, coerceBooleanProperty} from '../core';
 import {NgModel} from '@angular/forms';
+import {MdFeatureDetector} from '../core/platform/feature-detector';
 
 
 // Invalid input type. Using one of these will throw an MdInputWrapperUnsupportedTypeError.
@@ -29,22 +30,6 @@ const MD_INPUT_INVALID_TYPES = [
   'reset',
   'submit'
 ];
-
-
-const MD_INPUT_NEVER_EMPTY_TYPES = (() => {
-  let featureTestInput = document.createElement('input');
-  return [
-    'date',
-    'datetime',
-    'datetime-local',
-    'month',
-    'time',
-    'week'
-  ].filter(value => {
-    featureTestInput.setAttribute('type', value);
-    return featureTestInput.type === value;
-  });
-})();
 
 
 let nextUniqueId = 0;
@@ -152,7 +137,18 @@ export class MdInputDirective implements AfterContentInit {
   private get _uid() { return this._cachedUid = this._cachedUid || `md-input-${nextUniqueId++}`; }
   private _cachedUid: string;
 
-  constructor(private _elementRef: ElementRef, @Optional() private _ngModel: NgModel) {
+  private _neverEmptyInputTypes = [
+    'date',
+    'datetime',
+    'datetime-local',
+    'month',
+    'time',
+    'week'
+  ].filter(t => this._featureDetector.supportedInputTypes.has(t));
+
+  constructor(private _featureDetector: MdFeatureDetector,
+              private _elementRef: ElementRef,
+              @Optional() private _ngModel: NgModel) {
     // Force setter to be called in case id was not specified.
     this.id = this.id;
 
@@ -177,7 +173,7 @@ export class MdInputDirective implements AfterContentInit {
     }
   }
 
-  private _isNeverEmpty() { return MD_INPUT_NEVER_EMPTY_TYPES.indexOf(this._type) != -1; }
+  private _isNeverEmpty() { return this._neverEmptyInputTypes.indexOf(this._type) != -1; }
 
   private _onFocus() { this.focused = true; }
 

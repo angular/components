@@ -3,12 +3,12 @@ import {FocusTrap} from './focus-trap';
 import {MdLiveAnnouncer} from './live-announcer';
 import {InteractivityChecker} from './interactivity-checker';
 import {CommonModule} from '@angular/common';
-import {PlatformModule} from '../platform/platform';
+import {MdPlatformModule} from '../platform/index';
 
 export const A11Y_PROVIDERS = [MdLiveAnnouncer, InteractivityChecker];
 
 @NgModule({
-  imports: [CommonModule, PlatformModule],
+  imports: [CommonModule, MdPlatformModule],
   declarations: [FocusTrap],
   exports: [FocusTrap],
 })
