@@ -16,6 +16,7 @@ env:
   - BROWSER_STACK_USERNAME=angularteam1
   - BROWSER_STACK_ACCESS_KEY=BWCd4SynLzdDcv8xtzsB
   - BROWSER_PROVIDER_READY_FILE=/tmp/material-angular-io-build/readyfile
+  - BROWSER_PROVIDER_ERROR_FILE=/tmp/material-angular-io-build/errorfile
   matrix:
     - MODE=lint
     - MODE=e2e
