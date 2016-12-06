@@ -4,9 +4,12 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {MdInputModule} from './input';
 import {MdInputWrapper} from './input-wrapper';
+import {MdPlatform} from '../core/platform/platform';
 
 
 describe('MdInputWrapper', function () {
+  let platform: MdPlatform = new MdPlatform();
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdInputModule.forRoot(), FormsModule, ReactiveFormsModule],
@@ -45,12 +48,26 @@ describe('MdInputWrapper', function () {
   });
 
   it('should not be treated as empty if type is date', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperDateTestController);
-    fixture.detectChanges();
+    if (!(platform.TRIDENT || platform.FIREFOX)) {
+      let fixture = TestBed.createComponent(MdInputWrapperDateTestController);
+      fixture.detectChanges();
 
-    let el = fixture.debugElement.query(By.css('label')).nativeElement;
-    expect(el).not.toBeNull();
-    expect(el.classList.contains('md-empty')).toBe(false);
+      let el = fixture.debugElement.query(By.css('label')).nativeElement;
+      expect(el).not.toBeNull();
+      expect(el.classList.contains('md-empty')).toBe(false);
+    }
+  });
+
+  // Firefox and IE don't support type="date" and fallback to type="text".
+  it('should be treated as empty if type is date on Firefox and IE', () => {
+    if (platform.TRIDENT || platform.FIREFOX) {
+      let fixture = TestBed.createComponent(MdInputWrapperDateTestController);
+      fixture.detectChanges();
+
+      let el = fixture.debugElement.query(By.css('label')).nativeElement;
+      expect(el).not.toBeNull();
+      expect(el.classList.contains('md-empty')).toBe(true);
+    }
   });
 
   it('should treat text input type as empty at init', () => {
