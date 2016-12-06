@@ -151,7 +151,8 @@ export class RippleRenderer {
     // If it were to run inside the Angular zone, every test that used ripples would have to be
     // either async or fakeAsync.
     this._ngZone.runOutsideAngular(() => {
-      // The ripple lasts a time equal to the sum of fade-in, transform, and fade-out (3 * fade-in time).
+      // The ripple lasts a time equal to the sum of fade-in, transform,
+      // and fade-out (3 * fade-in time).
       let rippleDuration =  fadeInSeconds * 3 * 1000;
       setTimeout(() => this.removeRippleFromDom(ripple.rippleElement), rippleDuration);
     });
