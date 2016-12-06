@@ -16,10 +16,10 @@ touch $TUNNEL_LOG
 
 cd $TUNNEL_DIR
 
-# Download the saucelabs connect binaries.
+# Download the browserstack local binaries.
 curl $TUNNEL_URL -o $TUNNEL_FILE 2> /dev/null 1> /dev/null
 
-# Extract the saucelabs connect binaries from the tarball.
+# Extract the browserstack local binaries from the tarball.
 mkdir -p browserstack-tunnel
 unzip -q $TUNNEL_FILE -d browserstack-tunnel
 
@@ -43,7 +43,7 @@ function create_ready_file {
 
   # To be able to exit the tail properly we need to have a sub shell spawned, which is
   # used to track the state of tail.
-  sleep 120 &
+  { sleep 120; touch $BROWSER_PROVIDER_ERROR_FILE; } &
 
   TIMER_PID=$!
 
@@ -56,6 +56,7 @@ function create_ready_file {
     tail -n0 -f $TUNNEL_LOG --pid $TIMER_PID | { sed '/Ctrl/q' && kill -9 $TIMER_PID; };
   } &> /dev/null
 
+  echo
   echo "BrowserStack Tunnel ready"
 
   touch $BROWSER_PROVIDER_READY_FILE
