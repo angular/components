@@ -75,10 +75,10 @@ export class MdTooltip {
   }
 
   /** The default delay in ms before showing the tooltip after show is called */
-  @Input('tooltip-show-delay') showDelay = 0;
+  @Input('tooltipShowDelay') showDelay = 0;
 
   /** The default delay in ms before hiding the tooltip after hide is called */
-  @Input('tooltip-hide-delay') hideDelay = 0;
+  @Input('tooltipHideDelay') hideDelay = 0;
 
   /** The message to be displayed in the tooltip */
   private _message: string;
