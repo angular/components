@@ -7,7 +7,7 @@ function _replaceWith(toReplaceEl: HTMLElement, otherEl: HTMLElement) {
   toReplaceEl.parentElement.replaceChild(otherEl, toReplaceEl);
 }
 
-
+/** @internal */
 @Directive({
   selector: 'dom-projection-host'
 })
@@ -16,6 +16,7 @@ export class DomProjectionHost {
 }
 
 
+/** @internal */
 @Injectable()
 export class DomProjection {
   /**
@@ -73,6 +74,7 @@ export class DomProjection {
 }
 
 
+/** @internal */
 @NgModule({
   exports: [DomProjectionHost],
   declarations: [DomProjectionHost],

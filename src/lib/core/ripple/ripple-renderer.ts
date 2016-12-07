@@ -3,7 +3,7 @@ import {
   NgZone,
 } from '@angular/core';
 
-/** TODO: internal */
+/** @internal */
 export enum ForegroundRippleState {
   NEW,
   EXPANDING,
@@ -12,7 +12,7 @@ export enum ForegroundRippleState {
 
 /**
  * Wrapper for a foreground ripple DOM element and its animation state.
- * TODO: internal
+ * @internal
  */
 export class ForegroundRipple {
   state = ForegroundRippleState.NEW;
@@ -37,7 +37,7 @@ const distanceToFurthestCorner = (x: number, y: number, rect: ClientRect) => {
  * The constructor takes a reference to the ripple directive's host element and a map of DOM
  * event handlers to be installed on the element that triggers ripple animations.
  * This will eventually become a custom renderer once Angular support exists.
- * TODO: internal
+ * @internal
  */
 export class RippleRenderer {
   private _backgroundDiv: HTMLElement;

@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 
 /**
  * Simple utility for getting the bounds of the browser viewport.
- * TODO: internal
+ * @internal
  */
 @Injectable()
 export class ViewportRuler {
