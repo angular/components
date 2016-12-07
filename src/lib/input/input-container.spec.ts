@@ -5,7 +5,7 @@ import {By} from '@angular/platform-browser';
 import {MdInputModule} from './input';
 import {MdInputContainer} from './input-container';
 import {MdPlatform} from '../core/platform/platform';
-import {MdPlatformModule} from '../core/platform/index';
+import {PlatformModule} from '../core/platform/index';
 
 
 describe('MdInputContainer', function () {
@@ -13,7 +13,7 @@ describe('MdInputContainer', function () {
     TestBed.configureTestingModule({
       imports: [
         MdInputModule.forRoot(),
-        MdPlatformModule.forRoot(),
+        PlatformModule.forRoot(),
         FormsModule,
         ReactiveFormsModule
       ],

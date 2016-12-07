@@ -3,10 +3,10 @@ import {MdPlatform} from './platform';
 
 
 @NgModule({})
-export class MdPlatformModule {
+export class PlatformModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdPlatformModule,
+      ngModule: PlatformModule,
       providers: [MdPlatform],
     };
   }
