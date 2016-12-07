@@ -215,4 +215,3 @@ class TestApp {
     this.clickCount++;
   }
 }
-

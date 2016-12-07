@@ -724,4 +724,3 @@ class CheckboxWithChangeEvent {
 class CheckboxWithFormControl {
   formControl = new FormControl();
 }
-
