@@ -24,6 +24,7 @@ import {MdError, coerceBooleanProperty} from '../core';
 import {Observable} from 'rxjs/Observable';
 import {MdPlaceholder, MdInputContainer, MdHint, MdInputDirective} from './input-container';
 import {MdTextareaAutosize} from './autosize';
+import {MdPlatformModule} from '../core/platform/index';
 
 
 const noop = () => {};
@@ -353,7 +354,11 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
     MdTextareaAutosize,
     MdInputDirective
   ],
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MdPlatformModule,
+  ],
   exports: [
     MdInput,
     MdPlaceholder,
@@ -367,7 +372,7 @@ export class MdInputModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdInputModule,
-      providers: []
+      providers: MdPlatformModule.forRoot().providers,
     };
   }
 }

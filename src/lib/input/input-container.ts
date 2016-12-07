@@ -14,7 +14,7 @@ import {
   Renderer
 } from '@angular/core';
 import {coerceBooleanProperty} from '../core';
-import {NgModel} from '@angular/forms';
+import {NgControl} from '@angular/forms';
 import {MdFeatureDetector} from '../core/platform/feature-detector';
 import {
   MdInputContainerUnsupportedTypeError,
@@ -136,12 +136,12 @@ export class MdInputDirective implements AfterContentInit {
   constructor(private _featureDetector: MdFeatureDetector,
               private _elementRef: ElementRef,
               private _renderer: Renderer,
-              @Optional() private _ngModel: NgModel) {
+              @Optional() private _ngControl: NgControl) {
     // Force setter to be called in case id was not specified.
     this.id = this.id;
 
-    if (this._ngModel) {
-      this._ngModel.valueChanges.subscribe((value) => {
+    if (this._ngControl) {
+      this._ngControl.valueChanges.subscribe((value) => {
         this.value = value;
       });
     }
