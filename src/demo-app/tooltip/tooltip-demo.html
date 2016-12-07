@@ -6,7 +6,9 @@
         md-raised-button
         color="primary"
         [md-tooltip]="message"
-        [tooltip-position]="position">
+        [tooltip-position]="position"
+        [tooltip-show-delay]="showDelay"
+        [tooltip-hide-delay]="hideDelay">
       Mouse over to see the tooltip
     </button>
   </p>
@@ -27,11 +29,21 @@
     <md-input type="text" [(ngModel)]="message"></md-input>
   </p>
 
+  <p>
+    <strong>Show Delay (ms): </strong>
+    <md-input type="text" [(ngModel)]="showDelay"></md-input>
+  </p>
+
+  <p>
+    <strong>Hide Delay (ms): </strong>
+    <md-input type="text" [(ngModel)]="hideDelay"></md-input>
+  </p>
+
   <strong>Mouse over to</strong>
   <button md-raised-button color="primary" (mouseenter)="tooltip.show()">
     Show tooltip
   </button>
-  <button md-raised-button color="primary" (mouseenter)="tooltip.hide(0)">
+  <button md-raised-button color="primary" (mouseenter)="tooltip.hide()">
     Hide tooltip
   </button>
   <button md-raised-button color="primary" (mouseenter)="tooltip.toggle()">
