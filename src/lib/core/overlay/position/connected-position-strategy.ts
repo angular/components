@@ -76,7 +76,9 @@ export class ConnectedPositionStrategy implements PositionStrategy {
 
     // We use the viewport rect to determine whether a position would go off-screen.
     const viewportRect = this._viewportRuler.getViewportRect();
-    let attemptedPositions: OverlayPoint[] = [];
+
+    // Fallback point if none of the fallbacks fit into the viewport.
+    let fallbackPoint: OverlayPoint = null;
 
     // We want to place the overlay in the first of the preferred positions such that the
     // overlay fits on-screen.
@@ -91,17 +93,14 @@ export class ConnectedPositionStrategy implements PositionStrategy {
         this._setElementPosition(element, overlayPoint);
         this._onPositionChange.next(new ConnectedOverlayPositionChange(pos));
         return Promise.resolve(null);
-      } else {
-        attemptedPositions.push(overlayPoint);
+      } else if (!fallbackPoint || fallbackPoint.visibleArea < overlayPoint.visibleArea) {
+        fallbackPoint = overlayPoint;
       }
     }
 
-    // If none of the preferred positions were in the viewport, rank them based on the
-    // visible area that the element would have at that position and take the one with
-    // largest visible area.
-    this._setElementPosition(element, attemptedPositions.sort((a, b) => {
-      return a.visibleArea - b.visibleArea;
-    }).pop());
+    // If none of the preferred positions were in the viewport, take the one
+    // with the largest visible area.
+    this._setElementPosition(element, fallbackPoint);
 
     return Promise.resolve(null);
   }
