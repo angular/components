@@ -3,6 +3,7 @@ import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdButtonModule} from './button';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+import {FakeViewportRuler} from '../core/overlay/position/fake-viewport-ruler';
 
 
 describe('MdButton', () => {
@@ -215,14 +216,3 @@ class TestApp {
   }
 }
 
-class FakeViewportRuler {
-  getViewportRect() {
-    return {
-      left: 0, top: 0, width: 1014, height: 686, bottom: 686, right: 1014
-    };
-  }
-
-  getViewportScrollPosition() {
-    return {top: 0, left: 0};
-  }
-}
