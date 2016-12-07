@@ -17,13 +17,13 @@ import {coerceBooleanProperty} from '../core';
 import {NgModel} from '@angular/forms';
 import {MdFeatureDetector} from '../core/platform/feature-detector';
 import {
-  MdInputWrapperUnsupportedTypeError,
-  MdInputWrapperPlaceholderConflictError,
-  MdInputWrapperDuplicatedHintError
-} from './input-wrapper-errors';
+  MdInputContainerUnsupportedTypeError,
+  MdInputContainerPlaceholderConflictError,
+  MdInputContainerDuplicatedHintError
+} from './input-container-errors';
 
 
-// Invalid input type. Using one of these will throw an MdInputWrapperUnsupportedTypeError.
+// Invalid input type. Using one of these will throw an MdInputContainerUnsupportedTypeError.
 const MD_INPUT_INVALID_TYPES = [
   'button',
   'checkbox',
@@ -65,7 +65,7 @@ export class MdHint {
 }
 
 
-/** The input directive, used to mark the input that `MdInputWrapper` is wrapping. */
+/** The input directive, used to mark the input that `MdInputContainer` is wrapping. */
 @Directive({
   selector: 'input[md-input], textarea[md-input]',
   host: {
@@ -112,7 +112,9 @@ export class MdInputDirective implements AfterContentInit {
 
   value: any;
 
-  /** Emits an event when the placeholder changes so that the `md-input-wrapper` can re-validate. */
+  /**
+   * Emits an event when the placeholder changes so that the `md-input-container` can re-validate.
+   */
   @Output() _placeholderChange = new EventEmitter<string>();
 
   get empty() { return (this.value == null || this.value == '') && !this._isNeverEmpty(); }
@@ -155,7 +157,7 @@ export class MdInputDirective implements AfterContentInit {
   /** Make sure the input is a supported type. */
   private _validateType() {
     if (MD_INPUT_INVALID_TYPES.indexOf(this._type) != -1) {
-      throw new MdInputWrapperUnsupportedTypeError(this._type);
+      throw new MdInputContainerUnsupportedTypeError(this._type);
     }
   }
 
@@ -175,9 +177,9 @@ export class MdInputDirective implements AfterContentInit {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-input-wrapper',
-  templateUrl: 'input-wrapper.html',
-  styleUrls: ['input.css', 'input-wrapper.css'],
+  selector: 'md-input-container',
+  templateUrl: 'input-container.html',
+  styleUrls: ['input.css', 'input-container.css'],
   host: {
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
@@ -185,7 +187,7 @@ export class MdInputDirective implements AfterContentInit {
   },
   encapsulation: ViewEncapsulation.None,
 })
-export class MdInputWrapper implements AfterContentInit {
+export class MdInputContainer implements AfterContentInit {
   @Input() align: 'start' | 'end' = 'start';
 
   @Input() dividerColor: 'primary' | 'accent' | 'warn' = 'primary';
@@ -233,7 +235,7 @@ export class MdInputWrapper implements AfterContentInit {
    */
   private _validatePlaceholders() {
     if (this._mdInputChild.placeholder && this._placeholderChild) {
-      throw new MdInputWrapperPlaceholderConflictError();
+      throw new MdInputContainerPlaceholderConflictError();
     }
   }
 
@@ -248,12 +250,12 @@ export class MdInputWrapper implements AfterContentInit {
       this._hintChildren.forEach((hint: MdHint) => {
         if (hint.align == 'start') {
           if (startHint || this.hintLabel) {
-            throw new MdInputWrapperDuplicatedHintError('start');
+            throw new MdInputContainerDuplicatedHintError('start');
           }
           startHint = hint;
         } else if (hint.align == 'end') {
           if (endHint) {
-            throw new MdInputWrapperDuplicatedHintError('end');
+            throw new MdInputContainerDuplicatedHintError('end');
           }
           endHint = hint;
         }

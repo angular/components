@@ -3,12 +3,12 @@ import {Component} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {MdInputModule} from './input';
-import {MdInputWrapper} from './input-wrapper';
+import {MdInputContainer} from './input-container';
 import {MdPlatform} from '../core/platform/platform';
 import {MdPlatformModule} from '../core/platform/index';
 
 
-describe('MdInputWrapper', function () {
+describe('MdInputContainer', function () {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -18,23 +18,23 @@ describe('MdInputWrapper', function () {
         ReactiveFormsModule
       ],
       declarations: [
-        MdInputWrapperPlaceholderRequiredTestComponent,
-        MdInputWrapperPlaceholderElementTestComponent,
-        MdInputWrapperPlaceholderAttrTestComponent,
-        MdInputWrapperHintLabel2TestController,
-        MdInputWrapperHintLabelTestController,
-        MdInputWrapperInvalidTypeTestController,
-        MdInputWrapperInvalidPlaceholderTestController,
-        MdInputWrapperInvalidHint2TestController,
-        MdInputWrapperInvalidHintTestController,
-        MdInputWrapperBaseTestController,
-        MdInputWrapperWithId,
-        MdInputWrapperDateTestController,
-        MdInputWrapperTextTestController,
-        MdInputWrapperPasswordTestController,
-        MdInputWrapperNumberTestController,
+        MdInputContainerPlaceholderRequiredTestComponent,
+        MdInputContainerPlaceholderElementTestComponent,
+        MdInputContainerPlaceholderAttrTestComponent,
+        MdInputContainerHintLabel2TestController,
+        MdInputContainerHintLabelTestController,
+        MdInputContainerInvalidTypeTestController,
+        MdInputContainerInvalidPlaceholderTestController,
+        MdInputContainerInvalidHint2TestController,
+        MdInputContainerInvalidHintTestController,
+        MdInputContainerBaseTestController,
+        MdInputContainerWithId,
+        MdInputContainerDateTestController,
+        MdInputContainerTextTestController,
+        MdInputContainerPasswordTestController,
+        MdInputContainerNumberTestController,
         MdTextareaWithBindings,
-        MdInputWrapperWithDisabled,
+        MdInputContainerWithDisabled,
       ],
     });
 
@@ -42,19 +42,19 @@ describe('MdInputWrapper', function () {
   }));
 
   it('should default to floating placeholders', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperBaseTestController);
+    let fixture = TestBed.createComponent(MdInputContainerBaseTestController);
     fixture.detectChanges();
 
-    let mdInputWrapper = fixture.debugElement.query(By.directive(MdInputWrapper))
-        .componentInstance as MdInputWrapper;
-    expect(mdInputWrapper.floatingPlaceholder)
-        .toBe(true, 'Expected MdInputWrapper to default to having floating placeholders turned on');
+    let inputContainer = fixture.debugElement.query(By.directive(MdInputContainer))
+        .componentInstance as MdInputContainer;
+    expect(inputContainer.floatingPlaceholder).toBe(true,
+        'Expected MdInputContainer to default to having floating placeholders turned on');
   });
 
   it('should not be treated as empty if type is date',
       inject([MdPlatform], (platform: MdPlatform) => {
         if (!(platform.TRIDENT || platform.FIREFOX)) {
-          let fixture = TestBed.createComponent(MdInputWrapperDateTestController);
+          let fixture = TestBed.createComponent(MdInputContainerDateTestController);
           fixture.detectChanges();
 
           let el = fixture.debugElement.query(By.css('label')).nativeElement;
@@ -67,7 +67,7 @@ describe('MdInputWrapper', function () {
   it('should be treated as empty if type is date on Firefox and IE',
       inject([MdPlatform], (platform: MdPlatform) => {
         if (platform.TRIDENT || platform.FIREFOX) {
-          let fixture = TestBed.createComponent(MdInputWrapperDateTestController);
+          let fixture = TestBed.createComponent(MdInputContainerDateTestController);
           fixture.detectChanges();
 
           let el = fixture.debugElement.query(By.css('label')).nativeElement;
@@ -77,7 +77,7 @@ describe('MdInputWrapper', function () {
       }));
 
   it('should treat text input type as empty at init', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperTextTestController);
+    let fixture = TestBed.createComponent(MdInputContainerTextTestController);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
@@ -86,7 +86,7 @@ describe('MdInputWrapper', function () {
   });
 
   it('should treat password input type as empty at init', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperPasswordTestController);
+    let fixture = TestBed.createComponent(MdInputContainerPasswordTestController);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
@@ -95,7 +95,7 @@ describe('MdInputWrapper', function () {
   });
 
   it('should treat number input type as empty at init', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperNumberTestController);
+    let fixture = TestBed.createComponent(MdInputContainerNumberTestController);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
@@ -104,7 +104,7 @@ describe('MdInputWrapper', function () {
   });
 
   it('should not be empty after input entered', async(() => {
-    let fixture = TestBed.createComponent(MdInputWrapperTextTestController);
+    let fixture = TestBed.createComponent(MdInputContainerTextTestController);
     fixture.detectChanges();
 
     let inputEl = fixture.debugElement.query(By.css('input'));
@@ -122,7 +122,7 @@ describe('MdInputWrapper', function () {
   }));
 
   it('should add id', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperTextTestController);
+    let fixture = TestBed.createComponent(MdInputContainerTextTestController);
     fixture.detectChanges();
 
     const inputElement: HTMLInputElement =
@@ -135,7 +135,7 @@ describe('MdInputWrapper', function () {
   });
 
   it('should not overwrite existing id', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperWithId);
+    let fixture = TestBed.createComponent(MdInputContainerWithId);
     fixture.detectChanges();
 
     const inputElement: HTMLInputElement =
@@ -148,42 +148,42 @@ describe('MdInputWrapper', function () {
   });
 
   it('validates there\'s only one hint label per side', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperInvalidHintTestController);
+    let fixture = TestBed.createComponent(MdInputContainerInvalidHintTestController);
 
     expect(() => fixture.detectChanges()).toThrow();
-    // TODO(jelbourn): .toThrow(new MdInputWrapperDuplicatedHintError('start'));
+    // TODO(jelbourn): .toThrow(new MdInputContainerDuplicatedHintError('start'));
     // See https://github.com/angular/angular/issues/8348
   });
 
   it('validates there\'s only one hint label per side (attribute)', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperInvalidHint2TestController);
+    let fixture = TestBed.createComponent(MdInputContainerInvalidHint2TestController);
 
     expect(() => fixture.detectChanges()).toThrow();
-    // TODO(jelbourn): .toThrow(new MdInputWrapperDuplicatedHintError('start'));
+    // TODO(jelbourn): .toThrow(new MdInputContainerDuplicatedHintError('start'));
     // See https://github.com/angular/angular/issues/8348
   });
 
   it('validates there\'s only one placeholder', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperInvalidPlaceholderTestController);
+    let fixture = TestBed.createComponent(MdInputContainerInvalidPlaceholderTestController);
 
     expect(() => fixture.detectChanges()).toThrow();
-    // TODO(jelbourn): .toThrow(new MdInputWrapperPlaceholderConflictError());
+    // TODO(jelbourn): .toThrow(new MdInputContainerPlaceholderConflictError());
     // See https://github.com/angular/angular/issues/8348
   });
 
   it('validates the type', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperInvalidTypeTestController);
+    let fixture = TestBed.createComponent(MdInputContainerInvalidTypeTestController);
 
     // Technically this throws during the OnChanges detection phase,
     // so the error is really a ChangeDetectionError and it becomes
     // hard to build a full exception to compare with.
     // We just check for any exception in this case.
     expect(() => fixture.detectChanges()).toThrow(
-        /* new MdInputWrapperUnsupportedTypeError('file') */);
+        /* new MdInputContainerUnsupportedTypeError('file') */);
   });
 
   it('supports hint labels attribute', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperHintLabelTestController);
+    let fixture = TestBed.createComponent(MdInputContainerHintLabelTestController);
     fixture.detectChanges();
 
     // If the hint label is empty, expect no label.
@@ -195,7 +195,7 @@ describe('MdInputWrapper', function () {
   });
 
   it('supports hint labels elements', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperHintLabel2TestController);
+    let fixture = TestBed.createComponent(MdInputContainerHintLabel2TestController);
     fixture.detectChanges();
 
     // In this case, we should have an empty <md-hint>.
@@ -209,7 +209,7 @@ describe('MdInputWrapper', function () {
   });
 
   it('supports placeholder attribute', async(() => {
-    let fixture = TestBed.createComponent(MdInputWrapperPlaceholderAttrTestComponent);
+    let fixture = TestBed.createComponent(MdInputContainerPlaceholderAttrTestComponent);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label'));
@@ -225,7 +225,7 @@ describe('MdInputWrapper', function () {
   }));
 
   it('supports placeholder element', async(() => {
-    let fixture = TestBed.createComponent(MdInputWrapperPlaceholderElementTestComponent);
+    let fixture = TestBed.createComponent(MdInputContainerPlaceholderElementTestComponent);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label'));
@@ -242,7 +242,7 @@ describe('MdInputWrapper', function () {
   }));
 
   it('supports placeholder required star', () => {
-    let fixture = TestBed.createComponent(MdInputWrapperPlaceholderRequiredTestComponent);
+    let fixture = TestBed.createComponent(MdInputContainerPlaceholderRequiredTestComponent);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label'));
@@ -251,7 +251,7 @@ describe('MdInputWrapper', function () {
   });
 
   it('supports the disabled attribute', async(() => {
-    let fixture = TestBed.createComponent(MdInputWrapperWithDisabled);
+    let fixture = TestBed.createComponent(MdInputContainerWithDisabled);
     fixture.detectChanges();
 
     let underlineEl = fixture.debugElement.query(By.css('.md-input-underline')).nativeElement;
@@ -272,131 +272,134 @@ describe('MdInputWrapper', function () {
 });
 
 @Component({
-  template: `<md-input-wrapper><input md-input id="test-id" placeholder="test"></md-input-wrapper>`
+  template: `
+    <md-input-container>
+      <input md-input id="test-id" placeholder="test">
+    </md-input-container>`
 })
-class MdInputWrapperWithId {}
+class MdInputContainerWithId {}
 
 @Component({
-  template: `<md-input-wrapper><input md-input [disabled]="disabled"></md-input-wrapper>`
+  template: `<md-input-container><input md-input [disabled]="disabled"></md-input-container>`
 })
-class MdInputWrapperWithDisabled {
+class MdInputContainerWithDisabled {
   disabled: boolean;
 }
 
 @Component({
-  template: `<md-input-wrapper><input md-input required placeholder="hello"></md-input-wrapper>`
+  template: `<md-input-container><input md-input required placeholder="hello"></md-input-container>`
 })
-class MdInputWrapperPlaceholderRequiredTestComponent {}
+class MdInputContainerPlaceholderRequiredTestComponent {}
 
 @Component({
   template: `
-    <md-input-wrapper>
+    <md-input-container>
       <input md-input>
       <md-placeholder>{{placeholder}}</md-placeholder>
-    </md-input-wrapper>`
+    </md-input-container>`
 })
-class MdInputWrapperPlaceholderElementTestComponent {
+class MdInputContainerPlaceholderElementTestComponent {
   placeholder: string = 'Default Placeholder';
 }
 
 @Component({
-  template: `<md-input-wrapper><input md-input [placeholder]="placeholder"></md-input-wrapper>`
+  template: `<md-input-container><input md-input [placeholder]="placeholder"></md-input-container>`
 })
-class MdInputWrapperPlaceholderAttrTestComponent {
+class MdInputContainerPlaceholderAttrTestComponent {
   placeholder: string = '';
 }
 
 @Component({
-  template: `<md-input-wrapper><input md-input><md-hint>{{label}}</md-hint></md-input-wrapper>`
+  template: `<md-input-container><input md-input><md-hint>{{label}}</md-hint></md-input-container>`
 })
-class MdInputWrapperHintLabel2TestController {
+class MdInputContainerHintLabel2TestController {
   label: string = '';
 }
 
 @Component({
-  template: `<md-input-wrapper [hintLabel]="label"><input md-input></md-input-wrapper>`
+  template: `<md-input-container [hintLabel]="label"><input md-input></md-input-container>`
 })
-class MdInputWrapperHintLabelTestController {
+class MdInputContainerHintLabelTestController {
   label: string = '';
 }
 
 @Component({
-  template: `<md-input-wrapper><input md-input type="file"></md-input-wrapper>`
+  template: `<md-input-container><input md-input type="file"></md-input-container>`
 })
-class MdInputWrapperInvalidTypeTestController {}
+class MdInputContainerInvalidTypeTestController {}
 
 @Component({
   template: `
-    <md-input-wrapper>
+    <md-input-container>
       <input md-input placeholder="Hello">
       <md-placeholder>World</md-placeholder>
-    </md-input-wrapper>`
+    </md-input-container>`
 })
-class MdInputWrapperInvalidPlaceholderTestController {}
+class MdInputContainerInvalidPlaceholderTestController {}
 
 @Component({
   template: `
-    <md-input-wrapper hintLabel="Hello">
+    <md-input-container hintLabel="Hello">
       <input md-input>
       <md-hint>World</md-hint>
-    </md-input-wrapper>`
+    </md-input-container>`
 })
-class MdInputWrapperInvalidHint2TestController {}
+class MdInputContainerInvalidHint2TestController {}
 
 @Component({
   template: `
-    <md-input-wrapper>
+    <md-input-container>
       <input md-input>
       <md-hint>Hello</md-hint>
       <md-hint>World</md-hint>
-    </md-input-wrapper>`
+    </md-input-container>`
 })
-class MdInputWrapperInvalidHintTestController {}
+class MdInputContainerInvalidHintTestController {}
 
 @Component({
-  template: `<md-input-wrapper><input md-input [(ngModel)]="model"></md-input-wrapper>`
+  template: `<md-input-container><input md-input [(ngModel)]="model"></md-input-container>`
 })
-class MdInputWrapperBaseTestController {
+class MdInputContainerBaseTestController {
   model: any = '';
 }
 
 @Component({
   template: `
-    <md-input-wrapper>
+    <md-input-container>
       <input md-input type="date" placeholder="Placeholder">
-    </md-input-wrapper>`
+    </md-input-container>`
 })
-class MdInputWrapperDateTestController {}
+class MdInputContainerDateTestController {}
 
 @Component({
   template: `
-    <md-input-wrapper>
+    <md-input-container>
       <input md-input type="text" placeholder="Placeholder">
-    </md-input-wrapper>`
+    </md-input-container>`
 })
-class MdInputWrapperTextTestController {}
+class MdInputContainerTextTestController {}
 
 @Component({
   template: `
-    <md-input-wrapper>
+    <md-input-container>
       <input md-input type="password" placeholder="Placeholder">
-    </md-input-wrapper>`
+    </md-input-container>`
 })
-class MdInputWrapperPasswordTestController {}
+class MdInputContainerPasswordTestController {}
 
 @Component({
   template: `
-    <md-input-wrapper>
+    <md-input-container>
       <input md-input type="number" placeholder="Placeholder">
-    </md-input-wrapper>`
+    </md-input-container>`
 })
-class MdInputWrapperNumberTestController {}
+class MdInputContainerNumberTestController {}
 
 @Component({
   template: `
-    <md-input-wrapper>
+    <md-input-container>
       <textarea md-input [rows]="rows" [cols]="cols" [wrap]="wrap" placeholder="Snacks"></textarea>
-    </md-input-wrapper>`
+    </md-input-container>`
 })
 class MdTextareaWithBindings {
   rows: number = 4;

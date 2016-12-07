@@ -31,7 +31,7 @@ export class DemoApp {
     {name: 'Grid List', route: 'grid-list'},
     {name: 'Icon', route: 'icon'},
     {name: 'Input', route: 'input'},
-    {name: 'Input Wrapper', route: 'input-wrapper'},
+    {name: 'Input Container', route: 'input-container'},
     {name: 'List', route: 'list'},
     {name: 'Menu', route: 'menu'},
     {name: 'Live Announcer', route: 'live-announcer'},

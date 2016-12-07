@@ -5,11 +5,11 @@ let max = 5;
 
 @Component({
   moduleId: module.id,
-  selector: 'input-wrapper-demo',
-  templateUrl: 'input-wrapper-demo.html',
+  selector: 'input-container-demo',
+  templateUrl: 'input-container-demo.html',
   styleUrls: ['input-demo.css'],
 })
-export class InputWrapperDemo {
+export class InputContainerDemo {
   dividerColor: boolean;
   requiredField: boolean;
   floatingLabel: boolean;
