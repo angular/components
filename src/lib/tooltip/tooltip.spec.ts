@@ -105,33 +105,29 @@ describe('MdTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
     }));
 
-    it('should not show tooltip if message is not present or empty', fakeAsync(() => {
+    it('should not show tooltip if message is not present or empty', () => {
       expect(tooltipDirective._tooltipInstance).toBeUndefined();
 
       tooltipDirective.message = undefined;
       fixture.detectChanges();
       tooltipDirective.show();
-      tick(0); // Tick for the show delay (default is 0)
       expect(tooltipDirective._tooltipInstance).toBeUndefined();
 
       tooltipDirective.message = null;
       fixture.detectChanges();
       tooltipDirective.show();
-      tick(0); // Tick for the show delay (default is 0)
       expect(tooltipDirective._tooltipInstance).toBeUndefined();
 
       tooltipDirective.message = '';
       fixture.detectChanges();
       tooltipDirective.show();
-      tick(0); // Tick for the show delay (default is 0)
       expect(tooltipDirective._tooltipInstance).toBeUndefined();
 
       tooltipDirective.message = '   ';
       fixture.detectChanges();
       tooltipDirective.show();
-      tick(0); // Tick for the show delay (default is 0)
       expect(tooltipDirective._tooltipInstance).toBeUndefined();
-    }));
+    });
 
     it('should not follow through with hide if show is called after', fakeAsync(() => {
       tooltipDirective.show();
