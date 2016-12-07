@@ -103,8 +103,8 @@ export class MdTooltip {
     }
   }
 
-  /** Shows the tooltip after the provided delay in ms */
-  show(delay = this.showDelay): void {
+  /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
+  show(delay: number = this.showDelay): void {
     if (!this._message || !this._message.trim()) { return; }
 
     if (!this._tooltipInstance) {
@@ -115,8 +115,8 @@ export class MdTooltip {
     this._tooltipInstance.show(this._position, delay);
   }
 
-  /** Hides the tooltip after the provided delay in ms. */
-  hide(delay = this.hideDelay): void {
+  /** Hides the tooltip after the delay in ms, defaults to tooltip-delay-hide or 0ms if no input */
+  hide(delay: number = this.hideDelay): void {
     if (this._tooltipInstance) {
       this._tooltipInstance.hide(delay);
     }
