@@ -5,13 +5,13 @@ import {
   NgZone,
   QueryList,
   ElementRef,
-  Renderer, ViewEncapsulation, ContentChildren, Output, EventEmitter, Optional, OnInit
+  ViewEncapsulation, ContentChildren, Output, EventEmitter, Optional
 } from '@angular/core';
 import {RIGHT_ARROW, LEFT_ARROW, ENTER, Dir, LayoutDirection} from '../core';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdInkBar} from './ink-bar';
 import 'rxjs/add/operator/map';
-import {applyCssTransform} from "../core/style/apply-transform";
+import {applyCssTransform} from '../core/style/apply-transform';
 
 /**
  * The directions that scrolling can go in when the header's tabs exceed the header width. 'After'
