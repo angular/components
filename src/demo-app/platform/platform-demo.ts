@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MdFeatureDetector, MdPlatform} from '@angular/material';
+import {MdPlatform, getSupportedInputTypes} from '@angular/material';
 
 
 @Component({
@@ -8,5 +8,7 @@ import {MdFeatureDetector, MdPlatform} from '@angular/material';
   templateUrl: 'platform-demo.html',
 })
 export class PlatformDemo {
-  constructor(public feature: MdFeatureDetector, public platform: MdPlatform) {}
+  supportedInputTypes = getSupportedInputTypes();
+
+  constructor(public platform: MdPlatform) {}
 }

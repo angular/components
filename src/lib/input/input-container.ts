@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import {coerceBooleanProperty} from '../core';
 import {NgControl} from '@angular/forms';
-import {MdFeatureDetector} from '../core/platform/feature-detector';
+import {getSupportedInputTypes} from '../core/platform/features';
 import {
   MdInputContainerUnsupportedTypeError,
   MdInputContainerPlaceholderConflictError,
@@ -131,10 +131,9 @@ export class MdInputDirective implements AfterContentInit {
     'month',
     'time',
     'week'
-  ].filter(t => this._featureDetector.supportedInputTypes.has(t));
+  ].filter(t => getSupportedInputTypes().has(t));
 
-  constructor(private _featureDetector: MdFeatureDetector,
-              private _elementRef: ElementRef,
+  constructor(private _elementRef: ElementRef,
               private _renderer: Renderer,
               @Optional() private _ngControl: NgControl) {
     // Force setter to be called in case id was not specified.
