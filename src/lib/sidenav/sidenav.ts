@@ -140,6 +140,14 @@ export class MdSidenav implements AfterContentInit {
    *     If not available we do not hook on transitions.
    */
   constructor(private _elementRef: ElementRef, private _renderer: Renderer) {
+    this.onOpen.subscribe(() => {
+      this._elementFocusedBeforeSidenavWasOpened = document.activeElement as HTMLElement;
+
+      if (!this.isFocusTrapDisabled) {
+        this._focusTrap.focusFirstTabbableElementWhenReady();
+      }
+    });
+
     this.onClose.subscribe(() => {
       if (this._elementFocusedBeforeSidenavWasOpened instanceof HTMLElement) {
         this._renderer.invokeElementMethod(this._elementFocusedBeforeSidenavWasOpened, 'focus');
@@ -207,11 +215,6 @@ export class MdSidenav implements AfterContentInit {
       this.onOpenStart.emit();
     } else {
       this.onCloseStart.emit();
-    }
-
-    if (!this.isFocusTrapDisabled) {
-      this._elementFocusedBeforeSidenavWasOpened = document.activeElement as HTMLElement;
-      this._focusTrap.focusFirstTabbableElementWhenReady();
     }
 
     if (this._toggleAnimationPromise) {
