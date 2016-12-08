@@ -58,17 +58,6 @@ export class MdDialog {
   }
 
   /**
-   * Closes the top dialog
-   */
-  closeTop(): void {
-    let dialogs = this._openDialogs.length;
-
-    if (dialogs) {
-      this._openDialogs[dialogs - 1].close();
-    }
-  }
-
-  /**
    * Creates the overlay into which the dialog will be loaded.
    * @param dialogConfig The dialog configuration.
    * @returns A promise resolving to the OverlayRef for the created overlay.

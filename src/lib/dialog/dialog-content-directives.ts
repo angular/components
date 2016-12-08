@@ -1,5 +1,5 @@
 import {Directive} from '@angular/core';
-import {MdDialog} from './dialog';
+import {MdDialogRef} from './dialog-ref';
 
 
 /**
@@ -8,11 +8,11 @@ import {MdDialog} from './dialog';
 @Directive({
   selector: 'button[md-dialog-close], button[mat-dialog-close]',
   host: {
-    '(click)': 'dialog.closeTop()'
+    '(click)': 'dialogRef.close()'
   }
 })
 export class MdDialogClose {
-  constructor(public dialog: MdDialog) { }
+  constructor(public dialogRef: MdDialogRef<any>) { }
 }
 
 /**

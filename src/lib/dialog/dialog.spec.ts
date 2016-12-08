@@ -227,21 +227,6 @@ describe('MdDialog', () => {
     expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(0);
   });
 
-  it('should close the top dialog', () => {
-    dialog.open(PizzaMsg);
-    dialog.open(PizzaMsg);
-
-    expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(2);
-
-    dialog.closeTop();
-
-    expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(1);
-
-    dialog.closeTop();
-
-    expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(0);
-  });
-
   describe('disableClose option', () => {
     it('should prevent closing via clicks on the backdrop', () => {
       dialog.open(PizzaMsg, {
