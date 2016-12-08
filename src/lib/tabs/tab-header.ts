@@ -64,10 +64,10 @@ export class MdTabHeader {
   _showPaginationControls = false;
 
   /** Whether the tab list can be scrolled more towards the end of the tab label list. */
-  private _disableScrollAfter = true;
+  _disableScrollAfter = true;
 
   /** Whether the tab list can be scrolled more towards the beginning of the tab label list. */
-  private _disableScrollBefore = true;
+  _disableScrollBefore = true;
 
   /**
    * The number of tab labels that are displayed on the header. When this changes, the header
@@ -136,7 +136,7 @@ export class MdTabHeader {
     });
   }
 
-  private _handleKeydown(event: KeyboardEvent) {
+  _handleKeydown(event: KeyboardEvent) {
     switch (event.keyCode) {
       case RIGHT_ARROW:
         this._focusNextTab();
