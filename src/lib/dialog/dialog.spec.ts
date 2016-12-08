@@ -343,16 +343,6 @@ describe('MdDialog', () => {
       expect(button.getAttribute('aria-label')).toBe('Best close button ever');
     });
 
-    it('should add a role to the dialog title', () => {
-      let header = overlayContainerElement.querySelector('[md-dialog-title]');
-      expect(header.getAttribute('role')).toBe('heading');
-    });
-
-    it('should add a role to the dialog content', () => {
-      let content = overlayContainerElement.querySelector('md-dialog-content');
-      expect(content.getAttribute('role')).toBe('main');
-    });
-
   });
 });
 
