@@ -46,14 +46,14 @@ let nextUniqueId = 0;
  * complex placeholders.
  */
 @Directive({
-  selector: 'md-placeholder'
+  selector: 'md-placeholder, mat-placeholder'
 })
 export class MdPlaceholder {}
 
 
 /** The hint directive, used to tag content as hint labels (going under the input). */
 @Directive({
-  selector: 'md-hint',
+  selector: 'md-hint, mat-hint',
   host: {
     'class': 'md-hint',
     '[class.md-right]': 'align == "end"',
@@ -67,7 +67,7 @@ export class MdHint {
 
 /** The input directive, used to mark the input that `MdInputContainer` is wrapping. */
 @Directive({
-  selector: 'input[md-input], textarea[md-input]',
+  selector: 'input[md-input], textarea[md-input], input[mat-input], textarea[mat-input]',
   host: {
     'class': 'md-input-element',
     '[id]': 'id',
@@ -153,6 +153,12 @@ export class MdInputDirective implements AfterContentInit {
   /** Focus the input element. */
   focus() { this._renderer.invokeElementMethod(this._elementRef.nativeElement, 'focus'); }
 
+  _onFocus() { this.focused = true; }
+
+  _onBlur() { this.focused = false; }
+
+  _onInput() { this.value = this._elementRef.nativeElement.value; }
+
   /** Make sure the input is a supported type. */
   private _validateType() {
     if (MD_INPUT_INVALID_TYPES.indexOf(this._type) != -1) {
@@ -161,12 +167,6 @@ export class MdInputDirective implements AfterContentInit {
   }
 
   private _isNeverEmpty() { return this._neverEmptyInputTypes.indexOf(this._type) != -1; }
-
-  private _onFocus() { this.focused = true; }
-
-  private _onBlur() { this.focused = false; }
-
-  private _onInput() { this.value = this._elementRef.nativeElement.value; }
 }
 
 
@@ -176,7 +176,7 @@ export class MdInputDirective implements AfterContentInit {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-input-container',
+  selector: 'md-input-container, mat-input-container',
   templateUrl: 'input-container.html',
   styleUrls: ['input.css', 'input-container.css'],
   host: {
@@ -228,6 +228,8 @@ export class MdInputContainer implements AfterContentInit {
     return !!this._mdInputChild.placeholder || !!this._placeholderChild;
   }
 
+  _focusInput() { this._mdInputChild.focus(); }
+
   /**
    * Ensure that there is only one placeholder (either `input` attribute or child element with the
    * `md-placeholder` attribute.
@@ -261,6 +263,4 @@ export class MdInputContainer implements AfterContentInit {
       });
     }
   }
-
-  private _focusInput() { this._mdInputChild.focus(); }
 }
