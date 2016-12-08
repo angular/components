@@ -9,6 +9,8 @@ import {
   OverlayModule,
 } from '../core';
 export * from './select';
+export * from './select-animations';
+export * from './option';
 
 
 @NgModule({

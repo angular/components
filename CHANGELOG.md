@@ -1,4 +1,4 @@
-<a name="2.0.0-alpha.11"></a>
+<a name="2.0.0-alpha.11-1"></a>
 # [2.0.0-alpha.11 polyester-golem](https://github.com/angular/material2/compare/2.0.0-alpha.9...2.0.0-alpha.11) (2016-12-08)
 
 
