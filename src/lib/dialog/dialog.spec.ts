@@ -311,41 +311,48 @@ describe('MdDialog', () => {
   });
 
   describe('dialog content elements', () => {
-    let fixture: ComponentFixture<ContentElementDialog>;
-    let dialogElement: HTMLElement;
+    let dialogRef: MdDialogRef<ContentElementDialog>;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(ContentElementDialog);
-      dialogElement = fixture.debugElement.nativeElement;
-      dialog.open(ContentElementDialog);
-      fixture.detectChanges();
+      dialogRef = dialog.open(ContentElementDialog);
+      viewContainerFixture.detectChanges();
     });
 
-    it('close the dialog when clicking on the close button', () => {
+    it('should close the dialog when clicking on the close button', () => {
       expect(overlayContainerElement.querySelectorAll('.md-dialog-container').length).toBe(1);
 
-      (dialogElement.querySelector('button[md-dialog-close]') as HTMLElement).click();
+      (overlayContainerElement.querySelector('button[md-dialog-close]') as HTMLElement).click();
 
       expect(overlayContainerElement.querySelectorAll('.md-dialog-container').length).toBe(0);
     });
 
-    it('close not close the dialog if [md-dialog-close] is applied on a non-button node', () => {
+    it('should not close the dialog if [md-dialog-close] is applied on a non-button node', () => {
       expect(overlayContainerElement.querySelectorAll('.md-dialog-container').length).toBe(1);
 
-      (dialogElement.querySelector('div[md-dialog-close]') as HTMLElement).click();
+      (overlayContainerElement.querySelector('div[md-dialog-close]') as HTMLElement).click();
 
       expect(overlayContainerElement.querySelectorAll('.md-dialog-container').length).toBe(1);
     });
 
+    it('should allow for a user-specified aria-label on the close button', () => {
+      let button = overlayContainerElement.querySelector('button[md-dialog-close]');
+
+      dialogRef.componentInstance.closeButtonAriaLabel = 'Best close button ever';
+      viewContainerFixture.detectChanges();
+
+      expect(button.getAttribute('aria-label')).toBe('Best close button ever');
+    });
+
     it('should add a role to the dialog title', () => {
-      let header = dialogElement.querySelector('[md-dialog-title]');
+      let header = overlayContainerElement.querySelector('[md-dialog-title]');
       expect(header.getAttribute('role')).toBe('heading');
     });
 
     it('should add a role to the dialog content', () => {
-      let content = dialogElement.querySelector('md-dialog-content');
+      let content = overlayContainerElement.querySelector('md-dialog-content');
       expect(content.getAttribute('role')).toBe('main');
     });
+
   });
 });
 
@@ -378,12 +385,14 @@ class PizzaMsg {
     <h1 md-dialog-title>This is the title</h1>
     <md-dialog-content>Lorem ipsum dolor sit amet.</md-dialog-content>
     <md-dialog-actions>
-      <button md-dialog-close>Close</button>
+      <button md-dialog-close [aria-label]="closeButtonAriaLabel">Close</button>
       <div md-dialog-close>Should not close</div>
     </md-dialog-actions>
   `
 })
-class ContentElementDialog {}
+class ContentElementDialog {
+  closeButtonAriaLabel: string;
+}
 
 // Create a real (non-test) NgModule as a workaround for
 // https://github.com/angular/angular/issues/10760

@@ -1,4 +1,4 @@
-import {Directive} from '@angular/core';
+import {Directive, Input} from '@angular/core';
 import {MdDialogRef} from './dialog-ref';
 
 
@@ -8,10 +8,14 @@ import {MdDialogRef} from './dialog-ref';
 @Directive({
   selector: 'button[md-dialog-close], button[mat-dialog-close]',
   host: {
-    '(click)': 'dialogRef.close()'
+    '(click)': 'dialogRef.close()',
+    '[attr.aria-label]': 'ariaLabel'
   }
 })
 export class MdDialogClose {
+  /** Screenreader label for the button. */
+  @Input('aria-label') ariaLabel: string = 'Close dialog';
+
   constructor(public dialogRef: MdDialogRef<any>) { }
 }
 
