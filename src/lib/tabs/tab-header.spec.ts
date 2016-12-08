@@ -8,6 +8,8 @@ import {PortalModule} from '../core';
 import {MdInkBar} from './ink-bar';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {RIGHT_ARROW, LEFT_ARROW, ENTER} from '../core/keyboard/keycodes';
+import {FakeViewportRuler} from "../core/overlay/position/fake-viewport-ruler";
+import {ViewportRuler} from "../core/overlay/position/viewport-ruler";
 
 
 describe('MdTabHeader', () => {
@@ -26,8 +28,9 @@ describe('MdTabHeader', () => {
         SimpleTabHeaderApp,
       ],
       providers: [
-        { provide: Dir, useFactory: () => { return {value: dir}; }
-      }]
+        {provide: Dir, useFactory: () => { return {value: dir}; }},
+        {provide: ViewportRuler, useClass: FakeViewportRuler},
+      ]
     });
 
     TestBed.compileComponents();
