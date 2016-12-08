@@ -11,7 +11,12 @@ import {
 
 import {MdDialog} from './dialog';
 import {MdDialogContainer} from './dialog-container';
-import {MdDialogClose, MdDialogContent, MdDialogTitle, MdDialogActions} from './dialog-directives';
+import {
+  MdDialogClose,
+  MdDialogContent,
+  MdDialogTitle,
+  MdDialogActions
+} from './dialog-content-directives';
 
 
 @NgModule({
@@ -49,6 +54,6 @@ export class MdDialogModule {
 
 export * from './dialog';
 export * from './dialog-container';
-export * from './dialog-directives';
+export * from './dialog-content-directives';
 export * from './dialog-config';
 export * from './dialog-ref';
