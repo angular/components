@@ -238,6 +238,8 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     this._focusHost();
   }
 
+  /** The value cache. */
+  private _value:any
   /**
    * Sets the select's value. Part of the ControlValueAccessor interface
    * required to integrate with Angular's core forms API.
@@ -252,6 +254,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
       return;
     }
 
+    this._value = value;
     this.options.forEach((option: MdOption) => {
       if (option.value === value) {
         option.select();
@@ -370,6 +373,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     this._dropSubscriptions();
     this._listenToOptions();
     this._setOptionIds();
+    this.writeValue(this._value);// reselect options.
   }
 
   /** Listens to selection events on each option. */
