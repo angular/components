@@ -26,7 +26,7 @@ md-dialog-container {
   }
 }
 
-md-dialog-content, [md-dialog-content] {
+md-dialog-content, [md-dialog-content], mat-dialog-content, [mat-dialog-content] {
   display: block;
   margin: 0 $md-dialog-padding * -1;
   padding: 0 $md-dialog-padding;
@@ -34,7 +34,7 @@ md-dialog-content, [md-dialog-content] {
   overflow: auto;
 }
 
-[md-dialog-title] {
+[md-dialog-title], [mat-dialog-title] {
   font-size: rem(2);
   font-weight: bold;
   letter-spacing: 0.005em;
@@ -42,7 +42,7 @@ md-dialog-content, [md-dialog-content] {
   display: block;
 }
 
-md-dialog-actions, [md-dialog-actions] {
+md-dialog-actions, [md-dialog-actions], mat-dialog-actions, [mat-dialog-actions] {
   padding: $md-dialog-padding / 2 0;
   display: block;
 
