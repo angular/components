@@ -278,9 +278,6 @@ describe('MdSidenav', () => {
       endSidenavTransition(fixture);
       tick();
 
-      expect(document.activeElement)
-          .not.toBe(trigger, 'Expected focus to change when the sidenav was opened.');
-
       sidenav.close();
 
       fixture.detectChanges();
