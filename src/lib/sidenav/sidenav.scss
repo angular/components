@@ -135,7 +135,7 @@ md-sidenav {
 .md-sidenav-focus-trap {
   height: 100%;
 
-  > .focus-trap-content {
+  > .cdk-focus-trap-content {
     box-sizing: border-box;
     height: 100%;
     overflow-y: auto; // TODO(kara): revisit scrolling behavior for sidenavs
