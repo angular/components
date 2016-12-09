@@ -189,7 +189,10 @@ export class MdCheckbox implements ControlValueAccessor {
 
   set checked(checked: boolean) {
     if (checked != this.checked) {
-      this.indeterminate = false;
+      if (this._indeterminate) {
+        this._indeterminate = false;
+        this.indeterminateChange.emit(this._indeterminate);
+      }
       this._checked = checked;
       this._transitionCheckState(
           this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
