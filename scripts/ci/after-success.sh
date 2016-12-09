@@ -5,8 +5,7 @@ cd $(dirname $0)/../..
 
 RESULT=`$(npm bin)/travis-after-modes`
 
-if [ "$RESULT" = "PASSED" ]; then
-  echo "Everything passed"
-else
-  echo "Something failed"
+if [ "$RESULT" = "PASSED" ] && [ -z "$TRAVIS_PULL_REQUEST" ]; then
+  echo "All travis modes passed. Publishing the build artifacts..."
+  ./scripts/release/publish-build-artifacts.sh
 fi

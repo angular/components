@@ -33,7 +33,7 @@ cd $REPO_DIR &&
 
 # Setup the git repository authentication.
 git config credential.helper "store --file=.git/credentials" &&
-echo "$GITHUB_TOKEN_ANGULAR" > .git/credentials
+echo "$MATERIAL2_BUILDS_TOKEN" > .git/credentials
 
 git add -A &&
 git commit -m "$COMMIT_MESSAGE" --author "$COMMIT_AUTHOR" &&
