@@ -1,7 +1,7 @@
 .demo-sidenav-layout {
   border: 3px solid black;
 
-  md-sidenav .focus-trap-content {
+  .md-sidenav-focus-trap > .focus-trap-content {
     padding: 10px;
   }
 }
