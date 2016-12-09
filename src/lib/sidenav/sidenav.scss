@@ -108,8 +108,15 @@ md-sidenav {
   z-index: 3;
   min-width: 5%;
 
-  // TODO(kara): revisit scrolling behavior for sidenavs
-  overflow-y: auto;
+  > focus-trap {
+    height: 100%;
+
+    > .focus-trap-content {
+      box-sizing: border-box;
+      height: 100%;
+      overflow-y: auto; // TODO(kara): revisit scrolling behavior for sidenavs
+    }
+  }
 
   @include md-sidenav-transition(0, -100%);
 
