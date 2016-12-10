@@ -41,3 +41,12 @@ teardown_tunnel() {
   esac
 }
 
+run_in_tunnel() {
+  start_tunnel;
+  wait_for_tunnel;
+
+  # Evaluate the specified expression
+  ($1)
+
+  teardown_tunnel;
+}
