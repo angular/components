@@ -1,4 +1,6 @@
-<md-nav-list>
+<button (click)="showLinks = !showLinks">Toggle Navigation Links</button>
+
+<md-nav-list *ngIf="showLinks">
   <a md-list-item [routerLink]="['button']">Button</a>
   <a md-list-item [routerLink]="['checkbox']">Checkbox</a>
   <a md-list-item [routerLink]="['dialog']">Dialog</a>
