@@ -17,7 +17,7 @@
   $sidenav-container-background-color:  md-color($background, background) !default;
   $sidenav-push-background-color: md-color($background, dialog) !default;
 
-  md-sidenav-container {
+  .md-sidenav-container {
     background-color: $sidenav-container-background-color;
     color: md-color($foreground, text);
   }

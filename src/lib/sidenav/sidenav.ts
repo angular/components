@@ -303,7 +303,7 @@ export class MdSidenav implements AfterContentInit {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-sidenav-container, mat-sidenav-container',
+  selector: 'md-sidenav-container, mat-sidenav-container, md-sidenav-layout, mat-sidenav-layout',
   // Do not use ChangeDetectionStrategy.OnPush. It does not work for this component because
   // technically it is a sibling of MdSidenav (on the content tree) and isn't updated when MdSidenav
   // changes its state.
@@ -312,6 +312,9 @@ export class MdSidenav implements AfterContentInit {
     'sidenav.css',
     'sidenav-transitions.css',
   ],
+  host: {
+    'class': 'md-sidenav-container',
+  },
   encapsulation: ViewEncapsulation.None,
 })
 export class MdSidenavContainer implements AfterContentInit {
