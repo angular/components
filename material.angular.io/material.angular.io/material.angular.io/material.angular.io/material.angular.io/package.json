@@ -21,7 +21,7 @@
     "@angular/core": "~2.2.3",
     "@angular/forms": "~2.2.3",
     "@angular/http": "~2.2.3",
-    "@angular/material": "^2.0.0-alpha.11-3",
+    "@angular/material": "2.0.0-alpha.11-3",
     "@angular/platform-browser": "~2.2.3",
     "@angular/platform-browser-dynamic": "~2.2.3",
     "@angular/router": "~3.2.3",
