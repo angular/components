@@ -52,4 +52,14 @@ describe('slide-toggle', () => {
     expect(previousX).not.toBe(newX);
   });
 
+  it('should toggle the slide-toggle on space key', () => {
+    let inputEl = element(by.css('#normal-slide-toggle input'));
+
+    expect(inputEl.getAttribute('checked')).toBeFalsy('Expect slide-toggle to be unchecked');
+
+    inputEl.sendKeys(protractor.Key.SPACE);
+
+    expect(inputEl.getAttribute('checked')).toBeTruthy('Expect slide-toggle to be checked');
+  });
+
 });
