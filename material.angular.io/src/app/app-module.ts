@@ -9,6 +9,8 @@ import {Homepage} from './pages/homepage/homepage';
 import {NavBar} from './shared/navbar/navbar';
 import {routing} from './routes';
 import {ComponentsList} from './pages/components/components';
+import {DocViewerModule} from './shared/doc-viewer/index';
+import {ExampleViewerModule} from './shared/example-viewer/index';
 
 
 @NgModule({
@@ -18,8 +20,16 @@ import {ComponentsList} from './pages/components/components';
     Homepage,
     NavBar,
   ],
+  exports: [
+    MaterialDocsApp,
+    ComponentsList,
+    Homepage,
+    NavBar,
+  ],
   imports: [
     BrowserModule,
+    DocViewerModule,
+    ExampleViewerModule,
     FormsModule,
     HttpModule,
     MaterialModule.forRoot(),
