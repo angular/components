@@ -8,9 +8,9 @@ import 'rxjs/add/observable/fromEvent';
 
 
 /**
- * Sends an event when the directive's element is scrolled. Registers itself with the ScrollDispatcher
- * service to include itself as part of its collection of scrolling events that it can be listened
- * to through the service.
+ * Sends an event when the directive's element is scrolled. Registers itself with the
+ * ScrollDispatcher service to include itself as part of its collection of scrolling events that it
+ * can be listened to through the service.
  */
 @Directive({
   selector: '[cdk-scrollable]'
