@@ -6,6 +6,8 @@ import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/overlay-directives';
 import {A11yModule, A11Y_PROVIDERS} from './a11y/index';
 import {OVERLAY_PROVIDERS} from './overlay/overlay';
+import {Scroll} from './scroll/scroll';
+import {ScrollModule} from './scroll/scrollable';
 
 
 // RTL
@@ -47,6 +49,8 @@ export {
 } from './overlay/overlay-directives';
 export * from './overlay/position/connected-position-strategy';
 export * from './overlay/position/connected-position';
+export * from './scroll/scrollable';
+export * from './scroll/scroll';
 
 // Gestures
 export {GestureConfig} from './gestures/gesture-config';
@@ -107,16 +111,33 @@ export {coerceNumberProperty} from './coercion/number-property';
 export {DefaultStyleCompatibilityModeModule} from './compatibility/default-mode';
 export {NoConflictStyleCompatibilityMode} from './compatibility/no-conflict-mode';
 
+// Scroll
+export {Scroll} from './scroll/scroll';
+export {Scrollable} from './scroll/scrollable';
 
 @NgModule({
-  imports: [MdLineModule, RtlModule, MdRippleModule, PortalModule, OverlayModule, A11yModule],
-  exports: [MdLineModule, RtlModule, MdRippleModule, PortalModule, OverlayModule, A11yModule],
+  imports: [MdLineModule,
+    RtlModule,
+    MdRippleModule,
+    PortalModule,
+    OverlayModule,
+    A11yModule,
+    ScrollModule
+  ],
+  exports: [MdLineModule,
+    RtlModule,
+    MdRippleModule,
+    PortalModule,
+    OverlayModule,
+    A11yModule,
+    ScrollModule
+  ],
 })
 export class MdCoreModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdCoreModule,
-      providers: [A11Y_PROVIDERS, OVERLAY_PROVIDERS],
+      providers: [A11Y_PROVIDERS, OVERLAY_PROVIDERS, Scroll],
     };
   }
 }

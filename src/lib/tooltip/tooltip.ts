@@ -14,6 +14,8 @@ import {
   AnimationTransitionEvent,
   NgZone,
   Optional,
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import {
   Overlay,
@@ -23,15 +25,17 @@ import {
   ComponentPortal,
   OverlayConnectionPosition,
   OriginConnectionPosition,
-  OVERLAY_PROVIDERS,
-  DefaultStyleCompatibilityModeModule,
+  DefaultStyleCompatibilityModeModule
 } from '../core';
 import {MdTooltipInvalidPositionError} from './tooltip-errors';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Dir} from '../core/rtl/dir';
+import {Scroll} from '../core/scroll/scroll';
+import {ScrollModule} from '../core/scroll/scrollable';
+import {OverlayPositionBuilder} from '../core/overlay/position/overlay-position-builder';
+import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import 'rxjs/add/operator/first';
-
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
@@ -54,7 +58,7 @@ export const TOUCHEND_HIDE_DELAY  = 1500;
   },
   exportAs: 'mdTooltip',
 })
-export class MdTooltip {
+export class MdTooltip implements OnInit, OnDestroy {
   _overlayRef: OverlayRef;
   _tooltipInstance: TooltipComponent;
 
@@ -104,9 +108,22 @@ export class MdTooltip {
   get _deprecatedMessage(): string { return this.message; }
   set _deprecatedMessage(v: string) { this.message = v; }
 
-  constructor(private _overlay: Overlay, private _elementRef: ElementRef,
-              private _viewContainerRef: ViewContainerRef, private _ngZone: NgZone,
+  constructor(private _overlay: Overlay,
+              private _scroll: Scroll,
+              private _elementRef: ElementRef,
+              private _viewContainerRef: ViewContainerRef,
+              private _ngZone: NgZone,
               @Optional() private _dir: Dir) {}
+
+  ngOnInit() {
+    // When a scroll on the page occurs, update the position in case this tooltip needs
+    // to be repositioned.
+    this._scroll.scrolled().subscribe(() => {
+      if (this._overlayRef) {
+        this._overlayRef.updatePosition();
+      }
+    });
+  }
 
   /** Dispose the tooltip when destroyed */
   ngOnDestroy() {
@@ -361,7 +378,7 @@ export class TooltipComponent {
 
 
 @NgModule({
-  imports: [OverlayModule, DefaultStyleCompatibilityModeModule],
+  imports: [OverlayModule, DefaultStyleCompatibilityModeModule, ScrollModule],
   exports: [MdTooltip, TooltipComponent, DefaultStyleCompatibilityModeModule],
   declarations: [MdTooltip, TooltipComponent],
   entryComponents: [TooltipComponent],
@@ -370,7 +387,12 @@ export class MdTooltipModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdTooltipModule,
-      providers: OVERLAY_PROVIDERS,
+      providers: [
+        Overlay,
+        OverlayPositionBuilder,
+        ViewportRuler,
+        Scroll
+      ]
     };
   }
 }
