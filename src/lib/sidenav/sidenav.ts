@@ -26,8 +26,12 @@ import {InteractivityChecker} from '../core/a11y/interactivity-checker';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 =======
 import {MdLiveAnnouncer} from '../core/a11y/live-announcer';
+<<<<<<< 7f62f0a674630555a66a123367e701089f68e338
 import {ScrollDispatcher} from '../core/scroll/scroll-dispatcher';
 >>>>>>> review response
+=======
+import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
+>>>>>>> move scroll to overlay
 
 
 /** Exception thrown when two MdSidenav are matching the same side. */
