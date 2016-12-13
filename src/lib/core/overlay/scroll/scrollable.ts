@@ -1,6 +1,5 @@
 import {
-  Directive, ElementRef, OnInit, OnDestroy, ModuleWithProviders,
-  NgModule
+  Directive, ElementRef, OnInit, OnDestroy
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {ScrollDispatcher} from './scroll-dispatcher';
@@ -29,19 +28,5 @@ export class Scrollable implements OnInit, OnDestroy {
   /** Returns observable that emits when the scroll event is fired on the host element. */
   elementScrolled(): Observable<any> {
     return Observable.fromEvent(this._elementRef.nativeElement, 'scroll');
-  }
-}
-
-
-@NgModule({
-  exports: [Scrollable],
-  declarations: [Scrollable],
-})
-export class ScrollModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: ScrollModule,
-      providers: [ScrollDispatcher]
-    };
   }
 }

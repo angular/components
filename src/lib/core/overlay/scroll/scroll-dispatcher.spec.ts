@@ -1,7 +1,8 @@
 import {inject, TestBed, async, ComponentFixture} from '@angular/core/testing';
 import {NgModule, Component, ViewChild, ElementRef} from '@angular/core';
 import {ScrollDispatcher} from './scroll-dispatcher';
-import {ScrollModule, Scrollable} from './scrollable';
+import {OverlayModule} from '../overlay-directives';
+import {Scrollable} from './scrollable';
 
 describe('Scroll Dispatcher', () => {
   let scroll: ScrollDispatcher;
@@ -9,7 +10,7 @@ describe('Scroll Dispatcher', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ScrollModule.forRoot(), ScrollTestModule],
+      imports: [OverlayModule.forRoot(), ScrollTestModule],
     });
 
     TestBed.compileComponents();
@@ -69,7 +70,7 @@ class ScrollingComponent {
 
 const TEST_COMPONENTS = [ScrollingComponent];
 @NgModule({
-  imports: [ScrollModule],
+  imports: [OverlayModule],
   providers: [ScrollDispatcher],
   exports: TEST_COMPONENTS,
   declarations: TEST_COMPONENTS,

@@ -31,8 +31,7 @@ import {MdTooltipInvalidPositionError} from './tooltip-errors';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Dir} from '../core/rtl/dir';
-import {ScrollDispatcher} from '../core/scroll/scroll-dispatcher';
-import {ScrollModule} from '../core/scroll/scrollable';
+import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {OverlayPositionBuilder} from '../core/overlay/position/overlay-position-builder';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import 'rxjs/add/operator/first';
@@ -378,7 +377,7 @@ export class TooltipComponent {
 
 
 @NgModule({
-  imports: [OverlayModule, DefaultStyleCompatibilityModeModule, ScrollModule],
+  imports: [OverlayModule, DefaultStyleCompatibilityModeModule],
   exports: [MdTooltip, TooltipComponent, DefaultStyleCompatibilityModeModule],
   declarations: [MdTooltip, TooltipComponent],
   entryComponents: [TooltipComponent],

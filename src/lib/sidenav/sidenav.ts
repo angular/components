@@ -21,10 +21,9 @@ import {A11yModule} from '../core/a11y/index';
 import {FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {OverlayModule} from '../core/overlay/overlay-directives';
-import {ScrollModule} from '../core/scroll/scrollable';
 import {InteractivityChecker} from '../core/a11y/interactivity-checker';
 import {MdLiveAnnouncer} from '../core/a11y/live-announcer';
-import {ScrollDispatcher} from '../core/scroll/scroll-dispatcher';
+import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 
 
 /** Exception thrown when two MdSidenav are matching the same side. */
