@@ -1,4 +1,4 @@
-import { MaterialDocsAppPage } from './app.po';
+import {MaterialDocsAppPage} from './app.po';
 
 describe('angular-io-v42 App', function() {
   let page: MaterialDocsAppPage;

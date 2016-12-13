@@ -1,9 +1,10 @@
 import { Component} from '@angular/core';
 
 @Component({
+  moduleId: module.id,
   selector: 'app-components',
-  templateUrl: 'components.html',
-  styleUrls: ['components.scss']
+  templateUrl: './components.html',
+  styleUrls: ['./components.scss']
 })
 export class ComponentsList {
   componentItems = [
