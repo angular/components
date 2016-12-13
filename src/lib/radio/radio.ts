@@ -77,6 +77,9 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   /** Disables all individual radio buttons assigned to this group. */
   private _disabled: boolean = false;
 
+  /** Makes all individual radio buttons assigned to this group possible to deselect. */
+  private _deselectable: boolean = false;
+
   /** The currently selected radio button. Should match value. */
   private _selected: MdRadioButton = null;
 
@@ -117,6 +120,15 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   set disabled(value) {
     // The presence of *any* disabled value makes the component disabled, *except* for false.
     this._disabled = (value != null && value !== false) ? true : null;
+  }
+
+  @Input() get deselectable() {
+    return this._deselectable;
+  }
+
+  set deselectable(value: boolean) {
+    // The presence of *any* value makes the component deselectable, *except* for false.
+    this._deselectable = (value != null && value !== false) ? true : null;
   }
 
   @Input()
@@ -187,7 +199,7 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
     // If the value already matches the selected radio, do nothing.
     let isAlreadySelected = this._selected != null && this._selected.value == this._value;
 
-    if (this._radios != null && !isAlreadySelected) {
+    if (this._radios != null && (!isAlreadySelected || this.deselectable)) {
       this._selected = null;
       this._radios.forEach(radio => {
         radio.checked = this.value == radio.value;
@@ -273,6 +285,9 @@ export class MdRadioButton implements OnInit {
 
   /** Whether this radio is disabled. */
   private _disabled: boolean;
+
+  /** Whether this radio is deselectable. */
+  private _deselectable: boolean;
 
   /** Value assigned to this radio.*/
   private _value: any = null;
@@ -383,6 +398,17 @@ export class MdRadioButton implements OnInit {
     this._disabled = (value != null && value !== false) ? true : null;
   }
 
+  @HostBinding('class.md-radio-deselectable')
+  @Input()
+  get deselectable(): boolean {
+    return this._deselectable || (this.radioGroup != null && this.radioGroup.deselectable);
+  }
+
+  set deselectable(value: boolean) {
+    // The presence of *any* value makes the component deselectable, *except* for false.
+    this._deselectable = (value != null && value !== false) ? true : null;
+  }
+
   /** TODO: internal */
   ngOnInit() {
     if (this.radioGroup) {
@@ -437,6 +463,9 @@ export class MdRadioButton implements OnInit {
     // The real click event will bubble up, and the generated click event also tries to bubble up.
     // This will lead to multiple click events.
     // Preventing bubbling for the second event will solve that issue.
+    if (this.checked && (this.radioGroup && this.radioGroup.deselectable || this._deselectable)) {
+      this._onInputChange(event);
+    }
     event.stopPropagation();
   }
 
@@ -451,12 +480,15 @@ export class MdRadioButton implements OnInit {
     // emit its event object to the `change` output.
     event.stopPropagation();
 
-    let groupValueChanged = this.radioGroup && this.value != this.radioGroup.value;
-    this.checked = true;
+    let groupValueChanged =
+        this.radioGroup && (this.value != this.radioGroup.value || this.radioGroup.deselectable);
+    let deselectable = (this._deselectable || this.radioGroup && this.radioGroup.deselectable);
+    this.checked = deselectable ? !this.checked : true;
+
     this._emitChangeEvent();
 
     if (this.radioGroup) {
-      this.radioGroup._controlValueAccessorChangeFn(this.value);
+      this.radioGroup._controlValueAccessorChangeFn(this.checked ? this.value : null);
       this.radioGroup._touch();
       if (groupValueChanged) {
         this.radioGroup._emitChangeEvent();

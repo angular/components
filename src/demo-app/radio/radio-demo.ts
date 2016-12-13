@@ -9,6 +9,7 @@ import {Component} from '@angular/core';
 })
 export class RadioDemo {
   isDisabled: boolean = false;
+  isDeselectable: boolean = false;
   isAlignEnd: boolean = false;
   favoriteSeason: string = 'Autumn';
   seasonOptions = [
