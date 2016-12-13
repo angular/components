@@ -7,11 +7,13 @@ const DgeniPackage = Dgeni.Package;
 const jsdocPackage = require('dgeni-packages/jsdoc');
 const nunjucksPackage = require('dgeni-packages/nunjucks');
 const typescriptPackage = require('dgeni-packages/typescript');
-const gitPackage = require('dgeni-packages/git');
+//const gitPackage = require('dgeni-packages/git');
 
 
 // project configuration
-const projectRootDir = path.resolve(__dirname, '../src/lib');
+const projectRootDir = path.resolve(__dirname, '../..');
+const sourceDir = path.resolve(projectRootDir, 'src/lib');
+const outputDir = path.resolve(projectRootDir, 'dist/docs');
 const templateDir = path.resolve(__dirname, './templates');
 
 // Package definition for material2 api docs. This only *defines* the package- it does not yet
@@ -30,42 +32,82 @@ const dgeniPackageDeps = [
   jsdocPackage,
   nunjucksPackage,
   typescriptPackage,
-  gitPackage,
+//  gitPackage,
 ];
 
-let apiDocsPackage = new DgeniPackage('material2-api-docs', dgeniPackageDeps);
+module.exports = new DgeniPackage('material2-api-docs', dgeniPackageDeps)
+
+.config(function(log) {
+  log.level = 'info';
+})
 
 // Configure the processor for reading files from the file system.
-apiDocsPackage.config(readFilesProcessor => {
-  readFilesProcessor.basePath = projectRootDir;
-});
+.config(function(readFilesProcessor, writeFilesProcessor) {
+  readFilesProcessor.basePath = sourceDir;
+  readFilesProcessor.$enabled = false; // disable for now as we are using readTypeScriptModules
+
+  writeFilesProcessor.outputFolder = outputDir;
+})
 
 // Configure the processor for understanding TypeScript.
-apiDocsPackage.config(readTypeScriptModules => {
-  readTypeScriptModules.basePath = projectRootDir;
+.config(function(readTypeScriptModules) {
+  console.log(sourceDir);
+  readTypeScriptModules.basePath = sourceDir;
   readTypeScriptModules.ignoreExportsMatching = [/^_/];
   readTypeScriptModules.hidePrivateMembers = true;
 
-  readTypeScriptModules.sourceFiles = []; // ???
-});
+  readTypeScriptModules.sourceFiles = [
+    'autocomplete/index.ts',
+    'button/index.ts',
+    'button-toggle/index.ts',
+    'card/index.ts',
+    'checkbox/index.ts',
+    'chips/index.ts',
+    'core/index.ts',
+    'dialog/index.ts',
+    'grid-list/index.ts',
+    'icon/index.ts',
+    'input/index.ts',
+    'list/index.ts',
+    'menu/index.ts',
+    'progress-bar/index.ts',
+    'progress-circle/index.ts',
+    'radio/index.ts',
+    'select/index.ts',
+    'sidenav/index.ts',
+    'slide-toggle/index.ts',
+    'slider/index.ts',
+    'snack-bar/index.ts',
+    'tabs/index.ts',
+    'toolbar/index.ts',
+    'tooltip/index.ts',
+  ];
+})
+
 
 // Configure processor for finding nunjucks templates.
-apiDocsPackage.config(templateFinder => {
+.config(function(templateFinder, templateEngine) {
+  // Where to find the templates for the doc rendering
   templateFinder.templateFolders = [templateDir];
 
-  // templateFinder.templatePatterns ???
-});
+  // Standard patterns for matching docs to templates
+  templateFinder.templatePatterns = [
+    '${ doc.template }',
+    '${ doc.id }.${ doc.docType }.template.html',
+    '${ doc.id }.template.html',
+    '${ doc.docType }.template.html',
+    '${ doc.id }.${ doc.docType }.template.js',
+    '${ doc.id }.template.js',
+    '${ doc.docType }.template.js',
+    '${ doc.id }.${ doc.docType }.template.json',
+    '${ doc.id }.template.json',
+    '${ doc.docType }.template.json',
+    'common.template.html'
+  ];
 
-// Configure the nunjucks templating engine.
-apiDocsPackage.config(templateEngine => {
-  // ???
-});
-
-
-
-
-// Run the dgeni pipeline, generating documentation.
-let dgeni = new Dgeni([apiDocsPackage]);
-dgeni.generate().then(docs => {
-  console.log(docs);
+  // Nunjucks and Angular conflict in their template bindings so change Nunjucks
+  templateEngine.config.tags = {
+    variableStart: '{$',
+    variableEnd: '$}'
+  };
 });
