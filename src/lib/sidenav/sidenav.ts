@@ -17,14 +17,14 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Dir, MdError, coerceBooleanProperty, DefaultStyleCompatibilityModeModule} from '../core';
-import {A11yModule, A11Y_PROVIDERS} from '../core/a11y/index';
+import {A11yModule} from '../core/a11y/index';
 import {FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {OverlayModule} from '../core/overlay/overlay-directives';
 import {ScrollModule} from '../core/scroll/scrollable';
 import {InteractivityChecker} from '../core/a11y/interactivity-checker';
 import {MdLiveAnnouncer} from '../core/a11y/live-announcer';
-import {Scroll} from '../core/scroll/scroll';
+import {ScrollDispatcher} from '../core/scroll/scroll-dispatcher';
 
 
 /** Exception thrown when two MdSidenav are matching the same side. */
@@ -516,7 +516,7 @@ export class MdSidenavModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdSidenavModule,
-      providers: [MdLiveAnnouncer, InteractivityChecker, Scroll]
+      providers: [MdLiveAnnouncer, InteractivityChecker, ScrollDispatcher]
     };
   }
 }

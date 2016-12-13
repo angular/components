@@ -31,7 +31,7 @@ import {MdTooltipInvalidPositionError} from './tooltip-errors';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Dir} from '../core/rtl/dir';
-import {Scroll} from '../core/scroll/scroll';
+import {ScrollDispatcher} from '../core/scroll/scroll-dispatcher';
 import {ScrollModule} from '../core/scroll/scrollable';
 import {OverlayPositionBuilder} from '../core/overlay/position/overlay-position-builder';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
@@ -109,7 +109,7 @@ export class MdTooltip implements OnInit, OnDestroy {
   set _deprecatedMessage(v: string) { this.message = v; }
 
   constructor(private _overlay: Overlay,
-              private _scroll: Scroll,
+              private _scroll: ScrollDispatcher,
               private _elementRef: ElementRef,
               private _viewContainerRef: ViewContainerRef,
               private _ngZone: NgZone,
@@ -391,7 +391,7 @@ export class MdTooltipModule {
         Overlay,
         OverlayPositionBuilder,
         ViewportRuler,
-        Scroll
+        ScrollDispatcher
       ]
     };
   }

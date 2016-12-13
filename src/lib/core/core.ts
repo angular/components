@@ -6,7 +6,7 @@ import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/overlay-directives';
 import {A11yModule, A11Y_PROVIDERS} from './a11y/index';
 import {OVERLAY_PROVIDERS} from './overlay/overlay';
-import {Scroll} from './scroll/scroll';
+import {ScrollDispatcher} from './scroll/scroll-dispatcher';
 import {ScrollModule} from './scroll/scrollable';
 
 
@@ -50,7 +50,7 @@ export {
 export * from './overlay/position/connected-position-strategy';
 export * from './overlay/position/connected-position';
 export * from './scroll/scrollable';
-export * from './scroll/scroll';
+export * from './scroll/scroll-dispatcher';
 
 // Gestures
 export {GestureConfig} from './gestures/gesture-config';
@@ -111,8 +111,8 @@ export {coerceNumberProperty} from './coercion/number-property';
 export {DefaultStyleCompatibilityModeModule} from './compatibility/default-mode';
 export {NoConflictStyleCompatibilityMode} from './compatibility/no-conflict-mode';
 
-// Scroll
-export {Scroll} from './scroll/scroll';
+// ScrollDispatcher
+export {ScrollDispatcher} from './scroll/scroll-dispatcher';
 export {Scrollable} from './scroll/scrollable';
 
 @NgModule({
@@ -137,7 +137,7 @@ export class MdCoreModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdCoreModule,
-      providers: [A11Y_PROVIDERS, OVERLAY_PROVIDERS, Scroll],
+      providers: [A11Y_PROVIDERS, OVERLAY_PROVIDERS, ScrollDispatcher],
     };
   }
 }
