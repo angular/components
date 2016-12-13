@@ -1,4 +1,4 @@
-/** @internal */
+/** @docs-private */
 export class PromiseCompleter<R> {
   promise: Promise<R>;
   resolve: (value?: R | PromiseLike<R>) => void;

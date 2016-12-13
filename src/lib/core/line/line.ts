@@ -18,7 +18,7 @@ export class MdLine {}
 
 /**
  * Helper that takes a query list of lines and sets the correct class on the host.
- * @internal
+ * @docs-private
  */
 export class MdLineSetter {
   constructor(private _lines: QueryList<MdLine>, private _renderer: Renderer,

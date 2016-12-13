@@ -16,7 +16,7 @@ import 'rxjs/add/operator/first';
 
 /**
  * Internal component that wraps user-provided dialog content.
- * @internal
+ * @docs-private
  */
 @Component({
   moduleId: module.id,

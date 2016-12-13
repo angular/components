@@ -16,7 +16,7 @@ import {MdGridTileTooWideError} from './grid-list-errors';
  * decrements each value in the tracking array (indicating that the column is one cell closer to
  * being free).
  *
- * @internal
+ * @docs-private
  */
 export class TileCoordinator {
   /** Tracking array (see class description). */
@@ -138,7 +138,7 @@ export class TileCoordinator {
 
 /**
  * Simple data structure for tile position (row, col).
- * @internal
+ * @docs-private
  */
 export class TilePosition {
   constructor(public row: number, public col: number) {}

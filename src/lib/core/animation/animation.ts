@@ -1,4 +1,4 @@
-/** @internal */
+/** @docs-private */
 export class AnimationCurves {
   static STANDARD_CURVE = 'cubic-bezier(0.4,0.0,0.2,1)';
   static DECELERATION_CURVE = 'cubic-bezier(0.0,0.0,0.2,1)';
@@ -7,7 +7,7 @@ export class AnimationCurves {
 }
 
 
-/** @internal */
+/** @docs-private */
 export class AnimationDurations {
   static COMPLEX = '375ms';
   static ENTERING = '225ms';

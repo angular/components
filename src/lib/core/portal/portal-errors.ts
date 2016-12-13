@@ -2,7 +2,7 @@ import {MdError} from '../errors/error';
 
 /**
  * Exception thrown when attempting to attach a null portal to a host.
- * @internal
+ * @docs-private
  */
 export class MdNullPortalError extends MdError {
   constructor() {
@@ -12,7 +12,7 @@ export class MdNullPortalError extends MdError {
 
 /**
  * Exception thrown when attempting to attach a portal to a host that is already attached.
- * @internal
+ * @docs-private
  */
 export class MdPortalAlreadyAttachedError extends MdError {
   constructor() {
@@ -22,7 +22,7 @@ export class MdPortalAlreadyAttachedError extends MdError {
 
 /**
  * Exception thrown when attempting to attach a portal to an already-disposed host.
- * @internal
+ * @docs-private
  */
 export class MdPortalHostAlreadyDisposedError extends MdError {
   constructor() {
@@ -32,7 +32,7 @@ export class MdPortalHostAlreadyDisposedError extends MdError {
 
 /**
  * Exception thrown when attempting to attach an unknown portal type.
- * @internal
+ * @docs-private
  */
 export class MdUnknownPortalTypeError extends MdError {
   constructor() {
@@ -44,7 +44,7 @@ export class MdUnknownPortalTypeError extends MdError {
 
 /**
  * Exception thrown when attempting to attach a portal to a null host.
- * @internal
+ * @docs-private
  */
 export class MdNullPortalHostError extends MdError {
   constructor() {
@@ -54,7 +54,7 @@ export class MdNullPortalHostError extends MdError {
 
 /**
  * Exception thrown when attempting to detach a portal that is not attached.
- * @internal
+ * @docs-private
  */
 export class MdNoPortalAttachedError extends MdError {
   constructor() {

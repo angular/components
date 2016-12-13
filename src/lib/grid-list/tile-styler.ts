@@ -5,7 +5,7 @@ import {MdGridListBadRatioError} from './grid-list-errors';
 /**
  * Sets the style properties for an individual tile, given the position calculated by the
  * Tile Coordinator.
- * @internal
+ * @docs-private
  */
 export class TileStyler {
   _gutterSize: string;
@@ -120,7 +120,7 @@ export class TileStyler {
 /**
  * This type of styler is instantiated when the user passes in a fixed row height.
  * Example <md-grid-list cols="3" rowHeight="100px">
- * @internal
+ * @docs-private
  */
 export class FixedTileStyler extends TileStyler {
 
@@ -148,7 +148,7 @@ export class FixedTileStyler extends TileStyler {
 /**
  * This type of styler is instantiated when the user passes in a width:height ratio
  * for the row height.  Example <md-grid-list cols="3" rowHeight="3:1">
- * @internal
+ * @docs-private
  */
 export class RatioTileStyler extends TileStyler {
 
@@ -195,7 +195,7 @@ export class RatioTileStyler extends TileStyler {
  * In other words, the row height will reflect the total height of the container divided
  * by the number of rows.  Example <md-grid-list cols="3" rowHeight="fit">
  *
- * @internal
+ * @docs-private
  */
 export class FitTileStyler extends TileStyler {
 

@@ -490,7 +490,7 @@ export class MdSlider implements ControlValueAccessor {
 
 /**
  * Renderer class in order to keep all dom manipulation in one place and outside of the main class.
- * @internal
+ * @docs-private
  */
 export class SliderRenderer {
   private _sliderElement: HTMLElement;
