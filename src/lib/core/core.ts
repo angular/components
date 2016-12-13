@@ -7,6 +7,7 @@ import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/overlay-directives';
 import {A11yModule, A11Y_PROVIDERS} from './a11y/index';
 import {OVERLAY_PROVIDERS} from './overlay/overlay';
+import {ScrollDispatcher} from './scroll/scroll-dispatcher';
 
 
 // RTL

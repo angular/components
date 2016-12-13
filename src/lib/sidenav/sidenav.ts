@@ -22,7 +22,12 @@ import {FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {OverlayModule} from '../core/overlay/overlay-directives';
 import {InteractivityChecker} from '../core/a11y/interactivity-checker';
+<<<<<<< 38f2302c080b3941ee7be5289c9a47a0d1a3bcef
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
+=======
+import {MdLiveAnnouncer} from '../core/a11y/live-announcer';
+import {ScrollDispatcher} from '../core/scroll/scroll-dispatcher';
+>>>>>>> review response
 
 
 /** Exception thrown when two MdSidenav are matching the same side. */
@@ -516,7 +521,11 @@ export class MdSidenavModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdSidenavModule,
+<<<<<<< 38f2302c080b3941ee7be5289c9a47a0d1a3bcef
       providers: [InteractivityChecker, ScrollDispatcher]
+=======
+      providers: [MdLiveAnnouncer, InteractivityChecker, ScrollDispatcher]
+>>>>>>> review response
     };
   }
 }

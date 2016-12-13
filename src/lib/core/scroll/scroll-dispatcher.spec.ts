@@ -1,10 +1,10 @@
 import {inject, TestBed, async, ComponentFixture} from '@angular/core/testing';
 import {NgModule, Component, ViewChild, ElementRef} from '@angular/core';
-import {Scroll} from './scroll';
+import {ScrollDispatcher} from './scroll-dispatcher';
 import {ScrollModule, Scrollable} from './scrollable';
 
-describe('Scrollable', () => {
-  let scroll: Scroll;
+describe('Scroll Dispatcher', () => {
+  let scroll: ScrollDispatcher;
   let fixture: ComponentFixture<ScrollingComponent>;
 
   beforeEach(async(() => {
@@ -15,19 +15,19 @@ describe('Scrollable', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([Scroll], (s: Scroll) => {
+  beforeEach(inject([ScrollDispatcher], (s: ScrollDispatcher) => {
     scroll = s;
 
     fixture = TestBed.createComponent(ScrollingComponent);
     fixture.detectChanges();
   }));
 
-  it('should register the scrollable directive with the scroll service', () => {
+  it('should be registered with the scrollable directive with the scroll service', () => {
     const componentScrollable = fixture.componentInstance.scrollable;
     expect(scroll.scrollableReferences.has(componentScrollable)).toBe(true);
   });
 
-  it('should deregister the scrollable directive when the component is destroyed', () => {
+  it('should have the scrollable directive deregistered when the component is destroyed', () => {
     const componentScrollable = fixture.componentInstance.scrollable;
     expect(scroll.scrollableReferences.has(componentScrollable)).toBe(true);
 
@@ -48,7 +48,9 @@ describe('Scrollable', () => {
     // Emit a scroll event from the scrolling element in our component.
     // This event should be picked up by the scrollable directive and notify.
     // The notification should be picked up by the service.
-    fixture.componentInstance.scrollingElement.nativeElement.dispatchEvent(new Event('scroll'));
+    const scrollEvent = document.createEvent('UIEvents');
+    scrollEvent.initUIEvent('scroll', true, true, window, 0);
+    fixture.componentInstance.scrollingElement.nativeElement.dispatchEvent(scrollEvent);
 
     expect(hasDirectiveScrollNotified).toBe(true);
     expect(hasServiceScrollNotified).toBe(true);
@@ -58,7 +60,7 @@ describe('Scrollable', () => {
 
 /** Simple component that contains a large div and can be scrolled. */
 @Component({
-  template: `<div #scrollingElement md-scrollable style="height: 9999px"></div>`
+  template: `<div #scrollingElement cdk-scrollable style="height: 9999px"></div>`
 })
 class ScrollingComponent {
   @ViewChild(Scrollable) scrollable: Scrollable;
@@ -68,7 +70,7 @@ class ScrollingComponent {
 const TEST_COMPONENTS = [ScrollingComponent];
 @NgModule({
   imports: [ScrollModule],
-  providers: [Scroll],
+  providers: [ScrollDispatcher],
   exports: TEST_COMPONENTS,
   declarations: TEST_COMPONENTS,
   entryComponents: TEST_COMPONENTS,

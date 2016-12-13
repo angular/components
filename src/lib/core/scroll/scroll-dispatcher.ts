@@ -3,6 +3,7 @@ import {Scrollable} from './scrollable';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
+import 'rxjs/add/observable/fromEvent';
 
 
 /**
@@ -10,20 +11,20 @@ import {Subscription} from 'rxjs/Subscription';
  * Scrollable references emit a scrolled event.
  */
 @Injectable()
-export class Scroll {
+export class ScrollDispatcher {
   /** Subject for notifying that a registered scrollable reference element has been scrolled. */
-  _scrolled: Subject<Event> = new Subject();
+  _scrolled: Subject<void> = new Subject<void>();
 
   /**
    * Map of all the scrollable references that are registered with the service and their
    * scroll event subscriptions.
    */
-  scrollableReferences: Map<Scrollable, Subscription> = new Map();
+  scrollableReferences: WeakMap<Scrollable, Subscription> = new WeakMap();
 
   constructor() {
     // By default, notify a scroll event when the document is scrolled or the window is resized.
-    window.document.addEventListener('scroll', this._notify.bind(this));
-    window.addEventListener('resize', this._notify.bind(this));
+    Observable.fromEvent(window.document, 'scroll').subscribe(() => this._notify());
+    Observable.fromEvent(window, 'resize').subscribe(() => this._notify());
   }
 
   /**
@@ -31,7 +32,7 @@ export class Scroll {
    * scrollable is scrolled, the service emits the event in its scrolled observable.
    */
   register(scrollable: Scrollable): void {
-    const scrollSubscription = scrollable.elementScrolled().subscribe(this._notify.bind(this));
+    const scrollSubscription = scrollable.elementScrolled().subscribe(() => this._notify());
     this.scrollableReferences.set(scrollable, scrollSubscription);
   }
 
@@ -48,12 +49,12 @@ export class Scroll {
    * references (or window, document, or body) fire a scrolled event.
    * TODO: Add an event limiter that includes throttle with the leading and trailing events.
    */
-  scrolled(): Observable<Event> {
+  scrolled(): Observable<void> {
     return this._scrolled.asObservable();
   }
 
   /** Sends a notification that a scroll event has been fired. */
-  _notify(e: Event) {
-    this._scrolled.next(e);
+  _notify() {
+    this._scrolled.next();
   }
 }
