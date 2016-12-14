@@ -108,7 +108,7 @@ export class MdTooltip implements OnInit, OnDestroy {
   set _deprecatedMessage(v: string) { this.message = v; }
 
   constructor(private _overlay: Overlay,
-              private _scroll: ScrollDispatcher,
+              private _scrollDispatcher: ScrollDispatcher,
               private _elementRef: ElementRef,
               private _viewContainerRef: ViewContainerRef,
               private _ngZone: NgZone,
@@ -117,7 +117,7 @@ export class MdTooltip implements OnInit, OnDestroy {
   ngOnInit() {
     // When a scroll on the page occurs, update the position in case this tooltip needs
     // to be repositioned.
-    this._scroll.scrolled().subscribe(() => {
+    this._scrollDispatcher.scrolled().subscribe(() => {
       if (this._overlayRef) {
         this._overlayRef.updatePosition();
       }
