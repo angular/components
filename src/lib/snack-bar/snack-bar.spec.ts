@@ -161,8 +161,8 @@ describe('MdSnackBar', () => {
     viewContainerFixture.detectChanges();
 
     viewContainerFixture.whenStable().then(() => {
-      expect(overlayContainerElement.childElementCount).toBe(
-          0, 'Expected snack bar to be removed after the view container was destroyed');
+      expect(overlayContainerElement.childElementCount)
+          .toBe(0, 'Expected snack bar to be removed after the view container was destroyed');
     });
   }));
 
