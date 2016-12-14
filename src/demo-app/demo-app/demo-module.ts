@@ -41,9 +41,11 @@ import {DatepickerDemo} from '../datepicker/datepicker-demo';
 import {TypographyDemo} from '../typography/typography-demo';
 import {ExpansionDemo} from '../expansion/expansion-demo';
 import {DemoMaterialModule} from '../demo-material-module';
+import {ScreenTypeDemo} from '../screen-type/screen-type-demo';
 import {
   FullscreenOverlayContainer,
   OverlayContainer,
+  MediaQueryModule,
 } from '@angular/material';
 import {TableHeaderDemo} from '../table/table-header-demo';
 
@@ -54,6 +56,7 @@ import {TableHeaderDemo} from '../table/table-header-demo';
     ReactiveFormsModule,
     RouterModule.forChild(DEMO_APP_ROUTES),
     DemoMaterialModule,
+    MediaQueryModule,
   ],
   declarations: [
     AutocompleteDemo,
@@ -87,6 +90,7 @@ import {TableHeaderDemo} from '../table/table-header-demo';
     RippleDemo,
     RotiniPanel,
     ScienceJoke,
+    ScreenTypeDemo,
     SelectDemo,
     SidenavDemo,
     SliderDemo,
