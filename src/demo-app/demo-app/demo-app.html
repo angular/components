@@ -15,6 +15,14 @@
          [routerLink]="['baseline']">
         Baseline
       </a>
+
+      <hr>
+
+      <a md-list-item
+         (click)="start.close()"
+         [routerLink]="['examples']">
+        Examples
+      </a>
     </md-nav-list>
     <button md-button (click)="start.close()">CLOSE</button>
   </md-sidenav>
