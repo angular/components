@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {MaterialModule} from '@angular/material';
 import {RouterModule} from '@angular/router';
 import {Examples} from './examples';
-import {SimpleSliderExample} from './slider/simple/simple-slider-example';
+import {SliderOverviewExample} from './slider/overview/slider-overview-example';
 
 
 @NgModule({
@@ -14,7 +14,7 @@ import {SimpleSliderExample} from './slider/simple/simple-slider-example';
   ],
   declarations: [
     Examples,
-    SimpleSliderExample
+    SliderOverviewExample
   ],
 })
 export class ExamplesModule {}
