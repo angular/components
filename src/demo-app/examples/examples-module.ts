@@ -4,17 +4,21 @@ import {MaterialModule} from '@angular/material';
 import {RouterModule} from '@angular/router';
 import {Examples} from './examples';
 import {SliderOverviewExample} from './slider/overview/slider-overview-example';
+import {SliderConfigurableExample} from './slider/configurable/slider-configurable-example';
+import {FormsModule} from '@angular/forms';
 
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     MaterialModule,
     RouterModule
   ],
   declarations: [
     Examples,
-    SliderOverviewExample
+    SliderOverviewExample,
+    SliderConfigurableExample,
   ],
 })
 export class ExamplesModule {}

@@ -1,0 +1,60 @@
+<md-card>
+  <md-card-content>
+    <h2>Slider configuration</h2>
+
+    <section>
+      <md-input-container>
+        <input md-input type="number" placeholder="Value" [(ngModel)]="value">
+      </md-input-container>
+      <md-input-container>
+        <input md-input type="number" placeholder="Min value" [(ngModel)]="min">
+      </md-input-container>
+      <md-input-container>
+        <input md-input type="number" placeholder="Max value" [(ngModel)]="max">
+      </md-input-container>
+      <md-input-container>
+        <input md-input type="number" placeholder="Step size" [(ngModel)]="step">
+      </md-input-container>
+    </section>
+
+    <section>
+      <md-checkbox [(ngModel)]="showTicks">Show ticks</md-checkbox>
+      <md-checkbox [(ngModel)]="autoTicks" *ngIf="showTicks">Auto ticks</md-checkbox>
+      <md-input-container *ngIf="showTicks && !autoTicks">
+        <input md-input type="number" placeholder="Tick interval" [(ngModel)]="tickInterval">
+      </md-input-container>
+    </section>
+
+    <section>
+      <md-checkbox [(ngModel)]="thumbLabel">Show thumb label</md-checkbox>
+    </section>
+
+    <section>
+      <md-checkbox [(ngModel)]="vertical">Vertical</md-checkbox>
+      <md-checkbox [(ngModel)]="invert">Inverted</md-checkbox>
+    </section>
+
+    <section>
+      <md-checkbox [(ngModel)]="disabled">Disabled</md-checkbox>
+    </section>
+
+  </md-card-content>
+</md-card>
+
+<md-card class="result">
+  <md-card-content>
+    <h2>Result</h2>
+
+    <md-slider
+        [disabled]="disabled"
+        [invert]="invert"
+        [max]="max"
+        [min]="min"
+        [step]="step"
+        [thumb-label]="thumbLabel"
+        [tick-interval]="tickInterval"
+        [value]="value"
+        [vertical]="vertical">
+    </md-slider>
+  </md-card-content>
+</md-card>
