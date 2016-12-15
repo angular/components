@@ -10,5 +10,6 @@ import {Component, ViewEncapsulation} from '@angular/core';
 export class Examples {
   navItems = [
     {name: 'Slider Overview', route: 'slider/overview'},
+    {name: 'Configurable Slider', route: 'slider/configurable'},
   ];
 }
