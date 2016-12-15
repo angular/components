@@ -193,15 +193,19 @@ export function serverTask(liveReload: livereloadOptions = true,
                            streamCallback: (stream: NodeJS.ReadWriteStream) => void = null) {
 
   return () => {
+    const port = 4200;
+
     const stream = gulp.src('dist').pipe(gulpServer({
       livereload: liveReload,
       fallback: 'index.html',
-      port: 4200
+      port
     }));
 
     if (streamCallback) {
       streamCallback(stream);
     }
+
+    console.log(`Running app at http://localhost:${port}.`);
     return stream;
   };
 }
