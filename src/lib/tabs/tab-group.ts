@@ -65,9 +65,14 @@ export class MdTabGroup {
 
   /** Whether the tab group should grow to the size of the active tab */
   private _dynamicHeight: boolean = false;
-  @Input('md-dynamic-height') set dynamicHeight(value: boolean) {
+  @Input('mdDynamicHeight') set dynamicHeight(value: boolean) {
     this._dynamicHeight = coerceBooleanProperty(value);
   }
+
+  /** @deprecated */
+  @Input('md-dynamic-height')
+  get _dynamicHeightDeprecated(): boolean { return this._dynamicHeight; }
+  set _dynamicHeightDeprecated(value: boolean) { this._dynamicHeight = value; }
 
   /** The index of the active tab. */
   private _selectedIndex: number = null;

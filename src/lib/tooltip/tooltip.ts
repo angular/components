@@ -58,9 +58,14 @@ export class MdTooltip {
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   private _position: TooltipPosition = 'below';
-  @Input('tooltip-position') get position(): TooltipPosition {
+  @Input('tooltipPosition') get position(): TooltipPosition {
     return this._position;
   }
+
+  /** @deprecated */
+  @Input('tooltip-position')
+  get _positionDeprecated(): TooltipPosition { return this._position; }
+  set _positionDeprecated(value: TooltipPosition) { this._position = value; }
 
   set position(value: TooltipPosition) {
     if (value !== this._position) {

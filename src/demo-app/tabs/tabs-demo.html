@@ -43,7 +43,7 @@
   </md-card>
 
   <md-tab-group class="demo-tab-group"
-                md-dynamic-height
+                mdDynamicHeight
                 [(selectedIndex)]="activeTabIndex">
     <md-tab *ngFor="let tab of dynamicTabs" [disabled]="tab.disabled">
       <template md-tab-label>{{tab.label}}</template>
@@ -92,7 +92,7 @@
 
 <h1>Tab Group Demo - Dynamic Height</h1>
 
-<md-tab-group class="demo-tab-group" md-dynamic-height>
+<md-tab-group class="demo-tab-group" mdDynamicHeight>
   <md-tab *ngFor="let tab of tabs" [disabled]="tab.disabled">
     <template md-tab-label>{{tab.label}}</template>
     {{tab.content}}

@@ -303,7 +303,7 @@ describe('MdTooltip', () => {
   template: `
     <button *ngIf="showButton"
             [md-tooltip]="message"
-            [tooltip-position]="position">
+            [tooltipPosition]="position">
       Button
     </button>`
 })
