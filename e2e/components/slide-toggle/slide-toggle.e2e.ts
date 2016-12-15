@@ -1,3 +1,5 @@
+import {browser, element, by, protractor} from 'protractor';
+
 describe('slide-toggle', () => {
 
   beforeEach(() => browser.get('slide-toggle'));
