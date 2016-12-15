@@ -9,6 +9,14 @@ import {
 } from './connected-position';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
+import {Scrollable} from '../scroll/scrollable';
+
+export type ElementBoundingPositions = {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
@@ -25,6 +33,9 @@ export class ConnectedPositionStrategy implements PositionStrategy {
 
   /** The offset in pixels for the overlay connection point on the y-axis */
   private _offsetY: number = 0;
+
+  /** The Scrollable containers that may cause the overlay's connectedTo element to be clipped */
+  private scrollables: Scrollable[];
 
   /** Whether the we're dealing with an RTL context */
   get _isRtl() {
@@ -95,7 +106,8 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       // If the overlay in the calculated position fits on-screen, put it there and we're done.
       if (overlayPoint.fitsInViewport) {
         this._setElementPosition(element, overlayPoint);
-        this._onPositionChange.next(new ConnectedOverlayPositionChange(pos));
+        const isClipped = this.isConnectedToElementClipped();
+        this._onPositionChange.next(new ConnectedOverlayPositionChange(pos, isClipped));
         return Promise.resolve(null);
       } else if (!fallbackPoint || fallbackPoint.visibleArea < overlayPoint.visibleArea) {
         fallbackPoint = overlayPoint;
@@ -110,6 +122,15 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /**
+   * Sets the list of scrolling or resizing containers that host the connectedTo element so that
+   * on reposition we can evaluate if it has been clipped when repositioned.
+   */
+  withScrollableContainers(scrollables: Scrollable[]) {
+    this.scrollables = scrollables;
+  }
+
+  /**
+   <<<<<<< b07c918b15021de7b9b5af2928d994203174cbe7
    * Adds a new preferred fallback position.
    * @param originPos
    * @param overlayPos
@@ -249,6 +270,16 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   private _setElementPosition(element: HTMLElement, overlayPoint: Point) {
     element.style.left = overlayPoint.x + 'px';
     element.style.top = overlayPoint.y + 'px';
+  }
+
+  private _getElementBounds(element: ElementRef): ElementBoundingPositions {
+    const boundingClientRect = element.nativeElement.getBoundingClientRect();
+    return {
+      top: boundingClientRect.top,
+      right: boundingClientRect.left + boundingClientRect.width,
+      bottom: boundingClientRect.top + boundingClientRect.height,
+      left: boundingClientRect.left
+    };
   }
 
   /**

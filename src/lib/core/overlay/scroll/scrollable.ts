@@ -1,5 +1,5 @@
 import {
-  Directive, ElementRef, OnInit, OnDestroy
+  Directive, ElementRef, OnInit, OnDestroy, Optional, SkipSelf
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {ScrollDispatcher} from './scroll-dispatcher';
@@ -15,7 +15,9 @@ import 'rxjs/add/observable/fromEvent';
   selector: '[cdk-scrollable]'
 })
 export class Scrollable implements OnInit, OnDestroy {
-  constructor(private _elementRef: ElementRef, private _scroll: ScrollDispatcher) {}
+  constructor(private _elementRef: ElementRef,
+              @SkipSelf() @Optional() private parentScrollable: Scrollable,
+              private _scroll: ScrollDispatcher) {}
 
   ngOnInit() {
     this._scroll.register(this);
@@ -30,5 +32,14 @@ export class Scrollable implements OnInit, OnDestroy {
    */
   elementScrolled(): Observable<any> {
     return Observable.fromEvent(this._elementRef.nativeElement, 'scroll');
+  }
+
+  getElementRef(): ElementRef {
+    return this._elementRef;
+  }
+
+  /** Returns this scrollable along with all the scrollables that this is contained within. */
+  getAllScrollables(): Scrollable[] {
+    return this.parentScrollable ? this.parentScrollable.getAllScrollables().concat(this) : [this];
   }
 }

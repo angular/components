@@ -109,7 +109,7 @@ export class MdTooltip implements OnInit, OnDestroy {
               private _elementRef: ElementRef,
               private _viewContainerRef: ViewContainerRef,
               private _ngZone: NgZone,
-              @Optional() private _dir: Dir) {}
+              @Optional() private _dir: Dir) { }
 
   ngOnInit() {
     // When a scroll on the page occurs, update the position in case this tooltip needs
@@ -178,7 +178,16 @@ export class MdTooltip implements OnInit, OnDestroy {
   private _createOverlay(): void {
     let origin = this._getOrigin();
     let position = this._getOverlayPosition();
+
+    // Create connected strategy that listens for scroll events to reposition. After position
+    // changes occur, check if the scrolling trigger has been clipped and close the tooltip.
     let strategy = this._overlay.position().connectedTo(this._elementRef, origin, position);
+    strategy.withScrollableContainers(
+        this._scrollDispatcher.getScrollableContainers(this._elementRef));
+    strategy.onPositionChange.subscribe(change => {
+      if (change.isConnectedToElementClipped) { this.hide(0); }
+    });
+
     let config = new OverlayState();
     config.positionStrategy = strategy;
 

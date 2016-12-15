@@ -1,9 +1,10 @@
-import {Injectable} from '@angular/core';
+import {Injectable, ElementRef} from '@angular/core';
 import {Scrollable} from './scrollable';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/combineLatest';
 
 
 /**
@@ -19,7 +20,7 @@ export class ScrollDispatcher {
    * Map of all the scrollable references that are registered with the service and their
    * scroll event subscriptions.
    */
-  scrollableReferences: WeakMap<Scrollable, Subscription> = new WeakMap();
+  scrollableReferences: Map<Scrollable, Subscription> = new Map();
 
   constructor() {
     // By default, notify a scroll event when the document is scrolled or the window is resized.
@@ -57,8 +58,34 @@ export class ScrollDispatcher {
     return this._scrolled.asObservable();
   }
 
+  /** Returns all registered Scrollables that contain the provided element. */
+  getScrollableContainers(elementRef: ElementRef): Scrollable[] {
+    const scrollingContainers: Scrollable[] = [];
+
+    this.scrollableReferences.forEach((subscription: Subscription, scrollable: Scrollable) => {
+      if (this.scrollableContainsElement(scrollable, elementRef)) {
+        scrollingContainers.push(scrollable);
+      }
+    });
+
+    return scrollingContainers;
+  }
+
+  /** Returns true if the element is contained within the provided Scrollable. */
+  scrollableContainsElement(scrollable: Scrollable, elementRef: ElementRef): boolean {
+    let element = elementRef.nativeElement;
+    let scrollableElement = scrollable.getElementRef().nativeElement;
+
+    // Traverse through the element parents until we reach null, checking if any of the elements
+    // are the scrollable's element.
+    do {
+      if (element == scrollableElement) { return true; }
+    } while (element = element.parentElement);
+  }
+
   /** Sends a notification that a scroll event has been fired. */
   _notify() {
     this._scrolled.next();
   }
 }
+
