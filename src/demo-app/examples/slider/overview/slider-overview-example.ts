@@ -4,6 +4,6 @@ import {Component} from '@angular/core';
 @Component({
   moduleId: module.id,
   selector: 'simple-slider-example',
-  templateUrl: 'simple-slider-example.html',
+  templateUrl: 'slider-overview-example.html',
 })
-export class SimpleSliderExample {}
+export class SliderOverviewExample {}
