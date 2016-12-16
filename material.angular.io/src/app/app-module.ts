@@ -11,18 +11,14 @@ import {routing} from './routes';
 import {ComponentList} from './pages/component-list/component-list';
 import {DocViewerModule} from './shared/doc-viewer/index';
 import {ExampleViewerModule} from './shared/example-viewer/index';
+import {ComponentViewer} from './pages/component-viewer/component-viewer';
 
 
 @NgModule({
   declarations: [
     MaterialDocsApp,
     ComponentList,
-    Homepage,
-    NavBar,
-  ],
-  exports: [
-    MaterialDocsApp,
-    ComponentList,
+    ComponentViewer,
     Homepage,
     NavBar,
   ],

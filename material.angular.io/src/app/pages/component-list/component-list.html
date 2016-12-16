@@ -1,9 +1,12 @@
-<div *ngFor="let component of componentItems" class="docs-component-list-item">
+<a *ngFor="let component of componentItems"
+    class="docs-component-list-item"
+    [routerLink]="['/component/', component.name]">
   <img src="../../../assets/img/components/{{component.src}}.svg"
       class="docs-component-list-item-icon"
       [alt]="component.name">
   {{component.name}}
-</div>
+</a>
+
 
 
 

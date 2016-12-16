@@ -7,30 +7,30 @@ import {Component} from '@angular/core';
 })
 export class ComponentList {
   componentItems = [
-    {name: 'Button', src: 'button'},
-    {name: 'Checkbox', src: 'checkbox'},
-    {name: 'Radio button', src: 'radio'},
-    {name: 'Button toggle', src: 'button-toggle'},
-    {name: 'Input', src: 'input'},
-    {name: 'Textarea', src: 'textarea'},
-    {name: 'Select', src: 'select'},
-    {name: 'Slide toggle', src: 'slide-toggle'},
-    {name: 'Slider', src: 'slider'},
+    {id: 'button', name: 'Button', src: 'button'},
+    {id: 'checkbox', name: 'Checkbox', src: 'checkbox'},
+    {id: 'radio-button', name: 'Radio button', src: 'radio'},
+    {id: 'button-toggle', name: 'Button toggle', src: 'button-toggle'},
+    {id: 'input', name: 'Input', src: 'input'},
+    {id: 'textarea', name: 'Textarea', src: 'textarea'},
+    {id: 'select', name: 'Select', src: 'select'},
+    {id: 'slide-toggle', name: 'Slide toggle', src: 'slide-toggle'},
+    {id: 'slider', name: 'Slider', src: 'slider'},
 
-    {name: 'Card', src: 'card'},
-    {name: 'List', src: 'list'},
-    {name: 'Grid list', src: 'grid-list'},
-    {name: 'Sidenav', src: 'sidenav'},
-    {name: 'Toolbar', src: 'toolbar'},
+    {id: 'card', name: 'Card', src: 'card'},
+    {id: 'list', name: 'List', src: 'list'},
+    {id: 'grid-list', name: 'Grid list', src: 'grid-list'},
+    {id: 'sidenav', name: 'Sidenav', src: 'sidenav'},
+    {id: 'toolbar', name: 'Toolbar', src: 'toolbar'},
 
-    {name: 'Menu', src: 'menu'},
-    {name: 'Dialog', src: 'dialog'},
-    {name: 'Snackbar', src: 'snackbar'},
-    {name: 'Tooltip', src: 'tooltip'},
+    {id: 'menu', name: 'Menu', src: 'menu'},
+    {id: 'dialog', name: 'Dialog', src: 'dialog'},
+    {id: 'snackbar', name: 'Snackbar', src: 'snackbar'},
+    {id: 'tooltip', name: 'Tooltip', src: 'tooltip'},
 
-    {name: 'Progress Spinner', src: 'progress-spinner'},
-    {name: 'Progress Bar', src: 'progress-bar'},
+    {id: 'progress-spinner', name: 'Progress spinner', src: 'progress-spinner'},
+    {id: 'progress-bar', name: 'Progress bar', src: 'progress-bar'},
 
-    {name: 'Icon', src: 'icon'},
+    {id: 'icon', name: 'Icon', src: 'icon'},
   ];
 }
