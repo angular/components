@@ -9,6 +9,7 @@ import {FormsModule} from '@angular/forms';
 import {SidenavOverviewExample} from './sidenav/overview/sidenav-overview-example';
 import {SidenavFabExample} from './sidenav/fab/sidenav-fab-example';
 import {InputOverviewExample} from './input/overview/input-overview-example';
+import {InputFormExample} from './input/form/input-form-example';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import {InputOverviewExample} from './input/overview/input-overview-example';
     SidenavOverviewExample,
     SidenavFabExample,
     InputOverviewExample,
+    InputFormExample,
   ],
 })
 export class ExamplesModule {}
