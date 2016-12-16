@@ -2,10 +2,10 @@ import {PositionStrategy} from './position-strategy';
 import {ElementRef} from '@angular/core';
 import {ViewportRuler} from './viewport-ruler';
 import {
-    ConnectionPositionPair,
-    OriginConnectionPosition,
-    OverlayConnectionPosition,
-    ConnectedOverlayPositionChange
+  ConnectionPositionPair,
+  OriginConnectionPosition,
+  OverlayConnectionPosition,
+  ConnectedOverlayPositionChange, ScrollableViewProperties
 } from './connected-position';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
@@ -35,7 +35,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   private _offsetY: number = 0;
 
   /** The Scrollable containers that may cause the overlay's connectedTo element to be clipped */
-  private scrollables: Scrollable[] = [];
+  private scrollables: Scrollable[];
 
   /** Whether the we're dealing with an RTL context */
   get _isRtl() {
@@ -48,7 +48,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   /** The origin element against which the overlay will be positioned. */
   private _origin: HTMLElement;
 
-  private _onPositionChange:
+  _onPositionChange:
       Subject<ConnectedOverlayPositionChange> = new Subject<ConnectedOverlayPositionChange>();
 
   /** Emits an event when the connection point changes. */
@@ -106,8 +106,12 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       // If the overlay in the calculated position fits on-screen, put it there and we're done.
       if (overlayPoint.fitsInViewport) {
         this._setElementPosition(element, overlayPoint);
-        const isClipped = this.isOverlayElementClipped(element);
-        this._onPositionChange.next(new ConnectedOverlayPositionChange(pos, isClipped));
+
+        // Notify that the position has been changed along with its change properties.
+        const scrollableViewProperties = this.getScrollableViewProperties(element);
+        const positionChange = new ConnectedOverlayPositionChange(pos, scrollableViewProperties);
+        this._onPositionChange.next(positionChange);
+
         return Promise.resolve(null);
       } else if (!fallbackPoint || fallbackPoint.visibleArea < overlayPoint.visibleArea) {
         fallbackPoint = overlayPoint;
@@ -262,16 +266,48 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     return {x, y, fitsInViewport, visibleArea};
   }
 
-  /** Whether the overlay element is clipped out of view of one of the scrollable containers. */
-  private isOverlayElementClipped(element: HTMLElement): boolean {
-    const elementBounds = this._getElementBounds(element);
-    return this.scrollables.some((scrollable: Scrollable) => {
-      const scrollingContainerBounds = this._getElementBounds(scrollable.getElementRef().nativeElement);
+  /**
+   * Gets the view properties of the trigger and overlay, including whether they are clipped
+   * or completely outside the view of any of the strategy's scrollables.
+   */
+  private getScrollableViewProperties(overlay: HTMLElement): ScrollableViewProperties {
+    const triggerBounds = this._getElementBounds(this._connectedTo.nativeElement);
+    const overlayBounds = this._getElementBounds(overlay);
+    const scrollContainerBounds = this.scrollables.map((scrollable: Scrollable) => {
+      return this._getElementBounds(scrollable.getElementRef().nativeElement);
+    });
 
-      const clippedAbove = elementBounds.top < scrollingContainerBounds.top;
-      const clippedBelow = elementBounds.bottom > scrollingContainerBounds.bottom;
-      const clippedLeft = elementBounds.left < scrollingContainerBounds.left;
-      const clippedRight = elementBounds.right > scrollingContainerBounds.right;
+    return {
+      isTriggerClipped: this.isElementClipped(triggerBounds, scrollContainerBounds),
+      isTriggerOutsideView: this.isElementOutsideView(triggerBounds, scrollContainerBounds),
+      isOverlayClipped: this.isElementClipped(overlayBounds, scrollContainerBounds),
+      isOverlayOutsideView: this.isElementOutsideView(overlayBounds, scrollContainerBounds),
+    };
+  }
+
+  /** Whether the element is completely out of the view of any of the containers. */
+  private isElementOutsideView(
+      elementBounds: ElementBoundingPositions,
+      containersBounds: ElementBoundingPositions[]): boolean {
+    return containersBounds.some((containerBounds: ElementBoundingPositions) => {
+      const outsideAbove = elementBounds.bottom < containerBounds.top;
+      const outsideBelow = elementBounds.top > containerBounds.bottom;
+      const outsideLeft = elementBounds.right < containerBounds.left;
+      const outsideRight = elementBounds.left > containerBounds.right;
+
+      return outsideAbove || outsideBelow || outsideLeft || outsideRight;
+    });
+  }
+
+  /** Whether the element is clipped by any of the containers. */
+  private isElementClipped(
+      elementBounds: ElementBoundingPositions,
+      containersBounds: ElementBoundingPositions[]): boolean {
+    return containersBounds.some((containerBounds: ElementBoundingPositions) => {
+      const clippedAbove = elementBounds.top < containerBounds.top;
+      const clippedBelow = elementBounds.bottom > containerBounds.bottom;
+      const clippedLeft = elementBounds.left < containerBounds.left;
+      const clippedRight = elementBounds.right > containerBounds.right;
 
       return clippedAbove || clippedBelow || clippedLeft || clippedRight;
     });
@@ -311,7 +347,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
 interface Point {
   x: number;
   y: number;
-};
+}
 
 /**
  * Expands the simple (x, y) coordinate by adding info about whether the

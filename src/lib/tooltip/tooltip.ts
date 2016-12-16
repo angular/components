@@ -33,6 +33,7 @@ import {Subject} from 'rxjs/Subject';
 import {Dir} from '../core/rtl/dir';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {OVERLAY_PROVIDERS} from '../core/overlay/overlay';
+import {ConnectedOverlayPositionChange} from '../core/overlay/position/connected-position';
 import 'rxjs/add/operator/first';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
@@ -179,11 +180,16 @@ export class MdTooltip implements OnInit, OnDestroy {
     let origin = this._getOrigin();
     let position = this._getOverlayPosition();
 
-    // Create connected strategy that listens for scroll events to reposition. After position
-    // changes occur and the overlay is clipped then close the tooltip.
+    // Create connected position strategy that listens for scroll events to reposition.
+    // After position changes occur and the overlay is clipped by a parent scrollable then
+    // close the tooltip.
     let strategy = this._overlay.position().connectedTo(this._elementRef, origin, position);
     strategy.withScrollableContainers(this._scrollDispatcher.getScrollContainers(this._elementRef));
-    strategy.onPositionChange.subscribe(change => { if (change.isClipped) { this.hide(0); } });
+    strategy.onPositionChange.subscribe((change: ConnectedOverlayPositionChange) => {
+      if (change.scrollableViewProperties.isOverlayClipped) {
+        this.hide(0);
+      }
+    });
 
     let config = new OverlayState();
     config.positionStrategy = strategy;

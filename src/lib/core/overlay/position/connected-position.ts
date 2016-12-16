@@ -32,7 +32,15 @@ export class ConnectionPositionPair {
   }
 }
 
+export class ScrollableViewProperties {
+  isTriggerClipped: boolean;
+  isTriggerOutsideView: boolean;
+  isOverlayClipped: boolean;
+  isOverlayOutsideView: boolean;
+}
+
 /** The change event emitted by the strategy when a fallback position is used. */
 export class ConnectedOverlayPositionChange {
-  constructor(public connectionPair: ConnectionPositionPair, public isClipped: boolean) {}
+  constructor(public connectionPair: ConnectionPositionPair,
+              public scrollableViewProperties: ScrollableViewProperties) {}
 }
