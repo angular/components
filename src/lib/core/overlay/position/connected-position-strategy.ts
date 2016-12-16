@@ -34,8 +34,8 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   /** The offset in pixels for the overlay connection point on the y-axis */
   private _offsetY: number = 0;
 
-  /** The Scrollable containers that may cause the overlay's connectedTo element to be clipped */
-  private scrollables: Scrollable[];
+  /** The Scrollable containers used to check scrollable view properties on position change. */
+  private scrollables: Scrollable[] = [];
 
   /** Whether the we're dealing with an RTL context */
   get _isRtl() {
@@ -323,6 +323,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     element.style.top = overlayPoint.y + 'px';
   }
 
+  /** Returns the bounding positions of the provided element with respect to the viewport. */
   private _getElementBounds(element: HTMLElement): ElementBoundingPositions {
     const boundingClientRect = element.getBoundingClientRect();
     return {

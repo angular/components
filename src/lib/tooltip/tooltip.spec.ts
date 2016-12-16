@@ -300,7 +300,7 @@ describe('MdTooltip', () => {
   });
 
 
-  fdescribe('scrollable usage', () => {
+  describe('scrollable usage', () => {
     let fixture: ComponentFixture<ScrollableTooltipDemo>;
     let buttonDebugElement: DebugElement;
     let buttonElement: HTMLButtonElement;
