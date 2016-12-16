@@ -24,7 +24,7 @@ import {transformMenu, fadeInItems} from './menu-animations';
 
 @Component({
   moduleId: module.id,
-  selector: 'md-menu',
+  selector: 'md-menu, mat-menu',
   host: {'role': 'menu'},
   templateUrl: 'menu.html',
   styleUrls: ['menu.css'],
@@ -57,7 +57,6 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
     this.setPositionClasses(this.positionX, this.positionY);
   }
 
-  // TODO: internal
   ngAfterContentInit() {
     this._keyManager = new ListKeyManager(this.items).withFocusWrap();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => {
@@ -65,7 +64,6 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
     });
   }
 
-  // TODO: internal
   ngOnDestroy() {
     this._tabSubscription.unsubscribe();
   }
@@ -91,7 +89,6 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   /**
    * Focus the first item in the menu. This method is used by the menu trigger
    * to focus the first item when the menu is opened by the ENTER key.
-   * TODO: internal
    */
   focusFirstItem() {
     this._keyManager.focusFirstItem();

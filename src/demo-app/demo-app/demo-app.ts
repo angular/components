@@ -20,15 +20,18 @@ export class Home {}
 })
 export class DemoApp {
   navItems = [
+    {name: 'Autocomplete', route: 'autocomplete'},
     {name: 'Button', route: 'button'},
     {name: 'Button Toggle', route: 'button-toggle'},
     {name: 'Card', route: 'card'},
+    {name: 'Chips', route: 'chips'},
     {name: 'Checkbox', route: 'checkbox'},
     {name: 'Dialog', route: 'dialog'},
     {name: 'Gestures', route: 'gestures'},
     {name: 'Grid List', route: 'grid-list'},
     {name: 'Icon', route: 'icon'},
     {name: 'Input', route: 'input'},
+    {name: 'Input Container', route: 'input-container'},
     {name: 'List', route: 'list'},
     {name: 'Menu', route: 'menu'},
     {name: 'Live Announcer', route: 'live-announcer'},
@@ -46,6 +49,7 @@ export class DemoApp {
     {name: 'Snack Bar', route: 'snack-bar'},
     {name: 'Tabs', route: 'tabs'},
     {name: 'Toolbar', route: 'toolbar'},
-    {name: 'Tooltip', route: 'tooltip'}
+    {name: 'Tooltip', route: 'tooltip'},
+    {name: 'Platform', route: 'platform'}
   ];
 }

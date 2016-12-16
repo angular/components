@@ -1,9 +1,11 @@
 // Import all the theming functionality.
 @import '../core';
+@import '../../autocomplete/autocomplete-theme';
 @import '../../button/button-theme';
 @import '../../button-toggle/button-toggle-theme';
 @import '../../card/card-theme';
 @import '../../checkbox/checkbox-theme';
+@import '../../chips/chips-theme';
 @import '../../dialog/dialog-theme';
 @import '../../grid-list/grid-list-theme';
 @import '../../icon/icon-theme';
@@ -25,10 +27,12 @@
 // Create a theme.
 @mixin angular-material-theme($theme) {
   @include md-core-theme($theme);
+  @include md-autocomplete-theme($theme);
   @include md-button-theme($theme);
   @include md-button-toggle-theme($theme);
   @include md-card-theme($theme);
   @include md-checkbox-theme($theme);
+  @include md-chips-theme($theme);
   @include md-dialog-theme($theme);
   @include md-grid-list-theme($theme);
   @include md-icon-theme($theme);

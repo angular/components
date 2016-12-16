@@ -1,5 +1,5 @@
 import {spawn} from 'child_process';
-import {existsSync, readdirSync, statSync} from 'fs';
+import {existsSync, statSync} from 'fs';
 import {task} from 'gulp';
 import gulpRunSequence = require('run-sequence');
 import path = require('path');
@@ -34,7 +34,7 @@ task(':publish:whoami', execTask('npm', ['whoami'], {
 task(':publish:logout', execTask('npm', ['logout']));
 
 
-function _execNpmPublish(label: string): Promise<void> {
+function _execNpmPublish(label: string): Promise<{}> {
   const packageDir = DIST_COMPONENTS_ROOT;
   if (!statSync(packageDir).isDirectory()) {
     return;

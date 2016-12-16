@@ -1,13 +1,14 @@
 <div class="md-select-trigger" overlay-origin (click)="toggle()" #origin="overlayOrigin" #trigger>
-  <span class="md-select-placeholder" [@transformPlaceholder]="_getPlaceholderState()"> {{ placeholder }} </span>
+  <span class="md-select-placeholder" [class.md-floating-placeholder]="this.selected"
+   [@transformPlaceholder]="_placeholderState" [style.width.px]="_selectedValueWidth"> {{ placeholder }} </span>
   <span class="md-select-value" *ngIf="selected"> {{ selected?.viewValue }} </span>
   <span class="md-select-arrow"></span>
 </div>
 
 <template connected-overlay [origin]="origin"  [open]="panelOpen" hasBackdrop (backdropClick)="close()"
-  backdropClass="md-overlay-transparent-backdrop" [positions]="_positions" [width]="_getWidth()"
-  (positionChange)="_updateTransformOrigin($event)">
-  <div class="md-select-panel" [@transformPanel]="_getPanelState()" (@transformPanel.done)="_onPanelDone()"
+  backdropClass="md-overlay-transparent-backdrop" [positions]="_positions" [minWidth]="_triggerWidth"
+  [offsetY]="_offsetY" [offsetX]="_offsetX" (attach)="_setScrollTop()">
+  <div class="md-select-panel" [@transformPanel]="'showing'" (@transformPanel.done)="_onPanelDone()"
     (keydown)="_keyManager.onKeydown($event)" [style.transformOrigin]="_transformOrigin">
     <div class="md-select-content" [@fadeInContent]="'showing'">
       <ng-content></ng-content>

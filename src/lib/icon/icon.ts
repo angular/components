@@ -1,22 +1,21 @@
 import {
-    NgModule,
-    ModuleWithProviders,
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    Input,
-    OnChanges,
-    OnInit,
-    Renderer,
-    SimpleChange,
-    ViewEncapsulation,
-    AfterViewChecked
+  NgModule,
+  ModuleWithProviders,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  Renderer,
+  SimpleChange,
+  ViewEncapsulation,
+  AfterViewChecked,
 } from '@angular/core';
 import {HttpModule} from '@angular/http';
-import {MdError} from '../core';
+import {MdError, DefaultStyleCompatibilityModeModule} from '../core';
 import {MdIconRegistry} from './icon-registry';
 export {MdIconRegistry} from './icon-registry';
-
 
 /** Exception thrown when an invalid icon name is passed to an md-icon component. */
 export class MdIconInvalidNameError extends MdError {
@@ -61,7 +60,7 @@ export class MdIconInvalidNameError extends MdError {
 @Component({
   moduleId: module.id,
   template: '<ng-content></ng-content>',
-  selector: 'md-icon',
+  selector: 'md-icon, mat-icon',
   styleUrls: ['icon.css'],
   host: {
     'role': 'img',
@@ -138,7 +137,6 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
     }
   }
 
-  /** TODO: internal */
   ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
     const changedInputs = Object.keys(changes);
     // Only update the inline SVG icon if the inputs changed, to avoid unnecessary DOM operations.
@@ -160,7 +158,6 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
     this._updateAriaLabel();
   }
 
-  /** TODO: internal */
   ngOnInit() {
     // Update font classes because ngOnChanges won't be called if none of the inputs are present,
     // e.g. <md-icon>arrow</md-icon>. In this case we need to add a CSS class for the default font.
@@ -169,7 +166,6 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
     }
   }
 
-  /** TODO: internal */
   ngAfterViewChecked() {
     // Update aria label here because it may depend on the projected text content.
     // (e.g. <md-icon>home</md-icon> should use 'home').
@@ -251,8 +247,8 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
 
 
 @NgModule({
-  imports: [HttpModule],
-  exports: [MdIcon],
+  imports: [HttpModule, DefaultStyleCompatibilityModeModule],
+  exports: [MdIcon, DefaultStyleCompatibilityModeModule],
   declarations: [MdIcon],
 })
 export class MdIconModule {

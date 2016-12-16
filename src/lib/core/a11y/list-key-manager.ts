@@ -32,7 +32,11 @@ export class ListKeyManager {
     return this;
   }
 
-  /** Sets the focus of the list to the item at the index specified. */
+  /**
+   * Sets the focus of the list to the item at the index specified.
+   *
+   * @param index The index of the item to be focused.
+   */
   setFocus(index: number): void {
     this._focusedItemIndex = index;
     this._items.toArray()[index].focus();
@@ -54,9 +58,14 @@ export class ListKeyManager {
         this.focusLastItem();
         break;
       case TAB:
+        // Note that we shouldn't prevent the default action on tab.
         this._tabOut.next(null);
-        break;
+        return;
+      default:
+        return;
     }
+
+    event.preventDefault();
   }
 
   /** Focuses the first enabled item in the list. */
@@ -82,6 +91,11 @@ export class ListKeyManager {
   /** Returns the index of the currently focused item. */
   get focusedItemIndex(): number {
     return this._focusedItemIndex;
+  }
+
+  /** Allows setting of the focusedItemIndex without focusing the item. */
+  updateFocusedItemIndex(index: number) {
+    this._focusedItemIndex = index;
   }
 
   /**

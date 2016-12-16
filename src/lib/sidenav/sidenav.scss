@@ -1,6 +1,7 @@
 @import '../core/style/variables';
 @import '../core/style/elevation';
 @import '../core/style/layout-common';
+@import '../core/a11y/a11y';
 
 
 // Mixin to help with defining LTR/RTL 'transform: translate3d()' values.
@@ -39,9 +40,9 @@
   transform: translate3d(0, 0, 0);
 }
 
-md-sidenav-layout {
+.md-sidenav-container {
   // We need a stacking context here so that the backdrop and drawers are clipped to the
-  // MdSidenavLayout. This creates a new z-index stack so we use low numbered z-indices.
+  // MdSidenavContainer. This creates a new z-index stack so we use low numbered z-indices.
   // We create another stacking context in the '.md-sidenav-content' and in each sidenav so that
   // the application content does not get messed up with our own CSS.
   @include md-sidenav-stacking-context();
@@ -83,6 +84,10 @@ md-sidenav-layout {
   &.md-sidenav-shown {
     visibility: visible;
   }
+
+  @include md-high-contrast {
+    opacity: 0.5;
+  }
 }
 
 .md-sidenav-content {
@@ -102,9 +107,7 @@ md-sidenav {
   bottom: 0;
   z-index: 3;
   min-width: 5%;
-
-  // TODO(kara): revisit scrolling behavior for sidenavs
-  overflow-y: auto;
+  outline: 0;
 
   @include md-sidenav-transition(0, -100%);
 
@@ -127,6 +130,16 @@ md-sidenav {
 
       @include md-sidenav-transition(0, -100%);
     }
+  }
+}
+
+.md-sidenav-focus-trap {
+  height: 100%;
+
+  > .cdk-focus-trap-content {
+    box-sizing: border-box;
+    height: 100%;
+    overflow-y: auto; // TODO(kara): revisit scrolling behavior for sidenavs
   }
 }
 

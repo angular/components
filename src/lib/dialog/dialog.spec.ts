@@ -134,6 +134,98 @@ describe('MdDialog', () => {
     expect(overlayContainerElement.querySelector('md-dialog-container')).toBeFalsy();
   });
 
+  it('should should override the width of the overlay pane', () => {
+    dialog.open(PizzaMsg, {
+      width: '500px'
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.md-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.width).toBe('500px');
+  });
+
+  it('should should override the height of the overlay pane', () => {
+    dialog.open(PizzaMsg, {
+      height: '100px'
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.md-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.height).toBe('100px');
+  });
+
+  it('should should override the top offset of the overlay pane', () => {
+    dialog.open(PizzaMsg, {
+      position: {
+        top: '100px'
+      }
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.md-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.marginTop).toBe('100px');
+  });
+
+  it('should should override the bottom offset of the overlay pane', () => {
+    dialog.open(PizzaMsg, {
+      position: {
+        bottom: '200px'
+      }
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.md-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.marginBottom).toBe('200px');
+  });
+
+  it('should should override the left offset of the overlay pane', () => {
+    dialog.open(PizzaMsg, {
+      position: {
+        left: '250px'
+      }
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.md-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.marginLeft).toBe('250px');
+  });
+
+  it('should should override the right offset of the overlay pane', () => {
+    dialog.open(PizzaMsg, {
+      position: {
+        right: '125px'
+      }
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.md-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.marginRight).toBe('125px');
+  });
+
+  it('should close all of the dialogs', () => {
+    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsg);
+
+    expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(3);
+
+    dialog.closeAll();
+
+    expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(0);
+  });
+
   describe('disableClose option', () => {
     it('should prevent closing via clicks on the backdrop', () => {
       dialog.open(PizzaMsg, {

@@ -16,7 +16,7 @@ export function config(config) {
       require('karma-browserstack-launcher'),
       require('karma-sauce-launcher'),
       require('karma-chrome-launcher'),
-      require('karma-firefox-launcher'),
+      require('karma-firefox-launcher')
     ],
     files: [
       {pattern: 'dist/vendor/core-js/client/core.js', included: true, watched: false},
@@ -58,7 +58,7 @@ export function config(config) {
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
+    autoWatch: false,
 
     sauceLabs: {
       testName: 'material2',

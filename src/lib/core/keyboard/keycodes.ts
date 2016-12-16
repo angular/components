@@ -18,3 +18,7 @@ export const END = 35;
 export const ENTER = 13;
 export const SPACE = 32;
 export const TAB = 9;
+
+export const ESCAPE = 27;
+export const BACKSPACE = 8;
+export const DELETE = 46;

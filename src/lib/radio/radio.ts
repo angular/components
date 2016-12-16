@@ -4,6 +4,7 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
+  Renderer,
   EventEmitter,
   HostBinding,
   Input,
@@ -15,15 +16,17 @@ import {
   forwardRef,
   NgModule,
   ModuleWithProviders,
+  ViewChild,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 import {
-  NG_VALUE_ACCESSOR,
-  ControlValueAccessor
-} from '@angular/forms';
-import {MdRippleModule, MdUniqueSelectionDispatcher} from '../core';
-import {coerceBooleanProperty} from '../core/coersion/boolean-property';
-
+  MdRippleModule,
+  MdUniqueSelectionDispatcher,
+  DefaultStyleCompatibilityModeModule,
+} from '../core';
+import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 
 
 /**
@@ -53,7 +56,7 @@ export class MdRadioChange {
 }
 
 @Directive({
-  selector: 'md-radio-group',
+  selector: 'md-radio-group, mat-radio-group',
   providers: [MD_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
   host: {
     'role': 'radiogroup',
@@ -152,7 +155,6 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   /**
    * Initialize properties once content children are available.
    * This allows us to propagate relevant attributes to associated buttons.
-   * TODO: internal
    */
   ngAfterContentInit() {
     // Mark this component as initialized in AfterContentInit because the initial value can
@@ -205,35 +207,31 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
     }
   }
 
-  /**
-    * Implemented as part of ControlValueAccessor.
-    * TODO: internal
-    */
+  /** Implemented as part of ControlValueAccessor. */
   writeValue(value: any) {
     this.value = value;
   }
 
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
+  /** Implemented as part of ControlValueAccessor. */
   registerOnChange(fn: (value: any) => void) {
     this._controlValueAccessorChangeFn = fn;
   }
 
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
+  /** Implemented as part of ControlValueAccessor. */
   registerOnTouched(fn: any) {
     this.onTouched = fn;
+  }
+
+  /** Implemented as a part of ControlValueAccessor. */
+  setDisabledState(isDisabled: boolean) {
+    this.disabled = isDisabled;
   }
 }
 
 
 @Component({
   moduleId: module.id,
-  selector: 'md-radio-button',
+  selector: 'md-radio-button, mat-radio-button',
   templateUrl: 'radio.html',
   styleUrls: ['radio.css'],
   encapsulation: ViewEncapsulation.None
@@ -281,8 +279,12 @@ export class MdRadioButton implements OnInit {
   @Output()
   change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
 
+  /** The native `<input type=radio> element */
+  @ViewChild('input') _inputElement: ElementRef;
+
   constructor(@Optional() radioGroup: MdRadioGroup,
               private _elementRef: ElementRef,
+              private _renderer: Renderer,
               public radioDispatcher: MdUniqueSelectionDispatcher) {
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
@@ -369,7 +371,6 @@ export class MdRadioButton implements OnInit {
     this._disabled = (value != null && value !== false) ? true : null;
   }
 
-  /** TODO: internal */
   ngOnInit() {
     if (this.radioGroup) {
       // If the radio is inside a radio group, determine if it should be checked
@@ -400,7 +401,11 @@ export class MdRadioButton implements OnInit {
     this._isFocused = true;
   }
 
-  /** TODO: internal */
+  focus() {
+    this._renderer.invokeElementMethod(this._inputElement.nativeElement, 'focus');
+    this._onInputFocus();
+  }
+
   _onInputBlur() {
     this._isFocused = false;
 
@@ -409,7 +414,6 @@ export class MdRadioButton implements OnInit {
     }
   }
 
-  /** TODO: internal */
   _onInputClick(event: Event) {
     // We have to stop propagation for click events on the visual hidden input element.
     // By default, when a user clicks on a label element, a generated click event will be
@@ -424,7 +428,6 @@ export class MdRadioButton implements OnInit {
   /**
    * Triggered when the radio button received a click or the input recognized any change.
    * Clicking on a label element, will trigger a change event on the associated input.
-   * TODO: internal
    */
   _onInputChange(event: Event) {
     // We always have to stop propagation on the change event.
@@ -452,15 +455,15 @@ export class MdRadioButton implements OnInit {
 
 
 @NgModule({
-  imports: [CommonModule, MdRippleModule],
-  exports: [MdRadioGroup, MdRadioButton],
+  imports: [CommonModule, MdRippleModule, DefaultStyleCompatibilityModeModule],
+  exports: [MdRadioGroup, MdRadioButton, DefaultStyleCompatibilityModeModule],
   declarations: [MdRadioGroup, MdRadioButton],
 })
 export class MdRadioModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdRadioModule,
-      providers: [MdUniqueSelectionDispatcher],
+      providers: [MdUniqueSelectionDispatcher, ViewportRuler],
     };
   }
 }

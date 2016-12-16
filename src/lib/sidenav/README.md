@@ -1,13 +1,13 @@
 # MdSidenav
 
-MdSidenav is the side navigation component for Material 2. It is composed of two components; `<md-sidenav-layout>` and `<md-sidenav>`.
+MdSidenav is the side navigation component for Material 2. It is composed of two components: `<md-sidenav-container>` and `<md-sidenav>`.
 
 ## Screenshots
 
 <img src="https://material.angularjs.org/material2_assets/sidenav-example.png">
 
 
-## `<md-sidenav-layout>`
+## `<md-sidenav-container>`
 
 The parent component. Contains the code necessary to coordinate one or two sidenav and the backdrop.
 
@@ -19,8 +19,8 @@ The sidenav panel.
 
 | Name | Type | Description |
 | --- | --- | --- |
-| `align` | `"start"|"end"` | The alignment of this sidenav. In LTR direction, `"start"` will be shown on the left, `"end"` on the right. In RTL, it is reversed. `"start"` is used by default. If there is more than 1 sidenav on either side the layout will be considered invalid and none of the sidenavs will be visible or toggleable until the layout is valid again. |
-| `mode` | `"over"|"push"|"side"` | The mode or styling of the sidenav, default being `"over"`. With `"over"` the sidenav will appear above the content, and a backdrop will be shown. With `"push"` the sidenav will push the content of the `<md-sidenav-layout>` to the side, and show a backdrop over it. `"side"` will resize the content and keep the sidenav opened. Clicking the backdrop will close sidenavs that do not have `mode="side"`. |
+| `align` | `"start"|"end"` | The alignment of this sidenav. In LTR direction, `"start"` will be shown on the left, `"end"` on the right. In RTL, it is reversed. `"start"` is used by default. If there is more than 1 sidenav on either side the container will be considered invalid and none of the sidenavs will be visible or toggleable until the container is valid again. |
+| `mode` | `"over"|"push"|"side"` | The mode or styling of the sidenav, default being `"over"`. With `"over"` the sidenav will appear above the content, and a backdrop will be shown. With `"push"` the sidenav will push the content of the `<md-sidenav-container>` to the side, and show a backdrop over it. `"side"` will resize the content and keep the sidenav opened. Clicking the backdrop will close sidenavs that do not have `mode="side"`. |
 | `opened` | `boolean` | Whether or not the sidenav is opened. Use this binding to open/close the sidenav. |
 
 ### Events
@@ -58,7 +58,7 @@ Here's a simple example of using the sidenav:
 
 ```html
 <app>
-  <md-sidenav-layout>
+  <md-sidenav-container>
     <md-sidenav #start (open)="closeStartButton.focus()">
       Start Sidenav.
       <br>
@@ -73,7 +73,90 @@ Here's a simple example of using the sidenav:
     <button md-button (click)="start.open()">Open start sidenav</button>
     <button md-button (click)="end.open()">Open end sidenav</button>
 
-  </md-sidenav-layout>
+  </md-sidenav-container>
 </app>
 ```
 
+For a fullscreen sidenav, the recommended approach is set up the DOM such that the
+`md-sidenav-container` can naturally take up the full space:
+
+```html
+<app>
+  <md-sidenav-container>
+    <md-sidenav mode="side" opened="true">Drawer content</md-sidenav>
+    <div class="my-content">Main content</div>
+  </md-sidenav-container>
+</app>
+```
+```css
+html, body, material-app, md-sidenav-container, .my-content {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+```
+
+For a sidenav with a FAB (or other floating element), the recommended approach is to place the FAB
+outside of the scrollable region and absolutely position it.
+
+```html
+<app>
+  <md-sidenav-container class="my-container">
+    <md-sidenav mode="side" opened="true">
+      <button md-mini-fab class="my-fab">
+        <md-icon>add</md-icon>
+      </button>
+      <div class="my-scrolling-content">
+        Lorem ipsum dolor sit amet, pede a libero aenean phasellus, lectus metus sint ut risus,
+        fusce vel in pellentesque. Nisl rutrum etiam morbi consectetuer tempor magna, aenean nullam
+        nunc id, neque vivamus interdum sociis nulla scelerisque sem, dolor id wisi turpis magna
+        aliquam magna. Risus accumsan hac eget etiam donec sed, senectus erat mattis quam, tempor
+        vel urna occaecat cras, metus urna augue nec at. Et morbi amet dui praesent, nec eu at,
+        ligula ipsum dui sollicitudin, quis nisl massa viverra ligula, mauris fermentum orci arcu
+        enim fringilla. Arcu erat nulla in aenean lacinia ullamcorper, urna ante nam et sagittis,
+        tristique vehicula nibh ipsum vivamus, proin proin. Porta commodo nibh quis libero amet.
+        Taciti dui, sapien consectetuer.
+      </div>
+    </md-sidenav>
+    <button md-mini-fab class="my-fab">
+      <md-icon>add</md-icon>
+    </button>
+    <div class="my-scrolling-content">
+      Lorem ipsum dolor sit amet, pede a libero aenean phasellus, lectus metus sint ut risus, fusce
+      vel in pellentesque. Nisl rutrum etiam morbi consectetuer tempor magna, aenean nullam nunc id,
+      neque vivamus interdum sociis nulla scelerisque sem, dolor id wisi turpis magna aliquam magna.
+      Risus accumsan hac eget etiam donec sed, senectus erat mattis quam, tempor vel urna occaecat
+      cras, metus urna augue nec at. Et morbi amet dui praesent, nec eu at, ligula ipsum dui
+      sollicitudin, quis nisl massa viverra ligula, mauris fermentum orci arcu enim fringilla. Arcu
+      erat nulla in aenean lacinia ullamcorper, urna ante nam et sagittis, tristique vehicula nibh
+      ipsum vivamus, proin proin. Porta commodo nibh quis libero amet. Taciti dui, sapien
+      consectetuer.
+    </div>
+  </md-sidenav-container>
+</app>
+```
+```css
+.my-container {
+  width: 500px;
+  height: 300px;
+}
+
+.my-container md-sidenav {
+  max-width: 200px;
+}
+
+.my-container .md-sidenav-content,
+.my-container md-sidenav {
+  display: flex;
+}
+
+.my-scrolling-content {
+  overflow: auto;
+}
+
+button.my-fab {
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+}
+```

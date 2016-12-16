@@ -10,11 +10,17 @@ import {
   AfterContentInit,
   NgModule,
   ModuleWithProviders,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {applyCssTransform, coerceBooleanProperty, MdGestureConfig} from '../core';
+import {
+  applyCssTransform,
+  coerceBooleanProperty,
+  MdGestureConfig,
+  DefaultStyleCompatibilityModeModule,
+} from '../core';
 import {Observable} from 'rxjs/Observable';
 
 
@@ -35,7 +41,7 @@ let nextId = 0;
 
 @Component({
   moduleId: module.id,
-  selector: 'md-slide-toggle',
+  selector: 'md-slide-toggle, mat-slide-toggle',
   host: {
     '[class.md-checked]': 'checked',
     '[class.md-disabled]': 'disabled',
@@ -86,9 +92,10 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   // Returns the unique id for the visual hidden input.
   getInputId = () => `${this.id || this._uniqueId}-input`;
 
+  @ViewChild('input') _inputElement: ElementRef;
+
   constructor(private _elementRef: ElementRef, private _renderer: Renderer) {}
 
-  /** TODO: internal */
   ngAfterContentInit() {
     this._slideRenderer = new SlideToggleRenderer(this._elementRef);
   }
@@ -150,28 +157,29 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
     this.onTouched();
   }
 
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
+  /** Implemented as part of ControlValueAccessor. */
   writeValue(value: any): void {
     this.checked = value;
   }
 
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
+  /** Implemented as part of ControlValueAccessor. */
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
 
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
+  /** Implemented as part of ControlValueAccessor. */
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
+  }
+
+  /** Implemented as a part of ControlValueAccessor. */
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  focus() {
+    this._renderer.invokeElementMethod(this._inputElement.nativeElement, 'focus');
+    this._onInputFocus();
   }
 
   @Input()
@@ -220,21 +228,18 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   }
 
 
-  /** TODO: internal */
   _onDragStart() {
     if (!this.disabled) {
       this._slideRenderer.startThumbDrag(this.checked);
     }
   }
 
-  /** TODO: internal */
   _onDrag(event: HammerInput) {
     if (this._slideRenderer.isDragging()) {
       this._slideRenderer.updateThumbPosition(event.deltaX);
     }
   }
 
-  /** TODO: internal */
   _onDragEnd() {
     if (!this._slideRenderer.isDragging()) {
       return;
@@ -315,8 +320,8 @@ class SlideToggleRenderer {
 
 
 @NgModule({
-  imports: [FormsModule],
-  exports: [MdSlideToggle],
+  imports: [FormsModule, DefaultStyleCompatibilityModeModule],
+  exports: [MdSlideToggle, DefaultStyleCompatibilityModeModule],
   declarations: [MdSlideToggle],
 })
 export class MdSlideToggleModule {

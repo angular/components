@@ -14,6 +14,7 @@ import {
   PortalModule,
   OVERLAY_PROVIDERS,
   MdLiveAnnouncer,
+  DefaultStyleCompatibilityModeModule,
 } from '../core';
 import {CommonModule} from '@angular/common';
 import {MdSnackBarConfig} from './snack-bar-config';
@@ -120,7 +121,6 @@ export class MdSnackBar {
   private _createOverlay(): OverlayRef {
     let state = new OverlayState();
     state.positionStrategy = this._overlay.position().global()
-        .fixed()
         .centerHorizontally()
         .bottom('0');
     return this._overlay.create(state);
@@ -138,8 +138,8 @@ function _applyConfigDefaults(config: MdSnackBarConfig): MdSnackBarConfig {
 
 
 @NgModule({
-  imports: [OverlayModule, PortalModule, CommonModule],
-  exports: [MdSnackBarContainer],
+  imports: [OverlayModule, PortalModule, CommonModule, DefaultStyleCompatibilityModeModule],
+  exports: [MdSnackBarContainer, DefaultStyleCompatibilityModeModule],
   declarations: [MdSnackBarContainer, SimpleSnackBar],
   entryComponents: [MdSnackBarContainer, SimpleSnackBar],
 })

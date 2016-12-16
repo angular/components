@@ -4,6 +4,8 @@ import {
     Component,
     ContentChildren,
     Directive,
+    ElementRef,
+    Renderer,
     EventEmitter,
     HostBinding,
     Input,
@@ -11,13 +13,19 @@ import {
     Optional,
     Output,
     QueryList,
+    ViewChild,
     ViewEncapsulation,
     forwardRef,
     AfterViewInit
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
-import {MdUniqueSelectionDispatcher, coerceBooleanProperty} from '../core';
+import {
+  MdUniqueSelectionDispatcher,
+  coerceBooleanProperty,
+  DefaultStyleCompatibilityModeModule,
+} from '../core';
+
 
 export type ToggleType = 'checkbox' | 'radio';
 
@@ -47,6 +55,7 @@ export class MdButtonToggleChange {
   providers: [MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
   host: {
     'role': 'radiogroup',
+    '[class.md-button-toggle-vertical]': 'vertical'
   },
   exportAs: 'mdButtonToggleGroup',
 })
@@ -59,6 +68,9 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
 
   /** Disables all toggles in the group. */
   private _disabled: boolean = null;
+
+  /** Whether the button toggle group should be vertical. */
+  private _vertical: boolean = false;
 
   /** The currently selected button toggle, should match the value. */
   private _selected: MdButtonToggle = null;
@@ -85,7 +97,6 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
   @ContentChildren(forwardRef(() => MdButtonToggle))
   _buttonToggles: QueryList<MdButtonToggle> = null;
 
-  /** TODO: internal */
   ngAfterViewInit() {
     this._isInitialized = true;
   }
@@ -107,6 +118,15 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
 
   set disabled(value) {
     this._disabled = coerceBooleanProperty(value);
+  }
+
+  @Input()
+  get vertical(): boolean {
+    return this._vertical;
+  }
+
+  set vertical(value) {
+    this._vertical = coerceBooleanProperty(value);
   }
 
   @Input()
@@ -178,26 +198,17 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
     this._change.emit(event);
   }
 
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
+  /** Implemented as part of ControlValueAccessor. */
   writeValue(value: any) {
     this.value = value;
   }
 
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
+  /** Implemented as part of ControlValueAccessor. */
   registerOnChange(fn: (value: any) => void) {
     this._controlValueAccessorChangeFn = fn;
   }
 
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
+  /** Implemented as part of ControlValueAccessor. */
   registerOnTouched(fn: any) {
     this.onTouched = fn;
   }
@@ -207,10 +218,16 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
 @Directive({
   selector: 'md-button-toggle-group[multiple]',
   exportAs: 'mdButtonToggleGroup',
+  host: {
+    '[class.md-button-toggle-vertical]': 'vertical'
+  }
 })
 export class MdButtonToggleGroupMultiple {
   /** Disables all toggles in the group. */
   private _disabled: boolean = null;
+
+  /** Whether the button toggle group should be vertical. */
+  private _vertical: boolean = false;
 
   @Input()
   get disabled(): boolean {
@@ -220,6 +237,16 @@ export class MdButtonToggleGroupMultiple {
   set disabled(value) {
     this._disabled = (value != null && value !== false) ? true : null;
   }
+
+  @Input()
+  get vertical(): boolean {
+    return this._vertical;
+  }
+
+  set vertical(value) {
+    this._vertical = coerceBooleanProperty(value);
+  }
+
 }
 
 @Component({
@@ -266,9 +293,12 @@ export class MdButtonToggle implements OnInit {
     return this._change.asObservable();
   }
 
+  @ViewChild('input') _inputElement: ElementRef;
+
   constructor(@Optional() toggleGroup: MdButtonToggleGroup,
               @Optional() toggleGroupMultiple: MdButtonToggleGroupMultiple,
-              public buttonToggleDispatcher: MdUniqueSelectionDispatcher) {
+              public buttonToggleDispatcher: MdUniqueSelectionDispatcher,
+              private _renderer: Renderer) {
     this.buttonToggleGroup = toggleGroup;
 
     this.buttonToggleGroupMultiple = toggleGroupMultiple;
@@ -383,9 +413,7 @@ export class MdButtonToggle implements OnInit {
     this._emitChangeEvent();
   }
 
-  /** TODO: internal */
   _onInputClick(event: Event) {
-
     // We have to stop propagation for click events on the visual hidden input element.
     // By default, when a user clicks on a label element, a generated click event will be
     // dispatched on the associated input element. Since we are using a label element as our
@@ -395,12 +423,21 @@ export class MdButtonToggle implements OnInit {
     // Preventing bubbling for the second event will solve that issue.
     event.stopPropagation();
   }
+
+  focus() {
+    this._renderer.invokeElementMethod(this._inputElement.nativeElement, 'focus');
+  }
 }
 
 
 @NgModule({
-  imports: [FormsModule],
-  exports: [MdButtonToggleGroup, MdButtonToggleGroupMultiple, MdButtonToggle],
+  imports: [FormsModule, DefaultStyleCompatibilityModeModule],
+  exports: [
+    MdButtonToggleGroup,
+    MdButtonToggleGroupMultiple,
+    MdButtonToggle,
+    DefaultStyleCompatibilityModeModule,
+  ],
   declarations: [MdButtonToggleGroup, MdButtonToggleGroupMultiple, MdButtonToggle],
 })
 export class MdButtonToggleModule {

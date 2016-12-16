@@ -24,7 +24,7 @@ import {
     HorizontalConnectionPos,
     VerticalConnectionPos,
 } from '../core';
-import { Subscription } from 'rxjs/Subscription';
+import {Subscription} from 'rxjs/Subscription';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
 
 /**
@@ -32,7 +32,7 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
  * responsible for toggling the display of the provided menu instance.
  */
 @Directive({
-  selector: '[md-menu-trigger-for]',
+  selector: '[md-menu-trigger-for], [mat-menu-trigger-for]',
   host: {
     'aria-haspopup': 'true',
     '(mousedown)': '_handleMousedown($event)',

@@ -8,10 +8,14 @@ import {
 import {
     NgControl,
     FormsModule,
+    ReactiveFormsModule,
+    FormControl,
 } from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdCheckbox, MdCheckboxChange, MdCheckboxModule} from './checkbox';
+import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+import {FakeViewportRuler} from '../core/overlay/position/fake-viewport-ruler';
 
 
 // TODO: Implement E2E tests for spacebar/click behavior for checking/unchecking
@@ -21,7 +25,7 @@ describe('MdCheckbox', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdCheckboxModule.forRoot(), FormsModule],
+      imports: [MdCheckboxModule.forRoot(), FormsModule, ReactiveFormsModule],
       declarations: [
         SingleCheckbox,
         CheckboxWithFormDirectives,
@@ -31,7 +35,11 @@ describe('MdCheckbox', () => {
         CheckboxWithAriaLabelledby,
         CheckboxWithNameAttribute,
         CheckboxWithChangeEvent,
+        CheckboxWithFormControl,
       ],
+      providers: [
+        {provide: ViewportRuler, useClass: FakeViewportRuler},
+      ]
     });
 
     TestBed.compileComponents();
@@ -95,6 +103,15 @@ describe('MdCheckbox', () => {
       expect(checkboxNativeElement.classList).not.toContain('md-checkbox-indeterminate');
       expect(inputElement.checked).toBe(false);
       expect(inputElement.indeterminate).toBe(false);
+    });
+
+    it('should change native element checked when check programmatically', () => {
+      expect(inputElement.checked).toBe(false);
+
+      checkboxInstance.checked = true;
+      fixture.detectChanges();
+
+      expect(inputElement.checked).toBe(true);
     });
 
     it('should toggle checked state on click', () => {
@@ -276,6 +293,15 @@ describe('MdCheckbox', () => {
       fixture.detectChanges();
 
       expect(inputElement.required).toBe(false);
+    });
+
+    it('should focus on underlying input element when focus() is called', () => {
+      expect(document.activeElement).not.toBe(inputElement);
+
+      checkboxInstance.focus();
+      fixture.detectChanges();
+
+      expect(document.activeElement).toBe(inputElement);
     });
 
     describe('color behaviour', () => {
@@ -561,18 +587,48 @@ describe('MdCheckbox', () => {
       expect(inputElement.getAttribute('name')).toBe('test-name');
     });
   });
+
+
+  describe('with form control', () => {
+    let checkboxDebugElement: DebugElement;
+    let checkboxInstance: MdCheckbox;
+    let testComponent: CheckboxWithFormControl;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(CheckboxWithFormControl);
+      fixture.detectChanges();
+
+      checkboxDebugElement = fixture.debugElement.query(By.directive(MdCheckbox));
+      checkboxInstance = checkboxDebugElement.componentInstance;
+      testComponent = fixture.debugElement.componentInstance;
+    });
+
+    it('should toggle the disabled state', () => {
+      expect(checkboxInstance.disabled).toBe(false);
+
+      testComponent.formControl.disable();
+      fixture.detectChanges();
+
+      expect(checkboxInstance.disabled).toBe(true);
+
+      testComponent.formControl.enable();
+      fixture.detectChanges();
+
+      expect(checkboxInstance.disabled).toBe(false);
+    });
+  });
 });
 
 /** Simple component for testing a single checkbox. */
 @Component({
   template: `
-  <div (click)="parentElementClicked = true" (keyup)="parentElementKeyedUp = true">    
-    <md-checkbox 
+  <div (click)="parentElementClicked = true" (keyup)="parentElementKeyedUp = true">
+    <md-checkbox
         id="simple-check"
         [required]="isRequired"
         [align]="alignment"
-        [checked]="isChecked" 
-        [indeterminate]="isIndeterminate" 
+        [checked]="isChecked"
+        [indeterminate]="isIndeterminate"
         [disabled]="isDisabled"
         [color]="checkboxColor"
         (change)="changeCount = changeCount + 1"
@@ -623,9 +679,9 @@ class MultipleCheckboxes { }
 /** Simple test component with tabIndex */
 @Component({
   template: `
-    <md-checkbox 
-        [tabindex]="customTabIndex" 
-        [disabled]="isDisabled" 
+    <md-checkbox
+        [tabindex]="customTabIndex"
+        [disabled]="isDisabled"
         [disableRipple]="disableRipple">
     </md-checkbox>`,
 })
@@ -659,4 +715,12 @@ class CheckboxWithNameAttribute {}
 })
 class CheckboxWithChangeEvent {
   lastEvent: MdCheckboxChange;
+}
+
+/** Test component with reactive forms */
+@Component({
+  template: `<md-checkbox [formControl]="formControl"></md-checkbox>`
+})
+class CheckboxWithFormControl {
+  formControl = new FormControl();
 }

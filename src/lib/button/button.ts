@@ -10,7 +10,9 @@ import {
   ModuleWithProviders,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MdRippleModule, coerceBooleanProperty} from '../core';
+import {MdRippleModule, coerceBooleanProperty, DefaultStyleCompatibilityModeModule} from '../core';
+import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+
 
 // TODO(jelbourn): Make the `isMouseDown` stuff done with one global listener.
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
@@ -95,7 +97,7 @@ export class MdButton {
 
   /** TODO(hansl): e2e test this function. */
   focus() {
-    this._elementRef.nativeElement.focus();
+    this._renderer.invokeElementMethod(this._elementRef.nativeElement, 'focus');
   }
 
   getHostElement() {
@@ -157,15 +159,15 @@ export class MdAnchor extends MdButton {
 
 
 @NgModule({
-  imports: [CommonModule, MdRippleModule],
-  exports: [MdButton, MdAnchor],
+  imports: [CommonModule, MdRippleModule, DefaultStyleCompatibilityModeModule],
+  exports: [MdButton, MdAnchor, DefaultStyleCompatibilityModeModule],
   declarations: [MdButton, MdAnchor],
 })
 export class MdButtonModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdButtonModule,
-      providers: []
+      providers: [ViewportRuler]
     };
   }
 }

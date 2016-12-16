@@ -15,15 +15,22 @@ class FakeQueryList<T> extends QueryList<T> {
   }
 }
 
-const DOWN_ARROW_EVENT = { keyCode: DOWN_ARROW } as KeyboardEvent;
-const UP_ARROW_EVENT = { keyCode: UP_ARROW } as KeyboardEvent;
-const TAB_EVENT = { keyCode: TAB } as KeyboardEvent;
-const HOME_EVENT = { keyCode: HOME } as KeyboardEvent;
-const END_EVENT = { keyCode: END } as KeyboardEvent;
+class FakeEvent {
+  defaultPrevented: boolean = false;
+  constructor(public keyCode: number) {}
+  preventDefault() {
+    this.defaultPrevented = true;
+  }
+}
 
 describe('ListKeyManager', () => {
   let keyManager: ListKeyManager;
   let itemList: FakeQueryList<FakeFocusable>;
+  let DOWN_ARROW_EVENT: KeyboardEvent;
+  let UP_ARROW_EVENT: KeyboardEvent;
+  let TAB_EVENT: KeyboardEvent;
+  let HOME_EVENT: KeyboardEvent;
+  let END_EVENT: KeyboardEvent;
 
   beforeEach(() => {
     itemList = new FakeQueryList<FakeFocusable>();
@@ -34,6 +41,12 @@ describe('ListKeyManager', () => {
     ];
 
     keyManager = new ListKeyManager(itemList);
+
+    DOWN_ARROW_EVENT = new FakeEvent(DOWN_ARROW) as KeyboardEvent;
+    UP_ARROW_EVENT = new FakeEvent(UP_ARROW) as KeyboardEvent;
+    TAB_EVENT = new FakeEvent(TAB) as KeyboardEvent;
+    HOME_EVENT = new FakeEvent(HOME) as KeyboardEvent;
+    END_EVENT = new FakeEvent(END) as KeyboardEvent;
 
     // first item is already focused
     keyManager.focusFirstItem();
@@ -166,6 +179,22 @@ describe('ListKeyManager', () => {
       expect(tabOutEmitted).toBe(true);
     });
 
+    it('should prevent the default keyboard action', () => {
+      expect(DOWN_ARROW_EVENT.defaultPrevented).toBe(false);
+
+      keyManager.onKeydown(DOWN_ARROW_EVENT);
+
+      expect(DOWN_ARROW_EVENT.defaultPrevented).toBe(true);
+    });
+
+    it('should not prevent the default keyboard action when pressing tab', () => {
+      expect(TAB_EVENT.defaultPrevented).toBe(false);
+
+      keyManager.onKeydown(TAB_EVENT);
+
+      expect(TAB_EVENT.defaultPrevented).toBe(false);
+    });
+
   });
 
   describe('programmatic focus', () => {
@@ -178,6 +207,16 @@ describe('ListKeyManager', () => {
       expect(keyManager.focusedItemIndex)
           .toBe(1, `Expected focusedItemIndex to be updated when setFocus() was called.`);
       expect(itemList.items[1].focus).toHaveBeenCalledTimes(1);
+    });
+
+    it('should allow setting the focused item without calling focus', () => {
+      expect(keyManager.focusedItemIndex)
+        .toBe(0, `Expected focus to be on the first item of the list.`);
+
+      keyManager.updateFocusedItemIndex(1);
+      expect(keyManager.focusedItemIndex)
+        .toBe(1, `Expected focusedItemIndex to be updated after calling updateFocusedItemIndex().`);
+      expect(itemList.items[1].focus).not.toHaveBeenCalledTimes(1);
     });
 
     it('should focus the first item when focusFirstItem() is called', () => {

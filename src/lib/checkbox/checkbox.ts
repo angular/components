@@ -1,4 +1,5 @@
 import {
+    ChangeDetectorRef,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
@@ -10,11 +11,14 @@ import {
     forwardRef,
     NgModule,
     ModuleWithProviders,
+    ViewChild,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
-import {coerceBooleanProperty} from '../core/coersion/boolean-property';
-import {MdRippleModule} from '../core';
+import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {MdRippleModule, DefaultStyleCompatibilityModeModule} from '../core';
+import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+
 
 /**
  * Monotonically increasing integer used to auto-generate unique ids for checkbox components.
@@ -61,7 +65,7 @@ export class MdCheckboxChange {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-checkbox',
+  selector: 'md-checkbox, mat-checkbox',
   templateUrl: 'checkbox.html',
   styleUrls: ['checkbox.css'],
   host: {
@@ -112,7 +116,7 @@ export class MdCheckbox implements ControlValueAccessor {
   /** Whether or not the checkbox should come before or after the label. */
   @Input() align: 'start' | 'end' = 'start';
 
-  private _disabled: boolean;
+  private _disabled: boolean = false;
 
   /**
    * Whether the checkbox is disabled. When the checkbox is disabled it cannot be interacted with.
@@ -134,6 +138,9 @@ export class MdCheckbox implements ControlValueAccessor {
   /** Event emitted when the checkbox's `checked` value changes. */
   @Output() change: EventEmitter<MdCheckboxChange> = new EventEmitter<MdCheckboxChange>();
 
+  /** The native `<input type=checkbox> element */
+  @ViewChild('input') _inputElement: ElementRef;
+
   /** Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor. */
   onTouched: () => any = () => {};
 
@@ -151,7 +158,9 @@ export class MdCheckbox implements ControlValueAccessor {
 
   hasFocus: boolean = false;
 
-  constructor(private _renderer: Renderer, private _elementRef: ElementRef) {
+  constructor(private _renderer: Renderer,
+              private _elementRef: ElementRef,
+              private _changeDetectorRef: ChangeDetectorRef) {
     this.color = 'accent';
   }
 
@@ -169,6 +178,7 @@ export class MdCheckbox implements ControlValueAccessor {
       this._checked = checked;
       this._transitionCheckState(
           this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+      this._changeDetectorRef.markForCheck();
     }
   }
 
@@ -221,28 +231,24 @@ export class MdCheckbox implements ControlValueAccessor {
     return this.disableRipple || this.disabled;
   }
 
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
+  /** Implemented as part of ControlValueAccessor. */
   writeValue(value: any) {
     this.checked = !!value;
   }
 
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
+  /** Implemented as part of ControlValueAccessor. */
   registerOnChange(fn: (value: any) => void) {
     this._controlValueAccessorChangeFn = fn;
   }
 
-  /**
-   * Implemented as part of ControlValueAccessor.
-   * TODO: internal
-   */
+  /** Implemented as part of ControlValueAccessor. */
   registerOnTouched(fn: any) {
     this.onTouched = fn;
+  }
+
+  /** Implemented as a part of ControlValueAccessor. */
+  setDisabledState(isDisabled: boolean) {
+    this.disabled = isDisabled;
   }
 
   private _transitionCheckState(newState: TransitionCheckState) {
@@ -314,6 +320,11 @@ export class MdCheckbox implements ControlValueAccessor {
     }
   }
 
+  focus() {
+    this._renderer.invokeElementMethod(this._inputElement.nativeElement, 'focus');
+    this._onInputFocus();
+  }
+
   _onInputClick(event: Event) {
     // We have to stop propagation for click events on the visual hidden input element.
     // By default, when a user clicks on a label element, a generated click event will be
@@ -362,15 +373,15 @@ export class MdCheckbox implements ControlValueAccessor {
 
 
 @NgModule({
-  imports: [CommonModule, MdRippleModule],
-  exports: [MdCheckbox],
+  imports: [CommonModule, MdRippleModule, DefaultStyleCompatibilityModeModule],
+  exports: [MdCheckbox, DefaultStyleCompatibilityModeModule],
   declarations: [MdCheckbox],
 })
 export class MdCheckboxModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdCheckboxModule,
-      providers: []
+      providers: [ViewportRuler]
     };
   }
 }

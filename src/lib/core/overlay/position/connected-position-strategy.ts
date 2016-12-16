@@ -1,7 +1,6 @@
 import {PositionStrategy} from './position-strategy';
 import {ElementRef} from '@angular/core';
 import {ViewportRuler} from './viewport-ruler';
-import {applyCssTransform} from '../../style/apply-transform';
 import {
     ConnectionPositionPair,
     OriginConnectionPosition,
@@ -60,9 +59,14 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /**
+   * To be used to for any cleanup after the element gets destroyed.
+   */
+  dispose() { }
+
+  /**
    * Updates the position of the overlay element, using whichever preferred position relative
    * to the origin fits on-screen.
-   * TODO: internal
+   * @docs-private
    */
   apply(element: HTMLElement): Promise<void> {
     // We need the bounding rects for the origin and the overlay to determine how to position
@@ -214,10 +218,10 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       viewportRect: ClientRect): boolean {
 
     // TODO(jelbourn): probably also want some space between overlay edge and viewport edge.
-    return overlayPoint.x >= viewportRect.left &&
-        overlayPoint.x + overlayRect.width <= viewportRect.right &&
-        overlayPoint.y >= viewportRect.top &&
-        overlayPoint.y + overlayRect.height <= viewportRect.bottom;
+    return overlayPoint.x >= 0 &&
+        overlayPoint.x + overlayRect.width <= viewportRect.width &&
+        overlayPoint.y >= 0 &&
+        overlayPoint.y + overlayRect.height <= viewportRect.height;
   }
 
 
@@ -227,18 +231,11 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * @param overlayPoint
    */
   private _setElementPosition(element: HTMLElement, overlayPoint: Point) {
-    // Round the values to prevent blurry overlays due to subpixel rendering.
-    let x = Math.round(overlayPoint.x);
-    let y = Math.round(overlayPoint.y);
-
-    // TODO(jelbourn): we don't want to always overwrite the transform property here,
-    // because it will need to be used for animations.
-    applyCssTransform(element, `translateX(${x}px) translateY(${y}px)`);
+    element.style.left = overlayPoint.x + 'px';
+    element.style.top = overlayPoint.y + 'px';
   }
 }
 
 
 /** A simple (x, y) coordinate. */
 type Point = {x: number, y: number};
-
-

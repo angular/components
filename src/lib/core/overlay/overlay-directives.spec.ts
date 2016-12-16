@@ -85,6 +85,24 @@ describe('Overlay directives', () => {
       expect(pane.style.height).toEqual('100vh');
     });
 
+    it('should set the min width', () => {
+      fixture.componentInstance.minWidth = 250;
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
+      const pane = overlayContainerElement.children[0] as HTMLElement;
+      expect(pane.style.minWidth).toEqual('250px');
+    });
+
+    it('should set the min height', () => {
+      fixture.componentInstance.minHeight = '500px';
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
+      const pane = overlayContainerElement.children[0] as HTMLElement;
+      expect(pane.style.minHeight).toEqual('500px');
+    });
+
     it('should create the backdrop if designated', () => {
       fixture.componentInstance.hasBackdrop = true;
       fixture.componentInstance.isOpen = true;
@@ -119,10 +137,22 @@ describe('Overlay directives', () => {
       fixture.componentInstance.isOpen = true;
       fixture.detectChanges();
 
-      // expected x value is the starting x + offset x
-      const expectedX = startX + 5;
       const pane = overlayContainerElement.children[0] as HTMLElement;
-      expect(pane.style.transform).toContain(`translateX(${expectedX}px)`);
+
+      expect(pane.style.left)
+          .toBe(startX + 5 + 'px',
+              `Expected overlay translateX to equal the original X + the offsetX.`);
+
+      fixture.componentInstance.isOpen = false;
+      fixture.detectChanges();
+
+      fixture.componentInstance.offsetX = 15;
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
+      expect(pane.style.left)
+          .toBe(startX + 15 + 'px',
+              `Expected overlay directive to reflect new offsetX if it changes.`);
     });
 
     it('should set the offsetY', () => {
@@ -138,7 +168,18 @@ describe('Overlay directives', () => {
       // expected y value is the starting y + trigger height + offset y
       // 30 + 20 + 45 = 95px
       const pane = overlayContainerElement.children[0] as HTMLElement;
-      expect(pane.style.transform).toContain(`translateY(95px)`);
+
+      expect(pane.style.top)
+          .toBe('95px', `Expected overlay translateY to equal the start Y + height + offsetY.`);
+
+      fixture.componentInstance.isOpen = false;
+      fixture.detectChanges();
+
+      fixture.componentInstance.offsetY = 55;
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+      expect(pane.style.top)
+          .toBe('105px', `Expected overlay directive to reflect new offsetY if it changes.`);
     });
 
   });
@@ -167,6 +208,23 @@ describe('Overlay directives', () => {
               `Expected directive to emit an instance of ConnectedOverlayPositionChange.`);
     });
 
+    it('should emit attach and detach appropriately', () => {
+      expect(fixture.componentInstance.attachHandler).not.toHaveBeenCalled();
+      expect(fixture.componentInstance.detachHandler).not.toHaveBeenCalled();
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.attachHandler).toHaveBeenCalled();
+      expect(fixture.componentInstance.attachResult)
+          .toEqual(jasmine.any(HTMLElement),
+              `Expected pane to be populated with HTML elements when attach was called.`);
+      expect(fixture.componentInstance.detachHandler).not.toHaveBeenCalled();
+
+      fixture.componentInstance.isOpen = false;
+      fixture.detectChanges();
+      expect(fixture.componentInstance.detachHandler).toHaveBeenCalled();
+    });
+
   });
 
 });
@@ -178,7 +236,8 @@ describe('Overlay directives', () => {
   <template connected-overlay [origin]="trigger" [open]="isOpen" [width]="width" [height]="height"
             [hasBackdrop]="hasBackdrop" backdropClass="md-test-class"
             (backdropClick)="backdropClicked=true" [offsetX]="offsetX" [offsetY]="offsetY"
-            (positionChange)="positionChangeHandler($event)">
+            (positionChange)="positionChangeHandler($event)" (attach)="attachHandler()"
+            (detach)="detachHandler()" [minWidth]="minWidth" [minHeight]="minHeight">
     <p>Menu content</p>
   </template>`,
 })
@@ -186,11 +245,19 @@ class ConnectedOverlayDirectiveTest {
   isOpen = false;
   width: number | string;
   height: number | string;
+  minWidth: number | string;
+  minHeight: number | string;
   offsetX: number = 0;
   offsetY: number = 0;
   hasBackdrop: boolean;
   backdropClicked = false;
   positionChangeHandler = jasmine.createSpy('positionChangeHandler');
+  attachHandler = jasmine.createSpy('attachHandler').and.callFake(() => {
+    this.attachResult =
+        this.connectedOverlayDirective.overlayRef.overlayElement.querySelector('p') as HTMLElement;
+  });
+  detachHandler = jasmine.createSpy('detachHandler');
+  attachResult: HTMLElement;
 
   @ViewChild(ConnectedOverlayDirective) connectedOverlayDirective: ConnectedOverlayDirective;
 }
