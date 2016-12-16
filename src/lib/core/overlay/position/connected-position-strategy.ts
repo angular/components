@@ -35,7 +35,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   private _offsetY: number = 0;
 
   /** The Scrollable containers that may cause the overlay's connectedTo element to be clipped */
-  private scrollables: Scrollable[];
+  private scrollables: Scrollable[] = [];
 
   /** Whether the we're dealing with an RTL context */
   get _isRtl() {
@@ -106,7 +106,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       // If the overlay in the calculated position fits on-screen, put it there and we're done.
       if (overlayPoint.fitsInViewport) {
         this._setElementPosition(element, overlayPoint);
-        const isClipped = this.isConnectedToElementClipped();
+        const isClipped = this.isOverlayElementClipped(element);
         this._onPositionChange.next(new ConnectedOverlayPositionChange(pos, isClipped));
         return Promise.resolve(null);
       } else if (!fallbackPoint || fallbackPoint.visibleArea < overlayPoint.visibleArea) {
@@ -262,6 +262,21 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     return {x, y, fitsInViewport, visibleArea};
   }
 
+  /** Whether the overlay element is clipped out of view of one of the scrollable containers. */
+  private isOverlayElementClipped(element: HTMLElement): boolean {
+    const elementBounds = this._getElementBounds(element);
+    return this.scrollables.some((scrollable: Scrollable) => {
+      const scrollingContainerBounds = this._getElementBounds(scrollable.getElementRef().nativeElement);
+
+      const clippedAbove = elementBounds.top < scrollingContainerBounds.top;
+      const clippedBelow = elementBounds.bottom > scrollingContainerBounds.bottom;
+      const clippedLeft = elementBounds.left < scrollingContainerBounds.left;
+      const clippedRight = elementBounds.right > scrollingContainerBounds.right;
+
+      return clippedAbove || clippedBelow || clippedLeft || clippedRight;
+    });
+  }
+
   /**
    * Physically positions the overlay element to the given coordinate.
    * @param element
@@ -272,8 +287,8 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     element.style.top = overlayPoint.y + 'px';
   }
 
-  private _getElementBounds(element: ElementRef): ElementBoundingPositions {
-    const boundingClientRect = element.nativeElement.getBoundingClientRect();
+  private _getElementBounds(element: HTMLElement): ElementBoundingPositions {
+    const boundingClientRect = element.getBoundingClientRect();
     return {
       top: boundingClientRect.top,
       right: boundingClientRect.left + boundingClientRect.width,

@@ -180,13 +180,10 @@ export class MdTooltip implements OnInit, OnDestroy {
     let position = this._getOverlayPosition();
 
     // Create connected strategy that listens for scroll events to reposition. After position
-    // changes occur, check if the scrolling trigger has been clipped and close the tooltip.
+    // changes occur and the overlay is clipped then close the tooltip.
     let strategy = this._overlay.position().connectedTo(this._elementRef, origin, position);
-    strategy.withScrollableContainers(
-        this._scrollDispatcher.getScrollableContainers(this._elementRef));
-    strategy.onPositionChange.subscribe(change => {
-      if (change.isConnectedToElementClipped) { this.hide(0); }
-    });
+    strategy.withScrollableContainers(this._scrollDispatcher.getScrollContainers(this._elementRef));
+    strategy.onPositionChange.subscribe(change => { if (change.isClipped) { this.hide(0); } });
 
     let config = new OverlayState();
     config.positionStrategy = strategy;

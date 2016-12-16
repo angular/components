@@ -59,7 +59,7 @@ export class ScrollDispatcher {
   }
 
   /** Returns all registered Scrollables that contain the provided element. */
-  getScrollableContainers(elementRef: ElementRef): Scrollable[] {
+  getScrollContainers(elementRef: ElementRef): Scrollable[] {
     const scrollingContainers: Scrollable[] = [];
 
     this.scrollableReferences.forEach((subscription: Subscription, scrollable: Scrollable) => {
