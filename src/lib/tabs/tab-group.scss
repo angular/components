@@ -38,6 +38,7 @@ md-tab-body {
   @include md-fill;
   display: block;
   overflow: hidden;
+
   &.md-tab-body-active {
     position: relative;
     overflow-x: hidden;
@@ -45,10 +46,9 @@ md-tab-body {
     z-index: 1;
     flex-grow: 1;
   }
-  :host[mdDynamicHeight], :host[md-dynamic-height] {
-    &.md-tab-body-active {
-      overflow-y: hidden;
-    }
+
+  :host.md-tab-group-dynamic-height &.md-tab-body-active {
+    overflow-y: hidden;
   }
 }
 
