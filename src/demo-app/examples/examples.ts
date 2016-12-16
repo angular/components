@@ -14,5 +14,6 @@ export class Examples {
     {name: 'Sidenav Overview', route: 'sidenav/overview'},
     {name: 'Sidenav with FAB', route: 'sidenav/fab'},
     {name: 'Input Overview', route: 'input/overview'},
+    {name: 'Input Form', route: 'input/form'},
   ];
 }
