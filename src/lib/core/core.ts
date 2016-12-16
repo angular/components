@@ -46,7 +46,7 @@ export * from './overlay/position/connected-position-strategy';
 export * from './overlay/position/connected-position';
 
 // Gestures
-export {MdGestureConfig} from './gestures/MdGestureConfig';
+export {GestureConfig} from './gestures/gesture-config';
 
 // Ripple
 export {MdRipple, MdRippleModule} from './ripple/ripple';
@@ -54,7 +54,7 @@ export {MdRipple, MdRippleModule} from './ripple/ripple';
 // a11y
 export {
   AriaLivePoliteness,
-  MdLiveAnnouncer,
+  LiveAnnouncer,
   LIVE_ANNOUNCER_ELEMENT_TOKEN,
 } from './a11y/live-announcer';
 
@@ -65,8 +65,8 @@ export {isFakeMousedownFromScreenReader} from './a11y/fake-mousedown';
 export {A11yModule} from './a11y/index';
 
 export {
-  MdUniqueSelectionDispatcher,
-  MdUniqueSelectionDispatcherListener
+  UniqueSelectionDispatcher,
+  UniqueSelectionDispatcherListener
 } from './coordination/unique-selection-dispatcher';
 
 export {MdLineModule, MdLine, MdLineSetter} from './line/line';
