@@ -126,8 +126,9 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /**
-   * Sets the list of scrolling or resizing containers that host the connectedTo element so that
-   * on reposition we can evaluate if it has been clipped when repositioned.
+   * Sets the list of Scrollable containers that host the origin element so that
+   * on reposition we can evaluate if it or the overlay has been clipped or outside view. Every
+   * Scrollable must be an ancestor element of the strategy's origin element.
    */
   withScrollableContainers(scrollables: Scrollable[]) {
     this.scrollables = scrollables;
@@ -271,15 +272,15 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * or completely outside the view of any of the strategy's scrollables.
    */
   private getScrollableViewProperties(overlay: HTMLElement): ScrollableViewProperties {
-    const triggerBounds = this._getElementBounds(this._connectedTo.nativeElement);
+    const originBounds = this._getElementBounds(this._origin);
     const overlayBounds = this._getElementBounds(overlay);
     const scrollContainerBounds = this.scrollables.map((scrollable: Scrollable) => {
       return this._getElementBounds(scrollable.getElementRef().nativeElement);
     });
 
     return {
-      isTriggerClipped: this.isElementClipped(triggerBounds, scrollContainerBounds),
-      isTriggerOutsideView: this.isElementOutsideView(triggerBounds, scrollContainerBounds),
+      isOriginClipped: this.isElementClipped(originBounds, scrollContainerBounds),
+      isOriginOutsideView: this.isElementOutsideView(originBounds, scrollContainerBounds),
       isOverlayClipped: this.isElementClipped(overlayBounds, scrollContainerBounds),
       isOverlayOutsideView: this.isElementOutsideView(overlayBounds, scrollContainerBounds),
     };
