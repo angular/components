@@ -1,0 +1,172 @@
+<p><strong>NOTE: The <code>md-input</code> element is deprecated. <code>md-input-container</code> should be
+used instead.</strong></p>
+<h1 id="md-input-container">md-input-container</h1>
+<p>Inputs are the basic input component of Material 2. The spec can be found
+<a href="https://www.google.com/design/spec/components/text-fields.html">here</a>. <code>md-input-container</code> acts as
+a wrapper for native <code>input</code> and <code>textarea</code> elements. The native element wrapped by the
+<code>md-input-container</code> must be marked with the <code>md-input</code> directive.</p>
+<p>Simple <code>input</code> example:</p>
+<pre><code class="lang-html">&lt;md-input-container&gt;
+  &lt;input md-input&gt;
+&lt;/md-input-container&gt;
+</code></pre>
+<p>Simple <code>textarea</code> example:</p>
+<pre><code class="lang-html">&lt;md-input-container&gt;
+  &lt;textarea md-input&gt;&lt;/textarea&gt;
+&lt;/md-input-container&gt;
+</code></pre>
+<h2 id="usage">Usage</h2>
+<h3 id="-input-and-textarea-attributes"><code>input</code> and <code>textarea</code> attributes</h3>
+<p>All of the attributes that can be used with normal <code>input</code> and <code>textarea</code> elements can be used on
+elements within the <code>md-input-container</code> as well. This includes angular specific ones such as
+<code>ngModel</code> and <code>formControl</code>.</p>
+<p>The only limitations are that the <code>type</code> attribute can only be one of the values supported by
+<code>md-input-container</code> and the native element cannot specify a <code>placeholder</code> attribute if the
+<code>md-input-container</code> also contains a <code>md-placeholder</code> element. </p>
+<h4 id="supported-input-types">Supported <code>input</code> types</h4>
+<p>The following <a href="http://www.w3schools.com/TAGs/att_input_type.asp">input types</a> can be used with
+<code>md-input-container</code>:</p>
+<ul>
+<li>date</li>
+<li>datetime-local</li>
+<li>email</li>
+<li>month</li>
+<li>number</li>
+<li>password</li>
+<li>search</li>
+<li>tel</li>
+<li>text</li>
+<li>time</li>
+<li>url</li>
+<li>week</li>
+</ul>
+<h3 id="placeholder">Placeholder</h3>
+<p>A placeholder is an indicative text displayed in the input zone when the input does not contain
+text. When text is present, the indicative text will float above this input zone.</p>
+<p>You can set the <code>floatingPlaceholder</code> attribute of <code>md-input-container</code> to <code>false</code> to hide the
+indicative text instead when text is present in the input.</p>
+<p>You can specify a placeholder for the input in one of two ways; either using the <code>placeholder</code>
+attribute on the <code>input</code> or <code>textarea</code>, or using an <code>md-placeholder</code> element in the
+<code>md-input-container</code>. Using both will raise an error.</p>
+<h3 id="prefix-and-suffix">Prefix and Suffix</h3>
+<p>You can include HTML before, and after the input tag, as prefix or suffix. It will be underlined as
+per the Material specification, and clicking it will focus the input.</p>
+<p>To add a prefix, use the <code>md-prefix</code> attribute on the element. Similarly, to add a suffix, use the
+<code>md-suffix</code> attribute. For example, in a template:</p>
+<pre><code class="lang-html">&lt;md-input-container align=&quot;end&quot;&gt;
+  &lt;input md-input placeholder=&quot;amount&quot;&gt;
+  &lt;span md-prefix&gt;$&amp;nbsp;&lt;/span&gt;
+  &lt;span md-suffix&gt;.00&lt;/span&gt;
+&lt;/md-input-container&gt;
+</code></pre>
+<p><img src="https://material.angularjs.org/material2_assets/input/prefix-suffix.png"></p>
+<h3 id="hint-labels">Hint Labels</h3>
+<p>Hint labels are the labels that show below the underline. You can have up to two hint labels; one on
+the <code>start</code> of the line (left in an LTR language, right in RTL), and one on the <code>end</code>.</p>
+<p>You specify a hint label in one of two ways; either using the <code>hintLabel</code> attribute of
+<code>md-input-container</code>, or using an <code>md-hint</code> element inside the <code>md-input-container</code>, which takes an
+<code>align</code> attribute containing the side. The attribute version is assumed to be at the <code>start</code>.
+Specifying a side twice will result in an exception during initialization.</p>
+<p>For example, a simple character counter can be made like the following:</p>
+<pre><code class="lang-html">&lt;md-input-container&gt;
+  &lt;input md-input
+         placeholder=&quot;Character count (100 max)&quot;
+         maxlength=&quot;100&quot;
+         value=&quot;Hello world. How are you?&quot;
+         #characterCountHintExample&gt;
+  &lt;md-hint align=&quot;end&quot;&gt;{{characterCountHintExample.value.length}} / 100&lt;/md-hint&gt;
+&lt;/md-input-container&gt;
+</code></pre>
+<p><img src="https://material.angularjs.org/material2_assets/input/character-count.png"></p>
+<h3 id="divider-color">Divider Color</h3>
+<p>The divider (line under the <code>input</code> content) color can be changed by using the <code>dividerColor</code>
+attribute of <code>md-input-container</code>. A value of <code>primary</code> is the default and will correspond to your
+theme primary color. Alternatively, you can specify <code>accent</code> or <code>warn</code>.</p>
+<pre><code class="lang-html">&lt;md-input-container&gt;
+  &lt;input md-input placeholder=&quot;Default color&quot; value=&quot;example&quot;&gt;
+&lt;/md-input-container&gt;
+&lt;md-input-container dividerColor=&quot;accent&quot;&gt;
+  &lt;input md-input placeholder=&quot;Accent color&quot; value=&quot;example&quot;&gt;
+&lt;/md-input-container&gt;
+&lt;md-input-container dividerColor=&quot;warn&quot;&gt;
+  &lt;input md-input placeholder=&quot;Warn color&quot; value=&quot;example&quot;&gt;
+&lt;/md-input-container&gt;
+</code></pre>
+<p><em>please note that this image has been doctored to show each <code>input</code> as if it were focused:</em>
+<img src="https://material.angularjs.org/material2_assets/input/divider-colors.png"></p>
+<h3 id="full-forms">Full Forms</h3>
+<p>You can make a full form using inputs, and they will support autofill natively.</p>
+<pre><code class="lang-html">&lt;form&gt;
+  &lt;md-input-container style=&quot;width: 100%&quot;&gt;
+    &lt;input md-input placeholder=&quot;Company (disabled)&quot; disabled value=&quot;Google&quot;&gt;
+  &lt;/md-input-container&gt;
+
+  &lt;table style=&quot;width: 100%&quot; cellspacing=&quot;0&quot;&gt;&lt;tr&gt;
+    &lt;td&gt;&lt;md-input-container style=&quot;width: 100%&quot;&gt;
+      &lt;input md-input placeholder=&quot;First name&quot;&gt;
+    &lt;/md-input-container&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;md-input-container style=&quot;width: 100%&quot;&gt;
+      &lt;input md-input placeholder=&quot;Long Last Name That Will Be Truncated&quot;&gt;
+    &lt;/md-input-container&gt;&lt;/td&gt;
+  &lt;/tr&gt;&lt;/table&gt;
+
+  &lt;p&gt;
+    &lt;md-input-container width=&quot;100%&quot;&gt;
+      &lt;textarea md-input placeholder=&quot;Address&quot; value=&quot;1600 Amphitheatre Pkway&quot;&gt;&lt;/textarea&gt;
+    &lt;/md-input-container&gt;
+    &lt;md-input-container width=&quot;100%&quot;&gt;
+      &lt;textarea md-input placeholder=&quot;Address 2&quot;&gt;&lt;/textarea&gt;
+    &lt;/md-input-container&gt;
+  &lt;/p&gt;
+
+  &lt;table style=&quot;width: 100%&quot; cellspacing=&quot;0&quot;&gt;&lt;tr&gt;
+    &lt;td&gt;&lt;md-input-container width=&quot;100%&quot;&gt;
+      &lt;input md-input placeholder=&quot;City&quot;&gt;
+    &lt;/md-input-container&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;md-input-container width=&quot;100%&quot;&gt;
+      &lt;input md-input placeholder=&quot;State&quot;&gt;
+    &lt;/md-input-container&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;md-input-container width=&quot;100%&quot;&gt;
+      &lt;input md-input #postalCode maxlength=&quot;5&quot; placeholder=&quot;Postal Code&quot; value=&quot;94043&quot;&gt;
+      &lt;md-hint align=&quot;end&quot;&gt;{{postalCode.value.length}} / 5&lt;/md-hint&gt;
+    &lt;/md-input-container&gt;&lt;/td&gt;
+  &lt;/tr&gt;&lt;/table&gt;
+&lt;/form&gt;
+</code></pre>
+<p><img src="https://material.angularjs.org/material2_assets/input/full-form.png"></p>
+<h2 id="api-summary">API Summary</h2>
+<h3 id="inputs">Inputs</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>align</code></td>
+<td>`&quot;start&quot;</td>
+<td>&quot;end&quot;`</td>
+<td>The alignment of the <code>input</code> or <code>textarea</code>. Default = <code>&quot;start&quot;</code>.</td>
+</tr>
+<tr>
+<td><code>dividerColor</code></td>
+<td>`&quot;primary&quot;</td>
+<td>&quot;accent&quot;</td>
+<td>&quot;warn&quot;`</td>
+<td>The color of the placeholder and underline. Default = <code>&quot;primary&quot;</code>.</td>
+</tr>
+<tr>
+<td><code>floatingPlaceholder</code></td>
+<td>boolean</td>
+<td>Whether the placeholder should float above the input after text is entered. Default = <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>hintLabel</code></td>
+<td>string</td>
+<td>The hint text to show on the start end of the <code>md-input-container</code>.</td>
+</tr>
+</tbody>
+</table>

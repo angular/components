@@ -1,0 +1,222 @@
+<style>
+  table {
+    border-collapse: collapse;
+    margin: 10px;
+    min-width: 300px;
+  }
+
+  td, th {
+    border: 1px solid black;
+    padding: 4px;
+  }
+</style>
+
+<h2>tooltip</h2>
+<p> Module: <code>MdTooltipModule</code> </p>
+
+<h3>Directives</h3>
+
+
+  <h4>MdTooltip</h4>
+  <p> Directive that attaches a material design tooltip to the host element. Animates the showing and
+hiding of a tooltip provided position (defaults to below the element).
+
+https://material.google.com/components/tooltips.html
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>position</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>showDelay</p>
+            <p><code></code></p>
+          </td>
+          <td> The default delay in ms before showing the tooltip after show is called
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>hideDelay</p>
+            <p><code></code></p>
+          </td>
+          <td> The default delay in ms before hiding the tooltip after hide is called
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>message</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">show</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>delay?</p>
+              <p>number</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        </table>
+    
+    <table>
+      <tr>
+        <th colspan="2">hide</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Hides the tooltip after the delay in ms, defaults to tooltip-delay-hide or 0ms if no input
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>delay?</p>
+              <p>number</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        </table>
+    
+    <table>
+      <tr>
+        <th colspan="2">toggle</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Shows/hides the tooltip
+ </td>
+      </tr></table>
+    
+  <h4>TooltipComponent</h4>
+  <p>  </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>message</p>
+            <p><code></code></p>
+          </td>
+          <td> Message to display in the tooltip
+</td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">show</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Shows the tooltip with an animation originating from the provided origin
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>position</p>
+              <p>TooltipPosition</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        
+          <tr>
+            <td>
+              <p>delay</p>
+              <p>number</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        </table>
+    
+    <table>
+      <tr>
+        <th colspan="2">hide</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Begins the animation to hide the tooltip after the provided delay in ms
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>delay</p>
+              <p>number</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        </table>
+    
+    <table>
+      <tr>
+        <th colspan="2">afterHidden</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Returns an observable that notifies when the tooltip has been hidden from view
+ </td>
+      </tr><tr>
+          <th colspan="2"> Returns </th>
+        </tr>
+        <tr>
+          <td>Observable<void></td>
+          <td></td>
+        </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">isVisible</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Whether the tooltip is being displayed
+ </td>
+      </tr><tr>
+          <th colspan="2"> Returns </th>
+        </tr>
+        <tr>
+          <td>boolean</td>
+          <td></td>
+        </tr></table>
+    
+
+
+
+

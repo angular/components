@@ -1,0 +1,74 @@
+<h1 id="md-grid-list">md-grid-list</h1>
+<p><code>md-grid-list</code> is an alternative list view that arranges cells into grid-based layout. 
+See Material Design spec <a href="https://www.google.com/design/spec/components/grid-lists.html">here</a>.</p>
+<h2 id="usage">Usage</h2>
+<h3 id="simple-grid-list">Simple grid list</h3>
+<p>In your template, create an <code>md-grid-list</code> element and specify the number of columns you want for
+your grid using the <code>cols</code> property (this is the only mandatory attribute). </p>
+<p>You can define each tile using an <code>md-grid-tile</code> element, passing any tile content between its tags.</p>
+<p>Tiles are greedily placed in the first position of the grid that fits them, so row count depends on 
+how many tiles can fit in each row, given the col count and the colspan/rowspan of each tile.</p>
+<pre><code class="lang-html">&lt;md-grid-list cols=&quot;4&quot; [style.background]=&quot;&#39;lightblue&#39;&quot;&gt;
+   &lt;md-grid-tile&gt;One&lt;/md-grid-tile&gt;
+   &lt;md-grid-tile&gt;Two&lt;/md-grid-tile&gt;
+   &lt;md-grid-tile&gt;Three&lt;/md-grid-tile&gt;
+   &lt;md-grid-tile&gt;Four&lt;/md-grid-tile&gt;
+&lt;/md-grid-list&gt;
+</code></pre>
+<p>Output:</p>
+<p><img src="https://material.angularjs.org/material2_assets/grid-list/basic-grid-list.png"></p>
+<h2 id="grid-list-config">Grid list config</h2>
+<p>####<code>cols</code></p>
+<p>The <code>cols</code> property controls the number of columns displayed in your grid. It must be set or the 
+grid list will not be able to generate your layout.</p>
+<p>Ex: <code>&lt;md-grid-list cols=&quot;3&quot;&gt;...</code></p>
+<p>Default: There is no reasonable default value for this, so if it is unspecified, the grid list will 
+throw an error.</p>
+<p>####<code>rowHeight</code></p>
+<p>Row height for the list can be calculated in three ways:</p>
+<ol>
+<li><p><strong>Fixed height</strong>: The height can be in <code>px</code>, <code>em</code>, or <code>rem</code>.  If no units are specified, <code>px</code> 
+units are assumed. </p>
+<p>Ex: <code>&lt;md-grid-list cols=&quot;3&quot; rowHeight=&quot;100px&quot;&gt;...</code></p>
+</li>
+<li><p><strong>Ratio</strong>: This ratio is width:height, and must be passed in with a colon, not a decimal.</p>
+<p>Ex: <code>&lt;md-grid-list cols=&quot;3&quot; rowHeight=&quot;4:3&quot;&gt;...</code>.</p>
+</li>
+<li><p><strong>Fit</strong>:  This mode automatically divides the available height by the number of rows.  Please note
+the height of the grid-list or its container must be set.  </p>
+<p>Ex: <code>&lt;md-grid-list cols=&quot;3&quot; rowHeight=&quot;fit&quot;&gt;...</code></p>
+</li>
+</ol>
+<p>Defaults to a 1:1 ratio of width:height. </p>
+<p>####<code>gutterSize</code></p>
+<p>Gutter size can be set to any <code>px</code>, <code>em</code>, or <code>rem</code> value with the <code>gutterSize</code> property.  If no 
+units are specified, <code>px</code> units are assumed.</p>
+<p>Ex: <code>&lt;md-grid-list cols=&quot;3&quot; gutterSize=&quot;4px&quot;&gt;...</code></p>
+<p>Defaults to <code>1px</code>.</p>
+<h2 id="grid-tile-config">Grid tile config</h2>
+<p>You can set the rowspan and colspan of each tile individually, using the <code>rowspan</code> and <code>colspan</code> 
+properties.  If not set, they both default to <code>1</code>.</p>
+<pre><code class="lang-html">&lt;md-grid-list cols=&quot;4&quot; rowHeight=&quot;100px&quot;&gt;
+  &lt;md-grid-tile *ngFor=&quot;let tile of tiles&quot; [colspan]=&quot;tile.cols&quot; [rowspan]=&quot;tile.rows&quot;
+  [style.background]=&quot;tile.color&quot;&gt;
+    {{tile.text}}
+  &lt;/md-grid-tile&gt;
+&lt;/md-grid-list&gt;
+</code></pre>
+<pre><code class="lang-javascript">...
+export class MyComp {
+  tiles: any[] = [
+    {text: &#39;One&#39;, cols: 3, rows: 1, color: &#39;lightblue&#39;},
+    {text: &#39;Two&#39;, cols: 1, rows: 2, color: &#39;lightgreen&#39;},
+    {text: &#39;Three&#39;, cols: 1, rows: 1, color: &#39;lightpink&#39;},
+    {text: &#39;Four&#39;, cols: 2, rows: 1, color: &#39;#DDBDF1&#39;},
+  ];
+}
+</code></pre>
+<p>Output:</p>
+<p><img src="https://material.angularjs.org/material2_assets/grid-list/fancy-grid-list.png"></p>
+<h2 id="todo">TODO</h2>
+<ul>
+<li>Grid tile headers and footers</li>
+<li>Responsive sizing support</li>
+</ul>

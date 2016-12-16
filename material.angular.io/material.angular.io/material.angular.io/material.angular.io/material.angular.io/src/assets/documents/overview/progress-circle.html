@@ -1,0 +1,67 @@
+<h1 id="md-progress-circle">md-progress-circle</h1>
+<p><code>md-progress-circle</code> is a component for indicating progress and activity, matching the spec of 
+<a href="https://www.google.com/design/spec/components/progress-activity.html">Material Design Progress &amp; Activity</a>.</p>
+<h3 id="progress-modes">Progress Modes</h3>
+<p>There are two modes:</p>
+<ol>
+<li>Determinate - <code>&lt;md-progress-circle mode=&quot;determinate&quot;&gt;</code><ul>
+<li>Indicates how long an operation will take when the percentage complete is detectable. </li>
+</ul>
+</li>
+<li>Indeterminate - <code>&lt;md-progress-circle mode=&quot;indeterminate&quot;&gt;</code> or <code>&lt;md-spinner&gt;</code><ul>
+<li>Indicates the user must wait while something finishes when it’s not necessary or possible to indicate how long it
+will take.</li>
+</ul>
+</li>
+</ol>
+<p>Example:</p>
+<pre><code class="lang-html">&lt;md-progress-circle mode=&quot;determinate&quot; [value]=&quot;myValue&quot;&gt;&lt;/md-progress-circle&gt;
+&lt;md-progress-circle mode=&quot;indeterminate&quot;&gt;&lt;/md-progress-circle&gt;
+&lt;md-spinner&gt;&lt;/md-spinner&gt;
+</code></pre>
+<h3 id="theming">Theming</h3>
+<p>All progress indicators can be themed to match your &quot;primary&quot; palette, your &quot;accent&quot; palette, or your &quot;warn&quot; palette using the appropriate class.</p>
+<p>Example:</p>
+<pre><code class="lang-html">&lt;md-progress-circle mode=&quot;indeterminate&quot; color=&quot;primary&quot;&gt;&lt;/md-progress-circle&gt;
+&lt;md-progress-circle mode=&quot;indeterminate&quot; color=&quot;accent&quot;&gt;&lt;/md-progress-circle&gt;
+&lt;md-progress-circle mode=&quot;indeterminate&quot; color=&quot;warn&quot;&gt;&lt;/md-progress-circle&gt;
+</code></pre>
+<h3 id="accessibility">Accessibility</h3>
+<ul>
+<li>ARIA attributes are applied to the indicator defining the valuemin, valuemax and valuenow attributes.</li>
+</ul>
+<h3 id="upcoming-work">Upcoming work</h3>
+<ul>
+<li>Adding ARIA attribute for progressbar &quot;for&quot;.</li>
+</ul>
+<h3 id="api-summary">API Summary</h3>
+<p>Properties:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>color</code></td>
+<td>`&quot;primary&quot;</td>
+<td>&quot;accent&quot;</td>
+<td>&quot;warn&quot;`</td>
+<td>The color palette of the progress indicator</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td>`&quot;determinate&quot;</td>
+<td>&quot;indeterminate&quot;`</td>
+<td>The mode of the progress indicator</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>number</td>
+<td>The current progress percentage for determinate indicators</td>
+</tr>
+</tbody>
+</table>

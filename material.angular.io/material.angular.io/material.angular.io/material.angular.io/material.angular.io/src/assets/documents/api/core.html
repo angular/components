@@ -1,0 +1,518 @@
+<style>
+  table {
+    border-collapse: collapse;
+    margin: 10px;
+    min-width: 300px;
+  }
+
+  td, th {
+    border: 1px solid black;
+    padding: 4px;
+  }
+</style>
+
+<h2>core</h2>
+<p> Module: <code>MdCoreModule</code> </p>
+
+<h3>Directives</h3>
+
+
+  <h4>Dir</h4>
+  <p> Directive to listen to changes of direction of part of the DOM.
+
+Applications should use this directive instead of the native attribute so that Material
+components can listen on changes of direction.
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>dirChange</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>dir</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>value</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table>
+  <h4>PortalHostDirective</h4>
+  <p> Directive version of a PortalHost. Because the directive *is* a PortalHost, portals can be
+directly attached to it, enabling declarative use.
+
+Usage:
+<template [portalHost]="greeting"></template>
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>portal</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">attachComponentPortal</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Attach the given ComponentPortal to this PortalHost using the ComponentFactoryResolver.
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>portal</p>
+              <p>ComponentPortal<T></p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        <tr>
+          <th colspan="2"> Returns </th>
+        </tr>
+        <tr>
+          <td>ComponentRef<T></td>
+          <td></td>
+        </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">attachTemplatePortal</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Attach the given TemplatePortal to this PortlHost as an embedded View.
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>portal</p>
+              <p>TemplatePortal</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        <tr>
+          <th colspan="2"> Returns </th>
+        </tr>
+        <tr>
+          <td>Map<string, any></td>
+          <td></td>
+        </tr></table>
+    
+  <h4>TemplatePortalDirective</h4>
+  <p> Directive version of a `TemplatePortal`. Because the directive *is* a TemplatePortal,
+the directive instance itself can be attached to a host, enabling declarative use of portals.
+
+Usage:
+<template portal #greeting>
+  <p> Hello {{name}} </p>
+</template>
+ </p>
+  <h4>ConnectedOverlayDirective</h4>
+  <p> Directive to facilitate declarative creation of an Overlay using a ConnectedPositionStrategy.
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>origin</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>positions</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>offsetX</p>
+            <p><code></code></p>
+          </td>
+          <td> The offset in pixels for the overlay connection point on the x-axis
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>offsetY</p>
+            <p><code></code></p>
+          </td>
+          <td> The offset in pixels for the overlay connection point on the y-axis
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>width</p>
+            <p><code></code></p>
+          </td>
+          <td> The width of the overlay panel.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>height</p>
+            <p><code></code></p>
+          </td>
+          <td> The height of the overlay panel.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>minWidth</p>
+            <p><code></code></p>
+          </td>
+          <td> The min width of the overlay panel.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>minHeight</p>
+            <p><code></code></p>
+          </td>
+          <td> The min height of the overlay panel.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>backdropClass</p>
+            <p><code></code></p>
+          </td>
+          <td> The custom class to be set on the backdrop element.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>hasBackdrop</p>
+            <p><code></code></p>
+          </td>
+          <td> Whether or not the overlay should attach a backdrop.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>open</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>backdropClick</p>
+            <p><code></code></p>
+          </td>
+          <td> Event emitted when the backdrop is clicked.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>positionChange</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>attach</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>detach</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>overlayRef</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>dir</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table>
+  <h4>OverlayOrigin</h4>
+  <p> Directive applied to an element to make it usable as an origin for an Overlay using a
+ConnectedPositionStrategy.
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>elementRef</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table>
+  <h4>MdRipple</h4>
+  <p>  </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>trigger</p>
+            <p><code></code></p>
+          </td>
+          <td> The element that triggers the ripple when click events are received. Defaults to the
+directive's host element.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>centered</p>
+            <p><code></code></p>
+          </td>
+          <td> Whether the ripple always originates from the center of the host element's bounds, rather
+than originating from the location of the click event.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>disabled</p>
+            <p><code></code></p>
+          </td>
+          <td> Whether click events will not trigger the ripple. It can still be triggered by manually
+calling start() and end().
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>maxRadius</p>
+            <p><code></code></p>
+          </td>
+          <td> If set, the radius in pixels of foreground ripples when fully expanded. If unset, the radius
+will be the distance from the center of the ripple to the furthest corner of the host element's
+bounding rectangle.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>speedFactor</p>
+            <p><code></code></p>
+          </td>
+          <td> If set, the normal duration of ripple animations is divided by this value. For example,
+setting it to 0.5 will cause the animations to take twice as long.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>color</p>
+            <p><code></code></p>
+          </td>
+          <td> Custom color for ripples.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>backgroundColor</p>
+            <p><code></code></p>
+          </td>
+          <td> Custom color for the ripple background.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>focused</p>
+            <p><code></code></p>
+          </td>
+          <td> Whether the ripple background will be highlighted to indicated a focused state.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>unbounded</p>
+            <p><code></code></p>
+          </td>
+          <td> Whether foreground ripples should be visible outside the component's bounds.
+</td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">start</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Responds to the start of a ripple animation trigger by fading the background in.
+ </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">end</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Responds to the end of a ripple animation trigger by fading the background out, and creating a
+foreground ripple that expands from the event location (or from the center of the element if
+the "centered" property is set or forceCenter is true).
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>left</p>
+              <p>number</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        
+          <tr>
+            <td>
+              <p>top</p>
+              <p>number</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        
+          <tr>
+            <td>
+              <p>forceCenter?</p>
+              <p>any</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        </table>
+    
+  <h4>FocusTrap</h4>
+  <p> Directive for trapping focus within a region.
+
+NOTE: This directive currently uses a very simple (naive) approach to focus trapping.
+It assumes that the tab order is the same as DOM order, which is not necessarily true.
+Things like tabIndex > 0, flex `order`, and shadow roots can cause to two to misalign.
+This will be replaced with a more intelligent solution before the library is considered stable.
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>trappedContent</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>disabled</p>
+            <p><code></code></p>
+          </td>
+          <td> Whether the focus trap is active.
+</td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">focusFirstTabbableElementWhenReady</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Waits for microtask queue to empty, then focuses the first tabbable element within the focus
+trap region.
+ </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">focusLastTabbableElementWhenReady</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Waits for microtask queue to empty, then focuses the last tabbable element within the focus
+trap region.
+ </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">focusFirstTabbableElement</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Focuses the first tabbable element within the focus trap region.
+ </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">focusLastTabbableElement</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Focuses the last tabbable element within the focus trap region.
+ </td>
+      </tr></table>
+    
+  <h4>MdLine</h4>
+  <p> Shared directive to count lines inside a text area, such as a list item.
+Line elements can be extracted with a @ContentChildren(MdLine) query, then
+counted by checking the query list's length.
+ </p>
+  <h4>MatPrefixEnforcer</h4>
+  <p> Directive that enforces that the `mat-` prefix cannot be used.
+ </p>
+
+
+
+

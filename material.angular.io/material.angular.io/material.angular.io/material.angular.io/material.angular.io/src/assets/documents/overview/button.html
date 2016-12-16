@@ -1,0 +1,118 @@
+<h1 id="md-button">md-button</h1>
+<p><code>md-button</code> is an HTML <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code> tag enhanced with styling and animation to match the
+<a href="https://www.google.com/design/spec/components/buttons.html">Material Design button spec</a>.</p>
+<p>Users should employ a button element (<code>&lt;button&gt;</code>) when clicking triggers some action in the current
+view <em>without navigating</em>. An anchor element (<code>&lt;a&gt;</code>) should be used when clicking <em>navigates</em>
+the user to another URL. Depending on which element is used, the component will either be an
+instance of <code>MdButton</code> or <code>MdAnchor</code>. Visually, the two are identical.</p>
+<h3 id="button-types">Button types</h3>
+<p>There are five types of buttons:</p>
+<ol>
+<li>Flat buttons - <code>md-button</code><ul>
+<li>Rectangular button</li>
+<li>Defaults to white background</li>
+<li>No box shadow</li>
+</ul>
+</li>
+<li>Raised buttons - <code>md-raised-button</code><ul>
+<li>Rectangular button</li>
+<li>Defaults to white background</li>
+<li>Box shadow applied</li>
+</ul>
+</li>
+<li>Icon buttons - <code>md-icon-button</code><ul>
+<li>Circular button</li>
+<li>Transparent background</li>
+<li>40 by 40 px</li>
+</ul>
+</li>
+<li>Floating Action Buttons (FABs) - <code>md-fab</code><ul>
+<li>Circular button</li>
+<li>Defaults background to &quot;accent&quot; palette defined in theme</li>
+<li>Box shadow applied</li>
+<li>56 by 56 px</li>
+</ul>
+</li>
+<li>Mini Floating Action Buttons (Mini FABs) - <code>md-mini-fab</code><ul>
+<li>Circular button</li>
+<li>Defaults background to &quot;accent&quot; palette defined in theme</li>
+<li>Box shadow applied</li>
+<li>40 by 40 px</li>
+</ul>
+</li>
+</ol>
+<p>Each is an attribute directive that you can add to a <code>button</code> or <code>a</code> tag.  You can provide custom content to the button by inserting it
+between the tags, as you would with a normal button.</p>
+<p>Example:</p>
+<div material-docs-example="my example"></div>
+<pre><code class="lang-html">&lt;button md-button&gt;FLAT&lt;/button&gt;
+&lt;button md-raised-button&gt;RAISED&lt;/button&gt;
+&lt;button md-fab&gt;
+    &lt;md-icon class=&quot;md-24&quot;&gt;add&lt;/md-icon&gt;
+&lt;/button&gt;
+&lt;button md-mini-fab&gt;
+    &lt;md-icon class=&quot;md-24&quot;&gt;add&lt;/md-icon&gt;
+&lt;/button&gt;
+</code></pre>
+<p>Output:</p>
+<p><img src="https://material.angularjs.org/material2_assets/buttons/basic-buttons.png"></p>
+<h3 id="theming">Theming</h3>
+<p>All button types can be themed to match your &quot;primary&quot; palette, your &quot;accent&quot; palette, or your &quot;warn&quot; palette using the <code>color</code> attribute.
+Simply pass in the palette name.</p>
+<p>In flat buttons, the palette chosen will affect the text color, while in other buttons, it affects the background.</p>
+<p>Example:</p>
+<div material-docs-example="my other example"></div>
+<pre><code class="lang-html">&lt;button md-raised-button color=&quot;primary&quot;&gt;PRIMARY&lt;/button&gt;
+&lt;button md-raised-button color=&quot;accent&quot;&gt;ACCENT&lt;/button&gt;
+&lt;button md-raised-button color=&quot;warn&quot;&gt;WARN&lt;/button&gt;
+</code></pre>
+<p>Output:</p>
+<p><img src="https://material.angularjs.org/material2_assets/buttons/colored-buttons.png"></p>
+<h3 id="disabling">Disabling</h3>
+<p>You can disable any button type through the native <code>disabled</code> property.  You can add it directly, or bind it to a property on your
+component class by adding <code>[disabled]=&quot;isDisabled&quot;</code> given that the <code>isDisabled</code>
+property exists.</p>
+<pre><code class="lang-html">&lt;button md-button disabled&gt;OFF&lt;/button&gt;
+&lt;button md-raised-button [disabled]=&quot;isDisabled&quot;&gt;OFF&lt;/button&gt;
+&lt;button md-mini-fab [disabled]=&quot;isDisabled&quot;&gt;&lt;md-icon&gt;check&lt;/md-icon&gt;&lt;/button&gt;
+</code></pre>
+<p>Output:</p>
+<p><img src="https://material.angularjs.org/material2_assets/buttons/disabled-buttons.png"></p>
+<h3 id="accessibility">Accessibility</h3>
+<ul>
+<li>In high contrast mode, a strong border is added to the button to make it easier to see.</li>
+<li>Button focus events originating from the keyboard will retain focus styles, while button focus events from the mouse will not.</li>
+<li>As <code>md-button</code> is added to an existing <code>button</code> or <code>a</code> tag, it enjoys all the accessibility natively built into these elements.</li>
+</ul>
+<h3 id="upcoming-work">Upcoming work</h3>
+<p>We will also be adding ink ripples to buttons in an upcoming milestone.</p>
+<h3 id="api-summary">API Summary</h3>
+<p>Properties:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>color</code></td>
+<td>`&quot;primary&quot;</td>
+<td>&quot;accent&quot;</td>
+<td>&quot;warn&quot;`</td>
+<td>The color palette of the button</td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td>boolean</td>
+<td>Whether or not the button is disabled</td>
+</tr>
+<tr>
+<td><code>disableRipple</code></td>
+<td>boolean</td>
+<td>Whether the ripple effect when the button is clicked should be disabled</td>
+</tr>
+</tbody>
+</table>

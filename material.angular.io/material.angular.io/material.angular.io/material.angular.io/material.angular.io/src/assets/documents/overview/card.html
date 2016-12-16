@@ -1,0 +1,88 @@
+<h1 id="md-card">md-card</h1>
+<p><code>md-card</code> is a content container component that conforms to the spec of a Material Design card.</p>
+<p>See plunker example <a href="http://plnkr.co/edit/pkUNGMXPcf8RXKapXNXQ?p=preview">here</a>.</p>
+<h2 id="usage">Usage</h2>
+<p>Simply add your content between <code>md-card</code> tags to consume basic card styles like box-shadow and default padding.</p>
+<pre><code class="lang-html">&lt;md-card&gt;
+   Basic card.
+&lt;/md-card&gt;
+</code></pre>
+<p>Output:</p>
+<p><img src="https://material.angularjs.org/material2_assets/cards/basic-card-min.png"></p>
+<h3 id="preset-sections">Preset sections</h3>
+<p>We also provide a number of preset sections that you can mix and match within the <code>md-card</code> tags. </p>
+<ul>
+<li><code>&lt;md-card-title&gt;</code>: adds styles for a title</li>
+<li><code>&lt;md-card-subtitle&gt;</code>: adds styles for a subtitle</li>
+<li><code>&lt;md-card-content&gt;</code>: main content section, intended for blocks of text</li>
+<li><code>&lt;img md-card-image&gt;</code>: stretches image to container width</li>
+<li><code>&lt;md-card-actions&gt;</code>: wraps and styles buttons</li>
+<li><code>&lt;md-card-footer&gt;</code>: anchors section to bottom of card (e.g progress bar)</li>
+</ul>
+<p>Example markup for a card with section presets:</p>
+<pre><code class="lang-html">&lt;md-card&gt;
+   &lt;md-card-subtitle&gt;Subtitle first&lt;/md-card-subtitle&gt;
+   &lt;md-card-title&gt;Card with title&lt;/md-card-title&gt;   
+   &lt;md-card-content&gt;
+        &lt;p&gt;This is supporting text.&lt;/p&gt;
+        &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad&lt;/p&gt;
+   &lt;/md-card-content&gt;
+   &lt;md-card-actions&gt;
+        &lt;button md-button&gt;LIKE&lt;/button&gt;
+        &lt;button md-button&gt;SHARE&lt;/button&gt;
+   &lt;/md-card-actions&gt;
+&lt;/md-card&gt;
+</code></pre>
+<p>Output:</p>
+<p><img src="https://material.angularjs.org/material2_assets/cards/sections-card-min.png"></p>
+<h4 id="preset-shortcuts">Preset shortcuts</h4>
+<p><code>md-card-actions</code> has a few layout shortcuts. You can add <code>align=&quot;end&quot;</code> to align the buttons at the end of
+the main axis (flex-end). The default is <code>align=&quot;start&quot;</code> (flex-start).</p>
+<h3 id="preset-layouts">Preset layouts</h3>
+<p>You can also leverage preset layouts that format some of the sections together.</p>
+<h4 id="-md-card-header-"><code>&lt;md-card-header&gt;</code></h4>
+<p>Formats the following sections into a header:</p>
+<ul>
+<li><code>&lt;md-card-title&gt;</code>: title to format within header</li>
+<li><code>&lt;md-card-subtitle&gt;</code>: subtitle to format within header</li>
+<li><code>&lt;img md-card-avatar&gt;</code>: image to use for avatar</li>
+</ul>
+<p>Example markup for a card with a header:</p>
+<pre><code class="lang-html">&lt;md-card&gt;
+   &lt;md-card-header&gt;
+      &lt;img md-card-avatar src=&quot;path/to/img.png&quot;&gt;
+      &lt;md-card-title&gt;Header title&lt;/md-card-title&gt;
+      &lt;md-card-subtitle&gt;Header subtitle&lt;/md-card-subtitle&gt;
+   &lt;/md-card-header&gt;
+   &lt;img md-card-image src=&quot;path/to/img.png&quot;&gt;
+   &lt;md-card-content&gt;
+      &lt;p&gt;Here is some more content&lt;/p&gt;
+   &lt;/md-card-content&gt;
+&lt;/md-card&gt;
+</code></pre>
+<p>Output:</p>
+<p><img src="https://material.angularjs.org/material2_assets/cards/header-card-min.png">    </p>
+<h4 id="-md-card-title-group-"><code>&lt;md-card-title-group&gt;</code></h4>
+<p>Groups the following sections together:</p>
+<ul>
+<li><code>&lt;md-card-title&gt;</code>: title to format within group</li>
+<li><code>&lt;md-card-subtitle&gt;</code>: subtitle to format within group</li>
+<li>One of the following image sizes:<ul>
+<li><code>&lt;img md-card-sm-image&gt;</code></li>
+<li><code>&lt;img md-card-md-image&gt;</code></li>
+<li><code>&lt;img md-card-lg-image&gt;</code></li>
+</ul>
+</li>
+</ul>
+<p>Example markup for a card with title-group layout:</p>
+<pre><code class="lang-html">&lt;md-card&gt;
+   &lt;md-card-title-group&gt;
+      &lt;img md-card-sm-image src=&quot;path/to/img.png&quot;&gt;
+      &lt;md-card-title&gt;Card with title&lt;/md-card-title&gt;
+      &lt;md-card-subtitle&gt;Subtitle&lt;/md-card-subtitle&gt;
+   &lt;/md-card-title-group&gt;
+&lt;/md-card&gt;
+</code></pre>
+<p>Output:</p>
+<p><img src="https://material.angularjs.org/material2_assets/cards/title-group-card-min.png"></p>
