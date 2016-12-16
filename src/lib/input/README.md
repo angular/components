@@ -1,4 +1,4 @@
-<div class="warning">
+<div style="background: rgba(255, 0, 0, 0.1)">
 The <code>md-input</code> element is deprecated. <code>md-input-container</code> should be used
 instead.
 </div>

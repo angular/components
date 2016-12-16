@@ -1,4 +1,4 @@
-<div class="warning">
+<div style="background: rgba(255, 0, 0, 0.1)">
 The <code>md-sidenav-layout</code> element is deprecated. <code>md-sidenav-container</code> should
 be used instead.
 </div>
