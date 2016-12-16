@@ -16,5 +16,6 @@ export class Examples {
     {name: 'Input Overview', route: 'input/overview'},
     {name: 'Input Form', route: 'input/form'},
     {name: 'Button Overview', route: 'button/overview'},
+    {name: 'Button Types', route: 'button/types'},
   ];
 }

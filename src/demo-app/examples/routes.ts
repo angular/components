@@ -7,6 +7,7 @@ import {SidenavFabExample} from './sidenav/fab/sidenav-fab-example';
 import {InputOverviewExample} from './input/overview/input-overview-example';
 import {InputFormExample} from './input/form/input-form-example';
 import {ButtonOverviewExample} from './button/overview/button-overview-example';
+import {ButtonTypesExample} from './button/types/button-types-example';
 
 
 export const EXAMPLE_ROUTES: Routes = [
@@ -18,4 +19,5 @@ export const EXAMPLE_ROUTES: Routes = [
   {path: 'examples/input/overview', component: InputOverviewExample},
   {path: 'examples/input/form', component: InputFormExample},
   {path: 'examples/button/overview', component: ButtonOverviewExample},
+  {path: 'examples/button/types', component: ButtonTypesExample},
 ];
