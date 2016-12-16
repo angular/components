@@ -7,6 +7,7 @@ import {SliderOverviewExample} from './slider/overview/slider-overview-example';
 import {SliderConfigurableExample} from './slider/configurable/slider-configurable-example';
 import {FormsModule} from '@angular/forms';
 import {SidenavOverviewExample} from './sidenav/overview/sidenav-overview-example';
+import {SidenavFabExample} from './sidenav/fab/sidenav-fab-example';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import {SidenavOverviewExample} from './sidenav/overview/sidenav-overview-exampl
     SliderOverviewExample,
     SliderConfigurableExample,
     SidenavOverviewExample,
+    SidenavFabExample,
   ],
 })
 export class ExamplesModule {}
