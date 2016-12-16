@@ -2,10 +2,10 @@ import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-components',
-  templateUrl: './components.html',
-  styleUrls: ['./components.scss']
+  templateUrl: './component-list.html',
+  styleUrls: ['./component-list.scss']
 })
-export class ComponentsList {
+export class ComponentList {
   componentItems = [
     {name: 'Button', src: 'button'},
     {name: 'Checkbox', src: 'checkbox'},
