@@ -1,0 +1,25 @@
+.my-container {
+  width: 500px;
+  height: 300px;
+  border: 1px solid rgba(black, .5);
+}
+
+.my-container md-sidenav {
+  max-width: 200px;
+}
+
+.my-container .md-sidenav-content,
+.my-container md-sidenav {
+  display: flex;
+  overflow: visible;
+}
+
+.my-scrolling-content {
+  overflow: auto;
+}
+
+button.my-fab {
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+}

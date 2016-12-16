@@ -12,5 +12,6 @@ export class Examples {
     {name: 'Slider Overview', route: 'slider/overview'},
     {name: 'Configurable Slider', route: 'slider/configurable'},
     {name: 'Sidenav Overview', route: 'sidenav/overview'},
+    {name: 'Sidenav with FAB', route: 'sidenav/fab'},
   ];
 }
