@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="160px" height="39px" viewBox="0 0 160 39" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Button Toggle Component</title>
+    <desc>Button Toggle Component</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="160" height="39" rx="2.2"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="160" height="39" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Material-Internal-Landing-Page-(Components)" transform="translate(-365.000000, -796.000000)">
+            <g id="button-toggle" transform="translate(365.000000, 796.000000)">
+                <use id="rectangle" stroke-opacity="0.41" stroke="#979797" mask="url(#mask-2)" stroke-width="1.1" fill="#F4F6F7" xlink:href="#path-1"></use>
+                <path d="M119.5,0.681972022 L119.5,38.410315" id="line" stroke-opacity="0.41" stroke="#979797" stroke-width="0.55" stroke-linecap="square"></path>
+                <rect id="select" fill="#00BDD5" x="39" y="0" width="40" height="39"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

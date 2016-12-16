@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="101px" height="85px" viewBox="0 0 101 85" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Slider Component</title>
+    <desc>Slider Component</desc>
+    <defs>
+        <circle id="path-1" cx="9" cy="9" r="9"></circle>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="18" height="18" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Material-Internal-Landing-Page-(Components)" transform="translate(-928.000000, -1069.000000)">
+            <g id="slider" transform="translate(928.000000, 1069.000000)">
+                <g id="full-slide" transform="translate(2.000000, 67.000000)">
+                    <path d="M0.383540373,9.98000002 L93.5014519,9.98000002" id="Line" stroke="#00BCD4" stroke-width="3.24500005" stroke-linecap="square"></path>
+                    <circle id="Oval" fill="#00BDD5" transform="translate(90.000000, 9.000000) scale(-1, 1) translate(-90.000000, -9.000000) " cx="90" cy="9" r="9"></circle>
+                </g>
+                <g id="no-slide">
+                    <path d="M2.38354037,8.98000002 L95.5,8.98000002" id="Line" stroke="#CED2D4" stroke-width="3.24500005" stroke-linecap="square"></path>
+                    <use id="Oval" stroke="#DBDEDF" mask="url(#mask-2)" stroke-width="5" fill="#FFFFFF" transform="translate(9.000000, 9.000000) scale(-1, 1) translate(-9.000000, -9.000000) " xlink:href="#path-1"></use>
+                </g>
+                <g id="middle-slide" transform="translate(2.000000, 34.000000)">
+                    <path d="M0.383540373,9.98000002 L92.5014677,9.98000002" id="Line" stroke="#00BCD4" stroke-width="3.24500005" stroke-linecap="square"></path>
+                    <path d="M59.5,9.98000002 L94.5038626,9.98000002" id="Line" stroke="#CED2D4" stroke-width="3.24500005" stroke-linecap="square"></path>
+                    <circle id="oval" fill="#00BDD5" transform="translate(49.000000, 9.000000) scale(-1, 1) translate(-49.000000, -9.000000) " cx="49" cy="9" r="9"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
