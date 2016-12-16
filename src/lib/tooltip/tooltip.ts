@@ -43,7 +43,7 @@ export const TOUCHEND_HIDE_DELAY  = 1500;
  * https://material.google.com/components/tooltips.html
  */
 @Directive({
-  selector: '[md-tooltip], [mat-tooltip]',
+  selector: '[md-tooltip], [mat-tooltip], [mdTooltip]',
   host: {
     '(longpress)': 'show()',
     '(touchend)': 'hide(' + TOUCHEND_HIDE_DELAY + ')',
@@ -58,7 +58,7 @@ export class MdTooltip {
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   private _position: TooltipPosition = 'below';
-  @Input('tooltipPosition') get position(): TooltipPosition {
+  @Input('mdTooltipPosition') get position(): TooltipPosition {
     return this._position;
   }
 
@@ -80,14 +80,14 @@ export class MdTooltip {
   }
 
   /** The default delay in ms before showing the tooltip after show is called */
-  @Input('tooltipShowDelay') showDelay = 0;
+  @Input('mdTooltipShowDelay') showDelay = 0;
 
   /** The default delay in ms before hiding the tooltip after hide is called */
-  @Input('tooltipHideDelay') hideDelay = 0;
+  @Input('mdTooltipHideDelay') hideDelay = 0;
 
   /** The message to be displayed in the tooltip */
   private _message: string;
-  @Input('md-tooltip') get message() {
+  @Input('mdTooltip') get message() {
     return this._message;
   }
   set message(value: string) {
