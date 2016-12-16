@@ -11,6 +11,7 @@ import {SidenavFabExample} from './sidenav/fab/sidenav-fab-example';
 import {InputOverviewExample} from './input/overview/input-overview-example';
 import {InputFormExample} from './input/form/input-form-example';
 import {ButtonOverviewExample} from './button/overview/button-overview-example';
+import {ButtonTypesExample} from './button/types/button-types-example';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import {ButtonOverviewExample} from './button/overview/button-overview-example';
     InputOverviewExample,
     InputFormExample,
     ButtonOverviewExample,
+    ButtonTypesExample,
   ],
 })
 export class ExamplesModule {}
