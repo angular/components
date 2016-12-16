@@ -11,5 +11,6 @@ export class Examples {
   navItems = [
     {name: 'Slider Overview', route: 'slider/overview'},
     {name: 'Configurable Slider', route: 'slider/configurable'},
+    {name: 'Sidenav Overview', route: 'sidenav/overview'},
   ];
 }
