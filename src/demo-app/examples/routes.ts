@@ -4,6 +4,7 @@ import {Examples} from './examples';
 import {SliderConfigurableExample} from './slider/configurable/slider-configurable-example';
 import {SidenavOverviewExample} from './sidenav/overview/sidenav-overview-example';
 import {SidenavFabExample} from './sidenav/fab/sidenav-fab-example';
+import {InputOverviewExample} from './input/overview/input-overview-example';
 
 
 export const EXAMPLE_ROUTES: Routes = [
@@ -12,4 +13,5 @@ export const EXAMPLE_ROUTES: Routes = [
   {path: 'examples/slider/configurable', component: SliderConfigurableExample},
   {path: 'examples/sidenav/overview', component: SidenavOverviewExample},
   {path: 'examples/sidenav/fab', component: SidenavFabExample},
+  {path: 'examples/input/overview', component: InputOverviewExample},
 ];
