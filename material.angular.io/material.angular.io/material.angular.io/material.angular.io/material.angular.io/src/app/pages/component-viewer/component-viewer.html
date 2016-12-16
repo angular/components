@@ -4,16 +4,16 @@
   </md-sidenav>
 
   <h1 class="docs-component-viewer-header">
-    Button
+    {{componentId.toUpperCase()}}
   </h1>
 
   <md-tab-group class="docs-component-viewer-tabbed-content">
     <md-tab label="OVERVIEW">
-      overview
+      <doc-viewer documentUrl="/assets/documents/overview/{{componentId}}.html"></doc-viewer>
     </md-tab>
 
     <md-tab label="API">
-      api
+      <doc-viewer documentUrl="/assets/documents/api/{{componentId}}.html"></doc-viewer>
     </md-tab>
 
     <md-tab label="EXAMPLES">
