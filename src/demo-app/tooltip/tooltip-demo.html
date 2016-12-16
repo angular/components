@@ -1,14 +1,14 @@
-<div class="demo-tooltip" cdk-scrollable>
+<div class="demo-tooltip">
   <h1>Tooltip Demo</h1>
 
   <p class="centered">
     <button #tooltip="mdTooltip"
-        md-raised-button
-        color="primary"
-        [mdTooltip]="message"
-        [mdTooltipPosition]="position"
-        [mdTooltipShowDelay]="showDelay"
-        [mdTooltipHideDelay]="hideDelay">
+            md-raised-button
+            color="primary"
+            [mdTooltip]="message"
+            [mdTooltipPosition]="position"
+            [mdTooltipShowDelay]="showDelay"
+            [mdTooltipHideDelay]="hideDelay">
       Mouse over to see the tooltip
     </button>
   </p>
@@ -40,7 +40,7 @@
   </p>
 
   <strong>Mouse over to</strong>
-  <button md-raised-button color="primary" (mouseenter)="tooltip1.show(); tooltip2.show()">
+  <button md-raised-button color="primary" (mouseenter)="tooltip.show()">
     Show tooltip
   </button>
   <button md-raised-button color="primary" (mouseenter)="tooltip.hide()">
@@ -48,30 +48,5 @@
   </button>
   <button md-raised-button color="primary" (mouseenter)="tooltip.toggle()">
     Toggle tooltip
-  </button>
-</div>
-
-<div class="scrolling-container" cdk-scrollable>
-  Scroll to see tooltip button.
-  <button #tooltip1="mdTooltip"
-          md-raised-button
-          color="primary"
-          [md-tooltip]="message"
-          [tooltip-position]="position"
-          [tooltipShowDelay]="showDelay"
-          [tooltipHideDelay]="hideDelay">
-    Mouse over to see the tooltip
-  </button>
-</div>
-<div class="scrolling-container" cdk-scrollable>
-  Scroll to see tooltip button.
-  <button #tooltip2="mdTooltip"
-          md-raised-button
-          color="primary"
-          [md-tooltip]="message"
-          [tooltip-position]="position"
-          [tooltipShowDelay]="showDelay"
-          [tooltipHideDelay]="hideDelay">
-    Mouse over to see the tooltip
   </button>
 </div>
