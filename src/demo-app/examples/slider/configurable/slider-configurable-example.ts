@@ -20,7 +20,7 @@ export class SliderConfigurableExample {
   value = 0;
   vertical = false;
 
-  get tickInterval() : number | 'auto' {
+  get tickInterval(): number | 'auto' {
     return this.showTicks ? (this.autoTicks ? 'auto' : this._tickInterval) : null;
   }
   set tickInterval(v) {
