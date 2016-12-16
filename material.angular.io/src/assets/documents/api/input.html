@@ -1,0 +1,485 @@
+<style>
+  table {
+    border-collapse: collapse;
+    margin: 10px;
+    min-width: 300px;
+  }
+
+  td, th {
+    border: 1px solid black;
+    padding: 4px;
+  }
+</style>
+
+<h2>input</h2>
+<p> Module: <code>MdInputModule</code> </p>
+
+<h3>Directives</h3>
+
+
+  <h4>MdTextareaAutosize</h4>
+  <p> Directive to automatically resize a textarea to fit its content.
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>minRows</p>
+            <p><code></code></p>
+          </td>
+          <td> Minimum number of rows for this textarea.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>maxRows</p>
+            <p><code></code></p>
+          </td>
+          <td> Maximum number of rows for this textarea.
+</td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">resizeToFitContent</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Resize the textarea to fit its content.
+ </td>
+      </tr></table>
+    
+  <h4>MdInput</h4>
+  <p> Component that represents a text input. It encapsulates the <input> HTMLElement and
+improve on its behaviour, along with styling it according to the Material Design.
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>ariaLabel</p>
+            <p><code></code></p>
+          </td>
+          <td> Aria related inputs.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>ariaLabelledBy</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>ariaDisabled</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>ariaRequired</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>ariaInvalid</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>focused</p>
+            <p><code></code></p>
+          </td>
+          <td> Readonly properties.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>empty</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>characterCount</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>inputId</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>align</p>
+            <p><code></code></p>
+          </td>
+          <td> Bindings.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>dividerColor</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>hintLabel</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>autocomplete</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>autocorrect</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>autocapitalize</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>id</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>list</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>max</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>maxlength</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>min</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>minlength</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>placeholder</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>step</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>tabindex</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>type</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>name</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>rows</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>cols</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>wrap</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>floatingPlaceholder</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>autofocus</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>disabled</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>readonly</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>required</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>spellcheck</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>onBlur</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>onFocus</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>value</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">focus</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Set focus on input
+ </td>
+      </tr></table>
+    
+  <h4>MdPlaceholder</h4>
+  <p> The placeholder directive. The content can declare this to implement more
+complex placeholders.
+ </p>
+  <h4>MdHint</h4>
+  <p> The hint directive, used to tag content as hint labels (going under the input).
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>align</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table>
+  <h4>MdInputDirective</h4>
+  <p> The input directive, used to mark the input that `MdInputContainer` is wrapping.
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>disabled</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>id</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>placeholder</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>required</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>type</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>value</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>empty</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>focused</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">focus</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Focus the input element.
+ </td>
+      </tr></table>
+    
+  <h4>MdInputContainer</h4>
+  <p> Component that represents a text input. It encapsulates the <input> HTMLElement and
+improve on its behaviour, along with styling it according to the Material Design.
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>align</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>dividerColor</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>hintLabel</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>floatingPlaceholder</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table>
+
+
+
+

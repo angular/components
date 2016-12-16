@@ -1,0 +1,242 @@
+<style>
+  table {
+    border-collapse: collapse;
+    margin: 10px;
+    min-width: 300px;
+  }
+
+  td, th {
+    border: 1px solid black;
+    padding: 4px;
+  }
+</style>
+
+<h2>menu</h2>
+<p> Module: <code>MdMenuModule</code> </p>
+
+<h3>Directives</h3>
+
+
+  <h4>MdMenuTrigger</h4>
+  <p> This directive is intended to be used in conjunction with an md-menu tag.  It is
+responsible for toggling the display of the provided menu instance.
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>menu</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>onMenuOpen</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>onMenuClose</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>menuOpen</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>dir</p>
+            <p><code></code></p>
+          </td>
+          <td> The text direction of the containing app.
+</td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">toggleMenu</th>
+      </tr>
+      <tr>
+        <td colspan="2">  </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">openMenu</th>
+      </tr>
+      <tr>
+        <td colspan="2">  </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">closeMenu</th>
+      </tr>
+      <tr>
+        <td colspan="2">  </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">destroyMenu</th>
+      </tr>
+      <tr>
+        <td colspan="2">  </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">focus</th>
+      </tr>
+      <tr>
+        <td colspan="2">  </td>
+      </tr></table>
+    
+  <h4>MdMenu</h4>
+  <p>  </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>positionX</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>positionY</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>templateRef</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>items</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>classList</p>
+            <p><code></code></p>
+          </td>
+          <td> This method takes classes set on the host md-menu element and applies them on the
+menu template that displays in the overlay container.  Otherwise, it's difficult
+to style the containing menu from outside the component.</td>
+        </tr>
+      
+        <tr>
+          <td><p>close</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">focusFirstItem</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Focus the first item in the menu. This method is used by the menu trigger
+to focus the first item when the menu is opened by the ENTER key.
+ </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">setPositionClasses</th>
+      </tr>
+      <tr>
+        <td colspan="2"> It's necessary to set position-based classes to ensure the menu panel animation
+folds out from the correct direction.
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>posX</p>
+              <p>MenuPositionX</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        
+          <tr>
+            <td>
+              <p>posY</p>
+              <p>MenuPositionY</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        </table>
+    
+  <h4>MdMenuItem</h4>
+  <p> This directive is intended to be used inside an md-menu tag.
+It exists mostly to set the role attribute.
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>disabled</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>isAriaDisabled</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">focus</th>
+      </tr>
+      <tr>
+        <td colspan="2">  </td>
+      </tr></table>
+    
+
+
+
+

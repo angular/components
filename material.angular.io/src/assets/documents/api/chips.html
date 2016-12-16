@@ -1,0 +1,165 @@
+<style>
+  table {
+    border-collapse: collapse;
+    margin: 10px;
+    min-width: 300px;
+  }
+
+  td, th {
+    border: 1px solid black;
+    padding: 4px;
+  }
+</style>
+
+<h2>chips</h2>
+<p> Module: <code>MdChipsModule</code> </p>
+
+<h3>Directives</h3>
+
+
+  <h4>MdChipList</h4>
+  <p> A material design chips component (named ChipList for it's similarity to the List component).
+
+Example:
+
+    <md-chip-list>
+      <md-chip>Chip 1<md-chip>
+      <md-chip>Chip 2<md-chip>
+    </md-chip-list>
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>chips</p>
+            <p><code></code></p>
+          </td>
+          <td> The chip components contained within this chip list.
+</td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">keydown</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Pass relevant key presses to our key manager.
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>event</p>
+              <p>KeyboardEvent</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        </table>
+    
+    <table>
+      <tr>
+        <th colspan="2">subscribeChips</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Iterate through the list of chips and add them to our list of
+subscribed chips.
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>chips</p>
+              <p>QueryList<MdChip></p>
+            </td>
+            <td>
+              The list of chips to be subscribed.
+
+            </td>
+          </tr>
+        </table>
+    
+    <table>
+      <tr>
+        <th colspan="2">addChip</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Add a specific chip to our subscribed list. If the chip has
+already been subscribed, this ensures it is only subscribed
+once.
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>chip</p>
+              <p>MdChip</p>
+            </td>
+            <td>
+              The chip to be subscribed (or checked for existing
+subscription).
+
+            </td>
+          </tr>
+        </table>
+    
+  <h4>MdChip</h4>
+  <p> A material design styled Chip component. Used inside the ChipList component.
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>onFocus</p>
+            <p><code></code></p>
+          </td>
+          <td> Emitted when the chip is focused.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>destroy</p>
+            <p><code></code></p>
+          </td>
+          <td> Emitted when the chip is destroyed.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>disabled</p>
+            <p><code></code></p>
+          </td>
+          <td> Whether or not the chip is disabled.
+</td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">focus</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Allows for programmatic focusing of the chip.
+ </td>
+      </tr></table>
+    
+
+
+
+

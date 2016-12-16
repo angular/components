@@ -1,0 +1,200 @@
+<style>
+  table {
+    border-collapse: collapse;
+    margin: 10px;
+    min-width: 300px;
+  }
+
+  td, th {
+    border: 1px solid black;
+    padding: 4px;
+  }
+</style>
+
+<h2>checkbox</h2>
+<p> Module: <code>MdCheckboxModule</code> </p>
+
+<h3>Directives</h3>
+
+
+  <h4>MdCheckbox</h4>
+  <p> A material design checkbox component. Supports all of the functionality of an HTML5 checkbox,
+and exposes a similar API. An MdCheckbox can be either checked, unchecked, indeterminate, or
+disabled. Note that all additional accessibility attributes are taken care of by the component,
+so there is no need to provide them yourself. However, if you want to omit a label and still
+have the checkbox be accessible, you may supply an [aria-label] input.
+See: https://www.google.com/design/spec/components/selection-controls.html
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>ariaLabel</p>
+            <p><code></code></p>
+          </td>
+          <td> Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
+take precedence so this may be omitted.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>ariaLabelledby</p>
+            <p><code></code></p>
+          </td>
+          <td> Users can specify the `aria-labelledby` attribute which will be forwarded to the input element
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>id</p>
+            <p><code></code></p>
+          </td>
+          <td> A unique id for the checkbox. If one is not supplied, it is auto-generated.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>disableRipple</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>inputId</p>
+            <p><code></code></p>
+          </td>
+          <td> ID to be applied to the `input` element
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>required</p>
+            <p><code></code></p>
+          </td>
+          <td> Whether the checkbox is required or not.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>align</p>
+            <p><code></code></p>
+          </td>
+          <td> Whether or not the checkbox should come before or after the label.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>disabled</p>
+            <p><code></code></p>
+          </td>
+          <td> Whether the checkbox is disabled. When the checkbox is disabled it cannot be interacted with.
+The correct ARIA attributes are applied to denote this to assistive technology.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>tabindex</p>
+            <p><code></code></p>
+          </td>
+          <td> The tabindex attribute for the checkbox. Note that when the checkbox is disabled, the attribute
+on the host element will be removed. It will be placed back when the checkbox is re-enabled.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>name</p>
+            <p><code></code></p>
+          </td>
+          <td> Name value will be applied to the input element if present
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>change</p>
+            <p><code></code></p>
+          </td>
+          <td> Event emitted when the checkbox's `checked` value changes.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>onTouched</p>
+            <p><code></code></p>
+          </td>
+          <td> Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>hasFocus</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>checked</p>
+            <p><code></code></p>
+          </td>
+          <td> Whether the checkbox is checked. Note that setting `checked` will immediately set
+`indeterminate` to false.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>indeterminate</p>
+            <p><code></code></p>
+          </td>
+          <td> Whether the checkbox is indeterminate. This is also known as "mixed" mode and can be used to
+represent a checkbox with three states, e.g. a checkbox that represents a nested list of
+checkable items. Note that whenever `checked` is set, indeterminate is immediately set to
+false. This differs from the web platform in that indeterminate state on native
+checkboxes is only remove when the user manually checks the checkbox (rather than setting the
+`checked` property programmatically). However, we feel that this behavior is more accommodating
+to the way consumers would envision using this component.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>color</p>
+            <p><code></code></p>
+          </td>
+          <td> Sets the color of the checkbox
+</td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">toggle</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Toggles the `checked` value between true and false
+ </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">focus</th>
+      </tr>
+      <tr>
+        <td colspan="2">  </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">getHostElement</th>
+      </tr>
+      <tr>
+        <td colspan="2">  </td>
+      </tr></table>
+    
+
+
+
+

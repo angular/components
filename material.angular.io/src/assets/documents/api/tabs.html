@@ -1,0 +1,328 @@
+<style>
+  table {
+    border-collapse: collapse;
+    margin: 10px;
+    min-width: 300px;
+  }
+
+  td, th {
+    border: 1px solid black;
+    padding: 4px;
+  }
+</style>
+
+<h2>tabs</h2>
+<p> Module: <code>MdTabsModule</code> </p>
+
+<h3>Directives</h3>
+
+
+  <h4>MdInkBar</h4>
+  <p> The ink-bar is used to display and animate the line underneath the current active tab label.
+ </p><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">alignToElement</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Calculates the styles from the provided element in order to align the ink-bar to that element.
+Shows the ink bar if previously set as hidden. </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>element</p>
+              <p>HTMLElement</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        </table>
+    
+    <table>
+      <tr>
+        <th colspan="2">show</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Shows the ink bar.
+ </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">hide</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Hides the ink bar.
+ </td>
+      </tr></table>
+    
+  <h4>MdTabBody</h4>
+  <p>  </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>onCentering</p>
+            <p><code></code></p>
+          </td>
+          <td> Event emitted when the tab begins to animate towards the center as the active tab.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>onCentered</p>
+            <p><code></code></p>
+          </td>
+          <td> Event emitted when the tab completes its animation towards the center.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>position</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>origin</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table>
+  <h4>MdTabHeader</h4>
+  <p> The header of the tab group which displays a list of all the tabs in the tab group. Includes
+an ink bar that follows the currently selected tab. When the tabs list's width exceeds the
+width of the header container, then arrows will be displayed to allow the user to scroll
+left and right across the header.
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>selectedIndex</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>selectFocusedIndex</p>
+            <p><code></code></p>
+          </td>
+          <td> Event emitted when the option is selected.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>indexFocused</p>
+            <p><code></code></p>
+          </td>
+          <td> Event emitted when a label is focused.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>focusIndex</p>
+            <p><code></code></p>
+          </td>
+          <td> When the focus index is set, we must manually send focus to the correct label
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>scrollDistance</p>
+            <p><code></code></p>
+          </td>
+          <td> Sets the distance in pixels that the tab header should be transformed in the X-axis.
+</td>
+        </tr>
+      
+    </table>
+  <h4>MdTabLabelWrapper</h4>
+  <p> Used in the `md-tab-group` view to display tab labels
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>elementRef</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>disabled</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">focus</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Sets focus on the wrapper element
+ </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">getOffsetLeft</th>
+      </tr>
+      <tr>
+        <td colspan="2">  </td>
+      </tr><tr>
+          <th colspan="2"> Returns </th>
+        </tr>
+        <tr>
+          <td>number</td>
+          <td></td>
+        </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">getOffsetWidth</th>
+      </tr>
+      <tr>
+        <td colspan="2">  </td>
+      </tr><tr>
+          <th colspan="2"> Returns </th>
+        </tr>
+        <tr>
+          <td>number</td>
+          <td></td>
+        </tr></table>
+    
+  <h4>MdTab</h4>
+  <p>  </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>templateLabel</p>
+            <p><code></code></p>
+          </td>
+          <td> Content for the tab label given by <template md-tab-label>.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>textLabel</p>
+            <p><code></code></p>
+          </td>
+          <td> The plain text label for the tab, used when there is no template label.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>content</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>position</p>
+            <p><code></code></p>
+          </td>
+          <td> The relatively indexed position where 0 represents the center, negative is left, and positive
+represents the right.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>origin</p>
+            <p><code></code></p>
+          </td>
+          <td> The initial relatively index origin of the tab if it was created and selected after there
+was already a selected tab. Provides context of what position the tab should originate from.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>disabled</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table>
+  <h4>MdTabLabel</h4>
+  <p> Used to flag tab labels for use with the portal directive
+ </p>
+  <h4>MdTabGroup</h4>
+  <p> Material design tab-group component.  Supports basic tab pairs (label + content) and includes
+animated ink-bar, keyboard navigation, and screen reader.
+See: https://www.google.com/design/spec/components/tabs.html
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>dynamicHeight</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>@Input</p><p>selectedIndex</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>selectedIndexChange</p>
+            <p><code></code></p>
+          </td>
+          <td> Output to enable support for two-way binding on `selectedIndex`.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>focusChange</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+        <tr>
+          <td><p>selectChange</p>
+            <p><code></code></p>
+          </td>
+          <td> </td>
+        </tr>
+      
+    </table>
+
+
+
+

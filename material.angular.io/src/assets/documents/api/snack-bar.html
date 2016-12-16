@@ -1,0 +1,152 @@
+<style>
+  table {
+    border-collapse: collapse;
+    margin: 10px;
+    min-width: 300px;
+  }
+
+  td, th {
+    border: 1px solid black;
+    padding: 4px;
+  }
+</style>
+
+<h2>snack-bar</h2>
+<p> Module: <code>MdSnackBarModule</code> </p>
+
+<h3>Directives</h3>
+
+
+  <h4>MdSnackBarContainer</h4>
+  <p> Internal component that wraps user-provided snack bar content.
+ </p><h5> Properties </h5>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+        <tr>
+          <td><p>animationState</p>
+            <p><code></code></p>
+          </td>
+          <td> The state of the snack bar animations.
+</td>
+        </tr>
+      
+        <tr>
+          <td><p>snackBarConfig</p>
+            <p><code></code></p>
+          </td>
+          <td> The snack bar configuration.
+</td>
+        </tr>
+      
+    </table><h5> Methods </h5>
+    
+    <table>
+      <tr>
+        <th colspan="2">attachComponentPortal</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Attach a component portal as content to this snack bar container.
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>portal</p>
+              <p>ComponentPortal<T></p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        <tr>
+          <th colspan="2"> Returns </th>
+        </tr>
+        <tr>
+          <td>ComponentRef<T></td>
+          <td></td>
+        </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">attachTemplatePortal</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Attach a template portal as content to this snack bar container.
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>portal</p>
+              <p>TemplatePortal</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        <tr>
+          <th colspan="2"> Returns </th>
+        </tr>
+        <tr>
+          <td>Map<string, any></td>
+          <td></td>
+        </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">onAnimationEnd</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Handle end of animations, updating the state of the snackbar.
+ </td>
+      </tr><tr>
+          <th colspan="2"> Parameters </th>
+        </tr>
+        
+          <tr>
+            <td>
+              <p>event</p>
+              <p>AnimationTransitionEvent</p>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        </table>
+    
+    <table>
+      <tr>
+        <th colspan="2">enter</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Begin animation of snack bar entrance into view.
+ </td>
+      </tr></table>
+    
+    <table>
+      <tr>
+        <th colspan="2">exit</th>
+      </tr>
+      <tr>
+        <td colspan="2"> Begin animation of the snack bar exiting from view.
+ </td>
+      </tr><tr>
+          <th colspan="2"> Returns </th>
+        </tr>
+        <tr>
+          <td>Observable<void></td>
+          <td></td>
+        </tr></table>
+    
+
+
+
+

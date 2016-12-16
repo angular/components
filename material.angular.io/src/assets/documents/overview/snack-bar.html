@@ -1,0 +1,64 @@
+<h1 id="mdsnackbar">MdSnackBar</h1>
+<p><code>MdSnackBar</code> is a service, which opens snack bar notifications in the view.</p>
+<h3 id="methods">Methods</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>open(message: string, actionLabel: string, config: MdSnackBarConfig): MdSnackBarRef&lt;SimpleSnackBar&gt;</code></td>
+<td>Creates and opens a simple snack bar notification matching material spec.</td>
+</tr>
+<tr>
+<td><code>openFromComponent(component: ComponentType&lt;T&gt;, config: MdSnackBarConfig): MdSnackBarRef&lt;T&gt;</code></td>
+<td>Creates and opens a snack bar notification with a custom component as content.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config">Config</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>viewContainerRef: ViewContainerRef</code></td>
+<td>The view container ref to attach the snack bar to.</td>
+</tr>
+<tr>
+<td><code>role: AriaLivePoliteness = &#39;assertive&#39;</code></td>
+<td>The politeness level to announce the snack bar with.</td>
+</tr>
+<tr>
+<td><code>announcementMessage: string</code></td>
+<td>The message to announce with the snack bar.</td>
+</tr>
+<tr>
+<td><code>duration: number</code></td>
+<td>The length of time in milliseconds to wait before autodismissing the snack bar.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example">Example</h3>
+<p>The service can be injected in a component.</p>
+<pre><code class="lang-ts">@Component({
+  selector: &#39;my-component&#39;,
+  providers: [MdSnackBar]
+})
+export class MyComponent {
+
+ constructor(snackBar: MdSnackBar) {}
+
+ failedAttempt() {
+   this.snackBar.open(&#39;It didn\&#39;t quite work!&#39;, &#39;Try Again&#39;);
+ }
+
+}
+</code></pre>
