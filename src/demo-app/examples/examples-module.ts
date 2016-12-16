@@ -6,6 +6,7 @@ import {Examples} from './examples';
 import {SliderOverviewExample} from './slider/overview/slider-overview-example';
 import {SliderConfigurableExample} from './slider/configurable/slider-configurable-example';
 import {FormsModule} from '@angular/forms';
+import {SidenavOverviewExample} from './sidenav/overview/sidenav-overview-example';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import {FormsModule} from '@angular/forms';
     Examples,
     SliderOverviewExample,
     SliderConfigurableExample,
+    SidenavOverviewExample,
   ],
 })
 export class ExamplesModule {}
