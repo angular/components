@@ -1,10 +1,12 @@
-import {Component} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+
 
 @Component({
   selector: 'app-components',
   templateUrl: './component-viewer.html',
-  styleUrls: ['./component-viewer.scss']
+  styleUrls: ['./component-viewer.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ComponentViewer {
   componentId: string;

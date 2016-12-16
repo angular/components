@@ -1,6 +1,6 @@
 <a *ngFor="let component of componentItems"
     class="docs-component-list-item"
-    [routerLink]="['/component/', component.name]">
+    [routerLink]="['/component/', component.id]">
   <img src="../../../assets/img/components/{{component.src}}.svg"
       class="docs-component-list-item-icon"
       [alt]="component.name">
