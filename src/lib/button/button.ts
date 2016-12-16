@@ -120,7 +120,7 @@ export class MdButton {
   inputs: ['color', 'disabled', 'disableRipple'],
   host: {
     '[attr.disabled]': 'disabled',
-    '[attr.aria-disabled]': 'disabled',
+    '[attr.aria-disabled]': '_isAriaDisabled',
     '[class.md-button-focus]': '_isKeyboardFocused',
     '(mousedown)': '_setMousedown()',
     '(focus)': '_setKeyboardFocus()',
@@ -140,6 +140,10 @@ export class MdAnchor extends MdButton {
   @HostBinding('tabIndex')
   get tabIndex(): number {
     return this.disabled ? -1 : 0;
+  }
+
+  get _isAriaDisabled(): string {
+    return this.disabled ? 'true' : 'false';
   }
 
   _haltDisabledEvents(event: Event) {
