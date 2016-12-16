@@ -8,7 +8,7 @@ import {MaterialDocsApp} from './material-docs-app';
 import {Homepage} from './pages/homepage/homepage';
 import {NavBar} from './shared/navbar/navbar';
 import {routing} from './routes';
-import {ComponentsList} from './pages/components/components';
+import {ComponentList} from './pages/component-list/component-list';
 import {DocViewerModule} from './shared/doc-viewer/index';
 import {ExampleViewerModule} from './shared/example-viewer/index';
 
@@ -16,13 +16,13 @@ import {ExampleViewerModule} from './shared/example-viewer/index';
 @NgModule({
   declarations: [
     MaterialDocsApp,
-    ComponentsList,
+    ComponentList,
     Homepage,
     NavBar,
   ],
   exports: [
     MaterialDocsApp,
-    ComponentsList,
+    ComponentList,
     Homepage,
     NavBar,
   ],
