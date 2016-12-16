@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-components',
@@ -7,12 +7,30 @@ import { Component} from '@angular/core';
 })
 export class ComponentsList {
   componentItems = [
-    {name: 'Buttons', src: 'button'},
-    {name: 'Cards', src: 'card'},
-    {name: 'Chips', src: 'chip'},
-    {name: 'Grid lists', src: 'grid'},
+    {name: 'Button', src: 'button'},
+    {name: 'Checkbox', src: 'checkbox'},
+    {name: 'Radio button', src: 'radio'},
+    {name: 'Button toggle', src: 'button-toggle'},
+    {name: 'Input', src: 'input'},
+    {name: 'Textarea', src: 'textarea'},
+    {name: 'Select', src: 'select'},
+    {name: 'Slide toggle', src: 'slide-toggle'},
+    {name: 'Slider', src: 'slider'},
+
+    {name: 'Card', src: 'card'},
+    {name: 'List', src: 'list'},
+    {name: 'Grid list', src: 'grid-list'},
+    {name: 'Sidenav', src: 'sidenav'},
+    {name: 'Toolbar', src: 'toolbar'},
+
     {name: 'Menu', src: 'menu'},
+    {name: 'Dialog', src: 'dialog'},
+    {name: 'Snackbar', src: 'snackbar'},
     {name: 'Tooltip', src: 'tooltip'},
-    {name: 'Progress', src: 'progress'},
+
+    {name: 'Progress Spinner', src: 'progress-spinner'},
+    {name: 'Progress Bar', src: 'progress-bar'},
+
+    {name: 'Icon', src: 'icon'},
   ];
 }
