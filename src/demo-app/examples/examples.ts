@@ -19,5 +19,7 @@ export class Examples {
     {name: 'Button Types', route: 'button/types'},
     {name: 'Card Overview', route: 'card/overview'},
     {name: 'Fancy Card', route: 'card/fancy'},
+    {name: 'Checkbox Overview', route: 'checkbox/overview'},
+    {name: 'Configurable Checkbox', route: 'checkbox/configurable'},
   ];
 }

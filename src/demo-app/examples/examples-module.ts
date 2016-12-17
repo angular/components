@@ -14,6 +14,8 @@ import {ButtonOverviewExample} from './button/overview/button-overview-example';
 import {ButtonTypesExample} from './button/types/button-types-example';
 import {CardOverviewExample} from './card/overview/card-overview-example';
 import {CardFancyExample} from './card/fancy/card-fancy-example';
+import {CheckboxOverviewExample} from './checkbox/overview/checkbox-overview-example';
+import {CheckboxConfigurableExample} from './checkbox/configurable/checkbox-configurable-example';
 
 
 @NgModule({
@@ -35,6 +37,8 @@ import {CardFancyExample} from './card/fancy/card-fancy-example';
     ButtonTypesExample,
     CardOverviewExample,
     CardFancyExample,
+    CheckboxOverviewExample,
+    CheckboxConfigurableExample,
   ],
 })
 export class ExamplesModule {}
