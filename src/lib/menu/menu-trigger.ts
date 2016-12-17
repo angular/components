@@ -51,6 +51,11 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   // the first item of the list when the menu is opened via the keyboard
   private _openedByMouse: boolean = false;
 
+  /** @deprecated */
+  @Input('md-menu-trigger-for')
+  get _deprecatedMenuTriggerFor(): MdMenuPanel { return this.menu; }
+  set _deprecatedMenuTriggerFor(v: MdMenuPanel) { this.menu = v; }
+
   @Input('mdMenuTriggerFor') menu: MdMenuPanel;
   @Output() onMenuOpen = new EventEmitter<void>();
   @Output() onMenuClose = new EventEmitter<void>();

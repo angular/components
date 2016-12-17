@@ -97,6 +97,11 @@ export class MdTooltip {
     }
   }
 
+  /** @deprecated */
+  @Input('md-tooltip')
+  get _deprecatedMessage(): string { return this.message; }
+  set _deprecatedMessage(v: string) { this.message = v; }
+
   constructor(private _overlay: Overlay, private _elementRef: ElementRef,
               private _viewContainerRef: ViewContainerRef, private _ngZone: NgZone,
               @Optional() private _dir: Dir) {}
