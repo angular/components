@@ -48,9 +48,7 @@ export class MdTabChangeEvent {
   selector: 'md-tab-group',
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
-  host: {
-    '[class.md-tab-group-dynamic-height]': '_dynamicHeight'
-  }
+  host: { '[class.md-tab-group-dynamic-height]': 'dynamicHeight' }
 })
 export class MdTabGroup {
   @ContentChildren(MdTab) _tabs: QueryList<MdTab>;
@@ -68,9 +66,9 @@ export class MdTabGroup {
 
   /** Whether the tab group should grow to the size of the active tab */
   private _dynamicHeight: boolean = false;
-  @Input() set dynamicHeight(value: boolean) {
-    this._dynamicHeight = coerceBooleanProperty(value);
-  }
+  @Input()
+  get dynamicHeight(): boolean { return this._dynamicHeight; }
+  set dynamicHeight(value: boolean) { this._dynamicHeight = coerceBooleanProperty(value); }
 
   /** @deprecated */
   @Input('md-dynamic-height')
