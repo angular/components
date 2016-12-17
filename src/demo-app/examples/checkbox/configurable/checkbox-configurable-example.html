@@ -1,0 +1,39 @@
+<md-card>
+  <md-card-content>
+    <h2>Checkbox configuration</h2>
+
+    <section>
+      <md-checkbox [(ngModel)]="checked">Checked</md-checkbox>
+      <md-checkbox [(ngModel)]="indeterminate">Indeterminate</md-checkbox>
+    </section>
+
+    <section>
+      <label class="radio-group-label">Align:</label>
+      <md-radio-group [(ngModel)]="align">
+        <md-radio-button value="start">Start</md-radio-button>
+        <md-radio-button value="end">End</md-radio-button>
+      </md-radio-group>
+    </section>
+
+    <section>
+      <md-checkbox [(ngModel)]="disabled">Disabled</md-checkbox>
+    </section>
+  </md-card-content>
+</md-card>
+
+<md-card class="result">
+  <md-card-content>
+    <h2>Result</h2>
+
+    <section>
+      <md-checkbox
+          [checked]="checked"
+          [indeterminate]="indeterminate"
+          [align]="align"
+          [disabled]="disabled">
+        I'm a checkbox
+      </md-checkbox>
+    </section>
+  </md-card-content>
+</md-card>
+

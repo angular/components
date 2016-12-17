@@ -10,6 +10,8 @@ import {ButtonOverviewExample} from './button/overview/button-overview-example';
 import {ButtonTypesExample} from './button/types/button-types-example';
 import {CardOverviewExample} from './card/overview/card-overview-example';
 import {CardFancyExample} from './card/fancy/card-fancy-example';
+import {CheckboxOverviewExample} from './checkbox/overview/checkbox-overview-example';
+import {CheckboxConfigurableExample} from './checkbox/configurable/checkbox-configurable-example';
 
 
 export const EXAMPLE_ROUTES: Routes = [
@@ -24,4 +26,6 @@ export const EXAMPLE_ROUTES: Routes = [
   {path: 'examples/button/types', component: ButtonTypesExample},
   {path: 'examples/card/overview', component: CardOverviewExample},
   {path: 'examples/card/fancy', component: CardFancyExample},
+  {path: 'examples/checkbox/overview', component: CheckboxOverviewExample},
+  {path: 'examples/checkbox/configurable', component: CheckboxConfigurableExample},
 ];
