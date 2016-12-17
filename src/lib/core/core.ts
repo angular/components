@@ -32,6 +32,9 @@ export * from './projection/projection';
 // Platform
 export * from './platform/index';
 
+/** @deprecated */
+export {Platform as MdPlatform} from './platform/platform';
+
 // Overlay
 export {Overlay, OVERLAY_PROVIDERS} from './overlay/overlay';
 export {OverlayContainer} from './overlay/overlay-container';
@@ -58,6 +61,9 @@ export {
   LIVE_ANNOUNCER_ELEMENT_TOKEN,
 } from './a11y/live-announcer';
 
+/** @deprecated */
+export {LiveAnnouncer as MdLiveAnnouncer} from './a11y/live-announcer';
+
 export {FocusTrap} from './a11y/focus-trap';
 export {InteractivityChecker} from './a11y/interactivity-checker';
 export {isFakeMousedownFromScreenReader} from './a11y/fake-mousedown';
@@ -67,6 +73,11 @@ export {A11yModule} from './a11y/index';
 export {
   UniqueSelectionDispatcher,
   UniqueSelectionDispatcherListener
+} from './coordination/unique-selection-dispatcher';
+
+/** @deprecated */
+export {
+  UniqueSelectionDispatcher as MdUniqueSelectionDispatcher
 } from './coordination/unique-selection-dispatcher';
 
 export {MdLineModule, MdLine, MdLineSetter} from './line/line';
