@@ -12,6 +12,8 @@ import {InputOverviewExample} from './input/overview/input-overview-example';
 import {InputFormExample} from './input/form/input-form-example';
 import {ButtonOverviewExample} from './button/overview/button-overview-example';
 import {ButtonTypesExample} from './button/types/button-types-example';
+import {CardOverviewExample} from './card/overview/card-overview-example';
+import {CardFancyExample} from './card/fancy/card-fancy-example';
 
 
 @NgModule({
@@ -31,6 +33,8 @@ import {ButtonTypesExample} from './button/types/button-types-example';
     InputFormExample,
     ButtonOverviewExample,
     ButtonTypesExample,
+    CardOverviewExample,
+    CardFancyExample,
   ],
 })
 export class ExamplesModule {}

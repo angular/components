@@ -8,6 +8,8 @@ import {InputOverviewExample} from './input/overview/input-overview-example';
 import {InputFormExample} from './input/form/input-form-example';
 import {ButtonOverviewExample} from './button/overview/button-overview-example';
 import {ButtonTypesExample} from './button/types/button-types-example';
+import {CardOverviewExample} from './card/overview/card-overview-example';
+import {CardFancyExample} from './card/fancy/card-fancy-example';
 
 
 export const EXAMPLE_ROUTES: Routes = [
@@ -20,4 +22,6 @@ export const EXAMPLE_ROUTES: Routes = [
   {path: 'examples/input/form', component: InputFormExample},
   {path: 'examples/button/overview', component: ButtonOverviewExample},
   {path: 'examples/button/types', component: ButtonTypesExample},
+  {path: 'examples/card/overview', component: CardOverviewExample},
+  {path: 'examples/card/fancy', component: CardFancyExample},
 ];
