@@ -125,7 +125,8 @@ describe('Overlay directives', () => {
       fixture.componentInstance.isOpen = true;
       fixture.detectChanges();
 
-      const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+      const backdrop =
+          overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       expect(backdrop.classList).toContain('md-test-class');
     });
 
@@ -190,7 +191,8 @@ describe('Overlay directives', () => {
       fixture.componentInstance.isOpen = true;
       fixture.detectChanges();
 
-      const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+      const backdrop =
+          overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       backdrop.click();
       fixture.detectChanges();
 
@@ -233,7 +235,8 @@ describe('Overlay directives', () => {
 @Component({
   template: `
   <button cdk-overlay-origin #trigger="cdkOverlayOrigin">Toggle menu</button>
-  <template cdk-connected-overlay [origin]="trigger" [open]="isOpen" [width]="width" [height]="height"
+  <template cdk-connected-overlay [open]="isOpen" [width]="width" [height]="height"
+            [origin]="trigger"
             [hasBackdrop]="hasBackdrop" backdropClass="md-test-class"
             (backdropClick)="backdropClicked=true" [offsetX]="offsetX" [offsetY]="offsetY"
             (positionChange)="positionChangeHandler($event)" (attach)="attachHandler()"
