@@ -10,10 +10,10 @@ describe('fullscreen', () => {
     element(by.id('fullscreen')).click();
     element(by.id('dialog')).click();
 
-    overlayInFullscreen.then(isPresent => {
+    overlayInFullscreen().then(isPresent => {
         expect(isPresent).toBe(true);
         element(by.id('exitfullscreenindialog')).click();
-        overlayInBody.then(isPresent => {
+        overlayInBody().then(isPresent => {
             expect(isPresent).toBe(true);
         });
     });
@@ -21,13 +21,13 @@ describe('fullscreen', () => {
 
   it('should open a dialog inside the document body and move it to a fullscreen element', () => {
     element(by.id('dialog')).click();
-    overlayInBody.then(isPresent => {
+    overlayInBody().then(isPresent => {
         expect(isPresent).toBe(true);
         element(by.id('fullscreenindialog')).click();
-        overlayInFullscreen.then(isPresent => {
+        overlayInFullscreen().then(isPresent => {
             expect(isPresent).toBe(true);
             element(by.id('exitfullscreenindialog')).click();
-            browser.isElementPresent(by.css('body > .md-overlay-container')).then(isPresent => {
+            overlayInBody().then(isPresent => {
                 expect(isPresent).toBe(true);
             });
         });
