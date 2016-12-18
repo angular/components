@@ -14,6 +14,7 @@ import {OverlayContainer} from './overlay-container';
 export class FullscreenOverlayContainer extends OverlayContainer {
   protected _createContainer(): void {
     super._createContainer();
+    this._adjustParentForFullscreenChange();
     this._addFullscreenChangeListener(() => this._adjustParentForFullscreenChange());
   }
 
@@ -21,8 +22,7 @@ export class FullscreenOverlayContainer extends OverlayContainer {
     if (!this._containerElement) {
       return;
     }
-
-    let fullscreenElement = this._getFullscreenElement();
+    let fullscreenElement = this.getFullscreenElement();
     let parent = fullscreenElement || document.body;
     parent.appendChild(this._containerElement);
   }
@@ -41,11 +41,28 @@ export class FullscreenOverlayContainer extends OverlayContainer {
 
   // When the page is put into fullscreen mode, a specific element is specified.
   // Only that element and its children are visible when in fullscreen mode.
-  private _getFullscreenElement(): Element {
+  getFullscreenElement(): Element {
     return document.fullscreenElement ||
         document.webkitFullscreenElement ||
         (document as any).mozFullScreenElement ||
         (document as any).msFullscreenElement ||
         null;
+  }
+
+  // returns true if it has tried to toggle fullscreen mode
+  // but provides no guarantees whether it really happened
+  toggleFullscreen(element: HTMLElement) {
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.webkitRequestFullScreen) {
+      element.webkitRequestFullScreen();
+    } else if ((element as any).mozRequestFullScreen) {
+      (element as any).mozRequestFullScreen();
+    } else if ((element as any).msRequestFullScreen) {
+      (element as any).msRequestFullScreen();
+    } else {
+      return false;
+    }
+    return true;
   }
 }
