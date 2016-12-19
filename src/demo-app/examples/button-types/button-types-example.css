@@ -1,8 +1,8 @@
-.example {
+.example-container {
   width: 500px;
 }
 
-.button-row {
+.example-button-row {
   display: flex;
   align-items: center;
   justify-content: space-around;
