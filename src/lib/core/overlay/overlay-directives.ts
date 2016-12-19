@@ -40,7 +40,7 @@ let defaultPositionList = [
  * ConnectedPositionStrategy.
  */
 @Directive({
-  selector: '[cdk-overlay-origin]',
+  selector: '[cdk-overlay-origin], [overlay-origin]',
   exportAs: 'cdkOverlayOrigin',
 })
 export class OverlayOrigin {
@@ -57,7 +57,7 @@ export class OverlayOrigin {
  * Directive to facilitate declarative creation of an Overlay using a ConnectedPositionStrategy.
  */
 @Directive({
-  selector: '[cdk-connected-overlay]',
+  selector: '[cdk-connected-overlay], [connected-overlay]',
   exportAs: 'cdkConnectedOverlay'
 })
 export class ConnectedOverlayDirective implements OnDestroy {

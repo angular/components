@@ -13,7 +13,7 @@ import {coerceBooleanProperty} from '../coercion/boolean-property';
  */
 @Component({
   moduleId: module.id,
-  selector: 'cdk-focus-trap',
+  selector: 'cdk-focus-trap, focus-trap',
   templateUrl: 'focus-trap.html',
   encapsulation: ViewEncapsulation.None,
 })
