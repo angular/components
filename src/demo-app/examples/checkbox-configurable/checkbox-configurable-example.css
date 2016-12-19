@@ -1,18 +1,14 @@
-h2 {
+.example-h2 {
   margin: 10px;
 }
 
-section {
+.example-section {
   display: flex;
   align-content: center;
   align-items: center;
   height: 60px;
 }
 
-md-checkbox {
-  margin: 0 10px;
-}
-
-.radio-group-label, md-checkbox, md-radio-button {
+.example-margin {
   margin: 0 10px;
 }

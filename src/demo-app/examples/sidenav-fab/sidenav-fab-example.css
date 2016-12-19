@@ -1,24 +1,24 @@
-.my-container {
+.example-container {
   width: 500px;
   height: 300px;
-  border: 1px solid rgba(black, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
-.my-container md-sidenav {
+.example-container md-sidenav {
   max-width: 200px;
 }
 
-.my-container .md-sidenav-content,
-.my-container md-sidenav {
+.example-container .md-sidenav-content,
+.example-container md-sidenav {
   display: flex;
   overflow: visible;
 }
 
-.my-scrolling-content {
+.example-scrolling-content {
   overflow: auto;
 }
 
-button.my-fab {
+.example-fab {
   position: absolute;
   right: 20px;
   bottom: 10px;

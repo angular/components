@@ -1,18 +1,14 @@
-h2 {
+.example-h2 {
   margin: 10px;
 }
 
-section {
+.example-section {
   display: flex;
   align-content: center;
   align-items: center;
   height: 60px;
 }
 
-md-input-container, md-checkbox {
-  margin: 0 10px;
-}
-
-md-slider {
+.example-margin {
   margin: 10px;
 }
