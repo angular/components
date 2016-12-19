@@ -23,6 +23,13 @@ body {
     padding: 32px;
   }
 
+  // stretch to screen size in fullscreen mode
+  .demo-content:fullscreen {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+  }
+
   md-toolbar {
     md-icon {
       cursor: pointer;

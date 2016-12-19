@@ -23,7 +23,35 @@ export class OverlayContainer {
   private _createContainer(): void {
     let container = document.createElement('div');
     container.classList.add('md-overlay-container');
-    document.body.appendChild(container);
     this._containerElement = container;
+    this._adjustContainerParent();
+    if (document.fullscreenEnabled) {
+      document.addEventListener('fullscreenchange', () => this._adjustContainerParent());
+    }
+    if (document.webkitFullscreenEnabled) {
+      document.addEventListener('webkitfullscreenchange', () => this._adjustContainerParent());
+    }
+    if ((<any>document).mozFullScreenEnabled) {
+      document.addEventListener('mozfullscreenchange', () => this._adjustContainerParent());
+    }
+    if ((<any>document).msFullscreenEnabled) {
+      document.addEventListener('MSFullscreenChange', () => this._adjustContainerParent());
+    }
+  }
+
+  private _adjustContainerParent() {
+    // use any type because document type doesn't declare full screen variables
+    let currentDocument: any = document;
+    if (currentDocument.fullscreenElement) {
+      currentDocument.fullScreenElement.appendChild(this._containerElement);
+    } else if (currentDocument.mozFullScreenElement) {
+      currentDocument.mozFullScreenElement.appendChild(this._containerElement);
+    } else if (currentDocument.webkitFullscreenElement) {
+      currentDocument.webkitCurrentFullScreenElement.appendChild(this._containerElement);
+    } else if (currentDocument.msFullscreenElement) {
+      currentDocument.msFullscreenElement.appendChild(this._containerElement);
+    } else {
+      document.body.appendChild(this._containerElement);
+    }
   }
 }
