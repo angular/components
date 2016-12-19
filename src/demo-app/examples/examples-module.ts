@@ -16,6 +16,10 @@ import {CardOverviewExample} from './card-overview/card-overview-example';
 import {CardFancyExample} from './card-fancy/card-fancy-example';
 import {CheckboxOverviewExample} from './checkbox-overview/checkbox-overview-example';
 import {CheckboxConfigurableExample} from './checkbox-configurable/checkbox-configurable-example';
+import {ButtonToggleOverviewExample} from './button-toggle-overview/button-toggle-overview-example';
+import {ButtonToggleExclusiveExample} from './button-toggle-exclusive/button-toggle-exclusive-example';
+import {RadioOverviewExample} from './radio-overview/radio-overview-example';
+import {RadioNgModelExample} from './radio-ngmodel/radio-ngmodel-example';
 
 
 @NgModule({
@@ -39,6 +43,10 @@ import {CheckboxConfigurableExample} from './checkbox-configurable/checkbox-conf
     CardFancyExample,
     CheckboxOverviewExample,
     CheckboxConfigurableExample,
+    ButtonToggleOverviewExample,
+    ButtonToggleExclusiveExample,
+    RadioOverviewExample,
+    RadioNgModelExample,
   ],
 })
 export class ExamplesModule {}

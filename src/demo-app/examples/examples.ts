@@ -21,5 +21,9 @@ export class Examples {
     {name: 'Fancy Card', route: 'card-fancy'},
     {name: 'Checkbox Overview', route: 'checkbox-overview'},
     {name: 'Configurable Checkbox', route: 'checkbox-configurable'},
+    {name: 'Button Toggle Overview', route: 'button-toggle-overview'},
+    {name: 'Button Toggle Exclusive', route: 'button-toggle-exclusive'},
+    {name: 'Radio Button Overview', route: 'radio-overview'},
+    {name: 'Radio Button ngModel', route: 'radio-ngmodel'},
   ];
 }

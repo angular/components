@@ -12,6 +12,10 @@ import {CardOverviewExample} from './card-overview/card-overview-example';
 import {CardFancyExample} from './card-fancy/card-fancy-example';
 import {CheckboxOverviewExample} from './checkbox-overview/checkbox-overview-example';
 import {CheckboxConfigurableExample} from './checkbox-configurable/checkbox-configurable-example';
+import {ButtonToggleOverviewExample} from './button-toggle-overview/button-toggle-overview-example';
+import {ButtonToggleExclusiveExample} from './button-toggle-exclusive/button-toggle-exclusive-example';
+import {RadioOverviewExample} from './radio-overview/radio-overview-example';
+import {RadioNgModelExample} from './radio-ngmodel/radio-ngmodel-example';
 
 
 export const EXAMPLE_ROUTES: Routes = [
@@ -28,4 +32,8 @@ export const EXAMPLE_ROUTES: Routes = [
   {path: 'examples/card-fancy', component: CardFancyExample},
   {path: 'examples/checkbox-overview', component: CheckboxOverviewExample},
   {path: 'examples/checkbox-configurable', component: CheckboxConfigurableExample},
+  {path: 'examples/button-toggle-overview', component: ButtonToggleOverviewExample},
+  {path: 'examples/button-toggle-exclusive', component: ButtonToggleExclusiveExample},
+  {path: 'examples/radio-overview', component: RadioOverviewExample},
+  {path: 'examples/radio-ngmodel', component: RadioNgModelExample},
 ];
