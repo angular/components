@@ -25,5 +25,11 @@ export class Examples {
     {name: 'Button Toggle Exclusive', route: 'button-toggle-exclusive'},
     {name: 'Radio Button Overview', route: 'radio-overview'},
     {name: 'Radio Button ngModel', route: 'radio-ngmodel'},
+    {name: 'Toolbar Overview', route: 'toolbar-overview'},
+    {name: 'Multi-row Toolbar', route: 'toolbar-multirow'},
+    {name: 'List Overview', route: 'list-overview'},
+    {name: 'List with Sections', route: 'list-sections'},
+    {name: 'Grid List Overview', route: 'grid-list-overview'},
+    {name: 'Dynamic Grid List', route: 'grid-list-dynamic'},
   ];
 }

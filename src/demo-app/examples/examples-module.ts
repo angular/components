@@ -20,6 +20,12 @@ import {ButtonToggleOverviewExample} from './button-toggle-overview/button-toggl
 import {ButtonToggleExclusiveExample} from './button-toggle-exclusive/button-toggle-exclusive-example';
 import {RadioOverviewExample} from './radio-overview/radio-overview-example';
 import {RadioNgModelExample} from './radio-ngmodel/radio-ngmodel-example';
+import {ToolbarOverviewExample} from './toolbar-overview/toolbar-overview-example';
+import {ToolbarMultirowExample} from './toolbar-multirow/toolbar-multirow-example';
+import {ListOverviewExample} from './list-overview/list-overview-example';
+import {ListSectionsExample} from './list-sections/list-sections-example';
+import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
+import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-example';
 
 
 @NgModule({
@@ -47,6 +53,12 @@ import {RadioNgModelExample} from './radio-ngmodel/radio-ngmodel-example';
     ButtonToggleExclusiveExample,
     RadioOverviewExample,
     RadioNgModelExample,
+    ToolbarOverviewExample,
+    ToolbarMultirowExample,
+    ListOverviewExample,
+    ListSectionsExample,
+    GridListOverviewExample,
+    GridListDynamicExample,
   ],
 })
 export class ExamplesModule {}

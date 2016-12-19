@@ -16,6 +16,12 @@ import {ButtonToggleOverviewExample} from './button-toggle-overview/button-toggl
 import {ButtonToggleExclusiveExample} from './button-toggle-exclusive/button-toggle-exclusive-example';
 import {RadioOverviewExample} from './radio-overview/radio-overview-example';
 import {RadioNgModelExample} from './radio-ngmodel/radio-ngmodel-example';
+import {ToolbarOverviewExample} from './toolbar-overview/toolbar-overview-example';
+import {ToolbarMultirowExample} from './toolbar-multirow/toolbar-multirow-example';
+import {ListOverviewExample} from './list-overview/list-overview-example';
+import {ListSectionsExample} from './list-sections/list-sections-example';
+import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
+import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-example';
 
 
 export const EXAMPLE_ROUTES: Routes = [
@@ -36,4 +42,11 @@ export const EXAMPLE_ROUTES: Routes = [
   {path: 'examples/button-toggle-exclusive', component: ButtonToggleExclusiveExample},
   {path: 'examples/radio-overview', component: RadioOverviewExample},
   {path: 'examples/radio-ngmodel', component: RadioNgModelExample},
+  {path: 'examples/toolbar-overview', component: ToolbarOverviewExample},
+  {path: 'examples/toolbar-multirow', component: ToolbarMultirowExample},
+  {path: 'examples/list-overview', component: ListOverviewExample},
+  {path: 'examples/list-sections', component: ListSectionsExample},
+  {path: 'examples/grid-list-overview', component: GridListOverviewExample},
+  {path: 'examples/grid-list-dynamic', component: GridListDynamicExample},
+
 ];
