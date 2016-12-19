@@ -1,15 +1,17 @@
 import {task, watch, src, dest} from 'gulp';
 import * as path from 'path';
 
-import {DIST_COMPONENTS_ROOT, PROJECT_ROOT, COMPONENTS_DIR} from '../constants';
+import {
+  DIST_COMPONENTS_ROOT, PROJECT_ROOT, COMPONENTS_DIR, HTML_MINIFIER_OPTIONS
+} from '../constants';
 import {sassBuildTask, tsBuildTask, execNodeTask, copyTask, sequenceTask} from '../task_helpers';
 import {writeFileSync} from 'fs';
 
 // No typings for these.
 const inlineResources = require('../../../scripts/release/inline-resources');
 const rollup = require('rollup').rollup;
-const gulpMinifyCSS = require('gulp-clean-css');
-const gulpMinifyHTML = require('gulp-htmlmin');
+const gulpMinifyCss = require('gulp-clean-css');
+const gulpMinifyHtml = require('gulp-htmlmin');
 const gulpIf = require('gulp-if');
 
 
@@ -47,7 +49,7 @@ task(':build:components:assets', copyTask([
 /** Minifies the HTML and CSS assets in the distribution folder. */
 task(':build:components:assets:minify', () => {
   return src('**/*.+(html|css)', { cwd: DIST_COMPONENTS_ROOT})
-    .pipe(gulpIf(/.css$/, gulpMinifyCSS(), gulpMinifyHTML({collapseWhitespace: true})))
+    .pipe(gulpIf(/.css$/, gulpMinifyCss(), gulpMinifyHtml(HTML_MINIFIER_OPTIONS)))
     .pipe(dest(DIST_COMPONENTS_ROOT));
 });
 
