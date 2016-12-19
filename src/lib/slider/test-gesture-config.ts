@@ -11,7 +11,7 @@ export class TestGestureConfig extends GestureConfig {
    * A map of Hammer instances to element.
    * Used to emit events over instances for an element.
    */
-  hammerInstances: Map<HTMLElement, HammerManager[]> = new Map<HTMLElement, HammerManager[]>();
+  hammerInstances: Map<HTMLElement, any[]> = new Map<HTMLElement, any[]>();
 
   /**
    * Create a mapping of Hammer instances to element so that events can be emitted during testing.

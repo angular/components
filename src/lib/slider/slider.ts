@@ -14,11 +14,11 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/for
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {
   GestureConfig,
+  MdHammerEvent,
   coerceBooleanProperty,
   coerceNumberProperty,
   DefaultStyleCompatibilityModeModule,
 } from '../core';
-import {Input as HammerInput} from 'hammerjs';
 import {Dir} from '../core/rtl/dir';
 import {CommonModule} from '@angular/common';
 import {
@@ -31,7 +31,6 @@ import {
   RIGHT_ARROW,
   DOWN_ARROW,
 } from '../core/keyboard/keycodes';
-
 
 /**
  * Visually, a 30px separation between tick marks looks best. This is very subjective but it is
@@ -324,7 +323,7 @@ export class MdSlider implements ControlValueAccessor {
     this._emitValueIfChanged();
   }
 
-  _onSlide(event: HammerInput) {
+  _onSlide(event: MdHammerEvent) {
     if (this.disabled) {
       return;
     }
@@ -334,7 +333,7 @@ export class MdSlider implements ControlValueAccessor {
     this._updateValueFromPosition({x: event.center.x, y: event.center.y});
   }
 
-  _onSlideStart(event: HammerInput) {
+  _onSlideStart(event: MdHammerEvent) {
     if (this.disabled) {
       return;
     }
