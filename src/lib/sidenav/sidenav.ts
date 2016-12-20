@@ -22,7 +22,6 @@ import {FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {OverlayModule} from '../core/overlay/overlay-directives';
 import {InteractivityChecker} from '../core/a11y/interactivity-checker';
-import {MdLiveAnnouncer} from '../core/a11y/live-announcer';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 
 
@@ -515,7 +514,7 @@ export class MdSidenavModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdSidenavModule,
-      providers: [MdLiveAnnouncer, InteractivityChecker, ScrollDispatcher]
+      providers: [InteractivityChecker, ScrollDispatcher]
     };
   }
 }
