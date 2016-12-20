@@ -1,3 +1,5 @@
+import {browser, by, element, Key, ProtractorBy} from 'protractor';
+
 describe('fullscreen', () => {
   beforeEach(() => browser.get('/fullscreen'));
 
@@ -10,10 +12,10 @@ describe('fullscreen', () => {
     element(by.id('fullscreen')).click();
     element(by.id('dialog')).click();
 
-    overlayInFullscreen().then(isPresent => {
+    overlayInFullscreen().then((isPresent: boolean) => {
         expect(isPresent).toBe(true);
         element(by.id('exitfullscreenindialog')).click();
-        overlayInBody().then(isPresent => {
+        overlayInBody().then((isPresent: boolean) => {
             expect(isPresent).toBe(true);
         });
     });
@@ -21,13 +23,13 @@ describe('fullscreen', () => {
 
   it('should open a dialog inside the document body and move it to a fullscreen element', () => {
     element(by.id('dialog')).click();
-    overlayInBody().then(isPresent => {
+    overlayInBody().then((isPresent: boolean) => {
         expect(isPresent).toBe(true);
         element(by.id('fullscreenindialog')).click();
-        overlayInFullscreen().then(isPresent => {
+        overlayInFullscreen().then((isPresent: boolean) => {
             expect(isPresent).toBe(true);
             element(by.id('exitfullscreenindialog')).click();
-            overlayInBody().then(isPresent => {
+            overlayInBody().then((isPresent: boolean) => {
                 expect(isPresent).toBe(true);
             });
         });
