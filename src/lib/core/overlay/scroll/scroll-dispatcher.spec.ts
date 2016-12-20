@@ -60,7 +60,7 @@ describe('Scroll Dispatcher', () => {
     });
   });
 
-  fdescribe('Nested scrollables', () => {
+  describe('Nested scrollables', () => {
     let scroll: ScrollDispatcher;
     let fixture: ComponentFixture<NestedScrollingComponent>;
 

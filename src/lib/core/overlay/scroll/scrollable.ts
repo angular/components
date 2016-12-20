@@ -16,7 +16,6 @@ import 'rxjs/add/observable/fromEvent';
 })
 export class Scrollable implements OnInit, OnDestroy {
   constructor(private _elementRef: ElementRef,
-              @SkipSelf() @Optional() private parentScrollable: Scrollable,
               private _scroll: ScrollDispatcher) {}
 
   ngOnInit() {
@@ -36,10 +35,5 @@ export class Scrollable implements OnInit, OnDestroy {
 
   getElementRef(): ElementRef {
     return this._elementRef;
-  }
-
-  /** Returns this scrollable along with all the scrollables that this is contained within. */
-  getAllScrollables(): Scrollable[] {
-    return this.parentScrollable ? this.parentScrollable.getAllScrollables().concat(this) : [this];
   }
 }

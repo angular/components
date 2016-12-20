@@ -1,8 +1,8 @@
 <div class="demo-tooltip">
   <h1>Tooltip Demo</h1>
 
-  <p class="centered">
-    <button #tooltip="mdTooltip"
+  <p class="centered" style="height: 200px; overflow: auto;" cdk-scrollable>
+    <button #tooltip="mdTooltip" style="margin: 300px;"
             md-raised-button
             color="primary"
             [mdTooltip]="message"
