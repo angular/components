@@ -75,7 +75,7 @@ export class GestureConfig extends HammerGestureConfig {
  * to the one from HammerJS.
  * @docs-private
  */
-export interface MdHammerEvent {
+export interface HammerEvent {
   preventDefault: () => {};
   deltaX: number;
   deltaY: number;

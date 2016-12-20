@@ -49,7 +49,7 @@ export * from './overlay/position/connected-position-strategy';
 export * from './overlay/position/connected-position';
 
 // Gestures
-export {GestureConfig, MdHammerEvent} from './gestures/gesture-config';
+export {GestureConfig, HammerEvent} from './gestures/gesture-config';
 
 // Ripple
 export {MdRipple, MdRippleModule} from './ripple/ripple';
