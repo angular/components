@@ -84,7 +84,7 @@ export function config(config) {
     browserDisconnectTimeout: 20000,
     browserNoActivityTimeout: 240000,
     captureTimeout: 120000,
-    browsers: ['Firefox'],
+    browsers: ['Chrome_1024x768'],
 
     singleRun: false
   });
