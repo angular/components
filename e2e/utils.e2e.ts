@@ -28,8 +28,8 @@ export class E2EUtils {
    */
   expectLocation(element: FinderResult, {x, y}: Point): void {
     this._getElement(element).getLocation().then((location: Point) => {
-      expect(location.x).toEqual(Math.round(x));
-      expect(location.y).toEqual(Math.round(y));
+      expect(location.x).toEqual(x);
+      expect(location.y).toEqual(y);
     });
   }
 
