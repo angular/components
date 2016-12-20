@@ -353,9 +353,3 @@ export class MdProgressSpinnerModule {
     };
   }
 }
-
-/** @deprecated */
-export {MdProgressSpinner as MdProgressCircle};
-
-/** @deprecated */
-export {MdProgressSpinnerModule as MdProgressCircleModule};
