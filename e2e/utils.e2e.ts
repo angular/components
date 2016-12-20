@@ -1,3 +1,5 @@
+import {ElementFinder, browser, by, element, ProtractorBy} from 'protractor';
+
 /**
  * A set of utility functions for writing E2E tests.
  */
@@ -16,7 +18,7 @@ export class E2EUtils {
    */
   expectFocusOn(element: FinderResult, expected = true): void {
     expect(browser.driver.switchTo().activeElement().getInnerHtml()).toBe(
-      this._getElement(element).getInnerHtml(),
+      (this._getElement(element) as any).getInnerHtml(),
       `Expected element${expected ? '' : ' not'} to be focused.`
     );
   }
@@ -44,7 +46,7 @@ export class E2EUtils {
    * Waits for an element to be rendered.
    */
   waitForElement(selector: string): webdriver.promise.Promise<any> {
-    return browser.isElementPresent(by.css(selector));
+    return browser.isElementPresent(by.css(selector) as ProtractorBy);
   }
 
   /**
@@ -68,10 +70,10 @@ export class E2EUtils {
    * Normalizes either turning a selector into an
    * ElementFinder or returning the finder itself.
    */
-  private _getElement(el: FinderResult): protractor.ElementFinder {
+  private _getElement(el: FinderResult): ElementFinder {
     return typeof el === 'string' ? element(by.css(el)) : el;
   }
 }
 
-interface Point { x: number; y: number; }
-type FinderResult = protractor.ElementFinder | string;
+export interface Point { x: number; y: number; }
+export type FinderResult = ElementFinder | string;

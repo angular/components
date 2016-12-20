@@ -91,6 +91,6 @@ describe('dialog', () => {
   }
 
   function clickOnBackrop() {
-    utils.clickElementAtPoint('.md-overlay-backdrop', { x: 0, y: 0 });
+    utils.clickElementAtPoint('.cdk-overlay-backdrop', { x: 0, y: 0 });
   }
 });
