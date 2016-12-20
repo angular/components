@@ -241,8 +241,8 @@ describe('Overlay', () => {
 
       viewContainerFixture.detectChanges();
 
-      let backdrop = overlayContainerElement.querySelector('.md-overlay-backdrop');
-      let pane = overlayContainerElement.querySelector('.md-overlay-pane');
+      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+      let pane = overlayContainerElement.querySelector('.cdk-overlay-pane');
       let children = Array.prototype.slice.call(overlayContainerElement.children);
 
       expect(children.indexOf(backdrop)).toBeGreaterThan(-1);
