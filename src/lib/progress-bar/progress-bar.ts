@@ -23,7 +23,7 @@ import {DefaultStyleCompatibilityModeModule} from '../core/compatibility/default
     'role': 'progressbar',
     'aria-valuemin': '0',
     'aria-valuemax': '100',
-    '[class.md-primary]': 'color == "praimry"',
+    '[class.md-primary]': 'color == "primary"',
     '[class.md-accent]': 'color == "accent"',
     '[class.md-warn]': 'color == "warn"',
   },
