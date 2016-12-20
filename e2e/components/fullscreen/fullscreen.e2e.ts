@@ -4,9 +4,9 @@ describe('fullscreen', () => {
   beforeEach(() => browser.get('/fullscreen'));
 
   let overlayInBody = () =>
-    browser.isElementPresent(by.css('body > .cdk-overlay-container'));
+    browser.isElementPresent(by.css('body > .cdk-overlay-container') as ProtractorBy);
   let overlayInFullscreen = () =>
-    browser.isElementPresent(by.css('#fullscreenpane > .cdk-overlay-container'));
+    browser.isElementPresent(by.css('#fullscreenpane > .cdk-overlay-container') as ProtractorBy);
 
   it('should open a dialog inside a fullscreen element and move it to the document body', () => {
     element(by.id('fullscreen')).click();
