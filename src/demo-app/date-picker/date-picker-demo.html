@@ -1,0 +1,43 @@
+<md-card class="demo-card demo-basic">
+  <md-toolbar color="primary">Basic</md-toolbar>
+  <md-card-content>
+    <md-date-picker [(ngModel)]="date">
+      <md-input-container>
+        <input md-input value="{{date | date: 'dd-MMM-y'}}">
+      </md-input-container>
+    </md-date-picker>
+    <p>{{ date | date: 'dd-MMMM-y' }}</p>
+  </md-card-content>
+</md-card>
+
+<md-card class="demo-card demo-basic">
+  <md-toolbar color="primary">Two selections</md-toolbar>
+  <md-card-content>
+    <md-date-picker #_date2 [(ngModel)]="date01" [(date2)]="date02">
+      <md-input-container>
+        <input md-input value="{{date01 | date: 'dd-MMM-y'}}">
+      </md-input-container>
+      <md-input-container>
+        <input md-input value="{{date02 | date: 'dd-MMM-y'}}">
+      </md-input-container>
+    </md-date-picker>
+    <p>{{ date01 | date: 'dd-MMMM-y' }} to {{ date02 | date: 'dd-MMMM-y' }}</p>
+    <p>{{ _date2.Days }} days selected</p>
+  </md-card-content>
+</md-card>
+
+<md-card class="demo-card demo-basic">
+  <md-toolbar color="primary">Two date picker</md-toolbar>
+  <md-card-content>
+    <md-date-picker #_date3 [(ngModel)]="ini" [(date2)]="end" mode="dual">
+      <md-input-container>
+        <input md-input value="{{ini | date: 'dd-MMM-y'}}">
+      </md-input-container>
+      <md-input-container>
+        <input md-input value="{{end | date: 'dd-MMM-y'}}">
+      </md-input-container>
+    </md-date-picker>
+    <p>{{ ini | date: 'dd-MMMM-y'}} to {{ end | date: 'dd-MMMM-y'}}</p>
+    <p>{{ _date3.Days }} days selected</p>
+  </md-card-content>
+</md-card>

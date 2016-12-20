@@ -22,6 +22,7 @@
 @import '../../tabs/tabs-theme';
 @import '../../toolbar/toolbar-theme';
 @import '../../tooltip/tooltip-theme';
+@import '../../date-picker/date-picker-theme';
 
 
 // Create a theme.
@@ -49,4 +50,5 @@
   @include md-tabs-theme($theme);
   @include md-toolbar-theme($theme);
   @include md-tooltip-theme($theme);
+  @include md-date-picker-theme($theme);
 }

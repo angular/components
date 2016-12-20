@@ -34,6 +34,7 @@ import {MdMenuModule} from './menu/index';
 import {MdDialogModule} from './dialog/index';
 import {PlatformModule} from './core/platform/index';
 import {MdAutocompleteModule} from './autocomplete/index';
+import {MdDatePickerModule} from './date-picker/index';
 
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
@@ -67,6 +68,7 @@ const MATERIAL_MODULES = [
   PlatformModule,
   ProjectionModule,
   DefaultStyleCompatibilityModeModule,
+  MdDatePickerModule
 ];
 
 @NgModule({
@@ -104,6 +106,7 @@ const MATERIAL_MODULES = [
     PlatformModule.forRoot(),
     OverlayModule.forRoot(),
     DefaultStyleCompatibilityModeModule.forRoot(),
+    MdDatePickerModule.forRoot()
   ],
   exports: MATERIAL_MODULES,
 })
