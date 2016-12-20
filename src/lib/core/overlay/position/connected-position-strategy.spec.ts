@@ -430,7 +430,7 @@ describe('ConnectedPositionStrategy', () => {
     }
   });
 
-  fdescribe('onPositionChange with scrollable view properties', () => {
+  describe('onPositionChange with scrollable view properties', () => {
     let overlayElement: HTMLElement;
     let strategy: ConnectedPositionStrategy;
 
