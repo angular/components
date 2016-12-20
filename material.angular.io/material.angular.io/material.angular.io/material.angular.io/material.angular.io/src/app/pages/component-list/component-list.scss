@@ -1,3 +1,10 @@
+@import '~@angular/material/button/button-base';
+
+
+.docs-component-list-category {
+  margin: 50px;
+}
+
 .docs-component-list-item {
   display: inline-flex;
   flex-direction: column;

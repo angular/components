@@ -1,5 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {DocumentationItems, DocItem} from '../../shared/documentation-items/documentation-items';
 
 
 @Component({
@@ -9,11 +10,11 @@ import {ActivatedRoute} from '@angular/router';
   encapsulation: ViewEncapsulation.None,
 })
 export class ComponentViewer {
-  componentId: string;
+  componentDocItem: DocItem;
 
-  constructor(private _route: ActivatedRoute) {
+  constructor(private _route: ActivatedRoute, public docItems: DocumentationItems) {
     _route.params.first().subscribe(p => {
-      this.componentId = p['id'];
+      this.componentDocItem = docItems.getItemById(p['id']);
     });
   }
 }

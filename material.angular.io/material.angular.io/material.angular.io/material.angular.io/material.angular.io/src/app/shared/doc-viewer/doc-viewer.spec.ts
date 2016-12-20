@@ -2,15 +2,15 @@ import {Component} from '@angular/core';
 import {TestBed, inject, async} from '@angular/core/testing';
 import {MockBackend} from '@angular/http/testing';
 import {Response, ResponseOptions, XHRBackend} from '@angular/http';
-import {DocViewerModule} from './index';
 import {By} from '@angular/platform-browser';
 import {DocViewer} from './doc-viewer';
+import {SharedModule} from '../shared-module';
 
 
 describe('DocViewer', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [DocViewerModule],
+      imports: [SharedModule],
       declarations: [
         DocViewerTestComponent,
       ],

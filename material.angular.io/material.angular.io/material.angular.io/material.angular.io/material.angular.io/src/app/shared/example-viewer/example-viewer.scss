@@ -1,0 +1,22 @@
+:host {
+  display: block;
+
+  // temp styles
+  border: 1px solid black;
+  margin: 20px auto 0 auto;
+}
+
+.docs-example-viewer-title {
+  display: flex;
+
+  // temp styles
+  background: #00bcd4;
+}
+
+.docs-example-viewer-title-spacer {
+  flex: 1 1 auto;
+}
+
+.docs-example-viewer-body {
+  padding: 10px;
+}

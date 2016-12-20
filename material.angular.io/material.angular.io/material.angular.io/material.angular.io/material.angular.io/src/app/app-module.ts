@@ -6,12 +6,11 @@ import {HttpModule} from '@angular/http';
 import {MaterialModule} from '@angular/material';
 import {MaterialDocsApp} from './material-docs-app';
 import {Homepage} from './pages/homepage/homepage';
-import {NavBar} from './shared/navbar/navbar';
 import {routing} from './routes';
 import {ComponentList} from './pages/component-list/component-list';
-import {DocViewerModule} from './shared/doc-viewer/index';
-import {ExampleViewerModule} from './shared/example-viewer/index';
 import {ComponentViewer} from './pages/component-viewer/component-viewer';
+import {ExampleModule} from './examples/example-module';
+import {SharedModule} from './shared/shared-module';
 
 
 @NgModule({
@@ -20,12 +19,11 @@ import {ComponentViewer} from './pages/component-viewer/component-viewer';
     ComponentList,
     ComponentViewer,
     Homepage,
-    NavBar,
   ],
   imports: [
     BrowserModule,
-    DocViewerModule,
-    ExampleViewerModule,
+    ExampleModule,
+    SharedModule,
     FormsModule,
     HttpModule,
     MaterialModule.forRoot(),

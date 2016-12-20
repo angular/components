@@ -1,23 +1,35 @@
 <md-sidenav-layout>
   <md-sidenav opened mode="side" class="docs-component-viewer-sidenav">
-    component list
+    <div *ngFor="let category of docItems.getItemsInCategories()">
+      <div>{{category.name}}</div>
+      <ul>
+        <li *ngFor="let component of category.items">
+          <a [routerLink]="['/component/', component.id]">
+            {{component.name}}
+          </a>
+        </li>
+      </ul>
+    </div>
   </md-sidenav>
 
-  <h1 class="docs-component-viewer-header">
-    {{componentId.toUpperCase()}}
-  </h1>
+  <h1 class="docs-component-viewer-header"> {{componentDocItem.name}} </h1>
 
+  <!-- TODO(jelbourn): turn this into nav tabs -->
   <md-tab-group class="docs-component-viewer-tabbed-content">
     <md-tab label="OVERVIEW">
-      <doc-viewer documentUrl="/assets/documents/overview/{{componentId}}.html"></doc-viewer>
+      <doc-viewer documentUrl="/assets/documents/overview/{{componentDocItem.id}}.html">
+      </doc-viewer>
     </md-tab>
 
     <md-tab label="API">
-      <doc-viewer documentUrl="/assets/documents/api/{{componentId}}.html"></doc-viewer>
+      <doc-viewer documentUrl="/assets/documents/api/{{componentDocItem.id}}.html"></doc-viewer>
     </md-tab>
 
     <md-tab label="EXAMPLES">
-      examples
+
+      <example-viewer *ngFor="let example of componentDocItem.examples" [example]="example">
+      </example-viewer>
+
     </md-tab>
   </md-tab-group>
 </md-sidenav-layout>
