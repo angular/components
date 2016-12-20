@@ -430,7 +430,7 @@ describe('ConnectedPositionStrategy', () => {
     }
   });
 
-  describe('onPositionChange with scrollable view properties', () => {
+  fdescribe('onPositionChange with scrollable view properties', () => {
     let overlayElement: HTMLElement;
     let strategy: ConnectedPositionStrategy;
 
@@ -447,9 +447,7 @@ describe('ConnectedPositionStrategy', () => {
       overlayContainerElement.appendChild(overlayElement);
 
       // Set up the origin
-      let originElement = createPositionedBlockElement();
-      originElement.style.top = '0';
-      originElement.style.left = '0';
+      let originElement = createBlockElement();
       originElement.style.margin = '0 1000px 1000px 0';  // Added so that the container scrolls
 
       // Create a scrollable container and put the origin inside
@@ -534,10 +532,16 @@ describe('ConnectedPositionStrategy', () => {
 
 /** Creates an absolutely positioned, display: block element with a default size. */
 function createPositionedBlockElement() {
-  let element = document.createElement('div');
+  let element = createBlockElement();
   element.style.position = 'absolute';
   element.style.top = '0';
   element.style.left = '0';
+  return element;
+}
+
+/** Creates a block element with a default size. */
+function createBlockElement() {
+  let element = document.createElement('div');
   element.style.width = `${DEFAULT_WIDTH}px`;
   element.style.height = `${DEFAULT_HEIGHT}px`;
   element.style.backgroundColor = 'rebeccapurple';
