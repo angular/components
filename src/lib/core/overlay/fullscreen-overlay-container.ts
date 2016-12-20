@@ -39,8 +39,10 @@ export class FullscreenOverlayContainer extends OverlayContainer {
     }
   }
 
-  // When the page is put into fullscreen mode, a specific element is specified.
-  // Only that element and its children are visible when in fullscreen mode.
+  /**
+   * When the page is put into fullscreen mode, a specific element is specified.
+   * Only that element and its children are visible when in fullscreen mode.
+  */
   getFullscreenElement(): Element {
     return document.fullscreenElement ||
         document.webkitFullscreenElement ||
@@ -49,8 +51,11 @@ export class FullscreenOverlayContainer extends OverlayContainer {
         null;
   }
 
-  // returns true if it has tried to toggle fullscreen mode
-  // but provides no guarantees whether it really happened
+  /**
+   * Toggle element into fullscreen mode
+   * returns true if it has tried to toggle fullscreen mode
+   * but provides no guarantees whether it really happened
+  */
   toggleFullscreen(element: HTMLElement) {
     if (element.requestFullscreen) {
       element.requestFullscreen();
