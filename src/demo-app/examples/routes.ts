@@ -32,6 +32,12 @@ import {TabsOverviewExample} from './tabs-overview/tabs-overview-example';
 import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-label-example';
 import {SlideToggleOverviewExample} from './slide-toggle-overview/slide-toggle-overview-example';
 import {SlideToggleConfigurableExample} from './slide-toggle-configurable/slide-toggle-configurable-example';
+import {MenuOverviewExample} from './menu-overview/menu-overview-example';
+import {MenuIconsExample} from './menu-icons/menu-icons-example';
+import {TooltipOverviewExample} from './tooltip-overview/tooltip-overview-example';
+import {TooltipPositionExample} from './tooltip-position/tooltip-position-example';
+import {DialogOverviewExample} from './dialog-overview/dialog-overview-example';
+import {DialogResultExample} from './dialog-result/dialog-result-example';
 
 
 export const EXAMPLE_ROUTES: Routes = [
@@ -68,4 +74,10 @@ export const EXAMPLE_ROUTES: Routes = [
   {path: 'examples/tabs-template-label', component: TabsTemplateLabelExample},
   {path: 'examples/slide-toggle-overview', component: SlideToggleOverviewExample},
   {path: 'examples/slide-toggle-configurable', component: SlideToggleConfigurableExample},
+  {path: 'examples/menu-overview', component: MenuOverviewExample},
+  {path: 'examples/menu-icons', component: MenuIconsExample},
+  {path: 'examples/tooltip-overview', component: TooltipOverviewExample},
+  {path: 'examples/tooltip-position', component: TooltipPositionExample},
+  {path: 'examples/dialog-overview', component: DialogOverviewExample},
+  {path: 'examples/dialog-result', component: DialogResultExample},
 ];

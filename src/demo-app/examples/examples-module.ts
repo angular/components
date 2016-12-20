@@ -36,6 +36,18 @@ import {TabsOverviewExample} from './tabs-overview/tabs-overview-example';
 import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-label-example';
 import {SlideToggleOverviewExample} from './slide-toggle-overview/slide-toggle-overview-example';
 import {SlideToggleConfigurableExample} from './slide-toggle-configurable/slide-toggle-configurable-example';
+import {MenuOverviewExample} from './menu-overview/menu-overview-example';
+import {MenuIconsExample} from './menu-icons/menu-icons-example';
+import {TooltipOverviewExample} from './tooltip-overview/tooltip-overview-example';
+import {TooltipPositionExample} from './tooltip-position/tooltip-position-example';
+import {
+  DialogOverviewExample,
+  DialogOverviewExampleDialog
+} from './dialog-overview/dialog-overview-example';
+import {
+  DialogResultExample,
+  DialogResultExampleDialog
+} from './dialog-result/dialog-result-example';
 
 
 @NgModule({
@@ -79,6 +91,18 @@ import {SlideToggleConfigurableExample} from './slide-toggle-configurable/slide-
     TabsTemplateLabelExample,
     SlideToggleOverviewExample,
     SlideToggleConfigurableExample,
+    MenuOverviewExample,
+    MenuIconsExample,
+    TooltipOverviewExample,
+    TooltipPositionExample,
+    DialogOverviewExample,
+    DialogOverviewExampleDialog,
+    DialogResultExample,
+    DialogResultExampleDialog,
+  ],
+  entryComponents: [
+    DialogOverviewExampleDialog,
+    DialogResultExampleDialog,
   ],
 })
 export class ExamplesModule {}

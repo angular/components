@@ -41,5 +41,11 @@ export class Examples {
     {name: 'Tabs with Template Label', route: 'tabs-template-label'},
     {name: 'Slide Toggle Overview', route: 'slide-toggle-overview'},
     {name: 'Slide Toggle Configurable', route: 'slide-toggle-configurable'},
+    {name: 'Menu Overview', route: 'menu-overview'},
+    {name: 'Menu with Icons', route: 'menu-icons'},
+    {name: 'Tooltip Overview', route: 'tooltip-overview'},
+    {name: 'Tooltip Position', route: 'tooltip-position'},
+    {name: 'Dialog Overview', route: 'dialog-overview'},
+    {name: 'Dialog with Result', route: 'dialog-result'},
   ];
 }
