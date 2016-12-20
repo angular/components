@@ -36,4 +36,4 @@ Several directives are available to make it easier to structure your dialog cont
 | `md-dialog-title`     | \[Attr] Dialog title, applied to a heading element (e.g., `<h1>`, `<h2>`)|
 | `<md-dialog-content>` | Primary scrollable content of the dialog                                 |
 | `<md-dialog-actions>` | Container for action buttons at the bottom of the dialog                 |
-| `md-dialog-close`     | \[Attr] Added to a `<button>` to make the button close the on click      |
+| `md-dialog-close`     | \[Attr] Added to a `<button>`, makes the button close the dialog on click|
