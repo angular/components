@@ -22,19 +22,7 @@ import {FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {OverlayModule} from '../core/overlay/overlay-directives';
 import {InteractivityChecker} from '../core/a11y/interactivity-checker';
-<<<<<<< ebeb579c60bb44de259764cd9d226ea92252671e
-<<<<<<< 38f2302c080b3941ee7be5289c9a47a0d1a3bcef
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
-=======
-import {MdLiveAnnouncer} from '../core/a11y/live-announcer';
-<<<<<<< 7f62f0a674630555a66a123367e701089f68e338
-import {ScrollDispatcher} from '../core/scroll/scroll-dispatcher';
->>>>>>> review response
-=======
-=======
->>>>>>> make lint happy
-import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
->>>>>>> move scroll to overlay
 
 
 /** Exception thrown when two MdSidenav are matching the same side. */
