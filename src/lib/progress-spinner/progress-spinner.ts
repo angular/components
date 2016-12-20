@@ -39,7 +39,7 @@ type EasingFn = (currentTime: number, startValue: number,
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-progress-spinner, mat-progress-spinner',
+  selector: 'md-progress-spinner, mat-progress-spinner, md-progress-circle, mat-progress-circle',
   host: {
     'role': 'progressbar',
     '[attr.aria-valuemin]': '_ariaValueMin',
@@ -353,3 +353,9 @@ export class MdProgressSpinnerModule {
     };
   }
 }
+
+/** @deprecated */
+export {MdProgressSpinner as MdProgressCircle};
+
+/** @deprecated */
+export {MdProgressSpinnerModule as MdProgressCircleModule};
