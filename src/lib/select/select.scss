@@ -3,7 +3,7 @@
 @import '../core/style/form-common';
 @import '../core/a11y/a11y';
 
-$md-select-trigger-height: 30px !default;
+$md-select-trigger-height: 27px !default;
 $md-select-trigger-min-width: 112px !default;
 $md-select-arrow-size: 5px !default;
 $md-select-arrow-margin: 4px !default;
@@ -11,6 +11,7 @@ $md-select-panel-max-height: 256px !default;
 
 md-select {
   display: inline-block;
+  margin: 16px 0;
   outline: none;
 }
 
@@ -18,11 +19,11 @@ md-select {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: $md-select-trigger-height;
   min-width: $md-select-trigger-min-width;
   cursor: pointer;
   position: relative;
   box-sizing: border-box;
+  height: $md-select-trigger-height;
 
   [aria-disabled='true'] & {
     @include md-control-disabled-underline();
