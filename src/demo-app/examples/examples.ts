@@ -47,5 +47,7 @@ export class Examples {
     {name: 'Tooltip Position', route: 'tooltip-position'},
     {name: 'Dialog Overview', route: 'dialog-overview'},
     {name: 'Dialog with Result', route: 'dialog-result'},
+    {name: 'Snack Bar Overview', route: 'snack-bar-overview'},
+    {name: 'Snack Bar with Custom Component', route: 'snack-bar-component'},
   ];
 }

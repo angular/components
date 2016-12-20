@@ -38,6 +38,8 @@ import {TooltipOverviewExample} from './tooltip-overview/tooltip-overview-exampl
 import {TooltipPositionExample} from './tooltip-position/tooltip-position-example';
 import {DialogOverviewExample} from './dialog-overview/dialog-overview-example';
 import {DialogResultExample} from './dialog-result/dialog-result-example';
+import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
+import {SnackBarComponentExample} from './snack-bar-component/snack-bar-component-example';
 
 
 export const EXAMPLE_ROUTES: Routes = [
@@ -80,4 +82,6 @@ export const EXAMPLE_ROUTES: Routes = [
   {path: 'examples/tooltip-position', component: TooltipPositionExample},
   {path: 'examples/dialog-overview', component: DialogOverviewExample},
   {path: 'examples/dialog-result', component: DialogResultExample},
+  {path: 'examples/snack-bar-overview', component: SnackBarOverviewExample},
+  {path: 'examples/snack-bar-component', component: SnackBarComponentExample},
 ];

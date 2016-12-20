@@ -48,6 +48,11 @@ import {
   DialogResultExample,
   DialogResultExampleDialog
 } from './dialog-result/dialog-result-example';
+import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
+import {
+  SnackBarComponentExample,
+  SnackBarComponentExampleSnack
+} from './snack-bar-component/snack-bar-component-example';
 
 
 @NgModule({
@@ -99,10 +104,14 @@ import {
     DialogOverviewExampleDialog,
     DialogResultExample,
     DialogResultExampleDialog,
+    SnackBarOverviewExample,
+    SnackBarComponentExample,
+    SnackBarComponentExampleSnack,
   ],
   entryComponents: [
     DialogOverviewExampleDialog,
     DialogResultExampleDialog,
+    SnackBarComponentExampleSnack,
   ],
 })
 export class ExamplesModule {}
