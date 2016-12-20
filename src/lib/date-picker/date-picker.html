@@ -1,0 +1,101 @@
+<div class="_picker"
+      tabindex="0"
+      [class._focusedPicker]="_focused"
+      (click)="openPanelWithBackdrop()"
+>
+  <div class="_input">
+    <ng-content></ng-content>
+  </div>
+  <template portal>
+    <div [class]="_color">
+      <div class="_datePicker _focusedPicker" [class._dual]="_mode">
+        <div class="_datePicker-content">
+          <div class="_top">
+            <div class="_top_year">{{_value | date: 'y'}}</div>
+            <div class="_top_date">{{_value | date: 'EE, MMM d'}}</div>
+          </div>
+          <div class="_bg">
+            <div class="_header _control">
+              <div>{{ days._INI | date: 'MMMM y' }}</div>
+              <span (click)="_left(false, days)" class="_left">
+                <svg viewBox="0 0 24 24" style="display: inline-block; fill: rgba(0, 0, 0, 0.87); height: 24px; width: 24px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+                </svg>
+              </span>
+              <span (click)="_right(false, days)" class="_right">
+                <svg viewBox="0 0 24 24" style="display: inline-block; fill: rgba(0, 0, 0, 0.87); height: 24px; width: 24px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+                  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+                </svg>
+              </span>
+            </div>
+            <div class="_header">
+              <span class="_DaysName" *ngFor="let day of daysName">{{day}}</span>
+            </div>
+            <div class="_days">
+              <div
+              [class._before]="day.date<dateINT"
+              [class._days_selected]="days2.length!=0&&day.date<=date2INT&&day.date>INT_DATE(_value)"
+              [class._today]="day.dateActive==dateToday"
+              [class._focused]="dayActive==day.dateActive || dayActive2==day.dateActive && days2!=0"
+              [class._parent_S]="dayActive==day.dateActive && !stateSELECT && days2!=0 || dayActive2==day.dateActive && stateSELECT && days2!=0" *ngFor="let day of days.data;" class="_day">
+                <div class="_background" *ngIf="day.date!=0"></div>
+                <span
+                (focus)="selectDate(day.date, false, $event)"
+                tabindex="0" *ngIf="day.date!=0">{{day.index}}
+                  <div (mouseenter)="stateSELECT=false"
+                  *ngIf="dayActive==day.dateActive && days2!=0"></div>
+                  <div (mouseenter)="stateSELECT=true"
+                  *ngIf="dayActive2==day.dateActive && days2!=0"></div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="days2.length!=0 && _mode" class="_datePicker-content">
+          <div class="_top">
+            <div class="_top_year">{{date2INT | date: 'y'}}</div>
+            <div class="_top_date">{{date2INT | date: 'EE, MMM d'}}</div>
+          </div>
+          <div class="_bg">
+            <div class="_header _control">
+              <div>{{ days2._INI | date: 'MMMM y' }}</div>
+              <span (click)="_left(true, days2)" class="_left">
+                <svg viewBox="0 0 24 24" style="display: inline-block; fill: rgba(0, 0, 0, 0.87); height: 24px; width: 24px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+                </svg>
+              </span>
+              <span (click)="_right(true, days2)" class="_right">
+                <svg viewBox="0 0 24 24" style="display: inline-block; fill: rgba(0, 0, 0, 0.87); height: 24px; width: 24px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;">
+                  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+                </svg>
+              </span>
+            </div>
+            <div class="_header">
+              <span class="_DaysName" *ngFor="let day of daysName">{{day}}</span>
+            </div>
+            <div class="_days">
+              <div [class._before]="day.date<dateINT"
+              [class._days_selected]="days2.length!=0&&day.date<=date2INT&&day.date>INT_DATE(_value)"
+              [class._today]="day.dateActive==dateToday"
+              [class._focused]="dayActive==day.dateActive || dayActive2==day.dateActive"
+              [class._parent_S]="dayActive==day.dateActive && !stateSELECT || dayActive2==day.dateActive && stateSELECT"
+              *ngFor="let day of days2.data;"
+              class="_day">
+                <div class="_background" *ngIf="day.date!=0"></div>
+                <span
+                (focus)="selectDate(day.date, true, $event)"
+                tabindex="0"
+                *ngIf="day.date!=0">{{day.index}}
+                  <div (mouseenter)="stateSELECT=false"
+                  *ngIf="dayActive==day.dateActive"></div>
+                  <div (mouseenter)="stateSELECT=true"
+                  *ngIf="dayActive2==day.dateActive"></div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+</div>
