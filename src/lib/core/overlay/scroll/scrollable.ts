@@ -1,6 +1,4 @@
-import {
-  Directive, ElementRef, OnInit, OnDestroy, Optional, SkipSelf
-} from '@angular/core';
+import {Directive, ElementRef, OnInit, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {ScrollDispatcher} from './scroll-dispatcher';
 import 'rxjs/add/observable/fromEvent';
