@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 
 @Component({
     moduleId: module.id,
-    selector: 'date-pícker-demo',
+    selector: 'date-picker-demo',
     templateUrl: 'date-picker-demo.html',
     styleUrls: ['date-picker-demo.css'],
 })
