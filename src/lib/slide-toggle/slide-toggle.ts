@@ -19,7 +19,7 @@ import {
   applyCssTransform,
   coerceBooleanProperty,
   GestureConfig,
-  HammerEvent,
+  HammerInput,
   DefaultStyleCompatibilityModeModule,
 } from '../core';
 import {Observable} from 'rxjs/Observable';
@@ -235,7 +235,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
     }
   }
 
-  _onDrag(event: HammerEvent) {
+  _onDrag(event: HammerInput) {
     if (this._slideRenderer.isDragging()) {
       this._slideRenderer.updateThumbPosition(event.deltaX);
     }

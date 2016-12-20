@@ -1,10 +1,11 @@
 import {Injectable, isDevMode} from '@angular/core';
 import {HammerGestureConfig} from '@angular/platform-browser';
+import {HammerStatic, HammerInstance, Recognizer, RecognizerStatic} from './gesture-annotations';
 
 /* Adjusts configuration of our gesture library, Hammer. */
 @Injectable()
 export class GestureConfig extends HammerGestureConfig {
-  private _hammer = typeof window !== 'undefined' ? (window as any).Hammer : null;
+  private _hammer: HammerStatic = typeof window !== 'undefined' ? (window as any).Hammer : null;
 
   /* List of new event names to add to the gesture support list */
   events: string[] = this._hammer ? [
@@ -20,7 +21,10 @@ export class GestureConfig extends HammerGestureConfig {
     super();
 
     if (!this._hammer && isDevMode()) {
-      console.warn('Could not find HammerJS. Certain Angular Material may not work correctly.');
+      console.warn(
+        'Could not find HammerJS. Certain Angular Material ' +
+        'components may not work correctly.'
+      );
     }
   }
 
@@ -37,7 +41,7 @@ export class GestureConfig extends HammerGestureConfig {
    * TODO: Confirm threshold numbers with Material Design UX Team
    * */
   buildHammer(element: HTMLElement) {
-    const mc: any = super.buildHammer(element);
+    const mc = new this._hammer(element);
 
     // Default Hammer Recognizers.
     let pan = new this._hammer.Pan();
@@ -55,12 +59,12 @@ export class GestureConfig extends HammerGestureConfig {
     // Add customized gestures to Hammer manager
     mc.add([swipe, press, pan, slide, longpress]);
 
-    return mc;
+    return mc as HammerInstance;
   }
 
   /** Creates a new recognizer, without affecting the default recognizers of HammerJS */
-  private _createRecognizer(base: any, options: any, ...inheritances: any[]) {
-    let recognizer = new base.constructor(options);
+  private _createRecognizer(base: Recognizer, options: any, ...inheritances: Recognizer[]) {
+    let recognizer = new (base.constructor as RecognizerStatic)(options);
 
     inheritances.push(base);
     inheritances.forEach(item => recognizer.recognizeWith(item));
@@ -68,19 +72,4 @@ export class GestureConfig extends HammerGestureConfig {
     return recognizer;
   }
 
-}
-
-/**
- * Stripped-down annotation to be used as alternative
- * to the one from HammerJS.
- * @docs-private
- */
-export interface HammerEvent {
-  preventDefault: () => {};
-  deltaX: number;
-  deltaY: number;
-  center: {
-    x: number;
-    y: number;
-  };
 }

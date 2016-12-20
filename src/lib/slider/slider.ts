@@ -14,7 +14,7 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/for
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {
   GestureConfig,
-  HammerEvent,
+  HammerInput,
   coerceBooleanProperty,
   coerceNumberProperty,
   DefaultStyleCompatibilityModeModule,
@@ -323,7 +323,7 @@ export class MdSlider implements ControlValueAccessor {
     this._emitValueIfChanged();
   }
 
-  _onSlide(event: HammerEvent) {
+  _onSlide(event: HammerInput) {
     if (this.disabled) {
       return;
     }
@@ -333,7 +333,7 @@ export class MdSlider implements ControlValueAccessor {
     this._updateValueFromPosition({x: event.center.x, y: event.center.y});
   }
 
-  _onSlideStart(event: HammerEvent) {
+  _onSlideStart(event: HammerInput) {
     if (this.disabled) {
       return;
     }
