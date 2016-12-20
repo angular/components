@@ -32,6 +32,10 @@ import {ProgressCircleOverviewExample} from './progress-circle-overview/progress
 import {ProgressCircleConfigurableExample} from './progress-circle-configurable/progress-circle-configurable-example';
 import {ProgressBarOverviewExample} from './progress-bar-overview/progress-bar-overview-example';
 import {ProgressBarConfigurableExample} from './progress-bar-configurable/progress-bar-configurable-example';
+import {TabsOverviewExample} from './tabs-overview/tabs-overview-example';
+import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-label-example';
+import {SlideToggleOverviewExample} from './slide-toggle-overview/slide-toggle-overview-example';
+import {SlideToggleConfigurableExample} from './slide-toggle-configurable/slide-toggle-configurable-example';
 
 
 @NgModule({
@@ -71,6 +75,10 @@ import {ProgressBarConfigurableExample} from './progress-bar-configurable/progre
     ProgressCircleConfigurableExample,
     ProgressBarOverviewExample,
     ProgressBarConfigurableExample,
+    TabsOverviewExample,
+    TabsTemplateLabelExample,
+    SlideToggleOverviewExample,
+    SlideToggleConfigurableExample,
   ],
 })
 export class ExamplesModule {}

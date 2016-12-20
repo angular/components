@@ -37,5 +37,9 @@ export class Examples {
     {name: 'Configurable Progress Circle', route: 'progress-circle-configurable'},
     {name: 'Progress Bar Overview', route: 'progress-bar-overview'},
     {name: 'Configurable Progress Bar', route: 'progress-bar-configurable'},
+    {name: 'Tabs Overview', route: 'tabs-overview'},
+    {name: 'Tabs with Template Label', route: 'tabs-template-label'},
+    {name: 'Slide Toggle Overview', route: 'slide-toggle-overview'},
+    {name: 'Slide Toggle Configurable', route: 'slide-toggle-configurable'},
   ];
 }

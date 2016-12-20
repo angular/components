@@ -28,6 +28,10 @@ import {ProgressCircleOverviewExample} from './progress-circle-overview/progress
 import {ProgressCircleConfigurableExample} from './progress-circle-configurable/progress-circle-configurable-example';
 import {ProgressBarOverviewExample} from './progress-bar-overview/progress-bar-overview-example';
 import {ProgressBarConfigurableExample} from './progress-bar-configurable/progress-bar-configurable-example';
+import {TabsOverviewExample} from './tabs-overview/tabs-overview-example';
+import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-label-example';
+import {SlideToggleOverviewExample} from './slide-toggle-overview/slide-toggle-overview-example';
+import {SlideToggleConfigurableExample} from './slide-toggle-configurable/slide-toggle-configurable-example';
 
 
 export const EXAMPLE_ROUTES: Routes = [
@@ -60,4 +64,8 @@ export const EXAMPLE_ROUTES: Routes = [
   {path: 'examples/progress-circle-configurable', component: ProgressCircleConfigurableExample},
   {path: 'examples/progress-bar-overview', component: ProgressBarOverviewExample},
   {path: 'examples/progress-bar-configurable', component: ProgressBarConfigurableExample},
+  {path: 'examples/tabs-overview', component: TabsOverviewExample},
+  {path: 'examples/tabs-template-label', component: TabsTemplateLabelExample},
+  {path: 'examples/slide-toggle-overview', component: SlideToggleOverviewExample},
+  {path: 'examples/slide-toggle-configurable', component: SlideToggleConfigurableExample},
 ];
