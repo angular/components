@@ -31,5 +31,11 @@ export class Examples {
     {name: 'List with Sections', route: 'list-sections'},
     {name: 'Grid List Overview', route: 'grid-list-overview'},
     {name: 'Dynamic Grid List', route: 'grid-list-dynamic'},
+    {name: 'Icon Overview', route: 'icon-overview'},
+    {name: 'SVG Icon', route: 'icon-svg'},
+    {name: 'Progress Circle Overview', route: 'progress-circle-overview'},
+    {name: 'Configurable Progress Circle', route: 'progress-circle-configurable'},
+    {name: 'Progress Bar Overview', route: 'progress-bar-overview'},
+    {name: 'Configurable Progress Bar', route: 'progress-bar-configurable'},
   ];
 }

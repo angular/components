@@ -26,6 +26,12 @@ import {ListOverviewExample} from './list-overview/list-overview-example';
 import {ListSectionsExample} from './list-sections/list-sections-example';
 import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
 import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-example';
+import {IconOverviewExample} from './icon-overview/icon-overview-example';
+import {IconSvgExample} from './icon-svg-example/icon-svg-example';
+import {ProgressCircleOverviewExample} from './progress-circle-overview/progress-circle-overview-example';
+import {ProgressCircleConfigurableExample} from './progress-circle-configurable/progress-circle-configurable-example';
+import {ProgressBarOverviewExample} from './progress-bar-overview/progress-bar-overview-example';
+import {ProgressBarConfigurableExample} from './progress-bar-configurable/progress-bar-configurable-example';
 
 
 @NgModule({
@@ -59,6 +65,12 @@ import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-exam
     ListSectionsExample,
     GridListOverviewExample,
     GridListDynamicExample,
+    IconOverviewExample,
+    IconSvgExample,
+    ProgressCircleOverviewExample,
+    ProgressCircleConfigurableExample,
+    ProgressBarOverviewExample,
+    ProgressBarConfigurableExample,
   ],
 })
 export class ExamplesModule {}

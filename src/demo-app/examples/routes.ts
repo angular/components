@@ -22,6 +22,12 @@ import {ListOverviewExample} from './list-overview/list-overview-example';
 import {ListSectionsExample} from './list-sections/list-sections-example';
 import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
 import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-example';
+import {IconOverviewExample} from './icon-overview/icon-overview-example';
+import {IconSvgExample} from './icon-svg-example/icon-svg-example';
+import {ProgressCircleOverviewExample} from './progress-circle-overview/progress-circle-overview-example';
+import {ProgressCircleConfigurableExample} from './progress-circle-configurable/progress-circle-configurable-example';
+import {ProgressBarOverviewExample} from './progress-bar-overview/progress-bar-overview-example';
+import {ProgressBarConfigurableExample} from './progress-bar-configurable/progress-bar-configurable-example';
 
 
 export const EXAMPLE_ROUTES: Routes = [
@@ -48,5 +54,10 @@ export const EXAMPLE_ROUTES: Routes = [
   {path: 'examples/list-sections', component: ListSectionsExample},
   {path: 'examples/grid-list-overview', component: GridListOverviewExample},
   {path: 'examples/grid-list-dynamic', component: GridListDynamicExample},
-
+  {path: 'examples/icon-overview', component: IconOverviewExample},
+  {path: 'examples/icon-svg', component: IconSvgExample},
+  {path: 'examples/progress-circle-overview', component: ProgressCircleOverviewExample},
+  {path: 'examples/progress-circle-configurable', component: ProgressCircleConfigurableExample},
+  {path: 'examples/progress-bar-overview', component: ProgressBarOverviewExample},
+  {path: 'examples/progress-bar-configurable', component: ProgressBarConfigurableExample},
 ];
