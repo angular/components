@@ -18,7 +18,7 @@ export class E2EUtils {
    */
   expectFocusOn(element: FinderResult, expected = true): void {
     expect(browser.driver.switchTo().activeElement().getInnerHtml()).toBe(
-      (this._getElement(element) as any).getInnerHtml(),
+      this._getElement(element).getWebElement().getInnerHtml(),
       `Expected element${expected ? '' : ' not'} to be focused.`
     );
   }
