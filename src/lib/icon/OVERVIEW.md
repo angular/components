@@ -13,7 +13,7 @@ icon fonts and SVG icons, but not bitmap-based formats (png, jpg, etc.).
 define aliases for CSS font classes. Its methods are discussed below and listed in the API summary.
 
 In order to prevent XSS vulnerabilities, any URLs passed to the `MdIconRegistry` must be marked as
-trusted resource URLs by using Angular's `DomSantizer` service.
+trusted resource URLs by using Angular's `DomSanitizer` service.
 
 ### Font icons
 
