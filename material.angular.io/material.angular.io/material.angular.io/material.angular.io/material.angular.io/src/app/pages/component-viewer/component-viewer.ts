@@ -13,7 +13,7 @@ export class ComponentViewer {
   componentDocItem: DocItem;
 
   constructor(private _route: ActivatedRoute, public docItems: DocumentationItems) {
-    _route.params.first().subscribe(p => {
+    _route.params.subscribe(p => {
       this.componentDocItem = docItems.getItemById(p['id']);
     });
   }

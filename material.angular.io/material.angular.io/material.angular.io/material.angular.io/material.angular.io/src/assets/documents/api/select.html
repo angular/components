@@ -1,218 +1,334 @@
-<style>
-  table {
-    border-collapse: collapse;
-    margin: 10px;
-    min-width: 300px;
-  }
-
-  td, th {
-    border: 1px solid black;
-    padding: 4px;
-  }
-</style>
-
-<h2>select</h2>
-<p> Module: <code>MdSelectModule</code> </p>
-
-<h3>Directives</h3>
 
 
-  <h4>MdOption</h4>
-  <p>  </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>id</p>
-            <p><code></code></p>
-          </td>
-          <td> The unique ID of the option.
+
+
+
+
+
+
+
+
+
+<h1 class="docs-api-h1">select</h1>
+<h2 class="docs-api-h2">
+  Module: <code>MdSelectModule</code>
+</h2><h2>Directives</h2>
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdOption</h3>
+<p class="docs-api-class-description">Single option inside of a `&lt;md-select&gt;` element.
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      id
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The unique ID of the option.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>value</p>
-            <p><code></code></p>
-          </td>
-          <td> The form value of the option.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      value
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The form value of the option.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>disabled</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>onSelect</p>
-            <p><code></code></p>
-          </td>
-          <td> Event emitted when the option is selected.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      disabled
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the option is disabled.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>selected</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether or not the option is currently selected.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      onSelect
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the option is selected.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>viewValue</p>
-            <p><code></code></p>
-          </td>
-          <td> The displayed value of the option. It is necessary to show the selected option in the
-select's trigger.
-TODO(kara): Add input property alternative for node envs.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      selected
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether or not the option is currently selected.
 </td>
-        </tr>
-      
-    </table><h5> Methods </h5>
+</tr>
+
+
     
-    <table>
-      <tr>
-        <th colspan="2">select</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Selects the option.
- </td>
-      </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">deselect</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Deselects the option.
- </td>
-      </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">focus</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Sets focus onto this option.
- </td>
-      </tr></table>
-    
-  <h4>MdSelect</h4>
-  <p>  </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>trigger</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>overlayDir</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>options</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>placeholder</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>disabled</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>required</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>onOpen</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>onClose</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>panelOpen</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether or not the overlay panel is open.
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      viewValue
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The displayed value of the option. It is necessary to show the selected option in the
+select&#39;s trigger.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>selected</p>
-            <p><code></code></p>
-          </td>
-          <td> The currently selected option.
+</tr>
+
+
+    
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">select</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Selects the option.
 </td>
-        </tr>
-      
-    </table><h5> Methods </h5>
-    
-    <table>
-      <tr>
-        <th colspan="2">toggle</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Toggles the overlay panel open or closed.
- </td>
-      </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">open</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Opens the overlay panel.
- </td>
-      </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">close</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Closes the overlay panel and focuses the host element.
- </td>
-      </tr></table>
-    
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">deselect</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Deselects the option.
+</td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">focus</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Sets focus onto this option.
+</td>
+  </tr></table>
+
+
+  
 
 
 
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdSelect</h3>
+<p class="docs-api-class-description"></p>
 
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      trigger
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Trigger that opens the select.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      overlayDir
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Overlay pane containing the options.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      options
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">All of the defined select options.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      placeholder
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Placeholder to be shown if no value has been selected.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      disabled
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the component is disabled.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      required
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the component is required.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      onOpen
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the select has been opened.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      onClose
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the select has been closed.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      panelOpen
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether or not the overlay panel is open.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      selected
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The currently selected option.
+</td>
+</tr>
+
+
+    
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">toggle</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Toggles the overlay panel open or closed.
+</td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">open</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Opens the overlay panel.
+</td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">close</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Closes the overlay panel and focuses the host element.
+</td>
+  </tr></table>
+
+
+  
+
+
+
+  

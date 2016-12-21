@@ -1,165 +1,231 @@
-<style>
-  table {
-    border-collapse: collapse;
-    margin: 10px;
-    min-width: 300px;
-  }
-
-  td, th {
-    border: 1px solid black;
-    padding: 4px;
-  }
-</style>
-
-<h2>chips</h2>
-<p> Module: <code>MdChipsModule</code> </p>
-
-<h3>Directives</h3>
 
 
-  <h4>MdChipList</h4>
-  <p> A material design chips component (named ChipList for it's similarity to the List component).
+
+
+
+
+
+
+
+
+
+<h1 class="docs-api-h1">chips</h1>
+<h2 class="docs-api-h2">
+  Module: <code>MdChipsModule</code>
+</h2><h2>Directives</h2>
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdChipList</h3>
+<p class="docs-api-class-description">A material design chips component (named ChipList for it&#39;s similarity to the List component).
 
 Example:
 
-    <md-chip-list>
-      <md-chip>Chip 1<md-chip>
-      <md-chip>Chip 2<md-chip>
-    </md-chip-list>
- </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>chips</p>
-            <p><code></code></p>
-          </td>
-          <td> The chip components contained within this chip list.
+    &lt;md-chip-list&gt;
+      &lt;md-chip&gt;Chip 1&lt;md-chip&gt;
+      &lt;md-chip&gt;Chip 2&lt;md-chip&gt;
+    &lt;/md-chip-list&gt;
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      chips
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The chip components contained within this chip list.
 </td>
-        </tr>
-      
-    </table><h5> Methods </h5>
-    
-    <table>
-      <tr>
-        <th colspan="2">keydown</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Pass relevant key presses to our key manager.
- </td>
-      </tr><tr>
-          <th colspan="2"> Parameters </th>
-        </tr>
-        
-          <tr>
-            <td>
-              <p>event</p>
-              <p>KeyboardEvent</p>
-            </td>
-            <td>
-              
-            </td>
-          </tr>
-        </table>
-    
-    <table>
-      <tr>
-        <th colspan="2">subscribeChips</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Iterate through the list of chips and add them to our list of
-subscribed chips.
- </td>
-      </tr><tr>
-          <th colspan="2"> Parameters </th>
-        </tr>
-        
-          <tr>
-            <td>
-              <p>chips</p>
-              <p>QueryList<MdChip></p>
-            </td>
-            <td>
-              The list of chips to be subscribed.
+</tr>
 
-            </td>
-          </tr>
-        </table>
-    
-    <table>
-      <tr>
-        <th colspan="2">addChip</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Add a specific chip to our subscribed list. If the chip has
-already been subscribed, this ensures it is only subscribed
-once.
- </td>
-      </tr><tr>
-          <th colspan="2"> Parameters </th>
-        </tr>
-        
-          <tr>
-            <td>
-              <p>chip</p>
-              <p>MdChip</p>
-            </td>
-            <td>
-              The chip to be subscribed (or checked for existing
-subscription).
 
-            </td>
-          </tr>
-        </table>
     
-  <h4>MdChip</h4>
-  <p> A material design styled Chip component. Used inside the ChipList component.
- </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>onFocus</p>
-            <p><code></code></p>
-          </td>
-          <td> Emitted when the chip is focused.
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      selectable
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether or not this chip is selectable. When a chip is not selectable,
+it&#39;s selected state is always ignored.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>destroy</p>
-            <p><code></code></p>
-          </td>
-          <td> Emitted when the chip is destroyed.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>disabled</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether or not the chip is disabled.
-</td>
-        </tr>
-      
-    </table><h5> Methods </h5>
+</tr>
+
+
     
-    <table>
-      <tr>
-        <th colspan="2">focus</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Allows for programmatic focusing of the chip.
- </td>
-      </tr></table>
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">focus</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Programmatically focus the chip list. This in turn focuses the first
+non-disabled chip in this chip list.
+</td>
+  </tr></table>
+
+
+  
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdChip</h3>
+<p class="docs-api-class-description">Material design styled Chip component. Used inside the MdChipList component.
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
     
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      onFocus
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Emitted when the chip is focused.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      select
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Emitted when the chip is selected.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      deselect
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Emitted when the chip is deselected.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      destroy
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Emitted when the chip is destroyed.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      disabled
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether or not the chip is disabled.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      selected
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether or not this chip is selected.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      color
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The color of the chip. Can be `primary`, `accent`, or `warn`.
+</td>
+</tr>
+
+
+    
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">toggleSelected</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Toggles the current selected state of this chip.</td>
+  </tr><thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">boolean</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description">Whether the chip is selected.
+</p>
+    </td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">focus</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Allows for programmatic focusing of the chip.
+</td>
+  </tr></table>
+
+
+  
 
 
 
-
+  
