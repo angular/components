@@ -1,6 +1,7 @@
 # md-icon
 
-`md-icon` is a component that displays an icon, which can be a font glyph or an SVG image.
+`md-icon` makes it easier to use _vector-based_ icons in your app.  This directive supports both
+icon fonts and SVG icons, but not bitmap-based formats (png, jpg, etc.).
 
 <!-- example(icon-example) -->
 
@@ -10,6 +11,9 @@
 
 `MdIconRegistry` is an injectable service that allows you to associate icon names with SVG URLs and
 define aliases for CSS font classes. Its methods are discussed below and listed in the API summary.
+
+In order to prevent XSS vulnerabilities, any URLs passed to the `MdIconRegistry` must be marked as
+trusted resource URLs by using Angular's `DomSantizer` service.
 
 ### Font icons
 
