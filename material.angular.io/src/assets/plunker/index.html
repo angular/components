@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Angular 2 Material Plunker</title>
+
+  <!-- Load common libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/typescript/2.0.3/typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/zone.js/0.6.25/zone.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.38/system.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+
+  <!-- Load Bundle from Asset Host -->
+  <script src="https://plnkr-test.firebaseapp.com/components.bundle.js?sha=bf44c16"></script>
+
+  <!-- Configure SystemJS -->
+  <script src="systemjs.config.js"></script>
+
+  <script>
+    System
+      .import('main.ts')
+      .catch(console.error.bind(console));
+  </script>
+
+  <!-- Load the Angular Material 2 stylesheet -->
+  <link href="https://unpkg.com/@angular/material/core/theming/prebuilt/indigo-pink.css" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+
+<body>
+<material-docs-example>Loading Material Docs example...</material-docs-example>
+</body>
+
+</html>
