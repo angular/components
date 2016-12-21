@@ -1,1 +1,17 @@
-<svg width="100" height="103" viewBox="0 0 100 103" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><rect fill="#00BCD4" width="99" height="101" rx="7.92"/><rect fill="#F4F6F7" y="68" width="100" height="35" rx="7.92"/><path d="M34.964 13.98H62.09v-3.96H32.984v3.96h1.98zm0 9H62.09v-3.96H32.984v3.96h1.98zM17 27c5.523 0 10-4.477 10-10S22.523 7 17 7 7 11.477 7 17s4.477 10 10 10z" fill="#FFF"/></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="99px" height="103px" viewBox="0 0 99 103" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>card</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Component-Directory" transform="translate(-137.000000, -1501.000000)">
+            <g id="card" transform="translate(137.000000, 1501.000000)">
+                <rect fill="#00BCD4" x="0" y="0" width="99" height="101" rx="7.92"></rect>
+                <rect id="footer" fill="#F4F6F7" x="0" y="68" width="99" height="35" rx="7.92"></rect>
+                <path d="M34.9642857,13.98 L60.1097807,13.98 L62.0897807,13.98 L62.0897807,10.02 L60.1097807,10.02 L34.9642857,10.02 L32.9842857,10.02 L32.9842857,13.98 L34.9642857,13.98 Z M34.9642857,22.98 L60.1097807,22.98 L62.0897807,22.98 L62.0897807,19.02 L60.1097807,19.02 L34.9642857,19.02 L32.9842857,19.02 L32.9842857,22.98 L34.9642857,22.98 Z M17,27 C22.5228475,27 27,22.5228475 27,17 C27,11.4771525 22.5228475,7 17,7 C11.4771525,7 7,11.4771525 7,17 C7,22.5228475 11.4771525,27 17,27 Z" id="header" fill="#FFFFFF"></path>
+                <rect id="Rectangle-24" fill="#F4F6F7" x="0" y="68" width="99" height="16"></rect>
+            </g>
+        </g>
+    </g>
+</svg>
