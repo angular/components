@@ -11,7 +11,7 @@ import {
 
 /**
  * Directive that triggers a callback whenever the content of
- * it's associated element has changed.
+ * its associated element has changed.
  */
 @Directive({
   selector: '[cdkObserveContent]'
