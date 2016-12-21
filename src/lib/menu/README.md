@@ -29,14 +29,14 @@ disable items by adding the `disabled` boolean attribute or binding to it.
 ```
 
 Menus are hidden by default, so you'll want to connect up a menu trigger that can open your menu.
-You can do so by adding a button tag with an `mdMenuTriggerFor` attribute and passing in the menu
+You can do so by adding a button tag with an `md-menu-trigger-for` attribute and passing in the menu
 instance.  You can create a local reference to your menu instance by adding `#menu="mdMenu"` to
 your menu element.
 
 *my-comp.html*
 ```html
 <!-- menu opens when trigger button is clicked -->
-<button md-icon-button [mdMenuTriggerFor]="menu">
+<button md-icon-button [md-menu-trigger-for]="menu">
    <md-icon>more_vert</md-icon>
 </button>
 
@@ -56,7 +56,7 @@ Output:
 ### Toggling the menu programmatically
 
 You can also use the menu's API to open or close the menu programmatically from your class. Please
-note that in this case, an `mdMenuTriggerFor` attribute is still necessary to connect
+note that in this case, an `md-menu-trigger-for` attribute is still necessary to connect
 the menu to its trigger element in the DOM.
 
 *my-comp.component.ts*
@@ -72,7 +72,7 @@ class MyComp {
 
 *my-comp.html*
 ```html
-<button md-icon-button [mdMenuTriggerFor]="menu">
+<button md-icon-button [md-menu-trigger-for]="menu">
    <md-icon>more_vert</md-icon>
 </button>
 
