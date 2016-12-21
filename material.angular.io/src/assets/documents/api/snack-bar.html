@@ -1,152 +1,146 @@
-<style>
-  table {
-    border-collapse: collapse;
-    margin: 10px;
-    min-width: 300px;
-  }
-
-  td, th {
-    border: 1px solid black;
-    padding: 4px;
-  }
-</style>
-
-<h2>snack-bar</h2>
-<p> Module: <code>MdSnackBarModule</code> </p>
-
-<h3>Directives</h3>
 
 
-  <h4>MdSnackBarContainer</h4>
-  <p> Internal component that wraps user-provided snack bar content.
- </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>animationState</p>
-            <p><code></code></p>
-          </td>
-          <td> The state of the snack bar animations.
+
+
+
+
+
+
+
+
+
+<h1 class="docs-api-h1">snack-bar</h1>
+<h2 class="docs-api-h2">
+  Module: <code>MdSnackBarModule</code>
+</h2><h2 class="docs-api-h2">Services</h2>
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdSnackBar</h3>
+<p class="docs-api-class-description">Service to dispatch Material Design snack bar messages.
+</p>
+
+
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">openFromComponent</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Creates and dispatches a snack bar with a custom component for the content, removing any
+currently opened snack bars.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>snackBarConfig</p>
-            <p><code></code></p>
-          </td>
-          <td> The snack bar configuration.
-</td>
-        </tr>
-      
-    </table><h5> Methods </h5>
-    
-    <table>
-      <tr>
-        <th colspan="2">attachComponentPortal</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Attach a component portal as content to this snack bar container.
- </td>
-      </tr><tr>
-          <th colspan="2"> Parameters </th>
-        </tr>
-        
-          <tr>
-            <td>
-              <p>portal</p>
-              <p>ComponentPortal<T></p>
-            </td>
-            <td>
-              
-            </td>
-          </tr>
-        <tr>
-          <th colspan="2"> Returns </th>
-        </tr>
-        <tr>
-          <td>ComponentRef<T></td>
-          <td></td>
-        </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">attachTemplatePortal</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Attach a template portal as content to this snack bar container.
- </td>
-      </tr><tr>
-          <th colspan="2"> Parameters </th>
-        </tr>
-        
-          <tr>
-            <td>
-              <p>portal</p>
-              <p>TemplatePortal</p>
-            </td>
-            <td>
-              
-            </td>
-          </tr>
-        <tr>
-          <th colspan="2"> Returns </th>
-        </tr>
-        <tr>
-          <td>Map<string, any></td>
-          <td></td>
-        </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">onAnimationEnd</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Handle end of animations, updating the state of the snackbar.
- </td>
-      </tr><tr>
-          <th colspan="2"> Parameters </th>
-        </tr>
-        
-          <tr>
-            <td>
-              <p>event</p>
-              <p>AnimationTransitionEvent</p>
-            </td>
-            <td>
-              
-            </td>
-          </tr>
-        </table>
-    
-    <table>
-      <tr>
-        <th colspan="2">enter</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Begin animation of snack bar entrance into view.
- </td>
-      </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">exit</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Begin animation of the snack bar exiting from view.
- </td>
-      </tr><tr>
-          <th colspan="2"> Returns </th>
-        </tr>
-        <tr>
-          <td>Observable<void></td>
-          <td></td>
-        </tr></table>
-    
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        component</p>
+      <code class="docs-api-method-parameter-type">ComponentType&lt;T&gt;</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Component to be instantiated.</p>
+    </td>
+  </tr>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        config<span class="docs-api-method-parameter-optional-marker">?</span></p>
+      <code class="docs-api-method-parameter-type">MdSnackBarConfig</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Extra configuration for the snack bar.
+</p>
+    </td>
+  </tr>
+  <thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">MdSnackBarRef&lt;T&gt;</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description"></p>
+    </td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">open</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Opens a snackbar with a message and an optional action.</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        message</p>
+      <code class="docs-api-method-parameter-type">string</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">The message to show in the snackbar.</p>
+    </td>
+  </tr>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        action<span class="docs-api-method-parameter-optional-marker">?</span></p>
+      <code class="docs-api-method-parameter-type">any</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">The label for the snackbar action.</p>
+    </td>
+  </tr>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        config<span class="docs-api-method-parameter-optional-marker">?</span></p>
+      <code class="docs-api-method-parameter-type">MdSnackBarConfig</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Additional configuration options for the snackbar.
+</p>
+    </td>
+  </tr>
+  <thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">MdSnackBarRef&lt;SimpleSnackBar&gt;</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description"></p>
+    </td>
+  </tr></table>
+
+
+  
 
 
 
-
+  

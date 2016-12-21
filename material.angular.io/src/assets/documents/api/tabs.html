@@ -1,328 +1,534 @@
-<style>
-  table {
-    border-collapse: collapse;
-    margin: 10px;
-    min-width: 300px;
-  }
-
-  td, th {
-    border: 1px solid black;
-    padding: 4px;
-  }
-</style>
-
-<h2>tabs</h2>
-<p> Module: <code>MdTabsModule</code> </p>
-
-<h3>Directives</h3>
 
 
-  <h4>MdInkBar</h4>
-  <p> The ink-bar is used to display and animate the line underneath the current active tab label.
- </p><h5> Methods </h5>
-    
-    <table>
-      <tr>
-        <th colspan="2">alignToElement</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Calculates the styles from the provided element in order to align the ink-bar to that element.
-Shows the ink bar if previously set as hidden. </td>
-      </tr><tr>
-          <th colspan="2"> Parameters </th>
-        </tr>
-        
-          <tr>
-            <td>
-              <p>element</p>
-              <p>HTMLElement</p>
-            </td>
-            <td>
-              
-            </td>
-          </tr>
-        </table>
-    
-    <table>
-      <tr>
-        <th colspan="2">show</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Shows the ink bar.
- </td>
-      </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">hide</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Hides the ink bar.
- </td>
-      </tr></table>
-    
-  <h4>MdTabBody</h4>
-  <p>  </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>onCentering</p>
-            <p><code></code></p>
-          </td>
-          <td> Event emitted when the tab begins to animate towards the center as the active tab.
+
+
+
+
+
+
+
+
+
+<h1 class="docs-api-h1">tabs</h1>
+<h2 class="docs-api-h2">
+  Module: <code>MdTabsModule</code>
+</h2><h2>Directives</h2>
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdInkBar</h3>
+<p class="docs-api-class-description">The ink-bar is used to display and animate the line underneath the current active tab label.
+</p>
+
+
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">alignToElement</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Calculates the styles from the provided element in order to align the ink-bar to that element.
+Shows the ink bar if previously set as hidden.</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        element</p>
+      <code class="docs-api-method-parameter-type">HTMLElement</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description"></p>
+    </td>
+  </tr>
+  </table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">show</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Shows the ink bar.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>onCentered</p>
-            <p><code></code></p>
-          </td>
-          <td> Event emitted when the tab completes its animation towards the center.
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">hide</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Hides the ink bar.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>position</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>origin</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-    </table>
-  <h4>MdTabHeader</h4>
-  <p> The header of the tab group which displays a list of all the tabs in the tab group. Includes
-an ink bar that follows the currently selected tab. When the tabs list's width exceeds the
+  </tr></table>
+
+
+  
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdTabBody</h3>
+<p class="docs-api-class-description">Wrapper for the contents of a tab.
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      onCentering
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the tab begins to animate towards the center as the active tab.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      onCentered
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the tab completes its animation towards the center.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;position&#39;</span>)
+        </div><p class="docs-api-property-name">
+      position
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;origin&#39;</span>)
+        </div><p class="docs-api-property-name">
+      origin
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The origin position from which this tab should appear when it is centered into view.
+</td>
+</tr>
+
+
+    
+  </table>
+
+
+
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdTabHeader</h3>
+<p class="docs-api-class-description">The header of the tab group which displays a list of all the tabs in the tab group. Includes
+an ink bar that follows the currently selected tab. When the tabs list&#39;s width exceeds the
 width of the header container, then arrows will be displayed to allow the user to scroll
 left and right across the header.
- </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>selectedIndex</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>selectFocusedIndex</p>
-            <p><code></code></p>
-          </td>
-          <td> Event emitted when the option is selected.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>indexFocused</p>
-            <p><code></code></p>
-          </td>
-          <td> Event emitted when a label is focused.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>focusIndex</p>
-            <p><code></code></p>
-          </td>
-          <td> When the focus index is set, we must manually send focus to the correct label
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>scrollDistance</p>
-            <p><code></code></p>
-          </td>
-          <td> Sets the distance in pixels that the tab header should be transformed in the X-axis.
-</td>
-        </tr>
-      
-    </table>
-  <h4>MdTabLabelWrapper</h4>
-  <p> Used in the `md-tab-group` view to display tab labels
- </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>elementRef</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>disabled</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-    </table><h5> Methods </h5>
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
     
-    <table>
-      <tr>
-        <th colspan="2">focus</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Sets focus on the wrapper element
- </td>
-      </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">getOffsetLeft</th>
-      </tr>
-      <tr>
-        <td colspan="2">  </td>
-      </tr><tr>
-          <th colspan="2"> Returns </th>
-        </tr>
-        <tr>
-          <td>number</td>
-          <td></td>
-        </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">getOffsetWidth</th>
-      </tr>
-      <tr>
-        <td colspan="2">  </td>
-      </tr><tr>
-          <th colspan="2"> Returns </th>
-        </tr>
-        <tr>
-          <td>number</td>
-          <td></td>
-        </tr></table>
-    
-  <h4>MdTab</h4>
-  <p>  </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>templateLabel</p>
-            <p><code></code></p>
-          </td>
-          <td> Content for the tab label given by <template md-tab-label>.
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      selectedIndex
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The index of the active tab.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>textLabel</p>
-            <p><code></code></p>
-          </td>
-          <td> The plain text label for the tab, used when there is no template label.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      selectFocusedIndex
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the option is selected.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>content</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>position</p>
-            <p><code></code></p>
-          </td>
-          <td> The relatively indexed position where 0 represents the center, negative is left, and positive
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      indexFocused
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when a label is focused.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      focusIndex
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">When the focus index is set, we must manually send focus to the correct label
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      scrollDistance
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Sets the distance in pixels that the tab header should be transformed in the X-axis.
+</td>
+</tr>
+
+
+    
+  </table>
+
+
+
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdTabLabelWrapper</h3>
+<p class="docs-api-class-description">Used in the `md-tab-group` view to display tab labels
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      elementRef
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      disabled
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the element is disabled.
+</td>
+</tr>
+
+
+    
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">focus</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Sets focus on the wrapper element
+</td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">getOffsetLeft</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell"></td>
+  </tr><thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">number</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description"></p>
+    </td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">getOffsetWidth</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell"></td>
+  </tr><thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">number</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description"></p>
+    </td>
+  </tr></table>
+
+
+  
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdTab</h3>
+<p class="docs-api-class-description"></p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      templateLabel
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Content for the tab label given by &lt;template md-tab-label&gt;.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;label&#39;</span>)
+        </div><p class="docs-api-property-name">
+      textLabel
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The plain text label for the tab, used when there is no template label.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      content
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      position
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The relatively indexed position where 0 represents the center, negative is left, and positive
 represents the right.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>origin</p>
-            <p><code></code></p>
-          </td>
-          <td> The initial relatively index origin of the tab if it was created and selected after there
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      origin
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The initial relatively index origin of the tab if it was created and selected after there
 was already a selected tab. Provides context of what position the tab should originate from.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>disabled</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-    </table>
-  <h4>MdTabLabel</h4>
-  <p> Used to flag tab labels for use with the portal directive
- </p>
-  <h4>MdTabGroup</h4>
-  <p> Material design tab-group component.  Supports basic tab pairs (label + content) and includes
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      disabled
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the tab is disabled
+</td>
+</tr>
+
+
+    
+  </table>
+
+
+
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdTabLabel</h3>
+<p class="docs-api-class-description">Used to flag tab labels for use with the portal directive
+</p>
+
+
+
+
+
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdTabGroup</h3>
+<p class="docs-api-class-description">Material design tab-group component.  Supports basic tab pairs (label + content) and includes
 animated ink-bar, keyboard navigation, and screen reader.
 See: https://www.google.com/design/spec/components/tabs.html
- </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>dynamicHeight</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>selectedIndex</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>selectedIndexChange</p>
-            <p><code></code></p>
-          </td>
-          <td> Output to enable support for two-way binding on `selectedIndex`.
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      dynamicHeight
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      selectedIndex
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The index of the active tab.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>focusChange</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>selectChange</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-    </table>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      selectedIndexChange
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Output to enable support for two-way binding on `selectedIndex`.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      focusChange
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when focus has changed within a tab group.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      selectChange
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the tab selection has changed.
+</td>
+</tr>
+
+
+    
+  </table>
 
 
 
 
+
+
+  

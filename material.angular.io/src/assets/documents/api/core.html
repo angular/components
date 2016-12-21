@@ -1,518 +1,1593 @@
-<style>
-  table {
-    border-collapse: collapse;
-    margin: 10px;
-    min-width: 300px;
-  }
-
-  td, th {
-    border: 1px solid black;
-    padding: 4px;
-  }
-</style>
-
-<h2>core</h2>
-<p> Module: <code>MdCoreModule</code> </p>
-
-<h3>Directives</h3>
 
 
-  <h4>Dir</h4>
-  <p> Directive to listen to changes of direction of part of the DOM.
+
+
+
+
+
+
+
+
+
+<h1 class="docs-api-h1">core</h1>
+<h2 class="docs-api-h2">
+  Module: <code>PlatformModule</code>
+</h2><h2 class="docs-api-h2">Services</h2>
+  
+    <h3 class="docs-api-h3 docs-api-class-name">Overlay</h3>
+<p class="docs-api-class-description">Service to create Overlays. Overlays are dynamically added pieces of floating UI, meant to be
+used as a low-level building building block for other components. Dialogs, tooltips, menus,
+selects, etc. can all be built using overlays. The service should primarily be used by authors
+of re-usable components rather than developers building end-user applications.
+
+An overlay *is* a PortalHost, so any kind of Portal can be loaded into one.
+</p>
+
+
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">create</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Creates an overlay.</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        state<span class="docs-api-method-parameter-optional-marker">?</span></p>
+      <code class="docs-api-method-parameter-type">OverlayState</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">State to apply to the overlay.</p>
+    </td>
+  </tr>
+  <thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">OverlayRef</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description">Reference to the created overlay.
+</p>
+    </td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">position</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Returns a position builder that can be used, via fluent API,
+to construct and configure a position strategy.
+</td>
+  </tr><thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">OverlayPositionBuilder</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description"></p>
+    </td>
+  </tr></table>
+
+
+  
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">ScrollDispatcher</h3>
+<p class="docs-api-class-description">Service contained all registered Scrollable references and emits an event when any one of the
+Scrollable references emit a scrolled event.
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      scrollableReferences
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Map of all the scrollable references that are registered with the service and their
+scroll event subscriptions.
+</td>
+</tr>
+
+
+    
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">register</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Registers a Scrollable with the service and listens for its scrolled events. When the
+scrollable is scrolled, the service emits the event in its scrolled observable.
+</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        scrollable</p>
+      <code class="docs-api-method-parameter-type">Scrollable</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Scrollable instance to be registered.
+</p>
+    </td>
+  </tr>
+  </table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">deregister</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Deregisters a Scrollable reference and unsubscribes from its scroll event observable.
+</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        scrollable</p>
+      <code class="docs-api-method-parameter-type">Scrollable</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Scrollable instance to be deregistered.
+</p>
+    </td>
+  </tr>
+  </table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">scrolled</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Returns an observable that emits an event whenever any of the registered Scrollable
+references (or window, document, or body) fire a scrolled event.
+</td>
+  </tr><thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">Observable&lt;void&gt;</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description"></p>
+    </td>
+  </tr></table>
+
+
+  
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">GestureConfig</h3>
+<p class="docs-api-class-description"></p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      events
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
+</tr>
+
+
+    
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">buildHammer</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Builds Hammer instance manually to add custom recognizers that match the Material Design spec.
+
+Our gesture names come from the Material Design gestures spec:
+https://www.google.com/design/spec/patterns/gestures.html#gestures-touch-mechanics
+
+More information on default recognizers can be found in Hammer docs:
+http://hammerjs.github.io/recognizer-pan/
+http://hammerjs.github.io/recognizer-press/
+</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        element</p>
+      <code class="docs-api-method-parameter-type">HTMLElement</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Element to which to assign the new HammerJS gestures.</p>
+    </td>
+  </tr>
+  <thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">HammerInstance</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description">Newly-created HammerJS instance.
+</p>
+    </td>
+  </tr></table>
+
+
+  
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">LiveAnnouncer</h3>
+<p class="docs-api-class-description"></p>
+
+
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">announce</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Announces a message to screenreaders.</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        message</p>
+      <code class="docs-api-method-parameter-type">string</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Message to be announced to the screenreader</p>
+    </td>
+  </tr>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        politeness<span class="docs-api-method-parameter-optional-marker">?</span></p>
+      <code class="docs-api-method-parameter-type">AriaLivePoliteness</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">The politeness of the announcer element
+</p>
+    </td>
+  </tr>
+  </table>
+
+
+  
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdLiveAnnouncer</h3>
+<p class="docs-api-class-description"></p>
+
+
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">announce</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Announces a message to screenreaders.</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        message</p>
+      <code class="docs-api-method-parameter-type">string</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Message to be announced to the screenreader</p>
+    </td>
+  </tr>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        politeness<span class="docs-api-method-parameter-optional-marker">?</span></p>
+      <code class="docs-api-method-parameter-type">AriaLivePoliteness</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">The politeness of the announcer element
+</p>
+    </td>
+  </tr>
+  </table>
+
+
+  
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">InteractivityChecker</h3>
+<p class="docs-api-class-description">The InteractivityChecker leans heavily on the ally.js accessibility utilities.
+Methods like `isTabbable` are only covering specific edge-cases for the browsers which are
+supported.
+Utility for checking the interactivity of an element, such as whether is is focusable or
+tabbable.
+</p>
+
+
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">isDisabled</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Gets whether an element is disabled.
+</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        element</p>
+      <code class="docs-api-method-parameter-type">HTMLElement</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Element to be checked.</p>
+    </td>
+  </tr>
+  <thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">boolean</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description">Whether the element is disabled.
+</p>
+    </td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">isVisible</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Gets whether an element is visible for the purposes of interactivity.
+
+This will capture states like `display: none` and `visibility: hidden`, but not things like
+being clipped by an `overflow: hidden` parent or being outside the viewport.
+</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        element</p>
+      <code class="docs-api-method-parameter-type">HTMLElement</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description"></p>
+    </td>
+  </tr>
+  <thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">boolean</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description">Whether the element is visible.
+</p>
+    </td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">isTabbable</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Gets whether an element can be reached via Tab key.
+Assumes that the element has already been checked with isFocusable.
+</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        element</p>
+      <code class="docs-api-method-parameter-type">HTMLElement</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Element to be checked.</p>
+    </td>
+  </tr>
+  <thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">boolean</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description">Whether the element is tabbable.
+</p>
+    </td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">isFocusable</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Gets whether an element can be focused by the user.
+</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        element</p>
+      <code class="docs-api-method-parameter-type">HTMLElement</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Element to be checked.</p>
+    </td>
+  </tr>
+  <thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">boolean</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description">Whether the element is focusable.
+</p>
+    </td>
+  </tr></table>
+
+
+  
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">UniqueSelectionDispatcher</h3>
+<p class="docs-api-class-description">Class to coordinate unique selection based on name.
+Intended to be consumed as an Angular service.
+This service is needed because native radio change events are only fired on the item currently
+being selected, and we still need to uncheck the previous selection.
+
+This service does not *store* any IDs and names because they may change at any time, so it is
+less error-prone if they are simply passed through when the events occur.
+</p>
+
+
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">notify</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Notify other items that selection for the given name has been set.</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        id</p>
+      <code class="docs-api-method-parameter-type">string</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">ID of the item.</p>
+    </td>
+  </tr>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        name</p>
+      <code class="docs-api-method-parameter-type">string</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Name of the item.
+</p>
+    </td>
+  </tr>
+  </table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">listen</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Listen for future changes to item selection.
+</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        listener</p>
+      <code class="docs-api-method-parameter-type">UniqueSelectionDispatcherListener</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description"></p>
+    </td>
+  </tr>
+  </table>
+
+
+  
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdUniqueSelectionDispatcher</h3>
+<p class="docs-api-class-description">Class to coordinate unique selection based on name.
+Intended to be consumed as an Angular service.
+This service is needed because native radio change events are only fired on the item currently
+being selected, and we still need to uncheck the previous selection.
+
+This service does not *store* any IDs and names because they may change at any time, so it is
+less error-prone if they are simply passed through when the events occur.
+</p>
+
+
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">notify</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Notify other items that selection for the given name has been set.</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        id</p>
+      <code class="docs-api-method-parameter-type">string</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">ID of the item.</p>
+    </td>
+  </tr>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        name</p>
+      <code class="docs-api-method-parameter-type">string</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Name of the item.
+</p>
+    </td>
+  </tr>
+  </table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">listen</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Listen for future changes to item selection.
+</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        listener</p>
+      <code class="docs-api-method-parameter-type">UniqueSelectionDispatcherListener</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description"></p>
+    </td>
+  </tr>
+  </table>
+
+
+  
+
+
+
+  <h2>Directives</h2>
+  
+    <h3 class="docs-api-h3 docs-api-class-name">Dir</h3>
+<p class="docs-api-class-description">Directive to listen for changes of direction of part of the DOM.
 
 Applications should use this directive instead of the native attribute so that Material
 components can listen on changes of direction.
- </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>dirChange</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>dir</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>value</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-    </table>
-  <h4>PortalHostDirective</h4>
-  <p> Directive version of a PortalHost. Because the directive *is* a PortalHost, portals can be
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      dirChange
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the direction changes.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      value
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Current layout direction of the element.
+</td>
+</tr>
+
+
+    
+  </table>
+
+
+
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">ObserveContent</h3>
+<p class="docs-api-class-description">Directive that triggers a callback whenever the content of
+its associated element has changed.
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">@Output(<span class="docs-api-output-alias">&#39;cdkObserveContent&#39;</span>)
+        </div><p class="docs-api-property-name">
+      event
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted for each change in the element&#39;s content.
+</td>
+</tr>
+
+
+    
+  </table>
+
+
+
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">PortalHostDirective</h3>
+<p class="docs-api-class-description">Directive version of a PortalHost. Because the directive *is* a PortalHost, portals can be
 directly attached to it, enabling declarative use.
 
 Usage:
-<template [portalHost]="greeting"></template>
- </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>portal</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-    </table><h5> Methods </h5>
+&lt;template [cdkPortalHost]=&quot;greeting&quot;&gt;&lt;/template&gt;
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
     
-    <table>
-      <tr>
-        <th colspan="2">attachComponentPortal</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Attach the given ComponentPortal to this PortalHost using the ComponentFactoryResolver.
- </td>
-      </tr><tr>
-          <th colspan="2"> Parameters </th>
-        </tr>
-        
-          <tr>
-            <td>
-              <p>portal</p>
-              <p>ComponentPortal<T></p>
-            </td>
-            <td>
-              
-            </td>
-          </tr>
-        <tr>
-          <th colspan="2"> Returns </th>
-        </tr>
-        <tr>
-          <td>ComponentRef<T></td>
-          <td></td>
-        </tr></table>
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      portal
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Portal associated with the Portal host.
+</td>
+</tr>
+
+
     
-    <table>
-      <tr>
-        <th colspan="2">attachTemplatePortal</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Attach the given TemplatePortal to this PortlHost as an embedded View.
- </td>
-      </tr><tr>
-          <th colspan="2"> Parameters </th>
-        </tr>
-        
-          <tr>
-            <td>
-              <p>portal</p>
-              <p>TemplatePortal</p>
-            </td>
-            <td>
-              
-            </td>
-          </tr>
-        <tr>
-          <th colspan="2"> Returns </th>
-        </tr>
-        <tr>
-          <td>Map<string, any></td>
-          <td></td>
-        </tr></table>
-    
-  <h4>TemplatePortalDirective</h4>
-  <p> Directive version of a `TemplatePortal`. Because the directive *is* a TemplatePortal,
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">attachComponentPortal</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Attach the given ComponentPortal to this PortalHost using the ComponentFactoryResolver.
+</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        portal</p>
+      <code class="docs-api-method-parameter-type">ComponentPortal&lt;T&gt;</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Portal to be attached to the portal host.
+</p>
+    </td>
+  </tr>
+  <thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">ComponentRef&lt;T&gt;</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description"></p>
+    </td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">attachTemplatePortal</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Attach the given TemplatePortal to this PortlHost as an embedded View.</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        portal</p>
+      <code class="docs-api-method-parameter-type">TemplatePortal</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Portal to be attached.
+</p>
+    </td>
+  </tr>
+  <thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">Map&lt;string, any&gt;</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description"></p>
+    </td>
+  </tr></table>
+
+
+  
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">TemplatePortalDirective</h3>
+<p class="docs-api-class-description">Directive version of a `TemplatePortal`. Because the directive *is* a TemplatePortal,
 the directive instance itself can be attached to a host, enabling declarative use of portals.
 
 Usage:
-<template portal #greeting>
-  <p> Hello {{name}} </p>
-</template>
- </p>
-  <h4>ConnectedOverlayDirective</h4>
-  <p> Directive to facilitate declarative creation of an Overlay using a ConnectedPositionStrategy.
- </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>origin</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>positions</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>offsetX</p>
-            <p><code></code></p>
-          </td>
-          <td> The offset in pixels for the overlay connection point on the x-axis
+&lt;template portal #greeting&gt;
+  &lt;p&gt; Hello {{name}} &lt;/p&gt;
+&lt;/template&gt;
+</p>
+
+
+
+
+
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">ConnectedOverlayDirective</h3>
+<p class="docs-api-class-description">Directive to facilitate declarative creation of an Overlay using a ConnectedPositionStrategy.
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      origin
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Origin for the connected overlay.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>offsetY</p>
-            <p><code></code></p>
-          </td>
-          <td> The offset in pixels for the overlay connection point on the y-axis
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      positions
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Registered connected position pairs.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>width</p>
-            <p><code></code></p>
-          </td>
-          <td> The width of the overlay panel.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      offsetX
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The offset in pixels for the overlay connection point on the x-axis
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>height</p>
-            <p><code></code></p>
-          </td>
-          <td> The height of the overlay panel.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      offsetY
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The offset in pixels for the overlay connection point on the y-axis
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>minWidth</p>
-            <p><code></code></p>
-          </td>
-          <td> The min width of the overlay panel.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      width
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The width of the overlay panel.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>minHeight</p>
-            <p><code></code></p>
-          </td>
-          <td> The min height of the overlay panel.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      height
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The height of the overlay panel.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>backdropClass</p>
-            <p><code></code></p>
-          </td>
-          <td> The custom class to be set on the backdrop element.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      minWidth
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The min width of the overlay panel.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>hasBackdrop</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether or not the overlay should attach a backdrop.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      minHeight
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The min height of the overlay panel.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>open</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>backdropClick</p>
-            <p><code></code></p>
-          </td>
-          <td> Event emitted when the backdrop is clicked.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      backdropClass
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The custom class to be set on the backdrop element.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>positionChange</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>attach</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>detach</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>overlayRef</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>dir</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-    </table>
-  <h4>OverlayOrigin</h4>
-  <p> Directive applied to an element to make it usable as an origin for an Overlay using a
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      hasBackdrop
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether or not the overlay should attach a backdrop.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      open
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      backdropClick
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the backdrop is clicked.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      positionChange
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the position has changed.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      attach
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the overlay has been attached.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      detach
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the overlay has been detached.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      overlayRef
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The associated overlay reference.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      dir
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The element&#39;s layout direction.
+</td>
+</tr>
+
+
+    
+  </table>
+
+
+
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">OverlayOrigin</h3>
+<p class="docs-api-class-description">Directive applied to an element to make it usable as an origin for an Overlay using a
 ConnectedPositionStrategy.
- </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>elementRef</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-    </table>
-  <h4>MdRipple</h4>
-  <p>  </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>trigger</p>
-            <p><code></code></p>
-          </td>
-          <td> The element that triggers the ripple when click events are received. Defaults to the
-directive's host element.
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      elementRef
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
+</tr>
+
+
+    
+  </table>
+
+
+
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdRipple</h3>
+<p class="docs-api-class-description"></p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;mdRippleTrigger&#39;</span>)
+        </div><p class="docs-api-property-name">
+      trigger
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The element that triggers the ripple when click events are received. Defaults to the
+directive&#39;s host element.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>centered</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether the ripple always originates from the center of the host element's bounds, rather
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;mdRippleCentered&#39;</span>)
+        </div><p class="docs-api-property-name">
+      centered
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the ripple always originates from the center of the host element&#39;s bounds, rather
 than originating from the location of the click event.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>disabled</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether click events will not trigger the ripple. It can still be triggered by manually
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;mdRippleDisabled&#39;</span>)
+        </div><p class="docs-api-property-name">
+      disabled
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether click events will not trigger the ripple. It can still be triggered by manually
 calling start() and end().
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>maxRadius</p>
-            <p><code></code></p>
-          </td>
-          <td> If set, the radius in pixels of foreground ripples when fully expanded. If unset, the radius
-will be the distance from the center of the ripple to the furthest corner of the host element's
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;mdRippleMaxRadius&#39;</span>)
+        </div><p class="docs-api-property-name">
+      maxRadius
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">If set, the radius in pixels of foreground ripples when fully expanded. If unset, the radius
+will be the distance from the center of the ripple to the furthest corner of the host element&#39;s
 bounding rectangle.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>speedFactor</p>
-            <p><code></code></p>
-          </td>
-          <td> If set, the normal duration of ripple animations is divided by this value. For example,
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;mdRippleSpeedFactor&#39;</span>)
+        </div><p class="docs-api-property-name">
+      speedFactor
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">If set, the normal duration of ripple animations is divided by this value. For example,
 setting it to 0.5 will cause the animations to take twice as long.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>color</p>
-            <p><code></code></p>
-          </td>
-          <td> Custom color for ripples.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>backgroundColor</p>
-            <p><code></code></p>
-          </td>
-          <td> Custom color for the ripple background.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>focused</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether the ripple background will be highlighted to indicated a focused state.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>unbounded</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether foreground ripples should be visible outside the component's bounds.
-</td>
-        </tr>
-      
-    </table><h5> Methods </h5>
+</tr>
+
+
     
-    <table>
-      <tr>
-        <th colspan="2">start</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Responds to the start of a ripple animation trigger by fading the background in.
- </td>
-      </tr></table>
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;mdRippleColor&#39;</span>)
+        </div><p class="docs-api-property-name">
+      color
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Custom color for ripples.
+</td>
+</tr>
+
+
     
-    <table>
-      <tr>
-        <th colspan="2">end</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Responds to the end of a ripple animation trigger by fading the background out, and creating a
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;mdRippleBackgroundColor&#39;</span>)
+        </div><p class="docs-api-property-name">
+      backgroundColor
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Custom color for the ripple background.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;mdRippleFocused&#39;</span>)
+        </div><p class="docs-api-property-name">
+      focused
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the ripple background will be highlighted to indicated a focused state.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;mdRippleUnbounded&#39;</span>)
+        </div><p class="docs-api-property-name">
+      unbounded
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether foreground ripples should be visible outside the component&#39;s bounds.
+</td>
+</tr>
+
+
+    
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">start</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Responds to the start of a ripple animation trigger by fading the background in.
+</td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">end</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Responds to the end of a ripple animation trigger by fading the background out, and creating a
 foreground ripple that expands from the event location (or from the center of the element if
-the "centered" property is set or forceCenter is true).
- </td>
-      </tr><tr>
-          <th colspan="2"> Parameters </th>
-        </tr>
-        
-          <tr>
-            <td>
-              <p>left</p>
-              <p>number</p>
-            </td>
-            <td>
-              
-            </td>
-          </tr>
-        
-          <tr>
-            <td>
-              <p>top</p>
-              <p>number</p>
-            </td>
-            <td>
-              
-            </td>
-          </tr>
-        
-          <tr>
-            <td>
-              <p>forceCenter?</p>
-              <p>any</p>
-            </td>
-            <td>
-              
-            </td>
-          </tr>
-        </table>
-    
-  <h4>FocusTrap</h4>
-  <p> Directive for trapping focus within a region.
+the &quot;centered&quot; property is set or forceCenter is true).
+</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        left</p>
+      <code class="docs-api-method-parameter-type">number</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description"></p>
+    </td>
+  </tr>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        top</p>
+      <code class="docs-api-method-parameter-type">number</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description"></p>
+    </td>
+  </tr>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        forceCenter<span class="docs-api-method-parameter-optional-marker">?</span></p>
+      <code class="docs-api-method-parameter-type">any</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description"></p>
+    </td>
+  </tr>
+  </table>
+
+
+  
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">FocusTrap</h3>
+<p class="docs-api-class-description">Directive for trapping focus within a region.
 
 NOTE: This directive currently uses a very simple (naive) approach to focus trapping.
 It assumes that the tab order is the same as DOM order, which is not necessarily true.
-Things like tabIndex > 0, flex `order`, and shadow roots can cause to two to misalign.
+Things like tabIndex &gt; 0, flex `order`, and shadow roots can cause to two to misalign.
 This will be replaced with a more intelligent solution before the library is considered stable.
- </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>trappedContent</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>disabled</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether the focus trap is active.
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      trappedContent
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      disabled
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the focus trap is active.
 </td>
-        </tr>
-      
-    </table><h5> Methods </h5>
+</tr>
+
+
     
-    <table>
-      <tr>
-        <th colspan="2">focusFirstTabbableElementWhenReady</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Waits for microtask queue to empty, then focuses the first tabbable element within the focus
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">focusFirstTabbableElementWhenReady</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Waits for microtask queue to empty, then focuses the first tabbable element within the focus
 trap region.
- </td>
-      </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">focusLastTabbableElementWhenReady</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Waits for microtask queue to empty, then focuses the last tabbable element within the focus
+</td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">focusLastTabbableElementWhenReady</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Waits for microtask queue to empty, then focuses the last tabbable element within the focus
 trap region.
- </td>
-      </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">focusFirstTabbableElement</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Focuses the first tabbable element within the focus trap region.
- </td>
-      </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">focusLastTabbableElement</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Focuses the last tabbable element within the focus trap region.
- </td>
-      </tr></table>
-    
-  <h4>MdLine</h4>
-  <p> Shared directive to count lines inside a text area, such as a list item.
+</td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">focusFirstTabbableElement</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Focuses the first tabbable element within the focus trap region.
+</td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">focusLastTabbableElement</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Focuses the last tabbable element within the focus trap region.
+</td>
+  </tr></table>
+
+
+  
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdLine</h3>
+<p class="docs-api-class-description">Shared directive to count lines inside a text area, such as a list item.
 Line elements can be extracted with a @ContentChildren(MdLine) query, then
-counted by checking the query list's length.
- </p>
-  <h4>MatPrefixEnforcer</h4>
-  <p> Directive that enforces that the `mat-` prefix cannot be used.
- </p>
+counted by checking the query list&#39;s length.
+</p>
 
 
 
 
+
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MatPrefixEnforcer</h3>
+<p class="docs-api-class-description">Directive that enforces that the `mat-` prefix cannot be used.
+</p>
+
+
+
+
+
+
+
+
+  

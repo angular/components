@@ -1,58 +1,175 @@
-<style>
-  table {
-    border-collapse: collapse;
-    margin: 10px;
-    min-width: 300px;
-  }
-
-  td, th {
-    border: 1px solid black;
-    padding: 4px;
-  }
-</style>
-
-<h2>dialog</h2>
-<p> Module: <code>MdDialogModule</code> </p>
-
-<h3>Directives</h3>
 
 
-  <h4>MdDialogClose</h4>
-  <p> Button that will close the current dialog.
- </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>ariaLabel</p>
-            <p><code></code></p>
-          </td>
-          <td> Screenreader label for the button.
+
+
+
+
+
+
+
+
+
+<h1 class="docs-api-h1">dialog</h1>
+<h2 class="docs-api-h2">
+  Module: <code>MdDialogModule</code>
+</h2><h2 class="docs-api-h2">Services</h2>
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdDialog</h3>
+<p class="docs-api-class-description">Service to open Material Design modal dialogs.
+</p>
+
+
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">open</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Opens a modal dialog containing the given component.</td>
+  </tr><thead>
+    <tr class="docs-api-method-parameters-header-row">
+      <th colspan="2" class="docs-api-method-parameters-header-cell">Parameters</th>
+    </tr>
+  </thead>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        component</p>
+      <code class="docs-api-method-parameter-type">ComponentType&lt;T&gt;</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Type of the component to load into the load.</p>
+    </td>
+  </tr>
+  
+  <tr class="docs-api-method-parameter-row">
+    <td class="docs-api-method-parameter-cell">
+      <p class="docs-api-method-parameter-name">
+        config<span class="docs-api-method-parameter-optional-marker">?</span></p>
+      <code class="docs-api-method-parameter-type">MdDialogConfig</code>
+    </td>
+    <td class="docs-api-method-parameter-description-cell">
+      <p class="docs-api-method-parameter-description">Extra configuration options.</p>
+    </td>
+  </tr>
+  <thead>
+    <tr class="docs-api-method-returns-header-row">
+      <th colspan="2" class="docs-api-method-returns-header-cell">Returns</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="docs-api-method-returns-type-cell">
+      <code class="docs-api-method-returns-type">MdDialogRef&lt;T&gt;</code>
+    </td>
+    <td class="docs-api-method-returns-description-cell">
+      <p class="docs-api-method-returns-description">Reference to the newly-opened dialog.
+</p>
+    </td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">closeAll</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Closes all of the currently-open dialogs.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>dialogRef</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-    </table>
-  <h4>MdDialogTitle</h4>
-  <p> Title of a dialog element. Stays fixed to the top of the dialog when scrolling.
- </p>
-  <h4>MdDialogContent</h4>
-  <p> Scrollable content container of a dialog.
- </p>
-  <h4>MdDialogActions</h4>
-  <p> Container for the bottom action buttons in a dialog.
+  </tr></table>
+
+
+  
+
+
+
+  <h2>Directives</h2>
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdDialogClose</h3>
+<p class="docs-api-class-description">Button that will close the current dialog.
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;aria-label&#39;</span>)
+        </div><p class="docs-api-property-name">
+      ariaLabel
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Screenreader label for the button.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      dialogRef
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
+</tr>
+
+
+    
+  </table>
+
+
+
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdDialogTitle</h3>
+<p class="docs-api-class-description">Title of a dialog element. Stays fixed to the top of the dialog when scrolling.
+</p>
+
+
+
+
+
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdDialogContent</h3>
+<p class="docs-api-class-description">Scrollable content container of a dialog.
+</p>
+
+
+
+
+
+
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdDialogActions</h3>
+<p class="docs-api-class-description">Container for the bottom action buttons in a dialog.
 Stays fixed to the bottom when scrolling.
- </p>
+</p>
 
 
 
 
+
+
+
+
+  

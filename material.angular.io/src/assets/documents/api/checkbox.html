@@ -1,155 +1,199 @@
-<style>
-  table {
-    border-collapse: collapse;
-    margin: 10px;
-    min-width: 300px;
-  }
-
-  td, th {
-    border: 1px solid black;
-    padding: 4px;
-  }
-</style>
-
-<h2>checkbox</h2>
-<p> Module: <code>MdCheckboxModule</code> </p>
-
-<h3>Directives</h3>
 
 
-  <h4>MdCheckbox</h4>
-  <p> A material design checkbox component. Supports all of the functionality of an HTML5 checkbox,
-and exposes a similar API. An MdCheckbox can be either checked, unchecked, indeterminate, or
+
+
+
+
+
+
+
+
+
+<h1 class="docs-api-h1">checkbox</h1>
+<h2 class="docs-api-h2">
+  Module: <code>MdCheckboxModule</code>
+</h2><h2>Directives</h2>
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdCheckbox</h3>
+<p class="docs-api-class-description">A material design checkbox component. Supports all of the functionality of an HTML5 checkbox,
+and exposes a similar API. A MdCheckbox can be either checked, unchecked, indeterminate, or
 disabled. Note that all additional accessibility attributes are taken care of by the component,
 so there is no need to provide them yourself. However, if you want to omit a label and still
 have the checkbox be accessible, you may supply an [aria-label] input.
 See: https://www.google.com/design/spec/components/selection-controls.html
- </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>ariaLabel</p>
-            <p><code></code></p>
-          </td>
-          <td> Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;aria-label&#39;</span>)
+        </div><p class="docs-api-property-name">
+      ariaLabel
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
 take precedence so this may be omitted.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>ariaLabelledby</p>
-            <p><code></code></p>
-          </td>
-          <td> Users can specify the `aria-labelledby` attribute which will be forwarded to the input element
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;aria-labelledby&#39;</span>)
+        </div><p class="docs-api-property-name">
+      ariaLabelledby
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Users can specify the `aria-labelledby` attribute which will be forwarded to the input element
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>id</p>
-            <p><code></code></p>
-          </td>
-          <td> A unique id for the checkbox. If one is not supplied, it is auto-generated.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      id
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">A unique id for the checkbox. If one is not supplied, it is auto-generated.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>disableRipple</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>inputId</p>
-            <p><code></code></p>
-          </td>
-          <td> ID to be applied to the `input` element
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      disableRipple
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the ripple effect for this checkbox is disabled.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>required</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether the checkbox is required or not.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      inputId
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">ID of the native input element inside `&lt;md-checkbox&gt;`
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>align</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether or not the checkbox should come before or after the label.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      required
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the checkbox is required.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>disabled</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether the checkbox is disabled. When the checkbox is disabled it cannot be interacted with.
-The correct ARIA attributes are applied to denote this to assistive technology.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      align
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether or not the checkbox should appear before or after the label.</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      labelPosition
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the label should appear after or before the checkbox. Defaults to &#39;after&#39;
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>tabindex</p>
-            <p><code></code></p>
-          </td>
-          <td> The tabindex attribute for the checkbox. Note that when the checkbox is disabled, the attribute
-on the host element will be removed. It will be placed back when the checkbox is re-enabled.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      disabled
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the checkbox is disabled.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>name</p>
-            <p><code></code></p>
-          </td>
-          <td> Name value will be applied to the input element if present
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      name
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Name value will be applied to the input element if present
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>change</p>
-            <p><code></code></p>
-          </td>
-          <td> Event emitted when the checkbox's `checked` value changes.
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      change
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the checkbox&#39;s `checked` value changes.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>onTouched</p>
-            <p><code></code></p>
-          </td>
-          <td> Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>hasFocus</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>checked</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether the checkbox is checked. Note that setting `checked` will immediately set
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      checked
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the checkbox is checked. Note that setting `checked` will immediately set
 `indeterminate` to false.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>indeterminate</p>
-            <p><code></code></p>
-          </td>
-          <td> Whether the checkbox is indeterminate. This is also known as "mixed" mode and can be used to
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      indeterminate
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the checkbox is indeterminate. This is also known as &quot;mixed&quot; mode and can be used to
 represent a checkbox with three states, e.g. a checkbox that represents a nested list of
 checkable items. Note that whenever `checked` is set, indeterminate is immediately set to
 false. This differs from the web platform in that indeterminate state on native
@@ -157,44 +201,55 @@ checkboxes is only remove when the user manually checks the checkbox (rather tha
 `checked` property programmatically). However, we feel that this behavior is more accommodating
 to the way consumers would envision using this component.
 </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>color</p>
-            <p><code></code></p>
-          </td>
-          <td> Sets the color of the checkbox
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      color
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The color of the button. Can be `primary`, `accent`, or `warn`.
 </td>
-        </tr>
-      
-    </table><h5> Methods </h5>
+</tr>
+
+
     
-    <table>
-      <tr>
-        <th colspan="2">toggle</th>
-      </tr>
-      <tr>
-        <td colspan="2"> Toggles the `checked` value between true and false
- </td>
-      </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">focus</th>
-      </tr>
-      <tr>
-        <td colspan="2">  </td>
-      </tr></table>
-    
-    <table>
-      <tr>
-        <th colspan="2">getHostElement</th>
-      </tr>
-      <tr>
-        <td colspan="2">  </td>
-      </tr></table>
-    
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">toggle</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Toggles the `checked` state of the checkbox.
+</td>
+  </tr></table>
+
+
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">focus</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Focuses the checkbox.
+</td>
+  </tr></table>
+
+
+  
 
 
 
-
+  

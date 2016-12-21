@@ -1,207 +1,339 @@
-<style>
-  table {
-    border-collapse: collapse;
-    margin: 10px;
-    min-width: 300px;
-  }
-
-  td, th {
-    border: 1px solid black;
-    padding: 4px;
-  }
-</style>
-
-<h2>radio</h2>
-<p> Module: <code>MdRadioModule</code> </p>
-
-<h3>Directives</h3>
 
 
-  <h4>MdRadioGroup</h4>
-  <p>  </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>onTouched</p>
-            <p><code></code></p>
-          </td>
-          <td> onTouch function registered via registerOnTouch (ControlValueAccessor).
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>change</p>
-            <p><code></code></p>
-          </td>
-          <td> Event emitted when the group value changes.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>name</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>align</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>disabled</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>value</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>selected</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-    </table>
-  <h4>MdRadioButton</h4>
-  <p>  </p><h5> Properties </h5>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>id</p>
-            <p><code></code></p>
-          </td>
-          <td> The unique ID for the radio button.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>name</p>
-            <p><code></code></p>
-          </td>
-          <td> Analog to HTML 'name' attribute used to group radios for unique selection.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>ariaLabel</p>
-            <p><code></code></p>
-          </td>
-          <td> Used to set the 'aria-label' attribute on the underlying input element.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>ariaLabelledby</p>
-            <p><code></code></p>
-          </td>
-          <td> The 'aria-labelledby' attribute takes precedence as the element's text alternative.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>radioGroup</p>
-            <p><code></code></p>
-          </td>
-          <td> The parent radio group. May or may not be present.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>disableRipple</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>change</p>
-            <p><code></code></p>
-          </td>
-          <td> Event emitted when the group value changes.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>radioDispatcher</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>inputId</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>checked</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>value</p>
-            <p><code></code></p>
-          </td>
-          <td> MdRadioGroup reads this to assign its own value.
-</td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>align</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-        <tr>
-          <td><p>@Input</p><p>disabled</p>
-            <p><code></code></p>
-          </td>
-          <td> </td>
-        </tr>
-      
-    </table><h5> Methods </h5>
+
+
+
+
+
+
+
+
+
+<h1 class="docs-api-h1">radio</h1>
+<h2 class="docs-api-h2">
+  Module: <code>MdRadioModule</code>
+</h2><h2>Directives</h2>
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdRadioGroup</h3>
+<p class="docs-api-class-description">A group of radio buttons. May contain one or more `&lt;md-radio-button&gt;` elements.
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
     
-    <table>
-      <tr>
-        <th colspan="2">focus</th>
-      </tr>
-      <tr>
-        <td colspan="2">  </td>
-      </tr></table>
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      change
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the group value changes.
+Change events are only emitted when the value changes due to user interaction with
+a radio button (the same behavior as `&lt;input type-&quot;radio&quot;&gt;`).
+</td>
+</tr>
+
+
     
-    <table>
-      <tr>
-        <th colspan="2">getHostElement</th>
-      </tr>
-      <tr>
-        <td colspan="2">  </td>
-      </tr></table>
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      name
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Name of the radio button group. All radio buttons inside this group will use this name.
+</td>
+</tr>
+
+
     
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      align
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Alignment of the radio-buttons relative to their labels. Can be &#39;before&#39; or &#39;after&#39;.</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      labelPosition
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the labels should appear after or before the radio-buttons. Defaults to &#39;after&#39;
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      disabled
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the radio button is disabled.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      value
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Value of the radio button.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      selected
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the radio button is selected.
+</td>
+</tr>
+
+
+    
+  </table>
 
 
 
 
+
+
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdRadioButton</h3>
+<p class="docs-api-class-description">A radio-button. May be inside of
+</p>
+
+<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      id
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The unique ID for the radio button.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      name
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Analog to HTML &#39;name&#39; attribute used to group radios for unique selection.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;aria-label&#39;</span>)
+        </div><p class="docs-api-property-name">
+      ariaLabel
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Used to set the &#39;aria-label&#39; attribute on the underlying input element.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;aria-labelledby&#39;</span>)
+        </div><p class="docs-api-property-name">
+      ariaLabelledby
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The &#39;aria-labelledby&#39; attribute takes precedence as the element&#39;s text alternative.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      radioGroup
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The parent radio group. May or may not be present.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      disableRipple
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the ripple effect for this radio button is disabled.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      change
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the checked state of this radio button changes.
+Change events are only emitted when the value changes due to user interaction with
+the radio button (the same behavior as `&lt;input type-&quot;radio&quot;&gt;`).
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      radioDispatcher
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      inputId
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">ID of the native input element inside `&lt;md-radio-button&gt;`
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      checked
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether this radio button is checked.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      value
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The value of this radio button.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      align
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether or not the radio-button should appear before or after the label.</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      labelPosition
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the label should appear after or before the radio button. Defaults to &#39;after&#39;
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      disabled
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the radio button is disabled.
+</td>
+</tr>
+
+
+    
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">focus</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Focuses the radio button.
+</td>
+  </tr></table>
+
+
+  
+
+
+
+  
