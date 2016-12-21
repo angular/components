@@ -140,7 +140,6 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /**
-   <<<<<<< b07c918b15021de7b9b5af2928d994203174cbe7
    * Adds a new preferred fallback position.
    * @param originPos
    * @param overlayPos
