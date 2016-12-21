@@ -39,9 +39,9 @@ export class GestureConfig extends HammerGestureConfig {
    * http://hammerjs.github.io/recognizer-press/
    *
    * @param element Element to which to assign the new HammerJS gestures.
-   * @returns {HammerInstance} Newly-created HammerJS instance.
+   * @returns Newly-created HammerJS instance.
    */
-  buildHammer(element: HTMLElement) {
+  buildHammer(element: HTMLElement): HammerInstance {
     const mc = new this._hammer(element);
 
     // Default Hammer Recognizers.

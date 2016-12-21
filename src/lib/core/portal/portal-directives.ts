@@ -78,7 +78,6 @@ export class PortalHostDirective extends BasePortalHost implements OnDestroy {
    * Attach the given ComponentPortal to this PortalHost using the ComponentFactoryResolver.
    *
    * @param portal Portal to be attached to the portal host.
-   * @returns {ComponentRef<T>}
    */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     portal.setAttachedHost(this);
@@ -102,7 +101,6 @@ export class PortalHostDirective extends BasePortalHost implements OnDestroy {
   /**
    * Attach the given TemplatePortal to this PortlHost as an embedded View.
    * @param portal Portal to be attached.
-   * @returns {Map<string, any>}
    */
   attachTemplatePortal(portal: TemplatePortal): Map<string, any> {
     portal.setAttachedHost(this);

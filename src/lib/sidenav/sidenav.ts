@@ -199,7 +199,7 @@ export class MdSidenav implements AfterContentInit {
    * Toggle this sidenav. This is equivalent to calling open() when it's already opened, or
    * close() when it's closed.
    * @param isOpen
-   * @returns {Promise<MdSidenavToggleResult>} Resolves with the result of whether the
+   * @returns Resolves with the result of whether the
    * sidenav was opened or closed.
    */
   toggle(isOpen: boolean = !this.opened): Promise<MdSidenavToggleResult> {

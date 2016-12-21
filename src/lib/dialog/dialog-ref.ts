@@ -31,7 +31,6 @@ export class MdDialogRef<T> {
 
   /**
    * Gets an observable that is notified when the dialog is finished closing.
-   * @returns {Observable<any>}
    */
   afterClosed(): Observable<any> {
     return this._afterClosed.asObservable();

@@ -29,7 +29,6 @@ export class Scrollable implements OnInit, OnDestroy {
 
   /**
    * Returns observable that emits when a scroll event is fired on the host element.
-   * @returns {Observable<any>}
    */
   elementScrolled(): Observable<any> {
     return Observable.fromEvent(this._elementRef.nativeElement, 'scroll');

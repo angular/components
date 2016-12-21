@@ -27,7 +27,7 @@ export class ListKeyManager {
    * Turns on focus wrapping mode, which ensures that the focus will wrap to
    * the other end of list when there are no more items in the given direction.
    *
-   * @returns {ListKeyManager} The ListKeyManager that the method was called on.
+   * @returns The ListKeyManager that the method was called on.
    */
   withFocusWrap(): this {
     this._wrap = true;

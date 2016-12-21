@@ -28,7 +28,7 @@ export class MdDialog {
    * Opens a modal dialog containing the given component.
    * @param component Type of the component to load into the load.
    * @param config Extra configuration options.
-   * @returns {MdDialogRef<T>} Reference to the newly-opened dialog.
+   * @returns Reference to the newly-opened dialog.
    */
   open<T>(component: ComponentType<T>, config?: MdDialogConfig): MdDialogRef<T> {
     config = _applyConfigDefaults(config);

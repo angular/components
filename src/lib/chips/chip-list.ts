@@ -189,7 +189,7 @@ export class MdChipList implements AfterContentInit {
    * Utility to ensure all indexes are valid.
    *
    * @param index The index to be checked.
-   * @returns {boolean} True if the index is valid for our list of chips.
+   * @returns True if the index is valid for our list of chips.
    */
   private _isValidIndex(index: number): boolean {
     return index >= 0 && index < this.chips.length;

@@ -27,7 +27,7 @@ export class OverlayRef implements PortalHost {
   /**
    * Attaches the overlay to a portal instance and adds the backdrop.
    * @param portal Portal instance to which to attach the overlay.
-   * @returns {any} The portal attachment result.
+   * @returns The portal attachment result.
    */
   attach(portal: Portal<any>): any {
     if (this._state.hasBackdrop) {
@@ -44,7 +44,7 @@ export class OverlayRef implements PortalHost {
 
   /**
    * Detaches an overlay from a portal.
-   * @returns {Promise<any>} Resolves when the overlay has been detached.
+   * @returns Resolves when the overlay has been detached.
    */
   detach(): Promise<any> {
     this._detachBackdrop();
@@ -65,7 +65,6 @@ export class OverlayRef implements PortalHost {
 
   /**
    * Checks whether the overlay has been attached.
-   * @returns {boolean}
    */
   hasAttached(): boolean {
     return this._portalHost.hasAttached();
@@ -73,7 +72,6 @@ export class OverlayRef implements PortalHost {
 
   /**
    * Returns an observable that emits when the backdrop has been clicked.
-   * @returns {Observable<void>}
    */
   backdropClick(): Observable<void> {
     return this._backdropClick.asObservable();
@@ -81,9 +79,8 @@ export class OverlayRef implements PortalHost {
 
   /**
    * Gets the current state config of the overlay.
-   * @returns {OverlayState}
    */
-  getState() {
+  getState(): OverlayState {
     return this._state;
   }
 

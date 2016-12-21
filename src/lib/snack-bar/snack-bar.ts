@@ -40,7 +40,6 @@ export class MdSnackBar {
    *
    * @param component Component to be instantiated.
    * @param config Extra configuration for the snack bar.
-   * @returns {MdSnackBarRef<T>}
    */
   openFromComponent<T>(component: ComponentType<T>, config?: MdSnackBarConfig): MdSnackBarRef<T> {
     config = _applyConfigDefaults(config);
@@ -85,7 +84,6 @@ export class MdSnackBar {
    * @param message The message to show in the snackbar.
    * @param action The label for the snackbar action.
    * @param config Additional configuration options for the snackbar.
-   * @returns {MdSnackBarRef<SimpleSnackBar>}
    */
   open(message: string, action = '', config: MdSnackBarConfig = {}): MdSnackBarRef<SimpleSnackBar> {
     config.announcementMessage = message;
@@ -134,7 +132,7 @@ export class MdSnackBar {
 /**
  * Applies default options to the snackbar config.
  * @param config The configuration to which the defaults will be applied.
- * @returns {MdSnackBarConfig} The new configuration object with defaults applied.
+ * @returns The new configuration object with defaults applied.
  */
 function _applyConfigDefaults(config: MdSnackBarConfig): MdSnackBarConfig {
   return extendObject(new MdSnackBarConfig(), config);

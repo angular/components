@@ -49,15 +49,14 @@ export class Overlay {
   /**
    * Returns a position builder that can be used, via fluent API,
    * to construct and configure a position strategy.
-   * @returns {OverlayPositionBuilder}
    */
-  position() {
+  position(): OverlayPositionBuilder {
     return this._positionBuilder;
   }
 
   /**
    * Creates the DOM element for an overlay and appends it to the overlay container.
-   * @returns {HTMLElement} Newly-created pane element
+   * @returns Newly-created pane element
    */
   private _createPaneElement(): HTMLElement {
     let pane = document.createElement('div');
@@ -82,7 +81,6 @@ export class Overlay {
    * Creates an OverlayRef for an overlay in the given DOM element.
    * @param pane DOM element for the overlay
    * @param state
-   * @returns {OverlayRef}
    */
   private _createOverlayRef(pane: HTMLElement, state: OverlayState): OverlayRef {
     return new OverlayRef(this._createPortalHost(pane), pane, state, this._ngZone);

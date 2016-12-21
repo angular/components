@@ -53,7 +53,6 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
   /**
    * Attach a portal as content to this dialog container.
    * @param portal Portal to be attached as the dialog content.
-   * @returns {ComponentRef<T>}
    */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     if (this._portalHost.hasAttached()) {

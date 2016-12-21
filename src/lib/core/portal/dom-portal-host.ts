@@ -26,7 +26,6 @@ export class DomPortalHost extends BasePortalHost {
   /**
    * Attach the given ComponentPortal to DOM element using the ComponentFactoryResolver.
    * @param portal Portal to be attached
-   * @returns {ComponentRef<T>}
    */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     let componentFactory = this._componentFactoryResolver.resolveComponentFactory(portal.component);
@@ -89,7 +88,6 @@ export class DomPortalHost extends BasePortalHost {
   /**
    * Attaches a template portal to the DOM as an embedded view.
    * @param portal Portal to be attached.
-   * @returns {Map<string, any>}
    */
   attachTemplatePortal(portal: TemplatePortal): Map<string, any> {
     let viewContainer = portal.viewContainerRef;

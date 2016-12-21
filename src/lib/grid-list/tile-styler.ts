@@ -105,7 +105,6 @@ export class TileStyler {
 
   /**
    * Calculates the total size taken up by gutters across one axis of a list.
-   * @returns {string}
    */
   getGutterSpan(): string {
     return `${this._gutterSize} * (${this._rowspan} - 1)`;
@@ -114,7 +113,6 @@ export class TileStyler {
   /**
    * Calculates the total size taken up by tiles across one axis of a list.
    * @param tileHeight Height of the tile.
-   * @returns {string}
    */
   getTileSpan(tileHeight: string): string {
     return `${this._rowspan} * ${this.getTileSize(tileHeight, 1)}`;

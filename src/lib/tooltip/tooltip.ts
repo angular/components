@@ -347,7 +347,6 @@ export class TooltipComponent {
 
   /**
    * Returns an observable that notifies when the tooltip has been hidden from view
-   * @returns {Observable<void>}
    */
   afterHidden(): Observable<void> {
     return this._onHide.asObservable();
@@ -355,7 +354,6 @@ export class TooltipComponent {
 
   /**
    * Whether the tooltip is being displayed
-   * @returns {boolean}
    */
   isVisible(): boolean {
     return this._visibility === 'visible';

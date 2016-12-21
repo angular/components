@@ -70,7 +70,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * @docs-private
    *
    * @param element Element to which to apply the CSS styles.
-   * @returns {Promise<void>} Resolves when the styles have been applied.
+   * @returns Resolves when the styles have been applied.
    */
   apply(element: HTMLElement): Promise<void> {
     // We need the bounding rects for the origin and the overlay to determine how to position
@@ -113,7 +113,6 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * Adds a new preferred fallback position.
    * @param originPos
    * @param overlayPos
-   * @returns {ConnectedPositionStrategy}
    */
   withFallbackPosition(
       originPos: OriginConnectionPosition,
@@ -125,7 +124,6 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   /**
    * Sets the layout direction so the overlay's position can be adjusted to match.
    * @param dir New layout direction.
-   * @returns {ConnectedPositionStrategy}
    */
   withDirection(dir: 'ltr' | 'rtl'): this {
     this._dir = dir;
@@ -135,7 +133,6 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   /**
    * Sets an offset for the overlay's connection point on the x-axis
    * @param offset New offset in the X axis.
-   * @returns {ConnectedPositionStrategy}
    */
   withOffsetX(offset: number): this {
     this._offsetX = offset;
@@ -145,7 +142,6 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   /**
    * Sets an offset for the overlay's connection point on the y-axis
    * @param  offset New offset in the Y axis.
-   * @returns {ConnectedPositionStrategy}
    */
   withOffsetY(offset: number): this {
     this._offsetY = offset;

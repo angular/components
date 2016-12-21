@@ -20,7 +20,7 @@ export class InteractivityChecker {
    * Gets whether an element is disabled.
    *
    * @param element Element to be checked.
-   * @returns {boolean} Whether the element is disabled.
+   * @returns Whether the element is disabled.
    */
   isDisabled(element: HTMLElement): boolean {
     // This does not capture some cases, such as a non-form control with a disabled attribute or
@@ -34,7 +34,7 @@ export class InteractivityChecker {
    * This will capture states like `display: none` and `visibility: hidden`, but not things like
    * being clipped by an `overflow: hidden` parent or being outside the viewport.
    *
-   * @returns {boolean} Whether the element is visible.
+   * @returns Whether the element is visible.
    */
   isVisible(element: HTMLElement): boolean {
     return hasGeometry(element) && getComputedStyle(element).visibility === 'visible';
@@ -45,7 +45,7 @@ export class InteractivityChecker {
    * Assumes that the element has already been checked with isFocusable.
    *
    * @param element Element to be checked.
-   * @returns {boolean} Whether the element is tabbable.
+   * @returns Whether the element is tabbable.
    */
   isTabbable(element: HTMLElement): boolean {
 
@@ -122,7 +122,7 @@ export class InteractivityChecker {
    * Gets whether an element can be focused by the user.
    *
    * @param element Element to be checked.
-   * @returns {boolean} Whether the element is focusable.
+   * @returns Whether the element is focusable.
    */
   isFocusable(element: HTMLElement): boolean {
     // Perform checks in order of left to most expensive.

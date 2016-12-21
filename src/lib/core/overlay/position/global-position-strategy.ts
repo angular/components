@@ -24,7 +24,6 @@ export class GlobalPositionStrategy implements PositionStrategy {
   /**
    * Sets the top position of the overlay. Clears any previously set vertical position.
    * @param value New top offset.
-   * @returns {GlobalPositionStrategy}
    */
   top(value: string): this {
     this._bottomOffset = '';
@@ -36,7 +35,6 @@ export class GlobalPositionStrategy implements PositionStrategy {
   /**
    * Sets the left position of the overlay. Clears any previously set horizontal position.
    * @param value New left offset.
-   * @returns {GlobalPositionStrategy}
    */
   left(value: string): this {
     this._rightOffset = '';
@@ -48,7 +46,6 @@ export class GlobalPositionStrategy implements PositionStrategy {
   /**
    * Sets the bottom position of the overlay. Clears any previously set vertical position.
    * @param value New bottom offset.
-   * @returns {GlobalPositionStrategy}
    */
   bottom(value: string): this {
     this._topOffset = '';
@@ -60,7 +57,6 @@ export class GlobalPositionStrategy implements PositionStrategy {
   /**
    * Sets the right position of the overlay. Clears any previously set horizontal position.
    * @param value New right offset.
-   * @returns {GlobalPositionStrategy}
    */
   right(value: string): this {
     this._leftOffset = '';
@@ -72,7 +68,6 @@ export class GlobalPositionStrategy implements PositionStrategy {
   /**
    * Sets the overlay width and clears any previously set width.
    * @param value New width for the overlay
-   * @returns {GlobalPositionStrategy}
    */
   width(value: string): this {
     this._width = value;
@@ -89,7 +84,6 @@ export class GlobalPositionStrategy implements PositionStrategy {
   /**
    * Sets the overlay height and clears any previously set height.
    * @param value New height for the overlay
-   * @returns {GlobalPositionStrategy}
    */
   height(value: string): this {
     this._height = value;
@@ -108,7 +102,6 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Clears any previously set horizontal position.
    *
    * @param offset Overlay offset from the horizontal center.
-   * @returns {GlobalPositionStrategy}
    */
   centerHorizontally(offset = ''): this {
     this.left(offset);
@@ -121,7 +114,6 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Clears any previously set vertical position.
    *
    * @param offset Overlay offset from the vertical center.
-   * @returns {GlobalPositionStrategy}
    */
   centerVertically(offset = ''): this {
     this.top(offset);
@@ -134,7 +126,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * @docs-private
    *
    * @param element Element to which to apply the CSS.
-   * @returns {Promise<void>} Resolved when the styles have been applied.
+   * @returns Resolved when the styles have been applied.
    */
   apply(element: HTMLElement): Promise<void> {
     if (!this._wrapper) {

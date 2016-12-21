@@ -13,9 +13,8 @@ export class OverlayPositionBuilder {
 
   /**
    * Creates a global position strategy.
-   * @returns {GlobalPositionStrategy}
    */
-  global() {
+  global(): GlobalPositionStrategy {
     return new GlobalPositionStrategy();
   }
 
@@ -24,12 +23,11 @@ export class OverlayPositionBuilder {
    * @param elementRef
    * @param originPos
    * @param overlayPos
-   * @returns {ConnectedPositionStrategy}
    */
   connectedTo(
       elementRef: ElementRef,
       originPos: OriginConnectionPosition,
-      overlayPos: OverlayConnectionPosition) {
+      overlayPos: OverlayConnectionPosition): ConnectedPositionStrategy {
     return new ConnectedPositionStrategy(elementRef, originPos, overlayPos, this._viewportRuler);
   }
 }

@@ -51,8 +51,6 @@ export class ScrollDispatcher {
   /**
    * Returns an observable that emits an event whenever any of the registered Scrollable
    * references (or window, document, or body) fire a scrolled event.
-   *
-   * @returns {Observable<void>}
    */
   scrolled(): Observable<void> {
     // TODO: Add an event limiter that includes throttle with the leading and trailing events.
