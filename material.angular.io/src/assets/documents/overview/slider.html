@@ -1,0 +1,185 @@
+<h1 id="md-slider">md-slider</h1>
+<p><code>md-slider</code> is a component that allows users to select from a range of values by moving the slider
+thumb. It is similar in behavior to the native <code>&lt;input type=&quot;range&quot;&gt;</code> element. You can read more
+about the slider in the <a href="https://material.google.com/components/sliders.html">Material Design spec</a>.</p>
+<p>Simple example:</p>
+<pre><code class="lang-html">&lt;md-slider&gt;&lt;/md-slider&gt;
+</code></pre>
+<h2 id="usage">Usage</h2>
+<h3 id="changing-the-min-max-step-and-initial-value">Changing the min, max, step, and initial value</h3>
+<p>By default the minimum value of the slider is <code>0</code>, the maximum value is <code>100</code>, and the thumb moves
+in increments of <code>1</code>. These values can be changed by setting the <code>min</code>, <code>max</code>, and <code>step</code> attributes
+respectively. The initial value is set to the minimum value unless otherwise specified.</p>
+<pre><code class="lang-html">&lt;md-slider min=&quot;1&quot; max=&quot;5&quot; step=&quot;0.5&quot; value=&quot;1.5&quot;&gt;&lt;/md-slider&gt;
+</code></pre>
+<h3 id="setting-the-orientation">Setting the orientation</h3>
+<p>By default sliders are horizontal with the minimum value on the left and the maximum value on the
+right. The <code>vertical</code> attribute can be added to a slider to make it vertical with the minimum value
+on bottom and the maximum value on top.</p>
+<pre><code class="lang-html">&lt;md-slider vertical&gt;&lt;/md-slider&gt;
+</code></pre>
+<p>An <code>invert</code> attribute is also available which can be specified to flip the axis that the thumb moves
+along. An inverted horizontal slider will have the minimum value on the right and the maximum value
+on the left, while an inverted vertical slider will have the minimum value on top and the  maximum
+value on bottom.</p>
+<pre><code class="lang-html">&lt;md-slider invert&gt;&lt;/md-slider&gt;
+</code></pre>
+<h3 id="adding-a-thumb-label">Adding a thumb label</h3>
+<p>By default the exact selected value of a slider is not visible to the user. However, this value can
+be added to the thumb by adding the <code>thumbLabel</code> attribute.</p>
+<p>The <a href="https://material.google.com/components/sliders.html">material design spec</a> recommends using the
+<code>thumbLabel</code> attribute (along with <code>tickInterval=&quot;1&quot;</code>) only for sliders that are used to display a
+discrete value (such as a 1-5 rating).</p>
+<pre><code class="lang-html">&lt;md-slider thumbLabel tickInterval=&quot;1&quot;&gt;&lt;/md-slider&gt;
+</code></pre>
+<h3 id="adding-ticks">Adding ticks</h3>
+<p>By default a sliders do not show tick marks along the thumb track. They can be enabled using the
+<code>tickInterval</code> attribute. The value of <code>tickInterval</code> should be a number representing the number
+of steps between between ticks. For example a <code>tickInterval</code> of <code>3</code> with a <code>step</code> of <code>4</code> will draw
+tick marks at every <code>3</code> steps, which is the same as every <code>12</code> values.</p>
+<pre><code class="lang-html">&lt;md-slider step=&quot;4&quot; tickInterval=&quot;3&quot;&gt;&lt;/md-slider&gt;
+</code></pre>
+<p>The <code>tickInterval</code> can also be set to <code>auto</code> which will automatically choose the number of steps
+such that there is at least <code>30px</code> of space between ticks.</p>
+<pre><code class="lang-html">&lt;md-slider tickInterval=&quot;auto&quot;&gt;&lt;/md-slider&gt;
+</code></pre>
+<p>The slider will always show a tick at the beginning and end of the track. If the remaining space
+doesn&#39;t add up perfectly the last interval will be shortened or lengthened so that the tick can be
+shown at the end of the track.</p>
+<p>The <a href="https://material.google.com/components/sliders.html">material design spec</a> recommends using the
+<code>tickInterval</code> attribute (set to <code>1</code> along with the <code>thumbLabel</code> attribute) only for sliders that
+are used to display a discrete value (such as a 1-5 rating).</p>
+<h3 id="disabling-the-slider">Disabling the slider</h3>
+<p>The <code>disabled</code> attribute can be used to disable the slider, preventing the user from changing the
+value.</p>
+<pre><code class="lang-html">&lt;md-slider disabled value=&quot;5&quot;&gt;&lt;/md-slider&gt;
+</code></pre>
+<h3 id="value-binding">Value binding</h3>
+<p><code>md-slider</code> supports both 1-way binding and 2-way binding via <code>ngModel</code>. It also emits a <code>change</code>
+event when the value changes due to user interaction.</p>
+<pre><code class="lang-html">&lt;md-slider [value]=&quot;myValue&quot; (change)=&quot;onChange()&quot;&gt;&lt;/md-slider&gt;
+</code></pre>
+<pre><code class="lang-html">&lt;md-slider [(ngModel)]=&quot;myValue&quot;&gt;&lt;/md-slider&gt;
+</code></pre>
+<h2 id="accessibility">Accessibility</h2>
+<p>The slider has the following keyboard bindings:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Right arrow</td>
+<td>Increment the slider value by one step. (Decrement in right-to-left-languages).</td>
+</tr>
+<tr>
+<td>Up arrow</td>
+<td>Increment the slider value by one step.</td>
+</tr>
+<tr>
+<td>Left arrow</td>
+<td>Decrement the slider value by one step. (Increment in right-to-left-languages).</td>
+</tr>
+<tr>
+<td>Down arrow</td>
+<td>Decrement the slider value by one step.</td>
+</tr>
+<tr>
+<td>Page up</td>
+<td>Increment the slider value by 10 steps.</td>
+</tr>
+<tr>
+<td>Page down</td>
+<td>Decrement the slider value by 10 steps.</td>
+</tr>
+<tr>
+<td>End</td>
+<td>Set the value to the maximum possible.</td>
+</tr>
+<tr>
+<td>Home</td>
+<td>Set the value to the minimum possible.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="internationalization">Internationalization</h2>
+<p>In right-to-left languages the horizontal slider has the minimum value on the right and the maximum
+value on the left by default. The meaning of the left and right arrow keys is also swapped in
+right-to-left languages.</p>
+<h2 id="api-summary">API Summary</h2>
+<h3 id="inputs">Inputs</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>min</code></td>
+<td>number</td>
+<td>Optional, the minimum number for the slider. Default = <code>0</code>.</td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td>number</td>
+<td>Optional, the maximum number for the slider. Default = <code>100</code>.</td>
+</tr>
+<tr>
+<td><code>step</code></td>
+<td>number</td>
+<td>Optional, declares where the thumb will snap to. Default = <code>1</code>.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>number</td>
+<td>Optional, the value to start the slider at.</td>
+</tr>
+<tr>
+<td><code>tickInterval</code></td>
+<td><code>&quot;auto&quot;</code> \</td>
+<td>number</td>
+<td>Optional, how many steps between tick marks.</td>
+</tr>
+<tr>
+<td><code>invert</code></td>
+<td>boolean</td>
+<td>Optional, whether to invert the axis the thumb moves along.</td>
+</tr>
+<tr>
+<td><code>vertical</code></td>
+<td>boolean</td>
+<td>Optional, whether the slider should be oriented vertically.</td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td>boolean</td>
+<td>Optional, whether or not the slider is disabled. Default = <code>false</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="outputs">Outputs</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>change</code></td>
+<td>Emitted when the value changes due to user interaction.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="future-work-open-questions">Future work &amp; open questions</h2>
+<ul>
+<li>Update focused, disabled, and <code>value=min</code> states to match spec.</li>
+<li>Should there be an option to not force the end tick to be shown?</li>
+</ul>

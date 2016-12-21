@@ -1,0 +1,49 @@
+<p>The <code>MdDialog</code> service can be used to open modal dialogs with Material Design styling and 
+animations.</p>
+<div material-docs-example="dialog-overview"></div>
+<p>A dialog is opened by calling the <code>open</code> method with a component to be loaded and an optional 
+config object. The <code>open</code> method will return an instance of <code>MdDialogRef</code>:</p>
+<pre><code class="lang-ts">let dialogRef = dialog.open(UserProfileComponent, {
+  height: &#39;400px&#39;,
+  width: &#39;600px&#39;,
+});
+</code></pre>
+<p>The <code>MdDialogRef</code> provides a handle on the opened dialog. It can be used to close the dialog and to
+recieve notification when the dialog has been closed.</p>
+<pre><code class="lang-ts">dialogRef.afterClosed.then(result =&gt; {
+  console.log(`Dialog result: ${result}`); // Pizza!
+});
+
+dialogRef.close(&#39;Pizza!&#39;);
+</code></pre>
+<p>Components created via <code>MdDialog</code> can <em>inject</em> <code>MdDialogRef</code> and use it to close the dialog
+in which they are contained. When closing, an optional result value can be provided. This result
+value is forwarded as the result of the <code>afterClosed</code> promise. </p>
+<h3 id="dialog-content">Dialog content</h3>
+<p>Several directives are available to make it easier to structure your dialog content:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>md-dialog-title</code></td>
+<td>[Attr] Dialog title, applied to a heading element (e.g., <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>)</td>
+</tr>
+<tr>
+<td><code>&lt;md-dialog-content&gt;</code></td>
+<td>Primary scrollable content of the dialog</td>
+</tr>
+<tr>
+<td><code>&lt;md-dialog-actions&gt;</code></td>
+<td>Container for action buttons at the bottom of the dialog</td>
+</tr>
+<tr>
+<td><code>md-dialog-close</code></td>
+<td>[Attr] Added to a <code>&lt;button&gt;</code>, makes the button close the dialog on click</td>
+</tr>
+</tbody>
+</table>

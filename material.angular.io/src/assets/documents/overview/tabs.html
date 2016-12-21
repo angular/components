@@ -1,0 +1,81 @@
+<h1 id="mdtabgroup">MdTabGroup</h1>
+<p>Tab groups allow the user to organize their content by labels such that only one tab is visible at any given time.</p>
+<h2 id="-md-tab-group-"><code>&lt;md-tab-group&gt;</code></h2>
+<h3 id="properties">Properties</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>selectedIndex</code></td>
+<td><code>number</code></td>
+<td>The index of the currently active tab.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="events">Events</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>focusChange</code></td>
+<td><code>Event</code></td>
+<td>Fired when focus changes from one label to another</td>
+</tr>
+<tr>
+<td><code>selectChange</code></td>
+<td><code>Event</code></td>
+<td>Fired when the selected tab changes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="basic-use">Basic use</h3>
+<p>A basic tab group would have the following markup.</p>
+<pre><code class="lang-html">&lt;md-tab-group&gt;
+  &lt;md-tab label=&quot;One&quot;&gt;
+    &lt;h1&gt;Some tab content&lt;/h1&gt;
+    &lt;p&gt;...&lt;/p&gt;
+  &lt;/md-tab&gt;
+  &lt;md-tab label=&quot;Two&quot;&gt;
+    &lt;h1&gt;Some more tab content&lt;/h1&gt;
+    &lt;p&gt;...&lt;/p&gt;
+  &lt;/md-tab&gt;
+&lt;/md-tab-group&gt;
+</code></pre>
+<p>You can specifiy the active tab by using the <code>selectedIndex</code> property.</p>
+<pre><code class="lang-html">&lt;md-tab-group [selectedIndex]=&quot;1&quot;&gt;
+  ...
+&lt;/md-tab-group&gt;
+</code></pre>
+<p><strong>Note</strong>: The index always starts counting from <code>zero</code>.</p>
+<h3 id="tabs-with-label-templates">Tabs with label templates</h3>
+<p>If you want to use an arbitrary template for your tab, you can use the <code>md-tab-label</code> directive to
+provide the label template:</p>
+<pre><code class="lang-html">&lt;md-tab-group&gt;
+  &lt;md-tab&gt;
+    &lt;template md-tab-label&gt;
+      The &lt;em&gt;best&lt;/em&gt; pasta
+    &lt;/template&gt;
+    &lt;h1&gt;Best pasta restaurants&lt;/h1&gt;
+    &lt;p&gt;...&lt;/p&gt;
+  &lt;/md-tab&gt;
+  &lt;md-tab&gt;
+    &lt;template md-tab-label&gt;
+      &lt;md-icon&gt;thumb_down&lt;/md-icon&gt; The worst sushi
+    &lt;/template&gt;
+    &lt;h1&gt;Terrible sushi restaurants&lt;/h1&gt;
+    &lt;p&gt;...&lt;/p&gt;
+  &lt;/md-tab&gt;
+&lt;/md-tab-group&gt;
+</code></pre>
