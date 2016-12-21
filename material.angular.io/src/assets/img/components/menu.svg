@@ -1,15 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="105px" height="106px" viewBox="0 0 105 106" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>Menu Component</title>
-    <desc>Menu Component</desc>
-    <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Material-Internal-Landing-Page-(Components)" transform="translate(-926.000000, -1940.000000)">
-            <g id="menu" transform="translate(926.000000, 1940.000000)">
-                <path d="M1.6974642e-14,8.36670579 C2.12047563e-14,3.74590178 3.73700559,0 8.35995315,0 L96.6400469,0 C101.257121,0 105,3.74159654 105,8.36670579 L105,26.9091107 L0,26.9091107 L1.6974642e-14,8.36670579 Z" id="header" fill="#00BCD4"></path>
-                <path d="M10,10 C11.1045695,10 12,9.1045695 12,8 C12,6.8954305 11.1045695,6 10,6 C8.8954305,6 8,6.8954305 8,8 C8,9.1045695 8.8954305,10 10,10 Z M10,15 C11.1045695,15 12,14.1045695 12,13 C12,11.8954305 11.1045695,11 10,11 C8.8954305,11 8,11.8954305 8,13 C8,14.1045695 8.8954305,15 10,15 Z M10,20 C11.1045695,20 12,19.1045695 12,18 C12,16.8954305 11.1045695,16 10,16 C8.8954305,16 8,16.8954305 8,18 C8,19.1045695 8.8954305,20 10,20 Z" fill="#FFFFFF"></path>
-                <rect id="card" fill="#F4F6F7" x="0" y="26" width="105" height="80" rx="8.36"></rect>
-            </g>
-        </g>
-    </g>
-</svg>
+<svg width="105" height="106" viewBox="0 0 105 106" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M0 8.367C0 3.746 3.737 0 8.36 0h88.28A8.36 8.36 0 0 1 105 8.367v18.542H0V8.367z" fill="#00BCD4"/><path d="M10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" fill="#FFF"/><rect fill="#F4F6F7" y="26" width="105" height="80" rx="8.36"/></g></svg>
