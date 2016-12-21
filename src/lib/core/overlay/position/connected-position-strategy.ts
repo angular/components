@@ -11,6 +11,11 @@ import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {Scrollable} from '../scroll/scrollable';
 
+/**
+ * Container to hold the bounding positions of a particular element with respect to the viewport,
+ * where top and bottom are the y-axis coordinates of the bounding rectangle and left and right are
+ * the x-axis coordinates.
+ */
 export type ElementBoundingPositions = {
   top: number;
   right: number;

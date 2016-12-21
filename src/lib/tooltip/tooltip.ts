@@ -185,7 +185,7 @@ export class MdTooltip implements OnInit, OnDestroy {
     // close the tooltip.
     let strategy = this._overlay.position().connectedTo(this._elementRef, origin, position);
     strategy.withScrollableContainers(this._scrollDispatcher.getScrollContainers(this._elementRef));
-    strategy.onPositionChange.subscribe((change: ConnectedOverlayPositionChange) => {
+    strategy.onPositionChange.subscribe(change => {
       if (change.scrollableViewProperties.isOverlayClipped) {
         this.hide(0);
       }
