@@ -396,7 +396,6 @@ class AsyncTabsTestApp {
 
   tabs: Observable<any>;
 
-  /** @docs-private */
   ngOnInit() {
     // Use ngOnInit because there is some issue with scheduling the async task in the constructor.
     this.tabs = Observable.create((observer: any) => {

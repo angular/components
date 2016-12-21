@@ -160,7 +160,6 @@ export class MdSidenav implements AfterContentInit {
     });
   }
 
-  /** @docs-private */
   ngAfterContentInit() {
     // This can happen when the sidenav is set to opened in the template and the transition
     // isn't ended.
@@ -355,7 +354,6 @@ export class MdSidenavContainer implements AfterContentInit {
     }
   }
 
-  /** @docs-private */
   ngAfterContentInit() {
     // On changes, assert on consistency.
     this._sidenavs.changes.subscribe(() => this._validateDrawers());

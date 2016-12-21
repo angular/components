@@ -99,7 +99,6 @@ export class MdTabHeader {
               private _elementRef: ElementRef,
               @Optional() private _dir: Dir) {}
 
-  /** @docs-private */
   ngAfterContentChecked(): void {
     // If the number of tab labels have changed, check if scrolling should be enabled
     if (this._tabLabelCount != this._labelWrappers.length) {
@@ -127,7 +126,6 @@ export class MdTabHeader {
   /**
    * Waits one frame for the view to update, then updates the ink bar and scroll.
    * Note: This must be run outside of the zone or it will create an infinite change detection loop.
-   * @docs-private
    */
   ngAfterViewChecked(): void {
     this._zone.runOutsideAngular(() => {

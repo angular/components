@@ -112,7 +112,6 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
 
   constructor(private _elementRef: ElementRef, private _renderer: Renderer) {}
 
-  /** @docs-private */
   ngAfterContentInit() {
     this._slideRenderer = new SlideToggleRenderer(this._elementRef);
   }

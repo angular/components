@@ -60,7 +60,6 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
     this.setPositionClasses(this.positionX, this.positionY);
   }
 
-  /** @docs-private */
   ngAfterContentInit() {
     this._keyManager = new ListKeyManager(this.items).withFocusWrap();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => {
@@ -68,7 +67,6 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
     });
   }
 
-  /** @docs-private */
   ngOnDestroy() {
     this._tabSubscription.unsubscribe();
   }

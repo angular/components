@@ -129,7 +129,6 @@ export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
 
   /**
    * Makes sure the exit callbacks have been invoked when the element is destroyed.
-   * @docs-private
    */
   ngOnDestroy() {
     // Wait for the zone to settle before removing the element. Helps prevent

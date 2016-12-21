@@ -34,7 +34,6 @@ export class MdTextareaAutosize implements OnInit {
     return this.maxRows ? `${this.maxRows * this._cachedLineHeight}px` : null;
   }
 
-  /** @docs-private */
   ngOnInit() {
     this._cacheTextareaLineHeight();
     this.resizeToFitContent();

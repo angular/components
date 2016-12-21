@@ -187,7 +187,6 @@ class SimpleTabBodyApp {
 
   constructor(private _viewContainerRef: ViewContainerRef) { }
 
-  /** @docs-private */
   ngAfterContentInit() {
     this.content = new TemplatePortal(this.template, this._viewContainerRef);
   }

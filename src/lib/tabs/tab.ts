@@ -47,7 +47,6 @@ export class MdTab implements OnInit {
 
   constructor(private _viewContainerRef: ViewContainerRef) { }
 
-  /** @docs-private */
   ngOnInit() {
     this._contentPortal = new TemplatePortal(this._content, this._viewContainerRef);
   }

@@ -111,7 +111,6 @@ export class MdTabBody implements OnInit {
   /**
    * After initialized, check if the content is centered and has an origin. If so, set the
    * special position states that transition the tab from the left or right before centering.
-   * @docs-private
    */
   ngOnInit() {
     if (this._position == 'center' && this._origin) {
@@ -122,7 +121,6 @@ export class MdTabBody implements OnInit {
   /**
    * After the view has been set, check if the tab content is set to the center and attach the
    * content if it is not already attached.
-   * @docs-private
    */
   ngAfterViewChecked() {
     if (this._isCenterPosition(this._position) && !this._portalHost.hasAttached()) {

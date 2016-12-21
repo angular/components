@@ -98,7 +98,6 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
   @ContentChildren(forwardRef(() => MdButtonToggle))
   _buttonToggles: QueryList<MdButtonToggle> = null;
 
-  /** @docs-private */
   ngAfterViewInit() {
     this._isInitialized = true;
   }
@@ -342,7 +341,6 @@ export class MdButtonToggle implements OnInit {
     }
   }
 
-  /** @docs-private */
   ngOnInit() {
     if (this.id == null) {
       this.id = `md-button-toggle-${_uniqueIdCounter++}`;

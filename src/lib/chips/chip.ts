@@ -58,13 +58,11 @@ export class MdChip implements Focusable, OnInit, OnDestroy {
 
   constructor(protected _renderer: Renderer, protected _elementRef: ElementRef) { }
 
-  /** @docs-private */
   ngOnInit(): void {
     this._addDefaultCSSClass();
     this._updateColor(this._color);
   }
 
-  /** @docs-private */
   ngOnDestroy(): void {
     this.destroy.emit({chip: this});
   }

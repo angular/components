@@ -63,7 +63,6 @@ export class MdChipList implements AfterContentInit {
 
   constructor(private _elementRef: ElementRef) { }
 
-  /** @docs-private */
   ngAfterContentInit(): void {
     this._keyManager = new ListKeyManager(this.chips).withFocusWrap();
 

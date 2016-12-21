@@ -69,13 +69,11 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
               private _viewContainerRef: ViewContainerRef, private _renderer: Renderer,
               @Optional() private _dir: Dir) {}
 
-  /** @docs-private */
   ngAfterViewInit() {
     this._checkMenu();
     this.menu.close.subscribe(() => this.closeMenu());
   }
 
-  /** @docs-private */
   ngOnDestroy() { this.destroyMenu(); }
 
   /** Whether the menu is open. */

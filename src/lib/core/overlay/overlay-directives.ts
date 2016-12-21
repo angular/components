@@ -168,7 +168,6 @@ export class ConnectedOverlayDirective implements OnDestroy {
     return this._dir ? this._dir.value : 'ltr';
   }
 
-  /** @docs-private */
   ngOnDestroy() {
     this._destroyOverlay();
   }

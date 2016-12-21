@@ -114,7 +114,6 @@ export class MdTabGroup {
    * and what the selected index should be. This is where we can know exactly what position
    * each tab should be in according to the new selected index, and additionally we know how
    * a new selected tab should transition in (from the left or right).
-   * @docs-private
    */
   ngAfterContentChecked(): void {
     // Clamp the next selected index to the bounds of 0 and the tabs length.
@@ -144,7 +143,6 @@ export class MdTabGroup {
   /**
    * Waits one frame for the view to update, then updates the ink bar
    * Note: This must be run outside of the zone or it will create an infinite change detection loop.
-   * @docs-private
    */
   ngAfterViewChecked(): void {
     this._isInitialized = true;

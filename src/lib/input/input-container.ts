@@ -153,7 +153,6 @@ export class MdInputDirective implements AfterContentInit {
     }
   }
 
-  /** @docs-private */
   ngAfterContentInit() {
     this.value = this._elementRef.nativeElement.value;
   }
@@ -229,7 +228,6 @@ export class MdInputContainer implements AfterContentInit {
 
   @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
 
-  /** @docs-private */
   ngAfterContentInit() {
     if (!this._mdInputChild) {
       throw new MdInputContainerMissingMdInputError();

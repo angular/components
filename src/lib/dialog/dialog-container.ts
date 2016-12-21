@@ -87,7 +87,6 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     }
   }
 
-  /** @docs-private */
   ngOnDestroy() {
     // When the dialog is destroyed, return focus to the element that originally had it before
     // the dialog was opened. Wait for the DOM to finish settling before changing the focus so

@@ -165,7 +165,6 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   /**
    * Initialize properties once content children are available.
    * This allows us to propagate relevant attributes to associated buttons.
-   * @docs-private
    */
   ngAfterContentInit() {
     // Mark this component as initialized in AfterContentInit because the initial value can
@@ -422,7 +421,6 @@ export class MdRadioButton implements OnInit {
     this._disabled = (value != null && value !== false) ? true : null;
   }
 
-  /** @docs-private */
   ngOnInit() {
     if (this.radioGroup) {
       // If the radio is inside a radio group, determine if it should be checked

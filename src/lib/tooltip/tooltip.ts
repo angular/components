@@ -111,7 +111,6 @@ export class MdTooltip implements OnInit, OnDestroy {
               private _ngZone: NgZone,
               @Optional() private _dir: Dir) {}
 
-  /** @docs-private */
   ngOnInit() {
     // When a scroll on the page occurs, update the position in case this tooltip needs
     // to be repositioned.
@@ -124,7 +123,6 @@ export class MdTooltip implements OnInit, OnDestroy {
 
   /**
    * Dispose the tooltip when destroyed.
-   * @docs-private
    */
   ngOnDestroy() {
     if (this._tooltipInstance) {

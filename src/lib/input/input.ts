@@ -339,7 +339,6 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
     this.disabled = isDisabled;
   }
 
-  /** @docs-private */
   ngAfterContentInit() {
     this._validateConstraints();
 
@@ -349,7 +348,6 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
     });
   }
 
-  /** @docs-private */
   ngOnChanges(changes: {[key: string]: SimpleChange}) {
     this._validateConstraints();
   }

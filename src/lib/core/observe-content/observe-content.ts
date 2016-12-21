@@ -24,7 +24,6 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
 
   constructor(private _elementRef: ElementRef) {}
 
-  /** @docs-private */
   ngAfterContentInit() {
     this._observer = new MutationObserver(mutations => mutations.forEach(() => this.event.emit()));
 
@@ -35,7 +34,6 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
     });
   }
 
-  /** @docs-private */
   ngOnDestroy() {
     if (this._observer) {
       this._observer.disconnect();

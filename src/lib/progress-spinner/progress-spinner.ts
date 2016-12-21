@@ -87,7 +87,6 @@ export class MdProgressSpinner implements OnDestroy {
 
   /**
    * Clean up any animations that were running.
-   * @docs-private
    */
   ngOnDestroy() {
     this._cleanupIndeterminateAnimation();
@@ -255,7 +254,6 @@ export class MdSpinner extends MdProgressSpinner implements OnDestroy {
     this.mode = 'indeterminate';
   }
 
-  /** @docs-private */
   ngOnDestroy() {
     // The `ngOnDestroy` from `MdProgressSpinner` should be called explicitly, because
     // in certain cases Angular won't call it (e.g. when using AoT and in unit tests).

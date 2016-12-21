@@ -68,7 +68,6 @@ export class MdTabLinkRipple extends MdRipple implements OnDestroy {
 
   /**
    * In certain cases the parent destroy handler may not get called. See Angular issue #11606.
-   * @docs-private
    */
   ngOnDestroy() {
     super.ngOnDestroy();

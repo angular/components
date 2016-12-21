@@ -69,7 +69,6 @@ export class PortalHostDirective extends BasePortalHost implements OnDestroy {
     }
   }
 
-  /** @docs-private */
   ngOnDestroy() {
     this.dispose();
   }
