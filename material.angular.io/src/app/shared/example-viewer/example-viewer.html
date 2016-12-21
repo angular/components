@@ -1,21 +1,29 @@
-<div class="docs-example-viewer-title">
-  <span>{{example}}</span>
+<div class="docs-example-viewer-wrapper">
+  <div class="docs-example-viewer-title">
+    <div class="docs-example-viewer-title-spacer">{{example}}</div>
 
-  <div class="docs-example-viewer-title-spacer"></div>
+    <button md-icon-button type="button" (click)="toggleSourceView()">
+      <md-icon>
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
+          <path fill="none" d="M0 0h24v24H0V0z"></path>
+          <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"></path>
+        </svg>
+      </md-icon>
+    </button>
 
-  <button md-icon-button type="button" (click)="toggleSourceView()">S</button>
   <plunker-button [example]="example"></plunker-button>
 </div>
 
-<div class="docs-example-viewer-source" *ngIf="showSource">
-  <md-tab-group>
-    <!-- TODO(jelbourn): don't hard-code the html + ts + css structure -->
-    <md-tab *ngFor="let extension of ['HTML', 'TS', 'SCSS']" [label]="extension">
-      <pre><doc-viewer [documentUrl]="exampleFileUrl(extension)"></doc-viewer></pre>
-    </md-tab>
-  </md-tab-group>
-</div>
+  <div class="docs-example-viewer-source" *ngIf="showSource">
+    <md-tab-group>
+      <!-- TODO(jelbourn): don't hard-code the html + ts + css structure -->
+      <md-tab *ngFor="let extension of ['HTML', 'TS', 'SCSS']" [label]="extension">
+        <pre><doc-viewer [documentUrl]="exampleFileUrl(extension)"></doc-viewer></pre>
+      </md-tab>
+    </md-tab-group>
+  </div>
 
-<div class="docs-example-viewer-body">
-  <template [portalHost]="selectedPortal"></template>
+  <div class="docs-example-viewer-body">
+    <template [portalHost]="selectedPortal"></template>
+  </div>
 </div>

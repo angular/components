@@ -1,16 +1,19 @@
 :host {
   display: block;
+}
 
-  // temp styles
-  border: 1px solid black;
-  margin: 20px auto 0 auto;
+.docs-example-viewer-wrapper {
+  h3 {
+    margin-top: 10px;
+  }
 }
 
 .docs-example-viewer-title {
+  align-content: center;
+  align-items: center;
   display: flex;
-
-  // temp styles
-  background: #00bcd4;
+  justify-content: center;
+  padding: 8px 20px;
 }
 
 .docs-example-viewer-title-spacer {

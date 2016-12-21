@@ -1,0 +1,19 @@
+@mixin example-viewer-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  example-viewer {
+    .docs-example-viewer-wrapper {
+      border: 1px solid rgba(md-color($foreground, secondary-text), .03);
+      box-shadow: 0 2px 2px rgba(0,0,0,0.24), 0 0 2px rgba(0,0,0,0.12);
+    }
+
+    .docs-example-viewer-title {
+      color: md-color($foreground, secondary-text);
+      background: rgba(md-color($foreground, secondary-text), .03);
+    }
+  }
+}
