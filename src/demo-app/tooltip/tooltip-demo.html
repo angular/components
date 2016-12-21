@@ -1,8 +1,8 @@
 <div class="demo-tooltip">
   <h1>Tooltip Demo</h1>
 
-  <p class="centered" style="height: 200px; overflow: auto;" cdk-scrollable>
-    <button #tooltip="mdTooltip" style="margin-bottom: 300px;"
+  <p class="centered">
+    <button #tooltip="mdTooltip"
             md-raised-button
             color="primary"
             [mdTooltip]="message"
@@ -11,7 +11,6 @@
             [mdTooltipHideDelay]="hideDelay">
       Mouse over to see the tooltip
     </button>
-    Scroll down while tooltip is open to see it hide automatically
   </p>
 
   <p>

@@ -432,6 +432,7 @@ describe('ConnectedPositionStrategy', () => {
 
   describe('onPositionChange with scrollable view properties', () => {
     let overlayElement: HTMLElement;
+    let overlayContainerElement: HTMLElement;
     let strategy: ConnectedPositionStrategy;
 
     let scrollable: HTMLDivElement;
@@ -441,7 +442,7 @@ describe('ConnectedPositionStrategy', () => {
 
     beforeEach(() => {
       // Set up the overlay
-      let overlayContainerElement = createFixedElement();
+      overlayContainerElement = createFixedElement();
       overlayElement = createPositionedBlockElement();
       document.body.appendChild(overlayContainerElement);
       overlayContainerElement.appendChild(overlayElement);
@@ -471,6 +472,7 @@ describe('ConnectedPositionStrategy', () => {
     afterEach(() => {
       onPositionChangeSubscription.unsubscribe();
       document.body.removeChild(scrollable);
+      document.body.removeChild(overlayContainerElement);
     });
 
     it('should not have origin or overlay clipped or out of view without scroll', () => {
