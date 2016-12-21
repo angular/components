@@ -55,7 +55,7 @@ High level items planned for December 2016:
 | list             |                           Available | [README][8]  |   [#107][0107] |
 | grid-list        |                           Available | [README][9]  |              - |
 | icon             |                           Available | [README][10] |              - |
-| progress-spinner  |                           Available | [README][11] |              - |
+| progress-spinner |                           Available | [README][11] |              - |
 | progress-bar     |                           Available | [README][12] |              - |
 | tabs             |                           Available | [README][13] |              - |
 | slide-toggle     |                           Available | [README][14] |              - |
