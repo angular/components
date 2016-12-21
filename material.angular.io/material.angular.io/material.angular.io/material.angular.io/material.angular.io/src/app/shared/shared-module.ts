@@ -7,6 +7,7 @@ import {NavBar} from './navbar/navbar';
 import {MaterialModule} from '@angular/material';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
+import {PlunkerButton} from './plunker';
 
 
 @NgModule({
@@ -16,8 +17,8 @@ import {RouterModule} from '@angular/router';
     BrowserModule,
     MaterialModule,
   ],
-  declarations: [DocViewer, ExampleViewer, NavBar],
-  exports: [DocViewer, ExampleViewer, NavBar],
+  declarations: [DocViewer, ExampleViewer, NavBar, PlunkerButton],
+  exports: [DocViewer, ExampleViewer, NavBar, PlunkerButton],
   providers: [DocumentationItems],
   entryComponents: [
     ExampleViewer,

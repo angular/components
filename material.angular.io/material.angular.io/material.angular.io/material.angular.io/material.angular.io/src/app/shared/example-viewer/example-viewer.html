@@ -4,7 +4,7 @@
   <div class="docs-example-viewer-title-spacer"></div>
 
   <button md-icon-button type="button" (click)="toggleSourceView()">S</button>
-  <button md-icon-button type="button">P</button>
+  <plunker-button [example]="example"></plunker-button>
 </div>
 
 <div class="docs-example-viewer-source" *ngIf="showSource">

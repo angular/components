@@ -43,6 +43,6 @@ export class ExampleViewer {
   }
 
   exampleFileUrl(extension: string) {
-    return `/assets/examples/${this.example}-example.${extension.toLowerCase()}.html`;
+    return `/app/examples/${this.example}/${this.example}-example.${extension.toLowerCase()}`;
   }
 }
