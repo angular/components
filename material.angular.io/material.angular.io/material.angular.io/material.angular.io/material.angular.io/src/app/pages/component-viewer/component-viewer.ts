@@ -6,7 +6,7 @@ import {DocumentationItems, DocItem} from '../../shared/documentation-items/docu
 @Component({
   selector: 'app-components',
   templateUrl: './component-viewer.html',
-  styleUrls: ['./component-viewer.scss'],
+  styleUrls: ['./component-viewer.scss', './component-viewer-sidenav.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class ComponentViewer {

@@ -1,0 +1,62 @@
+$sidenav-spacing-unit: 8px;
+$sidenav-width: 240px;
+
+.docs-component-viewer-sidenav {
+  box-shadow: 3px 0 6px rgba(0, 0, 0, .24);
+  padding-bottom: 72px;
+  width: $sidenav-width;
+  bottom: 0;
+  overflow: auto;
+
+  &.md-sidenav-opened {
+    box-shadow: 3px 0 6px rgba(0, 0, 0, .24);
+  }
+
+  // Section divider
+  h3 {
+    border: none;
+    font-size: 10px;
+    letter-spacing: 1px;
+    line-height: $sidenav-spacing-unit * 3;
+    text-transform: uppercase;
+    font-weight: 400;
+    margin: 0;
+    padding: 0 ($sidenav-spacing-unit * 2);
+  }
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  // Sidenav navigation item
+  li {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    margin: 0;
+    padding: 0;
+
+
+    // Hide the border on the last item
+    &:last-child {
+      border-color: transparent;
+    }
+
+    > a {
+      box-sizing: border-box;
+      display: block;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: ($sidenav-spacing-unit * 6) - 1;
+      text-decoration: none;
+      transition: all .3s;
+      padding: 0 ($sidenav-spacing-unit * 2);
+      position: relative;
+
+      &.docs-component-viewer-sidenav-item-selected {
+        font-weight: 600;
+      }
+    }
+  }
+}
