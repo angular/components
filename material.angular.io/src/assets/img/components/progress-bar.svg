@@ -1,1 +1,21 @@
-<svg width="108" height="109" viewBox="0 0 108 109" xmlns="http://www.w3.org/2000/svg"><g transform="translate(1)" fill="none" fill-rule="evenodd"><rect fill="#00BCD4" width="105" height="106" rx="8.36"/><rect fill="#F4F6F7" y="46" width="105" height="63" rx="8.36"/><g stroke-width="6.225" stroke-linecap="square"><path d="M3 43.112h43" stroke="#B0EAF2"/><path d="M40 43.112h63" stroke="#FFF"/></g><path d="M39.036 21.09h29.098v-4.18H36.946v4.18h2.09zM20.5 31C26.299 31 31 26.299 31 20.5S26.299 10 20.5 10 10 14.701 10 20.5 14.701 31 20.5 31z" fill="#FFF"/></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="108px" height="109px" viewBox="0 0 108 109" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>progress-bar</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Component-Directory" transform="translate(-128.000000, -2385.000000)">
+            <g id="progress-bar" transform="translate(129.000000, 2385.000000)">
+                <rect id="header" fill="#00BCD4" x="0" y="0" width="105" height="106" rx="8.36"></rect>
+                <rect id="card" fill="#F4F6F7" x="0" y="46" width="105" height="63" rx="8.36"></rect>
+                <g id="progress" transform="translate(0.000000, 40.000000)">
+                    <path d="M3,3.11249995 L46,3.11249995" id="Line" stroke="#B0EAF2" stroke-width="6.2249999" stroke-linecap="square"></path>
+                    <path d="M40,3.11249995 L103,3.11249995" id="Line" stroke="#FFFFFF" stroke-width="6.2249999" stroke-linecap="square"></path>
+                    <rect id="Rectangle-26" fill="#F4F6F7" x="0" y="6" width="105" height="21"></rect>
+                </g>
+                <path d="M39.0357143,21.09 L66.0438385,21.09 L68.1338385,21.09 L68.1338385,16.91 L66.0438385,16.91 L39.0357143,16.91 L36.9457143,16.91 L36.9457143,21.09 L39.0357143,21.09 Z M20.5,31 C26.2989899,31 31,26.2989899 31,20.5 C31,14.7010101 26.2989899,10 20.5,10 C14.7010101,10 10,14.7010101 10,20.5 C10,26.2989899 14.7010101,31 20.5,31 Z" id="header" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>
