@@ -1,5 +1,6 @@
 @import '~@angular/material/core/theming/theming';
 @import './app/pages/homepage/homepage-theme';
+@import './app/pages/component-viewer/component-viewer-sidenav-theme';
 @import './app/shared/navbar/navbar-theme';
 
 // Styles for the docs app that are based on the current theme.
@@ -15,5 +16,6 @@
   }
 
   @include nav-bar-theme($theme);
+  @include component-viewer-sidenav-theme($theme);
   @include home-page-theme($theme);
 }
