@@ -65,10 +65,12 @@ export class MdGridList implements OnInit, AfterContentChecked {
       private _element: ElementRef,
       @Optional() private _dir: Dir) {}
 
+  /** Amount of columns in the grid list. */
   @Input()
   get cols() { return this._cols; }
   set cols(value: any) { this._cols = coerceToNumber(value); }
 
+  /** Size of the grid list's gutter in pixels. */
   @Input()
   get gutterSize() { return this._gutter; }
   set gutterSize(value: any) { this._gutter = coerceToString(value); }
@@ -80,6 +82,7 @@ export class MdGridList implements OnInit, AfterContentChecked {
     this._setTileStyler();
   }
 
+  /** @docs-private */
   ngOnInit() {
     this._checkCols();
     this._checkRowHeight();
@@ -88,6 +91,7 @@ export class MdGridList implements OnInit, AfterContentChecked {
   /**
    * The layout calculation is fairly cheap if nothing changes, so there's little cost
    * to run it frequently.
+   * @docs-private
    */
   ngAfterContentChecked() {
     this._layoutTiles();

@@ -17,15 +17,20 @@ import 'rxjs/add/observable/fromEvent';
 export class Scrollable implements OnInit, OnDestroy {
   constructor(private _elementRef: ElementRef, private _scroll: ScrollDispatcher) {}
 
+  /** @docs-private */
   ngOnInit() {
     this._scroll.register(this);
   }
 
+  /** @docs-private */
   ngOnDestroy() {
     this._scroll.deregister(this);
   }
 
-  /** Returns observable that emits when the scroll event is fired on the host element. */
+  /**
+   * Returns observable that emits when a scroll event is fired on the host element.
+   * @returns {Observable<any>}
+   */
   elementScrolled(): Observable<any> {
     return Observable.fromEvent(this._elementRef.nativeElement, 'scroll');
   }

@@ -61,9 +61,9 @@ export class MdChipList implements AfterContentInit {
   /** The chip components contained within this chip list. */
   chips: QueryList<MdChip>;
 
-  constructor(private _elementRef: ElementRef) {
-  }
+  constructor(private _elementRef: ElementRef) { }
 
+  /** @docs-private */
   ngAfterContentInit(): void {
     this._keyManager = new ListKeyManager(this.chips).withFocusWrap();
 
@@ -89,16 +89,15 @@ export class MdChipList implements AfterContentInit {
   }
 
   /**
-   * Programmatically focus the chip list. This in turn focuses the first non-disabled chip in this
-   * chip list.
-   *
-   * TODO: ARIA says this should focus the first `selected` chip.
+   * Programmatically focus the chip list. This in turn focuses the first
+   * non-disabled chip in this chip list.
    */
-  focus(event: Event) {
+  focus() {
+    // TODO: ARIA says this should focus the first `selected` chip.
     this._keyManager.focusFirstItem();
   }
 
-  /** Pass relevant key presses to our key manager. */
+  /** Passes relevant key presses to our key manager. */
   _keydown(event: KeyboardEvent) {
     switch (event.keyCode) {
       case SPACE:

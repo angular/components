@@ -78,8 +78,9 @@ export class MdTabHeader {
   /** Whether the scroll distance has changed and should be applied after the view is checked. */
   private _scrollDistanceChanged: boolean;
 
-  /** The index of the active tab. */
   private _selectedIndex: number = 0;
+
+  /** The index of the active tab. */
   @Input() set selectedIndex(value: number) {
     this._selectedIndexChanged = this._selectedIndex != value;
 
@@ -98,6 +99,7 @@ export class MdTabHeader {
               private _elementRef: ElementRef,
               @Optional() private _dir: Dir) {}
 
+  /** @docs-private */
   ngAfterContentChecked(): void {
     // If the number of tab labels have changed, check if scrolling should be enabled
     if (this._tabLabelCount != this._labelWrappers.length) {
@@ -124,7 +126,8 @@ export class MdTabHeader {
 
   /**
    * Waits one frame for the view to update, then updates the ink bar and scroll.
-   * Note: This must be run outside of the zone or it will create an infinite change detection loop
+   * Note: This must be run outside of the zone or it will create an infinite change detection loop.
+   * @docs-private
    */
   ngAfterViewChecked(): void {
     this._zone.runOutsideAngular(() => {

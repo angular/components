@@ -173,7 +173,7 @@ describe('MdTabBody', () => {
 
 @Component({
   template: `
-    <template>Tab Body Content</template> 
+    <template>Tab Body Content</template>
     <md-tab-body [content]="content" [position]="position" [origin]="origin"></md-tab-body>
   `
 })
@@ -187,6 +187,7 @@ class SimpleTabBodyApp {
 
   constructor(private _viewContainerRef: ViewContainerRef) { }
 
+  /** @docs-private */
   ngAfterContentInit() {
     this.content = new TemplatePortal(this.template, this._viewContainerRef);
   }

@@ -50,7 +50,11 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     super();
   }
 
-  /** Attach a portal as content to this dialog container. */
+  /**
+   * Attach a portal as content to this dialog container.
+   * @param portal Portal to be attached as the dialog content.
+   * @returns {ComponentRef<T>}
+   */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     if (this._portalHost.hasAttached()) {
       throw new MdDialogContentAlreadyAttachedError();
@@ -69,17 +73,22 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     return attachResult;
   }
 
+  /** @docs-private */
   attachTemplatePortal(portal: TemplatePortal): Map<string, any> {
     throw Error('Not yet implemented');
   }
 
-  /** Handles the user pressing the Escape key. */
+  /**
+   * Handles the user pressing the Escape key.
+   * @docs-private
+   */
   handleEscapeKey() {
     if (!this.dialogConfig.disableClose) {
       this.dialogRef.close();
     }
   }
 
+  /** @docs-private */
   ngOnDestroy() {
     // When the dialog is destroyed, return focus to the element that originally had it before
     // the dialog was opened. Wait for the DOM to finish settling before changing the focus so

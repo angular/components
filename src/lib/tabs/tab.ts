@@ -39,11 +39,15 @@ export class MdTab implements OnInit {
   origin: number = null;
 
   private _disabled = false;
-  @Input() set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+
+  /** Whether the tab is disabled */
+  @Input()
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
   get disabled(): boolean { return this._disabled; }
 
   constructor(private _viewContainerRef: ViewContainerRef) { }
 
+  /** @docs-private */
   ngOnInit() {
     this._contentPortal = new TemplatePortal(this._content, this._viewContainerRef);
   }

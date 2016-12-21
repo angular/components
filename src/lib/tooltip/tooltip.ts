@@ -60,17 +60,11 @@ export class MdTooltip implements OnInit, OnDestroy {
   _overlayRef: OverlayRef;
   _tooltipInstance: TooltipComponent;
 
-  /** Allows the user to define the position of the tooltip relative to the parent element */
   private _position: TooltipPosition = 'below';
-  @Input('mdTooltipPosition') get position(): TooltipPosition {
-    return this._position;
-  }
 
-  /** @deprecated */
-  @Input('tooltip-position')
-  get _positionDeprecated(): TooltipPosition { return this._position; }
-  set _positionDeprecated(value: TooltipPosition) { this._position = value; }
-
+  /** Allows the user to define the position of the tooltip relative to the parent element */
+  @Input('mdTooltipPosition')
+  get position(): TooltipPosition { return this._position; }
   set position(value: TooltipPosition) {
     if (value !== this._position) {
       this._position = value;
@@ -83,17 +77,21 @@ export class MdTooltip implements OnInit, OnDestroy {
     }
   }
 
+  /** @deprecated */
+  @Input('tooltip-position')
+  get _positionDeprecated(): TooltipPosition { return this._position; }
+  set _positionDeprecated(value: TooltipPosition) { this._position = value; }
+
   /** The default delay in ms before showing the tooltip after show is called */
   @Input('mdTooltipShowDelay') showDelay = 0;
 
   /** The default delay in ms before hiding the tooltip after hide is called */
   @Input('mdTooltipHideDelay') hideDelay = 0;
 
-  /** The message to be displayed in the tooltip */
   private _message: string;
-  @Input('mdTooltip') get message() {
-    return this._message;
-  }
+
+  /** The message to be displayed in the tooltip */
+  @Input('mdTooltip') get message() { return this._message; }
   set message(value: string) {
     this._message = value;
     if (this._tooltipInstance) {
@@ -113,6 +111,7 @@ export class MdTooltip implements OnInit, OnDestroy {
               private _ngZone: NgZone,
               @Optional() private _dir: Dir) {}
 
+  /** @docs-private */
   ngOnInit() {
     // When a scroll on the page occurs, update the position in case this tooltip needs
     // to be repositioned.
@@ -123,7 +122,10 @@ export class MdTooltip implements OnInit, OnDestroy {
     });
   }
 
-  /** Dispose the tooltip when destroyed */
+  /**
+   * Dispose the tooltip when destroyed.
+   * @docs-private
+   */
   ngOnDestroy() {
     if (this._tooltipInstance) {
       this._disposeTooltip();
@@ -255,6 +257,10 @@ export class MdTooltip implements OnInit, OnDestroy {
 
 export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
 
+/**
+ * Internal component that wraps the tooltip's content.
+ * @docs-private
+ */
 @Component({
   moduleId: module.id,
   selector: 'md-tooltip-component, mat-tooltip-component',
@@ -298,7 +304,11 @@ export class TooltipComponent {
 
   constructor(@Optional() private _dir: Dir) {}
 
-  /** Shows the tooltip with an animation originating from the provided origin */
+  /**
+   * Shows the tooltip with an animation originating from the provided origin
+   * @param position Position of the tooltip.
+   * @param delay Amount of milliseconds to the delay showing the tooltip.
+   */
   show(position: TooltipPosition, delay: number): void {
     // Cancel the delayed hide if it is scheduled
     if (this._hideTimeoutId) {
@@ -319,7 +329,10 @@ export class TooltipComponent {
     }, delay);
   }
 
-  /** Begins the animation to hide the tooltip after the provided delay in ms */
+  /**
+   * Begins the animation to hide the tooltip after the provided delay in ms.
+   * @param delay Amount of milliseconds to delay showing the tooltip.
+   */
   hide(delay: number): void {
     // Cancel the delayed show if it is scheduled
     if (this._showTimeoutId) {
@@ -332,12 +345,18 @@ export class TooltipComponent {
     }, delay);
   }
 
-  /** Returns an observable that notifies when the tooltip has been hidden from view */
+  /**
+   * Returns an observable that notifies when the tooltip has been hidden from view
+   * @returns {Observable<void>}
+   */
   afterHidden(): Observable<void> {
     return this._onHide.asObservable();
   }
 
-  /** Whether the tooltip is being displayed */
+  /**
+   * Whether the tooltip is being displayed
+   * @returns {boolean}
+   */
   isVisible(): boolean {
     return this._visibility === 'visible';
   }

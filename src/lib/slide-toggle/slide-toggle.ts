@@ -40,6 +40,9 @@ export class MdSlideToggleChange {
 // Increasing integer for generating unique ids for slide-toggle components.
 let nextId = 0;
 
+/**
+ * Two-state control, which can be also called `switch`.
+ */
 @Component({
   moduleId: module.id,
   selector: 'md-slide-toggle, mat-slide-toggle',
@@ -109,6 +112,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
 
   constructor(private _elementRef: ElementRef, private _renderer: Renderer) {}
 
+  /** @docs-private */
   ngAfterContentInit() {
     this._slideRenderer = new SlideToggleRenderer(this._elementRef);
   }
@@ -198,10 +202,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
 
   /** Whether the slide-toggle is checked. */
   @Input()
-  get checked() {
-    return !!this._checked;
-  }
-
+  get checked() { return !!this._checked; }
   set checked(value) {
     if (this.checked !== !!value) {
       this._checked = value;
@@ -211,10 +212,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
 
   /** The color of the slide-toggle. Can be primary, accent, or warn. */
   @Input()
-  get color(): string {
-    return this._color;
-  }
-
+  get color(): string { return this._color; }
   set color(value: string) {
     this._updateColor(value);
   }

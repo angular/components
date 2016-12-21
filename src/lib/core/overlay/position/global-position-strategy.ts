@@ -21,40 +21,60 @@ export class GlobalPositionStrategy implements PositionStrategy {
   /* A lazily-created wrapper for the overlay element that is used as a flex container.  */
   private _wrapper: HTMLElement;
 
-  /** Sets the top position of the overlay. Clears any previously set vertical position. */
-  top(value: string) {
+  /**
+   * Sets the top position of the overlay. Clears any previously set vertical position.
+   * @param value New top offset.
+   * @returns {GlobalPositionStrategy}
+   */
+  top(value: string): this {
     this._bottomOffset = '';
     this._topOffset = value;
     this._alignItems = 'flex-start';
     return this;
   }
 
-  /** Sets the left position of the overlay. Clears any previously set horizontal position. */
-  left(value: string) {
+  /**
+   * Sets the left position of the overlay. Clears any previously set horizontal position.
+   * @param value New left offset.
+   * @returns {GlobalPositionStrategy}
+   */
+  left(value: string): this {
     this._rightOffset = '';
     this._leftOffset = value;
     this._justifyContent = 'flex-start';
     return this;
   }
 
-  /** Sets the bottom position of the overlay. Clears any previously set vertical position. */
-  bottom(value: string) {
+  /**
+   * Sets the bottom position of the overlay. Clears any previously set vertical position.
+   * @param value New bottom offset.
+   * @returns {GlobalPositionStrategy}
+   */
+  bottom(value: string): this {
     this._topOffset = '';
     this._bottomOffset = value;
     this._alignItems = 'flex-end';
     return this;
   }
 
-  /** Sets the right position of the overlay. Clears any previously set horizontal position. */
-  right(value: string) {
+  /**
+   * Sets the right position of the overlay. Clears any previously set horizontal position.
+   * @param value New right offset.
+   * @returns {GlobalPositionStrategy}
+   */
+  right(value: string): this {
     this._leftOffset = '';
     this._rightOffset = value;
     this._justifyContent = 'flex-end';
     return this;
   }
 
-  /** Sets the overlay width and clears any previously set width. */
-  width(value: string) {
+  /**
+   * Sets the overlay width and clears any previously set width.
+   * @param value New width for the overlay
+   * @returns {GlobalPositionStrategy}
+   */
+  width(value: string): this {
     this._width = value;
 
     // When the width is 100%, we should reset the `left` and the offset,
@@ -66,8 +86,12 @@ export class GlobalPositionStrategy implements PositionStrategy {
     return this;
   }
 
-  /** Sets the overlay height and clears any previously set height. */
-  height(value: string) {
+  /**
+   * Sets the overlay height and clears any previously set height.
+   * @param value New height for the overlay
+   * @returns {GlobalPositionStrategy}
+   */
+  height(value: string): this {
     this._height = value;
 
     // When the height is 100%, we should reset the `top` and the offset,
@@ -82,8 +106,11 @@ export class GlobalPositionStrategy implements PositionStrategy {
   /**
    * Centers the overlay horizontally with an optional offset.
    * Clears any previously set horizontal position.
+   *
+   * @param offset Overlay offset from the horizontal center.
+   * @returns {GlobalPositionStrategy}
    */
-  centerHorizontally(offset = '') {
+  centerHorizontally(offset = ''): this {
     this.left(offset);
     this._justifyContent = 'center';
     return this;
@@ -92,8 +119,11 @@ export class GlobalPositionStrategy implements PositionStrategy {
   /**
    * Centers the overlay vertically with an optional offset.
    * Clears any previously set vertical position.
+   *
+   * @param offset Overlay offset from the vertical center.
+   * @returns {GlobalPositionStrategy}
    */
-  centerVertically(offset = '') {
+  centerVertically(offset = ''): this {
     this.top(offset);
     this._alignItems = 'center';
     return this;
@@ -102,6 +132,9 @@ export class GlobalPositionStrategy implements PositionStrategy {
   /**
    * Apply the position to the element.
    * @docs-private
+   *
+   * @param element Element to which to apply the CSS.
+   * @returns {Promise<void>} Resolved when the styles have been applied.
    */
   apply(element: HTMLElement): Promise<void> {
     if (!this._wrapper) {

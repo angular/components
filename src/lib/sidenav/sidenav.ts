@@ -77,9 +77,7 @@ export class MdSidenav implements AfterContentInit {
   private _align: 'start' | 'end' = 'start';
 
   /** Whether this md-sidenav is part of a valid md-sidenav-container configuration. */
-  get valid() {
-    return this._valid;
-  }
+  get valid() { return this._valid; }
   set valid(value) {
     value = coerceBooleanProperty(value);
     // When the drawers are not in a valid configuration we close them all until they are in a valid
@@ -91,10 +89,9 @@ export class MdSidenav implements AfterContentInit {
   }
   private _valid = true;
 
+  /** Direction which the sidenav is aligned in. */
   @Input()
-  get align() {
-    return this._align;
-  }
+  get align() { return this._align; }
   set align(value) {
     // Make sure we have a valid value.
     value = (value == 'end') ? 'end' : 'start';
@@ -163,6 +160,7 @@ export class MdSidenav implements AfterContentInit {
     });
   }
 
+  /** @docs-private */
   ngAfterContentInit() {
     // This can happen when the sidenav is set to opened in the template and the transition
     // isn't ended.
@@ -201,6 +199,8 @@ export class MdSidenav implements AfterContentInit {
    * Toggle this sidenav. This is equivalent to calling open() when it's already opened, or
    * close() when it's closed.
    * @param isOpen
+   * @returns {Promise<MdSidenavToggleResult>} Resolves with the result of whether the
+   * sidenav was opened or closed.
    */
   toggle(isOpen: boolean = !this.opened): Promise<MdSidenavToggleResult> {
     if (!this.valid) {
@@ -233,6 +233,7 @@ export class MdSidenav implements AfterContentInit {
 
   /**
    * Handles the keyboard events.
+   * @docs-private
    */
   handleKeydown(event: KeyboardEvent) {
     if (event.keyCode === ESCAPE) {
@@ -323,7 +324,10 @@ export class MdSidenav implements AfterContentInit {
 export class MdSidenavContainer implements AfterContentInit {
   @ContentChildren(MdSidenav) _sidenavs: QueryList<MdSidenav>;
 
+  /** The sidenav child with the `start` alignment. */
   get start() { return this._start; }
+
+  /** The sidenav child with the `end` alignment. */
   get end() { return this._end; }
 
   /** Event emitted when the sidenav backdrop is clicked. */
@@ -351,6 +355,7 @@ export class MdSidenavContainer implements AfterContentInit {
     }
   }
 
+  /** @docs-private */
   ngAfterContentInit() {
     // On changes, assert on consistency.
     this._sidenavs.changes.subscribe(() => this._validateDrawers());

@@ -76,14 +76,12 @@ export class MdTabGroup {
   get _dynamicHeightDeprecated(): boolean { return this._dynamicHeight; }
   set _dynamicHeightDeprecated(value: boolean) { this._dynamicHeight = value; }
 
-  /** The index of the active tab. */
   private _selectedIndex: number = null;
-  @Input() set selectedIndex(value: number) {
-    this._indexToSelect = value;
-  }
-  get selectedIndex(): number {
-    return this._selectedIndex;
-  }
+
+  /** The index of the active tab. */
+  @Input()
+  set selectedIndex(value: number) { this._indexToSelect = value; }
+  get selectedIndex(): number { return this._selectedIndex; }
 
   /** Output to enable support for two-way binding on `selectedIndex`. */
   @Output() get selectedIndexChange(): Observable<number> {
@@ -91,12 +89,16 @@ export class MdTabGroup {
   }
 
   private _onFocusChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();
+
+  /** Event emitted when focus has changed within a tab group. */
   @Output() get focusChange(): Observable<MdTabChangeEvent> {
     return this._onFocusChange.asObservable();
   }
 
   private _onSelectChange: EventEmitter<MdTabChangeEvent> =
       new EventEmitter<MdTabChangeEvent>(true);
+
+  /** Event emitted when the tab selection has changed. */
   @Output() get selectChange(): Observable<MdTabChangeEvent> {
     return this._onSelectChange.asObservable();
   }
@@ -112,6 +114,7 @@ export class MdTabGroup {
    * and what the selected index should be. This is where we can know exactly what position
    * each tab should be in according to the new selected index, and additionally we know how
    * a new selected tab should transition in (from the left or right).
+   * @docs-private
    */
   ngAfterContentChecked(): void {
     // Clamp the next selected index to the bounds of 0 and the tabs length.
@@ -140,7 +143,8 @@ export class MdTabGroup {
 
   /**
    * Waits one frame for the view to update, then updates the ink bar
-   * Note: This must be run outside of the zone or it will create an infinite change detection loop
+   * Note: This must be run outside of the zone or it will create an infinite change detection loop.
+   * @docs-private
    */
   ngAfterViewChecked(): void {
     this._isInitialized = true;
