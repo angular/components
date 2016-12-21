@@ -4,7 +4,6 @@ import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/combineLatest';
 
 
 /**
