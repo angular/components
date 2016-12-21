@@ -73,6 +73,9 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   /** Disables all individual radio buttons assigned to this group. */
   private _disabled: boolean = false;
 
+  /** Will add required property to all radio buttons in the group */
+  private _required: boolean = false;
+
   /** The currently selected radio button. Should match value. */
   private _selected: MdRadioButton = null;
 
@@ -137,6 +140,15 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   set disabled(value) {
     // The presence of *any* disabled value makes the component disabled, *except* for false.
     this._disabled = (value != null && value !== false) ? true : null;
+  }
+
+  @Input()
+  get required(): boolean {
+    return this._required;
+  }
+
+  set required(value) {
+    this._required = coerceBooleanProperty(value);
   }
 
   @Input()
@@ -281,6 +293,9 @@ export class MdRadioButton implements OnInit {
   /** The 'aria-labelledby' attribute takes precedence as the element's text alternative. */
   @Input('aria-labelledby') ariaLabelledby: string;
 
+  /** Whether this radio is required. */
+  private _required: boolean;
+
   /** Whether this radio is disabled. */
   private _disabled: boolean;
 
@@ -414,7 +429,16 @@ export class MdRadioButton implements OnInit {
 
   set disabled(value: boolean) {
     // The presence of *any* disabled value makes the component disabled, *except* for false.
-    this._disabled = (value != null && value !== false) ? true : null;
+    this._disabled = coerceBooleanProperty(value);
+  }
+
+  @Input()
+  get required(): boolean {
+    return this._required || (this.radioGroup != null && this.radioGroup.required);
+  }
+
+  set required(value: boolean) {
+    this._required = coerceBooleanProperty(value);
   }
 
   ngOnInit() {
