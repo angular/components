@@ -33,6 +33,7 @@ export const HIDE_ANIMATION = '195ms cubic-bezier(0.0,0.0,0.2,1)';
 
 /**
  * Internal component that wraps user-provided snack bar content.
+ * @docs-private
  */
 @Component({
   moduleId: module.id,
