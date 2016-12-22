@@ -14,8 +14,7 @@ import {
   AnimationTransitionEvent,
   NgZone,
   Optional,
-  OnDestroy,
-  OnInit
+  OnDestroy
 } from '@angular/core';
 import {
   Overlay,
