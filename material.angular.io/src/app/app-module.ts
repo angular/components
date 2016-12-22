@@ -9,6 +9,8 @@ import {Homepage} from './pages/homepage/homepage';
 import {routing} from './routes';
 import {ComponentList} from './pages/component-list/component-list';
 import {ComponentViewer} from './pages/component-viewer/component-viewer';
+import {GuideList} from './pages/guide-list';
+import {GuideViewer} from './pages/guide-viewer';
 import {ExampleModule} from './examples/example-module';
 import {SharedModule} from './shared/shared-module';
 import {ComponentCategoryList} from './pages/component-category-list/component-category-list';
@@ -22,6 +24,8 @@ import {ComponentSidenav} from './pages/component-sidenav/component-sidenav';
     ComponentList,
     ComponentSidenav,
     ComponentViewer,
+    GuideList,
+    GuideViewer,
     Homepage,
   ],
   imports: [

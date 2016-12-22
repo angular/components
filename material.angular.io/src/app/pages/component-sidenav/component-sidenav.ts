@@ -1,6 +1,5 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {DocumentationItems, DocItem} from '../../shared/documentation-items/documentation-items';
+import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
 
 
 @Component({

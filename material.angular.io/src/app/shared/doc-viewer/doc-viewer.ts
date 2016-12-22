@@ -55,7 +55,6 @@ export class DocViewer {
     let exampleElements =
         this._elementRef.nativeElement.querySelectorAll('[material-docs-example]');
     Array.prototype.slice.call(exampleElements).forEach((element: Element) => {
-      console.log('create portal');
       let example = element.getAttribute('material-docs-example');
       let portalHost =
           new DomPortalHost(element, this._componentFactoryResolver, this._appRef, this._injector);
