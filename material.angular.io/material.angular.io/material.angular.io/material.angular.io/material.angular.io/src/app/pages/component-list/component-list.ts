@@ -1,5 +1,9 @@
 import {Component} from '@angular/core';
-import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
+import {
+  DocumentationItems,
+  DocCategory
+} from '../../shared/documentation-items/documentation-items';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-components',
@@ -7,5 +11,11 @@ import {DocumentationItems} from '../../shared/documentation-items/documentation
   styleUrls: ['./component-list.scss']
 })
 export class ComponentList {
-  constructor(public docItems: DocumentationItems) { }
+  category: DocCategory;
+
+  constructor(public docItems: DocumentationItems, private _route: ActivatedRoute) {
+    _route.params.subscribe(p => {
+      this.category = docItems.getCategoryById(p['id']);
+    });
+  }
 }

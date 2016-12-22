@@ -15,56 +15,60 @@ export interface DocCategory {
 const DOCS = [
   {
     id: 'forms',
-    name: 'Form controls',
+    name: 'Form Controls',
+    summary: 'Radio buttons, checkboxes, input fields, sliders, slide toggles, selects',
     items: [
-      {id: 'button', name: 'Button', examples: ['button-types']},
-      {id: 'checkbox', name: 'Checkbox'},
       {id: 'radio', name: 'Radio button'},
-      {id: 'button-toggle', name: 'Button toggle'},
+      {id: 'checkbox', name: 'Checkbox'},
       {id: 'input', name: 'Input'},
       {id: 'textarea', name: 'Textarea'},
-      {id: 'select', name: 'Select'},
-      {id: 'slide-toggle', name: 'Slide toggle'},
       {id: 'slider', name: 'Slider'},
+      {id: 'slide-toggle', name: 'Slide toggle'},
+      {id: 'select', name: 'Select'},
     ]
   },
   {
-    id: 'structure',
-    name: 'Application structure',
+    id: 'nav',
+    name: 'Navigation',
+    summary: 'Sidenavs, toolbars, menus, lists',
     items: [
-      {id: 'card', name: 'Card'},
-      {id: 'list', name: 'List'},
-      {id: 'grid-list', name: 'Grid list'},
       {id: 'sidenav', name: 'Sidenav'},
       {id: 'toolbar', name: 'Toolbar'},
-    ]
-  },
-  {
-    id: 'popups',
-    name: 'Pop-ups and notifications',
-    items: [
-
       {id: 'menu', name: 'Menu'},
-      {id: 'dialog', name: 'Dialog'},
-      {id: 'snackbar', name: 'Snackbar'},
-      {id: 'tooltip', name: 'Tooltip'},
+      {id: 'list', name: 'List'},
     ]
   },
   {
-    id: 'progress',
-    name: 'Progress indicators',
+    id: 'layout',
+    name: 'Layout',
+    summary: 'Grid lists, cards',
     items: [
+      {id: 'grid-list', name: 'Grid list'},
+      {id: 'card', name: 'Card'},
+    ]
+  },
+  {
+    id: 'buttons',
+    name: 'Buttons, Actions & Icons',
+    summary: 'buttons, button toggles, icons, progress spinners, progress bars',
+    items: [
+      {id: 'button', name: 'Button', examples: ['button-types']},
+      {id: 'button-toggle', name: 'Button toggle'},
+      {id: 'icon', name: 'Icon'},
       {id: 'progress-spinner', name: 'Progress spinner'},
       {id: 'progress-bar', name: 'Progress bar'},
     ]
   },
   {
-    id: 'icons',
-    name: 'Icons',
+    id: 'modals',
+    name: 'Popups & Modals',
+    summary: 'Dialogs, tooltips, snackbars',
     items: [
-      {id: 'icon', name: 'Icon'},
+      {id: 'dialog', name: 'Dialog'},
+      {id: 'tooltip', name: 'Tooltip'},
+      {id: 'snackbar', name: 'Snackbar'},
     ]
-  }
+  },
 ];
 
 const ALL_ITEMS = DOCS.reduce((result, category) => result.concat(category.items), []);
@@ -81,5 +85,9 @@ export class DocumentationItems {
 
   getItemById(id: string): DocItem {
     return ALL_ITEMS.find(i => i.id === id);
+  }
+
+  getCategoryById(id: string): DocCategory {
+    return DOCS.find(c => c.id == id);
   }
 }

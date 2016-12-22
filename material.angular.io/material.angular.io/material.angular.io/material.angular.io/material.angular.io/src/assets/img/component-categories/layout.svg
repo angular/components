@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="176px" height="91px" viewBox="0 0 176 91" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>layout-category</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Website" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.87">
+        <g id="Material-components-" transform="translate(-808.000000, -392.000000)" fill="#00BDD5">
+            <g id="grid-list" transform="translate(808.000000, 392.000000)">
+                <g id="layout-category">
+                    <g id="Page-1">
+                        <g id="Material-Internal-Landing-Page-(Components)">
+                            <g id="grid-list">
+                                <rect id="Rectangle-Left---Top" x="0" y="0" width="115.541985" height="44"></rect>
+                                <rect id="Rectangle-Left---Left" x="0" y="47" width="56.4274809" height="44"></rect>
+                                <rect id="Rectangle-Left--Right" x="60.4580153" y="47" width="55.0839695" height="44"></rect>
+                                <rect id="Rectangle---Right" x="119.572519" y="0" width="56.4274809" height="91"></rect>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
