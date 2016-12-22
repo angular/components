@@ -1,78 +1,40 @@
-<h1 id="md-progress-bar">md-progress-bar</h1>
-<p><code>md-progress-bar</code> is a component for indicating progress and activity, matching the spec of 
-<a href="https://www.google.com/design/spec/components/progress-activity.html">Material Design Progress &amp; Activity</a>.</p>
-<h3 id="progress-modes">Progress Modes</h3>
-<p>There are four modes:</p>
-<ol>
-<li>Determinate - <code>&lt;md-progress-bar mode=&quot;determinate&quot;&gt;</code><ul>
-<li>Indicates how long an operation will take when the percentage complete is detectable. </li>
-</ul>
-</li>
-<li>Indeterminate - <code>&lt;md-progress-bar mode=&quot;indeterminate&quot;&gt;</code><ul>
-<li>Indicates the user must wait while something finishes when it’s not necessary or possible to indicate how long it will take.</li>
-</ul>
-</li>
-<li>Buffer - <code>&lt;md-progress-bar mode=&quot;buffer&quot;&gt;</code><ul>
-<li>Indicates how long an operation will take when the percentage complete is detectable, also provides a value of the preloading for the operation.</li>
-</ul>
-</li>
-<li>Query - <code>&lt;md-progress-bar mode=&quot;query&quot;&gt;</code><ul>
-<li>Indicates the user must wait while something finishes when it is not yet possible to indicate how long it will take, but will be possible.  Once possible, the progress mode should be moved to buffer or determinate.</li>
-</ul>
-</li>
-</ol>
-<p>Example:</p>
-<pre><code class="lang-html">&lt;md-progress-bar mode=&quot;determinate&quot; value=&quot;myValue&quot;&gt;&lt;/md-progress-bar&gt;
-&lt;md-progress-bar mode=&quot;indeterminate&quot;&gt;&lt;/md-progress-bar&gt;
-&lt;md-progress-bar mode=&quot;buffer&quot; value=&quot;myValue&quot; bufferValue=&quot;myBufferValue&quot;&gt;&lt;/md-progress-bar&gt;
-&lt;md-progress-bar mode=&quot;query&quot;&gt;&lt;/md-progress-bar&gt;
-</code></pre>
-<h3 id="theming">Theming</h3>
-<p>All progress indicators can be themed to match your &quot;primary&quot; palette, your &quot;accent&quot; palette, or your &quot;warn&quot; palette using the appropriate class.</p>
-<p>Example:</p>
-<pre><code class="lang-html">&lt;md-progress-bar mode=&quot;indeterminate&quot; color=&quot;primary&quot;&gt;&lt;/md-progress-bar&gt;
-&lt;md-progress-bar mode=&quot;indeterminate&quot; color=&quot;accent&quot;&gt;&lt;/md-progress-bar&gt;
-&lt;md-progress-bar mode=&quot;indeterminate&quot; color=&quot;warn&quot;&gt;&lt;/md-progress-bar&gt;
-</code></pre>
-<h3 id="accessibility">Accessibility</h3>
-<ul>
-<li>ARIA attributes are applied to the indicator defining the valuemin, valuemax and valuenow attributes.</li>
-</ul>
-<h3 id="api-summary">API Summary</h3>
-<p>Properties:</p>
+<p><code>&lt;md-progress-bar&gt;</code> is a horizontal progress-bar for indicating progress and activity.</p>
+<div material-docs-example="progress-bar-overview"></div>
+<h3 id="progress-mode">Progress mode</h3>
+<p>The progress-bar supports four modes.</p>
 <table>
 <thead>
 <tr>
-<th>Name</th>
-<th>Type</th>
+<th>Mode</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>color</code></td>
-<td>`&quot;primary&quot;</td>
-<td>&quot;accent&quot;</td>
-<td>&quot;warn&quot;`</td>
-<td>The color palette of the progress indicator</td>
+<td>determinate</td>
+<td>Standard progress bar, fills from 0% to 100%</td>
 </tr>
 <tr>
-<td><code>mode</code></td>
-<td>`&quot;determinate&quot;</td>
-<td>&quot;indeterminate&quot;</td>
-<td>&quot;buffer&quot;</td>
-<td>&quot;query&quot;`</td>
-<td>The mode of the progress indicator</td>
+<td>indeterminate</td>
+<td>Indicates that something is happening without conveying a discrete progress</td>
 </tr>
 <tr>
-<td><code>value</code></td>
-<td>number</td>
-<td>The current progress percentage for determinate indicators</td>
+<td>buffer</td>
+<td>Dual-progress mode, typically showing both video download and playback progress</td>
 </tr>
 <tr>
-<td><code>bufferValue</code></td>
-<td>number</td>
-<td>The current progress percentage for buffer secondary indicators</td>
+<td>query</td>
+<td>Dual-stage mode, typically showing sending a request and downloading a response</td>
 </tr>
 </tbody>
 </table>
+<p>The default mode is &quot;determinate&quot;. In this mode, the progress is set via the <code>value</code> property, 
+which can be a whole number between 0 and 100.</p>
+<p>In &quot;buffer&quot; mode, <code>value</code> determines the progress of the primary bar while the <code>bufferValue</code> is 
+used to show the additional buffering progress.</p>
+<p>In &quot;query&quot; mode, the progress-bar renders as an inverted &quot;indeterminate&quot; bar. Once the response 
+progress is available, the <code>mode</code> should be changed to determinate to convey the progress.  </p>
+<p>In both &quot;indeterminate&quot; and &quot;query&quot; modes, the <code>value</code> property is ignored.</p>
+<h3 id="theming">Theming</h3>
+<p>The color of a progress-bar can be changed by using the <code>color</code> property. By default, progress-bars
+use the theme&#39;s primary color. This can be changed to <code>&#39;accent&#39;</code> or <code>&#39;warn&#39;</code>.  </p>

@@ -1,5 +1,21 @@
-<h1 id="md-chips">md-chips</h1>
-<p><code>md-chips</code> provides a horizontal display of (optionally) selectable, addable, and removable,
-items and an input to create additional ones (again; optional). You can read more about chips
-in the <a href="https://material.google.com/components/chips.html">Material Design spec</a>.</p>
-<p>This is a placeholder README for the eventual chips component.</p>
+<p><code>&lt;md-chip-list&gt;</code> displays a list of values as individual chips.</p>
+<div material-docs-example="chips-overview"></div>
+<p><em>Note: chips are still early in their development and more features are being actively worked on.</em></p>
+<pre><code class="lang-html">&lt;md-chip-list&gt;
+  &lt;md-chip&gt;Papadum&lt;/md-chip&gt;
+  &lt;md-chip&gt;Naan&lt;/md-chip&gt;
+  &lt;md-chip&gt;Dal&lt;/md-chip&gt;
+&lt;/md-chip-list&gt;
+</code></pre>
+<h3 id="unstyled-chips">Unstyled chips</h3>
+<p>By default, <code>&lt;md-chip&gt;</code> has Material Design styles applied. For a chip with no styles applied,
+use <code>&lt;md-basic-chip&gt;</code>. You can then customize the chip appearance by adding your own CSS.</p>
+<h3 id="selection">Selection</h3>
+<p>Chips can be selected via the <code>selected</code> property. Selection can be disabled by setting
+<code>selectable</code> to <code>false</code> on the <code>&lt;md-chip-list&gt;</code>. </p>
+<h3 id="keyboard-interation">Keyboard interation</h3>
+<p>Users can move through the chips using the arrow keys and select them with the space.</p>
+<h3 id="theming">Theming</h3>
+<p>The color of an <code>&lt;md-chip&gt;</code> can be changed by using the <code>color</code> property. By default, chips
+use a neutral background color based on the current theme (light or dark). This can be changed to 
+<code>&#39;primary&#39;</code>, <code>&#39;accent&#39;</code>, or <code>&#39;warn&#39;</code>.</p>

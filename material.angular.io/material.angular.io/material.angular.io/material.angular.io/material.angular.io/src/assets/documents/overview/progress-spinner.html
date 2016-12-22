@@ -1,67 +1,29 @@
-<h1 id="md-progress-spinner">md-progress-spinner</h1>
-<p><code>md-progress-spinner</code> is a component for indicating progress and activity, matching the spec of 
-<a href="https://www.google.com/design/spec/components/progress-activity.html">Material Design Progress &amp; Activity</a>.</p>
-<h3 id="progress-modes">Progress Modes</h3>
-<p>There are two modes:</p>
-<ol>
-<li>Determinate - <code>&lt;md-progress-spinner mode=&quot;determinate&quot;&gt;</code><ul>
-<li>Indicates how long an operation will take when the percentage complete is detectable. </li>
-</ul>
-</li>
-<li>Indeterminate - <code>&lt;md-progress-spinner mode=&quot;indeterminate&quot;&gt;</code> or <code>&lt;md-spinner&gt;</code><ul>
-<li>Indicates the user must wait while something finishes when it’s not necessary or possible to indicate how long it
-will take.</li>
-</ul>
-</li>
-</ol>
-<p>Example:</p>
-<pre><code class="lang-html">&lt;md-progress-spinner mode=&quot;determinate&quot; [value]=&quot;myValue&quot;&gt;&lt;/md-progress-spinner&gt;
-&lt;md-progress-spinner mode=&quot;indeterminate&quot;&gt;&lt;/md-progress-spinner&gt;
-&lt;md-spinner&gt;&lt;/md-spinner&gt;
-</code></pre>
-<h3 id="theming">Theming</h3>
-<p>All progress indicators can be themed to match your &quot;primary&quot; palette, your &quot;accent&quot; palette, or your &quot;warn&quot; palette using the appropriate class.</p>
-<p>Example:</p>
-<pre><code class="lang-html">&lt;md-progress-spinner mode=&quot;indeterminate&quot; color=&quot;primary&quot;&gt;&lt;/md-progress-spinner&gt;
-&lt;md-progress-spinner mode=&quot;indeterminate&quot; color=&quot;accent&quot;&gt;&lt;/md-progress-spinner&gt;
-&lt;md-progress-spinner mode=&quot;indeterminate&quot; color=&quot;warn&quot;&gt;&lt;/md-progress-spinner&gt;
-</code></pre>
-<h3 id="accessibility">Accessibility</h3>
-<ul>
-<li>ARIA attributes are applied to the indicator defining the valuemin, valuemax and valuenow attributes.</li>
-</ul>
-<h3 id="upcoming-work">Upcoming work</h3>
-<ul>
-<li>Adding ARIA attribute for progressbar &quot;for&quot;.</li>
-</ul>
-<h3 id="api-summary">API Summary</h3>
-<p>Properties:</p>
+<p><code>&lt;md-progress-spinner&gt;</code> and <code>&lt;md-spinner&gt;</code> are a circular indicators of progress and activity.</p>
+<div material-docs-example="progress-spinner-overview"></div>
+<h3 id="progress-mode">Progress mode</h3>
+<p>The progress-spinner supports two modes, &quot;determinate&quot; and &quot;indeterminate&quot;. 
+The <code>&lt;md-spinner&gt;</code> component is an alias for <code>&lt;md-progress-spinner mode=&quot;indeterminate&quot;&gt;</code>.</p>
 <table>
 <thead>
 <tr>
-<th>Name</th>
-<th>Type</th>
+<th>Mode</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>color</code></td>
-<td>`&quot;primary&quot;</td>
-<td>&quot;accent&quot;</td>
-<td>&quot;warn&quot;`</td>
-<td>The color palette of the progress indicator</td>
+<td>determinate</td>
+<td>Standard progress indicator, fills from 0% to 100%</td>
 </tr>
 <tr>
-<td><code>mode</code></td>
-<td>`&quot;determinate&quot;</td>
-<td>&quot;indeterminate&quot;`</td>
-<td>The mode of the progress indicator</td>
-</tr>
-<tr>
-<td><code>value</code></td>
-<td>number</td>
-<td>The current progress percentage for determinate indicators</td>
+<td>indeterminate</td>
+<td>Indicates that something is happening without conveying a discrete progress</td>
 </tr>
 </tbody>
 </table>
+<p>The default mode is &quot;determinate&quot;. In this mode, the progress is set via the <code>value</code> property, 
+which can be a whole number between 0 and 100.</p>
+<p>In &quot;indeterminate&quot; mode, the <code>value</code> property is ignored.</p>
+<h3 id="theming">Theming</h3>
+<p>The color of a progress-spinner can be changed by using the <code>color</code> property. By default, 
+progress-spinners use the theme&#39;s primary color. This can be changed to <code>&#39;accent&#39;</code> or <code>&#39;warn&#39;</code>.</p>

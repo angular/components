@@ -1,15 +1,10 @@
-<h1 id="md-icon">md-icon</h1>
 <p><code>md-icon</code> makes it easier to use <em>vector-based</em> icons in your app.  This directive supports both
 icon fonts and SVG icons, but not bitmap-based formats (png, jpg, etc.).</p>
 <div material-docs-example="icon-example"></div>
-<h2 id="usage">Usage</h2>
-<h3 id="registering-new-icons">Registering new icons</h3>
+<h3 id="registering-icons">Registering icons</h3>
 <p><code>MdIconRegistry</code> is an injectable service that allows you to associate icon names with SVG URLs and
 define aliases for CSS font classes. Its methods are discussed below and listed in the API summary.</p>
-<p>In order to prevent XSS vulnerabilities, any URLs passed to the <code>MdIconRegistry</code> must be marked as
-trusted resource URLs by using Angular&#39;s <code>DomSanitizer</code> service.</p>
-<h3 id="font-icons">Font icons</h3>
-<h4 id="ligatures">Ligatures</h4>
+<h3 id="font-icons-with-ligatures">Font icons with ligatures</h3>
 <p>Some fonts are designed to show icons by using
 <a href="https://en.wikipedia.org/wiki/Typographic_ligature">ligatures</a>, for example by rendering the text
 &quot;home&quot; as a home image. To use a ligature icon, put its text in the content of the <code>md-icon</code>
@@ -20,7 +15,7 @@ component.</p>
 You can specify a different font by setting the <code>fontSet</code> input to either the CSS class to apply to
 use the desired font, or to an alias previously registered with
 <code>MdIconRegistry.registerFontClassAlias</code>.</p>
-<h4 id="font-icons-via-css">Font icons via CSS</h4>
+<h3 id="font-icons-with-css">Font icons with CSS</h3>
 <p>Fonts can also display icons by defining a CSS class for each icon glyph, which typically uses a
 <code>:before</code> selector to cause the icon to appear.
 <a href="https://fortawesome.github.io/Font-Awesome/examples/">FontAwesome</a> uses this approach to display
@@ -33,12 +28,15 @@ explicitly set by calling <code>MdIconRegistry.setDefaultFontSetClass</code>.</p
 <p>When an <code>md-icon</code> component displays an SVG icon, it does so by directly inlining the SVG content
 into the page as a child of the component. (Rather than using an <img> tag or a div background
 image). This makes it easier to apply CSS styles to SVG icons. For example, the default color of the
-SVG content is the CSS <a href="http://www.quirksmode.org/css/color/currentcolor.html">currentColor</a> value.
-This makes SVG icons by default have the same color as surrounding text, and allows you to change
-the color by setting the &quot;color&quot; style on the <code>md-icon</code> element.</p>
-<h4 id="icons-from-urls">Icons from URLs</h4>
-<p>SVG icons can be used either by directly specifying the icon&#39;s URL, or by associating an icon name
-with a URL and then referring to the name. To use a URL directly, set the <code>svgSrc</code> input.</p>
+SVG content is the CSS 
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#currentColor_keyword">currentColor</a> 
+value. This makes SVG icons by default have the same color as surrounding text, and allows you to 
+change the color by setting the &quot;color&quot; style on the <code>md-icon</code> element.</p>
+<p>In order to prevent XSS vulnerabilities, any SVG URLs passed to the <code>MdIconRegistry</code> must be 
+marked as trusted resource URLs by using Angular&#39;s <code>DomSanitizer</code> service.</p>
+<p>Also note that all SVG icons are fetched via XmlHttpRequest, and due to the same-origin policy, 
+their URLs must be on the same domain as the containing page, or their servers must be configured 
+to allow cross-domain access.</p>
 <h4 id="named-icons">Named icons</h4>
 <p>To associate a name with an icon URL, use the <code>addSvgIcon</code> or <code>addSvgIconInNamespace</code> methods of
 <code>MdIconRegistry</code>. After registering an icon, it can be displayed by setting the <code>svgIcon</code> input.
@@ -54,12 +52,10 @@ their <code>id</code> attributes. To display an icon from an icon set, use the <
 as for individually registered icons.</p>
 <p>Multiple icon sets can be registered in the same namespace. Requesting an icon whose id appears in
 more than one icon set, the icon from the most recently registered set will be used.</p>
-<p>Note that all SVG icons are fetched via XmlHttpRequest, and due to the same-origin policy their URLs
-must be on the same domain as the containing page, or their servers must be configured to allow
-cross-domain access.</p>
 <h3 id="theming">Theming</h3>
-<p>Icons can be themed to match your &quot;primary&quot; palette, your &quot;accent&quot; palette, or your &quot;warn&quot; palette
-using the <code>color</code> attribute. Simply pass in the desired palette name.</p>
+<p>By default, icons will use the current font color (<code>currentColor</code>). this color can be changed to 
+match the current theme&#39;s colors using the <code>color</code> attribute. This can be changed to 
+<code>&#39;primary&#39;</code>, <code>&#39;accent&#39;</code>, or <code>&#39;warn&#39;</code>.</p>
 <h3 id="accessibility">Accessibility</h3>
 <p>If an <code>aria-label</code> attribute is set on the <code>md-icon</code> element, its value will be used as-is. If not,
 the md-icon component will attempt to set the aria-label value from one of these sources:</p>

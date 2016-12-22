@@ -1,52 +1,20 @@
-<h1 id="md-menu">md-menu</h1>
-<p><code>md-menu</code> is a list of options that displays when triggered.  You can read more about menus in the
-<a href="https://material.google.com/components/menus.html">Material Design spec</a>.</p>
-<h3 id="not-yet-implemented">Not yet implemented</h3>
-<ul>
-<li><code>prevent-close</code> option, to turn off automatic menu close when clicking outside the menu</li>
-<li>Custom offset support</li>
-<li>Menu groupings (which menus are allowed to open together)</li>
-</ul>
-<h2 id="usage">Usage</h2>
-<h3 id="simple-menu">Simple menu</h3>
-<p>In your template, create an <code>md-menu</code> element. You can use either <code>&lt;button&gt;</code> or <code>&lt;anchor&gt;</code> tags for
-your menu items, as long as each is tagged with an <code>md-menu-item</code> attribute. Note that you can
-disable items by adding the <code>disabled</code> boolean attribute or binding to it.</p>
-<p><em>my-comp.html</em></p>
-<pre><code class="lang-html">&lt;!-- this menu starts as hidden by default --&gt;
-&lt;md-menu&gt;
-    &lt;button md-menu-item&gt; Refresh &lt;/button&gt;
-    &lt;button md-menu-item&gt; Settings &lt;/button&gt;
-    &lt;button md-menu-item&gt; Help &lt;/button&gt;
-    &lt;button md-menu-item disabled&gt; Sign Out &lt;/button&gt;
+<p><code>&lt;md-menu&gt;</code> is a floating panel containing list of options. </p>
+<div material-docs-example="menu-overview"></div>
+<p>By itself, the <code>&lt;md-menu&gt;</code> element does not render anything. The menu is attached to and opened 
+via application of the <code>mdMenuTriggerFor</code> directive:</p>
+<pre><code class="lang-ts">&lt;md-menu #appMenu=&quot;mdMenu&quot;&gt;
+  &lt;button md-menu-item&gt; Settings &lt;/button&gt;
+  &lt;button md-menu-item&gt; Help &lt;/button&gt;
 &lt;/md-menu&gt;
-</code></pre>
-<p>Menus are hidden by default, so you&#39;ll want to connect up a menu trigger that can open your menu.
-You can do so by adding a button tag with an <code>mdMenuTriggerFor</code> attribute and passing in the menu
-instance.  You can create a local reference to your menu instance by adding <code>#menu=&quot;mdMenu&quot;</code> to
-your menu element.</p>
-<p><em>my-comp.html</em></p>
-<pre><code class="lang-html">&lt;!-- menu opens when trigger button is clicked --&gt;
-&lt;button md-icon-button [mdMenuTriggerFor]=&quot;menu&quot;&gt;
+
+&lt;button md-icon-button [mdMenuTriggerFor]=&quot;appMenu&quot;&gt;
    &lt;md-icon&gt;more_vert&lt;/md-icon&gt;
 &lt;/button&gt;
-
-&lt;md-menu #menu=&quot;mdMenu&quot;&gt;
-    &lt;button md-menu-item&gt; Refresh &lt;/button&gt;
-    &lt;button md-menu-item&gt; Settings &lt;/button&gt;
-    &lt;button md-menu-item&gt; Help &lt;/button&gt;
-    &lt;button md-menu-item disabled&gt; Sign Out &lt;/button&gt;
-&lt;/md-menu&gt;
 </code></pre>
-<p>Output:</p>
-<p><img src="https://material.angularjs.org/material2_assets/menu/default_closed.png">
-<img src="https://material.angularjs.org/material2_assets/menu/default_open.png"></p>
 <h3 id="toggling-the-menu-programmatically">Toggling the menu programmatically</h3>
-<p>You can also use the menu&#39;s API to open or close the menu programmatically from your class. Please
-note that in this case, an <code>mdMenuTriggerFor</code> attribute is still necessary to connect
-the menu to its trigger element in the DOM.</p>
-<p><em>my-comp.component.ts</em></p>
-<pre><code class="lang-ts">class MyComp {
+<p>The menu exposes an API to open/close programmatically. Please note that in this case, an 
+<code>mdMenuTriggerFor</code> directive is still necessary to attach the menu to a trigger element in the DOM.</p>
+<pre><code class="lang-ts">class MyComponent {
   @ViewChild(MdMenuTrigger) trigger: MdMenuTrigger;
 
   someMethod() {
@@ -54,20 +22,8 @@ the menu to its trigger element in the DOM.</p>
   }
 }
 </code></pre>
-<p><em>my-comp.html</em></p>
-<pre><code class="lang-html">&lt;button md-icon-button [mdMenuTriggerFor]=&quot;menu&quot;&gt;
-   &lt;md-icon&gt;more_vert&lt;/md-icon&gt;
-&lt;/button&gt;
-
-&lt;md-menu #menu=&quot;mdMenu&quot;&gt;
-    &lt;button md-menu-item&gt; Refresh &lt;/button&gt;
-    &lt;button md-menu-item&gt; Settings &lt;/button&gt;
-    &lt;button md-menu-item&gt; Help &lt;/button&gt;
-    &lt;button md-menu-item disabled&gt; Sign Out &lt;/button&gt;
-&lt;/md-menu&gt;
-</code></pre>
-<h3 id="adding-an-icon">Adding an icon</h3>
-<p>Menus also support displaying <code>md-icon</code> elements before the menu item text.</p>
+<h3 id="icons">Icons</h3>
+<p>Menus support displaying <code>md-icon</code> elements before the menu item text.</p>
 <p><em>my-comp.html</em></p>
 <pre><code class="lang-html">&lt;md-menu #menu=&quot;mdMenu&quot;&gt;
   &lt;button md-menu-item&gt;
@@ -84,113 +40,12 @@ the menu to its trigger element in the DOM.</p>
   &lt;/button&gt;
 &lt;/md-menu&gt;
 </code></pre>
-<p>Output:</p>
-<p><img src="https://material.angularjs.org/material2_assets/menu/icon_menu_closed.png">
-<img src="https://material.angularjs.org/material2_assets/menu/icon_menu_open.png"></p>
 <h3 id="customizing-menu-position">Customizing menu position</h3>
-<p>By default, the menu will display after and below its trigger.  You can change this display position
+<p>By default, the menu will display after and below its trigger.  The position can be changed
 using the <code>x-position</code> (<code>before | after</code>) and <code>y-position</code> (<code>above | below</code>) attributes.</p>
-<p><em>my-comp.html</em></p>
-<pre><code class="lang-html">&lt;md-menu x-position=&quot;before&quot; #menu=&quot;mdMenu&quot;&gt;
-    &lt;button md-menu-item&gt; Refresh &lt;/button&gt;
-    &lt;button md-menu-item&gt; Settings &lt;/button&gt;
-    &lt;button md-menu-item&gt; Help &lt;/button&gt;
-    &lt;button md-menu-item disabled&gt; Sign Out &lt;/button&gt;
-&lt;/md-menu&gt;
-</code></pre>
-<p>Output:</p>
-<p><img src="https://material.angularjs.org/material2_assets/menu/before_closed.png">
-<img src="https://material.angularjs.org/material2_assets/menu/before_open.png"></p>
-<h3 id="accessibility">Accessibility</h3>
-<p>The menu adds <code>role=&quot;menu&quot;</code> to the main menu element and <code>role=&quot;menuitem&quot;</code> to each menu item. It
-also adds <code>aria-hasPopup=&quot;true&quot;</code> to the trigger element.</p>
-<h4 id="keyboard-events-">Keyboard events:</h4>
+<h3 id="keyboard-interaction">Keyboard interaction</h3>
 <ul>
-<li><kbd>DOWN_ARROW</kbd>: Focus next menu item</li>
-<li><kbd>UP_ARROW</kbd>: Focus previous menu item</li>
-<li><kbd>ENTER</kbd>: Select focused item</li>
+<li><kbd>DOWN_ARROW</kbd>: Focuses the next menu item</li>
+<li><kbd>UP_ARROW</kbd>: Focuses previous menu item</li>
+<li><kbd>ENTER</kbd>: Activates the focused menu item</li>
 </ul>
-<h3 id="menu-attributes">Menu attributes</h3>
-<table>
-<thead>
-<tr>
-<th>Signature</th>
-<th>Values</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>x-position</code></td>
-<td>`before</td>
-<td>after`</td>
-<td>The horizontal position of the menu in relation to the trigger. Defaults to <code>after</code>.</td>
-</tr>
-<tr>
-<td><code>y-position</code></td>
-<td>`above</td>
-<td>below`</td>
-<td>The vertical position of the menu in relation to the trigger. Defaults to <code>below</code>.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="trigger-programmatic-api">Trigger Programmatic API</h3>
-<p><strong>Properties</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>menuOpen</code></td>
-<td><code>Boolean</code></td>
-<td>Property that is true when the menu is open. It is not settable (use methods below).</td>
-</tr>
-<tr>
-<td><code>onMenuOpen</code></td>
-<td><code>Observable&lt;void&gt;</code></td>
-<td>Observable that emits when the menu opens.</td>
-</tr>
-<tr>
-<td><code>onMenuClose</code></td>
-<td><code>Observable&lt;void&gt;</code></td>
-<td>Observable that emits when the menu closes.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Methods</strong></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Returns</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>openMenu()</code></td>
-<td><code>Promise&lt;void&gt;</code></td>
-<td>Opens the menu. Returns a promise that will resolve when the menu has opened.</td>
-</tr>
-<tr>
-<td><code>closeMenu()</code></td>
-<td><code>Promise&lt;void&gt;</code></td>
-<td>Closes the menu. Returns a promise that will resolve when the menu has closed.</td>
-</tr>
-<tr>
-<td><code>toggleMenu()</code></td>
-<td><code>Promise&lt;void&gt;</code></td>
-<td>Toggles the menu. Returns a promise that will resolve when the menu has completed opening or closing.</td>
-</tr>
-<tr>
-<td><code>destroyMenu()</code></td>
-<td><code>Promise&lt;void&gt;</code></td>
-<td>Destroys the menu overlay completely.</td>
-</tr>
-</tbody>
-</table>

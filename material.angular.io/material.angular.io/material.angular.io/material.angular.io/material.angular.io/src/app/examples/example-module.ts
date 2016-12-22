@@ -61,55 +61,85 @@ import {
 import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-label-example';
 import {RadioOverviewExample} from './radio-overview/radio-overview-example';
 import {SidenavOverviewExample} from './sidenav-overview/sidenav-overview-example';
+import {SelectOverviewExample} from './select-overview/select-overview-example';
+import {ChipsOverviewExample} from './chips-overview/chips-overview-example';
+import {ChipsStackedExample} from './chips-stacked/chips-stacked-example';
+import {SelectFormExample} from './select-form/select-form-example';
 
+
+export interface LiveExample {
+  title: string;
+  component: any;
+}
 
 /**
  * The list of example components.
  * Key is the example name which will be used in `material-docs-example="key"`.
  * Value is the component.
  */
-
 export const EXAMPLE_COMPONENTS = {
-  'button-overview': ButtonOverviewExample,
-  'button-types': ButtonTypesExample,
-  'button-toggle-exclusive': ButtonToggleExclusiveExample,
-  'button-toggle-overview': ButtonToggleOverviewExample,
-  'card-fancy': CardFancyExample,
-  'card-overview': CardOverviewExample,
-  'checkbox-configurable': CheckboxConfigurableExample,
-  'checkbox-overview': CheckboxOverviewExample,
-  'dialog-overview': DialogOverviewExample,
-  'dialog-result': DialogResultExample,
-  'grid-list-dynamic': GridListDynamicExample,
-  'grid-list-overview': GridListOverviewExample,
-  'icon-overview': IconOverviewExample,
-  'icon-svg': IconSvgExample,
-  'input-form': InputFormExample,
-  'input-overview': InputOverviewExample,
-  'list-overview': ListOverviewExample,
-  'list-sections': ListSectionsExample,
-  'menu-icons': MenuIconsExample,
-  'menu-overview': MenuOverviewExample,
-  'progress-bar-configurable': ProgressBarConfigurableExample,
-  'progress-bar-overview': ProgressBarOverviewExample,
-  'progress-spinner-configurable': ProgressSpinnerConfigurableExample,
-  'progress-spinner-overview': ProgressSpinnerOverviewExample,
-  'radio-ngmodel': RadioNgModelExample,
-  'radio-overview': RadioOverviewExample,
-  'sidenav-fab': SidenavFabExample,
-  'sidenav-overview': SidenavOverviewExample,
-  'slider-configurable': SliderConfigurableExample,
-  'slider-overview': SliderOverviewExample,
-  'slide-toggle-configurable': SlideToggleConfigurableExample,
-  'slide-toggle-overview': SlideToggleOverviewExample,
-  'snack-bar-component': SnackBarComponentExample,
-  'snack-bar-overview': SnackBarOverviewExample,
-  'tabs-overview': TabsOverviewExample,
-  'tabs-template-label': TabsTemplateLabelExample,
-  'toolbar-multirow': ToolbarMultirowExample,
-  'toolbar-overview': ToolbarOverviewExample,
-  'tooltip-overview': TooltipOverviewExample,
-  'tooltip-position': TooltipPositionExample,
+  'button-overview': {title: 'Basic buttons', component: ButtonOverviewExample},
+  'button-types': {title: 'Button varieties', component: ButtonTypesExample},
+  'button-toggle-exclusive': {
+    title: 'Exclusive selection',
+    component: ButtonToggleExclusiveExample
+  },
+  'button-toggle-overview': {title: 'Basic button-toggles', component: ButtonToggleOverviewExample},
+  'chips-overview': {title: 'Basic chips', component: ChipsOverviewExample},
+  'chips-stacked': {title: 'Stacked chips', component: ChipsStackedExample},
+  'card-fancy': {title: 'Card with multiple sections', component: CardFancyExample},
+  'card-overview': {title: 'Basic cards', component: CardOverviewExample},
+  'checkbox-configurable': {title: 'Configurable checkbox', component: CheckboxConfigurableExample},
+  'checkbox-overview': {title: 'Basic checkboxes', component: CheckboxOverviewExample},
+  'dialog-overview': {title: 'Basic dialog', component: DialogOverviewExample},
+  'dialog-result': {title: 'Dailog with a result', component: DialogResultExample},
+  'grid-list-dynamic': {title: 'Dynamic grid-list', component: GridListDynamicExample},
+  'grid-list-overview': {title: 'Basic grid-list', component: GridListOverviewExample},
+  'icon-overview': {title: 'Basic icons', component: IconOverviewExample},
+  'icon-svg': {title: 'SVG icons', component: IconSvgExample},
+  'input-form': {title: 'Inputs in a form', component: InputFormExample},
+  'input-overview': {title: 'Basic inputs', component: InputOverviewExample},
+  'list-overview': {title: 'Basic list', component: ListOverviewExample},
+  'list-sections': {title: 'List with sections', component: ListSectionsExample},
+  'menu-icons': {title: 'Menu with icons', component: MenuIconsExample},
+  'menu-overview': {title: 'Basic menu', component: MenuOverviewExample},
+  'progress-bar-configurable': {
+    title: 'Configurable progress-bar',
+    component: ProgressBarConfigurableExample
+  },
+  'progress-bar-overview': {title: 'Basic progress-bar', component: ProgressBarOverviewExample},
+  'progress-spinner-configurable': {
+    title: 'Configurable progress-bar',
+    component: ProgressSpinnerConfigurableExample
+  },
+  'progress-spinner-overview': {
+    title: 'Basic progress-spinner',
+    component: ProgressSpinnerOverviewExample
+  },
+  'radio-ngmodel': {title: 'Radios with ngModel', component: RadioNgModelExample},
+  'radio-overview': {title: 'Basic radios', component: RadioOverviewExample},
+  'select-overview': {title: 'Basic select', component: SelectOverviewExample},
+  'select-form': {title: 'Select in a form', component: SelectFormExample},
+  'sidenav-fab': {title: 'Sidenav with a FAB', component: SidenavFabExample},
+  'sidenav-overview': {title: 'Basic sidenav', component: SidenavOverviewExample},
+  'slider-configurable': {title: 'Configurable slider', component: SliderConfigurableExample},
+  'slider-overview': {title: 'Basic slider', component: SliderOverviewExample},
+  'slide-toggle-configurable': {
+    title: 'Configurable slide-toggle',
+    component: SlideToggleConfigurableExample
+  },
+  'slide-toggle-overview': {title: 'Basic slide-toggles', component: SlideToggleOverviewExample},
+  'snack-bar-component': {
+    title: 'Snack-bar with a custom component',
+    component: SnackBarComponentExample
+  },
+  'snack-bar-overview': {title: 'Basic snack-bar', component: SnackBarOverviewExample},
+  'tabs-overview': {title: 'Basic tabs', component: TabsOverviewExample},
+  'tabs-template-label': {title: 'Tabs with a label template', component: TabsTemplateLabelExample},
+  'toolbar-multirow': {title: 'Multi-row toolbar', component: ToolbarMultirowExample},
+  'toolbar-overview': {title: 'basic toolbar', component: ToolbarOverviewExample},
+  'tooltip-overview': {title: 'Basic tooltip', component: TooltipOverviewExample},
+  'tooltip-position': {title: 'Tooltip with custom position', component: TooltipPositionExample},
 };
 
 /**
@@ -123,6 +153,8 @@ export const EXAMPLE_LIST = [
   ButtonTypesExample,
   CardFancyExample,
   CardOverviewExample,
+  ChipsOverviewExample,
+  ChipsStackedExample,
   CheckboxConfigurableExample,
   CheckboxOverviewExample,
   DialogOverviewExample,
@@ -146,6 +178,8 @@ export const EXAMPLE_LIST = [
   RadioNgModelExample,
   RadioOverviewExample,
   SidenavFabExample,
+  SelectOverviewExample,
+  SelectFormExample,
   SidenavOverviewExample,
   SliderConfigurableExample,
   SliderOverviewExample,
