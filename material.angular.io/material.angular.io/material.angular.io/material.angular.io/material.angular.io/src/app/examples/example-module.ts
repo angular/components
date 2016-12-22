@@ -70,6 +70,8 @@ import {SelectFormExample} from './select-form/select-form-example';
 export interface LiveExample {
   title: string;
   component: any;
+  additionalFiles: string[];
+  selectorName: string;
 }
 
 /**
@@ -91,8 +93,18 @@ export const EXAMPLE_COMPONENTS = {
   'card-overview': {title: 'Basic cards', component: CardOverviewExample},
   'checkbox-configurable': {title: 'Configurable checkbox', component: CheckboxConfigurableExample},
   'checkbox-overview': {title: 'Basic checkboxes', component: CheckboxOverviewExample},
-  'dialog-overview': {title: 'Basic dialog', component: DialogOverviewExample},
-  'dialog-result': {title: 'Dailog with a result', component: DialogResultExample},
+  'dialog-overview': {
+    title: 'Basic dialog',
+    component: DialogOverviewExample,
+    additionalFiles: ['dialog-overview-example-dialog.html'],
+    selectorName: 'DialogOverviewExample, DialogOverviewExampleDialog',
+  },
+  'dialog-result': {
+    title: 'Dailog with a result',
+    component: DialogResultExample,
+    additionalFiles: ['dialog-result-example-dialog.html'],
+    selectorName: 'DialogResultExample, DialogResultExampleDialog',
+  },
   'grid-list-dynamic': {title: 'Dynamic grid-list', component: GridListDynamicExample},
   'grid-list-overview': {title: 'Basic grid-list', component: GridListOverviewExample},
   'icon-overview': {title: 'Basic icons', component: IconOverviewExample},

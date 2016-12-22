@@ -1,3 +1,6 @@
+import {EXAMPLE_COMPONENTS} from './example-module';
+
+
 /**
  * Example data
  *   with information about Component name, selector, files used in example, and path to examples
@@ -15,17 +18,31 @@ export class ExampleData {
   componentName = 'ButtonDemo';
 
   constructor(example: string) {
-    if (example) {
+    if (example && EXAMPLE_COMPONENTS[example]) {
       this.examplePath = `/app/examples/${example}/`;
       // TODO(tinayuangao): Do not hard-code extensions
       this.exampleFiles = ['html', 'ts', 'css']
         .map((extension) => `${example}-example.${extension}`);
+      if (EXAMPLE_COMPONENTS[example].additionalFiles) {
+        this.exampleFiles = this.exampleFiles.concat(EXAMPLE_COMPONENTS[example].additionalFiles);
+      }
       this.selectorName = this.indexFilename = `${example}-example`;
+
       var exampleName = example.replace(/(?:^\w|\b\w)/g, function(letter) {
         return letter.toUpperCase();
       });
-      this.description = exampleName.replace(/[\-]+/g, ' ') + ' Example';
-      this.componentName = exampleName.replace(/[\-]+/g, '') + 'Example';
+
+      if (EXAMPLE_COMPONENTS[example].title) {
+        this.description = EXAMPLE_COMPONENTS[example].title;
+      } else {
+        this.description = exampleName.replace(/[\-]+/g, ' ') + ' Example';
+      }
+
+      if (EXAMPLE_COMPONENTS[example].selectorName) {
+        this.componentName = EXAMPLE_COMPONENTS[example].selectorName;
+      } else {
+        this.componentName = exampleName.replace(/[\-]+/g, '') + 'Example';
+      }
     }
   }
 }
