@@ -15,7 +15,7 @@ export class DialogResultExample {
     let dialogRef = this.dialog.open(DialogResultExampleDialog);
     dialogRef.afterClosed().subscribe(result => {
       this.selectedOption = result;
-    })
+    });
   }
 }
 

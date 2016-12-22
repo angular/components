@@ -18,7 +18,8 @@
       "prefix": "app",
       "mobile": false,
       "styles": [
-        "main.scss"
+        "main.scss",
+        "highlightjs/solarized-light.css"
       ],
       "scripts": [],
       "environments": {
