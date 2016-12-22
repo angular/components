@@ -1,14 +1,18 @@
-<span class="hljs-keyword">import</span> {Component, ViewEncapsulation} from <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> {Component} from <span class="hljs-string">'@angular/core'</span>;
 <span class="hljs-keyword">import</span> {MdSnackBar} from <span class="hljs-string">'@angular/material'</span>;
 
 
 <span class="hljs-meta">@Component</span>({
   selector: <span class="hljs-string">'snack-bar-component-example'</span>,
-  template: <span class="hljs-string">''</span>,
+  templateUrl: <span class="hljs-string">'./snack-bar-component-example.html'</span>,
 })
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> SnackBarComponentExample {
-  <span class="hljs-keyword">constructor</span>(<span class="hljs-params">snackBar: MdSnackBar</span>) {
-    snackBar.openFromComponent(SnackBarComponentExampleSnack);
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> snackBar: MdSnackBar</span>) {}
+
+  openSnackBar() {
+    <span class="hljs-keyword">this</span>.snackBar.openFromComponent(PizzaPartyComponent, {
+      duration: <span class="hljs-number">500</span>,
+    });
   }
 }
 
@@ -17,9 +21,5 @@
   selector: <span class="hljs-string">'snack-bar-component-example-snack'</span>,
   templateUrl: <span class="hljs-string">'./snack-bar-component-example-snack.html'</span>,
   styleUrls: [<span class="hljs-string">'./snack-bar-component-example-snack.css'</span>],
-  host: {
-    <span class="hljs-string">'class'</span>: <span class="hljs-string">'example-snack'</span>,
-  },
-  encapsulation: ViewEncapsulation.None,
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> SnackBarComponentExampleSnack {}
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> PizzaPartyComponent {}
