@@ -18,7 +18,7 @@ import {
   DialogOverviewExampleDialog,
   DialogOverviewExample
 } from './dialog-overview/dialog-overview-example';
-import {RadioNgModelExample} from './radio-ngmodel/radio-ngmodel-example';
+import {RadioNgModelExample} from './radio-ng-model/radio-ng-model-example';
 import {CardFancyExample} from './card-fancy/card-fancy-example';
 import {ToolbarOverviewExample} from './toolbar-overview/toolbar-overview-example';
 import {ToolbarMultirowExample} from './toolbar-multirow/toolbar-multirow-example';
@@ -116,7 +116,7 @@ export const EXAMPLE_COMPONENTS = {
     title: 'Basic progress-spinner',
     component: ProgressSpinnerOverviewExample
   },
-  'radio-ngmodel': {title: 'Radios with ngModel', component: RadioNgModelExample},
+  'radio-ng-model': {title: 'Radios with ngModel', component: RadioNgModelExample},
   'radio-overview': {title: 'Basic radios', component: RadioOverviewExample},
   'select-overview': {title: 'Basic select', component: SelectOverviewExample},
   'select-form': {title: 'Select in a form', component: SelectFormExample},
