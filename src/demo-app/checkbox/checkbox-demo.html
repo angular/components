@@ -45,3 +45,14 @@
 
 <h1>Nested Checklist</h1>
 <md-checkbox-demo-nested-checklist></md-checkbox-demo-nested-checklist>
+
+<div [style.display]="flex ? 'flex' : 'block'" [style.align-items]="center ? 'center' : ''">
+  <md-checkbox (change)="flex = $event.checked">Toggle Flex</md-checkbox>
+  <md-input placeholder="An Input"></md-input>
+  <md-select placeholder="A Select">
+    <md-option *ngFor="let option of ['One', 'Two', 'Three']" [value]="option">{{ option }}</md-option>
+  </md-select>
+  <md-checkbox (change)="center = $event.checked">Toggle Align</md-checkbox>
+  <md-radio-button>Radio button</md-radio-button>
+  <button md-raised-button>Button</button>
+</div>
