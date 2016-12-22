@@ -2,9 +2,9 @@ import {Component} from '@angular/core';
 
 
 @Component({
-  selector: 'radio-ngmodel-example',
-  templateUrl: './radio-ngmodel-example.html',
-  styleUrls: ['./radio-ngmodel-example.css'],
+  selector: 'radio-ng-model-example',
+  templateUrl: './radio-ng-model-example.html',
+  styleUrls: ['./radio-ng-model-example.css'],
 })
 export class RadioNgModelExample {
   favoriteSeason: string;

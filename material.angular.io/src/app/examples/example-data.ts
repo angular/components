@@ -18,7 +18,7 @@ export class ExampleData {
     if (example) {
       this.examplePath = `/app/examples/${example}/`;
       // TODO(tinayuangao): Do not hard-code extensions
-      this.exampleFiles = ['html', 'ts', 'scss']
+      this.exampleFiles = ['html', 'ts', 'css']
         .map((extension) => `${example}-example.${extension}`);
       this.selectorName = this.indexFilename = `${example}-example`;
       var exampleName = example.replace(/(?:^\w|\b\w)/g, function(letter) {
