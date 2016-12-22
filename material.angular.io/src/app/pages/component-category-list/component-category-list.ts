@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
+import {ComponentPageTitle} from '../page-title/page-title';
 
 
 @Component({
@@ -8,5 +9,10 @@ import {DocumentationItems} from '../../shared/documentation-items/documentation
   styleUrls: ['./component-category-list.scss']
 })
 export class ComponentCategoryList {
-  constructor(public docItems: DocumentationItems) {}
+  constructor(public docItems: DocumentationItems,
+              private _componentPageTitle: ComponentPageTitle) {}
+
+  ngOnInit() {
+    this._componentPageTitle.title = 'Component Library';
+  }
 }

@@ -6,12 +6,10 @@
   $warn: map-get($theme, warn);
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
-  $sidenav: '.docs-component-viewer-sidenav'; 
+  $sidenav: '.docs-component-viewer-sidenav';
 
 
   .docs-component-viewer-sidenav {
-    background: rgba(md-color($foreground, secondary-text), .04);
-
 
     // Section divider
     h3 {
@@ -27,8 +25,8 @@
       > a {
       color: md-color($foreground, secondary-text);
 
-        &.is-selected, 
-        &:hover, 
+        &.is-selected,
+        &:hover,
         &:focus {
           background: md-color($background, background);
           color: md-color($primary);

@@ -1,9 +1,14 @@
+@import '../../../styles/constants';
+
 app-component-viewer {
   font-weight: 400;
 }
 
 .docs-component-viewer-tabbed-content {
   margin: 50px 70px;
+  @media (max-width: $small-breakpoint-width) {
+    margin: 16px;
+  }
 
   md-tab {
     margin: 30px;

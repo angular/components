@@ -15,6 +15,8 @@ import {ExampleModule} from './examples/example-module';
 import {SharedModule} from './shared/shared-module';
 import {ComponentCategoryList} from './pages/component-category-list/component-category-list';
 import {ComponentSidenav} from './pages/component-sidenav/component-sidenav';
+import {ComponentPageTitle} from './pages/page-title/page-title';
+import {ComponentPageHeader} from './pages/component-page-header/component-page-header';
 
 
 @NgModule({
@@ -24,6 +26,7 @@ import {ComponentSidenav} from './pages/component-sidenav/component-sidenav';
     ComponentList,
     ComponentSidenav,
     ComponentViewer,
+    ComponentPageHeader,
     GuideList,
     GuideViewer,
     Homepage,
@@ -39,6 +42,7 @@ import {ComponentSidenav} from './pages/component-sidenav/component-sidenav';
   ],
   providers: [
     Location,
+    ComponentPageTitle,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
   ],
   bootstrap: [MaterialDocsApp],

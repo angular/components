@@ -1,5 +1,7 @@
 <md-sidenav-layout class="docs-component-viewer-sidenav-container">
-  <md-sidenav opened mode="side" class="docs-component-viewer-sidenav">
+  <md-sidenav #sidenav class="docs-component-viewer-sidenav"
+              [opened]="!isScreenSmall()"
+              [mode]="isScreenSmall() ? 'over' : 'side'">
     <nav *ngFor="let category of docItems.getItemsInCategories()">
       <h3>{{category.name}}</h3>
       <ul>
@@ -13,5 +15,6 @@
     </nav>
   </md-sidenav>
 
+  <component-page-header (toggleSidenav)="sidenav.toggle()"></component-page-header>
   <router-outlet></router-outlet>
 </md-sidenav-layout>
