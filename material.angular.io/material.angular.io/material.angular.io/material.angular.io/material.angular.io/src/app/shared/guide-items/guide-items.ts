@@ -8,14 +8,19 @@ export interface GuideItem {
 
 const GUIDES = [
   {
-    id: 'readme',
-    name: 'Read Me',
-    document: '/assets/documents/README.html',
+    id: 'getting-started',
+    name: 'Getting started',
+    document: '/assets/documents/guides/getting-started.html',
   },
   {
-    id: 'card',
-    name: 'Card',
-    document: '/assets/documents/overview/card.html',
+    id: 'theming',
+    name: 'Theming Angular Material',
+    document: '/assets/documents/guides/theming.html',
+  },
+  {
+    id: 'theming-your-components',
+    name: 'Theming your own components',
+    document: '/assets/documents/guides/theming-your-components.html',
   },
 ];
 

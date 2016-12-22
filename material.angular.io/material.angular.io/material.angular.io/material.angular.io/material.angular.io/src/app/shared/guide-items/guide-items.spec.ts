@@ -30,6 +30,6 @@ describe('GuideItems', () => {
   });
 
   it('should get a doc item by id', () => {
-    expect(guideItems.getItemById('readme')).toBeDefined();
+    expect(guideItems.getItemById('getting-started')).toBeDefined();
   });
 });
