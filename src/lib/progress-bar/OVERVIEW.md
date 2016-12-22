@@ -23,3 +23,8 @@ In "query" mode, the progress-bar renders as an inverted "indeterminate" bar. On
 progress is available, the `mode` should be changed to determinate to convey the progress.  
 
 In both "indeterminate" and "query" modes, the `value` property is ignored.
+
+
+### Theming
+The color of a progress-bar can be changed by using the `color` property. By default, progress-bars
+use the theme's primary color. This can be changed to `'accent'` or `'warn'`.  

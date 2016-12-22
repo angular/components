@@ -16,3 +16,8 @@ The default mode is "determinate". In this mode, the progress is set via the `va
 which can be a whole number between 0 and 100.
 
 In "indeterminate" mode, the `value` property is ignored.
+
+
+### Theming
+The color of a progress-spinner can be changed by using the `color` property. By default, 
+progress-spinners use the theme's primary color. This can be changed to `'accent'` or `'warn'`.
