@@ -1,5 +1,13 @@
+@import '../../../styles/constants';
+
 .docs-component-category-list {
   padding: 20px;
+
+  @media (max-width: $small-breakpoint-width) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }
 
 .docs-component-category-list-card {
@@ -24,6 +32,8 @@
 
 .docs-component-category-list-header {
   padding-left: 20px;
+  display: flex;
+  align-items: center;
 
   h1 {
     font-size: 30px;

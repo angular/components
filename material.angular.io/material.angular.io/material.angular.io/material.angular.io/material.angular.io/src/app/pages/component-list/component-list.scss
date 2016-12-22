@@ -1,8 +1,14 @@
 @import '~@angular/material/button/button-base';
-
+@import '../../../styles/constants';
 
 .docs-component-list-category {
   margin: 20px;
+
+  @media (max-width: $small-breakpoint-width) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
 }
 
 .docs-component-list-item {
