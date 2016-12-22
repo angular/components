@@ -17,7 +17,7 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  material-docs-app {
+  .docs-app-background {
     background: md-color($background, background);
   }
 
