@@ -3,14 +3,18 @@
 </div>
 
 <!-- TODO(jelbourn): turn this into nav tabs -->
-<md-tab-group class="docs-component-viewer-tabbed-content">
+<md-tab-group class="docs-component-viewer-tabbed-content"
+    (selectedIndexChange)="overviewViewer.releadLiveExamples()">
   <md-tab label="OVERVIEW">
-    <doc-viewer documentUrl="/assets/documents/overview/{{componentDocItem.id}}.html" class="docs-component-view-text-content">
+    <doc-viewer #overviewViewer
+        documentUrl="/assets/documents/overview/{{componentDocItem.id}}.html"
+        class="docs-component-view-text-content">
     </doc-viewer>
   </md-tab>
 
   <md-tab label="API REFERENCE">
-    <doc-viewer documentUrl="/assets/documents/api/{{componentDocItem.id}}.html"  class="docs-component-view-text-content"></doc-viewer>
+    <doc-viewer documentUrl="/assets/documents/api/{{componentDocItem.id}}.html"
+        class="docs-component-view-text-content"></doc-viewer>
   </md-tab>
 
   <md-tab label="EXAMPLES">

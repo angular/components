@@ -1,0 +1,22 @@
+<span class="hljs-keyword">import</span> {Component} from <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> {MdDialog} from <span class="hljs-string">'@angular/material'</span>;
+
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'dialog-overview-example'</span>,
+  templateUrl: <span class="hljs-string">'./dialog-overview-example.html'</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> DialogOverviewExample {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> dialog: MdDialog</span>) {}
+
+  openDialog() {
+    <span class="hljs-keyword">this</span>.dialog.open(DialogOverviewExampleDialog);
+  }
+}
+
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'dialog-overview-example-dialog'</span>,
+  templateUrl: <span class="hljs-string">'./dialog-overview-example-dialog.html'</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> DialogOverviewExampleDialog {}

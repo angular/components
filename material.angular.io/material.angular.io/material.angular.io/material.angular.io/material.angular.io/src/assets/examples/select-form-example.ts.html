@@ -1,0 +1,16 @@
+<span class="hljs-keyword">import</span> {Component} from <span class="hljs-string">'@angular/core'</span>;
+
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'select-form-example'</span>,
+  templateUrl: <span class="hljs-string">'./select-form-example.html'</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> SelectFormExample {
+  selectedValue: <span class="hljs-built_in">string</span>;
+
+  foods = [
+    {value: <span class="hljs-string">'steak-0'</span>, viewValue: <span class="hljs-string">'Steak'</span>},
+    {value: <span class="hljs-string">'pizza-1'</span>, viewValue: <span class="hljs-string">'Pizza'</span>},
+    {value: <span class="hljs-string">'tacos-2'</span>, viewValue: <span class="hljs-string">'Tacos'</span>}
+  ];
+}

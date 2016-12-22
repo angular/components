@@ -4,10 +4,12 @@ import {MdSnackBar} from '@angular/material';
 
 @Component({
   selector: 'snack-bar-overview-example',
-  template: '',
+  templateUrl: './snack-bar-overview-example.html',
 })
 export class SnackBarOverviewExample {
-  constructor(snackBar: MdSnackBar) {
-    snackBar.open('Here\'s a tasty snack!', 'Nom');
+  constructor(public snackBar: MdSnackBar) {}
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action);
   }
 }

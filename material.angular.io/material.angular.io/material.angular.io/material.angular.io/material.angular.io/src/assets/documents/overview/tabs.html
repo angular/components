@@ -11,34 +11,34 @@ tab labels in the header.</p>
 the header, usually through keyboard navigation. </p>
 <h3 id="labels">Labels</h3>
 <p>If a tab&#39;s label is only text then the simple tab-group API can be used.</p>
-<pre><code class="lang-html">&lt;md-tab-group&gt;
-  &lt;md-tab label=&quot;One&quot;&gt;
-    &lt;h1&gt;Some tab content&lt;/h1&gt;
-    &lt;p&gt;...&lt;/p&gt;
-  &lt;/md-tab&gt;
-  &lt;md-tab label=&quot;Two&quot;&gt;
-    &lt;h1&gt;Some more tab content&lt;/h1&gt;
-    &lt;p&gt;...&lt;/p&gt;
-  &lt;/md-tab&gt;
-&lt;/md-tab-group&gt;
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">md-tab-group</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">md-tab</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"One"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Some tab content<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">md-tab</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">md-tab</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"Two"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Some more tab content<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">md-tab</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">md-tab-group</span>&gt;</span>
 </code></pre>
 <p>For more complex labels, add a template with the <code>md-tab-label</code> directive inside the <code>md-tab</code>.</p>
-<pre><code class="lang-html">&lt;md-tab-group&gt;
-  &lt;md-tab&gt;
-    &lt;template md-tab-label&gt;
-      The &lt;em&gt;best&lt;/em&gt; pasta
-    &lt;/template&gt;
-    &lt;h1&gt;Best pasta restaurants&lt;/h1&gt;
-    &lt;p&gt;...&lt;/p&gt;
-  &lt;/md-tab&gt;
-  &lt;md-tab&gt;
-    &lt;template md-tab-label&gt;
-      &lt;md-icon&gt;thumb_down&lt;/md-icon&gt; The worst sushi
-    &lt;/template&gt;
-    &lt;h1&gt;Terrible sushi restaurants&lt;/h1&gt;
-    &lt;p&gt;...&lt;/p&gt;
-  &lt;/md-tab&gt;
-&lt;/md-tab-group&gt;
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">md-tab-group</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">md-tab</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">md-tab-label</span>&gt;</span>
+      The <span class="hljs-tag">&lt;<span class="hljs-name">em</span>&gt;</span>best<span class="hljs-tag">&lt;/<span class="hljs-name">em</span>&gt;</span> pasta
+    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Best pasta restaurants<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">md-tab</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">md-tab</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">md-tab-label</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">md-icon</span>&gt;</span>thumb_down<span class="hljs-tag">&lt;/<span class="hljs-name">md-icon</span>&gt;</span> The worst sushi
+    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Terrible sushi restaurants<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">md-tab</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">md-tab-group</span>&gt;</span>
 </code></pre>
 <h3 id="dynamic-height">Dynamic Height</h3>
 <p>By default, the tab group will not change its height to the height of the currently active tab. To
@@ -47,17 +47,17 @@ change this, set the <code>dynamicHeight</code> input to true. The tab body will
 <h3 id="tabs-and-navigation">Tabs and navigation</h3>
 <p>While <code>&lt;md-tab-group&gt;</code> is used to switch between views within a single route, <code>&lt;nav md-tab-nav-bar&gt;</code>
 provides a tab-like UI for navigating between routes.</p>
-<pre><code class="lang-html">&lt;nav md-tab-nav-bar&gt;
-  &lt;a md-tab-link
-     *ngFor=&quot;let link of navLinks&quot;
-     [routerLink]=&quot;link&quot;
-     routerLinkActive #rla=&quot;routerLinkActive&quot;
-     [active]=&quot;rla.isActive&quot;&gt;
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">nav</span> <span class="hljs-attr">md-tab-nav-bar</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">md-tab-link</span>
+     *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let link of navLinks"</span>
+     [<span class="hljs-attr">routerLink</span>]=<span class="hljs-string">"link"</span>
+     <span class="hljs-attr">routerLinkActive</span> #<span class="hljs-attr">rla</span>=<span class="hljs-string">"routerLinkActive"</span>
+     [<span class="hljs-attr">active</span>]=<span class="hljs-string">"rla.isActive"</span>&gt;</span>
     {{tabLink.label}}
-  &lt;/a&gt;
-&lt;/nav&gt;
+  <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">nav</span>&gt;</span>
 
-&lt;router-outlet&gt;&lt;/router-outlet&gt;
+<span class="hljs-tag">&lt;<span class="hljs-name">router-outlet</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">router-outlet</span>&gt;</span>
 </code></pre>
 <p>The tab-nav-bar is not tied to any particular router; it works with normal <code>&lt;a&gt;</code> elements and uses
 the <code>active</code> property to determine which tab is currently active. The corresponding 

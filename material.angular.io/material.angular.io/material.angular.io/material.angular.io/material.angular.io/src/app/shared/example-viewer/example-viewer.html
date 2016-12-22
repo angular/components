@@ -17,8 +17,9 @@
   <div class="docs-example-viewer-source" *ngIf="showSource">
     <md-tab-group>
       <!-- TODO(jelbourn): don't hard-code the html + ts + css structure -->
-      <md-tab *ngFor="let extension of ['HTML', 'TS', 'SCSS']" [label]="extension">
-        <pre><doc-viewer [documentUrl]="exampleFileUrl(extension)"></doc-viewer></pre>
+      <md-tab *ngFor="let extension of ['HTML', 'TS', 'CSS']" [label]="extension">
+        <pre class="docs-example-source"><doc-viewer
+            [documentUrl]="exampleFileUrl(extension)"></doc-viewer></pre>
       </md-tab>
     </md-tab-group>
   </div>

@@ -1,15 +1,15 @@
-.example-container {
+.example-sidenav-fab-container {
   width: 500px;
   height: 300px;
   border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
-.example-container md-sidenav {
+.example-sidenav-fab-container md-sidenav {
   max-width: 200px;
 }
 
-.example-container .md-sidenav-content,
-.example-container md-sidenav {
+.example-sidenav-fab-container .md-sidenav-content,
+.example-sidenav-fab-container md-sidenav {
   display: flex;
   overflow: visible;
 }

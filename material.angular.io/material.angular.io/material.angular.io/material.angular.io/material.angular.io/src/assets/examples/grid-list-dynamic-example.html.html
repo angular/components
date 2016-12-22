@@ -1,0 +1,9 @@
+<span class="hljs-tag">&lt;<span class="hljs-name">md-grid-list</span> <span class="hljs-attr">cols</span>=<span class="hljs-string">"4"</span> <span class="hljs-attr">rowHeight</span>=<span class="hljs-string">"100px"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">md-grid-tile</span>
+      *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let tile of tiles"</span>
+      [<span class="hljs-attr">colspan</span>]=<span class="hljs-string">"tile.cols"</span>
+      [<span class="hljs-attr">rowspan</span>]=<span class="hljs-string">"tile.rows"</span>
+      [<span class="hljs-attr">style.background</span>]=<span class="hljs-string">"tile.color"</span>&gt;</span>
+    {{tile.text}}
+  <span class="hljs-tag">&lt;/<span class="hljs-name">md-grid-tile</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">md-grid-list</span>&gt;</span>

@@ -12,3 +12,11 @@
 .example-margin {
   margin: 10px;
 }
+
+.md-slider-horizontal {
+  width: 300px;
+}
+
+.md-slider-vertical {
+  height: 300px;
+}

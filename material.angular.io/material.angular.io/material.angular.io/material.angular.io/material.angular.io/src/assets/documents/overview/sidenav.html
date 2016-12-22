@@ -2,13 +2,13 @@
 typically used for navigation, but can contain any content.</p>
 <div material-docs-example="sidenav-overview"></div>
 <p>The sidenav and its associated content live inside of an <code>&lt;md-sidenav-container&gt;</code>:</p>
-<pre><code class="lang-html">&lt;md-sidenav-container&gt;
-  &lt;md-sidenav&gt;
-    &lt;!-- sidenav content --&gt;
-  &lt;/md-sidenav&gt;
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">md-sidenav-container</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">md-sidenav</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- sidenav content --&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">md-sidenav</span>&gt;</span>
 
-  &lt;!-- primary content --&gt;
-&lt;/md-sidenav-container&gt;
+  <span class="hljs-comment">&lt;!-- primary content --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">md-sidenav-container</span>&gt;</span>
 </code></pre>
 <p>A sidenav container may contain one or two <code>&lt;md-sidenav&gt;</code> elements. When there are two 
 <code>&lt;md-sidenav&gt;</code> elements, each must be placed on a different side of the container.
@@ -44,24 +44,24 @@ appears at the start of the container.</p>
 <h3 id="sizing-the-sidenav">Sizing the sidenav</h3>
 <p>The <code>&lt;md-sidenav&gt;</code> will, by default, fit the size of its content. The width can be explicitly set
 via CSS:</p>
-<pre><code class="lang-css">md-sidenav {
-  width: 200px;
+<pre><code class="lang-css"><span class="hljs-selector-tag">md-sidenav</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;
 }
 </code></pre>
 <p>Try to avoid percent based width as <code>resize</code> events are not (yet) supported.</p>
 <p>For a fullscreen sidenav, the recommended approach is set up the DOM such that the
 <code>&lt;md-sidenav-container&gt;</code> can naturally take up the full space:</p>
-<pre><code class="lang-html">&lt;app&gt;
-  &lt;md-sidenav-container&gt;
-    &lt;md-sidenav mode=&quot;side&quot; opened=&quot;true&quot;&gt;Drawer content&lt;/md-sidenav&gt;
-    &lt;div class=&quot;my-content&quot;&gt;Main content&lt;/div&gt;
-  &lt;/md-sidenav-container&gt;
-&lt;/app&gt;
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">app</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">md-sidenav-container</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">md-sidenav</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">"side"</span> <span class="hljs-attr">opened</span>=<span class="hljs-string">"true"</span>&gt;</span>Drawer content<span class="hljs-tag">&lt;/<span class="hljs-name">md-sidenav</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"my-content"</span>&gt;</span>Main content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">md-sidenav-container</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">app</span>&gt;</span>
 </code></pre>
-<pre><code class="lang-css">html, body, material-app, md-sidenav-container, .my-content {
-  margin: 0;
-  width: 100%;
-  height: 100%;
+<pre><code class="lang-css"><span class="hljs-selector-tag">html</span>, <span class="hljs-selector-tag">body</span>, <span class="hljs-selector-tag">material-app</span>, <span class="hljs-selector-tag">md-sidenav-container</span>, <span class="hljs-selector-class">.my-content</span> {
+  <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;
 }
 </code></pre>
 <h3 id="fabs-inside-sidenav">FABs inside sidenav</h3>

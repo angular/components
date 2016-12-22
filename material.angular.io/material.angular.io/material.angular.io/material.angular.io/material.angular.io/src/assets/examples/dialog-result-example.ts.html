@@ -1,0 +1,29 @@
+<span class="hljs-keyword">import</span> {Component} from <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> {MdDialog, MdDialogRef} from <span class="hljs-string">'@angular/material'</span>;
+
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'dialog-result-example'</span>,
+  templateUrl: <span class="hljs-string">'./dialog-result-example.html'</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> DialogResultExample {
+  selectedOption: <span class="hljs-built_in">string</span>;
+
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> dialog: MdDialog</span>) {}
+
+  openDialog() {
+    <span class="hljs-keyword">let</span> dialogRef = <span class="hljs-keyword">this</span>.dialog.open(DialogResultExampleDialog);
+    dialogRef.afterClosed().subscribe(result =&gt; {
+      <span class="hljs-keyword">this</span>.selectedOption = result;
+    });
+  }
+}
+
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'dialog-result-example-dialog'</span>,
+  templateUrl: <span class="hljs-string">'./dialog-result-example-dialog.html'</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> DialogResultExampleDialog {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> dialogRef: MdDialogRef&lt;DialogResultExampleDialog&gt;</span>) {}
+}

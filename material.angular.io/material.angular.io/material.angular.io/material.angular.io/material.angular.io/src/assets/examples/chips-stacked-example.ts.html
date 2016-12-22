@@ -1,0 +1,18 @@
+<span class="hljs-keyword">import</span> {Component} from <span class="hljs-string">'@angular/core'</span>;
+
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'chips-stacked-example'</span>,
+  templateUrl: <span class="hljs-string">'./chips-stacked-example.html'</span>,
+  styleUrls: [<span class="hljs-string">'./chips-stacked-example.css'</span>],
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ChipsStackedExample {
+  color: <span class="hljs-built_in">string</span>;
+
+  availableColors = [
+    { name: <span class="hljs-string">'none'</span>, color: <span class="hljs-string">''</span> },
+    { name: <span class="hljs-string">'Primary'</span>, color: <span class="hljs-string">'primary'</span> },
+    { name: <span class="hljs-string">'Accent'</span>, color: <span class="hljs-string">'accent'</span> },
+    { name: <span class="hljs-string">'Warn'</span>, color: <span class="hljs-string">'warn'</span> }
+  ];
+}

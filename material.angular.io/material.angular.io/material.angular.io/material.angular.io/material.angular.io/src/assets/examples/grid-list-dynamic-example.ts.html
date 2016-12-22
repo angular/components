@@ -1,0 +1,15 @@
+<span class="hljs-keyword">import</span> {Component} from <span class="hljs-string">'@angular/core'</span>;
+
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'grid-list-dynamic-example'</span>,
+  templateUrl: <span class="hljs-string">'./grid-list-dynamic-example.html'</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> GridListDynamicExample {
+  tiles = [
+    {text: <span class="hljs-string">'One'</span>, cols: <span class="hljs-number">3</span>, rows: <span class="hljs-number">1</span>, color: <span class="hljs-string">'lightblue'</span>},
+    {text: <span class="hljs-string">'Two'</span>, cols: <span class="hljs-number">1</span>, rows: <span class="hljs-number">2</span>, color: <span class="hljs-string">'lightgreen'</span>},
+    {text: <span class="hljs-string">'Three'</span>, cols: <span class="hljs-number">1</span>, rows: <span class="hljs-number">1</span>, color: <span class="hljs-string">'lightpink'</span>},
+    {text: <span class="hljs-string">'Four'</span>, cols: <span class="hljs-number">2</span>, rows: <span class="hljs-number">1</span>, color: <span class="hljs-string">'#DDBDF1'</span>},
+  ];
+}
