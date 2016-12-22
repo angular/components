@@ -1,14 +1,18 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component} from '@angular/core';
 import {MdSnackBar} from '@angular/material';
 
 
 @Component({
   selector: 'snack-bar-component-example',
-  template: '',
+  templateUrl: './snack-bar-component-example.html',
 })
 export class SnackBarComponentExample {
-  constructor(snackBar: MdSnackBar) {
-    snackBar.openFromComponent(SnackBarComponentExampleSnack);
+  constructor(public snackBar: MdSnackBar) {}
+
+  openSnackBar() {
+    this.snackBar.openFromComponent(PizzaPartyComponent, {
+      duration: 500,
+    });
   }
 }
 
@@ -17,9 +21,5 @@ export class SnackBarComponentExample {
   selector: 'snack-bar-component-example-snack',
   templateUrl: './snack-bar-component-example-snack.html',
   styleUrls: ['./snack-bar-component-example-snack.css'],
-  host: {
-    'class': 'example-snack',
-  },
-  encapsulation: ViewEncapsulation.None,
 })
-export class SnackBarComponentExampleSnack {}
+export class PizzaPartyComponent {}
