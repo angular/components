@@ -18,33 +18,32 @@ const DOCS = [
     name: 'Form Controls',
     summary: 'Radio buttons, checkboxes, input fields, sliders, slide toggles, selects',
     items: [
-      {id: 'radio', name: 'Radio button'},
-      {id: 'checkbox', name: 'Checkbox'},
-      {id: 'input', name: 'Input'},
-      {id: 'textarea', name: 'Textarea'},
-      {id: 'slider', name: 'Slider'},
-      {id: 'slide-toggle', name: 'Slide toggle'},
-      {id: 'select', name: 'Select'},
+      {id: 'radio', name: 'Radio button', examples: ['radio-ngmodel']},
+      {id: 'checkbox', name: 'Checkbox', examples: ['checkbox-configurable']},
+      {id: 'input', name: 'Input', examples: ['input-form']},
+      {id: 'slider', name: 'Slider', examples: ['slider-configurable']},
+      {id: 'slide-toggle', name: 'Slide toggle', examples: ['slide-toggle-configurable']},
+      {id: 'select', name: 'Select', examples: []},
     ]
   },
   {
     id: 'nav',
     name: 'Navigation',
-    summary: 'Sidenavs, toolbars, menus, lists',
+    summary: 'Sidenavs, toolbars, menus',
     items: [
-      {id: 'sidenav', name: 'Sidenav'},
-      {id: 'toolbar', name: 'Toolbar'},
-      {id: 'menu', name: 'Menu'},
-      {id: 'list', name: 'List'},
+      {id: 'sidenav', name: 'Sidenav', examples: ['sidenav-fab']},
+      {id: 'toolbar', name: 'Toolbar', examples: ['toolbar-multirow']},
+      {id: 'menu', name: 'Menu', examples: ['menu-icons']},
     ]
   },
   {
     id: 'layout',
     name: 'Layout',
-    summary: 'Grid lists, cards',
+    summary: 'Lists, grid-lists, cards',
     items: [
-      {id: 'grid-list', name: 'Grid list'},
-      {id: 'card', name: 'Card'},
+      {id: 'list', name: 'List', examples: ['list-sections']},
+      {id: 'grid-list', name: 'Grid list', examples: ['grid-list-dynamic']},
+      {id: 'card', name: 'Card', examples: ['card-fancy']},
     ]
   },
   {
@@ -53,10 +52,11 @@ const DOCS = [
     summary: 'buttons, button toggles, icons, progress spinners, progress bars',
     items: [
       {id: 'button', name: 'Button', examples: ['button-types']},
-      {id: 'button-toggle', name: 'Button toggle'},
-      {id: 'icon', name: 'Icon'},
-      {id: 'progress-spinner', name: 'Progress spinner'},
-      {id: 'progress-bar', name: 'Progress bar'},
+      {id: 'button-toggle', name: 'Button toggle', examples: ['button-toggle-exclusive']},
+      {id: 'icon', name: 'Icon', examples: ['icon-svg']},
+      {id: 'progress-spinner', name: 'Progress spinner',
+          examples: ['progress-spinner-configurable']},
+      {id: 'progress-bar', name: 'Progress bar', examples: ['progress-bar-configurable']},
     ]
   },
   {
@@ -64,9 +64,9 @@ const DOCS = [
     name: 'Popups & Modals',
     summary: 'Dialogs, tooltips, snackbars',
     items: [
-      {id: 'dialog', name: 'Dialog'},
-      {id: 'tooltip', name: 'Tooltip'},
-      {id: 'snackbar', name: 'Snackbar'},
+      {id: 'dialog', name: 'Dialog', examples: ['dialog-result']},
+      {id: 'tooltip', name: 'Tooltip', examples: ['tooltip-position']},
+      {id: 'snackbar', name: 'Snackbar', examples: ['snack-bar-component']},
     ]
   },
 ];
