@@ -8,7 +8,7 @@ import {CheckboxOverviewExample} from './checkbox-overview/checkbox-overview-exa
 import {SliderConfigurableExample} from './slider-configurable/slider-configurable-example';
 import {TabsOverviewExample} from './tabs-overview/tabs-overview-example';
 import {
-  SnackBarComponentExampleSnack,
+  PizzaPartyComponent,
   SnackBarComponentExample
 } from './snack-bar-component/snack-bar-component-example';
 import {
@@ -186,7 +186,7 @@ export const EXAMPLE_LIST = [
   SlideToggleConfigurableExample,
   SlideToggleOverviewExample,
   SnackBarComponentExample,
-  SnackBarComponentExampleSnack,
+  PizzaPartyComponent,
   SnackBarOverviewExample,
   TabsOverviewExample,
   TabsTemplateLabelExample,
