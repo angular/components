@@ -1,8 +1,16 @@
-<md-card
-    *ngFor="let category of docItems.getItemsInCategories()"
-    class="docs-component-category-list-category"
-    [routerLink]="['/components/category/', category.id]">
-  <md-card-title>{{category.name}}</md-card-title>
-  <p>{{category.summary}}</p>
-  <img md-card-image src="../../../assets/img/component-categories/{{category.id}}.svg">
-</md-card>
+<div class="docs-component-category-list-header">
+  <h1>Component Library</h1>
+</div>
+
+<div class="docs-component-category-list">
+  <md-card
+      *ngFor="let category of docItems.getItemsInCategories()"
+      class="docs-component-category-list-card"
+      [routerLink]="['/components/category/', category.id]">
+    <md-card-title>{{category.name}}</md-card-title>
+    <p class="docs-component-category-list-card-summary">{{category.summary}}</p>
+    <div class="docs-component-category-list-card-image"
+         [style.backgroundImage]="'url(\'../../../assets/img/component-categories/' + category.id +'.svg\')'">
+    </div>
+  </md-card>
+</div>

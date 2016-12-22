@@ -1,11 +1,15 @@
+<div class="docs-component-list-header">
+  <h1> {{category.name}} </h1>
+</div>
+
 <div class="docs-component-list-category">
-  <h2>{{category.name}}</h2>
   <a *ngFor="let component of category.items"
       class="docs-component-list-item"
       [routerLink]="['/components/component/', component.id]">
-    <img src="../../../assets/img/components/{{component.id}}.svg"
-        class="docs-component-list-item-icon"
-        [alt]="component.name">
+    <div class="docs-component-list-item-icon"
+         [attr.aria-label]="component.name"
+         [style.backgroundImage]="'url(\'../../../assets/img/components/' + component.id + '.svg\')'">
+    </div>
     {{component.name}}
   </a>
 </div>

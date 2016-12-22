@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -7,8 +8,16 @@ import {Component} from '@angular/core';
   styleUrls: ['./material-docs-app.scss'],
   host: {
     '[class.docs-dark-theme]': 'isDarkTheme',
-  }
+  },
+  encapsulation: ViewEncapsulation.None,
 })
 export class MaterialDocsApp {
-  isDarkTheme: boolean = false;
+  isDarkTheme = false;
+  showShadow = false;
+
+  constructor(router: Router) {
+    router.events.subscribe(data => {
+      this.showShadow = data.url.startsWith('/components');
+    });
+  }
 }

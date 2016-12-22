@@ -1,4 +1,34 @@
-.docs-component-category-list-category {
+.docs-component-category-list {
+  padding: 20px;
+}
+
+.docs-component-category-list-card {
   display: inline-block;
-  width: 300px;
+  width: 260px;
+  margin: 20px;
+  vertical-align: top;
+  cursor: pointer;
+}
+
+.docs-component-category-list-card-image {
+  width: 100%;
+  height: 160px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.docs-component-category-list-card-summary {
+  height: 2.4em;
+}
+
+.docs-component-category-list-header {
+  padding-left: 20px;
+
+  h1 {
+    font-size: 30px;
+    font-weight: 300;
+    margin: 0;
+    padding: 50px;
+  }
 }

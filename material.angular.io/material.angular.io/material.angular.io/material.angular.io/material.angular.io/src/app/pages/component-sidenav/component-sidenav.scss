@@ -1,12 +1,21 @@
 $sidenav-spacing-unit: 8px;
 $sidenav-width: 240px;
 
+app-component-sidenav {
+  display: flex;
+}
+
+.docs-component-viewer-sidenav-container {
+  width: 100%;
+}
+
 .docs-component-viewer-sidenav {
   box-shadow: 3px 0 6px rgba(0, 0, 0, .24);
   padding-bottom: 72px;
   width: $sidenav-width;
   bottom: 0;
   overflow: auto;
+  height: 100%;
 
   &.md-sidenav-opened {
     box-shadow: 3px 0 6px rgba(0, 0, 0, .24);
