@@ -11,11 +11,13 @@ import {ComponentList} from './pages/component-list/component-list';
 import {ComponentViewer} from './pages/component-viewer/component-viewer';
 import {ExampleModule} from './examples/example-module';
 import {SharedModule} from './shared/shared-module';
+import {ComponentCategoryList} from './pages/component-category-list/component-category-list';
 
 
 @NgModule({
   declarations: [
     MaterialDocsApp,
+    ComponentCategoryList,
     ComponentList,
     ComponentViewer,
     Homepage,
