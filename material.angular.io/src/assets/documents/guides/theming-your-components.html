@@ -1,0 +1,53 @@
+<h1 id="theming-your-custom-components">Theming your custom components</h1>
+<p>In order to style your own components with Angular Material&#39;s tooling, the component&#39;s styles must be defined with Sass.</p>
+<h2 id="using-mixin-to-automatically-apply-a-theme">Using <code>@mixin</code> to automatically apply a theme</h2>
+<h3 id="why-using-mixin-">Why using <code>@mixin</code></h3>
+<p>The advantage of using a <code>@mixin</code> function is that when you change your theme, every file that uses it will be updated automatically.
+Calling it with a different theme argument allow multiple themes within the app or component.</p>
+<h3 id="how-to-use-mixin-">How to use <code>@mixin</code></h3>
+<p>We can better theming our custom components adding a <code>@mixin</code> function to its theme file and then calling this function to apply a theme.</p>
+<p>All you need is to create a <code>@mixin</code> function in the custom-component-theme.scss</p>
+<pre><code class="lang-scss"><span class="hljs-comment">// Import all the tools needed to customize the theme and extract parts of it</span>
+@<span class="hljs-keyword">import</span> <span class="hljs-string">'~@angular/material/core/theming/all-theme'</span>;
+
+<span class="hljs-comment">// Define a mixin that accepts a theme and outputs the color styles for the component.</span>
+@<span class="hljs-keyword">mixin</span> candy-carousel-theme(<span class="hljs-variable">$theme</span>) {
+  <span class="hljs-comment">// Extract whichever individual palettes you need from the theme.</span>
+  <span class="hljs-variable">$primary</span>: map-get(<span class="hljs-variable">$theme</span>, primary);
+  <span class="hljs-variable">$accent</span>: map-get(<span class="hljs-variable">$theme</span>, accent);
+
+  <span class="hljs-comment">// Use md-color to extract individual colors from a palette as necessary.</span>
+  <span class="hljs-selector-class">.candy-carousel</span> {
+    <span class="hljs-attribute">background-color</span>: md-color(<span class="hljs-variable">$primary</span>);
+    <span class="hljs-attribute">border-color</span>: md-color(<span class="hljs-variable">$accent</span>, A400);
+  }
+}
+</code></pre>
+<p>Now you just have to call the <code>@mixin</code> function to apply the theme:</p>
+<pre><code class="lang-scss"><span class="hljs-comment">// Import a pre-built theme</span>
+@<span class="hljs-keyword">import</span> <span class="hljs-string">'~@angular/material/core/theming/prebuilt/deeppurple-amber'</span>;
+<span class="hljs-comment">// Import your custom input theme file so you can call the custom-input-theme function</span>
+@<span class="hljs-keyword">import</span> <span class="hljs-string">'app/candy-carousel/candy-carousel-theme.scss'</span>;
+
+<span class="hljs-comment">// Using the $theme variable from the pre-built theme you can call the theming function</span>
+@<span class="hljs-keyword">include</span> candy-carousel-theme(<span class="hljs-variable">$theme</span>);
+</code></pre>
+<p>For more details about the theming functions, see the comments in the
+<a href="https://github.com/angular/material2/blob/master/src/lib/core/theming/_theming.scss">source</a>.</p>
+<h3 id="best-practices-using-mixin-">Best practices using <code>@mixin</code></h3>
+<p>When using <code>@mixin</code>, the theme file should only contain the definitions that are affected by the passed-in theme.</p>
+<p>All styles that are not affected by the theme should be placed in a <code>candy-carousel.scss</code> file. This file should contain everything that is not affected by the theme like sizes, transitions...</p>
+<p>Styles that are affected by the theme should be placed in a separated theming file as <code>_candy-carousel-theme.scss</code> and the file should have a <code>_</code> before the name. This file should contain the <code>@mixin</code> function responsible for applying the theme to the component.</p>
+<h2 id="using-colors-from-a-palette">Using colors from a palette</h2>
+<p>You can consume the theming functions from the <code>@angular/material/core/theming/theming</code> and Material palette vars from <code>@angular/material/core/theming/palette</code>. You can use the <code>md-color</code> function to extract a specific color from a palette. For example:</p>
+<pre><code class="lang-scss"><span class="hljs-comment">// Import theming functions</span>
+@<span class="hljs-keyword">import</span> <span class="hljs-string">'~@angular/material/core/theming/theming'</span>;
+<span class="hljs-comment">// Import your custom theme</span>
+@<span class="hljs-keyword">import</span> <span class="hljs-string">'src/unicorn-app-theme.scss'</span>;
+
+<span class="hljs-comment">// Use md-color to extract individual colors from a palette as necessary.</span>
+<span class="hljs-selector-class">.candy-carousel</span> {
+  <span class="hljs-attribute">background-color</span>: md-color(<span class="hljs-variable">$candy-app-primary</span>);
+  <span class="hljs-attribute">border-color</span>: md-color(<span class="hljs-variable">$candy-app-accent</span>, A400);
+}
+</code></pre>
