@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {
-  DocumentationItems,
-  DocCategory
+  DocumentationItems
 } from '../../shared/documentation-items/documentation-items';
 
 

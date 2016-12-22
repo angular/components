@@ -8,6 +8,7 @@ import {MaterialModule} from '@angular/material';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
 import {PlunkerButton} from './plunker';
+import {GuideItems} from './guide-items/guide-items';
 
 
 @NgModule({
@@ -19,7 +20,7 @@ import {PlunkerButton} from './plunker';
   ],
   declarations: [DocViewer, ExampleViewer, NavBar, PlunkerButton],
   exports: [DocViewer, ExampleViewer, NavBar, PlunkerButton],
-  providers: [DocumentationItems],
+  providers: [DocumentationItems, GuideItems],
   entryComponents: [
     ExampleViewer,
   ],

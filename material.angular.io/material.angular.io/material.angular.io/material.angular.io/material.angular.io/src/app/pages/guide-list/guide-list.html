@@ -1,0 +1,7 @@
+<md-list class="docs-guide-list-item">
+  <a md-list-item
+     *ngFor="let guide of guideItems.getAllItems()"
+     [routerLink]="['/guide/', guide.id]">
+      {{guide.name}}
+  </a>
+</md-list>
