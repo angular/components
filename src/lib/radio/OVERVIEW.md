@@ -1,7 +1,7 @@
 `<md-radio>` provides the same functionality as a native `<input type="radio">` enhanced with 
 Material Design styling and animations.  
  
-<!-- example(radio-button-overview) -->
+<!-- example(radio-overview) -->
  
 All radio buttons with the same `name` comprise a set from which only one may be selected at a time.
   
