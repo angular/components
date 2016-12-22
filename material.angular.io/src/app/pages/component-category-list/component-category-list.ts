@@ -1,7 +1,5 @@
 import {Component} from '@angular/core';
-import {
-  DocumentationItems
-} from '../../shared/documentation-items/documentation-items';
+import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
 
 
 @Component({
