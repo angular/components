@@ -1,23 +1,23 @@
-The Angular Material tab group helps organize content into separate views where one view is
-visible at one time. Each tab has a label at the top of the group in the tab header and the active
-tab's label is designated with an animated ink bar. When the list of tab labels exceeds the width
-of the header, pagination controls appear to allow the user to scroll to their desired tab.
+The Angular Material tab group helps organize content into separate views where only one view can be
+visible at a time. Each tab's label is shown in the tab header and the active
+tab's label is designated with the animated ink bar. When the list of tab labels exceeds the width
+of the header, pagination controls appear to let the user scroll left and right across the labels.
 
-The active tab is set using the `selectedIndex` input or through user interaction by selecting a
-tab label on the header.
+The active tab may be set using the `selectedIndex` input or when the user selects one of the
+tab labels in the header.
 
 <!-- example(tab-overview) -->
 
 ### Events
 
+The `selectChange` output event is emitted when the active tab changes.  
+
 The `focusChange` output event is emitted when the user puts focus on any of the tab labels in
 the header, usually through keyboard navigation. 
 
-The `selectChange` output event is emitted when the active tab changes.  
-
 ### Labels
 
-If the tab's label can simply be displayed as text, then the simple tab-group API can be used.
+If a tab's label is only text then the simple tab-group API can be used.
 
 ```html
 <md-tab-group>
@@ -32,7 +32,7 @@ If the tab's label can simply be displayed as text, then the simple tab-group AP
 </md-tab-group>
 ```
 
-For more complex labels, add a template inside the `md-tab` with the `md-tab-label` directive.
+For more complex labels, add a template with the `md-tab-label` directive inside the `md-tab`.
 
 ```html
 <md-tab-group>
