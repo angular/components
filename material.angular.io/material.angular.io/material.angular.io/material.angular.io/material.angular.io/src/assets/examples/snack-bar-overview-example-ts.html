@@ -10,6 +10,8 @@
   <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> snackBar: MdSnackBar</span>) {}
 
   openSnackBar(message: <span class="hljs-built_in">string</span>, action: <span class="hljs-built_in">string</span>) {
-    <span class="hljs-keyword">this</span>.snackBar.open(message, action);
+    <span class="hljs-keyword">this</span>.snackBar.open(message, action, {
+      duration: <span class="hljs-number">2000</span>,
+    });
   }
 }
