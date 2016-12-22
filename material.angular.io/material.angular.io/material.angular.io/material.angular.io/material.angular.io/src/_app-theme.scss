@@ -29,6 +29,11 @@
     }
   }
 
+  .docs-footer {
+    background: md-color($primary);
+    color: md-color($primary, default-contrast);
+  }
+
   @include docs-site-typography-theme($theme);
   @include nav-bar-theme($theme);
   @include component-viewer-sidenav-theme($theme);

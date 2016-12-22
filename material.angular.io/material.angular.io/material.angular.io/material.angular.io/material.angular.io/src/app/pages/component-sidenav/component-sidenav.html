@@ -15,6 +15,9 @@
     </nav>
   </md-sidenav>
 
-  <component-page-header (toggleSidenav)="sidenav.toggle()"></component-page-header>
-  <router-outlet></router-outlet>
+  <div class="docs-component-sidenav-content">   
+    <component-page-header (toggleSidenav)="sidenav.toggle()"></component-page-header>
+    <router-outlet></router-outlet>
+    <app-footer></app-footer>
+  </div>
 </md-sidenav-layout>
