@@ -1,4 +1,4 @@
-`<md-checkbox>` provides the same functionality as a native `<input type="radio">` enhanced with 
+`<md-radio>` provides the same functionality as a native `<input type="radio">` enhanced with 
 Material Design styling and animations.  
  
 <!-- example(radio-button-overview) -->
