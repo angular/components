@@ -1,0 +1,33 @@
+<span class="hljs-keyword">import</span> {Component} from <span class="hljs-string">'@angular/core'</span>;
+
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'list-sections-example'</span>,
+  templateUrl: <span class="hljs-string">'./list-sections-example.html'</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ListSectionsExample {
+  folders = [
+    {
+      name: <span class="hljs-string">'Photos'</span>,
+      updated: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'1/1/16'</span>),
+    },
+    {
+      name: <span class="hljs-string">'Recipes'</span>,
+      updated: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'1/17/16'</span>),
+    },
+    {
+      name: <span class="hljs-string">'Work'</span>,
+      updated: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'1/28/16'</span>),
+    }
+  ];
+  notes = [
+    {
+      name: <span class="hljs-string">'Vacation Itinerary'</span>,
+      updated: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'2/20/16'</span>),
+    },
+    {
+      name: <span class="hljs-string">'Kitchen Remodel'</span>,
+      updated: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'1/18/16'</span>),
+    }
+  ];
+}

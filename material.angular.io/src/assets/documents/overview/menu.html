@@ -2,43 +2,43 @@
 <div material-docs-example="menu-overview"></div>
 <p>By itself, the <code>&lt;md-menu&gt;</code> element does not render anything. The menu is attached to and opened 
 via application of the <code>mdMenuTriggerFor</code> directive:</p>
-<pre><code class="lang-ts">&lt;md-menu #appMenu=&quot;mdMenu&quot;&gt;
+<pre><code class="lang-ts">&lt;md-menu #appMenu="mdMenu"&gt;
   &lt;button md-menu-item&gt; Settings &lt;/button&gt;
   &lt;button md-menu-item&gt; Help &lt;/button&gt;
 &lt;/md-menu&gt;
 
-&lt;button md-icon-button [mdMenuTriggerFor]=&quot;appMenu&quot;&gt;
+&lt;button md-icon-button [mdMenuTriggerFor]="appMenu"&gt;
    &lt;md-icon&gt;more_vert&lt;/md-icon&gt;
 &lt;/button&gt;
 </code></pre>
 <h3 id="toggling-the-menu-programmatically">Toggling the menu programmatically</h3>
 <p>The menu exposes an API to open/close programmatically. Please note that in this case, an 
 <code>mdMenuTriggerFor</code> directive is still necessary to attach the menu to a trigger element in the DOM.</p>
-<pre><code class="lang-ts">class MyComponent {
-  @ViewChild(MdMenuTrigger) trigger: MdMenuTrigger;
+<pre><code class="lang-ts"><span class="hljs-keyword">class</span> MyComponent {
+  <span class="hljs-meta">@ViewChild</span>(MdMenuTrigger) trigger: MdMenuTrigger;
 
   someMethod() {
-    this.trigger.openMenu();
+    <span class="hljs-keyword">this</span>.trigger.openMenu();
   }
 }
 </code></pre>
 <h3 id="icons">Icons</h3>
 <p>Menus support displaying <code>md-icon</code> elements before the menu item text.</p>
 <p><em>my-comp.html</em></p>
-<pre><code class="lang-html">&lt;md-menu #menu=&quot;mdMenu&quot;&gt;
-  &lt;button md-menu-item&gt;
-    &lt;md-icon&gt; dialpad &lt;/md-icon&gt;
-    &lt;span&gt; Redial &lt;/span&gt;
-  &lt;/button&gt;
-  &lt;button md-menu-item disabled&gt;
-    &lt;md-icon&gt; voicemail &lt;/md-icon&gt;
-    &lt;span&gt; Check voicemail &lt;/span&gt;
-  &lt;/button&gt;
-  &lt;button md-menu-item&gt;
-    &lt;md-icon&gt; notifications_off &lt;/md-icon&gt;
-    &lt;span&gt; Disable alerts &lt;/span&gt;
-  &lt;/button&gt;
-&lt;/md-menu&gt;
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">md-menu</span> #<span class="hljs-attr">menu</span>=<span class="hljs-string">"mdMenu"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">md-menu-item</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">md-icon</span>&gt;</span> dialpad <span class="hljs-tag">&lt;/<span class="hljs-name">md-icon</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span> Redial <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">md-menu-item</span> <span class="hljs-attr">disabled</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">md-icon</span>&gt;</span> voicemail <span class="hljs-tag">&lt;/<span class="hljs-name">md-icon</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span> Check voicemail <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">md-menu-item</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">md-icon</span>&gt;</span> notifications_off <span class="hljs-tag">&lt;/<span class="hljs-name">md-icon</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span> Disable alerts <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">md-menu</span>&gt;</span>
 </code></pre>
 <h3 id="customizing-menu-position">Customizing menu position</h3>
 <p>By default, the menu will display after and below its trigger.  The position can be changed

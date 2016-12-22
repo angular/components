@@ -4,11 +4,13 @@ import {MdDialog} from '@angular/material';
 
 @Component({
   selector: 'dialog-overview-example',
-  template: '',
+  templateUrl: './dialog-overview-example.html',
 })
 export class DialogOverviewExample {
-  constructor(dialog: MdDialog) {
-    dialog.open(DialogOverviewExampleDialog);
+  constructor(public dialog: MdDialog) {}
+
+  openDialog() {
+    this.dialog.open(DialogOverviewExampleDialog);
   }
 }
 

@@ -3,18 +3,18 @@ animations.</p>
 <div material-docs-example="dialog-overview"></div>
 <p>A dialog is opened by calling the <code>open</code> method with a component to be loaded and an optional 
 config object. The <code>open</code> method will return an instance of <code>MdDialogRef</code>:</p>
-<pre><code class="lang-ts">let dialogRef = dialog.open(UserProfileComponent, {
-  height: &#39;400px&#39;,
-  width: &#39;600px&#39;,
+<pre><code class="lang-ts"><span class="hljs-keyword">let</span> dialogRef = dialog.open(UserProfileComponent, {
+  height: <span class="hljs-string">'400px'</span>,
+  width: <span class="hljs-string">'600px'</span>,
 });
 </code></pre>
 <p>The <code>MdDialogRef</code> provides a handle on the opened dialog. It can be used to close the dialog and to
 recieve notification when the dialog has been closed.</p>
 <pre><code class="lang-ts">dialogRef.afterClosed.then(result =&gt; {
-  console.log(`Dialog result: ${result}`); // Pizza!
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Dialog result: <span class="hljs-subst">${result}</span>`</span>); <span class="hljs-comment">// Pizza!</span>
 });
 
-dialogRef.close(&#39;Pizza!&#39;);
+dialogRef.close(<span class="hljs-string">'Pizza!'</span>);
 </code></pre>
 <p>Components created via <code>MdDialog</code> can <em>inject</em> <code>MdDialogRef</code> and use it to close the dialog
 in which they are contained. When closing, an optional result value can be provided. This result

@@ -48,6 +48,6 @@ export class ExampleViewer {
   }
 
   exampleFileUrl(extension: string) {
-    return `/app/examples/${this.example}/${this.example}-example.${extension.toLowerCase()}`;
+    return `/assets/examples/${this.example}-example.${extension.toLowerCase()}.html`;
   }
 }

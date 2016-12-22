@@ -1,0 +1,15 @@
+<span class="hljs-tag">&lt;<span class="hljs-name">md-list</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h3</span> <span class="hljs-attr">md-subheader</span>&gt;</span>Folders<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">md-list-item</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let folder of folders"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">md-icon</span> <span class="hljs-attr">md-list-avatar</span>&gt;</span>folder<span class="hljs-tag">&lt;/<span class="hljs-name">md-icon</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h4</span> <span class="hljs-attr">md-line</span>&gt;</span>{{folder.name}}<span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">md-line</span>&gt;</span> {{folder.updated | date}} <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">md-list-item</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">md-divider</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">md-divider</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h3</span> <span class="hljs-attr">md-subheader</span>&gt;</span>Notes<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">md-list-item</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let note of notes"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">md-icon</span> <span class="hljs-attr">md-list-avatar</span>&gt;</span>note<span class="hljs-tag">&lt;/<span class="hljs-name">md-icon</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h4</span> <span class="hljs-attr">md-line</span>&gt;</span>{{note.name}}<span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">md-line</span>&gt;</span> {{note.updated | date}} <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">md-list-item</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">md-list</span>&gt;</span>
