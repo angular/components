@@ -20,7 +20,7 @@ const DOCS = [
     items: [
       {id: 'checkbox', name: 'Checkbox', examples: ['checkbox-configurable']},
       {id: 'input', name: 'Input', examples: ['input-form']},
-      {id: 'radio', name: 'Radio button', examples: ['radio-ngmodel']},
+      {id: 'radio', name: 'Radio button', examples: ['radio-ng-model']},
       {id: 'select', name: 'Select', examples: ['select-form']},
       {id: 'slider', name: 'Slider', examples: ['slider-configurable']},
       {id: 'slide-toggle', name: 'Slide toggle', examples: ['slide-toggle-configurable']},
