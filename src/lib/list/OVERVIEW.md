@@ -1,48 +1,124 @@
-`MdSnackBar` is a service for displaying snack-bar notifications.
+`<md-list>` is a container component that wraps and formats a series of line items. As the base 
+list component, it provides Material Design styling, but no behavior of its own.
+
+<!-- example(list-overview) -->
 
 
-<!-- example(snackbar-overview) -->
+### Simple lists
 
-### Opening a snack-bar
-A snack-bar can contain either a string message or a given component.
-```ts
-// Simple message.
-let snackBarRef = snackBar.open('Message archived');
+An `<md-list>` element contains a number of `<md-list-item>` elements.
 
-// Simple message with an action.
-let snackBarRef = snackBar.open('Message archived', 'Undo');
-
-// Load the given component into the snack-bar.
-let snackBarRef = snackbar.openFromComponent(MessageArchivedComponent);
+```html
+<md-list>
+ <md-list-item> Pepper </md-list-item>
+ <md-list-item> Salt </md-list-item>
+ <md-list-item> Paprika </md-list-item>
+</md-list>
 ```
 
-In either case, an `MdSnackBarRef` is returned. This can be used to dismiss the snack-bar or to 
-recieve notification of when the snack-bar is dismissed. For simple messages with an action, the 
-`MdSnackBarRef` exposes an observable for when the action is triggered.
+### Navigation lists
 
-```ts
-snackBarRef.afterDismissed().subscribe(() => {
-  console.log('The snack-bar was dismissed');
-});
+Use `md-nav-list` tags for navigation lists (i.e. lists that have anchor tags).
 
+Simple navigation lists can use the `md-list-item` attribute on anchor tag elements directly:
 
-snackBarRef.onAction().subscribe(() => {
-  console.log('The snack-bar action was triggered!');
-});
-
-snackBarRef.dismiss();
+```html
+<md-nav-list>
+   <a md-list-item href="..." *ngFor="let link of links"> {{ link }} </a>
+</md-nav-list>
 ```
 
-### Dismissal
-A snack-bar can be dismissed manually by calling the `dismiss` method on the `MdSnackBarRef` 
-returned from the call to `open`.
+For more complex navigation lists (e.g. with more than one target per item), wrap the anchor 
+element in an `<md-list-item>`.
 
-Only one snack-bar can ever be opened at one time. If a new snackbar is opened while a previous
-message is still showing, the older message will be automatically dismissed.
+```html
+<md-nav-list>
+  <md-list-item *ngFor="let link of links">
+     <a md-line href="...">{{ link }}</a>
+     <button md-icon-button (click)="showInfo(link)">
+        <md-icon>info</md-icon>
+     </button>
+  </md-list-item>
+</md-nav-list>
+```
 
-A snack-bar can also be given a duration via the optional configuration object:
-```ts
-snackbar.open('Message archived', 'Undo', {
-  duration: 3000
-});
+### Multi-line lists
+For lists that require multiple lines per item, annotate each line with an `md-line` attribute.
+Whichever heading tag is appropriate for your DOM hierarchy should be used (not necesarily `<h3>`
+as shown in the example).
+
+```html
+<!-- two line list -->
+<md-list>
+  <md-list-item *ngFor="let message of messages">
+    <h3 md-line> {{message.from}} </h3>
+    <p md-line>
+      <span> {{message.subject}} </span>
+      <span class="demo-2"> -- {{message.content}} </span>
+    </p>
+  </md-list-item>
+</md-list>
+
+<!-- three line list -->
+<md-list>
+  <md-list-item *ngFor="let message of messages">
+    <h3 md-line> {{message.from}} </h3>
+    <p md-line> {{message.subject}} </p>
+    <p md-line class="demo-2"> {{message.content}} </p>
+  </md-list-item>
+</md-list>
+```
+
+### Lists with avatars
+To include an avatar, add an image tag with an `md-list-avatar` attribute.
+
+```html
+<md-list>
+  <md-list-item *ngFor="let message of messages">
+    <img md-list-avatar src="..." alt="...">
+    <h3 md-line> {{message.from}} </h3>
+    <p md-line>
+      <span> {{message.subject}} </span>
+      <span class="demo-2"> -- {{message.content}} </span>
+    </p>
+  </md-list-item>
+</md-list>
+```
+
+### Dense lists
+Lists are also available in "dense layout" mode, which shrinks the font size and height of the list
+to suit UIs that may need to display more information.  To enable this mode, add a `dense` attribute
+to the main `md-list` tag.
+
+
+```html
+<md-list dense>
+ <md-list-item> Pepper </md-list-item>
+ <md-list-item> Salt </md-list-item>
+ <md-list-item> Paprika </md-list-item>
+</md-list>
+```
+
+
+### Lists with multiple sections
+
+Subheader can be added to a list by annotating a heading tag with an `md-subheader` attribute. 
+To add a divider, use `<md-divider>`.
+
+```html
+<md-list>
+   <h3 md-subheader>Folders</h3>
+   <md-list-item *ngFor="let folder of folders">
+      <md-icon md-list-avatar>folder</md-icon>
+      <h4 md-line>{{folder.name}}</h4>
+      <p md-line class="demo-2"> {{folder.updated}} </p>
+   </md-list-item>
+   <md-divider></md-divider>
+   <h3 md-subheader>Notes</h3>
+   <md-list-item *ngFor="let note of notes">
+      <md-icon md-list-avatar>note</md-icon>
+      <h4 md-line>{{note.name}}</h4>
+      <p md-line class="demo-2"> {{note.updated}} </p>
+   </md-list-item>
+</md-list>
 ```
