@@ -1,38 +1,22 @@
-<md-sidenav-layout>
-  <md-sidenav opened mode="side" class="docs-component-viewer-sidenav">
-    <nav *ngFor="let category of docItems.getItemsInCategories()">
-      <h3>{{category.name}}</h3>
-      <ul>
-        <li *ngFor="let component of category.items">
-          <a [routerLink]="['/component/', component.id]"
-              routerLinkActive="docs-component-viewer-sidenav-item-selected">
-            {{component.name}}
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </md-sidenav>
+<div class="docs-component-viewer-header">
+  <h1> Component - {{componentDocItem.name}} </h1>
+</div>
 
-  <div class="docs-component-viewer-header">
-    <h1> Component - {{componentDocItem.name}} </h1>
-  </div>
+<!-- TODO(jelbourn): turn this into nav tabs -->
+<md-tab-group class="docs-component-viewer-tabbed-content">
+  <md-tab label="OVERVIEW">
+    <doc-viewer documentUrl="/assets/documents/overview/{{componentDocItem.id}}.html" class="docs-component-view-text-content">
+    </doc-viewer>
+  </md-tab>
 
-  <!-- TODO(jelbourn): turn this into nav tabs -->
-  <md-tab-group class="docs-component-viewer-tabbed-content">
-    <md-tab label="OVERVIEW">
-      <doc-viewer documentUrl="/assets/documents/overview/{{componentDocItem.id}}.html" class="docs-component-view-text-content">
-      </doc-viewer>
-    </md-tab>
+  <md-tab label="API REFERENCE">
+    <doc-viewer documentUrl="/assets/documents/api/{{componentDocItem.id}}.html"  class="docs-component-view-text-content"></doc-viewer>
+  </md-tab>
 
-    <md-tab label="API REFERENCE">
-      <doc-viewer documentUrl="/assets/documents/api/{{componentDocItem.id}}.html"  class="docs-component-view-text-content"></doc-viewer>
-    </md-tab>
+  <md-tab label="EXAMPLES">
 
-    <md-tab label="EXAMPLES">
+    <example-viewer *ngFor="let example of componentDocItem.examples" [example]="example">
+    </example-viewer>
 
-      <example-viewer *ngFor="let example of componentDocItem.examples" [example]="example">
-      </example-viewer>
-
-    </md-tab>
-  </md-tab-group>
-</md-sidenav-layout>
+  </md-tab>
+</md-tab-group>

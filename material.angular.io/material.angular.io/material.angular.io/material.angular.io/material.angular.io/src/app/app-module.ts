@@ -12,6 +12,7 @@ import {ComponentViewer} from './pages/component-viewer/component-viewer';
 import {ExampleModule} from './examples/example-module';
 import {SharedModule} from './shared/shared-module';
 import {ComponentCategoryList} from './pages/component-category-list/component-category-list';
+import {ComponentSidenav} from './pages/component-sidenav/component-sidenav';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import {ComponentCategoryList} from './pages/component-category-list/component-c
     MaterialDocsApp,
     ComponentCategoryList,
     ComponentList,
+    ComponentSidenav,
     ComponentViewer,
     Homepage,
   ],
