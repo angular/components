@@ -1,3 +1,11 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
 .docs-guide-list-item {
   margin: 50px;
+  flex-grow: 1;
 }
+

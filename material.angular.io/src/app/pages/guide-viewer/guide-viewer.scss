@@ -1,4 +1,11 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
 .docs-guide-content {
   display: block;
   margin: 20px 0 0 70px;
+  flex-grow: 1;
 }

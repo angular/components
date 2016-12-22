@@ -15,6 +15,7 @@ import {ExampleModule} from './examples/example-module';
 import {SharedModule} from './shared/shared-module';
 import {ComponentCategoryList} from './pages/component-category-list/component-category-list';
 import {ComponentSidenav} from './pages/component-sidenav/component-sidenav';
+import {Footer} from './shared/footer/footer';
 import {ComponentPageTitle} from './pages/page-title/page-title';
 import {ComponentPageHeader} from './pages/component-page-header/component-page-header';
 
@@ -30,6 +31,7 @@ import {ComponentPageHeader} from './pages/component-page-header/component-page-
     GuideList,
     GuideViewer,
     Homepage,
+    Footer
   ],
   imports: [
     BrowserModule,

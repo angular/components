@@ -69,3 +69,14 @@ app-component-sidenav {
     }
   }
 }
+
+.docs-component-sidenav-content {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  // The rule will match the element following the router-outlet which will be the routed component.
+  router-outlet + * {
+    flex-grow: 1;
+  }
+}
