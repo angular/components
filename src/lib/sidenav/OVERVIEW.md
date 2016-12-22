@@ -29,7 +29,7 @@ The sidenav can render in one of three different ways based on the `mode` proper
 
 
 ### Positioning the sidenav
-The `align` propert determines whether the sidenav appears at the `"start"` or `"end"` of the
+The `align` property determines whether the sidenav appears at the `"start"` or `"end"` of the
 container. This is affected by the current text direction ("ltr" or "rtl"). By default, the sidenav
 appears at the start of the container.
 

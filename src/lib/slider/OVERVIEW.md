@@ -3,6 +3,8 @@ similar to `<input type="range">`.
 
 <!-- example(slider-overview) -->
 
+_Note: the sliding behavior for this component requires that HammerJS is loaded on the page._
+
 ### Selecting a value
 
 By default the minimum value of the slider is `0`, the maximum value is `100`, and the thumb moves

@@ -5,6 +5,8 @@
 The slide-toggle behaves similarly to a checkbox, though it does not support an `indeterminate` 
 state like `<md-checkbox>`.
 
+_Note: the sliding behavior for this component requires that HammerJS is loaded on the page._
+
 ### Slide-toggle label
 The slide-toggle label is provided as the content to the `<md-slide-toggle>` element. 
 

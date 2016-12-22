@@ -9,7 +9,7 @@ The native element wrapped by the `md-input-container` must be marked with the `
 ### `input` and `textarea` attributes
 
 All of the attributes that can be used with normal `input` and `textarea` elements can be used on
-elements inside `md-input-container` as well. This includes angular specific ones such as
+elements inside `md-input-container` as well. This includes Angular directives such as
 `ngModel` and `formControl`.
 
 The only limitations are that the `type` attribute can only be one of the values supported by

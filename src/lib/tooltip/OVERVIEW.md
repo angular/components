@@ -28,7 +28,7 @@ hides when the user's mouse leaves. A delay in showing or hiding the tooltip can
 the inputs `mdTooltipShowDelay` and `mdTooltipHideDelay`.
 
 On mobile, the tooltip is displayed when the user longpresses the element and hides after a 
-delay of 1500ms.
+delay of 1500ms. The longpress behavior requires HammerJS to be loaded on the page.
 
 The tooltip can also be shown and hidden through the `show` and `hide` directive methods,
 which both accept a number in milliseconds to delay before applying the display change.

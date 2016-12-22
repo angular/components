@@ -87,7 +87,7 @@ To include an avatar, add an image tag with an `md-list-avatar` attribute.
 
 ### Dense lists
 Lists are also available in "dense layout" mode, which shrinks the font size and height of the list
-to suit UIs that may need to display more information.  To enable this mode, add a `dense` attribute
+to suit UIs that may need to display more information. To enable this mode, add a `dense` attribute
 to the main `md-list` tag.
 
 

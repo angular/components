@@ -1,4 +1,4 @@
-`md-grid-list` is an two-dimensional list view that arranges cells into grid-based layout. 
+`md-grid-list` is a two-dimensional list view that arranges cells into grid-based layout. 
 See Material Design spec [here](https://www.google.com/design/spec/components/grid-lists.html).
 
 <!-- example(grid-list-overview) -->
