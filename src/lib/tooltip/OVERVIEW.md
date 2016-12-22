@@ -3,7 +3,7 @@ over or longpresses an element.
 
 <!-- example(tooltip-overview) -->
 
-##Positioning
+### Positioning
 
 The tooltip will be displayed below the element but this can be configured using the `mdTooltipPosition`
 input. 
@@ -21,7 +21,7 @@ the positions `before` and `after` should be used instead of `left` and `right`,
 | `after`   | Display to the right in left-to-right layout and to the right in right-to-left layout |
 
 
-##Show and Hide
+### Showing and hiding
 
 The tooltip is immediately shown when the user's mouse hovers over the element and immediately 
 hides when the user's mouse leaves. A delay in showing or hiding the tooltip can be added through
