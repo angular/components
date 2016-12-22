@@ -14,7 +14,7 @@ const configuration = {
   'IE9':          { unitTest: {target: null}, e2e: {target: null}},
   'IE10':         { unitTest: {target: null}, e2e: {target: null}},
   'IE11':         { unitTest: {target: null}, e2e: {target: null}},
-  'Edge':         { unitTest: {target: 'SL'}, e2e: {target: null}},
+  'Edge':         { unitTest: {target: null}, e2e: {target: null}},
   'Android4.1':   { unitTest: {target: null}, e2e: {target: null}},
   'Android4.2':   { unitTest: {target: null}, e2e: {target: null}},
   'Android4.3':   { unitTest: {target: null}, e2e: {target: null}},
