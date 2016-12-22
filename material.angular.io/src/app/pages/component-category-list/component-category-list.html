@@ -1,7 +1,7 @@
 <md-card
     *ngFor="let category of docItems.getItemsInCategories()"
     class="docs-component-category-list-category"
-    routerLink="/components/{{category.id}}">
+    [routerLink]="['/components/category/', category.id]">
   <md-card-title>{{category.name}}</md-card-title>
   <p>{{category.summary}}</p>
   <img md-card-image src="../../../assets/img/component-categories/{{category.id}}.svg">

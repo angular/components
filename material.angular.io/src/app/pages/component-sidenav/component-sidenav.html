@@ -1,0 +1,17 @@
+<md-sidenav-layout>
+  <md-sidenav opened mode="side" class="docs-component-viewer-sidenav">
+    <nav *ngFor="let category of docItems.getItemsInCategories()">
+      <h3>{{category.name}}</h3>
+      <ul>
+        <li *ngFor="let component of category.items">
+          <a [routerLink]="['/components/component/', component.id]"
+             routerLinkActive="docs-component-viewer-sidenav-item-selected">
+            {{component.name}}
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </md-sidenav>
+
+  <router-outlet></router-outlet>
+</md-sidenav-layout>

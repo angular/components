@@ -2,7 +2,7 @@
   <h2>{{category.name}}</h2>
   <a *ngFor="let component of category.items"
       class="docs-component-list-item"
-      [routerLink]="['/component/', component.id]">
+      [routerLink]="['/components/component/', component.id]">
     <img src="../../../assets/img/components/{{component.id}}.svg"
         class="docs-component-list-item-icon"
         [alt]="component.name">
