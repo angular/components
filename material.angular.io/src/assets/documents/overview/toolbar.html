@@ -1,38 +1,10 @@
-<h1 id="mdtoolbar">MdToolbar</h1>
-<p><code>MdToolbar</code> is a vertical aligned bar, which can hold the application title or actions.</p>
-<h3 id="screenshots">Screenshots</h3>
-<p><img src="https://cloud.githubusercontent.com/assets/4987015/13727769/6d952c78-e900-11e5-890a-ccfd46996812.png" alt="Preview"></p>
-<h2 id="-md-toolbar-"><code>&lt;md-toolbar&gt;</code></h2>
-<h3 id="bound-properties">Bound Properties</h3>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>color</code></td>
-<td>`&quot;primary&quot;</td>
-<td>&quot;accent&quot;</td>
-<td>&quot;warn&quot;`</td>
-<td>The color palette for the toolbar</td>
-</tr>
-</tbody>
-</table>
-<h3 id="notes">Notes</h3>
-<p>The <code>md-toolbar</code> component will use by default the background palette.</p>
-<h3 id="examples">Examples</h3>
-<p>A basic toolbar would have the following markup.</p>
-<pre><code class="lang-html">&lt;md-toolbar [color]=&quot;myColor&quot;&gt;
-  &lt;span&gt;My Application Title&lt;/span&gt;
-&lt;/md-toolbar&gt;
-</code></pre>
-<p>Toolbars can also have multiple rows.<br/>
-Multiple rows inside of a <code>md-toolbar</code> can be added by appending as many as needed <code>&lt;md-toolbar-row&gt;</code> elements.</p>
-<pre><code class="lang-html">&lt;md-toolbar [color]=&quot;myColor&quot;&gt;
+<p><code>&lt;md-toolbar&gt;</code> is a container for headers, titles, or actions.</p>
+<div material-docs-example="toolbar-overview"></div>
+<h3 id="multiple-rows">Multiple rows</h3>
+<p>Toolbars can have multiple rows using <code>&lt;md-toolbar-row&gt;</code> elements. Any content outside of an 
+<code>&lt;md-toolbar-row&gt;</code> element are automatically placed inside of one at the begining of the toolbar.
+Each toolbar row is a <code>display: flex</code> container.</p>
+<pre><code class="lang-html">&lt;md-toolbar&gt;
   &lt;span&gt;First Row&lt;/span&gt;
 
   &lt;md-toolbar-row&gt;
@@ -44,10 +16,11 @@ Multiple rows inside of a <code>md-toolbar</code> can be added by appending as m
   &lt;/md-toolbar-row&gt;
 &lt;/md-toolbar&gt;
 </code></pre>
-<h3 id="alignment">Alignment</h3>
-<p>The alignment inside of a toolbar row can be easily done by using the flexbox layout.<br/>
-For example, the following markup aligns the items on the <code>right</code>.</p>
-<p>Custom HTML</p>
+<h3 id="positioning-toolbar-content">Positioning toolbar content</h3>
+<p>The toolbar does not perform any positioning of its content. This gives the user full power to 
+position the content as it suits their application.</p>
+<p>A common pattern is to position a title on the left with some actions on the right. This can be
+easily accomplished with <code>display: flex</code>:</p>
 <pre><code class="lang-html">&lt;md-toolbar color=&quot;primary&quot;&gt;
   &lt;span&gt;Application Title&lt;/span&gt;
 
@@ -57,12 +30,13 @@ For example, the following markup aligns the items on the <code>right</code>.</p
   &lt;span&gt;Right Aligned Text&lt;/span&gt;
 &lt;/md-toolbar&gt;
 </code></pre>
-<p>Custom SCSS</p>
 <pre><code class="lang-scss">.example-fill-remaining-space {
   // This fills the remaining space, by using flexbox. 
   // Every toolbar row uses a flexbox row layout.
   flex: 1 1 auto;
 }
 </code></pre>
-<p>Output
-<img src="https://cloud.githubusercontent.com/assets/4987015/13730760/0864894e-e959-11e5-9312-7f3cb990d80a.png" alt="image"></p>
+<h3 id="theming">Theming</h3>
+<p>The color of a <code>&lt;md-toolbar&gt;</code> can be changed by using the <code>color</code> property. By default, toolbars
+use a neutral background color based on the current theme (light or dark). This can be changed to 
+<code>&#39;primary&#39;</code>, <code>&#39;accent&#39;</code>, or <code>&#39;warn&#39;</code>.  </p>

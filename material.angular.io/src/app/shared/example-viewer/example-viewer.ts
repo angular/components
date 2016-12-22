@@ -3,7 +3,7 @@ import {Http} from '@angular/http';
 import {ComponentPortal} from '@angular/material';
 import 'rxjs/add/operator/first';
 
-import {EXAMPLE_COMPONENTS} from '../../examples/example-module';
+import {EXAMPLE_COMPONENTS, LiveExample} from '../../examples/example-module';
 
 
 @Component({
@@ -17,6 +17,8 @@ export class ExampleViewer {
 
   /** String key of the currently displayed example. */
   _example: string;
+
+  exampleData: LiveExample;
 
   /** Whether the source for the example is being displayed. */
   showSource: boolean = false;
@@ -34,7 +36,10 @@ export class ExampleViewer {
   set example(example: string) {
     if (example && EXAMPLE_COMPONENTS[example]) {
       this._example = example;
-      this.selectedPortal = new ComponentPortal(EXAMPLE_COMPONENTS[example]);
+      this.exampleData = EXAMPLE_COMPONENTS[example];
+      this.selectedPortal = new ComponentPortal(this.exampleData.component);
+    } else {
+      console.log('MISSING EXAMPLE: ', example);
     }
   }
 

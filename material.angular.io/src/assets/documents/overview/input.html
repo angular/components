@@ -1,21 +1,18 @@
-<h1 id="md-input-container">md-input-container</h1>
-<p>Inputs are the basic input component of Material 2. The spec can be found
-<a href="https://www.google.com/design/spec/components/text-fields.html">here</a>. <code>md-input-container</code> acts as
-a wrapper for native <code>input</code> and <code>textarea</code> elements that is used to add material design styles and
-behavior. The native element wrapped by the <code>md-input-container</code> must be marked with the <code>md-input</code>
-directive.</p>
+<p><code>&lt;md-input-container&gt;</code> is a wrapper for native <code>input</code> and <code>textarea</code> elements. This container 
+applies Material Design styles and behavior while still allowing direct access to the underlying
+native element.</p>
+<p>The native element wrapped by the <code>md-input-container</code> must be marked with the <code>mdInput</code> directive.</p>
 <div material-docs-example="input-overview"></div>
-<h2 id="usage">Usage</h2>
 <h3 id="-input-and-textarea-attributes"><code>input</code> and <code>textarea</code> attributes</h3>
 <p>All of the attributes that can be used with normal <code>input</code> and <code>textarea</code> elements can be used on
-elements within the <code>md-input-container</code> as well. This includes angular specific ones such as
+elements inside <code>md-input-container</code> as well. This includes Angular directives such as
 <code>ngModel</code> and <code>formControl</code>.</p>
 <p>The only limitations are that the <code>type</code> attribute can only be one of the values supported by
 <code>md-input-container</code> and the native element cannot specify a <code>placeholder</code> attribute if the
 <code>md-input-container</code> also contains a <code>md-placeholder</code> element. </p>
-<h4 id="supported-input-types">Supported <code>input</code> types</h4>
-<p>The following <a href="http://www.w3schools.com/TAGs/att_input_type.asp">input types</a> can be used with
-<code>md-input-container</code>:</p>
+<h3 id="supported-input-types">Supported <code>input</code> types</h3>
+<p>The following <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input types</a> can
+be used with <code>md-input-container</code>:</p>
 <ul>
 <li>date</li>
 <li>datetime-local</li>

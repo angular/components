@@ -1,102 +1,20 @@
-<h1 id="mdradio">MdRadio</h1>
-<p>Radio buttons allow the user to select one option from a set. Use radio buttons for exclusive selection if you think that the user needs to see all available options side-by-side.</p>
-<p><img src="https://material.angularjs.org/material2_assets/radio/radios.png" alt="Preview"></p>
-<h3 id="examples">Examples</h3>
-<p>A basic radio group would have the following markup.</p>
-<pre><code class="lang-html">&lt;md-radio-group&gt;
-  &lt;md-radio-button value=&quot;option_1&quot;&gt;1&lt;/md-radio-button&gt;
-  &lt;md-radio-button value=&quot;option_2&quot;&gt;2&lt;/md-radio-button&gt;
-&lt;/md-radio-group&gt;
-</code></pre>
-<p>A dynamic example for use inside a form showing support for <code>[(ngModel)]</code>:</p>
-<pre><code class="lang-html">&lt;md-radio-group [(ngModel)]=&quot;chosenOption&quot;&gt;
-  &lt;md-radio-button *ngFor=&quot;let o of options&quot; [value]=&quot;o.value&quot;&gt;
-    {{o.label}}
-  &lt;/md-radio-button&gt;
-&lt;/md-radio-group&gt;
-</code></pre>
-<h2 id="-md-radio-group-"><code>&lt;md-radio-group&gt;</code></h2>
-<h3 id="properties">Properties</h3>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>selected</code></td>
-<td><code>MdRadioButton</code></td>
-<td>The currently selected button.</td>
-</tr>
-<tr>
-<td><code>value</code></td>
-<td><code>any</code></td>
-<td>The current value for this group.</td>
-</tr>
-<tr>
-<td><code>disabled</code></td>
-<td><code>boolean</code></td>
-<td>Whether the group is disabled.</td>
-</tr>
-</tbody>
-</table>
-<p>When selection is changed, an event is emitted from the <code>change</code> EventEmitter property.</p>
-<h3 id="notes">Notes</h3>
-<p>The <code>md-radio-group</code> component has no button initially selected.</p>
-<h2 id="-md-radio-button-"><code>&lt;md-radio-button&gt;</code></h2>
-<h3 id="properties">Properties</h3>
-<table>
-<thead>
-<tr>
-<th>Name (attribute)</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>id</code></td>
-<td><code>string</code></td>
-<td>The unique ID of this radio button.</td>
-</tr>
-<tr>
-<td><code>name</code></td>
-<td><code>string</code></td>
-<td>Group name, defaults to parent radio group if present.</td>
-</tr>
-<tr>
-<td><code>value</code></td>
-<td><code>any</code></td>
-<td>The value of this radio button.</td>
-</tr>
-<tr>
-<td><code>checked</code></td>
-<td><code>boolean</code></td>
-<td>Whether the radio is checked.</td>
-</tr>
-<tr>
-<td><code>disabled</code></td>
-<td><code>boolean</code></td>
-<td>Whether the radio is disabled.</td>
-</tr>
-<tr>
-<td><code>aria-label</code></td>
-<td><code>string</code></td>
-<td>Used to set the <code>aria-label</code> attribute of the underlying input element.</td>
-</tr>
-<tr>
-<td><code>aria-labelledby</code></td>
-<td><code>string</code></td>
-<td>Used to set the <code>aria-labelledby</code> attribute of the underlying input element.</td>
-</tr>
-</tbody>
-</table>
-<pre><code>                             If provided, this attribute takes precedence as the element&#39;s text alternative. |
-</code></pre><p>When checked, an event is emitted from the <code>change</code> EventEmitter property.</p>
-<h3 id="notes">Notes</h3>
-<ul>
-<li>The <code>md-radio-button</code> component by default uses the accent color from the theme palette.</li>
-</ul>
+<p><code>&lt;md-radio&gt;</code> provides the same functionality as a native <code>&lt;input type=&quot;radio&quot;&gt;</code> enhanced with 
+Material Design styling and animations.  </p>
+<div material-docs-example="radio-overview"></div>
+<p>All radio buttons with the same <code>name</code> comprise a set from which only one may be selected at a time.</p>
+<h3 id="radio-button-label">Radio-button label</h3>
+<p>The radio-button label is provided as the content to the <code>&lt;md-checkbox&gt;</code> element. The label can be 
+positioned before or after the radio-button by setting the <code>labelPosition</code> property to <code>&#39;before&#39;</code> 
+or <code>&#39;after&#39;</code>.</p>
+<p>If you don&#39;t want the label to appear next to the radio-button, you can use 
+<a href="https://www.w3.org/TR/wai-aria/states_and_properties#aria-label"><code>aria-label</code></a> or 
+<a href="https://www.w3.org/TR/wai-aria/states_and_properties#aria-labelledby"><code>aria-labelledby</code></a> to 
+specify an appropriate label.</p>
+<h3 id="radio-groups">Radio groups</h3>
+<p>Radio-buttons should typically be placed inside of an <code>&lt;md-radio-group&gt;</code> unless the DOM structure
+would make that impossible (e.g., radio buttons inside of table cells). The radio-group has a 
+<code>value</code> property that reflects the currently selected radio-button inside of the group.</p>
+<p>Individual radio-buttons inside of a radio-group will inherit the <code>name</code> of the group.</p>
+<h3 id="use-with-angular-forms-">Use with <code>@angular/forms</code></h3>
+<p><code>&lt;md-radio-group&gt;</code> is compatible with <code>@angular/forms</code> and supports both <code>FormsModule</code> 
+and <code>ReactiveFormsModule</code>.</p>

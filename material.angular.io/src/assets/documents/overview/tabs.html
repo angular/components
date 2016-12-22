@@ -1,47 +1,16 @@
-<h1 id="mdtabgroup">MdTabGroup</h1>
-<p>Tab groups allow the user to organize their content by labels such that only one tab is visible at any given time.</p>
-<h2 id="-md-tab-group-"><code>&lt;md-tab-group&gt;</code></h2>
-<h3 id="properties">Properties</h3>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>selectedIndex</code></td>
-<td><code>number</code></td>
-<td>The index of the currently active tab.</td>
-</tr>
-</tbody>
-</table>
+<p>Angular Material tabs organize content into separate views where only one view can be
+visible at a time. Each tab&#39;s label is shown in the tab header and the active
+tab&#39;s label is designated with the animated ink bar. When the list of tab labels exceeds the width
+of the header, pagination controls appear to let the user scroll left and right across the labels.</p>
+<p>The active tab may be set using the <code>selectedIndex</code> input or when the user selects one of the
+tab labels in the header.</p>
+<div material-docs-example="tab-overview"></div>
 <h3 id="events">Events</h3>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>focusChange</code></td>
-<td><code>Event</code></td>
-<td>Fired when focus changes from one label to another</td>
-</tr>
-<tr>
-<td><code>selectChange</code></td>
-<td><code>Event</code></td>
-<td>Fired when the selected tab changes</td>
-</tr>
-</tbody>
-</table>
-<h3 id="basic-use">Basic use</h3>
-<p>A basic tab group would have the following markup.</p>
+<p>The <code>selectChange</code> output event is emitted when the active tab changes.  </p>
+<p>The <code>focusChange</code> output event is emitted when the user puts focus on any of the tab labels in
+the header, usually through keyboard navigation. </p>
+<h3 id="labels">Labels</h3>
+<p>If a tab&#39;s label is only text then the simple tab-group API can be used.</p>
 <pre><code class="lang-html">&lt;md-tab-group&gt;
   &lt;md-tab label=&quot;One&quot;&gt;
     &lt;h1&gt;Some tab content&lt;/h1&gt;
@@ -53,15 +22,7 @@
   &lt;/md-tab&gt;
 &lt;/md-tab-group&gt;
 </code></pre>
-<p>You can specifiy the active tab by using the <code>selectedIndex</code> property.</p>
-<pre><code class="lang-html">&lt;md-tab-group [selectedIndex]=&quot;1&quot;&gt;
-  ...
-&lt;/md-tab-group&gt;
-</code></pre>
-<p><strong>Note</strong>: The index always starts counting from <code>zero</code>.</p>
-<h3 id="tabs-with-label-templates">Tabs with label templates</h3>
-<p>If you want to use an arbitrary template for your tab, you can use the <code>md-tab-label</code> directive to
-provide the label template:</p>
+<p>For more complex labels, add a template with the <code>md-tab-label</code> directive inside the <code>md-tab</code>.</p>
 <pre><code class="lang-html">&lt;md-tab-group&gt;
   &lt;md-tab&gt;
     &lt;template md-tab-label&gt;
@@ -79,3 +40,25 @@ provide the label template:</p>
   &lt;/md-tab&gt;
 &lt;/md-tab-group&gt;
 </code></pre>
+<h3 id="dynamic-height">Dynamic Height</h3>
+<p>By default, the tab group will not change its height to the height of the currently active tab. To
+change this, set the <code>dynamicHeight</code> input to true. The tab body will animate its height according
+ to the height of the active tab.</p>
+<h3 id="tabs-and-navigation">Tabs and navigation</h3>
+<p>While <code>&lt;md-tab-group&gt;</code> is used to switch between views within a single route, <code>&lt;nav md-tab-nav-bar&gt;</code>
+provides a tab-like UI for navigating between routes.</p>
+<pre><code class="lang-html">&lt;nav md-tab-nav-bar&gt;
+  &lt;a md-tab-link
+     *ngFor=&quot;let link of navLinks&quot;
+     [routerLink]=&quot;link&quot;
+     routerLinkActive #rla=&quot;routerLinkActive&quot;
+     [active]=&quot;rla.isActive&quot;&gt;
+    {{tabLink.label}}
+  &lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;router-outlet&gt;&lt;/router-outlet&gt;
+</code></pre>
+<p>The tab-nav-bar is not tied to any particular router; it works with normal <code>&lt;a&gt;</code> elements and uses
+the <code>active</code> property to determine which tab is currently active. The corresponding 
+<code>&lt;router-outlet&gt;</code> can be placed anywhere in the view. </p>

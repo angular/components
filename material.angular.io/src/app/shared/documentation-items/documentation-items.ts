@@ -18,12 +18,12 @@ const DOCS = [
     name: 'Form Controls',
     summary: 'Radio buttons, checkboxes, input fields, sliders, slide toggles, selects',
     items: [
-      {id: 'radio', name: 'Radio button', examples: ['radio-ngmodel']},
       {id: 'checkbox', name: 'Checkbox', examples: ['checkbox-configurable']},
       {id: 'input', name: 'Input', examples: ['input-form']},
+      {id: 'radio', name: 'Radio button', examples: ['radio-ngmodel']},
+      {id: 'select', name: 'Select', examples: ['select-form']},
       {id: 'slider', name: 'Slider', examples: ['slider-configurable']},
       {id: 'slide-toggle', name: 'Slide toggle', examples: ['slide-toggle-configurable']},
-      {id: 'select', name: 'Select', examples: []},
     ]
   },
   {
@@ -31,9 +31,9 @@ const DOCS = [
     name: 'Navigation',
     summary: 'Sidenavs, toolbars, menus',
     items: [
+      {id: 'menu', name: 'Menu', examples: ['menu-icons']},
       {id: 'sidenav', name: 'Sidenav', examples: ['sidenav-fab']},
       {id: 'toolbar', name: 'Toolbar', examples: ['toolbar-multirow']},
-      {id: 'menu', name: 'Menu', examples: ['menu-icons']},
     ]
   },
   {
@@ -48,11 +48,12 @@ const DOCS = [
   },
   {
     id: 'buttons',
-    name: 'Buttons, Actions & Icons',
+    name: 'Buttons, Indicators & Icons',
     summary: 'buttons, button toggles, icons, progress spinners, progress bars',
     items: [
       {id: 'button', name: 'Button', examples: ['button-types']},
       {id: 'button-toggle', name: 'Button toggle', examples: ['button-toggle-exclusive']},
+      {id: 'chips', name: 'Chips', examples: ['chips-stacked']},
       {id: 'icon', name: 'Icon', examples: ['icon-svg']},
       {id: 'progress-spinner', name: 'Progress spinner',
           examples: ['progress-spinner-configurable']},

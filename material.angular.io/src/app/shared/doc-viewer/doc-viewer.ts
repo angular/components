@@ -5,7 +5,8 @@ import {
   ComponentFactoryResolver,
   ViewContainerRef,
   ApplicationRef,
-  Injector
+  Injector,
+  OnDestroy,
 } from '@angular/core';
 import {Http} from '@angular/http';
 import {DomPortalHost, ComponentPortal} from '@angular/material';
@@ -16,7 +17,9 @@ import {ExampleViewer} from '../example-viewer/example-viewer';
   selector: 'doc-viewer',
   template: 'Loading document...',
 })
-export class DocViewer {
+export class DocViewer implements OnDestroy {
+  private _portalHosts: DomPortalHost[] = [];
+
   /** The URL of the document to display. */
   @Input()
   set documentUrl(url: string) {
@@ -61,6 +64,12 @@ export class DocViewer {
       let examplePortal = new ComponentPortal(ExampleViewer, this._viewContainerRef);
       let exampleViewer = portalHost.attach(examplePortal);
       exampleViewer.instance.example = example;
+
+      this._portalHosts.push(portalHost);
     });
+  }
+
+  ngOnDestroy() {
+    this._portalHosts.forEach(h => h.dispose());
   }
 }
