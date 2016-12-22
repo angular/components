@@ -45,7 +45,7 @@ import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-e
 import {TooltipPositionExample} from './tooltip-position/tooltip-position-example';
 import {
   ProgressSpinnerConfigurableExample
-} from './progress-circle-configurable/progress-circle-configurable-example';
+} from './progress-spinner-configurable/progress-spinner-configurable-example';
 import {InputFormExample} from './input-form/input-form-example';
 import {ListOverviewExample} from './list-overview/list-overview-example';
 import {SliderOverviewExample} from './slider-overview/slider-overview-example';
@@ -57,7 +57,7 @@ import {SidenavFabExample} from './sidenav-fab/sidenav-fab-example';
 import {CardOverviewExample} from './card-overview/card-overview-example';
 import {
   ProgressSpinnerOverviewExample
-} from './progress-circle-overview/progress-circle-overview-example';
+} from './progress-spinner-overview/progress-spinner-overview-example';
 import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-label-example';
 import {RadioOverviewExample} from './radio-overview/radio-overview-example';
 import {SidenavOverviewExample} from './sidenav-overview/sidenav-overview-example';
