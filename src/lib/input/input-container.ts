@@ -152,7 +152,21 @@ export class MdInputDirective {
    */
   @Output() _placeholderChange = new EventEmitter<string>();
 
-  get empty() { return (this.value == null || this.value === '') && !this._isNeverEmpty(); }
+  get empty() {
+    if (this._isNeverEmpty()) {
+      return false;
+    }
+    if (this.value == null || this.value === '') {
+      // Check if this is an <input> element that contains bad input.
+      // If so, we know that it only appears empty because the value failed to parse.
+      if (this._elementRef.nativeElement instanceof HTMLInputElement &&
+          this._elementRef.nativeElement.validity.badInput) {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
 
   private get _uid() { return this._cachedUid = this._cachedUid || `md-input-${nextUniqueId++}`; }
 
