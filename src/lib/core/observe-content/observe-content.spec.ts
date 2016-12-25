@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {async, TestBed} from '@angular/core/testing';
+import {async, TestBed, ComponentFixture} from '@angular/core/testing';
 import {ObserveContentModule} from './observe-content';
 
 // TODO(elad): `ProxyZone` doesn't seem to capture the events raised by
@@ -9,7 +9,11 @@ describe('Observe content', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ObserveContentModule],
-      declarations: [ComponentWithTextContent, ComponentWithChildTextContent],
+      declarations: [
+        ComponentWithTextContent,
+        ComponentWithChildTextContent,
+        ComponentWithDebouncedListener
+      ],
     });
 
     TestBed.compileComponents();
@@ -50,6 +54,49 @@ describe('Observe content', () => {
       fixture.detectChanges();
     });
   });
+
+  // Note that these tests need to use real timeouts, instead of fakeAsync, because Angular doens't
+  // mock out the MutationObserver, in addition to it being async. Perhaps we should find a way to
+  // stub the MutationObserver for tests?
+  describe('debounced', () => {
+    let fixture: ComponentFixture<ComponentWithDebouncedListener>;
+    let instance: ComponentWithDebouncedListener;
+
+    const setText = (text: string, delay: number) => {
+      setTimeout(() => {
+        instance.text = text;
+        fixture.detectChanges();
+      }, delay);
+    };
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(ComponentWithDebouncedListener);
+      instance = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+
+    it('should debounce the content changes', (done: any) => {
+      setText('a', 5);
+      setText('b', 10);
+      setText('c', 15);
+
+      setTimeout(() => {
+        expect(instance.spy).toHaveBeenCalledTimes(1);
+        done();
+      }, 50);
+    });
+
+    it('should should keep track of all of the mutation records', (done: any) => {
+      setText('a', 5);
+      setText('b', 10);
+      setText('c', 15);
+
+      setTimeout(() => {
+        expect(instance.spy.calls.mostRecent().args[0].length).toBeGreaterThanOrEqual(1);
+        done();
+      }, 50);
+    });
+  });
 });
 
 
@@ -63,4 +110,13 @@ class ComponentWithTextContent {
 class ComponentWithChildTextContent {
   text = '';
   doSomething() {}
+}
+
+@Component({
+  template: `<div (cdkObserveContent)="spy($event)" [debounce]="debounce">{{text}}</div>`
+})
+class ComponentWithDebouncedListener {
+  text = '';
+  debounce = 15;
+  spy = jasmine.createSpy('MutationObserver callback');
 }
