@@ -6,7 +6,8 @@ import {
   Input,
   EventEmitter,
   OnDestroy,
-  AfterContentInit
+  AfterContentInit,
+  Injector,
 } from '@angular/core';
 
 import {debounce} from '../util/debounce';
@@ -30,7 +31,7 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
   /** Debounce interval for emitting the changes. */
   @Input() debounce: number;
 
-  constructor(private _elementRef: ElementRef) {}
+  constructor(private _elementRef: ElementRef, private _injector: Injector) { }
 
   ngAfterContentInit() {
     let callback: MutationCallback;
@@ -50,7 +51,7 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
       callback = (mutations: MutationRecord[]) => this.event.emit(mutations);
     }
 
-    this._observer = new MutationObserver(callback);
+    this._observer = new (this._injector.get(MutationObserver))(callback);
 
     this._observer.observe(this._elementRef.nativeElement, {
       characterData: true,
@@ -69,6 +70,10 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
 
 @NgModule({
   exports: [ObserveContent],
-  declarations: [ObserveContent]
+  declarations: [ObserveContent],
+  providers: [
+    // Pass the MutationObserver through DI so it can be stubbed when testing.
+    { provide: MutationObserver, useValue: MutationObserver }
+  ]
 })
 export class ObserveContentModule {}

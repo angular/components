@@ -1,22 +1,22 @@
 import {Component} from '@angular/core';
-import {async, TestBed} from '@angular/core/testing';
+import {async, TestBed, ComponentFixture, fakeAsync, tick} from '@angular/core/testing';
 import {ObserveContentModule} from './observe-content';
 
 // TODO(elad): `ProxyZone` doesn't seem to capture the events raised by
 // `MutationObserver` and needs to be investigated
 
 describe('Observe content', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [ObserveContentModule],
-      declarations: [ComponentWithTextContent, ComponentWithChildTextContent],
-    });
+  describe('basic usage', () => {
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [ObserveContentModule],
+        declarations: [ComponentWithTextContent, ComponentWithChildTextContent]
+      });
 
-    TestBed.compileComponents();
-  }));
+      TestBed.compileComponents();
+    }));
 
-  describe('text content change', () => {
-    it('should call the registered for changes function', done => {
+    it('should trigger the callback when the content of the element changes', done => {
       let fixture = TestBed.createComponent(ComponentWithTextContent);
       fixture.detectChanges();
 
@@ -31,10 +31,8 @@ describe('Observe content', () => {
       fixture.componentInstance.text = 'text';
       fixture.detectChanges();
     });
-  });
 
-  describe('child text content change', () => {
-    it('should call the registered for changes function', done => {
+    it('should trigger the callback when the content of the children changes', done => {
       let fixture = TestBed.createComponent(ComponentWithChildTextContent);
       fixture.detectChanges();
 
@@ -50,6 +48,55 @@ describe('Observe content', () => {
       fixture.detectChanges();
     });
   });
+
+  describe('debounced', () => {
+    let fixture: ComponentFixture<ComponentWithDebouncedListener>;
+    let callbacks: Function[];
+    let invokeCallbacks = (args?: any) => callbacks.forEach(callback => callback(args));
+
+    beforeEach(async(() => {
+      callbacks = [];
+
+      TestBed.configureTestingModule({
+        imports: [ObserveContentModule],
+        declarations: [ComponentWithDebouncedListener],
+        providers: [{
+          provide: MutationObserver,
+          useValue: function(callback: Function) {
+            callbacks.push(callback);
+
+            return {
+              observe: () => {},
+              disconnect: () => {}
+            };
+          }
+        }]
+      });
+
+      TestBed.compileComponents();
+
+      fixture = TestBed.createComponent(ComponentWithDebouncedListener);
+      fixture.detectChanges();
+    }));
+
+    it('should debounce the content changes', fakeAsync(() => {
+      invokeCallbacks();
+      invokeCallbacks();
+      invokeCallbacks();
+
+      tick(500);
+      expect(fixture.componentInstance.spy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should should keep track of and merge all of the mutation records', fakeAsync(() => {
+      invokeCallbacks([1]);
+      invokeCallbacks([2]);
+      invokeCallbacks([3]);
+
+      tick(500);
+      expect(fixture.componentInstance.spy).toHaveBeenCalledWith([1, 2, 3]);
+    }));
+  });
 });
 
 
@@ -63,4 +110,12 @@ class ComponentWithTextContent {
 class ComponentWithChildTextContent {
   text = '';
   doSomething() {}
+}
+
+@Component({
+  template: `<div (cdkObserveContent)="spy($event)" [debounce]="debounce">{{text}}</div>`
+})
+class ComponentWithDebouncedListener {
+  debounce = 500;
+  spy = jasmine.createSpy('MutationObserver callback');
 }
