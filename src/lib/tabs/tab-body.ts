@@ -149,7 +149,7 @@ export class MdTabBody implements OnInit, AfterViewChecked, AfterContentChecked 
    */
   ngAfterContentChecked() {
     if (!this._canBeAnimated) {
-      this._canBeAnimated = document.contains(this._elementRef.nativeElement);
+      this._canBeAnimated = document.body.contains(this._elementRef.nativeElement);
 
       if (this._canBeAnimated) {
         this._changeDetectorRef.markForCheck();
