@@ -36,7 +36,7 @@ your menu element.
 *my-comp.html*
 ```html
 <!-- menu opens when trigger button is clicked -->
-<button md-icon-button [mdMenuTriggerFor]="menu">
+<button md-icon-button [md-menu-trigger-for]="menu">
    <md-icon>more_vert</md-icon>
 </button>
 
@@ -56,7 +56,7 @@ Output:
 ### Toggling the menu programmatically
 
 You can also use the menu's API to open or close the menu programmatically from your class. Please
-note that in this case, an `mdMenuTriggerFor` attribute is still necessary to connect
+note that in this case, an `md-menu-trigger-for` attribute is still necessary to connect
 the menu to its trigger element in the DOM.
 
 *my-comp.component.ts*
@@ -72,7 +72,7 @@ class MyComp {
 
 *my-comp.html*
 ```html
-<button md-icon-button [mdMenuTriggerFor]="menu">
+<button md-icon-button [md-menu-trigger-for]="menu">
    <md-icon>more_vert</md-icon>
 </button>
 
