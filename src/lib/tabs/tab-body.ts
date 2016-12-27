@@ -146,6 +146,8 @@ export class MdTabBody implements OnInit, AfterViewChecked, AfterContentChecked 
    * computed style (with Angular > 2.3.0). This can alternatively be determined by checking the
    * transform: canBeAnimated = getComputedStyle(element) !== '', however document.contains should
    * be faster since it doesn't cause a reflow.
+   *
+   * TODO(crisbeto): This workaround can be removed safely once Angular < 2.4.1 isn't supported.
    */
   ngAfterContentChecked() {
     if (!this._canBeAnimated) {
