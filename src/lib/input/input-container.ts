@@ -136,7 +136,7 @@ export class MdInputDirective implements AfterContentInit {
     // When using Angular inputs, developers are no longer able to set the properties on the native
     // input element. To ensure that bindings for `type` work, we need to sync the setter
     // with the native property. Textarea elements don't support the type property or attribute.
-    if (!this._isTextarea()) {
+    if (!this._isTextarea() && getSupportedInputTypes().has(this._type)) {
       this._renderer.setElementProperty(this._elementRef.nativeElement, 'type', this._type);
     }
   }
