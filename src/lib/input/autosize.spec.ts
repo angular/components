@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, async} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MdInputModule} from './input';
@@ -97,6 +97,12 @@ describe('MdTextareaAutosize', () => {
     expect(parseInt(textarea.style.maxHeight))
         .toBeGreaterThan(previousMaxHeight, 'Expected increased max-height with maxRows increase.');
   });
+
+  it('should export the mdAutosize reference', () => {
+    expect(fixture.componentInstance.autosize).toBeTruthy();
+    expect(fixture.componentInstance.autosize.resizeToFitContent).toBeTruthy();
+  });
+
 });
 
 
@@ -109,10 +115,14 @@ const textareaStyleReset = `
     }`;
 
 @Component({
-  template: `<textarea md-autosize [minRows]="minRows" [maxRows]="maxRows">{{content}}</textarea>`,
+  template: `
+    <textarea md-autosize [minRows]="minRows" [maxRows]="maxRows" #autosize="mdAutosize">
+      {{content}}
+    </textarea>`,
   styles: [textareaStyleReset],
 })
 class AutosizeTextAreaWithContent {
+  @ViewChild('autosize') autosize: MdTextareaAutosize;
   minRows: number = null;
   maxRows: number = null;
   content: string = '';
