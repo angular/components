@@ -197,7 +197,7 @@ export class MdInputDirective implements AfterContentInit {
   /** Determines if the component host is a textarea. If not recognizable it returns false. */
   private _isTextarea() {
     let nativeElement = this._elementRef.nativeElement;
-    return nativeElement ? nativeElement.nodeName === 'textarea' : 'input';
+    return nativeElement ? nativeElement.nodeName.toLowerCase() === 'textarea' : false;
   }
 }
 
