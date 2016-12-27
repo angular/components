@@ -6,7 +6,8 @@ import {
     TemplateRef,
     ComponentFactoryResolver,
     ViewContainerRef,
-    OnDestroy
+    OnDestroy,
+    Input,
 } from '@angular/core';
 import {Portal, TemplatePortal, ComponentPortal, BasePortalHost} from './portal';
 
@@ -21,8 +22,8 @@ import {Portal, TemplatePortal, ComponentPortal, BasePortalHost} from './portal'
  * </template>
  */
 @Directive({
-  selector: '[portal]',
-  exportAs: 'portal',
+  selector: '[cdk-portal], [portal]',
+  exportAs: 'cdkPortal',
 })
 export class TemplatePortalDirective extends TemplatePortal {
   constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
@@ -36,11 +37,11 @@ export class TemplatePortalDirective extends TemplatePortal {
  * directly attached to it, enabling declarative use.
  *
  * Usage:
- * <template [portalHost]="greeting"></template>
+ * <template [cdkPortalHost]="greeting"></template>
  */
 @Directive({
-  selector: '[portalHost]',
-  inputs: ['portal: portalHost']
+  selector: '[cdkPortalHost], [portalHost]',
+  inputs: ['portal: cdkPortalHost']
 })
 export class PortalHostDirective extends BasePortalHost implements OnDestroy {
   /** The attached portal. */
@@ -52,6 +53,12 @@ export class PortalHostDirective extends BasePortalHost implements OnDestroy {
     super();
   }
 
+  /** @deprecated */
+  @Input('portalHost')
+  get _deprecatedPortal() { return this.portal; }
+  set _deprecatedPortal(v) { this.portal = v; }
+
+  /** Portal associated with the Portal host. */
   get portal(): Portal<any> {
     return this._portal;
   }
@@ -66,7 +73,11 @@ export class PortalHostDirective extends BasePortalHost implements OnDestroy {
     this.dispose();
   }
 
-  /** Attach the given ComponentPortal to this PortalHost using the ComponentFactoryResolver. */
+  /**
+   * Attach the given ComponentPortal to this PortalHost using the ComponentFactoryResolver.
+   *
+   * @param portal Portal to be attached to the portal host.
+   */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     portal.setAttachedHost(this);
 
@@ -86,7 +97,10 @@ export class PortalHostDirective extends BasePortalHost implements OnDestroy {
     return ref;
   }
 
-  /** Attach the given TemplatePortal to this PortlHost as an embedded View. */
+  /**
+   * Attach the given TemplatePortal to this PortlHost as an embedded View.
+   * @param portal Portal to be attached.
+   */
   attachTemplatePortal(portal: TemplatePortal): Map<string, any> {
     portal.setAttachedHost(this);
 

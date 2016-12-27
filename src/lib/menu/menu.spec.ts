@@ -72,7 +72,7 @@ describe('MdMenu', () => {
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
 
-    const backdrop = <HTMLElement>overlayContainerElement.querySelector('.md-overlay-backdrop');
+    const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
     backdrop.click();
     fixture.detectChanges();
 
@@ -101,7 +101,7 @@ describe('MdMenu', () => {
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
 
-    const overlayPane = overlayContainerElement.children[0];
+    const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane');
     expect(overlayPane.getAttribute('dir')).toEqual('rtl');
   });
 
@@ -248,9 +248,7 @@ describe('MdMenu', () => {
     });
 
     function getOverlayPane(): HTMLElement {
-      let pane = overlayContainerElement.children[0] as HTMLElement;
-      pane.style.position = 'absolute';
-      return pane;
+      return overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
     }
   });
 
@@ -284,7 +282,7 @@ describe('MdMenu', () => {
 
 @Component({
   template: `
-    <button [md-menu-trigger-for]="menu" #triggerEl>Toggle menu</button>
+    <button [mdMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
     <md-menu #menu="mdMenu">
       <button md-menu-item> Item </button>
       <button md-menu-item disabled> Disabled </button>
@@ -298,7 +296,7 @@ class SimpleMenu {
 
 @Component({
   template: `
-    <button [md-menu-trigger-for]="menu" #triggerEl>Toggle menu</button>
+    <button [mdMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
     <md-menu x-position="before" y-position="above" #menu="mdMenu">
       <button md-menu-item> Positioned Content </button>
     </md-menu>
@@ -332,7 +330,7 @@ class CustomMenuPanel implements MdMenuPanel {
 
 @Component({
   template: `
-    <button [md-menu-trigger-for]="menu">Toggle menu</button>
+    <button [mdMenuTriggerFor]="menu">Toggle menu</button>
     <custom-menu #menu="mdCustomMenu">
       <button md-menu-item> Custom Content </button>
     </custom-menu>

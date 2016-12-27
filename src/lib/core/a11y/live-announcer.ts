@@ -5,12 +5,13 @@ import {
   Inject
 } from '@angular/core';
 
-export const LIVE_ANNOUNCER_ELEMENT_TOKEN  = new OpaqueToken('mdLiveAnnouncerElement');
+export const LIVE_ANNOUNCER_ELEMENT_TOKEN  = new OpaqueToken('liveAnnouncerElement');
 
+/** Possible politeness levels. */
 export type AriaLivePoliteness = 'off' | 'polite' | 'assertive';
 
 @Injectable()
-export class MdLiveAnnouncer {
+export class LiveAnnouncer {
 
   private _liveElement: Element;
 
@@ -23,8 +24,9 @@ export class MdLiveAnnouncer {
   }
 
   /**
+   * Announces a message to screenreaders.
    * @param message Message to be announced to the screenreader
-   * @param politeness The politeness of the announcer element.
+   * @param politeness The politeness of the announcer element
    */
   announce(message: string, politeness: AriaLivePoliteness = 'polite'): void {
     this._liveElement.textContent = '';
@@ -50,7 +52,7 @@ export class MdLiveAnnouncer {
   private _createLiveElement(): Element {
     let liveEl = document.createElement('div');
 
-    liveEl.classList.add('md-visually-hidden');
+    liveEl.classList.add('cdk-visually-hidden');
     liveEl.setAttribute('aria-atomic', 'true');
     liveEl.setAttribute('aria-live', 'polite');
 

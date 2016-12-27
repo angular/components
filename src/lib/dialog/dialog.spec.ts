@@ -9,7 +9,8 @@ import {
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {NgModule, Component, Directive, ViewChild, ViewContainerRef} from '@angular/core';
-import {MdDialog, MdDialogModule} from './dialog';
+import {MdDialogModule} from './index';
+import {MdDialog} from './dialog';
 import {OverlayContainer} from '../core';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
@@ -128,7 +129,7 @@ describe('MdDialog', () => {
 
     viewContainerFixture.detectChanges();
 
-    let backdrop = overlayContainerElement.querySelector('.md-overlay-backdrop') as HTMLElement;
+    let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
     backdrop.click();
 
     expect(overlayContainerElement.querySelector('md-dialog-container')).toBeFalsy();
@@ -141,7 +142,7 @@ describe('MdDialog', () => {
 
     viewContainerFixture.detectChanges();
 
-    let overlayPane = overlayContainerElement.querySelector('.md-overlay-pane') as HTMLElement;
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
     expect(overlayPane.style.width).toBe('500px');
   });
@@ -153,7 +154,7 @@ describe('MdDialog', () => {
 
     viewContainerFixture.detectChanges();
 
-    let overlayPane = overlayContainerElement.querySelector('.md-overlay-pane') as HTMLElement;
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
     expect(overlayPane.style.height).toBe('100px');
   });
@@ -167,7 +168,7 @@ describe('MdDialog', () => {
 
     viewContainerFixture.detectChanges();
 
-    let overlayPane = overlayContainerElement.querySelector('.md-overlay-pane') as HTMLElement;
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
     expect(overlayPane.style.marginTop).toBe('100px');
   });
@@ -181,7 +182,7 @@ describe('MdDialog', () => {
 
     viewContainerFixture.detectChanges();
 
-    let overlayPane = overlayContainerElement.querySelector('.md-overlay-pane') as HTMLElement;
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
     expect(overlayPane.style.marginBottom).toBe('200px');
   });
@@ -195,7 +196,7 @@ describe('MdDialog', () => {
 
     viewContainerFixture.detectChanges();
 
-    let overlayPane = overlayContainerElement.querySelector('.md-overlay-pane') as HTMLElement;
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
     expect(overlayPane.style.marginLeft).toBe('250px');
   });
@@ -209,7 +210,7 @@ describe('MdDialog', () => {
 
     viewContainerFixture.detectChanges();
 
-    let overlayPane = overlayContainerElement.querySelector('.md-overlay-pane') as HTMLElement;
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
     expect(overlayPane.style.marginRight).toBe('125px');
   });
@@ -235,7 +236,7 @@ describe('MdDialog', () => {
 
       viewContainerFixture.detectChanges();
 
-      let backdrop = overlayContainerElement.querySelector('.md-overlay-backdrop') as HTMLElement;
+      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       backdrop.click();
 
       expect(overlayContainerElement.querySelector('md-dialog-container')).toBeTruthy();
@@ -308,6 +309,41 @@ describe('MdDialog', () => {
           .toBe('dialog-trigger', 'Expected that the trigger was refocused after dialog close');
     }));
   });
+
+  describe('dialog content elements', () => {
+    let dialogRef: MdDialogRef<ContentElementDialog>;
+
+    beforeEach(() => {
+      dialogRef = dialog.open(ContentElementDialog);
+      viewContainerFixture.detectChanges();
+    });
+
+    it('should close the dialog when clicking on the close button', () => {
+      expect(overlayContainerElement.querySelectorAll('.md-dialog-container').length).toBe(1);
+
+      (overlayContainerElement.querySelector('button[md-dialog-close]') as HTMLElement).click();
+
+      expect(overlayContainerElement.querySelectorAll('.md-dialog-container').length).toBe(0);
+    });
+
+    it('should not close the dialog if [md-dialog-close] is applied on a non-button node', () => {
+      expect(overlayContainerElement.querySelectorAll('.md-dialog-container').length).toBe(1);
+
+      (overlayContainerElement.querySelector('div[md-dialog-close]') as HTMLElement).click();
+
+      expect(overlayContainerElement.querySelectorAll('.md-dialog-container').length).toBe(1);
+    });
+
+    it('should allow for a user-specified aria-label on the close button', () => {
+      let button = overlayContainerElement.querySelector('button[md-dialog-close]');
+
+      dialogRef.componentInstance.closeButtonAriaLabel = 'Best close button ever';
+      viewContainerFixture.detectChanges();
+
+      expect(button.getAttribute('aria-label')).toBe('Best close button ever');
+    });
+
+  });
 });
 
 
@@ -334,13 +370,33 @@ class PizzaMsg {
   constructor(public dialogRef: MdDialogRef<PizzaMsg>) { }
 }
 
+@Component({
+  template: `
+    <h1 md-dialog-title>This is the title</h1>
+    <md-dialog-content>Lorem ipsum dolor sit amet.</md-dialog-content>
+    <md-dialog-actions>
+      <button md-dialog-close [aria-label]="closeButtonAriaLabel">Close</button>
+      <div md-dialog-close>Should not close</div>
+    </md-dialog-actions>
+  `
+})
+class ContentElementDialog {
+  closeButtonAriaLabel: string;
+}
+
 // Create a real (non-test) NgModule as a workaround for
 // https://github.com/angular/angular/issues/10760
-const TEST_DIRECTIVES = [ComponentWithChildViewContainer, PizzaMsg, DirectiveWithViewContainer];
+const TEST_DIRECTIVES = [
+  ComponentWithChildViewContainer,
+  PizzaMsg,
+  DirectiveWithViewContainer,
+  ContentElementDialog
+];
+
 @NgModule({
   imports: [MdDialogModule],
   exports: TEST_DIRECTIVES,
   declarations: TEST_DIRECTIVES,
-  entryComponents: [ComponentWithChildViewContainer, PizzaMsg],
+  entryComponents: [ComponentWithChildViewContainer, PizzaMsg, ContentElementDialog],
 })
 class DialogTestModule { }

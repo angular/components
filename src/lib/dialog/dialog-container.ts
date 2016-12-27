@@ -22,7 +22,7 @@ import 'rxjs/add/operator/first';
   moduleId: module.id,
   selector: 'md-dialog-container, mat-dialog-container',
   templateUrl: 'dialog-container.html',
-  styleUrls: ['dialog-container.css'],
+  styleUrls: ['dialog.css'],
   host: {
     'class': 'md-dialog-container',
     '[attr.role]': 'dialogConfig?.role',
@@ -50,7 +50,10 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     super();
   }
 
-  /** Attach a portal as content to this dialog container. */
+  /**
+   * Attach a portal as content to this dialog container.
+   * @param portal Portal to be attached as the dialog content.
+   */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     if (this._portalHost.hasAttached()) {
       throw new MdDialogContentAlreadyAttachedError();
@@ -69,11 +72,15 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     return attachResult;
   }
 
+  /** @docs-private */
   attachTemplatePortal(portal: TemplatePortal): Map<string, any> {
     throw Error('Not yet implemented');
   }
 
-  /** Handles the user pressing the Escape key. */
+  /**
+   * Handles the user pressing the Escape key.
+   * @docs-private
+   */
   handleEscapeKey() {
     if (!this.dialogConfig.disableClose) {
       this.dialogRef.close();

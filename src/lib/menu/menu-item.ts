@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, HostBinding, Renderer} from '@angular/core';
-import {MdFocusable} from '../core/a11y/list-key-manager';
+import {Focusable} from '../core/a11y/list-key-manager';
 
 /**
  * This directive is intended to be used inside an md-menu tag.
@@ -16,7 +16,7 @@ import {MdFocusable} from '../core/a11y/list-key-manager';
   templateUrl: 'menu-item.html',
   exportAs: 'mdMenuItem'
 })
-export class MdMenuItem implements MdFocusable {
+export class MdMenuItem implements Focusable {
   _disabled: boolean;
 
   constructor(private _renderer: Renderer, private _elementRef: ElementRef) {}
@@ -26,25 +26,18 @@ export class MdMenuItem implements MdFocusable {
   }
 
   // this is necessary to support anchors
+  /** Whether the menu item is disabled. */
   @HostBinding('attr.disabled')
   @Input()
-  get disabled(): boolean {
-    return this._disabled;
-  }
-
+  get disabled(): boolean { return this._disabled; }
   set disabled(value: boolean) {
     this._disabled = (value === false || value === undefined) ? null : true;
   }
 
+  /** Sets the aria-disabled property on the menu item. */
   @HostBinding('attr.aria-disabled')
-  get isAriaDisabled(): string {
-    return String(!!this.disabled);
-  }
-
-  get _tabindex() {
-    return this.disabled ? '-1' : '0';
-  }
-
+  get isAriaDisabled(): string { return String(!!this.disabled); }
+  get _tabindex() { return this.disabled ? '-1' : '0'; }
 
   _getHostElement(): HTMLElement {
     return this._elementRef.nativeElement;
