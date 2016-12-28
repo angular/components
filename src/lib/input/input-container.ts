@@ -11,7 +11,8 @@ import {
   Optional,
   Output,
   EventEmitter,
-  Renderer
+  Renderer,
+  OnInit,
 } from '@angular/core';
 import {coerceBooleanProperty} from '../core';
 import {NgControl} from '@angular/forms';
@@ -77,7 +78,7 @@ export class MdHint {
     '(input)': '_onInput()',
   }
 })
-export class MdInputDirective implements AfterContentInit {
+export class MdInputDirective implements AfterContentInit, OnInit {
   /** Whether the element is disabled. */
   @Input()
   get disabled() { return this._disabled; }
@@ -142,14 +143,14 @@ export class MdInputDirective implements AfterContentInit {
 
   constructor(private _elementRef: ElementRef,
               private _renderer: Renderer,
-              @Optional() public _ngControl: NgControl) {
+              @Optional() public _ngControl: NgControl) { }
+
+  ngOnInit() {
     // Force setter to be called in case id was not specified.
     this.id = this.id;
 
     if (this._ngControl && this._ngControl.valueChanges) {
-      this._ngControl.valueChanges.subscribe((value) => {
-        this.value = value;
-      });
+      this._ngControl.valueChanges.subscribe(value => this.value = value);
     }
   }
 
