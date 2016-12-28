@@ -116,7 +116,8 @@ const textareaStyleReset = `
 
 @Component({
   template: `
-    <textarea md-autosize [minRows]="minRows" [maxRows]="maxRows" #autosize="mdAutosize">
+    <textarea md-textarea-autosize [minRows]="minRows" [maxRows]="maxRows" 
+        #autosize="mdTextareaAutosize">
       {{content}}
     </textarea>`,
   styles: [textareaStyleReset],
@@ -129,7 +130,7 @@ class AutosizeTextAreaWithContent {
 }
 
 @Component({
-  template: `<textarea md-autosize [value]="value"></textarea>`,
+  template: `<textarea md-textarea-autosize [value]="value"></textarea>`,
   styles: [textareaStyleReset],
 })
 class AutosizeTextAreaWithValue {
