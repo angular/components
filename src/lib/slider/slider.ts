@@ -301,6 +301,8 @@ export class MdSlider implements ControlValueAccessor {
 
   /** Event emitted when the slider value has changed. */
   @Output() change = new EventEmitter<MdSliderChange>();
+
+  /** Event emitted when the slider thumb moves. */
   @Output() input = new EventEmitter<MdSliderChange>();
 
   constructor(@Optional() private _dir: Dir, elementRef: ElementRef) {
