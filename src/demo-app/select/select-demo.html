@@ -3,7 +3,7 @@
 <div class="demo-select">
   <div *ngIf="showSelect">
     <md-card>
-      <md-select placeholder="Food i would like to eat" [formControl]="foodControl">
+      <md-select placeholder="Food i would like to eat" [formControl]="foodControl" (change)="changeListener($event)">
         <md-option *ngFor="let food of foods" [value]="food.value"> {{ food.viewValue }} </md-option>
       </md-select>
       <p> Value: {{ foodControl.value }} </p>
@@ -19,7 +19,7 @@
 
   <md-card>
     <md-select placeholder="Drink" [(ngModel)]="currentDrink" [required]="isRequired" [disabled]="isDisabled"
-      #drinkControl="ngModel">
+      (change)="changeListener($event)" #drinkControl="ngModel">
       <md-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drink.disabled">
         {{ drink.viewValue }}
       </md-option>

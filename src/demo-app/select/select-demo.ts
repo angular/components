@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
+import {MdSelectChange} from '@angular/material';
 
 @Component({
     moduleId: module.id,
@@ -36,4 +37,7 @@ export class SelectDemo {
     this.foodControl.enabled ? this.foodControl.disable() : this.foodControl.enable();
   }
 
+  changeListener(event: MdSelectChange) {
+    console.log(event);
+  };
 }

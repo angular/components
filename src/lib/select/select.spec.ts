@@ -237,6 +237,27 @@ describe('MdSelect', () => {
       expect(fixture.componentInstance.select.selected).not.toBeDefined();
     });
 
+
+    it('should emit an event when the selected option has changed', () => {
+      trigger.click();
+      fixture.detectChanges();
+
+      (overlayContainerElement.querySelector('md-option') as HTMLElement).click();
+
+      expect(fixture.componentInstance.changeListener).toHaveBeenCalled();
+    });
+
+    it('should not emit multiple change events for the same option', () => {
+      trigger.click();
+      fixture.detectChanges();
+
+      let option = overlayContainerElement.querySelector('md-option') as HTMLElement;
+
+      option.click();
+      option.click();
+
+      expect(fixture.componentInstance.changeListener).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('forms integration', () => {
@@ -1146,7 +1167,8 @@ describe('MdSelect', () => {
   selector: 'basic-select',
   template: `
     <div [style.height.px]="heightAbove"></div>
-    <md-select placeholder="Food" [formControl]="control" [required]="isRequired">
+    <md-select placeholder="Food" [formControl]="control" [required]="isRequired"
+      (change)="changeListener($event)">
       <md-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
         {{ food.viewValue }}
       </md-option>
@@ -1169,6 +1191,7 @@ class BasicSelect {
   isRequired: boolean;
   heightAbove = 0;
   heightBelow = 0;
+  changeListener = jasmine.createSpy('MdSelect change listener');
 
   @ViewChild(MdSelect) select: MdSelect;
   @ViewChildren(MdOption) options: QueryList<MdOption>;
