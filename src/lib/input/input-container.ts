@@ -83,6 +83,7 @@ export class MdHint {
     '[required]': 'required',
     '(blur)': '_onBlur()',
     '(focus)': '_onFocus()',
+    '(input)': '_onInput()'
   }
 })
 export class MdInputDirective {
@@ -173,6 +174,11 @@ export class MdInputDirective {
   _onFocus() { this.focused = true; }
 
   _onBlur() { this.focused = false; }
+
+  _onInput() {
+    // This is a noop function and is used to let Angular recognize the changes
+    // to the input element while typing. Listening to the `input` event is similar to NgControls.
+  }
 
   /** Make sure the input is a supported type. */
   private _validateType() {

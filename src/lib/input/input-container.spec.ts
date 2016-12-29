@@ -45,6 +45,7 @@ describe('MdInputContainer', function () {
         MdInputContainerWithType,
         MdInputContainerWithValueBinding,
         MdInputContainerWithFormControl,
+        MdInputContainerWithStaticPlaceholder,
         MdInputContainerMissingMdInputTestController
       ],
     });
@@ -130,6 +131,26 @@ describe('MdInputContainer', function () {
 
     el = fixture.debugElement.query(By.css('label')).nativeElement;
     expect(el.classList.contains('md-empty')).toBe(false, 'should not be empty');
+  }));
+
+  it('should update the placeholder when input entered', async(() => {
+    let fixture = TestBed.createComponent(MdInputContainerWithStaticPlaceholder);
+    fixture.detectChanges();
+
+    let inputEl = fixture.debugElement.query(By.css('input'));
+    let labelEl = fixture.debugElement.query(By.css('label')).nativeElement;
+
+    expect(labelEl.classList).toContain('md-empty');
+    expect(labelEl.classList).not.toContain('md-float');
+
+    // Update the value of the input.
+    inputEl.nativeElement.value = 'Text';
+
+    // Fake behavior of the `(input)` event which should trigger a change detection.
+    fixture.detectChanges();
+
+    expect(labelEl.classList).not.toContain('md-empty');
+    expect(labelEl.classList).not.toContain('md-float');
   }));
 
   it('should not be empty when the value set before view init', async(() => {
@@ -528,6 +549,15 @@ class MdInputContainerZeroTestController {
 class MdInputContainerWithValueBinding {
   value: string = 'Initial';
 }
+
+@Component({
+  template: `
+    <md-input-container [floatingPlaceholder]="false">
+      <input md-input placeholder="Label">
+    </md-input-container>
+  `
+})
+class MdInputContainerWithStaticPlaceholder {}
 
 @Component({
   template: `
