@@ -83,10 +83,9 @@ export class MdHint {
     '[required]': 'required',
     '(blur)': '_onBlur()',
     '(focus)': '_onFocus()',
-    '(input)': '_onInput()',
   }
 })
-export class MdInputDirective implements AfterContentInit {
+export class MdInputDirective {
 
   /** Variables used as cache for getters and setters. */
   private _type = 'text';
@@ -95,9 +94,6 @@ export class MdInputDirective implements AfterContentInit {
   private _required = false;
   private _id: string;
   private _cachedUid: string;
-
-  /** The element's value. */
-  value: any;
 
   /** Whether the element is focused or not. */
   focused = false;
@@ -141,6 +137,10 @@ export class MdInputDirective implements AfterContentInit {
     }
   }
 
+  /** The input element's value. */
+  get value() { return this._elementRef.nativeElement.value; }
+  set value(value: string) { this._elementRef.nativeElement.value = value; }
+
   /**
    * Emits an event when the placeholder changes so that the `md-input-container` can re-validate.
    */
@@ -162,18 +162,9 @@ export class MdInputDirective implements AfterContentInit {
   constructor(private _elementRef: ElementRef,
               private _renderer: Renderer,
               @Optional() public _ngControl: NgControl) {
+
     // Force setter to be called in case id was not specified.
     this.id = this.id;
-
-    if (this._ngControl && this._ngControl.valueChanges) {
-      this._ngControl.valueChanges.subscribe((value) => {
-        this.value = value;
-      });
-    }
-  }
-
-  ngAfterContentInit() {
-    this.value = this._elementRef.nativeElement.value;
   }
 
   /** Focuses the input element. */
@@ -182,8 +173,6 @@ export class MdInputDirective implements AfterContentInit {
   _onFocus() { this.focused = true; }
 
   _onBlur() { this.focused = false; }
-
-  _onInput() { this.value = this._elementRef.nativeElement.value; }
 
   /** Make sure the input is a supported type. */
   private _validateType() {
