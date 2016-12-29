@@ -41,6 +41,10 @@ md-toolbar {
     // Flexbox Vertical Alignment
     flex-direction: row;
     align-items: center;
+
+    // Ensure toolbar content doesn't wrap and exceed the md-toolbar-row width. Ellipsis doesn't work on flex elements.
+    white-space: nowrap;
+    overflow: hidden;
   }
 }
 
