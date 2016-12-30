@@ -12,7 +12,7 @@
          mdRippleBackgroundColor="rgba(0, 0, 0, 0)"></div>
   </div>
 
-  <input #input class="md-radio-input md-visually-hidden" type="radio"
+  <input #input class="md-radio-input cdk-visually-hidden" type="radio"
           [id]="inputId"
           [checked]="checked"
           [disabled]="disabled"
@@ -25,7 +25,7 @@
           (click)="_onInputClick($event)">
 
   <!-- The label content for radio control. -->
-  <div class="md-radio-label-content" [class.md-radio-align-end]="align == 'after'">
+  <div class="md-radio-label-content" [class.md-radio-label-before]="labelPosition == 'before'">
     <ng-content></ng-content>
   </div>
 </label>

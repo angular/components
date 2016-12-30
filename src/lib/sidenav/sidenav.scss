@@ -85,7 +85,7 @@
     visibility: visible;
   }
 
-  @include md-high-contrast {
+  @include cdk-high-contrast {
     opacity: 0.5;
   }
 }
@@ -140,6 +140,9 @@ md-sidenav {
     box-sizing: border-box;
     height: 100%;
     overflow-y: auto; // TODO(kara): revisit scrolling behavior for sidenavs
+
+    // Prevents unnecessary repaints while scrolling.
+    transform: translateZ(0);
   }
 }
 

@@ -7,7 +7,7 @@ import {Subject} from 'rxjs/Subject';
  * This is the interface for focusable items (used by the ListKeyManager).
  * Each item must know how to focus itself and whether or not it is currently disabled.
  */
-export interface MdFocusable {
+export interface Focusable {
   focus(): void;
   disabled?: boolean;
 }
@@ -21,11 +21,13 @@ export class ListKeyManager {
   private _tabOut: Subject<any> = new Subject();
   private _wrap: boolean = false;
 
-  constructor(private _items: QueryList<MdFocusable>) {}
+  constructor(private _items: QueryList<Focusable>) {}
 
   /**
    * Turns on focus wrapping mode, which ensures that the focus will wrap to
    * the other end of list when there are no more items in the given direction.
+   *
+   * @returns The ListKeyManager that the method was called on.
    */
   withFocusWrap(): this {
     this._wrap = true;
@@ -42,7 +44,10 @@ export class ListKeyManager {
     this._items.toArray()[index].focus();
   }
 
-  /** Sets the focus properly depending on the key event passed in. */
+  /**
+   * Sets the focus depending on the key event passed in.
+   * @param event Keyboard event to be used for determining which element to focus.
+   */
   onKeydown(event: KeyboardEvent): void {
     switch (event.keyCode) {
       case DOWN_ARROW:
@@ -93,7 +98,10 @@ export class ListKeyManager {
     return this._focusedItemIndex;
   }
 
-  /** Allows setting of the focusedItemIndex without focusing the item. */
+  /**
+   * Allows setting of the focusedItemIndex without focusing the item.
+   * @param index The new focusedItemIndex.
+   */
   updateFocusedItemIndex(index: number) {
     this._focusedItemIndex = index;
   }
@@ -121,7 +129,7 @@ export class ListKeyManager {
    * down the list until it finds an item that is not disabled, and it will wrap if it
    * encounters either end of the list.
    */
-  private _setWrapModeFocus(delta: number, items: MdFocusable[]): void {
+  private _setWrapModeFocus(delta: number, items: Focusable[]): void {
     // when focus would leave menu, wrap to beginning or end
     this._focusedItemIndex =
       (this._focusedItemIndex + delta + items.length) % items.length;
@@ -139,7 +147,7 @@ export class ListKeyManager {
    * continue to move down the list until it finds an item that is not disabled. If
    * it encounters either end of the list, it will stop and not wrap.
    */
-  private _setDefaultModeFocus(delta: number, items: MdFocusable[]): void {
+  private _setDefaultModeFocus(delta: number, items: Focusable[]): void {
     this._setFocusByIndex(this._focusedItemIndex + delta, delta, items);
   }
 

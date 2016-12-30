@@ -23,6 +23,7 @@ import {MdInkBar} from './ink-bar';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {MdRippleModule} from '../core/ripple/ripple';
+import {ObserveContentModule} from '../core/observe-content/observe-content';
 import {MdTab} from './tab';
 import {MdTabBody} from './tab-body';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
@@ -75,14 +76,12 @@ export class MdTabGroup {
   get _dynamicHeightDeprecated(): boolean { return this._dynamicHeight; }
   set _dynamicHeightDeprecated(value: boolean) { this._dynamicHeight = value; }
 
-  /** The index of the active tab. */
   private _selectedIndex: number = null;
-  @Input() set selectedIndex(value: number) {
-    this._indexToSelect = value;
-  }
-  get selectedIndex(): number {
-    return this._selectedIndex;
-  }
+
+  /** The index of the active tab. */
+  @Input()
+  set selectedIndex(value: number) { this._indexToSelect = value; }
+  get selectedIndex(): number { return this._selectedIndex; }
 
   /** Output to enable support for two-way binding on `selectedIndex`. */
   @Output() get selectedIndexChange(): Observable<number> {
@@ -90,12 +89,16 @@ export class MdTabGroup {
   }
 
   private _onFocusChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();
+
+  /** Event emitted when focus has changed within a tab group. */
   @Output() get focusChange(): Observable<MdTabChangeEvent> {
     return this._onFocusChange.asObservable();
   }
 
   private _onSelectChange: EventEmitter<MdTabChangeEvent> =
       new EventEmitter<MdTabChangeEvent>(true);
+
+  /** Event emitted when the tab selection has changed. */
   @Output() get selectChange(): Observable<MdTabChangeEvent> {
     return this._onSelectChange.asObservable();
   }
@@ -139,7 +142,7 @@ export class MdTabGroup {
 
   /**
    * Waits one frame for the view to update, then updates the ink bar
-   * Note: This must be run outside of the zone or it will create an infinite change detection loop
+   * Note: This must be run outside of the zone or it will create an infinite change detection loop.
    */
   ngAfterViewChecked(): void {
     this._isInitialized = true;
@@ -194,7 +197,7 @@ export class MdTabGroup {
 }
 
 @NgModule({
-  imports: [CommonModule, PortalModule, MdRippleModule],
+  imports: [CommonModule, PortalModule, MdRippleModule, ObserveContentModule],
   // Don't export all components because some are only to be used internally.
   exports: [MdTabGroup, MdTabLabel, MdTab, MdTabNavBar, MdTabLink, MdTabLinkRipple],
   declarations: [MdTabGroup, MdTabLabel, MdTab, MdInkBar, MdTabLabelWrapper,

@@ -13,7 +13,7 @@ import {
   OverlayState,
   PortalModule,
   OVERLAY_PROVIDERS,
-  MdLiveAnnouncer,
+  LiveAnnouncer,
   DefaultStyleCompatibilityModeModule,
 } from '../core';
 import {CommonModule} from '@angular/common';
@@ -32,11 +32,14 @@ export class MdSnackBar {
   /** A reference to the current snack bar in the view. */
   private _snackBarRef: MdSnackBarRef<any>;
 
-  constructor(private _overlay: Overlay, private _live: MdLiveAnnouncer) {}
+  constructor(private _overlay: Overlay, private _live: LiveAnnouncer) {}
 
   /**
    * Creates and dispatches a snack bar with a custom component for the content, removing any
    * currently opened snack bars.
+   *
+   * @param component Component to be instantiated.
+   * @param config Extra configuration for the snack bar.
    */
   openFromComponent<T>(component: ComponentType<T>, config?: MdSnackBarConfig): MdSnackBarRef<T> {
     config = _applyConfigDefaults(config);
@@ -81,7 +84,6 @@ export class MdSnackBar {
    * @param message The message to show in the snackbar.
    * @param action The label for the snackbar action.
    * @param config Additional configuration options for the snackbar.
-   * @returns {MdSnackBarRef<SimpleSnackBar>}
    */
   open(message: string, action = '', config: MdSnackBarConfig = {}): MdSnackBarRef<SimpleSnackBar> {
     config.announcementMessage = message;
@@ -147,7 +149,7 @@ export class MdSnackBarModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdSnackBarModule,
-      providers: [MdSnackBar, OVERLAY_PROVIDERS, MdLiveAnnouncer]
+      providers: [MdSnackBar, OVERLAY_PROVIDERS, LiveAnnouncer]
     };
   }
 }

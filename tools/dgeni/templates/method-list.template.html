@@ -1,0 +1,6 @@
+{%- if methodList.length -%}
+  <h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  {% for m in methodList %}
+    {$ method(m) $}
+  {% endfor %}
+{%- endif -%}

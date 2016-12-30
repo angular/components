@@ -1,4 +1,5 @@
-import {Injectable} from '@angular/core';
+import {Injectable, SecurityContext} from '@angular/core';
+import {SafeResourceUrl, DomSanitizer} from '@angular/platform-browser';
 import {Http} from '@angular/http';
 import {MdError} from '../core';
 import {Observable} from 'rxjs/Observable';
@@ -18,7 +19,7 @@ import 'rxjs/add/operator/catch';
  */
 export class MdIconNameNotFoundError extends MdError {
   constructor(iconName: string) {
-      super(`Unable to find icon with the name "${iconName}"`);
+    super(`Unable to find icon with the name "${iconName}"`);
   }
 }
 
@@ -29,7 +30,7 @@ export class MdIconNameNotFoundError extends MdError {
  */
 export class MdIconSvgTagNotFoundError extends MdError {
   constructor() {
-      super('<svg> tag not found');
+    super('<svg> tag not found');
   }
 }
 
@@ -39,7 +40,7 @@ export class MdIconSvgTagNotFoundError extends MdError {
  */
 class SvgIconConfig {
   svgElement: SVGElement = null;
-  constructor(public url: string) { }
+  constructor(public url: SafeResourceUrl) { }
 }
 
 /** Returns the cache key to use for an icon namespace and name. */
@@ -81,27 +82,43 @@ export class MdIconRegistry {
    */
   private _defaultFontSetClass = 'material-icons';
 
-  constructor(private _http: Http) {}
+  constructor(private _http: Http, private _sanitizer: DomSanitizer) {}
 
-  /** Registers an icon by URL in the default namespace. */
-  addSvgIcon(iconName: string, url: string): this {
+  /**
+   * Registers an icon by URL in the default namespace.
+   * @param iconName Name under which the icon should be registered.
+   * @param url
+   */
+  addSvgIcon(iconName: string, url: SafeResourceUrl): this {
     return this.addSvgIconInNamespace('', iconName, url);
   }
 
-  /** Registers an icon by URL in the specified namespace. */
-  addSvgIconInNamespace(namespace: string, iconName: string, url: string): this {
+  /**
+   * Registers an icon by URL in the specified namespace.
+   * @param namespace Namespace in which the icon should be registered.
+   * @param iconName Name under which the icon should be registered.
+   * @param url
+   */
+  addSvgIconInNamespace(namespace: string, iconName: string, url: SafeResourceUrl): this {
     const key = iconKey(namespace, iconName);
     this._svgIconConfigs.set(key, new SvgIconConfig(url));
     return this;
   }
 
-  /** Registers an icon set by URL in the default namespace. */
-  addSvgIconSet(url: string): this {
+  /**
+   * Registers an icon set by URL in the default namespace.
+   * @param url
+   */
+  addSvgIconSet(url: SafeResourceUrl): this {
     return this.addSvgIconSetInNamespace('', url);
   }
 
-  /** Registers an icon set by URL in the specified namespace. */
-  addSvgIconSetInNamespace(namespace: string, url: string): this {
+  /**
+   * Registers an icon set by URL in the specified namespace.
+   * @param namespace Namespace in which to register the icon set.
+   * @param url
+   */
+  addSvgIconSetInNamespace(namespace: string, url: SafeResourceUrl): this {
     const config = new SvgIconConfig(url);
     if (this._iconSetConfigs.has(namespace)) {
       this._iconSetConfigs.get(namespace).push(config);
@@ -115,6 +132,9 @@ export class MdIconRegistry {
    * Defines an alias for a CSS class name to be used for icon fonts. Creating an mdIcon
    * component with the alias as the fontSet input will cause the class name to be applied
    * to the <md-icon> element.
+   *
+   * @param alias Alias for the font.
+   * @param className Class name override to be used instead of the alias.
    */
   registerFontClassAlias(alias: string, className = alias): this {
     this._fontCssClassesByAlias.set(alias, className);
@@ -132,6 +152,8 @@ export class MdIconRegistry {
   /**
    * Sets the CSS class name to be used for icon fonts when an <md-icon> component does not
    * have a fontSet input value, and is not loading an icon by name or URL.
+   *
+   * @param className
    */
   setDefaultFontSetClass(className: string): this {
     this._defaultFontSetClass = className;
@@ -151,8 +173,12 @@ export class MdIconRegistry {
    * The response from the URL may be cached so this will not always cause an HTTP request, but
    * the produced element will always be a new copy of the originally fetched icon. (That is,
    * it will not contain any modifications made to elements previously returned).
+   *
+   * @param safeUrl URL from which to fetch the SVG icon.
    */
-  getSvgIconFromUrl(url: string): Observable<SVGElement> {
+  getSvgIconFromUrl(safeUrl: SafeResourceUrl): Observable<SVGElement> {
+    let url = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, safeUrl);
+
     if (this._cachedIconsByUrl.has(url)) {
       return Observable.of(cloneSvg(this._cachedIconsByUrl.get(url)));
     }
@@ -165,6 +191,9 @@ export class MdIconRegistry {
    * Returns an Observable that produces the icon (as an <svg> DOM element) with the given name
    * and namespace. The icon must have been previously registered with addIcon or addIconSet;
    * if not, the Observable will throw an MdIconNameNotFoundError.
+   *
+   * @param name Name of the icon to be retrieved.
+   * @param namespace Namespace in which to look for the icon.
    */
   getNamedSvgIcon(name: string, namespace = ''): Observable<SVGElement> {
     // Return (copy of) cached icon if possible.
@@ -221,9 +250,12 @@ export class MdIconRegistry {
         .map(iconSetConfig =>
             this._loadSvgIconSetFromConfig(iconSetConfig)
                 .catch((err: any, caught: Observable<SVGElement>): Observable<SVGElement> => {
+                  let url =
+                      this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, iconSetConfig.url);
+
                   // Swallow errors fetching individual URLs so the combined Observable won't
                   // necessarily fail.
-                  console.log(`Loading icon set URL: ${iconSetConfig.url} failed: ${err}`);
+                  console.log(`Loading icon set URL: ${url} failed: ${err}`);
                   return Observable.of(null);
                 })
                 .do(svg => {
@@ -280,7 +312,7 @@ export class MdIconRegistry {
   private _loadSvgIconSetFromConfig(config: SvgIconConfig): Observable<SVGElement> {
       // TODO: Document that icons should only be loaded from trusted sources.
     return this._fetchUrl(config.url)
-        .map((svgText) => this._svgElementFromString(svgText));
+        .map(svgText => this._svgElementFromString(svgText));
   }
 
   /**
@@ -353,7 +385,9 @@ export class MdIconRegistry {
    * Returns an Observable which produces the string contents of the given URL. Results may be
    * cached, so future calls with the same URL may not cause another HTTP request.
    */
-  private _fetchUrl(url: string): Observable<string> {
+  private _fetchUrl(safeUrl: SafeResourceUrl): Observable<string> {
+    let url = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, safeUrl);
+
     // Store in-progress fetches to avoid sending a duplicate request for a URL when there is
     // already a request in progress for that URL. It's necessary to call share() on the
     // Observable returned by http.get() so that multiple subscribers don't cause multiple XHRs.

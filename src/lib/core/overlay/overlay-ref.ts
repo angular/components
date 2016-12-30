@@ -24,6 +24,11 @@ export class OverlayRef implements PortalHost {
     return this._pane;
   }
 
+  /**
+   * Attaches the overlay to a portal instance and adds the backdrop.
+   * @param portal Portal instance to which to attach the overlay.
+   * @returns The portal attachment result.
+   */
   attach(portal: Portal<any>): any {
     if (this._state.hasBackdrop) {
       this._attachBackdrop();
@@ -37,11 +42,18 @@ export class OverlayRef implements PortalHost {
     return attachResult;
   }
 
+  /**
+   * Detaches an overlay from a portal.
+   * @returns Resolves when the overlay has been detached.
+   */
   detach(): Promise<any> {
     this._detachBackdrop();
     return this._portalHost.detach();
   }
 
+  /**
+   * Cleans up the overlay from the DOM.
+   */
   dispose(): void {
     if (this._state.positionStrategy) {
       this._state.positionStrategy.dispose();
@@ -51,16 +63,24 @@ export class OverlayRef implements PortalHost {
     this._portalHost.dispose();
   }
 
+  /**
+   * Checks whether the overlay has been attached.
+   */
   hasAttached(): boolean {
     return this._portalHost.hasAttached();
   }
 
+  /**
+   * Returns an observable that emits when the backdrop has been clicked.
+   */
   backdropClick(): Observable<void> {
     return this._backdropClick.asObservable();
   }
 
-  /** Gets the current state config of the overlay. */
-  getState() {
+  /**
+   * Gets the current state config of the overlay.
+   */
+  getState(): OverlayState {
     return this._state;
   }
 
@@ -98,21 +118,21 @@ export class OverlayRef implements PortalHost {
   /** Attaches a backdrop for this overlay. */
   private _attachBackdrop() {
     this._backdropElement = document.createElement('div');
-    this._backdropElement.classList.add('md-overlay-backdrop');
+    this._backdropElement.classList.add('cdk-overlay-backdrop');
     this._backdropElement.classList.add(this._state.backdropClass);
 
-    this._pane.parentElement.appendChild(this._backdropElement);
+    // Insert the backdrop before the pane in the DOM order,
+    // in order to handle stacked overlays properly.
+    this._pane.parentElement.insertBefore(this._backdropElement, this._pane);
 
     // Forward backdrop clicks such that the consumer of the overlay can perform whatever
     // action desired when such a click occurs (usually closing the overlay).
-    this._backdropElement.addEventListener('click', () => {
-      this._backdropClick.next(null);
-    });
+    this._backdropElement.addEventListener('click', () => this._backdropClick.next(null));
 
     // Add class to fade-in the backdrop after one frame.
     requestAnimationFrame(() => {
       if (this._backdropElement) {
-        this._backdropElement.classList.add('md-overlay-backdrop-showing');
+        this._backdropElement.classList.add('cdk-overlay-backdrop-showing');
       }
     });
   }
@@ -136,7 +156,7 @@ export class OverlayRef implements PortalHost {
         }
       };
 
-      backdropToDetach.classList.remove('md-overlay-backdrop-showing');
+      backdropToDetach.classList.remove('cdk-overlay-backdrop-showing');
       backdropToDetach.classList.remove(this._state.backdropClass);
       backdropToDetach.addEventListener('transitionend', finishDetach);
 

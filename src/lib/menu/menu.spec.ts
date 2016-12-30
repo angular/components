@@ -72,7 +72,7 @@ describe('MdMenu', () => {
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
 
-    const backdrop = <HTMLElement>overlayContainerElement.querySelector('.md-overlay-backdrop');
+    const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
     backdrop.click();
     fixture.detectChanges();
 
@@ -101,7 +101,7 @@ describe('MdMenu', () => {
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
 
-    const overlayPane = overlayContainerElement.children[0];
+    const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane');
     expect(overlayPane.getAttribute('dir')).toEqual('rtl');
   });
 
@@ -248,9 +248,7 @@ describe('MdMenu', () => {
     });
 
     function getOverlayPane(): HTMLElement {
-      let pane = overlayContainerElement.children[0] as HTMLElement;
-      pane.style.position = 'absolute';
-      return pane;
+      return overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
     }
   });
 

@@ -22,7 +22,7 @@ import {CommonModule} from '@angular/common';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 import {
   MdRippleModule,
-  MdUniqueSelectionDispatcher,
+  UniqueSelectionDispatcher,
   DefaultStyleCompatibilityModeModule,
 } from '../core';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
@@ -102,33 +102,41 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
 
   /** Name of the radio button group. All radio buttons inside this group will use this name. */
   @Input()
-  get name(): string {
-    return this._name;
-  }
-
+  get name(): string { return this._name; }
   set name(value: string) {
     this._name = value;
     this._updateRadioButtonNames();
   }
 
-  /** Alignment of the radio-buttons relative to their labels. Can be 'before' or 'after'. */
-  @Input() align: 'before' | 'after';
-
+  /**
+   * Alignment of the radio-buttons relative to their labels. Can be 'before' or 'after'.
+   * @deprecated
+   */
   @Input()
-  get disabled(): boolean {
-    return this._disabled;
+  get align(): 'start' | 'end' {
+    // align refers to the checkbox relative to the label, while labelPosition refers to the
+    // label relative to the checkbox. As such, they are inverted.
+    return this.labelPosition == 'after' ? 'start' : 'end';
   }
 
+  set align(v) {
+    this.labelPosition = (v == 'start') ? 'after' : 'before';
+  }
+
+  /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
+  @Input() labelPosition: 'before' | 'after' = 'after';
+
+  /** Whether the radio button is disabled. */
+  @Input()
+  get disabled(): boolean { return this._disabled; }
   set disabled(value) {
     // The presence of *any* disabled value makes the component disabled, *except* for false.
     this._disabled = (value != null && value !== false) ? true : null;
   }
 
+  /** Value of the radio button. */
   @Input()
-  get value(): any {
-    return this._value;
-  }
-
+  get value(): any { return this._value; }
   set value(newValue: any) {
     if (this._value != newValue) {
       // Set this before proceeding to ensure no circular loop occurs with selection.
@@ -145,15 +153,12 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
     }
   }
 
+  /** Whether the radio button is selected. */
   @Input()
-  get selected() {
-    return this._selected;
-  }
-
+  get selected() { return this._selected; }
   set selected(selected: MdRadioButton) {
     this._selected = selected;
     this.value = selected ? selected.value : null;
-
     this._checkSelectedRadioButton();
   }
 
@@ -212,22 +217,36 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
     }
   }
 
-  /** Implemented as part of ControlValueAccessor. */
+  /**
+   * Sets the model value. Implemented as part of ControlValueAccessor.
+   * @param value
+   */
   writeValue(value: any) {
     this.value = value;
   }
 
-  /** Implemented as part of ControlValueAccessor. */
+  /**
+   * Registers a callback to be triggered when the model value changes.
+   * Implemented as part of ControlValueAccessor.
+   * @param fn Callback to be registered.
+   */
   registerOnChange(fn: (value: any) => void) {
     this._controlValueAccessorChangeFn = fn;
   }
 
-  /** Implemented as part of ControlValueAccessor. */
+  /**
+   * Registers a callback to be triggered when the control is touched.
+   * Implemented as part of ControlValueAccessor.
+   * @param fn Callback to be registered.
+   */
   registerOnTouched(fn: any) {
     this.onTouched = fn;
   }
 
-  /** Implemented as a part of ControlValueAccessor. */
+  /**
+   * Sets the disabled state of the control. Implemented as a part of ControlValueAccessor.
+   * @param isDisabled Whether the control should be disabled.
+   */
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
   }
@@ -297,7 +316,7 @@ export class MdRadioButton implements OnInit {
   constructor(@Optional() radioGroup: MdRadioGroup,
               private _elementRef: ElementRef,
               private _renderer: Renderer,
-              public radioDispatcher: MdUniqueSelectionDispatcher) {
+              public radioDispatcher: UniqueSelectionDispatcher) {
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
 
@@ -363,16 +382,31 @@ export class MdRadioButton implements OnInit {
     }
   }
 
-  private _align: 'before' | 'after';
-
-  /** Alignment of the radio-button relative to their labels. Can be 'before' or 'after'. */
+  /**
+   * Whether or not the radio-button should appear before or after the label.
+   * @deprecated
+   */
   @Input()
-  get align(): 'before' | 'after' {
-    return this._align || (this.radioGroup != null && this.radioGroup.align) || 'before';
+  get align(): 'start' | 'end' {
+    // align refers to the checkbox relative to the label, while labelPosition refers to the
+    // label relative to the checkbox. As such, they are inverted.
+    return this.labelPosition == 'after' ? 'start' : 'end';
   }
 
-  set align(value: 'before' | 'after') {
-    this._align = value;
+  set align(v) {
+    this.labelPosition = (v == 'start') ? 'after' : 'before';
+  }
+
+  private _labelPosition: 'before' | 'after';
+
+  /** Whether the label should appear after or before the radio button. Defaults to 'after' */
+  @Input()
+  get labelPosition(): 'before' | 'after' {
+    return this._labelPosition || (this.radioGroup && this.radioGroup.labelPosition) || 'after';
+  }
+
+  set labelPosition(value) {
+    this._labelPosition = value;
   }
 
   /** Whether the radio button is disabled. */
@@ -480,7 +514,7 @@ export class MdRadioModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdRadioModule,
-      providers: [MdUniqueSelectionDispatcher, ViewportRuler],
+      providers: [UniqueSelectionDispatcher, ViewportRuler],
     };
   }
 }

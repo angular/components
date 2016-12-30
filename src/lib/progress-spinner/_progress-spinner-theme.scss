@@ -1,0 +1,23 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+
+@mixin md-progress-spinner-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+
+  md-progress-spinner, md-progress-circle, md-spinner {
+    path {
+      stroke: md-color($primary, 600);
+    }
+
+    &.md-accent path {
+      stroke: md-color($accent, 600);
+    }
+
+    &.md-warn path {
+      stroke: md-color($warn, 600);
+    }
+  }
+}

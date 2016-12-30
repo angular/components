@@ -10,35 +10,42 @@ This is the home for the Angular team's Material Design components built on top 
 [Contributing](https://github.com/angular/material2/blob/master/CONTRIBUTING.md),
 [Plunker Template](http://plnkr.co/edit/o077B6uEiiIgkC0S06dd?p=preview)
 
-### Getting started 
+### Installation
 
-See our [Getting Started Guide](https://github.com/angular/material2/blob/master/GETTING_STARTED.md)
+The latest release of Angular Material can be installed from npm
+
+`npm install @angular/material`
+
+Playing with the latest changes from [master](https://github.com/angular/material2/tree/master) is also possible
+
+`npm install https://github.com/angular/material2-builds.git`
+
+### Getting started
+
+See our [Getting Started Guide][getting-started]
 if you're building your first project with Angular Material 2.
 
 ### Project status
-Angular Material 2 is currently in alpha and under active development. 
-During alpha, breaking API and behavior changes will be occurring regularly.
+Angular Material 2 is currently in beta and under active development.
+During beta, new features will be added regularly and APIs will evolve based on user feedback.
 
-Check out our [directory of design documents](https://github.com/angular/material2/wiki/Design-doc-directory) 
+Check out our [directory of design documents](https://github.com/angular/material2/wiki/Design-doc-directory)
 for more insight into our process.
 
-If you'd like to contribute, you must follow our [contributing guidelines](https://github.com/angular/material2/blob/master/CONTRIBUTING.md). 
-You can look through the issues (which should be up-to-date on who is working on which features 
-and which pieces are blocked) and make a comment. 
-Also see our [`Good for community contribution`](https://github.com/angular/material2/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+for+community+contribution%22) 
+If you'd like to contribute, you must follow our [contributing guidelines](https://github.com/angular/material2/blob/master/CONTRIBUTING.md).
+You can look through the issues (which should be up-to-date on who is working on which features
+and which pieces are blocked) and make a comment.
+Also see our [`Good for community contribution`](https://github.com/angular/material2/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+for+community+contribution%22)
 label.
 
-High level items planned for December 2016:
-* Continued work on initial versions of md-autocomplete and md-chips
-* Continued bug bashing
-* Continued work on https://material.angular.io site
-* Finish major refactoring for md-input (hit a few issues last month)
+High level items planned for January 2017:
+* Initial version of md-autocomplete
+* Prototyping for data-table
+* Improvements to https://material.angular.io
 * Continued expanding e2e test coverage
-* Paginated tabs.
-* Scroll / resize handling for overlays
-* Production build 
-* AoT compile e2e app
-* Release beta.0
+* More work on scroll / resize handling for overlays
+* Screenshot tests
+* Better development automation
 
 
 #### Feature status:
@@ -55,23 +62,22 @@ High level items planned for December 2016:
 | list             |                           Available | [README][8]  |   [#107][0107] |
 | grid-list        |                           Available | [README][9]  |              - |
 | icon             |                           Available | [README][10] |              - |
-| progress-circle  |                           Available | [README][11] |              - |
+| progress-spinner |                           Available | [README][11] |              - |
 | progress-bar     |                           Available | [README][12] |              - |
 | tabs             |                           Available | [README][13] |              - |
 | slide-toggle     |                           Available | [README][14] |              - |
 | button-toggle    |                           Available | [README][15] |              - |
 | slider           |                           Available | [README][16] |              - |
 | menu             |                           Available | [README][17] |   [#119][0119] |
-| tooltip          | Initial version, needs enhancements | [README][18] |              - |
+| tooltip          |                           Available | [README][18] |              - |
 | ripples          |                           Available | [README][19] |   [#108][0108] |
 | dialog           |                           Available | [README][22] |   [#114][0114] |
 | snackbar / toast |                           Available | [README][21] |   [#115][0115] |
-| select           |        Will be released in alpha.11 |           -  |   [#118][0118] |
-| textarea         | Initial version, needs enhancements |           -  |              - |
-| autocomplete     |                      Design started |           -  |   [#117][0117] |
-| chips            |                             Started |           -  |   [#120][0120] |
+| select           |                           Available |           -  |   [#118][0118] |
+| textarea         |                           Available |           -  |              - |
+| autocomplete     |                         In-progress |           -  |   [#117][0117] |
+| chips            |  Initial version, features evolving |           -  |   [#120][0120] |
 | theming          |   Available, need guidance overlays | [Guide][20]  |              - |
-| prod build       |                         Not started |           -  |              - |
 | docs site        |   UX design and tooling in progress |           -  |              - |
 | typography       |                         Not started |           -  |   [#205][0205] |
 | fab speed-dial   |                         Not started |           -  |   [#860][0860] |
@@ -80,7 +86,7 @@ High level items planned for December 2016:
 | bottom-nav       |                         Not started |           -  |   [#408][0408] |
 | virtual-repeat   |                         Not started |           -  |   [#823][0823] |
 | datepicker       |                         Not started |           -  |   [#675][0675] |
-| data-table       |                         Not started |           -  |   [#581][0581] |
+| data-table       |                  Design in-progress |           -  |   [#581][0581] |
 | stepper          |                         Not started |           -  |   [#508][0508] |
 | layout           |   see [angular/flex-layout][lay_rp] |           -  |              - |
 
@@ -95,7 +101,7 @@ High level items planned for December 2016:
  [8]: https://github.com/angular/material2/blob/master/src/lib/list/README.md
  [9]: https://github.com/angular/material2/blob/master/src/lib/grid-list/README.md
 [10]: https://github.com/angular/material2/blob/master/src/lib/icon/README.md
-[11]: https://github.com/angular/material2/blob/master/src/lib/progress-circle/README.md
+[11]: https://github.com/angular/material2/blob/master/src/lib/progress-spinner/README.md
 [12]: https://github.com/angular/material2/blob/master/src/lib/progress-bar/README.md
 [13]: https://github.com/angular/material2/blob/master/src/lib/tabs/README.md
 [14]: https://github.com/angular/material2/blob/master/src/lib/slide-toggle/README.md
@@ -104,7 +110,7 @@ High level items planned for December 2016:
 [17]: https://github.com/angular/material2/blob/master/src/lib/menu/README.md
 [18]: https://github.com/angular/material2/blob/master/src/lib/tooltip/README.md
 [19]: https://github.com/angular/material2/blob/master/src/lib/core/ripple/README.md
-[20]: https://github.com/angular/material2/blob/master/docs/theming.md
+[20]: https://github.com/angular/material2/blob/master/guides/theming.md
 [21]: https://github.com/angular/material2/blob/master/src/lib/snack-bar/README.md
 [22]: https://github.com/angular/material2/blob/master/src/lib/dialog/README.md
 
@@ -126,13 +132,16 @@ High level items planned for December 2016:
 [0675]: https://github.com/angular/material2/issues/675
 [0581]: https://github.com/angular/material2/issues/581
 
+[getting-started]: https://github.com/angular/material2/blob/master/guides/getting-started.md
+[theming]: https://github.com/angular/material2/blob/master/guides/theming.md
+
 
 "Available" means that the components or feature is published and available for use, but may still
 be missing some behaviors or polish.
 
 ## The goal of Angular Material
-Our goal is to build a set of high-quality UI components built with Angular 2 and TypeScript, 
-following the Material Design spec. These 
+Our goal is to build a set of high-quality UI components built with Angular 2 and TypeScript,
+following the Material Design spec. These
 components will serve as an example of how to write Angular code following best practices.
 
 ### What do we mean by "high-quality"?
@@ -145,7 +154,7 @@ components will serve as an example of how to write Angular code following best 
 * Code is clean and well-documented to serve as an example for Angular devs.
 
 ## Browser and screen reader support
-Angular Material supports the most recent two versions of all major browsers: 
+Angular Material supports the most recent two versions of all major browsers:
 Chrome (including Android), Firefox, Safari (including iOS), and IE11 / Edge
 
 We also aim for great user experience with the following screen readers:

@@ -3,6 +3,7 @@ import {NgModule, ModuleWithProviders} from '@angular/core';
 import {
   MdRippleModule,
   RtlModule,
+  ObserveContentModule,
   PortalModule,
   OverlayModule,
   A11yModule,
@@ -23,7 +24,7 @@ import {MdGridListModule} from './grid-list/index';
 import {MdCardModule} from './card/index';
 import {MdChipsModule} from './chips/index';
 import {MdIconModule} from './icon/index';
-import {MdProgressCircleModule} from './progress-circle/index';
+import {MdProgressSpinnerModule} from './progress-spinner/index';
 import {MdProgressBarModule} from './progress-bar/index';
 import {MdInputModule} from './input/index';
 import {MdSnackBarModule} from './snack-bar/snack-bar';
@@ -49,7 +50,7 @@ const MATERIAL_MODULES = [
   MdListModule,
   MdMenuModule,
   MdProgressBarModule,
-  MdProgressCircleModule,
+  MdProgressSpinnerModule,
   MdRadioModule,
   MdRippleModule,
   MdSelectModule,
@@ -67,6 +68,7 @@ const MATERIAL_MODULES = [
   PlatformModule,
   ProjectionModule,
   DefaultStyleCompatibilityModeModule,
+  ObserveContentModule
 ];
 
 @NgModule({
@@ -80,7 +82,7 @@ const MATERIAL_MODULES = [
     MdInputModule.forRoot(),
     MdListModule.forRoot(),
     MdProgressBarModule.forRoot(),
-    MdProgressCircleModule.forRoot(),
+    MdProgressSpinnerModule.forRoot(),
     MdRippleModule.forRoot(),
     MdSelectModule.forRoot(),
     MdSidenavModule.forRoot(),
@@ -89,6 +91,7 @@ const MATERIAL_MODULES = [
     PortalModule.forRoot(),
     ProjectionModule.forRoot(),
     RtlModule.forRoot(),
+    ObserveContentModule.forRoot(),
 
     // These modules include providers.
     A11yModule.forRoot(),
