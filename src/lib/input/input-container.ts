@@ -75,6 +75,7 @@ export class MdHint {
     '(blur)': '_onBlur()',
     '(focus)': '_onFocus()',
     '(input)': '_onInput()',
+    '[attr.step]': 'step'
   }
 })
 export class MdInputDirective implements AfterContentInit {
@@ -120,6 +121,16 @@ export class MdInputDirective implements AfterContentInit {
   value: any;
 
   /**
+   * Step value if the component is a number input. This is used to work around a bug in Chrome
+   * where number inputs with `min` and `max` collapse, if they don't have a `step` attribute.
+   * We work around it by adding the `any` value, if the user didn't specify anything. The value is
+   * added in the `ngAfterContentInit` hook.
+   * See https://bugs.chromium.org/p/chromium/issues/detail?id=598164
+   * @docs-private
+   */
+  @Input() step: string = null;
+
+  /**
    * Emits an event when the placeholder changes so that the `md-input-container` can re-validate.
    */
   @Output() _placeholderChange = new EventEmitter<string>();
@@ -155,6 +166,10 @@ export class MdInputDirective implements AfterContentInit {
 
   ngAfterContentInit() {
     this.value = this._elementRef.nativeElement.value;
+
+    if (this.type === 'number' && !this.step) {
+      this.step = 'any';
+    }
   }
 
   /** Focuses the input element. */

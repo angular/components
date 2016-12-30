@@ -110,6 +110,26 @@ describe('MdInputContainer', function () {
     expect(el.classList.contains('md-empty')).toBe(true);
   });
 
+  it('should add a default "step" to number inputs', () => {
+    let fixture = TestBed.createComponent(MdInputContainerNumberTestController);
+    fixture.detectChanges();
+
+    let el = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('step')).toBe('any');
+  });
+
+  it('should should not override the user-supplied "step"', () => {
+    let fixture = TestBed.createComponent(MdInputContainerNumberTestController);
+
+    fixture.componentInstance.step = '10';
+    fixture.detectChanges();
+
+    let el = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.getAttribute('step')).toBe('10');
+  });
+
   it('should not be empty after input entered', async(() => {
     let fixture = TestBed.createComponent(MdInputContainerTextTestController);
     fixture.detectChanges();
@@ -414,10 +434,14 @@ class MdInputContainerPasswordTestController {}
 @Component({
   template: `
     <md-input-container>
-      <input md-input type="number" placeholder="Placeholder">
+      <input md-input type="number" placeholder="Placeholder" [min]="min" [max]="max" [step]="step">
     </md-input-container>`
 })
-class MdInputContainerNumberTestController {}
+class MdInputContainerNumberTestController {
+  min = 10;
+  max = 100;
+  step: string = null;
+}
 
 @Component({
   template: `
