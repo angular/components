@@ -227,6 +227,23 @@ describe('MdDialog', () => {
     expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(0);
   });
 
+  it('should add a class for styling to the root element', () => {
+    dialog.open(PizzaMsg);
+
+    let pizzaMsgContainer = overlayContainerElement.querySelector('pizza-msg');
+
+    expect(pizzaMsgContainer.classList).toContain('md-dialog-root');
+    expect(pizzaMsgContainer.classList).not.toContain('md-dialog-root-flex');
+  });
+
+  it('should add an extra flexbox class to components that use md-dialog-content', () => {
+    dialog.open(ContentElementDialog);
+
+    let dialogContainer = overlayContainerElement.querySelector('content-element-dialog');
+
+    expect(dialogContainer.classList).toContain('md-dialog-root-flex');
+  });
+
   describe('disableClose option', () => {
     it('should prevent closing via clicks on the backdrop', () => {
       dialog.open(PizzaMsg, {
@@ -365,7 +382,10 @@ class ComponentWithChildViewContainer {
 }
 
 /** Simple component for testing ComponentPortal. */
-@Component({template: '<p>Pizza</p> <input> <button>Close</button>'})
+@Component({
+  template: '<p>Pizza</p> <input> <button>Close</button>',
+  selector: 'pizza-msg'
+})
 class PizzaMsg {
   constructor(public dialogRef: MdDialogRef<PizzaMsg>) { }
 }
@@ -378,7 +398,8 @@ class PizzaMsg {
       <button md-dialog-close [aria-label]="closeButtonAriaLabel">Close</button>
       <div md-dialog-close>Should not close</div>
     </md-dialog-actions>
-  `
+  `,
+  selector: 'content-element-dialog'
 })
 class ContentElementDialog {
   closeButtonAriaLabel: string;
