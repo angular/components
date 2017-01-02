@@ -82,6 +82,7 @@ task(':build:components:rollup', () => {
     'rxjs/add/operator/do': 'Rx.Observable.prototype',
     'rxjs/add/operator/share': 'Rx.Observable.prototype',
     'rxjs/add/operator/finally': 'Rx.Observable.prototype',
+    'rxjs/add/operator/debounceTime': 'Rx.Observable.protoype',
     'rxjs/add/operator/catch': 'Rx.Observable.prototype',
     'rxjs/add/operator/first': 'Rx.Observable.prototype',
     'rxjs/Observable': 'Rx'

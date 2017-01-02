@@ -1,5 +1,7 @@
 import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
 
+import 'rxjs/add/operator/debounceTime';
 
 
 /**
@@ -8,12 +10,21 @@ import {Injectable} from '@angular/core';
  */
 @Injectable()
 export class ViewportRuler {
-  // TODO(jelbourn): cache the document's bounding rect and only update it when the window
-  // is resized (debounced).
 
+  /** Cached document client rectangle. */
+  private _documentRect: ClientRect;
+
+  constructor() {
+    this._updateDocumentRect();
+
+    // Listen for resize events in the window and update the document rectangle.
+    Observable.fromEvent(window, 'resize')
+      .debounceTime(100)
+      .subscribe(() => this._updateDocumentRect());
+  }
 
   /** Gets a ClientRect for the viewport's bounds. */
-  getViewportRect(): ClientRect {
+  getViewportRect(documentRect = this._documentRect): ClientRect {
     // Use the document element's bounding rect rather than the window scroll properties
     // (e.g. pageYOffset, scrollY) due to in issue in Chrome and IE where window scroll
     // properties and client coordinates (boundingClientRect, clientX/Y, etc.) are in different
@@ -23,7 +34,6 @@ export class ViewportRuler {
     // We use the documentElement instead of the body because, by default (without a css reset)
     // browsers typically give the document body an 8px margin, which is not included in
     // getBoundingClientRect().
-    const documentRect = document.documentElement.getBoundingClientRect();
     const scrollPosition = this.getViewportScrollPosition(documentRect);
     const height = window.innerHeight;
     const width = window.innerWidth;
@@ -43,7 +53,7 @@ export class ViewportRuler {
    * Gets the (top, left) scroll position of the viewport.
    * @param documentRect
    */
-  getViewportScrollPosition(documentRect = document.documentElement.getBoundingClientRect()) {
+  getViewportScrollPosition(documentRect = this._documentRect) {
     // The top-left-corner of the viewport is determined by the scroll position of the document
     // body, normally just (scrollLeft, scrollTop). However, Chrome and Firefox disagree about
     // whether `document.body` or `document.documentElement` is the scrolled element, so reading
@@ -55,4 +65,10 @@ export class ViewportRuler {
 
     return {top, left};
   }
+
+  /** Updates the document rect and caches it in the service. */
+  private _updateDocumentRect() {
+    this._documentRect = document.documentElement.getBoundingClientRect();
+  }
+
 }
