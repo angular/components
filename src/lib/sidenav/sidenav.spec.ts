@@ -264,6 +264,30 @@ describe('MdSidenav', () => {
       expect(testComponent.closeCount).toBe(1);
     }));
 
+    it('should not close when pressing escape if disableClose is set', fakeAsync(() => {
+      let fixture = TestBed.createComponent(BasicTestApp);
+      let testComponent = fixture.debugElement.componentInstance;
+      let sidenav = fixture.debugElement.query(By.directive(MdSidenav)).componentInstance;
+
+      sidenav.disableClose = true;
+      sidenav.open();
+
+      fixture.detectChanges();
+      endSidenavTransition(fixture);
+      tick();
+
+      sidenav.handleKeydown({
+        keyCode: ESCAPE,
+        stopPropagation: () => {}
+      });
+
+      fixture.detectChanges();
+      endSidenavTransition(fixture);
+      tick();
+
+      expect(testComponent.closeCount).toBe(0);
+    }));
+
     it('should restore focus to the trigger element on close', fakeAsync(() => {
       let fixture = TestBed.createComponent(BasicTestApp);
       let sidenav: MdSidenav = fixture.debugElement

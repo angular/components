@@ -103,6 +103,12 @@ export class MdSidenav implements AfterContentInit {
   /** Mode of the sidenav; whether 'over' or 'side'. */
   @Input() mode: 'over' | 'push' | 'side' = 'over';
 
+  /** Whether the sidenav can be closed with the escape key or not. */
+  @Input()
+  get disableClose(): boolean { return this._disableClose; }
+  set disableClose(value: boolean) { this._disableClose = coerceBooleanProperty(value); }
+  private _disableClose: boolean = false;
+
   /** Whether the sidenav is opened. */
   _opened: boolean = false;
 
@@ -233,7 +239,7 @@ export class MdSidenav implements AfterContentInit {
    * @docs-private
    */
   handleKeydown(event: KeyboardEvent) {
-    if (event.keyCode === ESCAPE) {
+    if (event.keyCode === ESCAPE && !this.disableClose) {
       this.close();
       event.stopPropagation();
     }
