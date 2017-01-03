@@ -2,7 +2,7 @@ import {task} from 'gulp';
 import {join} from 'path';
 import {statSync, readFileSync} from 'fs';
 import {DIST_COMPONENTS_ROOT} from '../constants';
-import {openFirebaseDatabase} from '../task_helpers';
+import {openFirebaseDatabase, isTravisPushBuild} from '../task_helpers';
 import {spawnSync} from 'child_process';
 
 // Those imports lack types.
@@ -14,8 +14,8 @@ const BUNDLE_PATH = join(DIST_COMPONENTS_ROOT, 'bundles', 'material.umd.js');
 task('payload', ['build:release'], () => {
 
   let results = {
-    normal: getFilesize(BUNDLE_PATH),
-    minified_uglify: getUglifiedSize(BUNDLE_PATH),
+    umd_kb: getFilesize(BUNDLE_PATH),
+    umd_minified_uglify_kb: getUglifiedSize(BUNDLE_PATH),
     timestamp: Date.now()
   };
 
@@ -23,7 +23,7 @@ task('payload', ['build:release'], () => {
   console.log('Payload Results:', JSON.stringify(results, null, 2));
 
   // Publish the results to firebase when it runs on Travis and not as a PR.
-  if (process.env['TRAVIS_PULL_REQUEST'] === 'false') {
+  if (isTravisPushBuild()) {
     return publishResults(results);
   }
 

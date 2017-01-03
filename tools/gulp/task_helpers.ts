@@ -216,6 +216,7 @@ export function sequenceTask(...args: any[]) {
 /** Opens a connection to the firebase realtime database. */
 export function openFirebaseDatabase() {
   // Initialize the Firebase application with admin credentials.
+  // Credentials need to be for a Service Account, which can be created in the Firebase console.
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert({
       project_id: 'material2-dashboard',
@@ -226,4 +227,9 @@ export function openFirebaseDatabase() {
   });
 
   return firebaseAdmin.database();
+}
+
+/** Whether gulp currently runs inside of Travis as a push. */
+export function isTravisPushBuild() {
+  return process.env['TRAVIS_PULL_REQUEST'] === 'false';
 }
