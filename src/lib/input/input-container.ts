@@ -176,8 +176,13 @@ export class MdInputDirective {
   _onBlur() { this.focused = false; }
 
   _onInput() {
-    // This is a noop function and is used to let Angular recognize the changes
-    // to the input element while typing. Listening to the `input` event is similar to NgControls.
+    // This is a noop function and is used to let Angular know whenever the value changes.
+    // Angular will run a new change detection each time the `input` event has been dispatched.
+    // It's necessary that Angular recognizes the value change, because when floatingLabel
+    // is set to false and Angular forms aren't used, the placeholder won't recognize the
+    // value changes and will not disappear.
+    // Listening to the input event wouldn't be necessary when the input is using the
+    // FormsModule or ReactiveFormsModule, because Angular forms also listens to input events.
   }
 
   /** Make sure the input is a supported type. */
