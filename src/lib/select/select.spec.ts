@@ -1178,8 +1178,7 @@ describe('MdSelect', () => {
   selector: 'basic-select',
   template: `
     <div [style.height.px]="heightAbove"></div>
-    <md-select placeholder="Food" [formControl]="control" [required]="isRequired"
-      (change)="changeListener($event)">
+    <md-select placeholder="Food" [formControl]="control" [required]="isRequired">
       <md-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
         {{ food.viewValue }}
       </md-option>
@@ -1269,7 +1268,7 @@ class NgIfSelect {
 }
 
 @Component({
-  selector: 'select-with-change-element',
+  selector: 'select-with-change-event',
   template: `
     <md-select (change)="changeListener($event)">
       <md-option *ngFor="let food of foods" [value]="food">{{ food }}</md-option>
