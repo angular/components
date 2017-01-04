@@ -153,19 +153,11 @@ export class MdInputDirective {
   @Output() _placeholderChange = new EventEmitter<string>();
 
   get empty() {
-    if (this._isNeverEmpty()) {
-      return false;
-    }
-    if (this.value == null || this.value === '') {
-      // Check if this is an <input> element that contains bad input.
-      // If so, we know that it only appears empty because the value failed to parse.
-      if (this._elementRef.nativeElement instanceof HTMLInputElement &&
-          this._elementRef.nativeElement.validity.badInput) {
-        return false;
-      }
-      return true;
-    }
-    return false;
+    return !this._isNeverEmpty() &&
+        (this.value == null || this.value === '') &&
+        // Check if the input contains bad input. If so, we know that it only appears empty because
+        // the value failed to parse. From the user's perspective it is not empty.
+        !this._isBadInput();
   }
 
   private get _uid() { return this._cachedUid = this._cachedUid || `md-input-${nextUniqueId++}`; }
@@ -212,6 +204,10 @@ export class MdInputDirective {
   }
 
   private _isNeverEmpty() { return this._neverEmptyInputTypes.indexOf(this._type) !== -1; }
+
+  private _isBadInput() {
+    return (this._elementRef.nativeElement as HTMLInputElement).validity.badInput;
+  }
 
   /** Determines if the component host is a textarea. If not recognizable it returns false. */
   private _isTextarea() {
