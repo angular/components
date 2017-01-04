@@ -140,12 +140,18 @@ describe('MdDialog', () => {
     dialog.afterOpen().subscribe(r => {
       ref = r;
     });
-    expect(dialog.open(PizzaMsg)).toBe(ref);
+    expect(dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef
+    })).toBe(ref);
   });
 
   it('should notify the observers if all open dialogs have finished closing', () => {
-    const ref1 = dialog.open(PizzaMsg);
-    const ref2 = dialog.open(ContentElementDialog);
+    const ref1 = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef
+    });
+    const ref2 = dialog.open(ContentElementDialog, {
+      viewContainerRef: testViewContainerRef
+    });
     let allClosed = false;
 
     dialog.afterAllClosed().subscribe(_ => {
