@@ -16,7 +16,7 @@ describe('MdSelect', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdSelectModule.forRoot(), ReactiveFormsModule, FormsModule],
-      declarations: [BasicSelect, NgModelSelect, ManySelects, NgIfSelect, SelectWithoutOptions],
+      declarations: [BasicSelect, NgModelSelect, ManySelects, NgIfSelect, SelectInitWithoutOptions],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div') as HTMLElement;
@@ -241,7 +241,7 @@ describe('MdSelect', () => {
 
   it('should select the proper option when the list of options is initialized at a later point',
     async(() => {
-      let fixture = TestBed.createComponent(SelectWithoutOptions);
+      let fixture = TestBed.createComponent(SelectInitWithoutOptions);
       let instance = fixture.componentInstance;
 
       fixture.detectChanges();
@@ -1257,7 +1257,7 @@ class NgIfSelect {
 
 
 @Component({
-  selector: 'ng-if-select',
+  selector: 'select-init-without-options',
   template: `
     <md-select placeholder="Food I want to eat right now" [formControl]="control">
       <md-option *ngFor="let food of foods" [value]="food.value">
@@ -1266,7 +1266,7 @@ class NgIfSelect {
     </md-select>
   `
 })
-class SelectWithoutOptions {
+class SelectInitWithoutOptions {
   foods: any[];
   control = new FormControl('pizza-1');
 

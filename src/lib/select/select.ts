@@ -234,9 +234,9 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
       this._resetOptions();
 
       if (this._control) {
-        // Defer setting the value in order to avoid the "Expression has changed after
-        // it was checked" errors from Angular.
-        Promise.resolve(null).then(() => this.writeValue(this._control.value));
+        // Defer setting the value in order to avoid the "Expression
+        // has changed after it was checked" errors from Angular.
+        Promise.resolve(null).then(() => this._setSelectionByValue(this._control.value));
       }
     });
   }
