@@ -1,9 +1,9 @@
 import {async, TestBed, inject} from '@angular/core/testing';
 import {Component} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {MdInputModule} from './input';
-import {MdInputContainer} from './input-container';
+import {MdInputContainer, MdInputDirective} from './input-container';
 import {Platform} from '../core/platform/platform';
 import {PlatformModule} from '../core/platform/index';
 import {
@@ -41,7 +41,8 @@ describe('MdInputContainer', function () {
         MdInputContainerZeroTestController,
         MdTextareaWithBindings,
         MdInputContainerWithDisabled,
-        MdInputContainerMissingMdInputTestController
+        MdInputContainerMissingMdInputTestController,
+        MdInputContainerWithFormControl
       ],
     });
 
@@ -293,6 +294,21 @@ describe('MdInputContainer', function () {
     const textarea: HTMLTextAreaElement = fixture.nativeElement.querySelector('textarea');
     expect(textarea).not.toBeNull();
   });
+
+  it('should update the value when using FormControl.setValue', () => {
+    let fixture = TestBed.createComponent(MdInputContainerWithFormControl);
+    fixture.detectChanges();
+
+    let input = fixture.debugElement.query(By.directive(MdInputDirective))
+        .injector.get(MdInputDirective) as MdInputDirective;
+
+    expect(input.value).toBeFalsy();
+
+    fixture.componentInstance.formControl.setValue('something');
+
+    expect(input.value).toBe('something');
+  });
+
 });
 
 @Component({
@@ -445,6 +461,13 @@ class MdTextareaWithBindings {
   template: `<md-input-container><input></md-input-container>`
 })
 class MdInputContainerMissingMdInputTestController {}
+
+@Component({
+  template: `<md-input-container><input md-input [formControl]="formControl"></md-input-container>`
+})
+class MdInputContainerWithFormControl {
+  formControl = new FormControl();
+}
 
 /**
  * Gets a RegExp used to detect an angular wrapped error message.
