@@ -238,6 +238,12 @@ export class MdSlider implements ControlValueAccessor {
   set vertical(value: any) { this._vertical = coerceBooleanProperty(value); }
   private _vertical = false;
 
+  /** The value to be used for display purposes. */
+  get displayValue(): string|number {
+    // Skip adding the decimal part if the number is whole.
+    return this.value % 1 === 0 ? this.value : this.value.toFixed(1);
+  }
+
   /**
    * Whether the axis of the slider is inverted.
    * (i.e. whether moving the thumb in the positive x or y direction decreases the slider's value).

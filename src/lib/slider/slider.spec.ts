@@ -431,6 +431,24 @@ describe('MdSlider', () => {
       // The closest snap is at the end of the slider.
       expect(trackFillElement.style.transform).toContain('scaleX(1)');
     });
+
+    it('should round the value inside the label to one decimal place', () => {
+      fixture.componentInstance.step = 0.1;
+      fixture.detectChanges();
+
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.333333, gestureConfig);
+
+      expect(sliderDebugElement.componentInstance.displayValue).toBe('33.3');
+    });
+
+    it('should not add decimals to the value if it is a whole number', () => {
+      fixture.componentInstance.step = 0.1;
+      fixture.detectChanges();
+
+      dispatchSlideEventSequence(sliderNativeElement, 0, 1, gestureConfig);
+
+      expect(sliderDebugElement.componentInstance.displayValue).toBe(100);
+    });
   });
 
   describe('slider with auto ticks', () => {
@@ -1162,10 +1180,12 @@ class SliderWithMinAndMax {
 class SliderWithValue { }
 
 @Component({
-  template: `<md-slider step="25"></md-slider>`,
+  template: `<md-slider [step]="step"></md-slider>`,
   styles: [styles],
 })
-class SliderWithStep { }
+class SliderWithStep {
+  step = 25;
+}
 
 @Component({
   template: `<md-slider step="5" tickInterval="auto"></md-slider>`,
