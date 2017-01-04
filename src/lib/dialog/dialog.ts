@@ -31,7 +31,7 @@ export class MdDialog {
   /** Subject for notifying the user that all open dialogs have finished closing. */
   private _afterAllClosed: Subject<any> = new Subject();
 
-  /** Subject for notifying the user that a dialogs has opened. */
+  /** Subject for notifying the user that a dialog has opened. */
   private _afterOpen: Subject<any> = new Subject();
 
   constructor(
