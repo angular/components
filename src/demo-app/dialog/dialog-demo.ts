@@ -118,7 +118,7 @@ export class ContentElementDialog {
 
   constructor(public dialog: MdDialog) { }
 
-  showInStackedDialog(src: string) {
+  showInStackedDialog() {
     this.dialog.open(IFrameDialog);
   }
 }
