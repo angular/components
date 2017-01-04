@@ -1,4 +1,6 @@
 import {Injector, ComponentRef, Injectable, Optional, SkipSelf} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
 
 import {Overlay, OverlayRef, ComponentType, OverlayState, ComponentPortal} from '../core';
 import {extendObject} from '../core/util/object-extend';
@@ -26,6 +28,12 @@ export class MdDialog {
     return this._parentDialog ? this._parentDialog._openDialogs : this._openDialogsAtThisLevel;
   }
 
+  /** Subject for notifying the user that all open dialogs have finished closing. */
+  private _afterAllClosed: Subject<any> = new Subject();
+
+  /** Subject for notifying the user that a dialogs has opened. */
+  private _afterOpen: Subject<any> = new Subject();
+
   constructor(
       private _overlay: Overlay,
       private _injector: Injector,
@@ -46,6 +54,7 @@ export class MdDialog {
 
     this._openDialogs.push(dialogRef);
     dialogRef.afterClosed().subscribe(() => this._removeOpenDialog(dialogRef));
+    this._afterOpen.next(dialogRef);
 
     return dialogRef;
   }
@@ -63,6 +72,20 @@ export class MdDialog {
       // they'll be removed from the list instantaneously.
       this._openDialogs[i].close();
     }
+  }
+
+  /**
+   * Gets an observable that is notified when a dialog has been opened.
+   */
+  afterOpen(): Observable<any> {
+    return this._afterOpen.asObservable();
+  }
+
+  /**
+   * Gets an observable that is notified when all open dialog have finished closing.
+   */
+  afterAllClosed(): Observable<any> {
+    return this._afterAllClosed.asObservable();
   }
 
   /**
@@ -166,6 +189,9 @@ export class MdDialog {
 
     if (index > -1) {
       this._openDialogs.splice(index, 1);
+      if (!this._openDialogs.length) {
+        this._afterAllClosed.next();
+      }
     }
   }
 }
