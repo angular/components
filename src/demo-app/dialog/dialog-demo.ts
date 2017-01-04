@@ -24,7 +24,7 @@ export class DialogDemo {
     }
   };
 
-  constructor(public dialog: MdDialog, @Inject(DOCUMENT) doc: Document) {
+  constructor(public dialog: MdDialog, @Inject(DOCUMENT) doc: any) {
     // Possible useful example for the open and closeAll events.
     // Adding a class to the body if a dialog opens and
     // removing it after all open dialogs are closed
