@@ -123,7 +123,6 @@ md-input, md-textarea {
   transform: translateY(0);
   transform-origin: bottom left;
   transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
-              scale $swift-ease-out-duration $swift-ease-out-timing-function,
               color $swift-ease-out-duration $swift-ease-out-timing-function,
               width $swift-ease-out-duration $swift-ease-out-timing-function;
 
