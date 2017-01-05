@@ -16,6 +16,7 @@ const gulpAutoprefixer = require('gulp-autoprefixer');
 const gulpConnect = require('gulp-connect');
 const resolveBin = require('resolve-bin');
 const firebaseAdmin = require('firebase-admin');
+const gcloud = require('google-cloud');
 
 
 /** If the string passed in is a glob, returns it, otherwise append '**\/*' to it. */
@@ -206,4 +207,37 @@ export function openFirebaseDatabase() {
 /** Whether gulp currently runs inside of Travis as a push. */
 export function isTravisPushBuild() {
   return process.env['TRAVIS_PULL_REQUEST'] === 'false';
+}
+
+/** Open Google Cloud Storage for screenshots */
+export function openScreenshotsCloudStorage() {
+  // Enable Storage
+  let gcs = gcloud.storage({
+    projectId: 'material2-screenshots',
+    credentials: {
+      client_email: 'firebase-adminsdk-t4209@material2-screenshots.iam.gserviceaccount.com',
+      private_key: (process.env['MATERIAL2_SCREENSHOT_FIREBASE_KEY'] || '').replace(/\\n/g, '\n')
+    },
+  });
+
+  // Reference an existing bucket.
+  return gcs.bucket('material2-screenshots.appspot.com');
+}
+
+/** Opens a connection to the firebase realtime database for screenshots. */
+export function openScreenshotsFirebaseDatabase() {
+  // Initialize the Firebase application with admin credentials.
+  // Credentials need to be for a Service Account, which can be created in the Firebase console.
+  let screenshotApp = firebaseAdmin.initializeApp({
+    credential: firebaseAdmin.credential.cert({
+      project_id: 'material2-screenshots',
+      client_email: 'firebase-adminsdk-t4209@material2-screenshots.iam.gserviceaccount.com',
+      // In Travis CI the private key will be incorrect because the line-breaks are escaped.
+      // The line-breaks need to persist in the service account private key.
+      private_key: (process.env['MATERIAL2_SCREENSHOT_FIREBASE_KEY'] || '').replace(/\\n/g, '\n')
+    }),
+    databaseURL: 'https://material2-screenshots.firebaseio.com'
+  }, 'material2-screenshots');
+
+  return screenshotApp.database();
 }
