@@ -2,6 +2,8 @@
 `<select>` element. You can read more about selects in the 
 [Material Design spec](https://material.google.com/components/menus.html).
 
+<!-- example(select-overview) -->
+
 ### Simple select
 
 In your template, create an `md-select` element. For each option you'd like in your select, add an 
