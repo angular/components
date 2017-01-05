@@ -1,12 +1,12 @@
 import {browser} from 'protractor';
-import {getElement, FinderResult} from './query';
+import {getElement, FinderResult, waitForElement} from './query';
 import {Point} from './actions';
 
 /**
  * Asserts that an element exists.
  */
 export function expectToExist(selector: string, expected = true): webdriver.promise.Promise<any> {
-  return this.waitForElement(selector).then((isPresent: boolean) => {
+  return waitForElement(selector).then((isPresent: boolean) => {
     expect(isPresent).toBe(expected, `Expected "${selector}"${expected ? '' : ' not'} to exist`);
   });
 }
