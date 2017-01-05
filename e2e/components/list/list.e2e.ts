@@ -1,16 +1,14 @@
 import {browser} from 'protractor';
-import {E2EUtils} from '../../utils.e2e';
+import {expectToExist} from '../../util/asserts';
 
 describe('list', () => {
-  const utils = new E2EUtils();
-
   beforeEach(() => browser.get('/list'));
 
   it('should render a list container', () => {
-    utils.expectToExist('md-list');
+    expectToExist('md-list');
   });
 
   it('should render list items inside the list container', () => {
-    utils.expectToExist('md-list md-list-item');
+    expectToExist('md-list md-list-item');
   });
 });

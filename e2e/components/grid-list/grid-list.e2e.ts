@@ -1,16 +1,14 @@
 import {browser} from 'protractor';
-import {E2EUtils} from '../../utils.e2e';
+import {expectToExist} from '../../util/asserts';
 
 describe('grid-list', () => {
-  const utils = new E2EUtils();
-
   beforeEach(() => browser.get('/grid-list'));
 
   it('should render a grid list container', () => {
-    utils.expectToExist('md-grid-list');
+    expectToExist('md-grid-list');
   });
 
   it('should render list items inside the grid list container', () => {
-    utils.expectToExist('md-grid-list md-grid-tile');
+    expectToExist('md-grid-list md-grid-tile');
   });
 });

@@ -1,15 +1,14 @@
 import {browser, element, by, Key} from 'protractor';
-import {E2EUtils} from '../../utils.e2e';
+import {expectToExist} from '../../util/asserts';
 
 describe('slide-toggle', () => {
-  const utils = new E2EUtils();
   const getInput = () => element(by.css('#normal-slide-toggle input'));
   const getNormalToggle = () => element(by.css('#normal-slide-toggle'));
 
   beforeEach(() => browser.get('slide-toggle'));
 
   it('should render a slide-toggle', () => {
-    utils.expectToExist('md-slide-toggle');
+    expectToExist('md-slide-toggle');
   });
 
   it('should change the checked state on click', () => {

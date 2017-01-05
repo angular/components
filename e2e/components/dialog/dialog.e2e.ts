@@ -1,14 +1,14 @@
 import {browser, by, element, Key} from 'protractor';
-import {E2EUtils} from '../../utils.e2e';
+import {expectToExist, expectFocusOn} from '../../util/asserts';
+import {pressKeys, clickElementAtPoint} from '../../util/actions';
+import {waitForElement} from '../../util/query';
 
 describe('dialog', () => {
-  const utils = new E2EUtils();
-
   beforeEach(() => browser.get('/dialog'));
 
   it('should open a dialog', () => {
     element(by.id('default')).click();
-    utils.expectToExist('md-dialog-container');
+    expectToExist('md-dialog-container');
   });
 
   it('should close by clicking on the backdrop', () => {
@@ -16,7 +16,7 @@ describe('dialog', () => {
 
     waitForDialog().then(() => {
       clickOnBackrop();
-      utils.expectToExist('md-dialog-container', false);
+      expectToExist('md-dialog-container', false);
     });
   });
 
@@ -24,8 +24,8 @@ describe('dialog', () => {
     element(by.id('default')).click();
 
     waitForDialog().then(() => {
-      utils.pressKeys(Key.ESCAPE);
-      utils.expectToExist('md-dialog-container', false);
+      pressKeys(Key.ESCAPE);
+      expectToExist('md-dialog-container', false);
     });
   });
 
@@ -34,7 +34,7 @@ describe('dialog', () => {
 
     waitForDialog().then(() => {
       element(by.id('close')).click();
-      utils.expectToExist('md-dialog-container', false);
+      expectToExist('md-dialog-container', false);
     });
   });
 
@@ -42,7 +42,7 @@ describe('dialog', () => {
     element(by.id('default')).click();
 
     waitForDialog().then(() => {
-      utils.expectFocusOn('md-dialog-container input');
+      expectFocusOn('md-dialog-container input');
     });
   });
 
@@ -53,7 +53,7 @@ describe('dialog', () => {
 
     waitForDialog().then(() => {
       clickOnBackrop();
-      utils.expectFocusOn(openButton);
+      expectFocusOn(openButton);
     });
   });
 
@@ -63,8 +63,8 @@ describe('dialog', () => {
     waitForDialog().then(() => {
       let tab = Key.TAB;
 
-      utils.pressKeys(tab, tab, tab);
-      utils.expectFocusOn('#close');
+      pressKeys(tab, tab, tab);
+      expectFocusOn('#close');
     });
   });
 
@@ -73,7 +73,7 @@ describe('dialog', () => {
 
     waitForDialog().then(() => {
       clickOnBackrop();
-      utils.expectToExist('md-dialog-container');
+      expectToExist('md-dialog-container');
     });
   });
 
@@ -81,16 +81,16 @@ describe('dialog', () => {
     element(by.id('disabled')).click();
 
     waitForDialog().then(() => {
-      utils.pressKeys(Key.ESCAPE);
-      utils.expectToExist('md-dialog-container');
+      pressKeys(Key.ESCAPE);
+      expectToExist('md-dialog-container');
     });
   });
 
   function waitForDialog() {
-    return utils.waitForElement('md-dialog-container');
+    return waitForElement('md-dialog-container');
   }
 
   function clickOnBackrop() {
-    utils.clickElementAtPoint('.cdk-overlay-backdrop', { x: 0, y: 0 });
+    clickElementAtPoint('.cdk-overlay-backdrop', { x: 0, y: 0 });
   }
 });

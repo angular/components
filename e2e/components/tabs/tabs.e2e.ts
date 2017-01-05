@@ -1,9 +1,7 @@
 import {browser, by, element, ElementArrayFinder, ElementFinder, Key} from 'protractor';
-import {E2EUtils} from '../../utils.e2e';
+import {pressKeys} from '../../util/actions';
 
 describe('tabs', () => {
-  const utils = new E2EUtils();
-
   describe('basic behavior', () => {
     let tabGroup: ElementFinder;
     let tabLabels: ElementArrayFinder;
@@ -33,22 +31,22 @@ describe('tabs', () => {
       tabLabels.get(0).click();
       expect(getFocusStates(tabLabels)).toEqual([true, false, false]);
 
-      utils.pressKeys(right);
+      pressKeys(right);
       expect(getFocusStates(tabLabels)).toEqual([false, true, false]);
 
-      utils.pressKeys(right);
+      pressKeys(right);
       expect(getFocusStates(tabLabels)).toEqual([false, false, true]);
 
-      utils.pressKeys(right);
+      pressKeys(right);
       expect(getFocusStates(tabLabels)).toEqual([false, false, true]);
 
-      utils.pressKeys(left);
+      pressKeys(left);
       expect(getFocusStates(tabLabels)).toEqual([false, true, false]);
 
-      utils.pressKeys(left);
+      pressKeys(left);
       expect(getFocusStates(tabLabels)).toEqual([true, false, false]);
 
-      utils.pressKeys(left);
+      pressKeys(left);
       expect(getFocusStates(tabLabels)).toEqual([true, false, false]);
     });
   });
