@@ -1,1 +1,8 @@
-I'm a month
+<table>
+  <tr>
+    <th colspan="7">{{label}}</th>
+  </tr>
+  <tr *ngFor="let week of weeks">
+    <td *ngFor="let date of week">{{getDateString(date)}}</td>
+  </tr>
+</table>
