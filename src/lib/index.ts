@@ -6,6 +6,7 @@ export * from './button-toggle/index';
 export * from './card/index';
 export * from './chips/index';
 export * from './checkbox/index';
+export * from './date-picker/index';
 export * from './dialog/index';
 export * from './grid-list/index';
 export * from './icon/index';
