@@ -3,49 +3,51 @@ import * as gulp from 'gulp';
 import * as path from 'path';
 import {browser} from 'protractor';
 
+
+function initializeEnvironment(jasmine: any) {
+  var reporter = new jasmine.JsApiReporter({});
+  reporter.specStarted = function(result: any) {
+    jasmine.getEnv().currentSpec = result.fullName;
+  };
+  jasmine.getEnv().addReporter(reporter);
+}
+
+initializeEnvironment(jasmine);
+
 export class Screenshot {
   id: string;
+  dir: string = '/tmp/angular-material2-build/screenshots/';
 
-  /**
-   * The filename used to store the screenshot
-   * @returns {string}
-   */
-  get filename() {
+  /** The filename used to store the screenshot. */
+  get filename(): string {
     return this.id
         .toLowerCase()
-        .replace(/[ :\/]/g, '_')
+        .replace(/\s/g, '_')
         .replace(/[^/a-z0-9_]+/g, '')
       + '.screenshot.png';
   }
 
-  /**
-   * The full path to the screenshot
-   * @returns {string}
-   */
-  get path() {
-    return path.resolve(__dirname, '..', 'screenshots', this.filename);
+  /** The full path to the screenshot */
+  get fullPath(): string {
+    return path.resolve(this.dir, this.filename);
   }
 
-  /**
-   * @param {string} id A unique identifier used for the screenshot
-   */
   constructor(id: string) {
-    this.id   = id;
+    this.id   = `${jasmine.getEnv().currentSpec} ${id}`;
     browser.takeScreenshot().then(png => this.storeScreenshot(png));
   }
 
-  /**
-   * Replaces the existing screenshot with the newly generated one.
-   */
+  /** Replaces the existing screenshot with the newly generated one. */
   storeScreenshot(png: any) {
-    var dir = path.resolve(__dirname, '..', 'screenshots');
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, 0o744);
+    if (!fs.existsSync(this.dir)) {
+      fs.mkdirSync(this.dir, '744');
     }
-    fs.writeFileSync(this.path, png, {encoding: 'base64'});
+
+    if (fs.existsSync(this.dir)) {
+      fs.writeFileSync(this.fullPath, png, {encoding: 'base64' });
+    }
   }
 }
-
 
 export function screenshot(id: string) {
   return new Screenshot(id);
