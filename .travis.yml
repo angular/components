@@ -35,9 +35,6 @@ env:
     - MODE=e2e
     - MODE=saucelabs_required
     - MODE=browserstack_required
-# Temporary disable the optional builds because of potential concurrency flakiness
-#    - MODE=saucelabs_optional
-#    - MODE=browserstack_optional
 
 matrix:
   fast_finish: true
