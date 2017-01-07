@@ -79,3 +79,7 @@ provides a tab-like UI for navigating between routes.
 The tab-nav-bar is not tied to any particular router; it works with normal `<a>` elements and uses
 the `active` property to determine which tab is currently active. The corresponding 
 `<router-outlet>` can be placed anywhere in the view. 
+
+**Note**: The `md-tab-nav-bar` example above does not work with recent versions of Angular core.
+Please consult [Issue #1967](https://github.com/angular/material2/issues/1967) for more details
+including a work around and a link to the PR that is being reviewed by the Angular core team.
