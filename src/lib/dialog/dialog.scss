@@ -52,11 +52,11 @@ md-dialog-actions, [md-dialog-actions], mat-dialog-actions, [mat-dialog-actions]
     margin-bottom: -$md-dialog-padding;
   }
 
-  &[align="end"] {
+  &[align='end'] {
     justify-content: flex-end;
   }
 
-  &[align="middle"] {
+  &[align='middle'] {
     justify-content: center;
   }
 }
