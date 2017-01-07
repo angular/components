@@ -1,8 +1,33 @@
-<table>
-  <tr>
-    <th colspan="7">{{label}}</th>
+<table class="md-month-view-table">
+  <!-- If there's not enough space in the first week, create a separate label row. -->
+  <tr *ngIf="_firstWeekOffset < 3">
+    <td class="md-month-view-label" colspan="7" >{{_monthLabel}}</td>
   </tr>
-  <tr *ngFor="let week of weeks">
-    <td *ngFor="let date of week">{{getDateString(date)}}</td>
+
+  <!-- Create the first week separately so we can include a spacer cell. -->
+  <tr>
+    <td *ngIf="_firstWeekOffset"
+        class="md-month-view-label"
+        [attr.colspan]="_firstWeekOffset">
+      {{_firstWeekOffset >= 3 ? _monthLabel : ''}}
+    </td>
+    <td *ngFor="let date of _weeks[0]"
+        class="md-month-view-date"
+        [class.md-month-view-selected]="_selectedDate === date"
+        [class.md-month-view-today]="_todayDate === date"
+        (click)="_dateClicked(date)">
+      {{_getDateString(date)}}
+    </td>
+  </tr>
+
+  <!-- Create the rest of the weeks. -->
+  <tr *ngFor="let week of _weeks.slice(1)">
+    <td *ngFor="let date of week"
+        class="md-month-view-date"
+        [class.md-month-view-selected]="_selectedDate === date"
+        [class.md-month-view-today]="_todayDate === date"
+        (click)="_dateClicked(date)">
+      {{_getDateString(date)}}
+    </td>
   </tr>
 </table>
