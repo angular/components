@@ -1,4 +1,13 @@
-import {Component, ViewEncapsulation, ChangeDetectionStrategy, Input} from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+  Input,
+  EventEmitter,
+  Output,
+  AfterContentInit
+} from '@angular/core';
+import {coerceDateProperty} from '../core/coercion/date-property';
 
 
 @Component({
@@ -9,10 +18,37 @@ import {Component, ViewEncapsulation, ChangeDetectionStrategy, Input} from '@ang
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdMonthView {
-  @Input() date: Date = new Date();
+export class MdMonthView implements AfterContentInit {
+  @Input()
+  get date() { return this._date; }
+  set date(value) {
+    this._date = coerceDateProperty(value);
+    this._init();
+  }
+  private _date = new Date();
 
-  localeSettings = {
+  @Input()
+  get selected() { return this._selected; }
+  set selected(value) {
+    this._selected = coerceDateProperty(value);
+    this._selectedDate = (this.selected && this.selected.getMonth() == this.date.getMonth()) ?
+        this.selected.getDate() : 0;
+  }
+  private _selected: Date;
+
+  @Output() selectedChange = new EventEmitter<Date>();
+
+  _monthLabel: string;
+
+  _weeks: number[][];
+
+  _firstWeekOffset: number;
+
+  _selectedDate = 0;
+
+  _todayDate = 0;
+
+  private _localeSettings = {
     firstDayOfWeek: 0,
     getDateString: (d: number) => '' + d,
     getMonthLabel: (m: number, y: number) => {
@@ -21,39 +57,42 @@ export class MdMonthView {
     }
   };
 
-  label: string;
-
-  weeks: number[][];
-
-  padding: number;
-
-  constructor() {
-    this.label = this.localeSettings.getMonthLabel(this.date.getMonth(), this.date.getFullYear());
-    this._calculateWeeks();
+  ngAfterContentInit(): void {
+    this._init();
   }
 
-  private _calculateWeeks() {
+  _getDateString(date: number) {
+    return date === null ? '' : this._localeSettings.getDateString(date);
+  }
+
+  _dateClicked(date: number) {
+    if (this.selected && this.selected.getDate() == date) {
+      return;
+    }
+    this.selectedChange.emit(new Date(this.date.getFullYear(), this.date.getMonth(), date));
+  }
+
+  private _init() {
+    this._selectedDate = (this.selected && this.selected.getMonth() == this.date.getMonth()) ?
+        this.selected.getDate() : 0;
+
+    let today = new Date();
+    this._todayDate = (today.getMonth() == this.date.getMonth()) ? today.getDate() : 0;
+
+    this._monthLabel =
+        this._localeSettings.getMonthLabel(this.date.getMonth(), this.date.getFullYear());
+
     let firstOfMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
     let daysInMonth = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).getDate();
-    let padding = (7 + firstOfMonth.getDay() - this.localeSettings.firstDayOfWeek) % 7;
+    this._firstWeekOffset = (7 + firstOfMonth.getDay() - this._localeSettings.firstDayOfWeek) % 7;
 
-    // Fill in empty cells at the beginning of the month.
-    this.weeks = [[]];
-    for (let i = 0; i < padding; i++) {
-      this.weeks[0].push(0);
-    }
-
-    // Fill in the date cells.
-    for (let i = 0, cell = padding; i < daysInMonth; i++, cell++) {
+    this._weeks = [[]];
+    for (let i = 0, cell = this._firstWeekOffset; i < daysInMonth; i++, cell++) {
       if (cell == 7) {
-        this.weeks.push([]);
+        this._weeks.push([]);
         cell = 0;
       }
-      this.weeks[this.weeks.length - 1].push(i + 1);
+      this._weeks[this._weeks.length - 1].push(i + 1);
     }
-  }
-
-  getDateString(date: number) {
-    return date == 0 ? '' : this.localeSettings.getDateString(date);
   }
 }
