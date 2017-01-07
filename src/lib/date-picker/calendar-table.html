@@ -1,0 +1,37 @@
+<table class="md-calendar-table">
+  <!-- If there's not enough space in the first row, create a separate label row. -->
+  <tr *ngIf="_firstRowOffset() < labelMinCells">
+    <td class="md-calendar-table-label" colspan="7" >{{label}}</td>
+  </tr>
+
+  <!-- Create the first row separately so we can include a special spacer cell. -->
+  <tr *ngFor="let row of data | slice:0:1">
+    <td *ngIf="_firstRowOffset()"
+        class="md-calendar-table-label"
+        [attr.colspan]="_firstRowOffset()">
+      {{_firstRowOffset() >= labelMinCells ? label : ''}}
+    </td>
+    <td *ngFor="let item of row"
+        class="md-calendar-table-cell"
+        (click)="_cellClicked(item.value)">
+      <div class="md-calendar-table-cell-content"
+           [class.md-calendar-table-selected]="selectedValue === item.value"
+           [class.md-calendar-table-today]="todayValue === item.value">
+        {{item.displayValue}}
+      </div>
+    </td>
+  </tr>
+
+  <!-- Create the rest of the rows. -->
+  <tr *ngFor="let row of data | slice:1">
+    <td *ngFor="let item of row"
+        class="md-calendar-table-cell"
+        (click)="_cellClicked(item.value)">
+      <div class="md-calendar-table-cell-content"
+           [class.md-calendar-table-selected]="selectedValue === item.value"
+           [class.md-calendar-table-today]="todayValue === item.value">
+        {{item.displayName}}
+      </div>
+    </td>
+  </tr>
+</table>
