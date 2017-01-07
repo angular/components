@@ -169,7 +169,7 @@ describe('ConnectedPositionStrategy', () => {
         fakeViewportRuler.fakeRect = {
           top: 0, left: 0, width: 500, height: 500, right: 500, bottom: 500
         };
-        positionBuilder = new OverlayPositionBuilder(fakeViewportRuler);
+        positionBuilder = new OverlayPositionBuilder(fakeViewportRuler as any);
 
         originElement.style.top = '475px';
         originElement.style.left = '200px';
@@ -195,7 +195,7 @@ describe('ConnectedPositionStrategy', () => {
         fakeViewportRuler.fakeRect = {
           top: 0, left: 0, width: 500, height: 500, right: 500, bottom: 500
         };
-        positionBuilder = new OverlayPositionBuilder(fakeViewportRuler);
+        positionBuilder = new OverlayPositionBuilder(fakeViewportRuler as any);
 
         originElement.style.top = '200px';
         originElement.style.left = '475px';
@@ -270,7 +270,7 @@ describe('ConnectedPositionStrategy', () => {
       fakeViewportRuler.fakeRect = {
         top: 0, left: 0, width: 500, height: 500, right: 500, bottom: 500
       };
-      positionBuilder = new OverlayPositionBuilder(fakeViewportRuler);
+      positionBuilder = new OverlayPositionBuilder(fakeViewportRuler as any);
       originElement.style.top = '200px';
       originElement.style.left = '475px';
 
@@ -296,7 +296,7 @@ describe('ConnectedPositionStrategy', () => {
         fakeViewportRuler.fakeRect = {
           top: 0, left: 0, width: 500, height: 500, right: 500, bottom: 500
         };
-        positionBuilder = new OverlayPositionBuilder(fakeViewportRuler);
+        positionBuilder = new OverlayPositionBuilder(fakeViewportRuler as any);
 
         originElement.style.top = '200px';
         originElement.style.left = '475px';
@@ -576,7 +576,7 @@ function createOverflowContainerElement() {
 
 
 /** Fake implementation of ViewportRuler that just returns the previously given ClientRect. */
-class FakeViewportRuler implements ViewportRuler {
+class FakeViewportRuler {
   fakeRect: ClientRect = {left: 0, top: 0, width: 1014, height: 686, bottom: 686, right: 1014};
   fakeScrollPos: {top: number, left: number} = {top: 0, left: 0};
 
