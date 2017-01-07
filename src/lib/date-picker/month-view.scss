@@ -1,11 +1,11 @@
-$md-month-view-border-spacing: 2px !default;
 $md-month-view-font-size: 12px !default;
-$md-month-view-date-size: 30px !default;
+$md-month-view-date-cell-padding: 1px !default;
+$md-month-view-date-size: 32px !default;
 $md-month-view-date-border-width: 1px !default;
 
 
 .md-month-view-table {
-  border-spacing: $md-month-view-border-spacing;
+  border-spacing: 0;
   font-size: $md-month-view-font-size;
 }
 
@@ -16,7 +16,12 @@ $md-month-view-date-border-width: 1px !default;
   font-weight: normal;
 }
 
+.md-month-view-date-cell {
+  padding: $md-month-view-date-cell-padding;
+}
+
 .md-month-view-date {
+  display: table-cell;
   box-sizing: border-box;
   width: $md-month-view-date-size;
   height: $md-month-view-date-size;
