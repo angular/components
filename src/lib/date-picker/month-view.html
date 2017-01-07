@@ -12,22 +12,26 @@
       {{_firstWeekOffset >= 3 ? _monthLabel : ''}}
     </td>
     <td *ngFor="let date of _weeks[0]"
-        class="md-month-view-date"
-        [class.md-month-view-selected]="_selectedDate === date"
-        [class.md-month-view-today]="_todayDate === date"
+        class="md-month-view-date-cell"
         (click)="_dateClicked(date)">
-      {{_getDateString(date)}}
+      <div class="md-month-view-date"
+           [class.md-month-view-selected]="_selectedDate === date"
+           [class.md-month-view-today]="_todayDate === date">
+        {{_getDateString(date)}}
+      </div>
     </td>
   </tr>
 
   <!-- Create the rest of the weeks. -->
-  <tr *ngFor="let week of _weeks.slice(1)">
+  <tr *ngFor="let week of _weeks | slice:1">
     <td *ngFor="let date of week"
-        class="md-month-view-date"
-        [class.md-month-view-selected]="_selectedDate === date"
-        [class.md-month-view-today]="_todayDate === date"
+        class="md-month-view-date-cell"
         (click)="_dateClicked(date)">
-      {{_getDateString(date)}}
+      <div class="md-month-view-date"
+           [class.md-month-view-selected]="_selectedDate === date"
+           [class.md-month-view-today]="_todayDate === date">
+        {{_getDateString(date)}}
+      </div>
     </td>
   </tr>
 </table>
