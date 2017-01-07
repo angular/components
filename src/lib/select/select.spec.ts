@@ -180,6 +180,25 @@ describe('MdSelect', () => {
       expect(optionInstances[2].selected).toBe(false);
     });
 
+    it('should remove an unavailable selected option when the options change', () => {
+      let select = fixture.componentInstance.select;
+
+      trigger.click();
+      fixture.detectChanges();
+
+      let firstOption = overlayContainerElement.querySelectorAll('md-option')[0] as HTMLElement;
+
+      firstOption.click();
+      fixture.detectChanges();
+
+      expect(select.selected).toBe(select.options.first);
+
+      fixture.componentInstance.foods = [];
+      fixture.detectChanges();
+
+      expect(select.selected).toBe(null);
+    });
+
     it('should display the selected option in the trigger', () => {
       trigger.click();
       fixture.detectChanges();
