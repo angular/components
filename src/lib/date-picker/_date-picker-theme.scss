@@ -16,11 +16,11 @@ $md-month-view-today-color: rgba(black, 0.12) !default;
   .md-month-view-date {
     color: md-color($foreground, text);
 
-    &:hover {
+    .md-month-view-date-cell:hover & {
       background: md-color($md-grey, 200);
     }
 
-    &.md-month-view-selected {
+    .md-month-view-date-cell &.md-month-view-selected {
       background: md-color($primary);
       color: md-color($primary, default-contrast);
     }
