@@ -180,7 +180,11 @@ describe('MdSelect', () => {
       expect(optionInstances[2].selected).toBe(false);
     });
 
+<<<<<<< HEAD
     it('should remove selection if option has been removed', () => {
+=======
+    it('should remove an unavailable selected option when the options change', () => {
+>>>>>>> fix(select): remove selection if option is removed
       let select = fixture.componentInstance.select;
 
       trigger.click();
