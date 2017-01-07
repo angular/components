@@ -3,11 +3,15 @@ import * as gulp from 'gulp';
 import * as path from 'path';
 import {browser} from 'protractor';
 
+const OUTPUT_DIR = '/tmp/angular-material2-build/screenshots/';
 
+let currentJasmineSpecName = '';
+
+/**  Adds a custom jasmine reporter that simply keeps track of the current test name. */
 function initializeEnvironment(jasmine: any) {
-  var reporter = new jasmine.JsApiReporter({});
+  let reporter = new jasmine.JsApiReporter({});
   reporter.specStarted = function(result: any) {
-    jasmine.getEnv().currentSpec = result.fullName;
+    currentJasmineSpecName = result.fullName;
   };
   jasmine.getEnv().addReporter(reporter);
 }
@@ -16,7 +20,6 @@ initializeEnvironment(jasmine);
 
 export class Screenshot {
   id: string;
-  dir: string = '/tmp/angular-material2-build/screenshots/';
 
   /** The filename used to store the screenshot. */
   get filename(): string {
@@ -29,21 +32,21 @@ export class Screenshot {
 
   /** The full path to the screenshot */
   get fullPath(): string {
-    return path.resolve(this.dir, this.filename);
+    return path.resolve(OUTPUT_DIR, this.filename);
   }
 
   constructor(id: string) {
-    this.id   = `${jasmine.getEnv().currentSpec} ${id}`;
+    this.id = `${currentJasmineSpecName} ${id}`;
     browser.takeScreenshot().then(png => this.storeScreenshot(png));
   }
 
   /** Replaces the existing screenshot with the newly generated one. */
   storeScreenshot(png: any) {
-    if (!fs.existsSync(this.dir)) {
-      fs.mkdirSync(this.dir, '744');
+    if (!fs.existsSync(OUTPUT_DIR)) {
+      fs.mkdirSync(OUTPUT_DIR, '744');
     }
 
-    if (fs.existsSync(this.dir)) {
+    if (fs.existsSync(OUTPUT_DIR)) {
       fs.writeFileSync(this.fullPath, png, {encoding: 'base64' });
     }
   }
