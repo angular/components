@@ -1,4 +1,4 @@
-<table class="md-calendar-table">
+<table class="md-calendar-table-table">
   <!-- If there's not enough space in the first row, create a separate label row. -->
   <tr *ngIf="_firstRowOffset() < labelMinCells">
     <td class="md-calendar-table-label" colspan="7" >{{label}}</td>
@@ -30,7 +30,7 @@
       <div class="md-calendar-table-cell-content"
            [class.md-calendar-table-selected]="selectedValue === item.value"
            [class.md-calendar-table-today]="todayValue === item.value">
-        {{item.displayName}}
+        {{item.displayValue}}
       </div>
     </td>
   </tr>
