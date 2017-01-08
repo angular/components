@@ -18,9 +18,9 @@ export class MdCalendarCell {
 
 @Component({
   moduleId: module.id,
-  selector: 'md-month-view, mat-month-view',
-  templateUrl: 'month-view.html',
-  styleUrls: ['month-view.css'],
+  selector: 'md-calendar-table, mat-calendar-table',
+  templateUrl: 'calendar-table.html',
+  styleUrls: ['calendar-table.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

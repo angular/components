@@ -8,6 +8,7 @@ import {
   AfterContentInit
 } from '@angular/core';
 import {coerceDateProperty} from '../core/coercion/date-property';
+import {MdCalendarCell} from './calendar-table';
 
 
 @Component({
@@ -40,7 +41,7 @@ export class MdMonthView implements AfterContentInit {
 
   _monthLabel: string;
 
-  _weeks: number[][];
+  _weeks: MdCalendarCell[][];
 
   _firstWeekOffset: number;
 
@@ -65,7 +66,7 @@ export class MdMonthView implements AfterContentInit {
     return date === null ? '' : this._localeSettings.getDateString(date);
   }
 
-  _dateClicked(date: number) {
+  _dateSelected(date: number) {
     if (this.selected && this.selected.getDate() == date) {
       return;
     }
@@ -92,7 +93,7 @@ export class MdMonthView implements AfterContentInit {
         this._weeks.push([]);
         cell = 0;
       }
-      this._weeks[this._weeks.length - 1].push(i + 1);
+      this._weeks[this._weeks.length - 1].push(new MdCalendarCell(i + 1, this._getDateString(i + 1)));
     }
   }
 }
