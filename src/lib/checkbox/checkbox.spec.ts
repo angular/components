@@ -18,7 +18,6 @@ import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {FakeViewportRuler} from '../core/overlay/position/fake-viewport-ruler';
 
 
-
 describe('MdCheckbox', () => {
   let fixture: ComponentFixture<any>;
 
@@ -66,40 +65,34 @@ describe('MdCheckbox', () => {
 
     it('should add and remove the checked state', () => {
       expect(checkboxInstance.checked).toBe(false);
-      expect(checkboxNativeElement.classList).not.toContain('md-checkbox-checked');
       expect(inputElement.checked).toBe(false);
 
       testComponent.isChecked = true;
       fixture.detectChanges();
 
       expect(checkboxInstance.checked).toBe(true);
-      expect(checkboxNativeElement.classList).toContain('md-checkbox-checked');
       expect(inputElement.checked).toBe(true);
 
       testComponent.isChecked = false;
       fixture.detectChanges();
 
       expect(checkboxInstance.checked).toBe(false);
-      expect(checkboxNativeElement.classList).not.toContain('md-checkbox-checked');
       expect(inputElement.checked).toBe(false);
     });
 
     it('should add and remove indeterminate state', () => {
-      expect(checkboxNativeElement.classList).not.toContain('md-checkbox-checked');
       expect(inputElement.checked).toBe(false);
       expect(inputElement.indeterminate).toBe(false);
 
       testComponent.isIndeterminate = true;
       fixture.detectChanges();
 
-      expect(checkboxNativeElement.classList).toContain('md-checkbox-indeterminate');
       expect(inputElement.checked).toBe(false);
       expect(inputElement.indeterminate).toBe(true);
 
       testComponent.isIndeterminate = false;
       fixture.detectChanges();
 
-      expect(checkboxNativeElement.classList).not.toContain('md-checkbox-indeterminate');
       expect(inputElement.checked).toBe(false);
       expect(inputElement.indeterminate).toBe(false);
     });
@@ -228,13 +221,13 @@ describe('MdCheckbox', () => {
       spyOn(testComponent, 'onCheckboxClick');
 
       expect(inputElement.checked).toBe(false);
-      expect(checkboxNativeElement.classList).not.toContain('md-checkbox-checked');
+      expect(checkboxInstance.checked).toBe(false);
 
       labelElement.click();
       fixture.detectChanges();
 
-      expect(checkboxNativeElement.classList).toContain('md-checkbox-checked');
       expect(inputElement.checked).toBe(true);
+      expect(checkboxInstance.checked).toBe(true);
 
       expect(testComponent.onCheckboxClick).toHaveBeenCalledTimes(1);
     });
@@ -243,13 +236,13 @@ describe('MdCheckbox', () => {
       spyOn(testComponent, 'onCheckboxChange');
 
       expect(inputElement.checked).toBe(false);
-      expect(checkboxNativeElement.classList).not.toContain('md-checkbox-checked');
+      expect(checkboxInstance.checked).toBe(false);
 
       labelElement.click();
       fixture.detectChanges();
 
       expect(inputElement.checked).toBe(true);
-      expect(checkboxNativeElement.classList).toContain('md-checkbox-checked');
+      expect(checkboxInstance.checked).toBe(true);
 
       // Wait for the fixture to become stable, because the EventEmitter for the change event,
       // will only fire after the zone async change detection has finished.
@@ -264,13 +257,13 @@ describe('MdCheckbox', () => {
       spyOn(testComponent, 'onCheckboxChange');
 
       expect(inputElement.checked).toBe(false);
-      expect(checkboxNativeElement.classList).not.toContain('md-checkbox-checked');
+      expect(checkboxInstance.checked).toBe(false);
 
       testComponent.isChecked = true;
       fixture.detectChanges();
 
       expect(inputElement.checked).toBe(true);
-      expect(checkboxNativeElement.classList).toContain('md-checkbox-checked');
+      expect(checkboxInstance.checked).toBe(true);
 
       // Wait for the fixture to become stable, because the EventEmitter for the change event,
       // will only fire after the zone async change detection has finished.
@@ -303,89 +296,6 @@ describe('MdCheckbox', () => {
       expect(document.activeElement).toBe(inputElement);
     });
 
-    describe('color behaviour', () => {
-      it('should apply class based on color attribute', () => {
-        testComponent.checkboxColor = 'primary';
-        fixture.detectChanges();
-        expect(checkboxDebugElement.nativeElement.classList.contains('md-primary')).toBe(true);
-
-        testComponent.checkboxColor = 'accent';
-        fixture.detectChanges();
-        expect(checkboxDebugElement.nativeElement.classList.contains('md-accent')).toBe(true);
-      });
-
-      it('should should not clear previous defined classes', () => {
-        checkboxDebugElement.nativeElement.classList.add('custom-class');
-
-        testComponent.checkboxColor = 'primary';
-        fixture.detectChanges();
-
-        expect(checkboxDebugElement.nativeElement.classList.contains('md-primary')).toBe(true);
-        expect(checkboxDebugElement.nativeElement.classList.contains('custom-class')).toBe(true);
-
-        testComponent.checkboxColor = 'accent';
-        fixture.detectChanges();
-
-        expect(checkboxDebugElement.nativeElement.classList.contains('md-primary')).toBe(false);
-        expect(checkboxDebugElement.nativeElement.classList.contains('md-accent')).toBe(true);
-        expect(checkboxDebugElement.nativeElement.classList.contains('custom-class')).toBe(true);
-
-      });
-    });
-
-    describe('state transition css classes', () => {
-      it('should transition unchecked -> checked -> unchecked', () => {
-        testComponent.isChecked = true;
-        fixture.detectChanges();
-        expect(checkboxNativeElement.classList).toContain('md-checkbox-anim-unchecked-checked');
-
-        testComponent.isChecked = false;
-        fixture.detectChanges();
-        expect(checkboxNativeElement.classList).not.toContain('md-checkbox-anim-unchecked-checked');
-        expect(checkboxNativeElement.classList).toContain('md-checkbox-anim-checked-unchecked');
-      });
-
-      it('should transition unchecked -> indeterminate -> unchecked', () => {
-        testComponent.isIndeterminate = true;
-        fixture.detectChanges();
-
-        expect(checkboxNativeElement.classList)
-            .toContain('md-checkbox-anim-unchecked-indeterminate');
-
-        testComponent.isIndeterminate = false;
-        fixture.detectChanges();
-
-        expect(checkboxNativeElement.classList)
-            .not.toContain('md-checkbox-anim-unchecked-indeterminate');
-        expect(checkboxNativeElement.classList)
-            .toContain('md-checkbox-anim-indeterminate-unchecked');
-      });
-
-      it('should transition indeterminate -> checked', () => {
-        testComponent.isIndeterminate = true;
-        fixture.detectChanges();
-
-        testComponent.isChecked = true;
-        fixture.detectChanges();
-
-        expect(checkboxNativeElement.classList).not.toContain(
-            'md-checkbox-anim-unchecked-indeterminate');
-        expect(checkboxNativeElement.classList).toContain('md-checkbox-anim-indeterminate-checked');
-      });
-
-      it('should not apply transition classes when there is no state change', () => {
-        testComponent.isChecked = checkboxInstance.checked;
-        fixture.detectChanges();
-        expect(checkboxNativeElement).not.toMatch(/^md\-checkbox\-anim/g);
-
-        testComponent.isIndeterminate = checkboxInstance.indeterminate;
-        expect(checkboxNativeElement).not.toMatch(/^md\-checkbox\-anim/g);
-      });
-
-      it('should not initially have any transition classes', () => {
-        expect(checkboxNativeElement).not.toMatch(/^md\-checkbox\-anim/g);
-      });
-    });
   });
 
   describe('with change event and no initial value', () => {
