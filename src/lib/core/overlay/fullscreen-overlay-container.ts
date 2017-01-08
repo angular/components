@@ -50,24 +50,4 @@ export class FullscreenOverlayContainer extends OverlayContainer {
         (document as any).msFullscreenElement ||
         null;
   }
-
-  /**
-   * Toggle element into fullscreen mode
-   * returns true if it has tried to toggle fullscreen mode
-   * but provides no guarantees whether it really happened
-  */
-  toggleFullscreen(element: HTMLElement) {
-    if (element.requestFullscreen) {
-      element.requestFullscreen();
-    } else if (element.webkitRequestFullScreen) {
-      element.webkitRequestFullScreen();
-    } else if ((element as any).mozRequestFullScreen) {
-      (element as any).mozRequestFullScreen();
-    } else if ((element as any).msRequestFullScreen) {
-      (element as any).msRequestFullScreen();
-    } else {
-      return false;
-    }
-    return true;
-  }
 }

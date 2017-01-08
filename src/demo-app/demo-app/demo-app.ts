@@ -57,7 +57,7 @@ export class DemoApp {
 
   }
 
-  public toggleFullscreen() {
+  toggleFullscreen() {
     let elem = this._element.nativeElement.querySelector('.demo-content');
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
