@@ -2,31 +2,31 @@
 @import '../core/theming/theming';
 
 
-$md-month-view-today-color: rgba(black, 0.12) !default;
+$md-calendar-table-today-color: rgba(black, 0.12) !default;
 
 
 @mixin md-date-picker-theme($theme) {
   $primary: map-get($theme, primary);
   $foreground: map-get($theme, foreground);
 
-  .md-month-view-label {
+  .md-calendar-table-label {
     color: md-color($foreground, secondary-text);
   }
 
-  .md-month-view-date {
+  .md-calendar-table-cell-content {
     color: md-color($foreground, text);
 
-    .md-month-view-date-cell:hover & {
+    .md-calendar-table-cell:hover & {
       background: md-color($md-grey, 200);
     }
 
-    .md-month-view-date-cell &.md-month-view-selected {
+    .md-calendar-table-cell &.md-calendar-table-selected {
       background: md-color($primary);
       color: md-color($primary, default-contrast);
     }
 
-    &.md-month-view-today {
-      border-color: $md-month-view-today-color;
+    &.md-calendar-table-today {
+      border-color: $md-calendar-table-today-color;
     }
   }
 }
