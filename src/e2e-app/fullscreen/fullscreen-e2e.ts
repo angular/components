@@ -1,6 +1,5 @@
 import {Component, ElementRef, Output, EventEmitter} from '@angular/core';
-import {MdDialog, MdDialogRef, OverlayContainer,
-    FullscreenOverlayContainer} from '@angular/material';
+import {MdDialog, MdDialogRef} from '@angular/material';
 
 @Component({
   selector: 'fullscreen-e2e',
@@ -10,8 +9,7 @@ import {MdDialog, MdDialogRef, OverlayContainer,
 export class FullscreenE2E {
   dialogRef: MdDialogRef<TestDialog>;
 
-  constructor (private _element: ElementRef, private _dialog: MdDialog,
-    private _overlayContainer: OverlayContainer) { }
+  constructor (private _element: ElementRef, private _dialog: MdDialog) { }
 
   openDialog() {
     this.dialogRef = this._dialog.open(TestDialog);
@@ -23,8 +21,16 @@ export class FullscreenE2E {
   }
 
   toggleFullScreen() {
-      let elem = this._element.nativeElement.querySelector('#fullscreenpane');
-      (this._overlayContainer as FullscreenOverlayContainer).toggleFullscreen(elem);
+      let element = this._element.nativeElement.querySelector('#fullscreenpane');
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.webkitRequestFullScreen) {
+        element.webkitRequestFullScreen();
+      } else if ((element as any).mozRequestFullScreen) {
+        (element as any).mozRequestFullScreen();
+      } else if ((element as any).msRequestFullScreen) {
+        (element as any).msRequestFullScreen();
+      }
   }
 
   exitFullscreen() {
