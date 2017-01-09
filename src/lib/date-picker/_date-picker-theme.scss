@@ -2,12 +2,10 @@
 @import '../core/theming/theming';
 
 
-$md-calendar-table-today-color: rgba(black, 0.12) !default;
-
-
 @mixin md-date-picker-theme($theme) {
   $primary: map-get($theme, primary);
   $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
 
   .md-calendar-table-label {
     color: md-color($foreground, secondary-text);
@@ -17,7 +15,7 @@ $md-calendar-table-today-color: rgba(black, 0.12) !default;
     color: md-color($foreground, text);
 
     .md-calendar-table-cell:hover & {
-      background: md-color($md-grey, 200);
+      background: md-color($background, hover);
     }
 
     .md-calendar-table-cell &.md-calendar-table-selected {
@@ -26,7 +24,7 @@ $md-calendar-table-today-color: rgba(black, 0.12) !default;
     }
 
     &.md-calendar-table-today {
-      border-color: $md-calendar-table-today-color;
+      border-color: md-color($foreground, divider);
     }
   }
 }

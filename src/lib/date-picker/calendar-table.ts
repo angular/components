@@ -24,18 +24,18 @@ export class MdCalendarCell {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-calendar-table, mat-calendar-table',
+  selector: 'md-calendar-table',
   templateUrl: 'calendar-table.html',
   styleUrls: ['calendar-table.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdCalendarTable {
-  /** The label for the table. */
+  /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
 
   /** The cells to display in the table. */
-  @Input() data: MdCalendarCell[][];
+  @Input() rows: MdCalendarCell[][];
 
   /** The value in the table that corresponds to today. */
   @Input() todayValue: number;
@@ -59,8 +59,9 @@ export class MdCalendarTable {
     this.selectedValueChange.emit(value);
   }
 
-  _firstRowOffset() {
-    return this.data && this.data.length && this.data[0].length ?
-        this.numCols - this.data[0].length : 0;
+  /** The number of blank cells to put at the beginning for the first row. */
+  get _firstRowOffset() {
+    return this.rows && this.rows.length && this.rows[0].length ?
+        this.numCols - this.rows[0].length : 0;
   }
 }
