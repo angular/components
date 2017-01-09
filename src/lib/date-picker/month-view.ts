@@ -18,7 +18,7 @@ import {DateLocale} from './date-locale';
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-month-view, mat-month-view',
+  selector: 'md-month-view',
   templateUrl: 'month-view.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,16 +47,25 @@ export class MdMonthView implements AfterContentInit {
   /** Emits when a new date is selected. */
   @Output() selectedChange = new EventEmitter<Date>();
 
+  /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
 
+  /** Grid of calendar cells representing the dates of the month. */
   _weeks: MdCalendarCell[][];
 
+  /** The number of days in a week. */
   _daysPerWeek: number;
 
+  /** The number of blank cells in the first row before the 1st of the month. */
   _firstWeekOffset: number;
 
+  /**
+   * The date of the month that the currently selected Date falls on.
+   * Null if the currently selected Date is in another month.
+   */
   _selectedDate = 0;
 
+  /** The date of the month that today falls on. Null if today is in another month. */
   _todayDate = 0;
 
   constructor(private _locale: DateLocale) {
@@ -67,6 +76,7 @@ export class MdMonthView implements AfterContentInit {
     this._init();
   }
 
+  /** Handles when a new date is selected. */
   _dateSelected(date: number) {
     if (this.selected && this.selected.getDate() == date) {
       return;
@@ -74,17 +84,23 @@ export class MdMonthView implements AfterContentInit {
     this.selectedChange.emit(new Date(this.date.getFullYear(), this.date.getMonth(), date));
   }
 
+  /** Initializes this month view. */
   private _init() {
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
     this._todayDate = this._getDateInCurrentMonth(new Date());
     this._monthLabel = this._locale.getMonthLabel(this.date.getMonth(), this.date.getFullYear());
 
     let firstOfMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
-    let daysInMonth = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).getDate();
     this._firstWeekOffset =
         (this._daysPerWeek + firstOfMonth.getDay() - this._locale.firstDayOfWeek) %
         this._daysPerWeek;
 
+    this._createWeekCells();
+  }
+
+  /** Creates MdCalendarCells for the dates in this month. */
+  private _createWeekCells() {
+    let daysInMonth = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).getDate();
     this._weeks = [[]];
     for (let i = 0, cell = this._firstWeekOffset; i < daysInMonth; i++, cell++) {
       if (cell == this._daysPerWeek) {
@@ -92,14 +108,14 @@ export class MdMonthView implements AfterContentInit {
         cell = 0;
       }
       this._weeks[this._weeks.length - 1].push(
-          new MdCalendarCell(i + 1, this._getDateString(i + 1)));
+          new MdCalendarCell(i + 1, this._locale.getDateLabel(i + 1)));
     }
   }
 
-  private _getDateString(date: number) {
-    return date === null ? '' : this._locale.getDateLabel(date);
-  }
-
+  /**
+   * Gets the date in this month that the given Date falls on.
+   * Returns null if the given Date is in another year.
+   */
   private _getDateInCurrentMonth(date: Date) {
     return date && date.getMonth() == this.date.getMonth() ? date.getDate() : null;
   }
