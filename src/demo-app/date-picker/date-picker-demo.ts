@@ -9,5 +9,5 @@ import {Component} from '@angular/core';
 })
 export class DatePickerDemo {
   date = new Date();
-  selected = new Date('1/10/2017');
+  selected: Date;
 }
