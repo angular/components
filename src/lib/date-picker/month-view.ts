@@ -9,17 +9,24 @@ import {
 } from '@angular/core';
 import {coerceDateProperty} from '../core/coercion/date-property';
 import {MdCalendarCell} from './calendar-table';
+import {DateLocale} from './date-locale';
 
 
+/**
+ * An internal component used to display a single month in the date-picker.
+ * @docs-private
+ */
 @Component({
   moduleId: module.id,
   selector: 'md-month-view, mat-month-view',
   templateUrl: 'month-view.html',
-  styleUrls: ['month-view.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdMonthView implements AfterContentInit {
+  /**
+   * The date to display in this month view (everything other than the month and year is ignored).
+   */
   @Input()
   get date() { return this._date; }
   set date(value) {
@@ -28,20 +35,23 @@ export class MdMonthView implements AfterContentInit {
   }
   private _date = new Date();
 
+  /** The currently selected date. */
   @Input()
   get selected() { return this._selected; }
   set selected(value) {
-    this._selected = coerceDateProperty(value);
-    this._selectedDate = (this.selected && this.selected.getMonth() == this.date.getMonth()) ?
-        this.selected.getDate() : 0;
+    this._selected = coerceDateProperty(value, null);
+    this._selectedDate = this._getDateInCurrentMonth(this.selected);
   }
   private _selected: Date;
 
+  /** Emits when a new date is selected. */
   @Output() selectedChange = new EventEmitter<Date>();
 
   _monthLabel: string;
 
   _weeks: MdCalendarCell[][];
+
+  _daysPerWeek: number;
 
   _firstWeekOffset: number;
 
@@ -49,21 +59,12 @@ export class MdMonthView implements AfterContentInit {
 
   _todayDate = 0;
 
-  private _localeSettings = {
-    firstDayOfWeek: 0,
-    getDateString: (d: number) => '' + d,
-    getMonthLabel: (m: number, y: number) => {
-      let months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUL', 'AUG', 'SEP', 'OCT', 'DEC'];
-      return `${months[m]} ${y}`;
-    }
-  };
+  constructor(private _locale: DateLocale) {
+    this._daysPerWeek = _locale.days.length;
+  }
 
   ngAfterContentInit(): void {
     this._init();
-  }
-
-  _getDateString(date: number) {
-    return date === null ? '' : this._localeSettings.getDateString(date);
   }
 
   _dateSelected(date: number) {
@@ -74,26 +75,32 @@ export class MdMonthView implements AfterContentInit {
   }
 
   private _init() {
-    this._selectedDate = (this.selected && this.selected.getMonth() == this.date.getMonth()) ?
-        this.selected.getDate() : 0;
-
-    let today = new Date();
-    this._todayDate = (today.getMonth() == this.date.getMonth()) ? today.getDate() : 0;
-
-    this._monthLabel =
-        this._localeSettings.getMonthLabel(this.date.getMonth(), this.date.getFullYear());
+    this._selectedDate = this._getDateInCurrentMonth(this.selected);
+    this._todayDate = this._getDateInCurrentMonth(new Date());
+    this._monthLabel = this._locale.getMonthLabel(this.date.getMonth(), this.date.getFullYear());
 
     let firstOfMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
     let daysInMonth = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).getDate();
-    this._firstWeekOffset = (7 + firstOfMonth.getDay() - this._localeSettings.firstDayOfWeek) % 7;
+    this._firstWeekOffset =
+        (this._daysPerWeek + firstOfMonth.getDay() - this._locale.firstDayOfWeek) %
+        this._daysPerWeek;
 
     this._weeks = [[]];
     for (let i = 0, cell = this._firstWeekOffset; i < daysInMonth; i++, cell++) {
-      if (cell == 7) {
+      if (cell == this._daysPerWeek) {
         this._weeks.push([]);
         cell = 0;
       }
-      this._weeks[this._weeks.length - 1].push(new MdCalendarCell(i + 1, this._getDateString(i + 1)));
+      this._weeks[this._weeks.length - 1].push(
+          new MdCalendarCell(i + 1, this._getDateString(i + 1)));
     }
+  }
+
+  private _getDateString(date: number) {
+    return date === null ? '' : this._locale.getDateLabel(date);
+  }
+
+  private _getDateInCurrentMonth(date: Date) {
+    return date && date.getMonth() == this.date.getMonth() ? date.getDate() : null;
   }
 }
