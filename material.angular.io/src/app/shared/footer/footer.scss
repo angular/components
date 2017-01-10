@@ -1,6 +1,44 @@
 .docs-footer {
   margin-top: 40px;
-  padding: 15px;
-  text-align: center;
+  padding: 12px;
   font-size: 12px;
+}
+
+.docs-footer-list {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  padding: 8px;
+}
+
+.docs-footer-angular-logo {
+  height: 50px;
+}
+
+.docs-footer-copyright {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.docs-footer-links ul {
+  list-style: none;
+  margin: 0 40px;
+  padding: 0;
+
+  a {
+    font-size: 16px;
+    padding: 0;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+@media screen and (max-width: 884px){
+  .docs-footer-list {
+    flex-direction: column;
+  }
 }
