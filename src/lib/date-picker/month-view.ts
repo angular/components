@@ -12,6 +12,9 @@ import {MdCalendarCell} from './calendar-table';
 import {DateLocale} from './date-locale';
 
 
+const DAYS_PER_WEEK = 7;
+
+
 /**
  * An internal component used to display a single month in the date-picker.
  * @docs-private
@@ -53,9 +56,6 @@ export class MdMonthView implements AfterContentInit {
   /** Grid of calendar cells representing the dates of the month. */
   _weeks: MdCalendarCell[][];
 
-  /** The number of days in a week. */
-  _daysPerWeek: number;
-
   /** The number of blank cells in the first row before the 1st of the month. */
   _firstWeekOffset: number;
 
@@ -68,9 +68,7 @@ export class MdMonthView implements AfterContentInit {
   /** The date of the month that today falls on. Null if today is in another month. */
   _todayDate = 0;
 
-  constructor(private _locale: DateLocale) {
-    this._daysPerWeek = _locale.days.length;
-  }
+  constructor(private _locale: DateLocale) {}
 
   ngAfterContentInit(): void {
     this._init();
@@ -92,8 +90,7 @@ export class MdMonthView implements AfterContentInit {
 
     let firstOfMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
     this._firstWeekOffset =
-        (this._daysPerWeek + firstOfMonth.getDay() - this._locale.firstDayOfWeek) %
-        this._daysPerWeek;
+        (DAYS_PER_WEEK + firstOfMonth.getDay() - this._locale.firstDayOfWeek) % DAYS_PER_WEEK;
 
     this._createWeekCells();
   }
@@ -103,7 +100,7 @@ export class MdMonthView implements AfterContentInit {
     let daysInMonth = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).getDate();
     this._weeks = [[]];
     for (let i = 0, cell = this._firstWeekOffset; i < daysInMonth; i++, cell++) {
-      if (cell == this._daysPerWeek) {
+      if (cell == DAYS_PER_WEEK) {
         this._weeks.push([]);
         cell = 0;
       }
