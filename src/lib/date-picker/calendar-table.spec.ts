@@ -19,7 +19,7 @@ describe('MdCalendarTable', () => {
 
   describe('standard calendar table', () => {
     let fixture: ComponentFixture<StandardCalendarTable>;
-    let calendarTableInstance: StandardCalendarTable;
+    let testComponent: StandardCalendarTable;
     let calendarTableNativeElement: Element;
     let rowEls: NodeListOf<Element>;
     let labelEls: NodeListOf<Element>;
@@ -37,7 +37,7 @@ describe('MdCalendarTable', () => {
 
       let calendarTableDebugElement = fixture.debugElement.query(By.directive(MdCalendarTable));
       calendarTableNativeElement = calendarTableDebugElement.nativeElement;
-      calendarTableInstance = fixture.componentInstance;
+      testComponent = fixture.componentInstance;
 
       refreshElementLists();
     });
@@ -61,8 +61,8 @@ describe('MdCalendarTable', () => {
     });
 
     it('places label in first row if space is available', () => {
-      calendarTableInstance.rows[0] = calendarTableInstance.rows[0].slice(3);
-      calendarTableInstance.rows = calendarTableInstance.rows.slice();
+      testComponent.rows[0] = testComponent.rows[0].slice(3);
+      testComponent.rows = testComponent.rows.slice();
       fixture.detectChanges();
       refreshElementLists();
 
