@@ -8,6 +8,8 @@
 @import './styles/typography-theme';
 @import './app/shared/navbar/navbar-theme';
 @import './app/shared/example-viewer/example-viewer-theme';
+@import './app/shared/footer/footer-theme';
+
 
 // Styles for the docs app that are based on the current theme.
 @mixin material-docs-app-theme($theme) {
@@ -43,4 +45,5 @@
   @include component-category-list-theme($theme);
   @include nav-bar-theme($theme);
   @include example-viewer-theme($theme);
+  @include footer-theme($theme);
 }
