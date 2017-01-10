@@ -44,7 +44,7 @@ export class MdCalendarTable {
   @Input() selectedValue: number;
 
   /** The minimum number of free cells needed to fit the label in the first row. */
-  @Input() labelMinCells: number;
+  @Input() labelMinRequiredCells: number;
 
   /** The number of columns in the table. */
   @Input() numCols = 7;
