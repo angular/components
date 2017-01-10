@@ -7,7 +7,7 @@
 
       <label class="md-input-placeholder"
              [attr.for]="_mdInputChild.id"
-             [class.md-empty]="_mdInputChild.empty"
+             [class.md-empty]="_mdInputChild.empty && !_shouldAlwaysFloat"
              [class.md-focused]="_mdInputChild.focused"
              [class.md-float]="floatingPlaceholder"
              [class.md-accent]="dividerColor == 'accent'"

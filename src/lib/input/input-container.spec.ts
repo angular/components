@@ -48,7 +48,8 @@ describe('MdInputContainer', function () {
         MdInputContainerWithStaticPlaceholder,
         MdInputContainerMissingMdInputTestController,
         MdInputContainerMultipleHintTestController,
-        MdInputContainerMultipleHintMixedTestController
+        MdInputContainerMultipleHintMixedTestController,
+        MdInputContainerWithDynamicPlaceholder
       ],
     });
 
@@ -477,6 +478,78 @@ describe('MdInputContainer', function () {
 
     expect(ariaValue).toBe(`${hintLabel.getAttribute('id')} ${endLabel.getAttribute('id')}`);
   });
+
+  it('should float when floatingPlaceholder is set to default and text is entered', () => {
+    let fixture = TestBed.createComponent(MdInputContainerWithDynamicPlaceholder);
+    fixture.detectChanges();
+
+    let inputEl = fixture.debugElement.query(By.css('input'));
+    let labelEl = fixture.debugElement.query(By.css('label')).nativeElement;
+
+    expect(labelEl.classList).not.toContain('md-empty');
+    expect(labelEl.classList).toContain('md-float');
+
+    fixture.componentInstance.shouldFloat = null;
+    fixture.detectChanges();
+
+    expect(labelEl.classList).toContain('md-empty');
+    expect(labelEl.classList).toContain('md-float');
+
+    // Update the value of the input.
+    inputEl.nativeElement.value = 'Text';
+
+    // Fake behavior of the `(input)` event which should trigger a change detection.
+    fixture.detectChanges();
+
+    expect(labelEl.classList).not.toContain('md-empty');
+    expect(labelEl.classList).toContain('md-float');
+  });
+
+  it('should always float the placeholder when floatingPlaceholder is set to true', () => {
+    let fixture = TestBed.createComponent(MdInputContainerWithDynamicPlaceholder);
+    fixture.detectChanges();
+
+    let inputEl = fixture.debugElement.query(By.css('input'));
+    let labelEl = fixture.debugElement.query(By.css('label')).nativeElement;
+
+    expect(labelEl.classList).not.toContain('md-empty');
+    expect(labelEl.classList).toContain('md-float');
+
+    fixture.detectChanges();
+
+    // Update the value of the input.
+    inputEl.nativeElement.value = 'Text';
+
+    // Fake behavior of the `(input)` event which should trigger a change detection.
+    fixture.detectChanges();
+
+    expect(labelEl.classList).not.toContain('md-empty');
+    expect(labelEl.classList).toContain('md-float');
+  });
+
+
+  it('should never float the placeholder when floatingPlaceholder is set to false', () => {
+    let fixture = TestBed.createComponent(MdInputContainerWithDynamicPlaceholder);
+
+    fixture.componentInstance.shouldFloat = false;
+    fixture.detectChanges();
+
+    let inputEl = fixture.debugElement.query(By.css('input'));
+    let labelEl = fixture.debugElement.query(By.css('label')).nativeElement;
+
+    expect(labelEl.classList).toContain('md-empty');
+    expect(labelEl.classList).not.toContain('md-float');
+
+    // Update the value of the input.
+    inputEl.nativeElement.value = 'Text';
+
+    // Fake behavior of the `(input)` event which should trigger a change detection.
+    fixture.detectChanges();
+
+    expect(labelEl.classList).not.toContain('md-empty');
+    expect(labelEl.classList).not.toContain('md-float');
+  });
+
 });
 
 @Component({
@@ -674,6 +747,16 @@ class MdInputContainerWithValueBinding {
   `
 })
 class MdInputContainerWithStaticPlaceholder {}
+
+@Component({
+  template: `
+    <md-input-container [floatingPlaceholder]="shouldFloat">
+      <input md-input placeholder="Label">
+    </md-input-container>`
+})
+class MdInputContainerWithDynamicPlaceholder {
+  shouldFloat: boolean = true;
+}
 
 @Component({
   template: `

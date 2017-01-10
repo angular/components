@@ -180,7 +180,8 @@
       </md-input-container>
     </p>
     <p>
-      <md-checkbox [(ngModel)]="floatingLabel"> Check to make floating label:</md-checkbox>
+      <md-checkbox [(ngModel)]="floatingLabel">Toggle Floating Label</md-checkbox>
+      <button md-button (click)="floatingLabel = null">Reset Floating Label</button>
       <md-input-container [floatingPlaceholder]="floatingLabel">
         <input mdInput [placeholder]="floatingLabel ? 'Floating label' : 'Not floating label'">
       </md-input-container>

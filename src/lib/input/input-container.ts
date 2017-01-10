@@ -253,6 +253,13 @@ export class MdInputContainer implements AfterContentInit {
   /** Color of the input divider, based on the theme. */
   @Input() dividerColor: 'primary' | 'accent' | 'warn' = 'primary';
 
+  /** Whether the floating label should always float or not. */
+  _shouldAlwaysFloat: boolean = false;
+
+  /** Whether the placeholder can float or not. */
+  _floatingPlaceholder: boolean = true;
+
+
   /** Text for the input hint. */
   @Input()
   get hintLabel() { return this._hintLabel; }
@@ -265,11 +272,16 @@ export class MdInputContainer implements AfterContentInit {
   // Unique id for the hint label.
   _hintLabelId: string = `md-input-hint-${nextUniqueId++}`;
 
-  /** Text or the floating placeholder. */
+  /**
+   * Whether the placeholder should always float or just show the placeholder when empty.
+   * If the value is set to null the placeholder will float if text is entered.
+   */
   @Input()
-  get floatingPlaceholder(): boolean { return this._floatingPlaceholder; }
-  set floatingPlaceholder(value) { this._floatingPlaceholder = coerceBooleanProperty(value); }
-  private _floatingPlaceholder: boolean = true;
+  get floatingPlaceholder() { return this._floatingPlaceholder; }
+  set floatingPlaceholder(value: boolean) {
+    this._floatingPlaceholder = value == null || coerceBooleanProperty(value);
+    this._shouldAlwaysFloat = coerceBooleanProperty(value);
+  }
 
   @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
 
