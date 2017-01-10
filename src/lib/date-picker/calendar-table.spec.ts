@@ -1,6 +1,6 @@
 import {async, TestBed, ComponentFixture} from '@angular/core/testing';
 import {MdDatePickerModule} from './index';
-import {Component, DebugElement} from '@angular/core';
+import {Component} from '@angular/core';
 import {MdCalendarTable, MdCalendarCell} from './calendar-table';
 import {By} from '@angular/platform-browser';
 
@@ -37,7 +37,7 @@ describe('MdCalendarTable', () => {
 
       let calendarTableDebugElement = fixture.debugElement.query(By.directive(MdCalendarTable));
       calendarTableNativeElement = calendarTableDebugElement.nativeElement;
-      calendarTableInstance = calendarTableDebugElement.componentInstance;
+      calendarTableInstance = fixture.componentInstance;
 
       refreshElementLists();
     });
@@ -51,8 +51,38 @@ describe('MdCalendarTable', () => {
     it('highlights today', () => {
       let todayCell = calendarTableNativeElement.querySelector('.md-calendar-table-today');
       expect(todayCell).not.toBeNull();
-      expect(todayCell.innerHTML).toBe('3');
-    })
+      expect(todayCell.innerHTML.trim()).toBe('3');
+    });
+
+    it('highlights selected', () => {
+      let todayCell = calendarTableNativeElement.querySelector('.md-calendar-table-selected');
+      expect(todayCell).not.toBeNull();
+      expect(todayCell.innerHTML.trim()).toBe('4');
+    });
+
+    it('places label in first row if space is available', () => {
+      calendarTableInstance.rows[0] = calendarTableInstance.rows[0].slice(3);
+      calendarTableInstance.rows = calendarTableInstance.rows.slice();
+      fixture.detectChanges();
+      refreshElementLists();
+
+      expect(rowEls.length).toBe(2);
+      expect(labelEls.length).toBe(1);
+      expect(cellEls.length).toBe(11);
+      expect(rowEls[0].firstElementChild.classList.contains('md-calendar-table-label')).toBe(
+          true, 'first cell should be the label');
+      expect(labelEls[0].getAttribute('colspan')).toBe('3');
+    });
+
+    it('cell should be selected on click', () => {
+      let todayElement =
+          calendarTableNativeElement.querySelector('.md-calendar-table-today') as HTMLElement;
+      todayElement.click();
+      fixture.detectChanges();
+
+      expect(todayElement.classList.contains('md-calendar-table-selected')).toBe(
+          true, 'today should be selected');
+    });
   });
 });
 
@@ -69,7 +99,7 @@ describe('MdCalendarTable', () => {
 })
 class StandardCalendarTable {
   label = 'Jan 2017';
-  rows = [[1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11, 12, 13, 14]].map(r => r.map(c => createCell));
+  rows = [[1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11, 12, 13, 14]].map(r => r.map(createCell));
   todayValue = 3;
   selectedValue = 4;
   labelMinRequiredCells = 3;
