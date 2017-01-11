@@ -33,9 +33,9 @@ export class SelectionModel<T> {
   constructor(private _isMulti = false, initiallySelectedValues?: T[]) {
     if (initiallySelectedValues) {
       if (_isMulti) {
-        initiallySelectedValues.forEach(value => this._select(value));
+        initiallySelectedValues.forEach(value => this._markSelected(value));
       } else {
-        this._select(initiallySelectedValues[0]);
+        this._markSelected(initiallySelectedValues[0]);
       }
 
       // Clear the array in order to avoid firing the change event for preselected values.
@@ -47,7 +47,7 @@ export class SelectionModel<T> {
    * Selects a value or an array of values.
    */
   select(value: T): void {
-    this._select(value);
+    this._markSelected(value);
     this._emitChangeEvent();
   }
 
@@ -55,7 +55,7 @@ export class SelectionModel<T> {
    * Deselects a value or an array of values.
    */
   deselect(value: T): void {
-    this._deselect(value);
+    this._unmarkSelected(value);
     this._emitChangeEvent();
   }
 
@@ -63,7 +63,7 @@ export class SelectionModel<T> {
    * Clears all of the selected values.
    */
   clear(): void {
-    this._clear();
+    this._unmarkAll();
     this._emitChangeEvent();
   }
 
@@ -94,10 +94,10 @@ export class SelectionModel<T> {
   }
 
   /** Selects a value. */
-  private _select(value: T) {
+  private _markSelected(value: T) {
     if (!this.isSelected(value)) {
       if (!this._isMulti) {
-        this._clear();
+        this._unmarkAll();
       }
 
       this._selection.add(value);
@@ -106,7 +106,7 @@ export class SelectionModel<T> {
   }
 
    /** Deselects a value. */
-   private _deselect(value: T) {
+   private _unmarkSelected(value: T) {
      if (this.isSelected(value)) {
        this._selection.delete(value);
        this._deselectedToEmit.push(value);
@@ -114,9 +114,9 @@ export class SelectionModel<T> {
    }
 
   /** Clears out the selected values. */
-  private _clear() {
+  private _unmarkAll() {
     if (!this.isEmpty()) {
-      this._selection.forEach(value => this._deselect(value));
+      this._selection.forEach(value => this._unmarkSelected(value));
     }
   }
 }
