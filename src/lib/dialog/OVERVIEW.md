@@ -40,7 +40,8 @@ Several directives are available to make it easier to structure your dialog cont
 | `md-dialog-close`     | \[Attr] Added to a `<button>`, makes the button close the dialog on click|
 
 Once a dialog opens, the dialog will automatically focus the first tabbable element.
-> To avoid that an element will be focused upon opening, developers can set the `tabindex`.
+
+You can control which elements are tab stops with the `tabindex` attribute
 
 ```html
 <button md-button tabindex="-1">Not Tabbable</button>
