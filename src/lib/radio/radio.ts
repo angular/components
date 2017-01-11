@@ -132,19 +132,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
   }
 
   /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
-  _labelPosition: 'before' | 'after' = 'after';
-  @Input()
-  get labelPosition(): 'before' | 'after' {
-    return this._labelPosition;
-  }
-  set labelPosition(v: 'before' | 'after') {
-    this._labelPosition = v
-    if (this._radios) {
-      this._radios.forEach((radio) => {
-        radio.labelPosition = this._labelPosition;
-      });
-    }
-  }
+  @Input() labelPosition: 'before' | 'after' = 'after';
 
   /** Value of the radio button. */
   @Input()
@@ -173,6 +161,8 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
     this.value = selected ? selected.value : null;
     this._checkSelectedRadioButton();
   }
+
+  constructor(private _change: ChangeDetectorRef) {}
 
   /**
    * Initialize properties once content children are available.
@@ -235,6 +225,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
    */
   writeValue(value: any) {
     this.value = value;
+    this._change.markForCheck();
   }
 
   /**
@@ -290,34 +281,15 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
   @Input() name: string;
 
   /** Used to set the 'aria-label' attribute on the underlying input element. */
-  _ariaLabel: string;
-  @Input('aria-label')
-  get ariaLabel(): string {
-    return this._ariaLabel;
-  }
-  set ariaLabel(value: string) {
-    this._ariaLabel = value;
-    this._change.markForCheck();
-  }
+  @Input('aria-label') ariaLabel: string;
 
   /** The 'aria-labelledby' attribute takes precedence as the element's text alternative. */
-  _ariaLabelledby: string;
-  @Input('aria-labelledby')
-  get ariaLabelledby(): string {
-    return this._ariaLabelledby;
-  }
-  set ariaLabelledby(value: string) {
-    this._ariaLabelledby = value;
-    this._change.markForCheck();
-  }
+  @Input('aria-labelledby') ariaLabelledby: string;
 
   /** Whether the ripple effect for this radio button is disabled. */
   @Input()
   get disableRipple(): boolean { return this._disableRipple; }
-  set disableRipple(value) {
-    this._disableRipple = coerceBooleanProperty(value);
-    this._change.markForCheck();
-  }
+  set disableRipple(value) { this._disableRipple = coerceBooleanProperty(value); }
 
   /**
    * Event emitted when the checked state of this radio button changes.
@@ -333,7 +305,6 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
   constructor(@Optional() radioGroup: MdRadioGroup,
               private _elementRef: ElementRef,
               private _renderer: Renderer,
-              private _change: ChangeDetectorRef,
               public radioDispatcher: UniqueSelectionDispatcher) {
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
@@ -374,7 +345,6 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
         // Notify all radio buttons with the same name to un-check.
         this._radioDispatcher.notify(this.id, this.name);
       }
-      this._change.markForCheck();
     }
   }
 
@@ -396,7 +366,6 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
           this.radioGroup.selected = this;
         }
       }
-      this._change.markForCheck();
     }
   }
 
@@ -413,7 +382,6 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
 
   set align(v) {
     this.labelPosition = (v == 'start') ? 'after' : 'before';
-    this._change.markForCheck();
   }
 
   private _labelPosition: 'before' | 'after';
@@ -426,7 +394,6 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
 
   set labelPosition(value) {
     this._labelPosition = value;
-    this._change.markForCheck();
   }
 
   /** Whether the radio button is disabled. */
