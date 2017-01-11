@@ -14,7 +14,8 @@ let dialogRef = dialog.open(UserProfileComponent, {
 ```
 
 The `MdDialogRef` provides a handle on the opened dialog. It can be used to close the dialog and to
-recieve notification when the dialog has been closed.
+receive notification when the dialog has been closed.
+
 ```ts
 dialogRef.afterClosed.then(result => {
   console.log(`Dialog result: ${result}`); // Pizza!
@@ -37,3 +38,10 @@ Several directives are available to make it easier to structure your dialog cont
 | `<md-dialog-content>` | Primary scrollable content of the dialog                                 |
 | `<md-dialog-actions>` | Container for action buttons at the bottom of the dialog                 |
 | `md-dialog-close`     | \[Attr] Added to a `<button>`, makes the button close the dialog on click|
+
+Once a dialog opens, the dialog will automatically focus the first tabbable element.
+> To avoid that an element will be focused upon opening, developers can set the `tabindex`.
+
+```html
+<button md-button tabindex="-1">Not Tabbable</button>
+```
