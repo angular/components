@@ -1,5 +1,5 @@
 import {Injectable, Optional, SkipSelf} from '@angular/core';
-import {ScrollDispatcher} from '../scroll/scroll-dispatcher';
+import {ScrollDispatcher, SCROLL_DISPATCHER_PROVIDER} from '../scroll/scroll-dispatcher';
 
 
 /**
@@ -70,13 +70,14 @@ export class ViewportRuler {
 
 }
 
-export function VIEWPORT_RULER_PROVIDER_FACTORY(parentDispatcher: ViewportRuler) {
-  return parentDispatcher || new ViewportRuler(new ScrollDispatcher());
-};
+export function VIEWPORT_RULER_PROVIDER_FACTORY(parentRuler: ViewportRuler,
+                                                scrollDispatcher: ScrollDispatcher) {
+  return parentRuler || new ViewportRuler(scrollDispatcher);
+}
 
 export const VIEWPORT_RULER_PROVIDER = {
   // If there is already a ViewportRuler available, use that. Otherwise, provide a new one.
   provide: ViewportRuler,
-  deps: [[new Optional(), new SkipSelf(), ViewportRuler]],
+  deps: [[new Optional(), new SkipSelf(), ViewportRuler], ScrollDispatcher],
   useFactory: VIEWPORT_RULER_PROVIDER_FACTORY
 };
