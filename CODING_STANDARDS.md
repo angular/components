@@ -68,13 +68,21 @@ high user value for price we pay both in maintenance, complexity, and payload si
 leave it out. 
 
 This applies especially so to providing two different APIs to accomplish the same thing. Always 
-prefer sticking to a _single_ API for accomplishing something. 
+prefer sticking to a _single_ API for accomplishing something.
+
+### 100 column limit 
+All code and docs in the repo should be 100 columns or fewer. This applies to TypeScript, SCSS,
+ HTML, bash scripts, and markdown files.
 
 ### TypeScript
 
 #### Typing
 Avoid `any` where possible. If you find yourself using `any`, consider whether a generic may be
 appropriate in your case.
+
+For methods and properties that are part of a component's public API, all types must be explicitly
+specified because our documentation tooling cannot currently infer types in places where TypeScript 
+can.
 
 #### Fluent APIs
 When creating a fluent or builder-pattern style API, use the `this` return type for methods:
@@ -90,11 +98,15 @@ class ConfigBuilder {
 #### Access modifiers
 * Omit the `public` keyword as it is the default behavior.
 * Use `private` when appropriate and possible, prefixing the name with an underscore.
+* Use `protected` when appropriate and possible with no prefix.
 * Prefix *library-internal* properties and methods with an underscore without using the `private` 
 keyword. This is necessary for anything that must be public (to be used by Angular), but should not
 be part of the user-facing API. This typically applies to symbols used in template expressions, 
 `@ViewChildren` / `@ContentChildren` properties, host bindings, and `@Input` / `@Output` properties
 (when using an alias).
+
+Additionally, the `@docs-private` JsDoc annotation can be used to hide any symbol from the public
+API docs.
 
 #### JsDoc comments
 
