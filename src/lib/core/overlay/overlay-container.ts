@@ -7,7 +7,7 @@ import {Injectable, Optional, SkipSelf} from '@angular/core';
  */
 @Injectable()
 export class OverlayContainer {
-  private _containerElement: HTMLElement;
+  protected _containerElement: HTMLElement;
 
   /**
    * This method returns the overlay container element.  It will lazily
@@ -24,7 +24,7 @@ export class OverlayContainer {
    * Create the overlay container element, which is simply a div
    * with the 'cdk-overlay-container' class on the document body.
    */
-  private _createContainer(): void {
+  protected _createContainer(): void {
     let container = document.createElement('div');
     container.classList.add('cdk-overlay-container');
     document.body.appendChild(container);
