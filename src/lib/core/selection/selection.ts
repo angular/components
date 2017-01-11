@@ -52,7 +52,7 @@ export class SelectionModel<T> {
     }
 
     this._select(value);
-    this._flushChangeEvent();
+    this._emitChangeEvent();
   }
 
   /**
@@ -60,7 +60,7 @@ export class SelectionModel<T> {
    */
   deselect(value: T): void {
     this._deselect(value);
-    this._flushChangeEvent();
+    this._emitChangeEvent();
   }
 
   /**
@@ -82,11 +82,11 @@ export class SelectionModel<T> {
    */
   clear(): void {
     this._clear();
-    this._flushChangeEvent();
+    this._emitChangeEvent();
   }
 
   /** Emits a change event and clears the records of selected and deselected values. */
-  private _flushChangeEvent() {
+  private _emitChangeEvent() {
     if (this._selectedToEmit.length || this._deselectedToEmit.length) {
       let eventData = new SelectionChange(this._selectedToEmit, this._deselectedToEmit);
 
