@@ -47,10 +47,6 @@ export class SelectionModel<T> {
    * Selects a value or an array of values.
    */
   select(value: T): void {
-    if (!this._isMulti) {
-      this._clear();
-    }
-
     this._select(value);
     this._emitChangeEvent();
   }
@@ -60,6 +56,14 @@ export class SelectionModel<T> {
    */
   deselect(value: T): void {
     this._deselect(value);
+    this._emitChangeEvent();
+  }
+
+  /**
+   * Clears all of the selected values.
+   */
+  clear(): void {
+    this._clear();
     this._emitChangeEvent();
   }
 
@@ -77,14 +81,6 @@ export class SelectionModel<T> {
     return this._selection.size === 0;
   }
 
-  /**
-   * Clears all of the selected values.
-   */
-  clear(): void {
-    this._clear();
-    this._emitChangeEvent();
-  }
-
   /** Emits a change event and clears the records of selected and deselected values. */
   private _emitChangeEvent() {
     if (this._selectedToEmit.length || this._deselectedToEmit.length) {
@@ -100,6 +96,10 @@ export class SelectionModel<T> {
   /** Selects a value. */
   private _select(value: T) {
     if (!this.isSelected(value)) {
+      if (!this._isMulti) {
+        this._clear();
+      }
+
       this._selection.add(value);
       this._selectedToEmit.push(value);
     }
