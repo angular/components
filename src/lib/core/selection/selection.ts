@@ -5,13 +5,33 @@ import {Subject} from 'rxjs/Subject';
  * Class to be used to power selecting one or more options from a list.
  * @docs-private
  */
-export class MdSelectionModel {
-  constructor(
-    private _options: any[],
-    private _isMulti = false,
-    initiallySelectedValues?: any[]) {
+export class SelectionModel<T> {
+  /** Currently-selected values. */
+  private _selection: Set<T> = new Set();
 
-    if (initiallySelectedValues && initiallySelectedValues.length) {
+  /** Keeps track of the deselected options that haven't been emitted by the change event. */
+  private _deselectedToEmit: T[] = [];
+
+  /** Keeps track of the selected option that haven't been emitted by the change event. */
+  private _selectedToEmit: T[] = [];
+
+  /** Cache for the array value of the selected items. */
+  private _selected: T[];
+
+  /** Selected value(s). */
+  get selected(): T[] {
+    if (!this._selected) {
+      this._selected = Array.from(this._selection.values());
+    }
+
+    return this._selected;
+  }
+
+  /** Event emitted when the value has changed. */
+  onChange: Subject<SelectionChange<T>> = new Subject();
+
+  constructor(private _isMulti = false, initiallySelectedValues?: T[]) {
+    if (initiallySelectedValues) {
       if (_isMulti) {
         initiallySelectedValues.forEach(value => this._select(value));
       } else {
@@ -19,53 +39,16 @@ export class MdSelectionModel {
       }
 
       // Clear the array in order to avoid firing the change event for preselected values.
-      this._unflushedSelectedValues.length = 0;
+      this._selectedToEmit.length = 0;
     }
-  }
-
-  /** Event emitted when the value has changed. */
-  onChange: Subject<MdSelectionChange> = new Subject();
-
-  /** Currently-selected values. */
-  private _selectedValues: any[] = [];
-
-  /** Keeps track of the deselected options that haven't been emitted by the change event. */
-  private _unflushedDeselectedValues: any[] = [];
-
-  /** Keeps track of the selected option that haven't been emitted by the change event. */
-  private _unflushedSelectedValues: any[] = [];
-
-  /** List of available available options. */
-  get options(): any[] { return this._options.slice(); }
-  set options(newOptions: any[]) {
-    this._options = newOptions.slice();
-
-    // Remove any options that are no longer a part of the options and skip throwing an error.
-    // Uses a reverse while, because it's modifying the array that it is iterating.
-    let i = this._selectedValues.length;
-
-    while (i--) {
-      if (this._options.indexOf(this._selectedValues[i]) === -1) {
-        this._deselect(this._selectedValues[i]);
-      }
-    }
-
-    this._flushChangeEvent();
-  }
-
-  /** Selected value(s). */
-  get selected(): any[] {
-    return this._selectedValues.slice();
   }
 
   /**
-   * Selects a value.
+   * Selects a value or an array of values.
    */
-  select(value: any): void {
-    this._verifyExistence(value);
-
-    if (!this._isMulti && !this.isEmpty()) {
-      this._deselect(this._selectedValues[0]);
+  select(value: T): void {
+    if (!this._isMulti) {
+      this._clear();
     }
 
     this._select(value);
@@ -73,10 +56,9 @@ export class MdSelectionModel {
   }
 
   /**
-   * Deselects a value.
+   * Deselects a value or an array of values.
    */
-  deselect(value: any): void {
-    this._verifyExistence(value);
+  deselect(value: T): void {
     this._deselect(value);
     this._flushChangeEvent();
   }
@@ -84,77 +66,57 @@ export class MdSelectionModel {
   /**
    * Determines whether a value is selected.
    */
-  isSelected(value: any): boolean {
-    return this._selectedValues.indexOf(value) > -1;
+  isSelected(value: T): boolean {
+    return this._selection.has(value);
   }
 
   /**
    * Determines whether the model has a value.
    */
   isEmpty(): boolean {
-    return this._selectedValues.length === 0;
-  }
-
-  /**
-   * Selects all of the options. Only applicable when the model is in multi-selection mode.
-   */
-  selectAll(): void {
-    if (!this._isMulti) {
-      throw new Error('selectAll is only allowed in multi-selection mode');
-    }
-
-    this._options.forEach(option => this._select(option));
-    this._flushChangeEvent();
+    return this._selection.size === 0;
   }
 
   /**
    * Clears all of the selected values.
    */
   clear(): void {
-    if (!this.isEmpty()) {
-      let i = this._selectedValues.length;
-
-      // Use a reverse while, because we're modifying the array that we're iterating.
-      while (i--) {
-        this._deselect(this._selectedValues[i]);
-      }
-
-      this._flushChangeEvent();
-    }
+    this._clear();
+    this._flushChangeEvent();
   }
 
   /** Emits a change event and clears the records of selected and deselected values. */
   private _flushChangeEvent() {
-    if (this._unflushedSelectedValues.length || this._unflushedDeselectedValues.length) {
-      let event = new MdSelectionChange(this._unflushedSelectedValues,
-          this._unflushedDeselectedValues);
+    if (this._selectedToEmit.length || this._deselectedToEmit.length) {
+      let eventData = new SelectionChange(this._selectedToEmit, this._deselectedToEmit);
 
-      this.onChange.next(event);
-      this._unflushedDeselectedValues = [];
-      this._unflushedSelectedValues = [];
+      this.onChange.next(eventData);
+      this._deselectedToEmit = [];
+      this._selectedToEmit = [];
+      this._selected = null;
     }
   }
 
   /** Selects a value. */
-  private _select(value: any) {
+  private _select(value: T) {
     if (!this.isSelected(value)) {
-      this._selectedValues.push(value);
-      this._unflushedSelectedValues.push(value);
+      this._selection.add(value);
+      this._selectedToEmit.push(value);
     }
   }
 
-  /** Deselects a value. */
-  private _deselect(value: any) {
-    if (this.isSelected(value)) {
-      this._selectedValues.splice(this._selectedValues.indexOf(value), 1);
-      this._unflushedDeselectedValues.push(value);
-    }
-  }
+   /** Deselects a value. */
+   private _deselect(value: T) {
+     if (this.isSelected(value)) {
+       this._selection.delete(value);
+       this._deselectedToEmit.push(value);
+     }
+   }
 
-  /** Throws an error if a value isn't a part of the list of options. */
-  private _verifyExistence(value: any): void {
-    if (this._options.indexOf(value) === -1) {
-      throw new Error('Attempting to manipulate an option that is not part of the option list.');
+  /** Clears out the selected values. */
+  private _clear() {
+    if (!this.isEmpty()) {
+      this._selection.forEach(value => this._deselect(value));
     }
   }
 }
@@ -163,6 +125,6 @@ export class MdSelectionModel {
  * Describes an event emitted when the value of a MdSelectionModel has changed.
  * @docs-private
  */
-export class MdSelectionChange {
-  constructor(public added?: any, public removed?: any) { }
+export class SelectionChange<T> {
+  constructor(public added?: T[], public removed?: T[]) { }
 }
