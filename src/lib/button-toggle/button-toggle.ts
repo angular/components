@@ -24,6 +24,7 @@ import {
   UniqueSelectionDispatcher,
   coerceBooleanProperty,
   DefaultStyleCompatibilityModeModule,
+  UNIQUE_SELECTION_DISPATCHER_PROVIDER,
 } from '../core';
 
 /** Acceptable types for a button toggle. */
@@ -228,6 +229,14 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
    */
   registerOnTouched(fn: any) {
     this.onTouched = fn;
+  }
+
+  /**
+   * Toggles the disabled state of the component. Implemented as part of ControlValueAccessor.
+   * @param isDisabled Whether the component should be disabled.
+   */
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 }
 
@@ -463,12 +472,14 @@ export class MdButtonToggle implements OnInit {
     DefaultStyleCompatibilityModeModule,
   ],
   declarations: [MdButtonToggleGroup, MdButtonToggleGroupMultiple, MdButtonToggle],
+  providers: [UNIQUE_SELECTION_DISPATCHER_PROVIDER]
 })
 export class MdButtonToggleModule {
+  /** @deprecated */
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdButtonToggleModule,
-      providers: [UniqueSelectionDispatcher]
+      providers: []
     };
   }
 }
