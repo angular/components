@@ -1,6 +1,6 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
 import {MdLineModule} from './line/line';
-import {RtlModule} from './rtl/dir';
+import {RtlModule} from './rtl/index';
 import {ObserveContentModule} from './observe-content/observe-content';
 import {MdOptionModule} from './option/option';
 import {MdRippleModule} from './ripple/ripple';
@@ -10,7 +10,7 @@ import {A11yModule} from './a11y/index';
 
 
 // RTL
-export {Dir, LayoutDirection, RtlModule} from './rtl/dir';
+export {Dir, LayoutDirection, GlobalDirAccessor, RtlModule} from './rtl/index';
 
 // Mutation Observer
 export {ObserveContentModule, ObserveContent} from './observe-content/observe-content';

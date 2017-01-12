@@ -1,15 +1,16 @@
 import {
-    NgModule,
-    ModuleWithProviders,
-    Directive,
-    EventEmitter,
-    TemplateRef,
-    ViewContainerRef,
-    Optional,
-    Input,
-    OnDestroy,
-    Output,
-    ElementRef
+  NgModule,
+  ModuleWithProviders,
+  Directive,
+  EventEmitter,
+  TemplateRef,
+  ViewContainerRef,
+  Optional,
+  Input,
+  OnDestroy,
+  Output,
+  ElementRef, 
+  Injector
 } from '@angular/core';
 import {Overlay, OVERLAY_PROVIDERS} from './overlay';
 import {OverlayRef} from './overlay-ref';
@@ -22,7 +23,7 @@ import {
 import {PortalModule} from '../portal/portal-directives';
 import {ConnectedPositionStrategy} from './position/connected-position-strategy';
 import {Subscription} from 'rxjs/Subscription';
-import {Dir, LayoutDirection} from '../rtl/dir';
+import {GlobalDirAccessor, LayoutDirection} from '../rtl/index';
 import {Scrollable} from './scroll/scrollable';
 import {coerceBooleanProperty} from '../coercion/boolean-property';
 
@@ -68,6 +69,7 @@ export class ConnectedOverlayDirective implements OnDestroy {
   private _offsetX: number = 0;
   private _offsetY: number = 0;
   private _position: ConnectedPositionStrategy;
+  private _dir: LayoutDirection;
 
   /** Origin for the connected overlay. */
   @Input() origin: OverlayOrigin;
@@ -154,8 +156,14 @@ export class ConnectedOverlayDirective implements OnDestroy {
       private _overlay: Overlay,
       templateRef: TemplateRef<any>,
       viewContainerRef: ViewContainerRef,
-      @Optional() private _dir: Dir) {
+      _injector: Injector,
+      @Optional() _activeLayoutDirection: GlobalDirAccessor) {
     this._templatePortal = new TemplatePortal(templateRef, viewContainerRef);
+
+    if (_activeLayoutDirection) {
+      _activeLayoutDirection.getActiveDirection(_injector)
+        .then(direction => this._dir = direction);
+    }
   }
 
   /** The associated overlay reference. */
@@ -165,7 +173,7 @@ export class ConnectedOverlayDirective implements OnDestroy {
 
   /** The element's layout direction. */
   get dir(): LayoutDirection {
-    return this._dir ? this._dir.value : 'ltr';
+    return this._dir ? this._dir : 'ltr';
   }
 
   ngOnDestroy() {

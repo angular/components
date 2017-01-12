@@ -8,7 +8,8 @@ import {
   ViewEncapsulation,
   forwardRef,
   EventEmitter,
-  Optional
+  Optional, 
+  Injector
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
@@ -19,7 +20,7 @@ import {
   coerceNumberProperty,
   DefaultStyleCompatibilityModeModule,
 } from '../core';
-import {Dir} from '../core/rtl/dir';
+import {GlobalDirAccessor, LayoutDirection} from '../core/rtl/index';
 import {CommonModule} from '@angular/common';
 import {
   PAGE_UP,
@@ -98,6 +99,8 @@ export class MdSlider implements ControlValueAccessor {
 
   private _disabled: boolean = false;
 
+  private _dir: LayoutDirection;
+  
   /** Whether or not the slider is disabled. */
   @Input()
   get disabled(): boolean { return this._disabled; }
@@ -296,7 +299,7 @@ export class MdSlider implements ControlValueAccessor {
 
   /** The language direction for this slider element. */
   get direction() {
-    return (this._dir && this._dir.value == 'rtl') ? 'rtl' : 'ltr';
+    return (this._dir && this._dir == 'rtl') ? 'rtl' : 'ltr';
   }
 
   /** Event emitted when the slider value has changed. */
@@ -305,8 +308,15 @@ export class MdSlider implements ControlValueAccessor {
   /** Event emitted when the slider thumb moves. */
   @Output() input = new EventEmitter<MdSliderChange>();
 
-  constructor(@Optional() private _dir: Dir, elementRef: ElementRef) {
+  constructor(@Optional() _activeLayoutDirection: GlobalDirAccessor,
+              _injector: Injector,
+              elementRef: ElementRef) {
     this._renderer = new SliderRenderer(elementRef);
+
+    if (_activeLayoutDirection) {
+      _activeLayoutDirection.getActiveDirection(_injector)
+        .then(direction => this._dir = direction);
+    }
   }
 
   _onMouseenter() {

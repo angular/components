@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed, flushMicrotasks, fakeAsync} from '@angular/core/testing';
 import {Component, ViewChild, TemplateRef, ViewContainerRef} from '@angular/core';
-import {LayoutDirection, Dir} from '../core/rtl/dir';
+import {LayoutDirection, Dir} from '../core/rtl/index';
 import {TemplatePortal} from '../core/portal/portal';
 import {MdTabBody} from './tab-body';
 import {MdRippleModule} from '../core/ripple/ripple';

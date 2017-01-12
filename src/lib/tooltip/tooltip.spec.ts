@@ -10,7 +10,7 @@ import {Component, DebugElement, AnimationTransitionEvent} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {TooltipPosition, MdTooltip, MdTooltipModule} from './tooltip';
 import {OverlayContainer} from '../core';
-import {Dir, LayoutDirection} from '../core/rtl/dir';
+import {Dir, LayoutDirection} from '../core/rtl/index';
 import {OverlayModule} from '../core/overlay/overlay-directives';
 
 const initialTooltipMessage = 'initial tooltip message';

@@ -1,21 +1,19 @@
 import {
-    AfterViewInit,
-    Directive,
-    ElementRef,
-    EventEmitter,
-    Input,
-    OnDestroy,
-    Optional,
-    Output,
-    Renderer,
-    ViewContainerRef,
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Optional,
+  Output,
+  Renderer,
+  ViewContainerRef, Injector,
 } from '@angular/core';
 import {MdMenuPanel} from './menu-panel';
 import {MdMenuMissingError} from './menu-errors';
 import {
     isFakeMousedownFromScreenReader,
-    Dir,
-    LayoutDirection,
     Overlay,
     OverlayState,
     OverlayRef,
@@ -26,6 +24,7 @@ import {
 } from '../core';
 import {Subscription} from 'rxjs/Subscription';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
+import {GlobalDirAccessor, LayoutDirection} from '../core/rtl/index';
 
 /**
  * This directive is intended to be used in conjunction with an md-menu tag.  It is
@@ -46,6 +45,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   private _menuOpen: boolean = false;
   private _backdropSubscription: Subscription;
   private _positionSubscription: Subscription;
+  private _dir: LayoutDirection;
 
   // tracking input type is necessary so it's possible to only auto-focus
   // the first item of the list when the menu is opened via the keyboard
@@ -67,7 +67,13 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
 
   constructor(private _overlay: Overlay, private _element: ElementRef,
               private _viewContainerRef: ViewContainerRef, private _renderer: Renderer,
-              @Optional() private _dir: Dir) {}
+              @Optional() _activeLayoutDirection: GlobalDirAccessor,
+              _injector: Injector) {
+    if (_activeLayoutDirection) {
+      _activeLayoutDirection.getActiveDirection(_injector)
+        .then(direction => this._dir = direction);
+    }
+  }
 
   ngAfterViewInit() {
     this._checkMenu();
@@ -120,7 +126,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
 
   /** The text direction of the containing app. */
   get dir(): LayoutDirection {
-    return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
+    return this._dir ? this._dir : 'ltr';
   }
 
   /**

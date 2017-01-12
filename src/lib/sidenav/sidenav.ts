@@ -13,10 +13,16 @@ import {
   EventEmitter,
   Renderer,
   ViewEncapsulation,
-  ViewChild
+  ViewChild, Injector
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Dir, MdError, coerceBooleanProperty, DefaultStyleCompatibilityModeModule} from '../core';
+import {
+  LayoutDirection,
+  GlobalDirAccessor,
+  MdError,
+  coerceBooleanProperty,
+  DefaultStyleCompatibilityModeModule
+} from '../core';
 import {A11yModule} from '../core/a11y/index';
 import {FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
@@ -342,12 +348,17 @@ export class MdSidenavContainer implements AfterContentInit {
   private _left: MdSidenav;
   private _right: MdSidenav;
 
-  constructor(@Optional() private _dir: Dir, private _element: ElementRef,
+  private _dir: LayoutDirection;
+
+  constructor(@Optional() _activeLayoutDirection: GlobalDirAccessor,
+              _injector: Injector,
+              private _element: ElementRef,
               private _renderer: Renderer) {
     // If a `Dir` directive exists up the tree, listen direction changes and update the left/right
     // properties to point to the proper start/end.
-    if (_dir != null) {
-      _dir.dirChange.subscribe(() => this._validateDrawers());
+    if (_activeLayoutDirection) {
+      _activeLayoutDirection.getActiveDirection(_injector)
+        .then(direction => this._dir = direction);
     }
   }
 
@@ -422,7 +433,7 @@ export class MdSidenavContainer implements AfterContentInit {
     this._right = this._left = null;
 
     // Detect if we're LTR or RTL.
-    if (this._dir == null || this._dir.value == 'ltr') {
+    if (this._dir == null || this._dir == 'ltr') {
       this._left = this._start;
       this._right = this._end;
     } else {

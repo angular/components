@@ -10,13 +10,18 @@ import {
   QueryList,
   Renderer,
   ElementRef,
-  Optional,
+  Optional, Injector,
 } from '@angular/core';
 import {MdGridTile, MdGridTileText} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
 import {TileStyler, FitTileStyler, RatioTileStyler, FixedTileStyler} from './tile-styler';
 import {MdGridListColsError} from './grid-list-errors';
-import {Dir, MdLineModule, DefaultStyleCompatibilityModeModule} from '../core';
+import {
+  MdLineModule,
+  DefaultStyleCompatibilityModeModule,
+  GlobalDirAccessor,
+  LayoutDirection
+} from '../core';
 import {
   coerceToString,
   coerceToNumber,
@@ -60,10 +65,18 @@ export class MdGridList implements OnInit, AfterContentChecked {
   /** Query list of tiles that are being rendered. */
   @ContentChildren(MdGridTile) _tiles: QueryList<MdGridTile>;
 
+  private _dir: LayoutDirection;
+
   constructor(
       private _renderer: Renderer,
       private _element: ElementRef,
-      @Optional() private _dir: Dir) {}
+      @Optional() _activeLayoutDirection: GlobalDirAccessor,
+      _injector: Injector) {
+    if (_activeLayoutDirection) {
+      _activeLayoutDirection.getActiveDirection(_injector)
+        .then(direction => this._dir = direction);
+    }
+  }
 
   /** Amount of columns in the grid list. */
   @Input()
@@ -124,7 +137,7 @@ export class MdGridList implements OnInit, AfterContentChecked {
   private _layoutTiles(): void {
     let tiles = this._tiles.toArray();
     let tracker = new TileCoordinator(this.cols, tiles);
-    let direction = this._dir ? this._dir.value : 'ltr';
+    let direction = this._dir ? this._dir : 'ltr';
     this._tileStyler.init(this.gutterSize, tracker, this.cols, direction);
 
     for (let i = 0; i < tiles.length; i++) {

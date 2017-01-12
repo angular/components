@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild, ViewContainerRef} from '@angular/core';
-import {LayoutDirection, Dir} from '../core/rtl/dir';
+import {LayoutDirection, Dir} from '../core/rtl/index';
 import {MdTabHeader} from './tab-header';
 import {MdRippleModule} from '../core/ripple/ripple';
 import {CommonModule} from '@angular/common';

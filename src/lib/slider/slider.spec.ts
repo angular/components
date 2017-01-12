@@ -4,7 +4,7 @@ import {Component, DebugElement} from '@angular/core';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MdSlider, MdSliderModule} from './slider';
 import {TestGestureConfig} from './test-gesture-config';
-import {RtlModule} from '../core/rtl/dir';
+import {RtlModule} from '../core/rtl/index';
 import {
   UP_ARROW,
   RIGHT_ARROW,

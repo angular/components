@@ -5,7 +5,7 @@ import {MdSelectModule} from './index';
 import {OverlayContainer} from '../core/overlay/overlay-container';
 import {MdSelect} from './select';
 import {MdOption} from '../core/option/option';
-import {Dir} from '../core/rtl/dir';
+import {Dir} from '../core/rtl/index';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 
