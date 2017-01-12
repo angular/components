@@ -62,8 +62,9 @@ export class DisableBodyScroll {
   }
 }
 
-export function DISABLE_BODY_SCROLL_PROVIDER_FACTORY(parentDispatcher: DisableBodyScroll) {
-  return parentDispatcher || new DisableBodyScroll(new ViewportRuler());
+export function DISABLE_BODY_SCROLL_PROVIDER_FACTORY(parentDispatcher: DisableBodyScroll,
+                                                     viewportRuler: ViewportRuler) {
+  return parentDispatcher || new DisableBodyScroll(viewportRuler);
 };
 
 export const DISABLE_BODY_SCROLL_PROVIDER = {
