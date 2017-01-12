@@ -255,7 +255,7 @@ export class MdSlider implements ControlValueAccessor {
     let sign = this.invertMouseCoords ? '-' : '';
     return {
       'transform': `translate${axis}(${sign}${this.thumbGap}px) scale${axis}(${1 - this.percent})`
-    }
+    };
   }
 
   /** CSS styles for the track fill element. */
