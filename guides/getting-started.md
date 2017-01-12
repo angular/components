@@ -37,12 +37,14 @@ export class PizzaPartyAppModule { }
 This is **required** to apply all of the core and theme styles to your application. You can either
 use a pre-built theme, or define your own custom theme.
 
-:trident:  See the [theming guide](guides/theming.md) for instructions.
+:trident:  See the [theming guide](./theming.md) for instructions.
 
-### Additional setup for `md-slide-toggle` and `md-slider`:
-The slide-toggle and slider components have a dependency on [HammerJS](http://hammerjs.github.io/).
+### Additional setup for gestures
+Some components (`md-slide-toggle`, `md-slider`, `mdTooltip`) rely on 
+[HammerJS](http://hammerjs.github.io/) for gestures. In order to get the full feature-set of these
+components, HammerJS must be loaded into the application.
 
-Add HammerJS to your application via [npm](https://www.npmjs.com/package/hammerjs), a CDN 
+You can add HammerJS to your application via [npm](https://www.npmjs.com/package/hammerjs), a CDN 
 (such as the [Google CDN](https://developers.google.com/speed/libraries/#hammerjs)), or served 
 directly from your app.
 
@@ -50,26 +52,12 @@ directly from your app.
 
 ```bash
 npm install --save hammerjs 
-npm install --save-dev @types/hammerjs
 ```
 
-Import HammerJS on your app's module.
-
+After installing, import HammerJS on your app's module.
 **src/app/app.module.ts**
 ```ts
 import 'hammerjs';
-```
-
-Finally, you need to add `hammerjs` to the `types` section of your `tsconfig.json` file:
-
-```json
-{
-  "compilerOptions": {
-    "types": [
-      "hammerjs"
-    ]
-  }
-}
 ```
 
 ## Configuring SystemJS
@@ -81,7 +69,7 @@ System.config({
   // existing configuration options
   map: {
     ...,
-    '@angular/material': 'npm:@angular/material/material.umd.js'
+    '@angular/material': 'npm:@angular/material/bundles/material.umd.js'
   }
 });
 ```

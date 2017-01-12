@@ -30,12 +30,11 @@ env:
   matrix:
     # Order: a slower build first, so that we don't occupy an idle travis worker waiting for others to complete.
     - MODE=lint
-    - MODE=extract_metadata
+    - MODE=aot
+    - MODE=payload
     - MODE=e2e
     - MODE=saucelabs_required
     - MODE=browserstack_required
-    - MODE=saucelabs_optional
-    - MODE=browserstack_optional
 
 matrix:
   fast_finish: true

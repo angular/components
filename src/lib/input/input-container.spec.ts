@@ -1,9 +1,9 @@
 import {async, TestBed, inject} from '@angular/core/testing';
 import {Component} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {MdInputModule} from './input';
-import {MdInputContainer} from './input-container';
+import {MdInputContainer, MdInputDirective} from './input-container';
 import {Platform} from '../core/platform/platform';
 import {PlatformModule} from '../core/platform/index';
 import {
@@ -41,6 +41,11 @@ describe('MdInputContainer', function () {
         MdInputContainerZeroTestController,
         MdTextareaWithBindings,
         MdInputContainerWithDisabled,
+        MdInputContainerWithRequired,
+        MdInputContainerWithType,
+        MdInputContainerWithValueBinding,
+        MdInputContainerWithFormControl,
+        MdInputContainerWithStaticPlaceholder,
         MdInputContainerMissingMdInputTestController
       ],
     });
@@ -128,6 +133,40 @@ describe('MdInputContainer', function () {
     expect(el.classList.contains('md-empty')).toBe(false, 'should not be empty');
   }));
 
+  it('should update the placeholder when input entered', async(() => {
+    let fixture = TestBed.createComponent(MdInputContainerWithStaticPlaceholder);
+    fixture.detectChanges();
+
+    let inputEl = fixture.debugElement.query(By.css('input'));
+    let labelEl = fixture.debugElement.query(By.css('label')).nativeElement;
+
+    expect(labelEl.classList).toContain('md-empty');
+    expect(labelEl.classList).not.toContain('md-float');
+
+    // Update the value of the input.
+    inputEl.nativeElement.value = 'Text';
+
+    // Fake behavior of the `(input)` event which should trigger a change detection.
+    fixture.detectChanges();
+
+    expect(labelEl.classList).not.toContain('md-empty');
+    expect(labelEl.classList).not.toContain('md-float');
+  }));
+
+  it('should not be empty when the value set before view init', async(() => {
+    let fixture = TestBed.createComponent(MdInputContainerWithValueBinding);
+    fixture.detectChanges();
+
+    let placeholderEl = fixture.debugElement.query(By.css('.md-input-placeholder')).nativeElement;
+
+    expect(placeholderEl.classList).not.toContain('md-empty');
+
+    fixture.componentInstance.value = '';
+    fixture.detectChanges();
+
+    expect(placeholderEl.classList).toContain('md-empty');
+  }));
+
   it('should not treat the number 0 as empty', async(() => {
     let fixture = TestBed.createComponent(MdInputContainerZeroTestController);
     fixture.detectChanges();
@@ -140,6 +179,20 @@ describe('MdInputContainer', function () {
       expect(el.classList.contains('md-empty')).toBe(false);
     });
   }));
+
+  it('should update the value when using FormControl.setValue', () => {
+    let fixture = TestBed.createComponent(MdInputContainerWithFormControl);
+    fixture.detectChanges();
+
+    let input = fixture.debugElement.query(By.directive(MdInputDirective))
+      .injector.get(MdInputDirective) as MdInputDirective;
+
+    expect(input.value).toBeFalsy();
+
+    fixture.componentInstance.formControl.setValue('something');
+
+    expect(input.value).toBe('something');
+  });
 
   it('should add id', () => {
     let fixture = TestBed.createComponent(MdInputContainerTextTestController);
@@ -188,7 +241,7 @@ describe('MdInputContainer', function () {
         angularWrappedErrorMessage(new MdInputContainerPlaceholderConflictError()));
   });
 
-  it('validates that md-input child is present', () => {
+  it('validates that mdInput child is present', () => {
     let fixture = TestBed.createComponent(MdInputContainerMissingMdInputTestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
@@ -236,16 +289,20 @@ describe('MdInputContainer', function () {
     let fixture = TestBed.createComponent(MdInputContainerPlaceholderAttrTestComponent);
     fixture.detectChanges();
 
-    let el = fixture.debugElement.query(By.css('label'));
-    expect(el).toBeNull();
+    let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+
+    expect(fixture.debugElement.query(By.css('label'))).toBeNull();
+    expect(inputEl.placeholder).toBe('');
 
     fixture.componentInstance.placeholder = 'Other placeholder';
     fixture.detectChanges();
 
-    el = fixture.debugElement.query(By.css('label'));
-    expect(el).not.toBeNull();
-    expect(el.nativeElement.textContent).toMatch('Other placeholder');
-    expect(el.nativeElement.textContent).not.toMatch(/\*/g);
+    let labelEl = fixture.debugElement.query(By.css('label'));
+
+    expect(inputEl.placeholder).toBe('Other placeholder');
+    expect(labelEl).not.toBeNull();
+    expect(labelEl.nativeElement.textContent).toMatch('Other placeholder');
+    expect(labelEl.nativeElement.textContent).not.toMatch(/\*/g);
   }));
 
   it('supports placeholder element', async(() => {
@@ -274,16 +331,70 @@ describe('MdInputContainer', function () {
     expect(el.nativeElement.textContent).toMatch(/hello\s+\*/g);
   });
 
-  it('supports the disabled attribute', async(() => {
-    let fixture = TestBed.createComponent(MdInputContainerWithDisabled);
+  it('supports the disabled attribute as binding', async(() => {
+    const fixture = TestBed.createComponent(MdInputContainerWithDisabled);
     fixture.detectChanges();
 
-    let underlineEl = fixture.debugElement.query(By.css('.md-input-underline')).nativeElement;
-    expect(underlineEl.classList.contains('md-disabled')).toBe(false, 'should not be disabled');
+    const underlineEl = fixture.debugElement.query(By.css('.md-input-underline')).nativeElement;
+    const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+
+    expect(underlineEl.classList.contains('md-disabled'))
+        .toBe(false, `Expected underline not to start out disabled.`);
+    expect(inputEl.disabled).toBe(false);
 
     fixture.componentInstance.disabled = true;
     fixture.detectChanges();
-    expect(underlineEl.classList.contains('md-disabled')).toBe(true, 'should be disabled');
+
+    expect(underlineEl.classList.contains('md-disabled'))
+        .toBe(true, `Expected underline to look disabled after property is set.`);
+    expect(inputEl.disabled).toBe(true);
+  }));
+
+  it('should display disabled styles when using FormControl.disable()', () => {
+    const fixture = TestBed.createComponent(MdInputContainerWithFormControl);
+    fixture.detectChanges();
+
+    const underlineEl = fixture.debugElement.query(By.css('.md-input-underline')).nativeElement;
+    const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+
+    expect(underlineEl.classList)
+        .not.toContain('md-disabled', `Expected underline not to start out disabled.`);
+    expect(inputEl.disabled).toBe(false);
+
+    fixture.componentInstance.formControl.disable();
+    fixture.detectChanges();
+
+    expect(underlineEl.classList)
+        .toContain('md-disabled', `Expected underline to look disabled after disable() is called.`);
+    expect(inputEl.disabled).toBe(true);
+  });
+
+  it('supports the required attribute as binding', async(() => {
+    let fixture = TestBed.createComponent(MdInputContainerWithRequired);
+    fixture.detectChanges();
+
+    let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+
+    expect(inputEl.required).toBe(false);
+
+    fixture.componentInstance.required = true;
+    fixture.detectChanges();
+
+    expect(inputEl.required).toBe(true);
+  }));
+
+  it('supports the type attribute as binding', async(() => {
+    let fixture = TestBed.createComponent(MdInputContainerWithType);
+    fixture.detectChanges();
+
+    let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+
+    expect(inputEl.type).toBe('text');
+
+    fixture.componentInstance.type = 'password';
+    fixture.detectChanges();
+
+    expect(inputEl.type).toBe('password');
   }));
 
   it('supports textarea', () => {
@@ -298,20 +409,34 @@ describe('MdInputContainer', function () {
 @Component({
   template: `
     <md-input-container>
-      <input md-input id="test-id" placeholder="test">
+      <input mdInput id="test-id" placeholder="test">
     </md-input-container>`
 })
 class MdInputContainerWithId {}
 
 @Component({
-  template: `<md-input-container><input md-input [disabled]="disabled"></md-input-container>`
+  template: `<md-input-container><input mdInput [disabled]="disabled"></md-input-container>`
 })
 class MdInputContainerWithDisabled {
   disabled: boolean;
 }
 
 @Component({
-  template: `<md-input-container><input md-input required placeholder="hello"></md-input-container>`
+  template: `<md-input-container><input mdInput [required]="required"></md-input-container>`
+})
+class MdInputContainerWithRequired {
+  required: boolean;
+}
+
+@Component({
+  template: `<md-input-container><input mdInput [type]="type"></md-input-container>`
+})
+class MdInputContainerWithType {
+  type: string;
+}
+
+@Component({
+  template: `<md-input-container><input mdInput required placeholder="hello"></md-input-container>`
 })
 class MdInputContainerPlaceholderRequiredTestComponent {}
 
@@ -327,7 +452,14 @@ class MdInputContainerPlaceholderElementTestComponent {
 }
 
 @Component({
-  template: `<md-input-container><input md-input [placeholder]="placeholder"></md-input-container>`
+  template: `<md-input-container><input md-input [formControl]="formControl"></md-input-container>`
+})
+class MdInputContainerWithFormControl {
+  formControl = new FormControl();
+}
+
+@Component({
+  template: `<md-input-container><input mdInput [placeholder]="placeholder"></md-input-container>`
 })
 class MdInputContainerPlaceholderAttrTestComponent {
   placeholder: string = '';
@@ -348,14 +480,14 @@ class MdInputContainerHintLabelTestController {
 }
 
 @Component({
-  template: `<md-input-container><input md-input type="file"></md-input-container>`
+  template: `<md-input-container><input mdInput type="file"></md-input-container>`
 })
 class MdInputContainerInvalidTypeTestController {}
 
 @Component({
   template: `
     <md-input-container>
-      <input md-input placeholder="Hello">
+      <input mdInput placeholder="Hello">
       <md-placeholder>World</md-placeholder>
     </md-input-container>`
 })
@@ -381,7 +513,7 @@ class MdInputContainerInvalidHint2TestController {}
 class MdInputContainerInvalidHintTestController {}
 
 @Component({
-  template: `<md-input-container><input md-input [(ngModel)]="model"></md-input-container>`
+  template: `<md-input-container><input mdInput [(ngModel)]="model"></md-input-container>`
 })
 class MdInputContainerBaseTestController {
   model: any = '';
@@ -390,7 +522,7 @@ class MdInputContainerBaseTestController {
 @Component({
   template: `
     <md-input-container>
-      <input md-input type="date" placeholder="Placeholder">
+      <input mdInput type="date" placeholder="Placeholder">
     </md-input-container>`
 })
 class MdInputContainerDateTestController {}
@@ -398,7 +530,7 @@ class MdInputContainerDateTestController {}
 @Component({
   template: `
     <md-input-container>
-      <input md-input type="text" placeholder="Placeholder">
+      <input mdInput type="text" placeholder="Placeholder">
     </md-input-container>`
 })
 class MdInputContainerTextTestController {}
@@ -406,7 +538,7 @@ class MdInputContainerTextTestController {}
 @Component({
   template: `
     <md-input-container>
-      <input md-input type="password" placeholder="Placeholder">
+      <input mdInput type="password" placeholder="Placeholder">
     </md-input-container>`
 })
 class MdInputContainerPasswordTestController {}
@@ -414,7 +546,7 @@ class MdInputContainerPasswordTestController {}
 @Component({
   template: `
     <md-input-container>
-      <input md-input type="number" placeholder="Placeholder">
+      <input mdInput type="number" placeholder="Placeholder">
     </md-input-container>`
 })
 class MdInputContainerNumberTestController {}
@@ -422,7 +554,7 @@ class MdInputContainerNumberTestController {}
 @Component({
   template: `
     <md-input-container>
-      <input md-input type="number" placeholder="Placeholder" [(ngModel)]="value">
+      <input mdInput type="number" placeholder="Placeholder" [(ngModel)]="value">
     </md-input-container>`
 })
 class MdInputContainerZeroTestController {
@@ -432,7 +564,26 @@ class MdInputContainerZeroTestController {
 @Component({
   template: `
     <md-input-container>
-      <textarea md-input [rows]="rows" [cols]="cols" [wrap]="wrap" placeholder="Snacks"></textarea>
+      <input mdInput placeholder="Label" [value]="value">
+    </md-input-container>`
+})
+class MdInputContainerWithValueBinding {
+  value: string = 'Initial';
+}
+
+@Component({
+  template: `
+    <md-input-container [floatingPlaceholder]="false">
+      <input md-input placeholder="Label">
+    </md-input-container>
+  `
+})
+class MdInputContainerWithStaticPlaceholder {}
+
+@Component({
+  template: `
+    <md-input-container>
+      <textarea mdInput [rows]="rows" [cols]="cols" [wrap]="wrap" placeholder="Snacks"></textarea>
     </md-input-container>`
 })
 class MdTextareaWithBindings {

@@ -9,6 +9,10 @@ is_lint() {
   [[ "$MODE" = lint ]]
 }
 
-is_extract_metadata() {
-  [[ "$MODE" = extract_metadata ]]
+is_aot() {
+  [[ "$MODE" = aot ]]
+}
+
+is_payload() {
+  [[ "$MODE" = payload ]]
 }

@@ -17,7 +17,7 @@ import {
   ForegroundRippleState,
 } from './ripple-renderer';
 import {DefaultStyleCompatibilityModeModule} from '../compatibility/default-mode';
-import {ViewportRuler} from '../overlay/position/viewport-ruler';
+import {ViewportRuler, VIEWPORT_RULER_PROVIDER} from '../overlay/position/viewport-ruler';
 
 
 @Directive({
@@ -128,7 +128,7 @@ export class MdRipple implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit() {
-    // If no trigger element was explicity set, use the host element
+    // If no trigger element was explicitly set, use the host element
     if (!this.trigger) {
       this._rippleRenderer.setTriggerElementToHost();
     }
@@ -238,12 +238,14 @@ export class MdRipple implements OnInit, OnDestroy, OnChanges {
   imports: [DefaultStyleCompatibilityModeModule],
   exports: [MdRipple, DefaultStyleCompatibilityModeModule],
   declarations: [MdRipple],
+  providers: [VIEWPORT_RULER_PROVIDER],
 })
 export class MdRippleModule {
+  /** @deprecated */
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdRippleModule,
-      providers: [ViewportRuler]
+      providers: []
     };
   }
 }

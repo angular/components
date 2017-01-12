@@ -68,44 +68,65 @@ export class MdHint {
 
 /** The input directive, used to mark the input that `MdInputContainer` is wrapping. */
 @Directive({
-  selector: 'input[md-input], textarea[md-input], input[mat-input], textarea[mat-input]',
+  // TODO: remove the md-input selector after next version
+  selector: `
+    input[mdInput], textarea[mdInput], input[matInput], textarea[matInput],
+    input[md-input], textarea[md-input], input[mat-input], textarea[mat-input]
+  `,
   host: {
     'class': 'md-input-element',
+    // Native input properties that are overwritten by Angular inputs need to be synced with
+    // the native input element. Otherwise property bindings for those don't work.
     '[id]': 'id',
+    '[placeholder]': 'placeholder',
+    '[disabled]': 'disabled',
+    '[required]': 'required',
     '(blur)': '_onBlur()',
     '(focus)': '_onFocus()',
-    '(input)': '_onInput()',
+    '(input)': '_onInput()'
   }
 })
-export class MdInputDirective implements AfterContentInit {
+export class MdInputDirective {
+
+  /** Variables used as cache for getters and setters. */
+  private _type = 'text';
+  private _placeholder: string = '';
+  private _disabled = false;
+  private _required = false;
+  private _id: string;
+  private _cachedUid: string;
+
+  /** Whether the element is focused or not. */
+  focused = false;
+
   /** Whether the element is disabled. */
   @Input()
-  get disabled() { return this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
-  private _disabled = false;
+  get disabled() {
+    return this._ngControl ? this._ngControl.disabled : this._disabled;
+  }
+
+  set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
+  }
 
   /** Unique id of the element. */
   @Input()
   get id() { return this._id; };
-  set id(value: string) { this._id = value || this._uid; }
-  private _id: string;
+  set id(value: string) {this._id = value || this._uid; }
 
   /** Placeholder attribute of the element. */
   @Input()
   get placeholder() { return this._placeholder; }
   set placeholder(value: string) {
-    if (this._placeholder != value) {
+    if (this._placeholder !== value) {
       this._placeholder = value;
       this._placeholderChange.emit(this._placeholder);
     }
   }
-  private _placeholder = '';
-
   /** Whether the element is required. */
   @Input()
   get required() { return this._required; }
   set required(value: any) { this._required = coerceBooleanProperty(value); }
-  private _required = false;
 
   /** Input type of the element. */
   @Input()
@@ -113,11 +134,18 @@ export class MdInputDirective implements AfterContentInit {
   set type(value: string) {
     this._type = value || 'text';
     this._validateType();
-  }
-  private _type = 'text';
 
-  /** The element's value. */
-  value: any;
+    // When using Angular inputs, developers are no longer able to set the properties on the native
+    // input element. To ensure that bindings for `type` work, we need to sync the setter
+    // with the native property. Textarea elements don't support the type property or attribute.
+    if (!this._isTextarea() && getSupportedInputTypes().has(this._type)) {
+      this._renderer.setElementProperty(this._elementRef.nativeElement, 'type', this._type);
+    }
+  }
+
+  /** The input element's value. */
+  get value() { return this._elementRef.nativeElement.value; }
+  set value(value: string) { this._elementRef.nativeElement.value = value; }
 
   /**
    * Emits an event when the placeholder changes so that the `md-input-container` can re-validate.
@@ -126,10 +154,7 @@ export class MdInputDirective implements AfterContentInit {
 
   get empty() { return (this.value == null || this.value === '') && !this._isNeverEmpty(); }
 
-  focused = false;
-
   private get _uid() { return this._cachedUid = this._cachedUid || `md-input-${nextUniqueId++}`; }
-  private _cachedUid: string;
 
   private _neverEmptyInputTypes = [
     'date',
@@ -143,18 +168,9 @@ export class MdInputDirective implements AfterContentInit {
   constructor(private _elementRef: ElementRef,
               private _renderer: Renderer,
               @Optional() public _ngControl: NgControl) {
+
     // Force setter to be called in case id was not specified.
     this.id = this.id;
-
-    if (this._ngControl && this._ngControl.valueChanges) {
-      this._ngControl.valueChanges.subscribe((value) => {
-        this.value = value;
-      });
-    }
-  }
-
-  ngAfterContentInit() {
-    this.value = this._elementRef.nativeElement.value;
   }
 
   /** Focuses the input element. */
@@ -164,16 +180,30 @@ export class MdInputDirective implements AfterContentInit {
 
   _onBlur() { this.focused = false; }
 
-  _onInput() { this.value = this._elementRef.nativeElement.value; }
+  _onInput() {
+    // This is a noop function and is used to let Angular know whenever the value changes.
+    // Angular will run a new change detection each time the `input` event has been dispatched.
+    // It's necessary that Angular recognizes the value change, because when floatingLabel
+    // is set to false and Angular forms aren't used, the placeholder won't recognize the
+    // value changes and will not disappear.
+    // Listening to the input event wouldn't be necessary when the input is using the
+    // FormsModule or ReactiveFormsModule, because Angular forms also listens to input events.
+  }
 
   /** Make sure the input is a supported type. */
   private _validateType() {
-    if (MD_INPUT_INVALID_TYPES.indexOf(this._type) != -1) {
+    if (MD_INPUT_INVALID_TYPES.indexOf(this._type) !== -1) {
       throw new MdInputContainerUnsupportedTypeError(this._type);
     }
   }
 
-  private _isNeverEmpty() { return this._neverEmptyInputTypes.indexOf(this._type) != -1; }
+  private _isNeverEmpty() { return this._neverEmptyInputTypes.indexOf(this._type) !== -1; }
+
+  /** Determines if the component host is a textarea. If not recognizable it returns false. */
+  private _isTextarea() {
+    let nativeElement = this._elementRef.nativeElement;
+    return nativeElement ? nativeElement.nodeName.toLowerCase() === 'textarea' : false;
+  }
 }
 
 
@@ -189,13 +219,13 @@ export class MdInputDirective implements AfterContentInit {
   host: {
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
-    '[class.ng-untouched]': '_isUntouched()',
-    '[class.ng-touched]': '_isTouched()',
-    '[class.ng-pristine]': '_isPristine()',
-    '[class.ng-dirty]': '_isDirty()',
-    '[class.ng-valid]': '_isValid()',
-    '[class.ng-invalid]': '_isInvalid()',
-    '[class.ng-pending]': '_isPending()',
+    '[class.ng-untouched]': '_shouldForward("untouched")',
+    '[class.ng-touched]': '_shouldForward("touched")',
+    '[class.ng-pristine]': '_shouldForward("pristine")',
+    '[class.ng-dirty]': '_shouldForward("dirty")',
+    '[class.ng-valid]': '_shouldForward("valid")',
+    '[class.ng-invalid]': '_shouldForward("invalid")',
+    '[class.ng-pending]': '_shouldForward("pending")',
     '(click)': '_focusInput()',
   },
   encapsulation: ViewEncapsulation.None,
@@ -237,34 +267,20 @@ export class MdInputContainer implements AfterContentInit {
     this._validatePlaceholders();
 
     // Re-validate when things change.
-    this._hintChildren.changes.subscribe(() => {
-      this._validateHints();
-    });
-    this._mdInputChild._placeholderChange.subscribe(() => {
-      this._validatePlaceholders();
-    });
+    this._hintChildren.changes.subscribe(() => this._validateHints());
+    this._mdInputChild._placeholderChange.subscribe(() => this._validatePlaceholders());
   }
 
-  _isUntouched() { return this._hasNgControl() && this._mdInputChild._ngControl.untouched; }
-
-  _isTouched() { return this._hasNgControl() && this._mdInputChild._ngControl.touched; }
-
-  _isPristine() { return this._hasNgControl() && this._mdInputChild._ngControl.pristine; }
-
-  _isDirty() { return this._hasNgControl() && this._mdInputChild._ngControl.dirty; }
-
-  _isValid() { return this._hasNgControl() && this._mdInputChild._ngControl.valid; }
-
-  _isInvalid() { return this._hasNgControl() && this._mdInputChild._ngControl.invalid; }
-
-  _isPending() { return this._hasNgControl() && this._mdInputChild._ngControl.pending; }
+  /** Determines whether a class from the NgControl should be forwarded to the host element. */
+  _shouldForward(prop: string): boolean {
+    let control = this._mdInputChild ? this._mdInputChild._ngControl : null;
+    return control && (control as any)[prop];
+  }
 
   /** Whether the input has a placeholder. */
   _hasPlaceholder() { return !!(this._mdInputChild.placeholder || this._placeholderChild); }
 
   _focusInput() { this._mdInputChild.focus(); }
-
-  private _hasNgControl() { return !!(this._mdInputChild && this._mdInputChild._ngControl); }
 
   /**
    * Ensure that there is only one placeholder (either `input` attribute or child element with the
