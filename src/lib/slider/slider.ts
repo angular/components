@@ -84,6 +84,7 @@ export class MdSliderChange {
     '[class.md-slider-sliding]': '_isSliding',
     '[class.md-slider-thumb-label-showing]': 'thumbLabel',
     '[class.md-slider-vertical]': 'vertical',
+    '[class.md-slider-min-value]': 'value === min',
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -245,11 +246,24 @@ export class MdSlider implements ControlValueAccessor {
     return (this.direction == 'rtl' && !this.vertical) ? !this.invertAxis : this.invertAxis;
   }
 
+  get thumbGap() {
+    return this.disabled ? 7 : 0;
+  }
+
+  get trackBackgroundStyles(): { [key: string]: string } {
+    let axis = this.vertical ? 'Y' : 'X';
+    let sign = this.invertMouseCoords ? '-' : '';
+    return {
+      'transform': `translate${axis}(${sign}${this.thumbGap}px) scale${axis}(${1 - this.percent})`
+    }
+  }
+
   /** CSS styles for the track fill element. */
   get trackFillStyles(): { [key: string]: string } {
     let axis = this.vertical ? 'Y' : 'X';
+    let sign = this.invertMouseCoords ? '' : '-';
     return {
-      'transform': `scale${axis}(${this.percent})`
+      'transform': `translate${axis}(${sign}${this.thumbGap}px) scale${axis}(${this.percent})`
     };
   }
 
@@ -561,8 +575,8 @@ export class SliderRenderer {
    * take up.
    */
   getSliderDimensions() {
-    let trackElement = this._sliderElement.querySelector('.md-slider-track');
-    return trackElement.getBoundingClientRect();
+    let wrapperElement = this._sliderElement.querySelector('.md-slider-wrapper');
+    return wrapperElement.getBoundingClientRect();
   }
 
   /**
