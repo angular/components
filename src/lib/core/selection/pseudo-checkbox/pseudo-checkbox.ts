@@ -18,7 +18,7 @@ export type MdPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
   encapsulation: ViewEncapsulation.None,
   selector: 'md-pseudo-checkbox',
   styleUrls: ['pseudo-checkbox.css'],
-  templateUrl: 'pseudo-checkbox.html',
+  template: '',
   host: {
     '[class.md-pseudo-checkbox-indeterminate]': 'state === "indeterminate"',
     '[class.md-pseudo-checkbox-checked]': 'state === "checked"',
