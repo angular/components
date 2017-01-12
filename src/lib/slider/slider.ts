@@ -246,10 +246,15 @@ export class MdSlider implements ControlValueAccessor {
     return (this.direction == 'rtl' && !this.vertical) ? !this.invertAxis : this.invertAxis;
   }
 
+  /**
+   * The amount of space to leave between the slider thumb and the track fill & track background
+   * elements.
+   */
   get thumbGap() {
     return this.disabled ? 7 : 0;
   }
 
+  /** CSS styles for the track background element. */
   get trackBackgroundStyles(): { [key: string]: string } {
     let axis = this.vertical ? 'Y' : 'X';
     let sign = this.invertMouseCoords ? '-' : '';
