@@ -38,6 +38,9 @@ import {
  */
 const MIN_AUTO_TICK_SEPARATION = 30;
 
+/** The thumb gap size for a disabled slider. */
+const DISABLED_THUMB_GAP = 7;
+
 /**
  * Provider Expression that allows md-slider to register as a ControlValueAccessor.
  * This allows it to support [(ngModel)] and [formControl].
@@ -250,8 +253,8 @@ export class MdSlider implements ControlValueAccessor {
    * The amount of space to leave between the slider thumb and the track fill & track background
    * elements.
    */
-  get thumbGap() {
-    return this.disabled ? 7 : 0;
+  private get _thumbGap() {
+    return this.disabled ? DISABLED_THUMB_GAP : 0;
   }
 
   /** CSS styles for the track background element. */
@@ -259,7 +262,7 @@ export class MdSlider implements ControlValueAccessor {
     let axis = this.vertical ? 'Y' : 'X';
     let sign = this.invertMouseCoords ? '-' : '';
     return {
-      'transform': `translate${axis}(${sign}${this.thumbGap}px) scale${axis}(${1 - this.percent})`
+      'transform': `translate${axis}(${sign}${this._thumbGap}px) scale${axis}(${1 - this.percent})`
     };
   }
 
@@ -268,7 +271,7 @@ export class MdSlider implements ControlValueAccessor {
     let axis = this.vertical ? 'Y' : 'X';
     let sign = this.invertMouseCoords ? '' : '-';
     return {
-      'transform': `translate${axis}(${sign}${this.thumbGap}px) scale${axis}(${this.percent})`
+      'transform': `translate${axis}(${sign}${this._thumbGap}px) scale${axis}(${this.percent})`
     };
   }
 
