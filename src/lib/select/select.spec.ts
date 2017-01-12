@@ -196,7 +196,7 @@ describe('MdSelect', () => {
       fixture.componentInstance.foods = [];
       fixture.detectChanges();
 
-      expect(select.selected).toBe(null, 'Expected nothing to be selected.');
+      expect(select.selected).toBe(null, 'Expected selection to be removed when option no longer exists.');
     });
 
     it('should display the selected option in the trigger', () => {
