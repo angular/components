@@ -223,7 +223,7 @@ describe('MdSlider', () => {
 
     it ('should leave thumb gap', () => {
       expect(trackFillElement.style.transform).toContain('translateX(-7px)');
-    })
+    });
   });
 
   describe('slider with set min and max', () => {
