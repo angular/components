@@ -441,17 +441,9 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   /** Drops current option subscriptions and IDs and resets from scratch. */
   private _resetOptions(): void {
-    this._checkSelected();
     this._dropSubscriptions();
     this._listenToOptions();
     this._setOptionIds();
-  }
-
-  /** Checks if the current selected value is still a valid option and deselects if not. */
-  private _checkSelected() {
-    if (this.selected && !this.options.some(option => option === this.selected)) {
-      this._selected = null;
-    }
   }
 
   /** Listens to selection events on each option. */

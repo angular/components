@@ -191,12 +191,12 @@ describe('MdSelect', () => {
       firstOption.click();
       fixture.detectChanges();
 
-      expect(select.selected).toBe(select.options.first);
+      expect(select.selected).toBe(select.options.first, 'Expected first option to be selected.');
 
       fixture.componentInstance.foods = [];
       fixture.detectChanges();
 
-      expect(select.selected).toBe(null);
+      expect(select.selected).toBe(null, 'Expected nothing to be selected.');
     });
 
     it('should display the selected option in the trigger', () => {
