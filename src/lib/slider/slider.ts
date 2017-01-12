@@ -253,7 +253,7 @@ export class MdSlider implements ControlValueAccessor {
    * The amount of space to leave between the slider thumb and the track fill & track background
    * elements.
    */
-  private get _thumbGap() {
+  get thumbGap() {
     return this.disabled ? DISABLED_THUMB_GAP : 0;
   }
 
@@ -262,8 +262,8 @@ export class MdSlider implements ControlValueAccessor {
     let axis = this.vertical ? 'Y' : 'X';
     let sign = this.invertMouseCoords ? '-' : '';
     return {
-      'transform': `translate${axis}(${sign}${this._thumbGap}px) scale${axis}(${1 - this.percent})`
-    };
+      'transform': `translate${axis}(${sign}${this.thumbGap}px) scale${axis}(${1 - this.percent})`
+    }
   }
 
   /** CSS styles for the track fill element. */
@@ -271,7 +271,7 @@ export class MdSlider implements ControlValueAccessor {
     let axis = this.vertical ? 'Y' : 'X';
     let sign = this.invertMouseCoords ? '' : '-';
     return {
-      'transform': `translate${axis}(${sign}${this._thumbGap}px) scale${axis}(${this.percent})`
+      'transform': `translate${axis}(${sign}${this.thumbGap}px) scale${axis}(${this.percent})`
     };
   }
 
