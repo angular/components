@@ -24,7 +24,7 @@ md-pseudo-checkbox {
   &::after {
     position: absolute;
     opacity: 0;
-    content: "";
+    content: '';
     border-bottom: $md-checkbox-border-width solid currentColor;
     transition: opacity $md-checkbox-transition-duration $md-linear-out-slow-in-timing-function;
   }
