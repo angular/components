@@ -194,7 +194,7 @@ describe('MdSidenav', () => {
       }).not.toThrow();
     }));
 
-    it('should emit the backdrop-clicked event when the backdrop is clicked', fakeAsync(() => {
+    it('should emit the backdropClick event when the backdrop is clicked', fakeAsync(() => {
       let fixture = TestBed.createComponent(BasicTestApp);
 
       let testComponent: BasicTestApp = fixture.debugElement.componentInstance;
@@ -264,7 +264,7 @@ describe('MdSidenav', () => {
       expect(testComponent.closeCount).toBe(1);
     }));
 
-    it('should not close when pressing escape if disableClose is set', fakeAsync(() => {
+    it('should not close by pressing escape when disableClose is set', fakeAsync(() => {
       let fixture = TestBed.createComponent(BasicTestApp);
       let testComponent = fixture.debugElement.componentInstance;
       let sidenav = fixture.debugElement.query(By.directive(MdSidenav)).componentInstance;
@@ -280,6 +280,30 @@ describe('MdSidenav', () => {
         keyCode: ESCAPE,
         stopPropagation: () => {}
       });
+
+      fixture.detectChanges();
+      endSidenavTransition(fixture);
+      tick();
+
+      expect(testComponent.closeCount).toBe(0);
+    }));
+
+    it('should not close by clicking on the backdrop when disableClose is set', fakeAsync(() => {
+      let fixture = TestBed.createComponent(BasicTestApp);
+      let testComponent = fixture.debugElement.componentInstance;
+      let sidenav = fixture.debugElement.query(By.directive(MdSidenav)).componentInstance;
+
+      sidenav.disableClose = true;
+      sidenav.open();
+
+      fixture.detectChanges();
+      endSidenavTransition(fixture);
+      tick();
+
+      let backdropEl = fixture.debugElement.query(By.css('.md-sidenav-backdrop')).nativeElement;
+      backdropEl.click();
+      fixture.detectChanges();
+      tick();
 
       fixture.detectChanges();
       endSidenavTransition(fixture);
@@ -438,7 +462,7 @@ class SidenavContainerTwoSidenavTestApp { }
 /** Test component that contains an MdSidenavContainer and one MdSidenav. */
 @Component({
   template: `
-    <md-sidenav-container (backdrop-clicked)="backdropClicked()">
+    <md-sidenav-container (backdropClick)="backdropClicked()">
       <md-sidenav #sidenav align="start"
                   (open-start)="openStart()"
                   (open)="open()"

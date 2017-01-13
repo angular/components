@@ -334,7 +334,7 @@ export class MdSidenavContainer implements AfterContentInit {
   get end() { return this._end; }
 
   /** Event emitted when the sidenav backdrop is clicked. */
-  @Output('backdrop-clicked') onBackdropClicked = new EventEmitter<void>();
+  @Output() backdropClick = new EventEmitter<void>();
 
   /** The sidenav at the start/end alignment, independent of direction. */
   private _start: MdSidenav;
@@ -441,17 +441,15 @@ export class MdSidenavContainer implements AfterContentInit {
   }
 
   _onBackdropClicked() {
-    this.onBackdropClicked.emit();
+    this.backdropClick.emit();
     this._closeModalSidenav();
   }
 
   _closeModalSidenav() {
-    if (this._start != null && this._start.mode != 'side') {
-      this._start.close();
-    }
-    if (this._end != null && this._end.mode != 'side') {
-      this._end.close();
-    }
+    // Close all open sidenav's where closing is not disabled and the mode is not `side`.
+    [this._start, this._end]
+      .filter(sidenav => sidenav && !sidenav.disableClose && sidenav.mode !== 'side')
+      .forEach(sidenav => sidenav.close());
   }
 
   _isShowingBackdrop(): boolean {
