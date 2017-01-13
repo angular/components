@@ -93,8 +93,8 @@ export class MdSliderChange {
     '[class.md-slider-sliding]': '_isSliding',
     '[class.md-slider-thumb-label-showing]': 'thumbLabel',
     '[class.md-slider-vertical]': 'vertical',
-    '[class.md-slider-min-value]': '_isAtMinValue',
-    '[class.md-slider-hide-last-tick]': '_isAtMinValue && _thumbGap && invertAxis',
+    '[class.md-slider-min-value]': '_isMinValue',
+    '[class.md-slider-hide-last-tick]': '_isMinValue && _thumbGap && invertAxis',
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -257,7 +257,7 @@ export class MdSlider implements ControlValueAccessor {
   }
 
   /** Whether the slider is at its minimum value. */
-  get _isAtMinValue() {
+  get _isMinValue() {
     return this.percent === 0;
   }
 
@@ -269,12 +269,8 @@ export class MdSlider implements ControlValueAccessor {
     if (this.disabled) {
       return DISABLED_THUMB_GAP;
     }
-    if (this._isAtMinValue && !this.thumbLabel) {
-      if (this._isActive) {
-        return MIN_VALUE_ACTIVE_THUMB_GAP;
-      } else {
-        return MIN_VALUE_NONACTIVE_THUMB_GAP;
-      }
+    if (this._isMinValue && !this.thumbLabel) {
+      return this._isActive ? MIN_VALUE_ACTIVE_THUMB_GAP : MIN_VALUE_NONACTIVE_THUMB_GAP;
     }
     return 0;
   }
@@ -325,7 +321,7 @@ export class MdSlider implements ControlValueAccessor {
       'transform': `translateZ(0) translate${axis}(${sign}${tickSize / 2}%)${rotate}`
     };
 
-    if (this._isAtMinValue && this._thumbGap) {
+    if (this._isMinValue && this._thumbGap) {
       let side = this.vertical ?
           (this.invertAxis ? 'Bottom' : 'Top') :
           (this.invertAxis ? 'Right' : 'Left');
