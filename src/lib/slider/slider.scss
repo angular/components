@@ -268,7 +268,7 @@ md-slider {
   .md-slider-thumb-label {
     right: -$md-slider-thumb-label-size / 2;
     top: -($md-slider-thumb-label-size + $md-slider-thumb-arrow-gap);
-    transform: translateY($md-slider-thumb-label-size / 2 + $md-slider-thumb-arrow-gap) scale(.01)
+    transform: translateY($md-slider-thumb-label-size / 2 + $md-slider-thumb-arrow-gap) scale(0.01)
         rotate(45deg);
   }
 
@@ -342,7 +342,7 @@ md-slider {
   .md-slider-thumb-label {
     bottom: -$md-slider-thumb-label-size / 2;
     left: -($md-slider-thumb-label-size + $md-slider-thumb-arrow-gap);
-    transform: translateX($md-slider-thumb-label-size / 2 + $md-slider-thumb-arrow-gap) scale(.01)
+    transform: translateX($md-slider-thumb-label-size / 2 + $md-slider-thumb-arrow-gap) scale(0.01)
         rotate(-45deg);
   }
 
