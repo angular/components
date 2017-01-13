@@ -16,7 +16,14 @@ describe('MdSelect', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdSelectModule.forRoot(), ReactiveFormsModule, FormsModule],
-      declarations: [BasicSelect, NgModelSelect, ManySelects, NgIfSelect, SelectInitWithoutOptions, SelectWithChangeEvent],
+      declarations: [
+        BasicSelect,
+        NgModelSelect,
+        ManySelects,
+        NgIfSelect,
+        SelectInitWithoutOptions,
+        SelectWithChangeEvent
+      ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div') as HTMLElement;
@@ -1320,7 +1327,7 @@ class SelectWithChangeEvent {
     'pasta-6',
     'sushi-7'
   ];
-  
+
   changeListener = jasmine.createSpy('MdSelect change listener');
 }
 
