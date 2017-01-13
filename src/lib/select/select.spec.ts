@@ -1,4 +1,4 @@
-import {TestBed, async, ComponentFixture} from '@angular/core/testing';
+import {TestBed, async, ComponentFixture, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {MdSelectModule} from './index';
@@ -16,7 +16,7 @@ describe('MdSelect', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdSelectModule.forRoot(), ReactiveFormsModule, FormsModule],
-      declarations: [BasicSelect, NgModelSelect, ManySelects, NgIfSelect],
+      declarations: [BasicSelect, NgModelSelect, ManySelects, NgIfSelect, SelectWithChangeEvent],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div') as HTMLElement;
@@ -539,6 +539,20 @@ describe('MdSelect', () => {
         expect(fixture.componentInstance.select._placeholderState).toEqual('floating-rtl');
       });
 
+
+      it('should add a class to the panel when the menu is done animating', fakeAsync(() => {
+        trigger.click();
+        fixture.detectChanges();
+
+        const panel = overlayContainerElement.querySelector('.md-select-panel');
+
+        expect(panel.classList).not.toContain('md-select-panel-done-animating');
+
+        tick(250);
+        fixture.detectChanges();
+
+        expect(panel.classList).toContain('md-select-panel-done-animating');
+      }));
   });
 
   describe('positioning', () => {
@@ -1141,6 +1155,38 @@ describe('MdSelect', () => {
 
   });
 
+  describe('change event', () => {
+    let fixture: ComponentFixture<SelectWithChangeEvent>;
+    let trigger: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SelectWithChangeEvent);
+      fixture.detectChanges();
+
+      trigger = fixture.debugElement.query(By.css('.md-select-trigger')).nativeElement;
+    });
+
+    it('should emit an event when the selected option has changed', () => {
+      trigger.click();
+      fixture.detectChanges();
+
+      (overlayContainerElement.querySelector('md-option') as HTMLElement).click();
+
+      expect(fixture.componentInstance.changeListener).toHaveBeenCalled();
+    });
+
+    it('should not emit multiple change events for the same option', () => {
+      trigger.click();
+      fixture.detectChanges();
+
+      let option = overlayContainerElement.querySelector('md-option') as HTMLElement;
+
+      option.click();
+      option.click();
+
+      expect(fixture.componentInstance.changeListener).toHaveBeenCalledTimes(1);
+    });
+  });
 });
 
 @Component({
@@ -1235,7 +1281,28 @@ class NgIfSelect {
   @ViewChild(MdSelect) select: MdSelect;
 }
 
+@Component({
+  selector: 'select-with-change-event',
+  template: `
+    <md-select (change)="changeListener($event)">
+      <md-option *ngFor="let food of foods" [value]="food">{{ food }}</md-option>
+    </md-select>
+  `
+})
+class SelectWithChangeEvent {
+  foods: string[] = [
+    'steak-0',
+    'pizza-1',
+    'tacos-2',
+    'sandwich-3',
+    'chips-4',
+    'eggs-5',
+    'pasta-6',
+    'sushi-7'
+  ];
 
+  changeListener = jasmine.createSpy('MdSelect change listener');
+}
 
 /**
  * TODO: Move this to core testing utility until Angular has event faking
