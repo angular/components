@@ -178,7 +178,7 @@ describe('MdSlider', () => {
 
       // Some browsers use '0' and some use '0px', so leave off the closing paren.
       expect(trackFillElement.style.transform).toContain('translateX(0');
-    })
+    });
   });
 
   describe('disabled slider', () => {
