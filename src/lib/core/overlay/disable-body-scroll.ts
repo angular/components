@@ -17,7 +17,7 @@ export class DisableBodyScroll {
     return this._isActive;
   }
 
-  constructor(private _viewportRuler: ViewportRuler) {}
+  constructor(private _viewportRuler: ViewportRuler) { }
 
   /**
    * Disables scrolling if it hasn't been disabled already and if the body is scrollable.

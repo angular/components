@@ -13,7 +13,8 @@ describe('DisableBodyScroll', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule.forRoot()]
+      imports: [OverlayModule.forRoot()],
+      providers: [DisableBodyScroll]
     });
   }));
 
