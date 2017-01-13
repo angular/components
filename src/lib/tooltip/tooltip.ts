@@ -15,6 +15,7 @@ import {
   NgZone,
   Optional,
   OnDestroy,
+  OnInit,
   ChangeDetectorRef
 } from '@angular/core';
 import {
@@ -32,6 +33,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Dir} from '../core/rtl/dir';
 import 'rxjs/add/operator/first';
+import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
@@ -54,7 +56,7 @@ export const TOUCHEND_HIDE_DELAY  = 1500;
   },
   exportAs: 'mdTooltip',
 })
-export class MdTooltip implements OnDestroy {
+export class MdTooltip implements OnInit, OnDestroy {
   _overlayRef: OverlayRef;
   _tooltipInstance: TooltipComponent;
 
@@ -123,10 +125,25 @@ export class MdTooltip implements OnDestroy {
   set _matShowDelay(v) { this.showDelay = v; }
 
   constructor(private _overlay: Overlay,
+              private _scrollDispatcher: ScrollDispatcher,
               private _elementRef: ElementRef,
               private _viewContainerRef: ViewContainerRef,
               private _ngZone: NgZone,
               @Optional() private _dir: Dir) { }
+
+  ngOnInit() {
+    // When a scroll on the page occurs, update the position in case this tooltip needs
+    // to be repositioned.
+    this._scrollDispatcher.scrolled().subscribe(() => {
+      if (this._scrollDispatcher.events > 1) {
+        console.log(`Saved ${this._scrollDispatcher.events - 1} ${this._scrollDispatcher.events > 1 ? 'events' : 'event'}`);
+      }
+      this._scrollDispatcher.events = 0;
+      if (this._overlayRef) {
+        this._overlayRef.updatePosition();
+      }
+    });
+  }
 
   /**
    * Dispose the tooltip when destroyed.
@@ -185,7 +202,17 @@ export class MdTooltip implements OnDestroy {
   private _createOverlay(): void {
     let origin = this._getOrigin();
     let position = this._getOverlayPosition();
+
+    // Create connected position strategy that listens for scroll events to reposition.
+    // After position changes occur and the overlay is clipped by a parent scrollable then
+    // close the tooltip.
     let strategy = this._overlay.position().connectedTo(this._elementRef, origin, position);
+    strategy.withScrollableContainers(this._scrollDispatcher.getScrollContainers(this._elementRef));
+    strategy.onPositionChange.subscribe(change => {
+      if (change.scrollableViewProperties.isOverlayClipped) {
+        this.hide(0);
+      }
+    });
     let config = new OverlayState();
     config.positionStrategy = strategy;
 
@@ -331,7 +358,7 @@ export class TooltipComponent {
       // trigger interaction and close the tooltip right after it was displayed.
       this._closeOnInteraction = false;
 
-      // Mark for check so if any parent component has set the 
+      // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways
       this._changeDetectorRef.markForCheck();
       setTimeout(() => { this._closeOnInteraction = true; }, 0);
@@ -352,7 +379,7 @@ export class TooltipComponent {
       this._visibility = 'hidden';
       this._closeOnInteraction = false;
 
-      // Mark for check so if any parent component has set the 
+      // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways
       this._changeDetectorRef.markForCheck();
     }, delay);

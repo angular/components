@@ -74,6 +74,7 @@ task(':build:components:rollup', () => {
     'rxjs/Subject': 'Rx',
     'rxjs/add/observable/fromEvent': 'Rx.Observable',
     'rxjs/add/observable/forkJoin': 'Rx.Observable',
+    'rxjs/add/observable/auditTime': 'Rx.Observable',
     'rxjs/add/observable/of': 'Rx.Observable',
     'rxjs/add/observable/merge': 'Rx.Observable',
     'rxjs/add/observable/throw': 'Rx.Observable',

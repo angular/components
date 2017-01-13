@@ -4,7 +4,11 @@ import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/auditTime';
 
+
+/** Time in ms to throttle the scrolling events by default. */
+export const DEFAULT_AUDIT_TIME = 20;
 
 /**
  * Service contained all registered Scrollable references and emits an event when any one of the
@@ -12,6 +16,8 @@ import 'rxjs/add/observable/fromEvent';
  */
 @Injectable()
 export class ScrollDispatcher {
+  events = 0;
+
   /** Subject for notifying that a registered scrollable reference element has been scrolled. */
   _scrolled: Subject<void> = new Subject<void>();
 
@@ -50,11 +56,11 @@ export class ScrollDispatcher {
 
   /**
    * Returns an observable that emits an event whenever any of the registered Scrollable
-   * references (or window, document, or body) fire a scrolled event.
+   * references (or window, document, or body) fire a scrolled event. Can provide a time in ms
+   * to override the default throttling time.
    */
-  scrolled(): Observable<void> {
-    // TODO: Add an event limiter that includes throttle with the leading and trailing events.
-    return this._scrolled.asObservable();
+  scrolled(auditTimeInMs: number = DEFAULT_AUDIT_TIME): Observable<void> {
+    return this._scrolled.asObservable().auditTime(auditTimeInMs);
   }
 
   /** Returns all registered Scrollables that contain the provided element. */
@@ -84,13 +90,14 @@ export class ScrollDispatcher {
 
   /** Sends a notification that a scroll event has been fired. */
   _notify() {
+    this.events++;
     this._scrolled.next();
   }
 }
 
 export function SCROLL_DISPATCHER_PROVIDER_FACTORY(parentDispatcher: ScrollDispatcher) {
   return parentDispatcher || new ScrollDispatcher();
-};
+}
 
 export const SCROLL_DISPATCHER_PROVIDER = {
   // If there is already a ScrollDispatcher available, use that. Otherwise, provide a new one.
