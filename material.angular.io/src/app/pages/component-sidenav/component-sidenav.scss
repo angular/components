@@ -7,6 +7,10 @@ app-component-sidenav {
 
 .docs-component-viewer-sidenav-container {
   width: 100%;
+  
+  .md-sidenav-content {
+    position: absolute;
+  }
 }
 
 .docs-component-viewer-sidenav {
