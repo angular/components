@@ -35,10 +35,10 @@ export class MdDialog {
   private _afterOpen = new Subject<MdDialogRef<any>>();
 
   /** Gets an observable that is notified when a dialog has been opened. */
-  afterOpen = this._afterOpen.asObservable();
+  afterOpen: Observable<MdDialogRef<any>> = this._afterOpen.asObservable();
 
   /** Gets an observable that is notified when all open dialog have finished closing. */
-  afterAllClosed = this._afterAllClosed.asObservable();
+  afterAllClosed: Observable<void> = this._afterAllClosed.asObservable();
 
   constructor(
       private _overlay: Overlay,
