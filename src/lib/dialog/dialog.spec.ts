@@ -137,7 +137,7 @@ describe('MdDialog', () => {
 
   it('should notify the observers if a dialog has been opened', () => {
     let ref: MdDialogRef<PizzaMsg>;
-    dialog.afterOpen().subscribe(r => {
+    dialog.afterOpen.subscribe(r => {
       ref = r;
     });
     expect(dialog.open(PizzaMsg, {
@@ -154,7 +154,7 @@ describe('MdDialog', () => {
     });
     let allClosed = false;
 
-    dialog.afterAllClosed().subscribe(_ => {
+    dialog.afterAllClosed.subscribe(() => {
       allClosed = true;
     });
 

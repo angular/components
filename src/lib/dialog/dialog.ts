@@ -29,10 +29,16 @@ export class MdDialog {
   }
 
   /** Subject for notifying the user that all open dialogs have finished closing. */
-  private _afterAllClosed: Subject<any> = new Subject();
+  private _afterAllClosed = new Subject<void>();
 
   /** Subject for notifying the user that a dialog has opened. */
-  private _afterOpen: Subject<any> = new Subject();
+  private _afterOpen = new Subject<MdDialogRef<any>>();
+
+  /** Gets an observable that is notified when a dialog has been opened. */
+  afterOpen = this._afterOpen.asObservable();
+
+  /** Gets an observable that is notified when all open dialog have finished closing. */
+  afterAllClosed = this._afterAllClosed.asObservable();
 
   constructor(
       private _overlay: Overlay,
@@ -72,20 +78,6 @@ export class MdDialog {
       // they'll be removed from the list instantaneously.
       this._openDialogs[i].close();
     }
-  }
-
-  /**
-   * Gets an observable that is notified when a dialog has been opened.
-   */
-  afterOpen(): Observable<any> {
-    return this._afterOpen.asObservable();
-  }
-
-  /**
-   * Gets an observable that is notified when all open dialog have finished closing.
-   */
-  afterAllClosed(): Observable<any> {
-    return this._afterAllClosed.asObservable();
   }
 
   /**
