@@ -180,7 +180,7 @@ describe('MdSelect', () => {
       expect(optionInstances[2].selected).toBe(false);
     });
 
-    it('should remove selection if option has been removed', () => {
+    it('should remove selection if option has been removed', async(() => {
       let select = fixture.componentInstance.select;
 
       trigger.click();
@@ -196,9 +196,11 @@ describe('MdSelect', () => {
       fixture.componentInstance.foods = [];
       fixture.detectChanges();
 
-      expect(select.selected)
-        .toBe(null, 'Expected selection to be removed when option no longer exists.');
-    });
+      fixture.whenStable().then(() => {
+        expect(select.selected)
+          .toBe(null, 'Expected selection to be removed when option no longer exists.');
+      });
+    }));
 
     it('should display the selected option in the trigger', () => {
       trigger.click();
