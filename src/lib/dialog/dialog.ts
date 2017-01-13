@@ -181,6 +181,8 @@ export class MdDialog {
 
     if (index > -1) {
       this._openDialogs.splice(index, 1);
+
+      // no open dialogs are left, call next on afterAllClosed Subject
       if (!this._openDialogs.length) {
         this._afterAllClosed.next();
       }
