@@ -36,7 +36,8 @@ export class MdDialog {
   }
   /** Subject for notifying the user that a dialog has opened. */
   get _afterAllClosed(): Subject<void> {
-    return this._parentDialog ? this._parentDialog._afterAllClosed : this._afterAllClosedAtThisLevel;
+    return this._parentDialog ?
+      this._parentDialog._afterAllClosed : this._afterAllClosedAtThisLevel;
   }
 
   /** Gets an observable that is notified when a dialog has been opened. */
