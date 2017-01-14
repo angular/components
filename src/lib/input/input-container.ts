@@ -20,7 +20,7 @@ import {
   MdInputContainerUnsupportedTypeError,
   MdInputContainerPlaceholderConflictError,
   MdInputContainerDuplicatedHintError,
-  MdInputContainerMissingMdInputError
+  MdInputContainerMissingMdInputError, MdInputContainerFloatingPlaceholderInvalidError
 } from './input-container-errors';
 
 
@@ -38,6 +38,9 @@ const MD_INPUT_INVALID_TYPES = [
   'submit'
 ];
 
+/** Valid options for the floatingPlaceholder input binding. */
+export type MD_INPUT_PLACEHOLDER_TYPES = 'always' | 'never' | 'auto';
+const MD_INPUT_PLACEHOLDER_VALUES = ['always', 'never', 'auto'];
 
 let nextUniqueId = 0;
 
@@ -254,11 +257,10 @@ export class MdInputContainer implements AfterContentInit {
   @Input() dividerColor: 'primary' | 'accent' | 'warn' = 'primary';
 
   /** Whether the floating label should always float or not. */
-  _shouldAlwaysFloat: boolean = false;
+  get _shouldAlwaysFloat() { return this._floatingPlaceholder === 'always'; };
 
   /** Whether the placeholder can float or not. */
-  _floatingPlaceholder: boolean = true;
-
+  get _canPlaceholderFloat() { return this._floatingPlaceholder !== 'never'; }
 
   /** Text for the input hint. */
   @Input()
@@ -273,15 +275,17 @@ export class MdInputContainer implements AfterContentInit {
   _hintLabelId: string = `md-input-hint-${nextUniqueId++}`;
 
   /**
-   * Whether the placeholder should always float or just show the placeholder when empty.
-   * If the value is set to null the placeholder will float if text is entered.
+   * Whether the placeholder should always float, never float or float as the user types.
    */
   @Input()
   get floatingPlaceholder() { return this._floatingPlaceholder; }
-  set floatingPlaceholder(value: boolean) {
-    this._floatingPlaceholder = value == null || coerceBooleanProperty(value);
-    this._shouldAlwaysFloat = coerceBooleanProperty(value);
+  set floatingPlaceholder(value: MD_INPUT_PLACEHOLDER_TYPES) {
+    if (value && MD_INPUT_PLACEHOLDER_VALUES.indexOf(value) === -1) {
+      throw new MdInputContainerFloatingPlaceholderInvalidError(value);
+    }
+    this._floatingPlaceholder = value || 'auto';
   }
+  private _floatingPlaceholder: MD_INPUT_PLACEHOLDER_TYPES = 'auto';
 
   @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
 
