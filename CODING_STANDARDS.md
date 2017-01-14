@@ -106,7 +106,7 @@ import 'rxjs/add/operator/map';
 someObservable.map(...).subscribe(...);
 
 // YES
-import {map} from 'rxks/operator/map';
+import {map} from 'rxjs/operator/map';
 map.call(someObservable, ...).subscribe(...);
 ```
 
