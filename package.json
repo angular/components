@@ -54,7 +54,7 @@
     "axe-webdriverjs": "^0.5.0",
     "conventional-changelog": "^1.1.0",
     "dgeni": "^0.4.2",
-    "dgeni-packages": "^0.16.4",
+    "dgeni-packages": "^0.16.5",
     "firebase-admin": "^4.0.4",
     "firebase-tools": "^3.2.1",
     "fs-extra": "^1.0.0",

@@ -118,93 +118,9 @@
     "@types/gulp" "*"
     "@types/node" "*"
 
-"@types/rx-core-binding@*":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/rx-core-binding/-/rx-core-binding-4.0.0.tgz#77c26d8f786140c6e10139bb19bf5363de67a398"
-  dependencies:
-    "@types/rx-core" "*"
-
-"@types/rx-core@*":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/rx-core/-/rx-core-4.0.0.tgz#82c2f9f3ff055e1d6664dc9845b6f3d5fd890cf8"
-
-"@types/rx-lite-aggregates@*":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/rx-lite-aggregates/-/rx-lite-aggregates-4.0.0.tgz#91f397b6463ab1eab69e5cd82e66b8683e158908"
-  dependencies:
-    "@types/rx-lite" "*"
-
-"@types/rx-lite-async@*":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/rx-lite-async/-/rx-lite-async-4.0.0.tgz#c20d2a6dfe57a240296febbcc152fd070f6e2ee7"
-  dependencies:
-    "@types/rx-lite" "*"
-
-"@types/rx-lite-backpressure@*":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/rx-lite-backpressure/-/rx-lite-backpressure-4.0.0.tgz#a9e6576bc63bfaa28fcbb6ce9f2079419cbc4d45"
-  dependencies:
-    "@types/rx-lite" "*"
-
-"@types/rx-lite-coincidence@*":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/rx-lite-coincidence/-/rx-lite-coincidence-4.0.0.tgz#b619f856ebc4596d72be570303ed9a66b72f9561"
-  dependencies:
-    "@types/rx-lite" "*"
-
-"@types/rx-lite-experimental@*":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/rx-lite-experimental/-/rx-lite-experimental-4.0.0.tgz#3391bfc6f0bd698e994c958022e1a2fe316c3fb9"
-  dependencies:
-    "@types/rx-lite" "*"
-
-"@types/rx-lite-joinpatterns@*":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/rx-lite-joinpatterns/-/rx-lite-joinpatterns-4.0.0.tgz#1532b9319055ec97038e7ba6b70c8e883c4bcf12"
-  dependencies:
-    "@types/rx-lite" "*"
-
-"@types/rx-lite-testing@*":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/rx-lite-testing/-/rx-lite-testing-4.0.0.tgz#c950d641dbfc4e06359de63440604a9d82e6e979"
-  dependencies:
-    "@types/rx-lite-virtualtime" "*"
-
-"@types/rx-lite-time@*":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/rx-lite-time/-/rx-lite-time-4.0.0.tgz#d835941f707e09e5e7f04d49614e6e1bcd040105"
-  dependencies:
-    "@types/rx-lite" "*"
-
-"@types/rx-lite-virtualtime@*":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/rx-lite-virtualtime/-/rx-lite-virtualtime-4.0.0.tgz#c7b62de0e59c1699b29a08e4effee8df05f544ac"
-  dependencies:
-    "@types/rx-lite" "*"
-
-"@types/rx-lite@*":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@types/rx-lite/-/rx-lite-4.0.1.tgz#f4772bcda865730647d134dc86b88dde4687b75b"
-  dependencies:
-    "@types/rx-core" "*"
-    "@types/rx-core-binding" "*"
-
-"@types/rx@^4.1.1":
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/@types/rx/-/rx-4.1.1.tgz#598fc94a56baed975f194574e0f572fd8e627a48"
-  dependencies:
-    "@types/rx-core" "*"
-    "@types/rx-core-binding" "*"
-    "@types/rx-lite" "*"
-    "@types/rx-lite-aggregates" "*"
-    "@types/rx-lite-async" "*"
-    "@types/rx-lite-backpressure" "*"
-    "@types/rx-lite-coincidence" "*"
-    "@types/rx-lite-experimental" "*"
-    "@types/rx-lite-joinpatterns" "*"
-    "@types/rx-lite-testing" "*"
-    "@types/rx-lite-time" "*"
-    "@types/rx-lite-virtualtime" "*"
+"@types/rx@2.5.33":
+  version "2.5.33"
+  resolved "https://registry.yarnpkg.com/@types/rx/-/rx-2.5.33.tgz#1867f4ac98e57428fe82b284d1a80c9c1f611bb7"
 
 "@types/selenium-webdriver@^2.53.35", "@types/selenium-webdriver@~2.53.39":
   version "2.53.39"
@@ -1639,9 +1555,9 @@ detective@^4.3.1:
     acorn "^3.1.0"
     defined "^1.0.0"
 
-dgeni-packages@^0.16.4:
-  version "0.16.4"
-  resolved "https://registry.yarnpkg.com/dgeni-packages/-/dgeni-packages-0.16.4.tgz#79b9e2664359880c8d33ef23d9937d9ce64e6b00"
+dgeni-packages@^0.16.5:
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/dgeni-packages/-/dgeni-packages-0.16.5.tgz#3f4d59b312dc11cf216933d0fc368a954ac7c268"
   dependencies:
     canonical-path "0.0.2"
     catharsis "^0.8.1"
