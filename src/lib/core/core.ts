@@ -2,11 +2,11 @@ import {NgModule, ModuleWithProviders} from '@angular/core';
 import {MdLineModule} from './line/line';
 import {RtlModule} from './rtl/dir';
 import {ObserveContentModule} from './observe-content/observe-content';
+import {MdOptionModule} from './option/option';
 import {MdRippleModule} from './ripple/ripple';
 import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/overlay-directives';
-import {A11yModule, A11Y_PROVIDERS} from './a11y/index';
-import {OVERLAY_PROVIDERS} from './overlay/overlay';
+import {A11yModule} from './a11y/index';
 
 
 // RTL
@@ -14,6 +14,8 @@ export {Dir, LayoutDirection, RtlModule} from './rtl/dir';
 
 // Mutation Observer
 export {ObserveContentModule, ObserveContent} from './observe-content/observe-content';
+
+export {MdOptionModule, MdOption} from './option/option';
 
 // Portals
 export {
@@ -42,6 +44,7 @@ export {Platform as MdPlatform} from './platform/platform';
 // Overlay
 export {Overlay, OVERLAY_PROVIDERS} from './overlay/overlay';
 export {OverlayContainer} from './overlay/overlay-container';
+export {FullscreenOverlayContainer} from './overlay/fullscreen-overlay-container';
 export {OverlayRef} from './overlay/overlay-ref';
 export {OverlayState} from './overlay/overlay-state';
 export {
@@ -67,7 +70,11 @@ export {
   AriaLivePoliteness,
   LiveAnnouncer,
   LIVE_ANNOUNCER_ELEMENT_TOKEN,
+  LIVE_ANNOUNCER_PROVIDER,
 } from './a11y/live-announcer';
+
+// Selection
+export * from './selection/selection';
 
 /** @deprecated */
 export {LiveAnnouncer as MdLiveAnnouncer} from './a11y/live-announcer';
@@ -80,9 +87,9 @@ export {A11yModule} from './a11y/index';
 
 export {
   UniqueSelectionDispatcher,
-  UniqueSelectionDispatcherListener
+  UniqueSelectionDispatcherListener,
+  UNIQUE_SELECTION_DISPATCHER_PROVIDER,
 } from './coordination/unique-selection-dispatcher';
-
 /** @deprecated */
 export {
   UniqueSelectionDispatcher as MdUniqueSelectionDispatcher
@@ -125,6 +132,7 @@ export {NoConflictStyleCompatibilityMode} from './compatibility/no-conflict-mode
     PortalModule,
     OverlayModule,
     A11yModule,
+    MdOptionModule
   ],
   exports: [
     MdLineModule,
@@ -134,13 +142,15 @@ export {NoConflictStyleCompatibilityMode} from './compatibility/no-conflict-mode
     PortalModule,
     OverlayModule,
     A11yModule,
+    MdOptionModule
   ],
 })
 export class MdCoreModule {
+  /** @deprecated */
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdCoreModule,
-      providers: [A11Y_PROVIDERS, OVERLAY_PROVIDERS],
+      providers: [],
     };
   }
 }

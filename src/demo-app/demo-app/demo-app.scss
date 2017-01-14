@@ -21,6 +21,7 @@ body {
 
   .demo-content {
     padding: 32px;
+    box-sizing: border-box;
   }
 
   md-toolbar {
@@ -38,4 +39,11 @@ body {
   h1 {
     font-size: 20px;
   }
+}
+
+// stretch to screen size in fullscreen mode
+.demo-content {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }

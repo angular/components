@@ -26,7 +26,7 @@ import {MdRippleModule} from '../core/ripple/ripple';
 import {ObserveContentModule} from '../core/observe-content/observe-content';
 import {MdTab} from './tab';
 import {MdTabBody} from './tab-body';
-import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+import {VIEWPORT_RULER_PROVIDER} from '../core/overlay/position/viewport-ruler';
 import {MdTabHeader} from './tab-header';
 
 
@@ -116,9 +116,11 @@ export class MdTabGroup {
    * a new selected tab should transition in (from the left or right).
    */
   ngAfterContentChecked(): void {
-    // Clamp the next selected index to the bounds of 0 and the tabs length.
+    // Clamp the next selected index to the bounds of 0 and the tabs length. Note the `|| 0`, which
+    // ensures that values like NaN can't get through and which would otherwise throw the
+    // component into an infinite loop (since Math.max(NaN, 0) === NaN).
     this._indexToSelect =
-        Math.min(this._tabs.length - 1, Math.max(this._indexToSelect, 0));
+        Math.min(this._tabs.length - 1, Math.max(this._indexToSelect || 0, 0));
 
     // If there is a change in selected index, emit a change event. Should not trigger if
     // the selected index has not yet been initialized.
@@ -202,12 +204,14 @@ export class MdTabGroup {
   exports: [MdTabGroup, MdTabLabel, MdTab, MdTabNavBar, MdTabLink, MdTabLinkRipple],
   declarations: [MdTabGroup, MdTabLabel, MdTab, MdInkBar, MdTabLabelWrapper,
     MdTabNavBar, MdTabLink, MdTabBody, MdTabLinkRipple, MdTabHeader],
+  providers: [VIEWPORT_RULER_PROVIDER],
 })
 export class MdTabsModule {
+  /** @deprecated */
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdTabsModule,
-      providers: [ViewportRuler]
+      providers: []
     };
   }
 }

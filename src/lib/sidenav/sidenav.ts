@@ -21,7 +21,6 @@ import {A11yModule} from '../core/a11y/index';
 import {FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {OverlayModule} from '../core/overlay/overlay-directives';
-import {InteractivityChecker} from '../core/a11y/interactivity-checker';
 
 
 /** Exception thrown when two MdSidenav are matching the same side. */
@@ -102,6 +101,12 @@ export class MdSidenav implements AfterContentInit {
 
   /** Mode of the sidenav; whether 'over' or 'side'. */
   @Input() mode: 'over' | 'push' | 'side' = 'over';
+
+  /** Whether the sidenav can be closed with the escape key or not. */
+  @Input()
+  get disableClose(): boolean { return this._disableClose; }
+  set disableClose(value: boolean) { this._disableClose = coerceBooleanProperty(value); }
+  private _disableClose: boolean = false;
 
   /** Whether the sidenav is opened. */
   _opened: boolean = false;
@@ -233,7 +238,7 @@ export class MdSidenav implements AfterContentInit {
    * @docs-private
    */
   handleKeydown(event: KeyboardEvent) {
-    if (event.keyCode === ESCAPE) {
+    if (event.keyCode === ESCAPE && !this.disableClose) {
       this.close();
       event.stopPropagation();
     }
@@ -304,7 +309,7 @@ export class MdSidenav implements AfterContentInit {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-sidenav-container, mat-sidenav-container, md-sidenav-layout, mat-sidenav-layout',
+  selector: 'md-sidenav-container, mat-sidenav-container',
   // Do not use ChangeDetectionStrategy.OnPush. It does not work for this component because
   // technically it is a sibling of MdSidenav (on the content tree) and isn't updated when MdSidenav
   // changes its state.
@@ -328,7 +333,7 @@ export class MdSidenavContainer implements AfterContentInit {
   get end() { return this._end; }
 
   /** Event emitted when the sidenav backdrop is clicked. */
-  @Output('backdrop-clicked') onBackdropClicked = new EventEmitter<void>();
+  @Output() backdropClick = new EventEmitter<void>();
 
   /** The sidenav at the start/end alignment, independent of direction. */
   private _start: MdSidenav;
@@ -435,17 +440,15 @@ export class MdSidenavContainer implements AfterContentInit {
   }
 
   _onBackdropClicked() {
-    this.onBackdropClicked.emit();
+    this.backdropClick.emit();
     this._closeModalSidenav();
   }
 
   _closeModalSidenav() {
-    if (this._start != null && this._start.mode != 'side') {
-      this._start.close();
-    }
-    if (this._end != null && this._end.mode != 'side') {
-      this._end.close();
-    }
+    // Close all open sidenav's where closing is not disabled and the mode is not `side`.
+    [this._start, this._end]
+      .filter(sidenav => sidenav && !sidenav.disableClose && sidenav.mode !== 'side')
+      .forEach(sidenav => sidenav.close());
   }
 
   _isShowingBackdrop(): boolean {
@@ -512,10 +515,11 @@ export class MdSidenavContainer implements AfterContentInit {
   declarations: [MdSidenavContainer, MdSidenav],
 })
 export class MdSidenavModule {
+  /** @deprecated */
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdSidenavModule,
-      providers: [InteractivityChecker]
+      providers: []
     };
   }
 }

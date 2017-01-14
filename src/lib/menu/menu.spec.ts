@@ -21,9 +21,10 @@ import {Dir, LayoutDirection} from '../core/rtl/dir';
 
 describe('MdMenu', () => {
   let overlayContainerElement: HTMLElement;
-  let dir: LayoutDirection = 'ltr';
+  let dir: LayoutDirection;
 
   beforeEach(async(() => {
+    dir = 'ltr';
     TestBed.configureTestingModule({
       imports: [MdMenuModule.forRoot()],
       declarations: [SimpleMenu, PositionedMenu, CustomMenuPanel, CustomMenu],
@@ -116,6 +117,9 @@ describe('MdMenu', () => {
       trigger.style.position = 'relative';
       trigger.style.top = '600px';
 
+      // Push trigger to the right, so it has space to open "before"
+      trigger.style.left = '100px';
+
       fixture.componentInstance.trigger.openMenu();
       fixture.detectChanges();
     });
@@ -144,7 +148,7 @@ describe('MdMenu', () => {
       // Push trigger to the right side of viewport, so it doesn't have space to open
       // in its default "after" position on the right side.
       trigger.style.position = 'relative';
-      trigger.style.left = '900px';
+      trigger.style.left = '950px';
 
       fixture.componentInstance.trigger.openMenu();
       fixture.detectChanges();
@@ -202,7 +206,7 @@ describe('MdMenu', () => {
       // push trigger to the bottom, right part of viewport, so it doesn't have space to open
       // in its default "after below" position.
       trigger.style.position = 'relative';
-      trigger.style.left = '900px';
+      trigger.style.left = '950px';
       trigger.style.top = '600px';
 
       fixture.componentInstance.trigger.openMenu();

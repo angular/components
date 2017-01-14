@@ -11,7 +11,7 @@ export function getElement(el: FinderResult): ElementFinder {
 /**
  * Waits for an element to be rendered.
  */
-export function waitForElement(selector: string): webdriver.promise.Promise<any> {
+export function waitForElement(selector: string) {
   return browser.isElementPresent(by.css(selector) as ProtractorBy);
 }
 

@@ -1,10 +1,10 @@
-import {TestBed, async, ComponentFixture} from '@angular/core/testing';
+import {TestBed, async, ComponentFixture, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {MdSelectModule} from './index';
 import {OverlayContainer} from '../core/overlay/overlay-container';
 import {MdSelect} from './select';
-import {MdOption} from './option';
+import {MdOption} from '../core/option/option';
 import {Dir} from '../core/rtl/dir';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
@@ -16,7 +16,14 @@ describe('MdSelect', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdSelectModule.forRoot(), ReactiveFormsModule, FormsModule],
-      declarations: [BasicSelect, NgModelSelect, ManySelects, NgIfSelect],
+      declarations: [
+        BasicSelect,
+        NgModelSelect,
+        ManySelects,
+        NgIfSelect,
+        SelectInitWithoutOptions,
+        SelectWithChangeEvent
+      ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div') as HTMLElement;
@@ -238,6 +245,27 @@ describe('MdSelect', () => {
     });
 
   });
+
+  it('should select the proper option when the list of options is initialized at a later point',
+    async(() => {
+      let fixture = TestBed.createComponent(SelectInitWithoutOptions);
+      let instance = fixture.componentInstance;
+
+      fixture.detectChanges();
+
+      // Wait for the initial writeValue promise.
+      fixture.whenStable().then(() => {
+        expect(instance.select.selected).toBeFalsy();
+
+        instance.addOptions();
+        fixture.detectChanges();
+
+        // Wait for the next writeValue promise.
+        fixture.whenStable().then(() => {
+          expect(instance.select.selected).toBe(instance.options.toArray()[1]);
+        });
+      });
+    }));
 
   describe('forms integration', () => {
     let fixture: ComponentFixture<BasicSelect>;
@@ -539,6 +567,20 @@ describe('MdSelect', () => {
         expect(fixture.componentInstance.select._placeholderState).toEqual('floating-rtl');
       });
 
+
+      it('should add a class to the panel when the menu is done animating', fakeAsync(() => {
+        trigger.click();
+        fixture.detectChanges();
+
+        const panel = overlayContainerElement.querySelector('.md-select-panel');
+
+        expect(panel.classList).not.toContain('md-select-panel-done-animating');
+
+        tick(250);
+        fixture.detectChanges();
+
+        expect(panel.classList).toContain('md-select-panel-done-animating');
+      }));
   });
 
   describe('positioning', () => {
@@ -586,6 +628,7 @@ describe('MdSelect', () => {
         select.style.marginLeft = '20px';
         select.style.marginRight = '20px';
       });
+
 
       it('should align the first option with the trigger text if no option is selected', () => {
         trigger.click();
@@ -1081,7 +1124,7 @@ describe('MdSelect', () => {
         let firstOptionID = options[0].id;
 
         expect(options[0].id)
-            .toContain('md-select-option', `Expected option ID to have the correct prefix.`);
+            .toContain('md-option', `Expected option ID to have the correct prefix.`);
         expect(options[0].id).not.toEqual(options[1].id, `Expected option IDs to be unique.`);
 
         const backdrop =
@@ -1096,7 +1139,7 @@ describe('MdSelect', () => {
           options =
               overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
           expect(options[0].id)
-              .toContain('md-select-option', `Expected option ID to have the correct prefix.`);
+              .toContain('md-option', `Expected option ID to have the correct prefix.`);
           expect(options[0].id).not.toEqual(firstOptionID, `Expected option IDs to be unique.`);
           expect(options[0].id).not.toEqual(options[1].id, `Expected option IDs to be unique.`);
         });
@@ -1140,6 +1183,38 @@ describe('MdSelect', () => {
 
   });
 
+  describe('change event', () => {
+    let fixture: ComponentFixture<SelectWithChangeEvent>;
+    let trigger: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SelectWithChangeEvent);
+      fixture.detectChanges();
+
+      trigger = fixture.debugElement.query(By.css('.md-select-trigger')).nativeElement;
+    });
+
+    it('should emit an event when the selected option has changed', () => {
+      trigger.click();
+      fixture.detectChanges();
+
+      (overlayContainerElement.querySelector('md-option') as HTMLElement).click();
+
+      expect(fixture.componentInstance.changeListener).toHaveBeenCalled();
+    });
+
+    it('should not emit multiple change events for the same option', () => {
+      trigger.click();
+      fixture.detectChanges();
+
+      let option = overlayContainerElement.querySelector('md-option') as HTMLElement;
+
+      option.click();
+      option.click();
+
+      expect(fixture.componentInstance.changeListener).toHaveBeenCalledTimes(1);
+    });
+  });
 });
 
 @Component({
@@ -1219,8 +1294,7 @@ class ManySelects {}
         </md-option>
       </md-select>
     </div>
-  `
-
+  `,
 })
 class NgIfSelect {
   isShowing = false;
@@ -1234,7 +1308,54 @@ class NgIfSelect {
   @ViewChild(MdSelect) select: MdSelect;
 }
 
+@Component({
+  selector: 'select-with-change-event',
+  template: `
+    <md-select (change)="changeListener($event)">
+      <md-option *ngFor="let food of foods" [value]="food">{{ food }}</md-option>
+    </md-select>
+  `
+})
+class SelectWithChangeEvent {
+  foods: string[] = [
+    'steak-0',
+    'pizza-1',
+    'tacos-2',
+    'sandwich-3',
+    'chips-4',
+    'eggs-5',
+    'pasta-6',
+    'sushi-7'
+  ];
 
+  changeListener = jasmine.createSpy('MdSelect change listener');
+}
+
+@Component({
+  selector: 'select-init-without-options',
+  template: `
+    <md-select placeholder="Food I want to eat right now" [formControl]="control">
+      <md-option *ngFor="let food of foods" [value]="food.value">
+        {{ food.viewValue }}
+      </md-option>
+    </md-select>
+  `
+})
+class SelectInitWithoutOptions {
+  foods: any[];
+  control = new FormControl('pizza-1');
+
+  @ViewChild(MdSelect) select: MdSelect;
+  @ViewChildren(MdOption) options: QueryList<MdOption>;
+
+  addOptions() {
+    this.foods = [
+      { value: 'steak-0', viewValue: 'Steak' },
+      { value: 'pizza-1', viewValue: 'Pizza' },
+      { value: 'tacos-2', viewValue: 'Tacos'}
+    ];
+  }
+}
 
 /**
  * TODO: Move this to core testing utility until Angular has event faking

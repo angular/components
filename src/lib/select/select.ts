@@ -13,7 +13,7 @@ import {
   ViewEncapsulation,
   ViewChild,
 } from '@angular/core';
-import {MdOption} from './option';
+import {MdOption} from '../core/option/option';
 import {ENTER, SPACE} from '../core/keyboard/keycodes';
 import {ListKeyManager} from '../core/a11y/list-key-manager';
 import {Dir} from '../core/rtl/dir';
@@ -63,6 +63,11 @@ export const SELECT_PANEL_PADDING_Y = 16;
  * this value or more away from the viewport boundary.
  */
 export const SELECT_PANEL_VIEWPORT_PADDING = 8;
+
+/** Change event object that is emitted when the select value has changed. */
+export class MdSelectChange {
+  constructor(public source: MdSelect, public value: any) { }
+}
 
 @Component({
   moduleId: module.id,
@@ -147,6 +152,9 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   /** The value of the select panel's transform-origin property. */
   _transformOrigin: string = 'top';
 
+  /** Whether the panel's animation is done. */
+  _panelDoneAnimating: boolean = false;
+
   /**
    * The x-offset of the overlay panel in relation to the trigger's top start corner.
    * This must be adjusted to align the selected option text over the trigger text when
@@ -214,10 +222,13 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   set required(value: any) { this._required = coerceBooleanProperty(value); }
 
   /** Event emitted when the select has been opened. */
-  @Output() onOpen = new EventEmitter();
+  @Output() onOpen: EventEmitter<void> = new EventEmitter<void>();
 
   /** Event emitted when the select has been closed. */
-  @Output() onClose = new EventEmitter();
+  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Event emitted when the selected value has been changed by the user. */
+  @Output() change: EventEmitter<MdSelectChange> = new EventEmitter<MdSelectChange>();
 
   constructor(private _element: ElementRef, private _renderer: Renderer,
               private _viewportRuler: ViewportRuler, @Optional() private _dir: Dir,
@@ -230,7 +241,15 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   ngAfterContentInit() {
     this._initKeyManager();
     this._resetOptions();
-    this._changeSubscription = this.options.changes.subscribe(() => this._resetOptions());
+    this._changeSubscription = this.options.changes.subscribe(() => {
+      this._resetOptions();
+
+      if (this._control) {
+        // Defer setting the value in order to avoid the "Expression
+        // has changed after it was checked" errors from Angular.
+        Promise.resolve(null).then(() => this._setSelectionByValue(this._control.value));
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -353,6 +372,8 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     } else {
       this.onClose.emit();
     }
+
+    this._panelDoneAnimating = this.panelOpen;
   }
 
   /**
@@ -429,8 +450,8 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   private _listenToOptions(): void {
     this.options.forEach((option: MdOption) => {
       const sub = option.onSelect.subscribe((isUserInput: boolean) => {
-        if (isUserInput) {
-          this._onChange(option.value);
+        if (isUserInput && this._selected !== option) {
+          this._emitChangeEvent(option);
         }
         this._onSelect(option);
       });
@@ -442,6 +463,12 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   private _dropSubscriptions(): void {
     this._subscriptions.forEach((sub: Subscription) => sub.unsubscribe());
     this._subscriptions = [];
+  }
+
+  /** Emits an event when the user selects an option. */
+  private _emitChangeEvent(option: MdOption): void {
+    this._onChange(option.value);
+    this.change.emit(new MdSelectChange(this, option.value));
   }
 
   /** Records option IDs to pass to the aria-owns property. */

@@ -5,7 +5,7 @@ import {Point} from './actions';
 /**
  * Asserts that an element exists.
  */
-export function expectToExist(selector: string, expected = true): webdriver.promise.Promise<any> {
+export function expectToExist(selector: string, expected = true) {
   return waitForElement(selector).then((isPresent: boolean) => {
     expect(isPresent).toBe(expected, `Expected "${selector}"${expected ? '' : ' not'} to exist`);
   });
@@ -15,10 +15,8 @@ export function expectToExist(selector: string, expected = true): webdriver.prom
  * Asserts that an element is focused.
  */
 export function expectFocusOn(element: FinderResult, expected = true): void {
-  expect(browser.driver.switchTo().activeElement().getInnerHtml()).toBe(
-    getElement(element).getWebElement().getInnerHtml(),
-    `Expected element${expected ? '' : ' not'} to be focused.`
-  );
+  expect(browser.driver.switchTo().activeElement().getId()).toBe(
+    getElement(element).getId(), `Expected element${expected ? '' : ' not'} to be focused.`);
 }
 
 /**
