@@ -22,6 +22,8 @@ import {MdDialogContainer} from './dialog-container';
 @Injectable()
 export class MdDialog {
   private _openDialogsAtThisLevel: MdDialogRef<any>[] = [];
+  private _afterAllClosedAtThisLevel = new Subject<void>();
+  private _afterOpenAtThisLevel = new Subject<MdDialogRef<any>>();
 
   /** Keeps track of the currently-open dialogs. */
   get _openDialogs(): MdDialogRef<any>[] {
@@ -29,10 +31,13 @@ export class MdDialog {
   }
 
   /** Subject for notifying the user that all open dialogs have finished closing. */
-  private _afterAllClosed = new Subject<void>();
-
+  get _afterOpen(): Subject<MdDialogRef<any>> {
+    return this._parentDialog ? this._parentDialog._afterOpen : this._afterOpenAtThisLevel;
+  }
   /** Subject for notifying the user that a dialog has opened. */
-  private _afterOpen = new Subject<MdDialogRef<any>>();
+  get _afterAllClosed(): Subject<void> {
+    return this._parentDialog ? this._parentDialog._afterAllClosed : this._afterAllClosedAtThisLevel;
+  }
 
   /** Gets an observable that is notified when a dialog has been opened. */
   afterOpen: Observable<MdDialogRef<any>> = this._afterOpen.asObservable();

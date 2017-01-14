@@ -1,5 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { DOCUMENT } from '@angular/platform-browser';
+import {Component, Inject} from '@angular/core';
+import {DOCUMENT} from '@angular/platform-browser';
 import {MdDialog, MdDialogRef, MdDialogConfig} from '@angular/material';
 
 @Component({
