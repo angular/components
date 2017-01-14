@@ -16,7 +16,6 @@ import {
 import {RIGHT_ARROW, LEFT_ARROW, ENTER, Dir, LayoutDirection} from '../core';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdInkBar} from './ink-bar';
-import 'rxjs/add/operator/map';
 import {applyCssTransform} from '../core/style/apply-transform';
 
 /**

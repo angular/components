@@ -21,7 +21,7 @@ import {MdSnackBarConfig} from './snack-bar-config';
 import {MdSnackBarContentAlreadyAttached} from './snack-bar-errors';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-
+import {first} from 'rxjs/operator/first';
 
 
 export type SnackBarState = 'initial' | 'visible' | 'complete' | 'void';
@@ -137,7 +137,7 @@ export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
    * errors where we end up removing an element which is in the middle of an animation.
    */
   private _completeExit() {
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+    first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => {
       this.onExit.next();
       this.onExit.complete();
     });

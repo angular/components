@@ -1,6 +1,7 @@
 import {Injector, ComponentRef, Injectable, Optional, SkipSelf} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import {first} from 'rxjs/operator/first';
 
 import {Overlay, OverlayRef, ComponentType, OverlayState, ComponentPortal} from '../core';
 import {extendObject} from '../core/util/object-extend';
@@ -127,11 +128,11 @@ export class MdDialog {
       config?: MdDialogConfig): MdDialogRef<T> {
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
-    let dialogRef = <MdDialogRef<T>> new MdDialogRef(overlayRef);
+    let dialogRef = new MdDialogRef(overlayRef) as MdDialogRef<T>;
 
     if (!dialogContainer.dialogConfig.disableClose) {
       // When the dialog backdrop is clicked, we want to close it.
-      overlayRef.backdropClick().first().subscribe(() => dialogRef.close());
+      first.call(overlayRef.backdropClick()).subscribe(() => dialogRef.close());
     }
 
     // Set the dialogRef to the container so that it can use the ref to close the dialog.

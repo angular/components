@@ -3,6 +3,7 @@ import {FocusKeyManager} from './focus-key-manager';
 import {DOWN_ARROW, UP_ARROW, TAB, HOME, END} from '../keyboard/keycodes';
 import {ListKeyManager} from './list-key-manager';
 import {ActiveDescendantKeyManager} from './activedescendant-key-manager';
+import {first} from 'rxjs/operator/first';
 
 class FakeFocusable {
   disabled = false;
@@ -196,7 +197,7 @@ describe('Key managers', () => {
 
       it('should emit tabOut when the tab key is pressed', () => {
         let tabOutEmitted = false;
-        keyManager.tabOut.first().subscribe(() => tabOutEmitted = true);
+        first.call(keyManager.tabOut).subscribe(() => tabOutEmitted = true);
         keyManager.onKeydown(TAB_EVENT);
 
         expect(tabOutEmitted).toBe(true);

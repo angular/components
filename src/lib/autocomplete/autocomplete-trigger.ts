@@ -5,12 +5,14 @@ import {NgControl} from '@angular/forms';
 import {Overlay, OverlayRef, OverlayState, TemplatePortal} from '../core';
 import {MdAutocomplete} from './autocomplete';
 import {PositionStrategy} from '../core/overlay/position/position-strategy';
+import {FunctionChain} from '../core/util/function-chain';
 import {Observable} from 'rxjs/Observable';
 import {MdOptionSelectEvent} from '../core/option/option';
-import 'rxjs/add/observable/merge';
 import {Dir} from '../core/rtl/dir';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/switchMap';
+import {merge} from 'rxjs/observable/merge';
+import {first} from 'rxjs/operator/first';
+import {switchMap} from 'rxjs/operator/switchMap';
+import {startWith} from 'rxjs/operator/startWith';
 
 
 /** The panel needs a slight y-offset to ensure the input underline displays. */
@@ -70,7 +72,7 @@ export class MdAutocompleteTrigger implements OnDestroy {
    */
   get panelClosingActions(): Observable<any> {
     // TODO(kara): add tab event observable with keyboard event PR
-    return Observable.merge(...this.optionSelections, this._overlayRef.backdropClick());
+    return merge.call(Observable, ...this.optionSelections, this._overlayRef.backdropClick());
   }
 
   /** Stream of autocomplete option selections. */
@@ -84,17 +86,19 @@ export class MdAutocompleteTrigger implements OnDestroy {
    * stream every time the option list changes.
    */
   private _subscribeToClosingActions(): void {
-    // Every time the option list changes...
-    this.autocomplete.options.changes
-    // and also at initialization, before there are any option changes...
-        .startWith(null)
-        // create a new stream of panelClosingActions, replacing any previous streams
-        // that were created, and flatten it so our stream only emits closing events...
-        .switchMap(() => this.panelClosingActions)
-        // when the first closing event occurs...
-        .first()
-        // set the value, close the panel, and complete.
-        .subscribe(event => this._setValueAndClose(event));
+    new FunctionChain<Observable<any>>()
+      // Every time the option list changes...
+      .context(this.autocomplete.options.changes)
+      // and also at initialization, before there are any option changes...
+      .call(startWith, null)
+      // create a new stream of panelClosingActions, replacing any previous streams
+      // that were created, and flatten it so our stream only emits closing events...
+      .call(switchMap, () => this.panelClosingActions)
+      // when the first closing event occurs...
+      .call(first)
+      .execute()
+      // set the value, close the panel, and complete.
+      .subscribe(event => this._setValueAndClose(event));
   }
 
   /** Destroys the autocomplete suggestion panel. */
