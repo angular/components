@@ -274,9 +274,7 @@ export class MdInputContainer implements AfterContentInit {
   // Unique id for the hint label.
   _hintLabelId: string = `md-input-hint-${nextUniqueId++}`;
 
-  /**
-   * Whether the placeholder should always float, never float or float as the user types.
-   */
+  /** Whether the placeholder should always float, never float or float as the user types. */
   @Input()
   get floatingPlaceholder() { return this._floatingPlaceholder; }
   set floatingPlaceholder(value: MD_INPUT_PLACEHOLDER_TYPES) {
