@@ -148,7 +148,7 @@ export class MdSlider implements ControlValueAccessor {
   _isActive: boolean = false;
 
   /** Decimal places to round to, based on the step amount. */
-  private _roundTo: number;
+  private _roundLabelTo: number;
 
   private _step: number = 1;
 
@@ -159,7 +159,7 @@ export class MdSlider implements ControlValueAccessor {
     this._step = coerceNumberProperty(v, this._step);
 
     if (this._step % 1 !== 0) {
-      this._roundTo = this._step.toString().split('.').pop().length;
+      this._roundLabelTo = this._step.toString().split('.').pop().length;
     }
   }
 
@@ -249,8 +249,8 @@ export class MdSlider implements ControlValueAccessor {
 
   /** The value to be used for display purposes. */
   get displayValue(): string|number {
-    if (this._roundTo && this.value % 1 !== 0) {
-      return this.value.toFixed(this._roundTo);
+    if (this._roundLabelTo && this.value % 1 !== 0) {
+      return this.value.toFixed(this._roundLabelTo);
     }
 
     return this.value;
