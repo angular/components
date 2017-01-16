@@ -432,13 +432,18 @@ describe('MdSlider', () => {
       expect(trackFillElement.style.transform).toContain('scaleX(1)');
     });
 
-    it('should round the value inside the label to one decimal place', () => {
-      fixture.componentInstance.step = 0.1;
-      fixture.detectChanges();
+    it('should round the value inside the label based on the provided step', () => {
+      let testStep = (step: number, expected: string) => {
+        fixture.componentInstance.step = step;
+        fixture.detectChanges();
+        dispatchSlideEventSequence(sliderNativeElement, 0, 0.333333, gestureConfig);
+        expect(sliderDebugElement.componentInstance.displayValue.toString()).toBe(expected);
+      };
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.333333, gestureConfig);
-
-      expect(sliderDebugElement.componentInstance.displayValue).toBe('33.3');
+      testStep(1, '33');
+      testStep(0.1, '33.3');
+      testStep(0.01, '33.33');
+      testStep(0.001, '33.333');
     });
 
     it('should not add decimals to the value if it is a whole number', () => {

@@ -147,12 +147,21 @@ export class MdSlider implements ControlValueAccessor {
    */
   _isActive: boolean = false;
 
+  /** Decimal places to round to, based on the step amount. */
+  private _roundTo: number;
+
   private _step: number = 1;
 
   /** The values at which the thumb will snap. */
   @Input()
   get step() { return this._step; }
-  set step(v) { this._step = coerceNumberProperty(v, this._step); }
+  set step(v) {
+    this._step = coerceNumberProperty(v, this._step);
+
+    if (this._step % 1 !== 0) {
+      this._roundTo = this._step.toString().split('.').pop().length;
+    }
+  }
 
   private _tickInterval: 'auto' | number = 0;
 
@@ -240,8 +249,11 @@ export class MdSlider implements ControlValueAccessor {
 
   /** The value to be used for display purposes. */
   get displayValue(): string|number {
-    // Skip adding the decimal part if the number is whole.
-    return this.value % 1 === 0 ? this.value : this.value.toFixed(1);
+    if (this._roundTo && this.value % 1 !== 0) {
+      return this.value.toFixed(this._roundTo);
+    }
+
+    return this.value;
   }
 
   /**
