@@ -3,7 +3,7 @@ import * as gulp from 'gulp';
 import * as path from 'path';
 import {browser} from 'protractor';
 
-const OUTPUT_DIR = '/tmp/angular-material2-build/screenshots/';
+const OUTPUT_DIR = './screenshots/';
 
 let currentJasmineSpecName = '';
 
