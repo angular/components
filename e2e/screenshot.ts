@@ -47,11 +47,14 @@ export class Screenshot {
     }
 
     if (fs.existsSync(OUTPUT_DIR)) {
+      console.log(`take screenshot ${this.id}`);
       fs.writeFileSync(this.fullPath, png, {encoding: 'base64' });
     }
   }
 }
 
 export function screenshot(id: string) {
-  return new Screenshot(id);
+  if (process.env['TRAVIS']) {
+    return new Screenshot(id);
+  }
 }
