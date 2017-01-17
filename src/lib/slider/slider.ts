@@ -249,6 +249,9 @@ export class MdSlider implements ControlValueAccessor {
 
   /** The value to be used for display purposes. */
   get displayValue(): string|number {
+    // Note that this could be improved further by rounding something like 0.999 to 0.99 or
+    // 0.899 to 0.89, however it is very performance sensitive, because it gets called on
+    // every change detection cycle.
     if (this._roundLabelTo && this.value % 1 !== 0) {
       return this.value.toFixed(this._roundLabelTo);
     }
