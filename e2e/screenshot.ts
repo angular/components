@@ -47,7 +47,6 @@ export class Screenshot {
     }
 
     if (fs.existsSync(OUTPUT_DIR)) {
-      console.log(`take screenshot ${this.id}`);
       fs.writeFileSync(this.fullPath, png, {encoding: 'base64' });
     }
   }
