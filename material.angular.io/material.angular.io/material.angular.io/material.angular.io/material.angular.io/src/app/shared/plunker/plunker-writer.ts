@@ -34,58 +34,67 @@ const TAGS: string[] = ['angular', 'material', 'example'];
  */
 @Injectable()
 export class PlunkerWriter {
-  form: HTMLFormElement;
-  exampleData: ExampleData;
-
   constructor(private _http: Http) {}
 
-  /** Construct the plunker content */
-  openPlunker(data: ExampleData) {
-    this.exampleData = data;
+  /**
+   * Returns an HTMLFormElement that will open a new plunker template with the example data when
+   * called with submit().
+   */
+  constructPlunkerForm(data: ExampleData): Promise<HTMLFormElement> {
+    let form = this._createFormElement();
 
-    this.form = this._createFormElement();
+    TAGS.forEach((tag, i) => this._appendFormInput(form, `tags[${i}]`, tag));
+    this._appendFormInput(form, 'private', 'true');
+    this._appendFormInput(form, 'description', data.description);
 
-    for (let i = 0; i < TAGS.length; i++) {
-      this._createFormInput(`tags[${i}]`, TAGS[i]);
-    }
+    return new Promise(resolve => {
+      let templateContents = TEMPLATE_FILES
+          .map(file => this._readFile(form, data, file, TEMPLATE_PATH));
 
-    this._createFormInput('private', 'true');
-    this._createFormInput('description', this.exampleData.description);
+      let exampleContents = data.exampleFiles
+          .map(file => this._readFile(form, data, file, data.examplePath));
 
-    var templateContents = TEMPLATE_FILES.map((file) => this._readFile(file, TEMPLATE_PATH));
-    var exampleContents = this.exampleData.exampleFiles.map(
-      (file) => this._readFile(file, this.exampleData.examplePath));
-
-    Promise.all(templateContents.concat(exampleContents)).then((_) => this.form.submit());
+      Promise.all(templateContents.concat(exampleContents)).then(() => {
+        resolve(form);
+      });
+    });
   }
 
+  /** Constructs a new form element that will navigate to the plunker url. */
   _createFormElement(): HTMLFormElement {
-    var form = document.createElement('form');
+    const form = document.createElement('form');
     form.action = PLUNKER_URL;
     form.method = 'post';
     form.target = '_blank';
     return form;
   }
 
-  _createFormInput(name: string, value: string) {
-    var input = document.createElement('input');
+  /** Appends the name and value as an input to the form. */
+  _appendFormInput(form: HTMLFormElement, name: string, value: string): void {
+    const input = document.createElement('input');
     input.type = 'hidden';
     input.name = name;
     input.value = value;
-    this.form.appendChild(input);
+    form.appendChild(input);
   }
 
-  _readFile(filename: string, path: string) {
-    return this._http.get(path + filename).toPromise().then(
-      response => this._addFileToForm(response.text(), filename, path),
+  /** Reads the file and adds its text to the form */
+  _readFile(form: HTMLFormElement, data: ExampleData, filename: string, path: string): void {
+    this._http.get(path + filename).toPromise().then(
+      response => this._addFileToForm(form, data, response.text(), filename, path),
       error => console.log(error));
   }
 
-  _addFileToForm(content: string, filename: string, path: string) {
+  /** Adds the file text to the form. */
+  _addFileToForm(form: HTMLFormElement,
+                 data: ExampleData,
+                 content: string,
+                 filename: string,
+                 path: string) {
     if (path == TEMPLATE_PATH) {
-      content = this._replaceExamplePlaceholderNames(filename, content);
+      content = this._replaceExamplePlaceholderNames(data, filename, content);
     }
-    this._createFormInput(`files[${filename}]`, this._appendCopyright(filename, content));
+    this._appendFormInput(form, `files[${filename}]`, this._appendCopyright(filename, content));
   }
 
   /**
@@ -94,18 +103,20 @@ export class PlunkerWriter {
    * This will replace those placeholders with the names from the example metadata,
    * e.g. "<basic-button-example>" and "BasicButtonExample"
    */
-  _replaceExamplePlaceholderNames(fileName: string, fileContent: string): string {
+  _replaceExamplePlaceholderNames(data: ExampleData,
+                                  fileName: string,
+                                  fileContent: string): string {
     if (fileName == 'index.html') {
       // Replace the component selector in `index,html`.
-      // For example, <material-docs-example></material-docs-exmaple> will be replaced as
+      // For example, <material-docs-example></material-docs-example> will be replaced as
       // <button-demo></button-demo>
-      fileContent = fileContent.replace(/material-docs-example/g, this.exampleData.selectorName);
+      fileContent = fileContent.replace(/material-docs-example/g, data.selectorName);
     } else if (fileName == 'main.ts') {
       // Replace the component name in `main.ts`.
       // For example, `import {MaterialDocsExample} from 'material-docs-example'`
       // will be replaced as `import {ButtonDemo} from './button-demo'`
-      fileContent = fileContent.replace(/MaterialDocsExample/g, this.exampleData.componentName);
-      fileContent = fileContent.replace(/material-docs-example/g, this.exampleData.indexFilename);
+      fileContent = fileContent.replace(/MaterialDocsExample/g, data.componentName);
+      fileContent = fileContent.replace(/material-docs-example/g, data.indexFilename);
     }
     return fileContent;
   }

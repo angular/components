@@ -6,8 +6,8 @@ import {ExampleData} from '../../examples/example-data';
 
 
 describe('PlunkerWriter', () => {
-  var plunkerWriter: PlunkerWriter;
-  var data: ExampleData;
+  let plunkerWriter: PlunkerWriter;
+  let data: ExampleData;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [],
@@ -37,7 +37,7 @@ describe('PlunkerWriter', () => {
     });
 
     plunkerWriter = TestBed.get(PlunkerWriter);
-    data = new ExampleData();
+    data = new ExampleData('');
     data.examplePath = 'http://material.angular.io/';
     data.exampleFiles = ['test.ts', 'test.html', 'src/detail.ts'];
   }));
@@ -63,45 +63,44 @@ describe('PlunkerWriter', () => {
   });
 
   it('should add files to form input', () => {
-    plunkerWriter.form = plunkerWriter._createFormElement();
+    let form = plunkerWriter._createFormElement();
 
-    plunkerWriter._addFileToForm('NoContent', 'test.ts', 'path/to/file');
-    plunkerWriter._addFileToForm('Test', 'test.html', 'path/to/file');
-    plunkerWriter._addFileToForm('Detail', 'src/detail.ts', 'path/to/file');
+    plunkerWriter._addFileToForm(form, data, 'NoContent', 'test.ts', 'path/to/file');
+    plunkerWriter._addFileToForm(form, data, 'Test', 'test.html', 'path/to/file');
+    plunkerWriter._addFileToForm(form, data, 'Detail', 'src/detail.ts', 'path/to/file');
 
-    let elements = plunkerWriter.form.elements;
-    expect(elements.length).toBe(3);
-    expect(elements[0].getAttribute('name')).toBe('files[test.ts]');
-    expect(elements[1].getAttribute('name')).toBe('files[test.html]');
-    expect(elements[2].getAttribute('name')).toBe('files[src/detail.ts]');
+    expect(form.elements.length).toBe(3);
+    expect(form.elements[0].getAttribute('name')).toBe('files[test.ts]');
+    expect(form.elements[1].getAttribute('name')).toBe('files[test.html]');
+    expect(form.elements[2].getAttribute('name')).toBe('files[src/detail.ts]');
   });
 
   it('should open a new window with plunker url', fakeAsync(() => {
-    plunkerWriter.openPlunker(data);
+    let form;
+    plunkerWriter.constructPlunkerForm(data).then(result => form = result);
     flushMicrotasks();
 
-    let elements = plunkerWriter.form.elements;
-    expect(elements.length).toBe(11);
+    expect(form.elements.length).toBe(11);
 
     // Should have correct tags
-    expect(elements[0].getAttribute('name')).toBe('tags[0]');
-    expect(elements[0].getAttribute('value')).toBe('angular');
-    expect(elements[1].getAttribute('value')).toBe('material');
-    expect(elements[2].getAttribute('value')).toBe('example');
+    expect(form.elements[0].getAttribute('name')).toBe('tags[0]');
+    expect(form.elements[0].getAttribute('value')).toBe('angular');
+    expect(form.elements[1].getAttribute('value')).toBe('material');
+    expect(form.elements[2].getAttribute('value')).toBe('example');
 
     // Should have private and description
-    expect(elements[3].getAttribute('name')).toBe('private');
-    expect(elements[4].getAttribute('name')).toBe('description');
+    expect(form.elements[3].getAttribute('name')).toBe('private');
+    expect(form.elements[4].getAttribute('name')).toBe('description');
 
     // Should have example files
-    expect(elements[5].getAttribute('name')).toBe('files[index.html]');
-    expect(elements[6].getAttribute('name')).toBe('files[systemjs.config.js]');
-    expect(elements[7].getAttribute('name')).toBe('files[main.ts]');
+    expect(form.elements[5].getAttribute('name')).toBe('files[index.html]');
+    expect(form.elements[6].getAttribute('name')).toBe('files[systemjs.config.js]');
+    expect(form.elements[7].getAttribute('name')).toBe('files[main.ts]');
 
     // Should have template files
-    expect(elements[8].getAttribute('name')).toBe('files[test.ts]');
-    expect(elements[9].getAttribute('name')).toBe('files[test.html]');
-    expect(elements[10].getAttribute('name')).toBe('files[src/detail.ts]');
+    expect(form.elements[8].getAttribute('name')).toBe('files[test.ts]');
+    expect(form.elements[9].getAttribute('name')).toBe('files[test.html]');
+    expect(form.elements[10].getAttribute('name')).toBe('files[src/detail.ts]');
 
     // TODO(tinagao): Add more test
   }));
