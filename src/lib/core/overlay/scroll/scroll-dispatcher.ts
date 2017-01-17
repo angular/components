@@ -16,8 +16,6 @@ export const DEFAULT_AUDIT_TIME = 20;
  */
 @Injectable()
 export class ScrollDispatcher {
-  events = 0;
-
   /** Subject for notifying that a registered scrollable reference element has been scrolled. */
   _scrolled: Subject<void> = new Subject<void>();
 
@@ -90,7 +88,6 @@ export class ScrollDispatcher {
 
   /** Sends a notification that a scroll event has been fired. */
   _notify() {
-    this.events++;
     this._scrolled.next();
   }
 }
