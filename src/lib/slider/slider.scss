@@ -127,8 +127,9 @@ md-slider {
 }
 
 
-// Slider with ticks.
-.md-slider-has-ticks {
+// Slider with ticks when not disabled.
+.md-slider-has-ticks:not(.md-slider-disabled) {
+
   .md-slider-wrapper::after {
     content: '';
     position: absolute;
