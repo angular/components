@@ -83,13 +83,13 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   @Input() id: string = this._uniqueId;
 
   /** Used to specify the tabIndex value for the underlying input element. */
-  @Input() tabIndex: number = 0;
+  @Input() tabindex: number = 0;
 
   /** Used to set the aria-label attribute on the underlying input element. */
-  @Input() ariaLabel: string = null;
+  @Input('aria-label') ariaLabel: string = null;
 
   /** Used to set the aria-labelledby attribute on the underlying input element. */
-  @Input() ariaLabelledby: string = null;
+  @Input('aria-labelledby') ariaLabelledby: string = null;
 
   /** Whether the slide-toggle is disabled. */
   @Input()
