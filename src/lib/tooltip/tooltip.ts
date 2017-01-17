@@ -41,7 +41,7 @@ export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 
 export const TOUCHEND_HIDE_DELAY  = 1500;
 
 /** Time in ms to throttle repositioning after scroll events. */
-export const SCROLL_THROTTLE_MS = 20;
+export const SCROLL_THROTTLE_MS = 10;
 
 /**
  * Directive that attaches a material design tooltip to the host element. Animates the showing and
@@ -208,7 +208,8 @@ export class MdTooltip implements OnInit, OnDestroy {
     let strategy = this._overlay.position().connectedTo(this._elementRef, origin, position);
     strategy.withScrollableContainers(this._scrollDispatcher.getScrollContainers(this._elementRef));
     strategy.onPositionChange.subscribe(change => {
-      if (change.scrollableViewProperties.isOverlayClipped && this._tooltipInstance.isVisible()) {
+      if (change.scrollableViewProperties.isOverlayClipped &&
+          this._tooltipInstance && this._tooltipInstance.isVisible()) {
         this.hide(0);
       }
     });
