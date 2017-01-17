@@ -56,7 +56,7 @@
     "dgeni": "^0.4.2",
     "dgeni-packages": "^0.16.5",
     "firebase-admin": "^4.0.4",
-    "firebase-tools": "^3.2.1",
+    "firebase-tools": "^2.2.1",
     "fs-extra": "^1.0.0",
     "glob": "^7.1.1",
     "gulp": "^3.9.1",
