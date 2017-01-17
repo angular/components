@@ -583,7 +583,7 @@ function dispatchFocusChangeEvent(eventName: string, element: HTMLElement): void
                      [name]="slideName"
                      [aria-label]="slideLabel"
                      [aria-labelledby]="slideLabelledBy"
-                     [tabindex]="slideTabindex"
+                     [tabIndex]="slideTabindex"
                      (change)="onSlideChange($event)"
                      (click)="onSlideClick($event)">
 

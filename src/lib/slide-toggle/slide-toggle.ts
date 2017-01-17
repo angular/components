@@ -83,7 +83,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   @Input() id: string = this._uniqueId;
 
   /** Used to specify the tabIndex value for the underlying input element. */
-  @Input() tabindex: number = 0;
+  @Input() tabIndex: number = 0;
 
   /** Used to set the aria-label attribute on the underlying input element. */
   @Input('aria-label') ariaLabel: string = null;
