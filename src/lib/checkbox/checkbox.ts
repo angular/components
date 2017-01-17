@@ -148,7 +148,7 @@ export class MdCheckbox implements ControlValueAccessor {
   @Output() change: EventEmitter<MdCheckboxChange> = new EventEmitter<MdCheckboxChange>();
 
   /** Event emitted when the checkbox's `indeterminate` value changes. */
-  @Output() indeterminateChange: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+  @Output() indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** The native `<input type="checkbox"> element */
   @ViewChild('input') _inputElement: ElementRef;
@@ -214,6 +214,7 @@ export class MdCheckbox implements ControlValueAccessor {
   }
 
   set indeterminate(indeterminate: boolean) {
+    let changed =  indeterminate != this._indeterminate;
     this._indeterminate = indeterminate;
     if (this._indeterminate) {
       this._transitionCheckState(TransitionCheckState.Indeterminate);
@@ -221,7 +222,9 @@ export class MdCheckbox implements ControlValueAccessor {
       this._transitionCheckState(
           this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
     }
-    this.indeterminateChange.emit(this._indeterminate);
+    if (changed) {
+      this.indeterminateChange.emit(this._indeterminate);
+    }
   }
 
   /** The color of the button. Can be `primary`, `accent`, or `warn`. */
