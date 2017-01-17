@@ -58,6 +58,12 @@ export class ScrollDispatcher {
    * to override the default "throttle" time.
    */
   scrolled(auditTimeInMs: number = DEFAULT_AUDIT_TIME): Observable<void> {
+    // In the case of a 0ms delay, return the observable without auditTime since it does add
+    // a perceptible delay in processing overhead.
+    if (auditTimeInMs == 0) {
+      return this._scrolled.asObservable();
+    }
+
     return this._scrolled.asObservable().auditTime(auditTimeInMs);
   }
 
