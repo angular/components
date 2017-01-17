@@ -40,6 +40,9 @@ export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 
 /** Time in ms to delay before changing the tooltip visibility to hidden */
 export const TOUCHEND_HIDE_DELAY  = 1500;
 
+/** Time in ms to throttle repositioning after scroll events. */
+export const SCROLL_THROTTLE_MS = 20;
+
 /**
  * Directive that attaches a material design tooltip to the host element. Animates the showing and
  * hiding of a tooltip provided position (defaults to below the element).
@@ -134,11 +137,7 @@ export class MdTooltip implements OnInit, OnDestroy {
   ngOnInit() {
     // When a scroll on the page occurs, update the position in case this tooltip needs
     // to be repositioned.
-    this._scrollDispatcher.scrolled().subscribe(() => {
-      if (this._scrollDispatcher.events > 1) {
-        console.log(`Saved ${this._scrollDispatcher.events - 1} ${this._scrollDispatcher.events > 1 ? 'events' : 'event'}`);
-      }
-      this._scrollDispatcher.events = 0;
+    this._scrollDispatcher.scrolled(SCROLL_THROTTLE_MS).subscribe(() => {
       if (this._overlayRef) {
         this._overlayRef.updatePosition();
       }
@@ -209,7 +208,7 @@ export class MdTooltip implements OnInit, OnDestroy {
     let strategy = this._overlay.position().connectedTo(this._elementRef, origin, position);
     strategy.withScrollableContainers(this._scrollDispatcher.getScrollContainers(this._elementRef));
     strategy.onPositionChange.subscribe(change => {
-      if (change.scrollableViewProperties.isOverlayClipped) {
+      if (change.scrollableViewProperties.isOverlayClipped && this._tooltipInstance.isVisible()) {
         this.hide(0);
       }
     });

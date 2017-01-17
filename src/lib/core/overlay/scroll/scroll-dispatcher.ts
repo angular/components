@@ -57,7 +57,7 @@ export class ScrollDispatcher {
   /**
    * Returns an observable that emits an event whenever any of the registered Scrollable
    * references (or window, document, or body) fire a scrolled event. Can provide a time in ms
-   * to override the default throttling time.
+   * to override the default "throttle" time.
    */
   scrolled(auditTimeInMs: number = DEFAULT_AUDIT_TIME): Observable<void> {
     return this._scrolled.asObservable().auditTime(auditTimeInMs);
