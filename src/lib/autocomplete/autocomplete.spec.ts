@@ -8,6 +8,7 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import {ENTER, DOWN_ARROW, SPACE} from '../core/keyboard/keycodes';
 import {MdOption} from '../core/option/option';
+import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 
 describe('MdAutocomplete', () => {
   let overlayContainerElement: HTMLElement;
@@ -31,6 +32,7 @@ describe('MdAutocomplete', () => {
 
           return {getContainerElement: () => overlayContainerElement};
         }},
+        {provide: ViewportRuler, useClass: FakeViewportRuler}
       ]
     });
 
@@ -355,6 +357,44 @@ describe('MdAutocomplete', () => {
 
   });
 
+  describe('Fallback positions', () => {
+
+    it('should use below positioning by default', () => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      const inputBottom = input.getBoundingClientRect().bottom;
+      const panel = overlayContainerElement.querySelector('.md-autocomplete-panel');
+      const panelTop = panel.getBoundingClientRect().top;
+
+      // Panel is offset by 6px in styles so that the underline has room to display.
+      expect((inputBottom + 6).toFixed(2))
+          .toEqual(panelTop.toFixed(2), `Expected panel top to match input bottom by default.`);
+      expect(fixture.componentInstance.trigger.autocomplete.positionY)
+          .toEqual('below', `Expected autocomplete positionY to default to below.`);
+    });
+
+    it('should fall back to above position if panel cannot fit below', () => {
+      // Push the autocomplete trigger down so it won't have room to open "below"
+      input.style.top = '400px';
+      input.style.position = 'relative';
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      const inputTop = input.getBoundingClientRect().top;
+      const panel = overlayContainerElement.querySelector('.md-autocomplete-panel');
+      const panelBottom = panel.getBoundingClientRect().bottom;
+
+      // Panel is offset by 24px in styles so that the label has room to display.
+      expect((inputTop - 24).toFixed(2))
+          .toEqual(panelBottom.toFixed(2), `Expected panel to fall back to above position.`);
+      expect(fixture.componentInstance.trigger.autocomplete.positionY)
+          .toEqual('above', `Expected autocomplete positionY to be "above" if panel won't fit.`);
+    });
+
+  });
+
 });
 
 @Component({
@@ -427,5 +467,15 @@ class FakeKeyboardEvent {
   preventDefault() {}
 }
 
+class FakeViewportRuler {
+  getViewportRect() {
+    return {
+      left: 0, top: 0, width: 500, height: 500, bottom: 500, right: 500
+    };
+  }
 
+  getViewportScrollPosition() {
+    return {top: 0, left: 0};
+  }
+}
 
