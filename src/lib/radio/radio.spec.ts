@@ -622,7 +622,10 @@ class RadiosInsideRadioGroup {
     <md-radio-button name="weather" value="cool">Autumn</md-radio-button>
 
     <span id="xyz">Baby Banana</span>
-    <md-radio-button name="fruit" value="banana" [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby">
+    <md-radio-button name="fruit"
+                     value="banana"
+                     [aria-label]="ariaLabel"
+                     [aria-labelledby]="ariaLabelledby">
     </md-radio-button>
     <md-radio-button name="fruit" value="raspberry">Raspberry</md-radio-button>
   `
