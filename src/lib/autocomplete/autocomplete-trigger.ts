@@ -12,7 +12,15 @@ export const MD_AUTOCOMPLETE_PANEL_OFFSET = 6;
 @Directive({
   selector: 'input[mdAutocomplete], input[matAutocomplete]',
   host: {
-    '(focus)': 'openPanel()'
+    'role': 'combobox',
+    'autocomplete': 'off',
+    '(focus)': 'openPanel()',
+    '(keydown)': '_handleKeydown($event)',
+    'aria-autocomplete': 'list',
+    'aria-multiline': 'false',
+    '[attr.aria-activedescendant]': 'activeOption?.id',
+    '[attr.aria-expanded]': 'panelOpen.toString()',
+    '[attr.aria-owns]': 'autocomplete?.id'
   }
 })
 export class MdAutocompleteTrigger implements OnDestroy {
