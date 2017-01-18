@@ -16,7 +16,7 @@ import {
 import {CommonModule} from '@angular/common';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
-import {MdRippleModule, DefaultStyleCompatibilityModeModule} from '../core';
+import {MdRippleModule, MdSelectionModule, DefaultStyleCompatibilityModeModule} from '../core';
 
 
 /** Monotonically increasing integer used to auto-generate unique ids for checkbox components. */
@@ -33,20 +33,6 @@ export const MD_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
   multi: true
 };
 
-/**
- * Represents the different states that require custom transitions between them.
- * @docs-private
- */
-export enum TransitionCheckState {
-  /** The initial state of the component before any user interaction. */
-  Init,
-  /** The state representing the component when it's becoming checked. */
-  Checked,
-  /** The state representing the component when it's becoming unchecked. */
-  Unchecked,
-  /** The state representing the component when it's becoming indeterminate. */
-  Indeterminate
-}
 
 /** Change event object emitted by MdCheckbox. */
 export class MdCheckboxChange {
@@ -68,11 +54,8 @@ export class MdCheckboxChange {
   templateUrl: 'checkbox.html',
   styleUrls: ['checkbox.css'],
   host: {
-    '[class.md-checkbox-indeterminate]': 'indeterminate',
-    '[class.md-checkbox-checked]': 'checked',
-    '[class.md-checkbox-disabled]': 'disabled',
     '[class.md-checkbox-label-before]': 'labelPosition == "before"',
-    '[class.md-checkbox-focused]': '_hasFocus',
+    '[class.md-checkbox-disabled]': 'disabled',
   },
   providers: [MD_CHECKBOX_CONTROL_VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None,
@@ -156,25 +139,16 @@ export class MdCheckbox implements ControlValueAccessor {
    */
   onTouched: () => any = () => {};
 
-  private _currentAnimationClass: string = '';
-
-  private _currentCheckState: TransitionCheckState = TransitionCheckState.Init;
-
   private _checked: boolean = false;
-
-  private _indeterminate: boolean = false;
-
-  private _color: string;
 
   private _controlValueAccessorChangeFn: (value: any) => void = (value) => {};
 
   _hasFocus: boolean = false;
 
-  constructor(private _renderer: Renderer,
-              private _elementRef: ElementRef,
-              private _changeDetectorRef: ChangeDetectorRef) {
-    this.color = 'accent';
-  }
+  constructor(
+    private _renderer: Renderer,
+    private _elementRef: ElementRef,
+    private _changeDetectorRef: ChangeDetectorRef) { }
 
   /**
    * Whether the checkbox is checked. Note that setting `checked` will immediately set
@@ -186,10 +160,8 @@ export class MdCheckbox implements ControlValueAccessor {
 
   set checked(checked: boolean) {
     if (checked != this.checked) {
-      this._indeterminate = false;
+      this.indeterminate = false;
       this._checked = checked;
-      this._transitionCheckState(
-          this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -203,36 +175,10 @@ export class MdCheckbox implements ControlValueAccessor {
    * `checked` property programmatically). However, we feel that this behavior is more accommodating
    * to the way consumers would envision using this component.
    */
-  @Input() get indeterminate() {
-    return this._indeterminate;
-  }
-
-  set indeterminate(indeterminate: boolean) {
-    this._indeterminate = indeterminate;
-    if (this._indeterminate) {
-      this._transitionCheckState(TransitionCheckState.Indeterminate);
-    } else {
-      this._transitionCheckState(
-          this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
-    }
-  }
+  @Input() indeterminate: boolean = false;
 
   /** The color of the button. Can be `primary`, `accent`, or `warn`. */
-  @Input()
-  get color(): string { return this._color; }
-  set color(value: string) { this._updateColor(value); }
-
-  _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `md-${color}`, isAdd);
-    }
-  }
+  @Input() color: string = 'accent';
 
   _isRippleDisabled() {
     return this.disableRipple || this.disabled;
@@ -270,27 +216,6 @@ export class MdCheckbox implements ControlValueAccessor {
    */
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
-  }
-
-  private _transitionCheckState(newState: TransitionCheckState) {
-    let oldState = this._currentCheckState;
-    let renderer = this._renderer;
-    let elementRef = this._elementRef;
-
-    if (oldState === newState) {
-      return;
-    }
-    if (this._currentAnimationClass.length > 0) {
-      renderer.setElementClass(elementRef.nativeElement, this._currentAnimationClass, false);
-    }
-
-    this._currentAnimationClass = this._getAnimationClassForCheckStateTransition(
-        oldState, newState);
-    this._currentCheckState = newState;
-
-    if (this._currentAnimationClass.length > 0) {
-      renderer.setElementClass(elementRef.nativeElement, this._currentAnimationClass, true);
-    }
   }
 
   private _emitChangeEvent() {
@@ -356,36 +281,6 @@ export class MdCheckbox implements ControlValueAccessor {
     event.stopPropagation();
   }
 
-  private _getAnimationClassForCheckStateTransition(
-      oldState: TransitionCheckState, newState: TransitionCheckState): string {
-    var animSuffix: string;
-
-    switch (oldState) {
-    case TransitionCheckState.Init:
-      // Handle edge case where user interacts with checkbox that does not have [(ngModel)] or
-      // [checked] bound to it.
-      if (newState === TransitionCheckState.Checked) {
-        animSuffix = 'unchecked-checked';
-      } else {
-        return '';
-      }
-      break;
-    case TransitionCheckState.Unchecked:
-      animSuffix = newState === TransitionCheckState.Checked ?
-          'unchecked-checked' : 'unchecked-indeterminate';
-      break;
-    case TransitionCheckState.Checked:
-      animSuffix = newState === TransitionCheckState.Unchecked ?
-          'checked-unchecked' : 'checked-indeterminate';
-      break;
-    case TransitionCheckState.Indeterminate:
-      animSuffix = newState === TransitionCheckState.Checked ?
-          'indeterminate-checked' : 'indeterminate-unchecked';
-    }
-
-    return `md-checkbox-anim-${animSuffix}`;
-  }
-
   _getHostElement() {
     return this._elementRef.nativeElement;
   }
@@ -393,7 +288,12 @@ export class MdCheckbox implements ControlValueAccessor {
 
 
 @NgModule({
-  imports: [CommonModule, MdRippleModule, DefaultStyleCompatibilityModeModule],
+  imports: [
+    CommonModule,
+    MdRippleModule,
+    MdSelectionModule,
+    DefaultStyleCompatibilityModeModule
+  ],
   exports: [MdCheckbox, DefaultStyleCompatibilityModeModule],
   declarations: [MdCheckbox],
 })

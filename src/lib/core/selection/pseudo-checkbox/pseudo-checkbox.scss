@@ -1,0 +1,357 @@
+@import '../../style/variables';
+@import '../../style/elevation';
+
+// The width/height of the checkbox element.
+$md-pseudo-checkbox-size: $md-toggle-size !default;
+// The width of the line used to draw the checkmark / mixedmark.
+$md-pseudo-checkbox-mark-stroke-size: 2 / 15 * $md-pseudo-checkbox-size !default;
+// The width of the checkbox border shown when the checkbox is unchecked.
+$md-pseudo-checkbox-border-width: 2px;
+// The base duration used for the majority of transitions for the checkbox.
+$md-pseudo-checkbox-transition-duration: 90ms;
+
+// Manual calculation done on SVG
+$_md-pseudo-checkbox-mark-path-length: 22.910259;
+$_md-pseudo-checkbox-indeterminate-checked-easing-function: cubic-bezier(0.14, 0, 0, 1);
+
+
+// Fades in the background of the checkbox when it goes from unchecked -> {checked,indeterminate}.
+@keyframes md-pseudo-checkbox-fade-in-background {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+// Fades out the background of the checkbox when it goes from {checked,indeterminate} -> unchecked.
+@keyframes md-pseudo-checkbox-fade-out-background {
+  0%, 50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+// "Draws" in the checkmark when the checkbox goes from unchecked -> checked.
+@keyframes md-pseudo-checkbox-unchecked-checked-checkmark-path {
+  0%, 50% {
+    stroke-dashoffset: $_md-pseudo-checkbox-mark-path-length;
+  }
+
+  50% {
+    animation-timing-function: $md-linear-out-slow-in-timing-function;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+// Horizontally expands the mixedmark when the checkbox goes from unchecked -> indeterminate.
+@keyframes md-pseudo-checkbox-unchecked-indeterminate-mixedmark {
+  0%, 68.2% {
+    transform: scaleX(0);
+  }
+
+  68.2% {
+    animation-timing-function: cubic-bezier(0, 0, 0, 1);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+// "Erases" the checkmark when the checkbox goes from checked -> unchecked.
+@keyframes md-pseudo-checkbox-checked-unchecked-checkmark-path {
+  from {
+    animation-timing-function: $md-fast-out-linear-in-timing-function;
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: $_md-pseudo-checkbox-mark-path-length * -1;
+  }
+}
+
+// Rotates and fades out the checkmark when the checkbox goes from checked -> indeterminate. This
+// animation helps provide the illusion of the checkmark "morphing" into the mixedmark.
+@keyframes md-pseudo-checkbox-checked-indeterminate-checkmark {
+  from {
+    animation-timing-function: $md-linear-out-slow-in-timing-function;
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+
+  to {
+    opacity: 0;
+    transform: rotate(45deg);
+  }
+}
+
+// Rotates and fades the checkmark back into position when the checkbox goes from indeterminate ->
+// checked. This animation helps provide the illusion that the mixedmark is "morphing" into the
+// checkmark.
+@keyframes md-pseudo-checkbox-indeterminate-checked-checkmark {
+  from {
+    animation-timing-function: $_md-pseudo-checkbox-indeterminate-checked-easing-function;
+    opacity: 0;
+    transform: rotate(45deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotate(360deg);
+  }
+}
+
+// Rotates and fades in the mixedmark when the checkbox goes from checked -> indeterminate. This
+// animation, similar to md-pseudo-checkbox-checked-indeterminate-checkmark, helps provide an
+// illusion of "morphing" from checkmark -> mixedmark.
+@keyframes md-pseudo-checkbox-checked-indeterminate-mixedmark {
+  from {
+    animation-timing-function: $md-linear-out-slow-in-timing-function;
+    opacity: 0;
+    transform: rotate(-45deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+}
+
+// Rotates and fades out the mixedmark when the checkbox goes from indeterminate -> checked. This
+// animation, similar to md-pseudo-checkbox-indeterminate-checked-checkmark, helps provide an
+// illusion of "morphing" from mixedmark -> checkmark.
+@keyframes md-pseudo-checkbox-indeterminate-checked-mixedmark {
+  from {
+    animation-timing-function: $_md-pseudo-checkbox-indeterminate-checked-easing-function;
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+
+  to {
+    opacity: 0;
+    transform: rotate(315deg);
+  }
+}
+
+
+// Horizontally collapses and fades out the mixedmark when the checkbox goes from indeterminate ->
+// unchecked.
+@keyframes md-pseudo-checkbox-indeterminate-unchecked-mixedmark {
+  0% {
+    animation-timing-function: linear;
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  32.8%, 100% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+}
+
+md-pseudo-checkbox {
+  transition: background $swift-ease-out-duration $swift-ease-out-timing-function,
+      md-elevation-transition-property-value();
+
+  height: $md-pseudo-checkbox-size;
+  width: $md-pseudo-checkbox-size;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+}
+
+// Applied to elements that are considered "marks" within the checkbox, e.g. the checkmark and
+// the mixedmark.
+%md-pseudo-checkbox-mark {
+  $width-padding-inset: 2 * $md-pseudo-checkbox-border-width;
+  width: calc(100% - #{$width-padding-inset});
+}
+
+// Applied to elements that cover the checkbox's entire inner container.
+%md-pseudo-checkbox-cover-element {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+// Applied to elements that appear to make up the outer box of the checkmark, such as the frame
+// that contains the border and the actual background element that contains the marks.
+%md-pseudo-checkbox-outer-box {
+  @extend %md-pseudo-checkbox-cover-element;
+  border-radius: 2px;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.md-pseudo-checkbox-frame {
+  @extend %md-pseudo-checkbox-outer-box;
+
+  background-color: transparent;
+  border: $md-pseudo-checkbox-border-width solid;
+  will-change: border-color;
+  transition: border-color $md-pseudo-checkbox-transition-duration
+      $md-linear-out-slow-in-timing-function;
+}
+
+.md-pseudo-checkbox-background {
+  @extend %md-pseudo-checkbox-outer-box;
+
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  transition: background-color $md-pseudo-checkbox-transition-duration
+              $md-linear-out-slow-in-timing-function,
+              opacity $md-pseudo-checkbox-transition-duration
+              $md-linear-out-slow-in-timing-function;
+  will-change: background-color, opacity;
+}
+
+.md-pseudo-checkbox-checkmark {
+  @extend %md-pseudo-checkbox-cover-element;
+  @extend %md-pseudo-checkbox-mark;
+
+  width: 100%;
+}
+
+.md-pseudo-checkbox-checkmark-path {
+  stroke: {
+    dashoffset: $_md-pseudo-checkbox-mark-path-length;
+    dasharray: $_md-pseudo-checkbox-mark-path-length;
+    width: $md-pseudo-checkbox-mark-stroke-size;
+  }
+}
+
+.md-pseudo-checkbox-mixedmark {
+  @extend %md-pseudo-checkbox-mark;
+
+  height: floor($md-pseudo-checkbox-mark-stroke-size);
+  opacity: 0;
+  transform: scaleX(0) rotate(0deg);
+}
+
+.md-pseudo-checkbox-checked {
+  .md-pseudo-checkbox-checkmark {
+    opacity: 1;
+  }
+
+  .md-pseudo-checkbox-checkmark-path {
+    stroke-dashoffset: 0;
+  }
+
+  .md-pseudo-checkbox-mixedmark {
+    transform: scaleX(1) rotate(-45deg);
+  }
+}
+
+.md-pseudo-checkbox-indeterminate {
+  .md-pseudo-checkbox-checkmark {
+    opacity: 0;
+    transform: rotate(45deg);
+  }
+
+  .md-pseudo-checkbox-checkmark-path {
+    stroke-dashoffset: 0;
+  }
+
+  .md-pseudo-checkbox-mixedmark {
+    opacity: 1;
+    transform: scaleX(1) rotate(0deg);
+  }
+}
+
+.md-pseudo-checkbox-unchecked {
+  .md-pseudo-checkbox-background {
+    background-color: transparent;
+  }
+}
+
+.md-pseudo-checkbox-anim {
+  $indeterminate-change-duration: 500ms;
+
+  &-unchecked-checked {
+    .md-pseudo-checkbox-background {
+      animation: $md-pseudo-checkbox-transition-duration * 2 linear 0ms
+          md-pseudo-checkbox-fade-in-background;
+    }
+
+    .md-pseudo-checkbox-checkmark-path {
+      // Instead of delaying the animation, we simply multiply its length by 2 and begin the
+      // animation at 50% in order to prevent a flash of styles applied to a checked checkmark
+      // as the background is fading in before the animation begins.
+      animation: $md-pseudo-checkbox-transition-duration * 2 linear 0ms
+          md-pseudo-checkbox-unchecked-checked-checkmark-path;
+    }
+  }
+
+  &-unchecked-indeterminate {
+    .md-pseudo-checkbox-background {
+      animation: $md-pseudo-checkbox-transition-duration * 2 linear 0ms
+          md-pseudo-checkbox-fade-in-background;
+    }
+
+    .md-pseudo-checkbox-mixedmark {
+      animation: $md-pseudo-checkbox-transition-duration linear 0ms
+          md-pseudo-checkbox-unchecked-indeterminate-mixedmark;
+    }
+  }
+
+  &-checked-unchecked {
+    .md-pseudo-checkbox-background {
+      animation: $md-pseudo-checkbox-transition-duration * 2 linear 0ms
+          md-pseudo-checkbox-fade-out-background;
+    }
+
+    .md-pseudo-checkbox-checkmark-path {
+      animation: $md-pseudo-checkbox-transition-duration linear 0ms
+          md-pseudo-checkbox-checked-unchecked-checkmark-path;
+    }
+  }
+
+  &-checked-indeterminate {
+    .md-pseudo-checkbox-checkmark {
+      animation: $md-pseudo-checkbox-transition-duration linear 0ms
+          md-pseudo-checkbox-checked-indeterminate-checkmark;
+    }
+
+    .md-pseudo-checkbox-mixedmark {
+      animation: $md-pseudo-checkbox-transition-duration linear 0ms
+          md-pseudo-checkbox-checked-indeterminate-mixedmark;
+    }
+  }
+
+  &-indeterminate-checked {
+    .md-pseudo-checkbox-checkmark {
+      animation: $indeterminate-change-duration linear 0ms
+          md-pseudo-checkbox-indeterminate-checked-checkmark;
+    }
+
+    .md-pseudo-checkbox-mixedmark {
+      animation: $indeterminate-change-duration linear 0ms
+          md-pseudo-checkbox-indeterminate-checked-mixedmark;
+    }
+  }
+
+  &-indeterminate-unchecked {
+    .md-pseudo-checkbox-background {
+      animation: $md-pseudo-checkbox-transition-duration * 2 linear 0ms
+          md-pseudo-checkbox-fade-out-background;
+    }
+
+    .md-pseudo-checkbox-mixedmark {
+      animation: $indeterminate-change-duration * 0.6 linear 0ms
+          md-pseudo-checkbox-indeterminate-unchecked-mixedmark;
+    }
+  }
+}
+

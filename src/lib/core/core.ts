@@ -3,6 +3,7 @@ import {MdLineModule} from './line/line';
 import {RtlModule} from './rtl/dir';
 import {ObserveContentModule} from './observe-content/observe-content';
 import {MdOptionModule} from './option/option';
+import {MdSelectionModule} from './selection/index';
 import {MdRippleModule} from './ripple/ripple';
 import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/overlay-directives';
@@ -16,6 +17,9 @@ export {Dir, LayoutDirection, RtlModule} from './rtl/dir';
 export {ObserveContentModule, ObserveContent} from './observe-content/observe-content';
 
 export {MdOptionModule, MdOption} from './option/option';
+
+// Selection
+export * from './selection/index';
 
 // Portals
 export {
@@ -132,7 +136,8 @@ export {NoConflictStyleCompatibilityMode} from './compatibility/no-conflict-mode
     PortalModule,
     OverlayModule,
     A11yModule,
-    MdOptionModule
+    MdOptionModule,
+    MdSelectionModule,
   ],
   exports: [
     MdLineModule,
@@ -142,8 +147,9 @@ export {NoConflictStyleCompatibilityMode} from './compatibility/no-conflict-mode
     PortalModule,
     OverlayModule,
     A11yModule,
-    MdOptionModule
-  ],
+    MdOptionModule,
+    MdSelectionModule,
+  ]
 })
 export class MdCoreModule {
   /** @deprecated */
