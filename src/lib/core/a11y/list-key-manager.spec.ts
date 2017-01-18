@@ -1,7 +1,7 @@
 import {QueryList} from '@angular/core';
 import {FocusKeyManager} from './focus-key-manager';
 import {DOWN_ARROW, UP_ARROW, TAB, HOME, END} from '../keyboard/keycodes';
-import {ListKeyManager} from './list-key-manager';
+import {ListKeyManager, keyAffectsActiveItem} from './list-key-manager';
 import {ActiveDescendantKeyManager} from './activedescendant-key-manager';
 
 class FakeFocusable {
@@ -347,6 +347,20 @@ describe('Key managers', () => {
         expect(keyManager.activeItemIndex).toBe(2, 'Expected active item to wrap to end.');
       });
 
+    });
+
+    it('should determine if keyAffectsActiveItem()', () => {
+      expect(keyAffectsActiveItem(DOWN_ARROW_EVENT))
+          .toBe(true, 'Expected DOWN key to return true for affecting active item.');
+      expect(keyAffectsActiveItem(UP_ARROW_EVENT))
+          .toBe(true, 'Expected UP key to return true for affecting active item.');
+      expect(keyAffectsActiveItem(HOME_EVENT))
+          .toBe(true, 'Expected HOME key to return true for affecting active item.');
+      expect(keyAffectsActiveItem(END_EVENT))
+          .toBe(true, 'Expected END key to return true for affecting active item.');
+      const A_KEY_EVENT = new FakeEvent(65) as KeyboardEvent;
+      expect(keyAffectsActiveItem(A_KEY_EVENT))
+          .toBe(false, 'Expected A key to return false for affecting active item.');
     });
 
   });

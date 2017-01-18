@@ -1,6 +1,7 @@
 import {
   Component,
   ContentChildren,
+  ElementRef,
   QueryList,
   TemplateRef,
   ViewChild,
@@ -23,7 +24,16 @@ export class MdAutocomplete {
   positionY: MenuPositionY = 'below';
 
   @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild('panel') panel: ElementRef;
   @ContentChildren(MdOption) options: QueryList<MdOption>;
+
+  /**
+   * Sets the panel scrollTop. This allows us to manually scroll to display
+   * options below the fold, as they are not actually being focused when active.
+   */
+  _setScrollTop(scrollTop: number): void {
+    this.panel.nativeElement.scrollTop = scrollTop;
+  }
 
   /** Sets a class on the panel based on its position (used to set y-offset). */
   _getPositionClass() {
