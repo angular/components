@@ -15,6 +15,19 @@ import 'rxjs/add/observable/merge';
 import {Dir} from '../core/rtl/dir';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/switchMap';
+import {keyAffectsActiveItem} from '../core/a11y/list-key-manager';
+
+/**
+ * The following style constants are necessary to save here in order
+ * to properly calculate the scrollTop of the panel. Because we are not
+ * actually focusing the active item, scroll must be handled manually.
+ */
+
+/** The height of each autocomplete option. */
+export const AUTOCOMPLETE_OPTION_HEIGHT = 48;
+
+/** The total height of the autocomplete panel. */
+export const MD_AUTOCOMPLETE_PANEL_HEIGHT = 256;
 
 @Directive({
   selector: 'input[mdAutocomplete], input[matAutocomplete]',
@@ -116,7 +129,23 @@ export class MdAutocompleteTrigger implements AfterContentInit, OnDestroy {
     } else {
       this.openPanel();
       this._keyManager.onKeydown(event);
+      if (keyAffectsActiveItem(event)) {
+        this._scrollToOption();
+      }
     }
+  }
+
+  /**
+   * Given that we are not actually focusing active options, we must manually adjust scroll
+   * to reveal options below the fold. First, we find the offset of the option from the top
+   * of the panel. The new scrollTop will be that offset - the panel height + the option
+   * height, so the active option will be just visible at the bottom of the panel.
+   */
+  private _scrollToOption(): void {
+    const optionOffset = this._keyManager.activeItemIndex * AUTOCOMPLETE_OPTION_HEIGHT;
+    const newScrollTop =
+        Math.max(0, optionOffset - MD_AUTOCOMPLETE_PANEL_HEIGHT + AUTOCOMPLETE_OPTION_HEIGHT);
+    this.autocomplete._setScrollTop(newScrollTop);
   }
 
   /**

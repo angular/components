@@ -174,3 +174,13 @@ export class ListKeyManager<T extends CanDisable> {
 
 }
 
+/**
+ * Whether the key event is a directional key that will affect the
+ * currently active item.
+ */
+export function keyAffectsActiveItem(event: KeyboardEvent): boolean {
+  return event.keyCode === DOWN_ARROW ||
+      event.keyCode === UP_ARROW ||
+      event.keyCode === HOME ||
+      event.keyCode === END;
+}
