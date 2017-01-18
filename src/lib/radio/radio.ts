@@ -144,7 +144,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
   set labelPosition(v) {
     this._labelPosition = (v == 'before') ? 'before' : 'after';
     if (this._radios) {
-      this._radios.forEach(radio => radio.groupValueChanged());
+      this._radios.forEach(radio => radio._groupValueChanged());
     }
   }
 
@@ -480,7 +480,7 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
     this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, this._renderer, 'keyboard');
   }
 
-  groupValueChanged() {
+  _groupValueChanged() {
     this._changeDetector.markForCheck();
   }
 

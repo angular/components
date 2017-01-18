@@ -595,7 +595,8 @@ describe('MdRadio', () => {
                   [labelPosition]="labelPos"
                   [value]="groupValue"
                   name="test-name">
-    <md-radio-button value="fire" [disableRipple]="disableRipple">Charmander</md-radio-button>
+    <md-radio-button value="fire" [disableRipple]="disableRipple"
+                     [disabled]="isFirstDisabled">Charmander</md-radio-button>
     <md-radio-button value="water" [disableRipple]="disableRipple">Squirtle</md-radio-button>
     <md-radio-button value="leaf" [disableRipple]="disableRipple">Bulbasaur</md-radio-button>
   </md-radio-group>
@@ -604,6 +605,7 @@ describe('MdRadio', () => {
 class RadiosInsideRadioGroup {
   labelPos: 'before' | 'after';
   isGroupDisabled: boolean = false;
+  isFirstDisabled: boolean = false;
   groupValue: string = null;
   disableRipple: boolean = false;
 }
