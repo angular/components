@@ -88,6 +88,9 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
   /** Whether the `value` has been set to its initial value. */
   private _isInitialized: boolean = false;
 
+  /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
+  private _labelPosition: 'before' | 'after' = 'after';
+
   /** The method to be called in order to update ngModel */
   _controlValueAccessorChangeFn: (value: any) => void = (value) => {};
 
@@ -131,8 +134,19 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
     this.labelPosition = (v == 'start') ? 'after' : 'before';
   }
 
+
   /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
-  @Input() labelPosition: 'before' | 'after' = 'after';
+  @Input()
+  get labelPosition() {
+    return this._labelPosition;
+  }
+
+  set labelPosition(v) {
+    this._labelPosition = (v == 'before') ? 'before' : 'after';
+    if (this._radios) {
+      this._radios.forEach(radio => radio.groupValueChanged());
+    }
+  }
 
   /** Value of the radio button. */
   @Input()
@@ -305,6 +319,7 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
   constructor(@Optional() radioGroup: MdRadioGroup,
               private _elementRef: ElementRef,
               private _renderer: Renderer,
+              private _changeDetector: ChangeDetectorRef,
               public radioDispatcher: UniqueSelectionDispatcher) {
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
@@ -345,6 +360,7 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
         // Notify all radio buttons with the same name to un-check.
         this._radioDispatcher.notify(this.id, this.name);
       }
+      this._changeDetector.markForCheck();
     }
   }
 
@@ -462,6 +478,10 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
   /** Focuses the radio button. */
   focus(): void {
     this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, this._renderer, 'keyboard');
+  }
+
+  groupValueChanged() {
+    this._changeDetector.markForCheck();
   }
 
   ngOnInit() {
