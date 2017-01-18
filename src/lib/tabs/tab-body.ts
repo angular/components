@@ -12,9 +12,9 @@ import {
   transition,
   AnimationTransitionEvent,
   ElementRef,
-  Optional
+  Optional, Injector
 } from '@angular/core';
-import {TemplatePortal, PortalHostDirective, Dir, LayoutDirection} from '../core';
+import {TemplatePortal, PortalHostDirective, GlobalDirAccessor, LayoutDirection} from '../core';
 import 'rxjs/add/operator/map';
 
 /**
@@ -66,6 +66,8 @@ export type MdTabBodyOriginState = 'left' | 'right';
   ]
 })
 export class MdTabBody implements OnInit {
+  private _dir: LayoutDirection;
+
   /** The portal host inside of this container into which the tab body content will be loaded. */
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
@@ -106,7 +108,14 @@ export class MdTabBody implements OnInit {
     }
   }
 
-  constructor(private _elementRef: ElementRef, @Optional() private _dir: Dir) {}
+  constructor(private _elementRef: ElementRef,
+              @Optional() _activeLayoutDirection: GlobalDirAccessor,
+              _injector: Injector) {
+    if (_activeLayoutDirection) {
+      _activeLayoutDirection.getActiveDirection(_injector)
+        .then(direction => this._dir = direction);
+    }
+  }
 
   /**
    * After initialized, check if the content is centered and has an origin. If so, set the
@@ -148,7 +157,7 @@ export class MdTabBody implements OnInit {
 
   /** The text direction of the containing app. */
   _getLayoutDirection(): LayoutDirection {
-    return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
+    return this._dir ? this._dir : 'ltr';
   }
 
 

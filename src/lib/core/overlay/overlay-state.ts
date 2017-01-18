@@ -1,5 +1,5 @@
 import {PositionStrategy} from './position/position-strategy';
-import {LayoutDirection} from '../rtl/dir';
+import {LayoutDirection} from '../rtl/index';
 
 
 /**

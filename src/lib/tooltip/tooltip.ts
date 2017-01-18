@@ -13,7 +13,8 @@ import {
   animate,
   AnimationTransitionEvent,
   NgZone,
-  Optional,
+  Optional, 
+  Injector,
   OnDestroy
 } from '@angular/core';
 import {
@@ -24,12 +25,13 @@ import {
   ComponentPortal,
   OverlayConnectionPosition,
   OriginConnectionPosition,
-  DefaultStyleCompatibilityModeModule
+  DefaultStyleCompatibilityModeModule,
+  GlobalDirAccessor,
+  LayoutDirection
 } from '../core';
 import {MdTooltipInvalidPositionError} from './tooltip-errors';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {Dir} from '../core/rtl/dir';
 import 'rxjs/add/operator/first';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
@@ -56,6 +58,7 @@ export const TOUCHEND_HIDE_DELAY  = 1500;
 export class MdTooltip implements OnDestroy {
   _overlayRef: OverlayRef;
   _tooltipInstance: TooltipComponent;
+  _dir: LayoutDirection;
 
   private _position: TooltipPosition = 'below';
 
@@ -105,7 +108,13 @@ export class MdTooltip implements OnDestroy {
               private _elementRef: ElementRef,
               private _viewContainerRef: ViewContainerRef,
               private _ngZone: NgZone,
-              @Optional() private _dir: Dir) { }
+              @Optional() _activeLayoutDirection: GlobalDirAccessor,
+              _injector: Injector) {
+    if (_activeLayoutDirection) {
+      _activeLayoutDirection.getActiveDirection(_injector)
+        .then(direction => this._dir = direction);
+    }
+  }
 
   /**
    * Dispose the tooltip when destroyed.
@@ -184,7 +193,7 @@ export class MdTooltip implements OnDestroy {
       return {originX: 'center', originY: this.position == 'above' ? 'top' : 'bottom'};
     }
 
-    const isDirectionLtr = !this._dir || this._dir.value == 'ltr';
+    const isDirectionLtr = !this._dir || this._dir == 'ltr';
     if (this.position == 'left' ||
         this.position == 'before' && isDirectionLtr ||
         this.position == 'after' && !isDirectionLtr) {
@@ -210,7 +219,7 @@ export class MdTooltip implements OnDestroy {
       return {overlayX: 'center', overlayY: 'top'};
     }
 
-    const isLtr = !this._dir || this._dir.value == 'ltr';
+    const isLtr = !this._dir || this._dir == 'ltr';
     if (this.position == 'left' ||
         this.position == 'before' && isLtr ||
         this.position == 'after' && !isLtr) {
@@ -283,10 +292,18 @@ export class TooltipComponent {
   /** The transform origin used in the animation for showing and hiding the tooltip */
   _transformOrigin: string = 'bottom';
 
+  _dir: LayoutDirection;
+
   /** Subject for notifying that the tooltip has been hidden from the view */
   private _onHide: Subject<any> = new Subject();
 
-  constructor(@Optional() private _dir: Dir) {}
+  constructor(@Optional() _activeLayoutDirection: GlobalDirAccessor,
+             _injector: Injector) {
+    if (_activeLayoutDirection) {
+      _activeLayoutDirection.getActiveDirection(_injector)
+        .then(direction => this._dir = direction);
+    }
+  }
 
   /**
    * Shows the tooltip with an animation originating from the provided origin
@@ -345,7 +362,7 @@ export class TooltipComponent {
 
   /** Sets the tooltip transform origin according to the tooltip position */
   _setTransformOrigin(value: TooltipPosition) {
-    const isLtr = !this._dir || this._dir.value == 'ltr';
+    const isLtr = !this._dir || this._dir == 'ltr';
     switch (value) {
       case 'before': this._transformOrigin = isLtr ? 'right' : 'left'; break;
       case 'after':  this._transformOrigin = isLtr ? 'left' : 'right'; break;

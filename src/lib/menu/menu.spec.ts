@@ -17,7 +17,7 @@ import {
 } from './menu';
 import {OverlayContainer} from '../core/overlay/overlay-container';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
-import {Dir, LayoutDirection} from '../core/rtl/dir';
+import {Dir, LayoutDirection} from '../core/rtl/index';
 
 describe('MdMenu', () => {
   let overlayContainerElement: HTMLElement;

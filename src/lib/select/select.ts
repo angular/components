@@ -11,12 +11,12 @@ import {
   QueryList,
   Renderer,
   ViewEncapsulation,
-  ViewChild,
+  ViewChild, Injector,
 } from '@angular/core';
 import {MdOption} from '../core/option/option';
 import {ENTER, SPACE} from '../core/keyboard/keycodes';
 import {ListKeyManager} from '../core/a11y/list-key-manager';
-import {Dir} from '../core/rtl/dir';
+import {GlobalDirAccessor, LayoutDirection} from '../core/rtl/index';
 import {Subscription} from 'rxjs/Subscription';
 import {transformPlaceholder, transformPanel, fadeInContent} from './select-animations';
 import {ControlValueAccessor, NgControl} from '@angular/forms';
@@ -121,6 +121,8 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   /** The placeholder displayed in the trigger of the select. */
   private _placeholder: string;
+
+  private _dir: LayoutDirection;
 
   /** The animation state of the placeholder. */
   _placeholderState = '';
@@ -231,10 +233,17 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   @Output() change: EventEmitter<MdSelectChange> = new EventEmitter<MdSelectChange>();
 
   constructor(private _element: ElementRef, private _renderer: Renderer,
-              private _viewportRuler: ViewportRuler, @Optional() private _dir: Dir,
+              private _viewportRuler: ViewportRuler,
+              _injector: Injector,
+              @Optional() _activeLayoutDirection: GlobalDirAccessor,
               @Optional() public _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
+    }
+
+    if (_activeLayoutDirection) {
+      _activeLayoutDirection.getActiveDirection(_injector)
+        .then(direction => this._dir = direction);
     }
   }
 
@@ -344,7 +353,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   }
 
   _isRtl(): boolean {
-    return this._dir ? this._dir.value === 'rtl' : false;
+    return this._dir ? this._dir === 'rtl' : false;
   }
 
   /** The width of the trigger element. This is necessary to match

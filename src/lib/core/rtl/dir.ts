@@ -1,12 +1,12 @@
 import {
-  NgModule,
-  ModuleWithProviders,
   Directive,
   HostBinding,
   Output,
   Input,
   EventEmitter
 } from '@angular/core';
+import {GlobalDirAccessor} from './global-dir-accessor';
+import {ActiveLayoutDirection} from './active-layout-direction';
 
 export type LayoutDirection = 'ltr' | 'rtl';
 
@@ -19,9 +19,12 @@ export type LayoutDirection = 'ltr' | 'rtl';
 @Directive({
   selector: '[dir]',
   // TODO(hansl): maybe `$implicit` isn't the best option here, but for now that's the best we got.
-  exportAs: '$implicit'
+  exportAs: '$implicit',
+  providers: [
+    {provide: GlobalDirAccessor, useExisting: Dir}
+  ]
 })
-export class Dir {
+export class Dir implements ActiveLayoutDirection {
   /** Layout direction of the element. */
   @Input('dir') _dir: LayoutDirection = 'ltr';
 
@@ -43,20 +46,8 @@ export class Dir {
 
   /** Current layout direction of the element. */
   get value(): LayoutDirection { return this.dir; }
-  set value(v: LayoutDirection) { this.dir = v; }
-}
 
-
-@NgModule({
-  exports: [Dir],
-  declarations: [Dir]
-})
-export class RtlModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: RtlModule,
-      providers: []
-    };
+  getActiveDirection() {
+    return Promise.resolve(this._dir);
   }
 }
