@@ -11,7 +11,7 @@ body {
   md-sidenav {
     min-width: 15%;
 
-    [md-button] {
+    .mat-button {
       width: 100%;
       position: relative;
       bottom: 0;

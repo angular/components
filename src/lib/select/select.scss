@@ -25,7 +25,7 @@ md-select {
   box-sizing: border-box;
 
   [aria-disabled='true'] & {
-    @include md-control-disabled-underline();
+    @include mat-control-disabled-underline();
     border-bottom: transparent;
     background-position: 0 bottom;
     cursor: default;
@@ -65,7 +65,7 @@ md-select {
 }
 
 .md-select-value {
-  @include md-truncate-line();
+  @include mat-truncate-line();
   position: absolute;
   max-width: calc(100% - #{$md-select-arrow-size * 2});
 
@@ -98,7 +98,7 @@ md-select {
 }
 
 .md-select-panel {
-  @include md-menu-base();
+  @include mat-menu-base();
   padding-top: 0;
   padding-bottom: 0;
   max-height: $md-select-panel-max-height;

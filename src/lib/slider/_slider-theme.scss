@@ -2,7 +2,7 @@
 @import '../core/theming/theming';
 
 
-@mixin md-slider-theme($theme) {
+@mixin mat-slider-theme($theme) {
   $accent: map-get($theme, accent);
 
   $md-slider-off-color: rgba(black, 0.26);
@@ -16,19 +16,19 @@
   }
 
   .md-slider-track-fill {
-    background-color: md-color($accent);
+    background-color: mat-color($accent);
   }
 
   .md-slider-thumb {
-    background-color: md-color($accent);
+    background-color: mat-color($accent);
   }
 
   .md-slider-thumb-label {
-    background-color: md-color($accent);
+    background-color: mat-color($accent);
   }
 
   .md-slider-thumb-label-text {
-    color: md-color($accent, default-contrast);
+    color: mat-color($accent, default-contrast);
   }
 
   md-slider:hover,

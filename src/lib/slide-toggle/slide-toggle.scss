@@ -15,7 +15,7 @@ $md-slide-toggle-spacing: 8px !default;
 @mixin md-switch-ripple() {
   // Temporary ripple effect for the thumb of the slide-toggle.
   // Bind to the parent selector and specify the current palette.
-  @include md-temporary-ink-ripple(slide-toggle, true);
+  @include mat-temporary-ink-ripple(slide-toggle, true);
 }
 
 md-slide-toggle {
@@ -41,7 +41,7 @@ md-slide-toggle {
 
   @include md-switch-ripple();
 
-  &.md-disabled {
+  &.mat-disabled {
 
     .md-slide-toggle-label, .md-slide-toggle-container {
       cursor: default;
@@ -52,8 +52,8 @@ md-slide-toggle {
 // The content element is responsible for the users content.
 // It will apply the given typography styles and align at the end of the slide-toggle.
 .md-slide-toggle-content {
-  font-size: $md-body-font-size-base;
-  font-family: $md-font-family;
+  font-size: $mat-body-font-size-base;
+  font-family: $mat-font-family;
   font-weight: 500;
 }
 
@@ -116,7 +116,7 @@ md-slide-toggle {
   width: $md-slide-toggle-thumb-size;
   border-radius: 50%;
 
-  @include md-elevation(1);
+  @include mat-elevation(1);
 
   @include cdk-high-contrast {
     background: #fff;

@@ -5,7 +5,7 @@
 :host {
   display: flex;
   flex-direction: column;
-  font-family: $md-font-family;
+  font-family: $mat-font-family;
 
   &.md-tab-group-inverted-header {
     flex-direction: column-reverse;
@@ -18,7 +18,7 @@
   position: relative;
 }
 
-@media ($md-xsmall) {
+@media ($mat-xsmall) {
   .md-tab-label {
     min-width: 72px;
   }
@@ -39,7 +39,7 @@
 
 // Wraps each tab body
 md-tab-body {
-  @include md-fill;
+  @include mat-fill;
   display: block;
   overflow: hidden;
 

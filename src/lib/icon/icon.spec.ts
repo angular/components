@@ -79,7 +79,7 @@ describe('MdIcon', () => {
     testComponent.iconName = 'home';
     testComponent.iconColor = 'primary';
     fixture.detectChanges();
-    expect(sortedClassNames(mdIconElement)).toEqual(['material-icons', 'md-primary']);
+    expect(sortedClassNames(mdIconElement)).toEqual(['material-icons', 'mat-primary']);
   });
 
   describe('Ligature icons', () => {

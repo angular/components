@@ -35,13 +35,14 @@ export class MdOptionSelectEvent {
   host: {
     'role': 'option',
     '[attr.tabindex]': '_getTabIndex()',
-    '[class.md-selected]': 'selected',
+    '[class.mat-selected]': 'selected',
     '[id]': 'id',
     '[attr.aria-selected]': 'selected.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
-    '[class.md-option-disabled]': 'disabled',
+    '[class.mat-option-disabled]': 'disabled',
     '(click)': '_selectViaInteraction()',
-    '(keydown)': '_handleKeydown($event)'
+    '(keydown)': '_handleKeydown($event)',
+    '[class.mat-option]': 'true',
   },
   templateUrl: 'option.html',
   encapsulation: ViewEncapsulation.None

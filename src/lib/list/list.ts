@@ -21,16 +21,75 @@ export class MdListDivider {}
 @Component({
   moduleId: module.id,
   selector: 'md-list, mat-list, md-nav-list, mat-nav-list',
-  host: {'role': 'list'},
+  host: {
+    'role': 'list'},
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None
 })
 export class MdList {}
 
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ */
+@Directive({
+  selector: 'md-list, mat-list',
+  host: {
+    '[class.mat-list': 'true'
+  }
+})
+export class MdListCssMatStyler {}
+
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ */
+@Directive({
+  selector: 'md-nav-list, mat-nav-list',
+  host: {
+    '[class.mat-nav-list': 'true'
+  }
+})
+export class MdNavListCssMatStyler {}
+
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ */
+@Directive({
+  selector: 'md-divider, mat-divider',
+  host: {
+    '[class.mat-divider': 'true'
+  }
+})
+export class MdDividerCssMatStyler {}
+
 /* Need directive for a ContentChild query in list-item */
-@Directive({ selector: '[md-list-avatar], [mat-list-avatar]' })
+@Directive({
+  selector: '[md-list-avatar], [mat-list-avatar]',
+  host: {
+    '[class.mat-list-avatar': 'true'
+  }
+})
 export class MdListAvatar {}
+
+/* Need directive to add mat- CSS styling */
+@Directive({
+  selector: '[md-list-icon], [mat-list-icon]',
+  host: {
+    '[class.mat-list-icon': 'true'
+  }
+})
+export class MdListIcon {}
+
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ */
+@Directive({
+  selector: '[md-subheader], [mat-subheader]',
+  host: {
+    '[class.mat-subheader': 'true'
+  }
+})
+export class MdListSubheaderCssMatStyler {}
 
 @Component({
   moduleId: module.id,
@@ -39,6 +98,7 @@ export class MdListAvatar {}
     'role': 'listitem',
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
+    '[class.mat-list-item]': 'true',
   },
   templateUrl: 'list-item.html',
   encapsulation: ViewEncapsulation.None
@@ -81,7 +141,9 @@ export class MdListItem implements AfterContentInit {
     MdLineModule,
     CompatibilityModule,
   ],
-  declarations: [MdList, MdListItem, MdListDivider, MdListAvatar],
+  declarations: [MdList, MdListItem, MdListDivider, MdListAvatar, MdListIcon,
+    MdListCssMatStyler, MdNavListCssMatStyler, MdDividerCssMatStyler,
+    MdListSubheaderCssMatStyler],
 })
 export class MdListModule {
   /** @deprecated */

@@ -1,13 +1,13 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
 
-@mixin md-tabs-theme($theme) {
+@mixin mat-tabs-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
-  $header-border: 1px solid md-color($background, status-bar);
+  $header-border: 1px solid mat-color($background, status-bar);
 
   [md-tab-nav-bar],
   .md-tab-header {
@@ -20,10 +20,10 @@
   }
 
   .md-tab-label:focus {
-    background-color: md-color($primary, 100, 0.3);
+    background-color: mat-color($primary, 100, 0.3);
   }
 
   md-ink-bar {
-    background-color: md-color($primary, 500);
+    background-color: mat-color($primary, 500);
   }
 }

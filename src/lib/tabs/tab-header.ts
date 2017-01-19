@@ -46,8 +46,8 @@ const EXAGGERATED_OVERSCROLL = 60;
   encapsulation: ViewEncapsulation.None,
   host: {
     'class': 'md-tab-header',
-    '[class.md-tab-header-pagination-controls-enabled]': '_showPaginationControls',
-    '[class.md-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
+    '[class.mat-tab-header-pagination-controls-enabled]': '_showPaginationControls',
+    '[class.mat-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
   }
 })
 export class MdTabHeader implements AfterContentChecked, AfterContentInit {

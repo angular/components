@@ -21,7 +21,7 @@
   &.md-sidenav-opening, &.md-sidenav-opened {
     // The elevation of z-16 is noted in the design specifications.
     // See https://material.io/guidelines/patterns/navigation-drawer.html#
-    @include md-elevation(16);
+    @include mat-elevation(16);
     transform: translate3d($open, 0, 0);
   }
 }
@@ -53,7 +53,7 @@
 
   // TODO(hansl): Update this with a more robust solution.
   &[fullscreen] {
-    @include md-fill();
+    @include mat-fill();
 
     &.md-sidenav-opened {
       overflow: hidden;
@@ -62,7 +62,7 @@
 }
 
 .md-sidenav-backdrop {
-  @include md-fill();
+  @include mat-fill();
 
   display: block;
 

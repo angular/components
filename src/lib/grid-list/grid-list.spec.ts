@@ -120,7 +120,7 @@ describe('MdGridList', () => {
     let fixture = TestBed.createComponent(GridListWithUnspecifiedGutterSize);
     fixture.detectChanges();
 
-    let tiles = fixture.debugElement.queryAll(By.css('md-grid-tile'));
+    let tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
 
     // check horizontal gutter
     expect(getStyle(tiles[0], 'width')).toBe('99.5px');
@@ -135,7 +135,7 @@ describe('MdGridList', () => {
     let fixture = TestBed.createComponent(GridListWithGutterSize);
     fixture.detectChanges();
 
-    let tiles = fixture.debugElement.queryAll(By.css('md-grid-tile'));
+    let tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
 
     // check horizontal gutter
     expect(getStyle(tiles[0], 'width')).toBe('99px');
@@ -150,7 +150,7 @@ describe('MdGridList', () => {
     let fixture = TestBed.createComponent(GridListWithUnitlessGutterSize);
     fixture.detectChanges();
 
-    let tiles = fixture.debugElement.queryAll(By.css('md-grid-tile'));
+    let tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
 
     // check horizontal gutter
     expect(getStyle(tiles[0], 'width')).toBe('99px');
@@ -215,7 +215,7 @@ describe('MdGridList', () => {
       ];
 
       fixture.detectChanges();
-      let tiles = fixture.debugElement.queryAll(By.css('md-grid-tile'));
+      let tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
 
       expect(getStyle(tiles[0], 'width')).toBe('299.75px');
       expect(getStyle(tiles[0], 'height')).toBe('100px');
@@ -243,7 +243,7 @@ describe('MdGridList', () => {
     fixture.detectChanges();
 
     let footer = fixture.debugElement.query(By.directive(MdGridTileText));
-    expect(footer.nativeElement.classList.contains('md-2-line')).toBe(false);
+    expect(footer.nativeElement.classList.contains('mat-2-line')).toBe(false);
   });
 
   it('should add class to footers with two lines', () => {
@@ -251,7 +251,7 @@ describe('MdGridList', () => {
     fixture.detectChanges();
 
     let footer = fixture.debugElement.query(By.directive(MdGridTileText));
-    expect(footer.nativeElement.classList.contains('md-2-line')).toBe(true);
+    expect(footer.nativeElement.classList.contains('mat-2-line')).toBe(true);
   });
 });
 

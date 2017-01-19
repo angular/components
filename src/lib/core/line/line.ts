@@ -13,7 +13,12 @@ import {CompatibilityModule} from '../compatibility/compatibility';
  * Line elements can be extracted with a @ContentChildren(MdLine) query, then
  * counted by checking the query list's length.
  */
-@Directive({ selector: '[md-line], [mat-line]' })
+@Directive({
+  selector: '[md-line], [mat-line]',
+  host: {
+    '[class.mat-line]': 'true'
+  }
+})
 export class MdLine {}
 
 /**
