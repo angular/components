@@ -14,7 +14,7 @@
   overflow: hidden;  // Keeps the ripple from extending outside the element bounds
 }
 
-@media ($md-xsmall) {
+@media ($mat-xsmall) {
   [md-tab-link] {
     min-width: 72px;
   }

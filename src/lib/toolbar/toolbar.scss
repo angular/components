@@ -26,7 +26,7 @@ md-toolbar {
   // Font Styling
   font-size: $md-toolbar-font-size;
   font-weight: 400;
-  font-family: $md-font-family;
+  font-family: $mat-font-family;
 
   padding: 0 $md-toolbar-padding;
 
@@ -48,11 +48,11 @@ md-toolbar {
 @include md-toolbar-height($md-toolbar-height-desktop);
 
 // Specific height for mobile devices in portrait mode.
-@media ($md-xsmall) and (orientation: portrait) {
+@media ($mat-xsmall) and (orientation: portrait) {
   @include md-toolbar-height($md-toolbar-height-mobile-portrait);
 }
 
 // Specific height for mobile devices in landscape mode.
-@media ($md-small) and (orientation: landscape) {
+@media ($mat-small) and (orientation: landscape) {
   @include md-toolbar-height($md-toolbar-height-mobile-landscape);
 }

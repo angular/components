@@ -27,7 +27,7 @@ describe('MdProgressSpinner', () => {
     let fixture = TestBed.createComponent(BasicProgressSpinner);
       fixture.detectChanges();
 
-      let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
+      let progressElement = fixture.debugElement.query(By.css('mat-progress-spinner'));
       expect(progressElement.componentInstance.mode).toBe('determinate');
   });
 
@@ -35,7 +35,7 @@ describe('MdProgressSpinner', () => {
     let fixture = TestBed.createComponent(IndeterminateProgressSpinner);
     fixture.detectChanges();
 
-    let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
+    let progressElement = fixture.debugElement.query(By.css('mat-progress-spinner'));
     expect(progressElement.componentInstance.mode).toBe('indeterminate');
   });
 
@@ -43,13 +43,13 @@ describe('MdProgressSpinner', () => {
     let fixture = TestBed.createComponent(BasicProgressSpinner);
     fixture.detectChanges();
 
-    let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
+    let progressElement = fixture.debugElement.query(By.css('mat-progress-spinner'));
     expect(progressElement.componentInstance.value).toBeUndefined();
   });
 
   it('should set the value to undefined when the mode is set to indeterminate', () => {
     let fixture = TestBed.createComponent(ProgressSpinnerWithValueAndBoundMode);
-    let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
+    let progressElement = fixture.debugElement.query(By.css('mat-progress-spinner'));
     fixture.debugElement.componentInstance.mode = 'determinate';
     fixture.detectChanges();
 
@@ -63,7 +63,7 @@ describe('MdProgressSpinner', () => {
     let fixture = TestBed.createComponent(BasicProgressSpinner);
     fixture.detectChanges();
 
-    let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
+    let progressElement = fixture.debugElement.query(By.css('mat-progress-spinner'));
     let progressComponent = progressElement.componentInstance;
 
     progressComponent.value = 50;
@@ -86,7 +86,7 @@ describe('MdProgressSpinner', () => {
     let fixture = TestBed.createComponent(IndeterminateProgressSpinnerWithNgIf);
     fixture.detectChanges();
 
-    let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
+    let progressElement = fixture.debugElement.query(By.css('mat-progress-spinner'));
     expect(progressElement.componentInstance.interdeterminateInterval).toBeTruthy();
 
     fixture.debugElement.componentInstance.isHidden = true;
@@ -98,7 +98,7 @@ describe('MdProgressSpinner', () => {
     let fixture = TestBed.createComponent(SpinnerWithNgIf);
     fixture.detectChanges();
 
-    let progressElement = fixture.debugElement.query(By.css('md-spinner'));
+    let progressElement = fixture.debugElement.query(By.css('mat-spinner'));
 
     expect(progressElement.componentInstance.interdeterminateInterval).toBeTruthy();
 
@@ -112,30 +112,30 @@ describe('MdProgressSpinner', () => {
     let fixture = TestBed.createComponent(SpinnerWithColor);
     fixture.detectChanges();
 
-    let progressElement = fixture.debugElement.query(By.css('md-spinner'));
+    let progressElement = fixture.debugElement.query(By.css('mat-spinner'));
 
-    expect(progressElement.nativeElement.classList).toContain('md-primary');
+    expect(progressElement.nativeElement.classList).toContain('mat-primary');
 
     fixture.debugElement.componentInstance.color = 'accent';
     fixture.detectChanges();
 
-    expect(progressElement.nativeElement.classList).toContain('md-accent');
-    expect(progressElement.nativeElement.classList).not.toContain('md-primary');
+    expect(progressElement.nativeElement.classList).toContain('mat-accent');
+    expect(progressElement.nativeElement.classList).not.toContain('mat-primary');
   });
 
   it('should set the color class on the md-progress-spinner', () => {
     let fixture = TestBed.createComponent(ProgressSpinnerWithColor);
     fixture.detectChanges();
 
-    let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
+    let progressElement = fixture.debugElement.query(By.css('mat-progress-spinner'));
 
-    expect(progressElement.nativeElement.classList).toContain('md-primary');
+    expect(progressElement.nativeElement.classList).toContain('mat-primary');
 
     fixture.debugElement.componentInstance.color = 'accent';
     fixture.detectChanges();
 
-    expect(progressElement.nativeElement.classList).toContain('md-accent');
-    expect(progressElement.nativeElement.classList).not.toContain('md-primary');
+    expect(progressElement.nativeElement.classList).toContain('mat-accent');
+    expect(progressElement.nativeElement.classList).not.toContain('mat-primary');
   });
 
 });

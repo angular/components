@@ -47,10 +47,10 @@ let nextId = 0;
   moduleId: module.id,
   selector: 'md-slide-toggle, mat-slide-toggle',
   host: {
-    '[class.md-checked]': 'checked',
-    '[class.md-disabled]': 'disabled',
+    '[class.mat-checked]': 'checked',
+    '[class.mat-disabled]': 'disabled',
     // This md-slide-toggle prefix will change, once the temporary ripple is removed.
-    '[class.md-slide-toggle-focused]': '_hasFocus',
+    '[class.mat-slide-toggle-focused]': '_hasFocus',
     '(mousedown)': '_setMousedown()'
   },
   templateUrl: 'slide-toggle.html',

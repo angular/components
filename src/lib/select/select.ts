@@ -84,7 +84,7 @@ export class MdSelectChange {
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': '_control?.invalid || "false"',
     '[attr.aria-owns]': '_optionIds',
-    '[class.md-select-disabled]': 'disabled',
+    '[class.mat-select-disabled]': 'disabled',
     '(keydown)': '_handleKeydown($event)',
     '(blur)': '_onBlur()'
   },
