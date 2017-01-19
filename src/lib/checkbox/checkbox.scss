@@ -238,8 +238,8 @@ $mat-checkbox-ripple-size: 15px;
   @extend %mat-checkbox-outer-box;
 
   background-color: transparent;
-  border: $md-checkbox-border-width solid;
-  transition: border-color $md-checkbox-transition-duration $md-linear-out-slow-in-timing-function;
+  border: $mat-checkbox-border-width solid;
+  transition: border-color $mat-checkbox-transition-duration $mat-linear-out-slow-in-timing-function;
 }
 
 .mat-checkbox-background {
@@ -248,9 +248,9 @@ $mat-checkbox-ripple-size: 15px;
   align-items: center;
   display: inline-flex;
   justify-content: center;
-  transition: background-color $md-checkbox-transition-duration
-                  $md-linear-out-slow-in-timing-function,
-              opacity $md-checkbox-transition-duration $md-linear-out-slow-in-timing-function;
+  transition: background-color $mat-checkbox-transition-duration
+                  $mat-linear-out-slow-in-timing-function,
+              opacity $mat-checkbox-transition-duration $mat-linear-out-slow-in-timing-function;
 }
 
 .mat-checkbox-checkmark {

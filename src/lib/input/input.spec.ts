@@ -245,12 +245,12 @@ describe('MdInput', function () {
     fixture.detectChanges();
 
     // In this case, we should have an empty <md-hint>.
-    let el = fixture.debugElement.query(By.css('md-hint')).nativeElement;
+    let el = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
     expect(el.textContent).toBeFalsy();
 
     fixture.componentInstance.label = 'label';
     fixture.detectChanges();
-    el = fixture.debugElement.query(By.css('md-hint')).nativeElement;
+    el = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
     expect(el.textContent).toBe('label');
   });
 
