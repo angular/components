@@ -72,6 +72,11 @@ md-slider {
   transition: opacity $swift-ease-out-duration $swift-ease-out-timing-function;
 }
 
+// TODO(mmalerba): Simplify css to avoid unnecessary selectors.
+.md-slider-disabled .md-slider-ticks {
+  opacity: 0;
+}
+
 .md-slider-thumb-container {
   position: absolute;
   z-index: 1;
@@ -128,7 +133,7 @@ md-slider {
 
 
 // Slider with ticks when not disabled.
-.md-slider-has-ticks:not(.md-slider-disabled) {
+.md-slider-has-ticks {
 
   .md-slider-wrapper::after {
     content: '';
