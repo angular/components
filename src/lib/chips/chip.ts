@@ -141,7 +141,8 @@ export class MdChip implements Focusable, OnInit, OnDestroy {
     el.classList.add('mat-chip');
 
     // If we are a basic chip, also add the `mat-basic-chip` class for :not() targeting
-    if (el.nodeName.toLowerCase() == 'mat-basic-chip' || el.hasAttribute('mat-basic-chip')) {
+    if (el.nodeName.toLowerCase() == 'mat-basic-chip' || el.hasAttribute('mat-basic-chip') ||
+        el.nodeName.toLowerCase() == 'md-basic-chip' || el.hasAttribute('md-basic-chip')) {
       el.classList.add('mat-basic-chip');
     }
   }

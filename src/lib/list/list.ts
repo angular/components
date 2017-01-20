@@ -69,7 +69,7 @@ export class MdDividerCssMatStyler {}
     '[class.mat-list-avatar]': 'true'
   }
 })
-export class MdListAvatar {}
+export class MdListAvatarCssMatStyler {}
 
 /* Need directive to add mat- CSS styling */
 @Directive({
@@ -78,7 +78,7 @@ export class MdListAvatar {}
     '[class.mat-list-icon]': 'true'
   }
 })
-export class MdListIcon {}
+export class MdListIconCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
@@ -110,9 +110,9 @@ export class MdListItem implements AfterContentInit {
 
   @ContentChildren(MdLine) _lines: QueryList<MdLine>;
 
-  @ContentChild(MdListAvatar)
-  set _hasAvatar(avatar: MdListAvatar) {
-    this._renderer.setElementClass(this._element.nativeElement, 'md-list-avatar', avatar != null);
+  @ContentChild(MdListAvatarCssMatStyler)
+  set _hasAvatar(avatar: MdListAvatarCssMatStyler) {
+    this._renderer.setElementClass(this._element.nativeElement, 'mat-list-avatar', avatar != null);
   }
 
   constructor(private _renderer: Renderer, private _element: ElementRef) {}
@@ -137,13 +137,26 @@ export class MdListItem implements AfterContentInit {
     MdList,
     MdListItem,
     MdListDivider,
-    MdListAvatar,
+    MdListAvatarCssMatStyler,
     MdLineModule,
     CompatibilityModule,
+    MdListIconCssMatStyler,
+    MdListCssMatStyler,
+    MdNavListCssMatStyler,
+    MdDividerCssMatStyler,
+    MdListSubheaderCssMatStyler
   ],
-  declarations: [MdList, MdListItem, MdListDivider, MdListAvatar, MdListIcon,
-    MdListCssMatStyler, MdNavListCssMatStyler, MdDividerCssMatStyler,
-    MdListSubheaderCssMatStyler],
+  declarations: [
+    MdList,
+    MdListItem,
+    MdListDivider,
+    MdListAvatarCssMatStyler,
+    MdListIconCssMatStyler,
+    MdListCssMatStyler,
+    MdNavListCssMatStyler,
+    MdDividerCssMatStyler,
+    MdListSubheaderCssMatStyler
+  ],
 })
 export class MdListModule {
   /** @deprecated */

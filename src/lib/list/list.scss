@@ -31,10 +31,11 @@ $mat-dense-three-line-height: 76px;
 @mixin mat-list-item-base($font-size, $base-height, $avatar-height,
   $two-line-height, $three-line-height) {
 
-  // Prevents the wrapper `mat-list-item` from collapsing due to it being `inline` by default.
+  // Prevents the wrapper `mat-list-item-content` from collapsing due to it
+  // being `inline` by default.
   display: block;
 
-  .mat-list-item {
+  .mat-list-item-content {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -45,22 +46,22 @@ $mat-dense-three-line-height: 76px;
     padding: 0 $mat-list-side-padding;
   }
 
-  &.mat-list-avatar .mat-list-item {
+  &.mat-list-avatar .mat-list-item-content {
     height: $avatar-height;
   }
 
-  &.mat-2-line .mat-list-item {
+  &.mat-2-line .mat-list-item-content {
     height: $two-line-height;
   }
 
 
-  &.mat-3-line .mat-list-item {
+  &.mat-3-line .mat-list-item-content {
     height: $three-line-height;
   }
 
   // list items with more than 3 lines should expand to match
   // the height of its contained text
-  &.mat-multi-line .mat-list-item {
+  &.mat-multi-line .mat-list-item-content {
     height: 100%;
     padding: 8px $mat-list-side-padding;
   }
@@ -171,7 +172,7 @@ $mat-dense-three-line-height: 76px;
     color: inherit;
   }
 
-  .mat-list-item {
+  .mat-list-item-content {
     cursor: pointer;
 
     &:hover, &.mat-list-item-focus {

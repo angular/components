@@ -320,7 +320,7 @@ export class MdSidenav implements AfterContentInit {
     'sidenav-transitions.css',
   ],
   host: {
-    'class': 'md-sidenav-container',
+    'class': 'mat-sidenav-container',
   },
   encapsulation: ViewEncapsulation.None,
 })

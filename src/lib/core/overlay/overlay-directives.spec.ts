@@ -237,7 +237,7 @@ describe('Overlay directives', () => {
   <button cdk-overlay-origin #trigger="cdkOverlayOrigin">Toggle menu</button>
   <template cdk-connected-overlay [open]="isOpen" [width]="width" [height]="height"
             [origin]="trigger"
-            [hasBackdrop]="hasBackdrop" backdropclass="mat-test-class"
+            [hasBackdrop]="hasBackdrop" backdropClass="mat-test-class"
             (backdropClick)="backdropClicked=true" [offsetX]="offsetX" [offsetY]="offsetY"
             (positionChange)="positionChangeHandler($event)" (attach)="attachHandler()"
             (detach)="detachHandler()" [minWidth]="minWidth" [minHeight]="minHeight">

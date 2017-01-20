@@ -346,8 +346,8 @@ describe('MdSidenav', () => {
 
       let sidenavEl = fixture.debugElement.query(By.css('md-sidenav')).nativeElement;
 
-      expect(sidenavEl.classList).toContain('.mat-sidenav-closed');
-      expect(sidenavEl.classList).not.toContain('.mat-sidenav-opened');
+      expect(sidenavEl.classList).toContain('mat-sidenav-closed');
+      expect(sidenavEl.classList).not.toContain('mat-sidenav-opened');
     });
 
     it('should correctly parse opened="true"', () => {
@@ -358,8 +358,8 @@ describe('MdSidenav', () => {
       let sidenavEl = fixture.debugElement.query(By.css('md-sidenav')).nativeElement;
       let testComponent = fixture.debugElement.query(By.css('md-sidenav')).componentInstance;
 
-      expect(sidenavEl.classList).not.toContain('.mat-sidenav-closed');
-      expect(sidenavEl.classList).toContain('.mat-sidenav-opened');
+      expect(sidenavEl.classList).not.toContain('mat-sidenav-closed');
+      expect(sidenavEl.classList).toContain('mat-sidenav-opened');
 
       expect((testComponent as any)._toggleAnimationPromise).toBeNull();
     });
@@ -379,17 +379,17 @@ describe('MdSidenav', () => {
 
       const testComponent: SidenavDynamicAlign = fixture.debugElement.componentInstance;
       const sidenavEl = fixture.debugElement.query(By.css('md-sidenav')).nativeElement;
-      expect(sidenavEl.classList).not.toContain('.mat-sidenav-invalid');
+      expect(sidenavEl.classList).not.toContain('mat-sidenav-invalid');
 
       testComponent.sidenav1Align = 'end';
       fixture.detectChanges();
 
-      expect(sidenavEl.classList).toContain('.mat-sidenav-invalid');
+      expect(sidenavEl.classList).toContain('mat-sidenav-invalid');
 
       testComponent.sidenav2Align = 'start';
       fixture.detectChanges();
 
-      expect(sidenavEl.classList).not.toContain('.mat-sidenav-invalid');
+      expect(sidenavEl.classList).not.toContain('mat-sidenav-invalid');
     });
   });
 

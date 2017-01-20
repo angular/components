@@ -316,7 +316,7 @@ describe('MdSelect', () => {
       const options =
           overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
       expect(options[1].classList)
-          .toContain('md-selected',
+          .toContain('mat-selected',
               `Expected option with the control's initial value to be selected.`);
     });
 
@@ -342,7 +342,7 @@ describe('MdSelect', () => {
       const options =
         overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
       expect(options[1].classList)
-        .toContain('md-selected', `Expected option with the control's new value to be selected.`);
+        .toContain('mat-selected', `Expected option with the control's new value to be selected.`);
     });
 
     it('should update the form value when the view changes', () => {

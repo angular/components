@@ -21,7 +21,7 @@ import {MdRippleModule, coerceBooleanProperty, CompatibilityModule} from '../cor
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  */
 @Directive({
-  selector: 'button[md-button], button[mat-button]',
+  selector: 'button[md-button], button[mat-button], a[md-button], a[mat-button]',
   host: {
     '[class.mat-button]': 'true'
   }
@@ -32,7 +32,9 @@ export class MdButtonCssMatStyler {}
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  */
 @Directive({
-  selector: 'button[md-raised-button], button[mat-raised-button]',
+  selector:
+      'button[md-raised-button], button[mat-raised-button], ' +
+      'a[md-raised-button], a[mat-raised-button]',
   host: {
     '[class.mat-raised-button]': 'true'
   }
@@ -43,9 +45,10 @@ export class MdRaisedButtonCssMatStyler {}
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  */
 @Directive({
-  selector: 'button[md-icon-button], button[mat-icon-button]',
+  selector:
+      'button[md-icon-button], button[mat-icon-button], a[md-icon-button], a[mat-icon-button]',
   host: {
-    '[class.mat-icon-button]': 'true'
+    'class': 'mat-icon-button',
   }
 })
 export class MdIconButtonCssMatStyler {}
@@ -54,7 +57,7 @@ export class MdIconButtonCssMatStyler {}
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  */
 @Directive({
-  selector: 'button[md-fab], button[mat-fab]',
+  selector: 'button[md-fab], button[mat-fab], a[md-fab], a[mat-fab]',
   host: {
     '[class.mat-fab]': 'true'
   }
@@ -65,7 +68,7 @@ export class MdFabCssMatStyler {}
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  */
 @Directive({
-  selector: 'button[md-mini-fab], button[mat-mini-fab]',
+  selector: 'button[md-mini-fab], button[mat-mini-fab], a[md-mini-fab], a[mat-mini-fab]',
   host: {
     '[class.mat-mini-fab]': 'true'
   }
@@ -141,7 +144,7 @@ export class MdButton {
 
   _setElementColor(color: string, isAdd: boolean) {
     if (color != null && color != '') {
-      this._renderer.setElementClass(this._getHostElement(), `md-${color}`, isAdd);
+      this._renderer.setElementClass(this._getHostElement(), `mat-${color}`, isAdd);
     }
   }
 
@@ -222,9 +225,24 @@ export class MdAnchor extends MdButton {
 
 @NgModule({
   imports: [CommonModule, MdRippleModule, CompatibilityModule],
-  exports: [MdButton, MdAnchor, CompatibilityModule],
-  declarations: [MdButton, MdAnchor, MdButtonCssMatStyler, MdRaisedButtonCssMatStyler,
-      MdIconButtonCssMatStyler, MdFabCssMatStyler, MdMiniFabCssMatStyler],
+  exports: [
+    MdButton, MdAnchor,
+    CompatibilityModule,
+    MdButtonCssMatStyler,
+    MdRaisedButtonCssMatStyler,
+    MdIconButtonCssMatStyler,
+    MdFabCssMatStyler,
+    MdMiniFabCssMatStyler
+  ],
+  declarations: [
+    MdButton,
+    MdAnchor,
+    MdButtonCssMatStyler,
+    MdRaisedButtonCssMatStyler,
+    MdIconButtonCssMatStyler,
+    MdFabCssMatStyler,
+    MdMiniFabCssMatStyler
+  ],
 })
 export class MdButtonModule {
   /** @deprecated */
