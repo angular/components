@@ -57,7 +57,7 @@ export class MdRadioChange {
   providers: [MD_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
   host: {
     'role': 'radiogroup',
-    '[class.mat-radio-group]': 'true',
+    'class': 'mat-radio-group',
   },
 })
 export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
@@ -264,7 +264,7 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   styleUrls: ['radio.css'],
   encapsulation: ViewEncapsulation.None,
   host: {
-    '[class.mat-radio-button]': 'true',
+    'class': 'mat-radio-button',
   }
 })
 export class MdRadioButton implements OnInit {

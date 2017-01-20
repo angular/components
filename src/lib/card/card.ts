@@ -15,7 +15,7 @@ import {CompatibilityModule} from '../core';
 @Directive({
   selector: 'md-card-content, mat-card-content',
   host: {
-    '[class.mat-card-content]': 'true'
+    'class': 'mat-card-content'
   }
 })
 export class MdCardContent {}
@@ -26,7 +26,7 @@ export class MdCardContent {}
 @Directive({
   selector: 'md-card-title, mat-card-title',
   host: {
-    '[class.mat-card-title]': 'true'
+    'class': 'mat-card-title'
   }
 })
 export class MdCardTitle {}
@@ -37,7 +37,7 @@ export class MdCardTitle {}
 @Directive({
   selector: 'md-card-subtitle, mat-card-subtitle',
   host: {
-    '[class.mat-card-subtitle]': 'true'
+    'class': 'mat-card-subtitle'
   }
 })
 export class MdCardSubtitle {}
@@ -48,7 +48,7 @@ export class MdCardSubtitle {}
 @Directive({
   selector: 'md-card-actions, mat-card-actions',
   host: {
-    '[class.mat-card-actions]': 'true'
+    'class': 'mat-card-actions'
   }
 })
 export class MdCardActions {}
@@ -59,7 +59,7 @@ export class MdCardActions {}
 @Directive({
   selector: 'md-card-footer, mat-card-footer',
   host: {
-    '[class.mat-card-footer]': 'true'
+    'class': 'mat-card-footer'
   }
 })
 export class MdCardFooter {}
@@ -70,7 +70,7 @@ export class MdCardFooter {}
 @Directive({
   selector: '[md-card-sm-image], [mat-card-sm-image]',
   host: {
-    '[class.mat-card-sm-image]': 'true'
+    'class': 'mat-card-sm-image'
   }
 })
 export class MdCardSmImage {}
@@ -81,7 +81,7 @@ export class MdCardSmImage {}
 @Directive({
   selector: '[md-card-md-image], [mat-card-md-image]',
   host: {
-    '[class.mat-card-md-image]': 'true'
+    'class': 'mat-card-md-image'
   }
 })
 export class MdCardMdImage {}
@@ -92,7 +92,7 @@ export class MdCardMdImage {}
 @Directive({
   selector: '[md-card-lg-image], [mat-card-lg-image]',
   host: {
-    '[class.mat-card-lg-image]': 'true'
+    'class': 'mat-card-lg-image'
   }
 })
 export class MdCardLgImage {}
@@ -103,7 +103,7 @@ export class MdCardLgImage {}
 @Directive({
   selector: '[md-card-image], [mat-card-image]',
   host: {
-    '[class.mat-card-image]': 'true'
+    'class': 'mat-card-image'
   }
 })
 export class MdCardImage {}
@@ -114,7 +114,7 @@ export class MdCardImage {}
 @Directive({
   selector: 'md-card-xl-image, mat-card-xl-image',
   host: {
-    '[class.mat-card-xl-image]': 'true'
+    'class': 'mat-card-xl-image'
   }
 })
 export class MdCardXlImage {}
@@ -125,7 +125,7 @@ export class MdCardXlImage {}
 @Directive({
   selector: 'md-card-avatar, mat-card-avatar',
   host: {
-    '[class.mat-card-avatar]': 'true'
+    'class': 'mat-card-avatar'
   }
 })
 export class MdCardAvatar {}
@@ -150,7 +150,7 @@ export class MdCardAvatar {}
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.mat-card]': 'true'
+    'class': 'mat-card'
   }
 })
 export class MdCard {}
@@ -167,7 +167,7 @@ export class MdCard {}
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.mat-card-header]': 'true'
+    'class': 'mat-card-header'
   }
 })
 export class MdCardHeader {}
@@ -184,7 +184,7 @@ export class MdCardHeader {}
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.mat-card-title-group]': 'true'
+    'class': 'mat-card-title-group'
   }
 })
 export class MdCardTitleGroup {}

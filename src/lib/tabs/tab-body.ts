@@ -49,7 +49,7 @@ export type MdTabBodyOriginState = 'left' | 'right';
   selector: 'md-tab-body',
   templateUrl: 'tab-body.html',
   host: {
-    '[class.mat-tab-body]': 'true',
+    'class': 'mat-tab-body',
   },
   animations: [
     trigger('translateTab', [

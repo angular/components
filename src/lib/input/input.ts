@@ -73,7 +73,7 @@ export class MdInputDuplicatedHintError extends MdError {
 @Directive({
   selector: 'md-input',
   host: {
-    '[class.mat-input]': 'true'
+    'class': 'mat-input'
   }
 })
 export class MdInputCssMatStyler {}
@@ -84,7 +84,7 @@ export class MdInputCssMatStyler {}
 @Directive({
   selector: 'md-textarea',
   host: {
-    '[class.mat-textarea]': 'true'
+    'class': 'mat-textarea'
   }
 })
 export class MdTextareaCssMatStyler {}

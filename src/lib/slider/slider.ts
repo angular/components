@@ -72,7 +72,7 @@ export class MdSliderChange {
   selector: 'md-slider, mat-slider',
   providers: [MD_SLIDER_VALUE_ACCESSOR],
   host: {
-    '[class.mat-slider]': 'true',
+    'class': 'mat-slider',
     '(blur)': '_onBlur()',
     '(click)': '_onClick($event)',
     '(keydown)': '_onKeydown($event)',

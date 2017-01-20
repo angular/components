@@ -15,7 +15,7 @@ import {CompatibilityModule} from '../core';
 @Directive({
   selector: 'md-toolbar-row, mat-toolbar-row',
   host: {
-    '[class.mat-toolbar-row]': 'true',
+    'class': 'mat-toolbar-row',
   },
 })
 export class MdToolbarRow {}
@@ -26,7 +26,7 @@ export class MdToolbarRow {}
   templateUrl: 'toolbar.html',
   styleUrls: ['toolbar.css'],
   host: {
-    '[class.mat-toolbar]': 'true',
+    'class': 'mat-toolbar',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None

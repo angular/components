@@ -228,7 +228,7 @@ export class MdInputDirective {
   templateUrl: 'input-container.html',
   styleUrls: ['input.css', 'input-container.css'],
   host: {
-    '[class.mat-input-container]': 'true',
+    'class': 'mat-input-container',
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
     '[class.ng-untouched]': '_shouldForward("untouched")',

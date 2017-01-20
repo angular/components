@@ -23,7 +23,7 @@ import {ViewportRuler, VIEWPORT_RULER_PROVIDER} from '../overlay/position/viewpo
 @Directive({
   selector: '[md-ripple], [mat-ripple]',
   host: {
-    '[class.mat-ripple]': 'true',
+    'class': 'mat-ripple',
   }
 })
 export class MdRipple implements OnInit, OnDestroy, OnChanges {

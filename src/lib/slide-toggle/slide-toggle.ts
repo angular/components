@@ -47,7 +47,7 @@ let nextId = 0;
   moduleId: module.id,
   selector: 'md-slide-toggle, mat-slide-toggle',
   host: {
-    '[class.mat-slide-toggle]': 'true',
+    'class': 'mat-slide-toggle',
     '[class.mat-checked]': 'checked',
     '[class.mat-disabled]': 'disabled',
     // This mat-slide-toggle prefix will change, once the temporary ripple is removed.
