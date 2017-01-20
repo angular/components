@@ -77,7 +77,7 @@ $mat-slider-tick-size: 2px !default;
   opacity: 0;
 }
 
-.md-slider-thumb-container {
+.mat-slider-thumb-container {
   position: absolute;
   z-index: 1;
   transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;
