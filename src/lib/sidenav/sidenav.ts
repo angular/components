@@ -50,6 +50,7 @@ export class MdSidenavToggleResult {
   // TODO(mmalerba): move template to separate file.
   templateUrl: 'sidenav.html',
   host: {
+    '[class.mat-sidenav]': 'true',
     '(transitionend)': '_onTransitionEnd($event)',
     '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
@@ -387,9 +388,9 @@ export class MdSidenavContainer implements AfterContentInit {
     sidenav.onAlignChanged.subscribe(() => this._validateDrawers());
   }
 
-  /** Toggles the 'md-sidenav-opened' class on the main 'md-sidenav-container' element. */
+  /** Toggles the 'mat-sidenav-opened' class on the main 'md-sidenav-container' element. */
   private _setContainerClass(sidenav: MdSidenav, bool: boolean): void {
-    this._renderer.setElementClass(this._element.nativeElement, 'md-sidenav-opened', bool);
+    this._renderer.setElementClass(this._element.nativeElement, 'mat-sidenav-opened', bool);
   }
 
   /** Sets the valid state of the drawers. */

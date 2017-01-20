@@ -5,7 +5,7 @@
 @mixin mat-dialog-theme($theme) {
   $background: map-get($theme, background);
 
-  md-dialog-container {
+  .mat-dialog-container {
     background: mat-color($background, dialog);
   }
 }

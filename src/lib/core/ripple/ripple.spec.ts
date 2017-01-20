@@ -88,7 +88,7 @@ describe('MdRipple', () => {
       fixture.detectChanges();
 
       rippleElement = fixture.debugElement.nativeElement.querySelector('[md-ripple]');
-      rippleBackground = rippleElement.querySelector('.md-ripple-background');
+      rippleBackground = rippleElement.querySelector('.mat-ripple-background');
       expect(rippleBackground).toBeTruthy();
     });
 
@@ -106,10 +106,10 @@ describe('MdRipple', () => {
 
     it('creates foreground ripples on click', () => {
       rippleElement.click();
-      expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(1);
+      expect(rippleElement.querySelectorAll('.mat-ripple-foreground').length).toBe(1);
       // Second click should create another ripple.
       rippleElement.click();
-      const ripples = rippleElement.querySelectorAll('.md-ripple-foreground');
+      const ripples = rippleElement.querySelectorAll('.mat-ripple-foreground');
       expect(ripples.length).toBe(2);
       expect(ripples[0].classList).toContain('md-ripple-fade-in');
       expect(ripples[1].classList).toContain('md-ripple-fade-in');
@@ -122,23 +122,23 @@ describe('MdRipple', () => {
       expect(ripples[1].classList).not.toContain('md-ripple-fade-out');
       // Signal the end of the first ripple's fade out. The ripple should be removed from the DOM.
       ripples[0].dispatchEvent(opacityTransitionEnd);
-      expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(1);
-      expect(rippleElement.querySelectorAll('.md-ripple-foreground')[0]).toBe(ripples[1]);
+      expect(rippleElement.querySelectorAll('.mat-ripple-foreground').length).toBe(1);
+      expect(rippleElement.querySelectorAll('.mat-ripple-foreground')[0]).toBe(ripples[1]);
       // Finish the second ripple.
       ripples[1].dispatchEvent(opacityTransitionEnd);
       expect(ripples[1].classList).not.toContain('md-ripple-fade-in');
       expect(ripples[1].classList).toContain('md-ripple-fade-out');
       ripples[1].dispatchEvent(opacityTransitionEnd);
-      expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(0);
+      expect(rippleElement.querySelectorAll('.mat-ripple-foreground').length).toBe(0);
     });
 
     it('removes foreground ripples after timeout', fakeAsync(() => {
       rippleElement.click();
-      expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(1);
+      expect(rippleElement.querySelectorAll('.mat-ripple-foreground').length).toBe(1);
 
       tick(1600);
 
-      expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(0);
+      expect(rippleElement.querySelectorAll('.mat-ripple-foreground').length).toBe(0);
     }));
 
     it('creates ripples when manually triggered', () => {
@@ -146,11 +146,11 @@ describe('MdRipple', () => {
       // start() should show the background, but no foreground ripple yet.
       rippleComponent.start();
       expect(rippleBackground.classList).toContain('md-ripple-active');
-      expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(0);
+      expect(rippleElement.querySelectorAll('.mat-ripple-foreground').length).toBe(0);
       // end() should deactivate the background and show the foreground ripple.
       rippleComponent.end(0, 0);
       expect(rippleBackground.classList).not.toContain('md-ripple-active');
-      expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(1);
+      expect(rippleElement.querySelectorAll('.mat-ripple-foreground').length).toBe(1);
     });
 
     it('sizes ripple to cover element', () => {
@@ -165,7 +165,7 @@ describe('MdRipple', () => {
       const expectedRadius = Math.sqrt(250 * 250 + 125 * 125);
       const expectedLeft = elementRect.left + 50 - expectedRadius;
       const expectedTop = elementRect.top + 75 - expectedRadius;
-      const ripple = <HTMLElement>rippleElement.querySelector('.md-ripple-foreground');
+      const ripple = <HTMLElement>rippleElement.querySelector('.mat-ripple-foreground');
       // Note: getBoundingClientRect won't work because there's a transform applied to make the
       // ripple start out tiny.
       expect(pxStringToFloat(ripple.style.left)).toBeCloseTo(expectedLeft, 1);
@@ -187,7 +187,7 @@ describe('MdRipple', () => {
       const expectedTop = elementRect.top + (elementRect.height / 2) - expectedRadius;
       // Note: getBoundingClientRect won't work because there's a transform applied to make the
       // ripple start out tiny.
-      const ripple = <HTMLElement>rippleElement.querySelector('.md-ripple-foreground');
+      const ripple = <HTMLElement>rippleElement.querySelector('.mat-ripple-foreground');
       expect(pxStringToFloat(ripple.style.left)).toBeCloseTo(expectedLeft, 1);
       expect(pxStringToFloat(ripple.style.top)).toBeCloseTo(expectedTop, 1);
       expect(pxStringToFloat(ripple.style.width)).toBeCloseTo(2 * expectedRadius, 1);
@@ -200,7 +200,7 @@ describe('MdRipple', () => {
       fixture.detectChanges();
 
       rippleElement = fixture.debugElement.nativeElement.querySelector('[md-ripple]');
-      rippleBackground = rippleElement.querySelector('.md-ripple-background');
+      rippleBackground = rippleElement.querySelector('.mat-ripple-background');
 
       fixture.componentInstance.isDestroyed = true;
       fixture.detectChanges();
@@ -263,7 +263,7 @@ describe('MdRipple', () => {
         const expectedLeft = left - expectedRadius;
         const expectedTop = top - expectedRadius;
 
-        const ripple = <HTMLElement>rippleElement.querySelector('.md-ripple-foreground');
+        const ripple = <HTMLElement>rippleElement.querySelector('.mat-ripple-foreground');
 
         // In the iOS simulator (BrowserStack & SauceLabs), adding the content to the
         // body causes karma's iframe for the test to stretch to fit that content once we attempt to
@@ -294,7 +294,7 @@ describe('MdRipple', () => {
       controller = fixture.debugElement.componentInstance;
       rippleComponent = controller.ripple;
       rippleElement = fixture.debugElement.nativeElement.querySelector('[md-ripple]');
-      rippleBackground = rippleElement.querySelector('.md-ripple-background');
+      rippleBackground = rippleElement.querySelector('.mat-ripple-background');
       expect(rippleBackground).toBeTruthy();
     });
 
@@ -313,7 +313,7 @@ describe('MdRipple', () => {
       controller.color = color;
       fixture.detectChanges();
       rippleElement.click();
-      const ripple = rippleElement.querySelector('.md-ripple-foreground');
+      const ripple = rippleElement.querySelector('.mat-ripple-foreground');
       expect(window.getComputedStyle(ripple).backgroundColor).toBe(color);
     });
 
@@ -326,12 +326,12 @@ describe('MdRipple', () => {
       rippleElement.dispatchEvent(mouseDown);
       expect(rippleBackground.classList).not.toContain('md-ripple-active');
       rippleElement.click();
-      expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(0);
+      expect(rippleElement.querySelectorAll('.mat-ripple-foreground').length).toBe(0);
       // Calling start() and end() should still create a ripple.
       rippleComponent.start();
       expect(rippleBackground.classList).toContain('md-ripple-active');
       rippleComponent.end(0, 0);
-      expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(1);
+      expect(rippleElement.querySelectorAll('.mat-ripple-foreground').length).toBe(1);
     });
 
     it('allows specifying custom trigger element', () => {
@@ -342,7 +342,7 @@ describe('MdRipple', () => {
       alternateTrigger.dispatchEvent(mouseDown);
       expect(rippleBackground.classList).not.toContain('md-ripple-active');
       alternateTrigger.click();
-      expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(0);
+      expect(rippleElement.querySelectorAll('.mat-ripple-foreground').length).toBe(0);
 
       // Reassign the trigger element, and now events should create ripples.
       controller.trigger = alternateTrigger;
@@ -350,7 +350,7 @@ describe('MdRipple', () => {
       alternateTrigger.dispatchEvent(mouseDown);
       expect(rippleBackground.classList).toContain('md-ripple-active');
       alternateTrigger.click();
-      expect(rippleElement.querySelectorAll('.md-ripple-foreground').length).toBe(1);
+      expect(rippleElement.querySelectorAll('.mat-ripple-foreground').length).toBe(1);
     });
 
     it('expands ripple from center if centered input is set', () => {
@@ -368,7 +368,7 @@ describe('MdRipple', () => {
       const expectedLeft = elementRect.left + (elementRect.width / 2) - expectedRadius;
       const expectedTop = elementRect.top + (elementRect.height / 2) - expectedRadius;
 
-      const ripple = <HTMLElement>rippleElement.querySelector('.md-ripple-foreground');
+      const ripple = <HTMLElement>rippleElement.querySelector('.mat-ripple-foreground');
       expect(pxStringToFloat(ripple.style.left)).toBeCloseTo(expectedLeft, 1);
       expect(pxStringToFloat(ripple.style.top)).toBeCloseTo(expectedTop, 1);
       expect(pxStringToFloat(ripple.style.width)).toBeCloseTo(2 * expectedRadius, 1);
@@ -387,7 +387,7 @@ describe('MdRipple', () => {
       const expectedLeft = elementRect.left + 50 - customRadius;
       const expectedTop = elementRect.top + 75 - customRadius;
 
-      const ripple = <HTMLElement>rippleElement.querySelector('.md-ripple-foreground');
+      const ripple = <HTMLElement>rippleElement.querySelector('.mat-ripple-foreground');
       expect(pxStringToFloat(ripple.style.left)).toBeCloseTo(expectedLeft, 1);
       expect(pxStringToFloat(ripple.style.top)).toBeCloseTo(expectedTop, 1);
       expect(pxStringToFloat(ripple.style.width)).toBeCloseTo(2 * customRadius, 1);
@@ -410,26 +410,26 @@ describe('MdRipple', () => {
     });
 
     it('initially does not create background', () => {
-      rippleBackground = rippleElement.querySelector('.md-ripple-background');
+      rippleBackground = rippleElement.querySelector('.mat-ripple-background');
       expect(rippleBackground).toBeNull();
     });
 
     it('creates background when enabled', () => {
-      rippleBackground = rippleElement.querySelector('.md-ripple-background');
+      rippleBackground = rippleElement.querySelector('.mat-ripple-background');
       expect(rippleBackground).toBeNull();
 
       controller.disabled = false;
       fixture.detectChanges();
-      rippleBackground = rippleElement.querySelector('.md-ripple-background');
+      rippleBackground = rippleElement.querySelector('.mat-ripple-background');
       expect(rippleBackground).toBeTruthy();
     });
 
     it('creates background when manually activated', () => {
-      rippleBackground = rippleElement.querySelector('.md-ripple-background');
+      rippleBackground = rippleElement.querySelector('.mat-ripple-background');
       expect(rippleBackground).toBeNull();
 
       rippleComponent.start();
-      rippleBackground = rippleElement.querySelector('.md-ripple-background');
+      rippleBackground = rippleElement.querySelector('.mat-ripple-background');
       expect(rippleBackground).toBeTruthy();
     });
   });

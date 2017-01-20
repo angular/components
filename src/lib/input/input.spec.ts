@@ -233,11 +233,11 @@ describe('MdInput', function () {
     fixture.detectChanges();
 
     // If the hint label is empty, expect no label.
-    expect(fixture.debugElement.query(By.css('.md-hint'))).toBeNull();
+    expect(fixture.debugElement.query(By.css('.mat-hint'))).toBeNull();
 
     fixture.componentInstance.label = 'label';
     fixture.detectChanges();
-    expect(fixture.debugElement.query(By.css('.md-hint'))).not.toBeNull();
+    expect(fixture.debugElement.query(By.css('.mat-hint'))).not.toBeNull();
   });
 
   it('supports hint labels elements', () => {

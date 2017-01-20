@@ -8,7 +8,7 @@
   $warn: map-get($theme, warn);
 
   .mat-progress-bar-background {
-    background: #{_md-progress-bar-buffer($primary, 100)};
+    background: #{_mat-progress-bar-buffer($primary, 100)};
   }
 
   .mat-progress-bar-buffer {
@@ -19,9 +19,9 @@
     background-color: mat-color($primary, 600);
   }
 
-  md-progress-bar.mat-accent {
+  .mat-progress-bar.mat-accent {
     .mat-progress-bar-background {
-      background: #{_md-progress-bar-buffer($accent, 100)};
+      background: #{_mat-progress-bar-buffer($accent, 100)};
     }
 
     .mat-progress-bar-buffer {
@@ -32,9 +32,9 @@
     }
   }
 
-  md-progress-bar.mat-warn {
+  .mat-progress-bar.mat-warn {
     .mat-progress-bar-background {
-      background: #{_md-progress-bar-buffer($warn, 100)};
+      background: #{_mat-progress-bar-buffer($warn, 100)};
     }
 
     .mat-progress-bar-buffer {
@@ -57,7 +57,7 @@
 //       xml:space="preserve" viewBox="0 0 5 2" preserveAspectRatio="none slice">
 //    <circle cx="1" cy="1" r="1" fill="{INJECTED_COLOR}"/>
 //  </svg>
-@function _md-progress-bar-buffer($palette, $hue) {
+@function _mat-progress-bar-buffer($palette, $hue) {
  $result: '' +
    'data:image/svg+xml;charset=UTF-8,%3Csvg%20version%3D%271.1%27%20xmlns%3D%27http%3A%2F%2F' +
    'www.w3.org%2F2000%2Fsvg%27%20xmlns%3Axlink%3D%27http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%2' +

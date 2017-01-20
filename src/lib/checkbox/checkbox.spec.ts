@@ -225,7 +225,7 @@ describe('MdCheckbox', () => {
     });
 
     it('should project the checkbox content into the label element', () => {
-      let label = <HTMLLabelElement>checkboxNativeElement.querySelector('.md-checkbox-label');
+      let label = <HTMLLabelElement>checkboxNativeElement.querySelector('.mat-checkbox-label');
       expect(label.textContent.trim()).toBe('Simple checkbox');
     });
 

@@ -1,9 +1,4 @@
-md-simple-snackbar {
-  display: flex;
-  justify-content: space-between;
-}
-
-.md-simple-snackbar-message {
+.mat-simple-snackbar-message {
   box-sizing: border-box;
   border: none;
   color: white;
@@ -15,7 +10,7 @@ md-simple-snackbar {
   word-break: break-all;
 }
 
-.md-simple-snackbar-action {
+.mat-simple-snackbar-action {
   box-sizing: border-box;
   color: white;
   float: right;

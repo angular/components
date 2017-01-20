@@ -6,7 +6,7 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  md-list, md-nav-list {
+  .mat-list, .mat-nav-list {
     .mat-list-item {
       color: mat-color($foreground, base);
     }
@@ -16,11 +16,11 @@
     }
   }
 
-  md-divider {
+  .mat-divider {
     border-top-color: mat-color($foreground, divider);
   }
 
-  md-nav-list .mat-list-item {
+  .mat-nav-list .mat-list-item {
     &:hover, &.mat-list-item-focus {
       background: mat-color($background, 'hover');
     }
