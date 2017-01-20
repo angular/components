@@ -42,9 +42,8 @@ md-toolbar {
     flex-direction: row;
     align-items: center;
 
-    // Ensure toolbar content doesn't wrap and exceed the md-toolbar-row width. Ellipsis doesn't work on flex elements.
+    // The toolbar should not wrap text by default. Developers can still overwrite it.
     white-space: nowrap;
-    overflow: hidden;
   }
 }
 
