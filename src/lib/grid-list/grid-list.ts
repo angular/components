@@ -155,9 +155,17 @@ export class MdGridList implements OnInit, AfterContentChecked {
     MdGridTileText,
     MdLineModule,
     CompatibilityModule,
+    MdGridTileHeaderCssMatStyler,
+    MdGridTileFooterCssMatStyler,
+    MdGridAvatarCssMatStyler
   ],
-  declarations: [MdGridList, MdGridTile, MdGridTileText,
-      MdGridTileHeaderCssMatStyler, MdGridTileFooterCssMatStyler, MdGridAvatarCssMatStyler],
+  declarations: [
+    MdGridList,
+    MdGridTile,
+    MdGridTileText,
+    MdGridTileHeaderCssMatStyler,
+    MdGridTileFooterCssMatStyler,
+    MdGridAvatarCssMatStyler],
 })
 export class MdGridListModule {
   /** @deprecated */

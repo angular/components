@@ -449,7 +449,9 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
     MdInputContainer,
     MdHint,
     MdTextareaAutosize,
-    MdInputDirective
+    MdInputDirective,
+    MdInputCssMatStyler,
+    MdTextareaCssMatStyler,
   ],
 })
 export class MdInputModule {

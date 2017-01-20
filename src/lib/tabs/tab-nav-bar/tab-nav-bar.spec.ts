@@ -49,7 +49,7 @@ describe('MdTabNavBar', () => {
     let fixture: ComponentFixture<TabLinkWithNgIf> = TestBed.createComponent(TabLinkWithNgIf);
     fixture.detectChanges();
 
-    let link = fixture.debugElement.nativeElement.querySelector('.mat-tab-link]');
+    let link = fixture.debugElement.nativeElement.querySelector('.mat-tab-link');
     let rippleBackground = link.querySelector('.mat-ripple-background');
     let mouseEvent = document.createEvent('MouseEvents');
 

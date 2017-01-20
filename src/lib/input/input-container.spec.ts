@@ -141,7 +141,7 @@ describe('MdInputContainer', function () {
     let labelEl = fixture.debugElement.query(By.css('label')).nativeElement;
 
     expect(labelEl.classList).toContain('mat-empty');
-    expect(labelEl.classList).not.toContain('md-float');
+    expect(labelEl.classList).not.toContain('mat-float');
 
     // Update the value of the input.
     inputEl.nativeElement.value = 'Text';
@@ -150,7 +150,7 @@ describe('MdInputContainer', function () {
     fixture.detectChanges();
 
     expect(labelEl.classList).not.toContain('mat-empty');
-    expect(labelEl.classList).not.toContain('md-float');
+    expect(labelEl.classList).not.toContain('mat-float');
   }));
 
   it('should not be empty when the value set before view init', async(() => {
@@ -358,14 +358,14 @@ describe('MdInputContainer', function () {
     const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(underlineEl.classList)
-        .not.toContain('md-disabled', `Expected underline not to start out disabled.`);
+        .not.toContain('mat-disabled', `Expected underline not to start out disabled.`);
     expect(inputEl.disabled).toBe(false);
 
     fixture.componentInstance.formControl.disable();
     fixture.detectChanges();
 
     expect(underlineEl.classList)
-        .toContain('md-disabled', `Expected underline to look disabled after disable() is called.`);
+        .toContain('mat-disabled', `Expected underline to look disabled after disable() is called.`);
     expect(inputEl.disabled).toBe(true);
   });
 

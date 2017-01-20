@@ -132,7 +132,7 @@ export class MdAutocompleteTrigger implements OnDestroy {
     overlayState.positionStrategy = this._getOverlayPosition();
     overlayState.width = this._getHostWidth();
     overlayState.hasBackdrop = true;
-    overlayState.backdropClass = 'md-overlay-transparent-backdrop';
+    overlayState.backdropClass = 'cdk-overlay-transparent-backdrop';
     overlayState.direction = this._dir ? this._dir.value : 'ltr';
     return overlayState;
   }

@@ -388,9 +388,19 @@ function getSvgArc(currentValue: number, rotation: number) {
 
 @NgModule({
   imports: [CompatibilityModule],
-  exports: [MdProgressSpinner, MdSpinner, CompatibilityModule],
-  declarations: [MdProgressSpinner, MdSpinner,
-    MdProgressSpinnerCssMatStyler, MdProgressCircleCssMatStyler],
+  exports: [
+    MdProgressSpinner,
+    MdSpinner,
+    CompatibilityModule,
+    MdProgressSpinnerCssMatStyler,
+    MdProgressCircleCssMatStyler
+  ],
+  declarations: [
+    MdProgressSpinner,
+    MdSpinner,
+    MdProgressSpinnerCssMatStyler,
+    MdProgressCircleCssMatStyler
+  ],
 })
 export class MdProgressSpinnerModule {
   /** @deprecated */
