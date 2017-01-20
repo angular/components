@@ -33,6 +33,26 @@
     <button md-button (click)="drinkControl.reset()">RESET</button>
   </md-card>
 
+  <div>
+    <md-card>
+      <md-card-subtitle>Filter selection</md-card-subtitle>
+
+      <md-card-content>
+        <md-select placeholder="Bond movies" [search]="true" [required]="movieRequired" [disabled]="moviesDisabled" [(ngModel)]="currentMovie" #movieControl="ngModel">
+          <md-option *ngFor="let movie of movies" [value]="movie.value">{{ movie.viewValue }}</md-option>
+        </md-select>
+        <p> Value: {{ currentMovie }} </p>
+        <p> Touched: {{ movieControl.touched }} </p>
+        <p> Dirty: {{ movieControl.dirty }} </p>
+        <p> Status: {{ movieControl.control?.status }} </p>
+        <button md-button (click)="currentMovie='moonraker-0'">SET VALUE</button>
+        <button md-button (click)="movieRequired=!movieRequired">TOGGLE REQUIRED</button>
+        <button md-button (click)="moviesDisabled=!moviesDisabled">TOGGLE DISABLED</button>
+        <button md-button (click)="movieControl.reset()">RESET</button>
+      </md-card-content>
+    </md-card>
+  </div>
+
   <div *ngIf="showSelect">
     <md-card>
       <md-select placeholder="Starter Pokemon" (change)="latestChangeEvent = $event">

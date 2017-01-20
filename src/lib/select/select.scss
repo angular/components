@@ -108,3 +108,19 @@ md-select {
   }
 }
 
+.md-select-content md-input {
+  @include md-menu-item-base();
+  height: auto;
+
+  .md-input-wrapper {
+    width: 100%;
+  }
+
+  .md-input-underline {
+    width: calc(100% - #{$md-menu-side-padding*2});
+  }
+}
+
+md-option[hidden] {
+  display: none;
+}
