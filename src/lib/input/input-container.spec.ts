@@ -364,8 +364,8 @@ describe('MdInputContainer', function () {
     fixture.componentInstance.formControl.disable();
     fixture.detectChanges();
 
-    expect(underlineEl.classList)
-        .toContain('mat-disabled', `Expected underline to look disabled after disable() is called.`);
+    expect(underlineEl.classList).toContain('mat-disabled',
+        `Expected underline to look disabled after disable() is called.`);
     expect(inputEl.disabled).toBe(true);
   });
 

@@ -362,8 +362,10 @@ describe('MdCheckbox', () => {
 
         testComponent.isChecked = false;
         fixture.detectChanges();
-        expect(checkboxNativeElement.classList).not.toContain('mat-checkbox-anim-unchecked-checked');
-        expect(checkboxNativeElement.classList).toContain('mat-checkbox-anim-checked-unchecked');
+        expect(checkboxNativeElement.classList)
+            .not.toContain('mat-checkbox-anim-unchecked-checked');
+        expect(checkboxNativeElement.classList)
+            .toContain('mat-checkbox-anim-checked-unchecked');
       });
 
       it('should transition unchecked -> indeterminate -> unchecked', () => {
@@ -391,7 +393,8 @@ describe('MdCheckbox', () => {
 
         expect(checkboxNativeElement.classList).not.toContain(
             'mat-checkbox-anim-unchecked-indeterminate');
-        expect(checkboxNativeElement.classList).toContain('mat-checkbox-anim-indeterminate-checked');
+        expect(checkboxNativeElement.classList)
+            .toContain('mat-checkbox-anim-indeterminate-checked');
       });
 
       it('should not apply transition classes when there is no state change', () => {
