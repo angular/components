@@ -46,10 +46,10 @@ Example:
 <button md-button>FLAT</button>
 <button md-raised-button>RAISED</button>
 <button md-fab>
-    <md-icon class="mat-24">add</md-icon>
+    <md-icon class="md-24">add</md-icon>
 </button>
 <button md-mini-fab>
-    <md-icon class="mat-24">add</md-icon>
+    <md-icon class="md-24">add</md-icon>
 </button>
  ```
 
