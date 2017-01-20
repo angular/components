@@ -40,7 +40,7 @@ type EasingFn = (currentTime: number, startValue: number,
 @Directive({
   selector: 'md-progress-spinner, mat-progress-spinner',
   host: {
-    '[class.mat-progress-spinner]': 'true'
+    'class': 'mat-progress-spinner'
   }
 })
 export class MdProgressSpinnerCssMatStyler {}
@@ -52,7 +52,7 @@ export class MdProgressSpinnerCssMatStyler {}
 @Directive({
   selector: 'md-progress-circle, mat-progress-circle',
   host: {
-    '[class.mat-progress-circle]': 'true'
+    'class': 'mat-progress-circle'
   }
 })
 export class MdProgressCircleCssMatStyler {}
@@ -289,7 +289,7 @@ export class MdProgressSpinner implements OnDestroy {
   host: {
     'role': 'progressbar',
     'mode': 'indeterminate',
-    '[class.mat-spinner]': 'true',
+    'class': 'mat-spinner',
   },
   // Due to the class extending we need to explicitly say that the input exists.
   inputs: ['color'],

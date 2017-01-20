@@ -26,7 +26,7 @@ import {CompatibilityModule} from '../core/compatibility/compatibility';
     '[class.mat-primary]': 'color == "primary"',
     '[class.mat-accent]': 'color == "accent"',
     '[class.mat-warn]': 'color == "warn"',
-    '[class.mat-progress-bar]': 'true',
+    'class': 'mat-progress-bar',
   },
   templateUrl: 'progress-bar.html',
   styleUrls: ['progress-bar.css'],

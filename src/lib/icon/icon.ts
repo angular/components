@@ -67,7 +67,7 @@ export class MdIconInvalidNameError extends MdError {
   styleUrls: ['icon.css'],
   host: {
     'role': 'img',
-    '[class.mat-icon]': 'true',
+    'class': 'mat-icon',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

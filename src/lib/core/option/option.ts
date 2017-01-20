@@ -42,7 +42,7 @@ export class MdOptionSelectEvent {
     '[class.mat-option-disabled]': 'disabled',
     '(click)': '_selectViaInteraction()',
     '(keydown)': '_handleKeydown($event)',
-    '[class.mat-option]': 'true',
+    'class': 'mat-option',
   },
   templateUrl: 'option.html',
   encapsulation: ViewEncapsulation.None
