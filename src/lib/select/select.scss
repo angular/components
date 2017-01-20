@@ -66,7 +66,6 @@ $mat-select-panel-max-height: 256px !default;
 
 .mat-select-value {
   position: absolute;
-  position: absolute;
   max-width: calc(100% - #{$mat-select-arrow-size * 2});
 
   // Firefox and some versions of IE incorrectly keep absolutely
