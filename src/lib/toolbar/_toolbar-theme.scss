@@ -2,7 +2,7 @@
 @import '../core/theming/theming';
 
 
-@mixin _md-toolbar-color($palette) {
+@mixin _mat-toolbar-color($palette) {
   background: mat-color($palette);
   color: mat-color($palette, default-contrast);
 }
@@ -14,20 +14,20 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  md-toolbar {
+  .mat-toolbar {
     background: mat-color($background, app-bar);
     color: mat-color($foreground, text);
 
     &.mat-primary {
-      @include _md-toolbar-color($primary);
+      @include _mat-toolbar-color($primary);
     }
 
     &.mat-accent {
-      @include _md-toolbar-color($accent);
+      @include _mat-toolbar-color($accent);
     }
 
     &.mat-warn {
-      @include _md-toolbar-color($warn);
+      @include _mat-toolbar-color($warn);
     }
   }
 }

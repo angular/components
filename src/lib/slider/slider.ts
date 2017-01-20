@@ -72,6 +72,7 @@ export class MdSliderChange {
   selector: 'md-slider, mat-slider',
   providers: [MD_SLIDER_VALUE_ACCESSOR],
   host: {
+    '[class.mat-slider]': 'true',
     '(blur)': '_onBlur()',
     '(click)': '_onClick($event)',
     '(keydown)': '_onKeydown($event)',
@@ -610,7 +611,7 @@ export class SliderRenderer {
    * take up.
    */
   getSliderDimensions() {
-    let wrapperElement = this._sliderElement.querySelector('.md-slider-wrapper');
+    let wrapperElement = this._sliderElement.querySelector('.mat-slider-wrapper');
     return wrapperElement.getBoundingClientRect();
   }
 

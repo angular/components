@@ -27,7 +27,7 @@
     color: $unselected-foreground;
   }
 
-  .mat-chip.md-chip-selected:not(.mat-basic-chip) {
+  .mat-chip.mat-chip-selected:not(.mat-basic-chip) {
     background-color: $selected-background;
     color: $selected-foreground;
 

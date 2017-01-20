@@ -4,15 +4,15 @@
     max-width: 200px;
   }
 
-  md-card {
+  .mat-card {
     padding: 0;
     margin: 16px;
 
-    & md-toolbar {
+    & .mat-toolbar {
       margin: 0;
     }
 
-    & md-card-content {
+    & .mat-card-content {
       padding: 24px;
     }
   }

@@ -9,21 +9,21 @@
   $foreground: map-get($theme, foreground);
   $header-border: 1px solid mat-color($background, status-bar);
 
-  [md-tab-nav-bar],
-  .md-tab-header {
+  .mat-tab-nav-bar,
+  .mat-tab-header {
     border-bottom: $header-border;
 
-    .md-tab-group-inverted-header & {
+    .mat-tab-group-inverted-header & {
       border-top: $header-border;
       border-bottom: none;
     }
   }
 
-  .md-tab-label:focus {
+  .mat-tab-label:focus {
     background-color: mat-color($primary, 100, 0.3);
   }
 
-  md-ink-bar {
+  .mat-ink-bar {
     background-color: mat-color($primary, 500);
   }
 }

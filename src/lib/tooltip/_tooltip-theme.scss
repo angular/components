@@ -3,7 +3,7 @@
 
 
 @mixin mat-tooltip-theme($theme) {
-  .md-tooltip {
+  .mat-tooltip {
     background: mat-color($mat-grey, 700, 0.9);
   }
 }
