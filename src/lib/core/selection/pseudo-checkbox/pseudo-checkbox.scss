@@ -1,4 +1,4 @@
-@import '../../style/checkbox-variables';
+@import '../../style/checkbox-common';
 
 // Padding inside of a pseudo checkbox.
 $_md-pseudo-checkbox-padding: $md-checkbox-border-width * 2;
@@ -21,6 +21,7 @@ md-pseudo-checkbox {
       border-color $md-checkbox-transition-duration $md-linear-out-slow-in-timing-function,
       background-color $md-checkbox-transition-duration $md-linear-out-slow-in-timing-function;
 
+  // Used to render the checkmark/mixedmark inside of the box.
   &::after {
     position: absolute;
     opacity: 0;

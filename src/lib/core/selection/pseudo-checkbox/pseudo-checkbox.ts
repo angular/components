@@ -9,8 +9,14 @@ import {
 export type MdPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
 /**
- * Simplified checkbox without any of the underlying form control logic
- * and fancy animations. To be used when composing other components.
+ * Component that shows a simplified checkbox without including any kind of "real" checkbox.
+ * Meant to be used when the checkbox is purely decorative and a large number of them will be
+ * included, such as for the options in a multi-select. Uses no SVGs or complex animations.
+ *
+ * Note that this component will be completely invisible to screen-reader users. This is *not*
+ * interchangeable with <md-checkbox> and should *not* be used if the user would directly interact
+ * with the checkbox. The pseudo-checkbox should only be used as an implementation detail of
+ * more complex components that appropriately handle selected / checked state.
  * @docs-private
  */
 @Component({

@@ -148,7 +148,7 @@ export {NoConflictStyleCompatibilityMode} from './compatibility/no-conflict-mode
     OverlayModule,
     A11yModule,
     MdOptionModule,
-    MdSelectionModule
+    MdSelectionModule,
   ],
 })
 export class MdCoreModule {
