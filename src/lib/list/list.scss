@@ -114,8 +114,8 @@ $mat-dense-three-line-height: 76px;
   .mat-subheader {
     @include mat-subheader-base(
       $mat-list-top-padding,
-                    $mat-list-secondary-font,
-                    $mat-list-base-height
+      $mat-list-secondary-font,
+      $mat-list-base-height
     );
   }
 
@@ -123,10 +123,10 @@ $mat-dense-three-line-height: 76px;
   .mat-list-item {
     @include mat-list-item-base(
       $mat-list-font-size,
-                    $mat-list-base-height,
-                    $mat-list-avatar-height,
-                    $mat-list-two-line-height,
-                    $mat-list-three-line-height
+      $mat-list-base-height,
+      $mat-list-avatar-height,
+      $mat-list-two-line-height,
+      $mat-list-three-line-height
     );
 
     @include mat-line-base($mat-list-secondary-font);
@@ -141,18 +141,18 @@ $mat-dense-three-line-height: 76px;
   .mat-subheader {
     @include mat-subheader-base(
       $mat-dense-top-padding,
-                    $mat-dense-font-size,
-                    $mat-dense-base-height
+      $mat-dense-font-size,
+      $mat-dense-base-height
     );
   }
 
   .mat-list-item {
     @include mat-list-item-base(
       $mat-dense-font-size,
-                    $mat-dense-base-height,
-                    $mat-dense-avatar-height,
-                    $mat-dense-two-line-height,
-                    $mat-dense-three-line-height
+      $mat-dense-base-height,
+      $mat-dense-avatar-height,
+      $mat-dense-two-line-height,
+      $mat-dense-three-line-height
     );
 
     @include mat-line-base($mat-dense-font-size);
