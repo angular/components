@@ -11,11 +11,6 @@ export interface DialogPosition {
   right?: string;
 };
 
-/** Data to be injected into a dialog. */
-export class MdDialogData {
-  [key: string]: any;
-}
-
 /**
  * Configuration for opening a modal dialog with the MdDialog service.
  */
@@ -38,7 +33,7 @@ export class MdDialogConfig {
   position?: DialogPosition;
 
   /** Data being injected into the child component. */
-  data?: MdDialogData;
+  data?: any;
 
   // TODO(jelbourn): add configuration for lifecycle hooks, ARIA labelling.
 }

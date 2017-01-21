@@ -1,6 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {DOCUMENT} from '@angular/platform-browser';
-import {MdDialog, MdDialogRef, MdDialogConfig, MdDialogData} from '@angular/material';
+import {MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA} from '@angular/material';
 
 
 @Component({
@@ -69,7 +68,7 @@ export class DialogDemo {
 export class JazzDialog {
   constructor(
     public dialogRef: MdDialogRef<JazzDialog>,
-    public data: MdDialogData) { }
+    @Inject(MD_DIALOG_DATA) public data: any) { }
 }
 
 

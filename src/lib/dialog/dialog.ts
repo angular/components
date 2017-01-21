@@ -141,7 +141,7 @@ export class MdDialog {
     // inject the MdDialogRef. This allows a component loaded inside of a dialog to close itself
     // and, optionally, to return a value.
     let userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
-    let dialogInjector = new DialogInjector(dialogRef, config.data, userInjector || this._injector);
+    let dialogInjector = new DialogInjector(userInjector || this._injector, dialogRef, config.data);
 
     let contentPortal = new ComponentPortal(component, null, dialogInjector);
 

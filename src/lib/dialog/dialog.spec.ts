@@ -7,14 +7,21 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
+import {NgModule,
+  Component,
+  Directive,
+  ViewChild,
+  ViewContainerRef,
+  Injector,
+  Inject,
+} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {NgModule, Component, Directive, ViewChild, ViewContainerRef, Injector} from '@angular/core';
 import {MdDialogModule} from './index';
 import {MdDialog} from './dialog';
 import {OverlayContainer} from '../core';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
-import {MdDialogData} from './dialog-config';
+import {MD_DIALOG_DATA} from './dialog-injector';
 
 
 describe('MdDialog', () => {
@@ -283,8 +290,8 @@ describe('MdDialog', () => {
 
       let instance = dialog.open(DialogWithInjectedData, config).componentInstance;
 
-      expect(instance.data['stringParam']).toBe(config.data.stringParam);
-      expect(instance.data['dateParam']).toBe(config.data.dateParam);
+      expect(instance.data.stringParam).toBe(config.data.stringParam);
+      expect(instance.data.dateParam).toBe(config.data.dateParam);
     });
 
     it('should throw if injected data is expected but none is passed', () => {
@@ -531,7 +538,7 @@ class ComponentThatProvidesMdDialog {
 /** Simple component for testing ComponentPortal. */
 @Component({template: ''})
 class DialogWithInjectedData {
-  constructor(public data: MdDialogData) { }
+  constructor(@Inject(MD_DIALOG_DATA) public data: any) { }
 }
 
 // Create a real (non-test) NgModule as a workaround for
