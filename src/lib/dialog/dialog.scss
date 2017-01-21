@@ -49,7 +49,9 @@ md-dialog-actions, [md-dialog-actions], mat-dialog-actions, [mat-dialog-actions]
     // If the actions are the last element in a dialog, we need to pull them down
     // over the dialog padding, in order to avoid the action's padding stacking
     // with the dialog's.
-    margin-bottom: -$md-dialog-padding;
+    margin: $md-dialog-padding -$md-dialog-padding -$md-dialog-padding 0;
+    padding: 8px 8px 8px 0;
+    text-align: right;
   }
 
   &[align='end'] {
