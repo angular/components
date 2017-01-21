@@ -29,16 +29,25 @@ describe('Overlay directives', () => {
     fixture.detectChanges();
   });
 
+  /** Returns the current open overlay pane element. */
+  function getPaneElement() {
+    return overlayContainerElement.firstElementChild as HTMLElement;
+  }
+
   it(`should attach the overlay based on the open property`, () => {
     fixture.componentInstance.isOpen = true;
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent).toContain('Menu content');
+    expect(getPaneElement().style.visibility)
+      .toBeFalsy('Expected the overlay pane to be visible when attached.');
 
     fixture.componentInstance.isOpen = false;
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent).toBe('');
+    expect(getPaneElement().style.visibility)
+      .toBe('hidden', 'Expected the overlay pane to be hidden when detached.');
   });
 
   it('should destroy the overlay when the directive is destroyed', () => {
@@ -47,6 +56,8 @@ describe('Overlay directives', () => {
     fixture.destroy();
 
     expect(overlayContainerElement.textContent.trim()).toBe('');
+    expect(getPaneElement())
+      .toBeFalsy('Expected the overlay pane element to be removed when disposed.');
   });
 
   it('should use a connected position strategy with a default set of positions', () => {

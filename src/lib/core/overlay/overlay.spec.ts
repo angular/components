@@ -62,6 +62,23 @@ describe('Overlay', () => {
     expect(overlayContainerElement.textContent).toBe('');
   });
 
+  it('should hide the pane element if the overlay is detached', () => {
+    let overlayRef = overlay.create();
+    let paneElement = overlayRef.overlayElement;
+
+    overlayRef.attach(componentPortal);
+
+    expect(paneElement.childNodes.length).not.toBe(0);
+    expect(paneElement.style.visibility)
+      .toBeFalsy('Expected the overlay pane to be visible when attached.');
+
+    overlayRef.detach();
+
+    expect(paneElement.childNodes.length).toBe(0);
+    expect(paneElement.style.visibility)
+      .toBe('hidden', 'Expected the overlay pane to be hidden when detached.');
+  });
+
   it('should open multiple overlays', () => {
     let pizzaOverlayRef = overlay.create();
     pizzaOverlayRef.attach(componentPortal);
