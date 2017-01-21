@@ -238,9 +238,12 @@ md-checkbox {
   @extend %md-checkbox-outer-box;
 
   background-color: transparent;
-  border: $md-checkbox-border-width solid;
   transition: border-color $md-checkbox-transition-duration $md-linear-out-slow-in-timing-function;
   will-change: border-color;
+  border: {
+    width: $md-checkbox-border-width;
+    style: solid;
+  }
 }
 
 .md-checkbox-background {

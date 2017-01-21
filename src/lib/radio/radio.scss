@@ -31,8 +31,6 @@ md-radio-button {
 
 // The outer circle for the radio, always present.
 .md-radio-outer-circle {
-  border: solid 2px;
-  border-radius: 50%;
   box-sizing: border-box;
   height: $md-radio-size;
   left: 0;
@@ -40,6 +38,11 @@ md-radio-button {
   top: 0;
   transition: border-color ease 280ms;
   width: $md-radio-size;
+  border: {
+    width: 2px;
+    style: solid;
+    radius: 50%;
+  }
 }
 
 // The inner circle for the radio, shown when checked.
