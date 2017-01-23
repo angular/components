@@ -6,7 +6,12 @@ import {
   fakeAsync,
   flushMicrotasks
 } from '@angular/core/testing';
-import {Component, DebugElement, AnimationTransitionEvent} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  AnimationTransitionEvent,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {TooltipPosition, MdTooltip, MdTooltipModule} from './tooltip';
 import {OverlayContainer} from '../core';
@@ -22,7 +27,7 @@ describe('MdTooltip', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdTooltipModule.forRoot(), OverlayModule],
-      declarations: [BasicTooltipDemo],
+      declarations: [BasicTooltipDemo, OnPushTooltipDemo],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
@@ -59,6 +64,15 @@ describe('MdTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       fixture.detectChanges();
+
+      // wait till animation has finished
+      tick(500);
+
+      // Make sure tooltip is shown to the user and animation has finished
+      const tooltipElement = <HTMLElement>overlayContainerElement.querySelector('.md-tooltip');
+      expect(tooltipElement instanceof HTMLElement).toBe(true);
+      expect(tooltipElement.style.transform).toBe('scale(1)');
+
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
 
       // After hide called, a timeout delay is created that will to hide the tooltip.
@@ -74,6 +88,43 @@ describe('MdTooltip', () => {
       // On animation complete, should expect that the tooltip has been detached.
       flushMicrotasks();
       expect(tooltipDirective._tooltipInstance).toBeNull();
+    }));
+
+    it('should show and hide the tooltip if changeDetection is OnPush', fakeAsync(() => {
+      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+
+      const fixtureOnPush = TestBed.createComponent(OnPushTooltipDemo);
+      fixtureOnPush.detectChanges();
+      const buttonDebugElementOnPush = fixtureOnPush.debugElement.query(By.css('button'));
+      const tooltipDirectiveOnPush = buttonDebugElementOnPush.injector.get(MdTooltip);
+
+      tooltipDirectiveOnPush.show();
+      tick(0); // Tick for the show delay (default is 0)
+      expect(tooltipDirectiveOnPush._isTooltipVisible()).toBe(true);
+
+      fixtureOnPush.detectChanges();
+
+      // wait till animation has finished
+      tick(500);
+
+      // Make sure tooltip is shown to the user and animation has finished
+      const tooltipElement = <HTMLElement>overlayContainerElement.querySelector('.md-tooltip');
+      expect(tooltipElement instanceof HTMLElement).toBe(true);
+      expect(tooltipElement.style.transform).toBe('scale(1)');
+
+      // After hide called, a timeout delay is created that will to hide the tooltip.
+      const tooltipDelay = 1000;
+      tooltipDirectiveOnPush.hide(tooltipDelay);
+      expect(tooltipDirectiveOnPush._isTooltipVisible()).toBe(true);
+
+      // After the tooltip delay elapses, expect that the tooltip is not visible.
+      tick(tooltipDelay);
+      fixtureOnPush.detectChanges();
+      expect(tooltipDirectiveOnPush._isTooltipVisible()).toBe(false);
+
+      // On animation complete, should expect that the tooltip has been detached.
+      flushMicrotasks();
+      expect(tooltipDirectiveOnPush._tooltipInstance).toBeNull();
     }));
 
     it('should show with delay', fakeAsync(() => {
@@ -312,5 +363,18 @@ class BasicTooltipDemo {
   position: string = 'below';
   message: string = initialTooltipMessage;
   showButton: boolean = true;
+}
+@Component({
+  selector: 'app',
+  template: `
+    <button [mdTooltip]="message"
+            [mdTooltipPosition]="position">
+      Button
+    </button>`,
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+class OnPushTooltipDemo {
+  position: string = 'below';
+  message: string = initialTooltipMessage;
 }
 
