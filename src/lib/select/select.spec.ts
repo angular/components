@@ -26,7 +26,8 @@ describe('MdSelect', () => {
         SelectInitWithoutOptions,
         SelectWithChangeEvent,
         CustomSelectAccessor,
-        CompWithCustomSelect
+        CompWithCustomSelect,
+        ViewValueSelect
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -542,20 +543,6 @@ describe('MdSelect', () => {
     }));
 
   });
-
-  describe('misc forms', () => {
-    it('should support use inside a custom value accessor', () => {
-      const fixture = TestBed.createComponent(CompWithCustomSelect);
-      spyOn(fixture.componentInstance.customAccessor, 'writeValue');
-      fixture.detectChanges();
-
-      expect(fixture.componentInstance.customAccessor.select._control)
-          .toBe(null, 'Expected md-select NOT to inherit control from parent value accessor.');
-      expect(fixture.componentInstance.customAccessor.writeValue).toHaveBeenCalled();
-    });
-
-  });
-
 
   describe('animations', () => {
     let fixture: ComponentFixture<BasicSelect>;
@@ -1254,7 +1241,38 @@ describe('MdSelect', () => {
 
       expect(fixture.componentInstance.changeListener).toHaveBeenCalledTimes(1);
     });
+
   });
+
+  describe('misc', () => {
+    it('should support use inside a custom value accessor', () => {
+      const fixture = TestBed.createComponent(CompWithCustomSelect);
+      spyOn(fixture.componentInstance.customAccessor, 'writeValue');
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.customAccessor.select._control)
+          .toBe(null, 'Expected md-select NOT to inherit control from parent value accessor.');
+      expect(fixture.componentInstance.customAccessor.writeValue).toHaveBeenCalled();
+    });
+
+    it('should display the viewValue in the trigger instead of textContent if it is set', () => {
+      const fixture = TestBed.createComponent(ViewValueSelect);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.md-select-trigger')).nativeElement;
+      trigger.click();
+      fixture.detectChanges();
+
+      const option = overlayContainerElement.querySelector('md-option') as HTMLElement;
+      option.click();
+      fixture.detectChanges();
+
+      expect(trigger.textContent).toContain('Steak', 'Expected trigger to contain viewValue.');
+      expect(trigger.textContent).not.toContain('0', 'Expected trigger to contain viewValue.');
+    });
+
+  });
+
 });
 
 @Component({
@@ -1288,6 +1306,25 @@ class BasicSelect {
   @ViewChild(MdSelect) select: MdSelect;
   @ViewChildren(MdOption) options: QueryList<MdOption>;
 }
+
+@Component({
+  selector: 'view-value-select',
+  template: `
+    <md-select placeholder="Food">
+      <md-option *ngFor="let food of foods" [value]="food.value" [viewValue]="food.name">
+        {{ food.id }}: {{food.name}}
+      </md-option>
+    </md-select>
+  `
+})
+class ViewValueSelect {
+  foods: any[] = [
+    { value: 'steak-0', name: 'Steak' , id: 0},
+    { value: 'pizza-1', name: 'Pizza' , id: 1},
+    { value: 'tacos-2', name: 'Tacos', id: 2},
+  ];
+}
+
 
 @Component({
   selector: 'ng-model-select',
