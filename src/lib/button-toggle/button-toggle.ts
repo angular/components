@@ -102,7 +102,7 @@ export class MdButtonToggleGroup implements AfterContentInit, OnDestroy, Control
 
   /** Child button toggle buttons. */
   @ContentChildren(forwardRef(() => MdButtonToggle))
-  private _toggles: QueryList<MdButtonToggle> = null;
+  _toggles: QueryList<MdButtonToggle> = null;
 
   ngAfterContentInit(): void {
     this._model = new SelectionModel<MdButtonToggle>(this.multiple,
@@ -326,7 +326,7 @@ export class MdButtonToggle implements OnInit {
   _type: 'checkbox' | 'radio';
 
   /** Unique ID for the underlying input element. */
-  _inputId: string;
+  _inputId: string = '';
 
   /** Whether the toggle is checked. */
   private _checked: boolean = false;
