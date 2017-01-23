@@ -22,6 +22,7 @@ task('screenshots', () => {
       .then((results: boolean) => {
         return database.ref(FIREBASE_REPORT).child(`${prNumber}/result`).set(results);
       })
+      .then(() => database.ref(FIREBASE_REPORT).child(`${prNumber}/commit`).set(process.env['TRAVIS_COMMIT']))
       .then(() => setFilenameList(database, prNumber))
       .then(() => uploadScreenshots(prNumber, 'diff'))
       .then(() => uploadScreenshots(prNumber, 'test'))
