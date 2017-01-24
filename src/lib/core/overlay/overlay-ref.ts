@@ -41,8 +41,8 @@ export class OverlayRef implements PortalHost {
     this.updateDirection();
     this.updatePosition();
 
-    // Make the pane element visible when overlay is attached.
-    this._toggleVisibility(true);
+    // Enable pointer events for the overlay pane element.
+    this._togglePointerEvents(true);
 
     return attachResult;
   }
@@ -54,10 +54,10 @@ export class OverlayRef implements PortalHost {
   detach(): Promise<any> {
     this._detachBackdrop();
 
-    // When the overlay is detached, the pane element should be invisible.
-    // This is necessary because otherwise the pane element can cover the page and disable
-    // pointer events. Depends on the position strategy and the applied pane boundaries.
-    this._toggleVisibility(false);
+    // When the overlay is detached, the pane element should disable pointer events.
+    // This is necessary because otherwise the pane element will cover the page and disable
+    // pointer events therefore. Depends on the position strategy and the applied pane boundaries.
+    this._togglePointerEvents(false);
 
     return this._portalHost.detach();
   }
@@ -126,9 +126,9 @@ export class OverlayRef implements PortalHost {
     }
   }
 
-  /** Toggles the visibility of the overlay pane element. */
-  private _toggleVisibility(isVisible: boolean) {
-    this._pane.style.visibility = isVisible ? null : 'hidden';
+  /** Toggles the pointer events for the overlay pane element. */
+  private _togglePointerEvents(enablePointer: boolean) {
+    this._pane.style.pointerEvents = enablePointer ? null : 'none';
   }
 
   /** Attaches a backdrop for this overlay. */

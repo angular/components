@@ -39,15 +39,15 @@ describe('Overlay directives', () => {
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent).toContain('Menu content');
-    expect(getPaneElement().style.visibility)
-      .toBeFalsy('Expected the overlay pane to be visible when attached.');
+    expect(getPaneElement().style.pointerEvents)
+      .toBeFalsy('Expected the overlay pane to enable pointerEvents when attached.');
 
     fixture.componentInstance.isOpen = false;
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent).toBe('');
-    expect(getPaneElement().style.visibility)
-      .toBe('hidden', 'Expected the overlay pane to be hidden when detached.');
+    expect(getPaneElement().style.pointerEvents)
+      .toBe('none', 'Expected the overlay pane to disable pointerEvents when detached.');
   });
 
   it('should destroy the overlay when the directive is destroyed', () => {
