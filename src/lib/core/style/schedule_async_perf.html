@@ -1,0 +1,26 @@
+<html>
+<head>
+  <title>Schedule Async</title>
+</head>
+<body>
+<script>
+  const NUM_EVENTS = 100;
+  let count = 0;
+  let start = 0;
+  let x = false;
+  console.log('schedule async results:');
+  document.addEventListener('keydown', () => {
+    if (count == 0) {
+      start = performance.now();
+    } else if (count == NUM_EVENTS) {
+      console.log(performance.now() - start);
+      count = 0;
+      return;
+    }
+    count++;
+    x = true;
+    Promise.resolve().then(() => x = false);
+  }, true);
+</script>
+</body>
+</html>

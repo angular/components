@@ -3,7 +3,7 @@ import {Directive, Injectable, Optional, SkipSelf} from '@angular/core';
 
 /** Singleton that allows all instances of CdkAddFocusClasses to share document event listeners. */
 @Injectable()
-export class CdkFocusCauseDetector {
+export class FocusOriginMonitor {
   /** Whether a keydown event has just occurred. */
   get keydownOccurred() { return this._keydownOccurred; }
   private _keydownOccurred = false;
@@ -12,14 +12,16 @@ export class CdkFocusCauseDetector {
   private _mousedownOccurred = false;
 
   constructor() {
+    // Listen to keydown and mousedown in the capture phase so we can detect them even if the user
+    // stops propagation.
     document.addEventListener('keydown', () => {
       this._keydownOccurred = true;
-      setTimeout(() => this._keydownOccurred = false, 0);
+      Promise.resolve().then(() => this._keydownOccurred = false);
     }, true);
 
     document.addEventListener('mousedown', () => {
       this._mousedownOccurred = true;
-      setTimeout(() => this._mousedownOccurred = false, 0);
+      Promise.resolve().then(() => this._mousedownOccurred = false);
     }, true);
   }
 }
@@ -50,7 +52,7 @@ export class CdkAddFocusClasses {
   /** Whether the has been programmatically focused. */
   programmaticallyFocused = false;
 
-  constructor(private _focusCauseDetector: CdkFocusCauseDetector) {}
+  constructor(private _focusCauseDetector: FocusOriginMonitor) {}
 
   /** Handles focus event on the element. */
   _onFocus() {
@@ -67,14 +69,14 @@ export class CdkAddFocusClasses {
 
 
 export function FOCUS_CAUSE_DETECTOR_PROVIDER_FACTORY(
-    parentDispatcher: CdkFocusCauseDetector) {
-  return parentDispatcher || new CdkFocusCauseDetector();
+    parentDispatcher: FocusOriginMonitor) {
+  return parentDispatcher || new FocusOriginMonitor();
 }
 
 
 export const FOCUS_CAUSE_DETECTOR_PROVIDER = {
-  // If there is already a CdkFocusCauseDetector available, use that. Otherwise, provide a new one.
-  provide: CdkFocusCauseDetector,
-  deps: [[new Optional(), new SkipSelf(), CdkFocusCauseDetector]],
+  // If there is already a FocusOriginMonitor available, use that. Otherwise, provide a new one.
+  provide: FocusOriginMonitor,
+  deps: [[new Optional(), new SkipSelf(), FocusOriginMonitor]],
   useFactory: FOCUS_CAUSE_DETECTOR_PROVIDER_FACTORY
 };
