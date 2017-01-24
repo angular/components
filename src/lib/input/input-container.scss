@@ -9,6 +9,9 @@ md-input-container {
   // To avoid problems with text-align.
   text-align: left;
 
+  // Prevents the label from causing a horizontal overflow in IE/Edge.
+  overflow: hidden;
+
   [dir='rtl'] & {
     text-align: right;
   }
