@@ -222,7 +222,7 @@ export class MdInputDirective {
   moduleId: module.id,
   selector: 'md-input-container, mat-input-container',
   templateUrl: 'input-container.html',
-  styleUrls: ['input.css', 'input-container.css'],
+  styleUrls: ['input-container.css'],
   host: {
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',

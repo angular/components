@@ -2,7 +2,7 @@ import {async, TestBed, inject} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {MdInputModule} from './input';
+import {MdInputModule} from './index';
 import {MdInputContainer, MdInputDirective} from './input-container';
 import {Platform} from '../core/platform/platform';
 import {PlatformModule} from '../core/platform/index';
