@@ -40,7 +40,7 @@ if (process.env['TRAVIS']) {
     'browserName': 'chrome',
     'tunnel-identifier': process.env['TRAVIS_JOB_NUMBER'],
     'build': process.env['TRAVIS_JOB_NUMBER'],
-    'name': 'Material 2 Docs E2E'
+    'name': 'Material Docs E2E'
   };
 
 }
