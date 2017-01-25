@@ -16,6 +16,7 @@ md-radio-button {
   cursor: pointer;
   display: inline-flex;
   align-items: baseline;
+  vertical-align: middle;
   white-space: nowrap;
 }
 
@@ -26,7 +27,7 @@ md-radio-button {
   height: $md-radio-size;
   position: relative;
   width: $md-radio-size;
-  top: 2px;
+  top: 4px;
 }
 
 // The outer circle for the radio, always present.
@@ -63,7 +64,7 @@ md-radio-button {
 .md-radio-label-content {
   display: inline-block;
   order: 0;
-  line-height: inherit;
+  line-height: 24px;
   padding-left: $md-toggle-padding;
   padding-right: 0;
 
