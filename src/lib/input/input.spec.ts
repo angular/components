@@ -91,7 +91,7 @@ describe('MdInput', function () {
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
     expect(el).not.toBeNull();
-    expect(el.className.includes('md-empty')).toBe(false);
+    expect(el.className.includes('mat-empty')).toBe(false);
   });
 
   it('should treat text input type as empty at init', () => {
@@ -104,7 +104,7 @@ describe('MdInput', function () {
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
     expect(el).not.toBeNull();
-    expect(el.className.includes('md-empty')).toBe(true);
+    expect(el.className.includes('mat-empty')).toBe(true);
   });
 
   it('should treat password input type as empty at init', () => {
@@ -117,7 +117,7 @@ describe('MdInput', function () {
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
     expect(el).not.toBeNull();
-    expect(el.className.includes('md-empty')).toBe(true);
+    expect(el.className.includes('mat-empty')).toBe(true);
   });
 
   it('should treat number input type as empty at init', () => {
@@ -130,7 +130,7 @@ describe('MdInput', function () {
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
     expect(el).not.toBeNull();
-    expect(el.className.includes('md-empty')).toBe(true);
+    expect(el.className.includes('mat-empty')).toBe(true);
   });
 
   // TODO(kara): update when core/testing adds fix
@@ -233,11 +233,11 @@ describe('MdInput', function () {
     fixture.detectChanges();
 
     // If the hint label is empty, expect no label.
-    expect(fixture.debugElement.query(By.css('.md-hint'))).toBeNull();
+    expect(fixture.debugElement.query(By.css('.mat-hint'))).toBeNull();
 
     fixture.componentInstance.label = 'label';
     fixture.detectChanges();
-    expect(fixture.debugElement.query(By.css('.md-hint'))).not.toBeNull();
+    expect(fixture.debugElement.query(By.css('.mat-hint'))).not.toBeNull();
   });
 
   it('supports hint labels elements', () => {

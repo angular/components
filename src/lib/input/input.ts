@@ -16,7 +16,7 @@ import {
   Output,
   NgModule,
   ModuleWithProviders,
-  ViewEncapsulation
+  ViewEncapsulation, Directive
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
@@ -67,6 +67,27 @@ export class MdInputDuplicatedHintError extends MdError {
   }
 }
 
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ */
+@Directive({
+  selector: 'md-input',
+  host: {
+    'class': 'mat-input'
+  }
+})
+export class MdInputCssMatStyler {}
+
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ */
+@Directive({
+  selector: 'md-textarea',
+  host: {
+    'class': 'mat-textarea'
+  }
+})
+export class MdTextareaCssMatStyler {}
 
 /**
  * Component that represents a text input. It encapsulates the <input> HTMLElement and
@@ -413,7 +434,9 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
     MdInputContainer,
     MdHint,
     MdTextareaAutosize,
-    MdInputDirective
+    MdInputDirective,
+    MdInputCssMatStyler,
+    MdTextareaCssMatStyler,
   ],
   imports: [
     CommonModule,
@@ -426,7 +449,9 @@ export class MdInput implements ControlValueAccessor, AfterContentInit, OnChange
     MdInputContainer,
     MdHint,
     MdTextareaAutosize,
-    MdInputDirective
+    MdInputDirective,
+    MdInputCssMatStyler,
+    MdTextareaCssMatStyler,
   ],
 })
 export class MdInputModule {

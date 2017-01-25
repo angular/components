@@ -2,23 +2,23 @@
 @import '../core/style/form-common';
 
 
-$md-input-floating-placeholder-scale-factor: 0.75 !default;
+$mat-input-floating-placeholder-scale-factor: 0.75 !default;
 
 // Gradient for showing the dashed line when the input is disabled.
-$md-input-underline-disabled-background-image:
+$mat-input-underline-disabled-background-image:
     linear-gradient(to right, rgba(0, 0, 0, 0.26) 0%, rgba(0, 0, 0, 0.26) 33%, transparent 0%);
 
 // Applies a floating placeholder above the input itself.
-@mixin md-input-placeholder-floating {
+@mixin mat-input-placeholder-floating {
   display: block;
-  transform: translateY(-1.35em) scale($md-input-floating-placeholder-scale-factor);
-  width: 100% / $md-input-floating-placeholder-scale-factor;
+  transform: translateY(-1.35em) scale($mat-input-floating-placeholder-scale-factor);
+  width: 100% / $mat-input-floating-placeholder-scale-factor;
 }
 
-md-input, md-textarea {
+.mat-input, .mat-textarea {
   display: inline-block;
   position: relative;
-  font-family: $md-font-family;
+  font-family: $mat-font-family;
   line-height: normal;
 
   // To avoid problems with text-align.
@@ -31,7 +31,7 @@ md-input, md-textarea {
 
 // Global wrapper. We need to apply margin to the element for spacing, but
 // cannot apply it to the host element directly.
-.md-input-wrapper {
+.mat-input-wrapper {
   margin: 1em 0;
   // Account for the underline which has 4px of margin + 2px of border.
   padding-bottom: 6px;
@@ -42,7 +42,7 @@ md-input, md-textarea {
 // this table.
 // Flex does not respect the baseline. What we really want is akin to a table
 // as want an inline-block where elements don't wrap.
-.md-input-table {
+.mat-input-table {
   display: inline-table;
   flex-flow: column;
   vertical-align: bottom;
@@ -53,12 +53,12 @@ md-input, md-textarea {
   }
 }
 
-.md-input-infix {
+.mat-input-infix {
   position: relative;
 }
 
 // The Input element proper.
-.md-input-element {
+.mat-input-element {
   // Font needs to be inherited, because by default <input> has a system font.
   font: inherit;
 
@@ -74,7 +74,7 @@ md-input, md-textarea {
   padding: 0;
   width: 100%;
 
-  &.md-end {
+  &.mat-end {
     text-align: right;
 
     [dir='rtl'] & {
@@ -91,18 +91,18 @@ md-input, md-textarea {
   // Pseudo-class for Chrome and Safari auto-fill to move the placeholder to
   // the floating position. This is necessary because these browsers do not actually
   // fire any events when a form auto-fill is occurring.
-  // Once the autofill is committed, a change event happen and the regular md-input
+  // Once the autofill is committed, a change event happen and the regular mat-input
   // classes take over to fulfill this behaviour.
   // Assumes the autofill is non-empty.
-  &:-webkit-autofill + .md-input-placeholder.md-float {
-    @include md-input-placeholder-floating;
+  &:-webkit-autofill + .mat-input-placeholder.mat-float {
+    @include mat-input-placeholder-floating;
   }
 }
 
 // The placeholder label. This is invisible unless it is. The logic to show it is
 // basically `empty || (float && (!empty || focused))`. Float is dependent on the
 // `floatingPlaceholder` input.
-.md-input-placeholder {
+.mat-input-placeholder {
   // The placeholder is after the <input>, but needs to be aligned top-left of the
   // infix <div>.
   position: absolute;
@@ -126,14 +126,14 @@ md-input, md-textarea {
               color $swift-ease-out-duration $swift-ease-out-timing-function,
               width $swift-ease-out-duration $swift-ease-out-timing-function;
 
-  &.md-empty {
+  &.mat-empty {
     display: block;
     cursor: text;
   }
 
   // Show the placeholder above the input when it's not empty, or focused.
-  &.md-float:not(.md-empty), &.md-float.md-focused {
-    @include md-input-placeholder-floating;
+  &.mat-float:not(.mat-empty), &.mat-float.mat-focused {
+    @include mat-input-placeholder-floating;
   }
 
   [dir='rtl'] & {
@@ -145,7 +145,7 @@ md-input, md-textarea {
 
 // The underline is what's shown under the input, its prefix and its suffix.
 // The ripple is the blue animation coming on top of it.
-.md-input-underline {
+.mat-input-underline {
   position: absolute;
   height: 1px;
   width: 100%;
@@ -153,13 +153,13 @@ md-input, md-textarea {
   border-top-width: 1px;
   border-top-style: solid;
 
-  &.md-disabled {
-    @include md-control-disabled-underline();
+  &.mat-disabled {
+    @include mat-control-disabled-underline();
     border-top: 0;
     background-position: 0;
   }
 
-  .md-input-ripple {
+  .mat-input-ripple {
     position: absolute;
     height: 2px;
     z-index: 1;
@@ -171,7 +171,7 @@ md-input, md-textarea {
     transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
                 opacity $swift-ease-out-duration $swift-ease-out-timing-function;
 
-    &.md-focused {
+    &.mat-focused {
       opacity: 1;
       transform: scaleY(1);
     }
@@ -180,13 +180,13 @@ md-input, md-textarea {
 
 // The hint is shown below the underline. There can be more than one; one at the start
 // and one at the end.
-.md-hint {
+.mat-hint {
   display: block;
   position: absolute;
   font-size: 75%;
   bottom: 0;
 
-  &.md-right {
+  &.mat-right {
     right: 0;
   }
 
@@ -194,7 +194,7 @@ md-input, md-textarea {
     right: 0;
     left: auto;
 
-    &.md-right {
+    &.mat-right {
       right: auto;
       left: 0;
     }
