@@ -28,18 +28,18 @@ describe('MdProgressBar', () => {
     });
 
     it('should apply a mode of "determinate" if no mode is provided.', () => {
-      let progressElement = fixture.debugElement.query(By.css('mat-progress-bar'));
+      let progressElement = fixture.debugElement.query(By.css('md-progress-bar'));
       expect(progressElement.componentInstance.mode).toBe('determinate');
     });
 
     it('should define default values for value and bufferValue attributes', () => {
-      let progressElement = fixture.debugElement.query(By.css('mat-progress-bar'));
+      let progressElement = fixture.debugElement.query(By.css('md-progress-bar'));
       expect(progressElement.componentInstance.value).toBe(0);
       expect(progressElement.componentInstance.bufferValue).toBe(0);
     });
 
     it('should clamp value and bufferValue between 0 and 100', () => {
-      let progressElement = fixture.debugElement.query(By.css('mat-progress-bar'));
+      let progressElement = fixture.debugElement.query(By.css('md-progress-bar'));
       let progressComponent = progressElement.componentInstance;
 
       progressComponent.value = 50;
@@ -62,7 +62,7 @@ describe('MdProgressBar', () => {
     });
 
     it('should return the transform attribute for bufferValue and mode', () => {
-      let progressElement = fixture.debugElement.query(By.css('mat-progress-bar'));
+      let progressElement = fixture.debugElement.query(By.css('md-progress-bar'));
       let progressComponent = progressElement.componentInstance;
 
       expect(progressComponent._primaryTransform()).toEqual({transform: 'scaleX(0)'});
@@ -98,7 +98,7 @@ describe('MdProgressBar', () => {
     });
 
     it('should not modify the mode if a valid mode is provided.', () => {
-      let progressElement = fixture.debugElement.query(By.css('mat-progress-bar'));
+      let progressElement = fixture.debugElement.query(By.css('md-progress-bar'));
       expect(progressElement.componentInstance.mode).toBe('buffer');
     });
   });

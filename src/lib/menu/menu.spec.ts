@@ -351,8 +351,8 @@ describe('MdMenu', () => {
       it('repositions the origin to be below, so the menu opens from the trigger', () => {
         subject.openMenu();
 
-        expect(subject.menuPanel.classList).toContain('md-menu-below');
-        expect(subject.menuPanel.classList).not.toContain('md-menu-above');
+        expect(subject.menuPanel.classList).toContain('mat-menu-below');
+        expect(subject.menuPanel.classList).not.toContain('mat-menu-above');
       });
 
     });
