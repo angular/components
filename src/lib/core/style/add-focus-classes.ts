@@ -18,7 +18,7 @@ export class FocusOriginMonitor {
 
   /** A function to clear the fake origin. */
   private _clearFakeOrigin = (): void => {
-    Promise.resolve().then(() => this._fakeOrigin = null);
+    setTimeout(() => this._fakeOrigin = null, 0);
     document.removeEventListener('focus', this._clearFakeOrigin, true);
   };
 
