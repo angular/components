@@ -4,7 +4,7 @@ import {StyleModule} from './index';
 import {By} from '@angular/platform-browser';
 
 
-describe('MdSlider', () => {
+describe('cdkAddFocusClasses', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [StyleModule],

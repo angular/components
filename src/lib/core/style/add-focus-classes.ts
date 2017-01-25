@@ -1,28 +1,69 @@
-import {Directive, Injectable, Optional, SkipSelf} from '@angular/core';
+import {Directive, Injectable, Optional, SkipSelf, Renderer, ElementRef} from '@angular/core';
 
 
-/** Singleton that allows all instances of CdkAddFocusClasses to share document event listeners. */
+export type FocusOrigin = 'mouse' | 'keyboard' | 'programmatic';
+
+
+/** Monitors mouse and keyboard events to determine the cause of focus events. */
 @Injectable()
 export class FocusOriginMonitor {
   /** Whether a keydown event has just occurred. */
-  get keydownOccurred() { return this._keydownOccurred; }
   private _keydownOccurred = false;
 
-  get mousedownOccurred() { return this._mousedownOccurred; }
+  /** Whether a mousedown event has just occurred. */
   private _mousedownOccurred = false;
+
+  /** The focus origin that we're pretending the next focus event is a result of. */
+  private _fakeOrigin: FocusOrigin = null;
+
+  /** A function to clear the fake origin. */
+  private _clearFakeOrigin = (): void => {
+    Promise.resolve().then(() => this._fakeOrigin = null);
+    document.removeEventListener('focus', this._clearFakeOrigin, true);
+  };
 
   constructor() {
     // Listen to keydown and mousedown in the capture phase so we can detect them even if the user
     // stops propagation.
+    // TODO(mmalerba): Figure out how to handle touchstart
     document.addEventListener('keydown', () => {
       this._keydownOccurred = true;
-      Promise.resolve().then(() => this._keydownOccurred = false);
+      setTimeout(() => this._keydownOccurred = false, 0);
     }, true);
 
     document.addEventListener('mousedown', () => {
       this._mousedownOccurred = true;
-      Promise.resolve().then(() => this._mousedownOccurred = false);
+      setTimeout(() => this._mousedownOccurred = false, 0);
     }, true);
+  }
+
+  /** Register an element to receive focus classes. */
+  registerElementForFocusClasses(element: Element, renderer: Renderer) {
+    renderer.listen(element, 'focus', () => {
+      let isKeyboard = this._fakeOrigin ? this._fakeOrigin === 'keyboard' : this._keydownOccurred;
+      let isMouse = this._fakeOrigin ? this._fakeOrigin === 'mouse' : this._mousedownOccurred;
+      let isProgrammatic = this._fakeOrigin ?
+          this._fakeOrigin === 'programmatic' : !this._keydownOccurred && !this._mousedownOccurred;
+
+      renderer.setElementClass(element, 'cdk-focused', true);
+      renderer.setElementClass(element, 'cdk-keyboard-focused', isKeyboard);
+      renderer.setElementClass(element, 'cdk-mouse-focused', isMouse);
+      renderer.setElementClass(element, 'cdk-programmatically-focused', isProgrammatic);
+    });
+
+    renderer.listen(element, 'blur', () => {
+      renderer.setElementClass(element, 'cdk-focused', false);
+      renderer.setElementClass(element, 'cdk-keyboard-focused', false);
+      renderer.setElementClass(element, 'cdk-mouse-focused', false);
+      renderer.setElementClass(element, 'cdk-programmatically-focused', false);
+    });
+  }
+
+  /** Focuses the element via the specified focus origin. */
+  focusVia(element: Node, renderer: Renderer, focusOrigin: FocusOrigin) {
+    this._fakeOrigin = focusOrigin;
+    document.addEventListener('focus', this._clearFakeOrigin, true);
+    renderer.invokeElementMethod(element, 'focus');
   }
 }
 
@@ -33,50 +74,22 @@ export class FocusOriginMonitor {
  */
 @Directive({
   selector: '[cdkAddFocusClasses]',
-  host: {
-    '[class.cdk-focused]': 'keyboardFocused || mouseFocused || programmaticallyFocused',
-    '[class.cdk-keyboard-focused]': 'keyboardFocused',
-    '[class.cdk-mouse-focused]': 'mouseFocused',
-    '[class.cdk-programmatically-focused]': 'programmaticallyFocused',
-    '(focus)': '_onFocus()',
-    '(blur)': '_onBlur()',
-  }
 })
 export class CdkAddFocusClasses {
-  /** Whether the elmenet is focused due to a keyboard event. */
-  keyboardFocused = false;
-
-  /** Whether the element is focused due to a mouse event. */
-  mouseFocused = false;
-
-  /** Whether the has been programmatically focused. */
-  programmaticallyFocused = false;
-
-  constructor(private _focusCauseDetector: FocusOriginMonitor) {}
-
-  /** Handles focus event on the element. */
-  _onFocus() {
-    this.keyboardFocused = this._focusCauseDetector.keydownOccurred;
-    this.mouseFocused = this._focusCauseDetector.mousedownOccurred;
-    this.programmaticallyFocused = !this.keyboardFocused && !this.mouseFocused;
-  }
-
-  /** Handles blur event on the element. */
-  _onBlur() {
-    this.keyboardFocused = this.mouseFocused = this.programmaticallyFocused = false;
+  constructor(elementRef: ElementRef, focusOriginMonitor: FocusOriginMonitor, renderer: Renderer) {
+    focusOriginMonitor.registerElementForFocusClasses(elementRef.nativeElement, renderer);
   }
 }
 
 
-export function FOCUS_CAUSE_DETECTOR_PROVIDER_FACTORY(
-    parentDispatcher: FocusOriginMonitor) {
+export function FOCUS_ORIGIN_MONITOR_PROVIDER_FACTORY(parentDispatcher: FocusOriginMonitor) {
   return parentDispatcher || new FocusOriginMonitor();
 }
 
 
-export const FOCUS_CAUSE_DETECTOR_PROVIDER = {
+export const FOCUS_ORIGIN_MONITOR_PROVIDER = {
   // If there is already a FocusOriginMonitor available, use that. Otherwise, provide a new one.
   provide: FocusOriginMonitor,
   deps: [[new Optional(), new SkipSelf(), FocusOriginMonitor]],
-  useFactory: FOCUS_CAUSE_DETECTOR_PROVIDER_FACTORY
+  useFactory: FOCUS_ORIGIN_MONITOR_PROVIDER_FACTORY
 };
