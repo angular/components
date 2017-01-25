@@ -19,7 +19,7 @@
     }
     count++;
     x = true;
-    Promise.resolve().then(() => x = false);
+    setTimeout(() => x = false, 0);
   }, true);
 </script>
 </body>
