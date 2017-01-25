@@ -118,7 +118,7 @@ md-input, md-textarea {
   display: none;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow-x: hidden;
+  overflow: hidden;
 
   transform: translateY(0);
   transform-origin: bottom left;
