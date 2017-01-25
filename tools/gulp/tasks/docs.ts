@@ -50,8 +50,12 @@ function transformMarkdownFiles(buffer: Buffer, file: any): string {
     `<div material-docs-example="${name}"></div>`
   );
 
-  content = content.replace(LINK_PATTERN, (match: string, pre: string, link: string) =>
-    `${pre} href="${fixMarkdownDocLinks(link, file.path)}"`
+  /* Replaces the URL in anchor elements inside of compiled markdown files. */
+  content = content.replace(LINK_PATTERN, (match: string, head: string, link: string) =>
+    // The head is the first match of the RegExp and is necessary to ensure that the RegExp matches
+    // an anchor element. The head will be then used to re-create the existing anchor element.
+    // If the head is not prepended to the replaced value, then the first match will be lost.
+    `${head} href="${fixMarkdownDocLinks(link, file.path)}"`
   );
 
   return content;
