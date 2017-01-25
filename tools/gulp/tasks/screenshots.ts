@@ -1,6 +1,8 @@
 import {task} from 'gulp';
 import {readdirSync, statSync, existsSync, mkdirSync} from 'fs';
-import {openScreenshotsCloudStorage, openScreenshotsFirebaseDatabase} from '../task_helpers';
+import {openScreenshotsCloudStorage, openFirebaseScreenshotsDatabase} from '../task_helpers';
+import * as path from 'path';
+import * as admin from 'firebase-admin';
 const imageDiff = require('image-diff');
 
 const SCREENSHOT_DIR = './screenshots';
@@ -11,38 +13,48 @@ const FIREBASE_REPORT = 'screenshot/reports';
 task('screenshots', () => {
   let prNumber = process.env['TRAVIS_PULL_REQUEST'];
   if (prNumber) {
-    let database = openScreenshotsFirebaseDatabase();
-    return getFilenameList(database)
-      .then((filenames: string[]) => {
-        return downloadReferenceScreenshots(filenames, database)
-          .then((results: any) => {
-            return compareScreenshots(filenames, database, prNumber);
-          });
-      })
-      .then((results: boolean) => {
-        return database.ref(FIREBASE_REPORT).child(`${prNumber}/result`).set(results);
-      })
-      .then(() => database.ref(FIREBASE_REPORT).child(`${prNumber}/commit`).set(process.env['TRAVIS_COMMIT']))
-      .then(() => setFilenameList(database, prNumber))
+    let database = openFirebaseScreenshotsDatabase();
+    return getScreenFilenames(database)
+      .then((filenames: string[]) => downloadAllGolds(filenames, database, prNumber))
+      .then((results: boolean) => updateResult(database, prNumber, results))
+      .then(() => setScreenFilenames(database, prNumber))
       .then(() => uploadScreenshots(prNumber, 'diff'))
       .then(() => uploadScreenshots(prNumber, 'test'))
+      .then(() => updateCommit(database, prNumber))
       .then(() => database.goOffline(), () => database.goOffline());
   }
 });
 
+function updateFileResult(database: admin.database.Database, prNumber: string,
+                          filenameKey: string, result: boolean): admin.Promise<void>{
+  return database.ref(FIREBASE_REPORT).child(`${prNumber}/results/${filenameKey}`).set(result);
+}
+
+function updateResult(database: admin.database.Database, prNumber: string,
+                      result: boolean): admin.Promise<void> {
+  return database.ref(FIREBASE_REPORT).child(`${prNumber}/result`).set(result);
+}
+
+function updateCommit(database: admin.database.Database,
+                      prNumber: string): admin.Promise<void> {
+  return database.ref(FIREBASE_REPORT).child(`${prNumber}/commit`)
+    .set(process.env['TRAVIS_COMMIT']);
+}
+
 /** Get a list of filenames from firebase database. */
-function getFilenameList(database: any) : Promise<string[]> {
-  return database.ref(FIREBASE_FILELIST).once('value').then(function(snapshots: any) {
+function getScreenFilenames(database: admin.database.Database): admin.Promise<string[]> {
+  return database.ref(FIREBASE_FILELIST).once('value')
+      .then((snapshots: admin.database.DataSnapshot) => {
     return snapshots.val();
   });
 }
 
-/** Upload a list of filenames to firebase database as reference. */
-function setFilenameList(database: any,
-                         reportKey?: string): Promise<any> {
+/** Upload a list of filenames to firebase database as gold. */
+function setScreenFilenames(database: admin.database.Database,
+                            reportKey?: string): admin.Promise<void> {
   let filenames: string[] = [];
-  readdirSync(SCREENSHOT_DIR).map(function(file) {
-    let fullName = SCREENSHOT_DIR + '/' + file;
+  readdirSync(SCREENSHOT_DIR).map((file: string) => {
+    let fullName = path.join(SCREENSHOT_DIR, file);
     let key = file.replace('.screenshot.png', '');
     if (!statSync(fullName).isDirectory() && key) {
       filenames.push(file);
@@ -54,23 +66,31 @@ function setFilenameList(database: any,
   return filelistDatabase.set(filenames);
 }
 
-/** Upload screenshots to google cloud storage. */
+/**
+ * Upload screenshots to google cloud storage.
+ * @param {string} reportKey - The key used in firebase. Here it is the PR number.
+ *   If there's no reportKey, we will upload images to 'golds/' folder
+ * @param {string} mode - Can be 'test' or 'diff' or null.
+ *   If the images are the test results, mode should be 'test'.
+ *   If the images are the diff images generated, mode should be 'diff'.
+ *   For golds mode should be null.
+ */
 function uploadScreenshots(reportKey?: string, mode?: 'test' | 'diff') {
   let bucket = openScreenshotsCloudStorage();
 
-  let promises: Promise<any>[] = [];
+  let promises: admin.Promise<void>[] = [];
   let localDir = mode == 'diff' ? `${SCREENSHOT_DIR}/diff` : SCREENSHOT_DIR;
-  readdirSync(localDir).map(function(file) {
-    let fileName = localDir + '/' + file;
+  readdirSync(localDir).map((file: string) => {
+    let fileName = path.join(localDir, file);
     let key = file.replace('.screenshot.png', '');
     let destination = (mode == null || !reportKey) ?
-      `references/${file}` : `screenshots/${reportKey}/${mode}/${file}`;
+      `golds/${file}` : `screenshots/${reportKey}/${mode}/${file}`;
 
     if (!statSync(fileName).isDirectory() && key) {
       promises.push(bucket.upload(fileName, { destination: destination }));
     }
   });
-  return Promise.all(promises);
+  return admin.Promise.all(promises);
 }
 
 /** Check whether the directory exists. If not then create one. */
@@ -80,57 +100,50 @@ function _makeDir(dirName: string) {
   }
 }
 
-/** Download references screenshots. */
-function downloadReferenceScreenshots(
-    filenames: string[], database: any): Promise<any> {
-  _makeDir(`${SCREENSHOT_DIR}/references`);
+/** Download golds screenshots. */
+function downloadAllGolds(
+    filenames: string[], database: admin.database.Database,
+    reportKey: string): admin.Promise<boolean> {
+  _makeDir(`${SCREENSHOT_DIR}/golds`);
 
-  return Promise.all(filenames.map((filename: string) => {
-    return _downloadReferenceScreenshot(filename);
-  }));
+  return admin.Promise.all(filenames.map((filename: string) => {
+    return downloadGold(filename).then(() => diffScreenshot(filename, database, reportKey));
+  })).then((results: boolean[]) => results.every((value: boolean) => value == true));
 }
 
-/** Download one reference screenshot */
-function _downloadReferenceScreenshot(filename: string): Promise<any> {
+/** Download one gold screenshot */
+function downloadGold(filename: string): Promise<void> {
   let bucket = openScreenshotsCloudStorage();
-  return bucket.file(`references/${filename}`).download({
-    destination: `${SCREENSHOT_DIR}/references/${filename}`
+  return bucket.file(`golds/${filename}`).download({
+    destination: `${SCREENSHOT_DIR}/golds/${filename}`
   });
 }
 
-/** Compare the test result and the reference. */
-function compareScreenshots(filenames: string[], database: any, reportKey: string): Promise<any> {
-  return Promise.all(filenames.map((filename) =>
-    _compareScreenshot(filename, database, reportKey)))
-      .then((results: any) => results.every((value: boolean) => value == true));
-}
-
-function _compareScreenshot(filename: string, database: any,
-                             reportKey: string): Promise<any> {
-  let expectedUrl = `${SCREENSHOT_DIR}/references/${filename}`;
-  let actualUrl = `${SCREENSHOT_DIR}/${filename}`;
+function diffScreenshot(filename: string, database: admin.database.Database,
+                             reportKey: string): admin.Promise<boolean> {
+  // TODO(tinayuangao): Run the downloads and diffs in parallel.
+  let goldUrl = `${SCREENSHOT_DIR}/golds/${filename}`;
+  let pullRequestUrl = `${SCREENSHOT_DIR}/${filename}`;
   let diffUrl = `${SCREENSHOT_DIR}/diff/${filename}`;
   let filenameKey = filename.replace('.screenshot.png', '');
 
-  if (existsSync(expectedUrl) && existsSync(actualUrl)) {
-    return new Promise(function(resolve, reject) {
+  if (existsSync(goldUrl) && existsSync(pullRequestUrl)) {
+    return new admin.Promise((resolve: any, reject: any) => {
       imageDiff({
-        actualImage: actualUrl,
-        expectedImage: expectedUrl,
+        actualImage: pullRequestUrl,
+        expectedImage: goldUrl,
         diffImage: diffUrl,
-      }, function (err: any, imagesAreSame: boolean) {
+      }, (err: any, imagesAreSame: boolean) => {
         if (err) {
           console.log(err);
           imagesAreSame = false;
           reject(err);
         }
         resolve(imagesAreSame);
-        return database.ref(FIREBASE_REPORT).child(`${reportKey}/results/${filenameKey}`)
-          .set(imagesAreSame);
+        return updateFileResult(database, reportKey, filenameKey, imagesAreSame);
       });
     });
   } else {
-    return database.ref(FIREBASE_REPORT).child(`${reportKey}/results/${filenameKey}`)
-      .set(false).then(() => false);
+    return updateFileResult(database, reportKey, filenameKey, false).then(() => false);
   }
 }

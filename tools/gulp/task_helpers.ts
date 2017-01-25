@@ -2,7 +2,6 @@ import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as gulp from 'gulp';
 import * as path from 'path';
-
 import {NPM_VENDOR_FILES, PROJECT_ROOT, DIST_ROOT, SASS_AUTOPREFIXER_OPTIONS} from './constants';
 
 
@@ -187,7 +186,7 @@ export function sequenceTask(...args: any[]) {
 }
 
 /** Opens a connection to the firebase realtime database. */
-export function openFirebaseDatabase() {
+export function openFirebaseDashboardDatabase() {
   // Initialize the Firebase application with admin credentials.
   // Credentials need to be for a Service Account, which can be created in the Firebase console.
   firebaseAdmin.initializeApp({
@@ -209,6 +208,11 @@ export function isTravisPushBuild() {
   return process.env['TRAVIS_PULL_REQUEST'] === 'false';
 }
 
+/** Decode the token for Travis to use. */
+function decode(str: string): string {
+  return (str || '').split('\\n').reverse().join('\\n').replace(/\\n/g, '\n');
+}
+
 /** Open Google Cloud Storage for screenshots */
 export function openScreenshotsCloudStorage() {
   // Enable Storage
@@ -216,7 +220,7 @@ export function openScreenshotsCloudStorage() {
     projectId: 'material2-screenshots',
     credentials: {
       client_email: 'firebase-adminsdk-t4209@material2-screenshots.iam.gserviceaccount.com',
-      private_key: (process.env['MATERIAL2_SCREENSHOT_FIREBASE_KEY'] || '').replace(/\\n/g, '\n')
+      private_key: decode(process.env['MATERIAL2_SCREENSHOT_FIREBASE_KEY'])
     },
   });
 
@@ -225,7 +229,7 @@ export function openScreenshotsCloudStorage() {
 }
 
 /** Opens a connection to the firebase realtime database for screenshots. */
-export function openScreenshotsFirebaseDatabase() {
+export function openFirebaseScreenshotsDatabase() {
   // Initialize the Firebase application with admin credentials.
   // Credentials need to be for a Service Account, which can be created in the Firebase console.
   let screenshotApp = firebaseAdmin.initializeApp({
@@ -234,7 +238,7 @@ export function openScreenshotsFirebaseDatabase() {
       client_email: 'firebase-adminsdk-t4209@material2-screenshots.iam.gserviceaccount.com',
       // In Travis CI the private key will be incorrect because the line-breaks are escaped.
       // The line-breaks need to persist in the service account private key.
-      private_key: (process.env['MATERIAL2_SCREENSHOT_FIREBASE_KEY'] || '').replace(/\\n/g, '\n')
+      private_key: decode(process.env['MATERIAL2_SCREENSHOT_FIREBASE_KEY'])
     }),
     databaseURL: 'https://material2-screenshots.firebaseio.com'
   }, 'material2-screenshots');
