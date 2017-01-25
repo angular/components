@@ -298,7 +298,7 @@ describe('MdMenu', () => {
       }
 
       get menuPanel() {
-        return overlayContainerElement.querySelector('.md-menu-panel');
+        return overlayContainerElement.querySelector('.mat-menu-panel');
       }
 
       private get overlayPane() {
