@@ -12,9 +12,7 @@ env:
   global:
   - LOGS_DIR=/tmp/angular-material2-build/logs
   - SAUCE_USERNAME=angular-ci
-  - SAUCE_ACCESS_KEY=9b988f434ff8-fbca-8aa4-4ae3-35442987
   - BROWSER_STACK_USERNAME=angularteam1
-  - BROWSER_STACK_ACCESS_KEY=BWCd4SynLzdDcv8xtzsB
   - BROWSER_PROVIDER_READY_FILE=/tmp/angular-material2-build/readyfile
   - BROWSER_PROVIDER_ERROR_FILE=/tmp/angular-material2-build/errorfile
   matrix:
@@ -48,3 +46,8 @@ cache:
   directories:
     - node_modules
     - $HOME/.pub-cache
+
+addons:
+  jwt:
+    - secure: "tfTT7gDppwHc9yz8XdE+wWjZZy3nVqzfr0Os/CHD0RddThjZW15yaip4lFU8l3G4mnriw2vlQpOzJW6/ddERWxlBW56fS5+vreg13VqRHsgOBPoWfaX0ywkfuzB9gA8Bux+xEs7AdjQz8TNIGDvLAFhlzgvpvBHJrWTuQUXBgixKkI2Us5DbTYzdWmeQfAht24y+m9mMu1EqVUF9A8XSjT8VgLbIbaHgXLf74O2i6Fn24ZONPdhJ015UZfTEmmZtfyo/2MHElEYwnPBcH5Eax7ouoFHyMuNxba0HOxh3RMGQqIsyWh4iRAOcwACvowQ6lOYUAppRYdjU0E+WvrTnrW5XGO68KzjDTjr+vKxjmjx+UGTiIogQrDkul0TRSvjpb6MZH+gP2SDnMh3tWpzPd4PQh91EeD2vSDIDMvyE9NySKkqZBYl6EKTHROyqgvaz/msDGR7pk9dktV6dYQxzCKMfGAfX+Ih22QQ0XZorHWu2ZPEDvxshU+RcoMGS1870mNoKH1nFiakZisvn2GIIEKsazIllPCTQXF4rVPqmpevJ7xMKvPlam11yWDQOW+S6chU5d9rNtMpYeL2qb15TnWViYteNV2rWTFlNjgDfWorgT4fKgIONEDIESqwSbVIXe60KQk7FJDkYByXFdwrE2l6v1wP0efIjy0PR6LHC1Tw="
+    - secure: "pbtHP13vsXnEEGAFtKNGPDG0+Eu1dp1hNYHeiBKcAcx08w5vyHhMyqur6ws63SvXkDm7B4yrDUIcrDDGqT4Eg2WhJY3yc7BPU8K4P7T4Jb4xf3VgwpyvgB2dUM5lvaLwN9x2FxUoyymU2t254zp5pfG21OPa+l/pa/Z3OrAQxzLjZWnTLs+KHkDoe/jl6ZRq5NoMzjhDBn1MhBzSzuu1KTpXylt/aiH9oXrLTufR7wZVmPI9/tMlmjkXwDqaZOp5r3E+3AHe+HYziqBy2wnwfr9I3JW0NvP+3I3SGfz2v0K6azeH7GVJVK1gQIakffbyGrcKFB56d34HfzkW6y5nsq5jWNJ24ej5w6wZA9S+y4uNNFxBdvfEPaQXr/zXd62VDJ75C2UOpGFIP0xVr/B2ndYwOkW7QkKhBN190p2crT5sRedhluZI5t9DxocQnd2dcSzz5enRJMawqxFVCEo7BJejbaGj4F7GGHT8noEUTSNWFvsyaeK6+1ntomxZkZh2Ej7yEUtBDTZSsHn4DjD20xzMzoNg+tq9LS3CT1mHh7V4zvtXb66xtCIY0Vlif2onjFsClkdElQzpJI/utTeXzzP3K7Ia/iI89uje+mnf1HnXgo2t/yuPuh8WO3jnvHofeHJTVidTI46Ieri9awsHRfbHjfMmKMcLs8GpFeJ5/To="
