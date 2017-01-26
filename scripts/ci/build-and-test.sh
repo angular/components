@@ -10,6 +10,9 @@ cd $(dirname $0)/../..
 source scripts/ci/sources/mode.sh
 source scripts/ci/sources/tunnel.sh
 
+echo "Token"
+echo $SAUCE_ACCESS_KEY
+
 start_tunnel
 
 wait_for_tunnel
