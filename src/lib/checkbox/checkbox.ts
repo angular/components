@@ -195,8 +195,6 @@ export class MdCheckbox implements ControlValueAccessor {
         this.indeterminateChange.emit(this._indeterminate);
       }
       this._checked = checked;
-      this._transitionCheckState(
-          this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -348,6 +346,8 @@ export class MdCheckbox implements ControlValueAccessor {
 
     if (!this.disabled) {
       this.toggle();
+      this._transitionCheckState(
+        this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
 
       // Emit our custom change event if the native input emitted one.
       // It is important to only emit it, if the native input triggered one, because
