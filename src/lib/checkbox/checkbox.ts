@@ -215,13 +215,14 @@ export class MdCheckbox implements ControlValueAccessor {
   set indeterminate(indeterminate: boolean) {
     let changed =  indeterminate != this._indeterminate;
     this._indeterminate = indeterminate;
-    if (this._indeterminate) {
-      this._transitionCheckState(TransitionCheckState.Indeterminate);
-    } else {
-      this._transitionCheckState(
-          this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
-    }
+
     if (changed) {
+      if (this._indeterminate) {
+        this._transitionCheckState(TransitionCheckState.Indeterminate);
+      } else {
+        this._transitionCheckState(
+          this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+      }
       this.indeterminateChange.emit(this._indeterminate);
     }
   }
@@ -379,6 +380,8 @@ export class MdCheckbox implements ControlValueAccessor {
       // [checked] bound to it.
       if (newState === TransitionCheckState.Checked) {
         animSuffix = 'unchecked-checked';
+      } else if (newState == TransitionCheckState.Indeterminate) {
+        animSuffix = 'unchecked-indeterminate';
       } else {
         return '';
       }
