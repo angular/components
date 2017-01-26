@@ -8,8 +8,6 @@ TUNNEL_DIR="/tmp/saucelabs-connect"
 
 TUNNEL_LOG="$LOGS_DIR/sauce-connect"
 
-SAUCE_ACCESS_KEY=`echo $SAUCE_ACCESS_KEY | rev`
-
 # Cleanup and create the folder structure for the tunnel connector.
 rm -rf $TUNNEL_DIR $BROWSER_PROVIDER_READY_FILE
 mkdir -p $TUNNEL_DIR

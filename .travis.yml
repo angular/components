@@ -12,11 +12,13 @@ env:
   global:
   - LOGS_DIR=/tmp/angular-material2-build/logs
   - SAUCE_USERNAME=angular-ci
-  - SAUCE_ACCESS_KEY=9b988f434ff8-fbca-8aa4-4ae3-35442987
   - BROWSER_STACK_USERNAME=angularteam1
-  - BROWSER_STACK_ACCESS_KEY=BWCd4SynLzdDcv8xtzsB
   - BROWSER_PROVIDER_READY_FILE=/tmp/angular-material2-build/readyfile
   - BROWSER_PROVIDER_ERROR_FILE=/tmp/angular-material2-build/errorfile
+  # Authentication variables SAUCE_ACCESS_KEY and BROWSER_STACK_ACCESS_KEY
+  - secure: "NL51yHSYEiGDtURLo39ZC8/5MFltU2/MYTw7w4tG1gCEX+QwHcppH2Wc6Dq/cZQydoOKggNT1/EivKanZuHc9K7/FGfpUkxuROxkXkXV6bSdq3NdTnhcB9M8NqzXvkICP5NG/KoXLSTkSbx7r5A+LCRkyd+ihuX4t2bf4Tm/MAu3xI+yn94W+BevJrzGtsR5+3PA/5uihiuVi7wkCkBBg3j8B1t9Eq+Jrtqp+cT686CTRYf3M09r5dEzkGn0zsf289dGzeKc1kR94ah4cElY5bFiYEW4WbEVHH8G/bs4qz7/pM1hrakcZ29Na7ZZYhO1xAtpP5ym7rVDsgrWRkfTD4mO0lgJP5KgG7SPMruPoLhlbvZ2IfIhjRjcAn9K0MEWvb3h3+Q7RH++U5QW2yEjx2l2JdkE9zOgw5+qh5H+7iYNBGAIgd0lywWXscD53pZMxIl0UEOst4BL/wzvbS2Fm94jYPaJBR3q09myEJzSa7ad4uziVsoKaY9AUtPfTWmCTJeNzjAbyBzPyDWR5lXI28Ff1ehqfK9Nd2RptYMnaRXOuGHWy0ypqIIkR1hkPe/Xyg3mryry4H0oH8467U4GRpYlfHwhGav8RGWBLvcVAggAZOuQZLwQUTlrrvBF7eUzqA5PjcVWxj1fqyioS09cBVYGgvJsCvim65ydF/O0FTc="
+  - secure: "lDE+AYPKryxJf5ltgchEuuo8MzfgEAXXlXNeFn3weLCw++DfioTklC4XRIRJS064OXaFwe9S+JKjrmLEm2gEt/ONwk9unaY2h8WimEP2qGwITX1FUCRVBcFVi2C5m8oQ81ajPciDyNqjTMoEvpUV8c7yolyW13LpUY7SdQ7fnPs6Sa48hgtsPWqMKMvzK1E/7TzAsQ7aPCw/PjruTsuF/gw5svEXKpSFLZVsXBeAzrpTmpb1LptkHeASZ7h/pKphsjCR1qXn5broPoZ3ccyATX8Js3XP9lK6n6Y5a9g8ulHjmMZLTx2e2FAGfynNB5FYVJst1TfQtPVTakjJHC3NTrbDunJEzwkZfJtH3EspMaG78dapQC3z1BucqUTFirdckiQ1EIuE3TsGyLUDNrZxNU8wrOy0aG2ts8m80ryL71z42Nkk60oSWvZKLbZRcfYP70wWpkiduHs5jJf0OahXEb6bZU+mKica+IkxHIQyWsxeksnFgc2ByfGSy/mY98RJki+61B/2OZ6E1IPmA75Mn9v6a4fG6cWsdIh8vRmvHOq3l4hLPRrmefThQhZR6n7LuRafhxnHMG5GOLlNBrrGCdYD6EwPnOBUyQEh6KOp0bxIbew23cB+DBWa4D7JicQyGgW5PSoABxTRFkJn5YVfZ1f1IGRTYSPbKDVkL9hoaaI="
+
   matrix:
     # Order: a slower build first, so that we don't occupy an idle travis worker waiting for others to complete.
     - MODE=lint
