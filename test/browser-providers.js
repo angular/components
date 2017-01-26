@@ -51,3 +51,15 @@ function buildConfiguration(type, target, required) {
     .filter(([, conf]) => conf.required === required && conf.target === target)
     .map(([item]) => `${target}_${item.toUpperCase()}`);
 }
+
+/** Decode the token for Travis to use. */
+function decodeToken(token) {
+  return (token || '').split('').reverse().join('');
+}
+
+
+/** Ensures that the Travis access keys work properly. */
+if (process.env.TRAVIS) {
+  process.env.SAUCE_ACCESS_KEY = decodeToken(process.env.SAUCE_ACCESS_KEY);
+  process.env.BROWSER_STACK_ACCESS_KEY = decodeToken(process.env.BROWSER_STACK_ACCESS_KEY);
+}
