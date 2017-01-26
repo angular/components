@@ -73,9 +73,9 @@ export class FocusOriginMonitor {
  * programmatically) and adds corresponding classes to the element.
  */
 @Directive({
-  selector: '[cdkAddFocusClasses]',
+  selector: '[cdkFocusClasses]',
 })
-export class CdkAddFocusClasses {
+export class CdkFocusClasses {
   constructor(elementRef: ElementRef, focusOriginMonitor: FocusOriginMonitor, renderer: Renderer) {
     focusOriginMonitor.registerElementForFocusClasses(elementRef.nativeElement, renderer);
   }

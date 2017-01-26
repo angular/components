@@ -4,7 +4,7 @@ import {StyleModule} from './index';
 import {By} from '@angular/platform-browser';
 
 
-describe('cdkAddFocusClasses', () => {
+describe('cdkFocusClasses', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [StyleModule],
@@ -16,7 +16,7 @@ describe('cdkAddFocusClasses', () => {
     TestBed.compileComponents();
   }));
 
-  describe('cdkAddFocusClasses', () => {
+  describe('cdkFocusClasses', () => {
     let fixture: ComponentFixture<ButtonWithFocusClasses>;
     let buttonElement: HTMLElement;
 
@@ -87,7 +87,7 @@ describe('cdkAddFocusClasses', () => {
 });
 
 
-@Component({template: `<button cdkAddFocusClasses>focus me!</button>`})
+@Component({template: `<button cdkFocusClasses>focus me!</button>`})
 class ButtonWithFocusClasses {}
 
 
