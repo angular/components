@@ -193,6 +193,7 @@ $md-checkbox-ripple-size: 15px;
 
 md-checkbox {
   cursor: pointer;
+  font-family: $md-font-family;
 
   // Animation
   transition: background $swift-ease-out-duration $swift-ease-out-timing-function,
