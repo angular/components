@@ -79,6 +79,7 @@ Example markup for a card with a header:
    </md-card-header>
    <img md-card-image src="path/to/img.png">
    <md-card-content>
+      <md-card-title>Content Title</md-card-title>
       <p>Here is some more content</p>
    </md-card-content>
 </md-card>
