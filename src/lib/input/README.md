@@ -8,14 +8,14 @@ a wrapper for native `input` and `textarea` elements. The native element wrapped
 Simple `input` example:
 ```html
 <md-input-container>
-  <input mdInput>
+  <input md-input>
 </md-input-container>
 ```
 
 Simple `textarea` example:
 ```html
 <md-input-container>
-  <textarea mdInput></textarea>
+  <textarea md-input></textarea>
 </md-input-container>
 ```
 
@@ -70,7 +70,7 @@ To add a prefix, use the `mdPrefix` attribute on the element. Similarly, to add 
 
 ```html
 <md-input-container align="end">
-  <input mdInput placeholder="amount">
+  <input md-input placeholder="amount">
   <span mdPrefix>$&nbsp;</span>
   <span mdSuffix>.00</span>
 </md-input-container>
@@ -91,7 +91,7 @@ Specifying a side twice will result in an exception during initialization.
 For example, a simple character counter can be made like the following:
 ```html
 <md-input-container>
-  <input mdInput
+  <input md-input
          placeholder="Character count (100 max)"
          maxlength="100"
          value="Hello world. How are you?"
@@ -110,13 +110,13 @@ theme primary color. Alternatively, you can specify `accent` or `warn`.
 
 ```html
 <md-input-container>
-  <input mdInput placeholder="Default color" value="example">
+  <input md-input placeholder="Default color" value="example">
 </md-input-container>
 <md-input-container dividerColor="accent">
-  <input mdInput placeholder="Accent color" value="example">
+  <input md-input placeholder="Accent color" value="example">
 </md-input-container>
 <md-input-container dividerColor="warn">
-  <input mdInput placeholder="Warn color" value="example">
+  <input md-input placeholder="Warn color" value="example">
 </md-input-container>
 ```
 
@@ -130,36 +130,36 @@ You can make a full form using inputs, and they will support autofill natively.
 ```html
 <form>
   <md-input-container style="width: 100%">
-    <input mdInput placeholder="Company (disabled)" disabled value="Google">
+    <input md-input placeholder="Company (disabled)" disabled value="Google">
   </md-input-container>
 
   <table style="width: 100%" cellspacing="0"><tr>
     <td><md-input-container style="width: 100%">
-      <input mdInput placeholder="First name">
+      <input md-input placeholder="First name">
     </md-input-container></td>
     <td><md-input-container style="width: 100%">
-      <input mdInput placeholder="Long Last Name That Will Be Truncated">
+      <input md-input placeholder="Long Last Name That Will Be Truncated">
     </md-input-container></td>
   </tr></table>
   
   <p>
     <md-input-container width="100%">
-      <textarea mdInput placeholder="Address" value="1600 Amphitheatre Pkway"></textarea>
+      <textarea md-input placeholder="Address" value="1600 Amphitheatre Pkway"></textarea>
     </md-input-container>
     <md-input-container width="100%">
-      <textarea mdInput placeholder="Address 2"></textarea>
+      <textarea md-input placeholder="Address 2"></textarea>
     </md-input-container>
   </p>
   
   <table style="width: 100%" cellspacing="0"><tr>
     <td><md-input-container width="100%">
-      <input mdInput placeholder="City">
+      <input md-input placeholder="City">
     </md-input-container></td>
     <td><md-input-container width="100%">
-      <input mdInput placeholder="State">
+      <input md-input placeholder="State">
     </md-input-container></td>
     <td><md-input-container width="100%">
-      <input mdInput #postalCode maxlength="5" placeholder="Postal Code" value="94043">
+      <input md-input #postalCode maxlength="5" placeholder="Postal Code" value="94043">
       <md-hint align="end">{{postalCode.value.length}} / 5</md-hint>
     </md-input-container></td>
   </tr></table>
