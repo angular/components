@@ -86,7 +86,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   /** Used to specify the tabIndex value for the underlying input element. */
   @Input() tabIndex: number = 0;
 
-  /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
+  /** Whether the label should appear after or before the slide-toggle. Defaults to 'after' */
   @Input() labelPosition: 'before' | 'after' = 'after';
 
   /** Used to set the aria-label attribute on the underlying input element. */
