@@ -28,9 +28,3 @@ export class MdInputContainerMissingMdInputError extends MdError {
           'to the native input or textarea element?');
   }
 }
-
-export class MdInputContainerFloatingPlaceholderInvalidError extends MdError {
-  constructor(value: string) {
-    super(`The value "${value}" for the floatingPlaceholder input is not valid.`);
-  }
-}

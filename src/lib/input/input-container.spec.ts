@@ -62,7 +62,7 @@ describe('MdInputContainer', function () {
 
     let inputContainer = fixture.debugElement.query(By.directive(MdInputContainer))
         .componentInstance as MdInputContainer;
-    expect(inputContainer.floatingPlaceholder).toBe('auto',
+    expect(inputContainer.floatPlaceholder).toBe('auto',
         'Expected MdInputContainer to set floatingLabel to auto by default.');
   });
 
@@ -479,7 +479,7 @@ describe('MdInputContainer', function () {
     expect(ariaValue).toBe(`${hintLabel.getAttribute('id')} ${endLabel.getAttribute('id')}`);
   });
 
-  it('should float when floatingPlaceholder is set to default and text is entered', () => {
+  it('should float when floatPlaceholder is set to default and text is entered', () => {
     let fixture = TestBed.createComponent(MdInputContainerWithDynamicPlaceholder);
     fixture.detectChanges();
 
@@ -505,7 +505,7 @@ describe('MdInputContainer', function () {
     expect(labelEl.classList).toContain('md-float');
   });
 
-  it('should always float the placeholder when floatingPlaceholder is set to true', () => {
+  it('should always float the placeholder when floatPlaceholder is set to true', () => {
     let fixture = TestBed.createComponent(MdInputContainerWithDynamicPlaceholder);
     fixture.detectChanges();
 
@@ -528,7 +528,7 @@ describe('MdInputContainer', function () {
   });
 
 
-  it('should never float the placeholder when floatingPlaceholder is set to false', () => {
+  it('should never float the placeholder when floatPlaceholder is set to false', () => {
     let fixture = TestBed.createComponent(MdInputContainerWithDynamicPlaceholder);
 
     fixture.componentInstance.shouldFloat = 'never';
@@ -741,7 +741,7 @@ class MdInputContainerWithValueBinding {
 
 @Component({
   template: `
-    <md-input-container floatingPlaceholder="never">
+    <md-input-container floatPlaceholder="never">
       <input mdInput placeholder="Label">
     </md-input-container>
   `
@@ -750,8 +750,8 @@ class MdInputContainerWithStaticPlaceholder {}
 
 @Component({
   template: `
-    <md-input-container [floatingPlaceholder]="shouldFloat">
-      <input md-input placeholder="Label">
+    <md-input-container [floatPlaceholder]="shouldFloat">
+      <input mdInput placeholder="Label">
     </md-input-container>`
 })
 class MdInputContainerWithDynamicPlaceholder {
