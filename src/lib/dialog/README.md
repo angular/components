@@ -46,7 +46,7 @@ The service can be injected in a component.
 @Component({
   selector: 'pizza-component',
   template: `
-  <button type="button" (click)="openDialog()">Open dialog</button>
+  <button md-button (click)="openDialog()">Open dialog</button>
   `
 })
 export class PizzaComponent {
@@ -70,10 +70,11 @@ export class PizzaComponent {
 @Component({
   selector: 'pizza-dialog',
   template: `
+
   <h1 md-dialog-title>Would you like to order pizza?</h1>
 
   <md-dialog-actions>
-    <button (click)="dialogRef.close('yes')">Yes</button>
+    <button md-button (click)="dialogRef.close('yes')">Yes</button>
     <button md-dialog-close>No</button>
   </md-dialog-actions>
   `
