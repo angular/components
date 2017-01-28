@@ -8,7 +8,15 @@ import {
   tick,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {NgModule, Component, Directive, ViewChild, ViewContainerRef, Injector} from '@angular/core';
+import {
+  NgModule,
+  Component,
+  Directive,
+  ViewChild,
+  ViewContainerRef,
+  Injector,
+  TemplateRef
+} from '@angular/core';
 import {MdDialogModule} from './index';
 import {MdDialog} from './dialog';
 import {OverlayContainer} from '../core';
@@ -63,6 +71,23 @@ describe('MdDialog', () => {
     let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container');
     expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
   });
+
+  it('should open a dialog with a templateRef', () => {
+    const pizzaMsgContainer = TestBed.createComponent(PizzaMsgContainer);
+
+    viewContainerFixture.detectChanges();
+
+    dialog.openFromTemplateRef(pizzaMsgContainer.componentInstance.pizzaRef);
+
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('Pizza');
+
+    viewContainerFixture.detectChanges();
+    let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container');
+    expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
+  });
+
 
   it('should use injector from viewContainerRef for DialogInjector', () => {
     let dialogRef = dialog.open(PizzaMsg, {
@@ -120,7 +145,6 @@ describe('MdDialog', () => {
     expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
   });
 
-
   it('should close a dialog via the escape key', () => {
     dialog.open(PizzaMsg, {
       viewContainerRef: testViewContainerRef
@@ -137,6 +161,28 @@ describe('MdDialog', () => {
     expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
   });
 
+  it('should notify the user that escape key was pressed', () => {
+    let dialogRef = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let dialogContainer: MdDialogContainer =
+        viewContainerFixture.debugElement.query(By.directive(MdDialogContainer)).componentInstance;
+
+    let pressed = false;
+
+    dialogRef.escapePressed.subscribe(() => {
+      pressed = true;
+    });
+
+    // Fake the user pressing the escape key by calling the handler directly.
+    dialogContainer.handleEscapeKey();
+
+    expect(pressed).toBe(true);
+  });
+
   it('should close when clicking on the overlay backdrop', () => {
     dialog.open(PizzaMsg, {
       viewContainerRef: testViewContainerRef
@@ -148,6 +194,25 @@ describe('MdDialog', () => {
     backdrop.click();
 
     expect(overlayContainerElement.querySelector('md-dialog-container')).toBeFalsy();
+  });
+
+  it('should notify the user that overlay backdrop was clicked', () => {
+    let dialogRef = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+
+    let clicked = false;
+
+    dialogRef.backdropClicked.subscribe(() => {
+      clicked = true;
+    });
+
+    backdrop.click();
+    expect(clicked).toBe(true);
   });
 
   it('should notify the observers if a dialog has been opened', () => {
@@ -477,10 +542,16 @@ class ComponentWithChildViewContainer {
 }
 
 /** Simple component for testing ComponentPortal. */
-@Component({template: '<p>Pizza</p> <input> <button>Close</button>'})
+@Component({selector:'pizza-msg', template: '<p>Pizza</p> <input> <button>Close</button>'})
 class PizzaMsg {
   constructor(public dialogRef: MdDialogRef<PizzaMsg>,
               public dialogInjector: Injector) {}
+}
+
+/** Simple component for testing dialog using TemplateRef. */
+@Component({template: '<template #pizzaRef><pizza-msg></pizza-msg></template>'})
+class PizzaMsgContainer {
+  @ViewChild('pizzaRef') pizzaRef: TemplateRef<PizzaMsg>;
 }
 
 @Component({
@@ -510,6 +581,7 @@ class ComponentThatProvidesMdDialog {
 const TEST_DIRECTIVES = [
   ComponentWithChildViewContainer,
   PizzaMsg,
+  PizzaMsgContainer,
   DirectiveWithViewContainer,
   ContentElementDialog
 ];
@@ -518,6 +590,11 @@ const TEST_DIRECTIVES = [
   imports: [MdDialogModule],
   exports: TEST_DIRECTIVES,
   declarations: TEST_DIRECTIVES,
-  entryComponents: [ComponentWithChildViewContainer, PizzaMsg, ContentElementDialog],
+  entryComponents: [
+    ComponentWithChildViewContainer,
+    PizzaMsg,
+    PizzaMsgContainer,
+    ContentElementDialog
+  ],
 })
 class DialogTestModule { }
