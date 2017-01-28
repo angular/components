@@ -12,6 +12,7 @@ export * from './icon/index';
 export * from './input/index';
 export * from './list/index';
 export * from './menu/index';
+export * from './popover/index';
 export * from './progress-bar/index';
 export * from './progress-spinner/index';
 export * from './radio/index';

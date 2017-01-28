@@ -1,10 +1,10 @@
 // TODO(kara): update vars for desktop when MD team responds
 // TODO(kara): animation for popover opening
 
-@import '../../../../../node_modules/@angular/material/core/style/button-common';
-@import '../../../../../node_modules/@angular/material/core/style/layout-common';
-@import '../../../../../node_modules/@angular/material/core/style/menu-common';
-@import '../../../../../node_modules/@angular/material/core/a11y/a11y';
+@import '../core/style/button-common';
+@import '../core/style/layout-common';
+@import '../core/style/menu-common';
+@import '../core/a11y/a11y';
 
 $md-popover-vertical-padding: 8px !default;
 

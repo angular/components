@@ -24,6 +24,7 @@ import {MdGridListModule} from './grid-list/index';
 import {MdCardModule} from './card/index';
 import {MdChipsModule} from './chips/index';
 import {MdIconModule} from './icon/index';
+import {MdPopoverModule} from './popover/index';
 import {MdProgressSpinnerModule} from './progress-spinner/index';
 import {MdProgressBarModule} from './progress-bar/index';
 import {MdInputModule} from './input/index';
@@ -49,6 +50,7 @@ const MATERIAL_MODULES = [
   MdInputModule,
   MdListModule,
   MdMenuModule,
+  MdPopoverModule,
   MdProgressBarModule,
   MdProgressSpinnerModule,
   MdRadioModule,
@@ -88,6 +90,7 @@ const MATERIAL_MODULES = [
     MdSidenavModule.forRoot(),
     MdTabsModule.forRoot(),
     MdToolbarModule.forRoot(),
+    MdPopoverModule.forRoot(),
     PortalModule.forRoot(),
     ProjectionModule.forRoot(),
     RtlModule.forRoot(),

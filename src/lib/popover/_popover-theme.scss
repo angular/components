@@ -1,5 +1,5 @@
-@import '../../../../../node_modules/@angular/material/core/theming/palette';
-@import '../../../../../node_modules/@angular/material/core/theming/theming';
+@import '../core/theming/palette';
+@import '../core/theming/theming';
 
 
 @mixin md-popover-theme($theme) {

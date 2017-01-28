@@ -12,6 +12,7 @@ import {IconDemo} from '../icon/icon-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {CheckboxDemo} from '../checkbox/checkbox-demo';
 import {OverlayDemo} from '../overlay/overlay-demo';
+import {PopoverDemo} from '../popover/popover-demo';
 import {PortalDemo} from '../portal/portal-demo';
 import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
 import {ProgressSpinnerDemo} from '../progress-spinner/progress-spinner-demo';
@@ -46,6 +47,7 @@ export const DEMO_APP_ROUTES: Routes = [
   {path: 'slider', component: SliderDemo},
   {path: 'progress-spinner', component: ProgressSpinnerDemo},
   {path: 'progress-bar', component: ProgressBarDemo},
+  {path: 'popover', component: PopoverDemo},
   {path: 'portal', component: PortalDemo},
   {path: 'projection', component: ProjectionDemo},
   {path: 'overlay', component: OverlayDemo},

@@ -36,6 +36,7 @@ export class DemoApp {
     {name: 'Menu', route: 'menu'},
     {name: 'Live Announcer', route: 'live-announcer'},
     {name: 'Overlay', route: 'overlay'},
+    {name: 'Popover', route: 'popover'},
     {name: 'Portal', route: 'portal'},
     {name: 'Projection', route: 'projection'},
     {name: 'Progress Bar', route: 'progress-bar'},

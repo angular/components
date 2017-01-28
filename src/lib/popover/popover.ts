@@ -1,12 +1,12 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
 import {CommonModule} from '@angular/common';
-//import {OverlayModule, CompatibilityModule} from '@angular/material/core';
-import {OverlayModule} from '@angular/material/core';
+// import {OverlayModule, CompatibilityModule} from '../core';
+import {OverlayModule} from '../core';
 import {MdPopover} from './popover-directive';
 import {MdPopoverTrigger} from './popover-trigger';
-import {MdRippleModule} from '@angular/material/core/ripple/ripple';
+import {MdRippleModule} from '../core/ripple/ripple';
 export {MdPopover} from './popover-directive';
-//export {MdPopoverItem} from './popover-item';
+// export {MdPopoverItem} from './popover-item';
 export {MdPopoverTrigger} from './popover-trigger';
 export {MdPopoverPanel} from './popover-panel';
 export {PopoverPositionX, PopoverPositionY} from './popover-positions';

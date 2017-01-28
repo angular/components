@@ -31,6 +31,7 @@ import {SelectDemo} from './select/select-demo';
 import {SliderDemo} from './slider/slider-demo';
 import {SidenavDemo} from './sidenav/sidenav-demo';
 import {SnackBarDemo} from './snack-bar/snack-bar-demo';
+import {PopoverDemo} from './popover/popover-demo';
 import {PortalDemo, ScienceJoke} from './portal/portal-demo';
 import {MenuDemo} from './menu/menu-demo';
 import {TabsDemo, SunnyTabContent, RainyTabContent, FoggyTabContent} from './tabs/tabs-demo';
@@ -72,6 +73,7 @@ import {InputContainerDemo} from './input/input-container-demo';
     MenuDemo,
     SnackBarDemo,
     OverlayDemo,
+    PopoverDemo,
     PortalDemo,
     ProgressBarDemo,
     ProgressSpinnerDemo,

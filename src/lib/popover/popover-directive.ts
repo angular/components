@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import {PopoverPositionX, PopoverPositionY} from './popover-positions';
 import {MdPopoverInvalidPositionX, MdPopoverInvalidPositionY} from './popover-errors';
-//import {FocusKeyManager} from '@angular/material/core/a11y/focus-key-manager';
+// import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {MdPopoverPanel} from './popover-panel';
 import {Subscription} from 'rxjs/Subscription';
 import {transformPopover, fadeInItems} from './popover-animations';
@@ -27,7 +27,7 @@ import {transformPopover, fadeInItems} from './popover-animations';
   selector: 'md-popover, mat-popover',
   host: {'role': 'dialog'},
   templateUrl: 'popover.html',
-  styleUrls: ['popover.scss'],
+  styleUrls: ['popover.css'],
   encapsulation: ViewEncapsulation.None,
   animations: [
     transformPopover,
@@ -36,7 +36,7 @@ import {transformPopover, fadeInItems} from './popover-animations';
   exportAs: 'mdPopover'
 })
 export class MdPopover implements AfterContentInit, MdPopoverPanel, OnDestroy {
-  //private _keyManager: FocusKeyManager;
+  // private _keyManager: FocusKeyManager;
 
   /** Subscription to tab events on the popover panel */
   private _tabSubscription: Subscription;

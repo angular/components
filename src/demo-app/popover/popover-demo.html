@@ -1,0 +1,111 @@
+<div style="position: absolute; top: 64px; right: 0; bottom: 0; left: 0;">
+
+    <button style="position: absolute; top: 30px; left: 30px;" md-raised-button [mdPopoverTriggerFor]="appPopover">Hover Popover</button>
+
+    <button style="position: absolute; top: 30px; right: 30px;" md-raised-button color="warn" [mdPopoverTriggerFor]="appPopover">Hover Popover</button>
+
+    <button style="position: absolute; right: 30px; bottom: 30px;" md-raised-button color="accent" [mdPopoverTriggerFor]="appPopover">Hover Popover</button>
+
+    <button style="position: absolute; bottom: 30px; left: 30px;" md-raised-button color="primary" [mdPopoverTriggerFor]="appPopover">Hover Popover</button>
+
+
+    <md-popover #appPopover="mdPopover" x-position="after" y-position="below"
+                [overlapTrigger]="false" mdPopoverTrigger="hover"
+                mdPopoverPlacement="bottom" [mdPopoverDelay]="400">
+
+
+        <md-card style="width: 300px;">
+            <md-card-subtitle>Subtitle first</md-card-subtitle>
+            <md-card-title>Card with title</md-card-title>
+            <md-card-content>
+                <p>This is supporting text.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad</p>
+            </md-card-content>
+            <md-card-actions>
+                <button md-button>LIKE</button>
+                <button md-button>SHARE</button>
+            </md-card-actions>
+        </md-card>
+
+    </md-popover>
+
+
+
+
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 200px;">
+
+        <button md-raised-button [mdPopoverTriggerFor]="appPopover1">Hover Popover</button>
+        <button md-raised-button color="warn" [mdPopoverTriggerFor]="appPopover2">Hover Popover</button>
+        <button md-raised-button color="primary" [mdPopoverTriggerFor]="appPopover3">Hover Popover</button>
+        <button md-raised-button color="accent" [mdPopoverTriggerFor]="appPopover4">Hover Popover</button>
+
+
+        <md-popover #appPopover1="mdPopover" x-position="before" y-position="above"
+                    [overlapTrigger]="false" mdPopoverTrigger="hover"
+                    mdPopoverPlacement="bottom" [mdPopoverDelay]="400">
+
+            <md-card style="width: 300px;">
+                <md-card-title>Card with title</md-card-title>
+                <md-card-content>
+                    <p>This is supporting text.</p>
+                </md-card-content>
+                <md-card-actions>
+                    <button md-button>ACTION</button>
+                </md-card-actions>
+            </md-card>
+
+        </md-popover>
+
+        <md-popover #appPopover2="mdPopover" x-position="after" y-position="above"
+                    [overlapTrigger]="false" mdPopoverTrigger="hover"
+                    mdPopoverPlacement="bottom" [mdPopoverDelay]="400">
+
+            <md-card style="width: 300px;">
+                <md-card-title>Card with title</md-card-title>
+                <md-card-content>
+                    <p>This is supporting text.</p>
+                </md-card-content>
+                <md-card-actions>
+                    <button md-button>ACTION</button>
+                </md-card-actions>
+            </md-card>
+
+        </md-popover>
+
+        <md-popover #appPopover3="mdPopover" x-position="before" y-position="below"
+                    [overlapTrigger]="false" mdPopoverTrigger="hover"
+                    mdPopoverPlacement="bottom" [mdPopoverDelay]="400">
+
+            <md-card style="width: 300px;">
+                <md-card-title>Card with title</md-card-title>
+                <md-card-content>
+                    <p>This is supporting text.</p>
+                </md-card-content>
+                <md-card-actions>
+                    <button md-button>ACTION</button>
+                </md-card-actions>
+            </md-card>
+
+        </md-popover>
+
+        <md-popover #appPopover4="mdPopover" x-position="after" y-position="below"
+                    [overlapTrigger]="false" mdPopoverTrigger="hover"
+                    mdPopoverPlacement="bottom" [mdPopoverDelay]="400">
+
+            <md-card style="width: 300px;">
+                <md-card-title>Card with title</md-card-title>
+                <md-card-content>
+                    <p>This is supporting text.</p>
+                </md-card-content>
+                <md-card-actions>
+                    <button md-button>ACTION</button>
+                </md-card-actions>
+            </md-card>
+
+        </md-popover>
+
+    </div>
+
+
+</div>

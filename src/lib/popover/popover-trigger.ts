@@ -24,7 +24,7 @@ import {
     ConnectedPositionStrategy,
     HorizontalConnectionPos,
     VerticalConnectionPos,
-} from '@angular/material/core';
+} from '../core';
 import {Subscription} from 'rxjs/Subscription';
 import {PopoverPositionX, PopoverPositionY} from './popover-positions';
 
@@ -37,9 +37,9 @@ import {PopoverPositionX, PopoverPositionY} from './popover-positions';
   host: {
     'aria-haspopup': 'true',
     '(mousedown)': '_handleMousedown($event)',
-    //'(click)': 'togglePopover()',
-    //'(mouseenter)': 'openPopover()',
-    //'(mouseleave)': 'closePopover()',
+    // '(click)': 'togglePopover()',
+    // '(mouseenter)': 'openPopover()',
+    // '(mouseleave)': 'closePopover()',
   },
   exportAs: 'mdPopoverTrigger'
 })
@@ -54,7 +54,7 @@ export class MdPopoverTrigger implements AfterViewInit, OnDestroy {
   // the first item of the list when the popover is opened via the keyboard
   private _openedByMouse: boolean = false;
 
-  private _mouseoverTimmer;
+  private _mouseoverTimmer: number;
   private _popoverCloseDisabled = false;
 
 
@@ -88,30 +88,14 @@ export class MdPopoverTrigger implements AfterViewInit, OnDestroy {
       clearTimeout(this._mouseoverTimmer);
       if (this._popoverOpen) {
         setTimeout(() => {
-          if (!this.popover.closeDisabled)
+          if (!this.popover.closeDisabled) {
             this.closePopover();
+          }
         }, 200);
       }
     }
   }
 
-  attachEvents() {
-    /*
-    this._renderer.listen(this._portal.templateRef.elementRef.nativeElement, 'mouseover', () => {
-      if (this.popover.mdPopoverTrigger == 'hover') {
-        this._popoverCloseDisabled = true;
-        console.log('mouseover: md-popover');
-      }
-    });
-
-    this._renderer.listen(this._portal.templateRef.elementRef.nativeElement, 'mouseleave', () => {
-      if (this.popover.mdPopoverTrigger == 'hover') {
-        this._popoverCloseDisabled = false;
-        console.log('mouseleave: md-popover');
-      }
-    });
-    */
-  }
 
 
   /** Event emitted when the associated popover is opened. */
@@ -145,7 +129,6 @@ export class MdPopoverTrigger implements AfterViewInit, OnDestroy {
   openPopover(): void {
     if (!this._popoverOpen) {
       this._createOverlay();
-        this.attachEvents();
       this._overlayRef.attach(this._portal);
       this._subscribeToBackdrop();
       this._initPopover();
