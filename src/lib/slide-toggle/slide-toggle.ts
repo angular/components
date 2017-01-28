@@ -21,6 +21,7 @@ import {
   GestureConfig,
   HammerInput,
   CompatibilityModule,
+  MdThemeCheckModule,
 } from '../core';
 import {Observable} from 'rxjs/Observable';
 
@@ -338,7 +339,7 @@ class SlideToggleRenderer {
 
 
 @NgModule({
-  imports: [FormsModule, CompatibilityModule],
+  imports: [FormsModule, CompatibilityModule, MdThemeCheckModule],
   exports: [MdSlideToggle, CompatibilityModule],
   declarations: [MdSlideToggle],
   providers: [{provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}],

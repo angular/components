@@ -10,7 +10,12 @@ import {
   ModuleWithProviders,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MdRippleModule, coerceBooleanProperty, CompatibilityModule} from '../core';
+import {
+  MdRippleModule,
+  coerceBooleanProperty,
+  CompatibilityModule,
+  MdThemeCheckModule
+} from '../core';
 
 
 // TODO(jelbourn): Make the `isMouseDown` stuff done with one global listener.
@@ -164,7 +169,7 @@ export class MdAnchor extends MdButton {
 
 
 @NgModule({
-  imports: [CommonModule, MdRippleModule, CompatibilityModule],
+  imports: [CommonModule, MdRippleModule, CompatibilityModule, MdThemeCheckModule],
   exports: [MdButton, MdAnchor, CompatibilityModule],
   declarations: [MdButton, MdAnchor],
 })

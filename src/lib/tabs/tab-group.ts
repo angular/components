@@ -14,7 +14,8 @@ import {
 import {CommonModule} from '@angular/common';
 import {
   PortalModule,
-  coerceBooleanProperty
+  coerceBooleanProperty,
+  MdThemeCheckModule,
 } from '../core';
 import {MdTabLabel} from './tab-label';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
@@ -210,7 +211,7 @@ export class MdTabGroup {
 }
 
 @NgModule({
-  imports: [CommonModule, PortalModule, MdRippleModule, ObserveContentModule],
+  imports: [CommonModule, PortalModule, MdRippleModule, ObserveContentModule, MdThemeCheckModule],
   // Don't export all components because some are only to be used internally.
   exports: [MdTabGroup, MdTabLabel, MdTab, MdTabNavBar, MdTabLink, MdTabLinkRipple],
   declarations: [MdTabGroup, MdTabLabel, MdTab, MdInkBar, MdTabLabelWrapper,

@@ -9,7 +9,7 @@ import {
   ElementRef,
   Renderer
 } from '@angular/core';
-import {CompatibilityModule} from '../core';
+import {CompatibilityModule, MdThemeCheckModule} from '../core';
 
 
 @Directive({
@@ -57,7 +57,7 @@ export class MdToolbar {
 
 
 @NgModule({
-  imports: [CompatibilityModule],
+  imports: [CompatibilityModule, MdThemeCheckModule],
   exports: [MdToolbar, MdToolbarRow, CompatibilityModule],
   declarations: [MdToolbar, MdToolbarRow],
 })

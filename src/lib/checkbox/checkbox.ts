@@ -16,7 +16,7 @@ import {
 import {CommonModule} from '@angular/common';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
-import {MdRippleModule, CompatibilityModule} from '../core';
+import {MdRippleModule, CompatibilityModule, MdThemeCheckModule} from '../core';
 
 
 /** Monotonically increasing integer used to auto-generate unique ids for checkbox components. */
@@ -403,7 +403,7 @@ export class MdCheckbox implements ControlValueAccessor {
 
 
 @NgModule({
-  imports: [CommonModule, MdRippleModule, CompatibilityModule],
+  imports: [CommonModule, MdRippleModule, CompatibilityModule, MdThemeCheckModule],
   exports: [MdCheckbox, CompatibilityModule],
   declarations: [MdCheckbox],
 })

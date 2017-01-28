@@ -25,6 +25,7 @@ import {
   UniqueSelectionDispatcher,
   CompatibilityModule,
   UNIQUE_SELECTION_DISPATCHER_PROVIDER,
+  MdThemeCheckModule,
 } from '../core';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 import {VIEWPORT_RULER_PROVIDER} from '../core/overlay/position/viewport-ruler';
@@ -507,7 +508,7 @@ export class MdRadioButton implements OnInit {
 
 
 @NgModule({
-  imports: [CommonModule, MdRippleModule, CompatibilityModule],
+  imports: [CommonModule, MdRippleModule, CompatibilityModule, MdThemeCheckModule],
   exports: [MdRadioGroup, MdRadioButton, CompatibilityModule],
   providers: [UNIQUE_SELECTION_DISPATCHER_PROVIDER, VIEWPORT_RULER_PROVIDER],
   declarations: [MdRadioGroup, MdRadioButton],

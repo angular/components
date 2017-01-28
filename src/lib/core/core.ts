@@ -8,6 +8,7 @@ import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/overlay-directives';
 import {A11yModule} from './a11y/index';
 import {MdSelectionModule} from './selection/index';
+import {MdThemeCheckModule} from './theming/theme-check';
 
 
 // RTL
@@ -86,6 +87,9 @@ export {isFakeMousedownFromScreenReader} from './a11y/fake-mousedown';
 
 export {A11yModule} from './a11y/index';
 
+// Theming check
+export {MdThemeCheckModule} from './theming/theme-check';
+
 export {
   UniqueSelectionDispatcher,
   UniqueSelectionDispatcherListener,
@@ -137,6 +141,7 @@ export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibi
     A11yModule,
     MdOptionModule,
     MdSelectionModule,
+    MdThemeCheckModule,
   ],
   exports: [
     MdLineModule,
@@ -148,6 +153,7 @@ export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibi
     A11yModule,
     MdOptionModule,
     MdSelectionModule,
+    MdThemeCheckModule,
   ],
 })
 export class MdCoreModule {

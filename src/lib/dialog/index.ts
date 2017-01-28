@@ -4,6 +4,7 @@ import {
   PortalModule,
   A11yModule,
   CompatibilityModule,
+  MdThemeCheckModule,
 } from '../core';
 import {MdDialog} from './dialog';
 import {MdDialogContainer} from './dialog-container';
@@ -21,6 +22,7 @@ import {
     PortalModule,
     A11yModule,
     CompatibilityModule,
+    MdThemeCheckModule,
   ],
   exports: [
     MdDialogContainer,

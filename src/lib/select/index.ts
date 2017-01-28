@@ -5,13 +5,14 @@ import {MdOptionModule} from '../core/option/option';
 import {
   CompatibilityModule,
   OverlayModule,
+  MdThemeCheckModule,
 } from '../core';
 export * from './select';
 export {fadeInContent, transformPanel, transformPlaceholder} from './select-animations';
 
 
 @NgModule({
-  imports: [CommonModule, OverlayModule, MdOptionModule, CompatibilityModule],
+  imports: [CommonModule, OverlayModule, MdOptionModule, CompatibilityModule, MdThemeCheckModule],
   exports: [MdSelect, MdOptionModule, CompatibilityModule],
   declarations: [MdSelect],
 })

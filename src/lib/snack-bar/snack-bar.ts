@@ -17,6 +17,7 @@ import {
   LiveAnnouncer,
   CompatibilityModule,
   LIVE_ANNOUNCER_PROVIDER,
+  MdThemeCheckModule,
 } from '../core';
 import {CommonModule} from '@angular/common';
 import {MdSnackBarConfig} from './snack-bar-config';
@@ -163,7 +164,7 @@ function _applyConfigDefaults(config: MdSnackBarConfig): MdSnackBarConfig {
 
 
 @NgModule({
-  imports: [OverlayModule, PortalModule, CommonModule, CompatibilityModule],
+  imports: [OverlayModule, PortalModule, CommonModule, CompatibilityModule, MdThemeCheckModule],
   exports: [MdSnackBarContainer, CompatibilityModule],
   declarations: [MdSnackBarContainer, SimpleSnackBar],
   entryComponents: [MdSnackBarContainer, SimpleSnackBar],

@@ -25,6 +25,7 @@ import {
   coerceBooleanProperty,
   UNIQUE_SELECTION_DISPATCHER_PROVIDER,
   CompatibilityModule,
+  MdThemeCheckModule,
 } from '../core';
 
 /** Acceptable types for a button toggle. */
@@ -464,7 +465,7 @@ export class MdButtonToggle implements OnInit {
 
 
 @NgModule({
-  imports: [FormsModule, CompatibilityModule],
+  imports: [FormsModule, CompatibilityModule, MdThemeCheckModule],
   exports: [
     MdButtonToggleGroup,
     MdButtonToggleGroupMultiple,

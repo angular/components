@@ -10,7 +10,7 @@ import {
   NgZone,
   Renderer
 } from '@angular/core';
-import {CompatibilityModule} from '../core';
+import {CompatibilityModule, MdThemeCheckModule} from '../core';
 
 
 // TODO(josephperrott): Benchpress tests.
@@ -362,7 +362,7 @@ function getSvgArc(currentValue: number, rotation: number) {
 
 
 @NgModule({
-  imports: [CompatibilityModule],
+  imports: [CompatibilityModule, MdThemeCheckModule],
   exports: [MdProgressSpinner, MdSpinner, CompatibilityModule],
   declarations: [MdProgressSpinner, MdSpinner],
 })
