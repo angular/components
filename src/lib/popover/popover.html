@@ -1,0 +1,10 @@
+<template>
+  <div class="md-popover-panel" [class.md-popover-overlap]="overlapTrigger" [ngClass]="_classList"
+       (click)="_emitCloseEvent()" [@transformPopover]="'showing'">
+    <div class="direction-arrow" *ngIf="!overlapTrigger"></div>
+    <div class="md-popover-content" [@fadeInItems]="'showing'" (mouseover)="onMouseOver()" (mouseleave)="onMouseLeave()">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</template>
+

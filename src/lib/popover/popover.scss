@@ -1,0 +1,99 @@
+// TODO(kara): update vars for desktop when MD team responds
+// TODO(kara): animation for popover opening
+
+@import '../../../../../node_modules/@angular/material/core/style/button-common';
+@import '../../../../../node_modules/@angular/material/core/style/layout-common';
+@import '../../../../../node_modules/@angular/material/core/style/menu-common';
+@import '../../../../../node_modules/@angular/material/core/a11y/a11y';
+
+$md-popover-vertical-padding: 8px !default;
+
+.md-popover-panel {
+  //@include md-menu-base();
+  @include md-menu-positions();
+
+  // max height must be 100% of the viewport height + one row height
+  max-height: calc(100vh + 48px);
+
+  @include cdk-high-contrast {
+    outline: solid 1px;
+  }
+}
+
+.md-popover-content {
+  //padding-top: $md-popover-vertical-padding;
+  //padding-top: 16px;
+  //padding-bottom: $md-popover-vertical-padding;
+  //padding-bottom: 16px;
+  padding: 15px 0;
+}
+
+[md-popover-item] {
+  @include md-button-reset();
+  @include md-menu-item-base();
+  position: relative;
+}
+
+button[md-popover-item] {
+  width: 100%;
+}
+
+.md-popover-ripple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+
+.md-popover-below {
+  .direction-arrow {
+    position: absolute;
+    top: 0px;
+
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+
+    border-bottom: 15px solid rgba(0, 0, 0, 0.12);
+  }
+}
+
+.md-popover-above {
+  .direction-arrow {
+    position: absolute;
+    bottom: -1px;
+
+    width: 0;
+    height: 0;
+    border-top: 15px solid rgba(0, 0, 0, 0.12);
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+  }
+}
+
+.md-popover-after {
+  .direction-arrow {
+    left: 20px;
+  }
+}
+
+.md-popover-before {
+  .direction-arrow {
+    right: 20px;
+  }
+}
+
+.md-popover-above.md-popover-overlap {
+  .md-popover-content {
+    padding: 30px 0 0 0;
+  }
+}
+
+.md-popover-below.md-popover-overlap {
+  .md-popover-content {
+    padding: 0;
+  }
+}

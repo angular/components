@@ -1,0 +1,30 @@
+@import '../../../../../node_modules/@angular/material/core/theming/palette';
+@import '../../../../../node_modules/@angular/material/core/theming/theming';
+
+
+@mixin md-popover-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .md-popover-content {
+    background: md-color($background, 'card');
+  }
+
+  [md-popover-item] {
+    background: transparent;
+    color: md-color($foreground, 'text');
+
+    &[disabled] {
+      color: md-color($foreground, 'disabled');
+    }
+
+    md-icon {
+      color: md-color($foreground, 'icon');
+      vertical-align: middle;
+    }
+
+    &:hover:not([disabled]), &:focus:not([disabled]) {
+      background: md-color($background, 'hover');
+    }
+  }
+}
