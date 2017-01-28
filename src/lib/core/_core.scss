@@ -26,12 +26,9 @@
 
 // Mixin that renders all of the core styles that depend on the theme.
 @mixin md-core-theme($theme) {
-  // Marker that is used to determine whether the user has added a theme to their page.
-  // Note that only the selector is being used, but we add a property, in order to avoid
-  // it being removed by minifiers.
-  .md-theme-loaded-marker {
-    color: #000;
-  }
+  @include md-ripple-theme($theme);
+  @include md-option-theme($theme);
+  @include md-pseudo-checkbox-theme($theme);
 
   // Wrapper element that provides the theme background when the
   // user's content isn't inside of a `md-sidenav-container`.
@@ -40,7 +37,8 @@
     background-color: md-color($background, background);
   }
 
-  @include md-ripple-theme($theme);
-  @include md-option-theme($theme);
-  @include md-pseudo-checkbox-theme($theme);
+  // Marker that is used to determine whether the user has added a theme to their page.
+  .md-theme-loaded-marker {
+    display: none;
+  }
 }
