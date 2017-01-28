@@ -7,13 +7,13 @@ import {
 } from '../core';
 import {MdDialog} from './dialog';
 import {MdDialogContainer} from './dialog-container';
+import {MdDialogElement, MdDialogPortal} from './dialog-element';
 import {
   MdDialogClose,
   MdDialogContent,
   MdDialogTitle,
   MdDialogActions
 } from './dialog-content-directives';
-
 
 @NgModule({
   imports: [
@@ -28,6 +28,8 @@ import {
     MdDialogTitle,
     MdDialogContent,
     MdDialogActions,
+    MdDialogElement,
+    MdDialogPortal,
     CompatibilityModule,
   ],
   declarations: [
@@ -36,6 +38,8 @@ import {
     MdDialogTitle,
     MdDialogActions,
     MdDialogContent,
+    MdDialogElement,
+    MdDialogPortal,
   ],
   providers: [
     MdDialog,
@@ -53,6 +57,7 @@ export class MdDialogModule {
 }
 
 export * from './dialog';
+export * from './dialog-element';
 export * from './dialog-container';
 export * from './dialog-content-directives';
 export * from './dialog-config';
