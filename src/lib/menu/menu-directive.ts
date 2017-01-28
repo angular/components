@@ -25,7 +25,6 @@ import {transformMenu, fadeInItems} from './menu-animations';
 @Component({
   moduleId: module.id,
   selector: 'md-menu, mat-menu',
-  host: {'role': 'menu'},
   templateUrl: 'menu.html',
   styleUrls: ['menu.css'],
   encapsulation: ViewEncapsulation.None,
