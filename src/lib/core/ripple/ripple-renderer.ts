@@ -1,5 +1,4 @@
 import {ElementRef, NgZone} from '@angular/core';
-import {MdRipple} from './ripple';
 import {ViewportRuler} from '../overlay/position/viewport-ruler';
 
 
@@ -117,7 +116,9 @@ export class RippleRenderer {
     ripple.style.opacity = '0';
 
     // Once the ripple faded out, the ripple can be safely removed from the DOM.
-    this.runTimeoutOutsideZone(() => ripple.remove(), RIPPLE_FADE_OUT_DURATION);
+    this.runTimeoutOutsideZone(() => {
+      ripple.parentNode.removeChild(ripple);
+    }, RIPPLE_FADE_OUT_DURATION);
   }
 
   /** Sets the trigger element and registers the mouse events. */
