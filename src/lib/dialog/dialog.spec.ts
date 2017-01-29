@@ -75,7 +75,7 @@ describe('MdDialog', () => {
   it('should open a dialog with a templateRef', () => {
     const pizzaMsgContainer = TestBed.createComponent(PizzaMsgContainer);
 
-    viewContainerFixture.detectChanges();
+    pizzaMsgContainer.detectChanges();
 
     dialog.openFromTemplateRef(pizzaMsgContainer.componentInstance.pizzaRef);
 
@@ -542,7 +542,7 @@ class ComponentWithChildViewContainer {
 }
 
 /** Simple component for testing ComponentPortal. */
-@Component({selector:'pizza-msg', template: '<p>Pizza</p> <input> <button>Close</button>'})
+@Component({selector: 'pizza-msg', template: '<p>Pizza</p> <input> <button>Close</button>'})
 class PizzaMsg {
   constructor(public dialogRef: MdDialogRef<PizzaMsg>,
               public dialogInjector: Injector) {}
