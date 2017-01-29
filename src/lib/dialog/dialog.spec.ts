@@ -73,15 +73,15 @@ describe('MdDialog', () => {
   });
 
   it('should open a dialog with a templateRef', () => {
-    const pizzaMsgContainer = TestBed.createComponent(PizzaMsgContainer);
+    const catDialogContainer = TestBed.createComponent(CatDialogContainer);
 
-    pizzaMsgContainer.detectChanges();
+    catDialogContainer.detectChanges();
 
-    dialog.openFromTemplateRef(pizzaMsgContainer.componentInstance.pizzaRef);
+    dialog.openFromTemplateRef(catDialogContainer.componentInstance.catRef);
 
     viewContainerFixture.detectChanges();
 
-    expect(overlayContainerElement.textContent).toContain('Pizza');
+    expect(overlayContainerElement.textContent).toContain('Cat');
 
     viewContainerFixture.detectChanges();
     let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container');
@@ -542,16 +542,19 @@ class ComponentWithChildViewContainer {
 }
 
 /** Simple component for testing ComponentPortal. */
-@Component({selector: 'pizza-msg', template: '<p>Pizza</p> <input> <button>Close</button>'})
+@Component({template: '<p>Pizza</p> <input> <button>Close</button>'})
 class PizzaMsg {
   constructor(public dialogRef: MdDialogRef<PizzaMsg>,
               public dialogInjector: Injector) {}
 }
 
-/** Simple component for testing dialog using TemplateRef. */
-@Component({template: '<template #pizzaRef><pizza-msg></pizza-msg></template>'})
-class PizzaMsgContainer {
-  @ViewChild('pizzaRef') pizzaRef: TemplateRef<PizzaMsg>;
+/** Components for testing dialog using TemplateRef. */
+@Component({selector: 'cat-dialog', template: '<p>Cat</p> <input> <button>Close</button>'})
+class CatDialog {}
+
+@Component({template: '<template #catRef><cat-dialog></cat-dialog></template>'})
+class CatDialogContainer {
+  @ViewChild('catRef') catRef: TemplateRef<CatDialog>;
 }
 
 @Component({
@@ -581,7 +584,8 @@ class ComponentThatProvidesMdDialog {
 const TEST_DIRECTIVES = [
   ComponentWithChildViewContainer,
   PizzaMsg,
-  PizzaMsgContainer,
+  CatDialog,
+  CatDialogContainer,
   DirectiveWithViewContainer,
   ContentElementDialog
 ];
@@ -593,7 +597,8 @@ const TEST_DIRECTIVES = [
   entryComponents: [
     ComponentWithChildViewContainer,
     PizzaMsg,
-    PizzaMsgContainer,
+    CatDialog,
+    CatDialogContainer,
     ContentElementDialog
   ],
 })
