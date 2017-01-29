@@ -12,6 +12,7 @@ import {
   JazzDialog,
   JazzDialogTemplateRef,
   ContentElementDialog,
+  ContentElementTemplateRefDialog,
   DialogDemo,
   IFrameDialog
 } from './dialog/dialog-demo';
@@ -72,6 +73,7 @@ import {InputContainerDemo} from './input/input-container-demo';
     JazzDialog,
     JazzDialogTemplateRef,
     ContentElementDialog,
+    ContentElementTemplateRefDialog,
     IFrameDialog,
     ListDemo,
     LiveAnnouncerDemo,
@@ -109,6 +111,7 @@ import {InputContainerDemo} from './input/input-container-demo';
     JazzDialog,
     JazzDialogTemplateRef,
     ContentElementDialog,
+    ContentElementTemplateRefDialog,
     IFrameDialog,
     RotiniPanel,
     ScienceJoke,

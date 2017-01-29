@@ -25,6 +25,7 @@ export class DialogDemo {
 
   dialogRef: MdDialogRef<JazzDialog>;
   dialogTemplateRef: MdDialogRef<JazzDialogTemplateRef>;
+  dialogContentTemplateRef: MdDialogRef<ContentElementDialog>;
   lastCloseResult: string;
   actionsAlignment: string;
   config: MdDialogConfig = {
@@ -82,7 +83,16 @@ export class DialogDemo {
   }
 
   openContentElementUsingTemplateRef() {
-    this.dialog.openFromTemplateRef(this.contentElementRef, this.config);
+    this.dialogContentTemplateRef = this.dialog.openFromTemplateRef(
+      this.contentElementRef,
+      this.config
+    );
+  }
+
+  closeContentElementUsingTemplateRef() {
+    if (this.dialogContentTemplateRef) {
+      this.dialogContentTemplateRef.close();
+    }
   }
 }
 
@@ -145,12 +155,10 @@ export class JazzDialogTemplateRef {
     </md-dialog-content>
 
     <md-dialog-actions [attr.align]="actionsAlignment">
-      <!--
       <button
         md-raised-button
         color="primary"
         md-dialog-close>Close</button>
-      -->
       <a
         md-button
         color="primary"
@@ -166,7 +174,6 @@ export class JazzDialogTemplateRef {
   `
 })
 export class ContentElementDialog {
-  @Input()
   actionsAlignment: string;
 
   constructor(public dialog: MdDialog) { }
@@ -178,7 +185,7 @@ export class ContentElementDialog {
 
 
 @Component({
-  selector: 'demo-content-element-dialog',
+  selector: 'demo-content-element-template-ref-dialog',
   styles: [
     `img {
       max-width: 100%;
@@ -202,12 +209,10 @@ export class ContentElementDialog {
     </md-dialog-content>
 
     <md-dialog-actions [attr.align]="actionsAlignment">
-      <!--
       <button
         md-raised-button
         color="primary"
-        md-dialog-close>Close</button>
-      -->
+        (click)="!!close.emit()">Close</button>
       <a
         md-button
         color="primary"
@@ -222,9 +227,12 @@ export class ContentElementDialog {
     </md-dialog-actions>
   `
 })
-export class ContentElementDialog {
+export class ContentElementTemplateRefDialog {
   @Input()
   actionsAlignment: string;
+
+  @Output()
+  close = new EventEmitter<void>();
 
   constructor(public dialog: MdDialog) { }
 
