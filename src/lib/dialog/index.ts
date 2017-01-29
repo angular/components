@@ -33,6 +33,7 @@ import {
   ],
   declarations: [
     MdDialogContainer,
+    MdDialogElement,
     MdDialogClose,
     MdDialogTitle,
     MdDialogActions,

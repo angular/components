@@ -28,6 +28,7 @@ export class DialogDemo {
   dialogContentTemplateRef: MdDialogRef<ContentElementDialog>;
   lastCloseResult: string;
   actionsAlignment: string;
+  mdDialogState: boolean = false;
   config: MdDialogConfig = {
     disableClose: false,
     width: '',
@@ -93,6 +94,10 @@ export class DialogDemo {
     if (this.dialogContentTemplateRef) {
       this.dialogContentTemplateRef.close();
     }
+  }
+
+  changeMdDialogState(to: boolean) {
+    this.mdDialogState = to;
   }
 }
 

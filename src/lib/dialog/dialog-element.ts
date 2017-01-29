@@ -15,8 +15,9 @@ import {MdDialogRef} from './dialog-ref';
 import {Subscription} from 'rxjs/Subscription';
 
 @Component({
+  moduleId: module.id,
   selector: 'md-dialog',
-  templateUrl: './dialog-element.html',
+  templateUrl: 'dialog-element.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -43,30 +44,27 @@ export class MdDialogElement {
   @Input()
   set open(state: boolean) {
     if (state) {
-      // needede to prevent `Expression has changed after it was checked`
+      // needed to prevent `Expression has changed after it was checked`
       this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
-
         this.dialog = this._dialog.openFromTemplateRef(
           this.mdDialogContentTemplateRef,
           this.config
         );
 
-        this._backdropClickSubscription = this.dialog.backdropClicked
-          .subscribe(() => {
-            this.close.emit('backdrop');
-          });
+        this._backdropClickSubscription = this.dialog
+          .backdropClicked
+          .subscribe(() => this.close.emit('backdrop'));
 
-        this._escapePressSubscription = this.dialog.escapePressed
-          .subscribe(() => {
-            this.close.emit('escape');
-          });
+        this._escapePressSubscription = this.dialog
+          .escapePressed
+          .subscribe(() => this.close.emit('escape'));
       });
 
     } else if (this.dialog) {
       if (this.dialog) {
         this.dialog.close();
 
-        // remove backdrop/escape subscription only if dialog is actually closed
+        // remove backdrop/escape subscription only if dialog was actually closed
         this._backdropClickSubscription.unsubscribe();
         this._escapePressSubscription.unsubscribe();
       }
@@ -80,8 +78,9 @@ export class MdDialogElement {
   constructor(private _dialog: MdDialog, private _ngZone: NgZone) {
     let config = new MdDialogConfig();
 
-    // disable close by default, to make it truly stateless
-    // it's default behaviour of https://developer.mozilla.org/en/docs/Web/HTML/Element/dialog
+    // disable close by default, to make it
+    // truly stateless it's default behaviour of
+    // https://developer.mozilla.org/en/docs/Web/HTML/Element/dialog
     // as well
     config.disableClose = true;
 

@@ -19,10 +19,10 @@ import {
 } from '@angular/core';
 import {MdDialogModule} from './index';
 import {MdDialog} from './dialog';
+import {MdDialogConfig} from './dialog-config';
 import {OverlayContainer} from '../core';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
-
 
 describe('MdDialog', () => {
   let dialog: MdDialog;
@@ -88,6 +88,81 @@ describe('MdDialog', () => {
     expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
   });
 
+  it('should open dialog using md-dialog component', () => {
+    const dialogComponentContainer = TestBed.createComponent(DialogComponentContainer);
+
+    dialogComponentContainer.detectChanges();
+
+    expect(overlayContainerElement.textContent).toBe('');
+
+    dialogComponentContainer.componentInstance.changeState(true);
+
+    dialogComponentContainer.detectChanges();
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('Hello');
+
+    viewContainerFixture.detectChanges();
+    let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container');
+    expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
+
+  });
+
+  it('should close md-dialog component by changing "open" input to false', () => {
+    const dialogComponentContainer = TestBed.createComponent(DialogComponentContainer);
+
+    dialogComponentContainer.componentInstance.changeState(true);
+
+    dialogComponentContainer.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('Hello');
+
+    dialogComponentContainer.componentInstance.changeState(false);
+
+    dialogComponentContainer.detectChanges();
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
+
+  });
+
+  it('should not close dialog by default when using md-dialog', () => {
+    const dialogComponentContainer = TestBed.createComponent(DialogComponentContainer);
+
+    dialogComponentContainer.componentInstance.changeState(true);
+
+    dialogComponentContainer.detectChanges();
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('Hello');
+
+    let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+    backdrop.click();
+
+    expect(overlayContainerElement.querySelector('md-dialog-container')).toBeTruthy();
+
+  });
+
+  it('should allow md-dialog settings to be changed with "config" input', () => {
+    const dialogComponentContainer = TestBed.createComponent(DialogComponentContainer);
+
+    dialogComponentContainer.componentInstance.config = {
+      disableClose: false
+    };
+
+    dialogComponentContainer.componentInstance.changeState(true);
+
+    dialogComponentContainer.detectChanges();
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('Hello');
+
+    let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+    backdrop.click();
+
+    expect(overlayContainerElement.querySelector('md-dialog-container')).toBeFalsy();
+
+  });
 
   it('should use injector from viewContainerRef for DialogInjector', () => {
     let dialogRef = dialog.open(PizzaMsg, {
@@ -557,6 +632,26 @@ class CatDialogContainer {
   @ViewChild('catRef') catRef: TemplateRef<CatDialog>;
 }
 
+/** Components for testing md-dialog component. */
+@Component({
+  template: `
+    <md-dialog
+      [config]="config"
+      [open]="state"
+      (close)="changeState(false)">
+      Hello
+    </md-dialog>
+  `
+})
+class DialogComponentContainer {
+  state: boolean = false;
+  config: MdDialogConfig;
+
+  changeState(to: boolean) {
+    this.state = to;
+  }
+}
+
 @Component({
   template: `
     <h1 md-dialog-title>This is the title</h1>
@@ -586,8 +681,9 @@ const TEST_DIRECTIVES = [
   PizzaMsg,
   CatDialog,
   CatDialogContainer,
+  DialogComponentContainer,
   DirectiveWithViewContainer,
-  ContentElementDialog
+  ContentElementDialog,
 ];
 
 @NgModule({
@@ -596,10 +692,11 @@ const TEST_DIRECTIVES = [
   declarations: TEST_DIRECTIVES,
   entryComponents: [
     ComponentWithChildViewContainer,
+    DialogComponentContainer,
     PizzaMsg,
     CatDialog,
     CatDialogContainer,
-    ContentElementDialog
+    ContentElementDialog,
   ],
 })
 class DialogTestModule { }
