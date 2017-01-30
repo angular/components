@@ -25,7 +25,10 @@ export abstract class CalendarLocale {
   /** Labels to use for the narrow form of the week days. (e.g. 'S') */
   narrowDays: string[];
 
-  /** Labels to use for the dates of the month. (e.g. '1', '2', '31') */
+  /**
+   * Labels to use for the dates of the month. (e.g. null, '1', '2', ..., '31').
+   * Note that the 0th index is null, since there is no January 0th.
+   */
   dates: string[];
 
   /** The first day of the week. (e.g. 0 = Sunday, 6 = Saturday). */
@@ -95,10 +98,10 @@ export class DefaultCalendarLocale implements  CalendarLocale {
   narrowDays = SUPPORTS_INTL_API ? this.createDaysArray('narrow') :
       ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
-  dates = SUPPORTS_INTL_API ?
+  dates = [null].concat(SUPPORTS_INTL_API ?
       this.createArray(31,
           i => new Date(2017, 0, i + 1).toLocaleDateString(undefined, {day: 'numeric'})) :
-      this.createArray(31, i => String(i + 1));
+      this.createArray(31, i => String(i + 1)));
 
   firstDayOfWeek = 0;
 
@@ -117,8 +120,8 @@ export class DefaultCalendarLocale implements  CalendarLocale {
 
   getCalendarMonthHeaderLabel(date: SimpleDate) {
     return SUPPORTS_INTL_API ?
-        date.toNativeDate().toLocaleDateString(undefined, {month: 'long', year: 'numeric'}) :
-        this.months[date.month] + ' ' + date.year;
+        date.toNativeDate().toLocaleDateString(undefined, {month: 'short', year: 'numeric'}) :
+        this.shortMonths[date.month] + ' ' + date.year;
   }
 
   getCalendarYearHeaderLabel(date: SimpleDate) {
@@ -137,6 +140,6 @@ export class DefaultCalendarLocale implements  CalendarLocale {
 
   protected createDaysArray(format: string) {
     return this.createArray(7,
-        i => new Date(2017, 0, i).toLocaleDateString(undefined, {weekday: format}));
+        i => new Date(2017, 0, i + 1).toLocaleDateString(undefined, {weekday: format}));
   }
 }
