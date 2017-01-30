@@ -93,15 +93,17 @@ export class RippleRenderer {
 
     // If the color is not set, the default CSS color will be used.
     ripple.style.backgroundColor = config.color;
+    ripple.style.transitionDuration = `${duration}s`;
 
     this._targetElement.appendChild(ripple);
 
-    // Wait for the next tick because for elements the CSS transition isn't applied
-    // immediately and otherwise the ripple would just expand without any animation.
-    this.runTimeoutOutsideZone(() => {
-      ripple.style.transitionDuration = `${duration}s`;
-      ripple.style.transform = 'scale(1)';
-    }, 1);
+    // By default the browser does not recalculate the styles of dynamically created
+    // ripple elements. This is critical because then the `scale` would not animate properly.
+    // Enforce a style recalculation by calling `getComputedStyle` and accessing any property.
+    // See: https://gist.github.com/paulirish/5d52fb081b3570c81e3a
+    window.getComputedStyle(ripple).getPropertyValue('opacity');
+
+    ripple.style.transform = 'scale(1)';
 
     // Wait for the ripple to be faded in. Once faded in the ripple can be hided if the mouse is
     // released.
