@@ -15,16 +15,16 @@ export class MdDialogRef<T> {
   componentInstance: T;
 
   /** Expose overlay backdrop click event */
-  backdropClicked: Observable<void>;
+  backdropClick: Observable<void>;
 
   /** Subject for notifying the user that esc key way pressed */
-  escapePressed = new Subject<void>();
+  escapePress = new Subject<void>();
 
   /** Subject for notifying the user that the dialog has finished closing. */
   private _afterClosed: Subject<any> = new Subject();
 
   constructor(private _overlayRef: OverlayRef) {
-    this.backdropClicked = this._overlayRef.backdropClick();
+    this.backdropClick = this._overlayRef.backdropClick();
   }
 
   /**

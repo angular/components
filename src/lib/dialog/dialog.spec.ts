@@ -77,7 +77,7 @@ describe('MdDialog', () => {
 
     catDialogContainer.detectChanges();
 
-    dialog.openFromTemplateRef(catDialogContainer.componentInstance.catRef);
+    dialog.openFromTemplate(catDialogContainer.componentInstance.catRef);
 
     viewContainerFixture.detectChanges();
 
@@ -171,16 +171,14 @@ describe('MdDialog', () => {
     let dialogContainer: MdDialogContainer =
         viewContainerFixture.debugElement.query(By.directive(MdDialogContainer)).componentInstance;
 
-    let pressed = false;
+    let pressedSpy = jasmine.createSpy('clicked callback');
 
-    dialogRef.escapePressed.subscribe(() => {
-      pressed = true;
-    });
+    dialogRef.escapePress.subscribe(pressedSpy);
 
     // Fake the user pressing the escape key by calling the handler directly.
     dialogContainer.handleEscapeKey();
 
-    expect(pressed).toBe(true);
+    expect(pressedSpy).toHaveBeenCalled();
   });
 
   it('should close when clicking on the overlay backdrop', () => {
@@ -205,14 +203,14 @@ describe('MdDialog', () => {
 
     let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
 
-    let clicked = false;
+    let clickedSpy = jasmine.createSpy('clicked callback');
 
-    dialogRef.backdropClicked.subscribe(() => {
-      clicked = true;
-    });
+    dialogRef.backdropClick.subscribe(clickedSpy);
 
     backdrop.click();
-    expect(clicked).toBe(true);
+
+    expect(clickedSpy).toHaveBeenCalled();
+
   });
 
   it('should notify the observers if a dialog has been opened', () => {

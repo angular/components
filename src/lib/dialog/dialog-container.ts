@@ -6,7 +6,6 @@ import {
   NgZone,
   OnDestroy,
   ViewContainerRef,
-  TemplateRef,
 } from '@angular/core';
 import {BasePortalHost, ComponentPortal, PortalHostDirective, TemplatePortal} from '../core';
 import {MdDialogConfig} from './dialog-config';
@@ -48,8 +47,13 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
   /** Reference to the open dialog. */
   dialogRef: MdDialogRef<any>;
 
+  /** Exposes ViewContainerRef */
+  containerRef: ViewContainerRef;
+
   constructor(private _viewContainerRef: ViewContainerRef, private _ngZone: NgZone) {
     super();
+
+    this.containerRef = this._viewContainerRef;
   }
 
   /**
@@ -80,12 +84,6 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     return attachResult;
   }
 
-  attachTemplateRef<T>(templateRef: TemplateRef<T>) {
-    const portal = new TemplatePortal(templateRef, this._viewContainerRef);
-
-    this.attachTemplatePortal(portal);
-  }
-
   /**
    * Handles the user pressing the Escape key.
    * @docs-private
@@ -95,7 +93,7 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
       this.dialogRef.close();
     }
 
-    this.dialogRef.escapePressed.next();
+    this.dialogRef.escapePress.next();
   }
 
   ngOnDestroy() {

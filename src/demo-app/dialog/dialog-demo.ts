@@ -18,14 +18,14 @@ import {MdDialog, MdDialogRef, MdDialogConfig} from '@angular/material';
 })
 export class DialogDemo {
   @ViewChild('jazzDialogRef')
-  jazzDialogRef: TemplateRef<JazzDialogTemplateRef>;
+  jazzDialogRef: TemplateRef<any>;
 
   @ViewChild('contentElementRef')
-  contentElementRef: TemplateRef<ContentElementDialog>;
+  contentElementRef: TemplateRef<any>;
 
   dialogRef: MdDialogRef<JazzDialog>;
-  dialogTemplateRef: MdDialogRef<JazzDialogTemplateRef>;
-  dialogContentTemplateRef: MdDialogRef<ContentElementDialog>;
+  dialogTemplateRef: MdDialogRef<any>;
+  dialogContentTemplateRef: MdDialogRef<any>;
   lastCloseResult: string;
   actionsAlignment: string;
   config: MdDialogConfig = {
@@ -64,7 +64,7 @@ export class DialogDemo {
   }
 
   openJazzUsingTemplateRef() {
-    this.dialogTemplateRef = this.dialog.openFromTemplateRef(this.jazzDialogRef, this.config);
+    this.dialogTemplateRef = this.dialog.openFromTemplate(this.jazzDialogRef, this.config);
 
     this.dialogTemplateRef.afterClosed().first().subscribe(() => {
       this.dialogTemplateRef = null;
@@ -83,7 +83,7 @@ export class DialogDemo {
   }
 
   openContentElementUsingTemplateRef() {
-    this.dialogContentTemplateRef = this.dialog.openFromTemplateRef(
+    this.dialogContentTemplateRef = this.dialog.openFromTemplate(
       this.contentElementRef,
       this.config
     );
