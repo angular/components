@@ -2,6 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {StyleModule} from './index';
 import {By} from '@angular/platform-browser';
+import {TAB} from '../keyboard/keycodes';
 
 
 describe('cdkFocusClasses', () => {
@@ -33,7 +34,7 @@ describe('cdkFocusClasses', () => {
 
     it('should detect focus via keyboard', async(() => {
       // Simulate focus via keyboard.
-      dispatchKeydownEvent(document, 9 /* tab */);
+      dispatchKeydownEvent(document, TAB);
       buttonElement.focus();
       fixture.detectChanges();
 
