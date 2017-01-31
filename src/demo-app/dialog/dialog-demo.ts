@@ -10,6 +10,7 @@ import {MdDialog, MdDialogRef, MdDialogConfig} from '@angular/material';
 })
 export class DialogDemo {
   dialogRef: MdDialogRef<JazzDialog>;
+  elementDialogState: boolean = false;
   lastCloseResult: string;
   actionsAlignment: string;
   config: MdDialogConfig = {
@@ -50,6 +51,14 @@ export class DialogDemo {
   openContentElement() {
     let dialogRef = this.dialog.open(ContentElementDialog, this.config);
     dialogRef.componentInstance.actionsAlignment = this.actionsAlignment;
+  }
+
+  openElementDialog() {
+    this.elementDialogState = true;
+  }
+
+  closeElementDialog() {
+    this.elementDialogState = false;
   }
 }
 
@@ -104,7 +113,7 @@ export class JazzDialog {
         color="primary"
         href="https://en.wikipedia.org/wiki/Neptune"
         target="_blank">Read more on Wikipedia</a>
-      
+
       <button
         md-button
         color="secondary"

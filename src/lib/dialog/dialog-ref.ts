@@ -14,10 +14,14 @@ export class MdDialogRef<T> {
   /** The instance of component opened into the dialog. */
   componentInstance: T;
 
+  backdropClick$: Observable<void>;
+
   /** Subject for notifying the user that the dialog has finished closing. */
   private _afterClosed: Subject<any> = new Subject();
 
-  constructor(private _overlayRef: OverlayRef) { }
+  constructor(private _overlayRef: OverlayRef) {
+     this.backdropClick$ = this._overlayRef.backdropClick();
+  }
 
   /**
    * Close the dialog.

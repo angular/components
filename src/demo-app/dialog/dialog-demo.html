@@ -51,3 +51,11 @@
 </md-card>
 
 <p>Last close result: {{lastCloseResult}}</p>
+
+
+<md-card class="demo-dialog-card">
+  <button md-raised-button color="primary" (click)="openElementDialog()">Open element dialog</button>
+  <md-dialog [open]="elementDialogState" (close)="closeElementDialog()">
+    whatup
+  </md-dialog>
+</md-card>
