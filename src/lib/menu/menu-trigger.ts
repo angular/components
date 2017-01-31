@@ -32,7 +32,8 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
  * responsible for toggling the display of the provided menu instance.
  */
 @Directive({
-  selector: '[md-menu-trigger-for], [mat-menu-trigger-for], [mdMenuTriggerFor]',
+  selector: `[md-menu-trigger-for], [mat-menu-trigger-for],
+             [mdMenuTriggerFor], [matMenuTriggerFor]`,
   host: {
     'aria-haspopup': 'true',
     '(mousedown)': '_handleMousedown($event)',
@@ -58,6 +59,14 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
 
   /** References the menu instance that the trigger is associated with. */
   @Input('mdMenuTriggerFor') menu: MdMenuPanel;
+
+  /**
+   * References the menu instance that the trigger is associated with as above,
+   * but with mat prefix.
+   */
+  @Input('matMenuTriggerFor')
+  get _matMenuTriggerFor(): MdMenuPanel { return this.menu; }
+  set _matMenuTriggerFor(menu: MdMenuPanel) { this.menu = menu; }
 
   /** Event emitted when the associated menu is opened. */
   @Output() onMenuOpen = new EventEmitter<void>();
