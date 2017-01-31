@@ -31,7 +31,7 @@ describe('Overlay directives', () => {
 
   /** Returns the current open overlay pane element. */
   function getPaneElement() {
-    return overlayContainerElement.firstElementChild as HTMLElement;
+    return overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
   }
 
   it(`should attach the overlay based on the open property`, () => {
