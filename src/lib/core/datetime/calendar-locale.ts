@@ -2,9 +2,19 @@ import {SimpleDate} from './simple-date';
 import {Injectable} from '@angular/core';
 
 
-const SUPPORTS_INTL_API = !!(new Date().toLocaleDateString);
+const SUPPORTS_INTL_API = !!Intl;
 
 
+function range<T>(length: number, valueFunction: (index: number) => T): T[] {
+  return Array.apply(null, Array(length)).map((v: undefined, i: number) => valueFunction(i));
+}
+
+
+/**
+ * This class encapsulates the details of how to localize all information needed for displaying a
+ * calendar. It is used by md-datepicker to render a properly localized calendar. Unless otherwise
+ * specified by the user DefaultCalendarLocale will be provided as the CalendarLocale.
+ */
 @Injectable()
 export abstract class CalendarLocale {
   /** Labels to use for the long form of the month. (e.g. 'January') */
@@ -66,8 +76,13 @@ export abstract class CalendarLocale {
 }
 
 
+/**
+ * The default implementation of CalendarLocale. This implementation is a best attempt at
+ * localization using only the functionality natively available in JS. If more robust localization
+ * is needed, an alternate class can be provided as the CalendarLocale for the app.
+ */
 export class DefaultCalendarLocale implements  CalendarLocale {
-  months = SUPPORTS_INTL_API ?  this.createMonthsArray('long') :
+  months = SUPPORTS_INTL_API ?  this._createMonthsArray('long') :
       [
         'January',
         'February',
@@ -83,25 +98,23 @@ export class DefaultCalendarLocale implements  CalendarLocale {
         'December'
       ];
 
-  shortMonths = SUPPORTS_INTL_API ? this.createMonthsArray('short') :
+  shortMonths = SUPPORTS_INTL_API ? this._createMonthsArray('short') :
       ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-  narrowMonths = SUPPORTS_INTL_API ? this.createMonthsArray('narrow') :
+  narrowMonths = SUPPORTS_INTL_API ? this._createMonthsArray('narrow') :
       ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
 
-  days = SUPPORTS_INTL_API ? this.createDaysArray('long') :
+  days = SUPPORTS_INTL_API ? this._createDaysArray('long') :
       ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-  shortDays = SUPPORTS_INTL_API ? this.createDaysArray('short') :
+  shortDays = SUPPORTS_INTL_API ? this._createDaysArray('short') :
       ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  narrowDays = SUPPORTS_INTL_API ? this.createDaysArray('narrow') :
+  narrowDays = SUPPORTS_INTL_API ? this._createDaysArray('narrow') :
       ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
-  dates = [null].concat(SUPPORTS_INTL_API ?
-      this.createArray(31,
-          i => new Date(2017, 0, i + 1).toLocaleDateString(undefined, {day: 'numeric'})) :
-      this.createArray(31, i => String(i + 1)));
+  dates = [null].concat(
+      SUPPORTS_INTL_API ? this._createDatesArray('numeric') :  range(31, i => String(i + 1)));
 
   firstDayOfWeek = 0;
 
@@ -113,33 +126,37 @@ export class DefaultCalendarLocale implements  CalendarLocale {
     return SimpleDate.fromNativeDate(new Date(Date.parse(dateString)));
   }
 
-  formatDate(date: SimpleDate) {
-    let nativeDate = date.toNativeDate();
-    return SUPPORTS_INTL_API ? nativeDate.toLocaleDateString() : nativeDate.toDateString();
+  formatDate = this._createFormatFunction(
+      undefined, (date: SimpleDate) => date.toNativeDate().toDateString());
+
+  getCalendarMonthHeaderLabel = this._createFormatFunction(
+      {month: 'short', year: 'numeric'},
+      (date: SimpleDate) => this.shortMonths[date.month] + ' ' + date.year);
+
+  getCalendarYearHeaderLabel = this._createFormatFunction(
+      {year: 'numeric'}, (date: SimpleDate) => String(date.year));
+
+  private _createMonthsArray(format: string) {
+    let dtf = new Intl.DateTimeFormat(undefined, {month: format});
+    return range(12, i => dtf.format(new Date(2017, i, 1)));
   }
 
-  getCalendarMonthHeaderLabel(date: SimpleDate) {
-    return SUPPORTS_INTL_API ?
-        date.toNativeDate().toLocaleDateString(undefined, {month: 'short', year: 'numeric'}) :
-        this.shortMonths[date.month] + ' ' + date.year;
+  private _createDaysArray(format: string) {
+    let dtf = new Intl.DateTimeFormat(undefined, {weekday: format});
+    return range(7, i => dtf.format(new Date(2017, 0, i + 1)));
   }
 
-  getCalendarYearHeaderLabel(date: SimpleDate) {
-    return SUPPORTS_INTL_API ?
-        date.toNativeDate().toLocaleDateString(undefined, {year: 'numeric'}) : String(date.year);
+  private _createDatesArray(format: string) {
+    let dtf = new Intl.DateTimeFormat(undefined, {day: format});
+    return range(31, i => dtf.format(new Date(2017, 0, i + 1)));
   }
 
-  protected createArray<T>(length: number, valueFunction: (index: number) => T): T[] {
-    return Array.apply(null, Array(length)).map((v: undefined, i: number) => valueFunction(i));
-  }
-
-  protected createMonthsArray(format: string) {
-    return this.createArray(12,
-        i => new Date(2017, i, 1).toLocaleDateString(undefined, {month: format}));
-  }
-
-  protected createDaysArray(format: string) {
-    return this.createArray(7,
-        i => new Date(2017, 0, i + 1).toLocaleDateString(undefined, {weekday: format}));
+  private _createFormatFunction(
+      options: Object, fallback: (date: SimpleDate) => string): (date: SimpleDate) => string {
+    if (SUPPORTS_INTL_API) {
+      let dtf = new Intl.DateTimeFormat(undefined, options);
+      return (date: SimpleDate) => dtf.format(date.toNativeDate());
+    }
+    return fallback;
   }
 }

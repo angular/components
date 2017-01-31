@@ -1,3 +1,7 @@
+/**
+ * A replacement for the native JS Date class that allows us to avoid dealing with time zone
+ * details and the time component of the native Date.
+ */
 export class SimpleDate {
   static fromNativeDate(nativeDate: Date) {
     return new SimpleDate(nativeDate.getFullYear(), nativeDate.getMonth(), nativeDate.getDate());
