@@ -23,7 +23,7 @@ export class RippleDemo {
 
   doManualRipple() {
     if (this.ripple) {
-      this.ripple.createRipple(0, 0, { centered: true });
+      this.ripple.launch(0, 0, { centered: true });
     }
   }
 

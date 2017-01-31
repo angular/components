@@ -31,7 +31,7 @@ export type RippleConfig = {
 export class RippleRenderer {
 
   /** Element where the ripples are being added to. */
-  private _targetElement: HTMLElement;
+  private _containerElement: HTMLElement;
 
   /** Element which triggers the ripple elements on mouse events. */
   private _triggerElement: HTMLElement;
@@ -39,8 +39,8 @@ export class RippleRenderer {
   /** Whether the mouse is currently down or not. */
   private _isMousedown: boolean = false;
 
-  /** Currently showing ripples that will be closed on mouseup. */
-  private _showingRipples: HTMLElement[] = [];
+  /** Currently active ripples that will be closed on mouseup. */
+  private _activeRipples: HTMLElement[] = [];
 
   /** Events to be registered on the trigger element. */
   private _triggerEvents = new Map<string, any>();
@@ -52,7 +52,7 @@ export class RippleRenderer {
   rippleDisabled: boolean = false;
 
   constructor(_elementRef: ElementRef, private _ngZone: NgZone, private _ruler: ViewportRuler) {
-    this._targetElement = _elementRef.nativeElement;
+    this._containerElement = _elementRef.nativeElement;
 
     // Specify events which need to be registered on the trigger.
     this._triggerEvents.set('mousedown', this.onMousedown.bind(this));
@@ -60,16 +60,16 @@ export class RippleRenderer {
     this._triggerEvents.set('mouseleave', this.onMouseLeave.bind(this));
 
     // By default use the host element as trigger element.
-    this.setTriggerElement(this._targetElement);
+    this.setTriggerElement(this._containerElement);
   }
 
   /** Fades in a ripple at the given coordinates. */
   fadeInRipple(pageX: number, pageY: number, config: RippleConfig = {}) {
-    let targetRect = this._targetElement.getBoundingClientRect();
+    let containerRect = this._containerElement.getBoundingClientRect();
 
     if (config.centered) {
-      pageX = targetRect.left + targetRect.width / 2;
-      pageY = targetRect.top + targetRect.height / 2;
+      pageX = containerRect.left + containerRect.width / 2;
+      pageY = containerRect.top + containerRect.height / 2;
     } else {
       // Subtract scroll values from the coordinates because calculations below
       // are always relative to the viewport rectangle.
@@ -78,10 +78,10 @@ export class RippleRenderer {
       pageY -= scrollPosition.top;
     }
 
-    let radius = config.radius || distanceToFurthestCorner(pageX, pageY, targetRect);
+    let radius = config.radius || distanceToFurthestCorner(pageX, pageY, containerRect);
     let duration = 1 / (config.speedFactor || 1) * (radius / RIPPLE_SPEED_PX_PER_SECOND);
-    let offsetX = pageX - targetRect.left;
-    let offsetY = pageY - targetRect.top;
+    let offsetX = pageX - containerRect.left;
+    let offsetY = pageY - containerRect.top;
 
     let ripple = document.createElement('div');
     ripple.classList.add('mat-ripple-element');
@@ -95,7 +95,7 @@ export class RippleRenderer {
     ripple.style.backgroundColor = config.color;
     ripple.style.transitionDuration = `${duration}s`;
 
-    this._targetElement.appendChild(ripple);
+    this._containerElement.appendChild(ripple);
 
     // By default the browser does not recalculate the styles of dynamically created
     // ripple elements. This is critical because then the `scale` would not animate properly.
@@ -108,7 +108,7 @@ export class RippleRenderer {
     // Wait for the ripple to be faded in. Once faded in the ripple can be hided if the mouse is
     // released.
     this.runTimeoutOutsideZone(() => {
-      this._isMousedown ? this._showingRipples.push(ripple) : this.fadeOutRipple(ripple);
+      this._isMousedown ? this._activeRipples.push(ripple) : this.fadeOutRipple(ripple);
     }, duration * 1000);
   }
 
@@ -151,8 +151,8 @@ export class RippleRenderer {
   /** Listener being called on mouseup event. */
   private onMouseup() {
     this._isMousedown = false;
-    this._showingRipples.forEach(ripple => this.fadeOutRipple(ripple));
-    this._showingRipples = [];
+    this._activeRipples.forEach(ripple => this.fadeOutRipple(ripple));
+    this._activeRipples = [];
   }
 
   /** Listener being called on mouseleave event. */

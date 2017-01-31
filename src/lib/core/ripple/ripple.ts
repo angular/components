@@ -28,7 +28,9 @@ export class MdRipple implements OnChanges, OnDestroy {
    * The element that triggers the ripple when click events are received. Defaults to the
    * directive's host element.
    */
-  @Input('mdRippleTrigger') trigger: any;
+  // Prevent TS metadata emit from referencing HTMLElement in ripple.js
+  // Otherwise running this code in a Node environment (e.g Universal) will not work.
+  @Input('mdRippleTrigger') trigger: HTMLElement|HTMLElement;
 
   /**
    * Whether the ripple always originates from the center of the host element's bounds, rather
@@ -82,8 +84,8 @@ export class MdRipple implements OnChanges, OnDestroy {
     this._rippleRenderer.setTriggerElement(null);
   }
 
-  /** Creates a manual ripple at the specified position. */
-  createRipple(pageX: number, pageY: number, config?: RippleConfig) {
+  /** Launches a manual ripple at the specified position. */
+  launch(pageX: number, pageY: number, config?: RippleConfig) {
     this._rippleRenderer.fadeInRipple(pageX, pageY, config);
   }
 

@@ -118,7 +118,7 @@ describe('MdRipple', () => {
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
 
-      rippleComponent.createRipple(0, 0);
+      rippleComponent.launch(0, 0);
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
     });
