@@ -16,7 +16,6 @@ export class FocusOriginMonitor {
     // TODO(mmalerba): Figure out how to handle touchstart
     document.addEventListener(
         'keydown', () => this._setOriginForCurrentEventQueue('keyboard'), true);
-
     document.addEventListener(
         'mousedown', () => this._setOriginForCurrentEventQueue('mouse'), true);
   }
