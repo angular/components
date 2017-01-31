@@ -1,7 +1,15 @@
 <h1>Dialog demo</h1>
 
-<button md-raised-button color="primary" (click)="openJazz()" [disabled]="dialogRef">Open dialog</button>
-<button md-raised-button color="accent" (click)="openContentElement()">Open dialog with content elements</button>
+<div class="demo-button-group">
+  <button md-raised-button color="primary" (click)="openJazz()" [disabled]="dialogRef">Open dialog</button>
+  <button md-raised-button color="accent" (click)="openContentElement()">Open dialog with content elements</button>
+</div>
+
+<div class="demo-button-group">
+  <button md-raised-button color="primary" (click)="openJazzUsingTemplateRef()" [disabled]="dialogTemplateRef">Open dialog using TemplateRef</button>
+  <button md-raised-button color="accent" (click)="openContentElementUsingTemplateRef()">Open dialog using TemplateRef with content elements</button>
+</div>
+
 
 <md-card class="demo-dialog-card">
   <md-card-content>
@@ -51,3 +59,12 @@
 </md-card>
 
 <p>Last close result: {{lastCloseResult}}</p>
+
+<template #jazzDialogRef>
+  <demo-jazz-dialog-template-ref (close)="closeJazzUsingTemplateRef($event)"></demo-jazz-dialog-template-ref>
+</template>
+
+
+<template #contentElementRef>
+  <demo-content-element-template-ref-dialog (close)="closeContentElementUsingTemplateRef()" [actionsAlignment]="actionsAlignment"></demo-content-element-template-ref-dialog>
+</template>

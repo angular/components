@@ -8,7 +8,14 @@ import {MaterialModule, OverlayContainer,
   FullscreenOverlayContainer} from '@angular/material';
 import {DEMO_APP_ROUTES} from './demo-app/routes';
 import {ProgressBarDemo} from './progress-bar/progress-bar-demo';
-import {JazzDialog, ContentElementDialog, DialogDemo, IFrameDialog} from './dialog/dialog-demo';
+import {
+  JazzDialog,
+  JazzDialogTemplateRef,
+  ContentElementDialog,
+  ContentElementTemplateRefDialog,
+  DialogDemo,
+  IFrameDialog
+} from './dialog/dialog-demo';
 import {RippleDemo} from './ripple/ripple-demo';
 import {IconDemo} from './icon/icon-demo';
 import {GesturesDemo} from './gestures/gestures-demo';
@@ -64,7 +71,9 @@ import {InputContainerDemo} from './input/input-container-demo';
     IconDemo,
     InputContainerDemo,
     JazzDialog,
+    JazzDialogTemplateRef,
     ContentElementDialog,
+    ContentElementTemplateRefDialog,
     IFrameDialog,
     ListDemo,
     LiveAnnouncerDemo,
@@ -100,7 +109,9 @@ import {InputContainerDemo} from './input/input-container-demo';
   entryComponents: [
     DemoApp,
     JazzDialog,
+    JazzDialogTemplateRef,
     ContentElementDialog,
+    ContentElementTemplateRefDialog,
     IFrameDialog,
     RotiniPanel,
     ScienceJoke,
