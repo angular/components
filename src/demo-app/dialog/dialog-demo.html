@@ -1,53 +1,107 @@
 <h1>Dialog demo</h1>
 
-<button md-raised-button color="primary" (click)="openJazz()" [disabled]="dialogRef">Open dialog</button>
-<button md-raised-button color="accent" (click)="openContentElement()">Open dialog with content elements</button>
+<div class="demo-dialog-section">
 
-<md-card class="demo-dialog-card">
-  <md-card-content>
-    <h2>Dialog dimensions</h2>
+  <h2>Using <strong>MdDialog</strong> service</h2>
 
-    <p>
-      <md-input-container>
-        <input mdInput [(ngModel)]="config.width" placeholder="Width">
-      </md-input-container>
-      <md-input-container>
-        <input mdInput [(ngModel)]="config.height" placeholder="Height">
-      </md-input-container>
-    </p>
+  <div class="demo-button-group">
+    <button md-raised-button color="primary" (click)="openJazz()" [disabled]="dialogRef">Open dialog</button>
+    <button md-raised-button color="accent" (click)="openContentElement()">Open dialog with content elements</button>
+  </div>
 
-    <h2>Dialog position</h2>
+  <div class="demo-button-group">
+    <button md-raised-button color="primary" (click)="openJazzUsingTemplateRef()" [disabled]="dialogTemplateRef">Open dialog using TemplateRef</button>
+    <button md-raised-button color="accent" (click)="openContentElementUsingTemplateRef()">Open dialog using TemplateRef with content elements</button>
+  </div>
 
-    <p>
-      <md-input-container>
-        <input mdInput [(ngModel)]="config.position.top" (change)="config.position.bottom = ''" placeholder="Top">
-      </md-input-container>
-      <md-input-container>
-        <input mdInput [(ngModel)]="config.position.bottom" (change)="config.position.top = ''" placeholder="Bottom">
-      </md-input-container>
-    </p>
+  <p *ngIf="lastCloseResult">Last close result: {{lastCloseResult}}</p>
 
-    <p>
-      <md-input-container>
-        <input mdInput [(ngModel)]="config.position.left" (change)="config.position.right = ''" placeholder="Left">
-      </md-input-container>
-      <md-input-container>
-        <input mdInput [(ngModel)]="config.position.right" (change)="config.position.left = ''" placeholder="Right">
-      </md-input-container>
-    </p>
+  <template #jazzDialogRef>
+    <demo-jazz-dialog-template-ref (close)="closeJazzUsingTemplateRef($event)"></demo-jazz-dialog-template-ref>
+  </template>
 
-    <h2>Other options</h2>
+  <template #contentElementRef>
+    <demo-content-element-template-ref-dialog (close)="closeContentElementUsingTemplateRef()" [actionsAlignment]="actionsAlignment"></demo-content-element-template-ref-dialog>
+  </template>
 
-    <p>
-      <md-select placeholder="Button alignment" [(ngModel)]="actionsAlignment">
-        <md-option>Start</md-option>
-        <md-option value="end">End</md-option>
-        <md-option value="center">Center</md-option>
-      </md-select>
-    </p>
+</div>
 
-    <md-checkbox [(ngModel)]="config.disableClose">Disable close</md-checkbox>
-  </md-card-content>
-</md-card>
+<div class="demo-dialog-section">
 
-<p>Last close result: {{lastCloseResult}}</p>
+  <h2>Using <strong>md-dialog</strong> element</h2>
+
+  <div class="demo-button-group">
+    <button
+      md-raised-button
+      color="primary"
+      (click)="changeMdDialogState(true)"
+      [disabled]="mdDialogState">
+      Open md-dialog with content elements
+    </button>
+  </div>
+
+  <md-dialog
+    [open]="mdDialogState"
+    (close)="changeMdDialogState(false)">
+
+    <demo-content-element-template-ref-dialog
+      (close)="changeMdDialogState(false)"
+      [actionsAlignment]="actionsAlignment">
+    </demo-content-element-template-ref-dialog>
+
+  </md-dialog>
+
+</div>
+
+<div class="demo-dialog-section">
+
+  <h2>Dialog settings</h2>
+
+  <md-card class="demo-dialog-card">
+    <md-card-content>
+      <h2>Dialog dimensions</h2>
+
+      <p>
+        <md-input-container>
+          <input mdInput [(ngModel)]="config.width" placeholder="Width">
+        </md-input-container>
+        <md-input-container>
+          <input mdInput [(ngModel)]="config.height" placeholder="Height">
+        </md-input-container>
+      </p>
+
+      <h2>Dialog position</h2>
+
+      <p>
+        <md-input-container>
+          <input mdInput [(ngModel)]="config.position.top" (change)="config.position.bottom = ''" placeholder="Top">
+        </md-input-container>
+        <md-input-container>
+          <input mdInput [(ngModel)]="config.position.bottom" (change)="config.position.top = ''" placeholder="Bottom">
+        </md-input-container>
+      </p>
+
+      <p>
+        <md-input-container>
+          <input mdInput [(ngModel)]="config.position.left" (change)="config.position.right = ''" placeholder="Left">
+        </md-input-container>
+        <md-input-container>
+          <input mdInput [(ngModel)]="config.position.right" (change)="config.position.left = ''" placeholder="Right">
+        </md-input-container>
+      </p>
+
+      <h2>Other options</h2>
+
+      <p>
+        <md-select placeholder="Button alignment" [(ngModel)]="actionsAlignment">
+          <md-option>Start</md-option>
+          <md-option value="end">End</md-option>
+          <md-option value="center">Center</md-option>
+        </md-select>
+      </p>
+
+      <md-checkbox [(ngModel)]="config.disableClose">Disable close</md-checkbox>
+    </md-card-content>
+  </md-card>
+
+</div>

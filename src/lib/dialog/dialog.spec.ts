@@ -8,13 +8,21 @@ import {
   tick,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {NgModule, Component, Directive, ViewChild, ViewContainerRef, Injector} from '@angular/core';
+import {
+  NgModule,
+  Component,
+  Directive,
+  ViewChild,
+  ViewContainerRef,
+  Injector,
+  TemplateRef
+} from '@angular/core';
 import {MdDialogModule} from './index';
 import {MdDialog} from './dialog';
+import {MdDialogConfig} from './dialog-config';
 import {OverlayContainer} from '../core';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
-
 
 describe('MdDialog', () => {
   let dialog: MdDialog;
@@ -62,6 +70,98 @@ describe('MdDialog', () => {
     viewContainerFixture.detectChanges();
     let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container');
     expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
+  });
+
+  it('should open a dialog with a templateRef', () => {
+    const catDialogContainer = TestBed.createComponent(CatDialogContainer);
+
+    catDialogContainer.detectChanges();
+
+    dialog.openFromTemplateRef(catDialogContainer.componentInstance.catRef);
+
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('Cat');
+
+    viewContainerFixture.detectChanges();
+    let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container');
+    expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
+  });
+
+  it('should open dialog using md-dialog component', () => {
+    const dialogComponentContainer = TestBed.createComponent(DialogComponentContainer);
+
+    dialogComponentContainer.detectChanges();
+
+    expect(overlayContainerElement.textContent).toBe('');
+
+    dialogComponentContainer.componentInstance.changeState(true);
+
+    dialogComponentContainer.detectChanges();
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('Hello');
+
+    viewContainerFixture.detectChanges();
+    let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container');
+    expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
+
+  });
+
+  it('should close md-dialog component by changing "open" input to false', () => {
+    const dialogComponentContainer = TestBed.createComponent(DialogComponentContainer);
+
+    dialogComponentContainer.componentInstance.changeState(true);
+
+    dialogComponentContainer.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('Hello');
+
+    dialogComponentContainer.componentInstance.changeState(false);
+
+    dialogComponentContainer.detectChanges();
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
+
+  });
+
+  it('should not close dialog by default when using md-dialog', () => {
+    const dialogComponentContainer = TestBed.createComponent(DialogComponentContainer);
+
+    dialogComponentContainer.componentInstance.changeState(true);
+
+    dialogComponentContainer.detectChanges();
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('Hello');
+
+    let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+    backdrop.click();
+
+    expect(overlayContainerElement.querySelector('md-dialog-container')).toBeTruthy();
+
+  });
+
+  it('should allow md-dialog settings to be changed with "config" input', () => {
+    const dialogComponentContainer = TestBed.createComponent(DialogComponentContainer);
+
+    dialogComponentContainer.componentInstance.config = {
+      disableClose: false
+    };
+
+    dialogComponentContainer.componentInstance.changeState(true);
+
+    dialogComponentContainer.detectChanges();
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('Hello');
+
+    let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+    backdrop.click();
+
+    expect(overlayContainerElement.querySelector('md-dialog-container')).toBeFalsy();
+
   });
 
   it('should use injector from viewContainerRef for DialogInjector', () => {
@@ -120,7 +220,6 @@ describe('MdDialog', () => {
     expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
   });
 
-
   it('should close a dialog via the escape key', () => {
     dialog.open(PizzaMsg, {
       viewContainerRef: testViewContainerRef
@@ -137,6 +236,28 @@ describe('MdDialog', () => {
     expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
   });
 
+  it('should notify the user that escape key was pressed', () => {
+    let dialogRef = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let dialogContainer: MdDialogContainer =
+        viewContainerFixture.debugElement.query(By.directive(MdDialogContainer)).componentInstance;
+
+    let pressed = false;
+
+    dialogRef.escapePressed.subscribe(() => {
+      pressed = true;
+    });
+
+    // Fake the user pressing the escape key by calling the handler directly.
+    dialogContainer.handleEscapeKey();
+
+    expect(pressed).toBe(true);
+  });
+
   it('should close when clicking on the overlay backdrop', () => {
     dialog.open(PizzaMsg, {
       viewContainerRef: testViewContainerRef
@@ -148,6 +269,25 @@ describe('MdDialog', () => {
     backdrop.click();
 
     expect(overlayContainerElement.querySelector('md-dialog-container')).toBeFalsy();
+  });
+
+  it('should notify the user that overlay backdrop was clicked', () => {
+    let dialogRef = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+
+    let clicked = false;
+
+    dialogRef.backdropClicked.subscribe(() => {
+      clicked = true;
+    });
+
+    backdrop.click();
+    expect(clicked).toBe(true);
   });
 
   it('should notify the observers if a dialog has been opened', () => {
@@ -483,6 +623,35 @@ class PizzaMsg {
               public dialogInjector: Injector) {}
 }
 
+/** Components for testing dialog using TemplateRef. */
+@Component({selector: 'cat-dialog', template: '<p>Cat</p> <input> <button>Close</button>'})
+class CatDialog {}
+
+@Component({template: '<template #catRef><cat-dialog></cat-dialog></template>'})
+class CatDialogContainer {
+  @ViewChild('catRef') catRef: TemplateRef<CatDialog>;
+}
+
+/** Components for testing md-dialog component. */
+@Component({
+  template: `
+    <md-dialog
+      [config]="config"
+      [open]="state"
+      (close)="changeState(false)">
+      Hello
+    </md-dialog>
+  `
+})
+class DialogComponentContainer {
+  state: boolean = false;
+  config: MdDialogConfig;
+
+  changeState(to: boolean) {
+    this.state = to;
+  }
+}
+
 @Component({
   template: `
     <h1 md-dialog-title>This is the title</h1>
@@ -510,14 +679,24 @@ class ComponentThatProvidesMdDialog {
 const TEST_DIRECTIVES = [
   ComponentWithChildViewContainer,
   PizzaMsg,
+  CatDialog,
+  CatDialogContainer,
+  DialogComponentContainer,
   DirectiveWithViewContainer,
-  ContentElementDialog
+  ContentElementDialog,
 ];
 
 @NgModule({
   imports: [MdDialogModule],
   exports: TEST_DIRECTIVES,
   declarations: TEST_DIRECTIVES,
-  entryComponents: [ComponentWithChildViewContainer, PizzaMsg, ContentElementDialog],
+  entryComponents: [
+    ComponentWithChildViewContainer,
+    DialogComponentContainer,
+    PizzaMsg,
+    CatDialog,
+    CatDialogContainer,
+    ContentElementDialog,
+  ],
 })
 class DialogTestModule { }

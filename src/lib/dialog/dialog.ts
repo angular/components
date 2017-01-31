@@ -1,4 +1,4 @@
-import {Injector, ComponentRef, Injectable, Optional, SkipSelf} from '@angular/core';
+import {Injector, ComponentRef, Injectable, Optional, SkipSelf, TemplateRef} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
@@ -10,11 +10,7 @@ import {MdDialogConfig} from './dialog-config';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
 
-
-// TODO(jelbourn): add support for opening with a TemplateRef
 // TODO(jelbourn): animations
-
-
 
 /**
  * Service to open Material Design modal dialogs.
@@ -52,6 +48,34 @@ export class MdDialog {
       @Optional() @SkipSelf() private _parentDialog: MdDialog) { }
 
   /**
+   * Opens a modal dialog containing the given TemplateRef.
+   * @param TemplateRef to load into the dialog
+   * @param config Extra configuration options.
+   * @returns Reference to the newly-opened dialog.
+   */
+  openFromTemplateRef<T>(templateRef: TemplateRef<T>, config?: MdDialogConfig): MdDialogRef<T> {
+    config = _applyConfigDefaults(config);
+
+    let overlayRef = this._createOverlay(config);
+
+    let dialogContainer = this._attachDialogContainer(overlayRef, config);
+    let dialogRef = this._attachDialogContent(
+      dialogContainer,
+      overlayRef,
+      undefined,
+      templateRef,
+      config
+    );
+
+    this._openDialogs.push(dialogRef);
+    dialogRef.afterClosed().subscribe(() => this._removeOpenDialog(dialogRef));
+    this._afterOpen.next(dialogRef);
+
+    return dialogRef;
+
+  }
+
+  /**
    * Opens a modal dialog containing the given component.
    * @param component Type of the component to load into the load.
    * @param config Extra configuration options.
@@ -62,7 +86,13 @@ export class MdDialog {
 
     let overlayRef = this._createOverlay(config);
     let dialogContainer = this._attachDialogContainer(overlayRef, config);
-    let dialogRef = this._attachDialogContent(component, dialogContainer, overlayRef, config);
+    let dialogRef = this._attachDialogContent(
+      dialogContainer,
+      overlayRef,
+      component,
+      undefined,
+      config
+    );
 
     this._openDialogs.push(dialogRef);
     dialogRef.afterClosed().subscribe(() => this._removeOpenDialog(dialogRef));
@@ -121,9 +151,10 @@ export class MdDialog {
    * @returns A promise resolving to the MdDialogRef that should be returned to the user.
    */
   private _attachDialogContent<T>(
-      component: ComponentType<T>,
       dialogContainer: MdDialogContainer,
       overlayRef: OverlayRef,
+      component: ComponentType<T>,
+      templateRef: TemplateRef<T>,
       config?: MdDialogConfig): MdDialogRef<T> {
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
@@ -143,10 +174,16 @@ export class MdDialog {
     let userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
     let dialogInjector = new DialogInjector(dialogRef, userInjector || this._injector);
 
-    let contentPortal = new ComponentPortal(component, null, dialogInjector);
+    if (component) {
+      let contentPortal = new ComponentPortal(component, null, dialogInjector);
 
-    let contentRef = dialogContainer.attachComponentPortal(contentPortal);
-    dialogRef.componentInstance = contentRef.instance;
+      let contentRef = dialogContainer.attachComponentPortal(contentPortal);
+      dialogRef.componentInstance = contentRef.instance;
+    }
+
+    if (templateRef) {
+      dialogContainer.attachTemplateRef(templateRef);
+    }
 
     return dialogRef;
   }

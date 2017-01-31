@@ -6,6 +6,7 @@ import {
   CompatibilityModule,
 } from '../core';
 import {MdDialog} from './dialog';
+import {MdDialogElement} from './dialog-element';
 import {MdDialogContainer} from './dialog-container';
 import {
   MdDialogClose,
@@ -13,7 +14,6 @@ import {
   MdDialogTitle,
   MdDialogActions
 } from './dialog-content-directives';
-
 
 @NgModule({
   imports: [
@@ -24,6 +24,7 @@ import {
   ],
   exports: [
     MdDialogContainer,
+    MdDialogElement,
     MdDialogClose,
     MdDialogTitle,
     MdDialogContent,
@@ -32,6 +33,7 @@ import {
   ],
   declarations: [
     MdDialogContainer,
+    MdDialogElement,
     MdDialogClose,
     MdDialogTitle,
     MdDialogActions,
@@ -53,6 +55,7 @@ export class MdDialogModule {
 }
 
 export * from './dialog';
+export * from './dialog-element';
 export * from './dialog-container';
 export * from './dialog-content-directives';
 export * from './dialog-config';
