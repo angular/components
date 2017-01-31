@@ -5,18 +5,20 @@
     <div class="md-input-infix" [class.md-end]="align == 'end'">
       <ng-content selector="input, textarea"></ng-content>
 
-      <label class="md-input-placeholder"
-             [attr.for]="_mdInputChild.id"
-             [class.md-empty]="_mdInputChild.empty"
-             [class.md-focused]="_mdInputChild.focused"
-             [class.md-float]="floatingPlaceholder"
-             [class.md-accent]="dividerColor == 'accent'"
-             [class.md-warn]="dividerColor == 'warn'"
-             *ngIf="_hasPlaceholder()">
-        <ng-content select="md-placeholder"></ng-content>
-        {{_mdInputChild.placeholder}}
-        <span class="md-placeholder-required" *ngIf="_mdInputChild.required">*</span>
-      </label>
+      <span class="md-input-placeholder-wrapper">
+        <label class="md-input-placeholder"
+               [attr.for]="_mdInputChild.id"
+               [class.md-empty]="_mdInputChild.empty"
+               [class.md-focused]="_mdInputChild.focused"
+               [class.md-float]="floatingPlaceholder"
+               [class.md-accent]="dividerColor == 'accent'"
+               [class.md-warn]="dividerColor == 'warn'"
+               *ngIf="_hasPlaceholder()">
+          <ng-content select="md-placeholder"></ng-content>
+          {{_mdInputChild.placeholder}}
+          <span class="md-placeholder-required" *ngIf="_mdInputChild.required">*</span>
+        </label>
+      </span>
     </div>
 
     <div class="md-input-suffix"><ng-content select="[mdSuffix], [md-suffix]"></ng-content></div>

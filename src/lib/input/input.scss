@@ -119,6 +119,7 @@ md-input, md-textarea {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow-x: hidden;
+  padding-top: 1em;
 
   transform: translateY(0);
   transform-origin: bottom left;
@@ -140,6 +141,23 @@ md-input, md-textarea {
     transform-origin: bottom right;
     left: auto;
     right: 0;
+  }
+}
+
+// Used to hide the placeholder overflow on IE, since IE doesn't take transform into account when
+// determining overflow.
+.md-input-placeholder-wrapper {
+  position: absolute;
+  left: 0;
+  top: -1em;
+  width: 100%;
+  padding-top: 1em;
+  overflow: hidden;
+  pointer-events: none;  // We shouldn't catch mouse events (let them through).
+
+  // Keeps the element height since the placeholder text is `position: absolute`.
+  &::after {
+    content: '\\00a0';
   }
 }
 
