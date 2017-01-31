@@ -34,6 +34,7 @@ import {Subject} from 'rxjs/Subject';
 import {Dir} from '../core/rtl/dir';
 import 'rxjs/add/operator/first';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
+import {Subscription} from 'rxjs';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
@@ -41,7 +42,7 @@ export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 
 export const TOUCHEND_HIDE_DELAY  = 1500;
 
 /** Time in ms to throttle repositioning after scroll events. */
-export const SCROLL_THROTTLE_MS = 0;
+export const SCROLL_THROTTLE_MS = 20;
 
 /**
  * Directive that attaches a material design tooltip to the host element. Animates the showing and
@@ -62,6 +63,7 @@ export const SCROLL_THROTTLE_MS = 0;
 export class MdTooltip implements OnInit, OnDestroy {
   _overlayRef: OverlayRef;
   _tooltipInstance: TooltipComponent;
+  scrollSubscription: Subscription;
 
   private _position: TooltipPosition = 'below';
 
@@ -137,7 +139,7 @@ export class MdTooltip implements OnInit, OnDestroy {
   ngOnInit() {
     // When a scroll on the page occurs, update the position in case this tooltip needs
     // to be repositioned.
-    this._scrollDispatcher.scrolled(SCROLL_THROTTLE_MS).subscribe(() => {
+    this.scrollSubscription = this._scrollDispatcher.scrolled(SCROLL_THROTTLE_MS).subscribe(() => {
       if (this._overlayRef) {
         this._overlayRef.updatePosition();
       }
@@ -151,6 +153,8 @@ export class MdTooltip implements OnInit, OnDestroy {
     if (this._tooltipInstance) {
       this._disposeTooltip();
     }
+
+    this.scrollSubscription.unsubscribe();
   }
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
