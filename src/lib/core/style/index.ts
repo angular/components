@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
-import {CdkFocusClasses, FOCUS_ORIGIN_MONITOR_PROVIDER} from './add-focus-classes';
+import {CdkFocusClasses, FOCUS_ORIGIN_MONITOR_PROVIDER} from './focus-classes';
 
-export * from './add-focus-classes';
+export * from './focus-classes';
 export * from './apply-transform';
 
 
