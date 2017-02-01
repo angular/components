@@ -2,28 +2,28 @@
 @import '../core/theming/theming';
 
 
-@mixin md-date-picker-theme($theme) {
+@mixin mat-datepicker-theme($theme) {
   $primary: map-get($theme, primary);
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .md-calendar-table-label {
+  .mat-calendar-table-label {
     color: md-color($foreground, secondary-text);
   }
 
-  .md-calendar-table-cell-content {
+  .mat-calendar-table-cell-content {
     color: md-color($foreground, text);
 
-    .md-calendar-table-cell:hover & {
+    .mat-calendar-table-cell:hover & {
       background: md-color($background, hover);
     }
 
-    .md-calendar-table-cell &.md-calendar-table-selected {
+    .mat-calendar-table-cell &.mat-calendar-table-selected {
       background: md-color($primary);
       color: md-color($primary, default-contrast);
     }
 
-    &.md-calendar-table-today {
+    &.mat-calendar-table-today {
       border-color: md-color($foreground, divider);
     }
   }

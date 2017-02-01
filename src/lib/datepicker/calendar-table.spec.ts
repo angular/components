@@ -1,5 +1,5 @@
 import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {MdDatePickerModule} from './index';
+import {MdDatepickerModule} from './index';
 import {Component} from '@angular/core';
 import {MdCalendarTable, MdCalendarCell} from './calendar-table';
 import {By} from '@angular/platform-browser';
@@ -8,7 +8,7 @@ import {By} from '@angular/platform-browser';
 describe('MdCalendarTable', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdDatePickerModule],
+      imports: [MdDatepickerModule],
       declarations: [
         StandardCalendarTable,
       ],
@@ -27,8 +27,8 @@ describe('MdCalendarTable', () => {
 
     let refreshElementLists = () => {
       rowEls = calendarTableNativeElement.querySelectorAll('tr');
-      labelEls = calendarTableNativeElement.querySelectorAll('.md-calendar-table-label');
-      cellEls = calendarTableNativeElement.querySelectorAll('.md-calendar-table-cell');
+      labelEls = calendarTableNativeElement.querySelectorAll('.mat-calendar-table-label');
+      cellEls = calendarTableNativeElement.querySelectorAll('.mat-calendar-table-cell');
     };
 
     beforeEach(() => {
@@ -49,13 +49,13 @@ describe('MdCalendarTable', () => {
     });
 
     it('highlights today', () => {
-      let todayCell = calendarTableNativeElement.querySelector('.md-calendar-table-today');
+      let todayCell = calendarTableNativeElement.querySelector('.mat-calendar-table-today');
       expect(todayCell).not.toBeNull();
       expect(todayCell.innerHTML.trim()).toBe('3');
     });
 
     it('highlights selected', () => {
-      let todayCell = calendarTableNativeElement.querySelector('.md-calendar-table-selected');
+      let todayCell = calendarTableNativeElement.querySelector('.mat-calendar-table-selected');
       expect(todayCell).not.toBeNull();
       expect(todayCell.innerHTML.trim()).toBe('4');
     });
@@ -69,18 +69,18 @@ describe('MdCalendarTable', () => {
       expect(rowEls.length).toBe(2);
       expect(labelEls.length).toBe(1);
       expect(cellEls.length).toBe(11);
-      expect(rowEls[0].firstElementChild.classList.contains('md-calendar-table-label')).toBe(
+      expect(rowEls[0].firstElementChild.classList.contains('mat-calendar-table-label')).toBe(
           true, 'first cell should be the label');
       expect(labelEls[0].getAttribute('colspan')).toBe('3');
     });
 
     it('cell should be selected on click', () => {
       let todayElement =
-          calendarTableNativeElement.querySelector('.md-calendar-table-today') as HTMLElement;
+          calendarTableNativeElement.querySelector('.mat-calendar-table-today') as HTMLElement;
       todayElement.click();
       fixture.detectChanges();
 
-      expect(todayElement.classList.contains('md-calendar-table-selected')).toBe(
+      expect(todayElement.classList.contains('mat-calendar-table-selected')).toBe(
           true, 'today should be selected');
     });
   });

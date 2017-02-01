@@ -1,22 +1,22 @@
-<table class="md-calendar-table-table">
+<table class="mat-calendar-table-table">
   <!-- If there's not enough space in the first row, create a separate label row. -->
   <tr *ngIf="_firstRowOffset < labelMinRequiredCells">
-    <td class="md-calendar-table-label" [attr.colspan]="numCols" >{{label}}</td>
+    <td class="mat-calendar-table-label" [attr.colspan]="numCols" >{{label}}</td>
   </tr>
 
   <!-- Create the first row separately so we can include a special spacer cell. -->
   <tr *ngFor="let row of rows; let i = index">
     <td *ngIf="i === 0 && _firstRowOffset"
-        class="md-calendar-table-label"
+        class="mat-calendar-table-label"
         [attr.colspan]="_firstRowOffset">
       {{_firstRowOffset >= labelMinRequiredCells ? label : ''}}
     </td>
     <td *ngFor="let item of row"
-        class="md-calendar-table-cell"
+        class="mat-calendar-table-cell"
         (click)="_cellClicked(item.value)">
-      <div class="md-calendar-table-cell-content"
-           [class.md-calendar-table-selected]="selectedValue === item.value"
-           [class.md-calendar-table-today]="todayValue === item.value">
+      <div class="mat-calendar-table-cell-content"
+           [class.mat-calendar-table-selected]="selectedValue === item.value"
+           [class.mat-calendar-table-today]="todayValue === item.value">
         {{item.displayValue}}
       </div>
     </td>

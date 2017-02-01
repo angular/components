@@ -7,16 +7,16 @@ import {
   Output,
   AfterContentInit
 } from '@angular/core';
-import {coerceDateProperty} from '../core/coercion/date-property';
 import {MdCalendarCell} from './calendar-table';
-import {DateLocale} from './date-locale';
+import {CalendarLocale} from '../core/datetime/calendar-locale';
+import {SimpleDate} from '../core/datetime/simple-date';
 
 
 const DAYS_PER_WEEK = 7;
 
 
 /**
- * An internal component used to display a single month in the date-picker.
+ * An internal component used to display a single month in the datepicker.
  * @docs-private
  */
 @Component({
@@ -33,22 +33,22 @@ export class MdMonthView implements AfterContentInit {
   @Input()
   get date() { return this._date; }
   set date(value) {
-    this._date = coerceDateProperty(value);
+    this._date = this._locale.parseDate(value) || SimpleDate.fromNativeDate(new Date());
     this._init();
   }
-  private _date = new Date();
+  private _date = SimpleDate.fromNativeDate(new Date());
 
   /** The currently selected date. */
   @Input()
   get selected() { return this._selected; }
   set selected(value) {
-    this._selected = coerceDateProperty(value, null);
+    this._selected = this._locale.parseDate(value);
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
   }
-  private _selected: Date;
+  private _selected: SimpleDate;
 
   /** Emits when a new date is selected. */
-  @Output() selectedChange = new EventEmitter<Date>();
+  @Output() selectedChange = new EventEmitter<SimpleDate>();
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
@@ -68,7 +68,7 @@ export class MdMonthView implements AfterContentInit {
   /** The date of the month that today falls on. Null if today is in another month. */
   _todayDate = 0;
 
-  constructor(private _locale: DateLocale) {}
+  constructor(private _locale: CalendarLocale) {}
 
   ngAfterContentInit(): void {
     this._init();
@@ -76,36 +76,38 @@ export class MdMonthView implements AfterContentInit {
 
   /** Handles when a new date is selected. */
   _dateSelected(date: number) {
-    if (this.selected && this.selected.getDate() == date) {
+    if (this.selected && this.selected.date == date) {
       return;
     }
-    this.selectedChange.emit(new Date(this.date.getFullYear(), this.date.getMonth(), date));
+    this.selectedChange.emit(new SimpleDate(this.date.year, this.date.month, date));
   }
 
   /** Initializes this month view. */
   private _init() {
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
-    this._todayDate = this._getDateInCurrentMonth(new Date());
-    this._monthLabel = this._locale.getMonthLabel(this.date.getMonth(), this.date.getFullYear());
+    this._todayDate = this._getDateInCurrentMonth(SimpleDate.fromNativeDate(new Date()));
+    this._monthLabel = this._locale.getCalendarMonthHeaderLabel(this.date);
 
-    let firstOfMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
+    let firstOfMonth = new SimpleDate(this.date.year, this.date.month, 1);
     this._firstWeekOffset =
-        (DAYS_PER_WEEK + firstOfMonth.getDay() - this._locale.firstDayOfWeek) % DAYS_PER_WEEK;
+        (DAYS_PER_WEEK + firstOfMonth.toNativeDate().getDay() - this._locale.firstDayOfWeek) %
+        DAYS_PER_WEEK;
 
     this._createWeekCells();
   }
 
   /** Creates MdCalendarCells for the dates in this month. */
   private _createWeekCells() {
-    let daysInMonth = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).getDate();
+    let daysInMonth =
+        new SimpleDate(this.date.year, this.date.month + 1, 0).toNativeDate().getDate();
     this._weeks = [[]];
     for (let i = 0, cell = this._firstWeekOffset; i < daysInMonth; i++, cell++) {
       if (cell == DAYS_PER_WEEK) {
         this._weeks.push([]);
         cell = 0;
       }
-      this._weeks[this._weeks.length - 1].push(
-          new MdCalendarCell(i + 1, this._locale.getDateLabel(i + 1)));
+      this._weeks[this._weeks.length - 1]
+          .push(new MdCalendarCell(i + 1, this._locale.dates[i + 1]));
     }
   }
 
@@ -113,7 +115,7 @@ export class MdMonthView implements AfterContentInit {
    * Gets the date in this month that the given Date falls on.
    * Returns null if the given Date is in another year.
    */
-  private _getDateInCurrentMonth(date: Date) {
-    return date && date.getMonth() == this.date.getMonth() ? date.getDate() : null;
+  private _getDateInCurrentMonth(date: SimpleDate) {
+    return date && date.month == this.date.month ? date.date : null;
   }
 }

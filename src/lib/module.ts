@@ -36,7 +36,7 @@ import {MdMenuModule} from './menu/index';
 import {MdDialogModule} from './dialog/index';
 import {PlatformModule} from './core/platform/index';
 import {MdAutocompleteModule} from './autocomplete/index';
-import {MdDatePickerModule} from './date-picker/index';
+import {MdDatepickerModule} from './datepicker/index';
 
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
@@ -45,7 +45,7 @@ const MATERIAL_MODULES = [
   MdCardModule,
   MdChipsModule,
   MdCheckboxModule,
-  MdDatePickerModule,
+  MdDatepickerModule,
   MdDialogModule,
   MdGridListModule,
   MdIconModule,
@@ -82,7 +82,6 @@ const MATERIAL_MODULES = [
     MdCardModule.forRoot(),
     MdChipsModule.forRoot(),
     MdCheckboxModule.forRoot(),
-    MdDatePickerModule.forRoot(),
     MdGridListModule.forRoot(),
     MdInputModule.forRoot(),
     MdListModule.forRoot(),

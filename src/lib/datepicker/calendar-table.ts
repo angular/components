@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 
 
-
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
  * @docs-private
