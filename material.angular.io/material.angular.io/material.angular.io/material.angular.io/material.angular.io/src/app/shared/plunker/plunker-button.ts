@@ -32,6 +32,12 @@ export class PlunkerButton {
   constructor(private plunkerWriter: PlunkerWriter) {}
 
   openPlunker(): void {
+    // When the form is submitted, it must be in the document body. The standard of forms is not
+    // to submit if it is detached from the document. See the following chromium commit for
+    // more details:
+    // https://chromium.googlesource.com/chromium/src/+/962c2a22ddc474255c776aefc7abeba00edc7470%5E!
+    document.body.appendChild(this.plunkerForm);
     this.plunkerForm.submit();
+    document.body.removeChild(this.plunkerForm);
   }
 }
