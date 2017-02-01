@@ -280,7 +280,7 @@ describe('MdInputContainer', function () {
     fixture.componentInstance.label = 'label';
     fixture.detectChanges();
 
-    let hint = fixture.debugElement.query(By.css('.md-hint')).nativeElement;
+    let hint = fixture.debugElement.query(By.css('.mat-hint')).nativeElement;
 
     expect(hint.getAttribute('id')).toBeTruthy();
   });
@@ -436,7 +436,7 @@ describe('MdInputContainer', function () {
     fixture.componentInstance.label = 'label';
     fixture.detectChanges();
 
-    let hint = fixture.debugElement.query(By.css('.md-hint')).nativeElement;
+    let hint = fixture.debugElement.query(By.css('.mat-hint')).nativeElement;
     let input = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(input.getAttribute('aria-describedby')).toBe(hint.getAttribute('id'));
@@ -448,7 +448,7 @@ describe('MdInputContainer', function () {
     fixture.componentInstance.label = 'label';
     fixture.detectChanges();
 
-    let hint = fixture.debugElement.query(By.css('.md-hint')).nativeElement;
+    let hint = fixture.debugElement.query(By.css('.mat-hint')).nativeElement;
     let input = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(input.getAttribute('aria-describedby')).toBe(hint.getAttribute('id'));
@@ -471,8 +471,8 @@ describe('MdInputContainer', function () {
 
     fixture.detectChanges();
 
-    let hintLabel = fixture.debugElement.query(By.css('.md-hint')).nativeElement;
-    let endLabel = fixture.debugElement.query(By.css('.md-hint[align="end"]')).nativeElement;
+    let hintLabel = fixture.debugElement.query(By.css('.mat-hint')).nativeElement;
+    let endLabel = fixture.debugElement.query(By.css('.mat-hint[align="end"]')).nativeElement;
     let input = fixture.debugElement.query(By.css('input')).nativeElement;
     let ariaValue = input.getAttribute('aria-describedby');
 

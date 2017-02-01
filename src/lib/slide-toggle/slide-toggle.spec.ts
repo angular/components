@@ -359,12 +359,12 @@ describe('MdSlideToggle', () => {
     });
 
     it('should set a element class if labelPosition is set to before', () => {
-      expect(slideToggleElement.classList).not.toContain('md-slide-toggle-label-before');
+      expect(slideToggleElement.classList).not.toContain('mat-slide-toggle-label-before');
 
       testComponent.labelPosition = 'before';
       fixture.detectChanges();
 
-      expect(slideToggleElement.classList).toContain('md-slide-toggle-label-before');
+      expect(slideToggleElement.classList).toContain('mat-slide-toggle-label-before');
     });
 
   });

@@ -188,7 +188,7 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
 
 .mat-checkbox {
   cursor: pointer;
-  font-family: $md-font-family;
+  font-family: $mat-font-family;
 
   // Animation
   transition: background $swift-ease-out-duration $swift-ease-out-timing-function,

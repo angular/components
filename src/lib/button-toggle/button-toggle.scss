@@ -1,6 +1,5 @@
 @import '../core/style/elevation';
 
-
 $mat-button-toggle-padding: 0 16px !default;
 $mat-button-toggle-line-height: 36px !default;
 $mat-button-toggle-border-radius: 2px !default;
@@ -34,7 +33,7 @@ $mat-button-toggle-border-radius: 2px !default;
 
 .mat-button-toggle {
   white-space: nowrap;
-  font-family: $md-font-family;
+  font-family: $mat-font-family;
 }
 
 .mat-button-toggle-label-content {
