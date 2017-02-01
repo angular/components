@@ -8,7 +8,12 @@ import {PlatformModule} from '../platform/index';
 import {Platform} from '../platform/platform';
 
 
-// NOTE: Focus listeners fail to trigger in Firefox for some reason, so we skip tests on Firefox.
+// NOTE: Firefox only fires focus & blur events when it is the currently active window.
+// This is not always the case on our CI setup, therefore we disable tests that depend on these
+// events firing for Firefox. We may be able to fix this by configuring our CI to start Firefox with
+// the following preference: focusmanager.testmode = true
+
+
 describe('FocusOriginMonitor', () => {
   let fixture: ComponentFixture<PlainButton>;
   let buttonElement: HTMLElement;
@@ -168,7 +173,6 @@ describe('FocusOriginMonitor', () => {
 });
 
 
-// NOTE: Focus listeners fail to trigger in Firefox for some reason, so we skip tests on Firefox.
 describe('cdkFocusClasses', () => {
   let fixture: ComponentFixture<ButtonWithFocusClasses>;
   let buttonElement: HTMLElement;
