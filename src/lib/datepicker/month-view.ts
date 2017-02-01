@@ -33,10 +33,10 @@ export class MdMonthView implements AfterContentInit {
   @Input()
   get date() { return this._date; }
   set date(value) {
-    this._date = this._locale.parseDate(value) || SimpleDate.today();
+    this._date = this._locale.parseDate(value) || SimpleDate.fromNativeDate(new Date());
     this._init();
   }
-  private _date = SimpleDate.today();
+  private _date = SimpleDate.fromNativeDate(new Date());
 
   /** The currently selected date. */
   @Input()
@@ -63,10 +63,10 @@ export class MdMonthView implements AfterContentInit {
    * The date of the month that the currently selected Date falls on.
    * Null if the currently selected Date is in another month.
    */
-  _selectedDate: number;
+  _selectedDate = 0;
 
   /** The date of the month that today falls on. Null if today is in another month. */
-  _todayDate: number;
+  _todayDate = 0;
 
   constructor(private _locale: CalendarLocale) {}
 
@@ -85,19 +85,21 @@ export class MdMonthView implements AfterContentInit {
   /** Initializes this month view. */
   private _init() {
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
-    this._todayDate = this._getDateInCurrentMonth(SimpleDate.today());
+    this._todayDate = this._getDateInCurrentMonth(SimpleDate.fromNativeDate(new Date()));
     this._monthLabel = this._locale.getCalendarMonthHeaderLabel(this.date);
 
     let firstOfMonth = new SimpleDate(this.date.year, this.date.month, 1);
     this._firstWeekOffset =
-        (DAYS_PER_WEEK + firstOfMonth.day - this._locale.firstDayOfWeek) % DAYS_PER_WEEK;
+        (DAYS_PER_WEEK + firstOfMonth.toNativeDate().getDay() - this._locale.firstDayOfWeek) %
+        DAYS_PER_WEEK;
 
     this._createWeekCells();
   }
 
   /** Creates MdCalendarCells for the dates in this month. */
   private _createWeekCells() {
-    let daysInMonth = new SimpleDate(this.date.year, this.date.month + 1, 0).date;
+    let daysInMonth =
+        new SimpleDate(this.date.year, this.date.month + 1, 0).toNativeDate().getDate();
     this._weeks = [[]];
     for (let i = 0, cell = this._firstWeekOffset; i < daysInMonth; i++, cell++) {
       if (cell == DAYS_PER_WEEK) {
@@ -111,7 +113,7 @@ export class MdMonthView implements AfterContentInit {
 
   /**
    * Gets the date in this month that the given Date falls on.
-   * Returns null if the given Date is in another month.
+   * Returns null if the given Date is in another year.
    */
   private _getDateInCurrentMonth(date: SimpleDate) {
     return date && date.month == this.date.month ? date.date : null;
