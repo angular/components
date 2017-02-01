@@ -20,7 +20,8 @@ task('screenshots', () => {
       .then(() => setScreenFilenames(database, prNumber))
       .then(() => uploadScreenshots(prNumber, 'diff'))
       .then(() => uploadScreenshots(prNumber, 'test'))
-      .then(() => updateCommit(database, prNumber))
+      .then(() => updateTravisCommit(database, prNumber))
+      .then(() => updatePRSha(database, prNumber))
       .then(() => database.goOffline(), () => database.goOffline());
   }
 });
@@ -35,10 +36,16 @@ function updateResult(database: admin.database.Database, prNumber: string,
   return database.ref(FIREBASE_REPORT).child(`${prNumber}/result`).set(result);
 }
 
-function updateCommit(database: admin.database.Database,
+function updateTravisCommit(database: admin.database.Database,
                       prNumber: string): admin.Promise<void> {
   return database.ref(FIREBASE_REPORT).child(`${prNumber}/commit`)
     .set(process.env['TRAVIS_COMMIT']);
+}
+
+function updatePRSha(database: admin.database.Database,
+                      prNumber: string): admin.Promise<void> {
+  return database.ref(FIREBASE_REPORT).child(`${prNumber}/sha`)
+    .set(process.env['TRAVIS_PULL_REQUEST_SHA']);
 }
 
 /** Get a list of filenames from firebase database. */
