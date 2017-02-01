@@ -55,6 +55,10 @@ describe('MdSelect', () => {
     document.body.removeChild(overlayContainerElement);
   });
 
+  it('does not fail when detectChanges is not called', () => {
+    TestBed.createComponent(BasicSelect);
+  });
+
   describe('overlay panel', () => {
     let fixture: ComponentFixture<BasicSelect>;
     let trigger: HTMLElement;
