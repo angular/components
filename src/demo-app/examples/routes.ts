@@ -1,0 +1,87 @@
+import {Routes} from '@angular/router';
+import {Examples} from './examples';
+import {SliderOverviewExample} from './slider-overview/slider-overview-example';
+import {SliderConfigurableExample} from './slider-configurable/slider-configurable-example';
+import {SidenavOverviewExample} from './sidenav-overview/sidenav-overview-example';
+import {SidenavFabExample} from './sidenav-fab/sidenav-fab-example';
+import {InputOverviewExample} from './input-overview/input-overview-example';
+import {InputFormExample} from './input-form/input-form-example';
+import {ButtonOverviewExample} from './button-overview/button-overview-example';
+import {ButtonTypesExample} from './button-types/button-types-example';
+import {CardOverviewExample} from './card-overview/card-overview-example';
+import {CardFancyExample} from './card-fancy/card-fancy-example';
+import {CheckboxOverviewExample} from './checkbox-overview/checkbox-overview-example';
+import {CheckboxConfigurableExample} from './checkbox-configurable/checkbox-configurable-example';
+import {ButtonToggleOverviewExample} from './button-toggle-overview/button-toggle-overview-example';
+import {ButtonToggleExclusiveExample} from './button-toggle-exclusive/button-toggle-exclusive-example';
+import {RadioOverviewExample} from './radio-overview/radio-overview-example';
+import {RadioNgModelExample} from './radio-ngmodel/radio-ngmodel-example';
+import {ToolbarOverviewExample} from './toolbar-overview/toolbar-overview-example';
+import {ToolbarMultirowExample} from './toolbar-multirow/toolbar-multirow-example';
+import {ListOverviewExample} from './list-overview/list-overview-example';
+import {ListSectionsExample} from './list-sections/list-sections-example';
+import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
+import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-example';
+import {IconOverviewExample} from './icon-overview/icon-overview-example';
+import {IconSvgExample} from './icon-svg-example/icon-svg-example';
+import {ProgressCircleOverviewExample} from './progress-circle-overview/progress-circle-overview-example';
+import {ProgressCircleConfigurableExample} from './progress-circle-configurable/progress-circle-configurable-example';
+import {ProgressBarOverviewExample} from './progress-bar-overview/progress-bar-overview-example';
+import {ProgressBarConfigurableExample} from './progress-bar-configurable/progress-bar-configurable-example';
+import {TabsOverviewExample} from './tabs-overview/tabs-overview-example';
+import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-label-example';
+import {SlideToggleOverviewExample} from './slide-toggle-overview/slide-toggle-overview-example';
+import {SlideToggleConfigurableExample} from './slide-toggle-configurable/slide-toggle-configurable-example';
+import {MenuOverviewExample} from './menu-overview/menu-overview-example';
+import {MenuIconsExample} from './menu-icons/menu-icons-example';
+import {TooltipOverviewExample} from './tooltip-overview/tooltip-overview-example';
+import {TooltipPositionExample} from './tooltip-position/tooltip-position-example';
+import {DialogOverviewExample} from './dialog-overview/dialog-overview-example';
+import {DialogResultExample} from './dialog-result/dialog-result-example';
+import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
+import {SnackBarComponentExample} from './snack-bar-component/snack-bar-component-example';
+
+
+export const EXAMPLE_ROUTES: Routes = [
+  {path: 'examples', component: Examples},
+  {path: 'examples/slider-overview', component: SliderOverviewExample},
+  {path: 'examples/slider-configurable', component: SliderConfigurableExample},
+  {path: 'examples/sidenav-overview', component: SidenavOverviewExample},
+  {path: 'examples/sidenav-fab', component: SidenavFabExample},
+  {path: 'examples/input-overview', component: InputOverviewExample},
+  {path: 'examples/input-form', component: InputFormExample},
+  {path: 'examples/button-overview', component: ButtonOverviewExample},
+  {path: 'examples/button-types', component: ButtonTypesExample},
+  {path: 'examples/card-overview', component: CardOverviewExample},
+  {path: 'examples/card-fancy', component: CardFancyExample},
+  {path: 'examples/checkbox-overview', component: CheckboxOverviewExample},
+  {path: 'examples/checkbox-configurable', component: CheckboxConfigurableExample},
+  {path: 'examples/button-toggle-overview', component: ButtonToggleOverviewExample},
+  {path: 'examples/button-toggle-exclusive', component: ButtonToggleExclusiveExample},
+  {path: 'examples/radio-overview', component: RadioOverviewExample},
+  {path: 'examples/radio-ngmodel', component: RadioNgModelExample},
+  {path: 'examples/toolbar-overview', component: ToolbarOverviewExample},
+  {path: 'examples/toolbar-multirow', component: ToolbarMultirowExample},
+  {path: 'examples/list-overview', component: ListOverviewExample},
+  {path: 'examples/list-sections', component: ListSectionsExample},
+  {path: 'examples/grid-list-overview', component: GridListOverviewExample},
+  {path: 'examples/grid-list-dynamic', component: GridListDynamicExample},
+  {path: 'examples/icon-overview', component: IconOverviewExample},
+  {path: 'examples/icon-svg', component: IconSvgExample},
+  {path: 'examples/progress-circle-overview', component: ProgressCircleOverviewExample},
+  {path: 'examples/progress-circle-configurable', component: ProgressCircleConfigurableExample},
+  {path: 'examples/progress-bar-overview', component: ProgressBarOverviewExample},
+  {path: 'examples/progress-bar-configurable', component: ProgressBarConfigurableExample},
+  {path: 'examples/tabs-overview', component: TabsOverviewExample},
+  {path: 'examples/tabs-template-label', component: TabsTemplateLabelExample},
+  {path: 'examples/slide-toggle-overview', component: SlideToggleOverviewExample},
+  {path: 'examples/slide-toggle-configurable', component: SlideToggleConfigurableExample},
+  {path: 'examples/menu-overview', component: MenuOverviewExample},
+  {path: 'examples/menu-icons', component: MenuIconsExample},
+  {path: 'examples/tooltip-overview', component: TooltipOverviewExample},
+  {path: 'examples/tooltip-position', component: TooltipPositionExample},
+  {path: 'examples/dialog-overview', component: DialogOverviewExample},
+  {path: 'examples/dialog-result', component: DialogResultExample},
+  {path: 'examples/snack-bar-overview', component: SnackBarOverviewExample},
+  {path: 'examples/snack-bar-component', component: SnackBarComponentExample},
+];
