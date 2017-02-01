@@ -417,10 +417,10 @@ class BasicTooltipDemo {
 
 @Component({
      selector: 'app',
-     template: `		
-    <div cdk-scrollable style="padding: 100px; margin: 300px; 
-                               height: 200px; width: 200px; overflow: auto;">		
-      <button *ngIf="showButton" style="margin-bottom: 350px"		
+     template: `
+    <div cdk-scrollable style="padding: 100px; margin: 300px;
+                               height: 200px; width: 200px; overflow: auto;">
+      <button *ngIf="showButton" style="margin-bottom: 600px"
               [md-tooltip]="message"		
               [tooltip-position]="position">		
         Button		
@@ -436,7 +436,7 @@ class ScrollableTooltipDemo {
 
  scrollDown() {
      const scrollingContainerEl = this.scrollingContainer.getElementRef().nativeElement;
-     scrollingContainerEl.scrollTop = 140;
+     scrollingContainerEl.scrollTop = 250;
 
      // Emit a scroll event from the scrolling element in our component.
      // This event should be picked up by the scrollable directive and notify.
