@@ -38,6 +38,7 @@ import {ProjectionDemo, ProjectionTestComponent} from './projection/projection-d
 import {PlatformDemo} from './platform/platform-demo';
 import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
 import {InputContainerDemo} from './input/input-container-demo';
+import {ExamplesModule} from './examples/examples-module';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import {InputContainerDemo} from './input/input-container-demo';
     ReactiveFormsModule,
     RouterModule.forRoot(DEMO_APP_ROUTES),
     MaterialModule.forRoot(),
+    ExamplesModule,
   ],
   declarations: [
     AutocompleteDemo,

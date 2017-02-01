@@ -1,0 +1,5 @@
+<md-nav-list>
+  <a *ngFor="let navItem of navItems" md-list-item [routerLink]="[navItem.route]">
+    {{navItem.name}}
+  </a>
+</md-nav-list>
