@@ -71,11 +71,26 @@ describe('DefaultCalendarLocale', () => {
     expect(calendarLocale.openCalendarLabel).toBe('Open calendar');
   });
 
-  it('parses simple dates', () => {
+  it('parses SimpleDate from string', () => {
     expect(calendarLocale.parseDate('1/1/2017')).toEqual(new SimpleDate(2017, 0, 1));
   });
 
-  it('formats simple dates', () => {
+  it('parses SimpleDate from number', () => {
+    let timestamp = new Date().getTime();
+    expect(calendarLocale.parseDate(timestamp))
+        .toEqual(SimpleDate.fromNativeDate(new Date(timestamp)));
+  });
+
+  it ('parses SimpleDate from SimpleDate by copying', () => {
+    let originalSimpleDate = new SimpleDate(2017, 0, 1);
+    expect(calendarLocale.parseDate(originalSimpleDate)).toEqual(originalSimpleDate);
+  });
+
+  it('parses null for invalid dates', () => {
+    expect(calendarLocale.parseDate('hello')).toBeNull();
+  });
+
+  it('formats SimpleDates', () => {
     expect(calendarLocale.formatDate(new SimpleDate(2017, 0, 1))).toEqual('1/1/2017');
   });
 

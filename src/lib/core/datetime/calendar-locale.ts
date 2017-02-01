@@ -2,9 +2,11 @@ import {SimpleDate} from './simple-date';
 import {Injectable} from '@angular/core';
 
 
+/** Whether the browser supports the Intl API. */
 const SUPPORTS_INTL_API = !!Intl;
 
 
+/** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {
   return Array.apply(null, Array(length)).map((v: undefined, i: number) => valueFunction(i));
 }
@@ -51,10 +53,10 @@ export abstract class CalendarLocale {
   openCalendarLabel: string;
 
   /**
-   * Parses a SimpleDate from a string.
-   * @param dateString The string to parse.
+   * Parses a SimpleDate from a value.
+   * @param value The value to parse.
    */
-  parseDate: (dateString: string) => SimpleDate;
+  parseDate: (value: any) => SimpleDate;
 
   /**
    * Formats a SimpleDate to a string.
@@ -122,8 +124,12 @@ export class DefaultCalendarLocale implements  CalendarLocale {
 
   openCalendarLabel = 'Open calendar';
 
-  parseDate(dateString: string) {
-    return SimpleDate.fromNativeDate(new Date(Date.parse(dateString)));
+  parseDate(value: any) {
+    if (value instanceof SimpleDate) {
+      return value;
+    }
+    let timestamp = typeof value == 'number' ? value : Date.parse(value);
+    return isNaN(timestamp) ? null : SimpleDate.fromNativeDate(new Date(timestamp));
   }
 
   formatDate = this._createFormatFunction(
