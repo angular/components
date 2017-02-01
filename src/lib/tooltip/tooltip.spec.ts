@@ -6,7 +6,13 @@ import {
   fakeAsync,
   flushMicrotasks
 } from '@angular/core/testing';
-import {Component, DebugElement, AnimationTransitionEvent, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  AnimationTransitionEvent,
+  ViewChild,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {TooltipPosition, MdTooltip, MdTooltipModule, SCROLL_THROTTLE_MS} from './tooltip';
 import {OverlayContainer} from '../core';
@@ -391,6 +397,7 @@ describe('MdTooltip', () => {
       flushMicrotasks();
       expect(tooltipDirective._tooltipInstance).toBeNull();
     }));
+  });
 });
 
 @Component({
