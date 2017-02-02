@@ -4,16 +4,21 @@ import {CommonModule} from '@angular/common';
 import {MdCalendarTable} from './calendar-table';
 import {MdYearView} from './year-view';
 import {DatetimeModule} from '../core/datetime/index';
+import {OverlayModule} from '../core/overlay/overlay-directives';
+import {MdDatepicker} from './datepicker';
+import {MdDatepickerInput} from './datepicker-input';
 
 
 export * from './calendar-table';
+export * from './datepicker';
+export * from './datepicker-input';
 export * from './month-view';
 export * from './year-view';
 
 
 @NgModule({
-  imports: [CommonModule, DatetimeModule],
-  exports: [MdCalendarTable, MdMonthView, MdYearView],
-  declarations: [MdCalendarTable, MdMonthView, MdYearView],
+  imports: [CommonModule, DatetimeModule, OverlayModule],
+  exports: [MdCalendarTable, MdDatepicker, MdDatepickerInput, MdMonthView, MdYearView],
+  declarations: [MdCalendarTable, MdDatepicker, MdDatepickerInput, MdMonthView, MdYearView],
 })
 export class MdDatepickerModule {}
