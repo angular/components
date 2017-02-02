@@ -9,6 +9,7 @@ import {
   A11yModule,
   ProjectionModule,
   CompatibilityModule,
+  DatetimeModule,
 } from './core/index';
 
 import {MdButtonToggleModule} from './button-toggle/index';
@@ -70,7 +71,8 @@ const MATERIAL_MODULES = [
   PlatformModule,
   ProjectionModule,
   CompatibilityModule,
-  ObserveContentModule
+  ObserveContentModule,
+  DatetimeModule,
 ];
 
 @NgModule({
