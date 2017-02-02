@@ -132,15 +132,14 @@ export class DefaultCalendarLocale implements  CalendarLocale {
     return isNaN(timestamp) ? null : SimpleDate.fromNativeDate(new Date(timestamp));
   }
 
-  formatDate = this._createFormatFunction(
-      undefined, (date: SimpleDate) => date.toNativeDate().toDateString());
+  formatDate = this._createFormatFunction(undefined) ||
+      ((date: SimpleDate) => date.toNativeDate().toDateString());
 
-  getCalendarMonthHeaderLabel = this._createFormatFunction(
-      {month: 'short', year: 'numeric'},
-      (date: SimpleDate) => this.shortMonths[date.month] + ' ' + date.year);
+  getCalendarMonthHeaderLabel = this._createFormatFunction({month: 'short', year: 'numeric'}) ||
+      ((date: SimpleDate) => this.shortMonths[date.month] + ' ' + date.year);
 
-  getCalendarYearHeaderLabel = this._createFormatFunction(
-      {year: 'numeric'}, (date: SimpleDate) => String(date.year));
+  getCalendarYearHeaderLabel = this._createFormatFunction({year: 'numeric'}) ||
+      ((date: SimpleDate) => String(date.year));
 
   private _createMonthsArray(format: string) {
     let dtf = new Intl.DateTimeFormat(undefined, {month: format});
@@ -157,12 +156,17 @@ export class DefaultCalendarLocale implements  CalendarLocale {
     return range(31, i => dtf.format(new Date(2017, 0, i + 1)));
   }
 
-  private _createFormatFunction(
-      options: Object, fallback: (date: SimpleDate) => string): (date: SimpleDate) => string {
+  /**
+   * Creates a function to format SimpleDates as strings using Intl.DateTimeFormat.
+   * @param options The options to use for Intl.DateTimeFormat.
+   * @returns The newly created format function, or null if the Intl API is not available.
+   * @private
+   */
+  private _createFormatFunction(options: Object): (date: SimpleDate) => string {
     if (SUPPORTS_INTL_API) {
       let dtf = new Intl.DateTimeFormat(undefined, options);
       return (date: SimpleDate) => dtf.format(date.toNativeDate());
     }
-    return fallback;
+    return null;
   }
 }
