@@ -99,14 +99,12 @@ export class RippleRenderer {
 
     // By default the browser does not recalculate the styles of dynamically created
     // ripple elements. This is critical because then the `scale` would not animate properly.
-    // Enforce a style recalculation by calling `getComputedStyle` and accessing any property.
-    // See: https://gist.github.com/paulirish/5d52fb081b3570c81e3a
-    window.getComputedStyle(ripple).getPropertyValue('opacity');
+    this._enforceStyleRecalculation(ripple);
 
     ripple.style.transform = 'scale(1)';
 
-    // Wait for the ripple to be faded in. Once faded in the ripple can be hided if the mouse is
-    // released.
+    // Wait for the ripple to be faded in. Once it's faded in, the ripple can be hidden immediately
+    // if the mouse is released.
     this.runTimeoutOutsideZone(() => {
       this._isMousedown ? this._activeRipples.push(ripple) : this.fadeOutRipple(ripple);
     }, duration * 1000);
@@ -165,6 +163,15 @@ export class RippleRenderer {
   /** Runs a timeout outside of the Angular zone to avoid triggering the change detection. */
   private runTimeoutOutsideZone(fn: Function, delay = 0) {
     this._ngZone.runOutsideAngular(() => setTimeout(fn, delay));
+  }
+
+  /** Enforces a style recalculation of a DOM element by computing its styles. */
+  // TODO(devversion): Move into global utility function.
+  private _enforceStyleRecalculation(element: HTMLElement) {
+    // Enforce a style recalculation by calling `getComputedStyle` and accessing any property.
+    // Calling `getPropertyValue` is important to let optimizers know that this is not a noop.
+    // See: https://gist.github.com/paulirish/5d52fb081b3570c81e3a
+    window.getComputedStyle(element).getPropertyValue('opacity');
   }
 
 }
