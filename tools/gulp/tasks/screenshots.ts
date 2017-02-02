@@ -3,6 +3,7 @@ import {readdirSync, statSync, existsSync, mkdirSync} from 'fs';
 import {openScreenshotsCloudStorage, openFirebaseScreenshotsDatabase} from '../task_helpers';
 import * as path from 'path';
 import * as admin from 'firebase-admin';
+const request = require('request');
 const imageDiff = require('image-diff');
 
 const SCREENSHOT_DIR = './screenshots';
@@ -17,6 +18,7 @@ task('screenshots', () => {
     return getScreenFilenames(database)
       .then((filenames: string[]) => downloadAllGolds(filenames, database, prNumber))
       .then((results: boolean) => updateResult(database, prNumber, results))
+      .then((result: boolean) => updateGithubStatus(result, prNumber))
       .then(() => setScreenFilenames(database, prNumber))
       .then(() => uploadScreenshots(prNumber, 'diff'))
       .then(() => uploadScreenshots(prNumber, 'test'))
@@ -32,7 +34,7 @@ function updateFileResult(database: admin.database.Database, prNumber: string,
 
 function updateResult(database: admin.database.Database, prNumber: string,
                       result: boolean): admin.Promise<void> {
-  return database.ref(FIREBASE_REPORT).child(`${prNumber}/result`).set(result);
+  return database.ref(FIREBASE_REPORT).child(`${prNumber}/result`).set(result).then(() => result);
 }
 
 function updateTravis(database: admin.database.Database,
@@ -149,4 +151,40 @@ function diffScreenshot(filename: string, database: admin.database.Database,
   } else {
     return updateFileResult(database, reportKey, filenameKey, false).then(() => false);
   }
+}
+
+function decode(value: string): string {
+  return value.split('').reverse().join('');
+}
+
+function updateGithubStatus(result: boolean, prNumber: string) {
+  let state = result ? 'success' : 'failure';
+  let sha = process.env['TRAVIS_PULL_REQUEST_SHA'];
+  let token = decode(process.env['MATERIAL2_GITHUB_STATUS_TOKEN']);
+
+  let data = JSON.stringify({
+    "state": state,
+    "target_url": `http://material2-screenshots.firebaseapp.com/${prNumber}`,
+    "context": "screenshot-diff",
+    "description": `Screenshot test ${state}`
+  });
+
+  let headers =  {
+    'Authorization': `token ${token}`,
+    'User-Agent': 'ScreenshotDiff/1.0.0',
+    'Content-Type': 'application/json',
+    'Content-Length': Buffer.byteLength(data)
+  };
+
+  return new admin.Promise((resolve, reject) => {
+    request({
+      url: `https://api.github.com/repos/angular/material2/statuses/${sha}`,
+      method: 'POST',
+      form: data,
+      headers: headers
+    }, function (error: any, response: any, body: any){
+      resolve(response.statusCode);
+      console.log(response.statusCode);
+    });
+  });
 }
