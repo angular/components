@@ -8,6 +8,6 @@ import {SimpleDate} from '@angular/material';
   templateUrl: 'datepicker-demo.html'
 })
 export class DatepickerDemo {
-  date = SimpleDate.fromNativeDate(new Date());
+  date = SimpleDate.today();
   selected: SimpleDate;
 }
