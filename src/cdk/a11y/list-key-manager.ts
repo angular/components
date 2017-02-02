@@ -9,33 +9,35 @@
 import {QueryList} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {UP_ARROW, DOWN_ARROW, TAB} from '@angular/cdk/keyboard';
+import {Subscription} from 'rxjs/Subscription';
+import {UP_ARROW, DOWN_ARROW, TAB, A, Z} from '@angular/cdk/keyboard';
+import {RxChain, debounceTime, filter, map, doOperator} from '@angular/cdk/rxjs';
 
 /**
- * This interface is for items that can be disabled. The type passed into
- * ListKeyManager must extend this interface.
+ * This interface is for items that can be passed to a ListKeyManager.
  */
-export interface CanDisable {
+export interface ListKeyManagerItem {
   disabled?: boolean;
+  getLabel?(): string;
 }
 
 /**
  * This class manages keyboard events for selectable lists. If you pass it a query list
  * of items, it will set the active item correctly when arrow events occur.
  */
-export class ListKeyManager<T extends CanDisable> {
-  private _activeItemIndex: number = -1;
+export class ListKeyManager<T extends ListKeyManagerItem> {
+  private _activeItemIndex = -1;
   private _activeItem: T;
-  private _tabOut = new Subject<void>();
-  private _wrap: boolean = false;
+  private _wrap = false;
+  private _pressedInputKeys: number[] = [];
+  private _nonNavigationKeyStream = new Subject<number>();
+  private _typeaheadSubscription: Subscription;
 
   constructor(private _items: QueryList<T>) { }
 
   /**
    * Turns on wrapping mode, which ensures that the active item will wrap to
    * the other end of list when there are no more items in the given direction.
-   *
-   * @returns The ListKeyManager that the method was called on.
    */
   withWrap(): this {
     this._wrap = true;
@@ -43,8 +45,41 @@ export class ListKeyManager<T extends CanDisable> {
   }
 
   /**
+   * Turns on typeahead mode which allows users to set the active item by typing.
+   * @param debounceInterval Time to wait after the last keystroke before setting the active item.
+   */
+  withTypeAhead(debounceInterval = 200): this {
+    if (this._items.length && this._items.some(item => typeof item.getLabel !== 'function')) {
+      throw Error('ListKeyManager items in typeahead mode must implement the `getLabel` method.');
+    }
+
+    if (this._typeaheadSubscription) {
+      this._typeaheadSubscription.unsubscribe();
+    }
+
+    this._typeaheadSubscription = RxChain.from(this._nonNavigationKeyStream)
+      .call(filter, keyCode => keyCode >= A && keyCode <= Z)
+      .call(doOperator, keyCode => this._pressedInputKeys.push(keyCode))
+      .call(debounceTime, debounceInterval)
+      .call(filter, () => this._pressedInputKeys.length > 0)
+      .call(map, () => String.fromCharCode(...this._pressedInputKeys))
+      .subscribe(inputString => {
+        const activeItemIndex = this._items.toArray().findIndex(item => {
+          return item.getLabel!().toUpperCase().trim().startsWith(inputString);
+        });
+
+        if (activeItemIndex > -1) {
+          this.setActiveItem(activeItemIndex);
+        }
+
+        this._pressedInputKeys = [];
+      });
+
+    return this;
+  }
+
+  /**
    * Sets the active item to the item at the index specified.
-   *
    * @param index The index of the item to be set as active.
    */
   setActiveItem(index: number): void {
@@ -58,20 +93,12 @@ export class ListKeyManager<T extends CanDisable> {
    */
   onKeydown(event: KeyboardEvent): void {
     switch (event.keyCode) {
-      case DOWN_ARROW:
-        this.setNextItemActive();
-        break;
-      case UP_ARROW:
-        this.setPreviousItemActive();
-        break;
-      case TAB:
-        // Note that we shouldn't prevent the default action on tab.
-        this._tabOut.next();
-        return;
-      default:
-        return;
+      case DOWN_ARROW: this.setNextItemActive(); break;
+      case UP_ARROW: this.setPreviousItemActive(); break;
+      default: this._nonNavigationKeyStream.next(event.keyCode); return;
     }
 
+    this._pressedInputKeys = [];
     event.preventDefault();
   }
 
@@ -119,7 +146,7 @@ export class ListKeyManager<T extends CanDisable> {
    * when focus is shifted off of the list.
    */
   get tabOut(): Observable<void> {
-    return this._tabOut.asObservable();
+    return filter.call(this._nonNavigationKeyStream, keyCode => keyCode === TAB);
   }
 
   /**
@@ -173,5 +200,4 @@ export class ListKeyManager<T extends CanDisable> {
     }
     this.setActiveItem(index);
   }
-
 }
