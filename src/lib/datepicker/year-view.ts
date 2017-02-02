@@ -28,10 +28,10 @@ export class MdYearView implements AfterContentInit {
   @Input()
   get date() { return this._date; }
   set date(value) {
-    this._date = this._locale.parseDate(value) || SimpleDate.fromNativeDate(new Date());
+    this._date = this._locale.parseDate(value) || SimpleDate.today();
     this._init();
   }
-  private _date = SimpleDate.fromNativeDate(new Date());
+  private _date = SimpleDate.today();
 
   /** The currently selected date. */
   @Input()
@@ -81,7 +81,7 @@ export class MdYearView implements AfterContentInit {
   /** Initializes this month view. */
   private _init() {
     this._selectedMonth = this._getMonthInCurrentYear(this.selected);
-    this._todayMonth = this._getMonthInCurrentYear(SimpleDate.fromNativeDate(new Date()));
+    this._todayMonth = this._getMonthInCurrentYear(SimpleDate.today());
     this._yearLabel = this._locale.getCalendarYearHeaderLabel(this._date);
   }
 
