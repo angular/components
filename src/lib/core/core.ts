@@ -8,6 +8,7 @@ import {OverlayModule} from './overlay/overlay-directives';
 import {A11yModule} from './a11y/index';
 import {MdSelectionModule} from './selection/index';
 import {MdRippleModule} from './ripple/index';
+import {DatetimeModule} from './datetime/index';
 
 
 // RTL
@@ -116,6 +117,8 @@ export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibi
 // Common material module
 export {MdCommonModule} from './common-behaviors/common-module';
 
+// Datetime
+export * from './datetime/index';
 
 @NgModule({
   imports: [
@@ -128,6 +131,7 @@ export {MdCommonModule} from './common-behaviors/common-module';
     A11yModule,
     MdOptionModule,
     MdSelectionModule,
+    DatetimeModule,
   ],
   exports: [
     MdLineModule,
@@ -139,6 +143,7 @@ export {MdCommonModule} from './common-behaviors/common-module';
     A11yModule,
     MdOptionModule,
     MdSelectionModule,
+    DatetimeModule,
   ],
 })
 export class MdCoreModule {}
