@@ -8,6 +8,7 @@ import {OverlayModule} from './overlay/overlay-directives';
 import {A11yModule} from './a11y/index';
 import {MdSelectionModule} from './selection/index';
 import {MdRippleModule} from './ripple/index';
+import {DatetimeModule} from './datetime/index';
 
 
 // RTL
@@ -122,6 +123,8 @@ export {coerceNumberProperty} from './coercion/number-property';
 // Compatibility
 export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibility/compatibility';
 
+// Datetime
+export * from './datetime/index';
 
 @NgModule({
   imports: [
@@ -134,6 +137,7 @@ export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibi
     A11yModule,
     MdOptionModule,
     MdSelectionModule,
+    DatetimeModule,
   ],
   exports: [
     MdLineModule,
@@ -145,6 +149,7 @@ export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibi
     A11yModule,
     MdOptionModule,
     MdSelectionModule,
+    DatetimeModule,
   ],
 })
 export class MdCoreModule {
