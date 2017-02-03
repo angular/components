@@ -32,7 +32,8 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
  * responsible for toggling the display of the provided menu instance.
  */
 @Directive({
-  selector: '[md-menu-trigger-for], [mat-menu-trigger-for], [mdMenuTriggerFor]',
+  selector: `[md-menu-trigger-for], [mat-menu-trigger-for], 
+             [mdMenuTriggerFor], [matMenuTriggerFor]`,
   host: {
     'aria-haspopup': 'true',
     '(mousedown)': '_handleMousedown($event)',
@@ -53,8 +54,18 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
 
   /** @deprecated */
   @Input('md-menu-trigger-for')
-  get _deprecatedMenuTriggerFor(): MdMenuPanel { return this.menu; }
-  set _deprecatedMenuTriggerFor(v: MdMenuPanel) { this.menu = v; }
+  get _deprecatedMdMenuTriggerFor(): MdMenuPanel { return this.menu; }
+  set _deprecatedMdMenuTriggerFor(v: MdMenuPanel) { this.menu = v; }
+
+  /** @deprecated */
+  @Input('mat-menu-trigger-for')
+  get _deprecatedMatMenuTriggerFor(): MdMenuPanel { return this.menu; }
+  set _deprecatedMatMenuTriggerFor(v: MdMenuPanel) { this.menu = v; }
+
+  // Trigger input for compatibility mode
+  @Input('matMenuTriggerFor')
+  get _matMenuTriggerFor(): MdMenuPanel { return this.menu; }
+  set _matMenuTriggerFor(v: MdMenuPanel) { this.menu = v; }
 
   /** References the menu instance that the trigger is associated with. */
   @Input('mdMenuTriggerFor') menu: MdMenuPanel;

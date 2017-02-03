@@ -1,6 +1,8 @@
 <div class="mat-input-wrapper">
   <div class="mat-input-table">
-    <div class="mat-input-prefix"><ng-content select="[mdPrefix], [md-prefix]"></ng-content></div>
+    <div class="mat-input-prefix">
+      <ng-content select="[mdPrefix], [matPrefix], [md-prefix], [mat-prefix]"></ng-content>
+    </div>
 
     <div class="mat-input-infix" [class.mat-end]="align == 'end'">
       <ng-content selector="input, textarea"></ng-content>
@@ -19,7 +21,9 @@
       </label>
     </div>
 
-    <div class="mat-input-suffix"><ng-content select="[mdSuffix], [md-suffix]"></ng-content></div>
+    <div class="mat-input-suffix">
+      <ng-content select="[mdSuffix], [matSuffix], [md-suffix], [mat-suffix]"></ng-content>
+    </div>
   </div>
 
   <div class="mat-input-underline"
