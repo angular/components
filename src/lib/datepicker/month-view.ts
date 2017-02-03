@@ -63,10 +63,10 @@ export class MdMonthView implements AfterContentInit {
    * The date of the month that the currently selected Date falls on.
    * Null if the currently selected Date is in another month.
    */
-  _selectedDate = 0;
+  _selectedDate: number;
 
   /** The date of the month that today falls on. Null if today is in another month. */
-  _todayDate = 0;
+  _todayDate: number;
 
   constructor(private _locale: CalendarLocale) {}
 
@@ -111,7 +111,7 @@ export class MdMonthView implements AfterContentInit {
 
   /**
    * Gets the date in this month that the given Date falls on.
-   * Returns null if the given Date is in another year.
+   * Returns null if the given Date is in another month.
    */
   private _getDateInCurrentMonth(date: SimpleDate) {
     return date && date.month == this.date.month ? date.date : null;

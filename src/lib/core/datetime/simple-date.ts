@@ -33,7 +33,7 @@ export class SimpleDate {
     return this._date.getFullYear();
   }
 
-  /** The month component of this date. */
+  /** The month component of this date. (0-indexed, 0 = January). */
   get month() {
     return this._date.getMonth();
   }
@@ -43,7 +43,7 @@ export class SimpleDate {
     return this._date.getDate();
   }
 
-  /** The day component of this date. */
+  /** The day component of this date. (0-indexed, 0 = Sunday) */
   get day() {
     return this._date.getDay();
   }
