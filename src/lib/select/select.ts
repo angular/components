@@ -266,7 +266,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   /** Opens the overlay panel. */
   open(): void {
-    if (this.disabled) {
+    if (this.disabled || !this.options.length) {
       return;
     }
     this._calculateOverlayPosition();
