@@ -31,7 +31,7 @@ import {ProjectionDemo} from '../projection/projection-demo';
 import {TABS_DEMO_ROUTES} from '../tabs/routes';
 import {PlatformDemo} from '../platform/platform-demo';
 import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
-import {InputContainerDemo} from '../input/input-container-demo';
+import {InputContainerDemo} from '../input-container/input-container-demo';
 import {StyleDemo} from '../style/style-demo';
 
 export const DEMO_APP_ROUTES: Routes = [
