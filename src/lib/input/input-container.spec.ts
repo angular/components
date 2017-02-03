@@ -486,14 +486,14 @@ describe('MdInputContainer', function () {
     let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
     let labelEl = fixture.debugElement.query(By.css('label')).nativeElement;
 
-    expect(labelEl.classList).not.toContain('md-empty');
-    expect(labelEl.classList).toContain('md-float');
+    expect(labelEl.classList).not.toContain('mat-empty');
+    expect(labelEl.classList).toContain('mat-float');
 
     fixture.componentInstance.shouldFloat = 'auto';
     fixture.detectChanges();
 
-    expect(labelEl.classList).toContain('md-empty');
-    expect(labelEl.classList).toContain('md-float');
+    expect(labelEl.classList).toContain('mat-empty');
+    expect(labelEl.classList).toContain('mat-float');
 
     // Update the value of the input.
     inputEl.value = 'Text';
@@ -501,8 +501,8 @@ describe('MdInputContainer', function () {
     // Fake behavior of the `(input)` event which should trigger a change detection.
     fixture.detectChanges();
 
-    expect(labelEl.classList).not.toContain('md-empty');
-    expect(labelEl.classList).toContain('md-float');
+    expect(labelEl.classList).not.toContain('mat-empty');
+    expect(labelEl.classList).toContain('mat-float');
   });
 
   it('should always float the placeholder when floatPlaceholder is set to true', () => {
@@ -512,8 +512,8 @@ describe('MdInputContainer', function () {
     let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
     let labelEl = fixture.debugElement.query(By.css('label')).nativeElement;
 
-    expect(labelEl.classList).not.toContain('md-empty');
-    expect(labelEl.classList).toContain('md-float');
+    expect(labelEl.classList).not.toContain('mat-empty');
+    expect(labelEl.classList).toContain('mat-float');
 
     fixture.detectChanges();
 
@@ -523,8 +523,8 @@ describe('MdInputContainer', function () {
     // Fake behavior of the `(input)` event which should trigger a change detection.
     fixture.detectChanges();
 
-    expect(labelEl.classList).not.toContain('md-empty');
-    expect(labelEl.classList).toContain('md-float');
+    expect(labelEl.classList).not.toContain('mat-empty');
+    expect(labelEl.classList).toContain('mat-float');
   });
 
 
@@ -537,8 +537,8 @@ describe('MdInputContainer', function () {
     let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
     let labelEl = fixture.debugElement.query(By.css('label')).nativeElement;
 
-    expect(labelEl.classList).toContain('md-empty');
-    expect(labelEl.classList).not.toContain('md-float');
+    expect(labelEl.classList).toContain('mat-empty');
+    expect(labelEl.classList).not.toContain('mat-float');
 
     // Update the value of the input.
     inputEl.value = 'Text';
@@ -546,8 +546,8 @@ describe('MdInputContainer', function () {
     // Fake behavior of the `(input)` event which should trigger a change detection.
     fixture.detectChanges();
 
-    expect(labelEl.classList).not.toContain('md-empty');
-    expect(labelEl.classList).not.toContain('md-float');
+    expect(labelEl.classList).not.toContain('mat-empty');
+    expect(labelEl.classList).not.toContain('mat-float');
   });
 
 });
