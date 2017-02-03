@@ -9,6 +9,7 @@ import {
   A11yModule,
   ProjectionModule,
   CompatibilityModule,
+  DatetimeModule,
 } from './core/index';
 
 import {MdButtonToggleModule} from './button-toggle/index';
@@ -35,6 +36,7 @@ import {MdMenuModule} from './menu/index';
 import {MdDialogModule} from './dialog/index';
 import {PlatformModule} from './core/platform/index';
 import {MdAutocompleteModule} from './autocomplete/index';
+import {MdDatePickerModule} from './date-picker/index';
 
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
@@ -43,6 +45,7 @@ const MATERIAL_MODULES = [
   MdCardModule,
   MdChipsModule,
   MdCheckboxModule,
+  MdDatePickerModule,
   MdDialogModule,
   MdGridListModule,
   MdIconModule,
@@ -68,7 +71,8 @@ const MATERIAL_MODULES = [
   PlatformModule,
   ProjectionModule,
   CompatibilityModule,
-  ObserveContentModule
+  ObserveContentModule,
+  DatetimeModule,
 ];
 
 @NgModule({
@@ -78,6 +82,7 @@ const MATERIAL_MODULES = [
     MdCardModule.forRoot(),
     MdChipsModule.forRoot(),
     MdCheckboxModule.forRoot(),
+    MdDatePickerModule.forRoot(),
     MdGridListModule.forRoot(),
     MdInputModule.forRoot(),
     MdListModule.forRoot(),

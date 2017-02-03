@@ -32,6 +32,7 @@ import {TABS_DEMO_ROUTES} from '../tabs/routes';
 import {PlatformDemo} from '../platform/platform-demo';
 import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
 import {InputContainerDemo} from '../input/input-container-demo';
+import {DatePickerDemo} from '../date-picker/date-picker-demo';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: Home},
@@ -39,6 +40,7 @@ export const DEMO_APP_ROUTES: Routes = [
   {path: 'button', component: ButtonDemo},
   {path: 'card', component: CardDemo},
   {path: 'chips', component: ChipsDemo},
+  {path: 'date-picker', component: DatePickerDemo},
   {path: 'radio', component: RadioDemo},
   {path: 'select', component: SelectDemo},
   {path: 'sidenav', component: SidenavDemo},
