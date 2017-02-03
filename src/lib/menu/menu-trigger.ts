@@ -30,6 +30,7 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
 /**
  * This directive is intended to be used in conjunction with an md-menu tag.  It is
  * responsible for toggling the display of the provided menu instance.
+ * TODO(andrewseguin): Remove the kebab versions in favor of camelCased attribute selectors
  */
 @Directive({
   selector: `[md-menu-trigger-for], [mat-menu-trigger-for], 
