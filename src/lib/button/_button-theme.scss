@@ -1,4 +1,5 @@
 @import '../core/theming/theming';
+@import './button-base';
 
 
 // Applies a focus style to an md-button element for each of the supported palettes.
@@ -17,6 +18,25 @@
 
   &.mat-warn .mat-button-focus-overlay {
     background-color: mat-color($warn, 0.12);
+  }
+}
+
+// Applies the focus style color to the focused state ripple for each of the palettes.
+@mixin _md-button-focus-ripple-color($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+
+  &.md-primary .md-button-focus-overlay {
+    @include md-button-ripple-color(md-color($primary));
+  }
+
+  &.md-accent .md-button-focus-overlay {
+    @include md-button-ripple-color(md-color($accent));
+  }
+
+  &.md-warn .md-button-focus-overlay {
+    @include md-button-ripple-color(md-color($warn));
   }
 }
 
@@ -53,14 +73,22 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  .mat-button, .mat-icon-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
-    &.cdk-keyboard-focused {
-      @include _mat-button-focus-color($theme);
+  [md-icon-button], [md-raised-button], [md-fab], [md-mini-fab] {
+    &.md-button-focus {
+      @include _md-button-focus-color($theme);
     }
   }
 
-  .mat-button, .mat-icon-button {
-    @include _mat-button-theme-color($theme, 'color');
+  // The colored ripple should only be applied to flat buttons since it's
+  // barely visible on the raised colored buttons.
+  [md-button] {
+    &.md-button-focus {
+      @include _md-button-focus-ripple-color($theme);
+    }
+  }
+
+  [md-button], [md-icon-button] {
+    @include _md-button-theme-color($theme, 'color');
     background: transparent;
 
     // Only flat buttons and icon buttons (not raised or fabs) have a hover style.
