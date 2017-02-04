@@ -39,6 +39,7 @@ Also see our [`Good for community contribution`](https://github.com/angular/mate
 label.
 
 High level items planned for January 2017:
+
 * Initial version of md-autocomplete
 * Prototyping for data-table
 * Improvements to https://material.angular.io
@@ -73,7 +74,7 @@ High level items planned for January 2017:
 | ripples          |                           Available | [README][19] |   [#108][0108] |
 | dialog           |                           Available | [README][22] |   [#114][0114] |
 | snackbar / toast |                           Available | [README][21] |   [#115][0115] |
-| select           |                           Available |           -  |   [#118][0118] |
+| select           |                           Available | [README][23] |   [#118][0118] |
 | textarea         |                           Available |           -  |              - |
 | autocomplete     |                         In-progress |           -  |   [#117][0117] |
 | chips            |  Initial version, features evolving |           -  |   [#120][0120] |
@@ -114,6 +115,7 @@ High level items planned for January 2017:
 [20]: https://github.com/angular/material2/blob/master/guides/theming.md
 [21]: https://github.com/angular/material2/blob/master/src/lib/snack-bar/README.md
 [22]: https://github.com/angular/material2/blob/master/src/lib/dialog/README.md
+[23]: https://github.com/angular/material2/blob/master/src/lib/select/README.md
 
 [0107]: https://github.com/angular/material2/issues/107
 [0119]: https://github.com/angular/material2/issues/119
