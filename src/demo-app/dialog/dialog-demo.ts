@@ -1,4 +1,5 @@
 import {Component, Inject} from '@angular/core';
+import {DOCUMENT} from '@angular/platform-browser';
 import {MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA} from '@angular/material';
 
 
