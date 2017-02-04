@@ -8,9 +8,9 @@
       <span class="md-input-placeholder-wrapper">
         <label class="md-input-placeholder"
                [attr.for]="_mdInputChild.id"
-               [class.md-empty]="_mdInputChild.empty"
+               [class.md-empty]="_mdInputChild.empty && !_shouldAlwaysFloat"
                [class.md-focused]="_mdInputChild.focused"
-               [class.md-float]="floatingPlaceholder"
+               [class.md-float]="_canPlaceholderFloat"
                [class.md-accent]="dividerColor == 'accent'"
                [class.md-warn]="dividerColor == 'warn'"
                *ngIf="_hasPlaceholder()">
@@ -32,6 +32,6 @@
           [class.md-warn]="dividerColor == 'warn'"></span>
   </div>
 
-  <div *ngIf="hintLabel != ''" class="md-hint">{{hintLabel}}</div>
+  <div *ngIf="hintLabel != ''" [attr.id]="_hintLabelId" class="md-hint">{{hintLabel}}</div>
   <ng-content select="md-hint"></ng-content>
 </div>
