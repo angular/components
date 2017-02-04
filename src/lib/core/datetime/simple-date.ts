@@ -38,7 +38,7 @@ export class SimpleDate {
     return this._date.getMonth();
   }
 
-  /** The date component of this date. */
+  /** The date component of this date. (1-indexed, 1 = 1st of month). */
   get date() {
     return this._date.getDate();
   }
