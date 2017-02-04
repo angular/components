@@ -2,6 +2,7 @@ import {Directive, ElementRef, Input} from '@angular/core';
 import {MdDatepicker} from './datepicker';
 
 
+/** Directive used to connect an input to a MdDatepicker. */
 @Directive({
   selector: 'input[mdDatepicker]',
 })
