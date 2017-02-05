@@ -62,7 +62,7 @@
 
   // We also need to escape the hash in hex colors,
   // otherwise IE will throw an XML error.
-  @if str-index($color, "#") == 1 {
+  @if str-index($color, '#') == 1 {
     $color: '%23' + str-slice($color, 2);
   }
 
