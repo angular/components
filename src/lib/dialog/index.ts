@@ -2,13 +2,9 @@ import {NgModule, ModuleWithProviders} from '@angular/core';
 import {
   OverlayModule,
   PortalModule,
-  OVERLAY_PROVIDERS,
   A11yModule,
-  InteractivityChecker,
-  Platform,
-  DefaultStyleCompatibilityModeModule,
+  CompatibilityModule,
 } from '../core';
-
 import {MdDialog} from './dialog';
 import {MdDialogContainer} from './dialog-container';
 import {
@@ -24,7 +20,7 @@ import {
     OverlayModule,
     PortalModule,
     A11yModule,
-    DefaultStyleCompatibilityModeModule
+    CompatibilityModule,
   ],
   exports: [
     MdDialogContainer,
@@ -32,22 +28,26 @@ import {
     MdDialogTitle,
     MdDialogContent,
     MdDialogActions,
-    DefaultStyleCompatibilityModeModule
+    CompatibilityModule,
   ],
   declarations: [
     MdDialogContainer,
     MdDialogClose,
     MdDialogTitle,
     MdDialogActions,
-    MdDialogContent
+    MdDialogContent,
+  ],
+  providers: [
+    MdDialog,
   ],
   entryComponents: [MdDialogContainer],
 })
 export class MdDialogModule {
+  /** @deprecated */
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdDialogModule,
-      providers: [MdDialog, OVERLAY_PROVIDERS, InteractivityChecker, Platform],
+      providers: [],
     };
   }
 }

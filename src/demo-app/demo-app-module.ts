@@ -4,14 +4,13 @@ import {HttpModule} from '@angular/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DemoApp, Home} from './demo-app/demo-app';
 import {RouterModule} from '@angular/router';
-import {MaterialModule} from '@angular/material';
+import {MaterialModule, OverlayContainer, FullscreenOverlayContainer} from '@angular/material';
 import {DEMO_APP_ROUTES} from './demo-app/routes';
 import {ProgressBarDemo} from './progress-bar/progress-bar-demo';
-import {JazzDialog, ContentElementDialog, DialogDemo} from './dialog/dialog-demo';
+import {JazzDialog, ContentElementDialog, DialogDemo, IFrameDialog} from './dialog/dialog-demo';
 import {RippleDemo} from './ripple/ripple-demo';
 import {IconDemo} from './icon/icon-demo';
 import {GesturesDemo} from './gestures/gestures-demo';
-import {InputDemo} from './input/input-demo';
 import {CardDemo} from './card/card-demo';
 import {ChipsDemo} from './chips/chips-demo';
 import {RadioDemo} from './radio/radio-demo';
@@ -38,6 +37,7 @@ import {ProjectionDemo, ProjectionTestComponent} from './projection/projection-d
 import {PlatformDemo} from './platform/platform-demo';
 import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
 import {InputContainerDemo} from './input/input-container-demo';
+import {StyleDemo} from './style/style-demo';
 
 @NgModule({
   imports: [
@@ -62,10 +62,10 @@ import {InputContainerDemo} from './input/input-container-demo';
     GridListDemo,
     Home,
     IconDemo,
-    InputDemo,
     InputContainerDemo,
     JazzDialog,
     ContentElementDialog,
+    IFrameDialog,
     ListDemo,
     LiveAnnouncerDemo,
     MdCheckboxDemoNestedChecklist,
@@ -86,6 +86,7 @@ import {InputContainerDemo} from './input/input-container-demo';
     SliderDemo,
     SlideToggleDemo,
     SpagettiPanel,
+    StyleDemo,
     ToolbarDemo,
     TooltipDemo,
     TabsDemo,
@@ -94,10 +95,14 @@ import {InputContainerDemo} from './input/input-container-demo';
     FoggyTabContent,
     PlatformDemo
   ],
+  providers: [
+    {provide: OverlayContainer, useClass: FullscreenOverlayContainer}
+  ],
   entryComponents: [
     DemoApp,
     JazzDialog,
     ContentElementDialog,
+    IFrameDialog,
     RotiniPanel,
     ScienceJoke,
     SpagettiPanel,

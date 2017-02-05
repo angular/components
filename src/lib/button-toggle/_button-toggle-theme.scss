@@ -4,11 +4,19 @@
 
 @mixin md-button-toggle-theme($theme) {
   $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
 
-  .md-button-toggle-checked .md-button-toggle-label-content {
-    background-color: md-color($md-grey, 300);
+  md-button-toggle {
+    color: md-color($foreground, hint-text);
   }
-  .md-button-toggle-disabled .md-button-toggle-label-content {
-    background-color: md-color($foreground, disabled);
+
+  .md-button-toggle-checked {
+    background-color: md-color($md-grey, 300);
+    color: md-color($foreground, base);
+  }
+
+  .md-button-toggle-disabled {
+    background-color: map_get($md-grey, 200);
+    color: md-color($foreground, disabled-button);
   }
 }

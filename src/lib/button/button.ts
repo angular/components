@@ -10,8 +10,7 @@ import {
   ModuleWithProviders,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MdRippleModule, coerceBooleanProperty, DefaultStyleCompatibilityModeModule} from '../core';
-import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+import {MdRippleModule, coerceBooleanProperty, CompatibilityModule} from '../core';
 
 
 // TODO(jelbourn): Make the `isMouseDown` stuff done with one global listener.
@@ -22,8 +21,10 @@ import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
  */
 @Component({
   moduleId: module.id,
-  selector: 'button[md-button], button[md-raised-button], button[md-icon-button], ' +
-            'button[md-fab], button[md-mini-fab]',
+  selector: 'button[md-button], button[md-raised-button], button[md-icon-button],' +
+            'button[md-fab], button[md-mini-fab],' +
+            'button[mat-button], button[mat-raised-button], button[mat-icon-button],' +
+            'button[mat-fab], button[mat-mini-fab]',
   host: {
     '[disabled]': 'disabled',
     '[class.md-button-focus]': '_isKeyboardFocused',
@@ -83,7 +84,7 @@ export class MdButton {
 
   _setElementColor(color: string, isAdd: boolean) {
     if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `md-${color}`, isAdd);
+      this._renderer.setElementClass(this._getHostElement(), `md-${color}`, isAdd);
     }
   }
 
@@ -97,7 +98,7 @@ export class MdButton {
 
   /** Focuses the button. */
   focus(): void {
-    this._renderer.invokeElementMethod(this._elementRef.nativeElement, 'focus');
+    this._renderer.invokeElementMethod(this._getHostElement(), 'focus');
   }
 
   _getHostElement() {
@@ -105,7 +106,7 @@ export class MdButton {
   }
 
   _isRoundButton() {
-    const el = this._elementRef.nativeElement;
+    const el = this._getHostElement();
     return el.hasAttribute('md-icon-button') ||
         el.hasAttribute('md-fab') ||
         el.hasAttribute('md-mini-fab');
@@ -121,7 +122,8 @@ export class MdButton {
  */
 @Component({
   moduleId: module.id,
-  selector: 'a[md-button], a[md-raised-button], a[md-icon-button], a[md-fab], a[md-mini-fab]',
+  selector: `a[md-button], a[md-raised-button], a[md-icon-button], a[md-fab], a[md-mini-fab],
+             a[mat-button], a[mat-raised-button], a[mat-icon-button], a[mat-fab], a[mat-mini-fab]`,
   inputs: ['color', 'disabled', 'disableRipple'],
   host: {
     '[attr.disabled]': 'disabled',
@@ -162,15 +164,16 @@ export class MdAnchor extends MdButton {
 
 
 @NgModule({
-  imports: [CommonModule, MdRippleModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdButton, MdAnchor, DefaultStyleCompatibilityModeModule],
+  imports: [CommonModule, MdRippleModule, CompatibilityModule],
+  exports: [MdButton, MdAnchor, CompatibilityModule],
   declarations: [MdButton, MdAnchor],
 })
 export class MdButtonModule {
+  /** @deprecated */
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdButtonModule,
-      providers: [ViewportRuler]
+      providers: []
     };
   }
 }

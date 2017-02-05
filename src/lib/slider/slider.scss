@@ -9,9 +9,13 @@ $md-slider-padding: 8px !default;
 
 $md-slider-track-thickness: 2px !default;
 $md-slider-thumb-size: 20px !default;
+$md-slider-thumb-border-width: 3px !default;
+$md-slider-thumb-border-width-active: 2px !default;
+$md-slider-thumb-border-width-disabled: 4px !default;
 
 $md-slider-thumb-default-scale: 0.7 !default;
 $md-slider-thumb-focus-scale: 1 !default;
+$md-slider-thumb-disabled-scale: 0.5 !default;
 
 $md-slider-thumb-arrow-gap: 12px !default;
 
@@ -30,14 +34,29 @@ md-slider {
   vertical-align: middle;
 }
 
-.md-slider-track {
+.md-slider-wrapper {
   position: absolute;
+}
+
+.md-slider-track-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
 }
 
 .md-slider-track-fill {
   position: absolute;
   transform-origin: 0 0;
-  transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;
+  transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
+              background-color $swift-ease-out-duration $swift-ease-out-timing-function;
+}
+
+.md-slider-track-background {
+  position: absolute;
+  transform-origin: 100% 100%;
+  transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
+              background-color $swift-ease-out-duration $swift-ease-out-timing-function;
 }
 
 .md-slider-ticks-container {
@@ -48,8 +67,14 @@ md-slider {
 }
 
 .md-slider-ticks {
+  box-sizing: border-box;
   opacity: 0;
   transition: opacity $swift-ease-out-duration $swift-ease-out-timing-function;
+}
+
+// TODO(mmalerba): Simplify css to avoid unnecessary selectors.
+.md-slider-disabled .md-slider-ticks {
+  opacity: 0;
 }
 
 .md-slider-thumb-container {
@@ -62,11 +87,15 @@ md-slider {
   position: absolute;
   right: -$md-slider-thumb-size / 2;
   bottom: -$md-slider-thumb-size / 2;
+  box-sizing: border-box;
   width: $md-slider-thumb-size;
   height: $md-slider-thumb-size;
+  border: $md-slider-thumb-border-width solid transparent;
   border-radius: 50%;
   transform: scale($md-slider-thumb-default-scale);
-  transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;
+  transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
+              background-color $swift-ease-out-duration $swift-ease-out-timing-function,
+              border-color $swift-ease-out-duration $swift-ease-out-timing-function;
 }
 
 .md-slider-thumb-label {
@@ -77,8 +106,9 @@ md-slider {
   width: $md-slider-thumb-label-size;
   height: $md-slider-thumb-label-size;
   border-radius: 50%;
-  transition: 300ms $swift-ease-in-out-timing-function;
-  transition-property: transform, border-radius;
+  transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
+              border-radius  $swift-ease-out-duration $swift-ease-out-timing-function,
+              background-color  $swift-ease-out-duration $swift-ease-out-timing-function;
 }
 
 .md-slider-thumb-label-text {
@@ -86,13 +116,14 @@ md-slider {
   font-size: 12px;
   font-weight: bold;
   opacity: 0;
-  transition: opacity 300ms $swift-ease-in-out-timing-function;
+  transition: opacity $swift-ease-out-duration $swift-ease-out-timing-function;
 }
 
 
 // Slider sliding state.
 .md-slider-sliding {
   .md-slider-track-fill,
+  .md-slider-track-background,
   .md-slider-thumb-container {
     // Must use `transition-duration: 0ms` to disable animation rather than `transition: none`.
     // On Mobile Safari `transition: none` causes the slider thumb to appear stuck.
@@ -101,20 +132,23 @@ md-slider {
 }
 
 
-// Slider with ticks.
+// Slider with ticks when not disabled.
 .md-slider-has-ticks {
-  .md-slider-track::after {
+
+  .md-slider-wrapper::after {
     content: '';
     position: absolute;
     border: 0 solid $md-slider-tick-color;
     opacity: 0;
-    transition: opacity 300ms $swift-ease-in-out-timing-function;
+    transition: opacity $swift-ease-out-duration $swift-ease-out-timing-function;
   }
 
   &.md-slider-active,
   &:hover {
-    .md-slider-track::after {
-      opacity: 1;
+    &:not(.md-slider-hide-last-tick) {
+      .md-slider-wrapper::after {
+        opacity: 1;
+      }
     }
 
     .md-slider-ticks {
@@ -137,12 +171,17 @@ md-slider {
   .md-slider-track-fill {
     transform-origin: 100% 100%;
   }
+
+  .md-slider-track-background {
+    transform-origin: 0 0;
+  }
 }
 
 
 // Active slider.
 .md-slider-active {
   .md-slider-thumb {
+    border-width: $md-slider-thumb-border-width-active;
     transform: scale($md-slider-thumb-focus-scale);
   }
 
@@ -160,28 +199,53 @@ md-slider {
 }
 
 
+// Disabled slider.
+.md-slider-disabled {
+  .md-slider-thumb {
+    border-width: $md-slider-thumb-border-width-disabled;
+    transform: scale($md-slider-thumb-disabled-scale);
+  }
+
+  .md-slider-thumb-label {
+    display: none;
+  }
+}
+
+
 // Horizontal slider.
 .md-slider-horizontal {
   height: $md-slider-thickness;
   min-width: $md-slider-min-size;
 
-  .md-slider-track {
+  .md-slider-wrapper {
     height: $md-slider-track-thickness;
     top: ($md-slider-thickness - $md-slider-track-thickness) / 2;
     left: $md-slider-padding;
     right: $md-slider-padding;
   }
 
-  .md-slider-track::after {
+  .md-slider-wrapper::after {
     height: $md-slider-track-thickness;
     border-left-width: $md-slider-tick-size;
     right: 0;
+    top: 0;
+  }
+
+  .md-slider-track-wrapper {
+    height: $md-slider-track-thickness;
+    width: 100%;
   }
 
   .md-slider-track-fill {
     height: $md-slider-track-thickness;
     width: 100%;
     transform: scaleX(0);
+  }
+
+  .md-slider-track-background {
+    height: $md-slider-track-thickness;
+    width: 100%;
+    transform: scaleX(1);
   }
 
   .md-slider-ticks-container {
@@ -196,6 +260,7 @@ md-slider {
     // (see https://bugzilla.mozilla.org/show_bug.cgi?id=1314319).
     background: -moz-repeating-linear-gradient(0.0001deg, $md-slider-tick-color,
         $md-slider-tick-color $md-slider-tick-size, transparent 0, transparent) repeat;
+    background-clip: content-box;
     height: $md-slider-track-thickness;
     width: 100%;
   }
@@ -209,7 +274,7 @@ md-slider {
   .md-slider-thumb-label {
     right: -$md-slider-thumb-label-size / 2;
     top: -($md-slider-thumb-label-size + $md-slider-thumb-arrow-gap);
-    transform: translateY($md-slider-thumb-label-size / 2 + $md-slider-thumb-arrow-gap) scale(0.4)
+    transform: translateY($md-slider-thumb-label-size / 2 + $md-slider-thumb-arrow-gap) scale(0.01)
         rotate(45deg);
   }
 
@@ -230,23 +295,35 @@ md-slider {
   width: $md-slider-thickness;
   min-height: $md-slider-min-size;
 
-  .md-slider-track {
+  .md-slider-wrapper {
     width: $md-slider-track-thickness;
     top: $md-slider-padding;
     bottom: $md-slider-padding;
     left: ($md-slider-thickness - $md-slider-track-thickness) / 2;
   }
 
-  .md-slider-track::after {
+  .md-slider-wrapper::after {
     width: $md-slider-track-thickness;
     border-top-width: $md-slider-tick-size;
     bottom: 0;
+    left: 0;
+  }
+
+  .md-slider-track-wrapper {
+    height: 100%;
+    width: $md-slider-track-thickness;
   }
 
   .md-slider-track-fill {
     height: 100%;
     width: $md-slider-track-thickness;
     transform: scaleY(0);
+  }
+
+  .md-slider-track-background {
+    height: 100%;
+    width: $md-slider-track-thickness;
+    transform: scaleY(1);
   }
 
   .md-slider-ticks-container {
@@ -257,6 +334,7 @@ md-slider {
   .md-slider-ticks {
     background: repeating-linear-gradient(to bottom, $md-slider-tick-color,
         $md-slider-tick-color $md-slider-tick-size, transparent 0, transparent) repeat;
+    background-clip: content-box;
     width: $md-slider-track-thickness;
     height: 100%;
   }
@@ -270,8 +348,8 @@ md-slider {
   .md-slider-thumb-label {
     bottom: -$md-slider-thumb-label-size / 2;
     left: -($md-slider-thumb-label-size + $md-slider-thumb-arrow-gap);
-    transform: translateX($md-slider-thumb-label-size / 2 + $md-slider-thumb-arrow-gap)
-        scale(0.4) rotate(-45deg);
+    transform: translateX($md-slider-thumb-label-size / 2 + $md-slider-thumb-arrow-gap) scale(0.01)
+        rotate(-45deg);
   }
 
   .md-slider-thumb-label-text {
@@ -288,7 +366,7 @@ md-slider {
 
 // Slider in RTL languages.
 [dir='rtl'] {
-  .md-slider-track::after {
+  .md-slider-wrapper::after {
     left: 0;
     right: auto;
   }
@@ -298,9 +376,17 @@ md-slider {
       transform-origin: 100% 100%;
     }
 
+    .md-slider-track-background {
+      transform-origin: 0 0;
+    }
+
     &.md-slider-axis-inverted {
       .md-slider-track-fill {
         transform-origin: 0 0;
+      }
+
+      .md-slider-track-background {
+        transform-origin: 100% 100%;
       }
     }
   }

@@ -37,7 +37,7 @@ task(':watch:components', () => {
 
 
 /** Builds component typescript only (ESM output). */
-task(':build:components:ts', tsBuildTask(COMPONENTS_DIR, 'tsconfig-srcs.json'));
+task(':build:components:ts', tsBuildTask(path.join(COMPONENTS_DIR, 'tsconfig-srcs.json')));
 
 /** Builds components typescript for tests (CJS output). */
 task(':build:components:spec', tsBuildTask(COMPONENTS_DIR));
@@ -75,6 +75,7 @@ task(':build:components:rollup', () => {
     'rxjs/add/observable/fromEvent': 'Rx.Observable',
     'rxjs/add/observable/forkJoin': 'Rx.Observable',
     'rxjs/add/observable/of': 'Rx.Observable',
+    'rxjs/add/observable/merge': 'Rx.Observable',
     'rxjs/add/observable/throw': 'Rx.Observable',
     'rxjs/add/operator/toPromise': 'Rx.Observable.prototype',
     'rxjs/add/operator/map': 'Rx.Observable.prototype',
@@ -84,6 +85,8 @@ task(':build:components:rollup', () => {
     'rxjs/add/operator/finally': 'Rx.Observable.prototype',
     'rxjs/add/operator/catch': 'Rx.Observable.prototype',
     'rxjs/add/operator/first': 'Rx.Observable.prototype',
+    'rxjs/add/operator/startWith': 'Rx.Observable.prototype',
+    'rxjs/add/operator/switchMap': 'Rx.Observable.prototype',
     'rxjs/Observable': 'Rx'
   };
 

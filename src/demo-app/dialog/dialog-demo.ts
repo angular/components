@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, Inject} from '@angular/core';
+import {DOCUMENT} from '@angular/platform-browser';
 import {MdDialog, MdDialogRef, MdDialogConfig} from '@angular/material';
 
 @Component({
@@ -10,6 +11,7 @@ import {MdDialog, MdDialogRef, MdDialogConfig} from '@angular/material';
 export class DialogDemo {
   dialogRef: MdDialogRef<JazzDialog>;
   lastCloseResult: string;
+  actionsAlignment: string;
   config: MdDialogConfig = {
     disableClose: false,
     width: '',
@@ -22,7 +24,19 @@ export class DialogDemo {
     }
   };
 
-  constructor(public dialog: MdDialog) { }
+  constructor(public dialog: MdDialog, @Inject(DOCUMENT) doc: any) {
+    // Possible useful example for the open and closeAll events.
+    // Adding a class to the body if a dialog opens and
+    // removing it after all open dialogs are closed
+    dialog.afterOpen.subscribe((ref: MdDialogRef<any>) => {
+      if (!doc.body.classList.contains('no-scroll')) {
+        doc.body.classList.add('no-scroll');
+      }
+    });
+    dialog.afterAllClosed.subscribe(() => {
+      doc.body.classList.remove('no-scroll');
+    });
+  }
 
   openJazz() {
     this.dialogRef = this.dialog.open(JazzDialog, this.config);
@@ -34,7 +48,8 @@ export class DialogDemo {
   }
 
   openContentElement() {
-    this.dialog.open(ContentElementDialog, this.config);
+    let dialogRef = this.dialog.open(ContentElementDialog, this.config);
+    dialogRef.componentInstance.actionsAlignment = this.actionsAlignment;
   }
 }
 
@@ -78,7 +93,7 @@ export class JazzDialog {
       </p>
     </md-dialog-content>
 
-    <md-dialog-actions>
+    <md-dialog-actions [attr.align]="actionsAlignment">
       <button
         md-raised-button
         color="primary"
@@ -89,7 +104,46 @@ export class JazzDialog {
         color="primary"
         href="https://en.wikipedia.org/wiki/Neptune"
         target="_blank">Read more on Wikipedia</a>
+      
+      <button
+        md-button
+        color="secondary"
+        (click)="showInStackedDialog()">
+        Show in Dialog</button>
     </md-dialog-actions>
   `
 })
-export class ContentElementDialog { }
+export class ContentElementDialog {
+  actionsAlignment: string;
+
+  constructor(public dialog: MdDialog) { }
+
+  showInStackedDialog() {
+    this.dialog.open(IFrameDialog);
+  }
+}
+
+@Component({
+  selector: 'demo-iframe-dialog',
+  styles: [
+    `iframe {
+      width: 800px;
+    }`
+  ],
+  template: `
+    <h2 md-dialog-title>Neptune</h2>
+
+    <md-dialog-content>
+      <iframe frameborder="0" src="https://en.wikipedia.org/wiki/Neptune"></iframe>
+    </md-dialog-content>
+
+    <md-dialog-actions>
+      <button
+        md-raised-button
+        color="primary"
+        md-dialog-close>Close</button>
+    </md-dialog-actions>
+  `
+})
+export class IFrameDialog {
+}

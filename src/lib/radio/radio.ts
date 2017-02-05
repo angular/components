@@ -23,10 +23,11 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 import {
   MdRippleModule,
   UniqueSelectionDispatcher,
-  DefaultStyleCompatibilityModeModule,
+  CompatibilityModule,
+  UNIQUE_SELECTION_DISPATCHER_PROVIDER,
 } from '../core';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
-import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+import {VIEWPORT_RULER_PROVIDER} from '../core/overlay/position/viewport-ruler';
 
 
 /**
@@ -506,15 +507,17 @@ export class MdRadioButton implements OnInit {
 
 
 @NgModule({
-  imports: [CommonModule, MdRippleModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdRadioGroup, MdRadioButton, DefaultStyleCompatibilityModeModule],
+  imports: [CommonModule, MdRippleModule, CompatibilityModule],
+  exports: [MdRadioGroup, MdRadioButton, CompatibilityModule],
+  providers: [UNIQUE_SELECTION_DISPATCHER_PROVIDER, VIEWPORT_RULER_PROVIDER],
   declarations: [MdRadioGroup, MdRadioButton],
 })
 export class MdRadioModule {
+  /** @deprecated */
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdRadioModule,
-      providers: [UniqueSelectionDispatcher, ViewportRuler],
+      providers: [],
     };
   }
 }

@@ -8,12 +8,14 @@ let max = 5;
   moduleId: module.id,
   selector: 'input-container-demo',
   templateUrl: 'input-container-demo.html',
-  styleUrls: ['input-demo.css'],
+  styleUrls: ['input-container-demo.css'],
 })
 export class InputContainerDemo {
+  floatingLabel: string = 'auto';
   dividerColor: boolean;
   requiredField: boolean;
-  floatingLabel: boolean;
+  ctrlDisabled = false;
+
   name: string;
   items: any[] = [
     { value: 10 },

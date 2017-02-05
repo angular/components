@@ -102,9 +102,12 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
   ngOnDestroy() {
     // When the dialog is destroyed, return focus to the element that originally had it before
     // the dialog was opened. Wait for the DOM to finish settling before changing the focus so
-    // that it doesn't end up back on the <body>.
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
-      (this._elementFocusedBeforeDialogWasOpened as HTMLElement).focus();
-    });
+    // that it doesn't end up back on the <body>. Also note that we need the extra check, because
+    // IE can set the `activeElement` to null in some cases.
+    if (this._elementFocusedBeforeDialogWasOpened) {
+      this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+        this._renderer.invokeElementMethod(this._elementFocusedBeforeDialogWasOpened, 'focus');
+      });
+    }
   }
 }

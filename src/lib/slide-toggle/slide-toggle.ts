@@ -20,7 +20,7 @@ import {
   coerceBooleanProperty,
   GestureConfig,
   HammerInput,
-  DefaultStyleCompatibilityModeModule,
+  CompatibilityModule,
 } from '../core';
 import {Observable} from 'rxjs/Observable';
 
@@ -51,6 +51,7 @@ let nextId = 0;
     '[class.md-disabled]': 'disabled',
     // This md-slide-toggle prefix will change, once the temporary ripple is removed.
     '[class.md-slide-toggle-focused]': '_hasFocus',
+    '[class.md-slide-toggle-label-before]': 'labelPosition == "before"',
     '(mousedown)': '_setMousedown()'
   },
   templateUrl: 'slide-toggle.html',
@@ -85,11 +86,14 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   /** Used to specify the tabIndex value for the underlying input element. */
   @Input() tabIndex: number = 0;
 
+  /** Whether the label should appear after or before the slide-toggle. Defaults to 'after' */
+  @Input() labelPosition: 'before' | 'after' = 'after';
+
   /** Used to set the aria-label attribute on the underlying input element. */
-  @Input() ariaLabel: string = null;
+  @Input('aria-label') ariaLabel: string = null;
 
   /** Used to set the aria-labelledby attribute on the underlying input element. */
-  @Input() ariaLabelledby: string = null;
+  @Input('aria-labelledby') ariaLabelledby: string = null;
 
   /** Whether the slide-toggle is disabled. */
   @Input()
@@ -334,15 +338,17 @@ class SlideToggleRenderer {
 
 
 @NgModule({
-  imports: [FormsModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdSlideToggle, DefaultStyleCompatibilityModeModule],
+  imports: [FormsModule, CompatibilityModule],
+  exports: [MdSlideToggle, CompatibilityModule],
   declarations: [MdSlideToggle],
+  providers: [{provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}],
 })
 export class MdSlideToggleModule {
+  /** @deprecated */
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdSlideToggleModule,
-      providers: [{provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}]
+      providers: []
     };
   }
 }

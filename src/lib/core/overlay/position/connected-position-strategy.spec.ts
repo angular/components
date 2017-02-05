@@ -1,11 +1,13 @@
 import {ElementRef} from '@angular/core';
 import {ConnectedPositionStrategy} from './connected-position-strategy';
-import {ViewportRuler} from './viewport-ruler';
+import {ViewportRuler, VIEWPORT_RULER_PROVIDER} from './viewport-ruler';
 import {OverlayPositionBuilder} from './overlay-position-builder';
 import {ConnectedOverlayPositionChange} from './connected-position';
 import {Scrollable} from '../scroll/scrollable';
 import {Subscription} from 'rxjs';
+import {TestBed, inject} from '@angular/core/testing';
 import Spy = jasmine.Spy;
+import {SCROLL_DISPATCHER_PROVIDER} from '../scroll/scroll-dispatcher';
 
 
 // Default width and height of the overlay and origin panels throughout these tests.
@@ -17,6 +19,16 @@ const DEFAULT_WIDTH = 60;
 // for tests on CI (both SauceLabs and Browserstack).
 
 describe('ConnectedPositionStrategy', () => {
+
+  let viewportRuler: ViewportRuler;
+
+  beforeEach(() => TestBed.configureTestingModule({
+    providers: [VIEWPORT_RULER_PROVIDER, SCROLL_DISPATCHER_PROVIDER]
+  }));
+
+  beforeEach(inject([ViewportRuler], (_ruler: ViewportRuler) => {
+    viewportRuler = _ruler;
+  }));
 
   describe('with origin on document body', () => {
     const ORIGIN_HEIGHT = DEFAULT_HEIGHT;
@@ -48,7 +60,7 @@ describe('ConnectedPositionStrategy', () => {
       overlayContainerElement.appendChild(overlayElement);
 
       fakeElementRef = new FakeElementRef(originElement);
-      positionBuilder = new OverlayPositionBuilder(new ViewportRuler());
+      positionBuilder = new OverlayPositionBuilder(viewportRuler);
     });
 
     afterEach(() => {
@@ -214,6 +226,39 @@ describe('ConnectedPositionStrategy', () => {
         let overlayRect = overlayElement.getBoundingClientRect();
         expect(overlayRect.top).toBe(originRect.bottom);
         expect(overlayRect.right).toBe(originRect.left);
+      });
+
+      it('should recalculate and set the last position with recalculateLastPosition()', () => {
+        // Use the fake viewport ruler because we don't know *exactly* how big the viewport is.
+        fakeViewportRuler.fakeRect = {
+          top: 0, left: 0, width: 500, height: 500, right: 500, bottom: 500
+        };
+        positionBuilder = new OverlayPositionBuilder(fakeViewportRuler);
+
+        // Push the trigger down so the overlay doesn't have room to open on the bottom.
+        originElement.style.top = '475px';
+        originRect = originElement.getBoundingClientRect();
+
+        strategy = positionBuilder.connectedTo(
+            fakeElementRef,
+            {originX: 'start', originY: 'bottom'},
+            {overlayX: 'start', overlayY: 'top'})
+            .withFallbackPosition(
+                {originX: 'start', originY: 'top'},
+                {overlayX: 'start', overlayY: 'bottom'});
+
+        // This should apply the fallback position, as the original position won't fit.
+        strategy.apply(overlayElement);
+
+        // Now make the overlay small enough to fit in the first preferred position.
+        overlayElement.style.height = '15px';
+
+        // This should only re-align in the last position, even though the first would fit.
+        strategy.recalculateLastPosition();
+
+        let overlayRect = overlayElement.getBoundingClientRect();
+        expect(overlayRect.bottom).toBe(originRect.top,
+            'Expected overlay to be re-aligned to the trigger in the previous position.');
       });
 
       it('should position a panel properly when rtl', () => {
@@ -457,7 +502,7 @@ describe('ConnectedPositionStrategy', () => {
       scrollable.appendChild(originElement);
 
       // Create a strategy with knowledge of the scrollable container
-      let positionBuilder = new OverlayPositionBuilder(new ViewportRuler());
+      let positionBuilder = new OverlayPositionBuilder(viewportRuler);
       let fakeElementRef = new FakeElementRef(originElement);
       strategy = positionBuilder.connectedTo(
           fakeElementRef,

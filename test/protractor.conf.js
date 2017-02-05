@@ -41,9 +41,11 @@ if (process.env['TRAVIS']) {
   config.sauceKey = key;
   config.capabilities = {
     'browserName': 'chrome',
-    'tunnel-identifier': process.env['TRAVIS_JOB_NUMBER'],
-    'build': process.env['TRAVIS_JOB_NUMBER'],
-    'name': 'Material 2 E2E Tests',
+    'version': 'latest',
+    "chromedriverVersion": "2.26",
+    'tunnel-identifier': process.env['TRAVIS_JOB_ID'],
+    'build': process.env['TRAVIS_JOB_ID'],
+    'name': 'Material E2E Tests',
 
     // Enables concurrent testing in the Webdriver. Currently runs five e2e files in parallel.
     maxInstances: 5,
@@ -53,11 +55,6 @@ if (process.env['TRAVIS']) {
     'recordVideo': false,
     'recordScreenshots': false
   };
-
-  // Because Protractor runs selenium instances concurrently in the CI and each instance
-  // will create a bloat of logs we don't want to show any info messages.
-  // Until protractor#1451 is solved, manually disable all info messages.
-  require('protractor/built/logger').Logger.prototype.info = () => {};
 }
 
 

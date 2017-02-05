@@ -8,7 +8,7 @@ import {
   tick,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {NgModule, Component, Directive, ViewChild, ViewContainerRef} from '@angular/core';
+import {NgModule, Component, Directive, ViewChild, ViewContainerRef, Injector} from '@angular/core';
 import {MdDialogModule} from './index';
 import {MdDialog} from './dialog';
 import {OverlayContainer} from '../core';
@@ -62,6 +62,21 @@ describe('MdDialog', () => {
     viewContainerFixture.detectChanges();
     let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container');
     expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
+  });
+
+  it('should use injector from viewContainerRef for DialogInjector', () => {
+    let dialogRef = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let dialogInjector = dialogRef.componentInstance.dialogInjector;
+
+    expect(dialogRef.componentInstance.dialogRef).toBe(dialogRef);
+    expect(dialogInjector.get(DirectiveWithViewContainer)).toBeTruthy(
+      'Expected the dialog component to be created with the injector from the viewContainerRef.'
+    );
   });
 
   it('should open a dialog with a component and no ViewContainerRef', () => {
@@ -133,6 +148,35 @@ describe('MdDialog', () => {
     backdrop.click();
 
     expect(overlayContainerElement.querySelector('md-dialog-container')).toBeFalsy();
+  });
+
+  it('should notify the observers if a dialog has been opened', () => {
+    let ref: MdDialogRef<PizzaMsg>;
+    dialog.afterOpen.subscribe(r => {
+      ref = r;
+    });
+    expect(dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef
+    })).toBe(ref);
+  });
+
+  it('should notify the observers if all open dialogs have finished closing', () => {
+    const ref1 = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef
+    });
+    const ref2 = dialog.open(ContentElementDialog, {
+      viewContainerRef: testViewContainerRef
+    });
+    let allClosed = false;
+
+    dialog.afterAllClosed.subscribe(() => {
+      allClosed = true;
+    });
+
+    ref1.close();
+    expect(allClosed).toBeFalsy();
+    ref2.close();
+    expect(allClosed).toBeTruthy();
   });
 
   it('should should override the width of the overlay pane', () => {
@@ -360,6 +404,74 @@ describe('MdDialog', () => {
       expect(button.getAttribute('aria-label')).toBe('Best close button ever');
     });
 
+    it('should override the "type" attribute of the close button', () => {
+      let button = overlayContainerElement.querySelector('button[md-dialog-close]');
+
+      expect(button.getAttribute('type')).toBe('button');
+    });
+
+  });
+});
+
+describe('MdDialog with a parent MdDialog', () => {
+  let parentDialog: MdDialog;
+  let childDialog: MdDialog;
+  let overlayContainerElement: HTMLElement;
+  let fixture: ComponentFixture<ComponentThatProvidesMdDialog>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [MdDialogModule.forRoot(), DialogTestModule],
+      declarations: [ComponentThatProvidesMdDialog],
+      providers: [
+        {provide: OverlayContainer, useFactory: () => {
+          overlayContainerElement = document.createElement('div');
+          return {getContainerElement: () => overlayContainerElement};
+        }}
+      ],
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  beforeEach(inject([MdDialog], (d: MdDialog) => {
+    parentDialog = d;
+
+    fixture = TestBed.createComponent(ComponentThatProvidesMdDialog);
+    childDialog = fixture.componentInstance.dialog;
+    fixture.detectChanges();
+  }));
+
+  afterEach(() => {
+    overlayContainerElement.innerHTML = '';
+  });
+
+  it('should close dialogs opened by a parent when calling closeAll on a child MdDialog', () => {
+    parentDialog.open(PizzaMsg);
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent)
+        .toContain('Pizza', 'Expected a dialog to be opened');
+
+    childDialog.closeAll();
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent.trim())
+        .toBe('', 'Expected closeAll on child MdDialog to close dialog opened by parent');
+  });
+
+  it('should close dialogs opened by a child when calling closeAll on a parent MdDialog', () => {
+    childDialog.open(PizzaMsg);
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent)
+        .toContain('Pizza', 'Expected a dialog to be opened');
+
+    parentDialog.closeAll();
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent.trim())
+        .toBe('', 'Expected closeAll on parent MdDialog to close dialog opened by child');
   });
 });
 
@@ -387,7 +499,8 @@ class ComponentWithChildViewContainer {
   selector: 'pizza-msg'
 })
 class PizzaMsg {
-  constructor(public dialogRef: MdDialogRef<PizzaMsg>) { }
+  constructor(public dialogRef: MdDialogRef<PizzaMsg>,
+              public dialogInjector: Injector) {}
 }
 
 @Component({
@@ -403,6 +516,14 @@ class PizzaMsg {
 })
 class ContentElementDialog {
   closeButtonAriaLabel: string;
+}
+
+@Component({
+  template: '',
+  providers: [MdDialog]
+})
+class ComponentThatProvidesMdDialog {
+  constructor(public dialog: MdDialog) {}
 }
 
 // Create a real (non-test) NgModule as a workaround for

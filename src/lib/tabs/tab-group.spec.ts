@@ -1,7 +1,7 @@
 import {
     async, fakeAsync, tick, ComponentFixture, TestBed
 } from '@angular/core/testing';
-import {MdTabGroup, MdTabsModule} from './tab-group';
+import {MdTabGroup, MdTabsModule, MdTabHeaderPosition} from './tab-group';
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
@@ -129,6 +129,15 @@ describe('MdTabGroup', () => {
       fixture.detectChanges();
       expect(component.selectedIndex).toBe(2);
     });
+
+    it('should not crash when setting the selected index to NaN', () => {
+      let component = fixture.debugElement.componentInstance;
+
+      expect(() => {
+        component.selectedIndex = NaN;
+        fixture.detectChanges();
+      }).not.toThrow();
+    });
   });
 
   describe('dynamic binding tabs', () => {
@@ -238,25 +247,36 @@ describe('MdTabGroup', () => {
     it('should support @ViewChild in the tab content', () => {
       expect(fixture.componentInstance.legumes).toBeTruthy();
     });
+
+    it('should support setting the header position', () => {
+      let tabGroupNode = fixture.debugElement.query(By.css('md-tab-group')).nativeElement;
+
+      expect(tabGroupNode.classList).not.toContain('md-tab-group-inverted-header');
+
+      tabGroup.headerPosition = 'below';
+      fixture.detectChanges();
+
+      expect(tabGroupNode.classList).toContain('md-tab-group-inverted-header');
+    });
   });
 
   /**
    * Checks that the `selectedIndex` has been updated; checks that the label and body have their
    * respective `active` classes
    */
-  function checkSelectedIndex(index: number, fixture: ComponentFixture<any>) {
+  function checkSelectedIndex(expectedIndex: number, fixture: ComponentFixture<any>) {
     fixture.detectChanges();
 
     let tabComponent: MdTabGroup = fixture.debugElement
         .query(By.css('md-tab-group')).componentInstance;
-    expect(tabComponent.selectedIndex).toBe(index);
+    expect(tabComponent.selectedIndex).toBe(expectedIndex);
 
     let tabLabelElement = fixture.debugElement
-        .query(By.css(`.md-tab-label:nth-of-type(${index + 1})`)).nativeElement;
+        .query(By.css(`.md-tab-label:nth-of-type(${expectedIndex + 1})`)).nativeElement;
     expect(tabLabelElement.classList.contains('md-tab-label-active')).toBe(true);
 
     let tabContentElement = fixture.debugElement
-        .query(By.css(`md-tab-body:nth-of-type(${index + 1})`)).nativeElement;
+        .query(By.css(`md-tab-body:nth-of-type(${expectedIndex + 1})`)).nativeElement;
     expect(tabContentElement.classList.contains('md-tab-body-active')).toBe(true);
   }
 
@@ -273,6 +293,7 @@ describe('MdTabGroup', () => {
   template: `
     <md-tab-group class="tab-group"
         [(selectedIndex)]="selectedIndex"
+        [headerPosition]="headerPosition"
         (focusChange)="handleFocus($event)"
         (selectChange)="handleSelection($event)">
       <md-tab>
@@ -294,6 +315,7 @@ class SimpleTabsTestApp {
   selectedIndex: number = 1;
   focusEvent: any;
   selectEvent: any;
+  headerPosition: MdTabHeaderPosition = 'above';
   handleFocus(event: any) {
     this.focusEvent = event;
   }

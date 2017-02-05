@@ -16,8 +16,9 @@ import {
   ForegroundRipple,
   ForegroundRippleState,
 } from './ripple-renderer';
-import {DefaultStyleCompatibilityModeModule} from '../compatibility/default-mode';
-import {ViewportRuler} from '../overlay/position/viewport-ruler';
+import {CompatibilityModule} from '../compatibility/compatibility';
+import {ViewportRuler, VIEWPORT_RULER_PROVIDER} from '../overlay/position/viewport-ruler';
+import {SCROLL_DISPATCHER_PROVIDER} from '../overlay/scroll/scroll-dispatcher';
 
 
 @Directive({
@@ -235,15 +236,17 @@ export class MdRipple implements OnInit, OnDestroy, OnChanges {
 
 
 @NgModule({
-  imports: [DefaultStyleCompatibilityModeModule],
-  exports: [MdRipple, DefaultStyleCompatibilityModeModule],
+  imports: [CompatibilityModule],
+  exports: [MdRipple, CompatibilityModule],
   declarations: [MdRipple],
+  providers: [VIEWPORT_RULER_PROVIDER, SCROLL_DISPATCHER_PROVIDER],
 })
 export class MdRippleModule {
+  /** @deprecated */
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdRippleModule,
-      providers: [ViewportRuler]
+      providers: []
     };
   }
 }

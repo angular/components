@@ -1,1 +1,5 @@
-I'm an autocomplete!
+<template>
+  <div class="md-autocomplete-panel" role="listbox" [id]="id" [ngClass]="_getPositionClass()" #panel>
+    <ng-content></ng-content>
+  </div>
+</template>

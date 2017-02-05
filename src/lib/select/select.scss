@@ -45,6 +45,7 @@ md-select {
   &.md-floating-placeholder {
     top: -22px;
     left: -2px;
+    text-align: left;
     transform: scale(0.75);
   }
 
@@ -53,6 +54,7 @@ md-select {
 
     &.md-floating-placeholder {
       left: 2px;
+      text-align: right;
     }
   }
 
@@ -63,8 +65,9 @@ md-select {
 }
 
 .md-select-value {
-  position: absolute;
   @include md-truncate-line();
+  position: absolute;
+  max-width: calc(100% - #{$md-select-arrow-size * 2});
 
   // Firefox and some versions of IE incorrectly keep absolutely
   // positioned children of flex containers in the flex flow when calculating
@@ -105,27 +108,3 @@ md-select {
   }
 }
 
-md-option {
-  @include md-menu-item-base();
-  position: relative;
-  cursor: pointer;
-  outline: none;
-
-  &[aria-disabled='true'] {
-    cursor: default;
-    user-select: none;
-  }
-}
-
-.md-option-ripple {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-
-  // In high contrast mode this completely covers the text.
-  @include cdk-high-contrast {
-    opacity: 0.5;
-  }
-}

@@ -11,7 +11,7 @@ import {
     NgModule,
     ModuleWithProviders,
 } from '@angular/core';
-import {MdLine, MdLineSetter, MdLineModule, DefaultStyleCompatibilityModeModule} from '../core';
+import {MdLine, MdLineSetter, MdLineModule, CompatibilityModule} from '../core';
 
 @Directive({
   selector: 'md-divider, mat-divider'
@@ -72,18 +72,19 @@ export class MdListItem implements AfterContentInit {
 
 
 @NgModule({
-  imports: [MdLineModule, DefaultStyleCompatibilityModeModule],
+  imports: [MdLineModule, CompatibilityModule],
   exports: [
     MdList,
     MdListItem,
     MdListDivider,
     MdListAvatar,
     MdLineModule,
-    DefaultStyleCompatibilityModeModule,
+    CompatibilityModule,
   ],
   declarations: [MdList, MdListItem, MdListDivider, MdListAvatar],
 })
 export class MdListModule {
+  /** @deprecated */
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdListModule,

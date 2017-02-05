@@ -34,7 +34,7 @@
     }
   }
 
-  .md-select-content {
+  .md-select-content, .md-select-panel-done-animating {
     background: md-color($background, card);
   }
 
@@ -44,21 +44,5 @@
     .md-select-disabled & {
       color: md-color($foreground, hint-text);
     }
-  }
-
-  md-option {
-    &:hover:not(.md-option-disabled), &:focus:not(.md-option-disabled) {
-     background: md-color($background, hover);
-    }
-
-    &.md-selected {
-      background: md-color($background, hover);
-      color: md-color($primary);
-    }
-
-    &.md-option-disabled {
-      color: md-color($foreground, hint-text);
-    }
-
   }
 }
