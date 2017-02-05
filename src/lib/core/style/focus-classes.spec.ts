@@ -32,14 +32,8 @@ describe('FocusOriginMonitor', () => {
 
     focusOriginMonitor.registerElementForFocusClasses(buttonElement, buttonRenderer);
 
-    // On Saucelabs, browsers will run simultaneously and therefore can't focus all browser windows
-    // at the same time. This is problematic when testing focus states. Chrome and Firefox
-    // only fire FocusEvents when the window is focused. This issue also appears locally.
-    let _nativeButtonFocus = buttonElement.focus.bind(buttonElement);
-    buttonElement.focus = () => {
-      document.hasFocus() ? _nativeButtonFocus() : dispatchFocusEvent(buttonElement);
-    };
-
+    // Patch the element focus to properly emit focus events when the browser is blurred.
+    patchElementFocus(buttonElement);
   }));
 
   it('manually registered element should receive focus classes', async(() => {
@@ -178,13 +172,8 @@ describe('cdkFocusClasses', () => {
 
     buttonElement = fixture.debugElement.query(By.css('button')).nativeElement;
 
-    // On Saucelabs, browsers will run simultaneously and therefore can't focus all browser windows
-    // at the same time. This is problematic when testing focus states. Chrome and Firefox
-    // only fire FocusEvents when the window is focused. This issue also appears locally.
-    let _nativeButtonFocus = buttonElement.focus.bind(buttonElement);
-    buttonElement.focus = () => {
-      document.hasFocus() ? _nativeButtonFocus() : dispatchFocusEvent(buttonElement);
-    };
+    // Patch the element focus to properly emit focus events when the browser is blurred.
+    patchElementFocus(buttonElement);
   });
 
   it('should initially not be focused', () => {
@@ -255,6 +244,7 @@ class PlainButton {
 @Component({template: `<button cdkFocusClasses>focus me!</button>`})
 class ButtonWithFocusClasses {}
 
+// TODO(devversion): move helper functions into a global utility file. See #2902
 
 /** Dispatches a mousedown event on the specified element. */
 function dispatchMousedownEvent(element: Node) {
@@ -281,4 +271,16 @@ function dispatchFocusEvent(element: Node, type = 'focus') {
   let event = document.createEvent('Event');
   event.initEvent(type, true, true);
   element.dispatchEvent(event);
+}
+
+/** Patches an elements focus method to properly emit focus events when the browser is blurred. */
+function patchElementFocus(element: HTMLElement) {
+  // On Saucelabs, browsers will run simultaneously and therefore can't focus all browser windows
+  // at the same time. This is problematic when testing focus states. Chrome and Firefox
+  // only fire FocusEvents when the window is focused. This issue also appears locally.
+  let _nativeButtonFocus = element.focus.bind(element);
+
+  element.focus = () => {
+    document.hasFocus() ? _nativeButtonFocus() : dispatchFocusEvent(element);
+  };
 }
