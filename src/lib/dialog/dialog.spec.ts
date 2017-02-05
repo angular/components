@@ -274,6 +274,26 @@ describe('MdDialog', () => {
     expect(overlayPane.style.marginRight).toBe('125px');
   });
 
+  it('should allow for the dimensions to be updated', () => {
+    let dialogRef = dialog.open(PizzaMsg, {
+      position: {
+        left: '250px'
+      }
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.marginLeft).toBe('250px');
+
+    dialogRef.updateDimensions(null, null, {
+      left: '500px'
+    });
+
+    expect(overlayPane.style.marginLeft).toBe('500px');
+  });
+
   it('should close all of the dialogs', async(() => {
     dialog.open(PizzaMsg);
     dialog.open(PizzaMsg);

@@ -92,11 +92,16 @@ export class MdDialog {
 
   /**
    * Creates the overlay into which the dialog will be loaded.
-   * @param dialogConfig The dialog configuration.
+   * @param config The dialog configuration.
    * @returns A promise resolving to the OverlayRef for the created overlay.
    */
-  private _createOverlay(dialogConfig: MdDialogConfig): OverlayRef {
-    let overlayState = this._getOverlayState(dialogConfig);
+  private _createOverlay(config: MdDialogConfig): OverlayRef {
+    let overlayState = new OverlayState();
+    let strategy = this._overlay.position().global();
+
+    overlayState.hasBackdrop = true;
+    overlayState.positionStrategy = strategy;
+
     return this._overlay.create(overlayState);
   }
 
@@ -129,10 +134,11 @@ export class MdDialog {
       componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
       dialogContainer: MdDialogContainer,
       overlayRef: OverlayRef,
-      config?: MdDialogConfig): MdDialogRef<T> {
+      config: MdDialogConfig): MdDialogRef<T> {
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
-    let dialogRef = new MdDialogRef(overlayRef, dialogContainer) as MdDialogRef<T>;
+
+    let dialogRef = new MdDialogRef<T>(overlayRef, dialogContainer);
 
     if (!config.disableClose) {
       // When the dialog backdrop is clicked, we want to close it.
@@ -153,37 +159,9 @@ export class MdDialog {
       dialogRef.componentInstance = contentRef.instance;
     }
 
+    dialogRef.updateDimensions(config.width, config.height, config.position);
+
     return dialogRef;
-  }
-
-  /**
-   * Creates an overlay state from a dialog config.
-   * @param dialogConfig The dialog configuration.
-   * @returns The overlay configuration.
-   */
-  private _getOverlayState(dialogConfig: MdDialogConfig): OverlayState {
-    let state = new OverlayState();
-    let strategy = this._overlay.position().global();
-    let position = dialogConfig.position;
-
-    state.hasBackdrop = true;
-    state.positionStrategy = strategy;
-
-    if (position && (position.left || position.right)) {
-      position.left ? strategy.left(position.left) : strategy.right(position.right);
-    } else {
-      strategy.centerHorizontally();
-    }
-
-    if (position && (position.top || position.bottom)) {
-      position.top ? strategy.top(position.top) : strategy.bottom(position.bottom);
-    } else {
-      strategy.centerVertically();
-    }
-
-    strategy.width(dialogConfig.width).height(dialogConfig.height);
-
-    return state;
   }
 
   /**
@@ -221,10 +199,10 @@ export class MdDialog {
 
 /**
  * Applies default options to the dialog config.
- * @param dialogConfig Config to be modified.
+ * @param config Config to be modified.
  * @returns The new configuration object.
  */
-function _applyConfigDefaults(dialogConfig: MdDialogConfig): MdDialogConfig {
-  return extendObject(new MdDialogConfig(), dialogConfig);
+function _applyConfigDefaults(config: MdDialogConfig): MdDialogConfig {
+  return extendObject(new MdDialogConfig(), config);
 }
 
