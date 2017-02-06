@@ -10,6 +10,7 @@ import {
 import {BasePortalHost, ComponentPortal, PortalHostDirective, TemplatePortal} from '../core';
 import {MdDialogConfig} from './dialog-config';
 import {MdDialogRef} from './dialog-ref';
+import {MD_DIALOG_CONTENT_SELECTOR} from './dialog-content-directives';
 import {MdDialogContentAlreadyAttachedError} from './dialog-errors';
 import {FocusTrap} from '../core/a11y/focus-trap';
 import 'rxjs/add/operator/first';
@@ -61,6 +62,16 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     }
 
     let attachResult = this._portalHost.attachComponentPortal(portal);
+    let componentElement = attachResult.location.nativeElement;
+
+    // Add a class that we can use for styling the root element.
+    this._renderer.setElementClass(componentElement, 'md-dialog-root', true);
+
+    // Add flexbox styling if the user is using the `md-dialog-content`.
+    if ('querySelector' in componentElement) {
+      this._renderer.setElementClass(componentElement, 'md-dialog-root-flex',
+          !!componentElement.querySelector(MD_DIALOG_CONTENT_SELECTOR));
+    }
 
     // If were to attempt to focus immediately, then the content of the dialog would not yet be
     // ready in instances where change detection has to run first. To deal with this, we simply

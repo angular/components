@@ -1,6 +1,9 @@
 import {Directive, Input} from '@angular/core';
 import {MdDialogRef} from './dialog-ref';
 
+export const MD_DIALOG_CONTENT_SELECTOR = '[md-dialog-content], md-dialog-content' +
+    ', [mat-dialog-content], mat-dialog-content';
+
 
 /**
  * Button that will close the current dialog.
@@ -33,7 +36,7 @@ export class MdDialogTitle { }
  * Scrollable content container of a dialog.
  */
 @Directive({
-  selector: '[md-dialog-content], md-dialog-content, [mat-dialog-content], mat-dialog-content'
+  selector: MD_DIALOG_CONTENT_SELECTOR
 })
 export class MdDialogContent { }
 
