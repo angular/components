@@ -123,6 +123,9 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   /** The placeholder displayed in the trigger of the select. */
   private _placeholder: string;
 
+  /** Holds a value that was attempted to be assigned before the component was initialized. */
+  private _tempValue: any;
+
   /** The animation state of the placeholder. */
   _placeholderState = '';
 
@@ -242,6 +245,15 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   ngAfterContentInit() {
     this._initKeyManager();
     this._resetOptions();
+
+    // Assign any values that were deferred until the component is initialized.
+    if (this._tempValue) {
+      Promise.resolve(null).then(() => {
+        this.writeValue(this._tempValue);
+        this._tempValue = null;
+      });
+    }
+
     this._changeSubscription = this.options.changes.subscribe(() => {
       this._resetOptions();
 
@@ -290,16 +302,14 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
    * @param value New value to be written to the model.
    */
   writeValue(value: any): void {
-    if (!this.options) {
+    if (this.options) {
+      this._setSelectionByValue(value);
+    } else {
       // In reactive forms, writeValue() will be called synchronously before
-      // the select's child options have been created. It's necessary to call
-      // writeValue() again after the options have been created to ensure any
-      // initial view value is set.
-      Promise.resolve(null).then(() => this.writeValue(value));
-      return;
+      // the select's child options have been created. We save the value and
+      // assign it after everything is set up, in order to avoid lost data.
+      this._tempValue = value;
     }
-
-    this._setSelectionByValue(value);
   }
 
   /**
