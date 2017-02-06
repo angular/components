@@ -5,6 +5,7 @@
 /tmp
 /deploy
 /screenshots
+/src/examples-highlights
 
 # dependencies
 /node_modules
