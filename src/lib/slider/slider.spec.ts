@@ -704,7 +704,7 @@ describe('MdSlider', () => {
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.injector.get(MdSlider);
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.md-slider-wrapper');
+      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
     });
 
     it('should update the model on click', () => {

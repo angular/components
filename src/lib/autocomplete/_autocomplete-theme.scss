@@ -9,9 +9,9 @@
     color: mat-color($foreground, text);
 
     .mat-option {
-      &.md-selected:not(.mat-active) {
-        background: md-color($background, card);
-        color: md-color($foreground, text);
+      &.mat-selected:not(.mat-active) {
+        background: mat-color($background, card);
+        color: mat-color($foreground, text);
       }
     }
   }
