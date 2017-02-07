@@ -1,4 +1,6 @@
 import {Directive, Injectable, Optional, SkipSelf, Renderer, ElementRef} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
 
 
 export type FocusOrigin = 'mouse' | 'keyboard' | 'program';
@@ -21,9 +23,11 @@ export class FocusOriginMonitor {
   }
 
   /** Register an element to receive focus classes. */
-  registerElementForFocusClasses(element: Element, renderer: Renderer) {
-    renderer.listen(element, 'focus', () => this._onFocus(element, renderer));
-    renderer.listen(element, 'blur', () => this._onBlur(element, renderer));
+  registerElementForFocusClasses(element: Element, renderer: Renderer): Observable<FocusOrigin> {
+    let subject = new Subject<FocusOrigin>();
+    renderer.listen(element, 'focus', () => this._onFocus(element, renderer, subject));
+    renderer.listen(element, 'blur', () => this._onBlur(element, renderer, subject));
+    return subject.asObservable();
   }
 
   /** Focuses the element via the specified focus origin. */
@@ -39,21 +43,23 @@ export class FocusOriginMonitor {
   }
 
   /** Handles focus events on a registered element. */
-  private _onFocus(element: Element, renderer: Renderer) {
+  private _onFocus(element: Element, renderer: Renderer, subject: Subject<FocusOrigin>) {
+    this._origin = this._origin || 'program';
     renderer.setElementClass(element, 'cdk-focused', true);
     renderer.setElementClass(element, 'cdk-keyboard-focused', this._origin == 'keyboard');
     renderer.setElementClass(element, 'cdk-mouse-focused', this._origin == 'mouse');
-    renderer.setElementClass(element, 'cdk-program-focused',
-        !this._origin || this._origin == 'program');
+    renderer.setElementClass(element, 'cdk-program-focused', this._origin == 'program');
+    subject.next(this._origin);
     this._origin = null;
   }
 
   /** Handles blur events on a registered element. */
-  private _onBlur(element: Element, renderer: Renderer) {
+  private _onBlur(element: Element, renderer: Renderer, subject: Subject<FocusOrigin>) {
     renderer.setElementClass(element, 'cdk-focused', false);
     renderer.setElementClass(element, 'cdk-keyboard-focused', false);
     renderer.setElementClass(element, 'cdk-mouse-focused', false);
     renderer.setElementClass(element, 'cdk-program-focused', false);
+    subject.next(null);
   }
 }
 
