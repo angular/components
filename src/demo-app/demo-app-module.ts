@@ -43,6 +43,7 @@ import {PlatformDemo} from './platform/platform-demo';
 import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
 import {InputDemo} from './input/input-demo';
 import {StyleDemo} from './style/style-demo';
+import {DatepickerDemo} from './datepicker/datepicker-demo';
 
 @NgModule({
   imports: [
@@ -62,6 +63,7 @@ import {StyleDemo} from './style/style-demo';
     CardDemo,
     ChipsDemo,
     CheckboxDemo,
+    DatepickerDemo,
     DemoApp,
     DialogDemo,
     GesturesDemo,
