@@ -1,0 +1,39 @@
+$mat-calendar-table-font-size: 12px !default;
+$mat-calendar-table-cell-padding: 1px !default;
+$mat-calendar-table-cell-content-size: 32px !default;
+$mat-calendar-table-cell-content-border-width: 1px !default;
+
+
+.mat-calendar-table-table {
+  border-spacing: 0;
+  font-size: $mat-calendar-table-font-size;
+}
+
+.mat-calendar-table-label {
+  height: $mat-calendar-table-cell-content-size;
+  padding: 0 0 0 10px;
+  text-align: left;
+  font-weight: normal;
+}
+
+.mat-calendar-table-cell {
+  padding: $mat-calendar-table-cell-padding;
+}
+
+.mat-calendar-table-cell-content {
+  display: table-cell;
+  box-sizing: border-box;
+  width: $mat-calendar-table-cell-content-size;
+  height: $mat-calendar-table-cell-content-size;
+  border: $mat-calendar-table-cell-content-border-width solid transparent;
+  border-radius: 50%;
+  text-align: center;
+  vertical-align: middle;
+}
+
+[dir='rtl'] {
+  .mat-calendar-table-label {
+    padding: 0 10px 0 0;
+    text-align: right;
+  }
+}

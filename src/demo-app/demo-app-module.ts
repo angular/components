@@ -38,6 +38,7 @@ import {ProjectionDemo, ProjectionTestComponent} from './projection/projection-d
 import {PlatformDemo} from './platform/platform-demo';
 import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
 import {InputContainerDemo} from './input/input-container-demo';
+import {DatepickerDemo} from './datepicker/datepicker-demo';
 
 @NgModule({
   imports: [
@@ -56,6 +57,7 @@ import {InputContainerDemo} from './input/input-container-demo';
     CardDemo,
     ChipsDemo,
     CheckboxDemo,
+    DatepickerDemo,
     DemoApp,
     DialogDemo,
     GesturesDemo,
