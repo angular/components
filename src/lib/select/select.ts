@@ -243,7 +243,6 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   ngAfterContentInit() {
     this._initKeyManager();
-    this._resetOptions();
 
     this._changeSubscription = this.options.changes.startWith(null).subscribe(() => {
       this._resetOptions();
