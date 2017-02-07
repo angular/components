@@ -1,4 +1,5 @@
 @import '../core/style/variables';
+@import '../core/style/elevation';
 
 $md-toolbar-height-desktop: 64px !default;
 $md-toolbar-height-mobile-portrait: 56px !default;
@@ -18,6 +19,8 @@ $md-toolbar-padding: 16px !default;
 }
 
 md-toolbar {
+  @include md-elevation(4);
+
   display: flex;
   box-sizing: border-box;
 
