@@ -11,9 +11,9 @@ import {By} from '@angular/platform-browser';
 import {
     MdButtonToggleGroup,
     MdButtonToggle,
-    MdButtonToggleGroupMultiple,
-    MdButtonToggleChange, MdButtonToggleModule,
-} from './button-toggle';
+    MdButtonToggleChange,
+    MdButtonToggleModule,
+} from './index';
 
 
 describe('MdButtonToggle', () => {
@@ -255,7 +255,7 @@ describe('MdButtonToggle', () => {
       for (let buttonToggle of buttonToggleInstances) {
         expect(buttonToggle.checked).toBe(groupInstance.value === buttonToggle.value);
       }
-      expect(groupInstance.selected.value).toBe(groupInstance.value);
+      expect((groupInstance.selected as MdButtonToggle).value).toBe(groupInstance.value);
     });
 
     it('should have the correct ngControl state initially and after interaction', fakeAsync(() => {
@@ -341,17 +341,20 @@ describe('MdButtonToggle', () => {
       let testComponent = fixture.debugElement.componentInstance;
       let groupDebugElement = fixture.debugElement.query(By.directive(MdButtonToggleGroup));
       let groupInstance: MdButtonToggleGroup = groupDebugElement.injector.get(MdButtonToggleGroup);
+      let labels = fixture.debugElement.queryAll(By.css('label'));
 
       fixture.detectChanges();
 
-      expect(groupInstance.value).toBe('red');
-      expect(testComponent.lastEvent).toBeFalsy();
+      fixture.whenStable().then(() => {
+        expect(groupInstance.value).toBe('red');
+        expect(testComponent.lastEvent).toBeFalsy();
 
-      groupInstance.value = 'green';
-      fixture.detectChanges();
+        labels[1].nativeElement.click();
+        fixture.detectChanges();
 
-      expect(groupInstance.value).toBe('green');
-      expect(testComponent.lastEvent.value).toBe('green');
+        expect(groupInstance.value).toBe('green');
+        expect(testComponent.lastEvent.value).toBe('green');
+      });
     });
 
   });
@@ -363,7 +366,7 @@ describe('MdButtonToggle', () => {
     let buttonToggleDebugElements: DebugElement[];
     let buttonToggleNativeElements: HTMLElement[];
     let buttonToggleLabelElements: HTMLLabelElement[];
-    let groupInstance: MdButtonToggleGroupMultiple;
+    let groupInstance: MdButtonToggleGroup;
     let buttonToggleInstances: MdButtonToggle[];
     let testComponent: ButtonTogglesInsideButtonToggleGroupMultiple;
 
@@ -373,9 +376,9 @@ describe('MdButtonToggle', () => {
 
       testComponent = fixture.debugElement.componentInstance;
 
-      groupDebugElement = fixture.debugElement.query(By.directive(MdButtonToggleGroupMultiple));
+      groupDebugElement = fixture.debugElement.query(By.directive(MdButtonToggleGroup));
       groupNativeElement = groupDebugElement.nativeElement;
-      groupInstance = groupDebugElement.injector.get(MdButtonToggleGroupMultiple);
+      groupInstance = groupDebugElement.injector.get(MdButtonToggleGroup);
 
       buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MdButtonToggle));
       buttonToggleNativeElements = buttonToggleDebugElements
