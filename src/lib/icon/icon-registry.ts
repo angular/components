@@ -1,17 +1,19 @@
 import {Injectable, SecurityContext} from '@angular/core';
 import {SafeResourceUrl, DomSanitizer} from '@angular/platform-browser';
-import {Http} from '@angular/http';
-import {MdError} from '../core';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/share';
-import 'rxjs/add/operator/finally';
-import 'rxjs/add/operator/catch';
+import {Http, Response} from '@angular/http';
 
+import {Observable} from 'rxjs/Observable';
+import {of as observableOf} from 'rxjs/observable/of';
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {map} from 'rxjs/operator/map';
+import {share} from 'rxjs/operator/share';
+import {_throw} from 'rxjs/observable/throw';
+import {_finally} from 'rxjs/operator/finally';
+import {_catch} from 'rxjs/operator/catch';
+import {_do} from 'rxjs/operator/do';
+
+import {MdError} from '../core';
+import {FunctionChain} from '../core/util/function-chain';
 
 /**
  * Exception thrown when attempting to load an icon with a name that cannot be found.
@@ -180,11 +182,14 @@ export class MdIconRegistry {
     let url = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, safeUrl);
 
     if (this._cachedIconsByUrl.has(url)) {
-      return Observable.of(cloneSvg(this._cachedIconsByUrl.get(url)));
+      return observableOf.call(Observable, cloneSvg(this._cachedIconsByUrl.get(url)));
     }
-    return this._loadSvgIconFromConfig(new SvgIconConfig(url))
-        .do(svg => this._cachedIconsByUrl.set(url, svg))
-        .map(svg => cloneSvg(svg));
+
+    return new FunctionChain<Observable<SVGElement>>()
+      .context(this._loadSvgIconFromConfig(new SvgIconConfig(url)))
+      .call(_do, (svg: SVGElement) => this._cachedIconsByUrl.set(url, svg))
+      .call(map, (svg: SVGElement) => cloneSvg(svg))
+      .execute();
   }
 
   /**
@@ -206,7 +211,7 @@ export class MdIconRegistry {
     if (iconSetConfigs) {
       return this._getSvgFromIconSetConfigs(name, iconSetConfigs);
     }
-    return Observable.throw(new MdIconNameNotFoundError(key));
+    return _throw.call(Observable, new MdIconNameNotFoundError(key));
   }
 
   /**
@@ -215,12 +220,14 @@ export class MdIconRegistry {
   private _getSvgFromConfig(config: SvgIconConfig): Observable<SVGElement> {
     if (config.svgElement) {
       // We already have the SVG element for this icon, return a copy.
-      return Observable.of(cloneSvg(config.svgElement));
+      return observableOf.call(Observable, cloneSvg(config.svgElement));
     } else {
       // Fetch the icon from the config's URL, cache it, and return a copy.
-      return this._loadSvgIconFromConfig(config)
-          .do(svg => config.svgElement = svg)
-          .map(svg => cloneSvg(svg));
+      return new FunctionChain<Observable<SVGElement>>()
+        .context(this._loadSvgIconFromConfig(config))
+        .call(_do, (svg: SVGElement) => config.svgElement = svg)
+        .call(map, (svg: SVGElement) => cloneSvg(svg))
+        .execute();
     }
   }
 
@@ -241,39 +248,48 @@ export class MdIconRegistry {
       // We could cache namedIcon in _svgIconConfigs, but since we have to make a copy every
       // time anyway, there's probably not much advantage compared to just always extracting
       // it from the icon set.
-      return Observable.of(namedIcon);
+      return observableOf.call(Observable, namedIcon);
     }
     // Not found in any cached icon sets. If there are icon sets with URLs that we haven't
     // fetched, fetch them now and look for iconName in the results.
     const iconSetFetchRequests: Observable<SVGElement>[] = iconSetConfigs
         .filter(iconSetConfig => !iconSetConfig.svgElement)
-        .map(iconSetConfig =>
-            this._loadSvgIconSetFromConfig(iconSetConfig)
-                .catch((err: any, caught: Observable<SVGElement>): Observable<SVGElement> => {
-                  let url =
-                      this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, iconSetConfig.url);
+        .map(iconSetConfig => {
+          let chain = new FunctionChain<Observable<SVGElement>>();
 
-                  // Swallow errors fetching individual URLs so the combined Observable won't
-                  // necessarily fail.
-                  console.log(`Loading icon set URL: ${url} failed: ${err}`);
-                  return Observable.of(null);
-                })
-                .do(svg => {
-                  // Cache SVG element.
-                  if (svg) {
-                    iconSetConfig.svgElement = svg;
-                  }
-                }));
+          chain
+            .context(this._loadSvgIconSetFromConfig(iconSetConfig))
+            .call(_catch, (err: any, caught: Observable<SVGElement>) => {
+              let url = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, iconSetConfig.url);
+
+              // Swallow errors fetching individual URLs so the combined Observable won't
+              // necessarily fail.
+              console.log(`Loading icon set URL: ${url} failed: ${err}`);
+              return observableOf.call(Observable, null);
+            })
+            .call(_do, (svg: SVGElement) => {
+              // Cache SVG element.
+              if (svg) {
+                iconSetConfig.svgElement = svg;
+              }
+            });
+
+          return chain.execute();
+        });
+
     // Fetch all the icon set URLs. When the requests complete, every IconSet should have a
     // cached SVG element (unless the request failed), and we can check again for the icon.
-    return Observable.forkJoin(iconSetFetchRequests)
-        .map((ignoredResults: any) => {
-          const foundIcon = this._extractIconWithNameFromAnySet(name, iconSetConfigs);
-          if (!foundIcon) {
-            throw new MdIconNameNotFoundError(name);
-          }
-          return foundIcon;
-        });
+    return new FunctionChain<Observable<SVGElement>>()
+      .context(Observable)
+      .call(forkJoin, iconSetFetchRequests)
+      .call(map, (ignoredResults: any) => {
+        const foundIcon = this._extractIconWithNameFromAnySet(name, iconSetConfigs);
+        if (!foundIcon) {
+          throw new MdIconNameNotFoundError(name);
+        }
+        return foundIcon;
+      })
+      .execute();
   }
 
   /**
@@ -301,8 +317,8 @@ export class MdIconRegistry {
    * from it.
    */
   private _loadSvgIconFromConfig(config: SvgIconConfig): Observable<SVGElement> {
-    return this._fetchUrl(config.url)
-        .map(svgText => this._createSvgElementForSingleIcon(svgText));
+    return map.call(this._fetchUrl(config.url),
+        (svgText: string) => this._createSvgElementForSingleIcon(svgText));
   }
 
   /**
@@ -310,9 +326,9 @@ export class MdIconRegistry {
    * from it.
    */
   private _loadSvgIconSetFromConfig(config: SvgIconConfig): Observable<SVGElement> {
-      // TODO: Document that icons should only be loaded from trusted sources.
-    return this._fetchUrl(config.url)
-        .map(svgText => this._svgElementFromString(svgText));
+    // TODO: Document that icons should only be loaded from trusted sources.
+    return map.call(this._fetchUrl(config.url),
+        (svgText: string) => this._svgElementFromString(svgText));
   }
 
   /**
@@ -396,12 +412,13 @@ export class MdIconRegistry {
 
     // TODO(jelbourn): for some reason, the `finally` operator "loses" the generic type on the
     // Observable. Figure out why and fix it.
-    const req = <Observable<string>> this._http.get(url)
-        .map(response => response.text())
-        .finally(() => {
-          this._inProgressUrlFetches.delete(url);
-        })
-        .share();
+    let req = new FunctionChain<Observable<string>>()
+      .context(this._http.get(url))
+      .call(map, (response: Response) => response.text())
+      .call(_finally, () => { this._inProgressUrlFetches.delete(url); })
+      .call(share)
+      .execute();
+
     this._inProgressUrlFetches.set(url, req);
     return req;
   }

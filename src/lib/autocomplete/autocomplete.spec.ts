@@ -797,7 +797,7 @@ describe('MdAutocomplete', () => {
     <md-input-container>
       <input mdInput placeholder="State" [mdAutocomplete]="auto" [formControl]="stateCtrl">
     </md-input-container>
-  
+
     <md-autocomplete #auto="mdAutocomplete" [displayWith]="displayFn">
       <md-option *ngFor="let state of filteredStates" [value]="state">
         <span> {{ state.code }}: {{ state.name }}  </span>

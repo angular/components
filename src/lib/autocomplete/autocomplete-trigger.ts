@@ -16,18 +16,21 @@ import {Overlay, OverlayRef, OverlayState, TemplatePortal} from '../core';
 import {MdAutocomplete} from './autocomplete';
 import {PositionStrategy} from '../core/overlay/position/position-strategy';
 import {ConnectedPositionStrategy} from '../core/overlay/position/connected-position-strategy';
-import {Observable} from 'rxjs/Observable';
 import {MdOptionSelectEvent, MdOption} from '../core/option/option';
 import {ActiveDescendantKeyManager} from '../core/a11y/activedescendant-key-manager';
 import {ENTER, UP_ARROW, DOWN_ARROW} from '../core/keyboard/keycodes';
+import {MdInputContainer, FloatPlaceholderType} from '../input/input-container';
 import {Dir} from '../core/rtl/dir';
 import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/switchMap';
-import {MdInputContainer, FloatPlaceholderType} from '../input/input-container';
+import {FunctionChain} from '../core/util/function-chain';
+import {of as observableOf} from 'rxjs/observable/of';
+import {merge} from 'rxjs/observable/merge';
+import {first} from 'rxjs/operator/first';
+import {map} from 'rxjs/operator/map';
+import {switchMap} from 'rxjs/operator/switchMap';
+
 
 /**
  * The following style constants are necessary to save here in order
@@ -144,11 +147,10 @@ export class MdAutocompleteTrigger implements AfterContentInit, ControlValueAcce
    * when an option is selected, on blur, and when TAB is pressed.
    */
   get panelClosingActions(): Observable<MdOptionSelectEvent> {
-    return Observable.merge(
-        ...this.optionSelections,
-        this._blurStream.asObservable(),
-        this._keyManager.tabOut
-    );
+    return merge.call(Observable,
+      ...this.optionSelections,
+      this._blurStream.asObservable(),
+      this._keyManager.tabOut);
   }
 
   /** Stream of autocomplete option selections. */
@@ -251,19 +253,24 @@ export class MdAutocompleteTrigger implements AfterContentInit, ControlValueAcce
     const initialOptions = this._getStableOptions();
 
     // When the zone is stable initially, and when the option list changes...
-    Observable.merge(initialOptions, this.autocomplete.options.changes)
-        // create a new stream of panelClosingActions, replacing any previous streams
-        // that were created, and flatten it so our stream only emits closing events...
-        .switchMap(options => {
-          this._resetPanel();
-          // If the options list is empty, emit close event immediately.
-          // Otherwise, listen for panel closing actions...
-          return options.length ? this.panelClosingActions : Observable.of(null);
-        })
-        // when the first closing event occurs...
-        .first()
-        // set the value, close the panel, and complete.
-        .subscribe(event => this._setValueAndClose(event));
+    const observable = merge.call(Observable,
+        initialOptions, this.autocomplete.options.changes);
+
+    new FunctionChain<Observable<MdOptionSelectEvent>>()
+      .context(observable)
+      // create a new stream of panelClosingActions, replacing any previous streams
+      // that were created, and flatten it so our stream only emits closing events...
+      .call(switchMap, (options: MdOption[]) => {
+        this._resetPanel();
+        // If the options list is empty, emit close event immediately.
+        // Otherwise, listen for panel closing actions...
+        return options.length ? this.panelClosingActions : observableOf.call(Observable, null);
+      })
+      // when the first closing event occurs...
+      .call(first)
+      .execute()
+      // set the value, close the panel, and complete.
+      .subscribe(event => this._setValueAndClose(event));
   }
 
   /**
@@ -272,7 +279,11 @@ export class MdAutocompleteTrigger implements AfterContentInit, ControlValueAcce
    * with the options available under the current filter.
    */
   private _getStableOptions(): Observable<QueryList<MdOption>> {
-    return this._zone.onStable.first().map(() => this.autocomplete.options);
+    return new FunctionChain<Observable<QueryList<MdOption>>>()
+      .context(this._zone.onStable)
+      .call(first)
+      .call(map, () => this.autocomplete.options)
+      .execute();
   }
 
   /** Destroys the autocomplete suggestion panel. */

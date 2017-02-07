@@ -12,7 +12,7 @@ import {MdDialogConfig} from './dialog-config';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContentAlreadyAttachedError} from './dialog-errors';
 import {FocusTrap} from '../core/a11y/focus-trap';
-import 'rxjs/add/operator/first';
+import {first} from 'rxjs/operator/first';
 
 
 /**
@@ -65,7 +65,7 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     // If were to attempt to focus immediately, then the content of the dialog would not yet be
     // ready in instances where change detection has to run first. To deal with this, we simply
     // wait for the microtask queue to be empty.
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+    first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => {
       this._elementFocusedBeforeDialogWasOpened = document.activeElement;
       this._focusTrap.focusFirstTabbableElement();
     });
@@ -94,7 +94,7 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     // that it doesn't end up back on the <body>. Also note that we need the extra check, because
     // IE can set the `activeElement` to null in some cases.
     if (this._elementFocusedBeforeDialogWasOpened) {
-      this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+      first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => {
         this._renderer.invokeElementMethod(this._elementFocusedBeforeDialogWasOpened, 'focus');
       });
     }

@@ -3,7 +3,7 @@ import {Scrollable} from './scrollable';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
-import 'rxjs/add/observable/fromEvent';
+import {fromEvent} from 'rxjs/observable/fromEvent';
 
 
 /**
@@ -23,8 +23,8 @@ export class ScrollDispatcher {
 
   constructor() {
     // By default, notify a scroll event when the document is scrolled or the window is resized.
-    Observable.fromEvent(window.document, 'scroll').subscribe(() => this._notify());
-    Observable.fromEvent(window, 'resize').subscribe(() => this._notify());
+    fromEvent.call(Observable, window.document, 'scroll').subscribe(() => this._notify());
+    fromEvent.call(Observable, window, 'resize').subscribe(() => this._notify());
   }
 
   /**

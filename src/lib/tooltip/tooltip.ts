@@ -31,7 +31,7 @@ import {MdTooltipInvalidPositionError} from './tooltip-errors';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Dir} from '../core/rtl/dir';
-import 'rxjs/add/operator/first';
+import {first} from 'rxjs/operator/first';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
@@ -252,7 +252,8 @@ export class MdTooltip implements OnDestroy {
     // Must wait for the message to be painted to the tooltip so that the overlay can properly
     // calculate the correct positioning based on the size of the text.
     this._tooltipInstance.message = message;
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+
+    first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => {
       if (this._tooltipInstance) {
         this._overlayRef.updatePosition();
       }

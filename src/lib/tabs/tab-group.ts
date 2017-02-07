@@ -21,7 +21,7 @@ import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdTabNavBar, MdTabLink, MdTabLinkRipple} from './tab-nav-bar/tab-nav-bar';
 import {MdInkBar} from './ink-bar';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import {map} from 'rxjs/operator/map';
 import {MdRippleModule} from '../core/ripple/ripple';
 import {ObserveContentModule} from '../core/observe-content/observe-content';
 import {MdTab} from './tab';
@@ -96,7 +96,7 @@ export class MdTabGroup {
 
   /** Output to enable support for two-way binding on `selectedIndex`. */
   @Output() get selectedIndexChange(): Observable<number> {
-    return this.selectChange.map(event => event.index);
+    return map.call(this.selectChange, (event: MdTabChangeEvent) => event.index);
   }
 
   private _onFocusChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();

@@ -1,4 +1,5 @@
 import {Component, ViewEncapsulation, ViewChild, ElementRef, Input, NgZone} from '@angular/core';
+import {first} from 'rxjs/operator/first';
 import {InteractivityChecker} from './interactivity-checker';
 import {coerceBooleanProperty} from '../coercion/boolean-property';
 
@@ -33,7 +34,7 @@ export class FocusTrap {
    * trap region.
    */
   focusFirstTabbableElementWhenReady() {
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+    first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => {
       this.focusFirstTabbableElement();
     });
   }
@@ -43,7 +44,7 @@ export class FocusTrap {
    * trap region.
    */
   focusLastTabbableElementWhenReady() {
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+    first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => {
       this.focusLastTabbableElement();
     });
   }

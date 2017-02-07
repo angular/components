@@ -16,8 +16,10 @@ import {
 } from '@angular/core';
 import {HttpModule, Http} from '@angular/http';
 import {DomSanitizer} from '@angular/platform-browser';
+import {first} from 'rxjs/operator/first';
 import {MdError, CompatibilityModule} from '../core';
 import {MdIconRegistry} from './icon-registry';
+
 export {MdIconRegistry} from './icon-registry';
 
 /** Exception thrown when an invalid icon name is passed to an md-icon component. */
@@ -150,8 +152,9 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
     if (changedInputs.indexOf('svgIcon') != -1 || changedInputs.indexOf('svgSrc') != -1) {
       if (this.svgIcon) {
         const [namespace, iconName] = this._splitIconName(this.svgIcon);
-        this._mdIconRegistry.getNamedSvgIcon(iconName, namespace).first().subscribe(
-            svg => this._setSvgElement(svg),
+
+        first.call(this._mdIconRegistry.getNamedSvgIcon(iconName, namespace)).subscribe(
+            (svg: SVGElement) => this._setSvgElement(svg),
             (err: any) => console.log(`Error retrieving icon: ${err}`));
       }
     }
