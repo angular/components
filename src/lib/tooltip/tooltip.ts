@@ -26,6 +26,7 @@ import {
   OverlayConnectionPosition,
   OriginConnectionPosition,
   CompatibilityModule,
+  MdThemeCheckModule,
 } from '../core';
 import {MdTooltipInvalidPositionError} from './tooltip-errors';
 import {Observable} from 'rxjs/Observable';
@@ -406,7 +407,7 @@ export class TooltipComponent {
 
 
 @NgModule({
-  imports: [OverlayModule, CompatibilityModule],
+  imports: [OverlayModule, CompatibilityModule, MdThemeCheckModule],
   exports: [MdTooltip, TooltipComponent, CompatibilityModule],
   declarations: [MdTooltip, TooltipComponent],
   entryComponents: [TooltipComponent],

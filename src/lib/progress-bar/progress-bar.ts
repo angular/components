@@ -7,7 +7,7 @@ import {
     Input,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CompatibilityModule} from '../core/compatibility/compatibility';
+import {CompatibilityModule, MdThemeCheckModule} from '../core';
 
 // TODO(josephperrott): Benchpress tests.
 // TODO(josephperrott): Add ARIA attributes for progressbar "for".
@@ -86,7 +86,7 @@ function clamp(v: number, min = 0, max = 100) {
 
 
 @NgModule({
-  imports: [CommonModule, CompatibilityModule],
+  imports: [CommonModule, CompatibilityModule, MdThemeCheckModule],
   exports: [MdProgressBar, CompatibilityModule],
   declarations: [MdProgressBar],
 })

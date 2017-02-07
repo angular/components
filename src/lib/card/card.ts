@@ -6,7 +6,7 @@ import {
   ChangeDetectionStrategy,
   Directive
 } from '@angular/core';
-import {CompatibilityModule} from '../core';
+import {CompatibilityModule, MdThemeCheckModule} from '../core';
 
 
 /**
@@ -101,7 +101,7 @@ export class MdCardTitleGroup {}
 
 
 @NgModule({
-  imports: [CompatibilityModule],
+  imports: [CompatibilityModule, MdThemeCheckModule],
   exports: [
     MdCard,
     MdCardHeader,

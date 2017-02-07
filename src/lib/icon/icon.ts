@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import {HttpModule, Http} from '@angular/http';
 import {DomSanitizer} from '@angular/platform-browser';
-import {MdError, CompatibilityModule} from '../core';
+import {MdError, CompatibilityModule, MdThemeCheckModule} from '../core';
 import {MdIconRegistry} from './icon-registry';
 export {MdIconRegistry} from './icon-registry';
 
@@ -262,7 +262,7 @@ export const ICON_REGISTRY_PROVIDER = {
 };
 
 @NgModule({
-  imports: [HttpModule, CompatibilityModule],
+  imports: [HttpModule, CompatibilityModule, MdThemeCheckModule],
   exports: [MdIcon, CompatibilityModule],
   declarations: [MdIcon],
   providers: [ICON_REGISTRY_PROVIDER],

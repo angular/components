@@ -9,6 +9,7 @@ import {
   A11yModule,
   ProjectionModule,
   CompatibilityModule,
+  MdThemeCheckModule,
 } from './core/index';
 
 import {MdButtonToggleModule} from './button-toggle/index';
@@ -62,6 +63,7 @@ const MATERIAL_MODULES = [
   MdTabsModule,
   MdToolbarModule,
   MdTooltipModule,
+  MdThemeCheckModule,
   OverlayModule,
   PortalModule,
   RtlModule,

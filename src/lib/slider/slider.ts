@@ -18,6 +18,7 @@ import {
   coerceBooleanProperty,
   coerceNumberProperty,
   CompatibilityModule,
+  MdThemeCheckModule,
 } from '../core';
 import {Dir} from '../core/rtl/dir';
 import {CommonModule} from '@angular/common';
@@ -654,7 +655,7 @@ export class SliderRenderer {
 
 
 @NgModule({
-  imports: [CommonModule, FormsModule, CompatibilityModule],
+  imports: [CommonModule, FormsModule, CompatibilityModule, MdThemeCheckModule],
   exports: [MdSlider, CompatibilityModule],
   declarations: [MdSlider],
   providers: [{provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}]

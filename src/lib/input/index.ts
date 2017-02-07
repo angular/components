@@ -1,8 +1,9 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
-import {MdPlaceholder, MdInputContainer, MdHint, MdInputDirective} from './input-container';
-import {MdTextareaAutosize} from './autosize';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import {MdThemeCheckModule} from '../core';
+import {MdPlaceholder, MdInputContainer, MdHint, MdInputDirective} from './input-container';
+import {MdTextareaAutosize} from './autosize';
 import {PlatformModule} from '../core/platform/index';
 
 
@@ -23,6 +24,7 @@ export * from './input-container-errors';
     CommonModule,
     FormsModule,
     PlatformModule,
+    MdThemeCheckModule,
   ],
   exports: [
     MdPlaceholder,

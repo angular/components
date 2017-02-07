@@ -11,6 +11,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 
+import {MdThemeCheckModule} from '../core';
 import {MdChip} from './chip';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
@@ -210,7 +211,7 @@ export class MdChipList implements AfterContentInit {
 }
 
 @NgModule({
-  imports: [],
+  imports: [MdThemeCheckModule],
   exports: [MdChipList, MdChip],
   declarations: [MdChipList, MdChip]
 })
