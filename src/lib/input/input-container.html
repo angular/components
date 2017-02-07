@@ -36,6 +36,6 @@
           [class.mat-warn]="dividerColor == 'warn'"></span>
   </div>
 
-  <div *ngIf="hintLabel != ''" [attr.id]="_hintLabelId" class="mat-hint, mat-hint">{{hintLabel}}</div>
-  <ng-content select="md-hint"></ng-content>
+  <div *ngIf="hintLabel != ''" [attr.id]="_hintLabelId" class="mat-hint">{{hintLabel}}</div>
+  <ng-content select="md-hint, mat-hint"></ng-content>
 </div>
