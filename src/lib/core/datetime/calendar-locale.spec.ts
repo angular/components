@@ -101,5 +101,5 @@ describe('DefaultCalendarLocale', () => {
 
   it('gets header label for calendar year', () => {
     expect(calendarLocale.getCalendarYearHeaderLabel(new SimpleDate(2017, 0, 1))).toBe('2017');
-  })
+  });
 });

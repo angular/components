@@ -1,0 +1,30 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+
+@mixin mat-datepicker-theme($theme) {
+  $primary: map-get($theme, primary);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .mat-calendar-table-label {
+    color: md-color($foreground, secondary-text);
+  }
+
+  .mat-calendar-table-cell-content {
+    color: md-color($foreground, text);
+
+    .mat-calendar-table-cell:hover & {
+      background: md-color($background, hover);
+    }
+
+    .mat-calendar-table-cell &.mat-calendar-table-selected {
+      background: md-color($primary);
+      color: md-color($primary, default-contrast);
+    }
+
+    &.mat-calendar-table-today {
+      border-color: md-color($foreground, divider);
+    }
+  }
+}
