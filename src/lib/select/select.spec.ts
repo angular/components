@@ -10,6 +10,7 @@ import {
   ControlValueAccessor, FormControl, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule
 } from '@angular/forms';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+import {MdInput} from '../input/input';
 
 describe('MdSelect', () => {
   let overlayContainerElement: HTMLElement;
@@ -20,6 +21,7 @@ describe('MdSelect', () => {
       imports: [MdSelectModule.forRoot(), ReactiveFormsModule, FormsModule],
       declarations: [
         BasicSelect,
+        SearchSelect,
         NgModelSelect,
         ManySelects,
         NgIfSelect,
@@ -1255,6 +1257,56 @@ describe('MdSelect', () => {
       expect(fixture.componentInstance.changeListener).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('Search input', () => {
+    let fixture: ComponentFixture<SearchSelect>;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SearchSelect);
+      fixture.detectChanges();
+
+      let trigger = fixture.debugElement.query(By.css('.md-select-trigger')).nativeElement;
+      trigger.click();
+      fixture.detectChanges();
+    });
+
+    it('should hide elements that are not in the filter', () => {
+      fixture.componentInstance.select._onSearch('steak');
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() =>
+      {
+        let options = overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+
+        expect(options[0].getAttribute('hidden')).toEqual(null);
+        expect(options[1].getAttribute('hidden')).toEqual('true');
+        expect(options[2].getAttribute('hidden')).toEqual('true');
+        expect(options[3].getAttribute('hidden')).toEqual('true');
+        expect(options[4].getAttribute('hidden')).toEqual('true');
+        expect(options[5].getAttribute('hidden')).toEqual('true');
+        expect(options[6].getAttribute('hidden')).toEqual('true');
+        expect(options[7].getAttribute('hidden')).toEqual('true');
+      });
+    });
+
+    it('should should not be case sensitive', () => {
+      fixture.componentInstance.select._onSearch('S-');
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        let options = overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+
+        expect(options[0].getAttribute('hidden')).toEqual('true');
+        expect(options[1].getAttribute('hidden')).toEqual('true');
+        expect(options[2].getAttribute('hidden')).toEqual(null);
+        expect(options[3].getAttribute('hidden')).toEqual('true');
+        expect(options[4].getAttribute('hidden')).toEqual(null);
+        expect(options[5].getAttribute('hidden')).toEqual(null);
+        expect(options[6].getAttribute('hidden')).toEqual('true');
+        expect(options[7].getAttribute('hidden')).toEqual('true');
+      });
+    });
+  });
 });
 
 @Component({
@@ -1270,6 +1322,38 @@ describe('MdSelect', () => {
   `
 })
 class BasicSelect {
+  foods: any[] = [
+    { value: 'steak-0', viewValue: 'Steak' },
+    { value: 'pizza-1', viewValue: 'Pizza' },
+    { value: 'tacos-2', viewValue: 'Tacos', disabled: true },
+    { value: 'sandwich-3', viewValue: 'Sandwich' },
+    { value: 'chips-4', viewValue: 'Chips' },
+    { value: 'eggs-5', viewValue: 'Eggs' },
+    { value: 'pasta-6', viewValue: 'Pasta' },
+    { value: 'sushi-7', viewValue: 'Sushi' },
+  ];
+  control = new FormControl();
+  isRequired: boolean;
+  heightAbove = 0;
+  heightBelow = 0;
+
+  @ViewChild(MdSelect) select: MdSelect;
+  @ViewChildren(MdOption) options: QueryList<MdOption>;
+}
+
+@Component({
+  selector: 'search-select',
+  template: `
+    <div [style.height.px]="heightAbove"></div>
+    <md-select placeholder="Food" [search]="true" [formControl]="control" [required]="isRequired">
+      <md-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
+        {{ food.viewValue }}
+      </md-option>
+    </md-select>
+    <div [style.height.px]="heightBelow"></div>
+  `
+})
+class SearchSelect {
   foods: any[] = [
     { value: 'steak-0', viewValue: 'Steak' },
     { value: 'pizza-1', viewValue: 'Pizza' },
