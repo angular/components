@@ -72,7 +72,7 @@ export class MdCheckboxChange {
     '[class.md-checkbox-checked]': 'checked',
     '[class.md-checkbox-disabled]': 'disabled',
     '[class.md-checkbox-label-before]': 'labelPosition == "before"',
-    '[class.md-checkbox-focused]': '_hasFocus',
+    '[class.md-ripple-focused]': '_hasFocus', // TODO: should only be triggered by keyboard focus
   },
   providers: [MD_CHECKBOX_CONTROL_VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None,
