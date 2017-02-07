@@ -74,8 +74,8 @@ export class FocusOriginMonitor {
     renderer.setElementClass(element, 'cdk-keyboard-focused', this._origin == 'keyboard');
     renderer.setElementClass(element, 'cdk-mouse-focused', this._origin == 'mouse');
     renderer.setElementClass(element, 'cdk-program-focused', this._origin == 'program');
-
     subject.next(this._origin);
+
     this._lastFocusOrigin = this._origin;
     this._origin = null;
   }
