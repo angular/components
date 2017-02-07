@@ -1,6 +1,7 @@
 @import '../core/style/menu-common';
 @import '../core/style/list-common';
 @import '../core/style/form-common';
+@import '../core/style/variables';
 @import '../core/a11y/a11y';
 
 $md-select-trigger-height: 30px !default;
@@ -12,6 +13,7 @@ $md-select-panel-max-height: 256px !default;
 md-select {
   display: inline-block;
   outline: none;
+  font-family: $mat-font-family;
 }
 
 .md-select-trigger {
