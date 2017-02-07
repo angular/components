@@ -28,6 +28,7 @@ import {MdTab} from './tab';
 import {MdTabBody} from './tab-body';
 import {VIEWPORT_RULER_PROVIDER} from '../core/overlay/position/viewport-ruler';
 import {MdTabHeader} from './tab-header';
+import {SCROLL_DISPATCHER_PROVIDER} from '../core/overlay/scroll/scroll-dispatcher';
 
 
 /** Used to generate unique ID's for each tab component */
@@ -39,6 +40,9 @@ export class MdTabChangeEvent {
   tab: MdTab;
 }
 
+/** Possible positions for the tab header. */
+export type MdTabHeaderPosition = 'above' | 'below';
+
 /**
  * Material design tab-group component.  Supports basic tab pairs (label + content) and includes
  * animated ink-bar, keyboard navigation, and screen reader.
@@ -49,7 +53,10 @@ export class MdTabChangeEvent {
   selector: 'md-tab-group',
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
-  host: { '[class.md-tab-group-dynamic-height]': 'dynamicHeight' }
+  host: {
+    '[class.md-tab-group-dynamic-height]': 'dynamicHeight',
+    '[class.md-tab-group-inverted-header]': 'headerPosition === "below"',
+  }
 })
 export class MdTabGroup {
   @ContentChildren(MdTab) _tabs: QueryList<MdTab>;
@@ -82,6 +89,10 @@ export class MdTabGroup {
   @Input()
   set selectedIndex(value: number) { this._indexToSelect = value; }
   get selectedIndex(): number { return this._selectedIndex; }
+
+  /** Position of the tab header. */
+  @Input()
+  headerPosition: MdTabHeaderPosition = 'above';
 
   /** Output to enable support for two-way binding on `selectedIndex`. */
   @Output() get selectedIndexChange(): Observable<number> {
@@ -204,7 +215,7 @@ export class MdTabGroup {
   exports: [MdTabGroup, MdTabLabel, MdTab, MdTabNavBar, MdTabLink, MdTabLinkRipple],
   declarations: [MdTabGroup, MdTabLabel, MdTab, MdInkBar, MdTabLabelWrapper,
     MdTabNavBar, MdTabLink, MdTabBody, MdTabLinkRipple, MdTabHeader],
-  providers: [VIEWPORT_RULER_PROVIDER],
+  providers: [VIEWPORT_RULER_PROVIDER, SCROLL_DISPATCHER_PROVIDER],
 })
 export class MdTabsModule {
   /** @deprecated */

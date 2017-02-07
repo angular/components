@@ -7,6 +7,7 @@ import {MdRippleModule} from './ripple/ripple';
 import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/overlay-directives';
 import {A11yModule} from './a11y/index';
+import {MdSelectionModule} from './selection/index';
 
 
 // RTL
@@ -98,7 +99,7 @@ export {
 export {MdLineModule, MdLine, MdLineSetter} from './line/line';
 
 // Style
-export {applyCssTransform} from './style/apply-transform';
+export * from './style/index';
 
 // Error
 export {MdError} from './errors/error';
@@ -109,18 +110,20 @@ export {ComponentType} from './overlay/generic-component-type';
 // Keybindings
 export * from './keyboard/keycodes';
 
-export * from './compatibility/default-mode';
+export * from './compatibility/compatibility';
 
 // Animation
 export * from './animation/animation';
+
+// Selection
+export * from './selection/index';
 
 // Coercion
 export {coerceBooleanProperty} from './coercion/boolean-property';
 export {coerceNumberProperty} from './coercion/number-property';
 
 // Compatibility
-export {DefaultStyleCompatibilityModeModule} from './compatibility/default-mode';
-export {NoConflictStyleCompatibilityMode} from './compatibility/no-conflict-mode';
+export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibility/compatibility';
 
 
 @NgModule({
@@ -132,7 +135,8 @@ export {NoConflictStyleCompatibilityMode} from './compatibility/no-conflict-mode
     PortalModule,
     OverlayModule,
     A11yModule,
-    MdOptionModule
+    MdOptionModule,
+    MdSelectionModule,
   ],
   exports: [
     MdLineModule,
@@ -142,7 +146,8 @@ export {NoConflictStyleCompatibilityMode} from './compatibility/no-conflict-mode
     PortalModule,
     OverlayModule,
     A11yModule,
-    MdOptionModule
+    MdOptionModule,
+    MdSelectionModule,
   ],
 })
 export class MdCoreModule {

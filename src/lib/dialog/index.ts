@@ -3,7 +3,7 @@ import {
   OverlayModule,
   PortalModule,
   A11yModule,
-  DefaultStyleCompatibilityModeModule
+  CompatibilityModule,
 } from '../core';
 import {MdDialog} from './dialog';
 import {MdDialogContainer} from './dialog-container';
@@ -20,7 +20,7 @@ import {
     OverlayModule,
     PortalModule,
     A11yModule,
-    DefaultStyleCompatibilityModeModule
+    CompatibilityModule,
   ],
   exports: [
     MdDialogContainer,
@@ -28,14 +28,14 @@ import {
     MdDialogTitle,
     MdDialogContent,
     MdDialogActions,
-    DefaultStyleCompatibilityModeModule
+    CompatibilityModule,
   ],
   declarations: [
     MdDialogContainer,
     MdDialogClose,
     MdDialogTitle,
     MdDialogActions,
-    MdDialogContent
+    MdDialogContent,
   ],
   providers: [
     MdDialog,
@@ -57,3 +57,4 @@ export * from './dialog-container';
 export * from './dialog-content-directives';
 export * from './dialog-config';
 export * from './dialog-ref';
+export {MD_DIALOG_DATA} from './dialog-injector';

@@ -23,7 +23,7 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 import {
   MdRippleModule,
   UniqueSelectionDispatcher,
-  DefaultStyleCompatibilityModeModule,
+  CompatibilityModule,
   UNIQUE_SELECTION_DISPATCHER_PROVIDER,
 } from '../core';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
@@ -500,15 +500,15 @@ export class MdRadioButton implements OnInit {
     }
   }
 
-  _getHostElement() {
-    return this._elementRef.nativeElement;
+  _getInputElement() {
+    return this._inputElement.nativeElement;
   }
 }
 
 
 @NgModule({
-  imports: [CommonModule, MdRippleModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdRadioGroup, MdRadioButton, DefaultStyleCompatibilityModeModule],
+  imports: [CommonModule, MdRippleModule, CompatibilityModule],
+  exports: [MdRadioGroup, MdRadioButton, CompatibilityModule],
   providers: [UNIQUE_SELECTION_DISPATCHER_PROVIDER, VIEWPORT_RULER_PROVIDER],
   declarations: [MdRadioGroup, MdRadioButton],
 })

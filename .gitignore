@@ -4,6 +4,7 @@
 /dist
 /tmp
 /deploy
+/screenshots
 
 # dependencies
 /node_modules
@@ -33,4 +34,3 @@
 npm-debug.log
 testem.log
 /.chrome
-yarn.lock

@@ -17,7 +17,7 @@ import {
   HammerInput,
   coerceBooleanProperty,
   coerceNumberProperty,
-  DefaultStyleCompatibilityModeModule,
+  CompatibilityModule,
 } from '../core';
 import {Dir} from '../core/rtl/dir';
 import {CommonModule} from '@angular/common';
@@ -29,7 +29,7 @@ import {
   LEFT_ARROW,
   UP_ARROW,
   RIGHT_ARROW,
-  DOWN_ARROW,
+  DOWN_ARROW
 } from '../core/keyboard/keycodes';
 
 /**
@@ -40,6 +40,12 @@ const MIN_AUTO_TICK_SEPARATION = 30;
 
 /** The thumb gap size for a disabled slider. */
 const DISABLED_THUMB_GAP = 7;
+
+/** The thumb gap size for a non-active slider at its minimum value. */
+const MIN_VALUE_NONACTIVE_THUMB_GAP = 7;
+
+/** The thumb gap size for an active slider at its minimum value. */
+const MIN_VALUE_ACTIVE_THUMB_GAP = 10;
 
 /**
  * Provider Expression that allows md-slider to register as a ControlValueAccessor.
@@ -69,6 +75,7 @@ export class MdSliderChange {
     '(blur)': '_onBlur()',
     '(click)': '_onClick($event)',
     '(keydown)': '_onKeydown($event)',
+    '(keyup)': '_onKeyup()',
     '(mouseenter)': '_onMouseenter()',
     '(slide)': '_onSlide($event)',
     '(slideend)': '_onSlideEnd()',
@@ -87,7 +94,8 @@ export class MdSliderChange {
     '[class.md-slider-sliding]': '_isSliding',
     '[class.md-slider-thumb-label-showing]': 'thumbLabel',
     '[class.md-slider-vertical]': 'vertical',
-    '[class.md-slider-min-value]': 'value === min',
+    '[class.md-slider-min-value]': '_isMinValue',
+    '[class.md-slider-hide-last-tick]': '_isMinValue && _thumbGap && invertAxis || disabled',
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -140,12 +148,21 @@ export class MdSlider implements ControlValueAccessor {
    */
   _isActive: boolean = false;
 
+  /** Decimal places to round to, based on the step amount. */
+  private _roundLabelTo: number;
+
   private _step: number = 1;
 
   /** The values at which the thumb will snap. */
   @Input()
   get step() { return this._step; }
-  set step(v) { this._step = coerceNumberProperty(v, this._step); }
+  set step(v) {
+    this._step = coerceNumberProperty(v, this._step);
+
+    if (this._step % 1 !== 0) {
+      this._roundLabelTo = this._step.toString().split('.').pop().length;
+    }
+  }
 
   private _tickInterval: 'auto' | number = 0;
 
@@ -231,6 +248,18 @@ export class MdSlider implements ControlValueAccessor {
   set vertical(value: any) { this._vertical = coerceBooleanProperty(value); }
   private _vertical = false;
 
+  /** The value to be used for display purposes. */
+  get displayValue(): string|number {
+    // Note that this could be improved further by rounding something like 0.999 to 1 or
+    // 0.899 to 0.9, however it is very performance sensitive, because it gets called on
+    // every change detection cycle.
+    if (this._roundLabelTo && this.value % 1 !== 0) {
+      return this.value.toFixed(this._roundLabelTo);
+    }
+
+    return this.value;
+  }
+
   /**
    * Whether the axis of the slider is inverted.
    * (i.e. whether moving the thumb in the positive x or y direction decreases the slider's value).
@@ -249,12 +278,23 @@ export class MdSlider implements ControlValueAccessor {
     return (this.direction == 'rtl' && !this.vertical) ? !this.invertAxis : this.invertAxis;
   }
 
+  /** Whether the slider is at its minimum value. */
+  get _isMinValue() {
+    return this.percent === 0;
+  }
+
   /**
    * The amount of space to leave between the slider thumb and the track fill & track background
    * elements.
    */
-  private get _thumbGap() {
-    return this.disabled ? DISABLED_THUMB_GAP : 0;
+  get _thumbGap() {
+    if (this.disabled) {
+      return DISABLED_THUMB_GAP;
+    }
+    if (this._isMinValue && !this.thumbLabel) {
+      return this._isActive ? MIN_VALUE_ACTIVE_THUMB_GAP : MIN_VALUE_NONACTIVE_THUMB_GAP;
+    }
+    return 0;
   }
 
   /** CSS styles for the track background element. */
@@ -297,11 +337,20 @@ export class MdSlider implements ControlValueAccessor {
     // ticks 180 degrees so we're really cutting off the end edge abd not the start.
     let sign = !this.vertical && this.direction == 'rtl' ? '-' : '';
     let rotate = !this.vertical && this.direction == 'rtl' ? ' rotate(180deg)' : '';
-    return {
+    let styles: { [key: string]: string } = {
       'backgroundSize': backgroundSize,
       // Without translateZ ticks sometimes jitter as the slider moves on Chrome & Firefox.
       'transform': `translateZ(0) translate${axis}(${sign}${tickSize / 2}%)${rotate}`
     };
+
+    if (this._isMinValue && this._thumbGap) {
+      let side = this.vertical ?
+          (this.invertAxis ? 'Bottom' : 'Top') :
+          (this.invertAxis ? 'Right' : 'Left');
+      styles[`padding${side}`] = `${this._thumbGap}px`;
+    }
+
+    return styles;
   }
 
   get thumbContainerStyles(): { [key: string]: string } {
@@ -437,12 +486,19 @@ export class MdSlider implements ControlValueAccessor {
         return;
     }
 
+    this._isSliding = true;
     event.preventDefault();
+  }
+
+  _onKeyup() {
+    this._isSliding = false;
   }
 
   /** Increments the slider by the given number of steps (negative number decrements). */
   private _increment(numSteps: number) {
     this.value = this._clamp(this.value + this.step * numSteps, this.min, this.max);
+    this._emitInputEvent();
+    this._emitValueIfChanged();
   }
 
   /** Calculate the new value from the new physical location. The value will always be snapped. */
@@ -598,8 +654,8 @@ export class SliderRenderer {
 
 
 @NgModule({
-  imports: [CommonModule, FormsModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdSlider, DefaultStyleCompatibilityModeModule],
+  imports: [CommonModule, FormsModule, CompatibilityModule],
+  exports: [MdSlider, CompatibilityModule],
   declarations: [MdSlider],
   providers: [{provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}]
 })

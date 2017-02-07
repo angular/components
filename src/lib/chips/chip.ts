@@ -9,7 +9,7 @@ import {
   Renderer
 } from '@angular/core';
 
-import {Focusable} from '../core/a11y/list-key-manager';
+import {Focusable} from '../core/a11y/focus-key-manager';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 
 export interface MdChipEvent {
@@ -20,7 +20,8 @@ export interface MdChipEvent {
  * Material design styled Chip component. Used inside the MdChipList component.
  */
 @Component({
-  selector: 'md-basic-chip, [md-basic-chip], md-chip, [md-chip]',
+  selector: `md-basic-chip, [md-basic-chip], md-chip, [md-chip],
+             mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]`,
   template: `<ng-content></ng-content>`,
   host: {
     'tabindex': '-1',

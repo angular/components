@@ -23,8 +23,8 @@ import {Observable} from 'rxjs/Observable';
 import {
   UniqueSelectionDispatcher,
   coerceBooleanProperty,
-  DefaultStyleCompatibilityModeModule,
   UNIQUE_SELECTION_DISPATCHER_PROVIDER,
+  CompatibilityModule,
 } from '../core';
 
 /** Acceptable types for a button toggle. */
@@ -53,7 +53,7 @@ export class MdButtonToggleChange {
 
 /** Exclusive selection button toggle group that behaves like a radio-button group. */
 @Directive({
-  selector: 'md-button-toggle-group:not([multiple])',
+  selector: 'md-button-toggle-group:not([multiple]), mat-button-toggle-group:not([multiple])',
   providers: [MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
   host: {
     'role': 'radiogroup',
@@ -66,7 +66,7 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
   private _value: any = null;
 
   /** The HTML name attribute applied to toggles in this group. */
-  private _name: string = `md-radio-group-${_uniqueIdCounter++}`;
+  private _name: string = `md-button-toggle-group-${_uniqueIdCounter++}`;
 
   /** Disables all toggles in the group. */
   private _disabled: boolean = null;
@@ -242,7 +242,7 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
 
 /** Multiple selection button-toggle group. `ngModel` is not supported in this mode. */
 @Directive({
-  selector: 'md-button-toggle-group[multiple]',
+  selector: 'md-button-toggle-group[multiple], mat-button-toggle-group[multiple]',
   exportAs: 'mdButtonToggleGroup',
   host: {
     '[class.md-button-toggle-vertical]': 'vertical'
@@ -280,7 +280,7 @@ export class MdButtonToggleGroupMultiple {
 /** Single button inside of a toggle group. */
 @Component({
   moduleId: module.id,
-  selector: 'md-button-toggle',
+  selector: 'md-button-toggle, mat-button-toggle',
   templateUrl: 'button-toggle.html',
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
@@ -464,12 +464,12 @@ export class MdButtonToggle implements OnInit {
 
 
 @NgModule({
-  imports: [FormsModule, DefaultStyleCompatibilityModeModule],
+  imports: [FormsModule, CompatibilityModule],
   exports: [
     MdButtonToggleGroup,
     MdButtonToggleGroupMultiple,
     MdButtonToggle,
-    DefaultStyleCompatibilityModeModule,
+    CompatibilityModule,
   ],
   declarations: [MdButtonToggleGroup, MdButtonToggleGroupMultiple, MdButtonToggle],
   providers: [UNIQUE_SELECTION_DISPATCHER_PROVIDER]

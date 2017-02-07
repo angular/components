@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import {HttpModule, Http} from '@angular/http';
 import {DomSanitizer} from '@angular/platform-browser';
-import {MdError, DefaultStyleCompatibilityModeModule} from '../core';
+import {MdError, CompatibilityModule} from '../core';
 import {MdIconRegistry} from './icon-registry';
 export {MdIconRegistry} from './icon-registry';
 
@@ -96,6 +96,7 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
 
   private _previousFontSetClass: string;
   private _previousFontIconClass: string;
+  private _previousAriaLabel: string;
 
   constructor(
       private _elementRef: ElementRef,
@@ -176,7 +177,8 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
 
   private _updateAriaLabel() {
       const ariaLabel = this._getAriaLabel();
-      if (ariaLabel) {
+      if (ariaLabel && ariaLabel !== this._previousAriaLabel) {
+        this._previousAriaLabel = ariaLabel;
         this._renderer.setElementAttribute(this._elementRef.nativeElement, 'aria-label', ariaLabel);
       }
   }
@@ -260,8 +262,8 @@ export const ICON_REGISTRY_PROVIDER = {
 };
 
 @NgModule({
-  imports: [HttpModule, DefaultStyleCompatibilityModeModule],
-  exports: [MdIcon, DefaultStyleCompatibilityModeModule],
+  imports: [HttpModule, CompatibilityModule],
+  exports: [MdIcon, CompatibilityModule],
   declarations: [MdIcon],
   providers: [ICON_REGISTRY_PROVIDER],
 })
