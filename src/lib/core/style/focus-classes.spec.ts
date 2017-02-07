@@ -1,15 +1,16 @@
 import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
-import {Component, Renderer} from '@angular/core';
+import {Component, Renderer, ViewChild} from '@angular/core';
 import {StyleModule} from './index';
 import {By} from '@angular/platform-browser';
 import {TAB} from '../keyboard/keycodes';
-import {FocusOriginMonitor} from './focus-classes';
+import {FocusOriginMonitor, FocusOrigin, CdkFocusClasses} from './focus-classes';
 
 describe('FocusOriginMonitor', () => {
   let fixture: ComponentFixture<PlainButton>;
   let buttonElement: HTMLElement;
   let buttonRenderer: Renderer;
   let focusOriginMonitor: FocusOriginMonitor;
+  let changeHandler: (origin: FocusOrigin) => void;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -30,7 +31,9 @@ describe('FocusOriginMonitor', () => {
     buttonRenderer = fixture.componentInstance.renderer;
     focusOriginMonitor = fom;
 
-    focusOriginMonitor.registerElementForFocusClasses(buttonElement, buttonRenderer);
+    changeHandler = jasmine.createSpy('focus origin change handler');
+    focusOriginMonitor.registerElementForFocusClasses(buttonElement, buttonRenderer)
+        .subscribe(changeHandler);
 
     // Patch the element focus to properly emit focus events when the browser is blurred.
     patchElementFocus(buttonElement);
@@ -45,6 +48,7 @@ describe('FocusOriginMonitor', () => {
 
       expect(buttonElement.classList.contains('cdk-focused'))
           .toBe(true, 'button should have cdk-focused class');
+      expect(changeHandler).toHaveBeenCalledTimes(1);
     }, 0);
   }));
 
@@ -63,6 +67,7 @@ describe('FocusOriginMonitor', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-keyboard-focused'))
           .toBe(true, 'button should have cdk-keyboard-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('keyboard');
     }, 0);
   }));
 
@@ -81,6 +86,7 @@ describe('FocusOriginMonitor', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-mouse-focused'))
           .toBe(true, 'button should have cdk-mouse-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('mouse');
     }, 0);
   }));
 
@@ -98,6 +104,7 @@ describe('FocusOriginMonitor', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-program-focused'))
           .toBe(true, 'button should have cdk-program-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('program');
     }, 0);
   }));
 
@@ -114,6 +121,7 @@ describe('FocusOriginMonitor', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-keyboard-focused'))
           .toBe(true, 'button should have cdk-keyboard-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('keyboard');
     }, 0);
   }));
 
@@ -130,6 +138,7 @@ describe('FocusOriginMonitor', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-mouse-focused'))
           .toBe(true, 'button should have cdk-mouse-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('mouse');
     }, 0);
   }));
 
@@ -146,6 +155,7 @@ describe('FocusOriginMonitor', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-program-focused'))
           .toBe(true, 'button should have cdk-program-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('program');
     }, 0);
   }));
 });
@@ -154,6 +164,7 @@ describe('FocusOriginMonitor', () => {
 describe('cdkFocusClasses', () => {
   let fixture: ComponentFixture<ButtonWithFocusClasses>;
   let buttonElement: HTMLElement;
+  let changeHandler: (origin: FocusOrigin) => void;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -170,6 +181,8 @@ describe('cdkFocusClasses', () => {
     fixture = TestBed.createComponent(ButtonWithFocusClasses);
     fixture.detectChanges();
 
+    changeHandler = jasmine.createSpy('focus origin change handler');
+    fixture.componentInstance.cdkFocusClasses.changes.subscribe(changeHandler);
     buttonElement = fixture.debugElement.query(By.css('button')).nativeElement;
 
     // Patch the element focus to properly emit focus events when the browser is blurred.
@@ -195,6 +208,7 @@ describe('cdkFocusClasses', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-keyboard-focused'))
           .toBe(true, 'button should have cdk-keyboard-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('keyboard');
     }, 0);
   }));
 
@@ -213,6 +227,7 @@ describe('cdkFocusClasses', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-mouse-focused'))
           .toBe(true, 'button should have cdk-mouse-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('mouse');
     }, 0);
   }));
 
@@ -230,6 +245,7 @@ describe('cdkFocusClasses', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-program-focused'))
           .toBe(true, 'button should have cdk-program-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('program');
     }, 0);
   }));
 });
@@ -242,7 +258,9 @@ class PlainButton {
 
 
 @Component({template: `<button cdkFocusClasses>focus me!</button>`})
-class ButtonWithFocusClasses {}
+class ButtonWithFocusClasses {
+  @ViewChild(CdkFocusClasses) cdkFocusClasses: CdkFocusClasses;
+}
 
 // TODO(devversion): move helper functions into a global utility file. See #2902
 

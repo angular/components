@@ -44,7 +44,10 @@ export class FocusOriginMonitor {
 
   /** Handles focus events on a registered element. */
   private _onFocus(element: Element, renderer: Renderer, subject: Subject<FocusOrigin>) {
+    // If we couldn't detect a cause for the focus event, assume it was due to programmatically
+    // setting the focus.
     this._origin = this._origin || 'program';
+
     renderer.setElementClass(element, 'cdk-focused', true);
     renderer.setElementClass(element, 'cdk-keyboard-focused', this._origin == 'keyboard');
     renderer.setElementClass(element, 'cdk-mouse-focused', this._origin == 'mouse');
@@ -72,8 +75,11 @@ export class FocusOriginMonitor {
   selector: '[cdkFocusClasses]',
 })
 export class CdkFocusClasses {
+  changes: Observable<FocusOrigin>;
+
   constructor(elementRef: ElementRef, focusOriginMonitor: FocusOriginMonitor, renderer: Renderer) {
-    focusOriginMonitor.registerElementForFocusClasses(elementRef.nativeElement, renderer);
+    this.changes =
+        focusOriginMonitor.registerElementForFocusClasses(elementRef.nativeElement, renderer);
   }
 }
 
