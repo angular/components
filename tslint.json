@@ -1,4 +1,5 @@
 {
+  "rulesDirectory": ["node_modules/tslint-no-unused-var"],
   "rules": {
     "max-line-length": [true, 100],
     // Disable this flag because of SHA tslint#48b0c597f9257712c7d1f04b55ed0aa60e333f6a
@@ -23,11 +24,7 @@
     "no-bitwise": true,
     "no-shadowed-variable": true,
     "no-unused-expression": true,
-    // This flag has been deprecated in favor the built-in TypeScript options that detect unused
-    // parameter and locals. See noUnusedLocals and noUnusedParameters. These options now throw
-    // at compilation and reduce flexibility when debugging. We should temporary keep the
-    // deprecated flag and see if TSLint reverts the deprecation.
-    "no-unused-variable": [true, {"ignore-pattern": "^(_.*)$"}],
+    "no-unused-var": [true, {"ignore-pattern": "^(_.*)$"}],
     "one-line": [
       true,
       "check-catch",
