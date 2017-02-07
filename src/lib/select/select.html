@@ -1,5 +1,5 @@
 <div class="md-select-trigger" cdk-overlay-origin (click)="toggle()" #origin="cdkOverlayOrigin" #trigger>
-  <span class="md-select-placeholder" [class.md-floating-placeholder]="this.selected"
+  <span class="md-select-placeholder" [class.md-floating-placeholder]="selected"
    [@transformPlaceholder]="_placeholderState" [style.width.px]="_selectedValueWidth"> {{ placeholder }} </span>
   <span class="md-select-value" *ngIf="selected"> {{ selected?.viewValue }} </span>
   <span class="md-select-arrow"></span>
