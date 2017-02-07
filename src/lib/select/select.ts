@@ -24,6 +24,8 @@ import {ControlValueAccessor, NgControl} from '@angular/forms';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 import {ConnectedOverlayDirective} from '../core/overlay/overlay-directives';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+import 'rxjs/add/operator/startWith';
+
 
 /**
  * The following style constants are necessary to save here in order
@@ -122,9 +124,6 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   /** The placeholder displayed in the trigger of the select. */
   private _placeholder: string;
-
-  /** Holds a value that was attempted to be assigned before the component was initialized. */
-  private _tempValue: any;
 
   /** The animation state of the placeholder. */
   _placeholderState = '';
@@ -246,15 +245,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     this._initKeyManager();
     this._resetOptions();
 
-    // Assign any values that were deferred until the component is initialized.
-    if (this._tempValue) {
-      Promise.resolve(null).then(() => {
-        this.writeValue(this._tempValue);
-        this._tempValue = null;
-      });
-    }
-
-    this._changeSubscription = this.options.changes.subscribe(() => {
+    this._changeSubscription = this.options.changes.startWith(null).subscribe(() => {
       this._resetOptions();
 
       if (this._control) {
@@ -267,8 +258,14 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   ngOnDestroy() {
     this._dropSubscriptions();
-    this._changeSubscription.unsubscribe();
-    this._tabSubscription.unsubscribe();
+
+    if (this._changeSubscription) {
+      this._changeSubscription.unsubscribe();
+    }
+
+    if (this._tabSubscription) {
+      this._tabSubscription.unsubscribe();
+    }
   }
 
   /** Toggles the overlay panel open or closed. */
@@ -304,11 +301,6 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   writeValue(value: any): void {
     if (this.options) {
       this._setSelectionByValue(value);
-    } else {
-      // In reactive forms, writeValue() will be called synchronously before
-      // the select's child options have been created. We save the value and
-      // assign it after everything is set up, in order to avoid lost data.
-      this._tempValue = value;
     }
   }
 

@@ -1,6 +1,6 @@
 import {TestBed, async, ComponentFixture, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {Component, DebugElement, QueryList, ViewChild, ViewChildren, OnInit} from '@angular/core';
 import {MdSelectModule} from './index';
 import {OverlayContainer} from '../core/overlay/overlay-container';
 import {MdSelect} from './select';
@@ -26,7 +26,9 @@ describe('MdSelect', () => {
         SelectInitWithoutOptions,
         SelectWithChangeEvent,
         CustomSelectAccessor,
-        CompWithCustomSelect
+        CompWithCustomSelect,
+        SelectWithErrorSibling,
+        ThrowsErrorOnInit,
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -1221,6 +1223,14 @@ describe('MdSelect', () => {
       });
     }));
 
+    it('should not crash the browser when a sibling throws an error on init', async(() => {
+      // Note that this test can be considered successful if the error being thrown didn't
+      // end up crashing the testing setup altogether.
+      expect(() => {
+        TestBed.createComponent(SelectWithErrorSibling).detectChanges();
+      }).toThrowError(new RegExp('Oh no!', 'g'));
+    }));
+
   });
 
   describe('change event', () => {
@@ -1431,6 +1441,28 @@ class CustomSelectAccessor implements ControlValueAccessor {
 class CompWithCustomSelect {
   ctrl = new FormControl('initial value');
   @ViewChild(CustomSelectAccessor) customAccessor: CustomSelectAccessor;
+}
+
+@Component({
+  selector: 'select-infinite-loop',
+  template: `
+    <md-select [(ngModel)]="value"></md-select>
+    <throws-error-on-init></throws-error-on-init>
+  `
+})
+class SelectWithErrorSibling {
+  value: string;
+}
+
+
+@Component({
+  selector: 'throws-error-on-init',
+  template: ''
+})
+export class ThrowsErrorOnInit implements OnInit {
+  ngOnInit() {
+    throw new Error('Oh no!');
+  }
 }
 
 
