@@ -12,6 +12,12 @@ export class FocusOriginMonitor {
   /** The focus origin that the next focus event is a result of. */
   private _origin: FocusOrigin = null;
 
+  /** A WeakMap used to track the last element focused via the FocusOriginMonitor. */
+  private _lastFocused = new WeakMap<Element, FocusOrigin>();
+
+  /** Whether the window has just been focused. */
+  private _windowFocused = false;
+
   constructor() {
     // Listen to keydown and mousedown in the capture phase so we can detect them even if the user
     // stops propagation.
@@ -20,6 +26,13 @@ export class FocusOriginMonitor {
         'keydown', () => this._setOriginForCurrentEventQueue('keyboard'), true);
     document.addEventListener(
         'mousedown', () => this._setOriginForCurrentEventQueue('mouse'), true);
+
+    // Make a note of when the window regains focus, so we can restore the origin info for the
+    // focused element.
+    window.addEventListener('focus', () => {
+      this._windowFocused = true;
+      setTimeout(() => this._windowFocused = false, 0);
+    });
   }
 
   /** Register an element to receive focus classes. */
@@ -44,15 +57,26 @@ export class FocusOriginMonitor {
 
   /** Handles focus events on a registered element. */
   private _onFocus(element: Element, renderer: Renderer, subject: Subject<FocusOrigin>) {
-    // If we couldn't detect a cause for the focus event, assume it was due to programmatically
-    // setting the focus.
-    this._origin = this._origin || 'program';
+    // If we couldn't detect a cause for the focus event, it's due to one of two reasons:
+    // 1) The window has just regained focus, in which case we want to restore the focused state of
+    //    the element from before the window blurred.
+    // 2) The element was programmatically focused, in which case we should mark the origin as
+    //    'program'.
+    if (!this._origin) {
+      if (this._windowFocused && this._lastFocused.has(element)) {
+        this._origin = this._lastFocused.get(element);
+      } else {
+        this._origin = 'program';
+      }
+    }
 
     renderer.setElementClass(element, 'cdk-focused', true);
     renderer.setElementClass(element, 'cdk-keyboard-focused', this._origin == 'keyboard');
     renderer.setElementClass(element, 'cdk-mouse-focused', this._origin == 'mouse');
     renderer.setElementClass(element, 'cdk-program-focused', this._origin == 'program');
+
     subject.next(this._origin);
+    this._lastFocused = new WeakMap().set(element, this._origin);
     this._origin = null;
   }
 
