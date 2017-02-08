@@ -65,6 +65,7 @@ $mat-select-panel-max-height: 256px !default;
 }
 
 .mat-select-value {
+  @include mat-truncate-line();
   position: absolute;
   max-width: calc(100% - #{$mat-select-arrow-size * 2});
 
