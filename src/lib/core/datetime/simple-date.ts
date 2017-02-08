@@ -7,12 +7,12 @@ export class SimpleDate {
    * Create a SimpleDate from a native JS Date object.
    * @param nativeDate The native JS Date object to convert.
    */
-  static fromNativeDate(nativeDate: Date) {
+  static fromNativeDate(nativeDate: Date): SimpleDate {
     return new SimpleDate(nativeDate.getFullYear(), nativeDate.getMonth(), nativeDate.getDate());
   }
 
   /** Creates a SimpleDate object representing today. */
-  static today() {
+  static today(): SimpleDate {
     return SimpleDate.fromNativeDate(new Date());
   }
 
@@ -29,22 +29,22 @@ export class SimpleDate {
   }
 
   /** The year component of this date. */
-  get year() {
+  get year(): number {
     return this._date.getFullYear();
   }
 
   /** The month component of this date. (0-indexed, 0 = January). */
-  get month() {
+  get month(): number {
     return this._date.getMonth();
   }
 
   /** The date component of this date. (1-indexed, 1 = 1st of month). */
-  get date() {
+  get date(): number {
     return this._date.getDate();
   }
 
   /** The day component of this date. (0-indexed, 0 = Sunday) */
-  get day() {
+  get day(): number {
     return this._date.getDay();
   }
 
@@ -52,7 +52,7 @@ export class SimpleDate {
    * Adds an amount of time (in days, months, and years) to the date.
    * @param amount The amount of time to add.
    */
-  add(amount: {days: number, months: number, years: number}) {
+  add(amount: {days: number, months: number, years: number}): SimpleDate {
     return new SimpleDate(
         this.year + amount.years || 0,
         this.month + amount.months || 0,
@@ -60,7 +60,7 @@ export class SimpleDate {
   }
 
   /** Converts the SimpleDate to a native JS Date object. */
-  toNativeDate() {
+  toNativeDate(): Date {
     return new Date(this.year, this.month, this.date);
   }
 }
