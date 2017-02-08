@@ -9,7 +9,7 @@ Get started with Angular Material using the Angular CLI.
 ## Create a new project
  
  ```bash
- ng new my-project
+ ng new my-project && cd my-project
  ```
 
 The new command creates a project with a build system for your Angular app.
