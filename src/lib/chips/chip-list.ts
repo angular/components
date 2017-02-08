@@ -34,7 +34,7 @@ import {SPACE, LEFT_ARROW, RIGHT_ARROW} from '../core/keyboard/keycodes';
     // Properties
     'tabindex': '0',
     'role': 'listbox',
-    'class': 'mat-chip-list',
+    '[class.mat-chip-list]': 'true',
 
     // Events
     '(focus)': 'focus()',

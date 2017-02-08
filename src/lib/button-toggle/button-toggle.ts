@@ -56,7 +56,7 @@ export class MdButtonToggleChange {
   selector: 'md-button-toggle-group:not([multiple]), mat-button-toggle-group:not([multiple])',
   providers: [MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
   host: {
-    'class': 'mat-button-toggle-group',
+    '[class.mat-button-toggle-group]': 'true',
     'role': 'radiogroup',
     '[class.mat-button-toggle-vertical]': 'vertical'
   },
@@ -246,7 +246,7 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
   selector: 'md-button-toggle-group[multiple], mat-button-toggle-group[multiple]',
   exportAs: 'mdButtonToggleGroup',
   host: {
-    'class': 'mat-button-toggle-group',
+    '[class.mat-button-toggle-group]': 'true',
     '[class.mat-button-toggle-vertical]': 'vertical'
   }
 })
@@ -287,7 +287,7 @@ export class MdButtonToggleGroupMultiple {
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
   host: {
-    'class': 'mat-button-toggle'
+    '[class.mat-button-toggle]': 'true'
   }
 })
 export class MdButtonToggle implements OnInit {

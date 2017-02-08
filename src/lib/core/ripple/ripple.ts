@@ -24,7 +24,7 @@ import {SCROLL_DISPATCHER_PROVIDER} from '../overlay/scroll/scroll-dispatcher';
 @Directive({
   selector: '[md-ripple], [mat-ripple]',
   host: {
-    'class': 'mat-ripple',
+    '[class.mat-ripple]': 'true',
   }
 })
 export class MdRipple implements OnInit, OnDestroy, OnChanges {

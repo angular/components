@@ -50,7 +50,7 @@ export class MdSidenavToggleResult {
   // TODO(mmalerba): move template to separate file.
   templateUrl: 'sidenav.html',
   host: {
-    'class': 'mat-sidenav',
+    '[class.mat-sidenav]': 'true',
     '(transitionend)': '_onTransitionEnd($event)',
     '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
@@ -320,7 +320,7 @@ export class MdSidenav implements AfterContentInit {
     'sidenav-transitions.css',
   ],
   host: {
-    'class': 'mat-sidenav-container',
+    '[class.mat-sidenav-container]': 'true',
   },
   encapsulation: ViewEncapsulation.None,
 })

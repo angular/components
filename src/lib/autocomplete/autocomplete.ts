@@ -26,7 +26,7 @@ export type AutocompletePositionY = 'above' | 'below';
   encapsulation: ViewEncapsulation.None,
   exportAs: 'mdAutocomplete',
   host: {
-    'class': 'mat-autocomplete'
+    '[class.mat-autocomplete]': 'true'
   }
 })
 export class MdAutocomplete {

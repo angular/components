@@ -26,7 +26,7 @@ export class MdDialogClose {
 @Directive({
   selector: '[md-dialog-title], [mat-dialog-title]',
   host: {
-    'class': 'mat-dialog-title'
+    '[class.mat-dialog-title]': 'true'
   }
 })
 export class MdDialogTitle { }
@@ -38,7 +38,7 @@ export class MdDialogTitle { }
 @Directive({
   selector: '[md-dialog-content], md-dialog-content, [mat-dialog-content], mat-dialog-content',
   host: {
-    'class': 'mat-dialog-content'
+    '[class.mat-dialog-content]': 'true'
   }
 })
 export class MdDialogContent { }
@@ -51,7 +51,7 @@ export class MdDialogContent { }
 @Directive({
   selector: '[md-dialog-actions], md-dialog-actions, [mat-dialog-actions], mat-dialog-actions',
   host: {
-    'class': 'mat-dialog-actions'
+    '[class.mat-dialog-actions]': 'true'
   }
 })
 export class MdDialogActions { }

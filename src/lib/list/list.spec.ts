@@ -98,7 +98,7 @@ describe('MdList', () => {
     fixture.detectChanges();
 
     let listItem = fixture.debugElement.children[0].query(By.css('md-list-item'));
-    expect(listItem.nativeElement.className).toBe('mat-list-item mat-2-line');
+    expect(listItem.nativeElement.className).toBe('mat-2-line mat-list-item');
 
     fixture.debugElement.componentInstance.showThirdLine = true;
     fixture.detectChanges();

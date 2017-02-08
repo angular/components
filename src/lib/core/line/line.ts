@@ -16,7 +16,7 @@ import {CompatibilityModule} from '../compatibility/compatibility';
 @Directive({
   selector: '[md-line], [mat-line]',
   host: {
-    'class': 'mat-line'
+    '[class.mat-line]': 'true'
   }
 })
 export class MdLine {}

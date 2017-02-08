@@ -16,7 +16,7 @@ import {coerceToNumber} from './grid-list-measure';
   selector: 'md-grid-tile, mat-grid-tile',
   host: {
     'role': 'listitem',
-    'class': 'mat-grid-tile',
+    '[class.mat-grid-tile]': 'true',
   },
   templateUrl: 'grid-tile.html',
   styleUrls: ['grid-list.css'],
@@ -73,7 +73,7 @@ export class MdGridTileText implements AfterContentInit {
 @Directive({
   selector: '[md-grid-avatar], [mat-grid-avatar]',
   host: {
-    'class': 'mat-grid-avatar'
+    '[class.mat-grid-avatar]': 'true'
   }
 })
 export class MdGridAvatarCssMatStyler {}
@@ -84,7 +84,7 @@ export class MdGridAvatarCssMatStyler {}
 @Directive({
   selector: 'md-grid-tile-header, mat-grid-tile-header',
   host: {
-    'class': 'mat-grid-tile-header'
+    '[class.mat-grid-tile-header]': 'true'
   }
 })
 export class MdGridTileHeaderCssMatStyler {}
@@ -95,7 +95,7 @@ export class MdGridTileHeaderCssMatStyler {}
 @Directive({
   selector: 'md-grid-tile-footer, mat-grid-tile-footer',
   host: {
-    'class': 'mat-grid-tile-footer'
+    '[class.mat-grid-tile-footer]': 'true'
   }
 })
 export class MdGridTileFooterCssMatStyler {}

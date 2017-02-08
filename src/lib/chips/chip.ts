@@ -24,6 +24,7 @@ export interface MdChipEvent {
              mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]`,
   template: `<ng-content></ng-content>`,
   host: {
+    '[class.mat-chip]': 'true',
     'tabindex': '-1',
     'role': 'option',
 

@@ -12,7 +12,7 @@ import {MdSnackBarRef} from './snack-bar-ref';
   templateUrl: 'simple-snack-bar.html',
   styleUrls: ['simple-snack-bar.css'],
   host: {
-    'class': 'mat-simple-snackbar',
+    '[class.mat-simple-snackbar]': 'true',
   }
 })
 export class SimpleSnackBar {

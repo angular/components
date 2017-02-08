@@ -23,7 +23,7 @@ import {MdRippleModule, coerceBooleanProperty, CompatibilityModule} from '../cor
 @Directive({
   selector: 'button[md-button], button[mat-button], a[md-button], a[mat-button]',
   host: {
-    'class': 'mat-button'
+    '[class.mat-button]': 'true'
   }
 })
 export class MdButtonCssMatStyler {}
@@ -36,7 +36,7 @@ export class MdButtonCssMatStyler {}
       'button[md-raised-button], button[mat-raised-button], ' +
       'a[md-raised-button], a[mat-raised-button]',
   host: {
-    'class': 'mat-raised-button'
+    '[class.mat-raised-button]': 'true'
   }
 })
 export class MdRaisedButtonCssMatStyler {}
@@ -48,7 +48,7 @@ export class MdRaisedButtonCssMatStyler {}
   selector:
       'button[md-icon-button], button[mat-icon-button], a[md-icon-button], a[mat-icon-button]',
   host: {
-    'class': 'mat-icon-button',
+    '[class.mat-icon-button]': 'true',
   }
 })
 export class MdIconButtonCssMatStyler {}
@@ -59,7 +59,7 @@ export class MdIconButtonCssMatStyler {}
 @Directive({
   selector: 'button[md-fab], button[mat-fab], a[md-fab], a[mat-fab]',
   host: {
-    'class': 'mat-fab'
+    '[class.mat-fab]': 'true'
   }
 })
 export class MdFabCssMatStyler {}
@@ -70,7 +70,7 @@ export class MdFabCssMatStyler {}
 @Directive({
   selector: 'button[md-mini-fab], button[mat-mini-fab], a[md-mini-fab], a[mat-mini-fab]',
   host: {
-    'class': 'mat-mini-fab'
+    '[class.mat-mini-fab]': 'true'
   }
 })
 export class MdMiniFabCssMatStyler {}

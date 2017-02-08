@@ -5,7 +5,7 @@ import {Directive, Renderer, ElementRef} from '@angular/core';
 @Directive({
   selector: 'md-ink-bar, mat-ink-bar',
   host: {
-    'class': 'mat-ink-bar',
+    '[class.mat-ink-bar]': 'true',
   },
 })
 export class MdInkBar {

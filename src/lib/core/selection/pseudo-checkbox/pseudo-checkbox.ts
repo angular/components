@@ -26,7 +26,7 @@ export type MdPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
   styleUrls: ['pseudo-checkbox.css'],
   template: '',
   host: {
-    'class': 'mat-pseudo-checkbox',
+    '[class.mat-pseudo-checkbox]': 'true',
     '[class.mat-pseudo-checkbox-indeterminate]': 'state === "indeterminate"',
     '[class.mat-pseudo-checkbox-checked]': 'state === "checked"',
     '[class.mat-pseudo-checkbox-disabled]': 'disabled',

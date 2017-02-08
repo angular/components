@@ -35,7 +35,7 @@ export class MdList {}
 @Directive({
   selector: 'md-list, mat-list',
   host: {
-    'class': 'mat-list'
+    '[class.mat-list]': 'true'
   }
 })
 export class MdListCssMatStyler {}
@@ -46,7 +46,7 @@ export class MdListCssMatStyler {}
 @Directive({
   selector: 'md-nav-list, mat-nav-list',
   host: {
-    'class': 'mat-nav-list'
+    '[class.mat-nav-list]': 'true'
   }
 })
 export class MdNavListCssMatStyler {}
@@ -57,7 +57,7 @@ export class MdNavListCssMatStyler {}
 @Directive({
   selector: 'md-divider, mat-divider',
   host: {
-    'class': 'mat-divider'
+    '[class.mat-divider]': 'true'
   }
 })
 export class MdDividerCssMatStyler {}
@@ -66,7 +66,7 @@ export class MdDividerCssMatStyler {}
 @Directive({
   selector: '[md-list-avatar], [mat-list-avatar]',
   host: {
-    'class': 'mat-list-avatar'
+    '[class.mat-list-avatar]': 'true'
   }
 })
 export class MdListAvatarCssMatStyler {}
@@ -75,7 +75,7 @@ export class MdListAvatarCssMatStyler {}
 @Directive({
   selector: '[md-list-icon], [mat-list-icon]',
   host: {
-    'class': 'mat-list-icon'
+    '[class.mat-list-icon]': 'true'
   }
 })
 export class MdListIconCssMatStyler {}
@@ -86,7 +86,7 @@ export class MdListIconCssMatStyler {}
 @Directive({
   selector: '[md-subheader], [mat-subheader]',
   host: {
-    'class': 'mat-subheader'
+    '[class.mat-subheader]': 'true'
   }
 })
 export class MdListSubheaderCssMatStyler {}
@@ -98,7 +98,7 @@ export class MdListSubheaderCssMatStyler {}
     'role': 'listitem',
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
-    'class': 'mat-list-item',
+    '[class.mat-list-item]': 'true',
   },
   templateUrl: 'list-item.html',
   encapsulation: ViewEncapsulation.None
