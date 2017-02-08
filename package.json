@@ -41,6 +41,7 @@
     "@angular/platform-browser-dynamic": "^2.3.0",
     "@angular/platform-server": "^2.3.0",
     "@angular/router": "^3.3.0",
+    "@types/fs-extra": "0.0.37",
     "@types/glob": "^5.0.30",
     "@types/gulp": "^3.8.32",
     "@types/hammerjs": "^2.0.34",
