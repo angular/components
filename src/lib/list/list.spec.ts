@@ -80,8 +80,8 @@ describe('MdList', () => {
     fixture.detectChanges();
 
     let listItems = fixture.debugElement.children[0].queryAll(By.css('md-list-item'));
-    expect(listItems[0].nativeElement.className).toContain('mat-list-avatar');
-    expect(listItems[1].nativeElement.className).not.toContain('mat-list-avatar');
+    expect(listItems[0].nativeElement.className).toContain('mat-list-item-avatar');
+    expect(listItems[1].nativeElement.className).not.toContain('mat-list-item-avatar');
   });
 
   it('should not clear custom classes provided by user', () => {
