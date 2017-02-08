@@ -158,6 +158,28 @@ describe('FocusOriginMonitor', () => {
       expect(changeHandler).toHaveBeenCalledWith('program');
     }, 0);
   }));
+
+  it('should remove focus classes on blur', async(() => {
+    if (platform.FIREFOX) { return; }
+
+    buttonElement.focus();
+    fixture.detectChanges();
+
+    setTimeout(() => {
+      fixture.detectChanges();
+
+      expect(buttonElement.classList.length)
+          .toBe(2, 'button should have exactly 2 focus classes');
+      expect(changeHandler).toHaveBeenCalledWith('program');
+
+      buttonElement.blur();
+      fixture.detectChanges();
+
+      expect(buttonElement.classList.length)
+          .toBe(0, 'button should not have any focus classes');
+      expect(changeHandler).toHaveBeenCalledWith(null);
+    }, 0);
+  }));
 });
 
 
@@ -246,6 +268,28 @@ describe('cdkFocusClasses', () => {
       expect(buttonElement.classList.contains('cdk-program-focused'))
           .toBe(true, 'button should have cdk-program-focused class');
       expect(changeHandler).toHaveBeenCalledWith('program');
+    }, 0);
+  }));
+
+  it('should remove focus classes on blur', async(() => {
+    if (platform.FIREFOX) { return; }
+
+    buttonElement.focus();
+    fixture.detectChanges();
+
+    setTimeout(() => {
+      fixture.detectChanges();
+
+      expect(buttonElement.classList.length)
+          .toBe(2, 'button should have exactly 2 focus classes');
+      expect(changeHandler).toHaveBeenCalledWith('program');
+
+      buttonElement.blur();
+      fixture.detectChanges();
+
+      expect(buttonElement.classList.length)
+          .toBe(0, 'button should not have any focus classes');
+      expect(changeHandler).toHaveBeenCalledWith(null);
     }, 0);
   }));
 });

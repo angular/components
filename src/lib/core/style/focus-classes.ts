@@ -12,8 +12,8 @@ export class FocusOriginMonitor {
   /** The focus origin that the next focus event is a result of. */
   private _origin: FocusOrigin = null;
 
-  /** A WeakMap used to track the last element focused via the FocusOriginMonitor. */
-  private _lastFocused = new WeakMap<Element, FocusOrigin>();
+  /** The FocusOrigin of the last focus event tracked by the FocusOriginMonitor. */
+  private _lastFocusOrigin: FocusOrigin;
 
   /** Whether the window has just been focused. */
   private _windowFocused = false;
@@ -63,8 +63,8 @@ export class FocusOriginMonitor {
     // 2) The element was programmatically focused, in which case we should mark the origin as
     //    'program'.
     if (!this._origin) {
-      if (this._windowFocused && this._lastFocused.has(element)) {
-        this._origin = this._lastFocused.get(element);
+      if (this._windowFocused && this._lastFocusOrigin) {
+        this._origin = this._lastFocusOrigin;
       } else {
         this._origin = 'program';
       }
@@ -76,7 +76,7 @@ export class FocusOriginMonitor {
     renderer.setElementClass(element, 'cdk-program-focused', this._origin == 'program');
 
     subject.next(this._origin);
-    this._lastFocused = new WeakMap().set(element, this._origin);
+    this._lastFocusOrigin = this._origin;
     this._origin = null;
   }
 
