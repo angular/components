@@ -208,14 +208,8 @@ export function isTravisPushBuild() {
   return process.env['TRAVIS_PULL_REQUEST'] === 'false';
 }
 
-/** Decode the token for Travis to use. */
-function decode(str: string): string {
-  return (str || '').split('\\n').reverse().join('\\n').replace(/\\n/g, '\n');
-}
-
 /** Open Google Cloud Storage for screenshots */
-export function openScreenshotsCloudStorage() {
-  // Enable Storage
+export function openScreenshotsBucket() {
   let gcs = gcloud.storage({
     projectId: 'material2-screenshots',
     credentials: {
@@ -236,12 +230,17 @@ export function openFirebaseScreenshotsDatabase() {
     credential: firebaseAdmin.credential.cert({
       project_id: 'material2-screenshots',
       client_email: 'firebase-adminsdk-t4209@material2-screenshots.iam.gserviceaccount.com',
-      // In Travis CI the private key will be incorrect because the line-breaks are escaped.
-      // The line-breaks need to persist in the service account private key.
       private_key: decode(process.env['MATERIAL2_SCREENSHOT_FIREBASE_KEY'])
     }),
     databaseURL: 'https://material2-screenshots.firebaseio.com'
   }, 'material2-screenshots');
 
   return screenshotApp.database();
+}
+
+/** Decode the token for Travis to use. */
+function decode(str: string): string {
+  // In Travis CI the private key will be incorrect because the line-breaks are escaped.
+  // The line-breaks need to persist in the service account private key.
+  return (str || '').split('\\n').reverse().join('\\n').replace(/\\n/g, '\n');
 }
