@@ -69,8 +69,8 @@ describe('MdCalendarTable', () => {
       expect(rowEls.length).toBe(2);
       expect(labelEls.length).toBe(1);
       expect(cellEls.length).toBe(11);
-      expect(rowEls[0].firstElementChild.classList.contains('mat-calendar-table-label')).toBe(
-          true, 'first cell should be the label');
+      expect(rowEls[0].firstElementChild.classList)
+          .toContain('mat-calendar-table-label', 'first cell should be the label');
       expect(labelEls[0].getAttribute('colspan')).toBe('3');
     });
 
@@ -80,8 +80,8 @@ describe('MdCalendarTable', () => {
       todayElement.click();
       fixture.detectChanges();
 
-      expect(todayElement.classList.contains('mat-calendar-table-selected')).toBe(
-          true, 'today should be selected');
+      expect(todayElement.classList)
+          .toContain('mat-calendar-table-selected', 'today should be selected');
     });
   });
 });
