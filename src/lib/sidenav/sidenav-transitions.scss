@@ -14,5 +14,7 @@ md-sidenav {
 }
 
 .md-sidenav-backdrop.md-sidenav-shown {
-  transition: background-color $swift-ease-out-duration $swift-ease-out-timing-function;
+  transition-property: background-color, visibility;
+  transition-duration: $swift-ease-out-duration;
+  transition-timing-function: $swift-ease-out-timing-function;
 }
