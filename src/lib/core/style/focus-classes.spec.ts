@@ -160,8 +160,6 @@ describe('FocusOriginMonitor', () => {
   }));
 
   it('should remove focus classes on blur', async(() => {
-    if (platform.FIREFOX) { return; }
-
     buttonElement.focus();
     fixture.detectChanges();
 
@@ -272,8 +270,6 @@ describe('cdkFocusClasses', () => {
   }));
 
   it('should remove focus classes on blur', async(() => {
-    if (platform.FIREFOX) { return; }
-
     buttonElement.focus();
     fixture.detectChanges();
 
@@ -335,14 +331,21 @@ function dispatchFocusEvent(element: Node, type = 'focus') {
   element.dispatchEvent(event);
 }
 
-/** Patches an elements focus method to properly emit focus events when the browser is blurred. */
+/**
+ * Patches an elements focus and blur methods to properly emit focus events when the browser is
+ * blurred.
+ */
 function patchElementFocus(element: HTMLElement) {
   // On Saucelabs, browsers will run simultaneously and therefore can't focus all browser windows
   // at the same time. This is problematic when testing focus states. Chrome and Firefox
   // only fire FocusEvents when the window is focused. This issue also appears locally.
   let _nativeButtonFocus = element.focus.bind(element);
+  let _nativeButtonBlur = element.blur.bind(element);
 
   element.focus = () => {
     document.hasFocus() ? _nativeButtonFocus() : dispatchFocusEvent(element);
+  };
+  element.blur = () => {
+    document.hasFocus() ? _nativeButtonBlur() : dispatchFocusEvent(element, 'blur');
   };
 }
