@@ -18,7 +18,7 @@ describe('MdMonthView', () => {
     TestBed.compileComponents();
   }));
 
-  describe('standard year view', () => {
+  describe('standard month view', () => {
     let fixture: ComponentFixture<StandardMonthView>;
     let testComponent: StandardMonthView;
     let monthViewNativeElement: Element;
