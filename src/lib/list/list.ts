@@ -112,7 +112,8 @@ export class MdListItem implements AfterContentInit {
 
   @ContentChild(MdListAvatarCssMatStyler)
   set _hasAvatar(avatar: MdListAvatarCssMatStyler) {
-    this._renderer.setElementClass(this._element.nativeElement, 'mat-list-avatar', avatar != null);
+    this._renderer.setElementClass(
+        this._element.nativeElement, 'mat-list-item-avatar', avatar != null);
   }
 
   constructor(private _renderer: Renderer, private _element: ElementRef) {}
