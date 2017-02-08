@@ -28,7 +28,7 @@ task('screenshots', () => {
 });
 
 function updateFileResult(database: admin.database.Database, prNumber: string,
-                          filenameKey: string, result: boolean): admin.Promise<void>{
+                          filenameKey: string, result: boolean) {
   return database.ref(FIREBASE_REPORT).child(prNumber).child('results').child(filenameKey).set(result);
 }
 
@@ -38,7 +38,7 @@ function updateResult(database: admin.database.Database, prNumber: string,
 }
 
 function updateTravis(database: admin.database.Database,
-                      prNumber: string): admin.Promise<void> {
+                      prNumber: string) {
   return database.ref(FIREBASE_REPORT).child(prNumber).update({
     commit: process.env['TRAVIS_COMMIT'],
     sha: process.env['TRAVIS_PULL_REQUEST_SHA'],
@@ -47,7 +47,7 @@ function updateTravis(database: admin.database.Database,
 }
 
 /** Get a list of filenames from firebase database. */
-function getScreenshotFiles(database: admin.database.Database): admin.Promise<any[]> {
+function getScreenshotFiles(database: admin.database.Database): Promise<any[]> {
   let bucket = openScreenshotsBucket();
   return bucket.getFiles({ prefix: 'golds/' }).then(function(data: any) {
     return data[0].filter((file:any) => file.name.endsWith('.screenshot.png'));
@@ -76,7 +76,7 @@ function getLocalScreenshotFiles(dir: string): string[] {
 function uploadScreenshots(prNumber?: string, mode?: 'test' | 'diff') {
   let bucket = openScreenshotsBucket();
 
-  let promises: admin.Promise<void>[] = [];
+  let promises: Promise<void>[] = [];
   let localDir = mode == 'diff' ? path.join(SCREENSHOT_DIR, 'diff') : SCREENSHOT_DIR;
   getLocalScreenshotFiles(localDir).forEach((file: string) => {
     let fileName = path.join(localDir, file);
@@ -84,18 +84,18 @@ function uploadScreenshots(prNumber?: string, mode?: 'test' | 'diff') {
       `golds/${file}` : `screenshots/${prNumber}/${mode}/${file}`;
     promises.push(bucket.upload(fileName, { destination: destination }));
   });
-  return admin.Promise.all(promises);
+  return Promise.all(promises);
 }
 
 /** Download golds screenshots. */
 function downloadAllGoldsAndCompare(
   files: any[], database: admin.database.Database,
-  prNumber: string): admin.Promise<boolean> {
+  prNumber: string): Promise<boolean> {
 
   mkdirp(path.join(SCREENSHOT_DIR, `golds`));
   mkdirp(path.join(SCREENSHOT_DIR, `diff`));
 
-  return admin.Promise.all(files.map((file: any) => {
+  return Promise.all(files.map((file: any) => {
     return downloadGold(file).then(() => diffScreenshot(file.name, database, prNumber));
   })).then((results: boolean[]) => results.every((value: boolean) => value == true));
 }
@@ -108,7 +108,7 @@ function downloadGold(file: any): Promise<void> {
 }
 
 function diffScreenshot(filename: string, database: admin.database.Database,
-                        prNumber: string): admin.Promise<boolean> {
+                        prNumber: string) {
   // TODO(tinayuangao): Run the downloads and diffs in parallel.
   filename = path.basename(filename);
   let goldUrl = path.join(SCREENSHOT_DIR, `golds`, filename);
@@ -117,7 +117,7 @@ function diffScreenshot(filename: string, database: admin.database.Database,
   let filenameKey = extractScreenshotName(filename);
 
   if (existsSync(goldUrl) && existsSync(pullRequestUrl)) {
-    return new admin.Promise((resolve: any, reject: any) => {
+    return new Promise((resolve: any, reject: any) => {
       imageDiff({
         actualImage: pullRequestUrl,
         expectedImage: goldUrl,

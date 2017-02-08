@@ -1,5 +1,4 @@
 const request = require('request');
-import * as admin from 'firebase-admin';
 
 /** Update github pr status to success/failure */
 export function updateGithubStatus(result: boolean, prNumber: string) {
@@ -21,7 +20,7 @@ export function updateGithubStatus(result: boolean, prNumber: string) {
     'Content-Length': Buffer.byteLength(data)
   };
 
-  return new admin.Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     request({
       url: `https://api.github.com/repos/angular/material2/statuses/${sha}`,
       method: 'POST',
