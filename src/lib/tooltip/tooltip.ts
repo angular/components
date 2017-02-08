@@ -26,7 +26,7 @@ import {
   ComponentPortal,
   OverlayConnectionPosition,
   OriginConnectionPosition,
-  CompatibilityModule,
+  CompatibilityModule
 } from '../core';
 import {MdTooltipInvalidPositionError} from './tooltip-errors';
 import {Observable} from 'rxjs/Observable';
@@ -34,7 +34,7 @@ import {Subject} from 'rxjs/Subject';
 import {Dir} from '../core/rtl/dir';
 import 'rxjs/add/operator/first';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
-import {Subscription} from 'rxjs';
+import {Subscription} from 'rxjs/Subscription';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
