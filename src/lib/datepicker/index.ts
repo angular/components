@@ -8,8 +8,10 @@ import {OverlayModule} from '../core/overlay/overlay-directives';
 import {MdDatepicker} from './datepicker';
 import {MdDatepickerInput} from './datepicker-input';
 import {MdDialogModule} from '../dialog/index';
+import {MdCalendar} from './calendar';
 
 
+export * from './calendar';
 export * from './calendar-table';
 export * from './datepicker';
 export * from './datepicker-input';
@@ -19,7 +21,7 @@ export * from './year-view';
 
 @NgModule({
   imports: [CommonModule, DatetimeModule, MdDialogModule, OverlayModule],
-  exports: [MdCalendarTable, MdDatepicker, MdDatepickerInput, MdMonthView, MdYearView],
-  declarations: [MdCalendarTable, MdDatepicker, MdDatepickerInput, MdMonthView, MdYearView],
+  exports: [MdCalendar, MdCalendarTable, MdDatepicker, MdDatepickerInput, MdMonthView, MdYearView],
+  declarations: [MdCalendar, MdCalendarTable, MdDatepicker, MdDatepickerInput, MdMonthView, MdYearView],
 })
 export class MdDatepickerModule {}
