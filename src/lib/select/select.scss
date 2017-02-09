@@ -78,13 +78,16 @@ $mat-select-trigger-font-size: 16px !default;
   // position. This has been fixed for Firefox 52, slated for early 2017.
   // Bug report: https://bugzilla.mozilla.org/show_bug.cgi?id=874718
   //
-  // In the meantime, we must adjust the left position to 0 to mimic where it
-  // would be if it were correctly taken out of the flex flow. It's also necessary
-  // to adjust the top value because absolutely positioned elements should not be
-  // affected by the flex container's "align-items" property either. To center the text,
-  // we must offset by 6px (6px top + 6px bottom + 18px text height = 30px total height).
+  // In the meantime, we must adjust the position to fit the top and left edge of the
+  // containing element with a height matching the trigger container.
+  // In doing so, we can use align-items: center to allow the text to
+  // correctly position itself in the middle of the container.
+  top: 0;
   left: 0;
-  top: 6px;
+  height: $mat-select-trigger-height;
+
+  display: flex;
+  align-items: center;
 
   [dir='rtl'] & {
     left: auto;
