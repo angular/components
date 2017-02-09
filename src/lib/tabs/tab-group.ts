@@ -50,12 +50,12 @@ export type MdTabHeaderPosition = 'above' | 'below';
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-tab-group',
+  selector: 'md-tab-group, mat-tab-group',
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
   host: {
-    '[class.md-tab-group-dynamic-height]': 'dynamicHeight',
-    '[class.md-tab-group-inverted-header]': 'headerPosition === "below"',
+    '[class.mat-tab-group-dynamic-height]': 'dynamicHeight',
+    '[class.mat-tab-group-inverted-header]': 'headerPosition === "below"',
   }
 })
 export class MdTabGroup {
