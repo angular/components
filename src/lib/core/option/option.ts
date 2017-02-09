@@ -57,6 +57,8 @@ export class MdOption {
 
   private _id: string = `md-option-${_uniqueIdCounter++}`;
 
+  private _viewValue: string;
+
   /** The unique ID of the option. */
   get id() { return this._id; }
 
@@ -90,11 +92,16 @@ export class MdOption {
 
   /**
    * The displayed value of the option. It is necessary to show the selected option in the
-   * select's trigger.
+   * select's trigger. If not set explicitly, it defaults to the text content of the option
+   * element.
    */
+  @Input()
   get viewValue(): string {
-    // TODO(kara): Add input property alternative for node envs.
-    return this._getHostElement().textContent.trim();
+    return this._viewValue || this._getHostElement().textContent.trim();
+  }
+
+  set viewValue(value: string) {
+    this._viewValue = value;
   }
 
   /** Selects the option. */
