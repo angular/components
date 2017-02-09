@@ -58,7 +58,7 @@
 //   <circle cx="1" cy="1" r="1" fill="{INJECTED_COLOR}"/>
 // </svg>
 @function _mat-progress-bar-buffer($palette, $hue) {
-  $color: md-color($palette, $hue) + '';
+  $color: mat-color($palette, $hue) + '';
 
   // We also need to escape the hash in hex colors,
   // otherwise IE will throw an XML error.
