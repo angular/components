@@ -43,14 +43,14 @@ export class FocusOriginMonitor {
   private _touchFocusListener = () => {
     document.addEventListener('blur', this._touchBlurListener, true);
     document.removeEventListener('focus', this._touchFocusListener, true);
-  };
+  }
 
   /** Blur listener that unsets the _touchActiveBacking and origin and then uninstalls itself. */
   private _touchBlurListener = () => {
     this._touchActiveBacking = false;
     this._origin = null;
     document.removeEventListener('blur', this._touchBlurListener, true);
-  };
+  }
 
   constructor() {
     // Note: we listen to events in the capture phase so we can detect them even if the user stops

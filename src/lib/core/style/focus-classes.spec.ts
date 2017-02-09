@@ -90,6 +90,25 @@ describe('FocusOriginMonitor', () => {
     }, 0);
   }));
 
+  it('should detect focus via touch', async(() => {
+    // Simulate focus via touch.
+    dispatchTouchstartEvent(document);
+    buttonElement.focus();
+    fixture.detectChanges();
+
+    setTimeout(() => {
+      fixture.detectChanges();
+
+      expect(buttonElement.classList.length)
+          .toBe(2, 'button should have exactly 2 focus classes');
+      expect(buttonElement.classList.contains('cdk-focused'))
+          .toBe(true, 'button should have cdk-focused class');
+      expect(buttonElement.classList.contains('cdk-touch-focused'))
+          .toBe(true, 'button should have cdk-touch-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('touch');
+    }, 650);
+  }));
+
   it('should detect programmatic focus', async(() => {
     // Programmatically focus.
     buttonElement.focus();
@@ -139,6 +158,23 @@ describe('FocusOriginMonitor', () => {
       expect(buttonElement.classList.contains('cdk-mouse-focused'))
           .toBe(true, 'button should have cdk-mouse-focused class');
       expect(changeHandler).toHaveBeenCalledWith('mouse');
+    }, 0);
+  }));
+
+  it('focusVia mouse should simulate mouse focus', async(() => {
+    focusOriginMonitor.focusVia(buttonElement, buttonRenderer, 'touch');
+    fixture.detectChanges();
+
+    setTimeout(() => {
+      fixture.detectChanges();
+
+      expect(buttonElement.classList.length)
+          .toBe(2, 'button should have exactly 2 focus classes');
+      expect(buttonElement.classList.contains('cdk-focused'))
+          .toBe(true, 'button should have cdk-focused class');
+      expect(buttonElement.classList.contains('cdk-touch-focused'))
+          .toBe(true, 'button should have cdk-touch-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('touch');
     }, 0);
   }));
 
@@ -251,6 +287,25 @@ describe('cdkFocusClasses', () => {
     }, 0);
   }));
 
+  it('should detect focus via touch', async(() => {
+    // Simulate focus via touch.
+    dispatchTouchstartEvent(document);
+    buttonElement.focus();
+    fixture.detectChanges();
+
+    setTimeout(() => {
+      fixture.detectChanges();
+
+      expect(buttonElement.classList.length)
+          .toBe(2, 'button should have exactly 2 focus classes');
+      expect(buttonElement.classList.contains('cdk-focused'))
+          .toBe(true, 'button should have cdk-focused class');
+      expect(buttonElement.classList.contains('cdk-touch-focused'))
+          .toBe(true, 'button should have cdk-touch-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('touch');
+    }, 650);
+  }));
+
   it('should detect programmatic focus', async(() => {
     // Programmatically focus.
     buttonElement.focus();
@@ -312,6 +367,13 @@ function dispatchMousedownEvent(element: Node) {
   element.dispatchEvent(event);
 }
 
+/** Dispatches a mousedown event on the specified element. */
+function dispatchTouchstartEvent(element: Node) {
+  let event = document.createEvent('MouseEvent');
+  event.initMouseEvent(
+      'touchstart', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+  element.dispatchEvent(event);
+}
 
 /** Dispatches a keydown event on the specified element. */
 function dispatchKeydownEvent(element: Node, keyCode: number) {
