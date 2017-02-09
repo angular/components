@@ -3,7 +3,10 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
 
-export type FocusOrigin = 'mouse' | 'keyboard' | 'program';
+const TOUCH_BUFFER_MS = 650;
+
+
+export type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program';
 
 
 /** Monitors mouse and keyboard events to determine the cause of focus events. */
@@ -18,14 +21,59 @@ export class FocusOriginMonitor {
   /** Whether the window has just been focused. */
   private _windowFocused = false;
 
+  /** Whether the current sequence of events was kicked off by a touch event. */
+  private get _touchActive() { return this._touchActiveBacking; }
+  private set _touchActive(value: boolean) {
+    this._touchActiveBacking = value;
+
+    if (this._touchActiveBacking) {
+      // Register a listener to unset the backing variable after a focus followed by a blur.
+      // This is necessary to avoid accidentally counting a programmatic focus that occurs on a
+      // touchstart event from being counted as a touch focus.
+      document.addEventListener('focus', this._touchFocusListener, true);
+    } else {
+      // Remove the focus and blur listeners so they don't interfere in the future.
+      document.removeEventListener('focus', this._touchFocusListener, true);
+      document.removeEventListener('blur', this._touchBlurListener, true);
+    }
+  }
+  private _touchActiveBacking = false;
+
+  /** A focus listener that adds _touchBlurListener listener and then uninstalls itself. */
+  private _touchFocusListener = () => {
+    document.addEventListener('blur', this._touchBlurListener, true);
+    document.removeEventListener('focus', this._touchFocusListener, true);
+  };
+
+  /** Blur listener that unsets the _touchActiveBacking and origin and then uninstalls itself. */
+  private _touchBlurListener = () => {
+    this._touchActiveBacking = false;
+    this._origin = null;
+    document.removeEventListener('blur', this._touchBlurListener, true);
+  };
+
   constructor() {
-    // Listen to keydown and mousedown in the capture phase so we can detect them even if the user
-    // stops propagation.
-    // TODO(mmalerba): Figure out how to handle touchstart
-    document.addEventListener(
-        'keydown', () => this._setOriginForCurrentEventQueue('keyboard'), true);
-    document.addEventListener(
-        'mousedown', () => this._setOriginForCurrentEventQueue('mouse'), true);
+    // Note: we listen to events in the capture phase so we can detect them even if the user stops
+    // propagation.
+
+    // On keydown record the origin and cancel any touch event that may be in progress.
+    document.addEventListener('keydown', () => {
+      this._touchActive = false;
+      this._setOriginForCurrentEventQueue('keyboard');
+    }, true);
+
+    // On mousedown record the origin, but do not cancel the touch event. A mousedown can happen as
+    // a result of a touch event.
+    document.addEventListener('mousedown',
+        () => this._setOriginForCurrentEventQueue('mouse'), true);
+
+    // When the touchstart event fires the focus event is not yet in the event queue. This means we
+    // can't rely on the trick used above (setting timeout of 0ms). Instead we wait 650ms to see if
+    // a focus happens.
+    document.addEventListener('touchstart', () => {
+      this._touchActive = true;
+      setTimeout(() => this._touchActive = false, TOUCH_BUFFER_MS);
+    }, true);
 
     // Make a note of when the window regains focus, so we can restore the origin info for the
     // focused element.
@@ -45,6 +93,10 @@ export class FocusOriginMonitor {
 
   /** Focuses the element via the specified focus origin. */
   focusVia(element: Node, renderer: Renderer, origin: FocusOrigin) {
+    // This method may have been called as a result of a touchstart event, so we need to clear
+    // _touchActive to prevent it from interfering.
+    this._touchActive = false;
+
     this._setOriginForCurrentEventQueue(origin);
     renderer.invokeElementMethod(element, 'focus');
   }
@@ -57,6 +109,10 @@ export class FocusOriginMonitor {
 
   /** Handles focus events on a registered element. */
   private _onFocus(element: Element, renderer: Renderer, subject: Subject<FocusOrigin>) {
+    if (this._touchActive) {
+      this._origin = 'touch';
+    }
+
     // If we couldn't detect a cause for the focus event, it's due to one of two reasons:
     // 1) The window has just regained focus, in which case we want to restore the focused state of
     //    the element from before the window blurred.
@@ -71,6 +127,7 @@ export class FocusOriginMonitor {
     }
 
     renderer.setElementClass(element, 'cdk-focused', true);
+    renderer.setElementClass(element, 'cdk-touch-focused', this._origin == 'touch');
     renderer.setElementClass(element, 'cdk-keyboard-focused', this._origin == 'keyboard');
     renderer.setElementClass(element, 'cdk-mouse-focused', this._origin == 'mouse');
     renderer.setElementClass(element, 'cdk-program-focused', this._origin == 'program');
@@ -83,6 +140,7 @@ export class FocusOriginMonitor {
   /** Handles blur events on a registered element. */
   private _onBlur(element: Element, renderer: Renderer, subject: Subject<FocusOrigin>) {
     renderer.setElementClass(element, 'cdk-focused', false);
+    renderer.setElementClass(element, 'cdk-touch-focused', false);
     renderer.setElementClass(element, 'cdk-keyboard-focused', false);
     renderer.setElementClass(element, 'cdk-mouse-focused', false);
     renderer.setElementClass(element, 'cdk-program-focused', false);
