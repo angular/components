@@ -13,6 +13,7 @@ import {
   Self,
   ViewEncapsulation,
   ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {MdOption, MdOptionSelectEvent} from '../core/option/option';
 import {ENTER, SPACE} from '../core/keyboard/keycodes';
@@ -84,7 +85,8 @@ export class MdSelectChange {
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': '_control?.invalid || "false"',
     '[attr.aria-owns]': '_optionIds',
-    '[class.md-select-disabled]': 'disabled',
+    '[class.mat-select-disabled]': 'disabled',
+    '[class.mat-select]': 'true',
     '(keydown)': '_handleKeydown($event)',
     '(blur)': '_onBlur()'
   },
@@ -232,8 +234,8 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   @Output() change: EventEmitter<MdSelectChange> = new EventEmitter<MdSelectChange>();
 
   constructor(private _element: ElementRef, private _renderer: Renderer,
-              private _viewportRuler: ViewportRuler, @Optional() private _dir: Dir,
-              @Self() @Optional() public _control: NgControl) {
+              private _viewportRuler: ViewportRuler, private _changeDetectorRef: ChangeDetectorRef,
+              @Optional() private _dir: Dir, @Self() @Optional() public _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
@@ -266,7 +268,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   /** Opens the overlay panel. */
   open(): void {
-    if (this.disabled) {
+    if (this.disabled || !this.options.length) {
       return;
     }
     this._calculateOverlayPosition();
@@ -300,6 +302,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     }
 
     this._setSelectionByValue(value);
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -406,7 +409,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
    */
   _setScrollTop(): void {
     const scrollContainer =
-        this.overlayDir.overlayRef.overlayElement.querySelector('.md-select-panel');
+        this.overlayDir.overlayRef.overlayElement.querySelector('.mat-select-panel');
     scrollContainer.scrollTop = this._scrollTop;
   }
 

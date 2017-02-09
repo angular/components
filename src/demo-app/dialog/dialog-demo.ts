@@ -1,6 +1,7 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, ViewChild, TemplateRef} from '@angular/core';
 import {DOCUMENT} from '@angular/platform-browser';
-import {MdDialog, MdDialogRef, MdDialogConfig} from '@angular/material';
+import {MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA} from '@angular/material';
+
 
 @Component({
   moduleId: module.id,
@@ -21,8 +22,14 @@ export class DialogDemo {
       bottom: '',
       left: '',
       right: ''
+    },
+    data: {
+      message: 'Jazzy jazz jazz'
     }
   };
+  numTemplateOpens = 0;
+
+  @ViewChild(TemplateRef) template: TemplateRef<any>;
 
   constructor(public dialog: MdDialog, @Inject(DOCUMENT) doc: any) {
     // Possible useful example for the open and closeAll events.
@@ -41,7 +48,7 @@ export class DialogDemo {
   openJazz() {
     this.dialogRef = this.dialog.open(JazzDialog, this.config);
 
-    this.dialogRef.afterClosed().subscribe(result => {
+    this.dialogRef.afterClosed().subscribe((result: string) => {
       this.lastCloseResult = result;
       this.dialogRef = null;
     });
@@ -51,6 +58,11 @@ export class DialogDemo {
     let dialogRef = this.dialog.open(ContentElementDialog, this.config);
     dialogRef.componentInstance.actionsAlignment = this.actionsAlignment;
   }
+
+  openTemplate() {
+    this.numTemplateOpens++;
+    this.dialog.open(this.template, this.config);
+  }
 }
 
 
@@ -59,13 +71,13 @@ export class DialogDemo {
   template: `
   <p>It's Jazz!</p>
   <p><label>How much? <input #howMuch></label></p>
-  <p> {{ jazzMessage }} </p>
+  <p> {{ data.message }} </p>
   <button type="button" (click)="dialogRef.close(howMuch.value)">Close dialog</button>`
 })
 export class JazzDialog {
-  jazzMessage = 'Jazzy jazz jazz';
-
-  constructor(public dialogRef: MdDialogRef<JazzDialog>) { }
+  constructor(
+    public dialogRef: MdDialogRef<JazzDialog>,
+    @Inject(MD_DIALOG_DATA) public data: any) { }
 }
 
 
@@ -104,7 +116,7 @@ export class JazzDialog {
         color="primary"
         href="https://en.wikipedia.org/wiki/Neptune"
         target="_blank">Read more on Wikipedia</a>
-      
+
       <button
         md-button
         color="secondary"

@@ -68,11 +68,12 @@ export class MdCheckboxChange {
   templateUrl: 'checkbox.html',
   styleUrls: ['checkbox.css'],
   host: {
-    '[class.md-checkbox-indeterminate]': 'indeterminate',
-    '[class.md-checkbox-checked]': 'checked',
-    '[class.md-checkbox-disabled]': 'disabled',
-    '[class.md-checkbox-label-before]': 'labelPosition == "before"',
-    '[class.md-checkbox-focused]': '_hasFocus',
+    '[class.mat-checkbox]': 'true',
+    '[class.mat-checkbox-indeterminate]': 'indeterminate',
+    '[class.mat-checkbox-checked]': 'checked',
+    '[class.mat-checkbox-disabled]': 'disabled',
+    '[class.mat-checkbox-label-before]': 'labelPosition == "before"',
+    '[class.mat-checkbox-focused]': '_hasFocus',
   },
   providers: [MD_CHECKBOX_CONTROL_VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None,
@@ -138,8 +139,8 @@ export class MdCheckbox implements ControlValueAccessor {
   get disabled(): boolean { return this._disabled; }
   set disabled(value) { this._disabled = coerceBooleanProperty(value); }
 
-  /** @docs-private */
-  @Input() tabindex: number = 0;
+  /** Tabindex value that is passed to the underlying input element. */
+  @Input() tabIndex: number = 0;
 
   /** Name value will be applied to the input element if present */
   @Input() name: string = null;
@@ -240,7 +241,7 @@ export class MdCheckbox implements ControlValueAccessor {
 
   _setElementColor(color: string, isAdd: boolean) {
     if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `md-${color}`, isAdd);
+      this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
     }
   }
 
@@ -393,7 +394,7 @@ export class MdCheckbox implements ControlValueAccessor {
           'indeterminate-checked' : 'indeterminate-unchecked';
     }
 
-    return `md-checkbox-anim-${animSuffix}`;
+    return `mat-checkbox-anim-${animSuffix}`;
   }
 
   _getHostElement() {

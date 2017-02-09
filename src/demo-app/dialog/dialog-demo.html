@@ -1,7 +1,14 @@
 <h1>Dialog demo</h1>
 
-<button md-raised-button color="primary" (click)="openJazz()" [disabled]="dialogRef">Open dialog</button>
-<button md-raised-button color="accent" (click)="openContentElement()">Open dialog with content elements</button>
+<button md-raised-button color="primary" (click)="openJazz()" [disabled]="dialogRef">
+  Open dialog
+</button>
+<button md-raised-button color="accent" (click)="openContentElement()">
+  Open dialog with content elements
+</button>
+<button md-raised-button color="accent" (click)="openTemplate()">
+  Open dialog with template content
+</button>
 
 <md-card class="demo-dialog-card">
   <md-card-content>
@@ -46,8 +53,20 @@
       </md-select>
     </p>
 
-    <md-checkbox [(ngModel)]="config.disableClose">Disable close</md-checkbox>
+    <p>
+      <md-input-container>
+        <input mdInput [(ngModel)]="config.data.message" placeholder="Dialog message">
+      </md-input-container>
+    </p>
+
+    <p>
+      <md-checkbox [(ngModel)]="config.disableClose">Disable close</md-checkbox>
+    </p>
   </md-card-content>
 </md-card>
 
 <p>Last close result: {{lastCloseResult}}</p>
+
+<template>
+  I'm a template dialog. I've been opened {{numTemplateOpens}} times!
+</template>
