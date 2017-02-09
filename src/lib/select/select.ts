@@ -13,6 +13,7 @@ import {
   Self,
   ViewEncapsulation,
   ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {MdOption, MdOptionSelectEvent} from '../core/option/option';
 import {ENTER, SPACE} from '../core/keyboard/keycodes';
@@ -24,6 +25,8 @@ import {ControlValueAccessor, NgControl} from '@angular/forms';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 import {ConnectedOverlayDirective} from '../core/overlay/overlay-directives';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+import 'rxjs/add/operator/startWith';
+
 
 /**
  * The following style constants are necessary to save here in order
@@ -233,8 +236,8 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   @Output() change: EventEmitter<MdSelectChange> = new EventEmitter<MdSelectChange>();
 
   constructor(private _element: ElementRef, private _renderer: Renderer,
-              private _viewportRuler: ViewportRuler, @Optional() private _dir: Dir,
-              @Self() @Optional() public _control: NgControl) {
+              private _viewportRuler: ViewportRuler, private _changeDetectorRef: ChangeDetectorRef,
+              @Optional() private _dir: Dir, @Self() @Optional() public _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
@@ -242,8 +245,8 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   ngAfterContentInit() {
     this._initKeyManager();
-    this._resetOptions();
-    this._changeSubscription = this.options.changes.subscribe(() => {
+
+    this._changeSubscription = this.options.changes.startWith(null).subscribe(() => {
       this._resetOptions();
 
       if (this._control) {
@@ -256,8 +259,14 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   ngOnDestroy() {
     this._dropSubscriptions();
-    this._changeSubscription.unsubscribe();
-    this._tabSubscription.unsubscribe();
+
+    if (this._changeSubscription) {
+      this._changeSubscription.unsubscribe();
+    }
+
+    if (this._tabSubscription) {
+      this._tabSubscription.unsubscribe();
+    }
   }
 
   /** Toggles the overlay panel open or closed. */
@@ -267,7 +276,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   /** Opens the overlay panel. */
   open(): void {
-    if (this.disabled) {
+    if (this.disabled || !this.options.length) {
       return;
     }
     this._calculateOverlayPosition();
@@ -291,16 +300,10 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
    * @param value New value to be written to the model.
    */
   writeValue(value: any): void {
-    if (!this.options) {
-      // In reactive forms, writeValue() will be called synchronously before
-      // the select's child options have been created. It's necessary to call
-      // writeValue() again after the options have been created to ensure any
-      // initial view value is set.
-      Promise.resolve(null).then(() => this.writeValue(value));
-      return;
+    if (this.options) {
+      this._setSelectionByValue(value);
+      this._changeDetectorRef.markForCheck();
     }
-
-    this._setSelectionByValue(value);
   }
 
   /**
