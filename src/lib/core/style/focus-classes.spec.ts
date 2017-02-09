@@ -1,29 +1,20 @@
 import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
-import {Component, Renderer} from '@angular/core';
+import {Component, Renderer, ViewChild} from '@angular/core';
 import {StyleModule} from './index';
 import {By} from '@angular/platform-browser';
 import {TAB} from '../keyboard/keycodes';
-import {FocusOriginMonitor} from './focus-classes';
-import {PlatformModule} from '../platform/index';
-import {Platform} from '../platform/platform';
-
-
-// NOTE: Firefox only fires focus & blur events when it is the currently active window.
-// This is not always the case on our CI setup, therefore we disable tests that depend on these
-// events firing for Firefox. We may be able to fix this by configuring our CI to start Firefox with
-// the following preference: focusmanager.testmode = true
-
+import {FocusOriginMonitor, FocusOrigin, CdkFocusClasses} from './focus-classes';
 
 describe('FocusOriginMonitor', () => {
   let fixture: ComponentFixture<PlainButton>;
   let buttonElement: HTMLElement;
   let buttonRenderer: Renderer;
   let focusOriginMonitor: FocusOriginMonitor;
-  let platform: Platform;
+  let changeHandler: (origin: FocusOrigin) => void;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [StyleModule, PlatformModule],
+      imports: [StyleModule],
       declarations: [
         PlainButton,
       ],
@@ -32,21 +23,23 @@ describe('FocusOriginMonitor', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([FocusOriginMonitor, Platform], (fom: FocusOriginMonitor, pfm: Platform) => {
+  beforeEach(inject([FocusOriginMonitor], (fom: FocusOriginMonitor) => {
     fixture = TestBed.createComponent(PlainButton);
     fixture.detectChanges();
 
     buttonElement = fixture.debugElement.query(By.css('button')).nativeElement;
     buttonRenderer = fixture.componentInstance.renderer;
     focusOriginMonitor = fom;
-    platform = pfm;
 
-    focusOriginMonitor.registerElementForFocusClasses(buttonElement, buttonRenderer);
+    changeHandler = jasmine.createSpy('focus origin change handler');
+    focusOriginMonitor.registerElementForFocusClasses(buttonElement, buttonRenderer)
+        .subscribe(changeHandler);
+
+    // Patch the element focus to properly emit focus events when the browser is blurred.
+    patchElementFocus(buttonElement);
   }));
 
   it('manually registered element should receive focus classes', async(() => {
-    if (platform.FIREFOX) { return; }
-
     buttonElement.focus();
     fixture.detectChanges();
 
@@ -55,12 +48,11 @@ describe('FocusOriginMonitor', () => {
 
       expect(buttonElement.classList.contains('cdk-focused'))
           .toBe(true, 'button should have cdk-focused class');
+      expect(changeHandler).toHaveBeenCalledTimes(1);
     }, 0);
   }));
 
   it('should detect focus via keyboard', async(() => {
-    if (platform.FIREFOX) { return; }
-
     // Simulate focus via keyboard.
     dispatchKeydownEvent(document, TAB);
     buttonElement.focus();
@@ -75,12 +67,11 @@ describe('FocusOriginMonitor', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-keyboard-focused'))
           .toBe(true, 'button should have cdk-keyboard-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('keyboard');
     }, 0);
   }));
 
   it('should detect focus via mouse', async(() => {
-    if (platform.FIREFOX) { return; }
-
     // Simulate focus via mouse.
     dispatchMousedownEvent(document);
     buttonElement.focus();
@@ -95,12 +86,11 @@ describe('FocusOriginMonitor', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-mouse-focused'))
           .toBe(true, 'button should have cdk-mouse-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('mouse');
     }, 0);
   }));
 
   it('should detect programmatic focus', async(() => {
-    if (platform.FIREFOX) { return; }
-
     // Programmatically focus.
     buttonElement.focus();
     fixture.detectChanges();
@@ -114,12 +104,11 @@ describe('FocusOriginMonitor', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-program-focused'))
           .toBe(true, 'button should have cdk-program-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('program');
     }, 0);
   }));
 
   it('focusVia keyboard should simulate keyboard focus', async(() => {
-    if (platform.FIREFOX) { return; }
-
     focusOriginMonitor.focusVia(buttonElement, buttonRenderer, 'keyboard');
     fixture.detectChanges();
 
@@ -132,12 +121,11 @@ describe('FocusOriginMonitor', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-keyboard-focused'))
           .toBe(true, 'button should have cdk-keyboard-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('keyboard');
     }, 0);
   }));
 
   it('focusVia mouse should simulate mouse focus', async(() => {
-    if (platform.FIREFOX) { return; }
-
     focusOriginMonitor.focusVia(buttonElement, buttonRenderer, 'mouse');
     fixture.detectChanges();
 
@@ -150,12 +138,11 @@ describe('FocusOriginMonitor', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-mouse-focused'))
           .toBe(true, 'button should have cdk-mouse-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('mouse');
     }, 0);
   }));
 
   it('focusVia program should simulate programmatic focus', async(() => {
-    if (platform.FIREFOX) { return; }
-
     focusOriginMonitor.focusVia(buttonElement, buttonRenderer, 'program');
     fixture.detectChanges();
 
@@ -168,6 +155,27 @@ describe('FocusOriginMonitor', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-program-focused'))
           .toBe(true, 'button should have cdk-program-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('program');
+    }, 0);
+  }));
+
+  it('should remove focus classes on blur', async(() => {
+    buttonElement.focus();
+    fixture.detectChanges();
+
+    setTimeout(() => {
+      fixture.detectChanges();
+
+      expect(buttonElement.classList.length)
+          .toBe(2, 'button should have exactly 2 focus classes');
+      expect(changeHandler).toHaveBeenCalledWith('program');
+
+      buttonElement.blur();
+      fixture.detectChanges();
+
+      expect(buttonElement.classList.length)
+          .toBe(0, 'button should not have any focus classes');
+      expect(changeHandler).toHaveBeenCalledWith(null);
     }, 0);
   }));
 });
@@ -176,11 +184,11 @@ describe('FocusOriginMonitor', () => {
 describe('cdkFocusClasses', () => {
   let fixture: ComponentFixture<ButtonWithFocusClasses>;
   let buttonElement: HTMLElement;
-  let platform: Platform;
+  let changeHandler: (origin: FocusOrigin) => void;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [StyleModule, PlatformModule],
+      imports: [StyleModule],
       declarations: [
         ButtonWithFocusClasses,
       ],
@@ -189,21 +197,23 @@ describe('cdkFocusClasses', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([Platform], (pfm: Platform) => {
+  beforeEach(() => {
     fixture = TestBed.createComponent(ButtonWithFocusClasses);
     fixture.detectChanges();
 
+    changeHandler = jasmine.createSpy('focus origin change handler');
+    fixture.componentInstance.cdkFocusClasses.changes.subscribe(changeHandler);
     buttonElement = fixture.debugElement.query(By.css('button')).nativeElement;
-    platform = pfm;
-  }));
+
+    // Patch the element focus to properly emit focus events when the browser is blurred.
+    patchElementFocus(buttonElement);
+  });
 
   it('should initially not be focused', () => {
     expect(buttonElement.classList.length).toBe(0, 'button should not have focus classes');
   });
 
   it('should detect focus via keyboard', async(() => {
-    if (platform.FIREFOX) { return; }
-
     // Simulate focus via keyboard.
     dispatchKeydownEvent(document, TAB);
     buttonElement.focus();
@@ -218,12 +228,11 @@ describe('cdkFocusClasses', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-keyboard-focused'))
           .toBe(true, 'button should have cdk-keyboard-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('keyboard');
     }, 0);
   }));
 
   it('should detect focus via mouse', async(() => {
-    if (platform.FIREFOX) { return; }
-
     // Simulate focus via mouse.
     dispatchMousedownEvent(document);
     buttonElement.focus();
@@ -238,12 +247,11 @@ describe('cdkFocusClasses', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-mouse-focused'))
           .toBe(true, 'button should have cdk-mouse-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('mouse');
     }, 0);
   }));
 
   it('should detect programmatic focus', async(() => {
-    if (platform.FIREFOX) { return; }
-
     // Programmatically focus.
     buttonElement.focus();
     fixture.detectChanges();
@@ -257,6 +265,27 @@ describe('cdkFocusClasses', () => {
           .toBe(true, 'button should have cdk-focused class');
       expect(buttonElement.classList.contains('cdk-program-focused'))
           .toBe(true, 'button should have cdk-program-focused class');
+      expect(changeHandler).toHaveBeenCalledWith('program');
+    }, 0);
+  }));
+
+  it('should remove focus classes on blur', async(() => {
+    buttonElement.focus();
+    fixture.detectChanges();
+
+    setTimeout(() => {
+      fixture.detectChanges();
+
+      expect(buttonElement.classList.length)
+          .toBe(2, 'button should have exactly 2 focus classes');
+      expect(changeHandler).toHaveBeenCalledWith('program');
+
+      buttonElement.blur();
+      fixture.detectChanges();
+
+      expect(buttonElement.classList.length)
+          .toBe(0, 'button should not have any focus classes');
+      expect(changeHandler).toHaveBeenCalledWith(null);
     }, 0);
   }));
 });
@@ -269,8 +298,11 @@ class PlainButton {
 
 
 @Component({template: `<button cdkFocusClasses>focus me!</button>`})
-class ButtonWithFocusClasses {}
+class ButtonWithFocusClasses {
+  @ViewChild(CdkFocusClasses) cdkFocusClasses: CdkFocusClasses;
+}
 
+// TODO(devversion): move helper functions into a global utility file. See #2902
 
 /** Dispatches a mousedown event on the specified element. */
 function dispatchMousedownEvent(element: Node) {
@@ -290,4 +322,30 @@ function dispatchKeydownEvent(element: Node, keyCode: number) {
     get: function() { return keyCode; }
   });
   element.dispatchEvent(event);
+}
+
+/** Dispatches a focus event on the specified element. */
+function dispatchFocusEvent(element: Node, type = 'focus') {
+  let event = document.createEvent('Event');
+  event.initEvent(type, true, true);
+  element.dispatchEvent(event);
+}
+
+/**
+ * Patches an elements focus and blur methods to properly emit focus events when the browser is
+ * blurred.
+ */
+function patchElementFocus(element: HTMLElement) {
+  // On Saucelabs, browsers will run simultaneously and therefore can't focus all browser windows
+  // at the same time. This is problematic when testing focus states. Chrome and Firefox
+  // only fire FocusEvents when the window is focused. This issue also appears locally.
+  let _nativeButtonFocus = element.focus.bind(element);
+  let _nativeButtonBlur = element.blur.bind(element);
+
+  element.focus = () => {
+    document.hasFocus() ? _nativeButtonFocus() : dispatchFocusEvent(element);
+  };
+  element.blur = () => {
+    document.hasFocus() ? _nativeButtonBlur() : dispatchFocusEvent(element, 'blur');
+  };
 }
