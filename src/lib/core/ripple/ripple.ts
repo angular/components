@@ -54,6 +54,7 @@ export class MdRipple implements OnChanges, OnDestroy {
   /**
    * If set, the normal duration of ripple animations is divided by this value. For example,
    * setting it to 0.5 will cause the animations to take twice as long.
+   * A changed speedFactor will not modify the fade-out duration of the ripples.
    */
   @Input('mdRippleSpeedFactor') speedFactor: number = 1;
 

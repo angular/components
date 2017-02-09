@@ -1,8 +1,10 @@
 import {ElementRef, NgZone} from '@angular/core';
 import {ViewportRuler} from '../overlay/position/viewport-ruler';
 
-
+/** Fade-in speed in pixels per second. Can be modified with the speedFactor option. */
 export const RIPPLE_SPEED_PX_PER_SECOND = 170;
+
+/** Fade-out speed for the ripples in milliseconds. This can't be modified by the speedFactor. */
 export const RIPPLE_FADE_OUT_DURATION = 600;
 
 /**
