@@ -29,11 +29,23 @@ $mat-select-trigger-font-size: 16px !default;
   font-size: $mat-select-trigger-font-size;
 
   [aria-disabled='true'] & {
-    @include mat-control-disabled-underline();
-    border-bottom: transparent;
     background-position: 0 bottom;
     cursor: default;
     user-select: none;
+  }
+}
+
+.mat-select-border {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+
+  [aria-disabled='true'] & {
+    @include mat-control-disabled-underline();
+    background-color: transparent;
+    background-position: 0 bottom;
   }
 }
 
@@ -69,7 +81,6 @@ $mat-select-trigger-font-size: 16px !default;
 }
 
 .mat-select-value {
-  @include mat-truncate-line();
   position: absolute;
   max-width: calc(100% - #{$mat-select-arrow-size * 2});
 
@@ -78,13 +89,12 @@ $mat-select-trigger-font-size: 16px !default;
   // position. This has been fixed for Firefox 52, slated for early 2017.
   // Bug report: https://bugzilla.mozilla.org/show_bug.cgi?id=874718
   //
-  // In the meantime, we must adjust the position to fit the top and left edge of the
-  // containing element with a height matching the trigger container.
-  // In doing so, we can use align-items: center to allow the text to
+  // In the meantime, we must adjust the position to fit the top, left, and bottom edge of the
+  // containing trigger element. In doing so, we can use align-items: center to allow the text to
   // correctly position itself in the middle of the container.
   top: 0;
   left: 0;
-  height: $mat-select-trigger-height;
+  bottom: 0;
 
   display: flex;
   align-items: center;
@@ -93,6 +103,11 @@ $mat-select-trigger-font-size: 16px !default;
     left: auto;
     right: 0;
   }
+}
+
+.mat-select-value-text {
+  @include mat-truncate-line();
+  line-height: $mat-select-trigger-height;
 }
 
 .mat-select-arrow {
