@@ -13,7 +13,7 @@ import {
   EventEmitter,
   Renderer,
   ViewEncapsulation,
-  ViewChild
+  ViewChild, NgZone
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Dir, MdError, coerceBooleanProperty, CompatibilityModule} from '../core';
@@ -321,6 +321,7 @@ export class MdSidenav implements AfterContentInit {
   ],
   host: {
     '[class.mat-sidenav-container]': 'true',
+    '[class.mat-sidenav-transition]': '_initialized',
   },
   encapsulation: ViewEncapsulation.None,
 })
@@ -349,8 +350,10 @@ export class MdSidenavContainer implements AfterContentInit {
   private _left: MdSidenav;
   private _right: MdSidenav;
 
+  _initialized = false;
+
   constructor(@Optional() private _dir: Dir, private _element: ElementRef,
-              private _renderer: Renderer) {
+              private _renderer: Renderer, private _ngZone: NgZone) {
     // If a `Dir` directive exists up the tree, listen direction changes and update the left/right
     // properties to point to the proper start/end.
     if (_dir != null) {
@@ -366,6 +369,9 @@ export class MdSidenavContainer implements AfterContentInit {
       this._watchSidenavAlign(sidenav);
     });
     this._validateDrawers();
+
+    // Give the view a chance to render the initial state, then enable transitions.
+    this._ngZone.onMicrotaskEmpty.first().subscribe(() => this._initialized = true);
   }
 
   /**
