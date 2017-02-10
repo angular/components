@@ -5,3 +5,8 @@
 
 <br>
 <div>{{selected?.toNativeDate()}}</div>
+
+<input [mdDatepicker]="dp">
+<button (click)="dp.openStandardUi()">open</button>
+<button (click)="dp.openTouchUi()">open (mobile)</button>
+<md-datepicker #dp></md-datepicker>
