@@ -23,58 +23,38 @@ export class FocusOriginMonitor {
   /** Whether the window has just been focused. */
   private _windowFocused = false;
 
-  /** Whether the current sequence of events was kicked off by a touch event. */
-  private get _touchActive() { return this._touchActiveBacking; }
-  private set _touchActive(value: boolean) {
-    this._touchActiveBacking = value;
+  /** The target of the last touch event. */
+  private _lastTouchTarget: EventTarget;
 
-    if (this._touchActiveBacking) {
-      // Register a listener to unset the backing variable after a focus followed by a blur.
-      // This is necessary to avoid accidentally counting a programmatic focus that occurs on a
-      // touchstart event from being counted as a touch focus.
-      document.addEventListener('focus', this._touchFocusListener, true);
-    } else {
-      // Remove the focus and blur listeners so they don't interfere in the future.
-      document.removeEventListener('focus', this._touchFocusListener, true);
-      document.removeEventListener('blur', this._touchBlurListener, true);
-    }
-  }
-  private _touchActiveBacking = false;
-
-  /** A focus listener that adds _touchBlurListener listener and then uninstalls itself. */
-  private _touchFocusListener = () => {
-    document.addEventListener('blur', this._touchBlurListener, true);
-    document.removeEventListener('focus', this._touchFocusListener, true);
-  }
-
-  /** Blur listener that unsets the _touchActiveBacking and origin and then uninstalls itself. */
-  private _touchBlurListener = () => {
-    this._touchActiveBacking = false;
-    this._origin = null;
-    document.removeEventListener('blur', this._touchBlurListener, true);
-  }
+  private _touchTimeout: number;
 
   constructor() {
     // Note: we listen to events in the capture phase so we can detect them even if the user stops
     // propagation.
 
-    // On keydown record the origin and cancel any touch event that may be in progress.
+    // On keydown record the origin and clear any touch event that may be in progress.
     document.addEventListener('keydown', () => {
-      this._touchActive = false;
+      this._lastTouchTarget = null;
       this._setOriginForCurrentEventQueue('keyboard');
     }, true);
 
-    // On mousedown record the origin, but do not cancel the touch event. A mousedown can happen as
-    // a result of a touch event.
-    document.addEventListener('mousedown',
-        () => this._setOriginForCurrentEventQueue('mouse'), true);
+    // On mousedown record the origin only if there is not touch target, since a mousedown can
+    // happen as a result of a touch event.
+    document.addEventListener('mousedown', () => {
+      if (!this._lastTouchTarget) {
+        this._setOriginForCurrentEventQueue('mouse');
+      }
+    }, true);
 
     // When the touchstart event fires the focus event is not yet in the event queue. This means we
     // can't rely on the trick used above (setting timeout of 0ms). Instead we wait 650ms to see if
     // a focus happens.
-    document.addEventListener('touchstart', () => {
-      this._touchActive = true;
-      setTimeout(() => this._touchActive = false, TOUCH_BUFFER_MS);
+    document.addEventListener('touchstart', (event: Event) => {
+      if (this._touchTimeout != null) {
+        clearTimeout(this._touchTimeout);
+      }
+      this._lastTouchTarget = event.target;
+      this._touchTimeout = setTimeout(() => this._lastTouchTarget = null, TOUCH_BUFFER_MS);
     }, true);
 
     // Make a note of when the window regains focus, so we can restore the origin info for the
@@ -88,17 +68,14 @@ export class FocusOriginMonitor {
   /** Register an element to receive focus classes. */
   registerElementForFocusClasses(element: Element, renderer: Renderer): Observable<FocusOrigin> {
     let subject = new Subject<FocusOrigin>();
-    renderer.listen(element, 'focus', () => this._onFocus(element, renderer, subject));
+    renderer.listen(element, 'focus',
+        (event: Event) => this._onFocus(event, element, renderer, subject));
     renderer.listen(element, 'blur', () => this._onBlur(element, renderer, subject));
     return subject.asObservable();
   }
 
   /** Focuses the element via the specified focus origin. */
   focusVia(element: Node, renderer: Renderer, origin: FocusOrigin) {
-    // This method may have been called as a result of a touchstart event, so we need to clear
-    // _touchActive to prevent it from interfering.
-    this._touchActive = false;
-
     this._setOriginForCurrentEventQueue(origin);
     renderer.invokeElementMethod(element, 'focus');
   }
@@ -109,20 +86,26 @@ export class FocusOriginMonitor {
     setTimeout(() => this._origin = null, 0);
   }
 
-  /** Handles focus events on a registered element. */
-  private _onFocus(element: Element, renderer: Renderer, subject: Subject<FocusOrigin>) {
-    if (this._touchActive) {
-      this._origin = 'touch';
-    }
+  private _wasCausedByTouch(event: Event): boolean {
+    let focusTarget = event.target;
+    return this._lastTouchTarget instanceof Node && focusTarget instanceof Node &&
+        (focusTarget == this._lastTouchTarget || focusTarget.contains(this._lastTouchTarget));
+  }
 
+  /** Handles focus events on a registered element. */
+  private _onFocus(event: Event, element: Element, renderer: Renderer,
+                   subject: Subject<FocusOrigin>) {
     // If we couldn't detect a cause for the focus event, it's due to one of two reasons:
     // 1) The window has just regained focus, in which case we want to restore the focused state of
     //    the element from before the window blurred.
-    // 2) The element was programmatically focused, in which case we should mark the origin as
+    // 2) It was caused by a touch event, in which case we mark the origin as 'touch'.
+    // 3) The element was programmatically focused, in which case we should mark the origin as
     //    'program'.
     if (!this._origin) {
       if (this._windowFocused && this._lastFocusOrigin) {
         this._origin = this._lastFocusOrigin;
+      } else if (this._wasCausedByTouch(event)) {
+        this._origin = 'touch';
       } else {
         this._origin = 'program';
       }

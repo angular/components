@@ -73,7 +73,7 @@ describe('FocusOriginMonitor', () => {
 
   it('should detect focus via mouse', async(() => {
     // Simulate focus via mouse.
-    dispatchMousedownEvent(document);
+    dispatchMousedownEvent(buttonElement);
     buttonElement.focus();
     fixture.detectChanges();
 
@@ -92,7 +92,7 @@ describe('FocusOriginMonitor', () => {
 
   it('should detect focus via touch', async(() => {
     // Simulate focus via touch.
-    dispatchTouchstartEvent(document);
+    dispatchTouchstartEvent(buttonElement);
     buttonElement.focus();
     fixture.detectChanges();
 
@@ -270,7 +270,7 @@ describe('cdkFocusClasses', () => {
 
   it('should detect focus via mouse', async(() => {
     // Simulate focus via mouse.
-    dispatchMousedownEvent(document);
+    dispatchMousedownEvent(buttonElement);
     buttonElement.focus();
     fixture.detectChanges();
 
@@ -289,7 +289,7 @@ describe('cdkFocusClasses', () => {
 
   it('should detect focus via touch', async(() => {
     // Simulate focus via touch.
-    dispatchTouchstartEvent(document);
+    dispatchTouchstartEvent(buttonElement);
     buttonElement.focus();
     fixture.detectChanges();
 
