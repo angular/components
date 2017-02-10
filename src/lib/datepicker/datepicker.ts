@@ -6,7 +6,8 @@ import {
   ChangeDetectionStrategy,
   ViewContainerRef,
   Optional,
-  ElementRef, OnDestroy
+  ElementRef,
+  OnDestroy
 } from '@angular/core';
 import {Overlay} from '../core/overlay/overlay';
 import {OverlayRef} from '../core/overlay/overlay-ref';
@@ -16,6 +17,11 @@ import {Dir} from '../core/rtl/dir';
 import {MdError} from '../core/errors/error';
 import {MdDialog} from '../dialog/dialog';
 import {MdDialogRef} from '../dialog/dialog-ref';
+import {PositionStrategy} from '../core/overlay/position/position-strategy';
+import {
+  OriginConnectionPosition,
+  OverlayConnectionPosition
+} from '../core/overlay/position/connected-position';
 
 
 // TODO(mmalerba): Figure out what the real width should be.
@@ -134,16 +140,20 @@ export class MdDatepicker implements OnDestroy {
 
   /** Create the popup. */
   private _createPopup(): void {
-    const positionStrategy = this._overlay.position().connectedTo(this._inputElementRef,
-        {originX: 'start', originY: 'bottom'}, {overlayX: 'start', overlayY: 'top'});
-
     const overlayState = new OverlayState();
-    overlayState.positionStrategy = positionStrategy;
+    overlayState.positionStrategy = this._createPopupPositionStrategy();
     overlayState.width = CALENDAR_POPUP_WIDTH;
     overlayState.hasBackdrop = true;
     overlayState.backdropClass = 'md-overlay-transparent-backdrop';
     overlayState.direction = this._dir ? this._dir.value : 'ltr';
 
     this._popupRef = this._overlay.create(overlayState);
+  }
+
+  /** Create the popup PositionStrategy. */
+  private _createPopupPositionStrategy(): PositionStrategy {
+    let origin = {originX: 'start', originY: 'bottom'} as OriginConnectionPosition;
+    let overlay = {overlayX: 'start', overlayY: 'top'} as OverlayConnectionPosition;
+    return this._overlay.position().connectedTo(this._inputElementRef, origin, overlay);
   }
 }
