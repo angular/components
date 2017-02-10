@@ -3,7 +3,7 @@ import {Component, Renderer, ViewChild} from '@angular/core';
 import {StyleModule} from './index';
 import {By} from '@angular/platform-browser';
 import {TAB} from '../keyboard/keycodes';
-import {FocusOriginMonitor, FocusOrigin, CdkFocusClasses} from './focus-classes';
+import {FocusOriginMonitor, FocusOrigin, CdkFocusClasses, TOUCH_BUFFER_MS} from './focus-classes';
 
 describe('FocusOriginMonitor', () => {
   let fixture: ComponentFixture<PlainButton>;
@@ -106,7 +106,7 @@ describe('FocusOriginMonitor', () => {
       expect(buttonElement.classList.contains('cdk-touch-focused'))
           .toBe(true, 'button should have cdk-touch-focused class');
       expect(changeHandler).toHaveBeenCalledWith('touch');
-    }, 650);
+    }, TOUCH_BUFFER_MS);
   }));
 
   it('should detect programmatic focus', async(() => {
@@ -303,7 +303,7 @@ describe('cdkFocusClasses', () => {
       expect(buttonElement.classList.contains('cdk-touch-focused'))
           .toBe(true, 'button should have cdk-touch-focused class');
       expect(changeHandler).toHaveBeenCalledWith('touch');
-    }, 650);
+    }, TOUCH_BUFFER_MS);
   }));
 
   it('should detect programmatic focus', async(() => {

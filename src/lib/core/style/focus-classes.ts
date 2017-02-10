@@ -3,7 +3,9 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
 
-const TOUCH_BUFFER_MS = 650;
+// This is the value used by AngularJS Material. Through trial and error (on iPhone 6S) they found
+// that a value of around 650ms seems appropriate.
+export const TOUCH_BUFFER_MS = 650;
 
 
 export type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program';
