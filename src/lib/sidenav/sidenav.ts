@@ -321,7 +321,7 @@ export class MdSidenav implements AfterContentInit {
   ],
   host: {
     '[class.mat-sidenav-container]': 'true',
-    '[class.mat-sidenav-transition]': '_initialized',
+    '[class.mat-sidenav-transition]': '_enableTransitions',
   },
   encapsulation: ViewEncapsulation.None,
 })
@@ -350,7 +350,8 @@ export class MdSidenavContainer implements AfterContentInit {
   private _left: MdSidenav;
   private _right: MdSidenav;
 
-  _initialized = false;
+  /** Whether to enable open/close trantions. */
+  _enableTransitions = false;
 
   constructor(@Optional() private _dir: Dir, private _element: ElementRef,
               private _renderer: Renderer, private _ngZone: NgZone) {
@@ -371,7 +372,7 @@ export class MdSidenavContainer implements AfterContentInit {
     this._validateDrawers();
 
     // Give the view a chance to render the initial state, then enable transitions.
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => this._initialized = true);
+    this._ngZone.onMicrotaskEmpty.first().subscribe(() => this._enableTransitions = true);
   }
 
   /**
