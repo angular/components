@@ -18,16 +18,23 @@ import {MdDialog} from '../dialog/dialog';
 import {MdDialogRef} from '../dialog/dialog-ref';
 
 
+// TODO(mmalerba): Figure out what the real width should be.
+const CALENDAR_POPUP_WIDTH = 300;
+
+
 /** Component responsible for managing the datepicker popup/dialog. */
 @Component({
   moduleId: module.id,
-  selector: 'md-datepicker',
+  selector: 'md-datepicker, mat-datepicker',
   templateUrl: 'datepicker.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdDatepicker implements OnDestroy {
-  /** Whether the calendar is in UI is in touch mode. */
+  /**
+   * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather,
+   * than a popup and elements have more padding to allow for bigger touch targets.
+   */
   touchUi: boolean;
 
   /** The calendar template. */
@@ -50,27 +57,39 @@ export class MdDatepicker implements OnDestroy {
 
   ngOnDestroy() {
     this.close();
-    this._popupRef.dispose();
+    if (this._popupRef) {
+      this._popupRef.dispose();
+    }
   }
 
   /**
    * Register an input with this datepicker.
    * @param inputElementRef An ElementRef for the input.
    */
-  registerInput(inputElementRef: ElementRef) {
+  _registerInput(inputElementRef: ElementRef): void {
     if (this._inputElementRef) {
       throw new MdError('An MdDatepicker can only be associated with a single input.');
     }
     this._inputElementRef = inputElementRef;
   }
 
+  /** Opens the calendar in standard UI mode. */
+  openStandardUi(): void {
+    this._open();
+  }
+
+  /** Opens the calendar in touch UI mode. */
+  openTouchUi(): void {
+    this._open(true);
+  }
+
   /**
    * Open the calendar.
    * @param touchUi Whether to use the touch UI.
    */
-  open(touchUi = false) {
+  private _open(touchUi = false): void {
     if (!this._inputElementRef) {
-      throw new MdError('Attempted to open an MdDatepicker with no associated input.')
+      throw new MdError('Attempted to open an MdDatepicker with no associated input.');
     }
 
     if (!this._calendarPortal) {
@@ -82,20 +101,26 @@ export class MdDatepicker implements OnDestroy {
   }
 
   /** Close the calendar. */
-  close () {
-    this._popupRef && this._popupRef.hasAttached() && this._popupRef.detach();
-    this._dialogRef && this._dialogRef.close();
-    this._dialogRef = null;
-    this._calendarPortal.isAttached && this._calendarPortal.detach();
+  close(): void {
+    if (this._popupRef && this._popupRef.hasAttached()) {
+      this._popupRef.detach();
+    }
+    if (this._dialogRef) {
+      this._dialogRef.close();
+      this._dialogRef = null;
+    }
+    if (this._calendarPortal.isAttached) {
+      this._calendarPortal.detach();
+    }
   }
 
   /** Open the calendar as a dialog. */
-  private _openAsDialog() {
+  private _openAsDialog(): void {
     this._dialogRef = this._dialog.open(this.calendarTemplate);
   }
 
   /** Open the calendar as a popup. */
-  private _openAsPopup() {
+  private _openAsPopup(): void {
     if (!this._popupRef) {
       this._createPopup();
     }
@@ -114,7 +139,7 @@ export class MdDatepicker implements OnDestroy {
 
     const overlayState = new OverlayState();
     overlayState.positionStrategy = positionStrategy;
-    overlayState.width = 300;
+    overlayState.width = CALENDAR_POPUP_WIDTH;
     overlayState.hasBackdrop = true;
     overlayState.backdropClass = 'md-overlay-transparent-backdrop';
     overlayState.direction = this._dir ? this._dir.value : 'ltr';
