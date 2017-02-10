@@ -9,13 +9,15 @@ describe('MdDatepicker', () => {
       imports: [MdDatepickerModule],
       declarations: [
         StandardDatepicker,
+        MultiInputDatepicker,
+        NoInputDatepicker,
       ],
     });
 
     TestBed.compileComponents();
   }));
 
-  describe('standard month view', () => {
+  describe('standard datepicker', () => {
     let fixture: ComponentFixture<StandardDatepicker>;
     let testComponent: StandardDatepicker;
 
@@ -58,7 +60,7 @@ describe('MdDatepicker', () => {
       expect(parseInt(getComputedStyle(popup).height)).toBe(0);
     });
 
-    it('openTouchUi should open dialog', () => {
+    it('close should close dialog', () => {
       testComponent.datepicker.openTouchUi();
       fixture.detectChanges();
 
@@ -70,6 +72,29 @@ describe('MdDatepicker', () => {
       expect(document.querySelector('md-dialog-container')).toBeNull();
     });
   });
+
+  describe('datepicker with too many inputs', () => {
+    it('should throw when multiple inputs registered', () => {
+      let fixture = TestBed.createComponent(MultiInputDatepicker);
+      expect(() => fixture.detectChanges()).toThrow();
+    });
+  });
+
+  describe('datepicker with no inputs', () => {
+    let fixture: ComponentFixture<NoInputDatepicker>;
+    let testComponent: NoInputDatepicker;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(NoInputDatepicker);
+      fixture.detectChanges();
+
+      testComponent = fixture.componentInstance;
+    });
+
+    it('should throw when opened with no registered inputs', () => {
+      expect(() => testComponent.datepicker.openStandardUi()).toThrow();
+    });
+  });
 });
 
 
@@ -77,5 +102,23 @@ describe('MdDatepicker', () => {
   template: `<input [mdDatepicker]="d"><md-datepicker #d></md-datepicker>`,
 })
 class StandardDatepicker {
+  @ViewChild('d') datepicker: MdDatepicker;
+}
+
+
+@Component({
+  template: `
+    <input [mdDatepicker]="d"><input [mdDatepicker]="d"><md-datepicker #d></md-datepicker>
+  `,
+})
+class MultiInputDatepicker {
+  @ViewChild('d') datepicker: MdDatepicker;
+}
+
+
+@Component({
+  template: `<md-datepicker #d></md-datepicker>`,
+})
+class NoInputDatepicker {
   @ViewChild('d') datepicker: MdDatepicker;
 }

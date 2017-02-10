@@ -38,7 +38,7 @@ const CALENDAR_POPUP_WIDTH = 300;
 })
 export class MdDatepicker implements OnDestroy {
   /**
-   * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather,
+   * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
    * than a popup and elements have more padding to allow for bigger touch targets.
    */
   touchUi: boolean;
@@ -115,7 +115,7 @@ export class MdDatepicker implements OnDestroy {
       this._dialogRef.close();
       this._dialogRef = null;
     }
-    if (this._calendarPortal.isAttached) {
+    if (this._calendarPortal && this._calendarPortal.isAttached) {
       this._calendarPortal.detach();
     }
   }
