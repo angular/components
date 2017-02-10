@@ -19,7 +19,7 @@
     }
   }
 
-  .mat-select-border {
+  .mat-select-underline {
     background-color: mat-color($foreground, divider);
 
     .mat-select:focus:not(.mat-select-disabled) & {
