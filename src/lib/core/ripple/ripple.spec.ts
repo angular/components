@@ -167,7 +167,7 @@ describe('MdRipple', () => {
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
     });
 
-    it('does not trigger change detection', () => {
+    it('does not run events inside the NgZone', () => {
       const spy = jasmine.createSpy('zone unstable callback');
       const subscription = fixture.ngZone.onUnstable.subscribe(spy);
 
