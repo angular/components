@@ -13,7 +13,8 @@ import {
   EventEmitter,
   Renderer,
   ViewEncapsulation,
-  ViewChild, NgZone
+  ViewChild,
+  NgZone
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Dir, MdError, coerceBooleanProperty, CompatibilityModule} from '../core';
@@ -21,6 +22,7 @@ import {A11yModule} from '../core/a11y/index';
 import {FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {OverlayModule} from '../core/overlay/overlay-directives';
+import 'rxjs/add/operator/first';
 
 
 /** Exception thrown when two MdSidenav are matching the same side. */
