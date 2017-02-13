@@ -18,12 +18,13 @@
       background: mat-color($background, hover);
     }
 
-    .mat-calendar-table-cell &.mat-calendar-table-selected {
+    .mat-calendar-table-selected &,
+    .mat-calendar-table-selected:hover & {
       background: mat-color($primary);
       color: mat-color($primary, default-contrast);
     }
 
-    &.mat-calendar-table-today {
+    .mat-calendar-table-today & {
       border-color: mat-color($foreground, divider);
     }
   }
