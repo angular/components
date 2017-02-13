@@ -10,6 +10,7 @@ const imageDiff = require('image-diff');
 
 const SCREENSHOT_DIR = './screenshots';
 const FIREBASE_REPORT = 'screenshot/reports';
+const FIREBASE_FILELIST = 'screenshot/filenames';
 
 /** Task which upload screenshots generated from e2e test. */
 task('screenshots', () => {
@@ -23,6 +24,7 @@ task('screenshots', () => {
       .then(() => uploadScreenshots(prNumber, 'diff'))
       .then(() => uploadScreenshots(prNumber, 'test'))
       .then(() => updateTravis(database, prNumber))
+      .then(() => setScreenFilenames(database, prNumber))
       .then(() => database.goOffline(), () => database.goOffline());
   }
 });
@@ -135,4 +137,14 @@ function diffScreenshot(filename: string, database: admin.database.Database,
   } else {
     return updateFileResult(database, prNumber, filenameKey, false).then(() => false);
   }
+}
+
+/** Upload a list of filenames to firebase database as gold. */
+function setScreenFilenames(database: admin.database.Database,
+                            prNumber?: string) {
+  let filenames: string[] = getLocalScreenshotFiles(SCREENSHOT_DIR);
+  let filelistDatabase = prNumber ?
+    database.ref(FIREBASE_REPORT).child(prNumber).child('filenames') :
+    database.ref(FIREBASE_FILELIST);
+  return filelistDatabase.set(filenames);
 }
