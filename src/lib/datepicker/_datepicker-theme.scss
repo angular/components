@@ -13,19 +13,19 @@
 
   .mat-calendar-table-cell-content {
     color: mat-color($foreground, text);
+  }
 
-    .mat-calendar-table-cell:hover & {
-      background: mat-color($background, hover);
-    }
+  .mat-calendar-table-cell-content:hover {
+    background: mat-color($background, hover);
+  }
 
-    .mat-calendar-table-selected &,
-    .mat-calendar-table-selected:hover & {
-      background: mat-color($primary);
-      color: mat-color($primary, default-contrast);
-    }
+  .mat-calendar-table-selected,
+  .mat-calendar-table-selected:hover {
+    background: mat-color($primary);
+    color: mat-color($primary, default-contrast);
+  }
 
-    .mat-calendar-table-today & {
-      border-color: mat-color($foreground, divider);
-    }
+  .mat-calendar-table-today {
+    border-color: mat-color($foreground, divider);
   }
 }

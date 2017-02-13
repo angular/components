@@ -1,22 +1,27 @@
 $mat-calendar-table-font-size: 12px !default;
 $mat-calendar-table-label-padding-start: 5% !default;
+$mat-calendar-table-label-translation: -.5em;
 $mat-calendar-table-cell-min-size: 32px !default;
-$mat-calendar-table-min-size: 7 * $mat-calendar-table-cell-min-size !default;
 $mat-calendar-table-cell-size: 100% / 7 !default;
 $mat-calendar-table-cell-content-margin: 5% !default;
-$mat-calendar-table-cell-content-size: 100% - $mat-calendar-table-cell-content-margin * 2 !default;
 $mat-calendar-table-cell-content-border-width: 1px !default;
+
+$mat-calendar-table-min-size: 7 * $mat-calendar-table-cell-min-size !default;
+$mat-calendar-table-cell-padding: $mat-calendar-table-cell-size / 2 !default;
+$mat-calendar-table-cell-content-size: 100% - $mat-calendar-table-cell-content-margin * 2 !default;
 
 
 .mat-calendar-table-table {
-  min-width: $mat-calendar-table-min-size;
   border-spacing: 0;
   border-collapse: collapse;
   font-size: $mat-calendar-table-font-size;
+  min-width: $mat-calendar-table-min-size;
+  width: 100%;
 }
 
 .mat-calendar-table-label {
-  padding: 0 0 0 $mat-calendar-table-label-padding-start;
+  padding: 0 0 0 $mat-calendar-table-cell-padding;
+  transform: translateX($mat-calendar-table-label-translation);
   text-align: left;
   font-weight: normal;
 }
@@ -26,7 +31,7 @@ $mat-calendar-table-cell-content-border-width: 1px !default;
   width: $mat-calendar-table-cell-size;
   height: 0;
   line-height: 0;
-  padding: ($mat-calendar-table-cell-size / 2) 0;
+  padding: $mat-calendar-table-cell-padding 0;
   text-align: center;
 }
 
@@ -49,7 +54,8 @@ $mat-calendar-table-cell-content-border-width: 1px !default;
 
 [dir='rtl'] {
   .mat-calendar-table-label {
-    padding: 0 $mat-calendar-table-label-padding-start 0 0;
+    padding: 0 $mat-calendar-table-cell-padding 0 0;
+    transform: translateX(-$mat-calendar-table-label-translation);
     text-align: right;
   }
 }

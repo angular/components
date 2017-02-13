@@ -13,10 +13,10 @@
     </td>
     <td *ngFor="let item of row"
         class="mat-calendar-table-cell"
-        [class.mat-calendar-table-selected]="selectedValue === item.value"
-        [class.mat-calendar-table-today]="todayValue === item.value"
         (click)="_cellClicked(item.value)">
-      <div class="mat-calendar-table-cell-content">
+      <div class="mat-calendar-table-cell-content"
+           [class.mat-calendar-table-selected]="selectedValue === item.value"
+           [class.mat-calendar-table-today]="todayValue === item.value">
         {{item.displayValue}}
       </div>
     </td>
