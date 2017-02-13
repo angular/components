@@ -47,7 +47,7 @@ function updateTravis(database: admin.database.Database,
 }
 
 /** Get a list of filenames from firebase database. */
-function getScreenshotFiles(database: admin.database.Database): Promise<any[]> {
+function getScreenshotFiles(database: admin.database.Database) {
   let bucket = openScreenshotsBucket();
   return bucket.getFiles({ prefix: 'golds/' }).then(function(data: any) {
     return data[0].filter((file:any) => file.name.endsWith('.screenshot.png'));
@@ -76,7 +76,7 @@ function getLocalScreenshotFiles(dir: string): string[] {
 function uploadScreenshots(prNumber?: string, mode?: 'test' | 'diff') {
   let bucket = openScreenshotsBucket();
 
-  let promises: admin.Promise<void>[] = [];
+  let promises: any[] = [];
   let localDir = mode == 'diff' ? path.join(SCREENSHOT_DIR, 'diff') : SCREENSHOT_DIR;
   getLocalScreenshotFiles(localDir).forEach((file: string) => {
     let fileName = path.join(localDir, file);
@@ -95,13 +95,13 @@ function downloadAllGoldsAndCompare(
   mkdirp(path.join(SCREENSHOT_DIR, `golds`));
   mkdirp(path.join(SCREENSHOT_DIR, `diff`));
 
-  return admin.Promise.all(files.map((file: any) => {
+  return Promise.all(files.map((file: any) => {
     return downloadGold(file).then(() => diffScreenshot(file.name, database, prNumber));
   })).then((results: boolean[]) => results.every((value: boolean) => value == true));
 }
 
 /** Download one gold screenshot */
-function downloadGold(file: any): Promise<void> {
+function downloadGold(file: any) {
   return file.download({
     destination: path.join(SCREENSHOT_DIR, file.name)
   });
