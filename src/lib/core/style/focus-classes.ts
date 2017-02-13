@@ -26,6 +26,7 @@ export class FocusOriginMonitor {
   /** The target of the last touch event. */
   private _lastTouchTarget: EventTarget;
 
+  /** The timeout id of the touch timeout, used to cancel timeout later. */
   private _touchTimeout: number;
 
   constructor() {
@@ -87,6 +88,23 @@ export class FocusOriginMonitor {
   }
 
   private _wasCausedByTouch(event: Event): boolean {
+    // Note(mmalerba): This implementation is not quite perfect, there is a small edge case.
+    // Consider the following dom structure:
+    //
+    // <div #parent tabindex="0" cdkFocusClasses>
+    //   <div #child (click)="#parent.focus()"></div>
+    // </div>
+    //
+    // If the user touches the #child element and the #parent is programmatically focused as a
+    // result, this code will still consider it to have been caused by the touch event and will
+    // apply the cdk-touch-focused class rather than the cdk-program-focused class. This is a
+    // relatively small edge-case that can be worked around by using
+    // focusVia(parentEl, renderer,  'program') to focus the parent element.
+    //
+    // If we decide that we absolutely must handle this case correctly, we can do so by listening
+    // for the first focus event after the touchstart, and then the first blur event after that
+    // focus event. When that blur event fires we know that whatever follows is not a result of the
+    // touchstart.
     let focusTarget = event.target;
     return this._lastTouchTarget instanceof Node && focusTarget instanceof Node &&
         (focusTarget == this._lastTouchTarget || focusTarget.contains(this._lastTouchTarget));
