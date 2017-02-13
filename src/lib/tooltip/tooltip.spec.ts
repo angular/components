@@ -398,6 +398,15 @@ describe('MdTooltip', () => {
       expect(tooltipDirective._tooltipInstance).toBeNull();
     }));
   });
+
+  describe('destroy', () => {
+    it('does not throw an error on destroy', () => {
+      const fixture = TestBed.createComponent(BasicTooltipDemo);
+      fixture.detectChanges();
+      delete fixture.componentInstance.tooltip.scrollSubscription;
+      expect(fixture.destroy.bind(fixture)).not.toThrow();
+    });
+  });
 });
 
 @Component({
@@ -413,6 +422,7 @@ class BasicTooltipDemo {
   position: string = 'below';
   message: string = initialTooltipMessage;
   showButton: boolean = true;
+  @ViewChild(MdTooltip) tooltip: MdTooltip;
 }
 
 @Component({
