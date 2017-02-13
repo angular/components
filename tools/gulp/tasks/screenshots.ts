@@ -76,7 +76,7 @@ function getLocalScreenshotFiles(dir: string): string[] {
 function uploadScreenshots(prNumber?: string, mode?: 'test' | 'diff') {
   let bucket = openScreenshotsBucket();
 
-  let promises: Promise<void>[] = [];
+  let promises: admin.Promise<void>[] = [];
   let localDir = mode == 'diff' ? path.join(SCREENSHOT_DIR, 'diff') : SCREENSHOT_DIR;
   getLocalScreenshotFiles(localDir).forEach((file: string) => {
     let fileName = path.join(localDir, file);
@@ -90,12 +90,12 @@ function uploadScreenshots(prNumber?: string, mode?: 'test' | 'diff') {
 /** Download golds screenshots. */
 function downloadAllGoldsAndCompare(
   files: any[], database: admin.database.Database,
-  prNumber: string): Promise<boolean> {
+  prNumber: string) {
 
   mkdirp(path.join(SCREENSHOT_DIR, `golds`));
   mkdirp(path.join(SCREENSHOT_DIR, `diff`));
 
-  return Promise.all(files.map((file: any) => {
+  return admin.Promise.all(files.map((file: any) => {
     return downloadGold(file).then(() => diffScreenshot(file.name, database, prNumber));
   })).then((results: boolean[]) => results.every((value: boolean) => value == true));
 }
