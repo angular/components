@@ -87,6 +87,7 @@ export class FocusOriginMonitor {
     setTimeout(() => this._origin = null, 0);
   }
 
+  /** Checks whether the given focus event was caused by a touchstart event. */
   private _wasCausedByTouch(event: Event): boolean {
     // Note(mmalerba): This implementation is not quite perfect, there is a small edge case.
     // Consider the following dom structure:
