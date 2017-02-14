@@ -139,7 +139,10 @@ function diffScreenshot(filename: string, database: admin.database.Database,
   }
 }
 
-/** Upload a list of filenames to firebase database as gold. */
+/**
+ * Upload a list of filenames to firebase database as gold.
+ * This is necessary for control panel since google-cloud is not available to client side.
+ */
 function setScreenFilenames(database: admin.database.Database,
                             prNumber?: string) {
   let filenames: string[] = getLocalScreenshotFiles(SCREENSHOT_DIR);

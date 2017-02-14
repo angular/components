@@ -208,7 +208,10 @@ export function isTravisPushBuild() {
   return process.env['TRAVIS_PULL_REQUEST'] === 'false';
 }
 
-/** Open Google Cloud Storage for screenshots */
+/**
+ * Open Google Cloud Storage for screenshots.
+ * The files uploaded to google cloud are also available to firebase storage.
+ */
 export function openScreenshotsBucket() {
   let gcs = gcloud.storage({
     projectId: 'material2-screenshots',
