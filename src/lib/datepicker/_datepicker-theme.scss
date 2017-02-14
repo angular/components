@@ -13,6 +13,7 @@
 
   .mat-calendar-table-cell-content {
     color: mat-color($foreground, text);
+    border-color: transparent;
   }
 
   .mat-calendar-table-cell-content:hover {

@@ -48,7 +48,8 @@ $mat-calendar-table-cell-content-size: 100% - $mat-calendar-table-cell-content-m
   width: $mat-calendar-table-cell-content-size;
   height: $mat-calendar-table-cell-content-size;
 
-  border: $mat-calendar-table-cell-content-border-width solid transparent;
+  border-width: $mat-calendar-table-cell-content-border-width;
+  border-style: solid;
   border-radius: 50%;
 }
 
