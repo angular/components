@@ -19,6 +19,10 @@ export class Home {}
   encapsulation: ViewEncapsulation.None,
 })
 export class DemoApp {
+
+  /** Whether the demo-app should use a dark theme or not. */
+  isDarkTheme: boolean = false;
+
   navItems = [
     {name: 'Autocomplete', route: 'autocomplete'},
     {name: 'Button', route: 'button'},

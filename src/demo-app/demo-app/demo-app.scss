@@ -1,3 +1,19 @@
+// The default indigo-pink theme will load through the index file. This makes the SCSS build faster
+// since Sass doesn't need to build a "prebuilt" theme again.
+@import '../../lib/core/theming/all-theme';
+
+.demo-dark-theme {
+  // Include core material styles.
+  @include mat-core();
+
+  $primary: mat-palette($mat-indigo);
+  $accent:  mat-palette($mat-pink);
+  $dark-theme: mat-dark-theme($primary, $accent);
+
+  // Include component styles with the given theme.
+  @include angular-material-theme($dark-theme);
+}
+
 body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 
@@ -31,7 +47,6 @@ body {
 
     .demo-toolbar {
       display: flex;
-      justify-content: space-between;
       width: 100%;
     }
   }
@@ -39,6 +54,11 @@ body {
   h1 {
     font-size: 20px;
   }
+}
+
+// Fills remaining flex space.
+.demo-flex-fill {
+  flex: 1 1 auto;
 }
 
 // stretch to screen size in fullscreen mode
