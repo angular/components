@@ -1,0 +1,36 @@
+$mat-calendar-arrow-size: 5px !default;
+
+.mat-calendar {
+  display: block;
+}
+
+.mat-calendar-header {
+  display: flex;
+}
+
+.mat-calendar-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-calendar-button {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: none;
+}
+
+.mat-calendar-button > svg {
+  vertical-align: middle;
+}
+
+.mat-calendar-arrow {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: $mat-calendar-arrow-size solid transparent;
+  border-right: $mat-calendar-arrow-size solid transparent;
+  border-top: $mat-calendar-arrow-size solid;
+  margin: 0 $mat-calendar-arrow-size;
+  vertical-align: middle;
+}
