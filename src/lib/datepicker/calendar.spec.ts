@@ -6,7 +6,7 @@ import {MdCalendar} from './calendar';
 import {By} from '@angular/platform-browser';
 
 
-describe('MsCalendar', () => {
+describe('MdCalendar', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdDatepickerModule],
