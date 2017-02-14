@@ -1,40 +1,62 @@
 $mat-calendar-table-font-size: 12px !default;
-$mat-calendar-table-cell-padding: 1px !default;
-$mat-calendar-table-cell-content-size: 32px !default;
+$mat-calendar-table-label-padding-start: 5% !default;
+$mat-calendar-table-label-translation: -6px !default;
+$mat-calendar-table-cell-min-size: 32px !default;
+$mat-calendar-table-cell-size: 100% / 7 !default;
+$mat-calendar-table-cell-content-margin: 5% !default;
 $mat-calendar-table-cell-content-border-width: 1px !default;
-$mat-calendar-table-label-padding-start: 10px !default;
+
+$mat-calendar-table-min-size: 7 * $mat-calendar-table-cell-min-size !default;
+$mat-calendar-table-cell-padding: $mat-calendar-table-cell-size / 2 !default;
+$mat-calendar-table-cell-content-size: 100% - $mat-calendar-table-cell-content-margin * 2 !default;
 
 
 .mat-calendar-table-table {
   border-spacing: 0;
+  border-collapse: collapse;
   font-size: $mat-calendar-table-font-size;
+  min-width: $mat-calendar-table-min-size;
+  width: 100%;
 }
 
 .mat-calendar-table-label {
-  height: $mat-calendar-table-cell-content-size;
-  padding: 0 0 0 $mat-calendar-table-label-padding-start;
+  padding: 0 0 0 $mat-calendar-table-cell-padding;
+  transform: translateX($mat-calendar-table-label-translation);
   text-align: left;
   font-weight: normal;
 }
 
 .mat-calendar-table-cell {
-  padding: $mat-calendar-table-cell-padding;
+  position: relative;
+  width: $mat-calendar-table-cell-size;
+  height: 0;
+  line-height: 0;
+  padding: $mat-calendar-table-cell-padding 0;
+  text-align: center;
 }
 
 .mat-calendar-table-cell-content {
-  display: table-cell;
+  position: absolute;
+  top: $mat-calendar-table-cell-content-margin;
+  left: $mat-calendar-table-cell-content-margin;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   box-sizing: border-box;
   width: $mat-calendar-table-cell-content-size;
   height: $mat-calendar-table-cell-content-size;
-  border: $mat-calendar-table-cell-content-border-width solid transparent;
+
+  border-width: $mat-calendar-table-cell-content-border-width;
+  border-style: solid;
   border-radius: 50%;
-  text-align: center;
-  vertical-align: middle;
 }
 
 [dir='rtl'] {
   .mat-calendar-table-label {
-    padding: 0 $mat-calendar-table-label-padding-start 0 0;
+    padding: 0 $mat-calendar-table-cell-padding 0 0;
+    transform: translateX(-$mat-calendar-table-label-translation);
     text-align: right;
   }
 }

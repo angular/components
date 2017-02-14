@@ -8,23 +8,25 @@
   $background: map-get($theme, background);
 
   .mat-calendar-table-label {
-    color: md-color($foreground, secondary-text);
+    color: mat-color($foreground, secondary-text);
   }
 
   .mat-calendar-table-cell-content {
-    color: md-color($foreground, text);
+    color: mat-color($foreground, text);
+    border-color: transparent;
+  }
 
-    .mat-calendar-table-cell:hover & {
-      background: md-color($background, hover);
-    }
+  .mat-calendar-table-cell-content:hover {
+    background: mat-color($background, hover);
+  }
 
-    .mat-calendar-table-cell &.mat-calendar-table-selected {
-      background: md-color($primary);
-      color: md-color($primary, default-contrast);
-    }
+  .mat-calendar-table-selected,
+  .mat-calendar-table-selected:hover {
+    background: mat-color($primary);
+    color: mat-color($primary, default-contrast);
+  }
 
-    &.mat-calendar-table-today {
-      border-color: md-color($foreground, divider);
-    }
+  .mat-calendar-table-today {
+    border-color: mat-color($foreground, divider);
   }
 }
