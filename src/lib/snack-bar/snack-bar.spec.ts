@@ -278,13 +278,16 @@ describe('MdSnackBar', () => {
      fakeAsync(() => {
        let dismissObservableCompleted = false;
        let actionObservableCompleted = false;
-       let snackBarRef = snackBar.open('Some content', 'dismiss');
+       let action = 'dismiss';
+       let snackBarRef = snackBar.open('Some content', action);
        viewContainerFixture.detectChanges();
 
        snackBarRef.afterDismissed().subscribe(null, null, () => {
          dismissObservableCompleted = true;
        });
-       snackBarRef.onAction().subscribe(null, null, () => {
+       snackBarRef.onAction().subscribe((result) => {
+         expect(result).toBe(action);
+       }, null, () => {
          actionObservableCompleted = true;
       });
 
