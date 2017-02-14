@@ -35,5 +35,5 @@
 @include demo-list-item-theme(false);
 
 .demo-dark-theme {
-  @include demo-list-item-theme(true)
+  @include demo-list-item-theme(true);
 }
