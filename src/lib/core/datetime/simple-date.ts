@@ -52,11 +52,21 @@ export class SimpleDate {
    * Adds an amount of time (in days, months, and years) to the date.
    * @param amount The amount of time to add.
    */
-  add(amount: {days: number, months: number, years: number}): SimpleDate {
+  add(amount: {days?: number, months?: number, years?: number}): SimpleDate {
     return new SimpleDate(
-        this.year + amount.years || 0,
-        this.month + amount.months || 0,
-        this.date + amount.days || 0);
+        this.year + (amount.years || 0),
+        this.month + (amount.months || 0),
+        this.date + (amount.days || 0));
+  }
+
+  /**
+   * Compares this SimpleDate with another SimpleDate.
+   * @param other The other SimpleDate
+   * @returns 0 if the dates are equal, a number less than 0 if this date is earlier,
+   *     a number greater than 0 if this date is greater.
+   */
+  compare(other: SimpleDate): number {
+    return this.year - other.year || this.month - other.month || this.date - other.date;
   }
 
   /** Converts the SimpleDate to a native JS Date object. */
