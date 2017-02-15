@@ -16,7 +16,7 @@ export type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program';
 
 type MonitoredElementInfo = {
   unlisten: Function,
-  includesChildren: boolean,
+  checkChildren: boolean,
   renderer: Renderer,
   subject: Subject<FocusOrigin>
 };
@@ -44,64 +44,29 @@ export class FocusOriginMonitor {
   private _elementInfo = new WeakMap<Element, MonitoredElementInfo>();
 
   constructor(private _ngZone: NgZone) {
-    this._ngZone.runOutsideAngular(() => {
-      // Note: we listen to events in the capture phase so we can detect them even if the user stops
-      // propagation.
-
-      // On keydown record the origin and clear any touch event that may be in progress.
-      document.addEventListener('keydown', () => {
-        this._lastTouchTarget = null;
-        this._setOriginForCurrentEventQueue('keyboard');
-      }, true);
-
-      // On mousedown record the origin only if there is not touch target, since a mousedown can
-      // happen as a result of a touch event.
-      document.addEventListener('mousedown', () => {
-        if (!this._lastTouchTarget) {
-          this._setOriginForCurrentEventQueue('mouse');
-        }
-      }, true);
-
-      // When the touchstart event fires the focus event is not yet in the event queue. This means
-      // we can't rely on the trick used above (setting timeout of 0ms). Instead we wait 650ms to
-      // see if a focus happens.
-      document.addEventListener('touchstart', (event: Event) => {
-        if (this._touchTimeout != null) {
-          clearTimeout(this._touchTimeout);
-        }
-        this._lastTouchTarget = event.target;
-        this._touchTimeout = setTimeout(() => this._lastTouchTarget = null, TOUCH_BUFFER_MS);
-      }, true);
-
-      // Make a note of when the window regains focus, so we can restore the origin info for the
-      // focused element.
-      window.addEventListener('focus', () => {
-        this._windowFocused = true;
-        setTimeout(() => this._windowFocused = false, 0);
-      });
-    });
+    this._ngZone.runOutsideAngular(() => this._registerDocumentEvents());
   }
 
   /**
    * Monitors focus on an element and applies appropriate CSS classes.
    * @param element The element to monitor
    * @param renderer The renderer to use to apply CSS classes to the element.
-   * @param includeChildren Whether to count the element as focused when its children are focused.
+   * @param checkChildren Whether to count the element as focused when its children are focused.
    * @returns An observable that emits when the focus state of the element changes.
    *     When the element is blurred, null will be emitted.
    */
-  monitor(element: Element, renderer: Renderer, includeChildren: boolean): Observable<FocusOrigin> {
+  monitor(element: Element, renderer: Renderer, checkChildren: boolean): Observable<FocusOrigin> {
     // Check if we're already monitoring this element.
     if (this._elementInfo.has(element)) {
       let info = this._elementInfo.get(element);
-      info.includesChildren = includeChildren;
+      info.checkChildren = checkChildren;
       return info.subject.asObservable();
     }
 
     // Create monitored element info.
     let info: MonitoredElementInfo = {
       unlisten: null,
-      includesChildren: includeChildren,
+      checkChildren: checkChildren,
       renderer: renderer,
       subject: new Subject<FocusOrigin>()
     };
@@ -146,6 +111,44 @@ export class FocusOriginMonitor {
   focusVia(element: Node, renderer: Renderer, origin: FocusOrigin): void {
     this._setOriginForCurrentEventQueue(origin);
     renderer.invokeElementMethod(element, 'focus');
+  }
+
+  /** Register necessary event listeners on the document and window. */
+  private _registerDocumentEvents() {
+    // Note: we listen to events in the capture phase so we can detect them even if the user stops
+    // propagation.
+
+    // On keydown record the origin and clear any touch event that may be in progress.
+    document.addEventListener('keydown', () => {
+      this._lastTouchTarget = null;
+      this._setOriginForCurrentEventQueue('keyboard');
+    }, true);
+
+    // On mousedown record the origin only if there is not touch target, since a mousedown can
+    // happen as a result of a touch event.
+    document.addEventListener('mousedown', () => {
+      if (!this._lastTouchTarget) {
+        this._setOriginForCurrentEventQueue('mouse');
+      }
+    }, true);
+
+    // When the touchstart event fires the focus event is not yet in the event queue. This means
+    // we can't rely on the trick used above (setting timeout of 0ms). Instead we wait 650ms to
+    // see if a focus happens.
+    document.addEventListener('touchstart', (event: Event) => {
+      if (this._touchTimeout != null) {
+        clearTimeout(this._touchTimeout);
+      }
+      this._lastTouchTarget = event.target;
+      this._touchTimeout = setTimeout(() => this._lastTouchTarget = null, TOUCH_BUFFER_MS);
+    }, true);
+
+    // Make a note of when the window regains focus, so we can restore the origin info for the
+    // focused element.
+    window.addEventListener('focus', () => {
+      this._windowFocused = true;
+      setTimeout(() => this._windowFocused = false, 0);
+    });
   }
 
   /**
@@ -212,7 +215,7 @@ export class FocusOriginMonitor {
 
     // If we are not counting child-element-focus as focused, make sure that the event target is the
     // monitored element itself.
-    if (!this._elementInfo.get(element).includesChildren && element != event.target) {
+    if (!this._elementInfo.get(element).checkChildren && element != event.target) {
       return;
     }
 
@@ -246,7 +249,7 @@ export class FocusOriginMonitor {
   private _onBlur(event: FocusEvent, element: Element) {
     // If we are counting child-element-focus as focused, make sure that we aren't just blurring in
     // order to focus another child of the monitored element.
-    if (this._elementInfo.get(element).includesChildren && event.relatedTarget instanceof Node &&
+    if (this._elementInfo.get(element).checkChildren && event.relatedTarget instanceof Node &&
         element.contains(event.relatedTarget)) {
       return;
     }
