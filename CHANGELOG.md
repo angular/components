@@ -1,5 +1,5 @@
 <a name="2.0.0-beta.2"></a>
-# [2.0.0-beta.2](https://github.com/angular/material2/compare/2.0.0-beta.1...2.0.0-beta.2) (2017-02-15)
+# [2.0.0-beta.2 flannel-papaya](https://github.com/angular/material2/compare/2.0.0-beta.1...2.0.0-beta.2) (2017-02-15)
 
 ### Breaking changes from beta.1
 * Styling is no longer prefixed by `md-`. All styling is now prefixed by `mat-` so that apps can upgrade from AngularJS Material to Angular Material without styling conflicts between the two library components.
