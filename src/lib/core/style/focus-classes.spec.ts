@@ -32,7 +32,7 @@ describe('FocusOriginMonitor', () => {
     focusOriginMonitor = fom;
 
     changeHandler = jasmine.createSpy('focus origin change handler');
-    focusOriginMonitor.registerElementForFocusClasses(buttonElement, buttonRenderer)
+    focusOriginMonitor.monitor(buttonElement, buttonRenderer)
         .subscribe(changeHandler);
 
     // Patch the element focus to properly emit focus events when the browser is blurred.
