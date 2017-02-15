@@ -1,6 +1,14 @@
 <a name="2.0.0-beta.2"></a>
 # [2.0.0-beta.2](https://github.com/angular/material2/compare/2.0.0-beta.1...2.0.0-beta.2) (2017-02-15)
 
+### Breaking changes from beta.1
+* Styling is no longer prefixed by `md-`. All styling is now prefixed by `mat-` so that apps can upgrade from AngularJS Material to Angular Material without styling conflicts between the two library components.
+See ([#2790](https://github.com/angular/material2/issues/2790)) for the details on the code change and some useful regular expressions that can help migrate styles.
+* Checkbox tab index input has been changed from `tabindex` to `tabIndex`. ([#2953](https://github.com/angular/material2/issues/2953))
+* Ripple no longer has the `mdRippleBackgroundColor` input to change the background color. ([#2859](https://github.com/angular/material2/issues/2859))
+* The deprecated use of `<md-input>` and `<md-textarea>` has been removed. Use `mdInput` on an input within a `md-input-container`. ([#2788](https://github.com/angular/material2/issues/2788))
+* The deprecated use of `<md-sidenav-layout>` has been removed. Use `<md-sidenav-container>` instead.
+* Input floating placeholder input has changed from a boolean (`true` and `false`) to a state (`always`, `never`, and `auto`). For details on when to use which state, see  ([#2585](https://github.com/angular/material2/issues/2585))
 
 ### Bug Fixes
 
@@ -154,7 +162,7 @@
 ### Breaking changes from alpha.11
 * The `svgSrc` propert of `<md-icon>` has been removed. All SVG URLs must now be explicitly marked
 as trusted using Angular's `DomSanitizer` service.
-* The `<md-input>` element is deprecated in favor of `<md-input-container>`. This new component 
+* The `<md-input>` element is deprecated in favor of `<md-input-container>`. This new component
 allows for direct access to the native input element.
 * All `@Input` properties have been changed to use their camelCase names for binding. The old names
 are still available as deprecated but will be removed in the next release.
