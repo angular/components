@@ -1,4 +1,12 @@
-import {browser, by, element, ElementArrayFinder, ElementFinder, Key, ExpectedConditions} from 'protractor';
+import {
+  browser,
+  by,
+  element,
+  ElementArrayFinder,
+  ElementFinder,
+  Key,
+  ExpectedConditions
+} from 'protractor';
 import {pressKeys} from '../../util/actions';
 import {screenshot} from '../../screenshot';
 
