@@ -7,7 +7,7 @@ describe('grid-list', () => {
 
   it('should render a grid list container', () => {
     expectToExist('md-grid-list');
-    screenshot('');
+    screenshot();
   });
 
   it('should render list items inside the grid list container', () => {

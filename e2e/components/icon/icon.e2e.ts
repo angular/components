@@ -14,7 +14,7 @@ describe('icon', () => {
       testIcon.getAttribute('aria-label').then((attr: string) => {
         expect(attr).toEqual('favorite');
       });
-      screenshot('');
+      screenshot();
     });
 
     it('should have the correct class when used', () => {

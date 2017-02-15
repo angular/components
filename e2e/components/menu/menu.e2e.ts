@@ -16,14 +16,14 @@ describe('menu', () => {
 
     expectToExist(menuSelector);
     expect(page.menu().getText()).toEqual('One\nTwo\nThree\nFour');
-    screenshot('');
+    screenshot();
   });
 
   it('should close menu when menu item is clicked', () => {
     page.trigger().click();
     page.items(0).click();
     expectToExist(menuSelector, false);
-    screenshot('');
+    screenshot();
   });
 
   it('should run click handlers on regular menu items', () => {
@@ -42,7 +42,7 @@ describe('menu', () => {
     page.trigger().click();
     page.items(2).click();
     expect(page.getResultText()).toEqual('');
-    screenshot('');
+    screenshot();
   });
 
   it('should support multiple triggers opening the same menu', () => {

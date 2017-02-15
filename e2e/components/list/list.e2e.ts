@@ -7,7 +7,7 @@ describe('list', () => {
 
   it('should render a list container', () => {
     expectToExist('md-list');
-    screenshot('');
+    screenshot();
   });
 
   it('should render list items inside the list container', () => {
