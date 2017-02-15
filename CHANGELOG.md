@@ -6,8 +6,8 @@
 See ([#2790](https://github.com/angular/material2/issues/2790)) for the details on the code change and some useful regular expressions that can help migrate styles.
 * Checkbox tab index input has been changed from `tabindex` to `tabIndex`. ([#2953](https://github.com/angular/material2/issues/2953))
 * Ripple no longer has the `mdRippleBackgroundColor` input to change the background color. ([#2859](https://github.com/angular/material2/issues/2859))
-* The deprecated use of `<md-input>` and `<md-textarea>` has been removed. Use `mdInput` on an input within a `md-input-container`. ([#2788](https://github.com/angular/material2/issues/2788))
-* The deprecated use of `<md-sidenav-layout>` has been removed. Use `<md-sidenav-container>` instead.
+* The deprecated use of `<md-input>` and `<md-textarea>` has been removed. Use `mdInput` on an input within a `md-input-container`. `md-prefix` and `md-suffix` are now `mdPrefix` and `mdSuffix`. ([#2788](https://github.com/angular/material2/issues/2788))
+* The deprecated use of `<md-sidenav-layout>` has been removed. Use `<md-sidenav-container>` instead. ([#2283](https://github.com/angular/material2/issues/2283))
 * Input floating placeholder input has changed from a boolean (`true` and `false`) to a state (`always`, `never`, and `auto`). For details on when to use which state, see  ([#2585](https://github.com/angular/material2/issues/2585))
 
 ### Bug Fixes
@@ -140,12 +140,6 @@ See ([#2790](https://github.com/angular/material2/issues/2790)) for the details 
 ### Performance Improvements
 
 * **tabs:** reduce amount of reflows when aligning the ink bar ([#2372](https://github.com/angular/material2/issues/2372)) ([dab742f](https://github.com/angular/material2/commit/dab742f))
-
-
-### BREAKING CHANGES
-
-* input: md-prefix and md-suffix are now mdPrefix and mdSuffix 
-
 
 
 <a name="2.0.0-beta.1"></a>
