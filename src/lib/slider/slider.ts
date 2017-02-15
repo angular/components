@@ -72,9 +72,11 @@ export class MdSliderChange {
   selector: 'md-slider, mat-slider',
   providers: [MD_SLIDER_VALUE_ACCESSOR],
   host: {
+    '[class.mat-slider]': 'true',
     '(blur)': '_onBlur()',
     '(click)': '_onClick($event)',
     '(keydown)': '_onKeydown($event)',
+    '(keyup)': '_onKeyup()',
     '(mouseenter)': '_onMouseenter()',
     '(slide)': '_onSlide($event)',
     '(slideend)': '_onSlideEnd()',
@@ -85,16 +87,16 @@ export class MdSliderChange {
     '[attr.aria-valuemax]': 'max',
     '[attr.aria-valuemin]': 'min',
     '[attr.aria-valuenow]': 'value',
-    '[class.md-slider-active]': '_isActive',
-    '[class.md-slider-disabled]': 'disabled',
-    '[class.md-slider-has-ticks]': 'tickInterval',
-    '[class.md-slider-horizontal]': '!vertical',
-    '[class.md-slider-axis-inverted]': 'invertAxis',
-    '[class.md-slider-sliding]': '_isSliding',
-    '[class.md-slider-thumb-label-showing]': 'thumbLabel',
-    '[class.md-slider-vertical]': 'vertical',
-    '[class.md-slider-min-value]': '_isMinValue',
-    '[class.md-slider-hide-last-tick]': '_isMinValue && _thumbGap && invertAxis || disabled',
+    '[class.mat-slider-active]': '_isActive',
+    '[class.mat-slider-disabled]': 'disabled',
+    '[class.mat-slider-has-ticks]': 'tickInterval',
+    '[class.mat-slider-horizontal]': '!vertical',
+    '[class.mat-slider-axis-inverted]': 'invertAxis',
+    '[class.mat-slider-sliding]': '_isSliding',
+    '[class.mat-slider-thumb-label-showing]': 'thumbLabel',
+    '[class.mat-slider-vertical]': 'vertical',
+    '[class.mat-slider-min-value]': '_isMinValue',
+    '[class.mat-slider-hide-last-tick]': '_isMinValue && _thumbGap && invertAxis',
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -485,12 +487,19 @@ export class MdSlider implements ControlValueAccessor {
         return;
     }
 
+    this._isSliding = true;
     event.preventDefault();
+  }
+
+  _onKeyup() {
+    this._isSliding = false;
   }
 
   /** Increments the slider by the given number of steps (negative number decrements). */
   private _increment(numSteps: number) {
     this.value = this._clamp(this.value + this.step * numSteps, this.min, this.max);
+    this._emitInputEvent();
+    this._emitValueIfChanged();
   }
 
   /** Calculate the new value from the new physical location. The value will always be snapped. */
@@ -631,7 +640,7 @@ export class SliderRenderer {
    * take up.
    */
   getSliderDimensions() {
-    let wrapperElement = this._sliderElement.querySelector('.md-slider-wrapper');
+    let wrapperElement = this._sliderElement.querySelector('.mat-slider-wrapper');
     return wrapperElement.getBoundingClientRect();
   }
 

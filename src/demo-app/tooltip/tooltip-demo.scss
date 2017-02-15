@@ -1,8 +1,14 @@
 .demo-tooltip {
   .centered {
     text-align: center;
+    height: 200px;
+    overflow: auto;
+
+    button {
+      margin: 16px;
+    }
   }
-  md-radio-button {
+  .mat-radio-button {
     display: block;
   }
 }

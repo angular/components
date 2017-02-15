@@ -27,7 +27,7 @@ import {MdIconModule} from './icon/index';
 import {MdProgressSpinnerModule} from './progress-spinner/index';
 import {MdProgressBarModule} from './progress-bar/index';
 import {MdInputModule} from './input/index';
-import {MdSnackBarModule} from './snack-bar/snack-bar';
+import {MdSnackBarModule} from './snack-bar/index';
 import {MdTabsModule} from './tabs/index';
 import {MdToolbarModule} from './toolbar/index';
 import {MdTooltipModule} from './tooltip/index';
@@ -35,6 +35,7 @@ import {MdMenuModule} from './menu/index';
 import {MdDialogModule} from './dialog/index';
 import {PlatformModule} from './core/platform/index';
 import {MdAutocompleteModule} from './autocomplete/index';
+import {StyleModule} from './core/style/index';
 
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
@@ -64,6 +65,7 @@ const MATERIAL_MODULES = [
   OverlayModule,
   PortalModule,
   RtlModule,
+  StyleModule,
   A11yModule,
   PlatformModule,
   ProjectionModule,

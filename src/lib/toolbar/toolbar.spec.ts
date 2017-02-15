@@ -1,10 +1,14 @@
 import {Component} from '@angular/core';
-import {TestBed, async} from '@angular/core/testing';
+import {TestBed, async, ComponentFixture} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MdToolbarModule} from './toolbar';
 
 
 describe('MdToolbar', () => {
+
+  let fixture: ComponentFixture<TestApp>;
+  let testComponent: TestApp;
+  let toolbarElement: HTMLElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -15,28 +19,35 @@ describe('MdToolbar', () => {
     TestBed.compileComponents();
   }));
 
-  it('should apply class based on color attribute', () => {
-    let fixture = TestBed.createComponent(TestApp);
-    let testComponent = fixture.debugElement.componentInstance;
-    let toolbarElement = fixture.debugElement.query(By.css('md-toolbar')).nativeElement;
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TestApp);
+    testComponent = fixture.debugElement.componentInstance;
+    toolbarElement = fixture.debugElement.query(By.css('md-toolbar')).nativeElement;
+  });
 
+  it('should apply class based on color attribute', () => {
     testComponent.toolbarColor = 'primary';
     fixture.detectChanges();
 
-    expect(toolbarElement.classList.contains('md-primary')).toBe(true);
+    expect(toolbarElement.classList.contains('mat-primary')).toBe(true);
 
     testComponent.toolbarColor = 'accent';
     fixture.detectChanges();
 
-    expect(toolbarElement.classList.contains('md-primary')).toBe(false);
-    expect(toolbarElement.classList.contains('md-accent')).toBe(true);
+    expect(toolbarElement.classList.contains('mat-primary')).toBe(false);
+    expect(toolbarElement.classList.contains('mat-accent')).toBe(true);
 
     testComponent.toolbarColor = 'warn';
     fixture.detectChanges();
 
-    expect(toolbarElement.classList.contains('md-accent')).toBe(false);
-    expect(toolbarElement.classList.contains('md-warn')).toBe(true);
+    expect(toolbarElement.classList.contains('mat-accent')).toBe(false);
+    expect(toolbarElement.classList.contains('mat-warn')).toBe(true);
   });
+
+  it('should set the toolbar role on the host', () => {
+    expect(toolbarElement.getAttribute('role')).toBe('toolbar');
+  });
+
 });
 
 
