@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
-    "declaration": true,
+    "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": ["es6", "es2015", "dom"],
-    "mapRoot": "/",
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
@@ -23,8 +22,11 @@
       ]
     }
   },
-  "exclude": [
-    "*-aot.ts"
+  "files": [
+    "./demo-app-types.d.ts",
+    "./demo-app-module.ts",
+    "./system-config.ts",
+    "./main.ts"
   ],
   "angularCompilerOptions": {
     "genDir": "../../dist",

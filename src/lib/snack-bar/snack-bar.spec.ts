@@ -9,10 +9,8 @@ import {
 } from '@angular/core/testing';
 import {NgModule, Component, Directive, ViewChild, ViewContainerRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MdSnackBar, MdSnackBarModule} from './snack-bar';
-import {MdSnackBarConfig} from './snack-bar-config';
+import {MdSnackBarModule, MdSnackBar, MdSnackBarConfig, SimpleSnackBar} from './index';
 import {OverlayContainer, LiveAnnouncer} from '../core';
-import {SimpleSnackBar} from './simple-snack-bar';
 
 
 // TODO(josephperrott): Update tests to mock waiting for time to complete for animations.
@@ -71,7 +69,7 @@ describe('MdSnackBar', () => {
      let snackBarRef = snackBar.open('Snack time!', 'CHEW');
      viewContainerFixture.detectChanges();
 
-     let messageElement = overlayContainerElement.querySelector('.md-simple-snackbar-message');
+     let messageElement = overlayContainerElement.querySelector('.mat-simple-snackbar-message');
      expect(messageElement.textContent)
          .toBe('Snack time!', 'Expected snack bar to show a message without a ViewContainerRef');
 
@@ -96,12 +94,12 @@ describe('MdSnackBar', () => {
     expect(snackBarRef.instance.snackBarRef)
       .toBe(snackBarRef, 'Expected the snack bar reference to be placed in the component instance');
 
-    let messageElement = overlayContainerElement.querySelector('span.md-simple-snackbar-message');
+    let messageElement = overlayContainerElement.querySelector('span.mat-simple-snackbar-message');
     expect(messageElement.tagName).toBe('SPAN', 'Expected snack bar message element to be <span>');
     expect(messageElement.textContent)
         .toBe(simpleMessage, `Expected the snack bar message to be '${simpleMessage}''`);
 
-    let buttonElement = overlayContainerElement.querySelector('button.md-simple-snackbar-action');
+    let buttonElement = overlayContainerElement.querySelector('button.mat-simple-snackbar-action');
     expect(buttonElement.tagName)
         .toBe('BUTTON', 'Expected snack bar action label to be a <button>');
     expect(buttonElement.textContent)
@@ -121,11 +119,11 @@ describe('MdSnackBar', () => {
     expect(snackBarRef.instance.snackBarRef)
       .toBe(snackBarRef, 'Expected the snack bar reference to be placed in the component instance');
 
-    let messageElement = overlayContainerElement.querySelector('span.md-simple-snackbar-message');
+    let messageElement = overlayContainerElement.querySelector('span.mat-simple-snackbar-message');
     expect(messageElement.tagName).toBe('SPAN', 'Expected snack bar message element to be <span>');
     expect(messageElement.textContent)
         .toBe(simpleMessage, `Expected the snack bar message to be '${simpleMessage}''`);
-    expect(overlayContainerElement.querySelector('button.md-simple-snackbar-action'))
+    expect(overlayContainerElement.querySelector('button.mat-simple-snackbar-action'))
         .toBeNull('Expected the query selection for action label to be null');
   });
 
@@ -291,7 +289,7 @@ describe('MdSnackBar', () => {
       });
 
       let actionButton =
-        overlayContainerElement.querySelector('.md-simple-snackbar-action') as HTMLButtonElement;
+        overlayContainerElement.querySelector('.mat-simple-snackbar-action') as HTMLButtonElement;
       actionButton.click();
       viewContainerFixture.detectChanges();
       flushMicrotasks();
@@ -320,9 +318,21 @@ describe('MdSnackBar', () => {
       flushMicrotasks();
       expect(dismissObservableCompleted).toBeTruthy('Expected the snack bar to be dismissed');
     }));
+
+    it('should add extra classes to the container', () => {
+      snackBar.open(simpleMessage, simpleActionLabel, {
+        viewContainerRef: testViewContainerRef,
+        extraClasses: ['one', 'two']
+      });
+
+      let containerClasses = overlayContainerElement.querySelector('snack-bar-container').classList;
+
+      expect(containerClasses).toContain('one');
+      expect(containerClasses).toContain('two');
+    });
 });
 
-describe('MdSbackBar with parent MdSnackBar', () => {
+describe('MdSnackBar with parent MdSnackBar', () => {
   let parentSnackBar: MdSnackBar;
   let childSnackBar: MdSnackBar;
   let overlayContainerElement: HTMLElement;

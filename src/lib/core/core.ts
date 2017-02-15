@@ -7,6 +7,7 @@ import {MdRippleModule} from './ripple/ripple';
 import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/overlay-directives';
 import {A11yModule} from './a11y/index';
+import {MdSelectionModule} from './selection/index';
 
 
 // RTL
@@ -98,7 +99,7 @@ export {
 export {MdLineModule, MdLine, MdLineSetter} from './line/line';
 
 // Style
-export {applyCssTransform} from './style/apply-transform';
+export * from './style/index';
 
 // Error
 export {MdError} from './errors/error';
@@ -113,6 +114,9 @@ export * from './compatibility/compatibility';
 
 // Animation
 export * from './animation/animation';
+
+// Selection
+export * from './selection/index';
 
 // Coercion
 export {coerceBooleanProperty} from './coercion/boolean-property';
@@ -131,7 +135,8 @@ export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibi
     PortalModule,
     OverlayModule,
     A11yModule,
-    MdOptionModule
+    MdOptionModule,
+    MdSelectionModule,
   ],
   exports: [
     MdLineModule,
@@ -141,7 +146,8 @@ export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibi
     PortalModule,
     OverlayModule,
     A11yModule,
-    MdOptionModule
+    MdOptionModule,
+    MdSelectionModule,
   ],
 })
 export class MdCoreModule {

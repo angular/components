@@ -1,6 +1,9 @@
 import gulp = require('gulp');
 const markdown = require('gulp-markdown');
 const transform = require('gulp-transform');
+const highlight = require('gulp-highlight-files');
+const rename = require('gulp-rename');
+const flatten = require('gulp-flatten');
 const hljs = require('highlight.js');
 import {task} from 'gulp';
 import * as path from 'path';
@@ -11,7 +14,14 @@ import * as path from 'path';
 // viewer.
 const EXAMPLE_PATTERN = /<!--\W*example\(([^)]+)\)\W*-->/g;
 
-gulp.task('docs', () => {
+// Markdown files can contain links to other markdown files.
+// Most of those links don't work in the Material docs, because the paths are invalid in the
+// documentation page. Using a RegExp to rewrite links in HTML files to work in the docs.
+const LINK_PATTERN = /(<a[^>]*) href="([^"]*)"/g;
+
+gulp.task('docs', ['markdown-docs', 'highlight-docs', 'api-docs'])
+
+gulp.task('markdown-docs', () => {
   return gulp.src(['src/lib/**/*.md', 'guides/*.md'])
       .pipe(markdown({
         // Add syntax highlight using highlight.js
@@ -25,15 +35,60 @@ gulp.task('docs', () => {
           return code;
         }
       }))
-      .pipe(transform((content: string) =>
-          content.toString().replace(EXAMPLE_PATTERN, (match: string, name: string) =>
-              `<div material-docs-example="${name}"></div>`)))
-      .pipe(gulp.dest('dist/docs'));
+      .pipe(transform(transformMarkdownFiles))
+      .pipe(gulp.dest('dist/docs/markdown'));
 });
 
-task('api', () => {
+gulp.task('highlight-docs', () => {
+  // rename files to fit format: [filename]-[filetype].html
+  const renameFile = (path: any) => {
+    const extension = path.extname.slice(1);
+    path.basename = `${path.basename}-${extension}`;
+  };
+
+  return gulp.src('src/examples/**/*.+(html|css|ts)')
+    .pipe(flatten())
+    .pipe(rename(renameFile))
+    .pipe(highlight())
+    .pipe(gulp.dest('dist/docs/examples'));
+});
+
+task('api-docs', () => {
   const Dgeni = require('dgeni');
   const docsPackage = require(path.resolve(__dirname, '../../dgeni'));
   const dgeni = new Dgeni([docsPackage]);
   return dgeni.generate();
 });
+
+/** Updates the markdown file's content to work inside of the docs app. */
+function transformMarkdownFiles(buffer: Buffer, file: any): string {
+  let content = buffer.toString('utf-8');
+
+  /* Replace <!-- example(..) --> comments with HTML elements. */
+  content = content.replace(EXAMPLE_PATTERN, (match: string, name: string) =>
+    `<div material-docs-example="${name}"></div>`
+  );
+
+  /* Replaces the URL in anchor elements inside of compiled markdown files. */
+  content = content.replace(LINK_PATTERN, (match: string, head: string, link: string) =>
+    // The head is the first match of the RegExp and is necessary to ensure that the RegExp matches
+    // an anchor element. The head will be then used to re-create the existing anchor element.
+    // If the head is not prepended to the replaced value, then the first match will be lost.
+    `${head} href="${fixMarkdownDocLinks(link, file.path)}"`
+  );
+
+  return content;
+}
+
+/** Fixes paths in the markdown files to work in the material-docs-io. */
+function fixMarkdownDocLinks(link: string, filePath: string): string {
+  if (link.startsWith('http') && filePath.indexOf('guides/') === -1) {
+    return link;
+  }
+
+  let baseName = path.basename(link, path.extname(link));
+
+  // Temporary link the file to the /guide URL because that's the route where the
+  // guides can be loaded in the Material docs.
+  return `guide/${baseName}`;
+}

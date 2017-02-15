@@ -52,8 +52,9 @@ export class MdButtonToggleChange {
   selector: 'md-button-toggle-group, mat-button-toggle-group',
   providers: [MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
   host: {
+    '[class.mat-button-toggle-group]': 'true',
     'role': 'radiogroup',
-    '[class.md-button-toggle-vertical]': 'vertical'
+    '[class.mat-button-toggle-vertical]': 'vertical'
   },
   exportAs: 'mdButtonToggleGroup',
 })
@@ -284,13 +285,14 @@ export class MdButtonToggleGroup implements AfterContentInit, OnDestroy, Control
 /** Single button inside of a toggle group. */
 @Component({
   moduleId: module.id,
-  selector: 'md-button-toggle',
+  selector: 'md-button-toggle, mat-button-toggle',
   templateUrl: 'button-toggle.html',
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
   host: {
-    '[class.md-button-toggle-checked]': 'checked',
-    '[class.md-button-toggle-disabled]': 'disabled',
+    '[class.mat-button-toggle-checked]': 'checked',
+    '[class.mat-button-toggle-disabled]': 'disabled',
+    '[class.mat-button-toggle]': 'true',
     '[attr.id]': 'id',
   }
 })
