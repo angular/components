@@ -36,18 +36,12 @@ describe('checkbox', function () {
 
       inputEl.getAttribute('checked').then((value: string) => {
         expect(value).toBeFalsy('Expect checkbox "checked" property to be false');
-        browser.wait(ExpectedConditions.not(
-          ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))))
-          .then(() => screenshot('start'));
       });
 
       inputEl.sendKeys(Key.SPACE);
 
       inputEl.getAttribute('checked').then((value: string) => {
         expect(value).toBeTruthy('Expect checkbox "checked" property to be true');
-        browser.wait(ExpectedConditions.not(
-          ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))))
-          .then(() => screenshot('pressed space'));
       });
     });
   });
