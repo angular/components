@@ -40,8 +40,7 @@ describe('radio', () => {
       element(by.id('water')).click();
       element(by.id('water')).getAttribute('class').then((value: string) => {
         expect(value).toContain('mat-radio-disabled');
-        browser.wait(ExpectedConditions.not(
-          ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))))
+        browser.wait(ExpectedConditions.presenceOf(element(by.css('.mat-radio-disabled'))))
           .then(() => screenshot('water'));
       });
       element(by.css('input[id=water-input]')).getAttribute('disabled').then((value: string) => {
