@@ -51,8 +51,21 @@ as shown in the example).</p>
   <span class="hljs-tag">&lt;/<span class="hljs-name">md-list-item</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">md-list</span>&gt;</span>
 </code></pre>
+<h3 id="lists-with-icons">Lists with icons</h3>
+<p>To add an icon to your list item, use the <code>md-list-icon</code> attribute.</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">md-list</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">md-list-item</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let message of messages"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">md-icon</span> <span class="hljs-attr">md-list-icon</span>&gt;</span>folder<span class="hljs-tag">&lt;/<span class="hljs-name">md-icon</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h3</span> <span class="hljs-attr">md-line</span>&gt;</span> {{message.from}} <span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">md-line</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span> {{message.subject}} <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"demo-2"</span>&gt;</span> -- {{message.content}} <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">md-list-item</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">md-list</span>&gt;</span>
+</code></pre>
 <h3 id="lists-with-avatars">Lists with avatars</h3>
-<p>To include an avatar, add an image tag with an <code>md-list-avatar</code> attribute.</p>
+<p>To include an avatar image, add an image tag with an <code>md-list-avatar</code> attribute. </p>
 <pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">md-list</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">md-list-item</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let message of messages"</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">md-list-avatar</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"..."</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">"..."</span>&gt;</span>
@@ -80,14 +93,14 @@ To add a divider, use <code>&lt;md-divider&gt;</code>.</p>
 <pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">md-list</span>&gt;</span>
    <span class="hljs-tag">&lt;<span class="hljs-name">h3</span> <span class="hljs-attr">md-subheader</span>&gt;</span>Folders<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
    <span class="hljs-tag">&lt;<span class="hljs-name">md-list-item</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let folder of folders"</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">md-icon</span> <span class="hljs-attr">md-list-avatar</span>&gt;</span>folder<span class="hljs-tag">&lt;/<span class="hljs-name">md-icon</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">md-icon</span> <span class="hljs-attr">md-list-icon</span>&gt;</span>folder<span class="hljs-tag">&lt;/<span class="hljs-name">md-icon</span>&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-name">h4</span> <span class="hljs-attr">md-line</span>&gt;</span>{{folder.name}}<span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">md-line</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"demo-2"</span>&gt;</span> {{folder.updated}} <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
    <span class="hljs-tag">&lt;/<span class="hljs-name">md-list-item</span>&gt;</span>
    <span class="hljs-tag">&lt;<span class="hljs-name">md-divider</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">md-divider</span>&gt;</span>
    <span class="hljs-tag">&lt;<span class="hljs-name">h3</span> <span class="hljs-attr">md-subheader</span>&gt;</span>Notes<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
    <span class="hljs-tag">&lt;<span class="hljs-name">md-list-item</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let note of notes"</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">md-icon</span> <span class="hljs-attr">md-list-avatar</span>&gt;</span>note<span class="hljs-tag">&lt;/<span class="hljs-name">md-icon</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">md-icon</span> <span class="hljs-attr">md-list-icon</span>&gt;</span>note<span class="hljs-tag">&lt;/<span class="hljs-name">md-icon</span>&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-name">h4</span> <span class="hljs-attr">md-line</span>&gt;</span>{{note.name}}<span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">md-line</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"demo-2"</span>&gt;</span> {{note.updated}} <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
    <span class="hljs-tag">&lt;/<span class="hljs-name">md-list-item</span>&gt;</span>

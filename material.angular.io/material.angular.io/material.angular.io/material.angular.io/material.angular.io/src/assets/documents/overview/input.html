@@ -30,16 +30,17 @@ be used with <code>md-input-container</code>:</p>
 <h3 id="placeholder">Placeholder</h3>
 <p>A placeholder is an indicative text displayed in the input zone when the input does not contain
 text. When text is present, the indicative text will float above this input zone.</p>
-<p>The <code>floatingPlaceholder</code> attribute of <code>md-input-container</code> can be set to <code>false</code> to hide the
+<p>The <code>floatPlaceholder</code> attribute of <code>md-input-container</code> can be set to <code>never</code> to hide the
 indicative text instead when text is present in the input.</p>
+<p>When setting <code>floatPlaceholder</code> to <code>always</code> the floating label will always show above the input.</p>
 <p>A placeholder for the input can be specified in one of two ways: either using the <code>placeholder</code>
 attribute on the <code>input</code> or <code>textarea</code>, or using an <code>md-placeholder</code> element in the
 <code>md-input-container</code>. Using both will raise an error.</p>
 <h3 id="prefix-and-suffix">Prefix and Suffix</h3>
 <p>HTML can be included before, and after the input tag, as prefix or suffix. It will be underlined as
 per the Material specification, and clicking it will focus the input.</p>
-<p>Adding the <code>md-prefix</code> attribute to an element inside the <code>md-input-container</code> will designate it as
-the prefix. Similarly, adding <code>md-suffix</code> will designate it as the suffix.</p>
+<p>Adding the <code>mdPrefix</code> attribute to an element inside the <code>md-input-container</code> will designate it as
+the prefix. Similarly, adding <code>mdSuffix</code> will designate it as the suffix.</p>
 <h3 id="hint-labels">Hint Labels</h3>
 <p>Hint labels are the labels that show below the underline. An <code>md-input-container</code> can have up to two
 hint labels; one on the <code>start</code> of the line (left in an LTR language, right in RTL), and one on the

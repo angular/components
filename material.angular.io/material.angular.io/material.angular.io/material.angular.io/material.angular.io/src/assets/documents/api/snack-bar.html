@@ -19,8 +19,6 @@
 </p>
 
 
-
-
 <h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
   
     <table class="docs-api-method-table">
@@ -143,13 +141,92 @@ currently opened snack bars.
 
 
 
+  <h2>Directives</h2>
+  
+    <h3 class="docs-api-h3 docs-api-class-name">SimpleSnackBar</h3>
+<p class="docs-api-class-description">A component used to open as the default snack bar, matching material spec.
+This should only be used internally by the snack bar service.
+</p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      message
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The message to be shown in the snack bar.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      action
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The label for the button in the snack bar.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      snackBarRef
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The instance of the component making up the content of the snack bar.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      hasAction
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">If the action button should be shown.
+</td>
+</tr>
+
+
+    
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+  
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">dismiss</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Dismisses the snack bar.
+</td>
+  </tr></table>
+
+
+  
+
+
+
   <h2>Additional classes</h2>
   
     <h3 class="docs-api-h3 docs-api-class-name">MdSnackBarConfig</h3>
 <p class="docs-api-class-description">Configuration used when opening a snack-bar.
-</p>
-
-<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+</p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
   <table class="docs-api-properties-table">
     <tr class="docs-api-properties-header-row">
       <th class="docs-api-properties-th">Name</th>
@@ -204,6 +281,18 @@ currently opened snack bars.
 
 
     
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      extraClasses
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Extra CSS classes to be added to the snack bar container.
+</td>
+</tr>
+
+
+    
   </table>
 
 
@@ -214,9 +303,7 @@ currently opened snack bars.
   
     <h3 class="docs-api-h3 docs-api-class-name">MdSnackBarRef</h3>
 <p class="docs-api-class-description">Reference to a snack bar dispatched from the snack bar service.
-</p>
-
-<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+</p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
   <table class="docs-api-properties-table">
     <tr class="docs-api-properties-header-row">
       <th class="docs-api-properties-th">Name</th>

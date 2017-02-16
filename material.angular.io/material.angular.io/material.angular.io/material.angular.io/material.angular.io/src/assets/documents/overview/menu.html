@@ -41,8 +41,9 @@ via application of the <code>mdMenuTriggerFor</code> directive:</p>
 <span class="hljs-tag">&lt;/<span class="hljs-name">md-menu</span>&gt;</span>
 </code></pre>
 <h3 id="customizing-menu-position">Customizing menu position</h3>
-<p>By default, the menu will display after and below its trigger.  The position can be changed
-using the <code>x-position</code> (<code>before | after</code>) and <code>y-position</code> (<code>above | below</code>) attributes.</p>
+<p>By default, the menu will display below (y-axis), after (x-axis), and overlapping its trigger.  The position can be changed
+using the <code>x-position</code> (<code>before | after</code>) and <code>y-position</code> (<code>above | below</code>) attributes.
+The menu can be be forced to not overlap the trigger using <code>[overlapTrigger]=&quot;false&quot;</code> attribute.</p>
 <h3 id="keyboard-interaction">Keyboard interaction</h3>
 <ul>
 <li><kbd>DOWN_ARROW</kbd>: Focuses the next menu item</li>

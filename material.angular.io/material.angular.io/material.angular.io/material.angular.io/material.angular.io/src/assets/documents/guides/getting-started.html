@@ -1,6 +1,6 @@
 <p>Get started with Angular Material using the Angular CLI.</p>
-<h2 id="install-the-cli">Install the CLI</h2>
-<pre><code class="lang-bash"> npm install -g angular-cli
+<h2 id="install-angular-cli">Install Angular CLI</h2>
+<pre><code class="lang-bash"> npm install -g @angular/cli
 </code></pre>
 <h2 id="create-a-new-project">Create a new project</h2>
 <pre><code class="lang-bash"> ng new my-project
@@ -14,7 +14,7 @@
 <pre><code class="lang-ts"><span class="hljs-keyword">import</span> { MaterialModule } from <span class="hljs-string">'@angular/material'</span>;
 <span class="hljs-comment">// other imports </span>
 <span class="hljs-meta">@NgModule</span>({
-  imports: [MaterialModule.forRoot()],
+  imports: [MaterialModule],
   ...
 })
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> PizzaPartyAppModule { }
@@ -22,28 +22,20 @@
 <h2 id="include-the-core-and-theme-styles-">Include the core and theme styles:</h2>
 <p>This is <strong>required</strong> to apply all of the core and theme styles to your application. You can either
 use a pre-built theme, or define your own custom theme.</p>
-<p>:trident:  See the <a href="guides/theming.md">theming guide</a> for instructions.</p>
-<h3 id="additional-setup-for-md-slide-toggle-and-md-slider-">Additional setup for <code>md-slide-toggle</code> and <code>md-slider</code>:</h3>
-<p>The slide-toggle and slider components have a dependency on <a href="http://hammerjs.github.io/">HammerJS</a>.</p>
-<p>Add HammerJS to your application via <a href="https://www.npmjs.com/package/hammerjs">npm</a>, a CDN 
-(such as the <a href="https://developers.google.com/speed/libraries/#hammerjs">Google CDN</a>), or served 
+<p>:trident:  See the <a href="guide/theming">theming guide</a> for instructions.</p>
+<h3 id="additional-setup-for-gestures">Additional setup for gestures</h3>
+<p>Some components (<code>md-slide-toggle</code>, <code>md-slider</code>, <code>mdTooltip</code>) rely on 
+<a href="guide/hammerjs.github">HammerJS</a> for gestures. In order to get the full feature-set of these
+components, HammerJS must be loaded into the application.</p>
+<p>You can add HammerJS to your application via <a href="guide/hammerjs">npm</a>, a CDN 
+(such as the <a href="guide/#hammerjs">Google CDN</a>), or served 
 directly from your app.</p>
 <h4 id="if-you-want-to-include-hammerjs-from-npm-you-can-install-it-">If you want to include HammerJS from npm, you can install it:</h4>
-<pre><code class="lang-bash">npm install --save hammerjs 
-npm install --save-dev @types/hammerjs
+<pre><code class="lang-bash">npm install --save hammerjs
 </code></pre>
-<p>Import HammerJS on your app&#39;s module.</p>
-<p><strong>src/app/app.module.ts</strong></p>
+<p>After installing, import HammerJS on your app&#39;s module.
+<strong>src/app/app.module.ts</strong></p>
 <pre><code class="lang-ts"><span class="hljs-keyword">import</span> <span class="hljs-string">'hammerjs'</span>;
-</code></pre>
-<p>Finally, you need to add <code>hammerjs</code> to the <code>types</code> section of your <code>tsconfig.json</code> file:</p>
-<pre><code class="lang-json">{
-  <span class="hljs-attr">"compilerOptions"</span>: {
-    <span class="hljs-attr">"types"</span>: [
-      <span class="hljs-string">"hammerjs"</span>
-    ]
-  }
-}
 </code></pre>
 <h2 id="configuring-systemjs">Configuring SystemJS</h2>
 <p>If your project is using SystemJS for module loading, you will need to add <code>@angular/material</code> 
@@ -52,7 +44,7 @@ to the SystemJS configuration:</p>
   <span class="hljs-comment">// existing configuration options</span>
   map: {
     ...,
-    <span class="hljs-string">'@angular/material'</span>: <span class="hljs-string">'npm:@angular/material/material.umd.js'</span>
+    <span class="hljs-string">'@angular/material'</span>: <span class="hljs-string">'npm:@angular/material/bundles/material.umd.js'</span>
   }
 });
 </code></pre>
@@ -66,6 +58,6 @@ load the Material Design font in your <code>index.html</code>.<br><code>md-icon<
 </code></pre>
 <h2 id="sample-angular-material-projects">Sample Angular Material projects</h2>
 <ul>
-<li><a href="https://github.com/jelbourn/material2-app">Material Sample App</a></li>
-<li><a href="https://github.com/kara/leashed-in">Angular Connect 2016 Demo</a></li>
+<li><a href="guide/material2-app">Material Sample App</a></li>
+<li><a href="guide/leashed-in">Angular Connect 2016 Demo</a></li>
 </ul>

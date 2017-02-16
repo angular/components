@@ -1,7 +1,7 @@
 <h1 id="theming-your-angular-material-app">Theming your Angular Material app</h1>
 <h3 id="what-is-a-theme-">What is a theme?</h3>
 <p>A <strong>theme</strong> is the set of colors that will be applied to the Angular Material components. The
-library&#39;s approach to theming is based on the guidance from the <a href="https://material.google.com/style/color.html#color-color-palette">Material Design spec</a>.</p>
+library&#39;s approach to theming is based on the guidance from the <a href="guide/color">Material Design spec</a>.</p>
 <p>In Angular Material, a theme is created by composing multiple palettes. In particular,
 a theme consists of:</p>
 <ul>
@@ -20,7 +20,7 @@ single css file for Angular Material in your app.</p>
 <p>You can include a theme file directly into your application from
 <code>@angular/material/core/theming/prebuilt</code></p>
 <p>If you&#39;re using Angular CLI, this is as simple as including one line
-in your <code>style.css</code>  file:</p>
+in your <code>styles.css</code>  file:</p>
 <pre><code class="lang-css">@<span class="hljs-keyword">import</span> <span class="hljs-string">'~@angular/material/core/theming/prebuilt/deeppurple-amber.css'</span>;
 </code></pre>
 <p>Alternatively, you can just reference the file directly. This would look something like</p>
@@ -28,6 +28,9 @@ in your <code>style.css</code>  file:</p>
 </code></pre>
 <p>The actual path will depend on your server setup.</p>
 <p>You can also concatenate the file with the rest of your application&#39;s css.</p>
+<p>Finally, if your app&#39;s content <strong>is not</strong> placed inside of a <code>md-sidenav-container</code> element, you
+need to add the <code>mat-app-background</code> class to your wrapper element (for example the <code>body</code>). This
+ensures that the proper theme background is applied to your page.</p>
 <h3 id="defining-a-custom-theme">Defining a custom theme</h3>
 <p>When you want more customization than a pre-built theme offers, you can create your own theme file.</p>
 <p>A theme file is a simple Sass file that defines your palettes and passes them to mixins that output
@@ -37,19 +40,19 @@ the corresponding styles. A typical theme file will look something like this:</p
 
 <span class="hljs-comment">// Include the base styles for Angular Material core. We include this here so that you only</span>
 <span class="hljs-comment">// have to load a single css file for Angular Material in your app.</span>
-@<span class="hljs-keyword">include</span> md-core();
+@<span class="hljs-keyword">include</span> mat-core();
 
 <span class="hljs-comment">// Define the palettes for your theme using the Material Design palettes available in palette.scss</span>
 <span class="hljs-comment">// (imported above). For each palette, you can optionally specify a default, lighter, and darker</span>
 <span class="hljs-comment">// hue.</span>
-<span class="hljs-variable">$candy-app-primary</span>: md-palette(<span class="hljs-variable">$md-indigo</span>);
-<span class="hljs-variable">$candy-app-accent</span>:  md-palette(<span class="hljs-variable">$md-pink</span>, A200, A100, A400);
+<span class="hljs-variable">$candy-app-primary</span>: mat-palette(<span class="hljs-variable">$mat-indigo</span>);
+<span class="hljs-variable">$candy-app-accent</span>:  mat-palette(<span class="hljs-variable">$mat-pink</span>, A200, A100, A400);
 
 <span class="hljs-comment">// The warn palette is optional (defaults to red).</span>
-<span class="hljs-variable">$candy-app-warn</span>:    md-palette(<span class="hljs-variable">$md-red</span>);
+<span class="hljs-variable">$candy-app-warn</span>:    mat-palette(<span class="hljs-variable">$mat-red</span>);
 
 <span class="hljs-comment">// Create the theme object (a Sass map containing all of the palettes).</span>
-<span class="hljs-variable">$candy-app-theme</span>: md-light-theme(<span class="hljs-variable">$candy-app-primary</span>, <span class="hljs-variable">$candy-app-accent</span>, <span class="hljs-variable">$candy-app-warn</span>);
+<span class="hljs-variable">$candy-app-theme</span>: mat-light-theme(<span class="hljs-variable">$candy-app-primary</span>, <span class="hljs-variable">$candy-app-accent</span>, <span class="hljs-variable">$candy-app-warn</span>);
 
 <span class="hljs-comment">// Include theme styles for core and each component used in your app.</span>
 <span class="hljs-comment">// Alternatively, you can import and @include the theme mixins for each component</span>
@@ -70,19 +73,19 @@ as gulp-sass or grunt-sass). The simplest approach is to use the <code>node-sass
 some selector. For example, we could append the following to the example above to define a
 secondary dark theme:</p>
 <pre><code class="lang-scss"><span class="hljs-selector-class">.unicorn-dark-theme</span> {
-  <span class="hljs-variable">$dark-primary</span>: md-palette(<span class="hljs-variable">$md-blue-grey</span>);
-  <span class="hljs-variable">$dark-accent</span>:  md-palette(<span class="hljs-variable">$md-amber</span>, A200, A100, A400);
-  <span class="hljs-variable">$dark-warn</span>:    md-palette(<span class="hljs-variable">$md-deep-orange</span>);
+  <span class="hljs-variable">$dark-primary</span>: mat-palette(<span class="hljs-variable">$mat-blue-grey</span>);
+  <span class="hljs-variable">$dark-accent</span>:  mat-palette(<span class="hljs-variable">$mat-amber</span>, A200, A100, A400);
+  <span class="hljs-variable">$dark-warn</span>:    mat-palette(<span class="hljs-variable">$mat-deep-orange</span>);
 
-  <span class="hljs-variable">$dark-theme</span>: md-dark-theme(<span class="hljs-variable">$dark-primary</span>, <span class="hljs-variable">$dark-accent</span>, <span class="hljs-variable">$dark-warn</span>);
+  <span class="hljs-variable">$dark-theme</span>: mat-dark-theme(<span class="hljs-variable">$dark-primary</span>, <span class="hljs-variable">$dark-accent</span>, <span class="hljs-variable">$dark-warn</span>);
 
-  @<span class="hljs-keyword">include</span> angular-material-theme(<span class="hljs-variable">$dark-theme</span>);   
+  @<span class="hljs-keyword">include</span> angular-material-theme(<span class="hljs-variable">$dark-theme</span>);
 }
 </code></pre>
 <p>With this, any element inside of a parent with the <code>unicorn-dark-theme</code> class will use this
 dark theme.</p>
 <h3 id="theming-your-own-components">Theming your own components</h3>
-<p>For more details about theming your own components, see <a href="https://github.com/angular/material2/blob/master/guides/theming-your-components.md">theming-your-components.md</a></p>
+<p>For more details about theming your own components, see <a href="guide/theming-your-components">theming-your-components.md</a></p>
 <h3 id="future-work">Future work</h3>
 <ul>
 <li>Once CSS variables (custom properties) are available in all the browsers we support,

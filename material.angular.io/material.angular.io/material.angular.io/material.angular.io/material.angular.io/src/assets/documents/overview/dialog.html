@@ -9,7 +9,7 @@ config object. The <code>open</code> method will return an instance of <code>MdD
 });
 </code></pre>
 <p>The <code>MdDialogRef</code> provides a handle on the opened dialog. It can be used to close the dialog and to
-recieve notification when the dialog has been closed.</p>
+receive notification when the dialog has been closed.</p>
 <pre><code class="lang-ts">dialogRef.afterClosed.then(result =&gt; {
   <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Dialog result: <span class="hljs-subst">${result}</span>`</span>); <span class="hljs-comment">// Pizza!</span>
 });
@@ -47,3 +47,7 @@ value is forwarded as the result of the <code>afterClosed</code> promise. </p>
 </tr>
 </tbody>
 </table>
+<p>Once a dialog opens, the dialog will automatically focus the first tabbable element.</p>
+<p>You can control which elements are tab stops with the <code>tabindex</code> attribute</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">md-button</span> <span class="hljs-attr">tabindex</span>=<span class="hljs-string">"-1"</span>&gt;</span>Not Tabbable<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+</code></pre>

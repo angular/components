@@ -20,9 +20,7 @@
 This component corresponds to the drawer of the sidenav.
 
 Please refer to README.md for examples on how to use it.
-</p>
-
-<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+</p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
   <table class="docs-api-properties-table">
     <tr class="docs-api-properties-header-row">
       <th class="docs-api-properties-th">Name</th>
@@ -62,6 +60,19 @@ Please refer to README.md for examples on how to use it.
     <code class="docs-api-property-type"></code>
   </td>
   <td class="docs-api-property-description">Mode of the sidenav; whether &#39;over&#39; or &#39;side&#39;.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      disableClose
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether the sidenav can be closed with the escape key or not.
 </td>
 </tr>
 
@@ -265,9 +276,7 @@ close() when it&#39;s closed.</td>
 
 This is the parent component to one or two &lt;md-sidenav&gt;s that validates the state internally
 and coordinates the backdrop and content styling.
-</p>
-
-<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+</p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
   <table class="docs-api-properties-table">
     <tr class="docs-api-properties-header-row">
       <th class="docs-api-properties-th">Name</th>
@@ -299,9 +308,9 @@ and coordinates the backdrop and content styling.
 
     
       <tr class="docs-api-properties-row">
-  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">@Output(<span class="docs-api-output-alias">&#39;backdrop-clicked&#39;</span>)
-        </div><p class="docs-api-property-name">
-      onBackdropClicked
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      backdropClick
     </p>
     <code class="docs-api-property-type"></code>
   </td>
@@ -329,14 +338,10 @@ and coordinates the backdrop and content styling.
 
 
 
-
-
   
     <h3 class="docs-api-h3 docs-api-class-name">MdSidenavToggleResult</h3>
 <p class="docs-api-class-description">Sidenav toggle promise result.
-</p>
-
-<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+</p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
   <table class="docs-api-properties-table">
     <tr class="docs-api-properties-header-row">
       <th class="docs-api-properties-th">Name</th>
