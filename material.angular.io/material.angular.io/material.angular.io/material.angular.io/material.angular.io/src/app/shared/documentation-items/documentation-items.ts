@@ -18,6 +18,7 @@ const DOCS = [
     name: 'Form Controls',
     summary: 'Radio buttons, checkboxes, input fields, sliders, slide toggles, selects',
     items: [
+      {id: 'autocomplete', name: 'Autocomplete', examples: ['autocomplete-overview']},
       {id: 'checkbox', name: 'Checkbox', examples: ['checkbox-configurable']},
       {id: 'input', name: 'Input', examples: ['input-form']},
       {id: 'radio', name: 'Radio button', examples: ['radio-ng-model']},
