@@ -16,9 +16,38 @@
   
     <h3 class="docs-api-h3 docs-api-class-name">MdDialog</h3>
 <p class="docs-api-class-description">Service to open Material Design modal dialogs.
-</p>
+</p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      afterOpen
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Gets an observable that is notified when a dialog has been opened.
+</td>
+</tr>
 
 
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      afterAllClosed
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Gets an observable that is notified when all open dialog have finished closing.
+</td>
+</tr>
+
+
+    
+  </table>
 
 
 <h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
@@ -40,11 +69,12 @@
   <tr class="docs-api-method-parameter-row">
     <td class="docs-api-method-parameter-cell">
       <p class="docs-api-method-parameter-name">
-        component</p>
-      <code class="docs-api-method-parameter-type">ComponentType&lt;T&gt;</code>
+        componentOrTemplateRef</p>
+      <code class="docs-api-method-parameter-type">ComponentType&lt;T&gt; | TemplateRef&lt;T&gt;</code>
     </td>
     <td class="docs-api-method-parameter-description-cell">
-      <p class="docs-api-method-parameter-description">Type of the component to load into the load.</p>
+      <p class="docs-api-method-parameter-description">Type of the component to load into the dialog,
+    or a TemplateRef to instantiate as the dialog content.</p>
     </td>
   </tr>
   
@@ -95,9 +125,7 @@
   
     <h3 class="docs-api-h3 docs-api-class-name">MdDialogClose</h3>
 <p class="docs-api-class-description">Button that will close the current dialog.
-</p>
-
-<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+</p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
   <table class="docs-api-properties-table">
     <tr class="docs-api-properties-header-row">
       <th class="docs-api-properties-th">Name</th>
@@ -145,14 +173,10 @@
 
 
 
-
-
   
     <h3 class="docs-api-h3 docs-api-class-name">MdDialogContent</h3>
 <p class="docs-api-class-description">Scrollable content container of a dialog.
 </p>
-
-
 
 
 
@@ -170,15 +194,11 @@ Stays fixed to the bottom when scrolling.
 
 
 
-
-
   <h2>Additional classes</h2>
   
     <h3 class="docs-api-h3 docs-api-class-name">MdDialogConfig</h3>
 <p class="docs-api-class-description">Configuration for opening a modal dialog with the MdDialog service.
-</p>
-
-<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+</p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
   <table class="docs-api-properties-table">
     <tr class="docs-api-properties-header-row">
       <th class="docs-api-properties-th">Name</th>
@@ -256,6 +276,18 @@ Stays fixed to the bottom when scrolling.
 
 
     
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      data
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Data being injected into the child component.
+</td>
+</tr>
+
+
+    
   </table>
 
 
@@ -266,9 +298,7 @@ Stays fixed to the bottom when scrolling.
   
     <h3 class="docs-api-h3 docs-api-class-name">MdDialogRef</h3>
 <p class="docs-api-class-description">Reference to a dialog opened via the MdDialog service.
-</p>
-
-<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+</p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
   <table class="docs-api-properties-table">
     <tr class="docs-api-properties-header-row">
       <th class="docs-api-properties-th">Name</th>
@@ -283,6 +313,17 @@ Stays fixed to the bottom when scrolling.
   </td>
   <td class="docs-api-property-description">The instance of component opened into the dialog.
 </td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      config
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
 </tr>
 
 

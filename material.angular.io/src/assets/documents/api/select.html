@@ -14,145 +14,9 @@
   Module: <code>MdSelectModule</code>
 </h2><h2>Directives</h2>
   
-    <h3 class="docs-api-h3 docs-api-class-name">MdOption</h3>
-<p class="docs-api-class-description">Single option inside of a `&lt;md-select&gt;` element.
-</p>
-
-<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
-  <table class="docs-api-properties-table">
-    <tr class="docs-api-properties-header-row">
-      <th class="docs-api-properties-th">Name</th>
-      <th class="docs-api-properties-th">Description</th>
-    </tr>
-    
-      <tr class="docs-api-properties-row">
-  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
-      id
-    </p>
-    <code class="docs-api-property-type"></code>
-  </td>
-  <td class="docs-api-property-description">The unique ID of the option.
-</td>
-</tr>
-
-
-    
-      <tr class="docs-api-properties-row">
-  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
-          @Input()</div><p class="docs-api-property-name">
-      value
-    </p>
-    <code class="docs-api-property-type"></code>
-  </td>
-  <td class="docs-api-property-description">The form value of the option.
-</td>
-</tr>
-
-
-    
-      <tr class="docs-api-properties-row">
-  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
-          @Input()</div><p class="docs-api-property-name">
-      disabled
-    </p>
-    <code class="docs-api-property-type"></code>
-  </td>
-  <td class="docs-api-property-description">Whether the option is disabled.
-</td>
-</tr>
-
-
-    
-      <tr class="docs-api-properties-row">
-  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
-          @Output()</div><p class="docs-api-property-name">
-      onSelect
-    </p>
-    <code class="docs-api-property-type"></code>
-  </td>
-  <td class="docs-api-property-description">Event emitted when the option is selected.
-</td>
-</tr>
-
-
-    
-      <tr class="docs-api-properties-row">
-  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
-      selected
-    </p>
-    <code class="docs-api-property-type"></code>
-  </td>
-  <td class="docs-api-property-description">Whether or not the option is currently selected.
-</td>
-</tr>
-
-
-    
-      <tr class="docs-api-properties-row">
-  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
-      viewValue
-    </p>
-    <code class="docs-api-property-type"></code>
-  </td>
-  <td class="docs-api-property-description">The displayed value of the option. It is necessary to show the selected option in the
-select&#39;s trigger.
-</td>
-</tr>
-
-
-    
-  </table>
-
-
-<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
-  
-    <table class="docs-api-method-table">
-  <thead>
-    <tr class="docs-api-method-name-row">
-      <th colspan="2" class="docs-api-method-name-cell">select</th>
-    </tr>
-  </thead>
-  <tr class="docs-api-method-description-row">
-    <td colspan="2" class="docs-api-method-description-cell">Selects the option.
-</td>
-  </tr></table>
-
-
-  
-    <table class="docs-api-method-table">
-  <thead>
-    <tr class="docs-api-method-name-row">
-      <th colspan="2" class="docs-api-method-name-cell">deselect</th>
-    </tr>
-  </thead>
-  <tr class="docs-api-method-description-row">
-    <td colspan="2" class="docs-api-method-description-cell">Deselects the option.
-</td>
-  </tr></table>
-
-
-  
-    <table class="docs-api-method-table">
-  <thead>
-    <tr class="docs-api-method-name-row">
-      <th colspan="2" class="docs-api-method-name-cell">focus</th>
-    </tr>
-  </thead>
-  <tr class="docs-api-method-description-row">
-    <td colspan="2" class="docs-api-method-description-cell">Sets focus onto this option.
-</td>
-  </tr></table>
-
-
-  
-
-
-
-  
     <h3 class="docs-api-h3 docs-api-class-name">MdSelect</h3>
-<p class="docs-api-class-description"></p>
-
-<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+<p class="docs-api-class-description"></p><span class="docs-api-h4 docs-api-class-export-label">Exported as:</span>
+<span class="docs-api-class-export-name">mdSelect</span><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
   <table class="docs-api-properties-table">
     <tr class="docs-api-properties-header-row">
       <th class="docs-api-properties-th">Name</th>
@@ -261,6 +125,19 @@ select&#39;s trigger.
 
     
       <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      change
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the selected value has been changed by the user.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
   <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
       panelOpen
     </p>
@@ -328,6 +205,46 @@ select&#39;s trigger.
 
 
   
+
+
+
+  <h2>Additional classes</h2>
+  
+    <h3 class="docs-api-h3 docs-api-class-name">MdSelectChange</h3>
+<p class="docs-api-class-description">Change event object that is emitted when the select value has changed.
+</p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      source
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      value
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
+</tr>
+
+
+    
+  </table>
+
+
+
 
 
 

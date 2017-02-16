@@ -17,9 +17,7 @@
     <h3 class="docs-api-h3 docs-api-class-name">MdSlider</h3>
 <p class="docs-api-class-description">Allows users to select from a range of values by moving the slider thumb. It is similar in
 behavior to the native `&lt;input type=&quot;range&quot;&gt;` element.
-</p>
-
-<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+</p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
   <table class="docs-api-properties-table">
     <tr class="docs-api-properties-header-row">
       <th class="docs-api-properties-th">Name</th>
@@ -135,7 +133,7 @@ Ex: Tick interval of 4 with a step of 3 will draw a tick every 4 steps (every 12
     </p>
     <code class="docs-api-property-type"></code>
   </td>
-  <td class="docs-api-property-description">The miniumum value that the slider can have.
+  <td class="docs-api-property-description">The minimum value that the slider can have.
 </td>
 </tr>
 
@@ -182,6 +180,18 @@ Ex: Tick interval of 4 with a step of 3 will draw a tick every 4 steps (every 12
     
       <tr class="docs-api-properties-row">
   <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      displayValue
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The value to be used for display purposes.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
       invertAxis
     </p>
     <code class="docs-api-property-type"></code>
@@ -201,6 +211,18 @@ Ex: Tick interval of 4 with a step of 3 will draw a tick every 4 steps (every 12
   </td>
   <td class="docs-api-property-description">Whether mouse events should be converted to a slider position by calculating their distance
 from the right or bottom edge of the slider as opposed to the top or left.
+</td>
+</tr>
+
+
+    
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      trackBackgroundStyles
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">CSS styles for the track background element.
 </td>
 </tr>
 
@@ -278,6 +300,19 @@ from the right or bottom edge of the slider as opposed to the top or left.
 
 
     
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-output-marker">
+          @Output()</div><p class="docs-api-property-name">
+      input
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Event emitted when the slider thumb moves.
+</td>
+</tr>
+
+
+    
   </table>
 
 
@@ -289,9 +324,7 @@ from the right or bottom edge of the slider as opposed to the top or left.
   
     <h3 class="docs-api-h3 docs-api-class-name">MdSliderChange</h3>
 <p class="docs-api-class-description">A simple change event emitted by the MdSlider component.
-</p>
-
-<h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+</p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
   <table class="docs-api-properties-table">
     <tr class="docs-api-properties-header-row">
       <th class="docs-api-properties-th">Name</th>

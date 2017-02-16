@@ -13,9 +13,42 @@
 <h2 class="docs-api-h2">
   Module: <code>MdAutocompleteModule</code>
 </h2><h2>Directives</h2>
-  
+
     <h3 class="docs-api-h3 docs-api-class-name">MdAutocomplete</h3>
-<p class="docs-api-class-description"></p>
+<p class="docs-api-class-description"></p><span class="docs-api-h4 docs-api-class-export-label">Exported as:</span>
+<span class="docs-api-class-export-name">mdAutocomplete</span><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
+
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">
+          @Input()</div><p class="docs-api-property-name">
+      displayWith
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Function that maps an option&#39;s control value to its display value in the trigger.
+</td>
+</tr>
+
+
+
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      id
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Unique ID to be used by autocomplete trigger&#39;s &quot;aria-owns&quot; property.
+</td>
+</tr>
+
+
+
+  </table>
 
 
 
@@ -23,5 +56,105 @@
 
 
 
+    <h3 class="docs-api-h3 docs-api-class-name">MdAutocompleteTrigger</h3>
+<p class="docs-api-class-description"></p><h4 class="docs-api-h4 docs-api-method-header">Properties</h4>
+  <table class="docs-api-properties-table">
+    <tr class="docs-api-properties-header-row">
+      <th class="docs-api-properties-th">Name</th>
+      <th class="docs-api-properties-th">Description</th>
+    </tr>
 
-  
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><div class="docs-api-input-marker">@Input(<span class="docs-api-input-alias">&#39;mdAutocomplete&#39;</span>)
+        </div><p class="docs-api-property-name">
+      autocomplete
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description"></td>
+</tr>
+
+
+
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      panelOpen
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Whether or not the autocomplete panel is open.</td>
+</tr>
+
+
+
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      panelClosingActions
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">A stream of actions that should close the autocomplete panel, including
+when an option is selected, on blur, and when TAB is pressed.
+</td>
+</tr>
+
+
+
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      optionSelections
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">Stream of autocomplete option selections.
+</td>
+</tr>
+
+
+
+      <tr class="docs-api-properties-row">
+  <td class="docs-api-properties-name-cell"><p class="docs-api-property-name">
+      activeOption
+    </p>
+    <code class="docs-api-property-type"></code>
+  </td>
+  <td class="docs-api-property-description">The currently active option, coerced to MdOption type.
+</td>
+</tr>
+
+
+
+  </table>
+
+
+<h4 class="docs-api-h4 docs-api-method-header">Methods</h4>
+
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">openPanel</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Opens the autocomplete suggestion panel.
+</td>
+  </tr></table>
+
+
+
+    <table class="docs-api-method-table">
+  <thead>
+    <tr class="docs-api-method-name-row">
+      <th colspan="2" class="docs-api-method-name-cell">closePanel</th>
+    </tr>
+  </thead>
+  <tr class="docs-api-method-description-row">
+    <td colspan="2" class="docs-api-method-description-cell">Closes the autocomplete suggestion panel.
+</td>
+  </tr></table>
+
+
+
+
+
+
