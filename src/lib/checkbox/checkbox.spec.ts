@@ -11,6 +11,32 @@ import {dispatchFakeEvent} from '../core/testing/dispatch-events';
 describe('MdCheckbox', () => {
   let fixture: ComponentFixture<any>;
 
+  /** Creates a DOM mouse event. */
+  const createMouseEvent = (eventType: string, dict: any = {}) => {
+    // Ideally this would just be "return new MouseEvent(eventType, dict)". But IE11 doesn't support
+    // the MouseEvent constructor, and Edge inexplicably divides clientX and clientY by 100 to get
+    // pageX and pageY. (Really. After "e = new MouseEvent('click', {clientX: 200, clientY: 300})",
+    // e.clientX is 200, e.pageX is 2, e.clientY is 300, and e.pageY is 3.)
+    // So instead we use the deprecated createEvent/initMouseEvent API, which works everywhere.
+    const event = document.createEvent('MouseEvents');
+    event.initMouseEvent(eventType,
+      false, /* canBubble */
+      false, /* cancelable */
+      window, /* view */
+      0, /* detail */
+      dict.screenX || 0,
+      dict.screenY || 0,
+      dict.clientX || 0,
+      dict.clientY || 0,
+      false, /* ctrlKey */
+      false, /* altKey */
+      false, /* shiftKey */
+      false, /* metaKey */
+      0, /* button */
+      null /* relatedTarget */);
+    return event;
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdCheckboxModule.forRoot(), FormsModule, ReactiveFormsModule],
@@ -416,7 +442,7 @@ describe('MdCheckbox', () => {
         testComponent.isIndeterminate = true;
         fixture.detectChanges();
 
-        inputElement.click();
+        inputElement.dispatchEvent(createMouseEvent('click'));
         fixture.detectChanges();
 
         expect(checkboxNativeElement.classList).not.toContain(
