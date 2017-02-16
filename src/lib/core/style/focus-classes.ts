@@ -281,9 +281,7 @@ export class CdkMonitorFocus implements OnDestroy {
     this._focusOriginMonitor.monitor(
         this._elementRef.nativeElement, renderer,
         this._elementRef.nativeElement.hasAttribute('cdkMonitorSubtreeFocus'))
-        .subscribe((origin) => {
-          this.cdkFocusChange.emit(origin);
-        });
+        .subscribe(origin => this.cdkFocusChange.emit(origin));
   }
 
   ngOnDestroy() {
