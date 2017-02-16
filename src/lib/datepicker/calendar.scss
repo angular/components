@@ -1,7 +1,10 @@
+$mat-calendar-padding: 8px !default;
+$mat-calendar-header-divider-width: 1px !default;
+$mat-calendar-controls-vertical-padding: 5%;
+$mat-calendar-controls-start-padding: calc(100% / 14 - 6px);
+$mat-calendar-controls-end-padding: calc(100% / 14 - 12px);
+$mat-calendar-period-font-size: 14px;
 $mat-calendar-arrow-size: 5px !default;
-$mat-calendar-weekday-table-padding: 8px !default;
-$mat-calendar-weekday-table-margin: 8px !default;
-$mat-calendar-weekday-table-border-width: 1px !default;
 $mat-calendar-weekday-table-font-size: 11px !default;
 
 
@@ -10,7 +13,19 @@ $mat-calendar-weekday-table-font-size: 11px !default;
 }
 
 .mat-calendar-header {
+  border-bottom-width: $mat-calendar-header-divider-width;
+  border-bottom-style: solid;
+  padding: $mat-calendar-padding;
+}
+
+.mat-calendar-body {
+  padding: $mat-calendar-padding;
+}
+
+.mat-calendar-controls {
   display: flex;
+  padding: $mat-calendar-controls-vertical-padding $mat-calendar-controls-end-padding
+           $mat-calendar-controls-vertical-padding $mat-calendar-controls-start-padding;
 }
 
 .mat-calendar-spacer {
@@ -23,7 +38,11 @@ $mat-calendar-weekday-table-font-size: 11px !default;
   margin: 0;
   border: none;
   outline: none;
+}
+
+.mat-calendar-period-button {
   font: inherit;
+  font-size: $mat-calendar-period-font-size;
   font-weight: bold;
 }
 
@@ -41,24 +60,14 @@ $mat-calendar-weekday-table-font-size: 11px !default;
   border-top-style: solid;
   margin: 0 $mat-calendar-arrow-size;
   vertical-align: middle;
+
+  .mat-calendar-invert {
+    transform: rotate(180deg);
+  }
 }
 
 .mat-calendar-weekday-table {
   width: 100%;
-  padding: $mat-calendar-weekday-table-padding 0;
-  border-bottom-width: $mat-calendar-weekday-table-border-width;
-  border-bottom-style: solid;
-  margin-bottom: $mat-calendar-weekday-table-margin;
   text-align: center;
   font-size: $mat-calendar-weekday-table-font-size;
-}
-
-// clean up
-.mat-calendar-header {
-  padding: 8px (100% / 7 / 2);
-  margin: 0 -12px 0 -6px;
-}
-
-.mat-calendar-button {
-  font-size: 14px;
 }

@@ -3,12 +3,17 @@
 
 
 @mixin mat-datepicker-theme($theme) {
+  $mat-datepicker-selected-today-box-shadow-width: 1px;
   $primary: map-get($theme, primary);
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
   .mat-calendar {
     background-color: mat-color($background, card);
+  }
+
+  .mat-calendar-header {
+    border-color: mat-color($foreground, divider);
   }
 
   .mat-calendar-arrow {
@@ -21,7 +26,6 @@
   }
 
   .mat-calendar-weekday-table {
-    border-color: mat-color($foreground, divider);
     color: mat-color($foreground, hint-text);
   }
 
@@ -34,17 +38,27 @@
     border-color: transparent;
   }
 
-  .mat-calendar-table-cell-content:hover {
-    background-color: mat-color($background, hover);
+  .mat-calendar-table-cell:hover {
+    .mat-calendar-table-cell-content:not(.mat-calendar-table-selected) {
+      background-color: mat-color($background, hover);
+    }
   }
 
-  .mat-calendar-table-selected,
-  .mat-calendar-table-selected:hover {
+  .mat-calendar-table-selected {
     background-color: mat-color($primary);
     color: mat-color($primary, default-contrast);
   }
 
   .mat-calendar-table-today {
-    border-color: mat-color($foreground, divider);
+    &:not(.mat-calendar-table-selected) {
+      // Note: though its not text, the border is a hint about the fact that this is today's date,
+      // so we use the hint color.
+      border-color: mat-color($foreground, hint-text);
+    }
+
+    &.mat-calendar-table-selected {
+      box-shadow: inset 0 0 0 $mat-datepicker-selected-today-box-shadow-width
+                  mat-color($primary, default-contrast);
+    }
   }
 }
