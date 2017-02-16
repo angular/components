@@ -10,6 +10,7 @@ See ([#2790](https://github.com/angular/material2/issues/2790)) for the details 
 * The deprecated use of `<md-sidenav-layout>` has been removed. Use `<md-sidenav-container>` instead. ([#2283](https://github.com/angular/material2/issues/2283))
 * Input floating placeholder @Input has changed from a boolean (`true` and `false`) to a state (`always`, `never`, and `auto`) and was renamed from `floatingPlaceholder` to `floatPlaceholder`. For details on when to use which state, see  ([#2585](https://github.com/angular/material2/issues/2585))
 * The use of Module `forRoot` has been deprecated and will be removed in the next release. Instead, just simply import MaterialModule directly:
+
  ```
  @NgModule({
      imports: [
