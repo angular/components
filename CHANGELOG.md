@@ -7,6 +7,13 @@ See ([#2790](https://github.com/angular/material2/issues/2790)) for the details 
 * Checkbox tab index @Input has been changed from `tabindex` to `tabIndex`. ([#2953](https://github.com/angular/material2/issues/2953))
 * Ripple no longer has the `mdRippleBackgroundColor` input to change the background color. ([#2859](https://github.com/angular/material2/issues/2859))
 * The deprecated use of `<md-input>` and `<md-textarea>` has been removed. Use `mdInput` on an input or textarea within a `md-input-container`. `md-prefix` and `md-suffix` are now `mdPrefix` and `mdSuffix`. ([#2788](https://github.com/angular/material2/issues/2788))
+
+```html
+<md-input-container>
+  <input mdInput name="value" ngModel>
+</md-input-container>
+```
+
 * The deprecated use of `<md-sidenav-layout>` has been removed. Use `<md-sidenav-container>` instead. ([#2283](https://github.com/angular/material2/issues/2283))
 * Input floating placeholder @Input has changed from a boolean (`true` and `false`) to a state (`always`, `never`, and `auto`) and was renamed from `floatingPlaceholder` to `floatPlaceholder`. For details on when to use which state, see  ([#2585](https://github.com/angular/material2/issues/2585))
 * The use of Module `forRoot` has been deprecated and will be removed in the next release. Instead, just simply import MaterialModule directly:
