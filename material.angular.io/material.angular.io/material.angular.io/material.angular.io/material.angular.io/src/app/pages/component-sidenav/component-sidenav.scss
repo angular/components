@@ -7,9 +7,11 @@ app-component-sidenav {
 
 .docs-component-viewer-sidenav-container {
   width: 100%;
-  
-  .md-sidenav-content {
+
+  .mat-sidenav-content {
     position: absolute;
+    right: 0;
+    left: 0;
   }
 }
 
@@ -21,7 +23,7 @@ app-component-sidenav {
   overflow: auto;
   height: 100%;
 
-  &.md-sidenav-opened {
+  &.mat-sidenav-opened {
     box-shadow: 3px 0 6px rgba(0, 0, 0, .24);
   }
 

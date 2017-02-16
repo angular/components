@@ -7,19 +7,19 @@
 
   app-homepage {
     .docs-header-background {
-      background: url('assets/img/homepage/material_splash.svg') repeat-x center center, md-color($primary);
+      background: url('assets/img/homepage/material_splash.svg') repeat-x center center, mat-color($primary);
     }
 
     .docs-header-headline {
-      color: md-color($primary, default-contrast);
+      color: mat-color($primary, default-contrast);
     }
 
     .docs-header-start {
-      color: md-color($primary);
+      color: mat-color($primary);
     }
 
     .docs-homepage-row {
-      color: md-color($foreground, secondary-text);
+      color: mat-color($foreground, secondary-text);
     }
   }
 }

@@ -15,7 +15,7 @@ $guide-content-margin-side-xs: 15px;
   margin: 20px $guide-content-margin-side 0;
   flex-grow: 1;
 
-  @media ($md-xsmall) {
+  @media ($mat-xsmall) {
     margin-left: $guide-content-margin-side-xs;
     margin-right: $guide-content-margin-side-xs;
   }

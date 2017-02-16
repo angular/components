@@ -6,6 +6,6 @@
   $foreground: map-get($theme, foreground);
 
   .docs-component-list-item {
-    color: md-color($foreground, secondary-text);
+    color: mat-color($foreground, secondary-text);
   }
 }
