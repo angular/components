@@ -1,6 +1,14 @@
 import {
-  Directive, Injectable, Optional, SkipSelf, Renderer, ElementRef,
-  OnDestroy, NgZone, EventEmitter, Output
+  Directive,
+  ElementRef,
+  EventEmitter,
+  Injectable,
+  NgZone,
+  OnDestroy,
+  Optional,
+  Output,
+  Renderer,
+  SkipSelf
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';

@@ -3,7 +3,7 @@ import {Component, Renderer} from '@angular/core';
 import {StyleModule} from './index';
 import {By} from '@angular/platform-browser';
 import {TAB} from '../keyboard/keycodes';
-import {FocusOrigin, FocusOriginMonitor, TOUCH_BUFFER_MS} from './focus-classes';
+import {FocusOrigin, FocusOriginMonitor, TOUCH_BUFFER_MS} from './focus-origin-monitor';
 
 describe('FocusOriginMonitor', () => {
   let fixture: ComponentFixture<PlainButton>;
