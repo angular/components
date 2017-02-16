@@ -7,6 +7,24 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
+  .mat-calendar {
+    background-color: mat-color($background, card);
+  }
+
+  .mat-calendar-arrow {
+    border-top-color: mat-color($foreground, icon);
+  }
+
+  .mat-calendar-next-button,
+  .mat-calendar-previous-button {
+    color: mat-color($foreground, icon);
+  }
+
+  .mat-calendar-weekday-table {
+    border-color: mat-color($foreground, divider);
+    color: mat-color($foreground, hint-text);
+  }
+
   .mat-calendar-table-label {
     color: mat-color($foreground, secondary-text);
   }
@@ -17,12 +35,12 @@
   }
 
   .mat-calendar-table-cell-content:hover {
-    background: mat-color($background, hover);
+    background-color: mat-color($background, hover);
   }
 
   .mat-calendar-table-selected,
   .mat-calendar-table-selected:hover {
-    background: mat-color($primary);
+    background-color: mat-color($primary);
     color: mat-color($primary, default-contrast);
   }
 
