@@ -1,3 +1,9 @@
+@import "~@angular/material/core/style/variables";
+
+/* For desktop, the content should be aligned with the page title. */
+$guide-content-margin-side: 70px;
+$guide-content-margin-side-xs: 15px;
+
 :host {
   display: flex;
   flex-direction: column;
@@ -6,6 +12,11 @@
 
 .docs-guide-content {
   display: block;
-  margin: 20px 0 0 70px;
+  margin: 20px $guide-content-margin-side 0;
   flex-grow: 1;
+
+  @media ($md-xsmall) {
+    margin-left: $guide-content-margin-side-xs;
+    margin-right: $guide-content-margin-side-xs;
+  }
 }
