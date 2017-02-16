@@ -6,6 +6,8 @@
 
     <md-select placeholder="Drink" [color]="drinksTheme" [(ngModel)]="currentDrink" [required]="drinksRequired" [disabled]="drinksDisabled"
       [floatPlaceholder]="floatPlaceholder" #drinkControl="ngModel">
+      #drinkControl="ngModel">
+      <md-option>None</md-option>
       <md-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drink.disabled">
         {{ drink.viewValue }}
       </md-option>

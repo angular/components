@@ -567,7 +567,7 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
    */
   private _selectValue(value: any): MdOption {
     let optionsArray = this.options.toArray();
-    let correspondingOption = optionsArray.find(option => option.value === value);
+    let correspondingOption = optionsArray.find(option => option.value && option.value === value);
 
     if (correspondingOption) {
       correspondingOption.select();
@@ -632,8 +632,14 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
       wasSelected ? option.deselect() : option.select();
       this._sortValues();
     } else {
-      this._clearSelection(option);
-      this._selectionModel.select(option);
+      if (option.value == null) {
+        this._clearSelection();
+        this._onChange(option.value);
+        this.change.emit(new MdSelectChange(this, option.value));
+      } else {
+        this._clearSelection(option);
+        this._selectionModel.select(option);
+      }
     }
 
     if (wasSelected !== this._selectionModel.isSelected(option)) {
