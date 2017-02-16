@@ -87,7 +87,7 @@ See ([#2790](https://github.com/angular/material2/issues/2790)) for the details 
 * **select:** transparent background when overscrolling ([#2117](https://github.com/angular/material2/issues/2117)) ([d9b2d85](https://github.com/angular/material2/commit/d9b2d85))
 * **select:** trim long labels inside md-option ([#2444](https://github.com/angular/material2/issues/2444)) ([416f56f](https://github.com/angular/material2/commit/416f56f)), closes [#2440](https://github.com/angular/material2/issues/2440)
 * **select:** view not updating when using OnPush detection strategy ([#2894](https://github.com/angular/material2/issues/2894)) ([3bcb7c3](https://github.com/angular/material2/commit/3bcb7c3)), closes [#2663](https://github.com/angular/material2/issues/2663) [#2269](https://github.com/angular/material2/issues/2269)
-* **select.scss:** parent align affects placeholder ([#2572](https://github.com/angular/material2/issues/2572)) ([a1c90b3](https://github.com/angular/material2/commit/a1c90b3))
+* **select:** parent align affects placeholder ([#2572](https://github.com/angular/material2/issues/2572)) ([a1c90b3](https://github.com/angular/material2/commit/a1c90b3))
 * **sidenav:** animate content resizing for side mode. ([#2486](https://github.com/angular/material2/issues/2486)) ([4d33449](https://github.com/angular/material2/commit/4d33449))
 * **sidenav:** fix animation issue for initially open sidenav ([#3045](https://github.com/angular/material2/issues/3045)) ([37e4bad](https://github.com/angular/material2/commit/37e4bad))
 * **slide-toggle:** consistent naming of aria attributes ([#2688](https://github.com/angular/material2/issues/2688)) ([10bd6da](https://github.com/angular/material2/commit/10bd6da))
