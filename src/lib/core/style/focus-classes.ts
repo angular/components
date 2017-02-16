@@ -1,6 +1,6 @@
 import {
   Directive, Injectable, Optional, SkipSelf, Renderer, ElementRef,
-  OnDestroy, NgZone
+  OnDestroy, NgZone, EventEmitter, Output
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
@@ -159,10 +159,10 @@ export class FocusOriginMonitor {
   private _setClasses(element: Element, origin: FocusOrigin): void {
     let renderer = this._elementInfo.get(element).renderer;
     renderer.setElementClass(element, 'cdk-focused', !!origin);
-    renderer.setElementClass(element, 'cdk-touch-focused', origin == 'touch');
-    renderer.setElementClass(element, 'cdk-keyboard-focused', origin == 'keyboard');
-    renderer.setElementClass(element, 'cdk-mouse-focused', origin == 'mouse');
-    renderer.setElementClass(element, 'cdk-program-focused', origin == 'program');
+    renderer.setElementClass(element, 'cdk-touch-focused', origin === 'touch');
+    renderer.setElementClass(element, 'cdk-keyboard-focused', origin === 'keyboard');
+    renderer.setElementClass(element, 'cdk-mouse-focused', origin === 'mouse');
+    renderer.setElementClass(element, 'cdk-program-focused', origin === 'program');
   }
 
   /**
@@ -199,7 +199,7 @@ export class FocusOriginMonitor {
     // touchstart.
     let focusTarget = event.target;
     return this._lastTouchTarget instanceof Node && focusTarget instanceof Node &&
-        (focusTarget == this._lastTouchTarget || focusTarget.contains(this._lastTouchTarget));
+        (focusTarget === this._lastTouchTarget || focusTarget.contains(this._lastTouchTarget));
   }
 
   /**
@@ -215,7 +215,7 @@ export class FocusOriginMonitor {
 
     // If we are not counting child-element-focus as focused, make sure that the event target is the
     // monitored element itself.
-    if (!this._elementInfo.get(element).checkChildren && element != event.target) {
+    if (!this._elementInfo.get(element).checkChildren && element !== event.target) {
       return;
     }
 
@@ -273,13 +273,17 @@ export class FocusOriginMonitor {
   selector: '[cdkMonitorElementFocus], [cdkMonitorSubtreeFocus]',
 })
 export class CdkMonitorFocus implements OnDestroy {
-  changes: Observable<FocusOrigin>;
+  @Output()
+  cdkFocusChange = new EventEmitter<FocusOrigin>();
 
   constructor(private _elementRef: ElementRef, private _focusOriginMonitor: FocusOriginMonitor,
               renderer: Renderer) {
-    this.changes = this._focusOriginMonitor.monitor(
+    this._focusOriginMonitor.monitor(
         this._elementRef.nativeElement, renderer,
-        this._elementRef.nativeElement.hasAttribute('cdkMonitorSubtreeFocus'));
+        this._elementRef.nativeElement.hasAttribute('cdkMonitorSubtreeFocus'))
+        .subscribe((origin) => {
+          this.cdkFocusChange.emit(origin);
+        });
   }
 
   ngOnDestroy() {

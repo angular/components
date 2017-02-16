@@ -1,9 +1,9 @@
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
-import {Component, Renderer, ViewChild} from '@angular/core';
+import {Component, Renderer} from '@angular/core';
 import {StyleModule} from './index';
 import {By} from '@angular/platform-browser';
 import {TAB} from '../keyboard/keycodes';
-import {CdkMonitorFocus, FocusOrigin, FocusOriginMonitor, TOUCH_BUFFER_MS} from './focus-classes';
+import {FocusOrigin, FocusOriginMonitor, TOUCH_BUFFER_MS} from './focus-classes';
 
 describe('FocusOriginMonitor', () => {
   let fixture: ComponentFixture<PlainButton>;
@@ -250,14 +250,12 @@ describe('cdkMonitorFocus', () => {
   describe('button with cdkMonitorElementFocus', () => {
     let fixture: ComponentFixture<ButtonWithFocusClasses>;
     let buttonElement: HTMLElement;
-    let changeHandler: (origin: FocusOrigin) => void;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(ButtonWithFocusClasses);
       fixture.detectChanges();
 
-      changeHandler = jasmine.createSpy('focus origin change handler');
-      fixture.componentInstance.cdkMonitorElementFocus.changes.subscribe(changeHandler);
+      spyOn(fixture.componentInstance, 'focusChanged');
       buttonElement = fixture.debugElement.query(By.css('button')).nativeElement;
 
       // Patch the element focus to properly emit focus events when the browser is blurred.
@@ -283,7 +281,7 @@ describe('cdkMonitorFocus', () => {
             .toBe(true, 'button should have cdk-focused class');
         expect(buttonElement.classList.contains('cdk-keyboard-focused'))
             .toBe(true, 'button should have cdk-keyboard-focused class');
-        expect(changeHandler).toHaveBeenCalledWith('keyboard');
+        expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('keyboard');
       }, 0);
     }));
 
@@ -302,7 +300,7 @@ describe('cdkMonitorFocus', () => {
             .toBe(true, 'button should have cdk-focused class');
         expect(buttonElement.classList.contains('cdk-mouse-focused'))
             .toBe(true, 'button should have cdk-mouse-focused class');
-        expect(changeHandler).toHaveBeenCalledWith('mouse');
+        expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('mouse');
       }, 0);
     }));
 
@@ -321,7 +319,7 @@ describe('cdkMonitorFocus', () => {
             .toBe(true, 'button should have cdk-focused class');
         expect(buttonElement.classList.contains('cdk-touch-focused'))
             .toBe(true, 'button should have cdk-touch-focused class');
-        expect(changeHandler).toHaveBeenCalledWith('touch');
+        expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('touch');
       }, TOUCH_BUFFER_MS);
     }));
 
@@ -339,7 +337,7 @@ describe('cdkMonitorFocus', () => {
             .toBe(true, 'button should have cdk-focused class');
         expect(buttonElement.classList.contains('cdk-program-focused'))
             .toBe(true, 'button should have cdk-program-focused class');
-        expect(changeHandler).toHaveBeenCalledWith('program');
+        expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('program');
       }, 0);
     }));
 
@@ -352,14 +350,14 @@ describe('cdkMonitorFocus', () => {
 
         expect(buttonElement.classList.length)
             .toBe(2, 'button should have exactly 2 focus classes');
-        expect(changeHandler).toHaveBeenCalledWith('program');
+        expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('program');
 
         buttonElement.blur();
         fixture.detectChanges();
 
         expect(buttonElement.classList.length)
             .toBe(0, 'button should not have any focus classes');
-        expect(changeHandler).toHaveBeenCalledWith(null);
+        expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith(null);
       }, 0);
     }));
   });
@@ -450,15 +448,19 @@ describe('cdkMonitorFocus', () => {
 });
 
 
-@Component({template: `<button>focus me!</button>`})
+@Component({
+  template: `<button>focus me!</button>`
+})
 class PlainButton {
   constructor(public renderer: Renderer) {}
 }
 
 
-@Component({template: `<button cdkMonitorElementFocus>focus me!</button>`})
+@Component({
+  template: `<button cdkMonitorElementFocus (cdkFocusChange)="focusChanged($event)"></button>`
+})
 class ButtonWithFocusClasses {
-  @ViewChild(CdkMonitorFocus) cdkMonitorElementFocus: CdkMonitorFocus;
+  focusChanged(origin: FocusOrigin) {};
 }
 
 
