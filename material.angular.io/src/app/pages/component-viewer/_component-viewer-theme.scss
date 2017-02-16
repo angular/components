@@ -8,15 +8,15 @@
   $foreground: map-get($theme, foreground);
 
   app-component-viewer {
-    color: md-color($foreground, secondary-text);
+    color: mat-color($foreground, secondary-text);
 
-    .md-tab-label:focus {
-      color: md-color($foreground, secondary-text);
+    .mat-tab-label:focus {
+      color: mat-color($foreground, secondary-text);
     }
 
   }
 
   .docs-example-source {
-    border-bottom: 1px solid md-color($foreground, divider);
+    border-bottom: 1px solid mat-color($foreground, divider);
   }
 }

@@ -7,14 +7,14 @@
 
   example-viewer {
     .docs-example-viewer-wrapper {
-      border: 1px solid rgba(md-color($foreground, secondary-text), .03);
+      border: 1px solid rgba(mat-color($foreground, secondary-text), .03);
       box-shadow: 0 2px 2px rgba(0,0,0,0.24), 0 0 2px rgba(0,0,0,0.12);
       margin: 4px;
     }
 
     .docs-example-viewer-title {
-      color: md-color($foreground, secondary-text);
-      background: rgba(md-color($foreground, secondary-text), .03);
+      color: mat-color($foreground, secondary-text);
+      background: rgba(mat-color($foreground, secondary-text), .03);
     }
   }
 }

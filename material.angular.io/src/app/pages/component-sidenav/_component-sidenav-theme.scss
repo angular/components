@@ -13,23 +13,23 @@
 
     // Section divider
     h3 {
-      background: rgba(md-color($foreground, secondary-text), .32);
-      color: md-color($primary, default-contrast);
+      background: rgba(mat-color($foreground, secondary-text), .32);
+      color: mat-color($primary, default-contrast);
     }
 
     // Sidenav navigation items
     li {
-      border-color: rgba(md-color($foreground, secondary-text), .06);
-      color: md-color($foreground, secondary-text);
+      border-color: rgba(mat-color($foreground, secondary-text), .06);
+      color: mat-color($foreground, secondary-text);
 
       > a {
-      color: md-color($foreground, secondary-text);
+      color: mat-color($foreground, secondary-text);
 
         &.is-selected,
         &:hover,
         &:focus {
-          background: md-color($background, background);
-          color: md-color($primary);
+          background: mat-color($background, background);
+          color: mat-color($primary);
         }
       }
     }
