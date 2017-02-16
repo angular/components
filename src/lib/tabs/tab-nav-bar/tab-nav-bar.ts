@@ -6,7 +6,6 @@ import {
   ViewEncapsulation,
   Directive,
   NgZone,
-  OnDestroy,
 } from '@angular/core';
 import {MdInkBar} from '../ink-bar';
 import {MdRipple} from '../../core/ripple/ripple';
@@ -21,14 +20,29 @@ import {ViewportRuler} from '../../core/overlay/position/viewport-ruler';
   selector: '[md-tab-nav-bar], [mat-tab-nav-bar]',
   templateUrl: 'tab-nav-bar.html',
   styleUrls: ['tab-nav-bar.css'],
+  host: {
+    '[class.mat-tab-nav-bar]': 'true',
+  },
   encapsulation: ViewEncapsulation.None,
 })
 export class MdTabNavBar {
+  _activeLinkChanged: boolean;
+  _activeLinkElement: ElementRef;
+
   @ViewChild(MdInkBar) _inkBar: MdInkBar;
 
-  /** Animates the ink bar to the position of the active link element. */
-  updateActiveLink(element: HTMLElement) {
-    this._inkBar.alignToElement(element);
+  /** Notifies the component that the active link has been changed. */
+  updateActiveLink(element: ElementRef) {
+    this._activeLinkChanged = this._activeLinkElement != element;
+    this._activeLinkElement = element;
+  }
+
+  /** Checks if the active link has been changed and, if so, will update the ink bar. */
+  ngAfterContentChecked(): void {
+    if (this._activeLinkChanged) {
+      this._inkBar.alignToElement(this._activeLinkElement.nativeElement);
+      this._activeLinkChanged = false;
+    }
   }
 }
 
@@ -37,6 +51,9 @@ export class MdTabNavBar {
  */
 @Directive({
   selector: '[md-tab-link], [mat-tab-link]',
+  host: {
+    '[class.mat-tab-link]': 'true',
+  }
 })
 export class MdTabLink {
   private _isActive: boolean = false;
@@ -47,11 +64,11 @@ export class MdTabLink {
   set active(value: boolean) {
     this._isActive = value;
     if (value) {
-      this._mdTabNavBar.updateActiveLink(this._element.nativeElement);
+      this._mdTabNavBar.updateActiveLink(this._elementRef);
     }
   }
 
-  constructor(private _mdTabNavBar: MdTabNavBar, private _element: ElementRef) {}
+  constructor(private _mdTabNavBar: MdTabNavBar, private _elementRef: ElementRef) {}
 }
 
 /**
@@ -60,16 +77,13 @@ export class MdTabLink {
  */
 @Directive({
   selector: '[md-tab-link], [mat-tab-link]',
+  host: {
+    '[class.mat-tab-link]': 'true',
+  },
 })
-export class MdTabLinkRipple extends MdRipple implements OnDestroy {
-  constructor(private _element: ElementRef, private _ngZone: NgZone, _ruler: ViewportRuler) {
-    super(_element, _ngZone, _ruler);
+export class MdTabLinkRipple extends MdRipple {
+  constructor(elementRef: ElementRef, ngZone: NgZone, ruler: ViewportRuler) {
+    super(elementRef, ngZone, ruler);
   }
 
-  /**
-   * In certain cases the parent destroy handler may not get called. See Angular issue #11606.
-   */
-  ngOnDestroy() {
-    super.ngOnDestroy();
-  }
 }

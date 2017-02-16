@@ -1,14 +1,20 @@
 // Separate transitions to be able to disable them in unit tests by omitting this file.
 @import '../core/style/variables';
 
-md-sidenav {
-  transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;
-}
+.mat-sidenav-transition {
+  .mat-sidenav {
+    transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;
+  }
 
-.md-sidenav-content {
-  transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;
-}
+  .mat-sidenav-content {
+    transition: {
+      duration: $swift-ease-out-duration;
+      timing-function: $swift-ease-out-timing-function;
+      property: transform, margin-left, margin-right;
+    }
+  }
 
-.md-sidenav-backdrop.md-sidenav-shown {
-  transition: background-color $swift-ease-out-duration $swift-ease-out-timing-function;
+  .mat-sidenav-backdrop.mat-sidenav-shown {
+    transition: background-color $swift-ease-out-duration $swift-ease-out-timing-function;
+  }
 }

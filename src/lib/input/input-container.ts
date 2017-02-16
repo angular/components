@@ -38,6 +38,8 @@ const MD_INPUT_INVALID_TYPES = [
   'submit'
 ];
 
+/** Type for the available floatPlaceholder values. */
+export type FloatPlaceholderType = 'always' | 'never' | 'auto';
 
 let nextUniqueId = 0;
 
@@ -56,34 +58,35 @@ export class MdPlaceholder {}
 @Directive({
   selector: 'md-hint, mat-hint',
   host: {
-    'class': 'md-hint',
-    '[class.md-right]': 'align == "end"',
+    '[class.mat-hint]': 'true',
+    '[class.mat-right]': 'align == "end"',
+    '[attr.id]': 'id',
   }
 })
 export class MdHint {
   // Whether to align the hint label at the start or end of the line.
   @Input() align: 'start' | 'end' = 'start';
+
+  // Unique ID for the hint. Used for the aria-describedby on the input.
+  @Input() id: string = `md-input-hint-${nextUniqueId++}`;
 }
 
 
 /** The input directive, used to mark the input that `MdInputContainer` is wrapping. */
 @Directive({
-  // TODO: remove the md-input selector after next version
-  selector: `
-    input[mdInput], textarea[mdInput], input[matInput], textarea[matInput],
-    input[md-input], textarea[md-input], input[mat-input], textarea[mat-input]
-  `,
+  selector: `input[mdInput], textarea[mdInput], input[matInput], textarea[matInput]`,
   host: {
-    'class': 'md-input-element',
+    '[class.mat-input-element]': 'true',
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
     '[id]': 'id',
     '[placeholder]': 'placeholder',
     '[disabled]': 'disabled',
     '[required]': 'required',
+    '[attr.aria-describedby]': 'ariaDescribedby',
     '(blur)': '_onBlur()',
     '(focus)': '_onFocus()',
-    '(input)': '_onInput()'
+    '(input)': '_onInput()',
   }
 })
 export class MdInputDirective {
@@ -98,6 +101,9 @@ export class MdInputDirective {
 
   /** Whether the element is focused or not. */
   focused = false;
+
+  /** Sets the aria-describedby attribute on the input for improved a11y. */
+  ariaDescribedby: string;
 
   /** Whether the element is disabled. */
   @Input()
@@ -123,6 +129,7 @@ export class MdInputDirective {
       this._placeholderChange.emit(this._placeholder);
     }
   }
+
   /** Whether the element is required. */
   @Input()
   get required() { return this._required; }
@@ -226,8 +233,9 @@ export class MdInputDirective {
   moduleId: module.id,
   selector: 'md-input-container, mat-input-container',
   templateUrl: 'input-container.html',
-  styleUrls: ['input.css', 'input-container.css'],
+  styleUrls: ['input-container.css'],
   host: {
+    '[class.mat-input-container]': 'true',
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
     '[class.ng-untouched]': '_shouldForward("untouched")',
@@ -248,20 +256,31 @@ export class MdInputContainer implements AfterContentInit {
   /** Color of the input divider, based on the theme. */
   @Input() dividerColor: 'primary' | 'accent' | 'warn' = 'primary';
 
+  /** Whether the floating label should always float or not. */
+  get _shouldAlwaysFloat() { return this._floatPlaceholder === 'always'; };
+
+  /** Whether the placeholder can float or not. */
+  get _canPlaceholderFloat() { return this._floatPlaceholder !== 'never'; }
+
   /** Text for the input hint. */
   @Input()
   get hintLabel() { return this._hintLabel; }
   set hintLabel(value: string) {
     this._hintLabel = value;
-    this._validateHints();
+    this._processHints();
   }
   private _hintLabel = '';
 
-  /** Text or the floating placeholder. */
+  // Unique id for the hint label.
+  _hintLabelId: string = `md-input-hint-${nextUniqueId++}`;
+
+  /** Whether the placeholder should always float, never float or float as the user types. */
   @Input()
-  get floatingPlaceholder(): boolean { return this._floatingPlaceholder; }
-  set floatingPlaceholder(value) { this._floatingPlaceholder = coerceBooleanProperty(value); }
-  private _floatingPlaceholder: boolean = true;
+  get floatPlaceholder() { return this._floatPlaceholder; }
+  set floatPlaceholder(value: FloatPlaceholderType) {
+    this._floatPlaceholder = value || 'auto';
+  }
+  private _floatPlaceholder: FloatPlaceholderType = 'auto';
 
   @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
 
@@ -274,11 +293,11 @@ export class MdInputContainer implements AfterContentInit {
       throw new MdInputContainerMissingMdInputError();
     }
 
-    this._validateHints();
+    this._processHints();
     this._validatePlaceholders();
 
     // Re-validate when things change.
-    this._hintChildren.changes.subscribe(() => this._validateHints());
+    this._hintChildren.changes.subscribe(() => this._processHints());
     this._mdInputChild._placeholderChange.subscribe(() => this._validatePlaceholders());
   }
 
@@ -291,6 +310,7 @@ export class MdInputContainer implements AfterContentInit {
   /** Whether the input has a placeholder. */
   _hasPlaceholder() { return !!(this._mdInputChild.placeholder || this._placeholderChild); }
 
+  /** Focuses the underlying input. */
   _focusInput() { this._mdInputChild.focus(); }
 
   /**
@@ -301,6 +321,14 @@ export class MdInputContainer implements AfterContentInit {
     if (this._mdInputChild.placeholder && this._placeholderChild) {
       throw new MdInputContainerPlaceholderConflictError();
     }
+  }
+
+  /**
+   * Does any extra processing that is required when handling the hints.
+   */
+  private _processHints() {
+    this._validateHints();
+    this._syncAriaDescribedby();
   }
 
   /**
@@ -325,5 +353,29 @@ export class MdInputContainer implements AfterContentInit {
         }
       });
     }
+  }
+
+  /**
+   * Sets the child input's `aria-describedby` to a space-separated list of the ids
+   * of the currently-specified hints, as well as a generated id for the hint label.
+   */
+  private _syncAriaDescribedby() {
+    let ids: string[] = [];
+    let startHint = this._hintChildren ?
+        this._hintChildren.find(hint => hint.align === 'start') : null;
+    let endHint = this._hintChildren ?
+        this._hintChildren.find(hint => hint.align === 'end') : null;
+
+    if (startHint) {
+      ids.push(startHint.id);
+    } else if (this._hintLabel) {
+      ids.push(this._hintLabelId);
+    }
+
+    if (endHint) {
+      ids.push(endHint.id);
+    }
+
+    this._mdInputChild.ariaDescribedby = ids.join(' ');
   }
 }

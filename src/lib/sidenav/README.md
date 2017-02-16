@@ -4,7 +4,7 @@ should be used instead.**
 
 # MdSidenav
 
-MdSidenav is the side navigation component for Material 2. It is composed of two components: `<md-sidenav-container>` and `<md-sidenav>`.
+MdSidenav is the side navigation component for Angular Material. It is composed of two components: `<md-sidenav-container>` and `<md-sidenav>`.
 
 ## Screenshots
 
@@ -145,11 +145,11 @@ outside of the scrollable region and absolutely position it.
   height: 300px;
 }
 
-.my-container md-sidenav {
+.my-container .mat-sidenav {
   max-width: 200px;
 }
 
-.my-container .md-sidenav-content,
+.my-container .mat-sidenav-content,
 .my-container md-sidenav {
   display: flex;
 }

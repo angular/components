@@ -11,6 +11,12 @@ describe('dialog', () => {
     expectToExist('md-dialog-container');
   });
 
+  it('should open a template dialog', () => {
+    expectToExist('.my-template-dialog', false);
+    element(by.id('template')).click();
+    expectToExist('.my-template-dialog');
+  });
+
   it('should close by clicking on the backdrop', () => {
     element(by.id('default')).click();
 
@@ -24,6 +30,16 @@ describe('dialog', () => {
     element(by.id('default')).click();
 
     waitForDialog().then(() => {
+      pressKeys(Key.ESCAPE);
+      expectToExist('md-dialog-container', false);
+    });
+  });
+
+  it('should close by pressing escape when the first tabbable element has lost focus', () => {
+    element(by.id('default')).click();
+
+    waitForDialog().then(() => {
+      clickElementAtPoint('md-dialog-container', { x: 0, y: 0 });
       pressKeys(Key.ESCAPE);
       expectToExist('md-dialog-container', false);
     });

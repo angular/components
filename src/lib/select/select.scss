@@ -1,48 +1,63 @@
 @import '../core/style/menu-common';
 @import '../core/style/list-common';
 @import '../core/style/form-common';
+@import '../core/style/variables';
 @import '../core/a11y/a11y';
 
-$md-select-trigger-height: 30px !default;
-$md-select-trigger-min-width: 112px !default;
-$md-select-arrow-size: 5px !default;
-$md-select-arrow-margin: 4px !default;
-$md-select-panel-max-height: 256px !default;
+$mat-select-trigger-height: 30px !default;
+$mat-select-trigger-min-width: 112px !default;
+$mat-select-arrow-size: 5px !default;
+$mat-select-arrow-margin: 4px !default;
+$mat-select-panel-max-height: 256px !default;
+$mat-select-trigger-font-size: 16px !default;
 
-md-select {
+.mat-select {
   display: inline-block;
   outline: none;
+  font-family: $mat-font-family;
 }
 
-.md-select-trigger {
+.mat-select-trigger {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  height: $md-select-trigger-height;
-  min-width: $md-select-trigger-min-width;
+  height: $mat-select-trigger-height;
+  min-width: $mat-select-trigger-min-width;
   cursor: pointer;
   position: relative;
   box-sizing: border-box;
+  font-size: $mat-select-trigger-font-size;
 
   [aria-disabled='true'] & {
-    @include md-control-disabled-underline();
-    border-bottom: transparent;
-    background-position: 0 bottom;
     cursor: default;
     user-select: none;
   }
 }
 
-.md-select-placeholder {
+.mat-select-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+
+  [aria-disabled='true'] & {
+    @include mat-control-disabled-underline();
+    background-color: transparent;
+    background-position: 0 bottom;
+  }
+}
+
+.mat-select-placeholder {
   position: relative;
   padding: 0 2px;
   transform-origin: left top;
+  flex-grow: 1;
 
   // These values are duplicated from animation code in order to
   // allow placeholders to sometimes float without animating,
   // for example when the value is set programmatically.
   // TODO(kara): Change when animations API supports skipping animation.
-  &.md-floating-placeholder {
+  &.mat-floating-placeholder {
     top: -22px;
     left: -2px;
     text-align: left;
@@ -52,7 +67,7 @@ md-select {
   [dir='rtl'] & {
     transform-origin: right top;
 
-    &.md-floating-placeholder {
+    &.mat-floating-placeholder {
       left: 2px;
       text-align: right;
     }
@@ -64,23 +79,25 @@ md-select {
   }
 }
 
-.md-select-value {
-  @include md-truncate-line();
+.mat-select-value {
   position: absolute;
-  max-width: calc(100% - #{$md-select-arrow-size * 2});
+  max-width: calc(100% - #{($mat-select-arrow-size + $mat-select-arrow-margin) * 2});
+  flex-grow: 1;
 
   // Firefox and some versions of IE incorrectly keep absolutely
   // positioned children of flex containers in the flex flow when calculating
   // position. This has been fixed for Firefox 52, slated for early 2017.
   // Bug report: https://bugzilla.mozilla.org/show_bug.cgi?id=874718
   //
-  // In the meantime, we must adjust the left position to 0 to mimic where it
-  // would be if it were correctly taken out of the flex flow. It's also necessary
-  // to adjust the top value because absolutely positioned elements should not be
-  // affected by the flex container's "align-items" property either. To center the text,
-  // we must offset by 6px (6px top + 6px bottom + 18px text height = 30px total height).
+  // In the meantime, we must adjust the position to fit the top, left, and bottom edge of the
+  // containing trigger element. In doing so, we can use align-items: center to allow the text to
+  // correctly position itself in the middle of the container.
+  top: 0;
   left: 0;
-  top: 6px;
+  bottom: 0;
+
+  display: flex;
+  align-items: center;
 
   [dir='rtl'] & {
     left: auto;
@@ -88,20 +105,25 @@ md-select {
   }
 }
 
-.md-select-arrow {
-  width: 0;
-  height: 0;
-  border-left: $md-select-arrow-size solid transparent;
-  border-right: $md-select-arrow-size solid transparent;
-  border-top: $md-select-arrow-size solid;
-  margin: 0 $md-select-arrow-margin;
+.mat-select-value-text {
+  @include mat-truncate-line();
+  line-height: $mat-select-trigger-height;
 }
 
-.md-select-panel {
-  @include md-menu-base();
+.mat-select-arrow {
+  width: 0;
+  height: 0;
+  border-left: $mat-select-arrow-size solid transparent;
+  border-right: $mat-select-arrow-size solid transparent;
+  border-top: $mat-select-arrow-size solid;
+  margin: 0 $mat-select-arrow-margin;
+}
+
+.mat-select-panel {
+  @include mat-menu-base();
   padding-top: 0;
   padding-bottom: 0;
-  max-height: $md-select-panel-max-height;
+  max-height: $mat-select-panel-max-height;
 
   @include cdk-high-contrast {
     outline: solid 1px;

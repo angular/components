@@ -5,6 +5,7 @@ import {
   ViewEncapsulation,
   NgZone,
   OnDestroy,
+  Renderer,
 } from '@angular/core';
 import {BasePortalHost, ComponentPortal, PortalHostDirective, TemplatePortal} from '../core';
 import {MdDialogConfig} from './dialog-config';
@@ -24,9 +25,8 @@ import 'rxjs/add/operator/first';
   templateUrl: 'dialog-container.html',
   styleUrls: ['dialog.css'],
   host: {
-    'class': 'md-dialog-container',
+    '[class.mat-dialog-container]': 'true',
     '[attr.role]': 'dialogConfig?.role',
-    '(keydown.escape)': 'handleEscapeKey()',
   },
   encapsulation: ViewEncapsulation.None,
 })
@@ -46,12 +46,12 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
   /** Reference to the open dialog. */
   dialogRef: MdDialogRef<any>;
 
-  constructor(private _ngZone: NgZone) {
+  constructor(private _ngZone: NgZone, private _renderer: Renderer) {
     super();
   }
 
   /**
-   * Attach a portal as content to this dialog container.
+   * Attach a ComponentPortal as content to this dialog container.
    * @param portal Portal to be attached as the dialog content.
    */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
@@ -60,7 +60,29 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     }
 
     let attachResult = this._portalHost.attachComponentPortal(portal);
+    this._trapFocus();
+    return attachResult;
+  }
 
+  /**
+   * Attach a TemplatePortal as content to this dialog container.
+   * @param portal Portal to be attached as the dialog content.
+   */
+  attachTemplatePortal(portal: TemplatePortal): Map<string, any> {
+    if (this._portalHost.hasAttached()) {
+      throw new MdDialogContentAlreadyAttachedError();
+    }
+
+    let attachedResult = this._portalHost.attachTemplatePortal(portal);
+    this._trapFocus();
+    return attachedResult;
+  }
+
+  /**
+   * Moves the focus inside the focus trap.
+   * @private
+   */
+  private _trapFocus() {
     // If were to attempt to focus immediately, then the content of the dialog would not yet be
     // ready in instances where change detection has to run first. To deal with this, we simply
     // wait for the microtask queue to be empty.
@@ -68,31 +90,17 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
       this._elementFocusedBeforeDialogWasOpened = document.activeElement;
       this._focusTrap.focusFirstTabbableElement();
     });
-
-    return attachResult;
-  }
-
-  /** @docs-private */
-  attachTemplatePortal(portal: TemplatePortal): Map<string, any> {
-    throw Error('Not yet implemented');
-  }
-
-  /**
-   * Handles the user pressing the Escape key.
-   * @docs-private
-   */
-  handleEscapeKey() {
-    if (!this.dialogConfig.disableClose) {
-      this.dialogRef.close();
-    }
   }
 
   ngOnDestroy() {
     // When the dialog is destroyed, return focus to the element that originally had it before
     // the dialog was opened. Wait for the DOM to finish settling before changing the focus so
-    // that it doesn't end up back on the <body>.
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
-      (this._elementFocusedBeforeDialogWasOpened as HTMLElement).focus();
-    });
+    // that it doesn't end up back on the <body>. Also note that we need the extra check, because
+    // IE can set the `activeElement` to null in some cases.
+    if (this._elementFocusedBeforeDialogWasOpened) {
+      this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+        this._renderer.invokeElementMethod(this._elementFocusedBeforeDialogWasOpened, 'focus');
+      });
+    }
   }
 }

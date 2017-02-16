@@ -72,9 +72,11 @@ export class MdSliderChange {
   selector: 'md-slider, mat-slider',
   providers: [MD_SLIDER_VALUE_ACCESSOR],
   host: {
+    '[class.mat-slider]': 'true',
     '(blur)': '_onBlur()',
     '(click)': '_onClick($event)',
     '(keydown)': '_onKeydown($event)',
+    '(keyup)': '_onKeyup()',
     '(mouseenter)': '_onMouseenter()',
     '(slide)': '_onSlide($event)',
     '(slideend)': '_onSlideEnd()',
@@ -85,16 +87,16 @@ export class MdSliderChange {
     '[attr.aria-valuemax]': 'max',
     '[attr.aria-valuemin]': 'min',
     '[attr.aria-valuenow]': 'value',
-    '[class.md-slider-active]': '_isActive',
-    '[class.md-slider-disabled]': 'disabled',
-    '[class.md-slider-has-ticks]': 'tickInterval',
-    '[class.md-slider-horizontal]': '!vertical',
-    '[class.md-slider-axis-inverted]': 'invertAxis',
-    '[class.md-slider-sliding]': '_isSliding',
-    '[class.md-slider-thumb-label-showing]': 'thumbLabel',
-    '[class.md-slider-vertical]': 'vertical',
-    '[class.md-slider-min-value]': '_isMinValue',
-    '[class.md-slider-hide-last-tick]': '_isMinValue && _thumbGap && invertAxis || disabled',
+    '[class.mat-slider-active]': '_isActive',
+    '[class.mat-slider-disabled]': 'disabled',
+    '[class.mat-slider-has-ticks]': 'tickInterval',
+    '[class.mat-slider-horizontal]': '!vertical',
+    '[class.mat-slider-axis-inverted]': 'invertAxis',
+    '[class.mat-slider-sliding]': '_isSliding',
+    '[class.mat-slider-thumb-label-showing]': 'thumbLabel',
+    '[class.mat-slider-vertical]': 'vertical',
+    '[class.mat-slider-min-value]': '_isMinValue',
+    '[class.mat-slider-hide-last-tick]': '_isMinValue && _thumbGap && invertAxis',
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -147,12 +149,21 @@ export class MdSlider implements ControlValueAccessor {
    */
   _isActive: boolean = false;
 
+  /** Decimal places to round to, based on the step amount. */
+  private _roundLabelTo: number;
+
   private _step: number = 1;
 
   /** The values at which the thumb will snap. */
   @Input()
   get step() { return this._step; }
-  set step(v) { this._step = coerceNumberProperty(v, this._step); }
+  set step(v) {
+    this._step = coerceNumberProperty(v, this._step);
+
+    if (this._step % 1 !== 0) {
+      this._roundLabelTo = this._step.toString().split('.').pop().length;
+    }
+  }
 
   private _tickInterval: 'auto' | number = 0;
 
@@ -237,6 +248,18 @@ export class MdSlider implements ControlValueAccessor {
   get vertical() { return this._vertical; }
   set vertical(value: any) { this._vertical = coerceBooleanProperty(value); }
   private _vertical = false;
+
+  /** The value to be used for display purposes. */
+  get displayValue(): string|number {
+    // Note that this could be improved further by rounding something like 0.999 to 1 or
+    // 0.899 to 0.9, however it is very performance sensitive, because it gets called on
+    // every change detection cycle.
+    if (this._roundLabelTo && this.value % 1 !== 0) {
+      return this.value.toFixed(this._roundLabelTo);
+    }
+
+    return this.value;
+  }
 
   /**
    * Whether the axis of the slider is inverted.
@@ -464,12 +487,19 @@ export class MdSlider implements ControlValueAccessor {
         return;
     }
 
+    this._isSliding = true;
     event.preventDefault();
+  }
+
+  _onKeyup() {
+    this._isSliding = false;
   }
 
   /** Increments the slider by the given number of steps (negative number decrements). */
   private _increment(numSteps: number) {
     this.value = this._clamp(this.value + this.step * numSteps, this.min, this.max);
+    this._emitInputEvent();
+    this._emitValueIfChanged();
   }
 
   /** Calculate the new value from the new physical location. The value will always be snapped. */
@@ -610,7 +640,7 @@ export class SliderRenderer {
    * take up.
    */
   getSliderDimensions() {
-    let wrapperElement = this._sliderElement.querySelector('.md-slider-wrapper');
+    let wrapperElement = this._sliderElement.querySelector('.mat-slider-wrapper');
     return wrapperElement.getBoundingClientRect();
   }
 
