@@ -276,7 +276,6 @@ export class MdButtonToggleGroupMultiple {
   set vertical(value) {
     this._vertical = coerceBooleanProperty(value);
   }
-
 }
 
 /** Single button inside of a toggle group. */
@@ -287,12 +286,20 @@ export class MdButtonToggleGroupMultiple {
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
   host: {
-    '[class.mat-button-toggle]': 'true'
+    '[class.mat-button-toggle-focus]': '_hasFocus',
+    '[class.mat-button-toggle]': 'true',
+    '(mousedown)': '_setMousedown()',
   }
 })
 export class MdButtonToggle implements OnInit {
   /** Whether or not this button toggle is checked. */
   private _checked: boolean = false;
+
+  /** Whether the button has focus. Used for class binding. */
+  _hasFocus: boolean = false;
+
+  /** Whether a mousedown has occurred on this element in the last 100ms. */
+  _isMouseDown: boolean = false;
 
   /** Type of the button toggle. Either 'radio' or 'checkbox'. */
   _type: ToggleType;
@@ -461,9 +468,30 @@ export class MdButtonToggle implements OnInit {
     event.stopPropagation();
   }
 
+  _onInputFocus() {
+    // Only show the focus / ripple indicator when the focus was not triggered by a mouse
+    // interaction on the component.
+    if (!this._isMouseDown) {
+      this._hasFocus = true;
+    }
+  }
+
+  _onInputBlur() {
+    this._hasFocus = false;
+  }
+
   /** Focuses the button. */
   focus() {
     this._renderer.invokeElementMethod(this._inputElement.nativeElement, 'focus');
+  }
+
+  _setMousedown() {
+    // We only *show* the focus style when focus has come to the button via the keyboard.
+    // The Material Design spec is silent on this topic, and without doing this, the
+    // button continues to look :active after clicking.
+    // @see http://marcysutton.com/button-focus-hell/
+    this._isMouseDown = true;
+    setTimeout(() => { this._isMouseDown = false; }, 100);
   }
 }
 
