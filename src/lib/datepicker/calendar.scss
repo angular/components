@@ -1,11 +1,34 @@
+$mat-calendar-padding: 8px !default;
+$mat-calendar-header-divider-width: 1px !default;
+$mat-calendar-controls-vertical-padding: 5%;
+// We want to indent to the middle of the first tile. There are 7 tiles, so 100% / 7 / 2.
+// Then we back up a little bit since the text in the cells is center-aligned.
+$mat-calendar-controls-start-padding: calc(100% / 14 - 6px);
+// Same as above, but we back up a little more since the arrow buttons have more padding.
+$mat-calendar-controls-end-padding: calc(100% / 14 - 12px);
+$mat-calendar-period-font-size: 14px;
 $mat-calendar-arrow-size: 5px !default;
+$mat-calendar-weekday-table-font-size: 11px !default;
+
 
 .mat-calendar {
   display: block;
 }
 
 .mat-calendar-header {
+  border-bottom-width: $mat-calendar-header-divider-width;
+  border-bottom-style: solid;
+  padding: $mat-calendar-padding;
+}
+
+.mat-calendar-body {
+  padding: $mat-calendar-padding;
+}
+
+.mat-calendar-controls {
   display: flex;
+  padding: $mat-calendar-controls-vertical-padding $mat-calendar-controls-end-padding
+           $mat-calendar-controls-vertical-padding $mat-calendar-controls-start-padding;
 }
 
 .mat-calendar-spacer {
@@ -20,6 +43,12 @@ $mat-calendar-arrow-size: 5px !default;
   outline: none;
 }
 
+.mat-calendar-period-button {
+  font: inherit;
+  font-size: $mat-calendar-period-font-size;
+  font-weight: bold;
+}
+
 .mat-calendar-button > svg {
   vertical-align: middle;
 }
@@ -30,7 +59,18 @@ $mat-calendar-arrow-size: 5px !default;
   height: 0;
   border-left: $mat-calendar-arrow-size solid transparent;
   border-right: $mat-calendar-arrow-size solid transparent;
-  border-top: $mat-calendar-arrow-size solid;
+  border-top-width: $mat-calendar-arrow-size;
+  border-top-style: solid;
   margin: 0 $mat-calendar-arrow-size;
   vertical-align: middle;
+
+  .mat-calendar-invert {
+    transform: rotate(180deg);
+  }
+}
+
+.mat-calendar-weekday-table {
+  width: 100%;
+  text-align: center;
+  font-size: $mat-calendar-weekday-table-font-size;
 }
