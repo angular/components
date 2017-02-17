@@ -1,7 +1,10 @@
 $mat-calendar-padding: 8px !default;
 $mat-calendar-header-divider-width: 1px !default;
 $mat-calendar-controls-vertical-padding: 5%;
+// We want to indent to the middle of the first tile. There are 7 tiles, so 100% / 7 / 2.
+// Then we back up a little bit since the text in the cells is center-aligned.
 $mat-calendar-controls-start-padding: calc(100% / 14 - 6px);
+// Same as above, but we back up a little more since the arrow buttons have more padding.
 $mat-calendar-controls-end-padding: calc(100% / 14 - 12px);
 $mat-calendar-period-font-size: 14px;
 $mat-calendar-arrow-size: 5px !default;
