@@ -16,7 +16,7 @@
   $disabled-color: if($is-dark-theme, $white-30pct-opacity-on-dark, $black-26pct-opacity-on-light);
 
   .mat-pseudo-checkbox {
-    color: if($is-dark-theme, rgba(white, 0.7), rgba(black, 0.54));
+    color: mat-color(map-get($theme, foreground), secondary-text);
 
     &::after {
       color: mat-color($background, background);
