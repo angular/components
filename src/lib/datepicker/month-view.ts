@@ -86,7 +86,7 @@ export class MdMonthView implements AfterContentInit {
   private _init() {
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
     this._todayDate = this._getDateInCurrentMonth(SimpleDate.today());
-    this._monthLabel = this._locale.getCalendarMonthHeaderLabel(this.date);
+    this._monthLabel = this._locale.shortMonths[this.date.month].toLocaleUpperCase();
 
     let firstOfMonth = new SimpleDate(this.date.year, this.date.month, 1);
     this._firstWeekOffset =
@@ -114,6 +114,6 @@ export class MdMonthView implements AfterContentInit {
    * Returns null if the given Date is in another month.
    */
   private _getDateInCurrentMonth(date: SimpleDate) {
-    return date && date.month == this.date.month ? date.date : null;
+    return date && date.month == this.date.month && date.year == this.date.year ? date.date : null;
   }
 }
