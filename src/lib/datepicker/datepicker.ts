@@ -1,13 +1,13 @@
 import {
+  ChangeDetectionStrategy,
   Component,
+  ElementRef,
+  OnDestroy,
+  Optional,
   TemplateRef,
   ViewChild,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
   ViewContainerRef,
-  Optional,
-  ElementRef,
-  OnDestroy
+  ViewEncapsulation
 } from '@angular/core';
 import {Overlay} from '../core/overlay/overlay';
 import {OverlayRef} from '../core/overlay/overlay-ref';
@@ -24,15 +24,12 @@ import {
 } from '../core/overlay/position/connected-position';
 
 
-// TODO(mmalerba): Figure out what the real width should be.
-const CALENDAR_POPUP_WIDTH = 300;
-
-
 /** Component responsible for managing the datepicker popup/dialog. */
 @Component({
   moduleId: module.id,
   selector: 'md-datepicker, mat-datepicker',
   templateUrl: 'datepicker.html',
+  styleUrls: ['datepicker.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -142,7 +139,6 @@ export class MdDatepicker implements OnDestroy {
   private _createPopup(): void {
     const overlayState = new OverlayState();
     overlayState.positionStrategy = this._createPopupPositionStrategy();
-    overlayState.width = CALENDAR_POPUP_WIDTH;
     overlayState.hasBackdrop = true;
     overlayState.backdropClass = 'md-overlay-transparent-backdrop';
     overlayState.direction = this._dir ? this._dir.value : 'ltr';
