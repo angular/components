@@ -1,4 +1,5 @@
-$mat-calendar-table-font-size: 12px !default;
+$mat-calendar-table-font-size: 13px !default;
+$mat-calendar-table-header-font-size: 14px !default;
 $mat-calendar-table-label-padding-start: 5% !default;
 $mat-calendar-table-label-translation: -6px !default;
 $mat-calendar-table-cell-min-size: 32px !default;
@@ -20,10 +21,14 @@ $mat-calendar-table-cell-content-size: 100% - $mat-calendar-table-cell-content-m
 }
 
 .mat-calendar-table-label {
-  padding: 0 0 0 $mat-calendar-table-cell-padding;
+  padding: $mat-calendar-table-cell-padding 0
+           $mat-calendar-table-cell-padding $mat-calendar-table-cell-padding;
+  height: 0;
+  line-height: 0;
   transform: translateX($mat-calendar-table-label-translation);
   text-align: left;
-  font-weight: normal;
+  font-size: $mat-calendar-table-header-font-size;
+  font-weight: bold;
 }
 
 .mat-calendar-table-cell {
