@@ -55,19 +55,19 @@ the corresponding styles. A typical theme file will look something like this:
 
 // Include the base styles for Angular Material core. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
-@include mat-core();
+@include md-core();
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
-$candy-app-primary: mat-palette($mat-indigo);
-$candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+$candy-app-primary: md-palette($md-indigo);
+$candy-app-accent:  md-palette($md-pink, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$candy-app-warn:    mat-palette($mat-red);
+$candy-app-warn:    md-palette($md-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+$candy-app-theme: md-light-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -96,11 +96,11 @@ some selector. For example, we could append the following to the example above t
 secondary dark theme:
 ```scss
 .unicorn-dark-theme {
-  $dark-primary: mat-palette($mat-blue-grey);
-  $dark-accent:  mat-palette($mat-amber, A200, A100, A400);
-  $dark-warn:    mat-palette($mat-deep-orange);
+  $dark-primary: md-palette($md-blue-grey);
+  $dark-accent:  md-palette($md-amber, A200, A100, A400);
+  $dark-warn:    md-palette($md-deep-orange);
 
-  $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+  $dark-theme: md-dark-theme($dark-primary, $dark-accent, $dark-warn);
 
   @include angular-material-theme($dark-theme);
 }
