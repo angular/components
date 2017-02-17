@@ -95,6 +95,6 @@ export class MdYearView implements AfterContentInit {
 
   /** Creates an MdCalendarCell for the given month. */
   private _createCellForMonth(month: number) {
-    return new MdCalendarCell(month, this._locale.shortMonths[month]);
+    return new MdCalendarCell(month, this._locale.shortMonths[month].toLocaleUpperCase());
   }
 }
