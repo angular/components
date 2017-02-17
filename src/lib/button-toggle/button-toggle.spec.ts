@@ -14,6 +14,7 @@ import {
     MdButtonToggleGroupMultiple,
     MdButtonToggleChange, MdButtonToggleModule,
 } from './button-toggle';
+import {FocusOriginMonitor} from '../core';
 
 
 describe('MdButtonToggle', () => {
@@ -21,6 +22,7 @@ describe('MdButtonToggle', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdButtonToggleModule.forRoot(), FormsModule, ReactiveFormsModule],
+      providers: [FocusOriginMonitor],
       declarations: [
         ButtonTogglesInsideButtonToggleGroup,
         ButtonToggleGroupWithNgModel,
