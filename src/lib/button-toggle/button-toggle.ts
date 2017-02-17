@@ -333,6 +333,7 @@ export class MdButtonToggle implements OnInit {
               @Optional() toggleGroupMultiple: MdButtonToggleGroupMultiple,
               public buttonToggleDispatcher: UniqueSelectionDispatcher,
               private _renderer: Renderer,
+              private _elementRef: ElementRef,
               private _focusOriginMonitor: FocusOriginMonitor) {
     this.buttonToggleGroup = toggleGroup;
 
@@ -364,7 +365,7 @@ export class MdButtonToggle implements OnInit {
     if (this.buttonToggleGroup && this._value == this.buttonToggleGroup.value) {
       this._checked = true;
     }
-    this._focusOriginMonitor.registerElementForFocusClasses(this._inputElement.nativeElement, this._renderer);
+    this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
   }
 
   /** Unique ID for the underlying `input` element. */
