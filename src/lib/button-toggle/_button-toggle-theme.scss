@@ -3,10 +3,10 @@
 
 // Applies a focus style to an md-button-toggle element for each of the supported palettes.
 @mixin _mat-button-toggle-focus-color($theme) {
-  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
 
   .mat-button-toggle-focus-overlay {
-    background-color: mat-color($foreground, divider);
+    background-color: mat-color($background, dark-overlay);
   }
 }
 

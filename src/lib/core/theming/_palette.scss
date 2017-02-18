@@ -653,6 +653,7 @@ $mat-light-theme-background: (
   dialog:     white,
   disabled-button: $black-12-opacity,
   raised-button: white,
+  dark-overlay: $black-12-opacity,
 );
 
 // Background palette for dark themes.
@@ -665,6 +666,7 @@ $mat-dark-theme-background: (
   dialog:     map_get($mat-grey, 800),
   disabled-button: $white-12-opacity,
   raised-button: map-get($mat-grey, 800),
+  dark-overlay: $white-12-opacity,
 );
 
 // Foreground palette for light themes.
