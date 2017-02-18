@@ -1,5 +1,6 @@
-@import '../core/style/elevation';
 @import '../core/a11y/a11y';
+@import '../core/style/elevation';
+@import '../core/style/layout-common';
 
 $mat-button-toggle-padding: 0 16px !default;
 $mat-button-toggle-line-height: 36px !default;
@@ -58,22 +59,8 @@ $mat-button-toggle-border-radius: 2px !default;
 // element, however we use a proper DOM element in order to be able to disable the default
 // touch action. This makes the buttons more responsive on touch devices.
 .mat-button-toggle-focus-overlay {
-  // The button spec calls for focus on raised buttons (and FABs) to be indicated with a
-  // black, 12% opacity shade over the normal color (for both light and dark themes).
-  background-color: rgba(black, 0.12);
   border-radius: inherit;
   pointer-events: none;
   opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-
-  @include cdk-high-contrast {
-    // Note that IE will render this in the same way, no
-    // matter whether the theme is light or dark. This helps
-    // with the readability of focused buttons.
-    background-color: rgba(white, 0.5);
-  }
+  @include mat-fill;
 }

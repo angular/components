@@ -287,7 +287,7 @@ export class MdButtonToggleGroupMultiple {
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
   host: {
-    '[class.mat-button-toggle]': 'true',
+    '[class.mat-button-toggle]': 'true'
   }
 })
 export class MdButtonToggle implements OnInit {
@@ -480,7 +480,7 @@ export class MdButtonToggle implements OnInit {
     CompatibilityModule,
   ],
   declarations: [MdButtonToggleGroup, MdButtonToggleGroupMultiple, MdButtonToggle],
-  providers: [UNIQUE_SELECTION_DISPATCHER_PROVIDER]
+  providers: [UNIQUE_SELECTION_DISPATCHER_PROVIDER, FocusOriginMonitor]
 })
 export class MdButtonToggleModule {
   /** @deprecated */
