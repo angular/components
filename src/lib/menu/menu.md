@@ -54,9 +54,39 @@ Menus support displaying `md-icon` elements before the menu item text.
 
 By default, the menu will display below (y-axis), after (x-axis), and overlapping its trigger.  The position can be changed
 using the `x-position` (`before | after`) and `y-position` (`above | below`) attributes.
-The menu can be be forced to not overlap the trigger using `[overlapTrigger]="false"` attribute.
+The menu can be be forced to not overlap the trigger using the `[overlapTrigger]="false"` attribute.
+The menu can be converted to a fly-out using the `[flyOut]="true"` attribute.
 
+### Child menus
+Child menus are supported. A child menu should have the `[flyOut]="true"` attribute. Indicate that a trigger
+is for a child menu by using the `childMenuTrigger` attribute. The attribute is required
+for proper behavior of children menus. A child menu can have its own child menus.
 
+*my-child-comp.html*
+```html
+<md-menu #parentMenu="mdMenu">
+  <button md-menu-item>
+    First
+  </button>
+  <button md-menu-item disabled>
+    Second
+  </button>
+  <button md-menu-item childMenuTrigger="true" [mdMenuTriggerFor]="childMenu">
+    <span>Open child</span>
+    <md-icon> play_arrow </md-icon>
+    <md-menu #childMenu="mdMenu" [flyOut]="true">
+      <button md-menu-item disabled>
+        Child one
+      </button>
+      <button md-menu-item>
+        Child two
+      </button>
+    </md-menu>
+  </button>
+</md-menu>
+```
+
+A menu item 
 ### Keyboard interaction
 - <kbd>DOWN_ARROW</kbd>: Focuses the next menu item
 - <kbd>UP_ARROW</kbd>: Focuses previous menu item

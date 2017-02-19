@@ -5,6 +5,7 @@ export interface MdMenuPanel {
   positionX: MenuPositionX;
   positionY: MenuPositionY;
   overlapTrigger: boolean;
+  flyOut: boolean;
   templateRef: TemplateRef<any>;
   close: EventEmitter<void>;
   focusFirstItem: () => void;

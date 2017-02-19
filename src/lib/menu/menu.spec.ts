@@ -445,6 +445,7 @@ class CustomMenuPanel implements MdMenuPanel {
   positionX: MenuPositionX = 'after';
   positionY: MenuPositionY = 'below';
   overlapTrigger: true;
+  flyOut: false;
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
   @Output() close = new EventEmitter<void>();
@@ -462,6 +463,24 @@ class CustomMenuPanel implements MdMenuPanel {
 })
 class CustomMenu {
   @ViewChild(MdMenuTrigger) trigger: MdMenuTrigger;
+}
+
+@Component({
+  template: `
+    <button [mdMenuTriggerFor]="menu" #triggerEl>Toggle parent menu</button>
+    <md-menu #menu="mdMenu">
+      <button md-menu-item childMenuTrigger="true" [mdMenuTriggerFor]="childMenu" #childTriggerEl>Parent Content </button>
+      <md-menu #childMenu="mdMenu">
+        <button md-menu-item> Child Content </button>
+      </md-menu>
+    </md-menu>
+  `
+})
+class CustomSubMenu implements TestableMenu {
+  @Input() overlapTrigger: boolean;
+  @ViewChild(MdMenuTrigger) trigger: MdMenuTrigger;
+  @ViewChild('triggerEl') triggerEl: ElementRef;
+  @ViewChild('childTriggerEl') childTriggerEl: ElementRef;
 }
 
 class FakeViewportRuler {

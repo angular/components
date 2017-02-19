@@ -11,7 +11,7 @@ export class MenuPage {
 
   triggerTwo(): ElementFinder { return element(by.id('trigger-two')); }
 
-  backdrop(): ElementFinder { return element(by.css('.cdk-overlay-backdrop')); }
+  backdrop(): ElementFinder { return element.all(by.css('.cdk-overlay-backdrop')).last(); }
 
   items(index: number): ElementFinder { return element.all(by.css('[md-menu-item]')).get(index); }
 
