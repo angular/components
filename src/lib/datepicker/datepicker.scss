@@ -1,0 +1,21 @@
+@import '../core/style/elevation';
+
+
+$md-datepicker-touch-calendar-cell-size: 60px;
+$md-datepicker-non-touch-calendar-cell-size: 40px;
+$md-datepicker-calendar-padding: 8px;
+
+$md-datepicker-touch-calendar-width:
+    $md-datepicker-touch-calendar-cell-size * 7 + $md-datepicker-calendar-padding * 2;
+$md-datepicker-non-touch-calendar-width:
+    $md-datepicker-non-touch-calendar-cell-size * 7 + $md-datepicker-calendar-padding * 2;
+
+
+.mat-datepicker-touch {
+  width: $md-datepicker-touch-calendar-width;
+}
+
+.mat-datepicker-non-touch {
+  width: $md-datepicker-non-touch-calendar-width;
+  @include mat-elevation(8);
+}
