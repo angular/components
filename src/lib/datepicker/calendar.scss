@@ -64,7 +64,7 @@ $mat-calendar-weekday-table-font-size: 11px !default;
   margin: 0 $mat-calendar-arrow-size;
   vertical-align: middle;
 
-  .mat-calendar-invert {
+  &.mat-calendar-invert {
     transform: rotate(180deg);
   }
 }
