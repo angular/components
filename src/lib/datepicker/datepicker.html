@@ -1,3 +1,6 @@
 <template>
-  I'm a datepicker (touch ui = {{touchUi}}).
+  <md-calendar
+      [class.mat-datepicker-touch]="touchUi"
+      [class.mat-datepicker-non-touch]="!touchUi">
+  </md-calendar>
 </template>
