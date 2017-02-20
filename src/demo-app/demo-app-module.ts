@@ -38,6 +38,7 @@ import {PlatformDemo} from './platform/platform-demo';
 import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
 import {InputDemo} from './input/input-demo';
 import {StyleDemo} from './style/style-demo';
+import {FabSpeedDialDemo} from './fab-speed-dial/fab-speed-dial-demo';
 
 @NgModule({
   imports: [
@@ -93,7 +94,8 @@ import {StyleDemo} from './style/style-demo';
     SunnyTabContent,
     RainyTabContent,
     FoggyTabContent,
-    PlatformDemo
+    PlatformDemo,
+    FabSpeedDialDemo
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer}

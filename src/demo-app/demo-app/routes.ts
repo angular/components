@@ -33,6 +33,7 @@ import {PlatformDemo} from '../platform/platform-demo';
 import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
 import {InputDemo} from '../input/input-demo';
 import {StyleDemo} from '../style/style-demo';
+import {FabSpeedDialDemo} from '../fab-speed-dial/fab-speed-dial-demo';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: Home},
@@ -68,4 +69,5 @@ export const DEMO_APP_ROUTES: Routes = [
   {path: 'snack-bar', component: SnackBarDemo},
   {path: 'platform', component: PlatformDemo},
   {path: 'style', component: StyleDemo},
+  {path: 'fab-speed-dial', component: FabSpeedDialDemo},
 ];

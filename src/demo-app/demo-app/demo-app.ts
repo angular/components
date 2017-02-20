@@ -50,7 +50,8 @@ export class DemoApp {
     {name: 'Toolbar', route: 'toolbar'},
     {name: 'Tooltip', route: 'tooltip'},
     {name: 'Platform', route: 'platform'},
-    {name: 'Style', route: 'style'}
+    {name: 'Style', route: 'style'},
+    {name: 'FAB Speed Dial', route: 'fab-speed-dial'}
   ];
 
   constructor(private _element: ElementRef) {

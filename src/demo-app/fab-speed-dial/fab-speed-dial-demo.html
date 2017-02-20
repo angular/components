@@ -1,0 +1,55 @@
+<md-card class="fab-demo-actions">
+  <div>
+    Direction:
+    <md-radio-group [(ngModel)]="direction" name="direction">
+      <md-radio-button value="up">Up</md-radio-button>
+      <md-radio-button value="down">Down</md-radio-button>
+      <md-radio-button value="left">Left</md-radio-button>
+      <md-radio-button value="right">Right</md-radio-button>
+    </md-radio-group>
+  </div>
+  <div>
+    Animation Mode:
+    <md-radio-group [(ngModel)]="animationMode" name="animationMode">
+      <md-radio-button value="fling">fling</md-radio-button>
+      <md-radio-button value="scale">scale</md-radio-button>
+    </md-radio-group>
+  </div>
+  <div>
+    <md-slide-toggle [(ngModel)]="fixed">Fixed</md-slide-toggle>
+    <md-slide-toggle [(ngModel)]="spin">Enable Spinning</md-slide-toggle>
+  </div>
+</md-card>
+
+<div class="container-fab-demo">
+  <md-card>
+    <md-card-title>Click me!!</md-card-title>
+    <md-slide-toggle [(ngModel)]="open">Open</md-slide-toggle>
+    <md-fab-speed-dial [(open)]="open" [direction]="direction" [animationMode]="animationMode" [fixed]="fixed">
+      <md-fab-trigger [spin]="spin">
+        <button md-fab><md-icon>add</md-icon></button>
+      </md-fab-trigger>
+
+      <md-fab-actions>
+        <button md-mini-fab><md-icon>search</md-icon></button>
+        <button md-mini-fab><md-icon>edit</md-icon></button>
+        <button md-mini-fab><md-icon>home</md-icon></button>
+      </md-fab-actions>
+    </md-fab-speed-dial>
+  </md-card>
+  <md-card>
+    <md-card-title>Hover me!!</md-card-title>
+    <md-fab-speed-dial #myFab [direction]="direction" [animationMode]="animationMode" [fixed]="fixed"
+                        (mouseleave)="myFab.open = false">
+      <md-fab-trigger [spin]="spin" (mouseenter)="myFab.open = true" >
+        <button md-fab><md-icon>check</md-icon></button>
+      </md-fab-trigger>
+
+      <md-fab-actions>
+        <button md-mini-fab><md-icon>add</md-icon></button>
+        <button md-mini-fab><md-icon>edit</md-icon></button>
+        <button md-mini-fab><md-icon>menu</md-icon></button>
+      </md-fab-actions>
+    </md-fab-speed-dial>
+  </md-card>
+</div>

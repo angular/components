@@ -36,6 +36,7 @@ import {MdDialogModule} from './dialog/index';
 import {PlatformModule} from './core/platform/index';
 import {MdAutocompleteModule} from './autocomplete/index';
 import {StyleModule} from './core/style/index';
+import {MdFabSpeedDialModule} from './fab-speed-dial/index'
 
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
@@ -70,7 +71,8 @@ const MATERIAL_MODULES = [
   PlatformModule,
   ProjectionModule,
   CompatibilityModule,
-  ObserveContentModule
+  ObserveContentModule,
+  MdFabSpeedDialModule
 ];
 
 @NgModule({
@@ -94,6 +96,7 @@ const MATERIAL_MODULES = [
     ProjectionModule.forRoot(),
     RtlModule.forRoot(),
     ObserveContentModule.forRoot(),
+    MdFabSpeedDialModule.forRoot(),
 
     // These modules include providers.
     A11yModule.forRoot(),
