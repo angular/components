@@ -194,6 +194,8 @@ describe('Overlay directives', () => {
       fixture.detectChanges();
 
       fixture.componentInstance.offsetX = 15;
+      fixture.detectChanges();
+
       fixture.componentInstance.isOpen = true;
       fixture.detectChanges();
 
@@ -223,6 +225,8 @@ describe('Overlay directives', () => {
       fixture.detectChanges();
 
       fixture.componentInstance.offsetY = 55;
+      fixture.detectChanges();
+
       fixture.componentInstance.isOpen = true;
       fixture.detectChanges();
       expect(pane.style.top)
