@@ -1,11 +1,14 @@
-import {async, TestBed} from "@angular/core/testing";
-import {Component} from "@angular/core";
-import {MdIconModule} from "../icon/index";
+import {async, TestBed} from '@angular/core/testing';
+import {Component} from '@angular/core';
+import {MdIconModule} from '../icon/index';
 import {By} from '@angular/platform-browser';
-import {MdButtonModule} from "../button/index";
-import {MdFabSpeedDialModule, MdFabSpeedDialComponent, MdFabSpeedDialTrigger, MdFabSpeedDialActions} from "./fab-speed-dial";
+import {MdButtonModule} from '../button/index';
+import {
+  MdFabSpeedDialModule,
+  MdFabSpeedDialComponent,
+  MdFabSpeedDialTrigger
+} from './fab-speed-dial';
 
-// TODO
 describe('MdFabSpeedDial', () => {
 
   beforeEach(async(() => {
@@ -180,7 +183,10 @@ describe('MdFabSpeedDial', () => {
 
 @Component({
   template: `
-  <md-fab-speed-dial [(open)]="open" [direction]="direction" [animationMode]="animationMode" [fixed]="fixed">
+  <md-fab-speed-dial 
+    [(open)]="open" [direction]="direction" 
+    [animationMode]="animationMode" [fixed]="fixed">
+    
     <md-fab-trigger [spin]="spin">
       <button md-fab><md-icon>add</md-icon></button>
     </md-fab-trigger>
@@ -197,7 +203,7 @@ class FABSpeedDialTestApp {
   open: boolean;
   direction: string;
   animationMode: string;
-  private fixed: boolean;
+  fixed: boolean;
   spin: boolean;
 }
 

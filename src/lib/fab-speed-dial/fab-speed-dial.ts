@@ -15,9 +15,9 @@ import {
     HostListener,
     NgModule,
     ModuleWithProviders
-} from "@angular/core";
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MdButton, MdButtonModule} from "../button/index";
+import {MdButton, MdButtonModule} from '../button/index';
 
 const Z_INDEX_ITEM: number = 23;
 
@@ -39,7 +39,8 @@ export class MdFabSpeedDialTrigger {
      */
     @Input() spin: boolean = false;
 
-    constructor(@Inject(forwardRef(() => MdFabSpeedDialComponent)) private _parent: MdFabSpeedDialComponent) {
+    constructor(@Inject(forwardRef(() => MdFabSpeedDialComponent))
+                private _parent: MdFabSpeedDialComponent) {
     }
 
     @HostListener('click', ['$event'])
@@ -66,7 +67,9 @@ export class MdFabSpeedDialActions implements AfterContentInit {
 
     @ContentChildren(MdButton) _buttons: QueryList<MdButton>;
 
-    constructor(@Inject(forwardRef(() => MdFabSpeedDialComponent)) private _parent: MdFabSpeedDialComponent, private renderer: Renderer) {
+    constructor(@Inject(forwardRef(() => MdFabSpeedDialComponent))
+                private _parent: MdFabSpeedDialComponent,
+                private renderer: Renderer) {
     }
 
     ngAfterContentInit(): void {
@@ -82,25 +85,25 @@ export class MdFabSpeedDialActions implements AfterContentInit {
         this._buttons.toArray().forEach((button, i) => {
             this.renderer.setElementClass(button._getHostElement(), 'mat-fab-action-item', true);
             this.changeElementStyle(button._getHostElement(), 'z-index', '' + (Z_INDEX_ITEM - i));
-        })
+        });
     }
 
     show() {
         if (this._buttons) {
             this._buttons.toArray().forEach((button, i) => {
-                let transitionDelay = 0;
+                let delay = 0;
                 let transform: string;
                 if (this._parent.animationMode == 'scale') {
                     // Incremental transition delay of 65ms for each action button
-                    transitionDelay = 3 + (65 * i);
+                    delay = 3 + (65 * i);
                     transform = 'scale(1)';
                 } else {
                     transform = this.getTranslateFunction('0');
                 }
-                this.changeElementStyle(button._getHostElement(), 'transition-delay', transitionDelay + 'ms');
+                this.changeElementStyle(button._getHostElement(), 'transition-delay', delay + 'ms');
                 this.changeElementStyle(button._getHostElement(), 'opacity', '1');
                 this.changeElementStyle(button._getHostElement(), 'transform', transform);
-            })
+            });
         }
     }
 
@@ -108,19 +111,19 @@ export class MdFabSpeedDialActions implements AfterContentInit {
         if (this._buttons) {
             this._buttons.toArray().forEach((button, i) => {
                 let opacity = '1';
-                let transitionDelay = 0;
+                let delay = 0;
                 let transform: string;
                 if (this._parent.animationMode == 'scale') {
-                    transitionDelay = 3 - (65 * i);
+                    delay = 3 - (65 * i);
                     transform = 'scale(0)';
                     opacity = '0';
                 } else {
                     transform = this.getTranslateFunction((55 * (i + 1) - (i * 5)) + 'px');
                 }
-                this.changeElementStyle(button._getHostElement(), 'transition-delay', transitionDelay + 'ms');
+                this.changeElementStyle(button._getHostElement(), 'transition-delay', delay + 'ms');
                 this.changeElementStyle(button._getHostElement(), 'opacity', opacity);
                 this.changeElementStyle(button._getHostElement(), 'transform', transform);
-            })
+            });
         }
     }
 
@@ -132,7 +135,8 @@ export class MdFabSpeedDialActions implements AfterContentInit {
     }
 
     private changeElementStyle(elem: any, style: string, value: string) {
-        // FIXME - Find a way to create a "wrapper" around the action button(s) provided by the user, so we don't change it's style tag
+        // FIXME - Find a way to create a "wrapper" around the action button(s),
+        // so we don't change it's style tag
         this.renderer.setElementStyle(elem, style, value);
     }
 }
@@ -220,7 +224,7 @@ export class MdFabSpeedDialComponent implements AfterContentInit {
             this._setElementClass(this.animationMode, true);
 
             if (this.isInitialized) {
-                // To start another detect lifecycle and force the "close" on the action buttons
+                // To start another detect lifecycle and force the close on the action buttons
                 Promise.resolve(null).then(() => this.open = false);
             }
         }
@@ -262,7 +266,7 @@ export class MdFabSpeedDialComponent implements AfterContentInit {
         }
     }
 
-    private _setElementClass(elemClass:string , isAdd:boolean) {
+    private _setElementClass(elemClass: string, isAdd: boolean) {
         this.renderer.setElementClass(this.elementRef.nativeElement, `mat-${elemClass}`, isAdd);
     }
 }
