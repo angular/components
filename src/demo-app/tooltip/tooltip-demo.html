@@ -1,7 +1,7 @@
 <div class="demo-tooltip">
   <h1>Tooltip Demo</h1>
 
-  <div class="centered" cdk-scrollable>
+  <p class="centered">
     <button #tooltip="mdTooltip"
             md-raised-button
             color="primary"
@@ -11,9 +11,7 @@
             [mdTooltipHideDelay]="hideDelay">
       Mouse over to see the tooltip
     </button>
-    <div>Scroll down while tooltip is open to see it hide automatically</div>
-    <div style="height: 400px;"></div>
-  </div>
+  </p>
 
   <p>
     <md-radio-group [(ngModel)]="position">
