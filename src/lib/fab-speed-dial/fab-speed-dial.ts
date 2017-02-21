@@ -12,7 +12,6 @@ import {
     ContentChildren,
     QueryList,
     ContentChild,
-    HostBinding,
     HostListener,
     NgModule,
     ModuleWithProviders
@@ -29,7 +28,8 @@ const Z_INDEX_ITEM: number = 23;
         <ng-content select="[md-fab], [mat-fab]"></ng-content>
     `,
     host: {
-        '[class.mat-fab-trigger]': 'true'
+        '[class.mat-fab-trigger]': 'true',
+        '[class.mat-spin]': 'spin'
     }
 })
 export class MdFabSpeedDialTrigger {
@@ -37,7 +37,6 @@ export class MdFabSpeedDialTrigger {
     /**
      * Whether this trigger should spin (360dg) while opening the speed dial
      */
-    @HostBinding('class.mat-spin')
     @Input() spin: boolean = false;
 
     constructor(@Inject(forwardRef(() => MdFabSpeedDialComponent)) private _parent: MdFabSpeedDialComponent) {
