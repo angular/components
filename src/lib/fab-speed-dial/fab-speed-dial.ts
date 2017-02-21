@@ -18,12 +18,12 @@ import {
     ModuleWithProviders
 } from "@angular/core";
 import {CommonModule} from '@angular/common';
-import {CompatibilityModule} from '../core';
-import {MdButton} from "../button/index";
+import {MdButton, MdButtonModule} from "../button/index";
 
 const Z_INDEX_ITEM: number = 23;
 
 @Component({
+    moduleId: module.id,
     selector: 'md-fab-trigger, mat-fab-trigger',
     template: `
         <ng-content select="[md-fab], [mat-fab]"></ng-content>
@@ -54,6 +54,7 @@ export class MdFabSpeedDialTrigger {
 }
 
 @Component({
+    moduleId: module.id,
     selector: 'md-fab-actions, mat-fab-actions',
     template: `
         <ng-content select="[md-mini-fab], [mat-mini-fab]"></ng-content>
@@ -138,6 +139,7 @@ export class MdFabSpeedDialActions implements AfterContentInit {
 }
 
 @Component({
+    moduleId: module.id,
     selector: 'md-fab-speed-dial, mat-fab-speed-dial',
     template: `
         <div class="mat-fab-speed-dial-container">
@@ -148,7 +150,8 @@ export class MdFabSpeedDialActions implements AfterContentInit {
     styleUrls: ['fab-speed-dial.css'],
     encapsulation: ViewEncapsulation.None,
     host: {
-        '[class.mat-fab-speed-dial]': 'true'
+        '[class.mat-fab-speed-dial]': 'true',
+        '[class.mat-opened]': 'open'
     }
 })
 export class MdFabSpeedDialComponent implements AfterContentInit {
@@ -165,12 +168,12 @@ export class MdFabSpeedDialComponent implements AfterContentInit {
     /**
      * Whether this speed dial is opened
      */
-    @HostBinding('class.mat-opened')
     @Input() get open() {
         return this._open;
     }
 
     set open(open: boolean) {
+        open = open === true;
         let previousOpen = this._open;
         this._open = open;
         if (previousOpen != this._open) {
@@ -189,6 +192,7 @@ export class MdFabSpeedDialComponent implements AfterContentInit {
     }
 
     set direction(direction: string) {
+        direction = direction ? direction : 'up';
         let previousDir = this._direction;
         this._direction = direction;
         if (previousDir != this.direction) {
@@ -209,6 +213,7 @@ export class MdFabSpeedDialComponent implements AfterContentInit {
     }
 
     set animationMode(animationMode: string) {
+        animationMode = animationMode ? animationMode : 'fling';
         let previousAnimationMode = this._animationMode;
         this._animationMode = animationMode;
         if (previousAnimationMode != this._animationMode) {
@@ -265,9 +270,8 @@ export class MdFabSpeedDialComponent implements AfterContentInit {
 
 
 @NgModule({
-    imports: [CommonModule, CompatibilityModule],
+    imports: [CommonModule, MdButtonModule],
     exports: [
-        CompatibilityModule,
         MdFabSpeedDialTrigger,
         MdFabSpeedDialActions,
         MdFabSpeedDialComponent
