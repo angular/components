@@ -14,7 +14,7 @@ $mat-slide-toggle-ripple-radius: 23px !default;
 
 
 .mat-slide-toggle {
-  display: flex;
+  display: inline-block;
   height: $mat-slide-toggle-height;
 
   margin: $mat-slide-toggle-margin 0;
