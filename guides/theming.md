@@ -46,7 +46,7 @@ ensures that the proper theme background is applied to your page.
 
 #### Theming overlay-based components
 Since certain components (e.g. `dialog`) are inside of a global overlay container, your theme may
-not be applied to them. In order to define the theme, that will be used for overlay components, you
+not be applied to them. In order to define the theme that will be used for overlay components, you
 have to specify it on the global `OverlayContainer` instance:
 
 ```ts
