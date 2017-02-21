@@ -4,7 +4,12 @@ import {HttpModule} from '@angular/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DemoApp, Home} from './demo-app/demo-app';
 import {RouterModule} from '@angular/router';
-import {MaterialModule, OverlayContainer, FullscreenOverlayContainer} from '@angular/material';
+import {
+  MaterialModule,
+  OverlayContainer,
+  FullscreenOverlayContainer,
+  MdSelectionModule,
+} from '@angular/material';
 import {DEMO_APP_ROUTES} from './demo-app/routes';
 import {ProgressBarDemo} from './progress-bar/progress-bar-demo';
 import {JazzDialog, ContentElementDialog, DialogDemo, IFrameDialog} from './dialog/dialog-demo';
@@ -36,7 +41,7 @@ import {TabsDemo, SunnyTabContent, RainyTabContent, FoggyTabContent} from './tab
 import {ProjectionDemo, ProjectionTestComponent} from './projection/projection-demo';
 import {PlatformDemo} from './platform/platform-demo';
 import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
-import {InputContainerDemo} from './input/input-container-demo';
+import {InputDemo} from './input/input-demo';
 import {StyleDemo} from './style/style-demo';
 
 @NgModule({
@@ -47,6 +52,7 @@ import {StyleDemo} from './style/style-demo';
     ReactiveFormsModule,
     RouterModule.forRoot(DEMO_APP_ROUTES),
     MaterialModule.forRoot(),
+    MdSelectionModule,
   ],
   declarations: [
     AutocompleteDemo,
@@ -62,7 +68,7 @@ import {StyleDemo} from './style/style-demo';
     GridListDemo,
     Home,
     IconDemo,
-    InputContainerDemo,
+    InputDemo,
     JazzDialog,
     ContentElementDialog,
     IFrameDialog,
@@ -93,7 +99,7 @@ import {StyleDemo} from './style/style-demo';
     SunnyTabContent,
     RainyTabContent,
     FoggyTabContent,
-    PlatformDemo
+    PlatformDemo,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer}

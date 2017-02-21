@@ -2,7 +2,7 @@ import {TestBed, ComponentFixture, fakeAsync, tick, inject} from '@angular/core/
 import {Component, ViewChild} from '@angular/core';
 import {MdRipple, MdRippleModule} from './ripple';
 import {ViewportRuler} from '../overlay/position/viewport-ruler';
-import {RIPPLE_FADE_OUT_DURATION, RIPPLE_SPEED_PX_PER_SECOND} from './ripple-renderer';
+import {RIPPLE_FADE_OUT_DURATION, RIPPLE_FADE_IN_DURATION} from './ripple-renderer';
 
 
 /** Creates a DOM mouse event. */
@@ -75,6 +75,7 @@ describe('MdRipple', () => {
   }
 
   describe('basic ripple', () => {
+    let rippleDirective: MdRipple;
 
     const TARGET_HEIGHT = 200;
     const TARGET_WIDTH = 300;
@@ -83,7 +84,8 @@ describe('MdRipple', () => {
       fixture = TestBed.createComponent(BasicRippleContainer);
       fixture.detectChanges();
 
-      rippleTarget = fixture.debugElement.nativeElement.querySelector('[mat-ripple]');
+      rippleTarget = fixture.nativeElement.querySelector('[mat-ripple]');
+      rippleDirective = fixture.componentInstance.ripple;
     });
 
     it('creates ripple on mousedown', () => {
@@ -104,23 +106,34 @@ describe('MdRipple', () => {
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
 
-      // Determines the diagonal distance of the ripple target.
-      let diagonal = Math.sqrt(TARGET_HEIGHT * TARGET_HEIGHT + TARGET_WIDTH * TARGET_WIDTH);
-
-      // Calculates the duration for fading in the ripple. Also adds the fade-out duration.
-      tick((diagonal / RIPPLE_SPEED_PX_PER_SECOND * 1000) + RIPPLE_FADE_OUT_DURATION);
+      // Calculates the duration for fading-in and fading-out the ripple.
+      tick(RIPPLE_FADE_IN_DURATION + RIPPLE_FADE_OUT_DURATION);
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
     }));
 
     it('creates ripples when manually triggered', () => {
-      let rippleComponent = fixture.debugElement.componentInstance.ripple as MdRipple;
-
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
 
-      rippleComponent.launch(0, 0);
+      rippleDirective.launch(0, 0);
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
+    });
+
+    it('creates manual ripples with the default ripple config', () => {
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+
+      // Calculate the diagonal distance and divide it by two for the center radius.
+      let radius = Math.sqrt(TARGET_HEIGHT * TARGET_HEIGHT + TARGET_WIDTH * TARGET_WIDTH) / 2;
+
+      rippleDirective.centered = true;
+      rippleDirective.launch(0, 0);
+
+      let rippleElement = rippleTarget.querySelector('.mat-ripple-element') as HTMLElement;
+
+      expect(rippleElement).toBeTruthy();
+      expect(parseFloat(rippleElement.style.left)).toBeCloseTo(TARGET_WIDTH / 2 - radius, 1);
+      expect(parseFloat(rippleElement.style.top)).toBeCloseTo(TARGET_HEIGHT / 2 - radius, 1);
     });
 
     it('sizes ripple to cover element', () => {
@@ -165,6 +178,17 @@ describe('MdRipple', () => {
       dispatchMouseEvent('mouseup');
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+    });
+
+    it('does not run events inside the NgZone', () => {
+      const spy = jasmine.createSpy('zone unstable callback');
+      const subscription = fixture.ngZone.onUnstable.subscribe(spy);
+
+      dispatchMouseEvent('mousedown');
+      dispatchMouseEvent('mouseup');
+
+      expect(spy).not.toHaveBeenCalled();
+      subscription.unsubscribe();
     });
 
     describe('when page is scrolled', () => {
@@ -374,20 +398,20 @@ describe('MdRipple', () => {
 
 @Component({
   template: `
-    <div id="container" mat-ripple [mdRippleSpeedFactor]="0" 
+    <div id="container" #ripple="mdRipple" mat-ripple [mdRippleSpeedFactor]="0"
          style="position: relative; width:300px; height:200px;">
     </div>
   `,
 })
 class BasicRippleContainer {
-  @ViewChild(MdRipple) ripple: MdRipple;
+  @ViewChild('ripple') ripple: MdRipple;
 }
 
 @Component({
   template: `
     <div id="container" style="position: relative; width:300px; height:200px;"
       mat-ripple
-      [mdRippleSpeedFactor]="0"   
+      [mdRippleSpeedFactor]="0"
       [mdRippleTrigger]="trigger"
       [mdRippleCentered]="centered"
       [mdRippleRadius]="radius"
@@ -406,7 +430,7 @@ class RippleContainerWithInputBindings {
   @ViewChild(MdRipple) ripple: MdRipple;
 }
 
-@Component({ template: `<div id="container" mat-ripple [mdRippleSpeedFactor]="0" 
+@Component({ template: `<div id="container" mat-ripple [mdRippleSpeedFactor]="0"
                              *ngIf="!isDestroyed"></div>` })
 class RippleContainerWithNgIf {
   @ViewChild(MdRipple) ripple: MdRipple;
