@@ -57,7 +57,7 @@ npm install --save hammerjs
 After installing, import HammerJS on your app's module.
 **src/app/app.module.ts**
 ```ts
-import 'hammerjs';
+import 'hammerjs/hammer';
 ```
 
 ## Configuring SystemJS
