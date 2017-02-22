@@ -13,6 +13,9 @@ export class SelectDemo {
   isDisabled = false;
   showSelect = false;
   currentDrink: string;
+  flex1: string;
+  flex2: string;
+  flex3: string;
   latestChangeEvent: MdSelectChange;
   floatPlaceholder: string = 'auto';
   foodControl = new FormControl('pizza-1');

@@ -54,3 +54,27 @@
 
 </div>
 <div style="height: 500px">This div is for testing scrolled selects.</div>
+
+<md-card>
+  <md-card-header>Inside Simple Flex Layout</md-card-header>
+  <div class="demo-flex-line">
+    <div class="demo-flex-column">
+      <md-select placeholder="Starter Pokemon" [(ngModel)]="flex1">
+        <md-option *ngFor="let starter of pokemon" [value]="starter.value"> {{ starter.viewValue }} </md-option>
+      </md-select>
+    </div>
+
+    <div class="demo-flex-column">
+      <md-select placeholder="Starter Pokemon 2" [(ngModel)]="flex2">
+        <md-option *ngFor="let starter of pokemon" [value]="starter.value"> {{ starter.viewValue }} </md-option>
+      </md-select>
+    </div>
+
+    <div class="demo-flex-column">
+      <md-select placeholder="Starter Pokemon 3" [(ngModel)]="flex3">
+        <md-option *ngFor="let starter of pokemon" [value]="starter.value"> {{ starter.viewValue }} </md-option>
+        <md-option value="long-name-pokemont-0">A really long name for a pokemon. A pokemon should really be named like that?</md-option>
+      </md-select>
+    </div>
+  </div>
+</md-card>
