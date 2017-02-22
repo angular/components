@@ -3,8 +3,8 @@ import * as path from 'path';
 import {browser} from 'protractor';
 
 const OUTPUT_DIR = './screenshots/';
-const HEIGHT = 768;
-const WIDTH = 1024;
+const HEIGHT = 788;
+const WIDTH = 1034;
 
 let currentJasmineSpecName = '';
 
