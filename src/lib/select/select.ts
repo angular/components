@@ -9,6 +9,7 @@
 import {
   AfterContentInit,
   Component,
+  ContentChild,
   ContentChildren,
   ElementRef,
   EventEmitter,
@@ -28,6 +29,7 @@ import {
 } from '@angular/core';
 import {MdOption, MdOptionSelectionChange, MdOptgroup} from '../core/option/index';
 import {ENTER, SPACE, UP_ARROW, DOWN_ARROW, HOME, END} from '../core/keyboard/keycodes';
+import {MdSelectHeader} from './select-header';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {Dir} from '../core/rtl/dir';
 import {Observable} from 'rxjs/Observable';
@@ -115,6 +117,9 @@ export class MdSelectBase {
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
 export const _MdSelectMixinBase = mixinColor(MdSelectBase, 'primary');
+
+/** Counter for unique panel IDs. */
+let panelIds = 0;
 
 @Component({
   moduleId: module.id,
@@ -209,6 +214,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** The IDs of child options to be passed to the aria-owns attribute. */
   _optionIds: string = '';
 
+  /** Unique ID for the panel element. Useful for a11y in projected content (e.g. the header). */
+  panelId: string = 'md-select-panel-' + panelIds++;
+
   /** The value of the select panel's transform-origin property. */
   _transformOrigin: string = 'top';
 
@@ -257,6 +265,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
   @Input() panelClass: string|string[]|Set<string>|{[key: string]: any};
+
+  /** The select's header, if specified. */
+  @ContentChild(MdSelectHeader) header: MdSelectHeader;
 
   /** Placeholder to be shown if no value has been selected. */
   @Input()
@@ -566,7 +577,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
    */
   private _setScrollTop(): void {
     const scrollContainer =
-        this.overlayDir.overlayRef.overlayElement.querySelector('.mat-select-panel');
+        this.overlayDir.overlayRef.overlayElement.querySelector('.mat-select-content');
     scrollContainer.scrollTop = this._scrollTop;
   }
 
@@ -800,6 +811,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       // and the trigger element, then multiply it by -1 to ensure the panel moves
       // in the correct direction up the page.
       this._offsetY = (SELECT_ITEM_HEIGHT - SELECT_TRIGGER_HEIGHT) / 2 * -1;
+      // this._offsetY = (SELECT_OPTION_HEIGHT - SELECT_TRIGGER_HEIGHT) / 2 * -1 -
+      //     (this.header ? SELECT_OPTION_HEIGHT : 0);
     }
 
     this._checkOverlayWithinViewport(maxScroll);
@@ -932,7 +945,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     // The final offset is the option's offset from the top, adjusted for the height
     // difference, multiplied by -1 to ensure that the overlay moves in the correct
     // direction up the page.
-    return optionOffsetFromPanelTop * -1 - SELECT_OPTION_HEIGHT_ADJUSTMENT;
+    return optionOffsetFromPanelTop * -1 - SELECT_OPTION_HEIGHT_ADJUSTMENT -
+        (this.header ? SELECT_ITEM_HEIGHT : 0);
   }
 
   /**
@@ -952,6 +966,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     const panelHeightTop = Math.abs(this._offsetY);
     const totalPanelHeight =
         Math.min(this._getItemCount() * SELECT_ITEM_HEIGHT, SELECT_PANEL_MAX_HEIGHT);
+        // Math.min(this.options.length * SELECT_OPTION_HEIGHT, SELECT_PANEL_MAX_HEIGHT);
     const panelHeightBottom = totalPanelHeight - panelHeightTop - triggerRect.height;
 
     if (panelHeightBottom > bottomSpaceAvailable) {

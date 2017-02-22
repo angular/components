@@ -1,0 +1,12 @@
+<md-select placeholder="Favorite food" [(ngModel)]="currentDrink" name="food" #select="mdSelect">
+  <md-select-header>
+    <input type="search" [(ngModel)]="searchString" role="combobox" [attr.aria-owns]="select.panelId"
+      (ngModelChange)="filterFoods()" placeholder="Search for food"/>
+  </md-select-header>
+
+  <md-option *ngFor="let food of foods" [value]="food.value">
+    {{food.viewValue}}
+  </md-option>
+</md-select>
+
+<p> Selected value: {{selectedValue}} </p>

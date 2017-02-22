@@ -15,11 +15,10 @@ $mat-menu-icon-margin: 16px !default;
 
 @mixin mat-menu-base() {
   @include mat-elevation(8);
+  @include mat-menu-scrollable();
+
   min-width: $mat-menu-overlay-min-width;
   max-width: $mat-menu-overlay-max-width;
-
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;   // for momentum scroll on mobile
 }
 
 @mixin mat-menu-item-base() {
@@ -90,4 +89,9 @@ $mat-menu-icon-margin: 16px !default;
       transform-origin: left bottom;
     }
   }
+}
+
+@mixin mat-menu-scrollable() {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;   // for momentum scroll on mobile
 }
