@@ -47,6 +47,7 @@ import {MdDatepickerModule} from './datepicker/index';
 import {CdkDataTableModule} from './core/data-table/index';
 import {MdExpansionModule} from './expansion/index';
 import {MdPaginatorModule} from './paginator/index';
+import {MdTreeModule} from './tree/index';
 
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
@@ -76,6 +77,7 @@ const MATERIAL_MODULES = [
   MdTabsModule,
   MdToolbarModule,
   MdTooltipModule,
+  MdTreeModule,
   OverlayModule,
   PortalModule,
   BidiModule,

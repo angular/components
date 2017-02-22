@@ -4,6 +4,7 @@ import {
   Component,
   Directive,
   Input,
+  ContentChildren,
   ViewChildren,
   ElementRef,
   ViewContainerRef,
@@ -22,32 +23,7 @@ import {
   QueryList,
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-
-
-
-@Component({
-  selector: 'md-tree',
-  host: {
-  },
-  templateUrl: 'tree.html',
-  styleUrls: ['tree.css'],
-})
-export class MdTree {
-  @ViewChildren(MdTreeNode) treeNodes: QueryList<MdTreeNode>;
-  /**  The keys of the nodes which are expanded. */
-  _expandedKeys: string[];
-
-
-  @Input()
-  set expandedKeys(keys: string[]) {
-    this._expandedKeys = keys;
-  }
-  get expandedKeys() {
-    return this._expandedKeys;
-  }
-
-
-}
+import { BrowserModule } from '@angular/platform-browser';
 
 @Directive({
   selector: '[mdTreeNode]',
@@ -69,4 +45,43 @@ export class MdTreeNode {
 
   @Input()
   expanded: boolean = false;
+}
+
+@Component({
+  selector: 'md-tree',
+  host: {
+  },
+  templateUrl: 'tree.html',
+  styleUrls: ['tree.css'],
+
+})
+export class MdTree {
+  @ContentChildren(MdTreeNode) treeNodes: QueryList<MdTreeNode>;
+
+  /**  The keys of the nodes which are expanded. */
+  _expandedKeys: string[];
+
+
+  @Input()
+  get expandedKeys() {
+    return this._expandedKeys;
+  }
+  set expandedKeys(keys: string[]) {
+    this._expandedKeys = keys;
+  }
+}
+
+
+@NgModule({
+  imports: [BrowserModule],
+  exports: [MdTree, MdTreeNode],
+  declarations: [MdTree, MdTreeNode],
+})
+export class MdTreeModule implements OnInit {
+  @ContentChildren(MdTreeNode) treeNodes: QueryList<MdTreeNode>;
+
+  ngOnInit() {
+    console.log(this.treeNodes.length);
+  }
+
 }

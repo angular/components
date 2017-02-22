@@ -1,1 +1,6 @@
-{{expandedKeys}}
+{{expandedKeys}} {{treeNodes.length}}
+<ng-content></ng-content>
+
+<span *ngFor="let node of treeNodes">
+  {{node.key}} {{node.title}} {{node.disabled}} | {{node.selected}} | {{node.expanded}}
+</span>
