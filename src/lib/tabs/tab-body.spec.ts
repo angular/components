@@ -6,6 +6,7 @@ import {MdTabBody} from './tab-body';
 import {MdRippleModule} from '../core/ripple/ripple';
 import {CommonModule} from '@angular/common';
 import {PortalModule} from '../core';
+import {NoopBrowserAnimationModule} from '@angular/platform-browser/animations';
 
 
 describe('MdTabBody', () => {
@@ -14,7 +15,7 @@ describe('MdTabBody', () => {
   beforeEach(async(() => {
     dir = 'ltr';
     TestBed.configureTestingModule({
-      imports: [CommonModule, PortalModule, MdRippleModule],
+      imports: [CommonModule, PortalModule, MdRippleModule, NoopBrowserAnimationModule],
       declarations: [
         MdTabBody,
         SimpleTabBodyApp,

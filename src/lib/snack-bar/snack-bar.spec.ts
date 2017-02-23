@@ -11,6 +11,7 @@ import {NgModule, Component, Directive, ViewChild, ViewContainerRef} from '@angu
 import {CommonModule} from '@angular/common';
 import {MdSnackBarModule, MdSnackBar, MdSnackBarConfig, SimpleSnackBar} from './index';
 import {OverlayContainer, LiveAnnouncer} from '../core';
+import {NoopBrowserAnimationModule} from '@angular/platform-browser/animations';
 
 
 // TODO(josephperrott): Update tests to mock waiting for time to complete for animations.
@@ -28,7 +29,7 @@ describe('MdSnackBar', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSnackBarModule.forRoot(), SnackBarTestModule],
+      imports: [MdSnackBarModule.forRoot(), SnackBarTestModule, NoopBrowserAnimationModule],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');

@@ -8,10 +8,11 @@ import {
 } from '../core';
 export * from './select';
 export {fadeInContent, transformPanel, transformPlaceholder} from './select-animations';
+import {BrowserAnimationModule} from '@angular/platform-browser/animations';
 
 
 @NgModule({
-  imports: [CommonModule, OverlayModule, MdOptionModule, CompatibilityModule],
+  imports: [CommonModule, OverlayModule, MdOptionModule, CompatibilityModule, BrowserAnimationModule],
   exports: [MdSelect, MdOptionModule, CompatibilityModule],
   declarations: [MdSelect],
 })

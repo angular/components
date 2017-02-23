@@ -4,6 +4,7 @@ import {Component} from '@angular/core';
 import {MdSlideToggle, MdSlideToggleChange, MdSlideToggleModule} from './slide-toggle';
 import {FormsModule, NgControl, ReactiveFormsModule, FormControl} from '@angular/forms';
 import {TestGestureConfig} from '../slider/test-gesture-config';
+import {NoopBrowserAnimationModule} from '@angular/platform-browser/animations';
 
 describe('MdSlideToggle', () => {
 
@@ -11,7 +12,7 @@ describe('MdSlideToggle', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSlideToggleModule.forRoot(), FormsModule, ReactiveFormsModule],
+      imports: [MdSlideToggleModule.forRoot(), FormsModule, ReactiveFormsModule, NoopBrowserAnimationModule],
       declarations: [SlideToggleTestApp, SlideToggleFormsTestApp, SlideToggleWithFormControl],
       providers: [
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => gestureConfig = new TestGestureConfig()}
@@ -650,8 +651,10 @@ class SlideToggleTestApp {
 
 @Component({
   selector: 'slide-toggle-forms-test-app',
+  // see https://github.com/angular/angular/commit/874243279d5fd2bef567a13e0cef8d0cdf68eec1
+  // breaking change in rc.0!
   template: `
-    <form (ngSubmit)="isSubmitted = true">
+    <form ngNativeValidate (ngSubmit)="isSubmitted = true">
       <md-slide-toggle name="slide" ngModel [required]="isRequired">Required</md-slide-toggle>
       <button type="submit"></button>
     </form>`

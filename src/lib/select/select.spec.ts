@@ -18,6 +18,7 @@ import {
   ControlValueAccessor, FormControl, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule
 } from '@angular/forms';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+import {NoopBrowserAnimationModule} from '@angular/platform-browser/animations';
 
 describe('MdSelect', () => {
   let overlayContainerElement: HTMLElement;
@@ -25,7 +26,7 @@ describe('MdSelect', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSelectModule.forRoot(), ReactiveFormsModule, FormsModule],
+      imports: [MdSelectModule.forRoot(), ReactiveFormsModule, FormsModule, NoopBrowserAnimationModule],
       declarations: [
         BasicSelect,
         NgModelSelect,
@@ -582,12 +583,12 @@ describe('MdSelect', () => {
     let fixture: ComponentFixture<BasicSelect>;
     let trigger: HTMLElement;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(BasicSelect);
       fixture.detectChanges();
 
       trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
-    });
+    }));
 
       it('should float the placeholder when the panel is open and unselected', () => {
         expect(fixture.componentInstance.select._placeholderState)
