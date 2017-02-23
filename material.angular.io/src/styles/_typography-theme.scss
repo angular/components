@@ -11,11 +11,11 @@
   .docs-guide-content {
        h1 {
         color: mat-color($primary, 800);
-        background: rgba(mat-color($foreground, secondary-text), .03);
+        background: rgba(mat-color($foreground, text), .03);
       }
 
       h3, h2, h4, h5, p, ol, li{
-        color: mat-color($foreground, secondary-text);
+        color: mat-color($foreground, text);
       }
 
       a {
@@ -27,16 +27,16 @@
       }
 
       table tbody th{
-        border: 1px solid rgba(mat-color($foreground, secondary-text), .03);
+        border: 1px solid rgba(mat-color($foreground, text), .03);
       }
 
       td {
-        color: mat-color($foreground, secondary-text);
+        color: mat-color($foreground, text);
         border: 1px solid rgba(mat-color($foreground, secondary-text), .03);
       }
 
       th {
-        color: mat-color($foreground, secondary-text);
+        color: mat-color($foreground, text);
         background: rgba(mat-color($foreground, secondary-text), .03);
       }
   }
