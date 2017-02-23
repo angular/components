@@ -367,6 +367,27 @@ describe('MdSlideToggle', () => {
       expect(slideToggleElement.classList).toContain('mat-slide-toggle-label-before');
     });
 
+    it('should show ripples on label mousedown', () => {
+      expect(slideToggleElement.querySelectorAll('.mat-ripple-element').length).toBe(0);
+
+      dispatchFakeEvent(labelElement, 'mousedown');
+      dispatchFakeEvent(labelElement, 'mouseup');
+
+      expect(slideToggleElement.querySelectorAll('.mat-ripple-element').length).toBe(1);
+    });
+
+    it('should not show ripples when disableRipple is set', () => {
+      testComponent.disableRipple = true;
+      fixture.detectChanges();
+
+      expect(slideToggleElement.querySelectorAll('.mat-ripple-element').length).toBe(0);
+
+      dispatchFakeEvent(labelElement, 'mousedown');
+      dispatchFakeEvent(labelElement, 'mouseup');
+
+      expect(slideToggleElement.querySelectorAll('.mat-ripple-element').length).toBe(0);
+    });
+
   });
 
   describe('custom template', () => {
@@ -438,6 +459,7 @@ describe('MdSlideToggle', () => {
     let slideToggleElement: HTMLElement;
     let slideToggleControl: NgControl;
     let slideThumbContainer: HTMLElement;
+    let inputElement: HTMLInputElement;
 
     beforeEach(async(() => {
       fixture = TestBed.createComponent(SlideToggleTestApp);
@@ -453,6 +475,8 @@ describe('MdSlideToggle', () => {
       slideToggleElement = slideToggleDebug.nativeElement;
       slideToggleControl = slideToggleDebug.injector.get(NgControl);
       slideThumbContainer = thumbContainerDebug.nativeElement;
+
+      inputElement = slideToggleElement.querySelector('input');
     }));
 
     it('should drag from start to end', fakeAsync(() => {
@@ -495,7 +519,7 @@ describe('MdSlideToggle', () => {
       expect(slideThumbContainer.classList).not.toContain('mat-dragging');
     }));
 
-    it('should not drag when disbaled', fakeAsync(() => {
+    it('should not drag when disabled', fakeAsync(() => {
       slideToggle.disabled = true;
 
       expect(slideToggle.checked).toBe(false);
@@ -536,6 +560,28 @@ describe('MdSlideToggle', () => {
       expect(slideToggle.checked).toBe(true);
       expect(slideThumbContainer.classList).not.toContain('mat-dragging');
       expect(testComponent.lastEvent.checked).toBe(true);
+    }));
+
+    it('should update the checked property of the input', fakeAsync(() => {
+      expect(inputElement.checked).toBe(false);
+
+      gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
+
+      expect(slideThumbContainer.classList).toContain('mat-dragging');
+
+      gestureConfig.emitEventForElement('slide', slideThumbContainer, {
+        deltaX: 200 // Arbitrary, large delta that will be clamped to the end of the slide-toggle.
+      });
+
+      gestureConfig.emitEventForElement('slideend', slideThumbContainer);
+      fixture.detectChanges();
+
+      expect(inputElement.checked).toBe(true);
+
+      // Flush the timeout for the slide ending.
+      tick();
+
+      expect(slideThumbContainer.classList).not.toContain('mat-dragging');
     }));
 
   });
@@ -595,6 +641,7 @@ function dispatchFocusChangeEvent(eventName: string, element: HTMLElement): void
                      [aria-labelledby]="slideLabelledBy"
                      [tabIndex]="slideTabindex"
                      [labelPosition]="labelPosition"
+                     [disableRipple]="disableRipple"
                      (change)="onSlideChange($event)"
                      (click)="onSlideClick($event)">
 
@@ -605,6 +652,7 @@ function dispatchFocusChangeEvent(eventName: string, element: HTMLElement): void
 class SlideToggleTestApp {
   isDisabled: boolean = false;
   isRequired: boolean = false;
+  disableRipple: boolean = false;
   slideModel: boolean = false;
   slideChecked: boolean = false;
   slideColor: string;
@@ -645,4 +693,11 @@ class SlideToggleFormsTestApp {
 })
 class SlideToggleWithFormControl {
   formControl = new FormControl();
+}
+
+// TODO(devversion): replace with global utility once pull request #2943 is merged.
+function dispatchFakeEvent(element: HTMLElement, eventName: string): void {
+  let event  = document.createEvent('Event');
+  event.initEvent(eventName, true, true);
+  element.dispatchEvent(event);
 }

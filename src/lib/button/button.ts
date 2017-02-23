@@ -106,6 +106,12 @@ export class MdButton {
   /** Whether a mousedown has occurred on this element in the last 100ms. */
   _isMouseDown: boolean = false;
 
+  /** Whether the button is round. */
+  _isRoundButton: boolean = ['icon-button', 'fab', 'mini-fab'].some(suffix => {
+    let el = this._getHostElement();
+    return el.hasAttribute('md-' + suffix) || el.hasAttribute('mat-' + suffix);
+  });
+
   /** Whether the ripple effect on click should be disabled. */
   private _disableRipple: boolean = false;
   private _disabled: boolean = null;
@@ -165,13 +171,6 @@ export class MdButton {
     return this._elementRef.nativeElement;
   }
 
-  _isRoundButton() {
-    const el = this._getHostElement();
-    return el.hasAttribute('md-icon-button') ||
-        el.hasAttribute('md-fab') ||
-        el.hasAttribute('md-mini-fab');
-  }
-
   _isRippleDisabled() {
     return this.disableRipple || this.disabled;
   }
@@ -184,7 +183,6 @@ export class MdButton {
   moduleId: module.id,
   selector: `a[md-button], a[md-raised-button], a[md-icon-button], a[md-fab], a[md-mini-fab],
              a[mat-button], a[mat-raised-button], a[mat-icon-button], a[mat-fab], a[mat-mini-fab]`,
-  inputs: ['color', 'disabled', 'disableRipple'],
   host: {
     '[attr.disabled]': 'disabled',
     '[attr.aria-disabled]': '_isAriaDisabled',

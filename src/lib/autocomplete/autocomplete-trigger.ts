@@ -8,7 +8,6 @@ import {
     NgZone,
     Optional,
     OnDestroy,
-    QueryList,
     ViewContainerRef,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -23,7 +22,6 @@ import {ENTER, UP_ARROW, DOWN_ARROW} from '../core/keyboard/keycodes';
 import {Dir} from '../core/rtl/dir';
 import {Subscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/switchMap';
@@ -63,7 +61,7 @@ export const MD_AUTOCOMPLETE_VALUE_ACCESSOR: any = {
     '[attr.aria-owns]': 'autocomplete?.id',
     '(focus)': 'openPanel()',
     '(blur)': '_handleBlur($event.relatedTarget?.tagName)',
-    '(input)': '_handleInput($event.target.value)',
+    '(input)': '_handleInput($event)',
     '(keydown)': '_handleKeydown($event)',
   },
   providers: [MD_AUTOCOMPLETE_VALUE_ACCESSOR]
@@ -155,15 +153,15 @@ export class MdAutocompleteTrigger implements AfterContentInit, ControlValueAcce
    */
   get panelClosingActions(): Observable<MdOptionSelectEvent> {
     return Observable.merge(
-        ...this.optionSelections,
+        this.optionSelections,
         this._blurStream.asObservable(),
         this._keyManager.tabOut
     );
   }
 
   /** Stream of autocomplete option selections. */
-  get optionSelections(): Observable<MdOptionSelectEvent>[] {
-    return this.autocomplete.options.map(option => option.onSelect);
+  get optionSelections(): Observable<MdOptionSelectEvent> {
+    return Observable.merge(...this.autocomplete.options.map(option => option.onSelect));
   }
 
   /** The currently active option, coerced to MdOption type. */
@@ -215,9 +213,14 @@ export class MdAutocompleteTrigger implements AfterContentInit, ControlValueAcce
     }
   }
 
-  _handleInput(value: string): void {
-    this._onChange(value);
-    this.openPanel();
+  _handleInput(event: KeyboardEvent): void {
+    // We need to ensure that the input is focused, because IE will fire the `input`
+    // event on focus/blur/load if the input has a placeholder. See:
+    // https://connect.microsoft.com/IE/feedback/details/885747/
+    if (document.activeElement === event.target) {
+      this._onChange((event.target as HTMLInputElement).value);
+      this.openPanel();
+    }
   }
 
   _handleBlur(newlyFocusedTag: string): void {
@@ -258,31 +261,18 @@ export class MdAutocompleteTrigger implements AfterContentInit, ControlValueAcce
    * stream every time the option list changes.
    */
   private _subscribeToClosingActions(): void {
-    const initialOptions = this._getStableOptions();
-
     // When the zone is stable initially, and when the option list changes...
-    Observable.merge(initialOptions, this.autocomplete.options.changes)
+    Observable.merge(this._zone.onStable.first(), this.autocomplete.options.changes)
         // create a new stream of panelClosingActions, replacing any previous streams
         // that were created, and flatten it so our stream only emits closing events...
-        .switchMap(options => {
+        .switchMap(() => {
           this._resetPanel();
-          // If the options list is empty, emit close event immediately.
-          // Otherwise, listen for panel closing actions...
-          return options.length ? this.panelClosingActions : Observable.of(null);
+          return this.panelClosingActions;
         })
         // when the first closing event occurs...
         .first()
         // set the value, close the panel, and complete.
         .subscribe(event => this._setValueAndClose(event));
-  }
-
-  /**
-   * Retrieves the option list once the zone stabilizes. It's important to wait until
-   * stable so that change detection can run first and update the query list
-   * with the options available under the current filter.
-   */
-  private _getStableOptions(): Observable<QueryList<MdOption>> {
-    return this._zone.onStable.first().map(() => this.autocomplete.options);
   }
 
   /** Destroys the autocomplete suggestion panel. */
@@ -364,6 +354,7 @@ export class MdAutocompleteTrigger implements AfterContentInit, ControlValueAcce
   private _resetPanel() {
     this._resetActiveItem();
     this._positionStrategy.recalculateLastPosition();
+    this.autocomplete._setVisibility();
   }
 
 }

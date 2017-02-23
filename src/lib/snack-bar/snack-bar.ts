@@ -1,24 +1,12 @@
-import {
-  NgModule,
-  ModuleWithProviders,
-  Injectable,
-  ComponentRef,
-  Optional,
-  SkipSelf,
-} from '@angular/core';
+import {Injectable, ComponentRef, Optional, SkipSelf} from '@angular/core';
 import {
   ComponentType,
   ComponentPortal,
   Overlay,
-  OverlayModule,
   OverlayRef,
   OverlayState,
-  PortalModule,
   LiveAnnouncer,
-  CompatibilityModule,
-  LIVE_ANNOUNCER_PROVIDER,
 } from '../core';
-import {CommonModule} from '@angular/common';
 import {MdSnackBarConfig} from './snack-bar-config';
 import {MdSnackBarRef} from './snack-bar-ref';
 import {MdSnackBarContainer} from './snack-bar-container';
@@ -118,6 +106,15 @@ export class MdSnackBar {
   }
 
   /**
+   * Dismisses the currently-visible snack bar.
+   */
+  dismiss(): void {
+    if (this._openedSnackBarRef) {
+      this._openedSnackBarRef.dismiss();
+    }
+  }
+
+  /**
    * Attaches the snack bar container component to the overlay.
    */
   private _attachSnackBarContainer(overlayRef: OverlayRef,
@@ -159,22 +156,4 @@ export class MdSnackBar {
  */
 function _applyConfigDefaults(config: MdSnackBarConfig): MdSnackBarConfig {
   return extendObject(new MdSnackBarConfig(), config);
-}
-
-
-@NgModule({
-  imports: [OverlayModule, PortalModule, CommonModule, CompatibilityModule],
-  exports: [MdSnackBarContainer, CompatibilityModule],
-  declarations: [MdSnackBarContainer, SimpleSnackBar],
-  entryComponents: [MdSnackBarContainer, SimpleSnackBar],
-  providers: [MdSnackBar, LIVE_ANNOUNCER_PROVIDER]
-})
-export class MdSnackBarModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdSnackBarModule,
-      providers: []
-    };
-  }
 }

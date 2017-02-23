@@ -3,15 +3,13 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Overlay, OverlayRef, ComponentType, OverlayState, ComponentPortal} from '../core';
 import {extendObject} from '../core/util/object-extend';
+import {ESCAPE} from '../core/keyboard/keycodes';
 import {DialogInjector} from './dialog-injector';
 import {MdDialogConfig} from './dialog-config';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
 import {TemplatePortal} from '../core/portal/portal';
-
-
-// TODO(jelbourn): animations
-
+import 'rxjs/add/operator/first';
 
 
 /**
@@ -22,6 +20,7 @@ export class MdDialog {
   private _openDialogsAtThisLevel: MdDialogRef<any>[] = [];
   private _afterAllClosedAtThisLevel = new Subject<void>();
   private _afterOpenAtThisLevel = new Subject<MdDialogRef<any>>();
+  private _boundKeydown = this._handleKeydown.bind(this);
 
   /** Keeps track of the currently-open dialogs. */
   get _openDialogs(): MdDialogRef<any>[] {
@@ -64,6 +63,10 @@ export class MdDialog {
     let dialogContainer = this._attachDialogContainer(overlayRef, config);
     let dialogRef =
         this._attachDialogContent(componentOrTemplateRef, dialogContainer, overlayRef, config);
+
+    if (!this._openDialogs.length && !this._parentDialog) {
+      document.addEventListener('keydown', this._boundKeydown);
+    }
 
     this._openDialogs.push(dialogRef);
     dialogRef.afterClosed().subscribe(() => this._removeOpenDialog(dialogRef));
@@ -129,15 +132,12 @@ export class MdDialog {
       config?: MdDialogConfig): MdDialogRef<T> {
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
-    let dialogRef = <MdDialogRef<T>> new MdDialogRef(overlayRef);
+    let dialogRef = new MdDialogRef(overlayRef, dialogContainer) as MdDialogRef<T>;
 
     if (!config.disableClose) {
       // When the dialog backdrop is clicked, we want to close it.
       overlayRef.backdropClick().first().subscribe(() => dialogRef.close());
     }
-
-    // Set the dialogRef to the container so that it can use the ref to close the dialog.
-    dialogContainer.dialogRef = dialogRef;
 
     // We create an injector specifically for the component we're instantiating so that it can
     // inject the MdDialogRef. This allows a component loaded inside of a dialog to close itself
@@ -199,7 +199,22 @@ export class MdDialog {
       // no open dialogs are left, call next on afterAllClosed Subject
       if (!this._openDialogs.length) {
         this._afterAllClosed.next();
+        document.removeEventListener('keydown', this._boundKeydown);
       }
+    }
+  }
+
+  /**
+   * Handles global key presses while there are open dialogs. Closes the
+   * top dialog when the user presses escape.
+   */
+  private _handleKeydown(event: KeyboardEvent): void {
+    let topDialog = this._openDialogs[this._openDialogs.length - 1];
+
+    if (event.keyCode === ESCAPE && topDialog &&
+      !topDialog._containerInstance.dialogConfig.disableClose) {
+
+      topDialog.close();
     }
   }
 }

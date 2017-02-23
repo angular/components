@@ -9,6 +9,7 @@ $mat-button-min-width: 88px !default;
 $mat-button-margin: 0 !default;
 $mat-button-line-height: 36px !default;
 $mat-button-border-radius: 2px !default;
+$mat-button-focus-transition: opacity 200ms $swift-ease-in-out-timing-function !default;
 
 // Icon Button standards
 $mat-icon-button-size: 40px !default;
@@ -74,7 +75,7 @@ $mat-mini-fab-padding: 8px !default;
   transition: background $swift-ease-out-duration $swift-ease-out-timing-function,
               mat-elevation-transition-property-value();
 
-  &:active {
+  &:not([disabled]):active {
     @include mat-elevation(8);
   }
 
@@ -99,7 +100,7 @@ $mat-mini-fab-padding: 8px !default;
 
   flex-shrink: 0;
 
-  &:active {
+  &:not([disabled]):active {
     @include mat-elevation(12);
   }
 

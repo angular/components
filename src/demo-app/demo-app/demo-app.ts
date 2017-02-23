@@ -15,10 +15,14 @@ export class Home {}
   selector: 'demo-app',
   providers: [],
   templateUrl: 'demo-app.html',
-  styleUrls: ['demo-app.css'],
+  styleUrls: ['demo-app.css', 'demo-app-theme.css'],
   encapsulation: ViewEncapsulation.None,
 })
 export class DemoApp {
+
+  /** Whether the demo-app should use a dark theme or not. */
+  isDarkTheme: boolean = false;
+
   navItems = [
     {name: 'Autocomplete', route: 'autocomplete'},
     {name: 'Button', route: 'button'},
@@ -31,7 +35,6 @@ export class DemoApp {
     {name: 'Grid List', route: 'grid-list'},
     {name: 'Icon', route: 'icon'},
     {name: 'Input', route: 'input'},
-    {name: 'Input Container', route: 'input-container'},
     {name: 'List', route: 'list'},
     {name: 'Menu', route: 'menu'},
     {name: 'Live Announcer', route: 'live-announcer'},

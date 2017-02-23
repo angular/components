@@ -7,9 +7,6 @@
 .mat-button, .mat-icon-button {
   @extend %mat-button-base;
 
-  // Only flat button and icon buttons should inherit the color
-  color: currentColor;
-
   // Only flat buttons and icon buttons (not raised or fabs) have a hover style.
   &:hover {
     // Use the same visual treatment for hover as for focus.
@@ -58,6 +55,7 @@
 
 // The text and icon should be vertical aligned inside a button
 .mat-button, .mat-raised-button, .mat-icon-button {
+  color: currentColor;
   .mat-button-wrapper > * {
     vertical-align: middle;
   }
@@ -82,6 +80,8 @@
   border-radius: inherit;
   pointer-events: none;
   opacity: 0;
+
+  transition: $mat-button-focus-transition;
 
   @include cdk-high-contrast {
     // Note that IE will render this in the same way, no
