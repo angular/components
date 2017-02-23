@@ -4,6 +4,7 @@ import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/auditTime';
 
 
@@ -19,17 +20,14 @@ export class ScrollDispatcher {
   /** Subject for notifying that a registered scrollable reference element has been scrolled. */
   _scrolled: Subject<void> = new Subject<void>();
 
+  /** Keeps track of the global `scroll` and `resize` subscriptions. */
+  private _globalSubscription: Subscription;
+
   /**
    * Map of all the scrollable references that are registered with the service and their
    * scroll event subscriptions.
    */
   scrollableReferences: Map<Scrollable, Subscription> = new Map();
-
-  constructor() {
-    // By default, notify a scroll event when the document is scrolled or the window is resized.
-    Observable.fromEvent(window.document, 'scroll').subscribe(() => this._notify());
-    Observable.fromEvent(window, 'resize').subscribe(() => this._notify());
-  }
 
   /**
    * Registers a Scrollable with the service and listens for its scrolled events. When the
@@ -39,6 +37,13 @@ export class ScrollDispatcher {
   register(scrollable: Scrollable): void {
     const scrollSubscription = scrollable.elementScrolled().subscribe(() => this._notify());
     this.scrollableReferences.set(scrollable, scrollSubscription);
+
+    if (!this._globalSubscription) {
+      this._globalSubscription = Observable.merge(
+        Observable.fromEvent(window.document, 'scroll'),
+        Observable.fromEvent(window, 'resize')
+      ).subscribe(() => this._notify());
+    }
   }
 
   /**
@@ -49,6 +54,11 @@ export class ScrollDispatcher {
     if (this.scrollableReferences.has(scrollable)) {
       this.scrollableReferences.get(scrollable).unsubscribe();
       this.scrollableReferences.delete(scrollable);
+
+      if (!this.scrollableReferences.size && this._globalSubscription) {
+        this._globalSubscription.unsubscribe();
+        this._globalSubscription = null;
+      }
     }
   }
 
