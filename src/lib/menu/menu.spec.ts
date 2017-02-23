@@ -32,8 +32,8 @@ describe('MdMenu', () => {
     TestBed.configureTestingModule({
       imports: [MdMenuModule.forRoot()],
       declarations: [
-        SimpleMenu, PositionedMenu, OverlapMenu, CustomMenuPanel, CustomMenu, 
-        MdParentMenuTrigger, MdChildMenuTrigger, CustomParentMenuPanel, CustomChildMenuPanel, CustomParentMenu
+        SimpleMenu, PositionedMenu, OverlapMenu, CustomMenuPanel, CustomMenu, MdParentMenuTrigger,
+        MdChildMenuTrigger, CustomParentMenuPanel, CustomChildMenuPanel, CustomParentMenu
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -152,7 +152,7 @@ describe('MdMenu', () => {
               `Expected left edge of child menu to be at right edge of parent menu.`);
     });
 
-    it('should position the top edge of the child menu flyout at the top edge of the child trigger in parent menu', () => {
+    it('should position top edge of child flyout at top edge of trigger in parent menu', () => {
       const overlayPane = getOverlayPanes();
       const triggerRect = overlayPane.item(0).getBoundingClientRect();
       const childOverlayRect = overlayPane.item(1).getBoundingClientRect();
@@ -163,7 +163,8 @@ describe('MdMenu', () => {
     });
 
     function getOverlayPanes(): NodeListOf<HTMLElement> {
-      return overlayContainerElement.querySelectorAll('.cdk-overlay-pane') as NodeListOf<HTMLElement>;
+      return overlayContainerElement
+        .querySelectorAll('.cdk-overlay-pane') as NodeListOf<HTMLElement>;
     }
   });
 
@@ -598,7 +599,8 @@ class CustomChildMenuPanel implements MdMenuPanel {
   template: `
     <button [mdParentMenuTriggerFor]="parentMenu">Toggle menu</button>
     <custom-parent-menu #parentMenu="mdCustomParentMenu" #parentTriggerEl>
-      <button class="child-menu-trigger" md-menu-item childMenuTrigger="true" [mdChildMenuTriggerFor]="childMenu" #childTriggerEl> Parent Content </button>
+      <button class="child-menu-trigger" md-menu-item childMenuTrigger="true"
+        [mdChildMenuTriggerFor]="childMenu" #childTriggerEl> Parent Content </button>
       <custom-child-menu #childMenu="mdCustomChildMenu" [childFlyOut]="true">
         <button md-menu-item> Child Content </button>
       </custom-child-menu>
@@ -611,24 +613,6 @@ class CustomParentMenu extends MdMenu {
   @ViewChild('parentTriggerEl') parentTriggerEl: ElementRef;
   @ViewChild('childTriggerEl') childTriggerEl: ElementRef;
 }
-
-// @Component({
-//   template: `
-//     <button [mdParentMenuTriggerFor]="parentMenu">Toggle menu</button>
-//     <custom-parent-menu #parentMenu="mdCustomParentMenu" #parentTriggerEl>
-//       <button md-menu-item class="child-trigger" childMenuTrigger="true" [mdChildMenuTriggerFor]="childMenu" #childTriggerEl> Parent Content </button>
-//       <custom-child-menu #childMenu="mdCustomChildMenu">
-//         <button md-menu-item> Child Content </button>
-//       </custom-child-menu>
-//     </custom-parent-menu>
-//   `
-// })
-// class CustomChildMenu extends MdMenu {
-//   @ViewChild(MdParentMenuTrigger) parentTrigger: MdParentMenuTrigger;
-//   @ViewChild(MdChildMenuTrigger) childTrigger: MdChildMenuTrigger;
-//   @ViewChild('parentTriggerEl') parentTriggerEl: ElementRef;
-//   @ViewChild('childTriggerEl') childTriggerEl: ElementRef;
-// }
 
 class FakeViewportRuler {
   getViewportRect() {

@@ -225,19 +225,13 @@ describe('menu', () => {
     it('should align child menu to top right of its trigger when [flyout]="true"', () => {
       page.triggerParent().click();
       page.triggerChild().click();
-      page.parentMenu().getSize().then(parentMenu => {
-        const width = parentMenu.width;
-        page.parentMenu().getLocation().then(parentMenu => {
-          const leftEdge = parentMenu.x;
+      page.parentMenu().getSize().then(parentSize => {
+        const width = parentSize.width;
+        page.parentMenu().getLocation().then(parentLoc => {
+          const leftEdge = parentLoc.x;
           page.triggerChild().getLocation().then(trigger => {
             expectLocation(page.childMenu(), {x: leftEdge + width, y: trigger.y});
           });
-          // page.triggerChild().getLocation().then(trigger => {
-          //   expectLocation(page.childMenu(), {x: width, y: trigger.y});
-          // });
-          // page.triggerChild().getLocation().then(trigger => {
-          //   expectLocation(page.childMenu(), {x: rightEdge, y: trigger.y});
-          // });
         });
       });
     });
