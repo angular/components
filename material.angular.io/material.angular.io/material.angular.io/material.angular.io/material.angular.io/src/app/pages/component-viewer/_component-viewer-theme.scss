@@ -8,10 +8,10 @@
   $foreground: map-get($theme, foreground);
 
   app-component-viewer {
-    color: mat-color($foreground, secondary-text);
+    color: mat-color($foreground, text);
 
     .mat-tab-label:focus {
-      color: mat-color($foreground, secondary-text);
+      color: mat-color($foreground, text);
     }
 
   }
