@@ -19,7 +19,7 @@ export class AutocompleteDemo {
 
   tdDisabled = false;
 
-  states = [
+    states = [
     {code: 'AL', name: 'Alabama'},
     {code: 'AK', name: 'Alaska'},
     {code: 'AZ', name: 'Arizona'},
@@ -71,6 +71,7 @@ export class AutocompleteDemo {
     {code: 'WI', name: 'Wisconsin'},
     {code: 'WY', name: 'Wyoming'},
   ];
+     
 
   constructor() {
     this.tdStates = this.states;
