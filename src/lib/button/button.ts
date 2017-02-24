@@ -1,12 +1,13 @@
 import {
-  Component,
-  ViewEncapsulation,
-  Input,
-  HostBinding,
   ChangeDetectionStrategy,
+  Component,
+  Directive,
   ElementRef,
+  HostBinding,
+  Input,
+  OnDestroy,
   Renderer,
-  Directive, OnDestroy,
+  ViewEncapsulation
 } from '@angular/core';
 import {coerceBooleanProperty} from '../core';
 import {FocusOriginMonitor} from '../core/style/focus-origin-monitor';
