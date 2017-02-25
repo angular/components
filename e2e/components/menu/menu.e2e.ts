@@ -6,8 +6,8 @@ import {screenshot} from '../../screenshot';
 
 describe('menu', () => {
   const menuSelector = '.mat-menu-panel';
-  const parentMenuSelector = '.mat-menu-panel.parent';
-  const childMenuSelector = '.mat-menu-panel.child';
+  // const parentMenuSelector = '.mat-menu-panel.parent';
+  // const childMenuSelector = '.mat-menu-panel.child';
   let page: MenuPage;
 
   beforeEach(() => page = new MenuPage());
@@ -37,7 +37,7 @@ describe('menu', () => {
   //   screenshot();
   // });
 
-  // it('should open child menu and keep open parent menu when the child trigger is clicked', () => {
+  // it('should open child menu and keep parent open when the child trigger is clicked', () => {
   //   page.triggerParent().click();
   //   expectToExist(parentMenuSelector);
   //   expectToExist(childMenuSelector, false);
