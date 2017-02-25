@@ -33,7 +33,7 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
  * TODO(andrewseguin): Remove the kebab versions in favor of camelCased attribute selectors
  */
 @Directive({
-  selector: `[md-menu-trigger-for], [mat-menu-trigger-for], 
+  selector: `[md-menu-trigger-for], [mat-menu-trigger-for],
              [mdMenuTriggerFor], [matMenuTriggerFor]`,
   host: {
     'aria-haspopup': 'true',
@@ -143,7 +143,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    */
   private _subscribeToBackdrop(): void {
     this._backdropSubscription = this._overlayRef.backdropClick().subscribe(() => {
-      this.closeMenu();
+      this.menu.emitCloseEvent();
     });
   }
 
