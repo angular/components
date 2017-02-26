@@ -114,14 +114,22 @@ export class RippleRenderer {
     return rippleRef;
   }
 
-  /** Fades out a ripple element. */
-  fadeOutRipple(ripple: HTMLElement) {
-    ripple.style.transitionDuration = `${RIPPLE_FADE_OUT_DURATION}ms`;
-    ripple.style.opacity = '0';
+  /** Fades out a ripple reference. */
+  fadeOutRipple(ripple: RippleRef) {
+    let rippleEl = ripple.element;
+    let rippleIndex = this.activeRipples.indexOf(ripple);
+
+    // Remove the ripple reference if added to the list of active ripples.
+    if (rippleIndex !== -1) {
+      this.activeRipples.splice(rippleIndex, 1);
+    }
+
+    rippleEl.style.transitionDuration = `${RIPPLE_FADE_OUT_DURATION}ms`;
+    rippleEl.style.opacity = '0';
 
     // Once the ripple faded out, the ripple can be safely removed from the DOM.
     this.runTimeoutOutsideZone(() => {
-      ripple.parentNode.removeChild(ripple);
+      rippleEl.parentNode.removeChild(rippleEl);
     }, RIPPLE_FADE_OUT_DURATION);
   }
 
