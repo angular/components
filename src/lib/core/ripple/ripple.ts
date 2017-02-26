@@ -90,12 +90,7 @@ export class MdRipple implements OnChanges, OnDestroy {
 
   /** Fades out all currently showing ripple elements. */
   fadeOutAll() {
-    // Iterate in reverse, to avoid issues with the `fadeOut` method that will immediately remove
-    // items from the array.
-    let i = this._rippleRenderer.activeRipples.length;
-    while (i--) {
-      this._rippleRenderer.activeRipples[i].fadeOut();
-    }
+    this._rippleRenderer.fadeOutAll();
   }
 
   /** Ripple configuration from the directive's input values. */

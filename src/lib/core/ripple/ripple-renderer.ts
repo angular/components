@@ -37,8 +37,8 @@ export class RippleRenderer {
   /** Events to be registered on the trigger element. */
   private _triggerEvents = new Map<string, any>();
 
-  /** Currently active ripples. */
-  activeRipples: RippleRef[] = [];
+  /** Currently active ripple references. */
+  private _activeRipples: RippleRef[] = [];
 
   /** Ripple config for all ripples created by events. */
   rippleConfig: RippleConfig = {};
@@ -105,7 +105,7 @@ export class RippleRenderer {
     // Once it's faded in, the ripple can be hidden immediately if the mouse is released.
     this.runTimeoutOutsideZone(() => {
       if (config.persistent || this._isMousedown) {
-        this.activeRipples.push(rippleRef);
+        this._activeRipples.push(rippleRef);
       } else {
         rippleRef.fadeOut();
       }
@@ -117,11 +117,11 @@ export class RippleRenderer {
   /** Fades out a ripple reference. */
   fadeOutRipple(ripple: RippleRef) {
     let rippleEl = ripple.element;
-    let rippleIndex = this.activeRipples.indexOf(ripple);
+    let rippleIndex = this._activeRipples.indexOf(ripple);
 
     // Remove the ripple reference if added to the list of active ripples.
     if (rippleIndex !== -1) {
-      this.activeRipples.splice(rippleIndex, 1);
+      this._activeRipples.splice(rippleIndex, 1);
     }
 
     rippleEl.style.transitionDuration = `${RIPPLE_FADE_OUT_DURATION}ms`;
@@ -131,6 +131,16 @@ export class RippleRenderer {
     this.runTimeoutOutsideZone(() => {
       rippleEl.parentNode.removeChild(rippleEl);
     }, RIPPLE_FADE_OUT_DURATION);
+  }
+
+  /** Fades out all currently active ripples. */
+  fadeOutAll() {
+    // Iterate in reverse, to avoid issues with the `fadeOut` method that will immediately remove
+    // items from the array.
+    let i = this._activeRipples.length;
+    while (i--) {
+      this._activeRipples[i].fadeOut();
+    }
   }
 
   /** Sets the trigger element and registers the mouse events. */
@@ -163,7 +173,7 @@ export class RippleRenderer {
     this._isMousedown = false;
 
     // On mouseup, fade-out all ripples that are active and not persistent.
-    this.activeRipples
+    this._activeRipples
       .filter(ripple => !ripple.config.persistent)
       .forEach(ripple => ripple.fadeOut());
   }
