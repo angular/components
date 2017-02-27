@@ -26,6 +26,12 @@ task('screenshots', () => {
       .then(() => updateTravis(database, prNumber))
       .then(() => setScreenFilenames(database, prNumber))
       .then(() => database.goOffline(), () => database.goOffline());
+  } else if (process.env['TRAVIS']) {
+    // Only update golds and filenames for build
+    let database = openFirebaseScreenshotsDatabase();
+    uploadScreenshots(null, null)
+      .then(() => setScreenFilenames(database, null))
+      .then(() => database.goOffline(), () => database.goOffline());
   }
 });
 
