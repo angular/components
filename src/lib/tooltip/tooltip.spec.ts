@@ -20,6 +20,8 @@ import {Dir, LayoutDirection} from '../core/rtl/dir';
 import {OverlayModule} from '../core/overlay/overlay-directives';
 import {Platform} from '../core/platform/platform';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
+import {NoopBrowserAnimationModule} from '@angular/platform-browser/animations';
+
 
 
 const initialTooltipMessage = 'initial tooltip message';
@@ -30,7 +32,7 @@ describe('MdTooltip', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdTooltipModule.forRoot(), OverlayModule],
+      imports: [MdTooltipModule.forRoot(), OverlayModule, NoopBrowserAnimationModule],
       declarations: [BasicTooltipDemo, ScrollableTooltipDemo, OnPushTooltipDemo],
       providers: [
         Platform,
@@ -54,13 +56,13 @@ describe('MdTooltip', () => {
     let buttonElement: HTMLButtonElement;
     let tooltipDirective: MdTooltip;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
       buttonDebugElement = fixture.debugElement.query(By.css('button'));
       buttonElement = <HTMLButtonElement> buttonDebugElement.nativeElement;
       tooltipDirective = buttonDebugElement.injector.get(MdTooltip);
-    });
+    }));
 
     it('should show and hide the tooltip', fakeAsync(() => {
       expect(tooltipDirective._tooltipInstance).toBeUndefined();
@@ -231,12 +233,14 @@ describe('MdTooltip', () => {
       // _afterVisibilityAnimation function, but for unknown reasons in the test infrastructure,
       // this does not occur. Manually call this and verify that doing so does not
       // throw an error.
-      tooltipInstance._afterVisibilityAnimation(new AnimationTransitionEvent({
+      tooltipInstance._afterVisibilityAnimation({
         fromState: 'visible',
         toState: 'hidden',
         totalTime: 150,
         phaseName: '',
-      }));
+        element: null,
+        triggerName: ''
+      });
     }));
 
     it('should consistently position before and after overlay origin in ltr and rtl dir', () => {
@@ -361,13 +365,13 @@ describe('MdTooltip', () => {
     let buttonElement: HTMLButtonElement;
     let tooltipDirective: MdTooltip;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(OnPushTooltipDemo);
       fixture.detectChanges();
       buttonDebugElement = fixture.debugElement.query(By.css('button'));
       buttonElement = <HTMLButtonElement> buttonDebugElement.nativeElement;
       tooltipDirective = buttonDebugElement.injector.get(MdTooltip);
-    });
+    }));
 
     it('should show and hide the tooltip', fakeAsync(() => {
       expect(tooltipDirective._tooltipInstance).toBeUndefined();

@@ -8,6 +8,7 @@ System.config({
     'main': 'main.js',
 
     // Angular specific mappings.
+    '@angular/animations': 'vendor/@angular/animations/bundles/animations.umd.js',
     '@angular/core': 'vendor/@angular/core/bundles/core.umd.js',
     '@angular/core/testing': 'vendor/@angular/core/bundles/core-testing.umd.js',
     '@angular/common': 'vendor/@angular/common/bundles/common.umd.js',
@@ -19,6 +20,7 @@ System.config({
     '@angular/forms': 'vendor/@angular/forms/bundles/forms.umd.js',
     '@angular/forms/testing': 'vendor/@angular/forms/bundles/forms-testing.umd.js',
     '@angular/platform-browser': 'vendor/@angular/platform-browser/bundles/platform-browser.umd.js',
+    '@angular/platform-browser/animations': 'vendor/@angular/platform-browser/bundles/platform-browser-animations.umd.js',
     '@angular/platform-browser/testing':
       'vendor/@angular/platform-browser/bundles/platform-browser-testing.umd.js',
     '@angular/platform-browser-dynamic':
