@@ -1,4 +1,4 @@
-import {TestBed, async, ComponentFixture} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MdDatepickerModule} from './index';
 import {Component, ViewChild} from '@angular/core';
 import {MdDatepicker} from './datepicker';
@@ -98,7 +98,7 @@ describe('MdDatepicker', () => {
 
     it('startAt should fallback to input value', () => {
       expect(testComponent.datepicker.startAt).toEqual(new SimpleDate(2020, 0, 1));
-    })
+    });
   });
 
   describe('datepicker with too many inputs', () => {
