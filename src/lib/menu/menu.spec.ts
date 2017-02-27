@@ -434,10 +434,10 @@ class OverlapMenu implements TestableMenu {
 @Component({
   selector: 'custom-menu',
   template: `
-    <template>
+    <ng-template>
       Custom Menu header
       <ng-content></ng-content>
-    </template>
+    </ng-template>
   `,
   exportAs: 'mdCustomMenu'
 })

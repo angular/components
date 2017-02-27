@@ -13,20 +13,20 @@ import {
   ViewChild,
   ChangeDetectionStrategy
 } from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {TooltipPosition, MdTooltip, MdTooltipModule, SCROLL_THROTTLE_MS} from './tooltip';
-import {OverlayContainer} from '../core';
-import {Dir, LayoutDirection} from '../core/rtl/dir';
-import {OverlayModule} from '../core/overlay/overlay-directives';
-import {Platform} from '../core/platform/platform';
-import {Scrollable} from '../core/overlay/scroll/scrollable';
+import { By } from '@angular/platform-browser';
+import { TooltipPosition, MdTooltip, MdTooltipModule, SCROLL_THROTTLE_MS } from './tooltip';
+import { OverlayContainer } from '../core';
+import { Dir, LayoutDirection } from '../core/rtl/dir';
+import { OverlayModule } from '../core/overlay/overlay-directives';
+import { Platform } from '../core/platform/platform';
+import { Scrollable } from '../core/overlay/scroll/scrollable';
 
 
 const initialTooltipMessage = 'initial tooltip message';
 
 describe('MdTooltip', () => {
   let overlayContainerElement: HTMLElement;
-  let dir: {value: LayoutDirection};
+  let dir: { value: LayoutDirection };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -34,14 +34,18 @@ describe('MdTooltip', () => {
       declarations: [BasicTooltipDemo, ScrollableTooltipDemo, OnPushTooltipDemo],
       providers: [
         Platform,
-        {provide: OverlayContainer, useFactory: () => {
-          overlayContainerElement = document.createElement('div');
-          document.body.appendChild(overlayContainerElement);
-          return {getContainerElement: () => overlayContainerElement};
-        }},
-        {provide: Dir, useFactory: () => {
-          return dir = { value: 'ltr' };
-        }}
+        {
+          provide: OverlayContainer, useFactory: () => {
+            overlayContainerElement = document.createElement('div');
+            document.body.appendChild(overlayContainerElement);
+            return { getContainerElement: () => overlayContainerElement };
+          }
+        },
+        {
+          provide: Dir, useFactory: () => {
+            return dir = { value: 'ltr' };
+          }
+        }
       ]
     });
 
@@ -58,7 +62,7 @@ describe('MdTooltip', () => {
       fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
       buttonDebugElement = fixture.debugElement.query(By.css('button'));
-      buttonElement = <HTMLButtonElement> buttonDebugElement.nativeElement;
+      buttonElement = <HTMLButtonElement>buttonDebugElement.nativeElement;
       tooltipDirective = buttonDebugElement.injector.get(MdTooltip);
     });
 
@@ -231,12 +235,15 @@ describe('MdTooltip', () => {
       // _afterVisibilityAnimation function, but for unknown reasons in the test infrastructure,
       // this does not occur. Manually call this and verify that doing so does not
       // throw an error.
-      tooltipInstance._afterVisibilityAnimation(new AnimationTransitionEvent({
+      let event: AnimationTransitionEvent = {
         fromState: 'visible',
         toState: 'hidden',
         totalTime: 150,
         phaseName: '',
-      }));
+        element: '',
+        triggerName: ''
+      };
+      tooltipInstance._afterVisibilityAnimation(event);
     }));
 
     it('should consistently position before and after overlay origin in ltr and rtl dir', () => {
@@ -328,7 +335,7 @@ describe('MdTooltip', () => {
       fixture = TestBed.createComponent(ScrollableTooltipDemo);
       fixture.detectChanges();
       buttonDebugElement = fixture.debugElement.query(By.css('button'));
-      buttonElement = <HTMLButtonElement> buttonDebugElement.nativeElement;
+      buttonElement = <HTMLButtonElement>buttonDebugElement.nativeElement;
       tooltipDirective = buttonDebugElement.injector.get(MdTooltip);
     });
 
@@ -365,7 +372,7 @@ describe('MdTooltip', () => {
       fixture = TestBed.createComponent(OnPushTooltipDemo);
       fixture.detectChanges();
       buttonDebugElement = fixture.debugElement.query(By.css('button'));
-      buttonElement = <HTMLButtonElement> buttonDebugElement.nativeElement;
+      buttonElement = <HTMLButtonElement>buttonDebugElement.nativeElement;
       tooltipDirective = buttonDebugElement.injector.get(MdTooltip);
     });
 
@@ -419,8 +426,8 @@ class BasicTooltipDemo {
 }
 
 @Component({
-     selector: 'app',
-     template: `
+  selector: 'app',
+  template: `
     <div cdk-scrollable style="padding: 100px; margin: 300px;
                                height: 200px; width: 200px; overflow: auto;">
       <button *ngIf="showButton" style="margin-bottom: 600px"
@@ -431,23 +438,23 @@ class BasicTooltipDemo {
     </div>`
 })
 class ScrollableTooltipDemo {
- position: string = 'below';
- message: string = initialTooltipMessage;
- showButton: boolean = true;
+  position: string = 'below';
+  message: string = initialTooltipMessage;
+  showButton: boolean = true;
 
- @ViewChild(Scrollable) scrollingContainer: Scrollable;
+  @ViewChild(Scrollable) scrollingContainer: Scrollable;
 
- scrollDown() {
-     const scrollingContainerEl = this.scrollingContainer.getElementRef().nativeElement;
-     scrollingContainerEl.scrollTop = 250;
+  scrollDown() {
+    const scrollingContainerEl = this.scrollingContainer.getElementRef().nativeElement;
+    scrollingContainerEl.scrollTop = 250;
 
-     // Emit a scroll event from the scrolling element in our component.
-     // This event should be picked up by the scrollable directive and notify.
-     // The notification should be picked up by the service.
-     const scrollEvent = document.createEvent('UIEvents');
-     scrollEvent.initUIEvent('scroll', true, true, window, 0);
-     scrollingContainerEl.dispatchEvent(scrollEvent);
-   }
+    // Emit a scroll event from the scrolling element in our component.
+    // This event should be picked up by the scrollable directive and notify.
+    // The notification should be picked up by the service.
+    const scrollEvent = document.createEvent('UIEvents');
+    scrollEvent.initUIEvent('scroll', true, true, window, 0);
+    scrollingContainerEl.dispatchEvent(scrollEvent);
+  }
 }
 
 @Component({

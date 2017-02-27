@@ -37,16 +37,16 @@ For more complex labels, add a template with the `md-tab-label` directive inside
 ```html
 <md-tab-group>
   <md-tab>
-    <template md-tab-label>
+    <ng-template md-tab-label>
       The <em>best</em> pasta
-    </template>
+    </ng-template>
     <h1>Best pasta restaurants</h1>
     <p>...</p>
   </md-tab>
   <md-tab>
-    <template md-tab-label>
+    <ng-template md-tab-label>
       <md-icon>thumb_down</md-icon> The worst sushi
-    </template>
+    </ng-template>
     <h1>Terrible sushi restaurants</h1>
     <p>...</p>
   </md-tab>
