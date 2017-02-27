@@ -2,6 +2,8 @@ import {TestBed, async, ComponentFixture} from '@angular/core/testing';
 import {MdDatepickerModule} from './index';
 import {Component, ViewChild} from '@angular/core';
 import {MdDatepicker} from './datepicker';
+import {MdDatepickerInput} from './datepicker-input';
+import {SimpleDate} from '../core/datetime/simple-date';
 
 describe('MdDatepicker', () => {
   beforeEach(async(() => {
@@ -11,6 +13,7 @@ describe('MdDatepicker', () => {
         StandardDatepicker,
         MultiInputDatepicker,
         NoInputDatepicker,
+        DatepickerWithStartAt,
       ],
     });
 
@@ -46,7 +49,7 @@ describe('MdDatepicker', () => {
       expect(document.querySelector('md-dialog-container')).not.toBeNull();
     });
 
-    it('close should close popup', () => {
+    it('close should close popup', async(() => {
       testComponent.datepicker.openStandardUi();
       fixture.detectChanges();
 
@@ -57,10 +60,12 @@ describe('MdDatepicker', () => {
       testComponent.datepicker.close();
       fixture.detectChanges();
 
-      expect(parseInt(getComputedStyle(popup).height)).toBe(0);
-    });
+      fixture.whenStable().then(() => {
+        expect(parseInt(getComputedStyle(popup).height)).toBe(0);
+      });
+    }));
 
-    it('close should close dialog', () => {
+    it('close should close dialog', async(() => {
       testComponent.datepicker.openTouchUi();
       fixture.detectChanges();
 
@@ -69,8 +74,31 @@ describe('MdDatepicker', () => {
       testComponent.datepicker.close();
       fixture.detectChanges();
 
-      expect(document.querySelector('md-dialog-container')).toBeNull();
-    });
+      fixture.whenStable().then(() => {
+        expect(document.querySelector('md-dialog-container')).toBeNull();
+      });
+    }));
+
+    it('setting selected should update input and close calendar', async(() => {
+      testComponent.datepicker.openTouchUi();
+      fixture.detectChanges();
+
+      expect(document.querySelector('md-dialog-container')).not.toBeNull();
+      expect(testComponent.datepickerInput.value).toEqual(new SimpleDate(2020, 0, 1));
+
+      let selected = new SimpleDate(2017, 0, 1);
+      testComponent.datepicker.selected = selected;
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(document.querySelector('md-dialog-container')).toBeNull();
+        expect(testComponent.datepickerInput.value).toEqual(selected);
+      });
+    }));
+
+    it('startAt should fallback to input value', () => {
+      expect(testComponent.datepicker.startAt).toEqual(new SimpleDate(2020, 0, 1));
+    })
   });
 
   describe('datepicker with too many inputs', () => {
@@ -95,14 +123,31 @@ describe('MdDatepicker', () => {
       expect(() => testComponent.datepicker.openStandardUi()).toThrow();
     });
   });
+
+  describe('datepicker with startAt', () => {
+    let fixture: ComponentFixture<DatepickerWithStartAt>;
+    let testComponent: DatepickerWithStartAt;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(DatepickerWithStartAt);
+      fixture.detectChanges();
+
+      testComponent = fixture.componentInstance;
+    });
+
+    it('explicit startAt should override input value', () => {
+      expect(testComponent.datepicker.startAt).toEqual(new SimpleDate(2010, 0, 1));
+    });
+  });
 });
 
 
 @Component({
-  template: `<input [mdDatepicker]="d"><md-datepicker #d></md-datepicker>`,
+  template: `<input [mdDatepicker]="d" [value]="'1/1/2020'"><md-datepicker #d></md-datepicker>`,
 })
 class StandardDatepicker {
   @ViewChild('d') datepicker: MdDatepicker;
+  @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput;
 }
 
 
@@ -111,14 +156,23 @@ class StandardDatepicker {
     <input [mdDatepicker]="d"><input [mdDatepicker]="d"><md-datepicker #d></md-datepicker>
   `,
 })
-class MultiInputDatepicker {
-  @ViewChild('d') datepicker: MdDatepicker;
-}
+class MultiInputDatepicker {}
 
 
 @Component({
   template: `<md-datepicker #d></md-datepicker>`,
 })
 class NoInputDatepicker {
+  @ViewChild('d') datepicker: MdDatepicker;
+}
+
+
+@Component({
+  template: `
+    <input [mdDatepicker]="d" [value]="'1/1/2020'">
+    <md-datepicker #d [startAt]="'1/1/2010'"></md-datepicker>
+  `,
+})
+class DatepickerWithStartAt {
   @ViewChild('d') datepicker: MdDatepicker;
 }

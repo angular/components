@@ -32,9 +32,9 @@ describe('MdMonthView', () => {
       testComponent = fixture.componentInstance;
     });
 
-    it('has correct year label', () => {
+    it('has correct month label', () => {
       let labelEl = monthViewNativeElement.querySelector('.mat-calendar-table-label');
-      expect(labelEl.innerHTML.trim()).toBe('Jan 2017');
+      expect(labelEl.innerHTML.trim()).toBe('JAN');
     });
 
     it('has 31 days', () => {

@@ -24,6 +24,7 @@ import {
 } from '../core/overlay/position/connected-position';
 import {SimpleDate} from '../core/datetime/simple-date';
 import {MdDatepickerInput} from './datepicker-input';
+import {CalendarLocale} from '../core/datetime/calendar-locale';
 
 
 /** Component responsible for managing the datepicker popup/dialog. */
@@ -49,7 +50,7 @@ export class MdDatepicker implements OnDestroy {
     }
     return null;
   }
-  set startAt(date: SimpleDate) { this._startAt = date; }
+  set startAt(date: any) { this._startAt = this._locale.parseDate(date); }
   private _startAt: SimpleDate;
 
   get selected() { return this._datepickerInput ? this._datepickerInput.value : null; }
@@ -82,7 +83,8 @@ export class MdDatepicker implements OnDestroy {
   private _datepickerInput: MdDatepickerInput;
 
   constructor(private _dialog: MdDialog, private _overlay: Overlay,
-              private _viewContainerRef: ViewContainerRef, @Optional() private _dir: Dir) {}
+              private _viewContainerRef: ViewContainerRef, private _locale: CalendarLocale,
+              @Optional() private _dir: Dir) {}
 
   ngOnDestroy() {
     this.close();

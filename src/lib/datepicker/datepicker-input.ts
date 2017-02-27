@@ -47,12 +47,14 @@ export class MdDatepickerInput implements ControlValueAccessor {
 
   @Input()
   get value() {
-    return this._locale.parseDate(this._elementRef.nativeElement.value);
+    return this._value;
   }
-  set value(value: SimpleDate) {
-    let stringValue = value == null ? '' : this._locale.formatDate(value);
+  set value(value: any) {
+    this._value = this._locale.parseDate(value);
+    let stringValue = this._value == null ? '' : this._locale.formatDate(this._value);
     this._renderer.setElementProperty(this._elementRef.nativeElement, 'value', stringValue);
   }
+  private _value: SimpleDate;
 
   // Implemented as part of ControlValueAccessor
   writeValue(value: SimpleDate) {
