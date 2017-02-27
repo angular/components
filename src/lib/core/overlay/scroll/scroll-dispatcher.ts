@@ -21,7 +21,10 @@ export class ScrollDispatcher {
   _scrolled: Subject<void> = new Subject<void>();
 
   /** Keeps track of the global `scroll` and `resize` subscriptions. */
-  private _globalSubscription: Subscription;
+  _globalSubscription: Subscription = null;
+
+  /** Keeps track of the amount of subscriptions to `scrolled`. Used for cleaning up afterwards. */
+  private _scrolledCount = 0;
 
   /**
    * Map of all the scrollable references that are registered with the service and their
@@ -36,14 +39,9 @@ export class ScrollDispatcher {
    */
   register(scrollable: Scrollable): void {
     const scrollSubscription = scrollable.elementScrolled().subscribe(() => this._notify());
-    this.scrollableReferences.set(scrollable, scrollSubscription);
 
-    if (!this._globalSubscription) {
-      this._globalSubscription = Observable.merge(
-        Observable.fromEvent(window.document, 'scroll'),
-        Observable.fromEvent(window, 'resize')
-      ).subscribe(() => this._notify());
-    }
+    this.scrollableReferences.set(scrollable, scrollSubscription);
+    this._addGlobalSubscription();
   }
 
   /**
@@ -54,27 +52,31 @@ export class ScrollDispatcher {
     if (this.scrollableReferences.has(scrollable)) {
       this.scrollableReferences.get(scrollable).unsubscribe();
       this.scrollableReferences.delete(scrollable);
-
-      if (!this.scrollableReferences.size && this._globalSubscription) {
-        this._globalSubscription.unsubscribe();
-        this._globalSubscription = null;
-      }
+      this._removeGlobalSubscription();
     }
   }
 
   /**
-   * Returns an observable that emits an event whenever any of the registered Scrollable
+   * Subscribes to an observable that emits an event whenever any of the registered Scrollable
    * references (or window, document, or body) fire a scrolled event. Can provide a time in ms
    * to override the default "throttle" time.
    */
-  scrolled(auditTimeInMs: number = DEFAULT_SCROLL_TIME): Observable<void> {
-    // In the case of a 0ms delay, return the observable without auditTime since it does add
-    // a perceptible delay in processing overhead.
-    if (auditTimeInMs == 0) {
-      return this._scrolled.asObservable();
-    }
+  scrolled(auditTimeInMs: number = DEFAULT_SCROLL_TIME, callback: () => any): Subscription {
+    // In the case of a 0ms delay, use an observable without auditTime
+    // since it does add a perceptible delay in processing overhead.
+    let observable = auditTimeInMs > 0 ?
+      this._scrolled.asObservable().auditTime(auditTimeInMs) :
+      this._scrolled.asObservable();
 
-    return this._scrolled.asObservable().auditTime(auditTimeInMs);
+    this._scrolledCount++;
+    this._addGlobalSubscription();
+
+    // Note that we need to do the subscribing from here, in order to be able to remove
+    // the global event listeners once there are no more subscriptions.
+    return observable.subscribe(callback).add(() => {
+      this._scrolledCount--;
+      this._removeGlobalSubscription();
+    });
   }
 
   /** Returns all registered Scrollables that contain the provided element. */
@@ -105,6 +107,24 @@ export class ScrollDispatcher {
   /** Sends a notification that a scroll event has been fired. */
   _notify() {
     this._scrolled.next();
+  }
+
+  /** Sets up the global event listeners, if they're not active already. */
+  private _addGlobalSubscription(): void {
+    if (!this._globalSubscription) {
+      this._globalSubscription = Observable.merge(
+        Observable.fromEvent(window.document, 'scroll'),
+        Observable.fromEvent(window, 'resize')
+      ).subscribe(() => this._notify());
+    }
+  }
+
+  /** Removes the global event listeners, if there are no more subscriptions listening to them. */
+  private _removeGlobalSubscription(): void {
+    if (this._globalSubscription && !this.scrollableReferences.size && !this._scrolledCount) {
+      this._globalSubscription.unsubscribe();
+      this._globalSubscription = null;
+    }
   }
 }
 
