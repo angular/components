@@ -1,5 +1,5 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
-
+import {Component, ChangeDetectionStrategy, ViewChild} from '@angular/core';
+import {TemplatePortalDirective, Portal} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -9,5 +9,6 @@ import {Component, ChangeDetectionStrategy} from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
 export class TreeDemo {
+  @ViewChild(TemplatePortalDirective) nodeTemplate: Portal<any>;
   expandedKeys: string[] = ['apple', 'pear'];
 }

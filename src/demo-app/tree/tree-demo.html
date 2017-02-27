@@ -1,12 +1,30 @@
 
-<md-tree [expandedKeys]="expandedKeys">
-  <ul>
-    <li mdTreeNode title="Apple" key="apple">Apple
-      <ul>
-        <li mdtreenode title="Peach" key="peach">Peach</li>
-      </ul>
-    </li>
-    <li mdTreeNode title="Team" key="team">Team</li>
-    <li mdTreeNode title="Pear" key="pear">Pear</li>
-  </ul>
+<md-tree [expandedKeys]="expandedKeys" [selectChildren]="true" [nodeTemplate]="nodeTemplate">
+  <div class="node">Checkbox node</div>
+  <md-tree-node  title="Apple" key="apple">
+      Apple
+      <md-tree-node title="Peach" key="peach">
+        Peach
+      </md-tree-node>
+      <md-tree-node title="Cherry" key="cherry">
+          Cherry
+          <md-tree-node title="Strawberry" key="strawberry">
+            Strawberry
+          </md-tree-node>
+          <md-tree-node title="Blueberry" key="blueberry">
+            Blueberry
+          </md-tree-node>
+      </md-tree-node>
+  </md-tree-node>
+  <md-tree-node title="Team" key="team">
+    My Team
+  </md-tree-node>
+  <md-tree-node title="Pear" key="pear">Pear Republic</md-tree-node>
 </md-tree>
+
+<template cdk-portal>
+  <p> - Why don't jokes work in octal?</p>
+  <p> - Because 7 10 11.</p> {{self.key}}
+</template>
+
+Node {{nodeTemplate != null}} Template
