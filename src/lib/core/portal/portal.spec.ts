@@ -330,7 +330,7 @@ class ArbitraryViewContainerRefComponent {
   <ng-template cdk-portal> {{fruit}} </ng-template>`,
 })
 class PortalTestApp {
-  @ViewChildren(TemplatePortalDirective) portals: QueryList<ng-templatePortalDirective>;
+  @ViewChildren(TemplatePortalDirective) portals: QueryList<TemplatePortalDirective>;
   selectedPortal: Portal<any>;
   fruit: string = 'Banana';
 
