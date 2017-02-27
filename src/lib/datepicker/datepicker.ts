@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
+  Input,
   OnDestroy,
   Optional,
   TemplateRef,
@@ -22,6 +22,8 @@ import {
   OriginConnectionPosition,
   OverlayConnectionPosition
 } from '../core/overlay/position/connected-position';
+import {SimpleDate} from '../core/datetime/simple-date';
+import {MdDatepickerInput} from './datepicker-input';
 
 
 /** Component responsible for managing the datepicker popup/dialog. */
@@ -34,6 +36,30 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdDatepicker implements OnDestroy {
+  /** The date to open the calendar to initially. */
+  @Input()
+  get startAt() {
+    // If an explicit startAt is set we start there, otherwise we start at whatever the currently
+    // selected value is.
+    if (this._startAt) {
+      return this._startAt;
+    }
+    if (this._datepickerInput) {
+      return this._datepickerInput.value;
+    }
+    return null;
+  }
+  set startAt(date: SimpleDate) { this._startAt = date; }
+  private _startAt: SimpleDate;
+
+  get selected() { return this._datepickerInput ? this._datepickerInput.value : null; }
+  set selected(value: SimpleDate) {
+    if (this._datepickerInput) {
+      this._datepickerInput.value = value;
+    }
+    this.close();
+  }
+
   /**
    * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
    * than a popup and elements have more padding to allow for bigger touch targets.
@@ -53,7 +79,7 @@ export class MdDatepicker implements OnDestroy {
   private _calendarPortal: TemplatePortal;
 
   /** The input element this datepicker is associated with. */
-  private _inputElementRef: ElementRef;
+  private _datepickerInput: MdDatepickerInput;
 
   constructor(private _dialog: MdDialog, private _overlay: Overlay,
               private _viewContainerRef: ViewContainerRef, @Optional() private _dir: Dir) {}
@@ -69,11 +95,11 @@ export class MdDatepicker implements OnDestroy {
    * Register an input with this datepicker.
    * @param inputElementRef An ElementRef for the input.
    */
-  _registerInput(inputElementRef: ElementRef): void {
-    if (this._inputElementRef) {
+  _registerInput(input: MdDatepickerInput): void {
+    if (this._datepickerInput) {
       throw new MdError('An MdDatepicker can only be associated with a single input.');
     }
-    this._inputElementRef = inputElementRef;
+    this._datepickerInput = input;
   }
 
   /** Opens the calendar in standard UI mode. */
@@ -91,7 +117,7 @@ export class MdDatepicker implements OnDestroy {
    * @param touchUi Whether to use the touch UI.
    */
   private _open(touchUi = false): void {
-    if (!this._inputElementRef) {
+    if (!this._datepickerInput) {
       throw new MdError('Attempted to open an MdDatepicker with no associated input.');
     }
 
@@ -150,6 +176,7 @@ export class MdDatepicker implements OnDestroy {
   private _createPopupPositionStrategy(): PositionStrategy {
     let origin = {originX: 'start', originY: 'bottom'} as OriginConnectionPosition;
     let overlay = {overlayX: 'start', overlayY: 'top'} as OverlayConnectionPosition;
-    return this._overlay.position().connectedTo(this._inputElementRef, origin, overlay);
+    return this._overlay.position().connectedTo(
+        this._datepickerInput.getPopupConnectionElementRef(), origin, overlay);
   }
 }
