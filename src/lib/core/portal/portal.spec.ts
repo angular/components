@@ -70,7 +70,7 @@ describe('Portals', () => {
       expect(hostContainer.textContent).toContain('Chocolate');
     });
 
-    it('should load a <template> portal', () => {
+    it('should load a <ng-template> portal', () => {
       let testAppComponent = fixture.debugElement.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
@@ -85,7 +85,7 @@ describe('Portals', () => {
       expect(hostContainer.textContent).toContain('Cake');
     });
 
-    it('should load a <template> portal with the `*` sugar', () => {
+    it('should load a <ng-template> portal with the `*` sugar', () => {
       let testAppComponent = fixture.debugElement.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
@@ -100,7 +100,7 @@ describe('Portals', () => {
       expect(hostContainer.textContent).toContain('Pie');
     });
 
-    it('should load a <template> portal with a binding', () => {
+    it('should load a <ng-template> portal with a binding', () => {
       let testAppComponent = fixture.debugElement.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
@@ -320,14 +320,14 @@ class ArbitraryViewContainerRefComponent {
   selector: 'portal-test',
   template: `
   <div class="portal-container">
-    <template [cdkPortalHost]="selectedPortal"></template>
+    <ng-template [cdkPortalHost]="selectedPortal"></ng-template>
   </div>
 
-  <template cdk-portal>Cake</template>
+  <ng-template cdk-portal>Cake</ng-template>
 
   <div *cdk-portal>Pie</div>
 
-  <template cdk-portal> {{fruit}} </template>`,
+  <ng-template cdk-portal> {{fruit}} </ng-template>`,
 })
 class PortalTestApp {
   @ViewChildren(TemplatePortalDirective) portals: QueryList<TemplatePortalDirective>;

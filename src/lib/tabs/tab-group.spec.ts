@@ -297,15 +297,15 @@ describe('MdTabGroup', () => {
         (focusChange)="handleFocus($event)"
         (selectChange)="handleSelection($event)">
       <md-tab>
-        <template md-tab-label>Tab One</template>
+        <ng-template md-tab-label>Tab One</ng-template>
         Tab one content
       </md-tab>
       <md-tab>
-        <template md-tab-label>Tab Two</template>
+        <ng-template md-tab-label>Tab Two</ng-template>
         Tab two content
       </md-tab>
       <md-tab>
-        <template md-tab-label>Tab Three</template>
+        <ng-template md-tab-label>Tab Three</ng-template>
         Tab three content
       </md-tab>
     </md-tab-group>
@@ -331,7 +331,7 @@ class SimpleTabsTestApp {
         (focusChange)="handleFocus($event)"
         (selectChange)="handleSelection($event)">
       <md-tab *ngFor="let tab of tabs">
-        <template md-tab-label>{{tab.label}}</template>
+        <ng-template md-tab-label>{{tab.label}}</ng-template>
         {{tab.content}}
       </md-tab>
     </md-tab-group>
@@ -384,15 +384,15 @@ class BindedTabsTestApp {
   template: `
     <md-tab-group class="tab-group">
       <md-tab>
-        <template md-tab-label>Tab One</template>
+        <ng-template md-tab-label>Tab One</ng-template>
         Tab one content
       </md-tab>
       <md-tab disabled>
-        <template md-tab-label>Tab Two</template>
+        <ng-template md-tab-label>Tab Two</ng-template>
         Tab two content
       </md-tab>
       <md-tab>
-        <template md-tab-label>Tab Three</template>
+        <ng-template md-tab-label>Tab Three</ng-template>
         Tab three content
       </md-tab>
     </md-tab-group>
@@ -404,7 +404,7 @@ class DisabledTabsTestApp {}
   template: `
     <md-tab-group class="tab-group">
       <md-tab *ngFor="let tab of tabs | async">
-        <template md-tab-label>{{ tab.label }}</template>
+        <ng-template md-tab-label>{{ tab.label }}</ng-template>
         {{ tab.content }}
       </md-tab>
    </md-tab-group>

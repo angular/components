@@ -48,7 +48,7 @@
 
   <md-tab-group class="demo-tab-group" dynamicHeight [(selectedIndex)]="activeTabIndex">
     <md-tab *ngFor="let tab of dynamicTabs" [disabled]="tab.disabled">
-      <template md-tab-label>{{tab.label}}</template>
+      <ng-template md-tab-label>{{tab.label}}</ng-template>
       {{tab.content}}
       <br>
       <br>
@@ -98,7 +98,7 @@
 
 <md-tab-group class="demo-tab-group" dynamicHeight>
   <md-tab *ngFor="let tab of tabs" [disabled]="tab.disabled">
-    <template md-tab-label>{{tab.label}}</template>
+    <ng-template md-tab-label>{{tab.label}}</ng-template>
     {{tab.content}}
     <br>
     <br>
@@ -142,7 +142,7 @@
 
 <md-tab-group class="demo-tab-group" style="height: 200px">
   <md-tab *ngFor="let tab of tabs" [disabled]="tab.disabled">
-    <template md-tab-label>{{tab.label}}</template>
+    <ng-template md-tab-label>{{tab.label}}</ng-template>
     {{tab.content}}
     <br>
     <br>
@@ -185,7 +185,7 @@
 
 <md-tab-group class="demo-tab-group" style="height: 200px" md-stretch-tabs>
   <md-tab *ngFor="let tab of tabs" [disabled]="tab.disabled">
-    <template md-tab-label>{{tab.label}}</template>
+    <ng-template md-tab-label>{{tab.label}}</ng-template>
     {{tab.content}}
   </md-tab>
 </md-tab-group>
@@ -195,7 +195,7 @@
 
 <md-tab-group class="demo-tab-group">
   <md-tab *ngFor="let tab of asyncTabs | async; let i = index" [disabled]="i == 1">
-    <template md-tab-label>{{tab.label}}</template>
+    <ng-template md-tab-label>{{tab.label}}</ng-template>
     {{tab.content}}
     <br>
     <br>
