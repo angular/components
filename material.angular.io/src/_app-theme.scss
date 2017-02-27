@@ -20,20 +20,20 @@
   $foreground: map-get($theme, foreground);
 
   .docs-app-background {
-    background: md-color($background, background);
+    background: mat-color($background, background);
   }
 
   .docs-primary-header {
-    background: md-color($primary);
+    background: mat-color($primary);
 
     h1 {
-      color: md-color($primary, default-contrast);
+      color: mat-color($primary, default-contrast);
     }
   }
 
   .docs-footer {
-    background: md-color($primary);
-    color: md-color($primary, default-contrast);
+    background: mat-color($primary);
+    color: mat-color($primary, default-contrast);
   }
 
   @include docs-site-typography-theme($theme);
