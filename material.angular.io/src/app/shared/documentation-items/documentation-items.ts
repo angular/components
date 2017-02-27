@@ -51,7 +51,7 @@ const DOCS = [
   {
     id: 'buttons',
     name: 'Buttons, Indicators & Icons',
-    summary: 'buttons, button toggles, icons, progress spinners, progress bars',
+    summary: 'Buttons, button toggles, icons, progress spinners, progress bars',
     items: [
       {id: 'button', name: 'Button', examples: ['button-types']},
       {id: 'button-toggle', name: 'Button toggle', examples: ['button-toggle-exclusive']},
