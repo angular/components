@@ -50,6 +50,8 @@ $mat-mini-fab-padding: 8px !default;
   line-height: $mat-button-line-height;
   padding: $mat-button-padding;
   border-radius: $mat-button-border-radius;
+  
+  overflow: hidden;
 
   &[disabled] {
     cursor: default;
