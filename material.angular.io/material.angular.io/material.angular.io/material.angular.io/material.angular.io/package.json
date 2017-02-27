@@ -10,7 +10,7 @@
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
     "prod-build": "ng build --aot --prod && npm run prerender && cp -r tmp/prerendered/* dist/",
-    "postinstall": "webdriver-manager update",
+    "postinstall": "webdriver-manager update && tools/fetch-assets.sh",
     "publish-prod": "ng build --aot --prod && firebase use material-angular-io && firebase deploy",
     "publish-dev": "ng build --aot --prod && firebase use material2-docs-dev && firebase deploy"
   },
