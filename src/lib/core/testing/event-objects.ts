@@ -22,12 +22,12 @@ export function createMouseEvent(type: string, x = 0, y = 0) {
 }
 
 /** Dispatches a keydown event from an element. */
-export function createKeyboardEvent(eventType: string, keyCode: number) {
+export function createKeyboardEvent(type: string, keyCode: number) {
   let event = document.createEvent('KeyboardEvent') as any;
   // Firefox does not support `initKeyboardEvent`, but supports `initKeyEvent`.
   let initEventFn = (event.initKeyEvent || event.initKeyboardEvent).bind(event);
 
-  initEventFn(eventType, true, true, window, 0, 0, 0, 0, 0, keyCode);
+  initEventFn(type, true, true, window, 0, 0, 0, 0, 0, keyCode);
 
   // Webkit Browsers don't set the keyCode when calling the init function.
   // See related bug https://bugs.webkit.org/show_bug.cgi?id=16735
@@ -38,25 +38,9 @@ export function createKeyboardEvent(eventType: string, keyCode: number) {
   return event;
 }
 
-/** Creates a transition event with the specified property name. */
-export function createTransitionEndEvent(propertyName: string, elapsedTime = 0) {
-  // Some browsers have the TransitionEvent class, but once the class is being instantiated
-  // the browser will throw an exception. Those browsers don't support the constructor yet.
-  // To ensure that those browsers also work, the TransitionEvent is created by using the
-  // deprecated `initTransitionEvent` function.
-  try {
-    // TypeScript does not have valid types for the TransitionEvent class, so use `any`.
-    return new (TransitionEvent as any)('transitionend', {propertyName, elapsedTime});
-  } catch (e) {
-    let event = document.createEvent('TransitionEvent');
-    event.initTransitionEvent('transitionend', false, false, propertyName, elapsedTime);
-    return event;
-  }
-}
-
 /** Creates a fake event object with any desired event type. */
-export function createFakeEvent(eventName: string) {
+export function createFakeEvent(type: string) {
   let event  = document.createEvent('Event');
-  event.initEvent(eventName, true, true);
+  event.initEvent(type, true, true);
   return event;
 }

@@ -106,19 +106,21 @@ describe('MdTabHeader', () => {
       fixture.detectChanges();
       expect(appComponent.mdTabHeader.focusIndex).toBe(0);
 
+      let tabListContainer = appComponent.mdTabHeader._tabListContainer.nativeElement;
+
       // Move focus right to 2
-      dispatchKeyboardEvent(appComponent.mdTabHeader._tabListContainer.nativeElement, RIGHT_ARROW);
+      dispatchKeyboardEvent(tabListContainer, 'keydown', RIGHT_ARROW);
       fixture.detectChanges();
       expect(appComponent.mdTabHeader.focusIndex).toBe(2);
 
       // Select the focused index 2
       expect(appComponent.selectedIndex).toBe(0);
-      dispatchKeyboardEvent(appComponent.mdTabHeader._tabListContainer.nativeElement, ENTER);
+      dispatchKeyboardEvent(tabListContainer, 'keydown', ENTER);
       fixture.detectChanges();
       expect(appComponent.selectedIndex).toBe(2);
 
       // Move focus right to 0
-      dispatchKeyboardEvent(appComponent.mdTabHeader._tabListContainer.nativeElement, LEFT_ARROW);
+      dispatchKeyboardEvent(tabListContainer, 'keydown', LEFT_ARROW);
       fixture.detectChanges();
       expect(appComponent.mdTabHeader.focusIndex).toBe(0);
     });

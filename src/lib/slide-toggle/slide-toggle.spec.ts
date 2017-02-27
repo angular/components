@@ -684,10 +684,3 @@ class SlideToggleFormsTestApp {
 class SlideToggleWithFormControl {
   formControl = new FormControl();
 }
-
-// TODO(devversion): replace with global utility once pull request #2943 is merged.
-function dispatchFakeEvent(element: HTMLElement, eventName: string): void {
-  let event  = document.createEvent('Event');
-  event.initEvent(eventName, true, true);
-  element.dispatchEvent(event);
-}

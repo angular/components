@@ -729,7 +729,7 @@ describe('MdSlider', () => {
     it('should update the model on keydown', () => {
       expect(testComponent.val).toBe(0);
 
-      dispatchKeyboardEvent(sliderNativeElement, UP_ARROW);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', UP_ARROW);
       fixture.detectChanges();
 
       expect(testComponent.val).toBe(1);
@@ -949,14 +949,14 @@ describe('MdSlider', () => {
     });
 
     it('should increment slider by 1 on up arrow pressed', () => {
-      dispatchKeyboardEvent(sliderNativeElement, UP_ARROW);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', UP_ARROW);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(1);
     });
 
     it('should increment slider by 1 on right arrow pressed', () => {
-      dispatchKeyboardEvent(sliderNativeElement, RIGHT_ARROW);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', RIGHT_ARROW);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(1);
@@ -965,7 +965,7 @@ describe('MdSlider', () => {
     it('should decrement slider by 1 on down arrow pressed', () => {
       sliderInstance.value = 100;
 
-      dispatchKeyboardEvent(sliderNativeElement, DOWN_ARROW);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', DOWN_ARROW);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(99);
@@ -974,14 +974,14 @@ describe('MdSlider', () => {
     it('should decrement slider by 1 on left arrow pressed', () => {
       sliderInstance.value = 100;
 
-      dispatchKeyboardEvent(sliderNativeElement, LEFT_ARROW);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', LEFT_ARROW);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(99);
     });
 
     it('should increment slider by 10 on page up pressed', () => {
-      dispatchKeyboardEvent(sliderNativeElement, PAGE_UP);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', PAGE_UP);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(10);
@@ -990,14 +990,14 @@ describe('MdSlider', () => {
     it('should decrement slider by 10 on page down pressed', () => {
       sliderInstance.value = 100;
 
-      dispatchKeyboardEvent(sliderNativeElement, PAGE_DOWN);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', PAGE_DOWN);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(90);
     });
 
     it('should set slider to max on end pressed', () => {
-      dispatchKeyboardEvent(sliderNativeElement, END);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', END);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(100);
@@ -1006,7 +1006,7 @@ describe('MdSlider', () => {
     it('should set slider to min on home pressed', () => {
       sliderInstance.value = 100;
 
-      dispatchKeyboardEvent(sliderNativeElement, HOME);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', HOME);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(0);
@@ -1067,7 +1067,7 @@ describe('MdSlider', () => {
       testComponent.invert = true;
       fixture.detectChanges();
 
-      dispatchKeyboardEvent(sliderNativeElement, RIGHT_ARROW);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', RIGHT_ARROW);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(1);
@@ -1078,7 +1078,7 @@ describe('MdSlider', () => {
       sliderInstance.value = 100;
       fixture.detectChanges();
 
-      dispatchKeyboardEvent(sliderNativeElement, LEFT_ARROW);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', LEFT_ARROW);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(99);
@@ -1089,7 +1089,7 @@ describe('MdSlider', () => {
       sliderInstance.value = 100;
       fixture.detectChanges();
 
-      dispatchKeyboardEvent(sliderNativeElement, RIGHT_ARROW);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', RIGHT_ARROW);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(99);
@@ -1099,7 +1099,7 @@ describe('MdSlider', () => {
       testComponent.dir = 'rtl';
       fixture.detectChanges();
 
-      dispatchKeyboardEvent(sliderNativeElement, LEFT_ARROW);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', LEFT_ARROW);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(1);
@@ -1111,7 +1111,7 @@ describe('MdSlider', () => {
       sliderInstance.value = 100;
       fixture.detectChanges();
 
-      dispatchKeyboardEvent(sliderNativeElement, RIGHT_ARROW);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', RIGHT_ARROW);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(99);
@@ -1122,7 +1122,7 @@ describe('MdSlider', () => {
       testComponent.invert = true;
       fixture.detectChanges();
 
-      dispatchKeyboardEvent(sliderNativeElement, LEFT_ARROW);
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', LEFT_ARROW);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(1);

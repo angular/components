@@ -1003,7 +1003,7 @@ class AutocompleteWithoutForms {
  * @param value Value to be set on the input.
  * @param element Element onto which to set the value.
  */
-function typeInElement(value: string, element: HTMLInputElement) {
+function typeInElement(value: string, element: HTMLInputElement, autoFocus = true) {
   element.focus();
   element.value = value;
   dispatchFakeEvent(element, 'input');

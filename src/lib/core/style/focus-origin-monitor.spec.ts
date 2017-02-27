@@ -57,7 +57,7 @@ describe('FocusOriginMonitor', () => {
 
   it('should detect focus via keyboard', async(() => {
     // Simulate focus via keyboard.
-    dispatchKeyboardEvent(document, TAB);
+    dispatchKeyboardEvent(document, 'keydown', TAB);
     buttonElement.focus();
     fixture.detectChanges();
 
@@ -95,7 +95,7 @@ describe('FocusOriginMonitor', () => {
 
   it('should detect focus via touch', async(() => {
     // Simulate focus via touch.
-    dispatchTouchstartEvent(buttonElement);
+    dispatchMouseEvent(buttonElement, 'touchstart');
     buttonElement.focus();
     fixture.detectChanges();
 
@@ -272,7 +272,7 @@ describe('cdkMonitorFocus', () => {
 
     it('should detect focus via keyboard', async(() => {
       // Simulate focus via keyboard.
-      dispatchKeyboardEvent(document, TAB, 'keydown');
+      dispatchKeyboardEvent(document, 'keydown', TAB);
       buttonElement.focus();
       fixture.detectChanges();
 

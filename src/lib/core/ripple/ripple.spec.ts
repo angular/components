@@ -5,33 +5,6 @@ import {ViewportRuler} from '../overlay/position/viewport-ruler';
 import {RIPPLE_FADE_OUT_DURATION, RIPPLE_FADE_IN_DURATION} from './ripple-renderer';
 import {dispatchMouseEvent} from '../testing/dispatch-events';
 
-
-/** Creates a DOM mouse event. */
-const createMouseEvent = (eventType: string, dict: any = {}) => {
-  // Ideally this would just be "return new MouseEvent(eventType, dict)". But IE11 doesn't support
-  // the MouseEvent constructor, and Edge inexplicably divides clientX and clientY by 100 to get
-  // pageX and pageY. (Really. After "e = new MouseEvent('click', {clientX: 200, clientY: 300})",
-  // e.clientX is 200, e.pageX is 2, e.clientY is 300, and e.pageY is 3.)
-  // So instead we use the deprecated createEvent/initMouseEvent API, which works everywhere.
-  const event = document.createEvent('MouseEvents');
-  event.initMouseEvent(eventType,
-      false, /* canBubble */
-      false, /* cancelable */
-      window, /* view */
-      0, /* detail */
-      dict.screenX || 0,
-      dict.screenY || 0,
-      dict.clientX || 0,
-      dict.clientY || 0,
-      false, /* ctrlKey */
-      false, /* altKey */
-      false, /* shiftKey */
-      false, /* metaKey */
-      0, /* button */
-      null /* relatedTarget */);
-  return event;
-};
-
 /** Extracts the numeric value of a pixel size string like '123px'.  */
 const pxStringToFloat = (s: string) => {
   return parseFloat(s.replace('px', ''));
@@ -176,8 +149,8 @@ describe('MdRipple', () => {
       const spy = jasmine.createSpy('zone unstable callback');
       const subscription = fixture.ngZone.onUnstable.subscribe(spy);
 
-      dispatchMouseEvent('mousedown');
-      dispatchMouseEvent('mouseup');
+      dispatchMouseEvent(rippleTarget, 'mousedown');
+      dispatchMouseEvent(rippleTarget, 'mouseup');
 
       expect(spy).not.toHaveBeenCalled();
       subscription.unsubscribe();
@@ -314,11 +287,8 @@ describe('MdRipple', () => {
       let alternateTrigger = fixture.debugElement.nativeElement
         .querySelector('.alternateTrigger') as HTMLElement;
 
-      let mousedownEvent = createMouseEvent('mousedown');
-      let mouseupEvent = createMouseEvent('mouseup');
-
-      alternateTrigger.dispatchEvent(mousedownEvent);
-      alternateTrigger.dispatchEvent(mouseupEvent);
+      dispatchMouseEvent(alternateTrigger, 'mousedown');
+      dispatchMouseEvent(alternateTrigger, 'mouseup');
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
 
@@ -326,8 +296,8 @@ describe('MdRipple', () => {
       controller.trigger = alternateTrigger;
       fixture.detectChanges();
 
-      alternateTrigger.dispatchEvent(mousedownEvent);
-      alternateTrigger.dispatchEvent(mouseupEvent);
+      dispatchMouseEvent(alternateTrigger, 'mousedown');
+      dispatchMouseEvent(alternateTrigger, 'mouseup');
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
     });
