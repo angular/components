@@ -1,17 +1,16 @@
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdButtonModule} from './index';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {FakeViewportRuler} from '../core/overlay/position/fake-viewport-ruler';
-import {StyleModule} from '../core/style/index';
 
 
 describe('MdButton', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdButtonModule.forRoot(), StyleModule],
+      imports: [MdButtonModule.forRoot()],
       declarations: [TestApp],
       providers: [
         {provide: ViewportRuler, useClass: FakeViewportRuler},
