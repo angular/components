@@ -1,19 +1,23 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {MdDatepickerModule} from './index';
 import {Component, ViewChild} from '@angular/core';
 import {MdDatepicker} from './datepicker';
 import {MdDatepickerInput} from './datepicker-input';
 import {SimpleDate} from '../core/datetime/simple-date';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+
 
 describe('MdDatepicker', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdDatepickerModule],
+      imports: [MdDatepickerModule, FormsModule, ReactiveFormsModule],
       declarations: [
         StandardDatepicker,
         MultiInputDatepicker,
         NoInputDatepicker,
         DatepickerWithStartAt,
+        DatepickerWithNgModel,
+        DatepickerWithFormControl,
       ],
     });
 
@@ -139,7 +143,86 @@ describe('MdDatepicker', () => {
       expect(testComponent.datepicker.startAt).toEqual(new SimpleDate(2010, 0, 1));
     });
   });
+
+  describe('datepicker with ngModel', () => {
+    let fixture: ComponentFixture<DatepickerWithNgModel>;
+    let testComponent: DatepickerWithNgModel;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(DatepickerWithNgModel);
+      detectModelChanges(fixture);
+
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('should update datepicker when model changes', fakeAsync(() => {
+      expect(testComponent.datepickerInput.value).toBeNull();
+      expect(testComponent.datepicker.selected).toBeNull();
+
+      let selected = new SimpleDate(2017, 0, 1);
+      testComponent.selected = selected;
+      detectModelChanges(fixture);
+
+      expect(testComponent.datepickerInput.value).toEqual(selected);
+      expect(testComponent.datepicker.selected).toEqual(selected);
+    }));
+
+    it('should update model when date is selected', fakeAsync(() => {
+      expect(testComponent.selected).toBeNull();
+      expect(testComponent.datepickerInput.value).toBeNull();
+
+      let selected = new SimpleDate(2017, 0, 1);
+      testComponent.datepicker.selected = selected;
+      detectModelChanges(fixture);
+
+      expect(testComponent.selected).toEqual(selected);
+      expect(testComponent.datepickerInput.value).toEqual(selected);
+    }));
+  });
+
+  describe('datepicker with formControl', () => {
+    let fixture: ComponentFixture<DatepickerWithFormControl>;
+    let testComponent: DatepickerWithFormControl;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(DatepickerWithFormControl);
+      fixture.detectChanges();
+
+      testComponent = fixture.componentInstance;
+    });
+
+    it('should update datepicker when formControl changes', () => {
+      expect(testComponent.datepickerInput.value).toBeNull();
+      expect(testComponent.datepicker.selected).toBeNull();
+
+      let selected = new SimpleDate(2017, 0, 1);
+      testComponent.formControl.setValue(selected);
+      fixture.detectChanges();
+
+      expect(testComponent.datepickerInput.value).toEqual(selected);
+      expect(testComponent.datepicker.selected).toEqual(selected);
+    });
+
+    it('should update formControl when date is selected', () => {
+      expect(testComponent.formControl.value).toBeNull();
+      expect(testComponent.datepickerInput.value).toBeNull();
+
+      let selected = new SimpleDate(2017, 0, 1);
+      testComponent.datepicker.selected = selected;
+      fixture.detectChanges();
+
+      expect(testComponent.formControl.value).toEqual(selected);
+      expect(testComponent.datepickerInput.value).toEqual(selected);
+    });
+  });
 });
+
+
+function detectModelChanges(fixture: ComponentFixture<any>) {
+  fixture.detectChanges();
+  tick();
+  fixture.detectChanges();
+}
 
 
 @Component({
@@ -175,4 +258,27 @@ class NoInputDatepicker {
 })
 class DatepickerWithStartAt {
   @ViewChild('d') datepicker: MdDatepicker;
+}
+
+
+@Component({
+  template: `<input [(ngModel)]="selected" [mdDatepicker]="d"><md-datepicker #d></md-datepicker>`
+})
+class DatepickerWithNgModel {
+  selected: SimpleDate = null;
+  @ViewChild('d') datepicker: MdDatepicker;
+  @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput;
+}
+
+
+@Component({
+  template: `
+    <input [formControl]="formControl" [mdDatepicker]="d">
+    <md-datepicker #d></md-datepicker>
+  `
+})
+class DatepickerWithFormControl {
+  formControl = new FormControl();
+  @ViewChild('d') datepicker: MdDatepicker;
+  @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput;
 }

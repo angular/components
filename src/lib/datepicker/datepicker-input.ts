@@ -1,4 +1,4 @@
-import {Directive, ElementRef, forwardRef, Input, Renderer} from '@angular/core';
+import {AfterContentInit, Directive, ElementRef, forwardRef, Input, Renderer} from '@angular/core';
 import {MdDatepicker} from './datepicker';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {SimpleDate} from '../core/datetime/simple-date';
@@ -21,7 +21,7 @@ export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
     '(blur)': '_onTouched()',
   }
 })
-export class MdDatepickerInput implements ControlValueAccessor {
+export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor {
   @Input()
   set mdDatepicker(value: MdDatepicker) {
     if (value) {
@@ -41,38 +41,47 @@ export class MdDatepickerInput implements ControlValueAccessor {
   constructor(private _elementRef: ElementRef, private _renderer: Renderer,
               private _locale: CalendarLocale) {}
 
+  ngAfterContentInit() {
+    if (this._datepicker) {
+      this._datepicker.selectedChanged.subscribe((selected: SimpleDate) => {
+        this.value = selected;
+        this._onChange(selected);
+      });
+    }
+  }
+
   getPopupConnectionElementRef(): ElementRef {
     return this._elementRef;
   }
 
   @Input()
-  get value() {
+  get value(): SimpleDate {
     return this._value;
   }
-  set value(value: any) {
+  set value(value: SimpleDate) {
     this._value = this._locale.parseDate(value);
-    let stringValue = this._value == null ? '' : this._locale.formatDate(this._value);
+    const stringValue = this._value == null ? '' : this._locale.formatDate(this._value);
     this._renderer.setElementProperty(this._elementRef.nativeElement, 'value', stringValue);
   }
   private _value: SimpleDate;
 
   // Implemented as part of ControlValueAccessor
-  writeValue(value: SimpleDate) {
+  writeValue(value: SimpleDate): void {
     this.value = value;
   }
 
   // Implemented as part of ControlValueAccessor
-  registerOnChange(fn: (value: any) => void) {
+  registerOnChange(fn: (value: any) => void): void {
     this._onChange = value => fn(this._locale.parseDate(value));
   }
 
   // Implemented as part of ControlValueAccessor
-  registerOnTouched(fn: () => void) {
+  registerOnTouched(fn: () => void): void {
     this._onTouched = fn;
   }
 
   // Implemented as part of ControlValueAccessor
-  setDisabledState(disabled: boolean) {
+  setDisabledState(disabled: boolean): void {
     this._renderer.setElementProperty(this._elementRef.nativeElement, 'disabled', disabled);
   }
 }

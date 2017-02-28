@@ -1,9 +1,9 @@
 import {
   ChangeDetectionStrategy,
-  Component,
+  Component, EventEmitter,
   Input,
   OnDestroy,
-  Optional,
+  Optional, Output,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
@@ -39,7 +39,7 @@ import {CalendarLocale} from '../core/datetime/calendar-locale';
 export class MdDatepicker implements OnDestroy {
   /** The date to open the calendar to initially. */
   @Input()
-  get startAt() {
+  get startAt(): SimpleDate {
     // If an explicit startAt is set we start there, otherwise we start at whatever the currently
     // selected value is.
     if (this._startAt) {
@@ -50,14 +50,16 @@ export class MdDatepicker implements OnDestroy {
     }
     return null;
   }
-  set startAt(date: any) { this._startAt = this._locale.parseDate(date); }
+  set startAt(date: SimpleDate) { this._startAt = this._locale.parseDate(date); }
   private _startAt: SimpleDate;
 
-  get selected() { return this._datepickerInput ? this._datepickerInput.value : null; }
+  @Output() selectedChanged = new EventEmitter<SimpleDate>();
+
+  get selected(): SimpleDate {
+    return this._datepickerInput ? this._datepickerInput.value : null;
+  }
   set selected(value: SimpleDate) {
-    if (this._datepickerInput) {
-      this._datepickerInput.value = value;
-    }
+    this.selectedChanged.emit(value);
     this.close();
   }
 

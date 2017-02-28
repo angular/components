@@ -1,16 +1,23 @@
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {MdDatepickerModule} from './index';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdMonthView} from './month-view';
 import {SimpleDate} from '../core/datetime/simple-date';
+import {MdCalendarTable} from './calendar-table';
+import {DatetimeModule} from '../core/datetime/index';
 
 
 describe('MdMonthView', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdDatepickerModule],
+      imports: [
+        DatetimeModule,
+      ],
       declarations: [
+        MdCalendarTable,
+        MdMonthView,
+
+        // Test components.
         StandardMonthView,
       ],
     });

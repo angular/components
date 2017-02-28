@@ -24,15 +24,11 @@ export * from './year-view';
     CommonModule,
     DatetimeModule,
     MdDialogModule,
-    OverlayModule
+    OverlayModule,
   ],
   exports: [
-    MdCalendar,
-    MdCalendarTable,
     MdDatepicker,
     MdDatepickerInput,
-    MdMonthView,
-    MdYearView
   ],
   declarations: [
     MdCalendar,
@@ -40,7 +36,7 @@ export * from './year-view';
     MdDatepicker,
     MdDatepickerInput,
     MdMonthView,
-    MdYearView
+    MdYearView,
   ],
 })
 export class MdDatepickerModule {}
