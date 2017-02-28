@@ -10,10 +10,11 @@
       <path d="M0 0h24v24H0z" fill="none"/>
     </svg>
   </span>
-  <span [class.mat-tree-node-selected]="selected" (click)="toggleSelect()">
-    {{title}}
-    <ng-content></ng-content>
-    <template [cdkPortalHost]="portalHost"></template>
+  <span [class.mat-tree-node-selected]="selected" >
+    <!--{{title}} -->
+     <!--(click)="toggleSelect()"-->
+    <!--<ng-content></ng-content>-->
+    <template cdkPortalHost></template>
   </span>
 </li>
 <ul *ngIf="expanded">

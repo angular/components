@@ -42,6 +42,8 @@ import {PeopleDatabase} from './data-table/people-database';
 import {DatepickerDemo} from './datepicker/datepicker-demo';
 import {TypographyDemo} from './typography/typography-demo';
 import {ExpansionDemo} from './expansion/expansion-demo';
+import {TreeDemo} from './tree/tree-demo';
+import {TreeDemo, TreeNodeKey} from './tree/tree-demo';
 import {
   CdkDataTableModule,
   FullscreenOverlayContainer,
@@ -118,9 +120,6 @@ import {TableHeaderDemo} from './data-table/table-header-demo';
   ]
 })
 export class DemoMaterialModule {}
-=======
-import {TreeDemo} from './tree/tree-demo';
->>>>>>> .
 
 
 @NgModule({
@@ -184,6 +183,7 @@ import {TreeDemo} from './tree/tree-demo';
     TypographyDemo,
     ExpansionDemo,
     TreeDemo,
+    TreeNodeKey,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
@@ -197,6 +197,7 @@ import {TreeDemo} from './tree/tree-demo';
     RotiniPanel,
     ScienceJoke,
     SpagettiPanel,
+    TreeNodeKey,
   ],
 })
 export class DemoAppModule {

@@ -1,14 +1,16 @@
 import {
+  AfterContentInit,
   Component,
   ContentChildren,
   Inject,
   Input,
   OnInit,
   QueryList,
+  ViewChild,
   forwardRef,
 Output, EventEmitter
 } from '@angular/core';
-import {Overlay, OverlayRef, OverlayState, PortalHost, Portal, TemplatePortal} from '../core';
+import {PortalHostDirective} from '../core';
 import {MdTree} from './tree';
 
 
@@ -19,11 +21,9 @@ import {MdTree} from './tree';
   templateUrl: 'tree-node.html',
   styleUrls: ['tree-node.css']
 })
-export class MdTreeNode implements OnInit {
-  get portalHost(): Portal<any> {
-    return this.tree.nodeTemplate;
-  }
-  private _portal: TemplatePortal;
+export class MdTreeNode implements OnInit, AfterContentInit {
+
+  @ViewChild(PortalHostDirective) portalHost: PortalHostDirective;
 
   @ContentChildren(MdTreeNode) _treeNodes: QueryList<MdTreeNode>;
 
@@ -31,8 +31,8 @@ export class MdTreeNode implements OnInit {
     return this._treeNodes.filter((node) => node.key != this.key);
   }
 
-  get self() {
-    return this._treeNodes.first;
+  get node() {
+    return this._treeNodes ? this._treeNodes.first : null;
   }
 
   get isLeaf() {
@@ -50,8 +50,10 @@ export class MdTreeNode implements OnInit {
   ngOnInit() {
     this.selected = this.tree.selectedKeys.indexOf(this.key) >= 0;
     this.expanded = this.tree.expandedKeys.indexOf(this.key) >= 0;
-    console.log(`construct ${this.key}`);
-    //this.portalHost = this.tree.nodeTemplate;
+  }
+
+  ngAfterContentInit() {
+    this.portalHost.attach(this.tree.nodeTemplate).instance.node = this.node;
   }
 
   @Input()

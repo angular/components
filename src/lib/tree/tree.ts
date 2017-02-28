@@ -6,11 +6,9 @@ import {
   NgModule,
   Output,
   QueryList,
-  TemplateRef,
-  ViewChild
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {Overlay, OverlayRef, OverlayState, TemplatePortal, PortalModule, TemplatePortalDirective, Portal} from '../core';
+import {PortalModule, Portal} from '../core';
 import {MdTreeNode} from './tree-node';
 
 export class MdTreeChange {

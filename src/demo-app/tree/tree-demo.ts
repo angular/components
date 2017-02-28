@@ -1,5 +1,5 @@
-import {Component, ChangeDetectionStrategy, ViewChild} from '@angular/core';
-import {TemplatePortalDirective, Portal} from '@angular/material';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Portal, MdTreeNode, ComponentPortal} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -9,6 +9,15 @@ import {TemplatePortalDirective, Portal} from '@angular/material';
   changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
 export class TreeDemo {
-  @ViewChild(TemplatePortalDirective) nodeTemplate: Portal<any>;
+  nodeTemplate: Portal<any> = new ComponentPortal(TreeNodeKey);
   expandedKeys: string[] = ['apple', 'pear'];
+}
+
+@Component({
+  moduleId: module.id,
+  selector: 'tree-node-key',
+  template: `<md-checkbox [(ngModel)]="node.selected" >{{node.title}} </md-checkbox>`,
+})
+export class TreeNodeKey {
+  @Input() node: MdTreeNode;
 }
