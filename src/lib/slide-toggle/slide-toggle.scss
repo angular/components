@@ -68,13 +68,15 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
 }
 
 // Apply the margin for slide-toggles and revert it for RTL toggles with labelPosition before.
-[dir='rtl'] .mat-slide-toggle-label-before .mat-slide-toggle-bar, .mat-slide-toggle-bar {
+[dir='rtl'] .mat-slide-toggle-label-before .mat-slide-toggle-bar,
+.mat-slide-toggle-bar {
   margin-right: $mat-slide-toggle-spacing;
   margin-left: 0;
 }
 
 // Switch the margins in RTL mode and also switch it if the labelPosition is set to before.
-[dir='rtl'], .mat-slide-toggle-label-before {
+[dir='rtl'],
+.mat-slide-toggle-label-before {
   .mat-slide-toggle-bar {
     margin-left: $mat-slide-toggle-spacing;
     margin-right: 0;
