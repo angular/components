@@ -20,4 +20,6 @@ export class TreeDemo {
 })
 export class TreeNodeKey {
   @Input() node: MdTreeNode;
+
+  selectedApple: MdTreeNode;
 }

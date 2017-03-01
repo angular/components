@@ -12,7 +12,7 @@ Output, EventEmitter
 } from '@angular/core';
 import {PortalHostDirective} from '../core';
 import {MdTree} from './tree';
-
+import {TreeNodeModel} from './tree-node-model';
 
 @Component({
   selector: 'md-tree-node',
@@ -39,6 +39,8 @@ export class MdTreeNode implements OnInit, AfterContentInit {
     return this.children.length == 0;
   }
 
+  model: TreeNodeModel;
+
   @Output()
   selectChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -54,6 +56,13 @@ export class MdTreeNode implements OnInit, AfterContentInit {
 
   ngAfterContentInit() {
     this.portalHost.attach(this.tree.nodeTemplate).instance.node = this.node;
+
+    this.children.forEach(node => node.setParent(this));
+  }
+
+  _parent: MdTreeNode;
+  setParent(node: MdTreeNode) {
+    this._parent = node;
   }
 
   @Input()
@@ -75,7 +84,7 @@ export class MdTreeNode implements OnInit, AfterContentInit {
     if (this._selected != value) {
       this._selected = value;
       this.selectChange.emit(value);
-      this._updateTreeSelected();
+      this._updateTreeSelected(this.tree.selectChildren);
     }
   }
 
@@ -105,11 +114,20 @@ export class MdTreeNode implements OnInit, AfterContentInit {
     }
   }
 
-  _updateTreeSelected() {
+  _updateTreeSelected(updateChildren: boolean) {
     this.tree.updateSelected(this.key, this.selected);
 
-    if (this.tree.selectChildren) {
+    if (updateChildren) {
+
       this.children.forEach((node) => node.selected = this.selected);
+    } else if (this.tree.selectChildren) {
+      if (this._parent) {
+        let shouldSelect = (this._parent.children.filter(node => node.selected == false).length == 0);
+        if (shouldSelect != this._parent.selected) {
+          this._parent._selected = shouldSelect;
+          this._parent._updateTreeSelected(false);
+        }
+      }
     }
   }
 
@@ -119,5 +137,19 @@ export class MdTreeNode implements OnInit, AfterContentInit {
       // Collapse all children
       this.children.forEach((node) => node.expanded = false);
     }
+  }
+
+  findKey(key: string): MdTreeNode {
+    if (this.key == key) {
+      return this;
+    }
+    let result: MdTreeNode = null;
+    this.children.forEach((node) => {
+        let found = node.findKey(key);
+        if (found) {
+          result = found;
+        }
+      });
+    return result;
   }
 }

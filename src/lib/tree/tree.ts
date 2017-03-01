@@ -1,4 +1,5 @@
 import {
+  AfterContentInit,
   Component,
   ContentChildren,
   EventEmitter,
@@ -10,6 +11,8 @@ import {
 import { BrowserModule } from '@angular/platform-browser';
 import {PortalModule, Portal} from '../core';
 import {MdTreeNode} from './tree-node';
+import {TreeModel} from './tree-model';
+import {TreeNodeModel} from './tree-node-model';
 
 export class MdTreeChange {
   key: string;
@@ -24,7 +27,7 @@ export class MdTreeChange {
   styleUrls: ['tree.css'],
 
 })
-export class MdTree {
+export class MdTree implements AfterContentInit {
   @ContentChildren(MdTreeNode) treeNodes: QueryList<MdTreeNode>;
 
   @Input()
@@ -61,6 +64,29 @@ export class MdTree {
 
   @Input()
   loadData: (node: MdTreeNode) => {};
+
+  _nodes: TreeModel;
+  @Input()
+  get nodes(): TreeModel {
+    return this._nodes;
+  }
+  set nodes(value: TreeModel) {
+    this._nodes = value;
+
+    // build the tree
+    let root = value.root;
+    root.children.forEach((node) => {
+      // Add node;
+      this._addNode(node);
+
+    });
+  }
+
+  _addNode(node: TreeNodeModel) {
+
+    //add node
+    node.children.forEach(this._addNode);
+  }
 
   @Output()
   selectChange: EventEmitter<MdTreeChange> = new EventEmitter<MdTreeChange>();
@@ -100,6 +126,21 @@ export class MdTree {
       this.expandChange.emit(change);
     }
     console.log(`emit tree change ${key} ${type} ${value}`);
+  }
+
+  root: {};
+  ngAfterContentInit() {
+  }
+
+  findKey(key: string): MdTreeNode {
+    let result: MdTreeNode = null;
+    this.treeNodes.forEach(node => {
+      let found = node.findKey(key);
+      if (found) {
+        result = found;
+      }
+    });
+    return result;
   }
 }
 

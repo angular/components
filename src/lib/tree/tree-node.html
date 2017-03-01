@@ -11,12 +11,15 @@
     </svg>
   </span>
   <span [class.mat-tree-node-selected]="selected" >
-    <!--{{title}} -->
+    {{title}}
      <!--(click)="toggleSelect()"-->
     <!--<ng-content></ng-content>-->
     <template cdkPortalHost></template>
   </span>
 </li>
 <ul *ngIf="expanded">
-  <ng-content select="md-tree-node"></ng-content>
+  <div *ngFor="let node of children">
+    <md-tree-node [key]="node.key" [selected]="node.selected" [expanded]="node.expanded">{{node.title}}</md-tree-node>
+  </div>
+  <!--<ng-content select="md-tree-node"></ng-content>-->
 </ul>
