@@ -33,7 +33,6 @@ export * from './button';
     MdIconButtonCssMatStyler,
     MdFabCssMatStyler,
     MdMiniFabCssMatStyler,
-    StyleModule,
   ],
   declarations: [
     MdButton,
