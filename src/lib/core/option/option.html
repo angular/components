@@ -1,3 +1,5 @@
+<md-pseudo-checkbox class="mat-option-pseudo-checkbox" *ngIf="multiple"
+    [state]="selected ? 'checked' : ''" color="primary"></md-pseudo-checkbox>
 <ng-content></ng-content>
 <div class="mat-option-ripple" *ngIf="!disabled" md-ripple [mdRippleTrigger]="_getHostElement()">
 </div>
