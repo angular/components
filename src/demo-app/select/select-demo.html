@@ -43,7 +43,7 @@
       <p> Touched: {{ pokemonControl.touched }} </p>
       <p> Dirty: {{ pokemonControl.dirty }} </p>
       <p> Status: {{ pokemonControl.control?.status }} </p>
-      <button md-button (click)="currentPokemon=['eevee-4', 'psyduck-6']">SET VALUE</button>
+      <button md-button (click)="setPokemonValue()">SET VALUE</button>
       <button md-button (click)="pokemonRequired=!pokemonRequired">TOGGLE REQUIRED</button>
       <button md-button (click)="pokemonDisabled=!pokemonDisabled">TOGGLE DISABLED</button>
       <button md-button (click)="pokemonControl.reset()">RESET</button>

@@ -51,4 +51,8 @@ export class SelectDemo {
   toggleDisabled() {
     this.foodControl.enabled ? this.foodControl.disable() : this.foodControl.enable();
   }
+
+  setPokemonValue() {
+    this.currentPokemon = ['eevee-4', 'psyduck-6'];
+  }
 }
