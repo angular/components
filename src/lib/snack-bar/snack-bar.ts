@@ -24,15 +24,15 @@ export class MdSnackBar {
    * If there is a parent snack-bar service, all operations should delegate to that parent
    * via `_openedSnackBarRef`.
    */
-  private _snackBarRefAtThisLevel: MdSnackBarRef<any>;
+  private _snackBarRefAtThisLevel: MdSnackBarRef<any>|null;
 
   /** Reference to the currently opened snackbar at *any* level. */
-  get _openedSnackBarRef(): MdSnackBarRef<any> {
+  get _openedSnackBarRef(): MdSnackBarRef<any>|null {
     return this._parentSnackBar ?
         this._parentSnackBar._openedSnackBarRef : this._snackBarRefAtThisLevel;
   }
 
-  set _openedSnackBarRef(value: MdSnackBarRef<any>) {
+  set _openedSnackBarRef(value: MdSnackBarRef<any>|null) {
     if (this._parentSnackBar) {
       this._parentSnackBar._openedSnackBarRef = value;
     } else {
@@ -52,8 +52,10 @@ export class MdSnackBar {
    * @param component Component to be instantiated.
    * @param config Extra configuration for the snack bar.
    */
-  openFromComponent<T>(component: ComponentType<T>, config?: MdSnackBarConfig): MdSnackBarRef<T> {
-    config = _applyConfigDefaults(config);
+  openFromComponent<T>(component: ComponentType<T>, userConfig?: MdSnackBarConfig):
+    MdSnackBarRef<T> {
+
+    let config = _applyConfigDefaults(userConfig);
     let overlayRef = this._createOverlay();
     let snackBarContainer = this._attachSnackBarContainer(overlayRef, config);
     let snackBarRef = this._attachSnackbarContent(component, snackBarContainer, overlayRef);
@@ -85,7 +87,10 @@ export class MdSnackBar {
       });
     }
 
-    this._live.announce(config.announcementMessage, config.politeness);
+    if (config.announcementMessage) {
+      this._live.announce(config.announcementMessage, config.politeness);
+    }
+
     this._openedSnackBarRef = snackBarRef;
     return this._openedSnackBarRef;
   }
@@ -154,6 +159,6 @@ export class MdSnackBar {
  * @param config The configuration to which the defaults will be applied.
  * @returns The new configuration object with defaults applied.
  */
-function _applyConfigDefaults(config: MdSnackBarConfig): MdSnackBarConfig {
+function _applyConfigDefaults(config: MdSnackBarConfig|undefined): MdSnackBarConfig {
   return extendObject(new MdSnackBarConfig(), config);
 }

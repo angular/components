@@ -21,9 +21,12 @@ export class FocusKeyManager extends ListKeyManager<Focusable> {
    * This method sets the active item to the item at the specified index.
    * It also adds focuses the newly active item.
    */
-  setActiveItem(index: number): void {
+  setActiveItem(index: number|null): void {
     super.setActiveItem(index);
-    this.activeItem.focus();
+
+    if (this.activeItem) {
+      this.activeItem.focus();
+    }
   }
 
 }

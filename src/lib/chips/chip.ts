@@ -38,7 +38,7 @@ export interface MdChipEvent {
 export class MdChip implements Focusable, OnInit, OnDestroy {
 
   /** Whether or not the chip is disabled. Disabled chips cannot be focused. */
-  protected _disabled: boolean = null;
+  protected _disabled: boolean|null = null;
 
   /** Whether or not the chip is selected. */
   protected _selected: boolean = false;
@@ -70,12 +70,12 @@ export class MdChip implements Focusable, OnInit, OnDestroy {
   }
 
   /** Whether or not the chip is disabled. */
-  @Input() get disabled(): boolean {
+  @Input() get disabled(): boolean|null {
     return this._disabled;
   }
 
   /** Sets the disabled state of the chip. */
-  set disabled(value: boolean) {
+  set disabled(value: boolean|null) {
     this._disabled = coerceBooleanProperty(value) ? true : null;
   }
 

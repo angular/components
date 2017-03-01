@@ -10,7 +10,7 @@ import {ScrollDispatcher} from '../scroll/scroll-dispatcher';
 export class ViewportRuler {
 
   /** Cached document client rectangle. */
-  private _documentRect?: ClientRect;
+  private _documentRect: ClientRect|null = null;
 
   constructor(scrollDispatcher: ScrollDispatcher) {
     // Initially cache the document rectangle.
@@ -57,14 +57,21 @@ export class ViewportRuler {
     // `scrollTop` and `scrollLeft` is inconsistent. However, using the bounding rect of
     // `document.documentElement` works consistently, where the `top` and `left` values will
     // equal negative the scroll position.
-    const top = -documentRect.top || document.body.scrollTop || window.scrollY || 0;
-    const left = -documentRect.left || document.body.scrollLeft || window.scrollX || 0;
+    const top = (documentRect ? -documentRect.top : 0) ||
+                document.body.scrollTop ||
+                window.scrollY ||
+                0;
+
+    const left = (documentRect ? -documentRect.left : 0) ||
+                 document.body.scrollLeft ||
+                 window.scrollX ||
+                 0;
 
     return {top, left};
   }
 
   /** Caches the latest client rectangle of the document element. */
-  _cacheViewportGeometry?() {
+  _cacheViewportGeometry() {
     this._documentRect = document.documentElement.getBoundingClientRect();
   }
 

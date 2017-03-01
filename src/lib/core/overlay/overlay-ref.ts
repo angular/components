@@ -10,7 +10,7 @@ import {Subject} from 'rxjs/Subject';
  * Used to manipulate or dispose of said overlay.
  */
 export class OverlayRef implements PortalHost {
-  private _backdropElement: HTMLElement = null;
+  private _backdropElement: HTMLElement | null = null;
   private _backdropClick: Subject<any> = new Subject();
 
   constructor(
@@ -139,7 +139,9 @@ export class OverlayRef implements PortalHost {
 
     // Insert the backdrop before the pane in the DOM order,
     // in order to handle stacked overlays properly.
-    this._pane.parentElement.insertBefore(this._backdropElement, this._pane);
+    if (this._pane.parentElement) {
+      this._pane.parentElement.insertBefore(this._backdropElement, this._pane);
+    }
 
     // Forward backdrop clicks such that the consumer of the overlay can perform whatever
     // action desired when such a click occurs (usually closing the overlay).

@@ -82,9 +82,11 @@ export class MdTextareaAutosize implements OnInit {
     textareaClone.style.minHeight = '';
     textareaClone.style.maxHeight = '';
 
-    textarea.parentNode.appendChild(textareaClone);
-    this._cachedLineHeight = textareaClone.offsetHeight;
-    textarea.parentNode.removeChild(textareaClone);
+    if (textarea.parentNode) {
+      textarea.parentNode.appendChild(textareaClone);
+      this._cachedLineHeight = textareaClone.offsetHeight;
+      textarea.parentNode.removeChild(textareaClone);
+    }
   }
 
   /** Resize the textarea to fit its content. */

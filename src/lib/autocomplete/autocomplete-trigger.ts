@@ -65,7 +65,7 @@ export const MD_AUTOCOMPLETE_VALUE_ACCESSOR: any = {
   providers: [MD_AUTOCOMPLETE_VALUE_ACCESSOR]
 })
 export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
-  private _overlayRef: OverlayRef;
+  private _overlayRef: OverlayRef|null;
   private _portal: TemplatePortal;
   private _panelOpen: boolean = false;
 
@@ -123,7 +123,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this._createOverlay();
     }
 
-    if (!this._overlayRef.hasAttached()) {
+    if (this._overlayRef && !this._overlayRef.hasAttached()) {
       this._overlayRef.attach(this._portal);
       this._subscribeToClosingActions();
     }
@@ -160,7 +160,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   }
 
   /** The currently active option, coerced to MdOption type. */
-  get activeOption(): MdOption {
+  get activeOption(): MdOption|undefined {
     if (this.autocomplete._keyManager) {
       return this.autocomplete._keyManager.activeItem as MdOption;
     }

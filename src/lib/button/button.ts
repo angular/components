@@ -112,7 +112,7 @@ export class MdButton {
 
   /** Whether the ripple effect on click should be disabled. */
   private _disableRipple: boolean = false;
-  private _disabled: boolean = null;
+  private _disabled: boolean|null = null;
 
   /** Whether the ripple effect for this button is disabled. */
   @Input()
@@ -122,7 +122,7 @@ export class MdButton {
   /** Whether the button is disabled. */
   @Input()
   get disabled() { return this._disabled; }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value) ? true : null; }
+  set disabled(value: boolean|null) { this._disabled = coerceBooleanProperty(value) ? true : null; }
 
   constructor(private _elementRef: ElementRef, private _renderer: Renderer) { }
 

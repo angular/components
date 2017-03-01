@@ -60,7 +60,7 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
   private _focusTrap: FocusTrap;
 
   /** Element that was focused before the dialog was opened. Save this to restore upon close. */
-  private _elementFocusedBeforeDialogWasOpened: HTMLElement = null;
+  private _elementFocusedBeforeDialogWasOpened: HTMLElement|null = null;
 
   /** The dialog configuration. */
   dialogConfig: MdDialogConfig;

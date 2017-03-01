@@ -50,7 +50,7 @@ export const MD_SLIDER_VALUE_ACCESSOR: any = {
 /** A simple change event emitted by the MdSlider component. */
 export class MdSliderChange {
   source: MdSlider;
-  value: number;
+  value?: number;
 }
 
 /**
@@ -94,10 +94,10 @@ export class MdSliderChange {
 })
 export class MdSlider implements ControlValueAccessor {
   /** A renderer to handle updating the slider's thumb and fill track. */
-  private _renderer: SliderRenderer = null;
+  private _renderer: SliderRenderer;
 
   /** The dimensions of the slider. */
-  private _sliderDimensions: ClientRect = null;
+  private _sliderDimensions: ClientRect|null = null;
 
   private _disabled: boolean = false;
 
@@ -121,8 +121,8 @@ export class MdSlider implements ControlValueAccessor {
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   /** The last values for which a change or input event was emitted. */
-  private _lastChangeValue: number = null;
-  private _lastInputValue: number = null;
+  private _lastChangeValue: number|undefined;
+  private _lastInputValue: number|undefined;
 
   /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
   onTouched: () => any = () => {};
@@ -151,7 +151,8 @@ export class MdSlider implements ControlValueAccessor {
     this._step = coerceNumberProperty(v, this._step);
 
     if (this._step % 1 !== 0) {
-      this._roundLabelTo = this._step.toString().split('.').pop().length;
+      let valueAfterDecimal = this._step.toString().split('.').pop();
+      this._roundLabelTo = valueAfterDecimal ? valueAfterDecimal.length : 0;
     }
   }
 
@@ -182,18 +183,18 @@ export class MdSlider implements ControlValueAccessor {
   /** The percentage of the slider that coincides with the value. */
   get percent() { return this._clamp(this._percent); }
 
-  private _value: number = null;
+  private _value: number|undefined;
 
   /** Value of the slider. */
   @Input()
-  get value() {
+  get value(): number|undefined {
     // If the value needs to be read and it is still uninitialized, initialize it to the min.
-    if (this._value === null) {
+    if (typeof this._value === 'undefined') {
       this.value = this._min;
     }
     return this._value;
   }
-  set value(v: number) {
+  set value(v: number|undefined) {
     this._value = coerceNumberProperty(v, this._value);
     this._percent = this._calculatePercentage(this._value);
   }
@@ -240,11 +241,11 @@ export class MdSlider implements ControlValueAccessor {
   private _vertical = false;
 
   /** The value to be used for display purposes. */
-  get displayValue(): string|number {
+  get displayValue(): string|number|undefined {
     // Note that this could be improved further by rounding something like 0.999 to 1 or
     // 0.899 to 0.9, however it is very performance sensitive, because it gets called on
     // every change detection cycle.
-    if (this._roundLabelTo && this.value % 1 !== 0) {
+    if (this._roundLabelTo && this.value && this.value % 1 !== 0) {
       return this.value.toFixed(this._roundLabelTo);
     }
 
@@ -537,7 +538,7 @@ export class MdSlider implements ControlValueAccessor {
 
   /** Updates the amount of space between ticks as a percentage of the width of the slider. */
   private _updateTickIntervalPercent() {
-    if (!this.tickInterval) {
+    if (!this.tickInterval || !this._sliderDimensions) {
       return;
     }
 
@@ -563,8 +564,8 @@ export class MdSlider implements ControlValueAccessor {
   }
 
   /** Calculates the percentage of the slider that a value is. */
-  private _calculatePercentage(value: number) {
-    return (value - this.min) / (this.max - this.min);
+  private _calculatePercentage(value: number|undefined): number {
+    return value ? (value - this.min) / (this.max - this.min) : 0;
   }
 
   /** Calculates the value a percentage of the slider corresponds to. */
@@ -631,7 +632,7 @@ export class SliderRenderer {
    */
   getSliderDimensions() {
     let wrapperElement = this._sliderElement.querySelector('.mat-slider-wrapper');
-    return wrapperElement.getBoundingClientRect();
+    return wrapperElement ? wrapperElement.getBoundingClientRect() : null;
   }
 
   /**

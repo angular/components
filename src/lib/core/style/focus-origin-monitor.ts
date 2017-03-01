@@ -34,7 +34,7 @@ type MonitoredElementInfo = {
 @Injectable()
 export class FocusOriginMonitor {
   /** The focus origin that the next focus event is a result of. */
-  private _origin: FocusOrigin = null;
+  private _origin: FocusOrigin|null = null;
 
   /** The FocusOrigin of the last focus event tracked by the FocusOriginMonitor. */
   private _lastFocusOrigin: FocusOrigin;
@@ -43,7 +43,7 @@ export class FocusOriginMonitor {
   private _windowFocused = false;
 
   /** The target of the last touch event. */
-  private _lastTouchTarget: EventTarget;
+  private _lastTouchTarget: EventTarget|null;
 
   /** The timeout id of the touch timeout, used to cancel timeout later. */
   private _touchTimeout: number;
@@ -64,36 +64,35 @@ export class FocusOriginMonitor {
    *     When the element is blurred, null will be emitted.
    */
   monitor(element: Element, renderer: Renderer, checkChildren: boolean): Observable<FocusOrigin> {
+    let elementInfo = this._elementInfo.get(element);
+
     // Check if we're already monitoring this element.
-    if (this._elementInfo.has(element)) {
-      let info = this._elementInfo.get(element);
-      info.checkChildren = checkChildren;
-      return info.subject.asObservable();
+    if (elementInfo) {
+      elementInfo.checkChildren = checkChildren;
+      return elementInfo.subject.asObservable();
     }
 
-    // Create monitored element info.
-    let info: MonitoredElementInfo = {
-      unlisten: null,
-      checkChildren: checkChildren,
-      renderer: renderer,
-      subject: new Subject<FocusOrigin>()
-    };
-    this._elementInfo.set(element, info);
-
-    // Start listening. We need to listen in capture phase since focus events don't bubble.
     let focusListener = (event: FocusEvent) => this._onFocus(event, element);
     let blurListener = (event: FocusEvent) => this._onBlur(event, element);
+
+    // Start listening. We need to listen in capture phase since focus events don't bubble.
     this._ngZone.runOutsideAngular(() => {
       element.addEventListener('focus', focusListener, true);
       element.addEventListener('blur', blurListener, true);
     });
 
-    // Create an unlisten function for later.
-    info.unlisten = () => {
-      element.removeEventListener('focus', focusListener, true);
-      element.removeEventListener('blur', blurListener, true);
+    // Create monitored element info.
+    let info: MonitoredElementInfo = {
+      unlisten: () => {
+        element.removeEventListener('focus', focusListener, true);
+        element.removeEventListener('blur', blurListener, true);
+      },
+      checkChildren: checkChildren,
+      renderer: renderer,
+      subject: new Subject<FocusOrigin>()
     };
 
+    this._elementInfo.set(element, info);
     return info.subject.asObservable();
   }
 
@@ -167,13 +166,17 @@ export class FocusOriginMonitor {
    * @param element The element to update the classes on.
    * @param origin The focus origin.
    */
-  private _setClasses(element: Element, origin: FocusOrigin): void {
-    let renderer = this._elementInfo.get(element).renderer;
-    renderer.setElementClass(element, 'cdk-focused', !!origin);
-    renderer.setElementClass(element, 'cdk-touch-focused', origin === 'touch');
-    renderer.setElementClass(element, 'cdk-keyboard-focused', origin === 'keyboard');
-    renderer.setElementClass(element, 'cdk-mouse-focused', origin === 'mouse');
-    renderer.setElementClass(element, 'cdk-program-focused', origin === 'program');
+  private _setClasses(element: Element, origin: FocusOrigin|null): void {
+    let elementInfo = this._elementInfo.get(element);
+
+    if (elementInfo) {
+      let renderer = elementInfo.renderer;
+      renderer.setElementClass(element, 'cdk-focused', !!origin);
+      renderer.setElementClass(element, 'cdk-touch-focused', origin === 'touch');
+      renderer.setElementClass(element, 'cdk-keyboard-focused', origin === 'keyboard');
+      renderer.setElementClass(element, 'cdk-mouse-focused', origin === 'mouse');
+      renderer.setElementClass(element, 'cdk-program-focused', origin === 'program');
+    }
   }
 
   /**
@@ -223,10 +226,11 @@ export class FocusOriginMonitor {
     // focus event affecting the monitored element. If we want to use the origin of the first event
     // instead we should check for the cdk-focused class here and return if the element already has
     // it. (This only matters for elements that have includesChildren = true).
+    const elementInfo = this._elementInfo.get(element);
 
     // If we are not counting child-element-focus as focused, make sure that the event target is the
     // monitored element itself.
-    if (!this._elementInfo.get(element).checkChildren && element !== event.target) {
+    if (!elementInfo || !elementInfo.checkChildren && element !== event.target) {
       return;
     }
 
@@ -247,7 +251,7 @@ export class FocusOriginMonitor {
     }
 
     this._setClasses(element, this._origin);
-    this._elementInfo.get(element).subject.next(this._origin);
+    elementInfo.subject.next(this._origin);
     this._lastFocusOrigin = this._origin;
     this._origin = null;
   }
@@ -258,15 +262,17 @@ export class FocusOriginMonitor {
    * @param element The monitored element.
    */
   private _onBlur(event: FocusEvent, element: Element) {
+    const elementInfo = this._elementInfo.get(element);
+
     // If we are counting child-element-focus as focused, make sure that we aren't just blurring in
     // order to focus another child of the monitored element.
-    if (this._elementInfo.get(element).checkChildren && event.relatedTarget instanceof Node &&
-        element.contains(event.relatedTarget)) {
+    if (!elementInfo || (elementInfo.checkChildren && event.relatedTarget instanceof Node &&
+        element.contains(event.relatedTarget))) {
       return;
     }
 
     this._setClasses(element, null);
-    this._elementInfo.get(element).subject.next(null);
+    elementInfo.subject.next();
   }
 }
 

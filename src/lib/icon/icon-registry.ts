@@ -40,7 +40,7 @@ export class MdIconSvgTagNotFoundError extends MdError {
  * @docs-private
  */
 class SvgIconConfig {
-  svgElement: SVGElement = null;
+  svgElement: SVGElement;
   constructor(public url: SafeResourceUrl) { }
 }
 
@@ -121,8 +121,10 @@ export class MdIconRegistry {
    */
   addSvgIconSetInNamespace(namespace: string, url: SafeResourceUrl): this {
     const config = new SvgIconConfig(url);
-    if (this._iconSetConfigs.has(namespace)) {
-      this._iconSetConfigs.get(namespace).push(config);
+    const cachedConfig = this._iconSetConfigs.get(namespace);
+
+    if (cachedConfig) {
+      cachedConfig.push(config);
     } else {
       this._iconSetConfigs.set(namespace, [config]);
     }
@@ -179,9 +181,10 @@ export class MdIconRegistry {
    */
   getSvgIconFromUrl(safeUrl: SafeResourceUrl): Observable<SVGElement> {
     let url = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, safeUrl);
+    let cachedIcons = this._cachedIconsByUrl.get(url);
 
-    if (this._cachedIconsByUrl.has(url)) {
-      return Observable.of(cloneSvg(this._cachedIconsByUrl.get(url)));
+    if (cachedIcons) {
+      return Observable.of(cloneSvg(cachedIcons));
     }
     return this._loadSvgIconFromConfig(new SvgIconConfig(url))
         .do(svg => this._cachedIconsByUrl.set(url, svg))
@@ -199,8 +202,10 @@ export class MdIconRegistry {
   getNamedSvgIcon(name: string, namespace = ''): Observable<SVGElement> {
     // Return (copy of) cached icon if possible.
     const key = iconKey(namespace, name);
-    if (this._svgIconConfigs.has(key)) {
-      return this._getSvgFromConfig(this._svgIconConfigs.get(key));
+    const config = this._svgIconConfigs.get(key);
+
+    if (config) {
+      return this._getSvgFromConfig(config);
     }
     // See if we have any icon sets registered for the namespace.
     const iconSetConfigs = this._iconSetConfigs.get(namespace);
@@ -250,7 +255,7 @@ export class MdIconRegistry {
         .filter(iconSetConfig => !iconSetConfig.svgElement)
         .map(iconSetConfig =>
             this._loadSvgIconSetFromConfig(iconSetConfig)
-                .catch((err: any, caught: Observable<SVGElement>): Observable<SVGElement> => {
+                .catch((err: any, caught: Observable<SVGElement>): Observable<SVGElement|null> => {
                   let url =
                       this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, iconSetConfig.url);
 
@@ -283,7 +288,7 @@ export class MdIconRegistry {
    * returns it. Returns null if no matching element is found.
    */
   private _extractIconWithNameFromAnySet(iconName: string, iconSetConfigs: SvgIconConfig[]):
-      SVGElement {
+      SVGElement|null {
     // Iterate backwards, so icon sets added later have precedence.
     for (let i = iconSetConfigs.length - 1; i >= 0; i--) {
       const config = iconSetConfigs[i];
@@ -294,6 +299,7 @@ export class MdIconRegistry {
         }
       }
     }
+
     return null;
   }
 
@@ -330,7 +336,7 @@ export class MdIconRegistry {
    * tag matches the specified name. If found, copies the nested element to a new SVG element and
    * returns it. Returns null if no matching element is found.
    */
-  private _extractSvgIconFromSet(iconSet: SVGElement, iconName: string): SVGElement {
+  private _extractSvgIconFromSet(iconSet: SVGElement, iconName: string): SVGElement|null {
     const iconNode = iconSet.querySelector('#' + iconName);
     if (!iconNode) {
       return null;
@@ -387,12 +393,13 @@ export class MdIconRegistry {
    */
   private _fetchUrl(safeUrl: SafeResourceUrl): Observable<string> {
     let url = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, safeUrl);
+    let inProgressFetch = this._inProgressUrlFetches.get(url);
 
     // Store in-progress fetches to avoid sending a duplicate request for a URL when there is
     // already a request in progress for that URL. It's necessary to call share() on the
     // Observable returned by http.get() so that multiple subscribers don't cause multiple XHRs.
-    if (this._inProgressUrlFetches.has(url)) {
-      return this._inProgressUrlFetches.get(url);
+    if (inProgressFetch) {
+      return inProgressFetch;
     }
 
     // TODO(jelbourn): for some reason, the `finally` operator "loses" the generic type on the

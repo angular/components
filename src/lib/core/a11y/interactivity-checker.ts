@@ -188,15 +188,20 @@ function hasValidTabIndex(element: HTMLElement): boolean {
  * Returns the parsed tabindex from the element attributes instead of returning the
  * evaluated tabindex from the browsers defaults.
  */
-function getTabIndexValue(element: HTMLElement): number {
+function getTabIndexValue(element: HTMLElement): number|null {
   if (!hasValidTabIndex(element)) {
     return null;
   }
 
   // See browser issue in Gecko https://bugzilla.mozilla.org/show_bug.cgi?id=1128054
-  const tabIndex = parseInt(element.getAttribute('tabindex'), 10);
+  const rawTabIndex = element.getAttribute('tabindex');
 
-  return isNaN(tabIndex) ? -1 : tabIndex;
+  if (rawTabIndex) {
+    const tabIndex = parseInt(rawTabIndex, 10);
+    return isNaN(tabIndex) ? -1 : tabIndex;
+  }
+
+  return -1;
 }
 
 /** Checks whether the specified element is potentially tabbable on iOS */

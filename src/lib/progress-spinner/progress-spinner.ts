@@ -75,7 +75,7 @@ export class MdProgressSpinner implements OnDestroy {
   private _lastAnimationId: number = 0;
 
   /** The id of the indeterminate interval. */
-  private _interdeterminateInterval: number;
+  private _interdeterminateInterval: number|null = null;
 
   /** The SVG <path> node that is used to draw the circle. */
   private _path: SVGPathElement;
@@ -102,8 +102,11 @@ export class MdProgressSpinner implements OnDestroy {
     return this._interdeterminateInterval;
   }
   /** @docs-private */
-  set interdeterminateInterval(interval: number) {
-    clearInterval(this._interdeterminateInterval);
+  set interdeterminateInterval(interval: number|null) {
+    if (this._interdeterminateInterval) {
+      clearInterval(this._interdeterminateInterval);
+    }
+
     this._interdeterminateInterval = interval;
   }
 

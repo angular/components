@@ -63,7 +63,7 @@ export class ConnectedOverlayDirective implements OnDestroy {
   private _templatePortal: TemplatePortal;
   private _open = false;
   private _hasBackdrop = false;
-  private _backdropSubscription: Subscription;
+  private _backdropSubscription: Subscription|null;
   private _positionSubscription: Subscription;
   private _offsetX: number = 0;
   private _offsetY: number = 0;

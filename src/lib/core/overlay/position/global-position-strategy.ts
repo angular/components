@@ -19,7 +19,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
   private _height: string = '';
 
   /* A lazily-created wrapper for the overlay element that is used as a flex container.  */
-  private _wrapper: HTMLElement;
+  private _wrapper: HTMLElement|null = null;
 
   /**
    * Sets the top position of the overlay. Clears any previously set vertical position.
@@ -36,7 +36,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Sets the left position of the overlay. Clears any previously set horizontal position.
    * @param value New left offset.
    */
-  left(value: string): this {
+  left(value = ''): this {
     this._rightOffset = '';
     this._leftOffset = value;
     this._justifyContent = 'flex-start';
@@ -47,7 +47,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Sets the bottom position of the overlay. Clears any previously set vertical position.
    * @param value New bottom offset.
    */
-  bottom(value: string): this {
+  bottom(value = ''): this {
     this._topOffset = '';
     this._bottomOffset = value;
     this._alignItems = 'flex-end';
@@ -58,7 +58,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Sets the right position of the overlay. Clears any previously set horizontal position.
    * @param value New right offset.
    */
-  right(value: string): this {
+  right(value = ''): this {
     this._leftOffset = '';
     this._rightOffset = value;
     this._justifyContent = 'flex-end';
@@ -69,7 +69,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Sets the overlay width and clears any previously set width.
    * @param value New width for the overlay
    */
-  width(value: string): this {
+  width(value = 'auto'): this {
     this._width = value;
 
     // When the width is 100%, we should reset the `left` and the offset,
@@ -85,7 +85,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Sets the overlay height and clears any previously set height.
    * @param value New height for the overlay
    */
-  height(value: string): this {
+  height(value = 'auto'): this {
     this._height = value;
 
     // When the height is 100%, we should reset the `top` and the offset,
@@ -129,7 +129,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * @returns Resolved when the styles have been applied.
    */
   apply(element: HTMLElement): Promise<void> {
-    if (!this._wrapper) {
+    if (!this._wrapper && element.parentNode) {
       this._wrapper = document.createElement('div');
       this._wrapper.classList.add('cdk-global-overlay-wrapper');
       element.parentNode.insertBefore(this._wrapper, element);
@@ -150,7 +150,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
     parentStyles.justifyContent = this._justifyContent;
     parentStyles.alignItems = this._alignItems;
 
-    return Promise.resolve(null);
+    return Promise.resolve();
   }
 
   /**

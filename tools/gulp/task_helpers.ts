@@ -94,8 +94,8 @@ export function execTask(binPath: string, args: string[], options: ExecTaskOptio
  * binaries that are normally in the `./node_modules/.bin` directory, but their name might differ
  * from the package. Examples are typescript, ngc and gulp itself.
  */
-export function execNodeTask(packageName: string, executable: string | string[], args?: string[],
-                             options: ExecTaskOptions = {}) {
+export function execNodeTask(packageName: string, executable: string | string[] | void,
+                             args: string[] = [], options: ExecTaskOptions = {}) {
   if (!args) {
     args = <string[]>executable;
     executable = undefined;

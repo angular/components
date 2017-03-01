@@ -92,7 +92,7 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
   /**
    * Users can specify the `aria-labelledby` attribute which will be forwarded to the input element
    */
-  @Input('aria-labelledby') ariaLabelledby: string = null;
+  @Input('aria-labelledby') ariaLabelledby: string|null = null;
 
   /** A unique id for the checkbox. If one is not supplied, it is auto-generated. */
   @Input() id: string = `md-checkbox-${++nextId}`;
@@ -146,7 +146,7 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
   @Input() tabIndex: number = 0;
 
   /** Name value will be applied to the input element if present */
-  @Input() name: string = null;
+  @Input() name: string|null = null;
 
   /** Event emitted when the checkbox's `checked` value changes. */
   @Output() change: EventEmitter<MdCheckboxChange> = new EventEmitter<MdCheckboxChange>();
@@ -181,10 +181,10 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
   private _controlValueAccessorChangeFn: (value: any) => void = (value) => {};
 
   /** Reference to the focused state ripple. */
-  private _focusedRipple: RippleRef;
+  private _focusedRipple: RippleRef|null = null;
 
   /** Reference to the focus origin monitor subscription. */
-  private _focusedSubscription: Subscription;
+  private _focusedSubscription: Subscription|null = null;
 
   constructor(private _renderer: Renderer,
               private _elementRef: ElementRef,
@@ -400,31 +400,32 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
 
   private _getAnimationClassForCheckStateTransition(
       oldState: TransitionCheckState, newState: TransitionCheckState): string {
-    var animSuffix: string;
+
+    let animSuffix = '';
 
     switch (oldState) {
-    case TransitionCheckState.Init:
-      // Handle edge case where user interacts with checkbox that does not have [(ngModel)] or
-      // [checked] bound to it.
-      if (newState === TransitionCheckState.Checked) {
-        animSuffix = 'unchecked-checked';
-      } else if (newState == TransitionCheckState.Indeterminate) {
-        animSuffix = 'unchecked-indeterminate';
-      } else {
-        return '';
-      }
-      break;
-    case TransitionCheckState.Unchecked:
-      animSuffix = newState === TransitionCheckState.Checked ?
-          'unchecked-checked' : 'unchecked-indeterminate';
-      break;
-    case TransitionCheckState.Checked:
-      animSuffix = newState === TransitionCheckState.Unchecked ?
-          'checked-unchecked' : 'checked-indeterminate';
-      break;
-    case TransitionCheckState.Indeterminate:
-      animSuffix = newState === TransitionCheckState.Checked ?
-          'indeterminate-checked' : 'indeterminate-unchecked';
+      case TransitionCheckState.Init:
+        // Handle edge case where user interacts with checkbox that does not have [(ngModel)] or
+        // [checked] bound to it.
+        if (newState === TransitionCheckState.Checked) {
+          animSuffix = 'unchecked-checked';
+        } else if (newState == TransitionCheckState.Indeterminate) {
+          animSuffix = 'unchecked-indeterminate';
+        } else {
+          return '';
+        }
+        break;
+      case TransitionCheckState.Unchecked:
+        animSuffix = newState === TransitionCheckState.Checked ?
+            'unchecked-checked' : 'unchecked-indeterminate';
+        break;
+      case TransitionCheckState.Checked:
+        animSuffix = newState === TransitionCheckState.Unchecked ?
+            'checked-unchecked' : 'checked-indeterminate';
+        break;
+      case TransitionCheckState.Indeterminate:
+        animSuffix = newState === TransitionCheckState.Checked ?
+            'indeterminate-checked' : 'indeterminate-unchecked';
     }
 
     return `mat-checkbox-anim-${animSuffix}`;

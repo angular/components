@@ -63,19 +63,26 @@ export class DomPortalHost extends BasePortalHost {
    */
   attachTemplatePortal(portal: TemplatePortal): Map<string, any> {
     let viewContainer = portal.viewContainerRef;
-    let viewRef = viewContainer.createEmbeddedView(portal.templateRef);
 
-    // The method `createEmbeddedView` will add the view as a child of the viewContainer.
-    // But for the DomPortalHost the view can be added everywhere in the DOM (e.g Overlay Container)
-    // To move the view to the specified host element. We just re-append the existing root nodes.
-    viewRef.rootNodes.forEach(rootNode => this._hostDomElement.appendChild(rootNode));
+    if (viewContainer) {
+      let viewRef = viewContainer.createEmbeddedView(portal.templateRef);
 
-    this.setDisposeFn((() => {
-      let index = viewContainer.indexOf(viewRef);
-      if (index !== -1) {
-        viewContainer.remove(index);
-      }
-    }));
+      // The method `createEmbeddedView` will add the view as a child of the viewContainer.
+      // But for the DomPortalHost the view can be added everywhere in the DOM (e.g Overlay
+      // Container) To move the view to the specified host element. We just re-append the
+      // existing root nodes.
+      viewRef.rootNodes.forEach(rootNode => this._hostDomElement.appendChild(rootNode));
+
+      this.setDisposeFn(() => {
+        if (viewContainer) {
+          let index = viewContainer.indexOf(viewRef);
+
+          if (index !== -1) {
+            viewContainer.remove(index);
+          }
+        }
+      });
+    }
 
     // TODO(jelbourn): Return locals from view.
     return new Map<string, any>();

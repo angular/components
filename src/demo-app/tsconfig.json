@@ -12,6 +12,7 @@
     "sourceMap": true,
     "target": "es5",
     "stripInternal": false,
+    "strictNullChecks": true,
     "baseUrl": "",
     "typeRoots": [
       "../../node_modules/@types/!(node)"
