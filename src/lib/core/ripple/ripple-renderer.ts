@@ -101,12 +101,15 @@ export class RippleRenderer {
     // Exposed reference to the ripple that will be returned.
     let rippleRef = new RippleRef(this, ripple, config);
 
+    // Add the ripple reference to the list of all active ripples.
+    this._activeRipples.add(rippleRef);
+
     // Wait for the ripple element to be completely faded in.
     // Once it's faded in, the ripple can be hidden immediately if the mouse is released.
     this.runTimeoutOutsideZone(() => {
-      if (config.persistent || this._isMousedown) {
-        this._activeRipples.add(rippleRef);
-      } else {
+      rippleRef.fadedIn = true;
+
+      if (!config.persistent && !this._isMousedown) {
         rippleRef.fadeOut();
       }
     }, duration);
@@ -116,9 +119,12 @@ export class RippleRenderer {
 
   /** Fades out a ripple reference. */
   fadeOutRipple(ripple: RippleRef) {
-    let rippleEl = ripple.element;
+    // For ripples that are not active anymore, don't re-un the fade-out animation.
+    if (!this._activeRipples.delete(ripple)) {
+      return;
+    }
 
-    this._activeRipples.delete(ripple);
+    let rippleEl = ripple.element;
 
     rippleEl.style.transitionDuration = `${RIPPLE_FADE_OUT_DURATION}ms`;
     rippleEl.style.opacity = '0';
@@ -163,9 +169,9 @@ export class RippleRenderer {
   private onMouseup() {
     this._isMousedown = false;
 
-    // On mouseup, fade-out all ripples that are active and not persistent.
+    // Fade-out all ripples that are completely faded-in and not persistent.
     this._activeRipples.forEach(ripple => {
-      if (!ripple.config.persistent) {
+      if (!ripple.config.persistent && ripple.fadedIn) {
         ripple.fadeOut();
       }
     });

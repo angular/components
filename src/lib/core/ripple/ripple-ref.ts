@@ -5,6 +5,9 @@ import {RippleConfig, RippleRenderer} from './ripple-renderer';
  */
 export class RippleRef {
 
+  /** Whether the ripple finished it's fade-in animation. */
+  fadedIn: boolean = false;
+
   constructor(
     private _renderer: RippleRenderer,
     public element: HTMLElement,
