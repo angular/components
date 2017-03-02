@@ -23,13 +23,13 @@ export class MdMenuInputItem  {
     event.stopPropagation();
   }
 
-  onClickFocus(event: MouseEvent){
+  onClickFocus(event: MouseEvent) {
     this.holdMenuOpen(event);
   }
 
-  onTabFocus(event: KeyboardEvent){
-    if(event.key === "Tab"){
+  onTabFocus(event: KeyboardEvent) {
+    if (event.key === 'Tab') {
       this.holdMenuOpen(event);
-    }    
+    }
   }
 }
