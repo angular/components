@@ -3,11 +3,11 @@ import {MdLineModule} from './line/line';
 import {RtlModule} from './rtl/dir';
 import {ObserveContentModule} from './observe-content/observe-content';
 import {MdOptionModule} from './option/option';
-import {MdRippleModule} from './ripple/ripple';
 import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/overlay-directives';
 import {A11yModule} from './a11y/index';
 import {MdSelectionModule} from './selection/index';
+import {MdRippleModule} from './ripple/index';
 
 
 // RTL
@@ -64,7 +64,7 @@ export {GestureConfig} from './gestures/gesture-config';
 export {HammerInput, HammerManager} from './gestures/gesture-annotations';
 
 // Ripple
-export {MdRipple, MdRippleModule} from './ripple/ripple';
+export * from './ripple/index';
 
 // a11y
 export {
@@ -80,7 +80,7 @@ export * from './selection/selection';
 /** @deprecated */
 export {LiveAnnouncer as MdLiveAnnouncer} from './a11y/live-announcer';
 
-export {FocusTrap} from './a11y/focus-trap';
+export * from './a11y/focus-trap';
 export {InteractivityChecker} from './a11y/interactivity-checker';
 export {isFakeMousedownFromScreenReader} from './a11y/fake-mousedown';
 

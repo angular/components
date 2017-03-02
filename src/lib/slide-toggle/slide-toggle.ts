@@ -23,7 +23,7 @@ import {
   CompatibilityModule,
 } from '../core';
 import {Observable} from 'rxjs/Observable';
-import {MdRippleModule} from '../core/ripple/ripple';
+import {MdRippleModule} from '../core/ripple/index';
 
 
 export const MD_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {
@@ -75,6 +75,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   private _slideRenderer: SlideToggleRenderer = null;
   private _disabled: boolean = false;
   private _required: boolean = false;
+  private _disableRipple: boolean = false;
 
   // Needs to be public to support AOT compilation (as host binding).
   _hasFocus: boolean = false;
@@ -106,6 +107,11 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   @Input()
   get required(): boolean { return this._required; }
   set required(value) { this._required = coerceBooleanProperty(value); }
+
+  /** Whether the ripple effect for this slide-toggle is disabled. */
+  @Input()
+  get disableRipple(): boolean { return this._disableRipple; }
+  set disableRipple(value) { this._disableRipple = coerceBooleanProperty(value); }
 
   private _change: EventEmitter<MdSlideToggleChange> = new EventEmitter<MdSlideToggleChange>();
   /** An event will be dispatched each time the slide-toggle changes its value. */
@@ -290,7 +296,7 @@ class SlideToggleRenderer {
   /** Previous checked state before drag started. */
   private _previousChecked: boolean;
 
-  /** Percentage of the thumb while dragging. */
+  /** Percentage of the thumb while dragging. Percentage as fraction of 100. */
   dragPercentage: number;
 
   /** Whether the thumb is currently being dragged. */
@@ -327,12 +333,14 @@ class SlideToggleRenderer {
 
   /** Updates the thumb containers position from the specified distance. */
   updateThumbPosition(distance: number) {
-    this.dragPercentage = this._getThumbPercentage(distance);
-    applyCssTransform(this._thumbEl, `translate3d(${this.dragPercentage}%, 0, 0)`);
+    this.dragPercentage = this._getDragPercentage(distance);
+    // Calculate the moved distance based on the thumb bar width.
+    let dragX = (this.dragPercentage / 100) * this._thumbBarWidth;
+    applyCssTransform(this._thumbEl, `translate3d(${dragX}px, 0, 0)`);
   }
 
-  /** Retrieves the percentage of thumb from the moved distance. */
-  private _getThumbPercentage(distance: number) {
+  /** Retrieves the percentage of thumb from the moved distance. Percentage as fraction of 100. */
+  private _getDragPercentage(distance: number) {
     let percentage = (distance / this._thumbBarWidth) * 100;
 
     // When the toggle was initially checked, then we have to start the drag at the end.

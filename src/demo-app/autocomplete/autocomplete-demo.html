@@ -6,7 +6,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <div>Reactive value: {{ stateCtrl.value | json }}</div>
     <div>Reactive dirty: {{ stateCtrl.dirty }}</div>
 
-    <md-input-container>
+    <md-input-container floatPlaceholder="never">
       <input mdInput placeholder="State" [mdAutocomplete]="reactiveAuto" [formControl]="stateCtrl">
     </md-input-container>
 
@@ -21,12 +21,14 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
   </md-card>
 
   <md-card>
-    <div>Template-driven value (currentState): {{ currentState }}</div>
-    <div>Template-driven dirty: {{ modelDir.dirty }}</div>
 
-    <md-input-container>
-      <input mdInput placeholder="State" [mdAutocomplete]="tdAuto" [(ngModel)]="currentState" #modelDir="ngModel"
-        (ngModelChange)="this.tdStates = filterStates(currentState)" [disabled]="tdDisabled">
+    <div>Template-driven value (currentState): {{ currentState }}</div>
+    <div>Template-driven dirty: {{ modelDir?.dirty }}</div>
+
+    <!-- Added an ngIf below to test that autocomplete works with ngIf -->
+    <md-input-container *ngIf="true">
+      <input mdInput placeholder="State" [mdAutocomplete]="tdAuto" [(ngModel)]="currentState"
+        (ngModelChange)="tdStates = filterStates(currentState)" [disabled]="tdDisabled">
     </md-input-container>
 
     <md-card-actions>

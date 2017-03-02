@@ -94,7 +94,7 @@ $mat-input-underline-disabled-background-image:
   // Once the autofill is committed, a change event happen and the regular md-input-container
   // classes take over to fulfill this behaviour.
   // Assumes the autofill is non-empty.
-  &:-webkit-autofill + .mat-input-placeholder.mat-float {
+  &:-webkit-autofill + .mat-input-placeholder-wrapper .mat-float {
     @include mat-input-placeholder-floating;
   }
 
@@ -203,13 +203,10 @@ $mat-input-underline-disabled-background-image:
     width: 100%;
     transform-origin: top;
     opacity: 0;
-    transform: scaleY(0);
-    transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
-                opacity $swift-ease-out-duration $swift-ease-out-timing-function;
+    transition: opacity $swift-ease-out-duration $swift-ease-out-timing-function;
 
     .mat-focused & {
       opacity: 1;
-      transform: scaleY(1);
     }
   }
 }
