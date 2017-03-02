@@ -5,6 +5,7 @@ import {By} from '@angular/platform-browser';
 import {MdCheckbox, MdCheckboxChange, MdCheckboxModule} from './checkbox';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {FakeViewportRuler} from '../core/overlay/position/fake-viewport-ruler';
+import {dispatchFakeEvent} from '../core/testing/dispatch-events';
 
 
 describe('MdCheckbox', () => {
@@ -156,12 +157,12 @@ describe('MdCheckbox', () => {
       expect(checkboxInstance.checked).toBe(false);
       expect(checkboxInstance.indeterminate).toBe(true);
 
-      checkboxInstance._onInteractionEvent(<Event>{stopPropagation: () => {}});
+      checkboxInstance._onInputClick(<Event>{stopPropagation: () => {}});
 
       expect(checkboxInstance.checked).toBe(true);
       expect(checkboxInstance.indeterminate).toBe(false);
 
-      checkboxInstance._onInteractionEvent(<Event>{stopPropagation: () => {}});
+      checkboxInstance._onInputClick(<Event>{stopPropagation: () => {}});
       fixture.detectChanges();
 
       expect(checkboxInstance.checked).toBe(false);
@@ -188,17 +189,6 @@ describe('MdCheckbox', () => {
       expect(checkboxNativeElement.classList).not.toContain('mat-checkbox-disabled');
       expect(inputElement.tabIndex).toBe(0);
       expect(inputElement.disabled).toBe(false);
-    });
-
-    it('should not have a ripple when disabled', () => {
-      let rippleElement = checkboxNativeElement.querySelector('[md-ripple]');
-      expect(rippleElement).toBeTruthy('Expected an enabled checkbox to have a ripple');
-
-      testComponent.isDisabled = true;
-      fixture.detectChanges();
-
-      rippleElement = checkboxNativeElement.querySelector('[md-ripple]');
-      expect(rippleElement).toBeFalsy('Expected a disabled checkbox not to have a ripple');
     });
 
     it('should not toggle `checked` state upon interation while disabled', () => {
@@ -324,6 +314,44 @@ describe('MdCheckbox', () => {
       expect(document.activeElement).toBe(inputElement);
     });
 
+    describe('ripple elements', () => {
+
+      it('should show ripples on label mousedown', () => {
+        expect(checkboxNativeElement.querySelector('.mat-ripple-element')).toBeFalsy();
+
+        dispatchFakeEvent(labelElement, 'mousedown');
+        dispatchFakeEvent(labelElement, 'mouseup');
+
+        expect(checkboxNativeElement.querySelectorAll('.mat-ripple-element').length).toBe(1);
+      });
+
+      it('should not have a ripple when disabled', () => {
+        let rippleElement = checkboxNativeElement.querySelector('[md-ripple]');
+        expect(rippleElement).toBeTruthy('Expected an enabled checkbox to have a ripple');
+
+        testComponent.isDisabled = true;
+        fixture.detectChanges();
+
+        rippleElement = checkboxNativeElement.querySelector('[md-ripple]');
+        expect(rippleElement).toBeFalsy('Expected a disabled checkbox not to have a ripple');
+      });
+
+      it('should remove ripple if mdRippleDisabled input is set', async(() => {
+        testComponent.disableRipple = true;
+        fixture.detectChanges();
+
+        expect(checkboxNativeElement.querySelectorAll('[md-ripple]').length)
+          .toBe(0, 'Expect no [md-ripple] in checkbox');
+
+        testComponent.disableRipple = false;
+        fixture.detectChanges();
+
+        expect(checkboxNativeElement.querySelectorAll('[md-ripple]').length)
+          .toBe(1, 'Expect [md-ripple] in checkbox');
+      }));
+
+    });
+
     describe('color behaviour', () => {
       it('should apply class based on color attribute', () => {
         testComponent.checkboxColor = 'primary';
@@ -388,7 +416,7 @@ describe('MdCheckbox', () => {
         testComponent.isIndeterminate = true;
         fixture.detectChanges();
 
-        testComponent.isChecked = true;
+        inputElement.click();
         fixture.detectChanges();
 
         expect(checkboxNativeElement.classList).not.toContain(
@@ -544,19 +572,6 @@ describe('MdCheckbox', () => {
       expect(inputElement.tabIndex).toBe(13);
     });
 
-    it('should remove ripple if mdRippleDisabled input is set', async(() => {
-      testComponent.disableRipple = true;
-      fixture.detectChanges();
-
-      expect(checkboxNativeElement.querySelectorAll('[md-ripple]').length)
-        .toBe(0, 'Expect no [md-ripple] in checkbox');
-
-      testComponent.disableRipple = false;
-      fixture.detectChanges();
-
-      expect(checkboxNativeElement.querySelectorAll('[md-ripple]').length)
-        .toBe(1, 'Expect [md-ripple] in checkbox');
-    }));
   });
 
   describe('with multiple checkboxes', () => {
@@ -678,6 +693,7 @@ describe('MdCheckbox', () => {
         [(indeterminate)]="isIndeterminate"
         [disabled]="isDisabled"
         [color]="checkboxColor"
+        [disableRipple]="disableRipple"
         (change)="changeCount = changeCount + 1"
         (click)="onCheckboxClick($event)"
         (change)="onCheckboxChange($event)">
@@ -691,6 +707,7 @@ class SingleCheckbox {
   isRequired: boolean = false;
   isIndeterminate: boolean = false;
   isDisabled: boolean = false;
+  disableRipple: boolean = false;
   parentElementClicked: boolean = false;
   parentElementKeyedUp: boolean = false;
   lastKeydownEvent: Event = null;
@@ -728,14 +745,12 @@ class MultipleCheckboxes { }
   template: `
     <md-checkbox
         [tabIndex]="customTabIndex"
-        [disabled]="isDisabled"
-        [disableRipple]="disableRipple">
+        [disabled]="isDisabled">
     </md-checkbox>`,
 })
 class CheckboxWithTabIndex {
   customTabIndex: number = 7;
   isDisabled: boolean = false;
-  disableRipple: boolean = false;
 }
 
 /** Simple test component with an aria-label set. */
