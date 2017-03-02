@@ -27,13 +27,14 @@ describe('fullscreen', () => {
 
   /** Expects the overlay container to be inside of the body element. */
   function expectOverlayInBody() {
-    expect(browser.isElementPresent(by.css('body > .cdk-overlay-container'))).toBe(true);
+    expect(browser.isElementPresent(by.css('body > .cdk-overlay-container')))
+      .toBe(true, 'Expected the overlay container to be inside of the body.');
   }
 
   /** Expects the overlay container to be in fullscreen mode. */
   function expectOverlayInFullscreen() {
     expect(browser.isElementPresent(by.css('#fullscreen-pane > .cdk-overlay-container')))
-      .toBe(true);
+      .toBe(true, 'Expected the overlay container to be in fullscreen mode.');
   }
 
 });
