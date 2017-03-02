@@ -41,7 +41,6 @@ export class ScrollDispatcher {
     const scrollSubscription = scrollable.elementScrolled().subscribe(() => this._notify());
 
     this.scrollableReferences.set(scrollable, scrollSubscription);
-    this._addGlobalSubscription();
   }
 
   /**
@@ -52,7 +51,6 @@ export class ScrollDispatcher {
     if (this.scrollableReferences.has(scrollable)) {
       this.scrollableReferences.get(scrollable).unsubscribe();
       this.scrollableReferences.delete(scrollable);
-      this._removeGlobalSubscription();
     }
   }
 
@@ -69,13 +67,23 @@ export class ScrollDispatcher {
       this._scrolled.asObservable();
 
     this._scrolledCount++;
-    this._addGlobalSubscription();
+
+    if (!this._globalSubscription) {
+      this._globalSubscription = Observable.merge(
+        Observable.fromEvent(window.document, 'scroll'),
+        Observable.fromEvent(window, 'resize')
+      ).subscribe(() => this._notify());
+    }
 
     // Note that we need to do the subscribing from here, in order to be able to remove
     // the global event listeners once there are no more subscriptions.
     return observable.subscribe(callback).add(() => {
       this._scrolledCount--;
-      this._removeGlobalSubscription();
+
+      if (this._globalSubscription && !this.scrollableReferences.size && !this._scrolledCount) {
+        this._globalSubscription.unsubscribe();
+        this._globalSubscription = null;
+      }
     });
   }
 
@@ -107,24 +115,6 @@ export class ScrollDispatcher {
   /** Sends a notification that a scroll event has been fired. */
   _notify() {
     this._scrolled.next();
-  }
-
-  /** Sets up the global event listeners, if they're not active already. */
-  private _addGlobalSubscription(): void {
-    if (!this._globalSubscription) {
-      this._globalSubscription = Observable.merge(
-        Observable.fromEvent(window.document, 'scroll'),
-        Observable.fromEvent(window, 'resize')
-      ).subscribe(() => this._notify());
-    }
-  }
-
-  /** Removes the global event listeners, if there are no more subscriptions listening to them. */
-  private _removeGlobalSubscription(): void {
-    if (this._globalSubscription && !this.scrollableReferences.size && !this._scrolledCount) {
-      this._globalSubscription.unsubscribe();
-      this._globalSubscription = null;
-    }
   }
 }
 

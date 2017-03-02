@@ -98,21 +98,6 @@ describe('Scroll Dispatcher', () => {
       scroll = s;
     }));
 
-    it('should lazily add global listeners as Scrollable instances are added and removed', () => {
-      expect(scroll._globalSubscription).toBeNull('Expected no global listeners on init.');
-
-      let fixture = TestBed.createComponent(ScrollingComponent);
-      fixture.detectChanges();
-
-      expect(scroll._globalSubscription).toBeTruthy(
-          'Expected global listeners after a scrollable is added.');
-
-      fixture.destroy();
-
-      expect(scroll._globalSubscription).toBeNull(
-          'Expected global listeners to be removed after scrollable is destroyed.');
-    });
-
     it('should lazily add global listeners as service subscriptions are added and removed', () => {
       expect(scroll._globalSubscription).toBeNull('Expected no global listeners on init.');
 
