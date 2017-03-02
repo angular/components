@@ -1,8 +1,12 @@
-import {AfterContentInit, Directive, ElementRef, forwardRef, Input, Renderer} from '@angular/core';
+import {
+  AfterContentInit, Directive, ElementRef, forwardRef, Input, OnDestroy,
+  Renderer
+} from '@angular/core';
 import {MdDatepicker} from './datepicker';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {SimpleDate} from '../core/datetime/simple-date';
 import {CalendarLocale} from '../core/datetime/calendar-locale';
+import {Subscription} from 'rxjs';
 
 
 export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -21,7 +25,7 @@ export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
     '(blur)': '_onTouched()',
   }
 })
-export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor {
+export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor, OnDestroy {
   @Input()
   set mdDatepicker(value: MdDatepicker) {
     if (value) {
@@ -30,29 +34,6 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
     }
   }
   private _datepicker: MdDatepicker;
-
-  @Input()
-  set matDatepicker(value: MdDatepicker) { this.mdDatepicker = value; }
-
-  _onChange = (value: any) => {};
-
-  _onTouched = () => {};
-
-  constructor(private _elementRef: ElementRef, private _renderer: Renderer,
-              private _locale: CalendarLocale) {}
-
-  ngAfterContentInit() {
-    if (this._datepicker) {
-      this._datepicker.selectedChanged.subscribe((selected: SimpleDate) => {
-        this.value = selected;
-        this._onChange(selected);
-      });
-    }
-  }
-
-  getPopupConnectionElementRef(): ElementRef {
-    return this._elementRef;
-  }
 
   @Input()
   get value(): SimpleDate {
@@ -64,6 +45,38 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
     this._renderer.setElementProperty(this._elementRef.nativeElement, 'value', stringValue);
   }
   private _value: SimpleDate;
+
+  @Input()
+  set matDatepicker(value: MdDatepicker) { this.mdDatepicker = value; }
+
+  _onChange = (value: any) => {};
+
+  _onTouched = () => {};
+
+  private _datepickerSubscription: Subscription;
+
+  constructor(private _elementRef: ElementRef, private _renderer: Renderer,
+              private _locale: CalendarLocale) {}
+
+  ngAfterContentInit() {
+    if (this._datepicker) {
+      this._datepickerSubscription =
+          this._datepicker.selectedChanged.subscribe((selected: SimpleDate) => {
+            this.value = selected;
+            this._onChange(selected);
+          });
+    }
+  }
+
+  ngOnDestroy() {
+    if (this._datepickerSubscription) {
+      this._datepickerSubscription.unsubscribe();
+    }
+  }
+
+  getPopupConnectionElementRef(): ElementRef {
+    return this._elementRef;
+  }
 
   // Implemented as part of ControlValueAccessor
   writeValue(value: SimpleDate): void {
