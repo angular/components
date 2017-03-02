@@ -1,12 +1,12 @@
 # Developer guide: getting your environment set up
 
 1. Make sure you have `node` installed with a version at _least_ 5.5.0.
-2. Run `npm install -g gulp` to install gulp.
+2. Run `npm install -g yarn gulp` to install yarn and gulp.
 3. Fork the `angular/material2` repo. 
 4. Clone your fork. 
    Recommendation: name your git remotes `upstream` for `angular/material2`
    and `<your-username>` for your fork. Also see the [team git shortcuts](https://github.com/angular/material2/wiki/Team-git----bash-shortcuts).
-5. From the root of the project, run `npm install`.
+5. From the root of the project, run `yarn`.
 
 
 To build the components in dev mode, run `gulp build:components`.
