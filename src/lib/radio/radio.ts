@@ -283,7 +283,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
     '[class.mat-radio-checked]': 'checked',
     '[class.mat-radio-disabled]': 'disabled',
     '[attr.id]': 'id',
-  }
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
@@ -304,39 +304,6 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
   @Input()
   get disableRipple(): boolean { return this._disableRipple; }
   set disableRipple(value) { this._disableRipple = coerceBooleanProperty(value); }
-
-  /**
-   * Event emitted when the checked state of this radio button changes.
-   * Change events are only emitted when the value changes due to user interaction with
-   * the radio button (the same behavior as `<input type-"radio">`).
-   */
-  @Output()
-  change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
-
-  /** The native `<input type=radio>` element */
-  @ViewChild('input') _inputElement: ElementRef;
-
-  constructor(@Optional() radioGroup: MdRadioGroup,
-              private _elementRef: ElementRef,
-              private _renderer: Renderer,
-              private _changeDetector: ChangeDetectorRef,
-              public radioDispatcher: UniqueSelectionDispatcher) {
-    // Assertions. Ideally these should be stripped out by the compiler.
-    // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
-
-    this.radioGroup = radioGroup;
-
-    radioDispatcher.listen((id: string, name: string) => {
-      if (id != this.id && name == this.name) {
-        this.checked = false;
-      }
-    });
-  }
-
-  /** ID of the native input element inside `<md-radio-button>` */
-  get inputId(): string {
-    return `${this.id}-input`;
-  }
 
   /** Whether this radio button is checked. */
   @Input()
