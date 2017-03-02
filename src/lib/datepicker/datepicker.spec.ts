@@ -6,6 +6,7 @@ import {MdDatepickerInput} from './datepicker-input';
 import {SimpleDate} from '../core/datetime/simple-date';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
+import {dispatchFakeEvent} from '../core/testing/dispatch-events';
 
 
 describe('MdDatepicker', () => {
@@ -124,9 +125,9 @@ describe('MdDatepicker', () => {
       testComponent = fixture.componentInstance;
     });
 
-    //it('should throw when opened with no registered inputs', () => {
-    //  expect(() => testComponent.datepicker.openStandardUi()).toThrow();
-    //});
+    it('should throw when opened with no registered inputs', () => {
+      expect(() => testComponent.datepicker.openStandardUi()).toThrow();
+    });
   });
 
   describe('datepicker with startAt', () => {
@@ -272,13 +273,6 @@ function detectModelChanges(fixture: ComponentFixture<any>) {
   fixture.detectChanges();
   tick();
   fixture.detectChanges();
-}
-
-// TODO(mmalerba): Switch to shared testing utils
-function dispatchFakeEvent(el: Element, type: string) {
-  let event  = document.createEvent('Event');
-  event.initEvent(type, true, true);
-  el.dispatchEvent(event);
 }
 
 
