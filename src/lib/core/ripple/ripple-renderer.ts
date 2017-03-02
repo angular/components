@@ -101,15 +101,13 @@ export class RippleRenderer {
     // Exposed reference to the ripple that will be returned.
     let rippleRef = new RippleRef(this, ripple, config);
 
-    // Wait for the ripple element to be completely faded in.
-    // Once it's faded in, the ripple can be hidden immediately if the mouse is released.
-    this.runTimeoutOutsideZone(() => {
-      if (config.persistent || this._isMousedown) {
-        this._activeRipples.add(rippleRef);
-      } else {
-        rippleRef.fadeOut();
-      }
-    }, duration);
+    if (config.persistent || this._isMousedown) {
+      this._activeRipples.add(rippleRef);
+    } else {
+      // Wait for the ripple element to be completely faded in.
+      // Once it's faded in, the ripple can be hidden immediately if the mouse is released.
+      this.runTimeoutOutsideZone(() => rippleRef.fadeOut(), duration);
+    }
 
     return rippleRef;
   }
