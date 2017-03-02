@@ -302,7 +302,7 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
   private _disableRipple: boolean;
 
   /** The child ripple instance. */
-  @ViewChild(MdRipple) private _ripple: MdRipple;
+  @ViewChild(MdRipple) _ripple: MdRipple;
 
   /** Stream of focus event from the focus origin monitor. */
   private _focusOriginMonitorSubscription: Subscription;
