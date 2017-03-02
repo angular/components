@@ -31,6 +31,29 @@ $mat-menu-vertical-padding: 8px !default;
   position: relative;
 }
 
+.mat-menu-input-item{
+  // These margins work well for most of the input elements
+  margin: 16px 16px;
+  // The select box needs a little padding on top to make room for the floating placeholder
+  &.mat-select{
+    padding-top: 8px;
+  }
+  // Flex box stretches the input container across the menu for us and we don't need the margins on top or bottom
+  &.mat-input-container{
+    display:flex;
+    margin: 0 16px;
+  }
+  // This stacks our radios vertically
+  &.mat-radio-group{
+    display: inline-flex;
+    flex-direction: column;
+  }
+  // mat-slide-toggle needs more CSS specifity points to override margins from another class
+  &.mat-slide-toggle{
+    margin: 16px 16px;
+  }
+}
+
 button.mat-menu-item {
   width: 100%;
 }

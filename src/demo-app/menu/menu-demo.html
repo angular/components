@@ -112,4 +112,56 @@
       </button>
     </md-menu>
   </div>
+  <div class="menu-section">
+    <p>Menu as a form to take user input</p>
+
+    <md-toolbar>
+      <button md-icon-button [mdMenuTriggerFor]="formMenu" aria-label="Open basic menu">
+        <md-icon>more_vert</md-icon>
+      </button>
+    </md-toolbar>
+
+    <md-menu #formMenu="mdMenu">
+
+      <md-input-container md-menu-intput-item>
+        <input mdInput [(ngModel)]="user.email" placeholder="Email Address">
+      </md-input-container>
+
+      <md-checkbox md-menu-intput-item
+                   [(ngModel)]="user.subscribe"
+                   name="subscibe"
+                   color="primary"
+                   align="start">
+        Subscribe to our newsletter?
+      </md-checkbox>
+
+      <md-radio-group md-menu-intput-item name="favorite_season" [(ngModel)]="user.favoriteSeason">
+        Favorite Season?
+        <md-radio-button *ngFor="let season of seasonOptions" name="more_options" [value]="season">
+          {{season}}
+        </md-radio-button>
+      </md-radio-group>
+
+      <md-select md-menu-intput-item placeholder="Drink" [(ngModel)]="user.favoriteDrink" #drinkControl="ngModel">
+        <md-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drink.disabled">
+          {{ drink.viewValue }}
+        </md-option>
+      </md-select>
+
+      <md-slide-toggle md-menu-intput-item color="primary" [(ngModel)]="user.isVegetarian">
+        Vegetarian
+      </md-slide-toggle>
+      <div md-menu-intput-item>
+        Age
+        <md-slider [(ngModel)]="user.age" #slider2></md-slider>
+        {{slider2.value}}
+      </div>
+
+      <button md-menu-item>
+        Register
+      </button>
+    </md-menu>
+    <p>User data from menu form</p>
+    <pre>{{user | json}}</pre>
+  </div>
 </div>
