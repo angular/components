@@ -15,7 +15,7 @@ import {ViewportRuler} from '../overlay/position/viewport-ruler';
 import {RippleRef} from './ripple-ref';
 
 /** OpaqueToken that can be used to globally disable all ripples. Except programmatic ones. */
-export const MD_RIPPLES_DISABLE = new OpaqueToken('md-ripples-disable');
+export const MD_DISABLE_RIPPLES = new OpaqueToken('md-disable-ripples');
 
 @Directive({
   selector: '[md-ripple], [mat-ripple]',
@@ -71,7 +71,7 @@ export class MdRipple implements OnChanges, OnDestroy {
   private _rippleRenderer: RippleRenderer;
 
   constructor(elementRef: ElementRef, ngZone: NgZone, ruler: ViewportRuler,
-              @Optional() @Inject(MD_RIPPLES_DISABLE) private _forceDisableRipples: boolean) {
+              @Optional() @Inject(MD_DISABLE_RIPPLES) private _forceDisableRipples: boolean) {
 
     this._rippleRenderer = new RippleRenderer(elementRef, ngZone, ruler);
   }

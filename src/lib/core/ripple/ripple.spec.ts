@@ -1,6 +1,6 @@
 import {TestBed, ComponentFixture, fakeAsync, tick, inject} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
-import {MdRipple, MdRippleModule, MD_RIPPLES_DISABLE, RippleState} from './index';
+import {MdRipple, MdRippleModule, MD_DISABLE_RIPPLES, RippleState} from './index';
 import {ViewportRuler} from '../overlay/position/viewport-ruler';
 import {RIPPLE_FADE_OUT_DURATION, RIPPLE_FADE_IN_DURATION} from './ripple-renderer';
 import {dispatchMouseEvent} from '../testing/dispatch-events';
@@ -356,7 +356,7 @@ describe('MdRipple', () => {
       TestBed.configureTestingModule({
         imports: [MdRippleModule],
         declarations: [BasicRippleContainer],
-        providers: [{ provide: MD_RIPPLES_DISABLE, useValue: true }]
+        providers: [{ provide: MD_DISABLE_RIPPLES, useValue: true }]
       });
     });
 
