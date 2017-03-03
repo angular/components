@@ -9,7 +9,5 @@ import {SimpleDate} from '@angular/material';
   styleUrls: ['datepicker-demo.css'],
 })
 export class DatepickerDemo {
-  startAt = new SimpleDate(2017, 0, 1);
-  date = SimpleDate.today();
-  selected: SimpleDate;
+  date: SimpleDate;
 }
