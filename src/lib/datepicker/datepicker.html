@@ -1,6 +1,8 @@
 <template>
   <md-calendar
       [class.mat-datepicker-touch]="touchUi"
-      [class.mat-datepicker-non-touch]="!touchUi">
+      [class.mat-datepicker-non-touch]="!touchUi"
+      [startAt]="startAt"
+      [(selected)]="_selected">
   </md-calendar>
 </template>
