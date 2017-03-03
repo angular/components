@@ -55,10 +55,10 @@ export class MdDatepicker implements OnDestroy {
 
   @Output() selectedChanged = new EventEmitter<SimpleDate>();
 
-  get selected(): SimpleDate {
+  get _selected(): SimpleDate {
     return this._datepickerInput ? this._datepickerInput.value : null;
   }
-  set selected(value: SimpleDate) {
+  set _selected(value: SimpleDate) {
     this.selectedChanged.emit(value);
     this.close();
   }
