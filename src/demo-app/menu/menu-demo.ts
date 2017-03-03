@@ -37,7 +37,6 @@ export class MenuDemo {
     {value: 'water-2', viewValue: 'Water'},
     {value: 'pepper-3', viewValue: 'Dr. Pepper'},
   ];
-
   // Radio option in menu form
   seasonOptions = [
     'Winter',
