@@ -1,6 +1,6 @@
 import {ElementRef, NgZone} from '@angular/core';
 import {ViewportRuler} from '../overlay/position/viewport-ruler';
-import {RippleRef} from './ripple-ref';
+import {RippleRef, RippleState} from './ripple-ref';
 
 /** Fade-in duration for the ripples. Can be modified with the speedFactor option. */
 export const RIPPLE_FADE_IN_DURATION = 450;
@@ -101,13 +101,15 @@ export class RippleRenderer {
     // Exposed reference to the ripple that will be returned.
     let rippleRef = new RippleRef(this, ripple, config);
 
+    rippleRef.state = RippleState.FADING_IN;
+
     // Add the ripple reference to the list of all active ripples.
     this._activeRipples.add(rippleRef);
 
     // Wait for the ripple element to be completely faded in.
     // Once it's faded in, the ripple can be hidden immediately if the mouse is released.
     this.runTimeoutOutsideZone(() => {
-      rippleRef.fadedIn = true;
+      rippleRef.state = RippleState.VISIBLE;
 
       if (!config.persistent && !this._isMousedown) {
         rippleRef.fadeOut();
@@ -118,19 +120,22 @@ export class RippleRenderer {
   }
 
   /** Fades out a ripple reference. */
-  fadeOutRipple(ripple: RippleRef) {
+  fadeOutRipple(rippleRef: RippleRef) {
     // For ripples that are not active anymore, don't re-un the fade-out animation.
-    if (!this._activeRipples.delete(ripple)) {
+    if (!this._activeRipples.delete(rippleRef)) {
       return;
     }
 
-    let rippleEl = ripple.element;
+    let rippleEl = rippleRef.element;
 
     rippleEl.style.transitionDuration = `${RIPPLE_FADE_OUT_DURATION}ms`;
     rippleEl.style.opacity = '0';
 
+    rippleRef.state = RippleState.FADING_OUT;
+
     // Once the ripple faded out, the ripple can be safely removed from the DOM.
     this.runTimeoutOutsideZone(() => {
+      rippleRef.state = RippleState.HIDDEN;
       rippleEl.parentNode.removeChild(rippleEl);
     }, RIPPLE_FADE_OUT_DURATION);
   }
@@ -169,9 +174,9 @@ export class RippleRenderer {
   private onMouseup() {
     this._isMousedown = false;
 
-    // Fade-out all ripples that are completely faded-in and not persistent.
+    // Fade-out all ripples that are completely visible and not persistent.
     this._activeRipples.forEach(ripple => {
-      if (!ripple.config.persistent && ripple.fadedIn) {
+      if (!ripple.config.persistent && ripple.state === RippleState.VISIBLE) {
         ripple.fadeOut();
       }
     });

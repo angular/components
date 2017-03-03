@@ -1,6 +1,6 @@
 import {TestBed, ComponentFixture, fakeAsync, tick, inject} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
-import {MdRipple, MdRippleModule} from './index';
+import {MdRipple, MdRippleModule, RippleState} from './index';
 import {ViewportRuler} from '../overlay/position/viewport-ruler';
 import {RIPPLE_FADE_OUT_DURATION, RIPPLE_FADE_IN_DURATION} from './ripple-renderer';
 import {dispatchMouseEvent} from '../testing/dispatch-events';
@@ -319,6 +319,30 @@ describe('MdRipple', () => {
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
         .toBe(0, 'Expected no ripples to be active after calling fadeOutAll.');
     }));
+
+   it('should properly set ripple states', fakeAsync(() => {
+     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+
+     let rippleRef = rippleDirective.launch(0, 0, { persistent: true });
+
+     expect(rippleRef.state).toBe(RippleState.FADING_IN);
+     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
+
+     tick(RIPPLE_FADE_IN_DURATION);
+
+     expect(rippleRef.state).toBe(RippleState.VISIBLE);
+     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
+
+     rippleRef.fadeOut();
+
+     expect(rippleRef.state).toBe(RippleState.FADING_OUT);
+     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
+
+     tick(RIPPLE_FADE_OUT_DURATION);
+
+     expect(rippleRef.state).toBe(RippleState.HIDDEN);
+     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+   }));
 
   });
 
