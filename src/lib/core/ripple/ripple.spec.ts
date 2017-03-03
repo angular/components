@@ -270,6 +270,25 @@ describe('MdRipple', () => {
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
     }));
 
+    it('should be able to remove ripples that are not done animating in', fakeAsync(() => {
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+          .toBe(0, 'Expected no ripples on init.');
+
+      rippleDirective.launch(0, 0, { persistent: true });
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+          .toBe(1, 'Expected one ripple after launch.');
+
+      tick(RIPPLE_FADE_IN_DURATION / 2);
+
+      rippleDirective.fadeOutAll();
+
+      tick(RIPPLE_FADE_OUT_DURATION);
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+          .toBe(0, 'Expected no ripples after fadeOutAll has been called.');
+    }));
+
   });
 
   describe('configuring behavior', () => {
