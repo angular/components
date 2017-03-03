@@ -48,7 +48,7 @@ $mat-menu-vertical-padding: 8px !default;
     display: inline-flex;
     flex-direction: column;
   }
-  // mat-slide-toggle needs more CSS specifity points to override margins from another class
+  // mat-slide-toggle needs more CSS specifity points to override margins from another classgit
   &.mat-slide-toggle {
     margin: 16px;
   }
