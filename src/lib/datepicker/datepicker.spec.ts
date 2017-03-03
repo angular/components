@@ -203,6 +203,17 @@ describe('MdDatepicker', () => {
       expect(inputEl.classList).toContain('ng-dirty');
     }));
 
+    it('should not mark dirty after model change', fakeAsync(() => {
+      let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+
+      expect(inputEl.classList).toContain('ng-pristine');
+
+      testComponent.selected = new SimpleDate(2017, 0, 1);
+      detectModelChanges(fixture);
+
+      expect(inputEl.classList).toContain('ng-pristine');
+    }));
+
     it('should mark input touched on blur', () => {
       let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
