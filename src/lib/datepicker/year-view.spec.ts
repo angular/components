@@ -1,16 +1,23 @@
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {MdDatepickerModule} from './index';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdYearView} from './year-view';
 import {SimpleDate} from '../core/datetime/simple-date';
+import {MdCalendarTable} from './calendar-table';
+import {DatetimeModule} from '../core/datetime/index';
 
 
 describe('MdYearView', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdDatepickerModule],
+      imports: [
+        DatetimeModule,
+      ],
       declarations: [
+        MdCalendarTable,
+        MdYearView,
+
+        // Test components.
         StandardYearView,
       ],
     });
@@ -44,7 +51,7 @@ describe('MdYearView', () => {
 
     it('shows selected month if in same year', () => {
       let selectedEl = yearViewNativeElement.querySelector('.mat-calendar-table-selected');
-      expect(selectedEl.innerHTML.trim()).toBe('Mar');
+      expect(selectedEl.innerHTML.trim()).toBe('MAR');
     });
 
     it('does not show selected month if in different year', () => {
@@ -61,7 +68,7 @@ describe('MdYearView', () => {
       fixture.detectChanges();
 
       let selectedEl = yearViewNativeElement.querySelector('.mat-calendar-table-selected');
-      expect(selectedEl.innerHTML.trim()).toBe('Dec');
+      expect(selectedEl.innerHTML.trim()).toBe('DEC');
     });
   });
 });

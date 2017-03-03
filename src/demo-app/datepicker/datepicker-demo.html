@@ -1,11 +1,6 @@
 <h1>Work in progress, not ready for use.</h1>
 
-<md-calendar [startAt]="startAt" [(selected)]="selected"></md-calendar>
-
-<br>
-<div>{{selected?.toNativeDate()}}</div>
-
-<input [mdDatepicker]="dp">
+<input [mdDatepicker]="dp" [(ngModel)]="date">
 <button (click)="dp.openStandardUi()">open</button>
 <button (click)="dp.openTouchUi()">open (mobile)</button>
 <md-datepicker #dp></md-datepicker>

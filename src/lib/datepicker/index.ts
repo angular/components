@@ -20,8 +20,23 @@ export * from './year-view';
 
 
 @NgModule({
-  imports: [CommonModule, DatetimeModule, MdDialogModule, OverlayModule],
-  exports: [MdCalendar, MdCalendarTable, MdDatepicker, MdDatepickerInput, MdMonthView, MdYearView],
-  declarations: [MdCalendar, MdCalendarTable, MdDatepicker, MdDatepickerInput, MdMonthView, MdYearView],
+  imports: [
+    CommonModule,
+    DatetimeModule,
+    MdDialogModule,
+    OverlayModule,
+  ],
+  exports: [
+    MdDatepicker,
+    MdDatepickerInput,
+  ],
+  declarations: [
+    MdCalendar,
+    MdCalendarTable,
+    MdDatepicker,
+    MdDatepickerInput,
+    MdMonthView,
+    MdYearView,
+  ],
 })
 export class MdDatepickerModule {}
