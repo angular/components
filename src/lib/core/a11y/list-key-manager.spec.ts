@@ -240,7 +240,7 @@ describe('Key managers', () => {
         expect(TAB_EVENT.defaultPrevented).toBe(false);
       });
 
-      it('it should activate the first item when pressing down on a clean key manager', () => {
+      it('should activate the first item when pressing down on a clean key manager', () => {
         keyManager = new ListKeyManager<FakeFocusable>(itemList);
 
         expect(keyManager.activeItemIndex).toBeNull('Expected active index to default to null.');
