@@ -1573,8 +1573,6 @@ class BasicSelectOnPush {
     { value: 'tacos-2', viewValue: 'Tacos' },
   ];
   control = new FormControl();
-
-  @ViewChild(MdSelect) select: MdSelect;
 }
 
 @Component({
@@ -1595,8 +1593,6 @@ class BasicSelectOnPushPreselected {
     { value: 'tacos-2', viewValue: 'Tacos' },
   ];
   control = new FormControl('pizza-1');
-
-  @ViewChild(MdSelect) select: MdSelect;
 }
 
 @Component({
