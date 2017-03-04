@@ -179,7 +179,7 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['open']) {
-      changes['open'].currentValue ? this._attachOverlay() : this._detachOverlay();
+      this.open ? this._attachOverlay() : this._detachOverlay();
     }
   }
 
