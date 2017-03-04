@@ -479,7 +479,7 @@ class CustomMenuPanel implements MdMenuPanel {
   @Output() close = new EventEmitter<void>();
   focusFirstItem = () => {};
   setPositionClasses = () => {};
-  emitCloseEvent() {
+  _emitCloseEvent() {
     this.close.emit();
   }
 }

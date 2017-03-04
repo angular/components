@@ -143,7 +143,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    */
   private _subscribeToBackdrop(): void {
     this._backdropSubscription = this._overlayRef.backdropClick().subscribe(() => {
-      this.menu.emitCloseEvent();
+      this.menu._emitCloseEvent();
     });
   }
 

@@ -64,7 +64,7 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   ngAfterContentInit() {
     this._keyManager = new FocusKeyManager(this.items).withWrap();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => {
-      this.emitCloseEvent();
+      this._emitCloseEvent();
     });
   }
 
@@ -102,7 +102,7 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
    * This emits a close event to which the trigger is subscribed. When emitted, the
    * trigger will close the menu.
    */
-  emitCloseEvent(): void {
+  _emitCloseEvent(): void {
     this.close.emit();
   }
 
