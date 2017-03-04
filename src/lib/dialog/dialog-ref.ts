@@ -53,13 +53,11 @@ export class MdDialogRef<T> {
   }
 
   /**
-   * Updates the dialog's dimensions.
-   * @param width New width of the dialog.
-   * @param height New height of the dialog.
-   * @param position New position of the dialog.
+   * Updates the dialog's position.
+   * @param position New dialog position.
    */
-  updateDimensions(width?: string, height?: string, position?: DialogPosition): void {
-    let strategy = this._overlayRef.getState().positionStrategy as GlobalPositionStrategy;
+  updatePosition(position?: DialogPosition): this {
+    let strategy = this._getPositionStrategy();
 
     if (position && (position.left || position.right)) {
       position.left ? strategy.left(position.left) : strategy.right(position.right);
@@ -73,7 +71,24 @@ export class MdDialogRef<T> {
       strategy.centerVertically();
     }
 
-    strategy.width(width).height(height);
     this._overlayRef.updatePosition();
+
+    return this;
+  }
+
+  /**
+   * Updates the dialog's width and height.
+   * @param width New width of the dialog.
+   * @param height New height of the dialog.
+   */
+  updateDimensions(width = 'auto', height = 'auto'): this {
+    this._getPositionStrategy().width(width).height(height);
+    this._overlayRef.updatePosition();
+    return this;
+  }
+
+  /** Fetches the position strategy object from the overlay ref. */
+  private _getPositionStrategy(): GlobalPositionStrategy {
+    return this._overlayRef.getState().positionStrategy as GlobalPositionStrategy;
   }
 }

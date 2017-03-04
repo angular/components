@@ -73,25 +73,26 @@ export class DialogDemo {
   <p><label>How much? <input #howMuch></label></p>
   <p> {{ data.message }} </p>
   <button type="button" (click)="dialogRef.close(howMuch.value)">Close dialog</button>
-  <button (click)="togglePosition()">Change position</button>`
+  <button (click)="togglePosition()">Change dimensions</button>`
 })
 export class JazzDialog {
-  private _positionToggle = false;
+  private _dimesionToggle = false;
 
   constructor(
     public dialogRef: MdDialogRef<JazzDialog>,
     @Inject(MD_DIALOG_DATA) public data: any) { }
 
   togglePosition(): void {
-    this._positionToggle = !this._positionToggle;
+    this._dimesionToggle = !this._dimesionToggle;
 
-    if (this._positionToggle) {
-      this.dialogRef.updateDimensions(null, null, {
-        top: '25px',
-        left: '25px'
-      });
+    if (this._dimesionToggle) {
+      this.dialogRef
+        .updateDimensions('500px', '500px')
+        .updatePosition({ top: '25px', left: '25px' });
     } else {
-      this.dialogRef.updateDimensions();
+      this.dialogRef
+        .updateDimensions()
+        .updatePosition();
     }
   }
 }

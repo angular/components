@@ -159,7 +159,9 @@ export class MdDialog {
       dialogRef.componentInstance = contentRef.instance;
     }
 
-    dialogRef.updateDimensions(config.width, config.height, config.position);
+    dialogRef
+      .updateDimensions(config.width, config.height)
+      .updatePosition(config.position);
 
     return dialogRef;
   }
