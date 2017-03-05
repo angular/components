@@ -100,6 +100,15 @@ describe('MdRadio', () => {
       }
     });
 
+    it('should set required to each individual radio when the group is requried', () => {
+      testComponent.isGroupRequired = true;
+      fixture.detectChanges();
+
+      for (let radio of radioInstances) {
+        expect(radio.required).toBe(true);
+      }
+    });
+
     it('should disable each individual radio when the group is disabled', () => {
       testComponent.isGroupDisabled = true;
       fixture.detectChanges();
@@ -587,6 +596,7 @@ describe('MdRadio', () => {
   <md-radio-group [disabled]="isGroupDisabled"
                   [labelPosition]="labelPos"
                   [value]="groupValue"
+                  [required]="isGroupRequired"
                   name="test-name">
     <md-radio-button value="fire" [disableRipple]="disableRipple">Charmander</md-radio-button>
     <md-radio-button value="water" [disableRipple]="disableRipple">Squirtle</md-radio-button>
@@ -597,6 +607,7 @@ describe('MdRadio', () => {
 class RadiosInsideRadioGroup {
   labelPos: 'before' | 'after';
   isGroupDisabled: boolean = false;
+  isGroupRequired: boolean = false;
   groupValue: string = null;
   disableRipple: boolean = false;
 }

@@ -79,6 +79,9 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
   /** Whether the `value` has been set to its initial value. */
   private _isInitialized: boolean = false;
 
+  /** Wheter this radio is required */
+  private _required: boolean;
+
   /** The method to be called in order to update ngModel */
   _controlValueAccessorChangeFn: (value: any) => void = (value) => {};
 
@@ -162,6 +165,18 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
     this._checkSelectedRadioButton();
   }
 
+  @Input()
+  get required(){
+    return this._required;
+  }
+
+  set required(required: boolean) {
+    this._required = required;
+
+    if (this._radios) {
+      this._radios.forEach(radio => radio.required = this.required);
+    }
+  }
   /**
    * Initialize properties once content children are available.
    * This allows us to propagate relevant attributes to associated buttons.
@@ -284,6 +299,9 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
 
   /** The 'aria-labelledby' attribute takes precedence as the element's text alternative. */
   @Input('aria-labelledby') ariaLabelledby: string;
+
+  /** Whether this radio is required. */
+  @Input('required') required: any = null;
 
   /** Whether this radio is disabled. */
   private _disabled: boolean;
@@ -435,6 +453,7 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
       this.checked = this.radioGroup.value === this._value;
       // Copy name from parent radio group
       this.name = this.radioGroup.name;
+      this.required = this.radioGroup.required ? 'true' : null;
     }
   }
 
