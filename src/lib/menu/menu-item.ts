@@ -11,14 +11,16 @@ import {Focusable} from '../core/a11y/focus-key-manager';
   host: {
     'role': 'menuitem',
     '[class.mat-menu-item]': 'true',
-    '(click)': '_checkDisabled($event)',
-    '[attr.tabindex]': '_tabindex'
+    '(click)': '_checkStatus($event)',
+    '[attr.tabindex]': '_tabindex',
+    '(onMenuClose)': '_closeParentMenu()'
   },
   templateUrl: 'menu-item.html',
   exportAs: 'mdMenuItem'
 })
 export class MdMenuItem implements Focusable {
   _disabled: boolean;
+  private _childMenuOpen: boolean = false;
 
   constructor(private _renderer: Renderer, private _elementRef: ElementRef) {}
 
@@ -40,15 +42,29 @@ export class MdMenuItem implements Focusable {
   get isAriaDisabled(): string { return String(!!this.disabled); }
   get _tabindex() { return this.disabled ? '-1' : '0'; }
 
+  /** For child menu triggers */
+  @Input() childMenuTrigger: boolean = false;
+
   _getHostElement(): HTMLElement {
     return this._elementRef.nativeElement;
   }
 
-  _checkDisabled(event: Event) {
-    if (this.disabled) {
+  _checkStatus(event: Event) {
+    if (this.disabled || this.childMenuTrigger) {
+      this._childMenuOpen = this.childMenuTrigger;
       event.preventDefault();
       event.stopPropagation();
     }
   }
-}
 
+  _closeParentMenu() {
+    if (this._childMenuOpen) {
+      const menuElement = this._getHostElement().closest('.mat-menu-panel');
+      this._renderer.invokeElementMethod(
+        menuElement,
+        'dispatchEvent',
+        [ new MouseEvent('click', { bubbles: true}) ]
+      );
+    }
+  }
+}

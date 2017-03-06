@@ -53,6 +53,7 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
   @ContentChildren(MdMenuItem) items: QueryList<MdMenuItem>;
   @Input() overlapTrigger = true;
+  @Input() flyOut = false;
 
   constructor(@Attribute('x-position') posX: MenuPositionX,
               @Attribute('y-position') posY: MenuPositionY) {

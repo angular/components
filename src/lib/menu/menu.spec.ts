@@ -2,6 +2,7 @@ import {TestBed, async, ComponentFixture} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   Component,
+  Directive,
   ElementRef,
   EventEmitter,
   Input,
@@ -10,6 +11,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {
+  MdMenu,
   MdMenuModule,
   MdMenuTrigger,
   MdMenuPanel,
@@ -29,7 +31,10 @@ describe('MdMenu', () => {
     dir = 'ltr';
     TestBed.configureTestingModule({
       imports: [MdMenuModule.forRoot()],
-      declarations: [SimpleMenu, PositionedMenu, OverlapMenu, CustomMenuPanel, CustomMenu],
+      declarations: [
+        SimpleMenu, PositionedMenu, OverlapMenu, CustomMenuPanel, CustomMenu, MdParentMenuTrigger,
+        MdChildMenuTrigger, CustomParentMenuPanel, CustomChildMenuPanel, CustomParentMenu
+      ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
@@ -97,6 +102,25 @@ describe('MdMenu', () => {
     }).not.toThrowError();
   });
 
+  it('should open a custom parent menu and child menu where childMenuTrigger is set', () => {
+    const fixture = TestBed.createComponent(CustomParentMenu);
+    fixture.detectChanges();
+    expect(overlayContainerElement.textContent).toBe('');
+    expect(() => {
+      fixture.componentInstance.parentTrigger.openMenu();
+      fixture.componentInstance.parentTrigger.openMenu();
+
+      fixture.componentInstance.childTrigger.openMenu();
+      fixture.componentInstance.childTrigger.openMenu();
+
+      expect(overlayContainerElement.textContent).toContain('Custom parent menu header');
+      expect(overlayContainerElement.textContent).toContain('Parent Content');
+
+      expect(overlayContainerElement.textContent).toContain('Custom child menu header');
+      expect(overlayContainerElement.textContent).toContain('Child Content');
+    }).not.toThrowError();
+  });
+
   it('should set the panel direction based on the trigger direction', () => {
     dir = 'rtl';
     const fixture = TestBed.createComponent(SimpleMenu);
@@ -106,6 +130,42 @@ describe('MdMenu', () => {
 
     const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane');
     expect(overlayPane.getAttribute('dir')).toEqual('rtl');
+  });
+
+  describe('childMenu positions', () => {
+
+    beforeEach(() => {
+      const fixture = TestBed.createComponent(CustomParentMenu);
+      fixture.detectChanges();
+      fixture.componentInstance.parentTrigger.openMenu();
+      fixture.componentInstance.childTrigger.openMenu();
+      fixture.detectChanges();
+    });
+
+    it('should position the child menu flyout at the right edge of the parent menu', () => {
+      const overlayPane = getOverlayPanes();
+      const triggerRect = overlayPane.item(0).getBoundingClientRect();
+      const childOverlayRect = overlayPane.item(1).getBoundingClientRect();
+
+      expect(Math.round(childOverlayRect.left))
+          .toBe(Math.round(triggerRect.right),
+              `Expected left edge of child menu to be at right edge of parent menu.`);
+    });
+
+    it('should position top edge of child flyout at top edge of trigger in parent menu', () => {
+      const overlayPane = getOverlayPanes();
+      const triggerRect = overlayPane.item(0).getBoundingClientRect();
+      const childOverlayRect = overlayPane.item(1).getBoundingClientRect();
+
+      expect(Math.round(childOverlayRect.top))
+          .toBe(Math.round(triggerRect.bottom),
+              `Expected top edge of child menu to be at top edge of child trigger in parent menu.`);
+    });
+
+    function getOverlayPanes(): NodeListOf<HTMLElement> {
+      return overlayContainerElement
+        .querySelectorAll('.cdk-overlay-pane') as NodeListOf<HTMLElement>;
+    }
   });
 
   describe('positions', () => {
@@ -445,6 +505,7 @@ class CustomMenuPanel implements MdMenuPanel {
   positionX: MenuPositionX = 'after';
   positionY: MenuPositionY = 'below';
   overlapTrigger: true;
+  flyOut: false;
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
   @Output() close = new EventEmitter<void>();
@@ -462,6 +523,95 @@ class CustomMenuPanel implements MdMenuPanel {
 })
 class CustomMenu {
   @ViewChild(MdMenuTrigger) trigger: MdMenuTrigger;
+}
+
+@Directive({
+  selector: `[mdParentMenuTriggerFor]`,
+  host: {
+    'aria-haspopup': 'true',
+    '(mousedown)': '_handleMousedown($event)',
+    '(click)': 'toggleMenu()',
+  },
+  exportAs: 'mdParentMenuTrigger'
+})
+class MdParentMenuTrigger extends MdMenuTrigger {
+  @Input('mdParentMenuTriggerFor') menu: CustomParentMenuPanel;
+}
+
+@Directive({
+  selector: `[mdChildMenuTriggerFor]`,
+  host: {
+    'aria-haspopup': 'true',
+    '(mousedown)': '_handleMousedown($event)',
+    '(click)': 'toggleMenu()',
+  },
+  exportAs: 'mdChildMenuTrigger'
+})
+class MdChildMenuTrigger extends MdMenuTrigger {
+  @Input('mdChildMenuTriggerFor') menu: CustomChildMenuPanel;
+}
+
+@Component({
+  selector: 'custom-parent-menu',
+  template: `
+    <template>
+      Custom parent menu header
+      <ng-content></ng-content>
+    </template>
+  `,
+  exportAs: 'mdCustomParentMenu'
+})
+class CustomParentMenuPanel implements MdMenuPanel {
+  positionX: MenuPositionX = 'after';
+  positionY: MenuPositionY = 'below';
+  overlapTrigger: false;
+  flyOut: false;
+
+  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  @Output() close = new EventEmitter<void>();
+  focusFirstItem = () => {};
+  setPositionClasses = () => {};
+}
+
+@Component({
+  selector: 'custom-child-menu',
+  template: `
+    <template>
+      Custom child menu header
+      <ng-content></ng-content>
+    </template>
+  `,
+  exportAs: 'mdCustomChildMenu'
+})
+class CustomChildMenuPanel implements MdMenuPanel {
+  positionX: MenuPositionX = 'after';
+  positionY: MenuPositionY = 'below';
+  overlapTrigger: true;
+
+  @Input('childFlyOut') flyOut: boolean;
+  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  @Output() close = new EventEmitter<void>();
+  focusFirstItem = () => {};
+  setPositionClasses = () => {};
+}
+
+@Component({
+  template: `
+    <button [mdParentMenuTriggerFor]="parentMenu">Toggle menu</button>
+    <custom-parent-menu #parentMenu="mdCustomParentMenu" #parentTriggerEl>
+      <button class="child-menu-trigger" md-menu-item childMenuTrigger="true"
+        [mdChildMenuTriggerFor]="childMenu" #childTriggerEl> Parent Content </button>
+      <custom-child-menu #childMenu="mdCustomChildMenu" [childFlyOut]="true">
+        <button md-menu-item> Child Content </button>
+      </custom-child-menu>
+    </custom-parent-menu>
+  `
+})
+class CustomParentMenu extends MdMenu {
+  @ViewChild(MdParentMenuTrigger) parentTrigger: MdParentMenuTrigger;
+  @ViewChild(MdChildMenuTrigger) childTrigger: MdChildMenuTrigger;
+  @ViewChild('parentTriggerEl') parentTriggerEl: ElementRef;
+  @ViewChild('childTriggerEl') childTriggerEl: ElementRef;
 }
 
 class FakeViewportRuler {

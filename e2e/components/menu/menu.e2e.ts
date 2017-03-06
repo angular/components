@@ -6,6 +6,8 @@ import {screenshot} from '../../screenshot';
 
 describe('menu', () => {
   const menuSelector = '.mat-menu-panel';
+  // const parentMenuSelector = '.mat-menu-panel.parent';
+  // const childMenuSelector = '.mat-menu-panel.child';
   let page: MenuPage;
 
   beforeEach(() => page = new MenuPage());
@@ -25,6 +27,40 @@ describe('menu', () => {
     expectToExist(menuSelector, false);
     screenshot();
   });
+
+  // it('should open parent menu when the parent trigger is clicked', () => {
+  //   expectToExist(parentMenuSelector, false);
+  //   page.triggerParent().click();
+
+  //   expectToExist(parentMenuSelector);
+  //   expect(page.parentMenu().getText()).toEqual('One\nTwo\nMore ...');
+  //   screenshot();
+  // });
+
+  // it('should open child menu and keep parent open when the child trigger is clicked', () => {
+  //   page.triggerParent().click();
+  //   expectToExist(parentMenuSelector);
+  //   expectToExist(childMenuSelector, false);
+  //   page.triggerChild().click();
+
+  //   expectToExist(parentMenuSelector);
+  //   expectToExist(childMenuSelector);
+  //   expect(page.parentMenu().getText()).toEqual('One\nTwo\nMore ...');
+  //   expect(page.childMenu().getText()).toEqual('Three\nFour');
+  //   screenshot();
+  // });
+
+  // it('should close child menu and parent menu when child menu item is clicked', () => {
+  //   page.triggerParent().click();
+  //   page.triggerChild().click();
+  //   expectToExist(parentMenuSelector);
+  //   expectToExist(childMenuSelector);
+
+  //   page.items(3).click();
+  //   expectToExist(parentMenuSelector, false);
+  //   expectToExist(childMenuSelector, false);
+  //   screenshot();
+  // });
 
   it('should run click handlers on regular menu items', () => {
     page.trigger().click();
@@ -185,6 +221,20 @@ describe('menu', () => {
         expectLocation(page.combinedMenu(), {x: trigger.x - 52, y: trigger.y - 44});
       });
     });
+
+    // it('should align child menu to top right of its trigger when [flyout]="true"', () => {
+    //   page.triggerParent().click();
+    //   page.triggerChild().click();
+    //   page.parentMenu().getSize().then(parentSize => {
+    //     const width = parentSize.width;
+    //     page.parentMenu().getLocation().then(parentLoc => {
+    //       const leftEdge = parentLoc.x;
+    //       page.triggerChild().getLocation().then(trigger => {
+    //         expectLocation(page.childMenu(), {x: leftEdge + width, y: trigger.y});
+    //       });
+    //     });
+    //   });
+    // });
 
   });
 });

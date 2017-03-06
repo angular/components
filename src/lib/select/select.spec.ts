@@ -672,12 +672,12 @@ describe('MdSelect', () => {
 
       // The option text should align with the trigger text. Because each option is 18px
       // larger in height than the trigger, the option needs to be adjusted up 9 pixels.
-      expect(optionTop.toFixed(2))
-          .toEqual((triggerTop - 9).toFixed(2), `Expected trigger to align with option ${index}.`);
+      expect(Math.round(optionTop))
+          .toEqual(Math.round(triggerTop - 9), `Expected trigger to align with option ${index}.`);
 
       // For the animation to start at the option's center, its origin must be the distance
       // from the top of the overlay to the option top + half the option height (48/2 = 24).
-      const expectedOrigin = optionTop - overlayTop + 24;
+      const expectedOrigin = Math.round(optionTop - overlayTop + 24);
       expect(fixture.componentInstance.select._transformOrigin)
           .toContain(`${expectedOrigin}px`,
               `Expected panel animation to originate in the center of option ${index}.`);
@@ -811,7 +811,7 @@ describe('MdSelect', () => {
         // (686px - 600px margin - 30px trigger height = 56px - 8px padding = 48px)
         // and the height of the panel below the option (113px).
         // 113px - 48px = 75px difference. Original scrollTop 88px - 75px = 23px
-        expect(scrollContainer.scrollTop)
+        expect(Math.round(scrollContainer.scrollTop))
             .toEqual(23, `Expected panel to adjust scroll position to fit in viewport.`);
 
         checkTriggerAlignedWithOption(4);
@@ -1006,8 +1006,8 @@ describe('MdSelect', () => {
 
         // Each option is 32px wider than the trigger, so it must be adjusted 16px
         // to ensure the text overlaps correctly.
-        expect(firstOptionRight.toFixed(2))
-            .toEqual((triggerRight + 16).toFixed(2),
+        expect(Math.round(firstOptionRight))
+            .toEqual(Math.round(triggerRight + 16),
                 `Expected trigger to align with the selected option on the x-axis in RTL.`);
       });
     });
