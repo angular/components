@@ -9,8 +9,7 @@ import {
   Renderer,
   ViewEncapsulation
 } from '@angular/core';
-import {coerceBooleanProperty} from '../core';
-import {FocusOriginMonitor} from '../core/style/focus-origin-monitor';
+import {coerceBooleanProperty, FocusOriginMonitor} from '../core';
 
 
 // TODO(kara): Convert attribute selectors to classes when attr maps become available

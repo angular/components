@@ -1,7 +1,6 @@
 import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MdRippleModule} from '../core/ripple/ripple';
-import {CompatibilityModule} from '../core/compatibility/compatibility';
+import {CompatibilityModule, MdRippleModule, StyleModule} from '../core';
 import {
   MdAnchor,
   MdButton,
@@ -11,7 +10,6 @@ import {
   MdMiniFabCssMatStyler,
   MdRaisedButtonCssMatStyler
 } from './button';
-import {StyleModule} from '../core/style/index';
 
 
 export * from './button';
