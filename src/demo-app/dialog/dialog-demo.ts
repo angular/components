@@ -12,6 +12,7 @@ import {MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA} from '@angular/ma
 export class DialogDemo {
   dialogRef: MdDialogRef<JazzDialog>;
   lastCloseResult: string;
+  closeAttemptType: string;
   actionsAlignment: string;
   config: MdDialogConfig = {
     disableClose: false,
@@ -29,7 +30,8 @@ export class DialogDemo {
   };
   numTemplateOpens = 0;
 
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild('templateRef') template: TemplateRef<any>;
+  @ViewChild('disabledCloseRef') templateForDisabledClose: TemplateRef<any>;
 
   constructor(public dialog: MdDialog, @Inject(DOCUMENT) doc: any) {
     // Possible useful example for the open and closeAll events.
@@ -63,8 +65,19 @@ export class DialogDemo {
     this.numTemplateOpens++;
     this.dialog.open(this.template, this.config);
   }
-}
 
+  openWithDisabledClose() {
+    let disableCloseConfig = new MdDialogConfig();
+    disableCloseConfig.disableClose = true;
+
+    let dialogRef = this.dialog.open(this.templateForDisabledClose, disableCloseConfig);
+
+    dialogRef.closeAttempt().subscribe((type) => {
+      this.closeAttemptType = type;
+    });
+
+  }
+}
 
 @Component({
   selector: 'demo-jazz-dialog',

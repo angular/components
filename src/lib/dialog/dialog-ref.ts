@@ -1,8 +1,11 @@
 import {OverlayRef} from '../core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {MdDialogContainer, MdDialogContainerAnimationState} from './dialog-container';
-
+import {
+  MdDialogContainer,
+  MdDialogContainerAnimationState,
+  MdDialogCloseAttemptsTypes
+} from './dialog-container';
 
 // TODO(jelbourn): resizing
 // TODO(jelbourn): afterOpen and beforeClose
@@ -49,5 +52,12 @@ export class MdDialogRef<T> {
    */
   afterClosed(): Observable<any> {
     return this._afterClosed.asObservable();
+  }
+
+  /**
+   * Gets an observable that is notified when a close attempt is made
+   */
+  closeAttempt(): Observable<MdDialogCloseAttemptsTypes> {
+    return this._containerInstance._closeAttempt.asObservable();
   }
 }

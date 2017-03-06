@@ -19,12 +19,15 @@ import {BasePortalHost, ComponentPortal, PortalHostDirective, TemplatePortal} fr
 import {MdDialogConfig} from './dialog-config';
 import {MdDialogContentAlreadyAttachedError} from './dialog-errors';
 import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
+import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/first';
 
 
 /** Possible states for the dialog container animation. */
 export type MdDialogContainerAnimationState = 'void' | 'enter' | 'exit' | 'exit-start';
 
+/** Possible types of close events */
+export type MdDialogCloseAttemptsTypes = 'escape' | 'backdrop';
 
 /**
  * Internal component that wraps user-provided dialog content.
@@ -64,6 +67,9 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
 
   /** The dialog configuration. */
   dialogConfig: MdDialogConfig;
+
+  /** subject to expose any close attempt */
+  _closeAttempt = new Subject<MdDialogCloseAttemptsTypes>();
 
   /** State of the dialog animation. */
   _state: MdDialogContainerAnimationState = 'enter';

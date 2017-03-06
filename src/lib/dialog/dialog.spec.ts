@@ -156,6 +156,52 @@ describe('MdDialog', () => {
     });
   }));
 
+  it('should let the user know that there was a close attempt via the backdrop click', async(() => {
+    const dialogRef = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef,
+      disableClose: true
+    });
+
+    let attemptType: any;
+
+    dialogRef.closeAttempt().subscribe((type) => {
+      attemptType = type;
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+
+    backdrop.click();
+    viewContainerFixture.detectChanges();
+
+    viewContainerFixture.whenStable().then(() => {
+      expect(attemptType).toEqual('backdrop');
+      expect(overlayContainerElement.querySelector('md-dialog-container')).toBeTruthy();
+    });
+  }));
+
+  it('should let the user know that there was a close attempt via the escape key', async(() => {
+    const dialogRef = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef,
+      disableClose: true
+    });
+
+    let attemptType: any;
+
+    dialogRef.closeAttempt().subscribe((type) => {
+      attemptType = type;
+    });
+
+    dispatchKeyboardEvent(document, 'keydown', ESCAPE);
+    viewContainerFixture.detectChanges();
+
+    viewContainerFixture.whenStable().then(() => {
+      expect(attemptType).toEqual('escape');
+      expect(overlayContainerElement.querySelector('md-dialog-container')).toBeTruthy();
+    });
+  }));
+
   it('should notify the observers if a dialog has been opened', () => {
     let ref: MdDialogRef<PizzaMsg>;
     dialog.afterOpen.subscribe(r => {

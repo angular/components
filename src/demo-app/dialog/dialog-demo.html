@@ -10,6 +10,10 @@
   Open dialog with template content
 </button>
 
+<button md-raised-button color="accent" (click)="openWithDisabledClose()">
+  Open dialog with disabled close and close attempts exposure
+</button>
+
 <md-card class="demo-dialog-card">
   <md-card-content>
     <h2>Dialog dimensions</h2>
@@ -67,6 +71,10 @@
 
 <p>Last close result: {{lastCloseResult}}</p>
 
-<template>
+<template #templateRef>
   I'm a template dialog. I've been opened {{numTemplateOpens}} times!
+</template>
+
+<template #disabledCloseRef>
+  {{ closeAttemptType ? 'Tried to close with: ' + closeAttemptType : 'Have not tried to close yet.' }}
 </template>
