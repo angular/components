@@ -10,4 +10,5 @@ import {SimpleDate} from '@angular/material';
 })
 export class DatepickerDemo {
   date: SimpleDate;
+  touch = false;
 }
