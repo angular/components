@@ -189,6 +189,7 @@ export class MdAnchor extends MdButton {
     // A disabled button shouldn't apply any actions
     if (this.disabled) {
       event.preventDefault();
+      event.stopImmediatePropagation();
     }
   }
 }
