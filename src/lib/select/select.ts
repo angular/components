@@ -99,7 +99,7 @@ export type MdSelectFloatPlaceholderType = 'always' | 'never' | 'auto';
   encapsulation: ViewEncapsulation.None,
   host: {
     'role': 'listbox',
-    '[attr.tabindex]': '_getTabIndex()',
+    '[attr.tabindex]': 'tabIndex',
     '[attr.aria-label]': 'placeholder',
     '[attr.aria-required]': 'required.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
@@ -150,6 +150,9 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   /** The animation state of the placeholder. */
   private _placeholderState = '';
+
+  /** Tab index for the element. */
+  private _tabIndex: number = 0;
 
   /**
    * The width of the trigger. Must be saved to set the min width of the overlay panel
@@ -265,6 +268,15 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     this._floatPlaceholder = value || 'auto';
   }
   private _floatPlaceholder: MdSelectFloatPlaceholderType = 'auto';
+
+  /** Tab index for the select element. */
+  @Input()
+  get tabIndex(): number { return this._disabled ? -1 : this._tabIndex; }
+  set tabIndex(value: number) {
+    if (typeof value !== 'undefined') {
+      this._tabIndex = value;
+    }
+  }
 
   /** Combined stream of all of the child options' change events. */
   get optionSelectionChanges(): Observable<MdOptionSelectionChange> {
@@ -451,12 +463,6 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
       this._onTouched();
     }
   }
-
-  /** Returns the correct tabindex for the select depending on disabled state. */
-  _getTabIndex() {
-    return this.disabled ? '-1' : '0';
-  }
-
 
   /**
    * Sets the scroll position of the scroll container. This must be called after

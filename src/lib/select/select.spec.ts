@@ -1081,8 +1081,15 @@ describe('MdSelect', () => {
         expect(select.getAttribute('aria-label')).toEqual('Food');
       });
 
-      it('should set the tabindex of the select to 0', () => {
+      it('should set the tabindex of the select to 0 by default', () => {
         expect(select.getAttribute('tabindex')).toEqual('0');
+      });
+
+      it('should be able to override the tabindex', () => {
+        fixture.componentInstance.tabIndexOverride = 3;
+        fixture.detectChanges();
+
+        expect(select.getAttribute('tabindex')).toBe('3');
       });
 
       it('should set aria-required for required selects', () => {
@@ -1583,7 +1590,8 @@ describe('MdSelect', () => {
   selector: 'basic-select',
   template: `
     <div [style.height.px]="heightAbove"></div>
-    <md-select placeholder="Food" [formControl]="control" [required]="isRequired">
+    <md-select placeholder="Food" [formControl]="control" [required]="isRequired"
+      [tabIndex]="tabIndexOverride">
       <md-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
         {{ food.viewValue }}
       </md-option>
@@ -1606,6 +1614,7 @@ class BasicSelect {
   isRequired: boolean;
   heightAbove = 0;
   heightBelow = 0;
+  tabIndexOverride: number;
 
   @ViewChild(MdSelect) select: MdSelect;
   @ViewChildren(MdOption) options: QueryList<MdOption>;
