@@ -1,6 +1,7 @@
 import {task, src, dest} from 'gulp';
 import {Dgeni} from 'dgeni';
 import * as path from 'path';
+import {HTML_MINIFIER_OPTIONS} from '../constants';
 
 // Node packages that lack of types.
 const markdown = require('gulp-markdown');
@@ -8,6 +9,7 @@ const transform = require('gulp-transform');
 const highlight = require('gulp-highlight-files');
 const rename = require('gulp-rename');
 const flatten = require('gulp-flatten');
+const htmlmin = require('gulp-htmlmin');
 const hljs = require('highlight.js');
 
 // Our docs contain comments of the form `<!-- example(...) -->` which serve as placeholders where
@@ -21,7 +23,7 @@ const EXAMPLE_PATTERN = /<!--\W*example\(([^)]+)\)\W*-->/g;
 // documentation page. Using a RegExp to rewrite links in HTML files to work in the docs.
 const LINK_PATTERN = /(<a[^>]*) href="([^"]*)"/g;
 
-task('docs', ['markdown-docs', 'highlight-docs', 'api-docs']);
+task('docs', ['markdown-docs', 'highlight-docs', 'api-docs', 'minify-html-docs']);
 
 task('markdown-docs', () => {
   return src(['src/lib/**/*.md', 'guides/*.md'])
@@ -59,6 +61,12 @@ task('api-docs', () => {
   const docsPackage = require(path.resolve(__dirname, '../../dgeni'));
   const docs = new Dgeni([docsPackage]);
   return docs.generate();
+});
+
+task('minify-html-docs', ['api-docs'], () => {
+  return src('dist/docs/api/*.html')
+    .pipe(htmlmin(HTML_MINIFIER_OPTIONS))
+    .pipe(dest('dist/docs/api/'));
 });
 
 /** Updates the markdown file's content to work inside of the docs app. */
