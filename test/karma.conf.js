@@ -86,7 +86,13 @@ module.exports = (config) => {
     captureTimeout: 120000,
     browsers: ['Chrome_1024x768'],
 
-    singleRun: false
+    singleRun: false,
+
+    browserConsoleLogOptions: {
+      terminal: true,
+      level: 'log'
+    }
+
   });
 
   if (process.env['TRAVIS']) {
