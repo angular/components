@@ -4,8 +4,8 @@ import {CompatibilityModule} from '../compatibility/compatibility';
 import {VIEWPORT_RULER_PROVIDER} from '../overlay/position/viewport-ruler';
 import {SCROLL_DISPATCHER_PROVIDER} from '../overlay/scroll/scroll-dispatcher';
 
-export {MdRipple} from './ripple';
-export {RippleRef} from './ripple-ref';
+export {MdRipple, MD_DISABLE_RIPPLES} from './ripple';
+export {RippleRef, RippleState} from './ripple-ref';
 export {RippleConfig} from './ripple-renderer';
 
 @NgModule({
