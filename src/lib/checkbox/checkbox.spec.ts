@@ -1,15 +1,34 @@
-import {async, fakeAsync, flushMicrotasks, ComponentFixture, TestBed} from '@angular/core/testing';
+import {
+  async,
+  fakeAsync,
+  flushMicrotasks,
+  ComponentFixture,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import {NgControl, FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdCheckbox, MdCheckboxChange, MdCheckboxModule} from './checkbox';
+import {MdCheckbox, MdCheckboxChange, MdCheckboxModule} from './index';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {FakeViewportRuler} from '../core/overlay/position/fake-viewport-ruler';
 import {dispatchFakeEvent} from '../core/testing/dispatch-events';
+import {FocusOriginMonitor, FocusOrigin} from '../core';
+import {RIPPLE_FADE_IN_DURATION, RIPPLE_FADE_OUT_DURATION} from '../core/ripple/ripple-renderer';
+import {Subject} from 'rxjs/Subject';
 
 
 describe('MdCheckbox', () => {
   let fixture: ComponentFixture<any>;
+  let fakeFocusOriginMonitorSubject: Subject<FocusOrigin> = new Subject();
+  let fakeFocusOriginMonitor = {
+    monitor: () => fakeFocusOriginMonitorSubject.asObservable(),
+    unmonitor: () => {},
+    focusVia: (element: HTMLElement, renderer: any, focusOrigin: FocusOrigin) => {
+      element.focus();
+      fakeFocusOriginMonitorSubject.next(focusOrigin);
+    }
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -27,6 +46,7 @@ describe('MdCheckbox', () => {
       ],
       providers: [
         {provide: ViewportRuler, useClass: FakeViewportRuler},
+        {provide: FocusOriginMonitor, useValue: fakeFocusOriginMonitor}
       ]
     });
 
@@ -314,6 +334,30 @@ describe('MdCheckbox', () => {
       expect(document.activeElement).toBe(inputElement);
     });
 
+    it('should forward the value to input element', () => {
+      testComponent.checkboxValue = 'basic_checkbox';
+      fixture.detectChanges();
+
+      expect(inputElement.value).toBe('basic_checkbox');
+    });
+
+    it('should show a ripple when focused by a keyboard action', fakeAsync(() => {
+      expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
+          .toBe(0, 'Expected no ripples on load.');
+
+      fakeFocusOriginMonitorSubject.next('keyboard');
+      tick(RIPPLE_FADE_IN_DURATION);
+
+      expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
+          .toBe(1, 'Expected ripple after element is focused.');
+
+      dispatchFakeEvent(checkboxInstance._inputElement.nativeElement, 'blur');
+      tick(RIPPLE_FADE_OUT_DURATION);
+
+      expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
+          .toBe(0, 'Expected no ripple after element is blurred.');
+    }));
+
     describe('ripple elements', () => {
 
       it('should show ripples on label mousedown', () => {
@@ -349,7 +393,6 @@ describe('MdCheckbox', () => {
         expect(checkboxNativeElement.querySelectorAll('[md-ripple]').length)
           .toBe(1, 'Expect [md-ripple] in checkbox');
       }));
-
     });
 
     describe('color behaviour', () => {
@@ -384,11 +427,11 @@ describe('MdCheckbox', () => {
 
     describe('state transition css classes', () => {
       it('should transition unchecked -> checked -> unchecked', () => {
-        testComponent.isChecked = true;
+        inputElement.click();
         fixture.detectChanges();
         expect(checkboxNativeElement.classList).toContain('mat-checkbox-anim-unchecked-checked');
 
-        testComponent.isChecked = false;
+        inputElement.click();
         fixture.detectChanges();
         expect(checkboxNativeElement.classList)
             .not.toContain('mat-checkbox-anim-unchecked-checked');
@@ -694,6 +737,7 @@ describe('MdCheckbox', () => {
         [disabled]="isDisabled"
         [color]="checkboxColor"
         [disableRipple]="disableRipple"
+        [value]="checkboxValue"
         (change)="changeCount = changeCount + 1"
         (click)="onCheckboxClick($event)"
         (change)="onCheckboxChange($event)">
@@ -713,6 +757,7 @@ class SingleCheckbox {
   lastKeydownEvent: Event = null;
   changeCount: number = 0;
   checkboxColor: string = 'primary';
+  checkboxValue: string = 'single_checkbox';
 
   onCheckboxClick(event: Event) {}
   onCheckboxChange(event: MdCheckboxChange) {}
