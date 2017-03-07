@@ -16,7 +16,7 @@ export class SelectionModel<T> {
   private _selectedToEmit: T[] = [];
 
   /** Cache for the array value of the selected items. */
-  private _selected: T[];
+  private _selected: T[]|null = null;
 
   /** Selected value(s). */
   get selected(): T[] {

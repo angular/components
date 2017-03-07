@@ -22,7 +22,7 @@ export class ActiveDescendantKeyManager extends ListKeyManager<Highlightable> {
    * It also adds active styles to the newly active item and removes active
    * styles from the previously active item.
    */
-  setActiveItem(index: number): void {
+  setActiveItem(index: number|null): void {
     if (this.activeItem) {
       this.activeItem.setInactiveStyles();
     }

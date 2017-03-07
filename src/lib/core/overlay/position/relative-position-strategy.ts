@@ -7,7 +7,7 @@ export class RelativePositionStrategy implements PositionStrategy {
 
   apply(element: Element): Promise<void> {
     // Not yet implemented.
-    return null;
+    return Promise.resolve();
   }
 
   dispose() {

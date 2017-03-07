@@ -44,7 +44,7 @@ export class MdMenuItem implements Focusable {
   }
 
   /** Used to set the HTML `disabled` attribute. Necessary for links to be disabled properly. */
-  _getDisabledAttr(): boolean {
+  _getDisabledAttr(): boolean|null {
     return this._disabled ? true : null;
   }
 

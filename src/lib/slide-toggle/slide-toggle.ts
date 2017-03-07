@@ -62,7 +62,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   private _checked: boolean = false;
   private _color: string;
   private _isMousedown: boolean = false;
-  private _slideRenderer: SlideToggleRenderer = null;
+  private _slideRenderer: SlideToggleRenderer;
   private _disabled: boolean = false;
   private _required: boolean = false;
   private _disableRipple: boolean = false;
@@ -71,7 +71,7 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   _hasFocus: boolean = false;
 
   /** Name value will be applied to the input element if present */
-  @Input() name: string = null;
+  @Input() name: string;
 
   /** A unique id for the slide-toggle input. If none is supplied, it will be auto-generated. */
   @Input() id: string = this._uniqueId;
@@ -83,10 +83,10 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   @Input() labelPosition: 'before' | 'after' = 'after';
 
   /** Used to set the aria-label attribute on the underlying input element. */
-  @Input('aria-label') ariaLabel: string = null;
+  @Input('aria-label') ariaLabel: string;
 
   /** Used to set the aria-labelledby attribute on the underlying input element. */
-  @Input('aria-labelledby') ariaLabelledby: string = null;
+  @Input('aria-labelledby') ariaLabelledby: string;
 
   /** Whether the slide-toggle is disabled. */
   @Input()
@@ -310,7 +310,7 @@ class SlideToggleRenderer {
 
   /** Resets the current drag and returns the new checked value. */
   stopThumbDrag(): boolean {
-    if (!this.dragging) { return; }
+    if (!this.dragging) { return false; }
 
     this.dragging = false;
     this._thumbEl.classList.remove('mat-dragging');

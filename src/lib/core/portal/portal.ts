@@ -22,7 +22,7 @@ import {ComponentType} from '../overlay/generic-component-type';
  * It can be attach to / detached from a `PortalHost`.
  */
 export abstract class Portal<T> {
-  private _attachedHost: PortalHost;
+  private _attachedHost: PortalHost|null = null;
 
   /** Attach this portal to a host. */
   attach(host: PortalHost): T {
@@ -58,7 +58,7 @@ export abstract class Portal<T> {
    * Sets the PortalHost reference without performing `attach()`. This is used directly by
    * the PortalHost when it is performing an `attach()` or `detach()`.
    */
-  setAttachedHost(host: PortalHost) {
+  setAttachedHost(host: PortalHost|null) {
     this._attachedHost = host;
   }
 }
@@ -76,15 +76,15 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
    * This is different from where the component *renders*, which is determined by the PortalHost.
    * The origin is necessary when the host is outside of the Angular application context.
    */
-  viewContainerRef: ViewContainerRef;
+  viewContainerRef: ViewContainerRef|undefined;
 
   /** [Optional] Injector used for the instantiation of the component. */
-  injector: Injector;
+  injector: Injector|undefined;
 
   constructor(
       component: ComponentType<T>,
-      viewContainerRef: ViewContainerRef = null,
-      injector: Injector = null) {
+      viewContainerRef?: ViewContainerRef,
+      injector?: Injector) {
     super();
     this.component = component;
     this.viewContainerRef = viewContainerRef;
@@ -101,7 +101,7 @@ export class TemplatePortal extends Portal<Map<string, any>> {
   templateRef: TemplateRef<any>;
 
   /** Reference to the ViewContainer into which the template will be stamped out. */
-  viewContainerRef: ViewContainerRef;
+  viewContainerRef: ViewContainerRef|undefined;
 
   /**
    * Additional locals for the instantiated embedded view.
@@ -111,7 +111,7 @@ export class TemplatePortal extends Portal<Map<string, any>> {
    */
   locals: Map<string, any> = new Map<string, any>();
 
-  constructor(template: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
+  constructor(template: TemplateRef<any>, viewContainerRef?: ViewContainerRef) {
     super();
     this.templateRef = template;
     this.viewContainerRef = viewContainerRef;
@@ -153,10 +153,10 @@ export interface PortalHost {
  */
 export abstract class BasePortalHost implements PortalHost {
   /** The portal currently attached to the host. */
-  private _attachedPortal: Portal<any>;
+  private _attachedPortal: Portal<any>|null;
 
   /** A function that will permanently dispose this host. */
-  private _disposeFn: () => void;
+  private _disposeFn: (() => void)|null;
 
   /** Whether this host has already been permanently disposed. */
   private _isDisposed: boolean = false;

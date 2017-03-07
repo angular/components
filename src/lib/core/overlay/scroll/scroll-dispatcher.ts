@@ -46,8 +46,10 @@ export class ScrollDispatcher {
    * @param scrollable Scrollable instance to be deregistered.
    */
   deregister(scrollable: Scrollable): void {
-    if (this.scrollableReferences.has(scrollable)) {
-      this.scrollableReferences.get(scrollable).unsubscribe();
+    let scrollableReference = this.scrollableReferences.get(scrollable);
+
+    if (scrollableReference) {
+      scrollableReference.unsubscribe();
       this.scrollableReferences.delete(scrollable);
     }
   }
@@ -90,6 +92,8 @@ export class ScrollDispatcher {
     do {
       if (element == scrollableElement) { return true; }
     } while (element = element.parentElement);
+
+    return false;
   }
 
   /** Sends a notification that a scroll event has been fired. */

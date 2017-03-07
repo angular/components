@@ -107,7 +107,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   private _panelOpen = false;
 
   /** The currently selected option. */
-  private _selected: MdOption;
+  private _selected: MdOption|undefined;
 
   /** Subscriptions to option events. */
   private _subscriptions: Subscription[] = [];
@@ -354,7 +354,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   }
 
   /** The currently selected option. */
-  get selected(): MdOption {
+  get selected(): MdOption|undefined {
     return this._selected;
   }
 
@@ -421,7 +421,10 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   _setScrollTop(): void {
     const scrollContainer =
         this.overlayDir.overlayRef.overlayElement.querySelector('.mat-select-panel');
-    scrollContainer.scrollTop = this._scrollTop;
+
+    if (scrollContainer) {
+      scrollContainer.scrollTop = this._scrollTop;
+    }
   }
 
   /**
@@ -436,7 +439,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   /** Clears the select trigger and deselects every option in the list. */
   private _clearSelection(): void {
-    this._selected = null;
+    this._selected = undefined;
     this._updateOptions();
   }
 
@@ -535,10 +538,10 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   }
 
   /** Gets the index of the provided option in the option list. */
-  private _getOptionIndex(option: MdOption): number {
-    return this.options.reduce((result: number, current: MdOption, index: number) => {
+  private _getOptionIndex(option: MdOption): number|null {
+    return this.options.reduce((result: number|undefined, current: MdOption, index: number) => {
       return result === undefined ? (option === current ? index : undefined) : result;
-    }, undefined);
+    }, undefined) || null;
   }
 
   /** Calculates the scroll position and x- and y-offsets of the overlay panel. */
@@ -577,8 +580,13 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
    * too high or too low in the panel to be scrolled to the center, it clamps the
    * scroll position to the min or max scroll positions respectively.
    */
-  _calculateOverlayScroll(selectedIndex: number, scrollBuffer: number,
+  _calculateOverlayScroll(selectedIndex: number|null, scrollBuffer: number,
                           maxScroll: number): number {
+
+    if (typeof selectedIndex !== 'number') {
+      return 0;
+    }
+
     const optionOffsetFromScrollTop = SELECT_OPTION_HEIGHT * selectedIndex;
     const halfOptionHeight = SELECT_OPTION_HEIGHT / 2;
 
@@ -617,8 +625,13 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
    * top start corner of the trigger. It has to be adjusted in order for the
    * selected option to be aligned over the trigger when the panel opens.
    */
-  private _calculateOverlayOffset(selectedIndex: number, scrollBuffer: number,
+  private _calculateOverlayOffset(selectedIndex: number|null, scrollBuffer: number,
                                   maxScroll: number): number {
+
+    if (typeof selectedIndex !== 'number') {
+      return 0;
+    }
+
     let optionOffsetFromPanelTop: number;
 
     if (this._scrollTop === 0) {

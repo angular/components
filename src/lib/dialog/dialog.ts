@@ -56,9 +56,9 @@ export class MdDialog {
    * @returns Reference to the newly-opened dialog.
    */
   open<T>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
-          config?: MdDialogConfig): MdDialogRef<T> {
-    config = _applyConfigDefaults(config);
+          userConfig?: MdDialogConfig): MdDialogRef<T> {
 
+    let config = _applyConfigDefaults(userConfig);
     let overlayRef = this._createOverlay(config);
     let dialogContainer = this._attachDialogContainer(overlayRef, config);
     let dialogRef =
@@ -107,7 +107,7 @@ export class MdDialog {
    * @returns A promise resolving to a ComponentRef for the attached container.
    */
   private _attachDialogContainer(overlay: OverlayRef, config: MdDialogConfig): MdDialogContainer {
-    let viewContainer = config ? config.viewContainerRef : null;
+    let viewContainer = config ? config.viewContainerRef : undefined;
     let containerPortal = new ComponentPortal(MdDialogContainer, viewContainer);
 
     let containerRef: ComponentRef<MdDialogContainer> = overlay.attach(containerPortal);
@@ -129,7 +129,7 @@ export class MdDialog {
       componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
       dialogContainer: MdDialogContainer,
       overlayRef: OverlayRef,
-      config?: MdDialogConfig): MdDialogRef<T> {
+      config: MdDialogConfig): MdDialogRef<T> {
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
     let dialogRef = new MdDialogRef(overlayRef, dialogContainer) as MdDialogRef<T>;
@@ -146,10 +146,10 @@ export class MdDialog {
     let dialogInjector = new DialogInjector(userInjector || this._injector, dialogRef, config.data);
 
     if (componentOrTemplateRef instanceof TemplateRef) {
-      dialogContainer.attachTemplatePortal(new TemplatePortal(componentOrTemplateRef, null));
+      dialogContainer.attachTemplatePortal(new TemplatePortal(componentOrTemplateRef));
     } else {
       let contentRef = dialogContainer.attachComponentPortal(
-          new ComponentPortal(componentOrTemplateRef, null, dialogInjector));
+          new ComponentPortal(componentOrTemplateRef, undefined, dialogInjector));
       dialogRef.componentInstance = contentRef.instance;
     }
 
@@ -224,7 +224,7 @@ export class MdDialog {
  * @param dialogConfig Config to be modified.
  * @returns The new configuration object.
  */
-function _applyConfigDefaults(dialogConfig: MdDialogConfig): MdDialogConfig {
+function _applyConfigDefaults(dialogConfig?: MdDialogConfig): MdDialogConfig {
   return extendObject(new MdDialogConfig(), dialogConfig);
 }
 

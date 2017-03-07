@@ -40,7 +40,7 @@ var _uniqueIdCounter = 0;
 
 /** Change event object emitted by MdButtonToggle. */
 export class MdButtonToggleChange {
-  source: MdButtonToggle;
+  source: MdButtonToggle|null;
   value: any;
 }
 
@@ -63,13 +63,13 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
   private _name: string = `md-button-toggle-group-${_uniqueIdCounter++}`;
 
   /** Disables all toggles in the group. */
-  private _disabled: boolean = null;
+  private _disabled: boolean|null = null;
 
   /** Whether the button toggle group should be vertical. */
   private _vertical: boolean = false;
 
   /** The currently selected button toggle, should match the value. */
-  private _selected: MdButtonToggle = null;
+  private _selected: MdButtonToggle|null = null;
 
   /** Whether the button toggle group is initialized or not. */
   private _isInitialized: boolean = false;
@@ -91,7 +91,7 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
 
   /** Child button toggle buttons. */
   @ContentChildren(forwardRef(() => MdButtonToggle))
-  _buttonToggles: QueryList<MdButtonToggle> = null;
+  _buttonToggles: QueryList<MdButtonToggle>|null = null;
 
   ngAfterViewInit() {
     this._isInitialized = true;
@@ -110,7 +110,7 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
 
   /** Whether the toggle group is disabled. */
   @Input()
-  get disabled(): boolean {
+  get disabled(): boolean|null {
     return this._disabled;
   }
 
@@ -154,7 +154,7 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
     return this._selected;
   }
 
-  set selected(selected: MdButtonToggle) {
+  set selected(selected: MdButtonToggle|null) {
     this._selected = selected;
     this.value = selected ? selected.value : null;
 
@@ -245,27 +245,21 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
 })
 export class MdButtonToggleGroupMultiple {
   /** Disables all toggles in the group. */
-  private _disabled: boolean = null;
+  private _disabled: boolean|null = null;
 
   /** Whether the button toggle group should be vertical. */
   private _vertical: boolean = false;
 
   /** Whether the toggle group is disabled. */
   @Input()
-  get disabled(): boolean {
-    return this._disabled;
-  }
-
+  get disabled(): boolean|null { return this._disabled; }
   set disabled(value) {
     this._disabled = (value != null && value !== false) ? true : null;
   }
 
   /** Whether the toggle group is vertical. */
   @Input()
-  get vertical(): boolean {
-    return this._vertical;
-  }
-
+  get vertical(): boolean { return this._vertical; }
   set vertical(value) {
     this._vertical = coerceBooleanProperty(value);
   }
@@ -299,13 +293,13 @@ export class MdButtonToggle implements OnInit {
   name: string;
 
   /** Whether or not this button toggle is disabled. */
-  private _disabled: boolean = null;
+  private _disabled: boolean|null = null;
 
   /** Value assigned to this button toggle. */
   private _value: any = null;
 
   /** Whether or not the button toggle is a single selection. */
-  private _isSingleSelector: boolean = null;
+  private _isSingleSelector: boolean = false;
 
   /** The parent button toggle group (exclusive selection). Optional. */
   buttonToggleGroup: MdButtonToggleGroup;
@@ -413,12 +407,12 @@ export class MdButtonToggle implements OnInit {
   /** Whether the button is disabled. */
   @HostBinding('class.mat-button-toggle-disabled')
   @Input()
-  get disabled(): boolean {
+  get disabled(): boolean|null {
     return this._disabled || (this.buttonToggleGroup != null && this.buttonToggleGroup.disabled) ||
         (this.buttonToggleGroupMultiple != null && this.buttonToggleGroupMultiple.disabled);
   }
 
-  set disabled(value: boolean) {
+  set disabled(value: boolean|null) {
     this._disabled = (value != null && value !== false) ? true : null;
   }
 

@@ -35,10 +35,10 @@ task(':publish:whoami', execTask('npm', ['whoami'], {
 task(':publish:logout', execTask('npm', ['logout']));
 
 
-function _execNpmPublish(label: string): Promise<{}> {
+function _execNpmPublish(label: string): Promise<{}|void> {
   const packageDir = DIST_COMPONENTS_ROOT;
   if (!statSync(packageDir).isDirectory()) {
-    return;
+    return Promise.resolve();
   }
 
   if (!existsSync(path.join(packageDir, 'package.json'))) {
@@ -49,7 +49,7 @@ function _execNpmPublish(label: string): Promise<{}> {
   console.log(`Publishing material...`);
 
   const command = 'npm';
-  const args = ['publish', '--access', 'public', label ? `--tag` : undefined, label || undefined];
+  const args = ['publish', '--access', 'public', label ? `--tag` : '', label || ''];
   return new Promise((resolve, reject) => {
     console.log(`  Executing "${command} ${args.join(' ')}"...`);
     if (argv['dry']) {

@@ -11,6 +11,7 @@
     "outDir": "../dist/e2e/",
     "rootDir": ".",
     "sourceMap": true,
+    "strictNullChecks": true,
     "target": "es5",
     "typeRoots": [
       "../node_modules/@types"

@@ -107,7 +107,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     const viewportRect = this._viewportRuler.getViewportRect();
 
     // Fallback point if none of the fallbacks fit into the viewport.
-    let fallbackPoint: OverlayPoint = null;
+    let fallbackPoint: OverlayPoint|null = null;
 
     // We want to place the overlay in the first of the preferred positions such that the
     // overlay fits on-screen.
@@ -129,7 +129,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
         const positionChange = new ConnectedOverlayPositionChange(pos, scrollableViewProperties);
         this._onPositionChange.next(positionChange);
 
-        return Promise.resolve(null);
+        return Promise.resolve();
       } else if (!fallbackPoint || fallbackPoint.visibleArea < overlayPoint.visibleArea) {
         fallbackPoint = overlayPoint;
       }
@@ -137,9 +137,11 @@ export class ConnectedPositionStrategy implements PositionStrategy {
 
     // If none of the preferred positions were in the viewport, take the one
     // with the largest visible area.
-    this._setElementPosition(element, fallbackPoint);
+    if (fallbackPoint) {
+      this._setElementPosition(element, fallbackPoint);
+    }
 
-    return Promise.resolve(null);
+    return Promise.resolve();
   }
 
   /**

@@ -4,7 +4,9 @@ import {Injectable, Directive, ModuleWithProviders, NgModule, ElementRef} from '
 // "Polyfill" for `Node.replaceWith()`.
 // cf. https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/replaceWith
 function _replaceWith(toReplaceEl: HTMLElement, otherEl: HTMLElement) {
-  toReplaceEl.parentElement.replaceChild(otherEl, toReplaceEl);
+  if (toReplaceEl.parentElement) {
+    toReplaceEl.parentElement.replaceChild(otherEl, toReplaceEl);
+  }
 }
 
 /** @docs-private */

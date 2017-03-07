@@ -33,7 +33,7 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
  * TODO(andrewseguin): Remove the kebab versions in favor of camelCased attribute selectors
  */
 @Directive({
-  selector: `[md-menu-trigger-for], [mat-menu-trigger-for], 
+  selector: `[md-menu-trigger-for], [mat-menu-trigger-for],
              [mdMenuTriggerFor], [matMenuTriggerFor]`,
   host: {
     'aria-haspopup': 'true',
@@ -44,7 +44,7 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
 })
 export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   private _portal: TemplatePortal;
-  private _overlayRef: OverlayRef;
+  private _overlayRef: OverlayRef|null = null;
   private _menuOpen: boolean = false;
   private _backdropSubscription: Subscription;
   private _positionSubscription: Subscription;
@@ -100,7 +100,11 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   openMenu(): void {
     if (!this._menuOpen) {
       this._createOverlay();
-      this._overlayRef.attach(this._portal);
+
+      if (this._overlayRef) {
+        this._overlayRef.attach(this._portal);
+      }
+
       this._subscribeToBackdrop();
       this._initMenu();
     }
@@ -142,9 +146,11 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    * explicitly when the menu is closed or destroyed.
    */
   private _subscribeToBackdrop(): void {
-    this._backdropSubscription = this._overlayRef.backdropClick().subscribe(() => {
-      this.closeMenu();
-    });
+    if (this._overlayRef) {
+      this._backdropSubscription = this._overlayRef.backdropClick().subscribe(() => {
+        this.closeMenu();
+      });
+    }
   }
 
   /**

@@ -185,10 +185,17 @@ export class MdTabHeader implements AfterContentChecked, AfterContentInit {
    * providing a valid index and return true.
    */
   _isValidIndex(index: number): boolean {
-    if (!this._labelWrappers) { return true; }
+    if (!this._labelWrappers) {
+      return true;
+    }
 
     const tab = this._labelWrappers ? this._labelWrappers.toArray()[index] : null;
-    return tab && !tab.disabled;
+
+    if (tab) {
+      return !tab.disabled;
+    }
+
+    return false;
   }
 
   /**

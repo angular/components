@@ -134,7 +134,7 @@ export class MdChipList implements AfterContentInit {
     let focusedIndex = this._keyManager.activeItemIndex;
 
     if (this._isValidIndex(focusedIndex)) {
-      let focusedChip: MdChip = this.chips.toArray()[focusedIndex];
+      let focusedChip: MdChip = this.chips.toArray()[focusedIndex as number];
 
       if (focusedChip) {
         focusedChip.toggleSelected();
@@ -201,8 +201,8 @@ export class MdChipList implements AfterContentInit {
    * @param index The index to be checked.
    * @returns True if the index is valid for our list of chips.
    */
-  private _isValidIndex(index: number): boolean {
-    return index >= 0 && index < this.chips.length;
+  private _isValidIndex(index: number|null): boolean {
+    return typeof index === 'number' && index >= 0 && index < this.chips.length;
   }
 
 }

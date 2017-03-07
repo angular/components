@@ -8,7 +8,7 @@ import {Subject} from 'rxjs/Subject';
  * ListKeyManager must extend this interface.
  */
 export interface CanDisable {
-  disabled?: boolean;
+  disabled?: boolean|null;
 }
 
 /**
@@ -16,8 +16,8 @@ export interface CanDisable {
  * of items, it will set the active item correctly when arrow events occur.
  */
 export class ListKeyManager<T extends CanDisable> {
-  private _activeItemIndex: number = null;
-  private _activeItem: T;
+  private _activeItemIndex: number|null = null;
+  private _activeItem: T|null;
   private _tabOut: Subject<any> = new Subject();
   private _wrap: boolean = false;
 
@@ -40,9 +40,9 @@ export class ListKeyManager<T extends CanDisable> {
    *
    * @param index The index of the item to be set as active.
    */
-  setActiveItem(index: number): void {
+  setActiveItem(index: number|null): void {
     this._activeItemIndex = index;
-    this._activeItem = this._items.toArray()[index];
+    this._activeItem = typeof index === 'number' ? this._items.toArray()[index] : null;
   }
 
   /**
@@ -75,12 +75,12 @@ export class ListKeyManager<T extends CanDisable> {
   }
 
   /** Returns the index of the currently active item. */
-  get activeItemIndex(): number {
+  get activeItemIndex(): number|null {
     return this._activeItemIndex;
   }
 
   /** Returns the currently active item. */
-  get activeItem(): T {
+  get activeItem(): T|null {
     return this._activeItem;
   }
 

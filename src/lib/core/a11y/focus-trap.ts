@@ -20,8 +20,8 @@ import {coerceBooleanProperty} from '../coercion/boolean-property';
  * This will be replaced with a more intelligent solution before the library is considered stable.
  */
 export class FocusTrap {
-  private _startAnchor: HTMLElement;
-  private _endAnchor: HTMLElement;
+  private _startAnchor: HTMLElement|null;
+  private _endAnchor: HTMLElement|null;
 
   /** Whether the focus trap is active. */
   get enabled(): boolean { return this._enabled; }
@@ -63,20 +63,21 @@ export class FocusTrap {
    * in the constructor, but can be deferred for cases like directives with `*ngIf`.
    */
   attachAnchors(): void {
-    if (!this._startAnchor) {
-      this._startAnchor = this._createAnchor();
-    }
-
-    if (!this._endAnchor) {
-      this._endAnchor = this._createAnchor();
-    }
-
     this._ngZone.runOutsideAngular(() => {
-      this._startAnchor.addEventListener('focus', () => this.focusLastTabbableElement());
-      this._endAnchor.addEventListener('focus', () => this.focusFirstTabbableElement());
+      if (!this._startAnchor) {
+        this._startAnchor = this._createAnchor();
+        this._startAnchor.addEventListener('focus', () => this.focusLastTabbableElement());
+      }
 
-      this._element.parentNode.insertBefore(this._startAnchor, this._element);
-      this._element.parentNode.insertBefore(this._endAnchor, this._element.nextSibling);
+      if (!this._endAnchor) {
+        this._endAnchor = this._createAnchor();
+        this._endAnchor.addEventListener('focus', () => this.focusFirstTabbableElement());
+      }
+
+      if (this._element.parentNode) {
+        this._element.parentNode.insertBefore(this._startAnchor, this._element);
+        this._element.parentNode.insertBefore(this._endAnchor, this._element.nextSibling);
+      }
     });
   }
 
@@ -109,7 +110,7 @@ export class FocusTrap {
   /** Focuses the last tabbable element within the focus trap region. */
   focusLastTabbableElement() {
     let focusTargets = this._element.querySelectorAll('[cdk-focus-end]');
-    let redirectToElement: HTMLElement = null;
+    let redirectToElement: HTMLElement|null = null;
 
     if (focusTargets.length) {
       redirectToElement = focusTargets[focusTargets.length - 1] as HTMLElement;
@@ -123,7 +124,7 @@ export class FocusTrap {
   }
 
   /** Get the first tabbable element from a DOM subtree (inclusive). */
-  private _getFirstTabbableElement(root: HTMLElement): HTMLElement {
+  private _getFirstTabbableElement(root: HTMLElement): HTMLElement|null {
     if (this._checker.isFocusable(root) && this._checker.isTabbable(root)) {
       return root;
     }
@@ -146,7 +147,7 @@ export class FocusTrap {
   }
 
   /** Get the last tabbable element from a DOM subtree (inclusive). */
-  private _getLastTabbableElement(root: HTMLElement): HTMLElement {
+  private _getLastTabbableElement(root: HTMLElement): HTMLElement|null {
     if (this._checker.isFocusable(root) && this._checker.isTabbable(root)) {
       return root;
     }

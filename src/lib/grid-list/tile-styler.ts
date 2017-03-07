@@ -130,7 +130,7 @@ export class TileStyler {
    * This method will be implemented by each type of TileStyler.
    * @docs-private
    */
-  getComputedHeight(): [string, string] { return null; }
+  getComputedHeight(): [string, string] { return ['0px', '0px']; }
 }
 
 

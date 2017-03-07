@@ -52,10 +52,10 @@ export class MdTabGroup {
   private _isInitialized: boolean = false;
 
   /** The tab index that should be selected after the content has been checked. */
-  private _indexToSelect = 0;
+  private _indexToSelect: number|null = 0;
 
   /** Snapshot of the height of the tab body wrapper before another tab is activated. */
-  private _tabBodyWrapperHeight: number = null;
+  private _tabBodyWrapperHeight: number|null = null;
 
   /** Whether the tab group should grow to the size of the active tab */
   private _dynamicHeight: boolean = false;
@@ -68,12 +68,12 @@ export class MdTabGroup {
   get _dynamicHeightDeprecated(): boolean { return this._dynamicHeight; }
   set _dynamicHeightDeprecated(value: boolean) { this._dynamicHeight = value; }
 
-  private _selectedIndex: number = null;
+  private _selectedIndex: number|null = null;
 
   /** The index of the active tab. */
   @Input()
-  set selectedIndex(value: number) { this._indexToSelect = value; }
-  get selectedIndex(): number { return this._selectedIndex; }
+  set selectedIndex(value: number|null) { this._indexToSelect = value; }
+  get selectedIndex(): number|null { return this._selectedIndex; }
 
   /** Position of the tab header. */
   @Input()

@@ -57,8 +57,8 @@ export const SCROLL_THROTTLE_MS = 20;
   exportAs: 'mdTooltip',
 })
 export class MdTooltip implements OnInit, OnDestroy {
-  _overlayRef: OverlayRef;
-  _tooltipInstance: TooltipComponent;
+  _overlayRef: OverlayRef|null;
+  _tooltipInstance: TooltipComponent|null;
   scrollSubscription: Subscription;
 
   private _position: TooltipPosition = 'below';
@@ -173,7 +173,10 @@ export class MdTooltip implements OnInit, OnDestroy {
     }
 
     this._setTooltipMessage(this._message);
-    this._tooltipInstance.show(this._position, delay);
+
+    if (this._tooltipInstance) {
+      this._tooltipInstance.show(this._position, delay);
+    }
   }
 
   /** Hides the tooltip after the delay in ms, defaults to tooltip-delay-hide or 0ms if no input */
@@ -190,22 +193,24 @@ export class MdTooltip implements OnInit, OnDestroy {
 
   /** Returns true if the tooltip is currently visible to the user */
   _isTooltipVisible(): boolean {
-    return this._tooltipInstance && this._tooltipInstance.isVisible();
+    return this._tooltipInstance ? this._tooltipInstance.isVisible() : false;
   }
 
   /** Create the tooltip to display */
   private _createTooltip(): void {
     this._createOverlay();
     let portal = new ComponentPortal(TooltipComponent, this._viewContainerRef);
-    this._tooltipInstance = this._overlayRef.attach(portal).instance;
+    this._tooltipInstance = this._overlayRef ? this._overlayRef.attach(portal).instance : null;
 
-    // Dispose the overlay when finished the shown tooltip.
-    this._tooltipInstance.afterHidden().subscribe(() => {
-      // Check first if the tooltip has already been removed through this components destroy.
-      if (this._tooltipInstance) {
-        this._disposeTooltip();
-      }
-    });
+    if (this._tooltipInstance) {
+      // Dispose the overlay when finished the shown tooltip.
+      this._tooltipInstance.afterHidden().subscribe(() => {
+        // Check first if the tooltip has already been removed through this components destroy.
+        if (this._tooltipInstance) {
+          this._disposeTooltip();
+        }
+      });
+    }
   }
 
   /** Create the overlay config and position strategy */
@@ -232,9 +237,10 @@ export class MdTooltip implements OnInit, OnDestroy {
 
   /** Disposes the current tooltip and the overlay it is attached to */
   private _disposeTooltip(): void {
-    this._overlayRef.dispose();
-    this._overlayRef = null;
-    this._tooltipInstance = null;
+    if (this._overlayRef) {
+      this._overlayRef.dispose();
+      this._overlayRef = this._tooltipInstance = null;
+    }
   }
 
   /** Returns the origin position based on the user's position preference */
@@ -289,12 +295,15 @@ export class MdTooltip implements OnInit, OnDestroy {
   private _setTooltipMessage(message: string) {
     // Must wait for the message to be painted to the tooltip so that the overlay can properly
     // calculate the correct positioning based on the size of the text.
-    this._tooltipInstance.message = message;
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
-      if (this._tooltipInstance) {
-        this._overlayRef.updatePosition();
-      }
-    });
+    if (this._tooltipInstance) {
+      this._tooltipInstance.message = message;
+
+      this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+        if (this._overlayRef) {
+          this._overlayRef.updatePosition();
+        }
+      });
+    }
   }
 }
 
