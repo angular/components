@@ -27,7 +27,7 @@ import 'rxjs/add/operator/first';
 export type MdDialogContainerAnimationState = 'void' | 'enter' | 'exit' | 'exit-start';
 
 /** Possible types of close events */
-export type MdDialogCloseAttemptsTypes = 'escape' | 'backdrop';
+export type MdDialogCloseAttempt = 'escape' | 'backdrop';
 
 /**
  * Internal component that wraps user-provided dialog content.
@@ -69,7 +69,7 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
   dialogConfig: MdDialogConfig;
 
   /** subject to expose any close attempt */
-  _closeAttempt = new Subject<MdDialogCloseAttemptsTypes>();
+  _closeAttempt = new Subject<MdDialogCloseAttempt>();
 
   /** State of the dialog animation. */
   _state: MdDialogContainerAnimationState = 'enter';

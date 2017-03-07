@@ -4,7 +4,7 @@ import {Subject} from 'rxjs/Subject';
 import {
   MdDialogContainer,
   MdDialogContainerAnimationState,
-  MdDialogCloseAttemptsTypes
+  MdDialogCloseAttempt,
 } from './dialog-container';
 
 // TODO(jelbourn): resizing
@@ -57,7 +57,7 @@ export class MdDialogRef<T> {
   /**
    * Gets an observable that is notified when a close attempt is made
    */
-  closeAttempt(): Observable<MdDialogCloseAttemptsTypes> {
+  closeAttempt(): Observable<MdDialogCloseAttempt> {
     return this._containerInstance._closeAttempt.asObservable();
   }
 }
