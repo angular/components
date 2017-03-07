@@ -12,10 +12,10 @@ import {MdGridTileTooWideError} from './grid-list-errors';
  * are given.
  *
  * If the order should be ignored, we start from the beginning for each tile
- * 
- * The basis of the algorithm is the use of an two-dimensional array to track the already placed 
+ *
+ * The basis of the algorithm is the use of an two-dimensional array to track the already placed
  * tiles. Each element of the array corresponds to a row, each element of a row corresponds to a
- * cell. True indicates that the cell is already occupied; false indicates an empty cell. 
+ * cell. True indicates that the cell is already occupied; false indicates an empty cell.
  *
  * @docs-private
  */
@@ -63,7 +63,7 @@ export class TileCoordinator {
 
     // if order is ignored, reset the indexes
     if (ignoreOrder) {
-      // The next time we look for a gap, we start at the beginning 
+      // The next time we look for a gap, we start at the beginning
       this.columnIndex = 0;
       this.rowIndex = 0;
     } else {
@@ -83,7 +83,6 @@ export class TileCoordinator {
 
     // Start index is inclusive, end index is exclusive.
     let gapStartIndex = -1;
-    let gapEndIndex = -1;
     let gapIsLargeEnough = false;
 
     // Look for a gap large enough to fit the given tile. Empty spaces are marked with false.
@@ -103,7 +102,7 @@ export class TileCoordinator {
       }
 
       // if no cell has been occupied the gap sure is large enough
-      if(this.tracker[this.rowIndex].indexOf(true, this.columnIndex) == -1){
+      if (this.tracker[this.rowIndex].indexOf(true, this.columnIndex) == -1) {
         gapIsLargeEnough = true;
       } else {
         gapIsLargeEnough = this._checkGapSize(gapStartIndex, tileCols, tileRows);
@@ -140,9 +139,9 @@ export class TileCoordinator {
    * the tile cols and rows. The gap ends when a occupied cell is found.
    */
   private _checkGapSize(gapStartIndex: number, tileCols: number, tileRows: number): boolean {
-    for (let i = 0; i < tileRows; i++){
+    for (let i = 0; i < tileRows; i++) {
 
-      // if we would have to check a not yet tracked row, we know it is empty 
+      // if we would have to check a not yet tracked row, we know it is empty
       // and that the gap is large enough
       if (this.rowIndex + i  >= this.tracker.length) {
         break;
@@ -153,7 +152,7 @@ export class TileCoordinator {
       for (let j = gapStartIndex; j < gapStartIndex + tileCols; j++) {
 
         // if we encounter a occupied cell the gap isn't large enough
-        if (this.tracker[this.rowIndex + i][j]) {
+        if (this.tracker[this.rowIndex + i][j] !== false) {
           return false;
         }
       }
@@ -165,7 +164,7 @@ export class TileCoordinator {
 
   /** Update the tile tracker to account for the given tile in the given space. */
   private _markTilePosition(start: number, tile: MdGridTile): void {
-    for (let i = 0; i < tile.rowspan; i++){
+    for (let i = 0; i < tile.rowspan; i++) {
 
       // if the row wasn't create yet
       if (this.rowIndex + i >= this.tracker.length) {

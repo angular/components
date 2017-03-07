@@ -247,8 +247,6 @@ describe('MdGridList', () => {
         { cols: 1, rows: 1 },
         { cols: 2, rows: 2 },
         { cols: 1, rows: 1 },
-        { cols: 1, rows: 1 },
-        { cols: 2, rows: 2 },
         { cols: 2, rows: 2 },
         { cols: 1, rows: 1 },
         { cols: 1, rows: 1 }
@@ -257,46 +255,35 @@ describe('MdGridList', () => {
       fixture.detectChanges();
       let tiles = fixture.debugElement.queryAll(By.css('md-grid-tile'));
 
-      expect(getStyle(tiles[0], 'width')).toBe('99.1875px');
+      expect(getStyle(tiles[0], 'width')).toBe('99.25px');
       expect(getStyle(tiles[0], 'height')).toBe('100px');
       expect(getComputedLeft(tiles[0])).toBe(0);
       expect(getStyle(tiles[0], 'top')).toBe('0px');
 
-      expect(getStyle(tiles[1], 'width')).toBe('199.391px');
+      expect(getStyle(tiles[1], 'width')).toBe('199.5px');
       expect(getStyle(tiles[1], 'height')).toBe('201px');
-      expect(getComputedLeft(tiles[1])).toBe(100.1875);
+      expect(getComputedLeft(tiles[1])).toBe(100.25);
       expect(getStyle(tiles[1], 'top')).toBe('0px');
 
-      expect(getStyle(tiles[2], 'width')).toBe('99.1875px');
+      expect(getStyle(tiles[2], 'width')).toBe('99.25px');
       expect(getStyle(tiles[2], 'height')).toBe('100px');
-      expect(getComputedLeft(tiles[2])).toBe(300.59375);
+      expect(getComputedLeft(tiles[2])).toBe(300.75);
       expect(getStyle(tiles[2], 'top')).toBe('0px');
 
-      expect(getStyle(tiles[3], 'width')).toBe('99.1875px');
-      expect(getStyle(tiles[3], 'height')).toBe('100px');
-      expect(getComputedLeft(tiles[3])).toBe(400.796875);
-      expect(getStyle(tiles[3], 'top')).toBe('0px');
+      expect(getStyle(tiles[3], 'width')).toBe('199.5px');
+      expect(getStyle(tiles[3], 'height')).toBe('201px');
+      expect(getComputedLeft(tiles[3])).toBe(0);
+      expect(getStyle(tiles[3], 'top')).toBe('202px');
 
-      // causes gap
-      expect(getStyle(tiles[4], 'width')).toBe('199.391px');
-      expect(getStyle(tiles[4], 'height')).toBe('201px');
-      expect(getComputedLeft(tiles[4])).toBe(300.59375);
-      expect(getStyle(tiles[4], 'top')).toBe('101px');
+      expect(getStyle(tiles[4], 'width')).toBe('99.25px');
+      expect(getStyle(tiles[4], 'height')).toBe('100px');
+      expect(getComputedLeft(tiles[4])).toBe(200.5);
+      expect(getStyle(tiles[4], 'top')).toBe('202px');
 
-      expect(getStyle(tiles[5], 'width')).toBe('199.391px');
-      expect(getStyle(tiles[5], 'height')).toBe('201px');
-      expect(getComputedLeft(tiles[5])).toBe(0);
+      expect(getStyle(tiles[5], 'width')).toBe('99.25px');
+      expect(getStyle(tiles[5], 'height')).toBe('100px');
+      expect(getComputedLeft(tiles[5])).toBe(300.75);
       expect(getStyle(tiles[5], 'top')).toBe('202px');
-
-      expect(getStyle(tiles[6], 'width')).toBe('99.1875px');
-      expect(getStyle(tiles[6], 'height')).toBe('100px');
-      expect(getComputedLeft(tiles[6])).toBe(200.390625);
-      expect(getStyle(tiles[6], 'top')).toBe('202px');
-
-      expect(getStyle(tiles[7], 'width')).toBe('99.1875px');
-      expect(getStyle(tiles[7], 'height')).toBe('100px');
-      expect(getComputedLeft(tiles[7])).toBe(200.390625);
-      expect(getStyle(tiles[7], 'top')).toBe('303px');
   });
 
   it('should lay out tiles filling gaps, when order can be ignored', () => {
@@ -306,8 +293,6 @@ describe('MdGridList', () => {
         { cols: 1, rows: 1 },
         { cols: 2, rows: 2 },
         { cols: 1, rows: 1 },
-        { cols: 1, rows: 1 },
-        { cols: 2, rows: 2 },
         { cols: 2, rows: 2 },
         { cols: 1, rows: 1 },
         { cols: 1, rows: 1 }
@@ -316,48 +301,35 @@ describe('MdGridList', () => {
       fixture.detectChanges();
       let tiles = fixture.debugElement.queryAll(By.css('md-grid-tile'));
 
-      expect(getStyle(tiles[0], 'width')).toBe('99.1875px');
+      expect(getStyle(tiles[0], 'width')).toBe('99.25px');
       expect(getStyle(tiles[0], 'height')).toBe('100px');
       expect(getComputedLeft(tiles[0])).toBe(0);
       expect(getStyle(tiles[0], 'top')).toBe('0px');
 
-      expect(getStyle(tiles[1], 'width')).toBe('199.391px');
+      expect(getStyle(tiles[1], 'width')).toBe('199.5px');
       expect(getStyle(tiles[1], 'height')).toBe('201px');
-      expect(getComputedLeft(tiles[1])).toBe(100.1875);
+      expect(getComputedLeft(tiles[1])).toBe(100.25);
       expect(getStyle(tiles[1], 'top')).toBe('0px');
 
-      expect(getStyle(tiles[2], 'width')).toBe('99.1875px');
+      expect(getStyle(tiles[2], 'width')).toBe('99.25px');
       expect(getStyle(tiles[2], 'height')).toBe('100px');
-      expect(getComputedLeft(tiles[2])).toBe(300.59375);
+      expect(getComputedLeft(tiles[2])).toBe(300.75);
       expect(getStyle(tiles[2], 'top')).toBe('0px');
 
-      expect(getStyle(tiles[3], 'width')).toBe('99.1875px');
-      expect(getStyle(tiles[3], 'height')).toBe('100px');
-      expect(getComputedLeft(tiles[3])).toBe(400.796875);
-      expect(getStyle(tiles[3], 'top')).toBe('0px');
+      expect(getStyle(tiles[3], 'width')).toBe('199.5px');
+      expect(getStyle(tiles[3], 'height')).toBe('201px');
+      expect(getComputedLeft(tiles[3])).toBe(0);
+      expect(getStyle(tiles[3], 'top')).toBe('202px');
 
-      // causes gap
-      expect(getStyle(tiles[4], 'width')).toBe('199.391px');
-      expect(getStyle(tiles[4], 'height')).toBe('201px');
-      expect(getComputedLeft(tiles[4])).toBe(300.59375);
+      expect(getStyle(tiles[4], 'width')).toBe('99.25px');
+      expect(getStyle(tiles[4], 'height')).toBe('100px');
+      expect(getComputedLeft(tiles[4])).toBe(0);
       expect(getStyle(tiles[4], 'top')).toBe('101px');
 
-      // to large for gap
-      expect(getStyle(tiles[5], 'width')).toBe('199.391px');
-      expect(getStyle(tiles[5], 'height')).toBe('201px');
-      expect(getComputedLeft(tiles[5])).toBe(0);
-      expect(getStyle(tiles[5], 'top')).toBe('202px');
-
-      // fills gap
-      expect(getStyle(tiles[6], 'width')).toBe('99.1875px');
-      expect(getStyle(tiles[6], 'height')).toBe('100px');
-      expect(getComputedLeft(tiles[6])).toBe(0);
-      expect(getStyle(tiles[6], 'top')).toBe('101px');
-
-      expect(getStyle(tiles[7], 'width')).toBe('99.1875px');
-      expect(getStyle(tiles[7], 'height')).toBe('100px');
-      expect(getComputedLeft(tiles[7])).toBe(200.390625);
-      expect(getStyle(tiles[7], 'top')).toBe('202px');
+      expect(getStyle(tiles[5], 'width')).toBe('99.25px');
+      expect(getStyle(tiles[5], 'height')).toBe('100px');
+      expect(getComputedLeft(tiles[5])).toBe(300.75);
+      expect(getStyle(tiles[5], 'top')).toBe('101px');
   });
 
   it('should not add any classes to footers without lines', () => {
@@ -525,8 +497,8 @@ class GridListWithComplexLayout {
 }
 
 @Component({template: `
-    <div style="width:500px">
-      <md-grid-list cols="5" rowHeight="100px">
+    <div style="width:400px">
+      <md-grid-list cols="4" rowHeight="100px">
         <md-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows">
         </md-grid-tile>
       </md-grid-list>
@@ -536,8 +508,8 @@ class GridListWithGaps {
 }
 
 @Component({template: `
-    <div style="width:500px">
-      <md-grid-list cols="5" rowHeight="100px" ignoreOrder="true">
+    <div style="width:400px">
+      <md-grid-list cols="4" rowHeight="100px" ignoreOrder="true">
         <md-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows">
         </md-grid-tile>
       </md-grid-list>
