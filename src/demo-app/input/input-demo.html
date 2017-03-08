@@ -40,7 +40,10 @@
         <td>
           <md-input-container class="demo-full-width">
             <input mdInput #postalCode maxLength="5" placeholder="Postal Code" value="94043">
-            <md-hint align="end">{{postalCode.value.length}} / 5</md-hint>
+            <md-hint align="end">
+              <md-icon>mode_edit</md-icon>
+              {{postalCode.value.length}} / 5
+            </md-hint>
           </md-input-container>
         </td>
       </tr></table>
@@ -152,10 +155,10 @@
       <md-input-container>
         <input mdInput>
         <md-placeholder>
-          I <md-icon class="demo-icons">favorite</md-icon> <b>bold</b> placeholder
+          I <md-icon>favorite</md-icon> <b>bold</b> placeholder
         </md-placeholder>
         <md-hint>
-          I also <md-icon class="demo-icons">home</md-icon> <i>italic</i> hint labels
+          I also <md-icon>home</md-icon> <i>italic</i> hint labels
         </md-hint>
       </md-input-container>
     </p>
