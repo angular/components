@@ -71,6 +71,7 @@ task(':build:components:rollup', () => {
     '@angular/platform-browser-dynamic': 'ng.platformBrowserDynamic',
 
     // Rxjs dependencies
+    'rxjs/BehaviorSubject': 'Rx',
     'rxjs/Subject': 'Rx',
     'rxjs/add/observable/fromEvent': 'Rx.Observable',
     'rxjs/add/observable/forkJoin': 'Rx.Observable',

@@ -1,0 +1,13 @@
+<ng-content select="md-header-row"></ng-content>
+<template *ngFor="let row of rows; let index = index; let first = first;
+                  let even = even; let odd = odd;"
+          [ngTemplateOutlet]="getTemplateForRow(row, index, first, even, odd)"
+          [ngOutletContext]="{
+            row: row,
+            index: index,
+            first: first,
+            last: isLast(index),
+            even: even,
+            odd: odd
+          }">
+</template>

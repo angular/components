@@ -1,0 +1,33 @@
+<md-input-container>
+  <input mdInput name="searchTerm"
+         placeholder="Data filter"
+         [ngModel]="dataSource.filter"
+         (ngModelChange)="onSearchChanged($event)">
+</md-input-container>
+
+<md-data-table class="mat-elevation-z1"
+               [dataSource]="dataSource"
+               (onSort)="onSort($event)"
+               [initialSortColumn]="'name'"
+               [defaultSortOrder]="'ascending'">
+  <md-header-row>
+    <md-header-cell sortKey="name">Name</md-header-cell>
+    <md-header-cell sortKey="movie">Movie</md-header-cell>
+  </md-header-row>
+  <md-row *mdRowContext="let characterData = row; when: characterIsVillan" (click)="rowClicked(characterData)">
+    <md-cell>{{characterData.name}} (villan).</md-cell>
+    <md-cell>{{characterData.movie}}</md-cell>
+  </md-row>
+  <md-row *mdRowContext="let characterData = row; when: lastCharacterDisplayed" (click)="rowClicked(characterData)">
+    <md-cell>{{characterData.name}} is last.</md-cell>
+    <md-cell>{{characterData.movie}}</md-cell>
+  </md-row>
+  <md-row *mdRowContext="let characterData = row" (click)="rowClicked(characterData)">
+    <md-cell>{{characterData.name}}</md-cell>
+    <md-cell>{{characterData.movie}}</md-cell>
+  </md-row>
+</md-data-table>
+
+<p *ngIf="lastRowClicked">
+  You just clicked on: {{lastRowClicked.name}} from {{lastRowClicked.movie}}
+</p>

@@ -14,6 +14,7 @@ import {
 import {MdButtonToggleModule} from './button-toggle/index';
 import {MdButtonModule} from './button/index';
 import {MdCheckboxModule} from './checkbox/index';
+import {MdDataTableModule} from './data-table/index';
 import {MdRadioModule} from './radio/index';
 import {MdSelectModule} from './select/index';
 import {MdSlideToggleModule} from './slide-toggle/index';
@@ -44,6 +45,7 @@ const MATERIAL_MODULES = [
   MdCardModule,
   MdChipsModule,
   MdCheckboxModule,
+  MdDataTableModule,
   MdDialogModule,
   MdGridListModule,
   MdIconModule,
@@ -80,6 +82,7 @@ const MATERIAL_MODULES = [
     MdCardModule.forRoot(),
     MdChipsModule.forRoot(),
     MdCheckboxModule.forRoot(),
+    MdDataTableModule.forRoot(),
     MdGridListModule.forRoot(),
     MdInputModule.forRoot(),
     MdListModule.forRoot(),

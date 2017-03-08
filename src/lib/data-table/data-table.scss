@@ -1,0 +1,51 @@
+$table-border-color: #000;
+
+.mat-table {
+  display: block;
+  position: relative;
+}
+
+.mat-table-row,
+.mat-table-header-row {
+  display: flex;
+  width: 100%;
+}
+
+.mat-table-cell,
+.mat-table-header-cell {
+  display: flex;
+  height: 48px;
+  justify-content: flex-start;
+  align-items: center;
+  flex: 1;
+}
+
+.mat-table-header-cell {
+  font-weight: bold;
+
+  &.mat-table-sortable {
+    cursor: pointer;
+  }
+
+  @mixin mat-table-sort-arrow($direction) {
+    &::after {
+      content: '\\25b2';
+      font-size: small;
+
+      @if $direction == 'ascending' {
+        padding-right: 4px;
+        transform: rotate(180deg);
+      } @else {
+        padding-left: 4px;
+      }
+    }
+  }
+
+  &.mat-table-sort-descending {
+    @include mat-table-sort-arrow('descending');
+  }
+
+  &.mat-table-sort-ascending {
+    @include mat-table-sort-arrow('ascending');
+  }
+}
