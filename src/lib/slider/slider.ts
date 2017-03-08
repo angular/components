@@ -59,7 +59,10 @@ export const MD_SLIDER_VALUE_ACCESSOR: any = {
 
 /** A simple change event emitted by the MdSlider component. */
 export class MdSliderChange {
+  /** The MdSlider that changed. */
   source: MdSlider;
+
+  /** Thew new value of the source slider. */
   value: number;
 }
 
