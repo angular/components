@@ -283,13 +283,13 @@ export class MdInputContainer implements AfterContentInit {
   }
   private _floatPlaceholder: FloatPlaceholderType = 'auto';
 
+  @ViewChild('underline') underlineRef: ElementRef;
+
   @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
 
   @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
 
   @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
-
-  @ViewChild('underline') _underlineRef: ElementRef;
 
   ngAfterContentInit() {
     if (!this._mdInputChild) {
@@ -380,9 +380,5 @@ export class MdInputContainer implements AfterContentInit {
     }
 
     this._mdInputChild.ariaDescribedby = ids.join(' ');
-  }
-
-  getPopupConnectionElementRef(): ElementRef {
-    return this._underlineRef;
   }
 }

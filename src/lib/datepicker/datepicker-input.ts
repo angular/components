@@ -85,11 +85,7 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
   }
 
   getPopupConnectionElementRef(): ElementRef {
-    if (this._mdInputContainer) {
-      return this._mdInputContainer.getPopupConnectionElementRef();
-    } else {
-      return this._elementRef;
-    }
+    return this._mdInputContainer ? this._mdInputContainer.underlineRef : this._elementRef;
   }
 
   // Implemented as part of ControlValueAccessor
