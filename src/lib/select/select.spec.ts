@@ -42,7 +42,8 @@ describe('MdSelect', () => {
         SelectWithErrorSibling,
         ThrowsErrorOnInit,
         BasicSelectOnPush,
-        BasicSelectOnPushPreselected
+        BasicSelectOnPushPreselected,
+        SelectWithPlainTabindex
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -1092,6 +1093,17 @@ describe('MdSelect', () => {
         expect(select.getAttribute('tabindex')).toBe('3');
       });
 
+      it('should be able to set the tabindex via the native attribute', () => {
+        fixture.destroy();
+
+        const plainTabindexFixture = TestBed.createComponent(SelectWithPlainTabindex);
+
+        plainTabindexFixture.detectChanges();
+        select = plainTabindexFixture.debugElement.query(By.css('md-select')).nativeElement;
+
+        expect(select.getAttribute('tabindex')).toBe('5');
+      });
+
       it('should set aria-required for required selects', () => {
         expect(select.getAttribute('aria-required'))
           .toEqual('false', `Expected aria-required attr to be false for normal selects.`);
@@ -1872,6 +1884,14 @@ class MultiSelect {
   @ViewChild(MdSelect) select: MdSelect;
   @ViewChildren(MdOption) options: QueryList<MdOption>;
 }
+
+@Component({
+  selector: 'select-with-plain-tabindex',
+  template: `
+    <md-select tabindex="5"></md-select>
+  `
+})
+class SelectWithPlainTabindex { }
 
 
 class FakeViewportRuler {

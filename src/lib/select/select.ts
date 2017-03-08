@@ -14,6 +14,7 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
+  Attribute,
 } from '@angular/core';
 import {MdOption, MdOptionSelectionChange} from '../core/option/option';
 import {ENTER, SPACE} from '../core/keyboard/keycodes';
@@ -152,7 +153,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   private _placeholderState = '';
 
   /** Tab index for the element. */
-  private _tabIndex: number = 0;
+  private _tabIndex: number;
 
   /**
    * The width of the trigger. Must be saved to set the min width of the overlay panel
@@ -294,10 +295,13 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   constructor(private _element: ElementRef, private _renderer: Renderer,
               private _viewportRuler: ViewportRuler, private _changeDetectorRef: ChangeDetectorRef,
-              @Optional() private _dir: Dir, @Self() @Optional() public _control: NgControl) {
+              @Optional() private _dir: Dir, @Self() @Optional() public _control: NgControl,
+              @Attribute('tabindex') tabIndex: string) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
+
+    this._tabIndex = parseInt(tabIndex) || 0;
   }
 
   ngAfterContentInit() {
