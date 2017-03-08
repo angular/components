@@ -7,9 +7,10 @@ import {
   NgModule,
   Output,
   QueryList,
+  ViewChild
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {PortalModule, Portal} from '../core';
+import {PortalModule, Portal, PortalHostDirective, ComponentPortal} from '../core';
 import {MdTreeNode} from './tree-node';
 import {TreeModel} from './tree-model';
 import {TreeNodeModel} from './tree-node-model';
@@ -29,6 +30,8 @@ export class MdTreeChange {
 })
 export class MdTree implements AfterContentInit {
   @ContentChildren(MdTreeNode) treeNodes: QueryList<MdTreeNode>;
+
+  @ViewChild(PortalHostDirective) portalHost: ComponentPortal<MdTreeNode>;
 
   @Input()
   nodeTemplate: Portal<any>;
@@ -83,8 +86,12 @@ export class MdTree implements AfterContentInit {
   }
 
   _addNode(node: TreeNodeModel) {
+    this.portalHost = new ComponentPortal(MdTreeNode);
+    let mdNode = this.portalHost.component.
 
-    //add node
+    // add node itself
+
+    // add children
     node.children.forEach(this._addNode);
   }
 

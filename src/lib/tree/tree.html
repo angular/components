@@ -2,3 +2,5 @@
 <ul>
   <ng-content select="md-tree-node"></ng-content>
 </ul>
+
+<md-tree-node *ngFor="let root of treeModel.roots" [nodes]="root"></md-tree-node>
