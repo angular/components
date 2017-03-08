@@ -26,7 +26,7 @@ body {
 }
 
 h1, h2 {
-  weight: 400;
+  font-weight: 400;
 }
 
 pre {
@@ -45,4 +45,8 @@ pre {
     margin: 0;
     padding: 50px;
   }
+}
+
+code {
+  font-size: 13px;
 }
