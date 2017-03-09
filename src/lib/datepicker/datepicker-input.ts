@@ -1,5 +1,11 @@
 import {
-  AfterContentInit, Directive, ElementRef, forwardRef, Input, OnDestroy,
+  AfterContentInit,
+  Directive,
+  ElementRef,
+  forwardRef,
+  Input,
+  OnDestroy,
+  Optional,
   Renderer
 } from '@angular/core';
 import {MdDatepicker} from './datepicker';
@@ -7,6 +13,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {SimpleDate} from '../core/datetime/simple-date';
 import {CalendarLocale} from '../core/datetime/calendar-locale';
 import {Subscription} from 'rxjs';
+import {MdInputContainer} from '../input/input-container';
 
 
 export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -55,8 +62,11 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
 
   private _datepickerSubscription: Subscription;
 
-  constructor(private _elementRef: ElementRef, private _renderer: Renderer,
-              private _locale: CalendarLocale) {}
+  constructor(
+      private _elementRef: ElementRef,
+      private _renderer: Renderer,
+      private _locale: CalendarLocale,
+      @Optional() private _mdInputContainer: MdInputContainer) {}
 
   ngAfterContentInit() {
     if (this._datepicker) {
@@ -75,7 +85,7 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
   }
 
   getPopupConnectionElementRef(): ElementRef {
-    return this._elementRef;
+    return this._mdInputContainer ? this._mdInputContainer.underlineRef : this._elementRef;
   }
 
   // Implemented as part of ControlValueAccessor

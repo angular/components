@@ -11,7 +11,7 @@ import {
   Optional,
   Output,
   EventEmitter,
-  Renderer
+  Renderer, ViewChild
 } from '@angular/core';
 import {coerceBooleanProperty} from '../core';
 import {NgControl} from '@angular/forms';
@@ -282,6 +282,8 @@ export class MdInputContainer implements AfterContentInit {
     this._floatPlaceholder = value || 'auto';
   }
   private _floatPlaceholder: FloatPlaceholderType = 'auto';
+
+  @ViewChild('underline') underlineRef: ElementRef;
 
   @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
 
