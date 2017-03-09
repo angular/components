@@ -14,7 +14,7 @@ import {RippleConfig, RippleRenderer} from './ripple-renderer';
 import {ViewportRuler} from '../overlay/position/viewport-ruler';
 import {RippleRef} from './ripple-ref';
 
-/** OpqaueToken that can be used to specify the global ripple options. */
+/** OpaqueToken that can be used to specify the global ripple options. */
 export const MD_RIPPLE_GLOBAL_OPTIONS = new OpaqueToken('md-ripple-global-options');
 
 export type RippleGlobalOptions = {
@@ -75,13 +75,18 @@ export class MdRipple implements OnChanges, OnDestroy {
   /** Renderer for the ripple DOM manipulations. */
   private _rippleRenderer: RippleRenderer;
 
+  /** Options that are set globally for all ripples. */
+  private _globalOptions: RippleGlobalOptions;
+
   constructor(
     elementRef: ElementRef,
     ngZone: NgZone,
     ruler: ViewportRuler,
-    @Optional() @Inject(MD_RIPPLE_GLOBAL_OPTIONS) private _globalOptions: RippleGlobalOptions
+    // Type needs to be `any` because of https://github.com/angular/angular/issues/12631
+    @Optional() @Inject(MD_RIPPLE_GLOBAL_OPTIONS) globalOptions: any
   ) {
     this._rippleRenderer = new RippleRenderer(elementRef, ngZone, ruler);
+    this._globalOptions = globalOptions ? globalOptions : {};
   }
 
   ngOnChanges(changes: SimpleChanges) {
