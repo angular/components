@@ -33,9 +33,11 @@ To get started with a prebuilt theme, include the following in your app's index.
 <link href="node_modules/@angular/material/core/theming/prebuilt/indigo-pink.css" rel="stylesheet">
 ```
 
-For information on other prebuilt themes, or help building your own theme, check out the [theming guide](./theming.md).
+Note that your app's project structure may have a different relative location for your node_modules.
 
-## Step 4 (Optional): Gesture Support
+For more information on theming and instructions on how to create a custom theme, see the [theming guide](./theming.md).
+
+## Step 4: Gesture Support
 
 Some components (`md-slide-toggle`, `md-slider`, `mdTooltip`) rely on 
 [HammerJS](http://hammerjs.github.io/) for gestures. In order to get the full feature-set of these
@@ -45,7 +47,12 @@ You can add HammerJS to your application via [npm](https://www.npmjs.com/package
 (such as the [Google CDN](https://developers.google.com/speed/libraries/#hammerjs)), or served 
 directly from your app.
 
-After installing HammerJS, import it on your app's root module.
+To install via npm, use the following command:
+```bash
+npm install --save hammerjs
+```
+
+After installing, import it on your app's root module.
 ```ts
 import 'hammerjs';
 ```
