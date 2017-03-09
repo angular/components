@@ -9,6 +9,7 @@ const highlight = require('gulp-highlight-files');
 const rename = require('gulp-rename');
 const flatten = require('gulp-flatten');
 const hljs = require('highlight.js');
+const dom  = require('gulp-dom');
 
 // Our docs contain comments of the form `<!-- example(...) -->` which serve as placeholders where
 // example code should be inserted. We replace these comments with divs that have a
@@ -20,6 +21,24 @@ const EXAMPLE_PATTERN = /<!--\W*example\(([^)]+)\)\W*-->/g;
 // Most of those links don't work in the Material docs, because the paths are invalid in the
 // documentation page. Using a RegExp to rewrite links in HTML files to work in the docs.
 const LINK_PATTERN = /(<a[^>]*) href="([^"]*)"/g;
+
+// HTML tags in the markdown generated files that should receive a .docs-markdown-${tagName} class
+// for styling purposes.
+const MARKDOWN_TAGS_TO_CLASS_ALIAS = [
+  'a',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'li',
+  'ol',
+  'p',
+  'table',
+  'tbody',
+  'td',
+  'th'
+];
 
 task('docs', ['markdown-docs', 'highlight-docs', 'api-docs']);
 
@@ -38,6 +57,15 @@ task('markdown-docs', () => {
         }
       }))
       .pipe(transform(transformMarkdownFiles))
+      .pipe(dom(function () {
+        MARKDOWN_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
+          Array.prototype.slice.call(this.querySelectorAll(tag)).forEach((el: any) => {
+            el.classList.add(`docs-markdown-${tag}`);
+          });
+        });
+
+        return this;
+      }))
       .pipe(dest('dist/docs/markdown'));
 });
 
@@ -49,10 +77,10 @@ task('highlight-docs', () => {
   };
 
   return src('src/examples/**/*.+(html|css|ts)')
-    .pipe(flatten())
-    .pipe(rename(renameFile))
-    .pipe(highlight())
-    .pipe(dest('dist/docs/examples'));
+      .pipe(flatten())
+      .pipe(rename(renameFile))
+      .pipe(highlight())
+      .pipe(dest('dist/docs/examples'));
 });
 
 task('api-docs', () => {
