@@ -4,18 +4,22 @@ import {MdDatepicker} from './datepicker';
 
 @Component({
   moduleId: module.id,
-  selector: 'md-datepicker-trigger, mat-datepicker-trigger',
+  selector: 'button[mdDatepickerToggle], button[matDatepickerToggle]',
   template: '',
-  styleUrls: ['datepicker-trigger.css'],
+  styleUrls: ['datepicker-toggle.css'],
   host: {
-    '[class.mat-datepicker-trigger]': 'true',
+    '[class.mat-datepicker-toggle]': 'true',
     '(click)': '_open($event)',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdDatepickerTrigger {
-  @Input('for') datepicker: MdDatepicker;
+export class MdDatepickerToggle {
+  @Input('mdDatepickerToggle') datepicker: MdDatepicker;
+
+  @Input('matDatepickerToggle')
+  get _datepicker() { return this.datepicker; }
+  set _datepicker(v: MdDatepicker) { this.datepicker = v; }
 
   _open(event: Event): void {
     if (this.datepicker) {

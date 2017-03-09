@@ -21,7 +21,7 @@ describe('MdDatepicker', () => {
         DatepickerWithStartAt,
         DatepickerWithNgModel,
         DatepickerWithFormControl,
-        DatepickerWithTrigger,
+        DatepickerWithToggle,
         InputContainerDatepicker,
       ],
     });
@@ -296,22 +296,22 @@ describe('MdDatepicker', () => {
     });
   });
 
-  describe('datepicker with datepicker-trigger', () => {
-    let fixture: ComponentFixture<DatepickerWithTrigger>;
-    let testComponent: DatepickerWithTrigger;
+  describe('datepicker with mdDatepickerToggle', () => {
+    let fixture: ComponentFixture<DatepickerWithToggle>;
+    let testComponent: DatepickerWithToggle;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(DatepickerWithTrigger);
+      fixture = TestBed.createComponent(DatepickerWithToggle);
       fixture.detectChanges();
 
       testComponent = fixture.componentInstance;
     });
 
-    it('should open calendar when trigger clicked', () => {
+    it('should open calendar when toggle clicked', () => {
       expect(document.querySelector('md-dialog-container')).toBeNull();
 
-      let trigger = fixture.debugElement.query(By.css('md-datepicker-trigger'));
-      dispatchMouseEvent(trigger.nativeElement, 'click');
+      let toggle = fixture.debugElement.query(By.css('button'));
+      dispatchMouseEvent(toggle.nativeElement, 'click');
       fixture.detectChanges();
 
       expect(document.querySelector('md-dialog-container')).not.toBeNull();
@@ -411,11 +411,11 @@ class DatepickerWithFormControl {
 @Component({
   template: `
     <input [mdDatepicker]="d">
-    <md-datepicker-trigger [for]="d"></md-datepicker-trigger>
+    <button [mdDatepickerToggle]="d"></button>
     <md-datepicker #d [touchUi]="true"></md-datepicker>
   `,
 })
-class DatepickerWithTrigger {}
+class DatepickerWithToggle {}
 
 
 @Component({

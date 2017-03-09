@@ -6,18 +6,18 @@
 <br>
 <p>
   <input [mdDatepicker]="dp" [(ngModel)]="date">
-  <md-datepicker-trigger [for]="dp"></md-datepicker-trigger>
+  <button [mdDatepickerToggle]="dp"></button>
   <md-datepicker #dp [touchUi]="touch"></md-datepicker>
 </p>
 <p>
   <md-input-container>
     <input mdInput [mdDatepicker]="dp2" [(ngModel)]="date">
-    <md-datepicker-trigger mdSuffix [for]="dp2"></md-datepicker-trigger>
+    <button [mdDatepickerToggle]="dp2"></button>
     <md-datepicker #dp2 [touchUi]="touch"></md-datepicker>
   </md-input-container>
 </p>
 <p>
-  <md-datepicker-trigger [for]="dp3"></md-datepicker-trigger>
+  <button [mdDatepickerToggle]="dp3"></button>
   <md-input-container>
     <input mdInput [mdDatepicker]="dp3" [(ngModel)]="date">
     <md-datepicker #dp3 [touchUi]="touch"></md-datepicker>
