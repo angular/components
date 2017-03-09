@@ -61,7 +61,7 @@ import 'hammerjs';
 ```
 
 ## Configuring SystemJS
-If your project is using SystemJS for module loading, you will need to add `@angular/material` 
+If your project is using SystemJS for module loading, you will need to add `@angular/material` and `hammerjs`
 to the SystemJS configuration:
 
 ```js
@@ -69,7 +69,8 @@ System.config({
   // existing configuration options
   map: {
     ...,
-    '@angular/material': 'npm:@angular/material/bundles/material.umd.js'
+    '@angular/material': 'npm:@angular/material/bundles/material.umd.js',
+    'hammerjs': 'npm:hammerjs/hammer.js'
   }
 });
 ```
