@@ -54,8 +54,15 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   @ContentChildren(MdMenuItem) items: QueryList<MdMenuItem>;
   @Input() overlapTrigger = true;
 
-  constructor(@Attribute('x-position') posX: MenuPositionX,
-              @Attribute('y-position') posY: MenuPositionY) {
+  constructor(@Attribute('xPosition') posX: MenuPositionX,
+              @Attribute('yPosition') posY: MenuPositionY,
+              @Attribute('x-position') deprecatedPosX: MenuPositionX,
+              @Attribute('y-position') deprecatedPosY: MenuPositionY) {
+
+    // TODO(kara): Remove kebab-case attributes after next release
+    if (deprecatedPosX) { this._setPositionX(deprecatedPosX); }
+    if (deprecatedPosY) { this._setPositionY(deprecatedPosY); }
+
     if (posX) { this._setPositionX(posX); }
     if (posY) { this._setPositionY(posY); }
     this.setPositionClasses(this.positionX, this.positionY);
@@ -69,7 +76,9 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._tabSubscription.unsubscribe();
+    if (this._tabSubscription) {
+      this._tabSubscription.unsubscribe();
+    }
   }
 
   /**

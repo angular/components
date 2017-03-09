@@ -8,22 +8,12 @@ import {
   Output,
   EventEmitter,
   AfterContentInit,
-  NgModule,
-  ModuleWithProviders,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-import {FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {
-  applyCssTransform,
-  coerceBooleanProperty,
-  GestureConfig,
-  HammerInput,
-  CompatibilityModule,
-} from '../core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {applyCssTransform, coerceBooleanProperty, HammerInput} from '../core';
 import {Observable} from 'rxjs/Observable';
-import {MdRippleModule} from '../core/ripple/ripple';
 
 
 export const MD_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {
@@ -296,7 +286,7 @@ class SlideToggleRenderer {
   /** Previous checked state before drag started. */
   private _previousChecked: boolean;
 
-  /** Percentage of the thumb while dragging. */
+  /** Percentage of the thumb while dragging. Percentage as fraction of 100. */
   dragPercentage: number;
 
   /** Whether the thumb is currently being dragged. */
@@ -333,12 +323,14 @@ class SlideToggleRenderer {
 
   /** Updates the thumb containers position from the specified distance. */
   updateThumbPosition(distance: number) {
-    this.dragPercentage = this._getThumbPercentage(distance);
-    applyCssTransform(this._thumbEl, `translate3d(${this.dragPercentage}%, 0, 0)`);
+    this.dragPercentage = this._getDragPercentage(distance);
+    // Calculate the moved distance based on the thumb bar width.
+    let dragX = (this.dragPercentage / 100) * this._thumbBarWidth;
+    applyCssTransform(this._thumbEl, `translate3d(${dragX}px, 0, 0)`);
   }
 
-  /** Retrieves the percentage of thumb from the moved distance. */
-  private _getThumbPercentage(distance: number) {
+  /** Retrieves the percentage of thumb from the moved distance. Percentage as fraction of 100. */
+  private _getDragPercentage(distance: number) {
     let percentage = (distance / this._thumbBarWidth) * 100;
 
     // When the toggle was initially checked, then we have to start the drag at the end.
@@ -349,21 +341,4 @@ class SlideToggleRenderer {
     return Math.max(0, Math.min(percentage, 100));
   }
 
-}
-
-
-@NgModule({
-  imports: [FormsModule, MdRippleModule, CompatibilityModule],
-  exports: [MdSlideToggle, CompatibilityModule],
-  declarations: [MdSlideToggle],
-  providers: [{provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}],
-})
-export class MdSlideToggleModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdSlideToggleModule,
-      providers: []
-    };
-  }
 }

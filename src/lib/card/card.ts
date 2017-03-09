@@ -1,16 +1,14 @@
 import {
-  NgModule,
-  ModuleWithProviders,
   Component,
   ViewEncapsulation,
   ChangeDetectionStrategy,
   Directive
 } from '@angular/core';
-import {CompatibilityModule} from '../core';
 
 
 /**
  * Content of a card, needed as it's used as a selector in the API.
+ * @docs-private
  */
 @Directive({
   selector: 'md-card-content, mat-card-content',
@@ -22,6 +20,7 @@ export class MdCardContent {}
 
 /**
  * Title of a card, needed as it's used as a selector in the API.
+ * @docs-private
  */
 @Directive({
   selector: 'md-card-title, mat-card-title',
@@ -33,6 +32,7 @@ export class MdCardTitle {}
 
 /**
  * Sub-title of a card, needed as it's used as a selector in the API.
+ * @docs-private
  */
 @Directive({
   selector: 'md-card-subtitle, mat-card-subtitle',
@@ -44,6 +44,7 @@ export class MdCardSubtitle {}
 
 /**
  * Action section of a card, needed as it's used as a selector in the API.
+ * @docs-private
  */
 @Directive({
   selector: 'md-card-actions, mat-card-actions',
@@ -55,6 +56,7 @@ export class MdCardActions {}
 
 /**
  * Footer of a card, needed as it's used as a selector in the API.
+ * @docs-private
  */
 @Directive({
   selector: 'md-card-footer, mat-card-footer',
@@ -66,6 +68,7 @@ export class MdCardFooter {}
 
 /**
  * Image used in a card, needed to add the mat- CSS styling.
+ * @docs-private
  */
 @Directive({
   selector: '[md-card-sm-image], [mat-card-sm-image]',
@@ -77,6 +80,7 @@ export class MdCardSmImage {}
 
 /**
  * Image used in a card, needed to add the mat- CSS styling.
+ * @docs-private
  */
 @Directive({
   selector: '[md-card-md-image], [mat-card-md-image]',
@@ -88,6 +92,7 @@ export class MdCardMdImage {}
 
 /**
  * Image used in a card, needed to add the mat- CSS styling.
+ * @docs-private
  */
 @Directive({
   selector: '[md-card-lg-image], [mat-card-lg-image]',
@@ -99,6 +104,7 @@ export class MdCardLgImage {}
 
 /**
  * Image used in a card, needed to add the mat- CSS styling.
+ * @docs-private
  */
 @Directive({
   selector: '[md-card-image], [mat-card-image]',
@@ -110,6 +116,7 @@ export class MdCardImage {}
 
 /**
  * Large image used in a card, needed to add the mat- CSS styling.
+ * @docs-private
  */
 @Directive({
   selector: '[md-card-xl-image], [mat-card-xl-image]',
@@ -121,6 +128,7 @@ export class MdCardXlImage {}
 
 /**
  * Avatar image used in a card, needed to add the mat- CSS styling.
+ * @docs-private
  */
 @Directive({
   selector: '[md-card-avatar], [mat-card-avatar]',
@@ -159,6 +167,7 @@ export class MdCard {}
 /**
  * Component intended to be used within the `<md-card>` component. It adds styles for a
  * preset header section (i.e. a title, subtitle, and avatar layout).
+ * @docs-private
  */
 @Component({
   moduleId: module.id,
@@ -176,6 +185,7 @@ export class MdCardHeader {}
 /**
  * Component intended to be used within the <md-card> component. It adds styles for a preset
  * layout that groups an image with a title section.
+ * @docs-private
  */
 @Component({
   moduleId: module.id,
@@ -188,39 +198,3 @@ export class MdCardHeader {}
   }
 })
 export class MdCardTitleGroup {}
-
-
-@NgModule({
-  imports: [CompatibilityModule],
-  exports: [
-    MdCard,
-    MdCardHeader,
-    MdCardTitleGroup,
-    MdCardContent,
-    MdCardTitle,
-    MdCardSubtitle,
-    MdCardActions,
-    MdCardFooter,
-    MdCardSmImage,
-    MdCardMdImage,
-    MdCardLgImage,
-    MdCardImage,
-    MdCardXlImage,
-    MdCardAvatar,
-    CompatibilityModule,
-  ],
-  declarations: [
-    MdCard, MdCardHeader, MdCardTitleGroup, MdCardContent, MdCardTitle, MdCardSubtitle,
-    MdCardActions, MdCardFooter, MdCardSmImage, MdCardMdImage, MdCardLgImage, MdCardImage,
-    MdCardXlImage, MdCardAvatar,
-  ],
-})
-export class MdCardModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdCardModule,
-      providers: []
-    };
-  }
-}

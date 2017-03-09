@@ -15,7 +15,7 @@ import {
   MdMenuPanel,
   MenuPositionX,
   MenuPositionY
-} from './menu';
+} from './index';
 import {OverlayContainer} from '../core/overlay/overlay-container';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {Dir, LayoutDirection} from '../core/rtl/dir';
@@ -412,6 +412,12 @@ describe('MdMenu', () => {
     });
   });
 
+  describe('destroy', () => {
+    it('does not throw an error on destroy', () => {
+      const fixture = TestBed.createComponent(SimpleMenu);
+      expect(fixture.destroy.bind(fixture)).not.toThrow();
+    });
+  });
 });
 
 @Component({

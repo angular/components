@@ -1,5 +1,5 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {FormControl, NgModel} from '@angular/forms';
 import 'rxjs/add/operator/startWith';
 
 @Component({
@@ -18,6 +18,8 @@ export class AutocompleteDemo {
   tdStates: any[];
 
   tdDisabled = false;
+
+  @ViewChild(NgModel) modelDir: NgModel;
 
   states = [
     {code: 'AL', name: 'Alabama'},
@@ -86,7 +88,8 @@ export class AutocompleteDemo {
   }
 
   filterStates(val: string) {
-    return val ? this.states.filter((s) => s.name.match(new RegExp(val, 'gi'))) : this.states;
+    return val ? this.states.filter(s => new RegExp(`^${val}`, 'gi').test(s.name))
+               : this.states;
   }
 
 }

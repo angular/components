@@ -48,14 +48,18 @@ local template variable (here we called it "auto"), and binding that variable to
 At this point, the autocomplete panel should be toggleable on focus and options should be selectable. But if we want 
 our options to filter when we type, we need to add a custom filter. 
 
-You can filter the options in any way you want based on the text input. Here we will do a simple string test on the 
-input value to see if it matches the option value. We already have access to the built-in `valueChanges` observable on 
-the `FormControl`, so we can simply map the text input's values to the suggested options by passing them through this 
-filter. The resulting observable (`filteredOptions`) can be added to the template in place of the `options` property 
-using the `async` pipe.
+You can filter the options in any way you like based on the text input*. Here we will perform a simple string test on 
+the option value to see if it matches the input value, starting from the option's first letter. We already have access 
+to the built-in `valueChanges` observable on the `FormControl`, so we can simply map the text input's values to the 
+suggested options by passing them through this filter. The resulting observable (`filteredOptions`) can be added to the 
+template in place of the `options` property using the `async` pipe.
 
 Below we are also priming our value change stream with `null` so that the options are filtered by that value on init 
 (before there are any value changes).
+
+*For optimal accessibility, you may want to consider adding text guidance on the page to explain filter criteria. 
+This is especially helpful for screenreader users if you're using a non-standard filter that doesn't limit matches 
+to the beginning of the string.
 
 *my-comp.ts*
 ```ts
@@ -75,7 +79,7 @@ class MyComp {
    }
    
    filter(val: string): string[] {
-      return this.options.filter(option => new RegExp(val, 'gi').test(option)); 
+      return this.options.filter(option => new RegExp(`^${val}`, 'gi').test(option)); 
    }
 }
 ```
@@ -110,7 +114,7 @@ Then bind it to the autocomplete's `displayWith` property.
 
 <md-autocomplete #auto="mdAutocomplete" [displayWith]="displayFn">
    <md-option *ngFor="let option of filteredOptions | async" [value]="option">
-      {{ option }}
+      {{ option.name }}
    </md-option>
 </md-autocomplete>
 ```
@@ -134,7 +138,7 @@ class MyComp {
    }
    
    filter(name: string): User[] {
-      return this.options.filter(option => new RegExp(name, 'gi').test(option)); 
+      return this.options.filter(option => new RegExp(`^${name}`, 'gi').test(option)); 
    }
    
    displayFn(user: User): string {

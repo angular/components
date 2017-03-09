@@ -1,24 +1,23 @@
 import {
-  Component,
-  ViewEncapsulation,
-  Input,
-  HostBinding,
   ChangeDetectionStrategy,
+  Component,
+  Directive,
   ElementRef,
+  HostBinding,
+  Input,
+  OnDestroy,
   Renderer,
-  NgModule,
-  ModuleWithProviders, Directive,
+  ViewEncapsulation
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MdRippleModule, coerceBooleanProperty, CompatibilityModule} from '../core';
+import {coerceBooleanProperty, FocusOriginMonitor} from '../core';
 
 
-// TODO(jelbourn): Make the `isMouseDown` stuff done with one global listener.
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
 
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
  */
 @Directive({
   selector: 'button[md-button], button[mat-button], a[md-button], a[mat-button]',
@@ -30,6 +29,7 @@ export class MdButtonCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
  */
 @Directive({
   selector:
@@ -43,6 +43,7 @@ export class MdRaisedButtonCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
  */
 @Directive({
   selector:
@@ -55,6 +56,7 @@ export class MdIconButtonCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
  */
 @Directive({
   selector: 'button[md-fab], button[mat-fab], a[md-fab], a[mat-fab]',
@@ -66,6 +68,7 @@ export class MdFabCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
  */
 @Directive({
   selector: 'button[md-mini-fab], button[mat-mini-fab], a[md-mini-fab], a[mat-mini-fab]',
@@ -87,24 +90,14 @@ export class MdMiniFabCssMatStyler {}
             'button[mat-fab], button[mat-mini-fab]',
   host: {
     '[disabled]': 'disabled',
-    '[class.mat-button-focus]': '_isKeyboardFocused',
-    '(mousedown)': '_setMousedown()',
-    '(focus)': '_setKeyboardFocus()',
-    '(blur)': '_removeKeyboardFocus()',
   },
   templateUrl: 'button.html',
   styleUrls: ['button.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdButton {
+export class MdButton implements OnDestroy {
   private _color: string;
-
-  /** Whether the button has focus from the keyboard (not the mouse). Used for class binding. */
-  _isKeyboardFocused: boolean = false;
-
-  /** Whether a mousedown has occurred on this element in the last 100ms. */
-  _isMouseDown: boolean = false;
 
   /** Whether the button is round. */
   _isRoundButton: boolean = ['icon-button', 'fab', 'mini-fab'].some(suffix => {
@@ -126,21 +119,19 @@ export class MdButton {
   get disabled() { return this._disabled; }
   set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value) ? true : null; }
 
-  constructor(private _elementRef: ElementRef, private _renderer: Renderer) { }
+  constructor(private _elementRef: ElementRef, private _renderer: Renderer,
+              private _focusOriginMonitor: FocusOriginMonitor) {
+    this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
+  }
+
+  ngOnDestroy() {
+    this._focusOriginMonitor.unmonitor(this._elementRef.nativeElement);
+  }
 
   /** The color of the button. Can be `primary`, `accent`, or `warn`. */
   @Input()
   get color(): string { return this._color; }
   set color(value: string) { this._updateColor(value); }
-
-  _setMousedown() {
-    // We only *show* the focus style when focus has come to the button via the keyboard.
-    // The Material Design spec is silent on this topic, and without doing this, the
-    // button continues to look :active after clicking.
-    // @see http://marcysutton.com/button-focus-hell/
-    this._isMouseDown = true;
-    setTimeout(() => { this._isMouseDown = false; }, 100);
-  }
 
   _updateColor(newColor: string) {
     this._setElementColor(this._color, false);
@@ -152,14 +143,6 @@ export class MdButton {
     if (color != null && color != '') {
       this._renderer.setElementClass(this._getHostElement(), `mat-${color}`, isAdd);
     }
-  }
-
-  _setKeyboardFocus() {
-    this._isKeyboardFocused = !this._isMouseDown;
-  }
-
-  _removeKeyboardFocus() {
-    this._isKeyboardFocused = false;
   }
 
   /** Focuses the button. */
@@ -186,10 +169,6 @@ export class MdButton {
   host: {
     '[attr.disabled]': 'disabled',
     '[attr.aria-disabled]': '_isAriaDisabled',
-    '[class.mat-button-focus]': '_isKeyboardFocused',
-    '(mousedown)': '_setMousedown()',
-    '(focus)': '_setKeyboardFocus()',
-    '(blur)': '_removeKeyboardFocus()',
     '(click)': '_haltDisabledEvents($event)',
   },
   templateUrl: 'button.html',
@@ -197,8 +176,8 @@ export class MdButton {
   encapsulation: ViewEncapsulation.None
 })
 export class MdAnchor extends MdButton {
-  constructor(elementRef: ElementRef, renderer: Renderer) {
-    super(elementRef, renderer);
+  constructor(elementRef: ElementRef, renderer: Renderer, focusOriginMonitor: FocusOriginMonitor) {
+    super(elementRef, renderer, focusOriginMonitor);
   }
 
   /** @docs-private */
@@ -217,37 +196,5 @@ export class MdAnchor extends MdButton {
       event.preventDefault();
       event.stopImmediatePropagation();
     }
-  }
-}
-
-
-@NgModule({
-  imports: [CommonModule, MdRippleModule, CompatibilityModule],
-  exports: [
-    MdButton, MdAnchor,
-    CompatibilityModule,
-    MdButtonCssMatStyler,
-    MdRaisedButtonCssMatStyler,
-    MdIconButtonCssMatStyler,
-    MdFabCssMatStyler,
-    MdMiniFabCssMatStyler
-  ],
-  declarations: [
-    MdButton,
-    MdAnchor,
-    MdButtonCssMatStyler,
-    MdRaisedButtonCssMatStyler,
-    MdIconButtonCssMatStyler,
-    MdFabCssMatStyler,
-    MdMiniFabCssMatStyler
-  ],
-})
-export class MdButtonModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdButtonModule,
-      providers: []
-    };
   }
 }
