@@ -1,6 +1,25 @@
 <h1>Work in progress, not ready for use.</h1>
 
-<input [mdDatepicker]="dp" [(ngModel)]="date">
-<button (click)="dp.openStandardUi()">open</button>
-<button (click)="dp.openTouchUi()">open (mobile)</button>
-<md-datepicker #dp></md-datepicker>
+<p>
+  <md-checkbox [(ngModel)]="touch">Use touch UI</md-checkbox>
+</p>
+<br>
+<p>
+  <input [mdDatepicker]="dp" [(ngModel)]="date">
+  <button [mdDatepickerToggle]="dp"></button>
+  <md-datepicker #dp [touchUi]="touch"></md-datepicker>
+</p>
+<p>
+  <md-input-container>
+    <input mdInput [mdDatepicker]="dp2" [(ngModel)]="date">
+    <button [mdDatepickerToggle]="dp2"></button>
+    <md-datepicker #dp2 [touchUi]="touch"></md-datepicker>
+  </md-input-container>
+</p>
+<p>
+  <button [mdDatepickerToggle]="dp3"></button>
+  <md-input-container>
+    <input mdInput [mdDatepicker]="dp3" [(ngModel)]="date">
+    <md-datepicker #dp3 [touchUi]="touch"></md-datepicker>
+  </md-input-container>
+</p>
