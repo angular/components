@@ -53,6 +53,13 @@ export class MdDatepicker implements OnDestroy {
   set startAt(date: SimpleDate) { this._startAt = this._locale.parseDate(date); }
   private _startAt: SimpleDate;
 
+  /**
+   * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
+   * than a popup and elements have more padding to allow for bigger touch targets.
+   */
+  @Input()
+  touchUi = false;
+
   @Output() selectedChanged = new EventEmitter<SimpleDate>();
 
   get _selected(): SimpleDate {
@@ -62,12 +69,6 @@ export class MdDatepicker implements OnDestroy {
     this.selectedChanged.emit(value);
     this.close();
   }
-
-  /**
-   * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
-   * than a popup and elements have more padding to allow for bigger touch targets.
-   */
-  touchUi: boolean;
 
   /** The calendar template. */
   @ViewChild(TemplateRef) calendarTemplate: TemplateRef<any>;
@@ -106,21 +107,11 @@ export class MdDatepicker implements OnDestroy {
     this._datepickerInput = input;
   }
 
-  /** Opens the calendar in standard UI mode. */
-  openStandardUi(): void {
-    this._open();
-  }
-
-  /** Opens the calendar in touch UI mode. */
-  openTouchUi(): void {
-    this._open(true);
-  }
-
   /**
    * Open the calendar.
    * @param touchUi Whether to use the touch UI.
    */
-  private _open(touchUi = false): void {
+  open(): void {
     if (!this._datepickerInput) {
       throw new MdError('Attempted to open an MdDatepicker with no associated input.');
     }
@@ -129,8 +120,7 @@ export class MdDatepicker implements OnDestroy {
       this._calendarPortal = new TemplatePortal(this.calendarTemplate, this._viewContainerRef);
     }
 
-    this.touchUi = touchUi;
-    touchUi ? this._openAsDialog() : this._openAsPopup();
+    this.touchUi ? this._openAsDialog() : this._openAsPopup();
   }
 
   /** Close the calendar. */

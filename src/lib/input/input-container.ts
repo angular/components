@@ -1,30 +1,25 @@
 import {
-  AfterViewInit,
   AfterContentInit,
+  AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ContentChild,
   ContentChildren,
   Directive,
   ElementRef,
+  EventEmitter,
   Input,
   Optional,
   Output,
-  EventEmitter,
-  Renderer,
-  ChangeDetectorRef,
-  ViewEncapsulation,
-  Self,
   QueryList,
+  Renderer,
+  Self,
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {coerceBooleanProperty} from '../core';
-import {NgControl, NgForm, FormGroupDirective} from '@angular/forms';
+import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {getSupportedInputTypes} from '../core/platform/features';
 import {
   MdInputContainerDuplicatedHintError,
@@ -318,6 +313,8 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit {
     this._floatPlaceholder = value || 'auto';
   }
   private _floatPlaceholder: FloatPlaceholderType = 'auto';
+
+  @ViewChild('underline') underlineRef: ElementRef;
 
   @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
 

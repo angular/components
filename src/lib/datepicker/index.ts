@@ -9,6 +9,7 @@ import {MdDatepicker} from './datepicker';
 import {MdDatepickerInput} from './datepicker-input';
 import {MdDialogModule} from '../dialog/index';
 import {MdCalendar} from './calendar';
+import {MdDatepickerToggle} from './datepicker-toggle';
 
 
 export * from './calendar';
@@ -29,12 +30,14 @@ export * from './year-view';
   exports: [
     MdDatepicker,
     MdDatepickerInput,
+    MdDatepickerToggle,
   ],
   declarations: [
     MdCalendar,
     MdCalendarTable,
     MdDatepicker,
     MdDatepickerInput,
+    MdDatepickerToggle,
     MdMonthView,
     MdYearView,
   ],
