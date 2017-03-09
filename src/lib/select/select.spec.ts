@@ -979,8 +979,8 @@ describe('MdSelect', () => {
     describe('x-axis positioning', () => {
 
       beforeEach(() => {
-        select.style.marginLeft = '20px';
-        select.style.marginRight = '20px';
+        select.style.marginLeft = '30px';
+        select.style.marginRight = '30px';
       });
 
       it('should align the trigger and the selected option on the x-axis in ltr', () => {
