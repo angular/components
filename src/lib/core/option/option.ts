@@ -7,13 +7,16 @@ import {
   NgModule,
   ModuleWithProviders,
   Renderer,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Inject,
+  Optional,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ENTER, SPACE} from '../keyboard/keycodes';
 import {coerceBooleanProperty} from '../coercion/boolean-property';
 import {MdRippleModule} from '../ripple/index';
 import {MdSelectionModule} from '../selection/index';
+import {MATERIAL_COMPATIBILITY_MODE} from '../../core/compatibility/compatibility';
 
 /**
  * Option IDs need to be unique across components, so this counter exists outside of
@@ -79,7 +82,10 @@ export class MdOption {
   /** Event emitted when the option is selected or deselected. */
   @Output() onSelectionChange = new EventEmitter<MdOptionSelectionChange>();
 
-  constructor(private _element: ElementRef, private _renderer: Renderer) {}
+  constructor(
+    private _element: ElementRef,
+    private _renderer: Renderer,
+    @Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) public _isCompatibilityMode: boolean) {}
 
   /**
    * Whether or not the option is currently active and ready to be selected.

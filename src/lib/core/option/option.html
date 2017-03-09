@@ -1,5 +1,10 @@
-<md-pseudo-checkbox class="mat-option-pseudo-checkbox" *ngIf="multiple"
-    [state]="selected ? 'checked' : ''" color="primary"></md-pseudo-checkbox>
+<span [ngSwitch]="_isCompatibilityMode">
+  <mat-pseudo-checkbox class="mat-option-pseudo-checkbox" *ngSwitchCase="true"
+      [state]="selected ? 'checked' : ''" color="primary"></mat-pseudo-checkbox>
+  <md-pseudo-checkbox class="mat-option-pseudo-checkbox" *ngSwitchDefault
+      [state]="selected ? 'checked' : ''" color="primary"></md-pseudo-checkbox>
+</span>
+
 <ng-content></ng-content>
 <div class="mat-option-ripple" *ngIf="!disabled" md-ripple [mdRippleTrigger]="_getHostElement()">
 </div>
