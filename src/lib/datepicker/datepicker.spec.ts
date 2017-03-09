@@ -6,13 +6,14 @@ import {MdDatepickerInput} from './datepicker-input';
 import {SimpleDate} from '../core/datetime/simple-date';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {dispatchFakeEvent} from '../core/testing/dispatch-events';
+import {dispatchFakeEvent, dispatchMouseEvent} from '../core/testing/dispatch-events';
+import {MdInputModule} from '../input/index';
 
 
 describe('MdDatepicker', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdDatepickerModule, FormsModule, ReactiveFormsModule],
+      imports: [MdDatepickerModule, MdInputModule, FormsModule, ReactiveFormsModule],
       declarations: [
         StandardDatepicker,
         MultiInputDatepicker,
@@ -20,6 +21,8 @@ describe('MdDatepicker', () => {
         DatepickerWithStartAt,
         DatepickerWithNgModel,
         DatepickerWithFormControl,
+        DatepickerWithToggle,
+        InputContainerDatepicker,
       ],
     });
 
@@ -37,26 +40,29 @@ describe('MdDatepicker', () => {
       testComponent = fixture.componentInstance;
     });
 
-    it('openStandardUi should open popup', () => {
+    it('open non-touch should open popup', () => {
       expect(document.querySelector('.cdk-overlay-pane')).toBeNull();
 
-      testComponent.datepicker.openStandardUi();
+      testComponent.datepicker.open();
       fixture.detectChanges();
 
       expect(document.querySelector('.cdk-overlay-pane')).not.toBeNull();
     });
 
-    it('openTouchUi should open dialog', () => {
+    it('open touch should open dialog', () => {
+      testComponent.touch = true;
+      fixture.detectChanges();
+
       expect(document.querySelector('md-dialog-container')).toBeNull();
 
-      testComponent.datepicker.openTouchUi();
+      testComponent.datepicker.open();
       fixture.detectChanges();
 
       expect(document.querySelector('md-dialog-container')).not.toBeNull();
     });
 
     it('close should close popup', async(() => {
-      testComponent.datepicker.openStandardUi();
+      testComponent.datepicker.open();
       fixture.detectChanges();
 
       let popup = document.querySelector('.cdk-overlay-pane');
@@ -72,7 +78,10 @@ describe('MdDatepicker', () => {
     }));
 
     it('close should close dialog', async(() => {
-      testComponent.datepicker.openTouchUi();
+      testComponent.touch = true;
+      fixture.detectChanges();
+
+      testComponent.datepicker.open();
       fixture.detectChanges();
 
       expect(document.querySelector('md-dialog-container')).not.toBeNull();
@@ -86,7 +95,10 @@ describe('MdDatepicker', () => {
     }));
 
     it('setting selected should update input and close calendar', async(() => {
-      testComponent.datepicker.openTouchUi();
+      testComponent.touch = true;
+      fixture.detectChanges();
+
+      testComponent.datepicker.open();
       fixture.detectChanges();
 
       expect(document.querySelector('md-dialog-container')).not.toBeNull();
@@ -104,6 +116,12 @@ describe('MdDatepicker', () => {
 
     it('startAt should fallback to input value', () => {
       expect(testComponent.datepicker.startAt).toEqual(new SimpleDate(2020, 0, 1));
+    });
+
+    it('should attach popup to native input', () => {
+      let attachToRef = testComponent.datepickerInput.getPopupConnectionElementRef();
+      expect(attachToRef.nativeElement.tagName.toLowerCase())
+          .toBe('input', 'popup should be attached to native input');
     });
   });
 
@@ -126,7 +144,7 @@ describe('MdDatepicker', () => {
     });
 
     it('should throw when opened with no registered inputs', () => {
-      expect(() => testComponent.datepicker.openStandardUi()).toThrow();
+      expect(() => testComponent.datepicker.open()).toThrow();
     });
   });
 
@@ -277,6 +295,46 @@ describe('MdDatepicker', () => {
       expect(inputEl.disabled).toBe(true);
     });
   });
+
+  describe('datepicker with mdDatepickerToggle', () => {
+    let fixture: ComponentFixture<DatepickerWithToggle>;
+    let testComponent: DatepickerWithToggle;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(DatepickerWithToggle);
+      fixture.detectChanges();
+
+      testComponent = fixture.componentInstance;
+    });
+
+    it('should open calendar when toggle clicked', () => {
+      expect(document.querySelector('md-dialog-container')).toBeNull();
+
+      let toggle = fixture.debugElement.query(By.css('button'));
+      dispatchMouseEvent(toggle.nativeElement, 'click');
+      fixture.detectChanges();
+
+      expect(document.querySelector('md-dialog-container')).not.toBeNull();
+    });
+  });
+
+  describe('datepicker inside input-container', () => {
+    let fixture: ComponentFixture<InputContainerDatepicker>;
+    let testComponent: InputContainerDatepicker;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(InputContainerDatepicker);
+      fixture.detectChanges();
+
+      testComponent = fixture.componentInstance;
+    });
+
+    it('should attach popup to input-container underline', () => {
+      let attachToRef = testComponent.datepickerInput.getPopupConnectionElementRef();
+      expect(attachToRef.nativeElement.classList.contains('mat-input-underline'))
+          .toBe(true, 'popup should be attached to input-container underline');
+    });
+  });
 });
 
 
@@ -288,9 +346,13 @@ function detectModelChanges(fixture: ComponentFixture<any>) {
 
 
 @Component({
-  template: `<input [mdDatepicker]="d" value="1/1/2020"><md-datepicker #d></md-datepicker>`,
+  template: `
+    <input [mdDatepicker]="d" value="1/1/2020">
+    <md-datepicker #d [touchUi]="touch"></md-datepicker>
+  `,
 })
 class StandardDatepicker {
+  touch = false;
   @ViewChild('d') datepicker: MdDatepicker;
   @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput;
 }
@@ -324,7 +386,7 @@ class DatepickerWithStartAt {
 
 
 @Component({
-  template: `<input [(ngModel)]="selected" [mdDatepicker]="d"><md-datepicker #d></md-datepicker>`
+  template: `<input [(ngModel)]="selected" [mdDatepicker]="d"><md-datepicker #d></md-datepicker>`,
 })
 class DatepickerWithNgModel {
   selected: SimpleDate = null;
@@ -337,10 +399,33 @@ class DatepickerWithNgModel {
   template: `
     <input [formControl]="formControl" [mdDatepicker]="d">
     <md-datepicker #d></md-datepicker>
-  `
+  `,
 })
 class DatepickerWithFormControl {
   formControl = new FormControl();
   @ViewChild('d') datepicker: MdDatepicker;
+  @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput;
+}
+
+
+@Component({
+  template: `
+    <input [mdDatepicker]="d">
+    <button [mdDatepickerToggle]="d"></button>
+    <md-datepicker #d [touchUi]="true"></md-datepicker>
+  `,
+})
+class DatepickerWithToggle {}
+
+
+@Component({
+  template: `
+      <md-input-container>
+        <input mdInput [mdDatepicker]="d">
+        <md-datepicker #d></md-datepicker>
+      </md-input-container>
+  `,
+})
+class InputContainerDatepicker {
   @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput;
 }
