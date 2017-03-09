@@ -125,7 +125,7 @@ function fixMarkdownDocLinks(link: string, filePath: string): string {
  */
 function createTagNameAliaser(classPrefix: string) {
   return function() {
-    MARKDOWN_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
+    MARKDOWN_TAGS_TO_CLASS_ALIAS.forEach(tag => {
       for (let el of this.querySelectorAll(tag)) {
         el.classList.add(`${classPrefix}-${tag}`);
       }
