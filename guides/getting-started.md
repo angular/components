@@ -37,7 +37,7 @@ export class PizzaPartyAppModule { }
 This is **required** to apply all of the core and theme styles to your application. You can either
 use a pre-built theme, or define your own custom theme.
 
-:trident:  See the [theming guide](./theming.md) for instructions.
+:trident:  See the [theming guide](https://github.com/angular/material2/blob/master/guides/theming.md) for instructions.
 
 ### Additional setup for gestures
 Some components (`md-slide-toggle`, `md-slider`, `mdTooltip`) rely on 
