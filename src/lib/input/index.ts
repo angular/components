@@ -1,5 +1,11 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
-import {MdPlaceholder, MdInputContainer, MdHint, MdInputDirective, MdErrorDirective} from './input-container';
+import {
+  MdPlaceholder,
+  MdInputContainer,
+  MdHint,
+  MdInputDirective,
+  MdErrorDirective,
+} from './input-container';
 import {MdTextareaAutosize} from './autosize';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
