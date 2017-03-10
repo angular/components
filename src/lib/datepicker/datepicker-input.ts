@@ -14,6 +14,7 @@ import {SimpleDate} from '../core/datetime/simple-date';
 import {CalendarLocale} from '../core/datetime/calendar-locale';
 import {Subscription} from 'rxjs';
 import {MdInputContainer} from '../input/input-container';
+import {DOWN_ARROW} from '../core/keyboard/keycodes';
 
 
 export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -28,8 +29,12 @@ export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
   selector: 'input[mdDatepicker], input[matDatepicker]',
   providers: [MD_DATEPICKER_VALUE_ACCESSOR],
   host: {
+    '[attr.aria-expanded]': '_datepicker?.opened || "false"',
+    '[attr.aria-haspopup]': 'true',
+    '[attr.aria-owns]': '_datepicker?.id',
     '(input)': '_onChange($event.target.value)',
     '(blur)': '_onTouched()',
+    '(keydown)': '_onKeydown($event)',
   }
 })
 export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor, OnDestroy {
@@ -40,7 +45,7 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
       this._datepicker._registerInput(this);
     }
   }
-  private _datepicker: MdDatepicker;
+  _datepicker: MdDatepicker;
 
   @Input()
   get value(): SimpleDate {
@@ -106,5 +111,12 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
   // Implemented as part of ControlValueAccessor
   setDisabledState(disabled: boolean): void {
     this._renderer.setElementProperty(this._elementRef.nativeElement, 'disabled', disabled);
+  }
+
+  _onKeydown(event: KeyboardEvent) {
+    if (event.altKey && event.keyCode === DOWN_ARROW) {
+      this._datepicker.open();
+      event.preventDefault();
+    }
   }
 }
