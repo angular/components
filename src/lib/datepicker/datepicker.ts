@@ -27,6 +27,7 @@ import {MdDatepickerInput} from './datepicker-input';
 import {CalendarLocale} from '../core/datetime/calendar-locale';
 
 
+/** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
 
 
