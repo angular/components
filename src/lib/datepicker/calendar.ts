@@ -130,4 +130,24 @@ export class MdCalendar implements AfterContentInit {
     let amount = this._monthView ? {months: 1} : {years: 1};
     this._currentPeriod = this._currentPeriod.add(amount);
   }
+
+  /** Whether the previous period button is enabled. */
+  _previousEnabled() {
+    if (!this.minDate) {
+      return true;
+    }
+    return !this.minDate || !this._isSameView(this._currentPeriod, this.minDate);
+  }
+
+  /** Whether the next period button is enabled. */
+  _nextEnabled() {
+    return !this.maxDate || !this._isSameView(this._currentPeriod, this.maxDate);
+  }
+
+  /** Whether the two dates represent the same view in the current view mode (month or year). */
+  private _isSameView(date1: SimpleDate, date2: SimpleDate) {
+    return this._monthView ?
+        date1.year == date2.year && date1.month == date2.month :
+        date1.year == date2.year;
+  }
 }
