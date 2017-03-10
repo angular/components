@@ -27,7 +27,7 @@ import {CalendarLocale} from '../core/datetime/calendar-locale';
 export class MdCalendar implements AfterContentInit {
   /** A date representing the period (month or year) to start the calendar in. */
   @Input()
-  get startAt() {return this._startAt; }
+  get startAt() { return this._startAt; }
   set startAt(value: any) { this._startAt = this._locale.parseDate(value); }
   private _startAt: SimpleDate;
 
@@ -40,6 +40,21 @@ export class MdCalendar implements AfterContentInit {
   set selected(value: any) { this._selected = this._locale.parseDate(value); }
   private _selected: SimpleDate;
 
+  /** The minimum selectable date. */
+  @Input()
+  get minDate(): SimpleDate { return this._minDate; };
+  set minDate(date: SimpleDate) { this._minDate = this._locale.parseDate(date); }
+  private _minDate: SimpleDate;
+
+  /** The maximum selectable date. */
+  @Input()
+  get maxDate(): SimpleDate { return this._maxDate; };
+  set maxDate(date: SimpleDate) { this._maxDate = this._locale.parseDate(date); }
+  private _maxDate: SimpleDate;
+
+  /** A function used to filter which dates are selectable. */
+  @Input() dateFilter: (date: SimpleDate) => boolean;
+
   /** Emits when the currently selected date changes. */
   @Output() selectedChange = new EventEmitter<SimpleDate>();
 
@@ -50,7 +65,8 @@ export class MdCalendar implements AfterContentInit {
    */
   get _currentPeriod() { return this._normalizedCurrentPeriod; }
   set _currentPeriod(value: SimpleDate) {
-    this._normalizedCurrentPeriod = new SimpleDate(value.year, value.month, 1);
+    let clampedValue = value.clamp(this.minDate, this.maxDate);
+    this._normalizedCurrentPeriod = new SimpleDate(clampedValue.year, clampedValue.month, 1);
   }
   private _normalizedCurrentPeriod: SimpleDate;
 
