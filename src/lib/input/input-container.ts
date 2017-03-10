@@ -291,8 +291,6 @@ export class MdInputContainer implements AfterContentInit {
 
   @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
 
-  @ViewChild('underline') _underlineRef: ElementRef;
-
   ngAfterContentInit() {
     if (!this._mdInputChild) {
       throw new MdInputContainerMissingMdInputError();
@@ -382,9 +380,5 @@ export class MdInputContainer implements AfterContentInit {
     }
 
     this._mdInputChild.ariaDescribedby = ids.join(' ');
-  }
-
-  getPopupConnectionElementRef(): ElementRef {
-    return this._underlineRef;
   }
 }
