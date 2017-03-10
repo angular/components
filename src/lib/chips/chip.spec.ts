@@ -2,6 +2,9 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement}  from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdChipList, MdChip, MdChipEvent, MdChipsModule} from './index';
+import {FakeEvent} from '../core/a11y/list-key-manager.spec';
+import {SPACE, DELETE, BACKSPACE} from '../core/keyboard/keycodes';
+import {Dir} from '../core/rtl/dir';
 
 describe('Chips', () => {
   let fixture: ComponentFixture<any>;
@@ -10,12 +13,19 @@ describe('Chips', () => {
   let chipNativeElement: HTMLElement;
   let chipInstance: MdChip;
 
+  let dir = 'ltr';
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdChipsModule.forRoot()],
+      imports: [MdChipsModule],
       declarations: [
         BasicChip, SingleChip
-      ]
+      ],
+      providers: [{
+        provide: Dir, useFactory: () => {
+          return {value: dir};
+        }
+      }]
     });
 
     TestBed.compileComponents();
@@ -47,24 +57,24 @@ describe('Chips', () => {
   describe('MdChip', () => {
     let testComponent: SingleChip;
 
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SingleChip);
+      fixture.detectChanges();
+
+      chipDebugElement = fixture.debugElement.query(By.directive(MdChip));
+      chipListNativeElement = fixture.debugElement.query(By.directive(MdChipList)).nativeElement;
+      chipNativeElement = chipDebugElement.nativeElement;
+      chipInstance = chipDebugElement.componentInstance;
+      testComponent = fixture.debugElement.componentInstance;
+
+      document.body.appendChild(chipNativeElement);
+    });
+
+    afterEach(() => {
+      document.body.removeChild(chipNativeElement);
+    });
+
     describe('basic behaviors', () => {
-
-      beforeEach(() => {
-        fixture = TestBed.createComponent(SingleChip);
-        fixture.detectChanges();
-
-        chipDebugElement = fixture.debugElement.query(By.directive(MdChip));
-        chipListNativeElement = fixture.debugElement.query(By.directive(MdChipList)).nativeElement;
-        chipNativeElement = chipDebugElement.nativeElement;
-        chipInstance = chipDebugElement.componentInstance;
-        testComponent = fixture.debugElement.componentInstance;
-
-        document.body.appendChild(chipNativeElement);
-      });
-
-      afterEach(() => {
-        document.body.removeChild(chipNativeElement);
-      });
 
       it('adds the `md-chip` class', () => {
         expect(chipNativeElement.classList).toContain('mat-chip');
@@ -110,7 +120,132 @@ describe('Chips', () => {
         fixture.detectChanges();
 
         expect(chipNativeElement.classList).toContain('mat-chip-selected');
-        expect(testComponent.chipSelect).toHaveBeenCalledWith({ chip: chipInstance });
+        expect(testComponent.chipSelect).toHaveBeenCalledWith({chip: chipInstance});
+      });
+
+      it('allows removal', () => {
+        spyOn(testComponent, 'chipRemove');
+
+        chipInstance.remove();
+        fixture.detectChanges();
+
+        expect(testComponent.chipRemove).toHaveBeenCalledWith({chip: chipInstance});
+      });
+    });
+
+    describe('keyboard behavior', () => {
+
+      describe('when selectable is true', () => {
+        beforeEach(() => {
+          testComponent.selectable = true;
+          fixture.detectChanges();
+        });
+
+        it('SPACE selects/deselects the currently focused chip', () => {
+          const SPACE_EVENT: KeyboardEvent = new FakeEvent(SPACE) as KeyboardEvent;
+          const CHIP_EVENT: MdChipEvent = {chip: chipInstance};
+
+          spyOn(testComponent, 'chipSelect');
+          spyOn(testComponent, 'chipDeselect');
+
+          // Use the spacebar to select the chip
+          chipInstance._handleKeydown(SPACE_EVENT);
+          fixture.detectChanges();
+
+          expect(chipInstance.selected).toBeTruthy();
+          expect(testComponent.chipSelect).toHaveBeenCalledTimes(1);
+          expect(testComponent.chipSelect).toHaveBeenCalledWith(CHIP_EVENT);
+
+          // Use the spacebar to deselect the chip
+          chipInstance._handleKeydown(SPACE_EVENT);
+          fixture.detectChanges();
+
+          expect(chipInstance.selected).toBeFalsy();
+          expect(testComponent.chipDeselect).toHaveBeenCalledTimes(1);
+          expect(testComponent.chipDeselect).toHaveBeenCalledWith(CHIP_EVENT);
+        });
+      });
+
+      describe('when selectable is false', () => {
+        beforeEach(() => {
+          testComponent.selectable = false;
+          fixture.detectChanges();
+        });
+
+        it('SPACE ignores selection', () => {
+          const SPACE_EVENT: KeyboardEvent = new FakeEvent(SPACE) as KeyboardEvent;
+
+          spyOn(testComponent, 'chipSelect');
+
+          // Use the spacebar to attempt to select the chip
+          chipInstance._handleKeydown(SPACE_EVENT);
+          fixture.detectChanges();
+
+          expect(chipInstance.selected).toBeFalsy();
+          expect(testComponent.chipSelect).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('when removable is true', () => {
+        beforeEach(() => {
+          testComponent.removable = true;
+          fixture.detectChanges();
+        });
+
+        it('DELETE emits the (remove) event', () => {
+          const DELETE_EVENT = new FakeEvent(DELETE) as KeyboardEvent;
+
+          spyOn(testComponent, 'chipRemove');
+
+          // Use the delete to remove the chip
+          chipInstance._handleKeydown(DELETE_EVENT);
+          fixture.detectChanges();
+
+          expect(testComponent.chipRemove).toHaveBeenCalled();
+        });
+
+        it('BACKSPACE emits the (remove) event', () => {
+          const BACKSPACE_EVENT = new FakeEvent(BACKSPACE) as KeyboardEvent;
+
+          spyOn(testComponent, 'chipRemove');
+
+          // Use the delete to remove the chip
+          chipInstance._handleKeydown(BACKSPACE_EVENT);
+          fixture.detectChanges();
+
+          expect(testComponent.chipRemove).toHaveBeenCalled();
+        });
+      });
+
+      describe('when removable is false', () => {
+        beforeEach(() => {
+          testComponent.removable = false;
+          fixture.detectChanges();
+        });
+
+        it('DELETE does not emit the (remove) event', () => {
+          const DELETE_EVENT = new FakeEvent(DELETE) as KeyboardEvent;
+
+          spyOn(testComponent, 'chipRemove');
+
+          // Use the delete to remove the chip
+          chipInstance._handleKeydown(DELETE_EVENT);
+          fixture.detectChanges();
+
+          expect(testComponent.chipRemove).not.toHaveBeenCalled();
+        });
+
+        it('BACKSPACE does not emit the (remove) event', () => {
+          const BACKSPACE_EVENT = new FakeEvent(BACKSPACE) as KeyboardEvent;
+
+          spyOn(testComponent, 'chipRemove');
+
+          // Use the delete to remove the chip
+          chipInstance._handleKeydown(BACKSPACE_EVENT);
+          fixture.detectChanges();
+
+          expect(testComponent.chipRemove).not.toHaveBeenCalled();
+        });
       });
 
     });
@@ -121,9 +256,11 @@ describe('Chips', () => {
   template: `
     <md-chip-list>
       <div *ngIf="shouldShow">
-        <md-chip [color]="color" [selected]="selected"
+        <md-chip [selectable]="selectable" [removable]="removable"
+                 [color]="color" [selected]="selected"
                  (focus)="chipFocus($event)" (destroy)="chipDestroy($event)"
-                 (select)="chipSelect($event)" (deselect)="chipDeselect($event)">
+                 (select)="chipSelect($event)" (deselect)="chipDeselect($event)"
+                 (remove)="chipRemove($event)">
           {{name}}
         </md-chip>
       </div>
@@ -133,6 +270,8 @@ class SingleChip {
   name: string = 'Test';
   color: string = 'primary';
   selected: boolean = false;
+  selectable: boolean = true;
+  removable: boolean = true;
   shouldShow: boolean = true;
 
   chipFocus(event: MdChipEvent) {
@@ -145,6 +284,9 @@ class SingleChip {
   }
 
   chipDeselect(event: MdChipEvent) {
+  }
+
+  chipRemove(event: MdChipEvent) {
   }
 }
 
