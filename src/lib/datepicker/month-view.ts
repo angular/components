@@ -48,7 +48,7 @@ export class MdMonthView implements AfterContentInit {
   private _selected: SimpleDate;
 
   /** A function used to filter which dates are selectable. */
-  @Input() dateFilter = (date: SimpleDate) => true;
+  @Input() dateFilter: (date: SimpleDate) => boolean;
 
   /** Emits when a new date is selected. */
   @Output() selectedChange = new EventEmitter<SimpleDate>();
@@ -79,7 +79,7 @@ export class MdMonthView implements AfterContentInit {
 
   /** Handles when a new date is selected. */
   _dateSelected(date: number) {
-    if (this.selected && this.selected.date == date) {
+    if (this._selectedDate == date) {
       return;
     }
     this.selectedChange.emit(new SimpleDate(this.date.year, this.date.month, date));
@@ -107,7 +107,8 @@ export class MdMonthView implements AfterContentInit {
         this._weeks.push([]);
         cell = 0;
       }
-      let enabled = this.dateFilter(new SimpleDate(this.date.year, this.date.month, i + 1));
+      let enabled = !this.dateFilter ||
+          this.dateFilter(new SimpleDate(this.date.year, this.date.month, i + 1));
       this._weeks[this._weeks.length - 1]
           .push(new MdCalendarCell(i + 1, this._locale.dates[i + 1], enabled));
     }

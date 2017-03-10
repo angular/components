@@ -13,7 +13,8 @@
     </td>
     <td *ngFor="let item of row"
         class="mat-calendar-table-cell"
-        (click)="_cellClicked(item.value)">
+        [class.mat-calendar-table-disabled]="!item.enabled"
+        (click)="_cellClicked(item)">
       <div class="mat-calendar-table-cell-content"
            [class.mat-calendar-table-selected]="selectedValue === item.value"
            [class.mat-calendar-table-today]="todayValue === item.value">

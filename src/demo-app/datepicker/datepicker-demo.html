@@ -20,7 +20,8 @@
   <button [mdDatepickerToggle]="dp3"></button>
   <md-input-container>
     <input mdInput [mdDatepicker]="dp3" [(ngModel)]="date">
-    <md-datepicker #dp3 [touchUi]="touch" startAt="1/1/17" minDate="1/1/16" maxDate="1/1/18">
+    <md-datepicker #dp3 [touchUi]="touch" startAt="1/1/17" minDate="1/1/16" maxDate="1/1/18"
+                   [dateFilter]="dateFilter">
     </md-datepicker>
   </md-input-container>
 </p>
