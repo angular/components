@@ -301,7 +301,7 @@ describe('MdDialog', () => {
 
     expect(overlayPane.style.width).toBe('100px');
 
-    dialogRef.updateDimensions('200px');
+    dialogRef.updateSize('200px');
 
     expect(overlayPane.style.width).toBe('200px');
   });

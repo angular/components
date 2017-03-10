@@ -160,7 +160,7 @@ export class MdDialog {
     }
 
     dialogRef
-      .updateDimensions(config.width, config.height)
+      .updateSize(config.width, config.height)
       .updatePosition(config.position);
 
     return dialogRef;
