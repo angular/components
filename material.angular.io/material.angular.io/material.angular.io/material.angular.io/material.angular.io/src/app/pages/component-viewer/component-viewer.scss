@@ -10,24 +10,21 @@ app-component-viewer {
     margin: 16px;
   }
 
-  md-tab {
-    margin: 30px;
+  // Direct chain is necessary to avoid styling tabs in the example viewer
+  & > .mat-tab-header {
+    border: none;
+    margin-bottom: 30px;
+
+    & > .mat-tab-label-container > .mat-tab-list > .mat-tab-labels > .mat-tab-label {
+      font-weight: 400;
+      margin: 0 10px;
+      min-width: 0;
+      padding: 0 5px;
+    }
   }
 }
 
 .docs-example-source {
   padding: 0 0 10px 30px;
   min-height: 150px;
-}
-
-.mat-tab-header {
-  border: none;
-  margin-bottom: 30px;
-}
-
-.docs-component-viewer-tabbed-content .mat-tab-header .mat-tab-label {
-  font-weight: 400;
-  margin: 0 10px;
-  min-width: 0px;
-  padding: 0 5px;
 }
