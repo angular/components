@@ -9,7 +9,7 @@ import {
 import {MdInkBar} from '../ink-bar';
 import {MdRipple} from '../../core/ripple/index';
 import {ViewportRuler} from '../../core/overlay/position/viewport-ruler';
-import {MD_DISABLE_RIPPLES} from '../../core/ripple/ripple';
+import {MD_RIPPLE_GLOBAL_OPTIONS} from '../../core/ripple/ripple';
 
 /**
  * Navigation component matching the styles of the tab group header.
@@ -83,7 +83,7 @@ export class MdTabLink {
 })
 export class MdTabLinkRipple extends MdRipple {
   constructor(elementRef: ElementRef, ngZone: NgZone, ruler: ViewportRuler,
-              @Optional() @Inject(MD_DISABLE_RIPPLES) forceDisableRipples: boolean) {
+              @Optional() @Inject(MD_RIPPLE_GLOBAL_OPTIONS) forceDisableRipples: boolean) {
     super(elementRef, ngZone, ruler, forceDisableRipples);
   }
 }
