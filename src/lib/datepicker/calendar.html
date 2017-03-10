@@ -32,6 +32,7 @@
       *ngIf="_monthView"
       [date]="_currentPeriod"
       [selected]="selected"
+      [dateFilter]="_dateFilterForViews"
       (selectedChange)="_dateSelected($event)">
   </md-month-view>
 
@@ -39,6 +40,7 @@
       *ngIf="!_monthView"
       [date]="_currentPeriod"
       [selected]="selected"
+      [dateFilter]="_dateFilterForViews"
       (selectedChange)="_monthSelected($event)">
   </md-year-view>
 </div>

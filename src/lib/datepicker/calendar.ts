@@ -53,10 +53,16 @@ export class MdCalendar implements AfterContentInit {
   private _maxDate: SimpleDate;
 
   /** A function used to filter which dates are selectable. */
-  @Input() dateFilter: (date: SimpleDate) => boolean;
+  @Input() dateFilter = (date: SimpleDate) => true;
 
   /** Emits when the currently selected date changes. */
   @Output() selectedChange = new EventEmitter<SimpleDate>();
+
+  /** Date filter for the month and year views. */
+  _dateFilterForViews = (date: SimpleDate) => {
+    return !!date && date.compare(this.minDate) >= 0 && date.compare(this.maxDate) &&
+        this.dateFilter(date);
+  };
 
   /**
    * A date representing the current period shown in the calendar. The current period is always

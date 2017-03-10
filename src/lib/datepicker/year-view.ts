@@ -42,6 +42,9 @@ export class MdYearView implements AfterContentInit {
   }
   private _selected: SimpleDate;
 
+  /** A function used to filter which dates are selectable. */
+  @Input() dateFilter = (date: SimpleDate) => true;
+
   /** Emits when a new month is selected. */
   @Output() selectedChange = new EventEmitter<SimpleDate>();
 
@@ -95,6 +98,20 @@ export class MdYearView implements AfterContentInit {
 
   /** Creates an MdCalendarCell for the given month. */
   private _createCellForMonth(month: number) {
-    return new MdCalendarCell(month, this._locale.shortMonths[month].toLocaleUpperCase());
+    return new MdCalendarCell(
+        month, this._locale.shortMonths[month].toLocaleUpperCase(), this._isMonthEnabled(month));
+  }
+
+  /** Whether the given month is enabled. */
+  private _isMonthEnabled(month: number) {
+    let enabled = false;
+    for (let date = new SimpleDate(this.date.year, month, 1); date.month === month;
+         date = date.add({days: 1})) {
+      enabled = enabled || this.dateFilter(date);
+      if (enabled) {
+        break;
+      }
+    }
+    return enabled;
   }
 }

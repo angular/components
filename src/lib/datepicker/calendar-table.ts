@@ -13,7 +13,7 @@ import {
  * @docs-private
  */
 export class MdCalendarCell {
-  constructor(public value: number, public displayValue: string) {}
+  constructor(public value: number, public displayValue: string, public enabled: boolean) {}
 }
 
 
