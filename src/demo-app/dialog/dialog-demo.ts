@@ -87,11 +87,11 @@ export class JazzDialog {
 
     if (this._dimesionToggle) {
       this.dialogRef
-        .updateDimensions('500px', '500px')
+        .updateSize('500px', '500px')
         .updatePosition({ top: '25px', left: '25px' });
     } else {
       this.dialogRef
-        .updateDimensions()
+        .updateSize()
         .updatePosition();
     }
   }
