@@ -136,6 +136,8 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     // that it doesn't end up back on the <body>. Also note that we need the extra check, because
     // IE can set the `activeElement` to null in some cases.
     let toFocus = this._elementFocusedBeforeDialogWasOpened as HTMLElement;
+
+    // We shouldn't use `this` inside of the NgZone subscription, because it causes a memory leak.
     let animationStream = this._onAnimationStateChange;
 
     this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
