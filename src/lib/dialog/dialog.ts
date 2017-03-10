@@ -96,13 +96,21 @@ export class MdDialog {
    * @returns A promise resolving to the OverlayRef for the created overlay.
    */
   private _createOverlay(config: MdDialogConfig): OverlayRef {
-    let overlayState = new OverlayState();
-    let strategy = this._overlay.position().global();
-
-    overlayState.hasBackdrop = true;
-    overlayState.positionStrategy = strategy;
-
+    let overlayState = this._getOverlayState(config);
     return this._overlay.create(overlayState);
+  }
+
+  /**
+   * Creates an overlay state from a dialog config.
+   * @param dialogConfig The dialog configuration.
+   * @returns The overlay configuration.
+   */
+  private _getOverlayState(dialogConfig: MdDialogConfig): OverlayState {
+    let overlayState = new OverlayState();
+    overlayState.hasBackdrop = true;
+    overlayState.positionStrategy = this._overlay.position().global();
+
+    return overlayState;
   }
 
   /**
