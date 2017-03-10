@@ -15,6 +15,7 @@ import {MdAutocomplete} from './autocomplete';
 import {MdInputContainer} from '../input/input-container';
 import {Observable} from 'rxjs/Observable';
 import {dispatchFakeEvent} from '../core/testing/dispatch-events';
+import {typeInElement} from '../core/testing/type-in-element';
 
 import 'rxjs/add/operator/map';
 
@@ -807,7 +808,7 @@ describe('MdAutocomplete', () => {
             fixture.whenStable().then(() => {
               fixture.detectChanges();
               expect(input.getAttribute('aria-expanded'))
-                .toBe('false', 'Expected aria-expanded to be false when panel hides itself.');
+                  .toBe('false', 'Expected aria-expanded to be false when panel hides itself.');
             });
           });
         });
@@ -1112,18 +1113,6 @@ class AutocompleteWithNgModel {
     this.filteredStates = this.states.filter(s => new RegExp(value, 'gi').test(s));
   }
 
-}
-
-/**
- * Focuses an input, sets its value and dispatches
- * the `input` event, simulating the user typing.
- * @param value Value to be set on the input.
- * @param element Element onto which to set the value.
- */
-function typeInElement(value: string, element: HTMLInputElement, autoFocus = true) {
-  element.focus();
-  element.value = value;
-  dispatchFakeEvent(element, 'input');
 }
 
 /** This is a mock keyboard event to test keyboard events in the autocomplete. */
