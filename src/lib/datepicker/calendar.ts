@@ -64,7 +64,7 @@ export class MdCalendar implements AfterContentInit {
         (!this.dateFilter || this.dateFilter(date)) &&
         (!this.minDate || date.compare(this.minDate) >= 0) &&
         (!this.maxDate || date.compare(this.maxDate) <= 0);
-  };
+  }
 
   /**
    * A date representing the current period shown in the calendar. The current period is always

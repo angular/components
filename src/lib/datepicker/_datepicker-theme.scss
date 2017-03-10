@@ -8,6 +8,8 @@
   $background: map-get($theme, background);
 
   $mat-datepicker-selected-today-box-shadow-width: 1px;
+  $mat-datepicker-selected-fade-amount: 0.6;
+  $mat-datepicker-today-fade-amount: 0.2;
 
   .mat-calendar {
     background-color: mat-color($background, card);
@@ -54,7 +56,7 @@
     color: mat-color($primary, default-contrast);
 
     .mat-calendar-table-disabled > & {
-      background-color: fade-out(mat-color($primary), .6);
+      background-color: fade-out(mat-color($primary), $mat-datepicker-selected-fade-amount);
     }
   }
 
@@ -65,7 +67,8 @@
       border-color: mat-color($foreground, hint-text);
 
       .mat-calendar-table-disabled > & {
-        border-color: fade-out(mat-color($foreground, hint-text), .2);
+        border-color:
+            fade-out(mat-color($foreground, hint-text), $mat-datepicker-today-fade-amount);
       }
     }
 
