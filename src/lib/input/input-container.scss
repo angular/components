@@ -109,16 +109,7 @@ $mat-input-underline-disabled-background-image:
   // Note that we can't use something like visibility: hidden or
   // display: none, because IE ends up preventing the user from
   // focusing the input altogether.
-  &::placeholder {
-    color: transparent;
-  }
-  &::-moz-placeholder {
-    color: transparent;
-  }
-  &::-webkit-input-placeholder {
-    color: transparent;
-  }
-  &:-ms-input-placeholder {
+  @include placeholder {
     color: transparent;
   }
 }
