@@ -9,7 +9,6 @@ import {
   Renderer, Directive
 } from '@angular/core';
 
-
 // TODO(josephperrott): Benchpress tests.
 
 /** A single degree in radians. */
@@ -71,6 +70,7 @@ export class MdProgressCircleCssMatStyler {}
   templateUrl: 'progress-spinner.html',
   styleUrls: ['progress-spinner.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  exportAs: 'mdProgressSpinner'
 })
 export class MdProgressSpinner implements OnDestroy {
   /** The id of the last requested animation. */
@@ -164,7 +164,6 @@ export class MdProgressSpinner implements OnDestroy {
     private _elementRef: ElementRef,
     private _renderer: Renderer
   ) {}
-
 
   /**
    * Animates the circle from one percentage value to another.
@@ -292,6 +291,7 @@ export class MdProgressSpinner implements OnDestroy {
   },
   templateUrl: 'progress-spinner.html',
   styleUrls: ['progress-spinner.css'],
+  exportAs: 'mdSpinner'
 })
 export class MdSpinner extends MdProgressSpinner implements OnDestroy {
 

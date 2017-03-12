@@ -19,6 +19,7 @@ $mat-progress-spinner-viewport-size: 100px !default;
   height: $mat-progress-spinner-viewport-size;
   width: $mat-progress-spinner-viewport-size;
   overflow: hidden;
+  position: relative;
 
   // SVG's viewBox is defined as 0 0 100 100, this means that all SVG children will placed
   // based on a 100px by 100px box.  Additionally all SVG sizes and locations are in reference to
@@ -49,6 +50,13 @@ $mat-progress-spinner-viewport-size: 100px !default;
     animation-iteration-count: infinite;
     transition: none;
   }
+}
+
+.mat-progress-spinner-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 

@@ -14,5 +14,4 @@ export class ProgressSpinnerDemo {
   step(val: number) {
     this.progressValue = Math.max(0, Math.min(100, val + this.progressValue));
   }
-
 }

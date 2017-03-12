@@ -9,6 +9,9 @@
 <div class="demo-progress-spinner">
   <md-progress-spinner mode="determinate" [value]="progressValue" color="primary"></md-progress-spinner>
   <md-progress-spinner [value]="progressValue" color="accent"></md-progress-spinner>
+  <md-progress-spinner [value]="progressValue" #spinnerWithValue="mdProgressSpinner">
+    {{ spinnerWithValue.value }}%
+  </md-progress-spinner>
 </div>
 
 <h1>Indeterminate</h1>

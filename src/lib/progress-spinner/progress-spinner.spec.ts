@@ -16,7 +16,8 @@ describe('MdProgressSpinner', () => {
         ProgressSpinnerWithColor,
         IndeterminateProgressSpinnerWithNgIf,
         SpinnerWithNgIf,
-        SpinnerWithColor
+        SpinnerWithColor,
+        SpinnerWithText
       ],
     });
 
@@ -138,6 +139,22 @@ describe('MdProgressSpinner', () => {
     expect(progressElement.nativeElement.classList).not.toContain('mat-primary');
   });
 
+  it('should be able to render a text label with the curent value', () => {
+    let fixture = TestBed.createComponent(SpinnerWithText);
+    let label = fixture.debugElement.query(By.css('.mat-progress-spinner-content')).nativeElement;
+    let testComponent = fixture.debugElement.componentInstance;
+
+    fixture.detectChanges();
+
+    expect(label).toBeTruthy();
+    expect(label.textContent).toContain('58%');
+
+    testComponent.value = 37;
+    fixture.detectChanges();
+
+    expect(label.textContent).toContain('37%');
+  });
+
 });
 
 
@@ -162,3 +179,14 @@ class SpinnerWithColor { color: string = 'primary'; }
 
 @Component({template: `<md-progress-spinner value="50" [color]="color"></md-progress-spinner>`})
 class ProgressSpinnerWithColor { color: string = 'primary'; }
+
+@Component({
+  template: `
+    <md-progress-spinner #spinner="mdProgressSpinner" [value]="value">
+      {{ spinner.value }}%
+    </md-progress-spinner>
+  `
+})
+class SpinnerWithText {
+  value: number = 58;
+}
