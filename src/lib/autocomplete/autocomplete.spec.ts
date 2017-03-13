@@ -948,7 +948,8 @@ describe('MdAutocomplete', () => {
     widthFixture.detectChanges();
 
     const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-    expect(overlayPane.style.width).toEqual('300px');
+    // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
+    expect(Math.ceil(parseFloat(overlayPane.style.width))).toEqual(300);
 
     widthFixture.componentInstance.trigger.closePanel();
     widthFixture.detectChanges();
@@ -959,7 +960,8 @@ describe('MdAutocomplete', () => {
     widthFixture.componentInstance.trigger.openPanel();
     widthFixture.detectChanges();
 
-    expect(overlayPane.style.width).toEqual('500px');
+    // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
+    expect(Math.ceil(parseFloat(overlayPane.style.width))).toEqual(500);
 
   });
 });
