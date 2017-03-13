@@ -938,11 +938,35 @@ describe('MdAutocomplete', () => {
     }));
 
   });
+
+  it('should have correct width when opened', () => {
+    const widthFixture = TestBed.createComponent(SimpleAutocomplete);
+    widthFixture.componentInstance.width = 300;
+    widthFixture.detectChanges();
+
+    widthFixture.componentInstance.trigger.openPanel();
+    widthFixture.detectChanges();
+
+    const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+    expect(overlayPane.style.width).toEqual('300px');
+
+    widthFixture.componentInstance.trigger.closePanel();
+    widthFixture.detectChanges();
+
+    widthFixture.componentInstance.width = 500;
+    widthFixture.detectChanges();
+
+    widthFixture.componentInstance.trigger.openPanel();
+    widthFixture.detectChanges();
+
+    expect(overlayPane.style.width).toEqual('500px');
+
+  });
 });
 
 @Component({
   template: `
-    <md-input-container [floatPlaceholder]="placeholder">
+    <md-input-container [floatPlaceholder]="placeholder" [style.width.px]="width">
       <input mdInput placeholder="State" [mdAutocomplete]="auto" [formControl]="stateCtrl">
     </md-input-container>
 
@@ -958,6 +982,7 @@ class SimpleAutocomplete implements OnDestroy {
   filteredStates: any[];
   valueSub: Subscription;
   placeholder = 'auto';
+  width: number;
 
   @ViewChild(MdAutocompleteTrigger) trigger: MdAutocompleteTrigger;
   @ViewChild(MdAutocomplete) panel: MdAutocomplete;
