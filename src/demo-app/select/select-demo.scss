@@ -6,26 +6,5 @@
     width: 450px;
     margin: 24px;
   }
-
-}
-
-.demo-flex-line {
-  display:flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: stretch;
-  align-content: stretch;
-  align-items: stretch;
-
-  .demo-flex-column {
-    flex-grow: 1;
-    flex-shrink: 0;
-    flex-basis: 200px;
-  }
-
-  md-select {
-    margin: 10px 0;
-    width: 100%;
-  }
 }
 
