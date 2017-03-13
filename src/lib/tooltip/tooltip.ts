@@ -146,7 +146,7 @@ export class MdTooltip implements OnInit, OnDestroy {
   ngOnInit() {
     // When a scroll on the page occurs, update the position in case this tooltip needs
     // to be repositioned.
-    this.scrollSubscription = this._scrollDispatcher.scrolled(SCROLL_THROTTLE_MS).subscribe(() => {
+    this.scrollSubscription = this._scrollDispatcher.scrolled(SCROLL_THROTTLE_MS, () => {
       if (this._overlayRef) {
         this._overlayRef.updatePosition();
       }
@@ -161,7 +161,9 @@ export class MdTooltip implements OnInit, OnDestroy {
       this._disposeTooltip();
     }
 
-    this.scrollSubscription.unsubscribe();
+    if (this.scrollSubscription) {
+      this.scrollSubscription.unsubscribe();
+    }
   }
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
