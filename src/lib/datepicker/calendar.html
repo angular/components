@@ -6,14 +6,16 @@
       <div class="mat-calendar-arrow" [class.mat-calendar-invert]="!_monthView"></div>
     </button>
     <div class="mat-calendar-spacer"></div>
-    <button class="mat-calendar-button mat-calendar-previous-button" (click)="_previousClicked()">
+    <button class="mat-calendar-button mat-calendar-previous-button"
+            [class.mat-calendar-disabled]="!_previousEnabled()" (click)="_previousClicked()">
       <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"
            fill="currentColor">
         <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
         <path d="M0-.5h24v24H0z" fill="none"/>
       </svg>
     </button>
-    <button class="mat-calendar-button mat-calendar-next-button" (click)="_nextClicked()">
+    <button class="mat-calendar-button mat-calendar-next-button"
+            [class.mat-calendar-disabled]="!_nextEnabled()" (click)="_nextClicked()">
       <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"
            fill="currentColor">
         <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
@@ -32,6 +34,7 @@
       *ngIf="_monthView"
       [date]="_currentPeriod"
       [selected]="selected"
+      [dateFilter]="_dateFilterForViews"
       (selectedChange)="_dateSelected($event)">
   </md-month-view>
 
@@ -39,6 +42,7 @@
       *ngIf="!_monthView"
       [date]="_currentPeriod"
       [selected]="selected"
+      [dateFilter]="_dateFilterForViews"
       (selectedChange)="_monthSelected($event)">
   </md-year-view>
 </div>

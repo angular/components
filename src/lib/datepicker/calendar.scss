@@ -8,6 +8,7 @@ $mat-calendar-controls-start-padding: calc(100% / 14 - 6px);
 $mat-calendar-controls-end-padding: calc(100% / 14 - 12px);
 $mat-calendar-period-font-size: 14px;
 $mat-calendar-arrow-size: 5px !default;
+$mat-calendar-arrow-disabled-opacity: 0.5 !default;
 $mat-calendar-weekday-table-font-size: 11px !default;
 
 
@@ -41,6 +42,10 @@ $mat-calendar-weekday-table-font-size: 11px !default;
   margin: 0;
   border: none;
   outline: none;
+
+  &.mat-calendar-disabled {
+    opacity: $mat-calendar-arrow-disabled-opacity;
+  }
 }
 
 .mat-calendar-period-button {
