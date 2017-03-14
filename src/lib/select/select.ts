@@ -640,10 +640,11 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   /**
    * Must set the width of the selected option's value programmatically
    * because it is absolutely positioned and otherwise will not clip
-   * overflow. The selection arrow is 9px wide, add 4px of padding = 13
+   * overflow. The selection arrow is 5px wide, with 4px on each margin.
+   * add 4px of padding = 17
    */
   private _setValueWidth() {
-    this._selectedValueWidth =  this._triggerWidth - 13;
+    this._selectedValueWidth =  this._triggerWidth + 17;
   }
 
   /**
