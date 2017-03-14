@@ -780,7 +780,7 @@ class MdInputContainerMissingMdInputTestController {}
  * See https://github.com/angular/angular/issues/8348
  */
 const angularWrappedErrorMessage = (e: Error) =>
-    new RegExp(`.*caused by: ${regexpEscape(e.message)}$`);
+    new RegExp(`${regexpEscape(e.message)}$`);
 
 /**
  * Escape a string for use inside a RegExp.

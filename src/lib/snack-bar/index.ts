@@ -1,4 +1,5 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {OverlayModule, PortalModule, CompatibilityModule, LIVE_ANNOUNCER_PROVIDER} from '../core';
 import {CommonModule} from '@angular/common';
 import {MdSnackBar} from './snack-bar';
@@ -7,7 +8,13 @@ import {SimpleSnackBar} from './simple-snack-bar';
 
 
 @NgModule({
-  imports: [OverlayModule, PortalModule, CommonModule, CompatibilityModule],
+  imports: [
+    BrowserAnimationsModule,
+    OverlayModule,
+    PortalModule,
+    CommonModule,
+    CompatibilityModule,
+  ],
   exports: [MdSnackBarContainer, CompatibilityModule],
   declarations: [MdSnackBarContainer, SimpleSnackBar],
   entryComponents: [MdSnackBarContainer, SimpleSnackBar],

@@ -18,6 +18,9 @@ System.config({
     '@angular/http/testing': 'vendor/@angular/http/bundles/http-testing.umd.js',
     '@angular/forms': 'vendor/@angular/forms/bundles/forms.umd.js',
     '@angular/forms/testing': 'vendor/@angular/forms/bundles/forms-testing.umd.js',
+    '@angular/animations': 'vendor/@angular/animations/bundles/animations.umd.js',
+    '@angular/platform-browser/animations':
+      'vendor/@angular/platform-browser/bundles/platform-browser-animations.umd',
     '@angular/platform-browser': 'vendor/@angular/platform-browser/bundles/platform-browser.umd.js',
     '@angular/platform-browser/testing':
       'vendor/@angular/platform-browser/bundles/platform-browser-testing.umd.js',
