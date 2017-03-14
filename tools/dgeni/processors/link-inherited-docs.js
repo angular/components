@@ -1,3 +1,8 @@
+/**
+ * Processor that iterates through all class docs and determines if a class inherits
+ * another class. Inherited class-docs will be linked to the original class-doc.
+ */
+
 const ts = require('typescript');
 
 module.exports = function linkInheritedDocs(readTypeScriptModules, tsParser) {
@@ -19,10 +24,12 @@ module.exports = function linkInheritedDocs(readTypeScriptModules, tsParser) {
     checker = tsParser.parse(sourceFiles, basePath).typeChecker;
 
     // Iterate through all class docs and resolve the inherited docs.
-    docs.filter(doc => doc.docType === 'class').forEach(classDoc => visitClassDoc(classDoc, docs));
+    docs.filter(doc => doc.docType === 'class').forEach(classDoc => {
+      resolveInheritedDoc(classDoc, docs);
+    });
   }
 
-  function visitClassDoc(classDoc, docs) {
+  function resolveInheritedDoc(classDoc, docs) {
     let inheritedType = resolveInheritedType(classDoc.exportSymbol);
     let inheritedSymbol = inheritedType && inheritedType.symbol;
 

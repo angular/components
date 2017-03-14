@@ -29,24 +29,24 @@ const INTERNAL_METHODS = [
 module.exports = function docsPrivateFilter() {
   return {
     $runBefore: ['categorizer'],
-    $process: docs => docs.filter(doc => validateDocEntry(doc))
+    $process: docs => docs.filter(doc => isPublicDoc(doc))
   };
 };
 
-function validateDocEntry(doc) {
+function isPublicDoc(doc) {
   if (hasDocsPrivateTag(doc)) {
     return false;
   } else if (doc.docType === 'member') {
-    return validateMemberDoc(doc);
+    return !isInternalMember(doc);
   } else if (doc.docType === 'class') {
-    doc.members = doc.members.filter(memberDoc => validateMemberDoc(memberDoc));
+    doc.members = doc.members.filter(memberDoc => isPublicDoc(memberDoc));
   }
 
   return true;
 }
 
-function validateMemberDoc(memberDoc) {
-  return !INTERNAL_METHODS.includes(memberDoc.name)
+function isInternalMember(memberDoc) {
+  return INTERNAL_METHODS.includes(memberDoc.name)
 }
 
 function hasDocsPrivateTag(doc) {
