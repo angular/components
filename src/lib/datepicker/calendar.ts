@@ -27,7 +27,7 @@ import {CalendarLocale} from '../core/datetime/calendar-locale';
 export class MdCalendar implements AfterContentInit {
   /** A date representing the period (month or year) to start the calendar in. */
   @Input()
-  get startAt() {return this._startAt; }
+  get startAt() { return this._startAt; }
   set startAt(value: any) { this._startAt = this._locale.parseDate(value); }
   private _startAt: SimpleDate;
 
@@ -40,8 +40,31 @@ export class MdCalendar implements AfterContentInit {
   set selected(value: any) { this._selected = this._locale.parseDate(value); }
   private _selected: SimpleDate;
 
+  /** The minimum selectable date. */
+  @Input()
+  get minDate(): SimpleDate { return this._minDate; };
+  set minDate(date: SimpleDate) { this._minDate = this._locale.parseDate(date); }
+  private _minDate: SimpleDate;
+
+  /** The maximum selectable date. */
+  @Input()
+  get maxDate(): SimpleDate { return this._maxDate; };
+  set maxDate(date: SimpleDate) { this._maxDate = this._locale.parseDate(date); }
+  private _maxDate: SimpleDate;
+
+  /** A function used to filter which dates are selectable. */
+  @Input() dateFilter: (date: SimpleDate) => boolean;
+
   /** Emits when the currently selected date changes. */
   @Output() selectedChange = new EventEmitter<SimpleDate>();
+
+  /** Date filter for the month and year views. */
+  _dateFilterForViews = (date: SimpleDate) => {
+    return !!date &&
+        (!this.dateFilter || this.dateFilter(date)) &&
+        (!this.minDate || date.compare(this.minDate) >= 0) &&
+        (!this.maxDate || date.compare(this.maxDate) <= 0);
+  }
 
   /**
    * A date representing the current period shown in the calendar. The current period is always
@@ -50,7 +73,8 @@ export class MdCalendar implements AfterContentInit {
    */
   get _currentPeriod() { return this._normalizedCurrentPeriod; }
   set _currentPeriod(value: SimpleDate) {
-    this._normalizedCurrentPeriod = new SimpleDate(value.year, value.month, 1);
+    const clampedValue = value.clamp(this.minDate, this.maxDate);
+    this._normalizedCurrentPeriod = new SimpleDate(clampedValue.year, clampedValue.month, 1);
   }
   private _normalizedCurrentPeriod: SimpleDate;
 
@@ -105,5 +129,25 @@ export class MdCalendar implements AfterContentInit {
   _nextClicked() {
     let amount = this._monthView ? {months: 1} : {years: 1};
     this._currentPeriod = this._currentPeriod.add(amount);
+  }
+
+  /** Whether the previous period button is enabled. */
+  _previousEnabled() {
+    if (!this.minDate) {
+      return true;
+    }
+    return !this.minDate || !this._isSameView(this._currentPeriod, this.minDate);
+  }
+
+  /** Whether the next period button is enabled. */
+  _nextEnabled() {
+    return !this.maxDate || !this._isSameView(this._currentPeriod, this.maxDate);
+  }
+
+  /** Whether the two dates represent the same view in the current view mode (month or year). */
+  private _isSameView(date1: SimpleDate, date2: SimpleDate) {
+    return this._monthView ?
+        date1.year == date2.year && date1.month == date2.month :
+        date1.year == date2.year;
   }
 }

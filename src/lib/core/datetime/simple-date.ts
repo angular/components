@@ -51,6 +51,7 @@ export class SimpleDate {
   /**
    * Adds an amount of time (in days, months, and years) to the date.
    * @param amount The amount of time to add.
+   * @returns A new SimpleDate with the given amount of time added.
    */
   add(amount: {days?: number, months?: number, years?: number}): SimpleDate {
     return new SimpleDate(
@@ -67,6 +68,23 @@ export class SimpleDate {
    */
   compare(other: SimpleDate): number {
     return this.year - other.year || this.month - other.month || this.date - other.date;
+  }
+
+  /**
+   * Clamps the date between the given min and max dates.
+   * @param min The minimum date
+   * @param max The maximum date
+   * @returns A new SimpleDate equal to this one clamped between the given min and max dates.
+   */
+  clamp(min: SimpleDate, max: SimpleDate): SimpleDate {
+    let clampedDate: SimpleDate = this;
+    if (min && this.compare(min) < 0) {
+      clampedDate = min;
+    }
+    if (max && this.compare(max) > 0) {
+      clampedDate = max;
+    }
+    return new SimpleDate(clampedDate.year, clampedDate.month, clampedDate.date);
   }
 
   /** Converts the SimpleDate to a native JS Date object. */

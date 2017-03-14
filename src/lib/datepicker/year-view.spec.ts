@@ -19,6 +19,7 @@ describe('MdYearView', () => {
 
         // Test components.
         StandardYearView,
+        YearViewWithDateFilter,
       ],
     });
 
@@ -71,6 +72,27 @@ describe('MdYearView', () => {
       expect(selectedEl.innerHTML.trim()).toBe('DEC');
     });
   });
+
+  describe('year view with date filter', () => {
+    let fixture: ComponentFixture<YearViewWithDateFilter>;
+    let testComponent: YearViewWithDateFilter;
+    let yearViewNativeElement: Element;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(YearViewWithDateFilter);
+      fixture.detectChanges();
+
+      let yearViewDebugElement = fixture.debugElement.query(By.directive(MdYearView));
+      yearViewNativeElement = yearViewDebugElement.nativeElement;
+      testComponent = fixture.componentInstance;
+    });
+
+    it('should disabled months with no enabled days', () => {
+      let cells = yearViewNativeElement.querySelectorAll('.mat-calendar-table-cell');
+      expect(cells[0].classList).not.toContain('mat-calendar-table-disabled');
+      expect(cells[1].classList).toContain('mat-calendar-table-disabled');
+    });
+  });
 });
 
 
@@ -80,4 +102,20 @@ describe('MdYearView', () => {
 class StandardYearView {
   date = new SimpleDate(2017, 0, 5);
   selected = new SimpleDate(2017, 2, 10);
+}
+
+
+@Component({
+  template: `<md-year-view date="1/1/2017" [dateFilter]="dateFilter"></md-year-view>`
+})
+class YearViewWithDateFilter {
+  dateFilter(date: SimpleDate) {
+    if (date.month == 0) {
+      return date.date == 10;
+    }
+    if (date.month == 1) {
+      return false;
+    }
+    return true;
+  }
 }
