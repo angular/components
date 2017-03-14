@@ -6,7 +6,7 @@
   user-select: none;
 }
 
-@mixin placeholder {
+@mixin input-placeholder {
   &::placeholder {
     @content;
   }
