@@ -83,7 +83,14 @@ export class MdTooltip implements OnInit, OnDestroy {
   /** Disables the display of the tooltip. */
   @Input('mdTooltipDisabled')
   get disabled(): boolean { return this._disabled; }
-  set disabled(value) { this._disabled = coerceBooleanProperty(value); }
+  set disabled(value) {
+    this._disabled = coerceBooleanProperty(value);
+
+    // If tooltip is disabled, hide immediately.
+    if (this._disabled) {
+      this.hide(0);
+    }
+  }
 
   /** @deprecated */
   @Input('tooltip-position')
