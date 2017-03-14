@@ -1,5 +1,8 @@
 const firebaseAdmin = require('firebase-admin');
+const firebase = require('firebase');
 const gcloud = require('google-cloud');
+
+const config = require('../../../functions/config.json');
 
 /** Opens a connection to the firebase realtime database. */
 export function openFirebaseDashboardDatabase() {
@@ -11,7 +14,7 @@ export function openFirebaseDashboardDatabase() {
       client_email: 'firebase-adminsdk-ch1ob@material2-dashboard.iam.gserviceaccount.com',
       // In Travis CI the private key will be incorrect because the line-breaks are escaped.
       // The line-breaks need to persist in the service account private key.
-      private_key: (process.env['MATERIAL2_FIREBASE_PRIVATE_KEY'] || '').replace(/\\n/g, '\n')
+      private_key: decode(process.env['MATERIAL2_FIREBASE_PRIVATE_KEY'])
     }),
     databaseURL: 'https://material2-dashboard.firebaseio.com'
   });
@@ -56,6 +59,14 @@ export function openFirebaseScreenshotsDatabase() {
 export function decode(str: string): string {
   // In Travis CI the private key will be incorrect because the line-breaks are escaped.
   // The line-breaks need to persist in the service account private key.
-  return (str || '').split('\\n').reverse().join('\\n').replace(/\\n/g, '\n');
+  return (str || '').replace(/\\n/g, '\n');
+}
+
+/**
+ * Open firebase connection for screenshot
+ * This connection is client side connection with no credentials
+ */
+export function connectFirebaseScreenshots() {
+  return firebase.initializeApp(config.firebase);
 }
 
