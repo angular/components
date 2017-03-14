@@ -13,7 +13,7 @@ import {
  * @docs-private
  */
 export class MdCalendarCell {
-  constructor(public value: number, public displayValue: string) {}
+  constructor(public value: number, public displayValue: string, public enabled: boolean) {}
 }
 
 
@@ -48,14 +48,17 @@ export class MdCalendarTable {
   /** The number of columns in the table. */
   @Input() numCols = 7;
 
+  /** Whether to allow selection of disabled cells. */
+  @Input() allowDisabledSelection = false;
+
   /** Emits when a new value is selected. */
   @Output() selectedValueChange = new EventEmitter<number>();
 
-  _cellClicked(value: number) {
-    if (this.selectedValue && this.selectedValue === value) {
+  _cellClicked(cell: MdCalendarCell) {
+    if (!this.allowDisabledSelection && !cell.enabled) {
       return;
     }
-    this.selectedValueChange.emit(value);
+    this.selectedValueChange.emit(cell.value);
   }
 
   /** The number of blank cells to put at the beginning for the first row. */
