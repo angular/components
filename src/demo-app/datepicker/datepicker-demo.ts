@@ -11,4 +11,6 @@ import {SimpleDate} from '@angular/material';
 export class DatepickerDemo {
   date: SimpleDate;
   touch = false;
+  dateFilter = (date: SimpleDate) => !this._blacklistedMonths.has(date.month) && date.date % 2 == 0;
+  private _blacklistedMonths = new Set([2, 3]);
 }
