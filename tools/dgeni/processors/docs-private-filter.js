@@ -34,7 +34,9 @@ module.exports = function docsPrivateFilter() {
 };
 
 function validateDocEntry(doc) {
-  if (doc.docType === 'member') {
+  if (hasDocsPrivateTag(doc)) {
+    return false;
+  } else if (doc.docType === 'member') {
     return validateMemberDoc(doc);
   } else if (doc.docType === 'class') {
     doc.members = doc.members.filter(memberDoc => validateMemberDoc(memberDoc));
@@ -44,7 +46,7 @@ function validateDocEntry(doc) {
 }
 
 function validateMemberDoc(memberDoc) {
-  return !(hasDocsPrivateTag(memberDoc) || INTERNAL_METHODS.includes(memberDoc.name))
+  return !INTERNAL_METHODS.includes(memberDoc.name)
 }
 
 function hasDocsPrivateTag(doc) {
