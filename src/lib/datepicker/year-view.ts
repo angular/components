@@ -42,6 +42,9 @@ export class MdYearView implements AfterContentInit {
   }
   private _selected: SimpleDate;
 
+  /** A function used to filter which dates are selectable. */
+  @Input() dateFilter: (date: SimpleDate) => boolean;
+
   /** Emits when a new month is selected. */
   @Output() selectedChange = new EventEmitter<SimpleDate>();
 
@@ -60,11 +63,7 @@ export class MdYearView implements AfterContentInit {
    */
   _selectedMonth: number;
 
-  constructor(private _locale: CalendarLocale) {
-    // First row of months only contains 5 elements so we can fit the year label on the same row.
-    this._months = [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9, 10, 11]].map(row => row.map(
-        month => this._createCellForMonth(month)));
-  }
+  constructor(private _locale: CalendarLocale) {}
 
   ngAfterContentInit() {
     this._init();
@@ -72,9 +71,6 @@ export class MdYearView implements AfterContentInit {
 
   /** Handles when a new month is selected. */
   _monthSelected(month: number) {
-    if (this.selected && this.selected.month == month) {
-      return;
-    }
     this.selectedChange.emit(new SimpleDate(this.date.year, month, 1));
   }
 
@@ -83,6 +79,10 @@ export class MdYearView implements AfterContentInit {
     this._selectedMonth = this._getMonthInCurrentYear(this.selected);
     this._todayMonth = this._getMonthInCurrentYear(SimpleDate.today());
     this._yearLabel = this._locale.getCalendarYearHeaderLabel(this._date);
+
+    // First row of months only contains 5 elements so we can fit the year label on the same row.
+    this._months = [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9, 10, 11]].map(row => row.map(
+        month => this._createCellForMonth(month)));
   }
 
   /**
@@ -95,6 +95,24 @@ export class MdYearView implements AfterContentInit {
 
   /** Creates an MdCalendarCell for the given month. */
   private _createCellForMonth(month: number) {
-    return new MdCalendarCell(month, this._locale.shortMonths[month].toLocaleUpperCase());
+    return new MdCalendarCell(
+        month, this._locale.shortMonths[month].toLocaleUpperCase(), this._isMonthEnabled(month));
+  }
+
+  /** Whether the given month is enabled. */
+  private _isMonthEnabled(month: number) {
+    if (!this.dateFilter) {
+      return true;
+    }
+
+    // If any date in the month is enabled count the month as enabled.
+    for (let date = new SimpleDate(this.date.year, month, 1); date.month === month;
+         date = date.add({days: 1})) {
+      if (this.dateFilter(date)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

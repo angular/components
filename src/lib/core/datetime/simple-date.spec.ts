@@ -37,4 +37,23 @@ describe('SimpleDate', () => {
     expect(new SimpleDate(2017, 0, 1).add({years: 1, months: 1, days: 1}))
         .toEqual(new SimpleDate(2018, 1, 2));
   });
+
+  it('clamps date at lower bound', () => {
+    let date = new SimpleDate(2017, 0, 1);
+    let lower = new SimpleDate(2018, 1, 2);
+    let upper = new SimpleDate(2019, 2, 3);
+    expect(date.clamp(lower, upper)).toEqual(lower);
+  });
+
+  it('clamps date at upper bound', () => {
+    let date = new SimpleDate(2020, 0, 1);
+    let lower = new SimpleDate(2018, 1, 2);
+    let upper = new SimpleDate(2019, 2, 3);
+    expect(date.clamp(lower, upper)).toEqual(upper);
+  });
+
+  it('clamp treats null as unbounded', () => {
+    let date = new SimpleDate(2017, 0, 1);
+    expect(date.clamp(null, null)).toEqual(date);
+  });
 });

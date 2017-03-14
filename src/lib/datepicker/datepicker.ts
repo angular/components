@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
-  Component, EventEmitter,
+  Component,
+  EventEmitter,
   Input,
   OnDestroy,
-  Optional, Output,
+  Optional,
+  Output,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
@@ -64,12 +66,32 @@ export class MdDatepicker implements OnDestroy {
   @Input()
   touchUi = false;
 
+  /** The minimum selectable date. */
+  @Input()
+  get minDate(): SimpleDate { return this._minDate; };
+  set minDate(date: SimpleDate) { this._minDate = this._locale.parseDate(date); }
+  private _minDate: SimpleDate;
+
+  /** The maximum selectable date. */
+  @Input()
+  get maxDate(): SimpleDate { return this._maxDate; };
+  set maxDate(date: SimpleDate) { this._maxDate = this._locale.parseDate(date); }
+  private _maxDate: SimpleDate;
+
+  /** A function used to filter which dates are selectable. */
+  @Input()
+  dateFilter: (date: SimpleDate) => boolean;
+
+  /** Emits new selected date when selected date changes. */
   @Output() selectedChanged = new EventEmitter<SimpleDate>();
 
+  /** Whether the calendar is open. */
   opened = false;
 
+  /** The id for the datepicker calendar. */
   id = `md-datepicker-${datepickerUid++}`;
 
+  /** The currently selected date. */
   get _selected(): SimpleDate {
     return this._datepickerInput ? this._datepickerInput.value : null;
   }

@@ -2,6 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {MdCalendarCell, MdCalendarTable} from './calendar-table';
 import {By} from '@angular/platform-browser';
+import {SimpleDate} from '../core/datetime/simple-date';
 
 
 describe('MdCalendarTable', () => {
@@ -12,6 +13,7 @@ describe('MdCalendarTable', () => {
 
         // Test components.
         StandardCalendarTable,
+        CalendarTableWithDisabledCells,
       ],
     });
 
@@ -85,6 +87,38 @@ describe('MdCalendarTable', () => {
           .toContain('mat-calendar-table-selected', 'today should be selected');
     });
   });
+
+  describe('calendar table with disabled cells', () => {
+    let fixture: ComponentFixture<CalendarTableWithDisabledCells>;
+    let testComponent: CalendarTableWithDisabledCells;
+    let calendarTableNativeElement: Element;
+    let cellEls: NodeListOf<Element>;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(CalendarTableWithDisabledCells);
+      fixture.detectChanges();
+
+      let calendarTableDebugElement = fixture.debugElement.query(By.directive(MdCalendarTable));
+      calendarTableNativeElement = calendarTableDebugElement.nativeElement;
+      testComponent = fixture.componentInstance;
+      cellEls = calendarTableNativeElement.querySelectorAll('.mat-calendar-table-cell');
+    });
+
+    it('should only allow selection of disabled cells when allowDisabledSelection is true', () => {
+      (cellEls[0] as HTMLElement).click();
+      fixture.detectChanges();
+
+      expect(testComponent.selected).toBeFalsy();
+
+      testComponent.allowDisabledSelection = true;
+      fixture.detectChanges();
+
+      (cellEls[0] as HTMLElement).click();
+      fixture.detectChanges();
+
+      expect(testComponent.selected).toBe(1);
+    });
+  });
 });
 
 
@@ -112,6 +146,23 @@ class StandardCalendarTable {
 }
 
 
+@Component({
+  template: `<md-calendar-table [rows]="rows"
+                                [allowDisabledSelection]="allowDisabledSelection"
+                                (selectedValueChange)="selected = $event">
+             </md-calendar-table>`
+})
+class CalendarTableWithDisabledCells {
+  rows = [[1, 2, 3, 4]].map(r => r.map(d => {
+    let cell = createCell(d);
+    cell.enabled = d % 2 == 0;
+    return cell;
+  }));
+  allowDisabledSelection = false;
+  selected: SimpleDate;
+}
+
+
 function createCell(value: number) {
-  return new MdCalendarCell(value, `${value}`);
+  return new MdCalendarCell(value, `${value}`, true);
 }

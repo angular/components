@@ -19,6 +19,7 @@ describe('MdMonthView', () => {
 
         // Test components.
         StandardMonthView,
+        MonthViewWithDateFilter,
       ],
     });
 
@@ -71,6 +72,27 @@ describe('MdMonthView', () => {
       expect(selectedEl.innerHTML.trim()).toBe('31');
     });
   });
+
+  describe('month view with date filter', () => {
+    let fixture: ComponentFixture<MonthViewWithDateFilter>;
+    let testComponent: MonthViewWithDateFilter;
+    let monthViewNativeElement: Element;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(MonthViewWithDateFilter);
+      fixture.detectChanges();
+
+      let monthViewDebugElement = fixture.debugElement.query(By.directive(MdMonthView));
+      monthViewNativeElement = monthViewDebugElement.nativeElement;
+      testComponent = fixture.componentInstance;
+    });
+
+    it('should disabled filtered dates', () => {
+      let cells = monthViewNativeElement.querySelectorAll('.mat-calendar-table-cell');
+      expect(cells[0].classList).toContain('mat-calendar-table-disabled');
+      expect(cells[1].classList).not.toContain('mat-calendar-table-disabled');
+    });
+  });
 });
 
 
@@ -80,4 +102,14 @@ describe('MdMonthView', () => {
 class StandardMonthView {
   date = new SimpleDate(2017, 0, 5);
   selected = new SimpleDate(2017, 0, 10);
+}
+
+
+@Component({
+  template: `<md-month-view date="1/1/2017" [dateFilter]="dateFilter"></md-month-view>`
+})
+class MonthViewWithDateFilter {
+  dateFilter(date: SimpleDate) {
+    return date.date % 2 == 0;
+  }
 }

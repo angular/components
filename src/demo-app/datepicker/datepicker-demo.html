@@ -12,7 +12,7 @@
 <p>
   <md-input-container>
     <input mdInput [mdDatepicker]="dp2" [(ngModel)]="date">
-    <button [mdDatepickerToggle]="dp2"></button>
+    <button mdSuffix [mdDatepickerToggle]="dp2"></button>
     <md-datepicker #dp2 [touchUi]="touch"></md-datepicker>
   </md-input-container>
 </p>
@@ -20,6 +20,8 @@
   <button [mdDatepickerToggle]="dp3"></button>
   <md-input-container>
     <input mdInput [mdDatepicker]="dp3" [(ngModel)]="date">
-    <md-datepicker #dp3 [touchUi]="touch"></md-datepicker>
+    <md-datepicker #dp3 [touchUi]="touch" startAt="1/1/17" minDate="1/1/16" maxDate="1/1/18"
+                   [dateFilter]="dateFilter">
+    </md-datepicker>
   </md-input-container>
 </p>
