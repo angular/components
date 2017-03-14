@@ -76,7 +76,7 @@ export class SimpleDate {
    * @param max The maximum date
    * @returns A new SimpleDate equal to this one clamped between the given min and max dates.
    */
-  clamp(min: SimpleDate, max: SimpleDate) {
+  clamp(min: SimpleDate, max: SimpleDate): SimpleDate {
     let clampedDate: SimpleDate = this;
     if (min && this.compare(min) < 0) {
       clampedDate = min;

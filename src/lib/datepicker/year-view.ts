@@ -105,14 +105,14 @@ export class MdYearView implements AfterContentInit {
       return true;
     }
 
-    let enabled = false;
+    // If any date in the month is enabled count the month as enabled.
     for (let date = new SimpleDate(this.date.year, month, 1); date.month === month;
          date = date.add({days: 1})) {
-      enabled = enabled || this.dateFilter(date);
-      if (enabled) {
-        break;
+      if (this.dateFilter(date)) {
+        return true;
       }
     }
-    return enabled;
+
+    return false;
   }
 }

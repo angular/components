@@ -73,7 +73,7 @@ export class MdCalendar implements AfterContentInit {
    */
   get _currentPeriod() { return this._normalizedCurrentPeriod; }
   set _currentPeriod(value: SimpleDate) {
-    let clampedValue = value.clamp(this.minDate, this.maxDate);
+    const clampedValue = value.clamp(this.minDate, this.maxDate);
     this._normalizedCurrentPeriod = new SimpleDate(clampedValue.year, clampedValue.month, 1);
   }
   private _normalizedCurrentPeriod: SimpleDate;
