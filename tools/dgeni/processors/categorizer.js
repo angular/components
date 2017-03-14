@@ -9,45 +9,68 @@
 module.exports = function categorizer() {
   return {
     $runBefore: ['docs-processed'],
-    $process: function(docs) {
-      docs.forEach(doc => {
-        // The typescriptPackage groups both methods and parameters into "members".
-        // Use the presence of `parameters` as a proxy to determine if this is a method.
-        if (doc.classDoc && doc.hasOwnProperty('parameters')) {
-          doc.isMethod = true;
-
-          // Mark methods with a `void` return type so we can omit show the return type in the docs.
-          doc.showReturns = doc.returnType && doc.returnType != 'void';
-
-          normalizeMethodParameters(doc);
-
-          // Maintain a list of methods on the associated class so we can
-          // iterate through them while rendering.
-          doc.classDoc.methods ?
-              doc.classDoc.methods.push(doc) :
-              doc.classDoc.methods = [doc];
-        } else if (isDirective(doc)) {
-          doc.isDirective = true;
-          doc.directiveExportAs = getDirectiveExportAs(doc);
-        } else if (isService(doc)) {
-          doc.isService = true;
-        } else if (isNgModule(doc)) {
-          doc.isNgModule = true;
-        } else if (doc.docType == 'member') {
-          doc.isDirectiveInput = isDirectiveInput(doc);
-          doc.directiveInputAlias = getDirectiveInputAlias(doc);
-
-          doc.isDirectiveOutput = isDirectiveOutput(doc);
-          doc.directiveOutputAlias = getDirectiveOutputAlias(doc);
-
-          doc.classDoc.properties ?
-              doc.classDoc.properties.push(doc) :
-              doc.classDoc.properties = [doc];
-        }
-      });
+    $process: function (docs) {
+      docs.filter(doc => doc.docType === 'class').forEach(doc => visitClassDoc(doc));
     }
   };
+
+  function visitClassDoc(classDoc) {
+    // Resolve all methods and properties from the classDoc. Includes inherited docs.
+    classDoc.methods = resolveMethods(classDoc);
+    classDoc.properties = resolveProperties(classDoc);
+
+    // Call visit hooks that can modify the method and property docs.
+    classDoc.methods.forEach(doc => visitMethodDoc(doc));
+    classDoc.properties.forEach(doc => visitPropertyDoc(doc));
+
+    // Categorize the current visited classDoc into its Angular type.
+    if (isDirective(classDoc)) {
+      classDoc.isDirective = true;
+      classDoc.directiveExportAs = getDirectiveExportAs(classDoc);
+    } else if (isService(classDoc)) {
+      classDoc.isService = true;
+    } else if (isNgModule(classDoc)) {
+      classDoc.isNgModule = true;
+    }
+  }
+
+  function visitMethodDoc(methodDoc) {
+    normalizeMethodParameters(methodDoc);
+
+    // Mark methods with a `void` return type so we can omit show the return type in the docs.
+    methodDoc.showReturns = methodDoc.returnType && methodDoc.returnType != 'void';
+  }
+
+  function visitPropertyDoc(propertyDoc) {
+    propertyDoc.isDirectiveInput = isDirectiveInput(propertyDoc);
+    propertyDoc.directiveInputAlias = getDirectiveInputAlias(propertyDoc);
+
+    propertyDoc.isDirectiveOutput = isDirectiveOutput(propertyDoc);
+    propertyDoc.directiveOutputAlias = getDirectiveOutputAlias(propertyDoc);
+  }
 };
+
+/** Function that walks through all inherited docs and collects public methods. */
+function resolveMethods(classDoc) {
+  let methods = classDoc.members.filter(member => member.hasOwnProperty('parameters'));
+
+  if (classDoc.inheritedDoc) {
+    methods = methods.concat(resolveMethods(classDoc.inheritedDoc));
+  }
+
+  return methods;
+}
+
+/** Function that walks through all inherited docs and collects public properties. */
+function resolveProperties(classDoc) {
+  let properties = classDoc.members.filter(member => !member.hasOwnProperty('parameters'));
+
+  if (classDoc.inheritedDoc) {
+    properties = properties.concat(resolveProperties(classDoc.inheritedDoc));
+  }
+
+  return properties;
+}
 
 
 /**

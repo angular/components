@@ -28,12 +28,24 @@ const INTERNAL_METHODS = [
 
 module.exports = function docsPrivateFilter() {
   return {
-    $runBefore: ['docs-processed'],
-    $process: function(docs) {
-      return docs.filter(d => !(hasDocsPrivateTag(d) || INTERNAL_METHODS.includes(d.name)));
-    }
+    $runBefore: ['categorizer'],
+    $process: docs => docs.filter(doc => validateDocEntry(doc))
   };
 };
+
+function validateDocEntry(doc) {
+  if (doc.docType === 'member') {
+    return validateMemberDoc(doc);
+  } else if (doc.docType === 'class') {
+    doc.members = doc.members.filter(memberDoc => validateMemberDoc(memberDoc));
+  }
+
+  return true;
+}
+
+function validateMemberDoc(memberDoc) {
+  return !(hasDocsPrivateTag(memberDoc) || INTERNAL_METHODS.includes(memberDoc.name))
+}
 
 function hasDocsPrivateTag(doc) {
   let tags = doc.tags && doc.tags.tags;
