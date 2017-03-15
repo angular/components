@@ -88,7 +88,6 @@ describe('MdCalendarTable', () => {
     });
 
     it('should mark active date', () => {
-      let cellEls = calendarTableNativeElement.querySelectorAll('.mat-calendar-table-cell');
       expect((cellEls[10] as HTMLElement).innerText.trim()).toBe('11');
       expect(cellEls[10].classList).toContain('mat-calendar-table-active');
     });

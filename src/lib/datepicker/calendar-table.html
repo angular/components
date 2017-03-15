@@ -14,7 +14,7 @@
     <td *ngFor="let item of row; let colIndex = index"
         class="mat-calendar-table-cell"
         [class.mat-calendar-table-disabled]="!item.enabled"
-        [class.mat-calendar-table-active]="rowIndex * numCols + colIndex == activeCell"
+        [class.mat-calendar-table-active]="_isActiveCell(rowIndex, colIndex)"
         (click)="_cellClicked(item)">
       <div class="mat-calendar-table-cell-content"
            [class.mat-calendar-table-selected]="selectedValue === item.value"

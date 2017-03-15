@@ -54,9 +54,9 @@ describe('MdCalendar', () => {
       testComponent = fixture.componentInstance;
     });
 
-    it('should be in month view with specified month visible', () => {
+    it('should be in month view with specified month active', () => {
       expect(calendarInstance._monthView).toBe(true, 'should be in month view');
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2017, 0, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 0, 31));
     });
 
     it('should toggle view when period clicked', () => {
@@ -74,17 +74,17 @@ describe('MdCalendar', () => {
     });
 
     it('should go to next and previous month', () => {
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2017, 0, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 0, 31));
 
       nextButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2017, 1, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 1, 1));
 
       prevButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2017, 0, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 0, 1));
     });
 
     it('should go to previous and next year', () => {
@@ -92,17 +92,17 @@ describe('MdCalendar', () => {
       fixture.detectChanges();
 
       expect(calendarInstance._monthView).toBe(false, 'should be in year view');
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2017, 0, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 0, 31));
 
       nextButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2018, 0, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2018, 0, 1));
 
       prevButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2017, 0, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 0, 1));
     });
 
     it('should go back to month view after selecting month in year view', () => {
@@ -110,14 +110,14 @@ describe('MdCalendar', () => {
       fixture.detectChanges();
 
       expect(calendarInstance._monthView).toBe(false, 'should be in year view');
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2017, 0, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 0, 31));
 
       let monthCells = calendarElement.querySelectorAll('.mat-calendar-table-cell');
       (monthCells[monthCells.length - 1] as HTMLElement).click();
       fixture.detectChanges();
 
       expect(calendarInstance._monthView).toBe(true, 'should be in month view');
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2017, 11, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 11, 1));
       expect(testComponent.selected).toBeFalsy('no date should be selected yet');
     });
 
@@ -154,14 +154,14 @@ describe('MdCalendar', () => {
       testComponent.startAt = new SimpleDate(2000, 0, 1);
       fixture.detectChanges();
 
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2016, 0, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2016, 0, 1));
     });
 
     it('should clamp startAt value above max date', () => {
       testComponent.startAt = new SimpleDate(2020, 0, 1);
       fixture.detectChanges();
 
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2018, 0, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2018, 0, 1));
     });
 
     it('should not go back past min date', () => {
@@ -169,18 +169,18 @@ describe('MdCalendar', () => {
       fixture.detectChanges();
 
       expect(prevButton.classList).not.toContain('mat-calendar-disabled');
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2016, 1, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2016, 1, 1));
 
       prevButton.click();
       fixture.detectChanges();
 
       expect(prevButton.classList).toContain('mat-calendar-disabled');
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2016, 0, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2016, 0, 1));
 
       prevButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2016, 0, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2016, 0, 1));
     });
 
     it('should not go forward past max date', () => {
@@ -188,18 +188,18 @@ describe('MdCalendar', () => {
       fixture.detectChanges();
 
       expect(nextButton.classList).not.toContain('mat-calendar-disabled');
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2017, 11, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 11, 1));
 
       nextButton.click();
       fixture.detectChanges();
 
       expect(nextButton.classList).toContain('mat-calendar-disabled');
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2018, 0, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2018, 0, 1));
 
       nextButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._currentPeriod).toEqual(new SimpleDate(2018, 0, 1));
+      expect(calendarInstance._activeDate).toEqual(new SimpleDate(2018, 0, 1));
     });
   });
 

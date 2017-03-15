@@ -32,7 +32,7 @@
 <div class="mat-calendar-body">
   <md-month-view
       *ngIf="_monthView"
-      [activeDate]="_currentPeriod"
+      [activeDate]="_activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
       (selectedChange)="_dateSelected($event)">
@@ -40,7 +40,7 @@
 
   <md-year-view
       *ngIf="!_monthView"
-      [activeDate]="_currentPeriod"
+      [activeDate]="_activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
       (selectedChange)="_monthSelected($event)">

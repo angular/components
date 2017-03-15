@@ -67,16 +67,14 @@ export class MdCalendar implements AfterContentInit {
   }
 
   /**
-   * A date representing the current period shown in the calendar. The current period is always
-   * normalized to the 1st of a month, this prevents date overflow issues (e.g. adding a month to
-   * January 31st and overflowing into March).
+   * The current active date. This determines which time period is shown and which date is
+   * highlighted when using keyboard navigation.
    */
-  get _currentPeriod() { return this._normalizedCurrentPeriod; }
-  set _currentPeriod(value: SimpleDate) {
-    const clampedValue = value.clamp(this.minDate, this.maxDate);
-    this._normalizedCurrentPeriod = new SimpleDate(clampedValue.year, clampedValue.month, 1);
+  get _activeDate() { return this._clampedActiveDate; }
+  set _activeDate(value: SimpleDate) {
+    this._clampedActiveDate = value.clamp(this.minDate, this.maxDate);
   }
-  private _normalizedCurrentPeriod: SimpleDate;
+  private _clampedActiveDate: SimpleDate;
 
   /** Whether the calendar is in month view. */
   _monthView: boolean;
@@ -87,8 +85,8 @@ export class MdCalendar implements AfterContentInit {
   /** The label for the current calendar view. */
   get _label(): string {
     return this._monthView ?
-        this._locale.getCalendarMonthHeaderLabel(this._currentPeriod).toLocaleUpperCase() :
-        this._locale.getCalendarYearHeaderLabel(this._currentPeriod);
+        this._locale.getCalendarMonthHeaderLabel(this._activeDate).toLocaleUpperCase() :
+        this._locale.getCalendarYearHeaderLabel(this._activeDate);
   }
 
   constructor(private _locale: CalendarLocale) {
@@ -97,7 +95,7 @@ export class MdCalendar implements AfterContentInit {
   }
 
   ngAfterContentInit() {
-    this._currentPeriod = this.startAt || SimpleDate.today();
+    this._activeDate = this.startAt || SimpleDate.today();
     this._monthView = this.startView != 'year';
   }
 
@@ -110,7 +108,7 @@ export class MdCalendar implements AfterContentInit {
 
   /** Handles month selection in the year view. */
   _monthSelected(month: SimpleDate) {
-    this._currentPeriod = month;
+    this._activeDate = month;
     this._monthView = true;
   }
 
@@ -121,14 +119,16 @@ export class MdCalendar implements AfterContentInit {
 
   /** Handles user clicks on the previous button. */
   _previousClicked() {
-    let amount = this._monthView ? {months: -1} : {years: -1};
-    this._currentPeriod = this._currentPeriod.add(amount);
+    return this._activeDate = this._monthView ?
+        new SimpleDate(this._activeDate.year, this._activeDate.month - 1, 1) :
+        new SimpleDate(this._activeDate.year - 1, 0, 1);
   }
 
   /** Handles user clicks on the next button. */
   _nextClicked() {
-    let amount = this._monthView ? {months: 1} : {years: 1};
-    this._currentPeriod = this._currentPeriod.add(amount);
+    return this._activeDate = this._monthView ?
+        new SimpleDate(this._activeDate.year, this._activeDate.month + 1, 1) :
+        new SimpleDate(this._activeDate.year + 1, 0, 1);
   }
 
   /** Whether the previous period button is enabled. */
@@ -136,12 +136,12 @@ export class MdCalendar implements AfterContentInit {
     if (!this.minDate) {
       return true;
     }
-    return !this.minDate || !this._isSameView(this._currentPeriod, this.minDate);
+    return !this.minDate || !this._isSameView(this._activeDate, this.minDate);
   }
 
   /** Whether the next period button is enabled. */
   _nextEnabled() {
-    return !this.maxDate || !this._isSameView(this._currentPeriod, this.maxDate);
+    return !this.maxDate || !this._isSameView(this._activeDate, this.maxDate);
   }
 
   /** Whether the two dates represent the same view in the current view mode (month or year). */
