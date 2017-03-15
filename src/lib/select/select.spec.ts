@@ -11,7 +11,9 @@ import {
 } from '@angular/core';
 import {MdSelectModule} from './index';
 import {OverlayContainer} from '../core/overlay/overlay-container';
-import {MdSelect, MdSelectFloatPlaceholderType} from './select';
+import {
+  MdSelect, MdSelectFloatPlaceholderType, SELECT_MULTIPLE_PANEL_PADDING_X, SELECT_PANEL_PADDING_X
+} from './select';
 import {MdSelectDynamicMultipleError, MdSelectNonArrayValueError} from './select-errors';
 import {MdOption} from '../core/option/option';
 import {Dir} from '../core/rtl/dir';
@@ -151,7 +153,7 @@ describe('MdSelect', () => {
         trigger.click();
         fixture.detectChanges();
         const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-        expect(pane.style.minWidth).toBe('200px');
+        expect(pane.style.minWidth).toBe((200 + SELECT_PANEL_PADDING_X) + 'px');
       });
     }));
 
@@ -1302,7 +1304,7 @@ describe('MdSelect', () => {
         fixture.detectChanges();
 
         const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-        expect(pane.style.minWidth).toEqual('300px');
+        expect(pane.style.minWidth).toEqual((300 + SELECT_PANEL_PADDING_X) + 'px');
 
         expect(fixture.componentInstance.select.panelOpen).toBe(true);
         expect(overlayContainerElement.textContent).toContain('Steak');
@@ -1590,6 +1592,17 @@ describe('MdSelect', () => {
           expect(testInstance.options.toArray().every(option => option.multiple)).toBe(true,
               'Expected `multiple` to have been set on dynamically-added option.');
         });
+      });
+    }));
+
+    it('should set the width of the overlay based on the trigger', async(() => {
+      trigger.style.width = '200px';
+
+      fixture.whenStable().then(() => {
+        trigger.click();
+        fixture.detectChanges();
+        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        expect(pane.style.minWidth).toBe((200 + SELECT_MULTIPLE_PANEL_PADDING_X) + 'px');
       });
     }));
 
