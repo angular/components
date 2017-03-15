@@ -228,6 +228,7 @@ $mat-input-underline-disabled-background-image:
   top: 100%;
   width: 100%;
   margin-top: -$mat-input-wrapper-spacing;
+  overflow: hidden; // prevents multi-line errors from overlapping the input
 }
 
 // The hint is shown below the underline. There can be
@@ -246,19 +247,6 @@ $mat-input-underline-disabled-background-image:
     &.mat-right {
       float: left;
     }
-  }
-}
-
-// Clears the floats on the hints. Necessary for the `transform` animation to work.
-.mat-input-hint-clearfix {
-  &::before,
-  &::after {
-    content: '';
-    display: table;
-  }
-
-  &::after {
-    clear: both;
   }
 }
 

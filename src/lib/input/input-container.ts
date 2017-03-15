@@ -368,7 +368,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit {
   }
 
   /** Determines whether to display hints, errors or no messages at all. */
-  _getDisplayedMessages(): 'error'|'hint'|'none' {
+  _getDisplayedMessages(): 'error' | 'hint' | 'none' {
     if (this._errorChildren.length > 0) {
       if (this._isErrorState()) {
         return 'error';

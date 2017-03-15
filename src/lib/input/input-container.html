@@ -41,7 +41,7 @@
       <ng-content select="md-error, mat-error"></ng-content>
     </div>
 
-    <div *ngSwitchCase="'hint'" class="mat-input-hint-clearfix" [@transitionMessages]="_messageAnimationState">
+    <div *ngSwitchCase="'hint'" [@transitionMessages]="_messageAnimationState">
       <div *ngIf="hintLabel != ''" [attr.id]="_hintLabelId" class="mat-hint">{{hintLabel}}</div>
       <ng-content select="md-hint, mat-hint"></ng-content>
     </div>
