@@ -8,8 +8,10 @@ import {
   ElementRef,
   Renderer,
   AfterContentInit,
+  Input,
 } from '@angular/core';
 import {MdLine, MdLineSetter} from '../core';
+import {coerceBooleanProperty} from "../core/coercion/boolean-property";
 
 @Directive({
   selector: 'md-divider, mat-divider'
@@ -113,6 +115,14 @@ export class MdListSubheaderCssMatStyler {}
 })
 export class MdListItem implements AfterContentInit {
   _hasFocus: boolean = false;
+
+  /** Whether on click should be disabled. */
+  private _disabled: boolean = false;
+
+  /** Whether the component is disabled. */
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value) ? true : null; }
 
   private _lineSetter: MdLineSetter;
 

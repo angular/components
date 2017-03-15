@@ -9,6 +9,10 @@
   .mat-list, .mat-nav-list {
     .mat-list-item {
       color: mat-color($foreground, base);
+
+      .mat-list-item-disabled{
+        color: mat-color($foreground, disabled-button);
+      }
     }
 
     .mat-subheader {
@@ -20,7 +24,7 @@
     border-top-color: mat-color($foreground, divider);
   }
 
-  .mat-nav-list .mat-list-item-content {
+  .mat-nav-list .mat-list-item-content:not(.mat-list-item-disabled) {
     &:hover, &.mat-list-item-focus {
       background: mat-color($background, 'hover');
     }
