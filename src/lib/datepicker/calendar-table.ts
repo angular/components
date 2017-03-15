@@ -51,6 +51,9 @@ export class MdCalendarTable {
   /** Whether to allow selection of disabled cells. */
   @Input() allowDisabledSelection = false;
 
+  /** The cell number of the active cell in the table. */
+  @Input() activeCell = 0;
+
   /** Emits when a new value is selected. */
   @Output() selectedValueChange = new EventEmitter<number>();
 

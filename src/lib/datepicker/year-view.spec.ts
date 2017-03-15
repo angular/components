@@ -71,6 +71,12 @@ describe('MdYearView', () => {
       let selectedEl = yearViewNativeElement.querySelector('.mat-calendar-table-selected');
       expect(selectedEl.innerHTML.trim()).toBe('DEC');
     });
+
+    it('should mark active date', () => {
+      let cellEls = yearViewNativeElement.querySelectorAll('.mat-calendar-table-cell');
+      expect((cellEls[0] as HTMLElement).innerText.trim()).toBe('JAN');
+      expect(cellEls[0].classList).toContain('mat-calendar-table-active');
+    });
   });
 
   describe('year view with date filter', () => {
@@ -97,7 +103,8 @@ describe('MdYearView', () => {
 
 
 @Component({
-  template: `<md-year-view [date]="date" [(selected)]="selected"></md-year-view>`,
+  template: `
+    <md-year-view [activeDate]="date" [(selected)]="selected"></md-year-view>`,
 })
 class StandardYearView {
   date = new SimpleDate(2017, 0, 5);
