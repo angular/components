@@ -185,6 +185,22 @@ export class ConnectedOverlayDirective implements OnDestroy {
   private _buildConfig(): OverlayState {
     let overlayConfig = new OverlayState();
 
+    this._configureState(overlayConfig);
+
+    overlayConfig.hasBackdrop = this.hasBackdrop;
+
+    if (this.backdropClass) {
+      overlayConfig.backdropClass = this.backdropClass;
+    }
+
+    this._position = this._createPositionStrategy() as ConnectedPositionStrategy;
+    overlayConfig.positionStrategy = this._position;
+
+    return overlayConfig;
+  }
+
+  /** Configure the overlay state based on the directive's inputs */
+  private _configureState(overlayConfig: OverlayState): void {
     if (this.width || this.width === 0) {
       overlayConfig.width = this.width;
     }
@@ -200,17 +216,6 @@ export class ConnectedOverlayDirective implements OnDestroy {
     if (this.minHeight || this.minHeight === 0) {
       overlayConfig.minHeight = this.minHeight;
     }
-
-    overlayConfig.hasBackdrop = this.hasBackdrop;
-
-    if (this.backdropClass) {
-      overlayConfig.backdropClass = this.backdropClass;
-    }
-
-    this._position = this._createPositionStrategy() as ConnectedPositionStrategy;
-    overlayConfig.positionStrategy = this._position;
-
-    return overlayConfig;
   }
 
   /** Returns the position strategy of the overlay to be set on the overlay config */
@@ -249,6 +254,8 @@ export class ConnectedOverlayDirective implements OnDestroy {
 
     this._position.withDirection(this.dir);
     this._overlayRef.getState().direction = this.dir;
+    /** Update the overlay state, in case the directive's inputs have changed */
+    this._configureState(this._overlayRef.getState());
 
     if (!this._overlayRef.hasAttached()) {
       this._overlayRef.attach(this._templatePortal);
