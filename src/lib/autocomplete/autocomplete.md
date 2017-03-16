@@ -107,6 +107,10 @@ the option's string properties.
 To make this work, create a function on your component class that maps the control value to the desired display value. 
 Then bind it to the autocomplete's `displayWith` property. 
 
+The `displayWith` property also accepts a string value that will be used to match a property
+on the selected option value. So, in the example below, you can use the sintax: 
+`displayWith="name"`
+
 ```html
 <md-input-container>
    <input type="text" mdInput [formControl]="myControl" [mdAutocomplete]="auto">

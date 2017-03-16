@@ -46,8 +46,11 @@ export class MdAutocomplete implements AfterContentInit {
   @ViewChild('panel') panel: ElementRef;
   @ContentChildren(MdOption) options: QueryList<MdOption>;
 
-  /** Function that maps an option's control value to its display value in the trigger. */
-  @Input() displayWith: (value: any) => string;
+  /**
+   * Function that maps an option's control value to its display value in the trigger
+   * or a property name from the selected option value.
+   */
+  @Input() displayWith: ((value: any) => string) | string;
 
   /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
   id: string = `md-autocomplete-${_uniqueAutocompleteIdCounter++}`;
