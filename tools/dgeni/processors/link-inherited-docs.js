@@ -40,6 +40,7 @@ module.exports = function linkInheritedDocs(readTypeScriptModules, tsParser) {
   }
 
   function resolveInheritedType(classSymbol) {
+    // Ensure that the symbol can be converted into a TypeScript ClassDeclaration.
     if (classSymbol.flags & ~ts.SymbolFlags.Class) {
       return;
     }
