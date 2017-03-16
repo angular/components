@@ -3,10 +3,10 @@
   max-width: 500px;
 }
 
-.input-row {
+.example-input-row {
   display: flex;
 }
 
-.mat-input-container {
+.example-input-container {
   flex-grow: 1;
 }
