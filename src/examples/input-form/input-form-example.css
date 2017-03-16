@@ -1,7 +1,12 @@
-.example-form {
-  width: 500px;
+:host {
+  display: block;
+  max-width: 500px;
 }
 
-.example-full-width {
-  width: 100%;
+.input-row {
+  display: flex;
+}
+
+.mat-input-container {
+  flex-grow: 1;
 }
