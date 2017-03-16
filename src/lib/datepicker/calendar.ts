@@ -1,12 +1,15 @@
 import {
+  AfterContentInit,
   ChangeDetectionStrategy,
-  ViewEncapsulation,
   Component,
+  EventEmitter,
   Input,
-  AfterContentInit, Output, EventEmitter
+  Output,
+  ViewEncapsulation
 } from '@angular/core';
 import {SimpleDate} from '../core/datetime/simple-date';
 import {CalendarLocale} from '../core/datetime/calendar-locale';
+import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '../core/keyboard/keycodes';
 
 
 /**
@@ -100,39 +103,39 @@ export class MdCalendar implements AfterContentInit {
   }
 
   /** Handles date selection in the month view. */
-  _dateSelected(date: SimpleDate) {
+  _dateSelected(date: SimpleDate): void {
     if ((!date || !this.selected) && date != this.selected || date.compare(this.selected)) {
       this.selectedChange.emit(date);
     }
   }
 
   /** Handles month selection in the year view. */
-  _monthSelected(month: SimpleDate) {
+  _monthSelected(month: SimpleDate): void {
     this._activeDate = month;
     this._monthView = true;
   }
 
   /** Handles user clicks on the period label. */
-  _currentPeriodClicked() {
+  _currentPeriodClicked(): void {
     this._monthView = !this._monthView;
   }
 
   /** Handles user clicks on the previous button. */
-  _previousClicked() {
-    return this._activeDate = this._monthView ?
+  _previousClicked(): void {
+    this._activeDate = this._monthView ?
         new SimpleDate(this._activeDate.year, this._activeDate.month - 1, 1) :
         new SimpleDate(this._activeDate.year - 1, 0, 1);
   }
 
   /** Handles user clicks on the next button. */
-  _nextClicked() {
-    return this._activeDate = this._monthView ?
+  _nextClicked(): void {
+    this._activeDate = this._monthView ?
         new SimpleDate(this._activeDate.year, this._activeDate.month + 1, 1) :
         new SimpleDate(this._activeDate.year + 1, 0, 1);
   }
 
   /** Whether the previous period button is enabled. */
-  _previousEnabled() {
+  _previousEnabled(): boolean {
     if (!this.minDate) {
       return true;
     }
@@ -140,14 +143,40 @@ export class MdCalendar implements AfterContentInit {
   }
 
   /** Whether the next period button is enabled. */
-  _nextEnabled() {
+  _nextEnabled(): boolean {
     return !this.maxDate || !this._isSameView(this._activeDate, this.maxDate);
   }
 
   /** Whether the two dates represent the same view in the current view mode (month or year). */
-  private _isSameView(date1: SimpleDate, date2: SimpleDate) {
+  private _isSameView(date1: SimpleDate, date2: SimpleDate): boolean {
     return this._monthView ?
         date1.year == date2.year && date1.month == date2.month :
         date1.year == date2.year;
+  }
+
+  _handleCalendarBodyKeydown(event: KeyboardEvent): void {
+    let normalizedActiveDate = this._monthView ? this._activeDate :
+        new SimpleDate(this._activeDate.year, this._activeDate.month, 1);
+    let unit = this._monthView ? 'days' : 'months';
+
+    switch (event.keyCode) {
+      case LEFT_ARROW:
+        this._activeDate = normalizedActiveDate.add({[unit]: -1});
+        break;
+      case RIGHT_ARROW:
+        this._activeDate = normalizedActiveDate.add({[unit]: 1});
+        break;
+      case UP_ARROW:
+        this._activeDate = normalizedActiveDate.add({[unit]: -7});
+        break;
+      case DOWN_ARROW:
+        this._activeDate = normalizedActiveDate.add({[unit]: 7});
+        break;
+      default:
+        // Don't prevent default on keys that we don't explicitly handle.
+        return;
+    }
+
+    event.preventDefault();
   }
 }

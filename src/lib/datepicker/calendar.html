@@ -29,7 +29,7 @@
   </table>
 </div>
 
-<div class="mat-calendar-body">
+<div class="mat-calendar-body" tabindex="1" (keydown)="_handleCalendarBodyKeydown($event)">
   <md-month-view
       *ngIf="_monthView"
       [activeDate]="_activeDate"
