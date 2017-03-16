@@ -9,7 +9,16 @@ import {
 } from '@angular/core';
 import {SimpleDate} from '../core/datetime/simple-date';
 import {CalendarLocale} from '../core/datetime/calendar-locale';
-import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '../core/keyboard/keycodes';
+import {
+  DOWN_ARROW,
+  END, ENTER,
+  HOME,
+  LEFT_ARROW,
+  PAGE_DOWN,
+  PAGE_UP,
+  RIGHT_ARROW,
+  UP_ARROW
+} from '../core/keyboard/keycodes';
 
 
 /**
@@ -123,15 +132,14 @@ export class MdCalendar implements AfterContentInit {
   /** Handles user clicks on the previous button. */
   _previousClicked(): void {
     this._activeDate = this._monthView ?
-        new SimpleDate(this._activeDate.year, this._activeDate.month - 1, 1) :
-        new SimpleDate(this._activeDate.year - 1, 0, 1);
+        this._addCalendarMonths(this._activeDate, -1) :
+        this._addCalendarYears(this._activeDate, -1);
   }
 
   /** Handles user clicks on the next button. */
   _nextClicked(): void {
     this._activeDate = this._monthView ?
-        new SimpleDate(this._activeDate.year, this._activeDate.month + 1, 1) :
-        new SimpleDate(this._activeDate.year + 1, 0, 1);
+        this._addCalendarMonths(this._activeDate, 1) : this._addCalendarYears(this._activeDate, 1);
   }
 
   /** Whether the previous period button is enabled. */
@@ -154,29 +162,123 @@ export class MdCalendar implements AfterContentInit {
         date1.year == date2.year;
   }
 
+  /** Handles keydown events on the calendar body. */
   _handleCalendarBodyKeydown(event: KeyboardEvent): void {
-    let normalizedActiveDate = this._monthView ? this._activeDate :
-        new SimpleDate(this._activeDate.year, this._activeDate.month, 1);
-    let unit = this._monthView ? 'days' : 'months';
-
     switch (event.keyCode) {
       case LEFT_ARROW:
-        this._activeDate = normalizedActiveDate.add({[unit]: -1});
+        this._activeDate = this._monthView ?
+            this._addCalendarDays(this._activeDate, -1) :
+            this._addCalendarMonths(this._activeDate, -1);
         break;
       case RIGHT_ARROW:
-        this._activeDate = normalizedActiveDate.add({[unit]: 1});
+        this._activeDate = this._monthView ?
+            this._addCalendarDays(this._activeDate, 1) :
+            this._addCalendarMonths(this._activeDate, 1);
         break;
       case UP_ARROW:
-        this._activeDate = normalizedActiveDate.add({[unit]: -7});
+        this._activeDate = this._monthView ?
+            this._addCalendarDays(this._activeDate, -7) :
+            this._prevMonthInSameCol(this._activeDate);
         break;
       case DOWN_ARROW:
-        this._activeDate = normalizedActiveDate.add({[unit]: 7});
+        this._activeDate = this._monthView ?
+            this._addCalendarDays(this._activeDate, 7) :
+            this._nextMonthInSameCol(this._activeDate);
         break;
+      case HOME:
+        this._activeDate = this._monthView ?
+            new SimpleDate(this._activeDate.year, this._activeDate.month, 1) :
+            this._addCalendarMonths(this._activeDate, -this._activeDate.month);
+        break;
+      case END:
+        this._activeDate = this._monthView ?
+            new SimpleDate(this._activeDate.year, this._activeDate.month + 1, 0) :
+            this._addCalendarMonths(this._activeDate, 11 - this._activeDate.month);
+        break;
+      case PAGE_UP:
+        if (event.altKey) {
+          this._activeDate = this._addCalendarYears(this._activeDate, this._monthView ? -1 : -10);
+        } else {
+          this._activeDate = this._monthView ?
+              this._addCalendarMonths(this._activeDate, -1) :
+              this._addCalendarYears(this._activeDate, -1);
+        }
+        break;
+      case PAGE_DOWN:
+        if (event.altKey) {
+          this._activeDate = this._addCalendarYears(this._activeDate, this._monthView ? 1 : 10);
+        } else {
+          this._activeDate = this._monthView ?
+              this._addCalendarMonths(this._activeDate, 1) :
+              this._addCalendarYears(this._activeDate, 1);
+        }
+        break;
+      case ENTER:
+        if (this._monthView) {
+          this._dateSelected(this._activeDate);
+        } else {
+          this._monthSelected(this._activeDate);
+        }
       default:
         // Don't prevent default on keys that we don't explicitly handle.
         return;
     }
 
     event.preventDefault();
+  }
+
+  /** Adds the given number of days to the date. */
+  private _addCalendarDays(date: SimpleDate, days: number): SimpleDate {
+    return date.add({'days': days});
+  }
+
+  /**
+   * Adds the given number of months to the date. Months are counted as if flipping pages on a
+   * calendar and then finding the closest date in the new month. For example when adding 1 month to
+   * Jan 31 2017 the resulting date will be Feb 28 2017.
+   */
+  private _addCalendarMonths(date: SimpleDate, months: number): SimpleDate {
+    let newDate = date.add({'months': months});
+
+    // It's possible to wind up in the wrong month if the original month has more days than the new
+    // month. In this case we want to go to the last day of the desired month.
+    // Note: the additional + 12 % 12 ensures we end up with a positive number, since JS % doesn't
+    // guarantee this.
+    if (newDate.month != ((date.month + months) % 12 + 12) % 12) {
+      newDate = new SimpleDate(newDate.year, newDate.month, 0);
+    }
+
+    return newDate;
+  }
+
+  /**
+   * Adds the given number of months to the date. Months are counted as if flipping 12 pages for
+   * each year on a calendar and then finding the closest date in the new month. For example when
+   * adding 1 year to Feb 29 2016 the resulting date will be Feb 28 2017.
+   */
+  private _addCalendarYears(date: SimpleDate, years: number): SimpleDate {
+    return this._addCalendarMonths(date, years * 12);
+  }
+
+  /**
+   * Determine the date for the month that comes before the given month in the same column in the
+   * calendar table.
+   */
+  private _prevMonthInSameCol(date: SimpleDate) {
+    // Determine how many months to jump forward given that there are 2 empty slots at the beginning
+    // of each year.
+    let increment = date.month <= 4 ? -5 : (date.month >= 7 ? -7 : -12);
+    return this._addCalendarMonths(date, increment);
+  }
+
+  /**
+   * Determine the date for the month that comes after the given month in the same column in the
+   * calendar table.
+   */
+  private _nextMonthInSameCol(date: SimpleDate): SimpleDate {
+    // Determine how many months to jump forward given that there are 2 empty slots at the beginning
+    // of each year.
+    let increment = date.month <= 4 ? 7 : (date.month >= 7 ? 5 : 12);
+    return this._addCalendarMonths(date, increment);
   }
 }

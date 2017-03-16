@@ -74,7 +74,7 @@ export class MdYearView implements AfterContentInit {
 
   /** Handles when a new month is selected. */
   _monthSelected(month: number) {
-    this.selectedChange.emit(new SimpleDate(this.activeDate.year, month, 1));
+    this.selectedChange.emit(new SimpleDate(this.activeDate.year, month, this._activeDate.date));
   }
 
   /** Initializes this month view. */
