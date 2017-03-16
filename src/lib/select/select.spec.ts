@@ -146,12 +146,14 @@ describe('MdSelect', () => {
     }));
 
     it('should set the width of the overlay based on the trigger', async(() => {
+      trigger.style.width = '200px';
+
       fixture.whenStable().then(() => {
         trigger.click();
         fixture.detectChanges();
 
         const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-        expect(pane.style.minWidth).toBe(trigger.getBoundingClientRect().width + 'px');
+        expect(pane.style.minWidth).toBe('200px');
       });
     }));
 
