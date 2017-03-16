@@ -1,6 +1,14 @@
 import {async, TestBed, inject, ComponentFixture} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
-import {FormsModule, ReactiveFormsModule, FormControl, NgForm, Validators} from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormControl,
+  NgForm,
+  Validators,
+  FormGroupDirective,
+  FormGroup,
+} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdInputModule} from './index';
@@ -54,7 +62,8 @@ describe('MdInputContainer', function () {
         MdInputContainerMultipleHintTestController,
         MdInputContainerMultipleHintMixedTestController,
         MdInputContainerWithDynamicPlaceholder,
-        MdInputContainerWithErrorMessages
+        MdInputContainerWithFormErrorMessages,
+        MdInputContainerWithFormGroupErrorMessages
       ],
     });
 
@@ -556,19 +565,19 @@ describe('MdInputContainer', function () {
   });
 
   describe('error messages', () => {
-    let fixture: ComponentFixture<MdInputContainerWithErrorMessages>;
-    let testComponent: MdInputContainerWithErrorMessages;
+    let fixture: ComponentFixture<MdInputContainerWithFormErrorMessages>;
+    let testComponent: MdInputContainerWithFormErrorMessages;
     let containerEl: HTMLElement;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(MdInputContainerWithErrorMessages);
+      fixture = TestBed.createComponent(MdInputContainerWithFormErrorMessages);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       containerEl = fixture.debugElement.query(By.css('md-input-container')).nativeElement;
     });
 
     it('should not show any errors if the user has not interacted', () => {
-      expect(testComponent.formControl.pristine).toBe(true, 'Expected untouched form control');
+      expect(testComponent.formControl.untouched).toBe(true, 'Expected untouched form control');
       expect(containerEl.querySelectorAll('md-error').length).toBe(0, 'Expected no error messages');
     });
 
@@ -597,6 +606,34 @@ describe('MdInputContainer', function () {
 
       fixture.whenStable().then(() => {
         expect(testComponent.form.submitted).toBe(true, 'Expected form to have been submitted');
+        expect(containerEl.classList)
+            .toContain('mat-input-invalid', 'Expected container to have the invalid CSS class.');
+        expect(containerEl.querySelectorAll('md-error').length)
+            .toBe(1, 'Expected one error message to have been rendered.');
+      });
+    }));
+
+    it('should display an error message when the parent form group is submitted', async(() => {
+      fixture.destroy();
+
+      let groupFixture = TestBed.createComponent(MdInputContainerWithFormGroupErrorMessages);
+      let component: MdInputContainerWithFormGroupErrorMessages;
+
+      groupFixture.detectChanges();
+      component = groupFixture.componentInstance;
+      containerEl = groupFixture.debugElement.query(By.css('md-input-container')).nativeElement;
+
+      expect(component.formControl.invalid).toBe(true, 'Expected form control to be invalid');
+      expect(containerEl.querySelectorAll('md-error').length).toBe(0, 'Expected no error messages');
+      expect(component.formGroupDirective.submitted)
+          .toBe(false, 'Expected form not to have been submitted');
+
+      dispatchFakeEvent(groupFixture.debugElement.query(By.css('form')).nativeElement, 'submit');
+      groupFixture.detectChanges();
+
+      groupFixture.whenStable().then(() => {
+        expect(component.formGroupDirective.submitted)
+            .toBe(true, 'Expected form to have been submitted');
         expect(containerEl.classList)
             .toContain('mat-input-invalid', 'Expected container to have the invalid CSS class.');
         expect(containerEl.querySelectorAll('md-error').length)
@@ -909,8 +946,27 @@ class MdInputContainerMissingMdInputTestController {}
     </form>
   `
 })
-class MdInputContainerWithErrorMessages {
+class MdInputContainerWithFormErrorMessages {
   @ViewChild('form') form: NgForm;
   formControl = new FormControl('', Validators.required);
   renderError = true;
+}
+
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" novalidate>
+      <md-input-container>
+        <input mdInput [formControl]="formControl">
+        <md-hint>Please type something</md-hint>
+        <md-error>This field is required</md-error>
+      </md-input-container>
+    </form>
+  `
+})
+class MdInputContainerWithFormGroupErrorMessages {
+  @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
+  onSubmit() { }
+  formControl = new FormControl('', Validators.required);
+  formGroup = new FormGroup({ name: this.formControl });
 }

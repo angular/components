@@ -64,6 +64,9 @@
     }
   }
 
+  // Styling for the error state of the input container. Note that while the same can be
+  // achieved with the ng-* classes, we use this approach in order to ensure that the same
+  // logic is used to style the error state and to show the error messages.
   .mat-input-invalid {
     .mat-input-placeholder,
     .mat-placeholder-required {

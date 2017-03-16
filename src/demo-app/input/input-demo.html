@@ -64,10 +64,10 @@
 
       <md-input-container>
         <input mdInput placeholder="email" [formControl]="emailFormControl">
-        <md-error *ngIf="emailFormControl.errors ? emailFormControl.errors['required'] : false">
+        <md-error *ngIf="emailFormControl.hasError('required')">
           This field is required
         </md-error>
-        <md-error *ngIf="emailFormControl.errors ? emailFormControl.errors['pattern'] : false">
+        <md-error *ngIf="emailFormControl.hasError('pattern')">
           Please enter a valid email address
         </md-error>
       </md-input-container>

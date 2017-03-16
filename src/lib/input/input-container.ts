@@ -24,7 +24,7 @@ import {
   trigger,
 } from '@angular/animations';
 import {coerceBooleanProperty} from '../core';
-import {NgControl, NgForm} from '@angular/forms';
+import {NgControl, NgForm, FormGroupDirective} from '@angular/forms';
 import {getSupportedInputTypes} from '../core/platform/features';
 import {
   MdInputContainerDuplicatedHintError,
@@ -257,7 +257,7 @@ export class MdInputDirective {
       state('enter', style({ opacity: 1, transform: 'translateY(0%)' })),
       transition('void => enter', [
         style({ opacity: 0, transform: 'translateY(-100%)' }),
-        animate('300ms')
+        animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)')
       ])
     ])
   ],
@@ -292,7 +292,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit {
   get _canPlaceholderFloat() { return this._floatPlaceholder !== 'never'; }
 
   /** State of the md-hint and md-error animations. */
-  _messageAnimationState: string = '';
+  _subscriptAnimationState: string = '';
 
   /** Text for the input hint. */
   @Input()
@@ -324,7 +324,8 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit {
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    @Optional() private _parentForm: NgForm) { }
+    @Optional() private _parentForm: NgForm,
+    @Optional() private _parentFormGroup: FormGroupDirective) { }
 
   ngAfterContentInit() {
     if (!this._mdInputChild) {
@@ -341,7 +342,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit {
 
   ngAfterViewInit() {
     // Avoid animations on load.
-    this._messageAnimationState = 'enter';
+    this._subscriptAnimationState = 'enter';
     this._changeDetectorRef.detectChanges();
   }
 
@@ -360,11 +361,12 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit {
   /** Whether the input container is in an error state. */
   _isErrorState(): boolean {
     const control = this._mdInputChild._ngControl;
-    const isInvalid = control ? control.invalid : false;
-    const isTouched = control ? control.touched : false;
-    const isSubmitted = this._parentForm ? this._parentForm.submitted : false;
+    const isInvalid = control && control.invalid;
+    const isTouched = control && control.touched;
+    const isSubmitted = (this._parentFormGroup && this._parentFormGroup.submitted) ||
+        (this._parentForm && this._parentForm.submitted);
 
-    return isInvalid && (isTouched || isSubmitted);
+    return !!(isInvalid && (isTouched || isSubmitted));
   }
 
   /** Determines whether to display hints, errors or no messages at all. */

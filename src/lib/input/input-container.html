@@ -37,12 +37,12 @@
   </div>
 
   <div class="mat-input-hint-wrapper" [ngSwitch]="_getDisplayedMessages()">
-    <div *ngSwitchCase="'error'" [@transitionMessages]="_messageAnimationState">
+    <div *ngSwitchCase="'error'" [@transitionMessages]="_subscriptAnimationState">
       <ng-content select="md-error, mat-error"></ng-content>
     </div>
 
-    <div *ngSwitchCase="'hint'" [@transitionMessages]="_messageAnimationState">
-      <div *ngIf="hintLabel != ''" [attr.id]="_hintLabelId" class="mat-hint">{{hintLabel}}</div>
+    <div *ngSwitchCase="'hint'" [@transitionMessages]="_subscriptAnimationState">
+      <div *ngIf="hintLabel" [id]="_hintLabelId" class="mat-hint">{{hintLabel}}</div>
       <ng-content select="md-hint, mat-hint"></ng-content>
     </div>
   </div>

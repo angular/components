@@ -237,6 +237,9 @@ $mat-input-underline-disabled-background-image:
   display: block;
   float: left;
 
+  // We use floats here, as opposed to flexbox, in order to make it
+  // easier to reverse their location in rtl and to ensure that they're
+  // aligned properly in some cases (e.g. when there is only an `end` hint).
   &.mat-right {
     float: right;
   }
