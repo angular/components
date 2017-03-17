@@ -40,10 +40,6 @@ $mat-calendar-table-cell-content-size: 100% - $mat-calendar-table-cell-content-m
   text-align: center;
 }
 
-.mat-calendar-table-active {
-  box-shadow: 0 0 0 1px red; // for testing only
-}
-
 .mat-calendar-table-cell-content {
   position: absolute;
   top: $mat-calendar-table-cell-content-margin;
