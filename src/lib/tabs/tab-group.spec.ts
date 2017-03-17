@@ -3,6 +3,7 @@ import {
 } from '@angular/core/testing';
 import {MdTabGroup, MdTabsModule, MdTabHeaderPosition} from './index';
 import {Component, ViewChild} from '@angular/core';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 import {MdTab} from './tab';
@@ -13,7 +14,7 @@ import {FakeViewportRuler} from '../core/overlay/position/fake-viewport-ruler';
 describe('MdTabGroup', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdTabsModule.forRoot()],
+      imports: [MdTabsModule.forRoot(), NoopAnimationsModule],
       declarations: [
         SimpleTabsTestApp,
         SimpleDynamicTabsTestApp,

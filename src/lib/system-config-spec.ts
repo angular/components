@@ -19,6 +19,7 @@ System.config({
     '@angular/forms': 'vendor/@angular/forms/bundles/forms.umd.js',
     '@angular/forms/testing': 'vendor/@angular/forms/bundles/forms-testing.umd.js',
     '@angular/animations': 'vendor/@angular/animations/bundles/animations.umd.js',
+    '@angular/animations/browser': 'vendor/@angular/animations/bundles/animations-browser.umd.js',
     '@angular/platform-browser/animations':
       'vendor/@angular/platform-browser/bundles/platform-browser-animations.umd',
     '@angular/platform-browser': 'vendor/@angular/platform-browser/bundles/platform-browser.umd.js',
