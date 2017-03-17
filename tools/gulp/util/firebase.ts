@@ -6,7 +6,7 @@ const config = require('../../../functions/config.json');
 
 /** Opens a connection to the firebase realtime database. */
 export function openFirebaseDashboardDatabase() {
-  // Initialize the Firebase application with admin credentials.
+  // Initialize the Firebase application with firebaseAdmin credentials.
   // Credentials need to be for a Service Account, which can be created in the Firebase console.
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert({
@@ -41,7 +41,7 @@ export function openScreenshotsBucket() {
 
 /** Opens a connection to the firebase database for screenshots. */
 export function openFirebaseScreenshotsDatabase() {
-  // Initialize the Firebase application with admin credentials.
+  // Initialize the Firebase application with firebaseAdmin credentials.
   // Credentials need to be for a Service Account, which can be created in the Firebase console.
   let screenshotApp = firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert({

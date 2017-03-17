@@ -95,8 +95,14 @@ function getLocalScreenshotFiles(dir: string): string[] {
 }
 
 /**
- * Get processed secure token. The jwt token is connected by '.', while '.' is not a valid
- *   path in firebase database. Replace all '.' to '/' to make the path valid
+ * Get processed secure token. The jwt token has 3 parts: header, payload, signature and has format
+ * {jwtHeader}.{jwtPayload}.{jwtSignature}
+ * The three parts is connected by '.', while '.' is not a valid path in firebase database.
+ * Replace all '.' to '/' to make the path valid
+ * Output is {jwtHeader}/{jwtPayload}/{jwtSignature}.
+ * This secure token is used to validate the write access is from our TravisCI under our repo.
+ * All data is written to /$path/$secureToken/$data and after validated the
+ * secure token, the data is moved to /$path/$data in database.
  */
 function getSecureToken() {
   return process.env['FIREBASE_ACCESS_TOKEN'].replace(/[.]/g, '/');
