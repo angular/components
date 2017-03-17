@@ -12,7 +12,7 @@ import {MdDatepicker} from './datepicker';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {SimpleDate} from '../core/datetime/simple-date';
 import {CalendarLocale} from '../core/datetime/calendar-locale';
-import {Subscription} from 'rxjs';
+import {Subscription} from 'rxjs/Subscription';
 import {MdInputContainer} from '../input/input-container';
 import {DOWN_ARROW} from '../core/keyboard/keycodes';
 
