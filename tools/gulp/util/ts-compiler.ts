@@ -1,5 +1,6 @@
 import * as ts from 'typescript';
 import * as path from 'path';
+import * as chalk from 'chalk';
 
 /** Compiles a TypeScript project with possible extra options. */
 export function compileProject(project: string, options: ts.CompilerOptions) {
@@ -10,9 +11,8 @@ export function compileProject(project: string, options: ts.CompilerOptions) {
   checkDiagnostics(program.getOptionsDiagnostics());
 
   let emitResult = program.emit();
-  let emitDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 
-  checkDiagnostics(emitDiagnostics);
+  checkDiagnostics(emitResult.diagnostics);
 }
 
 /** Parses a TypeScript project configuration. */
@@ -38,11 +38,9 @@ export function formatDiagnostics(diagnostics: ts.Diagnostic[]): string {
     if (diagnostic.file) {
       let {line, character} = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
 
-      res += ' at ' + diagnostic.file.fileName + ':';
-      res += (line + 1) + ':' + (character + 1) + ':';
+      res += ` at ${diagnostic.file.fileName}(${line + 1},${character + 1}):`;
     }
-
-    res += ' ' + ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+    res += ` ${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`;
 
     return res;
   }).join('\n');
@@ -51,6 +49,8 @@ export function formatDiagnostics(diagnostics: ts.Diagnostic[]): string {
 /** Checks diagnostics and throws errors if present. */
 export function checkDiagnostics(diagnostics: ts.Diagnostic[]) {
   if (diagnostics && diagnostics.length && diagnostics[0]) {
-    throw new Error(formatDiagnostics(diagnostics));
+    console.error(formatDiagnostics(diagnostics));
+    console.error(chalk.red('TypeScript compilation failed. Exiting process.'));
+    process.exit(1);
   }
 }
