@@ -215,10 +215,13 @@ export class MdCalendar implements AfterContentInit {
         break;
       case ENTER:
         if (this._monthView) {
-          this._dateSelected(this._activeDate);
+          if (this._dateFilterForViews(this._activeDate)) {
+            this._dateSelected(this._activeDate);
+          }
         } else {
           this._monthSelected(this._activeDate);
         }
+        break;
       default:
         // Don't prevent default on keys that we don't explicitly handle.
         return;

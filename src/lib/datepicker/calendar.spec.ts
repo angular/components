@@ -246,6 +246,46 @@ describe('MdCalendar', () => {
 
       expect(testComponent.selected).toEqual(new SimpleDate(2017, 0, 2));
     });
+
+    describe('a11y', () => {
+      let calendarBodyEl: HTMLElement;
+
+      beforeEach(() => {
+        calendarBodyEl = calendarElement.querySelector('.mat-calendar-body') as HTMLElement;
+        expect(calendarBodyEl).not.toBeNull();
+
+        dispatchFakeEvent(calendarBodyEl, 'focus');
+        fixture.detectChanges();
+      });
+
+      it('should not allow selection of disabled date in month view', () => {
+        expect(calendarInstance._monthView).toBe(true);
+        expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 0, 1));
+
+        dispatchKeyboardEvent(calendarBodyEl, 'keydown', ENTER);
+        fixture.detectChanges();
+
+        expect(testComponent.selected).toBeNull();
+      });
+
+      it('should allow entering month view at disabled month', () => {
+        let periodButton =
+            calendarElement.querySelector('.mat-calendar-period-button') as HTMLElement;
+        dispatchMouseEvent(periodButton, 'click');
+        fixture.detectChanges();
+
+        calendarInstance._activeDate = new SimpleDate(2017, 10, 1);
+        fixture.detectChanges();
+
+        expect(calendarInstance._monthView).toBe(false);
+
+        dispatchKeyboardEvent(calendarBodyEl, 'keydown', ENTER);
+        fixture.detectChanges();
+
+        expect(calendarInstance._monthView).toBe(true);
+        expect(testComponent.selected).toBeNull();
+      });
+    });
   });
 
   describe('a11y', () => {
@@ -573,9 +613,9 @@ class CalendarWithMinMax {
   `
 })
 class CalendarWithDateFilter {
-  selected: SimpleDate;
+  selected: SimpleDate = null;
 
   dateFilter (date: SimpleDate) {
-    return date.date % 2 == 0;
+    return date.date % 2 == 0 && date.month != 10;
   }
 }
