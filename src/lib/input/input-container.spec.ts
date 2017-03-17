@@ -641,7 +641,7 @@ describe('MdInputContainer', function () {
       });
     }));
 
-    it('should hide the error messages once the input becomes valid', async(() => {
+    it('should hide the errors and show the hints once the input becomes valid', async(() => {
       testComponent.formControl.markAsTouched();
       fixture.detectChanges();
 
@@ -650,6 +650,8 @@ describe('MdInputContainer', function () {
             .toContain('mat-input-invalid', 'Expected container to have the invalid CSS class.');
         expect(containerEl.querySelectorAll('md-error').length)
             .toBe(1, 'Expected one error message to have been rendered.');
+        expect(containerEl.querySelectorAll('md-hint').length)
+            .toBe(0, 'Expected no hints to be shown.');
 
         testComponent.formControl.setValue('something');
         fixture.detectChanges();
@@ -659,38 +661,11 @@ describe('MdInputContainer', function () {
               'Expected container not to have the invalid class when valid.');
           expect(containerEl.querySelectorAll('md-error').length)
               .toBe(0, 'Expected no error messages when the input is valid.');
+          expect(containerEl.querySelectorAll('md-hint').length)
+              .toBe(1, 'Expected one hint to be shown once the input is valid.');
         });
       });
     }));
-
-    it('should hide the hints when there are errors and not show them again when' +
-      ' the input becomes valid', async(() => {
-
-        expect(containerEl.querySelectorAll('md-hint').length)
-            .toBe(1, 'Expected one hint to be shown on load.');
-        expect(containerEl.querySelectorAll('md-error').length)
-            .toBe(0, 'Expected no errors to be shown on load.');
-
-        testComponent.formControl.markAsTouched();
-        fixture.detectChanges();
-
-        fixture.whenStable().then(() => {
-          expect(containerEl.querySelectorAll('md-hint').length)
-              .toBe(0, 'Expected no hints to be shown after interaction.');
-          expect(containerEl.querySelectorAll('md-error').length)
-              .toBe(1, 'Expected one error to be shown after interaction.');
-
-          testComponent.formControl.setValue('something');
-          fixture.detectChanges();
-
-          fixture.whenStable().then(() => {
-            expect(containerEl.querySelectorAll('md-hint').length)
-                .toBe(0, 'Expected no hints to be shown after the value is set.');
-            expect(containerEl.querySelectorAll('md-error').length)
-                .toBe(0, 'Expected no errors to be shown after the value is set.');
-          });
-        });
-      }));
 
     it('should not hide the hint if there are no error messages', async(() => {
       testComponent.renderError = false;

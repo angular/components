@@ -369,18 +369,9 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit {
     return !!(isInvalid && (isTouched || isSubmitted));
   }
 
-  /** Determines whether to display hints, errors or no messages at all. */
-  _getDisplayedMessages(): 'error' | 'hint' | 'none' {
-    if (this._errorChildren.length > 0) {
-      if (this._isErrorState()) {
-        return 'error';
-      } else if (this._mdInputChild._ngControl) {
-        let control = this._mdInputChild._ngControl;
-        return (control.valid && control.touched) ? 'none' : 'hint';
-      }
-    }
-
-    return 'hint';
+  /** Determines whether to display hints or errors. */
+  _getDisplayedMessages(): 'error' | 'hint' {
+    return (this._errorChildren.length > 0 && this._isErrorState()) ? 'error' : 'hint';
   }
 
   /**

@@ -222,13 +222,26 @@ $mat-input-underline-disabled-background-image:
 
 // Wrapper for the hints and error messages. Provides positioning and text size.
 // Note that we're using `top` in order to allow for stacked children to flow downwards.
-.mat-input-hint-wrapper {
+.mat-input-subscript-wrapper {
   position: absolute;
   font-size: 75%;
   top: 100%;
   width: 100%;
   margin-top: -$mat-input-wrapper-spacing;
   overflow: hidden; // prevents multi-line errors from overlapping the input
+}
+
+// Clears the floats on the hints. This is necessary for the hint animation to work.
+.mat-input-hint-wrapper {
+  &::before,
+  &::after {
+    content: ' ';
+    display: table;
+  }
+
+  &::after {
+    clear: both;
+  }
 }
 
 // The hint is shown below the underline. There can be
