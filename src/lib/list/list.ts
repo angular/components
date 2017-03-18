@@ -14,7 +14,7 @@ import {
   Input,
 } from '@angular/core';
 import {MdLine, MdLineSetter} from '../core';
-import {coerceBooleanProperty} from "../core/coercion/boolean-property";
+import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 
 @Directive({
   selector: 'md-divider, mat-divider'
