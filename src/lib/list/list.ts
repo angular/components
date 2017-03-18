@@ -7,7 +7,6 @@ import {
   Directive,
   ElementRef,
   Inject,
-  Input,
   OpaqueToken,
   Optional,
   Renderer,
