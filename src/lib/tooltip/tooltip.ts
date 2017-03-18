@@ -15,7 +15,7 @@ import {
   OnDestroy,
   Renderer,
   OnInit,
-  ChangeDetectorRef
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   Overlay,
@@ -155,7 +155,7 @@ export class MdTooltip implements OnInit, OnDestroy {
     @Optional() private _dir: Dir) {
 
     // The mouse events shouldn't be bound on iOS devices, because
-    // they can prevent the first tap from firing it's click event.
+    // they can prevent the first tap from firing its click event.
     if (!_platform.IOS) {
       _renderer.listen(_elementRef.nativeElement, 'mouseenter', () => this.show());
       _renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
@@ -311,6 +311,8 @@ export class MdTooltip implements OnInit, OnDestroy {
     // Must wait for the message to be painted to the tooltip so that the overlay can properly
     // calculate the correct positioning based on the size of the text.
     this._tooltipInstance.message = message;
+    this._tooltipInstance._updateView();
+
     this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
       if (this._tooltipInstance) {
         this._overlayRef.updatePosition();
@@ -393,7 +395,7 @@ export class TooltipComponent {
       // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways
       this._changeDetectorRef.markForCheck();
-      setTimeout(() => { this._closeOnInteraction = true; }, 0);
+      setTimeout(() => this._closeOnInteraction = true, 0);
     }, delay);
   }
 
@@ -439,8 +441,8 @@ export class TooltipComponent {
       case 'after':  this._transformOrigin = isLtr ? 'left' : 'right'; break;
       case 'left':   this._transformOrigin = 'right'; break;
       case 'right':  this._transformOrigin = 'left'; break;
-      case 'above':    this._transformOrigin = 'bottom'; break;
-      case 'below': this._transformOrigin = 'top'; break;
+      case 'above':  this._transformOrigin = 'bottom'; break;
+      case 'below':  this._transformOrigin = 'top'; break;
       default: throw new MdTooltipInvalidPositionError(value);
     }
   }
@@ -460,5 +462,14 @@ export class TooltipComponent {
     if (this._closeOnInteraction) {
       this.hide(0);
     }
+  }
+
+  /**
+   * Ensures that the tooltip text has rendered. Mainly used for rendering the initial text
+   * before positioning a tooltip, which can be problematic in components with OnPush change
+   * detection.
+   */
+  _updateView(): void {
+    this._changeDetectorRef.detectChanges();
   }
 }
