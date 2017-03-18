@@ -34,7 +34,7 @@ describe('MdTooltip', () => {
       imports: [MdTooltipModule.forRoot(), OverlayModule],
       declarations: [BasicTooltipDemo, ScrollableTooltipDemo, OnPushTooltipDemo],
       providers: [
-        Platform,
+        {provide: Platform, useValue: {IOS: false}},
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
           document.body.appendChild(overlayContainerElement);
@@ -435,6 +435,7 @@ describe('MdTooltip', () => {
 
     it('should have rendered the tooltip text on init', fakeAsync(() => {
       dispatchFakeEvent(buttonElement, 'mouseenter');
+      fixture.detectChanges();
       tick(0);
 
       const tooltipElement = overlayContainerElement.querySelector('.mat-tooltip') as HTMLElement;
