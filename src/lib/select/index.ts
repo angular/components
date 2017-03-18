@@ -1,12 +1,19 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MdSelect} from './select';
 import {MdOptionModule} from '../core/option/option';
 import {CompatibilityModule, OverlayModule} from '../core';
 
 
 @NgModule({
-  imports: [CommonModule, OverlayModule, MdOptionModule, CompatibilityModule],
+  imports: [
+    CommonModule,
+    BrowserAnimationsModule,
+    OverlayModule,
+    MdOptionModule,
+    CompatibilityModule,
+  ],
   exports: [MdSelect, MdOptionModule, CompatibilityModule],
   declarations: [MdSelect],
 })
