@@ -311,7 +311,7 @@ export class MdTooltip implements OnInit, OnDestroy {
     // Must wait for the message to be painted to the tooltip so that the overlay can properly
     // calculate the correct positioning based on the size of the text.
     this._tooltipInstance.message = message;
-    this._tooltipInstance._updateView();
+    this._tooltipInstance._markForCheck();
 
     this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
       if (this._tooltipInstance) {
@@ -394,7 +394,7 @@ export class TooltipComponent {
 
       // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways
-      this._changeDetectorRef.markForCheck();
+      this._markForCheck();
       setTimeout(() => this._closeOnInteraction = true, 0);
     }, delay);
   }
@@ -415,7 +415,7 @@ export class TooltipComponent {
 
       // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways
-      this._changeDetectorRef.markForCheck();
+      this._markForCheck();
     }, delay);
   }
 
@@ -465,11 +465,11 @@ export class TooltipComponent {
   }
 
   /**
-   * Ensures that the tooltip text has rendered. Mainly used for rendering the initial text
-   * before positioning a tooltip, which can be problematic in components with OnPush change
-   * detection.
+   * Marks that the tooltip needs to be checked in the next change detection run.
+   * Mainly used for rendering the initial text before positioning a tooltip, which
+   * can be problematic in components with OnPush change detection.
    */
-  _updateView(): void {
-    this._changeDetectorRef.detectChanges();
+  _markForCheck(): void {
+    this._changeDetectorRef.markForCheck();
   }
 }
