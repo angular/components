@@ -4,7 +4,7 @@ import {HttpModule} from '@angular/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {DemoApp, Home} from './demo-app/demo-app';
+import {DemoApp, Home, DemoAppOnPush} from './demo-app/demo-app';
 import {
   MaterialModule,
   OverlayContainer,
@@ -65,6 +65,7 @@ import {StyleDemo} from './style/style-demo';
     ChipsDemo,
     CheckboxDemo,
     DemoApp,
+    DemoAppOnPush,
     DialogDemo,
     GesturesDemo,
     GridListDemo,
