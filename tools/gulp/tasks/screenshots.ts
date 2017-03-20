@@ -11,7 +11,10 @@ import {setGithubStatus} from '../util/github';
 
 const imageDiff = require('image-diff');
 
-const TEMP_FOLDER = 'screenshotQueue';
+// Directory to which untrusted screenshot results are temporarily written
+//   (without authentication required) before they are verified and copied to
+//   the final storage location.
+const TEMP_FOLDER = 'untrustedInbox';
 const SCREENSHOT_DIR = './screenshots';
 const FIREBASE_REPORT = `${TEMP_FOLDER}/screenshot/reports`;
 const FIREBASE_IMAGE = `${TEMP_FOLDER}/screenshot/images`;
@@ -78,7 +81,8 @@ function getScreenshotFiles(database: firebase.database.Database) {
       let key = childSnapshot.key;
       let binaryData = new Buffer(childSnapshot.val(), 'base64').toString('binary');
       writeFileSync(`${SCREENSHOT_DIR}/golds/${key}.screenshot.png`, binaryData, 'binary');
-      if (++counter == snapshot.numChildren()) {
+      counter++;
+      if (counter == snapshot.numChildren()) {
         return true;
       }
     });

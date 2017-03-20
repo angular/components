@@ -16,7 +16,7 @@ const fs = require('fs');
  * /screenshot/reports/$prNumber.
  * These are data for screenshot results (success or failure), GitHub PR/commit and TravisCI job information
  *
- * For valid image datas written to database /$temp/screenshot/images/$prNumber/$secureToken/, save the image
+ * For valid image results written to database /$temp/screenshot/images/$prNumber/$secureToken/, save the image
  * data to image files and upload to google cloud storage under location /screenshots/$prNumber
  * These are screenshot test result images, and difference images generated from screenshot comparison.
  *
@@ -48,26 +48,35 @@ const bucket = gcs.bucket(firebaseFunctions.config().firebase.storageBucket);
 /** The Json Web Token format. The token is stored in data path. */
 const jwtFormat = '{jwtHeader}/{jwtPayload}/{jwtSignature}';
 
-/** The temporary folder name */
-const tempFolder = '/screenshotQueue';
+/** The temporary folder name for screenshot data that needs to be validated via JWT.  */
+const tempFolder = '/untrustedInbox';
 
-/** Copy valid data from /$temp/screenshot/reports/$prNumber/$secureToken/ to /screenshot/reports/$prNumber */
+/**
+ * Copy valid data from /$temp/screenshot/reports/$prNumber/$secureToken/ to /screenshot/reports/$prNumber
+ * Data copied: filenames(image results names), commit(github PR info),
+ *     sha (github PR info), result (true or false for all the tests), travis job number
+ */
 const copyDataPath = `${tempFolder}/screenshot/reports/{prNumber}/${jwtFormat}/{dataType}`;
 exports.copyData = firebaseFunctions.database.ref(copyDataPath).onWrite(event => {
   const dataType = event.params.dataType;
   if (dataTypes.includes(dataType)) {
-    return handleDataChange(event, dataType);
+    return verifyAndCopyScreenshotResult(event, dataType);
   }
-  return;
 });
 
-/** Copy valid data from /$temp/screenshot/reports/$prNumber/$secureToken/ to /screenshot/reports/$prNumber */
+/**
+ * Copy valid data from /$temp/screenshot/reports/$prNumber/$secureToken/ to /screenshot/reports/$prNumber
+ * Data copied: test result for each file/test with ${filename}. The value should be true or false.
+ */
 const copyDataResultPath = `${tempFolder}/screenshot/reports/{prNumber}/${jwtFormat}/results/{filename}`;
 exports.copyDataResult = firebaseFunctions.database.ref(copyDataResultPath).onWrite(event => {
-  return handleDataChange(event, `results/${event.params.filename}`);
+  return verifyAndCopyScreenshotResult(event, `results/${event.params.filename}`);
 });
 
-/** Copy valid data from database /$temp/screenshot/images/$prNumber/$secureToken/ to storage /screenshots/$prNumber */
+/**
+ * Copy valid data from database /$temp/screenshot/images/$prNumber/$secureToken/ to storage /screenshots/$prNumber
+ * Data copied: test result images. Convert from data to image files in storage.
+ */
 const copyImagePath = `${tempFolder}/screenshot/images/{prNumber}/${jwtFormat}/{dataType}/{filename}`;
 exports.copyImage = firebaseFunctions.database.ref(copyImagePath).onWrite(event => {
   // Only edit data when it is first created. Exit when the data is deleted.
@@ -84,7 +93,7 @@ exports.copyImage = firebaseFunctions.database.ref(copyImagePath).onWrite(event 
     return;
   }
 
-  return validateSecureToken(secureToken, prNumber).then((payload) => {
+  return verifySecureToken(secureToken, prNumber).then((payload) => {
     const tempPath = `/tmp/${dataType}-${saveFilename}`
     const filePath = `screenshots/${prNumber}/${dataType}/${saveFilename}`;
     const binaryData = new Buffer(event.data.val(), 'base64').toString('binary');
@@ -105,6 +114,7 @@ exports.copyImage = firebaseFunctions.database.ref(copyImagePath).onWrite(event 
  */
 exports.copyGoldens = firebaseFunctions.storage.bucket(firebaseFunctions.config().firebase.storageBucket)
     .object().onChange(event => {
+  // The filePath should always l ook like "goldens/xxx.png"
   const filePath = event.data.name;
 
   // Get the file name.
@@ -114,7 +124,7 @@ exports.copyGoldens = firebaseFunctions.storage.bucket(firebaseFunctions.config(
   }
   const filenameKey = fileNames[1].replace('.screenshot.png', '');
 
-  // When delete a file, remove the file in database
+  // When a gold image is deleted, also delete the corresponding record in the firebase database.
   if (event.data.resourceState === 'not_exists') {
     return firebaseAdmin.database().ref(`screenshot/goldens/${filenameKey}`).set(null);
   }
@@ -132,7 +142,7 @@ exports.copyGoldens = firebaseFunctions.storage.bucket(firebaseFunctions.config(
  * Handle data written to temporary folder. Validate the JWT and move the data out of
  * temporary folder if the token is valid.
  */
-function handleDataChange(event, path) {
+function verifyAndCopyScreenshotResult(event, path) {
   // Only edit data when it is first created. Exit when the data is deleted.
   if (event.data.previous.exists() || !event.data.exists()) {
     return;
@@ -142,7 +152,7 @@ function handleDataChange(event, path) {
   const secureToken = getSecureToken(event);
   const original = event.data.val();
 
-  return validateSecureToken(secureToken, prNumber).then((payload) => {
+  return verifySecureToken(secureToken, prNumber).then((payload) => {
     return firebaseAdmin.database().ref().child('screenshot/reports')
         .child(prNumber).child(path).set(original).then(() => {
       // Clear the data in temporary folder after processed.
@@ -163,7 +173,7 @@ function getSecureToken(event) {
   return `${event.params.jwtHeader}.${event.params.jwtPayload}.${event.params.jwtSignature}`;
 }
 
-function validateSecureToken(token, prNumber) {
+function verifySecureToken(token, prNumber) {
   return new Promise((resolve, reject) => {
     jwt.verify(token, secret, {issuer: 'Travis CI, GmbH'}, (err, payload) => {
       if (err) {
