@@ -23,6 +23,10 @@ import { MaterialModule } from '@angular/material';
 export class PizzaPartyAppModule { }
 ```
 
+You could also import the individual components you need. Which reduces the size of your bundle. For example, If you will only  need the buttons you would import the `MdButtonModule` instead of the `MaterialModule` 
+
+All module names are listed at the API reference tab in the [documentation](https://material.angular.io/components/)
+
 ## Step 3: Include Theming
 
 Including a theme is **required** to apply all of the core and theme styles to your application. 
