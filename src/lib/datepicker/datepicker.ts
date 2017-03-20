@@ -178,6 +178,7 @@ export class MdDatepicker implements OnDestroy {
   /** Open the calendar as a dialog. */
   private _openAsDialog(): void {
     this._dialogRef = this._dialog.open(this.calendarTemplate);
+    this._dialogRef.afterClosed().first().subscribe(() => this.close());
   }
 
   /** Open the calendar as a popup. */
