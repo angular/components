@@ -27,6 +27,7 @@ import {
 import {SimpleDate} from '../core/datetime/simple-date';
 import {MdDatepickerInput} from './datepicker-input';
 import {CalendarLocale} from '../core/datetime/calendar-locale';
+import 'rxjs/add/operator/first';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
