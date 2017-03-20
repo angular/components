@@ -27,6 +27,7 @@ import {
 import {SimpleDate} from '../core/datetime/simple-date';
 import {MdDatepickerInput} from './datepicker-input';
 import {CalendarLocale} from '../core/datetime/calendar-locale';
+import 'rxjs/add/operator/first';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -178,6 +179,7 @@ export class MdDatepicker implements OnDestroy {
   /** Open the calendar as a dialog. */
   private _openAsDialog(): void {
     this._dialogRef = this._dialog.open(this.calendarTemplate);
+    this._dialogRef.afterClosed().first().subscribe(() => this.close());
   }
 
   /** Open the calendar as a popup. */
