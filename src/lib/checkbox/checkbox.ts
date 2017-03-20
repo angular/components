@@ -21,6 +21,7 @@ import {
   RippleRef,
   FocusOriginMonitor,
 } from '../core';
+import {MdThemeable} from '../core/style/themeable';
 
 
 /** Monotonically increasing integer used to auto-generate unique ids for checkbox components. */
@@ -84,7 +85,9 @@ export class MdCheckboxChange {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestroy {
+export class MdCheckbox extends MdThemeable
+    implements ControlValueAccessor, AfterViewInit, OnDestroy {
+
   /**
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
    * take precedence so this may be omitted.
@@ -178,8 +181,6 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
 
   private _indeterminate: boolean = false;
 
-  private _color: string;
-
   private _controlValueAccessorChangeFn: (value: any) => void = (value) => {};
 
   /** Reference to the focused state ripple. */
@@ -188,10 +189,13 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
   /** Reference to the focus origin monitor subscription. */
   private _focusedSubscription: Subscription;
 
-  constructor(private _renderer: Renderer,
-              private _elementRef: ElementRef,
-              private _changeDetectorRef: ChangeDetectorRef,
-              private _focusOriginMonitor: FocusOriginMonitor) {
+  constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _focusOriginMonitor: FocusOriginMonitor,
+    renderer: Renderer,
+    elementRef: ElementRef
+  ) {
+    super(renderer, elementRef);
     this.color = 'accent';
   }
 
@@ -258,23 +262,6 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
           this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
       }
       this.indeterminateChange.emit(this._indeterminate);
-    }
-  }
-
-  /** The color of the button. Can be `primary`, `accent`, or `warn`. */
-  @Input()
-  get color(): string { return this._color; }
-  set color(value: string) { this._updateColor(value); }
-
-  _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
     }
   }
 

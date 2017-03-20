@@ -8,6 +8,7 @@ import {
   NgZone,
   Renderer, Directive
 } from '@angular/core';
+import {MdThemeable} from '../core/style/themeable';
 
 
 // TODO(josephperrott): Benchpress tests.
@@ -72,7 +73,7 @@ export class MdProgressCircleCssMatStyler {}
   styleUrls: ['progress-spinner.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdProgressSpinner implements OnDestroy {
+export class MdProgressSpinner extends MdThemeable implements OnDestroy {
   /** The id of the last requested animation. */
   private _lastAnimationId: number = 0;
 
@@ -84,7 +85,6 @@ export class MdProgressSpinner implements OnDestroy {
 
   private _mode: ProgressSpinnerMode = 'determinate';
   private _value: number;
-  private _color: string = 'primary';
 
   /**
    * Values for aria max and min are only defined as numbers when in a determinate mode.  We do this
@@ -114,13 +114,6 @@ export class MdProgressSpinner implements OnDestroy {
    */
   ngOnDestroy() {
     this._cleanupIndeterminateAnimation();
-  }
-
-  /** The color of the progress-spinner. Can be primary, accent, or warn. */
-  @Input()
-  get color(): string { return this._color; }
-  set color(value: string) {
-    this._updateColor(value);
   }
 
   /** Value of the progress circle. It is bound to the host as the attribute aria-valuenow. */
@@ -159,11 +152,9 @@ export class MdProgressSpinner implements OnDestroy {
     this._mode = m;
   }
 
-  constructor(
-    private _ngZone: NgZone,
-    private _elementRef: ElementRef,
-    private _renderer: Renderer
-  ) {}
+  constructor(private _ngZone: NgZone, elementRef: ElementRef, renderer: Renderer) {
+    super(renderer, elementRef);
+  }
 
 
   /**
@@ -257,22 +248,6 @@ export class MdProgressSpinner implements OnDestroy {
     }
   }
 
-  /**
-   * Updates the color of the progress-spinner by adding the new palette class to the element
-   * and removing the old one.
-   */
-  private _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  /** Sets the given palette class on the component element. */
-  private _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
-    }
-  }
 }
 
 

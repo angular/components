@@ -5,6 +5,7 @@ import {
   ElementRef,
   Renderer,
 } from '@angular/core';
+import {MdThemeable} from '../../style/themeable';
 
 export type MdPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
@@ -32,29 +33,15 @@ export type MdPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
     '[class.mat-pseudo-checkbox-disabled]': 'disabled',
   },
 })
-export class MdPseudoCheckbox {
+export class MdPseudoCheckbox extends MdThemeable {
   /** Display state of the checkbox. */
   @Input() state: MdPseudoCheckboxState = 'unchecked';
 
   /** Whether the checkbox is disabled. */
   @Input() disabled: boolean = false;
 
-  /** Color of the checkbox. */
-  @Input()
-  get color(): string { return this._color; };
-  set color(value: string) {
-    if (value) {
-      let nativeElement = this._elementRef.nativeElement;
-
-      this._renderer.setElementClass(nativeElement, `mat-${this.color}`, false);
-      this._renderer.setElementClass(nativeElement, `mat-${value}`, true);
-      this._color = value;
-    }
-  }
-
-  private _color: string;
-
-  constructor(private _elementRef: ElementRef, private _renderer: Renderer) {
+  constructor(elementRef: ElementRef, renderer: Renderer) {
+    super(renderer, elementRef);
     this.color = 'accent';
   }
 }

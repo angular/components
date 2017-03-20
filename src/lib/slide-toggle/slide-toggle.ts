@@ -14,6 +14,7 @@ import {
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {applyCssTransform, coerceBooleanProperty, HammerInput} from '../core';
 import {Observable} from 'rxjs/Observable';
+import {MdThemeable} from '../core/style/themeable';
 
 
 export const MD_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {
@@ -52,7 +53,7 @@ let nextId = 0;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
+export class MdSlideToggle extends MdThemeable implements AfterContentInit, ControlValueAccessor {
 
   private onChange = (_: any) => {};
   private onTouched = () => {};
@@ -60,7 +61,6 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
   // A unique id for the slide-toggle. By default the id is auto-generated.
   private _uniqueId = `md-slide-toggle-${++nextId}`;
   private _checked: boolean = false;
-  private _color: string;
   private _isMousedown: boolean = false;
   private _slideRenderer: SlideToggleRenderer = null;
   private _disabled: boolean = false;
@@ -112,7 +112,9 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
 
   @ViewChild('input') _inputElement: ElementRef;
 
-  constructor(private _elementRef: ElementRef, private _renderer: Renderer) {}
+  constructor(elementRef: ElementRef, renderer: Renderer) {
+    super(renderer, elementRef);
+  }
 
   ngAfterContentInit() {
     this._slideRenderer = new SlideToggleRenderer(this._elementRef);
@@ -211,28 +213,9 @@ export class MdSlideToggle implements AfterContentInit, ControlValueAccessor {
     }
   }
 
-  /** The color of the slide-toggle. Can be primary, accent, or warn. */
-  @Input()
-  get color(): string { return this._color; }
-  set color(value: string) {
-    this._updateColor(value);
-  }
-
   /** Toggles the checked state of the slide-toggle. */
   toggle() {
     this.checked = !this.checked;
-  }
-
-  private _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  private _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
-    }
   }
 
   /** Emits the change event to the `change` output EventEmitter */

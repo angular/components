@@ -119,7 +119,7 @@ export class JazzDialog {
 
       <button
         md-button
-        color="secondary"
+        color="accent"
         (click)="showInStackedDialog()">
         Show in Dialog</button>
     </md-dialog-actions>

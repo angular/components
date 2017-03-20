@@ -10,6 +10,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {coerceBooleanProperty, FocusOriginMonitor} from '../core';
+import {MdThemeable} from '../core/style/themeable';
 
 
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
@@ -96,8 +97,7 @@ export class MdMiniFabCssMatStyler {}
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdButton implements OnDestroy {
-  private _color: string;
+export class MdButton extends MdThemeable implements OnDestroy {
 
   /** Whether the button is round. */
   _isRoundButton: boolean = ['icon-button', 'fab', 'mini-fab'].some(suffix => {
@@ -119,30 +119,14 @@ export class MdButton implements OnDestroy {
   get disabled() { return this._disabled; }
   set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value) ? true : null; }
 
-  constructor(private _elementRef: ElementRef, private _renderer: Renderer,
-              private _focusOriginMonitor: FocusOriginMonitor) {
-    this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
+  constructor(private _focusOriginMonitor: FocusOriginMonitor, elementRef: ElementRef,
+              renderer: Renderer) {
+    super(renderer, elementRef);
+    this._focusOriginMonitor.monitor(elementRef.nativeElement, renderer, true);
   }
 
   ngOnDestroy() {
     this._focusOriginMonitor.unmonitor(this._elementRef.nativeElement);
-  }
-
-  /** The color of the button. Can be `primary`, `accent`, or `warn`. */
-  @Input()
-  get color(): string { return this._color; }
-  set color(value: string) { this._updateColor(value); }
-
-  _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      this._renderer.setElementClass(this._getHostElement(), `mat-${color}`, isAdd);
-    }
   }
 
   /** Focuses the button. */
@@ -177,7 +161,7 @@ export class MdButton implements OnDestroy {
 })
 export class MdAnchor extends MdButton {
   constructor(elementRef: ElementRef, renderer: Renderer, focusOriginMonitor: FocusOriginMonitor) {
-    super(elementRef, renderer, focusOriginMonitor);
+    super(focusOriginMonitor, elementRef, renderer);
   }
 
   /** @docs-private */
