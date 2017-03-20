@@ -11,9 +11,10 @@ import {setGithubStatus} from '../util/github';
 
 const imageDiff = require('image-diff');
 
+const TEMP_FOLDER = 'screenshotQueue';
 const SCREENSHOT_DIR = './screenshots';
-const FIREBASE_REPORT = 'temp/screenshot/reports';
-const FIREBASE_IMAGE = 'temp/screenshot/images';
+const FIREBASE_REPORT = `${TEMP_FOLDER}/screenshot/reports`;
+const FIREBASE_IMAGE = `${TEMP_FOLDER}/screenshot/images`;
 const FIREBASE_FILELIST = 'screenshot/filenames';
 
 /** Task which upload screenshots generated from e2e test. */

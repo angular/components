@@ -9,11 +9,11 @@ const fs = require('fs');
 /**
  * Data and images handling for Screenshot test
  *
- * For valid data posted to database /temp/screenshot/reports/$prNumber/$secureToken, move it to
+ * For valid data posted to database /$temp/screenshot/reports/$prNumber/$secureToken, move it to
  * /screenshot/reports/$prNumber.
  * These are data for screenshot results (success or failure), GitHub PR/commit and TravisCI job information
  *
- * For valid image datas written to database /temp/screenshot/images/$prNumber/$secureToken/, save the image
+ * For valid image datas written to database /$temp/screenshot/images/$prNumber/$secureToken/, save the image
  * data to image files and upload to google cloud storage under location /screenshots/$prNumber
  * These are screenshot test result images, and difference images generated from screenshot comparison.
  *
@@ -46,9 +46,9 @@ const bucket = gcs.bucket(firebaseFunctions.config().firebase.storageBucket);
 const jwtFormat = '{jwtHeader}/{jwtPayload}/{jwtSignature}';
 
 /** The temporary folder name */
-const tempFolder = '/temp';
+const tempFolder = '/screenshotQueue';
 
-/** Copy valid data from /temp/screenshot/reports/$prNumber/$secureToken/ to /screenshot/reports/$prNumber */
+/** Copy valid data from /$temp/screenshot/reports/$prNumber/$secureToken/ to /screenshot/reports/$prNumber */
 const copyDataPath = `${tempFolder}/screenshot/reports/{prNumber}/${jwtFormat}/{dataType}`;
 exports.copyData = firebaseFunctions.database.ref(copyDataPath).onWrite(event => {
   const dataType = event.params.dataType;
@@ -58,13 +58,13 @@ exports.copyData = firebaseFunctions.database.ref(copyDataPath).onWrite(event =>
   return;
 });
 
-/** Copy valid data from /temp/screenshot/reports/$prNumber/$secureToken/ to /screenshot/reports/$prNumber */
+/** Copy valid data from /$temp/screenshot/reports/$prNumber/$secureToken/ to /screenshot/reports/$prNumber */
 const copyDataResultPath = `${tempFolder}/screenshot/reports/{prNumber}/${jwtFormat}/results/{filename}`;
 exports.copyDataResult = firebaseFunctions.database.ref(copyDataResultPath).onWrite(event => {
   return handleDataChange(event, `results/${event.params.filename}`);
 });
 
-/** Copy valid data from database /temp/screenshot/images/$prNumber/$secureToken/ to storage /screenshots/$prNumber */
+/** Copy valid data from database /$temp/screenshot/images/$prNumber/$secureToken/ to storage /screenshots/$prNumber */
 const copyImagePath = `${tempFolder}/screenshot/images/{prNumber}/${jwtFormat}/{dataType}/{filename}`;
 exports.copyImage = firebaseFunctions.database.ref(copyImagePath).onWrite(event => {
   // Only edit data when it is first created. Exit when the data is deleted.
