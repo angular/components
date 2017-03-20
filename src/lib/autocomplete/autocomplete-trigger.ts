@@ -306,6 +306,12 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    */
   private _setValueAndClose(event: MdOptionSelectionChange | null): void {
     if (event) {
+      this.autocomplete.options.forEach((option) => {
+        if (option != event.source) {
+          option.deselect();
+        }
+      });
+
       this._setTriggerValue(event.source.value);
       this._onChange(event.source.value);
     }
