@@ -7,7 +7,10 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs');
 
 /**
- * Data and images handling for Screenshot test
+ * Data and images handling for Screenshot test.
+ *
+ * All users can post data to temporary folder. These Functions will check the data with JsonWebToken and
+ * move the valid data out of temporary folder.
  *
  * For valid data posted to database /$temp/screenshot/reports/$prNumber/$secureToken, move it to
  * /screenshot/reports/$prNumber.
@@ -87,6 +90,7 @@ exports.copyImage = firebaseFunctions.database.ref(copyImagePath).onWrite(event 
     const binaryData = new Buffer(event.data.val(), 'base64').toString('binary');
     fs.writeFile(tempPath, binaryData, 'binary');
     return bucket.upload(tempPath, {destination: filePath}).then(() => {
+      // Clear the data in temporary folder after processed.
       return event.data.ref.parent.set(null);
     });
   }).catch((error) => {
@@ -124,6 +128,10 @@ exports.copyGoldens = firebaseFunctions.storage.bucket(firebaseFunctions.config(
   });
 });
 
+/**
+ * Handle data written to temporary folder. Validate the JWT and move the data out of
+ * temporary folder if the token is valid.
+ */
 function handleDataChange(event, path) {
   // Only edit data when it is first created. Exit when the data is deleted.
   if (event.data.previous.exists() || !event.data.exists()) {
@@ -137,6 +145,7 @@ function handleDataChange(event, path) {
   return validateSecureToken(secureToken, prNumber).then((payload) => {
     return firebaseAdmin.database().ref().child('screenshot/reports')
         .child(prNumber).child(path).set(original).then(() => {
+      // Clear the data in temporary folder after processed.
       return event.data.ref.parent.set(null);
     });
   }).catch((error) => {

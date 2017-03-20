@@ -119,14 +119,13 @@ function getSecureToken() {
 function uploadScreenshotsData(database: firebase.database.Database,
                                mode: 'test' | 'diff', prNumber: string) {
   let localDir = mode == 'diff' ? path.join(SCREENSHOT_DIR, 'diff') : SCREENSHOT_DIR;
-  let promises: any[] = [];
-  getLocalScreenshotFiles(localDir).forEach((file: string) => {
+  let promises = getLocalScreenshotFiles(localDir).map((file: string) => {
     let fileName = path.join(localDir, file);
     let filenameKey = extractScreenshotName(fileName);
     let secureToken = getSecureToken();
     let data = readFileSync(fileName);
-    promises.push(database.ref(FIREBASE_IMAGE).child(prNumber)
-      .child(secureToken).child(mode).child(filenameKey).set(data));
+    return database.ref(FIREBASE_IMAGE).child(prNumber)
+      .child(secureToken).child(mode).child(filenameKey).set(data);
   });
   return Promise.all(promises);
 }
@@ -195,17 +194,13 @@ function updateGithubStatus(prNumber: number, result: boolean) {
   });
 }
 
-/**
- * Upload screenshots to google cloud storage.
- */
+/** Upload screenshots to google cloud storage. */
 function uploadScreenshots() {
   let bucket = openScreenshotsBucket();
-
-  let promises: any[] = [];
-  getLocalScreenshotFiles(SCREENSHOT_DIR).forEach((file: string) => {
+  let promises = getLocalScreenshotFiles(SCREENSHOT_DIR).map((file: string) => {
     let fileName = path.join(SCREENSHOT_DIR, file);
     let destination = `golds/${file}`;
-    promises.push(bucket.upload(fileName, { destination: destination }));
+    return bucket.upload(fileName, { destination: destination });
   });
   return Promise.all(promises);
 }
