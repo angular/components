@@ -7,6 +7,7 @@
       [minDate]="_minDate"
       [maxDate]="_maxDate"
       [dateFilter]="dateFilter"
-      [(selected)]="_selected">
+      [selected]="_selected"
+      (selectedChange)="_selectAndClose($event)">
   </md-calendar>
 </ng-template>

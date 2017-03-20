@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -81,13 +82,7 @@ export class MdDatepicker implements OnDestroy {
   id = `md-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
-  get _selected(): SimpleDate {
-    return this._datepickerInput ? this._datepickerInput.value : null;
-  }
-  set _selected(value: SimpleDate) {
-    this.selectedChanged.emit(value);
-    this.close();
-  }
+  _selected: SimpleDate = null;
 
   /** The minimum selectable date. */
   get _minDate(): SimpleDate {
@@ -116,13 +111,23 @@ export class MdDatepicker implements OnDestroy {
 
   constructor(private _dialog: MdDialog, private _overlay: Overlay,
               private _viewContainerRef: ViewContainerRef, private _locale: CalendarLocale,
-              @Optional() private _dir: Dir) {}
+              private _changeDetectorRef: ChangeDetectorRef, @Optional() private _dir: Dir) {}
 
   ngOnDestroy() {
     this.close();
     if (this._popupRef) {
       this._popupRef.dispose();
     }
+  }
+
+  /** Selects the given date and closes the currently open popup or dialog. */
+  _selectAndClose(date: SimpleDate): void {
+    let oldValue = this._selected;
+    this._selected = date;
+    if (!SimpleDate.equals(oldValue, this._selected)) {
+      this.selectedChanged.emit(date);
+    }
+    this.close();
   }
 
   /**
@@ -134,6 +139,7 @@ export class MdDatepicker implements OnDestroy {
       throw new MdError('An MdDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
+    this._datepickerInput.valueChange.subscribe((value: SimpleDate) => this._selected = value);
   }
 
   /**

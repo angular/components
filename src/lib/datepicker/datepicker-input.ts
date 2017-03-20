@@ -2,10 +2,12 @@ import {
   AfterContentInit,
   Directive,
   ElementRef,
+  EventEmitter,
   forwardRef,
   Input,
   OnDestroy,
   Optional,
+  Output,
   Renderer
 } from '@angular/core';
 import {MdDatepicker} from './datepicker';
@@ -15,6 +17,7 @@ import {CalendarLocale} from '../core/datetime/calendar-locale';
 import {Subscription} from 'rxjs/Subscription';
 import {MdInputContainer} from '../input/input-container';
 import {DOWN_ARROW} from '../core/keyboard/keycodes';
+import {Observable} from 'rxjs/Observable';
 
 
 export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -34,7 +37,7 @@ export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
     '[attr.aria-owns]': '_datepicker?.id',
     '[min]': '_min?.toNativeDate()',
     '[max]': '_max?.toNativeDate()',
-    '(input)': '_onChange($event.target.value)',
+    '(input)': '_onInput($event.target.value)',
     '(blur)': '_onTouched()',
     '(keydown)': '_onKeydown($event)',
   }
@@ -59,9 +62,14 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
     return this._value;
   }
   set value(value: SimpleDate) {
+    let oldValue = this._value;
     this._value = this._locale.parseDate(value);
     const stringValue = this._value == null ? '' : this._locale.formatDate(this._value);
     this._renderer.setElementProperty(this._elementRef.nativeElement, 'value', stringValue);
+
+    if (!SimpleDate.equals(oldValue, this._value)) {
+      this._valueChangeEmitter.emit(this._value);
+    }
   }
   private _value: SimpleDate;
 
@@ -76,6 +84,11 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
   get max(): SimpleDate { return this._max; }
   set max(value: SimpleDate) { this._max = this._locale.parseDate(value); }
   private _max: SimpleDate;
+
+  private _valueChangeEmitter = new EventEmitter<SimpleDate>();
+
+  /** Emits when the value changes. */
+  @Output() valueChange: Observable<SimpleDate> = this._valueChangeEmitter.asObservable();
 
   _onChange = (value: any) => {};
 
@@ -137,6 +150,15 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
     if (event.altKey && event.keyCode === DOWN_ARROW) {
       this._datepicker.open();
       event.preventDefault();
+    }
+  }
+
+  _onInput(value: string) {
+    let date = this._locale.parseDate(value);
+    let dateChanged = !SimpleDate.equals(this.value, date);
+    this._onChange(date);
+    if (dateChanged) {
+      this._valueChangeEmitter.emit(date);
     }
   }
 }
