@@ -74,7 +74,8 @@ gulp.task('test', [':test:deps'], () => {
     singleRun: false
   });
 
-  // Refreshes Karma's file list and schedules a test run.
+  // Refreshes Karma's file list and schedules a test run. 
+  // Tests will only run if TypeScript compilation was successful.
   let runTests = (err?: Error) => {
     if (!err) {
       server.refreshFiles().then(() => server._injector.get('executor').schedule());
