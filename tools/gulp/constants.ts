@@ -6,7 +6,12 @@ export const PROJECT_ROOT = join(__dirname, '../..');
 export const SOURCE_ROOT = join(PROJECT_ROOT, 'src');
 
 export const DIST_ROOT = join(PROJECT_ROOT, 'dist');
-export const DIST_COMPONENTS_ROOT = join(DIST_ROOT, '@angular/material');
+export const DIST_BUNDLES = join(DIST_ROOT, 'bundles');
+export const DIST_RELEASE = join(DIST_ROOT, 'release');
+
+export const DIST_MATERIAL = join(DIST_ROOT, 'packages', 'material');
+export const DIST_DEMOAPP = join(DIST_ROOT, 'packages', 'demo-app');
+export const DIST_E2EAPP = join(DIST_ROOT, 'packages', 'e2e-app');
 
 export const COVERAGE_RESULT_FILE = join(DIST_ROOT, 'coverage', 'coverage-summary.json');
 
@@ -15,6 +20,10 @@ export const HTML_MINIFIER_OPTIONS = {
   removeComments: true,
   caseSensitive: true,
   removeAttributeQuotes: false
+};
+
+export const UGLIFYJS_OPTIONS = {
+  preserveComments: 'license'
 };
 
 export const LICENSE_BANNER = `/**

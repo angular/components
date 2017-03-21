@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "types": ["jasmine"]
+  },
+  "include": [
+    "system-config-spec.ts",
+    "**/*.spec.ts"
+  ]
+}
