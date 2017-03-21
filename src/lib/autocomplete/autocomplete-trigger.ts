@@ -205,11 +205,20 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     if (this.activeOption && event.keyCode === ENTER) {
       this.activeOption._selectViaInteraction();
     } else {
+      const prevActiveItem = this.autocomplete._keyManager.activeItem;
+      const isArrowKey = event.keyCode === UP_ARROW || event.keyCode === DOWN_ARROW;
+
       this.autocomplete._keyManager.onKeydown(event);
-      if (event.keyCode === UP_ARROW || event.keyCode === DOWN_ARROW) {
+
+      if (isArrowKey) {
         this.openPanel();
-        Promise.resolve().then(() => this._scrollToOption());
       }
+
+      Promise.resolve().then(() => {
+        if (isArrowKey || this.autocomplete._keyManager.activeItem !== prevActiveItem) {
+          this._scrollToOption();
+        }
+      });
     }
   }
 
