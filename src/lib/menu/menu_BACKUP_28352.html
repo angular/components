@@ -1,0 +1,13 @@
+<template>
+<<<<<<< HEAD
+  <div class="mat-menu-panel" [ngClass]="_classList" (keydown)="_keyManager.onKeydown($event)"
+=======
+  <div class="md-menu-panel" role="menu" [ngClass]="_classList" (keydown)="_keyManager.onKeydown($event)"
+>>>>>>> a97140b2608f7a6dc57e3a473dc5d42201168f48
+    (click)="_emitCloseEvent()" [@transformMenu]="'showing'">
+    <div class="mat-menu-content" [@fadeInItems]="'showing'">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</template>
+

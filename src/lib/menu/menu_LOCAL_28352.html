@@ -1,5 +1,5 @@
 <template>
-    <div class="mat-menu-panel" role="menu" [ngClass]="_classList" (keydown)="_keyManager.onKeydown($event)"
+  <div class="mat-menu-panel" [ngClass]="_classList" (keydown)="_keyManager.onKeydown($event)"
     (click)="_emitCloseEvent()" [@transformMenu]="'showing'">
     <div class="mat-menu-content" [@fadeInItems]="'showing'">
       <ng-content></ng-content>
