@@ -3,7 +3,8 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "types": ["jasmine"]
+    "types": ["jasmine"],
+    "experimentalDecorators": true
   },
   "include": [
     "system-config-spec.ts",

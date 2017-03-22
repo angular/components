@@ -12,3 +12,5 @@ import './tasks/aot';
 import './tasks/payload';
 import './tasks/coverage';
 import './tasks/library';
+
+import './tasks/packaging';

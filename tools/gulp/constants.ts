@@ -5,11 +5,18 @@ export const MATERIAL_VERSION = require('../../package.json').version;
 export const PROJECT_ROOT = join(__dirname, '../..');
 export const SOURCE_ROOT = join(PROJECT_ROOT, 'src');
 
+/** Root build output directory */
 export const DIST_ROOT = join(PROJECT_ROOT, 'dist');
+
+/** Output subdirectory where all bundles will be written (flat ES modules and UMD) */
 export const DIST_BUNDLES = join(DIST_ROOT, 'bundles');
+
+/** Output subdirectory where all library artifacts will be written (compiled JS, CSS, etc.) */
+export const DIST_MATERIAL = join(DIST_ROOT, 'packages', 'material');
+
+/** Output subdirectory where the npm package will be staged for publish */
 export const DIST_RELEASE = join(DIST_ROOT, 'release');
 
-export const DIST_MATERIAL = join(DIST_ROOT, 'packages', 'material');
 export const DIST_DEMOAPP = join(DIST_ROOT, 'packages', 'demo-app');
 export const DIST_E2EAPP = join(DIST_ROOT, 'packages', 'e2e-app');
 

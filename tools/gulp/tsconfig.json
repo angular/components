@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
     "lib": ["es2015", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
