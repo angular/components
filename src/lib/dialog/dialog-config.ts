@@ -15,6 +15,10 @@ export interface DialogPosition {
  * Configuration for opening a modal dialog with the MdDialog service.
  */
 export class MdDialogConfig {
+  
+  /** Where the attached component should live in Angular's *logical* component tree.
+   * This is different from where the component *renders*, which is determined by the PortalHost (the component that was passed into the MdDialog).
+   * Note the origin is necessary when the host is outside of the Angular application context. */
   viewContainerRef?: ViewContainerRef;
 
   /** The ARIA role of the dialog element. */
