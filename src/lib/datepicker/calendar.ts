@@ -167,63 +167,87 @@ export class MdCalendar implements AfterContentInit {
     // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
     // disabled ones from being selected. This may not be ideal, we should look into whether
     // navigation should skip over disabled dates, and if so, how to implement that efficiently.
+    if (this._monthView) {
+      this._handleCalendarBodyKeydownInMonthView(event);
+    } else {
+      this._handleCalendarBodyKeydownInYearView(event);
+    }
+  }
+
+  /** Handles keydown events on the calendar body when calendar is in month view. */
+  private _handleCalendarBodyKeydownInMonthView(event: KeyboardEvent): void {
     switch (event.keyCode) {
       case LEFT_ARROW:
-        this._activeDate = this._monthView ?
-            this._addCalendarDays(this._activeDate, -1) :
-            this._addCalendarMonths(this._activeDate, -1);
+        this._activeDate = this._addCalendarDays(this._activeDate, -1);
         break;
       case RIGHT_ARROW:
-        this._activeDate = this._monthView ?
-            this._addCalendarDays(this._activeDate, 1) :
-            this._addCalendarMonths(this._activeDate, 1);
+        this._activeDate = this._addCalendarDays(this._activeDate, 1);
         break;
       case UP_ARROW:
-        this._activeDate = this._monthView ?
-            this._addCalendarDays(this._activeDate, -7) :
-            this._prevMonthInSameCol(this._activeDate);
+        this._activeDate = this._addCalendarDays(this._activeDate, -7);
         break;
       case DOWN_ARROW:
-        this._activeDate = this._monthView ?
-            this._addCalendarDays(this._activeDate, 7) :
-            this._nextMonthInSameCol(this._activeDate);
+        this._activeDate = this._addCalendarDays(this._activeDate, 7);
         break;
       case HOME:
-        this._activeDate = this._monthView ?
-            new SimpleDate(this._activeDate.year, this._activeDate.month, 1) :
-            this._addCalendarMonths(this._activeDate, -this._activeDate.month);
+        this._activeDate = new SimpleDate(this._activeDate.year, this._activeDate.month, 1);
         break;
       case END:
-        this._activeDate = this._monthView ?
-            new SimpleDate(this._activeDate.year, this._activeDate.month + 1, 0) :
-            this._addCalendarMonths(this._activeDate, 11 - this._activeDate.month);
+        this._activeDate = new SimpleDate(this._activeDate.year, this._activeDate.month + 1, 0);
         break;
       case PAGE_UP:
-        if (event.altKey) {
-          this._activeDate = this._addCalendarYears(this._activeDate, this._monthView ? -1 : -10);
-        } else {
-          this._activeDate = this._monthView ?
-              this._addCalendarMonths(this._activeDate, -1) :
-              this._addCalendarYears(this._activeDate, -1);
-        }
+        this._activeDate = event.altKey ?
+            this._addCalendarYears(this._activeDate, -1) :
+            this._addCalendarMonths(this._activeDate, -1);
         break;
       case PAGE_DOWN:
-        if (event.altKey) {
-          this._activeDate = this._addCalendarYears(this._activeDate, this._monthView ? 1 : 10);
-        } else {
-          this._activeDate = this._monthView ?
-              this._addCalendarMonths(this._activeDate, 1) :
-              this._addCalendarYears(this._activeDate, 1);
-        }
+        this._activeDate = event.altKey ?
+            this._addCalendarYears(this._activeDate, 1) :
+            this._addCalendarMonths(this._activeDate, 1);
         break;
       case ENTER:
-        if (this._monthView) {
-          if (this._dateFilterForViews(this._activeDate)) {
-            this._dateSelected(this._activeDate);
-          }
-        } else {
-          this._monthSelected(this._activeDate);
+        if (this._dateFilterForViews(this._activeDate)) {
+          this._dateSelected(this._activeDate);
+          break;
         }
+        return;
+      default:
+        // Don't prevent default on keys that we don't explicitly handle.
+        return;
+    }
+
+    event.preventDefault();
+  }
+
+  /** Handles keydown events on the calendar body when calendar is in year view. */
+  private _handleCalendarBodyKeydownInYearView(event: KeyboardEvent): void {
+    switch (event.keyCode) {
+      case LEFT_ARROW:
+        this._activeDate = this._addCalendarMonths(this._activeDate, -1);
+        break;
+      case RIGHT_ARROW:
+        this._activeDate = this._addCalendarMonths(this._activeDate, 1);
+        break;
+      case UP_ARROW:
+        this._activeDate = this._prevMonthInSameCol(this._activeDate);
+        break;
+      case DOWN_ARROW:
+        this._activeDate = this._nextMonthInSameCol(this._activeDate);
+        break;
+      case HOME:
+        this._activeDate = this._addCalendarMonths(this._activeDate, -this._activeDate.month);
+        break;
+      case END:
+        this._activeDate = this._addCalendarMonths(this._activeDate, 11 - this._activeDate.month);
+        break;
+      case PAGE_UP:
+        this._activeDate = this._addCalendarYears(this._activeDate, event.altKey ? -10 : -1);
+        break;
+      case PAGE_DOWN:
+        this._activeDate = this._addCalendarYears(this._activeDate, event.altKey ? 10 : 1);
+        break;
+      case ENTER:
+        this._monthSelected(this._activeDate);
         break;
       default:
         // Don't prevent default on keys that we don't explicitly handle.
