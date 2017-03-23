@@ -1,6 +1,5 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {PortalModule} from '../core';
 import {MdRippleModule} from '../core/ripple/index';
 import {ObserveContentModule} from '../core/observe-content/observe-content';
@@ -19,7 +18,6 @@ import {SCROLL_DISPATCHER_PROVIDER} from '../core/overlay/scroll/scroll-dispatch
 @NgModule({
   imports: [
     CommonModule,
-    BrowserAnimationsModule,
     PortalModule,
     MdRippleModule,
     ObserveContentModule,
