@@ -12,7 +12,7 @@ let max = 5;
 })
 export class InputDemo {
   floatingLabel: string = 'auto';
-  dividerColor: boolean;
+  color: boolean;
   requiredField: boolean;
   ctrlDisabled = false;
 
