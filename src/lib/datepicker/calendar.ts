@@ -164,6 +164,9 @@ export class MdCalendar implements AfterContentInit {
 
   /** Handles keydown events on the calendar body. */
   _handleCalendarBodyKeydown(event: KeyboardEvent): void {
+    // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
+    // disabled ones from being selected. This may not be ideal, we should look into whether
+    // navigation should skip over disabled dates, and if so, how to implement that efficiently.
     switch (event.keyCode) {
       case LEFT_ARROW:
         this._activeDate = this._monthView ?
@@ -232,16 +235,16 @@ export class MdCalendar implements AfterContentInit {
 
   /** Adds the given number of days to the date. */
   private _addCalendarDays(date: SimpleDate, days: number): SimpleDate {
-    return date.add({'days': days});
+    return date.add({days});
   }
 
   /**
    * Adds the given number of months to the date. Months are counted as if flipping pages on a
    * calendar and then finding the closest date in the new month. For example when adding 1 month to
-   * Jan 31 2017 the resulting date will be Feb 28 2017.
+   * Jan 31, 2017 the resulting date will be Feb 28, 2017.
    */
   private _addCalendarMonths(date: SimpleDate, months: number): SimpleDate {
-    let newDate = date.add({'months': months});
+    let newDate = date.add({months});
 
     // It's possible to wind up in the wrong month if the original month has more days than the new
     // month. In this case we want to go to the last day of the desired month.
@@ -257,7 +260,7 @@ export class MdCalendar implements AfterContentInit {
   /**
    * Adds the given number of months to the date. Months are counted as if flipping 12 pages for
    * each year on a calendar and then finding the closest date in the new month. For example when
-   * adding 1 year to Feb 29 2016 the resulting date will be Feb 28 2017.
+   * adding 1 year to Feb 29, 2016 the resulting date will be Feb 28, 2017.
    */
   private _addCalendarYears(date: SimpleDate, years: number): SimpleDate {
     return this._addCalendarMonths(date, years * 12);
