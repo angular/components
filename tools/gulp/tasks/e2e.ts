@@ -3,9 +3,9 @@ import * as path from 'path';
 
 import {SOURCE_ROOT, DIST_ROOT, PROJECT_ROOT} from '../constants';
 import {
-  tsBuildTask, sassBuildTask, copyTask, buildAppTask, execNodeTask,
+  tsBuildTask, copyTask, buildAppTask, execNodeTask,
   vendorTask, sequenceTask, serverTask
-} from '../task_helpers';
+} from '../util/task_helpers';
 
 const gulpRunSequence = require('run-sequence');
 const gulpConnect = require('gulp-connect');
@@ -13,6 +13,8 @@ const gulpConnect = require('gulp-connect');
 const appDir = path.join(SOURCE_ROOT, 'e2e-app');
 const outDir = DIST_ROOT;
 const PROTRACTOR_CONFIG_PATH = path.join(PROJECT_ROOT, 'test/protractor.conf.js');
+
+const tsconfigPath = path.join(appDir, 'tsconfig.json');
 
 task(':watch:e2eapp', () => {
   watch(path.join(appDir, '**/*.ts'), [':build:e2eapp:ts']);
@@ -23,7 +25,7 @@ task(':watch:e2eapp', () => {
 task(':build:e2eapp:vendor', vendorTask());
 
 /** Builds e2e app ts to js. */
-task(':build:e2eapp:ts', tsBuildTask(appDir));
+task(':build:e2eapp:ts', tsBuildTask(tsconfigPath));
 
 /** Copies e2e app assets (html, css) to build output. */
 task(':build:e2eapp:assets', copyTask(appDir, outDir));
@@ -61,7 +63,6 @@ task('e2e', (done: (err?: string) => void) => {
     'serve:e2eapp',
     ':test:protractor',
     ':serve:e2eapp:stop',
-    'screenshots',
     (err: any) => done(err)
   );
 });

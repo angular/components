@@ -2,10 +2,11 @@ import {task} from 'gulp';
 import {join} from 'path';
 import {statSync, readFileSync} from 'fs';
 import {DIST_COMPONENTS_ROOT} from '../constants';
-import {openFirebaseDashboardDatabase, isTravisPushBuild} from '../task_helpers';
 import {spawnSync} from 'child_process';
+import {isTravisPushBuild} from '../util/travis-ci';
+import {openFirebaseDashboardDatabase} from '../util/firebase';
 
-// Those imports lack types.
+// There are no type definitions available for these imports.
 const uglifyJs = require('uglify-js');
 
 const BUNDLE_PATH = join(DIST_COMPONENTS_ROOT, 'bundles', 'material.umd.js');

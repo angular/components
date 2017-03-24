@@ -2,10 +2,9 @@ import {task} from 'gulp';
 import {readdirSync, statSync, existsSync, mkdirp} from 'fs-extra';
 import * as path from 'path';
 import * as admin from 'firebase-admin';
-import {openScreenshotsBucket, openFirebaseScreenshotsDatabase} from '../task_helpers';
-import {updateGithubStatus} from '../util-functions';
+import {openScreenshotsBucket, openFirebaseScreenshotsDatabase} from '../util/firebase';
+import {setGithubStatus} from '../util/github';
 
-const request = require('request');
 const imageDiff = require('image-diff');
 
 const SCREENSHOT_DIR = './screenshots';
@@ -20,7 +19,7 @@ task('screenshots', () => {
     return getScreenshotFiles(database)
       .then((files: any[]) => downloadAllGoldsAndCompare(files, database, prNumber))
       .then((results: boolean) => updateResult(database, prNumber, results))
-      .then((result: boolean) => updateGithubStatus(result, prNumber))
+      .then((result: boolean) => updateGithubStatus(prNumber, result))
       .then(() => uploadScreenshots('diff', prNumber))
       .then(() => uploadScreenshots('test', prNumber))
       .then(() => updateTravis(database, prNumber))
@@ -37,12 +36,15 @@ task('screenshots', () => {
 
 function updateFileResult(database: admin.database.Database, prNumber: string,
                           filenameKey: string, result: boolean) {
-  return database.ref(FIREBASE_REPORT).child(prNumber).child('results').child(filenameKey).set(result);
+  return getPullRequestRef(database, prNumber).child('results').child(filenameKey).set(result);
 }
 
-function updateResult(database: admin.database.Database, prNumber: string,
-                      result: boolean) {
-  return database.ref(FIREBASE_REPORT).child(prNumber).child('result').set(result).then(() => result);
+function updateResult(database: admin.database.Database, prNumber: string, result: boolean) {
+  return getPullRequestRef(database, prNumber).child('result').set(result).then(() => result);
+}
+
+function getPullRequestRef(database: admin.database.Database, prNumber: string) {
+  return database.ref(FIREBASE_REPORT).child(prNumber);
 }
 
 function updateTravis(database: admin.database.Database,
@@ -58,7 +60,7 @@ function updateTravis(database: admin.database.Database,
 function getScreenshotFiles(database: admin.database.Database) {
   let bucket = openScreenshotsBucket();
   return bucket.getFiles({ prefix: 'golds/' }).then(function(data: any) {
-    return data[0].filter((file:any) => file.name.endsWith('.screenshot.png'));
+    return data[0].filter((file: any) => file.name.endsWith('.screenshot.png'));
   });
 }
 
@@ -156,4 +158,14 @@ function setScreenFilenames(database: admin.database.Database,
     database.ref(FIREBASE_REPORT).child(prNumber).child('filenames') :
     database.ref(FIREBASE_FILELIST);
   return filelistDatabase.set(filenames);
+}
+
+/** Updates the Github Status of the given Pullrequest. */
+function updateGithubStatus(prNumber: number, result: boolean) {
+  setGithubStatus(process.env['TRAVIS_PULL_REQUEST_SHA'], {
+    result: result,
+    name: 'Screenshot Tests',
+    description: `Screenshot Tests ${result ? 'passed' : 'failed'})`,
+    url: `http://material2-screenshots.firebaseapp.com/${prNumber}`
+  });
 }

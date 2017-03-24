@@ -1,19 +1,19 @@
 <div class="mat-select-trigger" cdk-overlay-origin (click)="toggle()" #origin="cdkOverlayOrigin" #trigger>
   <span
     class="mat-select-placeholder"
-    [class.mat-floating-placeholder]="selected"
+    [class.mat-floating-placeholder]="_selectionModel.hasValue()"
     [@transformPlaceholder]="_getPlaceholderAnimationState()"
     [style.visibility]="_getPlaceholderVisibility()"
     [style.width.px]="_selectedValueWidth"> {{ placeholder }} </span>
-  <span class="mat-select-value" *ngIf="selected">
-    <span class="mat-select-value-text">{{ selected?.viewValue }}</span>
+  <span class="mat-select-value" *ngIf="_selectionModel.hasValue()">
+    <span class="mat-select-value-text">{{ triggerValue }}</span>
   </span>
 
   <span class="mat-select-arrow"></span>
   <span class="mat-select-underline"></span>
 </div>
 
-<template cdk-connected-overlay [origin]="origin" [open]="panelOpen" hasBackdrop (backdropClick)="close()"
+<ng-template cdk-connected-overlay [origin]="origin" [open]="panelOpen" hasBackdrop (backdropClick)="close()"
   backdropClass="cdk-overlay-transparent-backdrop" [positions]="_positions" [minWidth]="_triggerWidth"
   [offsetY]="_offsetY" [offsetX]="_offsetX" (attach)="_setScrollTop()">
   <div class="mat-select-panel" [@transformPanel]="'showing'" (@transformPanel.done)="_onPanelDone()"
@@ -23,4 +23,4 @@
       <ng-content></ng-content>
     </div>
   </div>
-</template>
+</ng-template>

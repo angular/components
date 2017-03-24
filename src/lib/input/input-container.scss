@@ -1,4 +1,5 @@
 @import '../core/style/variables';
+@import '../core/style/vendor-prefixes';
 @import '../core/style/form-common';
 
 
@@ -26,6 +27,14 @@ $mat-input-underline-disabled-background-image:
 
   [dir='rtl'] & {
     text-align: right;
+  }
+
+  // Allow icons in a prefix/suffix/hint/etc to adapt to the correct size.
+  & .mat-icon {
+    width: auto;
+    height: auto;
+    font-size: 100%;
+    vertical-align: top;
   }
 }
 
@@ -101,16 +110,7 @@ $mat-input-underline-disabled-background-image:
   // Note that we can't use something like visibility: hidden or
   // display: none, because IE ends up preventing the user from
   // focusing the input altogether.
-  &::placeholder {
-    color: transparent;
-  }
-  &::-moz-placeholder {
-    color: transparent;
-  }
-  &::-webkit-input-placeholder {
-    color: transparent;
-  }
-  &:-ms-input-placeholder {
+  @include input-placeholder {
     color: transparent;
   }
 }
@@ -135,7 +135,7 @@ $mat-input-underline-disabled-background-image:
   display: none;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow-x: hidden;
+  overflow: hidden;
 
   transform: translateY(0);
   transform-origin: bottom left;
@@ -170,6 +170,7 @@ $mat-input-underline-disabled-background-image:
   padding-top: 1em;
   overflow: hidden;
   pointer-events: none;  // We shouldn't catch mouse events (let them through).
+  transform: translate3d(0, 0, 0); // Prevents the label from shifting after the animation is done.
 
   // Keeps the element height since the placeholder text is `position: absolute`.
   &::after {
@@ -238,12 +239,4 @@ $mat-input-underline-disabled-background-image:
   // Prevents the prefix and suffix from stretching together with the container.
   width: 0.1px;
   white-space: nowrap;
-
-  // Allow icons in a prefix/suffix to adapt to the correct size.
-  & .mat-icon {
-    width: auto;
-    height: auto;
-    font-size: 100%;
-    vertical-align: top;
-  }
 }

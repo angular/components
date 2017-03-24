@@ -4,12 +4,6 @@ import {
   Input,
   ElementRef,
   ViewContainerRef,
-  style,
-  trigger,
-  state,
-  transition,
-  animate,
-  AnimationTransitionEvent,
   NgZone,
   Optional,
   OnDestroy,
@@ -17,6 +11,14 @@ import {
   OnInit,
   ChangeDetectorRef
 } from '@angular/core';
+import {
+  style,
+  trigger,
+  state,
+  transition,
+  animate,
+  AnimationEvent,
+} from '@angular/animations';
 import {
   Overlay,
   OverlayState,
@@ -33,6 +35,7 @@ import {Platform} from '../core/platform/index';
 import 'rxjs/add/operator/first';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {Subscription} from 'rxjs/Subscription';
+import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
@@ -62,6 +65,7 @@ export class MdTooltip implements OnInit, OnDestroy {
   scrollSubscription: Subscription;
 
   private _position: TooltipPosition = 'below';
+  private _disabled: boolean = false;
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   @Input('mdTooltipPosition')
@@ -75,6 +79,18 @@ export class MdTooltip implements OnInit, OnDestroy {
       if (this._tooltipInstance) {
         this._disposeTooltip();
       }
+    }
+  }
+
+  /** Disables the display of the tooltip. */
+  @Input('mdTooltipDisabled')
+  get disabled(): boolean { return this._disabled; }
+  set disabled(value) {
+    this._disabled = coerceBooleanProperty(value);
+
+    // If tooltip is disabled, hide immediately.
+    if (this._disabled) {
+      this.hide(0);
     }
   }
 
@@ -116,6 +132,11 @@ export class MdTooltip implements OnInit, OnDestroy {
   set _matPosition(v) { this.position = v; }
 
   // Properties with `mat-` prefix for noconflict mode.
+  @Input('matTooltipDisabled')
+  get _matDisabled() { return this.disabled; }
+  set _matDisabled(v) { this.disabled = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
   @Input('matTooltipHideDelay')
   get _matHideDelay() { return this.hideDelay; }
   set _matHideDelay(v) { this.hideDelay = v; }
@@ -146,7 +167,7 @@ export class MdTooltip implements OnInit, OnDestroy {
   ngOnInit() {
     // When a scroll on the page occurs, update the position in case this tooltip needs
     // to be repositioned.
-    this.scrollSubscription = this._scrollDispatcher.scrolled(SCROLL_THROTTLE_MS).subscribe(() => {
+    this.scrollSubscription = this._scrollDispatcher.scrolled(SCROLL_THROTTLE_MS, () => {
       if (this._overlayRef) {
         this._overlayRef.updatePosition();
       }
@@ -161,12 +182,14 @@ export class MdTooltip implements OnInit, OnDestroy {
       this._disposeTooltip();
     }
 
-    this.scrollSubscription.unsubscribe();
+    if (this.scrollSubscription) {
+      this.scrollSubscription.unsubscribe();
+    }
   }
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
   show(delay: number = this.showDelay): void {
-    if (!this._message || !this._message.trim()) { return; }
+    if (this.disabled || !this._message || !this._message.trim()) { return; }
 
     if (!this._tooltipInstance) {
       this._createTooltip();
@@ -190,7 +213,7 @@ export class MdTooltip implements OnInit, OnDestroy {
 
   /** Returns true if the tooltip is currently visible to the user */
   _isTooltipVisible(): boolean {
-    return this._tooltipInstance && this._tooltipInstance.isVisible();
+    return !!this._tooltipInstance && this._tooltipInstance.isVisible();
   }
 
   /** Create the tooltip to display */
@@ -424,7 +447,7 @@ export class TooltipComponent {
     }
   }
 
-  _afterVisibilityAnimation(e: AnimationTransitionEvent): void {
+  _afterVisibilityAnimation(e: AnimationEvent): void {
     if (e.toState === 'hidden' && !this.isVisible()) {
       this._onHide.next();
     }

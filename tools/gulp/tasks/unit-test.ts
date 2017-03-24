@@ -3,7 +3,7 @@ import path = require('path');
 import gulpMerge = require('merge2');
 
 import {PROJECT_ROOT, COMPONENTS_DIR} from '../constants';
-import {sequenceTask} from '../task_helpers';
+import {sequenceTask} from '../util/task_helpers';
 
 const karma = require('karma');
 const runSequence = require('run-sequence');
@@ -29,7 +29,7 @@ gulp.task(':test:deps', sequenceTask(
     ':build:test:vendor',
     ':build:components:assets',
     ':build:components:scss',
-    ':build:components:spec',
+    ':build:components:ts:spec',
   ]
 ));
 
@@ -75,16 +75,19 @@ gulp.task('test', [':test:deps'], () => {
   });
 
   // Refreshes Karma's file list and schedules a test run.
-  let runTests = () => {
-    server.refreshFiles().then(() => server._injector.get('executor').schedule());
+  // Tests will only run if TypeScript compilation was successful.
+  let runTests = (err?: Error) => {
+    if (!err) {
+      server.refreshFiles().then(() => server._injector.get('executor').schedule());
+    }
   };
 
   // Boot up the test server and run the tests whenever a new browser connects.
   server.start();
-  server.on('browser_register', runTests);
+  server.on('browser_register', () => runTests());
 
   // Watch for file changes, rebuild and run the tests.
-  gulp.watch(patternRoot + '.ts', () => runSequence(':build:components:spec', runTests));
+  gulp.watch(patternRoot + '.ts', () => runSequence(':build:components:ts:spec', runTests));
   gulp.watch(patternRoot + '.scss', () => runSequence(':build:components:scss', runTests));
   gulp.watch(patternRoot + '.html', () => runSequence(':build:components:assets', runTests));
 });

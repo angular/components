@@ -6,6 +6,10 @@ import {
   QueryList,
   Directive,
   ElementRef,
+  Inject,
+  Input,
+  OpaqueToken,
+  Optional,
   Renderer,
   AfterContentInit,
 } from '@angular/core';
@@ -16,6 +20,15 @@ import {MdLine, MdLineSetter} from '../core';
 })
 export class MdListDivider {}
 
+/**
+ * Token used to inject the list type into child MdListItem components so they can know whether
+ * they're in a nav list (and thus should use an MdRipple).
+ */
+export const LIST_TYPE_TOKEN = new OpaqueToken('list_type');
+
+const NORMAL_LIST_TYPE = 'normal_list_type';
+const NAV_LIST_TYPE = 'nav_list_type';
+
 @Component({
   moduleId: module.id,
   selector: 'md-list, mat-list, md-nav-list, mat-nav-list',
@@ -23,12 +36,14 @@ export class MdListDivider {}
     'role': 'list'},
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
+  providers: [{ provide: LIST_TYPE_TOKEN, useValue: NORMAL_LIST_TYPE }],
   encapsulation: ViewEncapsulation.None
 })
 export class MdList {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
  */
 @Directive({
   selector: 'md-list, mat-list',
@@ -40,6 +55,7 @@ export class MdListCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
  */
 @Directive({
   selector: 'md-nav-list, mat-nav-list',
@@ -50,7 +66,17 @@ export class MdListCssMatStyler {}
 export class MdNavListCssMatStyler {}
 
 /**
+ * Directive to set the ListType token to NAV_LIST_TYPE.
+ */
+@Directive({
+  selector: 'md-nav-list, mat-nav-list',
+  providers: [{ provide: LIST_TYPE_TOKEN, useValue: NAV_LIST_TYPE }],
+})
+export class MdNavListTokenSetter {}
+
+/**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
  */
 @Directive({
   selector: 'md-divider, mat-divider',
@@ -60,7 +86,10 @@ export class MdNavListCssMatStyler {}
 })
 export class MdDividerCssMatStyler {}
 
-/* Need directive for a ContentChild query in list-item */
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
+ */
 @Directive({
   selector: '[md-list-avatar], [mat-list-avatar]',
   host: {
@@ -69,7 +98,10 @@ export class MdDividerCssMatStyler {}
 })
 export class MdListAvatarCssMatStyler {}
 
-/* Need directive to add mat- CSS styling */
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
+ */
 @Directive({
   selector: '[md-list-icon], [mat-list-icon]',
   host: {
@@ -80,6 +112,7 @@ export class MdListIconCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
  */
 @Directive({
   selector: '[md-subheader], [mat-subheader]',
@@ -102,6 +135,11 @@ export class MdListSubheaderCssMatStyler {}
   encapsulation: ViewEncapsulation.None
 })
 export class MdListItem implements AfterContentInit {
+  /**
+   * Whether the ripple effect on click should be disabled. This applies only to list items that
+   * are children of an md-nav-list; md-list items never have ripples.
+   */
+  @Input() disableRipple: boolean = false;
   _hasFocus: boolean = false;
 
   private _lineSetter: MdLineSetter;
@@ -114,10 +152,16 @@ export class MdListItem implements AfterContentInit {
         this._element.nativeElement, 'mat-list-item-avatar', avatar != null);
   }
 
-  constructor(private _renderer: Renderer, private _element: ElementRef) {}
+  constructor(private _renderer: Renderer, private _element: ElementRef,
+      @Optional() @Inject(LIST_TYPE_TOKEN) private _listType: string) {}
 
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
+  }
+
+  /** Whether this list item should show a ripple effect when clicked.  */
+  isRippleEnabled() {
+    return !this.disableRipple && (this._listType === NAV_LIST_TYPE);
   }
 
   _handleFocus() {

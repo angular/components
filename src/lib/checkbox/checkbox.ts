@@ -54,7 +54,9 @@ export enum TransitionCheckState {
 
 /** Change event object emitted by MdCheckbox. */
 export class MdCheckboxChange {
+  /** The source MdCheckbox of the event. */
   source: MdCheckbox;
+  /** The new `checked` value of the checkbox. */
   checked: boolean;
 }
 
@@ -223,8 +225,10 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
   set checked(checked: boolean) {
     if (checked != this.checked) {
       if (this._indeterminate) {
-        this._indeterminate = false;
-        this.indeterminateChange.emit(this._indeterminate);
+        Promise.resolve().then(() => {
+          this._indeterminate = false;
+          this.indeterminateChange.emit(this._indeterminate);
+        });
       }
       this._checked = checked;
       this._changeDetectorRef.markForCheck();
@@ -400,7 +404,7 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
 
   private _getAnimationClassForCheckStateTransition(
       oldState: TransitionCheckState, newState: TransitionCheckState): string {
-    var animSuffix: string;
+    let animSuffix: string;
 
     switch (oldState) {
     case TransitionCheckState.Init:

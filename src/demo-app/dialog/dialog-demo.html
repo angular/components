@@ -71,10 +71,10 @@
 
 <p>Last close result: {{lastCloseResult}}</p>
 
-<template #templateRef>
+<ng-template #templateRef>
   I'm a template dialog. I've been opened {{numTemplateOpens}} times!
-</template>
+</ng-template>
 
-<template #disabledCloseRef>
+<ng-template #disabledCloseRef>
   {{ closeAttemptType ? 'Tried to close with: ' + closeAttemptType : 'Have not tried to close yet.' }}
-</template>
+</ng-template>

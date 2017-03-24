@@ -5,18 +5,20 @@ import {
   Output,
   EventEmitter,
   OnInit,
-  trigger,
-  state,
-  style,
-  animate,
-  transition,
-  AnimationTransitionEvent,
   ElementRef,
   Optional,
   ChangeDetectorRef,
   AfterViewChecked,
   AfterContentChecked,
 } from '@angular/core';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+  AnimationEvent,
+} from '@angular/animations';
 import {TemplatePortal, PortalHostDirective, Dir, LayoutDirection} from '../core';
 import 'rxjs/add/operator/map';
 
@@ -43,6 +45,7 @@ export type MdTabBodyOriginState = 'left' | 'right';
 
 /**
  * Wrapper for the contents of a tab.
+ * @docs-private
  */
 @Component({
   moduleId: module.id,
@@ -164,13 +167,13 @@ export class MdTabBody implements OnInit, AfterViewChecked, AfterContentChecked 
     }
   }
 
-  _onTranslateTabStarted(e: AnimationTransitionEvent) {
+  _onTranslateTabStarted(e: AnimationEvent) {
     if (this._isCenterPosition(e.toState)) {
       this.onCentering.emit(this._elementRef.nativeElement.clientHeight);
     }
   }
 
-  _onTranslateTabComplete(e: AnimationTransitionEvent) {
+  _onTranslateTabComplete(e: AnimationEvent) {
     // If the end state is that the tab is not centered, then detach the content.
     if (!this._isCenterPosition(e.toState) && !this._isCenterPosition(this._position)) {
       this._portalHost.detach();

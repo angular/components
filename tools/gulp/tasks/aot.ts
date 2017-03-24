@@ -1,7 +1,7 @@
 import {task} from 'gulp';
 import {join} from 'path';
 import {DIST_ROOT} from '../constants';
-import {execNodeTask, sequenceTask} from '../task_helpers';
+import {execNodeTask, sequenceTask} from '../util/task_helpers';
 
 /** Copies the source files of the demo-app to the dist folder. */
 task('aot:copy', [':build:devapp:scss', ':build:devapp:assets']);
@@ -12,7 +12,7 @@ task('aot:copy', [':build:devapp:scss', ':build:devapp:assets']);
  */
 task('aot:prepare', sequenceTask(
   'clean',
-  ['aot:copy', 'build:components:release', ':build:components:ngc'])
+  ['aot:copy', 'build:components', ':build:components:ngc'])
 );
 
 /** Builds the demo-app with the Angular compiler to verify that all components work. */

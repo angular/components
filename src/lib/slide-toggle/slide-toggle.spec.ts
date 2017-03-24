@@ -563,6 +563,22 @@ describe('MdSlideToggle', () => {
       expect(testComponent.lastEvent.checked).toBe(true);
     }));
 
+    it('should not emit a change event when the value did not change', fakeAsync(() => {
+      expect(slideToggle.checked).toBe(false);
+
+      gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
+      gestureConfig.emitEventForElement('slide', slideThumbContainer, { deltaX: 0 });
+      gestureConfig.emitEventForElement('slideend', slideThumbContainer);
+
+      // Flush the timeout for the slide ending.
+      tick();
+
+      expect(slideThumbContainer.classList).not.toContain('mat-dragging');
+      expect(slideToggle.checked).toBe(false);
+      expect(testComponent.lastEvent)
+          .toBeFalsy('Expected the slide-toggle to not emit a change event.');
+    }));
+
     it('should update the checked property of the input', fakeAsync(() => {
       expect(inputElement.checked).toBe(false);
 
@@ -664,7 +680,7 @@ class SlideToggleTestApp {
 @Component({
   selector: 'slide-toggle-forms-test-app',
   template: `
-    <form (ngSubmit)="isSubmitted = true">
+    <form ngNativeValidate (ngSubmit)="isSubmitted = true">
       <md-slide-toggle name="slide" ngModel [required]="isRequired">Required</md-slide-toggle>
       <button type="submit"></button>
     </form>`

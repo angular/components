@@ -7,7 +7,8 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import {NgModule,
+import {
+  NgModule,
   Component,
   Directive,
   ViewChild,
@@ -16,6 +17,7 @@ import {NgModule,
   Inject,
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdDialogModule} from './index';
 import {MdDialog} from './dialog';
 import {MdDialogContainer} from './dialog-container';
@@ -391,6 +393,19 @@ describe('MdDialog', () => {
     });
   });
 
+  it('should not keep a reference to the component after the dialog is closed', async(() => {
+    let dialogRef = dialog.open(PizzaMsg);
+
+    expect(dialogRef.componentInstance).toBeTruthy();
+
+    dialogRef.close();
+    viewContainerFixture.detectChanges();
+
+    viewContainerFixture.whenStable().then(() => {
+      expect(dialogRef.componentInstance).toBeFalsy('Expected reference to have been cleared.');
+    });
+  }));
+
   describe('disableClose option', () => {
     it('should prevent closing via clicks on the backdrop', () => {
       dialog.open(PizzaMsg, {
@@ -483,6 +498,7 @@ describe('MdDialog', () => {
       expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(1);
 
       (overlayContainerElement.querySelector('button[md-dialog-close]') as HTMLElement).click();
+      viewContainerFixture.detectChanges();
 
       viewContainerFixture.whenStable().then(() => {
         expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(0);
@@ -649,7 +665,7 @@ const TEST_DIRECTIVES = [
 ];
 
 @NgModule({
-  imports: [MdDialogModule],
+  imports: [MdDialogModule, NoopAnimationsModule],
   exports: TEST_DIRECTIVES,
   declarations: TEST_DIRECTIVES,
   entryComponents: [

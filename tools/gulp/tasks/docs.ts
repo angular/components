@@ -1,12 +1,17 @@
-import gulp = require('gulp');
+import {task, src, dest} from 'gulp';
+import {Dgeni} from 'dgeni';
+import * as path from 'path';
+import {HTML_MINIFIER_OPTIONS} from '../constants';
+
+// There are no type definitions available for these imports.
 const markdown = require('gulp-markdown');
 const transform = require('gulp-transform');
 const highlight = require('gulp-highlight-files');
 const rename = require('gulp-rename');
 const flatten = require('gulp-flatten');
+const htmlmin = require('gulp-htmlmin');
 const hljs = require('highlight.js');
-import {task} from 'gulp';
-import * as path from 'path';
+const dom  = require('gulp-dom');
 
 // Our docs contain comments of the form `<!-- example(...) -->` which serve as placeholders where
 // example code should be inserted. We replace these comments with divs that have a
@@ -19,10 +24,30 @@ const EXAMPLE_PATTERN = /<!--\W*example\(([^)]+)\)\W*-->/g;
 // documentation page. Using a RegExp to rewrite links in HTML files to work in the docs.
 const LINK_PATTERN = /(<a[^>]*) href="([^"]*)"/g;
 
-gulp.task('docs', ['markdown-docs', 'highlight-docs', 'api-docs'])
+// HTML tags in the markdown generated files that should receive a .docs-markdown-${tagName} class
+// for styling purposes.
+const MARKDOWN_TAGS_TO_CLASS_ALIAS = [
+  'a',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'li',
+  'ol',
+  'p',
+  'table',
+  'tbody',
+  'td',
+  'th',
+  'tr',
+  'ul'
+];
 
-gulp.task('markdown-docs', () => {
-  return gulp.src(['src/lib/**/*.md', 'guides/*.md'])
+task('docs', ['markdown-docs', 'highlight-docs', 'api-docs', 'minify-html-docs']);
+
+task('markdown-docs', () => {
+  return src(['src/lib/**/*.md', 'guides/*.md'])
       .pipe(markdown({
         // Add syntax highlight using highlight.js
         highlight: (code: string, language: string) => {
@@ -36,28 +61,34 @@ gulp.task('markdown-docs', () => {
         }
       }))
       .pipe(transform(transformMarkdownFiles))
-      .pipe(gulp.dest('dist/docs/markdown'));
+      .pipe(dom(createTagNameAliaser('docs-markdown')))
+      .pipe(dest('dist/docs/markdown'));
 });
 
-gulp.task('highlight-docs', () => {
+task('highlight-docs', () => {
   // rename files to fit format: [filename]-[filetype].html
   const renameFile = (path: any) => {
     const extension = path.extname.slice(1);
     path.basename = `${path.basename}-${extension}`;
   };
 
-  return gulp.src('src/examples/**/*.+(html|css|ts)')
-    .pipe(flatten())
-    .pipe(rename(renameFile))
-    .pipe(highlight())
-    .pipe(gulp.dest('dist/docs/examples'));
+  return src('src/examples/**/*.+(html|css|ts)')
+      .pipe(flatten())
+      .pipe(rename(renameFile))
+      .pipe(highlight())
+      .pipe(dest('dist/docs/examples'));
 });
 
 task('api-docs', () => {
-  const Dgeni = require('dgeni');
   const docsPackage = require(path.resolve(__dirname, '../../dgeni'));
-  const dgeni = new Dgeni([docsPackage]);
-  return dgeni.generate();
+  const docs = new Dgeni([docsPackage]);
+  return docs.generate();
+});
+
+task('minify-html-docs', ['api-docs'], () => {
+  return src('dist/docs/api/*.html')
+    .pipe(htmlmin(HTML_MINIFIER_OPTIONS))
+    .pipe(dest('dist/docs/api/'));
 });
 
 /** Updates the markdown file's content to work inside of the docs app. */
@@ -93,4 +124,21 @@ function fixMarkdownDocLinks(link: string, filePath: string): string {
   // Temporary link the file to the /guide URL because that's the route where the
   // guides can be loaded in the Material docs.
   return `guide/${baseName}`;
+}
+
+/**
+ * Returns a function to be called with an HTML document as its context that aliases HTML tags by
+ * adding a class consisting of a prefix + the tag name.
+ * @param classPrefix The prefix to use for the alias class.
+ */
+function createTagNameAliaser(classPrefix: string) {
+  return function() {
+    MARKDOWN_TAGS_TO_CLASS_ALIAS.forEach(tag => {
+      for (let el of this.querySelectorAll(tag)) {
+        el.classList.add(`${classPrefix}-${tag}`);
+      }
+    });
+
+    return this;
+  };
 }
