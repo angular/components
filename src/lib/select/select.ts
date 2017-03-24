@@ -756,7 +756,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   /** Returns the aria-label of the select component. */
   get _ariaLabel(): string {
-    // If a ariaLabelledby value has been set, the select should not overwrite the
+    // If an ariaLabelledby value has been set, the select should not overwrite the
     // `aria-labelledby` value by setting the ariaLabel to the placeholder.
     return this.ariaLabelledby ? null : this.ariaLabel || this.placeholder;
   }

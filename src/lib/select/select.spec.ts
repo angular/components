@@ -1092,7 +1092,7 @@ describe('MdSelect', () => {
         expect(select.getAttribute('aria-label')).toEqual('Custom Label');
       });
 
-      it('should not set a aria-label if aria-labelledby is specified', () => {
+      it('should not set an aria-label if aria-labelledby is specified', () => {
         fixture.componentInstance.ariaLabelledby = 'myLabelId';
         fixture.detectChanges();
 
