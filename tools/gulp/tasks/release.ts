@@ -1,15 +1,15 @@
 import {spawn} from 'child_process';
-import {existsSync, statSync, copySync, writeFileSync} from 'fs-extra';
-import {join} from 'path';
+import {existsSync, statSync, copySync, writeFileSync, readFileSync} from 'fs-extra';
+import {join, basename} from 'path';
 import {task, src, dest} from 'gulp';
 import {execTask, sequenceTask} from '../util/task_helpers';
 import {
-  DIST_RELEASE, DIST_BUNDLES, DIST_MATERIAL, COMPONENTS_DIR, LICENSE_BANNER
+  DIST_RELEASE, DIST_BUNDLES, DIST_MATERIAL, COMPONENTS_DIR, LICENSE_BANNER, DIST_ROOT
 } from '../constants';
 import * as minimist from 'minimist';
 
 // There are no type definitions available for these imports.
-const gulpRename = require('gulp-rename');
+const glob = require('glob');
 
 /** Parse command-line arguments for release task. */
 const argv = minimist(process.argv.slice(3));
@@ -29,30 +29,40 @@ task('build:release', sequenceTask(
 ));
 
 /** Task that combines intermediate build artifacts into the release package structure. */
-task(':package:release', [
+task(':package:release', sequenceTask(
+  [':package:typings', ':package:umd', ':package:fesm', ':package:assets'],
+  ':inline-metadata-resources',
   ':package:metadata',
-  ':package:typings',
-  ':package:umd',
-  ':package:fesm',
-  ':package:assets'
-]);
+));
 
 /** Copy metatadata.json and associated d.ts files to the root of the package structure. */
-task(':package:metadata', [':package:fix-metadata'], () => {
+task(':package:metadata', () => {
   // See: https://github.com/angular/angular/blob/master/build.sh#L293-L294
   copySync(join(DIST_MATERIAL, 'index.metadata.json'),
       join(DIST_RELEASE, 'material.metadata.json'));
 });
 
-/**
- * Workaround for a @angular/tsc-wrapped issue, where the compiler looks for component assets
- * in the wrong folder. This issue only appears for bundled metadata files.
- * As a workaround, we just copy all assets next to the metadata bundle.
- **/
-task(':package:fix-metadata', () => {
-  return src('**/*.+(html|css)', { cwd: DIST_MATERIAL })
-  .pipe(gulpRename({dirname: ''}))
-  .pipe(dest(DIST_RELEASE));
+/** Inlines the html and css resources into all metadata.json files in dist/ */
+task(':inline-metadata-resources', () => {
+  // Create a map of fileName -> fullFilePath. This is needed because the templateUrl and
+  // styleUrls for each component use just the filename because, in the source, the component
+  // and the resources live in the same directory.
+  const componentResources = new Map<string, string>();
+  glob(join(DIST_ROOT, '**/*.+(html|css)'), (err: any, resourceFilePaths: any) => {
+    for (const path of resourceFilePaths) {
+      componentResources.set(basename(path), path);
+    }
+  });
+
+  // Find all metadata files. For each one, parse the JSON content, inline the resources, and
+  // reserialize and rewrite back to the original location.
+  glob(join(DIST_ROOT, '**/*.metadata.json'), (err: any, metadataFilePaths: any) => {
+    for (const path of metadataFilePaths) {
+      let metadata = JSON.parse(readFileSync(path, 'utf-8'));
+      inlineMetadataResources(metadata, componentResources);
+      writeFileSync(path , JSON.stringify(metadata), 'utf-8');
+    }
+  });
 });
 
 task(':package:assets', () => src(assetsGlob).pipe(dest(DIST_RELEASE)));
@@ -155,3 +165,36 @@ task('publish', sequenceTask(
   ':publish',
   ':publish:logout',
 ));
+
+
+/**
+ * Recurse through a parsed metadata.json file and inline all html and css.
+ * Note: this assumes that all html and css files have a unique name.
+ */
+function inlineMetadataResources(metadata: any, componentResources: Map<string, string>) {
+  // Convert `templateUrl` to `template`
+  if (metadata.templateUrl) {
+    const fullResourcePath = componentResources.get(metadata.templateUrl);
+    metadata.template = readFileSync(fullResourcePath, 'utf-8');
+    delete metadata.templateUrl;
+  }
+
+  // Convert `styleUrls` to `styles`
+  if (metadata.styleUrls && metadata.styleUrls.length) {
+    metadata.styles = [];
+    for (const styleUrl of metadata.styleUrls) {
+      const fullResourcePath = componentResources.get(styleUrl);
+      metadata.styles.push(readFileSync(fullResourcePath, 'utf-8'));
+    }
+    delete metadata.styleUrls;
+  }
+
+  // We we did nothing at this node, go deeper.
+  if (!metadata.template && !metadata.styles) {
+    for (const property in metadata) {
+      if (typeof metadata[property] == 'object' && metadata[property]) {
+        inlineMetadataResources(metadata[property], componentResources);
+      }
+    }
+  }
+}
