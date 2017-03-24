@@ -26,12 +26,15 @@ import {SimpleDate} from '../core/datetime/simple-date';
 export class MdYearView implements AfterContentInit {
   /** The date to display in this year view (everything other than the year is ignored). */
   @Input()
-  get date() { return this._date; }
-  set date(value) {
-    this._date = this._locale.parseDate(value) || SimpleDate.today();
-    this._init();
+  get activeDate() { return this._activeDate; }
+  set activeDate(value) {
+    let oldActiveDate = this._activeDate;
+    this._activeDate = this._locale.parseDate(value) || SimpleDate.today();
+    if (oldActiveDate.year != this._activeDate.year) {
+      this._init();
+    }
   }
-  private _date = SimpleDate.today();
+  private _activeDate = SimpleDate.today();
 
   /** The currently selected date. */
   @Input()
@@ -71,14 +74,14 @@ export class MdYearView implements AfterContentInit {
 
   /** Handles when a new month is selected. */
   _monthSelected(month: number) {
-    this.selectedChange.emit(new SimpleDate(this.date.year, month, 1));
+    this.selectedChange.emit(new SimpleDate(this.activeDate.year, month, this._activeDate.date));
   }
 
   /** Initializes this month view. */
   private _init() {
     this._selectedMonth = this._getMonthInCurrentYear(this.selected);
     this._todayMonth = this._getMonthInCurrentYear(SimpleDate.today());
-    this._yearLabel = this._locale.getCalendarYearHeaderLabel(this._date);
+    this._yearLabel = this._locale.getCalendarYearHeaderLabel(this.activeDate);
 
     // First row of months only contains 5 elements so we can fit the year label on the same row.
     this._months = [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9, 10, 11]].map(row => row.map(
@@ -90,7 +93,7 @@ export class MdYearView implements AfterContentInit {
    * Returns null if the given Date is in another year.
    */
   private _getMonthInCurrentYear(date: SimpleDate) {
-    return date && date.year == this.date.year ? date.month : null;
+    return date && date.year == this.activeDate.year ? date.month : null;
   }
 
   /** Creates an MdCalendarCell for the given month. */
@@ -106,7 +109,7 @@ export class MdYearView implements AfterContentInit {
     }
 
     // If any date in the month is enabled count the month as enabled.
-    for (let date = new SimpleDate(this.date.year, month, 1); date.month === month;
+    for (let date = new SimpleDate(this.activeDate.year, month, 1); date.month === month;
          date = date.add({days: 1})) {
       if (this.dateFilter(date)) {
         return true;

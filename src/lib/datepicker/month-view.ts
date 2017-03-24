@@ -31,12 +31,15 @@ export class MdMonthView implements AfterContentInit {
    * The date to display in this month view (everything other than the month and year is ignored).
    */
   @Input()
-  get date() { return this._date; }
-  set date(value) {
-    this._date = this._locale.parseDate(value) || SimpleDate.today();
-    this._init();
+  get activeDate() { return this._activeDate; }
+  set activeDate(value) {
+    let oldActiveDate = this._activeDate;
+    this._activeDate = this._locale.parseDate(value) || SimpleDate.today();
+    if (!this._hasSameMonthAndYear(oldActiveDate, this._activeDate)) {
+      this._init();
+    }
   }
-  private _date = SimpleDate.today();
+  private _activeDate = SimpleDate.today();
 
   /** The currently selected date. */
   @Input()
@@ -82,16 +85,16 @@ export class MdMonthView implements AfterContentInit {
     if (this._selectedDate == date) {
       return;
     }
-    this.selectedChange.emit(new SimpleDate(this.date.year, this.date.month, date));
+    this.selectedChange.emit(new SimpleDate(this.activeDate.year, this.activeDate.month, date));
   }
 
   /** Initializes this month view. */
   private _init() {
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
     this._todayDate = this._getDateInCurrentMonth(SimpleDate.today());
-    this._monthLabel = this._locale.shortMonths[this.date.month].toLocaleUpperCase();
+    this._monthLabel = this._locale.shortMonths[this.activeDate.month].toLocaleUpperCase();
 
-    let firstOfMonth = new SimpleDate(this.date.year, this.date.month, 1);
+    let firstOfMonth = new SimpleDate(this.activeDate.year, this.activeDate.month, 1);
     this._firstWeekOffset =
         (DAYS_PER_WEEK + firstOfMonth.day - this._locale.firstDayOfWeek) % DAYS_PER_WEEK;
 
@@ -100,7 +103,7 @@ export class MdMonthView implements AfterContentInit {
 
   /** Creates MdCalendarCells for the dates in this month. */
   private _createWeekCells() {
-    let daysInMonth = new SimpleDate(this.date.year, this.date.month + 1, 0).date;
+    let daysInMonth = new SimpleDate(this.activeDate.year, this.activeDate.month + 1, 0).date;
     this._weeks = [[]];
     for (let i = 0, cell = this._firstWeekOffset; i < daysInMonth; i++, cell++) {
       if (cell == DAYS_PER_WEEK) {
@@ -108,7 +111,7 @@ export class MdMonthView implements AfterContentInit {
         cell = 0;
       }
       let enabled = !this.dateFilter ||
-          this.dateFilter(new SimpleDate(this.date.year, this.date.month, i + 1));
+          this.dateFilter(new SimpleDate(this.activeDate.year, this.activeDate.month, i + 1));
       this._weeks[this._weeks.length - 1]
           .push(new MdCalendarCell(i + 1, this._locale.dates[i + 1], enabled));
     }
@@ -118,7 +121,12 @@ export class MdMonthView implements AfterContentInit {
    * Gets the date in this month that the given Date falls on.
    * Returns null if the given Date is in another month.
    */
-  private _getDateInCurrentMonth(date: SimpleDate) {
-    return date && date.month == this.date.month && date.year == this.date.year ? date.date : null;
+  private _getDateInCurrentMonth(date: SimpleDate): number {
+    return this._hasSameMonthAndYear(date, this.activeDate) ? date.date : null;
+  }
+
+  /** Checks whether the 2 dates are non-null and fall within the same month of the same year. */
+  private _hasSameMonthAndYear(d1: SimpleDate, d2: SimpleDate): boolean {
+    return !!(d1 && d2 && d1.month == d2.month && d1.year == d2.year);
   }
 }
