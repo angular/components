@@ -71,6 +71,12 @@ describe('MdMonthView', () => {
       let selectedEl = monthViewNativeElement.querySelector('.mat-calendar-table-selected');
       expect(selectedEl.innerHTML.trim()).toBe('31');
     });
+
+    it('should mark active date', () => {
+      let cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-table-cell');
+      expect((cellEls[4] as HTMLElement).innerText.trim()).toBe('5');
+      expect(cellEls[4].classList).toContain('mat-calendar-table-active');
+    });
   });
 
   describe('month view with date filter', () => {
@@ -87,7 +93,7 @@ describe('MdMonthView', () => {
       testComponent = fixture.componentInstance;
     });
 
-    it('should disabled filtered dates', () => {
+    it('should disable filtered dates', () => {
       let cells = monthViewNativeElement.querySelectorAll('.mat-calendar-table-cell');
       expect(cells[0].classList).toContain('mat-calendar-table-disabled');
       expect(cells[1].classList).not.toContain('mat-calendar-table-disabled');
@@ -97,7 +103,7 @@ describe('MdMonthView', () => {
 
 
 @Component({
-  template: `<md-month-view [date]="date" [(selected)]="selected"></md-month-view>`,
+  template: `<md-month-view [activeDate]="date" [(selected)]="selected"></md-month-view>`,
 })
 class StandardMonthView {
   date = new SimpleDate(2017, 0, 5);
@@ -106,7 +112,7 @@ class StandardMonthView {
 
 
 @Component({
-  template: `<md-month-view date="1/1/2017" [dateFilter]="dateFilter"></md-month-view>`
+  template: `<md-month-view activeDate="1/1/2017" [dateFilter]="dateFilter"></md-month-view>`
 })
 class MonthViewWithDateFilter {
   dateFilter(date: SimpleDate) {

@@ -45,7 +45,8 @@
     }
   }
 
-  :not(.mat-calendar-table-disabled):hover {
+  :not(.mat-calendar-table-disabled):hover,
+  .cdk-keyboard-focused .mat-calendar-table-active {
     & > .mat-calendar-table-cell-content:not(.mat-calendar-table-selected) {
       background-color: mat-color($background, hover);
     }
