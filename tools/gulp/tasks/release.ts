@@ -1,5 +1,5 @@
 import {spawn} from 'child_process';
-import {existsSync, statSync, copySync, writeFileSync, readFileSync} from 'fs-extra';
+import {existsSync, statSync, writeFileSync, readFileSync} from 'fs-extra';
 import {join, basename} from 'path';
 import {task, src, dest} from 'gulp';
 import {execTask, sequenceTask} from '../util/task_helpers';
@@ -15,7 +15,7 @@ const glob = require('glob');
 const argv = minimist(process.argv.slice(3));
 
 // Matches all Typescript definition files for Material.
-const typingsGlob = join(DIST_MATERIAL, '**/*.d.ts');
+const typingsGlob = join(DIST_MATERIAL, '**/*.+(d.ts|metadata.json)');
 // Matches the "package.json" and "README.md" file that needs to be shipped.
 const assetsGlob = join(COMPONENTS_DIR, '+(package.json|README.md)');
 // Matches all UMD bundles inside of the bundles distribution.
@@ -35,11 +35,11 @@ task(':package:release', sequenceTask(
   ':package:metadata',
 ));
 
-/** Copy metatadata.json and associated d.ts files to the root of the package structure. */
+/** Writes a re-export metadata */
 task(':package:metadata', () => {
-  // See: https://github.com/angular/angular/blob/master/build.sh#L293-L294
-  copySync(join(DIST_MATERIAL, 'index.metadata.json'),
-      join(DIST_RELEASE, 'material.metadata.json'));
+  const metadataReExport =
+      `{"__symbolic":"module","version":3,"metadata":{},"exports":[{"from":"./typings/index"}]}`;
+  writeFileSync(join(DIST_RELEASE, 'material.metadata.json'), metadataReExport, 'utf-8');
 });
 
 /** Inlines the html and css resources into all metadata.json files in dist/ */
