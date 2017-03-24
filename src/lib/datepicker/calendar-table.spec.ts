@@ -86,6 +86,11 @@ describe('MdCalendarTable', () => {
       expect(todayElement.classList)
           .toContain('mat-calendar-table-selected', 'today should be selected');
     });
+
+    it('should mark active date', () => {
+      expect((cellEls[10] as HTMLElement).innerText.trim()).toBe('11');
+      expect(cellEls[10].classList).toContain('mat-calendar-table-active');
+    });
   });
 
   describe('calendar table with disabled cells', () => {
@@ -129,6 +134,7 @@ describe('MdCalendarTable', () => {
                                 [selectedValue]="selectedValue"
                                 [labelMinRequiredCells]="labelMinRequiredCells"
                                 [numCols]="numCols"
+                                [activeCell]="10"
                                 (selectedValueChange)="onSelect($event)">                           
              </md-calendar-table>`,
 })

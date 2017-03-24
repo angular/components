@@ -3,5 +3,6 @@
                    [todayValue]="_todayDate"
                    [selectedValue]="_selectedDate"
                    [labelMinRequiredCells]="3"
+                   [activeCell]="activeDate.date - 1"
                    (selectedValueChange)="_dateSelected($event)">
 </md-calendar-table>
