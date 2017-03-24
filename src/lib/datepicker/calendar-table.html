@@ -5,15 +5,16 @@
   </tr>
 
   <!-- Create the first row separately so we can include a special spacer cell. -->
-  <tr *ngFor="let row of rows; let i = index">
-    <td *ngIf="i === 0 && _firstRowOffset"
+  <tr *ngFor="let row of rows; let rowIndex = index">
+    <td *ngIf="rowIndex === 0 && _firstRowOffset"
         class="mat-calendar-table-label"
         [attr.colspan]="_firstRowOffset">
       {{_firstRowOffset >= labelMinRequiredCells ? label : ''}}
     </td>
-    <td *ngFor="let item of row"
+    <td *ngFor="let item of row; let colIndex = index"
         class="mat-calendar-table-cell"
         [class.mat-calendar-table-disabled]="!item.enabled"
+        [class.mat-calendar-table-active]="_isActiveCell(rowIndex, colIndex)"
         (click)="_cellClicked(item)">
       <div class="mat-calendar-table-cell-content"
            [class.mat-calendar-table-selected]="selectedValue === item.value"

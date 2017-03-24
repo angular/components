@@ -10,6 +10,7 @@ import {MdDatepickerInput} from './datepicker-input';
 import {MdDialogModule} from '../dialog/index';
 import {MdCalendar} from './calendar';
 import {MdDatepickerToggle} from './datepicker-toggle';
+import {StyleModule} from '../core/style/index';
 
 
 export * from './calendar';
@@ -26,6 +27,7 @@ export * from './year-view';
     DatetimeModule,
     MdDialogModule,
     OverlayModule,
+    StyleModule,
   ],
   exports: [
     MdDatepicker,
