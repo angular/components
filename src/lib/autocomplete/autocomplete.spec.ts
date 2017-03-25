@@ -611,18 +611,14 @@ describe('MdAutocomplete', () => {
       });
     }));
 
-    it('should not call the default input behaviour when an option is selected with ENTER',
-        async(() => {
+    it('should prevent the default enter key action', async(() => {
       fixture.whenStable().then(() => {
         fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
 
         fixture.whenStable().then(() => {
-          fixture.detectChanges();
-
           spyOn(ENTER_EVENT, 'preventDefault');
 
           fixture.componentInstance.trigger._handleKeydown(ENTER_EVENT);
-          fixture.detectChanges();
 
           expect(ENTER_EVENT.preventDefault).toHaveBeenCalled();
         });
