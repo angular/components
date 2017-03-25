@@ -59,19 +59,17 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
   /** The value of the input. */
   @Input()
   get value(): SimpleDate {
-    return this._value;
+    return this._locale.parseDate(this._elementRef.nativeElement.value);
   }
   set value(value: SimpleDate) {
-    let oldValue = this._value;
-    this._value = this._locale.parseDate(value);
-    const stringValue = this._value == null ? '' : this._locale.formatDate(this._value);
-    this._renderer.setElementProperty(this._elementRef.nativeElement, 'value', stringValue);
-
-    if (!SimpleDate.equals(oldValue, this._value)) {
-      this._valueChangeEmitter.emit(this._value);
+    let date = this._locale.parseDate(value);
+    let oldDate = this.value;
+    this._renderer.setElementProperty(this._elementRef.nativeElement, 'value',
+        date ? this._locale.formatDate(date) : '');
+    if (!SimpleDate.equals(oldDate, date)) {
+      this._valueChangeEmitter.emit(date);
     }
   }
-  private _value: SimpleDate;
 
   /** The minimum valid date. */
   @Input()
@@ -155,10 +153,7 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
 
   _onInput(value: string) {
     let date = this._locale.parseDate(value);
-    let dateChanged = !SimpleDate.equals(this.value, date);
     this._onChange(date);
-    if (dateChanged) {
-      this._valueChangeEmitter.emit(date);
-    }
+    this._valueChangeEmitter.emit(date);
   }
 }
