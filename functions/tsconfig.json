@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": ["es6", "es2016", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "outDir": "./",
+    "sourceMap": true,
+    "target": "es5",
+    "stripInternal": false,
+    "baseUrl": "",
+    "typeRoots": [
+      "../node_modules/@types/!(node)"
+    ]
+  },
+  "files": [
+    "data.ts",
+    "data_image.ts",
+    "github.ts",
+    "image_data.ts",
+    "index.ts",
+    "jwt_util.ts",
+    "test_goldens.ts",
+    "util/github.ts",
+    "util/jwt.ts"
+  ]
+}
