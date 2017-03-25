@@ -46,7 +46,8 @@ describe('MdSelect', () => {
         ThrowsErrorOnInit,
         BasicSelectOnPush,
         BasicSelectOnPushPreselected,
-        SelectWithPlainTabindex
+        SelectWithPlainTabindex,
+        SelectEarlyAccessSibling
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -1322,6 +1323,12 @@ describe('MdSelect', () => {
       }).toThrowError(new RegExp('Oh no!', 'g'));
     }));
 
+    it('should not throw when trying to access the selected value on init', async(() => {
+      expect(() => {
+        TestBed.createComponent(SelectEarlyAccessSibling).detectChanges();
+      }).not.toThrow();
+    }));
+
   });
 
   describe('change event', () => {
@@ -1895,6 +1902,15 @@ class MultiSelect {
   `
 })
 class SelectWithPlainTabindex { }
+
+@Component({
+  selector: 'select-early-sibling-access',
+  template: `
+    <md-select #select="mdSelect"></md-select>
+    <div *ngIf="select.selected"></div>
+  `
+})
+class SelectEarlyAccessSibling { }
 
 
 class FakeViewportRuler {
