@@ -20,7 +20,7 @@ export class SimpleDate {
    * Checks whether the given dates are equal. Null dates are considered equal to other null dates.
    */
   static equals(first: SimpleDate, second: SimpleDate): boolean {
-    return first && second ? !first.compare(second): first == second;
+    return first && second ? !first.compare(second) : first == second;
   }
 
   /** The native JS Date. */

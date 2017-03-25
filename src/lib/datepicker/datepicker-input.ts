@@ -131,7 +131,7 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
 
   // Implemented as part of ControlValueAccessor
   registerOnChange(fn: (value: any) => void): void {
-    this._onChange = value => fn(this._locale.parseDate(value));
+    this._onChange = fn;
   }
 
   // Implemented as part of ControlValueAccessor
