@@ -380,7 +380,7 @@ export class MdSlider implements ControlValueAccessor, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._focusOriginMonitor.unmonitor(this._elementRef.nativeElement);
+    this._focusOriginMonitor.stopMonitoring(this._elementRef.nativeElement);
   }
 
   _onMouseenter() {
