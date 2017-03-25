@@ -9,6 +9,8 @@ import {
 } from '@angular/core';
 import {DOCUMENT} from '@angular/platform-browser';
 
+/** Flag for whether we've checked that the theme is loaded. */
+let hasCheckedThemePresence = false;
 
 export const MATERIAL_COMPATIBILITY_MODE = new OpaqueToken('md-compatibility-mode');
 
@@ -170,13 +172,40 @@ export class CompatibilityModule {
     };
   }
 
-  constructor(@Optional() @Inject(DOCUMENT) document: any) {
-    if (isDevMode() && typeof document && !document.doctype) {
+  constructor(@Optional() @Inject(DOCUMENT) private _document: any) {
+    this._checkDoctype();
+    this._checkTheme();
+  }
+
+  private _checkDoctype(): void {
+    if (isDevMode() && this._document && !this._document.doctype) {
       console.warn(
         'Current document does not have a doctype. This may cause ' +
         'some Angular Material components not to behave as expected.'
       );
     }
+  }
+
+  private _checkTheme(): void {
+    if (hasCheckedThemePresence || !this._document || !isDevMode()) {
+      return;
+    }
+
+    let testElement = this._document.createElement('div');
+
+    testElement.classList.add('mat-theme-loaded-marker');
+    this._document.body.appendChild(testElement);
+
+    if (getComputedStyle(testElement).display !== 'none') {
+      console.warn(
+        'Could not find Angular Material core theme. Most Material ' +
+        'components may not work as expected. For more info refer ' +
+        'to the theming guide: https://github.com/angular/material2/blob/master/guides/theming.md'
+      );
+    }
+
+    this._document.body.removeChild(testElement);
+    hasCheckedThemePresence = true;
   }
 }
 
