@@ -77,7 +77,7 @@ export class MdSlideToggle implements OnDestroy, AfterContentInit, ControlValueA
   /** Reference to the focus state ripple. */
   private _focusRipple: RippleRef;
 
-  /** Reference to the focus origin monitor subscription. */
+  /** Subscription to focus-origin changes. */
   private _focusOriginSubscription: Subscription;
 
   /** Name value will be applied to the input element if present */
@@ -211,7 +211,7 @@ export class MdSlideToggle implements OnDestroy, AfterContentInit, ControlValueA
     this.disabled = isDisabled;
   }
 
-  /** Focuses the slide-toggle programmatically. */
+  /** Focuses the slide-toggle. */
   focus() {
     this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, this._renderer, 'program');
   }
@@ -242,7 +242,7 @@ export class MdSlideToggle implements OnDestroy, AfterContentInit, ControlValueA
   private _onInputFocusChange(focusOrigin: FocusOrigin) {
     if (!this._focusRipple && focusOrigin === 'keyboard') {
       // For keyboard focus show a persistent ripple as focus indicator.
-      this._focusRipple = this._ripple.launch(0, 0, { persistent: true, centered: true });
+      this._focusRipple = this._ripple.launch(0, 0, {persistent: true, centered: true});
     } else if (!focusOrigin) {
       this.onTouched();
 
