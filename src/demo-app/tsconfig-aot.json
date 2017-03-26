@@ -1,6 +1,6 @@
 /* Config file for the Angular Compiler. Paths need to be relative to the dist folder. */
 {
-  "extends": "./tsconfig",
+  "extends": "./tsconfig-build",
   "compilerOptions": {
     "experimentalDecorators": true,
     "paths": {
