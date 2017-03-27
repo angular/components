@@ -116,5 +116,5 @@ exports.approveImages = firebaseFunctions.database.ref(approveImagesPath).onWrit
  * otherwise update github status to `failure`.
  * The Github Status Token is set in config.secret.github
  */
-const githubStatusPath = `${trustedReportPath}/result`;
+const githubStatusPath = `${trustedReportPath}/result/{sha}`;
 exports.githubStatus = firebaseFunctions.database.ref(githubStatusPath).onWrite(updateGithubStatus);

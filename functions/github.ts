@@ -20,15 +20,13 @@ export function updateGithubStatus(event: firebaseFunctions.Event<any>) {
   }
   let result = event.data.val() == true;
   let prNumber = event.params.prNumber;
-  return event.data.ref.parent.child('sha').once('value').then((sha: firebaseAdmin.database.DataSnapshot) => {
-    return setGithubStatus(sha.val(),
-      {
-        result: result,
-        name: toolName,
-        description: `${toolName} ${result ? 'passed' : 'failed'}`,
-        url: `http://${authDomain}/${prNumber}`
-      },
-      repoSlug,
-      token);
-  });
+  return setGithubStatus(event.params.sha,
+    {
+      result: result,
+      name: toolName,
+      description: `${toolName} ${result ? 'passed' : 'failed'}`,
+      url: `http://${authDomain}/${prNumber}`
+    },
+    repoSlug,
+    token);
 }
