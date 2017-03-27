@@ -36,9 +36,6 @@ export {DomPortalHost} from './portal/dom-portal-host';
 // Platform
 export * from './platform/index';
 
-/** @deprecated */
-export {Platform as MdPlatform} from './platform/platform';
-
 // Overlay
 export {Overlay, OVERLAY_PROVIDERS} from './overlay/overlay';
 export {OverlayContainer} from './overlay/overlay-container';
@@ -73,9 +70,6 @@ export {
 
 // Selection
 export * from './selection/selection';
-
-/** @deprecated */
-export {LiveAnnouncer as MdLiveAnnouncer} from './a11y/live-announcer';
 
 export * from './a11y/focus-trap';
 export {InteractivityChecker} from './a11y/interactivity-checker';
