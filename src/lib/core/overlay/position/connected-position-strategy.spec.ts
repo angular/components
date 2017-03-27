@@ -4,7 +4,7 @@ import {ViewportRuler, VIEWPORT_RULER_PROVIDER} from './viewport-ruler';
 import {OverlayPositionBuilder} from './overlay-position-builder';
 import {ConnectedOverlayPositionChange} from './connected-position';
 import {Scrollable} from '../scroll/scrollable';
-import {Subscription} from 'rxjs';
+import {Subscription} from 'rxjs/Subscription';
 import {TestBed, inject} from '@angular/core/testing';
 import Spy = jasmine.Spy;
 import {SCROLL_DISPATCHER_PROVIDER} from '../scroll/scroll-dispatcher';
@@ -534,7 +534,9 @@ describe('ConnectedPositionStrategy', () => {
           fakeElementRef,
           {originX: 'start', originY: 'bottom'},
           {overlayX: 'start', overlayY: 'top'});
-      strategy.withScrollableContainers([new Scrollable(new FakeElementRef(scrollable), null)]);
+
+      strategy.withScrollableContainers([
+          new Scrollable(new FakeElementRef(scrollable), null, null, null)]);
 
       positionChangeHandler = jasmine.createSpy('positionChangeHandler');
       onPositionChangeSubscription = strategy.onPositionChange.subscribe(positionChangeHandler);

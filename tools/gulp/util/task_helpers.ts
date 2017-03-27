@@ -2,21 +2,21 @@ import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as gulp from 'gulp';
 import * as path from 'path';
-import {NPM_VENDOR_FILES, PROJECT_ROOT, DIST_ROOT, SASS_AUTOPREFIXER_OPTIONS} from './constants';
+import {NPM_VENDOR_FILES, PROJECT_ROOT, DIST_ROOT} from '../constants';
 
-
-/** Those imports lack typings. */
+/* Those imports lack typings. */
 const gulpClean = require('gulp-clean');
 const gulpMerge = require('merge2');
 const gulpRunSequence = require('run-sequence');
 const gulpSass = require('gulp-sass');
 const gulpSourcemaps = require('gulp-sourcemaps');
-const gulpAutoprefixer = require('gulp-autoprefixer');
 const gulpConnect = require('gulp-connect');
-const resolveBin = require('resolve-bin');
-const firebaseAdmin = require('firebase-admin');
-const gcloud = require('google-cloud');
+const gulpIf = require('gulp-if');
+const gulpCleanCss = require('gulp-clean-css');
 
+// There are no type definitions available for these imports.
+const resolveBin = require('resolve-bin');
+const httpRewrite = require('http-rewrite-middleware');
 
 /** If the string passed in is a glob, returns it, otherwise append '**\/*' to it. */
 function _globify(maybeGlob: string, suffix = '**/*') {
@@ -40,12 +40,12 @@ export function tsBuildTask(tsConfigPath: string) {
 
 
 /** Create a SASS Build Task. */
-export function sassBuildTask(dest: string, root: string) {
+export function sassBuildTask(dest: string, root: string, minify = false) {
   return () => {
     return gulp.src(_globify(root, '**/*.scss'))
-      .pipe(gulpSourcemaps.init())
+      .pipe(gulpSourcemaps.init({ loadMaps: true }))
       .pipe(gulpSass().on('error', gulpSass.logError))
-      .pipe(gulpAutoprefixer(SASS_AUTOPREFIXER_OPTIONS))
+      .pipe(gulpIf(minify, gulpCleanCss()))
       .pipe(gulpSourcemaps.write('.'))
       .pipe(gulp.dest(dest));
   };
@@ -134,14 +134,14 @@ export function cleanTask(glob: string) {
 
 /** Build an task that depends on all application build tasks. */
 export function buildAppTask(appName: string) {
-  const buildTasks = ['vendor', 'ts', 'scss', 'assets']
+  const buildTasks = ['ts', 'scss', 'assets']
     .map(taskName => `:build:${appName}:${taskName}`)
     .filter(taskName => gulp.hasTask(taskName));
 
   return (done: () => void) => {
     gulpRunSequence(
       'clean',
-      'build:components',
+      'library:build',
       [...buildTasks],
       done
     );
@@ -150,22 +150,35 @@ export function buildAppTask(appName: string) {
 
 
 /** Create a task that copies vendor files in the proper destination. */
-export function vendorTask() {
+export function vendorTask(outDir = path.join(DIST_ROOT, 'vendor')) {
   return () => gulpMerge(
-    NPM_VENDOR_FILES.map(root => {
-      const glob = path.join(PROJECT_ROOT, 'node_modules', root, '**/*.+(js|js.map)');
-      return gulp.src(glob).pipe(gulp.dest(path.join(DIST_ROOT, 'vendor', root)));
+    NPM_VENDOR_FILES.map(pkg => {
+      const glob = path.join(PROJECT_ROOT, 'node_modules', pkg, '**/*.+(js|js.map)');
+      return gulp.src(glob).pipe(gulp.dest(path.join(outDir, pkg)));
     }));
 }
 
-/** Create a task that serves the dist folder. */
-export function serverTask(livereload = true) {
+/**
+ * Create a task that serves a given directory in the project.
+ * The server rewrites all node_module/ or dist/ requests to the correct directory.
+ */
+export function serverTask(packagePath: string, livereload = true) {
+  // The http-rewrite-middlware only supports relative paths as rewrite destinations.
+  let relativePath = path.relative(PROJECT_ROOT, packagePath);
+
   return () => {
     gulpConnect.server({
-      root: 'dist/',
+      root: PROJECT_ROOT,
       livereload: livereload,
       port: 4200,
-      fallback: 'dist/index.html'
+      fallback: path.join(packagePath, 'index.html'),
+      middleware: () => {
+        return [httpRewrite.getMiddleware([
+          { from: '^/node_modules/(.*)$', to: '/node_modules/$1' },
+          { from: '^/dist/(.*)$', to: '/dist/$1' },
+          { from: '^(.*)$', to: `/${relativePath}/$1` }
+        ])];
+      }
     });
   };
 }
@@ -184,67 +197,4 @@ export function sequenceTask(...args: any[]) {
       done
     );
   };
-}
-
-/** Opens a connection to the firebase realtime database. */
-export function openFirebaseDashboardDatabase() {
-  // Initialize the Firebase application with admin credentials.
-  // Credentials need to be for a Service Account, which can be created in the Firebase console.
-  firebaseAdmin.initializeApp({
-    credential: firebaseAdmin.credential.cert({
-      project_id: 'material2-dashboard',
-      client_email: 'firebase-adminsdk-ch1ob@material2-dashboard.iam.gserviceaccount.com',
-      // In Travis CI the private key will be incorrect because the line-breaks are escaped.
-      // The line-breaks need to persist in the service account private key.
-      private_key: (process.env['MATERIAL2_FIREBASE_PRIVATE_KEY'] || '').replace(/\\n/g, '\n')
-    }),
-    databaseURL: 'https://material2-dashboard.firebaseio.com'
-  });
-
-  return firebaseAdmin.database();
-}
-
-/** Whether gulp currently runs inside of Travis as a push. */
-export function isTravisPushBuild() {
-  return process.env['TRAVIS_PULL_REQUEST'] === 'false';
-}
-
-/**
- * Open Google Cloud Storage for screenshots.
- * The files uploaded to google cloud are also available to firebase storage.
- */
-export function openScreenshotsBucket() {
-  let gcs = gcloud.storage({
-    projectId: 'material2-screenshots',
-    credentials: {
-      client_email: 'firebase-adminsdk-t4209@material2-screenshots.iam.gserviceaccount.com',
-      private_key: decode(process.env['MATERIAL2_SCREENSHOT_FIREBASE_KEY'])
-    },
-  });
-
-  // Reference an existing bucket.
-  return gcs.bucket('material2-screenshots.appspot.com');
-}
-
-/** Opens a connection to the firebase realtime database for screenshots. */
-export function openFirebaseScreenshotsDatabase() {
-  // Initialize the Firebase application with admin credentials.
-  // Credentials need to be for a Service Account, which can be created in the Firebase console.
-  let screenshotApp = firebaseAdmin.initializeApp({
-    credential: firebaseAdmin.credential.cert({
-      project_id: 'material2-screenshots',
-      client_email: 'firebase-adminsdk-t4209@material2-screenshots.iam.gserviceaccount.com',
-      private_key: decode(process.env['MATERIAL2_SCREENSHOT_FIREBASE_KEY'])
-    }),
-    databaseURL: 'https://material2-screenshots.firebaseio.com'
-  }, 'material2-screenshots');
-
-  return screenshotApp.database();
-}
-
-/** Decode the token for Travis to use. */
-function decode(str: string): string {
-  // In Travis CI the private key will be incorrect because the line-breaks are escaped.
-  // The line-breaks need to persist in the service account private key.
-  return (str || '').split('\\n').reverse().join('\\n').replace(/\\n/g, '\n');
 }

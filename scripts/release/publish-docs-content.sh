@@ -7,7 +7,7 @@ cd "$(dirname $0)/../../"
 
 docsPath="./dist/docs"
 repoPath="/tmp/material2-docs-content"
-repoUrl="https://github.com/DevVersion/material2-docs-content"
+repoUrl="https://github.com/angular/material2-docs-content"
 examplesSource="./dist/docs/examples"
 
 # If the docs directory is not present, generate docs
@@ -62,6 +62,9 @@ done
 
 # Move highlighted examples into $repoPath
 cp -r $examplesSource/* $repoPath/examples
+
+# Copies assets over to the docs-content repository.
+cp LICENSE $repoPath/
 
 # Push content to repo
 cd $repoPath

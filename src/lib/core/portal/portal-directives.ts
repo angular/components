@@ -17,9 +17,9 @@ import {Portal, TemplatePortal, ComponentPortal, BasePortalHost} from './portal'
  * the directive instance itself can be attached to a host, enabling declarative use of portals.
  *
  * Usage:
- * <template portal #greeting>
+ * <ng-template portal #greeting>
  *   <p> Hello {{name}} </p>
- * </template>
+ * </ng-template>
  */
 @Directive({
   selector: '[cdk-portal], [portal]',
@@ -37,7 +37,7 @@ export class TemplatePortalDirective extends TemplatePortal {
  * directly attached to it, enabling declarative use.
  *
  * Usage:
- * <template [cdkPortalHost]="greeting"></template>
+ * <ng-template [cdkPortalHost]="greeting"></ng-template>
  */
 @Directive({
   selector: '[cdkPortalHost], [portalHost]',
@@ -63,14 +63,21 @@ export class PortalHostDirective extends BasePortalHost implements OnDestroy {
     return this._portal;
   }
 
-  set portal(p: Portal<any>) {
-    if (p) {
-      this._replaceAttachedPortal(p);
+  set portal(portal: Portal<any>) {
+    if (this.hasAttached()) {
+      super.detach();
     }
+
+    if (portal) {
+      super.attach(portal);
+    }
+
+    this._portal = portal;
   }
 
   ngOnDestroy() {
-    this.dispose();
+    super.dispose();
+    this._portal = null;
   }
 
   /**
@@ -93,7 +100,9 @@ export class PortalHostDirective extends BasePortalHost implements OnDestroy {
         componentFactory, viewContainerRef.length,
         portal.injector || viewContainerRef.parentInjector);
 
-    this.setDisposeFn(() => ref.destroy());
+    super.setDisposeFn(() => ref.destroy());
+    this._portal = portal;
+
     return ref;
   }
 
@@ -105,22 +114,12 @@ export class PortalHostDirective extends BasePortalHost implements OnDestroy {
     portal.setAttachedHost(this);
 
     this._viewContainerRef.createEmbeddedView(portal.templateRef);
-    this.setDisposeFn(() => this._viewContainerRef.clear());
+    super.setDisposeFn(() => this._viewContainerRef.clear());
+
+    this._portal = portal;
 
     // TODO(jelbourn): return locals from view
     return new Map<string, any>();
-  }
-
-  /** Detaches the currently attached Portal (if there is one) and attaches the given Portal. */
-  private _replaceAttachedPortal(p: Portal<any>): void {
-    if (this.hasAttached()) {
-      this.detach();
-    }
-
-    if (p) {
-      this.attach(p);
-      this._portal = p;
-    }
   }
 }
 
