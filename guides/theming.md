@@ -27,10 +27,7 @@ You can include a theme file directly into your application from
 `@angular/material/core/theming/prebuilt`
 
 Available pre-built themes:
-* `deeppurple-amber.css`
-* `indigo-pink.css`
-* `pink-bluegrey.css`
-* `purple-green.css`
+<!-- directory('/src/lib/core/theming/prebuilt/') -->
 
 If you're using Angular CLI, this is as simple as including one line
 in your `styles.css`  file:
