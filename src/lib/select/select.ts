@@ -321,7 +321,7 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
 
   constructor(private _element: ElementRef, private _renderer: Renderer2,
               private _viewportRuler: ViewportRuler, private _changeDetectorRef: ChangeDetectorRef,
-              private _scrollDispatcher: ScrollDispatcher, @Optional() private _dir: Dir, 
+              private _scrollDispatcher: ScrollDispatcher, @Optional() private _dir: Dir,
               @Self() @Optional() public _control: NgControl,
               @Attribute('tabindex') tabIndex: string) {
 
