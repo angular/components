@@ -27,7 +27,7 @@ You can include a theme file directly into your application from
 `@angular/material/core/theming/prebuilt`
 
 Available pre-built themes:
-<!-- directory('/src/lib/core/theming/prebuilt/') -->
+<!-- directory(/src/lib/core/theming/prebuilt/) -->
 
 If you're using Angular CLI, this is as simple as including one line
 in your `styles.css`  file:
