@@ -116,7 +116,8 @@ function transformMarkdownFiles(buffer: Buffer, file: any): string {
   /* Replace <!-- directory(..) --> comments with HTML elements. */
   content = content.replace(DIRECTORY_PATTERN, (match: string, directory: string) =>
     `<div>${listFiles(directory,file.path)}</div>` )
-
+  );
+  
   return content;
 }
 
