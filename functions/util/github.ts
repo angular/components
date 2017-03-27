@@ -1,25 +1,30 @@
 const request = require('request');
 
+/** Data that must be specified to set a Github PR status. */
+export type GithubStatusData = {
+  result: boolean;
+  name: string;
+  description: string;
+  url: string;
+};
+
 /** Function that sets a Github commit status */
 export function setGithubStatus(commitSHA: string,
-                                result: boolean,
-                                name: string,
-                                description: string,
-                                url: string,
+                                statusData: GithubStatusData,
                                 repoSlug: string,
                                 token: string) {
-  let state = result ? 'success' : 'failure';
+  let state = statusData.result ? 'success' : 'failure';
 
   let data = JSON.stringify({
     state: state,
-    target_url: url,
-    context: name,
-    description: description
+    target_url: statusData.url,
+    context: statusData.name,
+    description: statusData.description
   });
 
   let headers =  {
     "Authorization": `token ${token}`,
-    "User-Agent": `${name}/1.0`,
+    "User-Agent": `${statusData.name}/1.0`,
     "Content-Type": "application/json"
   };
 

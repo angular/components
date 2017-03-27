@@ -22,10 +22,12 @@ export function updateGithubStatus(event: firebaseFunctions.Event<any>) {
   let prNumber = event.params.prNumber;
   return event.data.ref.parent.child('sha').once('value').then((sha: firebaseAdmin.database.DataSnapshot) => {
     return setGithubStatus(sha.val(),
-      result,
-      toolName,
-      `${toolName} ${result ? 'passed' : 'failed'}`,
-      `http://${authDomain}/${prNumber}`,
+      {
+        result: result,
+        name: toolName,
+        description: `${toolName} ${result ? 'passed' : 'failed'}`,
+        url: `http://${authDomain}/${prNumber}`
+      },
       repoSlug,
       token);
   });

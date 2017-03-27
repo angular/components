@@ -18,14 +18,6 @@
     ]
   },
   "files": [
-    "data.ts",
-    "data_image.ts",
-    "github.ts",
-    "image_data.ts",
-    "index.ts",
-    "jwt_util.ts",
-    "test_goldens.ts",
-    "util/github.ts",
-    "util/jwt.ts"
+    "index.ts"
   ]
 }

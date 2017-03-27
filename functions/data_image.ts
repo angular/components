@@ -9,7 +9,7 @@ const bucket = gcs.bucket(firebaseFunctions.config().firebase.storageBucket);
 
 /**
  * Convert data to images. Image data posted to database will be saved as png files
- * and upload to screenshot/$prNumber/dataType/$filename
+ * and uploaded to screenshot/$prNumber/dataType/$filename
  */
 export function convertTestImageDataToFiles(event: any) {
   // Only edit data when it is first created. Exit when the data is deleted.
@@ -22,7 +22,7 @@ export function convertTestImageDataToFiles(event: any) {
   let data = event.data.val();
   let saveFilename = `${event.params.filename}.screenshot.png`;
 
-  if (dataType != 'diff' && dataType != 'test') {
+  if (dataType !== 'diff' && dataType !== 'test') {
     return;
   }
 
