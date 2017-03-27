@@ -26,7 +26,7 @@ single css file for Angular Material in your app.
 You can include a theme file directly into your application from
 `@angular/material/core/theming/prebuilt`
 
-Avalible pre-built themes:
+Available pre-built themes:
 * `deeppurple-amber.css`
 * `indigo-pink.css`
 * `pink-bluegrey.css`
