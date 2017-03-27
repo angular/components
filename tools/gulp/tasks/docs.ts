@@ -21,6 +21,11 @@ const EXAMPLE_PATTERN = /<!--\W*example\(([^)]+)\)\W*-->/g;
 // documentation page. Using a RegExp to rewrite links in HTML files to work in the docs.
 const LINK_PATTERN = /(<a[^>]*) href="([^"]*)"/g;
 
+// Some docs require maintaining a list of files.
+// Supplying a directory as a argument will list the files at that directory.
+// Supplying no arguments will list the files at the root of that folder.
+const DIRECTORY_PATTERN = /<!--\W*directory\(([^)]+)\)\W*-->/g;
+
 task('docs', ['markdown-docs', 'highlight-docs', 'api-docs']);
 
 task('markdown-docs', () => {
@@ -77,8 +82,27 @@ function transformMarkdownFiles(buffer: Buffer, file: any): string {
     // If the head is not prepended to the replaced value, then the first match will be lost.
     `${head} href="${fixMarkdownDocLinks(link, file.path)}"`
   );
+  
+  /* Replace <!-- directory(..) --> comments with HTML elements. */
+  content = content.replace(DIRECTORY_PATTERN, (match: string, directory: string) =>
+    `<div>${listFiles(directory,file.path)}</div>` )
 
   return content;
+}
+
+/** Returns a list of files from a given directory */
+function listFiles(directory: string, filePath: string): string {
+  // If no directory is supplied, take the directory from the filePath.
+  if(directory === '') {
+    directory = .dirname(filePath.base);
+  }
+
+  // Get all the files in the directory, just store their names in a list.
+  let files = gulp.src(directory).map((path) => {
+    return '<li>' + path.basename() + '</li>';
+  }).join();
+
+  return '<ul>' + files + '</ul>';
 }
 
 /** Fixes paths in the markdown files to work in the material-docs-io. */
