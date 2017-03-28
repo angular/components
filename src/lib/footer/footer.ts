@@ -1,4 +1,10 @@
-import { Component, ChangeDetectionStrategy, Input, ViewEncapsulation, Directive } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  ViewEncapsulation,
+  Directive
+} from '@angular/core';
 
 @Component({
   moduleId: module.id,
@@ -61,7 +67,6 @@ export class MdFooterMiddle { }
 export class MdFooterDropDown {
   @Input('heading') heading: string;
 }
-
 
 @Directive({
   selector: 'md-footer-bottom, mat-footer-bottom',

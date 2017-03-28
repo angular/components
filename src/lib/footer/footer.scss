@@ -5,9 +5,9 @@
     color: $footer-color;
     background-color: $footer-bg-color;
 }
-.md-footer-top-section:after,
-.md-footer-middle-section:after,
-.md-footer-bottom-section:after {
+.md-footer-top-section::after,
+.md-footer-middle-section::after,
+.md-footer-bottom-section::after {
     content: '';
     display: block;
     clear: both;
@@ -49,7 +49,7 @@
     }
     .md-footer-drop-down-section:nth-child(3) {
         float: right;
-        &:after {
+        &::after {
             clear: right;
         }
     }
@@ -57,7 +57,7 @@
         clear: right;
         float: right;
     }
-    .md-footer-middle-section:after {
+    .md-footer-middle-section::after {
         content: '';
         display: block;
         clear: both;
@@ -84,9 +84,9 @@
     cursor: pointer;
     z-index: 1;
     opacity: 0;
-    & + .md-footer-heading:after {
+    & + .md-footer-heading::after {
         font-family: 'Material Icons';
-        content: 'keyboard_arrow_up'
+        content: 'keyboard_arrow_up';
     }
 }
 .md-footer-heading-checkbox:checked {
@@ -96,9 +96,9 @@
     & ~ .md-footer-link-list, & + .md-footer-heading + .md-footer-link-list {
         display: none;
     }
-    & + .md-footer-heading:after {
+    & + .md-footer-heading::after {
         font-family: 'Material Icons';
-        content: 'keyboard_arrow_down'
+        content: 'keyboard_arrow_down';
     }
 }
 .md-footer-heading {
@@ -115,7 +115,7 @@
     overflow: hidden;
     color: $footer-heading-color;
 }
-.md-footer-heading:after {
+.md-footer-heading::after {
     content: '';
     position: absolute;
     top: 0;
@@ -130,7 +130,7 @@
     margin: 0;
     padding: 0;
     margin-bottom: $footer-min-padding * 2;
-    &:after {
+    &::after {
         clear: both;
         display: block;
         content: '';
@@ -150,7 +150,7 @@
 @media screen and (min-width: 760px) {
     .md-footer-heading-checkbox {
         display: none;
-        & + .md-footer-heading:after {
+        & + .md-footer-heading::after {
             content: '';
         }
     }
@@ -161,7 +161,7 @@
         & ~ .md-footer-link-list, & + .md-footer-heading + .md-footer-link-list {
             display: block;
         }
-        & + .md-footer-heading:after {
+        & + .md-footer-heading::after {
             content: '';
         }
     }

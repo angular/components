@@ -83,7 +83,8 @@ export class MdMiniFabCssMatStyler {}
  * @docs-private
  */
 @Directive({
-  selector: 'button[md-social-button], button[mat-social-button], a[md-social-button], a[mat-social-button]',
+  selector: 'button[md-social-button], button[mat-social-button], a[md-social-button],' +
+            'a[mat-social-button]',
   host: {
     '[class.mat-social-btn]': 'true'
   }
