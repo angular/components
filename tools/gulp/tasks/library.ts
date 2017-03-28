@@ -21,7 +21,7 @@ const bundlesDir = DIST_BUNDLES;
 
 const esmMainFile = join(materialDir, 'index.js');
 
-task('library', sequenceTask('clean', 'library:build'));
+task('library:clean-build', sequenceTask('clean', 'library:build'));
 
 task('library:build', sequenceTask(
   ['library:build:esm', 'library:assets'],
