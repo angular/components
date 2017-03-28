@@ -1,0 +1,11 @@
+@import '../core/theming/palette';
+
+$footer-min-padding: 16px !default;
+$footer-padding-sides: 40px !default;
+$footer-heading-font-size: 14px !default;
+$footer-heading-line-height: (1.7 * $footer-heading-font-size) !default;
+$footer-btn-size: 36px !default;
+$footer-bg-color: map-get($mat-grey, 800);
+$footer-color: map-get($mat-grey, 500);
+$footer-heading-color: map-get($mat-grey, 300);
+$footer-underline-color: $footer-color !default;

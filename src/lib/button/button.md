@@ -17,6 +17,7 @@ There are five button variants, each applied as an attribute:
 | `md-icon-button`   | Circular button with a transparent background, meant to contain an icon     |
 | `md-fab`           | Circular button w/ elevation, defaults to theme's accent color              |
 | `md-mini-fab`      | Same as `md-fab` but smaller                                                |
+| `md-social-button` | Social icon buttons for footer component                                    |
 
 
 ### Theming

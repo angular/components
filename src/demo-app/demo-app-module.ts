@@ -19,6 +19,7 @@ import {IconDemo} from './icon/icon-demo';
 import {GesturesDemo} from './gestures/gestures-demo';
 import {CardDemo} from './card/card-demo';
 import {ChipsDemo} from './chips/chips-demo';
+import {FooterDemo} from './footer/footer-demo';
 import {RadioDemo} from './radio/radio-demo';
 import {ButtonToggleDemo} from './button-toggle/button-toggle-demo';
 import {ProgressSpinnerDemo} from './progress-spinner/progress-spinner-demo';
@@ -66,6 +67,7 @@ import {StyleDemo} from './style/style-demo';
     CheckboxDemo,
     DemoApp,
     DialogDemo,
+    FooterDemo,
     GesturesDemo,
     GridListDemo,
     Home,

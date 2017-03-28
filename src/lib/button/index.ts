@@ -8,6 +8,7 @@ import {
   MdFabCssMatStyler,
   MdIconButtonCssMatStyler,
   MdMiniFabCssMatStyler,
+  MdSocialButtonCssMatStyler,
   MdRaisedButtonCssMatStyler
 } from './button';
 
@@ -30,6 +31,7 @@ export * from './button';
     MdRaisedButtonCssMatStyler,
     MdIconButtonCssMatStyler,
     MdFabCssMatStyler,
+    MdSocialButtonCssMatStyler,
     MdMiniFabCssMatStyler,
   ],
   declarations: [
@@ -39,6 +41,7 @@ export * from './button';
     MdRaisedButtonCssMatStyler,
     MdIconButtonCssMatStyler,
     MdFabCssMatStyler,
+    MdSocialButtonCssMatStyler,
     MdMiniFabCssMatStyler,
   ],
 })

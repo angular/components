@@ -78,6 +78,17 @@ export class MdFabCssMatStyler {}
 })
 export class MdMiniFabCssMatStyler {}
 
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
+ */
+@Directive({
+  selector: 'button[md-social-button], button[mat-social-button], a[md-social-button], a[mat-social-button]',
+  host: {
+    '[class.mat-social-btn]': 'true'
+  }
+})
+export class MdSocialButtonCssMatStyler {}
 
 /**
  * Material design button.
