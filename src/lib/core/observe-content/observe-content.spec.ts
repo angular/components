@@ -87,15 +87,6 @@ describe('Observe content', () => {
       tick(500);
       expect(fixture.componentInstance.spy).toHaveBeenCalledTimes(1);
     }));
-
-    it('should should keep track of and merge all of the mutation records', fakeAsync(() => {
-      invokeCallbacks([1]);
-      invokeCallbacks([2]);
-      invokeCallbacks([3]);
-
-      tick(500);
-      expect(fixture.componentInstance.spy).toHaveBeenCalledWith([1, 2, 3]);
-    }));
   });
 });
 

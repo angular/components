@@ -9,8 +9,9 @@ import {
   AfterContentInit,
   Injector,
 } from '@angular/core';
-
-import {debounce} from '../util/debounce';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import 'rxjs/add/operator/debounceTime';
 
 /**
  * Directive that triggers a callback whenever the content of
@@ -22,11 +23,11 @@ import {debounce} from '../util/debounce';
 export class ObserveContent implements AfterContentInit, OnDestroy {
   private _observer: MutationObserver;
 
-  /** Collects any MutationRecords that haven't been emitted yet. */
-  private _pendingRecords: MutationRecord[] = [];
-
   /** Event emitted for each change in the element's content. */
   @Output('cdkObserveContent') event = new EventEmitter<MutationRecord[]>();
+
+  /** Used for debouncing the emitted values to the observeContent event. */
+  private _debouncer = new Subject<MutationRecord[]>();
 
   /** Debounce interval for emitting the changes. */
   @Input() debounce: number;
@@ -34,24 +35,12 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
   constructor(private _elementRef: ElementRef, private _injector: Injector) { }
 
   ngAfterContentInit() {
-    let callback: MutationCallback;
+    this._debouncer
+      .debounceTime(this.debounce)
+      .subscribe(mutations => this.event.emit(mutations));
 
-    // If a debounce interval is specified, keep track of the mutations and debounce the emit.
-    if (this.debounce > 0) {
-      let debouncedEmit = debounce((mutations: MutationRecord[]) => {
-        this.event.emit(this._pendingRecords);
-        this._pendingRecords = [];
-      }, this.debounce);
-
-      callback = (mutations: MutationRecord[]) => {
-        this._pendingRecords.push.apply(this._pendingRecords, mutations);
-        debouncedEmit();
-      };
-    } else {
-      callback = (mutations: MutationRecord[]) => this.event.emit(mutations);
-    }
-
-    this._observer = new (this._injector.get(MutationObserver))(callback);
+    this._observer = new (this._injector.get(MutationObserver) as any)(
+        (mutations: MutationRecord[]) => this._debouncer.next(mutations));
 
     this._observer.observe(this._elementRef.nativeElement, {
       characterData: true,
