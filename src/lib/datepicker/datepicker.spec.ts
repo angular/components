@@ -1,4 +1,4 @@
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MdDatepickerModule} from './index';
 import {Component, ViewChild} from '@angular/core';
 import {MdDatepicker} from './datepicker';
@@ -8,21 +8,28 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent, dispatchMouseEvent} from '../core/testing/dispatch-events';
 import {MdInputModule} from '../input/index';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 
 describe('MdDatepicker', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdDatepickerModule, MdInputModule, FormsModule, ReactiveFormsModule],
+      imports: [
+        FormsModule,
+        MdDatepickerModule,
+        MdInputModule,
+        NoopAnimationsModule,
+        ReactiveFormsModule,
+      ],
       declarations: [
-        StandardDatepicker,
-        MultiInputDatepicker,
-        NoInputDatepicker,
-        DatepickerWithStartAt,
-        DatepickerWithNgModel,
         DatepickerWithFormControl,
+        DatepickerWithNgModel,
+        DatepickerWithStartAt,
         DatepickerWithToggle,
         InputContainerDatepicker,
+        MultiInputDatepicker,
+        NoInputDatepicker,
+        StandardDatepicker,
       ],
     });
 
@@ -33,23 +40,28 @@ describe('MdDatepicker', () => {
     let fixture: ComponentFixture<StandardDatepicker>;
     let testComponent: StandardDatepicker;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
       fixture = TestBed.createComponent(StandardDatepicker);
       fixture.detectChanges();
 
       testComponent = fixture.componentInstance;
-    });
+    }));
 
-    it('open non-touch should open popup', () => {
+    afterEach(async(() => {
+      testComponent.datepicker.close();
+      fixture.detectChanges();
+    }));
+
+    it('open non-touch should open popup', async(() => {
       expect(document.querySelector('.cdk-overlay-pane')).toBeNull();
 
       testComponent.datepicker.open();
       fixture.detectChanges();
 
       expect(document.querySelector('.cdk-overlay-pane')).not.toBeNull();
-    });
+    }));
 
-    it('open touch should open dialog', () => {
+    it('open touch should open dialog', async(() => {
       testComponent.touch = true;
       fixture.detectChanges();
 
@@ -59,7 +71,7 @@ describe('MdDatepicker', () => {
       fixture.detectChanges();
 
       expect(document.querySelector('md-dialog-container')).not.toBeNull();
-    });
+    }));
 
     it('close should close popup', async(() => {
       testComponent.datepicker.open();
@@ -126,38 +138,48 @@ describe('MdDatepicker', () => {
   });
 
   describe('datepicker with too many inputs', () => {
-    it('should throw when multiple inputs registered', () => {
+    it('should throw when multiple inputs registered', async(() => {
       let fixture = TestBed.createComponent(MultiInputDatepicker);
       expect(() => fixture.detectChanges()).toThrow();
-    });
+    }));
   });
 
   describe('datepicker with no inputs', () => {
     let fixture: ComponentFixture<NoInputDatepicker>;
     let testComponent: NoInputDatepicker;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
       fixture = TestBed.createComponent(NoInputDatepicker);
       fixture.detectChanges();
 
       testComponent = fixture.componentInstance;
-    });
+    }));
 
-    it('should throw when opened with no registered inputs', () => {
+    afterEach(async(() => {
+      testComponent.datepicker.close();
+      fixture.detectChanges();
+    }));
+
+    it('should throw when opened with no registered inputs', async(() => {
       expect(() => testComponent.datepicker.open()).toThrow();
-    });
+    }));
   });
 
   describe('datepicker with startAt', () => {
     let fixture: ComponentFixture<DatepickerWithStartAt>;
     let testComponent: DatepickerWithStartAt;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
       fixture = TestBed.createComponent(DatepickerWithStartAt);
       fixture.detectChanges();
 
       testComponent = fixture.componentInstance;
-    });
+    }));
+
+    afterEach(async(() => {
+      testComponent.datepicker.close();
+      fixture.detectChanges();
+    }));
 
     it('explicit startAt should override input value', () => {
       expect(testComponent.datepicker.startAt).toEqual(new SimpleDate(2010, 0, 1));
@@ -168,35 +190,52 @@ describe('MdDatepicker', () => {
     let fixture: ComponentFixture<DatepickerWithNgModel>;
     let testComponent: DatepickerWithNgModel;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async(() => {
       fixture = TestBed.createComponent(DatepickerWithNgModel);
-      detectModelChanges(fixture);
+      fixture.detectChanges();
 
-      testComponent = fixture.componentInstance;
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        testComponent = fixture.componentInstance;
+      });
     }));
 
-    it('should update datepicker when model changes', fakeAsync(() => {
+    afterEach(async(() => {
+      testComponent.datepicker.close();
+      fixture.detectChanges();
+    }));
+
+    it('should update datepicker when model changes', async(() => {
       expect(testComponent.datepickerInput.value).toBeNull();
       expect(testComponent.datepicker._selected).toBeNull();
 
       let selected = new SimpleDate(2017, 0, 1);
       testComponent.selected = selected;
-      detectModelChanges(fixture);
+      fixture.detectChanges();
 
-      expect(testComponent.datepickerInput.value).toEqual(selected);
-      expect(testComponent.datepicker._selected).toEqual(selected);
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        expect(testComponent.datepickerInput.value).toEqual(selected);
+        expect(testComponent.datepicker._selected).toEqual(selected);
+      });
     }));
 
-    it('should update model when date is selected', fakeAsync(() => {
+    it('should update model when date is selected', async(() => {
       expect(testComponent.selected).toBeNull();
       expect(testComponent.datepickerInput.value).toBeNull();
 
       let selected = new SimpleDate(2017, 0, 1);
       testComponent.datepicker._selected = selected;
-      detectModelChanges(fixture);
+      fixture.detectChanges();
 
-      expect(testComponent.selected).toEqual(selected);
-      expect(testComponent.datepickerInput.value).toEqual(selected);
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        expect(testComponent.selected).toEqual(selected);
+        expect(testComponent.datepickerInput.value).toEqual(selected);
+      });
     }));
 
     it('should mark input dirty after input event', () => {
@@ -210,26 +249,34 @@ describe('MdDatepicker', () => {
       expect(inputEl.classList).toContain('ng-dirty');
     });
 
-    it('should mark input dirty after date selected', fakeAsync(() => {
+    it('should mark input dirty after date selected', async(() => {
       let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
       expect(inputEl.classList).toContain('ng-pristine');
 
       testComponent.datepicker._selected = new SimpleDate(2017, 0, 1);
-      detectModelChanges(fixture);
+      fixture.detectChanges();
 
-      expect(inputEl.classList).toContain('ng-dirty');
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        expect(inputEl.classList).toContain('ng-dirty');
+      });
     }));
 
-    it('should not mark dirty after model change', fakeAsync(() => {
+    it('should not mark dirty after model change', async(() => {
       let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
       expect(inputEl.classList).toContain('ng-pristine');
 
       testComponent.selected = new SimpleDate(2017, 0, 1);
-      detectModelChanges(fixture);
+      fixture.detectChanges();
 
-      expect(inputEl.classList).toContain('ng-pristine');
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        expect(inputEl.classList).toContain('ng-pristine');
+      });
     }));
 
     it('should mark input touched on blur', () => {
@@ -253,12 +300,17 @@ describe('MdDatepicker', () => {
     let fixture: ComponentFixture<DatepickerWithFormControl>;
     let testComponent: DatepickerWithFormControl;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
       fixture = TestBed.createComponent(DatepickerWithFormControl);
       fixture.detectChanges();
 
       testComponent = fixture.componentInstance;
-    });
+    }));
+
+    afterEach(async(() => {
+      testComponent.datepicker.close();
+      fixture.detectChanges();
+    }));
 
     it('should update datepicker when formControl changes', () => {
       expect(testComponent.datepickerInput.value).toBeNull();
@@ -300,14 +352,19 @@ describe('MdDatepicker', () => {
     let fixture: ComponentFixture<DatepickerWithToggle>;
     let testComponent: DatepickerWithToggle;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
       fixture = TestBed.createComponent(DatepickerWithToggle);
       fixture.detectChanges();
 
       testComponent = fixture.componentInstance;
-    });
+    }));
 
-    it('should open calendar when toggle clicked', () => {
+    afterEach(async(() => {
+      testComponent.datepicker.close();
+      fixture.detectChanges();
+    }));
+
+    it('should open calendar when toggle clicked', async(() => {
       expect(document.querySelector('md-dialog-container')).toBeNull();
 
       let toggle = fixture.debugElement.query(By.css('button'));
@@ -315,19 +372,24 @@ describe('MdDatepicker', () => {
       fixture.detectChanges();
 
       expect(document.querySelector('md-dialog-container')).not.toBeNull();
-    });
+    }));
   });
 
   describe('datepicker inside input-container', () => {
     let fixture: ComponentFixture<InputContainerDatepicker>;
     let testComponent: InputContainerDatepicker;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
       fixture = TestBed.createComponent(InputContainerDatepicker);
       fixture.detectChanges();
 
       testComponent = fixture.componentInstance;
-    });
+    }));
+
+    afterEach(async(() => {
+      testComponent.datepicker.close();
+      fixture.detectChanges();
+    }));
 
     it('should attach popup to input-container underline', () => {
       let attachToRef = testComponent.datepickerInput.getPopupConnectionElementRef();
@@ -336,13 +398,6 @@ describe('MdDatepicker', () => {
     });
   });
 });
-
-
-function detectModelChanges(fixture: ComponentFixture<any>) {
-  fixture.detectChanges();
-  tick();
-  fixture.detectChanges();
-}
 
 
 @Component({
@@ -415,7 +470,9 @@ class DatepickerWithFormControl {
     <md-datepicker #d [touchUi]="true"></md-datepicker>
   `,
 })
-class DatepickerWithToggle {}
+class DatepickerWithToggle {
+  @ViewChild('d') datepicker: MdDatepicker;
+}
 
 
 @Component({
@@ -427,5 +484,6 @@ class DatepickerWithToggle {}
   `,
 })
 class InputContainerDatepicker {
+  @ViewChild('d') datepicker: MdDatepicker;
   @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput;
 }
