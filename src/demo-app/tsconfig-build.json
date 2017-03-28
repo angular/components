@@ -1,3 +1,5 @@
+// TypeScript config file that is used to compile the demo-app. Target environment will be ES5,
+// since the demo-app will be served in the browser.
 {
   "compilerOptions": {
     "declaration": false,

@@ -1,3 +1,5 @@
+// TypeScript config file that is used to compile the e2e-app. Protractor will run all specs
+// against the e2e-app in the browser and therefore the code needs to be ES5 compatible.
 {
   "compilerOptions": {
     "declaration": true,
