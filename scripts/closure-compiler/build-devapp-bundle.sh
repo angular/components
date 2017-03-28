@@ -89,3 +89,5 @@ echo ${OPTS[*]} > $closureFlags
 
 # Run the Google Closure compiler java runnable.
 java -jar node_modules/google-closure-compiler/compiler.jar --flagfile $closureFlags
+
+echo "Finished bundling the dev-app using google closure compiler.."
