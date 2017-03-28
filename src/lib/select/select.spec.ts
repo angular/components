@@ -46,7 +46,8 @@ describe('MdSelect', () => {
         ThrowsErrorOnInit,
         BasicSelectOnPush,
         BasicSelectOnPushPreselected,
-        SelectWithPlainTabindex
+        SelectWithPlainTabindex,
+        BasicSelectNoPlaceholder
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -153,8 +154,24 @@ describe('MdSelect', () => {
       fixture.whenStable().then(() => {
         trigger.click();
         fixture.detectChanges();
+
         const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
         expect(pane.style.minWidth).toBe('200px');
+      });
+    }));
+
+    it('should set the width of the overlay if there is no placeholder', async(() => {
+      let noPlaceholder = TestBed.createComponent(BasicSelectNoPlaceholder);
+
+      noPlaceholder.detectChanges();
+      trigger = noPlaceholder.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+
+      noPlaceholder.whenStable().then(() => {
+        trigger.click();
+        noPlaceholder.detectChanges();
+
+        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        expect(parseInt(pane.style.minWidth)).toBeGreaterThan(0);
       });
     }));
 
@@ -1912,6 +1929,16 @@ class MultiSelect {
   `
 })
 class SelectWithPlainTabindex { }
+
+@Component({
+  selector: 'basic-select-no-placeholder',
+  template: `
+    <md-select>
+      <md-option value="value">There are no other options</md-option>
+    </md-select>
+  `
+})
+class BasicSelectNoPlaceholder { }
 
 
 class FakeViewportRuler {
