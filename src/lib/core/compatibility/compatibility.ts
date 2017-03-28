@@ -171,7 +171,7 @@ export class CompatibilityModule {
   }
 
   constructor(@Optional() @Inject(DOCUMENT) document: any) {
-    if (isDevMode() && typeof document && !document.doctype) {
+    if (isDevMode() && document && !document.doctype) {
       console.warn(
         'Current document does not have a doctype. This may cause ' +
         'some Angular Material components not to behave as expected.'
