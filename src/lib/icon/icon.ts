@@ -16,6 +16,7 @@ import {Http} from '@angular/http';
 import {DomSanitizer} from '@angular/platform-browser';
 import {MdError} from '../core';
 import {MdIconRegistry, MdIconNameNotFoundError} from './icon-registry';
+import {MdThemeable} from '../core/style/themeable';
 
 /** Exception thrown when an invalid icon name is passed to an md-icon component. */
 export class MdIconInvalidNameError extends MdError {
@@ -69,8 +70,7 @@ export class MdIconInvalidNameError extends MdError {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
-  private _color: string;
+export class MdIcon extends MdThemeable implements OnChanges, OnInit, AfterViewChecked {
 
   /** Name of the icon in the SVG icon set. */
   @Input() svgIcon: string;
@@ -87,30 +87,15 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
   /** Screenreader label for the icon. */
   @Input('aria-label') hostAriaLabel: string = '';
 
-  /** Color of the icon. */
-  @Input()
-  get color(): string { return this._color; }
-  set color(value: string) { this._updateColor(value); }
-
   private _previousFontSetClass: string;
   private _previousFontIconClass: string;
   private _previousAriaLabel: string;
 
   constructor(
-      private _elementRef: ElementRef,
-      private _renderer: Renderer,
-      private _mdIconRegistry: MdIconRegistry) { }
-
-  _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
-    }
+      private _mdIconRegistry: MdIconRegistry,
+      elementRef: ElementRef,
+      renderer: Renderer) {
+    super(renderer, elementRef);
   }
 
   /**

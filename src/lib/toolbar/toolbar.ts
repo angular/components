@@ -1,12 +1,12 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  Input,
   ViewEncapsulation,
   Directive,
   ElementRef,
   Renderer
 } from '@angular/core';
+import {MdThemeable} from '../core/style/themeable';
 
 
 @Directive({
@@ -29,32 +29,10 @@ export class MdToolbarRow {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class MdToolbar {
+export class MdToolbar extends MdThemeable {
 
-  private _color: string;
-
-  constructor(private elementRef: ElementRef, private renderer: Renderer) { }
-
-  /** The color of the toolbar. Can be primary, accent, or warn. */
-  @Input()
-  get color(): string {
-    return this._color;
-  }
-
-  set color(value: string) {
-    this._updateColor(value);
-  }
-
-  private _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  private _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      this.renderer.setElementClass(this.elementRef.nativeElement, `mat-${color}`, isAdd);
-    }
+  constructor(elementRef: ElementRef, renderer: Renderer) {
+    super(renderer, elementRef);
   }
 
 }
