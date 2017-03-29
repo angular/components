@@ -9,7 +9,7 @@ import {
   Input,
   OnDestroy,
   Output,
-  Renderer,
+  Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -181,7 +181,7 @@ export class MdCheckbox extends _MdCheckboxMixinBase
   /** Reference to the focused state ripple. */
   private _focusRipple: RippleRef;
 
-  constructor(private _renderer: Renderer,
+  constructor(private _renderer: Renderer2,
               private _elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
               private _focusOriginMonitor: FocusOriginMonitor) {
@@ -251,7 +251,11 @@ export class MdCheckbox extends _MdCheckboxMixinBase
 
   _setElementColor(color: string, isAdd: boolean) {
     if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
+      if (isAdd) {
+        this._renderer.addClass(this._elementRef.nativeElement, `mat-${color}`);
+      } else {
+        this._renderer.removeClass(this._elementRef.nativeElement, `mat-${color}`);
+      }
     }
   }
 
@@ -303,7 +307,7 @@ export class MdCheckbox extends _MdCheckboxMixinBase
       return;
     }
     if (this._currentAnimationClass.length > 0) {
-      renderer.setElementClass(elementRef.nativeElement, this._currentAnimationClass, false);
+      renderer.removeClass(elementRef.nativeElement, this._currentAnimationClass);
     }
 
     this._currentAnimationClass = this._getAnimationClassForCheckStateTransition(
@@ -311,7 +315,7 @@ export class MdCheckbox extends _MdCheckboxMixinBase
     this._currentCheckState = newState;
 
     if (this._currentAnimationClass.length > 0) {
-      renderer.setElementClass(elementRef.nativeElement, this._currentAnimationClass, true);
+      renderer.addClass(elementRef.nativeElement, this._currentAnimationClass);
     }
   }
 
