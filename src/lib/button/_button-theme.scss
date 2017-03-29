@@ -85,7 +85,6 @@
     background: transparent;
 
     @include _mat-button-theme-color($theme, 'color');
-    @include _mat-button-ripple-color($theme, default, 0.1);
   }
 
   .mat-raised-button, .mat-fab, .mat-mini-fab {
@@ -95,7 +94,20 @@
 
     @include _mat-button-theme-color($theme, 'color', default-contrast);
     @include _mat-button-theme-color($theme, 'background-color');
+
+    // Add ripple effect with contrast color to buttons that don't have a focus overlay.
     @include _mat-button-ripple-color($theme, default-contrast);
+  }
+  
+  // Add ripple effect with default color to the flat button, which doesn't have a focus overlay.
+  .mat-button {
+    @include _mat-button-ripple-color($theme, default, 0.1);
+  }
+
+  // Add ripple effect with default color to the icon button. Ripple color needs to be stronger
+  // since the icon button doesn't have a focus overlay.
+  .mat-icon-button {
+    @include _mat-button-ripple-color($theme, default);
   }
 
   // TODO(devversion): The color class accent should be just set from TS code. No need for this.
