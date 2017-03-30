@@ -82,10 +82,6 @@ export {
   UniqueSelectionDispatcherListener,
   UNIQUE_SELECTION_DISPATCHER_PROVIDER,
 } from './coordination/unique-selection-dispatcher';
-/** @deprecated */
-export {
-  UniqueSelectionDispatcher as MdUniqueSelectionDispatcher
-} from './coordination/unique-selection-dispatcher';
 
 export {MdLineModule, MdLine, MdLineSetter} from './line/line';
 
