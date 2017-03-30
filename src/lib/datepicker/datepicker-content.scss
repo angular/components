@@ -19,14 +19,14 @@ $md-datepicker-touch-max-width: 778px;
 $md-datepicker-touch-max-height: 800px;
 
 
-.mat-datepicker-content {
+.mat-datepicker-content-touch {
   display: block;
   // make sure the dialog scrolls rather than being cropped on ludicrously small screens
   max-height: 80vh;
   overflow: auto;
 }
 
-.mat-datepicker-content-touch {
+.mat-datepicker-content-touch .mat-calendar {
   width: $md-datepicker-touch-width;
   height: $md-datepicker-touch-height;
   min-width: $md-datepicker-touch-min-width;
@@ -35,11 +35,11 @@ $md-datepicker-touch-max-height: 800px;
   max-height: $md-datepicker-touch-max-height;
 }
 
-.mat-datepicker-content-non-touch {
+.mat-datepicker-content-non-touch .mat-calendar {
   width: $md-datepicker-non-touch-calendar-width;
   @include mat-elevation(8);
 }
 
-.mat-datepicker-content-dialog {
+.mat-datepicker-content-dialog.mat-dialog-container {
   padding: 0;
 }

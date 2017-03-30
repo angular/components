@@ -51,6 +51,8 @@ let datepickerUid = 0;
   styleUrls: ['datepicker-content.css'],
   host: {
     '[class.mat-datepicker-content]': 'true',
+    '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
+    '[class.mat-datepicker-content-non-touch]': '!datepicker.touchUi',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

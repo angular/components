@@ -24,6 +24,7 @@ $mat-calendar-weekday-table-font-size: 11px !default;
 
 .mat-calendar-body {
   padding: $mat-calendar-padding;
+  outline: none;
 }
 
 .mat-calendar-controls {
