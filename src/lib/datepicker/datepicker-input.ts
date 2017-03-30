@@ -40,6 +40,7 @@ export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
   }
 })
 export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor, OnDestroy {
+  /** The datepicker that this input is associated with. */
   @Input()
   set mdDatepicker(value: MdDatepicker) {
     if (value) {
@@ -49,6 +50,10 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
   }
   _datepicker: MdDatepicker;
 
+  @Input()
+  set matDatepicker(value: MdDatepicker) { this.mdDatepicker = value; }
+
+  /** The value of the input. */
   @Input()
   get value(): SimpleDate {
     return this._value;
@@ -60,14 +65,13 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
   }
   private _value: SimpleDate;
 
-  @Input()
-  set matDatepicker(value: MdDatepicker) { this.mdDatepicker = value; }
-
+  /** The minimum valid date. */
   @Input()
   get min(): SimpleDate { return this._min; }
   set min(value: SimpleDate) { this._min = this._locale.parseDate(value); }
   private _min: SimpleDate;
 
+  /** The maximum valid date. */
   @Input()
   get max(): SimpleDate { return this._max; }
   set max(value: SimpleDate) { this._max = this._locale.parseDate(value); }
@@ -101,6 +105,10 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
     }
   }
 
+  /**
+   * Gets the element that the datepicker popup should be connected to.
+   * @return The element to connect the popup to.
+   */
   getPopupConnectionElementRef(): ElementRef {
     return this._mdInputContainer ? this._mdInputContainer.underlineRef : this._elementRef;
   }
