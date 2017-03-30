@@ -32,6 +32,8 @@ export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
     '[attr.aria-expanded]': '_datepicker?.opened || "false"',
     '[attr.aria-haspopup]': 'true',
     '[attr.aria-owns]': '_datepicker?.id',
+    '[min]': '_min?.toNativeDate()',
+    '[max]': '_max?.toNativeDate()',
     '(input)': '_onChange($event.target.value)',
     '(blur)': '_onTouched()',
     '(keydown)': '_onKeydown($event)',
@@ -60,6 +62,16 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
 
   @Input()
   set matDatepicker(value: MdDatepicker) { this.mdDatepicker = value; }
+
+  @Input()
+  get min(): SimpleDate { return this._min; }
+  set min(value: SimpleDate) { this._min = this._locale.parseDate(value); }
+  private _min: SimpleDate;
+
+  @Input()
+  get max(): SimpleDate { return this._max; }
+  set max(value: SimpleDate) { this._max = this._locale.parseDate(value); }
+  private _max: SimpleDate;
 
   _onChange = (value: any) => {};
 

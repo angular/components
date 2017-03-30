@@ -67,18 +67,6 @@ export class MdDatepicker implements OnDestroy {
   @Input()
   touchUi = false;
 
-  /** The minimum selectable date. */
-  @Input()
-  get minDate(): SimpleDate { return this._minDate; };
-  set minDate(date: SimpleDate) { this._minDate = this._locale.parseDate(date); }
-  private _minDate: SimpleDate;
-
-  /** The maximum selectable date. */
-  @Input()
-  get maxDate(): SimpleDate { return this._maxDate; };
-  set maxDate(date: SimpleDate) { this._maxDate = this._locale.parseDate(date); }
-  private _maxDate: SimpleDate;
-
   /** A function used to filter which dates are selectable. */
   @Input()
   dateFilter: (date: SimpleDate) => boolean;
@@ -99,6 +87,16 @@ export class MdDatepicker implements OnDestroy {
   set _selected(value: SimpleDate) {
     this.selectedChanged.emit(value);
     this.close();
+  }
+
+  /** The minimum selectable date. */
+  get _minDate(): SimpleDate {
+    return this._datepickerInput && this._datepickerInput.min;
+  }
+
+  /** The maximum selectable date. */
+  get _maxDate(): SimpleDate {
+    return this._datepickerInput && this._datepickerInput.max;
   }
 
   /** The calendar template. */
