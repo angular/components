@@ -99,7 +99,7 @@
     @include _mat-button-ripple-color($theme, default-contrast);
   }
   
-  // Add ripple effect with default color to the flat button, which doesn't have a focus overlay.
+  // Add ripple effect with default color to flat buttons, which also have a focus overlay.
   .mat-button {
     @include _mat-button-ripple-color($theme, default, 0.1);
   }
