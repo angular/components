@@ -23,6 +23,7 @@ describe('MdDatepicker', () => {
       ],
       declarations: [
         DatepickerWithFormControl,
+        DatepickerWithMinAndMax,
         DatepickerWithNgModel,
         DatepickerWithStartAt,
         DatepickerWithToggle,
@@ -397,6 +398,28 @@ describe('MdDatepicker', () => {
           .toBe(true, 'popup should be attached to input-container underline');
     });
   });
+
+  describe('datepicker with min and max dates', () => {
+    let fixture: ComponentFixture<DatepickerWithMinAndMax>;
+    let testComponent: DatepickerWithMinAndMax;
+
+    beforeEach(async(() => {
+      fixture = TestBed.createComponent(DatepickerWithMinAndMax);
+      fixture.detectChanges();
+
+      testComponent = fixture.componentInstance;
+    }));
+
+    afterEach(async(() => {
+      testComponent.datepicker.close();
+      fixture.detectChanges();
+    }));
+
+    it('should use min and max dates specified by the input', () => {
+      expect(testComponent.datepicker._minDate).toEqual(new SimpleDate(2010, 0, 1));
+      expect(testComponent.datepicker._maxDate).toEqual(new SimpleDate(2020, 0, 1));
+    });
+  });
 });
 
 
@@ -486,4 +509,15 @@ class DatepickerWithToggle {
 class InputContainerDatepicker {
   @ViewChild('d') datepicker: MdDatepicker;
   @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput;
+}
+
+
+@Component({
+  template: `
+    <input [mdDatepicker]="d" min="1/1/2010" max="1/1/2020">
+    <md-datepicker #d></md-datepicker>
+  `,
+})
+class DatepickerWithMinAndMax {
+  @ViewChild('d') datepicker: MdDatepicker;
 }
