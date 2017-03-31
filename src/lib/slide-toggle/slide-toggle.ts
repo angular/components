@@ -133,18 +133,13 @@ export class MdSlideToggle implements OnDestroy, AfterContentInit, ControlValueA
   ngAfterContentInit() {
     this._slideRenderer = new SlideToggleRenderer(this._elementRef);
 
-    this._focusOriginSubscription = this._focusOriginMonitor
+    this._focusOriginMonitor
       .monitor(this._inputElement.nativeElement, this._renderer, false)
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 
   ngOnDestroy() {
-    this._focusOriginMonitor.unmonitor(this._inputElement.nativeElement);
-
-    if (this._focusOriginSubscription) {
-      this._focusOriginSubscription.unsubscribe();
-      this._focusOriginSubscription = null;
-    }
+    this._focusOriginMonitor.stopMonitoring(this._inputElement.nativeElement);
   }
 
   /**
