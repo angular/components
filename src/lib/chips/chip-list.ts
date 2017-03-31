@@ -182,7 +182,10 @@ export class MdChipList implements AfterContentInit {
       if (this._isValidIndex(chipIndex)) {
         // Check whether the chip is the last item
         if (chipIndex < this.chips.length - 1) {
-          this._keyManager.setActiveItem(chipIndex);
+          /** Wait until chip has been removed from children to focus chip at current index */
+          Promise.resolve(null).then(() => {
+            this._keyManager.setActiveItem(chipIndex);
+          });
         } else if (chipIndex - 1 >= 0) {
           this._keyManager.setActiveItem(chipIndex - 1);
         }
