@@ -23,7 +23,6 @@ import {
 } from '../core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
 
 export const MD_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -76,9 +75,6 @@ export class MdSlideToggle implements OnDestroy, AfterContentInit, ControlValueA
 
   /** Reference to the focus state ripple. */
   private _focusRipple: RippleRef;
-
-  /** Subscription to focus-origin changes. */
-  private _focusOriginSubscription: Subscription;
 
   /** Name value will be applied to the input element if present */
   @Input() name: string = null;
