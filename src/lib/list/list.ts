@@ -7,11 +7,11 @@ import {
   Directive,
   ElementRef,
   Inject,
+  Input,
   OpaqueToken,
   Optional,
   Renderer,
   AfterContentInit,
-  Input,
 } from '@angular/core';
 import {MdLine, MdLineSetter} from '../core';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
