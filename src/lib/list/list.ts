@@ -170,7 +170,8 @@ export class MdListItem implements AfterContentInit {
 
   /** Whether this list item should show a ripple effect when clicked.  */
   isRippleEnabled() {
-    return !this.disableRipple && (this._listType === NAV_LIST_TYPE) && !this.disabled; // considering the disabled flag
+    // considering the disabled flag
+    return !this.disableRipple && (this._listType === NAV_LIST_TYPE) && !this.disabled;
   }
 
   _handleFocus() {
