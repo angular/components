@@ -1011,6 +1011,7 @@ describe('MdSelect', () => {
 
       it('should align the trigger and the selected option on the x-axis in rtl', async(() => {
         dir.value = 'rtl';
+        console.log('beginning of rtl test')
         fixture.whenStable().then(() => {
           fixture.detectChanges();
 
@@ -1025,6 +1026,7 @@ describe('MdSelect', () => {
 
             // Each option is 32px wider than the trigger, so it must be adjusted 16px
             // to ensure the text overlaps correctly.
+            console.log('about to expect')
             expect(firstOptionRight.toFixed(2))
                 .toEqual((triggerRight + 16).toFixed(2),
                     `Expected trigger to align with the selected option on the x-axis in RTL.`);
