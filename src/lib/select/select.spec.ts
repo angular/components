@@ -989,24 +989,18 @@ describe('MdSelect', () => {
       });
 
       it('should align the trigger and the selected option on the x-axis in ltr', async(() => {
+        trigger.click();
+        fixture.detectChanges();
+
         fixture.whenStable().then(() => {
-          fixture.detectChanges();
+          const triggerLeft = trigger.getBoundingClientRect().left;
+          const firstOptionLeft = document.querySelector('.cdk-overlay-pane md-option')
+              .getBoundingClientRect().left;
 
-          trigger.click();
-          fixture.detectChanges();
-
-          fixture.whenStable().then(() => {
-            fixture.detectChanges();
-
-            const triggerLeft = trigger.getBoundingClientRect().left;
-            const firstOptionLeft = document.querySelector('.cdk-overlay-pane md-option')
-                .getBoundingClientRect().left;
-
-            // Each option is 32px wider than the trigger, so it must be adjusted 16px
-            // to ensure the text overlaps correctly.
-            expect(firstOptionLeft.toFixed(2)).toEqual((triggerLeft - 16).toFixed(2),
-                `Expected trigger to align with the selected option on the x-axis in LTR.`);
-          });
+          // Each option is 32px wider than the trigger, so it must be adjusted 16px
+          // to ensure the text overlaps correctly.
+          expect(firstOptionLeft.toFixed(2)).toEqual((triggerLeft - 16).toFixed(2),
+              `Expected trigger to align with the selected option on the x-axis in LTR.`);
         });
       }));
 
@@ -1019,7 +1013,6 @@ describe('MdSelect', () => {
           fixture.detectChanges();
 
           fixture.whenStable().then(() => {
-            fixture.detectChanges();
             const triggerRight = trigger.getBoundingClientRect().right;
             const firstOptionRight =
                 document.querySelector('.cdk-overlay-pane md-option').getBoundingClientRect().right;
