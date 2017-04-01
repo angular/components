@@ -1011,7 +1011,6 @@ describe('MdSelect', () => {
 
       it('should align the trigger and the selected option on the x-axis in rtl', async(() => {
         dir.value = 'rtl';
-        console.log('beginning of rtl test')
         fixture.whenStable().then(() => {
           fixture.detectChanges();
 
@@ -1026,7 +1025,6 @@ describe('MdSelect', () => {
 
             // Each option is 32px wider than the trigger, so it must be adjusted 16px
             // to ensure the text overlaps correctly.
-            console.log('about to expect')
             expect(firstOptionRight.toFixed(2))
                 .toEqual((triggerRight + 16).toFixed(2),
                     `Expected trigger to align with the selected option on the x-axis in RTL.`);
@@ -1464,13 +1462,13 @@ describe('MdSelect', () => {
     let testInstance: MultiSelect;
     let trigger: HTMLElement;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
       fixture = TestBed.createComponent(MultiSelect);
       testInstance = fixture.componentInstance;
       fixture.detectChanges();
 
       trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
-    });
+    }));
 
     it('should be able to select multiple values', () => {
       trigger.click();
@@ -1630,17 +1628,17 @@ describe('MdSelect', () => {
       expect(trigger.textContent).toContain('Tacos, Pizza, Steak');
     });
 
-    it('should throw an exception when trying to set a non-array value', () => {
+    it('should throw an exception when trying to set a non-array value', async(() => {
       expect(() => {
         testInstance.control.setValue('not-an-array');
       }).toThrowError(wrappedErrorMessage(new MdSelectNonArrayValueError()));
-    });
+    }));
 
-    it('should throw an exception when trying to change multiple mode after init', () => {
+    it('should throw an exception when trying to change multiple mode after init', async(() => {
       expect(() => {
         testInstance.select.multiple = false;
       }).toThrowError(wrappedErrorMessage(new MdSelectDynamicMultipleError()));
-    });
+    }));
 
     it('should pass the `multiple` value to all of the option instances', async(() => {
       trigger.click();

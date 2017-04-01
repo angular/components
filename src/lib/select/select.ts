@@ -507,7 +507,6 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
   private _setSelectionByValue(value: any | any[]): void {
     const isArray = Array.isArray(value);
 
-    console.log('is multiple: ', this.multiple)
     if (this.multiple && value && !isArray) {
       throw new MdSelectNonArrayValueError();
     }
