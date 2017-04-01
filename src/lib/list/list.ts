@@ -144,7 +144,7 @@ export class MdListItem implements AfterContentInit {
   _hasFocus: boolean = false;
 
   /** Whether on click should be disabled. */
-  private _disabled: boolean = false;
+  _disabled: boolean = false;
 
   /** Whether the component is disabled. */
   @Input()
