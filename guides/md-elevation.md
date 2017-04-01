@@ -15,7 +15,7 @@ simply adding the class `md-elevation`
 # Mixins
 _elevation.scss
 $zValue must be a value between 0 and 24, inclusive.
-  `@include md-elevation($zValue);`
+  `@include mat-elevation($zValue);`
 
 
 How to use the mixin 
