@@ -1,7 +1,7 @@
 import {QueryList} from '@angular/core';
 import {fakeAsync, tick} from '@angular/core/testing';
 import {FocusKeyManager} from './focus-key-manager';
-import {DOWN_ARROW, UP_ARROW, TAB, HOME, END} from '../keyboard/keycodes';
+import {DOWN_ARROW, UP_ARROW, TAB, HOME, END, ESCAPE} from '../keyboard/keycodes';
 import {ListKeyManager} from './list-key-manager';
 import {ActiveDescendantKeyManager} from './activedescendant-key-manager';
 
@@ -39,6 +39,7 @@ describe('Key managers', () => {
   let TAB_EVENT: KeyboardEvent;
   let HOME_EVENT: KeyboardEvent;
   let END_EVENT: KeyboardEvent;
+  let ESCAPE_EVENT: KeyboardEvent;
 
   beforeEach(() => {
     itemList = new FakeQueryList<any>();
@@ -48,7 +49,7 @@ describe('Key managers', () => {
     TAB_EVENT = new FakeEvent(TAB) as KeyboardEvent;
     HOME_EVENT = new FakeEvent(HOME) as KeyboardEvent;
     END_EVENT = new FakeEvent(END) as KeyboardEvent;
-
+    ESCAPE_EVENT = new FakeEvent(ESCAPE) as KeyboardEvent;
   });
 
 
@@ -218,11 +219,11 @@ describe('Key managers', () => {
       });
 
       it('should emit tabOut when the tab key is pressed', () => {
-        let tabOutEmitted = false;
-        keyManager.tabOut.first().subscribe(() => tabOutEmitted = true);
+        let spy = jasmine.createSpy('tabOut spy');
+        keyManager.tabOut.first().subscribe(spy);
         keyManager.onKeydown(TAB_EVENT);
 
-        expect(tabOutEmitted).toBe(true);
+        expect(spy).toHaveBeenCalled();
       });
 
       it('should prevent the default keyboard action', () => {
@@ -239,6 +240,14 @@ describe('Key managers', () => {
         keyManager.onKeydown(TAB_EVENT);
 
         expect(TAB_EVENT.defaultPrevented).toBe(false);
+      });
+
+      it('should emit an event when escape is pressed', () => {
+        let spy = jasmine.createSpy('escape spy');
+        keyManager.escape.first().subscribe(spy);
+        keyManager.onKeydown(ESCAPE_EVENT);
+
+        expect(spy).toHaveBeenCalled();
       });
 
       it('should activate the first item when pressing down on a clean key manager', () => {

@@ -1,5 +1,5 @@
 import {QueryList} from '@angular/core';
-import {UP_ARROW, DOWN_ARROW, TAB, HOME, END} from '../core';
+import {UP_ARROW, DOWN_ARROW, TAB, HOME, END, ESCAPE} from '../core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
@@ -18,7 +18,8 @@ export interface CanDisable {
 export class ListKeyManager<T extends CanDisable> {
   private _activeItemIndex: number = null;
   private _activeItem: T;
-  private _tabOut: Subject<any> = new Subject();
+  private _tabOut = new Subject<void>();
+  private _escape = new Subject<void>();
   private _wrap: boolean = false;
 
   constructor(private _items: QueryList<T>) {
@@ -62,6 +63,9 @@ export class ListKeyManager<T extends CanDisable> {
         break;
       case END:
         this.setLastItemActive();
+        break;
+      case ESCAPE:
+        this._escape.next(null);
         break;
       case TAB:
         // Note that we shouldn't prevent the default action on tab.
@@ -119,6 +123,14 @@ export class ListKeyManager<T extends CanDisable> {
    */
   get tabOut(): Observable<void> {
     return this._tabOut.asObservable();
+  }
+
+  /**
+   * Observable that emits whenever the escape key is pressed, which usually indicates
+   * that the component should be closed.
+   */
+  get escape(): Observable<void> {
+    return this._escape.asObservable();
   }
 
   /**
