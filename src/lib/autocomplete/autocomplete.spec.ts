@@ -1,6 +1,7 @@
 import {TestBed, async, fakeAsync, tick, ComponentFixture} from '@angular/core/testing';
 import {Component, OnDestroy, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdAutocompleteModule, MdAutocompleteTrigger} from './index';
 import {OverlayContainer} from '../core/overlay/overlay-container';
 import {MdInputModule} from '../input/index';
@@ -27,7 +28,11 @@ describe('MdAutocomplete', () => {
     dir = 'ltr';
     TestBed.configureTestingModule({
       imports: [
-          MdAutocompleteModule.forRoot(), MdInputModule.forRoot(), FormsModule, ReactiveFormsModule
+        MdAutocompleteModule.forRoot(),
+        MdInputModule.forRoot(),
+        FormsModule,
+        ReactiveFormsModule,
+        NoopAnimationsModule
       ],
       declarations: [
         SimpleAutocomplete,
@@ -100,6 +105,21 @@ describe('MdAutocomplete', () => {
             .toContain('California', `Expected panel to display when opened programmatically.`);
       });
     }));
+
+    it('should show the panel when the first open is after the initial zone stabilization',
+      async(() => {
+        // Note that we're running outside the Angular zone, in order to be able
+        // to test properly without the subscription from `_subscribeToClosingActions`
+        // giving us a false positive.
+        fixture.ngZone.runOutsideAngular(() => {
+          fixture.componentInstance.trigger.openPanel();
+
+          Promise.resolve().then(() => {
+            expect(fixture.componentInstance.panel.showPanel)
+                .toBe(true, `Expected panel to be visible.`);
+          });
+        });
+      }));
 
     it('should close the panel when blurred', async(() => {
       dispatchFakeEvent(input, 'focus');
@@ -611,6 +631,20 @@ describe('MdAutocomplete', () => {
       });
     }));
 
+    it('should prevent the default enter key action', async(() => {
+      fixture.whenStable().then(() => {
+        fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+
+        fixture.whenStable().then(() => {
+          spyOn(ENTER_EVENT, 'preventDefault');
+
+          fixture.componentInstance.trigger._handleKeydown(ENTER_EVENT);
+
+          expect(ENTER_EVENT.preventDefault).toHaveBeenCalled();
+        });
+      });
+    }));
+
     it('should fill the text field, not select an option, when SPACE is entered', async(() => {
       fixture.whenStable().then(() => {
         typeInElement('New', input);
@@ -896,6 +930,69 @@ describe('MdAutocomplete', () => {
       });
     }));
 
+  });
+
+  describe('Option selection', () => {
+    let fixture: ComponentFixture<SimpleAutocomplete>;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SimpleAutocomplete);
+      fixture.detectChanges();
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+    });
+
+    it('should deselect any other selected option', async(() => {
+      let options =
+          overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+      options[0].click();
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        let componentOptions = fixture.componentInstance.options.toArray();
+        expect(componentOptions[0].selected)
+            .toBe(true, `Clicked option should be selected.`);
+
+        options =
+            overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+        options[1].click();
+        fixture.detectChanges();
+
+        expect(componentOptions[0].selected)
+            .toBe(false, `Previous option should not be selected.`);
+        expect(componentOptions[1].selected)
+            .toBe(true, `New Clicked option should be selected.`);
+
+      });
+    }));
+
+    it('should call deselect only on the previous selected option', async(() => {
+      let options =
+          overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+      options[0].click();
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        let componentOptions = fixture.componentInstance.options.toArray();
+        componentOptions.forEach(option => spyOn(option, 'deselect'));
+
+        expect(componentOptions[0].selected)
+            .toBe(true, `Clicked option should be selected.`);
+
+        options =
+            overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+        options[1].click();
+        fixture.detectChanges();
+
+        expect(componentOptions[0].deselect).toHaveBeenCalled();
+        componentOptions.slice(1).forEach(option => expect(option.deselect).not.toHaveBeenCalled());
+      });
+    }));
   });
 
   describe('misc', () => {

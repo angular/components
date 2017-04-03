@@ -13,22 +13,11 @@ import {MdCheckbox, MdCheckboxChange, MdCheckboxModule} from './index';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {FakeViewportRuler} from '../core/overlay/position/fake-viewport-ruler';
 import {dispatchFakeEvent} from '../core/testing/dispatch-events';
-import {FocusOriginMonitor, FocusOrigin} from '../core';
 import {RIPPLE_FADE_IN_DURATION, RIPPLE_FADE_OUT_DURATION} from '../core/ripple/ripple-renderer';
-import {Subject} from 'rxjs/Subject';
 
 
 describe('MdCheckbox', () => {
   let fixture: ComponentFixture<any>;
-  let fakeFocusOriginMonitorSubject: Subject<FocusOrigin> = new Subject();
-  let fakeFocusOriginMonitor = {
-    monitor: () => fakeFocusOriginMonitorSubject.asObservable(),
-    unmonitor: () => {},
-    focusVia: (element: HTMLElement, renderer: any, focusOrigin: FocusOrigin) => {
-      element.focus();
-      fakeFocusOriginMonitorSubject.next(focusOrigin);
-    }
-  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -45,8 +34,7 @@ describe('MdCheckbox', () => {
         CheckboxWithFormControl,
       ],
       providers: [
-        {provide: ViewportRuler, useClass: FakeViewportRuler},
-        {provide: FocusOriginMonitor, useValue: fakeFocusOriginMonitor}
+        {provide: ViewportRuler, useClass: FakeViewportRuler}
       ]
     });
 
@@ -356,7 +344,9 @@ describe('MdCheckbox', () => {
       expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
           .toBe(0, 'Expected no ripples on load.');
 
-      fakeFocusOriginMonitorSubject.next('keyboard');
+      dispatchFakeEvent(inputElement, 'keydown');
+      dispatchFakeEvent(inputElement, 'focus');
+
       tick(RIPPLE_FADE_IN_DURATION);
 
       expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
@@ -367,6 +357,23 @@ describe('MdCheckbox', () => {
 
       expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
           .toBe(0, 'Expected no ripple after element is blurred.');
+    }));
+
+    it('should show a ripple when focused programmatically', fakeAsync(() => {
+      expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
+        .toBe(0, 'Expected no ripples to be present.');
+
+      dispatchFakeEvent(inputElement, 'focus');
+      tick(RIPPLE_FADE_IN_DURATION);
+
+      expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
+        .toBe(1, 'Expected focus ripple to be present.');
+
+      dispatchFakeEvent(checkboxInstance._inputElement.nativeElement, 'blur');
+      tick(RIPPLE_FADE_OUT_DURATION);
+
+      expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
+        .toBe(0, 'Expected focus ripple to be removed.');
     }));
 
     describe('ripple elements', () => {

@@ -131,8 +131,9 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this._subscribeToClosingActions();
     }
 
-    this._panelOpen = true;
+    this.autocomplete._setVisibility();
     this._floatPlaceholder();
+    this._panelOpen = true;
   }
 
   /** Closes the autocomplete suggestion panel. */
@@ -204,6 +205,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   _handleKeydown(event: KeyboardEvent): void {
     if (this.activeOption && event.keyCode === ENTER) {
       this.activeOption._selectViaInteraction();
+      event.preventDefault();
     } else {
       this.autocomplete._keyManager.onKeydown(event);
       if (event.keyCode === UP_ARROW || event.keyCode === DOWN_ARROW) {
@@ -306,11 +308,23 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    */
   private _setValueAndClose(event: MdOptionSelectionChange | null): void {
     if (event) {
+      this._clearPreviousSelectedOption(event.source);
       this._setTriggerValue(event.source.value);
       this._onChange(event.source.value);
     }
 
     this.closePanel();
+  }
+
+  /**
+   * Clear any previous selected option and emit a selection change event for this option
+   */
+  private _clearPreviousSelectedOption(skip: MdOption) {
+    this.autocomplete.options.forEach((option) => {
+      if (option != skip && option.selected) {
+        option.deselect();
+      }
+    });
   }
 
   private _createOverlay(): void {

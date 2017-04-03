@@ -97,9 +97,7 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
       throw new MdDialogContentAlreadyAttachedError();
     }
 
-    let attachResult = this._portalHost.attachComponentPortal(portal);
-    this._trapFocus();
-    return attachResult;
+    return this._portalHost.attachComponentPortal(portal);
   }
 
   /**
@@ -111,9 +109,7 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
       throw new MdDialogContentAlreadyAttachedError();
     }
 
-    let attachedResult = this._portalHost.attachTemplatePortal(portal);
-    this._trapFocus();
-    return attachedResult;
+    return this._portalHost.attachTemplatePortal(portal);
   }
 
   /**
@@ -128,10 +124,8 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     // If were to attempt to focus immediately, then the content of the dialog would not yet be
     // ready in instances where change detection has to run first. To deal with this, we simply
     // wait for the microtask queue to be empty.
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
-      this._elementFocusedBeforeDialogWasOpened = document.activeElement as HTMLElement;
-      this._focusTrap.focusFirstTabbableElement();
-    });
+    this._elementFocusedBeforeDialogWasOpened = document.activeElement as HTMLElement;
+    this._focusTrap.focusFirstTabbableElementWhenReady();
   }
 
   /**
@@ -148,6 +142,10 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
    * @docs-private
    */
   _onAnimationDone(event: AnimationEvent) {
+    if (event.toState === 'enter') {
+      this._trapFocus();
+    }
+
     this._onAnimationStateChange.emit(event.toState as MdDialogContainerAnimationState);
   }
 
@@ -156,18 +154,21 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     // the dialog was opened. Wait for the DOM to finish settling before changing the focus so
     // that it doesn't end up back on the <body>. Also note that we need the extra check, because
     // IE can set the `activeElement` to null in some cases.
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
-      let toFocus = this._elementFocusedBeforeDialogWasOpened as HTMLElement;
+    let toFocus = this._elementFocusedBeforeDialogWasOpened as HTMLElement;
 
-      // We need to check whether the focus method exists at all, because IE seems to throw an
-      // exception, even if the element is the document.body.
+    // We shouldn't use `this` inside of the NgZone subscription, because it causes a memory leak.
+    let animationStream = this._onAnimationStateChange;
+
+    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
       if (toFocus && 'focus' in toFocus) {
         toFocus.focus();
       }
 
-      this._onAnimationStateChange.complete();
+      animationStream.complete();
     });
 
-    this._focusTrap.destroy();
+    if (this._focusTrap) {
+      this._focusTrap.destroy();
+    }
   }
 }

@@ -199,19 +199,14 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
     this._focusedSubscription = this._focusOriginMonitor
       .monitor(this._inputElement.nativeElement, this._renderer, false)
       .subscribe(focusOrigin => {
-        if (!this._focusedRipple && focusOrigin === 'keyboard') {
+        if (!this._focusedRipple && (focusOrigin === 'keyboard' || focusOrigin === 'program')) {
           this._focusedRipple = this._ripple.launch(0, 0, { persistent: true, centered: true });
         }
       });
   }
 
   ngOnDestroy() {
-    this._focusOriginMonitor.unmonitor(this._inputElement.nativeElement);
-
-    if (this._focusedSubscription) {
-      this._focusedSubscription.unsubscribe();
-      this._focusedSubscription = null;
-    }
+    this._focusOriginMonitor.stopMonitoring(this._inputElement.nativeElement);
   }
 
   /**
@@ -392,7 +387,7 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
 
   /** Focuses the checkbox. */
   focus(): void {
-    this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, this._renderer, 'keyboard');
+    this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, this._renderer, 'program');
   }
 
   _onInteractionEvent(event: Event) {

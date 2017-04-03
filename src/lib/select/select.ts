@@ -15,6 +15,7 @@ import {
   ViewChild,
   ChangeDetectorRef,
   Attribute,
+  OnInit,
 } from '@angular/core';
 import {MdOption, MdOptionSelectionChange} from '../core/option/option';
 import {ENTER, SPACE} from '../core/keyboard/keycodes';
@@ -101,7 +102,8 @@ export type MdSelectFloatPlaceholderType = 'always' | 'never' | 'auto';
   host: {
     'role': 'listbox',
     '[attr.tabindex]': 'tabIndex',
-    '[attr.aria-label]': 'placeholder',
+    '[attr.aria-label]': '_ariaLabel',
+    '[attr.aria-labelledby]': 'ariaLabelledby',
     '[attr.aria-required]': 'required.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': '_control?.invalid || "false"',
@@ -118,7 +120,7 @@ export type MdSelectFloatPlaceholderType = 'always' | 'never' | 'auto';
   ],
   exportAs: 'mdSelect',
 })
-export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestroy {
+export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlValueAccessor {
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
 
@@ -279,6 +281,12 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     }
   }
 
+  /** Aria label of the select. If not specified, the placeholder will be used as label. */
+  @Input('aria-label') ariaLabel: string = '';
+
+  /** Input that can be used to specify the `aria-labelledby` attribute. */
+  @Input('aria-labelledby') ariaLabelledby: string = '';
+
   /** Combined stream of all of the child options' change events. */
   get optionSelectionChanges(): Observable<MdOptionSelectionChange> {
     return Observable.merge(...this.options.map(option => option.onSelectionChange));
@@ -304,8 +312,11 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     this._tabIndex = parseInt(tabIndex) || 0;
   }
 
-  ngAfterContentInit() {
+  ngOnInit() {
     this._selectionModel = new SelectionModel<MdOption>(this.multiple, null, false);
+  }
+
+  ngAfterContentInit() {
     this._initKeyManager();
 
     this._changeSubscription = this.options.changes.startWith(null).subscribe(() => {
@@ -413,9 +424,18 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   /** The value displayed in the trigger. */
   get triggerValue(): string {
-    return this.multiple ?
-      this._selectionModel.selected.map(option => option.viewValue).join(', ') :
-      this._selectionModel.selected[0].viewValue;
+    if (this._multiple) {
+      let selectedOptions = this._selectionModel.selected.map(option => option.viewValue);
+
+      if (this._isRtl()) {
+        selectedOptions.reverse();
+      }
+
+      // TODO(crisbeto): delimiter should be configurable for proper localization.
+      return selectedOptions.join(', ');
+    }
+
+    return this._selectionModel.selected[0].viewValue;
   }
 
   /** Whether the element is in RTL mode. */
@@ -745,6 +765,13 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   _getPlaceholderVisibility(): 'visible'|'hidden' {
     return (this.floatPlaceholder !== 'never' || this._selectionModel.isEmpty()) ?
         'visible' : 'hidden';
+  }
+
+  /** Returns the aria-label of the select component. */
+  get _ariaLabel(): string {
+    // If an ariaLabelledby value has been set, the select should not overwrite the
+    // `aria-labelledby` value by setting the ariaLabel to the placeholder.
+    return this.ariaLabelledby ? null : this.ariaLabel || this.placeholder;
   }
 
   /**

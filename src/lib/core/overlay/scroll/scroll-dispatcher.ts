@@ -1,4 +1,4 @@
-import {Injectable, ElementRef, Optional, SkipSelf} from '@angular/core';
+import {Injectable, ElementRef, Optional, SkipSelf, NgZone} from '@angular/core';
 import {Scrollable} from './scrollable';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
@@ -17,6 +17,8 @@ export const DEFAULT_SCROLL_TIME = 20;
  */
 @Injectable()
 export class ScrollDispatcher {
+  constructor(private _ngZone: NgZone) { }
+
   /** Subject for notifying that a registered scrollable reference element has been scrolled. */
   _scrolled: Subject<void> = new Subject<void>();
 
@@ -69,15 +71,19 @@ export class ScrollDispatcher {
     this._scrolledCount++;
 
     if (!this._globalSubscription) {
-      this._globalSubscription = Observable.merge(
-        Observable.fromEvent(window.document, 'scroll'),
-        Observable.fromEvent(window, 'resize')
-      ).subscribe(() => this._notify());
+      this._globalSubscription = this._ngZone.runOutsideAngular(() => {
+        return Observable.merge(
+          Observable.fromEvent(window.document, 'scroll'),
+          Observable.fromEvent(window, 'resize')
+        ).subscribe(() => this._notify());
+      });
     }
 
     // Note that we need to do the subscribing from here, in order to be able to remove
     // the global event listeners once there are no more subscriptions.
-    return observable.subscribe(callback).add(() => {
+    let subscription = observable.subscribe(callback);
+
+    subscription.add(() => {
       this._scrolledCount--;
 
       if (this._globalSubscription && !this.scrollableReferences.size && !this._scrolledCount) {
@@ -85,6 +91,8 @@ export class ScrollDispatcher {
         this._globalSubscription = null;
       }
     });
+
+    return subscription;
   }
 
   /** Returns all registered Scrollables that contain the provided element. */
@@ -118,13 +126,14 @@ export class ScrollDispatcher {
   }
 }
 
-export function SCROLL_DISPATCHER_PROVIDER_FACTORY(parentDispatcher: ScrollDispatcher) {
-  return parentDispatcher || new ScrollDispatcher();
+export function SCROLL_DISPATCHER_PROVIDER_FACTORY(parentDispatcher: ScrollDispatcher,
+                                                   ngZone: NgZone) {
+  return parentDispatcher || new ScrollDispatcher(ngZone);
 }
 
 export const SCROLL_DISPATCHER_PROVIDER = {
   // If there is already a ScrollDispatcher available, use that. Otherwise, provide a new one.
   provide: ScrollDispatcher,
-  deps: [[new Optional(), new SkipSelf(), ScrollDispatcher]],
+  deps: [[new Optional(), new SkipSelf(), ScrollDispatcher], NgZone],
   useFactory: SCROLL_DISPATCHER_PROVIDER_FACTORY
 };

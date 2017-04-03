@@ -26,7 +26,7 @@ import {wrappedErrorMessage} from '../core/testing/wrapped-error-message';
 
 describe('MdSelect', () => {
   let overlayContainerElement: HTMLElement;
-  let dir: {value: string};
+  let dir: {value: 'ltr'|'rtl'};
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -46,7 +46,8 @@ describe('MdSelect', () => {
         ThrowsErrorOnInit,
         BasicSelectOnPush,
         BasicSelectOnPushPreselected,
-        SelectWithPlainTabindex
+        SelectWithPlainTabindex,
+        SelectEarlyAccessSibling
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -1085,6 +1086,21 @@ describe('MdSelect', () => {
         expect(select.getAttribute('aria-label')).toEqual('Food');
       });
 
+      it('should support setting a custom aria-label', () => {
+        fixture.componentInstance.ariaLabel = 'Custom Label';
+        fixture.detectChanges();
+
+        expect(select.getAttribute('aria-label')).toEqual('Custom Label');
+      });
+
+      it('should not set an aria-label if aria-labelledby is specified', () => {
+        fixture.componentInstance.ariaLabelledby = 'myLabelId';
+        fixture.detectChanges();
+
+        expect(select.getAttribute('aria-label')).toBeFalsy('Expected no aria-label to be set.');
+        expect(select.getAttribute('aria-labelledby')).toBe('myLabelId');
+      });
+
       it('should set the tabindex of the select to 0 by default', () => {
         expect(select.getAttribute('tabindex')).toEqual('0');
       });
@@ -1322,6 +1338,12 @@ describe('MdSelect', () => {
       }).toThrowError(new RegExp('Oh no!', 'g'));
     }));
 
+    it('should not throw when trying to access the selected value on init', async(() => {
+      expect(() => {
+        TestBed.createComponent(SelectEarlyAccessSibling).detectChanges();
+      }).not.toThrow();
+    }));
+
   });
 
   describe('change event', () => {
@@ -1556,6 +1578,23 @@ describe('MdSelect', () => {
       expect(fixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1', 'tacos-2']);
     });
 
+    it('should sort the selected options in reverse in rtl', () => {
+      dir.value = 'rtl';
+      trigger.click();
+      fixture.detectChanges();
+
+      const options = overlayContainerElement.querySelectorAll('md-option') as
+          NodeListOf<HTMLElement>;
+
+      options[2].click();
+      options[0].click();
+      options[1].click();
+      fixture.detectChanges();
+
+      expect(trigger.textContent).toContain('Tacos, Pizza, Steak');
+      expect(fixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1', 'tacos-2']);
+    });
+
     it('should sort the values, that get set via the model, based on the panel order', () => {
       trigger.click();
       fixture.detectChanges();
@@ -1564,6 +1603,17 @@ describe('MdSelect', () => {
       fixture.detectChanges();
 
       expect(trigger.textContent).toContain('Steak, Pizza, Tacos');
+    });
+
+    it('should reverse sort the values, that get set via the model in rtl', () => {
+      dir.value = 'rtl';
+      trigger.click();
+      fixture.detectChanges();
+
+      testInstance.control.setValue(['tacos-2', 'steak-0', 'pizza-1']);
+      fixture.detectChanges();
+
+      expect(trigger.textContent).toContain('Tacos, Pizza, Steak');
     });
 
     it('should throw an exception when trying to set a non-array value', () => {
@@ -1606,7 +1656,7 @@ describe('MdSelect', () => {
   template: `
     <div [style.height.px]="heightAbove"></div>
     <md-select placeholder="Food" [formControl]="control" [required]="isRequired"
-      [tabIndex]="tabIndexOverride">
+      [tabIndex]="tabIndexOverride" [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby">
       <md-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
         {{ food.viewValue }}
       </md-option>
@@ -1630,6 +1680,8 @@ class BasicSelect {
   heightAbove = 0;
   heightBelow = 0;
   tabIndexOverride: number;
+  ariaLabel: string;
+  ariaLabelledby: string;
 
   @ViewChild(MdSelect) select: MdSelect;
   @ViewChildren(MdOption) options: QueryList<MdOption>;
@@ -1895,6 +1947,15 @@ class MultiSelect {
   `
 })
 class SelectWithPlainTabindex { }
+
+@Component({
+  selector: 'select-early-sibling-access',
+  template: `
+    <md-select #select="mdSelect"></md-select>
+    <div *ngIf="select.selected"></div>
+  `
+})
+class SelectEarlyAccessSibling { }
 
 
 class FakeViewportRuler {
