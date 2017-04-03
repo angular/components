@@ -23,9 +23,9 @@ export function setGithubStatus(commitSHA: string,
   });
 
   let headers =  {
-    "Authorization": `token ${token}`,
-    "User-Agent": `${statusData.name}/1.0`,
-    "Content-Type": "application/json"
+    'Authorization': `token ${token}`,
+    'User-Agent': `${statusData.name}/1.0`,
+    'Content-Type': 'application/json'
   };
 
   return new Promise((resolve) => {

@@ -1,23 +1,19 @@
 {
   "compilerOptions": {
-    "declaration": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "lib": ["es6", "es2016", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
     "noImplicitAny": true,
-    "outDir": "./",
     "sourceMap": true,
     "target": "es5",
-    "stripInternal": false,
     "baseUrl": "",
+    "outDir": "../../../functions/",
     "typeRoots": [
-      "../node_modules/@types/!(node)"
+      "../../../functions/node_modules/@types/!(node)"
     ]
   },
   "files": [
-    "index.ts"
+    "./index.ts"
   ]
 }

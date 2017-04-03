@@ -3,7 +3,7 @@
 import * as firebaseFunctions from 'firebase-functions';
 import * as firebaseAdmin from 'firebase-admin';
 
-import {verifyJWTAndUpdateData} from './data';
+import {verifyJwtAndTransferResultToTrustedLocation} from './verify-and-copy-report';
 import {convertGoldenImagesToData} from './image_data';
 import {convertTestImageDataToFiles} from './data_image';
 import {copyTestImagesToGoldens} from './test_goldens';
@@ -11,29 +11,37 @@ import {updateGithubStatus} from './github';
 
 /**
  * Usage: Firebase functions only accept javascript file index.js
- *   tsc
+ *   tsc -p tools/screenshot-test/functions/tsconfig.json
+ *   cd functions
+ *   npm install
  *   firebase deploy --only functions
  *
  *
  * Data and images handling for Screenshot test.
  *
- * All users can post data to temporary folder. These Functions will check the data with JsonWebToken and
- * move the valid data out of temporary folder.
+ * All users can post data to temporary folder. These Functions will check the data with
+ * JsonWebToken and move the valid data out of temporary folder.
  *
  * For valid data posted to database /$temp/screenshot/reports/$prNumber/$secureToken, move it to
  * /screenshot/reports/$prNumber.
- * These are data for screenshot results (success or failure), GitHub PR/commit and TravisCI job information
+ * These are data for screenshot results (success or failure), GitHub PR/commit and TravisCI job
+ * information.
  *
- * For valid image results written to database /$temp/screenshot/images/$prNumber/$secureToken/, save the image
- * data to image files and upload to google cloud storage under location /screenshots/$prNumber
- * These are screenshot test result images, and difference images generated from screenshot comparison.
+ * For valid image results written to database /$temp/screenshot/images/$prNumber/$secureToken/,
+ * save the image data to image files and upload to google cloud storage under
+ * location /screenshots/$prNumber
+ * These are screenshot test result images, and difference images generated from screenshot
+ * comparison.
  *
- * For golden images uploaded to /goldens, read the data from images files and write the data to Firebase database
- * under location /screenshot/goldens
- * Screenshot tests can only read restricted database data with no credentials, and they cannot access
- * Google Cloud Storage. Therefore we copy the image data to database to make it available to screenshot tests.
+ * For golden images uploaded to /goldens, read the data from images files and write the data to
+ * Firebase database under location /screenshot/goldens
+ * Screenshot tests can only read restricted database data with no credentials, and they cannot
+ * access.
+ * Google Cloud Storage. Therefore we copy the image data to database to make it available to
+ * screenshot tests.
  *
- * The JWT is stored in the data path, so every write to database needs a valid JWT to be copied to database/storage.
+ * The JWT is stored in the data path, so every write to database needs a valid JWT to be copied to
+ * database/storage.
  * All invalid data will be removed.
  * The JWT has 3 parts: header, payload and signature. These three parts are joint by '/' in path.
  */
@@ -65,11 +73,11 @@ const trustedReportPath = `screenshot/reports/{prNumber}`;
  *     sha (github PR info), result (true or false for all the tests), travis job number
  */
 const testDataPath = `${reportPath}/{dataType}`;
-exports.testData = firebaseFunctions.database.ref(testDataPath)
+export let testData = firebaseFunctions.database.ref(testDataPath)
     .onWrite((event: any) => {
   const dataType = event.params.dataType;
   if (dataTypes.includes(dataType)) {
-    return verifyJWTAndUpdateData(event, dataType);
+    return verifyJwtAndTransferResultToTrustedLocation(event, dataType);
   }
 });
 
@@ -79,9 +87,9 @@ exports.testData = firebaseFunctions.database.ref(testDataPath)
  * Data copied: test result for each file/test with ${filename}. The value should be true or false.
  */
 const testResultsPath = `${reportPath}/results/{filename}`;
-exports.testResults = firebaseFunctions.database.ref(testResultsPath)
+export let testResults = firebaseFunctions.database.ref(testResultsPath)
     .onWrite((event: any) => {
-  return verifyJWTAndUpdateData(event, `results/${event.params.filename}`);
+  return verifyJwtAndTransferResultToTrustedLocation(event, `results/${event.params.filename}`);
 });
 
 /**
@@ -90,14 +98,14 @@ exports.testResults = firebaseFunctions.database.ref(testResultsPath)
  * Data copied: test result images. Convert from data to image files in storage.
  */
 const imageDataToFilePath = `${imagePath}/{dataType}/{filename}`;
-exports.imageDataToFile = firebaseFunctions.database.ref(imageDataToFilePath)
+export let imageDataToFile = firebaseFunctions.database.ref(imageDataToFilePath)
   .onWrite(convertTestImageDataToFiles);
 
 /**
  * Copy valid goldens from storage /goldens/ to database /screenshot/goldens/
  * so we can read the goldens without credentials.
  */
-exports.goldenImageToData = firebaseFunctions.storage.bucket(
+export let goldenImageToData = firebaseFunctions.storage.bucket(
     firebaseFunctions.config().firebase.storageBucket).object().onChange((event: any) => {
   return convertGoldenImagesToData(event.data.name, event.data.resourceState, event.data.bucket);
 });
@@ -107,7 +115,8 @@ exports.goldenImageToData = firebaseFunctions.storage.bucket(
  * Copy images from /screenshot/$prNumber/test/ to /goldens/
  */
 const approveImagesPath = `${trustedReportPath}/approved`;
-exports.approveImages = firebaseFunctions.database.ref(approveImagesPath).onWrite((event: any) => {
+export let approveImages = firebaseFunctions.database.ref(approveImagesPath)
+    .onWrite((event: any) => {
   return copyTestImagesToGoldens(event.params.prNumber);
 });
 
@@ -117,4 +126,5 @@ exports.approveImages = firebaseFunctions.database.ref(approveImagesPath).onWrit
  * The Github Status Token is set in config.secret.github
  */
 const githubStatusPath = `${trustedReportPath}/result/{sha}`;
-exports.githubStatus = firebaseFunctions.database.ref(githubStatusPath).onWrite(updateGithubStatus);
+export let githubStatus = firebaseFunctions.database.ref(githubStatusPath)
+    .onWrite(updateGithubStatus);

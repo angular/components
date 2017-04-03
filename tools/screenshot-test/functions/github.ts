@@ -1,4 +1,3 @@
-import * as firebaseAdmin from 'firebase-admin';
 import * as firebaseFunctions from 'firebase-functions';
 import {setGithubStatus} from './util/github';
 

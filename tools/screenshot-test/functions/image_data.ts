@@ -4,17 +4,21 @@ import {readFileSync} from 'fs';
 
 const gcs = require('@google-cloud/storage')();
 
+/** Folder on Firebase database to store golden images data */
 const FIREBASE_DATA_GOLDENS = 'screenshot/goldens';
 
 /**
  * Read golden files under /goldens/ and store the image data to
  * database /screenshot/goldens/$filename
+ * Convert png image files to BufferArray data
  */
 export function convertGoldenImagesToData(name: string, resourceState: string, fileBucket: any) {
   // The name should always look like "goldens/xxx.png"
   let parsedPath = path.parse(name);
   // Get the file name.
-  if (parsedPath.root != '' || parsedPath.dir != 'goldens' || parsedPath.ext != '.png') {
+  if (parsedPath.root != '' ||
+    parsedPath.dir != 'goldens' ||
+    parsedPath.ext.toLowerCase() != '.png') {
     return;
   }
 

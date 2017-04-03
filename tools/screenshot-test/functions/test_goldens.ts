@@ -22,15 +22,17 @@ export function copyTestImagesToGoldens(prNumber: string) {
           failedFilenames.push(childSnapshot.key);
         }
         counter++;
-        if (counter == snapshot.numChildren()) return true;
+        if (counter == snapshot.numChildren()) {
+          return true;
+        }
       });
       return failedFilenames;
     }).then((failedFilenames: string[]) => {
       return bucket.getFiles({prefix: `screenshots/${prNumber}/test`}).then(function (data: any) {
         return Promise.all(data[0]
-          .filter((file: any) => failedFilenames.includes(path.basename(file.name, '.screenshot.png')))
+          .filter((file: any) => failedFilenames.includes(
+            path.basename(file.name, '.screenshot.png')))
           .map((file: any) => file.copy(`goldens/${path.basename(file.name)}`)));
       });
-    })
-
+    });
 };
