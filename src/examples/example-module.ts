@@ -157,8 +157,7 @@ export const EXAMPLE_COMPONENTS = {
     title: 'Snack-bar with a custom component',
     component: SnackBarComponentExample,
     additionalFiles: [
-      'snack-bar-component-example-snack.html',
-      'snack-bar-component-example-snack.css'
+      'snack-bar-component-example-snack.html', 'snack-bar-component-example-snack.css'
     ],
     selectorName: 'SnackBarComponentExample, SnackBarComponentExampleSnack',
   },
