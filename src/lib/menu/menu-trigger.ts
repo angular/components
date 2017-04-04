@@ -39,7 +39,7 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
   host: {
     'aria-haspopup': 'true',
     '(mousedown)': '_handleMousedown($event)',
-    '(click)': 'toggleMenu()',
+    '(click)': 'toggleMenu($event)',//attaching the $event object also
   },
   exportAs: 'mdMenuTrigger'
 })
@@ -53,7 +53,13 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   // tracking input type is necessary so it's possible to only auto-focus
   // the first item of the list when the menu is opened via the keyboard
   private _openedByMouse: boolean = false;
-
+ /**
+  *
+  * Added Input for checking if preventClose is requested by parent node.
+  *
+  */
+  @Input() preventClose:boolean = false;
+ 
   /** @deprecated */
   @Input('md-menu-trigger-for')
   get _deprecatedMdMenuTriggerFor(): MdMenuPanel { return this.menu; }
@@ -93,8 +99,14 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   get menuOpen(): boolean { return this._menuOpen; }
 
   /** Toggles the menu between the open and closed states. */
-  toggleMenu(): void {
-    return this._menuOpen ? this.closeMenu() : this.openMenu();
+  toggleMenu(event): void {
+      //-------whent it's a void function why there is a return statement?
+    //----return----
+      if(this.preventClose)
+        this._menuOpen && (!this._element.nativeElement.contains(event.target)) ? this.closeMenu() : this.openMenu();
+      else
+        this._menuOpen ? this.closeMenu() : this.openMenu();
+          
   }
 
   /** Opens the menu. */
