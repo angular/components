@@ -29,6 +29,33 @@ Components created via `MdDialog` can _inject_ `MdDialogRef` and use it to close
 in which they are contained. When closing, an optional result value can be provided. This result
 value is forwarded as the result of the `afterClosed` promise. 
 
+### Sharing Data with the Dialog component.
+Depending on what you are doing you might want to share data with your dialog component. Angular has documentation that explains in general how to share data between any components using [`services`](https://angular.io/docs/ts/latest/cookbook/component-communication.html#!#bidirectional-service).
+
+Passing outside data to your component is as simple as.
+```ts
+let dialogRef = dialog.open(DialogName, {
+  data:'your data',
+});
+```
+
+Here is an example component you can pass data to.
+```ts
+import {Component, Inject} from '@angular/core';
+import {MdDialog, MD_DIALOG_DATA} from '@angular/material';
+
+@Component({
+  selector: 'dialog-selector',
+  template: 'passed in {{ data }}',
+})
+
+export class DialogName {
+  constructor@Inject(MD_DIALOG_DATA) public data: any) { }
+}
+```
+ 
+
+
 ### Dialog content
 Several directives are available to make it easier to structure your dialog content:
 
