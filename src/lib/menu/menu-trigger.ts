@@ -39,7 +39,6 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
   host: {
     'aria-haspopup': 'true',
     '(mousedown)': '_handleMousedown($event)',
-    /** attaching the $event object as we will use it for checking if event target was inside or outside of menu panel. */
     '(click)': 'toggleMenu($event)',
   },
   exportAs: 'mdMenuTrigger'
