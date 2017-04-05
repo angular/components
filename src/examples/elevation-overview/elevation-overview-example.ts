@@ -2,7 +2,8 @@ import {Component} from '@angular/core';
 
 @Component({
   selector: 'elevation-overview-example',
-  style:'./elevation-overview-example.css',
+  styleUrls: ['./elevation-overview-example.scss'],
   templateUrl: './elevation-overview-example.html',
 })
-export class elevationOverviewExample {}
+
+export class ElevationOverviewExample {}
