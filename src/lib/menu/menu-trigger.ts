@@ -39,7 +39,8 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
   host: {
     'aria-haspopup': 'true',
     '(mousedown)': '_handleMousedown($event)',
-    '(click)': 'toggleMenu($event)',//attaching the $event object also
+    /** attaching the $event object as we will use it for checking if event target was inside or outside of menu panel. */
+    '(click)': 'toggleMenu($event)',
   },
   exportAs: 'mdMenuTrigger'
 })
@@ -53,11 +54,8 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   // tracking input type is necessary so it's possible to only auto-focus
   // the first item of the list when the menu is opened via the keyboard
   private _openedByMouse: boolean = false;
- /**
-  *
-  * Added Input for checking if preventClose is requested by parent node.
-  *
-  */
+  
+  /** Wether the preventClose for menu instance is asked or not.*/
   @Input() preventClose:boolean = false;
  
   /** @deprecated */
@@ -100,12 +98,16 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
 
   /** Toggles the menu between the open and closed states. */
   toggleMenu(event): void {
-      //-------whent it's a void function why there is a return statement?
-    //----return----
+      /** whent it's a void function why there is a return statement? */
+      /** Removed `return` */
+      
+      /** Checks if preventClose is defined and has true value or not. */
       if(this.preventClose)
-        this._menuOpen && (!this._element.nativeElement.contains(event.target)) ? this.closeMenu() : this.openMenu();
+          /** `this._element.nativeElement.contains(event.target)`. Checks if the target, where click was fired, falls inside menu panel or not. */
+          (this._menuOpen && !this._element.nativeElement.contains(event.target)) ? this.closeMenu() : this.openMenu();
       else
-        this._menuOpen ? this.closeMenu() : this.openMenu();
+          /** If no `preventClose` is defined, it will go same old way. */
+          this._menuOpen ? this.closeMenu() : this.openMenu();
           
   }
 
