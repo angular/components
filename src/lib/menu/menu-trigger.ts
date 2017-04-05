@@ -106,10 +106,12 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
           *    `this._element.nativeElement.contains(event.target)`.
           *    Checks if the target, where click was fired, falls inside menu panel or not.
           */
-          if(this._menuOpen && !this._element.nativeElement.contains(event.target))
+          if (this._menuOpen && !this._element.nativeElement.contains(event.target)) {
               this.closeMenu();
-          else
+          }
+          else {
               this.openMenu();
+          }
       }
       else {
           /** If no `preventClose` is defined, it will go same old way. */
