@@ -53,10 +53,10 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   // tracking input type is necessary so it's possible to only auto-focus
   // the first item of the list when the menu is opened via the keyboard
   private _openedByMouse: boolean = false;
-  
+
   /** Wether the preventClose for menu instance is asked or not.*/
-  @Input() preventClose:boolean = false;
- 
+  @Input() preventClose: boolean = false;
+
   /** @deprecated */
   @Input('md-menu-trigger-for')
   get _deprecatedMdMenuTriggerFor(): MdMenuPanel { return this.menu; }
@@ -99,15 +99,22 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   toggleMenu(event): void {
       /** whent it's a void function why there is a return statement? */
       /** Removed `return` */
-      
+
       /** Checks if preventClose is defined and has true value or not. */
-      if(this.preventClose)
-          /** `this._element.nativeElement.contains(event.target)`. Checks if the target, where click was fired, falls inside menu panel or not. */
-          (this._menuOpen && !this._element.nativeElement.contains(event.target)) ? this.closeMenu() : this.openMenu();
-      else
+      if (this.preventClose) {
+          /**
+          *    `this._element.nativeElement.contains(event.target)`.
+          *    Checks if the target, where click was fired, falls inside menu panel or not.
+          */
+          if(this._menuOpen && !this._element.nativeElement.contains(event.target))
+              this.closeMenu();
+          else
+              this.openMenu();
+      }
+      else {
           /** If no `preventClose` is defined, it will go same old way. */
           this._menuOpen ? this.closeMenu() : this.openMenu();
-          
+      }
   }
 
   /** Opens the menu. */
