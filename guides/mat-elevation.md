@@ -7,11 +7,11 @@ explains how best to use elevation.
 
 Elevation is implemented with a class, simply adding the class `mat-elevation-z#` where # is the elevation number you want, 0-24.
 
-# Example
+## Example
 <!-- example(elevation-overview) -->
 
 
-# Mixins
+## Mixins
 In order to use the mixin for Elevation you must 
 `@import '~@angular/material/core/style/_elevation.scss';`
 $zValue must be a value between 0 and 24, inclusive.
@@ -19,14 +19,15 @@ $zValue must be a value between 0 and 24, inclusive.
 
 
 How to use the mixin 
-` .myClass {
-   @include $mat-elevation(2);
+```scss
+.myClass {
+  @include $mat-elevation(2);
 
-   &:active {
-     @include $mat-elevation(8);
-   }
+  &:active {
+    @include $mat-elevation(8);
+  }
 }
-`
+```
 
-# Deprecated
+## Deprecated
 The use of `mdElevation($zValue)` is deprecated.
