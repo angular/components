@@ -50,7 +50,7 @@ import {MdDialog, MD_DIALOG_DATA} from '@angular/material';
 })
 
 export class DialogName {
-  constructor@Inject(MD_DIALOG_DATA) public data: any) { }
+  constructor( @Inject(MD_DIALOG_DATA) public data: any ) { }
 }
 ```
  
