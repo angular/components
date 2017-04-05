@@ -108,12 +108,10 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
           */
           if (this._menuOpen && !this._element.nativeElement.contains(event.target)) {
               this.closeMenu();
-          }
-          else {
+          } else {
               this.openMenu();
           }
-      }
-      else {
+      } else {
           /** If no `preventClose` is defined, it will go same old way. */
           this._menuOpen ? this.closeMenu() : this.openMenu();
       }
