@@ -13,7 +13,7 @@ Elevation is implemented with a class, simply adding the class `mat-elevation-z#
 
 ## Mixins
 In order to use the mixin for Elevation you must 
-`@import '~@angular/material/core/style/_elevation.scss';`
+`@import '~@angular/material/theming';`
 $zValue must be a value between 0 and 24, inclusive.
 `@include mat-elevation($zValue);`
 
