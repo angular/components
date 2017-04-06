@@ -24,15 +24,15 @@
   }
 
   .mat-pseudo-checkbox-checked, .mat-pseudo-checkbox-indeterminate {
-    &.mat-primary {
+    &.mat-primary, .mat-primary & {
       background: mat-color($primary, 500);
     }
 
-    &.mat-accent {
+    &.mat-accent, .mat-accent & {
       background: mat-color($accent, 500);
     }
 
-    &.mat-warn {
+    &.mat-warn, .mat-warn & {
       background: mat-color($warn, 500);
     }
 

@@ -5,6 +5,8 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
   $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
 
   .mat-option {
     &:hover:not(.mat-option-disabled), &:focus:not(.mat-option-disabled) {
@@ -12,7 +14,17 @@
     }
 
     &.mat-selected {
-      color: mat-color($primary);
+      &.mat-primary, .mat-primary & {
+        color: mat-color($primary);
+      }
+
+      &.mat-accent, .mat-accent & {
+        color: mat-color($accent);
+      }
+
+      &.mat-warn, .mat-warn & {
+        color: mat-color($warn);
+      }
 
       // In multiple mode there is a checkbox to show that the option is selected.
       &:not(.mat-option-multiple) {
