@@ -3,31 +3,35 @@
 # Fetch material2 assets from material2-docs-content repo.
 
 
-ASSETS_DOCS_PATH=./src/assets/documents/
-ASSETS_EXAMPLES_PATH=./src/assets/examples/
-DEST_PATH=/tmp/material-assets
-DOCS_REPO=https://github.com/DevVersion/material2-docs-content
-DOCS_API_PATH=$DEST_PATH/api
-DOCS_GUIDES_PATH=$DEST_PATH/guides
-DOCS_OVERVIEW_PATH=$DEST_PATH/overview
-DOCS_EXAMPLES_PATH=$DEST_PATH/examples/
+# Dir where documentation assets will be copied (overviews, api docs)
+docAssetsPath=./src/assets/documents/
 
-# create folder structure
-if [ ! -d $DEST_PATH ]; then
-  mkdir -p $DEST_PATH
-fi
+# Dir where live-example assets will be copied
+exampleAssetsPath=./src/assets/examples/
 
-if [ ! -d $ASSETS_EXAMPLES_PATH ]; then
-  mkdir -p $ASSETS_EXAMPLES_PATH $ASSETS_DOCS_PATH
-fi
+# Dir where published assets will temporarily copied to (using `git clone`).
+tmpAssetClonePath=/tmp/material-assets
+
+# GitHub repo which contains snapshots of the docs content from angular/material2.
+docsContentRepo=https://github.com/angular/material2-docs-content
+
+# Dirs for each of api docs, guides, overviews, and live-examples within the
+# cloned content repo.
+apiPath=$tmpAssetClonePath/api
+guidesPath=$tmpAssetClonePath/guides
+overviewPath=$tmpAssetClonePath/overview
+examplesPath=$tmpAssetClonePath/examples/
+
+# Create folders into which to copy content and assets.
+mkdir -p $tmpAssetClonePath
+mkdir -p $exampleAssetsPath $docAssetsPath
 
 # Pull assets from repo and remove .git directory
-git clone $DOCS_REPO $DEST_PATH
-rm -rf $DEST_PATH/.git
+git clone $docsContentRepo $tmpAssetClonePath
 
 # Copy files over to their proper place in src/assets
-cp -r $DOCS_API_PATH $DOCS_OVERVIEW_PATH $DOCS_GUIDES_PATH $ASSETS_DOCS_PATH
-cp -r $DOCS_EXAMPLES_PATH $ASSETS_EXAMPLES_PATH
+cp -r $apiPath $overviewPath $guidesPath $docAssetsPath
+cp -r $examplesPath $exampleAssetsPath
 
 # Remove temporary directory
-rm -rf $DEST_PATH
+rm -rf $tmpAssetClonePath
