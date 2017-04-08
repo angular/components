@@ -43,19 +43,20 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 export class PizzaPartyAppModule { }
 ```
 
-## Step 3: Import the Module
+## Step 3: Create Your "Material" Module
 
-Add MaterialModule as an import in your app's root NgModule.
+Create a module that imports and exports modules of material components your app uses and add it as an import in your app's root NgModule. Read more about module creation at [angular.io](https://angular.io/docs/ts/latest/guide/ngmodule.html#!#shared-module).
 
 ```ts
-import {MaterialModule} from '@angular/material';
+import {MdButtonModule, MdInputModule} from '@angular/material';
 
 @NgModule({
   ...
-  imports: [MaterialModule],
+  imports: [MdButtonModule, MdInputModule],
+  exports: [MdButtonModule, MdInputModule],
   ...
 })
-export class PizzaPartyAppModule { }
+export class MyMaterialModule { }
 ```
 
 ## Step 4: Include Theming
