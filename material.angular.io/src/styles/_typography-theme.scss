@@ -1,4 +1,4 @@
-@import '~@angular/material/core/theming/theming';
+@import '~@angular/material/theming';
 
 @mixin docs-site-typography-theme($theme) {
   $primary: map-get($theme, primary);

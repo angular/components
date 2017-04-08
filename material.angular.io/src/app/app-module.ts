@@ -1,4 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {FormsModule} from '@angular/forms';
@@ -35,6 +36,7 @@ import {ComponentPageHeader} from './pages/component-page-header/component-page-
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     ExampleModule,
     SharedModule,
     FormsModule,
