@@ -4,6 +4,7 @@
 @import './app/pages/component-viewer/component-viewer-theme';
 @import './app/pages/component-list/component-list-theme';
 @import './app/pages/component-category-list/component-category-list-theme';
+@import './app/pages/guide-list/guide-list-theme';
 
 @import './styles/api-theme';
 @import './styles/markdown-theme';
@@ -50,4 +51,5 @@
   @include nav-bar-theme($theme);
   @include example-viewer-theme($theme);
   @include footer-theme($theme);
+  @include guide-list-theme($theme);
 }
