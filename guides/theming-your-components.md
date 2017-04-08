@@ -53,7 +53,7 @@ Styles that are affected by the theme should be placed in a separated theming fi
 
 
 ## Using colors from a palette
-You can consume the theming functions and Material palette from the `@angular/material/theming`. You can use the `mat-color` function to extract a specific color from a palette. For example:
+You can consume the theming functions and Material palette from `@angular/material/theming`. You can use the `mat-color` function to extract a specific color from a palette. For example:
 
 ```scss
 // Import theming functions
