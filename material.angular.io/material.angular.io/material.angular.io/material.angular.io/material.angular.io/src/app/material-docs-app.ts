@@ -1,5 +1,5 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {Router} from '@angular/router';
+import {Router, NavigationStart} from '@angular/router';
 
 
 @Component({
@@ -16,7 +16,7 @@ export class MaterialDocsApp {
   showShadow = false;
 
   constructor(router: Router) {
-    router.events.subscribe(data => {
+    router.events.subscribe((data: NavigationStart) => {
       this.showShadow = data.url.startsWith('/components');
     });
   }
