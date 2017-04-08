@@ -358,18 +358,25 @@ describe('MdDialog', () => {
   }));
 
   describe('passing in data', () => {
-    it('should be able to pass in data', () => {
-      let config = {
+    let config = {
         data: {
           stringParam: 'hello',
           dateParam: new Date()
         }
       };
 
+    it('should be able to pass in data', () => {
       let instance = dialog.open(DialogWithInjectedData, config).componentInstance;
 
       expect(instance.data.stringParam).toBe(config.data.stringParam);
       expect(instance.data.dateParam).toBe(config.data.dateParam);
+    });
+
+    it('should be able to access passed in data', () => {
+      let dialogRef = dialog.open(DialogWithInjectedData, config);
+
+      expect(dialogRef.config.data.stringParam).toBe(config.data.stringParam);
+      expect(dialogRef.config.data.dateParam).toBe(config.data.dateParam);
     });
 
     it('should throw if injected data is expected but none is passed', () => {

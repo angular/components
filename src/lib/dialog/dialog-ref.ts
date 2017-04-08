@@ -1,5 +1,5 @@
 import {OverlayRef, GlobalPositionStrategy} from '../core';
-import {DialogPosition} from './dialog-config';
+import {DialogPosition, MdDialogConfig} from './dialog-config';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {MdDialogContainer, MdDialogContainerAnimationState} from './dialog-container';
@@ -22,7 +22,11 @@ export class MdDialogRef<T> {
   /** Result to be passed to afterClosed. */
   private _result: any;
 
-  constructor(private _overlayRef: OverlayRef, public _containerInstance: MdDialogContainer) {
+  constructor(
+    private _overlayRef: OverlayRef,
+    public _containerInstance: MdDialogContainer,
+    public config: MdDialogConfig
+  ) {
     _containerInstance._onAnimationStateChange.subscribe(
       (state: MdDialogContainerAnimationState) => {
         if (state === 'exit-start') {

@@ -147,7 +147,7 @@ export class MdDialog {
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
 
-    let dialogRef = new MdDialogRef<T>(overlayRef, dialogContainer);
+    let dialogRef = new MdDialogRef<T>(overlayRef, dialogContainer, config);
 
     if (!config.disableClose) {
       // When the dialog backdrop is clicked, we want to close it.
