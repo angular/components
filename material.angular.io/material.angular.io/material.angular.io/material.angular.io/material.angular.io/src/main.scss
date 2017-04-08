@@ -1,11 +1,12 @@
 @import '~@angular/material/theming';
 @import './app-theme';
-@import './styles/typography';
+@import './styles/api';
+@import './styles/markdown';
+@import './styles/tables';
 
 
 // Include material core styles.
 @include mat-core();
-@include docs-site-typography();
 
 
 // Define the light theme.

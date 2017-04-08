@@ -5,7 +5,9 @@
 @import './app/pages/component-list/component-list-theme';
 @import './app/pages/component-category-list/component-category-list-theme';
 
-@import './styles/typography-theme';
+@import './styles/api-theme';
+@import './styles/markdown-theme';
+@import './styles/tables-theme';
 @import './app/shared/navbar/navbar-theme';
 @import './app/shared/example-viewer/example-viewer-theme';
 @import './app/shared/footer/footer-theme';
@@ -36,7 +38,9 @@
     color: mat-color($primary, default-contrast);
   }
 
-  @include docs-site-typography-theme($theme);
+  @include docs-site-api-theme($theme);
+  @include docs-site-markdown-theme($theme);
+  @include docs-site-tables-theme($theme);
   @include nav-bar-theme($theme);
   @include component-viewer-sidenav-theme($theme);
   @include home-page-theme($theme);

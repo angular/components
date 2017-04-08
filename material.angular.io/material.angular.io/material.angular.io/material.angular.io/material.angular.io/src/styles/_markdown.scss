@@ -1,0 +1,38 @@
+// Styles for overview and guide docs generated via `marked` from the material2 repo.
+
+.docs-markdown-h1 {
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 400;
+  padding: 5px;
+}
+
+.docs-markdown-h2,
+.docs-markdown-h4 {
+  margin-top: 40px;
+}
+
+.docs-markdown-h5 {
+  font-size: 16px;
+}
+
+.docs-markdown-p {
+  font-size: 16px;
+  line-height: 28px;
+}
+
+.docs-markdown-a {
+  text-decoration: none;
+}
+
+.docs-markdown-td code {
+  font-size: 12px;
+}
+
+code, pre {
+  font-family: 'Roboto Mono', monospace;
+}
+
+pre {
+  font-size: 12px;
+}
