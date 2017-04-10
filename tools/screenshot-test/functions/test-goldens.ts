@@ -28,7 +28,7 @@ export function copyTestImagesToGoldens(prNumber: string) {
       });
       return failedFilenames;
     }).then((failedFilenames: string[]) => {
-      return bucket.getFiles({prefix: `screenshots/${prNumber}/test`}).then(function (data: any) {
+      return bucket.getFiles({prefix: `screenshots/${prNumber}/test`}).then((data: any) => {
         return Promise.all(data[0]
           .filter((file: any) => failedFilenames.includes(
             path.basename(file.name, '.screenshot.png')))

@@ -9,10 +9,10 @@ const FIREBASE_DATA_GOLDENS = 'screenshot/goldens';
 
 /**
  * Read golden files under /goldens/ and store the image data to
- * database /screenshot/goldens/$filename
+ * database /screenshot/goldens/$filename as base-64 encoded string
  * Convert png image files to BufferArray data
  */
-export function convertGoldenImagesToData(name: string, resourceState: string, fileBucket: any) {
+export function copyGoldImagesToDatabase(name: string, resourceState: string, fileBucket: any) {
   // The name should always look like "goldens/xxx.png"
   let parsedPath = path.parse(name);
   // Get the file name.

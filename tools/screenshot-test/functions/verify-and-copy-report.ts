@@ -1,5 +1,5 @@
 import * as firebaseAdmin from 'firebase-admin';
-import {verifySecureToken} from './jwt_util';
+import {verifySecureToken} from './jwt-util';
 import {isCreateEvent} from './util/util';
 
 /**

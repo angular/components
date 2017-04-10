@@ -4,9 +4,9 @@ import * as firebaseFunctions from 'firebase-functions';
 import * as firebaseAdmin from 'firebase-admin';
 
 import {verifyJwtAndTransferResultToTrustedLocation} from './verify-and-copy-report';
-import {convertGoldenImagesToData} from './image_data';
-import {convertTestImageDataToFiles} from './data_image';
-import {copyTestImagesToGoldens} from './test_goldens';
+import {copyGoldImagesToDatabase} from './image-data';
+import {writeTestImagesToFiles} from './data-image';
+import {copyTestImagesToGoldens} from './test-goldens';
 import {updateGithubStatus} from './github';
 
 /**
@@ -99,7 +99,7 @@ export let testResults = firebaseFunctions.database.ref(testResultsPath)
  */
 const imageDataToFilePath = `${imagePath}/{dataType}/{filename}`;
 export let imageDataToFile = firebaseFunctions.database.ref(imageDataToFilePath)
-  .onWrite(convertTestImageDataToFiles);
+  .onWrite(writeTestImagesToFiles);
 
 /**
  * Copy valid goldens from storage /goldens/ to database /screenshot/goldens/
@@ -107,7 +107,7 @@ export let imageDataToFile = firebaseFunctions.database.ref(imageDataToFilePath)
  */
 export let goldenImageToData = firebaseFunctions.storage.bucket(
     firebaseFunctions.config().firebase.storageBucket).object().onChange((event: any) => {
-  return convertGoldenImagesToData(event.data.name, event.data.resourceState, event.data.bucket);
+  return copyGoldImagesToDatabase(event.data.name, event.data.resourceState, event.data.bucket);
 });
 
 /**

@@ -6,7 +6,7 @@ import * as firebase from 'firebase';
 import {
   openScreenshotsBucket,
   connectFirebaseScreenshots} from '../util/firebase';
-import {isTravisPushBuild} from '../util/travis-ci';
+import {isTravisMasterBuild} from '../util/travis-ci';
 
 const imageDiff = require('image-diff');
 
@@ -27,8 +27,8 @@ const FIREBASE_STORAGE_GOLDENS = 'goldens';
 task('screenshots', () => {
   let prNumber = process.env['TRAVIS_PULL_REQUEST'];
 
-  if (isTravisPushBuild()) {
-    // Only update goldens for build
+  if (isTravisMasterBuild()) {
+    // Only update goldens for master build
     return uploadScreenshots();
   } else if (prNumber) {
     let firebaseApp = connectFirebaseScreenshots();

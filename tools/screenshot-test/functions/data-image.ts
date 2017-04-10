@@ -1,6 +1,6 @@
 import * as firebaseFunctions from 'firebase-functions';
 import {writeFileSync} from 'fs';
-import {verifySecureToken} from './jwt_util';
+import {verifySecureToken} from './jwt-util';
 import {isCreateEvent} from './util/util';
 
 const gcs = require('@google-cloud/storage')();
@@ -9,11 +9,12 @@ const gcs = require('@google-cloud/storage')();
 const bucket = gcs.bucket(firebaseFunctions.config().firebase.storageBucket);
 
 /**
- * Convert data to images. Image data posted to database will be saved as png files
+ * Writes base-64 encoded test images to png files on the filesystem.
+ * Image data posted to database will be saved as png files
  * and uploaded to screenshot/$prNumber/dataType/$filename
  * Convert BufferArray to .png image file
  */
-export function convertTestImageDataToFiles(event: any) {
+export function writeTestImagesToFiles(event: any) {
   // Only edit data when it is first created. Exit when the data is deleted.
   if (!isCreateEvent(event)) {
     return;
