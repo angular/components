@@ -101,7 +101,7 @@ describe('MdCheckbox', () => {
       expect(inputElement.indeterminate).toBe(false);
     });
 
-    it('should set indeterminate to false when set checked', async(() => {
+    it('should set indeterminate to false when input clicked', async(() => {
       testComponent.isIndeterminate = true;
       fixture.detectChanges();
 
@@ -109,7 +109,7 @@ describe('MdCheckbox', () => {
       expect(inputElement.indeterminate).toBe(true);
       expect(testComponent.isIndeterminate).toBe(true);
 
-      testComponent.isChecked = true;
+      inputElement.click();
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
@@ -127,7 +127,7 @@ describe('MdCheckbox', () => {
         expect(inputElement.checked).toBe(true);
         expect(testComponent.isIndeterminate).toBe(true);
 
-        testComponent.isChecked = false;
+        inputElement.click();
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
@@ -136,6 +136,38 @@ describe('MdCheckbox', () => {
           expect(inputElement.indeterminate).toBe(false);
           expect(inputElement.checked).toBe(false);
           expect(testComponent.isIndeterminate).toBe(false);
+        });
+      });
+
+    }));
+
+    it('should not set indeterminate to false when checked is set programmatically', async(() => {
+      testComponent.isIndeterminate = true;
+      fixture.detectChanges();
+
+      expect(checkboxInstance.indeterminate).toBe(true);
+      expect(inputElement.indeterminate).toBe(true);
+      expect(testComponent.isIndeterminate).toBe(true);
+
+      testComponent.isChecked = true;
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+        expect(checkboxInstance.checked).toBe(true);
+        expect(inputElement.indeterminate).toBe(true);
+        expect(inputElement.checked).toBe(true);
+        expect(testComponent.isIndeterminate).toBe(true);
+
+        testComponent.isChecked = false;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          fixture.detectChanges();
+          expect(checkboxInstance.checked).toBe(false);
+          expect(inputElement.indeterminate).toBe(true);
+          expect(inputElement.checked).toBe(false);
+          expect(testComponent.isIndeterminate).toBe(true);
         });
       });
 
@@ -216,11 +248,11 @@ describe('MdCheckbox', () => {
       expect(checkboxInstance.checked).toBe(false);
     });
 
-    it('should overwrite indeterminate state when checked is re-set', async(() => {
+    it('should overwrite indeterminate state when clicked', async(() => {
       testComponent.isIndeterminate = true;
       fixture.detectChanges();
 
-      testComponent.isChecked = true;
+      inputElement.click();
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
