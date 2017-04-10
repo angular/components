@@ -14,7 +14,7 @@ const secret = firebaseFunctions.config().secret.key;
  */
 function getSecureToken(event: firebaseFunctions.Event<any>) {
   return `${event.params.jwtHeader}.${event.params.jwtPayload}.${event.params.jwtSignature}`;
-};
+}
 
 /**
  * Verify that the event has a valid JsonWebToken. If the token is *not* valid,
@@ -34,4 +34,4 @@ export function verifySecureToken(event: firebaseFunctions.Event<any>) {
       reject();
     });
   });
-};
+}

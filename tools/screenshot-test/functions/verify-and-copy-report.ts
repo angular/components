@@ -19,4 +19,4 @@ export function verifyJwtAndTransferResultToTrustedLocation(event: any, path: st
     return firebaseAdmin.database().ref().child('screenshot/reports')
       .child(prNumber).child(path).set(data);
   });
-};
+}

@@ -38,4 +38,4 @@ export function copyGoldImagesToDatabase(name: string, resourceState: string, fi
       let data = readFileSync(tempFilePath);
       return databaseRef.set(data);
     }).catch((error: any) => console.error(`${filenameKey} ${error}`));
-};
+}

@@ -35,4 +35,4 @@ export function copyTestImagesToGoldens(prNumber: string) {
           .map((file: any) => file.copy(`goldens/${path.basename(file.name)}`)));
       });
     });
-};
+}

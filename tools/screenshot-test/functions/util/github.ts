@@ -39,4 +39,4 @@ export function setGithubStatus(commitSHA: string,
       resolve(response.statusCode);
     });
   });
-};
+}

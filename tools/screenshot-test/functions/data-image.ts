@@ -37,4 +37,4 @@ export function writeTestImagesToFiles(event: any) {
     writeFileSync(tempPath, binaryData, 'binary');
     return bucket.upload(tempPath, {destination: filePath});
   });
-};
+}
