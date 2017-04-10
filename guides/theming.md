@@ -71,8 +71,10 @@ export class YourAppModule {
 ### Defining a custom theme
 When you want more customization than a pre-built theme offers, you can create your own theme file.
 
-A theme file is a simple Sass file that defines your palettes and passes them to mixins that output
-the corresponding styles. A typical theme file will look something like this:
+A theme file is a simple Sass file that defines your palettes, which you can then `@import` in your main style file and generate corresponding styles using the `angular-material-theme()` mixin, as well as `@import` it in your custom components and utilize all of the material mixins, functions and variables.
+
+A typical theme file will look like this:
+
 ```scss
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
@@ -96,8 +98,16 @@ $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
+```
+
+```scss
+// in your main styles file
+@import '../path/to/my/candy-app-theme';
+
 @include angular-material-theme($candy-app-theme);
 ```
+
+*note: you can safely import your `candy-app-theme.scss`, in any custom component and use functions and variables, such as `mat-color($candy-app-primary)`, since the theme file doesn't generate any styles on itself*
 
 You only need this single Sass file; you do not need to use Sass to style the rest of your app.
 
@@ -134,7 +144,7 @@ With this, any element inside of a parent with the `unicorn-dark-theme` class wi
 dark theme.
 
 ### Theming your own components
-For more details about theming your own components, 
+For more details about theming your own components,
 see [theming-your-components.md](./theming-your-components.md)
 
 ### Future work
