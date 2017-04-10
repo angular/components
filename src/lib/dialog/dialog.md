@@ -30,16 +30,12 @@ in which they are contained. When closing, an optional result value can be provi
 value is forwarded as the result of the `afterClosed` promise. 
 
 ### Sharing Data with the Dialog component.
-Depending on what you are doing you might want to share data with your dialog component. The dialog component has a data option that you can include in order to pass data from the open to the dialog. 
+Depending on what you are doing you might want to share data with your dialog component. The dialog component has a `data` option allowing you to pass data to the component.
 
 Passing outside data to your component is as simple as.
 ```ts
-import {MdDialog} from '@angular/material';
-
-private dialog: MdDialog;
-
 let dialogRef = dialog.open(DialogName, {
-  data:'your data',
+  data: 'your data',
 });
 ```
 
@@ -49,11 +45,11 @@ import {Component, Inject} from '@angular/core';
 import {MD_DIALOG_DATA} from '@angular/material';
 
 @Component({
-  selector: 'dialog-selector',
+  selector: 'your-dialog',
   template: 'passed in {{ data }}',
 })
 
-export class DialogName {
+export class YourDialog {
   constructor(@Inject(MD_DIALOG_DATA) public data: any) { }
 }
 ```
