@@ -71,15 +71,12 @@ export class YourAppModule {
 ### Defining a custom theme
 When you want more customization than a pre-built theme offers, you can create your own theme file.
 
-A theme file is a simple Sass file that defines your palettes and passes them to mixins that output
-the corresponding styles. A typical theme file will look something like this:
+A theme file is a simple Sass file that defines your palettes, which you can then `@import` in your main style file and generate corresponding styles using the `angular-material-theme()` mixin, as well as `@import` it in your custom components and utilize all of the material mixins, functions and variables.
+
+A typical theme file will look like this:
+
 ```scss
 @import '~@angular/material/theming';
-// Plus imports for other components in your app.
-
-// Include the base styles for Angular Material core. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-@include mat-core();
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -92,12 +89,21 @@ $candy-app-warn:    mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+```
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
+```scss
+// In your main styles file
+
+// Include the base styles for Angular Material core. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+@include mat-core();
+
+@import '../path/to/my/candy-app-theme';
+
 @include angular-material-theme($candy-app-theme);
 ```
+
+*note: you can safely import your `candy-app-theme.scss`, in any custom component and use functions and variables, such as `mat-color($candy-app-primary)`, since the theme file doesn't generate any styles on itself*
 
 You only need this single Sass file; you do not need to use Sass to style the rest of your app.
 
@@ -134,7 +140,7 @@ With this, any element inside of a parent with the `unicorn-dark-theme` class wi
 dark theme.
 
 ### Theming your own components
-For more details about theming your own components, 
+For more details about theming your own components,
 see [theming-your-components.md](./theming-your-components.md)
 
 ### Future work
