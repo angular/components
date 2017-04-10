@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -29,6 +28,8 @@ import {SimpleDate} from '../core/datetime/simple-date';
 import {MdDatepickerInput} from './datepicker-input';
 import {CalendarLocale} from '../core/datetime/calendar-locale';
 import 'rxjs/add/operator/first';
+import {Subscription} from 'rxjs/Subscription';
+
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -109,14 +110,19 @@ export class MdDatepicker implements OnDestroy {
   /** The input element this datepicker is associated with. */
   private _datepickerInput: MdDatepickerInput;
 
+  private _inputSubscription: Subscription;
+
   constructor(private _dialog: MdDialog, private _overlay: Overlay,
               private _viewContainerRef: ViewContainerRef, private _locale: CalendarLocale,
-              private _changeDetectorRef: ChangeDetectorRef, @Optional() private _dir: Dir) {}
+              @Optional() private _dir: Dir) {}
 
   ngOnDestroy() {
     this.close();
     if (this._popupRef) {
       this._popupRef.dispose();
+    }
+    if (this._inputSubscription) {
+
     }
   }
 
@@ -139,7 +145,8 @@ export class MdDatepicker implements OnDestroy {
       throw new MdError('An MdDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
-    this._datepickerInput.valueChange.subscribe((value: SimpleDate) => this._selected = value);
+    this._inputSubscription =
+        this._datepickerInput.valueChange.subscribe((value: SimpleDate) => this._selected = value);
   }
 
   /**
