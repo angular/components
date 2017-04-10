@@ -11,10 +11,11 @@ div {
     margin-top: 10px;
 }
 
+
 .dynamimc {
-    @include $mat-elevation(2);
+    @include mat-elevation(2);
 
     &:active {
-        @include $mat-elevation(8);
+        @include mat-elevation(8);
     }
 }

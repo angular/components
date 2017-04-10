@@ -21,10 +21,10 @@ $zValue must be a value between 0 and 24, inclusive.
 How to use the mixin 
 ```scss
 .myClass {
-  @include $mat-elevation(2);
+  @include mat-elevation(2);
 
   &:active {
-    @include $mat-elevation(8);
+    @include mat-elevation(8);
   }
 }
 ```
