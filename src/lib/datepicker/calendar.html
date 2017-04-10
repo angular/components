@@ -24,7 +24,7 @@
     </button>
   </div>
 
-  <table class="mat-calendar-weekday-table">
+  <table class="mat-calendar-weekday-table" *ngIf="_monthView">
     <tr><td *ngFor="let day of _weekdays">{{day}}</td></tr>
   </table>
 </div>
