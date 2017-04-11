@@ -3,4 +3,14 @@
   <ng-content select="md-tree-node"></ng-content>
 </ul>
 
-<md-tree-node *ngFor="let root of treeModel.roots" [nodes]="root"></md-tree-node>
+<md-tree-node *ngFor="let node of nodes.roots" [key]="node.key" [selected]="node.selected" [expanded]="node.expanded">{{node.title}}</md-tree-node>
+
+<template *ngFor="let node of nodes; let index = index; let first = first;"
+          [ngTemplateOutlet]="getTemplateForNode(row, index, first)"
+          [ngOutletContext]="{
+            node: node,
+            index: index,
+            first: first,
+            last: isLast(index)
+          }">
+</template>
