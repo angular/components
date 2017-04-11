@@ -113,7 +113,7 @@ export class MdCalendar implements AfterContentInit {
 
   /** Handles date selection in the month view. */
   _dateSelected(date: SimpleDate): void {
-    if ((!date || !this.selected) && date != this.selected || date.compare(this.selected)) {
+    if (!SimpleDate.equals(date, this.selected)) {
       this.selectedChange.emit(date);
     }
   }

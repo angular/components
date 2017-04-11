@@ -117,13 +117,13 @@ describe('MdDatepicker', () => {
       expect(document.querySelector('md-dialog-container')).not.toBeNull();
       expect(testComponent.datepickerInput.value).toEqual(new SimpleDate(2020, 0, 1));
 
-      let selected = new SimpleDate(2017, 0, 1);
-      testComponent.datepicker._selected = selected;
+      let cells = document.querySelectorAll('.mat-calendar-table-cell');
+      dispatchMouseEvent(cells[1], 'click');
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
         expect(document.querySelector('md-dialog-container')).toBeNull();
-        expect(testComponent.datepickerInput.value).toEqual(selected);
+        expect(testComponent.datepickerInput.value).toEqual(new SimpleDate(2020, 0, 2));
       });
     }));
 
@@ -228,7 +228,7 @@ describe('MdDatepicker', () => {
       expect(testComponent.datepickerInput.value).toBeNull();
 
       let selected = new SimpleDate(2017, 0, 1);
-      testComponent.datepicker._selected = selected;
+      testComponent.datepicker._selectAndClose(selected);
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
@@ -255,7 +255,7 @@ describe('MdDatepicker', () => {
 
       expect(inputEl.classList).toContain('ng-pristine');
 
-      testComponent.datepicker._selected = new SimpleDate(2017, 0, 1);
+      testComponent.datepicker._selectAndClose(new SimpleDate(2017, 0, 1));
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
@@ -330,7 +330,7 @@ describe('MdDatepicker', () => {
       expect(testComponent.datepickerInput.value).toBeNull();
 
       let selected = new SimpleDate(2017, 0, 1);
-      testComponent.datepicker._selected = selected;
+      testComponent.datepicker._selectAndClose(selected);
       fixture.detectChanges();
 
       expect(testComponent.formControl.value).toEqual(selected);
