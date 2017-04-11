@@ -1,26 +1,22 @@
 import {
-  ChangeDetectorRef,
+  AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
+  forwardRef,
   Input,
+  OnDestroy,
   Output,
   Renderer,
-  ViewEncapsulation,
-  forwardRef,
   ViewChild,
-  AfterViewInit,
-  OnDestroy,
+  ViewEncapsulation
 } from '@angular/core';
-import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 import {Subscription} from 'rxjs/Subscription';
-import {
-  MdRipple,
-  RippleRef,
-  FocusOriginMonitor,
-} from '../core';
+import {FocusOriginMonitor, MdRipple, RippleRef} from '../core';
 
 
 /** Monotonically increasing integer used to auto-generate unique ids for checkbox components. */
@@ -86,40 +82,6 @@ export class MdCheckboxChange {
 })
 export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestroy {
   /**
-   * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
-   * take precedence so this may be omitted.
-   */
-  @Input('aria-label') ariaLabel: string = '';
-
-  /**
-   * Users can specify the `aria-labelledby` attribute which will be forwarded to the input element
-   */
-  @Input('aria-labelledby') ariaLabelledby: string = null;
-
-  /** A unique id for the checkbox. If one is not supplied, it is auto-generated. */
-  @Input() id: string = `md-checkbox-${++nextId}`;
-
-  /** Whether the ripple effect on click should be disabled. */
-  private _disableRipple: boolean;
-
-  /** Whether the ripple effect for this checkbox is disabled. */
-  @Input()
-  get disableRipple(): boolean { return this._disableRipple; }
-  set disableRipple(value) { this._disableRipple = coerceBooleanProperty(value); }
-
-  /** ID of the native input element inside `<md-checkbox>` */
-  get inputId(): string {
-    return `input-${this.id}`;
-  }
-
-  private _required: boolean;
-
-  /** Whether the checkbox is required. */
-  @Input()
-  get required(): boolean { return this._required; }
-  set required(value) { this._required = coerceBooleanProperty(value); }
-
-  /**
    * Whether or not the checkbox should appear before or after the label.
    * @deprecated
    */
@@ -134,80 +96,16 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
     this.labelPosition = (v == 'start') ? 'after' : 'before';
   }
 
-  /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
-  @Input() labelPosition: 'before' | 'after' = 'after';
-
-  private _disabled: boolean = false;
-
-  /** Whether the checkbox is disabled. */
-  @Input()
-  get disabled(): boolean { return this._disabled; }
-  set disabled(value) { this._disabled = coerceBooleanProperty(value); }
-
-  /** Tabindex value that is passed to the underlying input element. */
-  @Input() tabIndex: number = 0;
-
-  /** Name value will be applied to the input element if present */
-  @Input() name: string = null;
-
-  /** Event emitted when the checkbox's `checked` value changes. */
-  @Output() change: EventEmitter<MdCheckboxChange> = new EventEmitter<MdCheckboxChange>();
-
-  /** Event emitted when the checkbox's `indeterminate` value changes. */
-  @Output() indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-  /** The value attribute of the native input element */
-  @Input() value: string ;
-
-  /** The native `<input type="checkbox"> element */
-  @ViewChild('input') _inputElement: ElementRef;
-
-  @ViewChild(MdRipple) _ripple: MdRipple;
+  /**
+   * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
+   * take precedence so this may be omitted.
+   */
+  @Input('aria-label') ariaLabel: string = '';
 
   /**
-   * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
-   * @docs-private
+   * Users can specify the `aria-labelledby` attribute which will be forwarded to the input element
    */
-  onTouched: () => any = () => {};
-
-  private _currentAnimationClass: string = '';
-
-  private _currentCheckState: TransitionCheckState = TransitionCheckState.Init;
-
-  private _checked: boolean = false;
-
-  private _indeterminate: boolean = false;
-
-  private _color: string;
-
-  private _controlValueAccessorChangeFn: (value: any) => void = (value) => {};
-
-  /** Reference to the focused state ripple. */
-  private _focusedRipple: RippleRef;
-
-  /** Reference to the focus origin monitor subscription. */
-  private _focusedSubscription: Subscription;
-
-  constructor(private _renderer: Renderer,
-              private _elementRef: ElementRef,
-              private _changeDetectorRef: ChangeDetectorRef,
-              private _focusOriginMonitor: FocusOriginMonitor) {
-    this.color = 'accent';
-  }
-
-  ngAfterViewInit() {
-    this._focusedSubscription = this._focusOriginMonitor
-      .monitor(this._inputElement.nativeElement, this._renderer, false)
-      .subscribe(focusOrigin => {
-        if (!this._focusedRipple && (focusOrigin === 'keyboard' || focusOrigin === 'program')) {
-          this._focusedRipple = this._ripple.launch(0, 0, { persistent: true, centered: true });
-        }
-      });
-  }
-
-  ngOnDestroy() {
-    this._focusOriginMonitor.stopMonitoring(this._inputElement.nativeElement);
-  }
+  @Input('aria-labelledby') ariaLabelledby: string = null;
 
   /**
    * Whether the checkbox is checked. Note that setting `checked` will immediately set
@@ -228,6 +126,44 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
       this._checked = checked;
       this._changeDetectorRef.markForCheck();
     }
+  }
+
+  /** The color of the button. Can be `primary`, `accent`, or `warn`. */
+  @Input()
+  get color(): string {
+    return this._color;
+  }
+
+  set color(value: string) {
+    this._updateColor(value);
+  }
+
+  /** Whether the checkbox is disabled. */
+  @Input()
+  get disabled(): boolean {
+    return this._disabled;
+  }
+
+  set disabled(value) {
+    this._disabled = coerceBooleanProperty(value);
+  }
+
+  /** Whether the ripple effect for this checkbox is disabled. */
+  @Input()
+  get disableRipple(): boolean {
+    return this._disableRipple;
+  }
+
+  set disableRipple(value) {
+    this._disableRipple = coerceBooleanProperty(value);
+  }
+
+  /** A unique id for the checkbox. If one is not supplied, it is auto-generated. */
+  @Input() id: string = `md-checkbox-${++nextId}`;
+
+  /** ID of the native input element inside `<md-checkbox>` */
+  get inputId(): string {
+    return `input-${this.id}`;
   }
 
   /**
@@ -258,33 +194,84 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
     }
   }
 
-  /** The color of the button. Can be `primary`, `accent`, or `warn`. */
+  /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
+  @Input() labelPosition: 'before' | 'after' = 'after';
+
+  /** Name value will be applied to the input element if present */
+  @Input() name: string = null;
+
+  /** Whether the checkbox is required. */
   @Input()
-  get color(): string { return this._color; }
-  set color(value: string) { this._updateColor(value); }
-
-  _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
+  get required(): boolean {
+    return this._required;
   }
 
-  _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
-    }
+  set required(value) {
+    this._required = coerceBooleanProperty(value);
   }
 
-  _isRippleDisabled() {
-    return this.disableRipple || this.disabled;
-  }
+  /** Tabindex value that is passed to the underlying input element. */
+  @Input() tabIndex: number = 0;
+
+  /** The value attribute of the native input element */
+  @Input() value: string ;
+
+  /** Event emitted when the checkbox's `checked` value changes. */
+  @Output() change: EventEmitter<MdCheckboxChange> = new EventEmitter<MdCheckboxChange>();
+
+  /** Event emitted when the checkbox's `indeterminate` value changes. */
+  @Output() indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /** The native `<input type="checkbox"> element */
+  @ViewChild('input') _inputElement: ElementRef;
+
+  @ViewChild(MdRipple) _ripple: MdRipple;
 
   /**
-   * Sets the model value. Implemented as part of ControlValueAccessor.
-   * @param value Value to be set to the model.
+   * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
+   * @docs-private
    */
-  writeValue(value: any) {
-    this.checked = !!value;
+  onTouched: () => any = () => {};
+
+  private _checked: boolean = false;
+  private _color: string;
+  private _controlValueAccessorChangeFn: (value: any) => void = (value) => {};
+  private _currentAnimationClass: string = '';
+  private _currentCheckState: TransitionCheckState = TransitionCheckState.Init;
+  private _disabled: boolean = false;
+  /** Whether the ripple effect on click should be disabled. */
+  private _disableRipple: boolean;
+  /** Reference to the focused state ripple. */
+  private _focusedRipple: RippleRef;
+  /** Reference to the focus origin monitor subscription. */
+  private _focusedSubscription: Subscription;
+  private _indeterminate: boolean = false;
+  private _required: boolean;
+
+  constructor(private _changeDetectorRef: ChangeDetectorRef,
+              private _elementRef: ElementRef,
+              private _focusOriginMonitor: FocusOriginMonitor,
+              private _renderer: Renderer) {
+    this.color = 'accent';
+  }
+
+  ngAfterViewInit() {
+    this._focusedSubscription = this._focusOriginMonitor
+      .monitor(this._inputElement.nativeElement, this._renderer, false)
+      .subscribe(focusOrigin => {
+        if (!this._focusedRipple && (focusOrigin === 'keyboard' || focusOrigin === 'program')) {
+          this._focusedRipple = this._ripple.launch(0, 0, { persistent: true, centered: true });
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this._focusOriginMonitor.stopMonitoring(this._inputElement.nativeElement);
+  }
+
+  /** Focuses the checkbox. */
+  focus(): void {
+    this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, this._renderer, 'program');
   }
 
   /**
@@ -313,45 +300,27 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
     this.disabled = isDisabled;
   }
 
-  private _transitionCheckState(newState: TransitionCheckState) {
-    let oldState = this._currentCheckState;
-    let renderer = this._renderer;
-    let elementRef = this._elementRef;
-
-    if (oldState === newState) {
-      return;
-    }
-    if (this._currentAnimationClass.length > 0) {
-      renderer.setElementClass(elementRef.nativeElement, this._currentAnimationClass, false);
-    }
-
-    this._currentAnimationClass = this._getAnimationClassForCheckStateTransition(
-        oldState, newState);
-    this._currentCheckState = newState;
-
-    if (this._currentAnimationClass.length > 0) {
-      renderer.setElementClass(elementRef.nativeElement, this._currentAnimationClass, true);
-    }
+  /** Toggles the `checked` state of the checkbox. */
+  toggle(): void {
+    this.checked = !this.checked;
   }
 
-  private _emitChangeEvent() {
-    let event = new MdCheckboxChange();
-    event.source = this;
-    event.checked = this.checked;
+  /**
+   * Sets the model value. Implemented as part of ControlValueAccessor.
+   * @param value Value to be set to the model.
+   */
+  writeValue(value: any) {
+    this.checked = !!value;
+  }
 
-    this._controlValueAccessorChangeFn(this.checked);
-    this.change.emit(event);
+  _isRippleDisabled() {
+    return this.disableRipple || this.disabled;
   }
 
   /** Informs the component when we lose focus in order to style accordingly */
   _onInputBlur() {
     this._removeFocusedRipple();
     this.onTouched();
-  }
-
-  /** Toggles the `checked` state of the checkbox. */
-  toggle(): void {
-    this.checked = !this.checked;
   }
 
   /**
@@ -385,11 +354,6 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
     }
   }
 
-  /** Focuses the checkbox. */
-  focus(): void {
-    this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, this._renderer, 'program');
-  }
-
   _onInteractionEvent(event: Event) {
     // We always have to stop propagation on the change event.
     // Otherwise the change event, from the input element, will bubble up and
@@ -397,32 +361,53 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
     event.stopPropagation();
   }
 
+  _setElementColor(color: string, isAdd: boolean) {
+    if (color != null && color != '') {
+      this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
+    }
+  }
+
+  _updateColor(newColor: string) {
+    this._setElementColor(this._color, false);
+    this._setElementColor(newColor, true);
+    this._color = newColor;
+  }
+
+  private _emitChangeEvent() {
+    let event = new MdCheckboxChange();
+    event.source = this;
+    event.checked = this.checked;
+
+    this._controlValueAccessorChangeFn(this.checked);
+    this.change.emit(event);
+  }
+
   private _getAnimationClassForCheckStateTransition(
-      oldState: TransitionCheckState, newState: TransitionCheckState): string {
+    oldState: TransitionCheckState, newState: TransitionCheckState): string {
     let animSuffix: string;
 
     switch (oldState) {
-    case TransitionCheckState.Init:
-      // Handle edge case where user interacts with checkbox that does not have [(ngModel)] or
-      // [checked] bound to it.
-      if (newState === TransitionCheckState.Checked) {
-        animSuffix = 'unchecked-checked';
-      } else if (newState == TransitionCheckState.Indeterminate) {
-        animSuffix = 'unchecked-indeterminate';
-      } else {
-        return '';
-      }
-      break;
-    case TransitionCheckState.Unchecked:
-      animSuffix = newState === TransitionCheckState.Checked ?
+      case TransitionCheckState.Init:
+        // Handle edge case where user interacts with checkbox that does not have [(ngModel)] or
+        // [checked] bound to it.
+        if (newState === TransitionCheckState.Checked) {
+          animSuffix = 'unchecked-checked';
+        } else if (newState == TransitionCheckState.Indeterminate) {
+          animSuffix = 'unchecked-indeterminate';
+        } else {
+          return '';
+        }
+        break;
+      case TransitionCheckState.Unchecked:
+        animSuffix = newState === TransitionCheckState.Checked ?
           'unchecked-checked' : 'unchecked-indeterminate';
-      break;
-    case TransitionCheckState.Checked:
-      animSuffix = newState === TransitionCheckState.Unchecked ?
+        break;
+      case TransitionCheckState.Checked:
+        animSuffix = newState === TransitionCheckState.Unchecked ?
           'checked-unchecked' : 'checked-indeterminate';
-      break;
-    case TransitionCheckState.Indeterminate:
-      animSuffix = newState === TransitionCheckState.Checked ?
+        break;
+      case TransitionCheckState.Indeterminate:
+        animSuffix = newState === TransitionCheckState.Checked ?
           'indeterminate-checked' : 'indeterminate-unchecked';
     }
 
@@ -434,6 +419,27 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
     if (this._focusedRipple) {
       this._focusedRipple.fadeOut();
       this._focusedRipple = null;
+    }
+  }
+
+  private _transitionCheckState(newState: TransitionCheckState) {
+    let oldState = this._currentCheckState;
+    let renderer = this._renderer;
+    let elementRef = this._elementRef;
+
+    if (oldState === newState) {
+      return;
+    }
+    if (this._currentAnimationClass.length > 0) {
+      renderer.setElementClass(elementRef.nativeElement, this._currentAnimationClass, false);
+    }
+
+    this._currentAnimationClass = this._getAnimationClassForCheckStateTransition(
+        oldState, newState);
+    this._currentCheckState = newState;
+
+    if (this._currentAnimationClass.length > 0) {
+      renderer.setElementClass(elementRef.nativeElement, this._currentAnimationClass, true);
     }
   }
 }
