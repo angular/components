@@ -47,7 +47,9 @@ describe('MdSelect', () => {
         BasicSelectOnPush,
         BasicSelectOnPushPreselected,
         SelectWithPlainTabindex,
-        SelectEarlyAccessSibling
+        SelectEarlyAccessSibling,
+        BasicSelectInitiallyHidden,
+        BasicSelectNoPlaceholder
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -159,6 +161,25 @@ describe('MdSelect', () => {
       });
     }));
 
+    it('should set the width of the overlay if the element was hidden initially', async(() => {
+      let initiallyHidden = TestBed.createComponent(BasicSelectInitiallyHidden);
+
+      initiallyHidden.detectChanges();
+      trigger = initiallyHidden.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+      trigger.style.width = '200px';
+
+      initiallyHidden.componentInstance.isVisible = true;
+      initiallyHidden.detectChanges();
+
+      initiallyHidden.whenStable().then(() => {
+        trigger.click();
+        initiallyHidden.detectChanges();
+
+        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        expect(pane.style.minWidth).toBe('200px');
+      });
+    }));
+
     it('should not attempt to open a select that does not have any options', () => {
       fixture.componentInstance.foods = [];
       fixture.detectChanges();
@@ -168,6 +189,21 @@ describe('MdSelect', () => {
 
       expect(fixture.componentInstance.select.panelOpen).toBe(false);
     });
+
+    it('should set the width of the overlay if there is no placeholder', async(() => {
+      let noPlaceholder = TestBed.createComponent(BasicSelectNoPlaceholder);
+
+      noPlaceholder.detectChanges();
+      trigger = noPlaceholder.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+
+      noPlaceholder.whenStable().then(() => {
+        trigger.click();
+        noPlaceholder.detectChanges();
+
+        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        expect(parseInt(pane.style.minWidth)).toBeGreaterThan(0);
+      });
+    }));
 
   });
 
@@ -1040,34 +1076,38 @@ describe('MdSelect', () => {
         select.style.marginRight = '20px';
       });
 
-      it('should adjust for the checkbox in ltr', () => {
+      it('should adjust for the checkbox in ltr', async(() => {
         trigger.click();
         multiFixture.detectChanges();
 
-        const triggerLeft = trigger.getBoundingClientRect().left;
-        const firstOptionLeft =
-            document.querySelector('.cdk-overlay-pane md-option').getBoundingClientRect().left;
+        multiFixture.whenStable().then(() => {
+          const triggerLeft = trigger.getBoundingClientRect().left;
+          const firstOptionLeft =
+              document.querySelector('.cdk-overlay-pane md-option').getBoundingClientRect().left;
 
-        // 48px accounts for the checkbox size, margin and the panel's padding.
-        expect(firstOptionLeft.toFixed(2))
-            .toEqual((triggerLeft - 48).toFixed(2),
-                `Expected trigger label to align along x-axis, accounting for the checkbox.`);
-      });
+          // 48px accounts for the checkbox size, margin and the panel's padding.
+          expect(firstOptionLeft.toFixed(2))
+              .toEqual((triggerLeft - 48).toFixed(2),
+                  `Expected trigger label to align along x-axis, accounting for the checkbox.`);
+        });
+      }));
 
-      it('should adjust for the checkbox in rtl', () => {
+      it('should adjust for the checkbox in rtl', async(() => {
         dir.value = 'rtl';
         trigger.click();
         multiFixture.detectChanges();
 
-        const triggerRight = trigger.getBoundingClientRect().right;
-        const firstOptionRight =
-            document.querySelector('.cdk-overlay-pane md-option').getBoundingClientRect().right;
+        multiFixture.whenStable().then(() => {
+          const triggerRight = trigger.getBoundingClientRect().right;
+          const firstOptionRight =
+              document.querySelector('.cdk-overlay-pane md-option').getBoundingClientRect().right;
 
-        // 48px accounts for the checkbox size, margin and the panel's padding.
-        expect(firstOptionRight.toFixed(2))
-            .toEqual((triggerRight + 48).toFixed(2),
-                `Expected trigger label to align along x-axis, accounting for the checkbox.`);
-      });
+          // 48px accounts for the checkbox size, margin and the panel's padding.
+          expect(firstOptionRight.toFixed(2))
+              .toEqual((triggerRight + 48).toFixed(2),
+                  `Expected trigger label to align along x-axis, accounting for the checkbox.`);
+          });
+      }));
     });
 
   });
@@ -1963,6 +2003,27 @@ class SelectWithPlainTabindex { }
 })
 class SelectEarlyAccessSibling { }
 
+@Component({
+  selector: 'basic-select-initially-hidden',
+  template: `
+    <md-select [style.display]="isVisible ? 'block' : 'none'">
+      <md-option value="value">There are no other options</md-option>
+    </md-select>
+  `
+})
+class BasicSelectInitiallyHidden {
+  isVisible = false;
+}
+
+@Component({
+  selector: 'basic-select-no-placeholder',
+  template: `
+    <md-select>
+      <md-option value="value">There are no other options</md-option>
+    </md-select>
+  `
+})
+class BasicSelectNoPlaceholder { }
 
 class FakeViewportRuler {
   getViewportRect() {
