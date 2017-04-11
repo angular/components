@@ -122,7 +122,7 @@ export class MdDatepicker implements OnDestroy {
       this._popupRef.dispose();
     }
     if (this._inputSubscription) {
-
+      this._inputSubscription.unsubscribe();
     }
   }
 
