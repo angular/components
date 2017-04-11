@@ -31,7 +31,6 @@ import 'rxjs/add/operator/first';
 import {Subscription} from 'rxjs/Subscription';
 
 
-
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
 
@@ -146,7 +145,7 @@ export class MdDatepicker implements OnDestroy {
     }
     this._datepickerInput = input;
     this._inputSubscription =
-        this._datepickerInput.valueChange.subscribe((value: SimpleDate) => this._selected = value);
+        this._datepickerInput._valueChange.subscribe((value: SimpleDate) => this._selected = value);
   }
 
   /**

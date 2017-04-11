@@ -7,7 +7,6 @@ import {
   Input,
   OnDestroy,
   Optional,
-  Output,
   Renderer
 } from '@angular/core';
 import {MdDatepicker} from './datepicker';
@@ -85,8 +84,8 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
 
   private _valueChangeEmitter = new EventEmitter<SimpleDate>();
 
-  /** Emits when the value changes. */
-  @Output() valueChange: Observable<SimpleDate> = this._valueChangeEmitter.asObservable();
+  /** Emits when the value changes (either due to user input or programmatic change). */
+  _valueChange: Observable<SimpleDate> = this._valueChangeEmitter.asObservable();
 
   _onChange = (value: any) => {};
 
