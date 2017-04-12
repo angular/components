@@ -9,8 +9,34 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
+  .mat-radio-button {
+    //default color (accent)
+    &:not(.mat-primary):not(.mat-accent):not(.mat-warn) {
+      @include radio-theme-color($accent, $foreground);
+    }
+
+    &.mat-primary {
+      @include radio-theme-color($primary, $foreground);
+    } 
+
+    &.mat-accent {
+      @include radio-theme-color($accent, $foreground);
+    } 
+
+    &.mat-warn {
+      @include radio-theme-color($warn, $foreground);
+    }
+  }
+    
+}
+
+@mixin radio-theme-color($color, $foreground) {
   .mat-radio-outer-circle {
     border-color: mat-color($foreground, secondary-text);
+
+    .mat-radio-checked & {
+      border-color: mat-color($color);
+    }
 
     .mat-radio-disabled & {
       border-color: mat-color($foreground, disabled);
@@ -18,58 +44,18 @@
   }
 
   .mat-radio-inner-circle {
+    background-color: mat-color($color);
+
     .mat-radio-disabled & {
       background-color: mat-color($foreground, disabled);
     }
   }
 
   .mat-radio-ripple .mat-ripple-element {
+    background-color: mat-color($color, 0.26);
+
     .mat-radio-disabled & {
       background-color: mat-color($foreground, disabled);
     }
-  }
-
-  .mat-radio-button.mat-radio-checked {
-    &.mat-primary {
-      .mat-radio-outer-circle{
-        border-color: mat-color($primary);
-      }
-
-      .mat-radio-inner-circle {
-        background-color: mat-color($primary);
-      }
-
-      .mat-radio-ripple .mat-ripple-element {
-        background-color: mat-color($primary, 0.26);
-      }
-    } 
-
-    &.mat-accent {
-      .mat-radio-outer-circle{
-        border-color: mat-color($accent);
-      }
-
-      .mat-radio-inner-circle {
-        background-color: mat-color($accent);
-      }
-
-      .mat-radio-ripple .mat-ripple-element {
-        background-color: mat-color($accent, 0.26);
-      }
-    } 
-
-    &.mat-warn {
-      .mat-radio-outer-circle{
-        border-color: mat-color($warn);
-      }
-
-      .mat-radio-inner-circle {
-        background-color: mat-color($warn);
-      }
-
-      .mat-radio-ripple .mat-ripple-element {
-        background-color: mat-color($warn, 0.26);
-      }
-    } 
   }
 }
