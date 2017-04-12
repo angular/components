@@ -1,25 +1,18 @@
 import {task, watch} from 'gulp';
 import {join} from 'path';
 import {main as tsc} from '@angular/tsc-wrapped';
-import {SOURCE_ROOT, DIST_BUNDLES, DIST_MATERIAL} from '../constants';
+import {SOURCE_ROOT, DIST_MATERIAL} from '../constants';
 import {sequenceTask, sassBuildTask, copyTask, triggerLivereload} from '../util/task_helpers';
-import {createRollupBundle} from '../util/rollup-helper';
-import {transpileFile} from '../util/ts-compiler';
 import {buildModuleEntry} from '../util/package-build';
-import {ScriptTarget, ModuleKind} from 'typescript';
-import {writeFileSync} from 'fs';
 
 // There are no type definitions available for these imports.
 const inlineResources = require('../../../scripts/release/inline-resources');
-const uglify = require('uglify-js');
 
 const libraryRoot = join(SOURCE_ROOT, 'lib');
 const tsconfigPath = join(libraryRoot, 'tsconfig-build.json');
 
-// Paths to the different output directories.
+// Paths to the different output files and directories.
 const materialDir = DIST_MATERIAL;
-const bundlesDir = DIST_BUNDLES;
-
 const esmMainFile = join(materialDir, 'index.js');
 
 task('library:clean-build', sequenceTask('clean', 'library:build'));
@@ -41,14 +34,14 @@ task('library:watch', () => {
 
 /**
  * TypeScript compilation tasks. Tasks are creating ESM, FESM, UMD bundles for releases.
- **/
+ */
 
 task('library:build:esm', () => tsc(tsconfigPath, {basePath: libraryRoot}));
 task('library:build:bundles', () => buildModuleEntry(esmMainFile));
 
 /**
  * Asset tasks. Building SaSS files and inlining CSS, HTML files into the ESM output.
- **/
+ */
 
 task('library:assets', ['library:assets:scss', 'library:assets:html']);
 

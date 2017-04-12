@@ -1,9 +1,8 @@
-import {join, basename, dirname, relative} from 'path';
-import {main as tsc} from '@angular/tsc-wrapped';
+import {join, basename, dirname} from 'path';
 import {DIST_BUNDLES, DIST_ROOT, SOURCE_ROOT, PROJECT_ROOT, LICENSE_BANNER} from '../constants';
-import {createRollupBundle} from '../util/rollup-helper';
-import {inlineMetadataResources} from '../util/inline-resources';
-import {transpileFile} from '../util/ts-compiler';
+import {createRollupBundle} from './rollup-helper';
+import {inlineMetadataResources} from './inline-resources';
+import {transpileFile} from './ts-compiler';
 import {ScriptTarget, ModuleKind} from 'typescript';
 import {sync as glob} from 'glob';
 import {
@@ -13,13 +12,18 @@ import {
 // There are no type definitions available for these imports.
 const uglify = require('uglify-js');
 
+/**
+ * Copies different output files into a folder structure that follows the `angular/angular`
+ * release folder structure. The output will also contain a README and the according package.json
+ * file. Additionally the package will be Closure Compiler and AOT compatible.
+ */
 export function composeRelease(packageName: string) {
   // To avoid refactoring of the project the package material will map to the source path `lib/`.
   let sourcePath = join(SOURCE_ROOT, packageName === 'material' ? 'lib' : packageName);
   let packagePath = join(DIST_ROOT, 'packages', packageName);
   let releasePath = join(DIST_ROOT, 'releases', packageName);
 
-  inlineMetadata(packagePath);
+  inlinePackageMetadataFiles(packagePath);
 
   copyFiles(packagePath, '**/*.+(d.ts|metadata.json)', join(releasePath, 'typings'));
   copyFiles(DIST_BUNDLES, `${packageName}.umd?(.min).js`, join(releasePath, 'bundles'));
@@ -91,7 +95,8 @@ function createMetadataFile(packageDir: string, packageName: string) {
   writeFileSync(join(packageDir, `${packageName}.metadata.json`), metadataReExport, 'utf-8');
 }
 
-function inlineMetadata(packagePath: string) {
+/** Inlines HTML and CSS resources into `metadata.json` files. */
+function inlinePackageMetadataFiles(packagePath: string) {
   // Create a map of fileName -> fullFilePath. This is needed because the templateUrl and
   // styleUrls for each component use just the filename because, in the source, the component
   // and the resources live in the same directory.
