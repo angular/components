@@ -7,10 +7,21 @@ import {
   EventEmitter,
   OnDestroy,
   AfterContentInit,
-  Injector,
+  Injectable,
 } from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/debounceTime';
+
+/**
+ * Factory that creates a new MutationObserver and allows us to stub it out in unit tests.
+ * @docs-private
+ */
+@Injectable()
+export class MdMutationObserverFactory {
+  create(callback): MutationObserver {
+    return new MutationObserver(callback);
+  }
+}
 
 /**
  * Directive that triggers a callback whenever the content of
@@ -31,15 +42,22 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
   /** Debounce interval for emitting the changes. */
   @Input() debounce: number;
 
-  constructor(private _elementRef: ElementRef, private _injector: Injector) { }
+  constructor(
+    private _mutationObserverFactory: MdMutationObserverFactory,
+    private _elementRef: ElementRef) { }
 
   ngAfterContentInit() {
-    this._debouncer
-      .debounceTime(this.debounce)
-      .subscribe(mutations => this.event.emit(mutations));
+    if (this.debounce > 0) {
+      this._debouncer
+        .debounceTime(this.debounce)
+        .subscribe(mutations => this.event.emit(mutations));
+    } else {
+      this._debouncer.subscribe(mutations => this.event.emit(mutations));
+    }
 
-    this._observer = new (this._injector.get(MutationObserver) as any)(
-        (mutations: MutationRecord[]) => this._debouncer.next(mutations));
+    this._observer = this._mutationObserverFactory.create((mutations: MutationRecord[]) => {
+      this._debouncer.next(mutations);
+    });
 
     this._observer.observe(this._elementRef.nativeElement, {
       characterData: true,
@@ -51,17 +69,16 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
   ngOnDestroy() {
     if (this._observer) {
       this._observer.disconnect();
-      this._observer = null;
+      this._debouncer.complete();
+      this._debouncer = this._observer = null;
     }
   }
 }
 
+
 @NgModule({
   exports: [ObserveContent],
   declarations: [ObserveContent],
-  providers: [
-    // Pass the MutationObserver through DI so it can be stubbed when testing.
-    { provide: MutationObserver, useValue: MutationObserver }
-  ]
+  providers: [MdMutationObserverFactory]
 })
 export class ObserveContentModule {}
