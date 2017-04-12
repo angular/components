@@ -2,7 +2,9 @@ const ts = require('typescript');
 const utils = require('tsutils');
 const Lint = require('tslint');
 
-const ERROR_MESSAGE = 'Todo inside of the comment might be published in the docs.';
+const ERROR_MESSAGE =
+    'A TODO may only appear in inline (//) style comments. ' +
+    'This is meant to prevent a TODO from being accidentally included in any public API docs.';
 
 /**
  * Rule that walks through all comments inside of the library and adds failures when it
