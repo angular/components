@@ -152,25 +152,18 @@ describe('MdCheckbox', () => {
       testComponent.isChecked = true;
       fixture.detectChanges();
 
-      fixture.whenStable().then(() => {
-        fixture.detectChanges();
-        expect(checkboxInstance.checked).toBe(true);
-        expect(inputElement.indeterminate).toBe(true);
-        expect(inputElement.checked).toBe(true);
-        expect(testComponent.isIndeterminate).toBe(true);
+      expect(checkboxInstance.checked).toBe(true);
+      expect(inputElement.indeterminate).toBe(true);
+      expect(inputElement.checked).toBe(true);
+      expect(testComponent.isIndeterminate).toBe(true);
 
-        testComponent.isChecked = false;
-        fixture.detectChanges();
+      testComponent.isChecked = false;
+      fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
-          expect(checkboxInstance.checked).toBe(false);
-          expect(inputElement.indeterminate).toBe(true);
-          expect(inputElement.checked).toBe(false);
-          expect(testComponent.isIndeterminate).toBe(true);
-        });
-      });
-
+      expect(checkboxInstance.checked).toBe(false);
+      expect(inputElement.indeterminate).toBe(true);
+      expect(inputElement.checked).toBe(false);
+      expect(testComponent.isIndeterminate).toBe(true);
     }));
 
     it('should change native element checked when check programmatically', () => {
