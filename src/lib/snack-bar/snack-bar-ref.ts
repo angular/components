@@ -50,9 +50,9 @@ export class MdSnackBarRef<T> {
   }
 
   /** Marks the snackbar action clicked. */
-  _action(): void {
+  _action(result?: string): void {
     if (!this._onAction.closed) {
-      this._onAction.next();
+      this._onAction.next(result);
       this._onAction.complete();
     }
   }

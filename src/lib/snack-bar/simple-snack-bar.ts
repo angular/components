@@ -27,7 +27,7 @@ export class SimpleSnackBar {
 
   /** Dismisses the snack bar. */
   dismiss(): void {
-    this.snackBarRef._action();
+    this.snackBarRef._action(this.action);
   }
 
   /** If the action button should be shown. */

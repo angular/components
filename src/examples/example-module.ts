@@ -37,6 +37,10 @@ import {
 import {ListSectionsExample} from './list-sections/list-sections-example';
 import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
 import {
+  SnackBarMultipleActionsExample,
+  MultipleActionsComponent
+} from './snack-bar-multiple-actions/snack-bar-multiple-actions-example';
+import {
   DialogResultExampleDialog,
   DialogResultExample
 } from './dialog-result/dialog-result-example';
@@ -158,6 +162,10 @@ export const EXAMPLE_COMPONENTS = {
     component: SnackBarComponentExample
   },
   'snack-bar-overview': {title: 'Basic snack-bar', component: SnackBarOverviewExample},
+  'snack-bar-multiple-actions': {
+    title: 'Snack-bar with multiple actions',
+    component: SnackBarMultipleActionsExample
+  },
   'tabs-overview': {title: 'Basic tabs', component: TabsOverviewExample},
   'tabs-template-label': {title: 'Coming soon!', component: TabsTemplateLabelExample},
   'toolbar-multirow': {title: 'Multi-row toolbar', component: ToolbarMultirowExample},
@@ -214,6 +222,8 @@ export const EXAMPLE_LIST = [
   SlideToggleOverviewExample,
   SnackBarComponentExample,
   PizzaPartyComponent,
+  SnackBarMultipleActionsExample,
+  MultipleActionsComponent,
   SnackBarOverviewExample,
   TabsOverviewExample,
   TabsTemplateLabelExample,
