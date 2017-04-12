@@ -1,5 +1,6 @@
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {Portal, MdTreeNode, ComponentPortal} from '@angular/material';
+import {NgForContext} from '@angular/material';
+import {TreeDemoDataSource, Character} from './data-source';
 
 @Component({
   moduleId: module.id,
@@ -9,17 +10,19 @@ import {Portal, MdTreeNode, ComponentPortal} from '@angular/material';
   changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
 export class TreeDemo {
-  nodeTemplate: Portal<any> = new ComponentPortal(TreeNodeKey);
-  expandedKeys: string[] = ['apple', 'pear'];
-}
+  dataSource = new TreeDemoDataSource();
 
-@Component({
-  moduleId: module.id,
-  selector: 'tree-node-key',
-  template: `<md-checkbox [(ngModel)]="node.selected" >{{node.title}} </md-checkbox>`,
-})
-export class TreeNodeKey {
-  @Input() node: MdTreeNode;
+  lastRowClicked: Character;
 
-  selectedApple: MdTreeNode;
+  characterIsVillan(node: Character): boolean {
+    return node.villan;
+  }
+
+  lastCharacterDisplayed(node: Character, context: NgForContext) {
+    return context.last;
+  }
+
+  rowClicked(row: Character) {
+    this.lastRowClicked = row;
+  }
 }
