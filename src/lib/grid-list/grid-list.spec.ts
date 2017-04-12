@@ -262,6 +262,7 @@ describe('MdGridList', () => {
   it('should support switching between ratio and fixed row height', () => {
     // width is 400px, 1 column
     let fixture = TestBed.createComponent(GirdListWithRowHeightRatio);
+    const gridList = fixture.debugElement.query(By.directive(MdGridList));
     // initial ratio rowHeight
     fixture.componentInstance.rowHeight = '2:1';
     fixture.detectChanges();
@@ -271,6 +272,8 @@ describe('MdGridList', () => {
     expect(getStyle(tile, 'height')).toBe('0px');
     let rectHeight = tile.nativeElement.getBoundingClientRect().height;
     expect(rectHeight).toBe(200);
+    let gridHeight = gridList.nativeElement.getBoundingClientRect().height;
+    expect(gridHeight).toBe(200);
 
     // now change to fixed row height
     fixture.componentInstance.rowHeight = '100px';
@@ -280,6 +283,8 @@ describe('MdGridList', () => {
     rectHeight = tile.nativeElement.getBoundingClientRect().height;
     expect(rectHeight).toBe(100);
     expect(getStyle(tile, 'padding-top')).toBe('0px');
+    gridHeight = gridList.nativeElement.getBoundingClientRect().height;
+    expect(gridHeight).toBe(100);
 
     // ratio again (same checks as first)
     fixture.componentInstance.rowHeight = '2:1';
@@ -289,6 +294,8 @@ describe('MdGridList', () => {
     expect(getStyle(tile, 'height')).toBe('0px');
     rectHeight = tile.nativeElement.getBoundingClientRect().height;
     expect(rectHeight).toBe(200);
+    gridHeight = gridList.nativeElement.getBoundingClientRect().height;
+    expect(gridHeight).toBe(200);
   });
 });
 

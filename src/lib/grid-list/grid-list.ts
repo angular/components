@@ -115,6 +115,9 @@ export class MdGridList implements OnInit, AfterContentChecked {
       this._tiles.forEach((tile, index) => {
         this._tileStyler.clearRowStyles(tile);
       });
+      // clear styles set on grid by _layoutTiles()
+      this._setListStyle(['paddingBottom', '0px']);
+      this._setListStyle(['height', '0px']);
     }
     if (this._rowHeight === MD_FIT_MODE) {
       this._tileStyler = new FitTileStyler();
