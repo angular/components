@@ -1,10 +1,10 @@
 <md-card>
   <md-card-header>
     <md-card-title>
-      <md-icon (click)="collapse = !collapse; collapseEvent.emit(collapse)">{{collapse ? 'keyboard_arrow_right' : 'keyboard_arrow_down'}}</md-icon>
+      <md-icon (click)="toggleCollapse()">{{collapseIcon}}</md-icon>
       {{testName}}
     </md-card-title>
-    <md-card-subtitle [ngClass]="resultText">{{resultText}}</md-card-subtitle>
+    <md-card-subtitle [ngClass]="resultText.toLowerCase()">{{resultText}}</md-card-subtitle>
   </md-card-header>
   <md-card-content *ngIf="collapse == false">
     <div class="images-section" [ngClass]="mode" [class.flipping]="flipping">
@@ -34,6 +34,6 @@
         Side by side
       </md-button-toggle>
     </md-button-toggle-group>
-    <button md-button color="primary" (click)="flip()" *ngIf="mode == 'flip'">Flip</button>
+    <button md-button color="primary" (click)="flip()" *ngIf="mode === 'flip'">Flip</button>
   </md-card-actions>
 </md-card>

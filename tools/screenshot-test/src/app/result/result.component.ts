@@ -24,7 +24,6 @@ export class ResultComponent {
   diffImageUrl: string;
   goldImageUrl: string;
 
-
   /** Test result, auto set collapse to be the same as the result value */
   @Input()
   get result() {
@@ -68,6 +67,10 @@ export class ResultComponent {
   }
    _flipping: boolean = false;
 
+  get collapseIcon() {
+    return this.collapse ? 'keyboard_arrow_right' : 'keyboard_arrow_down';
+  }
+
    /** Filename, the test file name. */
   @Input()
   get filename() {
@@ -104,5 +107,10 @@ export class ResultComponent {
 
   flip() {
     this.service.screenshotResult.flipping = !this.service.screenshotResult.flipping;
+  }
+
+  toggleCollapse() {
+    this.collapse = !this.collapse;
+    this.collapseEvent.emit(this.collapse);
   }
 }

@@ -1,15 +1,15 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { MaterialModule } from '@angular/material';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {HttpModule} from '@angular/http';
+import {MaterialModule} from '@angular/material';
 import {FirebaseService} from './firebase.service';
 import {routing} from './routes';
 
-import { AppComponent } from './app.component';
-import { ViewerComponent } from './viewer/viewer.component';
-import { ResultComponent } from './result/result.component';
-import { NavComponent } from './nav/nav.component';
+import {AppComponent} from './app.component';
+import {ViewerComponent} from './viewer/viewer.component';
+import {ResultComponent} from './result/result.component';
+import {NavComponent} from './nav/nav.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +22,7 @@ import { NavComponent } from './nav/nav.component';
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule.forRoot(),
+    MaterialModule,
     routing,
   ],
   providers: [FirebaseService],

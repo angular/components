@@ -34,8 +34,8 @@
         Set Github to Success
       </button>
       <a md-icon-button>
-        <md-icon *ngIf="screenshotResult.githubStatus == 'success'" style="color:green">check</md-icon>
-        <md-icon  *ngIf="screenshotResult.githubStatus == 'failure'" style="color:red">close</md-icon>
+        <md-icon *ngIf="githubSuccess" style="color:green">check</md-icon>
+        <md-icon *ngIf="githubFailure" style="color:red">close</md-icon>
       </a>
       <a md-tooltip="Refresh Github Status" (click)="refreshGithubStatus()" md-icon-button>
         <md-icon>refresh</md-icon>

@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {FirebaseService} from '../firebase.service';
 
 
 @Component({
   selector: 'app-nav',
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css']
+  templateUrl: './nav.component.html'
 })
 export class NavComponent {
   get user() {

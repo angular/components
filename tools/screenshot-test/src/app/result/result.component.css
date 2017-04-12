@@ -49,10 +49,10 @@ img {
   visibility: visible;
 }
 
-.Failed {
+.failed {
   color: red;
 }
 
-.Passed {
+.passed {
   color: forestgreen;
 }
