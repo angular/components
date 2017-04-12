@@ -126,6 +126,12 @@ export class TileStyler {
   setRowStyles(tile: MdGridTile, rowIndex: number, percentWidth: number, gutterWidth: number) {}
 
   /**
+   * Clear any styles from the tile created by this TileStyler.
+   * @docs-private
+   */
+  clearRowStyles(tile: MdGridTile) {}
+
+  /**
    * Calculates the computed height and returns the correct style property to set.
    * This method will be implemented by each type of TileStyler.
    * @docs-private
@@ -152,6 +158,11 @@ export class FixedTileStyler extends TileStyler {
                gutterWidth: number): void {
     tile._setStyle('top', this.getTilePosition(this.fixedRowHeight, rowIndex));
     tile._setStyle('height', calc(this.getTileSize(this.fixedRowHeight, tile.rowspan)));
+  }
+
+  clearRowStyles(tile: MdGridTile): void {
+    tile._setStyle('top', '0px');
+    tile._setStyle('height', '0px');
   }
 
   getComputedHeight(): [string, string] {
@@ -188,6 +199,11 @@ export class RatioTileStyler extends TileStyler {
     // containing block. See http://www.w3.org/TR/CSS2/box.html#margin-properties
     tile._setStyle('marginTop', this.getTilePosition(this.baseTileHeight, rowIndex));
     tile._setStyle('paddingTop', calc(this.getTileSize(this.baseTileHeight, tile.rowspan)));
+  }
+
+  clearRowStyles(tile: MdGridTile): void {
+    tile._setStyle('marginTop', '0px');
+    tile._setStyle('paddingTop', '0px');
   }
 
   getComputedHeight(): [string, string] {
@@ -230,6 +246,12 @@ export class FitTileStyler extends TileStyler {
     tile._setStyle('top', this.getTilePosition(baseTileHeight, rowIndex));
     tile._setStyle('height', calc(this.getTileSize(baseTileHeight, tile.rowspan)));
   }
+
+  clearRowStyles(tile: MdGridTile): void {
+    tile._setStyle('top', '0px');
+    tile._setStyle('height', '0px');
+  }
+
 }
 
 
