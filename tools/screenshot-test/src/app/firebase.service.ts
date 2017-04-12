@@ -118,8 +118,8 @@ export class FirebaseService {
             this.screenshotResult.approved = childValue;
             break;
         }
-        counter ++;
-        if (counter == snapshot.numChildren()) {
+        counter++;
+        if (counter === snapshot.numChildren()) {
           return true;
         }
       });
@@ -166,7 +166,7 @@ export class FirebaseService {
       this.screenshotResult.testnames.push(key);
       this.screenshotResult.collapse.push(value);
       childCounter++;
-      if (childCounter == childSnapshot.numChildren()) {
+      if (childCounter === childSnapshot.numChildren()) {
         return true;
       }
     });
@@ -187,17 +187,11 @@ export class FirebaseService {
     let url =
       `https://api.github.com/repos/${config.repoSlug}/commits/${this.screenshotResult.sha}/status`;
     return new Promise((resolve) => {
-      request({
-        url: url,
-        method: 'GET',
-      }, function (error: any, response: any) {
+      request({url, method: 'GET'}, (error: any, response: any) => {
         let statusResponse = JSON.parse(response.body);
-        for (let status of statusResponse.statuses) {
-          if (status.context == 'Screenshot Tests') {
-            resolve(status.state);
-          }
-        }
-        resolve(null);
+        let screenshotStatus = statusResponse.statuses.find((status) =>
+          status.context === 'Screenshot Tests');
+        resolve(screenshotStatus ? screenshotStatus.state : null);
       });
     });
   }
