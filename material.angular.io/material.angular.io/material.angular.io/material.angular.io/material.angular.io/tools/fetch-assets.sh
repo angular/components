@@ -7,7 +7,7 @@
 docAssetsPath=./src/assets/documents/
 
 # Dir where live-example assets will be copied
-exampleAssetsPath=./src/assets/examples/
+exampleAssetsPath=./src/assets/
 
 # Dir where published assets will temporarily copied to (using `git clone`).
 tmpAssetClonePath=/tmp/material-assets
