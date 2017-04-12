@@ -20,7 +20,7 @@ import {FirebaseService} from '../firebase.service';
 })
 export class ResultComponent {
 
-  /** Test name, display on top of the allTestsPassedOrApproved card */
+  /** Test name, display on top of the result card */
   testName: string;
 
   /** Test, diff and golden image urls */
@@ -28,7 +28,9 @@ export class ResultComponent {
   diffImageUrl: string;
   goldImageUrl: string;
 
-  /** Test allTestsPassedOrApproved, auto set collapse to be the same as the allTestsPassedOrApproved value */
+  /**
+   * Test result, auto set collapse to be the same as the result value
+   */
   @Input()
   get result() {
     return this._result;
@@ -46,7 +48,7 @@ export class ResultComponent {
   /** Collapse: whether collapse or expand the card to show images */
   @Input() collapse: boolean = true;
 
-  /** Mode: the allTestsPassedOrApproved card has three modes, flip, side by side, and diff */
+  /** Mode: the result card has three modes, flip, side by side, and diff */
   @Input()
   get mode() {
     return this._mode;

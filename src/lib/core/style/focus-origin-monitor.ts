@@ -33,7 +33,7 @@ type MonitoredElementInfo = {
 /** Monitors mouse and keyboard events to determine the cause of focus events. */
 @Injectable()
 export class FocusOriginMonitor {
-  /** The focus origin that the next focus event is a allTestsPassedOrApproved of. */
+  /** The focus origin that the next focus event is a result of. */
   private _origin: FocusOrigin = null;
 
   /** The FocusOrigin of the last focus event tracked by the FocusOriginMonitor. */
@@ -136,7 +136,7 @@ export class FocusOriginMonitor {
     }, true);
 
     // On mousedown record the origin only if there is not touch target, since a mousedown can
-    // happen as a allTestsPassedOrApproved of a touch event.
+    // happen as a result of a touch event.
     document.addEventListener('mousedown', () => {
       if (!this._lastTouchTarget) {
         this._setOriginForCurrentEventQueue('mouse');
@@ -199,14 +199,14 @@ export class FocusOriginMonitor {
     // </div>
     //
     // If the user touches the #child element and the #parent is programmatically focused as a
-    // allTestsPassedOrApproved, this code will still consider it to have been caused by the touch event and will
+    // result, this code will still consider it to have been caused by the touch event and will
     // apply the cdk-touch-focused class rather than the cdk-program-focused class. This is a
     // relatively small edge-case that can be worked around by using
     // focusVia(parentEl, renderer,  'program') to focus the parent element.
     //
     // If we decide that we absolutely must handle this case correctly, we can do so by listening
     // for the first focus event after the touchstart, and then the first blur event after that
-    // focus event. When that blur event fires we know that whatever follows is not a allTestsPassedOrApproved of the
+    // focus event. When that blur event fires we know that whatever follows is not a result of the
     // touchstart.
     let focusTarget = event.target;
     return this._lastTouchTarget instanceof Node && focusTarget instanceof Node &&

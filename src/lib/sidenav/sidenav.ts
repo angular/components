@@ -28,7 +28,7 @@ export class MdDuplicatedSidenavError extends MdError {
 }
 
 
-/** Sidenav toggle promise allTestsPassedOrApproved. */
+/** Sidenav toggle promise result. */
 export class MdSidenavToggleResult {
   constructor(public type: 'open' | 'close', public animationFinished: boolean) {}
 }
@@ -199,7 +199,7 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
    * Toggle this sidenav. This is equivalent to calling open() when it's already opened, or
    * close() when it's closed.
    * @param isOpen Whether the sidenav should be open.
-   * @returns Resolves with the allTestsPassedOrApproved of whether the sidenav was opened or closed.
+   * @returns Resolves with the result of whether the sidenav was opened or closed.
    */
   toggle(isOpen: boolean = !this.opened): Promise<MdSidenavToggleResult> {
     // Shortcut it if we're already opened.

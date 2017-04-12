@@ -19,10 +19,10 @@ task('payload', ['library:clean-build'], () => {
     timestamp: Date.now()
   };
 
-  // Print the testResultsByName to the console, so we can read it from the CI.
+  // Print the results to the console, so we can read it from the CI.
   console.log('Payload Results:', JSON.stringify(results, null, 2));
 
-  // Publish the testResultsByName to firebase when it runs on Travis and not as a PR.
+  // Publish the results to firebase when it runs on Travis and not as a PR.
   if (isTravisPushBuild()) {
     return publishResults(results);
   }
@@ -39,12 +39,12 @@ function getFilesize(filePath: string) {
   return statSync(filePath).size / 1000;
 }
 
-/** Publishes the given testResultsByName to the firebase database. */
+/** Publishes the given results to the firebase database. */
 function publishResults(results: any) {
   let latestSha = spawnSync('git', ['rev-parse', 'HEAD']).stdout.toString().trim();
   let database = openFirebaseDashboardDatabase();
 
-  // Write the testResultsByName to the payloads object with the latest Git SHA as key.
+  // Write the results to the payloads object with the latest Git SHA as key.
   return database.ref('payloads').child(latestSha).set(results)
     .then(() => database.goOffline(), () => database.goOffline());
 }

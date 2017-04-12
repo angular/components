@@ -13,7 +13,7 @@ export class FirebaseService {
   /** The current user */
   user: any;
 
-  /** The screenshot testResultsByName */
+  /** The screenshot results */
   screenshotResult: ScreenshotResult;
 
   constructor() {
@@ -89,7 +89,8 @@ export class FirebaseService {
 
   /** Change the commit's screenshot test status on GitHub */
   updatePRResult() {
-    return this._databaseRef().child('allTestsPassedOrApproved').child(this.screenshotResult.sha).set(true);
+    return this._databaseRef().child('result').child(this.screenshotResult.sha)
+      .set(true);
   }
 
   _databaseRef(): firebase.database.Reference {

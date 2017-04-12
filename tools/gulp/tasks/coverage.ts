@@ -11,7 +11,7 @@ task('coverage:upload', () => {
   }
 
   if (!isTravisPushBuild()) {
-    throw new Error('Coverage testResultsByName will be only uploaded inside of Travis Push builds.');
+    throw new Error('Coverage results will be only uploaded inside of Travis Push builds.');
   }
 
   let results = require(COVERAGE_RESULT_FILE)['total'];
@@ -22,7 +22,7 @@ task('coverage:upload', () => {
   return uploadResults(results);
 });
 
-/** Uploads the coverage testResultsByName to the firebase database. */
+/** Uploads the coverage results to the firebase database. */
 function uploadResults(results: any): Promise<void> {
   let latestSha = spawnSync('git', ['rev-parse', 'HEAD']).stdout.toString().trim();
   let database = openFirebaseDashboardDatabase();
@@ -32,4 +32,4 @@ function uploadResults(results: any): Promise<void> {
 }
 
 // TODO(devversion): In the future we might have a big database where we can store full summaries.
-// TODO(devversion): We could also move the coverage to a bot and reply with the testResultsByName on PRs.
+// TODO(devversion): We could also move the coverage to a bot and reply with the results on PRs.

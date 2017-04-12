@@ -20,7 +20,7 @@ function onPageStable() {
 }
 
 /**
- * Processes the axe-core testResultsByName by reporting recognized violations
+ * Processes the axe-core results by reporting recognized violations
  * to Protractor and printing them out.
  * @param {!protractor.ProtractorPlugin} context
  * @param {!axe.AxeResults} results
