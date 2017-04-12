@@ -17,17 +17,16 @@
 
     &.mat-primary {
       @include radio-theme-color($primary, $foreground);
-    } 
+    }
 
     &.mat-accent {
       @include radio-theme-color($accent, $foreground);
-    } 
+    }
 
     &.mat-warn {
       @include radio-theme-color($warn, $foreground);
     }
   }
-    
 }
 
 @mixin radio-theme-color($color, $foreground) {

@@ -376,12 +376,12 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
 
   /** The color of the button. Can be `primary`, `accent`, or `warn`. */
   @Input()
-  get color(): string { 
-    return this._color; 
+  get color(): string {
+    return this._color;
   }
 
-  set color(value: string) { 
-    this._updateColor(value); 
+  set color(value: string) {
+    this._updateColor(value);
   }
 
   /**
@@ -522,7 +522,7 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
       this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
     }
   }
-         
+
   /** Function is called whenever the focus changes for the input element. */
   private _onInputFocusChange(focusOrigin: FocusOrigin) {
     if (!this._focusRipple && focusOrigin === 'keyboard') {
