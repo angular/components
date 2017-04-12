@@ -113,7 +113,7 @@ describe('MdDialog', () => {
     expect(dialogContainerElement.getAttribute('role')).toBe('alertdialog');
   });
 
-  it('should close a dialog and get back a result', async(() => {
+  it('should close a dialog and get back a allTestsPassedOrApproved', async(() => {
     let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
     let afterCloseCallback = jasmine.createSpy('afterClose callback');
 

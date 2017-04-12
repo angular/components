@@ -3,6 +3,11 @@ import {ActivatedRoute} from '@angular/router';
 import {MdSnackBar} from '@angular/material';
 import {FirebaseService} from '../firebase.service';
 
+/**
+ * Component to show test results for one commit. The github status, pull request and travis job
+ * information, test result and commit SHA are visible.
+ * User can approve the change by updating the github status, or by updating the goldens.
+ */
 @Component({
   selector: 'app-viewer',
   templateUrl: './viewer.component.html',
@@ -12,9 +17,7 @@ export class ViewerComponent {
   messageDuration = {duration: 10000};
 
   get isApproved() {
-    return this._service.screenshotResult.approved &&
-      this._service.screenshotResult.sha &&
-      this._service.screenshotResult.approved.indexOf(this._service.screenshotResult.sha) === 0;
+    return !!this._service.screenshotResult.approvedTime;
   }
 
   get screenshotResult() {

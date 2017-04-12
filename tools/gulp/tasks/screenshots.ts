@@ -12,7 +12,7 @@ import {isTravisPushBuild} from '../util/travis-ci';
 
 const imageDiff = require('image-diff');
 
-// Directory to which untrusted screenshot results are temporarily written
+// Directory to which untrusted screenshot testResultsByName are temporarily written
 //   (without authentication required) before they are verified and copied to
 //   the final storage location.
 const TEMP_FOLDER = 'untrustedInbox';
@@ -119,7 +119,7 @@ function getSecureToken() {
  * Upload screenshots to google cloud storage.
  * @param prNumber - The key used in firebase. Here it is the PR number.
  * @param mode - Can be 'test' or 'diff' .
- *   If the images are the test results, mode should be 'test'.
+ *   If the images are the test testResultsByName, mode should be 'test'.
  *   If the images are the diff images generated, mode should be 'diff'.
  */
 function uploadScreenshotsData(database: firebase.database.Database,

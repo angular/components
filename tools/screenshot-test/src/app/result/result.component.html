@@ -6,7 +6,7 @@
     </md-card-title>
     <md-card-subtitle [ngClass]="resultText.toLowerCase()">{{resultText}}</md-card-subtitle>
   </md-card-header>
-  <md-card-content *ngIf="collapse == false">
+  <md-card-content *ngIf="!collapse">
     <div class="images-section" [ngClass]="mode" [class.flipping]="flipping">
       <div class="image-section test-section" >
         <div class="image-title">Test image</div>

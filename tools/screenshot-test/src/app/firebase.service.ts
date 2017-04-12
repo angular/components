@@ -4,65 +4,16 @@ import * as firebase from 'firebase';
 const request = require('request');
 const config = require('../config.json');
 
+import {ScreenshotResult} from './screenshot-result';
 
-export class ScreenshotResult {
-  /** PR information: the pull request number */
-  prNumber: string;
-  /** PR information: the sha of the pull request commit */
-  sha: string;
-  /** PR information: The travis job ID */
-  travis: string;
-
-  /** Test result, the test names */
-  testnames: string[];
-  /** Test result: passed or failed. The value can be true if test failed but PR approved by user */
-  result: boolean;
-  /** Test results: passed or failed for each test */
-  results: Map<string, boolean> = new Map<string, boolean>();
-  /**
-   * Test approved: whether the test images are copied to goldens.
-   * The value is the commit SHA and date/time of approval.
-   */
-  approved: string;
-
-  githubStatus: any;
-
-  /** Viewing mode, can be flip, diff, side */
-  mode: 'diff' | 'side' | 'flip' = 'diff';
-  /** Viewing flipping, whether the image is test image or golden image */
-  flipping: boolean = false;
-  /** Viewing collapsed: whether the result should be collapsed/expanded */
-  collapse: boolean[];
-
-  setCollapse(value: boolean) {
-    if (this.collapse) {
-      for (let i = 0; i < this.collapse.length; i++) {
-        this.collapse[i] = value;
-      }
-    }
-  }
-
-  get prLink() {
-    return `https://github.com/${config.repoSlug}/pull/${this.prNumber}`;
-  }
-
-  get commitLink() {
-    return `https://github.com/${config.repoSlug}/commit/${this.sha}`;
-  }
-
-  get travisLink() {
-    return `https://travis-ci.org/${config.repoSlug}/jobs/${this.travis}`;
-  }
-}
-
-
+/** The service to fetch data from firebase database */
 @Injectable()
 export class FirebaseService {
 
   /** The current user */
   user: any;
 
-  /** The screenshot results */
+  /** The screenshot testResultsByName */
   screenshotResult: ScreenshotResult;
 
   constructor() {
@@ -114,9 +65,6 @@ export class FirebaseService {
           case 'results':
             this._processResults(childSnapshot);
             break;
-          case 'approved':
-            this.screenshotResult.approved = childValue;
-            break;
         }
         counter++;
         if (counter === snapshot.numChildren()) {
@@ -136,12 +84,12 @@ export class FirebaseService {
 
   /** Change the PR status to approved to let Firebase Functions copy test images to goldens */
   approvePR() {
-    return this._databaseRef().child('approved').set(`${this.screenshotResult.sha}-${new Date()}`);
+    return this._databaseRef().child('approved').child(this.screenshotResult.sha).set(Date.now());
   }
 
   /** Change the commit's screenshot test status on GitHub */
   updatePRResult() {
-    return this._databaseRef().child('result').child(this.screenshotResult.sha).set(true);
+    return this._databaseRef().child('allTestsPassedOrApproved').child(this.screenshotResult.sha).set(true);
   }
 
   _databaseRef(): firebase.database.Reference {
@@ -153,17 +101,17 @@ export class FirebaseService {
     return firebase.storage().ref('screenshots').child(this.screenshotResult.prNumber);
   }
 
-  /** Put the results in screenshotReuslt */
+  /** Put the testResultsByName in screenshotReuslt */
   _processResults(childSnapshot: firebase.database.DataSnapshot) {
     let childCounter = 0;
     this.screenshotResult.collapse = [];
-    this.screenshotResult.testnames = [];
-    this.screenshotResult.results.clear();
+    this.screenshotResult.testNames = [];
+    this.screenshotResult.testResultsByName.clear();
     childSnapshot.forEach((resultSnapshot: firebase.database.DataSnapshot) => {
       let key = resultSnapshot.key;
       let value = resultSnapshot.val();
-      this.screenshotResult.results.set(key, value);
-      this.screenshotResult.testnames.push(key);
+      this.screenshotResult.testResultsByName.set(key, value);
+      this.screenshotResult.testNames.push(key);
       this.screenshotResult.collapse.push(value);
       childCounter++;
       if (childCounter === childSnapshot.numChildren()) {
@@ -176,10 +124,15 @@ export class FirebaseService {
     this.screenshotResult.sha = childValue;
     // Get github status
     this.getGithubStatus().then((result) => this.screenshotResult.githubStatus = result);
-    // Get test result
+    // Get test allTestsPassedOrApproved
     this._databaseRef().child(`result/${childValue}`).once('value')
       .then((dataSnapshot: firebase.database.DataSnapshot) => {
-        this.screenshotResult.result = dataSnapshot.val();
+        this.screenshotResult.allTestsPassedOrApproved = dataSnapshot.val();
+      });
+    // Get the approved SHA and date time
+    this._databaseRef().child(`approved/${childValue}`).once('value')
+      .then((dataSnapshot: firebase.database.DataSnapshot) => {
+        this.screenshotResult.approvedTime = dataSnapshot.val();
       });
   }
 

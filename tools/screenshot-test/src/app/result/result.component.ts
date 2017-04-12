@@ -8,6 +8,10 @@ import {
 } from '@angular/core';
 import {FirebaseService} from '../firebase.service';
 
+/**
+ * Component to display test result, test name, test image, reference image, and diff image.
+ * User can change the view mode, or collapse the panel to hide the images.
+ */
 @Component({
   selector: 'app-result',
   templateUrl: './result.component.html',
@@ -16,7 +20,7 @@ import {FirebaseService} from '../firebase.service';
 })
 export class ResultComponent {
 
-  /** Test name, display on top of the result card */
+  /** Test name, display on top of the allTestsPassedOrApproved card */
   testName: string;
 
   /** Test, diff and golden image urls */
@@ -24,7 +28,7 @@ export class ResultComponent {
   diffImageUrl: string;
   goldImageUrl: string;
 
-  /** Test result, auto set collapse to be the same as the result value */
+  /** Test allTestsPassedOrApproved, auto set collapse to be the same as the allTestsPassedOrApproved value */
   @Input()
   get result() {
     return this._result;
@@ -42,17 +46,17 @@ export class ResultComponent {
   /** Collapse: whether collapse or expand the card to show images */
   @Input() collapse: boolean = true;
 
-  /** Mode: the result card has three modes, flip, side by side, and diff */
+  /** Mode: the allTestsPassedOrApproved card has three modes, flip, side by side, and diff */
   @Input()
   get mode() {
     return this._mode;
   }
-  set mode(value: 'flip' | 'side' | 'diff') {
+  set mode(value: 'flip' | 'side-by-side' | 'diff') {
     this._mode = value;
     this.modeEvent.emit(value);
     this._changeDetectorRef.markForCheck();
   }
-  _mode: 'flip' | 'side' | 'diff' = 'diff';
+  _mode: 'flip' | 'side-by-side' | 'diff' = 'diff';
 
   /** When mode is "flip" whether we show the test image or the golden image */
   @Input()
@@ -71,42 +75,45 @@ export class ResultComponent {
     return this.collapse ? 'keyboard_arrow_right' : 'keyboard_arrow_down';
   }
 
-   /** Filename, the test file name. */
   @Input()
-  get filename() {
-    return this._filename;
-  }
   set filename(filename: string) {
-    this._filename = `${filename}.screenshot.png`;
-    this.testName = filename.replace(/[_]/g, ' ');
-    this.service.testRef().child(this._filename).getDownloadURL()
+    if (this._filename != filename) {
+      this._filename = filename;
+      this.setFilenameAndFetchImages();
+    }
+  }
+  _filename: string;
+
+  setFilenameAndFetchImages() {
+    this.testName = this._filename.replace(/[_]/g, ' ');
+    let imageFilename = `${this._filename}.screenshot.png`;
+    this.service.testRef().child(imageFilename).getDownloadURL()
       .then((url) => {
         this.testImageUrl = url;
         this._changeDetectorRef.markForCheck();
       });
-    this.service.diffRef().child(this._filename).getDownloadURL()
+    this.service.diffRef().child(imageFilename).getDownloadURL()
       .then((url) => {
         this.diffImageUrl = url;
         this._changeDetectorRef.markForCheck();
       });
-    this.service.goldRef().child(this._filename).getDownloadURL()
+    this.service.goldRef().child(imageFilename).getDownloadURL()
       .then((url) => {
         this.goldImageUrl = url;
         this._changeDetectorRef.markForCheck();
       });
   }
-  _filename: string;
 
   @Output('flippingChange') flippingEvent = new EventEmitter<boolean>();
 
-  @Output('modeChange') modeEvent = new EventEmitter<'flip' | 'side' | 'diff'>();
+  @Output('modeChange') modeEvent = new EventEmitter<'flip' | 'side-by-side' | 'diff'>();
 
   @Output('collapseChange') collapseEvent = new EventEmitter<boolean>();
 
   constructor(public service: FirebaseService, private _changeDetectorRef: ChangeDetectorRef) { }
 
   flip() {
-    this.service.screenshotResult.flipping = !this.service.screenshotResult.flipping;
+    this.service.screenshotResult.isFlipped = !this.service.screenshotResult.isFlipped;
   }
 
   toggleCollapse() {

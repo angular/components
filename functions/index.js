@@ -14,11 +14,11 @@ const fs = require('fs');
  *
  * For valid data posted to database /$temp/screenshot/reports/$prNumber/$secureToken, move it to
  * /screenshot/reports/$prNumber.
- * These are data for screenshot results (success or failure), GitHub PR/commit and TravisCI job information
+ * These are data for screenshot testResultsByName (success or failure), GitHub PR/commit and TravisCI job information
  *
- * For valid image results written to database /$temp/screenshot/images/$prNumber/$secureToken/, save the image
+ * For valid image testResultsByName written to database /$temp/screenshot/images/$prNumber/$secureToken/, save the image
  * data to image files and upload to google cloud storage under location /screenshots/$prNumber
- * These are screenshot test result images, and difference images generated from screenshot comparison.
+ * These are screenshot test allTestsPassedOrApproved images, and difference images generated from screenshot comparison.
  *
  * For golden images uploaded to /goldens, read the data from images files and write the data to Firebase database
  * under location /screenshot/goldens
@@ -34,7 +34,7 @@ const fs = require('fs');
 firebaseAdmin.initializeApp(firebaseFunctions.config().firebase);
 
 /** The valid data types database accepts */
-const dataTypes = ['filenames', 'commit', 'result', 'sha', 'travis'];
+const dataTypes = ['filenames', 'commit', 'allTestsPassedOrApproved', 'sha', 'travis'];
 
 /** The repo slug. This is used to validate the JWT is sent from correct repo. */
 const repoSlug = firebaseFunctions.config().repo.slug;
@@ -53,8 +53,8 @@ const tempFolder = '/untrustedInbox';
 
 /**
  * Copy valid data from /$temp/screenshot/reports/$prNumber/$secureToken/ to /screenshot/reports/$prNumber
- * Data copied: filenames(image results names), commit(github PR info),
- *     sha (github PR info), result (true or false for all the tests), travis job number
+ * Data copied: filenames(image testResultsByName names), commit(github PR info),
+ *     sha (github PR info), allTestsPassedOrApproved (true or false for all the tests), travis job number
  */
 const copyDataPath = `${tempFolder}/screenshot/reports/{prNumber}/${jwtFormat}/{dataType}`;
 exports.copyData = firebaseFunctions.database.ref(copyDataPath).onWrite(event => {
@@ -66,7 +66,7 @@ exports.copyData = firebaseFunctions.database.ref(copyDataPath).onWrite(event =>
 
 /**
  * Copy valid data from /$temp/screenshot/reports/$prNumber/$secureToken/ to /screenshot/reports/$prNumber
- * Data copied: test result for each file/test with ${filename}. The value should be true or false.
+ * Data copied: test allTestsPassedOrApproved for each file/test with ${filename}. The value should be true or false.
  */
 const copyDataResultPath = `${tempFolder}/screenshot/reports/{prNumber}/${jwtFormat}/results/{filename}`;
 exports.copyDataResult = firebaseFunctions.database.ref(copyDataResultPath).onWrite(event => {
@@ -75,7 +75,7 @@ exports.copyDataResult = firebaseFunctions.database.ref(copyDataResultPath).onWr
 
 /**
  * Copy valid data from database /$temp/screenshot/images/$prNumber/$secureToken/ to storage /screenshots/$prNumber
- * Data copied: test result images. Convert from data to image files in storage.
+ * Data copied: test allTestsPassedOrApproved images. Convert from data to image files in storage.
  */
 const copyImagePath = `${tempFolder}/screenshot/images/{prNumber}/${jwtFormat}/{dataType}/{filename}`;
 exports.copyImage = firebaseFunctions.database.ref(copyImagePath).onWrite(event => {
