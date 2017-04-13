@@ -39,7 +39,7 @@ export class TreeDemoDataSource implements MdTreeDataSource<Character> {
    * Returns an observable the table watches in order to update rows.
    * @override
    */
-  getRows(): Observable<MdTreeNodes<Character>> {
+  getNodes(): Observable<MdTreeNodes<Character>> {
     return this.nodeSubject.asObservable();
   }
 

@@ -183,7 +183,6 @@ export class DemoMaterialModule {}
     TypographyDemo,
     ExpansionDemo,
     TreeDemo,
-    TreeNodeKey,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
@@ -197,7 +196,6 @@ export class DemoMaterialModule {}
     RotiniPanel,
     ScienceJoke,
     SpagettiPanel,
-    TreeNodeKey,
   ],
 })
 export class DemoAppModule {

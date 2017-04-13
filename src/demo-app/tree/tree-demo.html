@@ -1,5 +1,5 @@
 <md-tree class="mat-elevation-z1" [dataSource]="dataSource">
-  <md-tree-node *mdRowContext="let characterData = node" (click)="rowClicked(characterData)">
+  <md-tree-node *mdNodeContext="let characterData = node" (click)="nodeClicked(characterData)">
     {{characterData.name}} (villan).{{characterData.movie}}
   </md-tree-node>
 </md-tree>

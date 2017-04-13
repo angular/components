@@ -21,7 +21,7 @@ import {MdTreeDataSource} from './data-source';
  * copied from the ngFor loop, which allow you access to loop variables when
  * determining to render a row template.
  */
-export interface NgForContext {
+export interface NgForTreeContext {
   index: number;
   first: boolean;
   last: boolean;
@@ -77,13 +77,13 @@ export class MdTreeNode {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-data-table',
-  templateUrl: 'data-table.html',
+  selector: 'md-tree',
+  templateUrl: 'tree.html',
   host: {
     '[class.mat-table]': 'true',
     'role': 'grid',
   },
-  styleUrls: ['data-table.css'],
+  styleUrls: ['tree.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -131,7 +131,7 @@ export class MdTree implements OnInit, OnDestroy {
    */
   getTemplateForNode(
     node: any, index: number, first: boolean): TemplateRef<MdNodeContext> {
-    const ngForContext: NgForContext = {
+    const ngForContext: NgForTreeContext = {
       index,
       first,
       last: this.isLast(index),

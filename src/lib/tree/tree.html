@@ -5,7 +5,7 @@
 
 <!--<md-tree-node *ngFor="let node of nodes.roots" [key]="node.key" [selected]="node.selected" [expanded]="node.expanded">{{node.title}}</md-tree-node>-->
 
-<template *ngFor="let node of nodes; let index = index; let first = first;"
+<ng-container *ngFor="let node of nodes; let index = index; let first = first;"
           [ngTemplateOutlet]="getTemplateForNode(node, index, first)"
           [ngOutletContext]="{
             node: node,
@@ -13,4 +13,4 @@
             first: first,
             last: isLast(index)
           }">
-</template>
+</ng-container>

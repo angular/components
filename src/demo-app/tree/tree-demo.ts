@@ -1,5 +1,5 @@
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {NgForContext} from '@angular/material';
+import {NgForTreeContext} from '@angular/material';
 import {TreeDemoDataSource, Character} from './data-source';
 
 @Component({
@@ -12,17 +12,17 @@ import {TreeDemoDataSource, Character} from './data-source';
 export class TreeDemo {
   dataSource = new TreeDemoDataSource();
 
-  lastRowClicked: Character;
+  lastNodeClicked: Character;
 
   characterIsVillan(node: Character): boolean {
     return node.villan;
   }
 
-  lastCharacterDisplayed(node: Character, context: NgForContext) {
+  lastCharacterDisplayed(node: Character, context: NgForTreeContext) {
     return context.last;
   }
 
-  rowClicked(row: Character) {
-    this.lastRowClicked = row;
+  nodeClicked(row: Character) {
+    this.lastNodeClicked = row;
   }
 }
