@@ -39,7 +39,9 @@ let datepickerUid = 0;
 
 /**
  * Component used as the content for the datepicker dialog and popup. We use this instead of using
- * MdCalendar directly as the content so we can control the initial focus.
+ * MdCalendar directly as the content so we can control the initial focus. This also gives us a
+ * place to put additional features of the popup that are not part of the calendar itself in the
+ * future. (e.g. confirmation buttons).
  * @docs-internal
  */
 @Component({
@@ -61,6 +63,9 @@ export class MdDatepickerContent implements AfterContentInit {
 }
 
 
+// TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
+// template reference variables (e.g. #d vs #d="mdDatepicker"). We can change this to a directive if
+// angular adds support for `exportAs: '$implicit'` on directives.
 /** Component responsible for managing the datepicker popup/dialog. */
 @Component({
   moduleId: module.id,
