@@ -38,7 +38,8 @@ let datepickerUid = 0;
 
 
 /**
- * Component used as the content for the datepicker dialog and popup.
+ * Component used as the content for the datepicker dialog and popup. We use this instead of using
+ * MdCalendar directly as the content so we can control the initial focus.
  * @docs-internal
  */
 @Component({
@@ -205,7 +206,6 @@ export class MdDatepicker implements OnDestroy {
   private _openAsDialog(): void {
     let config = new MdDialogConfig();
     config.viewContainerRef = this._viewContainerRef;
-    config.disableFocusTrap = true; // We'll handle focus trapping ourselves.
 
     this._dialogRef = this._dialog.open(MdDatepickerContent, config);
     this._dialogRef.afterClosed().first().subscribe(() => this.close());

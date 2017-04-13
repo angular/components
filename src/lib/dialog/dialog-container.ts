@@ -115,9 +115,6 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
    * @private
    */
   private _trapFocus() {
-    if (this.dialogConfig.disableFocusTrap) {
-      return;
-    }
     if (!this._focusTrap) {
       this._focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
     }
@@ -165,8 +162,6 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
       this._onAnimationStateChange.complete();
     });
 
-    if (this._focusTrap) {
-      this._focusTrap.destroy();
-    }
+    this._focusTrap.destroy();
   }
 }
