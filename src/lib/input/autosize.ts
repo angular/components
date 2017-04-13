@@ -71,7 +71,7 @@ export class MdTextareaAutosize implements AfterViewInit {
     textareaClone.style.position = 'absolute';
     textareaClone.style.visibility = 'hidden';
     textareaClone.style.border = 'none';
-    textareaClone.style.padding = '0px';
+    textareaClone.style.padding = '0';
     textareaClone.style.height = '';
     textareaClone.style.minHeight = '';
     textareaClone.style.maxHeight = '';
