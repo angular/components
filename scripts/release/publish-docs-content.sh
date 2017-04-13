@@ -65,7 +65,7 @@ done
 cp -r $examplesSource/* $repoPath/examples
 
 # Copy example plunker assets
-rsync -a $docsPath/plunker $repoPath/plunker
+cp -r $docsPath/plunker/* $repoPath/plunker
 
 # Copies assets over to the docs-content repository.
 cp LICENSE $repoPath/
