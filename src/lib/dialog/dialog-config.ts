@@ -23,9 +23,6 @@ export class MdDialogConfig {
   /** Whether the user can use escape or clicking outside to close a modal. */
   disableClose?: boolean = false;
 
-  /** Whether to disable the dialog's focus trap. */
-  disableFocusTrap?: boolean = false;
-
   /** Width of the dialog. */
   width?: string = '';
 
