@@ -14,7 +14,7 @@ export class ComponentViewer {
   componentDocItem: DocItem;
 
   constructor(private _route: ActivatedRoute,
-              private _componentPageTitle: ComponentPageTitle,
+              public _componentPageTitle: ComponentPageTitle,
               public docItems: DocumentationItems) {
     _route.params.subscribe(p => {
       this.componentDocItem = docItems.getItemById(p['id']);

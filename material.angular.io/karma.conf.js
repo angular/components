@@ -6,12 +6,12 @@ const path = require('path');
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['jasmine', 'angular-cli'],
+    frameworks: ['jasmine', '@angular/cli'],
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-remap-istanbul'),
-      require('angular-cli/plugins/karma'),
+      require('@angular/cli/plugins/karma'),
       require('karma-browserstack-launcher'),
       require('karma-sauce-launcher'),
     ],
@@ -19,7 +19,7 @@ module.exports = function (config) {
       { pattern: './src/test.ts', watched: false }
     ],
     preprocessors: {
-      './src/test.ts': ['angular-cli']
+      './src/test.ts': ['@angular/cli']
     },
     mime: {
       'text/x-typescript': ['ts','tsx']
@@ -66,7 +66,7 @@ module.exports = function (config) {
       pollingTimeout: 20000
     },
   });
-  
+
   if (process.env['TRAVIS']) {
 
     let buildId = `TRAVIS #${process.env.TRAVIS_BUILD_NUMBER} (${process.env.TRAVIS_BUILD_ID})`;
@@ -87,5 +87,5 @@ module.exports = function (config) {
     }
 
     config.browsers = platformMap[platformType];
-  }  
+  }
 };

@@ -10,7 +10,7 @@ import {ComponentPageTitle} from '../page-title/page-title';
 })
 export class ComponentCategoryList {
   constructor(public docItems: DocumentationItems,
-              private _componentPageTitle: ComponentPageTitle) {}
+              public _componentPageTitle: ComponentPageTitle) {}
 
   ngOnInit() {
     this._componentPageTitle.title = 'Component Library';
