@@ -1,5 +1,5 @@
 {
-  "name": "angular-io-v42",
+  "name": "material-angular-io",
   "version": "0.0.0",
   "license": "MIT",
   "angular-cli": {},
@@ -28,7 +28,7 @@
     "@angular/router": "~4.0.0",
     "core-js": "^2.4.1",
     "rxjs": "^5.1.0",
-    "zone.js": "^0.7.7"
+    "zone.js": "^0.8.4"
   },
   "devDependencies": {
     "@angular/cli": "^1.0.0",
