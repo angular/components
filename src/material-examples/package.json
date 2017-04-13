@@ -1,11 +1,12 @@
 {
-  "name": "@angular/material",
+  "name": "@angular/material-examples",
   "version": "0.0.0-PLACEHOLDER",
-  "description": "Angular Material",
-  "main": "./bundles/material.umd.js",
-  "module": "./@angular/material.es5.js",
-  "es2015": "./@angular/material.js",
-  "typings": "./material.d.ts",
+  "description": "Angular Material Examples",
+  "main": "./bundles/material-examples.umd.js",
+  "module": "./@angular/material-examples.es5.js",
+  "es2015": "./@angular/material-examples.js",
+  "typings": "./material-examples.d.ts",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/angular/material2.git"

@@ -29,11 +29,12 @@ export class MdDialog {
     return this._parentDialog ? this._parentDialog._openDialogs : this._openDialogsAtThisLevel;
   }
 
-  /** Subject for notifying the user that all open dialogs have finished closing. */
+  /** Subject for notifying the user that a dialog has opened. */
   get _afterOpen(): Subject<MdDialogRef<any>> {
     return this._parentDialog ? this._parentDialog._afterOpen : this._afterOpenAtThisLevel;
   }
-  /** Subject for notifying the user that a dialog has opened. */
+
+  /** Subject for notifying the user that all open dialogs have finished closing. */
   get _afterAllClosed(): Subject<void> {
     return this._parentDialog ?
       this._parentDialog._afterAllClosed : this._afterAllClosedAtThisLevel;
@@ -66,7 +67,7 @@ export class MdDialog {
     let dialogRef =
         this._attachDialogContent(componentOrTemplateRef, dialogContainer, overlayRef, config);
 
-    if (!this._openDialogs.length && !this._parentDialog) {
+    if (!this._openDialogs.length) {
       document.addEventListener('keydown', this._boundKeydown);
     }
 
@@ -208,12 +209,12 @@ export class MdDialog {
    */
   private _handleKeydown(event: KeyboardEvent): void {
     let topDialog = this._openDialogs[this._openDialogs.length - 1];
+    let canClose = topDialog ? !topDialog._containerInstance.dialogConfig.disableClose : false;
 
     if (event.keyCode === ESCAPE && topDialog) {
-
       topDialog._containerInstance._closeAttempt.next('escape');
 
-      if (!topDialog._containerInstance.dialogConfig.disableClose) {
+      if (canClose) {
         topDialog.close();
       }
     }
@@ -228,4 +229,3 @@ export class MdDialog {
 function _applyConfigDefaults(config: MdDialogConfig): MdDialogConfig {
   return extendObject(new MdDialogConfig(), config);
 }
-
