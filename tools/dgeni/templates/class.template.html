@@ -1,15 +1,17 @@
-<div class="{$ class.docClasses $}">
-  <h4 class="docs-api-h4 docs-api-class-name">
-    <code>{$ class.name $}</code>
-  </h4>
-  <p class="docs-api-class-description">{$ class.description $}</p>
+<h4 class="docs-api-h4 docs-api-class-name">
+  <code>{$ class.name $}</code>
+</h4>
+<p class="docs-api-class-description">{$ class.description $}</p>
 
-  {%- if class.directiveExportAs -%}
-  <span class="docs-api-h4 docs-api-class-export-label">Exported as:</span>
-  <span class="docs-api-class-export-name">{$ class.directiveExportAs $}</span>
-  {%- endif -%}
+{%- if class.directiveExportAs -%}
+<span class="docs-api-h4 docs-api-class-export-label">Exported as:</span>
+<span class="docs-api-class-export-name">{$ class.directiveExportAs $}</span>
+{%- endif -%}
 
-  {$ propertyList(class.properties) $}
+{%- if class.isDeprecated -%}
+<div class="docs-api-class-deprecated-marker">Deprecated</div>
+{%- endif -%}   
 
-  {$ methodList(class.methods) $}
-</div>
+{$ propertyList(class.properties) $}
+
+{$ methodList(class.methods) $}

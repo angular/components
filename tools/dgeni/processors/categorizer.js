@@ -68,14 +68,11 @@ module.exports = function categorizer() {
   }
 
   /**
-   * Decorates public exposed docs. Creates a property with CSS classes that will be 
-   * added to the template.
+   * Decorates public exposed docs. Creates a property on the doc that indicates whether
+   * the item is deprecated or not.
    **/
   function decoratePublicDoc(doc) {
-    // Specific classes that will can added to the Dgeni doc template.
-    doc.docClasses = [
-      isDeprecatedDoc(doc) ? 'docs-api-deprecated' : ''
-    ].join(' ');
+    doc.isDeprecated = isDeprecatedDoc(doc);
   }
 };
 

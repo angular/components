@@ -1,4 +1,4 @@
-<tr class="docs-api-properties-row {$ property.docClasses $}">
+<tr class="docs-api-properties-row">
   <td class="docs-api-properties-name-cell">
     {%- if property.isDirectiveInput -%}
       <div class="docs-api-input-marker">
@@ -18,6 +18,9 @@
         {%- endif -%}
       </div>
     {%- endif -%}
+    {%- if property.isDeprecated -%}
+      <div class="docs-api-deprecated-marker">Deprecated</div>
+    {%- endif -%}   
 
     <p class="docs-api-property-name">
       {$ property.name $}
