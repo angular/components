@@ -142,7 +142,10 @@ export class MdCheckbox implements ControlValueAccessor, AfterViewInit, OnDestro
   /** Whether the checkbox is disabled. */
   @Input()
   get disabled(): boolean { return this._disabled; }
-  set disabled(value) { this._disabled = coerceBooleanProperty(value); }
+  set disabled(value) {
+    this._disabled = coerceBooleanProperty(value);
+    this._changeDetectorRef.markForCheck();
+  }
 
   /** Tabindex value that is passed to the underlying input element. */
   @Input() tabIndex: number = 0;
