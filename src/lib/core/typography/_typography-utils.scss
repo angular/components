@@ -1,0 +1,28 @@
+// Utility for fetching a nested value from a typography config.
+@function _mat-get-type-value($config, $level, $name) {
+  @return map-get(map-get($config, $level), $name);
+}
+
+// Returns the font size for a level inside a typography config.
+@function mat-font-size($config, $level) {
+  @return _mat-get-type-value($config, $level, font-size);
+}
+
+// Returns the line height for a level inside a typography config.
+@function mat-line-height($config, $level) {
+  @return _mat-get-type-value($config, $level, line-height);
+}
+
+// Returns the font weight for a level inside a typography config.
+@function mat-font-weight($config, $level) {
+  @return _mat-get-type-value($config, $level, font-weight);
+}
+
+// Converts a typography level into CSS styles.
+@mixin mat-typography-level-to-styles($config, $level) {
+  $font-size: mat-font-size($config, $level);
+  $font-weight: mat-font-weight($config, $level);
+  $line-height: mat-line-height($config, $level);
+
+  font: $font-weight #{$font-size}/#{$line-height} unquote(map-get($config, font-family));
+}
