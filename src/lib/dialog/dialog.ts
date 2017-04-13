@@ -213,7 +213,6 @@ export class MdDialog {
 
     if (event.keyCode === ESCAPE && topDialog) {
       topDialog._containerInstance._closeAttempt.next('escape');
-
       if (canClose) {
         topDialog.close();
       }
