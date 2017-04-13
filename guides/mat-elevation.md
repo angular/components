@@ -30,4 +30,4 @@ How to use the mixin
 ```
 
 ## Deprecated
-The use of `mdElevation($zValue)` is deprecated.
+The `mdElevation($zValue)` directive is deprecated.

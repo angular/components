@@ -12,10 +12,10 @@ div {
 }
 
 
-.dynamimc {
+.dynamic {
     @include mat-elevation(2);
 
-    &:active {
+    &:hover {
         @include mat-elevation(8);
     }
 }
