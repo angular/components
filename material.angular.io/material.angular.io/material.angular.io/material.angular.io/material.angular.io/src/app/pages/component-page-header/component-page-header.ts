@@ -8,7 +8,7 @@ import {ComponentPageTitle} from '../page-title/page-title';
   styleUrls: ['./component-page-header.scss']
 })
 export class ComponentPageHeader {
-  constructor(private _componentPageTitle: ComponentPageTitle) { }
+  constructor(public _componentPageTitle: ComponentPageTitle) { }
 
   @Output() toggleSidenav = new EventEmitter<void>();
 
