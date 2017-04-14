@@ -5,7 +5,7 @@ import {MdCalendarTable} from './calendar-table';
 import {MdYearView} from './year-view';
 import {DatetimeModule} from '../core/datetime/index';
 import {OverlayModule} from '../core/overlay/overlay-directives';
-import {MdDatepicker} from './datepicker';
+import {MdDatepicker, MdDatepickerContent} from './datepicker';
 import {MdDatepickerInput} from './datepicker-input';
 import {MdDialogModule} from '../dialog/index';
 import {MdCalendar} from './calendar';
@@ -31,6 +31,7 @@ export * from './year-view';
   ],
   exports: [
     MdDatepicker,
+    MdDatepickerContent,
     MdDatepickerInput,
     MdDatepickerToggle,
   ],
@@ -38,10 +39,14 @@ export * from './year-view';
     MdCalendar,
     MdCalendarTable,
     MdDatepicker,
+    MdDatepickerContent,
     MdDatepickerInput,
     MdDatepickerToggle,
     MdMonthView,
     MdYearView,
   ],
+  entryComponents: [
+    MdDatepickerContent,
+  ]
 })
 export class MdDatepickerModule {}

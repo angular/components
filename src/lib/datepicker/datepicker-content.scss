@@ -11,11 +11,11 @@ $md-datepicker-non-touch-calendar-width:
     $md-datepicker-non-touch-calendar-cell-size * 7 + $md-datepicker-calendar-padding * 2;
 
 
-.mat-datepicker-touch {
+.mat-datepicker-content-touch {
   width: $md-datepicker-touch-calendar-width;
 }
 
-.mat-datepicker-non-touch {
+.mat-datepicker-content-non-touch {
   width: $md-datepicker-non-touch-calendar-width;
   @include mat-elevation(8);
 }
