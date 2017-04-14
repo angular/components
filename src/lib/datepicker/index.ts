@@ -11,6 +11,7 @@ import {MdDialogModule} from '../dialog/index';
 import {MdCalendar} from './calendar';
 import {MdDatepickerToggle} from './datepicker-toggle';
 import {StyleModule} from '../core/style/index';
+import {MdButtonModule} from '../button/index';
 
 
 export * from './calendar';
@@ -25,6 +26,7 @@ export * from './year-view';
   imports: [
     CommonModule,
     DatetimeModule,
+    MdButtonModule,
     MdDialogModule,
     OverlayModule,
     StyleModule,
