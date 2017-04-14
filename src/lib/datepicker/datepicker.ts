@@ -50,9 +50,8 @@ let datepickerUid = 0;
   templateUrl: 'datepicker-content.html',
   styleUrls: ['datepicker-content.css'],
   host: {
-    '[class.mat-datepicker-content]': 'true',
+    'class': 'mat-datepicker-content',
     '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
-    '[class.mat-datepicker-content-non-touch]': '!datepicker.touchUi',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -216,7 +215,6 @@ export class MdDatepicker implements OnDestroy {
   private _openAsDialog(): void {
     let config = new MdDialogConfig();
     config.viewContainerRef = this._viewContainerRef;
-    config.containerClass = 'mat-datepicker-content-dialog';
 
     this._dialogRef = this._dialog.open(MdDatepickerContent, config);
     this._dialogRef.afterClosed().first().subscribe(() => this.close());

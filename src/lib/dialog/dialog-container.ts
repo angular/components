@@ -48,7 +48,6 @@ export type MdDialogContainerAnimationState = 'void' | 'enter' | 'exit' | 'exit-
     ])
   ],
   host: {
-    '[class]': 'dialogConfigClasses',
     '[class.mat-dialog-container]': 'true',
     '[attr.role]': 'dialogConfig?.role',
     '[@slideDialog]': '_state',
@@ -56,17 +55,6 @@ export type MdDialogContainerAnimationState = 'void' | 'enter' | 'exit' | 'exit-
   },
 })
 export class MdDialogContainer extends BasePortalHost implements OnDestroy {
-  /** The CSS classes for the container specified in the dialog config. */
-  get dialogConfigClasses(): string {
-    if (this.dialogConfig && this.dialogConfig.containerClass) {
-      if (typeof this.dialogConfig.containerClass === 'string') {
-        return this.dialogConfig.containerClass;
-      }
-      return this.dialogConfig.containerClass.join(' ');
-    }
-    return '';
-  }
-
   /** The portal host inside of this container into which the dialog content will be loaded. */
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 

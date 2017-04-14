@@ -32,9 +32,6 @@ export class MdDialogConfig {
   /** Position overrides. */
   position?: DialogPosition;
 
-  /** Classes to add to the dialog container. */
-  containerClass?: string | string[] = '';
-
   /** Data being injected into the child component. */
   data?: any;
 
