@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 
 
 /** Whether the browser supports the Intl API. */
-const SUPPORTS_INTL_API = !!Intl;
+const SUPPORTS_INTL_API = typeof Intl != 'undefined';
 
 
 /** Creates an array and fills it with values. */
@@ -190,7 +190,6 @@ export class DefaultCalendarLocale implements  CalendarLocale {
    * Creates a function to format SimpleDates as strings using Intl.DateTimeFormat.
    * @param options The options to use for Intl.DateTimeFormat.
    * @returns The newly created format function, or null if the Intl API is not available.
-   * @private
    */
   private _createFormatFunction(options: Object): (date: SimpleDate) => string {
     if (SUPPORTS_INTL_API) {
