@@ -14,11 +14,11 @@ export class NavComponent {
 
   constructor(private _service: FirebaseService) { }
 
-  signInGithub() {
-    this._service.signInGithub();
+  signIntoGithub() {
+    this._service.signIntoGithub();
   }
 
-  signOutGithub() {
-    this._service.signOutGithub();
+  signOutFromGithub() {
+    this._service.signOutFromGithub();
   }
 }

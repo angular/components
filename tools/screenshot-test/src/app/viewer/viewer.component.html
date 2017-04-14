@@ -1,14 +1,14 @@
-<div *ngIf="screenshotResult.prNumber">
+<div *ngIf="screenshotResultSummary.prNumber">
   <md-card>
     <p>
-      <a md-button [href]="screenshotResult.prUrl" target="_blank" color="primary">
-        Pull Request: {{screenshotResult.prNumber}}
+      <a md-button [href]="screenshotResultSummary.prUrl" target="_blank" color="primary">
+        Pull Request: {{screenshotResultSummary.prNumber}}
       </a>
-      <a md-button [href]="screenshotResult.commitLink" target="_blank" color="primary">
-        Commit: {{screenshotResult.sha}}
+      <a md-button [href]="screenshotResultSummary.commitLink" target="_blank" color="primary">
+        Commit: {{screenshotResultSummary.sha}}
       </a>
-      <a md-button [href]="screenshotResult.travisLink" target="_blank" color="primary">
-        Travis: {{screenshotResult.travis}}
+      <a md-button [href]="screenshotResultSummary.travisLink" target="_blank" color="primary">
+        Travis: {{screenshotResultSummary.travis}}
       </a>
     </p>
     <p *ngIf="!isApproved">
@@ -29,13 +29,12 @@
     </p>
     <p>
       <button md-button
-              [disabled]="screenshotResult.allTestsPassedOrApproved" color="primary"
+              [disabled]="screenshotResultSummary.allTestsPassedOrApproved" color="primary"
               (click)="updateGithubStatus()">
         Set Github to Success
       </button>
-      <a md-icon-button>
-        <md-icon *ngIf="githubSuccess" style="color:green">check</md-icon>
-        <md-icon *ngIf="githubFailure" style="color:red">close</md-icon>
+      <a md-icon-button *ngIf="githubStatus" [ngClass]="githubClass">
+        <md-icon>{{githubIcon}}</md-icon>
       </a>
       <a md-tooltip="Refresh Github Status" (click)="refreshGithubStatus()" md-icon-button>
         <md-icon>refresh</md-icon>
@@ -47,20 +46,20 @@
       </span>
     </p>
     <md-card-actions>
-      <button md-raised-button color="primary" (click)="screenshotResult.setCollapse(true)">
+      <button md-raised-button color="primary" (click)="screenshotResultSummary.setCollapse(true)">
         Collapse All
       </button>
-      <button md-raised-button color="primary" (click)="screenshotResult.setCollapse(false)">
+      <button md-raised-button color="primary" (click)="screenshotResultSummary.setCollapse(false)">
         Expand All
       </button>
     </md-card-actions>
   </md-card>
 
-  <div *ngFor="let testname of screenshotResult.testNames; let i = index">
+  <div *ngFor="let testname of screenshotResultSummary.testNames; let i = index">
     <app-result [filename]="testname"
-                [result]="screenshotResult.testResultsByName.get(testname)"
-                [(mode)]="screenshotResult.mode"
-                [(flipping)]="screenshotResult.isFlipped"
-                [(collapse)]="screenshotResult.collapse[i]"></app-result>
+                [result]="screenshotResultSummary.testResultsByName.get(testname)"
+                [(mode)]="screenshotResultSummary.mode"
+                [(flipping)]="screenshotResultSummary.isFlipped"
+                [(collapse)]="screenshotResultSummary.collapse[i]"></app-result>
   </div>
 </div>

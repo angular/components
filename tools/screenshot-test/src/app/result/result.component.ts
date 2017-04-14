@@ -89,17 +89,17 @@ export class ResultComponent {
   setFilenameAndFetchImages() {
     this.testName = this._filename.replace(/[_]/g, ' ');
     let imageFilename = `${this._filename}.screenshot.png`;
-    this.service.testRef().child(imageFilename).getDownloadURL()
-      .then((url) => {
+    this.service.getTestScreenshotImageUrl(imageFilename)
+        .then((url) => {
         this.testImageUrl = url;
         this._changeDetectorRef.markForCheck();
       });
-    this.service.diffRef().child(imageFilename).getDownloadURL()
+    this.service.getDiffScreenshotImageUrl(imageFilename)
       .then((url) => {
         this.diffImageUrl = url;
         this._changeDetectorRef.markForCheck();
       });
-    this.service.goldRef().child(imageFilename).getDownloadURL()
+    this.service.getGoldScreenshotImageUrl(imageFilename)
       .then((url) => {
         this.goldImageUrl = url;
         this._changeDetectorRef.markForCheck();
@@ -115,7 +115,7 @@ export class ResultComponent {
   constructor(public service: FirebaseService, private _changeDetectorRef: ChangeDetectorRef) { }
 
   flip() {
-    this.service.screenshotResult.isFlipped = !this.service.screenshotResult.isFlipped;
+    this.service.screenshotResultSummary.isFlipped = !this.service.screenshotResultSummary.isFlipped;
   }
 
   toggleCollapse() {

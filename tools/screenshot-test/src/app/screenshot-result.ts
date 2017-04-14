@@ -4,7 +4,7 @@ const config = require('../config.json');
  * Has all related information including Travis Job ID, SHA, pull request number.
  * And the test results for each test.
  */
-export class ScreenshotResult {
+export class ScreenshotResultSummary {
   /** PR information: the pull request number */
   prNumber: string;
   /** PR information: the sha of the pull request commit */
@@ -27,7 +27,7 @@ export class ScreenshotResult {
    */
   approvedTime: number;
 
-  githubStatus: any;
+  githubStatus: boolean;
 
   /** Viewing mode, can be flip, diff, side */
   mode: 'diff' | 'side' | 'flip' = 'diff';

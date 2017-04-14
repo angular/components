@@ -7,14 +7,14 @@ import {MaterialModule} from '@angular/material';
 import {FirebaseService} from './firebase.service';
 import {routing} from './routes';
 
-import {AppComponent} from './app.component';
+import {PixactoDashboardComponent} from './pixacto.dashboard.component';
 import {ViewerComponent} from './viewer/viewer.component';
 import {ResultComponent} from './result/result.component';
 import {NavComponent} from './nav/nav.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    PixactoDashboardComponent,
     ViewerComponent,
     ResultComponent,
     NavComponent
@@ -28,6 +28,6 @@ import {NavComponent} from './nav/nav.component';
     routing,
   ],
   providers: [FirebaseService],
-  bootstrap: [AppComponent]
+  bootstrap: [PixactoDashboardComponent]
 })
-export class AppModule { }
+export class PixactoDashboardModule { }

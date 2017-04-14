@@ -1,53 +1,58 @@
 import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
 import * as firebase from 'firebase';
+import 'rxjs/add/operator/toPromise';
 
-const request = require('request');
 const config = require('../config.json');
 
-import {ScreenshotResult} from './screenshot-result';
+import {ScreenshotResultSummary} from './screenshot-result';
 
 /** The service to fetch data from firebase database */
 @Injectable()
 export class FirebaseService {
 
   /** The current user */
-  user: any;
+  user: firebase.User;
 
   /** The screenshot results */
-  screenshotResult: ScreenshotResult;
+  screenshotResultSummary: ScreenshotResultSummary;
 
-  constructor() {
+  constructor(private _http: Http) {
     // Initialize Firebase
     firebase.initializeApp(config.firebase);
 
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged((user: firebase.User) => {
       this.user = user;
     });
   }
 
 
-  /** Get the firebase storage test image folder ref */
-  testRef(): firebase.storage.Reference {
-    return this._storageRef().child('test');
+  /** Get the firebase storage test image folder url */
+  getTestScreenshotImageUrl(filename: string): firebase.Promise<string> {
+    return this._storageRef().child('test').child(filename).getDownloadURL();
   }
 
-  /** Get the firebase storage diff image folder ref */
-  diffRef(): firebase.storage.Reference {
-    return this._storageRef().child('diff');
+  /** Get the firebase storage diff image folder url */
+  getDiffScreenshotImageUrl(filename: string): firebase.Promise<string> {
+    return this._storageRef().child('diff').child(filename).getDownloadURL();
   }
 
-  /** Get the firebase storage golden image folder ref */
-  goldRef(): firebase.storage.Reference {
-    return firebase.storage().ref('goldens');
+  /** Get the firebase storage golden image folder url */
+  getGoldScreenshotImageUrl(filename: string): firebase.Promise<string> {
+    return firebase.storage().ref('goldens').child(filename).getDownloadURL();
   }
 
   /** Set pull request number. All test information and pull request information will be retrived
    * from database
    */
   set prNumber(prNumber: string){
-    this.screenshotResult = new ScreenshotResult();
-    this.screenshotResult.prNumber = prNumber;
-    if (!prNumber) {
+    this.screenshotResultSummary = new ScreenshotResultSummary();
+    this.screenshotResultSummary.prNumber = prNumber;
+    this._readPullRequestScreenshotReport();
+  }
+
+  _readPullRequestScreenshotReport() {
+    if (!this.screenshotResultSummary.prNumber) {
       return;
     }
 
@@ -57,13 +62,13 @@ export class FirebaseService {
         let childValue = childSnapshot.val();
         switch (childSnapshot.key) {
           case 'sha':
-            this._processSha(childValue);
+            this._readSha(childValue);
             break;
           case 'travis':
-            this.screenshotResult.travis = childValue;
+            this.screenshotResultSummary.travis = childValue;
             break;
           case 'results':
-            this._processResults(childSnapshot);
+            this._readResults(childSnapshot);
             break;
         }
         counter++;
@@ -74,46 +79,51 @@ export class FirebaseService {
     });
   }
 
-  signInGithub(): firebase.Promise<any> {
+  signIntoGithub(): firebase.Promise<void> {
     return firebase.auth().signInWithRedirect(new firebase.auth.GithubAuthProvider());
   }
 
-  signOutGithub() {
+  signOutFromGithub() {
     firebase.auth().signOut();
   }
 
   /** Change the PR status to approved to let Firebase Functions copy test images to goldens */
-  approvePR() {
-    return this._databaseRef().child('approved').child(this.screenshotResult.sha).set(Date.now());
+  approvePullRequest() {
+    return this._databaseRef().child('approved').child(this.screenshotResultSummary.sha)
+      .set(Date.now());
   }
 
-  /** Change the commit's screenshot test status on GitHub */
-  updatePRResult() {
-    return this._databaseRef().child('result').child(this.screenshotResult.sha)
+  /**
+   * Change the commit's screenshot test status on GitHub
+   * The value in result/$sha/$result will trigger GitHub status update:
+   *   true - The GitHub status for this SHA will become `success` for Screenshot Test
+   *   false - The GitHub status for this SHA will become `failure` for Screenshot Test
+   * In this dashboard, we only approve pull requests, so the value is always `true`
+   */
+  updatePullRequestResult() {
+    return this._databaseRef().child('result').child(this.screenshotResultSummary.sha)
       .set(true);
   }
 
+  /** Reference to the firebase database where the JSON test results and meatadate is stored. */
   _databaseRef(): firebase.database.Reference {
     return firebase.database().ref('screenshot').child('reports')
-      .child(this.screenshotResult.prNumber);
+      .child(this.screenshotResultSummary.prNumber);
   }
 
+  /** Reference to the firebase storage bucket where the screenshot PNG files are stored. */
   _storageRef(): firebase.storage.Reference {
-    return firebase.storage().ref('screenshots').child(this.screenshotResult.prNumber);
+    return firebase.storage().ref('screenshots').child(this.screenshotResultSummary.prNumber);
   }
 
-  /** Put the testResultsByName in screenshotReuslt */
-  _processResults(childSnapshot: firebase.database.DataSnapshot) {
+  /** Read the results from database adn put the results in screenshotReusltSummary */
+  _readResults(childSnapshot: firebase.database.DataSnapshot) {
     let childCounter = 0;
-    this.screenshotResult.collapse = [];
-    this.screenshotResult.testNames = [];
-    this.screenshotResult.testResultsByName.clear();
+    this.screenshotResultSummary.collapse = [];
+    this.screenshotResultSummary.testNames = [];
+    this.screenshotResultSummary.testResultsByName.clear();
     childSnapshot.forEach((resultSnapshot: firebase.database.DataSnapshot) => {
-      let key = resultSnapshot.key;
-      let value = resultSnapshot.val();
-      this.screenshotResult.testResultsByName.set(key, value);
-      this.screenshotResult.testNames.push(key);
-      this.screenshotResult.collapse.push(value);
+      this._addTestResults(resultSnapshot.key, resultSnapshot.val());
       childCounter++;
       if (childCounter === childSnapshot.numChildren()) {
         return true;
@@ -121,32 +131,45 @@ export class FirebaseService {
     });
   }
 
-  _processSha(childValue) {
-    this.screenshotResult.sha = childValue;
+  _addTestResults(name: string, value: boolean) {
+    this.screenshotResultSummary.testResultsByName.set(name, value);
+    this.screenshotResultSummary.testNames.push(name);
+    this.screenshotResultSummary.collapse.push(value);
+  }
+
+  /** Read SHA and approved status from database and put them in ScreenshotResultSummary */
+  _readSha(childValue) {
+    this.screenshotResultSummary.sha = childValue;
     // Get github status
-    this.getGithubStatus().then((result) => this.screenshotResult.githubStatus = result);
+    this.getGithubStatus();
     // Get test allTestsPassedOrApproved
     this._databaseRef().child(`result/${childValue}`).once('value')
       .then((dataSnapshot: firebase.database.DataSnapshot) => {
-        this.screenshotResult.allTestsPassedOrApproved = dataSnapshot.val();
+        this.screenshotResultSummary.allTestsPassedOrApproved = dataSnapshot.val();
       });
     // Get the approved SHA and date time
     this._databaseRef().child(`approved/${childValue}`).once('value')
       .then((dataSnapshot: firebase.database.DataSnapshot) => {
-        this.screenshotResult.approvedTime = dataSnapshot.val();
+        this.screenshotResultSummary.approvedTime = dataSnapshot.val();
       });
   }
 
   getGithubStatus() {
     let url =
-      `https://api.github.com/repos/${config.repoSlug}/commits/${this.screenshotResult.sha}/status`;
-    return new Promise((resolve) => {
-      request({url, method: 'GET'}, (error: any, response: any) => {
-        let statusResponse = JSON.parse(response.body);
+      `https://api.github.com/repos/${config.repoSlug}/commits/${this.screenshotResultSummary.sha}/status`;
+    return this._http.get(url).toPromise()
+      .then((response) => {
+        let statusResponse = response.json();
         let screenshotStatus = statusResponse.statuses.find((status) =>
           status.context === 'Screenshot Tests');
-        resolve(screenshotStatus ? screenshotStatus.state : null);
+        switch (screenshotStatus && screenshotStatus.state) {
+          case 'success':
+            this.screenshotResultSummary.githubStatus = true;
+            break;
+          case 'failure':
+            this.screenshotResultSummary.githubStatus = false;
+            return;
+        }
       });
-    });
   }
 }

@@ -9,3 +9,11 @@
   color: grey;
   padding-left: 20px;
 }
+
+.failed {
+  color: red;
+}
+
+.passed {
+  color: forestgreen;
+}

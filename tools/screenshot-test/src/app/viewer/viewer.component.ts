@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {MdSnackBar} from '@angular/material';
 import {FirebaseService} from '../firebase.service';
@@ -17,19 +17,24 @@ export class ViewerComponent {
   messageDuration = {duration: 10000};
 
   get isApproved() {
-    return !!this._service.screenshotResult.approvedTime;
+    return !!this._service.screenshotResultSummary.approvedTime;
   }
 
-  get screenshotResult() {
-    return this._service.screenshotResult;
+  get screenshotResultSummary() {
+    return this._service.screenshotResultSummary;
   }
 
-  get githubSuccess(): boolean {
-    return this.screenshotResult.githubStatus === 'success';
+  get githubIcon(): string {
+    return this.githubStatus ? 'check' : 'close';
   }
 
-  get githubFailure(): boolean {
-    return this.screenshotResult.githubStatus === 'failure';
+  @Input()
+  get githubStatus() {
+    return this.screenshotResultSummary.githubStatus;
+  }
+
+  get githubClass(): string {
+    return this.githubStatus ? 'passed' : 'failed';
   }
 
   constructor(private _service: FirebaseService,
@@ -41,7 +46,7 @@ export class ViewerComponent {
   }
 
   approve() {
-    this._service.approvePR().then((result) => {
+    this._service.approvePullRequest().then((result) => {
       this.snackBar.open(`Approved`, '', this.messageDuration);
     }).catch((error) => {
       this.snackBar.open(`Error ${error}`, '', this.messageDuration);
@@ -49,7 +54,7 @@ export class ViewerComponent {
   }
 
   updateGithubStatus() {
-    this._service.updatePRResult().then((result) => {
+    this._service.updatePullRequestResult().then((result) => {
       this.snackBar.open(`Approved`, '', this.messageDuration);
     }).catch((error) => {
       this.snackBar.open(error.message, '', this.messageDuration);
@@ -57,9 +62,6 @@ export class ViewerComponent {
   }
 
   refreshGithubStatus() {
-    this._service.getGithubStatus().then((result) => {
-      console.log(result);
-      this._service.screenshotResult.githubStatus = result;
-    });
+    this._service.getGithubStatus();
   }
 }
