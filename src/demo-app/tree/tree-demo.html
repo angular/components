@@ -1,5 +1,17 @@
-<md-tree class="mat-elevation-z1" [dataSource]="dataSource">
-  <md-tree-node *mdNodeContext="let characterData = node" (click)="nodeClicked(characterData)">
-    {{characterData.name}} (villan).{{characterData.movie}}
-  </md-tree-node>
-</md-tree>
+<!--<md-tree class="mat-elevation-z1" [dataSource]="dataSource">-->
+  <!--<md-tree-node *mdNodeContext="let characterData = node" (click)="nodeClicked(characterData)">-->
+    <!--{{characterData.name}} (villan).{{characterData.movie}}-->
+  <!--</md-tree-node>-->
+<!--</md-tree>-->
+
+<ng-container [ngTemplateOutlet]="templateRef" *ngFor="let node of myTree" [ngTemplateOutletContext]="node"></ng-container>
+
+<hr>
+<ng-template #greet><span>Hello</span></ng-template>
+<ng-template #eng let-text="text"><span>Hello {{text}}!</span></ng-template>
+<ng-template #svk let-person="localSk"><span>Ahoj {{person}}!</span></ng-template>
+
+
+<button (click)="changeTemplate(0)">0 </button>
+<button (click)="changeTemplate(1)">1 </button>
+<button (click)="changeTemplate(2)">2 </button>
