@@ -1,19 +1,20 @@
 import {
+  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
+  ComponentRef,
+  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
   Optional,
   Output,
-  TemplateRef,
-  ViewChild,
   ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
 import {Overlay} from '../core/overlay/overlay';
 import {OverlayRef} from '../core/overlay/overlay-ref';
-import {TemplatePortal} from '../core/portal/portal';
+import {ComponentPortal} from '../core/portal/portal';
 import {OverlayState} from '../core/overlay/overlay-state';
 import {Dir} from '../core/rtl/dir';
 import {MdError} from '../core/errors/error';
@@ -29,20 +30,47 @@ import {MdDatepickerInput} from './datepicker-input';
 import {CalendarLocale} from '../core/datetime/calendar-locale';
 import 'rxjs/add/operator/first';
 import {Subscription} from 'rxjs/Subscription';
+import {MdDialogConfig} from '../dialog/dialog-config';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
 
 
+/**
+ * Component used as the content for the datepicker dialog and popup. We use this instead of using
+ * MdCalendar directly as the content so we can control the initial focus. This also gives us a
+ * place to put additional features of the popup that are not part of the calendar itself in the
+ * future. (e.g. confirmation buttons).
+ * @docs-internal
+ */
+@Component({
+  moduleId: module.id,
+  selector: 'md-datepicker-content',
+  templateUrl: 'datepicker-content.html',
+  styleUrls: ['datepicker-content.css'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MdDatepickerContent implements AfterContentInit {
+  datepicker: MdDatepicker;
+
+  constructor(private _elementRef: ElementRef) {}
+
+  ngAfterContentInit() {
+    this._elementRef.nativeElement.querySelector('.mat-calendar-body').focus();
+  }
+}
+
+
+// TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
+// template reference variables (e.g. #d vs #d="mdDatepicker"). We can change this to a directive if
+// angular adds support for `exportAs: '$implicit'` on directives.
 /** Component responsible for managing the datepicker popup/dialog. */
 @Component({
   moduleId: module.id,
   selector: 'md-datepicker, mat-datepicker',
-  templateUrl: 'datepicker.html',
-  styleUrls: ['datepicker.css'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '',
 })
 export class MdDatepicker implements OnDestroy {
   /** The date to open the calendar to initially. */
@@ -94,9 +122,6 @@ export class MdDatepicker implements OnDestroy {
     return this._datepickerInput && this._datepickerInput.max;
   }
 
-  /** The calendar template. */
-  @ViewChild(TemplateRef) calendarTemplate: TemplateRef<any>;
-
   /** A reference to the overlay when the calendar is opened as a popup. */
   private _popupRef: OverlayRef;
 
@@ -104,7 +129,7 @@ export class MdDatepicker implements OnDestroy {
   private _dialogRef: MdDialogRef<any>;
 
   /** A portal containing the calendar for this datepicker. */
-  private _calendarPortal: TemplatePortal;
+  private _calendarPortal: ComponentPortal<MdDatepickerContent>;
 
   /** The input element this datepicker is associated with. */
   private _datepickerInput: MdDatepickerInput;
@@ -160,10 +185,6 @@ export class MdDatepicker implements OnDestroy {
       throw new MdError('Attempted to open an MdDatepicker with no associated input.');
     }
 
-    if (!this._calendarPortal) {
-      this._calendarPortal = new TemplatePortal(this.calendarTemplate, this._viewContainerRef);
-    }
-
     this.touchUi ? this._openAsDialog() : this._openAsPopup();
     this.opened = true;
   }
@@ -188,18 +209,28 @@ export class MdDatepicker implements OnDestroy {
 
   /** Open the calendar as a dialog. */
   private _openAsDialog(): void {
-    this._dialogRef = this._dialog.open(this.calendarTemplate);
+    let config = new MdDialogConfig();
+    config.viewContainerRef = this._viewContainerRef;
+
+    this._dialogRef = this._dialog.open(MdDatepickerContent, config);
     this._dialogRef.afterClosed().first().subscribe(() => this.close());
+    this._dialogRef.componentInstance.datepicker = this;
   }
 
   /** Open the calendar as a popup. */
   private _openAsPopup(): void {
+    if (!this._calendarPortal) {
+      this._calendarPortal = new ComponentPortal(MdDatepickerContent, this._viewContainerRef);
+    }
+
     if (!this._popupRef) {
       this._createPopup();
     }
 
     if (!this._popupRef.hasAttached()) {
-      this._popupRef.attach(this._calendarPortal);
+      let componentRef: ComponentRef<MdDatepickerContent> =
+          this._popupRef.attach(this._calendarPortal);
+      componentRef.instance.datepicker = this;
     }
 
     this._popupRef.backdropClick().first().subscribe(() => this.close());
