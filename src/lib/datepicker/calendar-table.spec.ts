@@ -135,7 +135,7 @@ describe('MdCalendarTable', () => {
                                 [labelMinRequiredCells]="labelMinRequiredCells"
                                 [numCols]="numCols"
                                 [activeCell]="10"
-                                (selectedValueChange)="onSelect($event)">                           
+                                (selectedValueChange)="onSelect($event)">
              </md-calendar-table>`,
 })
 class StandardCalendarTable {
