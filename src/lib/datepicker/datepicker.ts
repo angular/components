@@ -49,6 +49,10 @@ let datepickerUid = 0;
   selector: 'md-datepicker-content',
   templateUrl: 'datepicker-content.html',
   styleUrls: ['datepicker-content.css'],
+  host: {
+    'class': 'mat-datepicker-content',
+    '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
+  },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
