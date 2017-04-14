@@ -52,6 +52,24 @@ export abstract class CalendarLocale {
   /** A label for the button used to open the calendar popup (used by screen readers). */
   openCalendarLabel: string;
 
+  /** A label for the previous month button (used by screen readers). */
+  prevMonthLabel: string;
+
+  /** A label for the next month button (used by screen readers). */
+  nextMonthLabel: string;
+
+  /** A label for the previous year button (used by screen readers). */
+  prevYearLabel: string;
+
+  /** A label for the next year button (used by screen readers). */
+  nextYearLabel: string;
+
+  /** A label for the 'switch to month view' button (used by screen readers). */
+  switchToMonthViewLabel: string;
+
+  /** A label for the 'switch to year view' button (used by screen readers). */
+  switchToYearViewLabel: string;
+
   /**
    * Parses a SimpleDate from a value.
    * @param value The value to parse.
@@ -123,6 +141,18 @@ export class DefaultCalendarLocale implements  CalendarLocale {
   calendarLabel = 'Calendar';
 
   openCalendarLabel = 'Open calendar';
+
+  prevMonthLabel = 'Previous month';
+
+  nextMonthLabel = 'Next month';
+
+  prevYearLabel = 'Previous year';
+
+  nextYearLabel = 'Next year';
+
+  switchToMonthViewLabel = 'Change to month view';
+
+  switchToYearViewLabel = 'Change to year view';
 
   parseDate(value: any) {
     if (value instanceof SimpleDate) {
