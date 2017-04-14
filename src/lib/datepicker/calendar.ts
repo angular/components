@@ -54,13 +54,13 @@ export class MdCalendar implements AfterContentInit {
 
   /** The minimum selectable date. */
   @Input()
-  get minDate(): SimpleDate { return this._minDate; };
+  get minDate(): SimpleDate { return this._minDate; }
   set minDate(date: SimpleDate) { this._minDate = this._locale.parseDate(date); }
   private _minDate: SimpleDate;
 
   /** The maximum selectable date. */
   @Input()
-  get maxDate(): SimpleDate { return this._maxDate; };
+  get maxDate(): SimpleDate { return this._maxDate; }
   set maxDate(date: SimpleDate) { this._maxDate = this._locale.parseDate(date); }
   private _maxDate: SimpleDate;
 
