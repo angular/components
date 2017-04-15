@@ -4,7 +4,6 @@
 
 
 $mat-input-floating-placeholder-scale-factor: 0.75 !default;
-$mat-input-wrapper-spacing: 1em !default;
 $mat-input-hint-min-space: 10px !default;
 
 // Gradient for showing the dashed line when the input is disabled.
@@ -43,7 +42,7 @@ $mat-input-underline-disabled-background-image:
 // Global wrapper. We need to apply margin to the element for spacing, but
 // cannot apply it to the host element directly.
 .mat-input-wrapper {
-  margin: $mat-input-wrapper-spacing 0;
+  margin: 1em 0;
   // Account for the underline which has 4px of margin + 2px of border.
   padding-bottom: 6px;
 }
@@ -227,11 +226,14 @@ $mat-input-underline-disabled-background-image:
 // Wrapper for the hints and error messages. Provides positioning and text size.
 // Note that we're using `top` in order to allow for stacked children to flow downwards.
 .mat-input-subscript-wrapper {
+  $line-height: 1.2em;
+
   position: absolute;
   font-size: 75%;
   top: 100%;
   width: 100%;
-  margin-top: -$mat-input-wrapper-spacing;
+  margin-top: -$line-height;
+  line-height: $line-height;
   overflow: hidden; // prevents multi-line errors from overlapping the input
 }
 
