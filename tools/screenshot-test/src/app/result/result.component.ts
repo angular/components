@@ -115,7 +115,8 @@ export class ResultComponent {
   constructor(public service: FirebaseService, private _changeDetectorRef: ChangeDetectorRef) { }
 
   flip() {
-    this.service.screenshotResultSummary.isFlipped = !this.service.screenshotResultSummary.isFlipped;
+    this.service.screenshotResultSummary.isFlipped =
+      !this.service.screenshotResultSummary.isFlipped;
   }
 
   toggleCollapse() {

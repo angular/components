@@ -156,7 +156,8 @@ export class FirebaseService {
 
   getGithubStatus() {
     let url =
-      `https://api.github.com/repos/${config.repoSlug}/commits/${this.screenshotResultSummary.sha}/status`;
+      `https://api.github.com/repos/${config.repoSlug}/commits/` +
+      `${this.screenshotResultSummary.sha}/status`;
     return this._http.get(url).toPromise()
       .then((response) => {
         let statusResponse = response.json();
