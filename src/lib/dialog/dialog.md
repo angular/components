@@ -33,7 +33,7 @@ value is forwarded as the result of the `afterClosed` promise.
 If you want to share data with your dialog, you can use the `data` option to pass information to the dialog component.
 
 ```ts
-let dialogRef = dialog.open(DialogName, {
+let dialogRef = dialog.open(YourDialog, {
   data: 'your data',
 });
 ```
