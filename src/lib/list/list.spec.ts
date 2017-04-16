@@ -49,6 +49,20 @@ describe('MdList', () => {
     expect(listItem.nativeElement.className).toBe('mat-list-item');
   });
 
+  it('should support toggling dense mode using an input', () => {
+    let fixture = TestBed.createComponent(ListWithOneItem);
+    let listElement = fixture.debugElement.query(By.css('md-list'));
+
+    fixture.detectChanges();
+
+    expect(listElement.nativeElement.className).not.toContain('mat-dense-list');
+
+    fixture.componentInstance.showDense = true;
+    fixture.detectChanges();
+
+    expect(listElement.nativeElement.className).toContain('mat-dense-list');
+  });
+
   it('should apply mat-2-line class to lists with two lines', () => {
     let fixture = TestBed.createComponent(ListWithTwoLineItem);
     fixture.detectChanges();
@@ -174,12 +188,14 @@ class NavListWithOneAnchorItem extends BaseTestList {
 }
 
 @Component({template: `
-  <md-list>
+  <md-list [dense]="showDense">
     <md-list-item>
       Paprika
     </md-list-item>
   </md-list>`})
-class ListWithOneItem extends BaseTestList { }
+class ListWithOneItem extends BaseTestList {
+  showDense: boolean = false;
+}
 
 @Component({template: `
   <md-list>

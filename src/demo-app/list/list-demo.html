@@ -1,7 +1,12 @@
 
 <h1>md-list demo</h1>
 
-<button md-raised-button (click)="thirdLine=!thirdLine" class="demo-button">Show third line</button>
+<button md-raised-button (click)="thirdLine=!thirdLine" class="demo-button">
+  Toggle third line
+</button>
+<button md-raised-button (click)="showDense=!showDense" class="demo-button">
+  Toggle dense mode
+</button>
 
 <div class="demo">
   <div>
@@ -43,21 +48,21 @@
 
   <div>
     <h2>Dense lists</h2>
-    <md-list dense>
+    <md-list [dense]="showDense">
       <h3 md-subheader>Items</h3>
       <md-list-item *ngFor="let item of items">
         {{item}}
       </md-list-item>
     </md-list>
 
-    <md-list dense>
+    <md-list [dense]="showDense">
       <md-list-item *ngFor="let contact of contacts">
         <h3 md-line>{{contact.name}}</h3>
         <p md-line class="demo-secondary-text">{{contact.headline}}</p>
       </md-list-item>
     </md-list>
 
-    <md-list dense>
+    <md-list [dense]="showDense">
       <h3 md-subheader>Today</h3>
       <md-list-item *ngFor="let message of messages">
         <img md-list-avatar [src]="message.image" alt="Image of {{message.from}}">
