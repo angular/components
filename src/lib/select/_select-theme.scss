@@ -9,38 +9,39 @@
 
   .mat-select-trigger {
     color: mat-color($foreground, hint-text);
+  }
 
-    .mat-select:focus:not(.mat-select-disabled) & {
-      color: mat-color($primary);
-    }
+  .mat-select:focus:not(.mat-select-disabled) .mat-select-trigger {
+    color: mat-color($primary);
+  }
 
-    .mat-select:not(:focus).ng-invalid.ng-touched:not(.mat-select-disabled) & {
-      color: mat-color($warn);
-    }
+  .mat-select:not(:focus).ng-invalid.ng-touched:not(.mat-select-disabled) .mat-select-trigger {
+    color: mat-color($warn);
   }
 
   .mat-select-underline {
     background-color: mat-color($foreground, divider);
-
-    .mat-select:focus:not(.mat-select-disabled) & {
-      background-color: mat-color($primary);
-    }
-
-    .mat-select:not(:focus).ng-invalid.ng-touched:not(.mat-select-disabled) & {
-      background-color: mat-color($warn);
-    }
   }
+
+  .mat-select:focus:not(.mat-select-disabled) .mat-select-underline {
+    background-color: mat-color($primary);
+  }
+
+  .mat-select:not(:focus).ng-invalid.ng-touched:not(.mat-select-disabled) .mat-select-underline {
+    background-color: mat-color($warn);
+  }
+
 
   .mat-select-arrow {
     color: mat-color($foreground, hint-text);
+  }
 
-    .mat-select:focus:not(.mat-select-disabled) & {
-      color: mat-color($primary);
-    }
+  .mat-select:focus:not(.mat-select-disabled) .mat-select-arrow {
+    color: mat-color($primary);
+  }
 
-    .mat-select:not(:focus).ng-invalid.ng-touched:not(.mat-select-disabled) & {
-      color: mat-color($warn);
-    }
+  .mat-select:not(:focus).ng-invalid.ng-touched:not(.mat-select-disabled) .mat-select-arrow {
+    color: mat-color($warn);
   }
 
   .mat-select-content, .mat-select-panel-done-animating {
@@ -49,9 +50,8 @@
 
   .mat-select-value {
     color: mat-color($foreground, text);
-
-    .mat-select-disabled & {
-      color: mat-color($foreground, hint-text);
-    }
+  }
+  .mat-select-disabled .mat-select-value {
+    color: mat-color($foreground, hint-text);
   }
 }
