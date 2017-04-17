@@ -13,23 +13,21 @@
       background: mat-color($background, hover);
     }
 
-    &.mat-selected {
-      &.mat-primary, .mat-primary & {
-        color: mat-color($primary);
-      }
+    &.mat-selected.mat-primary, .mat-primary &.mat-selected {
+      color: mat-color($primary);
+    }
 
-      &.mat-accent, .mat-accent & {
-        color: mat-color($accent);
-      }
+    &.mat-selected.mat-accent, .mat-accent &.mat-selected {
+      color: mat-color($accent);
+    }
 
-      &.mat-warn, .mat-warn & {
-        color: mat-color($warn);
-      }
+    &.mat-selected.mat-warn, .mat-warn &.mat-selected {
+      color: mat-color($warn);
+    }
 
-      // In multiple mode there is a checkbox to show that the option is selected.
-      &:not(.mat-option-multiple) {
-        background: mat-color($background, hover);
-      }
+    // In multiple mode there is a checkbox to show that the option is selected.
+    &.mat-selected:not(.mat-option-multiple) {
+      background: mat-color($background, hover);
     }
 
     &.mat-active {
@@ -40,6 +38,5 @@
     &.mat-option-disabled {
       color: mat-color($foreground, hint-text);
     }
-
   }
 }
