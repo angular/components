@@ -8,7 +8,8 @@ import {MdYearView} from './year-view';
 import {MdCalendarTable} from './calendar-table';
 import {DatetimeModule} from '../core/datetime/index';
 import {
-  dispatchFakeEvent, dispatchKeyboardEvent,
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
   dispatchMouseEvent
 } from '../core/testing/dispatch-events';
 import {
@@ -434,8 +435,8 @@ describe('MdCalendar', () => {
     let fixture: ComponentFixture<CalendarWithMinMax>;
     let testComponent: CalendarWithMinMax;
     let calendarElement: HTMLElement;
-    let prevButton: HTMLElement;
-    let nextButton: HTMLElement;
+    let prevButton: HTMLButtonElement;
+    let nextButton: HTMLButtonElement;
     let calendarInstance: MdCalendar;
 
     beforeEach(() => {
@@ -443,8 +444,9 @@ describe('MdCalendar', () => {
 
       let calendarDebugElement = fixture.debugElement.query(By.directive(MdCalendar));
       calendarElement = calendarDebugElement.nativeElement;
-      prevButton = calendarElement.querySelector('.mat-calendar-previous-button') as HTMLElement;
-      nextButton = calendarElement.querySelector('.mat-calendar-next-button') as HTMLElement;
+      prevButton =
+          calendarElement.querySelector('.mat-calendar-previous-button') as HTMLButtonElement;
+      nextButton = calendarElement.querySelector('.mat-calendar-next-button') as HTMLButtonElement;
       calendarInstance = calendarDebugElement.componentInstance;
       testComponent = fixture.componentInstance;
     });
@@ -467,13 +469,13 @@ describe('MdCalendar', () => {
       testComponent.startAt = new SimpleDate(2016, 1, 1);
       fixture.detectChanges();
 
-      expect(prevButton.classList).not.toContain('mat-calendar-disabled');
+      expect(prevButton.disabled).toBe(false, 'previous button should not be disabled');
       expect(calendarInstance._activeDate).toEqual(new SimpleDate(2016, 1, 1));
 
       prevButton.click();
       fixture.detectChanges();
 
-      expect(prevButton.classList).toContain('mat-calendar-disabled');
+      expect(prevButton.disabled).toBe(true, 'previous button should be disabled');
       expect(calendarInstance._activeDate).toEqual(new SimpleDate(2016, 0, 1));
 
       prevButton.click();
@@ -486,13 +488,13 @@ describe('MdCalendar', () => {
       testComponent.startAt = new SimpleDate(2017, 11, 1);
       fixture.detectChanges();
 
-      expect(nextButton.classList).not.toContain('mat-calendar-disabled');
+      expect(nextButton.disabled).toBe(false, 'next button should not be disabled');
       expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 11, 1));
 
       nextButton.click();
       fixture.detectChanges();
 
-      expect(nextButton.classList).toContain('mat-calendar-disabled');
+      expect(nextButton.disabled).toBe(true, 'next button should be disabled');
       expect(calendarInstance._activeDate).toEqual(new SimpleDate(2018, 0, 1));
 
       nextButton.click();
