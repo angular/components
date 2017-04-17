@@ -1,10 +1,12 @@
-<table md-calendar-body
-       allowDisabledSelection="true"
-       [label]="_yearLabel"
-       [rows]="_months"
-       [todayValue]="_todayMonth"
-       [selectedValue]="_selectedMonth"
-       [labelMinRequiredCells]="2"
-       [activeCell]="activeDate.month"
-       (selectedValueChange)="_monthSelected($event)">
+<table class="mat-calendar-table">
+  <tbody md-calendar-body
+         allowDisabledSelection="true"
+         [label]="_yearLabel"
+         [rows]="_months"
+         [todayValue]="_todayMonth"
+         [selectedValue]="_selectedMonth"
+         [labelMinRequiredCells]="2"
+         [activeCell]="activeDate.month"
+         (selectedValueChange)="_monthSelected($event)">
+  </tbody>
 </table>

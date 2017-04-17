@@ -13,11 +13,8 @@ $mat-calendar-body-cell-content-size: 100% - $mat-calendar-body-cell-content-mar
 
 
 .mat-calendar-body {
-  border-spacing: 0;
-  border-collapse: collapse;
   font-size: $mat-calendar-body-font-size;
   min-width: $mat-calendar-body-min-size;
-  width: 100%;
 }
 
 .mat-calendar-body-label {

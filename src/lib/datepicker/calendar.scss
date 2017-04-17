@@ -103,3 +103,9 @@ $mat-calendar-next-icon-transform: translateX(-2px) rotate(45deg);
   border-right-width: $mat-calendar-prev-next-icon-border-width;
   transform: $mat-calendar-next-icon-transform;
 }
+
+.mat-calendar-table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
+}
