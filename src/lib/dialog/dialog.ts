@@ -9,6 +9,7 @@ import {MdDialogConfig} from './dialog-config';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
 import {TemplatePortal} from '../core/portal/portal';
+import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/first';
 
 
@@ -21,6 +22,7 @@ export class MdDialog {
   private _afterAllClosedAtThisLevel = new Subject<void>();
   private _afterOpenAtThisLevel = new Subject<MdDialogRef<any>>();
   private _boundKeydown = this._handleKeydown.bind(this);
+  private _backdropClickSubscription: Subscription;
 
   /** Keeps track of the currently-open dialogs. */
   get _openDialogs(): MdDialogRef<any>[] {
@@ -152,6 +154,10 @@ export class MdDialog {
     if (!config.disableClose) {
       // When the dialog backdrop is clicked, we want to close it.
       overlayRef.backdropClick().first().subscribe(() => dialogRef.close());
+    } else {
+      this._backdropClickSubscription = overlayRef.backdropClick().subscribe(() => {
+        dialogContainer._closeAttempt.next('backdrop');
+      });
     }
 
     // We create an injector specifically for the component we're instantiating so that it can
@@ -187,6 +193,10 @@ export class MdDialog {
 
       // no open dialogs are left, call next on afterAllClosed Subject
       if (!this._openDialogs.length) {
+        if (this._backdropClickSubscription) {
+          this._backdropClickSubscription.unsubscribe();
+        }
+
         this._afterAllClosed.next();
         document.removeEventListener('keydown', this._boundKeydown);
       }
@@ -201,8 +211,11 @@ export class MdDialog {
     let topDialog = this._openDialogs[this._openDialogs.length - 1];
     let canClose = topDialog ? !topDialog._containerInstance.dialogConfig.disableClose : false;
 
-    if (event.keyCode === ESCAPE && canClose) {
-      topDialog.close();
+    if (event.keyCode === ESCAPE && topDialog) {
+      topDialog._containerInstance._closeAttempt.next('escape');
+      if (canClose) {
+        topDialog.close();
+      }
     }
   }
 }
