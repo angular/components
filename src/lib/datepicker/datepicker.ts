@@ -82,13 +82,7 @@ export class MdDatepicker implements OnDestroy {
   get startAt(): SimpleDate {
     // If an explicit startAt is set we start there, otherwise we start at whatever the currently
     // selected value is.
-    if (this._startAt) {
-      return this._startAt;
-    }
-    if (this._datepickerInput) {
-      return this._datepickerInput.value;
-    }
-    return null;
+    return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
   }
   set startAt(date: SimpleDate) { this._startAt = this._locale.parseDate(date); }
   private _startAt: SimpleDate;
@@ -166,7 +160,7 @@ export class MdDatepicker implements OnDestroy {
 
   /**
    * Register an input with this datepicker.
-   * @param inputElementRef An ElementRef for the input.
+   * @param input The datepicker input to register with this datepicker.
    */
   _registerInput(input: MdDatepickerInput): void {
     if (this._datepickerInput) {
@@ -177,10 +171,7 @@ export class MdDatepicker implements OnDestroy {
         this._datepickerInput._valueChange.subscribe((value: SimpleDate) => this._selected = value);
   }
 
-  /**
-   * Open the calendar.
-   * @param touchUi Whether to use the touch UI.
-   */
+  /** Open the calendar. */
   open(): void {
     if (this.opened) {
       return;

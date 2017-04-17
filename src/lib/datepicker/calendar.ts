@@ -95,10 +95,26 @@ export class MdCalendar implements AfterContentInit {
   _weekdays: string[];
 
   /** The label for the current calendar view. */
-  get _label(): string {
+  get _periodButtonText(): string {
     return this._monthView ?
         this._locale.getCalendarMonthHeaderLabel(this._activeDate).toLocaleUpperCase() :
         this._locale.getCalendarYearHeaderLabel(this._activeDate);
+  }
+
+  get _periodButtonLabel(): string {
+    return this._monthView ?
+        this._locale.switchToYearViewLabel :
+        this._locale.switchToMonthViewLabel;
+  }
+
+  /** The label for the the previous button. */
+  get _prevButtonLabel(): string {
+    return this._monthView ? this._locale.prevMonthLabel : this._locale.prevYearLabel;
+  }
+
+  /** The label for the the next button. */
+  get _nextButtonLabel(): string {
+    return this._monthView ? this._locale.nextMonthLabel : this._locale.nextYearLabel;
   }
 
   constructor(private _locale: CalendarLocale) {

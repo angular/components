@@ -1,6 +1,7 @@
 /**
- * A replacement for the native JS Date class that allows us to avoid dealing with time zone
- * details and the time component of the native Date.
+ * A wrapper for the native JS Date class that deals with some quirks for us:
+ * 1) The native Date constructor treats years in the range [0-99] as 19xx not 00xx.
+ * 2) ... (Eventually need to add support for other quirks related to time zones, DST).
  */
 export class SimpleDate {
   /**
