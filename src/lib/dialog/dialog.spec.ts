@@ -371,11 +371,11 @@ describe('MdDialog', () => {
       expect(instance.data.dateParam).toBe(config.data.dateParam);
     });
 
-    it('should default to an empty object if no data is passed', () => {
+    it('should default to null if no data is passed', () => {
       let dialogRef: MdDialogRef<DialogWithInjectedData>;
 
       expect(() => dialogRef = dialog.open(DialogWithInjectedData)).not.toThrow();
-      expect(dialogRef.componentInstance.data).toEqual({});
+      expect(dialogRef.componentInstance.data).toBeNull();
     });
   });
 
