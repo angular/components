@@ -54,10 +54,12 @@ export class MdTabNavBar implements AfterContentInit, OnDestroy {
 
   ngAfterContentInit(): void {
     this._realignInkBar = this._ngZone.runOutsideAngular(() => {
-      return Observable.merge(
-        this._dir ? this._dir.dirChange : Observable.of(null),
-        Observable.fromEvent(window, 'resize').auditTime(10)
-      ).subscribe(() => this._alignInkBar());
+      let dirChange = this._dir ? this._dir.dirChange : Observable.of(null);
+      let resize = typeof window !== 'undefined' ?
+          Observable.fromEvent(window, 'resize').auditTime(10) :
+          Observable.of(null);
+
+      return Observable.merge(dirChange, resize).subscribe(() => this._alignInkBar());
     });
   }
 
