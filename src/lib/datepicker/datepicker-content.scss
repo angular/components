@@ -11,12 +11,12 @@ $md-datepicker-non-touch-calendar-width:
 // the calendar grows, since some of the elements have pixel-based sizes. These numbers have been
 // chosen to minimize extra whitespace at larger sizes, while still ensuring we won't need
 // scrollbars at smaller sizes.
-$md-datepicker-touch-width: 67vmin;
+$md-datepicker-touch-width: 64vmin;
 $md-datepicker-touch-height: 80vmin;
-$md-datepicker-touch-min-width: 253px;
-$md-datepicker-touch-min-height: 300px;
-$md-datepicker-touch-max-width: 778px;
-$md-datepicker-touch-max-height: 800px;
+$md-datepicker-touch-min-width: 250px;
+$md-datepicker-touch-min-height: 312px;
+$md-datepicker-touch-max-width: 750px;
+$md-datepicker-touch-max-height: 788px;
 
 
 .mat-calendar {
