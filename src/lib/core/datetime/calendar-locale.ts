@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 
 
 /** Whether the browser supports the Intl API. */
-const SUPPORTS_INTL_API = !!Intl;
+const SUPPORTS_INTL_API = typeof Intl != 'undefined';
 
 
 /** Creates an array and fills it with values. */
@@ -51,6 +51,24 @@ export abstract class CalendarLocale {
 
   /** A label for the button used to open the calendar popup (used by screen readers). */
   openCalendarLabel: string;
+
+  /** A label for the previous month button (used by screen readers). */
+  prevMonthLabel: string;
+
+  /** A label for the next month button (used by screen readers). */
+  nextMonthLabel: string;
+
+  /** A label for the previous year button (used by screen readers). */
+  prevYearLabel: string;
+
+  /** A label for the next year button (used by screen readers). */
+  nextYearLabel: string;
+
+  /** A label for the 'switch to month view' button (used by screen readers). */
+  switchToMonthViewLabel: string;
+
+  /** A label for the 'switch to year view' button (used by screen readers). */
+  switchToYearViewLabel: string;
 
   /**
    * Parses a SimpleDate from a value.
@@ -124,6 +142,18 @@ export class DefaultCalendarLocale implements  CalendarLocale {
 
   openCalendarLabel = 'Open calendar';
 
+  prevMonthLabel = 'Previous month';
+
+  nextMonthLabel = 'Next month';
+
+  prevYearLabel = 'Previous year';
+
+  nextYearLabel = 'Next year';
+
+  switchToMonthViewLabel = 'Change to month view';
+
+  switchToYearViewLabel = 'Change to year view';
+
   parseDate(value: any) {
     if (value instanceof SimpleDate) {
       return value;
@@ -160,7 +190,6 @@ export class DefaultCalendarLocale implements  CalendarLocale {
    * Creates a function to format SimpleDates as strings using Intl.DateTimeFormat.
    * @param options The options to use for Intl.DateTimeFormat.
    * @returns The newly created format function, or null if the Intl API is not available.
-   * @private
    */
   private _createFormatFunction(options: Object): (date: SimpleDate) => string {
     if (SUPPORTS_INTL_API) {

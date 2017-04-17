@@ -1,26 +1,16 @@
 <div class="mat-calendar-header">
   <div class="mat-calendar-controls">
-    <button class="mat-calendar-button mat-calendar-period-button"
-            (click)="_currentPeriodClicked()">
-      {{_label}}
+    <button md-button class="mat-calendar-period-button" (click)="_currentPeriodClicked()"
+            [attr.aria-label]="_periodButtonLabel">
+      {{_periodButtonText}}
       <div class="mat-calendar-arrow" [class.mat-calendar-invert]="!_monthView"></div>
     </button>
     <div class="mat-calendar-spacer"></div>
-    <button class="mat-calendar-button mat-calendar-previous-button"
-            [class.mat-calendar-disabled]="!_previousEnabled()" (click)="_previousClicked()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"
-           fill="currentColor">
-        <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
-        <path d="M0-.5h24v24H0z" fill="none"/>
-      </svg>
+    <button md-icon-button class="mat-calendar-previous-button" [disabled]="!_previousEnabled()"
+            (click)="_previousClicked()" [attr.aria-label]="_prevButtonLabel">
     </button>
-    <button class="mat-calendar-button mat-calendar-next-button"
-            [class.mat-calendar-disabled]="!_nextEnabled()" (click)="_nextClicked()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"
-           fill="currentColor">
-        <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
-        <path d="M0-.25h24v24H0z" fill="none"/>
-      </svg>
+    <button md-icon-button class="mat-calendar-next-button" [disabled]="!_nextEnabled()"
+            (click)="_nextClicked()" [attr.aria-label]="_nextButtonLabel">
     </button>
   </div>
 
