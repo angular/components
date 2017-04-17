@@ -61,7 +61,7 @@ export class MdDialogContainer extends BasePortalHost {
   private _elementFocusedBeforeDialogWasOpened: HTMLElement = null;
 
   /** Reference to the global document object. */
-  private _document: Document|Document;
+  private _document: Document;
 
   /** The dialog configuration. */
   dialogConfig: MdDialogConfig;
