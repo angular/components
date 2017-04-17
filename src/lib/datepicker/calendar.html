@@ -13,10 +13,6 @@
             (click)="_nextClicked()" [attr.aria-label]="_nextButtonLabel">
     </button>
   </div>
-
-  <table class="mat-calendar-weekday-table" *ngIf="_monthView">
-    <tr><td *ngFor="let day of _weekdays">{{day}}</td></tr>
-  </table>
 </div>
 
 <div class="mat-calendar-temp-body" tabindex="0" (keydown)="_handleCalendarBodyKeydown($event)"

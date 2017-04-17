@@ -15,10 +15,6 @@
     background-color: mat-color($background, card);
   }
 
-  .mat-calendar-header {
-    border-color: mat-color($foreground, divider);
-  }
-
   .mat-calendar-arrow {
     border-top-color: mat-color($foreground, icon);
   }
@@ -28,8 +24,12 @@
     color: mat-color($foreground, icon);
   }
 
-  .mat-calendar-weekday-table {
+  .mat-calendar-table-header {
     color: mat-color($foreground, hint-text);
+  }
+
+  .mat-calendar-table-header-divider::after {
+    background: mat-color($foreground, divider);
   }
 
   .mat-calendar-body-label {

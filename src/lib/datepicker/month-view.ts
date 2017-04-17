@@ -74,7 +74,13 @@ export class MdMonthView implements AfterContentInit {
   /** The date of the month that today falls on. Null if today is in another month. */
   _todayDate: number;
 
-  constructor(private _locale: CalendarLocale) {}
+  /** The names of the weekdays. */
+  _weekdays: string[];
+
+  constructor(private _locale: CalendarLocale) {
+    this._weekdays = this._locale.narrowDays.slice(this._locale.firstDayOfWeek)
+        .concat(this._locale.narrowDays.slice(0, this._locale.firstDayOfWeek));
+  }
 
   ngAfterContentInit(): void {
     this._init();
