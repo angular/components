@@ -23,13 +23,16 @@ export class MdCalendarCell {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-calendar-table',
-  templateUrl: 'calendar-table.html',
-  styleUrls: ['calendar-table.css'],
+  selector: '[md-calendar-body]',
+  templateUrl: 'calendar-body.html',
+  styleUrls: ['calendar-body.css'],
+  host: {
+    'class': 'mat-calendar-body',
+  },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdCalendarTable {
+export class MdCalendarBody {
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
 

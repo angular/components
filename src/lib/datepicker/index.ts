@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {MdMonthView} from './month-view';
 import {CommonModule} from '@angular/common';
-import {MdCalendarTable} from './calendar-table';
+import {MdCalendarBody} from './calendar-body';
 import {MdYearView} from './year-view';
 import {DatetimeModule} from '../core/datetime/index';
 import {OverlayModule} from '../core/overlay/overlay-directives';
@@ -15,7 +15,7 @@ import {MdButtonModule} from '../button/index';
 
 
 export * from './calendar';
-export * from './calendar-table';
+export * from './calendar-body';
 export * from './datepicker';
 export * from './datepicker-input';
 export * from './month-view';
@@ -39,7 +39,7 @@ export * from './year-view';
   ],
   declarations: [
     MdCalendar,
-    MdCalendarTable,
+    MdCalendarBody,
     MdDatepicker,
     MdDatepickerContent,
     MdDatepickerInput,

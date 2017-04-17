@@ -5,7 +5,7 @@ import {MdCalendar} from './calendar';
 import {By} from '@angular/platform-browser';
 import {MdMonthView} from './month-view';
 import {MdYearView} from './year-view';
-import {MdCalendarTable} from './calendar-table';
+import {MdCalendarBody} from './calendar-body';
 import {DatetimeModule} from '../core/datetime/index';
 import {
   dispatchFakeEvent,
@@ -33,7 +33,7 @@ describe('MdCalendar', () => {
       ],
       declarations: [
         MdCalendar,
-        MdCalendarTable,
+        MdCalendarBody,
         MdMonthView,
         MdYearView,
 
@@ -128,7 +128,7 @@ describe('MdCalendar', () => {
       expect(calendarInstance._monthView).toBe(false, 'should be in year view');
       expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 0, 31));
 
-      let monthCells = calendarElement.querySelectorAll('.mat-calendar-table-cell');
+      let monthCells = calendarElement.querySelectorAll('.mat-calendar-body-cell');
       (monthCells[monthCells.length - 1] as HTMLElement).click();
       fixture.detectChanges();
 
@@ -138,7 +138,7 @@ describe('MdCalendar', () => {
     });
 
     it('should select date in month view', () => {
-      let monthCells = calendarElement.querySelectorAll('.mat-calendar-table-cell');
+      let monthCells = calendarElement.querySelectorAll('.mat-calendar-body-cell');
       (monthCells[monthCells.length - 1] as HTMLElement).click();
       fixture.detectChanges();
 
@@ -151,7 +151,7 @@ describe('MdCalendar', () => {
         let calendarBodyEl: HTMLElement;
 
         beforeEach(() => {
-          calendarBodyEl = calendarElement.querySelector('.mat-calendar-body') as HTMLElement;
+          calendarBodyEl = calendarElement.querySelector('.mat-calendar-temp-body') as HTMLElement;
           expect(calendarBodyEl).not.toBeNull();
 
           dispatchFakeEvent(calendarBodyEl, 'focus');
@@ -521,7 +521,7 @@ describe('MdCalendar', () => {
     });
 
     it('should disable and prevent selection of filtered dates', () => {
-      let cells = calendarElement.querySelectorAll('.mat-calendar-table-cell');
+      let cells = calendarElement.querySelectorAll('.mat-calendar-body-cell');
       (cells[0] as HTMLElement).click();
       fixture.detectChanges();
 
@@ -537,7 +537,7 @@ describe('MdCalendar', () => {
       let calendarBodyEl: HTMLElement;
 
       beforeEach(() => {
-        calendarBodyEl = calendarElement.querySelector('.mat-calendar-body') as HTMLElement;
+        calendarBodyEl = calendarElement.querySelector('.mat-calendar-temp-body') as HTMLElement;
         expect(calendarBodyEl).not.toBeNull();
 
         dispatchFakeEvent(calendarBodyEl, 'focus');

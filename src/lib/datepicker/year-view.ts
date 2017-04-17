@@ -7,7 +7,7 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import {MdCalendarCell} from './calendar-table';
+import {MdCalendarCell} from './calendar-body';
 import {CalendarLocale} from '../core/datetime/calendar-locale';
 import {SimpleDate} from '../core/datetime/simple-date';
 
