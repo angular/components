@@ -9,9 +9,13 @@ export interface Character {
 }
 
 export const CHARACTERS = [
-  {name: 'Goofy', movie: 'A Goofy Movie'},
-  {name: 'Tinker Bell', movie: 'Peter Pan'},
-  {name: 'Thumper', movie: 'Bambi'},
+  {name: 'Goofy', movie: 'A Goofy Movie', icon: 'check', items: [
+    {name: 'Jane', movie: 'Tarzan'},
+    {name: 'Pumbaa', movie: 'The Lion King'},
+    {name: 'Mulan', movie: 'Mulan'}
+  ]},
+  {name: 'Tinker Bell', icon: 'favorite', movie: 'Peter Pan'},
+  {name: 'Thumper', movie: 'Bambi', icon: 'favorite'},
   {name: 'Mad Hatter', movie: 'Alice in Wonderland'},
   {name: 'Kronk', movie: 'The Emperor\'s New Groove', villan: true},
   {name: 'Gus Gus', movie: 'Cinderella'},
@@ -21,10 +25,7 @@ export const CHARACTERS = [
   {name: 'Dumbo', movie: 'Dumbo'},
   {name: 'Jafar', movie: 'Aladdin', villan: true},
   {name: 'Lilo', movie: 'Lilo and Stitch'},
-  {name: 'Sebastian', movie: 'The Little Mermaid'},
-  {name: 'Jane', movie: 'Tarzan'},
-  {name: 'Pumbaa', movie: 'The Lion King'},
-  {name: 'Mulan', movie: 'Mulan'},
+  {name: 'Sebastian', movie: 'The Little Mermaid'}
 ];
 
 export class TreeDemoDataSource implements MdTreeDataSource<Character> {
@@ -40,6 +41,7 @@ export class TreeDemoDataSource implements MdTreeDataSource<Character> {
    * @override
    */
   getNodes(): Observable<MdTreeNodes<Character>> {
+    console.log(`get nodes`)
     return this.nodeSubject.asObservable();
   }
 
@@ -49,6 +51,7 @@ export class TreeDemoDataSource implements MdTreeDataSource<Character> {
   loadTableRows() {
     this.getRowsFromServer().subscribe(filteredRows => {
       const nodes = {nodes: filteredRows, nodeCount: filteredRows.length};
+      console.log(`nodes ${nodes}`);
       this.nodeSubject.next(nodes);
     });
   }

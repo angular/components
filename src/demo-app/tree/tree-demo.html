@@ -4,14 +4,24 @@
   <!--</md-tree-node>-->
 <!--</md-tree>-->
 
-<ng-container [ngTemplateOutlet]="templateRef" *ngFor="let node of myTree" [ngTemplateOutletContext]="node"></ng-container>
+<md-tree [dataSource]="dataSource">
+  <md-tree-node *mdNodeContext="let characterData = node">
+    <md-icon *ngIf="characterData.expandable" (click)="characterData.expanded = !characterData.expanded">{{characterData.expanded ? 'expand_less' : 'expand_more'}}</md-icon>
+    <div [style.padding-left]="getPadding(characterData.level)">
+      <md-icon *ngIf="characterData.data.icon">{{characterData.data.icon}}</md-icon>
+      {{characterData.data.name}} ({{characterData.data.movie}})
+    </div>
+  </md-tree-node>
+</md-tree>
 
-<hr>
-<ng-template #greet><span>Hello</span></ng-template>
-<ng-template #eng let-text="text"><span>Hello {{text}}!</span></ng-template>
-<ng-template #svk let-person="localSk"><span>Ahoj {{person}}!</span></ng-template>
+<!--<hr>-->
+<!--<ng-template #greet><span>Hello</span></ng-template>-->
+<!--<ng-template #eng let-name="text" let-children="items">-->
+  <!--<div>Hello {{name}}!</div>-->
+<!--</ng-template>-->
+<!--<ng-template #svk let-person="localSk"><span>Ahoj {{person}}!</span></ng-template>-->
 
 
-<button (click)="changeTemplate(0)">0 </button>
-<button (click)="changeTemplate(1)">1 </button>
-<button (click)="changeTemplate(2)">2 </button>
+<!--<button (click)="changeTemplate(1)">0 </button>-->
+<!--<button (click)="changeTemplate(2)">1 </button>-->
+<!--<button (click)="changeTemplate(3)">2 </button>-->

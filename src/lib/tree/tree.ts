@@ -27,6 +27,17 @@ export interface NgForTreeContext {
   last: boolean;
 }
 
+
+@Directive({
+  selector: 'md-tree-node',
+  host: {
+    '[class.mat-tree-node]': 'true',
+  },
+})
+export class MdTreeNode {
+
+}
+
 /**
  * The context directive for the `md-row` element. This template is stamped out
  * for the number of rows in the table.
@@ -39,17 +50,9 @@ export interface NgForTreeContext {
 export class MdNodeContext {
   @ContentChildren(MdTreeNode) cells: QueryList<MdTreeNode>;
 
-  constructor(public template: TemplateRef<MdNodeContext>) {}
-}
-
-@Directive({
-  selector: 'md-tree-node',
-  host: {
-    '[class.mat-tree-node]': 'true',
-  },
-})
-export class MdTreeNode {
-
+  constructor(public template: TemplateRef<MdNodeContext>) {
+    console.log(`has one md-node context`);
+  }
 }
 
 /**
@@ -98,9 +101,13 @@ export class MdTree implements OnInit, OnDestroy {
 
   @Output() onReload = new EventEmitter<void>();
 
-  nodes: any[];
+  displayNodes: MdTreeNodeControl[];
+  nodes: MdTreeNodeControl[];
   nodeCount: number;
   nodeSubscription: Subscription;
+
+  selectedNodes: any[];
+  expandedNodes: any[];
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef) {}
@@ -108,15 +115,46 @@ export class MdTree implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.nodeSubscription = this.dataSource.getNodes().subscribe(result => {
-      this.nodes = result.nodes;
+
+      this.flatten(result.nodes);
+      this.displayNodes = this.nodes.slice();
       this.nodeCount = result.nodeCount;
       this._changeDetectorRef.markForCheck();
       this.onReload.emit();
     });
   }
 
+  flatten(values: any[]) {
+    this.nodes = [];
+    let result: any[] = [];
+    for (let value of values) {
+      this._processNode(value, 0);
+
+    }
+  }
+
+  _processNode(value: any, level: number) {
+    let nodeControl = new MdTreeNodeControl();
+    nodeControl.level = level;
+    nodeControl.data = value;
+    nodeControl.expandable = !!value.items;
+    this.nodes.push(nodeControl);
+    if (value.items && nodeControl.expanded) {
+      for (let item of value.items) {
+        this._processNode(item, level + 1);
+      }
+    }
+  }
+
   ngOnDestroy() {
     this.nodeSubscription.unsubscribe();
+  }
+
+  get templateRef() {
+    console.log(this.nodeContexts);
+    console.log(this.nodeContexts.first);
+    console.log(this.nodeContexts.first.template);
+    return this.nodeContexts && this.nodeContexts.length > 0 && this.nodeContexts.first ? this.nodeContexts.first.template : null;
   }
 
   /**
@@ -137,7 +175,72 @@ export class MdTree implements OnInit, OnDestroy {
       last: this.isLast(index),
     };
 
-    return this.nodeContexts[0].template;
+    return this.nodeContexts[0];
+  }
+
+  @Output()
+  clickChange: EventEmitter<any> = new EventEmitter<any>();
+
+
+  @Output()
+  selectChange: EventEmitter<any> = new EventEmitter<any>();
+
+
+  click(data: any) {
+    this.clickChange.emit(data);
+  }
+
+  select(data: any) {
+    if (this.selectedNodes.includes(data)) {
+      this.selectedNodes.remove(data);
+    } else {
+      this.selectedNodes.push(data);
+    }
+    this.selectChange.emit(data);
+  }
+
+  expand(data: any) {
+
+  }
+
+  loadChildren(data: any) {
+
   }
 }
 
+export class MdTreeNodeControl {
+  tree: MdTree;
+  data: any;
+
+
+  level: number;
+  expanded: boolean;
+  expandable: boolean;
+  selected: boolean;
+
+  // Event related
+  clickNode() {
+    this.tree.click(this.data);
+  }
+  focusNode() {
+    //
+  }
+  blurNode() {
+
+  }
+
+  // select node only affect the node itself and the selection Control
+  //selection related
+  selectNode() {
+    this.tree.select(this.data);
+  }
+
+  // expand node affect the node itself and it's children
+  expandNode() {
+    this.expanded = false;
+    this.tree.expand(this);
+  }
+  // click event
+  // expand event
+  // select event
+}

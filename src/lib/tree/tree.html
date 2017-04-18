@@ -14,3 +14,10 @@
             <!--last: isLast(index)-->
           <!--}">-->
 <!--</ng-container>-->
+
+<ng-container *ngFor="let node of nodes; let i = index"
+              [ngTemplateOutlet]="templateRef"
+              [ngOutletContext]="{
+                node: node
+              }">
+</ng-container>

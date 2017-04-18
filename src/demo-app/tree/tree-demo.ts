@@ -41,6 +41,10 @@ export class TreeDemo {
     this.lastNodeClicked = row;
   }
 
+  getPadding(level: number) {
+    return `${level  *  20}px`;
+  }
+
   changeTemplate(value: number) {
     console.log(`change template ${value}`);
     console.log(this.templateRefs);
