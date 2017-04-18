@@ -102,17 +102,17 @@ $mat-calendar-next-icon-transform: translateX(-2px) rotate(45deg);
   text-align: center;
   font-size: $mat-calendar-weekday-table-font-size;
   font-weight: normal;
+  padding: 0 0 $mat-calendar-padding 0;
 }
 
 .mat-calendar-table-header-divider {
   position: relative;
-  padding: 0;
-  height: ($mat-calendar-padding * 2) + $mat-calendar-header-divider-width;
+  height: $mat-calendar-header-divider-width;
 
   &::after {
     content: '';
     position: absolute;
-    top: $mat-calendar-padding;
+    top: 0;
     left: -$mat-calendar-padding;
     right: -$mat-calendar-padding;
     height: $mat-calendar-header-divider-width;
