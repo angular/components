@@ -229,7 +229,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     this._onTouched();
 
     // Only emit blur event if the new focus is *not* on an option.
-    if (newlyFocusedTag !== 'MD-OPTION') {
+    if (newlyFocusedTag !== 'MD-OPTION' && newlyFocusedTag !== 'MAT-OPTION') {
       this._blurStream.next(null);
     }
   }
