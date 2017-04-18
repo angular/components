@@ -151,7 +151,7 @@ describe('MdCalendar', () => {
         let calendarBodyEl: HTMLElement;
 
         beforeEach(() => {
-          calendarBodyEl = calendarElement.querySelector('.mat-calendar-temp-body') as HTMLElement;
+          calendarBodyEl = calendarElement.querySelector('.mat-calendar-content') as HTMLElement;
           expect(calendarBodyEl).not.toBeNull();
 
           dispatchFakeEvent(calendarBodyEl, 'focus');
@@ -537,7 +537,7 @@ describe('MdCalendar', () => {
       let calendarBodyEl: HTMLElement;
 
       beforeEach(() => {
-        calendarBodyEl = calendarElement.querySelector('.mat-calendar-temp-body') as HTMLElement;
+        calendarBodyEl = calendarElement.querySelector('.mat-calendar-content') as HTMLElement;
         expect(calendarBodyEl).not.toBeNull();
 
         dispatchFakeEvent(calendarBodyEl, 'focus');
