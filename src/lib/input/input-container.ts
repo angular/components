@@ -1,26 +1,30 @@
 import {
-  Component,
-  Input,
-  Directive,
   AfterContentInit,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
   ContentChild,
   ContentChildren,
+  Directive,
   ElementRef,
-  QueryList,
-  ViewEncapsulation,
+  EventEmitter,
+  Input,
   Optional,
   Output,
-  EventEmitter,
-  Renderer
+  QueryList,
+  Renderer,
+  Self,
+  ViewEncapsulation
 } from '@angular/core';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {coerceBooleanProperty} from '../core';
-import {NgControl} from '@angular/forms';
+import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {getSupportedInputTypes} from '../core/platform/features';
 import {
-  MdInputContainerUnsupportedTypeError,
-  MdInputContainerPlaceholderConflictError,
   MdInputContainerDuplicatedHintError,
-  MdInputContainerMissingMdInputError
+  MdInputContainerMissingMdInputError,
+  MdInputContainerPlaceholderConflictError,
+  MdInputContainerUnsupportedTypeError
 } from './input-container-errors';
 
 
@@ -54,7 +58,7 @@ let nextUniqueId = 0;
 export class MdPlaceholder {}
 
 
-/** The hint directive, used to tag content as hint labels (going under the input). */
+/** Hint text to be shown underneath the input. */
 @Directive({
   selector: 'md-hint, mat-hint',
   host: {
@@ -71,8 +75,30 @@ export class MdHint {
   @Input() id: string = `md-input-hint-${nextUniqueId++}`;
 }
 
+/** Single error message to be shown underneath the input. */
+@Directive({
+  selector: 'md-error, mat-error',
+  host: {
+    '[class.mat-input-error]': 'true'
+  }
+})
+export class MdErrorDirective { }
 
-/** The input directive, used to mark the input that `MdInputContainer` is wrapping. */
+/** Prefix to be placed the the front of the input. */
+@Directive({
+  selector: '[mdPrefix], [matPrefix], [md-prefix]'
+})
+export class MdPrefix {}
+
+
+/** Suffix to be placed at the end of the input. */
+@Directive({
+  selector: '[mdSuffix], [matSuffix], [md-suffix]'
+})
+export class MdSuffix {}
+
+
+/** Marker for the input element that `MdInputContainer` is wrapping. */
 @Directive({
   selector: `input[mdInput], textarea[mdInput], input[matInput], textarea[matInput]`,
   host: {
@@ -83,7 +109,7 @@ export class MdHint {
     '[placeholder]': 'placeholder',
     '[disabled]': 'disabled',
     '[required]': 'required',
-    '[attr.aria-describedby]': 'ariaDescribedby',
+    '[attr.aria-describedby]': 'ariaDescribedby || null',
     '(blur)': '_onBlur()',
     '(focus)': '_onFocus()',
     '(input)': '_onInput()',
@@ -117,7 +143,7 @@ export class MdInputDirective {
 
   /** Unique id of the element. */
   @Input()
-  get id() { return this._id; };
+  get id() { return this._id; }
   set id(value: string) {this._id = value || this._uid; }
 
   /** Placeholder attribute of the element. */
@@ -181,7 +207,7 @@ export class MdInputDirective {
 
   constructor(private _elementRef: ElementRef,
               private _renderer: Renderer,
-              @Optional() public _ngControl: NgControl) {
+              @Optional() @Self() public _ngControl: NgControl) {
 
     // Force setter to be called in case id was not specified.
     this.id = this.id;
@@ -226,18 +252,27 @@ export class MdInputDirective {
 
 
 /**
- * Component that represents a text input. It encapsulates the <input> HTMLElement and
- * improve on its behaviour, along with styling it according to the Material Design.
+ * Container for text inputs that applies Material Design styling and behavior.
  */
 @Component({
   moduleId: module.id,
   selector: 'md-input-container, mat-input-container',
   templateUrl: 'input-container.html',
   styleUrls: ['input-container.css'],
+  animations: [
+    trigger('transitionMessages', [
+      state('enter', style({ opacity: 1, transform: 'translateY(0%)' })),
+      transition('void => enter', [
+        style({ opacity: 0, transform: 'translateY(-100%)' }),
+        animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)')
+      ])
+    ])
+  ],
   host: {
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
     '[class.mat-input-container]': 'true',
+    '[class.mat-input-invalid]': '_isErrorState()',
     '[class.mat-focused]': '_mdInputChild.focused',
     '[class.ng-untouched]': '_shouldForward("untouched")',
     '[class.ng-touched]': '_shouldForward("touched")',
@@ -250,18 +285,26 @@ export class MdInputDirective {
   },
   encapsulation: ViewEncapsulation.None,
 })
-export class MdInputContainer implements AfterContentInit {
+export class MdInputContainer implements AfterViewInit, AfterContentInit {
   /** Alignment of the input container's content. */
   @Input() align: 'start' | 'end' = 'start';
 
   /** Color of the input divider, based on the theme. */
-  @Input() dividerColor: 'primary' | 'accent' | 'warn' = 'primary';
+  @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
+
+  /** @deprecated Use color instead. */
+  @Input()
+  get dividerColor() { return this.color; }
+  set dividerColor(value) { this.color = value; }
 
   /** Whether the floating label should always float or not. */
-  get _shouldAlwaysFloat() { return this._floatPlaceholder === 'always'; };
+  get _shouldAlwaysFloat() { return this._floatPlaceholder === 'always'; }
 
   /** Whether the placeholder can float or not. */
   get _canPlaceholderFloat() { return this._floatPlaceholder !== 'never'; }
+
+  /** State of the md-hint and md-error animations. */
+  _subscriptAnimationState: string = '';
 
   /** Text for the input hint. */
   @Input()
@@ -287,7 +330,18 @@ export class MdInputContainer implements AfterContentInit {
 
   @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
 
+  @ContentChildren(MdErrorDirective) _errorChildren: QueryList<MdErrorDirective>;
+
   @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
+
+  @ContentChildren(MdPrefix) _prefixChildren: QueryList<MdPrefix>;
+
+  @ContentChildren(MdSuffix) _suffixChildren: QueryList<MdSuffix>;
+
+  constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    @Optional() private _parentForm: NgForm,
+    @Optional() private _parentFormGroup: FormGroupDirective) { }
 
   ngAfterContentInit() {
     if (!this._mdInputChild) {
@@ -302,6 +356,12 @@ export class MdInputContainer implements AfterContentInit {
     this._mdInputChild._placeholderChange.subscribe(() => this._validatePlaceholders());
   }
 
+  ngAfterViewInit() {
+    // Avoid animations on load.
+    this._subscriptAnimationState = 'enter';
+    this._changeDetectorRef.detectChanges();
+  }
+
   /** Determines whether a class from the NgControl should be forwarded to the host element. */
   _shouldForward(prop: string): boolean {
     let control = this._mdInputChild ? this._mdInputChild._ngControl : null;
@@ -313,6 +373,22 @@ export class MdInputContainer implements AfterContentInit {
 
   /** Focuses the underlying input. */
   _focusInput() { this._mdInputChild.focus(); }
+
+  /** Whether the input container is in an error state. */
+  _isErrorState(): boolean {
+    const control = this._mdInputChild._ngControl;
+    const isInvalid = control && control.invalid;
+    const isTouched = control && control.touched;
+    const isSubmitted = (this._parentFormGroup && this._parentFormGroup.submitted) ||
+        (this._parentForm && this._parentForm.submitted);
+
+    return !!(isInvalid && (isTouched || isSubmitted));
+  }
+
+  /** Determines whether to display hints or errors. */
+  _getDisplayedMessages(): 'error' | 'hint' {
+    return (this._errorChildren.length > 0 && this._isErrorState()) ? 'error' : 'hint';
+  }
 
   /**
    * Ensure that there is only one placeholder (either `input` attribute or child element with the

@@ -15,6 +15,7 @@ import {
   ViewChild,
   ChangeDetectorRef,
   Attribute,
+  OnInit,
 } from '@angular/core';
 import {MdOption, MdOptionSelectionChange} from '../core/option/option';
 import {ENTER, SPACE} from '../core/keyboard/keycodes';
@@ -101,7 +102,8 @@ export type MdSelectFloatPlaceholderType = 'always' | 'never' | 'auto';
   host: {
     'role': 'listbox',
     '[attr.tabindex]': 'tabIndex',
-    '[attr.aria-label]': 'placeholder',
+    '[attr.aria-label]': '_ariaLabel',
+    '[attr.aria-labelledby]': 'ariaLabelledby',
     '[attr.aria-required]': 'required.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': '_control?.invalid || "false"',
@@ -118,7 +120,7 @@ export type MdSelectFloatPlaceholderType = 'always' | 'never' | 'auto';
   ],
   exportAs: 'mdSelect',
 })
-export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestroy {
+export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlValueAccessor {
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
 
@@ -236,7 +238,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     this._placeholder = value;
 
     // Must wait to record the trigger width to ensure placeholder width is included.
-    Promise.resolve(null).then(() => this._triggerWidth = this._getWidth());
+    Promise.resolve(null).then(() => this._setTriggerWidth());
   }
 
   /** Whether the component is disabled. */
@@ -279,6 +281,12 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     }
   }
 
+  /** Aria label of the select. If not specified, the placeholder will be used as label. */
+  @Input('aria-label') ariaLabel: string = '';
+
+  /** Input that can be used to specify the `aria-labelledby` attribute. */
+  @Input('aria-labelledby') ariaLabelledby: string = '';
+
   /** Combined stream of all of the child options' change events. */
   get optionSelectionChanges(): Observable<MdOptionSelectionChange> {
     return Observable.merge(...this.options.map(option => option.onSelectionChange));
@@ -304,8 +312,11 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     this._tabIndex = parseInt(tabIndex) || 0;
   }
 
-  ngAfterContentInit() {
+  ngOnInit() {
     this._selectionModel = new SelectionModel<MdOption>(this.multiple, null, false);
+  }
+
+  ngAfterContentInit() {
     this._initKeyManager();
 
     this._changeSubscription = this.options.changes.startWith(null).subscribe(() => {
@@ -341,6 +352,11 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     if (this.disabled || !this.options.length) {
       return;
     }
+
+    if (!this._triggerWidth) {
+      this._setTriggerWidth();
+    }
+
     this._calculateOverlayPosition();
     this._placeholderState = this._floatPlaceholderState();
     this._panelOpen = true;
@@ -413,9 +429,18 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
 
   /** The value displayed in the trigger. */
   get triggerValue(): string {
-    return this.multiple ?
-      this._selectionModel.selected.map(option => option.viewValue).join(', ') :
-      this._selectionModel.selected[0].viewValue;
+    if (this._multiple) {
+      let selectedOptions = this._selectionModel.selected.map(option => option.viewValue);
+
+      if (this._isRtl()) {
+        selectedOptions.reverse();
+      }
+
+      // TODO(crisbeto): delimiter should be configurable for proper localization.
+      return selectedOptions.join(', ');
+    }
+
+    return this._selectionModel.selected[0].viewValue;
   }
 
   /** Whether the element is in RTL mode. */
@@ -423,11 +448,12 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
     return this._dir ? this._dir.value === 'rtl' : false;
   }
 
-  /** The width of the trigger element. This is necessary to match
+  /**
+   * Sets the width of the trigger element. This is necessary to match
    * the overlay width to the trigger width.
    */
-  _getWidth(): number {
-    return this._getTriggerRect().width;
+  private _setTriggerWidth(): void {
+    this._triggerWidth = this._getTriggerRect().width;
   }
 
   /** Ensures the panel opens if activated by the keyboard. */
@@ -447,6 +473,7 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
       this.onOpen.emit();
     } else {
       this.onClose.emit();
+      this._panelDoneAnimating = false;
     }
   }
 
@@ -627,7 +654,6 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   /**
    * Sets the `multiple` property on each option. The promise is necessary
    * in order to avoid Angular errors when modifying the property after init.
-   * TODO: there should be a better way of doing this.
    */
   private _setOptionMultiple() {
     if (this.multiple) {
@@ -744,6 +770,13 @@ export class MdSelect implements AfterContentInit, ControlValueAccessor, OnDestr
   _getPlaceholderVisibility(): 'visible'|'hidden' {
     return (this.floatPlaceholder !== 'never' || this._selectionModel.isEmpty()) ?
         'visible' : 'hidden';
+  }
+
+  /** Returns the aria-label of the select component. */
+  get _ariaLabel(): string {
+    // If an ariaLabelledby value has been set, the select should not overwrite the
+    // `aria-labelledby` value by setting the ariaLabel to the placeholder.
+    return this.ariaLabelledby ? null : this.ariaLabel || this.placeholder;
   }
 
   /**

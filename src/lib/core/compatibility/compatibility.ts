@@ -5,10 +5,29 @@ import {
   OpaqueToken,
   Inject,
   Optional,
+  isDevMode,
+  ElementRef,
 } from '@angular/core';
+import {DOCUMENT} from '@angular/platform-browser';
+import {MdError} from '../errors/error';
 
+/** Whether we've done the global sanity checks (e.g. a theme is loaded, there is a doctype). */
+let hasDoneGlobalChecks = false;
 
 export const MATERIAL_COMPATIBILITY_MODE = new OpaqueToken('md-compatibility-mode');
+
+/**
+ * Exception thrown if the consumer has used an invalid Material prefix on a component.
+ * @docs-private
+ */
+export class MdCompatibilityInvalidPrefixError extends MdError {
+  constructor(prefix: string, nodeName: string) {
+    super(
+      `The "${prefix}-" prefix cannot be used in ng-material v1 compatibility mode. ` +
+      `It was used on an "${nodeName.toLowerCase()}" element.`
+    );
+  }
+}
 
 /** Selector that matches all elements that may have style collisions with AngularJS Material. */
 export const MAT_ELEMENTS_SELECTOR = `
@@ -57,7 +76,6 @@ export const MAT_ELEMENTS_SELECTOR = `
   mat-option,
   mat-placeholder,
   mat-progress-bar,
-  mat-progress-circle,
   mat-pseudo-checkbox,
   mat-radio-button,
   mat-radio-group,
@@ -68,10 +86,11 @@ export const MAT_ELEMENTS_SELECTOR = `
   mat-spinner,
   mat-tab,
   mat-tab-group,
-  mat-toolbar`;
+  mat-toolbar,
+  mat-error`;
 
 /** Selector that matches all elements that may have style collisions with AngularJS Material. */
-export const MD_ELEMENTS_SELECTOR = `  
+export const MD_ELEMENTS_SELECTOR = `
   [md-button],
   [md-dialog-actions],
   [md-dialog-close],
@@ -117,7 +136,6 @@ export const MD_ELEMENTS_SELECTOR = `
   md-option,
   md-placeholder,
   md-progress-bar,
-  md-progress-circle,
   md-pseudo-checkbox,
   md-radio-button,
   md-radio-group,
@@ -128,14 +146,18 @@ export const MD_ELEMENTS_SELECTOR = `
   md-spinner,
   md-tab,
   md-tab-group,
-  md-toolbar`;
+  md-toolbar,
+  md-error`;
 
 /** Directive that enforces that the `mat-` prefix cannot be used. */
 @Directive({selector: MAT_ELEMENTS_SELECTOR})
 export class MatPrefixRejector {
-  constructor(@Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) isCompatibilityMode: boolean) {
+  constructor(
+    @Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) isCompatibilityMode: boolean,
+    elementRef: ElementRef) {
+
     if (!isCompatibilityMode) {
-      throw Error('The "mat-" prefix cannot be used out of ng-material v1 compatibility mode.');
+      throw new MdCompatibilityInvalidPrefixError('mat', elementRef.nativeElement.nodeName);
     }
   }
 }
@@ -143,9 +165,12 @@ export class MatPrefixRejector {
 /** Directive that enforces that the `md-` prefix cannot be used. */
 @Directive({selector: MD_ELEMENTS_SELECTOR})
 export class MdPrefixRejector {
-  constructor(@Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) isCompatibilityMode: boolean) {
+  constructor(
+    @Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) isCompatibilityMode: boolean,
+    elementRef: ElementRef) {
+
     if (isCompatibilityMode) {
-      throw Error('The "md-" prefix cannot be used in ng-material v1 compatibility mode.');
+      throw new MdCompatibilityInvalidPrefixError('md', elementRef.nativeElement.nodeName);
     }
   }
 }
@@ -166,6 +191,42 @@ export class CompatibilityModule {
       ngModule: CompatibilityModule,
       providers: [],
     };
+  }
+
+  constructor(@Optional() @Inject(DOCUMENT) private _document: any) {
+    if (!hasDoneGlobalChecks && isDevMode()) {
+      this._checkDoctype();
+      this._checkTheme();
+      hasDoneGlobalChecks = true;
+    }
+  }
+
+  private _checkDoctype(): void {
+    if (this._document && !this._document.doctype) {
+      console.warn(
+        'Current document does not have a doctype. This may cause ' +
+        'some Angular Material components not to behave as expected.'
+      );
+    }
+  }
+
+  private _checkTheme(): void {
+    if (this._document && typeof getComputedStyle === 'function') {
+      const testElement = this._document.createElement('div');
+
+      testElement.classList.add('mat-theme-loaded-marker');
+      this._document.body.appendChild(testElement);
+
+      if (getComputedStyle(testElement).display !== 'none') {
+        console.warn(
+          'Could not find Angular Material core theme. Most Material ' +
+          'components may not work as expected. For more info refer ' +
+          'to the theming guide: https://material.angular.io/guide/theming'
+        );
+      }
+
+      this._document.body.removeChild(testElement);
+    }
   }
 }
 

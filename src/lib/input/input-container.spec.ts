@@ -1,15 +1,26 @@
-import {async, TestBed, inject} from '@angular/core/testing';
-import {Component} from '@angular/core';
-import {FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {Component, ViewChild} from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  FormGroupDirective,
+  FormsModule,
+  NgForm,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdInputModule} from './index';
 import {MdInputContainer, MdInputDirective} from './input-container';
 import {Platform} from '../core/platform/platform';
 import {PlatformModule} from '../core/platform/index';
+import {wrappedErrorMessage} from '../core/testing/wrapped-error-message';
+import {dispatchFakeEvent} from '../core/testing/dispatch-events';
 import {
+  MdInputContainerDuplicatedHintError,
   MdInputContainerMissingMdInputError,
-  MdInputContainerPlaceholderConflictError,
-  MdInputContainerDuplicatedHintError
+  MdInputContainerPlaceholderConflictError
 } from './input-container-errors';
 
 
@@ -17,39 +28,43 @@ describe('MdInputContainer', function () {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        MdInputModule.forRoot(),
-        PlatformModule.forRoot(),
         FormsModule,
-        ReactiveFormsModule
+        MdInputModule,
+        NoopAnimationsModule,
+        PlatformModule,
+        ReactiveFormsModule,
       ],
       declarations: [
-        MdInputContainerPlaceholderRequiredTestComponent,
-        MdInputContainerPlaceholderElementTestComponent,
-        MdInputContainerPlaceholderAttrTestComponent,
+        MdInputContainerBaseTestController,
+        MdInputContainerDateTestController,
         MdInputContainerHintLabel2TestController,
         MdInputContainerHintLabelTestController,
-        MdInputContainerInvalidTypeTestController,
-        MdInputContainerInvalidPlaceholderTestController,
         MdInputContainerInvalidHint2TestController,
         MdInputContainerInvalidHintTestController,
-        MdInputContainerBaseTestController,
-        MdInputContainerWithId,
-        MdInputContainerDateTestController,
-        MdInputContainerTextTestController,
-        MdInputContainerPasswordTestController,
+        MdInputContainerInvalidPlaceholderTestController,
+        MdInputContainerInvalidTypeTestController,
+        MdInputContainerMissingMdInputTestController,
+        MdInputContainerMultipleHintMixedTestController,
+        MdInputContainerMultipleHintTestController,
         MdInputContainerNumberTestController,
-        MdInputContainerZeroTestController,
-        MdTextareaWithBindings,
+        MdInputContainerPasswordTestController,
+        MdInputContainerPlaceholderAttrTestComponent,
+        MdInputContainerPlaceholderElementTestComponent,
+        MdInputContainerPlaceholderRequiredTestComponent,
+        MdInputContainerTextTestController,
         MdInputContainerWithDisabled,
+        MdInputContainerWithDynamicPlaceholder,
+        MdInputContainerWithFormControl,
+        MdInputContainerWithFormErrorMessages,
+        MdInputContainerWithFormGroupErrorMessages,
+        MdInputContainerWithId,
+        MdInputContainerWithPrefixAndSuffix,
         MdInputContainerWithRequired,
+        MdInputContainerWithStaticPlaceholder,
         MdInputContainerWithType,
         MdInputContainerWithValueBinding,
-        MdInputContainerWithFormControl,
-        MdInputContainerWithStaticPlaceholder,
-        MdInputContainerMissingMdInputTestController,
-        MdInputContainerMultipleHintTestController,
-        MdInputContainerMultipleHintMixedTestController,
-        MdInputContainerWithDynamicPlaceholder
+        MdInputContainerZeroTestController,
+        MdTextareaWithBindings,
       ],
     });
 
@@ -227,28 +242,28 @@ describe('MdInputContainer', function () {
     let fixture = TestBed.createComponent(MdInputContainerInvalidHintTestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
-        angularWrappedErrorMessage(new MdInputContainerDuplicatedHintError('start')));
+        wrappedErrorMessage(new MdInputContainerDuplicatedHintError('start')));
   });
 
   it('validates there\'s only one hint label per side (attribute)', () => {
     let fixture = TestBed.createComponent(MdInputContainerInvalidHint2TestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
-        angularWrappedErrorMessage(new MdInputContainerDuplicatedHintError('start')));
+        wrappedErrorMessage(new MdInputContainerDuplicatedHintError('start')));
   });
 
   it('validates there\'s only one placeholder', () => {
     let fixture = TestBed.createComponent(MdInputContainerInvalidPlaceholderTestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
-        angularWrappedErrorMessage(new MdInputContainerPlaceholderConflictError()));
+        wrappedErrorMessage(new MdInputContainerPlaceholderConflictError()));
   });
 
   it('validates that mdInput child is present', () => {
     let fixture = TestBed.createComponent(MdInputContainerMissingMdInputTestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
-        angularWrappedErrorMessage(new MdInputContainerMissingMdInputError()));
+        wrappedErrorMessage(new MdInputContainerMissingMdInputError()));
   });
 
   it('validates the type', () => {
@@ -550,6 +565,150 @@ describe('MdInputContainer', function () {
     expect(labelEl.classList).not.toContain('mat-float');
   });
 
+  describe('error messages', () => {
+    let fixture: ComponentFixture<MdInputContainerWithFormErrorMessages>;
+    let testComponent: MdInputContainerWithFormErrorMessages;
+    let containerEl: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(MdInputContainerWithFormErrorMessages);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+      containerEl = fixture.debugElement.query(By.css('md-input-container')).nativeElement;
+    });
+
+    it('should not show any errors if the user has not interacted', () => {
+      expect(testComponent.formControl.untouched).toBe(true, 'Expected untouched form control');
+      expect(containerEl.querySelectorAll('md-error').length).toBe(0, 'Expected no error messages');
+    });
+
+    it('should display an error message when the input is touched and invalid', async(() => {
+      expect(testComponent.formControl.invalid).toBe(true, 'Expected form control to be invalid');
+      expect(containerEl.querySelectorAll('md-error').length).toBe(0, 'Expected no error messages');
+
+      testComponent.formControl.markAsTouched();
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(containerEl.classList)
+            .toContain('mat-input-invalid', 'Expected container to have the invalid CSS class.');
+        expect(containerEl.querySelectorAll('md-error').length)
+            .toBe(1, 'Expected one error message to have been rendered.');
+      });
+    }));
+
+    it('should display an error message when the parent form is submitted', async(() => {
+      expect(testComponent.form.submitted).toBe(false, 'Expected form not to have been submitted');
+      expect(testComponent.formControl.invalid).toBe(true, 'Expected form control to be invalid');
+      expect(containerEl.querySelectorAll('md-error').length).toBe(0, 'Expected no error messages');
+
+      dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(testComponent.form.submitted).toBe(true, 'Expected form to have been submitted');
+        expect(containerEl.classList)
+            .toContain('mat-input-invalid', 'Expected container to have the invalid CSS class.');
+        expect(containerEl.querySelectorAll('md-error').length)
+            .toBe(1, 'Expected one error message to have been rendered.');
+      });
+    }));
+
+    it('should display an error message when the parent form group is submitted', async(() => {
+      fixture.destroy();
+
+      let groupFixture = TestBed.createComponent(MdInputContainerWithFormGroupErrorMessages);
+      let component: MdInputContainerWithFormGroupErrorMessages;
+
+      groupFixture.detectChanges();
+      component = groupFixture.componentInstance;
+      containerEl = groupFixture.debugElement.query(By.css('md-input-container')).nativeElement;
+
+      expect(component.formGroup.invalid).toBe(true, 'Expected form control to be invalid');
+      expect(containerEl.querySelectorAll('md-error').length).toBe(0, 'Expected no error messages');
+      expect(component.formGroupDirective.submitted)
+          .toBe(false, 'Expected form not to have been submitted');
+
+      dispatchFakeEvent(groupFixture.debugElement.query(By.css('form')).nativeElement, 'submit');
+      groupFixture.detectChanges();
+
+      groupFixture.whenStable().then(() => {
+        expect(component.formGroupDirective.submitted)
+            .toBe(true, 'Expected form to have been submitted');
+        expect(containerEl.classList)
+            .toContain('mat-input-invalid', 'Expected container to have the invalid CSS class.');
+        expect(containerEl.querySelectorAll('md-error').length)
+            .toBe(1, 'Expected one error message to have been rendered.');
+      });
+    }));
+
+    it('should hide the errors and show the hints once the input becomes valid', async(() => {
+      testComponent.formControl.markAsTouched();
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(containerEl.classList)
+            .toContain('mat-input-invalid', 'Expected container to have the invalid CSS class.');
+        expect(containerEl.querySelectorAll('md-error').length)
+            .toBe(1, 'Expected one error message to have been rendered.');
+        expect(containerEl.querySelectorAll('md-hint').length)
+            .toBe(0, 'Expected no hints to be shown.');
+
+        testComponent.formControl.setValue('something');
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          expect(containerEl.classList).not.toContain('mat-input-invalid',
+              'Expected container not to have the invalid class when valid.');
+          expect(containerEl.querySelectorAll('md-error').length)
+              .toBe(0, 'Expected no error messages when the input is valid.');
+          expect(containerEl.querySelectorAll('md-hint').length)
+              .toBe(1, 'Expected one hint to be shown once the input is valid.');
+        });
+      });
+    }));
+
+    it('should not hide the hint if there are no error messages', async(() => {
+      testComponent.renderError = false;
+      fixture.detectChanges();
+
+      expect(containerEl.querySelectorAll('md-hint').length)
+          .toBe(1, 'Expected one hint to be shown on load.');
+
+      testComponent.formControl.markAsTouched();
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(containerEl.querySelectorAll('md-hint').length)
+            .toBe(1, 'Expected one hint to still be shown.');
+      });
+    }));
+
+  });
+
+  it('should not have prefix and suffix elements when none are specified', () => {
+    let fixture = TestBed.createComponent(MdInputContainerWithId);
+    fixture.detectChanges();
+
+    let prefixEl = fixture.debugElement.query(By.css('.mat-input-prefix'));
+    let suffixEl = fixture.debugElement.query(By.css('.mat-input-suffix'));
+
+    expect(prefixEl).toBeNull();
+    expect(suffixEl).toBeNull();
+  });
+
+  it('should add prefix and suffix elements when specified', () => {
+    let fixture = TestBed.createComponent(MdInputContainerWithPrefixAndSuffix);
+    fixture.detectChanges();
+
+    let prefixEl = fixture.debugElement.query(By.css('.mat-input-prefix'));
+    let suffixEl = fixture.debugElement.query(By.css('.mat-input-suffix'));
+
+    expect(prefixEl).not.toBeNull();
+    expect(suffixEl).not.toBeNull();
+    expect(prefixEl.nativeElement.innerText.trim()).toEqual('Prefix');
+    expect(suffixEl.nativeElement.innerText.trim()).toEqual('Suffix');
+  });
 });
 
 @Component({
@@ -775,15 +934,48 @@ class MdTextareaWithBindings {
 })
 class MdInputContainerMissingMdInputTestController {}
 
-/**
- * Gets a RegExp used to detect an angular wrapped error message.
- * See https://github.com/angular/angular/issues/8348
- */
-const angularWrappedErrorMessage = (e: Error) =>
-    new RegExp(`.*caused by: ${regexpEscape(e.message)}$`);
+@Component({
+  template: `
+    <form #form="ngForm" novalidate>
+      <md-input-container>
+        <input mdInput [formControl]="formControl">
+        <md-hint>Please type something</md-hint>
+        <md-error *ngIf="renderError">This field is required</md-error>
+      </md-input-container>
+    </form>
+  `
+})
+class MdInputContainerWithFormErrorMessages {
+  @ViewChild('form') form: NgForm;
+  formControl = new FormControl('', Validators.required);
+  renderError = true;
+}
 
-/**
- * Escape a string for use inside a RegExp.
- * Based on https://github.com/sindresorhus/escape-string-regex
- */
-const regexpEscape = (s: string) => s.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
+@Component({
+  template: `
+    <form [formGroup]="formGroup" novalidate>
+      <md-input-container>
+        <input mdInput formControlName="name">
+        <md-hint>Please type something</md-hint>
+        <md-error>This field is required</md-error>
+      </md-input-container>
+    </form>
+  `
+})
+class MdInputContainerWithFormGroupErrorMessages {
+  @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
+  formGroup = new FormGroup({
+    name: new FormControl('', Validators.required)
+  });
+}
+
+@Component({
+  template: `
+    <md-input-container>
+      <div mdPrefix>Prefix</div>
+      <input mdInput>
+      <div mdSuffix>Suffix</div>
+    </md-input-container>
+  `
+})
+class MdInputContainerWithPrefixAndSuffix {}

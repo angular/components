@@ -8,7 +8,7 @@ set -e -o pipefail
 # Go to the project root directory
 cd $(dirname $0)/../..
 
-buildDir="dist/@angular/material"
+buildDir="dist/releases/material"
 buildVersion=$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' package.json)
 
 commitSha=$(git rev-parse --short HEAD)
@@ -42,7 +42,7 @@ git config user.name "$commitAuthorName"
 git config user.email "$commitAuthorEmail"
 git config credential.helper "store --file=.git/credentials"
 
-echo "https://${MATERIAL2_DOCS_CONTENT_TOKEN}:@github.com" > .git/credentials
+echo "https://${MATERIAL2_BUILDS_TOKEN}:@github.com" > .git/credentials
 
 git add -A
 git commit -m "$commitMessage"

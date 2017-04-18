@@ -2,14 +2,15 @@ import {task} from 'gulp';
 import {existsSync} from 'fs-extra';
 import {COVERAGE_RESULT_FILE} from '../constants';
 import {spawnSync} from 'child_process';
-import {isTravisPushBuild, openFirebaseDashboardDatabase} from '../task_helpers';
+import {isTravisMasterBuild} from '../util/travis-ci';
+import {openFirebaseDashboardDatabase} from '../util/firebase';
 
 task('coverage:upload', () => {
   if (!existsSync(COVERAGE_RESULT_FILE)) {
     throw new Error('No coverage file has been found!');
   }
 
-  if (!isTravisPushBuild()) {
+  if (!isTravisMasterBuild()) {
     throw new Error('Coverage results will be only uploaded inside of Travis Push builds.');
   }
 

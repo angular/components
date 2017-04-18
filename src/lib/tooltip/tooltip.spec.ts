@@ -9,11 +9,12 @@ import {
 import {
   Component,
   DebugElement,
-  AnimationTransitionEvent,
   ViewChild,
   ChangeDetectionStrategy
 } from '@angular/core';
+import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {TooltipPosition, MdTooltip, MdTooltipModule, SCROLL_THROTTLE_MS} from './index';
 import {OverlayContainer} from '../core';
 import {Dir, LayoutDirection} from '../core/rtl/dir';
@@ -31,10 +32,10 @@ describe('MdTooltip', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdTooltipModule.forRoot(), OverlayModule],
+      imports: [MdTooltipModule.forRoot(), OverlayModule, NoopAnimationsModule],
       declarations: [BasicTooltipDemo, ScrollableTooltipDemo, OnPushTooltipDemo],
       providers: [
-        Platform,
+        {provide: Platform, useValue: {IOS: false}},
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
           document.body.appendChild(overlayContainerElement);
@@ -110,6 +111,37 @@ describe('MdTooltip', () => {
       tick(tooltipDelay);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
+    }));
+
+    it('should not show if disabled', fakeAsync(() => {
+      // Test that disabling the tooltip will not set the tooltip visible
+      tooltipDirective.disabled = true;
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick(0);
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
+
+      // Test to make sure setting disabled to false will show the tooltip
+      // Sanity check to make sure everything was correct before (detectChanges, tick)
+      tooltipDirective.disabled = false;
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick(0);
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+    }));
+
+    it('should hide if disabled while visible', fakeAsync(() => {
+      // Display the tooltip with a timeout before hiding.
+      tooltipDirective.hideDelay = 1000;
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick(0);
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+
+      // Set tooltip to be disabled and verify that the tooltip hides.
+      tooltipDirective.disabled = true;
+      tick(0);
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
     }));
 
     it('should not show if hide is called before delay finishes', fakeAsync(() => {
@@ -232,12 +264,12 @@ describe('MdTooltip', () => {
       // _afterVisibilityAnimation function, but for unknown reasons in the test infrastructure,
       // this does not occur. Manually call this and verify that doing so does not
       // throw an error.
-      tooltipInstance._afterVisibilityAnimation(new AnimationTransitionEvent({
+      tooltipInstance._afterVisibilityAnimation({
         fromState: 'visible',
         toState: 'hidden',
         totalTime: 150,
         phaseName: '',
-      }));
+      } as AnimationEvent);
     }));
 
     it('should consistently position before and after overlay origin in ltr and rtl dir', () => {
@@ -379,7 +411,7 @@ describe('MdTooltip', () => {
 
       fixture.detectChanges();
 
-      // wait till animation has finished
+      // wait until animation has finished
       tick(500);
 
       // Make sure tooltip is shown to the user and animation has finished
@@ -400,6 +432,15 @@ describe('MdTooltip', () => {
       // On animation complete, should expect that the tooltip has been detached.
       flushMicrotasks();
       expect(tooltipDirective._tooltipInstance).toBeNull();
+    }));
+
+    it('should have rendered the tooltip text on init', fakeAsync(() => {
+      dispatchFakeEvent(buttonElement, 'mouseenter');
+      fixture.detectChanges();
+      tick(0);
+
+      const tooltipElement = overlayContainerElement.querySelector('.mat-tooltip') as HTMLElement;
+      expect(tooltipElement.textContent).toContain('initial tooltip message');
     }));
   });
 

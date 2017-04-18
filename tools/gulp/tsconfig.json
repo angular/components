@@ -1,25 +1,19 @@
+// TypeScript config file that will be used to compile the gulp tasks. The normal gulpfile will
+// use TS-Node to compile the gulp tasks at runtime.
 {
   "compilerOptions": {
-    "declaration": true,
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": ["es6", "es2015"],
+    "lib": ["es2015", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
     "noImplicitAny": true,
-    "outDir": "../../dist/gulp",
-    "rootDir": ".",
-    "sourceMap": true,
     "target": "es5",
-    "inlineSources": true,
-    "stripInternal": false,
-    "baseUrl": "",
-    "typeRoots": [
-      "../../node_modules/@types"
-    ],
     "types": [
       "node"
     ]
-  }
+  },
+  "files": [
+    "gulpfile.ts"
+  ]
 }

@@ -5,6 +5,7 @@ import {FormsModule, NgControl, ReactiveFormsModule, FormControl} from '@angular
 import {MdSlideToggle, MdSlideToggleChange, MdSlideToggleModule} from './index';
 import {TestGestureConfig} from '../slider/test-gesture-config';
 import {dispatchFakeEvent} from '../core/testing/dispatch-events';
+import {RIPPLE_FADE_IN_DURATION, RIPPLE_FADE_OUT_DURATION} from '../core/ripple/ripple-renderer';
 
 describe('MdSlideToggle', () => {
 
@@ -268,6 +269,26 @@ describe('MdSlideToggle', () => {
       fixture.detectChanges();
     });
 
+    it('should show a ripple when focused by a keyboard action', fakeAsync(() => {
+      expect(slideToggleElement.querySelectorAll('.mat-ripple-element').length)
+          .toBe(0, 'Expected no ripples to be present.');
+
+      dispatchFakeEvent(inputElement, 'keydown');
+      dispatchFakeEvent(inputElement, 'focus');
+
+      tick(RIPPLE_FADE_IN_DURATION);
+
+      expect(slideToggleElement.querySelectorAll('.mat-ripple-element').length)
+          .toBe(1, 'Expected the focus ripple to be showing up.');
+
+      dispatchFakeEvent(inputElement, 'blur');
+
+      tick(RIPPLE_FADE_OUT_DURATION);
+
+      expect(slideToggleElement.querySelectorAll('.mat-ripple-element').length)
+          .toBe(0, 'Expected focus ripple to be removed.');
+    }));
+
     it('should have the correct control state initially and after interaction', () => {
       // The control should start off valid, pristine, and untouched.
       expect(slideToggleControl.valid).toBe(true);
@@ -327,15 +348,6 @@ describe('MdSlideToggle', () => {
       });
     }));
 
-    it('should correctly set the slide-toggle to checked on focus', () => {
-      expect(slideToggleElement.classList).not.toContain('mat-slide-toggle-focused');
-
-      dispatchFakeEvent(inputElement, 'focus');
-      fixture.detectChanges();
-
-      expect(slideToggleElement.classList).toContain('mat-slide-toggle-focused');
-    });
-
     it('should forward the required attribute', () => {
       testComponent.isRequired = true;
       fixture.detectChanges();
@@ -349,14 +361,12 @@ describe('MdSlideToggle', () => {
     });
 
     it('should focus on underlying input element when focus() is called', () => {
-      expect(slideToggleElement.classList).not.toContain('mat-slide-toggle-focused');
       expect(document.activeElement).not.toBe(inputElement);
 
       slideToggle.focus();
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(inputElement);
-      expect(slideToggleElement.classList).toContain('mat-slide-toggle-focused');
     });
 
     it('should set a element class if labelPosition is set to before', () => {
@@ -563,6 +573,22 @@ describe('MdSlideToggle', () => {
       expect(testComponent.lastEvent.checked).toBe(true);
     }));
 
+    it('should not emit a change event when the value did not change', fakeAsync(() => {
+      expect(slideToggle.checked).toBe(false);
+
+      gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
+      gestureConfig.emitEventForElement('slide', slideThumbContainer, { deltaX: 0 });
+      gestureConfig.emitEventForElement('slideend', slideThumbContainer);
+
+      // Flush the timeout for the slide ending.
+      tick();
+
+      expect(slideThumbContainer.classList).not.toContain('mat-dragging');
+      expect(slideToggle.checked).toBe(false);
+      expect(testComponent.lastEvent)
+          .toBeFalsy('Expected the slide-toggle to not emit a change event.');
+    }));
+
     it('should update the checked property of the input', fakeAsync(() => {
       expect(inputElement.checked).toBe(false);
 
@@ -664,7 +690,7 @@ class SlideToggleTestApp {
 @Component({
   selector: 'slide-toggle-forms-test-app',
   template: `
-    <form (ngSubmit)="isSubmitted = true">
+    <form ngNativeValidate (ngSubmit)="isSubmitted = true">
       <md-slide-toggle name="slide" ngModel [required]="isRequired">Required</md-slide-toggle>
       <button type="submit"></button>
     </form>`

@@ -4,19 +4,21 @@ import {
   Input,
   ElementRef,
   ViewContainerRef,
-  style,
-  trigger,
-  state,
-  transition,
-  animate,
-  AnimationTransitionEvent,
   NgZone,
   Optional,
   OnDestroy,
   Renderer,
   OnInit,
-  ChangeDetectorRef
+  ChangeDetectorRef,
 } from '@angular/core';
+import {
+  style,
+  trigger,
+  state,
+  transition,
+  animate,
+  AnimationEvent,
+} from '@angular/animations';
 import {
   Overlay,
   OverlayState,
@@ -33,6 +35,7 @@ import {Platform} from '../core/platform/index';
 import 'rxjs/add/operator/first';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {Subscription} from 'rxjs/Subscription';
+import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
@@ -62,6 +65,7 @@ export class MdTooltip implements OnInit, OnDestroy {
   scrollSubscription: Subscription;
 
   private _position: TooltipPosition = 'below';
+  private _disabled: boolean = false;
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   @Input('mdTooltipPosition')
@@ -75,6 +79,18 @@ export class MdTooltip implements OnInit, OnDestroy {
       if (this._tooltipInstance) {
         this._disposeTooltip();
       }
+    }
+  }
+
+  /** Disables the display of the tooltip. */
+  @Input('mdTooltipDisabled')
+  get disabled(): boolean { return this._disabled; }
+  set disabled(value) {
+    this._disabled = coerceBooleanProperty(value);
+
+    // If tooltip is disabled, hide immediately.
+    if (this._disabled) {
+      this.hide(0);
     }
   }
 
@@ -116,6 +132,11 @@ export class MdTooltip implements OnInit, OnDestroy {
   set _matPosition(v) { this.position = v; }
 
   // Properties with `mat-` prefix for noconflict mode.
+  @Input('matTooltipDisabled')
+  get _matDisabled() { return this.disabled; }
+  set _matDisabled(v) { this.disabled = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
   @Input('matTooltipHideDelay')
   get _matHideDelay() { return this.hideDelay; }
   set _matHideDelay(v) { this.hideDelay = v; }
@@ -136,7 +157,7 @@ export class MdTooltip implements OnInit, OnDestroy {
     @Optional() private _dir: Dir) {
 
     // The mouse events shouldn't be bound on iOS devices, because
-    // they can prevent the first tap from firing it's click event.
+    // they can prevent the first tap from firing its click event.
     if (!_platform.IOS) {
       _renderer.listen(_elementRef.nativeElement, 'mouseenter', () => this.show());
       _renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
@@ -168,7 +189,7 @@ export class MdTooltip implements OnInit, OnDestroy {
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
   show(delay: number = this.showDelay): void {
-    if (!this._message || !this._message.trim()) { return; }
+    if (this.disabled || !this._message || !this._message.trim()) { return; }
 
     if (!this._tooltipInstance) {
       this._createTooltip();
@@ -192,7 +213,7 @@ export class MdTooltip implements OnInit, OnDestroy {
 
   /** Returns true if the tooltip is currently visible to the user */
   _isTooltipVisible(): boolean {
-    return this._tooltipInstance && this._tooltipInstance.isVisible();
+    return !!this._tooltipInstance && this._tooltipInstance.isVisible();
   }
 
   /** Create the tooltip to display */
@@ -292,6 +313,8 @@ export class MdTooltip implements OnInit, OnDestroy {
     // Must wait for the message to be painted to the tooltip so that the overlay can properly
     // calculate the correct positioning based on the size of the text.
     this._tooltipInstance.message = message;
+    this._tooltipInstance._markForCheck();
+
     this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
       if (this._tooltipInstance) {
         this._overlayRef.updatePosition();
@@ -373,8 +396,8 @@ export class TooltipComponent {
 
       // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways
-      this._changeDetectorRef.markForCheck();
-      setTimeout(() => { this._closeOnInteraction = true; }, 0);
+      this._markForCheck();
+      setTimeout(() => this._closeOnInteraction = true, 0);
     }, delay);
   }
 
@@ -394,7 +417,7 @@ export class TooltipComponent {
 
       // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways
-      this._changeDetectorRef.markForCheck();
+      this._markForCheck();
     }, delay);
   }
 
@@ -420,13 +443,13 @@ export class TooltipComponent {
       case 'after':  this._transformOrigin = isLtr ? 'left' : 'right'; break;
       case 'left':   this._transformOrigin = 'right'; break;
       case 'right':  this._transformOrigin = 'left'; break;
-      case 'above':    this._transformOrigin = 'bottom'; break;
-      case 'below': this._transformOrigin = 'top'; break;
+      case 'above':  this._transformOrigin = 'bottom'; break;
+      case 'below':  this._transformOrigin = 'top'; break;
       default: throw new MdTooltipInvalidPositionError(value);
     }
   }
 
-  _afterVisibilityAnimation(e: AnimationTransitionEvent): void {
+  _afterVisibilityAnimation(e: AnimationEvent): void {
     if (e.toState === 'hidden' && !this.isVisible()) {
       this._onHide.next();
     }
@@ -441,5 +464,14 @@ export class TooltipComponent {
     if (this._closeOnInteraction) {
       this.hide(0);
     }
+  }
+
+  /**
+   * Marks that the tooltip needs to be checked in the next change detection run.
+   * Mainly used for rendering the initial text before positioning a tooltip, which
+   * can be problematic in components with OnPush change detection.
+   */
+  _markForCheck(): void {
+    this._changeDetectorRef.markForCheck();
   }
 }

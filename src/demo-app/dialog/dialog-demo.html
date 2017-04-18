@@ -1,6 +1,6 @@
 <h1>Dialog demo</h1>
 
-<button md-raised-button color="primary" (click)="openJazz()" [disabled]="dialogRef">
+<button md-raised-button color="primary" (click)="openJazz()">
   Open dialog
 </button>
 <button md-raised-button color="accent" (click)="openContentElement()">
@@ -67,6 +67,6 @@
 
 <p>Last close result: {{lastCloseResult}}</p>
 
-<template>
+<ng-template>
   I'm a template dialog. I've been opened {{numTemplateOpens}} times!
-</template>
+</ng-template>

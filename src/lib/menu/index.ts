@@ -8,7 +8,12 @@ import {MdRippleModule} from '../core/ripple/index';
 
 
 @NgModule({
-  imports: [OverlayModule, CommonModule, MdRippleModule, CompatibilityModule],
+  imports: [
+    OverlayModule,
+    CommonModule,
+    MdRippleModule,
+    CompatibilityModule,
+  ],
   exports: [MdMenu, MdMenuItem, MdMenuTrigger, CompatibilityModule],
   declarations: [MdMenu, MdMenuItem, MdMenuTrigger],
 })
@@ -24,7 +29,4 @@ export class MdMenuModule {
 
 
 export * from './menu';
-export {MdMenuTrigger} from './menu-trigger';
 export {fadeInItems, transformMenu} from './menu-animations';
-export {MdMenu} from './menu-directive';
-export {MdMenuItem} from './menu-item';

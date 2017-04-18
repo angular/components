@@ -9,12 +9,19 @@ export interface DialogPosition {
   bottom?: string;
   left?: string;
   right?: string;
-};
+}
 
 /**
  * Configuration for opening a modal dialog with the MdDialog service.
  */
 export class MdDialogConfig {
+
+  /**
+   * Where the attached component should live in Angular's *logical* component tree.
+   * This affects what is available for injection and the change detection order for the
+   * component instantiated inside of the dialog. This does not affect where the dialog
+   * content will be rendered.
+   */
   viewContainerRef?: ViewContainerRef;
 
   /** The ARIA role of the dialog element. */

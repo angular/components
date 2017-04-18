@@ -16,43 +16,35 @@ module.exports = (config) => {
       require('karma-coverage')
     ],
     files: [
-      {pattern: 'dist/vendor/core-js/client/core.js', included: true, watched: false},
-      {pattern: 'dist/vendor/systemjs/dist/system-polyfills.js', included: true, watched: false},
-      {pattern: 'dist/vendor/systemjs/dist/system.src.js', included: true, watched: false},
-      {pattern: 'dist/vendor/zone.js/dist/zone.js', included: true, watched: false},
-      {pattern: 'dist/vendor/zone.js/dist/proxy.js', included: true, watched: false},
-      {pattern: 'dist/vendor/zone.js/dist/sync-test.js', included: true, watched: false},
-      {pattern: 'dist/vendor/zone.js/dist/jasmine-patch.js', included: true, watched: false},
-      {pattern: 'dist/vendor/zone.js/dist/async-test.js', included: true, watched: false},
-      {pattern: 'dist/vendor/zone.js/dist/fake-async-test.js', included: true, watched: false},
-      {pattern: 'dist/vendor/hammerjs/hammer.min.js', included: true, watched: false},
+      {pattern: 'node_modules/core-js/client/core.js', included: true, watched: false},
+      {pattern: 'node_modules/systemjs/dist/system.src.js', included: true, watched: false},
+      {pattern: 'node_modules/zone.js/dist/zone.js', included: true, watched: false},
+      {pattern: 'node_modules/zone.js/dist/proxy.js', included: true, watched: false},
+      {pattern: 'node_modules/zone.js/dist/sync-test.js', included: true, watched: false},
+      {pattern: 'node_modules/zone.js/dist/jasmine-patch.js', included: true, watched: false},
+      {pattern: 'node_modules/zone.js/dist/async-test.js', included: true, watched: false},
+      {pattern: 'node_modules/zone.js/dist/fake-async-test.js', included: true, watched: false},
+      {pattern: 'node_modules/hammerjs/hammer.min.js', included: true, watched: false},
+
+      // Include all Angular dependencies
+      {pattern: 'node_modules/@angular/**/*', included: false, watched: false},
+      {pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false},
+
       {pattern: 'test/karma-test-shim.js', included: true, watched: false},
 
-      // paths loaded via module imports
-      {pattern: 'dist/**/*.js', included: false, watched: true},
+      // Include a Material theme in the test suite.
+      {pattern: 'dist/packages/**/core/theming/prebuilt/indigo-pink.css', included: true, watched: true},
 
-      // include one of the themes
-      {pattern: 'dist/**/prebuilt/indigo-pink.css', included: true, watched: true},
-
-      // paths loaded via Angular's component compiler
-      // (these paths need to be rewritten, see proxies section)
-      {pattern: 'dist/**/*.html', included: false, watched: true},
-      {pattern: 'dist/**/*.css', included: false, watched: true},
-
-      // paths to support debugging with source maps in dev tools
-      {pattern: 'dist/**/*.ts', included: false, watched: false},
-      {pattern: 'dist/**/*.js.map', included: false, watched: false}
+      // Includes all package tests and source files into karma. Those files will be watched.
+      // This pattern also matches all all sourcemap files and TypeScript files for debugging.
+      {pattern: 'dist/packages/**/*', included: false, watched: true},
+      {pattern: 'dist/bundles/*.umd.js', included: false, watched: true},
     ],
-    proxies: {
-      // required for component assets fetched by Angular's compiler
-      '/components/': '/base/dist/components/',
-      '/core/': '/base/dist/core/',
-    },
 
     customLaunchers: customLaunchers,
 
     preprocessors: {
-      'dist/@angular/material/**/*.js': ['sourcemap']
+      'dist/packages/**/*.js': ['sourcemap']
     },
 
     reporters: ['dots'],
@@ -109,7 +101,7 @@ module.exports = (config) => {
     if (process.env['TRAVIS_PULL_REQUEST'] === 'false' &&
         process.env['MODE'] === "browserstack_required") {
 
-      config.preprocessors['dist/@angular/material/**/!(*+(.|-)spec).js'] = ['coverage'];
+      config.preprocessors['dist/packages/**/!(*+(.|-)spec).js'] = ['coverage'];
       config.reporters.push('coverage');
     }
 

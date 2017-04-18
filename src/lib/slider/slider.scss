@@ -1,4 +1,5 @@
 @import '../core/style/variables';
+@import '../core/style/vendor-prefixes';
 
 
 // This refers to the thickness of the slider. On a horizontal slider this is the height, on a
@@ -23,6 +24,8 @@ $mat-slider-thumb-label-size: 28px !default;
 
 $mat-slider-tick-color: rgba(0, 0, 0, 0.6) !default;
 $mat-slider-tick-size: 2px !default;
+
+$mat-slider-focus-ring-size: 30px !default;
 
 
 .mat-slider {
@@ -72,18 +75,43 @@ $mat-slider-tick-size: 2px !default;
   transition: opacity $swift-ease-out-duration $swift-ease-out-timing-function;
 }
 
-// TODO(mmalerba): Simplify css to avoid unnecessary selectors.
-.mat-slider-disabled .mat-slider-ticks {
-  opacity: 0;
-}
-
 .mat-slider-thumb-container {
   position: absolute;
   z-index: 1;
   transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;
 }
 
+.mat-slider-focus-ring {
+  position: absolute;
+  width: $mat-slider-focus-ring-size;
+  height: $mat-slider-focus-ring-size;
+  border-radius: 50%;
+  transform: scale(0);
+  opacity: 0;
+  transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
+              background-color $swift-ease-out-duration $swift-ease-out-timing-function,
+              opacity $swift-ease-out-duration $swift-ease-out-timing-function;
+
+  .cdk-keyboard-focused & {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+%_mat-slider-cursor {
+  .mat-slider:not(.mat-slider-disabled) & {
+    @include cursor-grab;
+  }
+
+  .mat-slider:not(.mat-slider-disabled) &:active,
+  .mat-slider-sliding:not(.mat-slider-disabled) & {
+    @include cursor-grabbing;
+  }
+}
+
 .mat-slider-thumb {
+  @extend %_mat-slider-cursor;
+
   position: absolute;
   right: -$mat-slider-thumb-size / 2;
   bottom: -$mat-slider-thumb-size / 2;
@@ -99,6 +127,8 @@ $mat-slider-tick-size: 2px !default;
 }
 
 .mat-slider-thumb-label {
+  @extend %_mat-slider-cursor;
+
   display: none;
   align-items: center;
   justify-content: center;
@@ -143,7 +173,7 @@ $mat-slider-tick-size: 2px !default;
     transition: opacity $swift-ease-out-duration $swift-ease-out-timing-function;
   }
 
-  &.mat-slider-active,
+  &.cdk-focused,
   &:hover {
     &:not(.mat-slider-hide-last-tick) {
       .mat-slider-wrapper::after {
@@ -151,7 +181,7 @@ $mat-slider-tick-size: 2px !default;
       }
     }
 
-    .mat-slider-ticks {
+    &:not(.mat-slider-disabled) .mat-slider-ticks {
       opacity: 1;
     }
   }
@@ -160,6 +190,11 @@ $mat-slider-tick-size: 2px !default;
 
 // Slider with thumb label.
 .mat-slider-thumb-label-showing {
+  .mat-slider-focus-ring {
+    transform: scale(0);
+    opacity: 0;
+  }
+
   .mat-slider-thumb-label {
     display: flex;
   }
@@ -179,12 +214,7 @@ $mat-slider-tick-size: 2px !default;
 
 
 // Active slider.
-.mat-slider-active {
-  .mat-slider-thumb {
-    border-width: $mat-slider-thumb-border-width-active;
-    transform: scale($mat-slider-thumb-focus-scale);
-  }
-
+.cdk-focused {
   &.mat-slider-thumb-label-showing .mat-slider-thumb {
     transform: scale(0);
   }
@@ -198,9 +228,23 @@ $mat-slider-tick-size: 2px !default;
   }
 }
 
+.cdk-mouse-focused,
+.cdk-touch-focused,
+.cdk-program-focused {
+  .mat-slider-thumb {
+    border-width: $mat-slider-thumb-border-width-active;
+    transform: scale($mat-slider-thumb-focus-scale);
+  }
+}
+
 
 // Disabled slider.
 .mat-slider-disabled {
+  .mat-slider-focus-ring {
+    transform: scale(0);
+    opacity: 0;
+  }
+
   .mat-slider-thumb {
     border-width: $mat-slider-thumb-border-width-disabled;
     transform: scale($mat-slider-thumb-disabled-scale);
@@ -271,6 +315,11 @@ $mat-slider-tick-size: 2px !default;
     top: 50%;
   }
 
+  .mat-slider-focus-ring {
+    top: -$mat-slider-focus-ring-size / 2;
+    right: -$mat-slider-focus-ring-size / 2;
+  }
+
   .mat-slider-thumb-label {
     right: -$mat-slider-thumb-label-size / 2;
     top: -($mat-slider-thumb-label-size + $mat-slider-thumb-arrow-gap);
@@ -282,7 +331,7 @@ $mat-slider-tick-size: 2px !default;
     transform: rotate(-45deg);
   }
 
-  &.mat-slider-active {
+  &.cdk-focused {
     .mat-slider-thumb-label {
       transform: rotate(45deg);
     }
@@ -331,6 +380,11 @@ $mat-slider-tick-size: 2px !default;
     height: 100%;
   }
 
+  .mat-slider-focus-ring {
+    bottom: -$mat-slider-focus-ring-size / 2;
+    left: -$mat-slider-focus-ring-size / 2;
+  }
+
   .mat-slider-ticks {
     background: repeating-linear-gradient(to bottom, $mat-slider-tick-color,
         $mat-slider-tick-color $mat-slider-tick-size, transparent 0, transparent) repeat;
@@ -356,7 +410,7 @@ $mat-slider-tick-size: 2px !default;
     transform: rotate(45deg);
   }
 
-  &.mat-slider-active {
+  &.cdk-focused {
     .mat-slider-thumb-label {
       transform: rotate(-45deg);
     }

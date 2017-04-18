@@ -7,7 +7,8 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import {NgModule,
+import {
+  NgModule,
   Component,
   Directive,
   ViewChild,
@@ -16,6 +17,7 @@ import {NgModule,
   Inject,
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdDialogModule} from './index';
 import {MdDialog} from './dialog';
 import {MdDialogContainer} from './dialog-container';
@@ -124,7 +126,6 @@ describe('MdDialog', () => {
       expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
     });
   }));
-
 
   it('should close a dialog via the escape key', async(() => {
     dialog.open(PizzaMsg, {
@@ -274,6 +275,38 @@ describe('MdDialog', () => {
     expect(overlayPane.style.marginRight).toBe('125px');
   });
 
+  it('should allow for the position to be updated', () => {
+    let dialogRef = dialog.open(PizzaMsg, {
+      position: {
+        left: '250px'
+      }
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.marginLeft).toBe('250px');
+
+    dialogRef.updatePosition({ left: '500px' });
+
+    expect(overlayPane.style.marginLeft).toBe('500px');
+  });
+
+  it('should allow for the dimensions to be updated', () => {
+    let dialogRef = dialog.open(PizzaMsg, { width: '100px' });
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.width).toBe('100px');
+
+    dialogRef.updateSize('200px');
+
+    expect(overlayPane.style.width).toBe('200px');
+  });
+
   it('should close all of the dialogs', async(() => {
     dialog.open(PizzaMsg);
     dialog.open(PizzaMsg);
@@ -301,28 +334,6 @@ describe('MdDialog', () => {
     expect(dialogContainer._state).toBe('exit');
   });
 
-  it('should emit an event with the proper animation state', async(() => {
-    let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
-    let dialogContainer: MdDialogContainer =
-        viewContainerFixture.debugElement.query(By.directive(MdDialogContainer)).componentInstance;
-    let spy = jasmine.createSpy('animation state callback');
-
-    dialogContainer._onAnimationStateChange.subscribe(spy);
-    viewContainerFixture.detectChanges();
-
-    viewContainerFixture.whenStable().then(() => {
-      expect(spy).toHaveBeenCalledWith('enter');
-
-      dialogRef.close();
-      viewContainerFixture.detectChanges();
-      expect(spy).toHaveBeenCalledWith('exit-start');
-
-      viewContainerFixture.whenStable().then(() => {
-        expect(spy).toHaveBeenCalledWith('exit');
-      });
-    });
-  }));
-
   describe('passing in data', () => {
     it('should be able to pass in data', () => {
       let config = {
@@ -344,6 +355,19 @@ describe('MdDialog', () => {
       }).toThrow();
     });
   });
+
+  it('should not keep a reference to the component after the dialog is closed', async(() => {
+    let dialogRef = dialog.open(PizzaMsg);
+
+    expect(dialogRef.componentInstance).toBeTruthy();
+
+    dialogRef.close();
+    viewContainerFixture.detectChanges();
+
+    viewContainerFixture.whenStable().then(() => {
+      expect(dialogRef.componentInstance).toBeFalsy('Expected reference to have been cleared.');
+    });
+  }));
 
   describe('disableClose option', () => {
     it('should prevent closing via clicks on the backdrop', () => {
@@ -423,6 +447,35 @@ describe('MdDialog', () => {
 
       document.body.removeChild(button);
     }));
+
+    it('should allow the consumer to shift focus in afterClosed', fakeAsync(() => {
+      // Create a element that has focus before the dialog is opened.
+      let button = document.createElement('button');
+      let input = document.createElement('input');
+
+      button.id = 'dialog-trigger';
+      input.id = 'input-to-be-focused';
+
+      document.body.appendChild(button);
+      document.body.appendChild(input);
+      button.focus();
+
+      let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
+
+      dialogRef.afterClosed().subscribe(() => input.focus());
+
+      dialogRef.close();
+      tick(500);
+      viewContainerFixture.detectChanges();
+      flushMicrotasks();
+
+      expect(document.activeElement.id).toBe('input-to-be-focused',
+          'Expected that the trigger was refocused after dialog close');
+
+      document.body.removeChild(button);
+      document.body.removeChild(input);
+    }));
+
   });
 
   describe('dialog content elements', () => {
@@ -437,6 +490,7 @@ describe('MdDialog', () => {
       expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(1);
 
       (overlayContainerElement.querySelector('button[md-dialog-close]') as HTMLElement).click();
+      viewContainerFixture.detectChanges();
 
       viewContainerFixture.whenStable().then(() => {
         expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(0);
@@ -537,6 +591,17 @@ describe('MdDialog with a parent MdDialog', () => {
             .toBe('', 'Expected closeAll on parent MdDialog to close dialog opened by child');
       });
     }));
+
+  it('should close the top dialog via the escape key', async(() => {
+    childDialog.open(PizzaMsg);
+
+    dispatchKeyboardEvent(document, 'keydown', ESCAPE);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
+    });
+  }));
 });
 
 
@@ -603,7 +668,7 @@ const TEST_DIRECTIVES = [
 ];
 
 @NgModule({
-  imports: [MdDialogModule],
+  imports: [MdDialogModule, NoopAnimationsModule],
   exports: TEST_DIRECTIVES,
   declarations: TEST_DIRECTIVES,
   entryComponents: [

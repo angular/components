@@ -4,7 +4,6 @@ import {
   MdProgressSpinner,
   MdSpinner,
   MdProgressSpinnerCssMatStyler,
-  MdProgressCircleCssMatStyler
 } from './progress-spinner';
 
 
@@ -14,14 +13,12 @@ import {
     MdProgressSpinner,
     MdSpinner,
     CompatibilityModule,
-    MdProgressSpinnerCssMatStyler,
-    MdProgressCircleCssMatStyler
+    MdProgressSpinnerCssMatStyler
   ],
   declarations: [
     MdProgressSpinner,
     MdSpinner,
-    MdProgressSpinnerCssMatStyler,
-    MdProgressCircleCssMatStyler
+    MdProgressSpinnerCssMatStyler
   ],
 })
 class MdProgressSpinnerModule {
@@ -36,7 +33,3 @@ class MdProgressSpinnerModule {
 
 export {MdProgressSpinnerModule};
 export * from './progress-spinner';
-
-/** @deprecated */
-export {MdProgressSpinnerModule as MdProgressCircleModule};
-export {MdProgressSpinner as MdProgressCircle};

@@ -1,6 +1,7 @@
 import {TestBed, async, fakeAsync, tick, ComponentFixture} from '@angular/core/testing';
 import {Component, OnDestroy, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdAutocompleteModule, MdAutocompleteTrigger} from './index';
 import {OverlayContainer} from '../core/overlay/overlay-container';
 import {MdInputModule} from '../input/index';
@@ -15,6 +16,7 @@ import {MdAutocomplete} from './autocomplete';
 import {MdInputContainer} from '../input/input-container';
 import {Observable} from 'rxjs/Observable';
 import {dispatchFakeEvent} from '../core/testing/dispatch-events';
+import {typeInElement} from '../core/testing/type-in-element';
 
 import 'rxjs/add/operator/map';
 
@@ -26,7 +28,11 @@ describe('MdAutocomplete', () => {
     dir = 'ltr';
     TestBed.configureTestingModule({
       imports: [
-          MdAutocompleteModule.forRoot(), MdInputModule.forRoot(), FormsModule, ReactiveFormsModule
+        MdAutocompleteModule.forRoot(),
+        MdInputModule.forRoot(),
+        FormsModule,
+        ReactiveFormsModule,
+        NoopAnimationsModule
       ],
       declarations: [
         SimpleAutocomplete,
@@ -66,35 +72,54 @@ describe('MdAutocomplete', () => {
       input = fixture.debugElement.query(By.css('input')).nativeElement;
     });
 
-    it('should open the panel when the input is focused', () => {
+    it('should open the panel when the input is focused', async(() => {
       expect(fixture.componentInstance.trigger.panelOpen)
           .toBe(false, `Expected panel state to start out closed.`);
 
       dispatchFakeEvent(input, 'focus');
-      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
 
-      expect(fixture.componentInstance.trigger.panelOpen)
-          .toBe(true, `Expected panel state to read open when input is focused.`);
-      expect(overlayContainerElement.textContent)
-          .toContain('Alabama', `Expected panel to display when input is focused.`);
-      expect(overlayContainerElement.textContent)
-          .toContain('California', `Expected panel to display when input is focused.`);
-    });
+        expect(fixture.componentInstance.trigger.panelOpen)
+            .toBe(true, `Expected panel state to read open when input is focused.`);
+        expect(overlayContainerElement.textContent)
+            .toContain('Alabama', `Expected panel to display when input is focused.`);
+        expect(overlayContainerElement.textContent)
+            .toContain('California', `Expected panel to display when input is focused.`);
+      });
+    }));
 
-    it('should open the panel programmatically', () => {
+    it('should open the panel programmatically', async(() => {
       expect(fixture.componentInstance.trigger.panelOpen)
           .toBe(false, `Expected panel state to start out closed.`);
 
       fixture.componentInstance.trigger.openPanel();
-      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
 
-      expect(fixture.componentInstance.trigger.panelOpen)
-          .toBe(true, `Expected panel state to read open when opened programmatically.`);
-      expect(overlayContainerElement.textContent)
-          .toContain('Alabama', `Expected panel to display when opened programmatically.`);
-      expect(overlayContainerElement.textContent)
-          .toContain('California', `Expected panel to display when opened programmatically.`);
-    });
+        expect(fixture.componentInstance.trigger.panelOpen)
+            .toBe(true, `Expected panel state to read open when opened programmatically.`);
+        expect(overlayContainerElement.textContent)
+            .toContain('Alabama', `Expected panel to display when opened programmatically.`);
+        expect(overlayContainerElement.textContent)
+            .toContain('California', `Expected panel to display when opened programmatically.`);
+      });
+    }));
+
+    it('should show the panel when the first open is after the initial zone stabilization',
+      async(() => {
+        // Note that we're running outside the Angular zone, in order to be able
+        // to test properly without the subscription from `_subscribeToClosingActions`
+        // giving us a false positive.
+        fixture.ngZone.runOutsideAngular(() => {
+          fixture.componentInstance.trigger.openPanel();
+
+          Promise.resolve().then(() => {
+            expect(fixture.componentInstance.panel.showPanel)
+                .toBe(true, `Expected panel to be visible.`);
+          });
+        });
+      }));
 
     it('should close the panel when blurred', async(() => {
       dispatchFakeEvent(input, 'focus');
@@ -190,8 +215,6 @@ describe('MdAutocomplete', () => {
         fixture.whenStable().then(() => {
           fixture.detectChanges();
 
-          expect(fixture.componentInstance.trigger.panelOpen)
-            .toBe(true, `Expected panel to stay open when options list is empty.`);
           expect(panel.classList)
               .toContain('mat-autocomplete-hidden', `Expected panel to hide itself when empty.`);
         });
@@ -608,6 +631,20 @@ describe('MdAutocomplete', () => {
       });
     }));
 
+    it('should prevent the default enter key action', async(() => {
+      fixture.whenStable().then(() => {
+        fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+
+        fixture.whenStable().then(() => {
+          spyOn(ENTER_EVENT, 'preventDefault');
+
+          fixture.componentInstance.trigger._handleKeydown(ENTER_EVENT);
+
+          expect(ENTER_EVENT.preventDefault).toHaveBeenCalled();
+        });
+      });
+    }));
+
     it('should fill the text field, not select an option, when SPACE is entered', async(() => {
       fixture.whenStable().then(() => {
         typeInElement('New', input);
@@ -774,18 +811,41 @@ describe('MdAutocomplete', () => {
           .toBe('false', 'Expected aria-expanded to be false while panel is closed.');
 
       fixture.componentInstance.trigger.openPanel();
-      fixture.detectChanges();
-
-      expect(input.getAttribute('aria-expanded'))
-          .toBe('true', 'Expected aria-expanded to be true while panel is open.');
-
-      fixture.componentInstance.trigger.closePanel();
-      fixture.detectChanges();
-
       fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
         expect(input.getAttribute('aria-expanded'))
-            .toBe('false', 'Expected aria-expanded to be false when panel closes again.');
+            .toBe('true', 'Expected aria-expanded to be true while panel is open.');
+
+        fixture.componentInstance.trigger.closePanel();
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          expect(input.getAttribute('aria-expanded'))
+              .toBe('false', 'Expected aria-expanded to be false when panel closes again.');
+        });
       });
+    }));
+
+    it('should set aria-expanded properly when the panel is hidden', async(() => {
+        fixture.componentInstance.trigger.openPanel();
+
+        fixture.whenStable().then(() => {
+          fixture.detectChanges();
+          expect(input.getAttribute('aria-expanded'))
+              .toBe('true', 'Expected aria-expanded to be true while panel is open.');
+
+          typeInElement('zz', input);
+          fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+              fixture.detectChanges();
+              expect(input.getAttribute('aria-expanded'))
+                  .toBe('false', 'Expected aria-expanded to be false when panel hides itself.');
+            });
+          });
+        });
     }));
 
     it('should set aria-owns based on the attached autocomplete', () => {
@@ -872,6 +932,69 @@ describe('MdAutocomplete', () => {
 
   });
 
+  describe('Option selection', () => {
+    let fixture: ComponentFixture<SimpleAutocomplete>;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SimpleAutocomplete);
+      fixture.detectChanges();
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+    });
+
+    it('should deselect any other selected option', async(() => {
+      let options =
+          overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+      options[0].click();
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        let componentOptions = fixture.componentInstance.options.toArray();
+        expect(componentOptions[0].selected)
+            .toBe(true, `Clicked option should be selected.`);
+
+        options =
+            overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+        options[1].click();
+        fixture.detectChanges();
+
+        expect(componentOptions[0].selected)
+            .toBe(false, `Previous option should not be selected.`);
+        expect(componentOptions[1].selected)
+            .toBe(true, `New Clicked option should be selected.`);
+
+      });
+    }));
+
+    it('should call deselect only on the previous selected option', async(() => {
+      let options =
+          overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+      options[0].click();
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        let componentOptions = fixture.componentInstance.options.toArray();
+        componentOptions.forEach(option => spyOn(option, 'deselect'));
+
+        expect(componentOptions[0].selected)
+            .toBe(true, `Clicked option should be selected.`);
+
+        options =
+            overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+        options[1].click();
+        fixture.detectChanges();
+
+        expect(componentOptions[0].deselect).toHaveBeenCalled();
+        componentOptions.slice(1).forEach(option => expect(option.deselect).not.toHaveBeenCalled());
+      });
+    }));
+  });
+
   describe('misc', () => {
 
     it('should allow basic use without any forms directives', () => {
@@ -901,21 +1024,24 @@ describe('MdAutocomplete', () => {
       });
     }));
 
-    it('should work when input is wrapped in ngIf', () => {
+    it('should work when input is wrapped in ngIf', async(() => {
       const fixture = TestBed.createComponent(NgIfAutocomplete);
       fixture.detectChanges();
 
       const input = fixture.debugElement.query(By.css('input')).nativeElement;
       dispatchFakeEvent(input, 'focus');
-      fixture.detectChanges();
 
-      expect(fixture.componentInstance.trigger.panelOpen)
-          .toBe(true, `Expected panel state to read open when input is focused.`);
-      expect(overlayContainerElement.textContent)
-          .toContain('One', `Expected panel to display when input is focused.`);
-      expect(overlayContainerElement.textContent)
-          .toContain('Two', `Expected panel to display when input is focused.`);
-    });
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.trigger.panelOpen)
+            .toBe(true, `Expected panel state to read open when input is focused.`);
+        expect(overlayContainerElement.textContent)
+            .toContain('One', `Expected panel to display when input is focused.`);
+        expect(overlayContainerElement.textContent)
+            .toContain('Two', `Expected panel to display when input is focused.`);
+      });
+    }));
 
     it('should filter properly with ngIf after setting the active item', fakeAsync(() => {
       const fixture = TestBed.createComponent(NgIfAutocomplete);
@@ -938,11 +1064,37 @@ describe('MdAutocomplete', () => {
     }));
 
   });
+
+  it('should have correct width when opened', () => {
+    const widthFixture = TestBed.createComponent(SimpleAutocomplete);
+    widthFixture.componentInstance.width = 300;
+    widthFixture.detectChanges();
+
+    widthFixture.componentInstance.trigger.openPanel();
+    widthFixture.detectChanges();
+
+    const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+    // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
+    expect(Math.ceil(parseFloat(overlayPane.style.width))).toEqual(300);
+
+    widthFixture.componentInstance.trigger.closePanel();
+    widthFixture.detectChanges();
+
+    widthFixture.componentInstance.width = 500;
+    widthFixture.detectChanges();
+
+    widthFixture.componentInstance.trigger.openPanel();
+    widthFixture.detectChanges();
+
+    // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
+    expect(Math.ceil(parseFloat(overlayPane.style.width))).toEqual(500);
+
+  });
 });
 
 @Component({
   template: `
-    <md-input-container [floatPlaceholder]="placeholder">
+    <md-input-container [floatPlaceholder]="placeholder" [style.width.px]="width">
       <input mdInput placeholder="State" [mdAutocomplete]="auto" [formControl]="stateCtrl">
     </md-input-container>
 
@@ -958,6 +1110,7 @@ class SimpleAutocomplete implements OnDestroy {
   filteredStates: any[];
   valueSub: Subscription;
   placeholder = 'auto';
+  width: number;
 
   @ViewChild(MdAutocompleteTrigger) trigger: MdAutocompleteTrigger;
   @ViewChild(MdAutocomplete) panel: MdAutocomplete;
@@ -1084,18 +1237,6 @@ class AutocompleteWithNgModel {
     this.filteredStates = this.states.filter(s => new RegExp(value, 'gi').test(s));
   }
 
-}
-
-/**
- * Focuses an input, sets its value and dispatches
- * the `input` event, simulating the user typing.
- * @param value Value to be set on the input.
- * @param element Element onto which to set the value.
- */
-function typeInElement(value: string, element: HTMLInputElement, autoFocus = true) {
-  element.focus();
-  element.value = value;
-  dispatchFakeEvent(element, 'input');
 }
 
 /** This is a mock keyboard event to test keyboard events in the autocomplete. */

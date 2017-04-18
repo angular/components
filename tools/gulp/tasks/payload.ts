@@ -1,21 +1,21 @@
 import {task} from 'gulp';
 import {join} from 'path';
-import {statSync, readFileSync} from 'fs';
-import {DIST_COMPONENTS_ROOT} from '../constants';
-import {openFirebaseDashboardDatabase, isTravisPushBuild} from '../task_helpers';
+import {statSync} from 'fs';
+import {DIST_ROOT} from '../constants';
 import {spawnSync} from 'child_process';
+import {isTravisMasterBuild} from '../util/travis-ci';
+import {openFirebaseDashboardDatabase} from '../util/firebase';
 
-// Those imports lack types.
-const uglifyJs = require('uglify-js');
-
-const BUNDLE_PATH = join(DIST_COMPONENTS_ROOT, 'bundles', 'material.umd.js');
+const bundlesDir = join(DIST_ROOT, 'bundles');
 
 /** Task which runs test against the size of whole library. */
-task('payload', ['build:release'], () => {
+task('payload', ['library:clean-build'], () => {
 
   let results = {
-    umd_kb: getFilesize(BUNDLE_PATH),
-    umd_minified_uglify_kb: getUglifiedSize(BUNDLE_PATH),
+    umd_kb: getBundleSize('material.umd.js'),
+    umd_minified_uglify_kb: getBundleSize('material.umd.min.js'),
+    fesm_2015: getBundleSize('material.js'),
+    fesm_2014: getBundleSize('material.es5.js'),
     timestamp: Date.now()
   };
 
@@ -23,26 +23,20 @@ task('payload', ['build:release'], () => {
   console.log('Payload Results:', JSON.stringify(results, null, 2));
 
   // Publish the results to firebase when it runs on Travis and not as a PR.
-  if (isTravisPushBuild()) {
+  if (isTravisMasterBuild()) {
     return publishResults(results);
   }
 
 });
 
+/** Returns the size of the given library bundle. */
+function getBundleSize(bundleName: string) {
+  return getFilesize(join(bundlesDir, bundleName));
+}
+
 /** Returns the size of a file in kilobytes. */
 function getFilesize(filePath: string) {
   return statSync(filePath).size / 1000;
-}
-
-/** Returns the size of a uglify minified file in kilobytes */
-function getUglifiedSize(filePath: string) {
-  let fileContent = readFileSync(filePath, 'utf-8');
-
-  let compressedFile = uglifyJs.minify(fileContent, {
-    fromString: true
-  });
-
-  return Buffer.byteLength(compressedFile.code, 'utf8') / 1000;
 }
 
 /** Publishes the given results to the firebase database. */
