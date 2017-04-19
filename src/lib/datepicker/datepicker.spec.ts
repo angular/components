@@ -117,7 +117,7 @@ describe('MdDatepicker', () => {
       expect(document.querySelector('md-dialog-container')).not.toBeNull();
       expect(testComponent.datepickerInput.value).toEqual(new SimpleDate(2020, 0, 1));
 
-      let cells = document.querySelectorAll('.mat-calendar-table-cell');
+      let cells = document.querySelectorAll('.mat-calendar-body-cell');
       dispatchMouseEvent(cells[1], 'click');
       fixture.detectChanges();
 

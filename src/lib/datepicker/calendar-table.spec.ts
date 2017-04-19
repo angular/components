@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
-import {MdCalendarCell, MdCalendarTable} from './calendar-table';
+import {MdCalendarCell, MdCalendarBody} from './calendar-body';
 import {By} from '@angular/platform-browser';
 import {SimpleDate} from '../core/datetime/simple-date';
 
@@ -9,7 +9,7 @@ describe('MdCalendarTable', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        MdCalendarTable,
+        MdCalendarBody,
 
         // Test components.
         StandardCalendarTable,
@@ -30,15 +30,15 @@ describe('MdCalendarTable', () => {
 
     let refreshElementLists = () => {
       rowEls = calendarTableNativeElement.querySelectorAll('tr');
-      labelEls = calendarTableNativeElement.querySelectorAll('.mat-calendar-table-label');
-      cellEls = calendarTableNativeElement.querySelectorAll('.mat-calendar-table-cell');
+      labelEls = calendarTableNativeElement.querySelectorAll('.mat-calendar-body-label');
+      cellEls = calendarTableNativeElement.querySelectorAll('.mat-calendar-body-cell');
     };
 
     beforeEach(() => {
       fixture = TestBed.createComponent(StandardCalendarTable);
       fixture.detectChanges();
 
-      let calendarTableDebugElement = fixture.debugElement.query(By.directive(MdCalendarTable));
+      let calendarTableDebugElement = fixture.debugElement.query(By.directive(MdCalendarBody));
       calendarTableNativeElement = calendarTableDebugElement.nativeElement;
       testComponent = fixture.componentInstance;
 
@@ -52,13 +52,13 @@ describe('MdCalendarTable', () => {
     });
 
     it('highlights today', () => {
-      let todayCell = calendarTableNativeElement.querySelector('.mat-calendar-table-today');
+      let todayCell = calendarTableNativeElement.querySelector('.mat-calendar-body-today');
       expect(todayCell).not.toBeNull();
       expect(todayCell.innerHTML.trim()).toBe('3');
     });
 
     it('highlights selected', () => {
-      let selectedCell = calendarTableNativeElement.querySelector('.mat-calendar-table-selected');
+      let selectedCell = calendarTableNativeElement.querySelector('.mat-calendar-body-selected');
       expect(selectedCell).not.toBeNull();
       expect(selectedCell.innerHTML.trim()).toBe('4');
     });
@@ -73,23 +73,23 @@ describe('MdCalendarTable', () => {
       expect(labelEls.length).toBe(1);
       expect(cellEls.length).toBe(11);
       expect(rowEls[0].firstElementChild.classList)
-          .toContain('mat-calendar-table-label', 'first cell should be the label');
+          .toContain('mat-calendar-body-label', 'first cell should be the label');
       expect(labelEls[0].getAttribute('colspan')).toBe('3');
     });
 
     it('cell should be selected on click', () => {
       let todayElement =
-          calendarTableNativeElement.querySelector('.mat-calendar-table-today') as HTMLElement;
+          calendarTableNativeElement.querySelector('.mat-calendar-body-today') as HTMLElement;
       todayElement.click();
       fixture.detectChanges();
 
       expect(todayElement.classList)
-          .toContain('mat-calendar-table-selected', 'today should be selected');
+          .toContain('mat-calendar-body-selected', 'today should be selected');
     });
 
     it('should mark active date', () => {
       expect((cellEls[10] as HTMLElement).innerText.trim()).toBe('11');
-      expect(cellEls[10].classList).toContain('mat-calendar-table-active');
+      expect(cellEls[10].classList).toContain('mat-calendar-body-active');
     });
   });
 
@@ -103,10 +103,10 @@ describe('MdCalendarTable', () => {
       fixture = TestBed.createComponent(CalendarTableWithDisabledCells);
       fixture.detectChanges();
 
-      let calendarTableDebugElement = fixture.debugElement.query(By.directive(MdCalendarTable));
+      let calendarTableDebugElement = fixture.debugElement.query(By.directive(MdCalendarBody));
       calendarTableNativeElement = calendarTableDebugElement.nativeElement;
       testComponent = fixture.componentInstance;
-      cellEls = calendarTableNativeElement.querySelectorAll('.mat-calendar-table-cell');
+      cellEls = calendarTableNativeElement.querySelectorAll('.mat-calendar-body-cell');
     });
 
     it('should only allow selection of disabled cells when allowDisabledSelection is true', () => {
@@ -128,15 +128,16 @@ describe('MdCalendarTable', () => {
 
 
 @Component({
-  template: `<md-calendar-table [label]="label"
-                                [rows]="rows"
-                                [todayValue]="todayValue"
-                                [selectedValue]="selectedValue"
-                                [labelMinRequiredCells]="labelMinRequiredCells"
-                                [numCols]="numCols"
-                                [activeCell]="10"
-                                (selectedValueChange)="onSelect($event)">
-             </md-calendar-table>`,
+  template: `<table md-calendar-body
+                    [label]="label"
+                    [rows]="rows"
+                    [todayValue]="todayValue"
+                    [selectedValue]="selectedValue"
+                    [labelMinRequiredCells]="labelMinRequiredCells"
+                    [numCols]="numCols"
+                    [activeCell]="10"
+                    (selectedValueChange)="onSelect($event)">
+             </table>`,
 })
 class StandardCalendarTable {
   label = 'Jan 2017';
@@ -153,10 +154,11 @@ class StandardCalendarTable {
 
 
 @Component({
-  template: `<md-calendar-table [rows]="rows"
-                                [allowDisabledSelection]="allowDisabledSelection"
-                                (selectedValueChange)="selected = $event">
-             </md-calendar-table>`
+  template: `<table md-calendar-body
+                    [rows]="rows"
+                    [allowDisabledSelection]="allowDisabledSelection"
+                    (selectedValueChange)="selected = $event">
+             </table>`
 })
 class CalendarTableWithDisabledCells {
   rows = [[1, 2, 3, 4]].map(r => r.map(d => {

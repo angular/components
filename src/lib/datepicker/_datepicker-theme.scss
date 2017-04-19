@@ -15,10 +15,6 @@
     background-color: mat-color($background, card);
   }
 
-  .mat-calendar-header {
-    border-color: mat-color($foreground, divider);
-  }
-
   .mat-calendar-arrow {
     border-top-color: mat-color($foreground, icon);
   }
@@ -28,52 +24,56 @@
     color: mat-color($foreground, icon);
   }
 
-  .mat-calendar-weekday-table {
+  .mat-calendar-table-header {
     color: mat-color($foreground, hint-text);
   }
 
-  .mat-calendar-table-label {
+  .mat-calendar-table-header-divider::after {
+    background: mat-color($foreground, divider);
+  }
+
+  .mat-calendar-body-label {
     color: mat-color($foreground, secondary-text);
   }
 
-  .mat-calendar-table-cell-content {
+  .mat-calendar-body-cell-content {
     color: mat-color($foreground, text);
     border-color: transparent;
 
-    .mat-calendar-table-disabled > &:not(.mat-calendar-table-selected) {
+    .mat-calendar-body-disabled > &:not(.mat-calendar-body-selected) {
       color: mat-color($foreground, disabled-text);
     }
   }
 
-  :not(.mat-calendar-table-disabled):hover,
-  .cdk-keyboard-focused .mat-calendar-table-active {
-    & > .mat-calendar-table-cell-content:not(.mat-calendar-table-selected) {
+  :not(.mat-calendar-body-disabled):hover,
+  .cdk-keyboard-focused .mat-calendar-body-active {
+    & > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
       background-color: mat-color($background, hover);
     }
   }
 
-  .mat-calendar-table-selected {
+  .mat-calendar-body-selected {
     background-color: mat-color($primary);
     color: mat-color($primary, default-contrast);
 
-    .mat-calendar-table-disabled > & {
+    .mat-calendar-body-disabled > & {
       background-color: fade-out(mat-color($primary), $mat-datepicker-selected-fade-amount);
     }
   }
 
-  .mat-calendar-table-today {
-    &:not(.mat-calendar-table-selected) {
+  .mat-calendar-body-today {
+    &:not(.mat-calendar-body-selected) {
       // Note: though it's not text, the border is a hint about the fact that this is today's date,
       // so we use the hint color.
       border-color: mat-color($foreground, hint-text);
 
-      .mat-calendar-table-disabled > & {
+      .mat-calendar-body-disabled > & {
         border-color:
             fade-out(mat-color($foreground, hint-text), $mat-datepicker-today-fade-amount);
       }
     }
 
-    &.mat-calendar-table-selected {
+    &.mat-calendar-body-selected {
       box-shadow: inset 0 0 0 $mat-datepicker-selected-today-box-shadow-width
                   mat-color($primary, default-contrast);
     }

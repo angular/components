@@ -5,10 +5,11 @@ import {MdCalendar} from './calendar';
 import {By} from '@angular/platform-browser';
 import {MdMonthView} from './month-view';
 import {MdYearView} from './year-view';
-import {MdCalendarTable} from './calendar-table';
+import {MdCalendarBody} from './calendar-body';
 import {DatetimeModule} from '../core/datetime/index';
 import {
-  dispatchFakeEvent, dispatchKeyboardEvent,
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
   dispatchMouseEvent
 } from '../core/testing/dispatch-events';
 import {
@@ -32,7 +33,7 @@ describe('MdCalendar', () => {
       ],
       declarations: [
         MdCalendar,
-        MdCalendarTable,
+        MdCalendarBody,
         MdMonthView,
         MdYearView,
 
@@ -127,7 +128,7 @@ describe('MdCalendar', () => {
       expect(calendarInstance._monthView).toBe(false, 'should be in year view');
       expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 0, 31));
 
-      let monthCells = calendarElement.querySelectorAll('.mat-calendar-table-cell');
+      let monthCells = calendarElement.querySelectorAll('.mat-calendar-body-cell');
       (monthCells[monthCells.length - 1] as HTMLElement).click();
       fixture.detectChanges();
 
@@ -137,7 +138,7 @@ describe('MdCalendar', () => {
     });
 
     it('should select date in month view', () => {
-      let monthCells = calendarElement.querySelectorAll('.mat-calendar-table-cell');
+      let monthCells = calendarElement.querySelectorAll('.mat-calendar-body-cell');
       (monthCells[monthCells.length - 1] as HTMLElement).click();
       fixture.detectChanges();
 
@@ -150,7 +151,7 @@ describe('MdCalendar', () => {
         let calendarBodyEl: HTMLElement;
 
         beforeEach(() => {
-          calendarBodyEl = calendarElement.querySelector('.mat-calendar-body') as HTMLElement;
+          calendarBodyEl = calendarElement.querySelector('.mat-calendar-content') as HTMLElement;
           expect(calendarBodyEl).not.toBeNull();
 
           dispatchFakeEvent(calendarBodyEl, 'focus');
@@ -434,8 +435,8 @@ describe('MdCalendar', () => {
     let fixture: ComponentFixture<CalendarWithMinMax>;
     let testComponent: CalendarWithMinMax;
     let calendarElement: HTMLElement;
-    let prevButton: HTMLElement;
-    let nextButton: HTMLElement;
+    let prevButton: HTMLButtonElement;
+    let nextButton: HTMLButtonElement;
     let calendarInstance: MdCalendar;
 
     beforeEach(() => {
@@ -443,8 +444,9 @@ describe('MdCalendar', () => {
 
       let calendarDebugElement = fixture.debugElement.query(By.directive(MdCalendar));
       calendarElement = calendarDebugElement.nativeElement;
-      prevButton = calendarElement.querySelector('.mat-calendar-previous-button') as HTMLElement;
-      nextButton = calendarElement.querySelector('.mat-calendar-next-button') as HTMLElement;
+      prevButton =
+          calendarElement.querySelector('.mat-calendar-previous-button') as HTMLButtonElement;
+      nextButton = calendarElement.querySelector('.mat-calendar-next-button') as HTMLButtonElement;
       calendarInstance = calendarDebugElement.componentInstance;
       testComponent = fixture.componentInstance;
     });
@@ -467,13 +469,13 @@ describe('MdCalendar', () => {
       testComponent.startAt = new SimpleDate(2016, 1, 1);
       fixture.detectChanges();
 
-      expect(prevButton.classList).not.toContain('mat-calendar-disabled');
+      expect(prevButton.disabled).toBe(false, 'previous button should not be disabled');
       expect(calendarInstance._activeDate).toEqual(new SimpleDate(2016, 1, 1));
 
       prevButton.click();
       fixture.detectChanges();
 
-      expect(prevButton.classList).toContain('mat-calendar-disabled');
+      expect(prevButton.disabled).toBe(true, 'previous button should be disabled');
       expect(calendarInstance._activeDate).toEqual(new SimpleDate(2016, 0, 1));
 
       prevButton.click();
@@ -486,13 +488,13 @@ describe('MdCalendar', () => {
       testComponent.startAt = new SimpleDate(2017, 11, 1);
       fixture.detectChanges();
 
-      expect(nextButton.classList).not.toContain('mat-calendar-disabled');
+      expect(nextButton.disabled).toBe(false, 'next button should not be disabled');
       expect(calendarInstance._activeDate).toEqual(new SimpleDate(2017, 11, 1));
 
       nextButton.click();
       fixture.detectChanges();
 
-      expect(nextButton.classList).toContain('mat-calendar-disabled');
+      expect(nextButton.disabled).toBe(true, 'next button should be disabled');
       expect(calendarInstance._activeDate).toEqual(new SimpleDate(2018, 0, 1));
 
       nextButton.click();
@@ -519,7 +521,7 @@ describe('MdCalendar', () => {
     });
 
     it('should disable and prevent selection of filtered dates', () => {
-      let cells = calendarElement.querySelectorAll('.mat-calendar-table-cell');
+      let cells = calendarElement.querySelectorAll('.mat-calendar-body-cell');
       (cells[0] as HTMLElement).click();
       fixture.detectChanges();
 
@@ -535,7 +537,7 @@ describe('MdCalendar', () => {
       let calendarBodyEl: HTMLElement;
 
       beforeEach(() => {
-        calendarBodyEl = calendarElement.querySelector('.mat-calendar-body') as HTMLElement;
+        calendarBodyEl = calendarElement.querySelector('.mat-calendar-content') as HTMLElement;
         expect(calendarBodyEl).not.toBeNull();
 
         dispatchFakeEvent(calendarBodyEl, 'focus');
