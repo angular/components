@@ -7,7 +7,7 @@ import {
   Output,
   AfterContentInit
 } from '@angular/core';
-import {MdCalendarCell} from './calendar-table';
+import {MdCalendarCell} from './calendar-body';
 import {CalendarLocale} from '../core/datetime/calendar-locale';
 import {SimpleDate} from '../core/datetime/simple-date';
 
@@ -74,7 +74,14 @@ export class MdMonthView implements AfterContentInit {
   /** The date of the month that today falls on. Null if today is in another month. */
   _todayDate: number;
 
-  constructor(private _locale: CalendarLocale) {}
+  /** The names of the weekdays. */
+  _weekdays: string[];
+
+  constructor(private _locale: CalendarLocale) {
+    // Rotate the labels for days of the week based on the configured first day of the week.
+    this._weekdays = this._locale.narrowDays.slice(this._locale.firstDayOfWeek)
+        .concat(this._locale.narrowDays.slice(0, this._locale.firstDayOfWeek));
+  }
 
   ngAfterContentInit(): void {
     this._init();

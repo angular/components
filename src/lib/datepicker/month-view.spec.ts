@@ -3,7 +3,7 @@ import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdMonthView} from './month-view';
 import {SimpleDate} from '../core/datetime/simple-date';
-import {MdCalendarTable} from './calendar-table';
+import {MdCalendarBody} from './calendar-body';
 import {DatetimeModule} from '../core/datetime/index';
 
 
@@ -14,7 +14,7 @@ describe('MdMonthView', () => {
         DatetimeModule,
       ],
       declarations: [
-        MdCalendarTable,
+        MdCalendarBody,
         MdMonthView,
 
         // Test components.
@@ -41,17 +41,17 @@ describe('MdMonthView', () => {
     });
 
     it('has correct month label', () => {
-      let labelEl = monthViewNativeElement.querySelector('.mat-calendar-table-label');
+      let labelEl = monthViewNativeElement.querySelector('.mat-calendar-body-label');
       expect(labelEl.innerHTML.trim()).toBe('JAN');
     });
 
     it('has 31 days', () => {
-      let cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-table-cell');
+      let cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
       expect(cellEls.length).toBe(31);
     });
 
     it('shows selected date if in same month', () => {
-      let selectedEl = monthViewNativeElement.querySelector('.mat-calendar-table-selected');
+      let selectedEl = monthViewNativeElement.querySelector('.mat-calendar-body-selected');
       expect(selectedEl.innerHTML.trim()).toBe('10');
     });
 
@@ -59,23 +59,23 @@ describe('MdMonthView', () => {
       testComponent.selected = new SimpleDate(2017, 2, 10);
       fixture.detectChanges();
 
-      let selectedEl = monthViewNativeElement.querySelector('.mat-calendar-table-selected');
+      let selectedEl = monthViewNativeElement.querySelector('.mat-calendar-body-selected');
       expect(selectedEl).toBeNull();
     });
 
     it('fires selected change event on cell clicked', () => {
-      let cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-table-cell');
+      let cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
       (cellEls[cellEls.length - 1] as HTMLElement).click();
       fixture.detectChanges();
 
-      let selectedEl = monthViewNativeElement.querySelector('.mat-calendar-table-selected');
+      let selectedEl = monthViewNativeElement.querySelector('.mat-calendar-body-selected');
       expect(selectedEl.innerHTML.trim()).toBe('31');
     });
 
     it('should mark active date', () => {
-      let cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-table-cell');
+      let cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
       expect((cellEls[4] as HTMLElement).innerText.trim()).toBe('5');
-      expect(cellEls[4].classList).toContain('mat-calendar-table-active');
+      expect(cellEls[4].classList).toContain('mat-calendar-body-active');
     });
   });
 
@@ -94,9 +94,9 @@ describe('MdMonthView', () => {
     });
 
     it('should disable filtered dates', () => {
-      let cells = monthViewNativeElement.querySelectorAll('.mat-calendar-table-cell');
-      expect(cells[0].classList).toContain('mat-calendar-table-disabled');
-      expect(cells[1].classList).not.toContain('mat-calendar-table-disabled');
+      let cells = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+      expect(cells[0].classList).toContain('mat-calendar-body-disabled');
+      expect(cells[1].classList).not.toContain('mat-calendar-body-disabled');
     });
   });
 });

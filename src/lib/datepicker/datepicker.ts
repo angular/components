@@ -62,7 +62,7 @@ export class MdDatepickerContent implements AfterContentInit {
   constructor(private _elementRef: ElementRef) {}
 
   ngAfterContentInit() {
-    this._elementRef.nativeElement.querySelector('.mat-calendar-body').focus();
+    this._elementRef.nativeElement.querySelector('.mat-calendar-content').focus();
   }
 }
 
