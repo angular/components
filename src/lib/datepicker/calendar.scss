@@ -109,6 +109,8 @@ $mat-calendar-next-icon-transform: translateX(-2px) rotate(45deg);
   position: relative;
   height: $mat-calendar-header-divider-width;
 
+  // We use an absolutely positioned pseudo-element as the divider line for the table header so we
+  // can extend it all the way to the edge of the calendar.
   &::after {
     content: '';
     position: absolute;

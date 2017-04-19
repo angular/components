@@ -78,6 +78,7 @@ export class MdMonthView implements AfterContentInit {
   _weekdays: string[];
 
   constructor(private _locale: CalendarLocale) {
+    // Rotate the labels for days of the week based on the configured first day of the week.
     this._weekdays = this._locale.narrowDays.slice(this._locale.firstDayOfWeek)
         .concat(this._locale.narrowDays.slice(0, this._locale.firstDayOfWeek));
   }
