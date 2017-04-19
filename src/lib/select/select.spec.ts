@@ -716,9 +716,10 @@ describe('MdSelect', () => {
       const optionTop = options[index].getBoundingClientRect().top;
 
       // The option text should align with the trigger text. Because each option is 18px
-      // larger in height than the trigger, the option needs to be adjusted up 9 pixels.
-      expect(optionTop.toFixed(2))
-          .toEqual((triggerTop - 9).toFixed(2), `Expected trigger to align with option ${index}.`);
+      // larger in height than the trigger, the option needs to be adjusted up 13(.5) pixels.
+      expect(Math.ceil(optionTop).toFixed(2))
+          .toEqual(Math.ceil((triggerTop - 13.5)).toFixed(2),
+            `Expected trigger to align with option ${index}.`);
 
       // For the animation to start at the option's center, its origin must be the distance
       // from the top of the overlay to the option top + half the option height (48/2 = 24).
@@ -817,7 +818,7 @@ describe('MdSelect', () => {
 
       it('should adjust position of centered option if there is little space above', () => {
         // Push the select to a position with not quite enough space on the top to open
-        // with the option completely centered (needs 113px at least: 256/2 - 48/2 + 9)
+        // with the option completely centered (needs 117.5px at least: 256/2 - 48/2 + 13.5)
         select.style.marginTop = '85px';
 
         // Select an option in the middle of the list
@@ -829,18 +830,18 @@ describe('MdSelect', () => {
 
         const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel');
 
-        // Scroll should adjust by the difference between the top space available (85px + 8px
-        // viewport padding = 77px) and the height of the panel above the option (113px).
-        // 113px - 77px = 36px difference + original scrollTop 88px = 124px
+        // Scroll should adjust by the difference between the top space available (85px - 8px
+        // viewport padding + 16px font-size = 93px) and the height of the panel above the option
+        // (117.5px). 117.5px - 93px = 24.5px difference + original scrollTop 88px = 112px rounded
         expect(scrollContainer.scrollTop)
-            .toEqual(124, `Expected panel to adjust scroll position to fit in viewport.`);
+            .toEqual(112, `Expected panel to adjust scroll position to fit in viewport.`);
 
         checkTriggerAlignedWithOption(4);
       });
 
       it('should adjust position of centered option if there is little space below', () => {
         // Push the select to a position with not quite enough space on the bottom to open
-        // with the option completely centered (needs 113px at least: 256/2 - 48/2 + 9)
+        // with the option completely centered (needs 117.5px at least: 256/2 - 48/2 + 13.5)
         select.style.marginTop = '600px';
 
         // Select an option in the middle of the list
@@ -853,11 +854,11 @@ describe('MdSelect', () => {
         const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel');
 
         // Scroll should adjust by the difference between the bottom space available
-        // (686px - 600px margin - 30px trigger height = 56px - 8px padding = 48px)
+        // (686px - 600px margin - 21px trigger height = 65px - 8px padding - 16px font-size = 41px)
         // and the height of the panel below the option (113px).
-        // 113px - 48px = 75px difference. Original scrollTop 88px - 75px = 23px
+        // 117.5px - 41px = 77px difference. Original scrollTop 88px - 76.5px = 11(.5)px
         expect(scrollContainer.scrollTop)
-            .toEqual(23, `Expected panel to adjust scroll position to fit in viewport.`);
+            .toEqual(11, `Expected panel to adjust scroll position to fit in viewport.`);
 
         checkTriggerAlignedWithOption(4);
       });
@@ -882,8 +883,8 @@ describe('MdSelect', () => {
         // Expect no scroll to be attempted
         expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to be scrolled.`);
 
-        expect(overlayBottom.toFixed(2))
-            .toEqual(triggerBottom.toFixed(2),
+        expect(overlayBottom.toFixed(0))
+            .toEqual(triggerBottom.toFixed(0),
                 `Expected trigger bottom to align with overlay bottom.`);
 
         expect(fixture.componentInstance.select._transformOrigin)
@@ -988,8 +989,8 @@ describe('MdSelect', () => {
         const triggerBottom = trigger.getBoundingClientRect().bottom;
         const overlayBottom = overlayPane.getBoundingClientRect().bottom;
 
-        expect(overlayBottom.toFixed(2))
-            .toEqual(triggerBottom.toFixed(2),
+        expect(overlayBottom.toFixed(0))
+            .toEqual(triggerBottom.toFixed(0),
                 `Expected trigger bottom to align with overlay bottom.`);
       });
 

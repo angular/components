@@ -21,14 +21,12 @@ import {
  */
 export const transformPlaceholder: AnimationTriggerMetadata = trigger('transformPlaceholder', [
   state('floating-ltr', style({
-    top: '-22px',
-    left: '-2px',
-    transform: `scale(0.75)`
+    transform: `translateY(-1.05em) scale(0.75)`
   })),
   state('floating-rtl', style({
-    top: '-22px',
-    left: '2px',
-    transform: `scale(0.75)`
+    left: 'auto',
+    right: '0',
+    transform: `translateY(-1.05em) scale(0.75)`
   })),
   transition('* => *', animate(`400ms cubic-bezier(0.25, 0.8, 0.25, 1)`))
 ]);

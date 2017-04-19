@@ -50,14 +50,15 @@ export const SELECT_PANEL_MAX_HEIGHT = 256;
 export const SELECT_MAX_OPTIONS_DISPLAYED = 5;
 
 /** The fixed height of the select's trigger element. */
-export const SELECT_TRIGGER_HEIGHT = 30;
+export const SELECT_TRIGGER_HEIGHT = 21;
 
 /**
  * Must adjust for the difference in height between the option and the trigger,
  * so the text will align on the y axis.
- * (SELECT_OPTION_HEIGHT (48) - SELECT_TRIGGER_HEIGHT (30)) / 2 = 9
+ * (SELECT_OPTION_HEIGHT (48) - SELECT_TRIGGER_HEIGHT (21)) / 2 = 13.5
  */
-export const SELECT_OPTION_HEIGHT_ADJUSTMENT = 9;
+export const SELECT_OPTION_HEIGHT_ADJUSTMENT =
+  (SELECT_OPTION_HEIGHT - SELECT_TRIGGER_HEIGHT) / 2;
 
 /** The panel's padding on the x-axis */
 export const SELECT_PANEL_PADDING_X = 16;
@@ -162,12 +163,6 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
    * and the width of the selected value.
    */
   _triggerWidth: number;
-
-  /**
-   * The width of the selected option's value. Must be set programmatically
-   * to ensure its overflow is clipped, as it's absolutely positioned.
-   */
-  _selectedValueWidth: number;
 
   /** Manages keyboard events for options in the panel. */
   _keyManager: FocusKeyManager;
@@ -525,8 +520,6 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
       this._clearSelection();
     }
 
-    this._setValueWidth();
-
     if (this._selectionModel.isEmpty()) {
       this._placeholderState = '';
     }
@@ -586,7 +579,6 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
       .filter(event => event.isUserInput)
       .subscribe(event => {
         this._onSelect(event.source);
-        this._setValueWidth();
 
         if (!this.multiple) {
           this.close();
@@ -664,15 +656,6 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
   }
 
   /**
-   * Must set the width of the selected option's value programmatically
-   * because it is absolutely positioned and otherwise will not clip
-   * overflow. The selection arrow is 9px wide, add 4px of padding = 13
-   */
-  private _setValueWidth() {
-    this._selectedValueWidth =  this._triggerWidth - 13;
-  }
-
-  /**
    * Focuses the selected item. If no option is selected, it will focus
    * the first item instead.
    */
@@ -723,7 +706,7 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
       // we must only adjust for the height difference between the option element
       // and the trigger element, then multiply it by -1 to ensure the panel moves
       // in the correct direction up the page.
-      this._offsetY = (SELECT_OPTION_HEIGHT - SELECT_TRIGGER_HEIGHT) / 2 * -1;
+      this._offsetY = SELECT_OPTION_HEIGHT_ADJUSTMENT * -1;
     }
 
     this._checkOverlayWithinViewport(maxScroll);
@@ -887,7 +870,7 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
   private _getOriginBasedOnOption(): string {
     const originY =
         Math.abs(this._offsetY) - SELECT_OPTION_HEIGHT_ADJUSTMENT + SELECT_OPTION_HEIGHT / 2;
-    return `50% ${originY}px 0px`;
+    return `50% ${Math.ceil(originY)}px 0px`;
   }
 
   /** Figures out the floating placeholder state value. */
