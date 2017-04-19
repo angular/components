@@ -120,30 +120,30 @@ describe('NativeDateAdapter', () => {
   });
 
   it('should create Date', () => {
-    expect(adapter.create(2017, 0, 1)).toEqual(new Date(2017, 0, 1));
+    expect(adapter.createDate(2017, 0, 1)).toEqual(new Date(2017, 0, 1));
   });
 
   it('should create Date with month and date overflow', () => {
-    expect(adapter.create(2017, 12, 32)).toEqual(new Date(2018, 1, 1));
+    expect(adapter.createDate(2017, 12, 32)).toEqual(new Date(2018, 1, 1));
   });
 
   it('should create Date with month date underflow', () => {
-    expect(adapter.create(2017, -1, 0)).toEqual(new Date(2016, 10, 30));
+    expect(adapter.createDate(2017, -1, 0)).toEqual(new Date(2016, 10, 30));
   });
 
   it('should create Date with low year number', () => {
-    expect(adapter.create(-1, 0, 1).getFullYear()).toBe(-1);
-    expect(adapter.create(0, 0, 1).getFullYear()).toBe(0);
-    expect(adapter.create(50, 0, 1).getFullYear()).toBe(50);
-    expect(adapter.create(99, 0, 1).getFullYear()).toBe(99);
-    expect(adapter.create(100, 0, 1).getFullYear()).toBe(100);
+    expect(adapter.createDate(-1, 0, 1).getFullYear()).toBe(-1);
+    expect(adapter.createDate(0, 0, 1).getFullYear()).toBe(0);
+    expect(adapter.createDate(50, 0, 1).getFullYear()).toBe(50);
+    expect(adapter.createDate(99, 0, 1).getFullYear()).toBe(99);
+    expect(adapter.createDate(100, 0, 1).getFullYear()).toBe(100);
   });
 
   it('should create Date with low year number and over/under-flow', () => {
-    expect(adapter.create(50, 12 * 51, 1).getFullYear()).toBe(101);
-    expect(adapter.create(50, 12, 1).getFullYear()).toBe(51);
-    expect(adapter.create(50, -12, 1).getFullYear()).toBe(49);
-    expect(adapter.create(50, -12 * 51, 1).getFullYear()).toBe(-1);
+    expect(adapter.createDate(50, 12 * 51, 1).getFullYear()).toBe(101);
+    expect(adapter.createDate(50, 12, 1).getFullYear()).toBe(51);
+    expect(adapter.createDate(50, -12, 1).getFullYear()).toBe(49);
+    expect(adapter.createDate(50, -12 * 51, 1).getFullYear()).toBe(-1);
   });
 
   it("should get today's date", () => {
@@ -184,14 +184,29 @@ describe('NativeDateAdapter', () => {
     expect(adapter.format(new Date(2017, 0, 1))).toEqual('2017/1/1');
   });
 
-  it('should add years, months, and days', () => {
-    expect(adapter.addDateSpan(new Date(2017, 0, 1), {years: 1, months: 1, days: 1}))
-        .toEqual(new Date(2018, 1, 2));
+  it('should add years', () => {
+    expect(adapter.addCalendarYears(new Date(2017, 0, 1), 1)).toEqual(new Date(2018, 0, 1));
+    expect(adapter.addCalendarYears(new Date(2017, 0, 1), -1)).toEqual(new Date(2016, 0, 1));
   });
 
-  it('should add negative years, months, and days', () => {
-    expect(adapter.addDateSpan(new Date(2017, 0, 1), {years: -1, months: -1, days: -1}))
-        .toEqual(new Date(2015, 10, 30));
+  it('should respect leap years when adding years', () => {
+    expect(adapter.addCalendarYears(new Date(2016, 1, 29), 1)).toEqual(new Date(2017, 1, 28));
+    expect(adapter.addCalendarYears(new Date(2016, 1, 29), -1)).toEqual(new Date(2015, 1, 28));
+  });
+
+  it('should add months', () => {
+    expect(adapter.addCalendarMonths(new Date(2017, 0, 1), 1)).toEqual(new Date(2017, 1, 1));
+    expect(adapter.addCalendarMonths(new Date(2017, 0, 1), -1)).toEqual(new Date(2016, 11, 1));
+  });
+
+  it('should respect month length differences when adding months', () => {
+    expect(adapter.addCalendarMonths(new Date(2017, 0, 31), 1)).toEqual(new Date(2017, 1, 28));
+    expect(adapter.addCalendarMonths(new Date(2017, 2, 31), -1)).toEqual(new Date(2017, 1, 28));
+  });
+
+  it('should add days', () => {
+    expect(adapter.addCalendarDays(new Date(2017, 0, 1), 1)).toEqual(new Date(2017, 0, 2));
+    expect(adapter.addCalendarDays(new Date(2017, 0, 1), -1)).toEqual(new Date(2016, 11, 31));
   });
 
   it('should clone', () => {

@@ -82,7 +82,7 @@ export abstract class DateAdapter<D> {
    *     of days in the `month`, it should roll into the previous / next month.
    * @returns The new date.
    */
-  abstract create(year: number, month: number, date: number): D;
+  abstract createDate(year: number, month: number, date: number): D;
 
   /**
    * Gets today's date.
@@ -107,12 +107,33 @@ export abstract class DateAdapter<D> {
   abstract format(date: D, fmt?: any): string;
 
   /**
-   * Adds the given number of years, months, and days to the given date.
-   * @param date The date to add to.
-   * @param amount The number of years, months, and days to add (may be negative).
-   * @returns A new date equal to the original with the given amount of time added.
+   * Adds the given number of years to the date. Years are counted as if flipping 12 pages on the
+   * calendar for each year and then finding the closest date in the new month. For example when
+   * adding 1 year to Feb 29, 2016, the resulting date will be Feb 28, 2017.
+   * @param date The date to add years to.
+   * @param years The number of years to add (may be negative).
+   * @returns A new date equal to the given one with the specified number of years added.
    */
-  abstract addDateSpan(date: D, amount: {years?: number, months?: number, days?: number}): D;
+  abstract addCalendarYears(date: D, years: number): D;
+
+  /**
+   * Adds the given number of months to the date. Months are counted as if flipping a page on the
+   * calendar for each month and then finding the closest date in the new month. For example when
+   * adding 1 month to Jan 31, 2017, the resulting date will be Feb 28, 2017.
+   * @param date The date to add months to.
+   * @param months The number of months to add (may be negative).
+   * @returns A new date equal to the given one with the specified number of months added.
+   */
+  abstract addCalendarMonths(date: D, months: number): D;
+
+  /**
+   * Adds the given number of days to the date. Days are counted as if moving one cell on the
+   * calendar for each day.
+   * @param date The date to add days to.
+   * @param days The number of days to add (may be negative).
+   * @returns A new date equal to the given one with the specified number of days added.
+   */
+  abstract addCalendarDays(date: D, days: number): D;
 
   /**
    * Sets the locale used for all dates.
@@ -128,7 +149,7 @@ export abstract class DateAdapter<D> {
    * @returns A new date equal to the given date.
    */
   clone(date: D): D {
-    return this.create(this.getYear(date), this.getMonth(date), this.getDate(date));
+    return this.createDate(this.getYear(date), this.getMonth(date), this.getDate(date));
   }
 
   /**
