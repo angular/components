@@ -22,7 +22,7 @@ import {
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '../core/testing/dispatch-events';
 import {wrappedErrorMessage} from '../core/testing/wrapped-error-message';
-import {TAB, ESCAPE} from '../core/keyboard/keycodes';
+import {TAB} from '../core/keyboard/keycodes';
 
 
 describe('MdSelect', () => {
@@ -213,20 +213,6 @@ describe('MdSelect', () => {
 
       const panel = overlayContainerElement.querySelector('.mat-select-panel');
       dispatchKeyboardEvent(panel, 'keydown', TAB);
-      fixture.detectChanges();
-
-      fixture.whenStable().then(() => {
-        expect(fixture.componentInstance.select.panelOpen).toBe(false);
-      });
-    }));
-
-    it('should close the panel when pressing escape', async(() => {
-      trigger.click();
-      fixture.detectChanges();
-      expect(fixture.componentInstance.select.panelOpen).toBe(true);
-
-      const panel = overlayContainerElement.querySelector('.mat-select-panel');
-      dispatchKeyboardEvent(panel, 'keydown', ESCAPE);
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {

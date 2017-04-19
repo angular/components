@@ -130,8 +130,8 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
   /** Subscription to changes in the option list. */
   private _changeSubscription: Subscription;
 
-  /** Subscription to tab and escape presses while overlay is focused. */
-  private _closeKeySubscription: Subscription;
+  /** Subscription to tab events while overlay is focused. */
+  private _tabSubscription: Subscription;
 
   /** Whether filling out the select is required in the form.  */
   private _required: boolean = false;
@@ -337,8 +337,8 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
       this._changeSubscription.unsubscribe();
     }
 
-    if (this._closeKeySubscription) {
-      this._closeKeySubscription.unsubscribe();
+    if (this._tabSubscription) {
+      this._tabSubscription.unsubscribe();
     }
   }
 
@@ -569,9 +569,7 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
   /** Sets up a key manager to listen to keyboard events on the overlay panel. */
   private _initKeyManager() {
     this._keyManager = new FocusKeyManager(this.options);
-    this._closeKeySubscription = Observable
-      .merge(this._keyManager.tabOut, this._keyManager.escape)
-      .subscribe(() => this.close());
+    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close());
   }
 
   /** Drops current option subscriptions and IDs and resets from scratch. */
