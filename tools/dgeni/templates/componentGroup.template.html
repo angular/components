@@ -19,6 +19,7 @@
   {% include 'class.template.html' %}
 {% endmacro %}
 
+{% marked %}
 <div class="docs-api">
   <h2>
     API reference for Angular Material {$ doc.name $}
@@ -52,3 +53,4 @@
     {% endfor %}
   {%- endif -%}
 </div>
+{% endmarked %}
