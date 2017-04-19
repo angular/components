@@ -23,18 +23,19 @@
   .mat-input-placeholder {
     color: $input-placeholder-color;
 
-    // :focus is applied to the input, but we apply mat-focused to the other elements
-    // that need to listen to it.
-    .mat-focused & {
-      color: $input-floating-placeholder-color;
+  }
 
-      &.mat-accent {
-        color: $input-underline-color-accent;
-      }
-      &.mat-warn {
-        color: $input-underline-color-warn;
-      }
-    }
+  // :focus is applied to the input, but we apply mat-focused to the other elements
+  // that need to listen to it.
+  .mat-focused .mat-input-placeholder {
+    color: $input-floating-placeholder-color;
+  }
+
+  .mat-focused .mat-input-placeholder.mat-accent{
+    color: $input-underline-color-accent;
+  }
+  .mat-focused .mat-input-placeholder.mat-warn {
+    color: $input-underline-color-warn;
   }
 
   .mat-input-element:disabled {
@@ -54,13 +55,13 @@
 
     .mat-input-ripple {
       background-color: $input-underline-focused-color;
+    }
 
-      &.mat-accent {
-        background-color: $input-underline-color-accent;
-      }
-      &.mat-warn {
-        background-color: $input-underline-color-warn;
-      }
+    .mat-input-ripple.mat-accent {
+      background-color: $input-underline-color-accent;
+    }
+    .mat-input-ripple.mat-warn {
+      background-color: $input-underline-color-warn;
     }
   }
 
