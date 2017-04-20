@@ -71,7 +71,7 @@ export class ConnectedOverlayDirective implements OnDestroy {
   private _offsetX: number = 0;
   private _offsetY: number = 0;
   private _position: ConnectedPositionStrategy;
-  private _closeKeyListener: Function;
+  private _escapeListener: Function;
 
   /** Origin for the connected overlay. */
   @Input() origin: OverlayOrigin;
@@ -254,12 +254,7 @@ export class ConnectedOverlayDirective implements OnDestroy {
 
     this._position.withDirection(this.dir);
     this._overlayRef.getState().direction = this.dir;
-    this._closeKeyListener = this._renderer.listen('document', 'keydown',
-      (event: KeyboardEvent) => {
-        if (event.keyCode === ESCAPE) {
-          this._detachOverlay();
-        }
-      });
+    this._initEscapeListener();
 
     if (!this._overlayRef.hasAttached()) {
       this._overlayRef.attach(this._templatePortal);
@@ -285,8 +280,8 @@ export class ConnectedOverlayDirective implements OnDestroy {
       this._backdropSubscription = null;
     }
 
-    if (this._closeKeyListener) {
-      this._closeKeyListener();
+    if (this._escapeListener) {
+      this._escapeListener();
     }
   }
 
@@ -304,9 +299,18 @@ export class ConnectedOverlayDirective implements OnDestroy {
       this._positionSubscription.unsubscribe();
     }
 
-    if (this._closeKeyListener) {
-      this._closeKeyListener();
+    if (this._escapeListener) {
+      this._escapeListener();
     }
+  }
+
+  /** Sets the event listener that closes the overlay when pressing Escape. */
+  private _initEscapeListener() {
+    this._escapeListener = this._renderer.listen('document', 'keydown', (event: KeyboardEvent) => {
+      if (event.keyCode === ESCAPE) {
+        this._detachOverlay();
+      }
+    });
   }
 }
 
