@@ -31,7 +31,7 @@
   $font-family: mat-font-family($config);
 
   // Use the shorthand `font` to represent a typography level, because it's the shortest. Notes that
-  // we need to use interpolation for `font-size/line-height` in order to prevent SASS from diving
+  // we need to use interpolation for `font-size/line-height` in order to prevent SASS from dividing
   // the two values.
   font: $font-weight #{$font-size}/#{$line-height} $font-family;
 }
