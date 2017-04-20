@@ -1,14 +1,14 @@
 import {
-  Component,
-  ViewEncapsulation,
+  AfterContentInit,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   EventEmitter,
+  Input,
   Output,
-  AfterContentInit
+  ViewEncapsulation
 } from '@angular/core';
 import {MdCalendarCell} from './calendar-body';
-import {DateAdapter} from '@angular/material';
+import {DateAdapter} from '../core/datetime';
 
 
 const DAYS_PER_WEEK = 7;

@@ -1,14 +1,14 @@
 import {
-  Component,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  Input,
   AfterContentInit,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
   Output,
-  EventEmitter
+  ViewEncapsulation
 } from '@angular/core';
 import {MdCalendarCell} from './calendar-body';
-import {DateAdapter} from '@angular/material';
+import {DateAdapter} from '../core/datetime';
 
 
 /**
