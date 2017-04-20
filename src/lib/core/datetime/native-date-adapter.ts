@@ -99,6 +99,10 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return 0;
   }
 
+  getNumDaysInMonth(date: Date): number {
+    return this.getDate(this.createDate(this.getYear(date), this.getMonth(date) + 1, 0));
+  }
+
   getDefaultFormats(): {date: Object} {
     return {
       date: {

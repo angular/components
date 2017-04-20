@@ -74,6 +74,13 @@ export abstract class DateAdapter<D> {
   abstract getFirstDayOfWeek(): number;
 
   /**
+   * Gets the number of days in the month of the given date.
+   * @param date The date whose month should be checked.
+   * @returns The number of days in the month of the given date.
+   */
+  abstract getNumDaysInMonth(date: D): number;
+
+  /**
    * Gets a set of default formats to use for displaying the date in different contexts.
    * @returns An object with the following default formats:
    *     - date: The default format for showing just the date without any time information.
