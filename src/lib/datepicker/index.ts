@@ -12,7 +12,7 @@ import {MdCalendar} from './calendar';
 import {MdDatepickerToggle} from './datepicker-toggle';
 import {StyleModule} from '../core/style/index';
 import {MdButtonModule} from '../button/index';
-import {MdDatepickerL10n} from '@angular/material';
+import {MdDatepickerL10n} from './datepicker-l10n';
 
 
 export * from './calendar';

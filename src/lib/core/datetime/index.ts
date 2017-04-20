@@ -1,14 +1,13 @@
 import {NgModule} from '@angular/core';
-import {DefaultCalendarLocale, CalendarLocale} from './calendar-locale';
+import {DateAdapter} from './date-adapter';
+import {NativeDateAdapter} from './native-date-adapter';
 
 
-export * from './calendar-locale';
 export * from './date-adapter';
-export * from './simple-date';
 export * from './native-date-adapter';
 
 
 @NgModule({
-  providers: [{provide: CalendarLocale, useClass: DefaultCalendarLocale}],
+  providers: [{provide: DateAdapter, useClass: NativeDateAdapter}],
 })
 export class DatetimeModule {}

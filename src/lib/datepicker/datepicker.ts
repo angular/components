@@ -129,7 +129,7 @@ export class MdDatepicker<D> implements OnDestroy {
   private _calendarPortal: ComponentPortal<MdDatepickerContent<D>>;
 
   /** The input element this datepicker is associated with. */
-  private _datepickerInput: MdDatepickerInput;
+  private _datepickerInput: MdDatepickerInput<D>;
 
   private _inputSubscription: Subscription;
 
@@ -161,7 +161,7 @@ export class MdDatepicker<D> implements OnDestroy {
    * Register an input with this datepicker.
    * @param input The datepicker input to register with this datepicker.
    */
-  _registerInput(input: MdDatepickerInput): void {
+  _registerInput(input: MdDatepickerInput<D>): void {
     if (this._datepickerInput) {
       throw new MdError('An MdDatepicker can only be associated with a single input.');
     }
