@@ -135,7 +135,7 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
   private _tabSubscription: Subscription;
 
   /** Subscription to global scrolled events while the select is open. */
-  private _scrolledSubscription: Subscription;
+  private _scrollSubscription: Subscription;
 
   /** Whether filling out the select is required in the form.  */
   private _required: boolean = false;
@@ -381,7 +381,7 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
     this._calculateOverlayPosition();
     this._placeholderState = this._floatPlaceholderState();
     this._panelOpen = true;
-    this._scrolledSubscription = this._scrollDispatcher.scrolled(0, () => {
+    this._scrollSubscription = this._scrollDispatcher.scrolled(0, () => {
       this.overlayDir.overlayRef.updatePosition();
     });
   }
@@ -395,9 +395,9 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
         this._placeholderState = '';
       }
 
-      if (this._scrolledSubscription) {
-        this._scrolledSubscription.unsubscribe();
-        this._scrolledSubscription = null;
+      if (this._scrollSubscription) {
+        this._scrollSubscription.unsubscribe();
+        this._scrollSubscription = null;
       }
 
       this._focusHost();
