@@ -132,7 +132,7 @@ export class MdMonthView<D> implements AfterContentInit {
               this._dateAdapter.getYear(this.activeDate),
               this._dateAdapter.getMonth(this.activeDate), i + 1));
       this._weeks[this._weeks.length - 1]
-          .push(new MdCalendarCell(i + 1, dateNames[i + 1], enabled));
+          .push(new MdCalendarCell(i + 1, dateNames[i], enabled));
     }
   }
 

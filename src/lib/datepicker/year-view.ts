@@ -84,7 +84,7 @@ export class MdYearView<D> implements AfterContentInit {
   private _init() {
     this._selectedMonth = this._getMonthInCurrentYear(this.selected);
     this._todayMonth = this._getMonthInCurrentYear(this._dateAdapter.today());
-    this._yearLabel = this._dateAdapter.getMonthYearName(this.activeDate, 'short');
+    this._yearLabel = this._dateAdapter.getYearName(this.activeDate);
 
     let monthNames = this._dateAdapter.getMonthNames('short');
     // First row of months only contains 5 elements so we can fit the year label on the same row.
