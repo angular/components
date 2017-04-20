@@ -27,9 +27,8 @@ const themingEntryPointPath = join(COMPONENTS_DIR, 'core', 'theming', '_all-them
 // Output path for the scss theming bundle.
 const themingBundlePath = join(releasePath, '_theming.scss');
 
-// Glob that matches all files that might be imported multiple times.
-// Necessary for deduping inside of scss-bundle.
-const themingBundleDedupeGlob = join(COMPONENTS_DIR, '**/*.scss');
+// Matches all SCSS files in the library.
+const allScssGlob = join(COMPONENTS_DIR, '**/*.scss');
 
 // Matches all pre-built theme css files
 const prebuiltThemeGlob = join(DIST_MATERIAL, '**/theming/prebuilt/*.css');
@@ -51,7 +50,10 @@ task(':package:theming', [':bundle:theming-scss'], () => {
 
 /** Bundles all scss requires for theming into a single scss file in the root of the package. */
 task(':bundle:theming-scss', () => {
-  new Bundler().Bundle(themingEntryPointPath, [themingBundleDedupeGlob]).then(result => {
+  // Instantiates the SCSS bundler and bundles all imports of the specified entry point SCSS file.
+  // A glob of all SCSS files in the library will be passed to the bundler. The bundler takes an
+  // array of globs, which will match SCSS files that will be only included once in the bundle.
+  new Bundler().Bundle(themingEntryPointPath, [allScssGlob]).then(result => {
     writeFileSync(themingBundlePath, result.bundledContent);
   });
 });
