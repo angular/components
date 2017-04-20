@@ -15,9 +15,19 @@
           <!--}">-->
 <!--</ng-container>-->
 
-<ng-container *ngFor="let node of nodes; let i = index"
-              [ngTemplateOutlet]="templateRef"
-              [ngOutletContext]="{
-                node: node
-              }">
-</ng-container>
+<!--<ng-container *ngFor="let node of nodes; let i = index"-->
+              <!--[ngTemplateOutlet]="templateRef"-->
+              <!--[ngOutletContext]="{-->
+                <!--node: node-->
+              <!--}">-->
+<!--</ng-container>-->
+<ul>
+  <li *ngFor="let node of treeModel.treeNodes; let i = index">
+    <md-tree-node
+                  [templateRef]="templateRef"
+                  [treeNodeModel]="node">
+    </md-tree-node>
+
+  </li>
+</ul>
+

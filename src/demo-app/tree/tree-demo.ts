@@ -1,7 +1,6 @@
 import {Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, QueryList, TemplateRef} from '@angular/core';
-import {NgForTreeContext} from '@angular/material';
 import {TreeDemoDataSource, Character} from './data-source';
-
+import {TreeModel} from '@angular/material';
 
 @Directive({
   selector: 'md-tree-node',
@@ -22,10 +21,9 @@ export class MdTreeNode {
   changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
 export class TreeDemo {
-  @ViewChildren(TemplateRef) templateRefs: QueryList<TemplateRef<any>>;
-  myContext = {$implicit: 'World', localSk: 'Svet'};
+
   dataSource = new TreeDemoDataSource();
-  templateRef: any;
+  treeModel: TreeModel<Character> = new TreeModel<Character>(this.dataSource, true /* flat tree */);
 
   lastNodeClicked: Character;
 
@@ -33,30 +31,20 @@ export class TreeDemo {
     return node.villan;
   }
 
-  lastCharacterDisplayed(node: Character, context: NgForTreeContext) {
-    return context.last;
-  }
-
-  nodeClicked(row: Character) {
-    this.lastNodeClicked = row;
-  }
-
   getPadding(level: number) {
-    return `${level  *  20}px`;
+    return this.treeModel.isFlatTree ? `${level  *  20}px` : '0';
   }
 
-  changeTemplate(value: number) {
-    console.log(`change template ${value}`);
-    console.log(this.templateRefs);
-    this.templateRef = this.templateRefs.toArray()[value];
+  customerClickAction(event: any) {
+    console.log(`custom click action clicked ${event}`);
   }
 
-  myTree = [
-    { text: "foo", items: [
-      { text: "bar" },
-      { text: "what"}
-    ] },
-    { text: "any"},
-    { text: "any1"}
-  ];
+  customerSelectFunction(data: Character) {
+    console.log(`customer select function selected ${data.name}`);
+  }
+
+  onTreeExpanded(expanded: Character[]) {
+    console.log(`on tree expanded`);
+    console.log(expanded);
+  }
 }

@@ -1,27 +1,13 @@
-<!--<md-tree class="mat-elevation-z1" [dataSource]="dataSource">-->
-  <!--<md-tree-node *mdNodeContext="let characterData = node" (click)="nodeClicked(characterData)">-->
-    <!--{{characterData.name}} (villan).{{characterData.movie}}-->
-  <!--</md-tree-node>-->
-<!--</md-tree>-->
-
-<md-tree [dataSource]="dataSource">
-  <md-tree-node *mdNodeContext="let characterData = node">
-    <md-icon *ngIf="characterData.expandable" (click)="characterData.expanded = !characterData.expanded">{{characterData.expanded ? 'expand_less' : 'expand_more'}}</md-icon>
-    <div [style.padding-left]="getPadding(characterData.level)">
-      <md-icon *ngIf="characterData.data.icon">{{characterData.data.icon}}</md-icon>
-      {{characterData.data.name}} ({{characterData.data.movie}})
-    </div>
-  </md-tree-node>
+<md-tree [treeModel]="treeModel" (clickChange)="onTreeClicked($event)" (selectChange)="onTreeSelected" (expandChange)="onTreeExpanded($event)">
+  <div *mdNodeContext="let node = node" [style.padding-left]="getPadding(node.level)" (click)="customerClickAction($event)">
+    <md-checkbox [checked]="node.selected" (change)="node.select()"></md-checkbox>
+    <md-icon *ngIf="node.loading" class="sync-icon">sync</md-icon>
+    <md-icon *ngIf="node.expandable" (click)="node.expand()" class="expand-icon">{{node.expanded ? 'arrow_drop_up' : 'arrow_drop_down'}}</md-icon>
+    <span (click)="node.select()" [ngClass]="node.selected ? 'selected-node' : 'unselected-node'">{{node.data.name}}</span>
+    <span>{{node.data.movie}}</span>
+  </div>
 </md-tree>
 
-<!--<hr>-->
-<!--<ng-template #greet><span>Hello</span></ng-template>-->
-<!--<ng-template #eng let-name="text" let-children="items">-->
-  <!--<div>Hello {{name}}!</div>-->
-<!--</ng-template>-->
-<!--<ng-template #svk let-person="localSk"><span>Ahoj {{person}}!</span></ng-template>-->
 
-
-<!--<button (click)="changeTemplate(1)">0 </button>-->
-<!--<button (click)="changeTemplate(2)">1 </button>-->
-<!--<button (click)="changeTemplate(3)">2 </button>-->
+<!-- TreeModel => , TreeNodeModel =>  Node data: isSelected, isLoading, isExpandable, isExpanded, expand(), select()-->
+<!-- data: no children, hasChildren related. but it's possible => isLeaf -->

@@ -1,0 +1,18 @@
+<div tabindex="0" #node>
+  <ng-container [ngTemplateOutlet]="templateRef"
+                [ngOutletContext]="{
+                        node: treeNodeModel
+                      }">
+  </ng-container>
+</div>
+<div *ngIf="treeNodeModel.expanded">
+  <ul>
+    <li *ngFor="let child of treeNodeModel.children">
+      <md-tree-node [templateRef]="templateRef"
+                    [treeNodeModel]="child">
+
+      </md-tree-node>
+    </li>
+  </ul>
+
+</div>

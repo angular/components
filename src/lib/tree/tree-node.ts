@@ -2,154 +2,86 @@ import {
   AfterContentInit,
   Component,
   ContentChildren,
+  Directive,
+  ElementRef,
   Inject,
   Input,
   OnInit,
+  OnDestroy,
   QueryList,
+  Renderer,
   ViewChild,
   forwardRef,
+  TemplateRef,
 Output, EventEmitter
 } from '@angular/core';
-import {PortalHostDirective} from '../core';
-import {MdTree} from './tree';
-import {TreeNodeModel} from './tree-node-model';
+import {Subscription} from 'rxjs/Subscription';
+import {PortalHostDirective, FocusOriginMonitor, MdRipple, RippleRef} from '../core';
+import {MdTree, MdNodeContext} from './tree';
+import {TreeNodeModel, TreeModel} from './tree-model';
 
 @Component({
   selector: 'md-tree-node',
-  host: {
-  },
-  templateUrl: 'tree-node.html',
+  templateUrl: './tree-node.html',
   styleUrls: ['tree-node.css']
 })
-export class MdTreeNode implements OnInit, AfterContentInit {
+export class MdTreeNode implements OnInit, OnDestroy {
 
-  @ViewChild(PortalHostDirective) portalHost: PortalHostDirective;
+  @Input() templateRef: TemplateRef<MdNodeContext>;
+  @Input() treeNodeModel: TreeNodeModel<any>;
 
-  @ContentChildren(MdTreeNode) _treeNodes: QueryList<MdTreeNode>;
+  constructor(private _elementRef: ElementRef, private _renderer: Renderer,
+              private _focusOriginMonitor: FocusOriginMonitor) {
 
-  get children() {
-    return this._treeNodes.filter((node) => node.key != this.key);
+    this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true)
+      .subscribe((focusOrigin) => console.log(focusOrigin));
+
   }
 
-  get node() {
-    return this._treeNodes ? this._treeNodes.first : null;
+  ngAfterViewInit() {}
+
+  // Selection related
+  select() {
+    this.treeNodeModel.select();
   }
 
-  get isLeaf() {
-    return this.children.length == 0;
+  get isSelected() {
+    return this.treeNodeModel.selected;
   }
 
-  model: TreeNodeModel;
-
-  @Output()
-  selectChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-  @Output()
-  expandChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-  constructor(@Inject(forwardRef(() => MdTree))private tree: MdTree) {}
-
-  ngOnInit() {
-    this.selected = this.tree.selectedKeys.indexOf(this.key) >= 0;
-    this.expanded = this.tree.expandedKeys.indexOf(this.key) >= 0;
+  // Expansion related
+  get isExpanded() {
+    return this.treeNodeModel.expanded;
   }
 
-  ngAfterContentInit() {
-    this.portalHost.attach(this.tree.nodeTemplate).instance.node = this.node;
-
-    this.children.forEach(node => node.setParent(this));
+  get isExpandable() {
+    return this.treeNodeModel.expandable;
   }
 
-  _parent: MdTreeNode;
-  setParent(node: MdTreeNode) {
-    this._parent = node;
+  expand() {
+    this.treeNodeModel.expand();
   }
 
-  @Input()
-  key: string;
-
-  @Input()
-  disabled: boolean;
-
-  @Input()
-  title: string;
-
-  _selected: boolean = false;
-
-  @Input()
-  get selected() {
-    return this._selected;
-  }
-  set selected(value: boolean) {
-    if (this._selected != value) {
-      this._selected = value;
-      this.selectChange.emit(value);
-      this._updateTreeSelected(this.tree.selectChildren);
-    }
+  onClick() {
+    console.log(`onNode clicked ${this.treeNodeModel.data}`);
+    this.expand();
   }
 
-  _expanded: boolean = false;
+  onFocus() {
+    console.log(`on node focus`);
 
-  @Input()
-  get expanded() {
-    return this._expanded;
-  }
-  set expanded(value: boolean) {
-    if (this._expanded != value) {
-      this._expanded = value;
-      this.expandChange.emit(value);
-      this._updateTreeExpanded();
-    }
   }
 
-  toggleExpand() {
-    if (!this.disabled && !this.tree.disabled) {
-      this.expanded = !this._expanded;
-    }
+  ngOnInit() {}
+
+  ngOnDestroy() {
+    this._focusOriginMonitor.stopMonitoring(this._elementRef.nativeElement);
   }
 
-  toggleSelect() {
-    if (!this.disabled && !this.tree.disabled) {
-      this.selected = !this.selected;
-    }
-  }
+  //
+  // // Only for node hmtl
+  // getPadding(level: number) {
+  //   return this.treeNodeModel.isFlatTree ? `${level  *  20}px` : '0';
+  // }
 
-  _updateTreeSelected(updateChildren: boolean) {
-    this.tree.updateSelected(this.key, this.selected);
-
-    if (updateChildren) {
-
-      this.children.forEach((node) => node.selected = this.selected);
-    } else if (this.tree.selectChildren) {
-      if (this._parent) {
-        let shouldSelect = (this._parent.children.filter(node => node.selected == false).length == 0);
-        if (shouldSelect != this._parent.selected) {
-          this._parent._selected = shouldSelect;
-          this._parent._updateTreeSelected(false);
-        }
-      }
-    }
-  }
-
-  _updateTreeExpanded() {
-    this.tree.updateExpanded(this.key, this.expanded);
-    if (!this.expanded) {
-      // Collapse all children
-      this.children.forEach((node) => node.expanded = false);
-    }
-  }
-
-  findKey(key: string): MdTreeNode {
-    if (this.key == key) {
-      return this;
-    }
-    let result: MdTreeNode = null;
-    this.children.forEach((node) => {
-        let found = node.findKey(key);
-        if (found) {
-          result = found;
-        }
-      });
-    return result;
-  }
 }
