@@ -128,12 +128,11 @@ export class MdListItem implements AfterContentInit {
   private _disableRipple: boolean = false;
   private _isNavList: boolean = false;
 
-  // Variable needs to be public for AOT compilation.
   _hasFocus: boolean = false;
 
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
-   * part of a nav list. The value of `disableRipple` on the `md-nav-list` overwrites this flag.
+   * part of a nav list. The value of `disableRipple` on the `md-nav-list` overrides this flag.
    */
   @Input()
   get disableRipple() { return this._disableRipple; }
