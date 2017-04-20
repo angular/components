@@ -74,6 +74,13 @@ export abstract class DateAdapter<D> {
   abstract getFirstDayOfWeek(): number;
 
   /**
+   * Clones the given date.
+   * @param date The date to clone
+   * @returns A new date equal to the given date.
+   */
+  abstract clone(date: D): D;
+
+  /**
    * Creates a date with the given year, month, and date.
    * @param year The full year of the date. (e.g. 89 means the year 89, not the year 1989).
    * @param month The month of the date (0-indexed, 0 = January). If `month` is less than 0 or
@@ -141,15 +148,6 @@ export abstract class DateAdapter<D> {
    */
   setLocale(locale: any) {
     this.locale = locale;
-  }
-
-  /**
-   * Clones the given date.
-   * @param date The date to clone
-   * @returns A new date equal to the given date.
-   */
-  clone(date: D): D {
-    return this.createDate(this.getYear(date), this.getMonth(date), this.getDate(date));
   }
 
   /**

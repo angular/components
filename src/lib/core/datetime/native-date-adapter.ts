@@ -6,6 +6,29 @@ import {DateAdapter} from './date-adapter';
 const SUPPORTS_INTL_API = typeof Intl != 'undefined';
 
 
+/** The default month names to use if Intl API is not available. */
+const DEFAULT_MONTH_NAMES = {
+  'long': [
+    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+    'October', 'November', 'December'
+  ],
+  'short': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  'narrow': ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
+};
+
+
+/** The default date names to use if Intl API is not available. */
+const DEFAULT_DATE_NAMES = range(31, i => String(i + 1));
+
+
+/** The default day of the week names to use if Intl API is not available. */
+const DEFAULT_DAY_OF_WEEK_NAMES = {
+  'long': ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  'short': ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  'narrow': ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+};
+
+
 /** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {
   return Array.apply(null, Array(length)).map((v: undefined, i: number) => valueFunction(i));
@@ -35,14 +58,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
       let dtf = new Intl.DateTimeFormat(this.locale, {month: style});
       return range(12, i => dtf.format(new Date(2017, i, 1)));
     }
-    return {
-      'long': [
-        'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-        'October', 'November', 'December'
-      ],
-      'short': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      'narrow': ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
-    }[style];
+    return DEFAULT_MONTH_NAMES[style];
   }
 
   getDateNames(): string[] {
@@ -50,7 +66,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
       let dtf = new Intl.DateTimeFormat(this.locale, {day: 'numeric'});
       return range(31, i => dtf.format(new Date(2017, 0, i + 1)));
     }
-    return range(31, i => String(i + 1));
+    return DEFAULT_DATE_NAMES;
   }
 
   getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[] {
@@ -58,11 +74,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
       let dtf = new Intl.DateTimeFormat(this.locale, {weekday: style});
       return range(7, i => dtf.format(new Date(2017, 0, i + 1)));
     }
-    return {
-      'long': ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-      'short': ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      'narrow': ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-    }[style];
+    return DEFAULT_DAY_OF_WEEK_NAMES[style];
   }
 
   getYearName(date: Date): string {
@@ -85,6 +97,10 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   getFirstDayOfWeek(): number {
     // We can't tell using native JS Date what the first day of the week is, we default to Sunday.
     return 0;
+  }
+
+  clone(date: Date): Date {
+    return this.createDate(this.getYear(date), this.getMonth(date), this.getDate(date));
   }
 
   createDate(year: number, month: number, date: number): Date {
