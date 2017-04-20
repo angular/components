@@ -8,7 +8,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {MdCalendarCell} from './calendar-body';
-import {DateAdapter} from '../core/datetime';
+import {DateAdapter} from '../core/datetime/index';
 
 
 const DAYS_PER_WEEK = 7;

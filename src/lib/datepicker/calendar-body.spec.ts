@@ -1,8 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
-import {MdCalendarCell, MdCalendarBody} from './calendar-body';
+import {MdCalendarBody, MdCalendarCell} from './calendar-body';
 import {By} from '@angular/platform-browser';
-import {SimpleDate} from '../core/datetime/simple-date';
 
 
 describe('MdCalendarBody', () => {
@@ -167,7 +166,7 @@ class CalendarBodyWithDisabledCells {
     return cell;
   }));
   allowDisabledSelection = false;
-  selected: SimpleDate;
+  selected: Date;
 }
 
 

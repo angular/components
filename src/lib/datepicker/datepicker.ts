@@ -29,7 +29,7 @@ import {MdDatepickerInput} from './datepicker-input';
 import 'rxjs/add/operator/first';
 import {Subscription} from 'rxjs/Subscription';
 import {MdDialogConfig} from '../dialog/dialog-config';
-import {DateAdapter} from '../core/datetime';
+import {DateAdapter} from '../core/datetime/index';
 
 
 /** Used to generate a unique ID for each datepicker instance. */

@@ -18,7 +18,7 @@ import {
   RIGHT_ARROW,
   UP_ARROW
 } from '../core/keyboard/keycodes';
-import {DateAdapter} from '../core/datetime';
+import {DateAdapter} from '../core/datetime/index';
 import {MdDatepickerL10n} from './datepicker-l10n';
 
 

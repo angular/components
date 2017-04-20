@@ -2,7 +2,6 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdMonthView} from './month-view';
-import {SimpleDate} from '../core/datetime/simple-date';
 import {MdCalendarBody} from './calendar-body';
 import {DatetimeModule} from '../core/datetime/index';
 
@@ -56,7 +55,7 @@ describe('MdMonthView', () => {
     });
 
     it('does not show selected date if in different month', () => {
-      testComponent.selected = new SimpleDate(2017, 2, 10);
+      testComponent.selected = new Date(2017, 2, 10);
       fixture.detectChanges();
 
       let selectedEl = monthViewNativeElement.querySelector('.mat-calendar-body-selected');
@@ -106,8 +105,8 @@ describe('MdMonthView', () => {
   template: `<md-month-view [activeDate]="date" [(selected)]="selected"></md-month-view>`,
 })
 class StandardMonthView {
-  date = new SimpleDate(2017, 0, 5);
-  selected = new SimpleDate(2017, 0, 10);
+  date = new Date(2017, 0, 5);
+  selected = new Date(2017, 0, 10);
 }
 
 
@@ -115,7 +114,7 @@ class StandardMonthView {
   template: `<md-month-view activeDate="1/1/2017" [dateFilter]="dateFilter"></md-month-view>`
 })
 class MonthViewWithDateFilter {
-  dateFilter(date: SimpleDate) {
-    return date.date % 2 == 0;
+  dateFilter(date: Date) {
+    return date.getDate() % 2 == 0;
   }
 }

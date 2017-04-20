@@ -2,7 +2,6 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdYearView} from './year-view';
-import {SimpleDate} from '../core/datetime/simple-date';
 import {MdCalendarBody} from './calendar-body';
 import {DatetimeModule} from '../core/datetime/index';
 
@@ -56,7 +55,7 @@ describe('MdYearView', () => {
     });
 
     it('does not show selected month if in different year', () => {
-      testComponent.selected = new SimpleDate(2016, 2, 10);
+      testComponent.selected = new Date(2016, 2, 10);
       fixture.detectChanges();
 
       let selectedEl = yearViewNativeElement.querySelector('.mat-calendar-body-selected');
@@ -107,8 +106,8 @@ describe('MdYearView', () => {
     <md-year-view [activeDate]="date" [(selected)]="selected"></md-year-view>`,
 })
 class StandardYearView {
-  date = new SimpleDate(2017, 0, 5);
-  selected = new SimpleDate(2017, 2, 10);
+  date = new Date(2017, 0, 5);
+  selected = new Date(2017, 2, 10);
 }
 
 
@@ -116,11 +115,11 @@ class StandardYearView {
   template: `<md-year-view date="1/1/2017" [dateFilter]="dateFilter"></md-year-view>`
 })
 class YearViewWithDateFilter {
-  dateFilter(date: SimpleDate) {
-    if (date.month == 0) {
-      return date.date == 10;
+  dateFilter(date: Date) {
+    if (date.getMonth() == 0) {
+      return date.getDate() == 10;
     }
-    if (date.month == 1) {
+    if (date.getMonth() == 1) {
       return false;
     }
     return true;

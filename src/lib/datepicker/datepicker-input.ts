@@ -14,7 +14,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import {MdInputContainer} from '../input/input-container';
 import {DOWN_ARROW} from '../core/keyboard/keycodes';
-import {DateAdapter} from '../core/datetime';
+import {DateAdapter} from '../core/datetime/index';
 
 
 export const MD_DATEPICKER_VALUE_ACCESSOR: any = {

@@ -11,6 +11,6 @@ export class DatepickerDemo {
   date: Date;
   touch = false;
   dateFilter =
-      (date: Date) => !this._blacklistedMonths.has(date.getMonth()) && date.getDate() % 2 == 0;
+      (date: Date) => !this._blacklistedMonths.has(date.getMonth()) && date.getDate() % 2 == 0
   private _blacklistedMonths = new Set([2, 3]);
 }
