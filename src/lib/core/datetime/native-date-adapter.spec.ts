@@ -125,6 +125,11 @@ describe('NativeDateAdapter', () => {
     expect(adapter.getFirstDayOfWeek()).toBe(0);
   });
 
+  it('should get default formats', () => {
+    let dtf = new Intl.DateTimeFormat('en-US', adapter.getDefaultFormats().date);
+    expect(dtf.format(new Date(2017, 1, 1))).toEqual('2/1/2017');
+  });
+
   it('should create Date', () => {
     expect(adapter.createDate(2017, JAN, 1)).toEqual(new Date(2017, JAN, 1));
   });

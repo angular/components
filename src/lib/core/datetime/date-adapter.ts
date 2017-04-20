@@ -74,6 +74,13 @@ export abstract class DateAdapter<D> {
   abstract getFirstDayOfWeek(): number;
 
   /**
+   * Gets a set of default formats to use for displaying the date in different contexts.
+   * @returns An object with the following default formats:
+   *     - date: The default format for showing just the date without any time information.
+   */
+  abstract getDefaultFormats(): {date: any};
+
+  /**
    * Clones the given date.
    * @param date The date to clone
    * @returns A new date equal to the given date.
