@@ -8,6 +8,11 @@ import {buildPackageBundles, composeRelease} from './package-build';
 // There are no type definitions available for these imports.
 const inlineResources = require('../../../scripts/release/inline-resources');
 
+/**
+ * Creates a set of gulp tasks that can build the specified package.
+ * @param packageName Name of the package. Needs to be similar to the directory name in `src/`.
+ * @param requiredPackages Required packages that will be built before building the current package.
+ */
 export function createPackageBuildTasks(packageName: string, requiredPackages: string[] = [], ) {
   // To avoid refactoring of the project the package material will map to the source path `lib/`.
   const packageRoot = join(SOURCE_ROOT, packageName === 'material' ? 'lib' : packageName);

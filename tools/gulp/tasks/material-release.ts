@@ -32,18 +32,18 @@ task('material:build-release', ['material:prepare-release'], () => composeReleas
  */
 task('material:prepare-release', sequenceTask(
   'material:build',
-  ['material:prebuilt-themes', 'material:theming-scss']
+  ['material:copy-prebuilt-themes', 'material:bundle-theming-scss']
 ));
 
 /** Copies all prebuilt themes into the release package under `prebuilt-themes/` */
-task('material:prebuilt-themes', () => {
+task('material:copy-prebuilt-themes', () => {
   src(prebuiltThemeGlob)
     .pipe(gulpRename({dirname: ''}))
     .pipe(dest(join(releasePath, 'prebuilt-themes')));
 });
 
 /** Bundles all scss requires for theming into a single scss file in the root of the package. */
-task('material:theming-scss', () => {
+task('material:bundle-theming-scss', () => {
   // Instantiates the SCSS bundler and bundles all imports of the specified entry point SCSS file.
   // A glob of all SCSS files in the library will be passed to the bundler. The bundler takes an
   // array of globs, which will match SCSS files that will be only included once in the bundle.
