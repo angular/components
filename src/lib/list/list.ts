@@ -14,6 +14,7 @@ import {
   AfterContentInit,
 } from '@angular/core';
 import {MdLine, MdLineSetter} from '../core';
+import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 
 @Directive({
   selector: 'md-divider, mat-divider'
@@ -142,6 +143,14 @@ export class MdListItem implements AfterContentInit {
   @Input() disableRipple: boolean = false;
   _hasFocus: boolean = false;
 
+  /** Whether on click should be disabled. */
+  _disabled: boolean = false;
+
+  /** Whether the component is disabled. */
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value) ? true : null; }
+
   private _lineSetter: MdLineSetter;
 
   @ContentChildren(MdLine) _lines: QueryList<MdLine>;
@@ -161,7 +170,8 @@ export class MdListItem implements AfterContentInit {
 
   /** Whether this list item should show a ripple effect when clicked.  */
   isRippleEnabled() {
-    return !this.disableRipple && (this._listType === NAV_LIST_TYPE);
+    // considering the disabled flag
+    return !this.disableRipple && (this._listType === NAV_LIST_TYPE) && !this.disabled;
   }
 
   _handleFocus() {

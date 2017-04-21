@@ -179,7 +179,7 @@ $mat-dense-list-icon-size: 20px;
     color: inherit;
   }
 
-  .mat-list-item-content {
+  .mat-list-item-content:not(.mat-list-item-disabled) {
     cursor: pointer;
 
     &:hover, &.mat-list-item-focus {
