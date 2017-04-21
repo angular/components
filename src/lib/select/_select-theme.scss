@@ -20,7 +20,7 @@
   }
 
   .mat-select-underline {
-    background-color: mat-color($foreground, divider);
+    border-color: mat-color($foreground, divider);
 
     .mat-select:focus:not(.mat-select-disabled) & {
       background-color: mat-color($primary);

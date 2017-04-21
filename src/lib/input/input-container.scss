@@ -1,35 +1,16 @@
 @import '../core/style/variables';
 @import '../core/style/vendor-prefixes';
 @import '../core/style/form-common';
-
-
-$mat-input-floating-placeholder-scale-factor: 0.75 !default;
-$mat-input-wrapper-spacing: 1em !default;
-$mat-input-hint-min-space: 10px !default;
+@import '../core/style/input-common';
+@import '../core/style/list-common';
 
 // Gradient for showing the dashed line when the input is disabled.
 $mat-input-underline-disabled-background-image:
     linear-gradient(to right, rgba(0, 0, 0, 0.26) 0%, rgba(0, 0, 0, 0.26) 33%, transparent 0%);
-
-// Applies a floating placeholder above the input itself.
-@mixin mat-input-placeholder-floating {
-  display: block;
-  transform: translateY(-1.35em) scale($mat-input-floating-placeholder-scale-factor);
-  width: 100% / $mat-input-floating-placeholder-scale-factor;
-}
+$mat-input-placeholder-float-translate: -1.35em;
 
 .mat-input-container {
-  display: inline-block;
-  position: relative;
-  font-family: $mat-font-family;
-  line-height: normal;
-
-  // To avoid problems with text-align.
-  text-align: left;
-
-  [dir='rtl'] & {
-    text-align: right;
-  }
+  @include mat-input-base();
 
   // Allow icons in a prefix/suffix/hint/etc to adapt to the correct size.
   & .mat-icon {
@@ -40,14 +21,6 @@ $mat-input-underline-disabled-background-image:
   }
 }
 
-// Global wrapper. We need to apply margin to the element for spacing, but
-// cannot apply it to the host element directly.
-.mat-input-wrapper {
-  margin: $mat-input-wrapper-spacing 0;
-  // Account for the underline which has 4px of margin + 2px of border.
-  padding-bottom: 6px;
-}
-
 // We use a table layout to baseline align the prefix and suffix classes.
 // The underline is outside of it so it can cover all of the elements under
 // this table.
@@ -56,7 +29,6 @@ $mat-input-underline-disabled-background-image:
 .mat-input-table {
   display: inline-table;
   flex-flow: column;
-  vertical-align: bottom;
   width: 100%;
 
   & > * {
@@ -109,7 +81,7 @@ $mat-input-underline-disabled-background-image:
   // classes take over to fulfill this behaviour.
   // Assumes the autofill is non-empty.
   &:-webkit-autofill + .mat-input-placeholder-wrapper .mat-float {
-    @include mat-input-placeholder-floating;
+    @include mat-input-placeholder-floating($mat-input-placeholder-float-translate);
     transition: none;
   }
 
@@ -138,9 +110,8 @@ $mat-input-underline-disabled-background-image:
   // Put ellipsis text overflow.
   width: 100%;
   display: none;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+
+  @include mat-truncate-line();
 
   transform: translateY(0);
   transform-origin: bottom left;
@@ -155,7 +126,7 @@ $mat-input-underline-disabled-background-image:
 
   // Show the placeholder above the input when it's not empty, or focused.
   &.mat-float:not(.mat-empty), .mat-focused &.mat-float {
-    @include mat-input-placeholder-floating;
+    @include mat-input-placeholder-floating($mat-input-placeholder-float-translate);
   }
 
   [dir='rtl'] & {
