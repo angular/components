@@ -1,15 +1,14 @@
 import {
-  Component,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  Input,
   AfterContentInit,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
   Output,
-  EventEmitter
+  ViewEncapsulation
 } from '@angular/core';
 import {MdCalendarCell} from './calendar-body';
-import {CalendarLocale} from '../core/datetime/calendar-locale';
-import {SimpleDate} from '../core/datetime/simple-date';
+import {DateAdapter} from '../core/datetime/index';
 
 
 /**
@@ -23,33 +22,33 @@ import {SimpleDate} from '../core/datetime/simple-date';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdYearView implements AfterContentInit {
+export class MdYearView<D> implements AfterContentInit {
   /** The date to display in this year view (everything other than the year is ignored). */
   @Input()
-  get activeDate() { return this._activeDate; }
-  set activeDate(value) {
+  get activeDate(): D { return this._activeDate; }
+  set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
-    this._activeDate = this._locale.parseDate(value) || SimpleDate.today();
-    if (oldActiveDate.year != this._activeDate.year) {
+    this._activeDate = this._dateAdapter.parse(value) || this._dateAdapter.today();
+    if (this._dateAdapter.getYear(oldActiveDate) != this._dateAdapter.getYear(this._activeDate)) {
       this._init();
     }
   }
-  private _activeDate = SimpleDate.today();
+  private _activeDate: D;
 
   /** The currently selected date. */
   @Input()
-  get selected() { return this._selected; }
-  set selected(value) {
-    this._selected = this._locale.parseDate(value);
+  get selected(): D { return this._selected; }
+  set selected(value: D) {
+    this._selected = this._dateAdapter.parse(value);
     this._selectedMonth = this._getMonthInCurrentYear(this.selected);
   }
-  private _selected: SimpleDate;
+  private _selected: D;
 
   /** A function used to filter which dates are selectable. */
-  @Input() dateFilter: (date: SimpleDate) => boolean;
+  @Input() dateFilter: (date: D) => boolean;
 
   /** Emits when a new month is selected. */
-  @Output() selectedChange = new EventEmitter<SimpleDate>();
+  @Output() selectedChange = new EventEmitter<D>();
 
   /** Grid of calendar cells representing the months of the year. */
   _months: MdCalendarCell[][];
@@ -66,7 +65,9 @@ export class MdYearView implements AfterContentInit {
    */
   _selectedMonth: number;
 
-  constructor(private _locale: CalendarLocale) {}
+  constructor(public _dateAdapter: DateAdapter<D>) {
+    this._activeDate = this._dateAdapter.today();
+  }
 
   ngAfterContentInit() {
     this._init();
@@ -74,32 +75,36 @@ export class MdYearView implements AfterContentInit {
 
   /** Handles when a new month is selected. */
   _monthSelected(month: number) {
-    this.selectedChange.emit(new SimpleDate(this.activeDate.year, month, this._activeDate.date));
+    this.selectedChange.emit(this._dateAdapter.createDate(
+        this._dateAdapter.getYear(this.activeDate), month,
+        this._dateAdapter.getDate(this.activeDate)));
   }
 
   /** Initializes this month view. */
   private _init() {
     this._selectedMonth = this._getMonthInCurrentYear(this.selected);
-    this._todayMonth = this._getMonthInCurrentYear(SimpleDate.today());
-    this._yearLabel = this._locale.getCalendarYearHeaderLabel(this.activeDate);
+    this._todayMonth = this._getMonthInCurrentYear(this._dateAdapter.today());
+    this._yearLabel = this._dateAdapter.getYearName(this.activeDate);
 
+    let monthNames = this._dateAdapter.getMonthNames('short');
     // First row of months only contains 5 elements so we can fit the year label on the same row.
     this._months = [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9, 10, 11]].map(row => row.map(
-        month => this._createCellForMonth(month)));
+        month => this._createCellForMonth(month, monthNames[month])));
   }
 
   /**
    * Gets the month in this year that the given Date falls on.
    * Returns null if the given Date is in another year.
    */
-  private _getMonthInCurrentYear(date: SimpleDate) {
-    return date && date.year == this.activeDate.year ? date.month : null;
+  private _getMonthInCurrentYear(date: D) {
+    return date && this._dateAdapter.getYear(date) == this._dateAdapter.getYear(this.activeDate) ?
+        this._dateAdapter.getMonth(date) : null;
   }
 
   /** Creates an MdCalendarCell for the given month. */
-  private _createCellForMonth(month: number) {
+  private _createCellForMonth(month: number, monthName: string) {
     return new MdCalendarCell(
-        month, this._locale.shortMonths[month].toLocaleUpperCase(), this._isMonthEnabled(month));
+        month, monthName.toLocaleUpperCase(), this._isMonthEnabled(month));
   }
 
   /** Whether the given month is enabled. */
@@ -108,9 +113,12 @@ export class MdYearView implements AfterContentInit {
       return true;
     }
 
+    let firstOfMonth = this._dateAdapter.createDate(
+        this._dateAdapter.getYear(this.activeDate), month, 1);
+
     // If any date in the month is enabled count the month as enabled.
-    for (let date = new SimpleDate(this.activeDate.year, month, 1); date.month === month;
-         date = date.add({days: 1})) {
+    for (let date = firstOfMonth; this._dateAdapter.getMonth(date) == month;
+         date = this._dateAdapter.addCalendarDays(date, 1)) {
       if (this.dateFilter(date)) {
         return true;
       }

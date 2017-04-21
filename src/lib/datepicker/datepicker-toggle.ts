@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
 import {MdDatepicker} from './datepicker';
-import {CalendarLocale} from '../core/datetime/calendar-locale';
+import {MdDatepickerIntl} from './datepicker-intl';
 
 
 @Component({
@@ -10,20 +10,20 @@ import {CalendarLocale} from '../core/datetime/calendar-locale';
   styleUrls: ['datepicker-toggle.css'],
   host: {
     '[class.mat-datepicker-toggle]': 'true',
-    '[attr.aria-label]': '_locale.openCalendarLabel',
+    '[attr.aria-label]': '_intl.openCalendarLabel',
     '(click)': '_open($event)',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdDatepickerToggle {
-  @Input('mdDatepickerToggle') datepicker: MdDatepicker;
+export class MdDatepickerToggle<D> {
+  @Input('mdDatepickerToggle') datepicker: MdDatepicker<D>;
 
   @Input('matDatepickerToggle')
   get _datepicker() { return this.datepicker; }
-  set _datepicker(v: MdDatepicker) { this.datepicker = v; }
+  set _datepicker(v: MdDatepicker<D>) { this.datepicker = v; }
 
-  constructor(public _locale: CalendarLocale) {}
+  constructor(public _intl: MdDatepickerIntl) {}
 
   _open(event: Event): void {
     if (this.datepicker) {

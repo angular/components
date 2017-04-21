@@ -11,12 +11,10 @@ import {
 } from '@angular/core';
 import {MdDatepicker} from './datepicker';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {SimpleDate} from '../core/datetime/simple-date';
-import {CalendarLocale} from '../core/datetime/calendar-locale';
 import {Subscription} from 'rxjs/Subscription';
 import {MdInputContainer} from '../input/input-container';
 import {DOWN_ARROW} from '../core/keyboard/keycodes';
-import {Observable} from 'rxjs/Observable';
+import {DateAdapter} from '../core/datetime/index';
 
 
 export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -34,58 +32,56 @@ export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
     '[attr.aria-expanded]': '_datepicker?.opened || "false"',
     '[attr.aria-haspopup]': 'true',
     '[attr.aria-owns]': '_datepicker?.id',
-    '[min]': '_min?.toNativeDate()',
-    '[max]': '_max?.toNativeDate()',
+    '[min]': '_min',
+    '[max]': '_max',
     '(input)': '_onInput($event.target.value)',
     '(blur)': '_onTouched()',
     '(keydown)': '_onKeydown($event)',
   }
 })
-export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor, OnDestroy {
+export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy {
   /** The datepicker that this input is associated with. */
   @Input()
-  set mdDatepicker(value: MdDatepicker) {
+  set mdDatepicker(value: MdDatepicker<D>) {
     if (value) {
       this._datepicker = value;
       this._datepicker._registerInput(this);
     }
   }
-  _datepicker: MdDatepicker;
+  _datepicker: MdDatepicker<D>;
 
   @Input()
-  set matDatepicker(value: MdDatepicker) { this.mdDatepicker = value; }
+  set matDatepicker(value: MdDatepicker<D>) { this.mdDatepicker = value; }
 
   /** The value of the input. */
   @Input()
-  get value(): SimpleDate {
-    return this._locale.parseDate(this._elementRef.nativeElement.value);
+  get value(): D {
+    return this._dateAdapter.parse(this._elementRef.nativeElement.value);
   }
-  set value(value: SimpleDate) {
-    let date = this._locale.parseDate(value);
+  set value(value: D) {
+    let date = this._dateAdapter.parse(value);
     let oldDate = this.value;
     this._renderer.setElementProperty(this._elementRef.nativeElement, 'value',
-        date ? this._locale.formatDate(date) : '');
-    if (!SimpleDate.equals(oldDate, date)) {
-      this._valueChangeEmitter.emit(date);
+        date ? this._dateAdapter.format(date) : '');
+    if (!this._dateAdapter.sameDate(oldDate, date)) {
+      this._valueChange.emit(date);
     }
   }
 
   /** The minimum valid date. */
   @Input()
-  get min(): SimpleDate { return this._min; }
-  set min(value: SimpleDate) { this._min = this._locale.parseDate(value); }
-  private _min: SimpleDate;
+  get min(): D { return this._min; }
+  set min(value: D) { this._min = this._dateAdapter.parse(value); }
+  private _min: D;
 
   /** The maximum valid date. */
   @Input()
-  get max(): SimpleDate { return this._max; }
-  set max(value: SimpleDate) { this._max = this._locale.parseDate(value); }
-  private _max: SimpleDate;
-
-  private _valueChangeEmitter = new EventEmitter<SimpleDate>();
+  get max(): D { return this._max; }
+  set max(value: D) { this._max = this._dateAdapter.parse(value); }
+  private _max: D;
 
   /** Emits when the value changes (either due to user input or programmatic change). */
-  _valueChange: Observable<SimpleDate> = this._valueChangeEmitter.asObservable();
+  _valueChange = new EventEmitter<D>();
 
   _onChange = (value: any) => {};
 
@@ -96,13 +92,13 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
   constructor(
       private _elementRef: ElementRef,
       private _renderer: Renderer,
-      private _locale: CalendarLocale,
+      private _dateAdapter: DateAdapter<D>,
       @Optional() private _mdInputContainer: MdInputContainer) {}
 
   ngAfterContentInit() {
     if (this._datepicker) {
       this._datepickerSubscription =
-          this._datepicker.selectedChanged.subscribe((selected: SimpleDate) => {
+          this._datepicker.selectedChanged.subscribe((selected: D) => {
             this.value = selected;
             this._onChange(selected);
           });
@@ -124,7 +120,7 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
   }
 
   // Implemented as part of ControlValueAccessor
-  writeValue(value: SimpleDate): void {
+  writeValue(value: D): void {
     this.value = value;
   }
 
@@ -151,8 +147,8 @@ export class MdDatepickerInput implements AfterContentInit, ControlValueAccessor
   }
 
   _onInput(value: string) {
-    let date = this._locale.parseDate(value);
+    let date = this._dateAdapter.parse(value);
     this._onChange(date);
-    this._valueChangeEmitter.emit(date);
+    this._valueChange.emit(date);
   }
 }
