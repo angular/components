@@ -1,64 +1,63 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
-import {MdCalendarCell, MdCalendarBody} from './calendar-body';
+import {MdCalendarBody, MdCalendarCell} from './calendar-body';
 import {By} from '@angular/platform-browser';
-import {SimpleDate} from '../core/datetime/simple-date';
 
 
-describe('MdCalendarTable', () => {
+describe('MdCalendarBody', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
         MdCalendarBody,
 
         // Test components.
-        StandardCalendarTable,
-        CalendarTableWithDisabledCells,
+        StandardCalendarBody,
+        CalendarBodyWithDisabledCells,
       ],
     });
 
     TestBed.compileComponents();
   }));
 
-  describe('standard calendar table', () => {
-    let fixture: ComponentFixture<StandardCalendarTable>;
-    let testComponent: StandardCalendarTable;
-    let calendarTableNativeElement: Element;
+  describe('standard calendar body', () => {
+    let fixture: ComponentFixture<StandardCalendarBody>;
+    let testComponent: StandardCalendarBody;
+    let calendarBodyNativeElement: Element;
     let rowEls: NodeListOf<Element>;
     let labelEls: NodeListOf<Element>;
     let cellEls: NodeListOf<Element>;
 
     let refreshElementLists = () => {
-      rowEls = calendarTableNativeElement.querySelectorAll('tr');
-      labelEls = calendarTableNativeElement.querySelectorAll('.mat-calendar-body-label');
-      cellEls = calendarTableNativeElement.querySelectorAll('.mat-calendar-body-cell');
+      rowEls = calendarBodyNativeElement.querySelectorAll('tr');
+      labelEls = calendarBodyNativeElement.querySelectorAll('.mat-calendar-body-label');
+      cellEls = calendarBodyNativeElement.querySelectorAll('.mat-calendar-body-cell');
     };
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(StandardCalendarTable);
+      fixture = TestBed.createComponent(StandardCalendarBody);
       fixture.detectChanges();
 
-      let calendarTableDebugElement = fixture.debugElement.query(By.directive(MdCalendarBody));
-      calendarTableNativeElement = calendarTableDebugElement.nativeElement;
+      let calendarBodyDebugElement = fixture.debugElement.query(By.directive(MdCalendarBody));
+      calendarBodyNativeElement = calendarBodyDebugElement.nativeElement;
       testComponent = fixture.componentInstance;
 
       refreshElementLists();
     });
 
-    it('creates table', () => {
+    it('creates body', () => {
       expect(rowEls.length).toBe(3);
       expect(labelEls.length).toBe(1);
       expect(cellEls.length).toBe(14);
     });
 
     it('highlights today', () => {
-      let todayCell = calendarTableNativeElement.querySelector('.mat-calendar-body-today');
+      let todayCell = calendarBodyNativeElement.querySelector('.mat-calendar-body-today');
       expect(todayCell).not.toBeNull();
       expect(todayCell.innerHTML.trim()).toBe('3');
     });
 
     it('highlights selected', () => {
-      let selectedCell = calendarTableNativeElement.querySelector('.mat-calendar-body-selected');
+      let selectedCell = calendarBodyNativeElement.querySelector('.mat-calendar-body-selected');
       expect(selectedCell).not.toBeNull();
       expect(selectedCell.innerHTML.trim()).toBe('4');
     });
@@ -79,7 +78,7 @@ describe('MdCalendarTable', () => {
 
     it('cell should be selected on click', () => {
       let todayElement =
-          calendarTableNativeElement.querySelector('.mat-calendar-body-today') as HTMLElement;
+          calendarBodyNativeElement.querySelector('.mat-calendar-body-today') as HTMLElement;
       todayElement.click();
       fixture.detectChanges();
 
@@ -93,20 +92,20 @@ describe('MdCalendarTable', () => {
     });
   });
 
-  describe('calendar table with disabled cells', () => {
-    let fixture: ComponentFixture<CalendarTableWithDisabledCells>;
-    let testComponent: CalendarTableWithDisabledCells;
-    let calendarTableNativeElement: Element;
+  describe('calendar body with disabled cells', () => {
+    let fixture: ComponentFixture<CalendarBodyWithDisabledCells>;
+    let testComponent: CalendarBodyWithDisabledCells;
+    let calendarBodyNativeElement: Element;
     let cellEls: NodeListOf<Element>;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(CalendarTableWithDisabledCells);
+      fixture = TestBed.createComponent(CalendarBodyWithDisabledCells);
       fixture.detectChanges();
 
-      let calendarTableDebugElement = fixture.debugElement.query(By.directive(MdCalendarBody));
-      calendarTableNativeElement = calendarTableDebugElement.nativeElement;
+      let calendarBodyDebugElement = fixture.debugElement.query(By.directive(MdCalendarBody));
+      calendarBodyNativeElement = calendarBodyDebugElement.nativeElement;
       testComponent = fixture.componentInstance;
-      cellEls = calendarTableNativeElement.querySelectorAll('.mat-calendar-body-cell');
+      cellEls = calendarBodyNativeElement.querySelectorAll('.mat-calendar-body-cell');
     });
 
     it('should only allow selection of disabled cells when allowDisabledSelection is true', () => {
@@ -139,7 +138,7 @@ describe('MdCalendarTable', () => {
                     (selectedValueChange)="onSelect($event)">
              </table>`,
 })
-class StandardCalendarTable {
+class StandardCalendarBody {
   label = 'Jan 2017';
   rows = [[1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11, 12, 13, 14]].map(r => r.map(createCell));
   todayValue = 3;
@@ -160,14 +159,14 @@ class StandardCalendarTable {
                     (selectedValueChange)="selected = $event">
              </table>`
 })
-class CalendarTableWithDisabledCells {
+class CalendarBodyWithDisabledCells {
   rows = [[1, 2, 3, 4]].map(r => r.map(d => {
     let cell = createCell(d);
     cell.enabled = d % 2 == 0;
     return cell;
   }));
   allowDisabledSelection = false;
-  selected: SimpleDate;
+  selected: Date;
 }
 
 

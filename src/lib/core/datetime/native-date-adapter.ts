@@ -99,6 +99,11 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return 0;
   }
 
+  getNumDaysInMonth(date: Date): number {
+    return this.getDate(this._createDateWithOverflow(
+        this.getYear(date), this.getMonth(date) + 1, 0));
+  }
+
   getDefaultFormats(): {date: Object} {
     return {
       date: {
@@ -114,12 +119,20 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   }
 
   createDate(year: number, month: number, date: number): Date {
-    let result = new Date(year, month, date);
-    // We need to correct for the fact that JS native Date treats years in range [0, 99] as
-    // abbreviations for 19xx.
-    if (year >= 0 && year < 100) {
-      result.setFullYear(this.getYear(result) - 1900);
+    // Check for invalid month and date (except upper bound on date which we have to check after
+    // creating the Date).
+    if (month < 0 || month > 11 || date < 1) {
+      return null;
     }
+
+    let result = this._createDateWithOverflow(year, month, date);
+
+    // Check that the date wasn't above the upper bound for the month, causing the month to
+    // overflow.
+    if (result.getMonth() != month) {
+      return null;
+    }
+
     return result;
   }
 
@@ -147,21 +160,34 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   }
 
   addCalendarMonths(date: Date, months: number): Date {
-    let newDate =
-        this.createDate(this.getYear(date), this.getMonth(date) + months, this.getDate(date));
+    let newDate = this._createDateWithOverflow(
+        this.getYear(date), this.getMonth(date) + months, this.getDate(date));
 
     // It's possible to wind up in the wrong month if the original month has more days than the new
     // month. In this case we want to go to the last day of the desired month.
     // Note: the additional + 12 % 12 ensures we end up with a positive number, since JS % doesn't
     // guarantee this.
     if (this.getMonth(newDate) != ((this.getMonth(date) + months) % 12 + 12) % 12) {
-      newDate = this.createDate(this.getYear(newDate), this.getMonth(newDate), 0);
+      newDate = this._createDateWithOverflow(this.getYear(newDate), this.getMonth(newDate), 0);
     }
 
     return newDate;
   }
 
   addCalendarDays(date: Date, days: number): Date {
-    return this.createDate(this.getYear(date), this.getMonth(date), this.getDate(date) + days);
+    return this._createDateWithOverflow(
+        this.getYear(date), this.getMonth(date), this.getDate(date) + days);
+  }
+
+  /** Creates a date but allows the month and date to overflow. */
+  private _createDateWithOverflow(year: number, month: number, date: number) {
+    let result = new Date(year, month, date);
+
+    // We need to correct for the fact that JS native Date treats years in range [0, 99] as
+    // abbreviations for 19xx.
+    if (year >= 0 && year < 100) {
+      result.setFullYear(this.getYear(result) - 1900);
+    }
+    return result;
   }
 }

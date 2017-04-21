@@ -9,7 +9,7 @@
          [todayValue]="_todayMonth"
          [selectedValue]="_selectedMonth"
          [labelMinRequiredCells]="2"
-         [activeCell]="activeDate.month"
+         [activeCell]="_dateAdapter.getMonth(activeDate)"
          (selectedValueChange)="_monthSelected($event)">
   </tbody>
 </table>

@@ -25,12 +25,11 @@ import {
   OriginConnectionPosition,
   OverlayConnectionPosition
 } from '../core/overlay/position/connected-position';
-import {SimpleDate} from '../core/datetime/simple-date';
 import {MdDatepickerInput} from './datepicker-input';
-import {CalendarLocale} from '../core/datetime/calendar-locale';
 import 'rxjs/add/operator/first';
 import {Subscription} from 'rxjs/Subscription';
 import {MdDialogConfig} from '../dialog/dialog-config';
+import {DateAdapter} from '../core/datetime/index';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -56,8 +55,8 @@ let datepickerUid = 0;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdDatepickerContent implements AfterContentInit {
-  datepicker: MdDatepicker;
+export class MdDatepickerContent<D> implements AfterContentInit {
+  datepicker: MdDatepicker<D>;
 
   constructor(private _elementRef: ElementRef) {}
 
@@ -76,16 +75,16 @@ export class MdDatepickerContent implements AfterContentInit {
   selector: 'md-datepicker, mat-datepicker',
   template: '',
 })
-export class MdDatepicker implements OnDestroy {
+export class MdDatepicker<D> implements OnDestroy {
   /** The date to open the calendar to initially. */
   @Input()
-  get startAt(): SimpleDate {
+  get startAt(): D {
     // If an explicit startAt is set we start there, otherwise we start at whatever the currently
     // selected value is.
     return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
   }
-  set startAt(date: SimpleDate) { this._startAt = this._locale.parseDate(date); }
-  private _startAt: SimpleDate;
+  set startAt(date: D) { this._startAt = this._dateAdapter.parse(date); }
+  private _startAt: D;
 
   /**
    * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
@@ -96,10 +95,10 @@ export class MdDatepicker implements OnDestroy {
 
   /** A function used to filter which dates are selectable. */
   @Input()
-  dateFilter: (date: SimpleDate) => boolean;
+  dateFilter: (date: D) => boolean;
 
   /** Emits new selected date when selected date changes. */
-  @Output() selectedChanged = new EventEmitter<SimpleDate>();
+  @Output() selectedChanged = new EventEmitter<D>();
 
   /** Whether the calendar is open. */
   opened = false;
@@ -108,15 +107,15 @@ export class MdDatepicker implements OnDestroy {
   id = `md-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
-  _selected: SimpleDate = null;
+  _selected: D = null;
 
   /** The minimum selectable date. */
-  get _minDate(): SimpleDate {
+  get _minDate(): D {
     return this._datepickerInput && this._datepickerInput.min;
   }
 
   /** The maximum selectable date. */
-  get _maxDate(): SimpleDate {
+  get _maxDate(): D {
     return this._datepickerInput && this._datepickerInput.max;
   }
 
@@ -127,15 +126,15 @@ export class MdDatepicker implements OnDestroy {
   private _dialogRef: MdDialogRef<any>;
 
   /** A portal containing the calendar for this datepicker. */
-  private _calendarPortal: ComponentPortal<MdDatepickerContent>;
+  private _calendarPortal: ComponentPortal<MdDatepickerContent<D>>;
 
   /** The input element this datepicker is associated with. */
-  private _datepickerInput: MdDatepickerInput;
+  private _datepickerInput: MdDatepickerInput<D>;
 
   private _inputSubscription: Subscription;
 
   constructor(private _dialog: MdDialog, private _overlay: Overlay,
-              private _viewContainerRef: ViewContainerRef, private _locale: CalendarLocale,
+              private _viewContainerRef: ViewContainerRef, private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Dir) {}
 
   ngOnDestroy() {
@@ -149,10 +148,10 @@ export class MdDatepicker implements OnDestroy {
   }
 
   /** Selects the given date and closes the currently open popup or dialog. */
-  _selectAndClose(date: SimpleDate): void {
+  _selectAndClose(date: D): void {
     let oldValue = this._selected;
     this._selected = date;
-    if (!SimpleDate.equals(oldValue, this._selected)) {
+    if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
       this.selectedChanged.emit(date);
     }
     this.close();
@@ -162,13 +161,13 @@ export class MdDatepicker implements OnDestroy {
    * Register an input with this datepicker.
    * @param input The datepicker input to register with this datepicker.
    */
-  _registerInput(input: MdDatepickerInput): void {
+  _registerInput(input: MdDatepickerInput<D>): void {
     if (this._datepickerInput) {
       throw new MdError('An MdDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
     this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: SimpleDate) => this._selected = value);
+        this._datepickerInput._valueChange.subscribe((value: D) => this._selected = value);
   }
 
   /** Open the calendar. */
@@ -223,7 +222,7 @@ export class MdDatepicker implements OnDestroy {
     }
 
     if (!this._popupRef.hasAttached()) {
-      let componentRef: ComponentRef<MdDatepickerContent> =
+      let componentRef: ComponentRef<MdDatepickerContent<D>> =
           this._popupRef.attach(this._calendarPortal);
       componentRef.instance.datepicker = this;
     }

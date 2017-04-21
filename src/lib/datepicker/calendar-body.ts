@@ -1,10 +1,10 @@
 import {
-  Component,
-  ViewEncapsulation,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   EventEmitter,
-  Output
+  Input,
+  Output,
+  ViewEncapsulation
 } from '@angular/core';
 
 

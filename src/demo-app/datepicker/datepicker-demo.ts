@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {SimpleDate} from '@angular/material';
 
 
 @Component({
@@ -9,8 +8,9 @@ import {SimpleDate} from '@angular/material';
   styleUrls: ['datepicker-demo.css'],
 })
 export class DatepickerDemo {
-  date: SimpleDate;
+  date: Date;
   touch = false;
-  dateFilter = (date: SimpleDate) => !this._blacklistedMonths.has(date.month) && date.date % 2 == 0;
+  dateFilter =
+      (date: Date) => !this._blacklistedMonths.has(date.getMonth()) && date.getDate() % 2 == 0
   private _blacklistedMonths = new Set([2, 3]);
 }
