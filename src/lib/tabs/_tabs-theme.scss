@@ -29,9 +29,9 @@
 
   .mat-tab-label, .mat-tab-link {
     color: currentColor;
+  }
 
-    &.mat-tab-disabled {
-      color: mat-color($foreground, disabled-text);
-    }
+  .mat-tab-label.mat-tab-disabled, .mat-tab-link.mat-tab-disabled {
+    color: mat-color($foreground, disabled-text);
   }
 }
