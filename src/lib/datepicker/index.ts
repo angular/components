@@ -12,14 +12,14 @@ import {MdCalendar} from './calendar';
 import {MdDatepickerToggle} from './datepicker-toggle';
 import {StyleModule} from '../core/style/index';
 import {MdButtonModule} from '../button/index';
-import {MdDatepickerL10n} from './datepicker-l10n';
+import {MdDatepickerIntl} from './datepicker-intl';
 
 
 export * from './calendar';
 export * from './calendar-body';
 export * from './datepicker';
 export * from './datepicker-input';
-export * from './datepicker-l10n';
+export * from './datepicker-intl';
 export * from './datepicker-toggle';
 export * from './month-view';
 export * from './year-view';
@@ -51,7 +51,7 @@ export * from './year-view';
     MdYearView,
   ],
   providers: [
-    MdDatepickerL10n,
+    MdDatepickerIntl,
   ],
   entryComponents: [
     MdDatepickerContent,

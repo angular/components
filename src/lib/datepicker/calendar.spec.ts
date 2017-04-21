@@ -22,7 +22,7 @@ import {
   RIGHT_ARROW,
   UP_ARROW
 } from '../core/keyboard/keycodes';
-import {MdDatepickerL10n} from './datepicker-l10n';
+import {MdDatepickerIntl} from './datepicker-intl';
 
 
 // When constructing a Date, the month is zero-based. This can be confusing, since people are
@@ -49,7 +49,7 @@ describe('MdCalendar', () => {
         CalendarWithDateFilter,
       ],
       providers: [
-        MdDatepickerL10n,
+        MdDatepickerIntl,
       ],
     });
 

@@ -19,7 +19,7 @@ import {
   UP_ARROW
 } from '../core/keyboard/keycodes';
 import {DateAdapter} from '../core/datetime/index';
-import {MdDatepickerL10n} from './datepicker-l10n';
+import {MdDatepickerIntl} from './datepicker-intl';
 
 
 /**
@@ -100,20 +100,20 @@ export class MdCalendar<D> implements AfterContentInit {
   }
 
   get _periodButtonLabel(): string {
-    return this._monthView ? this._l10n.switchToYearViewLabel : this._l10n.switchToMonthViewLabel;
+    return this._monthView ? this._intl.switchToYearViewLabel : this._intl.switchToMonthViewLabel;
   }
 
   /** The label for the the previous button. */
   get _prevButtonLabel(): string {
-    return this._monthView ? this._l10n.prevMonthLabel : this._l10n.prevYearLabel;
+    return this._monthView ? this._intl.prevMonthLabel : this._intl.prevYearLabel;
   }
 
   /** The label for the the next button. */
   get _nextButtonLabel(): string {
-    return this._monthView ? this._l10n.nextMonthLabel : this._l10n.nextYearLabel;
+    return this._monthView ? this._intl.nextMonthLabel : this._intl.nextYearLabel;
   }
 
-  constructor(private _dateAdapter: DateAdapter<D>, private _l10n: MdDatepickerL10n) {}
+  constructor(private _dateAdapter: DateAdapter<D>, private _intl: MdDatepickerIntl) {}
 
   ngAfterContentInit() {
     this._activeDate = this.startAt || this._dateAdapter.today();

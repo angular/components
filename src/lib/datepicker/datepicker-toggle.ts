@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
 import {MdDatepicker} from './datepicker';
-import {MdDatepickerL10n} from './datepicker-l10n';
+import {MdDatepickerIntl} from './datepicker-intl';
 
 
 @Component({
@@ -10,7 +10,7 @@ import {MdDatepickerL10n} from './datepicker-l10n';
   styleUrls: ['datepicker-toggle.css'],
   host: {
     '[class.mat-datepicker-toggle]': 'true',
-    '[attr.aria-label]': '_l10n.openCalendarLabel',
+    '[attr.aria-label]': '_intl.openCalendarLabel',
     '(click)': '_open($event)',
   },
   encapsulation: ViewEncapsulation.None,
@@ -23,7 +23,7 @@ export class MdDatepickerToggle<D> {
   get _datepicker() { return this.datepicker; }
   set _datepicker(v: MdDatepicker<D>) { this.datepicker = v; }
 
-  constructor(public _l10n: MdDatepickerL10n) {}
+  constructor(public _intl: MdDatepickerIntl) {}
 
   _open(event: Event): void {
     if (this.datepicker) {

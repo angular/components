@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 
 
+/** Datepicker data that requires internationalization. */
 @Injectable()
-/** Datepicker data that requires localization. */
-export class MdDatepickerL10n {
+export class MdDatepickerIntl {
   /** A label for the calendar popup (used by screen readers). */
   calendarLabel = 'Calendar';
 
