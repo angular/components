@@ -10,6 +10,12 @@ import {MdInputModule} from '../input/index';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 
+// When constructing a Date, the month is zero-based. This can be confusing, since people are
+// used to seeing them one-based. So we create these aliases to make reading the tests easier.
+const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9,
+      NOV = 10, DEC = 11;
+
+
 describe('MdDatepicker', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -114,7 +120,7 @@ describe('MdDatepicker', () => {
       fixture.detectChanges();
 
       expect(document.querySelector('md-dialog-container')).not.toBeNull();
-      expect(testComponent.datepickerInput.value).toEqual(new Date(2020, 0, 1));
+      expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 1));
 
       let cells = document.querySelectorAll('.mat-calendar-body-cell');
       dispatchMouseEvent(cells[1], 'click');
@@ -122,12 +128,12 @@ describe('MdDatepicker', () => {
 
       fixture.whenStable().then(() => {
         expect(document.querySelector('md-dialog-container')).toBeNull();
-        expect(testComponent.datepickerInput.value).toEqual(new Date(2020, 0, 2));
+        expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 2));
       });
     }));
 
     it('startAt should fallback to input value', () => {
-      expect(testComponent.datepicker.startAt).toEqual(new Date(2020, 0, 1));
+      expect(testComponent.datepicker.startAt).toEqual(new Date(2020, JAN, 1));
     });
 
     it('should attach popup to native input', () => {
@@ -182,7 +188,7 @@ describe('MdDatepicker', () => {
     }));
 
     it('explicit startAt should override input value', () => {
-      expect(testComponent.datepicker.startAt).toEqual(new Date(2010, 0, 1));
+      expect(testComponent.datepicker.startAt).toEqual(new Date(2010, JAN, 1));
     });
   });
 
@@ -210,7 +216,7 @@ describe('MdDatepicker', () => {
       expect(testComponent.datepickerInput.value).toBeNull();
       expect(testComponent.datepicker._selected).toBeNull();
 
-      let selected = new Date(2017, 0, 1);
+      let selected = new Date(2017, JAN, 1);
       testComponent.selected = selected;
       fixture.detectChanges();
 
@@ -226,7 +232,7 @@ describe('MdDatepicker', () => {
       expect(testComponent.selected).toBeNull();
       expect(testComponent.datepickerInput.value).toBeNull();
 
-      let selected = new Date(2017, 0, 1);
+      let selected = new Date(2017, JAN, 1);
       testComponent.datepicker._selectAndClose(selected);
       fixture.detectChanges();
 
@@ -254,7 +260,7 @@ describe('MdDatepicker', () => {
 
       expect(inputEl.classList).toContain('ng-pristine');
 
-      testComponent.datepicker._selectAndClose(new Date(2017, 0, 1));
+      testComponent.datepicker._selectAndClose(new Date(2017, JAN, 1));
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
@@ -269,7 +275,7 @@ describe('MdDatepicker', () => {
 
       expect(inputEl.classList).toContain('ng-pristine');
 
-      testComponent.selected = new Date(2017, 0, 1);
+      testComponent.selected = new Date(2017, JAN, 1);
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
@@ -316,7 +322,7 @@ describe('MdDatepicker', () => {
       expect(testComponent.datepickerInput.value).toBeNull();
       expect(testComponent.datepicker._selected).toBeNull();
 
-      let selected = new Date(2017, 0, 1);
+      let selected = new Date(2017, JAN, 1);
       testComponent.formControl.setValue(selected);
       fixture.detectChanges();
 
@@ -328,7 +334,7 @@ describe('MdDatepicker', () => {
       expect(testComponent.formControl.value).toBeNull();
       expect(testComponent.datepickerInput.value).toBeNull();
 
-      let selected = new Date(2017, 0, 1);
+      let selected = new Date(2017, JAN, 1);
       testComponent.datepicker._selectAndClose(selected);
       fixture.detectChanges();
 
@@ -415,8 +421,8 @@ describe('MdDatepicker', () => {
     }));
 
     it('should use min and max dates specified by the input', () => {
-      expect(testComponent.datepicker._minDate).toEqual(new Date(2010, 0, 1));
-      expect(testComponent.datepicker._maxDate).toEqual(new Date(2020, 0, 1));
+      expect(testComponent.datepicker._minDate).toEqual(new Date(2010, JAN, 1));
+      expect(testComponent.datepicker._maxDate).toEqual(new Date(2020, JAN, 1));
     });
   });
 });

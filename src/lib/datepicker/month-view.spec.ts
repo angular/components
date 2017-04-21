@@ -6,6 +6,12 @@ import {MdCalendarBody} from './calendar-body';
 import {DatetimeModule} from '../core/datetime/index';
 
 
+// When constructing a Date, the month is zero-based. This can be confusing, since people are
+// used to seeing them one-based. So we create these aliases to make reading the tests easier.
+const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9,
+      NOV = 10, DEC = 11;
+
+
 describe('MdMonthView', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -55,7 +61,7 @@ describe('MdMonthView', () => {
     });
 
     it('does not show selected date if in different month', () => {
-      testComponent.selected = new Date(2017, 2, 10);
+      testComponent.selected = new Date(2017, MAR, 10);
       fixture.detectChanges();
 
       let selectedEl = monthViewNativeElement.querySelector('.mat-calendar-body-selected');
@@ -105,8 +111,8 @@ describe('MdMonthView', () => {
   template: `<md-month-view [activeDate]="date" [(selected)]="selected"></md-month-view>`,
 })
 class StandardMonthView {
-  date = new Date(2017, 0, 5);
-  selected = new Date(2017, 0, 10);
+  date = new Date(2017, JAN, 5);
+  selected = new Date(2017, JAN, 10);
 }
 
 
