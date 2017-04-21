@@ -50,5 +50,6 @@ export class ListDemo {
   ];
 
   thirdLine: boolean = false;
+  showDense: boolean = true;
   infoClicked: boolean = false;
 }

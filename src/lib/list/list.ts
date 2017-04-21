@@ -13,7 +13,7 @@ import {
   Renderer,
   AfterContentInit,
 } from '@angular/core';
-import {MdLine, MdLineSetter} from '../core';
+import {MdLine, MdLineSetter, coerceBooleanProperty} from '../core';
 
 @Directive({
   selector: 'md-divider, mat-divider'
@@ -33,13 +33,23 @@ const NAV_LIST_TYPE = 'nav_list_type';
   moduleId: module.id,
   selector: 'md-list, mat-list, md-nav-list, mat-nav-list',
   host: {
-    'role': 'list'},
+    'role': 'list',
+    '[class.mat-dense-list]': 'dense'
+  },
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
   providers: [{ provide: LIST_TYPE_TOKEN, useValue: NORMAL_LIST_TYPE }],
   encapsulation: ViewEncapsulation.None
 })
-export class MdList {}
+export class MdList {
+
+  private _dense: boolean = false;
+
+  /** Whether the list should display in dense mode or not. */
+  @Input()
+  get dense(): boolean { return this._dense; }
+  set dense(value) { this._dense = coerceBooleanProperty(value); }
+}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
