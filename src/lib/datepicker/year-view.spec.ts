@@ -2,9 +2,14 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdYearView} from './year-view';
-import {SimpleDate} from '../core/datetime/simple-date';
 import {MdCalendarBody} from './calendar-body';
 import {DatetimeModule} from '../core/datetime/index';
+
+
+// When constructing a Date, the month is zero-based. This can be confusing, since people are
+// used to seeing them one-based. So we create these aliases to make reading the tests easier.
+const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9,
+      NOV = 10, DEC = 11;
 
 
 describe('MdYearView', () => {
@@ -56,7 +61,7 @@ describe('MdYearView', () => {
     });
 
     it('does not show selected month if in different year', () => {
-      testComponent.selected = new SimpleDate(2016, 2, 10);
+      testComponent.selected = new Date(2016, MAR, 10);
       fixture.detectChanges();
 
       let selectedEl = yearViewNativeElement.querySelector('.mat-calendar-body-selected');
@@ -107,8 +112,8 @@ describe('MdYearView', () => {
     <md-year-view [activeDate]="date" [(selected)]="selected"></md-year-view>`,
 })
 class StandardYearView {
-  date = new SimpleDate(2017, 0, 5);
-  selected = new SimpleDate(2017, 2, 10);
+  date = new Date(2017, JAN, 5);
+  selected = new Date(2017, MAR, 10);
 }
 
 
@@ -116,11 +121,11 @@ class StandardYearView {
   template: `<md-year-view date="1/1/2017" [dateFilter]="dateFilter"></md-year-view>`
 })
 class YearViewWithDateFilter {
-  dateFilter(date: SimpleDate) {
-    if (date.month == 0) {
-      return date.date == 10;
+  dateFilter(date: Date) {
+    if (date.getMonth() == JAN) {
+      return date.getDate() == 10;
     }
-    if (date.month == 1) {
+    if (date.getMonth() == FEB) {
       return false;
     }
     return true;

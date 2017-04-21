@@ -74,6 +74,13 @@ export abstract class DateAdapter<D> {
   abstract getFirstDayOfWeek(): number;
 
   /**
+   * Gets the number of days in the month of the given date.
+   * @param date The date whose month should be checked.
+   * @returns The number of days in the month of the given date.
+   */
+  abstract getNumDaysInMonth(date: D): number;
+
+  /**
    * Gets a set of default formats to use for displaying the date in different contexts.
    * @returns An object with the following default formats:
    *     - date: The default format for showing just the date without any time information.
@@ -88,13 +95,12 @@ export abstract class DateAdapter<D> {
   abstract clone(date: D): D;
 
   /**
-   * Creates a date with the given year, month, and date.
+   * Creates a date with the given year, month, and date. Does not allow over/under-flow of the
+   * month and date.
    * @param year The full year of the date. (e.g. 89 means the year 89, not the year 1989).
-   * @param month The month of the date (0-indexed, 0 = January). If `month` is less than 0 or
-   *     greater than 11, it should roll into the previous / next year.
-   * @param date The date of month of the date. If `date` is less than 1 or greater than the number
-   *     of days in the `month`, it should roll into the previous / next month.
-   * @returns The new date.
+   * @param month The month of the date (0-indexed, 0 = January). Must be an integer 0 - 11.
+   * @param date The date of month of the date. Must be an integer 1 - length of the given month.
+   * @returns The new date, or null if invalid.
    */
   abstract createDate(year: number, month: number, date: number): D;
 

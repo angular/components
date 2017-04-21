@@ -134,12 +134,14 @@ describe('NativeDateAdapter', () => {
     expect(adapter.createDate(2017, JAN, 1)).toEqual(new Date(2017, JAN, 1));
   });
 
-  it('should create Date with month and date overflow', () => {
-    expect(adapter.createDate(2017, DEC + 1, 32)).toEqual(new Date(2018, FEB, 1));
+  it('should not create Date with month over/under-flow', () => {
+    expect(adapter.createDate(2017, DEC + 1, 1)).toBeNull();
+    expect(adapter.createDate(2017, JAN - 1, 1)).toBeNull();
   });
 
-  it('should create Date with month date underflow', () => {
-    expect(adapter.createDate(2017, JAN - 1, 0)).toEqual(new Date(2016, NOV, 30));
+  it('should not create Date with date over/under-flow', () => {
+    expect(adapter.createDate(2017, JAN, 32)).toBeNull();
+    expect(adapter.createDate(2017, JAN, 0)).toBeNull();
   });
 
   it('should create Date with low year number', () => {
@@ -148,13 +150,6 @@ describe('NativeDateAdapter', () => {
     expect(adapter.createDate(50, JAN, 1).getFullYear()).toBe(50);
     expect(adapter.createDate(99, JAN, 1).getFullYear()).toBe(99);
     expect(adapter.createDate(100, JAN, 1).getFullYear()).toBe(100);
-  });
-
-  it('should create Date with low year number and over/under-flow', () => {
-    expect(adapter.createDate(50, 12 * 51, 1).getFullYear()).toBe(101);
-    expect(adapter.createDate(50, 12, 1).getFullYear()).toBe(51);
-    expect(adapter.createDate(50, -12, 1).getFullYear()).toBe(49);
-    expect(adapter.createDate(50, -12 * 51, 1).getFullYear()).toBe(-1);
   });
 
   it("should get today's date", () => {
