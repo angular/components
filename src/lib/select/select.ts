@@ -358,6 +358,11 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
     }
 
     this._calculateOverlayPosition();
+    /**
+     * Update the trigger width, in case the select width has changed
+     * Taking into account the "offsetX"/"dir" to fit it better.
+     */
+    this._triggerWidth = this._getWidth() + (this._offsetX * (!this._isRtl() ? -1 : 1));
     this._placeholderState = this._floatPlaceholderState();
     this._panelOpen = true;
   }

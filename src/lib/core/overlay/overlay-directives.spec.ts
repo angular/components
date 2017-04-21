@@ -107,6 +107,15 @@ describe('Overlay directives', () => {
 
       const pane = overlayContainerElement.children[0] as HTMLElement;
       expect(pane.style.width).toEqual('250px');
+
+      fixture.componentInstance.isOpen = false;
+      fixture.detectChanges();
+
+      fixture.componentInstance.width = 500;
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
+      expect(pane.style.width).toEqual('500px');
     });
 
     it('should set the height', () => {
@@ -116,6 +125,15 @@ describe('Overlay directives', () => {
 
       const pane = overlayContainerElement.children[0] as HTMLElement;
       expect(pane.style.height).toEqual('100vh');
+
+      fixture.componentInstance.isOpen = false;
+      fixture.detectChanges();
+
+      fixture.componentInstance.height = '50vh';
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
+      expect(pane.style.height).toEqual('50vh');
     });
 
     it('should set the min width', () => {
@@ -125,6 +143,15 @@ describe('Overlay directives', () => {
 
       const pane = overlayContainerElement.children[0] as HTMLElement;
       expect(pane.style.minWidth).toEqual('250px');
+
+      fixture.componentInstance.isOpen = false;
+      fixture.detectChanges();
+
+      fixture.componentInstance.minWidth = 500;
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
+      expect(pane.style.minWidth).toEqual('500px');
     });
 
     it('should set the min height', () => {
@@ -133,6 +160,15 @@ describe('Overlay directives', () => {
       fixture.detectChanges();
 
       const pane = overlayContainerElement.children[0] as HTMLElement;
+      expect(pane.style.minHeight).toEqual('500px');
+
+      fixture.componentInstance.isOpen = false;
+      fixture.detectChanges();
+
+      fixture.componentInstance.minHeight = 500;
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
       expect(pane.style.minHeight).toEqual('500px');
     });
 
