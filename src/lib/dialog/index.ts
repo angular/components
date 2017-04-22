@@ -3,7 +3,7 @@ import {
   OverlayModule,
   PortalModule,
   A11yModule,
-  CompatibilityModule,
+  MdCommonModule,
 } from '../core';
 import {MdDialog} from './dialog';
 import {MdDialogContainer} from './dialog-container';
@@ -20,7 +20,7 @@ import {
     OverlayModule,
     PortalModule,
     A11yModule,
-    CompatibilityModule,
+    MdCommonModule,
   ],
   exports: [
     MdDialogContainer,
@@ -28,7 +28,7 @@ import {
     MdDialogTitle,
     MdDialogContent,
     MdDialogActions,
-    CompatibilityModule,
+    MdCommonModule,
   ],
   declarations: [
     MdDialogContainer,
