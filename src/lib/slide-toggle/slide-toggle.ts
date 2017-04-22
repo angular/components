@@ -186,7 +186,7 @@ export class MdSlideToggle extends _MdSlideToggleMixinBase implements OnDestroy,
 
   /** Implemented as part of ControlValueAccessor. */
   writeValue(value: any): void {
-    this.checked = value;
+    this.checked = !!value;
   }
 
   /** Implemented as part of ControlValueAccessor. */
