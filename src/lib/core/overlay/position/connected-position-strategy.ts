@@ -108,6 +108,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
 
     // Fallback point if none of the fallbacks fit into the viewport.
     let fallbackPoint: OverlayPoint = null;
+    let fallbackPosition: ConnectionPositionPair = null;
 
     // We want to place the overlay in the first of the preferred positions such that the
     // overlay fits on-screen.
@@ -116,10 +117,11 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       // (top, left) coordinate for the overlay at `pos`.
       let originPoint = this._getOriginConnectionPoint(originRect, pos);
       let overlayPoint = this._getOverlayPoint(originPoint, overlayRect, viewportRect, pos);
+      let overlayDimensions = this._getCSSDimensions(overlayRect, overlayPoint, pos);
 
       // If the overlay in the calculated position fits on-screen, put it there and we're done.
       if (overlayPoint.fitsInViewport) {
-        this._setElementPosition(element, overlayPoint);
+        this._setElementPosition(element, overlayDimensions);
 
         // Save the last connected position in case the position needs to be re-calculated.
         this._lastConnectedPosition = pos;
@@ -132,12 +134,14 @@ export class ConnectedPositionStrategy implements PositionStrategy {
         return Promise.resolve(null);
       } else if (!fallbackPoint || fallbackPoint.visibleArea < overlayPoint.visibleArea) {
         fallbackPoint = overlayPoint;
+        fallbackPosition = pos;
       }
     }
 
     // If none of the preferred positions were in the viewport, take the one
     // with the largest visible area.
-    this._setElementPosition(element, fallbackPoint);
+    let fallbackDimensions = this._getCSSDimensions(overlayRect, fallbackPoint, fallbackPosition);
+    this._setElementPosition(element, fallbackDimensions);
 
     return Promise.resolve(null);
   }
@@ -155,7 +159,8 @@ export class ConnectedPositionStrategy implements PositionStrategy {
 
     let originPoint = this._getOriginConnectionPoint(originRect, lastPosition);
     let overlayPoint = this._getOverlayPoint(originPoint, overlayRect, viewportRect, lastPosition);
-    this._setElementPosition(this._pane, overlayPoint);
+    let overlayPosition = this._getCSSDimensions(overlayRect, overlayPoint, lastPosition);
+    this._setElementPosition(this._pane, overlayPosition);
   }
 
   /**
@@ -300,6 +305,39 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /**
+   * Determines which CSS properties to use when positioning the overlay,
+   * depending on the direction the element would expand in, if extra content
+   * was added.
+   */
+  private _getCSSDimensions(overlayRect: ClientRect, overlayPoint: Point,
+    pos: ConnectionPositionPair): CSSDimensionPair {
+
+    const viewport = this._viewportRuler.getViewportRect();
+    const x: CSSDimension = { property: null, value: null };
+    const y: CSSDimension = { property: pos.overlayY === 'bottom' ? 'bottom' : 'top', value: null };
+
+    if (this._dir === 'rtl') {
+      x.property = pos.overlayX === 'end' ? 'left' : 'right';
+    } else {
+      x.property = pos.overlayX === 'end' ? 'right' : 'left';
+    }
+
+    if (x.property === 'left') {
+      x.value = overlayPoint.x;
+    } else {
+      x.value = viewport.width - (overlayPoint.x + overlayRect.width);
+    }
+
+    if (y.property === 'top') {
+      y.value = overlayPoint.y;
+    } else {
+      y.value = viewport.height - (overlayPoint.y + overlayRect.height);
+    }
+
+    return {x, y};
+  }
+
+  /**
    * Gets the view properties of the trigger and overlay, including whether they are clipped
    * or completely outside the view of any of the strategy's scrollables.
    */
@@ -346,14 +384,11 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     });
   }
 
-  /**
-   * Physically positions the overlay element to the given coordinate.
-   * @param element
-   * @param overlayPoint
-   */
-  private _setElementPosition(element: HTMLElement, overlayPoint: Point) {
-    element.style.left = overlayPoint.x + 'px';
-    element.style.top = overlayPoint.y + 'px';
+  /** Physically positions the overlay element to the given coordinate. */
+  private _setElementPosition(element: HTMLElement, dimensions: CSSDimensionPair) {
+    ['top', 'bottom', 'left', 'right'].forEach(prop => element.style[prop] = null);
+    element.style[dimensions.x.property] = dimensions.x.value + 'px';
+    element.style[dimensions.y.property] = dimensions.y.value + 'px';
   }
 
   /** Returns the bounding positions of the provided element with respect to the viewport. */
@@ -391,4 +426,16 @@ interface Point {
 interface OverlayPoint extends Point {
   visibleArea?: number;
   fitsInViewport?: boolean;
+}
+
+/** Key-value pair, representing a CSS dimension. */
+interface CSSDimension {
+  property: 'top' | 'bottom' | 'left' | 'right';
+  value: number;
+}
+
+/** A combination of CSS dimensions for the x and y axis. */
+interface CSSDimensionPair {
+  x: CSSDimension;
+  y: CSSDimension;
 }
