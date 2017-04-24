@@ -1,25 +1,18 @@
 @import '../core/style/variables';
 @import '../core/style/elevation';
 @import '../core/a11y/a11y';
-
-
-$mat-card-default-padding: 24px !default;
-$mat-card-mobile-padding: 24px 16px !default;
+$mat-card-default-padding: 8px 16px !default;
 $mat-card-border-radius: 2px !default;
-$mat-card-header-size: 40px !default;
-
+$mat-card-avatar-size: 40px !default;
 .mat-card {
   @include mat-elevation-transition;
   display: block;
   position: relative;
-  padding: $mat-card-default-padding;
   border-radius: $mat-card-border-radius;
   font-family: $mat-font-family;
-
   &:not([class*='mat-elevation-z']) {
     @include mat-elevation(2);
   }
-
   @include cdk-high-contrast {
     outline: solid 1px;
   }
@@ -32,31 +25,31 @@ $mat-card-header-size: 40px !default;
 // base styles for each card section preset (mat-card-content, etc)
 %mat-card-section-base {
   display: block;
-  margin-bottom: 16px;
+  padding-bottom: 16px;
 }
 
 .mat-card-title {
   @extend %mat-card-section-base;
   font-size: 24px;
   font-weight: 400;
+  padding: $mat-card-default-padding;
 }
 
 .mat-card-subtitle {
   @extend %mat-card-section-base;
   font-size: $mat-body-font-size-base;
+  padding: $mat-card-default-padding;
 }
 
 .mat-card-content {
   @extend %mat-card-section-base;
   font-size: $mat-body-font-size-base;
+  padding: $mat-card-default-padding;
 }
 
 .mat-card-actions {
   @extend %mat-card-section-base;
-  margin-left: -16px;
-  margin-right: -16px;
-  padding: 8px 0;
-
+  padding: 8px;
   &[align='end'] {
     display: flex;
     justify-content: flex-end;
@@ -64,14 +57,7 @@ $mat-card-header-size: 40px !default;
 }
 
 .mat-card-image {
-  width: calc(100% + 48px);
-  margin: 0 -24px 16px -24px;
-}
-
-.mat-card-xl-image {
-  width: 240px;
-  height: 240px;
-  margin: -8px;
+  width: 100%;
 }
 
 .mat-card-footer {
@@ -83,27 +69,29 @@ $mat-card-header-size: 40px !default;
 }
 
 .mat-card-actions {
-  .mat-button, .mat-raised-button {
+  .mat-button,
+  .mat-raised-button {
     margin: 0 4px;
   }
 }
 
 // HEADER STYLES
-
 .mat-card-header {
   display: flex;
   flex-direction: row;
+  height: 72px;
 }
 
 .mat-card-header-text {
-  margin: 0 8px;
+  padding: 0 8px;
 }
 
 .mat-card-avatar {
-  height: $mat-card-header-size;
-  width: $mat-card-header-size;
+  height: $mat-card-avatar-size;
+  width: $mat-card-avatar-size;
   border-radius: 50%;
   flex-shrink: 0;
+  margin-left: 16px;
 }
 
 .mat-card-header .mat-card-title {
@@ -111,93 +99,54 @@ $mat-card-header-size: 40px !default;
 }
 
 // TITLE-GROUP STYLES
-
 // images grouped with title in title-group layout
-%mat-card-title-img {
-  margin: -8px 0;
-}
-
 .mat-card-title-group {
   display: flex;
   justify-content: space-between;
-  margin: 0 -8px;
 }
 
 .mat-card-sm-image {
-  @extend %mat-card-title-img;
   width: 80px;
   height: 80px;
+  margin: -8px 16px 0 0;
 }
 
 .mat-card-md-image {
-  @extend %mat-card-title-img;
   width: 112px;
   height: 112px;
+  margin: -8px 16px 0 0;
 }
 
 .mat-card-lg-image {
-  @extend %mat-card-title-img;
   width: 152px;
   height: 152px;
+  margin: -8px 16px 0 0;
+}
+
+.mat-card-xl-image {
+  width: 240px;
+  height: 240px;
+  margin: -8px 16px 0 0;
 }
 
 // MEDIA QUERIES
-
-@media ($mat-xsmall) {
-  .mat-card {
-    padding: $mat-card-mobile-padding;
-  }
-
-  .mat-card-actions {
-    margin-left: -8px;
-    margin-right: -8px;
-  }
-
-  .mat-card-image {
-    width: calc(100% + 32px);
-    margin: 16px -16px;
-  }
-
-  .mat-card-title-group {
-    margin: 0;
-  }
-
-  .mat-card-xl-image {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .mat-card-header {
-    margin: -8px 0 0 0;
-  }
-
-}
-
 // FIRST/LAST CHILD ADJUSTMENTS
-
 // top els in mat-card-content and mat-card can't have their default margin-tops (e.g. <p> tags)
 // or they'll incorrectly add to card's top padding
-.mat-card > :first-child, .mat-card-content > :first-child {
-  margin-top: 0;
+.mat-card> :first-child:not(.mat-card-image) {
+  padding-top: 24px;
 }
 
 // last els in mat-card-content and mat-card can't have their default margin-bottoms (e.g. <p> tags)
 // or they'll incorrectly add to card's bottom padding
-.mat-card > :last-child, .mat-card-content > :last-child {
-  margin-bottom: 0;
-}
-
-// if main image is on top, need to place it flush against top
-// (by stripping card's default 24px padding)
-.mat-card-image:first-child {
-  margin-top: -24px;
+.mat-card> :last-child:not(.mat-card-footer) {
+  padding-bottom: 24px;
 }
 
 // actions panel on bottom should be 8px from bottom of card
 // so must strip 16px from default card padding of 24px
-.mat-card > .mat-card-actions:last-child {
-  margin-bottom: -16px;
-  padding-bottom: 0;
+.mat-card>.mat-card-actions:last-child {
+  padding-bottom: 8px;
 }
 
 // actions panel should always be 8px from sides,
@@ -210,7 +159,8 @@ $mat-card-header-size: 40px !default;
 
 // should be 12px space between titles and subtitles generally
 // default margin-bottom is 16px, so need to move lower title up 4px
-.mat-card-title:not(:first-child), .mat-card-subtitle:not(:first-child) {
+.mat-card-title:not(:first-child),
+.mat-card-subtitle:not(:first-child) {
   margin-top: -4px;
 }
 
@@ -222,12 +172,12 @@ $mat-card-header-size: 40px !default;
 
 // xl image should always have 16px on top.
 // when it's the first el, it'll need to remove 8px from default card padding of 24px
-.mat-card > .mat-card-xl-image:first-child {
+.mat-card>.mat-card-xl-image:first-child {
   margin-top: -8px;
 }
 
 // xl image should always have 16px on bottom
 // when it's the last el, it'll need to remove 8px from default card padding of 24px
-.mat-card > .mat-card-xl-image:last-child {
+.mat-card>.mat-card-xl-image:last-child {
   margin-bottom: -8px;
 }
