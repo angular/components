@@ -58,4 +58,12 @@
       <button md-button>Second</button>
     </md-card-actions>
   </md-card>
+
+  <md-card [elevation]="elevation">
+    <md-card-title>With Custom Elevation</md-card-title>
+    <md-select [(ngModel)]="elevation" name="elevation" placeholder="Elevation">
+      <md-option>Default</md-option>
+      <md-option *ngFor="let i of elevations" [value]="i">{{i}}</md-option>
+    </md-select>
+  </md-card>
 </div>

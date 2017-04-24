@@ -2,7 +2,10 @@ import {
   Component,
   ViewEncapsulation,
   ChangeDetectionStrategy,
-  Directive
+  Directive,
+  Input,
+  Renderer2,
+  ElementRef
 } from '@angular/core';
 
 
@@ -161,7 +164,32 @@ export class MdCardAvatar {}
     '[class.mat-card]': 'true'
   }
 })
-export class MdCard {}
+export class MdCard {
+
+  /** Defines the current elevation of the card **/
+  private _elevation: number;
+
+  constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {}
+
+  @Input() get elevation() {
+    return this._elevation;
+  }
+  set elevation(elevation: number) {
+    let previousElevation = this._elevation;
+    this._elevation = elevation;
+
+    if (previousElevation) {
+      this._renderer.removeClass(this._elementRef.nativeElement,
+          `mat-elevation-z${previousElevation}`);
+    }
+
+    if (this._elevation >= 0 && this._elevation <= 24) {
+      this._renderer.addClass(this._elementRef.nativeElement,
+          `mat-elevation-z${this._elevation}`);
+    }
+  }
+
+}
 
 
 /**
