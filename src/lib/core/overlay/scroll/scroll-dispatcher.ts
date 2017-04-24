@@ -1,4 +1,5 @@
-import {Injectable, ElementRef, Optional, SkipSelf, NgZone} from '@angular/core';
+import {ElementRef, Injectable, NgZone, Optional, SkipSelf} from '@angular/core';
+import {isBrowser} from '../../platform/browser';
 import {Scrollable} from './scrollable';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
@@ -62,6 +63,10 @@ export class ScrollDispatcher {
    * to override the default "throttle" time.
    */
   scrolled(auditTimeInMs: number = DEFAULT_SCROLL_TIME, callback: () => any): Subscription {
+    if (!isBrowser()) {
+      return Subscription.EMPTY;
+    }
+
     // In the case of a 0ms delay, use an observable without auditTime
     // since it does add a perceptible delay in processing overhead.
     let observable = auditTimeInMs > 0 ?

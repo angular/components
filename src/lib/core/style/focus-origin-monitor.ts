@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import {isBrowser} from '../platform/browser';
 
 
 // This is the value used by AngularJS Material. Through trial and error (on iPhone 6S) they found
@@ -63,9 +64,10 @@ export class FocusOriginMonitor {
    * @returns An observable that emits when the focus state of the element changes.
    *     When the element is blurred, null will be emitted.
    */
-  monitor(element: HTMLElement, renderer: Renderer2, checkChildren: boolean):
-    Observable<FocusOrigin> {
-
+  monitor(element: HTMLElement, renderer: Renderer2, checkChildren: boolean): Observable<FocusOrigin> {// Do nothing if we're not on the browser platform.
+    if (!isBrowser()) {
+      return Observable.of();
+    }
     // Check if we're already monitoring this element.
     if (this._elementInfo.has(element)) {
       let info = this._elementInfo.get(element);
@@ -128,6 +130,11 @@ export class FocusOriginMonitor {
 
   /** Register necessary event listeners on the document and window. */
   private _registerDocumentEvents() {
+    // Do nothing if we're not on the browser platform.
+    if (!isBrowser()) {
+      return;
+    }
+
     // Note: we listen to events in the capture phase so we can detect them even if the user stops
     // propagation.
 
