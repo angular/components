@@ -373,11 +373,15 @@ describe('MdInputContainer', function () {
 
   it('hide placeholder required star when set to hide the required marker', () => {
     let fixture = TestBed.createComponent(MdInputContainerPlaceholderRequiredTestComponent);
-    fixture.componentInstance.hideRequiredMarker = true;
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label'));
     expect(el).not.toBeNull();
+    expect(el.nativeElement.textContent).toMatch(/hello\s+\*/g);
+
+    fixture.componentInstance.hideRequiredMarker = true;
+    fixture.detectChanges();
+
     expect(el.nativeElement.textContent).toMatch(/hello/g);
   });
 
