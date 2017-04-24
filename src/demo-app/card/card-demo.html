@@ -1,6 +1,8 @@
 <div class="demo-card-container">
     <md-card>
+        <md-card-content>
             Hello
+        </md-card-content>
     </md-card>
 
     <md-card>
@@ -12,14 +14,16 @@
     </md-card>
 
     <md-card>
-        <md-card-subtitle>Subtitle</md-card-subtitle>
-        <md-card-title>Card with title and footer</md-card-title>
+        <md-card-title-group style="background:#4CAF50">
+            <md-card-title>Card with title and footer</md-card-title>
+            <md-card-subtitle>Subtitle</md-card-subtitle>
+        </md-card-title-group>
         <md-card-content>
-            <p>This is supporting text.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            This is supporting text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+            et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+            nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
+            id est laborum.
         </md-card-content>
         <md-card-actions>
             <button md-button>LIKE</button>
@@ -32,9 +36,11 @@
 
     <md-card>
         <img md-card-image src="https://material.angularjs.org/latest/img/washedout.png">
-        <md-card-title>Content Title</md-card-title>
+        <md-card-title-group>
+            <md-card-title>Content Title</md-card-title>
+        </md-card-title-group>
         <md-card-content>
-            <p>Here is some content</p>
+            Here is some content
         </md-card-content>
         <md-card-actions align="end">
             <button md-button>LIKE</button>
@@ -50,12 +56,14 @@
         </md-card-header>
         <img md-card-image src="https://material.angularjs.org/latest/img/washedout.png">
         <md-card-content>
-            <p>Here is some content</p>
+            Here is some content
         </md-card-content>
     </md-card>
 
     <md-card class="demo-card-blue mat-card-flat">
-        <md-card-title>Easily customizable</md-card-title>
+        <md-card-title-group>
+            <md-card-title>Easily customizable</md-card-title>
+        </md-card-title-group>
         <md-card-actions>
             <button md-button>First</button>
             <button md-button>Second</button>
