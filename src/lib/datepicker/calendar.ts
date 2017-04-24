@@ -41,7 +41,7 @@ export class MdCalendar<D> implements AfterContentInit {
   /** A date representing the period (month or year) to start the calendar in. */
   @Input()
   get startAt(): D { return this._startAt; }
-  set startAt(value: D) { this._startAt = this._dateAdapter.parse(value); }
+  set startAt(value: D) { this._startAt = this._dateAdapter.parse(value, this._parseFormat); }
   private _startAt: D;
 
   /** Whether the calendar should be started in month or year view. */
@@ -50,19 +50,19 @@ export class MdCalendar<D> implements AfterContentInit {
   /** The currently selected date. */
   @Input()
   get selected(): D { return this._selected; }
-  set selected(value: D) { this._selected = this._dateAdapter.parse(value); }
+  set selected(value: D) { this._selected = this._dateAdapter.parse(value, this._parseFormat); }
   private _selected: D;
 
   /** The minimum selectable date. */
   @Input()
   get minDate(): D { return this._minDate; }
-  set minDate(date: D) { this._minDate = this._dateAdapter.parse(date); }
+  set minDate(date: D) { this._minDate = this._dateAdapter.parse(date, this._parseFormat); }
   private _minDate: D;
 
   /** The maximum selectable date. */
   @Input()
   get maxDate(): D { return this._maxDate; }
-  set maxDate(date: D) { this._maxDate = this._dateAdapter.parse(date); }
+  set maxDate(date: D) { this._maxDate = this._dateAdapter.parse(date, this._parseFormat); }
   private _maxDate: D;
 
   /** A function used to filter which dates are selectable. */
@@ -113,7 +113,13 @@ export class MdCalendar<D> implements AfterContentInit {
     return this._monthView ? this._intl.nextMonthLabel : this._intl.nextYearLabel;
   }
 
-  constructor(private _dateAdapter: DateAdapter<D>, private _intl: MdDatepickerIntl) {}
+  /** The format to use when parsing dates. */
+  private _parseFormat: any;
+
+  constructor(private _dateAdapter: DateAdapter<D>, private _intl: MdDatepickerIntl) {
+    this._parseFormat =
+        this._intl.parseDateFormat || this._dateAdapter.getPredefinedFormats().parseDate;
+  }
 
   ngAfterContentInit() {
     this._activeDate = this.startAt || this._dateAdapter.today();
