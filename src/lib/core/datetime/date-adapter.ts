@@ -1,3 +1,7 @@
+import {Injectable} from '@angular/core';
+
+
+@Injectable()
 /** Adapts type `D` to be usable as a date by cdk-based components that work with dates. */
 export abstract class DateAdapter<D> {
   /** The locale to use for all dates. */
@@ -84,8 +88,12 @@ export abstract class DateAdapter<D> {
    * Gets a set of default formats to use for displaying the date in different contexts.
    * @returns An object with the following default formats:
    *     - date: The default format for showing just the date without any time information.
+   *     - parseDate: The default parsing format for just the date without any time information.
    */
-  abstract getDefaultFormats(): {date: any};
+  abstract getPredefinedFormats(): {
+    date: any,
+    parseDate: any,
+  };
 
   /**
    * Clones the given date.

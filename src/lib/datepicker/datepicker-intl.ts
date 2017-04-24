@@ -30,7 +30,13 @@ export class MdDatepickerIntl {
 
   /**
    * The format to use when displaying dates without time information. If unspecified the `date`
-   * format supplied by {@link DateAdapter#getDefaultFormats} will be used.
+   * format supplied by {@link DateAdapter#getPredefinedFormats} will be used.
    */
   dateFormat: any;
+
+  /**
+   * The format to use when parsing dates without time information. If unspecified the
+   * `parseDate` format supplied by {@link DateAdapter#getPredefinedFormats} will be used.
+   */
+  parseDateFormat: any;
 }

@@ -126,7 +126,7 @@ describe('NativeDateAdapter', () => {
   });
 
   it('should get default formats', () => {
-    let dtf = new Intl.DateTimeFormat('en-US', adapter.getDefaultFormats().date);
+    let dtf = new Intl.DateTimeFormat('en-US', adapter.getPredefinedFormats().date);
     expect(dtf.format(new Date(2017, 1, 1))).toEqual('2/1/2017');
   });
 

@@ -15,6 +15,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {MdInputContainer} from '../input/input-container';
 import {DOWN_ARROW} from '../core/keyboard/keycodes';
 import {DateAdapter} from '../core/datetime/index';
+import {MdDatepickerIntl} from './datepicker-intl';
 
 
 export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -56,13 +57,13 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   /** The value of the input. */
   @Input()
   get value(): D {
-    return this._dateAdapter.parse(this._elementRef.nativeElement.value);
+    return this._dateAdapter.parse(this._elementRef.nativeElement.value, this._parseFormat);
   }
   set value(value: D) {
-    let date = this._dateAdapter.parse(value);
+    let date = this._dateAdapter.parse(value, this._parseFormat);
     let oldDate = this.value;
     this._renderer.setElementProperty(this._elementRef.nativeElement, 'value',
-        date ? this._dateAdapter.format(date) : '');
+        date ? this._dateAdapter.format(date, this._displayFormat) : '');
     if (!this._dateAdapter.sameDate(oldDate, date)) {
       this._valueChange.emit(date);
     }
@@ -71,13 +72,13 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   /** The minimum valid date. */
   @Input()
   get min(): D { return this._min; }
-  set min(value: D) { this._min = this._dateAdapter.parse(value); }
+  set min(value: D) { this._min = this._dateAdapter.parse(value, this._parseFormat); }
   private _min: D;
 
   /** The maximum valid date. */
   @Input()
   get max(): D { return this._max; }
-  set max(value: D) { this._max = this._dateAdapter.parse(value); }
+  set max(value: D) { this._max = this._dateAdapter.parse(value, this._parseFormat); }
   private _max: D;
 
   /** Emits when the value changes (either due to user input or programmatic change). */
@@ -89,11 +90,21 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   private _datepickerSubscription: Subscription;
 
+  /** The format to use when parsing dates. */
+  private _parseFormat: any;
+
+  /** The format to use when displaying dates. */
+  private _displayFormat: any;
+
   constructor(
       private _elementRef: ElementRef,
       private _renderer: Renderer,
       private _dateAdapter: DateAdapter<D>,
-      @Optional() private _mdInputContainer: MdInputContainer) {}
+      intl: MdDatepickerIntl,
+      @Optional() private _mdInputContainer: MdInputContainer) {
+    this._parseFormat = intl.parseDateFormat || this._dateAdapter.getPredefinedFormats().parseDate;
+    this._displayFormat = intl.dateFormat || this._dateAdapter.getPredefinedFormats().date;
+  }
 
   ngAfterContentInit() {
     if (this._datepicker) {
@@ -147,7 +158,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   }
 
   _onInput(value: string) {
-    let date = this._dateAdapter.parse(value);
+    let date = this._dateAdapter.parse(value, this._parseFormat);
     this._onChange(date);
     this._valueChange.emit(date);
   }

@@ -1,4 +1,5 @@
 import {DateAdapter} from './date-adapter';
+import {Injectable} from '@angular/core';
 
 
 // TODO(mmalerba): Remove when we no longer support safari 9.
@@ -29,12 +30,24 @@ const DEFAULT_DAY_OF_WEEK_NAMES = {
 };
 
 
+/** Pre-defined formats that can be used for parsing and formatting dates with this adapter. */
+const PREDEFINED_FORMATS = {
+  date: {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric'
+  },
+  parseDate: undefined,
+};
+
+
 /** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {
   return Array.apply(null, Array(length)).map((v: undefined, i: number) => valueFunction(i));
 }
 
 
+@Injectable()
 /** Adapts the native JS Date for use with cdk-based components that work with dates. */
 export class NativeDateAdapter extends DateAdapter<Date> {
   getYear(date: Date): number {
@@ -104,15 +117,10 @@ export class NativeDateAdapter extends DateAdapter<Date> {
         this.getYear(date), this.getMonth(date) + 1, 0));
   }
 
-  getDefaultFormats(): {date: Object} {
-    return {
-      date: {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric'
-      }
-    };
-  }
+  getPredefinedFormats(): {
+    date: Object,
+    parseDate: Object,
+  } { return PREDEFINED_FORMATS; }
 
   clone(date: Date): Date {
     return this.createDate(this.getYear(date), this.getMonth(date), this.getDate(date));

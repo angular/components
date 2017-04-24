@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import {MdCalendarCell} from './calendar-body';
 import {DateAdapter} from '../core/datetime/index';
+import {MdDatepickerIntl} from './datepicker-intl';
 
 
 const DAYS_PER_WEEK = 7;
@@ -33,7 +34,8 @@ export class MdMonthView<D> implements AfterContentInit {
   get activeDate(): D { return this._activeDate; }
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
-    this._activeDate = this._dateAdapter.parse(value) || this._dateAdapter.today();
+    this._activeDate =
+        this._dateAdapter.parse(value, this._parseFormat) || this._dateAdapter.today();
     if (!this._hasSameMonthAndYear(oldActiveDate, this._activeDate)) {
       this._init();
     }
@@ -44,7 +46,7 @@ export class MdMonthView<D> implements AfterContentInit {
   @Input()
   get selected(): D { return this._selected; }
   set selected(value: D) {
-    this._selected = this._dateAdapter.parse(value);
+    this._selected = this._dateAdapter.parse(value, this._parseFormat);
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
   }
   private _selected: D;
@@ -76,7 +78,10 @@ export class MdMonthView<D> implements AfterContentInit {
   /** The names of the weekdays. */
   _weekdays: string[];
 
-  constructor(public _dateAdapter: DateAdapter<D>) {
+  /** The format to use when parsing dates. */
+  private _parseFormat: any;
+
+  constructor(public _dateAdapter: DateAdapter<D>, intl: MdDatepickerIntl) {
     const firstDayOfWeek = this._dateAdapter.getFirstDayOfWeek();
     const weekdays = this._dateAdapter.getDayOfWeekNames('narrow');
 
@@ -84,6 +89,8 @@ export class MdMonthView<D> implements AfterContentInit {
     this._weekdays = weekdays.slice(firstDayOfWeek).concat(weekdays.slice(0, firstDayOfWeek));
 
     this._activeDate = this._dateAdapter.today();
+
+    this._parseFormat = intl.parseDateFormat || this._dateAdapter.getPredefinedFormats().parseDate;
   }
 
   ngAfterContentInit(): void {

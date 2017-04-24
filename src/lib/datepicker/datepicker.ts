@@ -30,6 +30,7 @@ import 'rxjs/add/operator/first';
 import {Subscription} from 'rxjs/Subscription';
 import {MdDialogConfig} from '../dialog/dialog-config';
 import {DateAdapter} from '../core/datetime/index';
+import {MdDatepickerIntl} from './datepicker-intl';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -83,7 +84,7 @@ export class MdDatepicker<D> implements OnDestroy {
     // selected value is.
     return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
   }
-  set startAt(date: D) { this._startAt = this._dateAdapter.parse(date); }
+  set startAt(date: D) { this._startAt = this._dateAdapter.parse(date, this._parseFormat); }
   private _startAt: D;
 
   /**
@@ -131,11 +132,17 @@ export class MdDatepicker<D> implements OnDestroy {
   /** The input element this datepicker is associated with. */
   private _datepickerInput: MdDatepickerInput<D>;
 
+  /** A subscription to value changes on the datepicker input. */
   private _inputSubscription: Subscription;
+
+  /** The format to use when parsing dates. */
+  private _parseFormat: any;
 
   constructor(private _dialog: MdDialog, private _overlay: Overlay,
               private _viewContainerRef: ViewContainerRef, private _dateAdapter: DateAdapter<D>,
-              @Optional() private _dir: Dir) {}
+              intl: MdDatepickerIntl, @Optional() private _dir: Dir) {
+    this._parseFormat = intl.parseDateFormat || this._dateAdapter.getPredefinedFormats().parseDate;
+  }
 
   ngOnDestroy() {
     this.close();
