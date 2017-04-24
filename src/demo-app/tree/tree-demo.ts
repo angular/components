@@ -1,5 +1,5 @@
 import {Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, QueryList, TemplateRef} from '@angular/core';
-import {TreeDemoDataSource, Character} from './data-source';
+import {TreeDemoDataSource, Character, CHARACTERS} from './data-source';
 import {TreeModel} from '@angular/material';
 
 @Directive({
@@ -31,9 +31,9 @@ export class TreeDemo {
     return node.villan;
   }
 
-  getPadding(level: number) {
-    return this.treeModel.isFlatTree ? `${level  *  20}px` : '0';
-  }
+  // getPadding(level: number) {
+  //   return this.treeModel.isFlatTree ? `${level  *  20}px` : '0';
+  // }
 
   customerClickAction(event: any) {
     console.log(`custom click action clicked ${event}`);
@@ -47,4 +47,18 @@ export class TreeDemo {
     console.log(`on tree expanded`);
     console.log(expanded);
   }
+
+  get nodes() {
+    return CHARACTERS;
+  }
+
+  getKeyFunction = (node: any) => {
+    console.log(`get key function ${node} ${node.id}`);
+    return node.id;
+  };
+
+  getChildrenFunction = (node: Character) => {
+    console.log(`get children function ${node} ${node.id}`);
+    return node.children;
+  };
 }

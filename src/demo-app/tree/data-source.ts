@@ -12,27 +12,24 @@ export interface Character extends TreeData {
 }
 
 export const CHARACTERS = [
-  {name: 'Goofy', movie: 'A Goofy Movie', icon: 'check', children: [
-    {name: 'Jane', movie: 'Tarzan'},
-    {name: 'Pumbaa', movie: 'The Lion King'},
-    {name: 'Mulan', movie: 'Mulan', children: [
-      {name: 'Thumper', movie: 'Bambi', icon: 'favorite'},
-      {name: 'Mad Hatter', movie: 'Alice in Wonderland', children: [
-        {name: 'Jafar', movie: 'Aladdin', villan: true},
-        {name: 'Lilo', movie: 'Lilo and Stitch'},
+  {id: 'goofy', name: 'Goofy', movie: 'A Goofy Movie', icon: 'check', children: [
+    {id: 'jane', name: 'Jane', movie: 'Tarzan'},
+    {id: 'pumbaa', name: 'Pumbaa', movie: 'The Lion King'},
+    {id: 'mulan', name: 'Mulan', movie: 'Mulan', children: [
+      {id: 'thumper', name: 'Thumper', movie: 'Bambi', icon: 'favorite'},
+      {id: 'madhatter', name: 'Mad Hatter', movie: 'Alice in Wonderland', children: [
+        {id: 'jafar', name: 'Jafar', movie: 'Aladdin', villan: true},
+        {id: 'lilo', name: 'Lilo', movie: 'Lilo and Stitch'},
       ]},
     ]}
   ]},
-  {name: 'Tinker Bell', icon: 'favorite', movie: 'Peter Pan', children: null},
-  {name: 'Thumper', movie: 'Bambi', icon: 'favorite'},
-  {name: 'Mad Hatter', movie: 'Alice in Wonderland'},
-  {name: 'Kronk', movie: 'The Emperor\'s New Groove', villan: true},
-  {name: 'Gus Gus', movie: 'Cinderella'},
-  {name: 'Jiminy Cricket', movie: 'Pinocchio'},
-  {name: 'Tigger', movie: 'Winnie the Pooh'},
-  {name: 'Gaston', movie: 'Beauty and the Beast', villan: true},
-
-  {name: 'Sebastian', movie: 'The Little Mermaid'}
+  {id: 'tinkerbell', name: 'Tinker Bell', icon: 'favorite', movie: 'Peter Pan', children: null},
+  {id: 'kronk', name: 'Kronk', movie: 'The Emperor\'s New Groove', villan: true},
+  {id: 'gusgus', name: 'Gus Gus', movie: 'Cinderella'},
+  {id: 'jiminy', name: 'Jiminy Cricket', movie: 'Pinocchio'},
+  {id: 'tigger', name: 'Tigger', movie: 'Winnie the Pooh'},
+  {id: 'gaston', name: 'Gaston', movie: 'Beauty and the Beast', villan: true},
+  {id: 'sebastian', name: 'Sebastian', movie: 'The Little Mermaid'}
 ];
 
 export class TreeDemoDataSource implements MdTreeDataSource<Character> {
@@ -75,9 +72,12 @@ export class TreeDemoDataSource implements MdTreeDataSource<Character> {
   getChildren(node: Character): Promise<Character[]> {
     return new Promise((resolve, reject) => {
       console.log(`get children`);
-      resolve([{name: 'Dumbo', movie: 'Dumbo'},
-        {name: 'Jafar', movie: 'Aladdin', villan: true},
-        {name: 'Lilo', movie: 'Lilo and Stitch'}]);
+      setTimeout(() => {
+        resolve([{name: 'Dumbo', movie: 'Dumbo'},
+          {name: 'Jafar', movie: 'Aladdin', villan: true},
+          {name: 'Lilo', movie: 'Lilo and Stitch'}]);
+      }, 2000);
+
     });
 
   }

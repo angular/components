@@ -18,18 +18,27 @@ Output, EventEmitter
 import {Subscription} from 'rxjs/Subscription';
 import {PortalHostDirective, FocusOriginMonitor, MdRipple, RippleRef} from '../core';
 import {MdTree, MdNodeContext} from './tree';
-import {TreeNodeModel, TreeModel} from './tree-model';
+import {TreeNodeState} from './tree-model';
 
-@Component({
+@Directive({
   selector: 'md-tree-node',
-  templateUrl: './tree-node.html',
-  styleUrls: ['tree-node.css']
+  // templateUrl: './tree-node.html',
+  // styleUrls: ['tree-node.css']
 })
 export class MdTreeNode implements OnInit, OnDestroy {
 
   @Input() templateRef: TemplateRef<MdNodeContext>;
-  @Input() treeNodeModel: TreeNodeModel<any>;
+  @Input() treeNodeState: TreeNodeState;
+  @Input() node: any;
+  @Input() treeControl: MdTree;
 
+  get level() {
+    return this.treeNodeState.level;
+  }
+
+  get treeNodeModel() {
+    return this;
+  }
   constructor(private _elementRef: ElementRef, private _renderer: Renderer,
               private _focusOriginMonitor: FocusOriginMonitor) {
 
@@ -42,34 +51,46 @@ export class MdTreeNode implements OnInit, OnDestroy {
 
   // Selection related
   select() {
-    this.treeNodeModel.select();
+    console.log(`select ${this.treeNodeState.selected}`);
+    this.treeControl.toggleSelect(this.node);
+    console.log(`select ${this.treeNodeState.selected}`);
   }
 
-  get isSelected() {
-    return this.treeNodeModel.selected;
+  get selected() {
+    return this.treeNodeState.selected;
+  }
+  set selected(value: boolean) {
+    this.treeControl.select(this.node, value);
   }
 
   // Expansion related
-  get isExpanded() {
-    return this.treeNodeModel.expanded;
+  get expanded() {
+    return this.treeNodeState.expanded;
+  }
+  set expanded(value: boolean) {
+    this.treeControl.expand(this.node, value);
   }
 
-  get isExpandable() {
-    return this.treeNodeModel.expandable;
+  get expandable() {
+    return !!this.node.children;
   }
 
   expand() {
-    this.treeNodeModel.expand();
+    this.treeControl.toggleExpand(this.node);
   }
 
   onClick() {
-    console.log(`onNode clicked ${this.treeNodeModel.data}`);
+    console.log(`onNode clicked ${this.node}`);
     this.expand();
   }
 
   onFocus() {
     console.log(`on node focus`);
 
+  }
+  indentIncremental = 20;
+  get paddingStyle() {
+    return `${this.treeNodeState.level * this.indentIncremental}px`;
   }
 
   ngOnInit() {}

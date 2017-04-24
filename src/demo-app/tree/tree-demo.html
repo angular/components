@@ -1,11 +1,12 @@
-<md-tree [treeModel]="treeModel" (clickChange)="onTreeClicked($event)" (selectChange)="onTreeSelected" (expandChange)="onTreeExpanded($event)">
-  <div *mdNodeContext="let node = node" [style.padding-left]="getPadding(node.level)" (click)="customerClickAction($event)">
-    <md-checkbox [checked]="node.selected" (change)="node.select()"></md-checkbox>
-    <md-icon *ngIf="node.loading" class="sync-icon">sync</md-icon>
-    <md-icon *ngIf="node.expandable" (click)="node.expand()" class="expand-icon">{{node.expanded ? 'arrow_drop_up' : 'arrow_drop_down'}}</md-icon>
-    <span (click)="node.select()" [ngClass]="node.selected ? 'selected-node' : 'unselected-node'">{{node.data.name}}</span>
-    <span>{{node.data.movie}}</span>
-  </div>
+<md-tree [nodes]="nodes" (clickChange)="onTreeClicked($event)" (selectChange)="onTreeSelected" (expandChange)="onTreeExpanded($event)"
+         [getKeyFunction]="getKeyFunction"
+         [getChildrenFunction]="getChildrenFunction">
+  <md-tree-node *mdNodeContext="let node = node; let state = state">
+    <button (click)="select()">Selected: {{state.selected}}</button>
+    <md-icon>sync</md-icon>
+    <md-icon>{{state.expanded ? 'arrow_drop_up' : 'arrow_drop_down'}}</md-icon>
+    {{node.id}}: <span> {{node.name}}</span> ( <span>{{node.movie}}</span> )
+  </md-tree-node>
 </md-tree>
 
 
