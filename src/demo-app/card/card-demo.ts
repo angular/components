@@ -8,6 +8,6 @@ import {Component} from '@angular/core';
   styleUrls: ['card-demo.css'],
 })
 export class CardDemo {
-  private elevation: number;
-  private elevations: number[] = Array.apply(null, {length: 24}).map((v: any, i: number) => i + 1);
+  elevation: number;
+  elevations: number[] = Array.apply(null, {length: 24}).map((v: any, i: number) => i + 1);
 }
