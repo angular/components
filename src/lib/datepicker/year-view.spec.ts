@@ -4,6 +4,7 @@ import {By} from '@angular/platform-browser';
 import {MdYearView} from './year-view';
 import {MdCalendarBody} from './calendar-body';
 import {DatetimeModule} from '../core/datetime/index';
+import {MdDatepickerIntl} from './datepicker-intl';
 
 
 // When constructing a Date, the month is zero-based. This can be confusing, since people are
@@ -26,6 +27,9 @@ describe('MdYearView', () => {
         StandardYearView,
         YearViewWithDateFilter,
       ],
+      providers: [
+        MdDatepickerIntl,
+      ]
     });
 
     TestBed.compileComponents();
