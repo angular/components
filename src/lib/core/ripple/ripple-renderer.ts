@@ -1,5 +1,5 @@
 import {ElementRef, NgZone} from '@angular/core';
-import {isBrowser} from '../platform/browser';
+import {Platform} from '../platform/platform';
 import {ViewportRuler} from '../overlay/position/viewport-ruler';
 import {RippleRef, RippleState} from './ripple-ref';
 
@@ -48,10 +48,14 @@ export class RippleRenderer {
   /** Whether mouse ripples should be created or not. */
   rippleDisabled: boolean = false;
 
-  constructor(_elementRef: ElementRef, private _ngZone: NgZone, private _ruler: ViewportRuler) {
+  constructor(
+      elementRef: ElementRef,
+      private _ngZone: NgZone,
+      private _ruler: ViewportRuler,
+      platform: Platform) {
     // Only do anything if we're on the browser.
-    if (isBrowser()) {
-      this._containerElement = _elementRef.nativeElement;
+    if (platform.isBrowser) {
+      this._containerElement = elementRef.nativeElement;
 
       // Specify events which need to be registered on the trigger.
       this._triggerEvents.set('mousedown', this.onMousedown.bind(this));

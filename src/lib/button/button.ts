@@ -9,9 +9,8 @@ import {
   Renderer2,
   ViewEncapsulation
 } from '@angular/core';
-import {coerceBooleanProperty, FocusOriginMonitor} from '../core';
+import {coerceBooleanProperty, FocusOriginMonitor, Platform} from '../core';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
-import {isBrowser} from '../core/platform/browser';
 
 
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
@@ -111,8 +110,11 @@ export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisabl
   get disableRipple() { return this._disableRipple; }
   set disableRipple(v) { this._disableRipple = coerceBooleanProperty(v); }
 
-  constructor(private _elementRef: ElementRef, private _renderer: Renderer2,
-              private _focusOriginMonitor: FocusOriginMonitor) {
+  constructor(
+      private _elementRef: ElementRef,
+      private _renderer: Renderer2,
+      private _platform: Platform,
+      private _focusOriginMonitor: FocusOriginMonitor) {
     super();
     this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
   }
@@ -163,7 +165,7 @@ export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisabl
     // If not on the browser, say that there are none of the attributes present.
     // Since these only affect how the ripple displays (and ripples only happen on the client),
     // detecting these attributes isn't necessary when not on the browser.
-    if (!isBrowser()) {
+    if (!this._platform.isBrowser) {
       return false;
     }
 
@@ -193,8 +195,12 @@ export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisabl
   encapsulation: ViewEncapsulation.None
 })
 export class MdAnchor extends MdButton {
-  constructor(elementRef: ElementRef, renderer: Renderer2, focusOriginMonitor: FocusOriginMonitor) {
-    super(elementRef, renderer, focusOriginMonitor);
+  constructor(
+      elementRef: ElementRef,
+      renderer: Renderer2,
+      platform: Platform,
+      focusOriginMonitor: FocusOriginMonitor) {
+    super(elementRef, renderer, platform, focusOriginMonitor);
   }
 
   /** @docs-private */
