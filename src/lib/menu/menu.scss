@@ -12,8 +12,8 @@ $mat-menu-vertical-padding: 8px !default;
   @include mat-menu-base();
   @include mat-menu-positions();
 
-  // max height must be 100% of the viewport height + one row height
-  max-height: calc(100vh + 48px);
+  // max height must be 100% of the viewport height - one row height
+  max-height: calc(100vh - 48px);
 
   @include cdk-high-contrast {
     outline: solid 1px;
