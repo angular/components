@@ -1,18 +1,16 @@
-import {MdTree, MdNodeContext} from './tree';
-import {MdTreeNode} from './tree-node';
-import {MdTreeDataSource, MdTreeNodes} from './data-source';
+import {MdTree, MdNode, MdNodeDef, MdNodeOutlet, MdNodePlaceholder} from './tree';
+import {TreeDataSource, MdTreeViewData} from './data-source';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TreeModel, TreeNodeModel, TreeData} from './tree-model';
 import {FocusOriginMonitor, MdRippleModule} from '../core';
 
 export * from './data-source';
-export * from './tree-model';
+export * from './tree';
 
 @NgModule({
   imports: [CommonModule, MdRippleModule],
-  exports: [MdTreeNode, MdTree, MdNodeContext, MdTreeNode],
-  declarations: [MdTreeNode, MdTree, MdNodeContext, MdTreeNode],
+  exports: [MdTree, MdNodeDef, MdNodeOutlet, MdNode, MdNodePlaceholder],
+  declarations: [MdTree, MdNodeDef, MdNodeOutlet, MdNode, MdNodePlaceholder],
   providers: [FocusOriginMonitor]
 })
 export class MdTreeModule {}

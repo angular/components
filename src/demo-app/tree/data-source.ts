@@ -1,85 +1,65 @@
+import {TreeDataSource, MdTree, MdTreeViewData} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
-import {BehaviorSubject} from 'rxjs/Rx';
-import {MdTreeDataSource, MdTreeNodes, TreeData} from '@angular/material';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/pairwise';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/combineLatest';
+import {PeopleDatabase, UserData} from './person-database';
 
-export interface Character extends TreeData {
-  name: string;
-  movie: string;
-  villan?: boolean;
-  icon?: string;
-  children: Character[];
-  hasChildren: boolean;
-}
 
-export const CHARACTERS = [
-  {id: 'goofy', name: 'Goofy', movie: 'A Goofy Movie', icon: 'check', children: [
-    {id: 'jane', name: 'Jane', movie: 'Tarzan'},
-    {id: 'pumbaa', name: 'Pumbaa', movie: 'The Lion King'},
-    {id: 'mulan', name: 'Mulan', movie: 'Mulan', children: [
-      {id: 'thumper', name: 'Thumper', movie: 'Bambi', icon: 'favorite'},
-      {id: 'madhatter', name: 'Mad Hatter', movie: 'Alice in Wonderland', children: [
-        {id: 'jafar', name: 'Jafar', movie: 'Aladdin', villan: true},
-        {id: 'lilo', name: 'Lilo', movie: 'Lilo and Stitch'},
-      ]},
-    ]}
-  ]},
-  {id: 'tinkerbell', name: 'Tinker Bell', icon: 'favorite', movie: 'Peter Pan', children: null},
-  {id: 'kronk', name: 'Kronk', movie: 'The Emperor\'s New Groove', villan: true},
-  {id: 'gusgus', name: 'Gus Gus', movie: 'Cinderella'},
-  {id: 'jiminy', name: 'Jiminy Cricket', movie: 'Pinocchio'},
-  {id: 'tigger', name: 'Tigger', movie: 'Winnie the Pooh'},
-  {id: 'gaston', name: 'Gaston', movie: 'Beauty and the Beast', villan: true},
-  {id: 'sebastian', name: 'Sebastian', movie: 'The Little Mermaid'}
-];
+export class PersonDataSource extends TreeDataSource<any> {
+  _filteredData = new BehaviorSubject<UserData[]>([]);
+  get filteredData(): UserData[] { return this._filteredData.value; }
 
-export class TreeDemoDataSource implements MdTreeDataSource<Character> {
-  private readonly nodeSubject =
-    new BehaviorSubject<MdTreeNodes<Character>>({nodes: [], nodeCount: 0});
+  _displayData = new BehaviorSubject<UserData[]>([]);
+  get displayedData(): UserData[] { return this._displayData.value; }
 
-  constructor() {
-    this.loadTableRows();
-  }
+  _renderedData: any[] = [];
 
-  /**
-   * Returns an observable the table watches in order to update rows.
-   * @override
-   */
-  getNodes(): Observable<MdTreeNodes<Character>> {
-    console.log(`get nodes`)
-    return this.nodeSubject.asObservable();
-  }
+  _filter = new BehaviorSubject<string>('');
+  set filter(filter: string) { this._filter.next(filter); }
+  get filter(): string { return this._filter.value; }
 
-  /**
-   * Updates the table based on the table settings and filters.
-   */
-  loadTableRows() {
-    this.getRowsFromServer().subscribe(filteredRows => {
-      const nodes = {nodes: filteredRows, nodeCount: filteredRows.length};
-      console.log(`nodes ${nodes}`);
-      this.nodeSubject.next(nodes);
+
+  constructor(private peopleDatabase: PeopleDatabase) {
+    super();
+
+    // When the base data or filter changes, fetch a new set of filtered data.
+    const baseFilteredDataChanges = [this.peopleDatabase.baseDataChange, this._filter];
+    Observable.combineLatest(baseFilteredDataChanges)
+      .mergeMap(() => this.peopleDatabase.getData(this.filter))
+      .subscribe((data: UserData[]) => {
+        this._filteredData.next(data);
+      });
+
+
+    // Update displayed data when the filtered data changes, or the sort/pagination changes.
+    // When the filtered data changes, re-sort the data and update data size and displayed data.
+    this._filteredData.subscribe((result: any[]) => {
+
+      this._displayData.next(result);
     });
   }
 
-  /**
-   * Simulates getting a list of filtered rows from the server with a delay.
-   */
-  getRowsFromServer(): Observable<Character[]> {
-    const filteredRows = CHARACTERS;
+  connectTree(viewChange: Observable<MdTreeViewData>): Observable<UserData[]> {
+    return Observable.combineLatest([viewChange, this._displayData]).map((result: any[]) => {
+      const [view, displayData] = result;
 
-    return Observable.of(filteredRows);
-  }
+      // Set the rendered rows length to the virtual page size. Fill in the data provided
+      // from the index start until the end index or pagination size, whichever is smaller.
+      this._renderedData.length = displayData.length;
 
-  getChildren(node: Character): Promise<Character[]> {
-    return new Promise((resolve, reject) => {
-      console.log(`get children`);
-      setTimeout(() => {
-        resolve([{name: 'Dumbo', movie: 'Dumbo'},
-          {name: 'Jafar', movie: 'Aladdin', villan: true},
-          {name: 'Lilo', movie: 'Lilo and Stitch'}]);
-      }, 2000);
+      const buffer = 20;
+      const rangeStart = Math.max(0, view.start - buffer);
+      const rangeEnd = Math.min(displayData.length, view.end + buffer);
+      for (let i = rangeStart; i < rangeEnd; i++) {
+        this._renderedData[i] = displayData[i];
+      }
 
+      return this._renderedData; // Currently ignoring the view
     });
-
   }
-
 }

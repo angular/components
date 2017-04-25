@@ -1,256 +1,198 @@
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
+  ViewChild,
   Component,
-  ContentChild,
-  ContentChildren,
   Directive,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  QueryList,
   TemplateRef,
-  ViewEncapsulation
+  ContentChildren,
+  ContentChild,
+  QueryList,
+  ViewContainerRef,
+  Input,
+  forwardRef,
+  IterableDiffers,
+  SimpleChanges,
+  IterableDiffer,
+  Inject,
+  ViewEncapsulation,
+  ElementRef,
+  Renderer,
+  IterableChanges,
+  IterableChangeRecord
 } from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
-import {MdTreeDataSource} from './data-source';
-import {SelectionModel} from '../core/selection/selection';
-import {TreeNodeState} from './tree-model';
-import {MdTreeNode} from './tree-node';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import 'rxjs/add/operator/let';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/observable/combineLatest';
+import {TreeDataSource, MdTreeViewData} from './data-source';
 
-/**
- * Type for the mdRowContextWhen method. Takes in the current row in the ngFor
- * loop as well as the collection of ngFor properties. Returns whether to show
- * the given row.
- */
-export interface MdNodeContextWhenFunction {
-  (node?: any, ngForContext?: TreeNodeContext): boolean;
+/** Height of each row in pixels (48 + 1px border) */
+export const ROW_HEIGHT = 49;
+
+/** Amount of rows to buffer around the view */
+export const BUFFER = 3;
+
+@Directive({selector: '[mdNodeDef]'})
+export class MdNodeDef {
+  @Input('mdNodeDef') name: string;
+
+  constructor(public template: TemplateRef<any>) {}
 }
 
-/**
- * Passed in values to the MdRowContextWhenFunction. These properties are
- * copied from the ngFor loop, which allow you access to loop variables when
- * determining to render a row template.
- */
-export interface TreeNodeContext {
-  index: number;
-  state: TreeNodeState;
-}
-
-
-@Directive({selector: '[mdNodeContext]'})
-export class MdNodeContext {
-
-  private _when: MdNodeContextWhenFunction;
-
-  @Input()
-  set mdNodeContextWhen(value: MdNodeContextWhenFunction) {
-    this._when = value;
-  }
-
-  get mdNodeContextWhen(): MdNodeContextWhenFunction {
-    return this._when;
-  }
-
-
-  constructor(public template: TemplateRef<MdNodeContext>) {}
-}
-/**
- * A material design table component. In order to use the md-data-table, a
- * dataSource must be provided which implements the MdTableDataSource. The
- * table should contain md-row, mdRowContext, and md-cell directives.
- *
- * Example Use:
- * <md-data-table [dataSource]="dataSource">
- *   <md-header-row>
- *     <md-header-cell>Name</md-header-cell>
- *     <md-header-cell>Email</md-header-cell>
- *   <md-header-row>
- *   <md-row *mdRowContext="let row = row; when: mySuperCoolWhenFn">
- *     <md-cell>{{row.name}}</md-cell>
- *     <md-cell>{{row.email}}</md-cell>
- *   </md-row>
- * </md-data-table>
- * <md-tree [dataSource]="dataSource">
- *   <md-tree-parent>
- *   <md-tree-node *mdNodeContext="let node  = node">
- *     {{node.name}}
- *   </md-tree-node>
- * </md-tre>
- */
 @Component({
-  moduleId: module.id,
-  selector: 'md-tree',
-  templateUrl: 'tree.html',
-  styleUrls: ['tree.css'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'md-node',
+  template: '<ng-container mdNodeOutlet></ng-container>',
+  host: {
+    'class': 'mat-row',
+    'role': 'row',
+  },
 })
-export class MdTree implements OnInit, OnDestroy {
-
-  @ContentChildren(MdNodeContext) nodeContexts: QueryList<MdNodeContext>;
-  @Input() getChildrenFunction: any;
-  @Input() getKeyFunction: any;
-
-  _selectionModel: SelectionModel<any>;
-  // The states map of the tree
-  treeNodeStates: Map<any, TreeNodeState>;
-
-  // The node map of the tree
-  //treeNodes: Map<string, MdTreeNode>;
-
-  // The flattened tree, store the id of the node value
-  flatNodes: any[];
-
-  nodesMap: Map<any, any>;
-  // The original value of nodes
-  _nodes: any[];
-  @Input()
-  get nodes() { return this._nodes;}
-  set nodes(value: any[]) {
-    this._nodes = value;
-    this._buildNodeMap();
-    this.flattenNodes();
+export class MdNode {
+  constructor(private nodeDef: MdNodeDef,
+              private elementRef: ElementRef,
+              private renderer: Renderer) {
+    this.renderer.setElementClass(elementRef.nativeElement, 'mat-node', true);
+    this.renderer.setElementClass(elementRef.nativeElement, nodeDef.name, true);
   }
+}
 
-  /** Tree properties */
-  _multiSelection: boolean = true;
-  @Input()
-  get multiSelection() { return this._multiSelection; }
-  set multiSelection(value: boolean) {
-    this._multiSelection = value;
-    this._selectionModel = new SelectionModel<any>(value);
+@Directive({selector: '[mdNodeOutlet]'})
+export class MdNodeOutlet {
+  node: MdNodeDef;
+  context: any;
+
+  static mostRecentNodeOutlet: MdNodeOutlet = null;
+
+  constructor(private _viewContainer: ViewContainerRef) {
+    MdNodeOutlet.mostRecentNodeOutlet = this;
   }
-  @Input() flatTree: boolean = true;
-  @Input() defaultExpandAll: boolean;
-
-
-  get treeControl() { return this; }
-  //@Input() treeModel: TreeModel<any>;
-
-  /**
-   * The dataSource for the table rows. Not passing in a dataSource will
-   * result in an MdTableInvalidDataSourceError exception.
-   */
-
-  @Output() onReload = new EventEmitter<void>();
-
-  @Output() selectChange = new EventEmitter<any>();
-  @Output() expandChange = new EventEmitter<any>();
-
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef) {
-    this._selectionModel = new SelectionModel<any>(this.multiSelection);
-  }
-
-  //get templateRef() { return this.nodeContext.template; }
 
   ngOnInit() {
-    //
+    this._viewContainer.createEmbeddedView(this.node.template, this.context);
+  }
+}
+
+@Directive({selector: '[mdNodePlaceholder]'})
+export class MdNodePlaceholder {
+  constructor(public viewContainer: ViewContainerRef) { }
+}
+
+@Component({
+  selector: 'md-tree',
+  styleUrls: ['./tree.css'],
+  template: `    
+    <ng-container mdNodePlaceholder></ng-container>
+    <ng-template #emptyNode><div class="empty"></div></ng-template>
+  `,
+  host: {
+    'class': 'mat-tree',
+  },
+  encapsulation: ViewEncapsulation.None,
+})
+export class MdTree {
+  @Input() dataSource: TreeDataSource<any>;
+
+  viewChange = new BehaviorSubject<MdTreeViewData>({start: 0, end: 20});
+
+  private _dataDiffer: IterableDiffer<any> = null;
+
+  @ContentChildren(MdNodeDef) nodeDefinitions: QueryList<MdNodeDef>;
+  @ViewChild(MdNodePlaceholder) nodePlaceholder: MdNodePlaceholder;
+  @ViewChild('emptyNode') emptyNodeTemplate: TemplateRef<any>;
+
+  constructor(private _differs: IterableDiffers, private elementRef: ElementRef) {
+    this._dataDiffer = this._differs.find([]).create();
   }
 
-  ngOnDestroy() {
+  ngOnInit() {
+    Observable.fromEvent(this.elementRef.nativeElement, 'scroll')
+      .debounceTime(100)
+      .subscribe(() => this.scrollEvent());
   }
 
-  select(node: any, value: boolean) {
-    let state = this.treeNodeStates.get(node);
-    if (state && value != state.selected) {
-      state.selected = value;
-      this._selectionModel.toggle(node);
-    }
+  ngAfterViewInit() {
+    const connectFn = this.dataSource.connectTree.bind(this.dataSource);
+    this.viewChange.let(connectFn)
+      .subscribe((result: any) => { this.renderNodeChanges(result); });
   }
 
-  expand(node: any, value: boolean) {
-    let state = this.treeNodeStates.get(node);
-    if (state && value != state.expanded) {
-      state.expanded = value;
-      this.flattenNodes();
-    }
+  scrollToTop() {
+    this.elementRef.nativeElement.scrollTop = 0;
   }
 
-  toggleSelect(node: any) {
-    let state = this.treeNodeStates.get(node);
-    if (state) {
-      this.select(node, !state.selected);
-    }
-  }
+  scrollEvent() {
+    const scrollTop = this.elementRef.nativeElement.scrollTop;
+    const elementHeight = this.elementRef.nativeElement.getBoundingClientRect().height;
 
-  toggleExpand(node: any) {
+    const topIndex = Math.floor(scrollTop / ROW_HEIGHT);
 
-    let state = this.treeNodeStates.get(node);
-    if (state) {
-      this.expand(node, !state.expanded);
-    }
-  }
-
-  flattenNodes() {
-    console.log(`flatten ndoes`);
-    this.flatNodes = [];
-    for (let node of this.nodes) {
-      this._flattenNode(node, 0)
-    }
-  }
-
-  _flattenNode(node: any, level: number) {
-    let id = this.getKeyFunction(node);
-    this.flatNodes.push(node);
-
-    let state = this.treeNodeStates.get(node);
-    if (!state) {
-      state = new TreeNodeState();
-      this.treeNodeStates.set(node, state);
-      state.expanded = this.defaultExpandAll;
-    }
-    state.level = level;
-
-    if (state.expanded) {
-      for (let child of this.getChildrenFunction(node)) {
-        this._flattenNode(child, level + 1);
-      }
-    }
-  }
-
-  _addToNodeMap(node: any) {
-    let id = this.getKeyFunction(node);
-    this.nodesMap.set(id, node);
-    if (node.children) {
-      for (let child of this.getChildrenFunction(node)) {
-        this._addToNodeMap(child);
-      }
-    }
-  }
-
-  _buildNodeMap() {
-    console.log(`build node map`);
-    this.treeNodeStates = new Map<any, TreeNodeState>();
-    this.nodesMap = new Map<any, any>();
-    for (let node of this.nodes) {
-      this._addToNodeMap(node);
-    }
-  }
-
-  getTreeNodeState(node: any) {
-    console.log(`get tree node state ${node}`);
-    return this.treeNodeStates.get(node);
-  }
-
-  /**
-   * Returns the first template that matches the row.
-   */
-  getTemplateForNode(node: any, index: number): TemplateRef<MdNodeContext> {
-    let state = this.treeNodeStates.get(node);
-    const nodeContext: TreeNodeContext = {
-      index: index,
-      state: state
+    const view = {
+      start: Math.max(topIndex - BUFFER, 0),
+      end: Math.ceil(topIndex + (elementHeight / ROW_HEIGHT)) + BUFFER
     };
 
-    return this.nodeContexts
-      .find(nodeContext => {
-        const whenFunction = nodeContext.mdNodeContextWhen;
-        return true; //whenFunction ? whenFunction(node, nodeContext) : true;
-      })
-      .template;
+    this.viewChange.next(view);
+  }
+
+  renderNodeChanges(dataNodes: any[]) {
+
+    console.time('Rendering rows');
+    console.log(dataNodes);
+    const changes = this._dataDiffer.diff(dataNodes);
+    if (!changes) { return; }
+
+    const oldScrollTop = this.elementRef.nativeElement.scrollTop;
+    changes.forEachOperation(
+      (item: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
+        if (item.previousIndex == null) {
+          console.log('Adding row ');
+          this.addNode(dataNodes[currentIndex], currentIndex);
+        } else if (currentIndex == null) {
+          console.log('Removing a row ');
+          this.nodePlaceholder.viewContainer.remove(adjustedPreviousIndex);
+        } else {
+          console.log('Moving a row');
+          const view = this.nodePlaceholder.viewContainer.get(adjustedPreviousIndex);
+          this.nodePlaceholder.viewContainer.move(view, currentIndex);
+        }
+      });
+
+    // Scroll changes in the process of adding/removing rows. Reset it back to where it was
+    // so that it (1) it does not shift and (2) a scroll event does not get triggered which
+    // would cause a loop.
+    this.elementRef.nativeElement.scrollTop = oldScrollTop;
+
+    console.timeEnd('Rendering rows');
+  }
+
+  addNode(data: any, currentIndex: number) {
+    if (data) {
+      let node = this.getRowDefForItem(data);
+
+      const context = {$implicit: data};
+      this.nodePlaceholder.viewContainer.createEmbeddedView(node.template, context, currentIndex);
+
+      // Set cells outlet
+      this.setLatestRowsCellsOutlet(node, data);
+    } else {
+      this.nodePlaceholder.viewContainer.createEmbeddedView(this.emptyNodeTemplate, {}, currentIndex);
+    }
+  }
+
+  // Hack attack! Because we're so smart, we know that immediately after calling
+  // `createEmbeddedView` that the most recently constructed instance of MdCellOutlet
+  // is the one inside this row, so we can set stuff to it (so that the user doesn't have to).
+  // TODO: add some code to enforce that exactly one MdCellOutlet was instantiated as a result
+  // of this `createEmbeddedView`.
+  setLatestRowsCellsOutlet(node: MdNodeDef, item: any) {
+    let nodeOutlet = MdNodeOutlet.mostRecentNodeOutlet;
+    nodeOutlet.node = node;
+    nodeOutlet.context = {$implicit: item};
+  }
+
+  getRowDefForItem(item: any) {
+    // proof-of-concept: only supporting one row definition
+    return this.nodeDefinitions.first;
   }
 }

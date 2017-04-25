@@ -1,12 +1,10 @@
 import {Observable} from 'rxjs/Observable';
 
-export interface MdTreeNodes<T> {
-  nodes: T[];
-  nodeCount: number;
+export interface MdTreeViewData {
+  start: number;
+  end: number;
 }
 
-export interface MdTreeDataSource<T> {
-  getNodes(): Observable<MdTreeNodes<T>>;
-
-  getChildren(node: T): Promise<T[]>;
+export abstract class TreeDataSource<T> {
+  abstract connectTree(viewChanged: Observable<MdTreeViewData>): Observable<T[]>;
 }
