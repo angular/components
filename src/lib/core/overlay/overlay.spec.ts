@@ -7,6 +7,7 @@ import {OverlayContainer} from './overlay-container';
 import {OverlayState} from './overlay-state';
 import {PositionStrategy} from './position/position-strategy';
 import {OverlayModule} from './overlay-directives';
+import {ScrollStrategy} from './scroll/scroll-strategy';
 
 
 describe('Overlay', () => {
@@ -294,6 +295,50 @@ describe('Overlay', () => {
         .toBeLessThan(children.indexOf(pane), 'Expected backdrop to be before the pane in the DOM');
     });
 
+  });
+
+  describe('scroll strategy', () => {
+    let fakeScrollStrategy: ScrollStrategy;
+    let config: OverlayState;
+
+    beforeEach(() => {
+      config = new OverlayState();
+      fakeScrollStrategy = {
+        attach: jasmine.createSpy('attach spy'),
+        enable: jasmine.createSpy('enable spy'),
+        disable: jasmine.createSpy('disable spy')
+      };
+      config.scrollStrategy = fakeScrollStrategy;
+    });
+
+    it('should attach the overlay ref to the scroll strategy', () => {
+      let overlayRef = overlay.create(config);
+
+      expect(fakeScrollStrategy.attach).toHaveBeenCalledWith(overlayRef);
+    });
+
+    it('should enable the scroll strategy when the overlay is attached', () => {
+      let overlayRef = overlay.create(config);
+
+      overlayRef.attach(componentPortal);
+      expect(fakeScrollStrategy.enable).toHaveBeenCalled();
+    });
+
+    it('should disable the scroll strategy once the overlay is detached', () => {
+      let overlayRef = overlay.create(config);
+
+      overlayRef.attach(componentPortal);
+      overlayRef.detach();
+
+      expect(fakeScrollStrategy.disable).toHaveBeenCalled();
+    });
+
+    it('should disable the scroll strategy when the overlay is destroyed', () => {
+      let overlayRef = overlay.create(config);
+
+      overlayRef.dispose();
+      expect(fakeScrollStrategy.disable).toHaveBeenCalled();
+    });
   });
 });
 
