@@ -94,7 +94,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * @param element Element to which to apply the CSS styles.
    * @returns Resolves when the styles have been applied.
    */
-  apply(element: HTMLElement): Promise<void> {
+  apply(element: HTMLElement): void {
     // Cache the overlay pane element in case re-calculating position is necessary
     this._pane = element;
 
@@ -129,8 +129,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
         const scrollableViewProperties = this.getScrollableViewProperties(element);
         const positionChange = new ConnectedOverlayPositionChange(pos, scrollableViewProperties);
         this._onPositionChange.next(positionChange);
-
-        return Promise.resolve(null);
+        return;
       } else if (!fallbackPoint || fallbackPoint.visibleArea < overlayPoint.visibleArea) {
         fallbackPoint = overlayPoint;
         fallbackPosition = pos;
@@ -140,8 +139,6 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     // If none of the preferred positions were in the viewport, take the one
     // with the largest visible area.
     this._setElementPosition(element, overlayRect, fallbackPoint, fallbackPosition);
-
-    return Promise.resolve(null);
   }
 
   /**

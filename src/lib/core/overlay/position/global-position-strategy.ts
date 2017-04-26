@@ -128,7 +128,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * @param element Element to which to apply the CSS.
    * @returns Resolved when the styles have been applied.
    */
-  apply(element: HTMLElement): Promise<void> {
+  apply(element: HTMLElement): void {
     if (!this._wrapper) {
       this._wrapper = document.createElement('div');
       this._wrapper.classList.add('cdk-global-overlay-wrapper');
@@ -149,8 +149,6 @@ export class GlobalPositionStrategy implements PositionStrategy {
 
     parentStyles.justifyContent = this._justifyContent;
     parentStyles.alignItems = this._alignItems;
-
-    return Promise.resolve(null);
   }
 
   /**
