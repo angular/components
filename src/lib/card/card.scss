@@ -79,10 +79,10 @@ $mat-card-avatar-size: 40px !default;
   }
 }
 
-// HEADER STYLES
+ // HEADER STYLES
 .mat-card-header {
   display: flex;
-  flex-direction: row;
+   flex-direction: row;
   padding: 16px;
 }
 
@@ -130,18 +130,18 @@ $mat-card-avatar-size: 40px !default;
 
 // MEDIA QUERIES
 // FIRST/LAST CHILD ADJUSTMENTS
-.mat-card> :first-child:not(.mat-card-image):not(.mat-card-header):not(.mat-card-actions),
-.mat-card>.mat-card-image:first-child~.mat-card-title-group:nth-child(2),
-.mat-card>.mat-card-image:first-child~.mat-card-content:nth-child(2) {
+.mat-card > :first-child:not(.mat-card-image):not(.mat-card-header):not(.mat-card-actions),
+.mat-card > .mat-card-image:first-child ~ .mat-card-title-group:nth-child(2),
+.mat-card > .mat-card-image:first-child ~ .mat-card-content:nth-child(2) {
   padding-top: 24px;
 }
 
-.mat-card>.mat-card-image~.mat-card-title-group,
-.mat-card>.mat-card-image~.mat-card-content {
+.mat-card > .mat-card-image ~ .mat-card-title-group,
+.mat-card > .mat-card-image ~ .mat-card-content {
   padding-top: 16px;
 }
 
-.mat-card> :last-child:not(.mat-card-footer):not(.mat-card-header):not(.mat-card-actions) {
+.mat-card > :last-child:not(.mat-card-footer):not(.mat-card-header):not(.mat-card-actions) {
   padding-bottom: 24px;
 }
 
