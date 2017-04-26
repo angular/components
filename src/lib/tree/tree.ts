@@ -3,6 +3,8 @@ import {
   Component,
   Directive,
   TemplateRef,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
   ContentChildren,
   ContentChild,
   QueryList,
@@ -36,12 +38,9 @@ export const BUFFER = 3;
 
 @Directive({selector: '[mdNodeDef]'})
 export class MdNodeDef {
-  @Input('mdNodeDefLevel') level: number = 10;
   constructor(public template: TemplateRef<any>,
               @Inject(forwardRef(() => MdTree)) private tree: MdTree) {
-    console.log(`mdnode def is ${tree}`)
   }
-
 }
 
 @Directive({
@@ -52,7 +51,6 @@ export class MdNode {
               private elementRef: ElementRef,
               private renderer: Renderer,
               @Inject(forwardRef(() => MdTree)) private tree: MdTree) {
-    console.log(`mdnode tree is ${tree}`);
     this.renderer.setElementClass(elementRef.nativeElement, 'mat-node', true);
   }
 }
@@ -65,7 +63,7 @@ export class MdNodePlaceholder {
 @Component({
   selector: 'md-tree',
   styleUrls: ['./tree.css'],
-  template: `   {{expandedNodes}} 
+  template: `
     <ng-container mdNodePlaceholder></ng-container>
     <ng-template #emptyNode><div class="mat-placeholder"></div></ng-template>
   `,
@@ -73,6 +71,7 @@ export class MdNodePlaceholder {
     'class': 'mat-tree',
   },
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdTree {
   @Input() dataSource: TreeDataSource<any>;
@@ -89,7 +88,8 @@ export class MdTree {
   @ViewChild(MdNodePlaceholder) nodePlaceholder: MdNodePlaceholder;
   @ViewChild('emptyNode') emptyNodeTemplate: TemplateRef<any>;
 
-  constructor(private _differs: IterableDiffers, private elementRef: ElementRef) {
+  constructor(private _differs: IterableDiffers, private elementRef: ElementRef,
+              private changeDetectorRef: ChangeDetectorRef) {
     this._dataDiffer = this._differs.find([]).create();
   }
 
@@ -105,7 +105,6 @@ export class MdTree {
       .subscribe((result: any) => { this.renderNodeChanges(result[0]); });
     // Trigger first event
     this.expansionModel.onChange.next(null);
-
   }
 
   scrollToTop() {
@@ -132,13 +131,10 @@ export class MdTree {
   }
 
   renderNodeChanges(dataNodes: any[]) {
-    //this.flattenNodes(dataNodes);
-    this.flattenNodes(dataNodes);
     console.time('Rendering rows');
-    console.log(dataNodes);
+    this.flattenNodes(dataNodes);
     dataNodes = this.flatNodes;
-    console.time('Flat rows');
-    console.log(dataNodes);
+
     const changes = this._dataDiffer.diff(dataNodes);
     if (!changes) { return; }
 
@@ -162,7 +158,7 @@ export class MdTree {
     // so that it (1) it does not shift and (2) a scroll event does not get triggered which
     // would cause a loop.
     this.elementRef.nativeElement.scrollTop = oldScrollTop;
-
+    this.changeDetectorRef.detectChanges();
     console.timeEnd('Rendering rows');
   }
 
@@ -179,10 +175,8 @@ export class MdTree {
   _flattenNode(node: any, level: number) {
     let key = this.dataSource.getKey(node);
     this.levelMap.set(key, level);
-    console.log(`set ${node} level to ${level}`);
     this.flatNodes.push(node);
     let children = this.dataSource.getChildren(node);
-    console.log(`${children}children`);
     if (!!children && this.expansionModel.isSelected(node)) {
       children.forEach((child) => this._flattenNode(child, level + 1));
     }
@@ -190,23 +184,20 @@ export class MdTree {
 
   addNode(data: any, currentIndex: number) {
     if (data) {
-      let node = this.getRowDefForItem(data);
+      let node = this.getNodeDefForItem(data);
       const context = {
         $implicit: data,
         level: this.levelMap.get(this.dataSource.getKey(data)),
         expandable: !!this.dataSource.getChildren(data)
       };
-      console.log(`context is ${context}`);
       this.nodePlaceholder.viewContainer.createEmbeddedView(node.template, context, currentIndex);
     } else {
       this.nodePlaceholder.viewContainer.createEmbeddedView(this.emptyNodeTemplate, {}, currentIndex);
     }
   }
 
-  getRowDefForItem(item: any) {
+  getNodeDefForItem(item: any) {
     // proof-of-concept: only supporting one row definition
     return this.nodeDefinitions.first;
   }
-
-
 }

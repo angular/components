@@ -12,7 +12,8 @@
               [class.data-row]="!!node"
               (click)="node ? selection.toggle(node) : null">
       <div class="row"  [style.padding-left]="getPadding(level)">
-        <div class="special" *ngIf="level != 1"></div>
+
+
         <md-checkbox (click)="$event.stopPropagation()"
                      (change)="$event ? selection.toggle(node) : null"
                      [checked]="selection.isSelected(node)">

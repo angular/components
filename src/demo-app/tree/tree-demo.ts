@@ -23,7 +23,7 @@ export class TreeDemo {
   }
 
   getPadding(level: number) {
-    return `${(level - 1) * 45}px`;
+    return `${(level - 1) * 12}px`;
   }
 
   toggleExpand(node: UserData) {

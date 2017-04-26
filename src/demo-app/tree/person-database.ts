@@ -65,7 +65,6 @@ export class PeopleDatabase {
       let length = this.baseData.length - 1;
       let index = Math.round(Math.random() * length);
       let index2 = Math.round(Math.random() * length);
-      console.log(`${index} base data ${this.baseData[index]}`);
       let children = this.baseData[index].children;
       if (children) {
         children.push(this.baseData[index2]);
@@ -73,7 +72,6 @@ export class PeopleDatabase {
         this.baseData[index].children = [this.baseData[index2]];
       }
       this.baseData.splice(index2, 1);
-      console.log(this.baseData.length);
     }
     this.baseDataChange.next(null);
   }
