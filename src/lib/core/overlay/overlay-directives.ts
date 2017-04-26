@@ -29,7 +29,7 @@ import {coerceBooleanProperty} from '../coercion/boolean-property';
 import {ESCAPE} from '../keyboard/keycodes';
 import {ScrollDispatcher} from './scroll/scroll-dispatcher';
 import {Subscription} from 'rxjs/Subscription';
-import {ScrollDispatchModule} from './scroll/scroll-dispatcher';
+import {ScrollDispatchModule} from './scroll/index';
 
 
 /** Default set of positions for the overlay. Follows the behavior of a dropdown. */

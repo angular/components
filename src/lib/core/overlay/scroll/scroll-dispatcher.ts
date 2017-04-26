@@ -1,5 +1,5 @@
-import {NgModule, ElementRef, Injectable, NgZone, Optional, SkipSelf} from '@angular/core';
-import {Platform, PlatformModule} from '../../platform/index';
+import {ElementRef, Injectable, NgZone, Optional, SkipSelf} from '@angular/core';
+import {Platform} from '../../platform/index';
 import {Scrollable} from './scrollable';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
@@ -143,12 +143,3 @@ export const SCROLL_DISPATCHER_PROVIDER = {
   deps: [[new Optional(), new SkipSelf(), ScrollDispatcher], NgZone, Platform],
   useFactory: SCROLL_DISPATCHER_PROVIDER_FACTORY
 };
-
-
-@NgModule({
-  imports: [PlatformModule],
-  exports: [Scrollable],
-  declarations: [Scrollable],
-  providers: [SCROLL_DISPATCHER_PROVIDER],
-})
-export class ScrollDispatchModule { }

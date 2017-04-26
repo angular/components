@@ -7,7 +7,7 @@ import {Scrollable} from '../scroll/scrollable';
 import {Subscription} from 'rxjs/Subscription';
 import {TestBed, inject} from '@angular/core/testing';
 import Spy = jasmine.Spy;
-import {ScrollDispatchModule} from '../scroll/scroll-dispatcher';
+import {ScrollDispatchModule} from '../scroll/index';
 
 
 // Default width and height of the overlay and origin panels throughout these tests.

@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {MdRipple} from './ripple';
 import {MdCommonModule} from '../common-behaviors/common-module';
 import {VIEWPORT_RULER_PROVIDER} from '../overlay/position/viewport-ruler';
-import {ScrollDispatchModule} from '../overlay/scroll/scroll-dispatcher';
+import {ScrollDispatchModule} from '../overlay/scroll/index';
 import {PlatformModule} from '../platform/index';
 
 export {MdRipple, RippleGlobalOptions, MD_RIPPLE_GLOBAL_OPTIONS} from './ripple';

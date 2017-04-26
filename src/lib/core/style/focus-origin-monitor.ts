@@ -64,7 +64,11 @@ export class FocusOriginMonitor {
    * @returns An observable that emits when the focus state of the element changes.
    *     When the element is blurred, null will be emitted.
    */
-  monitor(element: HTMLElement, renderer: Renderer2, checkChildren: boolean): Observable<FocusOrigin> {// Do nothing if we're not on the browser platform.
+  monitor(
+      element: HTMLElement,
+      renderer: Renderer2,
+      checkChildren: boolean): Observable<FocusOrigin> {
+    // Do nothing if we're not on the browser platform.
     if (!this._platform.isBrowser) {
       return Observable.of();
     }

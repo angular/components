@@ -12,7 +12,7 @@ import {MdInkBar} from './ink-bar';
 import {MdTabBody} from './tab-body';
 import {VIEWPORT_RULER_PROVIDER} from '../core/overlay/position/viewport-ruler';
 import {MdTabHeader} from './tab-header';
-import {ScrollDispatchModule} from '../core/overlay/scroll/scroll-dispatcher';
+import {ScrollDispatchModule} from '../core/overlay/scroll/index';
 
 
 @NgModule({
