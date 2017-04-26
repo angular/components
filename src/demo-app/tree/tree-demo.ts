@@ -1,18 +1,7 @@
-import {Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, QueryList, TemplateRef} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
 import {PersonDataSource} from './data-source'
-import {SelectionModel} from '@angular/material';
-
-@Directive({
-  selector: 'md-tree-node',
-  host: {
-    '[class.mat-tree-node]': 'true',
-  },
-})
-export class MdTreeNode {
-
-}
-
+import {SelectionModel, MdTree} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -25,9 +14,21 @@ export class TreeDemo {
   selection = new SelectionModel<UserData>(true, []);
   dataSource: PersonDataSource;
 
+  @ViewChild(MdTree) tree: MdTree;
+
   constructor(private peopleDatabase: PeopleDatabase) { }
 
   ngOnInit() {
     this.dataSource = new PersonDataSource(this.peopleDatabase);
   }
+
+  getPadding(level: number) {
+    return `${(level - 1) * 45}px`;
+  }
+
+  toggleExpand(node: UserData) {
+    this.tree.toggleExpand(node);
+  }
+
+  expansionModel = new SelectionModel<UserData>(true, []);
 }

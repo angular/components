@@ -26,6 +26,7 @@ import 'rxjs/add/operator/let';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/combineLatest';
 import {TreeDataSource, MdTreeViewData} from './data-source';
+import {SelectionModel, SelectionChange} from '../core';
 
 /** Height of each row in pixels (48 + 1px border) */
 export const ROW_HEIGHT = 49;
@@ -35,41 +36,24 @@ export const BUFFER = 3;
 
 @Directive({selector: '[mdNodeDef]'})
 export class MdNodeDef {
-  @Input('mdNodeDef') name: string;
+  @Input('mdNodeDefLevel') level: number = 10;
+  constructor(public template: TemplateRef<any>,
+              @Inject(forwardRef(() => MdTree)) private tree: MdTree) {
+    console.log(`mdnode def is ${tree}`)
+  }
 
-  constructor(public template: TemplateRef<any>) {}
 }
 
-@Component({
-  selector: 'md-node',
-  template: '<ng-container mdNodeOutlet></ng-container>',
-  host: {
-    'class': 'mat-row',
-    'role': 'row',
-  },
+@Directive({
+  selector: 'md-node'
 })
 export class MdNode {
-  constructor(private nodeDef: MdNodeDef,
+  constructor(
               private elementRef: ElementRef,
-              private renderer: Renderer) {
+              private renderer: Renderer,
+              @Inject(forwardRef(() => MdTree)) private tree: MdTree) {
+    console.log(`mdnode tree is ${tree}`);
     this.renderer.setElementClass(elementRef.nativeElement, 'mat-node', true);
-    this.renderer.setElementClass(elementRef.nativeElement, nodeDef.name, true);
-  }
-}
-
-@Directive({selector: '[mdNodeOutlet]'})
-export class MdNodeOutlet {
-  node: MdNodeDef;
-  context: any;
-
-  static mostRecentNodeOutlet: MdNodeOutlet = null;
-
-  constructor(private _viewContainer: ViewContainerRef) {
-    MdNodeOutlet.mostRecentNodeOutlet = this;
-  }
-
-  ngOnInit() {
-    this._viewContainer.createEmbeddedView(this.node.template, this.context);
   }
 }
 
@@ -81,9 +65,9 @@ export class MdNodePlaceholder {
 @Component({
   selector: 'md-tree',
   styleUrls: ['./tree.css'],
-  template: `    
+  template: `   {{expandedNodes}} 
     <ng-container mdNodePlaceholder></ng-container>
-    <ng-template #emptyNode><div class="empty"></div></ng-template>
+    <ng-template #emptyNode><div class="mat-placeholder"></div></ng-template>
   `,
   host: {
     'class': 'mat-tree',
@@ -92,8 +76,12 @@ export class MdNodePlaceholder {
 })
 export class MdTree {
   @Input() dataSource: TreeDataSource<any>;
+  @Input() expansionModel: SelectionModel<any> = new SelectionModel<any>(true, []);
 
   viewChange = new BehaviorSubject<MdTreeViewData>({start: 0, end: 20});
+
+  // Tree structure related
+  levelMap: Map<any, number> = new Map<any, number>();
 
   private _dataDiffer: IterableDiffer<any> = null;
 
@@ -113,8 +101,11 @@ export class MdTree {
 
   ngAfterViewInit() {
     const connectFn = this.dataSource.connectTree.bind(this.dataSource);
-    this.viewChange.let(connectFn)
-      .subscribe((result: any) => { this.renderNodeChanges(result); });
+    Observable.combineLatest(this.viewChange.let(connectFn), this.expansionModel.onChange)
+      .subscribe((result: any) => { this.renderNodeChanges(result[0]); });
+    // Trigger first event
+    this.expansionModel.onChange.next(null);
+
   }
 
   scrollToTop() {
@@ -122,6 +113,7 @@ export class MdTree {
   }
 
   scrollEvent() {
+    console.log(`scroll event `);
     const scrollTop = this.elementRef.nativeElement.scrollTop;
     const elementHeight = this.elementRef.nativeElement.getBoundingClientRect().height;
 
@@ -135,9 +127,17 @@ export class MdTree {
     this.viewChange.next(view);
   }
 
-  renderNodeChanges(dataNodes: any[]) {
+  toggleExpand(node: any) {
+    this.expansionModel.toggle(node);
+  }
 
+  renderNodeChanges(dataNodes: any[]) {
+    //this.flattenNodes(dataNodes);
+    this.flattenNodes(dataNodes);
     console.time('Rendering rows');
+    console.log(dataNodes);
+    dataNodes = this.flatNodes;
+    console.time('Flat rows');
     console.log(dataNodes);
     const changes = this._dataDiffer.diff(dataNodes);
     if (!changes) { return; }
@@ -166,33 +166,47 @@ export class MdTree {
     console.timeEnd('Rendering rows');
   }
 
-  addNode(data: any, currentIndex: number) {
-    if (data) {
-      let node = this.getRowDefForItem(data);
+  // Tree structure related
+  flatNodes: any[];
 
-      const context = {$implicit: data};
-      this.nodePlaceholder.viewContainer.createEmbeddedView(node.template, context, currentIndex);
+  flattenNodes(dataNodes: any[]) {
+    this.flatNodes = [];
+    dataNodes.forEach((node) => {
+      this._flattenNode(node, 1);
+    })
+  }
 
-      // Set cells outlet
-      this.setLatestRowsCellsOutlet(node, data);
-    } else {
-      this.nodePlaceholder.viewContainer.createEmbeddedView(this.emptyNodeTemplate, {}, currentIndex);
+  _flattenNode(node: any, level: number) {
+    let key = this.dataSource.getKey(node);
+    this.levelMap.set(key, level);
+    console.log(`set ${node} level to ${level}`);
+    this.flatNodes.push(node);
+    let children = this.dataSource.getChildren(node);
+    console.log(`${children}children`);
+    if (!!children && this.expansionModel.isSelected(node)) {
+      children.forEach((child) => this._flattenNode(child, level + 1));
     }
   }
 
-  // Hack attack! Because we're so smart, we know that immediately after calling
-  // `createEmbeddedView` that the most recently constructed instance of MdCellOutlet
-  // is the one inside this row, so we can set stuff to it (so that the user doesn't have to).
-  // TODO: add some code to enforce that exactly one MdCellOutlet was instantiated as a result
-  // of this `createEmbeddedView`.
-  setLatestRowsCellsOutlet(node: MdNodeDef, item: any) {
-    let nodeOutlet = MdNodeOutlet.mostRecentNodeOutlet;
-    nodeOutlet.node = node;
-    nodeOutlet.context = {$implicit: item};
+  addNode(data: any, currentIndex: number) {
+    if (data) {
+      let node = this.getRowDefForItem(data);
+      const context = {
+        $implicit: data,
+        level: this.levelMap.get(this.dataSource.getKey(data)),
+        expandable: !!this.dataSource.getChildren(data)
+      };
+      console.log(`context is ${context}`);
+      this.nodePlaceholder.viewContainer.createEmbeddedView(node.template, context, currentIndex);
+    } else {
+      this.nodePlaceholder.viewContainer.createEmbeddedView(this.emptyNodeTemplate, {}, currentIndex);
+    }
   }
 
   getRowDefForItem(item: any) {
     // proof-of-concept: only supporting one row definition
     return this.nodeDefinitions.first;
   }
+
+
 }

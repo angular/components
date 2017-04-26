@@ -14,7 +14,7 @@ export interface UserData {
   name: string;
   progress: string;
   color: string;
-  [key: string]: string;
+  children: UserData[];
 }
 
 @Injectable()
@@ -23,7 +23,8 @@ export class PeopleDatabase {
   baseDataChange = new BehaviorSubject<void>(null);
 
   constructor(private snackBar: MdSnackBar) {
-    for (let i = 0; i < 10000; i++) { this.addPerson(true); }
+    for (let i = 0; i < 1000; i++) { this.addPerson(true);}
+    this.shuffle();
   }
 
   getData(filter: string): Observable<UserData[]> {
@@ -47,12 +48,8 @@ export class PeopleDatabase {
       NAMES[Math.round(Math.random() * (NAMES.length - 1))] + ' ' +
       NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) + '.';
 
-    this.baseData.push({
-      id: (++LATEST_ID).toString(),
-      name: name,
-      progress: this.getRandomProgress().toString(),
-      color: COLORS[Math.round(Math.random() * (COLORS.length - 1))]
-    });
+    this.baseData.push(this._addPerson(name));
+
 
     this.baseDataChange.next(null);
 
@@ -60,6 +57,34 @@ export class PeopleDatabase {
       this.snackBar.open(`${name} added to the dataset`, null, {
         duration: 2000,
       });
+    }
+  }
+
+  shuffle() {
+    for (let i = 0; i < 700; i++) {
+      let length = this.baseData.length - 1;
+      let index = Math.round(Math.random() * length);
+      let index2 = Math.round(Math.random() * length);
+      console.log(`${index} base data ${this.baseData[index]}`);
+      let children = this.baseData[index].children;
+      if (children) {
+        children.push(this.baseData[index2]);
+      } else {
+        this.baseData[index].children = [this.baseData[index2]];
+      }
+      this.baseData.splice(index2, 1);
+      console.log(this.baseData.length);
+    }
+    this.baseDataChange.next(null);
+  }
+
+  _addPerson(name: string, children: UserData[] = null) {
+    return {
+      id: (++LATEST_ID).toString(),
+      name: name,
+      progress: this.getRandomProgress().toString(),
+      color: COLORS[Math.round(Math.random() * (COLORS.length - 1))],
+      children: children
     }
   }
 

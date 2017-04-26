@@ -1,15 +1,24 @@
+.tree-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 800px;
 
-
-.sync-icon {
-  width: 20px;
-  height: 20px;
+  // Table fills in the remaining area with a scroll
+  md-tree {
+    flex: 1 1 auto;
+    overflow: auto;
+  }
 }
 
-.expand-icon {
-  width: 20px;
-  height: 20px;
+.row {
+  display: flex;
 }
 
-.cdk-keyboard-focused {
-  color: red;
+.special {
+  border: 1px dotted #e0e0e0;
+  border-width: 0 0 1px 1px;
+  width: 45px;
+  height: 48px;
+  position: relative;
+  bottom: 36px;
 }

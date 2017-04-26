@@ -1,21 +1,23 @@
 
-<div class="table-container mat-elevation-z4">
+<div class="tree-container mat-elevation-z4">
 
   <div class="empty-tree" *ngIf="!dataSource.displayedData.length">
     No data to display.
   </div>
 
-  <md-tree #tree [dataSource]="dataSource" [style.display]="dataSource.displayedData.length ? '' : 'none'">
+  <md-tree #tree [dataSource]="dataSource" [style.display]="dataSource.displayedData.length ? '' : 'none'" [expansionModel]="expansionModel">
     <!-- Row templates. The columns used are set at the row template level -->
-    <md-node>
-      <div *mdNodeDef="let node;"
+    <md-node *mdNodeDef="let node let level=level let expandable=expandable"
               [class.selected]="node ? selection.isSelected(node) : false"
               [class.data-row]="!!node"
               (click)="node ? selection.toggle(node) : null">
+      <div class="row"  [style.padding-left]="getPadding(level)">
+        <div class="special" *ngIf="level != 1"></div>
         <md-checkbox (click)="$event.stopPropagation()"
                      (change)="$event ? selection.toggle(node) : null"
-                     [checked]="selection.isSelected(node)"> </md-checkbox>
-          {{node.name}} {{node.movie}}
+                     [checked]="selection.isSelected(node)">
+          <md-icon (click)="expansionModel.toggle(node)" *ngIf="expandable">{{ expansionModel.isSelected(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</md-icon>
+          {{node.name}} {{node.progress}} Level {{level}} Expanded {{expansionModel.isSelected(node)}}</md-checkbox>
       </div>
     </md-node>
   </md-tree>

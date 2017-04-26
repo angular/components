@@ -27,7 +27,7 @@ export class PersonDataSource extends TreeDataSource<any> {
   constructor(private peopleDatabase: PeopleDatabase) {
     super();
 
-    // When the base data or filter changes, fetch a new set of filtered data.
+    // When the base   data or filter changes, fetch a new set of filtered data.
     const baseFilteredDataChanges = [this.peopleDatabase.baseDataChange, this._filter];
     Observable.combineLatest(baseFilteredDataChanges)
       .mergeMap(() => this.peopleDatabase.getData(this.filter))
@@ -61,5 +61,13 @@ export class PersonDataSource extends TreeDataSource<any> {
 
       return this._renderedData; // Currently ignoring the view
     });
+  }
+
+  getChildren(node: UserData): UserData[] {
+    return node.children;
+  }
+
+  getKey(node: UserData) {
+    return node.id;
   }
 }

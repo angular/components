@@ -1,6 +1,6 @@
-import {MdTree, MdNode, MdNodeDef, MdNodeOutlet, MdNodePlaceholder} from './tree';
+import {MdTree, MdNode, MdNodeDef, MdNodePlaceholder} from './tree';
 import {TreeDataSource, MdTreeViewData} from './data-source';
-import {NgModule} from '@angular/core';
+import {NgModule, ModuleWithProviders} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FocusOriginMonitor, MdRippleModule} from '../core';
 
@@ -9,8 +9,15 @@ export * from './tree';
 
 @NgModule({
   imports: [CommonModule, MdRippleModule],
-  exports: [MdTree, MdNodeDef, MdNodeOutlet, MdNode, MdNodePlaceholder],
-  declarations: [MdTree, MdNodeDef, MdNodeOutlet, MdNode, MdNodePlaceholder],
+  exports: [MdTree, MdNodeDef, MdNode, MdNodePlaceholder],
+  declarations: [MdTree, MdNodeDef, MdNode, MdNodePlaceholder],
   providers: [FocusOriginMonitor]
 })
-export class MdTreeModule {}
+export class MdTreeModule {
+  /** @deprecated */
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: MdTreeModule,
+    };
+  }
+}
