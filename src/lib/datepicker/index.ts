@@ -19,6 +19,7 @@ import {MD_DATE_FORMATS} from './date-formats';
 
 export * from './calendar';
 export * from './calendar-body';
+export * from './date-formats';
 export * from './datepicker';
 export * from './datepicker-input';
 export * from './datepicker-intl';

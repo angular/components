@@ -85,15 +85,6 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return String(this.getYear(date));
   }
 
-  getMonthYearName(date: Date, monthStyle: 'long' | 'short' | 'narrow'): string {
-    if (SUPPORTS_INTL_API) {
-      let dtf = new Intl.DateTimeFormat(this.locale, {month: monthStyle, year: 'numeric'});
-      return dtf.format(date);
-    }
-    let monthName = this.getMonthNames(monthStyle)[this.getMonth(date)];
-    return `${monthName} ${this.getYear(date)}`;
-  }
-
   getFirstDayOfWeek(): number {
     // We can't tell using native JS Date what the first day of the week is, we default to Sunday.
     return 0;
@@ -130,16 +121,16 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return new Date();
   }
 
-  parse(value: any, fmt?: Object): Date | null {
+  parse(value: any, parseFormat: Object): Date | null {
     // We have no way using the native JS Date to set the parse format or locale, so we ignore these
     // parameters.
     let timestamp = typeof value == 'number' ? value : Date.parse(value);
     return isNaN(timestamp) ? null : new Date(timestamp);
   }
 
-  format(date: Date, fmt?: Object): string {
+  format(date: Date, displayFormat: Object): string {
     if (SUPPORTS_INTL_API) {
-      let dtf = new Intl.DateTimeFormat(this.locale, fmt);
+      let dtf = new Intl.DateTimeFormat(this.locale, displayFormat);
       return dtf.format(date);
     }
     return date.toDateString();

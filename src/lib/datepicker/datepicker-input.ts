@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  Inject,
   Input,
   OnDestroy,
   Optional,
@@ -16,6 +17,7 @@ import {MdInputContainer} from '../input/input-container';
 import {DOWN_ARROW} from '../core/keyboard/keycodes';
 import {DateAdapter} from '../core/datetime/index';
 import {MdDatepickerMissingDateImplError} from './datepicker-errors';
+import {MD_DATE_FORMATS, MdDateFormats} from './date-formats';
 
 
 export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -57,13 +59,14 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   /** The value of the input. */
   @Input()
   get value(): D {
-    return this._dateAdapter.parse(this._elementRef.nativeElement.value);
+    return this._dateAdapter.parse(this._elementRef.nativeElement.value,
+        this._dateFormats.parse.dateInput);
   }
   set value(value: D) {
-    let date = this._dateAdapter.parse(value);
+    let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     let oldDate = this.value;
     this._renderer.setElementProperty(this._elementRef.nativeElement, 'value',
-        date ? this._dateAdapter.format(date) : '');
+        date ? this._dateAdapter.format(date, this._dateFormats.display.dateInput) : '');
     if (!this._dateAdapter.sameDate(oldDate, date)) {
       this._valueChange.emit(date);
     }
@@ -72,13 +75,17 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   /** The minimum valid date. */
   @Input()
   get min(): D { return this._min; }
-  set min(value: D) { this._min = this._dateAdapter.parse(value); }
+  set min(value: D) {
+    this._min = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
+  }
   private _min: D;
 
   /** The maximum valid date. */
   @Input()
   get max(): D { return this._max; }
-  set max(value: D) { this._max = this._dateAdapter.parse(value); }
+  set max(value: D) {
+    this._max = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
+  }
   private _max: D;
 
   /** Emits when the value changes (either due to user input or programmatic change). */
@@ -94,9 +101,13 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
       private _elementRef: ElementRef,
       private _renderer: Renderer,
       @Optional() private _dateAdapter: DateAdapter<D>,
+      @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats,
       @Optional() private _mdInputContainer: MdInputContainer) {
     if (!this._dateAdapter) {
-      throw new MdDatepickerMissingDateImplError('DateAdapter', ['MdNativeDateModule']);
+      throw new MdDatepickerMissingDateImplError('DateAdapter');
+    }
+    if (!this._dateFormats) {
+      throw new MdDatepickerMissingDateImplError('MD_DATE_FORMATS');
     }
   }
 
@@ -152,7 +163,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   }
 
   _onInput(value: string) {
-    let date = this._dateAdapter.parse(value);
+    let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     this._onChange(date);
     this._valueChange.emit(date);
   }
