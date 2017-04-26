@@ -3,12 +3,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
+  Input, Optional,
   Output,
   ViewEncapsulation
 } from '@angular/core';
 import {MdCalendarCell} from './calendar-body';
 import {DateAdapter} from '../core/datetime/index';
+import {MdDatepickerMissingDateImplError} from './datepicker-errors';
 
 
 /**
@@ -65,7 +66,10 @@ export class MdYearView<D> implements AfterContentInit {
    */
   _selectedMonth: number;
 
-  constructor(public _dateAdapter: DateAdapter<D>) {
+  constructor(@Optional() public _dateAdapter: DateAdapter<D>) {
+    if (!this._dateAdapter) {
+      throw new MdDatepickerMissingDateImplError('DateAdapter', ['MdNativeDateModule']);
+    }
     this._activeDate = this._dateAdapter.today();
   }
 

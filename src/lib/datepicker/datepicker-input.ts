@@ -15,6 +15,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {MdInputContainer} from '../input/input-container';
 import {DOWN_ARROW} from '../core/keyboard/keycodes';
 import {DateAdapter} from '../core/datetime/index';
+import {MdDatepickerMissingDateImplError} from './datepicker-errors';
 
 
 export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -92,8 +93,12 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   constructor(
       private _elementRef: ElementRef,
       private _renderer: Renderer,
-      private _dateAdapter: DateAdapter<D>,
-      @Optional() private _mdInputContainer: MdInputContainer) {}
+      @Optional() private _dateAdapter: DateAdapter<D>,
+      @Optional() private _mdInputContainer: MdInputContainer) {
+    if (!this._dateAdapter) {
+      throw new MdDatepickerMissingDateImplError('DateAdapter', ['MdNativeDateModule']);
+    }
+  }
 
   ngAfterContentInit() {
     if (this._datepicker) {

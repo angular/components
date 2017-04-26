@@ -9,7 +9,7 @@ import {
   MaterialModule,
   OverlayContainer,
   FullscreenOverlayContainer,
-  MdSelectionModule,
+  MdSelectionModule, MdNativeDateModule,
 } from '@angular/material';
 import {DEMO_APP_ROUTES} from './demo-app/routes';
 import {ProgressBarDemo} from './progress-bar/progress-bar-demo';
@@ -55,6 +55,7 @@ import {DatepickerDemo} from './datepicker/datepicker-demo';
     ReactiveFormsModule,
     RouterModule.forRoot(DEMO_APP_ROUTES),
     MaterialModule.forRoot(),
+    MdNativeDateModule,
     MdSelectionModule,
   ],
   declarations: [

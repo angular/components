@@ -30,6 +30,7 @@ import 'rxjs/add/operator/first';
 import {Subscription} from 'rxjs/Subscription';
 import {MdDialogConfig} from '../dialog/dialog-config';
 import {DateAdapter} from '../core/datetime/index';
+import {MdDatepickerMissingDateImplError} from './datepicker-errors';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -134,8 +135,13 @@ export class MdDatepicker<D> implements OnDestroy {
   private _inputSubscription: Subscription;
 
   constructor(private _dialog: MdDialog, private _overlay: Overlay,
-              private _viewContainerRef: ViewContainerRef, private _dateAdapter: DateAdapter<D>,
-              @Optional() private _dir: Dir) {}
+              private _viewContainerRef: ViewContainerRef,
+              @Optional() private _dateAdapter: DateAdapter<D>,
+              @Optional() private _dir: Dir) {
+    if (!this._dateAdapter) {
+      throw new MdDatepickerMissingDateImplError('DateAdapter', ['MdNativeDateModule']);
+    }
+  }
 
   ngOnDestroy() {
     this.close();

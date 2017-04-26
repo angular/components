@@ -104,16 +104,6 @@ export class NativeDateAdapter extends DateAdapter<Date> {
         this.getYear(date), this.getMonth(date) + 1, 0));
   }
 
-  getDefaultFormats(): {date: Object} {
-    return {
-      date: {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric'
-      }
-    };
-  }
-
   clone(date: Date): Date {
     return this.createDate(this.getYear(date), this.getMonth(date), this.getDate(date));
   }

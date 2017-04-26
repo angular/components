@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  Optional,
   Output,
   ViewEncapsulation
 } from '@angular/core';
@@ -20,6 +21,7 @@ import {
 } from '../core/keyboard/keycodes';
 import {DateAdapter} from '../core/datetime/index';
 import {MdDatepickerIntl} from './datepicker-intl';
+import {MdDatepickerMissingDateImplError} from './datepicker-errors';
 
 
 /**
@@ -113,7 +115,11 @@ export class MdCalendar<D> implements AfterContentInit {
     return this._monthView ? this._intl.nextMonthLabel : this._intl.nextYearLabel;
   }
 
-  constructor(private _dateAdapter: DateAdapter<D>, private _intl: MdDatepickerIntl) {}
+  constructor(private _intl: MdDatepickerIntl, @Optional() private _dateAdapter: DateAdapter<D>) {
+    if (!this._dateAdapter) {
+      throw new MdDatepickerMissingDateImplError('DateAdapter', ['MdNativeDateModule']);
+    }
+  }
 
   ngAfterContentInit() {
     this._activeDate = this.startAt || this._dateAdapter.today();

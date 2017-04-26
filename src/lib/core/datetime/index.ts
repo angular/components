@@ -10,4 +10,4 @@ export * from './native-date-adapter';
 @NgModule({
   providers: [{provide: DateAdapter, useClass: NativeDateAdapter}],
 })
-export class DatetimeModule {}
+export class NativeDateModule {}
