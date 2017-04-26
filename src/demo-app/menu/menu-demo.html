@@ -1,6 +1,6 @@
 <div class="demo-menu">
   <div class="menu-section">
-    <p>You clicked on: {{ selected }}</p>
+    <p>You clicked on: {{selected}}</p>
 
     <md-toolbar>
       <button md-icon-button [mdMenuTriggerFor]="menu" aria-label="Open basic menu">
@@ -10,7 +10,7 @@
 
     <md-menu #menu="mdMenu">
       <button md-menu-item *ngFor="let item of items" (click)="select(item.text)" [disabled]="item.disabled">
-        {{ item.text }}
+        {{item.text}}
       </button>
     </md-menu>
   </div>
@@ -24,7 +24,7 @@
 
     <md-menu #anchorMenu="mdMenu">
       <a md-menu-item *ngFor="let item of items" href="http://www.google.com" [disabled]="item.disabled">
-        {{ item.text }}
+        {{item.text}}
       </a>
     </md-menu>
   </div>
@@ -40,8 +40,8 @@
 
     <md-menu xPosition="before" #posXMenu="mdMenu" class="before">
       <button md-menu-item *ngFor="let item of iconItems" [disabled]="item.disabled">
-        <md-icon>{{ item.icon }}</md-icon>
-        {{ item.text }}
+        <md-icon>{{item.icon}}</md-icon>
+        {{item.text}}
       </button>
     </md-menu>
   </div>
@@ -57,7 +57,7 @@
 
     <md-menu yPosition="above" #posYMenu="mdMenu">
       <button md-menu-item *ngFor="let item of items" [disabled]="item.disabled">
-        {{ item.text }}
+        {{item.text}}
       </button>
     </md-menu>
   </div>
@@ -75,7 +75,7 @@
 
     <md-menu [overlapTrigger]="false" #menuOverlay="mdMenu">
       <button md-menu-item *ngFor="let item of items" [disabled]="item.disabled">
-        {{ item.text }}
+        {{item.text}}
       </button>
     </md-menu>
   </div>
@@ -91,8 +91,8 @@
 
     <md-menu xPosition="before" [overlapTrigger]="false" #posXMenuOverlay="mdMenu" class="before">
       <button md-menu-item *ngFor="let item of iconItems" [disabled]="item.disabled">
-        <md-icon>{{ item.icon }}</md-icon>
-        {{ item.text }}
+        <md-icon>{{item.icon}}</md-icon>
+        {{item.text}}
       </button>
     </md-menu>
   </div>
@@ -108,8 +108,22 @@
 
     <md-menu yPosition="above" [overlapTrigger]="false" #posYMenuOverlay="mdMenu">
       <button md-menu-item *ngFor="let item of items" [disabled]="item.disabled">
-        {{ item.text }}
+        {{item.text}}
       </button>
+    </md-menu>
+  </div>
+  <div class="menu-section">
+    <p>
+      Super long item list
+    </p>
+    <md-toolbar>
+      <button md-icon-button [mdMenuTriggerFor]="superLongMenu" aria-label="Super long menu">
+        <md-icon>more_vert</md-icon>
+      </button>
+    </md-toolbar>
+
+    <md-menu #superLongMenu>
+      <button md-menu-item *ngFor="let item of superLongItemList">{{item}}</button>
     </md-menu>
   </div>
 </div>

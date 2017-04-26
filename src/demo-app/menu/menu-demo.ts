@@ -22,5 +22,13 @@ export class MenuDemo {
     {text: 'Disable alerts', icon: 'notifications_off'}
   ];
 
+  superLongItemList: string[] = [];
+
   select(text: string) { this.selected = text; }
+
+  constructor() {
+    for (let i = 0; i < 100; i++) {
+      this.superLongItemList.push(`Item ${i}`);
+    }
+  }
 }
