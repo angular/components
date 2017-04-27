@@ -5,7 +5,6 @@ import {By} from '@angular/platform-browser';
 import {MdMonthView} from './month-view';
 import {MdYearView} from './year-view';
 import {MdCalendarBody} from './calendar-body';
-import {DatetimeModule} from '../core/datetime/index';
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
@@ -23,6 +22,7 @@ import {
   UP_ARROW
 } from '../core/keyboard/keycodes';
 import {MdDatepickerIntl} from './datepicker-intl';
+import {MdNativeDateModule} from '../core/datetime/index';
 
 
 // When constructing a Date, the month is zero-based. This can be confusing, since people are
@@ -35,7 +35,7 @@ describe('MdCalendar', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        DatetimeModule,
+        MdNativeDateModule,
       ],
       declarations: [
         MdCalendar,

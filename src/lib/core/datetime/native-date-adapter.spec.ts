@@ -104,30 +104,8 @@ describe('NativeDateAdapter', () => {
     expect(adapter.getYearName(new Date(2017, JAN, 1))).toBe('2017年');
   });
 
-  it('should get long month and year name', () => {
-    expect(adapter.getMonthYearName(new Date(2017, JAN, 1), 'long')).toBe('January 2017');
-  });
-
-  it('should get short month and year name', () => {
-    expect(adapter.getMonthYearName(new Date(2017, JAN, 1), 'short')).toBe('Jan 2017');
-  });
-
-  it('should get narrow month and year name', () => {
-    expect(adapter.getMonthYearName(new Date(2017, JAN, 1), 'narrow')).toBe('J 2017');
-  });
-
-  it('should get month and year name in a different locale', () => {
-    adapter.setLocale('ja-JP');
-    expect(adapter.getMonthYearName(new Date(2017, JAN, 1), 'long')).toBe('2017年1月');
-  });
-
   it('should get first day of week', () => {
     expect(adapter.getFirstDayOfWeek()).toBe(0);
-  });
-
-  it('should get default formats', () => {
-    let dtf = new Intl.DateTimeFormat('en-US', adapter.getDefaultFormats().date);
-    expect(dtf.format(new Date(2017, 1, 1))).toEqual('2/1/2017');
   });
 
   it('should create Date', () => {

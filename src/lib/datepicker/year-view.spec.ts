@@ -3,7 +3,7 @@ import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdYearView} from './year-view';
 import {MdCalendarBody} from './calendar-body';
-import {DatetimeModule} from '../core/datetime/index';
+import {MdNativeDateModule} from '../core/datetime/index';
 
 
 // When constructing a Date, the month is zero-based. This can be confusing, since people are
@@ -16,7 +16,7 @@ describe('MdYearView', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        DatetimeModule,
+        MdNativeDateModule,
       ],
       declarations: [
         MdCalendarBody,

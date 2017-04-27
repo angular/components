@@ -27,10 +27,4 @@ export class MdDatepickerIntl {
 
   /** A label for the 'switch to year view' button (used by screen readers). */
   switchToYearViewLabel = 'Change to year view';
-
-  /**
-   * The format to use when displaying dates without time information. If unspecified the `date`
-   * format supplied by {@link DateAdapter#getDefaultFormats} will be used.
-   */
-  dateFormat: any;
 }

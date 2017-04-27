@@ -8,7 +8,6 @@ import {OverlayModule} from './overlay/overlay-directives';
 import {A11yModule} from './a11y/index';
 import {MdSelectionModule} from './selection/index';
 import {MdRippleModule} from './ripple/index';
-import {DatetimeModule} from './datetime/index';
 
 
 // RTL
@@ -135,7 +134,6 @@ export * from './datetime/index';
     A11yModule,
     MdOptionModule,
     MdSelectionModule,
-    DatetimeModule,
   ],
   exports: [
     MdLineModule,
@@ -147,7 +145,6 @@ export * from './datetime/index';
     A11yModule,
     MdOptionModule,
     MdSelectionModule,
-    DatetimeModule,
   ],
 })
 export class MdCoreModule {}

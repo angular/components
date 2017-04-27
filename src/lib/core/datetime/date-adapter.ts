@@ -59,15 +59,6 @@ export abstract class DateAdapter<D> {
   abstract getYearName(date: D): string;
 
   /**
-   * Gets the name for the month and year of the given date.
-   * @param date The date to get the month and year name for.
-   * @param monthStyle The naming style for the month
-   *     (e.g. long = 'January', short = 'Jan', narrow = 'J').
-   * @returns The name of the month and year of the given date (e.g. 'Jan 2017').
-   */
-  abstract getMonthYearName(date: D, monthStyle: 'long' | 'short' | 'narrow'): string;
-
-  /**
    * Gets the first day of the week.
    * @returns The first day of the week (0-indexed, 0 = Sunday).
    */
@@ -79,13 +70,6 @@ export abstract class DateAdapter<D> {
    * @returns The number of days in the month of the given date.
    */
   abstract getNumDaysInMonth(date: D): number;
-
-  /**
-   * Gets a set of default formats to use for displaying the date in different contexts.
-   * @returns An object with the following default formats:
-   *     - date: The default format for showing just the date without any time information.
-   */
-  abstract getDefaultFormats(): {date: any};
 
   /**
    * Clones the given date.
@@ -113,18 +97,19 @@ export abstract class DateAdapter<D> {
   /**
    * Parses a date from a value.
    * @param value The value to parse.
-   * @param fmt The expected format of the value being parsed (type is implementation-dependent).
+   * @param parseFormat The expected format of the value being parsed
+   *     (type is implementation-dependent).
    * @returns The parsed date, or null if date could not be parsed.
    */
-  abstract parse(value: any, fmt?: any): D | null;
+  abstract parse(value: any, parseFormat: any): D | null;
 
   /**
    * Formats a date as a string.
    * @param date The value to parse.
-   * @param fmt The format to use for the result string.
+   * @param displayFormat The format to use to display the date as a string.
    * @returns The parsed date, or null if date could not be parsed.
    */
-  abstract format(date: D, fmt?: any): string;
+  abstract format(date: D, displayFormat: any): string;
 
   /**
    * Adds the given number of years to the date. Years are counted as if flipping 12 pages on the
