@@ -3,12 +3,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Inject,
   Input,
+  Optional,
   Output,
   ViewEncapsulation
 } from '@angular/core';
 import {MdCalendarCell} from './calendar-body';
 import {DateAdapter} from '../core/datetime/index';
+import {createMissingDateImplError} from './datepicker-errors';
+import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
 
 
 /**
@@ -28,7 +32,8 @@ export class MdYearView<D> implements AfterContentInit {
   get activeDate(): D { return this._activeDate; }
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
-    this._activeDate = this._dateAdapter.parse(value) || this._dateAdapter.today();
+    this._activeDate = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput) ||
+        this._dateAdapter.today();
     if (this._dateAdapter.getYear(oldActiveDate) != this._dateAdapter.getYear(this._activeDate)) {
       this._init();
     }
@@ -39,7 +44,7 @@ export class MdYearView<D> implements AfterContentInit {
   @Input()
   get selected(): D { return this._selected; }
   set selected(value: D) {
-    this._selected = this._dateAdapter.parse(value);
+    this._selected = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     this._selectedMonth = this._getMonthInCurrentYear(this.selected);
   }
   private _selected: D;
@@ -65,7 +70,15 @@ export class MdYearView<D> implements AfterContentInit {
    */
   _selectedMonth: number;
 
-  constructor(public _dateAdapter: DateAdapter<D>) {
+  constructor(@Optional() public _dateAdapter: DateAdapter<D>,
+              @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats) {
+    if (!this._dateAdapter) {
+      throw createMissingDateImplError('DateAdapter');
+    }
+    if (!this._dateFormats) {
+      throw createMissingDateImplError('MD_DATE_FORMATS');
+    }
+
     this._activeDate = this._dateAdapter.today();
   }
 

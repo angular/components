@@ -5,6 +5,7 @@ import {
   ComponentRef,
   ElementRef,
   EventEmitter,
+  Inject,
   Input,
   OnDestroy,
   Optional,
@@ -30,6 +31,8 @@ import 'rxjs/add/operator/first';
 import {Subscription} from 'rxjs/Subscription';
 import {MdDialogConfig} from '../dialog/dialog-config';
 import {DateAdapter} from '../core/datetime/index';
+import {createMissingDateImplError} from './datepicker-errors';
+import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -83,7 +86,9 @@ export class MdDatepicker<D> implements OnDestroy {
     // selected value is.
     return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
   }
-  set startAt(date: D) { this._startAt = this._dateAdapter.parse(date); }
+  set startAt(date: D) {
+    this._startAt = this._dateAdapter.parse(date, this._dateFormats.parse.dateInput);
+  }
   private _startAt: D;
 
   /**
@@ -134,8 +139,17 @@ export class MdDatepicker<D> implements OnDestroy {
   private _inputSubscription: Subscription;
 
   constructor(private _dialog: MdDialog, private _overlay: Overlay,
-              private _viewContainerRef: ViewContainerRef, private _dateAdapter: DateAdapter<D>,
-              @Optional() private _dir: Dir) {}
+              private _viewContainerRef: ViewContainerRef,
+              @Optional() private _dateAdapter: DateAdapter<D>,
+              @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats,
+              @Optional() private _dir: Dir) {
+    if (!this._dateAdapter) {
+      throw createMissingDateImplError('DateAdapter');
+    }
+    if (!this._dateFormats) {
+      throw createMissingDateImplError('MD_DATE_FORMATS');
+    }
+  }
 
   ngOnDestroy() {
     this.close();

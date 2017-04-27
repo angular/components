@@ -3,12 +3,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Inject,
   Input,
+  Optional,
   Output,
   ViewEncapsulation
 } from '@angular/core';
 import {MdCalendarCell} from './calendar-body';
 import {DateAdapter} from '../core/datetime/index';
+import {createMissingDateImplError} from './datepicker-errors';
+import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
 
 
 const DAYS_PER_WEEK = 7;
@@ -33,7 +37,8 @@ export class MdMonthView<D> implements AfterContentInit {
   get activeDate(): D { return this._activeDate; }
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
-    this._activeDate = this._dateAdapter.parse(value) || this._dateAdapter.today();
+    this._activeDate = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput) ||
+        this._dateAdapter.today();
     if (!this._hasSameMonthAndYear(oldActiveDate, this._activeDate)) {
       this._init();
     }
@@ -44,7 +49,7 @@ export class MdMonthView<D> implements AfterContentInit {
   @Input()
   get selected(): D { return this._selected; }
   set selected(value: D) {
-    this._selected = this._dateAdapter.parse(value);
+    this._selected = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
   }
   private _selected: D;
@@ -76,7 +81,15 @@ export class MdMonthView<D> implements AfterContentInit {
   /** The names of the weekdays. */
   _weekdays: string[];
 
-  constructor(public _dateAdapter: DateAdapter<D>) {
+  constructor(@Optional() public _dateAdapter: DateAdapter<D>,
+              @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats) {
+    if (!this._dateAdapter) {
+      throw createMissingDateImplError('DateAdapter');
+    }
+    if (!this._dateFormats) {
+      throw createMissingDateImplError('MD_DATE_FORMATS');
+    }
+
     const firstDayOfWeek = this._dateAdapter.getFirstDayOfWeek();
     const weekdays = this._dateAdapter.getDayOfWeekNames('narrow');
 

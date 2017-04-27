@@ -3,7 +3,6 @@ import {MdMonthView} from './month-view';
 import {CommonModule} from '@angular/common';
 import {MdCalendarBody} from './calendar-body';
 import {MdYearView} from './year-view';
-import {DatetimeModule} from '../core/datetime/index';
 import {OverlayModule} from '../core/overlay/overlay-directives';
 import {MdDatepicker, MdDatepickerContent} from './datepicker';
 import {MdDatepickerInput} from './datepicker-input';
@@ -28,7 +27,6 @@ export * from './year-view';
 @NgModule({
   imports: [
     CommonModule,
-    DatetimeModule,
     MdButtonModule,
     MdDialogModule,
     OverlayModule,

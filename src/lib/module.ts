@@ -8,7 +8,6 @@ import {
   OverlayModule,
   A11yModule,
   MdCommonModule,
-  DatetimeModule,
 } from './core/index';
 
 import {MdButtonToggleModule} from './button-toggle/index';
@@ -72,7 +71,6 @@ const MATERIAL_MODULES = [
   PlatformModule,
   MdCommonModule,
   ObserveContentModule,
-  DatetimeModule,
 ];
 
 /** @deprecated */
