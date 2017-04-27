@@ -31,7 +31,7 @@ import 'rxjs/add/operator/first';
 import {Subscription} from 'rxjs/Subscription';
 import {MdDialogConfig} from '../dialog/dialog-config';
 import {DateAdapter} from '../core/datetime/index';
-import {MdDatepickerMissingDateImplError} from './datepicker-errors';
+import {createMissingDateImplError} from './datepicker-errors';
 import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
 
 
@@ -144,10 +144,10 @@ export class MdDatepicker<D> implements OnDestroy {
               @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats,
               @Optional() private _dir: Dir) {
     if (!this._dateAdapter) {
-      throw new MdDatepickerMissingDateImplError('DateAdapter');
+      throw createMissingDateImplError('DateAdapter');
     }
     if (!this._dateFormats) {
-      throw new MdDatepickerMissingDateImplError('MD_DATE_FORMATS');
+      throw createMissingDateImplError('MD_DATE_FORMATS');
     }
   }
 

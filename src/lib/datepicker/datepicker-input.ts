@@ -16,7 +16,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {MdInputContainer} from '../input/input-container';
 import {DOWN_ARROW} from '../core/keyboard/keycodes';
 import {DateAdapter} from '../core/datetime/index';
-import {MdDatepickerMissingDateImplError} from './datepicker-errors';
+import {createMissingDateImplError} from './datepicker-errors';
 import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
 
 
@@ -104,10 +104,10 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
       @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats,
       @Optional() private _mdInputContainer: MdInputContainer) {
     if (!this._dateAdapter) {
-      throw new MdDatepickerMissingDateImplError('DateAdapter');
+      throw createMissingDateImplError('DateAdapter');
     }
     if (!this._dateFormats) {
-      throw new MdDatepickerMissingDateImplError('MD_DATE_FORMATS');
+      throw createMissingDateImplError('MD_DATE_FORMATS');
     }
   }
 

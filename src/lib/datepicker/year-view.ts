@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {MdCalendarCell} from './calendar-body';
 import {DateAdapter} from '../core/datetime/index';
-import {MdDatepickerMissingDateImplError} from './datepicker-errors';
+import {createMissingDateImplError} from './datepicker-errors';
 import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
 
 
@@ -73,10 +73,10 @@ export class MdYearView<D> implements AfterContentInit {
   constructor(@Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats) {
     if (!this._dateAdapter) {
-      throw new MdDatepickerMissingDateImplError('DateAdapter');
+      throw createMissingDateImplError('DateAdapter');
     }
     if (!this._dateFormats) {
-      throw new MdDatepickerMissingDateImplError('MD_DATE_FORMATS');
+      throw createMissingDateImplError('MD_DATE_FORMATS');
     }
 
     this._activeDate = this._dateAdapter.today();
