@@ -3,7 +3,7 @@ import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdYearView} from './year-view';
 import {MdCalendarBody} from './calendar-body';
-import {MdNativeDateModule} from './index';
+import {MdNativeDateModule} from '../core/datetime/index';
 
 
 // When constructing a Date, the month is zero-based. This can be confusing, since people are
