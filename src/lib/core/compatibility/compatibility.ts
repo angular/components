@@ -1,6 +1,5 @@
 import {
   NgModule,
-  ModuleWithProviders,
   Directive,
   OpaqueToken,
   Inject,
@@ -196,13 +195,6 @@ export class MdPrefixRejector {
 export class CompatibilityModule {
   /** Whether we've done the global sanity checks (e.g. a theme is loaded, there is a doctype). */
   private _hasDoneGlobalChecks = false;
-
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: CompatibilityModule,
-      providers: [],
-    };
-  }
 
   constructor(
     @Optional() @Inject(DOCUMENT) private _document: any,
