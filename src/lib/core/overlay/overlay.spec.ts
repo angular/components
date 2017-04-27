@@ -5,6 +5,7 @@ import {TemplatePortal, ComponentPortal} from '../portal/portal';
 import {Overlay} from './overlay';
 import {OverlayContainer} from './overlay-container';
 import {OverlayState} from './overlay-state';
+import {OverlayRef} from './overlay-ref';
 import {PositionStrategy} from './position/position-strategy';
 import {OverlayModule} from './overlay-directives';
 import {ScrollStrategy} from './scroll/scroll-strategy';
@@ -298,46 +299,44 @@ describe('Overlay', () => {
   });
 
   describe('scroll strategy', () => {
-    let fakeScrollStrategy: ScrollStrategy;
+    let fakeScrollStrategy: FakeScrollStrategy;
     let config: OverlayState;
 
     beforeEach(() => {
       config = new OverlayState();
-      fakeScrollStrategy = {
-        attach: jasmine.createSpy('attach spy'),
-        enable: jasmine.createSpy('enable spy'),
-        disable: jasmine.createSpy('disable spy')
-      };
+      fakeScrollStrategy = new FakeScrollStrategy();
       config.scrollStrategy = fakeScrollStrategy;
     });
 
     it('should attach the overlay ref to the scroll strategy', () => {
       let overlayRef = overlay.create(config);
 
-      expect(fakeScrollStrategy.attach).toHaveBeenCalledWith(overlayRef);
+      expect(fakeScrollStrategy.overlayRef).toBe(overlayRef,
+          'Expected scroll strategy to have been attached to the current overlay ref.');
     });
 
     it('should enable the scroll strategy when the overlay is attached', () => {
       let overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      expect(fakeScrollStrategy.enable).toHaveBeenCalled();
+      expect(fakeScrollStrategy.isEnabled).toBe(true, 'Expected scroll strategy to be enabled.');
     });
 
     it('should disable the scroll strategy once the overlay is detached', () => {
       let overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      overlayRef.detach();
+      expect(fakeScrollStrategy.isEnabled).toBe(true, 'Expected scroll strategy to be enabled.');
 
-      expect(fakeScrollStrategy.disable).toHaveBeenCalled();
+      overlayRef.detach();
+      expect(fakeScrollStrategy.isEnabled).toBe(false, 'Expected scroll strategy to be disabled.');
     });
 
     it('should disable the scroll strategy when the overlay is destroyed', () => {
       let overlayRef = overlay.create(config);
 
       overlayRef.dispose();
-      expect(fakeScrollStrategy.disable).toHaveBeenCalled();
+      expect(fakeScrollStrategy.isEnabled).toBe(false, 'Expected scroll strategy to be disabled.');
     });
   });
 });
@@ -410,3 +409,19 @@ class FakePositionStrategy implements PositionStrategy {
   dispose() {}
 }
 
+class FakeScrollStrategy implements ScrollStrategy {
+  isEnabled = false;
+  overlayRef: OverlayRef;
+
+  attach(overlayRef: OverlayRef) {
+    this.overlayRef = overlayRef;
+  }
+
+  enable() {
+    this.isEnabled = true;
+  }
+
+  disable() {
+    this.isEnabled = false;
+  }
+}
