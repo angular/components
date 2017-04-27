@@ -11,7 +11,7 @@ export class CloseScrollStrategy implements ScrollStrategy {
   private _scrollSubscription: Subscription|null = null;
   private _overlayRef: OverlayRef;
 
-  constructor(private _scrollDispatcher) { }
+  constructor(private _scrollDispatcher: ScrollDispatcher) { }
 
   attach(overlayRef: OverlayRef) {
     this._overlayRef = overlayRef;

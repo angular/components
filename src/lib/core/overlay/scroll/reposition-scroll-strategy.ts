@@ -11,7 +11,7 @@ export class RepositionScrollStrategy implements ScrollStrategy {
   private _scrollSubscription: Subscription|null = null;
   private _overlayRef: OverlayRef;
 
-  constructor(private _scrollDispatcher, private _scrollThrottle = 0) { }
+  constructor(private _scrollDispatcher: ScrollDispatcher, private _scrollThrottle = 0) { }
 
   attach(overlayRef: OverlayRef) {
     this._overlayRef = overlayRef;
