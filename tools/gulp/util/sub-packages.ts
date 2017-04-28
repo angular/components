@@ -42,7 +42,7 @@ async function buildSubpackage(packageName: string, packagePath: string, rootPac
     dest: fesm2015File,
     format: 'es',
     // Rewrite all internal paths to scoped package imports
-    paths: importPath => importPath.includes(DIST_ROOT) && `@angular/${packageName}`,
+    paths: importPath => importPath.includes(DIST_ROOT) && `@angular/${rootPackage}`,
     // Function to only bundle all files inside of the current subpackage.
     external: importPath => {
       return ROLLUP_EXTERNALS.indexOf(importPath) !== -1 ||
@@ -91,7 +91,7 @@ export async function composeSubpackages(packageName: string) {
     entry: moduleIndexPath,
     dest: fesmOutputPath,
     format: 'es',
-    // Function to only bundle all files inside of the root package directory.
-    external: importPath => importPath !== moduleIndexPath
+    external: importPath => importPath !== moduleIndexPath && !importPath.includes('module'),
+    paths: importPath => importPath.includes(packagePath) && `@angular/${packageName}`
   });
 }
