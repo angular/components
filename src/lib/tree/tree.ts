@@ -6,29 +6,25 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   ContentChildren,
-  ContentChild,
   QueryList,
   ViewContainerRef,
   Input,
   forwardRef,
   IterableDiffers,
-  SimpleChanges,
   IterableDiffer,
   Inject,
   ViewEncapsulation,
   ElementRef,
   Renderer,
-  IterableChanges,
   IterableChangeRecord
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/let';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/combineLatest';
 import {TreeDataSource, MdTreeViewData} from './data-source';
-import {SelectionModel, SelectionChange} from '../core';
+import {SelectionModel} from '../core';
 
 /** Height of each row in pixels (48 + 1px border) */
 export const ROW_HEIGHT = 49;
@@ -38,19 +34,15 @@ export const BUFFER = 3;
 
 @Directive({selector: '[mdNodeDef]'})
 export class MdNodeDef {
-  constructor(public template: TemplateRef<any>,
-              @Inject(forwardRef(() => MdTree)) private tree: MdTree) {
-  }
+  constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
   selector: 'md-node'
 })
 export class MdNode {
-  constructor(
-              private elementRef: ElementRef,
-              private renderer: Renderer,
-              @Inject(forwardRef(() => MdTree)) private tree: MdTree) {
+  constructor(private elementRef: ElementRef,
+              private renderer: Renderer) {
     this.renderer.setElementClass(elementRef.nativeElement, 'mat-node', true);
   }
 }
@@ -75,12 +67,8 @@ export class MdNodePlaceholder {
 })
 export class MdTree {
   @Input() dataSource: TreeDataSource<any>;
-  @Input() expansionModel: SelectionModel<any> = new SelectionModel<any>(true, []);
 
   viewChange = new BehaviorSubject<MdTreeViewData>({start: 0, end: 20});
-
-  // Tree structure related
-  levelMap: Map<any, number> = new Map<any, number>();
 
   private _dataDiffer: IterableDiffer<any> = null;
 
@@ -100,11 +88,7 @@ export class MdTree {
   }
 
   ngAfterViewInit() {
-    const connectFn = this.dataSource.connectTree.bind(this.dataSource);
-    Observable.combineLatest(this.viewChange.let(connectFn), this.expansionModel.onChange)
-      .subscribe((result: any) => { this.renderNodeChanges(result[0]); });
-    // Trigger first event
-    this.expansionModel.onChange.next(null);
+    this.dataSource.connectTree(this.viewChange).subscribe((result: any[]) => this.renderNodeChanges(result));
   }
 
   scrollToTop() {
@@ -126,15 +110,19 @@ export class MdTree {
     this.viewChange.next(view);
   }
 
-  toggleExpand(node: any) {
-    this.expansionModel.toggle(node);
+  scrollToIndex(topIndex: number) {
+    const elementHeight = this.elementRef.nativeElement.getBoundingClientRect().height;
+    const view = {
+      start: Math.max(topIndex - BUFFER, 0),
+      end: Math.ceil(topIndex + (elementHeight / ROW_HEIGHT)) + BUFFER
+    };
+    console.log(view);
+    this.viewChange.next(view);
+    this.elementRef.nativeElement.scrollTop = topIndex * ROW_HEIGHT;
   }
 
   renderNodeChanges(dataNodes: any[]) {
     console.time('Rendering rows');
-    this.flattenNodes(dataNodes);
-    dataNodes = this.flatNodes;
-
     const changes = this._dataDiffer.diff(dataNodes);
     if (!changes) { return; }
 
@@ -162,38 +150,29 @@ export class MdTree {
     console.timeEnd('Rendering rows');
   }
 
-  // Tree structure related
-  flatNodes: any[];
-
-  flattenNodes(dataNodes: any[]) {
-    this.flatNodes = [];
-    dataNodes.forEach((node) => {
-      this._flattenNode(node, 1);
-    })
-  }
-
-  _flattenNode(node: any, level: number) {
-    let key = this.dataSource.getKey(node);
-    this.levelMap.set(key, level);
-    this.flatNodes.push(node);
-    let children = this.dataSource.getChildren(node);
-    if (!!children && this.expansionModel.isSelected(node)) {
-      children.forEach((child) => this._flattenNode(child, level + 1));
-    }
-  }
-
   addNode(data: any, currentIndex: number) {
-    if (data) {
+    if (!!data) {
       let node = this.getNodeDefForItem(data);
       const context = {
         $implicit: data,
-        level: this.levelMap.get(this.dataSource.getKey(data)),
-        expandable: !!this.dataSource.getChildren(data)
+        level: this.dataSource.getLevel(data),// levelMap.get(this.dataSource.getKey(data)),
+        expandable: !!this.dataSource.getChildren(data),
       };
       this.nodePlaceholder.viewContainer.createEmbeddedView(node.template, context, currentIndex);
     } else {
       this.nodePlaceholder.viewContainer.createEmbeddedView(this.emptyNodeTemplate, {}, currentIndex);
     }
+  }
+
+  gotoParent(node: any) {
+    let parent = this.dataSource.getParent(node);
+    let index = this.dataSource.getIndex(parent);
+    console.log(index);
+    this.scrollToIndex(index);
+  }
+
+  toggleExpand(node: any) {
+    this.dataSource.expansionModel.toggle(node);
   }
 
   getNodeDefForItem(item: any) {

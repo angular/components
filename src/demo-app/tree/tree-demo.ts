@@ -20,15 +20,26 @@ export class TreeDemo {
 
   ngOnInit() {
     this.dataSource = new PersonDataSource(this.peopleDatabase);
+
+  }
+
+  get expansionModel() {
+    return this.dataSource.expansionModel;
   }
 
   getPadding(level: number) {
-    return `${(level - 1) * 12}px`;
+    return `${(level - 1) * 45}px`;
   }
 
   toggleExpand(node: UserData) {
-    this.tree.toggleExpand(node);
+    this.dataSource.expansionModel.toggle(node);
   }
 
-  expansionModel = new SelectionModel<UserData>(true, []);
+  refreshData() {
+    this.dataSource.refresh();
+  }
+
+  gotoParent(node: UserData) {
+    this.tree.gotoParent(node);
+  }
 }

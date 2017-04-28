@@ -25,6 +25,7 @@ export class PeopleDatabase {
   constructor(private snackBar: MdSnackBar) {
     for (let i = 0; i < 1000; i++) { this.addPerson(true);}
     this.shuffle();
+    this.oneRoot();
   }
 
   getData(filter: string): Observable<UserData[]> {
@@ -48,7 +49,7 @@ export class PeopleDatabase {
       NAMES[Math.round(Math.random() * (NAMES.length - 1))] + ' ' +
       NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) + '.';
 
-    this.baseData.push(this._addPerson(name));
+    this.baseData.push(this.generatePerson(name));
 
 
     this.baseDataChange.next(null);
@@ -76,7 +77,20 @@ export class PeopleDatabase {
     this.baseDataChange.next(null);
   }
 
-  _addPerson(name: string, children: UserData[] = null) {
+  oneRoot() {
+    let allother = this.baseData.slice(1);
+    console.log(allother.length);
+    this.baseData[0].children = allother;
+    this.baseData = this.baseData.slice(0, 1);
+    this.baseDataChange.next(null);
+  }
+
+  generatePerson(name: string, children: UserData[] = null) {
+    if (children == null) {
+      if (Math.random() > 0.5) {
+        children = [];
+      }
+    }
     return {
       id: (++LATEST_ID).toString(),
       name: name,
@@ -111,5 +125,31 @@ export class PeopleDatabase {
 
   getRandomProgress(): number {
     return Math.round(Math.random() * 100);
+  }
+
+  generateMoreNodes(node: UserData) {
+    if (!!node && !!node.children && node.children.length == 0) {
+      node.children.push(this.generatePerson('AAA~'));
+      this.baseDataChange.next(null);
+    }
+
+  }
+
+  findNode(target: UserData, node: UserData):UserData {
+    if (target == node) {
+      return node;
+    }
+
+    let foundTarget: UserData = null;
+
+    if (node.children) {
+      node.children.forEach((child) => {
+        let find = this.findNode(target, child);
+        if (find != null) {
+          foundTarget = find;
+        }
+      });
+    }
+    return foundTarget;
   }
 }

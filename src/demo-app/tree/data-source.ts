@@ -1,4 +1,4 @@
-import {TreeDataSource, MdTree, MdTreeViewData} from '@angular/material';
+import {TreeDataSource, MdTreeViewData} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/combineLatest';
@@ -8,14 +8,15 @@ import 'rxjs/add/operator/pairwise';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/combineLatest';
 import {PeopleDatabase, UserData} from './person-database';
+import {
+  IterableDiffers,
+  IterableDiffer,
+} from '@angular/core';
 
 
 export class PersonDataSource extends TreeDataSource<any> {
   _filteredData = new BehaviorSubject<UserData[]>([]);
   get filteredData(): UserData[] { return this._filteredData.value; }
-
-  _displayData = new BehaviorSubject<UserData[]>([]);
-  get displayedData(): UserData[] { return this._displayData.value; }
 
   _renderedData: any[] = [];
 
@@ -34,18 +35,15 @@ export class PersonDataSource extends TreeDataSource<any> {
       .subscribe((data: UserData[]) => {
         this._filteredData.next(data);
       });
+  }
 
-
-    // Update displayed data when the filtered data changes, or the sort/pagination changes.
-    // When the filtered data changes, re-sort the data and update data size and displayed data.
-    this._filteredData.subscribe((result: any[]) => {
-
-      this._displayData.next(result);
-    });
+  get data(): Observable<UserData[]> {
+    return this._filteredData;
   }
 
   connectTree(viewChange: Observable<MdTreeViewData>): Observable<UserData[]> {
-    return Observable.combineLatest([viewChange, this._displayData]).map((result: any[]) => {
+
+    return Observable.combineLatest([viewChange, this.flattenNodes(this._filteredData)]).map((result: any[]) => {
       const [view, displayData] = result;
 
       // Set the rendered rows length to the virtual page size. Fill in the data provided
@@ -58,16 +56,21 @@ export class PersonDataSource extends TreeDataSource<any> {
       for (let i = rangeStart; i < rangeEnd; i++) {
         this._renderedData[i] = displayData[i];
       }
-
       return this._renderedData; // Currently ignoring the view
     });
   }
 
   getChildren(node: UserData): UserData[] {
+    if (!!node.children && node.children.length == 0) {
+      setTimeout(() => {
+        this.peopleDatabase.generateMoreNodes(node);
+      }, 1000);
+
+    }
     return node.children;
   }
 
-  getKey(node: UserData) {
-    return node.id;
+  refresh() {
+    this.peopleDatabase.baseDataChange.next(null);
   }
 }
