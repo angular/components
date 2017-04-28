@@ -1,6 +1,6 @@
-import {join, basename, normalize, isAbsolute,} from 'path';
+import {join, basename, normalize, isAbsolute, dirname, relative} from 'path';
 import {sync as glob} from 'glob';
-import {DIST_ROOT, DIST_BUNDLES, DIST_RELEASES, LICENSE_BANNER} from '../constants';
+import {DIST_ROOT, DIST_BUNDLES, DIST_RELEASES} from '../constants';
 import {remapSourcemap, copyFiles} from './package-build';
 import {createRollupBundle, ROLLUP_GLOBALS} from './rollup-helper';
 import {transpileFile} from './ts-compiler';
@@ -77,10 +77,9 @@ export async function composeSubpackages(packageName: string) {
 
   const moduleIndexPath = join(fesmOutputDir, `module-index.js`);
 
-  let indexContent = bundlePaths.map(bundle => `export * from './${basename(bundle)}';`).join('\n');
+  let indexContent = `export * from '../../../packages/${packageName}/module';\n`;
 
-  // Manually add the `module.ts` file for now. This is not very dynamic but also a special case.
-  indexContent += `\nexport * from '../../../packages/${packageName}/module';`;
+  indexContent += bundlePaths.map(bundle => `export * from './${basename(bundle)}';`).join('\n');
 
   // Write index file to disk. Afterwards run rollup to bundle.
   writeFileSync(moduleIndexPath, indexContent);
@@ -94,7 +93,10 @@ export async function composeSubpackages(packageName: string) {
     dest: fesm2015File,
     format: 'es',
     external: importPath => importPath !== moduleIndexPath && !importPath.includes('module'),
-    paths: importPath => importPath.includes(packagePath) && `@angular/${packageName}`
+    paths: importPath => {
+      if (importPath.includes(packagePath)) { return `@angular/${packageName}`; }
+      if (dirname(importPath) === fesmOutputDir) { return 'TEST (intentionally committed!)'; }
+    }
   });
 
 
