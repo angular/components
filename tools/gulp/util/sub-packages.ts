@@ -35,7 +35,7 @@ async function buildSubpackage(packageName: string, packagePath: string, rootPac
   const fesm2015File = join(DIST_BUNDLES, rootPackage, `${packageName}.js`);
   const fesm2014File = join(DIST_BUNDLES, rootPackage, `${packageName}.es5.js`);
 
-  // Build FESM-2015 bundle for the subpackage folder.
+  // Build a FESM-2015 bundle for the subpackage folder.
   await createRollupBundle({
     moduleName: moduleName,
     entry: entryFile,
@@ -52,7 +52,7 @@ async function buildSubpackage(packageName: string, packagePath: string, rootPac
 
   await remapSourcemap(fesm2015File);
 
-  // Downlevel FESM-2015 file to ES5.
+  // Downlevel the FESM-2015 file to ES5.
   transpileFile(fesm2015File, fesm2014File, {
     target: ScriptTarget.ES5,
     module: ModuleKind.ES2015,
@@ -72,7 +72,9 @@ export async function composeSubpackages(packageName: string) {
   const bundlePaths = glob(join(bundlesDir, '!(*.es5).js')).map(normalize);
 
   const fesmOutputDir = join(DIST_RELEASES, packageName, '@angular');
-  const fesmOutputPath = join(fesmOutputDir, `${packageName}.js`);
+  const fesm2015File = join(fesmOutputDir, `${packageName}.js`);
+  const fesm2014File = join(fesmOutputDir, `${packageName}.es5.js`);
+
   const moduleIndexPath = join(fesmOutputDir, `module-index.js`);
 
   let indexContent = bundlePaths.map(bundle => `export * from './${basename(bundle)}';`).join('\n');
@@ -89,9 +91,17 @@ export async function composeSubpackages(packageName: string) {
   await createRollupBundle({
     moduleName: `ng.${packageName}`,
     entry: moduleIndexPath,
-    dest: fesmOutputPath,
+    dest: fesm2015File,
     format: 'es',
     external: importPath => importPath !== moduleIndexPath && !importPath.includes('module'),
     paths: importPath => importPath.includes(packagePath) && `@angular/${packageName}`
+  });
+
+
+  // Downlevel the FESM-2015 file to ES5.
+  transpileFile(fesm2015File, fesm2014File, {
+    target: ScriptTarget.ES5,
+    module: ModuleKind.ES2015,
+    allowJs: true
   });
 }
