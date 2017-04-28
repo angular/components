@@ -68,6 +68,7 @@ export {
   LIVE_ANNOUNCER_ELEMENT_TOKEN,
   LIVE_ANNOUNCER_PROVIDER,
 } from './a11y/live-announcer';
+export {ActiveDescendantKeyManager} from './a11y/activedescendant-key-manager';
 
 // Selection
 export * from './selection/selection';
