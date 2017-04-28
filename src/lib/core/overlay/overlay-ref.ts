@@ -13,8 +13,8 @@ import {Subject} from 'rxjs/Subject';
 export class OverlayRef implements PortalHost {
   private _backdropElement: HTMLElement = null;
   private _backdropClick: Subject<any> = new Subject();
-  private _onAttach = new Subject<void>();
-  private _onDetach = new Subject<void>();
+  private _attachments = new Subject<void>();
+  private _detachments = new Subject<void>();
 
   constructor(
       private _portalHost: PortalHost,
@@ -43,7 +43,7 @@ export class OverlayRef implements PortalHost {
     this.updateSize();
     this.updateDirection();
     this.updatePosition();
-    this._onAttach.next();
+    this._attachments.next();
     this._state.scrollStrategy.enable();
 
     // Enable pointer events for the overlay pane element.
@@ -68,7 +68,7 @@ export class OverlayRef implements PortalHost {
     // pointer events therefore. Depends on the position strategy and the applied pane boundaries.
     this._togglePointerEvents(false);
     this._state.scrollStrategy.disable();
-    this._onDetach.next();
+    this._detachments.next();
 
     return this._portalHost.detach();
   }
@@ -84,9 +84,9 @@ export class OverlayRef implements PortalHost {
     this.detachBackdrop();
     this._portalHost.dispose();
     this._state.scrollStrategy.disable();
-    this._onDetach.next();
-    this._onDetach.complete();
-    this._onAttach.complete();
+    this._detachments.next();
+    this._detachments.complete();
+    this._attachments.complete();
   }
 
   /**
@@ -104,13 +104,13 @@ export class OverlayRef implements PortalHost {
   }
 
   /** Returns an observable that emits when the overlay has been attached. */
-  onAttach(): Observable<void> {
-    return this._onAttach.asObservable();
+  attachments(): Observable<void> {
+    return this._attachments.asObservable();
   }
 
   /** Returns an observable that emits when the overlay has been detached. */
-  onDetach(): Observable<void> {
-    return this._onDetach.asObservable();
+  detachments(): Observable<void> {
+    return this._detachments.asObservable();
   }
 
   /**

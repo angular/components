@@ -139,9 +139,9 @@ describe('Overlay', () => {
 
   it('should emit when an overlay is attached', () => {
     let overlayRef = overlay.create();
-    let spy = jasmine.createSpy('onAttach spy');
+    let spy = jasmine.createSpy('attachments spy');
 
-    overlayRef.onAttach().subscribe(spy);
+    overlayRef.attachments().subscribe(spy);
     overlayRef.attach(componentPortal);
 
     expect(spy).toHaveBeenCalled();
@@ -149,9 +149,9 @@ describe('Overlay', () => {
 
   it('should emit when an overlay is detached', () => {
     let overlayRef = overlay.create();
-    let spy = jasmine.createSpy('onDetach spy');
+    let spy = jasmine.createSpy('detachments spy');
 
-    overlayRef.onDetach().subscribe(spy);
+    overlayRef.detachments().subscribe(spy);
     overlayRef.attach(componentPortal);
     overlayRef.detach();
 
@@ -164,8 +164,8 @@ describe('Overlay', () => {
     let attachCompleteSpy = jasmine.createSpy('attachCompleteSpy spy');
     let detachCompleteSpy = jasmine.createSpy('detachCompleteSpy spy');
 
-    overlayRef.onAttach().subscribe(null, null, attachCompleteSpy);
-    overlayRef.onDetach().subscribe(disposeSpy, null, detachCompleteSpy);
+    overlayRef.attachments().subscribe(null, null, attachCompleteSpy);
+    overlayRef.detachments().subscribe(disposeSpy, null, detachCompleteSpy);
 
     overlayRef.attach(componentPortal);
     overlayRef.dispose();
