@@ -1,0 +1,8 @@
+.demo-footer-container {
+  display: flex;
+  flex-flow: column nowrap;
+
+  .mat-footer {
+    margin: 0 16px 16px 0;
+  }
+}

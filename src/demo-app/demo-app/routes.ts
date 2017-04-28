@@ -1,6 +1,7 @@
 import {Routes} from '@angular/router';
 import {Home} from './demo-app';
 import {ButtonDemo} from '../button/button-demo';
+import {FooterDemo} from '../footer/footer-demo';
 import {BaselineDemo} from '../baseline/baseline-demo';
 import {ButtonToggleDemo} from '../button-toggle/button-toggle-demo';
 import {TabsDemo} from '../tabs/tabs-demo';
@@ -39,6 +40,7 @@ export const DEMO_APP_ROUTES: Routes = [
   {path: 'button', component: ButtonDemo},
   {path: 'card', component: CardDemo},
   {path: 'chips', component: ChipsDemo},
+  {path: 'footer', component: FooterDemo},
   {path: 'radio', component: RadioDemo},
   {path: 'select', component: SelectDemo},
   {path: 'sidenav', component: SidenavDemo},

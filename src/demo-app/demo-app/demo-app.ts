@@ -26,6 +26,7 @@ export class DemoApp {
     {name: 'Chips', route: 'chips'},
     {name: 'Checkbox', route: 'checkbox'},
     {name: 'Dialog', route: 'dialog'},
+    {name: 'Footer', route: 'footer'},
     {name: 'Gestures', route: 'gestures'},
     {name: 'Grid List', route: 'grid-list'},
     {name: 'Icon', route: 'icon'},
