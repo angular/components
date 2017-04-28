@@ -32,7 +32,7 @@ Here are all available global options listed:
 | Name            | Type    | Description                               |
 | --------------- | ------- | ----------------------------------------- |
 | disabled        | boolean | Whether ripples should show or not.       |
-| baseSpeedFactor | number  | Factor to adjust duration of the ripples. |
+| baseSpeedFactor | number  | Factor to adjust ripple speed.            |
 
 ### API Summary
 
