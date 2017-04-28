@@ -90,7 +90,7 @@ export async function buildPackageBundles(entryFile: string, packageName: string
  * Finds the original sourcemap of the file and maps it to the current file.
  * This is useful when multiple transformation happen (e.g TSC -> Rollup -> Uglify)
  **/
-async function remapSourcemap(sourceFile: string) {
+export async function remapSourcemap(sourceFile: string) {
   // Once sorcery loaded the chain of sourcemaps, the new sourcemap will be written asynchronously.
   return (await sorcery.load(sourceFile)).write();
 }
@@ -107,7 +107,7 @@ function uglifyFile(inputPath: string, outputPath: string) {
   writeFileSync(sourcemapOut, result.map);
 }
 
-function copyFiles(fromPath: string, fileGlob: string, outDir: string) {
+export function copyFiles(fromPath: string, fileGlob: string, outDir: string) {
   glob(fileGlob, {cwd: fromPath}).forEach(filePath => {
     let fileDestPath = join(outDir, filePath);
     mkdirpSync(dirname(fileDestPath));

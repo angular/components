@@ -2,9 +2,10 @@ import {task, src, dest} from 'gulp';
 import {join} from 'path';
 import {writeFileSync} from 'fs';
 import {Bundler} from 'scss-bundle';
-import {execNodeTask, sequenceTask} from '../util/task_helpers';
+import {sequenceTask} from '../util/task_helpers';
 import {composeRelease} from '../util/package-build';
 import {COMPONENTS_DIR, DIST_MATERIAL, DIST_RELEASES} from '../constants';
+import {composeSubpackages, buildAllSubpackages} from '../util/sub-packages';
 
 // There are no type definitions available for these imports.
 const gulpRename = require('gulp-rename');
@@ -24,7 +25,10 @@ const allScssGlob = join(COMPONENTS_DIR, '**/*.scss');
  * Overwrite the release task for the material package. The material release will include special
  * files, like a bundled theming SCSS file or all prebuilt themes.
  */
-task('material:build-release', ['material:prepare-release'], () => composeRelease('material'));
+task('material:build-release', ['material:prepare-release'], async () => {
+  await composeRelease('material');
+  await composeSubpackages('material');
+});
 
 /**
  * Task that will build the material package. It will also copy all prebuilt themes and build
@@ -32,8 +36,11 @@ task('material:build-release', ['material:prepare-release'], () => composeReleas
  */
 task('material:prepare-release', sequenceTask(
   'material:build',
-  ['material:copy-prebuilt-themes', 'material:bundle-theming-scss']
+  ['material:copy-prebuilt-themes', 'material:bundle-theming-scss', 'material:build-subpackages']
 ));
+
+/** Task that builds all subpackages of the Material package. Necessary for releases. */
+task('material:build-subpackages', () => buildAllSubpackages('material'));
 
 /** Copies all prebuilt themes into the release package under `prebuilt-themes/` */
 task('material:copy-prebuilt-themes', () => {

@@ -3,7 +3,7 @@ import {LICENSE_BANNER} from '../constants';
 // There are no type definitions available for these imports.
 const rollup = require('rollup');
 
-const ROLLUP_GLOBALS = {
+export const ROLLUP_GLOBALS = {
   // Angular dependencies
   '@angular/animations': 'ng.animations',
   '@angular/core': 'ng.core',
@@ -44,14 +44,17 @@ export type BundleConfig = {
   dest: string;
   format: string;
   moduleName: string;
+  external?: (moduleId: string) => boolean;
+  paths?: (moduleId: string) => string;
 };
 
 /** Creates a rollup bundles of the Material components.*/
 export function createRollupBundle(config: BundleConfig): Promise<any> {
   let bundleOptions = {
     context: 'this',
-    external: Object.keys(ROLLUP_GLOBALS),
-    entry: config.entry
+    external: config.external || Object.keys(ROLLUP_GLOBALS),
+    entry: config.entry,
+    paths: config.paths
   };
 
   let writeOptions = {
