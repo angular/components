@@ -137,6 +137,44 @@ describe('Overlay', () => {
     expect(pane.getAttribute('dir')).toEqual('rtl');
   });
 
+  it('should emit when an overlay is attached', () => {
+    let overlayRef = overlay.create();
+    let spy = jasmine.createSpy('onAttach spy');
+
+    overlayRef.onAttach().subscribe(spy);
+    overlayRef.attach(componentPortal);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should emit when an overlay is detached', () => {
+    let overlayRef = overlay.create();
+    let spy = jasmine.createSpy('onDetach spy');
+
+    overlayRef.onDetach().subscribe(spy);
+    overlayRef.attach(componentPortal);
+    overlayRef.detach();
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should emit and complete the observables when an overlay is disposed', () => {
+    let overlayRef = overlay.create();
+    let disposeSpy = jasmine.createSpy('dispose spy');
+    let attachCompleteSpy = jasmine.createSpy('attachCompleteSpy spy');
+    let detachCompleteSpy = jasmine.createSpy('detachCompleteSpy spy');
+
+    overlayRef.onAttach().subscribe(null, null, attachCompleteSpy);
+    overlayRef.onDetach().subscribe(disposeSpy, null, detachCompleteSpy);
+
+    overlayRef.attach(componentPortal);
+    overlayRef.dispose();
+
+    expect(disposeSpy).toHaveBeenCalled();
+    expect(attachCompleteSpy).toHaveBeenCalled();
+    expect(detachCompleteSpy).toHaveBeenCalled();
+  });
+
   describe('positioning', () => {
     let state: OverlayState;
 

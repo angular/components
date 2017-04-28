@@ -13,6 +13,8 @@ import {Subject} from 'rxjs/Subject';
 export class OverlayRef implements PortalHost {
   private _backdropElement: HTMLElement = null;
   private _backdropClick: Subject<any> = new Subject();
+  private _onAttach = new Subject<void>();
+  private _onDetach = new Subject<void>();
 
   constructor(
       private _portalHost: PortalHost,
@@ -41,6 +43,7 @@ export class OverlayRef implements PortalHost {
     this.updateSize();
     this.updateDirection();
     this.updatePosition();
+    this._onAttach.next();
     this._state.scrollStrategy.enable();
 
     // Enable pointer events for the overlay pane element.
@@ -65,6 +68,7 @@ export class OverlayRef implements PortalHost {
     // pointer events therefore. Depends on the position strategy and the applied pane boundaries.
     this._togglePointerEvents(false);
     this._state.scrollStrategy.disable();
+    this._onDetach.next();
 
     return this._portalHost.detach();
   }
@@ -80,6 +84,9 @@ export class OverlayRef implements PortalHost {
     this.detachBackdrop();
     this._portalHost.dispose();
     this._state.scrollStrategy.disable();
+    this._onDetach.next();
+    this._onDetach.complete();
+    this._onAttach.complete();
   }
 
   /**
@@ -94,6 +101,16 @@ export class OverlayRef implements PortalHost {
    */
   backdropClick(): Observable<void> {
     return this._backdropClick.asObservable();
+  }
+
+  /** Returns an observable that emits when the overlay has been attached. */
+  onAttach(): Observable<void> {
+    return this._onAttach.asObservable();
+  }
+
+  /** Returns an observable that emits when the overlay has been detached. */
+  onDetach(): Observable<void> {
+    return this._onDetach.asObservable();
   }
 
   /**
