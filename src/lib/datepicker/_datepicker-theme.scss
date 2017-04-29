@@ -55,10 +55,10 @@
   .mat-calendar-body-selected {
     background-color: mat-color($primary);
     color: mat-color($primary, default-contrast);
+  }
 
-    .mat-calendar-body-disabled > & {
-      background-color: fade-out(mat-color($primary), $mat-datepicker-selected-fade-amount);
-    }
+  .mat-calendar-body-disabled > .mat-calendar-body-selected {
+    background-color: fade-out(mat-color($primary), $mat-datepicker-selected-fade-amount);
   }
 
   .mat-calendar-body-today {
@@ -66,16 +66,15 @@
       // Note: though it's not text, the border is a hint about the fact that this is today's date,
       // so we use the hint color.
       border-color: mat-color($foreground, hint-text);
-
-      .mat-calendar-body-disabled > & {
-        border-color:
-            fade-out(mat-color($foreground, hint-text), $mat-datepicker-today-fade-amount);
-      }
     }
 
     &.mat-calendar-body-selected {
       box-shadow: inset 0 0 0 $mat-datepicker-selected-today-box-shadow-width
                   mat-color($primary, default-contrast);
     }
+  }
+
+  .mat-calendar-body-disabled > .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+    border-color: fade-out(mat-color($foreground, hint-text), $mat-datepicker-today-fade-amount);
   }
 }
