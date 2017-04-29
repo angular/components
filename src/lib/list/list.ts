@@ -11,7 +11,7 @@ import {
   Renderer2,
   AfterContentInit,
 } from '@angular/core';
-import {MdLine, MdLineSetter, coerceBooleanProperty} from '../core';
+import {MdLine, MdLineSetter, coerceBooleanProperty} from '@angular/material/core';
 
 @Directive({
   selector: 'md-divider, mat-divider'

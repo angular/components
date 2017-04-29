@@ -1,8 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MdCommonModule} from '../core';
-import {A11yModule} from '../core/a11y/index';
-import {OverlayModule} from '../core/overlay/overlay-directives';
+import {MdCommonModule, A11yModule, OverlayModule} from '@angular/material/core';
 import {MdSidenav, MdSidenavContainer} from './sidenav';
 
 

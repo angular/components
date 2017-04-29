@@ -1,4 +1,4 @@
-import {MdError} from '../core/errors/error';
+import {MdError} from '@angular/material/core';
 
 /** @docs-private */
 export class MdInputContainerPlaceholderConflictError extends MdError {

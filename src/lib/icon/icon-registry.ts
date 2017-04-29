@@ -1,7 +1,7 @@
 import {Injectable, SecurityContext} from '@angular/core';
 import {SafeResourceUrl, DomSanitizer} from '@angular/platform-browser';
 import {Http} from '@angular/http';
-import {MdError} from '../core';
+import {MdError} from '@angular/material/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';

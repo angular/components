@@ -26,16 +26,17 @@ import {
   ComponentPortal,
   OverlayConnectionPosition,
   OriginConnectionPosition,
-} from '../core';
+  Platform,
+  ScrollDispatcher,
+  coerceBooleanProperty,
+  Dir
+} from '@angular/material/core';
 import {MdTooltipInvalidPositionError} from './tooltip-errors';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {Dir} from '../core/rtl/dir';
-import {Platform} from '../core/platform/index';
-import 'rxjs/add/operator/first';
-import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {Subscription} from 'rxjs/Subscription';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+
+import 'rxjs/add/operator/first';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 

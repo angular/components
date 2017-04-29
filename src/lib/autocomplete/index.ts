@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {MdOptionModule, OverlayModule, MdCommonModule} from '../core';
+import {MdOptionModule, OverlayModule, MdCommonModule} from '@angular/material/core';
 import {CommonModule} from '@angular/common';
 import {MdAutocomplete} from './autocomplete';
 import {MdAutocompleteTrigger} from './autocomplete-trigger';

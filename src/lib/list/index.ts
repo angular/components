@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {MdLineModule, MdRippleModule, MdCommonModule} from '../core';
+import {MdLineModule, MdRippleModule, MdCommonModule} from '@angular/material/core';
 import {
   MdList,
   MdListItem,

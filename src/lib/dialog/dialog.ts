@@ -2,14 +2,16 @@ import {Injector, ComponentRef, Injectable, Optional, SkipSelf, TemplateRef} fro
 import {Location} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {Overlay, OverlayRef, ComponentType, OverlayState, ComponentPortal} from '../core';
-import {extendObject} from '../core/util/object-extend';
-import {ESCAPE} from '../core/keyboard/keycodes';
 import {DialogInjector} from './dialog-injector';
 import {MdDialogConfig} from './dialog-config';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
-import {TemplatePortal} from '../core/portal/portal';
+
+import {
+  TemplatePortal, ESCAPE, Overlay, OverlayRef, ComponentType, OverlayState, ComponentPortal,
+  _extendObject
+} from '@angular/material/core';
+
 import 'rxjs/add/operator/first';
 
 
@@ -226,5 +228,5 @@ export class MdDialog {
  * @returns The new configuration object.
  */
 function _applyConfigDefaults(config: MdDialogConfig): MdDialogConfig {
-  return extendObject(new MdDialogConfig(), config);
+  return _extendObject(new MdDialogConfig(), config);
 }

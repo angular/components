@@ -1,4 +1,4 @@
-import {MdError} from '../core';
+import {MdError} from '@angular/material/core';
 
 /**
  * Error that is thrown when attempting to attach a snack bar that is already attached.

@@ -1,5 +1,5 @@
 import {Directive, ElementRef, Input} from '@angular/core';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {coerceBooleanProperty} from '@angular/material/core';
 
 
 /**

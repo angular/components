@@ -11,8 +11,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {coerceBooleanProperty, coerceNumberProperty, HammerInput} from '../core';
-import {Dir} from '../core/rtl/dir';
 import {
   DOWN_ARROW,
   END,
@@ -21,10 +19,16 @@ import {
   PAGE_DOWN,
   PAGE_UP,
   RIGHT_ARROW,
-  UP_ARROW
-} from '../core/keyboard/keycodes';
-import {FocusOrigin, FocusOriginMonitor} from '../core/style/focus-origin-monitor';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
+  UP_ARROW,
+  Dir,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  HammerInput,
+  FocusOrigin,
+  FocusOriginMonitor,
+  _mixinDisabled,
+  _CanDisable
+} from '@angular/material/core';
 
 
 /**
@@ -64,7 +68,7 @@ export class MdSliderChange {
 
 // Boilerplate for applying mixins to MdSlider.
 export class MdSliderBase { }
-export const _MdSliderMixinBase = mixinDisabled(MdSliderBase);
+export const _MdSliderMixinBase = _mixinDisabled(MdSliderBase);
 
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
@@ -110,7 +114,7 @@ export const _MdSliderMixinBase = mixinDisabled(MdSliderBase);
   encapsulation: ViewEncapsulation.None,
 })
 export class MdSlider extends _MdSliderMixinBase
-    implements ControlValueAccessor, OnDestroy, CanDisable {
+    implements ControlValueAccessor, OnDestroy, _CanDisable {
   /** Whether the slider is inverted. */
   @Input()
   get invert() { return this._invert; }

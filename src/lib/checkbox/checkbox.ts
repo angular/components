@@ -14,9 +14,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 import {FocusOrigin, FocusOriginMonitor, MdRipple, RippleRef} from '../core';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
+import {coerceBooleanProperty, _mixinDisabled, _CanDisable} from '@angular/material/core';
 
 
 /** Monotonically increasing integer used to auto-generate unique ids for checkbox components. */
@@ -58,7 +57,7 @@ export class MdCheckboxChange {
 
 // Boilerplate for applying mixins to MdCheckbox.
 export class MdCheckboxBase { }
-export const _MdCheckboxMixinBase = mixinDisabled(MdCheckboxBase);
+export const _MdCheckboxMixinBase = _mixinDisabled(MdCheckboxBase);
 
 
 /**
@@ -87,7 +86,7 @@ export const _MdCheckboxMixinBase = mixinDisabled(MdCheckboxBase);
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MdCheckbox extends _MdCheckboxMixinBase
-    implements ControlValueAccessor, AfterViewInit, OnDestroy, CanDisable {
+    implements ControlValueAccessor, AfterViewInit, OnDestroy, _CanDisable {
   /**
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
    * take precedence so this may be omitted.

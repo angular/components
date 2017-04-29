@@ -1,9 +1,11 @@
 import {NgModule} from '@angular/core';
-import {OverlayModule, PortalModule, MdCommonModule, LIVE_ANNOUNCER_PROVIDER} from '../core';
 import {CommonModule} from '@angular/common';
 import {MdSnackBar} from './snack-bar';
 import {MdSnackBarContainer} from './snack-bar-container';
 import {SimpleSnackBar} from './simple-snack-bar';
+import {
+  OverlayModule, PortalModule, MdCommonModule, _LIVE_ANNOUNCER_PROVIDER
+} from '@angular/material/core';
 
 
 @NgModule({
@@ -16,7 +18,7 @@ import {SimpleSnackBar} from './simple-snack-bar';
   exports: [MdSnackBarContainer, MdCommonModule],
   declarations: [MdSnackBarContainer, SimpleSnackBar],
   entryComponents: [MdSnackBarContainer, SimpleSnackBar],
-  providers: [MdSnackBar, LIVE_ANNOUNCER_PROVIDER]
+  providers: [MdSnackBar, _LIVE_ANNOUNCER_PROVIDER]
 })
 export class MdSnackBarModule {}
 

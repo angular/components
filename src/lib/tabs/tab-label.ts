@@ -1,5 +1,5 @@
 import {Directive, TemplateRef, ViewContainerRef} from '@angular/core';
-import {TemplatePortalDirective} from '../core';
+import {TemplatePortalDirective} from '@angular/material/core';
 
 /** Used to flag tab labels for use with the portal directive */
 @Directive({

@@ -11,10 +11,14 @@ import {
   OnDestroy,
   AfterContentInit,
 } from '@angular/core';
+import {
+  MdRipple,
+  MD_RIPPLE_GLOBAL_OPTIONS,
+  RippleGlobalOptions,
+  Dir,
+  _ViewportRuler
+} from '@angular/material/core';
 import {MdInkBar} from '../ink-bar';
-import {MdRipple} from '../../core/ripple/index';
-import {ViewportRuler} from '../../core/overlay/position/viewport-ruler';
-import {MD_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions, Dir} from '../../core';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/auditTime';
@@ -122,7 +126,7 @@ export class MdTabLink {
   },
 })
 export class MdTabLinkRipple extends MdRipple {
-  constructor(elementRef: ElementRef, ngZone: NgZone, ruler: ViewportRuler,
+  constructor(elementRef: ElementRef, ngZone: NgZone, ruler: _ViewportRuler,
               @Optional() @Inject(MD_RIPPLE_GLOBAL_OPTIONS) globalOptions: RippleGlobalOptions) {
     super(elementRef, ngZone, ruler, globalOptions);
   }

@@ -20,7 +20,7 @@ import {
   ComponentPortal,
   TemplatePortal,
   PortalHostDirective,
-} from '../core';
+} from '@angular/material/core';
 import {MdSnackBarConfig} from './snack-bar-config';
 import {MdSnackBarContentAlreadyAttached} from './snack-bar-errors';
 import {Observable} from 'rxjs/Observable';

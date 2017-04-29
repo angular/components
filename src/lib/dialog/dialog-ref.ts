@@ -1,9 +1,10 @@
-import {OverlayRef, GlobalPositionStrategy} from '../core';
 import {AnimationEvent} from '@angular/animations';
 import {DialogPosition} from './dialog-config';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {MdDialogContainer} from './dialog-container';
+import {OverlayRef, GlobalPositionStrategy} from '@angular/material/core';
+
 import 'rxjs/add/operator/filter';
 
 

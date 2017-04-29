@@ -4,7 +4,6 @@ import {
   ViewChild,
   ViewEncapsulation,
   NgZone,
-  OnDestroy,
   ElementRef,
   EventEmitter,
   Inject,
@@ -19,10 +18,11 @@ import {
   AnimationEvent,
 } from '@angular/animations';
 import {DOCUMENT} from '@angular/platform-browser';
-import {BasePortalHost, ComponentPortal, PortalHostDirective, TemplatePortal} from '../core';
 import {MdDialogConfig} from './dialog-config';
 import {MdDialogContentAlreadyAttachedError} from './dialog-errors';
-import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
+import {
+  FocusTrapFactory, FocusTrap, BasePortalHost, ComponentPortal, PortalHostDirective, TemplatePortal
+} from '@angular/material/core';
 
 
 /**

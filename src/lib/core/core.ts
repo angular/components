@@ -47,6 +47,7 @@ export {
   OverlayOrigin,
   OverlayModule,
 } from './overlay/overlay-directives';
+export * from './overlay/position/position-strategy';
 export * from './overlay/position/global-position-strategy';
 export * from './overlay/position/connected-position-strategy';
 export * from './overlay/position/connected-position';

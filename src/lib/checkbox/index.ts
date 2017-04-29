@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MdRippleModule, MdCommonModule, FocusOriginMonitor} from '../core';
+import {MdRippleModule, MdCommonModule, FocusOriginMonitor} from '@angular/material/core';
 import {MdCheckbox} from './checkbox';
 
 

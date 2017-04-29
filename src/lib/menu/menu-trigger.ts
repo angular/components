@@ -22,7 +22,7 @@ import {
     ConnectedPositionStrategy,
     HorizontalConnectionPos,
     VerticalConnectionPos,
-} from '../core';
+} from '@angular/material/core';
 import {Subscription} from 'rxjs/Subscription';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
 

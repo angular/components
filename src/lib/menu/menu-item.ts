@@ -1,6 +1,5 @@
 import {Component, ElementRef, Input} from '@angular/core';
-import {Focusable} from '../core/a11y/focus-key-manager';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {_Focusable, coerceBooleanProperty} from '@angular/material/core';
 
 /**
  * This directive is intended to be used inside an md-menu tag.
@@ -20,7 +19,7 @@ import {coerceBooleanProperty} from '../core/coercion/boolean-property';
   templateUrl: 'menu-item.html',
   exportAs: 'mdMenuItem'
 })
-export class MdMenuItem implements Focusable {
+export class MdMenuItem implements _Focusable {
   /** Whether the menu item is disabled */
   private _disabled: boolean = false;
 

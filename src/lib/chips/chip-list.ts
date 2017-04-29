@@ -10,9 +10,9 @@ import {
 } from '@angular/core';
 
 import {MdChip} from './chip';
-import {FocusKeyManager} from '../core/a11y/focus-key-manager';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
-import {SPACE, LEFT_ARROW, RIGHT_ARROW} from '../core/keyboard/keycodes';
+import {
+  _FocusKeyManager, coerceBooleanProperty, SPACE, LEFT_ARROW, RIGHT_ARROW
+} from '@angular/material/core';
 
 /**
  * A material design chips component (named ChipList for it's similarity to the List component).
@@ -54,7 +54,7 @@ export class MdChipList implements AfterContentInit {
   protected _selectable: boolean = true;
 
   /** The FocusKeyManager which handles focus. */
-  _keyManager: FocusKeyManager;
+  _keyManager: _FocusKeyManager;
 
   /** The chip components contained within this chip list. */
   chips: QueryList<MdChip>;
@@ -62,7 +62,7 @@ export class MdChipList implements AfterContentInit {
   constructor(private _elementRef: ElementRef) { }
 
   ngAfterContentInit(): void {
-    this._keyManager = new FocusKeyManager(this.chips).withWrap();
+    this._keyManager = new _FocusKeyManager(this.chips).withWrap();
 
     // Go ahead and subscribe all of the initial chips
     this._subscribeChips(this.chips);

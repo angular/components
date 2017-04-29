@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {MdLineModule, MdCommonModule} from '../core';
+import {MdLineModule, MdCommonModule} from '@angular/material/core';
 import {
   MdGridTile, MdGridTileText, MdGridTileFooterCssMatStyler,
   MdGridTileHeaderCssMatStyler, MdGridAvatarCssMatStyler

@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MdCommonModule, MdRippleModule, StyleModule} from '../core';
+import {MdCommonModule, MdRippleModule, StyleModule} from '@angular/material/core';
 import {
   MdAnchor,
   MdButton,

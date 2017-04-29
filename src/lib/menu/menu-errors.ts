@@ -1,4 +1,4 @@
-import {MdError} from '../core';
+import {MdError} from '@angular/material/core';
 
 /**
  * Exception thrown when menu trigger doesn't have a valid md-menu instance

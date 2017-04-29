@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MdCommonModule} from '../core';
+import {MdCommonModule} from '@angular/material/core';
 import {MdProgressBar} from './progress-bar';
 
 
