@@ -14,8 +14,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {FocusOrigin, FocusOriginMonitor, MdRipple, RippleRef} from '../core';
-import {coerceBooleanProperty, _mixinDisabled, _CanDisable} from '@angular/material/core';
+import {
+  FocusOrigin, FocusOriginMonitor, MdRipple, RippleRef, coerceBooleanProperty,
+  _mixinDisabled, _CanDisable
+} from '@angular/material/core';
 
 
 /** Monotonically increasing integer used to auto-generate unique ids for checkbox components. */
