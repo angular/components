@@ -1,5 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CompatibilityModule} from '../compatibility/compatibility';
+import {MdDisabled} from './disabled';
 
 
 /**
@@ -10,6 +11,7 @@ import {CompatibilityModule} from '../compatibility/compatibility';
  */
 @NgModule({
   imports: [CompatibilityModule],
-  exports: [CompatibilityModule],
+  exports: [CompatibilityModule, MdDisabled],
+  declarations: [MdDisabled]
 })
 export class MdCommonModule { }

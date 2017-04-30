@@ -1,22 +1,26 @@
-import {coerceBooleanProperty} from '../coercion/boolean-property';
-
-
-/** @docs-private */
-export type Constructor<T> = new(...args: any[]) => T;
+import {Directive, SkipSelf, Optional} from '@angular/core';
+import {mixinDisabled, CanDisable} from './mixin-disabled';
 
 /** @docs-private */
-export interface CanDisable {
-  disabled: boolean;
-}
+export class MdDisabledBase { }
+export const _MdDisabledMixinBase = mixinDisabled(MdDisabledBase);
 
-/** Mixin to augment a directive with a `disabled` property. */
-export function mixinDisabled<T extends Constructor<{}>>(base: T): Constructor<CanDisable> & T {
-  return class extends base {
-    private _disabled: boolean = false;
-
-    get disabled() { return this._disabled; }
-    set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
-
-    constructor(...args: any[]) { super(...args); }
-  };
+/**
+ * Wrapper around the native `disabled` attribute.
+ * Used to set up the `disabled` fieldset inheritance.
+ * @docs-private
+ */
+@Directive({
+  selector: '[disabled]',
+  inputs: ['disabled'],
+  host: {
+    '[attr.disabled]': 'disabled || null',
+    '[attr.aria-disabled]': 'disabled',
+  }
+})
+export class MdDisabled extends _MdDisabledMixinBase implements CanDisable {
+  constructor(@SkipSelf() @Optional() parent?: MdDisabled) {
+    super();
+    this.withDisabledParent(parent);
+  }
 }

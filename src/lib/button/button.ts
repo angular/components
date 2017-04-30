@@ -7,10 +7,13 @@ import {
   Input,
   OnDestroy,
   Renderer2,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Optional,
+  SkipSelf,
 } from '@angular/core';
 import {coerceBooleanProperty, FocusOriginMonitor} from '../core';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
+import {mixinDisabled, CanDisable} from '../core/common-behaviors/mixin-disabled';
+import {MdDisabled} from '../core/common-behaviors/disabled';
 
 
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
@@ -121,8 +124,10 @@ export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisabl
   set disableRipple(v) { this._disableRipple = coerceBooleanProperty(v); }
 
   constructor(private _elementRef: ElementRef, private _renderer: Renderer2,
-              private _focusOriginMonitor: FocusOriginMonitor) {
+              private _focusOriginMonitor: FocusOriginMonitor,
+              @SkipSelf() @Optional() disabledParent?: MdDisabled) {
     super();
+    this.withDisabledParent(disabledParent);
     this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
   }
 
@@ -195,8 +200,9 @@ export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisabl
   encapsulation: ViewEncapsulation.None
 })
 export class MdAnchor extends MdButton {
-  constructor(elementRef: ElementRef, renderer: Renderer2, focusOriginMonitor: FocusOriginMonitor) {
-    super(elementRef, renderer, focusOriginMonitor);
+  constructor(elementRef: ElementRef, renderer: Renderer2, focusOriginMonitor: FocusOriginMonitor,
+    @SkipSelf() @Optional() disabledParent?: MdDisabled) {
+    super(elementRef, renderer, focusOriginMonitor, disabledParent);
   }
 
   /** @docs-private */

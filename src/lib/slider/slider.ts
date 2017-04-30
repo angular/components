@@ -8,7 +8,8 @@ import {
   Optional,
   Output,
   Renderer2,
-  ViewEncapsulation
+  ViewEncapsulation,
+  SkipSelf,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {coerceBooleanProperty, coerceNumberProperty, HammerInput} from '../core';
@@ -24,7 +25,8 @@ import {
   UP_ARROW
 } from '../core/keyboard/keycodes';
 import {FocusOrigin, FocusOriginMonitor} from '../core/style/focus-origin-monitor';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
+import {mixinDisabled, CanDisable} from '../core/common-behaviors/mixin-disabled';
+import {MdDisabled} from '../core/common-behaviors/disabled';
 
 
 /**
@@ -381,8 +383,10 @@ export class MdSlider extends _MdSliderMixinBase
   }
 
   constructor(renderer: Renderer2, private _elementRef: ElementRef,
-              private _focusOriginMonitor: FocusOriginMonitor, @Optional() private _dir: Dir) {
+              private _focusOriginMonitor: FocusOriginMonitor, @Optional() private _dir: Dir,
+              @SkipSelf() @Optional() disabledParent?: MdDisabled) {
     super();
+    this.withDisabledParent(disabledParent);
     this._focusOriginMonitor.monitor(this._elementRef.nativeElement, renderer, true)
         .subscribe((origin: FocusOrigin) => this._isActive = !!origin && origin !== 'keyboard');
     this._renderer = new SliderRenderer(this._elementRef);
