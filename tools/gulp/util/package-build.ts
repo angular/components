@@ -43,9 +43,7 @@ export function composeRelease(packageName: string) {
 }
 
 export async function buildPackage(entryFile: string, packagePath: string, packageName: string) {
-  let packageTasks = [
-    buildPackageBundles(entryFile, packageName)
-  ];
+  let packageTasks = [buildPackageBundles(entryFile, packageName)];
 
   glob(join(packagePath, '*/')).forEach(subPackagePath => {
     const subPackageName = basename(subPackagePath);
@@ -59,14 +57,14 @@ export async function buildPackage(entryFile: string, packagePath: string, packa
 }
 
 /** Builds the bundles for the specified package. */
-async function buildPackageBundles(entryFile: string, packageName: string, parentPackage?: string) {
+async function buildPackageBundles(entryFile: string, packageName: string, parentPackage = '') {
   let moduleName = parentPackage ? `ng.${parentPackage}.${packageName}` : `ng.${packageName}`;
 
   // List of paths to the package bundles.
-  let fesm2015File = join(DIST_BUNDLES, `${packageName}.js`);
-  let fesm2014File = join(DIST_BUNDLES, `${packageName}.es5.js`);
-  let umdFile = join(DIST_BUNDLES, `${packageName}.umd.js`);
-  let umdMinFile = join(DIST_BUNDLES, `${packageName}.umd.min.js`);
+  let fesm2015File = join(DIST_BUNDLES, parentPackage, `${packageName}.js`);
+  let fesm2014File = join(DIST_BUNDLES, parentPackage, `${packageName}.es5.js`);
+  let umdFile = join(DIST_BUNDLES, parentPackage, `${packageName}.umd.js`);
+  let umdMinFile = join(DIST_BUNDLES, parentPackage, `${packageName}.umd.min.js`);
 
   // Build FESM-2015 bundle file.
   await createRollupBundle({
