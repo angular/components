@@ -23,15 +23,24 @@ const sorcery = require('sorcery');
  */
 export function composeRelease(packageName: string) {
   // To avoid refactoring of the project the package material will map to the source path `lib/`.
-  let sourcePath = join(SOURCE_ROOT, packageName === 'material' ? 'lib' : packageName);
-  let packagePath = join(DIST_ROOT, 'packages', packageName);
-  let releasePath = join(DIST_ROOT, 'releases', packageName);
+  const sourcePath = join(SOURCE_ROOT, packageName === 'material' ? 'lib' : packageName);
+  const packagePath = join(DIST_ROOT, 'packages', packageName);
+  const releasePath = join(DIST_ROOT, 'releases', packageName);
+
+  const umdOutput = join(releasePath, 'bundles');
+  const fesmOutput = join(releasePath, '@angular');
 
   inlinePackageMetadataFiles(packagePath);
 
+  // Copy primary entry point bundles
+  copyFiles(DIST_BUNDLES, `${packageName}.umd?(.min).js?(.map)`, umdOutput);
+  copyFiles(DIST_BUNDLES, `${packageName}?(.es5).js?(.map)`, fesmOutput);
+
+  // Copy secondary entry point bundles.
+  copyFiles(DIST_BUNDLES, `${packageName}/!(*.umd)?(.min).js?(.map)`, fesmOutput);
+  copyFiles(join(DIST_BUNDLES, packageName), `*.umd?(.min).js?(.map)`, umdOutput);
+
   copyFiles(packagePath, '**/*.+(d.ts|metadata.json)', join(releasePath, 'typings'));
-  copyFiles(DIST_BUNDLES, `${packageName}.umd?(.min).js?(.map)`, join(releasePath, 'bundles'));
-  copyFiles(DIST_BUNDLES, `${packageName}?(.es5).js?(.map)`, join(releasePath, '@angular'));
   copyFiles(PROJECT_ROOT, 'LICENSE', releasePath);
   copyFiles(SOURCE_ROOT, 'README.md', releasePath);
   copyFiles(sourcePath, 'package.json', releasePath);
