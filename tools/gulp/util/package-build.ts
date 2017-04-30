@@ -1,5 +1,5 @@
 import {join, basename, dirname} from 'path';
-import {createRollupBundle, ROLLUP_EXTERNALS} from './rollup-helper';
+import {createRollupBundle} from './rollup-helper';
 import {inlineMetadataResources} from './inline-resources';
 import {transpileFile} from './ts-compiler';
 import {ScriptTarget, ModuleKind} from 'typescript';
@@ -45,10 +45,14 @@ export function composeRelease(packageName: string) {
   copyFiles(SOURCE_ROOT, 'README.md', releasePath);
   copyFiles(sourcePath, 'package.json', releasePath);
 
+  // Build secondary entry points for the package.
+  glob('*/', {cwd: packagePath})
+    .map(entryPath => basename(entryPath))
+    .forEach(entryName => createSecondaryEntryPoint(packageName, entryName));
+
   updatePackageVersion(releasePath);
   createTypingFile(releasePath, packageName);
   createMetadataFile(releasePath, packageName);
-  addPureAnnotationCommentsToEs5Bundle(releasePath, packageName);
 }
 
 export async function buildPackage(entryFile: string, packagePath: string, packageName: string) {
@@ -91,6 +95,9 @@ async function buildPackageBundles(entryFile: string, packageName: string, paren
     module: ModuleKind.ES2015,
     allowJs: true
   });
+
+  // Add pure annotation to ES5 bundles.
+  addPureAnnotationCommentsToEs5Bundle(fesm2014File);
 
   await remapSourcemap(fesm2014File);
 
@@ -184,10 +191,28 @@ function inlinePackageMetadataFiles(packagePath: string) {
 }
 
 /** Adds Uglify "@__PURE__" decorations to the generated ES5 bundle. */
-function addPureAnnotationCommentsToEs5Bundle(outputDir: string, entryName: string) {
-  const es5BundlePath = join(outputDir, '@angular', `${entryName}.es5.js`);
-  const originalContent = readFileSync(es5BundlePath, 'utf-8');
+function addPureAnnotationCommentsToEs5Bundle(inputFile: string) {
+  const originalContent = readFileSync(inputFile, 'utf-8');
   const annotatedContent = addPureAnnotations(originalContent);
 
-  writeFileSync(es5BundlePath, annotatedContent, 'utf-8');
+  writeFileSync(inputFile, annotatedContent, 'utf-8');
+}
+
+/** Creates a secondary entry point for a given package. */
+function createSecondaryEntryPoint(mainPackageName: string, secondaryPackageName: string) {
+  const releasePath = join(DIST_ROOT, 'releases', mainPackageName);
+  const entryPath = join(releasePath, secondaryPackageName);
+
+  const packageJson = {
+    name: `@angular/${mainPackageName}/${secondaryPackageName}`,
+    typings: `../typings/${secondaryPackageName}/index.d.ts`,
+    main: `../bundles/${secondaryPackageName}.umd.js`,
+    module: `../@angular/${mainPackageName}/${secondaryPackageName}.es5.js`,
+    es2015: `../@angular/${mainPackageName}/${secondaryPackageName}.js`
+  };
+
+  // Create the secondary entry point folder.
+  mkdirpSync(entryPath);
+
+  writeFileSync(join(entryPath, 'package.json'), JSON.stringify(packageJson, null, 2));
 }
