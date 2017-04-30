@@ -1,5 +1,5 @@
 import {join, basename, dirname} from 'path';
-import {createRollupBundle} from './rollup-helper';
+import {createRollupBundle, ROLLUP_EXTERNALS} from './rollup-helper';
 import {inlineMetadataResources} from './inline-resources';
 import {transpileFile} from './ts-compiler';
 import {ScriptTarget, ModuleKind} from 'typescript';
@@ -42,9 +42,25 @@ export function composeRelease(packageName: string) {
   addPureAnnotationCommentsToEs5Bundle(releasePath, packageName);
 }
 
+export async function buildPackage(entryFile: string, packagePath: string, packageName: string) {
+  let packageTasks = [
+    buildPackageBundles(entryFile, packageName)
+  ];
+
+  glob(join(packagePath, '*/')).forEach(subPackagePath => {
+    const subPackageName = basename(subPackagePath);
+    const subPackageEntry = join(subPackagePath, 'index.js');
+
+    packageTasks.push(buildPackageBundles(subPackageEntry, subPackageName, packageName));
+  });
+
+
+  await Promise.all(packageTasks);
+}
+
 /** Builds the bundles for the specified package. */
-export async function buildPackageBundles(entryFile: string, packageName: string) {
-  let moduleName = `ng.material.${packageName}`;
+async function buildPackageBundles(entryFile: string, packageName: string, parentPackage?: string) {
+  let moduleName = parentPackage ? `ng.${parentPackage}.${packageName}` : `ng.${packageName}`;
 
   // List of paths to the package bundles.
   let fesm2015File = join(DIST_BUNDLES, `${packageName}.js`);

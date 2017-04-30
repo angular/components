@@ -3,7 +3,7 @@ import {join} from 'path';
 import {main as tsc} from '@angular/tsc-wrapped';
 import {SOURCE_ROOT, DIST_ROOT} from '../constants';
 import {sequenceTask, sassBuildTask, copyTask, triggerLivereload} from './task_helpers';
-import {buildPackageBundles, composeRelease} from './package-build';
+import {composeRelease, buildPackage} from './package-build';
 
 // There are no type definitions available for these imports.
 const inlineResources = require('../../../scripts/release/inline-resources');
@@ -55,7 +55,7 @@ export function createPackageBuildTasks(packageName: string, requiredPackages: s
   task(`${packageName}:build:esm`, () => tsc(tsconfigBuild, {basePath: packageRoot}));
   task(`${packageName}:build:esm:tests`, () => tsc(tsconfigTests, {basePath: packageRoot}));
 
-  task(`${packageName}:build:bundles`, () => buildPackageBundles(esmMainFile, packageName));
+  task(`${packageName}:build:bundles`, () => buildPackage(esmMainFile, packageOut, packageName));
 
   /**
    * Asset tasks. Building SASS files and inlining CSS, HTML files into the ESM output.
