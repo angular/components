@@ -8,5 +8,6 @@ export const MD_NATIVE_DATE_FORMATS: MdDateFormats = {
   display: {
     dateInput: {year: 'numeric', month: 'numeric', day: 'numeric'},
     monthYearLabel: {year: 'numeric', month: 'short'},
+    dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric'},
   }
 };

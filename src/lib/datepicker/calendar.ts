@@ -2,9 +2,11 @@ import {
   AfterContentInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Inject,
   Input,
+  NgZone,
   Optional,
   Output,
   ViewEncapsulation
@@ -37,6 +39,7 @@ import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
   styleUrls: ['calendar.css'],
   host: {
     '[class.mat-calendar]': 'true',
+    '(focus)': '_focusActiveCell()',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -98,6 +101,7 @@ export class MdCalendar<D> implements AfterContentInit {
   get _activeDate(): D { return this._clampedActiveDate; }
   set _activeDate(value: D) {
     this._clampedActiveDate = this._dateAdapter.clampDate(value, this.minDate, this.maxDate);
+    this._focusActiveCell();
   }
   private _clampedActiveDate: D;
 
@@ -126,7 +130,9 @@ export class MdCalendar<D> implements AfterContentInit {
     return this._monthView ? this._intl.nextMonthLabel : this._intl.nextYearLabel;
   }
 
-  constructor(private _intl: MdDatepickerIntl,
+  constructor(private _elementRef: ElementRef,
+              private _intl: MdDatepickerIntl,
+              private _ngZone: NgZone,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats) {
     if (!this._dateAdapter) {
@@ -187,14 +193,6 @@ export class MdCalendar<D> implements AfterContentInit {
     return !this.maxDate || !this._isSameView(this._activeDate, this.maxDate);
   }
 
-  /** Whether the two dates represent the same view in the current view mode (month or year). */
-  private _isSameView(date1: D, date2: D): boolean {
-    return this._monthView ?
-        this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2) &&
-        this._dateAdapter.getMonth(date1) == this._dateAdapter.getMonth(date2) :
-        this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2);
-  }
-
   /** Handles keydown events on the calendar body. */
   _handleCalendarBodyKeydown(event: KeyboardEvent): void {
     // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
@@ -205,6 +203,22 @@ export class MdCalendar<D> implements AfterContentInit {
     } else {
       this._handleCalendarBodyKeydownInYearView(event);
     }
+  }
+
+  /** Focuses the active cell after the microtask queue is empty. */
+  _focusActiveCell() {
+    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+      let activeEl = this._elementRef.nativeElement.querySelector('.mat-calendar-body-active');
+      activeEl.focus();
+    });
+  }
+
+  /** Whether the two dates represent the same view in the current view mode (month or year). */
+  private _isSameView(date1: D, date2: D): boolean {
+    return this._monthView ?
+        this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2) &&
+        this._dateAdapter.getMonth(date1) == this._dateAdapter.getMonth(date2) :
+        this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2);
   }
 
   /** Handles keydown events on the calendar body when calendar is in month view. */
