@@ -33,6 +33,7 @@ import {MdDialogConfig} from '../dialog/dialog-config';
 import {DateAdapter} from '../core/datetime/index';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
+import {ESCAPE} from '../core/keyboard/keycodes';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -54,6 +55,7 @@ let datepickerUid = 0;
   host: {
     'class': 'mat-datepicker-content',
     '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
+    '(keydown)': '_handleKeydown($event)',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,6 +67,24 @@ export class MdDatepickerContent<D> implements AfterContentInit {
 
   ngAfterContentInit() {
     this._elementRef.nativeElement.querySelector('.mat-calendar-content').focus();
+  }
+
+  /**
+   * Handles keydown event on datepicker content.
+   * @param event The event.
+   * @private
+   */
+  _handleKeydown(event: KeyboardEvent): void {
+    switch (event.keyCode) {
+      case ESCAPE:
+        this.datepicker.close();
+        break;
+      default:
+        // Return so that we don't preventDefault on keys that are not explicitly handled.
+        return;
+    }
+
+    event.preventDefault();
   }
 }
 
