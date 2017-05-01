@@ -101,7 +101,6 @@ export class MdCalendar<D> implements AfterContentInit {
   get _activeDate(): D { return this._clampedActiveDate; }
   set _activeDate(value: D) {
     this._clampedActiveDate = this._dateAdapter.clampDate(value, this.minDate, this.maxDate);
-    this._focusActiveCell();
   }
   private _clampedActiveDate: D;
 
@@ -145,6 +144,7 @@ export class MdCalendar<D> implements AfterContentInit {
 
   ngAfterContentInit() {
     this._activeDate = this.startAt || this._dateAdapter.today();
+    this._focusActiveCell();
     this._monthView = this.startView != 'year';
   }
 
@@ -258,14 +258,15 @@ export class MdCalendar<D> implements AfterContentInit {
       case ENTER:
         if (this._dateFilterForViews(this._activeDate)) {
           this._dateSelected(this._activeDate);
-          break;
+          event.preventDefault();
         }
         return;
       default:
-        // Don't prevent default on keys that we don't explicitly handle.
+        // Don't prevent default or focus active cell on keys that we don't explicitly handle.
         return;
     }
 
+    this._focusActiveCell();
     event.preventDefault();
   }
 
@@ -304,10 +305,11 @@ export class MdCalendar<D> implements AfterContentInit {
         this._monthSelected(this._activeDate);
         break;
       default:
-        // Don't prevent default on keys that we don't explicitly handle.
+        // Don't prevent default or focus active cell on keys that we don't explicitly handle.
         return;
     }
 
+    this._focusActiveCell();
     event.preventDefault();
   }
 
