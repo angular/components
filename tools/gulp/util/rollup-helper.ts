@@ -14,6 +14,10 @@ const ROLLUP_GLOBALS = {
   '@angular/platform-browser-dynamic': 'ng.platformBrowserDynamic',
   '@angular/platform-browser/animations': 'ng.platformBrowser.animations',
 
+  // Local Angular packages inside of Material.
+  '@angular/material': 'ng.material',
+  '@angular/cdk': 'ng.cdk',
+
   // Rxjs dependencies
   'rxjs/Subject': 'Rx',
   'rxjs/add/observable/fromEvent': 'Rx.Observable',
@@ -58,6 +62,7 @@ export function createRollupBundle(config: BundleConfig): Promise<any> {
     format: config.format,
     dest: config.dest,
     globals: ROLLUP_GLOBALS,
+    sourceMap: true
   };
 
   return rollup.rollup(bundleOptions).then((bundle: any) => bundle.write(writeOptions));

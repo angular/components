@@ -16,7 +16,7 @@ task(':watch:devapp', () => {
 });
 
 /** Path to the demo-app tsconfig file. */
-const tsconfigPath = join(appDir, 'tsconfig.json');
+const tsconfigPath = join(appDir, 'tsconfig-build.json');
 
 task(':build:devapp:ts', tsBuildTask(tsconfigPath));
 task(':build:devapp:scss', sassBuildTask(outDir, appDir));
@@ -26,5 +26,5 @@ task('build:devapp', buildAppTask('devapp'));
 task(':serve:devapp', serverTask(outDir, true));
 
 task('serve:devapp', ['build:devapp'], sequenceTask(
-  [':serve:devapp', 'library:watch', ':watch:devapp']
+  [':serve:devapp', 'material:watch', ':watch:devapp']
 ));

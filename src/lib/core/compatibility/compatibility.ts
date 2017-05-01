@@ -1,20 +1,38 @@
 import {
   NgModule,
-  ModuleWithProviders,
   Directive,
-  OpaqueToken,
   Inject,
   Optional,
   isDevMode,
+  ElementRef,
+  InjectionToken,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/platform-browser';
+import {MdError} from '../errors/error';
 
+export const MATERIAL_COMPATIBILITY_MODE = new InjectionToken<boolean>('md-compatibility-mode');
 
-export const MATERIAL_COMPATIBILITY_MODE = new OpaqueToken('md-compatibility-mode');
+/** Injection token that configures whether the Material sanity checks are enabled. */
+export const MATERIAL_SANITY_CHECKS = new InjectionToken<boolean>('md-sanity-checks');
+
+/**
+ * Exception thrown if the consumer has used an invalid Material prefix on a component.
+ * @docs-private
+ */
+export class MdCompatibilityInvalidPrefixError extends MdError {
+  constructor(prefix: string, nodeName: string) {
+    super(
+      `The "${prefix}-" prefix cannot be used in ng-material v1 compatibility mode. ` +
+      `It was used on an "${nodeName.toLowerCase()}" element.`
+    );
+  }
+}
 
 /** Selector that matches all elements that may have style collisions with AngularJS Material. */
 export const MAT_ELEMENTS_SELECTOR = `
   [mat-button],
+  [mat-card-subtitle],
+  [mat-card-title],
   [mat-dialog-actions],
   [mat-dialog-close],
   [mat-dialog-content],
@@ -75,6 +93,8 @@ export const MAT_ELEMENTS_SELECTOR = `
 /** Selector that matches all elements that may have style collisions with AngularJS Material. */
 export const MD_ELEMENTS_SELECTOR = `
   [md-button],
+  [md-card-subtitle],
+  [md-card-title],
   [md-dialog-actions],
   [md-dialog-close],
   [md-dialog-content],
@@ -135,9 +155,12 @@ export const MD_ELEMENTS_SELECTOR = `
 /** Directive that enforces that the `mat-` prefix cannot be used. */
 @Directive({selector: MAT_ELEMENTS_SELECTOR})
 export class MatPrefixRejector {
-  constructor(@Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) isCompatibilityMode: boolean) {
+  constructor(
+    @Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) isCompatibilityMode: boolean,
+    elementRef: ElementRef) {
+
     if (!isCompatibilityMode) {
-      throw Error('The "mat-" prefix cannot be used out of ng-material v1 compatibility mode.');
+      throw new MdCompatibilityInvalidPrefixError('mat', elementRef.nativeElement.nodeName);
     }
   }
 }
@@ -145,9 +168,12 @@ export class MatPrefixRejector {
 /** Directive that enforces that the `md-` prefix cannot be used. */
 @Directive({selector: MD_ELEMENTS_SELECTOR})
 export class MdPrefixRejector {
-  constructor(@Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) isCompatibilityMode: boolean) {
+  constructor(
+    @Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) isCompatibilityMode: boolean,
+    elementRef: ElementRef) {
+
     if (isCompatibilityMode) {
-      throw Error('The "md-" prefix cannot be used in ng-material v1 compatibility mode.');
+      throw new MdCompatibilityInvalidPrefixError('md', elementRef.nativeElement.nodeName);
     }
   }
 }
@@ -161,21 +187,51 @@ export class MdPrefixRejector {
 @NgModule({
   declarations: [MatPrefixRejector, MdPrefixRejector],
   exports: [MatPrefixRejector, MdPrefixRejector],
+  providers: [{
+    provide: MATERIAL_SANITY_CHECKS, useValue: true,
+  }],
 })
 export class CompatibilityModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: CompatibilityModule,
-      providers: [],
-    };
+  /** Whether we've done the global sanity checks (e.g. a theme is loaded, there is a doctype). */
+  private _hasDoneGlobalChecks = false;
+
+  constructor(
+    @Optional() @Inject(DOCUMENT) private _document: any,
+    @Optional() @Inject(MATERIAL_SANITY_CHECKS) _sanityChecksEnabled: boolean) {
+
+    if (_sanityChecksEnabled && !this._hasDoneGlobalChecks && _document && isDevMode()) {
+      // Delay running the check to allow more time for the user's styles to load.
+      this._checkDoctype();
+      this._checkTheme();
+      this._hasDoneGlobalChecks = true;
+    }
   }
 
-  constructor(@Optional() @Inject(DOCUMENT) document: any) {
-    if (isDevMode() && typeof document && !document.doctype) {
+  private _checkDoctype(): void {
+    if (!this._document.doctype) {
       console.warn(
         'Current document does not have a doctype. This may cause ' +
         'some Angular Material components not to behave as expected.'
       );
+    }
+  }
+
+  private _checkTheme(): void {
+    if (typeof getComputedStyle === 'function') {
+      const testElement = this._document.createElement('div');
+
+      testElement.classList.add('mat-theme-loaded-marker');
+      this._document.body.appendChild(testElement);
+
+      if (getComputedStyle(testElement).display !== 'none') {
+        console.warn(
+          'Could not find Angular Material core theme. Most Material ' +
+          'components may not work as expected. For more info refer ' +
+          'to the theming guide: https://material.angular.io/guide/theming'
+        );
+      }
+
+      this._document.body.removeChild(testElement);
     }
   }
 }

@@ -32,10 +32,10 @@ describe('MdTooltip', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdTooltipModule.forRoot(), OverlayModule, NoopAnimationsModule],
+      imports: [MdTooltipModule, OverlayModule, NoopAnimationsModule],
       declarations: [BasicTooltipDemo, ScrollableTooltipDemo, OnPushTooltipDemo],
       providers: [
-        Platform,
+        {provide: Platform, useValue: {IOS: false}},
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
           document.body.appendChild(overlayContainerElement);
@@ -61,7 +61,7 @@ describe('MdTooltip', () => {
       fixture.detectChanges();
       buttonDebugElement = fixture.debugElement.query(By.css('button'));
       buttonElement = <HTMLButtonElement> buttonDebugElement.nativeElement;
-      tooltipDirective = buttonDebugElement.injector.get(MdTooltip);
+      tooltipDirective = buttonDebugElement.injector.get<MdTooltip>(MdTooltip);
     });
 
     it('should show and hide the tooltip', fakeAsync(() => {
@@ -362,7 +362,7 @@ describe('MdTooltip', () => {
       fixture.detectChanges();
       buttonDebugElement = fixture.debugElement.query(By.css('button'));
       buttonElement = <HTMLButtonElement> buttonDebugElement.nativeElement;
-      tooltipDirective = buttonDebugElement.injector.get(MdTooltip);
+      tooltipDirective = buttonDebugElement.injector.get<MdTooltip>(MdTooltip);
     });
 
     it('should hide tooltip if clipped after changing positions', fakeAsync(() => {
@@ -399,7 +399,7 @@ describe('MdTooltip', () => {
       fixture.detectChanges();
       buttonDebugElement = fixture.debugElement.query(By.css('button'));
       buttonElement = <HTMLButtonElement> buttonDebugElement.nativeElement;
-      tooltipDirective = buttonDebugElement.injector.get(MdTooltip);
+      tooltipDirective = buttonDebugElement.injector.get<MdTooltip>(MdTooltip);
     });
 
     it('should show and hide the tooltip', fakeAsync(() => {
@@ -411,7 +411,7 @@ describe('MdTooltip', () => {
 
       fixture.detectChanges();
 
-      // wait till animation has finished
+      // wait until animation has finished
       tick(500);
 
       // Make sure tooltip is shown to the user and animation has finished
@@ -432,6 +432,15 @@ describe('MdTooltip', () => {
       // On animation complete, should expect that the tooltip has been detached.
       flushMicrotasks();
       expect(tooltipDirective._tooltipInstance).toBeNull();
+    }));
+
+    it('should have rendered the tooltip text on init', fakeAsync(() => {
+      dispatchFakeEvent(buttonElement, 'mouseenter');
+      fixture.detectChanges();
+      tick(0);
+
+      const tooltipElement = overlayContainerElement.querySelector('.mat-tooltip') as HTMLElement;
+      expect(tooltipElement.textContent).toContain('initial tooltip message');
     }));
   });
 

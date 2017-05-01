@@ -1,24 +1,16 @@
-import {NgModule, ModuleWithProviders} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {HttpModule} from '@angular/http';
-import {CompatibilityModule} from '../core';
+import {MdCommonModule} from '../core';
 import {MdIcon, ICON_REGISTRY_PROVIDER} from './icon';
 
 
 @NgModule({
-  imports: [HttpModule, CompatibilityModule],
-  exports: [MdIcon, CompatibilityModule],
+  imports: [HttpModule, MdCommonModule],
+  exports: [MdIcon, MdCommonModule],
   declarations: [MdIcon],
   providers: [ICON_REGISTRY_PROVIDER],
 })
-export class MdIconModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdIconModule,
-      providers: [],
-    };
-  }
-}
+export class MdIconModule {}
 
 
 export * from './icon';

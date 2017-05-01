@@ -1,8 +1,9 @@
 const firebaseAdmin = require('firebase-admin');
 const firebase = require('firebase');
-const gcloud = require('google-cloud');
+const cloudStorage = require('@google-cloud/storage');
 
-const config = require('../../../functions/config.json');
+// Firebase configuration for the Screenshot project. Use the config from the screenshot functions.
+const screenshotFirebaseConfig = require('../../screenshot-test/functions/config.json');
 
 /** Opens a connection to the firebase realtime database. */
 export function openFirebaseDashboardDatabase() {
@@ -27,7 +28,7 @@ export function openFirebaseDashboardDatabase() {
  * The files uploaded to google cloud are also available to firebase storage.
  */
 export function openScreenshotsBucket() {
-  let gcs = gcloud.storage({
+  let gcs = cloudStorage({
     projectId: 'material2-screenshots',
     credentials: {
       client_email: 'firebase-adminsdk-t4209@material2-screenshots.iam.gserviceaccount.com',
@@ -37,22 +38,6 @@ export function openScreenshotsBucket() {
 
   // Reference the existing appspot bucket.
   return gcs.bucket('material2-screenshots.appspot.com');
-}
-
-/** Opens a connection to the firebase database for screenshots. */
-export function openFirebaseScreenshotsDatabase() {
-  // Initialize the Firebase application with firebaseAdmin credentials.
-  // Credentials need to be for a Service Account, which can be created in the Firebase console.
-  let screenshotApp = firebaseAdmin.initializeApp({
-    credential: firebaseAdmin.credential.cert({
-      project_id: 'material2-screenshots',
-      client_email: 'firebase-adminsdk-t4209@material2-screenshots.iam.gserviceaccount.com',
-      private_key: decode(process.env['MATERIAL2_SCREENSHOT_FIREBASE_KEY'])
-    }),
-    databaseURL: 'https://material2-screenshots.firebaseio.com'
-  }, 'material2-screenshots');
-
-  return screenshotApp.database();
 }
 
 /** Decodes a Travis CI variable that is public in favor for PRs. */
@@ -67,6 +52,6 @@ export function decode(str: string): string {
  * This connection is client side connection with no credentials
  */
 export function connectFirebaseScreenshots() {
-  return firebase.initializeApp(config.firebase);
+  return firebase.initializeApp(screenshotFirebaseConfig.firebase);
 }
 

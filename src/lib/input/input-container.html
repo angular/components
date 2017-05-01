@@ -1,6 +1,6 @@
 <div class="mat-input-wrapper">
   <div class="mat-input-table">
-    <div class="mat-input-prefix">
+    <div class="mat-input-prefix" *ngIf="_prefixChildren.length">
       <!-- TODO(andrewseguin): remove [md-prefix] -->
       <ng-content select="[mdPrefix], [matPrefix], [md-prefix]"></ng-content>
     </div>
@@ -18,12 +18,12 @@
                *ngIf="_hasPlaceholder()">
           <ng-content select="md-placeholder, mat-placeholder"></ng-content>
           {{_mdInputChild.placeholder}}
-          <span class="mat-placeholder-required" *ngIf="_mdInputChild.required">*</span>
+          <span class="mat-placeholder-required" *ngIf="!hideRequiredMarker && _mdInputChild.required">*</span>
         </label>
       </span>
     </div>
 
-    <div class="mat-input-suffix">
+    <div class="mat-input-suffix" *ngIf="_suffixChildren.length">
       <!-- TODO(andrewseguin): remove [md-suffix] -->
       <ng-content select="[mdSuffix], [matSuffix], [md-suffix]"></ng-content>
     </div>
@@ -44,7 +44,9 @@
     <div class="mat-input-hint-wrapper" *ngSwitchCase="'hint'"
       [@transitionMessages]="_subscriptAnimationState">
       <div *ngIf="hintLabel" [id]="_hintLabelId" class="mat-hint">{{hintLabel}}</div>
-      <ng-content select="md-hint, mat-hint"></ng-content>
+      <ng-content select="md-hint:not([align='end']), mat-hint:not([align='end'])"></ng-content>
+      <div class="mat-input-hint-spacer"></div>
+      <ng-content select="md-hint[align='end'], mat-hint[align='end']"></ng-content>
     </div>
   </div>
 </div>

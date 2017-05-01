@@ -1,6 +1,6 @@
-import {ModuleWithProviders, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CompatibilityModule, MdRippleModule, StyleModule} from '../core';
+import {MdCommonModule, MdRippleModule, StyleModule} from '../core';
 import {
   MdAnchor,
   MdButton,
@@ -19,13 +19,13 @@ export * from './button';
   imports: [
     CommonModule,
     MdRippleModule,
-    CompatibilityModule,
+    MdCommonModule,
     StyleModule,
   ],
   exports: [
     MdButton,
     MdAnchor,
-    CompatibilityModule,
+    MdCommonModule,
     MdButtonCssMatStyler,
     MdRaisedButtonCssMatStyler,
     MdIconButtonCssMatStyler,
@@ -42,12 +42,4 @@ export * from './button';
     MdMiniFabCssMatStyler,
   ],
 })
-export class MdButtonModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdButtonModule,
-      providers: []
-    };
-  }
-}
+export class MdButtonModule {}

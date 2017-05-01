@@ -6,10 +6,11 @@ import {
   HostBinding,
   Input,
   OnDestroy,
-  Renderer,
+  Renderer2,
   ViewEncapsulation
 } from '@angular/core';
 import {coerceBooleanProperty, FocusOriginMonitor} from '../core';
+import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
 
 
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
@@ -79,6 +80,11 @@ export class MdFabCssMatStyler {}
 export class MdMiniFabCssMatStyler {}
 
 
+// Boilerplate for applying mixins to MdButton.
+export class MdButtonBase { }
+export const _MdButtonMixinBase = mixinDisabled(MdButtonBase);
+
+
 /**
  * Material design button.
  */
@@ -89,14 +95,15 @@ export class MdMiniFabCssMatStyler {}
             'button[mat-button], button[mat-raised-button], button[mat-icon-button],' +
             'button[mat-fab], button[mat-mini-fab]',
   host: {
-    '[disabled]': 'disabled',
+    '[disabled]': 'disabled || null',
   },
   templateUrl: 'button.html',
   styleUrls: ['button.css'],
+  inputs: ['disabled'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdButton implements OnDestroy {
+export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisable {
   private _color: string;
 
   /** Whether the button is round. */
@@ -107,25 +114,20 @@ export class MdButton implements OnDestroy {
 
   /** Whether the ripple effect on click should be disabled. */
   private _disableRipple: boolean = false;
-  private _disabled: boolean = null;
 
   /** Whether the ripple effect for this button is disabled. */
   @Input()
   get disableRipple() { return this._disableRipple; }
   set disableRipple(v) { this._disableRipple = coerceBooleanProperty(v); }
 
-  /** Whether the button is disabled. */
-  @Input()
-  get disabled() { return this._disabled; }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value) ? true : null; }
-
-  constructor(private _elementRef: ElementRef, private _renderer: Renderer,
+  constructor(private _elementRef: ElementRef, private _renderer: Renderer2,
               private _focusOriginMonitor: FocusOriginMonitor) {
+    super();
     this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
   }
 
   ngOnDestroy() {
-    this._focusOriginMonitor.unmonitor(this._elementRef.nativeElement);
+    this._focusOriginMonitor.stopMonitoring(this._elementRef.nativeElement);
   }
 
   /** The color of the button. Can be `primary`, `accent`, or `warn`. */
@@ -141,13 +143,17 @@ export class MdButton implements OnDestroy {
 
   _setElementColor(color: string, isAdd: boolean) {
     if (color != null && color != '') {
-      this._renderer.setElementClass(this._getHostElement(), `mat-${color}`, isAdd);
+      if (isAdd) {
+        this._renderer.addClass(this._getHostElement(), `mat-${color}`);
+      } else {
+        this._renderer.removeClass(this._getHostElement(), `mat-${color}`);
+      }
     }
   }
 
   /** Focuses the button. */
   focus(): void {
-    this._renderer.invokeElementMethod(this._getHostElement(), 'focus');
+    this._getHostElement().focus();
   }
 
   _getHostElement() {
@@ -179,16 +185,17 @@ export class MdButton implements OnDestroy {
   selector: `a[md-button], a[md-raised-button], a[md-icon-button], a[md-fab], a[md-mini-fab],
              a[mat-button], a[mat-raised-button], a[mat-icon-button], a[mat-fab], a[mat-mini-fab]`,
   host: {
-    '[attr.disabled]': 'disabled',
+    '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': '_isAriaDisabled',
     '(click)': '_haltDisabledEvents($event)',
   },
+  inputs: ['disabled'],
   templateUrl: 'button.html',
   styleUrls: ['button.css'],
   encapsulation: ViewEncapsulation.None
 })
 export class MdAnchor extends MdButton {
-  constructor(elementRef: ElementRef, renderer: Renderer, focusOriginMonitor: FocusOriginMonitor) {
+  constructor(elementRef: ElementRef, renderer: Renderer2, focusOriginMonitor: FocusOriginMonitor) {
     super(elementRef, renderer, focusOriginMonitor);
   }
 

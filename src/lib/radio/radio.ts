@@ -4,7 +4,7 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
-  Renderer,
+  Renderer2,
   EventEmitter,
   Input,
   OnInit,
@@ -23,9 +23,10 @@ import {
   UniqueSelectionDispatcher,
   MdRipple,
   FocusOriginMonitor,
+  FocusOrigin,
 } from '../core';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
-import {Subscription} from 'rxjs/Subscription';
+import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
 
 
 /**
@@ -49,6 +50,11 @@ export class MdRadioChange {
   value: any;
 }
 
+
+// Boilerplate for applying mixins to MdRadioGroup.
+export class MdRadioGroupBase { }
+export const _MdRadioGroupMixinBase = mixinDisabled(MdRadioGroupBase);
+
 /**
  * A group of radio buttons. May contain one or more `<md-radio-button>` elements.
  */
@@ -59,8 +65,10 @@ export class MdRadioChange {
     'role': 'radiogroup',
     '[class.mat-radio-group]': 'true',
   },
+  inputs: ['disabled'],
 })
-export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
+export class MdRadioGroup extends _MdRadioGroupMixinBase
+    implements AfterContentInit, ControlValueAccessor, CanDisable {
   /**
    * Selected value for group. Should equal the value of the selected radio button if there *is*
    * a corresponding radio button with a matching value. If there is *not* such a corresponding
@@ -71,9 +79,6 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
 
   /** The HTML name attribute applied to radio buttons in this group. */
   private _name: string = `md-radio-group-${_uniqueIdCounter++}`;
-
-  /** Disables all individual radio buttons assigned to this group. */
-  private _disabled: boolean = false;
 
   /** The currently selected radio button. Should match value. */
   private _selected: MdRadioButton = null;
@@ -95,8 +100,7 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
    * Change events are only emitted when the value changes due to user interaction with
    * a radio button (the same behavior as `<input type-"radio">`).
    */
-  @Output()
-  change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
+  @Output() change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
 
   /** Child radio buttons. */
   @ContentChildren(forwardRef(() => MdRadioButton))
@@ -127,14 +131,6 @@ export class MdRadioGroup implements AfterContentInit, ControlValueAccessor {
 
   /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
   @Input() labelPosition: 'before' | 'after' = 'after';
-
-  /** Whether the radio button is disabled. */
-  @Input()
-  get disabled(): boolean { return this._disabled; }
-  set disabled(value) {
-    // The presence of *any* disabled value makes the component disabled, *except* for false.
-    this._disabled = (value != null && value !== false) ? true : null;
-  }
 
   /** Value of the radio button. */
   @Input()
@@ -370,8 +366,7 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
   }
 
   set disabled(value: boolean) {
-    // The presence of *any* disabled value makes the component disabled, *except* for false.
-    this._disabled = (value != null && value !== false) ? true : null;
+    this._disabled = coerceBooleanProperty(value);
   }
 
   /**
@@ -379,8 +374,7 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
    * Change events are only emitted when the value changes due to user interaction with
    * the radio button (the same behavior as `<input type-"radio">`).
    */
-  @Output()
-  change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
+  @Output() change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
 
   /** The parent radio group. May or may not be present. */
   radioGroup: MdRadioGroup;
@@ -405,18 +399,15 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
   /** The child ripple instance. */
   @ViewChild(MdRipple) _ripple: MdRipple;
 
-  /** Stream of focus event from the focus origin monitor. */
-  private _focusOriginMonitorSubscription: Subscription;
-
   /** Reference to the current focus ripple. */
-  private _focusedRippleRef: RippleRef;
+  private _focusRipple: RippleRef;
 
   /** The native `<input type=radio>` element */
   @ViewChild('input') _inputElement: ElementRef;
 
   constructor(@Optional() radioGroup: MdRadioGroup,
               private _elementRef: ElementRef,
-              private _renderer: Renderer,
+              private _renderer: Renderer2,
               private _focusOriginMonitor: FocusOriginMonitor,
               private _radioDispatcher: UniqueSelectionDispatcher) {
     // Assertions. Ideally these should be stripped out by the compiler.
@@ -446,22 +437,13 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this._focusOriginMonitorSubscription = this._focusOriginMonitor
+    this._focusOriginMonitor
       .monitor(this._inputElement.nativeElement, this._renderer, false)
-      .subscribe(focusOrigin => {
-        if (focusOrigin === 'keyboard' && !this._focusedRippleRef) {
-          this._focusedRippleRef = this._ripple.launch(0, 0, { persistent: true, centered: true });
-        }
-      });
+      .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 
   ngOnDestroy() {
-    this._focusOriginMonitor.unmonitor(this._inputElement.nativeElement);
-
-    if (this._focusOriginMonitorSubscription) {
-      this._focusOriginMonitorSubscription.unsubscribe();
-      this._focusOriginMonitorSubscription = null;
-    }
+    this._focusOriginMonitor.stopMonitoring(this._inputElement.nativeElement);
   }
 
   /** Dispatch change event with current value. */
@@ -474,17 +456,6 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
 
   _isRippleDisabled() {
     return this.disableRipple || this.disabled;
-  }
-
-  _onInputBlur() {
-    if (this._focusedRippleRef) {
-      this._focusedRippleRef.fadeOut();
-      this._focusedRippleRef = null;
-    }
-
-    if (this.radioGroup) {
-      this.radioGroup._touch();
-    }
   }
 
   _onInputClick(event: Event) {
@@ -517,6 +488,22 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
       this.radioGroup._touch();
       if (groupValueChanged) {
         this.radioGroup._emitChangeEvent();
+      }
+    }
+  }
+
+  /** Function is called whenever the focus changes for the input element. */
+  private _onInputFocusChange(focusOrigin: FocusOrigin) {
+    if (!this._focusRipple && focusOrigin === 'keyboard') {
+      this._focusRipple = this._ripple.launch(0, 0, {persistent: true, centered: true});
+    } else if (!focusOrigin) {
+      if (this.radioGroup) {
+        this.radioGroup._touch();
+      }
+
+      if (this._focusRipple) {
+        this._focusRipple.fadeOut();
+        this._focusRipple = null;
       }
     }
   }

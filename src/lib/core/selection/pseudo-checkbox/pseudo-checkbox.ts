@@ -3,7 +3,7 @@ import {
   ViewEncapsulation,
   Input,
   ElementRef,
-  Renderer,
+  Renderer2,
 } from '@angular/core';
 
 export type MdPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
@@ -41,20 +41,20 @@ export class MdPseudoCheckbox {
 
   /** Color of the checkbox. */
   @Input()
-  get color(): string { return this._color; };
+  get color(): string { return this._color; }
   set color(value: string) {
     if (value) {
       let nativeElement = this._elementRef.nativeElement;
 
-      this._renderer.setElementClass(nativeElement, `mat-${this.color}`, false);
-      this._renderer.setElementClass(nativeElement, `mat-${value}`, true);
+      this._renderer.removeClass(nativeElement, `mat-${this.color}`);
+      this._renderer.addClass(nativeElement, `mat-${value}`);
       this._color = value;
     }
   }
 
   private _color: string;
 
-  constructor(private _elementRef: ElementRef, private _renderer: Renderer) {
+  constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {
     this.color = 'accent';
   }
 }

@@ -1,4 +1,5 @@
 import {Injector, ComponentRef, Injectable, Optional, SkipSelf, TemplateRef} from '@angular/core';
+import {Location} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Overlay, OverlayRef, ComponentType, OverlayState, ComponentPortal} from '../core';
@@ -27,11 +28,12 @@ export class MdDialog {
     return this._parentDialog ? this._parentDialog._openDialogs : this._openDialogsAtThisLevel;
   }
 
-  /** Subject for notifying the user that all open dialogs have finished closing. */
+  /** Subject for notifying the user that a dialog has opened. */
   get _afterOpen(): Subject<MdDialogRef<any>> {
     return this._parentDialog ? this._parentDialog._afterOpen : this._afterOpenAtThisLevel;
   }
-  /** Subject for notifying the user that a dialog has opened. */
+
+  /** Subject for notifying the user that all open dialogs have finished closing. */
   get _afterAllClosed(): Subject<void> {
     return this._parentDialog ?
       this._parentDialog._afterAllClosed : this._afterAllClosedAtThisLevel;
@@ -46,7 +48,16 @@ export class MdDialog {
   constructor(
       private _overlay: Overlay,
       private _injector: Injector,
-      @Optional() @SkipSelf() private _parentDialog: MdDialog) { }
+      @Optional() private _location: Location,
+      @Optional() @SkipSelf() private _parentDialog: MdDialog) {
+
+    // Close all of the dialogs when the user goes forwards/backwards in history or when the
+    // location hash changes. Note that this usually doesn't include clicking on links (unless
+    // the user is using the `HashLocationStrategy`).
+    if (!_parentDialog && _location) {
+      _location.subscribe(() => this.closeAll());
+    }
+  }
 
   /**
    * Opens a modal dialog containing the given component.
@@ -64,7 +75,7 @@ export class MdDialog {
     let dialogRef =
         this._attachDialogContent(componentOrTemplateRef, dialogContainer, overlayRef, config);
 
-    if (!this._openDialogs.length && !this._parentDialog) {
+    if (!this._openDialogs.length) {
       document.addEventListener('keydown', this._boundKeydown);
     }
 
@@ -92,12 +103,28 @@ export class MdDialog {
 
   /**
    * Creates the overlay into which the dialog will be loaded.
-   * @param dialogConfig The dialog configuration.
+   * @param config The dialog configuration.
    * @returns A promise resolving to the OverlayRef for the created overlay.
    */
-  private _createOverlay(dialogConfig: MdDialogConfig): OverlayRef {
-    let overlayState = this._getOverlayState(dialogConfig);
+  private _createOverlay(config: MdDialogConfig): OverlayRef {
+    let overlayState = this._getOverlayState(config);
     return this._overlay.create(overlayState);
+  }
+
+  /**
+   * Creates an overlay state from a dialog config.
+   * @param dialogConfig The dialog configuration.
+   * @returns The overlay configuration.
+   */
+  private _getOverlayState(dialogConfig: MdDialogConfig): OverlayState {
+    let overlayState = new OverlayState();
+    overlayState.hasBackdrop = dialogConfig.hasBackdrop;
+    if (dialogConfig.backdropClass) {
+      overlayState.backdropClass = dialogConfig.backdropClass;
+    }
+    overlayState.positionStrategy = this._overlay.position().global();
+
+    return overlayState;
   }
 
   /**
@@ -129,10 +156,11 @@ export class MdDialog {
       componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
       dialogContainer: MdDialogContainer,
       overlayRef: OverlayRef,
-      config?: MdDialogConfig): MdDialogRef<T> {
+      config: MdDialogConfig): MdDialogRef<T> {
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
-    let dialogRef = new MdDialogRef(overlayRef, dialogContainer) as MdDialogRef<T>;
+
+    let dialogRef = new MdDialogRef<T>(overlayRef, dialogContainer);
 
     if (!config.disableClose) {
       // When the dialog backdrop is clicked, we want to close it.
@@ -153,37 +181,11 @@ export class MdDialog {
       dialogRef.componentInstance = contentRef.instance;
     }
 
+    dialogRef
+      .updateSize(config.width, config.height)
+      .updatePosition(config.position);
+
     return dialogRef;
-  }
-
-  /**
-   * Creates an overlay state from a dialog config.
-   * @param dialogConfig The dialog configuration.
-   * @returns The overlay configuration.
-   */
-  private _getOverlayState(dialogConfig: MdDialogConfig): OverlayState {
-    let state = new OverlayState();
-    let strategy = this._overlay.position().global();
-    let position = dialogConfig.position;
-
-    state.hasBackdrop = true;
-    state.positionStrategy = strategy;
-
-    if (position && (position.left || position.right)) {
-      position.left ? strategy.left(position.left) : strategy.right(position.right);
-    } else {
-      strategy.centerHorizontally();
-    }
-
-    if (position && (position.top || position.bottom)) {
-      position.top ? strategy.top(position.top) : strategy.bottom(position.bottom);
-    } else {
-      strategy.centerVertically();
-    }
-
-    strategy.width(dialogConfig.width).height(dialogConfig.height);
-
-    return state;
   }
 
   /**
@@ -210,10 +212,9 @@ export class MdDialog {
    */
   private _handleKeydown(event: KeyboardEvent): void {
     let topDialog = this._openDialogs[this._openDialogs.length - 1];
+    let canClose = topDialog ? !topDialog._containerInstance.dialogConfig.disableClose : false;
 
-    if (event.keyCode === ESCAPE && topDialog &&
-      !topDialog._containerInstance.dialogConfig.disableClose) {
-
+    if (event.keyCode === ESCAPE && canClose) {
       topDialog.close();
     }
   }
@@ -221,10 +222,9 @@ export class MdDialog {
 
 /**
  * Applies default options to the dialog config.
- * @param dialogConfig Config to be modified.
+ * @param config Config to be modified.
  * @returns The new configuration object.
  */
-function _applyConfigDefaults(dialogConfig: MdDialogConfig): MdDialogConfig {
-  return extendObject(new MdDialogConfig(), dialogConfig);
+function _applyConfigDefaults(config: MdDialogConfig): MdDialogConfig {
+  return extendObject(new MdDialogConfig(), config);
 }
-

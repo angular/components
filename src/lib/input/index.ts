@@ -1,10 +1,12 @@
-import {NgModule, ModuleWithProviders} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {
-  MdPlaceholder,
-  MdInputContainer,
-  MdHint,
-  MdInputDirective,
   MdErrorDirective,
+  MdHint,
+  MdInputContainer,
+  MdInputDirective,
+  MdPlaceholder,
+  MdPrefix,
+  MdSuffix
 } from './input-container';
 import {MdTextareaAutosize} from './autosize';
 import {CommonModule} from '@angular/common';
@@ -14,12 +16,14 @@ import {PlatformModule} from '../core/platform/index';
 
 @NgModule({
   declarations: [
-    MdPlaceholder,
-    MdInputContainer,
+    MdErrorDirective,
     MdHint,
-    MdTextareaAutosize,
+    MdInputContainer,
     MdInputDirective,
-    MdErrorDirective
+    MdPlaceholder,
+    MdPrefix,
+    MdSuffix,
+    MdTextareaAutosize,
   ],
   imports: [
     CommonModule,
@@ -27,26 +31,20 @@ import {PlatformModule} from '../core/platform/index';
     PlatformModule,
   ],
   exports: [
-    MdPlaceholder,
-    MdInputContainer,
+    MdErrorDirective,
     MdHint,
-    MdTextareaAutosize,
+    MdInputContainer,
     MdInputDirective,
-    MdErrorDirective
+    MdPlaceholder,
+    MdPrefix,
+    MdSuffix,
+    MdTextareaAutosize,
   ],
 })
-export class MdInputModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdInputModule,
-      providers: [],
-    };
-  }
-}
+export class MdInputModule {}
 
 
-export * from './autosize'
+export * from './autosize';
 export * from './input-container';
 export * from './input-container-errors';
 

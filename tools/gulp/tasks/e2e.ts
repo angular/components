@@ -13,7 +13,7 @@ const appDir = path.join(SOURCE_ROOT, 'e2e-app');
 const outDir = DIST_E2EAPP;
 
 const PROTRACTOR_CONFIG_PATH = path.join(PROJECT_ROOT, 'test/protractor.conf.js');
-const tsconfigPath = path.join(appDir, 'tsconfig.json');
+const tsconfigPath = path.join(appDir, 'tsconfig-build.json');
 
 task(':watch:e2eapp', () => {
   watch(path.join(appDir, '**/*.ts'), [':build:e2eapp:ts']);
@@ -48,7 +48,7 @@ task('serve:e2eapp', sequenceTask('build:e2eapp', ':serve:e2eapp'));
  * [Watch task] Builds and serves e2e app, rebuilding whenever the sources change.
  * This should only be used when running e2e tests locally.
  */
-task('serve:e2eapp:watch', ['serve:e2eapp', 'library:watch', ':watch:e2eapp']);
+task('serve:e2eapp:watch', ['serve:e2eapp', 'material:watch', ':watch:e2eapp']);
 
 /**
  * Builds and serves the e2e-app and runs protractor once the e2e-app is ready.
