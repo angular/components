@@ -116,8 +116,11 @@ export class MdYearView<D> implements AfterContentInit {
 
   /** Creates an MdCalendarCell for the given month. */
   private _createCellForMonth(month: number, monthName: string) {
+    let a11yLabel = this._dateAdapter.format(
+        this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1),
+        this._dateFormats.display.monthYearA11yLabel);
     return new MdCalendarCell(
-        month, monthName.toLocaleUpperCase(), 'PLACEHOLDER-DO-NOT-SUBMIT', this._isMonthEnabled(month));
+        month, monthName.toLocaleUpperCase(), a11yLabel, this._isMonthEnabled(month));
   }
 
   /** Whether the given month is enabled. */

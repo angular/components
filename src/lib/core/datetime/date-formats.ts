@@ -9,6 +9,7 @@ export type MdDateFormats = {
     dateInput: any,
     monthYearLabel: any,
     dateA11yLabel: any,
+    monthYearA11yLabel: any,
   }
 };
 
