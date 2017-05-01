@@ -117,11 +117,10 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       // (top, left) coordinate for the overlay at `pos`.
       let originPoint = this._getOriginConnectionPoint(originRect, pos);
       let overlayPoint = this._getOverlayPoint(originPoint, overlayRect, viewportRect, pos);
-      let overlayDimensions = this._getCSSDimensions(overlayRect, overlayPoint, pos);
 
       // If the overlay in the calculated position fits on-screen, put it there and we're done.
       if (overlayPoint.fitsInViewport) {
-        this._setElementPosition(element, overlayDimensions);
+        this._setElementPosition(element, overlayRect, overlayPoint, pos);
 
         // Save the last connected position in case the position needs to be re-calculated.
         this._lastConnectedPosition = pos;
@@ -140,8 +139,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
 
     // If none of the preferred positions were in the viewport, take the one
     // with the largest visible area.
-    let fallbackDimensions = this._getCSSDimensions(overlayRect, fallbackPoint, fallbackPosition);
-    this._setElementPosition(element, fallbackDimensions);
+    this._setElementPosition(element, overlayRect, fallbackPoint, fallbackPosition);
 
     return Promise.resolve(null);
   }
@@ -159,8 +157,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
 
     let originPoint = this._getOriginConnectionPoint(originRect, lastPosition);
     let overlayPoint = this._getOverlayPoint(originPoint, overlayRect, viewportRect, lastPosition);
-    let overlayPosition = this._getCSSDimensions(overlayRect, overlayPoint, lastPosition);
-    this._setElementPosition(this._pane, overlayPosition);
+    this._setElementPosition(this._pane, overlayRect, overlayPoint, lastPosition);
   }
 
   /**
@@ -305,39 +302,6 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /**
-   * Determines which CSS properties to use when positioning the overlay,
-   * depending on the direction the element would expand in, if extra content
-   * was added.
-   */
-  private _getCSSDimensions(overlayRect: ClientRect, overlayPoint: Point,
-    pos: ConnectionPositionPair): CSSDimensionPair {
-
-    const viewport = this._viewportRuler.getViewportRect();
-    const x: CSSDimension = { property: null, value: null };
-    const y: CSSDimension = { property: pos.overlayY === 'bottom' ? 'bottom' : 'top', value: null };
-
-    if (this._dir === 'rtl') {
-      x.property = pos.overlayX === 'end' ? 'left' : 'right';
-    } else {
-      x.property = pos.overlayX === 'end' ? 'right' : 'left';
-    }
-
-    if (x.property === 'left') {
-      x.value = overlayPoint.x;
-    } else {
-      x.value = viewport.width - (overlayPoint.x + overlayRect.width);
-    }
-
-    if (y.property === 'top') {
-      y.value = overlayPoint.y;
-    } else {
-      y.value = viewport.height - (overlayPoint.y + overlayRect.height);
-    }
-
-    return {x, y};
-  }
-
-  /**
    * Gets the view properties of the trigger and overlay, including whether they are clipped
    * or completely outside the view of any of the strategy's scrollables.
    */
@@ -385,10 +349,47 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Physically positions the overlay element to the given coordinate. */
-  private _setElementPosition(element: HTMLElement, dimensions: CSSDimensionPair) {
-    ['top', 'bottom', 'left', 'right'].forEach(prop => element.style[prop] = null);
-    element.style[dimensions.x.property] = dimensions.x.value + 'px';
-    element.style[dimensions.y.property] = dimensions.y.value + 'px';
+  private _setElementPosition(
+      element: HTMLElement,
+      overlayRect: ClientRect,
+      overlayPoint: Point,
+      pos: ConnectionPositionPair) {
+    const  viewport = this._viewportRuler.getViewportRect();
+
+    // We want to set either `top` or `bottom` based on whether the overlay wants to appear above
+    // or below the origin and the direction in which the element will expand.
+    let verticalStyleProperty = pos.overlayY === 'bottom' ? 'bottom' : 'top';
+
+    // When using `bottom`, we adjust the y position such that it is the distance
+    // from the bottom of the viewport rather than the top.
+    let y = verticalStyleProperty === 'top' ?
+        overlayPoint.y :
+        viewport.height - (overlayPoint.y + overlayRect.height);
+
+    // We want to set either `left` or `right` based on whether the overlay wants to appear "before"
+    // or "after" the origin, which determines the direction in which the element will expand.
+    // For the horizontal axis, the meaning of "before" and "after" change based on whether the
+    // page is in RTL or LTR.
+    let horizontalStyleProperty: string;
+    if (this._dir === 'rtl') {
+      horizontalStyleProperty = pos.overlayX === 'end' ? 'left' : 'right';
+    } else {
+      horizontalStyleProperty = pos.overlayX === 'end' ? 'right' : 'left';
+    }
+
+    // When we're setting `right`, we adjust the x position such that it is the distance
+    // from the right edge of the viewport rather than the left edge.
+    let x = horizontalStyleProperty === 'left' ?
+      overlayPoint.x :
+      viewport.width - (overlayPoint.x + overlayRect.width);
+
+
+    // Reset any existing styles. This is necessary in case the preferred position has
+    // changed since the last `apply`.
+    ['top', 'bottom', 'left', 'right'].forEach(p => element.style[p] = null);
+
+    element.style[verticalStyleProperty] = `${y}px`;
+    element.style[horizontalStyleProperty] = `${x}px`;
   }
 
   /** Returns the bounding positions of the provided element with respect to the viewport. */
@@ -426,16 +427,4 @@ interface Point {
 interface OverlayPoint extends Point {
   visibleArea?: number;
   fitsInViewport?: boolean;
-}
-
-/** Key-value pair, representing a CSS dimension. */
-interface CSSDimension {
-  property: 'top' | 'bottom' | 'left' | 'right';
-  value: number;
-}
-
-/** A combination of CSS dimensions for the x and y axis. */
-interface CSSDimensionPair {
-  x: CSSDimension;
-  y: CSSDimension;
 }
