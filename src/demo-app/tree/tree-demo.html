@@ -19,10 +19,12 @@
                      [checked]="selection.isSelected(node)">
           <md-icon (click)="expansionModel.toggle(node)" *ngIf="expandable">{{ expansionModel.isSelected(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</md-icon>
           {{node.name}} {{node.progress}} Level {{level}} Expanded {{expansionModel.isSelected(node)}}</md-checkbox>
-        <button md-button (click)="gotoParent(node)">Go To Parent</button>
+        <!--<button md-button (click)="gotoParent(node)">Go To Parent</button>-->
       </div>
     </md-node>
   </md-tree>
 </div>
+
+Selected: <span *ngFor="let node of selection.selected">{{node.name}}, </span>
 
 <button (click)="refreshData()" >Refresh</button>

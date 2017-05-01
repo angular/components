@@ -141,6 +141,7 @@ export class ListKeyManager<T extends CanDisable> {
     // when active item would leave menu, wrap to beginning or end
     this._activeItemIndex =
       (this._activeItemIndex + delta + items.length) % items.length;
+    console.log(`wrap next active index is ${this._activeItemIndex}`);
 
     // skip all disabled menu items recursively until an enabled one is reached
     if (items[this._activeItemIndex].disabled) {
@@ -156,6 +157,7 @@ export class ListKeyManager<T extends CanDisable> {
    * it encounters either end of the list, it will stop and not wrap.
    */
   private _setActiveInDefaultMode(delta: number, items: T[]): void {
+    console.log(`next active index is ${this._activeItemIndex + delta}`);
     this._setActiveItemByIndex(this._activeItemIndex + delta, delta, items);
   }
 

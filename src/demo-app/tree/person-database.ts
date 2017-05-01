@@ -25,7 +25,7 @@ export class PeopleDatabase {
   constructor(private snackBar: MdSnackBar) {
     for (let i = 0; i < 1000; i++) { this.addPerson(true);}
     this.shuffle();
-    this.oneRoot();
+    // this.oneRoot();
   }
 
   getData(filter: string): Observable<UserData[]> {

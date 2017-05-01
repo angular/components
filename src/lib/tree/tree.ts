@@ -24,7 +24,8 @@ import 'rxjs/add/operator/let';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/combineLatest';
 import {TreeDataSource, MdTreeViewData} from './data-source';
-import {SelectionModel} from '../core';
+import {SelectionModel, UP_ARROW, DOWN_ARROW, RIGHT_ARROW, LEFT_ARROW, HOME, ENTER, ESCAPE, FocusOriginMonitor} from '../core';
+import {FocusKeyManager, Focusable} from '../core/a11y/focus-key-manager';
 
 /** Height of each row in pixels (48 + 1px border) */
 export const ROW_HEIGHT = 49;
@@ -38,12 +39,25 @@ export class MdNodeDef {
 }
 
 @Directive({
-  selector: 'md-node'
+  selector: 'md-node',
 })
-export class MdNode {
+export class MdNode  implements Focusable {
   constructor(private elementRef: ElementRef,
-              private renderer: Renderer) {
+              private renderer: Renderer,
+              @Inject(forwardRef(() => MdTree)) private tree: MdTree,
+              private _focusOriginMonitor: FocusOriginMonitor) {
     this.renderer.setElementClass(elementRef.nativeElement, 'mat-node', true);
+    this._focusOriginMonitor.monitor(this.elementRef.nativeElement, this.renderer, true);
+  }
+
+  /** Focuses the menu item. */
+  focus(): void {
+    this.renderer.invokeElementMethod(this._getHostElement(), 'focus');
+  }
+
+  /** Returns the host DOM element. */
+  _getHostElement(): HTMLElement {
+    return this.elementRef.nativeElement;
   }
 }
 
@@ -61,6 +75,7 @@ export class MdNodePlaceholder {
   `,
   host: {
     'class': 'mat-tree',
+    '(keydown)': 'handleKeydown($event)',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,9 +87,13 @@ export class MdTree {
 
   private _dataDiffer: IterableDiffer<any> = null;
 
+  private _keyManager: FocusKeyManager;
+  @ContentChildren(MdNode) items: QueryList<MdNode>;
   @ContentChildren(MdNodeDef) nodeDefinitions: QueryList<MdNodeDef>;
   @ViewChild(MdNodePlaceholder) nodePlaceholder: MdNodePlaceholder;
   @ViewChild('emptyNode') emptyNodeTemplate: TemplateRef<any>;
+
+
 
   constructor(private _differs: IterableDiffers, private elementRef: ElementRef,
               private changeDetectorRef: ChangeDetectorRef) {
@@ -88,6 +107,8 @@ export class MdTree {
   }
 
   ngAfterViewInit() {
+    this._keyManager = new FocusKeyManager(this.items).withWrap();
+    console.log(`this items ${this.items}`);
     this.dataSource.connectTree(this.viewChange).subscribe((result: any[]) => this.renderNodeChanges(result));
   }
 
@@ -108,6 +129,27 @@ export class MdTree {
     };
 
     this.viewChange.next(view);
+  }
+
+
+  handleKeydown(event) {
+    console.log(this.items.length);
+    console.log(`Tree handle key down ${event.keyCode} Tree is ${this}`);
+    if (event.keyCode == UP_ARROW) {
+      this._keyManager.setPreviousItemActive();
+      // Move to previous index scrollToIndex(focusIndex - 1)
+      console.log(`// Move to previous index scrollToIndex(focusIndex - 1)`);
+    } else if (event.keyCode == DOWN_ARROW) {
+      this._keyManager.setNextItemActive();
+      console.log(`// Move to next index scrollToIndex(focusIndex + 1)`);
+      // Move to next index scrollToIndex(focusIndex + 1)
+    } else if (event.keyCode == RIGHT_ARROW) {
+      console.log(`// If focus expandable, expand, scrollToIndex(focusIndex + 1)`);
+      // If focus expandable, expand, scrollToIndex(focusIndex + 1)
+    } else if (event.keyCode == LEFT_ARROW) {
+      console.log(`// goToParent(focusIndex), collapse parent node`);
+      // goToParent(focusIndex), collapse parent node
+    }
   }
 
   scrollToIndex(topIndex: number) {
