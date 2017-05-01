@@ -91,6 +91,9 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
   /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
   private _labelPosition: 'before' | 'after' = 'after';
 
+  /** Whether the radio group is disabled. */
+  private _disabled: boolean = false;
+
   /** The method to be called in order to update ngModel */
   _controlValueAccessorChangeFn: (value: any) => void = (value) => {};
 
@@ -176,7 +179,20 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
     this._checkSelectedRadioButton();
   }
 
-  constructor(private _change: ChangeDetectorRef) {}
+  /** Whether the radio group is diabled */
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value) {
+    this._disabled = value;
+    if (this._radios) {
+      // Update radios disabled state
+      this._radios.forEach((r) => r._groupValueChanged());
+    }
+  }
+
+  constructor(private _change: ChangeDetectorRef) {
+    super();
+  }
 
   /**
    * Initialize properties once content children are available.
@@ -266,6 +282,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
    */
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
+    this._change.markForCheck();
   }
 }
 
@@ -384,9 +401,10 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
   get disabled(): boolean {
     return this._disabled || (this.radioGroup != null && this.radioGroup.disabled);
   }
-
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
+    // Update rippleDisabled
+    this._changeDetector.markForCheck();
   }
 
   /**
@@ -428,6 +446,7 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
   constructor(@Optional() radioGroup: MdRadioGroup,
               private _elementRef: ElementRef,
               private _renderer: Renderer2,
+              private _changeDetector: ChangeDetectorRef,
               private _focusOriginMonitor: FocusOriginMonitor,
               private _radioDispatcher: UniqueSelectionDispatcher) {
     // Assertions. Ideally these should be stripped out by the compiler.
@@ -448,6 +467,8 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
   }
 
   _groupValueChanged() {
+    // When group value changes, the button will not be notified. Use `markForCheck` to explicit
+    // update radio button's status
     this._changeDetector.markForCheck();
   }
 
