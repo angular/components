@@ -111,6 +111,9 @@ export class MdDatepicker<D> implements OnDestroy {
   }
   private _startAt: D;
 
+  @Input()
+  startView: 'month' | 'year' = 'month';
+
   /**
    * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
    * than a popup and elements have more padding to allow for bigger touch targets.
