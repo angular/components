@@ -124,7 +124,7 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
    * the trigger will close the menu.
    */
   _emitClickCloseEvent(): void {
-    if( !this.preventClose ){
+    if (!this.preventClose) {
       this.close.emit();
     }
   }
