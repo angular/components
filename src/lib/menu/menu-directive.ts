@@ -54,6 +54,9 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   @ContentChildren(MdMenuItem) items: QueryList<MdMenuItem>;
   @Input() overlapTrigger = true;
 
+  /** Wether the preventClose for menu instance is asked or not.*/
+  @Input('preventClose') preventClose: boolean = false;
+
   constructor(@Attribute('xPosition') posX: MenuPositionX,
               @Attribute('yPosition') posY: MenuPositionY,
               @Attribute('x-position') deprecatedPosX: MenuPositionX,
@@ -113,6 +116,17 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
    */
   _emitCloseEvent(): void {
     this.close.emit();
+  }
+
+  /**
+   * This emits a close event to which the trigger is subscribed, only when a user
+   * click inside menu panel and prevent close attribute/input is false. When emitted,
+   * the trigger will close the menu.
+   */
+  _emitClickCloseEvent(): void {
+    if (!this.preventClose) {
+      this.close.emit();
+    }
   }
 
   private _setPositionX(pos: MenuPositionX): void {
