@@ -7,6 +7,9 @@ import {
 import {join} from 'path';
 import {copyFiles} from '../util/copy-files';
 
+// These imports don't have any typings provided.
+const firebaseTools = require('firebase-tools');
+
 const appDir = join(SOURCE_ROOT, 'demo-app');
 const outDir = join(DIST_ROOT, 'packages', 'demo-app');
 
@@ -39,8 +42,19 @@ task('serve:devapp', ['build:devapp'], sequenceTask(
 ));
 
 /** Task that copies all vendors into the demo-app package. Allows hosting the app on firebase. */
-task('build-deploy:devapp', ['build:devapp'], () => {
+task('stage-deploy:devapp', ['build:devapp'], () => {
   copyFiles(join(PROJECT_ROOT, 'node_modules'), vendorGlob, join(outDir, 'node_modules'));
   copyFiles(DIST_BUNDLES, '*.+(js|map)', join(outDir, 'dist/bundles'));
   copyFiles(DIST_MATERIAL, '**/prebuilt/*.+(css|map)', join(outDir, 'dist/packages/material'));
+});
+
+/**
+ * Task that deploys the demo-app to Firebase. Firebase project will be the one that is
+ * set for project directory using the Firebase CLI.
+ */
+task('deploy:devapp', ['stage-deploy:devapp'], () => {
+  return firebaseTools.deploy({cwd: PROJECT_ROOT, only: 'hosting'})
+    // Firebase tools opens a persistent websocket connection and the process will never exit.
+    .then(() => { console.log('Successfully deployed the demo-app to firebase'); process.exit(0); })
+    .catch((err: any) => { console.log(err); process.exit(1); });
 });
