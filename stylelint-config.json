@@ -1,9 +1,15 @@
 {
   "plugins": [
-    "./tools/stylelint/no-prefixes/no-prefixes.js"
+    "./tools/stylelint/no-prefixes/no-prefixes.js",
+    "./tools/stylelint/selector-nested-pattern-scoped/index.js"
   ],
   "rules": {
     "material/no-prefixes": [["last 2 versions", "not ie <= 10", "not ie_mob <= 10"]],
+    "material/selector-nested-pattern-scoped": [".*[^&]$", {
+      "message": "The & operator is not allowed at the end of theme selectors.",
+      "filePattern": "-theme\\.scss$"
+    }],
+
     "color-hex-case": "lower",
     "color-no-invalid-hex": true,
 
@@ -41,6 +47,10 @@
     "declaration-block-semicolon-space-after": "always-single-line",
     "declaration-block-semicolon-newline-before": "never-multi-line",
     "declaration-block-semicolon-newline-after": "always-multi-line",
+    "declaration-property-value-blacklist": [
+        { "/.*/": ["initial"] },
+        { "message": "The `initial` value is not supported in IE."}
+    ],
 
     "block-closing-brace-newline-after": "always",
     "block-closing-brace-newline-before": "always-multi-line",

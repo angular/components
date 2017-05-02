@@ -5,8 +5,6 @@ import {
   Input,
   Output,
   NgModule,
-  ModuleWithProviders,
-  Renderer,
   ViewEncapsulation,
   Inject,
   Optional,
@@ -84,7 +82,6 @@ export class MdOption {
 
   constructor(
     private _element: ElementRef,
-    private _renderer: Renderer,
     @Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) public _isCompatibilityMode: boolean) {}
 
   /**
@@ -120,7 +117,7 @@ export class MdOption {
 
   /** Sets focus onto this option. */
   focus(): void {
-    this._renderer.invokeElementMethod(this._getHostElement(), 'focus');
+    this._getHostElement().focus();
   }
 
   /**
@@ -172,7 +169,7 @@ export class MdOption {
   /** Emits the selection change event. */
   private _emitSelectionChangeEvent(isUserInput = false): void {
     this.onSelectionChange.emit(new MdOptionSelectionChange(this, isUserInput));
-  };
+  }
 
 }
 
@@ -181,11 +178,4 @@ export class MdOption {
   exports: [MdOption],
   declarations: [MdOption]
 })
-export class MdOptionModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdOptionModule,
-      providers: []
-    };
-  }
-}
+export class MdOptionModule {}

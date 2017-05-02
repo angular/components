@@ -1,5 +1,5 @@
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
-import {Component, Renderer} from '@angular/core';
+import {Component, Renderer2} from '@angular/core';
 import {StyleModule} from './index';
 import {By} from '@angular/platform-browser';
 import {TAB} from '../keyboard/keycodes';
@@ -12,7 +12,7 @@ import {
 describe('FocusOriginMonitor', () => {
   let fixture: ComponentFixture<PlainButton>;
   let buttonElement: HTMLElement;
-  let buttonRenderer: Renderer;
+  let buttonRenderer: Renderer2;
   let focusOriginMonitor: FocusOriginMonitor;
   let changeHandler: (origin: FocusOrigin) => void;
 
@@ -218,7 +218,7 @@ describe('FocusOriginMonitor', () => {
     }, 0);
   }));
 
-  it('should remove classes on unmonitor', async(() => {
+  it('should remove classes on stopMonitoring', async(() => {
     buttonElement.focus();
     fixture.detectChanges();
 
@@ -228,7 +228,7 @@ describe('FocusOriginMonitor', () => {
       expect(buttonElement.classList.length)
           .toBe(2, 'button should have exactly 2 focus classes');
 
-      focusOriginMonitor.unmonitor(buttonElement);
+      focusOriginMonitor.stopMonitoring(buttonElement);
       fixture.detectChanges();
 
       expect(buttonElement.classList.length).toBe(0, 'button should not have any focus classes');
@@ -456,7 +456,7 @@ describe('cdkMonitorFocus', () => {
   template: `<button>focus me!</button>`
 })
 class PlainButton {
-  constructor(public renderer: Renderer) {}
+  constructor(public renderer: Renderer2) {}
 }
 
 
@@ -464,7 +464,7 @@ class PlainButton {
   template: `<button cdkMonitorElementFocus (cdkFocusChange)="focusChanged($event)"></button>`
 })
 class ButtonWithFocusClasses {
-  focusChanged(origin: FocusOrigin) {};
+  focusChanged(origin: FocusOrigin) {}
 }
 
 

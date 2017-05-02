@@ -5,6 +5,7 @@
 
 $mat-input-floating-placeholder-scale-factor: 0.75 !default;
 $mat-input-wrapper-spacing: 1em !default;
+$mat-input-hint-min-space: 10px !default;
 
 // Gradient for showing the dashed line when the input is disabled.
 $mat-input-underline-disabled-background-image:
@@ -226,47 +227,24 @@ $mat-input-underline-disabled-background-image:
 // Wrapper for the hints and error messages. Provides positioning and text size.
 // Note that we're using `top` in order to allow for stacked children to flow downwards.
 .mat-input-subscript-wrapper {
+  $line-height: 1.2em;
+
   position: absolute;
   font-size: 75%;
   top: 100%;
   width: 100%;
-  margin-top: -$mat-input-wrapper-spacing;
+  margin-top: -$line-height;
+  line-height: $line-height;
   overflow: hidden; // prevents multi-line errors from overlapping the input
 }
 
 // Clears the floats on the hints. This is necessary for the hint animation to work.
 .mat-input-hint-wrapper {
-  &::before,
-  &::after {
-    content: ' ';
-    display: table;
-  }
-
-  &::after {
-    clear: both;
-  }
+  display: flex;
 }
 
-// The hint is shown below the underline. There can be
-// more than one; one at the start and one at the end.
-.mat-hint {
-  display: block;
-  float: left;
-
-  // We use floats here, as opposed to flexbox, in order to make it
-  // easier to reverse their location in rtl and to ensure that they're
-  // aligned properly in some cases (e.g. when there is only an `end` hint).
-  &.mat-right {
-    float: right;
-  }
-
-  [dir='rtl'] & {
-    float: right;
-
-    &.mat-right {
-      float: left;
-    }
-  }
+.mat-input-hint-spacer {
+  flex: 1 0 $mat-input-hint-min-space;
 }
 
 // Single error message displayed beneath the input.

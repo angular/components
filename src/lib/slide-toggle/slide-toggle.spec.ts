@@ -1,10 +1,11 @@
 import {Component} from '@angular/core';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {async, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
-import {FormsModule, NgControl, ReactiveFormsModule, FormControl} from '@angular/forms';
+import {NgModel, FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
 import {MdSlideToggle, MdSlideToggleChange, MdSlideToggleModule} from './index';
 import {TestGestureConfig} from '../slider/test-gesture-config';
 import {dispatchFakeEvent} from '../core/testing/dispatch-events';
+import {RIPPLE_FADE_IN_DURATION, RIPPLE_FADE_OUT_DURATION} from '../core/ripple/ripple-renderer';
 
 describe('MdSlideToggle', () => {
 
@@ -12,7 +13,7 @@ describe('MdSlideToggle', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSlideToggleModule.forRoot(), FormsModule, ReactiveFormsModule],
+      imports: [MdSlideToggleModule, FormsModule, ReactiveFormsModule],
       declarations: [SlideToggleTestApp, SlideToggleFormsTestApp, SlideToggleWithFormControl],
       providers: [
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => gestureConfig = new TestGestureConfig()}
@@ -28,7 +29,7 @@ describe('MdSlideToggle', () => {
     let testComponent: SlideToggleTestApp;
     let slideToggle: MdSlideToggle;
     let slideToggleElement: HTMLElement;
-    let slideToggleControl: NgControl;
+    let slideToggleModel: NgModel;
     let labelElement: HTMLLabelElement;
     let inputElement: HTMLInputElement;
 
@@ -50,7 +51,7 @@ describe('MdSlideToggle', () => {
 
       slideToggle = slideToggleDebug.componentInstance;
       slideToggleElement = slideToggleDebug.nativeElement;
-      slideToggleControl = slideToggleDebug.injector.get(NgControl);
+      slideToggleModel = slideToggleDebug.injector.get<NgModel>(NgModel);
       inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
       labelElement = fixture.debugElement.query(By.css('label')).nativeElement;
     }));
@@ -268,39 +269,59 @@ describe('MdSlideToggle', () => {
       fixture.detectChanges();
     });
 
+    it('should show a ripple when focused by a keyboard action', fakeAsync(() => {
+      expect(slideToggleElement.querySelectorAll('.mat-ripple-element').length)
+          .toBe(0, 'Expected no ripples to be present.');
+
+      dispatchFakeEvent(inputElement, 'keydown');
+      dispatchFakeEvent(inputElement, 'focus');
+
+      tick(RIPPLE_FADE_IN_DURATION);
+
+      expect(slideToggleElement.querySelectorAll('.mat-ripple-element').length)
+          .toBe(1, 'Expected the focus ripple to be showing up.');
+
+      dispatchFakeEvent(inputElement, 'blur');
+
+      tick(RIPPLE_FADE_OUT_DURATION);
+
+      expect(slideToggleElement.querySelectorAll('.mat-ripple-element').length)
+          .toBe(0, 'Expected focus ripple to be removed.');
+    }));
+
     it('should have the correct control state initially and after interaction', () => {
       // The control should start off valid, pristine, and untouched.
-      expect(slideToggleControl.valid).toBe(true);
-      expect(slideToggleControl.pristine).toBe(true);
-      expect(slideToggleControl.touched).toBe(false);
+      expect(slideToggleModel.valid).toBe(true);
+      expect(slideToggleModel.pristine).toBe(true);
+      expect(slideToggleModel.touched).toBe(false);
 
       // After changing the value programmatically, the control should
       // become dirty (not pristine), but remain untouched.
       slideToggle.checked = true;
       fixture.detectChanges();
 
-      expect(slideToggleControl.valid).toBe(true);
-      expect(slideToggleControl.pristine).toBe(false);
-      expect(slideToggleControl.touched).toBe(false);
+      expect(slideToggleModel.valid).toBe(true);
+      expect(slideToggleModel.pristine).toBe(false);
+      expect(slideToggleModel.touched).toBe(false);
 
       // After a user interaction occurs (such as a click), the control should remain dirty and
       // now also be touched.
       labelElement.click();
       fixture.detectChanges();
 
-      expect(slideToggleControl.valid).toBe(true);
-      expect(slideToggleControl.pristine).toBe(false);
-      expect(slideToggleControl.touched).toBe(true);
+      expect(slideToggleModel.valid).toBe(true);
+      expect(slideToggleModel.pristine).toBe(false);
+      expect(slideToggleModel.touched).toBe(true);
     });
 
     it('should not set the control to touched when changing the state programmatically', () => {
       // The control should start off with being untouched.
-      expect(slideToggleControl.touched).toBe(false);
+      expect(slideToggleModel.touched).toBe(false);
 
       testComponent.slideChecked = true;
       fixture.detectChanges();
 
-      expect(slideToggleControl.touched).toBe(false);
+      expect(slideToggleModel.touched).toBe(false);
       expect(slideToggleElement.classList).toContain('mat-checked');
 
       // After a user interaction occurs (such as a click), the control should remain dirty and
@@ -308,33 +329,24 @@ describe('MdSlideToggle', () => {
       inputElement.click();
       fixture.detectChanges();
 
-      expect(slideToggleControl.touched).toBe(true);
+      expect(slideToggleModel.touched).toBe(true);
       expect(slideToggleElement.classList).not.toContain('mat-checked');
     });
 
     // TODO(kara): update when core/testing adds fix
     it('should not set the control to touched when changing the model', async(() => {
       // The control should start off with being untouched.
-      expect(slideToggleControl.touched).toBe(false);
+      expect(slideToggleModel.touched).toBe(false);
 
       testComponent.slideModel = true;
       fixture.detectChanges();
       fixture.whenStable().then(() => {
         fixture.detectChanges();
-        expect(slideToggleControl.touched).toBe(false);
+        expect(slideToggleModel.touched).toBe(false);
         expect(slideToggle.checked).toBe(true);
         expect(slideToggleElement.classList).toContain('mat-checked');
       });
     }));
-
-    it('should correctly set the slide-toggle to checked on focus', () => {
-      expect(slideToggleElement.classList).not.toContain('mat-slide-toggle-focused');
-
-      dispatchFakeEvent(inputElement, 'focus');
-      fixture.detectChanges();
-
-      expect(slideToggleElement.classList).toContain('mat-slide-toggle-focused');
-    });
 
     it('should forward the required attribute', () => {
       testComponent.isRequired = true;
@@ -349,14 +361,12 @@ describe('MdSlideToggle', () => {
     });
 
     it('should focus on underlying input element when focus() is called', () => {
-      expect(slideToggleElement.classList).not.toContain('mat-slide-toggle-focused');
       expect(document.activeElement).not.toBe(inputElement);
 
       slideToggle.focus();
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(inputElement);
-      expect(slideToggleElement.classList).toContain('mat-slide-toggle-focused');
     });
 
     it('should set a element class if labelPosition is set to before', () => {
@@ -458,7 +468,7 @@ describe('MdSlideToggle', () => {
     let testComponent: SlideToggleTestApp;
     let slideToggle: MdSlideToggle;
     let slideToggleElement: HTMLElement;
-    let slideToggleControl: NgControl;
+    let slideToggleModel: NgModel;
     let slideThumbContainer: HTMLElement;
     let inputElement: HTMLInputElement;
 
@@ -474,7 +484,7 @@ describe('MdSlideToggle', () => {
 
       slideToggle = slideToggleDebug.componentInstance;
       slideToggleElement = slideToggleDebug.nativeElement;
-      slideToggleControl = slideToggleDebug.injector.get(NgControl);
+      slideToggleModel = slideToggleDebug.injector.get<NgModel>(NgModel);
       slideThumbContainer = thumbContainerDebug.nativeElement;
 
       inputElement = slideToggleElement.querySelector('input');

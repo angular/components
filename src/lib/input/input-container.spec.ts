@@ -1,13 +1,13 @@
-import {async, TestBed, inject, ComponentFixture} from '@angular/core/testing';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {
-  FormsModule,
-  ReactiveFormsModule,
   FormControl,
-  NgForm,
-  Validators,
-  FormGroupDirective,
   FormGroup,
+  FormGroupDirective,
+  FormsModule,
+  NgForm,
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -18,9 +18,9 @@ import {PlatformModule} from '../core/platform/index';
 import {wrappedErrorMessage} from '../core/testing/wrapped-error-message';
 import {dispatchFakeEvent} from '../core/testing/dispatch-events';
 import {
+  MdInputContainerDuplicatedHintError,
   MdInputContainerMissingMdInputError,
-  MdInputContainerPlaceholderConflictError,
-  MdInputContainerDuplicatedHintError
+  MdInputContainerPlaceholderConflictError
 } from './input-container-errors';
 
 
@@ -28,42 +28,43 @@ describe('MdInputContainer', function () {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        MdInputModule.forRoot(),
-        PlatformModule.forRoot(),
         FormsModule,
+        MdInputModule,
+        NoopAnimationsModule,
+        PlatformModule,
         ReactiveFormsModule,
-        NoopAnimationsModule
       ],
       declarations: [
-        MdInputContainerPlaceholderRequiredTestComponent,
-        MdInputContainerPlaceholderElementTestComponent,
-        MdInputContainerPlaceholderAttrTestComponent,
+        MdInputContainerBaseTestController,
+        MdInputContainerDateTestController,
         MdInputContainerHintLabel2TestController,
         MdInputContainerHintLabelTestController,
-        MdInputContainerInvalidTypeTestController,
-        MdInputContainerInvalidPlaceholderTestController,
         MdInputContainerInvalidHint2TestController,
         MdInputContainerInvalidHintTestController,
-        MdInputContainerBaseTestController,
-        MdInputContainerWithId,
-        MdInputContainerDateTestController,
-        MdInputContainerTextTestController,
-        MdInputContainerPasswordTestController,
+        MdInputContainerInvalidPlaceholderTestController,
+        MdInputContainerInvalidTypeTestController,
+        MdInputContainerMissingMdInputTestController,
+        MdInputContainerMultipleHintMixedTestController,
+        MdInputContainerMultipleHintTestController,
         MdInputContainerNumberTestController,
-        MdInputContainerZeroTestController,
-        MdTextareaWithBindings,
+        MdInputContainerPasswordTestController,
+        MdInputContainerPlaceholderAttrTestComponent,
+        MdInputContainerPlaceholderElementTestComponent,
+        MdInputContainerPlaceholderRequiredTestComponent,
+        MdInputContainerTextTestController,
         MdInputContainerWithDisabled,
+        MdInputContainerWithDynamicPlaceholder,
+        MdInputContainerWithFormControl,
+        MdInputContainerWithFormErrorMessages,
+        MdInputContainerWithFormGroupErrorMessages,
+        MdInputContainerWithId,
+        MdInputContainerWithPrefixAndSuffix,
         MdInputContainerWithRequired,
+        MdInputContainerWithStaticPlaceholder,
         MdInputContainerWithType,
         MdInputContainerWithValueBinding,
-        MdInputContainerWithFormControl,
-        MdInputContainerWithStaticPlaceholder,
-        MdInputContainerMissingMdInputTestController,
-        MdInputContainerMultipleHintTestController,
-        MdInputContainerMultipleHintMixedTestController,
-        MdInputContainerWithDynamicPlaceholder,
-        MdInputContainerWithFormErrorMessages,
-        MdInputContainerWithFormGroupErrorMessages
+        MdInputContainerZeroTestController,
+        MdTextareaWithBindings,
       ],
     });
 
@@ -202,7 +203,7 @@ describe('MdInputContainer', function () {
     fixture.detectChanges();
 
     let input = fixture.debugElement.query(By.directive(MdInputDirective))
-      .injector.get(MdInputDirective) as MdInputDirective;
+      .injector.get<MdInputDirective>(MdInputDirective);
 
     expect(input.value).toBeFalsy();
 
@@ -368,6 +369,20 @@ describe('MdInputContainer', function () {
     let el = fixture.debugElement.query(By.css('label'));
     expect(el).not.toBeNull();
     expect(el.nativeElement.textContent).toMatch(/hello\s+\*/g);
+  });
+
+  it('hide placeholder required star when set to hide the required marker', () => {
+    let fixture = TestBed.createComponent(MdInputContainerPlaceholderRequiredTestComponent);
+    fixture.detectChanges();
+
+    let el = fixture.debugElement.query(By.css('label'));
+    expect(el).not.toBeNull();
+    expect(el.nativeElement.textContent).toMatch(/hello\s+\*/g);
+
+    fixture.componentInstance.hideRequiredMarker = true;
+    fixture.detectChanges();
+
+    expect(el.nativeElement.textContent).toMatch(/hello/g);
   });
 
   it('supports the disabled attribute as binding', async(() => {
@@ -685,6 +700,29 @@ describe('MdInputContainer', function () {
 
   });
 
+  it('should not have prefix and suffix elements when none are specified', () => {
+    let fixture = TestBed.createComponent(MdInputContainerWithId);
+    fixture.detectChanges();
+
+    let prefixEl = fixture.debugElement.query(By.css('.mat-input-prefix'));
+    let suffixEl = fixture.debugElement.query(By.css('.mat-input-suffix'));
+
+    expect(prefixEl).toBeNull();
+    expect(suffixEl).toBeNull();
+  });
+
+  it('should add prefix and suffix elements when specified', () => {
+    let fixture = TestBed.createComponent(MdInputContainerWithPrefixAndSuffix);
+    fixture.detectChanges();
+
+    let prefixEl = fixture.debugElement.query(By.css('.mat-input-prefix'));
+    let suffixEl = fixture.debugElement.query(By.css('.mat-input-suffix'));
+
+    expect(prefixEl).not.toBeNull();
+    expect(suffixEl).not.toBeNull();
+    expect(prefixEl.nativeElement.innerText.trim()).toEqual('Prefix');
+    expect(suffixEl.nativeElement.innerText.trim()).toEqual('Suffix');
+  });
 });
 
 @Component({
@@ -717,9 +755,13 @@ class MdInputContainerWithType {
 }
 
 @Component({
-  template: `<md-input-container><input mdInput required placeholder="hello"></md-input-container>`
+  template: `<md-input-container [hideRequiredMarker]="hideRequiredMarker">
+                <input mdInput required placeholder="hello">
+             </md-input-container>`
 })
-class MdInputContainerPlaceholderRequiredTestComponent {}
+class MdInputContainerPlaceholderRequiredTestComponent {
+  hideRequiredMarker: boolean;
+}
 
 @Component({
   template: `
@@ -927,7 +969,6 @@ class MdInputContainerWithFormErrorMessages {
   renderError = true;
 }
 
-
 @Component({
   template: `
     <form [formGroup]="formGroup" novalidate>
@@ -945,3 +986,14 @@ class MdInputContainerWithFormGroupErrorMessages {
     name: new FormControl('', Validators.required)
   });
 }
+
+@Component({
+  template: `
+    <md-input-container>
+      <div mdPrefix>Prefix</div>
+      <input mdInput>
+      <div mdSuffix>Suffix</div>
+    </md-input-container>
+  `
+})
+class MdInputContainerWithPrefixAndSuffix {}

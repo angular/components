@@ -26,21 +26,26 @@ export function createKeyboardEvent(type: string, keyCode: number) {
   let event = document.createEvent('KeyboardEvent') as any;
   // Firefox does not support `initKeyboardEvent`, but supports `initKeyEvent`.
   let initEventFn = (event.initKeyEvent || event.initKeyboardEvent).bind(event);
+  let originalPreventDefault = event.preventDefault;
 
   initEventFn(type, true, true, window, 0, 0, 0, 0, 0, keyCode);
 
   // Webkit Browsers don't set the keyCode when calling the init function.
   // See related bug https://bugs.webkit.org/show_bug.cgi?id=16735
-  Object.defineProperty(event, 'keyCode', {
-    get: function() { return keyCode; }
-  });
+  Object.defineProperty(event, 'keyCode', { get: () => keyCode });
+
+  // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
+  event.preventDefault = function() {
+    Object.defineProperty(event, 'defaultPrevented', { get: () => true });
+    return originalPreventDefault.apply(this, arguments);
+  };
 
   return event;
 }
 
 /** Creates a fake event object with any desired event type. */
 export function createFakeEvent(type: string) {
-  let event  = document.createEvent('Event');
+  let event = document.createEvent('Event');
   event.initEvent(type, true, true);
   return event;
 }

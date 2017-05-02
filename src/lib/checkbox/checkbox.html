@@ -1,5 +1,6 @@
 <label class="mat-checkbox-layout" #label>
-  <div class="mat-checkbox-inner-container">
+  <div class="mat-checkbox-inner-container"
+       [class.mat-checkbox-inner-container-no-side-margin]="!_hasLabel()">
     <input #input
            class="mat-checkbox-input cdk-visually-hidden" type="checkbox"
            [id]="inputId"
@@ -12,11 +13,11 @@
            [indeterminate]="indeterminate"
            [attr.aria-label]="ariaLabel"
            [attr.aria-labelledby]="ariaLabelledby"
-           (blur)="_onInputBlur()"
            (change)="_onInteractionEvent($event)"
            (click)="_onInputClick($event)">
-    <div md-ripple *ngIf="!_isRippleDisabled()" class="mat-checkbox-ripple"
+    <div md-ripple class="mat-checkbox-ripple"
          [mdRippleTrigger]="label"
+         [mdRippleDisabled]="_isRippleDisabled()"
          [mdRippleCentered]="true"></div>
     <div class="mat-checkbox-frame"></div>
     <div class="mat-checkbox-background">
@@ -34,7 +35,7 @@
       <div class="mat-checkbox-mixedmark"></div>
     </div>
   </div>
-  <span class="mat-checkbox-label">
+  <span class="mat-checkbox-label" #labelWrapper>
     <ng-content></ng-content>
   </span>
 </label>

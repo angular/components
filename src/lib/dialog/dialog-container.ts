@@ -5,9 +5,10 @@ import {
   ViewEncapsulation,
   NgZone,
   OnDestroy,
-  Renderer,
   ElementRef,
   EventEmitter,
+  Inject,
+  Optional,
 } from '@angular/core';
 import {
   animate,
@@ -17,15 +18,11 @@ import {
   transition,
   AnimationEvent,
 } from '@angular/animations';
+import {DOCUMENT} from '@angular/platform-browser';
 import {BasePortalHost, ComponentPortal, PortalHostDirective, TemplatePortal} from '../core';
 import {MdDialogConfig} from './dialog-config';
 import {MdDialogContentAlreadyAttachedError} from './dialog-errors';
 import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
-import 'rxjs/add/operator/first';
-
-
-/** Possible states for the dialog container animation. */
-export type MdDialogContainerAnimationState = 'void' | 'enter' | 'exit' | 'exit-start';
 
 
 /**
@@ -41,9 +38,9 @@ export type MdDialogContainerAnimationState = 'void' | 'enter' | 'exit' | 'exit-
   encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('slideDialog', [
-      state('void', style({ transform: 'translateY(25%) scale(0.9)', opacity: 0 })),
-      state('enter', style({ transform: 'translateY(0%) scale(1)', opacity: 1 })),
-      state('exit', style({ transform: 'translateY(25%)', opacity: 0 })),
+      state('void', style({ transform: 'translate3d(0, 25%, 0) scale(0.9)', opacity: 0 })),
+      state('enter', style({ transform: 'translate3d(0, 0, 0) scale(1)', opacity: 1 })),
+      state('exit', style({ transform: 'translate3d(0, 25%, 0)', opacity: 0 })),
       transition('* => *', animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)')),
     ])
   ],
@@ -54,7 +51,7 @@ export type MdDialogContainerAnimationState = 'void' | 'enter' | 'exit' | 'exit-
     '(@slideDialog.done)': '_onAnimationDone($event)',
   },
 })
-export class MdDialogContainer extends BasePortalHost implements OnDestroy {
+export class MdDialogContainer extends BasePortalHost {
   /** The portal host inside of this container into which the dialog content will be loaded. */
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
@@ -64,22 +61,26 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
   /** Element that was focused before the dialog was opened. Save this to restore upon close. */
   private _elementFocusedBeforeDialogWasOpened: HTMLElement = null;
 
+  /** Reference to the global document object. */
+  private _document: Document;
+
   /** The dialog configuration. */
   dialogConfig: MdDialogConfig;
 
   /** State of the dialog animation. */
-  _state: MdDialogContainerAnimationState = 'enter';
+  _state: 'void' | 'enter' | 'exit' = 'enter';
 
   /** Emits the current animation state whenever it changes. */
-  _onAnimationStateChange = new EventEmitter<MdDialogContainerAnimationState>();
+  _onAnimationStateChange = new EventEmitter<AnimationEvent>();
 
   constructor(
     private _ngZone: NgZone,
-    private _renderer: Renderer,
     private _elementRef: ElementRef,
-    private _focusTrapFactory: FocusTrapFactory) {
+    private _focusTrapFactory: FocusTrapFactory,
+    @Optional() @Inject(DOCUMENT) _document: any) {
 
     super();
+    this._document = _document;
   }
 
   /**
@@ -91,9 +92,8 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
       throw new MdDialogContentAlreadyAttachedError();
     }
 
-    let attachResult = this._portalHost.attachComponentPortal(portal);
-    this._trapFocus();
-    return attachResult;
+    this._savePreviouslyFocusedElement();
+    return this._portalHost.attachComponentPortal(portal);
   }
 
   /**
@@ -105,14 +105,12 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
       throw new MdDialogContentAlreadyAttachedError();
     }
 
-    let attachedResult = this._portalHost.attachTemplatePortal(portal);
-    this._trapFocus();
-    return attachedResult;
+    this._savePreviouslyFocusedElement();
+    return this._portalHost.attachTemplatePortal(portal);
   }
 
   /**
    * Moves the focus inside the focus trap.
-   * @private
    */
   private _trapFocus() {
     if (!this._focusTrap) {
@@ -122,19 +120,16 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
     // If were to attempt to focus immediately, then the content of the dialog would not yet be
     // ready in instances where change detection has to run first. To deal with this, we simply
     // wait for the microtask queue to be empty.
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
-      this._elementFocusedBeforeDialogWasOpened = document.activeElement as HTMLElement;
-      this._focusTrap.focusFirstTabbableElement();
-    });
+    this._focusTrap.focusFirstTabbableElementWhenReady();
   }
 
   /**
-   * Kicks off the leave animation.
-   * @docs-private
+   * Saves a reference to the element that was focused before the dialog was opened.
    */
-  _exit(): void {
-    this._state = 'exit';
-    this._onAnimationStateChange.emit('exit-start');
+  private _savePreviouslyFocusedElement() {
+    if (this._document) {
+      this._elementFocusedBeforeDialogWasOpened = this._document.activeElement as HTMLElement;
+    }
   }
 
   /**
@@ -142,26 +137,31 @@ export class MdDialogContainer extends BasePortalHost implements OnDestroy {
    * @docs-private
    */
   _onAnimationDone(event: AnimationEvent) {
-    this._onAnimationStateChange.emit(event.toState as MdDialogContainerAnimationState);
+    this._onAnimationStateChange.emit(event);
+
+    if (event.toState === 'enter') {
+      this._trapFocus();
+    } else if (event.toState === 'exit') {
+      this._onAnimationStateChange.complete();
+    }
   }
 
-  ngOnDestroy() {
-    // When the dialog is destroyed, return focus to the element that originally had it before
-    // the dialog was opened. Wait for the DOM to finish settling before changing the focus so
-    // that it doesn't end up back on the <body>. Also note that we need the extra check, because
-    // IE can set the `activeElement` to null in some cases.
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
-      let toFocus = this._elementFocusedBeforeDialogWasOpened as HTMLElement;
+  /**
+   * Kicks off the leave animation and restores focus to the previously-focused element.
+   * @docs-private
+   */
+  _exit(): void {
+    // We need the extra check, because IE can set the `activeElement` to null in some cases.
+    let toFocus = this._elementFocusedBeforeDialogWasOpened;
 
-      // We need to check whether the focus method exists at all, because IE seems to throw an
-      // exception, even if the element is the document.body.
-      if (toFocus && 'focus' in toFocus) {
-        toFocus.focus();
-      }
+    if (toFocus && 'focus' in toFocus) {
+      toFocus.focus();
+    }
 
-      this._onAnimationStateChange.complete();
-    });
+    if (this._focusTrap) {
+      this._focusTrap.destroy();
+    }
 
-    this._focusTrap.destroy();
+    this._state = 'exit';
   }
 }

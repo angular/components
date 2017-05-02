@@ -1,4 +1,17 @@
 /**
+ * We want to avoid emitting selectors that are deprecated but don't have a way to mark
+ * them as such in the source code. Thus, we maintain a separate blacklist of selectors
+ * that should not be emitted in the documentation.
+ */
+const SELECTOR_BLACKLIST  = new Set([
+  '[portal]',
+  '[portalHost]',
+  'textarea[md-autosize]',
+  '[overlay-origin]',
+  '[connected-overlay]',
+]);
+
+/**
  * Processor to add properties to docs objects.
  *
  * isMethod     | Whether the doc is for a method on a class.
@@ -18,7 +31,7 @@ module.exports = function categorizer() {
    * Decorates all class docs inside of the dgeni pipeline.
    * - Methods and properties of a class-doc will be extracted into separate variables.
    * - Identifies directives, services or NgModules and marks them them in class-doc.
-   **/
+   */
   function decorateClassDoc(classDoc) {
     // Resolve all methods and properties from the classDoc. Includes inherited docs.
     classDoc.methods = resolveMethods(classDoc);
@@ -28,10 +41,13 @@ module.exports = function categorizer() {
     classDoc.methods.forEach(doc => decorateMethodDoc(doc));
     classDoc.properties.forEach(doc => decoratePropertyDoc(doc));
 
+    decoratePublicDoc(classDoc);
+
     // Categorize the current visited classDoc into its Angular type.
     if (isDirective(classDoc)) {
       classDoc.isDirective = true;
       classDoc.directiveExportAs = getDirectiveExportAs(classDoc);
+      classDoc.directiveSelectors =  getDirectiveSelectors(classDoc);
     } else if (isService(classDoc)) {
       classDoc.isService = true;
     } else if (isNgModule(classDoc)) {
@@ -42,9 +58,10 @@ module.exports = function categorizer() {
   /**
    * Method that will be called for each method doc. The parameters for the method-docs
    * will be normalized, so that they can be easily used inside of dgeni templates.
-   **/
+   */
   function decorateMethodDoc(methodDoc) {
     normalizeMethodParameters(methodDoc);
+    decoratePublicDoc(methodDoc);
 
     // Mark methods with a `void` return type so we can omit show the return type in the docs.
     methodDoc.showReturns = methodDoc.returnType && methodDoc.returnType != 'void';
@@ -53,13 +70,23 @@ module.exports = function categorizer() {
   /**
    * Method that will be called for each property doc. Properties that are Angular inputs or
    * outputs will be marked. Aliases for the inputs or outputs will be stored as well.
-   **/
+   */
   function decoratePropertyDoc(propertyDoc) {
+    decoratePublicDoc(propertyDoc);
+
     propertyDoc.isDirectiveInput = isDirectiveInput(propertyDoc);
     propertyDoc.directiveInputAlias = getDirectiveInputAlias(propertyDoc);
 
     propertyDoc.isDirectiveOutput = isDirectiveOutput(propertyDoc);
     propertyDoc.directiveOutputAlias = getDirectiveOutputAlias(propertyDoc);
+  }
+
+  /**
+   * Decorates public exposed docs. Creates a property on the doc that indicates whether
+   * the item is deprecated or not.
+   **/
+  function decoratePublicDoc(doc) {
+    doc.isDeprecated = isDeprecatedDoc(doc);
   }
 };
 
@@ -146,12 +173,28 @@ function isDirectiveInput(doc) {
   return hasMemberDecorator(doc, 'Input');
 }
 
+function isDeprecatedDoc(doc) {
+  return (doc.tags && doc.tags.tags || []).some(tag => tag.tagName === 'deprecated');
+}
+
 function getDirectiveInputAlias(doc) {
   return isDirectiveInput(doc) ? doc.decorators.find(d => d.name == 'Input').arguments[0] : '';
 }
 
 function getDirectiveOutputAlias(doc) {
   return isDirectiveOutput(doc) ? doc.decorators.find(d => d.name == 'Output').arguments[0] : '';
+}
+
+function getDirectiveSelectors(classDoc) {
+  let metadata = classDoc.decorators
+    .find(d => d.name === 'Component' || d.name === 'Directive').arguments[0];
+
+  let selectorMatches = /selector\s*:\s*(?:"|')([^']*?)(?:"|')/g.exec(metadata);
+  selectorMatches = selectorMatches && selectorMatches[1];
+
+  return selectorMatches ? selectorMatches.split(/\s*,\s*/)
+    .filter(s => s !== '' && !s.includes('mat') && !SELECTOR_BLACKLIST.has(s))
+    : selectorMatches;
 }
 
 function getDirectiveExportAs(doc) {

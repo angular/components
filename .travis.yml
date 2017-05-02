@@ -2,7 +2,7 @@ language: node_js
 sudo: false
 
 node_js:
-  - '6.9.4'
+  - '6.10.2'
 
 addons:
   jwt:
@@ -27,6 +27,7 @@ env:
     # Order: a slower build first, so that we don't occupy an idle travis worker waiting for others to complete.
     - MODE=lint
     - MODE=aot
+    - MODE=closure-compiler
     - MODE=payload
     - MODE=e2e
     - MODE=saucelabs_required

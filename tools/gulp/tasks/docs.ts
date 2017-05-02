@@ -1,7 +1,7 @@
 import {task, src, dest} from 'gulp';
 import {Dgeni} from 'dgeni';
 import * as path from 'path';
-import {HTML_MINIFIER_OPTIONS} from '../constants';
+import {DIST_ROOT, HTML_MINIFIER_OPTIONS, SOURCE_ROOT} from '../constants';
 
 // There are no type definitions available for these imports.
 const markdown = require('gulp-markdown');
@@ -12,6 +12,8 @@ const flatten = require('gulp-flatten');
 const htmlmin = require('gulp-htmlmin');
 const hljs = require('highlight.js');
 const dom  = require('gulp-dom');
+
+const DIST_DOCS = path.join(DIST_ROOT, 'docs');
 
 // Our docs contain comments of the form `<!-- example(...) -->` which serve as placeholders where
 // example code should be inserted. We replace these comments with divs that have a
@@ -41,11 +43,21 @@ const MARKDOWN_TAGS_TO_CLASS_ALIAS = [
   'td',
   'th',
   'tr',
-  'ul'
+  'ul',
+  'pre',
+  'code',
 ];
 
-task('docs', ['markdown-docs', 'highlight-docs', 'api-docs', 'minify-html-docs']);
+/** Generate all docs content. */
+task('docs', [
+  'markdown-docs',
+  'highlight-examples',
+  'api-docs',
+  'minified-api-docs',
+  'plunker-example-assets',
+]);
 
+/** Generates html files from the markdown overviews and guides. */
 task('markdown-docs', () => {
   return src(['src/lib/**/*.md', 'guides/*.md'])
       .pipe(markdown({
@@ -65,42 +77,54 @@ task('markdown-docs', () => {
       .pipe(dest('dist/docs/markdown'));
 });
 
-task('highlight-docs', () => {
+/**
+ * Creates syntax-highlighted html files from the examples to be used for the source view of
+ * live examples on the docs site.
+ */
+task('highlight-examples', () => {
   // rename files to fit format: [filename]-[filetype].html
   const renameFile = (path: any) => {
     const extension = path.extname.slice(1);
     path.basename = `${path.basename}-${extension}`;
   };
 
-  return src('src/examples/**/*.+(html|css|ts)')
+  return src('src/material-examples/**/*.+(html|css|ts)')
       .pipe(flatten())
       .pipe(rename(renameFile))
       .pipe(highlight())
       .pipe(dest('dist/docs/examples'));
 });
 
+/** Generates API docs from the source JsDoc using dgeni. */
 task('api-docs', () => {
   const docsPackage = require(path.resolve(__dirname, '../../dgeni'));
   const docs = new Dgeni([docsPackage]);
   return docs.generate();
 });
 
-task('minify-html-docs', ['api-docs'], () => {
+/** Generates minified html api docs. */
+task('minified-api-docs', ['api-docs'], () => {
   return src('dist/docs/api/*.html')
     .pipe(htmlmin(HTML_MINIFIER_OPTIONS))
     .pipe(dest('dist/docs/api/'));
+});
+
+/** Copies example sources to be used as plunker assets for the docs site. */
+task('plunker-example-assets', () => {
+  src(path.join(SOURCE_ROOT, 'material-examples', '**/*'))
+      .pipe(dest(path.join(DIST_DOCS, 'plunker', 'examples')));
 });
 
 /** Updates the markdown file's content to work inside of the docs app. */
 function transformMarkdownFiles(buffer: Buffer, file: any): string {
   let content = buffer.toString('utf-8');
 
-  /* Replace <!-- example(..) --> comments with HTML elements. */
+  // Replace <!-- example(..) --> comments with HTML elements.
   content = content.replace(EXAMPLE_PATTERN, (match: string, name: string) =>
     `<div material-docs-example="${name}"></div>`
   );
 
-  /* Replaces the URL in anchor elements inside of compiled markdown files. */
+  // Replace the URL in anchor elements inside of compiled markdown files.
   content = content.replace(LINK_PATTERN, (match: string, head: string, link: string) =>
     // The head is the first match of the RegExp and is necessary to ensure that the RegExp matches
     // an anchor element. The head will be then used to re-create the existing anchor element.
@@ -108,7 +132,8 @@ function transformMarkdownFiles(buffer: Buffer, file: any): string {
     `${head} href="${fixMarkdownDocLinks(link, file.path)}"`
   );
 
-  return content;
+  // Finally, wrap the entire generated in a doc in a div with a specific class.
+  return `<div class="docs-markdown">${content}</div>`;
 }
 
 /** Fixes paths in the markdown files to work in the material-docs-io. */

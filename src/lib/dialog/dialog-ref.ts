@@ -1,7 +1,10 @@
-import {OverlayRef} from '../core';
+import {OverlayRef, GlobalPositionStrategy} from '../core';
+import {AnimationEvent} from '@angular/animations';
+import {DialogPosition} from './dialog-config';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {MdDialogContainer, MdDialogContainerAnimationState} from './dialog-container';
+import {MdDialogContainer} from './dialog-container';
+import 'rxjs/add/operator/filter';
 
 
 // TODO(jelbourn): resizing
@@ -22,17 +25,14 @@ export class MdDialogRef<T> {
   private _result: any;
 
   constructor(private _overlayRef: OverlayRef, public _containerInstance: MdDialogContainer) {
-    _containerInstance._onAnimationStateChange.subscribe(
-      (state: MdDialogContainerAnimationState) => {
-        if (state === 'exit-start') {
-          // Transition the backdrop in parallel with the dialog.
-          this._overlayRef.detachBackdrop();
-        } else if (state === 'exit') {
-          this._overlayRef.dispose();
-          this._afterClosed.next(this._result);
-          this._afterClosed.complete();
-          this.componentInstance = null;
-        }
+    _containerInstance._onAnimationStateChange
+      .filter((event: AnimationEvent) => event.toState === 'exit')
+      .subscribe(() => {
+        this._overlayRef.dispose();
+        this.componentInstance = null;
+      }, null, () => {
+        this._afterClosed.next(this._result);
+        this._afterClosed.complete();
       });
   }
 
@@ -43,6 +43,7 @@ export class MdDialogRef<T> {
   close(dialogResult?: any): void {
     this._result = dialogResult;
     this._containerInstance._exit();
+    this._overlayRef.detachBackdrop(); // Transition the backdrop in parallel with the dialog.
   }
 
   /**
@@ -50,5 +51,45 @@ export class MdDialogRef<T> {
    */
   afterClosed(): Observable<any> {
     return this._afterClosed.asObservable();
+  }
+
+  /**
+   * Updates the dialog's position.
+   * @param position New dialog position.
+   */
+  updatePosition(position?: DialogPosition): this {
+    let strategy = this._getPositionStrategy();
+
+    if (position && (position.left || position.right)) {
+      position.left ? strategy.left(position.left) : strategy.right(position.right);
+    } else {
+      strategy.centerHorizontally();
+    }
+
+    if (position && (position.top || position.bottom)) {
+      position.top ? strategy.top(position.top) : strategy.bottom(position.bottom);
+    } else {
+      strategy.centerVertically();
+    }
+
+    this._overlayRef.updatePosition();
+
+    return this;
+  }
+
+  /**
+   * Updates the dialog's width and height.
+   * @param width New width of the dialog.
+   * @param height New height of the dialog.
+   */
+  updateSize(width = 'auto', height = 'auto'): this {
+    this._getPositionStrategy().width(width).height(height);
+    this._overlayRef.updatePosition();
+    return this;
+  }
+
+  /** Fetches the position strategy object from the overlay ref. */
+  private _getPositionStrategy(): GlobalPositionStrategy {
+    return this._overlayRef.getState().positionStrategy as GlobalPositionStrategy;
   }
 }

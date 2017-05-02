@@ -7,7 +7,7 @@ import {
   QueryList,
   ContentChildren,
   ElementRef,
-  Renderer
+  Renderer2,
 } from '@angular/core';
 import {coerceBooleanProperty} from '../core';
 import {Observable} from 'rxjs/Observable';
@@ -79,29 +79,20 @@ export class MdTabGroup {
   @Input()
   headerPosition: MdTabHeaderPosition = 'above';
 
-  /** Output to enable support for two-way binding on `selectedIndex`. */
+  /** Output to enable support for two-way binding on `[(selectedIndex)]` */
   @Output() get selectedIndexChange(): Observable<number> {
     return this.selectChange.map(event => event.index);
   }
 
-  private _onFocusChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();
-
   /** Event emitted when focus has changed within a tab group. */
-  @Output() get focusChange(): Observable<MdTabChangeEvent> {
-    return this._onFocusChange.asObservable();
-  }
-
-  private _onSelectChange: EventEmitter<MdTabChangeEvent> =
-      new EventEmitter<MdTabChangeEvent>(true);
+  @Output() focusChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();
 
   /** Event emitted when the tab selection has changed. */
-  @Output() get selectChange(): Observable<MdTabChangeEvent> {
-    return this._onSelectChange.asObservable();
-  }
+  @Output() selectChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>(true);
 
   private _groupId: number;
 
-  constructor(private _renderer: Renderer) {
+  constructor(private _renderer: Renderer2) {
     this._groupId = nextId++;
   }
 
@@ -121,7 +112,7 @@ export class MdTabGroup {
     // If there is a change in selected index, emit a change event. Should not trigger if
     // the selected index has not yet been initialized.
     if (this._selectedIndex != this._indexToSelect && this._selectedIndex != null) {
-      this._onSelectChange.emit(this._createChangeEvent(this._indexToSelect));
+      this.selectChange.emit(this._createChangeEvent(this._indexToSelect));
     }
 
     // Setup the position for each tab and optionally setup an origin on the next selected tab.
@@ -147,7 +138,7 @@ export class MdTabGroup {
   }
 
   _focusChanged(index: number) {
-    this._onFocusChange.emit(this._createChangeEvent(index));
+    this.focusChange.emit(this._createChangeEvent(index));
   }
 
   private _createChangeEvent(index: number): MdTabChangeEvent {
@@ -176,13 +167,13 @@ export class MdTabGroup {
   _setTabBodyWrapperHeight(tabHeight: number): void {
     if (!this._dynamicHeight || !this._tabBodyWrapperHeight) { return; }
 
-    this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height',
+    this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height',
         this._tabBodyWrapperHeight + 'px');
 
     // This conditional forces the browser to paint the height so that
     // the animation to the new height can have an origin.
     if (this._tabBodyWrapper.nativeElement.offsetHeight) {
-      this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height',
+      this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height',
           tabHeight + 'px');
     }
   }
@@ -190,6 +181,6 @@ export class MdTabGroup {
   /** Removes the height of the tab body wrapper. */
   _removeTabBodyWrapperHeight(): void {
     this._tabBodyWrapperHeight = this._tabBodyWrapper.nativeElement.clientHeight;
-    this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height', '');
+    this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height', '');
   }
 }

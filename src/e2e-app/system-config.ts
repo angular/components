@@ -24,7 +24,9 @@ System.config({
       'node:@angular/platform-browser/bundles/platform-browser-animations.umd.js',
     '@angular/platform-browser-dynamic':
       'node:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
-    '@angular/material': 'dist/bundles/material.umd.js'
+
+    '@angular/material': 'dist/bundles/material.umd.js',
+    '@angular/cdk': 'dist/bundles/cdk.umd.js'
   },
   packages: {
     // Thirdparty barrels.

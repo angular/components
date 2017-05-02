@@ -1,4 +1,4 @@
-import {Directive, ElementRef, Input, OnInit} from '@angular/core';
+import {Directive, ElementRef, Input, AfterViewInit} from '@angular/core';
 
 
 /**
@@ -10,51 +10,74 @@ import {Directive, ElementRef, Input, OnInit} from '@angular/core';
   exportAs: 'mdTextareaAutosize',
   host: {
     '(input)': 'resizeToFitContent()',
-    '[style.min-height]': '_minHeight',
-    '[style.max-height]': '_maxHeight',
   },
 })
-export class MdTextareaAutosize implements OnInit {
+export class MdTextareaAutosize implements AfterViewInit {
+  private _minRows: number;
+  private _maxRows: number;
+
+  /** @deprecated Use mdAutosizeMinRows */
+  @Input()
+  get minRows() { return this._minRows; }
+
+  set minRows(value: number) {
+    this._minRows = value;
+    this._setMinHeight();
+  }
+
+  /** @deprecated Use mdAutosizeMaxRows */
+  @Input()
+  get maxRows() { return this._maxRows; }
+
+  set maxRows(value: number) {
+    this._maxRows = value;
+    this._setMaxHeight();
+  }
+
   /** Minimum number of rows for this textarea. */
-  @Input() minRows: number;
-
-  get mdAutosizeMinRows(): number {
-    return this.minRows;
-  }
-
-  @Input() set mdAutosizeMinRows(value: number) {
-    this.minRows = value;
-  }
+  @Input()
+  get mdAutosizeMinRows(): number { return this.minRows; }
+  set mdAutosizeMinRows(value: number) { this.minRows = value; }
 
   /** Maximum number of rows for this textarea. */
-  @Input() maxRows: number;
-
-  get mdAutosizeMaxRows(): number {
-    return this.maxRows;
-  }
-
-  @Input() set mdAutosizeMaxRows(value: number) {
-    this.maxRows = value;
-  }
+  @Input()
+  get mdAutosizeMaxRows(): number { return this.maxRows; }
+  set mdAutosizeMaxRows(value: number) { this.maxRows = value; }
 
   /** Cached height of a textarea with a single row. */
   private _cachedLineHeight: number;
 
   constructor(private _elementRef: ElementRef) { }
 
-  /** The minimum height of the textarea as determined by minRows. */
-  get _minHeight() {
-    return this.minRows ? `${this.minRows * this._cachedLineHeight}px` : null;
+  /** Sets the minimum height of the textarea as determined by minRows. */
+  _setMinHeight(): void {
+    const minHeight = this.minRows && this._cachedLineHeight ?
+        `${this.minRows * this._cachedLineHeight}px` : null;
+
+    if (minHeight)  {
+      this._setTextareaStyle('minHeight', minHeight);
+    }
   }
 
-  /** The maximum height of the textarea as determined by maxRows. */
-  get _maxHeight() {
-    return this.maxRows ? `${this.maxRows * this._cachedLineHeight}px` : null;
+  /** Sets the maximum height of the textarea as determined by maxRows. */
+  _setMaxHeight(): void {
+    const maxHeight = this.maxRows && this._cachedLineHeight ?
+        `${this.maxRows * this._cachedLineHeight}px` : null;
+
+    if (maxHeight) {
+      this._setTextareaStyle('maxHeight', maxHeight);
+    }
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this._cacheTextareaLineHeight();
     this.resizeToFitContent();
+  }
+
+  /** Sets a style property on the textarea element. */
+  private _setTextareaStyle(property: string, value: string): void {
+    const textarea = this._elementRef.nativeElement as HTMLTextAreaElement;
+    textarea.style[property] = value;
   }
 
   /**
@@ -77,14 +100,18 @@ export class MdTextareaAutosize implements OnInit {
     textareaClone.style.position = 'absolute';
     textareaClone.style.visibility = 'hidden';
     textareaClone.style.border = 'none';
-    textareaClone.style.padding = '';
+    textareaClone.style.padding = '0';
     textareaClone.style.height = '';
     textareaClone.style.minHeight = '';
     textareaClone.style.maxHeight = '';
 
     textarea.parentNode.appendChild(textareaClone);
-    this._cachedLineHeight = textareaClone.offsetHeight;
+    this._cachedLineHeight = textareaClone.clientHeight;
     textarea.parentNode.removeChild(textareaClone);
+
+    // Min and max heights have to be re-calculated if the cached line height changes
+    this._setMinHeight();
+    this._setMaxHeight();
   }
 
   /** Resize the textarea to fit its content. */
