@@ -31,10 +31,10 @@
   }
 
   .mat-tab-label, .mat-tab-link {
-     color: mat-color($foreground, text);
-
+    color: mat-color($foreground, text);
+    
     &.mat-tab-disabled {
-     color: mat-color($foreground, disabled-text);
+      color: mat-color($foreground, disabled-text);
     }
   }
 }
