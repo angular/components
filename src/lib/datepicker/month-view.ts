@@ -149,9 +149,9 @@ export class MdMonthView<D> implements AfterContentInit {
           this._dateAdapter.getMonth(this.activeDate), i + 1);
       let enabled = !this.dateFilter ||
           this.dateFilter(date);
-      let a11yLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
+      let ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
       this._weeks[this._weeks.length - 1]
-          .push(new MdCalendarCell(i + 1, dateNames[i], a11yLabel, enabled));
+          .push(new MdCalendarCell(i + 1, dateNames[i], ariaLabel, enabled));
     }
   }
 

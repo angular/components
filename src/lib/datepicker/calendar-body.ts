@@ -15,7 +15,7 @@ import {
 export class MdCalendarCell {
   constructor(public value: number,
               public displayValue: string,
-              public a11yLabel: string,
+              public ariaLabel: string,
               public enabled: boolean) {}
 }
 

@@ -39,7 +39,6 @@ import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
   styleUrls: ['calendar.css'],
   host: {
     '[class.mat-calendar]': 'true',
-    '(focus)': '_focusActiveCell()',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -207,10 +206,10 @@ export class MdCalendar<D> implements AfterContentInit {
 
   /** Focuses the active cell after the microtask queue is empty. */
   _focusActiveCell() {
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+    this._ngZone.runOutsideAngular(() => this._ngZone.onStable.first().subscribe(() => {
       let activeEl = this._elementRef.nativeElement.querySelector('.mat-calendar-body-active');
       activeEl.focus();
-    });
+    }));
   }
 
   /** Whether the two dates represent the same view in the current view mode (month or year). */
@@ -258,6 +257,7 @@ export class MdCalendar<D> implements AfterContentInit {
       case ENTER:
         if (this._dateFilterForViews(this._activeDate)) {
           this._dateSelected(this._activeDate);
+          // Prevent unexpected default actions such as form submission.
           event.preventDefault();
         }
         return;
@@ -267,6 +267,7 @@ export class MdCalendar<D> implements AfterContentInit {
     }
 
     this._focusActiveCell();
+    // Prevent unexpected default actions such as form submission.
     event.preventDefault();
   }
 
@@ -310,6 +311,7 @@ export class MdCalendar<D> implements AfterContentInit {
     }
 
     this._focusActiveCell();
+    // Prevent unexpected default actions such as form submission.
     event.preventDefault();
   }
 
