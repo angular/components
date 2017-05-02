@@ -42,4 +42,20 @@ export class TreeDemo {
   gotoParent(node: UserData) {
     this.tree.gotoParent(node);
   }
+
+  expandAll() {
+    this.tree.toggleAll(true);
+  }
+
+  collapseAll() {
+    this.tree.toggleAll(false);
+  }
+
+  expand(node: UserData) {
+    this.tree.toggleAll(true, node);
+  }
+
+  collapse(node: UserData) {
+    this.tree.toggleAll(false, node);
+  }
 }

@@ -88,6 +88,8 @@ export class MdTree {
   private _dataDiffer: IterableDiffer<any> = null;
 
   private _keyManager: FocusKeyManager;
+
+  private dataNodes: any[];
   @ContentChildren(MdNode) items: QueryList<MdNode>;
   @ContentChildren(MdNodeDef) nodeDefinitions: QueryList<MdNodeDef>;
   @ViewChild(MdNodePlaceholder) nodePlaceholder: MdNodePlaceholder;
@@ -164,6 +166,7 @@ export class MdTree {
   }
 
   renderNodeChanges(dataNodes: any[]) {
+    this.dataNodes = dataNodes;
     console.time('Rendering rows');
     const changes = this._dataDiffer.diff(dataNodes);
     if (!changes) { return; }
@@ -220,5 +223,21 @@ export class MdTree {
   getNodeDefForItem(item: any) {
     // proof-of-concept: only supporting one row definition
     return this.nodeDefinitions.first;
+  }
+
+  toggleAll(expand: boolean, node?: any, includingChildren: boolean = true) {
+    if (node) {
+      let children = this.dataSource.getChildren(node);
+      if (children) {
+        expand
+          ? this.dataSource.expansionModel.select(node)
+          : this.dataSource.expansionModel.deselect(node);
+        if (includingChildren) {
+          children.forEach((child) => this.toggleAll(expand, child, includingChildren));
+        }
+      }
+    } else {
+      this.dataNodes.forEach((node) => this.toggleAll(expand, node, includingChildren));
+    }
   }
 }
