@@ -1,4 +1,4 @@
-import {MdError} from '../core';
+import {MdError} from '@angular/material/core';
 
 /**
  * Exception thrown when a ComponentPortal is attached to a DomPortalHost without an origin.

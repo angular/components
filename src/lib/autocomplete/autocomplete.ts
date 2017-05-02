@@ -10,8 +10,7 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef,
 } from '@angular/core';
-import {MdOption} from '../core';
-import {ActiveDescendantKeyManager} from '../core/a11y/activedescendant-key-manager';
+import {MdOption, _ActiveDescendantKeyManager} from '@angular/material/core';
 
 /**
  * Autocomplete IDs need to be unique across components, so this counter exists outside of
@@ -35,7 +34,7 @@ export type AutocompletePositionY = 'above' | 'below';
 export class MdAutocomplete implements AfterContentInit {
 
   /** Manages active item in option list based on key events. */
-  _keyManager: ActiveDescendantKeyManager;
+  _keyManager: _ActiveDescendantKeyManager;
 
   /** Whether the autocomplete panel displays above or below its trigger. */
   positionY: AutocompletePositionY = 'below';
@@ -56,7 +55,7 @@ export class MdAutocomplete implements AfterContentInit {
   constructor(private _changeDetectorRef: ChangeDetectorRef) { }
 
   ngAfterContentInit() {
-    this._keyManager = new ActiveDescendantKeyManager(this.options).withWrap();
+    this._keyManager = new _ActiveDescendantKeyManager(this.options).withWrap();
   }
 
   /**

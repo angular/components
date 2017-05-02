@@ -17,9 +17,8 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {coerceBooleanProperty} from '../core';
 import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
-import {getSupportedInputTypes} from '../core/platform/features';
+import {coerceBooleanProperty, getSupportedInputTypes} from '@angular/material/core';
 import {
   MdInputContainerDuplicatedHintError,
   MdInputContainerMissingMdInputError,

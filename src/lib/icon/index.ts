@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {HttpModule} from '@angular/http';
-import {MdCommonModule} from '../core';
+import {MdCommonModule} from '@angular/material/core';
 import {MdIcon, ICON_REGISTRY_PROVIDER} from './icon';
 
 

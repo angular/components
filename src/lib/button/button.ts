@@ -9,8 +9,9 @@ import {
   Renderer2,
   ViewEncapsulation
 } from '@angular/core';
-import {coerceBooleanProperty, FocusOriginMonitor} from '../core';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
+import {
+  _mixinDisabled, _CanDisable, coerceBooleanProperty, FocusOriginMonitor
+} from '@angular/material/core';
 
 
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
@@ -82,7 +83,7 @@ export class MdMiniFabCssMatStyler {}
 
 // Boilerplate for applying mixins to MdButton.
 export class MdButtonBase { }
-export const _MdButtonMixinBase = mixinDisabled(MdButtonBase);
+export const _MdButtonMixinBase = _mixinDisabled(MdButtonBase);
 
 
 /**
@@ -103,7 +104,7 @@ export const _MdButtonMixinBase = mixinDisabled(MdButtonBase);
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisable {
+export class MdButton extends _MdButtonMixinBase implements OnDestroy, _CanDisable {
   private _color: string;
 
   /** Whether the button is round. */

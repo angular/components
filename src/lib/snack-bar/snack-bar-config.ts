@@ -1,5 +1,5 @@
 import {ViewContainerRef} from '@angular/core';
-import {AriaLivePoliteness} from '../core';
+import {AriaLivePoliteness} from '@angular/material/core';
 
 /**
  * Configuration used when opening a snack-bar.

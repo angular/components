@@ -6,12 +6,12 @@ import {
   OverlayRef,
   OverlayState,
   LiveAnnouncer,
-} from '../core';
+  _extendObject
+} from '@angular/material/core';
 import {MdSnackBarConfig} from './snack-bar-config';
 import {MdSnackBarRef} from './snack-bar-ref';
 import {MdSnackBarContainer} from './snack-bar-container';
 import {SimpleSnackBar} from './simple-snack-bar';
-import {extendObject} from '../core/util/object-extend';
 
 
 /**
@@ -155,5 +155,5 @@ export class MdSnackBar {
  * @returns The new configuration object with defaults applied.
  */
 function _applyConfigDefaults(config: MdSnackBarConfig): MdSnackBarConfig {
-  return extendObject(new MdSnackBarConfig(), config);
+  return _extendObject(new MdSnackBarConfig(), config);
 }

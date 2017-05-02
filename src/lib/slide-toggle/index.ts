@@ -4,7 +4,7 @@ import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MdSlideToggle} from './slide-toggle';
 import {
   GestureConfig, MdCommonModule, MdRippleModule, FOCUS_ORIGIN_MONITOR_PROVIDER
-} from '../core';
+} from '@angular/material/core';
 
 @NgModule({
   imports: [FormsModule, MdRippleModule, MdCommonModule],

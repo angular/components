@@ -17,7 +17,7 @@ import {
   transition,
   AnimationEvent,
 } from '@angular/animations';
-import {TemplatePortal, PortalHostDirective, Dir, LayoutDirection} from '../core';
+import {TemplatePortal, PortalHostDirective, Dir, LayoutDirection} from '@angular/material/core';
 import 'rxjs/add/operator/map';
 
 /**

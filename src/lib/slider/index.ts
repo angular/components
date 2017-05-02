@@ -2,9 +2,8 @@ import {NgModule} from '@angular/core';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {MdCommonModule, GestureConfig, StyleModule} from '../core';
+import {MdCommonModule, GestureConfig, StyleModule, RtlModule} from '@angular/material/core';
 import {MdSlider} from './slider';
-import {RtlModule} from '../core/rtl/dir';
 
 
 @NgModule({

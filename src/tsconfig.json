@@ -13,8 +13,10 @@
     "types": ["jasmine"],
     "baseUrl": ".",
     "paths": {
-      "@angular/material": ["./lib/public_api.ts"],
-      "@angular/cdk": ["./cdk/public_api.ts"]
+      "@angular/material/*": ["./lib/*/index"],
+      "@angular/material": ["./lib/public_api"],
+      "@angular/cdk/*": ["./cdk/*/index"],
+      "@angular/cdk": ["./cdk/public_api"]
     }
   }
 }

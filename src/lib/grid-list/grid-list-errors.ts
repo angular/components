@@ -1,4 +1,4 @@
-import {MdError} from '../core';
+import {MdError} from '@angular/material/core';
 
 /**
  * Exception thrown when cols property is missing from grid-list

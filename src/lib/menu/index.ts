@@ -1,10 +1,9 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {OverlayModule, MdCommonModule} from '../core';
+import {OverlayModule, MdCommonModule, MdRippleModule} from '@angular/material/core';
 import {MdMenu} from './menu-directive';
 import {MdMenuItem} from './menu-item';
 import {MdMenuTrigger} from './menu-trigger';
-import {MdRippleModule} from '../core/ripple/index';
 
 
 @NgModule({

@@ -23,34 +23,61 @@ const sorcery = require('sorcery');
  */
 export function composeRelease(packageName: string) {
   // To avoid refactoring of the project the package material will map to the source path `lib/`.
-  let sourcePath = join(SOURCE_ROOT, packageName === 'material' ? 'lib' : packageName);
-  let packagePath = join(DIST_ROOT, 'packages', packageName);
-  let releasePath = join(DIST_ROOT, 'releases', packageName);
+  const sourcePath = join(SOURCE_ROOT, packageName === 'material' ? 'lib' : packageName);
+  const packagePath = join(DIST_ROOT, 'packages', packageName);
+  const releasePath = join(DIST_ROOT, 'releases', packageName);
+
+  const umdOutput = join(releasePath, 'bundles');
+  const fesmOutput = join(releasePath, '@angular');
 
   inlinePackageMetadataFiles(packagePath);
 
+  // Copy primary entry point bundles
+  copyFiles(DIST_BUNDLES, `${packageName}.umd?(.min).js?(.map)`, umdOutput);
+  copyFiles(DIST_BUNDLES, `${packageName}?(.es5).js?(.map)`, fesmOutput);
+
+  // Copy secondary entry point bundles.
+  copyFiles(DIST_BUNDLES, `${packageName}/!(*.umd)?(.min).js?(.map)`, fesmOutput);
+  copyFiles(join(DIST_BUNDLES, packageName), `*.umd?(.min).js?(.map)`, umdOutput);
+
   copyFiles(packagePath, '**/*.+(d.ts|metadata.json)', join(releasePath, 'typings'));
-  copyFiles(DIST_BUNDLES, `${packageName}.umd?(.min).js?(.map)`, join(releasePath, 'bundles'));
-  copyFiles(DIST_BUNDLES, `${packageName}?(.es5).js?(.map)`, join(releasePath, '@angular'));
   copyFiles(PROJECT_ROOT, 'LICENSE', releasePath);
   copyFiles(SOURCE_ROOT, 'README.md', releasePath);
   copyFiles(sourcePath, 'package.json', releasePath);
 
+  // Build secondary entry points for the package.
+  glob('*/', {cwd: packagePath})
+    .map(entryPath => basename(entryPath))
+    .forEach(entryName => createSecondaryEntryPoint(packageName, entryName));
+
   updatePackageVersion(releasePath);
   createTypingFile(releasePath, packageName);
   createMetadataFile(releasePath, packageName);
-  addPureAnnotationCommentsToEs5Bundle(releasePath, packageName);
+}
+
+export async function buildPackage(entryFile: string, packagePath: string, packageName: string) {
+  let packageTasks = [buildPackageBundles(entryFile, packageName)];
+
+  glob(join(packagePath, '*/')).forEach(subPackagePath => {
+    const subPackageName = basename(subPackagePath);
+    const subPackageEntry = join(subPackagePath, 'index.js');
+
+    packageTasks.push(buildPackageBundles(subPackageEntry, subPackageName, packageName));
+  });
+
+
+  await Promise.all(packageTasks);
 }
 
 /** Builds the bundles for the specified package. */
-export async function buildPackageBundles(entryFile: string, packageName: string) {
-  let moduleName = `ng.material.${packageName}`;
+async function buildPackageBundles(entryFile: string, packageName: string, parentPackage = '') {
+  let moduleName = parentPackage ? `ng.${parentPackage}.${packageName}` : `ng.${packageName}`;
 
   // List of paths to the package bundles.
-  let fesm2015File = join(DIST_BUNDLES, `${packageName}.js`);
-  let fesm2014File = join(DIST_BUNDLES, `${packageName}.es5.js`);
-  let umdFile = join(DIST_BUNDLES, `${packageName}.umd.js`);
-  let umdMinFile = join(DIST_BUNDLES, `${packageName}.umd.min.js`);
+  let fesm2015File = join(DIST_BUNDLES, parentPackage, `${packageName}.js`);
+  let fesm2014File = join(DIST_BUNDLES, parentPackage, `${packageName}.es5.js`);
+  let umdFile = join(DIST_BUNDLES, parentPackage, `${packageName}.umd.js`);
+  let umdMinFile = join(DIST_BUNDLES, parentPackage, `${packageName}.umd.min.js`);
 
   // Build FESM-2015 bundle file.
   await createRollupBundle({
@@ -68,6 +95,9 @@ export async function buildPackageBundles(entryFile: string, packageName: string
     module: ModuleKind.ES2015,
     allowJs: true
   });
+
+  // Add pure annotation to ES5 bundles.
+  addPureAnnotationCommentsToEs5Bundle(fesm2014File);
 
   await remapSourcemap(fesm2014File);
 
@@ -161,10 +191,28 @@ function inlinePackageMetadataFiles(packagePath: string) {
 }
 
 /** Adds Uglify "@__PURE__" decorations to the generated ES5 bundle. */
-function addPureAnnotationCommentsToEs5Bundle(outputDir: string, entryName: string) {
-  const es5BundlePath = join(outputDir, '@angular', `${entryName}.es5.js`);
-  const originalContent = readFileSync(es5BundlePath, 'utf-8');
+function addPureAnnotationCommentsToEs5Bundle(inputFile: string) {
+  const originalContent = readFileSync(inputFile, 'utf-8');
   const annotatedContent = addPureAnnotations(originalContent);
 
-  writeFileSync(es5BundlePath, annotatedContent, 'utf-8');
+  writeFileSync(inputFile, annotatedContent, 'utf-8');
+}
+
+/** Creates a secondary entry point for a given package. */
+function createSecondaryEntryPoint(mainPackageName: string, secondaryPackageName: string) {
+  const releasePath = join(DIST_ROOT, 'releases', mainPackageName);
+  const entryPath = join(releasePath, secondaryPackageName);
+
+  const packageJson = {
+    name: `@angular/${mainPackageName}/${secondaryPackageName}`,
+    typings: `../typings/${secondaryPackageName}/index.d.ts`,
+    main: `../bundles/${secondaryPackageName}.umd.js`,
+    module: `../@angular/${mainPackageName}/${secondaryPackageName}.es5.js`,
+    es2015: `../@angular/${mainPackageName}/${secondaryPackageName}.js`
+  };
+
+  // Create the secondary entry point folder.
+  mkdirpSync(entryPath);
+
+  writeFileSync(join(entryPath, 'package.json'), JSON.stringify(packageJson, null, 2));
 }

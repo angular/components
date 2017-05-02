@@ -9,7 +9,7 @@ import {
   ElementRef,
   Renderer2,
 } from '@angular/core';
-import {coerceBooleanProperty} from '../core';
+import {coerceBooleanProperty} from '@angular/material/core';
 import {Observable} from 'rxjs/Observable';
 import {MdTab} from './tab';
 import 'rxjs/add/operator/map';

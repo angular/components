@@ -1,4 +1,4 @@
-import {MdError} from '../core/errors/error';
+import {MdError} from '@angular/material/core';
 
 /**
  * Exception thrown when attempting to change a select's `multiple` option after initialization.

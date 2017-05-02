@@ -5,7 +5,7 @@ import {
   PortalModule,
   A11yModule,
   MdCommonModule,
-} from '../core';
+} from '@angular/material/core';
 import {MdDialog} from './dialog';
 import {MdDialogContainer} from './dialog-container';
 import {

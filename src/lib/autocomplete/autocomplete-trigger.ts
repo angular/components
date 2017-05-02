@@ -13,17 +13,17 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DOCUMENT} from '@angular/platform-browser';
-import {Overlay, OverlayRef, OverlayState, TemplatePortal} from '../core';
 import {MdAutocomplete} from './autocomplete';
-import {PositionStrategy} from '../core/overlay/position/position-strategy';
-import {ConnectedPositionStrategy} from '../core/overlay/position/connected-position-strategy';
 import {Observable} from 'rxjs/Observable';
-import {MdOptionSelectionChange, MdOption} from '../core/option/option';
-import {ENTER, UP_ARROW, DOWN_ARROW} from '../core/keyboard/keycodes';
 import {Dir} from '../core/rtl/dir';
-import {MdInputContainer} from '../input/input-container';
-import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {Subscription} from 'rxjs/Subscription';
+
+import {MdInputContainer} from '@angular/material/input';
+import {
+  ScrollDispatcher, PositionStrategy, MdOption, MdOptionSelectionChange, ConnectedPositionStrategy,
+  ENTER, UP_ARROW, DOWN_ARROW, Overlay, OverlayRef, OverlayState, TemplatePortal
+} from '@angular/material/core';
+
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/filter';

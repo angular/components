@@ -1,4 +1,3 @@
-import {QueryList} from '@angular/core';
 import {ListKeyManager, CanDisable} from './list-key-manager';
 
 /**

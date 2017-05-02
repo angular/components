@@ -24,10 +24,10 @@ import {
   MdRipple,
   FocusOriginMonitor,
   FocusOrigin,
-} from '../core';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
-
+  coerceBooleanProperty,
+  _mixinDisabled,
+  _CanDisable
+} from '@angular/material/core';
 
 /**
  * Provider Expression that allows md-radio-group to register as a ControlValueAccessor. This
@@ -53,7 +53,7 @@ export class MdRadioChange {
 
 // Boilerplate for applying mixins to MdRadioGroup.
 export class MdRadioGroupBase { }
-export const _MdRadioGroupMixinBase = mixinDisabled(MdRadioGroupBase);
+export const _MdRadioGroupMixinBase = _mixinDisabled(MdRadioGroupBase);
 
 /**
  * A group of radio buttons. May contain one or more `<md-radio-button>` elements.
@@ -68,7 +68,7 @@ export const _MdRadioGroupMixinBase = mixinDisabled(MdRadioGroupBase);
   inputs: ['disabled'],
 })
 export class MdRadioGroup extends _MdRadioGroupMixinBase
-    implements AfterContentInit, ControlValueAccessor, CanDisable {
+    implements AfterContentInit, ControlValueAccessor, _CanDisable {
   /**
    * Selected value for group. Should equal the value of the selected radio button if there *is*
    * a corresponding radio button with a matching value. If there is *not* such a corresponding

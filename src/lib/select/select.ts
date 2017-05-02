@@ -17,20 +17,27 @@ import {
   Attribute,
   OnInit,
 } from '@angular/core';
-import {MdOption, MdOptionSelectionChange} from '../core/option/option';
-import {ENTER, SPACE, UP_ARROW, DOWN_ARROW} from '../core/keyboard/keycodes';
-import {FocusKeyManager} from '../core/a11y/focus-key-manager';
+import {
+  MdOption,
+  MdOptionSelectionChange,
+  ConnectedOverlayDirective,
+  ScrollDispatcher,
+  SelectionModel,
+  ENTER,
+  SPACE,
+  UP_ARROW,
+  DOWN_ARROW,
+  coerceBooleanProperty,
+  _FocusKeyManager,
+  _ViewportRuler,
+} from '@angular/material/core';
 import {Dir} from '../core/rtl/dir';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {transformPlaceholder, transformPanel, fadeInContent} from './select-animations';
 import {ControlValueAccessor, NgControl} from '@angular/forms';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
-import {ConnectedOverlayDirective} from '../core/overlay/overlay-directives';
-import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
-import {SelectionModel} from '../core/selection/selection';
-import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {MdSelectDynamicMultipleError, MdSelectNonArrayValueError} from './select-errors';
+
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/startWith';
 
@@ -177,7 +184,7 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
   _selectedValueWidth: number;
 
   /** Manages keyboard events for options in the panel. */
-  _keyManager: FocusKeyManager;
+  _keyManager: _FocusKeyManager;
 
   /** View -> model callback called when value changes */
   _onChange = (value: any) => {};
@@ -313,7 +320,7 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
   @Output() change: EventEmitter<MdSelectChange> = new EventEmitter<MdSelectChange>();
 
   constructor(private _element: ElementRef, private _renderer: Renderer2,
-              private _viewportRuler: ViewportRuler, private _changeDetectorRef: ChangeDetectorRef,
+              private _viewportRuler: _ViewportRuler, private _changeDetectorRef: ChangeDetectorRef,
               private _scrollDispatcher: ScrollDispatcher, @Optional() private _dir: Dir,
               @Self() @Optional() public _control: NgControl,
               @Attribute('tabindex') tabIndex: string) {
@@ -608,7 +615,7 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
 
   /** Sets up a key manager to listen to keyboard events on the overlay panel. */
   private _initKeyManager() {
-    this._keyManager = new FocusKeyManager(this.options);
+    this._keyManager = new _FocusKeyManager(this.options);
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close());
   }
 

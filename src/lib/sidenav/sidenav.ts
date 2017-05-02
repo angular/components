@@ -14,9 +14,10 @@ import {
   NgZone,
   OnDestroy,
 } from '@angular/core';
-import {Dir, MdError, coerceBooleanProperty} from '../core';
-import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
-import {ESCAPE} from '../core/keyboard/keycodes';
+import {
+  FocusTrapFactory, FocusTrap, ESCAPE, Dir, MdError, coerceBooleanProperty
+} from '@angular/material/core';
+
 import 'rxjs/add/operator/first';
 
 

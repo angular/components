@@ -5,7 +5,7 @@ import {
   UNIQUE_SELECTION_DISPATCHER_PROVIDER,
   MdCommonModule,
   FocusOriginMonitor,
-} from '../core';
+} from '@angular/material/core';
 
 
 @NgModule({

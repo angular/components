@@ -1,4 +1,4 @@
-import {OverlayRef} from '../core';
+import {OverlayRef} from '@angular/material/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {MdSnackBarContainer} from './snack-bar-container';

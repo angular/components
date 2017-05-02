@@ -14,12 +14,13 @@ import {
   OnDestroy,
   NgZone,
 } from '@angular/core';
-import {RIGHT_ARROW, LEFT_ARROW, ENTER, Dir, LayoutDirection} from '../core';
+import {
+  RIGHT_ARROW, LEFT_ARROW, ENTER, Dir, LayoutDirection, applyCssTransform
+} from '@angular/material/core';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdInkBar} from './ink-bar';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
-import {applyCssTransform} from '../core/style/apply-transform';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/auditTime';
 import 'rxjs/add/observable/of';

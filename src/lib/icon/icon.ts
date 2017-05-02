@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import {Http} from '@angular/http';
 import {DomSanitizer} from '@angular/platform-browser';
-import {MdError} from '../core';
+import {MdError} from '@angular/material/core';
 import {MdIconRegistry, MdIconNameNotFoundError} from './icon-registry';
 
 /** Exception thrown when an invalid icon name is passed to an md-icon component. */

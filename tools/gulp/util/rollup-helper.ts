@@ -1,9 +1,19 @@
-import {LICENSE_BANNER} from '../constants';
+import {LICENSE_BANNER, COMPONENTS_DIR} from '../constants';
+import {sync as glob} from 'glob';
+import {basename, dirname} from 'path';
 
 // There are no type definitions available for these imports.
 const rollup = require('rollup');
 
-const ROLLUP_GLOBALS = {
+/** Resolves all sub packages for the material package. */
+const materialSubPackages = glob('*/', {cwd: COMPONENTS_DIR})
+  .map(packagePath => basename(packagePath))
+  .reduce((map: any, packageName: string) => {
+    map[`@angular/material/${packageName}`] = `ng.material.${packageName}`;
+    return map;
+  }, {});
+
+export const ROLLUP_GLOBALS = {
   // Angular dependencies
   '@angular/animations': 'ng.animations',
   '@angular/core': 'ng.core',
@@ -17,6 +27,9 @@ const ROLLUP_GLOBALS = {
   // Local Angular packages inside of Material.
   '@angular/material': 'ng.material',
   '@angular/cdk': 'ng.cdk',
+
+  // Include all Material sub packages.
+  ...materialSubPackages,
 
   // Rxjs dependencies
   'rxjs/Subject': 'Rx',
@@ -39,6 +52,9 @@ const ROLLUP_GLOBALS = {
   'rxjs/Observable': 'Rx'
 };
 
+/** Modules that will be treated as external dependencies. Those won't be included in the bundle. */
+export const ROLLUP_EXTERNALS = Object.keys(ROLLUP_GLOBALS);
+
 export type BundleConfig = {
   entry: string;
   dest: string;
@@ -50,8 +66,9 @@ export type BundleConfig = {
 export function createRollupBundle(config: BundleConfig): Promise<any> {
   let bundleOptions = {
     context: 'this',
-    external: Object.keys(ROLLUP_GLOBALS),
-    entry: config.entry
+    entry: config.entry,
+    external: isExternalImport,
+    paths: rewriteConvertedImports
   };
 
   let writeOptions = {
@@ -66,4 +83,28 @@ export function createRollupBundle(config: BundleConfig): Promise<any> {
   };
 
   return rollup.rollup(bundleOptions).then((bundle: any) => bundle.write(writeOptions));
+}
+
+/**
+ * Function that will be used by rollup to detect imports that should be treated as external
+ * dependencies. This function also ignores the import shorthands from the NGC (tsickle)
+ **/
+function isExternalImport(moduleId: string): boolean {
+  return ROLLUP_EXTERNALS.indexOf(rewriteConvertedImports(moduleId)) !== -1;
+}
+
+/**
+ * When compiling with @angular/tsc-wrapped, shorthand imports will be converted into more
+ * explicit paths. This function rewrites all expanded imports to their original import.
+ * This is important, because when composing releases, the directories won't be present anymore.
+ */
+function rewriteConvertedImports(moduleId: string): string {
+  if (moduleId.endsWith('index')) {
+    const shorthandImport = dirname(moduleId);
+
+    // Only remove the path expansion if it is necessary for recognizing it as an external.
+    return ROLLUP_EXTERNALS.indexOf(shorthandImport) !== 1 ? shorthandImport : moduleId;
+  }
+
+  return moduleId;
 }

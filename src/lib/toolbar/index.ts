@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {MdCommonModule} from '../core';
+import {MdCommonModule} from '@angular/material/core';
 import {MdToolbar, MdToolbarRow} from './toolbar';
 
 

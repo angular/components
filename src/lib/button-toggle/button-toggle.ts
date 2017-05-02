@@ -17,8 +17,9 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
-import {UniqueSelectionDispatcher, coerceBooleanProperty, FocusOriginMonitor} from '../core';
+import {
+  UniqueSelectionDispatcher, coerceBooleanProperty, FocusOriginMonitor
+} from '@angular/material/core';
 
 /** Acceptable types for a button toggle. */
 export type ToggleType = 'checkbox' | 'radio';

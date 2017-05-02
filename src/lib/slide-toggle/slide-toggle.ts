@@ -19,10 +19,11 @@ import {
   FocusOriginMonitor,
   HammerInput,
   MdRipple,
-  RippleRef
-} from '../core';
+  RippleRef,
+  _mixinDisabled,
+  _CanDisable
+} from '@angular/material/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
 
 
 export const MD_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {
@@ -44,7 +45,7 @@ let nextId = 0;
 
 // Boilerplate for applying mixins to MdSlideToggle.
 export class MdSlideToggleBase { }
-export const _MdSlideToggleMixinBase = mixinDisabled(MdSlideToggleBase);
+export const _MdSlideToggleMixinBase = _mixinDisabled(MdSlideToggleBase);
 
 /** Represents a slidable "switch" toggle that can be moved between on and off. */
 @Component({
@@ -64,7 +65,7 @@ export const _MdSlideToggleMixinBase = mixinDisabled(MdSlideToggleBase);
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MdSlideToggle extends _MdSlideToggleMixinBase
-    implements OnDestroy, AfterContentInit, ControlValueAccessor, CanDisable {
+    implements OnDestroy, AfterContentInit, ControlValueAccessor, _CanDisable {
   private onChange = (_: any) => {};
   private onTouched = () => {};
 

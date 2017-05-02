@@ -1,9 +1,8 @@
-import {TemplatePortal} from '../core/portal/portal';
+import {TemplatePortal, coerceBooleanProperty} from '@angular/material/core';
 import {
   ViewContainerRef, Input, TemplateRef, ViewChild, OnInit, ContentChild,
   Component
 } from '@angular/core';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 
 import {MdTabLabel} from './tab-label';
 

@@ -14,11 +14,8 @@ import {MdGridTile} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
 import {TileStyler, FitTileStyler, RatioTileStyler, FixedTileStyler} from './tile-styler';
 import {MdGridListColsError} from './grid-list-errors';
-import {Dir} from '../core';
-import {
-  coerceToString,
-  coerceToNumber,
-} from './grid-list-measure';
+import {coerceToString, coerceToNumber} from './grid-list-measure';
+import {Dir} from '@angular/material/core';
 
 
 // TODO(kara): Conditional (responsive) column count / row size.
