@@ -5,13 +5,13 @@
 </p>
 <br>
 <p>
-  <input [mdDatepicker]="dp" [(ngModel)]="date">
+  <input [mdDatepicker]="dp" [(ngModel)]="date" aria-label="Departure date">
   <button [mdDatepickerToggle]="dp"></button>
   <md-datepicker #dp [touchUi]="touch"></md-datepicker>
 </p>
 <p>
   <md-input-container>
-    <input mdInput [mdDatepicker]="dp2" [(ngModel)]="date">
+    <input mdInput [mdDatepicker]="dp2" [(ngModel)]="date" aria-label="Departure date">
     <button mdSuffix [mdDatepickerToggle]="dp2"></button>
     <md-datepicker #dp2 [touchUi]="touch"></md-datepicker>
   </md-input-container>
@@ -19,7 +19,8 @@
 <p>
   <button [mdDatepickerToggle]="dp3"></button>
   <md-input-container>
-    <input mdInput [mdDatepicker]="dp3" [(ngModel)]="date" min="1/1/16" max="1/1/18">
+    <input mdInput [mdDatepicker]="dp3" [(ngModel)]="date" min="1/1/16" max="1/1/18"
+           aria-label="Departure date">
     <md-datepicker #dp3 [touchUi]="touch" startAt="1/1/17" [dateFilter]="dateFilter">
     </md-datepicker>
   </md-input-container>

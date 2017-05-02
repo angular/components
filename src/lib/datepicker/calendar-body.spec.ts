@@ -171,5 +171,5 @@ class CalendarBodyWithDisabledCells {
 
 
 function createCell(value: number) {
-  return new MdCalendarCell(value, `${value}`, true);
+  return new MdCalendarCell(value, `${value}`, `${value}-label`, true);
 }

@@ -8,6 +8,8 @@ export type MdDateFormats = {
   display: {
     dateInput: any,
     monthYearLabel: any,
+    dateA11yLabel: any,
+    monthYearA11yLabel: any,
   }
 };
 

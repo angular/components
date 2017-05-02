@@ -79,7 +79,7 @@ export class MdMonthView<D> implements AfterContentInit {
   _todayDate: number;
 
   /** The names of the weekdays. */
-  _weekdays: string[];
+  _weekdays: {long: string, narrow: string}[];
 
   constructor(@Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats) {
@@ -91,9 +91,13 @@ export class MdMonthView<D> implements AfterContentInit {
     }
 
     const firstDayOfWeek = this._dateAdapter.getFirstDayOfWeek();
-    const weekdays = this._dateAdapter.getDayOfWeekNames('narrow');
+    const narrowWeekdays = this._dateAdapter.getDayOfWeekNames('narrow');
+    const longWeekdays = this._dateAdapter.getDayOfWeekNames('long');
 
     // Rotate the labels for days of the week based on the configured first day of the week.
+    let weekdays = longWeekdays.map((long, i) => {
+      return {long, narrow: narrowWeekdays[i]};
+    });
     this._weekdays = weekdays.slice(firstDayOfWeek).concat(weekdays.slice(0, firstDayOfWeek));
 
     this._activeDate = this._dateAdapter.today();
@@ -140,12 +144,14 @@ export class MdMonthView<D> implements AfterContentInit {
         this._weeks.push([]);
         cell = 0;
       }
+      let date = this._dateAdapter.createDate(
+          this._dateAdapter.getYear(this.activeDate),
+          this._dateAdapter.getMonth(this.activeDate), i + 1);
       let enabled = !this.dateFilter ||
-          this.dateFilter(this._dateAdapter.createDate(
-              this._dateAdapter.getYear(this.activeDate),
-              this._dateAdapter.getMonth(this.activeDate), i + 1));
+          this.dateFilter(date);
+      let ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
       this._weeks[this._weeks.length - 1]
-          .push(new MdCalendarCell(i + 1, dateNames[i], enabled));
+          .push(new MdCalendarCell(i + 1, dateNames[i], ariaLabel, enabled));
     }
   }
 
