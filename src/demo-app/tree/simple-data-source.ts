@@ -13,33 +13,28 @@ import {
   IterableDiffer,
 } from '@angular/core';
 
+export class JsonNode {
+  key: string;
+  value: any;
+  children: any[];
+}
 
-export class PersonDataSource extends TreeDataSource<any> {
-  dottedLineLevels = new Map<UserData, number[]>();
-  _filteredData = new BehaviorSubject<UserData[]>([]);
-  get filteredData(): UserData[] { return this._filteredData.value; }
+export class JsonDataSource extends TreeDataSource<any> {
+  dottedLineLevels = new Map<any, number[]>();
 
   _renderedData: any[] = [];
 
-  _filter = new BehaviorSubject<string>('');
-  set filter(filter: string) { this._filter.next(filter); }
-  get filter(): string { return this._filter.value; }
+  _filteredData = new BehaviorSubject<any>([]);
+  get filteredData(): any { return this._filteredData.value; }
 
 
-  constructor(private peopleDatabase: PeopleDatabase) {
-    super();
-
-    // When the base   data or filter changes, fetch a new set of filtered data.
-    const baseFilteredDataChanges = [this.peopleDatabase.baseDataChange, this._filter];
-    Observable.combineLatest(baseFilteredDataChanges)
-      .mergeMap(() => this.peopleDatabase.getData(this.filter))
-      .subscribe((data: UserData[]) => {
-        this._filteredData.next(data);
-      });
+  set data(value: any) {
+    let tree = this.buildJsonTree(value);
+    this._filteredData.next(tree);
   }
 
-  get data(): Observable<UserData[]> {
-    return this._filteredData;
+  constructor() {
+    super();
   }
 
   connectTree(viewChange: Observable<MdTreeViewData>): Observable<UserData[]> {
@@ -61,21 +56,11 @@ export class PersonDataSource extends TreeDataSource<any> {
     });
   }
 
-  getChildren(node: UserData): UserData[] {
-    if (!!node.children && node.children.length == 0) {
-      setTimeout(() => {
-        this.peopleDatabase.generateMoreNodes(node);
-      }, 1000);
-
-    }
+  getChildren(node: any): any[] {
     return node.children;
   }
 
-  refresh() {
-    this.peopleDatabase.baseDataChange.next(null);
-  }
-
-  _flattenNode(node: UserData, level: number, flatNodes: UserData[]) {
+  _flattenNode(node: any, level: number, flatNodes: any[]) {
     let children = this.getChildren(node);
     let selected = this.expansionModel.isSelected(node);
     this.levelMap.set(node, level);
@@ -98,5 +83,27 @@ export class PersonDataSource extends TreeDataSource<any> {
 
       });
     }
+  }
+
+  childrenMap: Map<string, string[]> = new Map<string, string[]>();
+
+  buildJsonTree(value: any) {
+    let data: any[] = [];
+    for (let k in value) {
+      let v = value[k];
+      let node = new JsonNode();
+      node.key = `${k}`;
+      if (v === null || v === undefined) {
+        // no action
+      } else if (typeof v === 'object') {
+        node.children = this.buildJsonTree(v);
+        console.log(`json key value ${k}: ${v} with children ${node.children}`)
+      } else {
+        console.log(`json key value ${k}: ${v}`)
+        node.value = v;
+      }
+      data.push(node);
+    }
+    return data;
   }
 }

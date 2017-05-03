@@ -1,27 +1,33 @@
 import {Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
-import {PersonDataSource} from './data-source'
+import {JsonDataSource} from './simple-data-source'
 import {SelectionModel, MdTree} from '@angular/material';
 
 @Component({
   moduleId: module.id,
-  selector: 'tree-demo',
-  templateUrl: 'tree-demo.html',
-  styleUrls: ['tree-demo.css'],
+  selector: 'simple-tree-demo',
+  templateUrl: 'simple-tree-demo.html',
+  styleUrls: ['simple-tree-demo.css'],
   changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
-export class TreeDemo {
+export class SimpleTreeDemo {
+  data: string = '';
+
+  submit() {
+    try {
+      var obj = JSON.parse(this.data);
+      this.dataSource.data = obj;
+    } catch (e) {
+      console.log(e);
+    };
+  }
   selection = new SelectionModel<UserData>(true, []);
-  dataSource: PersonDataSource;
+  dataSource: JsonDataSource = new JsonDataSource();
 
   @ViewChild(MdTree) tree: MdTree;
 
-  constructor(private peopleDatabase: PeopleDatabase) { }
+  constructor() { }
 
-  ngOnInit() {
-    this.dataSource = new PersonDataSource(this.peopleDatabase);
-
-  }
 
   expandIncludeChildren: boolean = true;
 
@@ -35,10 +41,6 @@ export class TreeDemo {
 
   toggleExpand(node: UserData) {
     this.dataSource.expansionModel.toggle(node);
-  }
-
-  refreshData() {
-    this.dataSource.refresh();
   }
 
   gotoParent(node: UserData) {

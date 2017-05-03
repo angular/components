@@ -14,6 +14,7 @@ export abstract class TreeDataSource<T> {
   indexMap: Map<T, number> = new Map<T, number>();
   expandChange = new BehaviorSubject<T[]>([]);
 
+
   abstract connectTree(viewChanged: Observable<MdTreeViewData>): Observable<T[]>;
 
   abstract getChildren(node: T): T[];
@@ -39,7 +40,7 @@ export abstract class TreeDataSource<T> {
       let [dataNodes, selectionChange] = result;
       let flatNodes = [];
       dataNodes.forEach((node) => {
-        this._flattenNode(node, 1, flatNodes);
+        this._flattenNode(node, 0, flatNodes);
       });
       return flatNodes;
     });
@@ -55,9 +56,9 @@ export abstract class TreeDataSource<T> {
 
     if (!!children && selected) {
 
-      children.forEach((child) => {
+      children.forEach((child, index) => {
         this.parentMap.set(child, node);
-        this._flattenNode(child, level + 1, flatNodes)
+        this._flattenNode(child, level + 1, flatNodes);
       });
     }
   }

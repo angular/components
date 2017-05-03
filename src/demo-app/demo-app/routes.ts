@@ -37,6 +37,7 @@ import {DataTableDemo} from '../data-table/data-table-demo';
 import {TypographyDemo} from '../typography/typography-demo';
 import {ExpansionDemo} from '../expansion/expansion-demo';
 import {TreeDemo} from '../tree/tree-demo';
+import {SimpleTreeDemo} from '../tree/simple-tree-demo';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: Home},
@@ -71,6 +72,7 @@ export const DEMO_APP_ROUTES: Routes = [
   {path: 'dialog', component: DialogDemo},
   {path: 'tooltip', component: TooltipDemo},
   {path: 'tree', component: TreeDemo},
+  {path: 'simple-tree', component: SimpleTreeDemo},
   {path: 'snack-bar', component: SnackBarDemo},
   {path: 'platform', component: PlatformDemo},
   {path: 'style', component: StyleDemo},

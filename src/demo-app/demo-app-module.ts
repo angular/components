@@ -44,6 +44,7 @@ import {TypographyDemo} from './typography/typography-demo';
 import {ExpansionDemo} from './expansion/expansion-demo';
 import {TreeDemo} from './tree/tree-demo';
 import {TreeDemo, TreeNodeKey} from './tree/tree-demo';
+import {SimpleTreeDemo} from './tree/simple-tree-demo';
 import {
   CdkDataTableModule,
   FullscreenOverlayContainer,
@@ -177,6 +178,7 @@ export class DemoMaterialModule {}
     TooltipDemo,
     TabsDemo,
     SunnyTabContent,
+    SimpleTreeDemo,
     RainyTabContent,
     FoggyTabContent,
     PlatformDemo,

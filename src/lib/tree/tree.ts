@@ -40,6 +40,9 @@ export class MdNodeDef {
 
 @Directive({
   selector: 'md-node',
+  host: {
+    'role': 'treeitem',
+  }
 })
 export class MdNode  implements Focusable {
   constructor(private elementRef: ElementRef,
@@ -66,6 +69,54 @@ export class MdNodePlaceholder {
   constructor(public viewContainer: ViewContainerRef) { }
 }
 
+// @Component({
+//   selector: 'md-tree-dotted-lines',
+//   template: '<div *ngFor=l'
+// })
+// export class MdNodeDottedLines {
+//   @Input('node') node: any;
+//   @Input('level') level: number;
+//
+//   constructor(@Inject(forwardRef(() => MdTree)) private tree: MdTree) {}
+//
+//   get levels() {
+//     return this.tree.dataSource.dottedLineLevels.get(this.node);
+//   }
+// }
+
+@Directive({selector: '[mdNodePadding]',
+  host: {
+    '[style.padding-left]': 'paddingIndent',
+  }})
+export class MdNodePadding {
+  @Input('mdNodePadding') level: number;
+  @Input('mdNodePaddingIndent') indent: number = 28;
+
+  get paddingIndent() {
+    return `${this.level * this.indent}px`;
+  }
+}
+
+@Directive({
+  selector: '[mdNodeExpandTrigger]',
+  host: {
+    'class': 'mat-node-trigger',
+    '(click)': 'handleClick($event)',
+  },
+})
+export class MdNodeExpandTrigger {
+  @Input('mdNodeExpandTrigger') node: any;
+  @Input('mdNodeExpandTriggerChildren') includeChildren: boolean = false;
+
+  constructor(@Inject(forwardRef(() => MdTree)) private tree: MdTree) {
+    console.log(`construct md node expand trigger ${this.node} ${this.includeChildren}`);
+  }
+
+  handleClick(event) {
+    this.tree.toggleExpand(this.node, this.includeChildren);
+  }
+}
+
 @Component({
   selector: 'md-tree',
   styleUrls: ['./tree.css'],
@@ -74,6 +125,7 @@ export class MdNodePlaceholder {
     <ng-template #emptyNode><div class="mat-placeholder"></div></ng-template>
   `,
   host: {
+    'role': 'tree',
     'class': 'mat-tree',
     '(keydown)': 'handleKeydown($event)',
   },
@@ -131,6 +183,14 @@ export class MdTree {
     };
 
     this.viewChange.next(view);
+  }
+
+  expandable(node: any) {
+    return !!this.dataSource.getChildren(node);
+  }
+
+  expanded(node: any) {
+    return this.dataSource.expansionModel.isSelected(node);
   }
 
 
@@ -216,10 +276,6 @@ export class MdTree {
     this.scrollToIndex(index);
   }
 
-  toggleExpand(node: any) {
-    this.dataSource.expansionModel.toggle(node);
-  }
-
   getNodeDefForItem(item: any) {
     // proof-of-concept: only supporting one row definition
     return this.nodeDefinitions.first;
@@ -238,6 +294,15 @@ export class MdTree {
       }
     } else {
       this.dataNodes.forEach((node) => this.toggleAll(expand, node, includingChildren));
+    }
+  }
+
+  toggleExpand(node: any, includingChildren: boolean = true) {
+    this.dataSource.expansionModel.toggle(node);
+    let expand = this.dataSource.expansionModel.isSelected(node);
+    let children = this.dataSource.getChildren(node);
+    if (includingChildren && children) {
+      children.forEach((child) => this.toggleAll(expand, child, includingChildren));
     }
   }
 }
