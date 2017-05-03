@@ -51,9 +51,13 @@ open to the month or year containing today's date. This behavior can be overridd
 `startAt` property of `md-datepicker`. In this case the calendar will open to the month or year
 containing the `startAt` date. 
 
+```ts
+startDate = new Date(1990, 0, 1);
+```
+
 ```html
 ...
-<md-datepicker startView="year" startAt="1/1/1990"></md-datepicker>
+<md-datepicker startView="year" [startAt]="startDate"></md-datepicker>
 ```
 
 ### Preventing selection of specific dates
@@ -73,10 +77,12 @@ calendar past that point.
 
 ```ts
 myFilter = (d: Date) => d.getFullYear() > 2005 
+minDate = new Date(2000, 0, 1);
+maxDate = new Date(2020, 11, 31);
 ```
 
 ```html
-<input [mdDatepicker]="d" min="1/1/2000" max="12/31/2020">
+<input [mdDatepicker]="d" [min]="minDate" [max]="maxDate">
 <md-datepicker #d [dateFilter]="myFilter"></md-datepicker>
 ```
 
