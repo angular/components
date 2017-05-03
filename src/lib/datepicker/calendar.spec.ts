@@ -586,28 +586,35 @@ describe('MdCalendar', () => {
 
 
 @Component({
-  template: `<md-calendar startAt="1/31/2017" [(selected)]="selected"></md-calendar>`
+  template: `<md-calendar [startAt]="startDate" [(selected)]="selected"></md-calendar>`
 })
 class StandardCalendar {
   selected: Date = null;
-}
-
-
-@Component({
-  template: `<md-calendar [startAt]="startAt" minDate="1/1/2016" maxDate="1/1/2018"></md-calendar>`
-})
-class CalendarWithMinMax {
-  startAt: Date;
+  startDate = new Date(2017, JAN, 31);
 }
 
 
 @Component({
   template: `
-    <md-calendar startAt="1/1/2017" [(selected)]="selected" [dateFilter]="dateFilter"></md-calendar>
+    <md-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"></md-calendar>
+  `
+})
+class CalendarWithMinMax {
+  startAt: Date;
+  minDate = new Date(2016, JAN, 1);
+  maxDate = new Date(2018, JAN, 1);
+}
+
+
+@Component({
+  template: `
+    <md-calendar [startAt]="startDate" [(selected)]="selected" [dateFilter]="dateFilter">
+    </md-calendar>
   `
 })
 class CalendarWithDateFilter {
   selected: Date = null;
+  startDate = new Date(2017, JAN, 1);
 
   dateFilter (date: Date) {
     return date.getDate() % 2 == 0 && date.getMonth() != NOV;
