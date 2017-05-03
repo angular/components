@@ -8,9 +8,12 @@ import {Component} from '@angular/core';
   styleUrls: ['datepicker-demo.css'],
 })
 export class DatepickerDemo {
+  touch: boolean;
+  filterOdd: boolean;
+  yearView: boolean;
+  minDate: Date;
+  maxDate: Date;
+  startAt: Date;
   date: Date;
-  touch = false;
-  dateFilter =
-      (date: Date) => !this._blacklistedMonths.has(date.getMonth()) && date.getDate() % 2 == 0
-  private _blacklistedMonths = new Set([2, 3]);
+  dateFilter = (date: Date) => date.getMonth() % 2 == 0 && date.getDate() % 2 == 0;
 }
