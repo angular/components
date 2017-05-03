@@ -37,8 +37,7 @@ export class MdMonthView<D> implements AfterContentInit {
   get activeDate(): D { return this._activeDate; }
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
-    this._activeDate = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput) ||
-        this._dateAdapter.today();
+    this._activeDate = value || this._dateAdapter.today();
     if (!this._hasSameMonthAndYear(oldActiveDate, this._activeDate)) {
       this._init();
     }
@@ -49,7 +48,7 @@ export class MdMonthView<D> implements AfterContentInit {
   @Input()
   get selected(): D { return this._selected; }
   set selected(value: D) {
-    this._selected = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
+    this._selected = value;
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
   }
   private _selected: D;

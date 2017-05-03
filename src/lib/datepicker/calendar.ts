@@ -45,39 +45,19 @@ import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
 })
 export class MdCalendar<D> implements AfterContentInit {
   /** A date representing the period (month or year) to start the calendar in. */
-  @Input()
-  get startAt(): D { return this._startAt; }
-  set startAt(value: D) {
-    this._startAt = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-  }
-  private _startAt: D;
+  @Input() startAt: D;
 
   /** Whether the calendar should be started in month or year view. */
   @Input() startView: 'month' | 'year' = 'month';
 
   /** The currently selected date. */
-  @Input()
-  get selected(): D { return this._selected; }
-  set selected(value: D) {
-    this._selected = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-  }
-  private _selected: D;
+  @Input() selected: D;
 
   /** The minimum selectable date. */
-  @Input()
-  get minDate(): D { return this._minDate; }
-  set minDate(date: D) {
-    this._minDate = this._dateAdapter.parse(date, this._dateFormats.parse.dateInput);
-  }
-  private _minDate: D;
+  @Input() minDate: D;
 
   /** The maximum selectable date. */
-  @Input()
-  get maxDate(): D { return this._maxDate; }
-  set maxDate(date: D) {
-    this._maxDate = this._dateAdapter.parse(date, this._dateFormats.parse.dateInput);
-  }
-  private _maxDate: D;
+  @Input() maxDate: D;
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;

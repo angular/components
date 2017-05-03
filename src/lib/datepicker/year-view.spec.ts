@@ -118,9 +118,10 @@ class StandardYearView {
 
 
 @Component({
-  template: `<md-year-view date="1/1/2017" [dateFilter]="dateFilter"></md-year-view>`
+  template: `<md-year-view [activeDate]="activeDate" [dateFilter]="dateFilter"></md-year-view>`
 })
 class YearViewWithDateFilter {
+  activeDate = new Date(2017, JAN, 1);
   dateFilter(date: Date) {
     if (date.getMonth() == JAN) {
       return date.getDate() == 10;

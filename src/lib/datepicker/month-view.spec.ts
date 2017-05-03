@@ -117,9 +117,10 @@ class StandardMonthView {
 
 
 @Component({
-  template: `<md-month-view activeDate="1/1/2017" [dateFilter]="dateFilter"></md-month-view>`
+  template: `<md-month-view [activeDate]="activeDate" [dateFilter]="dateFilter"></md-month-view>`
 })
 class MonthViewWithDateFilter {
+  activeDate = new Date(2017, JAN, 1);
   dateFilter(date: Date) {
     return date.getDate() % 2 == 0;
   }
