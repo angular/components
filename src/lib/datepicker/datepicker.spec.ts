@@ -466,12 +466,13 @@ describe('MdDatepicker', () => {
 
 @Component({
   template: `
-    <input [mdDatepicker]="d" value="1/1/2020">
+    <input [mdDatepicker]="d" [value]="date">
     <md-datepicker #d [touchUi]="touch"></md-datepicker>
   `,
 })
 class StandardDatepicker {
   touch = false;
+  date = new Date(2020, JAN, 1);
   @ViewChild('d') datepicker: MdDatepicker<Date>;
   @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput<Date>;
 }
@@ -495,11 +496,13 @@ class NoInputDatepicker {
 
 @Component({
   template: `
-    <input [mdDatepicker]="d" value="1/1/2020">
-    <md-datepicker #d [startAt]="'1/1/2010'"></md-datepicker>
+    <input [mdDatepicker]="d" [value]="date">
+    <md-datepicker #d [startAt]="startDate"></md-datepicker>
   `,
 })
 class DatepickerWithStartAt {
+  date = new Date(2020, JAN, 1);
+  startDate = new Date(2010, JAN, 1);
   @ViewChild('d') datepicker: MdDatepicker<Date>;
 }
 
@@ -555,10 +558,12 @@ class InputContainerDatepicker {
 
 @Component({
   template: `
-    <input [mdDatepicker]="d" min="1/1/2010" max="1/1/2020">
+    <input [mdDatepicker]="d" [min]="minDate" [max]="maxDate">
     <md-datepicker #d></md-datepicker>
   `,
 })
 class DatepickerWithMinAndMax {
+  minDate = new Date(2010, JAN, 1);
+  maxDate = new Date(2020, JAN, 1);
   @ViewChild('d') datepicker: MdDatepicker<Date>;
 }

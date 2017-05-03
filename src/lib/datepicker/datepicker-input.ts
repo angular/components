@@ -73,20 +73,10 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   }
 
   /** The minimum valid date. */
-  @Input()
-  get min(): D { return this._min; }
-  set min(value: D) {
-    this._min = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-  }
-  private _min: D;
+  @Input() min: D;
 
   /** The maximum valid date. */
-  @Input()
-  get max(): D { return this._max; }
-  set max(value: D) {
-    this._max = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-  }
-  private _max: D;
+  @Input() max: D;
 
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D>();
