@@ -18,7 +18,7 @@ import {
   NG_VALUE_ACCESSOR,
   ValidationErrors,
   Validator,
-  ValidatorFn
+  ValidatorFn, Validators
 } from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import {MdInputContainer} from '../input/input-container';
@@ -40,14 +40,6 @@ export const MD_DATEPICKER_VALIDATORS: any = {
   useExisting: forwardRef(() => MdDatepickerInput),
   multi: true
 };
-
-
-/** Validator that requires dates to match a filter function. */
-export function mdDatepickerFilterValidator<D>(filter: (date: D | null) => boolean): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    return !filter(control.value) ? {'mdDatepickerFilter': true} : null;
-  }
-}
 
 
 /** Directive used to connect an input to a MdDatepicker. */
@@ -81,10 +73,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   @Input() set mdDatepickerFilter(filter: (date: D | null) => boolean) {
     this._dateFilter = filter;
-    this._validator = filter ? mdDatepickerFilterValidator(filter) : null;
-    if (this._validatorOnChange) {
-      this._validatorOnChange();
-    }
+    this._validatorOnChange();
   }
   _dateFilter: (date: D | null) => boolean;
 
@@ -109,10 +98,22 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   }
 
   /** The minimum valid date. */
-  @Input() min: D;
+  @Input()
+  get min(): D { return this._min; }
+  set min(value: D) {
+    this._min = value;
+    this._validatorOnChange();
+  }
+  private _min: D;
 
   /** The maximum valid date. */
-  @Input() max: D;
+  @Input()
+  get max(): D { return this._max; }
+  set max(value: D) {
+    this._max = value;
+    this._validatorOnChange();
+  }
+  private _max: D;
 
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D>();
@@ -121,11 +122,27 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   private _cvaOnChange = (value: any) => {};
 
-  private _validator: ValidatorFn;
-
-  private _validatorOnChange: () => void;
+  private _validatorOnChange = () => {};
 
   private _datepickerSubscription: Subscription;
+
+  /** The form control validator for this input. */
+  private _validator: ValidatorFn = Validators.compose([
+    (control: AbstractControl): ValidationErrors | null => {
+      return (!this.min || !control.value ||
+          this._dateAdapter.compareDate(this.min, control.value) < 0) ?
+          null : {'mdDatepickerMin': {'min': this.min, 'actual': control.value}};
+    },
+    (control: AbstractControl): ValidationErrors | null => {
+      return (!this.max || !control.value ||
+          this._dateAdapter.compareDate(this.max, control.value) > 0) ?
+          null : {'mdDatepickerMax': {'max': this.max, 'actual': control.value}};
+    },
+    (control: AbstractControl): ValidationErrors | null => {
+      return !this._dateFilter || !control.value || this._dateFilter(control.value) ?
+          null : {'mdDatepickerFilter': true};
+    },
+  ]);
 
   constructor(
       private _elementRef: ElementRef,

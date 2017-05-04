@@ -17,7 +17,7 @@ const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SE
       NOV = 10, DEC = 11;
 
 
-fdescribe('MdDatepicker', () => {
+describe('MdDatepicker', () => {
   describe('with MdNativeDateModule', () => {
     beforeEach(async(() => {
       TestBed.configureTestingModule({
@@ -622,5 +622,5 @@ class DatepickerWithMinAndMax {
 class DatepickerWithFilterAndValidation {
   @ViewChild('d') datepicker: MdDatepicker<Date>;
   date: Date;
-  filter = (date: Date) => !date || date.getDate() != 1;
+  filter = (date: Date) => date.getDate() != 1;
 }
