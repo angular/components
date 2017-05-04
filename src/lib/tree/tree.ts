@@ -15,7 +15,7 @@ import {
   Inject,
   ViewEncapsulation,
   ElementRef,
-  Renderer,
+  Renderer2,
   IterableChangeRecord
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
@@ -46,16 +46,16 @@ export class MdNodeDef {
 })
 export class MdNode  implements Focusable {
   constructor(private elementRef: ElementRef,
-              private renderer: Renderer,
+              private renderer: Renderer2,
               @Inject(forwardRef(() => MdTree)) private tree: MdTree,
               private _focusOriginMonitor: FocusOriginMonitor) {
-    this.renderer.setElementClass(elementRef.nativeElement, 'mat-node', true);
+    this.renderer.addClass(elementRef.nativeElement, 'mat-node');
     this._focusOriginMonitor.monitor(this.elementRef.nativeElement, this.renderer, true);
   }
 
   /** Focuses the menu item. */
   focus(): void {
-    this.renderer.invokeElementMethod(this._getHostElement(), 'focus');
+    this._getHostElement().focus();
   }
 
   /** Returns the host DOM element. */
