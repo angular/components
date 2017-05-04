@@ -3,17 +3,19 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Directive,
   ElementRef,
   EventEmitter,
   forwardRef,
   Input,
   OnDestroy,
   Output,
+  Provider,
   Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 import {FocusOrigin, FocusOriginMonitor, MdRipple, RippleRef} from '../core';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
@@ -30,6 +32,12 @@ let nextId = 0;
 export const MD_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MdCheckbox),
+  multi: true
+};
+
+export const MD_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
+  provide: NG_VALIDATORS,
+  useExisting: forwardRef(() => MdCheckboxRequiredValidator),
   multi: true
 };
 
@@ -60,6 +68,14 @@ export class MdCheckboxChange {
 export class MdCheckboxBase { }
 export const _MdCheckboxMixinBase = mixinDisabled(MdCheckboxBase);
 
+
+@Directive({
+  selector:
+    'md-checkbox[required][formControlName],md-checkbox[required][formControl],md-checkbox[required][ngModel]',
+  providers: [MD_CHECKBOX_REQUIRED_VALIDATOR],
+  host: {'[attr.required]': 'required ? "" : null'}
+})
+export class MdCheckboxRequiredValidator extends CheckboxRequiredValidator {}
 
 /**
  * A material design checkbox component. Supports all of the functionality of an HTML5 checkbox,
