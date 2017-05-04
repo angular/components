@@ -93,7 +93,9 @@ function inlineTemplate(content, urlResolver) {
     const templateContent = fs.readFileSync(templateFile, 'utf-8');
     const shortenedTemplate = templateContent
       .replace(/([\n\r]\s*)+/gm, ' ')
-      .replace(/"/g, '\\"');
+      .replace(/>\s</gm, '><')
+      .replace(/"/g, '\\"')
+      .trim();
     return `template: "${shortenedTemplate}"`;
   });
 }
