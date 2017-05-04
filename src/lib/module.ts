@@ -8,6 +8,7 @@ import {
   OverlayModule,
   A11yModule,
   MdCommonModule,
+  CdkDataTableModule,
 } from './core/index';
 
 import {MdButtonToggleModule} from './button-toggle/index';
@@ -71,6 +72,7 @@ const MATERIAL_MODULES = [
   PlatformModule,
   MdCommonModule,
   ObserveContentModule,
+  CdkDataTableModule
 ];
 
 /** @deprecated */

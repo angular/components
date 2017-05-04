@@ -8,6 +8,7 @@ import {OverlayModule} from './overlay/overlay-directives';
 import {A11yModule} from './a11y/index';
 import {MdSelectionModule} from './selection/index';
 import {MdRippleModule} from './ripple/index';
+import {CdkDataTableModule} from './data-table/index';
 
 
 // RTL
@@ -100,6 +101,9 @@ export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibi
 // Common material module
 export {MdCommonModule} from './common-behaviors/common-module';
 
+// Data Table
+export * from './data-table/index';
+
 // Datetime
 export * from './datetime/index';
 
@@ -114,6 +118,7 @@ export * from './datetime/index';
     A11yModule,
     MdOptionModule,
     MdSelectionModule,
+    CdkDataTableModule
   ],
   exports: [
     MdLineModule,
@@ -125,6 +130,7 @@ export * from './datetime/index';
     A11yModule,
     MdOptionModule,
     MdSelectionModule,
+    CdkDataTableModule
   ],
 })
 export class MdCoreModule {}
