@@ -122,6 +122,7 @@ import {TableHeaderDemo} from './data-table/table-header-demo';
 })
 export class DemoMaterialModule {}
 
+import {SimpleTreeNode} from './tree/simple-tree-node';
 
 @NgModule({
   imports: [
@@ -185,6 +186,7 @@ export class DemoMaterialModule {}
     TypographyDemo,
     ExpansionDemo,
     TreeDemo,
+    SimpleTreeNode,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},

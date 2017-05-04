@@ -2,6 +2,7 @@ import {Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, View
 import {UserData, PeopleDatabase} from './person-database';
 import {JsonDataSource} from './simple-data-source'
 import {SelectionModel, MdTree} from '@angular/material';
+import {SimpleTreeNode} from './simple-tree-node';
 
 @Component({
   moduleId: module.id,
@@ -12,6 +13,16 @@ import {SelectionModel, MdTree} from '@angular/material';
 })
 export class SimpleTreeDemo {
   data: string = '';
+  _flat: boolean = true;
+  @Input()
+  set flat(value: boolean) {
+    this._flat = value;
+    this.dataSource.flat = value;
+
+  }
+  get flat() {
+    return this._flat;
+  }
 
   submit() {
     try {
@@ -65,5 +76,9 @@ export class SimpleTreeDemo {
 
   createArray(level: number) {
     return new Array(level);
+  }
+
+  getChildren(node: any) {
+    return node.children;
   }
 }

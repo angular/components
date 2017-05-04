@@ -2,6 +2,7 @@
 <md-input-container>
   <textarea mdInput [(ngModel)]="data"></textarea>
 </md-input-container>
+<md-slide-toggle [(ngModel)]="flat">Flat: {{flat}}</md-slide-toggle>
 <button md-button (click)="submit()">Submit</button>
 
 <div class="tree-container mat-elevation-z4">
@@ -12,23 +13,15 @@
 
   <md-tree #tree [dataSource]="dataSource" [style.display]="!!dataSource.filteredData.length ? '' : 'none'">
     <!-- Row templates. The columns used are set at the row template level -->
-    <md-node *mdNodeDef="let node let level=level let expandable=expandable"
-             [class.selected]="node ? selection.isSelected(node) : false"
-             [class.data-row]="!!node"
-    >
-      <div class="row">
-        <!--[mdNodePadding]="level" [mdNodePaddingIndent]="45"-->
-        <div class="space">
-          <div *ngFor="let a of createArray(level); let index = index" [class.special]="dataSource.dottedLineLevels.get(node).includes(index)"></div>
-        </div>
-        <span [mdNodeExpandTrigger]="node" [mdNodeExpandTriggerChildren]="expandIncludeChildren" >
-          <md-icon *ngIf="expandable">{{ expansionModel.isSelected(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</md-icon>
-        </span>
-        <md-checkbox (click)="$event.stopPropagation()"
-                     (change)="$event ? selection.toggle(node) : null"
-                     [checked]="selection.isSelected(node)">
-          {{node.key}}<span *ngIf="node.value">: {{node.value}}</span> </md-checkbox>
-      </div>
+    <md-node *mdNodeDef="let node let level=level let expandable=expandable">
+        <simple-tree-node [node]="node"
+                          [level]="level"
+                          [expandable]="expandable"
+                          [expandIncludeChildren]="expandIncludeChildren"
+                          [dataSource]="dataSource"
+                          [flat]="flat"
+                          [selection]="selection" class="simple-tree-node">
+        </simple-tree-node>
     </md-node>
   </md-tree>
 </div>
@@ -37,3 +30,4 @@ Selected: <span *ngFor="let node of selection.selected">{{node.key}}: {{node.val
 
 <button md-button (click)="expandAll()">Expand All</button>
 <button md-button (click)="collapseAll()">Collapse All</button>
+

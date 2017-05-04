@@ -21,6 +21,7 @@ export class JsonNode {
 
 export class JsonDataSource extends TreeDataSource<any> {
   dottedLineLevels = new Map<any, number[]>();
+  flat: boolean = false;
 
   _renderedData: any[] = [];
 
@@ -41,7 +42,7 @@ export class JsonDataSource extends TreeDataSource<any> {
 
     return Observable.combineLatest([viewChange, this.flattenNodes(this._filteredData)]).map((result: any[]) => {
       const [view, displayData] = result;
-
+      console.log(displayData);
       // Set the rendered rows length to the virtual page size. Fill in the data provided
       // from the index start until the end index or pagination size, whichever is smaller.
       this._renderedData.length = displayData.length;
@@ -60,6 +61,16 @@ export class JsonDataSource extends TreeDataSource<any> {
     return node.children;
   }
 
+  flattenNodes(structuredData: Observable<any[]>): Observable<any[]> {
+    return Observable.combineLatest(structuredData, this.expandChange).map((result: any[]) => {
+      let [dataNodes, selectionChange] = result;
+      let flatNodes: any[] = [];
+      dataNodes.forEach((node: any) => {
+        this._flattenNode(node, 0, flatNodes);
+      });
+      return this.flat ? flatNodes : dataNodes;
+    });
+  }
   _flattenNode(node: any, level: number, flatNodes: any[]) {
     let children = this.getChildren(node);
     let selected = this.expansionModel.isSelected(node);
