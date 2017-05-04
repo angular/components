@@ -1,0 +1,88 @@
+/* Structure */
+.table-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 800px;
+
+  // Table fills in the remaining area with a scroll
+  .mat-table {
+    flex: 1 1 auto;
+    overflow: auto;
+  }
+}
+
+
+/* Material Styles */
+.mat-table {
+  display: block;
+  background: white;
+}
+
+.mat-row, .mat-header {
+  display: flex;
+  border-bottom: 1px solid #CCC;
+  align-items: center;
+  height: 48px;
+  padding: 0 8px;
+}
+
+.mat-row-cell, .mat-header-cell {
+  width: 150px;
+  padding: 10px;
+  position: relative;
+  flex: 1;
+}
+
+.mat-header-cell {
+  font-size: 12px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, .54);
+}
+
+.mat-row-cell {
+  font-size: 13px;
+  color: rgba(0, 0, 0, .87);
+}
+
+
+/* Column and cell styles */
+.mat-column-userId {
+  max-width: 32px;
+}
+
+.mat-column-userName {
+  max-width: 80px;
+}
+
+.mat-column-progress {
+  &.mat-row-cell {
+    display: flex;
+    position: relative;
+
+    .progress-stat {
+      width: 32px;
+      padding-right: 8px;
+    }
+
+    .progress-indicator-container {
+      position: relative;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+    }
+    .progress-indicator {
+      border-radius: 8px;
+      height: 8px;
+    }
+  }
+}
+
+.mat-column-color {
+  max-width: 160px;
+
+  &.mat-row-cell {
+    font-weight: bold;
+    font-size: 16px;
+    font-family: cursive;
+  }
+}
