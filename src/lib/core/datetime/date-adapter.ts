@@ -141,6 +141,14 @@ export abstract class DateAdapter<D> {
   abstract addCalendarDays(date: D, days: number): D;
 
   /**
+   * Gets the RFC 3339 compatible date string (https://tools.ietf.org/html/rfc3339)  for the given
+   * date.
+   * @param date The date to get the ISO date string for.
+   * @returns The ISO date string date string.
+   */
+  abstract getISODateString(date: D): string;
+
+  /**
    * Sets the locale used for all dates.
    * @param locale The new locale.
    */

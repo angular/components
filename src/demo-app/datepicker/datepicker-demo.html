@@ -34,14 +34,14 @@
            [(ngModel)]="date"
            [min]="minDate"
            [max]="maxDate"
+           [mdDatepickerFilter]="filterOdd ? dateFilter : null"
            placeholder="Pick a date">
   </md-input-container>
   <md-datepicker
       #resultPicker
       [touchUi]="touch"
       [startAt]="startAt"
-      [startView]="yearView ? 'year' : 'month'"
-      [dateFilter]="filterOdd ? dateFilter : null">
+      [startView]="yearView ? 'year' : 'month'">
   </md-datepicker>
 </p>
 <p>
@@ -49,13 +49,13 @@
          [(ngModel)]="date"
          [min]="minDate"
          [max]="maxDate"
+         [mdDatepickerFilter]="filterOdd ? dateFilter : null"
          placeholder="Pick a date">
   <button [mdDatepickerToggle]="resultPicker2"></button>
   <md-datepicker
       #resultPicker2
       [touchUi]="touch"
       [startAt]="startAt"
-      [startView]="yearView ? 'year' : 'month'"
-      [dateFilter]="filterOdd ? dateFilter : null">
+      [startView]="yearView ? 'year' : 'month'">
   </md-datepicker>
 </p>

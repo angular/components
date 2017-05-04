@@ -11,7 +11,15 @@ import {
   Renderer
 } from '@angular/core';
 import {MdDatepicker} from './datepicker';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  ValidatorFn
+} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import {MdInputContainer} from '../input/input-container';
 import {DOWN_ARROW} from '../core/keyboard/keycodes';
@@ -27,22 +35,38 @@ export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
 };
 
 
+export const MD_DATEPICKER_VALIDATORS: any = {
+  provide: NG_VALIDATORS,
+  useExisting: forwardRef(() => MdDatepickerInput),
+  multi: true
+};
+
+
+/** Validator that requires dates to match a filter function. */
+export function mdDatepickerFilterValidator<D>(filter: (date: D | null) => boolean): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    return !filter(control.value) ? {'mdDatepickerFilter': true} : null;
+  }
+}
+
+
 /** Directive used to connect an input to a MdDatepicker. */
 @Directive({
   selector: 'input[mdDatepicker], input[matDatepicker]',
-  providers: [MD_DATEPICKER_VALUE_ACCESSOR],
+  providers: [MD_DATEPICKER_VALUE_ACCESSOR, MD_DATEPICKER_VALIDATORS],
   host: {
     '[attr.aria-expanded]': '_datepicker?.opened || "false"',
     '[attr.aria-haspopup]': 'true',
     '[attr.aria-owns]': '_datepicker?.id',
-    '[min]': '_min',
-    '[max]': '_max',
+    '[attr.min]': 'min ? _dateAdapter.getISODateString(min) : null',
+    '[attr.max]': 'max ? _dateAdapter.getISODateString(max) : null',
     '(input)': '_onInput($event.target.value)',
     '(blur)': '_onTouched()',
     '(keydown)': '_onKeydown($event)',
   }
 })
-export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy {
+export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
+    Validator {
   /** The datepicker that this input is associated with. */
   @Input()
   set mdDatepicker(value: MdDatepicker<D>) {
@@ -53,8 +77,20 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   }
   _datepicker: MdDatepicker<D>;
 
-  @Input()
-  set matDatepicker(value: MdDatepicker<D>) { this.mdDatepicker = value; }
+  @Input() set matDatepicker(value: MdDatepicker<D>) { this.mdDatepicker = value; }
+
+  @Input() set mdDatepickerFilter(filter: (date: D | null) => boolean) {
+    this._dateFilter = filter;
+    this._validator = filter ? mdDatepickerFilterValidator(filter) : null;
+    if (this._validatorOnChange) {
+      this._validatorOnChange();
+    }
+  }
+  _dateFilter: (date: D | null) => boolean;
+
+  @Input() set matDatepickerFilter(filter: (date: D | null) => boolean) {
+    this.mdDatepickerFilter = filter;
+  }
 
   /** The value of the input. */
   @Input()
@@ -81,9 +117,13 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D>();
 
-  _onChange = (value: any) => {};
-
   _onTouched = () => {};
+
+  private _cvaOnChange = (value: any) => {};
+
+  private _validator: ValidatorFn;
+
+  private _validatorOnChange: () => void;
 
   private _datepickerSubscription: Subscription;
 
@@ -106,7 +146,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
       this._datepickerSubscription =
           this._datepicker.selectedChanged.subscribe((selected: D) => {
             this.value = selected;
-            this._onChange(selected);
+            this._cvaOnChange(selected);
           });
     }
   }
@@ -115,6 +155,14 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
     if (this._datepickerSubscription) {
       this._datepickerSubscription.unsubscribe();
     }
+  }
+
+  registerOnValidatorChange(fn: () => void): void {
+    this._validatorOnChange = fn;
+  }
+
+  validate(c: AbstractControl): ValidationErrors | null {
+    return this._validator ? this._validator(c) : null;
   }
 
   /**
@@ -132,7 +180,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   // Implemented as part of ControlValueAccessor
   registerOnChange(fn: (value: any) => void): void {
-    this._onChange = fn;
+    this._cvaOnChange = fn;
   }
 
   // Implemented as part of ControlValueAccessor
@@ -154,7 +202,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   _onInput(value: string) {
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-    this._onChange(date);
+    this._cvaOnChange(date);
     this._valueChange.emit(date);
   }
 }
