@@ -18,7 +18,8 @@ import {
   NG_VALUE_ACCESSOR,
   ValidationErrors,
   Validator,
-  ValidatorFn, Validators
+  ValidatorFn,
+  Validators
 } from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import {MdInputContainer} from '../input/input-container';
