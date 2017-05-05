@@ -8,7 +8,7 @@ import {
   Input,
   OnDestroy,
   Optional,
-  Renderer
+  Renderer2
 } from '@angular/core';
 import {MdDatepicker} from './datepicker';
 import {
@@ -91,7 +91,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   set value(value: D) {
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     let oldDate = this.value;
-    this._renderer.setElementProperty(this._elementRef.nativeElement, 'value',
+    this._renderer.setProperty(this._elementRef.nativeElement, 'value',
         date ? this._dateAdapter.format(date, this._dateFormats.display.dateInput) : '');
     if (!this._dateAdapter.sameDate(oldDate, date)) {
       this._valueChange.emit(date);
@@ -153,7 +153,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   constructor(
       private _elementRef: ElementRef,
-      private _renderer: Renderer,
+      private _renderer: Renderer2,
       @Optional() private _dateAdapter: DateAdapter<D>,
       @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats,
       @Optional() private _mdInputContainer: MdInputContainer) {
@@ -214,7 +214,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   // Implemented as part of ControlValueAccessor
   setDisabledState(disabled: boolean): void {
-    this._renderer.setElementProperty(this._elementRef.nativeElement, 'disabled', disabled);
+    this._renderer.setProperty(this._elementRef.nativeElement, 'disabled', disabled);
   }
 
   _onKeydown(event: KeyboardEvent) {
