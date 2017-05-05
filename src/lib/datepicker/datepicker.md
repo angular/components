@@ -73,7 +73,7 @@ the datepicker, see section on
 [choosing a date implementation](#choosing-a-date-implementation-and-date-format-settings)).
 A result of `true` indicates that the date is valid and a result of `false` indicates that it is
 not. Again this will also disable the dates on the calendar that are invalid. However, one important
-difference between using `mdDatepcikerFilter` vs using `min` or `max` is that filtering out all
+difference between using `mdDatepickerFilter` vs using `min` or `max` is that filtering out all
 dates before or after a certain point, will not prevent the user from advancing the calendar past
 that point.
 
@@ -90,12 +90,12 @@ maxDate = new Date(2020, 11, 31);
 
 In this example the user can back past 2005, but all of the dates before then will be unselectable.
 They will not be able to go further back in the calendar than 2000. If they manually type in a date
-that is before the min, after the max, or filtered out the input will have validation errors.
+that is before the min, after the max, or filtered out, the input will have validation errors.
 
 Each validation property has a different error that can be checked:
  * A value that violates the `min` property will have a `mdDatepickerMin` error.
  * A value that violates the `max` property will have a `mdDatepickerMax` error.
- * A value that violates the `mdDatepickerFilter` property will have a `mdDatepickerFitler` error.
+ * A value that violates the `mdDatepickerFilter` property will have a `mdDatepickerFilter` error.
 
 ### Touch UI mode
 The datepicker normally opens as a popup under the input. However this is not ideal for touch

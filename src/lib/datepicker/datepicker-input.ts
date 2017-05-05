@@ -127,23 +127,29 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   private _datepickerSubscription: Subscription;
 
-  /** The form control validator for this input. */
-  private _validator: ValidatorFn = Validators.compose([
-    (control: AbstractControl): ValidationErrors | null => {
-      return (!this.min || !control.value ||
-          this._dateAdapter.compareDate(this.min, control.value) < 0) ?
-          null : {'mdDatepickerMin': {'min': this.min, 'actual': control.value}};
-    },
-    (control: AbstractControl): ValidationErrors | null => {
-      return (!this.max || !control.value ||
-          this._dateAdapter.compareDate(this.max, control.value) > 0) ?
-          null : {'mdDatepickerMax': {'max': this.max, 'actual': control.value}};
-    },
-    (control: AbstractControl): ValidationErrors | null => {
-      return !this._dateFilter || !control.value || this._dateFilter(control.value) ?
-          null : {'mdDatepickerFilter': true};
-    },
-  ]);
+  /** The form control validator for the min date. */
+  private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    return (!this.min || !control.value ||
+        this._dateAdapter.compareDate(this.min, control.value) < 0) ?
+        null : {'mdDatepickerMin': {'min': this.min, 'actual': control.value}};
+  }
+
+  /** The form control validator for the max date. */
+  private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    return (!this.max || !control.value ||
+        this._dateAdapter.compareDate(this.max, control.value) > 0) ?
+        null : {'mdDatepickerMax': {'max': this.max, 'actual': control.value}};
+  }
+
+  /** The form control validator for the date filter. */
+  private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    return !this._dateFilter || !control.value || this._dateFilter(control.value) ?
+        null : {'mdDatepickerFilter': true};
+  }
+
+  /** The combined form control validator for this input. */
+  private _validator: ValidatorFn =
+      Validators.compose([this._minValidator, this._maxValidator, this._filterValidator]);
 
   constructor(
       private _elementRef: ElementRef,
