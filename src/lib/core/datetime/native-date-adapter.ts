@@ -160,6 +160,14 @@ export class NativeDateAdapter extends DateAdapter<Date> {
         this.getYear(date), this.getMonth(date), this.getDate(date) + days);
   }
 
+  getISODateString(date: Date): string {
+    return [
+      date.getUTCFullYear(),
+      this._2digit(date.getUTCMonth() + 1),
+      this._2digit(date.getUTCDate())
+    ].join('-');
+  }
+
   /** Creates a date but allows the month and date to overflow. */
   private _createDateWithOverflow(year: number, month: number, date: number) {
     let result = new Date(year, month, date);
@@ -170,5 +178,14 @@ export class NativeDateAdapter extends DateAdapter<Date> {
       result.setFullYear(this.getYear(result) - 1900);
     }
     return result;
+  }
+
+  /**
+   * Pads a number to make it two digits.
+   * @param n The number to pad.
+   * @returns The padded number.
+   */
+  private _2digit(n: number) {
+    return ('00' + n).slice(-2);
   }
 }

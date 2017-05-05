@@ -11,7 +11,16 @@ import {
   Renderer
 } from '@angular/core';
 import {MdDatepicker} from './datepicker';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import {MdInputContainer} from '../input/input-container';
 import {DOWN_ARROW} from '../core/keyboard/keycodes';
@@ -27,22 +36,30 @@ export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
 };
 
 
+export const MD_DATEPICKER_VALIDATORS: any = {
+  provide: NG_VALIDATORS,
+  useExisting: forwardRef(() => MdDatepickerInput),
+  multi: true
+};
+
+
 /** Directive used to connect an input to a MdDatepicker. */
 @Directive({
   selector: 'input[mdDatepicker], input[matDatepicker]',
-  providers: [MD_DATEPICKER_VALUE_ACCESSOR],
+  providers: [MD_DATEPICKER_VALUE_ACCESSOR, MD_DATEPICKER_VALIDATORS],
   host: {
     '[attr.aria-expanded]': '_datepicker?.opened || "false"',
     '[attr.aria-haspopup]': 'true',
     '[attr.aria-owns]': '_datepicker?.id',
-    '[min]': '_min',
-    '[max]': '_max',
+    '[attr.min]': 'min ? _dateAdapter.getISODateString(min) : null',
+    '[attr.max]': 'max ? _dateAdapter.getISODateString(max) : null',
     '(input)': '_onInput($event.target.value)',
     '(blur)': '_onTouched()',
     '(keydown)': '_onKeydown($event)',
   }
 })
-export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy {
+export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
+    Validator {
   /** The datepicker that this input is associated with. */
   @Input()
   set mdDatepicker(value: MdDatepicker<D>) {
@@ -53,8 +70,17 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   }
   _datepicker: MdDatepicker<D>;
 
-  @Input()
-  set matDatepicker(value: MdDatepicker<D>) { this.mdDatepicker = value; }
+  @Input() set matDatepicker(value: MdDatepicker<D>) { this.mdDatepicker = value; }
+
+  @Input() set mdDatepickerFilter(filter: (date: D | null) => boolean) {
+    this._dateFilter = filter;
+    this._validatorOnChange();
+  }
+  _dateFilter: (date: D | null) => boolean;
+
+  @Input() set matDatepickerFilter(filter: (date: D | null) => boolean) {
+    this.mdDatepickerFilter = filter;
+  }
 
   /** The value of the input. */
   @Input()
@@ -73,19 +99,57 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   }
 
   /** The minimum valid date. */
-  @Input() min: D;
+  @Input()
+  get min(): D { return this._min; }
+  set min(value: D) {
+    this._min = value;
+    this._validatorOnChange();
+  }
+  private _min: D;
 
   /** The maximum valid date. */
-  @Input() max: D;
+  @Input()
+  get max(): D { return this._max; }
+  set max(value: D) {
+    this._max = value;
+    this._validatorOnChange();
+  }
+  private _max: D;
 
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D>();
 
-  _onChange = (value: any) => {};
-
   _onTouched = () => {};
 
+  private _cvaOnChange = (value: any) => {};
+
+  private _validatorOnChange = () => {};
+
   private _datepickerSubscription: Subscription;
+
+  /** The form control validator for the min date. */
+  private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    return (!this.min || !control.value ||
+        this._dateAdapter.compareDate(this.min, control.value) < 0) ?
+        null : {'mdDatepickerMin': {'min': this.min, 'actual': control.value}};
+  }
+
+  /** The form control validator for the max date. */
+  private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    return (!this.max || !control.value ||
+        this._dateAdapter.compareDate(this.max, control.value) > 0) ?
+        null : {'mdDatepickerMax': {'max': this.max, 'actual': control.value}};
+  }
+
+  /** The form control validator for the date filter. */
+  private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    return !this._dateFilter || !control.value || this._dateFilter(control.value) ?
+        null : {'mdDatepickerFilter': true};
+  }
+
+  /** The combined form control validator for this input. */
+  private _validator: ValidatorFn =
+      Validators.compose([this._minValidator, this._maxValidator, this._filterValidator]);
 
   constructor(
       private _elementRef: ElementRef,
@@ -106,7 +170,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
       this._datepickerSubscription =
           this._datepicker.selectedChanged.subscribe((selected: D) => {
             this.value = selected;
-            this._onChange(selected);
+            this._cvaOnChange(selected);
           });
     }
   }
@@ -115,6 +179,14 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
     if (this._datepickerSubscription) {
       this._datepickerSubscription.unsubscribe();
     }
+  }
+
+  registerOnValidatorChange(fn: () => void): void {
+    this._validatorOnChange = fn;
+  }
+
+  validate(c: AbstractControl): ValidationErrors | null {
+    return this._validator ? this._validator(c) : null;
   }
 
   /**
@@ -132,7 +204,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   // Implemented as part of ControlValueAccessor
   registerOnChange(fn: (value: any) => void): void {
-    this._onChange = fn;
+    this._cvaOnChange = fn;
   }
 
   // Implemented as part of ControlValueAccessor
@@ -154,7 +226,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   _onInput(value: string) {
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-    this._onChange(date);
+    this._cvaOnChange(date);
     this._valueChange.emit(date);
   }
 }

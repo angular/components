@@ -30,6 +30,7 @@ describe('MdDatepicker', () => {
           ReactiveFormsModule,
         ],
         declarations: [
+          DatepickerWithFilterAndValidation,
           DatepickerWithFormControl,
           DatepickerWithMinAndMax,
           DatepickerWithNgModel,
@@ -428,6 +429,58 @@ describe('MdDatepicker', () => {
         expect(testComponent.datepicker._maxDate).toEqual(new Date(2020, JAN, 1));
       });
     });
+
+    describe('datepicker with filter and validation', () => {
+      let fixture: ComponentFixture<DatepickerWithFilterAndValidation>;
+      let testComponent: DatepickerWithFilterAndValidation;
+
+      beforeEach(async(() => {
+        fixture = TestBed.createComponent(DatepickerWithFilterAndValidation);
+        fixture.detectChanges();
+
+        testComponent = fixture.componentInstance;
+      }));
+
+      afterEach(async(() => {
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+      }));
+
+      it('should mark input invalid', async(() => {
+        testComponent.date = new Date(2017, JAN, 1);
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          fixture.detectChanges();
+
+          expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+              .toContain('ng-invalid');
+
+          testComponent.date = new Date(2017, JAN, 2);
+          fixture.detectChanges();
+
+          fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+                .not.toContain('ng-invalid');
+          });
+        });
+      }));
+
+      it('should disable filtered calendar cells', () => {
+        fixture.detectChanges();
+
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+
+        expect(document.querySelector('md-dialog-container')).not.toBeNull();
+
+        let cells = document.querySelectorAll('.mat-calendar-body-cell');
+        expect(cells[0].classList).toContain('mat-calendar-body-disabled');
+        expect(cells[1].classList).not.toContain('mat-calendar-body-disabled');
+      });
+    });
   });
 
   describe('with missing DateAdapter and MD_DATE_FORMATS', () => {
@@ -440,17 +493,7 @@ describe('MdDatepicker', () => {
           NoopAnimationsModule,
           ReactiveFormsModule,
         ],
-        declarations: [
-          DatepickerWithFormControl,
-          DatepickerWithMinAndMax,
-          DatepickerWithNgModel,
-          DatepickerWithStartAt,
-          DatepickerWithToggle,
-          InputContainerDatepicker,
-          MultiInputDatepicker,
-          NoInputDatepicker,
-          StandardDatepicker,
-        ],
+        declarations: [StandardDatepicker],
       });
 
       TestBed.compileComponents();
@@ -566,4 +609,18 @@ class DatepickerWithMinAndMax {
   minDate = new Date(2010, JAN, 1);
   maxDate = new Date(2020, JAN, 1);
   @ViewChild('d') datepicker: MdDatepicker<Date>;
+}
+
+
+@Component({
+  template: `
+    <input [mdDatepicker]="d" [(ngModel)]="date" [mdDatepickerFilter]="filter">
+    <button [mdDatepickerToggle]="d"></button>
+    <md-datepicker #d [touchUi]="true"></md-datepicker>
+  `,
+})
+class DatepickerWithFilterAndValidation {
+  @ViewChild('d') datepicker: MdDatepicker<Date>;
+  date: Date;
+  filter = (date: Date) => date.getDate() != 1;
 }

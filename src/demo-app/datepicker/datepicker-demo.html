@@ -30,18 +30,22 @@
   <button [mdDatepickerToggle]="resultPicker"></button>
   <md-input-container>
     <input mdInput
+           #resultPickerModel="ngModel"
            [mdDatepicker]="resultPicker"
            [(ngModel)]="date"
            [min]="minDate"
            [max]="maxDate"
+           [mdDatepickerFilter]="filterOdd ? dateFilter : null"
            placeholder="Pick a date">
+    <md-error *ngIf="resultPickerModel.hasError('mdDatepickerMin')">Too early!</md-error>
+    <md-error *ngIf="resultPickerModel.hasError('mdDatepickerMax')">Too late!</md-error>
+    <md-error *ngIf="resultPickerModel.hasError('mdDatepickerFilter')">Date unavailable!</md-error>
   </md-input-container>
   <md-datepicker
       #resultPicker
       [touchUi]="touch"
       [startAt]="startAt"
-      [startView]="yearView ? 'year' : 'month'"
-      [dateFilter]="filterOdd ? dateFilter : null">
+      [startView]="yearView ? 'year' : 'month'">
   </md-datepicker>
 </p>
 <p>
@@ -49,13 +53,13 @@
          [(ngModel)]="date"
          [min]="minDate"
          [max]="maxDate"
+         [mdDatepickerFilter]="filterOdd ? dateFilter : null"
          placeholder="Pick a date">
   <button [mdDatepickerToggle]="resultPicker2"></button>
   <md-datepicker
       #resultPicker2
       [touchUi]="touch"
       [startAt]="startAt"
-      [startView]="yearView ? 'year' : 'month'"
-      [dateFilter]="filterOdd ? dateFilter : null">
+      [startView]="yearView ? 'year' : 'month'">
   </md-datepicker>
 </p>

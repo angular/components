@@ -60,20 +60,22 @@ startDate = new Date(1990, 0, 1);
 <md-datepicker startView="year" [startAt]="startDate"></md-datepicker>
 ```
 
-### Preventing selection of specific dates
-There are two ways to restrict the dates available for selection in the datepicker. The first is by
-using the `min` and `max` properties of the input. This will disable all dates on the calendar
-before or after the respective given dates. It will also prevent the user from advancing the
-calendar past the `month` or `year` (depending on current view) containing the `min` or `max` date.
+### Date validation
+There are three properties that add date validation to the datepicker input. The first two are the
+`min` and `max` properties. In addition to enforcing validation on the input, these properties will
+disable all dates on the calendar popup before or after the respective values and prevent the user
+from advancing the calendar past the `month` or `year` (depending on current view) containing the
+`min` or `max` date.
  
-The second way to restrict selection is using the `dateFilter` property of `md-datepicker`. The
-`dateFilter` property accepts a function of `<D> => boolean` (where `<D>` is the date type used by
+The second way to add date validation is using the `mdDatepickerFilter` property of the datepicker
+input. This property accepts a function of `<D> => boolean` (where `<D>` is the date type used by
 the datepicker, see section on
 [choosing a date implementation](#choosing-a-date-implementation-and-date-format-settings)).
-A result of `true` indicates that the date is selectable and a result of `false` indicates that it
-is not. One important difference between using `dateFilter` vs using `min` or `max` is that
-filtering out all dates before a certain point, will not prevent the user from advancing the
-calendar past that point.
+A result of `true` indicates that the date is valid and a result of `false` indicates that it is
+not. Again this will also disable the dates on the calendar that are invalid. However, one important
+difference between using `mdDatepickerFilter` vs using `min` or `max` is that filtering out all
+dates before or after a certain point, will not prevent the user from advancing the calendar past
+that point.
 
 ```ts
 myFilter = (d: Date) => d.getFullYear() > 2005 
@@ -82,12 +84,18 @@ maxDate = new Date(2020, 11, 31);
 ```
 
 ```html
-<input [mdDatepicker]="d" [min]="minDate" [max]="maxDate">
-<md-datepicker #d [dateFilter]="myFilter"></md-datepicker>
+<input [mdDatepicker]="d" [mdDatepickerFilter]="myFilter" [min]="minDate" [max]="maxDate" ngModel>
+<md-datepicker #d></md-datepicker>
 ```
 
 In this example the user can back past 2005, but all of the dates before then will be unselectable.
-They will not be able to go further back in the calendar than 2000.
+They will not be able to go further back in the calendar than 2000. If they manually type in a date
+that is before the min, after the max, or filtered out, the input will have validation errors.
+
+Each validation property has a different error that can be checked:
+ * A value that violates the `min` property will have a `mdDatepickerMin` error.
+ * A value that violates the `max` property will have a `mdDatepickerMax` error.
+ * A value that violates the `mdDatepickerFilter` property will have a `mdDatepickerFilter` error.
 
 ### Touch UI mode
 The datepicker normally opens as a popup under the input. However this is not ideal for touch

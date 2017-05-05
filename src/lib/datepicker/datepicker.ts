@@ -116,9 +116,6 @@ export class MdDatepicker<D> implements OnDestroy {
    */
   @Input() touchUi = false;
 
-  /** A function used to filter which dates are selectable. */
-  @Input() dateFilter: (date: D) => boolean;
-
   /** Emits new selected date when selected date changes. */
   @Output() selectedChanged = new EventEmitter<D>();
 
@@ -139,6 +136,10 @@ export class MdDatepicker<D> implements OnDestroy {
   /** The maximum selectable date. */
   get _maxDate(): D {
     return this._datepickerInput && this._datepickerInput.max;
+  }
+
+  get _dateFilter(): (date: D | null) => boolean {
+    return this._datepickerInput && this._datepickerInput._dateFilter;
   }
 
   /** A reference to the overlay when the calendar is opened as a popup. */
