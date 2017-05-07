@@ -2,12 +2,12 @@ import {NgModule} from '@angular/core';
 import {MdLineModule, MdRippleModule, MdCommonModule} from '../core';
 import {
   MdList,
+  MdNavList,
   MdListItem,
   MdListDivider,
   MdListAvatarCssMatStyler,
   MdListIconCssMatStyler,
   MdListCssMatStyler,
-  MdNavListCssMatStyler,
   MdDividerCssMatStyler,
   MdListSubheaderCssMatStyler,
 } from './list';
@@ -17,6 +17,7 @@ import {
   imports: [MdLineModule, MdRippleModule, MdCommonModule],
   exports: [
     MdList,
+    MdNavList,
     MdListItem,
     MdListDivider,
     MdListAvatarCssMatStyler,
@@ -24,18 +25,17 @@ import {
     MdCommonModule,
     MdListIconCssMatStyler,
     MdListCssMatStyler,
-    MdNavListCssMatStyler,
     MdDividerCssMatStyler,
     MdListSubheaderCssMatStyler,
   ],
   declarations: [
     MdList,
+    MdNavList,
     MdListItem,
     MdListDivider,
     MdListAvatarCssMatStyler,
     MdListIconCssMatStyler,
     MdListCssMatStyler,
-    MdNavListCssMatStyler,
     MdDividerCssMatStyler,
     MdListSubheaderCssMatStyler,
   ],

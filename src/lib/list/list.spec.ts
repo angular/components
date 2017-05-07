@@ -1,7 +1,7 @@
 import {async, TestBed} from '@angular/core/testing';
 import {Component, QueryList, ViewChildren} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdListItem, MdListModule} from './index';
+import {MdList, MdListItem, MdListModule} from './index';
 
 
 describe('MdList', () => {
@@ -156,6 +156,49 @@ describe('MdList', () => {
 
     items.forEach(item => expect(item.isRippleEnabled()).toBe(false));
   });
+
+  it('should allow enabling ripples for a normal list', () => {
+    const fixture = TestBed.createComponent(ListWithOneAnchorItem);
+    const list = fixture.debugElement.query(By.directive(MdList)).componentInstance;
+
+    fixture.detectChanges();
+
+    const items = fixture.componentInstance.listItems;
+
+    expect(items.length).toBeGreaterThan(0);
+    expect(list.disableRipple).toBe(true, 'Ripples should be disabled for normal lists.');
+
+    // Ripples should be disabled by default, and can be enabled with a binding.
+    items.forEach(item => expect(item.isRippleEnabled()).toBe(false));
+
+    list.disableRipple = false;
+    fixture.detectChanges();
+
+    items.forEach(item => expect(item.isRippleEnabled()).toBe(true));
+  });
+
+  it('should allow disabling ripples for specific normal list items', () => {
+    const fixture = TestBed.createComponent(ListWithOneAnchorItem);
+    const list = fixture.debugElement.query(By.directive(MdList)).componentInstance;
+
+    fixture.detectChanges();
+
+    const items = fixture.componentInstance.listItems;
+
+    expect(items.length).toBeGreaterThan(0);
+    expect(list.disableRipple).toBe(true, 'Ripples should be disabled for normal lists.');
+
+    // Ripples should be disabled by default, and can be enabled with a binding.
+    items.forEach(item => expect(item.isRippleEnabled()).toBe(false));
+
+    list.disableRipple = false;
+
+    items.forEach(item => item.disableRipple = true);
+    fixture.detectChanges();
+
+    items.forEach(item => expect(item.isRippleEnabled()).toBe(false));
+  });
+
 });
 
 
