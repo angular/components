@@ -661,7 +661,7 @@ describe('MdAutocomplete', () => {
           fixture.componentInstance.trigger._handleKeydown(TAB_EVENT);
           fixture.detectChanges();
           expect(input.value)
-            .toBe('',`Expected text field to be empty when TAB is pressed.`);
+            .toBe('', `Expected text field to be empty when TAB is pressed.`);
         });
       });
     }));
@@ -1404,47 +1404,45 @@ class AutocompleteWithOnPushDelay implements OnInit {
 
 
 @Component({
-    template: `
-    <md-input-container [floatPlaceholder]="placeholder" [style.width.px]="width">
-      <input mdInput placeholder="State" [mdAutocomplete]="auto" [formControl]="stateCtrl">
-    </md-input-container>
+  template: `
+  <md-input-container [floatPlaceholder]="placeholder" [style.width.px]="width">
+    <input mdInput placeholder="State" [mdAutocomplete]="auto" [formControl]="stateCtrl">
+  </md-input-container>
 
-    <md-autocomplete #auto="mdAutocomplete" selectOptionOnTab="true">
-      <md-option *ngFor="let state of filteredStates" [value]="state.name">
-        <span> {{ state.code }}: {{ state.name }}  </span>
-      </md-option>
-    </md-autocomplete>
+  <md-autocomplete #auto="mdAutocomplete" selectOptionOnTab="true">
+    <md-option *ngFor="let state of filteredStates" [value]="state.name">
+      <span> {{ state.code }}: {{ state.name }}  </span>
+    </md-option>
+  </md-autocomplete>
   `
 })
 class AutocompleteWithSelectOptionOnTab implements OnDestroy {
-    stateCtrl = new FormControl();
-    filteredStates: any[];
-    valueSub: Subscription;
-    placeholder = 'auto';
-    width: number;
+  stateCtrl = new FormControl();
+  filteredStates: any[];
+  valueSub: Subscription;
+  placeholder = 'auto';
+  width: number;
 
-    @ViewChild(MdAutocompleteTrigger) trigger: MdAutocompleteTrigger;
-    @ViewChild(MdAutocomplete) panel: MdAutocomplete;
-    @ViewChild(MdInputContainer) inputContainer: MdInputContainer;
-    @ViewChildren(MdOption) options: QueryList<MdOption>;
+  @ViewChild(MdAutocompleteTrigger) trigger: MdAutocompleteTrigger;
+  @ViewChild(MdAutocomplete) panel: MdAutocomplete;
+  @ViewChild(MdInputContainer) inputContainer: MdInputContainer;
+  @ViewChildren(MdOption) options: QueryList<MdOption>;
 
-    states = [
-        { code: 'AL', name: 'Alabama' },
-        { code: 'CA', name: 'California' },
-    ];
+  states = [
+    { code: 'AL', name: 'Alabama' },
+    { code: 'CA', name: 'California' },
+  ];
 
-    constructor() {
+  constructor() {
+    this.filteredStates = this.states;
+    this.valueSub = this.stateCtrl.valueChanges.subscribe(val => {
         this.filteredStates = this.states;
-        this.valueSub = this.stateCtrl.valueChanges.subscribe(val => {
-            this.filteredStates = val ? this.states.filter((s) => s.name.match(new RegExp(val, 'gi')))
-                : this.states;
-        });
-    }
+    });
+  }
 
-    ngOnDestroy() {
-        this.valueSub.unsubscribe();
-    }
-
+  ngOnDestroy() {
+    this.valueSub.unsubscribe();
+  }
 }
 
 
