@@ -1,6 +1,9 @@
 import {NativeDateAdapter} from './native-date-adapter';
 
 
+const SUPPORTS_INTL = typeof Intl != 'undefined';
+
+
 // When constructing a Date, the month is zero-based. This can be confusing, since people are
 // used to seeing them one-based. So we create these aliases to make reading the tests easier.
 const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9,
@@ -51,9 +54,16 @@ describe('NativeDateAdapter', () => {
 
   it('should get month names in a different locale', () => {
     adapter.setLocale('ja-JP');
-    expect(adapter.getMonthNames('long')).toEqual([
-      '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'
-    ]);
+    if (SUPPORTS_INTL) {
+      expect(adapter.getMonthNames('long')).toEqual([
+        '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'
+      ]);
+    } else {
+      expect(adapter.getMonthNames('long')).toEqual([
+        'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+        'October', 'November', 'December'
+      ]);
+    }
   });
 
   it('should get date names', () => {
@@ -65,11 +75,18 @@ describe('NativeDateAdapter', () => {
 
   it('should get date names in a different locale', () => {
     adapter.setLocale('ja-JP');
-    expect(adapter.getDateNames()).toEqual([
-      '1日', '2日', '3日', '4日', '5日', '6日', '7日', '8日', '9日', '10日', '11日', '12日',
-      '13日', '14日', '15日', '16日', '17日', '18日', '19日', '20日', '21日', '22日', '23日', '24日',
-      '25日', '26日', '27日', '28日', '29日', '30日', '31日'
-    ]);
+    if (SUPPORTS_INTL) {
+      expect(adapter.getDateNames()).toEqual([
+        '1日', '2日', '3日', '4日', '5日', '6日', '7日', '8日', '9日', '10日', '11日', '12日',
+        '13日', '14日', '15日', '16日', '17日', '18日', '19日', '20日', '21日', '22日', '23日', '24日',
+        '25日', '26日', '27日', '28日', '29日', '30日', '31日'
+      ]);
+    } else {
+      expect(adapter.getDateNames()).toEqual([
+        '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17',
+        '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'
+      ]);
+    }
   });
 
   it('should get long day of week names', () => {
@@ -90,9 +107,15 @@ describe('NativeDateAdapter', () => {
 
   it('should get day of week names in a different locale', () => {
     adapter.setLocale('ja-JP');
-    expect(adapter.getDayOfWeekNames('long')).toEqual([
-      '日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'
-    ]);
+    if (SUPPORTS_INTL) {
+      expect(adapter.getDayOfWeekNames('long')).toEqual([
+        '日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'
+      ]);
+    } else {
+      expect(adapter.getDayOfWeekNames('long')).toEqual([
+        'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+      ]);
+    }
   });
 
   it('should get year name', () => {
@@ -101,7 +124,11 @@ describe('NativeDateAdapter', () => {
 
   it('should get year name in a different locale', () => {
     adapter.setLocale('ja-JP');
-    expect(adapter.getYearName(new Date(2017, JAN, 1))).toBe('2017年');
+    if (SUPPORTS_INTL) {
+      expect(adapter.getYearName(new Date(2017, JAN, 1))).toBe('2017年');
+    } else {
+      expect(adapter.getYearName(new Date(2017, JAN, 1))).toBe('2017');
+    }
   });
 
   it('should get first day of week', () => {
@@ -155,17 +182,36 @@ describe('NativeDateAdapter', () => {
   });
 
   it('should format', () => {
-    expect(adapter.format(new Date(2017, JAN, 1))).toEqual('1/1/2017');
+    if (SUPPORTS_INTL) {
+      expect(adapter.format(new Date(2017, JAN, 1))).toEqual('1/1/2017');
+    } else {
+      expect(adapter.format(new Date(2017, JAN, 1))).toEqual('Sun Jan 01 2017');
+    }
   });
 
   it('should format with custom format', () => {
-    expect(adapter.format(new Date(2017, JAN, 1), {year: 'numeric', month: 'long', day: 'numeric'}))
-        .toEqual('January 1, 2017');
+    if (SUPPORTS_INTL) {
+      expect(adapter.format(new Date(2017, JAN, 1), {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })).toEqual('January 1, 2017');
+    } else {
+      expect(adapter.format(new Date(2017, JAN, 1), {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })).toEqual('Sun Jan 01 2017');
+    }
   });
 
   it('should format with a different locale', () => {
     adapter.setLocale('ja-JP');
-    expect(adapter.format(new Date(2017, JAN, 1))).toEqual('2017/1/1');
+    if (SUPPORTS_INTL) {
+      expect(adapter.format(new Date(2017, JAN, 1))).toEqual('2017/1/1');
+    } else {
+      expect(adapter.format(new Date(2017, JAN, 1))).toEqual('Sun Jan 01 2017');
+    }
   });
 
   it('should add years', () => {
