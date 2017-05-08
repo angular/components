@@ -30,7 +30,7 @@ export class SimpleNestedTreeNode {
     }
 
     getChildren(node: any) {
-        return node.children;
+        return this.dataSource.getChildren(node);
     }
 
     dotline(node: any, index: number) {
