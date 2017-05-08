@@ -1,4 +1,5 @@
 import {NativeDateAdapter} from './native-date-adapter';
+import {Platform} from '../platform/index';
 
 
 const SUPPORTS_INTL = typeof Intl != 'undefined';
@@ -12,9 +13,11 @@ const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SE
 
 describe('NativeDateAdapter', () => {
   let adapter;
+  let platform;
 
   beforeEach(() => {
     adapter = new NativeDateAdapter();
+    platform = new Platform();
   });
 
   it('should get year', () => {
@@ -47,9 +50,16 @@ describe('NativeDateAdapter', () => {
   });
 
   it('should get narrow month names', () => {
-    expect(adapter.getMonthNames('narrow')).toEqual([
-      'J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'
-    ]);
+    // Edge & IE use same value for short and narrow.
+    if (platform.EDGE || platform.TRIDENT) {
+      expect(adapter.getMonthNames('narrow')).toEqual([
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      ]);
+    } else {
+      expect(adapter.getMonthNames('narrow')).toEqual([
+        'J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'
+      ]);
+    }
   });
 
   it('should get month names in a different locale', () => {
@@ -102,7 +112,14 @@ describe('NativeDateAdapter', () => {
   });
 
   it('should get narrow day of week names', () => {
-    expect(adapter.getDayOfWeekNames('narrow')).toEqual(['S', 'M', 'T', 'W', 'T', 'F', 'S']);
+    // Edge & IE use two-letter narrow days.
+    if (platform.EDGE || platform.TRIDENT) {
+      expect(adapter.getDayOfWeekNames('narrow')).toEqual([
+        'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'
+      ]);
+    } else {expect(adapter.getDayOfWeekNames('narrow')).toEqual([
+      'S', 'M', 'T', 'W', 'T', 'F', 'S'
+    ]);}
   });
 
   it('should get day of week names in a different locale', () => {
@@ -163,7 +180,7 @@ describe('NativeDateAdapter', () => {
   });
 
   it('should parse string', () => {
-    expect(adapter.parse('1/1/17')).toEqual(new Date(2017, JAN, 1));
+    expect(adapter.parse('1/1/2017')).toEqual(new Date(2017, JAN, 1));
   });
 
   it('should parse number', () => {
@@ -208,7 +225,12 @@ describe('NativeDateAdapter', () => {
   it('should format with a different locale', () => {
     adapter.setLocale('ja-JP');
     if (SUPPORTS_INTL) {
-      expect(adapter.format(new Date(2017, JAN, 1))).toEqual('2017/1/1');
+      // Edge & IE use a different format in Japanese.
+      if (platform.EDGE || platform.TRIDENT) {
+        expect(adapter.format(new Date(2017, JAN, 1))).toEqual('2017年1月1日');
+      } else {
+        expect(adapter.format(new Date(2017, JAN, 1))).toEqual('2017/1/1');
+      }
     } else {
       expect(adapter.format(new Date(2017, JAN, 1))).toEqual('Sun Jan 01 2017');
     }
