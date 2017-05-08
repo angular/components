@@ -122,7 +122,7 @@ describe('MdList', () => {
 
     const items: QueryList<MdListItem> = fixture.debugElement.componentInstance.listItems;
     expect(items.length).toBeGreaterThan(0);
-    items.forEach(item => expect(item.isRippleEnabled()).toBe(false));
+    expect(items.toArray().every(item => item.isRippleEnabled())).toBe(false);
   });
 
   it('should allow disabling ripples for specific nav-list items', () => {
@@ -133,12 +133,12 @@ describe('MdList', () => {
     expect(items.length).toBeGreaterThan(0);
 
     // Ripples should be enabled by default, and can be disabled with a binding.
-    items.forEach(item => expect(item.isRippleEnabled()).toBe(true));
+    expect(items.toArray().every(item => item.isRippleEnabled())).toBe(true);
 
     fixture.componentInstance.disableItemRipple = true;
     fixture.detectChanges();
 
-    items.forEach(item => expect(item.isRippleEnabled()).toBe(false));
+    expect(items.toArray().every(item => item.isRippleEnabled())).toBe(false);
   });
 
   it('should allow disabling ripples for the whole nav-list', () => {
@@ -149,12 +149,12 @@ describe('MdList', () => {
     expect(items.length).toBeGreaterThan(0);
 
     // Ripples should be enabled by default, and can be disabled with a binding.
-    items.forEach(item => expect(item.isRippleEnabled()).toBe(true));
+    expect(items.toArray().every(item => item.isRippleEnabled())).toBe(true);
 
     fixture.componentInstance.disableListRipple = true;
     fixture.detectChanges();
 
-    items.forEach(item => expect(item.isRippleEnabled()).toBe(false));
+    expect(items.toArray().every(item => item.isRippleEnabled())).toBe(false);
   });
 
   it('should allow enabling ripples for a normal list', () => {
@@ -169,12 +169,12 @@ describe('MdList', () => {
     expect(list.disableRipple).toBe(true, 'Ripples should be disabled for normal lists.');
 
     // Ripples should be disabled by default, and can be enabled with a binding.
-    items.forEach(item => expect(item.isRippleEnabled()).toBe(false));
+    expect(items.toArray().every(item => item.isRippleEnabled())).toBe(false);
 
     list.disableRipple = false;
     fixture.detectChanges();
 
-    items.forEach(item => expect(item.isRippleEnabled()).toBe(true));
+    expect(items.toArray().every(item => item.isRippleEnabled())).toBe(true);
   });
 
   it('should allow disabling ripples for specific normal list items', () => {
@@ -189,14 +189,14 @@ describe('MdList', () => {
     expect(list.disableRipple).toBe(true, 'Ripples should be disabled for normal lists.');
 
     // Ripples should be disabled by default, and can be enabled with a binding.
-    items.forEach(item => expect(item.isRippleEnabled()).toBe(false));
+    expect(items.toArray().every(item => item.isRippleEnabled())).toBe(false);
 
     list.disableRipple = false;
 
     items.forEach(item => item.disableRipple = true);
     fixture.detectChanges();
 
-    items.forEach(item => expect(item.isRippleEnabled()).toBe(false));
+    expect(items.toArray().every(item => item.isRippleEnabled())).toBe(false);
   });
 
 });
