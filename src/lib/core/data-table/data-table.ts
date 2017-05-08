@@ -1,26 +1,23 @@
 import {
-  ViewChild,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  Directive,
-  TemplateRef,
-  ContentChildren,
   ContentChild,
-  QueryList,
-  ViewContainerRef,
-  Input,
-  forwardRef,
-  IterableDiffers,
-  SimpleChanges,
-  IterableDiffer,
-  Inject,
-  ViewEncapsulation,
+  ContentChildren,
+  Directive,
   ElementRef,
-  Renderer,
+  Input,
+  IterableChangeRecord,
   IterableChanges,
-  IterableChangeRecord, ChangeDetectionStrategy, ChangeDetectorRef
+  IterableDiffer,
+  IterableDiffers,
+  QueryList,
+  Renderer,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation
 } from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/let';
 import 'rxjs/add/operator/debounceTime';
