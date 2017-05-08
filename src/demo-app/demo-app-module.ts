@@ -42,9 +42,10 @@ import {PeopleDatabase} from './data-table/people-database';
 import {DatepickerDemo} from './datepicker/datepicker-demo';
 import {TypographyDemo} from './typography/typography-demo';
 import {ExpansionDemo} from './expansion/expansion-demo';
-import {TreeDemo} from './tree/tree-demo';
-import {TreeDemo, TreeNodeKey} from './tree/tree-demo';
 import {SimpleTreeDemo} from './tree/simple-tree-demo';
+import {SimpleTreeNode} from './tree/simple-tree-node';
+import {SimpleNestedTreeDemo} from './tree/simple-nested-tree';
+import {SimpleNestedTreeNode} from './tree/simple-nested-node';
 import {
   CdkDataTableModule,
   FullscreenOverlayContainer,
@@ -122,7 +123,6 @@ import {TableHeaderDemo} from './data-table/table-header-demo';
 })
 export class DemoMaterialModule {}
 
-import {SimpleTreeNode} from './tree/simple-tree-node';
 
 @NgModule({
   imports: [
@@ -187,6 +187,8 @@ import {SimpleTreeNode} from './tree/simple-tree-node';
     ExpansionDemo,
     TreeDemo,
     SimpleTreeNode,
+    SimpleNestedTreeNode,
+    SimpleNestedTreeDemo,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},

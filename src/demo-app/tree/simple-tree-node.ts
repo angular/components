@@ -1,7 +1,7 @@
-import {Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
+import {OnInit, Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
 import {JsonDataSource} from './simple-data-source'
-import {SelectionModel, MdTree} from '@angular/material';
+import {MdNodePlaceholder, SelectionModel, MdTree} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -13,6 +13,7 @@ import {SelectionModel, MdTree} from '@angular/material';
 export class SimpleTreeNode {
 
 
+  @ViewChild(MdNodePlaceholder) nodePlaceholder: MdNodePlaceholder;
   @Input() flat: boolean;
   @Input() node: any;
   @Input() level: number;
@@ -20,6 +21,8 @@ export class SimpleTreeNode {
   @Input() expandIncludeChildren: boolean;
   @Input() selection: SelectionModel<any>;
   @Input() dataSource: JsonDataSource;
+
+  constructor(public tree: MdTree) {}
 
   createArray(level: number) {
     return new Array(level);
@@ -29,8 +32,8 @@ export class SimpleTreeNode {
     return node.children;
   }
 
-  dotline(node: any, index: number) {
-    let data = this.dataSource.dottedLineLevels.get(node);
-    return !!data && data.indexOf(index) != -1;
+  getSpecial(node: any, index: number) {
+    let levels = this.dataSource.dottedLineLevels.get(node);
+    return !!levels && levels.indexOf(index) != -1;
   }
 }

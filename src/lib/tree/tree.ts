@@ -6,6 +6,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   ContentChildren,
+  ContentChild,
   QueryList,
   ViewContainerRef,
   Input,
@@ -134,6 +135,7 @@ export class MdNodeExpandTrigger {
 })
 export class MdTree {
   @Input() dataSource: TreeDataSource<any>;
+  @Input() flat: boolean = true;
 
   viewChange = new BehaviorSubject<MdTreeViewData>({start: 0, end: 20});
 
@@ -146,7 +148,6 @@ export class MdTree {
   @ContentChildren(MdNodeDef) nodeDefinitions: QueryList<MdNodeDef>;
   @ViewChild(MdNodePlaceholder) nodePlaceholder: MdNodePlaceholder;
   @ViewChild('emptyNode') emptyNodeTemplate: TemplateRef<any>;
-
 
 
   constructor(private _differs: IterableDiffers, private elementRef: ElementRef,
@@ -257,16 +258,27 @@ export class MdTree {
 
   addNode(data: any, currentIndex: number) {
     if (!!data) {
-      let node = this.getNodeDefForItem(data);
-      const context = {
-        $implicit: data,
-        level: this.dataSource.getLevel(data),// levelMap.get(this.dataSource.getKey(data)),
-        expandable: !!this.dataSource.getChildren(data),
-      };
-      this.nodePlaceholder.viewContainer.createEmbeddedView(node.template, context, currentIndex);
+      this.addNodeInContainer(this.nodePlaceholder.viewContainer, data, currentIndex);
     } else {
       this.nodePlaceholder.viewContainer.createEmbeddedView(this.emptyNodeTemplate, {}, currentIndex);
     }
+  }
+
+  addNodeInContainer(container: ViewContainerRef, data: any, currentIndex: number) {
+    let node = this.getNodeDefForItem(data);
+    let children = this.dataSource.getChildren(data);
+    let expandable = !!children;
+    const context = {
+      $implicit: data,
+      level: this.dataSource.getLevel(data),// levelMap.get(this.dataSource.getKey(data)),
+      expandable: expandable,
+    };
+    container.createEmbeddedView(node.template, context, currentIndex);
+    /*if (!this.flat && expandable && !!node.placeholder) {
+      for (let child of children; let index = indx) {
+        this._addNodeInContainer(node.placeholder.viewContainer, child, index);
+      }
+    } */
   }
 
   gotoParent(node: any) {
