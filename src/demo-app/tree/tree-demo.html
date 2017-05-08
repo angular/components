@@ -16,7 +16,7 @@
         <div class="space">
           <div *ngFor="let a of createArray(level); let index = index" [class.special]="dataSource.dottedLineLevels.get(node).includes(index)"></div>
         </div>
-        <span [mdNodeExpandTrigger]="node" [mdNodeExpandTriggerChildren]="expandIncludeChildren" >
+        <span [mdNodeExpandTrigger]="node" [mdNodeExpandTriggerRecursive]="expandIncludeChildren" >
           <md-icon *ngIf="expandable">{{ expansionModel.isSelected(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</md-icon>
         </span>
         <md-checkbox (click)="$event.stopPropagation()"

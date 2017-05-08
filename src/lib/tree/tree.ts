@@ -1,4 +1,5 @@
 import {
+  AfterContentInit,
   ViewChild,
   Component,
   Directive,
@@ -17,6 +18,8 @@ import {
   ViewEncapsulation,
   ElementRef,
   Renderer2,
+  OnInit,
+  OnDestroy,
   IterableChangeRecord
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
@@ -39,19 +42,23 @@ export class MdNodeDef {
   constructor(public template: TemplateRef<any>) {}
 }
 
+// Role should be group for expandable ndoes
 @Directive({
   selector: 'md-node',
   host: {
     'role': 'treeitem',
   }
 })
-export class MdNode  implements Focusable {
+export class MdNode  implements Focusable, OnDestroy {
   constructor(private elementRef: ElementRef,
               private renderer: Renderer2,
-              @Inject(forwardRef(() => MdTree)) private tree: MdTree,
               private _focusOriginMonitor: FocusOriginMonitor) {
     this.renderer.addClass(elementRef.nativeElement, 'mat-node');
     this._focusOriginMonitor.monitor(this.elementRef.nativeElement, this.renderer, true);
+  }
+
+  ngOnDestroy() {
+    this._focusOriginMonitor.stopMonitoring(this.elementRef.nativeElement);
   }
 
   /** Focuses the menu item. */
@@ -64,26 +71,10 @@ export class MdNode  implements Focusable {
     return this.elementRef.nativeElement;
   }
 }
-
 @Directive({selector: '[mdNodePlaceholder]'})
 export class MdNodePlaceholder {
   constructor(public viewContainer: ViewContainerRef) { }
 }
-
-// @Component({
-//   selector: 'md-tree-dotted-lines',
-//   template: '<div *ngFor=l'
-// })
-// export class MdNodeDottedLines {
-//   @Input('node') node: any;
-//   @Input('level') level: number;
-//
-//   constructor(@Inject(forwardRef(() => MdTree)) private tree: MdTree) {}
-//
-//   get levels() {
-//     return this.tree.dataSource.dottedLineLevels.get(this.node);
-//   }
-// }
 
 @Directive({selector: '[mdNodePadding]',
   host: {
@@ -107,14 +98,33 @@ export class MdNodePadding {
 })
 export class MdNodeExpandTrigger {
   @Input('mdNodeExpandTrigger') node: any;
-  @Input('mdNodeExpandTriggerChildren') includeChildren: boolean = false;
+  @Input('mdNodeExpandTriggerRecursive') recursive: boolean = false;
 
   constructor(@Inject(forwardRef(() => MdTree)) private tree: MdTree) {
-    console.log(`construct md node expand trigger ${this.node} ${this.includeChildren}`);
+    console.log(`construct md node expand trigger ${this.node} ${this.recursive}`);
   }
 
   handleClick(event) {
-    this.tree.toggleExpand(this.node, this.includeChildren);
+    console.log(`clicked`);
+    this.tree.toggleExpand(this.node, this.recursive);
+  }
+}
+
+@Directive({selector: '[mdNestedNode]'})
+export class MdNestedNode implements OnInit {
+  @Input('mdNestedNode') node: any;
+
+  @ContentChild(MdNodePlaceholder) nodePlaceholder: MdNodePlaceholder;
+
+  constructor(public tree: MdTree) {}
+
+  ngOnInit() {
+    let children = this.tree.dataSource.getChildren(this.node);
+    if (!!children) {
+      children.forEach((child, index) => {
+        this.tree.addNodeInContainer(this.nodePlaceholder.viewContainer, child, index);
+      });
+    }
   }
 }
 

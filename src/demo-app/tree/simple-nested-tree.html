@@ -29,6 +29,7 @@
 
 Selected: <span *ngFor="let node of selection.selected">{{node.key}}: {{node.value}}, </span>
 
+Expanded: <span *ngFor="let node of dataSource.expansionModel.selected">{{node.key}} : {{node.value}}</span>
 <button md-button (click)="expandAll()">Expand All</button>
 <button md-button (click)="collapseAll()">Collapse All</button>
 
