@@ -748,10 +748,6 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
     }
 
     this._checkOverlayWithinViewport(maxScroll);
-
-    // Change detection needs to be triggered in order for
-    // the overlay's position to get updated in time.
-    this._changeDetectorRef.detectChanges();
   }
 
   /**
