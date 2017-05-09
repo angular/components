@@ -164,9 +164,9 @@ export class MdListItem implements AfterContentInit {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
   }
 
-  /** Whether this list item should show a ripple effect when clicked.  */
-  isRippleEnabled() {
-    return !this.disableRipple && !this._list.disableRipple;
+  /** Whether this list item should not show any ripple effect on click. */
+  isRippleDisabled() {
+    return this.disableRipple || (this._list && this._list.disableRipple);
   }
 
   _handleFocus() {
