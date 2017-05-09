@@ -117,9 +117,11 @@ describe('NativeDateAdapter', () => {
       expect(adapter.getDayOfWeekNames('narrow')).toEqual([
         'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'
       ]);
-    } else {expect(adapter.getDayOfWeekNames('narrow')).toEqual([
-      'S', 'M', 'T', 'W', 'T', 'F', 'S'
-    ]);}
+    } else {
+      expect(adapter.getDayOfWeekNames('narrow')).toEqual([
+        'S', 'M', 'T', 'W', 'T', 'F', 'S'
+      ]);
+    }
   });
 
   it('should get day of week names in a different locale', () => {
