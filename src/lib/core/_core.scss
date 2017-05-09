@@ -41,4 +41,11 @@
   .mat-theme-loaded-marker {
     display: none;
   }
+
+  // Used when disabling global scrolling.
+  .cdk-global-scrollblock {
+    position: fixed;
+    overflow-y: scroll;
+    max-width: 100vw; // necessary for iOS not to expand past the viewport.
+  }
 }

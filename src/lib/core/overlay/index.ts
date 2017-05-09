@@ -18,3 +18,4 @@ export {ScrollStrategy} from './scroll/scroll-strategy';
 export {RepositionScrollStrategy} from './scroll/reposition-scroll-strategy';
 export {CloseScrollStrategy} from './scroll/close-scroll-strategy';
 export {NoopScrollStrategy} from './scroll/noop-scroll-strategy';
+export {BlockScrollStrategy} from './scroll/block-scroll-strategy';
