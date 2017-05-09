@@ -195,7 +195,7 @@ export interface CdkTableViewData {
 
 @Component({
   selector: 'cdk-table',
-  template: `    
+  template: `
     <ng-container cdkHeaderRowPlaceholder></ng-container>
     <ng-container cdkRowPlaceholder></ng-container>
   `,
@@ -258,6 +258,10 @@ export class CdkTable {
     this._dataDiffer = this._differs.find([]).create();
   }
 
+  ngOnDestroy() {
+    // TODO: Disconnect from the data source so that it can unsubscribe from its streams.
+  }
+
   ngOnInit() {
     // TODO: Setup a listener for scroll events and emit the calculated view to this.viewChange
   }
@@ -271,7 +275,7 @@ export class CdkTable {
     this.renderHeaderRow();
 
     // TODO: Re-render rows when their list of columns change.
-
+    // TODO: If the data source is not present after view init, connect it when it is defined.
     const connectFn = this.dataSource.connectTable.bind(this.dataSource);
     this.viewChange.let(connectFn).subscribe((dataRows: any[]) => {
       const changes = this._dataDiffer.diff(dataRows);
