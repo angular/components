@@ -13,6 +13,7 @@ import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {VIEWPORT_RULER_PROVIDER} from './position/viewport-ruler';
 import {OverlayContainer, OVERLAY_CONTAINER_PROVIDER} from './overlay-container';
 import {SCROLL_DISPATCHER_PROVIDER} from './scroll/scroll-dispatcher';
+import {DISABLE_BODY_SCROLL_PROVIDER} from './disable-body-scroll';
 
 
 /** Next overlay unique ID. */
@@ -96,4 +97,5 @@ export const OVERLAY_PROVIDERS: Provider[] = [
   VIEWPORT_RULER_PROVIDER,
   SCROLL_DISPATCHER_PROVIDER,
   OVERLAY_CONTAINER_PROVIDER,
+  DISABLE_BODY_SCROLL_PROVIDER,
 ];
