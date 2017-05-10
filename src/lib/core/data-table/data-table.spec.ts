@@ -21,7 +21,7 @@ import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
-fdescribe('CdkTable', () => {
+describe('CdkTable', () => {
   let fixture: ComponentFixture<SimpleCdkTableApp>;
 
   let component: SimpleCdkTableApp, dataSource: FakeDataSource, table: CdkTable;
@@ -51,12 +51,20 @@ fdescribe('CdkTable', () => {
     return [].slice.call(element.querySelectorAll(query));
   }
 
+  function getHeaderRow() {
+    return fixture ? fixture.nativeElement.querySelector('.cdk-header-row') : undefined;
+  }
+
   function getRows() {
     return fixture ? getElements(fixture.nativeElement, '.cdk-row') : [];
   }
 
   function getRowCells(row: HTMLElement) {
     return row ? getElements(row, '.cdk-row-cell') : [];
+  }
+
+  function getHeaderRowCells() {
+    return getHeaderRow() ? getElements(getHeaderRow(), '.cdk-header-cell') : [];
   }
 
   describe('should initialize', () => {
@@ -66,20 +74,32 @@ fdescribe('CdkTable', () => {
     });
 
     it('with a rendered header with the right number of header cells', () => {
-      const header = fixture.nativeElement.querySelector('.cdk-header-row');
+      const header = getHeaderRow();
 
       expect(header).not.toBe(undefined);
       expect(header.classList).toContain('customHeaderRowClass');
-
-      const cells = [].slice.call(header.querySelectorAll('.cdk-header-cell'));
-      expect(cells.length).toBe(component.columnsToRender.length);
+      expect(getHeaderRowCells().length).toBe(component.columnsToRender.length);
     });
 
     it('with rendered rows with right number of row cells', () => {
-      expect(getRows().length).toBe(dataSource.data.length);
-      getRows().forEach(row => {
+      const rows = getRows();
+
+      expect(rows.length).toBe(dataSource.data.length);
+      rows.forEach(row => {
         expect(row.classList).toContain('customRowClass');
         expect(getRowCells(row).length).toBe(component.columnsToRender.length);
+      });
+    });
+
+    it('with column class names provided to header and data row cells', () => {
+      getHeaderRowCells().forEach((headerCell, index) => {
+        expect(headerCell.classList).toContain(`cdk-column-${component.columnsToRender[index]}`);
+      });
+
+      getRows().forEach(row => {
+        getRowCells(row).forEach((cell, index) => {
+          expect(cell.classList).toContain(`cdk-column-${component.columnsToRender[index]}`);
+        });
       });
     });
   });
