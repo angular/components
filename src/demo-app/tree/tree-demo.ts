@@ -1,7 +1,7 @@
 import {Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
 import {PersonDataSource} from './data-source'
-import {SelectionModel, MdTree} from '@angular/material';
+import {SelectionModel, CdkTree} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -13,36 +13,21 @@ import {SelectionModel, MdTree} from '@angular/material';
 export class TreeDemo {
   selection = new SelectionModel<UserData>(true, []);
   dataSource: PersonDataSource;
+  showDottedLine: boolean = true;
 
-  @ViewChild(MdTree) tree: MdTree;
+  @ViewChild(CdkTree) tree: CdkTree;
 
   constructor(private peopleDatabase: PeopleDatabase) { }
 
   ngOnInit() {
     this.dataSource = new PersonDataSource(this.peopleDatabase);
-
   }
 
-  expandIncludeChildren: boolean = true;
+  expandRecursive: boolean = true;
+  selectRecursive: boolean = true;
 
   get expansionModel() {
     return this.dataSource.expansionModel;
-  }
-
-  getPadding(level: number) {
-    return `${(level - 1) * 45}px`;
-  }
-
-  toggleExpand(node: UserData) {
-    this.dataSource.expansionModel.toggle(node);
-  }
-
-  refreshData() {
-    this.dataSource.refresh();
-  }
-
-  gotoParent(node: UserData) {
-    this.tree.gotoParent(node);
   }
 
   expandAll() {
@@ -53,15 +38,12 @@ export class TreeDemo {
     this.tree.toggleAll(false);
   }
 
-  expand(node: UserData) {
-    this.tree.toggleAll(true, node);
-  }
-
-  collapse(node: UserData) {
-    this.tree.toggleAll(false, node);
-  }
-
   createArray(level: number) {
     return new Array(level);
+  }
+
+  stop(event: any) {
+    console.log(event);
+    event.stopPropagation()
   }
 }

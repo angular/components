@@ -1,0 +1,68 @@
+.tree-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 800px;
+    background: white;
+    margin-bottom: 20px;
+    min-height: 300px;
+
+    // Table fills in the remaining area with a scroll
+    cdk-tree {
+        flex: 1 1 auto;
+        overflow: auto;
+    }
+}
+
+.row {
+    display: flex;
+    height: 48px;
+    align-items: center;
+}
+
+ul, li { list-style: none; margin: 0; padding: 0; }
+ul { padding-left: 16px; }
+li { padding-left: 16px;
+    border: 1px dotted black;
+    border-width: 0 0 1px 1px;
+}
+li.container { border-bottom: 0px; }
+li.empty { font-style: italic;
+    color: silver;
+    border-color: silver;
+}
+li .row { margin: 0;
+    background: white;
+    position: relative;
+    top: 24px;
+}
+li ul {
+    border-top: 1px dotted black;
+    margin-left: -16px;
+    padding-left: 32px;
+}
+ul > md-node:last-child > li > ul {
+    border-left: 1px solid white;
+    margin-left: -17px;
+}
+
+.mat-checkbox {
+    background-color: white;
+    z-index: 10;
+}
+
+.mat-node-trigger .mat-icon {
+    background-color: white;
+    z-index: 10;
+}
+
+md-icon {
+    cursor: hand;
+}
+
+.data-row {
+    height: 48px;
+}
+
+.children md-node {
+    padding-left: 45px;
+}

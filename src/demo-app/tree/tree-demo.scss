@@ -2,9 +2,11 @@
   display: flex;
   flex-direction: column;
   max-height: 800px;
+  background: white;
+  margin-bottom: 20px;
 
   // Table fills in the remaining area with a scroll
-  md-tree {
+  cdk-tree {
     flex: 1 1 auto;
     overflow: auto;
   }
@@ -12,6 +14,8 @@
 
 .row {
   display: flex;
+  height: 48px;
+  align-items: center;
 }
 
 .special {
@@ -24,8 +28,8 @@ div.space div {
   width: 45px;
   height: 48px;
   position: relative;
-  bottom: 34px;
-  left: 12px;
+  bottom: 25px;
+  left: 20px;
   display: inline-block;
 }
 

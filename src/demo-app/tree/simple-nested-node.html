@@ -1,8 +1,8 @@
 <li [mdNestedNode]="node">
-    <div  *ngIf="flat" [class.selected]="node ? selection.isSelected(node) : false"
+    <div  [class.selected]="node ? selection.isSelected(node) : false"
           [class.data-row]="!!node">
         <div class="row">
-            <span [mdNodeExpandTrigger]="node" [mdNodeExpandTriggerRecursive]="expandIncludeChildren" >
+            <span [mdNodeTrigger]="node" [mdNodeTriggerSelection]="dataSource.expansionModel" [mdNodeTriggerRecursive]="expandRecursive" >
               <md-icon *ngIf="expandable">{{ dataSource.expansionModel.isSelected(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</md-icon>
             </span>
             <md-checkbox (click)="$event.stopPropagation()"

@@ -1,7 +1,7 @@
 import {OnInit, Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
 import {JsonDataSource} from './simple-data-source'
-import {MdNodePlaceholder, SelectionModel, MdTree} from '@angular/material';
+import {MdNodePlaceholder, SelectionModel, CdkTree} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -22,7 +22,7 @@ export class SimpleTreeNode {
   @Input() selection: SelectionModel<any>;
   @Input() dataSource: JsonDataSource;
 
-  constructor(public tree: MdTree) {}
+  constructor(public tree: CdkTree) {}
 
   createArray(level: number) {
     return new Array(level);

@@ -1,7 +1,7 @@
 import {Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
 import {JsonDataSource} from './simple-data-source'
-import {SelectionModel, MdTree} from '@angular/material';
+import {SelectionModel, CdkTree} from '@angular/material';
 import {SimpleTreeNode} from './simple-tree-node';
 
 @Component({
@@ -107,7 +107,7 @@ export class SimpleTreeDemo {
   selection = new SelectionModel<UserData>(true, []);
   dataSource: JsonDataSource = new JsonDataSource();
 
-  @ViewChild(MdTree) tree: MdTree;
+  @ViewChild(CdkTree) tree: CdkTree;
 
   constructor() { }
 

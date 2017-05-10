@@ -1,4 +1,4 @@
-import {MdTree, MdNode, MdNodeDef, MdNodePlaceholder, MdNodeExpandTrigger, MdNodePadding, MdNestedNode} from './tree';
+import {CdkTree, MdNode, MdNodeDef, MdNodePlaceholder, MdNodeExpandTrigger, MdNodeSelectTrigger, MdNodeTrigger, MdNodePadding, MdNestedNode} from './tree';
 import {TreeDataSource, MdTreeViewData} from './data-source';
 import {NgModule, ModuleWithProviders} from '@angular/core';
 import {CommonModule} from '@angular/common';
@@ -9,8 +9,8 @@ export * from './tree';
 
 @NgModule({
   imports: [CommonModule, MdRippleModule],
-  exports: [MdTree, MdNodeDef, MdNode, MdNodePlaceholder, MdNodeExpandTrigger, MdNodePadding, MdNestedNode],
-  declarations: [MdTree, MdNodeDef, MdNode, MdNodePlaceholder, MdNodeExpandTrigger, MdNodePadding, MdNestedNode],
+  exports: [CdkTree, MdNodeDef, MdNode, MdNodePlaceholder, MdNodeExpandTrigger, MdNodeSelectTrigger, MdNodeTrigger, MdNodePadding, MdNestedNode],
+  declarations: [CdkTree, MdNodeDef, MdNode, MdNodePlaceholder, MdNodeExpandTrigger, MdNodeSelectTrigger, MdNodeTrigger, MdNodePadding, MdNestedNode],
   providers: [FocusOriginMonitor]
 })
 export class MdTreeModule {

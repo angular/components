@@ -5,32 +5,44 @@
     No data to display.
   </div>
 
-  <md-tree #tree [dataSource]="dataSource" [style.display]="!!dataSource.filteredData.length ? '' : 'none'">
+  <cdk-tree #tree [dataSource]="dataSource" [style.display]="!!dataSource.filteredData.length ? '' : 'none'">
     <!-- Row templates. The columns used are set at the row template level -->
     <md-node *mdNodeDef="let node let level=level let expandable=expandable"
               [class.selected]="node ? selection.isSelected(node) : false"
-              [class.data-row]="!!node"
-              >
-      <div class="row">
-        <!--[mdNodePadding]="level" [mdNodePaddingIndent]="45"-->
-        <div class="space">
+              [class.data-row]="!!node">
+      <div class="row" [mdNodePadding]="showDottedLine ? 0 : level" [mdNodePaddingIndent]="45">
+        <!-- Dotted line for tree -->
+        <div class="space" *ngIf="showDottedLine">
           <div *ngFor="let a of createArray(level); let index = index" [class.special]="dataSource.dottedLineLevels.get(node).includes(index)"></div>
         </div>
-        <span [mdNodeExpandTrigger]="node" [mdNodeExpandTriggerRecursive]="expandIncludeChildren" >
+
+        <!-- Expand trigger -->
+        <a md-icon-button [mdNodeTrigger]="node" [mdNodeTriggerRecursive]="expandRecursive" [mdNodeTriggerSelection]="expansionModel">
           <md-icon *ngIf="expandable">{{ expansionModel.isSelected(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</md-icon>
-        </span>
-        <md-checkbox (click)="$event.stopPropagation()"
-                     (change)="$event ? selection.toggle(node) : null"
-                     [checked]="selection.isSelected(node)">
-          {{node.name}} {{node.progress}} </md-checkbox>
+        </a>
+
+        <!-- display content and checkbox -->
+          <md-checkbox [checked]="selection.isSelected(node)" [mdNodeSelectTrigger]="node" [mdNodeTriggerRecursive]="selectRecursive"
+                       [mdNodeTriggerSelection]="selection">
+            {{node.name}} {{node.progress}}
+          </md-checkbox>
       </div>
     </md-node>
-  </md-tree>
+  </cdk-tree>
 </div>
 
 Selected: <span *ngFor="let node of selection.selected">{{node.name}}, </span>
 
-<button (click)="refreshData()" >Refresh</button>
+<br>
 
+Expanded: <span *ngFor="let node of expansionModel.selected">{{node.name}}, </span>
+<br>
 <button md-button (click)="expandAll()">Expand All</button>
 <button md-button (click)="collapseAll()">Collapse All</button>
+
+<br>
+<md-slide-toggle [(ngModel)]="showDottedLine">Show dotted lines</md-slide-toggle>
+<br>
+<md-slide-toggle [(ngModel)]="expandRecursive">Expand Recursively</md-slide-toggle>
+<br>
+<md-slide-toggle [(ngModel)]="selectRecursive">Select Recursively</md-slide-toggle>

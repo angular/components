@@ -37,12 +37,15 @@ export const ROW_HEIGHT = 49;
 /** Amount of rows to buffer around the view */
 export const BUFFER = 3;
 
+/**
+ * Node template
+ */
 @Directive({selector: '[mdNodeDef]'})
 export class MdNodeDef {
   constructor(public template: TemplateRef<any>) {}
 }
 
-// Role should be group for expandable ndoes
+// TODO: Role should be group for expandable ndoes
 @Directive({
   selector: 'md-node',
   host: {
@@ -71,11 +74,18 @@ export class MdNode  implements Focusable, OnDestroy {
     return this.elementRef.nativeElement;
   }
 }
+
+/**
+ * Placeholder for md-nodes
+ */
 @Directive({selector: '[mdNodePlaceholder]'})
 export class MdNodePlaceholder {
   constructor(public viewContainer: ViewContainerRef) { }
 }
 
+/**
+ * Indent for the children
+ */
 @Directive({selector: '[mdNodePadding]',
   host: {
     '[style.padding-left]': 'paddingIndent',
@@ -89,47 +99,104 @@ export class MdNodePadding {
   }
 }
 
+/**
+ * Expand trigger
+ */
 @Directive({
   selector: '[mdNodeExpandTrigger]',
   host: {
     'class': 'mat-node-trigger',
     '(click)': 'handleClick($event)',
+    '[style.z-index]': 'zIndex'
   },
 })
 export class MdNodeExpandTrigger {
   @Input('mdNodeExpandTrigger') node: any;
   @Input('mdNodeExpandTriggerRecursive') recursive: boolean = false;
+  @Input('mdNodeExpandTriggerZIndex') zIndex: number = 1;
 
-  constructor(@Inject(forwardRef(() => MdTree)) private tree: MdTree) {
-    console.log(`construct md node expand trigger ${this.node} ${this.recursive}`);
-  }
+  constructor(@Inject(forwardRef(() => CdkTree)) private tree: CdkTree) {}
 
   handleClick(event) {
-    console.log(`clicked`);
     this.tree.toggleExpand(this.node, this.recursive);
   }
 }
 
+
+/**
+ * Node trigger
+ */
+@Directive({
+  selector: '[mdNodeTrigger]',
+  host: {
+    'class': 'mat-node-trigger',
+    '(click)': 'trigger($event)',
+  },
+})
+export class MdNodeTrigger {
+  @Input('mdNodeTrigger') node: any;
+  @Input('mdNodeTriggerRecursive') recursive: boolean = false;
+  @Input('mdNodeTriggerSelection') selection: SelectionModel<any>;
+
+  constructor(@Inject(forwardRef(() => CdkTree)) private tree: CdkTree) {}
+
+  trigger(event: Event) {
+    this.selection.toggle(this.node);
+    if (this.recursive) {
+      this.selectRecursive(this.node, this.selection.isSelected(this.node));
+    }
+  }
+
+  selectRecursive(node: any, select: boolean) {
+    let children = this.tree.dataSource.getChildren(node);
+    if (!!children) {
+      children.forEach((child: any) => {
+        select ? this.selection.select(child) : this.selection.deselect(child);
+        this.selectRecursive(child, select);
+      });
+    }
+  }
+}
+
+/**
+ * Select trigger
+ */
+@Directive({
+  selector: '[mdNodeSelectTrigger]',
+  host: {
+    'class': 'mat-node-select-trigger',
+    '(change)': 'trigger($event)',
+    '(click)': '$event.stopPropagation()',
+  },
+})
+export class MdNodeSelectTrigger extends MdNodeTrigger{
+  @Input('mdNodeSelectTrigger') node: any;
+}
+
+
+/**
+ * Nested node, add children to `mdNodePlaceholder` in template
+ */
 @Directive({selector: '[mdNestedNode]'})
 export class MdNestedNode implements OnInit {
   @Input('mdNestedNode') node: any;
 
   @ContentChild(MdNodePlaceholder) nodePlaceholder: MdNodePlaceholder;
 
-  constructor(public tree: MdTree) {}
+  constructor(@Inject(forwardRef(() => CdkTree)) private tree: CdkTree) {}
 
   ngOnInit() {
     let children = this.tree.dataSource.getChildren(this.node);
     if (!!children) {
       children.forEach((child, index) => {
-        this.tree.addNodeInContainer(this.nodePlaceholder.viewContainer, child, index);
+        this.tree.addNode(this.nodePlaceholder.viewContainer, child, index);
       });
     }
   }
 }
 
 @Component({
-  selector: 'md-tree',
+  selector: 'cdk-tree',
   styleUrls: ['./tree.css'],
   template: `
     <ng-container mdNodePlaceholder></ng-container>
@@ -141,19 +208,20 @@ export class MdNestedNode implements OnInit {
     '(keydown)': 'handleKeydown($event)',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdTree {
+export class CdkTree {
   @Input() dataSource: TreeDataSource<any>;
-  @Input() flat: boolean = true;
 
   viewChange = new BehaviorSubject<MdTreeViewData>({start: 0, end: 20});
 
   private _dataDiffer: IterableDiffer<any> = null;
 
+  // Focus related
   private _keyManager: FocusKeyManager;
 
+  // Only for "expand all" feature
   private dataNodes: any[];
+
   @ContentChildren(MdNode) items: QueryList<MdNode>;
   @ContentChildren(MdNodeDef) nodeDefinitions: QueryList<MdNodeDef>;
   @ViewChild(MdNodePlaceholder) nodePlaceholder: MdNodePlaceholder;
@@ -172,68 +240,10 @@ export class MdTree {
   }
 
   ngAfterViewInit() {
+    // Focus related
     this._keyManager = new FocusKeyManager(this.items).withWrap();
-    console.log(`this items ${this.items}`);
+
     this.dataSource.connectTree(this.viewChange).subscribe((result: any[]) => this.renderNodeChanges(result));
-  }
-
-  scrollToTop() {
-    this.elementRef.nativeElement.scrollTop = 0;
-  }
-
-  scrollEvent() {
-    console.log(`scroll event `);
-    const scrollTop = this.elementRef.nativeElement.scrollTop;
-    const elementHeight = this.elementRef.nativeElement.getBoundingClientRect().height;
-
-    const topIndex = Math.floor(scrollTop / ROW_HEIGHT);
-
-    const view = {
-      start: Math.max(topIndex - BUFFER, 0),
-      end: Math.ceil(topIndex + (elementHeight / ROW_HEIGHT)) + BUFFER
-    };
-
-    this.viewChange.next(view);
-  }
-
-  expandable(node: any) {
-    return !!this.dataSource.getChildren(node);
-  }
-
-  expanded(node: any) {
-    return this.dataSource.expansionModel.isSelected(node);
-  }
-
-
-  handleKeydown(event) {
-    console.log(this.items.length);
-    console.log(`Tree handle key down ${event.keyCode} Tree is ${this}`);
-    if (event.keyCode == UP_ARROW) {
-      this._keyManager.setPreviousItemActive();
-      // Move to previous index scrollToIndex(focusIndex - 1)
-      console.log(`// Move to previous index scrollToIndex(focusIndex - 1)`);
-    } else if (event.keyCode == DOWN_ARROW) {
-      this._keyManager.setNextItemActive();
-      console.log(`// Move to next index scrollToIndex(focusIndex + 1)`);
-      // Move to next index scrollToIndex(focusIndex + 1)
-    } else if (event.keyCode == RIGHT_ARROW) {
-      console.log(`// If focus expandable, expand, scrollToIndex(focusIndex + 1)`);
-      // If focus expandable, expand, scrollToIndex(focusIndex + 1)
-    } else if (event.keyCode == LEFT_ARROW) {
-      console.log(`// goToParent(focusIndex), collapse parent node`);
-      // goToParent(focusIndex), collapse parent node
-    }
-  }
-
-  scrollToIndex(topIndex: number) {
-    const elementHeight = this.elementRef.nativeElement.getBoundingClientRect().height;
-    const view = {
-      start: Math.max(topIndex - BUFFER, 0),
-      end: Math.ceil(topIndex + (elementHeight / ROW_HEIGHT)) + BUFFER
-    };
-    console.log(view);
-    this.viewChange.next(view);
-    this.elementRef.nativeElement.scrollTop = topIndex * ROW_HEIGHT;
   }
 
   renderNodeChanges(dataNodes: any[]) {
@@ -247,7 +257,7 @@ export class MdTree {
       (item: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
         if (item.previousIndex == null) {
           console.log('Adding row ');
-          this.addNode(dataNodes[currentIndex], currentIndex);
+          this.addNode(this.nodePlaceholder.viewContainer, dataNodes[currentIndex], currentIndex);
         } else if (currentIndex == null) {
           console.log('Removing a row ');
           this.nodePlaceholder.viewContainer.remove(adjustedPreviousIndex);
@@ -266,36 +276,24 @@ export class MdTree {
     console.timeEnd('Rendering rows');
   }
 
-  addNode(data: any, currentIndex: number) {
+  addNode(viewContainer: ViewContainerRef, data: any, currentIndex: number) {
     if (!!data) {
-      this.addNodeInContainer(this.nodePlaceholder.viewContainer, data, currentIndex);
+      this._addNodeInContainer(viewContainer, data, currentIndex);
     } else {
-      this.nodePlaceholder.viewContainer.createEmbeddedView(this.emptyNodeTemplate, {}, currentIndex);
+      viewContainer.createEmbeddedView(this.emptyNodeTemplate, {}, currentIndex);
     }
   }
 
-  addNodeInContainer(container: ViewContainerRef, data: any, currentIndex: number) {
+  _addNodeInContainer(container: ViewContainerRef, data: any, currentIndex: number) {
     let node = this.getNodeDefForItem(data);
     let children = this.dataSource.getChildren(data);
     let expandable = !!children;
     const context = {
       $implicit: data,
-      level: this.dataSource.getLevel(data),// levelMap.get(this.dataSource.getKey(data)),
+      level: this.dataSource.getLevel(data),
       expandable: expandable,
     };
     container.createEmbeddedView(node.template, context, currentIndex);
-    /*if (!this.flat && expandable && !!node.placeholder) {
-      for (let child of children; let index = indx) {
-        this._addNodeInContainer(node.placeholder.viewContainer, child, index);
-      }
-    } */
-  }
-
-  gotoParent(node: any) {
-    let parent = this.dataSource.getParent(node);
-    let index = this.dataSource.getIndex(parent);
-    console.log(index);
-    this.scrollToIndex(index);
   }
 
   getNodeDefForItem(item: any) {
@@ -303,28 +301,101 @@ export class MdTree {
     return this.nodeDefinitions.first;
   }
 
-  toggleAll(expand: boolean, node?: any, includingChildren: boolean = true) {
-    if (node) {
-      let children = this.dataSource.getChildren(node);
-      if (children) {
-        expand
-          ? this.dataSource.expansionModel.select(node)
-          : this.dataSource.expansionModel.deselect(node);
-        if (includingChildren) {
-          children.forEach((child) => this.toggleAll(expand, child, includingChildren));
-        }
-      }
-    } else {
-      this.dataNodes.forEach((node) => this.toggleAll(expand, node, includingChildren));
+
+  /** Scroll related */
+  scrollToTop() {
+    this.elementRef.nativeElement.scrollTop = 0;
+  }
+
+  scrollEvent() {
+    const scrollTop = this.elementRef.nativeElement.scrollTop;
+    const elementHeight = this.elementRef.nativeElement.getBoundingClientRect().height;
+
+    const topIndex = Math.floor(scrollTop / ROW_HEIGHT);
+
+    const view = {
+      start: Math.max(topIndex - BUFFER, 0),
+      end: Math.ceil(topIndex + (elementHeight / ROW_HEIGHT)) + BUFFER
+    };
+
+    this.viewChange.next(view);
+  }
+
+  scrollToIndex(topIndex: number) {
+    const elementHeight = this.elementRef.nativeElement.getBoundingClientRect().height;
+    const view = {
+      start: Math.max(topIndex - BUFFER, 0),
+      end: Math.ceil(topIndex + (elementHeight / ROW_HEIGHT)) + BUFFER
+    };
+    this.viewChange.next(view);
+    this.elementRef.nativeElement.scrollTop = topIndex * ROW_HEIGHT;
+  }
+
+
+  gotoParent(node: any) {
+    let parent = this.dataSource.getParent(node);
+    let index = this.dataSource.getIndex(parent);
+    this.scrollToIndex(index);
+  }
+  /** Scroll related end */
+
+
+  // Key related
+  // TODO(tinagao): Work on keyboard traversal
+  handleKeydown(event) {
+    if (event.keyCode == UP_ARROW) {
+      this._keyManager.setPreviousItemActive();
+      // Move to previous index scrollToIndex(focusIndex - 1)
+      console.log(`// Move to previous index scrollToIndex(focusIndex - 1)`);
+    } else if (event.keyCode == DOWN_ARROW) {
+      this._keyManager.setNextItemActive();
+      console.log(`// Move to next index scrollToIndex(focusIndex + 1)`);
+      // Move to next index scrollToIndex(focusIndex + 1)
+    } else if (event.keyCode == RIGHT_ARROW) {
+      console.log(`// If focus expandable, expand, scrollToIndex(focusIndex + 1)`);
+      // If focus expandable, expand, scrollToIndex(focusIndex + 1)
+    } else if (event.keyCode == LEFT_ARROW) {
+      console.log(`// goToParent(focusIndex), collapse parent node`);
+      // goToParent(focusIndex), collapse parent node
     }
   }
 
-  toggleExpand(node: any, includingChildren: boolean = true) {
+  /** Expand related */
+  expandable(node: any) {
+    return !!this.dataSource.getChildren(node);
+  }
+
+  expanded(node: any) {
+    return this.dataSource.expansionModel.isSelected(node);
+  }
+
+  toggleAll(expand: boolean, node?: any, recursive: boolean = true) {
+    if (node) {
+      let children = this.dataSource.getChildren(node);
+      expand
+        ? this.dataSource.expansionModel.select(node)
+        : this.dataSource.expansionModel.deselect(node);
+      if (!!children && recursive) {
+        children.forEach((child) => this.toggleAll(expand, child, recursive));
+      }
+    } else {
+
+      this.dataNodes.forEach((node) => {
+        console.log(node);
+        console.log(`data nodes ${node} ${expand} ${recursive}`);
+        this.toggleAll(expand, node, recursive)
+      });
+      console.log(this.dataSource.expansionModel);
+    }
+  }
+
+  toggleExpand(node: any, recursive: boolean = true) {
     this.dataSource.expansionModel.toggle(node);
     let expand = this.dataSource.expansionModel.isSelected(node);
     let children = this.dataSource.getChildren(node);
-    if (includingChildren && children) {
-      children.forEach((child) => this.toggleAll(expand, child, includingChildren));
+    if (recursive && children) {
+      children.forEach((child) => this.toggleAll(expand, child, recursive));
     }
   }
+  /** Expand related end */
 }

@@ -62,4 +62,11 @@ export abstract class TreeDataSource<T> {
       });
     }
   }
+
+  getChildrenRecursive(node: T, collection: T[]) {
+    this.getChildren(node).forEach((child) => {
+      collection.push(child);
+      this.getChildrenRecursive(node, collection)
+    });
+  }
 }

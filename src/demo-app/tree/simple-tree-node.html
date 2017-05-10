@@ -4,9 +4,9 @@
     <div class="space">
       <div *ngFor="let a of createArray(level); let index = index" [class.special]="getSpecial(node, index)"></div>
     </div>
-    <span [mdNodeExpandTrigger]="node" [mdNodeExpandTriggerRecursive]="expandIncludeChildren" >
+    <a md-icon-button [mdNodeExpandTrigger]="node" [mdNodeExpandTriggerRecursive]="expandIncludeChildren" >
       <md-icon *ngIf="expandable">{{ dataSource.expansionModel.isSelected(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</md-icon>
-    </span>
+    </a>
     <md-checkbox (click)="$event.stopPropagation()"
                  (change)="$event ? selection.toggle(node) : null"
                  [checked]="selection.isSelected(node)">

@@ -248,6 +248,29 @@ export class MdCheckbox extends _MdCheckboxMixinBase
     }
   }
 
+  /** The color of the button. Can be `primary`, `accent`, or `warn`. */
+  @Input()
+  get color(): string { return this._color; }
+  set color(value: string) { this._updateColor(value); }
+
+  set disabled(value: any) {}
+
+  _updateColor(newColor: string) {
+    this._setElementColor(this._color, false);
+    this._setElementColor(newColor, true);
+    this._color = newColor;
+  }
+
+  _setElementColor(color: string, isAdd: boolean) {
+    if (color != null && color != '') {
+      if (isAdd) {
+        this._renderer.addClass(this._elementRef.nativeElement, `mat-${color}`);
+      } else {
+        this._renderer.removeClass(this._elementRef.nativeElement, `mat-${color}`);
+      }
+    }
+  }
+
   _isRippleDisabled() {
     return this.disableRipple || this.disabled;
   }
