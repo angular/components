@@ -62,9 +62,7 @@ export class CdkHeaderDef {
   constructor(public template: TemplateRef<any>) { }
 }
 
-/**
- * Provides the template to use for the data rows.
- */
+/** Provides the template to use for the data rows. */
 @Directive({selector: '[cdkRowDef]'})
 export class CdkRowDef {
   @Input('cdkRowDefColumns') columns: string[];
@@ -75,9 +73,7 @@ export class CdkRowDef {
   constructor(public template: TemplateRef<any>) { }
 }
 
-/**
- * Header template container that contains the cell outlet. Adds the right class and role.
- */
+/** Header template container that contains the cell outlet. Adds the right class and role. */
 @Component({
   selector: 'cdk-header',
   template: '<ng-container cdkCellOutlet></ng-container>',
@@ -88,9 +84,7 @@ export class CdkRowDef {
 })
 export class CdkHeaderRow { }
 
-/**
- * Data row template container that contains the cell outlet. Adds the right class and role.
- */
+/** Data row template container that contains the cell outlet. Adds the right class and role. */
 @Component({
   selector: 'cdk-row',
   template: '<ng-container cdkCellOutlet></ng-container>',
@@ -101,9 +95,7 @@ export class CdkHeaderRow { }
 })
 export class CdkRow { }
 
-/**
- * Header cell template container that adds the right classes and role.
- */
+/** Header cell template container that adds the right classes and role. */
 @Directive({
   selector: 'cdk-header-cell',
   host: {
@@ -119,9 +111,7 @@ export class CdkHeaderCell {
   }
 }
 
-/**
- * Cell template container that adds the right classes and role.
- */
+/** Cell template container that adds the right classes and role. */
 @Directive({
   selector: 'cdk-row-cell',
   host: {
@@ -147,14 +137,8 @@ export class CdkCellOutlet {
 
   static mostRecentCellOutlet: CdkCellOutlet = null;
 
-  // Hack attack! Because we're so smart, we know that immediately after calling
-  // `createEmbeddedView` that the most recently constructed instance of CdkCellOutlet
-  // is the one inside this row, so we can set stuff to it (so that the user doesn't have to).
-  // TODO: add some code to enforce that exactly one CdkCellOutlet was instantiated as a result
-  // of this `createEmbeddedView`.
   /**
    * Sets the most recently constructed CdkCellOutlet with the provided set of cells and context.
-   * Sets the cells and context of the most recently
    */
   static setMostRecentCellOutletData(cells: CdkRowCellDef[], context: any = {}) {
     CdkCellOutlet.mostRecentCellOutlet.cells = cells;
@@ -221,12 +205,6 @@ export class CdkTable {
   viewChange = new BehaviorSubject<CdkTableViewData>({start: 0, end: Number.MAX_VALUE});
 
   /**
-   * IterableDiffer to check if the data array has changed since the last render. If so, it provides
-   * information on what has changed (data added, removed, or moved).
-   */
-  private _dataDiffer: IterableDiffer<any> = null;
-
-  /**
    * Map of all the user's defined columns identified by name.
    * Contains the header and data-cell templates.
    */
@@ -242,21 +220,13 @@ export class CdkTable {
    */
   @ContentChildren(CdkColumnDef) columnDefinitions: QueryList<CdkColumnDef>;
 
-  /**
-   * Template used as the header container.
-   */
+  /** Template used as the header container. */
   @ContentChild(CdkHeaderDef) headerDefinition: CdkHeaderDef;
 
-  /**
-   * Set of templates that used as the data row containers.
-   */
+  /** Set of templates that used as the data row containers. */
   @ContentChildren(CdkRowDef) rowDefinitions: QueryList<CdkRowDef>;
 
-  constructor(private _differs: IterableDiffers,
-              private _changeDetectorRef: ChangeDetectorRef) {
-    // Initialize the data differ as an empty array to reflect that there are no rendered rows.
-    this._dataDiffer = this._differs.find([]).create();
-  }
+  constructor(private _changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnDestroy() {
     // TODO: Disconnect from the data source so that it can unsubscribe from its streams.
@@ -277,32 +247,13 @@ export class CdkTable {
     // TODO: Re-render rows when their list of columns change.
     // TODO: If the data source is not present after view init, connect it when it is defined.
     const connectFn = this.dataSource.connectTable.bind(this.dataSource);
-    this.viewChange.let(connectFn).subscribe((dataRows: any[]) => {
-      const changes = this._dataDiffer.diff(dataRows);
-      if (changes) {
-        this.renderRowChanges(changes, dataRows);
-      }
+    this.viewChange.let(connectFn).subscribe((rowsData: any[]) => {
+      // TODO: Add a differ that will check if the data has changed,
+      // rather than re-rendering all rows
+      this.rowPlaceholder.viewContainer.clear();
+      rowsData.forEach(rowData => this.insertRow(rowData));
+      this._changeDetectorRef.markForCheck();
     });
-  }
-
-  /**
-   * Re-render the data rows in the row placeholder view container using the information provided
-   * by the IterableChanges.
-   */
-  renderRowChanges(changes: IterableChanges<any>, dataRows: any[]) {
-    const rowViewContainer = this.rowPlaceholder.viewContainer;
-    changes.forEachOperation(
-        (item: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
-          if (item.previousIndex == null) {
-            this.insertRow(dataRows[currentIndex], currentIndex);
-          } else if (currentIndex == null) {
-            rowViewContainer.remove(adjustedPreviousIndex);
-          } else {
-            rowViewContainer.move(rowViewContainer.get(adjustedPreviousIndex), currentIndex);
-          }
-        });
-
-    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -311,6 +262,8 @@ export class CdkTable {
   renderHeaderRow() {
     const cells = this.getHeaderCellTemplatesForRow(this.headerDefinition);
 
+    // TODO: add some code to enforce that exactly one CdkCellOutlet was instantiated as a result
+    // of `createEmbeddedView`.
     this.headerRowPlaceholder.viewContainer
         .createEmbeddedView(this.headerDefinition.template, {cells});
     CdkCellOutlet.setMostRecentCellOutletData(cells);
@@ -320,17 +273,19 @@ export class CdkTable {
    * Create the embedded view for the data row template and place it in the correct index location
    * within the data row view container.
    */
-  insertRow(data: any, currentIndex: number) {
+  insertRow(rowData: any) {
     // TODO: Add when predicates to the row definitions to find the right template to used based on
     // the data rather than choosing the first row definition.
     const row = this.rowDefinitions.first;
 
-    const context = {$implicit: data};
-    this.rowPlaceholder.viewContainer
-        .createEmbeddedView(row.template, context, currentIndex);
+    const context = {$implicit: rowData};
+
+    // TODO: add some code to enforce that exactly one CdkCellOutlet was instantiated as a result
+    // of `createEmbeddedView`.
+    this.rowPlaceholder.viewContainer.createEmbeddedView(row.template, context);
 
     // Insert empty cells if there is no data to improve rendering time.
-    const cells = data ? this.getCellTemplatesForRow(row) : [];
+    const cells = rowData ? this.getCellTemplatesForRow(row) : [];
     CdkCellOutlet.setMostRecentCellOutletData(cells, context);
   }
 

@@ -31,7 +31,8 @@ describe('CdkTable', () => {
       imports: [CommonModule],
       declarations: [
         SimpleCdkTableApp,
-        CdkTable, CdkRowDef, CdkRowCellDef, CdkCellOutlet, CdkHeaderCellDef, CdkColumnDef, CdkRowCell, CdkRow,
+        CdkTable, CdkRowDef, CdkRowCellDef, CdkCellOutlet, CdkHeaderCellDef,
+        CdkColumnDef, CdkRowCell, CdkRow,
         CdkHeaderCell, CdkHeaderRow, CdkHeaderDef,
         CdkRowPlaceholder, CdkHeaderRowPlaceholder,
       ],
@@ -47,16 +48,16 @@ describe('CdkTable', () => {
     fixture.detectChanges();  // Let the cells render
   }));
 
-  function queryAll(element: HTMLElement, query: string) {
-    return [].slice.call(element.querySelectorAll(query))
+  function getElements(element: HTMLElement, query: string): HTMLElement[] {
+    return [].slice.call(element.querySelectorAll(query));
   }
 
   function getRows() {
-    return fixture ? queryAll(fixture.nativeElement, '.mat-row') : [];
+    return fixture ? getElements(fixture.nativeElement, '.mat-row') : [];
   }
 
   function getRowCells(row: HTMLElement) {
-    return row ? queryAll(row, '.mat-row-cell') : [];
+    return row ? getElements(row, '.mat-row-cell') : [];
   }
 
   describe('should initialize', () => {
