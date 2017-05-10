@@ -79,7 +79,7 @@ export class CdkHeaderRowDef {
 export class CdkRowDef {
   @Input('cdkRowDefColumns') columns: string[];
 
-  // TODO: Add an input for providing a switch function to determine
+  // TODO(andrewseguin): Add an input for providing a switch function to determine
   // if this template should be used.
 
   constructor(public template: TemplateRef<any>) { }
@@ -142,25 +142,25 @@ export class CdkRowCell {
 }
 
 /**
- * Outlet used by the header and data rows that has the right column cells and holds the context.
+ * Outlet for rendering cells inside of a row or header row.
+ * @docs-private
  */
 @Directive({selector: '[cdkCellOutlet]'})
 export class CdkCellOutlet {
   /** The ordered list of cells to render within this outlet's view container */
   cells: CdkRowCellDef[];
 
-  /** The row data context to be provided to each cell */
+  /** The data context to be provided to each cell */
   context: any;
 
-  static mostRecentCellOutlet: CdkCellOutlet = null;
-
   /**
-   * Sets the most recently constructed CdkCellOutlet with the provided set of cells and context.
+   * Static property containing the latest constructed instance of this class.
+   * Used by the CDK data-table when each CdkHeaderRow and CdkRow component is created using
+   * createEmbeddedView. After one of these components are created, this property will provide
+   * a handle to provide that component's cells and context. After init, the CdkCellOutlet will
+   * construct the cells with the provided context.
    */
-  static setMostRecentCellOutletData(cells: CdkRowCellDef[], context: any = {}) {
-    CdkCellOutlet.mostRecentCellOutlet.cells = cells;
-    CdkCellOutlet.mostRecentCellOutlet.context = context;
-  }
+  static mostRecentCellOutlet: CdkCellOutlet = null;
 
   constructor(private _viewContainer: ViewContainerRef) {
     CdkCellOutlet.mostRecentCellOutlet = this;
@@ -175,6 +175,7 @@ export class CdkCellOutlet {
 
 /**
  * Provides a handle for the table to grab the view container's ng-container to insert data rows.
+ * @docs-private
  */
 @Directive({selector: '[cdkRowPlaceholder]'})
 export class CdkRowPlaceholder {
@@ -183,6 +184,7 @@ export class CdkRowPlaceholder {
 
 /**
  * Provides a handle for the table to grab the view container's ng-container to insert the header.
+ * @docs-private
  */
 @Directive({selector: '[cdkHeaderRowPlaceholder]'})
 export class CdkHeaderRowPlaceholder {
@@ -201,7 +203,7 @@ export class CdkHeaderRowPlaceholder {
   `,
   host: {
     'class': 'cdk-table',
-    'role': 'grid' // TODO: Allow the user to choose either grid or treegrid
+    'role': 'grid' // TODO(andrewseguin): Allow the user to choose either grid or treegrid
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -214,59 +216,65 @@ export class CdkTable {
   @Input() dataSource: DataSource<any>;
 
   /**
-   * Stream containing the latest information on what rows are being displayed on screen. Offered
-   * to the data source as a heuristic of what data should be provided.
+   * Stream containing the latest information on what rows are being displayed on screen.
+   * Can be used by the data source to as a heuristic of what data should be provided.
    */
-  // TODO: Remove max value as the end index and instead calculate the view on init and scroll.
-  viewChange = new BehaviorSubject<CollectionViewer>({start: 0, end: Number.MAX_VALUE});
+  // TODO(andrewseguin): Remove max value as the end index
+  // and instead calculate the view on init and scroll.
+  viewChanges = new BehaviorSubject<CollectionViewer>({start: 0, end: Number.MAX_VALUE});
 
   /**
    * Map of all the user's defined columns identified by name.
    * Contains the header and data-cell templates.
    */
-  private _columnMap = new Map<ConstrainDOMString,  CdkColumnDef>();
+  private _columnDefinitionsByName = new Map<string,  CdkColumnDef>();
 
   // Placeholders within the table's template where the header and data rows will be inserted.
-  @ViewChild(CdkRowPlaceholder) rowPlaceholder: CdkRowPlaceholder;
-  @ViewChild(CdkHeaderRowPlaceholder) headerRowPlaceholder: CdkHeaderRowPlaceholder;
+  @ViewChild(CdkRowPlaceholder) _rowPlaceholder: CdkRowPlaceholder;
+  @ViewChild(CdkHeaderRowPlaceholder) _headerRowPlaceholder: CdkHeaderRowPlaceholder;
 
   /**
    * The column definitions provided by the user that contain what the header and cells should
    * render for each column.
    */
-  @ContentChildren(CdkColumnDef) columnDefinitions: QueryList<CdkColumnDef>;
+  @ContentChildren(CdkColumnDef) _columnDefinitions: QueryList<CdkColumnDef>;
 
   /** Template used as the header container. */
-  @ContentChild(CdkHeaderRowDef) headerDefinition: CdkHeaderRowDef;
+  @ContentChild(CdkHeaderRowDef) _headerDefinition: CdkHeaderRowDef;
 
   /** Set of templates that used as the data row containers. */
-  @ContentChildren(CdkRowDef) rowDefinitions: QueryList<CdkRowDef>;
+  @ContentChildren(CdkRowDef) _rowDefinitions: QueryList<CdkRowDef>;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnDestroy() {
-    // TODO: Disconnect from the data source so that it can unsubscribe from its streams.
+    // TODO(andrewseguin): Disconnect from the data source so
+    // that it can unsubscribe from its streams.
   }
 
   ngOnInit() {
-    // TODO: Setup a listener for scroll events and emit the calculated view to this.viewChange
+    // TODO(andrewseguin): Setup a listener for scroll events
+    // and emit the calculated view to this.viewChanges
   }
 
   ngAfterContentInit() {
-    this.columnDefinitions.forEach(columnDef => this._columnMap.set(columnDef.name, columnDef));
+    // TODO(andrewseguin): Throw an error if two columns share the same name
+    this._columnDefinitions.forEach(columnDef => {
+      this._columnDefinitionsByName.set(columnDef.name, columnDef);
+    });
   }
 
   ngAfterViewInit() {
-    // TODO: Re-render the header when the header's columns change.
+    // TODO(andrewseguin): Re-render the header when the header's columns change.
     this.renderHeaderRow();
 
-    // TODO: Re-render rows when their list of columns change.
-    // TODO: If the data source is not present after view init, connect it when it is defined.
-    const connectFn = this.dataSource.connectTable.bind(this.dataSource);
-    this.viewChange.let(connectFn).subscribe((rowsData: any[]) => {
-      // TODO: Add a differ that will check if the data has changed,
+    // TODO(andrewseguin): Re-render rows when their list of columns change.
+    // TODO(andrewseguin): If the data source is not
+    // present after view init, connect it when it is defined.
+    this.dataSource.connectTable(this.viewChanges).subscribe((rowsData: any[]) => {
+      // TODO(andrewseguin): Add a differ that will check if the data has changed,
       // rather than re-rendering all rows
-      this.rowPlaceholder.viewContainer.clear();
+      this._rowPlaceholder.viewContainer.clear();
       rowsData.forEach(rowData => this.insertRow(rowData));
       this._changeDetectorRef.markForCheck();
     });
@@ -276,13 +284,15 @@ export class CdkTable {
    * Create the embedded view for the header template and place it in the header row view container.
    */
   renderHeaderRow() {
-    const cells = this.getHeaderCellTemplatesForRow(this.headerDefinition);
+    const cells = this.getHeaderCellTemplatesForRow(this._headerDefinition);
 
-    // TODO: add some code to enforce that exactly one CdkCellOutlet was instantiated as a result
+    // TODO(andrewseguin): add some code to enforce that exactly
+    // one CdkCellOutlet was instantiated as a result
     // of `createEmbeddedView`.
-    this.headerRowPlaceholder.viewContainer
-        .createEmbeddedView(this.headerDefinition.template, {cells});
-    CdkCellOutlet.setMostRecentCellOutletData(cells);
+    this._headerRowPlaceholder.viewContainer
+        .createEmbeddedView(this._headerDefinition.template, {cells});
+    CdkCellOutlet.mostRecentCellOutlet.cells = cells;
+    CdkCellOutlet.mostRecentCellOutlet.context = {};
   }
 
   /**
@@ -290,19 +300,20 @@ export class CdkTable {
    * within the data row view container.
    */
   insertRow(rowData: any) {
-    // TODO: Add when predicates to the row definitions to find the right template to used based on
+    // TODO(andrewseguin): Add when predicates to the row definitions
+    // to find the right template to used based on
     // the data rather than choosing the first row definition.
-    const row = this.rowDefinitions.first;
+    const row = this._rowDefinitions.first;
 
     const context = {$implicit: rowData};
 
-    // TODO: add some code to enforce that exactly one CdkCellOutlet was instantiated as a result
-    // of `createEmbeddedView`.
-    this.rowPlaceholder.viewContainer.createEmbeddedView(row.template, context);
+    // TODO(andrewseguin): add some code to enforce that exactly one
+    // CdkCellOutlet was instantiated as a result  of `createEmbeddedView`.
+    this._rowPlaceholder.viewContainer.createEmbeddedView(row.template, context);
 
     // Insert empty cells if there is no data to improve rendering time.
-    const cells = rowData ? this.getCellTemplatesForRow(row) : [];
-    CdkCellOutlet.setMostRecentCellOutletData(cells, context);
+    CdkCellOutlet.mostRecentCellOutlet.cells = rowData ? this.getCellTemplatesForRow(row) : [];
+    CdkCellOutlet.mostRecentCellOutlet.context = context;
   }
 
   /**
@@ -310,7 +321,9 @@ export class CdkTable {
    * as defined by its list of columns to display.
    */
   getHeaderCellTemplatesForRow(headerDef: CdkHeaderRowDef): CdkHeaderCellDef[] {
-    return headerDef.columns.map(columnId => this._columnMap.get(columnId).headerCell);
+    return headerDef.columns.map(columnId => {
+      return this._columnDefinitionsByName.get(columnId).headerCell;
+    });
   }
 
   /**
@@ -318,6 +331,8 @@ export class CdkTable {
    * as defined by its list of columns to display.
    */
   getCellTemplatesForRow(rowDef: CdkRowDef): CdkRowCellDef[] {
-    return rowDef.columns.map(columnId => this._columnMap.get(columnId).cell);
+    return rowDef.columns.map(columnId => {
+      return this._columnDefinitionsByName.get(columnId).cell;
+    });
   }
 }

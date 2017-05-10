@@ -17,7 +17,7 @@
           <div class="demo-progress-indicator"
                [style.background]="row.progress > 50 ? 'green' : 'red'"
                [style.opacity]="getOpacity(row.progress)"
-               [style.width]="row.progress + '%'"></div>
+               [style.width.%]="row.progress"></div>
         </div>
       </cdk-row-cell>
     </ng-container>
