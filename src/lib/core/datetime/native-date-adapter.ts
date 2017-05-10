@@ -56,7 +56,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
     if (SUPPORTS_INTL_API) {
       let dtf = new Intl.DateTimeFormat(this.locale, {month: style});
-      return range(12, i => this._stripDirectionCharacters(dtf.format(new Date(2017, i, 1))));
+      return range(12, i => this._stripDirectionalityCharacters(dtf.format(new Date(2017, i, 1))));
     }
     return DEFAULT_MONTH_NAMES[style];
   }
@@ -64,7 +64,8 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   getDateNames(): string[] {
     if (SUPPORTS_INTL_API) {
       let dtf = new Intl.DateTimeFormat(this.locale, {day: 'numeric'});
-      return range(31, i => this._stripDirectionCharacters(dtf.format(new Date(2017, 0, i + 1))));
+      return range(31, i => this._stripDirectionalityCharacters(
+          dtf.format(new Date(2017, 0, i + 1))));
     }
     return DEFAULT_DATE_NAMES;
   }
@@ -72,7 +73,8 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[] {
     if (SUPPORTS_INTL_API) {
       let dtf = new Intl.DateTimeFormat(this.locale, {weekday: style});
-      return range(7, i => this._stripDirectionCharacters(dtf.format(new Date(2017, 0, i + 1))));
+      return range(7, i => this._stripDirectionalityCharacters(
+          dtf.format(new Date(2017, 0, i + 1))));
     }
     return DEFAULT_DAY_OF_WEEK_NAMES[style];
   }
@@ -80,7 +82,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   getYearName(date: Date): string {
     if (SUPPORTS_INTL_API) {
       let dtf = new Intl.DateTimeFormat(this.locale, {year: 'numeric'});
-      return this._stripDirectionCharacters(dtf.format(date));
+      return this._stripDirectionalityCharacters(dtf.format(date));
     }
     return String(this.getYear(date));
   }
@@ -131,9 +133,9 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   format(date: Date, displayFormat: Object): string {
     if (SUPPORTS_INTL_API) {
       let dtf = new Intl.DateTimeFormat(this.locale, displayFormat);
-      return this._stripDirectionCharacters(dtf.format(date));
+      return this._stripDirectionalityCharacters(dtf.format(date));
     }
-    return this._stripDirectionCharacters(date.toDateString());
+    return this._stripDirectionalityCharacters(date.toDateString());
   }
 
   addCalendarYears(date: Date, years: number): Date {
@@ -194,9 +196,9 @@ export class NativeDateAdapter extends DateAdapter<Date> {
    * other browsers do not. We remove them to make output consistent and because they interfere with
    * date parsing.
    * @param s The string to strip direction characters from.
-   * @returns {string} The stripped string.
+   * @returns The stripped string.
    */
-  private _stripDirectionCharacters(s: string) {
+  private _stripDirectionalityCharacters(s: string) {
     return s.replace(/[\u200e\u200f]/g, '');
   }
 }
