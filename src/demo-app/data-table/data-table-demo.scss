@@ -1,23 +1,23 @@
 /* Structure */
-.table-container {
+.demo-table-container {
   display: flex;
   flex-direction: column;
   max-height: 800px;
 
   // Table fills in the remaining area with a scroll
-  .mat-table {
+  .cdk-table {
     flex: 1 1 auto;
     overflow: auto;
   }
 }
 
 /* Material Styles */
-.mat-table {
+.cdk-table {
   display: block;
   background: white;
 }
 
-.mat-row, .mat-header {
+.cdk-row, .cdk-header-row {
   display: flex;
   border-bottom: 1px solid #CCC;
   align-items: center;
@@ -25,60 +25,60 @@
   padding: 0 8px;
 }
 
-.mat-row-cell, .mat-header-cell {
+.cdk-row-cell, .cdk-header-cell {
   width: 150px;
   padding: 10px;
   position: relative;
   flex: 1;
 }
 
-.mat-header-cell {
+.cdk-header-cell {
   font-size: 12px;
   font-weight: bold;
   color: rgba(0, 0, 0, .54);
 }
 
-.mat-row-cell {
+.cdk-row-cell {
   font-size: 13px;
   color: rgba(0, 0, 0, .87);
 }
 
 /* Column and cell styles */
-.mat-column-userId {
+.cdk-column-userId {
   max-width: 32px;
 }
 
-.mat-column-userName {
+.cdk-column-userName {
   max-width: 80px;
 }
 
-.mat-column-progress {
-  &.mat-row-cell {
+.cdk-column-progress {
+  &.cdk-row-cell {
     display: flex;
     position: relative;
 
-    .progress-stat {
+    .demo-progress-stat {
       width: 32px;
       padding-right: 8px;
     }
 
-    .progress-indicator-container {
+    .demo-progress-indicator-container {
       position: relative;
       flex-grow: 1;
       display: flex;
       align-items: center;
     }
-    .progress-indicator {
+    .demo-progress-indicator {
       border-radius: 8px;
       height: 8px;
     }
   }
 }
 
-.mat-column-color {
+.cdk-column-color {
   max-width: 160px;
 
-  &.mat-row-cell {
+  &.cdk-row-cell {
     font-weight: bold;
     font-size: 16px;
     font-family: cursive;

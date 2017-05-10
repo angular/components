@@ -3,9 +3,9 @@ import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {
   CdkCellOutlet,
   CdkColumnDef,
-  CdkHeaderCell,
+  CdkHeaderRowCell,
   CdkHeaderCellDef,
-  CdkHeaderDef,
+  CdkHeaderRowDef,
   CdkHeaderRow,
   CdkHeaderRowPlaceholder,
   CdkRow,
@@ -14,17 +14,17 @@ import {
   CdkRowDef,
   CdkRowPlaceholder,
   CdkTable,
-  CdkTableViewData
+  CollectionViewer
 } from './data-table';
 import {DataSource} from './data-source';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
-describe('CdkTable', () => {
+fdescribe('CdkTable', () => {
   let fixture: ComponentFixture<SimpleCdkTableApp>;
 
-  let component: SimpleCdkTableApp, dataSource: SimpleDataSource, table: CdkTable;
+  let component: SimpleCdkTableApp, dataSource: FakeDataSource, table: CdkTable;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -33,14 +33,14 @@ describe('CdkTable', () => {
         SimpleCdkTableApp,
         CdkTable, CdkRowDef, CdkRowCellDef, CdkCellOutlet, CdkHeaderCellDef,
         CdkColumnDef, CdkRowCell, CdkRow,
-        CdkHeaderCell, CdkHeaderRow, CdkHeaderDef,
+        CdkHeaderRowCell, CdkHeaderRow, CdkHeaderRowDef,
         CdkRowPlaceholder, CdkHeaderRowPlaceholder,
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SimpleCdkTableApp);
     component = fixture.componentInstance;
-    dataSource = component.dataSource as SimpleDataSource;
+    dataSource = component.dataSource as FakeDataSource;
     table = component.table;
 
     fixture.detectChanges();  // Let the component and table create embedded views
@@ -52,11 +52,11 @@ describe('CdkTable', () => {
   }
 
   function getRows() {
-    return fixture ? getElements(fixture.nativeElement, '.mat-row') : [];
+    return fixture ? getElements(fixture.nativeElement, '.cdk-row') : [];
   }
 
   function getRowCells(row: HTMLElement) {
-    return row ? getElements(row, '.mat-row-cell') : [];
+    return row ? getElements(row, '.cdk-row-cell') : [];
   }
 
   describe('should initialize', () => {
@@ -66,12 +66,12 @@ describe('CdkTable', () => {
     });
 
     it('with a rendered header with the right number of header cells', () => {
-      const header = fixture.nativeElement.querySelector('.mat-header');
+      const header = fixture.nativeElement.querySelector('.cdk-header-row');
 
       expect(header).not.toBe(undefined);
-      expect(header.classList).toContain('customHeaderClass');
+      expect(header.classList).toContain('customHeaderRowClass');
 
-      const cells = [].slice.call(header.querySelectorAll('.mat-header-cell'));
+      const cells = [].slice.call(header.querySelectorAll('.cdk-header-cell'));
       expect(cells.length).toBe(component.columnsToRender.length);
     });
 
@@ -97,13 +97,13 @@ describe('CdkTable', () => {
   });
 });
 
-export interface TestData {
+interface TestData {
   a: string;
   b: string;
   c: string;
 }
 
-export class SimpleDataSource extends DataSource<TestData> {
+class FakeDataSource extends DataSource<TestData> {
   isConnected: boolean = false;
 
   _dataChange = new BehaviorSubject<TestData[]>([]);
@@ -115,7 +115,7 @@ export class SimpleDataSource extends DataSource<TestData> {
     for (let i = 0; i < 3; i++) { this.addData(); }
   }
 
-  connectTable(viewChange: Observable<CdkTableViewData>): Observable<TestData[]> {
+  connectTable(viewChange: Observable<CollectionViewer>): Observable<TestData[]> {
     this.isConnected = true;
     return Observable.combineLatest(viewChange, this._dataChange).map((results: any[]) => {
       const [view, data] = results;
@@ -141,29 +141,29 @@ export class SimpleDataSource extends DataSource<TestData> {
   template: `
     <cdk-table [dataSource]="dataSource">
       <ng-container cdkColumnDef="column_a">
-        <cdk-header-cell *cdkHeaderCellDef> Column A </cdk-header-cell>
-        <cdk-row-cell *cdkRowCellDef="let row"> {{row.a}} </cdk-row-cell>
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-row-cell *cdkRowCellDef="let row"> {{row.a}}</cdk-row-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="column_b">
-        <cdk-header-cell *cdkHeaderCellDef> Column B </cdk-header-cell>
-        <cdk-row-cell *cdkRowCellDef="let row"> {{row.b}} </cdk-row-cell>
+        <cdk-header-cell *cdkHeaderCellDef> Column B</cdk-header-cell>
+        <cdk-row-cell *cdkRowCellDef="let row"> {{row.b}}</cdk-row-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="column_c">
-        <cdk-header-cell *cdkHeaderCellDef> Column C </cdk-header-cell>
-        <cdk-row-cell *cdkRowCellDef="let row"> {{row.c}} </cdk-row-cell>
+        <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
+        <cdk-row-cell *cdkRowCellDef="let row"> {{row.c}}</cdk-row-cell>
       </ng-container>
 
-      <cdk-header class="customHeaderClass"
-                  *cdkHeaderDef="columnsToRender"></cdk-header>
+      <cdk-header-row class="customHeaderRowClass"
+                      *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
       <cdk-row class="customRowClass"
                *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
     </cdk-table>
   `
 })
 class SimpleCdkTableApp {
-  dataSource: SimpleDataSource = new SimpleDataSource();
+  dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(CdkTable) table: CdkTable;

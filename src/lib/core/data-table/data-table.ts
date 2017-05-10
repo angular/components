@@ -24,21 +24,33 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/combineLatest';
 import {DataSource} from './data-source';
 
-/** Template to be used for the data cells of a particular column. */
+export interface CollectionViewer {
+  start: number;
+  end: number;
+}
+
+/**
+ * Row cell definition for a CDK data-table.
+ * Captures the template of a column's data row cell as well as cell-specific properties.
+ */
 @Directive({selector: '[cdkRowCellDef]'})
 export class CdkRowCellDef {
   constructor(public template: TemplateRef<any>) { }
 }
 
-/** Template to be used for the header cell of a particular column. */
-@Directive({selector: '[cdkHeaderCellDef], cdk-column-def'})
+
+/**
+ * Header row cell definition for a CDK data-table.
+ * Captures the template of a column's header cell and as well as cell-specific properties.
+ */
+@Directive({selector: '[cdkHeaderCellDef]'})
 export class CdkHeaderCellDef {
   constructor(public template: TemplateRef<any>) { }
 }
 
 /**
- * Column definition defined by the user. Contains the template definitions for the header cell
- * and data cells.
+ * Column definition for the CDK data-table.
+ * Captures the template for the header and data cells of a column.
  */
 @Directive({selector: '[cdkColumnDef]'})
 export class CdkColumnDef {
@@ -48,15 +60,21 @@ export class CdkColumnDef {
   @ContentChild(CdkHeaderCellDef) headerCell: CdkHeaderCellDef;
 }
 
-/** Provides the template to use for the header row. */
-@Directive({selector: '[cdkHeaderDef]'})
-export class CdkHeaderDef {
-  @Input('cdkHeaderDef') columns: string[];
+/**
+ * Header row definition for the CDK data-table.
+ * Captures the header row's template and other header properties such as the columns to display.
+ */
+@Directive({selector: '[cdkHeaderRowDef]'})
+export class CdkHeaderRowDef {
+  @Input('cdkHeaderRowDef') columns: string[];
 
   constructor(public template: TemplateRef<any>) { }
 }
 
-/** Provides the template to use for the data rows. */
+/**
+ * Data row definition for the CDK data-table.
+ * Captures the header row's template and other row properties such as the columns to display.
+ */
 @Directive({selector: '[cdkRowDef]'})
 export class CdkRowDef {
   @Input('cdkRowDefColumns') columns: string[];
@@ -69,10 +87,10 @@ export class CdkRowDef {
 
 /** Header template container that contains the cell outlet. Adds the right class and role. */
 @Component({
-  selector: 'cdk-header',
+  selector: 'cdk-header-row',
   template: '<ng-container cdkCellOutlet></ng-container>',
   host: {
-    'class': 'mat-header',
+    'class': 'cdk-header-row',
     'role': 'row',
   },
 })
@@ -83,7 +101,7 @@ export class CdkHeaderRow { }
   selector: 'cdk-row',
   template: '<ng-container cdkCellOutlet></ng-container>',
   host: {
-    'class': 'mat-row',
+    'class': 'cdk-row',
     'role': 'row',
   },
 })
@@ -93,15 +111,15 @@ export class CdkRow { }
 @Directive({
   selector: 'cdk-header-cell',
   host: {
-    'class': 'mat-header-cell',
+    'class': 'cdk-header-cell',
     'role': 'columnheader',
   },
 })
-export class CdkHeaderCell {
+export class CdkHeaderRowCell {
   constructor(private columnDef: CdkColumnDef,
               private elementRef: ElementRef,
               private renderer: Renderer) {
-    this.renderer.setElementClass(elementRef.nativeElement, `mat-column-${columnDef.name}`, true);
+    this.renderer.setElementClass(elementRef.nativeElement, `cdk-column-${columnDef.name}`, true);
   }
 }
 
@@ -109,7 +127,7 @@ export class CdkHeaderCell {
 @Directive({
   selector: 'cdk-row-cell',
   host: {
-    'class': 'mat-row-cell',
+    'class': 'cdk-row-cell',
     'role': 'gridcell',
   },
 })
@@ -117,7 +135,7 @@ export class CdkRowCell {
   constructor(private columnDef: CdkColumnDef,
               private elementRef: ElementRef,
               private renderer: Renderer) {
-    this.renderer.setElementClass(elementRef.nativeElement, `mat-column-${columnDef.name}`, true);
+    this.renderer.setElementClass(elementRef.nativeElement, `cdk-column-${columnDef.name}`, true);
   }
 }
 
@@ -169,11 +187,10 @@ export class CdkHeaderRowPlaceholder {
   constructor(public viewContainer: ViewContainerRef) { }
 }
 
-export interface CdkTableViewData {
-  start: number;
-  end: number;
-}
-
+/**
+ * A data table that connects with a data source to retrieve data and renders
+ * a header row and data rows. Updates the rows when new data is provided by the data source.
+ */
 @Component({
   selector: 'cdk-table',
   template: `
@@ -181,7 +198,7 @@ export interface CdkTableViewData {
     <ng-container cdkRowPlaceholder></ng-container>
   `,
   host: {
-    'class': 'mat-table',
+    'class': 'cdk-table',
     'role': 'grid' // TODO: Allow the user to choose either grid or treegrid
   },
   encapsulation: ViewEncapsulation.None,
@@ -196,10 +213,10 @@ export class CdkTable {
 
   /**
    * Stream containing the latest information on what rows are being displayed on screen. Offered
-   * to the data source as a hueristic of what data should be provided.
+   * to the data source as a heuristic of what data should be provided.
    */
   // TODO: Remove max value as the end index and instead calculate the view on init and scroll.
-  viewChange = new BehaviorSubject<CdkTableViewData>({start: 0, end: Number.MAX_VALUE});
+  viewChange = new BehaviorSubject<CollectionViewer>({start: 0, end: Number.MAX_VALUE});
 
   /**
    * Map of all the user's defined columns identified by name.
@@ -218,7 +235,7 @@ export class CdkTable {
   @ContentChildren(CdkColumnDef) columnDefinitions: QueryList<CdkColumnDef>;
 
   /** Template used as the header container. */
-  @ContentChild(CdkHeaderDef) headerDefinition: CdkHeaderDef;
+  @ContentChild(CdkHeaderRowDef) headerDefinition: CdkHeaderRowDef;
 
   /** Set of templates that used as the data row containers. */
   @ContentChildren(CdkRowDef) rowDefinitions: QueryList<CdkRowDef>;
@@ -290,7 +307,7 @@ export class CdkTable {
    * Returns the cell template definitions to insert into the header
    * as defined by its list of columns to display.
    */
-  getHeaderCellTemplatesForRow(headerDef: CdkHeaderDef): CdkHeaderCellDef[] {
+  getHeaderCellTemplatesForRow(headerDef: CdkHeaderRowDef): CdkHeaderCellDef[] {
     return headerDef.columns.map(columnId => this._columnMap.get(columnId).headerCell);
   }
 

@@ -2,7 +2,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {
   CdkRowCell,
-  CdkHeaderCell,
+  CdkHeaderRowCell,
   CdkRow,
   CdkHeaderRowPlaceholder,
   CdkRowPlaceholder,
@@ -13,7 +13,7 @@ import {
   CdkRowDef,
   CdkTable,
   CdkHeaderRow,
-  CdkHeaderDef
+  CdkHeaderRowDef
 } from './data-table';
 
 export * from './data-source';
@@ -23,10 +23,10 @@ export * from './data-table';
   imports: [CommonModule],
   exports: [
     CdkTable, CdkRowDef, CdkRowCellDef, CdkCellOutlet, CdkHeaderCellDef, CdkColumnDef, CdkRowCell, CdkRow,
-    CdkHeaderCell, CdkHeaderRow, CdkHeaderDef],
+    CdkHeaderRowCell, CdkHeaderRow, CdkHeaderRowDef],
   declarations: [
     CdkTable, CdkRowDef, CdkRowCellDef, CdkCellOutlet, CdkHeaderCellDef, CdkColumnDef, CdkRowCell, CdkRow,
-    CdkHeaderCell, CdkHeaderRow, CdkHeaderDef,
+    CdkHeaderRowCell, CdkHeaderRow, CdkHeaderRowDef,
     CdkRowPlaceholder, CdkHeaderRowPlaceholder,
   ]
 

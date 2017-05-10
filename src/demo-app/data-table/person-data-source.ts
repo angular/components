@@ -1,4 +1,4 @@
-import {CdkTableViewData, DataSource} from '@angular/material';
+import {CollectionViewer, DataSource} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {PeopleDatabase, UserData} from './people-database';
 
@@ -9,8 +9,8 @@ export class PersonDataSource extends DataSource<any> {
     super();
   }
 
-  connectTable(viewChange: Observable<CdkTableViewData>): Observable<UserData[]> {
-    return viewChange.map((view: CdkTableViewData) => {
+  connectTable(viewChange: Observable<CollectionViewer>): Observable<UserData[]> {
+    return viewChange.map((view: CollectionViewer) => {
       // Set the rendered rows length to the virtual page size. Fill in the data provided
       // from the index start until the end index or pagination size, whichever is smaller.
       this._renderedData.length = this._peopleDatabase.data.length;
