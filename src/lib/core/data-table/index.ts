@@ -22,10 +22,12 @@ export * from './data-table';
 @NgModule({
   imports: [CommonModule],
   exports: [
-    CdkTable, CdkRowDef, CdkRowCellDef, CdkCellOutlet, CdkHeaderCellDef, CdkColumnDef, CdkRowCell, CdkRow,
+    CdkTable, CdkRowDef, CdkRowCellDef, CdkCellOutlet, CdkHeaderCellDef,
+    CdkColumnDef, CdkRowCell, CdkRow,
     CdkHeaderRowCell, CdkHeaderRow, CdkHeaderRowDef],
   declarations: [
-    CdkTable, CdkRowDef, CdkRowCellDef, CdkCellOutlet, CdkHeaderCellDef, CdkColumnDef, CdkRowCell, CdkRow,
+    CdkTable, CdkRowDef, CdkRowCellDef, CdkCellOutlet, CdkHeaderCellDef,
+    CdkColumnDef, CdkRowCell, CdkRow,
     CdkHeaderRowCell, CdkHeaderRow, CdkHeaderRowDef,
     CdkRowPlaceholder, CdkHeaderRowPlaceholder,
   ]

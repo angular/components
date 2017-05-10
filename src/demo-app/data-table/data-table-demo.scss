@@ -19,7 +19,7 @@
 
 .cdk-row, .cdk-header-row {
   display: flex;
-  border-bottom: 1px solid #CCC;
+  border-bottom: 1px solid #ccc;
   align-items: center;
   height: 48px;
   padding: 0 8px;
@@ -35,12 +35,12 @@
 .cdk-header-cell {
   font-size: 12px;
   font-weight: bold;
-  color: rgba(0, 0, 0, .54);
+  color: rgba(0, 0, 0, 0.54);
 }
 
 .cdk-row-cell {
   font-size: 13px;
-  color: rgba(0, 0, 0, .87);
+  color: rgba(0, 0, 0, 0.87);
 }
 
 /* Column and cell styles */
