@@ -93,6 +93,7 @@ export class CdkRowDef {
     'class': 'cdk-header-row',
     'role': 'row',
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkHeaderRow { }
 
@@ -104,6 +105,7 @@ export class CdkHeaderRow { }
     'class': 'cdk-row',
     'role': 'row',
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkRow { }
 
