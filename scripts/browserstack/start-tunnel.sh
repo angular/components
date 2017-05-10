@@ -11,8 +11,6 @@ TUNNEL_URL="https://www.browserstack.com/browserstack-local/$TUNNEL_FILE"
 TUNNEL_DIR="/tmp/browserstack-tunnel"
 TUNNEL_LOG="$LOGS_DIR/browserstack-tunnel.log"
 
-BROWSER_STACK_ACCESS_KEY=`echo $BROWSER_STACK_ACCESS_KEY | rev`
-
 # Cleanup and create the folder structure for the tunnel connector.
 rm -rf $TUNNEL_DIR $BROWSER_PROVIDER_READY_FILE
 mkdir -p $TUNNEL_DIR
