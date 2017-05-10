@@ -32,6 +32,7 @@ import {PlatformDemo} from '../platform/platform-demo';
 import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
 import {InputDemo} from '../input/input-demo';
 import {StyleDemo} from '../style/style-demo';
+import {FabComponent} from "../fab/fab";
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: Home},
@@ -66,4 +67,5 @@ export const DEMO_APP_ROUTES: Routes = [
   {path: 'snack-bar', component: SnackBarDemo},
   {path: 'platform', component: PlatformDemo},
   {path: 'style', component: StyleDemo},
+  {path: 'fab', component: FabComponent},
 ];
