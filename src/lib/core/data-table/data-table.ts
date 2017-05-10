@@ -24,17 +24,13 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/combineLatest';
 import {DataSource} from './data-source';
 
-/**
- * Template to be used for the data cells of a particular column.
- */
+/** Template to be used for the data cells of a particular column. */
 @Directive({selector: '[cdkRowCellDef]'})
 export class CdkRowCellDef {
   constructor(public template: TemplateRef<any>) { }
 }
 
-/**
- * Template to be used for the header cell of a particular column.
- */
+/** Template to be used for the header cell of a particular column. */
 @Directive({selector: '[cdkHeaderCellDef], cdk-column-def'})
 export class CdkHeaderCellDef {
   constructor(public template: TemplateRef<any>) { }
@@ -52,9 +48,7 @@ export class CdkColumnDef {
   @ContentChild(CdkHeaderCellDef) headerCell: CdkHeaderCellDef;
 }
 
-/**
- * Provides the template to use for the header row.
- */
+/** Provides the template to use for the header row. */
 @Directive({selector: '[cdkHeaderDef]'})
 export class CdkHeaderDef {
   @Input('cdkHeaderDef') columns: string[];
@@ -132,7 +126,10 @@ export class CdkRowCell {
  */
 @Directive({selector: '[cdkCellOutlet]'})
 export class CdkCellOutlet {
+  /** The ordered list of cells to render within this outlet's view container */
   cells: CdkRowCellDef[];
+
+  /** The row data context to be provided to each cell */
   context: any;
 
   static mostRecentCellOutlet: CdkCellOutlet = null;

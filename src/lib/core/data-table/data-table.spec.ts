@@ -36,7 +36,6 @@ describe('CdkTable', () => {
         CdkHeaderCell, CdkHeaderRow, CdkHeaderDef,
         CdkRowPlaceholder, CdkHeaderRowPlaceholder,
       ],
-      providers: [ ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SimpleCdkTableApp);
@@ -137,7 +136,6 @@ export class SimpleDataSource extends DataSource<TestData> {
     this.data = copiedData;
   }
 }
-
 
 @Component({
   template: `
