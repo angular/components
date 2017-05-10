@@ -1,25 +1,12 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {
-  CdkCellOutlet,
-  CdkColumnDef,
-  CdkHeaderRowCell,
-  CdkHeaderCellDef,
-  CdkHeaderRowDef,
-  CdkHeaderRow,
-  CdkHeaderRowPlaceholder,
-  CdkRow,
-  CdkRowCell,
-  CdkRowCellDef,
-  CdkRowDef,
-  CdkRowPlaceholder,
-  CdkTable,
-  CollectionViewer
-} from './data-table';
+import {Component, ViewChild} from '@angular/core';
+import {CdkHeaderRowPlaceholder, CdkRowPlaceholder, CdkTable, CollectionViewer} from './data-table';
 import {DataSource} from './data-source';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {CdkCellOutlet, CdkHeaderRow, CdkHeaderRowDef, CdkRow, CdkRowDef} from './row';
+import {CdkColumnDef, CdkHeaderCellDef, CdkHeaderRowCell, CdkRowCell, CdkRowCellDef} from './cell';
 
 describe('CdkTable', () => {
   let fixture: ComponentFixture<SimpleCdkTableApp>;
