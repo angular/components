@@ -46,16 +46,25 @@
 @mixin mat-base-typography($config, $selector: '.mat-typography') {
   .mat-h0, .mat-hero-header {
     @include mat-typography-level-to-styles($config, display-4);
+
+    // Note: The spec doesn't mention letter spacing. The value comes from
+    // eyeballing it until it looked exactly like the spec examples.
     letter-spacing: -0.05em;
   }
 
   .mat-h1, #{$selector} h1 {
     @include mat-typography-level-to-styles($config, display-3);
+
+    // Note: The spec doesn't mention letter spacing. The value comes from
+    // eyeballing it until it looked exactly like the spec examples.
     letter-spacing: -0.02em;
   }
 
   .mat-h2, #{$selector} h2 {
-    @include mat-typography-level-to-styles($config, display-2);
+    @include mat-typography-level-to-styles($config, display-2)
+
+    // Note: The spec doesn't mention letter spacing. The value comes from
+    // eyeballing it until it looked exactly like the spec examples.;
     letter-spacing: -0.005em;
   }
 
