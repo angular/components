@@ -44,15 +44,15 @@ import {CanDisable} from '../core/common-behaviors/disabled';
  * the trigger element.
  */
 
-/** The fixed height of every option element. */
-export const SELECT_ELEMENT_HEIGHT = 48;
+/** The fixed height of every option element (option, group header etc.). */
+export const SELECT_ITEM_HEIGHT = 48;
 
 /** The max height of the select's overlay panel */
 export const SELECT_PANEL_MAX_HEIGHT = 256;
 
 /** The max number of options visible at once in the select panel. */
 export const SELECT_MAX_OPTIONS_DISPLAYED =
-    Math.floor(SELECT_PANEL_MAX_HEIGHT / SELECT_ELEMENT_HEIGHT);
+    Math.floor(SELECT_PANEL_MAX_HEIGHT / SELECT_ITEM_HEIGHT);
 
 /** The fixed height of the select's trigger element. */
 export const SELECT_TRIGGER_HEIGHT = 30;
@@ -61,7 +61,7 @@ export const SELECT_TRIGGER_HEIGHT = 30;
  * Must adjust for the difference in height between the option and the trigger,
  * so the text will align on the y axis.
  */
-export const SELECT_OPTION_HEIGHT_ADJUSTMENT = (SELECT_ELEMENT_HEIGHT - SELECT_TRIGGER_HEIGHT) / 2;
+export const SELECT_OPTION_HEIGHT_ADJUSTMENT = (SELECT_ITEM_HEIGHT - SELECT_TRIGGER_HEIGHT) / 2;
 
 /** The panel's padding on the x-axis */
 export const SELECT_PANEL_PADDING_X = 16;
@@ -761,8 +761,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Calculates the scroll position and x- and y-offsets of the overlay panel. */
   private _calculateOverlayPosition(): void {
     const items = this._getItemCount();
-    const panelHeight = Math.min(items * SELECT_ELEMENT_HEIGHT, SELECT_PANEL_MAX_HEIGHT);
-    const scrollContainerHeight = items * SELECT_ELEMENT_HEIGHT;
+    const panelHeight = Math.min(items * SELECT_ITEM_HEIGHT, SELECT_PANEL_MAX_HEIGHT);
+    const scrollContainerHeight = items * SELECT_ITEM_HEIGHT;
 
     // The farthest the panel can be scrolled before it hits the bottom
     const maxScroll = scrollContainerHeight - panelHeight;
@@ -782,7 +782,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       // we must only adjust for the height difference between the option element
       // and the trigger element, then multiply it by -1 to ensure the panel moves
       // in the correct direction up the page.
-      this._offsetY = (SELECT_ELEMENT_HEIGHT - SELECT_TRIGGER_HEIGHT) / 2 * -1;
+      this._offsetY = (SELECT_ITEM_HEIGHT - SELECT_TRIGGER_HEIGHT) / 2 * -1;
     }
 
     this._checkOverlayWithinViewport(maxScroll);
@@ -797,8 +797,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
    */
   _calculateOverlayScroll(selectedIndex: number, scrollBuffer: number,
                           maxScroll: number): number {
-    const optionOffsetFromScrollTop = SELECT_ELEMENT_HEIGHT * selectedIndex;
-    const halfOptionHeight = SELECT_ELEMENT_HEIGHT / 2;
+    const optionOffsetFromScrollTop = SELECT_ITEM_HEIGHT * selectedIndex;
+    const halfOptionHeight = SELECT_ITEM_HEIGHT / 2;
 
     // Starts at the optionOffsetFromScrollTop, which scrolls the option to the top of the
     // scroll container, then subtracts the scroll buffer to scroll the option down to
@@ -894,7 +894,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     let optionOffsetFromPanelTop: number;
 
     if (this._scrollTop === 0) {
-      optionOffsetFromPanelTop = selectedIndex * SELECT_ELEMENT_HEIGHT;
+      optionOffsetFromPanelTop = selectedIndex * SELECT_ITEM_HEIGHT;
     } else if (this._scrollTop === maxScroll) {
       const firstDisplayedIndex = this._getItemCount() - SELECT_MAX_OPTIONS_DISPLAYED;
       const selectedDisplayIndex = selectedIndex - firstDisplayedIndex;
@@ -904,12 +904,12 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       // scrolled to the very bottom, this padding is at the top of the panel and
       // must be added to the offset.
       optionOffsetFromPanelTop =
-          selectedDisplayIndex * SELECT_ELEMENT_HEIGHT + SELECT_PANEL_PADDING_Y;
+          selectedDisplayIndex * SELECT_ITEM_HEIGHT + SELECT_PANEL_PADDING_Y;
     } else {
       // If the option was scrolled to the middle of the panel using a scroll buffer,
       // its offset will be the scroll buffer minus the half height that was added to
       // center it.
-      optionOffsetFromPanelTop = scrollBuffer - SELECT_ELEMENT_HEIGHT / 2;
+      optionOffsetFromPanelTop = scrollBuffer - SELECT_ITEM_HEIGHT / 2;
     }
 
     // The final offset is the option's offset from the top, adjusted for the height
@@ -934,7 +934,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
     const panelHeightTop = Math.abs(this._offsetY);
     const totalPanelHeight =
-        Math.min(this._getItemCount() * SELECT_ELEMENT_HEIGHT, SELECT_PANEL_MAX_HEIGHT);
+        Math.min(this._getItemCount() * SELECT_ITEM_HEIGHT, SELECT_PANEL_MAX_HEIGHT);
     const panelHeightBottom = totalPanelHeight - panelHeightTop - triggerRect.height;
 
     if (panelHeightBottom > bottomSpaceAvailable) {
@@ -991,7 +991,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Sets the transform origin point based on the selected option. */
   private _getOriginBasedOnOption(): string {
     const originY =
-        Math.abs(this._offsetY) - SELECT_OPTION_HEIGHT_ADJUSTMENT + SELECT_ELEMENT_HEIGHT / 2;
+        Math.abs(this._offsetY) - SELECT_OPTION_HEIGHT_ADJUSTMENT + SELECT_ITEM_HEIGHT / 2;
     return `50% ${originY}px 0px`;
   }
 

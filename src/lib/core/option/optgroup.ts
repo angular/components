@@ -19,6 +19,7 @@ let nextId = 0;
   inputs: ['disabled'],
   host: {
     'class': 'mat-optgroup',
+    'role': 'group',
     '[class.mat-optgroup-disabled]': 'disabled',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-labelledby]': '_labelId',

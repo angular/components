@@ -844,6 +844,7 @@ describe('MdSelect', () => {
     /**
      * Asserts that the given option is aligned with the trigger.
      * @param index The index of the option.
+     * @param selectInstance Instance of the `md-select` component to check against.
      */
     function checkTriggerAlignedWithOption(index: number, selectInstance =
       fixture.componentInstance.select): void {
@@ -1744,6 +1745,10 @@ describe('MdSelect', () => {
         trigger.click();
         fixture.detectChanges();
         groups = overlayContainerElement.querySelectorAll('md-optgroup') as NodeListOf<HTMLElement>;
+      });
+
+      it('should set the appropriate role', () => {
+        expect(groups[0].getAttribute('role')).toBe('group');
       });
 
       it('should set the `aria-labelledby` attribute', () => {
