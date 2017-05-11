@@ -2,7 +2,6 @@
 <md-input-container>
     <textarea mdInput [(ngModel)]="data"></textarea>
 </md-input-container>
-<md-slide-toggle [(ngModel)]="flat">Flat: {{flat}}</md-slide-toggle>
 <button md-button (click)="submit()">Submit</button>
 
 <div class="tree-container mat-elevation-z4">
@@ -11,23 +10,23 @@
     </div>
 
     <cdk-tree #tree [dataSource]="dataSource" [style.display]="!!dataSource.filteredData.length ? '' : 'none'">
-        <md-node *mdNodeDef="let node let level=level let expandable=expandable">
-            <li [mdNestedNode]="node" [class.container]="expandable">
+        <cdk-node *cdkNodeDef="let node let level=level let expandable=expandable">
+            <li [cdkNestedNode]="node" [class.container]="expandable">
                 <div  [class.row]="true" [class.selected]="node ? selection.isSelected(node) : false"
                       [class.data-row]="!!node">
-                        <a md-icon-button [mdNodeTrigger]="node" [mdNodeTriggerSelection]="expansionModel" [mdNodeTriggerRecursive]="expandRecursive">
+                        <a md-icon-button [cdkNodeTrigger]="node" [cdkNodeTriggerSelection]="expansionModel" [cdkNodeTriggerRecursive]="expandRecursive">
                           <md-icon *ngIf="expandable">{{ expansionModel.isSelected(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</md-icon>
                         </a>
-                        <md-checkbox [mdNodeSelectTrigger]="node" [mdNodeTriggerSelection]="selection" [mdNodeTriggerRecursive]="selectRecursive"
+                        <md-checkbox [mdNodeSelectTrigger]="node" [cdkNodeTriggerSelection]="selection" [cdkNodeTriggerRecursive]="selectRecursive"
                                      [checked]="selection.isSelected(node)">
                             {{node.key}}<span *ngIf="node.value">: {{node.value}}</span>
                         </md-checkbox>
                 </div>
                 <ul class="children" [style.display]="expansionModel.isSelected(node) ? 'block' : 'none'">
-                    <ng-container mdNodePlaceholder> </ng-container>
+                    <ng-container cdkNodePlaceholder> </ng-container>
                 </ul>
             </li>
-        </md-node>
+        </cdk-node>
     </cdk-tree>
 </div>
 

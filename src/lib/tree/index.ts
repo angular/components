@@ -1,4 +1,4 @@
-import {CdkTree, MdNode, MdNodeDef, MdNodePlaceholder, MdNodeExpandTrigger, MdNodeSelectTrigger, MdNodeTrigger, MdNodePadding, MdNestedNode} from './tree';
+import {CdkTree, CdkNode, CdkNodeDef, CdkNodePlaceholder, MdNodeSelectTrigger, CdkNodeTrigger, CdkNodePadding, CdkNestedNode} from './tree';
 import {TreeDataSource, MdTreeViewData} from './data-source';
 import {NgModule, ModuleWithProviders} from '@angular/core';
 import {CommonModule} from '@angular/common';
@@ -9,15 +9,15 @@ export * from './tree';
 
 @NgModule({
   imports: [CommonModule, MdRippleModule],
-  exports: [CdkTree, MdNodeDef, MdNode, MdNodePlaceholder, MdNodeExpandTrigger, MdNodeSelectTrigger, MdNodeTrigger, MdNodePadding, MdNestedNode],
-  declarations: [CdkTree, MdNodeDef, MdNode, MdNodePlaceholder, MdNodeExpandTrigger, MdNodeSelectTrigger, MdNodeTrigger, MdNodePadding, MdNestedNode],
+  exports: [CdkTree, CdkNodeDef, CdkNode, CdkNodePlaceholder, MdNodeSelectTrigger, CdkNodeTrigger, CdkNodePadding, CdkNestedNode],
+  declarations: [CdkTree, CdkNodeDef, CdkNode, CdkNodePlaceholder, MdNodeSelectTrigger, CdkNodeTrigger, CdkNodePadding, CdkNestedNode],
   providers: [FocusOriginMonitor]
 })
-export class MdTreeModule {
+export class CdkTreeModule {
   /** @deprecated */
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: MdTreeModule,
+      ngModule: CdkTreeModule,
     };
   }
 }

@@ -1,7 +1,7 @@
 import {OnInit, Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
 import {JsonDataSource} from './simple-data-source'
-import {MdNodePlaceholder, SelectionModel, CdkTree} from '@angular/material';
+import {CdkNodePlaceholder, SelectionModel, CdkTree} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -13,7 +13,7 @@ import {MdNodePlaceholder, SelectionModel, CdkTree} from '@angular/material';
 export class SimpleTreeNode {
 
 
-  @ViewChild(MdNodePlaceholder) nodePlaceholder: MdNodePlaceholder;
+  @ViewChild(CdkNodePlaceholder) nodePlaceholder: CdkNodePlaceholder;
   @Input() flat: boolean;
   @Input() node: any;
   @Input() level: number;

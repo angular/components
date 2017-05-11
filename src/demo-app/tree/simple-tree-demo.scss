@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   max-height: 800px;
+  background: white;
 
   // Table fills in the remaining area with a scroll
   cdk-tree {
@@ -12,6 +13,8 @@
 
 .row {
   display: flex;
+  height: 48px;
+  align-items: center;
 }
 
 .special {

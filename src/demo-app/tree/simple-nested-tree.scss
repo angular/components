@@ -40,7 +40,7 @@ li ul {
     margin-left: -16px;
     padding-left: 32px;
 }
-ul > md-node:last-child > li > ul {
+ul > cdk-node:last-child > li > ul {
     border-left: 1px solid white;
     margin-left: -17px;
 }
@@ -63,6 +63,6 @@ md-icon {
     height: 48px;
 }
 
-.children md-node {
-    padding-left: 45px;
+.children cdk-node {
+   // padding-left: 45px;
 }

@@ -66,7 +66,6 @@ export class PersonDataSource extends TreeDataSource<any> {
       setTimeout(() => {
         this.peopleDatabase.generateMoreNodes(node);
       }, 1000);
-
     }
     return node.children;
   }

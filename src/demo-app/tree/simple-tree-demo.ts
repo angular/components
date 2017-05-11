@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Directive, Input, OnInit, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
 import {JsonDataSource} from './simple-data-source'
 import {SelectionModel, CdkTree} from '@angular/material';
@@ -11,7 +11,7 @@ import {SimpleTreeNode} from './simple-tree-node';
   styleUrls: ['simple-tree-demo.css'],
   changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
-export class SimpleTreeDemo {
+export class SimpleTreeDemo implements OnInit {
   data: string = `{
 
   "results" : [
@@ -110,6 +110,10 @@ export class SimpleTreeDemo {
   @ViewChild(CdkTree) tree: CdkTree;
 
   constructor() { }
+
+  ngOnInit() {
+    this.submit();
+  }
 
 
   expandIncludeChildren: boolean = true;

@@ -4,7 +4,7 @@
     <div class="space">
       <div *ngFor="let a of createArray(level); let index = index" [class.special]="getSpecial(node, index)"></div>
     </div>
-    <a md-icon-button [mdNodeExpandTrigger]="node" [mdNodeExpandTriggerRecursive]="expandIncludeChildren" >
+    <a md-icon-button [cdkNodeTrigger]="node" [cdkNodeTriggerRecursive]="expandIncludeChildren" [cdkNodeTriggerSelection]="dataSource.expansionModel">
       <md-icon *ngIf="expandable">{{ dataSource.expansionModel.isSelected(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</md-icon>
     </a>
     <md-checkbox (click)="$event.stopPropagation()"
@@ -13,7 +13,7 @@
       {{node.key}}<span *ngIf="node.value">: {{node.value}}</span> </md-checkbox>
   </div>
 </div>
-<p *ngIf="!flat"  [mdNodeExpandTrigger]="node" [mdNodeExpandTriggerRecursive]="expandIncludeChildren">
+<p *ngIf="!flat"  [cdkNodeTrigger]="node" [cdkNodeTriggerRecursive]="expandIncludeChildren" [cdkNodeTriggerSelection]="dataSource.expansionModel">
   {{node.key}}<span *ngIf="node.value">: {{node.value}}</span>
 </p>
 <ul *ngIf="!flat && expandable && dataSource.expansionModel.isSelected(node) ">

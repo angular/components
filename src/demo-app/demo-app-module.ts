@@ -123,7 +123,6 @@ import {TableHeaderDemo} from './data-table/table-header-demo';
 })
 export class DemoMaterialModule {}
 
-
 @NgModule({
   imports: [
     BrowserModule,
@@ -187,7 +186,6 @@ export class DemoMaterialModule {}
     ExpansionDemo,
     TreeDemo,
     SimpleTreeNode,
-    SimpleNestedTreeNode,
     SimpleNestedTreeDemo,
   ],
   providers: [

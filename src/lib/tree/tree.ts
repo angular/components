@@ -40,19 +40,19 @@ export const BUFFER = 3;
 /**
  * Node template
  */
-@Directive({selector: '[mdNodeDef]'})
-export class MdNodeDef {
+@Directive({selector: '[cdkNodeDef]'})
+export class CdkNodeDef {
   constructor(public template: TemplateRef<any>) {}
 }
 
 // TODO: Role should be group for expandable ndoes
 @Directive({
-  selector: 'md-node',
+  selector: 'cdk-node',
   host: {
     'role': 'treeitem',
   }
 })
-export class MdNode  implements Focusable, OnDestroy {
+export class CdkNode  implements Focusable, OnDestroy {
   constructor(private elementRef: ElementRef,
               private renderer: Renderer2,
               private _focusOriginMonitor: FocusOriginMonitor) {
@@ -78,65 +78,65 @@ export class MdNode  implements Focusable, OnDestroy {
 /**
  * Placeholder for md-nodes
  */
-@Directive({selector: '[mdNodePlaceholder]'})
-export class MdNodePlaceholder {
+@Directive({selector: '[cdkNodePlaceholder]'})
+export class CdkNodePlaceholder {
   constructor(public viewContainer: ViewContainerRef) { }
 }
 
 /**
  * Indent for the children
  */
-@Directive({selector: '[mdNodePadding]',
+@Directive({selector: '[cdkNodePadding]',
   host: {
     '[style.padding-left]': 'paddingIndent',
   }})
-export class MdNodePadding {
-  @Input('mdNodePadding') level: number;
-  @Input('mdNodePaddingIndent') indent: number = 28;
+export class CdkNodePadding {
+  @Input('cdkNodePadding') level: number;
+  @Input('cdkNodePaddingIndent') indent: number = 28;
 
   get paddingIndent() {
     return `${this.level * this.indent}px`;
   }
 }
 
-/**
- * Expand trigger
- */
-@Directive({
-  selector: '[mdNodeExpandTrigger]',
-  host: {
-    'class': 'mat-node-trigger',
-    '(click)': 'handleClick($event)',
-    '[style.z-index]': 'zIndex'
-  },
-})
-export class MdNodeExpandTrigger {
-  @Input('mdNodeExpandTrigger') node: any;
-  @Input('mdNodeExpandTriggerRecursive') recursive: boolean = false;
-  @Input('mdNodeExpandTriggerZIndex') zIndex: number = 1;
-
-  constructor(@Inject(forwardRef(() => CdkTree)) private tree: CdkTree) {}
-
-  handleClick(event) {
-    this.tree.toggleExpand(this.node, this.recursive);
-  }
-}
+// /**
+//  * Expand trigger
+//  */
+// @Directive({
+//   selector: '[cdkNodeExpandTrigger]',
+//   host: {
+//     'class': 'mat-node-trigger',
+//     '(click)': 'handleClick($event)',
+//     '[style.z-index]': 'zIndex'
+//   },
+// })
+// export class MdNodeExpandTrigger {
+//   @Input('mdNodeExpandTrigger') node: any;
+//   @Input('mdNodeExpandTriggerRecursive') recursive: boolean = false;
+//   @Input('mdNodeExpandTriggerZIndex') zIndex: number = 1;
+//
+//   constructor(@Inject(forwardRef(() => CdkTree)) private tree: CdkTree) {}
+//
+//   handleClick(event) {
+//     this.tree.toggleExpand(this.node, this.recursive);
+//   }
+// }
 
 
 /**
  * Node trigger
  */
 @Directive({
-  selector: '[mdNodeTrigger]',
+  selector: '[cdkNodeTrigger]',
   host: {
     'class': 'mat-node-trigger',
     '(click)': 'trigger($event)',
   },
 })
-export class MdNodeTrigger {
-  @Input('mdNodeTrigger') node: any;
-  @Input('mdNodeTriggerRecursive') recursive: boolean = false;
-  @Input('mdNodeTriggerSelection') selection: SelectionModel<any>;
+export class CdkNodeTrigger {
+  @Input('cdkNodeTrigger') node: any;
+  @Input('cdkNodeTriggerRecursive') recursive: boolean = false;
+  @Input('cdkNodeTriggerSelection') selection: SelectionModel<any>;
 
   constructor(@Inject(forwardRef(() => CdkTree)) private tree: CdkTree) {}
 
@@ -169,7 +169,7 @@ export class MdNodeTrigger {
     '(click)': '$event.stopPropagation()',
   },
 })
-export class MdNodeSelectTrigger extends MdNodeTrigger{
+export class MdNodeSelectTrigger extends CdkNodeTrigger{
   @Input('mdNodeSelectTrigger') node: any;
 }
 
@@ -177,11 +177,11 @@ export class MdNodeSelectTrigger extends MdNodeTrigger{
 /**
  * Nested node, add children to `mdNodePlaceholder` in template
  */
-@Directive({selector: '[mdNestedNode]'})
-export class MdNestedNode implements OnInit {
-  @Input('mdNestedNode') node: any;
+@Directive({selector: '[cdkNestedNode]'})
+export class CdkNestedNode implements OnInit {
+  @Input('cdkNestedNode') node: any;
 
-  @ContentChild(MdNodePlaceholder) nodePlaceholder: MdNodePlaceholder;
+  @ContentChild(CdkNodePlaceholder) nodePlaceholder: CdkNodePlaceholder;
 
   constructor(@Inject(forwardRef(() => CdkTree)) private tree: CdkTree) {}
 
@@ -199,7 +199,7 @@ export class MdNestedNode implements OnInit {
   selector: 'cdk-tree',
   styleUrls: ['./tree.css'],
   template: `
-    <ng-container mdNodePlaceholder></ng-container>
+    <ng-container cdkNodePlaceholder></ng-container>
     <ng-template #emptyNode><div class="mat-placeholder"></div></ng-template>
   `,
   host: {
@@ -222,9 +222,9 @@ export class CdkTree {
   // Only for "expand all" feature
   private dataNodes: any[];
 
-  @ContentChildren(MdNode) items: QueryList<MdNode>;
-  @ContentChildren(MdNodeDef) nodeDefinitions: QueryList<MdNodeDef>;
-  @ViewChild(MdNodePlaceholder) nodePlaceholder: MdNodePlaceholder;
+  @ContentChildren(CdkNode) items: QueryList<CdkNode>;
+  @ContentChildren(CdkNodeDef) nodeDefinitions: QueryList<CdkNodeDef>;
+  @ViewChild(CdkNodePlaceholder) nodePlaceholder: CdkNodePlaceholder;
   @ViewChild('emptyNode') emptyNodeTemplate: TemplateRef<any>;
 
 

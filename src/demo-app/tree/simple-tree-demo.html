@@ -13,7 +13,7 @@
 
   <cdk-tree #tree [dataSource]="dataSource" [style.display]="!!dataSource.filteredData.length ? '' : 'none'">
     <!-- Row templates. The columns used are set at the row template level -->
-    <md-node *mdNodeDef="let node let level=level let expandable=expandable">
+    <cdk-node *cdkNodeDef="let node let level=level let expandable=expandable">
         <simple-tree-node [node]="node"
                           [level]="level"
                           [expandable]="expandable"
@@ -22,7 +22,7 @@
                           [flat]="flat"
                           [selection]="selection" class="simple-tree-node">
         </simple-tree-node>
-    </md-node>
+    </cdk-node>
   </cdk-tree>
 </div>
 

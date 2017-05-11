@@ -7,27 +7,27 @@
 
   <cdk-tree #tree [dataSource]="dataSource" [style.display]="!!dataSource.filteredData.length ? '' : 'none'">
     <!-- Row templates. The columns used are set at the row template level -->
-    <md-node *mdNodeDef="let node let level=level let expandable=expandable"
+    <cdk-node *cdkNodeDef="let node let level=level let expandable=expandable"
               [class.selected]="node ? selection.isSelected(node) : false"
               [class.data-row]="!!node">
-      <div class="row" [mdNodePadding]="showDottedLine ? 0 : level" [mdNodePaddingIndent]="45">
+      <div class="row" [cdkNodePadding]="showDottedLine ? 0 : level" [cdkNodePaddingIndent]="45">
         <!-- Dotted line for tree -->
         <div class="space" *ngIf="showDottedLine">
           <div *ngFor="let a of createArray(level); let index = index" [class.special]="dataSource.dottedLineLevels.get(node).includes(index)"></div>
         </div>
 
         <!-- Expand trigger -->
-        <a md-icon-button [mdNodeTrigger]="node" [mdNodeTriggerRecursive]="expandRecursive" [mdNodeTriggerSelection]="expansionModel">
+        <a md-icon-button [cdkNodeTrigger]="node" [cdkNodeTriggerRecursive]="expandRecursive" [cdkNodeTriggerSelection]="expansionModel">
           <md-icon *ngIf="expandable">{{ expansionModel.isSelected(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</md-icon>
         </a>
 
         <!-- display content and checkbox -->
-          <md-checkbox [checked]="selection.isSelected(node)" [mdNodeSelectTrigger]="node" [mdNodeTriggerRecursive]="selectRecursive"
-                       [mdNodeTriggerSelection]="selection">
+          <md-checkbox [checked]="selection.isSelected(node)" [mdNodeSelectTrigger]="node" [cdkNodeTriggerRecursive]="selectRecursive"
+                       [cdkNodeTriggerSelection]="selection">
             {{node.name}} {{node.progress}}
           </md-checkbox>
       </div>
-    </md-node>
+    </cdk-node>
   </cdk-tree>
 </div>
 
