@@ -12,11 +12,14 @@ import {
   Renderer2,
   ViewChild,
   ViewEncapsulation,
+  Optional,
+  SkipSelf,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 import {FocusOrigin, FocusOriginMonitor, MdRipple, RippleRef} from '../core';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
+import {mixinDisabled, CanDisable} from '../core/common-behaviors/mixin-disabled';
+import {MdDisabled} from '../core/common-behaviors/disabled';
 
 
 /** Monotonically increasing integer used to auto-generate unique ids for checkbox components. */
@@ -193,8 +196,10 @@ export class MdCheckbox extends _MdCheckboxMixinBase
   constructor(private _renderer: Renderer2,
               private _elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
-              private _focusOriginMonitor: FocusOriginMonitor) {
+              private _focusOriginMonitor: FocusOriginMonitor,
+              @SkipSelf() @Optional() disabledParent?: MdDisabled) {
     super();
+    this.withDisabledParent(disabledParent);
     this.color = 'accent';
   }
 

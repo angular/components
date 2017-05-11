@@ -16,6 +16,7 @@ import {
   ViewChild,
   OnDestroy,
   AfterViewInit,
+  SkipSelf,
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 import {
@@ -26,7 +27,8 @@ import {
   FocusOrigin,
 } from '../core';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
+import {mixinDisabled, CanDisable} from '../core/common-behaviors/mixin-disabled';
+import {MdDisabled} from '../core/common-behaviors/disabled';
 
 
 /**
@@ -158,6 +160,11 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
     this._selected = selected;
     this.value = selected ? selected.value : null;
     this._checkSelectedRadioButton();
+  }
+
+  constructor(@SkipSelf() @Optional() disabledParent?: MdDisabled) {
+    super();
+    this.withDisabledParent(disabledParent);
   }
 
   /**

@@ -10,7 +10,9 @@ import {
   Output,
   Renderer2,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Optional,
+  SkipSelf,
 } from '@angular/core';
 import {
   applyCssTransform,
@@ -22,7 +24,8 @@ import {
   RippleRef
 } from '../core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
+import {mixinDisabled, CanDisable} from '../core/common-behaviors/mixin-disabled';
+import {MdDisabled} from '../core/common-behaviors/disabled';
 
 
 export const MD_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {
@@ -121,8 +124,10 @@ export class MdSlideToggle extends _MdSlideToggleMixinBase
 
   constructor(private _elementRef: ElementRef,
               private _renderer: Renderer2,
-              private _focusOriginMonitor: FocusOriginMonitor) {
+              private _focusOriginMonitor: FocusOriginMonitor,
+              @SkipSelf() @Optional() disabledParent?: MdDisabled) {
     super();
+    this.withDisabledParent(disabledParent);
   }
 
   ngAfterContentInit() {
