@@ -41,7 +41,7 @@ import {ComponentPageHeader} from './pages/component-page-header/component-page-
     SharedModule,
     FormsModule,
     HttpModule,
-    MaterialModule.forRoot(),
+    MaterialModule,
     routing,
   ],
   providers: [
