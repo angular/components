@@ -20,6 +20,6 @@ export class SnackBarComponentExample {
 @Component({
   selector: 'snack-bar-component-example-snack',
   templateUrl: './snack-bar-component-example-snack.html',
-  styleUrls: ['./snack-bar-component-example.css'],
+  styleUrls: ['./snack-bar-component-example-snack.css'],
 })
 export class PizzaPartyComponent {}
