@@ -3,8 +3,9 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MaterialModule} from '@angular/material';
+import {MaterialModule, MdNativeDateModule} from '@angular/material';
 import {MaterialDocsExample} from './material-docs-example';
+import {HttpModule} from '@angular/http';
 
 @NgModule({
 
@@ -12,8 +13,10 @@ import {MaterialDocsExample} from './material-docs-example';
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
-    ReactiveFormsModule,
+    HttpModule,
     MaterialModule,
+    MdNativeDateModule,
+    ReactiveFormsModule,
   ],
 
   declarations: [MaterialDocsExample],
