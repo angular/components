@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {MaterialModule} from '@angular/material';
+import {AutocompleteOverviewExample} from './autocomplete-overview/autocomplete-overview-example';
 import {ButtonOverviewExample} from './button-overview/button-overview-example';
 import {ButtonTypesExample} from './button-types/button-types-example';
 import {CheckboxOverviewExample} from './checkbox-overview/checkbox-overview-example';
@@ -39,6 +40,10 @@ import {
   DialogResultExampleDialog,
   DialogResultExample
 } from './dialog-result/dialog-result-example';
+import {
+  DialogElementsExampleDialog,
+  DialogElementsExample
+} from './dialog-elements/dialog-elements-example';
 import {TooltipOverviewExample} from './tooltip-overview/tooltip-overview-example';
 import {ButtonToggleOverviewExample} from './button-toggle-overview/button-toggle-overview-example';
 import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
@@ -62,7 +67,6 @@ import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-labe
 import {RadioOverviewExample} from './radio-overview/radio-overview-example';
 import {SidenavOverviewExample} from './sidenav-overview/sidenav-overview-example';
 import {SelectOverviewExample} from './select-overview/select-overview-example';
-import {AutocompleteOverviewExample} from './autocomplete-overview/autocomplete-overview-example';
 import {ChipsOverviewExample} from './chips-overview/chips-overview-example';
 import {ChipsStackedExample} from './chips-stacked/chips-stacked-example';
 import {SelectFormExample} from './select-form/select-form-example';
@@ -102,10 +106,16 @@ export const EXAMPLE_COMPONENTS = {
     selectorName: 'DialogOverviewExample, DialogOverviewExampleDialog',
   },
   'dialog-result': {
-    title: 'Dailog with a result',
+    title: 'Dialog with a result',
     component: DialogResultExample,
     additionalFiles: ['dialog-result-example-dialog.html'],
     selectorName: 'DialogResultExample, DialogResultExampleDialog',
+  },
+  'dialog-elements': {
+    title: 'Dialog elements',
+    component: DialogElementsExample,
+    additionalFiles: ['dialog-elements-example-dialog.html'],
+    selectorName: 'DialogElementsExample, DialogElementsExampleDialog',
   },
   'grid-list-dynamic': {title: 'Dynamic grid-list', component: GridListDynamicExample},
   'grid-list-overview': {title: 'Basic grid-list', component: GridListOverviewExample},
@@ -145,10 +155,7 @@ export const EXAMPLE_COMPONENTS = {
   'slide-toggle-overview': {title: 'Basic slide-toggles', component: SlideToggleOverviewExample},
   'snack-bar-component': {
     title: 'Snack-bar with a custom component',
-    component: SnackBarComponentExample,
-    selectorName: 'SnackBarComponentExample, PizzaPartyComponent',
-    additionalFiles:
-      ['snack-bar-component-example-snack.html', 'snack-bar-component-example-snack.css']
+    component: SnackBarComponentExample
   },
   'snack-bar-overview': {title: 'Basic snack-bar', component: SnackBarOverviewExample},
   'tabs-overview': {title: 'Basic tabs', component: TabsOverviewExample},
@@ -179,6 +186,8 @@ export const EXAMPLE_LIST = [
   DialogOverviewExampleDialog,
   DialogResultExample,
   DialogResultExampleDialog,
+  DialogElementsExample,
+  DialogElementsExampleDialog,
   GridListDynamicExample,
   GridListOverviewExample,
   IconOverviewExample,
