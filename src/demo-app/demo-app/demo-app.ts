@@ -69,7 +69,7 @@ export class DemoApp {
   constructor(private _element: ElementRef) {
     // Some browsers will throw when trying to access localStorage in incognito.
     try {
-      this.changeDetectionStrategy = localStorage.getItem(changeDetectionKey) || 'Default';
+      this.changeDetectionStrategy = window.localStorage.getItem(changeDetectionKey) || 'Default';
     } catch (error) {
       console.error(error);
     }
@@ -92,8 +92,8 @@ export class DemoApp {
     try {
       this.changeDetectionStrategy = this.changeDetectionStrategy === 'Default' ?
           'OnPush' : 'Default';
-      localStorage.setItem(changeDetectionKey, this.changeDetectionStrategy);
-      location.reload();
+      window.localStorage.setItem(changeDetectionKey, this.changeDetectionStrategy);
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
