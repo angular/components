@@ -1,6 +1,6 @@
 import {Component, ChangeDetectionStrategy, Directive, Input, OnInit, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
-import {NestedJsonDataSource} from './nested-data-source'
+import {NestedJsonDataSource, JsonNode} from './nested-data-source'
 import {SelectionModel, CdkTree} from '@angular/material';
 import {SimpleTreeNode} from './simple-tree-node';
 
@@ -9,7 +9,7 @@ import {SimpleTreeNode} from './simple-tree-node';
     selector: 'simple-nested-tree-demo',
     templateUrl: 'simple-nested-tree.html',
     styleUrls: ['simple-nested-tree.css'],
-//    changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
 export class SimpleNestedTreeDemo implements OnInit {
     data: string = `{
@@ -86,6 +86,8 @@ export class SimpleNestedTreeDemo implements OnInit {
 
 }`;
 
+
+
     expandRecursive: boolean = true;
     selectRecursive: boolean = true;
 
@@ -97,7 +99,7 @@ export class SimpleNestedTreeDemo implements OnInit {
             console.log(e);
         };
     }
-    selection = new SelectionModel<UserData>(true, []);
+    selection = new SelectionModel<JsonNode>(true, []);
     dataSource: NestedJsonDataSource = new NestedJsonDataSource();
 
     @ViewChild(CdkTree) tree: CdkTree;
@@ -118,5 +120,17 @@ export class SimpleNestedTreeDemo implements OnInit {
 
     get expansionModel() {
         return this.dataSource.expansionModel;
+    }
+
+
+    key: string;
+    value: string;
+    currentNode: JsonNode;
+    addChild() {
+        this.dataSource.addChild(this.key, this.value, this.currentNode);
+    }
+
+    editChild() {
+        this.dataSource.editChild(this.key, this.value, this.currentNode);
     }
 }

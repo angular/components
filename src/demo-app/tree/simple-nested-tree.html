@@ -9,7 +9,7 @@
         No data to display.
     </div>
 
-    <cdk-tree #tree [dataSource]="dataSource" [style.display]="!!dataSource.filteredData.length ? '' : 'none'">
+    <cdk-tree #tree [dataSource]="dataSource" [nested]="true" [style.display]="!!dataSource.filteredData.length ? '' : 'none'">
         <cdk-node *cdkNodeDef="let node let level=level let expandable=expandable">
             <li [cdkNestedNode]="node" [class.container]="expandable">
                 <div  [class.row]="true" [class.selected]="node ? selection.isSelected(node) : false"
@@ -21,6 +21,7 @@
                                      [checked]="selection.isSelected(node)">
                             {{node.key}}<span *ngIf="node.value">: {{node.value}}</span>
                         </md-checkbox>
+                  <button md-button (click)="currentNode = node">Choose</button>
                 </div>
                 <ul class="children" [style.display]="expansionModel.isSelected(node) ? 'block' : 'none'">
                     <ng-container cdkNodePlaceholder> </ng-container>
@@ -43,3 +44,15 @@ Expanded: <span *ngFor="let node of expansionModel.selected">{{node.key}} : {{no
 <md-slide-toggle [(ngModel)]="expandRecursive">Expand Recursively</md-slide-toggle>
 <br>
 <md-slide-toggle [(ngModel)]="selectRecursive">Select Recursively</md-slide-toggle>
+
+<md-card>
+  <md-input-container>
+    <input mdInput [(ngModel)]="key" placeholder="Key"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput [(ngModel)]="value" placeholder="Value"/>
+  </md-input-container>
+  <span *ngIf="!!currentNode"> {{currentNode.key}} </span>
+  <button md-button (click)="addChild()">Add Child</button>
+  <button md-button (click)="editChild()">Edit Child</button>
+</md-card>

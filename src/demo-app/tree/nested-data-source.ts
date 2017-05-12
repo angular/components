@@ -15,6 +15,7 @@ import {
 
 export class JsonNode {
     key: string;
+    level: number;
     value: any;
     children: any[];
 }
@@ -88,7 +89,6 @@ export class NestedJsonDataSource extends TreeDataSource<any> {
     //                 dottedLineLevels.push(level);
     //             }
     //             this.dottedLineLevels.set(child, dottedLineLevels);
-    //             console.log(`child` + child + `dootted line ` + dottedLineLevels)
     //
     //         });
     //     }
@@ -96,23 +96,42 @@ export class NestedJsonDataSource extends TreeDataSource<any> {
 
     childrenMap: Map<string, string[]> = new Map<string, string[]>();
 
-    buildJsonTree(value: any) {
+    buildJsonTree(value: any, level: number = 0) {
         let data: any[] = [];
         for (let k in value) {
             let v = value[k];
             let node = new JsonNode();
+            node.level = level;
             node.key = `${k}`;
             if (v === null || v === undefined) {
                 // no action
             } else if (typeof v === 'object') {
-                node.children = this.buildJsonTree(v);
-                console.log(`json key value ${k}: ${v} with children ${node.children}`)
+                node.children = this.buildJsonTree(v, level + 1);
             } else {
-                console.log(`json key value ${k}: ${v}`)
                 node.value = v;
             }
             data.push(node);
         }
         return data;
+    }
+
+    addChild(key: string, value: string, node: JsonNode) {
+        console.log(node.children);
+        if (!node.children) {
+            node.children = [];
+        }
+        let child = new JsonNode();
+        child.key = key;
+        child.value = value;
+        node.children.push(child);
+        console.log(node);
+        console.log(this.filteredData);
+        this._filteredData.next(this._filteredData.value);
+    }
+
+    editChild(key: string, value: string, node: JsonNode) {
+        node.key = key;
+        node.value = value;
+        this._filteredData.next(this._filteredData.value);
     }
 }

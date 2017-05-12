@@ -117,4 +117,18 @@ export class JsonDataSource extends TreeDataSource<any> {
     }
     return data;
   }
+
+  addChild(key: string, value: string, node: JsonNode) {
+    console.log(node.children);
+    if (!node.children) {
+      node.children = [];
+    }
+    let child = new JsonNode();
+    child.key = key;
+    child.value = value;
+    node.children.push(child);
+    console.log(node);
+    console.log(this.filteredData);
+    this._filteredData.next(this._filteredData.value);
+  }
 }

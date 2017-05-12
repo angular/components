@@ -40,8 +40,11 @@ export const BUFFER = 3;
 /**
  * Node template
  */
-@Directive({selector: '[cdkNodeDef]'})
+@Directive({
+  selector: '[cdkNodeDef]'
+})
 export class CdkNodeDef {
+
   constructor(public template: TemplateRef<any>) {}
 }
 
@@ -50,9 +53,11 @@ export class CdkNodeDef {
   selector: 'cdk-node',
   host: {
     'role': 'treeitem',
-  }
+  },
 })
 export class CdkNode  implements Focusable, OnDestroy {
+  @Input('cdkNodeLevel') level: number;
+  @Input('cdkNodeExpandable') expandable: boolean;
   constructor(private elementRef: ElementRef,
               private renderer: Renderer2,
               private _focusOriginMonitor: FocusOriginMonitor) {
@@ -78,7 +83,9 @@ export class CdkNode  implements Focusable, OnDestroy {
 /**
  * Placeholder for md-nodes
  */
-@Directive({selector: '[cdkNodePlaceholder]'})
+@Directive({
+  selector: '[cdkNodePlaceholder]'
+})
 export class CdkNodePlaceholder {
   constructor(public viewContainer: ViewContainerRef) { }
 }
@@ -86,16 +93,20 @@ export class CdkNodePlaceholder {
 /**
  * Indent for the children
  */
-@Directive({selector: '[cdkNodePadding]',
+@Directive({
+  selector: '[cdkNodePadding]',
   host: {
     '[style.padding-left]': 'paddingIndent',
-  }})
+  },
+})
 export class CdkNodePadding {
-  @Input('cdkNodePadding') level: number;
-  @Input('cdkNodePaddingIndent') indent: number = 28;
+//  @Input('cdkNodePadding') level: number;
+  @Input('cdkNodePadding') indent: number = 28;
+
+  constructor(public node: CdkNode) {}
 
   get paddingIndent() {
-    return `${this.level * this.indent}px`;
+    return `${this.node.level * this.indent}px`;
   }
 }
 
@@ -131,7 +142,7 @@ export class CdkNodePadding {
   host: {
     'class': 'mat-node-trigger',
     '(click)': 'trigger($event)',
-  },
+  }
 })
 export class CdkNodeTrigger {
   @Input('cdkNodeTrigger') node: any;
@@ -167,7 +178,7 @@ export class CdkNodeTrigger {
     'class': 'mat-node-select-trigger',
     '(change)': 'trigger($event)',
     '(click)': '$event.stopPropagation()',
-  },
+  }
 })
 export class MdNodeSelectTrigger extends CdkNodeTrigger{
   @Input('mdNodeSelectTrigger') node: any;
@@ -177,7 +188,9 @@ export class MdNodeSelectTrigger extends CdkNodeTrigger{
 /**
  * Nested node, add children to `mdNodePlaceholder` in template
  */
-@Directive({selector: '[cdkNestedNode]'})
+@Directive({
+  selector: '[cdkNestedNode]'
+})
 export class CdkNestedNode implements OnInit {
   @Input('cdkNestedNode') node: any;
 
@@ -208,9 +221,11 @@ export class CdkNestedNode implements OnInit {
     '(keydown)': 'handleKeydown($event)',
   },
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CdkTree {
   @Input() dataSource: TreeDataSource<any>;
+  @Input() nested: boolean = false;
 
   viewChange = new BehaviorSubject<MdTreeViewData>({start: 0, end: 20});
 
@@ -227,7 +242,6 @@ export class CdkTree {
   @ViewChild(CdkNodePlaceholder) nodePlaceholder: CdkNodePlaceholder;
   @ViewChild('emptyNode') emptyNodeTemplate: TemplateRef<any>;
 
-
   constructor(private _differs: IterableDiffers, private elementRef: ElementRef,
               private changeDetectorRef: ChangeDetectorRef) {
     this._dataDiffer = this._differs.find([]).create();
@@ -243,10 +257,35 @@ export class CdkTree {
     // Focus related
     this._keyManager = new FocusKeyManager(this.items).withWrap();
 
-    this.dataSource.connectTree(this.viewChange).subscribe((result: any[]) => this.renderNodeChanges(result));
+    this.dataSource.connectTree(this.viewChange).subscribe((result: any[]) => {
+      this.nested ? this.renderNestedNodeChanges(result) : this.renderNodeChanges(result);
+    });
+  }
+
+  renderNestedNodeChanges(dataNodes: any[]) {
+    this.dataNodes = dataNodes;
+    console.time('Rendering rows');
+
+    const oldScrollTop = this.elementRef.nativeElement.scrollTop;
+
+    this.nodePlaceholder.viewContainer.clear();
+    dataNodes.forEach((node, currentIndex) => {
+      this.addNode(this.nodePlaceholder.viewContainer, node, currentIndex);
+    });
+
+    // Scroll changes in the process of adding/removing rows. Reset it back to where it was
+    // so that it (1) it does not shift and (2) a scroll event does not get triggered which
+    // would cause a loop.
+    console.log(oldScrollTop);
+    this.elementRef.nativeElement.scrollTop = 400;
+
+    console.log(this.elementRef.nativeElement.scrollTop);
+    this.changeDetectorRef.detectChanges();
+    console.timeEnd('Rendering rows');
   }
 
   renderNodeChanges(dataNodes: any[]) {
+    console.log(`render nodes`);
     this.dataNodes = dataNodes;
     console.time('Rendering rows');
     const changes = this._dataDiffer.diff(dataNodes);
@@ -271,7 +310,9 @@ export class CdkTree {
     // Scroll changes in the process of adding/removing rows. Reset it back to where it was
     // so that it (1) it does not shift and (2) a scroll event does not get triggered which
     // would cause a loop.
+    console.log(oldScrollTop);
     this.elementRef.nativeElement.scrollTop = oldScrollTop;
+    console.log(this.elementRef.nativeElement.scrollTop);
     this.changeDetectorRef.detectChanges();
     console.timeEnd('Rendering rows');
   }
@@ -305,9 +346,11 @@ export class CdkTree {
   /** Scroll related */
   scrollToTop() {
     this.elementRef.nativeElement.scrollTop = 0;
+    console.log(`scroll top`);
   }
 
   scrollEvent() {
+    console.log(`screoo event`);
     const scrollTop = this.elementRef.nativeElement.scrollTop;
     const elementHeight = this.elementRef.nativeElement.getBoundingClientRect().height;
 
@@ -322,6 +365,7 @@ export class CdkTree {
   }
 
   scrollToIndex(topIndex: number) {
+    console.log(`scroll to index`);
     const elementHeight = this.elementRef.nativeElement.getBoundingClientRect().height;
     const view = {
       start: Math.max(topIndex - BUFFER, 0),

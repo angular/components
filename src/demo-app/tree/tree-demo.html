@@ -7,10 +7,10 @@
 
   <cdk-tree #tree [dataSource]="dataSource" [style.display]="!!dataSource.filteredData.length ? '' : 'none'">
     <!-- Row templates. The columns used are set at the row template level -->
-    <cdk-node *cdkNodeDef="let node let level=level let expandable=expandable"
+    <cdk-node *cdkNodeDef="let node; let expandable=expandable; let level=level" [cdkNodeExpandable]="expandable" [cdkNodeLevel]="level"
               [class.selected]="node ? selection.isSelected(node) : false"
               [class.data-row]="!!node">
-      <div class="row" [cdkNodePadding]="showDottedLine ? 0 : level" [cdkNodePaddingIndent]="45">
+      <div class="row" [cdkNodePadding]>
         <!-- Dotted line for tree -->
         <div class="space" *ngIf="showDottedLine">
           <div *ngFor="let a of createArray(level); let index = index" [class.special]="dataSource.dottedLineLevels.get(node).includes(index)"></div>

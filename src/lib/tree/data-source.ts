@@ -7,10 +7,10 @@ export interface MdTreeViewData {
   end: number;
 }
 
-export abstract class TreeDataSource<T> {
+export abstract class TreeDataSource<T extends object> {
 
-  levelMap: Map<T, number> = new Map<T, number>();
-  parentMap: Map<T, T> = new Map<T, T>();
+  levelMap: WeakMap<T, number> = new WeakMap<T, number>();
+  parentMap: WeakMap<T, T> = new WeakMap<T, T>();
   indexMap: Map<T, number> = new Map<T, number>();
   expandChange = new BehaviorSubject<T[]>([]);
 

@@ -1,6 +1,6 @@
 import {Component, ChangeDetectionStrategy, Directive, Input, OnInit, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
-import {JsonDataSource} from './simple-data-source'
+import {JsonDataSource, JsonNode} from './simple-data-source'
 import {SelectionModel, CdkTree} from '@angular/material';
 import {SimpleTreeNode} from './simple-tree-node';
 
@@ -156,5 +156,12 @@ export class SimpleTreeDemo implements OnInit {
 
   getChildren(node: any) {
     return node.children;
+  }
+
+  key: string;
+  value: string;
+  currentNode: JsonNode;
+  addChild() {
+    this.dataSource.addChild(this.key, this.value, this.currentNode);
   }
 }

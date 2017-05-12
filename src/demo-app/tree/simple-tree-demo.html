@@ -13,7 +13,7 @@
 
   <cdk-tree #tree [dataSource]="dataSource" [style.display]="!!dataSource.filteredData.length ? '' : 'none'">
     <!-- Row templates. The columns used are set at the row template level -->
-    <cdk-node *cdkNodeDef="let node let level=level let expandable=expandable">
+    <cdk-node *cdkNodeDef="let node let level=level let expandable=expandable" (click)="currentNode=node">
         <simple-tree-node [node]="node"
                           [level]="level"
                           [expandable]="expandable"
@@ -31,3 +31,14 @@ Selected: <span *ngFor="let node of selection.selected">{{node.key}}: {{node.val
 <button md-button (click)="expandAll()">Expand All</button>
 <button md-button (click)="collapseAll()">Collapse All</button>
 
+
+<md-card>
+  <md-input-container>
+    <input mdInput [(ngModel)]="key" placeholder="Key"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput [(ngModel)]="value" placeholder="Value"/>
+  </md-input-container>
+  <span *ngIf="!!currentNode"> {{currentNode.key}} </span>
+  <button md-button (click)="addChild()">Add Child</button>
+</md-card>
