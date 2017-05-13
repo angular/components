@@ -20,6 +20,7 @@ const DOCS = [
     items: [
       {id: 'autocomplete', name: 'Autocomplete', examples: ['autocomplete-overview']},
       {id: 'checkbox', name: 'Checkbox', examples: ['checkbox-configurable']},
+      {id: 'datepicker', name: 'Datepicker', examples: ['datepicker-overview']},
       {id: 'input', name: 'Input', examples: ['input-form']},
       {id: 'radio', name: 'Radio button', examples: ['radio-ng-model']},
       {id: 'select', name: 'Select', examples: ['select-form']},
