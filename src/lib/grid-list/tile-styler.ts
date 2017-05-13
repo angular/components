@@ -10,7 +10,6 @@ import {MdGridListBadRatioError} from './grid-list-errors';
 export class TileStyler {
   _gutterSize: string;
   _rows: number = 0;
-  _rowspan: number = 0;
   _cols: number;
   _direction: string;
 
@@ -25,8 +24,7 @@ export class TileStyler {
    */
   init(gutterSize: string, tracker: TileCoordinator, cols: number, direction: string): void {
     this._gutterSize = normalizeUnits(gutterSize);
-    this._rows = tracker.rowCount;
-    this._rowspan = tracker.rowspan;
+    this._rows = tracker.rows;
     this._cols = cols;
     this._direction = direction;
   }
@@ -107,7 +105,7 @@ export class TileStyler {
    * Calculates the total size taken up by gutters across one axis of a list.
    */
   getGutterSpan(): string {
-    return `${this._gutterSize} * (${this._rowspan} - 1)`;
+    return `${this._gutterSize} * (${this._rows} - 1)`;
   }
 
   /**
@@ -115,7 +113,7 @@ export class TileStyler {
    * @param tileHeight Height of the tile.
    */
   getTileSpan(tileHeight: string): string {
-    return `${this._rowspan} * ${this.getTileSize(tileHeight, 1)}`;
+    return `${this._rows} * ${this.getTileSize(tileHeight, 1)}`;
   }
 
   /**
@@ -219,7 +217,7 @@ export class FitTileStyler extends TileStyler {
   setRowStyles(tile: MdGridTile, rowIndex: number, percentWidth: number,
                gutterWidth: number): void {
     // Percent of the available vertical space that one row takes up.
-    let percentHeightPerTile = 100 / this._rowspan;
+    let percentHeightPerTile = 100 / this._rows;
 
     // Fraction of the horizontal gutter size that each column takes up.
     let gutterHeightPerTile = (this._rows - 1) / this._rows;

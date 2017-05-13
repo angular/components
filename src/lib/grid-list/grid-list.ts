@@ -50,6 +50,9 @@ export class MdGridList implements OnInit, AfterContentChecked {
    */
   private _rowHeight: string;
 
+  /** Flag if order has to be respected or can be ignored to fill gaps */
+  private _ignoreOrder: boolean = false;
+
   /** The amount of space between tiles. This will be something like '5px' or '2em'. */
   private _gutter: string = '1px';
 
@@ -79,6 +82,12 @@ export class MdGridList implements OnInit, AfterContentChecked {
   set rowHeight(value: string | number) {
     this._rowHeight = coerceToString(value);
     this._setTileStyler();
+  }
+
+  /** Set flag to ignore order in tile coordination. */
+  @Input()
+  set ignoreOrder(value: boolean) {
+    this._ignoreOrder = value;
   }
 
   ngOnInit() {
@@ -121,7 +130,7 @@ export class MdGridList implements OnInit, AfterContentChecked {
 
   /** Computes and applies the size and position for all children grid tiles. */
   private _layoutTiles(): void {
-    let tracker = new TileCoordinator(this.cols, this._tiles);
+    let tracker = new TileCoordinator(this.cols, this._tiles, this._ignoreOrder);
     let direction = this._dir ? this._dir.value : 'ltr';
     this._tileStyler.init(this.gutterSize, tracker, this.cols, direction);
 
