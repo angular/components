@@ -182,9 +182,13 @@ export class DemoMaterialModule {}
     RainyTabContent,
     FoggyTabContent,
     PlatformDemo,
+<<<<<<< HEAD
     TypographyDemo,
     ExpansionDemo,
     TreeDemo,
+=======
+    TreeDemo, TreeDottedLine, TreeExpansion,
+>>>>>>> .
     SimpleTreeNode,
     SimpleNestedTreeDemo,
   ],

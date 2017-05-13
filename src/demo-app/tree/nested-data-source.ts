@@ -66,7 +66,7 @@ export class NestedJsonDataSource extends TreeDataSource<any> {
     // }
     //
     // _flattenNode(node: any, level: number, flatNodes: any[]) {
-    //     console.log(`flatten node ${node}`);
+    //     console.log(`flatten data ${data}`);
     //     let children = this.getChildren(node);
     //     let selected = this.expansionModel.isSelected(node);
     //     this.levelMap.set(node, level);

@@ -7,6 +7,12 @@ export interface MdTreeViewData {
   end: number;
 }
 
+export interface CdkTreeContext {
+  $implicit: any;
+  level: number;
+  expandable: boolean;
+}
+
 export abstract class TreeDataSource<T extends object> {
 
   levelMap: WeakMap<T, number> = new WeakMap<T, number>();

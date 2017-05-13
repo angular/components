@@ -27,9 +27,10 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/let';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/combineLatest';
-import {TreeDataSource, MdTreeViewData} from './data-source';
+import {TreeDataSource, CdkTreeContext, MdTreeViewData} from './data-source';
 import {SelectionModel, UP_ARROW, DOWN_ARROW, RIGHT_ARROW, LEFT_ARROW, HOME, ENTER, ESCAPE, FocusOriginMonitor} from '../core';
 import {FocusKeyManager, Focusable} from '../core/a11y/focus-key-manager';
+import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 
 /** Height of each row in pixels (48 + 1px border) */
 export const ROW_HEIGHT = 49;
@@ -44,25 +45,36 @@ export const BUFFER = 3;
   selector: '[cdkNodeDef]'
 })
 export class CdkNodeDef {
-
-  constructor(public template: TemplateRef<any>) {}
+  constructor(public template: TemplateRef<any>,
+              public tree: CdkTree) {}
 }
 
 // TODO: Role should be group for expandable ndoes
-@Directive({
+@Component({
   selector: 'cdk-node',
-  host: {
-    'role': 'treeitem',
-  },
+  template: '<ng-content></ng-content>'
 })
 export class CdkNode  implements Focusable, OnDestroy {
-  @Input('cdkNodeLevel') level: number;
-  @Input('cdkNodeExpandable') expandable: boolean;
+  @Input('cdkNode') data: any;
   constructor(private elementRef: ElementRef,
               private renderer: Renderer2,
+              public tree: CdkTree,
               private _focusOriginMonitor: FocusOriginMonitor) {
-    this.renderer.addClass(elementRef.nativeElement, 'mat-node');
+    this.renderer.addClass(elementRef.nativeElement, 'mat-data');
     this._focusOriginMonitor.monitor(this.elementRef.nativeElement, this.renderer, true);
+  }
+
+  @Input()
+  get role() {
+    return this.expandable ? 'group' : 'treeitem';
+  }
+
+  get expandable() {
+    return this.tree.expandable(this.data);
+  }
+
+  get level() {
+    return this.tree.dataSource.getLevel(this.data);
   }
 
   ngOnDestroy() {
@@ -100,38 +112,16 @@ export class CdkNodePlaceholder {
   },
 })
 export class CdkNodePadding {
-//  @Input('cdkNodePadding') level: number;
-  @Input('cdkNodePadding') indent: number = 28;
+  @Input('cdkNodePadding') level: number;
 
-  constructor(public node: CdkNode) {}
+  @Input('cdkNodePaddingIndex') indent: number = 28;
 
   get paddingIndent() {
-    return `${this.node.level * this.indent}px`;
+    return `${(this.level ? this.level : this.node.level) * this.indent}px`;
   }
-}
 
-// /**
-//  * Expand trigger
-//  */
-// @Directive({
-//   selector: '[cdkNodeExpandTrigger]',
-//   host: {
-//     'class': 'mat-node-trigger',
-//     '(click)': 'handleClick($event)',
-//     '[style.z-index]': 'zIndex'
-//   },
-// })
-// export class MdNodeExpandTrigger {
-//   @Input('mdNodeExpandTrigger') node: any;
-//   @Input('mdNodeExpandTriggerRecursive') recursive: boolean = false;
-//   @Input('mdNodeExpandTriggerZIndex') zIndex: number = 1;
-//
-//   constructor(@Inject(forwardRef(() => CdkTree)) private tree: CdkTree) {}
-//
-//   handleClick(event) {
-//     this.tree.toggleExpand(this.node, this.recursive);
-//   }
-// }
+  constructor(public node: CdkNode) {}
+}
 
 
 /**
@@ -329,10 +319,10 @@ export class CdkTree {
     let node = this.getNodeDefForItem(data);
     let children = this.dataSource.getChildren(data);
     let expandable = !!children;
-    const context = {
+    const context: CdkTreeContext = {
       $implicit: data,
       level: this.dataSource.getLevel(data),
-      expandable: expandable,
+      expandable
     };
     container.createEmbeddedView(node.template, context, currentIndex);
   }
@@ -400,7 +390,7 @@ export class CdkTree {
       // If focus expandable, expand, scrollToIndex(focusIndex + 1)
     } else if (event.keyCode == LEFT_ARROW) {
       console.log(`// goToParent(focusIndex), collapse parent node`);
-      // goToParent(focusIndex), collapse parent node
+      // goToParent(focusIndex), collapse parent data
     }
   }
 
