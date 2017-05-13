@@ -71,9 +71,7 @@
   pointer-events: none;
 }
 
-// Overlay to be used as a tint. Note that the same effect can be achieved by using a pseudo
-// element, however we use a proper DOM element in order to be able to disable the default
-// touch action. This makes the buttons more responsive on touch devices.
+// Element that overlays the button to show focus and hover effects.
 .mat-button-focus-overlay {
   // The button spec calls for focus on raised buttons (and FABs) to be indicated with a
   // black, 12% opacity shade over the normal color (for both light and dark themes).
