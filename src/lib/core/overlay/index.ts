@@ -5,6 +5,7 @@ export {OverlayRef} from './overlay-ref';
 export {OverlayState} from './overlay-state';
 export {ConnectedOverlayDirective, OverlayOrigin, OverlayModule} from './overlay-directives';
 export {ScrollDispatcher} from './scroll/scroll-dispatcher';
+export {ViewportRuler} from './position/viewport-ruler';
 
 export * from './position/connected-position';
 
