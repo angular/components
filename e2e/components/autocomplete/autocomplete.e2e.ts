@@ -1,24 +1,55 @@
-import {browser, by, element, ExpectedConditions} from 'protractor';
-import {screenshot} from '../../screenshot';
+import {browser, by, element, Key} from 'protractor';
+import {pressKeys} from '../../util/actions';
 
 
-describe('button', () => {
-  describe('disabling behavior', () => {
-    beforeEach(() => browser.get('/button'));
+describe('autocomplete', () => {
+  describe('searching elements', () => {
+    beforeEach(() => browser.get('/autocomplete'));
 
-    it('should prevent click handlers from executing when disabled', () => {
-      element(by.id('test-button')).click();
-      expect(element(by.id('click-counter')).getText()).toEqual('1');
-      browser.wait(ExpectedConditions.not(
-        ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))))
-        .then(() => screenshot('clicked once'));
+    it('should show options when user types', () => {
+      let input = element(by.id('search-input'));
+      input.sendKeys('Ala');
+      element(by.className('mat-autocomplete-panel')).all(by.className('search-item'))
+        .count()
+        .then((size: number) => {
+          expect(size).toBe(2);
+        });
+    });
 
-      element(by.id('disable-toggle')).click();
-      element(by.id('test-button')).click();
-      expect(element(by.id('click-counter')).getText()).toEqual('1');
-      browser.wait(ExpectedConditions.not(
-        ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))))
-        .then(() => screenshot('click disabled'));
+    it('should update options on more specific search', () => {
+      let input = element(by.id('search-input'));
+      input.sendKeys('Alabama');
+      element(by.className('mat-autocomplete-panel')).all(by.className('search-item'))
+        .count()
+        .then((size: number) => {
+          expect(size).toBe(1);
+        });
+    });
+  });
+
+  describe('complete search', () => {
+    beforeEach(() => browser.get('/autocomplete'));
+
+    it('should complete input on enter', () => {
+      let input = element(by.id('search-input'));
+      input.sendKeys('Alabam');
+      pressKeys(Key.DOWN, Key.ENTER);
+      expect(input.getAttribute('value')).toBe('Alabama');
+    });
+  });
+
+  describe('complete visualization', () => {
+    beforeEach(() => browser.get('/autocomplete'));
+
+    it('should have selected class', () => {
+      let input = element(by.id('search-input'));
+      input.sendKeys('Ala');
+      pressKeys(Key.DOWN);
+      element(by.className('mat-autocomplete-panel')).all(by.className('mat-active'))
+          .count()
+          .then((size: number) => {
+            expect(size).toBe(1);
+          });
     });
   });
 });

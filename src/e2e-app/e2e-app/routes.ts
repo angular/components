@@ -14,6 +14,7 @@ import {ProgressSpinnerE2E} from '../progress-spinner/progress-spinner-e2e';
 import {SlideToggleE2E} from '../slide-toggle/slide-toggle-e2e';
 import {FullscreenE2E} from '../fullscreen/fullscreen-e2e';
 import {InputE2E} from '../input/input-e2e';
+import {AutocompleteE2E} from '../autocomplete/autocomplete-e2e';
 
 export const E2E_APP_ROUTES: Routes = [
   {path: '', component: Home},
@@ -31,4 +32,5 @@ export const E2E_APP_ROUTES: Routes = [
   {path: 'radio', component: SimpleRadioButtons},
   {path: 'slide-toggle', component: SlideToggleE2E},
   {path: 'tabs', component: BasicTabs},
+  {path: 'autocomplete', component: AutocompleteE2E},
 ];
