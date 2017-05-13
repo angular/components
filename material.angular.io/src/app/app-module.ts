@@ -4,7 +4,7 @@ import {NgModule} from '@angular/core';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
-import {MaterialModule} from '@angular/material';
+import {MaterialModule, MdNativeDateModule} from '@angular/material';
 import {MaterialDocsApp} from './material-docs-app';
 import {Homepage} from './pages/homepage/homepage';
 import {routing} from './routes';
@@ -42,6 +42,7 @@ import {ComponentPageHeader} from './pages/component-page-header/component-page-
     FormsModule,
     HttpModule,
     MaterialModule,
+    MdNativeDateModule,
     routing,
   ],
   providers: [
