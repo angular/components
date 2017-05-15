@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
+import {FormsModule, ReactiveFormsModule}   from '@angular/forms';
 import {SimpleCheckboxes} from './checkbox/checkbox-e2e';
 import {E2EApp, Home} from './e2e-app/e2e-app';
 import {IconE2E} from './icon/icon-e2e';
@@ -19,11 +20,14 @@ import {MaterialModule, OverlayContainer, FullscreenOverlayContainer} from '@ang
 import {E2E_APP_ROUTES} from './e2e-app/routes';
 import {SlideToggleE2E} from './slide-toggle/slide-toggle-e2e';
 import {InputE2E} from './input/input-e2e';
+import {AutocompleteE2E} from './autocomplete/autocomplete-e2e';
 
 @NgModule({
   imports: [
     BrowserModule,
     RouterModule.forRoot(E2E_APP_ROUTES),
+    FormsModule,
+    ReactiveFormsModule,
     MaterialModule,
     NoopAnimationsModule,
   ],
@@ -45,7 +49,8 @@ import {InputE2E} from './input/input-e2e';
     SimpleRadioButtons,
     SlideToggleE2E,
     TestDialog,
-    TestDialogFullScreen
+    TestDialogFullScreen,
+    AutocompleteE2E
   ],
   bootstrap: [E2EApp],
   providers: [

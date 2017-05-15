@@ -26,7 +26,10 @@ const config = {
 
       rules: [
         // Exclude md-menu elements because those are empty if not active.
-        { id: 'aria-required-children', selector: '*:not(md-menu)' },
+        { id: 'aria-required-children', selector: '*:not(md-menu, #search-input)' },
+
+        { id: 'aria-allowed-attr', selector: '*:not(#search-input)' },
+        { id: 'aria-valid-attr-value', selector: '*:not(#search-input)' },
 
         // Disable color constrast checks since the final colors will vary based on the theme.
         { id: 'color-contrast', enabled: false },

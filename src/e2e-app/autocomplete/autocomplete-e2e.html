@@ -1,0 +1,11 @@
+<section>
+  <md-input-container>
+    <input id="search-input" mdInput placeholder="State" [mdAutocomplete]="auto" [formControl]="stateCtrl">
+  </md-input-container>
+
+  <md-autocomplete #auto="mdAutocomplete">
+    <md-option *ngFor="let state of filteredStates | async" [value]="state" class="search-item">
+        {{ state }}
+    </md-option>
+  </md-autocomplete>
+</section>
