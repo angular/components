@@ -1,15 +1,15 @@
-md-tree {
+cdk-tree {
   display: block;
   background: white;
 }
 
-md-node, .mat-placeholder {
+cdk-node, .mat-placeholder {
   display: flex;
   align-items: center;
   //height: 48px;
   padding: 0 8px;
 }
 
-md-node.cdk-keyboard-focused {
+cdk-node.cdk-keyboard-focused {
   background-color: rgba(0, 0, 0, 0.1);
 }
