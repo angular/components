@@ -137,15 +137,24 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
       }
     });
 
-    this.onClose.subscribe(() => {
+    this.onClose.subscribe(() => this._restoreFocus());
+  }
+
+  /**
+   * If focus is currently inside the sidenav, restores it to where it was before the sidenav
+   * opened.
+   */
+  private _restoreFocus() {
+    let activeEl = document.activeElement;
+    if (activeEl && this._elementRef.nativeElement.contains(activeEl)) {
       if (this._elementFocusedBeforeSidenavWasOpened instanceof HTMLElement) {
         this._elementFocusedBeforeSidenavWasOpened.focus();
       } else {
         this._elementRef.nativeElement.blur();
       }
+    }
 
-      this._elementFocusedBeforeSidenavWasOpened = null;
-    });
+    this._elementFocusedBeforeSidenavWasOpened = null;
   }
 
   ngAfterContentInit() {
