@@ -1394,7 +1394,7 @@ class AutocompleteWithOnPushDelay implements OnInit {
 
 @Component({
   template: `
-    <input mdInput placeholder="Choose" [mdAutocomplete]="auto" [formControl]="optionCtrl">
+    <input placeholder="Choose" [mdAutocomplete]="auto" [formControl]="optionCtrl">
 
     <md-autocomplete #auto="mdAutocomplete">
       <md-option *ngFor="let option of filteredOptions | async" [value]="option">
