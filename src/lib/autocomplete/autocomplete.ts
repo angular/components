@@ -10,7 +10,7 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef,
 } from '@angular/core';
-import {MdOption} from '../core';
+import {MdOption, coerceBooleanProperty} from '../core';
 import {ActiveDescendantKeyManager} from '../core/a11y/activedescendant-key-manager';
 
 /**
@@ -49,6 +49,16 @@ export class MdAutocomplete implements AfterContentInit {
 
   /** Function that maps an option's control value to its display value in the trigger. */
   @Input() displayWith: (value: any) => string;
+
+  private _selectOptionOnTab: boolean = false;
+  /** Whether to select an option when the 'TAB' key is pressed and an option is selected */
+  @Input()
+  get selectOptionOnTab() {
+    return this._selectOptionOnTab;
+  }
+  set selectOptionOnTab(val: any) {
+    this._selectOptionOnTab = coerceBooleanProperty(val);
+  }
 
   /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
   id: string = `md-autocomplete-${_uniqueAutocompleteIdCounter++}`;

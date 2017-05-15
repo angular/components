@@ -16,7 +16,7 @@ import {MdInputModule} from '../input/index';
 import {Dir, LayoutDirection} from '../core/rtl/dir';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
-import {ENTER, DOWN_ARROW, SPACE, UP_ARROW, HOME, END} from '../core/keyboard/keycodes';
+import {ENTER, DOWN_ARROW, SPACE, UP_ARROW, HOME, END, TAB} from '../core/keyboard/keycodes';
 import {MdOption} from '../core/option/option';
 import {MdAutocomplete} from './autocomplete';
 import {MdInputContainer} from '../input/input-container';
@@ -48,7 +48,8 @@ describe('MdAutocomplete', () => {
         AutocompleteWithoutForms,
         NgIfAutocomplete,
         AutocompleteWithNgModel,
-        AutocompleteWithOnPushDelay
+        AutocompleteWithOnPushDelay,
+        AutocompleteWithSelectOptionOnTab
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -528,6 +529,7 @@ describe('MdAutocomplete', () => {
     let input: HTMLInputElement;
     let DOWN_ARROW_EVENT: KeyboardEvent;
     let ENTER_EVENT: KeyboardEvent;
+    let TAB_EVENT: KeyboardEvent;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleAutocomplete);
@@ -536,6 +538,7 @@ describe('MdAutocomplete', () => {
       input = fixture.debugElement.query(By.css('input')).nativeElement;
       DOWN_ARROW_EVENT = new MockKeyboardEvent(DOWN_ARROW) as KeyboardEvent;
       ENTER_EVENT = new MockKeyboardEvent(ENTER) as KeyboardEvent;
+      TAB_EVENT = new MockKeyboardEvent(TAB) as KeyboardEvent;
 
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
@@ -644,6 +647,21 @@ describe('MdAutocomplete', () => {
           fixture.detectChanges();
           expect(input.value)
               .toContain('Alabama', `Expected text field to fill with selected value on ENTER.`);
+        });
+      });
+    }));
+
+    it('text field should be empty when TAB is pressed', async(() => {
+      fixture.whenStable().then(() => {
+        fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+
+        fixture.whenStable().then(() => {
+          fixture.detectChanges();
+
+          fixture.componentInstance.trigger._handleKeydown(TAB_EVENT);
+          fixture.detectChanges();
+          expect(input.value)
+            .toBe('', `Expected text field to be empty when TAB is pressed.`);
         });
       });
     }));
@@ -788,6 +806,40 @@ describe('MdAutocomplete', () => {
 
   });
 
+  describe('tab keyboard event', () => {
+    let fixture: ComponentFixture<AutocompleteWithSelectOptionOnTab>;
+    let input: HTMLInputElement;
+    let DOWN_ARROW_EVENT: KeyboardEvent;
+    let TAB_EVENT: KeyboardEvent;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(AutocompleteWithSelectOptionOnTab);
+      fixture.detectChanges();
+
+      input = fixture.debugElement.query(By.css('input')).nativeElement;
+      DOWN_ARROW_EVENT = new MockKeyboardEvent(DOWN_ARROW) as KeyboardEvent;
+      TAB_EVENT = new MockKeyboardEvent(TAB) as KeyboardEvent;
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+    });
+
+    it('should fill the text field when an option is selected with TAB', async(() => {
+      fixture.whenStable().then(() => {
+        fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+
+        fixture.whenStable().then(() => {
+          fixture.detectChanges();
+
+          fixture.componentInstance.trigger._handleKeydown(TAB_EVENT);
+          fixture.detectChanges();
+          expect(input.value)
+            .toContain('Alabama', `Expected text field to fill with selected value on TAB.`);
+        });
+      });
+    }));
+  });
+
   describe('aria', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
     let input: HTMLInputElement;
@@ -929,7 +981,7 @@ describe('MdAutocomplete', () => {
 
       // Panel is offset by 6px in styles so that the underline has room to display.
       expect(Math.floor(inputBottom + 6))
-          .toEqual(Math.floor(panelTop), `Expected panel top to match input bottom by default.`);
+        .toEqual(Math.floor(panelTop), `Expected panel top to match input bottom by default.`);
       expect(fixture.componentInstance.trigger.autocomplete.positionY)
           .toEqual('below', `Expected autocomplete positionY to default to below.`);
     });
@@ -971,7 +1023,7 @@ describe('MdAutocomplete', () => {
 
       // Panel is offset by 24px in styles so that the label has room to display.
       expect(Math.floor(inputTop - 24))
-          .toEqual(Math.floor(panelBottom), `Expected panel to fall back to above position.`);
+        .toEqual(Math.floor(panelBottom), `Expected panel to fall back to above position.`);
       expect(fixture.componentInstance.trigger.autocomplete.positionY)
           .toEqual('above', `Expected autocomplete positionY to be "above" if panel won't fit.`);
     });
@@ -994,7 +1046,7 @@ describe('MdAutocomplete', () => {
 
         // Panel is offset by 24px in styles so that the label has room to display.
         expect(Math.floor(inputTop - 24))
-            .toEqual(Math.floor(panelBottom), `Expected panel to stay aligned after filtering.`);
+          .toEqual(Math.floor(panelBottom), `Expected panel to stay aligned after filtering.`);
         expect(fixture.componentInstance.trigger.autocomplete.positionY)
             .toEqual('above', `Expected autocomplete positionY to be "above" if panel won't fit.`);
       });
@@ -1370,6 +1422,49 @@ class AutocompleteWithOnPushDelay implements OnInit {
     setTimeout(() => {
       this.options = ['One'];
     }, 1000);
+  }
+}
+
+
+@Component({
+  template: `
+  <md-input-container [floatPlaceholder]="placeholder" [style.width.px]="width">
+    <input mdInput placeholder="State" [mdAutocomplete]="auto" [formControl]="stateCtrl">
+  </md-input-container>
+
+  <md-autocomplete #auto="mdAutocomplete" selectOptionOnTab="true">
+    <md-option *ngFor="let state of filteredStates" [value]="state.name">
+      <span> {{ state.code }}: {{ state.name }}  </span>
+    </md-option>
+  </md-autocomplete>
+  `
+})
+class AutocompleteWithSelectOptionOnTab implements OnDestroy {
+  stateCtrl = new FormControl();
+  filteredStates: any[];
+  valueSub: Subscription;
+  placeholder = 'auto';
+  width: number;
+
+  @ViewChild(MdAutocompleteTrigger) trigger: MdAutocompleteTrigger;
+  @ViewChild(MdAutocomplete) panel: MdAutocomplete;
+  @ViewChild(MdInputContainer) inputContainer: MdInputContainer;
+  @ViewChildren(MdOption) options: QueryList<MdOption>;
+
+  states = [
+    { code: 'AL', name: 'Alabama' },
+    { code: 'CA', name: 'California' },
+  ];
+
+  constructor() {
+    this.filteredStates = this.states;
+    this.valueSub = this.stateCtrl.valueChanges.subscribe(val => {
+        this.filteredStates = this.states;
+    });
+  }
+
+  ngOnDestroy() {
+    this.valueSub.unsubscribe();
   }
 }
 
