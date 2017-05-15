@@ -14,7 +14,7 @@ describe('FocusTrap', () => {
         FocusTrapWithBindings,
         SimpleFocusTrap,
         FocusTrapTargets,
-        FocusTrapWithSvg
+        FocusTrapWithSvg,
       ],
       providers: [InteractivityChecker, Platform, FocusTrapFactory]
     });
@@ -104,6 +104,13 @@ describe('FocusTrap', () => {
       focusTrapInstance = fixture.componentInstance.focusTrapDirective.focusTrap;
     });
 
+    it('should be able to set initial focus target', () => {
+      // Because we can't mimic a real tab press focus change in a unit test, just call the
+      // focus event handler directly.
+      focusTrapInstance.focusInitialElement();
+      expect(document.activeElement.id).toBe('middle');
+    });
+
     it('should be able to prioritize the first focus target', () => {
       // Because we can't mimic a real tab press focus change in a unit test, just call the
       // focus event handler directly.
@@ -131,7 +138,6 @@ describe('FocusTrap', () => {
       expect(() => focusTrapInstance.focusLastTabbableElement()).not.toThrow();
     });
   });
-
 });
 
 
@@ -168,6 +174,7 @@ class FocusTrapWithBindings {
     <div cdkTrapFocus>
       <input>
       <button id="last" cdk-focus-region-end></button>
+      <button id="middle" cdk-focus-init></button>
       <button id="first" cdk-focus-region-start>SAVE</button>
       <input>
     </div>
