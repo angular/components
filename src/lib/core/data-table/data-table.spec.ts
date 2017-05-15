@@ -7,13 +7,20 @@ import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CdkCellOutlet, CdkHeaderRow, CdkHeaderRowDef, CdkRow, CdkRowDef} from './row';
 import {CdkColumnDef, CdkHeaderCellDef, CdkHeaderRowCell, CdkRowCell, CdkRowCellDef} from './cell';
+import {customMatchers} from '../../matchers';
 
 describe('CdkTable', () => {
   let fixture: ComponentFixture<SimpleCdkTableApp>;
 
-  let component: SimpleCdkTableApp, dataSource: FakeDataSource, table: CdkTable;
+  let component: SimpleCdkTableApp;
+  let dataSource: FakeDataSource;
+  let table: CdkTable;
+  let tableElement: HTMLElement;
 
   beforeEach(async(() => {
+    jasmine.addMatchers(customMatchers);
+    jasmine.addMatchers(tableCustomMatchers);
+
     TestBed.configureTestingModule({
       imports: [CommonModule],
       declarations: [
@@ -26,33 +33,15 @@ describe('CdkTable', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(SimpleCdkTableApp);
+
     component = fixture.componentInstance;
     dataSource = component.dataSource as FakeDataSource;
     table = component.table;
+    tableElement = fixture.nativeElement.querySelector('cdk-table');
 
     fixture.detectChanges();  // Let the component and table create embedded views
     fixture.detectChanges();  // Let the cells render
   }));
-
-  function getElements(element: HTMLElement, query: string): HTMLElement[] {
-    return [].slice.call(element.querySelectorAll(query));
-  }
-
-  function getHeaderRow() {
-    return fixture ? fixture.nativeElement.querySelector('.cdk-header-row') : undefined;
-  }
-
-  function getRows() {
-    return fixture ? getElements(fixture.nativeElement, '.cdk-row') : [];
-  }
-
-  function getRowCells(row: HTMLElement) {
-    return row ? getElements(row, '.cdk-row-cell') : [];
-  }
-
-  function getHeaderRowCells() {
-    return getHeaderRow() ? getElements(getHeaderRow(), '.cdk-header-cell') : [];
-  }
 
   describe('should initialize', () => {
     it('with a connected data source', () => {
@@ -61,15 +50,15 @@ describe('CdkTable', () => {
     });
 
     it('with a rendered header with the right number of header cells', () => {
-      const header = getHeaderRow();
+      const header = getHeaderRow(tableElement);
 
       expect(header).not.toBe(undefined);
       expect(header.classList).toContain('customHeaderRowClass');
-      expect(getHeaderRowCells().length).toBe(component.columnsToRender.length);
+      expect(getHeaderRowCells(tableElement).length).toBe(component.columnsToRender.length);
     });
 
     it('with rendered rows with right number of row cells', () => {
-      const rows = getRows();
+      const rows = getRows(tableElement);
 
       expect(rows.length).toBe(dataSource.data.length);
       rows.forEach(row => {
@@ -79,14 +68,26 @@ describe('CdkTable', () => {
     });
 
     it('with column class names provided to header and data row cells', () => {
-      getHeaderRowCells().forEach((headerCell, index) => {
+      getHeaderRowCells(tableElement).forEach((headerCell, index) => {
         expect(headerCell.classList).toContain(`cdk-column-${component.columnsToRender[index]}`);
       });
 
-      getRows().forEach(row => {
+      getRows(tableElement).forEach(row => {
         getRowCells(row).forEach((cell, index) => {
           expect(cell.classList).toContain(`cdk-column-${component.columnsToRender[index]}`);
         });
+      });
+    });
+
+    it('with the right accessibility roles', () => {
+      expect(tableElement).toBeRole('grid');
+
+      expect(getHeaderRow(tableElement)).toBeRole('row');
+      getHeaderRowCells(tableElement).forEach(cell => expect(cell).toBeRole('columnheader'));
+
+      getRows(tableElement).forEach(row => {
+        expect(row).toBeRole('row');
+        getRowCells(row).forEach(cell => expect(cell).toBeRole('gridcell'));
       });
     });
   });
@@ -95,12 +96,32 @@ describe('CdkTable', () => {
     dataSource.addData();
     fixture.detectChanges();
 
-    expect(getRows().length).toBe(dataSource.data.length);
+    expect(getRows(tableElement).length).toBe(dataSource.data.length);
 
     // Check that the number of cells is correct
-    getRows().forEach(row => {
+    getRows(tableElement).forEach(row => {
       expect(getRowCells(row).length).toBe(component.columnsToRender.length);
     });
+  });
+
+  it('should match the right table content with dynamic data', () => {
+    let initialDataLength = dataSource.data.length;
+    expect(dataSource.data.length).toBe(3);
+    let headerContent = ['Column A', 'Column B', 'Column C'];
+
+    let initialTableContent = [headerContent];
+    dataSource.data.forEach(rowData => initialTableContent.push([rowData.a, rowData.b, rowData.c]));
+    expect(tableElement).toMatchTableContent(initialTableContent);
+
+    // Add data to the table and recreate what the rendered output should be.
+    dataSource.addData();
+    expect(dataSource.data.length).toBe(initialDataLength + 1); // Make sure data was added
+    fixture.detectChanges();
+    fixture.detectChanges();
+
+    let changedTableContent = [headerContent];
+    dataSource.data.forEach(rowData => changedTableContent.push([rowData.a, rowData.b, rowData.c]));
+    expect(tableElement).toMatchTableContent(changedTableContent);
   });
 });
 
@@ -175,3 +196,65 @@ class SimpleCdkTableApp {
 
   @ViewChild(CdkTable) table: CdkTable;
 }
+
+function getElements(element: Element, query: string): Element[] {
+  return [].slice.call(element.querySelectorAll(query));
+}
+
+function getHeaderRow(tableElement: Element): Element {
+  return tableElement.querySelector('.cdk-header-row');
+}
+
+function getRows(tableElement: Element) {
+  return getElements(tableElement, '.cdk-row');
+}
+
+function getRowCells(row: Element) {
+  return row ? getElements(row, '.cdk-row-cell') : [];
+}
+
+function getHeaderRowCells(tableElement: Element) {
+  return getElements(getHeaderRow(tableElement), '.cdk-header-cell');
+}
+
+const tableCustomMatchers: jasmine.CustomMatcherFactories = {
+  toMatchTableContent: function(util, customEqualityTesters) {
+    return {
+      compare: function (tableElement: Element, expectedTableContent: any[]) {
+        const missedExpectations = [];
+        function checkCellContent(cell: Element, expectedTextContent: string) {
+          const actualTextContent = cell.textContent.trim();
+          if (actualTextContent !== expectedTextContent) {
+            missedExpectations.push(
+                `Expected cell contents to be ${expectedTextContent} but was ${actualTextContent}`);
+          }
+        }
+
+        // Check header cells
+        const expectedHeaderContent = expectedTableContent.shift();
+        getHeaderRowCells(tableElement).forEach((cell, index) => {
+          return checkCellContent(cell, expectedHeaderContent[index]);
+        });
+
+        // Check data row cells
+        getRows(tableElement).forEach((row, rowIndex) => {
+          getRowCells(row).forEach((cell, cellIndex) => {
+            checkCellContent(cell, expectedTableContent[rowIndex][cellIndex]);
+          });
+        });
+
+        if (missedExpectations.length) {
+          return {
+            pass: false,
+            message: missedExpectations.join('\n')
+          };
+        }
+
+        return {
+          pass: true,
+          message: 'Table contained the right content'
+        };
+      }
+    };
+  }
+};
