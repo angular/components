@@ -2,11 +2,6 @@ import {Injectable, SecurityContext, Optional, SkipSelf} from '@angular/core';
 import {SafeResourceUrl, DomSanitizer} from '@angular/platform-browser';
 import {Http} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
-import {
-  MdIconNameNotFoundError,
-  MdIconSvgTagNotFoundError,
-  MdIconNoHttpProviderError,
-} from './icon-errors';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
@@ -27,6 +22,16 @@ export function getMdIconNameNotFoundError(iconName: string): Error {
   return new Error(`Unable to find icon with the name "${iconName}"`);
 }
 
+
+/**
+ * Returns an exception to be thrown when the consumer attempts to use
+ * `<md-icon>` without including @angular/http.
+ * @docs-private
+ */
+export function getMdIconNoHttpProviderError(): Error {
+  return new Error('Could not find Http provider for use with Angular Material icons. ' +
+                   'Please include the HttpModule from @angular/http in your app imports.');
+}
 
 /**
  * Configuration for an icon, including the URL and possibly the cached SVG element.
@@ -377,7 +382,7 @@ export class MdIconRegistry {
    */
   private _fetchUrl(safeUrl: SafeResourceUrl): Observable<string> {
     if (!this._http) {
-      throw new MdIconNoHttpProviderError();
+      throw getMdIconNoHttpProviderError();
     }
 
     const url = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, safeUrl);
