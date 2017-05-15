@@ -167,8 +167,8 @@ class FocusTrapWithBindings {
   template: `
     <div cdkTrapFocus>
       <input>
-      <button id="last" cdk-focus-end></button>
-      <button id="first" cdk-focus-start>SAVE</button>
+      <button id="last" cdk-focus-region-end></button>
+      <button id="first" cdk-focus-region-start>SAVE</button>
       <input>
     </div>
     `

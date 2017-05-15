@@ -81,6 +81,10 @@ export class FocusTrap {
     });
   }
 
+  focusInitialElementWhenReady() {
+    this._ngZone.onMicrotaskEmpty.first().subscribe(() => this.focusInitialElement());
+  }
+
   /**
    * Waits for microtask queue to empty, then focuses
    * the first tabbable element within the focus trap region.
@@ -97,11 +101,39 @@ export class FocusTrap {
     this._ngZone.onMicrotaskEmpty.first().subscribe(() => this.focusLastTabbableElement());
   }
 
+  private _getRegionMarker(marker: 'start' | 'end'): HTMLElement | null {
+    let markers = [
+      ...Array.prototype.slice.call(this._element.querySelectorAll(`[cdk-focus-region-${marker}]`)),
+      ...Array.prototype.slice.call(this._element.querySelectorAll(`[cdk-focus-${marker}]`)),
+    ];
+
+    markers.forEach((el: HTMLElement) => {
+      if (el.hasAttribute(`cdk-focus-${marker}`)) {
+        console.warn(`Found use of deprecated attribute 'cdk-focus-${marker}',` +
+                     ` use 'cdk-focus-region-${marker}' instead.`, el);
+      }
+    });
+
+    if (marker == 'start') {
+      return markers.length ? markers[0] : this._getFirstTabbableElement(this._element);
+    }
+    return markers.length ?
+        markers[markers.length - 1] : this._getLastTabbableElement(this._element);
+  }
+
+  /** Focuses the element that should be focused when the focus trap is initialized. */
+  focusInitialElement() {
+    let redirectToElement = this._element.querySelector('[cdk-focus-init]') as HTMLElement;
+    if (redirectToElement) {
+      redirectToElement.focus();
+    } else {
+      this.focusFirstTabbableElement();
+    }
+  }
+
   /** Focuses the first tabbable element within the focus trap region. */
   focusFirstTabbableElement() {
-    let redirectToElement = this._element.querySelector('[cdk-focus-start]') as HTMLElement ||
-                            this._getFirstTabbableElement(this._element);
-
+    let redirectToElement = this._getRegionMarker('start');
     if (redirectToElement) {
       redirectToElement.focus();
     }
@@ -109,15 +141,7 @@ export class FocusTrap {
 
   /** Focuses the last tabbable element within the focus trap region. */
   focusLastTabbableElement() {
-    let focusTargets = this._element.querySelectorAll('[cdk-focus-end]');
-    let redirectToElement: HTMLElement = null;
-
-    if (focusTargets.length) {
-      redirectToElement = focusTargets[focusTargets.length - 1] as HTMLElement;
-    } else {
-      redirectToElement = this._getLastTabbableElement(this._element);
-    }
-
+    let redirectToElement = this._getRegionMarker('end');
     if (redirectToElement) {
       redirectToElement.focus();
     }

@@ -133,7 +133,7 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
       this._elementFocusedBeforeSidenavWasOpened = document.activeElement as HTMLElement;
 
       if (this.isFocusTrapEnabled && this._focusTrap) {
-        this._focusTrap.focusFirstTabbableElementWhenReady();
+        this._focusTrap.focusInitialElementWhenReady();
       }
     });
 
