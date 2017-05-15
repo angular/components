@@ -9,7 +9,7 @@ import {
   Input,
   Optional,
   Renderer2,
-  AfterContentInit,
+  AfterContentInit, ChangeDetectorRef,
 } from '@angular/core';
 import {MdLine, MdLineSetter, coerceBooleanProperty} from '../core';
 
@@ -128,8 +128,6 @@ export class MdListItem implements AfterContentInit {
   private _disableRipple: boolean = false;
   private _isNavList: boolean = false;
 
-  _hasFocus: boolean = false;
-
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
    * part of a nav list. The value of `disableRipple` on the `md-nav-list` overrides this flag.
@@ -151,6 +149,7 @@ export class MdListItem implements AfterContentInit {
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
+              private _cdr: ChangeDetectorRef,
               @Optional() private _list: MdList,
               @Optional() navList: MdNavListCssMatStyler) {
     this._isNavList = !!navList;
@@ -166,11 +165,11 @@ export class MdListItem implements AfterContentInit {
   }
 
   _handleFocus() {
-    this._hasFocus = true;
+    this._renderer.addClass(this._element.nativeElement, 'mat-list-item-focus');
   }
 
   _handleBlur() {
-    this._hasFocus = false;
+    this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-focus');
   }
 
   /** Retrieves the DOM element of the component host. */
