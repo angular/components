@@ -1,17 +1,17 @@
 import {
+  AfterContentInit,
   Component,
-  ViewEncapsulation,
-  ContentChildren,
   ContentChild,
-  QueryList,
+  ContentChildren,
   Directive,
   ElementRef,
   Input,
   Optional,
+  QueryList,
   Renderer2,
-  AfterContentInit, ChangeDetectorRef,
+  ViewEncapsulation
 } from '@angular/core';
-import {MdLine, MdLineSetter, coerceBooleanProperty} from '../core';
+import {coerceBooleanProperty, MdLine, MdLineSetter} from '../core';
 
 @Directive({
   selector: 'md-divider, mat-divider'
@@ -149,7 +149,6 @@ export class MdListItem implements AfterContentInit {
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
-              private _cdr: ChangeDetectorRef,
               @Optional() private _list: MdList,
               @Optional() navList: MdNavListCssMatStyler) {
     this._isNavList = !!navList;
