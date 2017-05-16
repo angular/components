@@ -32,7 +32,7 @@ describe('MdDatepicker', () => {
         declarations: [
           DatepickerWithFilterAndValidation,
           DatepickerWithFormControl,
-          DatepickerWithMinAndMax,
+          DatepickerWithMinAndMaxValidation,
           DatepickerWithNgModel,
           DatepickerWithStartAt,
           DatepickerWithToggle,
@@ -413,12 +413,12 @@ describe('MdDatepicker', () => {
       });
     });
 
-    describe('datepicker with min and max dates', () => {
-      let fixture: ComponentFixture<DatepickerWithMinAndMax>;
-      let testComponent: DatepickerWithMinAndMax;
+    describe('datepicker with min and max dates and validation', () => {
+      let fixture: ComponentFixture<DatepickerWithMinAndMaxValidation>;
+      let testComponent: DatepickerWithMinAndMaxValidation;
 
       beforeEach(async(() => {
-        fixture = TestBed.createComponent(DatepickerWithMinAndMax);
+        fixture = TestBed.createComponent(DatepickerWithMinAndMaxValidation);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -433,6 +433,58 @@ describe('MdDatepicker', () => {
         expect(testComponent.datepicker._minDate).toEqual(new Date(2010, JAN, 1));
         expect(testComponent.datepicker._maxDate).toEqual(new Date(2020, JAN, 1));
       });
+
+      it('should mark input invalid', async(() => {
+        testComponent.date = new Date(2009, DEC, 31);
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          fixture.detectChanges();
+
+          expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+              .toContain('ng-invalid');
+
+          testComponent.date = new Date(2020, JAN, 2);
+          fixture.detectChanges();
+
+          fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+                .toContain('ng-invalid');
+
+            testComponent.date = new Date(2010, JAN, 2);
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+              fixture.detectChanges();
+
+              expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+                  .not.toContain('ng-invalid');
+
+              testComponent.date = testComponent.datepicker._minDate;
+              fixture.detectChanges();
+
+              fixture.whenStable().then(() => {
+                fixture.detectChanges();
+
+                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+                    .not.toContain('ng-invalid');
+
+                testComponent.date = testComponent.datepicker._maxDate;
+                fixture.detectChanges();
+
+                fixture.whenStable().then(() => {
+                  fixture.detectChanges();
+
+                  expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+                      .not.toContain('ng-invalid');
+                });
+              });
+            });
+          });
+        });
+      }));
     });
 
     describe('datepicker with filter and validation', () => {
@@ -606,14 +658,16 @@ class InputContainerDatepicker {
 
 @Component({
   template: `
-    <input [mdDatepicker]="d" [min]="minDate" [max]="maxDate">
+    <input [mdDatepicker]="d" [(ngModel)]="date" [min]="minDate" [max]="maxDate">
+    <button [mdDatepickerToggle]="d"></button>
     <md-datepicker #d></md-datepicker>
   `,
 })
-class DatepickerWithMinAndMax {
+class DatepickerWithMinAndMaxValidation {
+  @ViewChild('d') datepicker: MdDatepicker<Date>;
+  date: Date;
   minDate = new Date(2010, JAN, 1);
   maxDate = new Date(2020, JAN, 1);
-  @ViewChild('d') datepicker: MdDatepicker<Date>;
 }
 
 
