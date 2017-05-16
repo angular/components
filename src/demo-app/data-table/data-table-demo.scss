@@ -28,7 +28,7 @@
   padding: 0 8px;
 }
 
-.cdk-row-cell, .cdk-header-cell {
+.cdk-cell, .cdk-header-cell {
   width: 150px;
   padding: 10px;
   position: relative;
@@ -41,7 +41,7 @@
   color: rgba(0, 0, 0, 0.54);
 }
 
-.cdk-row-cell {
+.cdk-cell {
   font-size: 13px;
   color: rgba(0, 0, 0, 0.87);
 }
@@ -56,7 +56,7 @@
 }
 
 .cdk-column-progress {
-  &.cdk-row-cell {
+  &.cdk-cell {
     display: flex;
     position: relative;
 
@@ -81,7 +81,7 @@
 .cdk-column-color {
   max-width: 160px;
 
-  &.cdk-row-cell {
+  &.cdk-cell {
     font-weight: bold;
     font-size: 16px;
     font-family: cursive;

@@ -17,7 +17,7 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/combineLatest';
 import {DataSource} from './data-source';
 import {CdkCellOutlet, CdkHeaderRowDef, CdkRowDef} from './row';
-import {CdkColumnDef, CdkHeaderCellDef, CdkRowCellDef} from './cell';
+import {CdkColumnDef, CdkHeaderCellDef, CdkCellDef} from './cell';
 
 export interface CollectionViewer {
   start: number;
@@ -122,6 +122,7 @@ export class CdkTable {
     // TODO(andrewseguin): Re-render rows when their list of columns change.
     // TODO(andrewseguin): If the data source is not
     // present after view init, connect it when it is defined.
+    // TODO(andrewseguin): Unsubscribe from this on destroy.
     this.dataSource.connectTable(this.viewChanges).subscribe((rowsData: any[]) => {
       // TODO(andrewseguin): Add a differ that will check if the data has changed,
       // rather than re-rendering all rows
@@ -156,6 +157,7 @@ export class CdkTable {
     // the data rather than choosing the first row definition.
     const row = this._rowDefinitions.first;
 
+    // TODO(andrewseguin): Add more context, such as first/last/isEven/etc
     const context = {$implicit: rowData};
 
     // TODO(andrewseguin): add some code to enforce that exactly one
@@ -181,7 +183,7 @@ export class CdkTable {
    * Returns the cell template definitions to insert in the provided row
    * as defined by its list of columns to display.
    */
-  getCellTemplatesForRow(rowDef: CdkRowDef): CdkRowCellDef[] {
+  getCellTemplatesForRow(rowDef: CdkRowDef): CdkCellDef[] {
     return rowDef.columns.map(columnId => {
       return this._columnDefinitionsByName.get(columnId).cell;
     });

@@ -4,8 +4,8 @@ import {ContentChild, Directive, ElementRef, Input, Renderer, TemplateRef} from 
  * Row cell definition for a CDK data-table.
  * Captures the template of a column's data row cell as well as cell-specific properties.
  */
-@Directive({selector: '[cdkRowCellDef]'})
-export class CdkRowCellDef {
+@Directive({selector: '[cdkCellDef]'})
+export class CdkCellDef {
   constructor(public template: TemplateRef<any>) { }
 }
 
@@ -26,7 +26,7 @@ export class CdkHeaderCellDef {
 export class CdkColumnDef {
   @Input('cdkColumnDef') name: string;
 
-  @ContentChild(CdkRowCellDef) cell: CdkRowCellDef;
+  @ContentChild(CdkCellDef) cell: CdkCellDef;
   @ContentChild(CdkHeaderCellDef) headerCell: CdkHeaderCellDef;
 }
 
@@ -38,7 +38,7 @@ export class CdkColumnDef {
     'role': 'columnheader',
   },
 })
-export class CdkHeaderRowCell {
+export class CdkHeaderCell {
   constructor(private columnDef: CdkColumnDef,
               private elementRef: ElementRef,
               private renderer: Renderer) {
@@ -48,13 +48,13 @@ export class CdkHeaderRowCell {
 
 /** Cell template container that adds the right classes and role. */
 @Directive({
-  selector: 'cdk-row-cell',
+  selector: 'cdk-cell',
   host: {
-    'class': 'cdk-row-cell',
+    'class': 'cdk-cell',
     'role': 'gridcell',
   },
 })
-export class CdkRowCell {
+export class CdkCell {
   constructor(private columnDef: CdkColumnDef,
               private elementRef: ElementRef,
               private renderer: Renderer) {

@@ -6,7 +6,7 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import {CdkRowCellDef} from './cell';
+import {CdkCellDef} from './cell';
 
 /**
  * Header row definition for the CDK data-table.
@@ -40,7 +40,7 @@ export class CdkRowDef {
 @Directive({selector: '[cdkCellOutlet]'})
 export class CdkCellOutlet {
   /** The ordered list of cells to render within this outlet's view container */
-  cells: CdkRowCellDef[];
+  cells: CdkCellDef[];
 
   /** The data context to be provided to each cell */
   context: any;

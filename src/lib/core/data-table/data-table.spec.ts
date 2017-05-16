@@ -1,15 +1,14 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
-import {CdkHeaderRowPlaceholder, CdkRowPlaceholder, CdkTable, CollectionViewer} from './data-table';
+import {CdkTable, CollectionViewer} from './data-table';
 import {DataSource} from './data-source';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {CdkCellOutlet, CdkHeaderRow, CdkHeaderRowDef, CdkRow, CdkRowDef} from './row';
-import {CdkColumnDef, CdkHeaderCellDef, CdkHeaderRowCell, CdkRowCell, CdkRowCellDef} from './cell';
 import {customMatchers} from '../../matchers';
+import {CdkDataTableModule} from './index';
 
-describe('CdkTable', () => {
+fdescribe('CdkTable', () => {
   let fixture: ComponentFixture<SimpleCdkTableApp>;
 
   let component: SimpleCdkTableApp;
@@ -22,14 +21,8 @@ describe('CdkTable', () => {
     jasmine.addMatchers(tableCustomMatchers);
 
     TestBed.configureTestingModule({
-      imports: [CommonModule],
-      declarations: [
-        SimpleCdkTableApp,
-        CdkTable, CdkRowDef, CdkRowCellDef, CdkCellOutlet, CdkHeaderCellDef,
-        CdkColumnDef, CdkRowCell, CdkRow,
-        CdkHeaderRowCell, CdkHeaderRow, CdkHeaderRowDef,
-        CdkRowPlaceholder, CdkHeaderRowPlaceholder,
-      ],
+      imports: [CommonModule, CdkDataTableModule],
+      declarations: [SimpleCdkTableApp],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SimpleCdkTableApp);
@@ -54,7 +47,7 @@ describe('CdkTable', () => {
 
       expect(header).not.toBe(undefined);
       expect(header.classList).toContain('customHeaderRowClass');
-      expect(getHeaderRowCells(tableElement).length).toBe(component.columnsToRender.length);
+      expect(getHeaderCells(tableElement).length).toBe(component.columnsToRender.length);
     });
 
     it('with rendered rows with right number of row cells', () => {
@@ -63,17 +56,17 @@ describe('CdkTable', () => {
       expect(rows.length).toBe(dataSource.data.length);
       rows.forEach(row => {
         expect(row.classList).toContain('customRowClass');
-        expect(getRowCells(row).length).toBe(component.columnsToRender.length);
+        expect(getCells(row).length).toBe(component.columnsToRender.length);
       });
     });
 
     it('with column class names provided to header and data row cells', () => {
-      getHeaderRowCells(tableElement).forEach((headerCell, index) => {
+      getHeaderCells(tableElement).forEach((headerCell, index) => {
         expect(headerCell.classList).toContain(`cdk-column-${component.columnsToRender[index]}`);
       });
 
       getRows(tableElement).forEach(row => {
-        getRowCells(row).forEach((cell, index) => {
+        getCells(row).forEach((cell, index) => {
           expect(cell.classList).toContain(`cdk-column-${component.columnsToRender[index]}`);
         });
       });
@@ -83,11 +76,11 @@ describe('CdkTable', () => {
       expect(tableElement).toBeRole('grid');
 
       expect(getHeaderRow(tableElement)).toBeRole('row');
-      getHeaderRowCells(tableElement).forEach(cell => expect(cell).toBeRole('columnheader'));
+      getHeaderCells(tableElement).forEach(cell => expect(cell).toBeRole('columnheader'));
 
       getRows(tableElement).forEach(row => {
         expect(row).toBeRole('row');
-        getRowCells(row).forEach(cell => expect(cell).toBeRole('gridcell'));
+        getCells(row).forEach(cell => expect(cell).toBeRole('gridcell'));
       });
     });
   });
@@ -100,9 +93,11 @@ describe('CdkTable', () => {
 
     // Check that the number of cells is correct
     getRows(tableElement).forEach(row => {
-      expect(getRowCells(row).length).toBe(component.columnsToRender.length);
+      expect(getCells(row).length).toBe(component.columnsToRender.length);
     });
   });
+
+  // TODO(andrewseguin): Add test for dynamic classes on header/rows
 
   it('should match the right table content with dynamic data', () => {
     let initialDataLength = dataSource.data.length;
@@ -132,7 +127,7 @@ interface TestData {
 }
 
 class FakeDataSource extends DataSource<TestData> {
-  isConnected: boolean = false;
+  isConnected = false;
 
   _dataChange = new BehaviorSubject<TestData[]>([]);
   set data(data: TestData[]) { this._dataChange.next(data); }
@@ -170,17 +165,17 @@ class FakeDataSource extends DataSource<TestData> {
     <cdk-table [dataSource]="dataSource">
       <ng-container cdkColumnDef="column_a">
         <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
-        <cdk-row-cell *cdkRowCellDef="let row"> {{row.a}}</cdk-row-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="column_b">
         <cdk-header-cell *cdkHeaderCellDef> Column B</cdk-header-cell>
-        <cdk-row-cell *cdkRowCellDef="let row"> {{row.b}}</cdk-row-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.b}}</cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="column_c">
         <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
-        <cdk-row-cell *cdkRowCellDef="let row"> {{row.c}}</cdk-row-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.c}}</cdk-cell>
       </ng-container>
 
       <cdk-header-row class="customHeaderRowClass"
@@ -205,15 +200,14 @@ function getHeaderRow(tableElement: Element): Element {
   return tableElement.querySelector('.cdk-header-row');
 }
 
-function getRows(tableElement: Element) {
+function getRows(tableElement: Element): Element[] {
   return getElements(tableElement, '.cdk-row');
 }
-
-function getRowCells(row: Element) {
-  return row ? getElements(row, '.cdk-row-cell') : [];
+function getCells(row: Element): Element[] {
+  return row ? getElements(row, '.cdk-cell') : [];
 }
 
-function getHeaderRowCells(tableElement: Element) {
+function getHeaderCells(tableElement: Element): Element[] {
   return getElements(getHeaderRow(tableElement), '.cdk-header-cell');
 }
 
@@ -232,13 +226,13 @@ const tableCustomMatchers: jasmine.CustomMatcherFactories = {
 
         // Check header cells
         const expectedHeaderContent = expectedTableContent.shift();
-        getHeaderRowCells(tableElement).forEach((cell, index) => {
+        getHeaderCells(tableElement).forEach((cell, index) => {
           return checkCellContent(cell, expectedHeaderContent[index]);
         });
 
         // Check data row cells
         getRows(tableElement).forEach((row, rowIndex) => {
-          getRowCells(row).forEach((cell, cellIndex) => {
+          getCells(row).forEach((cell, cellIndex) => {
             checkCellContent(cell, expectedTableContent[rowIndex][cellIndex]);
           });
         });
