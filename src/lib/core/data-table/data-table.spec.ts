@@ -8,7 +8,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {customMatchers} from '../../matchers';
 import {CdkDataTableModule} from './index';
 
-fdescribe('CdkTable', () => {
+describe('CdkTable', () => {
   let fixture: ComponentFixture<SimpleCdkTableApp>;
 
   let component: SimpleCdkTableApp;
