@@ -3,7 +3,7 @@
  */
 export const customMatchers: jasmine.CustomMatcherFactories = {
   toBeRole: function(util: jasmine.MatchersUtil,
-                     customEqualityTesters: Array<jasmine.CustomEqualityTester>) {
+                     customEqualityTesters: jasmine.CustomEqualityTester[]) {
     return {
       compare: function (element: Element, expectedRole: string) {
         const result: jasmine.CustomMatcherResult = {pass: false};
