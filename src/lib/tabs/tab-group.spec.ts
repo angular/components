@@ -294,7 +294,7 @@ describe('MdTabGroup', () => {
     });
   });
 
-  fdescribe('with 100% height tab content', () => {
+  describe('with 100% height tab content', () => {
     let fixture: ComponentFixture<TabGroupWithStretchedHeight>;
     let tabGroup: MdTabGroup;
 
