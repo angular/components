@@ -16,9 +16,9 @@
 </div>
 
 <div class="mat-calendar-content" (keydown)="_handleCalendarBodyKeydown($event)"
-     cdkMonitorSubtreeFocus>
+    [ngSwitch]="_monthView" cdkMonitorSubtreeFocus>
   <md-month-view
-      *ngIf="_monthView"
+      *ngSwitchCase="true"
       [activeDate]="_activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
@@ -26,7 +26,7 @@
   </md-month-view>
 
   <md-year-view
-      *ngIf="!_monthView"
+      *ngSwitchDefault
       [activeDate]="_activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
