@@ -21,7 +21,7 @@ describe('CdkTable', () => {
     jasmine.addMatchers(tableCustomMatchers);
 
     TestBed.configureTestingModule({
-      imports: [CommonModule, CdkDataTableModule],
+      imports: [CdkDataTableModule],
       declarations: [SimpleCdkTableApp],
     }).compileComponents();
 
