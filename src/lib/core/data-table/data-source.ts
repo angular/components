@@ -1,6 +1,9 @@
 import {Observable} from 'rxjs/Observable';
-import {CollectionViewer} from './data-table';
+
+export interface CollectionViewer {
+  viewChanged: Observable<{start: number, end: number}>;
+}
 
 export abstract class DataSource<T> {
-  abstract connectTable(viewChanged: Observable<CollectionViewer>): Observable<T[]>;
+  abstract connect(collectionViewer: CollectionViewer): Observable<T[]>;
 }

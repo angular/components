@@ -28,7 +28,7 @@ export class CdkRowDef {
   @Input('cdkRowDefColumns') columns: string[];
 
   // TODO(andrewseguin): Add an input for providing a switch function to determine
-  // if this template should be used.
+  //   if this template should be used.
 
   constructor(public template: TemplateRef<any>) { }
 }

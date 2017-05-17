@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {CdkHeaderRowPlaceholder, CdkRowPlaceholder, CdkTable} from './data-table';
+import {HeaderRowPlaceholder, RowPlaceholder, CdkTable} from './data-table';
 import {CdkCellOutlet, CdkHeaderRow, CdkHeaderRowDef, CdkRow, CdkRowDef} from './row';
 import {CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCell, CdkCellDef} from './cell';
 
@@ -17,7 +17,7 @@ export * from './data-table';
     CdkTable, CdkRowDef, CdkCellDef, CdkCellOutlet, CdkHeaderCellDef,
     CdkColumnDef, CdkCell, CdkRow,
     CdkHeaderCell, CdkHeaderRow, CdkHeaderRowDef,
-    CdkRowPlaceholder, CdkHeaderRowPlaceholder,
+    RowPlaceholder, HeaderRowPlaceholder,
   ]
 
 })

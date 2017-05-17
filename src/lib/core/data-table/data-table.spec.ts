@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
-import {CdkTable, CollectionViewer} from './data-table';
-import {DataSource} from './data-source';
+import {CdkTable} from './data-table';
+import {CollectionViewer, DataSource} from './data-source';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
@@ -138,9 +138,10 @@ class FakeDataSource extends DataSource<TestData> {
     for (let i = 0; i < 3; i++) { this.addData(); }
   }
 
-  connectTable(viewChange: Observable<CollectionViewer>): Observable<TestData[]> {
+  connect(collectionViewer: CollectionViewer): Observable<TestData[]> {
     this.isConnected = true;
-    return Observable.combineLatest(viewChange, this._dataChange).map((results: any[]) => {
+    const streams = [collectionViewer.viewChanged, this._dataChange];
+    return Observable.combineLatest(streams).map((results: any[]) => {
       const [view, data] = results;
       return data;
     });
