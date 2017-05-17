@@ -92,7 +92,10 @@ export class CdkTable implements CollectionViewer {
   /** Set of templates that used as the data row containers. */
   @ContentChildren(CdkRowDef) _rowDefinitions: QueryList<CdkRowDef>;
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef) {}
+  constructor(private _changeDetectorRef: ChangeDetectorRef) {
+    console.warn('The data table is still in active development ' +
+        'and should be considered unstable.');
+  }
 
   ngOnDestroy() {
     // TODO(andrewseguin): Disconnect from the data source so
