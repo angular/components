@@ -67,7 +67,8 @@ export class CdkTable implements CollectionViewer {
    * Stream containing the latest information on what rows are being displayed on screen.
    * Can be used by the data source to as a heuristic of what data should be provided.
    */
-  viewChanged = new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
+  viewChanged =
+      new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
 
   /**
    * Map of all the user's defined columns identified by name.
