@@ -309,8 +309,8 @@ describe('MdTabGroup', () => {
     it('should grow to height of the tab group', () => {
       const tabContent = fixture.componentInstance.content.nativeElement;
 
-      // Check that the content is greater than 0 (it became larger to match the tab body height)
-      expect(tabContent.getBoundingClientRect().height).toBeGreaterThan(0);
+      expect(tabContent.getBoundingClientRect().height)
+          .toBeGreaterThan(0, 'Expected the tab content to have a height.');
     });
   });
 
