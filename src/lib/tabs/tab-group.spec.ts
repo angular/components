@@ -1,9 +1,7 @@
-import {
-    async, fakeAsync, tick, ComponentFixture, TestBed
-} from '@angular/core/testing';
-import {MdTabGroup, MdTabsModule, MdTabHeaderPosition} from './index';
-import {Component, ViewChild} from '@angular/core';
-import {NoopAnimationsModule, BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {MdTabGroup, MdTabHeaderPosition, MdTabsModule} from './index';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 import {MdTab} from './tab';
@@ -23,6 +21,7 @@ describe('MdTabGroup', () => {
         AsyncTabsTestApp,
         DisabledTabsTestApp,
         TabGroupWithSimpleApi,
+        TabGroupWithStretchedHeight
       ],
       providers: [
         {provide: ViewportRuler, useClass: FakeViewportRuler},
@@ -295,6 +294,26 @@ describe('MdTabGroup', () => {
     });
   });
 
+  fdescribe('with 100% height tab content', () => {
+    let fixture: ComponentFixture<TabGroupWithStretchedHeight>;
+    let tabGroup: MdTabGroup;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(TabGroupWithStretchedHeight);
+      fixture.detectChanges();
+
+      tabGroup =
+          fixture.debugElement.query(By.directive(MdTabGroup)).componentInstance as MdTabGroup;
+    });
+
+    it('should grow to height of the tab group', () => {
+      const tabContent = fixture.componentInstance.content.nativeElement;
+
+      // Check that the content is greater than 0 (it became larger to match the tab body height)
+      expect(tabContent.getBoundingClientRect().height).toBeGreaterThan(0);
+    });
+  });
+
   /**
    * Checks that the `selectedIndex` has been updated; checks that the label and body have their
    * respective `active` classes
@@ -518,3 +537,13 @@ class TabGroupWithSimpleApi {
 })
 class NestedTabs {}
 
+@Component({
+  template: `
+    <md-tab-group style="height: 500px">
+      <md-tab label="Tab One"><div #content style="height: 100%;"></div></md-tab>
+    </md-tab-group>
+  `
+})
+class TabGroupWithStretchedHeight {
+  @ViewChild('content') content: ElementRef;
+}
