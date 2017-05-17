@@ -434,7 +434,7 @@ describe('MdDatepicker', () => {
         expect(testComponent.datepicker._maxDate).toEqual(new Date(2020, JAN, 1));
       });
 
-      it('should mark input invalid', async(() => {
+      it('should mark invalid when value is before min', () => {
         testComponent.date = new Date(2009, DEC, 31);
         fixture.detectChanges();
 
@@ -443,48 +443,56 @@ describe('MdDatepicker', () => {
 
           expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
               .toContain('ng-invalid');
+        });
+      });
 
-          testComponent.date = new Date(2020, JAN, 2);
+      it('should mark invalid when value is after max', () => {
+        testComponent.date = new Date(2020, JAN, 2);
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
           fixture.detectChanges();
 
-          fixture.whenStable().then(() => {
-            fixture.detectChanges();
-
-            expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-                .toContain('ng-invalid');
-
-            testComponent.date = new Date(2010, JAN, 2);
-            fixture.detectChanges();
-
-            fixture.whenStable().then(() => {
-              fixture.detectChanges();
-
-              expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-                  .not.toContain('ng-invalid');
-
-              testComponent.date = testComponent.datepicker._minDate;
-              fixture.detectChanges();
-
-              fixture.whenStable().then(() => {
-                fixture.detectChanges();
-
-                expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-                    .not.toContain('ng-invalid');
-
-                testComponent.date = testComponent.datepicker._maxDate;
-                fixture.detectChanges();
-
-                fixture.whenStable().then(() => {
-                  fixture.detectChanges();
-
-                  expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-                      .not.toContain('ng-invalid');
-                });
-              });
-            });
-          });
+          expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+              .toContain('ng-invalid');
         });
-      }));
+      });
+
+      it('should not mark invalid when value equals min', () => {
+        testComponent.date = testComponent.datepicker._minDate;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          fixture.detectChanges();
+
+          expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+              .not.toContain('ng-invalid');
+        });
+      });
+
+      it('should not mark invalid when value equals max', () => {
+        testComponent.date = testComponent.datepicker._maxDate;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          fixture.detectChanges();
+
+          expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+              .not.toContain('ng-invalid');
+        });
+      });
+
+      it('should not mark invalid when value is between min and max', () => {
+        testComponent.date = new Date(2010, JAN, 2);
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          fixture.detectChanges();
+
+          expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+              .not.toContain('ng-invalid');
+        });
+      });
     });
 
     describe('datepicker with filter and validation', () => {
