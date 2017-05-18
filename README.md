@@ -86,7 +86,7 @@ High level items planned for next few months:
 | bottom-sheet     |                         Not started |           -  |              - |
 | bottom-nav       |                         Not started |           -  |   [#408][0408] |
 | virtual-repeat   |                         Not started |           -  |   [#823][0823] |
-| datepicker       |                         In progress |           -  |   [#675][0675] |
+| datepicker       |                           Available |           -  |   [#675][0675] |
 | data-table       |                  Design in-progress |           -  |   [#581][0581] |
 | stepper          |                         Not started |           -  |   [#508][0508] |
 | tree             |                         Not started |           -  |  [#3175][3175] |
