@@ -5,7 +5,7 @@ import {CollectionViewer, DataSource} from './data-source';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {customMatchers} from '../../matchers';
+import {customMatchers} from '../testing/jasmine-matchers';
 import {CdkDataTableModule} from './index';
 
 describe('CdkTable', () => {
