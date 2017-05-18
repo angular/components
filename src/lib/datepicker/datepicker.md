@@ -156,10 +156,9 @@ export class MyComponent {
 ```
 
 *Please note: `MdNativeDateModule` is based off of the functionality available in JavaScript's
-native Date object, and is thus not suitable for many locales. One of the biggest shortcomings of
-the native Date object is the inability to set the parse format. We highly recommend writing a
-custom `DateAdapter` that works with the formatting/parsing library of your choice, or waiting for
-the official Moment.js module.*
+native `Date` object, and is thus not suitable for many locales. One of the biggest shortcomings of
+the native `Date` object is the inability to set the parse format. We highly recommend using a
+custom `DateAdapter` that works with the formatting/parsing library of your choice.*
 
 #### Customizing the date implementation
 The datepicker does all of its interaction with date objects via the `DateAdapter`. Making the
