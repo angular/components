@@ -424,7 +424,7 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
 
   /** Focuses the radio button. */
   focus(): void {
-    this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, this._renderer, 'keyboard');
+    this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
   }
 
   ngOnInit() {
