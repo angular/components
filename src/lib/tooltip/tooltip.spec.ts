@@ -27,7 +27,7 @@ import {dispatchFakeEvent} from '../core/testing/dispatch-events';
 
 const initialTooltipMessage = 'initial tooltip message';
 
-fdescribe('MdTooltip', () => {
+describe('MdTooltip', () => {
   let overlayContainerElement: HTMLElement;
   let dir: {value: LayoutDirection};
 
