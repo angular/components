@@ -1,5 +1,9 @@
 <div class="mat-calendar-header">
   <div class="mat-calendar-controls">
+    <!--
+      TODO(mmalerba): Clean up duplicated compatibility mode code when we have a better way to do
+      this.
+    -->
 
     <!-- Check for compatibility mode and use correct prefix for md-button. -->
     <button *ngIf="!_isCompatibilityMode" md-button class="mat-calendar-period-button"
