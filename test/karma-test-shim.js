@@ -2,6 +2,9 @@
 Error.stackTraceLimit = Infinity;
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 3000;
 
+// make sure to compare and print objects properly
+jasmine.pp = function (obj) { return obj.toString(); };
+
 __karma__.loaded = function () {};
 
 var baseDir = '/base';

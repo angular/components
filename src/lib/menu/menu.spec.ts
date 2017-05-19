@@ -68,7 +68,7 @@ describe('MdMenu', () => {
     }).not.toThrowError();
   });
 
-  it('should close the menu when a click occurs outside the menu', () => {
+  it('should close the menu when a click occurs outside the menu', (async) => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -77,7 +77,10 @@ describe('MdMenu', () => {
     backdrop.click();
     fixture.detectChanges();
 
-    expect(overlayContainerElement.textContent).toBe('');
+    fixture.whenRenderingDone().then(() => {
+      expect(overlayContainerElement.textContent).toBe('');
+      async();
+    });
   });
 
   it('should open a custom menu', () => {
