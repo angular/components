@@ -1,16 +1,17 @@
 import {
   async,
   ComponentFixture,
-  TestBed,
-  tick,
   fakeAsync,
-  flushMicrotasks
+  flushMicrotasks,
+  TestBed,
+  tick
 } from '@angular/core/testing';
 import {
+  ChangeDetectionStrategy,
   Component,
   DebugElement,
-  ViewChild,
-  ChangeDetectionStrategy, ContentChild, ElementRef
+  ElementRef,
+  ViewChild
 } from '@angular/core';
 import {
   TooltipPosition,
@@ -22,6 +23,7 @@ import {
 import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MdTooltip, MdTooltipModule, SCROLL_THROTTLE_MS, TooltipPosition} from './index';
 import {Directionality, Direction} from '../core/bidi/index';
 import {OverlayModule, Scrollable, OverlayContainer} from '../core/overlay/index';
 import {Platform} from '../core/platform/platform';
