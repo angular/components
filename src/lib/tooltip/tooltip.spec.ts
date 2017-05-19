@@ -1,21 +1,22 @@
 import {
   async,
   ComponentFixture,
-  TestBed,
-  tick,
   fakeAsync,
-  flushMicrotasks
+  flushMicrotasks,
+  TestBed,
+  tick
 } from '@angular/core/testing';
 import {
+  ChangeDetectionStrategy,
   Component,
   DebugElement,
-  ViewChild,
-  ChangeDetectionStrategy, ContentChild, ElementRef
+  ElementRef,
+  ViewChild
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {TooltipPosition, MdTooltip, MdTooltipModule, SCROLL_THROTTLE_MS} from './index';
+import {MdTooltip, MdTooltipModule, SCROLL_THROTTLE_MS, TooltipPosition} from './index';
 import {OverlayContainer} from '../core';
 import {Dir, LayoutDirection} from '../core/rtl/dir';
 import {OverlayModule} from '../core/overlay/overlay-directives';

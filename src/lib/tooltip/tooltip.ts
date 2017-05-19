@@ -222,7 +222,6 @@ export class MdTooltip implements OnDestroy {
     this._tooltipInstance.afterHidden().subscribe(() => {
       // Check first if the tooltip has already been removed through this components destroy.
       if (this._tooltipInstance) {
-        debugger;
         this._disposeTooltip();
       }
     });
