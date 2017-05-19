@@ -31,7 +31,7 @@ import {dispatchFakeEvent} from '@angular/cdk/testing';
 
 const initialTooltipMessage = 'initial tooltip message';
 
-fdescribe('MdTooltip', () => {
+describe('MdTooltip', () => {
   let overlayContainerElement: HTMLElement;
   let dir: {value: Direction};
 
