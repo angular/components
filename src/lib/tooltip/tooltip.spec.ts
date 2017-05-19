@@ -69,6 +69,11 @@ describe('MdTooltip', () => {
       tooltipDirective = buttonDebugElement.injector.get<MdTooltip>(MdTooltip);
     });
 
+    afterEach(() => {
+      fixture.detectChanges();
+      flushMicrotasks();
+    });
+
     it('should show and hide the tooltip', fakeAsync(() => {
       expect(tooltipDirective._tooltipInstance).toBeUndefined();
 
@@ -378,9 +383,9 @@ describe('MdTooltip', () => {
 
       // Tooltip is shown, check that the tooltip's id matches the aria-describedby
       fixture.detectChanges();
-      expect(tooltipDirective._getTooltipId()).toContain('md-tooltip-');
-      expect(tooltipDirective._tooltipInstance.id).toContain('md-tooltip-');
-      expect(trigger.getAttribute('aria-describedBy')).toContain('md-tooltip-');
+      expect(tooltipDirective._getTooltipId()).toBe('md-tooltip-0');
+      expect(tooltipDirective._tooltipInstance.id).toBe('md-tooltip-0');
+      expect(trigger.getAttribute('aria-describedBy')).toBe('md-tooltip-0');
 
       tooltipDirective.hide(0);
       tick(0); // Tick for the hide delay
