@@ -418,6 +418,13 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
   }
 }
 
+.mat-checkbox-input {
+  // Move the input to the bottom and in the middle.
+  // Visual improvement to properly show browser popups when being required.
+  bottom: 0;
+  left: 50%;
+}
+
 .mat-checkbox-ripple {
   position: absolute;
   left: -$_mat-checkbox-ripple-size;
