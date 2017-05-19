@@ -58,7 +58,11 @@ export function throwMdTooltipInvalidPositionError(position: string) {
   selector: '[md-tooltip], [mdTooltip], [mat-tooltip], [matTooltip]',
   host: {
     '(longpress)': 'show()',
+    '(focus)': 'show()',
+    '(blur)': 'hide(0)',
+    '(keydown.esc)': 'hide(0)',
     '(touchend)': 'hide(' + TOUCHEND_HIDE_DELAY + ')',
+    '[attr.aria-describedby]': '_getTooltipId()'
   },
   exportAs: 'mdTooltip',
 })
@@ -199,6 +203,10 @@ export class MdTooltip implements OnDestroy {
     this._isTooltipVisible() ? this.hide() : this.show();
   }
 
+  _getTooltipId(): string {
+    return this._tooltipInstance ? this._tooltipInstance.id : '';
+  }
+
   /** Returns true if the tooltip is currently visible to the user */
   _isTooltipVisible(): boolean {
     return !!this._tooltipInstance && this._tooltipInstance.isVisible();
@@ -214,6 +222,7 @@ export class MdTooltip implements OnDestroy {
     this._tooltipInstance.afterHidden().subscribe(() => {
       // Check first if the tooltip has already been removed through this components destroy.
       if (this._tooltipInstance) {
+        debugger;
         this._disposeTooltip();
       }
     });
@@ -317,6 +326,9 @@ export class MdTooltip implements OnDestroy {
 
 export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
 
+/** Tooltip IDs need to be unique, so this counter exists outside of the component definition. */
+let _uniqueTooltipIdCounter = 0;
+
 /**
  * Internal component that wraps the tooltip's content.
  * @docs-private
@@ -358,6 +370,9 @@ export class TooltipComponent {
 
   /** The transform origin used in the animation for showing and hiding the tooltip */
   _transformOrigin: string = 'bottom';
+
+  /** Unique ID to be used by the tooltip trigger's "aria-describedby" property. */
+  id: string = `md-tooltip-${_uniqueTooltipIdCounter++}`;
 
   /** Subject for notifying that the tooltip has been hidden from the view */
   private _onHide: Subject<any> = new Subject();

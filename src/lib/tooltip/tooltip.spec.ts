@@ -10,7 +10,7 @@ import {
   Component,
   DebugElement,
   ViewChild,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy, ContentChild, ElementRef
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
@@ -366,6 +366,30 @@ describe('MdTooltip', () => {
       expect(tooltipWrapper).toBeTruthy('Expected tooltip to be shown.');
       expect(tooltipWrapper.getAttribute('dir')).toBe('rtl', 'Expected tooltip to be in RTL mode.');
     }));
+
+    it('should associate trigger and tooltip through aria-describedby', fakeAsync(() => {
+      // Expect that the trigger does not have an associated tooltip since there is no tooltip shown
+      const trigger = fixture.componentInstance.trigger.nativeElement;
+      expect(trigger.getAttribute('aria-describedBy')).toBe('');
+
+      tooltipDirective.show(0);
+      tick(0); // Tick for the show delay
+
+      // Tooltip is shown, check that the tooltip's id matches the aria-describedby
+      fixture.detectChanges();
+      expect(tooltipDirective._getTooltipId()).toBe('md-tooltip-0');
+      expect(tooltipDirective._tooltipInstance.id).toBe('md-tooltip-0');
+      expect(trigger.getAttribute('aria-describedBy')).toBe('md-tooltip-0');
+
+      tooltipDirective.hide(0);
+      tick(0); // Tick for the hide delay
+      fixture.detectChanges();
+      flushMicrotasks();
+
+      // Tooltip is hidden again, check that the trigger does not have an aria-describedby
+      expect(tooltipDirective._getTooltipId()).toBe('');
+      expect(trigger.getAttribute('aria-describedBy')).toBe('');
+    }));
   });
 
   describe('scrollable usage', () => {
@@ -467,6 +491,7 @@ describe('MdTooltip', () => {
   selector: 'app',
   template: `
     <button *ngIf="showButton"
+            #trigger
             [mdTooltip]="message"
             [mdTooltipPosition]="position">
       Button
@@ -476,6 +501,7 @@ class BasicTooltipDemo {
   position: string = 'below';
   message: string = initialTooltipMessage;
   showButton: boolean = true;
+  @ViewChild('trigger') trigger: ElementRef;
   @ViewChild(MdTooltip) tooltip: MdTooltip;
 }
 
