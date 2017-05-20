@@ -513,7 +513,11 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
 
   _setElementColor(color: string, isAdd: boolean) {
     if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
+      if (isAdd) {
+        this._renderer.addClass(this._elementRef.nativeElement, `mat-${color}`);
+      } else {
+        this._renderer.removeClass(this._elementRef.nativeElement, `mat-${color}`);
+      }
     }
   }
 
