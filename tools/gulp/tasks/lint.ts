@@ -1,16 +1,29 @@
-import gulp = require('gulp');
+import {task} from 'gulp';
 import {execNodeTask} from '../util/task_helpers';
-import {DIST_MATERIAL} from '../constants';
+import {DIST_MATERIAL, DIST_CDK} from '../constants';
 
-gulp.task('lint', ['tslint', 'stylelint', 'madge']);
+/** Glob that matches all SCSS or CSS files that should be linted. */
+const stylesGlob = '+(tools|src)/**/*.+(css|scss)';
+
+/** List of flags that will passed to the different TSLint tasks. */
+const tsLintBaseFlags = [
+  '-c', 'tslint.json', '+(src|e2e|tools)/**/*.ts', '--exclude', '**/node_modules/**/*'
+];
+
+task('lint', ['tslint', 'stylelint', 'madge']);
 
 /** Task that runs madge to detect circular dependencies. */
-gulp.task('madge', ['library:clean-build'], execNodeTask('madge', ['--circular', DIST_MATERIAL]));
+task('madge', ['material:clean-build'], execNodeTask(
+  'madge', ['--circular', DIST_MATERIAL, DIST_CDK])
+);
 
 /** Task to lint Angular Material's scss stylesheets. */
-gulp.task('stylelint', execNodeTask(
-  'stylelint', ['src/**/*.scss', '--config', 'stylelint-config.json', '--syntax', 'scss']
+task('stylelint', execNodeTask(
+  'stylelint', [stylesGlob, '--config', 'stylelint-config.json', '--syntax', 'scss']
 ));
 
 /** Task to run TSLint against the e2e/ and src/ directories. */
-gulp.task('tslint', execNodeTask('tslint', ['-c', 'tslint.json', '+(src|e2e|tools)/**/*.ts']));
+task('tslint', execNodeTask('tslint', tsLintBaseFlags));
+
+/** Task that automatically fixes TSLint warnings. */
+task('tslint:fix', execNodeTask('tslint', [...tsLintBaseFlags, '--fix']));

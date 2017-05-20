@@ -7,26 +7,28 @@ import {
   OnChanges,
   SimpleChanges,
   OnDestroy,
-  OpaqueToken,
+  InjectionToken,
   Optional,
 } from '@angular/core';
 import {RippleConfig, RippleRenderer} from './ripple-renderer';
-import {ViewportRuler} from '../overlay/position/viewport-ruler';
 import {RippleRef} from './ripple-ref';
+import {ViewportRuler} from '../overlay/position/viewport-ruler';
+import {Platform} from '../platform/platform';
 
-/** OpaqueToken that can be used to specify the global ripple options. */
-export const MD_RIPPLE_GLOBAL_OPTIONS = new OpaqueToken('md-ripple-global-options');
-
-export type RippleGlobalOptions = {
+export interface RippleGlobalOptions {
   disabled?: boolean;
   baseSpeedFactor?: number;
-};
+}
+
+/** Injection token that can be used to specify the global ripple options. */
+export const MD_RIPPLE_GLOBAL_OPTIONS =
+    new InjectionToken<RippleGlobalOptions>('md-ripple-global-options');
 
 @Directive({
   selector: '[md-ripple], [mat-ripple], [mdRipple], [matRipple]',
   exportAs: 'mdRipple',
   host: {
-    '[class.mat-ripple]': 'true',
+    'class': 'mat-ripple',
     '[class.mat-ripple-unbounded]': 'unbounded'
   }
 })
@@ -82,11 +84,13 @@ export class MdRipple implements OnChanges, OnDestroy {
     elementRef: ElementRef,
     ngZone: NgZone,
     ruler: ViewportRuler,
-    // Type needs to be `any` because of https://github.com/angular/angular/issues/12631
-    @Optional() @Inject(MD_RIPPLE_GLOBAL_OPTIONS) globalOptions: any
+    platform: Platform,
+    @Optional() @Inject(MD_RIPPLE_GLOBAL_OPTIONS) globalOptions: RippleGlobalOptions
   ) {
-    this._rippleRenderer = new RippleRenderer(elementRef, ngZone, ruler);
+    this._rippleRenderer = new RippleRenderer(elementRef, ngZone, ruler, platform);
     this._globalOptions = globalOptions ? globalOptions : {};
+
+    this._updateRippleRenderer();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -94,8 +98,7 @@ export class MdRipple implements OnChanges, OnDestroy {
       this._rippleRenderer.setTriggerElement(this.trigger);
     }
 
-    this._rippleRenderer.rippleDisabled = this._globalOptions.disabled || this.disabled;
-    this._rippleRenderer.rippleConfig = this.rippleConfig;
+    this._updateRippleRenderer();
   }
 
   ngOnDestroy() {
@@ -121,5 +124,11 @@ export class MdRipple implements OnChanges, OnDestroy {
       radius: this.radius,
       color: this.color
     };
+  }
+
+  /** Updates the ripple renderer with the latest ripple configuration. */
+  private _updateRippleRenderer() {
+    this._rippleRenderer.rippleDisabled = this._globalOptions.disabled || this.disabled;
+    this._rippleRenderer.rippleConfig = this.rippleConfig;
   }
 }

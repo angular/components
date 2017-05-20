@@ -48,6 +48,19 @@ $mat-dense-list-icon-size: 20px;
     position: relative;
   }
 
+  .mat-list-item-ripple {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    // Disable pointer events for the ripple container because the container will overlay the
+    // user content and we don't want to disable mouse events on the user content.
+    // Pointer events can be safely disabled because the ripple trigger element is the host element.
+    pointer-events: none;
+  }
+
   &.mat-list-item-avatar .mat-list-item-content {
     height: $avatar-height;
   }
@@ -72,7 +85,11 @@ $mat-dense-list-icon-size: 20px;
     @include mat-line-wrapper-base();
     padding: 0 $mat-list-side-padding;
 
-    &:first-child {
+    // We only want to override the padding if there isn't
+    // an avatar or icon before the element. Since the ripple
+    // will always be the first child in the container, we
+    // check whether this element is the second child.
+    &:nth-child(2) {
       padding: 0;
     }
   }
@@ -88,6 +105,7 @@ $mat-dense-list-icon-size: 20px;
     width: $icon-size;
     height: $icon-size;
     font-size: $icon-size;
+    box-sizing: content-box;
     border-radius: 50%;
     padding: 4px;
   }

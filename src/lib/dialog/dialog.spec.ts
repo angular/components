@@ -18,6 +18,8 @@ import {
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Location} from '@angular/common';
+import {SpyLocation} from '@angular/common/testing';
 import {MdDialogModule} from './index';
 import {MdDialog} from './dialog';
 import {MdDialogContainer} from './dialog-container';
@@ -33,23 +35,26 @@ describe('MdDialog', () => {
 
   let testViewContainerRef: ViewContainerRef;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
+  let mockLocation: SpyLocation;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdDialogModule.forRoot(), DialogTestModule],
+      imports: [MdDialogModule, DialogTestModule],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
           return {getContainerElement: () => overlayContainerElement};
-        }}
+        }},
+        {provide: Location, useClass: SpyLocation}
       ],
     });
 
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([MdDialog], (d: MdDialog) => {
+  beforeEach(inject([MdDialog, Location], (d: MdDialog, l: Location) => {
     dialog = d;
+    mockLocation = l as SpyLocation;
   }));
 
   beforeEach(() => {
@@ -85,7 +90,7 @@ describe('MdDialog', () => {
     let dialogInjector = dialogRef.componentInstance.dialogInjector;
 
     expect(dialogRef.componentInstance.dialogRef).toBe(dialogRef);
-    expect(dialogInjector.get(DirectiveWithViewContainer)).toBeTruthy(
+    expect(dialogInjector.get<DirectiveWithViewContainer>(DirectiveWithViewContainer)).toBeTruthy(
       'Expected the dialog component to be created with the injector from the viewContainerRef.'
     );
   });
@@ -334,25 +339,31 @@ describe('MdDialog', () => {
     expect(dialogContainer._state).toBe('exit');
   });
 
-  it('should emit an event with the proper animation state', async(() => {
-    let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
-    let dialogContainer: MdDialogContainer =
-        viewContainerFixture.debugElement.query(By.directive(MdDialogContainer)).componentInstance;
-    let spy = jasmine.createSpy('animation state callback');
+  it('should close all dialogs when the user goes forwards/backwards in history', async(() => {
+    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsg);
 
-    dialogContainer._onAnimationStateChange.subscribe(spy);
+    expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(2);
+
+    mockLocation.simulateUrlPop('');
     viewContainerFixture.detectChanges();
 
     viewContainerFixture.whenStable().then(() => {
-      expect(spy).toHaveBeenCalledWith('enter');
+      expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(0);
+    });
+  }));
 
-      dialogRef.close();
-      viewContainerFixture.detectChanges();
-      expect(spy).toHaveBeenCalledWith('exit-start');
+  it('should close all open dialogs when the location hash changes', async(() => {
+    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsg);
 
-      viewContainerFixture.whenStable().then(() => {
-        expect(spy).toHaveBeenCalledWith('exit');
-      });
+    expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(2);
+
+    mockLocation.simulateHashChange('');
+    viewContainerFixture.detectChanges();
+
+    viewContainerFixture.whenStable().then(() => {
+      expect(overlayContainerElement.querySelectorAll('md-dialog-container').length).toBe(0);
     });
   }));
 
@@ -371,10 +382,11 @@ describe('MdDialog', () => {
       expect(instance.data.dateParam).toBe(config.data.dateParam);
     });
 
-    it('should throw if injected data is expected but none is passed', () => {
-      expect(() => {
-        dialog.open(DialogWithInjectedData);
-      }).toThrow();
+    it('should default to null if no data is passed', () => {
+      let dialogRef: MdDialogRef<DialogWithInjectedData>;
+
+      expect(() => dialogRef = dialog.open(DialogWithInjectedData)).not.toThrow();
+      expect(dialogRef.componentInstance.data).toBeNull();
     });
   });
 
@@ -419,16 +431,58 @@ describe('MdDialog', () => {
     });
   });
 
+  describe('hasBackdrop option', () => {
+    it('should have a backdrop', () => {
+      dialog.open(PizzaMsg, {
+        hasBackdrop: true,
+        viewContainerRef: testViewContainerRef
+      });
+
+      viewContainerFixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
+    });
+
+    it('should not have a backdrop', () => {
+      dialog.open(PizzaMsg, {
+        hasBackdrop: false,
+        viewContainerRef: testViewContainerRef
+      });
+
+      viewContainerFixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
+    });
+  });
+
+  describe('backdropClass option', () => {
+    it('should have default backdrop class', () => {
+      dialog.open(PizzaMsg, {
+        backdropClass: '',
+        viewContainerRef: testViewContainerRef
+      });
+
+      viewContainerFixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.cdk-overlay-dark-backdrop')).toBeTruthy();
+    });
+
+    it('should have custom backdrop class', () => {
+      dialog.open(PizzaMsg, {
+        backdropClass: 'custom-backdrop-class',
+        viewContainerRef: testViewContainerRef
+      });
+
+      viewContainerFixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.custom-backdrop-class')).toBeTruthy();
+    });
+  });
+
   describe('focus management', () => {
-
     // When testing focus, all of the elements must be in the DOM.
-    beforeEach(() => {
-      document.body.appendChild(overlayContainerElement);
-    });
-
-    afterEach(() => {
-      document.body.removeChild(overlayContainerElement);
-    });
+    beforeEach(() => document.body.appendChild(overlayContainerElement));
+    afterEach(() => document.body.removeChild(overlayContainerElement));
 
     it('should focus the first tabbable element of the dialog on open', fakeAsync(() => {
       dialog.open(PizzaMsg, {
@@ -455,20 +509,51 @@ describe('MdDialog', () => {
 
       viewContainerFixture.detectChanges();
       flushMicrotasks();
-
       expect(document.activeElement.id)
           .not.toBe('dialog-trigger', 'Expected the focus to change when dialog was opened.');
+
+      dialogRef.close();
+      expect(document.activeElement.id).not.toBe('dialog-trigger',
+          'Expcted the focus not to have changed before the animation finishes.');
+
+      tick(500);
+      viewContainerFixture.detectChanges();
+      flushMicrotasks();
+
+      expect(document.activeElement.id).toBe('dialog-trigger',
+          'Expected that the trigger was refocused after the dialog is closed.');
+
+      document.body.removeChild(button);
+    }));
+
+    it('should allow the consumer to shift focus in afterClosed', fakeAsync(() => {
+      // Create a element that has focus before the dialog is opened.
+      let button = document.createElement('button');
+      let input = document.createElement('input');
+
+      button.id = 'dialog-trigger';
+      input.id = 'input-to-be-focused';
+
+      document.body.appendChild(button);
+      document.body.appendChild(input);
+      button.focus();
+
+      let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
+
+      dialogRef.afterClosed().subscribe(() => input.focus());
 
       dialogRef.close();
       tick(500);
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.id)
-          .toBe('dialog-trigger', 'Expected that the trigger was refocused after dialog close');
+      expect(document.activeElement.id).toBe('input-to-be-focused',
+          'Expected that the trigger was refocused after the dialog is closed.');
 
       document.body.removeChild(button);
+      document.body.removeChild(input);
     }));
+
   });
 
   describe('dialog content elements', () => {
@@ -526,13 +611,14 @@ describe('MdDialog with a parent MdDialog', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdDialogModule.forRoot(), DialogTestModule],
+      imports: [MdDialogModule, DialogTestModule],
       declarations: [ComponentThatProvidesMdDialog],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
           return {getContainerElement: () => overlayContainerElement};
-        }}
+        }},
+        {provide: Location, useClass: SpyLocation}
       ],
     });
 

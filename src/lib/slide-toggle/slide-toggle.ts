@@ -1,28 +1,29 @@
 import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Renderer,
-  forwardRef,
-  ChangeDetectionStrategy,
-  Input,
-  Output,
   EventEmitter,
-  AfterContentInit,
-  ViewChild,
-  ViewEncapsulation,
+  forwardRef,
+  Input,
   OnDestroy,
+  Output,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   applyCssTransform,
   coerceBooleanProperty,
-  HammerInput,
-  FocusOriginMonitor,
   FocusOrigin,
+  FocusOriginMonitor,
+  HammerInput,
   MdRipple,
   RippleRef
 } from '../core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
+import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
+
 
 export const MD_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -39,9 +40,13 @@ export class MdSlideToggleChange {
 // Increasing integer for generating unique ids for slide-toggle components.
 let nextId = 0;
 
-/**
- * Two-state control, which can be also called `switch`.
- */
+
+
+// Boilerplate for applying mixins to MdSlideToggle.
+export class MdSlideToggleBase { }
+export const _MdSlideToggleMixinBase = mixinDisabled(MdSlideToggleBase);
+
+/** Represents a slidable "switch" toggle that can be moved between on and off. */
 @Component({
   moduleId: module.id,
   selector: 'md-slide-toggle, mat-slide-toggle',
@@ -50,16 +55,16 @@ let nextId = 0;
     '[class.mat-checked]': 'checked',
     '[class.mat-disabled]': 'disabled',
     '[class.mat-slide-toggle-label-before]': 'labelPosition == "before"',
-    '(mousedown)': '_setMousedown()'
   },
   templateUrl: 'slide-toggle.html',
   styleUrls: ['slide-toggle.css'],
   providers: [MD_SLIDE_TOGGLE_VALUE_ACCESSOR],
+  inputs: ['disabled'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdSlideToggle implements OnDestroy, AfterContentInit, ControlValueAccessor {
-
+export class MdSlideToggle extends _MdSlideToggleMixinBase
+    implements OnDestroy, AfterContentInit, ControlValueAccessor, CanDisable {
   private onChange = (_: any) => {};
   private onTouched = () => {};
 
@@ -67,9 +72,7 @@ export class MdSlideToggle implements OnDestroy, AfterContentInit, ControlValueA
   private _uniqueId = `md-slide-toggle-${++nextId}`;
   private _checked: boolean = false;
   private _color: string;
-  private _isMousedown: boolean = false;
   private _slideRenderer: SlideToggleRenderer = null;
-  private _disabled: boolean = false;
   private _required: boolean = false;
   private _disableRipple: boolean = false;
 
@@ -94,11 +97,6 @@ export class MdSlideToggle implements OnDestroy, AfterContentInit, ControlValueA
   /** Used to set the aria-labelledby attribute on the underlying input element. */
   @Input('aria-labelledby') ariaLabelledby: string = null;
 
-  /** Whether the slide-toggle is disabled. */
-  @Input()
-  get disabled(): boolean { return this._disabled; }
-  set disabled(value) { this._disabled = coerceBooleanProperty(value); }
-
   /** Whether the slide-toggle is required. */
   @Input()
   get required(): boolean { return this._required; }
@@ -109,9 +107,8 @@ export class MdSlideToggle implements OnDestroy, AfterContentInit, ControlValueA
   get disableRipple(): boolean { return this._disableRipple; }
   set disableRipple(value) { this._disableRipple = coerceBooleanProperty(value); }
 
-  private _change: EventEmitter<MdSlideToggleChange> = new EventEmitter<MdSlideToggleChange>();
   /** An event will be dispatched each time the slide-toggle changes its value. */
-  @Output() change: Observable<MdSlideToggleChange> = this._change.asObservable();
+  @Output() change: EventEmitter<MdSlideToggleChange> = new EventEmitter<MdSlideToggleChange>();
 
   /** Returns the unique id for the visual hidden input. */
   get inputId(): string { return `${this.id || this._uniqueId}-input`; }
@@ -123,8 +120,10 @@ export class MdSlideToggle implements OnDestroy, AfterContentInit, ControlValueA
   @ViewChild(MdRipple) _ripple: MdRipple;
 
   constructor(private _elementRef: ElementRef,
-              private _renderer: Renderer,
-              private _focusOriginMonitor: FocusOriginMonitor) {}
+              private _renderer: Renderer2,
+              private _focusOriginMonitor: FocusOriginMonitor) {
+    super();
+  }
 
   ngAfterContentInit() {
     this._slideRenderer = new SlideToggleRenderer(this._elementRef);
@@ -171,15 +170,6 @@ export class MdSlideToggle implements OnDestroy, AfterContentInit, ControlValueA
     // This will lead to multiple click events.
     // Preventing bubbling for the second event will solve that issue.
     event.stopPropagation();
-  }
-
-  _setMousedown() {
-    // We only *show* the focus style when focus has come to the button via the keyboard.
-    // The Material Design spec is silent on this topic, and without doing this, the
-    // button continues to look :active after clicking.
-    // @see http://marcysutton.com/button-focus-hell/
-    this._isMousedown = true;
-    setTimeout(() => this._isMousedown = false, 100);
   }
 
   /** Implemented as part of ControlValueAccessor. */
@@ -253,7 +243,11 @@ export class MdSlideToggle implements OnDestroy, AfterContentInit, ControlValueA
 
   private _setElementColor(color: string, isAdd: boolean) {
     if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
+      if (isAdd) {
+        this._renderer.addClass(this._elementRef.nativeElement, `mat-${color}`);
+      } else {
+        this._renderer.removeClass(this._elementRef.nativeElement, `mat-${color}`);
+      }
     }
   }
 
@@ -262,7 +256,7 @@ export class MdSlideToggle implements OnDestroy, AfterContentInit, ControlValueA
     let event = new MdSlideToggleChange();
     event.source = this;
     event.checked = this.checked;
-    this._change.emit(event);
+    this.change.emit(event);
   }
 
 

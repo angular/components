@@ -14,7 +14,7 @@ $mat-input-underline-disabled-background-image:
 // Applies a floating placeholder above the input itself.
 @mixin mat-input-placeholder-floating {
   display: block;
-  transform: translateY(-1.35em) scale($mat-input-floating-placeholder-scale-factor);
+  transform: translate3d(0, -1.35em, 0) scale($mat-input-floating-placeholder-scale-factor);
   width: 100% / $mat-input-floating-placeholder-scale-factor;
 }
 
@@ -32,9 +32,10 @@ $mat-input-underline-disabled-background-image:
   }
 
   // Allow icons in a prefix/suffix/hint/etc to adapt to the correct size.
-  & .mat-icon {
-    width: auto;
-    height: auto;
+  & .mat-icon,
+  & .mat-datepicker-toggle {
+    width: 1em;
+    height: 1em;
     font-size: 100%;
     vertical-align: top;
   }
@@ -117,7 +118,9 @@ $mat-input-underline-disabled-background-image:
   // display: none, because IE ends up preventing the user from
   // focusing the input altogether.
   @include input-placeholder {
-    color: transparent;
+    // Needs to be !important, because the placeholder will end up inheriting the
+    // input color in IE, if the consumer overrides it with a higher specificity.
+    color: transparent !important;
   }
 }
 
@@ -143,7 +146,7 @@ $mat-input-underline-disabled-background-image:
   text-overflow: ellipsis;
   overflow: hidden;
 
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
   transform-origin: bottom left;
   transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
               color $swift-ease-out-duration $swift-ease-out-timing-function,
@@ -214,12 +217,17 @@ $mat-input-underline-disabled-background-image:
     z-index: 1;
     top: -1px;
     width: 100%;
-    transform-origin: top;
-    opacity: 0;
-    transition: opacity $swift-ease-out-duration $swift-ease-out-timing-function;
+    transform-origin: 50%;
+    transform: scaleX(0.5);
+    visibility: hidden;
+    transition: background-color $swift-ease-in-duration $swift-ease-in-timing-function;
 
-    .mat-focused & {
-      opacity: 1;
+    .mat-focused &,
+    .mat-input-invalid & {
+      visibility: visible;
+      transform: scaleX(1);
+      transition: transform 150ms linear,
+                  background-color $swift-ease-in-duration $swift-ease-in-timing-function;
     }
   }
 }
@@ -227,11 +235,14 @@ $mat-input-underline-disabled-background-image:
 // Wrapper for the hints and error messages. Provides positioning and text size.
 // Note that we're using `top` in order to allow for stacked children to flow downwards.
 .mat-input-subscript-wrapper {
+  $line-height: 1.2em;
+
   position: absolute;
   font-size: 75%;
   top: 100%;
   width: 100%;
-  margin-top: -$mat-input-wrapper-spacing;
+  margin-top: -$line-height;
+  line-height: $line-height;
   overflow: hidden; // prevents multi-line errors from overlapping the input
 }
 

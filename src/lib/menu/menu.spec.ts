@@ -29,14 +29,12 @@ describe('MdMenu', () => {
   beforeEach(async(() => {
     dir = 'ltr';
     TestBed.configureTestingModule({
-      imports: [MdMenuModule.forRoot(), NoopAnimationsModule],
+      imports: [MdMenuModule, NoopAnimationsModule],
       declarations: [SimpleMenu, PositionedMenu, OverlapMenu, CustomMenuPanel, CustomMenu],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
-          overlayContainerElement.style.position = 'fixed';
-          overlayContainerElement.style.top = '0';
-          overlayContainerElement.style.left = '0';
+          overlayContainerElement.classList.add('cdk-overlay-container');
           document.body.appendChild(overlayContainerElement);
 
           // remove body padding to keep consistent cross-browser
@@ -46,8 +44,7 @@ describe('MdMenu', () => {
         }},
         {provide: Dir, useFactory: () => {
           return {value: dir};
-        }},
-        {provide: ViewportRuler, useClass: FakeViewportRuler}
+        }}
       ]
     });
 
@@ -108,14 +105,17 @@ describe('MdMenu', () => {
   });
 
   describe('positions', () => {
+    let fixture: ComponentFixture<PositionedMenu>;
+    let panel: HTMLElement;
 
     beforeEach(() => {
-      const fixture = TestBed.createComponent(PositionedMenu);
+      fixture = TestBed.createComponent(PositionedMenu);
       fixture.detectChanges();
+
       const trigger = fixture.componentInstance.triggerEl.nativeElement;
 
       // Push trigger to the bottom edge of viewport,so it has space to open "above"
-      trigger.style.position = 'relative';
+      trigger.style.position = 'fixed';
       trigger.style.top = '600px';
 
       // Push trigger to the right, so it has space to open "before"
@@ -123,18 +123,43 @@ describe('MdMenu', () => {
 
       fixture.componentInstance.trigger.openMenu();
       fixture.detectChanges();
+      panel = overlayContainerElement.querySelector('.mat-menu-panel') as HTMLElement;
     });
 
-    it('should append mat-menu-before if x position is changed', () => {
-      const panel = overlayContainerElement.querySelector('.mat-menu-panel');
+    it('should append mat-menu-before if the x position is changed', () => {
       expect(panel.classList).toContain('mat-menu-before');
       expect(panel.classList).not.toContain('mat-menu-after');
+
+      fixture.componentInstance.xPosition = 'after';
+      fixture.detectChanges();
+
+      expect(panel.classList).toContain('mat-menu-after');
+      expect(panel.classList).not.toContain('mat-menu-before');
     });
 
-    it('should append mat-menu-above if y position is changed', () => {
-      const panel = overlayContainerElement.querySelector('.mat-menu-panel');
+    it('should append mat-menu-above if the y position is changed', () => {
       expect(panel.classList).toContain('mat-menu-above');
       expect(panel.classList).not.toContain('mat-menu-below');
+
+      fixture.componentInstance.yPosition = 'below';
+      fixture.detectChanges();
+
+      expect(panel.classList).toContain('mat-menu-below');
+      expect(panel.classList).not.toContain('mat-menu-above');
+    });
+
+    it('should default to the "below" and "after" positions', () => {
+      fixture.destroy();
+
+      let newFixture = TestBed.createComponent(SimpleMenu);
+
+      newFixture.detectChanges();
+      newFixture.componentInstance.trigger.openMenu();
+      newFixture.detectChanges();
+      panel = overlayContainerElement.querySelector('.mat-menu-panel') as HTMLElement;
+
+      expect(panel.classList).toContain('mat-menu-below');
+      expect(panel.classList).toContain('mat-menu-after');
     });
 
   });
@@ -148,8 +173,9 @@ describe('MdMenu', () => {
 
       // Push trigger to the right side of viewport, so it doesn't have space to open
       // in its default "after" position on the right side.
-      trigger.style.position = 'relative';
-      trigger.style.left = '950px';
+      trigger.style.position = 'fixed';
+      trigger.style.right = '-50px';
+      trigger.style.top = '200px';
 
       fixture.componentInstance.trigger.openMenu();
       fixture.detectChanges();
@@ -160,13 +186,13 @@ describe('MdMenu', () => {
       // In "before" position, the right sides of the overlay and the origin are aligned.
       // To find the overlay left, subtract the menu width from the origin's right side.
       const expectedLeft = triggerRect.right - overlayRect.width;
-      expect(Math.round(overlayRect.left))
-          .toBe(Math.round(expectedLeft),
+      expect(Math.floor(overlayRect.left))
+          .toBe(Math.floor(expectedLeft),
               `Expected menu to open in "before" position if "after" position wouldn't fit.`);
 
       // The y-position of the overlay should be unaffected, as it can already fit vertically
-      expect(Math.round(overlayRect.top))
-          .toBe(Math.round(triggerRect.top),
+      expect(Math.floor(overlayRect.top))
+          .toBe(Math.floor(triggerRect.top),
               `Expected menu top position to be unchanged if it can fit in the viewport.`);
     });
 
@@ -177,8 +203,8 @@ describe('MdMenu', () => {
 
       // Push trigger to the bottom part of viewport, so it doesn't have space to open
       // in its default "below" position below the trigger.
-      trigger.style.position = 'relative';
-      trigger.style.top = '600px';
+      trigger.style.position = 'fixed';
+      trigger.style.bottom = '65px';
 
       fixture.componentInstance.trigger.openMenu();
       fixture.detectChanges();
@@ -189,13 +215,13 @@ describe('MdMenu', () => {
       // In "above" position, the bottom edges of the overlay and the origin are aligned.
       // To find the overlay top, subtract the menu height from the origin's bottom edge.
       const expectedTop = triggerRect.bottom - overlayRect.height;
-      expect(Math.round(overlayRect.top))
-          .toBe(Math.round(expectedTop),
+      expect(Math.floor(overlayRect.top))
+          .toBe(Math.floor(expectedTop),
               `Expected menu to open in "above" position if "below" position wouldn't fit.`);
 
       // The x-position of the overlay should be unaffected, as it can already fit horizontally
-      expect(Math.round(overlayRect.left))
-          .toBe(Math.round(triggerRect.left),
+      expect(Math.floor(overlayRect.left))
+          .toBe(Math.floor(triggerRect.left),
               `Expected menu x position to be unchanged if it can fit in the viewport.`);
     });
 
@@ -206,9 +232,9 @@ describe('MdMenu', () => {
 
       // push trigger to the bottom, right part of viewport, so it doesn't have space to open
       // in its default "after below" position.
-      trigger.style.position = 'relative';
-      trigger.style.left = '950px';
-      trigger.style.top = '600px';
+      trigger.style.position = 'fixed';
+      trigger.style.right = '-50px';
+      trigger.style.bottom = '65px';
 
       fixture.componentInstance.trigger.openMenu();
       fixture.detectChanges();
@@ -219,12 +245,12 @@ describe('MdMenu', () => {
       const expectedLeft = triggerRect.right - overlayRect.width;
       const expectedTop = triggerRect.bottom - overlayRect.height;
 
-      expect(Math.round(overlayRect.left))
-          .toBe(Math.round(expectedLeft),
+      expect(Math.floor(overlayRect.left))
+          .toBe(Math.floor(expectedLeft),
               `Expected menu to open in "before" position if "after" position wouldn't fit.`);
 
-      expect(Math.round(overlayRect.top))
-          .toBe(Math.round(expectedTop),
+      expect(Math.floor(overlayRect.top))
+          .toBe(Math.floor(expectedTop),
               `Expected menu to open in "above" position if "below" position wouldn't fit.`);
     });
 
@@ -241,14 +267,14 @@ describe('MdMenu', () => {
 
       // As designated "before" position won't fit on screen, the menu should fall back
       // to "after" mode, where the left sides of the overlay and trigger are aligned.
-      expect(Math.round(overlayRect.left))
-          .toBe(Math.round(triggerRect.left),
+      expect(Math.floor(overlayRect.left))
+          .toBe(Math.floor(triggerRect.left),
               `Expected menu to open in "after" position if "before" position wouldn't fit.`);
 
       // As designated "above" position won't fit on screen, the menu should fall back
       // to "below" mode, where the top edges of the overlay and trigger are aligned.
-      expect(Math.round(overlayRect.top))
-          .toBe(Math.round(triggerRect.top),
+      expect(Math.floor(overlayRect.top))
+          .toBe(Math.floor(triggerRect.top),
               `Expected menu to open in "below" position if "above" position wouldn't fit.`);
     });
 
@@ -315,8 +341,8 @@ describe('MdMenu', () => {
         subject.openMenu();
 
         // Since the menu is overlaying the trigger, the overlay top should be the trigger top.
-        expect(Math.round(subject.overlayRect.top))
-            .toBe(Math.round(subject.triggerRect.top),
+        expect(Math.floor(subject.overlayRect.top))
+            .toBe(Math.floor(subject.triggerRect.top),
                 `Expected menu to open in default "below" position.`);
       });
     });
@@ -330,20 +356,20 @@ describe('MdMenu', () => {
         subject.openMenu();
 
         // Since the menu is below the trigger, the overlay top should be the trigger bottom.
-        expect(Math.round(subject.overlayRect.top))
-            .toBe(Math.round(subject.triggerRect.bottom),
+        expect(Math.floor(subject.overlayRect.top))
+            .toBe(Math.floor(subject.triggerRect.bottom),
                 `Expected menu to open directly below the trigger.`);
       });
 
       it('supports above position fall back', () => {
         // Push trigger to the bottom part of viewport, so it doesn't have space to open
         // in its default "below" position below the trigger.
-        subject.updateTriggerStyle({position: 'relative', top: '650px'});
+        subject.updateTriggerStyle({position: 'fixed', bottom: '0'});
         subject.openMenu();
 
         // Since the menu is above the trigger, the overlay bottom should be the trigger top.
-        expect(Math.round(subject.overlayRect.bottom))
-            .toBe(Math.round(subject.triggerRect.top),
+        expect(Math.floor(subject.overlayRect.bottom))
+            .toBe(Math.floor(subject.triggerRect.top),
                 `Expected menu to open in "above" position if "below" position wouldn't fit.`);
       });
 
@@ -437,7 +463,7 @@ class SimpleMenu {
 @Component({
   template: `
     <button [mdMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
-    <md-menu x-position="before" y-position="above" #menu="mdMenu">
+    <md-menu [xPosition]="xPosition" [yPosition]="yPosition" #menu="mdMenu">
       <button md-menu-item> Positioned Content </button>
     </md-menu>
   `
@@ -445,6 +471,8 @@ class SimpleMenu {
 class PositionedMenu {
   @ViewChild(MdMenuTrigger) trigger: MdMenuTrigger;
   @ViewChild('triggerEl') triggerEl: ElementRef;
+  xPosition: MenuPositionX = 'before';
+  yPosition: MenuPositionY = 'above';
 }
 
 interface TestableMenu {
@@ -476,8 +504,8 @@ class OverlapMenu implements TestableMenu {
   exportAs: 'mdCustomMenu'
 })
 class CustomMenuPanel implements MdMenuPanel {
-  positionX: MenuPositionX = 'after';
-  positionY: MenuPositionY = 'below';
+  xPosition: MenuPositionX = 'after';
+  yPosition: MenuPositionY = 'below';
   overlapTrigger: true;
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
@@ -499,16 +527,4 @@ class CustomMenuPanel implements MdMenuPanel {
 })
 class CustomMenu {
   @ViewChild(MdMenuTrigger) trigger: MdMenuTrigger;
-}
-
-class FakeViewportRuler {
-  getViewportRect() {
-    return {
-      left: 0, top: 0, width: 1014, height: 686, bottom: 686, right: 1014
-    };
-  }
-
-  getViewportScrollPosition() {
-    return {top: 0, left: 0};
-  }
 }

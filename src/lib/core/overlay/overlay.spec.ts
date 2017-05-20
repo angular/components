@@ -5,8 +5,10 @@ import {TemplatePortal, ComponentPortal} from '../portal/portal';
 import {Overlay} from './overlay';
 import {OverlayContainer} from './overlay-container';
 import {OverlayState} from './overlay-state';
+import {OverlayRef} from './overlay-ref';
 import {PositionStrategy} from './position/position-strategy';
 import {OverlayModule} from './overlay-directives';
+import {ScrollStrategy} from './scroll/scroll-strategy';
 
 
 describe('Overlay', () => {
@@ -18,7 +20,7 @@ describe('Overlay', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule.forRoot(), PortalModule, OverlayTestModule],
+      imports: [OverlayModule, PortalModule, OverlayTestModule],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
@@ -133,6 +135,44 @@ describe('Overlay', () => {
 
     const pane = overlayContainerElement.children[0] as HTMLElement;
     expect(pane.getAttribute('dir')).toEqual('rtl');
+  });
+
+  it('should emit when an overlay is attached', () => {
+    let overlayRef = overlay.create();
+    let spy = jasmine.createSpy('attachments spy');
+
+    overlayRef.attachments().subscribe(spy);
+    overlayRef.attach(componentPortal);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should emit when an overlay is detached', () => {
+    let overlayRef = overlay.create();
+    let spy = jasmine.createSpy('detachments spy');
+
+    overlayRef.detachments().subscribe(spy);
+    overlayRef.attach(componentPortal);
+    overlayRef.detach();
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should emit and complete the observables when an overlay is disposed', () => {
+    let overlayRef = overlay.create();
+    let disposeSpy = jasmine.createSpy('dispose spy');
+    let attachCompleteSpy = jasmine.createSpy('attachCompleteSpy spy');
+    let detachCompleteSpy = jasmine.createSpy('detachCompleteSpy spy');
+
+    overlayRef.attachments().subscribe(null, null, attachCompleteSpy);
+    overlayRef.detachments().subscribe(disposeSpy, null, detachCompleteSpy);
+
+    overlayRef.attach(componentPortal);
+    overlayRef.dispose();
+
+    expect(disposeSpy).toHaveBeenCalled();
+    expect(attachCompleteSpy).toHaveBeenCalled();
+    expect(detachCompleteSpy).toHaveBeenCalled();
   });
 
   describe('positioning', () => {
@@ -295,6 +335,48 @@ describe('Overlay', () => {
     });
 
   });
+
+  describe('scroll strategy', () => {
+    let fakeScrollStrategy: FakeScrollStrategy;
+    let config: OverlayState;
+
+    beforeEach(() => {
+      config = new OverlayState();
+      fakeScrollStrategy = new FakeScrollStrategy();
+      config.scrollStrategy = fakeScrollStrategy;
+    });
+
+    it('should attach the overlay ref to the scroll strategy', () => {
+      let overlayRef = overlay.create(config);
+
+      expect(fakeScrollStrategy.overlayRef).toBe(overlayRef,
+          'Expected scroll strategy to have been attached to the current overlay ref.');
+    });
+
+    it('should enable the scroll strategy when the overlay is attached', () => {
+      let overlayRef = overlay.create(config);
+
+      overlayRef.attach(componentPortal);
+      expect(fakeScrollStrategy.isEnabled).toBe(true, 'Expected scroll strategy to be enabled.');
+    });
+
+    it('should disable the scroll strategy once the overlay is detached', () => {
+      let overlayRef = overlay.create(config);
+
+      overlayRef.attach(componentPortal);
+      expect(fakeScrollStrategy.isEnabled).toBe(true, 'Expected scroll strategy to be enabled.');
+
+      overlayRef.detach();
+      expect(fakeScrollStrategy.isEnabled).toBe(false, 'Expected scroll strategy to be disabled.');
+    });
+
+    it('should disable the scroll strategy when the overlay is destroyed', () => {
+      let overlayRef = overlay.create(config);
+
+      overlayRef.dispose();
+      expect(fakeScrollStrategy.isEnabled).toBe(false, 'Expected scroll strategy to be disabled.');
+    });
+  });
 });
 
 describe('OverlayContainer theming', () => {
@@ -310,6 +392,10 @@ describe('OverlayContainer theming', () => {
     overlayContainer = o;
     overlayContainerElement = overlayContainer.getContainerElement();
   }));
+
+  afterEach(() => {
+    overlayContainerElement.parentNode.removeChild(overlayContainerElement);
+  });
 
   it('should be able to set a theme on the overlay container', () => {
     overlayContainer.themeClass = 'my-theme';
@@ -365,3 +451,19 @@ class FakePositionStrategy implements PositionStrategy {
   dispose() {}
 }
 
+class FakeScrollStrategy implements ScrollStrategy {
+  isEnabled = false;
+  overlayRef: OverlayRef;
+
+  attach(overlayRef: OverlayRef) {
+    this.overlayRef = overlayRef;
+  }
+
+  enable() {
+    this.isEnabled = true;
+  }
+
+  disable() {
+    this.isEnabled = false;
+  }
+}

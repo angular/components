@@ -7,11 +7,14 @@ import {
   OnDestroy,
   Optional,
   Output,
-  Renderer,
-  SkipSelf
+  Renderer2,
+  SkipSelf,
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import {Platform} from '../platform/platform';
+
+import 'rxjs/add/observable/of';
 
 
 // This is the value used by AngularJS Material. Through trial and error (on iPhone 6S) they found
@@ -25,7 +28,7 @@ export type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program';
 type MonitoredElementInfo = {
   unlisten: Function,
   checkChildren: boolean,
-  renderer: Renderer,
+  renderer: Renderer2,
   subject: Subject<FocusOrigin>
 };
 
@@ -51,7 +54,7 @@ export class FocusOriginMonitor {
   /** Weak map of elements being monitored to their info. */
   private _elementInfo = new WeakMap<Element, MonitoredElementInfo>();
 
-  constructor(private _ngZone: NgZone) {
+  constructor(private _ngZone: NgZone, private _platform: Platform) {
     this._ngZone.runOutsideAngular(() => this._registerDocumentEvents());
   }
 
@@ -63,7 +66,14 @@ export class FocusOriginMonitor {
    * @returns An observable that emits when the focus state of the element changes.
    *     When the element is blurred, null will be emitted.
    */
-  monitor(element: Element, renderer: Renderer, checkChildren: boolean): Observable<FocusOrigin> {
+  monitor(
+      element: HTMLElement,
+      renderer: Renderer2,
+      checkChildren: boolean): Observable<FocusOrigin> {
+    // Do nothing if we're not on the browser platform.
+    if (!this._platform.isBrowser) {
+      return Observable.of();
+    }
     // Check if we're already monitoring this element.
     if (this._elementInfo.has(element)) {
       let info = this._elementInfo.get(element);
@@ -101,7 +111,7 @@ export class FocusOriginMonitor {
    * Stops monitoring an element and removes all focus classes.
    * @param element The element to stop monitoring.
    */
-  stopMonitoring(element: Element): void {
+  stopMonitoring(element: HTMLElement): void {
     let elementInfo = this._elementInfo.get(element);
 
     if (elementInfo) {
@@ -119,13 +129,18 @@ export class FocusOriginMonitor {
    * @param renderer The renderer to use to invoke the focus method on the element.
    * @param origin The focus origin.
    */
-  focusVia(element: Node, renderer: Renderer, origin: FocusOrigin): void {
+  focusVia(element: HTMLElement, renderer: Renderer2, origin: FocusOrigin): void {
     this._setOriginForCurrentEventQueue(origin);
-    renderer.invokeElementMethod(element, 'focus');
+    element.focus();
   }
 
   /** Register necessary event listeners on the document and window. */
   private _registerDocumentEvents() {
+    // Do nothing if we're not on the browser platform.
+    if (!this._platform.isBrowser) {
+      return;
+    }
+
     // Note: we listen to events in the capture phase so we can detect them even if the user stops
     // propagation.
 
@@ -167,13 +182,17 @@ export class FocusOriginMonitor {
    * @param element The element to update the classes on.
    * @param origin The focus origin.
    */
-  private _setClasses(element: Element, origin: FocusOrigin): void {
+  private _setClasses(element: HTMLElement, origin: FocusOrigin): void {
     let renderer = this._elementInfo.get(element).renderer;
-    renderer.setElementClass(element, 'cdk-focused', !!origin);
-    renderer.setElementClass(element, 'cdk-touch-focused', origin === 'touch');
-    renderer.setElementClass(element, 'cdk-keyboard-focused', origin === 'keyboard');
-    renderer.setElementClass(element, 'cdk-mouse-focused', origin === 'mouse');
-    renderer.setElementClass(element, 'cdk-program-focused', origin === 'program');
+    let toggleClass = (className: string, shouldSet: boolean) => {
+      shouldSet ? renderer.addClass(element, className) : renderer.removeClass(element, className);
+    };
+
+    toggleClass('cdk-focused', !!origin);
+    toggleClass('cdk-touch-focused', origin === 'touch');
+    toggleClass('cdk-keyboard-focused', origin === 'keyboard');
+    toggleClass('cdk-mouse-focused', origin === 'mouse');
+    toggleClass('cdk-program-focused', origin === 'program');
   }
 
   /**
@@ -218,7 +237,7 @@ export class FocusOriginMonitor {
    * @param event The focus event.
    * @param element The monitored element.
    */
-  private _onFocus(event: FocusEvent, element: Element) {
+  private _onFocus(event: FocusEvent, element: HTMLElement) {
     // NOTE(mmalerba): We currently set the classes based on the focus origin of the most recent
     // focus event affecting the monitored element. If we want to use the origin of the first event
     // instead we should check for the cdk-focused class here and return if the element already has
@@ -257,7 +276,7 @@ export class FocusOriginMonitor {
    * @param event The blur event.
    * @param element The monitored element.
    */
-  private _onBlur(event: FocusEvent, element: Element) {
+  private _onBlur(event: FocusEvent, element: HTMLElement) {
     // If we are counting child-element-focus as focused, make sure that we aren't just blurring in
     // order to focus another child of the monitored element.
     if (this._elementInfo.get(element).checkChildren && event.relatedTarget instanceof Node &&
@@ -284,11 +303,10 @@ export class FocusOriginMonitor {
   selector: '[cdkMonitorElementFocus], [cdkMonitorSubtreeFocus]',
 })
 export class CdkMonitorFocus implements OnDestroy {
-  @Output()
-  cdkFocusChange = new EventEmitter<FocusOrigin>();
+  @Output() cdkFocusChange = new EventEmitter<FocusOrigin>();
 
   constructor(private _elementRef: ElementRef, private _focusOriginMonitor: FocusOriginMonitor,
-              renderer: Renderer) {
+              renderer: Renderer2) {
     this._focusOriginMonitor.monitor(
         this._elementRef.nativeElement, renderer,
         this._elementRef.nativeElement.hasAttribute('cdkMonitorSubtreeFocus'))
@@ -301,15 +319,15 @@ export class CdkMonitorFocus implements OnDestroy {
 }
 
 
-export function FOCUS_ORIGIN_MONITOR_PROVIDER_FACTORY(parentDispatcher: FocusOriginMonitor,
-                                                      ngZone: NgZone) {
-  return parentDispatcher || new FocusOriginMonitor(ngZone);
+export function FOCUS_ORIGIN_MONITOR_PROVIDER_FACTORY(
+    parentDispatcher: FocusOriginMonitor, ngZone: NgZone, platform: Platform) {
+  return parentDispatcher || new FocusOriginMonitor(ngZone, platform);
 }
 
 
 export const FOCUS_ORIGIN_MONITOR_PROVIDER = {
   // If there is already a FocusOriginMonitor available, use that. Otherwise, provide a new one.
   provide: FocusOriginMonitor,
-  deps: [[new Optional(), new SkipSelf(), FocusOriginMonitor], NgZone],
+  deps: [[new Optional(), new SkipSelf(), FocusOriginMonitor], NgZone, Platform],
   useFactory: FOCUS_ORIGIN_MONITOR_PROVIDER_FACTORY
 };

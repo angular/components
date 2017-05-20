@@ -1,37 +1,34 @@
 import {
   NgModule,
-  ModuleWithProviders,
   Directive,
-  OpaqueToken,
   Inject,
   Optional,
   isDevMode,
   ElementRef,
+  InjectionToken,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/platform-browser';
-import {MdError} from '../errors/error';
 
-/** Whether we've done the global sanity checks (e.g. a theme is loaded, there is a doctype). */
-let hasDoneGlobalChecks = false;
+export const MATERIAL_COMPATIBILITY_MODE = new InjectionToken<boolean>('md-compatibility-mode');
 
-export const MATERIAL_COMPATIBILITY_MODE = new OpaqueToken('md-compatibility-mode');
+/** Injection token that configures whether the Material sanity checks are enabled. */
+export const MATERIAL_SANITY_CHECKS = new InjectionToken<boolean>('md-sanity-checks');
 
 /**
- * Exception thrown if the consumer has used an invalid Material prefix on a component.
+ * Returns an exception to be thrown if the consumer has used
+ * an invalid Material prefix on a component.
  * @docs-private
  */
-export class MdCompatibilityInvalidPrefixError extends MdError {
-  constructor(prefix: string, nodeName: string) {
-    super(
-      `The "${prefix}-" prefix cannot be used in ng-material v1 compatibility mode. ` +
-      `It was used on an "${nodeName.toLowerCase()}" element.`
-    );
-  }
+export function getMdCompatibilityInvalidPrefixError(prefix: string, nodeName: string) {
+  return new Error(`The "${prefix}-" prefix cannot be used in ng-material v1 compatibility mode. ` +
+                   `It was used on an "${nodeName.toLowerCase()}" element.`);
 }
 
 /** Selector that matches all elements that may have style collisions with AngularJS Material. */
 export const MAT_ELEMENTS_SELECTOR = `
   [mat-button],
+  [mat-card-subtitle],
+  [mat-card-title],
   [mat-dialog-actions],
   [mat-dialog-close],
   [mat-dialog-content],
@@ -92,6 +89,8 @@ export const MAT_ELEMENTS_SELECTOR = `
 /** Selector that matches all elements that may have style collisions with AngularJS Material. */
 export const MD_ELEMENTS_SELECTOR = `
   [md-button],
+  [md-card-subtitle],
+  [md-card-title],
   [md-dialog-actions],
   [md-dialog-close],
   [md-dialog-content],
@@ -157,7 +156,7 @@ export class MatPrefixRejector {
     elementRef: ElementRef) {
 
     if (!isCompatibilityMode) {
-      throw new MdCompatibilityInvalidPrefixError('mat', elementRef.nativeElement.nodeName);
+      throw getMdCompatibilityInvalidPrefixError('mat', elementRef.nativeElement.nodeName);
     }
   }
 }
@@ -170,7 +169,7 @@ export class MdPrefixRejector {
     elementRef: ElementRef) {
 
     if (isCompatibilityMode) {
-      throw new MdCompatibilityInvalidPrefixError('md', elementRef.nativeElement.nodeName);
+      throw getMdCompatibilityInvalidPrefixError('md', elementRef.nativeElement.nodeName);
     }
   }
 }
@@ -184,25 +183,28 @@ export class MdPrefixRejector {
 @NgModule({
   declarations: [MatPrefixRejector, MdPrefixRejector],
   exports: [MatPrefixRejector, MdPrefixRejector],
+  providers: [{
+    provide: MATERIAL_SANITY_CHECKS, useValue: true,
+  }],
 })
 export class CompatibilityModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: CompatibilityModule,
-      providers: [],
-    };
-  }
+  /** Whether we've done the global sanity checks (e.g. a theme is loaded, there is a doctype). */
+  private _hasDoneGlobalChecks = false;
 
-  constructor(@Optional() @Inject(DOCUMENT) private _document: any) {
-    if (!hasDoneGlobalChecks && isDevMode()) {
+  constructor(
+    @Optional() @Inject(DOCUMENT) private _document: any,
+    @Optional() @Inject(MATERIAL_SANITY_CHECKS) _sanityChecksEnabled: boolean) {
+
+    if (_sanityChecksEnabled && !this._hasDoneGlobalChecks && _document && isDevMode()) {
+      // Delay running the check to allow more time for the user's styles to load.
       this._checkDoctype();
       this._checkTheme();
-      hasDoneGlobalChecks = true;
+      this._hasDoneGlobalChecks = true;
     }
   }
 
   private _checkDoctype(): void {
-    if (this._document && !this._document.doctype) {
+    if (!this._document.doctype) {
       console.warn(
         'Current document does not have a doctype. This may cause ' +
         'some Angular Material components not to behave as expected.'
@@ -211,7 +213,7 @@ export class CompatibilityModule {
   }
 
   private _checkTheme(): void {
-    if (this._document && typeof getComputedStyle === 'function') {
+    if (typeof getComputedStyle === 'function') {
       const testElement = this._document.createElement('div');
 
       testElement.classList.add('mat-theme-loaded-marker');

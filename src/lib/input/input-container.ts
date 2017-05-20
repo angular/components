@@ -1,5 +1,6 @@
 import {
   AfterContentInit,
+  AfterContentChecked,
   AfterViewInit,
   ChangeDetectorRef,
   Component,
@@ -12,8 +13,9 @@ import {
   Optional,
   Output,
   QueryList,
-  Renderer,
+  Renderer2,
   Self,
+  ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
@@ -21,10 +23,10 @@ import {coerceBooleanProperty} from '../core';
 import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {getSupportedInputTypes} from '../core/platform/features';
 import {
-  MdInputContainerDuplicatedHintError,
-  MdInputContainerMissingMdInputError,
-  MdInputContainerPlaceholderConflictError,
-  MdInputContainerUnsupportedTypeError
+  getMdInputContainerDuplicatedHintError,
+  getMdInputContainerMissingMdInputError,
+  getMdInputContainerPlaceholderConflictError,
+  getMdInputContainerUnsupportedTypeError
 } from './input-container-errors';
 
 
@@ -172,7 +174,7 @@ export class MdInputDirective {
     // input element. To ensure that bindings for `type` work, we need to sync the setter
     // with the native property. Textarea elements don't support the type property or attribute.
     if (!this._isTextarea() && getSupportedInputTypes().has(this._type)) {
-      this._renderer.setElementProperty(this._elementRef.nativeElement, 'type', this._type);
+      this._renderer.setProperty(this._elementRef.nativeElement, 'type', this._type);
     }
   }
 
@@ -206,7 +208,7 @@ export class MdInputDirective {
   ].filter(t => getSupportedInputTypes().has(t));
 
   constructor(private _elementRef: ElementRef,
-              private _renderer: Renderer,
+              private _renderer: Renderer2,
               @Optional() @Self() public _ngControl: NgControl) {
 
     // Force setter to be called in case id was not specified.
@@ -214,7 +216,7 @@ export class MdInputDirective {
   }
 
   /** Focuses the input element. */
-  focus() { this._renderer.invokeElementMethod(this._elementRef.nativeElement, 'focus'); }
+  focus() { this._elementRef.nativeElement.focus(); }
 
   _onFocus() { this.focused = true; }
 
@@ -233,7 +235,7 @@ export class MdInputDirective {
   /** Make sure the input is a supported type. */
   private _validateType() {
     if (MD_INPUT_INVALID_TYPES.indexOf(this._type) !== -1) {
-      throw new MdInputContainerUnsupportedTypeError(this._type);
+      throw getMdInputContainerUnsupportedTypeError(this._type);
     }
   }
 
@@ -285,7 +287,7 @@ export class MdInputDirective {
   },
   encapsulation: ViewEncapsulation.None,
 })
-export class MdInputContainer implements AfterViewInit, AfterContentInit {
+export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterContentChecked {
   /** Alignment of the input container's content. */
   @Input() align: 'start' | 'end' = 'start';
 
@@ -296,6 +298,14 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit {
   @Input()
   get dividerColor() { return this.color; }
   set dividerColor(value) { this.color = value; }
+
+  /** Whether we should hide the required marker. */
+  @Input()
+  get hideRequiredMarker() { return this._hideRequiredMarker; }
+  set hideRequiredMarker(value: any) {
+    this._hideRequiredMarker = coerceBooleanProperty(value);
+  }
+  private _hideRequiredMarker: boolean;
 
   /** Whether the floating label should always float or not. */
   get _shouldAlwaysFloat() { return this._floatPlaceholder === 'always'; }
@@ -326,6 +336,8 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit {
   }
   private _floatPlaceholder: FloatPlaceholderType = 'auto';
 
+  @ViewChild('underline') underlineRef: ElementRef;
+
   @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
 
   @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
@@ -339,21 +351,23 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit {
   @ContentChildren(MdSuffix) _suffixChildren: QueryList<MdSuffix>;
 
   constructor(
+    public _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
     @Optional() private _parentForm: NgForm,
     @Optional() private _parentFormGroup: FormGroupDirective) { }
 
   ngAfterContentInit() {
-    if (!this._mdInputChild) {
-      throw new MdInputContainerMissingMdInputError();
-    }
-
+    this._validateInputChild();
     this._processHints();
     this._validatePlaceholders();
 
     // Re-validate when things change.
     this._hintChildren.changes.subscribe(() => this._processHints());
     this._mdInputChild._placeholderChange.subscribe(() => this._validatePlaceholders());
+  }
+
+  ngAfterContentChecked() {
+    this._validateInputChild();
   }
 
   ngAfterViewInit() {
@@ -396,7 +410,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit {
    */
   private _validatePlaceholders() {
     if (this._mdInputChild.placeholder && this._placeholderChild) {
-      throw new MdInputContainerPlaceholderConflictError();
+      throw getMdInputContainerPlaceholderConflictError();
     }
   }
 
@@ -419,12 +433,12 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit {
       this._hintChildren.forEach((hint: MdHint) => {
         if (hint.align == 'start') {
           if (startHint || this.hintLabel) {
-            throw new MdInputContainerDuplicatedHintError('start');
+            throw getMdInputContainerDuplicatedHintError('start');
           }
           startHint = hint;
         } else if (hint.align == 'end') {
           if (endHint) {
-            throw new MdInputContainerDuplicatedHintError('end');
+            throw getMdInputContainerDuplicatedHintError('end');
           }
           endHint = hint;
         }
@@ -437,22 +451,33 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit {
    * of the currently-specified hints, as well as a generated id for the hint label.
    */
   private _syncAriaDescribedby() {
-    let ids: string[] = [];
-    let startHint = this._hintChildren ?
-        this._hintChildren.find(hint => hint.align === 'start') : null;
-    let endHint = this._hintChildren ?
-        this._hintChildren.find(hint => hint.align === 'end') : null;
+    if (this._mdInputChild) {
+      let ids: string[] = [];
+      let startHint = this._hintChildren ?
+          this._hintChildren.find(hint => hint.align === 'start') : null;
+      let endHint = this._hintChildren ?
+          this._hintChildren.find(hint => hint.align === 'end') : null;
 
-    if (startHint) {
-      ids.push(startHint.id);
-    } else if (this._hintLabel) {
-      ids.push(this._hintLabelId);
+      if (startHint) {
+        ids.push(startHint.id);
+      } else if (this._hintLabel) {
+        ids.push(this._hintLabelId);
+      }
+
+      if (endHint) {
+        ids.push(endHint.id);
+      }
+
+      this._mdInputChild.ariaDescribedby = ids.join(' ');
     }
+  }
 
-    if (endHint) {
-      ids.push(endHint.id);
+  /**
+   * Throws an error if the container's input child was removed.
+   */
+  private _validateInputChild() {
+    if (!this._mdInputChild) {
+      throw getMdInputContainerMissingMdInputError();
     }
-
-    this._mdInputChild.ariaDescribedby = ids.join(' ');
   }
 }

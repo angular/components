@@ -18,32 +18,36 @@ import {FullscreenE2E, TestDialog as TestDialogFullScreen} from './fullscreen/fu
 import {MaterialModule, OverlayContainer, FullscreenOverlayContainer} from '@angular/material';
 import {E2E_APP_ROUTES} from './e2e-app/routes';
 import {SlideToggleE2E} from './slide-toggle/slide-toggle-e2e';
+import {InputE2E} from './input/input-e2e';
+import {BlockScrollStrategyE2E} from './block-scroll-strategy/block-scroll-strategy-e2e';
 
 @NgModule({
   imports: [
     BrowserModule,
     RouterModule.forRoot(E2E_APP_ROUTES),
-    MaterialModule.forRoot(),
+    MaterialModule,
     NoopAnimationsModule,
   ],
   declarations: [
-    E2EApp,
-    IconE2E,
-    ButtonE2E,
-    MenuE2E,
     BasicTabs,
-    SimpleRadioButtons,
-    SimpleCheckboxes,
-    Home,
+    ButtonE2E,
     DialogE2E,
-    TestDialog,
+    E2EApp,
+    FullscreenE2E,
     GridListE2E,
+    Home,
+    IconE2E,
+    InputE2E,
     ListE2E,
+    MenuE2E,
     ProgressBarE2E,
     ProgressSpinnerE2E,
+    SimpleCheckboxes,
+    SimpleRadioButtons,
     SlideToggleE2E,
-    FullscreenE2E,
-    TestDialogFullScreen
+    TestDialog,
+    TestDialogFullScreen,
+    BlockScrollStrategyE2E
   ],
   bootstrap: [E2EApp],
   providers: [

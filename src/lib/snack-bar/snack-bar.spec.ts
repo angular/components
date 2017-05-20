@@ -29,7 +29,7 @@ describe('MdSnackBar', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSnackBarModule.forRoot(), SnackBarTestModule, NoopAnimationsModule],
+      imports: [MdSnackBarModule, SnackBarTestModule, NoopAnimationsModule],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
@@ -67,7 +67,7 @@ describe('MdSnackBar', () => {
    });
 
    it('should open and close a snackbar without a ViewContainerRef', async(() => {
-     let snackBarRef = snackBar.open('Snack time!', 'CHEW');
+     let snackBarRef = snackBar.open('Snack time!', 'Chew');
      viewContainerFixture.detectChanges();
 
      let messageElement = overlayContainerElement.querySelector('snack-bar-container');
@@ -97,7 +97,7 @@ describe('MdSnackBar', () => {
 
     let messageElement = overlayContainerElement.querySelector('snack-bar-container');
     expect(messageElement.textContent)
-        .toContain(simpleMessage, `Expected the snack bar message to be '${simpleMessage}''`);
+        .toContain(simpleMessage, `Expected the snack bar message to be '${simpleMessage}'`);
 
     let buttonElement = overlayContainerElement.querySelector('button.mat-simple-snackbar-action');
     expect(buttonElement.tagName)
@@ -121,7 +121,7 @@ describe('MdSnackBar', () => {
 
     let messageElement = overlayContainerElement.querySelector('snack-bar-container');
     expect(messageElement.textContent)
-        .toContain(simpleMessage, `Expected the snack bar message to be '${simpleMessage}''`);
+        .toContain(simpleMessage, `Expected the snack bar message to be '${simpleMessage}'`);
     expect(overlayContainerElement.querySelector('button.mat-simple-snackbar-action'))
         .toBeNull('Expected the query selection for action label to be null');
   });
@@ -236,7 +236,7 @@ describe('MdSnackBar', () => {
 
   it('should open a new snackbar after dismissing a previous snackbar', async(() => {
     let config = {viewContainerRef: testViewContainerRef};
-    let snackBarRef = snackBar.open(simpleMessage, 'DISMISS', config);
+    let snackBarRef = snackBar.open(simpleMessage, 'Dismiss', config);
     viewContainerFixture.detectChanges();
 
     snackBarRef.dismiss();
@@ -244,7 +244,7 @@ describe('MdSnackBar', () => {
 
     // Wait for the snackbar dismiss animation to finish.
     viewContainerFixture.whenStable().then(() => {
-      snackBarRef = snackBar.open('Second snackbar', 'DISMISS', config);
+      snackBarRef = snackBar.open('Second snackbar', 'Dismiss', config);
       viewContainerFixture.detectChanges();
 
       // Wait for the snackbar open animation to finish.
@@ -290,7 +290,7 @@ describe('MdSnackBar', () => {
      fakeAsync(() => {
        let dismissObservableCompleted = false;
        let actionObservableCompleted = false;
-       let snackBarRef = snackBar.open('Some content', 'dismiss');
+       let snackBarRef = snackBar.open('Some content', 'Dismiss');
        viewContainerFixture.detectChanges();
 
        snackBarRef.afterDismissed().subscribe(null, null, () => {
@@ -349,10 +349,11 @@ describe('MdSnackBar with parent MdSnackBar', () => {
   let childSnackBar: MdSnackBar;
   let overlayContainerElement: HTMLElement;
   let fixture: ComponentFixture<ComponentThatProvidesMdSnackBar>;
+  let liveAnnouncer: LiveAnnouncer;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSnackBarModule.forRoot(), SnackBarTestModule, NoopAnimationsModule],
+      imports: [MdSnackBarModule, SnackBarTestModule, NoopAnimationsModule],
       declarations: [ComponentThatProvidesMdSnackBar],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -365,8 +366,9 @@ describe('MdSnackBar with parent MdSnackBar', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([MdSnackBar], (sb: MdSnackBar) => {
+  beforeEach(inject([MdSnackBar, LiveAnnouncer], (sb: MdSnackBar, la: LiveAnnouncer) => {
     parentSnackBar = sb;
+    liveAnnouncer = la;
 
     fixture = TestBed.createComponent(ComponentThatProvidesMdSnackBar);
     childSnackBar = fixture.componentInstance.snackBar;
@@ -375,6 +377,7 @@ describe('MdSnackBar with parent MdSnackBar', () => {
 
   afterEach(() => {
     overlayContainerElement.innerHTML = '';
+    liveAnnouncer._removeLiveElement();
   });
 
   it('should close snackBars opened by parent when opening from child MdSnackBar', fakeAsync(() => {

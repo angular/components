@@ -9,52 +9,57 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  .mat-radio-button {
-    //default color (accent)
-    &:not(.mat-primary):not(.mat-accent):not(.mat-warn) {
-      @include radio-theme-color($accent, $foreground);
-    }
+    .mat-radio-button {
+        //default color (accent)
+        &:not(.mat-primary):not(.mat-accent):not(.mat-warn) {
+            @include radio-theme-color($accent, $foreground);
+        }
 
-    &.mat-primary {
-      @include radio-theme-color($primary, $foreground);
-    }
+        &.mat-primary {
+            @include radio-theme-color($primary, $foreground);
+        }
 
-    &.mat-accent {
-      @include radio-theme-color($accent, $foreground);
-    }
+        &.mat-accent {
+            @include radio-theme-color($accent, $foreground);
+        }
 
-    &.mat-warn {
-      @include radio-theme-color($warn, $foreground);
+        &.mat-warn {
+            @include radio-theme-color($warn, $foreground);
+        }
     }
-  }
 }
 
 @mixin radio-theme-color($color, $foreground) {
-  .mat-radio-outer-circle {
-    border-color: mat-color($foreground, secondary-text);
 
-    .mat-radio-checked & {
-      border-color: mat-color($color);
+    .mat-radio-outer-circle {
+        border-color: mat-color($foreground, secondary-text);
     }
 
-    .mat-radio-disabled & {
-      border-color: mat-color($foreground, disabled);
+    .mat-radio-checked .mat-radio-outer-circle {
+        border-color: mat-color($color);
     }
-  }
 
-  .mat-radio-inner-circle {
-    background-color: mat-color($color);
-
-    .mat-radio-disabled & {
-      background-color: mat-color($foreground, disabled);
+    .mat-radio-disabled .mat-radio-outer-circle {
+        border-color: mat-color($foreground, disabled);
     }
-  }
 
-  .mat-radio-ripple .mat-ripple-element {
-    background-color: mat-color($color, 0.26);
-
-    .mat-radio-disabled & {
-      background-color: mat-color($foreground, disabled);
+    .mat-radio-inner-circle {
+        background-color: mat-color($color);
     }
-  }
+
+    .mat-radio-ripple .mat-ripple-element {
+        background-color: mat-color($color, 0.26);
+    }
+
+    .mat-radio-disabled {
+        .mat-radio-ripple .mat-ripple-element, .mat-radio-inner-circle {
+            background-color: mat-color($foreground, disabled);
+        }
+
+        .mat-radio-label-content {
+            color: mat-color($foreground, disabled);
+        }
+    }
 }
+
+

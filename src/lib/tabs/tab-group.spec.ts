@@ -3,18 +3,19 @@ import {
 } from '@angular/core/testing';
 import {MdTabGroup, MdTabsModule, MdTabHeaderPosition} from './index';
 import {Component, ViewChild} from '@angular/core';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {NoopAnimationsModule, BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 import {MdTab} from './tab';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {FakeViewportRuler} from '../core/overlay/position/fake-viewport-ruler';
+import {dispatchFakeEvent} from '../core/testing/dispatch-events';
 
 
 describe('MdTabGroup', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdTabsModule.forRoot(), NoopAnimationsModule],
+      imports: [MdTabsModule, NoopAnimationsModule],
       declarations: [
         SimpleTabsTestApp,
         SimpleDynamicTabsTestApp,
@@ -138,6 +139,39 @@ describe('MdTabGroup', () => {
         component.selectedIndex = NaN;
         fixture.detectChanges();
       }).not.toThrow();
+    });
+
+    it('should show ripples for tab-group labels', () => {
+      fixture.detectChanges();
+
+      const testElement = fixture.nativeElement;
+      const tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+
+      expect(testElement.querySelectorAll('.mat-ripple-element').length)
+        .toBe(0, 'Expected no ripples to show up initially.');
+
+      dispatchFakeEvent(tabLabel.nativeElement, 'mousedown');
+      dispatchFakeEvent(tabLabel.nativeElement, 'mouseup');
+
+      expect(testElement.querySelectorAll('.mat-ripple-element').length)
+        .toBe(1, 'Expected one ripple to show up on label mousedown.');
+    });
+
+    it('should allow disabling ripples for tab-group labels', () => {
+      fixture.componentInstance.disableRipple = true;
+      fixture.detectChanges();
+
+      const testElement = fixture.nativeElement;
+      const tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+
+      expect(testElement.querySelectorAll('.mat-ripple-element').length)
+        .toBe(0, 'Expected no ripples to show up initially.');
+
+      dispatchFakeEvent(tabLabel.nativeElement, 'mousedown');
+      dispatchFakeEvent(tabLabel.nativeElement, 'mouseup');
+
+      expect(testElement.querySelectorAll('.mat-ripple-element').length)
+        .toBe(0, 'Expected no ripple to show up on label mousedown.');
     });
   });
 
@@ -290,11 +324,32 @@ describe('MdTabGroup', () => {
   }
 });
 
+
+describe('nested MdTabGroup with enabled animations', () => {
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [MdTabsModule, BrowserAnimationsModule],
+      declarations: [NestedTabs]
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  it('should not throw when creating a component with nested tab groups', async(() => {
+    expect(() => {
+      let fixture = TestBed.createComponent(NestedTabs);
+      fixture.detectChanges();
+    }).not.toThrow();
+  }));
+});
+
+
 @Component({
   template: `
     <md-tab-group class="tab-group"
         [(selectedIndex)]="selectedIndex"
         [headerPosition]="headerPosition"
+        [disableRipple]="disableRipple"
         (focusChange)="handleFocus($event)"
         (selectChange)="handleSelection($event)">
       <md-tab>
@@ -316,6 +371,7 @@ class SimpleTabsTestApp {
   selectedIndex: number = 1;
   focusEvent: any;
   selectEvent: any;
+  disableRipple: boolean = false;
   headerPosition: MdTabHeaderPosition = 'above';
   handleFocus(event: any) {
     this.focusEvent = event;
@@ -443,3 +499,22 @@ class TabGroupWithSimpleApi {
   otherContent = 'Apples, grapes';
   @ViewChild('legumes') legumes: any;
 }
+
+
+@Component({
+  selector: 'nested-tabs',
+  template: `
+    <md-tab-group>
+      <md-tab label="One">Tab one content</md-tab>
+      <md-tab label="Two">
+        Tab two content
+         <md-tab-group [dynamicHeight]="true">
+          <md-tab label="Inner tab one">Inner content one</md-tab>
+          <md-tab label="Inner tab two">Inner content two</md-tab>
+        </md-tab-group>
+      </md-tab>
+    </md-tab-group>
+  `,
+})
+class NestedTabs {}
+

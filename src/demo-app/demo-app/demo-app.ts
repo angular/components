@@ -13,12 +13,16 @@ export class Home {}
 @Component({
   moduleId: module.id,
   selector: 'demo-app',
-  providers: [],
   templateUrl: 'demo-app.html',
   styleUrls: ['demo-app.css'],
+  host: {
+    '[class.unicorn-dark-theme]': 'dark',
+  },
   encapsulation: ViewEncapsulation.None,
 })
 export class DemoApp {
+  dark = false;
+
   navItems = [
     {name: 'Autocomplete', route: 'autocomplete'},
     {name: 'Button', route: 'button'},
@@ -26,6 +30,7 @@ export class DemoApp {
     {name: 'Card', route: 'card'},
     {name: 'Chips', route: 'chips'},
     {name: 'Checkbox', route: 'checkbox'},
+    {name: 'Datepicker', route: 'datepicker'},
     {name: 'Dialog', route: 'dialog'},
     {name: 'Gestures', route: 'gestures'},
     {name: 'Grid List', route: 'grid-list'},

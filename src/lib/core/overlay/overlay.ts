@@ -12,7 +12,6 @@ import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {VIEWPORT_RULER_PROVIDER} from './position/viewport-ruler';
 import {OverlayContainer, OVERLAY_CONTAINER_PROVIDER} from './overlay-container';
-import {SCROLL_DISPATCHER_PROVIDER} from './scroll/scroll-dispatcher';
 
 
 /** Next overlay unique ID. */
@@ -30,7 +29,7 @@ let defaultState = new OverlayState();
  *
  * An overlay *is* a PortalHost, so any kind of Portal can be loaded into one.
  */
- @Injectable()
+@Injectable()
 export class Overlay {
   constructor(private _overlayContainer: OverlayContainer,
               private _componentFactoryResolver: ComponentFactoryResolver,
@@ -94,6 +93,5 @@ export const OVERLAY_PROVIDERS: Provider[] = [
   Overlay,
   OverlayPositionBuilder,
   VIEWPORT_RULER_PROVIDER,
-  SCROLL_DISPATCHER_PROVIDER,
   OVERLAY_CONTAINER_PROVIDER,
 ];

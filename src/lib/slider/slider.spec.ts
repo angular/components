@@ -154,6 +154,10 @@ describe('MdSlider', () => {
       // Some browsers use '0' and some use '0px', so leave off the closing paren.
       expect(trackFillElement.style.transform).toContain('translateX(0');
     });
+
+    it('should have aria-orientation horizontal', () => {
+      expect(sliderNativeElement.getAttribute('aria-orientation')).toEqual('horizontal');
+    });
   });
 
   describe('disabled slider', () => {
@@ -236,7 +240,7 @@ describe('MdSlider', () => {
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
       testComponent = fixture.debugElement.componentInstance;
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+      sliderInstance = sliderDebugElement.injector.get<MdSlider>(MdSlider);
       sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
       ticksContainerElement =
@@ -331,7 +335,7 @@ describe('MdSlider', () => {
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+      sliderInstance = sliderDebugElement.injector.get<MdSlider>(MdSlider);
       sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
     });
 
@@ -370,7 +374,7 @@ describe('MdSlider', () => {
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+      sliderInstance = sliderDebugElement.injector.get<MdSlider>(MdSlider);
       sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
     });
@@ -563,7 +567,7 @@ describe('MdSlider', () => {
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+      sliderInstance = sliderDebugElement.injector.get<MdSlider>(MdSlider);
       sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
     });
 
@@ -665,7 +669,7 @@ describe('MdSlider', () => {
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+      sliderInstance = sliderDebugElement.injector.get<MdSlider>(MdSlider);
       sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
     });
 
@@ -714,7 +718,7 @@ describe('MdSlider', () => {
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+      sliderInstance = sliderDebugElement.injector.get<MdSlider>(MdSlider);
       sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
     });
@@ -906,7 +910,7 @@ describe('MdSlider', () => {
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+      sliderInstance = sliderDebugElement.injector.get<MdSlider>(MdSlider);
     });
 
     it('should increment slider by 1 on up arrow pressed', () => {
@@ -988,7 +992,7 @@ describe('MdSlider', () => {
 
       testComponent = fixture.debugElement.componentInstance;
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+      sliderInstance = sliderDebugElement.injector.get<MdSlider>(MdSlider);
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
     });
@@ -1113,7 +1117,7 @@ describe('MdSlider', () => {
 
       testComponent = fixture.debugElement.componentInstance;
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
-      sliderInstance = sliderDebugElement.injector.get(MdSlider);
+      sliderInstance = sliderDebugElement.injector.get<MdSlider>(MdSlider);
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
@@ -1155,6 +1159,10 @@ describe('MdSlider', () => {
       fixture.detectChanges();
 
       expect(trackFillElement.style.transform).toContain('scaleY(0.39)');
+    });
+
+    it('should have aria-orientation vertical', () => {
+      expect(sliderNativeElement.getAttribute('aria-orientation')).toEqual('vertical');
     });
   });
 });
