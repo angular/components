@@ -117,6 +117,10 @@ export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisabl
       private _focusOriginMonitor: FocusOriginMonitor) {
     super();
     this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
+
+    if (this._isRoundButton) {
+      this.color = 'accent';
+    }
   }
 
   ngOnDestroy() {
