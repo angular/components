@@ -254,12 +254,12 @@ describe('MdIcon', () => {
       fixture.detectChanges();
 
       const svgElement = verifyAndGetSingleSvgChild(mdIconElement);
-      const firstChild = svgElement.children[0];
+      const firstChild = svgElement.childNodes[0];
 
       expect(svgElement.querySelector('symbol')).toBeFalsy();
-      expect(svgElement.children.length).toBe(1);
+      expect(svgElement.childNodes.length).toBe(1);
       expect(firstChild.nodeName.toLowerCase()).toBe('path');
-      expect(firstChild.getAttribute('id')).toBe('quack');
+      expect((firstChild as HTMLElement).getAttribute('id')).toBe('quack');
     });
 
     it('should not wrap <svg> elements in icon sets in another svg tag', () => {
