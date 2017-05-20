@@ -371,7 +371,7 @@ describe('MdTooltip', () => {
     it('should associate trigger and tooltip through aria-describedby', fakeAsync(() => {
       // Expect that the trigger does not have an associated tooltip since there is no tooltip shown
       const trigger = fixture.componentInstance.trigger.nativeElement;
-      expect(trigger.getAttribute('aria-describedBy')).toBe('');
+      expect(trigger.getAttribute('aria-describedBy')).toBe(null);
 
       tooltipDirective.show(0);
       tick(0); // Tick for the show delay

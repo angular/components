@@ -1,31 +1,24 @@
 import {
+  ChangeDetectorRef,
   Component,
   Directive,
-  Input,
   ElementRef,
-  ViewContainerRef,
+  Input,
   NgZone,
-  Optional,
   OnDestroy,
+  Optional,
   Renderer2,
-  ChangeDetectorRef,
+  ViewContainerRef
 } from '@angular/core';
+import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
 import {
-  style,
-  trigger,
-  state,
-  transition,
-  animate,
-  AnimationEvent,
-} from '@angular/animations';
-import {
-  Overlay,
-  OverlayState,
-  OverlayRef,
   ComponentPortal,
-  OverlayConnectionPosition,
   OriginConnectionPosition,
-  RepositionScrollStrategy,
+  Overlay,
+  OverlayConnectionPosition,
+  OverlayRef,
+  OverlayState,
+  RepositionScrollStrategy
 } from '../core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
@@ -34,6 +27,7 @@ import {Platform} from '../core/platform/index';
 import 'rxjs/add/operator/first';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {ESCAPE} from '../core/keyboard/keycodes';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
@@ -60,9 +54,8 @@ export function throwMdTooltipInvalidPositionError(position: string) {
     '(longpress)': 'show()',
     '(focus)': 'show()',
     '(blur)': 'hide(0)',
-    '(keydown.esc)': 'hide(0)',
+    '(keydown)': '_handleKeydown($event)',
     '(touchend)': 'hide(' + TOUCHEND_HIDE_DELAY + ')',
-    '[attr.aria-describedby]': '_getTooltipId()'
   },
   exportAs: 'mdTooltip',
 })
@@ -153,15 +146,14 @@ export class MdTooltip implements OnDestroy {
   set _matShowDelay(v) { this.showDelay = v; }
 
   constructor(
-    private _overlay: Overlay,
-    private _elementRef: ElementRef,
-    private _scrollDispatcher: ScrollDispatcher,
-    private _viewContainerRef: ViewContainerRef,
-    private _ngZone: NgZone,
-    private _renderer: Renderer2,
-    private _platform: Platform,
-    @Optional() private _dir: Dir) {
-
+      private _overlay: Overlay,
+      private _elementRef: ElementRef,
+      private _scrollDispatcher: ScrollDispatcher,
+      private _viewContainerRef: ViewContainerRef,
+      private _ngZone: NgZone,
+      private _renderer: Renderer2,
+      private _platform: Platform,
+      @Optional() private _dir: Dir) {
     // The mouse events shouldn't be bound on iOS devices, because
     // they can prevent the first tap from firing its click event.
     if (!_platform.IOS) {
@@ -170,9 +162,7 @@ export class MdTooltip implements OnDestroy {
     }
   }
 
-  /**
-   * Dispose the tooltip when destroyed.
-   */
+  /** Dispose the tooltip when destroyed. */
   ngOnDestroy() {
     if (this._tooltipInstance) {
       this._disposeTooltip();
@@ -187,6 +177,11 @@ export class MdTooltip implements OnDestroy {
       this._createTooltip();
     }
 
+    // If the user has not already set an aria-describedby, then use the tooltip's id.
+    if (!this._getAriaDescribedby()) {
+      this._setAriaDescribedBy(this._tooltipInstance.id);
+    }
+
     this._setTooltipMessage(this._message);
     this._tooltipInstance.show(this._position, delay);
   }
@@ -194,6 +189,11 @@ export class MdTooltip implements OnDestroy {
   /** Hides the tooltip after the delay in ms, defaults to tooltip-delay-hide or 0ms if no input */
   hide(delay: number = this.hideDelay): void {
     if (this._tooltipInstance) {
+      // Remove the aria-describedby attribute if it matches the now-hidden tooltip's id
+      if (this._getAriaDescribedby() === this._tooltipInstance.id) {
+        this._setAriaDescribedBy('');
+      }
+
       this._tooltipInstance.hide(delay);
     }
   }
@@ -210,6 +210,27 @@ export class MdTooltip implements OnDestroy {
   /** Returns true if the tooltip is currently visible to the user */
   _isTooltipVisible(): boolean {
     return !!this._tooltipInstance && this._tooltipInstance.isVisible();
+  }
+
+  /** Handles the keydown events on the host element. */
+  _handleKeydown(e: KeyboardEvent) {
+    // If the tooltip is visible and the user pressed escape,
+    // intercept the event and hide the tooltip.
+    if (this._tooltipInstance && this._tooltipInstance.isVisible() && e.keyCode === ESCAPE) {
+      e.stopPropagation();
+      this.hide(0);
+    }
+  }
+
+  /** Returns the trigger's aria-describedby attribute. */
+  private _getAriaDescribedby(): string {
+    return this._elementRef.nativeElement.getAttribute('aria-describedby');
+  }
+
+  /** Sets the trigger's aria-describedby attribute. */
+  private _setAriaDescribedBy(ariaDescribedby: string) {
+    this._renderer.setAttribute(
+        this._elementRef.nativeElement, 'aria-describedby', ariaDescribedby);
   }
 
   /** Create the tooltip to display */
