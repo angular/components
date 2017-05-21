@@ -1,7 +1,13 @@
 import {browser, by, element, Key} from 'protractor';
-import {expectToExist, expectFocusOn} from '../../util/asserts';
-import {pressKeys, clickElementAtPoint} from '../../util/actions';
-import {waitForElement} from '../../util/query';
+import {
+  expectToExist,
+  expectFocusOn,
+  pressKeys,
+  clickElementAtPoint,
+  waitForElement,
+  asyncSpec,
+} from '../../util/index';
+
 
 describe('dialog', () => {
   beforeEach(() => browser.get('/dialog'));
@@ -17,90 +23,80 @@ describe('dialog', () => {
     expectToExist('.my-template-dialog');
   });
 
-  it('should close by clicking on the backdrop', () => {
+  it('should close by clicking on the backdrop', asyncSpec(async() => {
     element(by.id('default')).click();
 
-    waitForDialog().then(() => {
-      clickOnBackrop();
-      expectToExist('md-dialog-container', false);
-    });
-  });
+    await waitForDialog();
+    clickOnBackrop();
+    expectToExist('md-dialog-container', false);
+  }));
 
-  it('should close by pressing escape', () => {
+  it('should close by pressing escape', asyncSpec(async () => {
     element(by.id('default')).click();
 
-    waitForDialog().then(() => {
-      pressKeys(Key.ESCAPE);
-      expectToExist('md-dialog-container', false);
-    });
-  });
+    await waitForDialog();
+    pressKeys(Key.ESCAPE);
+    expectToExist('md-dialog-container', false);
+  }));
 
-  it('should close by pressing escape when the first tabbable element has lost focus', () => {
-    element(by.id('default')).click();
+  it('should close by pressing escape when the first tabbable element has lost focus',
+    asyncSpec(async () => {
+      element(by.id('default')).click();
 
-    waitForDialog().then(() => {
+      await waitForDialog();
       clickElementAtPoint('md-dialog-container', { x: 0, y: 0 });
       pressKeys(Key.ESCAPE);
       expectToExist('md-dialog-container', false);
-    });
-  });
+    }));
 
-  it('should close by clicking on the "close" button', () => {
+  it('should close by clicking on the "close" button', asyncSpec(async () => {
     element(by.id('default')).click();
 
-    waitForDialog().then(() => {
-      element(by.id('close')).click();
-      expectToExist('md-dialog-container', false);
-    });
-  });
+    await waitForDialog();
+    element(by.id('close')).click();
+    expectToExist('md-dialog-container', false);
+  }));
 
-  it('should focus the first focusable element', () => {
+  it('should focus the first focusable element', asyncSpec(async () => {
     element(by.id('default')).click();
 
-    waitForDialog().then(() => {
-      expectFocusOn('md-dialog-container input');
-    });
-  });
+    await waitForDialog();
+    expectFocusOn('md-dialog-container input');
+  }));
 
-  it('should restore focus to the element that opened the dialog', () => {
+  it('should restore focus to the element that opened the dialog', asyncSpec(async () => {
     let openButton = element(by.id('default'));
 
     openButton.click();
 
-    waitForDialog().then(() => {
-      clickOnBackrop();
-      expectFocusOn(openButton);
-    });
-  });
+    await waitForDialog();
+    clickOnBackrop();
+    expectFocusOn(openButton);
+  }));
 
-  it('should prevent tabbing out of the dialog', () => {
+  it('should prevent tabbing out of the dialog', asyncSpec(async () => {
     element(by.id('default')).click();
 
-    waitForDialog().then(() => {
-      let tab = Key.TAB;
+    await waitForDialog();
+    pressKeys(Key.TAB, Key.TAB, Key.TAB);
+    expectFocusOn('#close');
+  }));
 
-      pressKeys(tab, tab, tab);
-      expectFocusOn('#close');
-    });
-  });
-
-  it('should be able to prevent closing by clicking on the backdrop', () => {
+  it('should be able to prevent closing by clicking on the backdrop', asyncSpec(async () => {
     element(by.id('disabled')).click();
 
-    waitForDialog().then(() => {
-      clickOnBackrop();
-      expectToExist('md-dialog-container');
-    });
-  });
+    await waitForDialog();
+    clickOnBackrop();
+    expectToExist('md-dialog-container');
+  }));
 
-  it('should be able to prevent closing by pressing escape', () => {
+  it('should be able to prevent closing by pressing escape', asyncSpec(async () => {
     element(by.id('disabled')).click();
 
-    waitForDialog().then(() => {
-      pressKeys(Key.ESCAPE);
-      expectToExist('md-dialog-container');
-    });
-  });
+    await waitForDialog();
+    pressKeys(Key.ESCAPE);
+    expectToExist('md-dialog-container');
+  }));
 
   function waitForDialog() {
     return waitForElement('md-dialog-container');
