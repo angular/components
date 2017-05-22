@@ -558,16 +558,22 @@ describe('MdDialog', () => {
 
   describe('dialog content elements', () => {
     let dialogRef: MdDialogRef<ContentElementDialog>;
+    let closeDialogButton: HTMLButtonElement;
+    let closeDialogDiv: HTMLElement;
 
     beforeEach(() => {
       dialogRef = dialog.open(ContentElementDialog);
       viewContainerFixture.detectChanges();
+
+      closeDialogButton = overlayContainerElement
+        .querySelector('button') as HTMLButtonElement;
+      closeDialogDiv = overlayContainerElement.querySelector('#dialog-close-div') as HTMLElement;
     });
 
     it('should close the dialog when clicking on the close button', async(() => {
       expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(1);
 
-      (overlayContainerElement.querySelector('button[md-dialog-close]') as HTMLElement).click();
+      closeDialogButton.click();
       viewContainerFixture.detectChanges();
 
       viewContainerFixture.whenStable().then(() => {
@@ -575,29 +581,46 @@ describe('MdDialog', () => {
       });
     }));
 
+    it('should close the dialog with the specified value on the close button', async(() => {
+      const afterCloseCallback = jasmine.createSpy('afterClose callback');
+
+      // Subscribe to the afterClosed observable to keep track of the close value.
+      dialogRef.afterClosed().subscribe(afterCloseCallback);
+
+      expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(1);
+
+      // Set the result for the close button to some value.
+      dialogRef.componentInstance.closeResult = 'Works';
+      viewContainerFixture.detectChanges();
+
+      closeDialogButton.click();
+      viewContainerFixture.detectChanges();
+
+      viewContainerFixture.whenStable().then(() => {
+        expect(afterCloseCallback).toHaveBeenCalledWith('Works');
+        expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(0);
+      });
+    }));
+
     it('should not close the dialog if [md-dialog-close] is applied on a non-button node', () => {
       expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(1);
 
-      (overlayContainerElement.querySelector('div[md-dialog-close]') as HTMLElement).click();
+      closeDialogDiv.click();
 
       expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(1);
     });
 
     it('should allow for a user-specified aria-label on the close button', async(() => {
-      let button = overlayContainerElement.querySelector('button[md-dialog-close]');
-
       dialogRef.componentInstance.closeButtonAriaLabel = 'Best close button ever';
       viewContainerFixture.detectChanges();
 
       viewContainerFixture.whenStable().then(() => {
-        expect(button.getAttribute('aria-label')).toBe('Best close button ever');
+        expect(closeDialogButton.getAttribute('aria-label')).toBe('Best close button ever');
       });
     }));
 
     it('should override the "type" attribute of the close button', () => {
-      let button = overlayContainerElement.querySelector('button[md-dialog-close]');
-
-      expect(button.getAttribute('type')).toBe('button');
+      expect(closeDialogButton.getAttribute('type')).toBe('button');
     });
 
   });
@@ -713,13 +736,17 @@ class PizzaMsg {
     <h1 md-dialog-title>This is the title</h1>
     <md-dialog-content>Lorem ipsum dolor sit amet.</md-dialog-content>
     <md-dialog-actions>
-      <button md-dialog-close [aria-label]="closeButtonAriaLabel">Close</button>
-      <div md-dialog-close>Should not close</div>
+      <button [md-dialog-close]="closeResult" [aria-label]="closeButtonAriaLabel"
+          id="dialog-close-button">
+        Close
+      </button>
+      <div md-dialog-close id="dialog-close-div">Should not close</div>
     </md-dialog-actions>
   `
 })
 class ContentElementDialog {
   closeButtonAriaLabel: string;
+  closeResult: any;
 }
 
 @Component({
