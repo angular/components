@@ -21,13 +21,7 @@ import {Dir} from '../core/rtl/dir';
 import {MdDialog} from '../dialog/dialog';
 import {MdDialogRef} from '../dialog/dialog-ref';
 import {PositionStrategy} from '../core/overlay/position/position-strategy';
-import {
-  OriginConnectionPosition,
-  OverlayConnectionPosition,
-  RepositionScrollStrategy,
-  BlockScrollStrategy,
-  ScrollDispatcher,
-} from '../core/overlay/index';
+import {RepositionScrollStrategy, ScrollDispatcher} from '../core/overlay/index';
 import {MdDatepickerInput} from './datepicker-input';
 import {Subscription} from 'rxjs/Subscription';
 import {MdDialogConfig} from '../dialog/dialog-config';
