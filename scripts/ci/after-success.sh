@@ -16,8 +16,7 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && $(npm bin)/travis-after-modes; then
   $(npm bin)/gulp material-examples:build-release
   $(npm bin)/gulp docs
 
-  # Run publishing of artifacts sequentially because the dist/ folder may change at
-  # the same time when running in parallel.
+  # Run publishing of artifacts in parallel. This is possible because the output has been built before.
   ./scripts/release/publish-build-artifacts.sh --no-build &
   ./scripts/release/publish-docs-content.sh --no-build &
 
