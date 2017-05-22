@@ -12,12 +12,13 @@ import {
   Renderer2,
   ViewEncapsulation,
   NgZone,
-  OnDestroy,
+  OnDestroy, Inject,
 } from '@angular/core';
 import {Dir, MdError, coerceBooleanProperty} from '../core';
 import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import 'rxjs/add/operator/first';
+import {DOCUMENT} from '@angular/platform-browser';
 
 
 /** Exception thrown when two MdSidenav are matching the same side. */
@@ -128,9 +129,13 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
    * @param _elementRef The DOM element reference. Used for transition and width calculation.
    *     If not available we do not hook on transitions.
    */
-  constructor(private _elementRef: ElementRef, private _focusTrapFactory: FocusTrapFactory) {
+  constructor(private _elementRef: ElementRef,
+              private _focusTrapFactory: FocusTrapFactory,
+              @Optional() @Inject(DOCUMENT) private _doc: any) {
     this.onOpen.subscribe(() => {
-      this._elementFocusedBeforeSidenavWasOpened = document.activeElement as HTMLElement;
+      if (this._doc) {
+        this._elementFocusedBeforeSidenavWasOpened = this._doc.activeElement as HTMLElement;
+      }
 
       if (this.isFocusTrapEnabled && this._focusTrap) {
         this._focusTrap.focusFirstTabbableElementWhenReady();
@@ -145,7 +150,7 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
    * opened.
    */
   private _restoreFocus() {
-    let activeEl = document.activeElement;
+    let activeEl = this._doc && this._doc.activeElement;
     if (activeEl && this._elementRef.nativeElement.contains(activeEl)) {
       if (this._elementFocusedBeforeSidenavWasOpened instanceof HTMLElement) {
         this._elementFocusedBeforeSidenavWasOpened.focus();
