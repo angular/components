@@ -53,6 +53,10 @@ export class OverlayRef implements PortalHost {
       this._attachBackdrop();
     }
 
+    if (this._state.dialogClass) {
+      this._pane.classList.add(this._state.dialogClass);
+    }
+
     return attachResult;
   }
 
@@ -69,6 +73,9 @@ export class OverlayRef implements PortalHost {
     this._togglePointerEvents(false);
     this._state.scrollStrategy.disable();
     this._detachments.next();
+    if (this._state.dialogClass) {
+      this._pane.classList.remove(this._state.dialogClass);
+    }
 
     return this._portalHost.detach();
   }

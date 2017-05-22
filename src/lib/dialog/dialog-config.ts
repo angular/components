@@ -27,6 +27,9 @@ export class MdDialogConfig {
   /** The ARIA role of the dialog element. */
   role?: DialogRole = 'dialog';
 
+  /** Custom class for the dialog, */
+  dialogClass?: string = '';
+
   /** Whether the dialog has a backdrop. */
   hasBackdrop?: boolean = true;
 
