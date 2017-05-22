@@ -2,8 +2,8 @@ import {task, watch} from 'gulp';
 import {join} from 'path';
 import {main as tsc} from '@angular/tsc-wrapped';
 import {SOURCE_ROOT, DIST_ROOT} from '../constants';
-import {sequenceTask, sassBuildTask, copyTask, triggerLivereload} from './task_helpers';
-import {buildPackageBundles, composeRelease} from './package-build';
+import {sequenceTask, sassBuildTask, copyTask, triggerLivereload} from '../util/task_helpers';
+import {buildPackageBundles, composeRelease} from './build-functions';
 
 // There are no type definitions available for these imports.
 const inlineResources = require('../../../scripts/release/inline-resources');
