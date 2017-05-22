@@ -545,6 +545,7 @@ export class MdSelect implements AfterContentInit, OnDestroy, OnInit, ControlVal
     }
 
     this._clearSelection();
+
     if (isArray) {
       value.forEach((currentValue: any) => this._selectValue(currentValue));
       this._sortValues();

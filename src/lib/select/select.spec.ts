@@ -321,12 +321,12 @@ describe('MdSelect', () => {
 
       options =
         overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
-      expect(options[0].classList).not.toContain('mat-selected');
-      expect(options[1].classList).toContain('mat-selected');
+      expect(options[0].classList).not.toContain('mat-selected', 'Expected first option to no longer be selected');
+      expect(options[1].classList).toContain('mat-selected', 'Expected second option to be selected');
 
       const optionInstances = fixture.componentInstance.options.toArray();
-      expect(optionInstances[0].selected).toBe(false);
-      expect(optionInstances[1].selected).toBe(true);
+      expect(optionInstances[0].selected).toBe(false, 'Expected first option to no longer be selected');
+      expect(optionInstances[1].selected).toBe(true, 'Expected second option to be selected');
     });
 
     it('should remove selection if option has been removed', async(() => {
