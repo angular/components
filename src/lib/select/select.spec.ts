@@ -2037,6 +2037,16 @@ describe('MdSelect', () => {
       expect(trigger.textContent).not.toContain('Null');
     });
 
+    it('should reset when a blank option is selected', () => {
+      options[6].click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.control.value).toBeUndefined();
+      expect(fixture.componentInstance.select.selected).toBeFalsy();
+      expect(placeholder.classList).not.toContain('mat-floating-placeholder');
+      expect(trigger.textContent).not.toContain('None');
+    });
+
     it('should not reset when any other falsy option is selected', () => {
       options[3].click();
       fixture.detectChanges();
@@ -2410,10 +2420,12 @@ class BasicSelectWithTheming {
 @Component({
   selector: 'reset-values-select',
   template: `
-    <md-select placeholder="Food" [formControl]="control" [required]="isRequired">
+    <md-select placeholder="Food" [formControl]="control">
       <md-option *ngFor="let food of foods" [value]="food.value">
         {{ food.viewValue }}
       </md-option>
+
+      <md-option>None</md-option>
     </md-select>
   `
 })
@@ -2427,8 +2439,6 @@ class ResetValuesSelect {
     { value: null, viewValue: 'Null' },
   ];
   control = new FormControl();
-  isRequired: boolean;
 
   @ViewChild(MdSelect) select: MdSelect;
-  @ViewChildren(MdOption) options: QueryList<MdOption>;
 }
