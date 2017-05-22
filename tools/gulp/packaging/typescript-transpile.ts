@@ -18,7 +18,7 @@ export function transpileFile(inputPath: string, outputPath: string, options: ts
 }
 
 /** Formats the TypeScript diagnostics into a error string. */
-export function formatDiagnostics(diagnostics: ts.Diagnostic[], baseDir: string): string {
+function formatDiagnostics(diagnostics: ts.Diagnostic[], baseDir: string): string {
   return diagnostics.map(diagnostic => {
     let res = `• ${chalk.red(`TS${diagnostic.code}`)} - `;
 
@@ -35,7 +35,7 @@ export function formatDiagnostics(diagnostics: ts.Diagnostic[], baseDir: string)
 }
 
 /** Checks and reports diagnostics if present. */
-export function reportDiagnostics(diagnostics: ts.Diagnostic[], baseDir?: string) {
+function reportDiagnostics(diagnostics: ts.Diagnostic[], baseDir?: string) {
   if (diagnostics && diagnostics.length && diagnostics[0]) {
     console.error(formatDiagnostics(diagnostics, baseDir));
     throw new Error('TypeScript compilation failed.');
