@@ -28,4 +28,9 @@ $mat-snack-bar-button-margin: 48px !default;
     size: inherit;
     weight: 600;
   }
+
+  /deep/ [dir='rtl'] & {
+    margin-right: $mat-snack-bar-button-margin;
+    margin-left: 0;
+  }
 }
