@@ -1,5 +1,4 @@
 import {browser, by, element} from 'protractor';
-import {asyncSpec} from '../../util/index';
 
 
 describe('input', () => {
@@ -22,7 +21,7 @@ describe('input', () => {
       expect(input.getAttribute('value')).toBe('123');
     });
 
-    it('should increment when increment button clicked', asyncSpec(async () => {
+    it('should increment when increment button clicked', async () => {
       const input = element(by.id('number-input'));
 
       input.click();
@@ -42,6 +41,6 @@ describe('input', () => {
           .perform();
 
       expect(input.getAttribute('value')).toBe('0');
-    }));
+    });
   });
 });

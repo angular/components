@@ -7,7 +7,6 @@ import {
   expectFocusOn,
   expectLocation,
   pressKeys,
-  asyncSpec,
 } from '../../util/index';
 
 
@@ -150,14 +149,14 @@ describe('menu', () => {
 
   describe('position - ', () => {
 
-    it('should default menu alignment to "after below" when not set', asyncSpec(async () => {
+    it('should default menu alignment to "after below" when not set', async () => {
       page.trigger().click();
 
       // menu.x should equal trigger.x, menu.y should equal trigger.y
       await expectAlignedWith(page.menu(), '#trigger');
-    }));
+    });
 
-    it('should align overlay end to origin end when x-position is "before"', asyncSpec(async() => {
+    it('should align overlay end to origin end when x-position is "before"', async() => {
       page.beforeTrigger().click();
 
       const trigger = await page.beforeTrigger().getLocation();
@@ -167,22 +166,21 @@ describe('menu', () => {
       // trigger.x (left corner) - 52px (menu left of trigger) = expected menu.x (left corner)
       // menu.y should equal trigger.y because only x position has changed.
       expectLocation(page.beforeMenu(), {x: trigger.x - 52, y: trigger.y});
-    }));
+    });
 
-    it('should align overlay bottom to origin bottom when y-position is "above"',
-      asyncSpec(async () => {
-        page.aboveTrigger().click();
+    it('should align overlay bottom to origin bottom when y-position is "above"', async () => {
+      page.aboveTrigger().click();
 
-        const trigger = await page.aboveTrigger().getLocation();
+      const trigger = await page.aboveTrigger().getLocation();
 
-        // the menu's bottom corner must be attached to the trigger's bottom corner.
-        // menu.x should equal trigger.x because only y position has changed.
-        // menu = 64px high. trigger = 20px high. 64 - 20 = 44px of menu extending up past trigger.
-        // trigger.y (top corner) - 44px (menu above trigger) = expected menu.y (top corner)
-        expectLocation(page.aboveMenu(), {x: trigger.x, y: trigger.y - 44});
-      }));
+      // the menu's bottom corner must be attached to the trigger's bottom corner.
+      // menu.x should equal trigger.x because only y position has changed.
+      // menu = 64px high. trigger = 20px high. 64 - 20 = 44px of menu extending up past trigger.
+      // trigger.y (top corner) - 44px (menu above trigger) = expected menu.y (top corner)
+      expectLocation(page.aboveMenu(), {x: trigger.x, y: trigger.y - 44});
+    });
 
-    it('should align menu to top left of trigger when "below" and "above"', asyncSpec(async () => {
+    it('should align menu to top left of trigger when "below" and "above"', async () => {
       page.combinedTrigger().click();
 
       const trigger = await page.combinedTrigger().getLocation();
@@ -190,7 +188,7 @@ describe('menu', () => {
       // trigger.x (left corner) - 52px (menu left of trigger) = expected menu.x
       // trigger.y (top corner) - 44px (menu above trigger) = expected menu.y
       expectLocation(page.combinedMenu(), {x: trigger.x - 52, y: trigger.y - 44});
-    }));
+    });
 
   });
 });

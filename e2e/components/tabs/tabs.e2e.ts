@@ -7,7 +7,7 @@ import {
   Key,
   ExpectedConditions
 } from 'protractor';
-import {pressKeys, asyncSpec} from '../../util/index';
+import {pressKeys} from '../../util/index';
 import {screenshot} from '../../screenshot';
 
 
@@ -24,7 +24,7 @@ describe('tabs', () => {
       tabBodies = element.all(by.css('md-tab-body'));
     });
 
-    it('should change tabs when the label is clicked', asyncSpec(async () => {
+    it('should change tabs when the label is clicked', async () => {
       tabLabels.get(1).click();
       expect(getLabelActiveStates(tabLabels)).toEqual([false, true, false]);
       expect(getBodyActiveStates(tabBodies)).toEqual([false, true, false]);
@@ -40,7 +40,7 @@ describe('tabs', () => {
       await browser.wait(ExpectedConditions.not(
         ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
       screenshot('click0');
-    }));
+    });
 
     it('should change focus with keyboard interaction', () => {
       let right = Key.RIGHT;

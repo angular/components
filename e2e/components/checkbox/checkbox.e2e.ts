@@ -1,6 +1,5 @@
 import {browser, by, element, Key, ExpectedConditions} from 'protractor';
 import {screenshot} from '../../screenshot';
-import {asyncSpec} from '../../util/index';
 
 
 describe('checkbox', () => {
@@ -8,7 +7,7 @@ describe('checkbox', () => {
   describe('check behavior', () => {
     beforeEach(() => browser.get('/checkbox'));
 
-    it('should be checked when clicked, and unchecked when clicked again', asyncSpec(async () => {
+    it('should be checked when clicked, and unchecked when clicked again', async () => {
       let checkboxEl = element(by.id('test-checkbox'));
       let inputEl = element(by.css('input[id=input-test-checkbox]'));
       let checked: string;
@@ -31,7 +30,7 @@ describe('checkbox', () => {
       await browser.wait(ExpectedConditions.not(
         ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
       screenshot('unchecked');
-    }));
+    });
 
     it('should toggle the checkbox when pressing space', () => {
       let inputEl = element(by.css('input[id=input-test-checkbox]'));

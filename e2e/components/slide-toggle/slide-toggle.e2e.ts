@@ -1,5 +1,5 @@
 import {browser, element, by, Key, ExpectedConditions} from 'protractor';
-import {expectToExist, asyncSpec} from '../../util/index';
+import {expectToExist} from '../../util/index';
 import {screenshot} from '../../screenshot';
 
 
@@ -14,7 +14,7 @@ describe('slide-toggle', () => {
     screenshot();
   });
 
-  it('should change the checked state on click', asyncSpec(async () => {
+  it('should change the checked state on click', async () => {
     let inputEl = getInput();
 
     expect(inputEl.getAttribute('checked')).toBeFalsy('Expect slide-toggle to be unchecked');
@@ -26,9 +26,9 @@ describe('slide-toggle', () => {
     await browser.wait(ExpectedConditions.not(
       ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
     screenshot();
-  }));
+  });
 
-  it('should change the checked state on click', asyncSpec(async () => {
+  it('should change the checked state on click', async () => {
     let inputEl = getInput();
 
     expect(inputEl.getAttribute('checked')).toBeFalsy('Expect slide-toggle to be unchecked');
@@ -39,9 +39,9 @@ describe('slide-toggle', () => {
     await browser.wait(ExpectedConditions.not(
       ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
     screenshot();
-  }));
+  });
 
-  it('should not change the checked state on click when disabled', asyncSpec(async () => {
+  it('should not change the checked state on click when disabled', async () => {
     let inputEl = getInput();
 
     expect(inputEl.getAttribute('checked')).toBeFalsy('Expect slide-toggle to be unchecked');
@@ -52,9 +52,9 @@ describe('slide-toggle', () => {
     await browser.wait(ExpectedConditions.not(
       ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
     screenshot();
-  }));
+  });
 
-  it('should move the thumb on state change', asyncSpec(async () => {
+  it('should move the thumb on state change', async () => {
     let slideToggleEl = getNormalToggle();
     let thumbEl = element(by.css('#normal-slide-toggle .mat-slide-toggle-thumb-container'));
     let previousPosition = await thumbEl.getLocation();
@@ -68,7 +68,7 @@ describe('slide-toggle', () => {
     await browser.wait(ExpectedConditions.not(
       ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
     screenshot();
-  }));
+  });
 
   it('should toggle the slide-toggle on space key', () => {
     let inputEl = getInput();
