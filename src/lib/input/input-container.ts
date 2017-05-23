@@ -300,7 +300,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   get dividerColor() { return this.color; }
   set dividerColor(value) { this.color = value; }
 
-  /** Whether we should hide the required marker. */
+  /** Whether the required marker should be hidden. */
   @Input()
   get hideRequiredMarker() { return this._hideRequiredMarker; }
   set hideRequiredMarker(value: any) {
@@ -337,6 +337,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   }
   private _floatPlaceholder: FloatPlaceholderType = 'auto';
 
+  /** Reference to the input's underline element. */
   @ViewChild('underline') underlineRef: ElementRef;
 
   @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
