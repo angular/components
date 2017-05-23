@@ -100,6 +100,7 @@ export const MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER = {
 export class MdTooltip implements OnDestroy {
   _overlayRef: OverlayRef | null;
   _tooltipInstance: TooltipComponent | null;
+  _scrollStrategy: RepositionScrollStrategy;
 
   private _position: TooltipPosition = 'below';
   private _disabled: boolean = false;
@@ -239,13 +240,19 @@ export class MdTooltip implements OnDestroy {
   show(delay: number = this.showDelay): void {
     if (this.disabled || !this._message || !this._message.trim()) { return; }
 
+    this._scrollStrategy.enable();
     if (this._tooltipInstance) {
       this._tooltipInstance.show(this._position, delay);
+    }
+    if (this._overlayRef) {
+      this._overlayRef.overlayElement.classList.remove('cdk-visually-hidden');
+      this._overlayRef.updatePosition();
     }
   }
 
   /** Hides the tooltip after the delay in ms, defaults to tooltip-delay-hide or 0ms if no input */
   hide(delay: number = this.hideDelay): void {
+    this._scrollStrategy.disable();
     if (this._tooltipInstance) {
       this._tooltipInstance.hide(delay);
     }
@@ -290,10 +297,20 @@ export class MdTooltip implements OnDestroy {
     let portal = new ComponentPortal(TooltipComponent, this._viewContainerRef);
 
     this._tooltipInstance = overlayRef.attach(portal).instance;
+    this._scrollStrategy.disable();
 
     // If the user has not already set an aria-describedby, then use the tooltip's id.
     if (!this._getAriaDescribedby() && this._tooltipInstance) {
       this._setAriaDescribedBy(this._tooltipInstance.id);
+    }
+
+    if (this._tooltipInstance) {
+      this._tooltipInstance.afterHidden().subscribe(() => {
+        if (this._overlayRef) {
+          this._overlayRef.overlayElement.classList.add('cdk-visually-hidden');
+        }
+        this._scrollStrategy.disable();
+      });
     }
 
     this._setTooltipClass(this._tooltipClass);
@@ -322,11 +339,12 @@ export class MdTooltip implements OnDestroy {
     config.direction = this._dir ? this._dir.value : 'ltr';
     config.positionStrategy = strategy;
     config.panelClass = TOOLTIP_PANEL_CLASS;
-    config.scrollStrategy = this._scrollStrategy();
+
+    this._scrollStrategy = this._scrollStrategy();
+    config.scrollStrategy = this._scrollStrategy;
 
     this._overlayRef = this._overlay.create(config);
-
-    return this._overlayRef;
+    this._overlayRef.overlayElement.classList.add('cdk-visually-hidden');
   }
 
   /** Disposes the current tooltip and the overlay it is attached to */
@@ -334,6 +352,10 @@ export class MdTooltip implements OnDestroy {
     if (this._overlayRef) {
       this._overlayRef.dispose();
       this._overlayRef = null;
+    }
+
+    if (this._tooltipInstance && this._getAriaDescribedby() == this._tooltipInstance.id) {
+      this._setAriaDescribedBy('');
     }
 
     this._tooltipInstance = null;
@@ -430,13 +452,11 @@ let _uniqueTooltipIdCounter = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('state', [
-      state('void', style({transform: 'scale(0)'})),
-      state('initial', style({transform: 'scale(0)'})),
+      state('void, initial, hidden', style({transform: 'scale(0)'})),
       state('visible', style({transform: 'scale(1)'})),
-      state('hidden', style({transform: 'scale(0)'})),
       transition('* => visible', animate('150ms cubic-bezier(0.0, 0.0, 0.2, 1)')),
       transition('* => hidden', animate('150ms cubic-bezier(0.4, 0.0, 1, 1)')),
-    ])
+    ]),
   ],
   host: {
     // Forces the element to have a layout in IE and Edge. This fixes issues where the element
@@ -452,6 +472,8 @@ export class TooltipComponent {
 
   /** Classes to be added to the tooltip. Supports the same syntax as `ngClass`. */
   tooltipClass: string|string[]|Set<string>|{[key: string]: any};
+
+  a11y: string = 'hidden';
 
   /** The timeout ID of any current timer set to show the tooltip */
   _showTimeoutId: number;
