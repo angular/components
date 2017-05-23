@@ -6,6 +6,7 @@ import {
   FormGroupDirective,
   FormsModule,
   NgForm,
+  NgControl,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
@@ -23,6 +24,7 @@ import {
   getMdInputContainerPlaceholderConflictError
 } from './input-container-errors';
 import {MD_PLACEHOLDER_GLOBAL_OPTIONS} from '../core/placeholder/placeholder-options';
+import {MD_ERROR_GLOBAL_OPTIONS} from '../core/error/error-options';
 
 describe('MdInputContainer', function () {
   beforeEach(async(() => {
@@ -56,6 +58,7 @@ describe('MdInputContainer', function () {
         MdInputContainerWithDynamicPlaceholder,
         MdInputContainerWithFormControl,
         MdInputContainerWithFormErrorMessages,
+        MdInputContainerWithCustomErrorStateMatcher,
         MdInputContainerWithFormGroupErrorMessages,
         MdInputContainerWithId,
         MdInputContainerWithPrefixAndSuffix,
@@ -705,6 +708,116 @@ describe('MdInputContainer', function () {
       });
     }));
 
+    it('should display an error message when a custom error matcher returns true', async(() => {
+      fixture.destroy();
+
+      let customFixture = TestBed.createComponent(MdInputContainerWithCustomErrorStateMatcher);
+      let component: MdInputContainerWithCustomErrorStateMatcher;
+
+      customFixture.detectChanges();
+      component = customFixture.componentInstance;
+      containerEl = customFixture.debugElement.query(By.css('md-input-container')).nativeElement;
+
+      expect(component.formControl.invalid).toBe(true, 'Expected form control to be invalid');
+      expect(containerEl.querySelectorAll('md-error').length).toBe(0, 'Expected no error messages');
+
+      component.formControl.markAsTouched();
+      customFixture.detectChanges();
+
+      customFixture.whenStable().then(() => {
+        expect(containerEl.querySelectorAll('md-error').length)
+          .toBe(0, 'Expected no error messages after being touched.');
+
+        component.errorState = true;
+        customFixture.detectChanges();
+
+        customFixture.whenStable().then(() => {
+          expect(containerEl.querySelectorAll('md-error').length)
+            .toBe(1, 'Expected one error messages to have been rendered.');
+        });
+      });
+    }));
+
+    it('should display an error message when global error matcher returns true', () => {
+
+      // Global error state matcher that will always cause errors to show
+      function globalErrorStateMatcher() {
+        return true;
+      }
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [
+          FormsModule,
+          MdInputModule,
+          NoopAnimationsModule,
+          ReactiveFormsModule,
+        ],
+        declarations: [
+          MdInputContainerWithFormErrorMessages
+        ],
+        providers: [
+          {
+            provide: MD_ERROR_GLOBAL_OPTIONS,
+            useValue: { errorStateMatcher: globalErrorStateMatcher } }
+        ]
+      });
+
+      let customFixture = TestBed.createComponent(MdInputContainerWithFormErrorMessages);
+      customFixture.detectChanges();
+
+      containerEl = customFixture.debugElement.query(By.css('md-input-container')).nativeElement;
+      testComponent = customFixture.componentInstance;
+
+      // Expect the control to still be untouched but the error to show due to the global setting
+      expect(testComponent.formControl.untouched).toBe(true, 'Expected untouched form control');
+      expect(containerEl.querySelectorAll('md-error').length).toBe(1, 'Expected an error message');
+    });
+
+    it('should display an error message when global setting shows errors on dirty', async() => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [
+          FormsModule,
+          MdInputModule,
+          NoopAnimationsModule,
+          ReactiveFormsModule,
+        ],
+        declarations: [
+          MdInputContainerWithFormErrorMessages
+        ],
+        providers: [
+          { provide: MD_ERROR_GLOBAL_OPTIONS, useValue: { showOnDirty: true } }
+        ]
+      });
+
+      let customFixture = TestBed.createComponent(MdInputContainerWithFormErrorMessages);
+      customFixture.detectChanges();
+
+      containerEl = customFixture.debugElement.query(By.css('md-input-container')).nativeElement;
+      testComponent = customFixture.componentInstance;
+
+      expect(testComponent.formControl.invalid).toBe(true, 'Expected form control to be invalid');
+      expect(containerEl.querySelectorAll('md-error').length).toBe(0, 'Expected no error messages');
+
+      testComponent.formControl.markAsTouched();
+      customFixture.detectChanges();
+
+      customFixture.whenStable().then(() => {
+        expect(containerEl.querySelectorAll('md-error').length)
+          .toBe(0, 'Expected no error messages when touched');
+
+        testComponent.formControl.markAsDirty();
+        customFixture.detectChanges();
+
+        customFixture.whenStable().then(() => {
+          expect(containerEl.querySelectorAll('md-error').length)
+            .toBe(1, 'Expected one error message when dirty');
+        });
+      });
+
+    });
+
     it('should hide the errors and show the hints once the input becomes valid', async(() => {
       testComponent.formControl.markAsTouched();
       fixture.detectChanges();
@@ -1016,6 +1129,29 @@ class MdInputContainerWithFormErrorMessages {
   @ViewChild('form') form: NgForm;
   formControl = new FormControl('', Validators.required);
   renderError = true;
+}
+
+@Component({
+  template: `
+    <form #form="ngForm" novalidate>
+      <md-input-container>
+        <input mdInput
+          [formControl]="formControl"
+          [errorStateMatcher]="customErrorStateMatcher.bind(this)">
+        <md-hint>Please type something</md-hint>
+        <md-error>This field is required</md-error>
+      </md-input-container>
+    </form>
+  `
+})
+class MdInputContainerWithCustomErrorStateMatcher {
+  @ViewChild('form') form: NgForm;
+  formControl = new FormControl('', Validators.required);
+  errorState = false;
+
+  customErrorStateMatcher(): boolean {
+    return this.errorState;
+  }
 }
 
 @Component({

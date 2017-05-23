@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {FormControl, Validators, NgControl} from '@angular/forms';
 
 
 let max = 5;
@@ -23,6 +23,7 @@ export class InputDemo {
   errorMessageExample1: string;
   errorMessageExample2: string;
   errorMessageExample3: string;
+  errorMessageExample4: string;
   dividerColorExample1: string;
   dividerColorExample2: string;
   dividerColorExample3: string;
@@ -42,5 +43,12 @@ export class InputDemo {
     for (let x = 0; x < n; x++) {
       this.items.push({ value: ++max });
     }
+  }
+
+  customErrorStateMatcher(c: NgControl): boolean {
+    const isDirty = c.dirty;
+    const isInvalid = c.invalid;
+
+    return isDirty && isInvalid;
   }
 }
