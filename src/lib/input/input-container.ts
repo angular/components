@@ -187,6 +187,7 @@ export class MdInputDirective {
    */
   @Output() _placeholderChange = new EventEmitter<string>();
 
+  /** Whether the input is empty. */
   get empty() {
     return !this._isNeverEmpty() &&
         (this.value == null || this.value === '') &&
