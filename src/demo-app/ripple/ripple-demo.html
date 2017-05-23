@@ -21,33 +21,36 @@
   <section>
     Speed
     <md-radio-group [(ngModel)]="rippleSpeed">
-      <md-radio-button name="demo-ripple-options" value="0.1">Slow</md-radio-button>
+      <md-radio-button name="demo-ripple-options" value="0.4">Slow</md-radio-button>
       <md-radio-button name="demo-ripple-options" value="1">Normal</md-radio-button>
-      <md-radio-button name="demo-ripple-options" value="4">Fast</md-radio-button>
+      <md-radio-button name="demo-ripple-options" value="2">Fast</md-radio-button>
     </md-radio-group>
   </section>
   <section>
-    <md-input placeholder="Max radius" aria-label="radius" [(ngModel)]="maxRadius"></md-input>
-    <md-input placeholder="Ripple color" aria-label="color" [(ngModel)]="rippleColor"></md-input>
-    <md-input placeholder="Ripple background" aria-label="background" [(ngModel)]="rippleBackgroundColor"></md-input>
+    <md-input-container>
+      <input mdInput placeholder="Ripple radius" aria-label="radius" [(ngModel)]="radius">
+    </md-input-container>
+    <md-input-container>
+      <input mdInput placeholder="Ripple color" aria-label="color" [(ngModel)]="rippleColor">
+    </md-input-container>
   </section>
   <section>
-    <button md-raised-button (click)="doManualRipple()">Manual ripple</button>
+    <button md-raised-button (click)="launchRipple()">Launch Ripple</button>
+    <button md-raised-button (click)="launchRipple(true)">Launch Ripple (Persistent)</button>
+    <button md-raised-button (click)="fadeOutAll()">Fade Out All</button>
   </section>
   <section>
     <div class="demo-ripple-container"
         [class.demo-ripple-disabled]="disabled"
         [class.demo-ripple-rounded]="rounded"
         md-ripple
-        [md-ripple-centered]="centered"
-        [md-ripple-disabled]="disabled"
-        [md-ripple-unbounded]="unbounded"
-        [md-ripple-max-radius]="maxRadius"
-        [md-ripple-color]="rippleColor"
-        [md-ripple-background-color]="rippleBackgroundColor"
-        [md-ripple-speed-factor]="rippleSpeed">
+        [mdRippleCentered]="centered"
+        [mdRippleDisabled]="disabled"
+        [mdRippleUnbounded]="unbounded"
+        [mdRippleRadius]="radius"
+        [mdRippleColor]="rippleColor"
+        [mdRippleSpeedFactor]="rippleSpeed">
       Click me
     </div>
   </section>
-  {{centered.checked}} {{rounded.checked}}
 </div>

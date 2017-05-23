@@ -1,0 +1,44 @@
+// Core styles that can be used to apply material design treatments to any element.
+@import 'a11y/a11y';
+@import 'style/elevation';
+@import 'overlay/overlay';
+@import 'ripple/ripple';
+@import 'option/option';
+@import 'option/option-theme';
+@import 'selection/pseudo-checkbox/pseudo-checkbox-theme';
+
+// Mixin that renders all of the core styles that are not theme-dependent.
+@mixin mat-core() {
+  // Provides external CSS classes for each elevation value. Each CSS class is formatted as
+  // `mat-elevation-z$zValue` where `$zValue` corresponds to the z-space to which the element is
+  // elevated.
+  @for $zValue from 0 through 24 {
+    .mat-elevation-z#{$zValue} {
+      @include mat-elevation($zValue);
+    }
+  }
+
+  @include mat-ripple();
+  @include mat-option();
+  @include cdk-a11y();
+  @include cdk-overlay();
+}
+
+// Mixin that renders all of the core styles that depend on the theme.
+@mixin mat-core-theme($theme) {
+  @include mat-ripple-theme($theme);
+  @include mat-option-theme($theme);
+  @include mat-pseudo-checkbox-theme($theme);
+
+  // Wrapper element that provides the theme background when the
+  // user's content isn't inside of a `md-sidenav-container`.
+  .mat-app-background {
+    $background: map-get($theme, background);
+    background-color: mat-color($background, background);
+  }
+
+  // Marker that is used to determine whether the user has added a theme to their page.
+  .mat-theme-loaded-marker {
+    display: none;
+  }
+}

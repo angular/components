@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {TooltipPosition} from '@angular2-material/tooltip/tooltip';
+import {TooltipPosition} from '@angular/material';
 
 
 @Component({
@@ -10,4 +10,8 @@ import {TooltipPosition} from '@angular2-material/tooltip/tooltip';
 })
 export class TooltipDemo {
   position: TooltipPosition = 'below';
+  message: string = 'Here is the tooltip';
+  disabled = false;
+  showDelay = 0;
+  hideDelay = 1000;
 }

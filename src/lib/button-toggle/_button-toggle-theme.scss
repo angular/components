@@ -1,0 +1,38 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+// Applies a focus style to an md-button-toggle element for each of the supported palettes.
+@mixin _mat-button-toggle-focus-color($theme) {
+  $background: map-get($theme, background);
+
+  .mat-button-toggle-focus-overlay {
+    background-color: mat-color($background, focused-button);
+  }
+}
+
+@mixin mat-button-toggle-theme($theme) {
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .mat-button-toggle {
+    color: mat-color($foreground, hint-text);
+
+    &.cdk-focused {
+      @include _mat-button-toggle-focus-color($theme);
+    }
+  }
+
+  .mat-button-toggle-checked {
+    background-color: mat-color($background, selected-button);
+    color: mat-color($foreground, base);
+  }
+
+  .mat-button-toggle-disabled {
+    background-color: mat-color($background, disabled-button-toggle);
+    color: mat-color($foreground, disabled-button);
+
+    &.mat-button-toggle-checked {
+      background-color: mat-color($background, selected-disabled-button);
+    }
+  }
+}

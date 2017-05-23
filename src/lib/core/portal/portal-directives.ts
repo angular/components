@@ -4,7 +4,9 @@ import {
     Directive,
     TemplateRef,
     ComponentFactoryResolver,
-    ViewContainerRef
+    ViewContainerRef,
+    OnDestroy,
+    Input,
 } from '@angular/core';
 import {Portal, TemplatePortal, ComponentPortal, BasePortalHost} from './portal';
 
@@ -14,13 +16,13 @@ import {Portal, TemplatePortal, ComponentPortal, BasePortalHost} from './portal'
  * the directive instance itself can be attached to a host, enabling declarative use of portals.
  *
  * Usage:
- * <template portal #greeting>
+ * <ng-template portal #greeting>
  *   <p> Hello {{name}} </p>
- * </template>
+ * </ng-template>
  */
 @Directive({
-  selector: '[portal]',
-  exportAs: 'portal',
+  selector: '[cdk-portal], [cdkPortal], [portal]',
+  exportAs: 'cdkPortal',
 })
 export class TemplatePortalDirective extends TemplatePortal {
   constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
@@ -34,13 +36,13 @@ export class TemplatePortalDirective extends TemplatePortal {
  * directly attached to it, enabling declarative use.
  *
  * Usage:
- * <template [portalHost]="greeting"></template>
+ * <ng-template [cdkPortalHost]="greeting"></ng-template>
  */
 @Directive({
-  selector: '[portalHost]',
-  inputs: ['portal: portalHost']
+  selector: '[cdkPortalHost], [portalHost]',
+  inputs: ['portal: cdkPortalHost']
 })
-export class PortalHostDirective extends BasePortalHost {
+export class PortalHostDirective extends BasePortalHost implements OnDestroy {
   /** The attached portal. */
   private _portal: Portal<any>;
 
@@ -50,15 +52,38 @@ export class PortalHostDirective extends BasePortalHost {
     super();
   }
 
+  /** @deprecated */
+  @Input('portalHost')
+  get _deprecatedPortal() { return this.portal; }
+  set _deprecatedPortal(v) { this.portal = v; }
+
+  /** Portal associated with the Portal host. */
   get portal(): Portal<any> {
     return this._portal;
   }
 
-  set portal(p: Portal<any>) {
-    this._replaceAttachedPortal(p);
+  set portal(portal: Portal<any>) {
+    if (this.hasAttached()) {
+      super.detach();
+    }
+
+    if (portal) {
+      super.attach(portal);
+    }
+
+    this._portal = portal;
   }
 
-  /** Attach the given ComponentPortal to this PortlHost using the ComponentFactoryResolver. */
+  ngOnDestroy() {
+    super.dispose();
+    this._portal = null;
+  }
+
+  /**
+   * Attach the given ComponentPortal to this PortalHost using the ComponentFactoryResolver.
+   *
+   * @param portal Portal to be attached to the portal host.
+   */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     portal.setAttachedHost(this);
 
@@ -74,39 +99,32 @@ export class PortalHostDirective extends BasePortalHost {
         componentFactory, viewContainerRef.length,
         portal.injector || viewContainerRef.parentInjector);
 
-    this.setDisposeFn(() => ref.destroy());
+    super.setDisposeFn(() => ref.destroy());
+    this._portal = portal;
+
     return ref;
   }
 
-  /** Attach the given TemplatePortal to this PortlHost as an embedded View. */
+  /**
+   * Attach the given TemplatePortal to this PortlHost as an embedded View.
+   * @param portal Portal to be attached.
+   */
   attachTemplatePortal(portal: TemplatePortal): Map<string, any> {
     portal.setAttachedHost(this);
 
     this._viewContainerRef.createEmbeddedView(portal.templateRef);
-    this.setDisposeFn(() => this._viewContainerRef.clear());
+    super.setDisposeFn(() => this._viewContainerRef.clear());
+
+    this._portal = portal;
 
     // TODO(jelbourn): return locals from view
     return new Map<string, any>();
   }
-
-  /** Detatches the currently attached Portal (if there is one) and attaches the given Portal. */
-  private _replaceAttachedPortal(p: Portal<any>): void {
-    if (this.hasAttached()) {
-      this.detach();
-    }
-
-    if (p) {
-      this.attach(p);
-      this._portal = p;
-    }
-  }
 }
-
-export const PORTAL_DIRECTIVES = [TemplatePortalDirective, PortalHostDirective];
 
 
 @NgModule({
-  exports: PORTAL_DIRECTIVES,
-  declarations: PORTAL_DIRECTIVES,
+  exports: [TemplatePortalDirective, PortalHostDirective],
+  declarations: [TemplatePortalDirective, PortalHostDirective],
 })
-export class PortalModule { }
+export class PortalModule {}

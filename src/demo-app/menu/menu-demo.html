@@ -3,7 +3,7 @@
     <p>You clicked on: {{ selected }}</p>
 
     <md-toolbar>
-      <button md-icon-button [md-menu-trigger-for]="menu">
+      <button md-icon-button [mdMenuTriggerFor]="menu" aria-label="Open basic menu">
         <md-icon>more_vert</md-icon>
       </button>
     </md-toolbar>
@@ -17,7 +17,7 @@
   <div class="menu-section">
     <p> Clicking these will navigate:</p>
     <md-toolbar>
-      <button md-icon-button [md-menu-trigger-for]="anchorMenu">
+      <button md-icon-button [mdMenuTriggerFor]="anchorMenu" aria-label="Open anchor menu">
         <md-icon>more_vert</md-icon>
       </button>
     </md-toolbar>
@@ -33,13 +33,14 @@
       Position x: before
     </p>
     <md-toolbar class="end-icon">
-      <button md-icon-button [md-menu-trigger-for]="posXMenu">
+      <button md-icon-button [mdMenuTriggerFor]="posXMenu" aria-label="Open x-positioned menu">
         <md-icon>more_vert</md-icon>
       </button>
     </md-toolbar>
 
-    <md-menu x-position="before" #posXMenu="mdMenu" class="before">
-      <button md-menu-item *ngFor="let item of items" [disabled]="item.disabled">
+    <md-menu xPosition="before" #posXMenu="mdMenu" class="before">
+      <button md-menu-item *ngFor="let item of iconItems" [disabled]="item.disabled">
+        <md-icon>{{ item.icon }}</md-icon>
         {{ item.text }}
       </button>
     </md-menu>
@@ -49,12 +50,63 @@
       Position y: above
     </p>
     <md-toolbar>
-      <button md-icon-button [md-menu-trigger-for]="posYMenu">
+      <button md-icon-button [mdMenuTriggerFor]="posYMenu" aria-label="Open y-positioned menu">
         <md-icon>more_vert</md-icon>
       </button>
     </md-toolbar>
 
-    <md-menu y-position="above" #posYMenu="mdMenu">
+    <md-menu yPosition="above" #posYMenu="mdMenu">
+      <button md-menu-item *ngFor="let item of items" [disabled]="item.disabled">
+        {{ item.text }}
+      </button>
+    </md-menu>
+  </div>
+</div>
+
+<div class="demo-menu">
+  <div class="menu-section">
+    <p>overlapTrigger: false</p>
+
+    <md-toolbar>
+      <button md-icon-button [md-menu-trigger-for]="menuOverlay">
+        <md-icon>more_vert</md-icon>
+      </button>
+    </md-toolbar>
+
+    <md-menu [overlapTrigger]="false" #menuOverlay="mdMenu">
+      <button md-menu-item *ngFor="let item of items" [disabled]="item.disabled">
+        {{ item.text }}
+      </button>
+    </md-menu>
+  </div>
+  <div class="menu-section">
+    <p>
+      Position x: before, overlapTrigger: false
+    </p>
+    <md-toolbar class="end-icon">
+      <button md-icon-button [md-menu-trigger-for]="posXMenuOverlay">
+        <md-icon>more_vert</md-icon>
+      </button>
+    </md-toolbar>
+
+    <md-menu xPosition="before" [overlapTrigger]="false" #posXMenuOverlay="mdMenu" class="before">
+      <button md-menu-item *ngFor="let item of iconItems" [disabled]="item.disabled">
+        <md-icon>{{ item.icon }}</md-icon>
+        {{ item.text }}
+      </button>
+    </md-menu>
+  </div>
+  <div class="menu-section">
+    <p>
+      Position y: above, overlapTrigger: false
+    </p>
+    <md-toolbar>
+      <button md-icon-button [md-menu-trigger-for]="posYMenuOverlay">
+        <md-icon>more_vert</md-icon>
+      </button>
+    </md-toolbar>
+
+    <md-menu yPosition="above" [overlapTrigger]="false" #posYMenuOverlay="mdMenu">
       <button md-menu-item *ngFor="let item of items" [disabled]="item.disabled">
         {{ item.text }}
       </button>

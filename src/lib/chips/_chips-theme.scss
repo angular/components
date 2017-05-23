@@ -1,0 +1,49 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+@mixin mat-chips-theme($theme) {
+  $is-dark-theme: map-get($theme, is-dark);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  // Use spec-recommended color for regular foreground, and utilise contrast color for a grey very
+  // close to the selected spec since no guidance is provided and to ensure palette consistency.
+  $light-foreground: rgba(0, 0, 0, 0.87);
+  $light-selected-foreground: mat-contrast($mat-grey, 600);
+
+  // The spec only provides guidance for light-themed chips. When inside of a dark theme, fall back
+  // to standard background and foreground colors.
+  $unselected-background: if($is-dark-theme, mat-color($background, card), #e0e0e0);
+  $unselected-foreground: if($is-dark-theme, mat-color($foreground, text), $light-foreground);
+
+  $selected-background: if($is-dark-theme, mat-color($background, app-bar), #808080);
+  $selected-foreground: if($is-dark-theme, mat-color($foreground, text), $light-selected-foreground);
+
+  .mat-chip:not(.mat-basic-chip) {
+    background-color: $unselected-background;
+    color: $unselected-foreground;
+  }
+
+  .mat-chip.mat-chip-selected:not(.mat-basic-chip) {
+    background-color: $selected-background;
+    color: $selected-foreground;
+
+    &.mat-primary {
+      background-color: mat-color($primary);
+      color: mat-color($primary, default-contrast);
+    }
+
+    &.mat-accent {
+      background-color: mat-color($accent);
+      color: mat-color($accent, default-contrast);
+    }
+
+    &.mat-warn {
+      background-color: mat-color($warn);
+      color: mat-color($warn, default-contrast);
+    }
+  }
+}

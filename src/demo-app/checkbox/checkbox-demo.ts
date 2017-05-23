@@ -25,7 +25,7 @@ export class MdCheckboxDemoNestedChecklist {
       subtasks: [
         { name: 'Cook Dinner', completed: false },
         { name: 'Read the Material Design Spec', completed: false },
-        { name: 'Upgrade Application to Angular2', completed: false }
+        { name: 'Upgrade Application to Angular', completed: false }
       ]
     },
     {
@@ -67,11 +67,16 @@ export class CheckboxDemo {
   isChecked: boolean = false;
   isDisabled: boolean = false;
   alignment: string = 'start';
+  useAlternativeColor: boolean = false;
 
   printResult() {
     if (this.isIndeterminate) {
       return 'Maybe!';
     }
     return this.isChecked ? 'Yes!' : 'No!';
+  }
+
+  checkboxColor() {
+    return this.useAlternativeColor ? 'primary' : 'accent';
   }
 }

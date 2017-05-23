@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {MdGestureConfig} from '@angular2-material/core/gestures/MdGestureConfig';
+import {GestureConfig, HammerManager} from '../core';
 
 /**
- * An extension of MdGestureConfig that exposes the underlying HammerManager instances.
+ * An extension of GestureConfig that exposes the underlying HammerManager instances.
  * Tests can use these instances to emit fake gesture events.
  */
 @Injectable()
-export class TestGestureConfig extends MdGestureConfig {
+export class TestGestureConfig extends GestureConfig {
   /**
    * A map of Hammer instances to element.
    * Used to emit events over instances for an element.
@@ -17,7 +17,7 @@ export class TestGestureConfig extends MdGestureConfig {
    * Create a mapping of Hammer instances to element so that events can be emitted during testing.
    */
   buildHammer(element: HTMLElement) {
-    let mc = super.buildHammer(element);
+    let mc = super.buildHammer(element) as HammerManager;
 
     if (this.hammerInstances.get(element)) {
       this.hammerInstances.get(element).push(mc);
@@ -32,7 +32,7 @@ export class TestGestureConfig extends MdGestureConfig {
    * The Angular event plugin for Hammer creates a new HammerManager instance for each listener,
    * so we need to apply our event on all instances to hit the correct listener.
    */
-  emitEventForElement(eventType: string, element: HTMLElement, eventData: Object) {
+  emitEventForElement(eventType: string, element: HTMLElement, eventData = {}) {
     let instances = this.hammerInstances.get(element);
     instances.forEach(instance => instance.emit(eventType, eventData));
   }

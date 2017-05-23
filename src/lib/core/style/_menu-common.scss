@@ -1,0 +1,95 @@
+@import './variables';
+@import './elevation';
+@import './list-common';
+
+/** The mixins below are shared between md-menu and md-select */
+
+// menu width must be a multiple of 56px
+$mat-menu-overlay-min-width: 112px !default;   // 56 * 2
+$mat-menu-overlay-max-width: 280px !default;   // 56 * 5
+
+$mat-menu-item-height: 48px !default;
+$mat-menu-font-size: 16px !default;
+$mat-menu-side-padding: 16px !default;
+$mat-menu-icon-margin: 16px !default;
+
+@mixin mat-menu-base() {
+  @include mat-elevation(8);
+  min-width: $mat-menu-overlay-min-width;
+  max-width: $mat-menu-overlay-max-width;
+
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;   // for momentum scroll on mobile
+}
+
+@mixin mat-menu-item-base() {
+  @include mat-truncate-line();
+
+  // Needs to be a block for the ellipsis to work.
+  display: block;
+  line-height: $mat-menu-item-height;
+  height: $mat-menu-item-height;
+  padding: 0 $mat-menu-side-padding;
+
+  font-size: $mat-menu-font-size;
+  font-family: $mat-font-family;
+  text-align: left;
+  text-decoration: none;   // necessary to reset anchor tags
+
+  &[disabled] {
+    cursor: default;
+  }
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
+
+  .mat-icon {
+    margin-right: $mat-menu-icon-margin;
+
+    [dir='rtl'] & {
+      margin-left: $mat-menu-icon-margin;
+      margin-right: 0;
+    }
+  }
+}
+
+/**
+ * This mixin adds the correct panel transform styles based
+ * on the direction that the menu panel opens.
+ */
+@mixin mat-menu-positions() {
+  &.mat-menu-after.mat-menu-below {
+    transform-origin: left top;
+  }
+
+  &.mat-menu-after.mat-menu-above {
+    transform-origin: left bottom;
+  }
+
+  &.mat-menu-before.mat-menu-below {
+    transform-origin: right top;
+  }
+
+  &.mat-menu-before.mat-menu-above {
+    transform-origin: right bottom;
+  }
+
+  [dir='rtl'] & {
+    &.mat-menu-after.mat-menu-below {
+      transform-origin: right top;
+    }
+
+    &.mat-menu-after.mat-menu-above {
+      transform-origin: right bottom;
+    }
+
+    &.mat-menu-before.mat-menu-below {
+      transform-origin: left top;
+    }
+
+    &.mat-menu-before.mat-menu-above {
+      transform-origin: left bottom;
+    }
+  }
+}

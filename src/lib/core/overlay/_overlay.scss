@@ -1,0 +1,83 @@
+@import '../style/variables';
+
+
+@mixin cdk-overlay() {
+  .cdk-overlay-container, .cdk-global-overlay-wrapper {
+    // Disable events from being captured on the overlay container.
+    pointer-events: none;
+
+    // The container should be the size of the viewport.
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  // The overlay-container is an invisible element which contains all individual overlays.
+  .cdk-overlay-container {
+    position: fixed;
+    z-index: $cdk-z-index-overlay-container;
+  }
+
+  // We use an extra wrapper element in order to use make the overlay itself a flex item.
+  // This makes centering the overlay easy without running into the subpixel rendering
+  // problems tied to using `transform` and without interfering with the other position
+  // strategies.
+  .cdk-global-overlay-wrapper {
+    display: flex;
+    position: absolute;
+    z-index: $cdk-z-index-overlay;
+  }
+
+  // A single overlay pane.
+  .cdk-overlay-pane {
+    position: absolute;
+    pointer-events: auto;
+    box-sizing: border-box;
+    z-index: $cdk-z-index-overlay;
+  }
+
+  .cdk-overlay-backdrop {
+    // TODO(jelbourn): reuse sidenav fullscreen mixin.
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    z-index: $cdk-z-index-overlay-backdrop;
+    pointer-events: auto;
+
+    // TODO(jelbourn): figure out if there are actually spec'ed colors for both light and dark
+    // themes here. Currently using the values from AngularJS Material.
+    transition: opacity $swift-ease-out-duration $swift-ease-out-timing-function;
+    opacity: 0;
+
+    &.cdk-overlay-backdrop-showing {
+      opacity: 0.48;
+    }
+  }
+
+  .cdk-overlay-dark-backdrop {
+    background: $cdk-overlay-dark-backdrop-background;
+  }
+
+  .cdk-overlay-transparent-backdrop {
+    background: none;
+  }
+
+  // Used when disabling global scrolling.
+  .cdk-global-scrollblock {
+    position: fixed;
+
+    // Necessary for the content not to lose its width. Note that we're using 100%, instead of
+    // 100vw, because 100vw includes the width plus the scrollbar, whereas 100% is the width
+    // that the element had before we made it `fixed`.
+    width: 100%;
+
+    // Note: this will always add a scrollbar to whatever element it is on, which can
+    // potentially result in double scrollbars. It shouldn't be an issue, because we won't
+    // block scrolling on a page that doesn't have a scrollbar in the first place.
+    overflow-y: scroll;
+  }
+}

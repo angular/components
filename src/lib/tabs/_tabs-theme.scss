@@ -1,0 +1,40 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+@mixin mat-tabs-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  $header-border: 1px solid mat-color($foreground, divider);
+
+  .mat-tab-nav-bar,
+  .mat-tab-header {
+    border-bottom: $header-border;
+  }
+
+  .mat-tab-group-inverted-header {
+    .mat-tab-nav-bar,
+    .mat-tab-header {
+      border-top: $header-border;
+      border-bottom: none;
+    }
+  }
+
+  .mat-tab-label:focus {
+    background-color: mat-color($primary, lighter, 0.3);
+  }
+
+  .mat-ink-bar {
+    background-color: mat-color($primary);
+  }
+
+  .mat-tab-label, .mat-tab-link {
+    color: mat-color($foreground, text);
+
+    &.mat-tab-disabled {
+      color: mat-color($foreground, disabled-text);
+    }
+  }
+}

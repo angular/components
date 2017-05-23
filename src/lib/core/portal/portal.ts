@@ -6,12 +6,12 @@ import {
     Injector
 } from '@angular/core';
 import {
-    MdNullPortalHostError,
-    MdPortalAlreadyAttachedError,
-    MdNoPortalAttachedError,
-    MdNullPortalError,
-    MdPortalHostAlreadyDisposedError,
-    MdUnknownPortalTypeError
+    throwNullPortalHostError,
+    throwPortalAlreadyAttachedError,
+    throwNoPortalAttachedError,
+    throwNullPortalError,
+    throwPortalHostAlreadyDisposedError,
+    throwUnknownPortalTypeError
 } from './portal-errors';
 import {ComponentType} from '../overlay/generic-component-type';
 
@@ -27,11 +27,11 @@ export abstract class Portal<T> {
   /** Attach this portal to a host. */
   attach(host: PortalHost): T {
     if (host == null) {
-      throw new MdNullPortalHostError();
+      throwNullPortalHostError();
     }
 
     if (host.hasAttached()) {
-      throw new MdPortalAlreadyAttachedError();
+      throwPortalAlreadyAttachedError();
     }
 
     this._attachedHost = host;
@@ -42,7 +42,7 @@ export abstract class Portal<T> {
   detach(): void {
     let host = this._attachedHost;
     if (host == null) {
-      throw new MdNoPortalAttachedError();
+      throwNoPortalAttachedError();
     }
 
     this._attachedHost = null;
@@ -56,7 +56,7 @@ export abstract class Portal<T> {
 
   /**
    * Sets the PortalHost reference without performing `attach()`. This is used directly by
-   * the PortalHost when it is performing an `attach()` or `detatch()`.
+   * the PortalHost when it is performing an `attach()` or `detach()`.
    */
   setAttachedHost(host: PortalHost) {
     this._attachedHost = host;
@@ -74,7 +74,7 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
   /**
    * [Optional] Where the attached component should live in Angular's *logical* component tree.
    * This is different from where the component *renders*, which is determined by the PortalHost.
-   * The origin necessary when the host is outside of the Angular application context.
+   * The origin is necessary when the host is outside of the Angular application context.
    */
   viewContainerRef: ViewContainerRef;
 
@@ -162,21 +162,21 @@ export abstract class BasePortalHost implements PortalHost {
   private _isDisposed: boolean = false;
 
   /** Whether this host has an attached portal. */
-  hasAttached() {
-    return this._attachedPortal != null;
+  hasAttached(): boolean {
+    return !!this._attachedPortal;
   }
 
   attach(portal: Portal<any>): any {
-    if (portal == null) {
-      throw new MdNullPortalError();
+    if (!portal) {
+      throwNullPortalError();
     }
 
     if (this.hasAttached()) {
-      throw new MdPortalAlreadyAttachedError();
+      throwPortalAlreadyAttachedError();
     }
 
     if (this._isDisposed) {
-      throw new MdPortalHostAlreadyDisposedError();
+      throwPortalHostAlreadyDisposedError();
     }
 
     if (portal instanceof ComponentPortal) {
@@ -187,7 +187,7 @@ export abstract class BasePortalHost implements PortalHost {
       return this.attachTemplatePortal(portal);
     }
 
-    throw new MdUnknownPortalTypeError();
+    throwUnknownPortalTypeError();
   }
 
   abstract attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
@@ -195,13 +195,12 @@ export abstract class BasePortalHost implements PortalHost {
   abstract attachTemplatePortal(portal: TemplatePortal): Map<string, any>;
 
   detach(): void {
-    if (this._attachedPortal) { this._attachedPortal.setAttachedHost(null); }
-
-    this._attachedPortal = null;
-    if (this._disposeFn != null) {
-      this._disposeFn();
-      this._disposeFn = null;
+    if (this._attachedPortal) {
+      this._attachedPortal.setAttachedHost(null);
+      this._attachedPortal = null;
     }
+
+    this._invokeDisposeFn();
   }
 
   dispose() {
@@ -209,10 +208,18 @@ export abstract class BasePortalHost implements PortalHost {
       this.detach();
     }
 
+    this._invokeDisposeFn();
     this._isDisposed = true;
   }
 
   setDisposeFn(fn: () => void) {
     this._disposeFn = fn;
+  }
+
+  private _invokeDisposeFn() {
+    if (this._disposeFn) {
+      this._disposeFn();
+      this._disposeFn = null;
+    }
   }
 }

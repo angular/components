@@ -1,0 +1,60 @@
+.demo-nav-bar {
+  border: 1px solid #e0e0e0;
+  margin-bottom: 40px;
+  .mat-tab-nav-bar {
+    background: #f9f9f9;
+  }
+  sunny-routed-content,
+  rainy-routed-content,
+  foggy-routed-content {
+    display: block;
+    padding: 12px;
+  }
+}
+
+.demo-tab-group {
+  border: 1px solid #e0e0e0;
+  margin-bottom: 40px;
+  flex-grow: 1;
+  .mat-tab-header {
+    background: #f9f9f9;
+  }
+}
+
+tabs-demo .mat-card {
+  width: 160px;
+
+}
+
+.demo-dynamic-tabs {
+  display: flex;
+  width: 100%;
+
+  .mat-tab-group {
+    min-width: 200px;
+    margin-bottom: 0;
+    flex-grow: 1;
+  }
+
+  .mat-card {
+    min-width: 160px;
+    margin-right: 16px;
+
+    .mat-checkbox {
+      display: block;
+      margin-top: 8px;
+    }
+
+    .mat-input-container {
+      width: 100px;
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.tab-content {
+  padding: 16px;
+}

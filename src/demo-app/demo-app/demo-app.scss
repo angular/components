@@ -8,10 +8,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
   }
 
-  md-sidenav {
-    min-width: 15%;
+  .mat-sidenav {
+    min-width: 15vw;
 
-    [md-button] {
+    .mat-button {
       width: 100%;
       position: relative;
       bottom: 0;
@@ -21,16 +21,18 @@ body {
 
   .demo-content {
     padding: 32px;
+    box-sizing: border-box;
   }
 
-  md-toolbar {
-    md-icon {
+  .mat-toolbar {
+    .mat-icon {
       cursor: pointer;
     }
 
     .demo-toolbar {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       width: 100%;
     }
   }
@@ -38,4 +40,11 @@ body {
   h1 {
     font-size: 20px;
   }
+}
+
+// stretch to screen size in fullscreen mode
+.demo-content {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }

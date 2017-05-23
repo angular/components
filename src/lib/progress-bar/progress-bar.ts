@@ -1,11 +1,9 @@
 import {
-    NgModule,
-    Component,
-    ChangeDetectionStrategy,
-    HostBinding,
-    Input,
+  Component,
+  ChangeDetectionStrategy,
+  HostBinding,
+  Input,
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
 
 // TODO(josephperrott): Benchpress tests.
 // TODO(josephperrott): Add ARIA attributes for progressbar "for".
@@ -16,41 +14,38 @@ import {CommonModule} from '@angular/common';
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-progress-bar',
+  selector: 'md-progress-bar, mat-progress-bar',
   host: {
     'role': 'progressbar',
     'aria-valuemin': '0',
     'aria-valuemax': '100',
+    '[class.mat-primary]': 'color == "primary"',
+    '[class.mat-accent]': 'color == "accent"',
+    '[class.mat-warn]': 'color == "warn"',
+    '[class.mat-progress-bar]': 'true',
   },
   templateUrl: 'progress-bar.html',
   styleUrls: ['progress-bar.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdProgressBar {
-  /** Value of the progressbar. Defaults to zero. Mirrored to aria-valuenow. */
+  /** Color of the progress bar. */
+  @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
+
   private _value: number = 0;
 
+  /** Value of the progressbar. Defaults to zero. Mirrored to aria-valuenow. */
   @Input()
   @HostBinding('attr.aria-valuenow')
-  get value() {
-    return this._value;
-  }
+  get value() { return this._value; }
+  set value(v: number) { this._value = clamp(v || 0); }
 
-  set value(v: number) {
-    this._value = clamp(v || 0);
-  }
-
-  /** Buffer value of the progress bar. Defaults to zero. */
   private _bufferValue: number = 0;
 
+  /** Buffer value of the progress bar. Defaults to zero. */
   @Input()
-  get bufferValue() {
-    return this._bufferValue;
-  }
-
-  set bufferValue(v: number) {
-    this._bufferValue = clamp(v || 0);
-  }
+  get bufferValue() { return this._bufferValue; }
+  set bufferValue(v: number) { this._bufferValue = clamp(v || 0); }
 
   /**
    * Mode of the progress bar.
@@ -85,13 +80,3 @@ export class MdProgressBar {
 function clamp(v: number, min = 0, max = 100) {
   return Math.max(min, Math.min(max, v));
 }
-
-/** @deprecated */
-export const MD_PROGRESS_BAR_DIRECTIVES = [MdProgressBar];
-
-@NgModule({
-  imports: [CommonModule],
-  exports: MD_PROGRESS_BAR_DIRECTIVES,
-  declarations: MD_PROGRESS_BAR_DIRECTIVES,
-})
-export class MdProgressBarModule { }

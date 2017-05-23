@@ -10,11 +10,10 @@ import {
     Overlay,
     OverlayState,
     OverlayOrigin,
-    OVERLAY_PROVIDERS,
     ComponentPortal,
     Portal,
     TemplatePortalDirective,
-} from '@angular2-material/core/core';
+} from '@angular/material';
 
 
 @Component({
@@ -22,15 +21,17 @@ import {
   selector: 'overlay-demo',
   templateUrl: 'overlay-demo.html',
   styleUrls: ['overlay-demo.css'],
-  providers: [OVERLAY_PROVIDERS],
   encapsulation: ViewEncapsulation.None,
 })
 export class OverlayDemo {
   nextPosition: number = 0;
   isMenuOpen: boolean = false;
+  tortelliniFillings = ['cheese and spinach', 'mushroom and broccoli'];
 
   @ViewChildren(TemplatePortalDirective) templatePortals: QueryList<Portal<any>>;
   @ViewChild(OverlayOrigin) _overlayOrigin: OverlayOrigin;
+  @ViewChild('tortelliniOrigin') tortelliniOrigin: OverlayOrigin;
+  @ViewChild('tortelliniTemplate') tortelliniTemplate: TemplatePortalDirective;
 
   constructor(public overlay: Overlay, public viewContainerRef: ViewContainerRef) { }
 
@@ -76,6 +77,36 @@ export class OverlayDemo {
     let overlayRef = this.overlay.create(config);
     overlayRef.attach(new ComponentPortal(SpagettiPanel, this.viewContainerRef));
   }
+
+  openTortelliniPanel() {
+    let strategy = this.overlay.position()
+        .connectedTo(
+            this.tortelliniOrigin.elementRef,
+            {originX: 'start', originY: 'bottom'},
+            {overlayX: 'end', overlayY: 'top'} );
+
+    let config = new OverlayState();
+    config.positionStrategy = strategy;
+
+    let overlayRef = this.overlay.create(config);
+
+    overlayRef.attach(this.tortelliniTemplate);
+  }
+
+  openPanelWithBackdrop() {
+    let config = new OverlayState();
+
+    config.positionStrategy = this.overlay.position()
+      .global()
+      .centerHorizontally();
+    config.hasBackdrop = true;
+    config.backdropClass = 'cdk-overlay-transparent-backdrop';
+
+    let overlayRef = this.overlay.create(config);
+    overlayRef.attach(this.templatePortals.first);
+    overlayRef.backdropClick().subscribe(() => overlayRef.detach());
+  }
+
 }
 
 /** Simple component to load into an overlay */

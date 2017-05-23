@@ -1,67 +1,132 @@
 import {
-  Component,
-  ViewEncapsulation,
-  Input,
-  HostBinding,
   ChangeDetectionStrategy,
+  Component,
+  Directive,
   ElementRef,
-  Renderer,
-  NgModule,
+  HostBinding,
+  Input,
+  OnDestroy,
+  Renderer2,
+  ViewEncapsulation
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {BooleanFieldValue} from '@angular2-material/core/annotations/field-value';
-import {MdRippleModule} from '@angular2-material/core/ripple/ripple';
+import {coerceBooleanProperty, FocusOriginMonitor, Platform} from '../core';
+import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
 
-// TODO(jelbourn): Make the `isMouseDown` stuff done with one global listener.
+
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
 
 
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
+ */
+@Directive({
+  selector: 'button[md-button], button[mat-button], a[md-button], a[mat-button]',
+  host: {'class': 'mat-button'}
+})
+export class MdButtonCssMatStyler {}
+
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
+ */
+@Directive({
+  selector:
+      'button[md-raised-button], button[mat-raised-button], ' +
+      'a[md-raised-button], a[mat-raised-button]',
+  host: {'class': 'mat-raised-button'}
+})
+export class MdRaisedButtonCssMatStyler {}
+
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
+ */
+@Directive({
+  selector:
+      'button[md-icon-button], button[mat-icon-button], a[md-icon-button], a[mat-icon-button]',
+  host: {'class': 'mat-icon-button'}
+})
+export class MdIconButtonCssMatStyler {}
+
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
+ */
+@Directive({
+  selector: 'button[md-fab], button[mat-fab], a[md-fab], a[mat-fab]',
+  host: {'class': 'mat-fab'}
+})
+export class MdFabCssMatStyler {}
+
+/**
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
+ * @docs-private
+ */
+@Directive({
+  selector: 'button[md-mini-fab], button[mat-mini-fab], a[md-mini-fab], a[mat-mini-fab]',
+  host: {'class': 'mat-mini-fab'}
+})
+export class MdMiniFabCssMatStyler {}
+
+
+// Boilerplate for applying mixins to MdButton.
+export class MdButtonBase { }
+export const _MdButtonMixinBase = mixinDisabled(MdButtonBase);
+
+
+/**
+ * Material design button.
+ */
 @Component({
   moduleId: module.id,
-  selector: 'button[md-button], button[md-raised-button], button[md-icon-button], ' +
-            'button[md-fab], button[md-mini-fab]',
-  inputs: ['color'],
+  selector: 'button[md-button], button[md-raised-button], button[md-icon-button],' +
+            'button[md-fab], button[md-mini-fab],' +
+            'button[mat-button], button[mat-raised-button], button[mat-icon-button],' +
+            'button[mat-fab], button[mat-mini-fab]',
   host: {
-    '[class.md-button-focus]': '_isKeyboardFocused',
-    '(mousedown)': '_setMousedown()',
-    '(focus)': '_setKeyboardFocus()',
-    '(blur)': '_removeKeyboardFocus()',
+    '[disabled]': 'disabled || null',
   },
   templateUrl: 'button.html',
   styleUrls: ['button.css'],
+  inputs: ['disabled'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdButton {
+export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisable {
   private _color: string;
 
-  /** Whether the button has focus from the keyboard (not the mouse). Used for class binding. */
-  _isKeyboardFocused: boolean = false;
+  /** Whether the button is round. */
+  _isRoundButton: boolean = this._hasAttributeWithPrefix('fab', 'mini-fab');
 
-  /** Whether a mousedown has occurred on this element in the last 100ms. */
-  _isMouseDown: boolean = false;
+  /** Whether the button is icon button. */
+  _isIconButton: boolean = this._hasAttributeWithPrefix('icon-button');
 
   /** Whether the ripple effect on click should be disabled. */
-  @Input() @BooleanFieldValue() disableRipple: boolean = false;
+  private _disableRipple: boolean = false;
 
-  constructor(private _elementRef: ElementRef, private _renderer: Renderer) { }
+  /** Whether the ripple effect for this button is disabled. */
+  @Input()
+  get disableRipple() { return this._disableRipple; }
+  set disableRipple(v) { this._disableRipple = coerceBooleanProperty(v); }
 
-  get color(): string {
-    return this._color;
+  constructor(
+      private _elementRef: ElementRef,
+      private _renderer: Renderer2,
+      private _platform: Platform,
+      private _focusOriginMonitor: FocusOriginMonitor) {
+    super();
+    this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
   }
 
-  set color(value: string) {
-    this._updateColor(value);
+  ngOnDestroy() {
+    this._focusOriginMonitor.stopMonitoring(this._elementRef.nativeElement);
   }
 
-  _setMousedown() {
-    // We only *show* the focus style when focus has come to the button via the keyboard.
-    // The Material Design spec is silent on this topic, and without doing this, the
-    // button continues to look :active after clicking.
-    // @see http://marcysutton.com/button-focus-hell/
-    this._isMouseDown = true;
-    setTimeout(() => { this._isMouseDown = false; }, 100);
-  }
+  /** The color of the button. Can be `primary`, `accent`, or `warn`. */
+  @Input()
+  get color(): string { return this._color; }
+  set color(value: string) { this._updateColor(value); }
 
   _updateColor(newColor: string) {
     this._setElementColor(this._color, false);
@@ -71,79 +136,81 @@ export class MdButton {
 
   _setElementColor(color: string, isAdd: boolean) {
     if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `md-${color}`, isAdd);
+      if (isAdd) {
+        this._renderer.addClass(this._getHostElement(), `mat-${color}`);
+      } else {
+        this._renderer.removeClass(this._getHostElement(), `mat-${color}`);
+      }
     }
   }
 
-  _setKeyboardFocus() {
-    this._isKeyboardFocused = !this._isMouseDown;
+  /** Focuses the button. */
+  focus(): void {
+    this._getHostElement().focus();
   }
 
-  _removeKeyboardFocus() {
-    this._isKeyboardFocused = false;
-  }
-
-  /** TODO(hansl): e2e test this function. */
-  focus() {
-    this._elementRef.nativeElement.focus();
-  }
-
-  getHostElement() {
+  _getHostElement() {
     return this._elementRef.nativeElement;
   }
 
-  isRoundButton() {
-    const el = this._elementRef.nativeElement;
-    return el.hasAttribute('md-icon-button') ||
-        el.hasAttribute('md-fab') ||
-        el.hasAttribute('md-mini-fab');
+  _isRippleDisabled() {
+    return this.disableRipple || this.disabled;
   }
 
-  isRippleEnabled() {
-    return !this.disableRipple;
+  /**
+   * Gets whether the button has one of the given attributes
+   * with either an 'md-' or 'mat-' prefix.
+   */
+  _hasAttributeWithPrefix(...unprefixedAttributeNames: string[]) {
+    // If not on the browser, say that there are none of the attributes present.
+    // Since these only affect how the ripple displays (and ripples only happen on the client),
+    // detecting these attributes isn't necessary when not on the browser.
+    if (!this._platform.isBrowser) {
+      return false;
+    }
+
+    return unprefixedAttributeNames.some(suffix => {
+      const el = this._getHostElement();
+
+      return el.hasAttribute('md-' + suffix) || el.hasAttribute('mat-' + suffix);
+    });
   }
 }
 
+/**
+ * Raised Material design button.
+ */
 @Component({
   moduleId: module.id,
-  selector: 'a[md-button], a[md-raised-button], a[md-icon-button], a[md-fab], a[md-mini-fab]',
-  inputs: ['color'],
+  selector: `a[md-button], a[md-raised-button], a[md-icon-button], a[md-fab], a[md-mini-fab],
+             a[mat-button], a[mat-raised-button], a[mat-icon-button], a[mat-fab], a[mat-mini-fab]`,
   host: {
-    '[class.md-button-focus]': '_isKeyboardFocused',
-    '(mousedown)': '_setMousedown()',
-    '(focus)': '_setKeyboardFocus()',
-    '(blur)': '_removeKeyboardFocus()',
+    '[attr.disabled]': 'disabled || null',
+    '[attr.aria-disabled]': '_isAriaDisabled',
     '(click)': '_haltDisabledEvents($event)',
   },
+  inputs: ['disabled'],
   templateUrl: 'button.html',
   styleUrls: ['button.css'],
   encapsulation: ViewEncapsulation.None
 })
 export class MdAnchor extends MdButton {
-  _disabled: boolean = null;
-
-  constructor(elementRef: ElementRef, renderer: Renderer) {
-    super(elementRef, renderer);
+  constructor(
+      elementRef: ElementRef,
+      renderer: Renderer2,
+      platform: Platform,
+      focusOriginMonitor: FocusOriginMonitor) {
+    super(elementRef, renderer, platform, focusOriginMonitor);
   }
 
+  /** @docs-private */
   @HostBinding('tabIndex')
   get tabIndex(): number {
     return this.disabled ? -1 : 0;
   }
 
-  @HostBinding('attr.aria-disabled')
-  /** Gets the aria-disabled value for the component, which must be a string for Dart. */
-  get isAriaDisabled(): string {
+  get _isAriaDisabled(): string {
     return this.disabled ? 'true' : 'false';
-  }
-
-  @HostBinding('attr.disabled')
-  @Input('disabled')
-  get disabled() { return this._disabled; }
-
-  set disabled(value: boolean) {
-    // The presence of *any* disabled value makes the component disabled, *except* for false.
-    this._disabled = (value != null && value != false) ? true : null;
   }
 
   _haltDisabledEvents(event: Event) {
@@ -154,15 +221,3 @@ export class MdAnchor extends MdButton {
     }
   }
 }
-
-
-/** @deprecated */
-export const MD_BUTTON_DIRECTIVES: any[] = [MdButton, MdAnchor];
-
-
-@NgModule({
-  imports: [CommonModule, MdRippleModule],
-  exports: MD_BUTTON_DIRECTIVES,
-  declarations: MD_BUTTON_DIRECTIVES,
-})
-export class MdButtonModule { }

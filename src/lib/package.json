@@ -1,0 +1,28 @@
+{
+  "name": "@angular/material",
+  "version": "0.0.0-PLACEHOLDER",
+  "description": "Angular Material",
+  "main": "./bundles/material.umd.js",
+  "module": "./@angular/material.es5.js",
+  "es2015": "./@angular/material.js",
+  "typings": "./material.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular/material2.git"
+  },
+  "keywords": [
+    "angular",
+    "material",
+    "material design",
+    "components"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/angular/material2/issues"
+  },
+  "homepage": "https://github.com/angular/material2#readme",
+  "peerDependencies": {
+    "@angular/core": "^4.0.0",
+    "@angular/common": "^4.0.0"
+  }
+}

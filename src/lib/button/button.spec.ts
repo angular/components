@@ -1,10 +1,10 @@
-import {
-  async,
-  TestBed,
-} from '@angular/core/testing';
-import {Component} from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdButtonModule} from './button';
+import {MdButtonModule} from './index';
+import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+import {FakeViewportRuler} from '../core/overlay/position/fake-viewport-ruler';
+import {MdRipple} from '../core/ripple/index';
 
 
 describe('MdButton', () => {
@@ -13,6 +13,9 @@ describe('MdButton', () => {
     TestBed.configureTestingModule({
       imports: [MdButtonModule],
       declarations: [TestApp],
+      providers: [
+        {provide: ViewportRuler, useClass: FakeViewportRuler},
+      ]
     });
 
     TestBed.compileComponents();
@@ -28,13 +31,13 @@ describe('MdButton', () => {
 
     testComponent.buttonColor = 'primary';
     fixture.detectChanges();
-    expect(buttonDebugElement.nativeElement.classList.contains('md-primary')).toBe(true);
-    expect(aDebugElement.nativeElement.classList.contains('md-primary')).toBe(true);
+    expect(buttonDebugElement.nativeElement.classList.contains('mat-primary')).toBe(true);
+    expect(aDebugElement.nativeElement.classList.contains('mat-primary')).toBe(true);
 
     testComponent.buttonColor = 'accent';
     fixture.detectChanges();
-    expect(buttonDebugElement.nativeElement.classList.contains('md-accent')).toBe(true);
-    expect(aDebugElement.nativeElement.classList.contains('md-accent')).toBe(true);
+    expect(buttonDebugElement.nativeElement.classList.contains('mat-accent')).toBe(true);
+    expect(aDebugElement.nativeElement.classList.contains('mat-accent')).toBe(true);
   });
 
   it('should should not clear previous defined classes', () => {
@@ -47,14 +50,14 @@ describe('MdButton', () => {
     testComponent.buttonColor = 'primary';
     fixture.detectChanges();
 
-    expect(buttonDebugElement.nativeElement.classList.contains('md-primary')).toBe(true);
+    expect(buttonDebugElement.nativeElement.classList.contains('mat-primary')).toBe(true);
     expect(buttonDebugElement.nativeElement.classList.contains('custom-class')).toBe(true);
 
     testComponent.buttonColor = 'accent';
     fixture.detectChanges();
 
-    expect(buttonDebugElement.nativeElement.classList.contains('md-primary')).toBe(false);
-    expect(buttonDebugElement.nativeElement.classList.contains('md-accent')).toBe(true);
+    expect(buttonDebugElement.nativeElement.classList.contains('mat-primary')).toBe(false);
+    expect(buttonDebugElement.nativeElement.classList.contains('mat-accent')).toBe(true);
     expect(buttonDebugElement.nativeElement.classList.contains('custom-class')).toBe(true);
 
   });
@@ -81,6 +84,16 @@ describe('MdButton', () => {
       buttonDebugElement.nativeElement.click();
 
       expect(testComponent.clickCount).toBe(0);
+    });
+
+    it('should disable the native button element', () => {
+      let fixture = TestBed.createComponent(TestApp);
+      let buttonNativeElement = fixture.nativeElement.querySelector('button');
+      expect(buttonNativeElement.disabled).toBeFalsy('Expected button not to be disabled');
+
+      fixture.componentInstance.isDisabled = true;
+      fixture.detectChanges();
+      expect(buttonNativeElement.disabled).toBeTruthy('Expected button to be disabled');
     });
 
   });
@@ -121,6 +134,78 @@ describe('MdButton', () => {
       expect(buttonDebugElement.nativeElement.getAttribute('aria-disabled')).toBe('true');
     });
 
+    it('should not add aria-disabled attribute if disabled is false', () => {
+      let fixture = TestBed.createComponent(TestApp);
+      let testComponent = fixture.debugElement.componentInstance;
+      let buttonDebugElement = fixture.debugElement.query(By.css('a'));
+      fixture.detectChanges();
+      expect(buttonDebugElement.nativeElement.getAttribute('aria-disabled'))
+        .toBe('false', 'Expect aria-disabled="false"');
+      expect(buttonDebugElement.nativeElement.getAttribute('disabled'))
+        .toBeNull('Expect disabled="false"');
+
+      testComponent.isDisabled = false;
+      fixture.detectChanges();
+      expect(buttonDebugElement.nativeElement.getAttribute('aria-disabled'))
+        .toBe('false', 'Expect no aria-disabled');
+      expect(buttonDebugElement.nativeElement.getAttribute('disabled'))
+        .toBeNull('Expect no disabled');
+    });
+  });
+
+  // Ripple tests.
+  describe('button ripples', () => {
+    let fixture: ComponentFixture<TestApp>;
+    let testComponent: TestApp;
+    let buttonDebugElement: DebugElement;
+    let buttonRippleDebugElement: DebugElement;
+    let buttonRippleInstance: MdRipple;
+    let anchorDebugElement: DebugElement;
+    let anchorRippleDebugElement: DebugElement;
+    let anchorRippleInstance: MdRipple;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(TestApp);
+      fixture.detectChanges();
+
+      testComponent = fixture.componentInstance;
+
+      buttonDebugElement = fixture.debugElement.query(By.css('button[md-button]'));
+      buttonRippleDebugElement = buttonDebugElement.query(By.directive(MdRipple));
+      buttonRippleInstance = buttonRippleDebugElement.injector.get<MdRipple>(MdRipple);
+
+      anchorDebugElement = fixture.debugElement.query(By.css('a[md-button]'));
+      anchorRippleDebugElement = anchorDebugElement.query(By.directive(MdRipple));
+      anchorRippleInstance = anchorRippleDebugElement.injector.get<MdRipple>(MdRipple);
+    });
+
+    it('should disable the ripple if mdRippleDisabled input is set', () => {
+      expect(buttonRippleInstance.disabled).toBeFalsy();
+
+      testComponent.rippleDisabled = true;
+      fixture.detectChanges();
+
+      expect(buttonRippleInstance.disabled).toBeTruthy();
+    });
+
+    it('should disable the ripple when the button is disabled', () => {
+      expect(buttonRippleInstance.disabled).toBeFalsy(
+        'Expected an enabled button[md-button] to have an enabled ripple'
+      );
+      expect(anchorRippleInstance.disabled).toBeFalsy(
+        'Expected an enabled a[md-button] to have an enabled ripple'
+      );
+
+      testComponent.isDisabled = true;
+      fixture.detectChanges();
+
+      expect(buttonRippleInstance.disabled).toBeTruthy(
+        'Expected a disabled button[md-button] not to have an enabled ripple'
+      );
+      expect(anchorRippleInstance.disabled).toBeTruthy(
+        'Expected a disabled a[md-button] not to have an enabled ripple'
+      );
+    });
   });
 });
 

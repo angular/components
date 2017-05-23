@@ -1,0 +1,31 @@
+@import '../core/style/variables';
+@import '../core/style/button-common';
+@import '../core/style/list-common';
+
+$mat-snack-bar-button-margin: 48px !default;
+
+:host {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  line-height: 20px;
+  font: {
+    size: $mat-body-font-size-base;
+    family: $mat-font-family;
+  }
+}
+
+.mat-simple-snackbar-action {
+  @include mat-button-reset;
+
+  background: none;
+  color: inherit;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-left: $mat-snack-bar-button-margin;
+  font: {
+    family: inherit;
+    size: inherit;
+    weight: 600;
+  }
+}

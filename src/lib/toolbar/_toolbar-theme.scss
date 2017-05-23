@@ -1,0 +1,33 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+
+@mixin _mat-toolbar-color($palette) {
+  background: mat-color($palette);
+  color: mat-color($palette, default-contrast);
+}
+
+@mixin mat-toolbar-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .mat-toolbar {
+    background: mat-color($background, app-bar);
+    color: mat-color($foreground, text);
+
+    &.mat-primary {
+      @include _mat-toolbar-color($primary);
+    }
+
+    &.mat-accent {
+      @include _mat-toolbar-color($accent);
+    }
+
+    &.mat-warn {
+      @include _mat-toolbar-color($warn);
+    }
+  }
+}

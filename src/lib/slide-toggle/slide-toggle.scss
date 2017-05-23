@@ -1,186 +1,169 @@
-@import 'variables';
-@import 'mixins';
-@import 'elevation';
+@import '../core/style/variables';
+@import '../core/ripple/ripple';
+@import '../core/style/elevation';
+@import '../core/style/vendor-prefixes';
+@import '../core/a11y/a11y';
 
-//TODO(): remove the default theme.
-@import 'default-theme';
+$mat-slide-toggle-thumb-size: 20px !default;
+$mat-slide-toggle-bar-border-radius: 8px !default;
+$mat-slide-toggle-height: 24px !default;
+$mat-slide-toggle-spacing: 8px !default;
+$mat-slide-toggle-ripple-radius: 23px !default;
+$mat-slide-toggle-bar-width: 36px !default;
+$mat-slide-toggle-bar-height: 14px !default;
+$mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-toggle-thumb-size;
 
-$md-slide-toggle-width: 36px !default;
-$md-slide-toggle-height: 24px !default;
-$md-slide-toggle-bar-height: 14px !default;
-$md-slide-toggle-thumb-size: 20px !default;
-$md-slide-toggle-margin: 16px !default;
 
-@mixin md-switch-checked($palette) {
-  &.md-checked {
-    .md-slide-toggle-thumb {
-      background-color: md-color($palette);
-    }
+.mat-slide-toggle {
+  display: inline-block;
+  height: $mat-slide-toggle-height;
 
-    .md-slide-toggle-bar {
-      background-color: md-color($palette, 0.5);
-    }
-  }
-}
-
-@mixin md-switch-ripple($palette) {
-  // Temporary ripple effect for the thumb of the slide-toggle.
-  // Bind to the parent selector and specify the current palette.
-  @include md-temporary-ink-ripple(slide-toggle, true, $palette);
-
-  &.md-slide-toggle-focused {
-    &:not(.md-checked) .md-ink-ripple {
-      // When the slide-toggle is not checked and it shows its focus indicator, it should use a 12% opacity
-      // of black in light themes and 12% of white in dark themes.
-      background-color: md-color($md-foreground, divider);
-    }
-  }
-}
-
-:host {
-  display: flex;
-  height: $md-slide-toggle-height;
-
-  margin: $md-slide-toggle-margin 0;
-  line-height: $md-slide-toggle-height;
+  line-height: $mat-slide-toggle-height;
 
   white-space: nowrap;
-  user-select: none;
+
+  // Disable user selection to ensure that dragging is smooth without grabbing
+  // some elements accidentally.
+  @include user-select(none);
 
   outline: none;
 
-  &.md-checked {
-    .md-slide-toggle-thumb-container {
-      transform: translate3d(100%, 0, 0);
+  &.mat-checked {
+    .mat-slide-toggle-thumb-container {
+      transform: translate3d($mat-slide-toggle-bar-track-width, 0, 0);
     }
   }
 
-  @include md-switch-checked($md-accent);
-  @include md-switch-ripple($md-accent);
-
-  &.md-primary {
-    @include md-switch-checked($md-primary);
-    @include md-switch-ripple($md-primary);
-  }
-
-  &.md-warn {
-    @include md-switch-checked($md-warn);
-    @include md-switch-ripple($md-warn);
-  }
-
-  &.md-disabled {
-
-    .md-slide-toggle-label, .md-slide-toggle-container {
+  &.mat-disabled {
+    .mat-slide-toggle-label, .mat-slide-toggle-thumb-container {
       cursor: default;
-    }
-
-    .md-slide-toggle-thumb {
-      // The thumb of the slide-toggle always uses the hue 400 of the grey palette in dark or light themes.
-      // Since this is very specific to the slide-toggle component, we're not providing
-      // it in the background palette.
-      background-color: md-color($md-grey, 400);
-    }
-    .md-slide-toggle-bar {
-      background-color: md-color($md-foreground, divider);
     }
   }
 }
 
 // The content element is responsible for the users content.
 // It will apply the given typography styles and align at the end of the slide-toggle.
-.md-slide-toggle-content {
-  font-size: $md-body-font-size-base;
-  font-family: $md-font-family;
+.mat-slide-toggle-content {
+  font-size: $mat-body-font-size-base;
+  font-family: $mat-font-family;
   font-weight: 500;
 }
 
 // The label element is our root container for the slide-toggle / switch indicator and label text.
 // It has to be a label, to support accessibility for the visual hidden input.
-.md-slide-toggle-label {
+.mat-slide-toggle-label {
   display: flex;
   flex: 1;
+  flex-direction: row;
+  align-items: center;
 
   cursor: pointer;
 }
 
-// Container for the composition of the slide-toggle / switch indicator.
-.md-slide-toggle-container {
-  cursor: grab;
-  width: $md-slide-toggle-width;
-  height: $md-slide-toggle-height;
+/* If the label should be placed before the thumb then we just change the orders. */
+.mat-slide-toggle-label-before {
+  .mat-slide-toggle-label { order: 1; }
+  .mat-slide-toggle-bar { order: 2; }
+}
 
-  position: relative;
-  user-select: none;
+// Apply the margin for slide-toggles and revert it for RTL toggles with labelPosition before.
+[dir='rtl'] .mat-slide-toggle-label-before .mat-slide-toggle-bar,
+.mat-slide-toggle-bar {
+  margin-right: $mat-slide-toggle-spacing;
+  margin-left: 0;
+}
 
-  margin-right: 8px;
+// Switch the margins in RTL mode and also switch it if the labelPosition is set to before.
+[dir='rtl'],
+.mat-slide-toggle-label-before {
+  .mat-slide-toggle-bar {
+    margin-left: $mat-slide-toggle-spacing;
+    margin-right: 0;
+  }
 }
 
 // The thumb container is responsible for the dragging functionality.
-// It moves around and holds the actual circle as a thumb.
-.md-slide-toggle-thumb-container {
+// The container includes the visual thumb and the ripple container element.
+.mat-slide-toggle-thumb-container {
+  $thumb-bar-vertical-padding: ($mat-slide-toggle-thumb-size - $mat-slide-toggle-bar-height) / 2;
+
   position: absolute;
-  top: $md-slide-toggle-height / 2 - $md-slide-toggle-thumb-size / 2;
-  left: 0;
   z-index: 1;
 
-  width: $md-slide-toggle-width - $md-slide-toggle-thumb-size;
+  width: $mat-slide-toggle-thumb-size;
+  height: $mat-slide-toggle-thumb-size;
+  top: -$thumb-bar-vertical-padding;
+  left: 0;
 
   transform: translate3d(0, 0, 0);
-
   transition: $swift-linear;
   transition-property: transform;
 
+  @include cursor-grab;
+
   // Once the thumb container is being dragged around, we remove the transition duration to
   // make the drag feeling fast and not delayed.
-  &.md-dragging {
+  &.mat-dragging, &:active {
+    @include cursor-grabbing;
+
     transition-duration: 0ms;
   }
 }
 
-// The thumb will be elevated from the slide-toggle bar.
-// Also the thumb is bound to its parent thumb-container, which manages the movement of the thumb.
-.md-slide-toggle-thumb {
-  position: absolute;
-  margin: 0;
-  left: 0;
-  top: 0;
-
-  height: $md-slide-toggle-thumb-size;
-  width: $md-slide-toggle-thumb-size;
+// The visual thumb element that moves inside of the thumb bar.
+// The parent thumb-container container is responsible for the movement of the visual thumb.
+.mat-slide-toggle-thumb {
+  height: $mat-slide-toggle-thumb-size;
+  width: $mat-slide-toggle-thumb-size;
   border-radius: 50%;
 
-  background-color: md-color($md-background, background);
-  @include md-elevation(1);
+  @include mat-elevation(1);
+
+  @include cdk-high-contrast {
+    background: #fff;
+    border: solid 1px #000;
+  }
 }
 
 // Horizontal bar for the slide-toggle.
-// The slide-toggle bar is shown behind the thumb container.
-.md-slide-toggle-bar {
-  position: absolute;
-  left: 1px;
-  top: $md-slide-toggle-height / 2 - $md-slide-toggle-bar-height / 2;
+// The slide-toggle bar is shown behind the movable thumb element.
+.mat-slide-toggle-bar {
+  position: relative;
 
-  width: $md-slide-toggle-width - 2px;
-  height: $md-slide-toggle-bar-height;
+  width: $mat-slide-toggle-bar-width;
+  height: $mat-slide-toggle-bar-height;
 
-  // The bar of the slide-toggle always uses the hue 500 of the grey palette in dark or light themes.
-  // Since this is very specific to the slide-toggle component, we're not providing
-  // it in the background palette.
-  background-color: md-color($md-grey, 500);
+  border-radius: $mat-slide-toggle-bar-border-radius;
 
-  border-radius: 8px;
+  @include cdk-high-contrast {
+    background: #fff;
+  }
 }
 
-// The slide toggle shows a visually hidden checkbox inside of the component.
-// This checkbox allows us to take advantage of the browsers support.
-// Like accessibility and keyboard interaction.
-.md-slide-toggle-checkbox {
-  @include md-visually-hidden();
+// The slide toggle shows a visually hidden input inside of the component, which is used
+// to take advantage of the native browser functionality.
+.mat-slide-toggle-input {
+  // Move the input to the bottom and in the middle of the thumb.
+  // Visual improvement to properly show browser popups when being required.
+  bottom: 0;
+  left: $mat-slide-toggle-thumb-size / 2;
 }
 
-.md-slide-toggle-bar,
-.md-slide-toggle-thumb {
+.mat-slide-toggle-bar,
+.mat-slide-toggle-thumb {
   transition: $swift-linear;
   transition-property: background-color;
   transition-delay: 50ms;
+}
+
+// Ripple positioning for the slide-toggle. Moves the ripple container into the center of the thumb.
+.mat-slide-toggle-ripple {
+  position: absolute;
+  top: $mat-slide-toggle-thumb-size / 2 - $mat-slide-toggle-ripple-radius;
+  left: $mat-slide-toggle-thumb-size / 2 - $mat-slide-toggle-ripple-radius;
+  height: $mat-slide-toggle-ripple-radius * 2;
+  width: $mat-slide-toggle-ripple-radius * 2;
+  border-radius: 50%;
+  z-index: 1;
+  pointer-events: none;
 }

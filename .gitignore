@@ -3,11 +3,11 @@
 # compiled output
 /dist
 /tmp
-/typings
 /deploy
+/screenshots
 
 # dependencies
-/node_modules
+node_modules
 /bower_components
 
 # Dart
@@ -33,3 +33,4 @@
 /libpeerconnection.log
 npm-debug.log
 testem.log
+/.chrome

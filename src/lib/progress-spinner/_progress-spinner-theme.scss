@@ -1,0 +1,23 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+
+@mixin mat-progress-spinner-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+
+  .mat-progress-spinner, .mat-spinner {
+    path {
+      stroke: mat-color($primary);
+    }
+
+    &.mat-accent path {
+      stroke: mat-color($accent);
+    }
+
+    &.mat-warn path {
+      stroke: mat-color($warn);
+    }
+  }
+}

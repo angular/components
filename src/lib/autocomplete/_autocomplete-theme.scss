@@ -1,0 +1,19 @@
+@import '../core/theming/theming';
+
+@mixin mat-autocomplete-theme($theme) {
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .mat-autocomplete-panel {
+    background: mat-color($background, card);
+    color: mat-color($foreground, text);
+
+    .mat-option {
+      &.mat-selected:not(.mat-active) {
+        background: mat-color($background, card);
+        color: mat-color($foreground, text);
+      }
+    }
+  }
+
+}

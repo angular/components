@@ -1,0 +1,25 @@
+@import '../core/theming/theming';
+
+
+// Include this empty mixin for consistency with the other components.
+@mixin mat-icon-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .mat-icon {
+    &.mat-primary {
+      color: mat-color($primary);
+    }
+
+    &.mat-accent {
+      color: mat-color($accent);
+    }
+
+    &.mat-warn {
+      color: mat-color($warn);
+    }
+  }
+}

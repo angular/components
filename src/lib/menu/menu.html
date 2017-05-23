@@ -1,6 +1,9 @@
-<template>
-  <div class="md-menu" [ngClass]="_classList" (click)="_emitCloseEvent()">
-    <ng-content></ng-content>
+<ng-template>
+  <div class="mat-menu-panel" [ngClass]="_classList" (keydown)="_handleKeydown($event)"
+    (click)="_emitCloseEvent()" [@transformMenu]="'showing'">
+    <div class="mat-menu-content" [@fadeInItems]="'showing'">
+      <ng-content></ng-content>
+    </div>
   </div>
-</template>
-<div class="md-menu-click-catcher" *ngIf="_showClickCatcher" (click)="_emitCloseEvent()"></div>
+</ng-template>
+

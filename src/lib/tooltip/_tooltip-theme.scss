@@ -1,0 +1,9 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+
+@mixin mat-tooltip-theme($theme) {
+  .mat-tooltip {
+    background: mat-color($mat-grey, 700, 0.9);
+  }
+}

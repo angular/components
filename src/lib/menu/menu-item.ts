@@ -1,53 +1,64 @@
-import {Directive, Input, HostBinding} from '@angular/core';
+import {Component, ElementRef, Input} from '@angular/core';
+import {Focusable} from '../core/a11y/focus-key-manager';
+import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 
 /**
  * This directive is intended to be used inside an md-menu tag.
  * It exists mostly to set the role attribute.
  */
-@Directive({
-  selector: 'button[md-menu-item]',
-  host: {'role': 'menuitem'}
-})
-export class MdMenuItem {}
-
-/**
- * This directive is intended to be used inside an md-menu tag.
- * It sets the role attribute and adds support for the disabled property to anchors.
- */
-@Directive({
-  selector: 'a[md-menu-item]',
+@Component({
+  moduleId: module.id,
+  selector: '[md-menu-item], [mat-menu-item]',
   host: {
     'role': 'menuitem',
-    '(click)': 'checkDisabled($event)'
-  }
+    '[class.mat-menu-item]': 'true',
+    '[attr.tabindex]': '_getTabIndex()',
+    '[attr.aria-disabled]': 'disabled.toString()',
+    '[attr.disabled]': '_getDisabledAttr()',
+    '(click)': '_checkDisabled($event)',
+  },
+  templateUrl: 'menu-item.html',
+  exportAs: 'mdMenuItem'
 })
-export class MdMenuAnchor {
-  _disabled: boolean;
+export class MdMenuItem implements Focusable {
+  /** Whether the menu item is disabled */
+  private _disabled: boolean = false;
 
-  @HostBinding('attr.disabled')
+  constructor(private _elementRef: ElementRef) {}
+
+  /** Focuses the menu item. */
+  focus(): void {
+    this._getHostElement().focus();
+  }
+
+  /** Whether the menu item is disabled. */
   @Input()
-  get disabled(): boolean {
-    return this._disabled;
+  get disabled() { return this._disabled; }
+  set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
   }
 
-  set disabled(value: boolean) {
-    this._disabled = (value === false || value === undefined) ? null : true;
+  /** Used to set the `tabindex`. */
+  _getTabIndex(): string {
+    return this._disabled ? '-1' : '0';
   }
 
-  @HostBinding('attr.aria-disabled')
-  get isAriaDisabled(): string {
-    return String(this.disabled);
+  /** Used to set the HTML `disabled` attribute. Necessary for links to be disabled properly. */
+  _getDisabledAttr(): boolean {
+    return this._disabled ? true : null;
   }
 
-  @HostBinding('tabIndex')
-  get tabIndex(): number {
-    return this.disabled ? -1 : 0;
+  /** Returns the host DOM element. */
+  _getHostElement(): HTMLElement {
+    return this._elementRef.nativeElement;
   }
 
-  checkDisabled(event: Event) {
+  /** Prevents the default element actions if it is disabled. */
+  _checkDisabled(event: Event): void {
     if (this.disabled) {
       event.preventDefault();
       event.stopPropagation();
     }
   }
 }
+

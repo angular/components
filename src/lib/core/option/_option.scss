@@ -1,0 +1,50 @@
+@import '../style/menu-common';
+@import '../style/vendor-prefixes';
+@import '../a11y/a11y';
+
+/**
+ * This mixin contains shared option styles between the select and
+ * autocomplete components.
+ */
+@mixin mat-option() {
+  .mat-option {
+    @include mat-menu-item-base();
+    position: relative;
+    cursor: pointer;
+    outline: none;
+
+    &[aria-disabled='true'] {
+      @include user-select(none);
+      cursor: default;
+    }
+  }
+
+  .mat-option-ripple {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    // Disable pointer events for the ripple container because the container will overlay the
+    // user content and we don't want to disable mouse events on the user content.
+    // Pointer events can be safely disabled because the ripple trigger element is the host element.
+    pointer-events: none;
+
+    // In high contrast mode this completely covers the text.
+    @include cdk-high-contrast {
+      opacity: 0.5;
+    }
+  }
+
+  .mat-option-pseudo-checkbox {
+    $margin: $mat-menu-side-padding / 2;
+    margin-right: $margin;
+
+    [dir='rtl'] & {
+      margin-left: $margin;
+      margin-right: 0;
+    }
+  }
+}
+

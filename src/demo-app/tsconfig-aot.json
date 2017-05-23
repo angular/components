@@ -1,0 +1,22 @@
+// TypeScript config that extends the demo-app tsconfig file. This config compiles the 
+// "main-aot.ts" file and also enables templage code generation / AOT. All paths need
+// to be relative to the output directory.
+{
+  "extends": "./tsconfig-build",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "outDir": ".",
+    "paths": {
+      "@angular/material": ["./material"],
+      "@angular/cdk": ["./cdk"]
+    }
+  },
+  "files": [
+    "./demo-app-types.d.ts",
+    "./demo-app-module.ts",
+    "./main-aot.ts"
+  ],
+  "angularCompilerOptions": {
+    "skipTemplateCodegen": false
+  }
+}

@@ -1,15 +1,13 @@
 import {Component} from '@angular/core';
-import {
-  MdUniqueSelectionDispatcher
-} from '@angular2-material/core/coordination/unique-selection-dispatcher';
 
 @Component({
   moduleId: module.id,
   selector: 'button-toggle-demo',
-  templateUrl: 'button-toggle-demo.html',
-  providers: [MdUniqueSelectionDispatcher],
+  templateUrl: 'button-toggle-demo.html'
 })
 export class ButtonToggleDemo {
+  isVertical = false;
+  isDisabled = false;
   favoritePie = 'Apple';
   pieOptions = [
     'Apple',

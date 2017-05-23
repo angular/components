@@ -1,5 +1,7 @@
 import {task} from 'gulp';
-import {cleanTask} from '../task_helpers';
+import {DIST_ROOT} from '../constants';
+import {cleanTask} from '../util/task_helpers';
 
 
-task('clean', cleanTask('dist'));
+/** Deletes the dist/ directory. */
+task('clean', cleanTask(DIST_ROOT));

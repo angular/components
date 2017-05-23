@@ -1,57 +1,33 @@
-import ElementFinder = protractor.ElementFinder;
+import {browser, by, element, ElementFinder} from 'protractor';
 
 export class MenuPage {
+  constructor() { browser.get('/menu'); }
 
-  constructor() {
-    browser.get('/menu');
-  }
+  menu(): ElementFinder { return element(by.css('.mat-menu-panel')); }
 
-  menu() { return element(by.css('.md-menu')); }
+  start(): ElementFinder { return element(by.id('start')); }
 
-  trigger() { return element(by.id('trigger')); }
+  trigger(): ElementFinder { return element(by.id('trigger')); }
 
-  triggerTwo() { return element(by.id('trigger-two')); }
+  triggerTwo(): ElementFinder { return element(by.id('trigger-two')); }
 
-  body() { return element(by.tagName('body')); }
+  backdrop(): ElementFinder { return element(by.css('.cdk-overlay-backdrop')); }
 
-  items(index: number) {
-    return element.all(by.css('[md-menu-item]')).get(index);
-  }
+  items(index: number): ElementFinder { return element.all(by.css('[md-menu-item]')).get(index); }
 
-  textArea() { return element(by.id('text')); }
+  textArea(): ElementFinder { return element(by.id('text')); }
 
-  beforeTrigger() { return element(by.id('before-t')); }
+  beforeTrigger(): ElementFinder { return element(by.id('before-t')); }
 
-  aboveTrigger() { return element(by.id('above-t')); }
+  aboveTrigger(): ElementFinder { return element(by.id('above-t')); }
 
-  combinedTrigger() { return element(by.id('combined-t')); }
+  combinedTrigger(): ElementFinder { return element(by.id('combined-t')); }
 
-  beforeMenu() { return element(by.css('.md-menu.before')); }
+  beforeMenu(): ElementFinder { return element(by.css('.mat-menu-panel.before')); }
 
-  aboveMenu() { return element(by.css('.md-menu.above')); }
+  aboveMenu(): ElementFinder { return element(by.css('.mat-menu-panel.above')); }
 
-  combinedMenu() { return element(by.css('.md-menu.combined')); }
+  combinedMenu(): ElementFinder { return element(by.css('.mat-menu-panel.combined')); }
 
-  expectMenuPresent(expected: boolean) {
-    return browser.isElementPresent(by.css('.md-menu')).then((isPresent) => {
-      expect(isPresent).toBe(expected);
-    });
-  }
-
-  expectMenuLocation(el: ElementFinder, {x,y}: {x: number, y: number}) {
-    el.getLocation().then((loc) => {
-      expect(loc.x).toEqual(x);
-      expect(loc.y).toEqual(y);
-    });
-  }
-
-  expectMenuAlignedWith(el: ElementFinder, id: string) {
-    element(by.id(id)).getLocation().then((loc) => {
-      this.expectMenuLocation(el, {x: loc.x, y: loc.y});
-    });
-  }
-
-  getResultText() {
-    return this.textArea().getText();
-  }
+  getResultText() { return this.textArea().getText(); }
 }

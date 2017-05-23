@@ -1,0 +1,44 @@
+@import '../core/style/variables';
+
+$mat-tab-bar-height: 48px !default;
+
+$mat-tab-animation-duration: 500ms !default;
+
+// Mixin styles for labels that are contained within the tab header.
+@mixin tab-label {
+  line-height: $mat-tab-bar-height;
+  height: $mat-tab-bar-height;
+  padding: 0 12px;
+  font-size: $mat-body-font-size-base;
+  font-family: $mat-font-family;
+  font-weight: 500;
+  cursor: pointer;
+  box-sizing: border-box;
+  opacity: 0.6;
+  min-width: 160px;
+  text-align: center;
+  &:focus {
+    outline: none;
+    opacity: 1;
+  }
+}
+
+// Mixin styles for the top section of the view; contains the tab labels.
+@mixin tab-header {
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+// Mixin styles for the ink bar that displays near the active tab in the header.
+@mixin ink-bar {
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  transition: $mat-tab-animation-duration $ease-in-out-curve-function;
+
+  .mat-tab-group-inverted-header & {
+    bottom: auto;
+    top: 0;
+  }
+}

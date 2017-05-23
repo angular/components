@@ -1,14 +1,18 @@
 import {
   ComponentFactoryResolver,
   Injectable,
+  ApplicationRef,
+  Injector,
+  NgZone,
+  Provider,
 } from '@angular/core';
 import {OverlayState} from './overlay-state';
 import {DomPortalHost} from '../portal/dom-portal-host';
 import {OverlayRef} from './overlay-ref';
-
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
-import {ViewportRuler} from './position/viewport-ruler';
-import {OverlayContainer} from './overlay-container';
+import {VIEWPORT_RULER_PROVIDER} from './position/viewport-ruler';
+import {OverlayContainer, OVERLAY_CONTAINER_PROVIDER} from './overlay-container';
+
 
 /** Next overlay unique ID. */
 let nextUniqueId = 0;
@@ -25,16 +29,19 @@ let defaultState = new OverlayState();
  *
  * An overlay *is* a PortalHost, so any kind of Portal can be loaded into one.
  */
- @Injectable()
+@Injectable()
 export class Overlay {
   constructor(private _overlayContainer: OverlayContainer,
               private _componentFactoryResolver: ComponentFactoryResolver,
-              private _positionBuilder: OverlayPositionBuilder) {}
+              private _positionBuilder: OverlayPositionBuilder,
+              private _appRef: ApplicationRef,
+              private _injector: Injector,
+              private _ngZone: NgZone) {}
 
   /**
    * Creates an overlay.
    * @param state State to apply to the overlay.
-   * @returns A reference to the created overlay.
+   * @returns Reference to the created overlay.
    */
   create(state: OverlayState = defaultState): OverlayRef {
     return this._createOverlayRef(this._createPaneElement(), state);
@@ -44,18 +51,18 @@ export class Overlay {
    * Returns a position builder that can be used, via fluent API,
    * to construct and configure a position strategy.
    */
-  position() {
+  position(): OverlayPositionBuilder {
     return this._positionBuilder;
   }
 
   /**
    * Creates the DOM element for an overlay and appends it to the overlay container.
-   * @returns Promise resolving to the created element.
+   * @returns Newly-created pane element
    */
   private _createPaneElement(): HTMLElement {
-    var pane = document.createElement('div');
-    pane.id = `md-overlay-${nextUniqueId++}`;
-    pane.classList.add('md-overlay-pane');
+    let pane = document.createElement('div');
+    pane.id = `cdk-overlay-${nextUniqueId++}`;
+    pane.classList.add('cdk-overlay-pane');
 
     this._overlayContainer.getContainerElement().appendChild(pane);
 
@@ -68,26 +75,23 @@ export class Overlay {
    * @returns A portal host for the given DOM element.
    */
   private _createPortalHost(pane: HTMLElement): DomPortalHost {
-    return new DomPortalHost(pane, this._componentFactoryResolver);
+    return new DomPortalHost(pane, this._componentFactoryResolver, this._appRef, this._injector);
   }
 
   /**
    * Creates an OverlayRef for an overlay in the given DOM element.
    * @param pane DOM element for the overlay
    * @param state
-   * @returns {OverlayRef}
    */
   private _createOverlayRef(pane: HTMLElement, state: OverlayState): OverlayRef {
-    return new OverlayRef(this._createPortalHost(pane), pane, state);
+    return new OverlayRef(this._createPortalHost(pane), pane, state, this._ngZone);
   }
 }
 
-
 /** Providers for Overlay and its related injectables. */
-export const OVERLAY_PROVIDERS = [
-  ViewportRuler,
-  OverlayPositionBuilder,
+export const OVERLAY_PROVIDERS: Provider[] = [
   Overlay,
-  OverlayContainer,
+  OverlayPositionBuilder,
+  VIEWPORT_RULER_PROVIDER,
+  OVERLAY_CONTAINER_PROVIDER,
 ];
-

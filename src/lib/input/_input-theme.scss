@@ -1,0 +1,85 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+
+@mixin mat-input-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  // Placeholder colors. Required is used for the `*` star shown in the placeholder.
+  $input-placeholder-color: mat-color($foreground, hint-text);
+  $input-floating-placeholder-color: mat-color($primary);
+  $input-required-placeholder-color: mat-color($accent);
+
+  // Underline colors.
+  $input-underline-color: mat-color($foreground, divider);
+  $input-underline-color-accent: mat-color($accent);
+  $input-underline-color-warn: mat-color($warn);
+  $input-underline-focused-color: mat-color($primary);
+
+  .mat-input-placeholder {
+    color: $input-placeholder-color;
+  }
+
+  // :focus is applied to the input, but we apply mat-focused to the other elements
+  // that need to listen to it.
+  .mat-focused .mat-input-placeholder {
+    color: $input-floating-placeholder-color;
+
+    &.mat-accent {
+      color: $input-underline-color-accent;
+    }
+
+    &.mat-warn {
+      color: $input-underline-color-warn;
+    }
+  }
+
+  .mat-input-element:disabled {
+    color: mat-color($foreground, disabled-text);
+  }
+
+  // See mat-input-placeholder-floating mixin in input.scss
+  input.mat-input-element:-webkit-autofill + .mat-input-placeholder,
+  .mat-focused .mat-input-placeholder.mat-float {
+    .mat-placeholder-required {
+      color: $input-required-placeholder-color;
+    }
+  }
+
+  .mat-input-underline {
+    border-color: $input-underline-color;
+
+    .mat-input-ripple {
+      background-color: $input-underline-focused-color;
+
+      &.mat-accent {
+        background-color: $input-underline-color-accent;
+      }
+      &.mat-warn {
+        background-color: $input-underline-color-warn;
+      }
+    }
+  }
+
+  // Styling for the error state of the input container. Note that while the same can be
+  // achieved with the ng-* classes, we use this approach in order to ensure that the same
+  // logic is used to style the error state and to show the error messages.
+  .mat-input-invalid {
+    .mat-input-placeholder,
+    .mat-placeholder-required {
+      color: $input-underline-color-warn;
+    }
+
+    .mat-input-ripple {
+      background-color: $input-underline-color-warn;
+    }
+  }
+
+  .mat-input-error {
+    color: $input-underline-color-warn;
+  }
+}

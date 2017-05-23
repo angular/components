@@ -1,5 +1,5 @@
+import {QueryList} from '@angular/core';
 import {MdGridTile} from './grid-tile';
-import {MdGridTileTooWideError} from './grid-list-errors';
 
 /**
  * Class for determining, from a list of tiles, the (row, col) position of each of those tiles
@@ -15,6 +15,8 @@ import {MdGridTileTooWideError} from './grid-list-errors';
  * column are already occupied; zero indicates an empty cell. Moving "down" to the next row
  * decrements each value in the tracking array (indicating that the column is one cell closer to
  * being free).
+ *
+ * @docs-private
  */
 export class TileCoordinator {
   /** Tracking array (see class description). */
@@ -41,7 +43,7 @@ export class TileCoordinator {
   /** The computed (row, col) position of each tile (the output). */
   positions: TilePosition[];
 
-  constructor(numColumns: number, tiles: MdGridTile[]) {
+  constructor(numColumns: number, tiles: QueryList<MdGridTile>) {
     this.tracker = new Array(numColumns);
     this.tracker.fill(0, 0, this.tracker.length);
 
@@ -66,7 +68,8 @@ export class TileCoordinator {
   /** Finds the next available space large enough to fit the tile. */
   private _findMatchingGap(tileCols: number): number {
     if (tileCols > this.tracker.length) {
-      throw new MdGridTileTooWideError(tileCols, this.tracker.length);
+      throw new Error(`md-grid-list: tile with colspan ${tileCols} is wider than ` +
+                      `grid with cols="${this.tracker.length}".`);
     }
 
     // Start index is inclusive, end index is exclusive.
@@ -134,7 +137,10 @@ export class TileCoordinator {
   }
 }
 
-/** Simple data structure for tile position (row, col). */
+/**
+ * Simple data structure for tile position (row, col).
+ * @docs-private
+ */
 export class TilePosition {
   constructor(public row: number, public col: number) {}
 }

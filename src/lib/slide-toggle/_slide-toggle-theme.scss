@@ -1,0 +1,88 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+@mixin _mat-slide-toggle-checked($palette, $thumb-checked-hue) {
+  // Do not apply the checked colors if the toggle is disabled, because the specificity would be to high for
+  // the disabled styles.
+  &.mat-checked:not(.mat-disabled) {
+    .mat-slide-toggle-thumb {
+      background-color: mat-color($palette, $thumb-checked-hue);
+    }
+
+    .mat-slide-toggle-bar {
+      background-color: mat-color($palette, $thumb-checked-hue, 0.5);
+    }
+  }
+}
+
+// Applies the specified colors to the slide-toggle ripple elements.
+@mixin _mat-slide-toggle-ripple($palette, $ripple-unchecked-color, $ripple-checked-color) {
+  &:not(.mat-checked) .mat-ripple-element {
+    background-color: $ripple-unchecked-color;
+  }
+  .mat-ripple-element {
+    background-color: $ripple-checked-color;
+  }
+}
+
+@mixin mat-slide-toggle-theme($theme) {
+  $is-dark: map_get($theme, is-dark);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  // Color hues based on the specs, which prescribe different hues for dark and light themes
+  // https://material.google.com/components/selection-controls.html#selection-controls-switch
+  $thumb-normal-hue: if($is-dark, 400, 50);
+  $thumb-checked-hue: if($is-dark, 200, 500);
+  $thumb-disabled-hue: if($is-dark, 800, 400);
+
+  $bar-normal-color: mat-color($foreground, disabled);
+  $bar-disabled-color: if($is-dark, rgba(white, 0.12), rgba(black, 0.1));
+
+  // Ripple colors are based on the current palette and the state of the slide-toggle.
+  // See https://material.google.com/components/selection-controls.html#selection-controls-switch
+  $ripple-checked-opacity: 0.12;
+  $ripple-unchecked-color: mat-color($foreground, base, if($is-dark, 0.12, 0.06));
+  $ripple-primary-color: mat-color($primary, $thumb-checked-hue, $ripple-checked-opacity);
+  $ripple-accent-color: mat-color($accent, $thumb-checked-hue, $ripple-checked-opacity);
+  $ripple-warn-color: mat-color($warn, $thumb-checked-hue, $ripple-checked-opacity);
+
+  .mat-slide-toggle {
+    @include _mat-slide-toggle-checked($accent, $thumb-checked-hue);
+    @include _mat-slide-toggle-ripple($accent, $ripple-unchecked-color, $ripple-accent-color);
+
+    &.mat-primary {
+      @include _mat-slide-toggle-checked($primary, $thumb-checked-hue);
+      @include _mat-slide-toggle-ripple($accent, $ripple-unchecked-color, $ripple-primary-color);
+    }
+  
+    &.mat-warn {
+      @include _mat-slide-toggle-checked($warn, $thumb-checked-hue);
+      @include _mat-slide-toggle-ripple($accent, $ripple-unchecked-color, $ripple-warn-color);
+    }
+
+  }
+
+  .mat-disabled {
+    .mat-slide-toggle-thumb {
+      // The thumb of the slide-toggle always uses the hue 400 of the grey palette in dark or light themes.
+      // Since this is very specific to the slide-toggle component, we're not providing
+      // it in the background palette.
+      background-color: mat-color($mat-grey, $thumb-disabled-hue);
+    }
+    .mat-slide-toggle-bar {
+      background-color: $bar-disabled-color;
+    }
+  }
+
+  .mat-slide-toggle-thumb {
+    background-color: mat-color($mat-grey, $thumb-normal-hue);
+  }
+
+  .mat-slide-toggle-bar {
+    background-color: $bar-normal-color;
+  }
+}

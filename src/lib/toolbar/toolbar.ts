@@ -1,18 +1,31 @@
 import {
-  NgModule,
   Component,
   ChangeDetectionStrategy,
   Input,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Directive,
+  ElementRef,
+  Renderer2,
 } from '@angular/core';
-import {Renderer} from '@angular/core';
-import {ElementRef} from '@angular/core';
+
+
+@Directive({
+  selector: 'md-toolbar-row, mat-toolbar-row',
+  host: {
+    '[class.mat-toolbar-row]': 'true',
+  },
+})
+export class MdToolbarRow {}
 
 @Component({
   moduleId: module.id,
-  selector: 'md-toolbar',
+  selector: 'md-toolbar, mat-toolbar',
   templateUrl: 'toolbar.html',
   styleUrls: ['toolbar.css'],
+  host: {
+    '[class.mat-toolbar]': 'true',
+    'role': 'toolbar'
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
@@ -20,8 +33,9 @@ export class MdToolbar {
 
   private _color: string;
 
-  constructor(private elementRef: ElementRef, private renderer: Renderer) { }
+  constructor(private _elementRef: ElementRef, private _renderer: Renderer2) { }
 
+  /** The color of the toolbar. Can be primary, accent, or warn. */
   @Input()
   get color(): string {
     return this._color;
@@ -39,18 +53,14 @@ export class MdToolbar {
 
   private _setElementColor(color: string, isAdd: boolean) {
     if (color != null && color != '') {
-      this.renderer.setElementClass(this.elementRef.nativeElement, `md-${color}`, isAdd);
+      let element = this._elementRef.nativeElement;
+
+      if (isAdd) {
+        this._renderer.addClass(element, `mat-${color}`);
+      } else {
+        this._renderer.removeClass(element, `mat-${color}`);
+      }
     }
   }
 
 }
-
-/** @deprecated */
-export const MD_TOOLBAR_DIRECTIVES = [MdToolbar];
-
-
-@NgModule({
-  exports: MD_TOOLBAR_DIRECTIVES,
-  declarations: MD_TOOLBAR_DIRECTIVES,
-})
-export class MdToolbarModule { }

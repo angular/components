@@ -1,0 +1,65 @@
+<div class="chips-demo">
+  <md-card>
+    <md-toolbar color="primary">Static Chips</md-toolbar>
+
+    <md-card-content>
+      <h4>Simple</h4>
+
+      <md-chip-list>
+        <md-chip>Chip 1</md-chip>
+        <md-chip>Chip 2</md-chip>
+        <md-chip>Chip 3</md-chip>
+      </md-chip-list>
+
+      <h4>Unstyled</h4>
+
+      <md-chip-list>
+        <md-basic-chip>Basic Chip 1</md-basic-chip>
+        <md-basic-chip>Basic Chip 2</md-basic-chip>
+        <md-basic-chip>Basic Chip 3</md-basic-chip>
+      </md-chip-list>
+
+      <h4>Advanced</h4>
+
+      <md-chip-list selectable="false">
+        <md-chip color="accent" selected="true">Selected/Colored</md-chip>
+        <md-chip color="warn" selected="true" *ngIf="visible"
+                 (destroy)="alert('chip destroyed')" (click)="toggleVisible()">
+          With Events
+        </md-chip>
+      </md-chip-list>
+    </md-card-content>
+  </md-card>
+
+  <md-card>
+    <md-toolbar color="primary">Dynamic Chips</md-toolbar>
+
+    <md-card-content>
+      <h4>Input Container</h4>
+
+      <md-chip-list>
+        <md-chip *ngFor="let person of people" [color]="color">
+          {{person.name}}
+        </md-chip>
+      </md-chip-list>
+
+      <md-input-container>
+        <input mdInput #input (keyup.enter)="add(input)" placeholder="New Contributor..."/>
+      </md-input-container>
+
+      <h4>Stacked Chips</h4>
+
+      <p>
+        You can also stack the chips if you want them on top of each other and/or use the
+        <code>(focus)</code> event to run custom code.
+      </p>
+
+      <md-chip-list class="mat-chip-list-stacked">
+        <md-chip *ngFor="let aColor of availableColors"
+                 (focus)="color = aColor.color" color="{{aColor.color}}" selected="true">
+          {{aColor.name}}
+        </md-chip>
+      </md-chip-list>
+    </md-card-content>
+  </md-card>
+</div>

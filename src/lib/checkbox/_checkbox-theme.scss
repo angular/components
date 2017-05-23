@@ -1,0 +1,85 @@
+@import '../core/theming/theming';
+
+
+@mixin mat-checkbox-theme($theme) {
+  $is-dark-theme: map-get($theme, is-dark);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+
+
+  // The color of the checkbox's checkmark / mixedmark.
+  $checkbox-mark-color: mat-color($background, background);
+
+  // NOTE(traviskaufman): While the spec calls for translucent blacks/whites for disabled colors,
+  // this does not work well with elements layered on top of one another. To get around this we
+  // blend the colors together based on the base color and the theme background.
+  $white-30pct-opacity-on-dark: #686868;
+  $black-26pct-opacity-on-light: #b0b0b0;
+  $disabled-color: if($is-dark-theme, $white-30pct-opacity-on-dark, $black-26pct-opacity-on-light);
+
+  .mat-checkbox-frame {
+    border-color: mat-color(map-get($theme, foreground), secondary-text);
+  }
+
+  .mat-checkbox-checkmark {
+    fill: $checkbox-mark-color;
+  }
+
+  .mat-checkbox-checkmark-path {
+    // !important is needed here because a stroke must be set as an attribute on the SVG in order
+    // for line animation to work properly.
+    stroke: $checkbox-mark-color !important;
+  }
+
+  .mat-checkbox-mixedmark {
+    background-color: $checkbox-mark-color;
+  }
+
+  .mat-checkbox-indeterminate, .mat-checkbox-checked {
+    &.mat-primary .mat-checkbox-background {
+      background-color: mat-color($primary);
+    }
+
+    &.mat-accent .mat-checkbox-background {
+      background-color: mat-color($accent);
+    }
+
+    &.mat-warn .mat-checkbox-background {
+      background-color: mat-color($warn);
+    }
+  }
+
+  .mat-checkbox-disabled {
+    &.mat-checkbox-checked, &.mat-checkbox-indeterminate {
+      .mat-checkbox-background {
+        background-color: $disabled-color;
+      }
+    }
+
+    &:not(.mat-checkbox-checked) {
+      .mat-checkbox-frame {
+        border-color: $disabled-color;
+      }
+    }
+
+    .mat-checkbox-label {
+      color: $disabled-color;
+    }
+  }
+
+  .mat-checkbox:not(.mat-checkbox-disabled) {
+    &.mat-primary .mat-checkbox-ripple .mat-ripple-element {
+      background-color: mat-color($primary, 0.26);
+    }
+
+    &.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+      background-color: mat-color($accent, 0.26);
+    }
+
+    &.mat-warn .mat-checkbox-ripple .mat-ripple-element {
+      background-color: mat-color($warn, 0.26);
+    }
+  }
+}

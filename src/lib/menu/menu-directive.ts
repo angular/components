@@ -1,44 +1,81 @@
-// TODO(kara): keyboard events for menu navigation
 // TODO(kara): prevent-close functionality
 
 import {
-  Attribute,
+  AfterContentInit,
   Component,
+  ContentChildren,
   EventEmitter,
   Input,
+  OnDestroy,
   Output,
+  QueryList,
   TemplateRef,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
-import {MdMenuInvalidPositionX, MdMenuInvalidPositionY} from './menu-errors';
+import {throwMdMenuInvalidPositionX, throwMdMenuInvalidPositionY} from './menu-errors';
+import {MdMenuItem} from './menu-item';
+import {FocusKeyManager} from '../core/a11y/focus-key-manager';
+import {MdMenuPanel} from './menu-panel';
+import {Subscription} from 'rxjs/Subscription';
+import {transformMenu, fadeInItems} from './menu-animations';
+import {ESCAPE} from '../core/keyboard/keycodes';
+
 
 @Component({
   moduleId: module.id,
-  selector: 'md-menu',
+  selector: 'md-menu, mat-menu',
   host: {'role': 'menu'},
   templateUrl: 'menu.html',
   styleUrls: ['menu.css'],
   encapsulation: ViewEncapsulation.None,
+  animations: [
+    transformMenu,
+    fadeInItems
+  ],
   exportAs: 'mdMenu'
 })
-export class MdMenu {
-  _showClickCatcher: boolean = false;
+export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
+  private _keyManager: FocusKeyManager;
+  private _xPosition: MenuPositionX = 'after';
+  private _yPosition: MenuPositionY = 'below';
 
-  // config object to be passed into the menu's ngClass
-  _classList: Object;
+  /** Subscription to tab events on the menu panel */
+  private _tabSubscription: Subscription;
 
-  positionX: MenuPositionX = 'after';
-  positionY: MenuPositionY = 'below';
+  /** Config object to be passed into the menu's ngClass */
+  _classList: any = {};
+
+  /** Position of the menu in the X axis. */
+  @Input()
+  get xPosition() { return this._xPosition; }
+  set xPosition(value: MenuPositionX) {
+    if (value !== 'before' && value !== 'after') {
+      throwMdMenuInvalidPositionX();
+    }
+    this._xPosition = value;
+    this.setPositionClasses();
+  }
+
+  /** Position of the menu in the Y axis. */
+  @Input()
+  get yPosition() { return this._yPosition; }
+  set yPosition(value: MenuPositionY) {
+    if (value !== 'above' && value !== 'below') {
+      throwMdMenuInvalidPositionY();
+    }
+    this._yPosition = value;
+    this.setPositionClasses();
+  }
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
 
-  constructor(@Attribute('x-position') posX: MenuPositionX,
-              @Attribute('y-position') posY: MenuPositionY) {
-    if (posX) { this._setPositionX(posX); }
-    if (posY) { this._setPositionY(posY); }
-  }
+  /** List of the items inside of a menu. */
+  @ContentChildren(MdMenuItem) items: QueryList<MdMenuItem>;
+
+  /** Whether the menu should overlap its trigger. */
+  @Input() overlapTrigger = true;
 
   /**
    * This method takes classes set on the host md-menu element and applies them on the
@@ -52,34 +89,59 @@ export class MdMenu {
       obj[className] = true;
       return obj;
     }, {});
+    this.setPositionClasses();
   }
 
-  @Output() close = new EventEmitter;
+  /** Event emitted when the menu is closed. */
+  @Output() close = new EventEmitter<void>();
+
+  ngAfterContentInit() {
+    this._keyManager = new FocusKeyManager(this.items).withWrap();
+    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this._emitCloseEvent());
+  }
+
+  ngOnDestroy() {
+    if (this._tabSubscription) {
+      this._tabSubscription.unsubscribe();
+    }
+  }
+
+  /** Handle a keyboard event from the menu, delegating to the appropriate action. */
+  _handleKeydown(event: KeyboardEvent) {
+    switch (event.keyCode) {
+      case ESCAPE:
+        this._emitCloseEvent();
+        return;
+      default:
+        this._keyManager.onKeydown(event);
+    }
+  }
 
   /**
-   * This function toggles the display of the menu's click catcher element.
-   * This element covers the viewport when the menu is open to detect clicks outside the menu.
-   * TODO: internal
+   * Focus the first item in the menu. This method is used by the menu trigger
+   * to focus the first item when the menu is opened by the ENTER key.
    */
-  _setClickCatcher(bool: boolean): void {
-    this._showClickCatcher = bool;
+  focusFirstItem() {
+    this._keyManager.setFirstItemActive();
   }
 
-  private _setPositionX(pos: MenuPositionX): void {
-    if ( pos !== 'before' && pos !== 'after') {
-      throw new MdMenuInvalidPositionX();
-    }
-    this.positionX = pos;
+  /**
+   * This emits a close event to which the trigger is subscribed. When emitted, the
+   * trigger will close the menu.
+   */
+  _emitCloseEvent(): void {
+    this.close.emit();
   }
 
-  private _setPositionY(pos: MenuPositionY): void {
-    if ( pos !== 'above' && pos !== 'below') {
-      throw new MdMenuInvalidPositionY();
-    }
-    this.positionY = pos;
+  /**
+   * It's necessary to set position-based classes to ensure the menu panel animation
+   * folds out from the correct direction.
+   */
+  setPositionClasses(posX = this.xPosition, posY = this.yPosition): void {
+    this._classList['mat-menu-before'] = posX === 'before';
+    this._classList['mat-menu-after'] = posX === 'after';
+    this._classList['mat-menu-above'] = posY === 'above';
+    this._classList['mat-menu-below'] = posY === 'below';
   }
 
-  private _emitCloseEvent(): void {
-    this.close.emit(null);
-  }
 }

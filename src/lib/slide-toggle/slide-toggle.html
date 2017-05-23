@@ -1,32 +1,38 @@
-<label class="md-slide-toggle-label">
+<label class="mat-slide-toggle-label" #label>
 
-  <div class="md-slide-toggle-container">
-    <div class="md-slide-toggle-bar"></div>
+  <div class="mat-slide-toggle-bar">
 
-    <div class="md-slide-toggle-thumb-container"
-         (slidestart)="_onDragStart($event)"
-         (slide)="_onDrag($event)"
-         (slideend)="_onDragEnd($event)">
-
-      <div class="md-slide-toggle-thumb">
-        <div class="md-ink-ripple"></div>
-      </div>
-    </div>
-
-    <input #input class="md-slide-toggle-checkbox" type="checkbox"
-           [id]="getInputId()"
+    <input #input class="mat-slide-toggle-input cdk-visually-hidden" type="checkbox"
+           [id]="inputId"
+           [required]="required"
            [tabIndex]="tabIndex"
            [checked]="checked"
            [disabled]="disabled"
            [attr.name]="name"
            [attr.aria-label]="ariaLabel"
            [attr.aria-labelledby]="ariaLabelledby"
-           (blur)="_onInputBlur()"
-           (focus)="_onInputFocus()"
            (change)="_onChangeEvent($event)"
            (click)="_onInputClick($event)">
+
+    <div class="mat-slide-toggle-thumb-container"
+         (slidestart)="_onDragStart()"
+         (slide)="_onDrag($event)"
+         (slideend)="_onDragEnd()">
+
+      <div class="mat-slide-toggle-thumb"></div>
+
+      <div class="mat-slide-toggle-ripple" md-ripple
+           [mdRippleTrigger]="label"
+           [mdRippleCentered]="true"
+           [mdRippleDisabled]="disableRipple || disabled">
+      </div>
+
+    </div>
+
+
   </div>
-  <span class="md-slide-toggle-content">
+
+  <span class="mat-slide-toggle-content">
     <ng-content></ng-content>
   </span>
 </label>

@@ -1,66 +1,42 @@
 // TODO(kara): update vars for desktop when MD team responds
 // TODO(kara): animation for menu opening
-@import 'variables';
-@import 'elevation';
-@import 'default-theme';
-@import 'button-mixins';
-@import 'sidenav-mixins';
-@import 'list-shared';
 
-// menu width must be a multiple of 56px
-$md-menu-overlay-min-width: 112px !default;   // 56 * 2
-$md-menu-overlay-max-width: 280px !default;   // 56 * 5
+@import '../core/style/button-common';
+@import '../core/style/layout-common';
+@import '../core/style/menu-common';
+@import '../core/a11y/a11y';
 
-$md-menu-item-height: 48px !default;
-$md-menu-font-size: 16px !default;
-$md-menu-side-padding: 16px !default;
-$md-menu-vertical-padding: 8px !default;
+$mat-menu-vertical-padding: 8px !default;
 
-.md-menu {
-  @include md-elevation(2);
-  min-width: $md-menu-overlay-min-width;
-  max-width: $md-menu-overlay-max-width;
+.mat-menu-panel {
+  @include mat-menu-base();
+  @include mat-menu-positions();
+  max-height: calc(100vh - #{$mat-menu-item-height});
 
-  // max height must be 100% of the viewport height + one row height
-  max-height: calc(100vh + 48px);
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;   // for momentum scroll on mobile
-
-  background: md-color($md-background, 'card');
-  padding-top: $md-menu-vertical-padding;
-  padding-bottom: $md-menu-vertical-padding;
-}
-
-[md-menu-item] {
-  @include md-button-reset();
-  @include md-truncate-line();
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: $md-menu-item-height;
-  padding: 0 $md-menu-side-padding;
-
-  font-size: $md-menu-font-size;
-  font-family: $md-font-family;
-  text-align: start;
-  text-decoration: none;   // necessary to reset anchor tags
-  color: md-color($md-foreground, 'text');
-
-  &[disabled] {
-    color: md-color($md-foreground, 'disabled');
-    cursor: default;
-  }
-
-  &:hover:not([disabled]) {
-    background: md-color($md-background, 'hover');
+  @include cdk-high-contrast {
+    outline: solid 1px;
   }
 }
 
-button[md-menu-item] {
+.mat-menu-content {
+  padding-top: $mat-menu-vertical-padding;
+  padding-bottom: $mat-menu-vertical-padding;
+}
+
+.mat-menu-item {
+  @include mat-button-reset();
+  @include mat-menu-item-base();
+  position: relative;
+}
+
+button.mat-menu-item {
   width: 100%;
 }
 
-.md-menu-click-catcher {
-  @include md-fullscreen();
+.mat-menu-ripple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }

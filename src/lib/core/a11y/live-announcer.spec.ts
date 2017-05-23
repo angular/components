@@ -1,21 +1,22 @@
 import {inject, fakeAsync, tick, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdLiveAnnouncer, LIVE_ANNOUNCER_ELEMENT_TOKEN} from './live-announcer';
+import {LiveAnnouncer, LIVE_ANNOUNCER_ELEMENT_TOKEN} from './live-announcer';
+import {A11yModule} from '../index';
 
 
-describe('MdLiveAnnouncer', () => {
-  let announcer: MdLiveAnnouncer;
+describe('LiveAnnouncer', () => {
+  let announcer: LiveAnnouncer;
   let ariaLiveElement: Element;
   let fixture: ComponentFixture<TestApp>;
 
   describe('with default element', () => {
     beforeEach(() => TestBed.configureTestingModule({
+      imports: [A11yModule],
       declarations: [TestApp],
-      providers: [MdLiveAnnouncer]
     }));
 
-    beforeEach(fakeAsync(inject([MdLiveAnnouncer], (la: MdLiveAnnouncer) => {
+    beforeEach(fakeAsync(inject([LiveAnnouncer], (la: LiveAnnouncer) => {
       announcer = la;
       ariaLiveElement = getLiveElement();
       fixture = TestBed.createComponent(TestApp);
@@ -24,7 +25,7 @@ describe('MdLiveAnnouncer', () => {
     afterEach(() => {
       // In our tests we always remove the current live element, because otherwise we would have
       // multiple live elements due multiple service instantiations.
-      ariaLiveElement.parentNode.removeChild(ariaLiveElement);
+      announcer._removeLiveElement();
     });
 
     it('should correctly update the announce text', fakeAsync(() => {
@@ -56,6 +57,18 @@ describe('MdLiveAnnouncer', () => {
       expect(ariaLiveElement.textContent).toBe('Hey Google');
       expect(ariaLiveElement.getAttribute('aria-live')).toBe('polite');
     }));
+
+    it('should remove the aria-live element from the DOM', fakeAsync(() => {
+      announcer.announce('Hey Google');
+
+      // This flushes our 100ms timeout for the screenreaders.
+      tick(100);
+
+      announcer._removeLiveElement();
+
+      expect(document.body.querySelector('[aria-live]'))
+          .toBeFalsy('Expected that the aria-live element was remove from the DOM.');
+    }));
   });
 
   describe('with a custom element', () => {
@@ -65,15 +78,13 @@ describe('MdLiveAnnouncer', () => {
       customLiveElement = document.createElement('div');
 
       return TestBed.configureTestingModule({
+        imports: [A11yModule],
         declarations: [TestApp],
-        providers: [
-          {provide: LIVE_ANNOUNCER_ELEMENT_TOKEN, useValue: customLiveElement},
-          MdLiveAnnouncer,
-        ],
+        providers: [{provide: LIVE_ANNOUNCER_ELEMENT_TOKEN, useValue: customLiveElement}],
       });
     });
 
-    beforeEach(inject([MdLiveAnnouncer], (la: MdLiveAnnouncer) => {
+    beforeEach(inject([LiveAnnouncer], (la: LiveAnnouncer) => {
         announcer = la;
         ariaLiveElement = getLiveElement();
       }));
@@ -92,15 +103,14 @@ describe('MdLiveAnnouncer', () => {
 
 
 function getLiveElement(): Element {
-  return document.body.querySelector('.md-live-announcer');
+  return document.body.querySelector('[aria-live]');
 }
 
 @Component({template: `<button (click)="announceText('Test')">Announce</button>`})
 class TestApp {
-  constructor(public live: MdLiveAnnouncer) { };
+  constructor(public live: LiveAnnouncer) { }
 
   announceText(message: string) {
     this.live.announce(message);
   }
 }
-

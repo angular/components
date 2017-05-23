@@ -1,0 +1,67 @@
+@import '../core/style/variables';
+
+
+// Animation Durations
+$mat-progress-spinner-duration: 5250ms !default;
+$mat-progress-spinner-constant-rotate-duration: $mat-progress-spinner-duration * 0.55 !default;
+$mat-progress-spinner-sporadic-rotate-duration: $mat-progress-spinner-duration !default;
+
+// Component sizing
+$mat-progress-spinner-stroke-width: 10px !default;
+// Height and weight of the viewport for mat-progress-spinner.
+$mat-progress-spinner-viewport-size: 100px !default;
+
+
+:host {
+  display: block;
+  // Height and width are provided for mat-progress-spinner to act as a default.
+  // The height and width are expected to be overwritten by application css.
+  height: $mat-progress-spinner-viewport-size;
+  width: $mat-progress-spinner-viewport-size;
+  overflow: hidden;
+
+  // SVG's viewBox is defined as 0 0 100 100, this means that all SVG children will placed
+  // based on a 100px by 100px box.  Additionally all SVG sizes and locations are in reference to
+  // this viewBox.
+  svg {
+    height: 100%;
+    width: 100%;
+    transform-origin: center;
+  }
+
+
+  path {
+    fill: transparent;
+
+    transition: stroke $swift-ease-in-duration $ease-in-out-curve-function;
+  }
+
+
+  &[mode='indeterminate'] svg {
+    animation-duration: $mat-progress-spinner-sporadic-rotate-duration,
+    $mat-progress-spinner-constant-rotate-duration;
+    animation-name: mat-progress-spinner-sporadic-rotate,
+                    mat-progress-spinner-linear-rotate;
+    animation-timing-function: $ease-in-out-curve-function,
+                               linear;
+    animation-iteration-count: infinite;
+    transition: none;
+  }
+}
+
+
+// Animations for indeterminate mode
+@keyframes mat-progress-spinner-linear-rotate {
+  0%       { transform: rotate(0deg); }
+  100%     { transform: rotate(360deg); }
+}
+@keyframes mat-progress-spinner-sporadic-rotate {
+  12.5%    { transform: rotate( 135deg); }
+  25%      { transform: rotate( 270deg); }
+  37.5%    { transform: rotate( 405deg); }
+  50%      { transform: rotate( 540deg); }
+  62.5%    { transform: rotate( 675deg); }
+  75%      { transform: rotate( 810deg); }
+  87.5%    { transform: rotate( 945deg); }
+  100%     { transform: rotate(1080deg); }
+}

@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {MdRipple} from '@angular2-material/core/core';
+import {MdRipple} from '@angular/material';
 
 
 @Component({
@@ -9,23 +9,28 @@ import {MdRipple} from '@angular2-material/core/core';
   styleUrls: ['ripple-demo.css'],
 })
 export class RippleDemo {
-  @ViewChild(MdRipple) manualRipple: MdRipple;
+  @ViewChild(MdRipple) ripple: MdRipple;
 
   centered = false;
   disabled = false;
   unbounded = false;
   rounded = false;
-  maxRadius: number = null;
+  radius: number = null;
   rippleSpeed = 1;
   rippleColor = '';
-  rippleBackgroundColor = '';
 
   disableButtonRipples = false;
 
-  doManualRipple() {
-    if (this.manualRipple) {
-      window.setTimeout(() => this.manualRipple.start(), 10);
-      window.setTimeout(() => this.manualRipple.end(0, 0), 500);
+  launchRipple(persistent = false) {
+    if (this.ripple) {
+      this.ripple.launch(0, 0, { centered: true, persistent });
     }
   }
+
+  fadeOutAll() {
+    if (this.ripple) {
+      this.ripple.fadeOutAll();
+    }
+  }
+
 }

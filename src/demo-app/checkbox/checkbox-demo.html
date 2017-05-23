@@ -1,7 +1,9 @@
 <h1>md-checkbox: Basic Example</h1>
 <form>
 <md-checkbox [(ngModel)]="isChecked"
-              name="cb"
+             name="cb"
+             value="basic_checkbox"
+             [color]="checkboxColor()"
              (change)="isIndeterminate = false"
              [indeterminate]="isIndeterminate"
              [disabled]="isDisabled"
@@ -18,6 +20,8 @@
 <label for="indeterminate-toggle">Toggle Indeterminate</label>
 <input id="disabled-toggle" type="checkbox" [(ngModel)]="isDisabled">
 <label for="disabled-toggle">Toggle Disabled</label>
+<input id="color-toggle" type="checkbox" [(ngModel)]="useAlternativeColor">
+<label for="color-toggle">Toggle Color</label>
 </div>
 <div>
   <p>Alignment:</p>
@@ -39,6 +43,16 @@
     <label for="align-end">End</label>
   </div>
 </div>
+
+<h1>Pseudo checkboxes</h1>
+<md-pseudo-checkbox></md-pseudo-checkbox>
+<md-pseudo-checkbox [disabled]="true"></md-pseudo-checkbox>
+
+<md-pseudo-checkbox state="checked"></md-pseudo-checkbox>
+<md-pseudo-checkbox state="checked" [disabled]="true"></md-pseudo-checkbox>
+
+<md-pseudo-checkbox state="indeterminate"></md-pseudo-checkbox>
+<md-pseudo-checkbox state="indeterminate" [disabled]="true"></md-pseudo-checkbox>
 
 <h1>Nested Checklist</h1>
 <md-checkbox-demo-nested-checklist></md-checkbox-demo-nested-checklist>
