@@ -65,6 +65,19 @@ export class ScrollableViewProperties {
 
 /** The change event emitted by the strategy when a fallback position is used. */
 export class ConnectedOverlayPositionChange {
-  constructor(public connectionPair: ConnectionPositionPair,
-              @Optional() public scrollableViewProperties: ScrollableViewProperties) {}
+  /**
+   * Width constraint that should be applied to the overlay content to ensure that it fits within
+   * the viewport.
+   */
+  contrainedWidth: number = 0;
+
+  /**
+   * Height constraint that should be applied to the overlay content to ensure that it fits within
+   * the viewport.
+   */
+  constrainedHeight: number = 0;
+
+  constructor(
+      public connectionPair: ConnectionPositionPair,
+      @Optional() public scrollableViewProperties: ScrollableViewProperties) {}
 }

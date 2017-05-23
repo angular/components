@@ -2,10 +2,11 @@ import {PositionStrategy} from './position-strategy';
 import {ElementRef} from '@angular/core';
 import {ViewportRuler} from './viewport-ruler';
 import {
+  ConnectedOverlayPositionChange,
   ConnectionPositionPair,
   OriginConnectionPosition,
   OverlayConnectionPosition,
-  ConnectedOverlayPositionChange, ScrollableViewProperties
+  ScrollableViewProperties,
 } from './connected-position';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
@@ -23,6 +24,7 @@ type ElementBoundingPositions = {
   left: number;
 };
 
+
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
  * implicit position relative some origin element. The relative position is defined in terms of
@@ -31,7 +33,8 @@ type ElementBoundingPositions = {
  * of the overlay.
  */
 export class ConnectedPositionStrategy implements PositionStrategy {
-  private _dir = 'ltr';
+  /** The page direction for the overlay. */
+  private _dir: 'ltr' | 'rtl' = 'ltr';
 
   /** The offset in pixels for the overlay connection point on the x-axis */
   private _offsetX: number = 0;
@@ -39,16 +42,29 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   /** The offset in pixels for the overlay connection point on the y-axis */
   private _offsetY: number = 0;
 
+  /** Amount of space that must be maintained between the overlay and the edge of the viewport. */
+  private _viewportMargin: number = 0;
+
   /** The Scrollable containers used to check scrollable view properties on position change. */
-  private scrollables: Scrollable[] = [];
+  private _scrollables: Scrollable[] = [];
 
   /** Whether the we're dealing with an RTL context */
-  get _isRtl() {
-    return this._dir === 'rtl';
-  }
+  private get _isRtl() { return this._dir === 'rtl'; }
 
   /** Ordered list of preferred positions, from most to least desirable. */
-  _preferredPositions: ConnectionPositionPair[] = [];
+  private _preferredPositions: ConnectionPositionPair[] = [];
+
+  /** Whether the overlay width can be constrained in order to use a preferred position. */
+  private _isConstrainWidthAllowed = false;
+
+  /** Whether the overlay height can be constrained in order to use a preferred position. */
+  private _isConstrainHeightAllowed = false;
+
+  /** When width constraint is allowed, the minimum width for the overlay. */
+  private _minWidth: number = 0;
+
+  /** When height constraint is allowed, the minimum height for the overlay. */
+  private _minHeight: number = 0;
 
   /** The origin element against which the overlay will be positioned. */
   private _origin: HTMLElement;
@@ -59,7 +75,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   /** The last position to have been calculated as the best fit position. */
   private _lastConnectedPosition: ConnectionPositionPair;
 
-  _onPositionChange:
+  private _onPositionChange:
       Subject<ConnectedOverlayPositionChange> = new Subject<ConnectedOverlayPositionChange>();
 
   /** Emits an event when the connection point changes. */
@@ -81,9 +97,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     return this._preferredPositions;
   }
 
-  /**
-   * To be used to for any cleanup after the element gets destroyed.
-   */
+  /** Clean up resources used by this position strategy. */
   dispose() { }
 
   /**
@@ -104,9 +118,10 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     const overlayRect = element.getBoundingClientRect();
 
     // We use the viewport rect to determine whether a position would go off-screen.
-    const viewportRect = this._viewportRuler.getViewportRect();
+    // Narrow the viewport in order to prevent overlays from going too close to the actual edge.
+    const viewportRect = this._narrowViewportRectWith(this._viewportRuler.getViewportRect());
 
-    // Fallback point if none of the fallbacks fit into the viewport.
+    // Fallback if none of the preferred positions fit within the viewport.
     let fallbackPoint: OverlayPoint = null;
     let fallbackPosition: ConnectionPositionPair = null;
 
@@ -120,25 +135,34 @@ export class ConnectedPositionStrategy implements PositionStrategy {
 
       // If the overlay in the calculated position fits on-screen, put it there and we're done.
       if (overlayPoint.fitsInViewport) {
-        this._setElementPosition(element, overlayRect, overlayPoint, pos);
-
-        // Save the last connected position in case the position needs to be re-calculated.
-        this._lastConnectedPosition = pos;
-
-        // Notify that the position has been changed along with its change properties.
-        const scrollableViewProperties = this.getScrollableViewProperties(element);
-        const positionChange = new ConnectedOverlayPositionChange(pos, scrollableViewProperties);
-        this._onPositionChange.next(positionChange);
+        this._applyPosition(element, pos, overlayPoint, overlayRect);
         return;
-      } else if (!fallbackPoint || fallbackPoint.visibleArea < overlayPoint.visibleArea) {
+      }
+
+      // When the preferred position does not fit, attempt to constrain the size of the overlay
+      // so that we can still use this position.
+      const constrainResult = this._attemptSizeConstraint(overlayPoint, viewportRect);
+      if (constrainResult.isConstraintSuccessful) {
+        // todo: pass along the contraints
+        this._applyPosition(element, pos, overlayPoint, overlayRect, constrainResult);
+        return;
+      }
+
+      // If the current preferred position does not fit on the screen, remember the position
+      // if it has more visible area on-screen than we've seen and move onto the next preferred
+      // position.
+      if (!fallbackPoint || fallbackPoint.visibleArea < overlayPoint.visibleArea) {
         fallbackPoint = overlayPoint;
         fallbackPosition = pos;
       }
     }
 
-    // If none of the preferred positions were in the viewport, take the one
-    // with the largest visible area.
-    this._setElementPosition(element, overlayRect, fallbackPoint, fallbackPosition);
+    // When none of the preferred positions exactly fit within the viewport, take the position
+    // that went off-screen the least and push it on-screen.
+    // todo: option to not let this cover up the trigger
+    const pushedPoint = this._pushOverlayOnScreen(fallbackPoint, overlayRect, viewportRect);
+    const constraintResult = this._attemptSizeConstraint(pushedPoint, viewportRect);
+    this._applyPosition(element, fallbackPosition, pushedPoint, overlayRect, constraintResult);
   }
 
   /**
@@ -154,7 +178,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
 
     let originPoint = this._getOriginConnectionPoint(originRect, lastPosition);
     let overlayPoint = this._getOverlayPoint(originPoint, overlayRect, viewportRect, lastPosition);
-    this._setElementPosition(this._pane, overlayRect, overlayPoint, lastPosition);
+    this._applyPosition(this._pane, lastPosition, overlayPoint, overlayRect);
   }
 
   /**
@@ -163,7 +187,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * Scrollable must be an ancestor element of the strategy's origin element.
    */
   withScrollableContainers(scrollables: Scrollable[]) {
-    this.scrollables = scrollables;
+    this._scrollables = scrollables;
   }
 
   /**
@@ -206,6 +230,40 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /**
+   * Specifies a margin around the edge of the viewport. Overlays will keep at least this much
+   * distance between themselves and the edge of the viewport.
+   * @param margin The margin in pixels.
+   */
+  withViewportMargin(margin: number): this {
+    this._viewportMargin = margin;
+    return this;
+  }
+
+  /**
+   * Allow the overlay to use a preferred position where it would normally go off-screen
+   * horizontally by constraining the width of the overlay element. The constrained width will be
+   * communicated via `onPositionChange`, which is left to the component to apply.
+   * @param minWidth The minimum width of the overlay.
+   */
+  allowWidthConstraint(minWidth: number): this {
+    this._isConstrainWidthAllowed = true;
+    this._minWidth = minWidth;
+    return this;
+  }
+
+  /**
+   * Allow the overlay to use a preferred position where it would normally go off-screen
+   * vertically by constraining the height of the overlay element. The constrained height will be
+   * communicated via `onPositionChange`, which is left to the component to apply.
+   * @param minHeight The minimum width of the overlay.
+   */
+  allowHeightConstraint(minHeight: number): this {
+    this._isConstrainHeightAllowed = true;
+    this._minHeight = minHeight;
+    return this;
+  }
+
+  /**
    * Gets the horizontal (x) "start" dimension based on whether the overlay is in an RTL context.
    * @param rect
    */
@@ -221,6 +279,17 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     return this._isRtl ? rect.left : rect.right;
   }
 
+  /** Narrows the given viewport rect by the current _viewportMargin. */
+  private _narrowViewportRectWith(rect: ClientRect): ClientRect {
+    return {
+      top:    rect.top    + this._viewportMargin,
+      left:   rect.left   + this._viewportMargin,
+      right:  rect.right  - this._viewportMargin,
+      bottom: rect.bottom - this._viewportMargin,
+      width:  rect.width  - (2 * this._viewportMargin),
+      height: rect.height - (2 * this._viewportMargin),
+    };
+  }
 
   /**
    * Gets the (x, y) coordinate of a connection point on the origin based on a relative position.
@@ -248,11 +317,10 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     return {x, y};
   }
 
-
   /**
    * Gets the (x, y) coordinate of the top-left corner of the overlay given a given position and
-   * origin point to which the overlay should be connected, as well as how much of the element
-   * would be inside the viewport at that position.
+   * origin point to which the overlay should be connected, as well as some additional information
+   * about how the overlay fits in the viewport at this position.
    */
   private _getOverlayPoint(
       originPoint: Point,
@@ -287,6 +355,8 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     let topOverflow = 0 - y;
     let bottomOverflow = (y + overlayRect.height) - viewportRect.height;
 
+    let isTopLeftCornerInViewport = y > viewportRect.top && x > viewportRect.left;
+
     // Visible parts of the element on each axis.
     let visibleWidth = this._subtractOverflows(overlayRect.width, leftOverflow, rightOverflow);
     let visibleHeight = this._subtractOverflows(overlayRect.height, topOverflow, bottomOverflow);
@@ -295,7 +365,104 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     let visibleArea = visibleWidth * visibleHeight;
     let fitsInViewport = (overlayRect.width * overlayRect.height) === visibleArea;
 
-    return {x, y, fitsInViewport, visibleArea};
+    return {
+      x,
+      y,
+      visibleArea,
+      fitsInViewport,
+      fitsInViewportVertically: visibleHeight === overlayRect.height,
+      fitsInViewportHorizontally: visibleWidth == overlayRect.width,
+      isTopLeftCornerInViewport,
+    };
+  }
+
+  /**
+   * Attempt to use a preferred positon by constraining the size of the overlay.
+   *
+   * @param overlay The computed point for the overlay
+   * @param viewport The viewport bounds
+   * @returns An result that includes whether the attempt succeeded or failed and, if it succeeded,
+   *     the constrained width and height of the overlay.
+   */
+  private _attemptSizeConstraint(overlay: OverlayPoint, viewport: ClientRect): ConstraintResult {
+    // If the top-left corner of the overlay is in the viewport, we can potentially still use
+    // this preferred position if the user is okay with constraining the overlay's width and/or
+    // height. This information will be communicated back to the component using the overlay
+    // via `onPositionChange` so that the component can be in change of how to *apply* the
+    // contrained dimensions.
+    if (overlay.isTopLeftCornerInViewport) {
+      let height = 0;
+      let width = 0;
+
+      let verticalFit = overlay.fitsInViewportVertically;
+      let horizontalFit = overlay.fitsInViewportHorizontally;
+
+      if (this._isConstrainHeightAllowed && !overlay.fitsInViewportVertically) {
+        height = viewport.bottom - overlay.y;
+        verticalFit = verticalFit || height >= this._minHeight;
+      }
+
+      if (this._isConstrainWidthAllowed && !overlay.fitsInViewportHorizontally) {
+        width = viewport.right - overlay.x;
+        horizontalFit = horizontalFit || width >= this._minWidth;
+      }
+
+      if (verticalFit && horizontalFit) {
+        return {isConstraintSuccessful: true, width, height};
+      }
+    }
+
+    return {isConstraintSuccessful: false, width: 0, height: 0};
+  }
+
+  /**
+   * Pushes an overlay into the viewport if is possible for the overlay to fit within the viewport
+   * at all.
+   *
+   * @param position The (x,y) coordinates of the overlay
+   * @param overlayRect The bounding rect for the overlay
+   * @param viewport The bounding rect for the viewport
+   * @returns If the overlay *can* fit within the viewport, a new (x,y) coordinate for the overlay
+   *     that shifts the entire element to be within the viewport. Otherwise, the original
+   *     coordinates.
+   */
+  private _pushOverlayOnScreen(
+      position: Point, overlayRect: ClientRect, viewport: ClientRect): OverlayPoint {
+
+    const overflowRight = Math.max(position.x + overlayRect.width - viewport.right, 0);
+    const overflowBottom = Math.max(position.y + overlayRect.height - viewport.bottom, 0);
+    const overflowTop = Math.max(viewport.top - position.y, 0);
+    const overflowLeft = Math.max(viewport.left - position.x, 0);
+
+    // Amount by which to push the overlay in each direction such that it remains on-screen.
+    let pushX, pushY = 0;
+    let fitsInViewportHorizontally, fitsInViewportVertically = false;
+
+    // If the overlay fits completely within the bounds of the viewport, push it from whichever
+    // direction is goes off-screen. Otherwise, push the top-left corner such that its in the
+    // viewport and allow for the trailing end of the overlay to go out of bounds (this can then
+    // be separately constrained by the called).
+    if (overlayRect.width <= viewport.width) {
+      pushX = overflowLeft || -overflowRight;
+      fitsInViewportHorizontally = true;
+    } else {
+      pushX = viewport.left - position.x;
+    }
+
+    if (overlayRect.height <= viewport.height) {
+      pushY = overflowTop || -overflowBottom;
+      fitsInViewportVertically = true;
+    } else if (this._isConstrainHeightAllowed) {
+      pushY = viewport.top - position.y;
+    }
+
+    return {
+      x: position.x + pushX,
+      y: position.y + pushY,
+      fitsInViewportHorizontally,
+      fitsInViewportVertically,
+      isTopLeftCornerInViewport: true,
+    };
   }
 
   /**
@@ -305,7 +472,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   private getScrollableViewProperties(overlay: HTMLElement): ScrollableViewProperties {
     const originBounds = this._getElementBounds(this._origin);
     const overlayBounds = this._getElementBounds(overlay);
-    const scrollContainerBounds = this.scrollables.map((scrollable: Scrollable) => {
+    const scrollContainerBounds = this._scrollables.map((scrollable: Scrollable) => {
       return this._getElementBounds(scrollable.getElementRef().nativeElement);
     });
 
@@ -345,8 +512,41 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     });
   }
 
-  /** Physically positions the overlay element to the given coordinate. */
-  private _setElementPosition(
+  /**
+   * Applies a computed position to the overlay and emits a position change.
+   *
+   * @param element The overlay element
+   * @param position The position preference
+   * @param point The exact point at which to place the overlay's top-left corner.
+   * @param constraints The size constraints of the overlay
+   */
+  private _applyPosition(
+      element: HTMLElement,
+      position: ConnectionPositionPair,
+      point: Point,
+      overlayRect: ClientRect,
+      constraints: SizeConstraints = {width: 0, height: 0}) {
+    this._setElementPositionStyles(element, overlayRect, point, position);
+
+    // Save the last connected position in case the position needs to be re-calculated.
+    this._lastConnectedPosition = position;
+
+    // Notify that the position has been changed along with its change properties.
+    const scrollableViewProperties = this.getScrollableViewProperties(element);
+    const positionChange = new ConnectedOverlayPositionChange(position, scrollableViewProperties);
+    positionChange.constrainedHeight = constraints.height;
+    positionChange.contrainedWidth = constraints.width;
+    this._onPositionChange.next(positionChange);
+  }
+
+  /**
+   * Physically positions the overlay element to the given coordinate.
+   * @param element The overlay element
+   * @param overlayRect
+   * @param overlayPoint
+   * @param pos
+   */
+  private _setElementPositionStyles(
       element: HTMLElement,
       overlayRect: ClientRect,
       overlayPoint: Point,
@@ -376,8 +576,8 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     // When we're setting `right`, we adjust the x position such that it is the distance
     // from the right edge of the viewport rather than the left edge.
     let x = horizontalStyleProperty === 'left' ?
-      overlayPoint.x :
-      document.documentElement.clientWidth - (overlayPoint.x + overlayRect.width);
+        overlayPoint.x :
+        document.documentElement.clientWidth - (overlayPoint.x + overlayRect.width);
 
 
     // Reset any existing styles. This is necessary in case the preferred position has
@@ -387,6 +587,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     element.style[verticalStyleProperty] = `${y}px`;
     element.style[horizontalStyleProperty] = `${x}px`;
   }
+
 
   /** Returns the bounding positions of the provided element with respect to the viewport. */
   private _getElementBounds(element: HTMLElement): ElementBoundingPositions {
@@ -423,4 +624,20 @@ interface Point {
 interface OverlayPoint extends Point {
   visibleArea?: number;
   fitsInViewport?: boolean;
+  fitsInViewportVertically?: boolean;
+  fitsInViewportHorizontally?: boolean;
+  isTopLeftCornerInViewport?: boolean;
+}
+
+/** Result of an attempt to use a preferred position by constraining the size of the overlay. */
+interface ConstraintResult {
+  isConstraintSuccessful: boolean;
+  width: number;
+  height: number;
+}
+
+/** Represents a constrained overlay size */
+interface SizeConstraints {
+  width: number;
+  height: number;
 }

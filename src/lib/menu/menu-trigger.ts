@@ -28,6 +28,9 @@ import {
 import {Subscription} from 'rxjs/Subscription';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
 
+
+const MENU_ITEM_HEIGHT = 48;
+
 // TODO(andrewseguin): Remove the kebab versions in favor of camelCased attribute selectors
 
 /**
@@ -229,7 +232,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    * correct, even if a fallback position is used for the overlay.
    */
   private _subscribeToPositions(position: ConnectedPositionStrategy): void {
-    this._positionSubscription = position.onPositionChange.subscribe((change) => {
+    this._positionSubscription = position.onPositionChange.subscribe(change => {
       const posX: MenuPositionX = change.connectionPair.originX === 'start' ? 'after' : 'before';
       let posY: MenuPositionY = change.connectionPair.originY === 'top' ? 'below' : 'above';
 
@@ -238,6 +241,12 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
       }
 
       this.menu.setPositionClasses(posX, posY);
+
+      if (change.constrainedHeight) {
+        // test!
+        (document.querySelector('.mat-menu-panel') as HTMLElement).style.maxHeight =
+            `${change.constrainedHeight}px`;
+      }
     });
   }
 
@@ -272,7 +281,9 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
           {overlayX: posX, overlayY: fallbackOverlayY})
       .withFallbackPosition(
           {originX: fallbackX, originY: fallbackOriginY},
-          {overlayX: fallbackX, overlayY: fallbackOverlayY});
+          {overlayX: fallbackX, overlayY: fallbackOverlayY})
+      .withViewportMargin(48)
+      .allowHeightConstraint(MENU_ITEM_HEIGHT * 3);
   }
 
   private _cleanUpSubscriptions(): void {

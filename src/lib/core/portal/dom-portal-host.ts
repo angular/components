@@ -40,10 +40,12 @@ export class DomPortalHost extends BasePortalHost {
           componentFactory,
           portal.viewContainerRef.length,
           portal.injector || portal.viewContainerRef.parentInjector);
-
       this.setDisposeFn(() => componentRef.destroy());
     } else {
       componentRef = componentFactory.create(portal.injector || this._defaultInjector);
+
+      componentRef.hostView.detectChanges();
+
       this._appRef.attachView(componentRef.hostView);
       this.setDisposeFn(() => {
         this._appRef.detachView(componentRef.hostView);
