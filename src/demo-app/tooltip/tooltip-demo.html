@@ -1,6 +1,14 @@
 <div class="demo-tooltip">
   <h1>Tooltip Demo</h1>
 
+  <div class="demo-icon-row">
+    <button md-icon-button><md-icon mdTooltip="Delete">delete</md-icon></button>
+    <button md-icon-button><md-icon mdTooltip="Make favorite">favorite</md-icon></button>
+    <button md-icon-button><md-icon mdTooltip="Get help">help</md-icon></button>
+    <button md-icon-button><md-icon mdTooltip="Ride">motorcycle</md-icon></button>
+    <button md-icon-button><md-icon [mdTooltip]="extensionTooltip">extension</md-icon></button>
+  </div>
+
   <div class="centered" cdk-scrollable>
     <button #tooltip="mdTooltip"
             md-raised-button

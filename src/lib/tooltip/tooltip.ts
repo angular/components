@@ -116,6 +116,7 @@ export class MdTooltip implements OnDestroy {
       // the tooltip.
       if (this._tooltipInstance) {
         this._disposeTooltip();
+        this._createTooltip();
       }
     }
   }
@@ -220,11 +221,13 @@ export class MdTooltip implements OnDestroy {
     }
   }
 
-  /** Dispose the tooltip when destroyed. */
+  ngOnInit() {
+    this._createTooltip();
+  }
+
   ngOnDestroy() {
-    if (this._tooltipInstance) {
-      this._disposeTooltip();
-    }
+    this._disposeTooltip();
+
     // Clean up the event listeners set in the constructor
     if (!this._platform.IOS) {
       this._enterListener();
@@ -236,28 +239,14 @@ export class MdTooltip implements OnDestroy {
   show(delay: number = this.showDelay): void {
     if (this.disabled || !this._message || !this._message.trim()) { return; }
 
-    if (!this._tooltipInstance) {
-      this._createTooltip();
+    if (this._tooltipInstance) {
+      this._tooltipInstance.show(this._position, delay);
     }
-
-    // If the user has not already set an aria-describedby, then use the tooltip's id.
-    if (!this._getAriaDescribedby() && this._tooltipInstance) {
-      this._setAriaDescribedBy(this._tooltipInstance.id);
-    }
-
-    this._setTooltipClass(this._tooltipClass);
-    this._setTooltipMessage(this._message);
-    this._tooltipInstance!.show(this._position, delay);
   }
 
   /** Hides the tooltip after the delay in ms, defaults to tooltip-delay-hide or 0ms if no input */
   hide(delay: number = this.hideDelay): void {
     if (this._tooltipInstance) {
-      // Remove the aria-describedby attribute if it matches the now-hidden tooltip's id
-      if (this._getAriaDescribedby() === this._tooltipInstance.id) {
-        this._setAriaDescribedBy('');
-      }
-
       this._tooltipInstance.hide(delay);
     }
   }
@@ -267,13 +256,11 @@ export class MdTooltip implements OnDestroy {
     this._isTooltipVisible() ? this.hide() : this.show();
   }
 
-  _getTooltipId(): string {
-    return this._tooltipInstance ? this._tooltipInstance.id : '';
-  }
-
   /** Returns true if the tooltip is currently visible to the user */
   _isTooltipVisible(): boolean {
-    return !!this._tooltipInstance && this._tooltipInstance.isVisible();
+    if (this._tooltipInstance) {
+      return this._tooltipInstance.isVisible();
+    }
   }
 
   /** Handles the keydown events on the host element. */
@@ -304,13 +291,13 @@ export class MdTooltip implements OnDestroy {
 
     this._tooltipInstance = overlayRef.attach(portal).instance;
 
-    // Dispose the overlay when finished the shown tooltip.
-    this._tooltipInstance!.afterHidden().subscribe(() => {
-      // Check first if the tooltip has already been removed through this components destroy.
-      if (this._tooltipInstance) {
-        this._disposeTooltip();
-      }
-    });
+    // If the user has not already set an aria-describedby, then use the tooltip's id.
+    if (!this._getAriaDescribedby() && this._tooltipInstance) {
+      this._setAriaDescribedBy(this._tooltipInstance.id);
+    }
+
+    this._setTooltipClass(this._tooltipClass);
+    this._setTooltipMessage(this._message);
   }
 
   /** Create the overlay config and position strategy */
@@ -455,7 +442,8 @@ let _uniqueTooltipIdCounter = 0;
     // Forces the element to have a layout in IE and Edge. This fixes issues where the element
     // won't be rendered if the animations are disabled or there is no web animations polyfill.
     '[style.zoom]': '_visibility === "visible" ? 1 : null',
-    '(body:click)': 'this._handleBodyInteraction()'
+    '(body:click)': '_handleBodyInteraction()',
+    '[attr.aria-hidden]': "isVisible() ? '' : 'true'",
   }
 })
 export class TooltipComponent {

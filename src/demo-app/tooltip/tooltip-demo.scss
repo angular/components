@@ -1,4 +1,10 @@
 .demo-tooltip {
+  .demo-icon-row {
+    height: 64px;
+    display: flex;
+    align-items: center;
+  }
+
   .centered {
     text-align: center;
     height: 200px;

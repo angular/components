@@ -15,5 +15,7 @@ export class TooltipDemo {
   disabled = false;
   showDelay = 0;
   hideDelay = 1000;
+
+  extensionTooltip = 'Extension tooltip';
   showExtraClass = false;
 }

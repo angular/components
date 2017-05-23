@@ -4,14 +4,14 @@ import {
   fakeAsync,
   flushMicrotasks,
   TestBed,
-  tick
+  tick,
 } from '@angular/core/testing';
 import {
   ChangeDetectionStrategy,
   Component,
   DebugElement,
   ElementRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {
   TooltipPosition,
