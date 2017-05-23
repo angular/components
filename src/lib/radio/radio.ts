@@ -182,13 +182,10 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
   get disabled() { return this._disabled; }
   set disabled(value) {
     this._disabled = value;
-    if (this._radios) {
-      // Update radios disabled state
-      this._radios.forEach((r) => r._markForCheck());
-    }
+    this._markRadiosForCheck();
   }
 
-  constructor(private _change: ChangeDetectorRef) {
+  constructor(private _changeDetector: ChangeDetectorRef) {
     super();
   }
 
@@ -259,7 +256,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
    */
   writeValue(value: any) {
     this.value = value;
-    this._change.markForCheck();
+    this._changeDetector.markForCheck();
   }
 
   /**
@@ -286,7 +283,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
    */
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
-    this._change.markForCheck();
+    this._changeDetector.markForCheck();
   }
 }
 
