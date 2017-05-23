@@ -70,10 +70,10 @@ export class MdPlaceholder {}
   }
 })
 export class MdHint {
-  // Whether to align the hint label at the start or end of the line.
+  /** Whether to align the hint label at the start or end of the line. */
   @Input() align: 'start' | 'end' = 'start';
 
-  // Unique ID for the hint. Used for the aria-describedby on the input.
+  /** Unique ID for the hint. Used for the aria-describedby on the input. */
   @Input() id: string = `md-input-hint-${nextUniqueId++}`;
 }
 
