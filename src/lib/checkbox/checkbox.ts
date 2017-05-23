@@ -161,9 +161,6 @@ export class MdCheckbox extends _MdCheckboxMixinBase
   /** Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor. */
   @ViewChild(MdRipple) _ripple: MdRipple;
 
-  /** Whether the checkbox has a label set or not. */
-  _hasLabel: boolean = false;
-
   /**
    * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
    * @docs-private
@@ -265,6 +262,14 @@ export class MdCheckbox extends _MdCheckboxMixinBase
 
   _isRippleDisabled() {
     return this.disableRipple || this.disabled;
+  }
+
+  /** Method being called whenever the label text changes. */
+  _onLabelTextChange() {
+    // This method is getting called whenever the label of the checkbox changes.
+    // Since the checkbox uses the OnPush strategy we need to notify it about the change
+    // that has been recognized by the cdkObserveContent directive.
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
