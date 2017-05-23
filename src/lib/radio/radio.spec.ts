@@ -229,7 +229,7 @@ describe('MdRadio', () => {
     });
 
     it('should not show ripples on disabled radio buttons', () => {
-      radioInstances[0].disabled = true;
+      testComponent.isFirstDisabled = true;
       fixture.detectChanges();
 
       dispatchFakeEvent(radioLabelElements[0], 'mousedown');
@@ -238,7 +238,7 @@ describe('MdRadio', () => {
       expect(radioNativeElements[0].querySelectorAll('.mat-ripple-element').length)
         .toBe(0, 'Expected a disabled radio button to not show ripples');
 
-      radioInstances[0].disabled = false;
+      testComponent.isFirstDisabled = false;
       fixture.detectChanges();
 
       dispatchFakeEvent(radioLabelElements[0], 'mousedown');

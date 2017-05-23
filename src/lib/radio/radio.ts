@@ -146,9 +146,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
 
   set labelPosition(v) {
     this._labelPosition = (v == 'before') ? 'before' : 'after';
-    if (this._radios) {
-      this._radios.forEach(radio => radio._groupValueChanged());
-    }
+    this._markRadiosForCheck();
   }
 
   /** Value of the radio button. */
@@ -186,7 +184,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
     this._disabled = value;
     if (this._radios) {
       // Update radios disabled state
-      this._radios.forEach((r) => r._groupValueChanged());
+      this._radios.forEach((r) => r._markForCheck());
     }
   }
 
@@ -246,6 +244,12 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
       event.source = this._selected;
       event.value = this._value;
       this.change.emit(event);
+    }
+  }
+
+  _markRadiosForCheck() {
+    if (this._radios) {
+      this._radios.forEach(radio => radio._markForCheck());
     }
   }
 
@@ -403,8 +407,6 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
   }
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
-    // Update rippleDisabled
-    this._changeDetector.markForCheck();
   }
 
   /**
@@ -466,7 +468,12 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
     this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, this._renderer, 'keyboard');
   }
 
-  _groupValueChanged() {
+  /**
+   * Marks the radio button as needing checking for change detection.
+   * This method is exposed because the parent radio group will directly
+   * update bound properties of the radio button.
+   */
+  _markForCheck() {
     // When group value changes, the button will not be notified. Use `markForCheck` to explicit
     // update radio button's status
     this._changeDetector.markForCheck();
