@@ -24,7 +24,7 @@ import {ESCAPE} from '../core/keyboard/keycodes';
 import {dispatchKeyboardEvent} from '../core/testing/dispatch-events';
 
 
-describe('MdMenu', () => {
+fdescribe('MdMenu', () => {
   let overlayContainerElement: HTMLElement;
   let dir: LayoutDirection;
 

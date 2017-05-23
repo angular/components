@@ -922,7 +922,7 @@ describe('MdAutocomplete', () => {
           .toEqual('below', `Expected autocomplete positionY to default to below.`);
     });
 
-    it('should reposition the panel on scroll', () => {
+    fit('should reposition the panel on scroll', () => {
       const spacer = document.createElement('div');
 
       spacer.style.height = '1000px';

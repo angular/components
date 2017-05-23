@@ -281,9 +281,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
           {overlayX: posX, overlayY: fallbackOverlayY})
       .withFallbackPosition(
           {originX: fallbackX, originY: fallbackOriginY},
-          {overlayX: fallbackX, overlayY: fallbackOverlayY})
-      .withViewportMargin(48)
-      .allowHeightConstraint(MENU_ITEM_HEIGHT * 3);
+          {overlayX: fallbackX, overlayY: fallbackOverlayY});
   }
 
   private _cleanUpSubscriptions(): void {

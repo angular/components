@@ -18,7 +18,7 @@ const DEFAULT_WIDTH = 60;
 // The karma config has been set to this for local tests, and it is the default size
 // for tests on CI (both SauceLabs and Browserstack).
 
-describe('ConnectedPositionStrategy', () => {
+fdescribe('ConnectedPositionStrategy', () => {
 
   let viewportRuler: ViewportRuler;
 
