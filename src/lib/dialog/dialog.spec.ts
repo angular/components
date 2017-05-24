@@ -455,16 +455,16 @@ describe('MdDialog', () => {
     });
   });
 
-  describe('dialogClass option', () => {
-    it('should have custom dialog class', () => {
+  describe('panelClass option', () => {
+    it('should have custom panel class', () => {
       dialog.open(PizzaMsg, {
-        dialogClass: 'custom-dialog-class',
+        panelClass: 'custom-panel-class',
         viewContainerRef: testViewContainerRef
       });
 
       viewContainerFixture.detectChanges();
 
-      expect(overlayContainerElement.querySelector('.custom-dialog-class')).toBeTruthy();
+      expect(overlayContainerElement.querySelector('.custom-panel-class')).toBeTruthy();
     });
   });
 

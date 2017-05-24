@@ -28,7 +28,7 @@ export class MdDialogConfig {
   role?: DialogRole = 'dialog';
 
   /** Custom class for the dialog, */
-  dialogClass?: string = '';
+  panelClass?: string = '';
 
   /** Whether the dialog has a backdrop. */
   hasBackdrop?: boolean = true;

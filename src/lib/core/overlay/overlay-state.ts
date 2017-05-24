@@ -16,7 +16,7 @@ export class OverlayState {
   scrollStrategy: ScrollStrategy = new NoopScrollStrategy();
 
   /** Custom class to add to the dialog */
-  dialogClass: string = '';
+  panelClass: string = '';
 
   /** Whether the overlay has a backdrop. */
   hasBackdrop: boolean = false;
