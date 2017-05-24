@@ -6,6 +6,8 @@ import {
   OnDestroy,
   Renderer2,
   ElementRef,
+  OnInit,
+  Optional,
 } from '@angular/core';
 import {
   trigger,
@@ -15,6 +17,7 @@ import {
   animate,
   AnimationEvent,
 } from '@angular/animations';
+import {Router, NavigationStart} from '@angular/router';
 import {
   BasePortalHost,
   ComponentPortal,
@@ -24,7 +27,8 @@ import {
 import {MdSnackBarConfig} from './snack-bar-config';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-
+import {Subscription} from 'rxjs/Subscription';
+import 'rxjs/add/operator/filter';
 
 
 export type SnackBarState = 'initial' | 'visible' | 'complete' | 'void';
@@ -58,7 +62,7 @@ export const HIDE_ANIMATION = '195ms cubic-bezier(0.0,0.0,0.2,1)';
     ])
   ],
 })
-export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
+export class MdSnackBarContainer extends BasePortalHost implements OnDestroy, OnInit {
   /** The portal host inside of this container into which the snack bar content will be loaded. */
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
@@ -67,6 +71,9 @@ export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
 
   /** Subject for notifying that the snack bar has finished entering the view. */
   private onEnter: Subject<any> = new Subject();
+
+  /** Subscription to route change events. */
+  private _routeChangeSubscription: Subscription;
 
   /** The state of the snack bar animations. */
   animationState: SnackBarState = 'initial';
@@ -77,8 +84,17 @@ export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
   constructor(
     private _ngZone: NgZone,
     private _renderer: Renderer2,
-    private _elementRef: ElementRef) {
+    private _elementRef: ElementRef,
+    @Optional() private _router: Router) {
     super();
+  }
+
+  ngOnInit() {
+    if (this._router) {
+      this._routeChangeSubscription = this._router.events
+        .filter(event => event instanceof NavigationStart)
+        .subscribe(() => this.exit());
+    }
   }
 
   /** Attach a component portal as content to this snack bar container. */
@@ -148,6 +164,10 @@ export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
    */
   ngOnDestroy() {
     this._completeExit();
+
+    if (this._routeChangeSubscription) {
+      this._routeChangeSubscription.unsubscribe();
+    }
   }
 
   /**

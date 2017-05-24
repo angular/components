@@ -7,11 +7,13 @@ import {
   flushMicrotasks,
   tick
 } from '@angular/core/testing';
+import {Router, NavigationStart} from '@angular/router';
 import {NgModule, Component, Directive, ViewChild, ViewContainerRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdSnackBarModule, MdSnackBar, MdSnackBarConfig, SimpleSnackBar} from './index';
 import {OverlayContainer, LiveAnnouncer} from '../core';
+import {Subject} from 'rxjs/Subject';
 
 
 // TODO(josephperrott): Update tests to mock waiting for time to complete for animations.
@@ -20,6 +22,8 @@ describe('MdSnackBar', () => {
   let snackBar: MdSnackBar;
   let liveAnnouncer: LiveAnnouncer;
   let overlayContainerElement: HTMLElement;
+  let fakeRouter: { events: Subject<any> };
+
 
   let testViewContainerRef: ViewContainerRef;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
@@ -27,17 +31,19 @@ describe('MdSnackBar', () => {
   let simpleMessage = 'Burritos are here!';
   let simpleActionLabel = 'pickup';
 
+
   beforeEach(async(() => {
+    fakeRouter = { events: new Subject() };
     TestBed.configureTestingModule({
       imports: [MdSnackBarModule, SnackBarTestModule, NoopAnimationsModule],
       providers: [
+        { provide: Router, useValue: fakeRouter },
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
           return {getContainerElement: () => overlayContainerElement};
         }}
       ],
-    });
-    TestBed.compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(inject([MdSnackBar, LiveAnnouncer], (sb: MdSnackBar, la: LiveAnnouncer) => {
@@ -348,6 +354,23 @@ describe('MdSnackBar', () => {
     expect(pane.getAttribute('dir')).toBe('rtl', 'Expected the pane to be in RTL mode.');
   });
 
+  it('should close when the route changes', fakeAsync(() => {
+    snackBar.open('Hello', 'Goodbye');
+
+    viewContainerFixture.detectChanges();
+    tick(500);
+
+    expect(overlayContainerElement.querySelectorAll('snack-bar-container').length)
+        .toBe(1, 'Expected one open snack bar.');
+
+    fakeRouter.events.next(new NavigationStart(1337, '/mordor'));
+    viewContainerFixture.detectChanges();
+    tick(500);
+
+    expect(overlayContainerElement.querySelectorAll('snack-bar-container').length)
+        .toBe(0, 'Expected no open snack bars.');
+  }));
+
 });
 
 describe('MdSnackBar with parent MdSnackBar', () => {
@@ -419,6 +442,7 @@ describe('MdSnackBar with parent MdSnackBar', () => {
   }));
 });
 
+
 @Directive({selector: 'dir-with-view-container'})
 class DirectiveWithViewContainer {
   constructor(public viewContainerRef: ViewContainerRef) { }
@@ -452,7 +476,8 @@ class ComponentThatProvidesMdSnackBar {
 }
 
 
-/** Simple component to open snack bars from.
+/**
+ * Simple component to open snack bars from.
  * Create a real (non-test) NgModule as a workaround forRoot
  * https://github.com/angular/angular/issues/10760
  */
