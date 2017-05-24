@@ -19,7 +19,7 @@ import {PositionStrategy} from '../core/overlay/position/position-strategy';
 import {ConnectedPositionStrategy} from '../core/overlay/position/connected-position-strategy';
 import {Observable} from 'rxjs/Observable';
 import {MdOptionSelectionChange, MdOption} from '../core/option/option';
-import {ENTER, UP_ARROW, DOWN_ARROW} from '../core/keyboard/keycodes';
+import {ENTER, UP_ARROW, DOWN_ARROW, HOME, END} from '../core/keyboard/keycodes';
 import {Dir} from '../core/rtl/dir';
 import {MdInputContainer} from '../input/input-container';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
@@ -235,13 +235,16 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this.activeOption._selectViaInteraction();
       event.preventDefault();
     } else {
-      const prevActiveItem = this.autocomplete._keyManager.activeItem;
-      const isArrowKey = event.keyCode === UP_ARROW || event.keyCode === DOWN_ARROW;
-
-      this.autocomplete._keyManager.onKeydown(event);
-
-      if (isArrowKey) {
-        this.openPanel();
+      // By returning we are preventing the prevent default on HOME AND END key.
+      // keyManager.onKeydown(event) method in list-key-manager.ts sets preventDefault.
+      if (event.keyCode ===  HOME || event.keyCode === END) {
+        return;
+      } else {
+        this.autocomplete._keyManager.onKeydown(event);
+        if (event.keyCode === UP_ARROW || event.keyCode === DOWN_ARROW) {
+          this.openPanel();
+          Promise.resolve().then(() => this._scrollToOption());
+        }      
       }
 
       Promise.resolve().then(() => {
