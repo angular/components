@@ -15,7 +15,7 @@ export class DialogDemo {
   actionsAlignment: string;
   config: MdDialogConfig = {
     disableClose: false,
-    panelClass: 'custom-dialog-class',
+    panelClass: 'custom-overlay-pane-class',
     hasBackdrop: true,
     backdropClass: '',
     width: '',

@@ -338,11 +338,8 @@ describe('Overlay', () => {
 
   describe('panelClass', () => {
     let config: OverlayState;
-
-    beforeEach(() => {
-      config = new OverlayState();
-      config.panelClass = 'custom-panel-class';
-    });
+    config = new OverlayState();
+    config.panelClass = 'custom-panel-class';
 
     it('should apply a custom overlay pane class', () => {
       let overlayRef = overlay.create(config);
