@@ -10,8 +10,6 @@ import {MdDialogConfig} from './dialog-config';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
 import {TemplatePortal} from '../core/portal/portal';
-import {BlockScrollStrategy} from '../core/overlay/scroll/block-scroll-strategy';
-import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import 'rxjs/add/operator/first';
 
 
@@ -50,7 +48,6 @@ export class MdDialog {
   constructor(
       private _overlay: Overlay,
       private _injector: Injector,
-      private _viewportRuler: ViewportRuler,
       @Optional() private _location: Location,
       @Optional() @SkipSelf() private _parentDialog: MdDialog) {
 
@@ -123,7 +120,7 @@ export class MdDialog {
     let overlayState = new OverlayState();
     overlayState.panelClass = dialogConfig.panelClass;
     overlayState.hasBackdrop = dialogConfig.hasBackdrop;
-    overlayState.scrollStrategy = new BlockScrollStrategy(this._viewportRuler);
+    overlayState.scrollStrategy = 'block';
     if (dialogConfig.backdropClass) {
       overlayState.backdropClass = dialogConfig.backdropClass;
     }

@@ -20,9 +20,11 @@ export class OverlayRef implements PortalHost {
       private _portalHost: PortalHost,
       private _pane: HTMLElement,
       private _state: OverlayState,
+      private _scrollStrategy: ScrollStrategy,
       private _ngZone: NgZone) {
 
-    this._state.scrollStrategy.attach(this);
+    _scrollStrategy.attach(this,
+        typeof _state.scrollStrategy === 'string' ? null : _state.scrollStrategy.config);
   }
 
   /** The overlay's HTML element */
@@ -44,7 +46,7 @@ export class OverlayRef implements PortalHost {
     this.updateDirection();
     this.updatePosition();
     this._attachments.next();
-    this._state.scrollStrategy.enable();
+    this._scrollStrategy.enable();
 
     // Enable pointer events for the overlay pane element.
     this._togglePointerEvents(true);
@@ -71,7 +73,7 @@ export class OverlayRef implements PortalHost {
     // This is necessary because otherwise the pane element will cover the page and disable
     // pointer events therefore. Depends on the position strategy and the applied pane boundaries.
     this._togglePointerEvents(false);
-    this._state.scrollStrategy.disable();
+    this._scrollStrategy.disable();
     this._detachments.next();
 
     return this._portalHost.detach();
@@ -85,9 +87,13 @@ export class OverlayRef implements PortalHost {
       this._state.positionStrategy.dispose();
     }
 
+    if (this._scrollStrategy) {
+      this._scrollStrategy.disable();
+      this._scrollStrategy = null;
+    }
+
     this.detachBackdrop();
     this._portalHost.dispose();
-    this._state.scrollStrategy.disable();
     this._detachments.next();
     this._detachments.complete();
     this._attachments.complete();

@@ -1,9 +1,11 @@
+import {Injectable} from '@angular/core';
 import {ScrollStrategy} from './scroll-strategy';
 import {ViewportRuler} from '../position/viewport-ruler';
 
 /**
  * Strategy that will prevent the user from scrolling while the overlay is visible.
  */
+@Injectable()
 export class BlockScrollStrategy implements ScrollStrategy {
   private _previousHTMLStyles = { top: null, left: null };
   private _previousScrollPosition: { top: number, left: number };

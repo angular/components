@@ -1,4 +1,5 @@
-import {ScrollStrategy} from './scroll-strategy';
+import {Injectable} from '@angular/core';
+import {ScrollStrategy, getMdScrollStrategyAlreadyAttachedError} from './scroll-strategy';
 import {OverlayRef} from '../overlay-ref';
 import {Subscription} from 'rxjs/Subscription';
 import {ScrollDispatcher} from './scroll-dispatcher';
@@ -7,6 +8,7 @@ import {ScrollDispatcher} from './scroll-dispatcher';
 /**
  * Strategy that will close the overlay as soon as the user starts scrolling.
  */
+@Injectable()
 export class CloseScrollStrategy implements ScrollStrategy {
   private _scrollSubscription: Subscription|null = null;
   private _overlayRef: OverlayRef;
@@ -14,6 +16,10 @@ export class CloseScrollStrategy implements ScrollStrategy {
   constructor(private _scrollDispatcher: ScrollDispatcher) { }
 
   attach(overlayRef: OverlayRef) {
+    if (this._overlayRef) {
+      throw getMdScrollStrategyAlreadyAttachedError();
+    }
+
     this._overlayRef = overlayRef;
   }
 

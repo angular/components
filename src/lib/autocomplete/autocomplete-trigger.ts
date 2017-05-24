@@ -22,7 +22,6 @@ import {MdOptionSelectionChange, MdOption} from '../core/option/option';
 import {ENTER, UP_ARROW, DOWN_ARROW, ESCAPE} from '../core/keyboard/keycodes';
 import {Dir} from '../core/rtl/dir';
 import {MdInputContainer} from '../input/input-container';
-import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/fromEvent';
@@ -104,7 +103,6 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   constructor(private _element: ElementRef, private _overlay: Overlay,
               private _viewContainerRef: ViewContainerRef,
               private _changeDetectorRef: ChangeDetectorRef,
-              private _scrollDispatcher: ScrollDispatcher,
               @Optional() private _dir: Dir, private _zone: NgZone,
               @Optional() @Host() private _inputContainer: MdInputContainer,
               @Optional() @Inject(DOCUMENT) private _document: any) {}
@@ -368,7 +366,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     overlayState.positionStrategy = this._getOverlayPosition();
     overlayState.width = this._getHostWidth();
     overlayState.direction = this._dir ? this._dir.value : 'ltr';
-    overlayState.scrollStrategy = new RepositionScrollStrategy(this._scrollDispatcher);
+    overlayState.scrollStrategy = 'reposition';
     return overlayState;
   }
 

@@ -27,9 +27,7 @@ describe('Overlay', () => {
           return {getContainerElement: () => overlayContainerElement};
         }}
       ]
-    });
-
-    TestBed.compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(inject([Overlay], (o: Overlay) => {
@@ -355,10 +353,31 @@ describe('Overlay', () => {
     let fakeScrollStrategy: FakeScrollStrategy;
     let config: OverlayState;
 
+    class FakeScrollStrategy implements ScrollStrategy {
+      isEnabled = false;
+      overlayRef: OverlayRef;
+
+      constructor() {
+        fakeScrollStrategy = this;
+      }
+
+      attach(overlayRef: OverlayRef) {
+        this.overlayRef = overlayRef;
+      }
+
+      enable() {
+        this.isEnabled = true;
+      }
+
+      disable() {
+        this.isEnabled = false;
+      }
+    }
+
     beforeEach(() => {
       config = new OverlayState();
-      fakeScrollStrategy = new FakeScrollStrategy();
-      config.scrollStrategy = fakeScrollStrategy;
+      overlay.registerScrollStrategy('fake', FakeScrollStrategy);
+      config.scrollStrategy = 'fake';
     });
 
     it('should attach the overlay ref to the scroll strategy', () => {
@@ -464,21 +483,4 @@ class FakePositionStrategy implements PositionStrategy {
   }
 
   dispose() {}
-}
-
-class FakeScrollStrategy implements ScrollStrategy {
-  isEnabled = false;
-  overlayRef: OverlayRef;
-
-  attach(overlayRef: OverlayRef) {
-    this.overlayRef = overlayRef;
-  }
-
-  enable() {
-    this.isEnabled = true;
-  }
-
-  disable() {
-    this.isEnabled = false;
-  }
 }
