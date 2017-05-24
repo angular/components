@@ -1,4 +1,5 @@
 // TODO(kara): prevent-close functionality
+// wasn't this supposed to be from an outside developer who needs this feature urgently?
 
 import {
   AfterContentInit,
