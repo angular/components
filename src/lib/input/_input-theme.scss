@@ -71,7 +71,10 @@
   // logic is used to style the error state and to show the error messages.
   .mat-input-invalid {
     .mat-input-placeholder {
-      &, &.mat-accent, &.mat-float .mat-placeholder-required {
+      color: $input-underline-color-warn;
+
+      &.mat-accent,
+      &.mat-float .mat-placeholder-required {
         color: $input-underline-color-warn;
       }
     }
