@@ -47,8 +47,8 @@ if (process.env['TRAVIS']) {
     'build': process.env['TRAVIS_JOB_ID'],
     'name': 'Material E2E Tests',
 
-    // Enables concurrent testing in the Webdriver. Currently runs five e2e files in parallel.
-    maxInstances: 5,
+    // Enables concurrent testing in the webdriver. Currently runs eight e2e files in parallel.
+    maxInstances: 8,
     shardTestFiles: true,
 
     // By default Saucelabs tries to record the whole e2e run. This can slow down the builds.
