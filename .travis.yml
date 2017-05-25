@@ -28,6 +28,7 @@ env:
     - MODE=lint
     - MODE=aot
     - MODE=closure-compiler
+    - MODE=prerender
     - MODE=payload
     - MODE=e2e
     - MODE=saucelabs_required
