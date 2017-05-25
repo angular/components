@@ -10,7 +10,7 @@ $mat-input-line-spacing: 0.125 !default;
 // The height of the underline.
 $mat-input-underline-height: 1px !default;
 // The amount to scale the font for the floating label and subscript.
-$mat-input-helper-font-scale: 0.75 !default;
+$mat-input-subscript-font-scale: 0.75 !default;
 // The amount to scale the font for the prefix and suffix icons.
 $mat-input-prefix-suffix-icon-font-scale: 1.5 !default;
 
@@ -20,33 +20,34 @@ $mat-input-line-height: 1 + $mat-input-line-spacing;
 // the text itself, not the edge of the line; therefore we subtract off 1/2 of the line spacing.
 $mat-input-infix-padding: 0.5em - $mat-input-line-spacing / 2;
 // The margin applied to the input-infix to reserve space for the floating label.
-$mat-input-infix-margin-top: 1em * $mat-input-line-height * $mat-input-helper-font-scale;
+$mat-input-infix-margin-top: 1em * $mat-input-line-height * $mat-input-subscript-font-scale;
 // Font size to use for the label and subscript text.
-$mat-input-helper-font-size: $mat-input-helper-font-scale * 100%;
+$mat-input-subscript-font-size: $mat-input-subscript-font-scale * 100%;
 // Font size to use for the for the prefix and suffix icons.
 $mat-input-prefix-suffix-icon-font-size: $mat-input-prefix-suffix-icon-font-scale * 100%;
 // The space between the bottom of the input table and the subscript container. Mocks show half of
-// the text size, but this margin is applied to an element with the helper text font size, so we
+// the text size, but this margin is applied to an element with the subscript text font size, so we
 // need to divide by the scale factor to make it half of the original text size. We again need to
 // subtract off 1/2 of the line spacing since the mocks measure to the edge of the text, not the
 // edge of the line.
-$mat-input-subscript-margin-top: 0.5em / $mat-input-helper-font-scale - $mat-input-line-spacing / 2;
+$mat-input-subscript-margin-top:
+    0.5em / $mat-input-subscript-font-scale - $mat-input-line-spacing / 2;
 // The padding applied to the input-wrapper to reserve space for the subscript, since it's
 // absolutely positioned. This is a combination of the subscript's margin and line-height, but we
-// need to multiply by the helper font scale factor since the wrapper has a larger font size.
+// need to multiply by the subscript font scale factor since the wrapper has a larger font size.
 $mat-input-wrapper-padding-bottom:
-    ($mat-input-subscript-margin-top + $mat-input-line-height) * $mat-input-helper-font-scale;
-// The amount of y-offset to apply to the placeholder when it is floating.
-$mat-input-floating-placeholder-offset: -$mat-input-infix-padding - 1em;
+    ($mat-input-subscript-margin-top + $mat-input-line-height) * $mat-input-subscript-font-scale;
 
 
 // Applies a floating placeholder above the input itself.
 @mixin mat-input-placeholder-floating {
   display: block;
   transform: translateY(-$mat-input-infix-margin-top - $mat-input-infix-padding)
-             perspective(1px) // fixes text blurriness.
-             scale($mat-input-helper-font-scale);
-  width: 100% / $mat-input-helper-font-scale;
+             // fixes text blurriness, see
+             // https://css-tricks.com/forums/topic/transforms-cause-font-smoothing-weirdness-in-webkit/
+             perspective(1px)
+             scale($mat-input-subscript-font-scale);
+  width: 100% / $mat-input-subscript-font-scale;
 }
 
 
@@ -280,14 +281,14 @@ $mat-input-floating-placeholder-offset: -$mat-input-infix-padding - 1em;
 // Note that we're using `top` in order to allow for stacked children to flow downwards.
 .mat-input-subscript-wrapper {
   position: absolute;
-  font-size: $mat-input-helper-font-size;
+  font-size: $mat-input-subscript-font-size;
   margin-top: $mat-input-subscript-margin-top;
   width: 100%;
   overflow: hidden; // prevents multi-line errors from overlapping the input
 
   // We want the subscript to start at the end of the content box, not the padding box,
   // so we move it up by the padding amount (adjusted for the smaller font size);
-  top: calc(100% - #{$mat-input-wrapper-padding-bottom / $mat-input-helper-font-scale});
+  top: calc(100% - #{$mat-input-wrapper-padding-bottom / $mat-input-subscript-font-scale});
 }
 
 // Scale down icons in the placeholder and hint to be the same size as the text.
