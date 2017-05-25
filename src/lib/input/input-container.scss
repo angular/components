@@ -120,7 +120,7 @@ $mat-input-floating-placeholder-offset: -$mat-input-infix-padding - 1em;
   padding: $mat-input-infix-padding 0;
   // Throws off the baseline if we do it as a real margin, so we do it as a border instead.
   border-top: $mat-input-infix-margin-top solid transparent;
-  flex: 1;
+  flex: auto;
 }
 
 // The Input element proper.
