@@ -23,6 +23,7 @@ export class MdDialog {
   private _openDialogsAtThisLevel: MdDialogRef<any>[] = [];
   private _afterAllClosedAtThisLevel = new Subject<void>();
   private _afterOpenAtThisLevel = new Subject<MdDialogRef<any>>();
+  private _isOpenState = new Subject<boolean>();
   private _boundKeydown = this._handleKeydown.bind(this);
 
   /** Keeps track of the currently-open dialogs. */
@@ -85,6 +86,7 @@ export class MdDialog {
     this._openDialogs.push(dialogRef);
     dialogRef.afterClosed().subscribe(() => this._removeOpenDialog(dialogRef));
     this._afterOpen.next(dialogRef);
+    this._isOpenState.next(true);
 
     return dialogRef;
   }
@@ -102,6 +104,14 @@ export class MdDialog {
       // they'll be removed from the list instantaneously.
       this._openDialogs[i].close();
     }
+  }
+
+  /**
+   * Gets an observable that is notified when dialog changes open state.
+   * @returns Observable of open state of a dialog.
+   */
+  isOpenState(): Observable<boolean> {
+    return this._isOpenState.asObservable();
   }
 
   /**
@@ -205,7 +215,9 @@ export class MdDialog {
       // no open dialogs are left, call next on afterAllClosed Subject
       if (!this._openDialogs.length) {
         this._afterAllClosed.next();
+        this._isOpenState.next(false);
         document.removeEventListener('keydown', this._boundKeydown);
+
       }
     }
   }
