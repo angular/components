@@ -5,7 +5,7 @@ import {
   ContentChild,
   ContentChildren,
   Directive,
-  Input,
+  Input, IterableChangeRecord, IterableDiffer, IterableDiffers,
   QueryList,
   ViewChild,
   ViewContainerRef,
@@ -76,6 +76,9 @@ export class CdkTable implements CollectionViewer {
    */
   private _columnDefinitionsByName = new Map<string,  CdkColumnDef>();
 
+  /** Differ used to check and find the changes in the data provided by the data source. */
+  private _dataDiffer: IterableDiffer<any> = null;
+
   // Placeholders within the table's template where the header and data rows will be inserted.
   @ViewChild(RowPlaceholder) _rowPlaceholder: RowPlaceholder;
   @ViewChild(HeaderRowPlaceholder) _headerRowPlaceholder: HeaderRowPlaceholder;
@@ -92,9 +95,13 @@ export class CdkTable implements CollectionViewer {
   /** Set of templates that used as the data row containers. */
   @ContentChildren(CdkRowDef) _rowDefinitions: QueryList<CdkRowDef>;
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef) {
+  constructor(private _differs: IterableDiffers,
+              private _changeDetectorRef: ChangeDetectorRef) {
     console.warn('The data table is still in active development ' +
         'and should be considered unstable.');
+
+    // TODO(andrewseguin): Add trackby function input.
+    this._dataDiffer = this._differs.find([]).create();
   }
 
   ngOnDestroy() {
@@ -123,11 +130,7 @@ export class CdkTable implements CollectionViewer {
     //   present after view init, connect it when it is defined.
     // TODO(andrewseguin): Unsubscribe from this on destroy.
     this.dataSource.connect(this).subscribe((rowsData: any[]) => {
-      // TODO(andrewseguin): Add a differ that will check if the data has changed,
-      //   rather than re-rendering all rows
-      this._rowPlaceholder.viewContainer.clear();
-      rowsData.forEach(rowData => this.insertRow(rowData));
-      this._changeDetectorRef.markForCheck();
+      this.renderRowChanges(rowsData);
     });
   }
 
@@ -146,11 +149,30 @@ export class CdkTable implements CollectionViewer {
     CdkCellOutlet.mostRecentCellOutlet.context = {};
   }
 
+  renderRowChanges(dataRows: any[]) {
+    const changes = this._dataDiffer.diff(dataRows);
+    if (!changes) { return; }
+
+    changes.forEachOperation(
+        (item: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
+          if (item.previousIndex == null) {
+            this.insertRow(dataRows[currentIndex], currentIndex);
+          } else if (currentIndex == null) {
+            this._rowPlaceholder.viewContainer.remove(adjustedPreviousIndex);
+          } else {
+            const view = this._rowPlaceholder.viewContainer.get(adjustedPreviousIndex);
+            this._rowPlaceholder.viewContainer.move(view, currentIndex);
+          }
+        });
+
+    this._changeDetectorRef.markForCheck();
+  }
+
   /**
    * Create the embedded view for the data row template and place it in the correct index location
    * within the data row view container.
    */
-  insertRow(rowData: any) {
+  insertRow(rowData: any, index: number) {
     // TODO(andrewseguin): Add when predicates to the row definitions
     //   to find the right template to used based on
     //   the data rather than choosing the first row definition.
@@ -161,7 +183,7 @@ export class CdkTable implements CollectionViewer {
 
     // TODO(andrewseguin): add some code to enforce that exactly one
     //   CdkCellOutlet was instantiated as a result  of `createEmbeddedView`.
-    this._rowPlaceholder.viewContainer.createEmbeddedView(row.template, context);
+    this._rowPlaceholder.viewContainer.createEmbeddedView(row.template, context, index);
 
     // Insert empty cells if there is no data to improve rendering time.
     CdkCellOutlet.mostRecentCellOutlet.cells = rowData ? this.getCellTemplatesForRow(row) : [];

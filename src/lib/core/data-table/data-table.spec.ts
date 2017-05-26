@@ -2,7 +2,6 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {CdkTable} from './data-table';
 import {CollectionViewer, DataSource} from './data-source';
-import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {customMatchers} from '../testing/jasmine-matchers';
@@ -95,6 +94,39 @@ describe('CdkTable', () => {
     getRows(tableElement).forEach(row => {
       expect(getCells(row).length).toBe(component.columnsToRender.length);
     });
+  });
+
+  it('should use differ to add/remove/move rows', () => {
+    // Each row receives an attribute 'initialIndex' the element's original place
+    getRows(tableElement).forEach((row: Element, index: number) => {
+      row.setAttribute('initialIndex', index.toString());
+    });
+
+    // Prove that the attributes match their indicies
+    const initialRows = getRows(tableElement);
+    expect(initialRows[0].getAttribute('initialIndex')).toBe('0');
+    expect(initialRows[1].getAttribute('initialIndex')).toBe('1');
+    expect(initialRows[2].getAttribute('initialIndex')).toBe('2');
+
+    // Swap first and second data in data array
+    let copiedData = component.dataSource.data.slice();
+    let temp = copiedData[0];
+    copiedData[0] = copiedData[1];
+    copiedData[1] = temp;
+
+    // Remove the third element
+    copiedData.splice(2, 1);
+
+    // Add new data
+    component.dataSource.data = copiedData;
+    component.dataSource.addData();
+
+    // Expect that the first and second rows were swapped and that the last row is new
+    const changedRows = getRows(tableElement);
+    expect(changedRows.length).toBe(3);
+    expect(changedRows[0].getAttribute('initialIndex')).toBe('1');
+    expect(changedRows[1].getAttribute('initialIndex')).toBe('0');
+    expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
   });
 
   // TODO(andrewseguin): Add test for dynamic classes on header/rows
