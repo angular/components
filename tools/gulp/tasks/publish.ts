@@ -3,7 +3,7 @@ import {existsSync, statSync} from 'fs-extra';
 import {join} from 'path';
 import {task} from 'gulp';
 import {execTask, sequenceTask} from '../util/task_helpers';
-import {DIST_RELEASES, RELEASE_PACKAGES} from '../constants';
+import {DIST_RELEASES, RELEASE_PACKAGES} from '../build-config';
 import {yellow, green, red, grey} from 'chalk';
 import * as minimist from 'minimist';
 
