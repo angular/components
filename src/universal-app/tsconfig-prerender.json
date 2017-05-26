@@ -1,4 +1,4 @@
-// TypeScript config file that is used to compile the server code for the Universal App.
+// TypeScript config file that is used to compile the files that prerender the Universal app.
 {
   "compilerOptions": {
     "declaration": false,
@@ -20,6 +20,6 @@
     }
   },
   "files": [
-    "server.ts"
+    "prerender.ts"
   ]
 }
