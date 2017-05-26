@@ -16,6 +16,7 @@ import {
   Input,
   OnDestroy,
   Optional,
+  Output,
   Renderer2
 } from '@angular/core';
 import {MdDatepicker} from './datepicker';
@@ -52,6 +53,21 @@ export const MD_DATEPICKER_VALIDATORS: any = {
 };
 
 
+/** An event used for datepicker input and change events. */
+export class MdDatepickerInputEvent<D> {
+  /** The HTMLElement for the target datepicker input. */
+  targetElement: HTMLElement;
+
+  /** The new value for the target datepicker input. */
+  value: D;
+
+  constructor(public target: MdDatepickerInput<D>) {
+    this.targetElement = this.target._elementRef.nativeElement;
+    this.value = this.target.value;
+  }
+}
+
+
 /** Directive used to connect an input to a MdDatepicker. */
 @Directive({
   selector: 'input[mdDatepicker], input[matDatepicker]',
@@ -64,9 +80,11 @@ export const MD_DATEPICKER_VALIDATORS: any = {
     '[attr.max]': 'max ? _dateAdapter.getISODateString(max) : null',
     '[disabled]': 'disabled',
     '(input)': '_onInput($event.target.value)',
+    '(change)': '_onChange()',
     '(blur)': '_onTouched()',
     '(keydown)': '_onKeydown($event)',
-  }
+  },
+  exportAs: 'mdDatepickerInput',
 })
 export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
     Validator {
@@ -134,6 +152,10 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   }
   private _disabled: boolean;
 
+  @Output() dateChange = new EventEmitter<MdDatepickerInputEvent<D>>();
+
+  @Output() dateInput = new EventEmitter<MdDatepickerInputEvent<D>>();
+
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D|null>();
 
@@ -170,7 +192,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
       Validators.compose([this._minValidator, this._maxValidator, this._filterValidator]);
 
   constructor(
-      private _elementRef: ElementRef,
+      public _elementRef: ElementRef,
       private _renderer: Renderer2,
       @Optional() private _dateAdapter: DateAdapter<D>,
       @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats,
@@ -189,6 +211,8 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
           this._datepicker.selectedChanged.subscribe((selected: D) => {
             this.value = selected;
             this._cvaOnChange(selected);
+            this.dateInput.emit(new MdDatepickerInputEvent(this));
+            this.dateChange.emit(new MdDatepickerInputEvent(this));
           });
     }
   }
@@ -246,5 +270,10 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     this._cvaOnChange(date);
     this._valueChange.emit(date);
+    this.dateInput.emit(new MdDatepickerInputEvent(this));
+  }
+
+  _onChange() {
+    this.dateChange.emit(new MdDatepickerInputEvent(this));
   }
 }
