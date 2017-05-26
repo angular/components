@@ -5,7 +5,10 @@ import {
   ContentChild,
   ContentChildren,
   Directive,
-  Input, IterableChangeRecord, IterableDiffer, IterableDiffers,
+  Input,
+  IterableChangeRecord,
+  IterableDiffer,
+  IterableDiffers,
   QueryList,
   ViewChild,
   ViewContainerRef,
@@ -76,7 +79,7 @@ export class CdkTable implements CollectionViewer {
    */
   private _columnDefinitionsByName = new Map<string,  CdkColumnDef>();
 
-  /** Differ used to check and find the changes in the data provided by the data source. */
+  /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<any> = null;
 
   // Placeholders within the table's template where the header and data rows will be inserted.
@@ -149,6 +152,7 @@ export class CdkTable implements CollectionViewer {
     CdkCellOutlet.mostRecentCellOutlet.context = {};
   }
 
+  /** Check for changes made in the data and render each change (row added/removed/moved). */
   renderRowChanges(dataRows: any[]) {
     const changes = this._dataDiffer.diff(dataRows);
     if (!changes) { return; }
