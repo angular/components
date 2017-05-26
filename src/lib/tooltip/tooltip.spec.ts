@@ -31,7 +31,7 @@ import {dispatchFakeEvent} from '@angular/cdk/testing';
 
 const initialTooltipMessage = 'initial tooltip message';
 
-describe('MdTooltip', () => {
+fdescribe('MdTooltip', () => {
   let overlayContainerElement: HTMLElement;
   let dir: {value: Direction};
 
@@ -73,9 +73,7 @@ describe('MdTooltip', () => {
       tooltipDirective = buttonDebugElement.injector.get<MdTooltip>(MdTooltip);
     });
 
-    it('should show and hide the tooltip', fakeAsync(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
-
+    fit('should show and hide the tooltip', fakeAsync(() => {
       tooltipDirective.show();
       tick(0); // Tick for the show delay (default is 0)
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
@@ -89,7 +87,6 @@ describe('MdTooltip', () => {
       const tooltipElement = overlayContainerElement.querySelector('.mat-tooltip') as HTMLElement;
       expect(tooltipElement instanceof HTMLElement).toBe(true);
       expect(tooltipElement.style.transform).toBe('scale(1)');
-
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
 
       // After hide called, a timeout delay is created that will to hide the tooltip.
@@ -101,15 +98,9 @@ describe('MdTooltip', () => {
       tick(tooltipDelay);
       fixture.detectChanges();
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
-
-      // On animation complete, should expect that the tooltip has been detached.
-      flushMicrotasks();
-      expect(tooltipDirective._tooltipInstance).toBeNull();
     }));
 
     it('should show with delay', fakeAsync(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
-
       const tooltipDelay = 1000;
       tooltipDirective.show(tooltipDelay);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
@@ -166,8 +157,6 @@ describe('MdTooltip', () => {
     }));
 
     it('should not show if hide is called before delay finishes', fakeAsync(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
-
       const tooltipDelay = 1000;
       tooltipDirective.show(tooltipDelay);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
@@ -180,29 +169,40 @@ describe('MdTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
     }));
 
-    it('should not show tooltip if message is not present or empty', () => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+    it('should not show tooltip if message is not present or empty', fakeAsync(() => {
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
 
       tooltipDirective.message = undefined!;
       fixture.detectChanges();
-      tooltipDirective.show();
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      tooltipDirective.show(0);
+      tick(0);
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
 
       tooltipDirective.message = null!;
       fixture.detectChanges();
-      tooltipDirective.show();
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      tooltipDirective.show(0);
+      tick(0);
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
 
       tooltipDirective.message = '';
       fixture.detectChanges();
-      tooltipDirective.show();
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      tooltipDirective.show(0);
+      tick(0);
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
 
       tooltipDirective.message = '   ';
       fixture.detectChanges();
-      tooltipDirective.show();
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
-    });
+      tooltipDirective.show(0);
+      tick(0);
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
+
+      // Control showing that the tooltip is visible due to the message content
+      tooltipDirective.message = 'message';
+      fixture.detectChanges();
+      tooltipDirective.show(0);
+      tick(0);
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+    }));
 
     it('should not follow through with hide if show is called after', fakeAsync(() => {
       tooltipDirective.show();
@@ -220,29 +220,27 @@ describe('MdTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
     }));
 
-    it('should remove the tooltip when changing position', () => {
+    it('should recreate the tooltip when changing position', () => {
       const initialPosition: TooltipPosition = 'below';
       const changedPosition: TooltipPosition = 'above';
 
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
-
       tooltipDirective.position = initialPosition;
-      tooltipDirective.show();
+      const initialOverlayElement = tooltipDirective._overlayRef.overlayElement;
+      const initialTooltipElement = document.querySelector('md-tooltip-component');
       expect(tooltipDirective._tooltipInstance).toBeDefined();
 
       // Same position value should not remove the tooltip
       tooltipDirective.position = initialPosition;
-      expect(tooltipDirective._tooltipInstance).toBeDefined();
+      expect(tooltipDirective._overlayRef.overlayElement).toBe(initialOverlayElement);
+      expect(document.querySelector('md-tooltip-component')).toBe(initialTooltipElement);
 
-      // Different position value should destroy the tooltip
+      // Different position value should re-create the tooltip
       tooltipDirective.position = changedPosition;
-      expect(tooltipDirective._tooltipInstance).toBeNull();
-      expect(tooltipDirective._overlayRef).toBeNull();
+      expect(tooltipDirective._overlayRef.overlayElement).not.toBe(initialOverlayElement);
+      expect(document.querySelector('md-tooltip-component')).not.toBe(initialTooltipElement);
     });
 
     it('should be able to modify the tooltip message', fakeAsync(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
-
       tooltipDirective.show();
       tick(0); // Tick for the show delay (default is 0)
       expect(tooltipDirective._tooltipInstance!._visibility).toBe('visible');
@@ -400,8 +398,11 @@ describe('MdTooltip', () => {
     it('should pass the layout direction to the tooltip', fakeAsync(() => {
       dir.value = 'rtl';
 
-      tooltipDirective.show();
-      tick(0);
+      // Force tooltip to be recreated
+      fixture.componentInstance.showButton = false;
+      fixture.detectChanges();
+
+      fixture.componentInstance.showButton = true;
       fixture.detectChanges();
 
       const tooltipWrapper = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
@@ -411,30 +412,10 @@ describe('MdTooltip', () => {
     }));
 
     it('should associate trigger and tooltip through aria-describedby', fakeAsync(() => {
-      // Expect that the trigger does not have an associated tooltip since there is no tooltip shown
-      const trigger = fixture.componentInstance.trigger.nativeElement;
-      expect(trigger.getAttribute('aria-describedBy')).toBe(null);
-
-      tooltipDirective.show(0);
-      tick(0); // Tick for the show delay
-
-      // Tooltip is shown, check that the tooltip's id matches the aria-describedby
-      fixture.detectChanges();
-      expect(tooltipDirective._getTooltipId()).toContain('md-tooltip-');
       expect(tooltipDirective._tooltipInstance.id).toContain('md-tooltip-');
+
+      const trigger = fixture.componentInstance.trigger.nativeElement;
       expect(trigger.getAttribute('aria-describedBy')).toContain('md-tooltip-');
-
-      tooltipDirective.hide(0);
-      tick(0); // Tick for the hide delay
-      fixture.detectChanges();
-
-      // Let animation play out and resolve to remove the tooltip
-      flushMicrotasks();
-      fixture.detectChanges();
-
-      // Tooltip is hidden again, check that the trigger does not have an aria-describedby
-      expect(tooltipDirective._getTooltipId()).toBe('');
-      expect(trigger.getAttribute('aria-describedBy')).toBe('');
     }));
   });
 
@@ -453,8 +434,6 @@ describe('MdTooltip', () => {
     });
 
     it('should hide tooltip if clipped after changing positions', fakeAsync(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
-
       // Show the tooltip and tick for the show delay (default is 0)
       tooltipDirective.show();
       fixture.detectChanges();
@@ -494,8 +473,6 @@ describe('MdTooltip', () => {
     });
 
     it('should show and hide the tooltip', fakeAsync(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
-
       tooltipDirective.show();
       tick(0); // Tick for the show delay (default is 0)
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
@@ -519,10 +496,6 @@ describe('MdTooltip', () => {
       tick(tooltipDelay);
       fixture.detectChanges();
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
-
-      // On animation complete, should expect that the tooltip has been detached.
-      flushMicrotasks();
-      expect(tooltipDirective._tooltipInstance).toBeNull();
     }));
 
     it('should have rendered the tooltip text on init', fakeAsync(() => {

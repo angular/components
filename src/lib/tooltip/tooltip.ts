@@ -341,7 +341,7 @@ export class MdTooltip implements OnDestroy {
     strategy.onPositionChange.subscribe(change => {
       if (change.scrollableViewProperties.isOverlayClipped && this._tooltipInstance &&
           this._tooltipInstance.isVisible()) {
-        this.hide(1000);
+        this.hide(0);
       }
     });
 
@@ -359,8 +359,10 @@ export class MdTooltip implements OnDestroy {
 
   /** Visually hides the overlay and disables the scrolling strategy. */
   private _hideOverlay(): void {
-    this._overlayRef.overlayElement.classList.add('cdk-visually-hidden');
-    this._scrollStrategy.disable();
+    if (this._overlayRef) {
+      this._overlayRef.overlayElement.classList.add('cdk-visually-hidden');
+      this._scrollStrategy.disable();
+    }
   }
 
   /** Disposes the current tooltip and the overlay it is attached to */
@@ -474,7 +476,9 @@ let _uniqueTooltipIdCounter = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('state', [
-      state('void, initial, hidden', style({transform: 'scale(0)'})),
+      state('void', style({transform: 'scale(0)'})),
+      state('initial', style({transform: 'scale(0)'})),
+      state('hidden', style({transform: 'scale(0)'})),
       state('visible', style({transform: 'scale(1)'})),
       transition('* => visible', animate('150ms cubic-bezier(0.0, 0.0, 0.2, 1)')),
       transition('* => hidden', animate('150ms cubic-bezier(0.4, 0.0, 1, 1)')),
@@ -538,6 +542,7 @@ export class TooltipComponent {
     this._setTransformOrigin(position);
     this._showTimeoutId = setTimeout(() => {
       this._visibility = 'visible';
+      console.log('Setting visibility to', this._visibility);
 
       // If this was set to true immediately, then a body click that triggers show() would
       // trigger interaction and close the tooltip right after it was displayed.
@@ -595,9 +600,14 @@ export class TooltipComponent {
   }
 
   _afterVisibilityAnimation(e: AnimationEvent): void {
+    console.log('Visibility set', e);
     if (e.toState === 'hidden' && !this.isVisible()) {
       this._onHide.next();
     }
+  }
+
+  _whenVisibilityAnimation(e: AnimationEvent): void {
+    console.log('Visibility animation started', e);
   }
 
   /**
