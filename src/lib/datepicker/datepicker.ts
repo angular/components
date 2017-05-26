@@ -257,7 +257,7 @@ export class MdDatepicker<D> implements OnDestroy {
       this._ngZone.onStable.first().subscribe(() => this._popupRef.updatePosition());
     }
 
-    this._popupRef.backdropClick().first().subscribe(() => this.close());
+    this._popupRef.backdropClick().subscribe(() => this.close());
   }
 
   /** Create the popup. */
