@@ -12,9 +12,5 @@ require('ts-node').register({
   project: path.join(__dirname, 'tsconfig.json')
 });
 
-const functionExports = require('./dashboard-functions');
-
-// Re-export every firebase function from TypeScript
-Object.keys(functionExports).forEach(fnName => {
-  module.exports[fnName] = functionExports[fnName];
-});
+// Export all functions from the TypeScript source.
+Object.assign(exports, require('./functions'));

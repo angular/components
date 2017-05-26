@@ -1,5 +1,10 @@
+import {config} from 'firebase-functions';
+
 const request = require('request');
-const {version, name} = require('./package.json');
+const {version, name} = require('../package.json');
+
+/** API token for the Github repository. Required to set the github status on commits and PRs. */
+const repoToken = config().repoToken;
 
 /** Data that must be specified to set a Github PR status. */
 export type GithubStatusData = {
@@ -10,7 +15,7 @@ export type GithubStatusData = {
 };
 
 /** Function that sets a Github commit status */
-export function setGithubStatus(commitSHA: string, authToken: string, data: GithubStatusData) {
+export function setGithubStatus(commitSHA: string, data: GithubStatusData) {
   const state = data.result ? 'success' : 'failure';
 
   const requestData = JSON.stringify({
@@ -21,7 +26,7 @@ export function setGithubStatus(commitSHA: string, authToken: string, data: Gith
   });
 
   const headers = {
-    'Authorization': `token ${authToken}`,
+    'Authorization': `token ${repoToken}`,
     'User-Agent': `${name}/${version}`,
     'Content-Type': 'application/json',
     'Content-Length': Buffer.byteLength(requestData)

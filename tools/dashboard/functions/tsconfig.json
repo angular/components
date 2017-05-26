@@ -11,6 +11,6 @@
     "outDir": "../../../dist/dashboard-functions/"
   },
   "files": [
-    "./dashboard-functions.ts"
+    "./functions.ts"
   ]
 }
