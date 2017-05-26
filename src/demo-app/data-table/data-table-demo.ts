@@ -22,4 +22,13 @@ export class DataTableDemo {
     let distanceFromMiddle = Math.abs(50 - progress);
     return distanceFromMiddle / 50 + .3;
   }
+
+  toggleColorColumn() {
+    let colorColumnIndex = this.propertiesToDisplay.findIndex((col: string) => col === 'color');
+    if (colorColumnIndex == -1) {
+      this.propertiesToDisplay.push('color');
+    } else {
+      this.propertiesToDisplay.splice(colorColumnIndex, 1);
+    }
+  }
 }

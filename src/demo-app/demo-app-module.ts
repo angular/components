@@ -73,6 +73,7 @@ import {
   MdTooltipModule,
   OverlayContainer
 } from '@angular/material';
+import {TableHeaderDemo} from './data-table/table-header-demo';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
@@ -162,6 +163,7 @@ export class DemoMaterialModule {}
     SlideToggleDemo,
     SpagettiPanel,
     StyleDemo,
+    TableHeaderDemo,
     ToolbarDemo,
     TooltipDemo,
     TabsDemo,

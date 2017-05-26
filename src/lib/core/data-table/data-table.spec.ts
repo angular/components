@@ -150,6 +150,23 @@ describe('CdkTable', () => {
     dataSource.data.forEach(rowData => changedTableContent.push([rowData.a, rowData.b, rowData.c]));
     expect(tableElement).toMatchTableContent(changedTableContent);
   });
+
+  it('should be able to dynamically change the columns for header and rows', () => {
+    expect(dataSource.data.length).toBe(3);
+
+    let initialTableContent = [['Column A', 'Column B', 'Column C']];
+    dataSource.data.forEach(rowData => initialTableContent.push([rowData.a, rowData.b, rowData.c]));
+    expect(tableElement).toMatchTableContent(initialTableContent);
+
+    // Remove column_a and swap column_b/column_c.
+    component.columnsToRender = ['column_c', 'column_b'];
+    fixture.detectChanges();
+    fixture.detectChanges();
+
+    let changedTableContent = [['Column C', 'Column B']];
+    dataSource.data.forEach(rowData => changedTableContent.push([rowData.c, rowData.b]));
+    expect(tableElement).toMatchTableContent(changedTableContent);
+  });
 });
 
 interface TestData {
