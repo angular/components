@@ -188,6 +188,7 @@ export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisabl
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': '_isAriaDisabled',
     '(click)': '_haltDisabledEvents($event)',
+    'role': 'button'
   },
   inputs: ['disabled'],
   templateUrl: 'button.html',
