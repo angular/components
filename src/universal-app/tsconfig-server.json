@@ -1,0 +1,25 @@
+// TypeScript config file that is used to compile the server code for the Universal App.
+{
+  "compilerOptions": {
+    "declaration": false,
+    "stripInternal": false,
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": ".",
+    "rootDir": ".",
+    "sourceMap": true,
+    "target": "es2015",
+    "lib": ["es2015", "dom"],
+    "skipLibCheck": true,
+    "types": [],
+    "baseUrl": ".",
+    "paths": {
+      "@angular/material": ["./material"],
+      "@angular/cdk": ["./cdk"]
+    }
+  },
+  "files": [
+    "server.ts"
+  ]
+}

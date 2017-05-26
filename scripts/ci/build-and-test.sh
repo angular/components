@@ -41,8 +41,8 @@ elif is_closure_compiler; then
   ./scripts/closure-compiler/build-devapp-bundle.sh
 elif is_unit; then
   $(npm bin)/gulp ci:test
-elif is_prerender; then
-  ./scripts/ci/prerender.sh
+elif is_server_rendering; then
+  $(npm bin)/gulp ci:server-rendering
 fi
 
 # Upload coverage results if those are present.

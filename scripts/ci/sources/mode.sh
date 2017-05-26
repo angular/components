@@ -25,6 +25,6 @@ is_unit() {
   [[ "$MODE" = saucelabs_required || "$MODE" = browserstack_required ]]
 }
 
-is_prerender() {
-  [[ "$MODE" = prerender ]]
+is_server_rendering() {
+  [[ "$MODE" = server-rendering ]]
 }
