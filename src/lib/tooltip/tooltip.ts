@@ -148,6 +148,9 @@ export class MdTooltip implements OnDestroy {
   get _matShowDelay() { return this.showDelay; }
   set _matShowDelay(v) { this.showDelay = v; }
 
+  private _enterListener: Function;
+  private _leaveListener: Function;
+
   constructor(
     private _overlay: Overlay,
     private _elementRef: ElementRef,
@@ -161,8 +164,12 @@ export class MdTooltip implements OnDestroy {
     // The mouse events shouldn't be bound on iOS devices, because
     // they can prevent the first tap from firing its click event.
     if (!_platform.IOS) {
-      _renderer.listen(_elementRef.nativeElement, 'mouseenter', () => this.show());
-      _renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
+      this._enterListener = _renderer.listen(_elementRef.nativeElement,
+                                              'mouseenter',
+                                              () => this.show());
+      this._leaveListener = _renderer.listen(_elementRef.nativeElement,
+                                              'mouseleave',
+                                              () => this.hide());
     }
   }
 
@@ -172,6 +179,11 @@ export class MdTooltip implements OnDestroy {
   ngOnDestroy() {
     if (this._tooltipInstance) {
       this._disposeTooltip();
+    }
+    // Clean up the event listeners set in the constructor
+    if (!this._platform.IOS) {
+      this._enterListener();
+      this._leaveListener();
     }
   }
 
