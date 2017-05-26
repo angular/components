@@ -16,6 +16,10 @@ $mat-select-trigger-font-size: 16px !default;
   display: inline-block;
   outline: none;
   font-family: $mat-font-family;
+  
+  [placeholder] & {
+    margin-top: 1em;
+  }
 }
 
 .mat-select-trigger {
