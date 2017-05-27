@@ -64,7 +64,8 @@ export class DemoApp {
     {name: 'Toolbar', route: 'toolbar'},
     {name: 'Tooltip', route: 'tooltip'},
     {name: 'Platform', route: 'platform'},
-    {name: 'Style', route: 'style'}
+    {name: 'Style', route: 'style'},
+    {name: 'Sticky Header', route: 'sticky-header'}
   ];
 
   constructor(private _element: ElementRef) {

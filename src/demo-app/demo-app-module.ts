@@ -46,6 +46,7 @@ import {
   MdProgressSpinnerModule, MdRippleModule, MdSelectModule, MdSidenavModule, MdSliderModule,
   MdSlideToggleModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule
 } from '@angular/material';
+import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
@@ -140,6 +141,7 @@ export class DemoMaterialModule {}
     RainyTabContent,
     FoggyTabContent,
     PlatformDemo,
+    StickyHeaderDemo,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer}
