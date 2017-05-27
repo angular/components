@@ -2,8 +2,9 @@ import {Component} from '@angular/core';
 
 
 @Component({
+  moduleId: module.id,
   selector: 'select-form-example',
-  templateUrl: './select-form-example.html',
+  templateUrl: 'select-form-example.html',
 })
 export class SelectFormExample {
   selectedValue: string;

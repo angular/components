@@ -81,8 +81,8 @@ import {
 export interface LiveExample {
   title: string;
   component: any;
-  additionalFiles: string[];
-  selectorName: string;
+  additionalFiles?: string[];
+  selectorName?: string;
 }
 
 /**

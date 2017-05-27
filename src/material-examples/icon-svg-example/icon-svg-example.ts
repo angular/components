@@ -4,8 +4,9 @@ import {MdIconRegistry} from '@angular/material';
 
 
 @Component({
+  moduleId: module.id,
   selector: 'icon-svg-example',
-  templateUrl: './icon-svg-example.html',
+  templateUrl: 'icon-svg-example.html',
 })
 export class IconSvgExample {
   constructor(iconRegistry: MdIconRegistry, sanitizer: DomSanitizer) {

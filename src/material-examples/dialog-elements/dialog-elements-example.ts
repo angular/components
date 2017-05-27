@@ -3,8 +3,9 @@ import {MdDialog} from '@angular/material';
 
 
 @Component({
+  moduleId: module.id,
   selector: 'dialog-elements-example',
-  templateUrl: './dialog-elements-example.html',
+  templateUrl: 'dialog-elements-example.html',
 })
 export class DialogElementsExample {
   constructor(public dialog: MdDialog) { }
@@ -16,7 +17,8 @@ export class DialogElementsExample {
 
 
 @Component({
+  moduleId: module.id,
   selector: 'dialog-elements-example-dialog',
-  templateUrl: './dialog-elements-example-dialog.html',
+  templateUrl: 'dialog-elements-example-dialog.html',
 })
 export class DialogElementsExampleDialog { }
