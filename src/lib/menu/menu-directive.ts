@@ -1,5 +1,3 @@
-// TODO(kara): prevent-close functionality
-
 import {
   AfterContentInit,
   Component,
@@ -20,7 +18,7 @@ import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {MdMenuPanel} from './menu-panel';
 import {Subscription} from 'rxjs/Subscription';
 import {transformMenu, fadeInItems} from './menu-animations';
-import {ESCAPE} from '../core/keyboard/keycodes';
+import {ESCAPE, coerceBooleanProperty} from '../core';
 
 
 @Component({
@@ -77,6 +75,12 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   /** Whether the menu should overlap its trigger. */
   @Input() overlapTrigger = true;
 
+  /** Whether the user should be able to close the menu. */
+  @Input()
+  get disableClose(): boolean { return this._disableClose; }
+  set disableClose(value: boolean) { this._disableClose = coerceBooleanProperty(value); }
+  private _disableClose: boolean = false;
+
   /**
    * This method takes classes set on the host md-menu element and applies them on the
    * menu template that displays in the overlay container.  Otherwise, it's difficult
@@ -97,7 +101,10 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
 
   ngAfterContentInit() {
     this._keyManager = new FocusKeyManager(this.items).withWrap();
-    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this._emitCloseEvent());
+
+    if (!this._disableClose) {
+      this._tabSubscription = this._keyManager.tabOut.subscribe(() => this._emitCloseEvent());
+    }
   }
 
   ngOnDestroy() {
@@ -108,12 +115,17 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
 
   /** Handle a keyboard event from the menu, delegating to the appropriate action. */
   _handleKeydown(event: KeyboardEvent) {
-    switch (event.keyCode) {
-      case ESCAPE:
-        this._emitCloseEvent();
-        return;
-      default:
-        this._keyManager.onKeydown(event);
+    if (event.keyCode === ESCAPE && !this._disableClose) {
+      this._emitCloseEvent();
+    } else {
+      this._keyManager.onKeydown(event);
+    }
+  }
+
+  /** Handles clicks inside the menu panel. */
+  _handleClick() {
+    if (!this._disableClose) {
+      this._emitCloseEvent();
     }
   }
 
