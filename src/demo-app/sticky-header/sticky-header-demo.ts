@@ -10,7 +10,7 @@ import {TooltipPosition} from '@angular/material';
     styleUrls: ['sticky-header-demo.css'],
 })
 export class StickyHeaderDemo {
-    message: string = 'Here is the ticky-header';
+    message: string = 'Here is the sticky-header';
     position: TooltipPosition = 'below';
     disabled = false;
     showDelay = 0;
