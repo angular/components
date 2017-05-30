@@ -67,7 +67,6 @@ $mat-input-wrapper-padding-bottom:
   // TODO(mmalerba): should this come from typography settings? If so a lot of this CSS needs to go
   // into some sort of typography mixin.
   line-height: $mat-input-line-height;
-  font-size: 16px;
 
   // To avoid problems with text-align.
   text-align: left;
