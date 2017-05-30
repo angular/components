@@ -44,7 +44,7 @@ import {
   MdChipsModule, MdCoreModule, MdDatepickerModule, MdDialogModule, MdGridListModule, MdIconModule,
   MdInputModule, MdListModule, MdMenuModule, MdNativeDateModule, MdProgressBarModule, MdRadioModule,
   MdProgressSpinnerModule, MdRippleModule, MdSelectModule, MdSidenavModule, MdSliderModule,
-  MdSlideToggleModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule
+  MdSlideToggleModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule,MdStickyHeaderModule
 } from '@angular/material';
 import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
 
@@ -80,6 +80,7 @@ import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
     MdToolbarModule,
     MdTooltipModule,
     MdNativeDateModule,
+    MdStickyHeaderModule,
   ]
 })
 export class DemoMaterialModule {}

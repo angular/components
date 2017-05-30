@@ -1,14 +1,79 @@
-.demo-tooltip {
-  .centered {
-    text-align: center;
-    height: 200px;
-    overflow: auto;
+* {
+  margin: 0;
+  padding: 0;
+}
 
-    button {
-      margin: 16px;
-    }
-  }
-  .mat-radio-button {
-    display: block;
-  }
+body {
+  font: 14px/1.5 Helvetica, Arial, sans-serif;
+}
+
+header {
+  display: block;
+  width: 100%;
+  height: 200px;
+  background: #aaa;
+}
+
+nav {
+  display: block;
+  width: 100%;
+  height: 48px;
+  background: #2f4f90;
+}
+
+.nav-container {
+  display: block;
+  height: 48px;
+  color: #fff;
+  text-align: center;
+  font-size: 20px;
+}
+
+.container {
+  margin: 0 auto;
+  width: 960px;
+}
+
+.row {
+  border-bottom: 10px;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  position: relative;
+}
+
+.row:after {
+  clear: both;
+  content: ".";
+  display: block;
+  height: 0;
+  visibility: hidden;
+}
+
+.content {
+  float: left;
+  width: 600px;
+  padding: 20px;
+}
+
+.rside {
+  background: #cecece;
+  float: right;
+  padding: 20px;
+  width: 100%;
+}
+
+.lside {
+  background: #cecece;
+  float: left;
+  padding: 20px;
+  width: 400px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+p {
+  margin-bottom: 1.5em;
 }

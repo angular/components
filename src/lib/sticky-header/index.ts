@@ -5,3 +5,15 @@ import {MdMenu} from '../menu/menu-directive';
 import {MdMenuItem} from '../menu/menu-item';
 import {MdMenuTrigger} from '../menu/menu-trigger';
 import {MdRippleModule} from '../core/ripple/index';
+import {StickyHeaderComponent} from './sticky-header';
+
+@NgModule({
+    imports: [OverlayModule, MdCommonModule],
+    exports: [StickyHeaderComponent, MdCommonModule],
+    declarations: [StickyHeaderComponent],
+    entryComponents: [StickyHeaderComponent],
+})
+export class MdStickyHeaderModule {}
+
+
+export * from './sticky-header';
