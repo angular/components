@@ -26,8 +26,8 @@ export function createPackageBuildTasks(packageName: string, requiredPackages: s
   // Paths to the different output files and directories.
   const esmMainFile = join(packageOut, 'index.js');
 
-  // Glob that matches all assets that should be copied to the package.
-  const assetsGlob = join(packageRoot, '**/*.+(scss|css)');
+  // Glob that matches all style files that need to be copied to the package output.
+  const stylesGlob = join(packageRoot, '**/*.+(scss|css)');
 
   // Glob that matches every HTML file in the current package.
   const htmlGlob = join(packageRoot, '**/*.html');
@@ -75,11 +75,11 @@ export function createPackageBuildTasks(packageName: string, requiredPackages: s
    * Asset tasks. Building SASS files and inlining CSS, HTML files into the ESM output.
    */
   task(`${packageName}:assets`, [
-    `${packageName}:assets:scss`, `${packageName}:assets:copy`, `${packageName}:assets:html`
+    `${packageName}:assets:scss`, `${packageName}:assets:copy-styles`, `${packageName}:assets:html`
   ]);
 
   task(`${packageName}:assets:scss`, sassBuildTask(packageOut, packageRoot, true));
-  task(`${packageName}:assets:copy`, copyTask(assetsGlob, packageOut));
+  task(`${packageName}:assets:copy-styles`, copyTask(stylesGlob, packageOut));
   task(`${packageName}:assets:html`, () => {
     return src(htmlGlob).pipe(htmlmin(HTML_MINIFIER_OPTIONS)).pipe(dest(packageOut));
   });
