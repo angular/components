@@ -72,7 +72,7 @@ export class CdkTable<T> implements CollectionViewer {
    * Stream containing the latest information on what rows are being displayed on screen.
    * Can be used by the data source to as a heuristic of what data should be provided.
    */
-  viewChanged =
+  viewChange =
       new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
 
   /** Stream that emits when a row def has a change to its array of columns to render. */
@@ -120,7 +120,7 @@ export class CdkTable<T> implements CollectionViewer {
 
   ngOnInit() {
     // TODO(andrewseguin): Setup a listener for scroll events
-    //   and emit the calculated view to this.viewChanged
+    //   and emit the calculated view to this.viewChange
   }
 
   ngAfterContentInit() {
@@ -130,7 +130,7 @@ export class CdkTable<T> implements CollectionViewer {
     });
 
     // Get and merge the streams for column changes made to the row defs
-    const rowDefs = this._rowDefinitions.toArray().concat(this._headerDefinition);
+    const rowDefs = [...this._rowDefinitions.toArray(), this._headerDefinition];
     const columnChangeStreams = rowDefs.map((rowDef: BaseRowDef) => rowDef.columnsChange);
     this.columnsChange = Observable.combineLatest(columnChangeStreams);
   }
@@ -148,7 +148,7 @@ export class CdkTable<T> implements CollectionViewer {
     //   present after view init, connect it when it is defined.
     // TODO(andrewseguin): Unsubscribe from this on destroy.
     const streams = [this.dataSource.connect(this), this.columnsChange];
-    Observable.combineLatest(streams).subscribe((rowsData: NgIterable<T>)  => {
+    Observable.combineLatest(streams).subscribe(([rowsData]) => {
       this.renderRowChanges(rowsData);
     });
   }

@@ -143,8 +143,6 @@ describe('CdkTable', () => {
     // Add data to the table and recreate what the rendered output should be.
     dataSource.addData();
     expect(dataSource.data.length).toBe(initialDataLength + 1); // Make sure data was added
-    fixture.detectChanges();
-    fixture.detectChanges();
 
     const changedTableContent = [headerContent];
     dataSource.data.forEach(rowData => changedTableContent.push([rowData.a, rowData.b, rowData.c]));
@@ -160,7 +158,6 @@ describe('CdkTable', () => {
 
     // Remove column_a and swap column_b/column_c.
     component.columnsToRender = ['column_c', 'column_b'];
-    fixture.detectChanges();
     fixture.detectChanges();
 
     let changedTableContent = [['Column C', 'Column B']];
@@ -189,11 +186,8 @@ class FakeDataSource extends DataSource<TestData> {
 
   connect(collectionViewer: CollectionViewer): Observable<TestData[]> {
     this.isConnected = true;
-    const streams = [collectionViewer.viewChanged, this._dataChange];
-    return Observable.combineLatest(streams).map((results: any[]) => {
-      const [view, data] = results;
-      return data;
-    });
+    const streams = [this._dataChange, collectionViewer.viewChange];
+    return Observable.combineLatest(streams).map(([data]) => data);
   }
 
   addData() {
