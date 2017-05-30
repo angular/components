@@ -192,7 +192,7 @@ export class StickyHeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private scrollbarYPos(): number {
-        return window.pageYOffset || document.documentElement.scrollTop;
+        return window.pageYOffset || document.documentElement.scrollTop; //
         //In Javascript window.pageYOffset and document.documentElement.scrollTop both measures
         // the distance of an window top to its topmost visible content in pixel
     }

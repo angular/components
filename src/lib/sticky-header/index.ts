@@ -8,9 +8,9 @@ import {MdRippleModule} from '../core/ripple/index';
 import {StickyHeaderComponent} from './sticky-header';
 
 @NgModule({
-    imports: [OverlayModule, MdCommonModule],
-    exports: [StickyHeaderComponent, MdCommonModule],
+    imports: [OverlayModule, MdCommonModule, CommonModule],
     declarations: [StickyHeaderComponent],
+    exports: [StickyHeaderComponent, MdCommonModule],
     entryComponents: [StickyHeaderComponent],
 })
 export class MdStickyHeaderModule {}
