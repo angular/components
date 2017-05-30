@@ -109,8 +109,8 @@ describe('CdkTable', () => {
     expect(initialRows[2].getAttribute('initialIndex')).toBe('2');
 
     // Swap first and second data in data array
-    let copiedData = component.dataSource.data.slice();
-    let temp = copiedData[0];
+    const copiedData = component.dataSource.data.slice();
+    const temp = copiedData[0];
     copiedData[0] = copiedData[1];
     copiedData[1] = temp;
 
@@ -132,11 +132,11 @@ describe('CdkTable', () => {
   // TODO(andrewseguin): Add test for dynamic classes on header/rows
 
   it('should match the right table content with dynamic data', () => {
-    let initialDataLength = dataSource.data.length;
+    const initialDataLength = dataSource.data.length;
     expect(dataSource.data.length).toBe(3);
-    let headerContent = ['Column A', 'Column B', 'Column C'];
+    const headerContent = ['Column A', 'Column B', 'Column C'];
 
-    let initialTableContent = [headerContent];
+    const initialTableContent = [headerContent];
     dataSource.data.forEach(rowData => initialTableContent.push([rowData.a, rowData.b, rowData.c]));
     expect(tableElement).toMatchTableContent(initialTableContent);
 
@@ -146,7 +146,7 @@ describe('CdkTable', () => {
     fixture.detectChanges();
     fixture.detectChanges();
 
-    let changedTableContent = [headerContent];
+    const changedTableContent = [headerContent];
     dataSource.data.forEach(rowData => changedTableContent.push([rowData.a, rowData.b, rowData.c]));
     expect(tableElement).toMatchTableContent(changedTableContent);
   });
