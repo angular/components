@@ -1,6 +1,5 @@
 @import '../core/style/menu-common';
 @import '../core/style/list-common';
-@import '../core/style/form-common';
 @import '../core/style/variables';
 @import '../core/style/vendor-prefixes';
 @import '../core/a11y/a11y';
@@ -42,7 +41,6 @@ $mat-select-trigger-font-size: 16px !default;
   height: 1px;
 
   [aria-disabled='true'] & {
-    @include mat-control-disabled-underline();
     background-color: transparent;
     background-position: 0 bottom;
   }
