@@ -26,7 +26,7 @@
   "files": [
     "./e2e-app-module.ts",
     "./e2e-app-types.d.ts",
-    "./main-aot.ts",
+    "./main.ts",
     "./system-config.ts"
   ],
   "angularCompilerOptions": {
