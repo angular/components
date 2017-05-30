@@ -4,7 +4,7 @@ const isStandardSyntaxSelector = require('stylelint/lib/utils/isStandardSyntaxSe
 
 const ruleName = 'material/selector-no-deep';
 const messages = stylelint.utils.ruleMessages(ruleName, {
-  expected: selector => `Usage of the /deep/ in "${selector}" is now allowed`,
+  expected: selector => `Usage of the /deep/ in "${selector}" is not allowed`,
 });
 
 
@@ -19,7 +19,7 @@ const plugin = stylelint.createPlugin(ruleName, isEnabled => {
       if (rule.parent.type === 'rule' &&
           isStandardSyntaxRule(rule) &&
           isStandardSyntaxSelector(rule.selector) &&
-          rule.selector.indexOf('/deep/') > -1) {
+          rule.selector.includes('/deep/')) {
 
         stylelint.utils.report({
           result,
