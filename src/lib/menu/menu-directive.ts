@@ -21,7 +21,7 @@ import {MdMenuPanel} from './menu-panel';
 import {Subscription} from 'rxjs/Subscription';
 import {transformMenu, fadeInItems} from './menu-animations';
 import {ESCAPE} from '../core/keyboard/keycodes';
-
+import {coerceBooleanProperty} from '../core';
 
 @Component({
   moduleId: module.id,
@@ -75,7 +75,10 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   @ContentChildren(MdMenuItem) items: QueryList<MdMenuItem>;
 
   /** Whether the menu should overlap its trigger. */
-  @Input() overlapTrigger = true;
+  @Input()
+  get overlapTrigger(): boolean { return this._overlapTrigger; }
+  set overlapTrigger(value: boolean) { this._overlapTrigger = coerceBooleanProperty(value); }
+  private _overlapTrigger = true;
 
   /**
    * This method takes classes set on the host md-menu element and applies them on the
