@@ -2,6 +2,8 @@ import {Component} from '@angular/core';
 import {PeopleDatabase} from './people-database';
 import {PersonDataSource} from './person-data-source';
 
+type UserProperties = 'userId' | 'userName' | 'progress' | 'color';
+
 @Component({
   moduleId: module.id,
   selector: 'data-table-demo',
@@ -10,7 +12,7 @@ import {PersonDataSource} from './person-data-source';
 })
 export class DataTableDemo {
   dataSource: PersonDataSource;
-  propertiesToDisplay = ['userId', 'userName', 'progress', 'color'];
+  propertiesToDisplay: UserProperties[] = ['userId', 'userName', 'progress', 'color'];
 
   constructor(private _peopleDatabase: PeopleDatabase) { }
 
