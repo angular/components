@@ -7,6 +7,22 @@ body {
   font: 14px/1.5 Helvetica, Arial, sans-serif;
 }
 
+.demo-sticky {
+  .centered {
+    text-align: center;
+    height: 500px;
+    width: 900px;
+    overflow: auto;
+
+    button {
+      margin: 16px;
+    }
+  }
+  .mat-radio-button {
+    display: block;
+  }
+}
+
 header {
   display: block;
   width: 100%;

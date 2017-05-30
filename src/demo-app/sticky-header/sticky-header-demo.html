@@ -12,10 +12,12 @@
         <!--</sticky>-->
     <!--</div>-->
 
-    <div class="sticky-header-demo">
-        <div>
+    <div class="demo-sticky">
+        <h1>Sticky-header Demo</h1>
+        <div sticky class="centered" cdk-scrollable>
+
             <div>
-                <sticky style="color:#069" class="rside" sticky-parent="true" [sticky-offset-top]="48" [sticky-offset-bottom]="40" [sticky-media-query]="'min-width: 500px'" >
+                <sticky style="color:#069" class="rside" [sticky-zIndex]="999" [sticky-parent]=true [sticky-offset-top]="48" [sticky-offset-bottom]="40" [sticky-media-query]="'min-width: 500px'" >
                     <div >
                         <h2>Heading 1</h2>
 
@@ -45,9 +47,6 @@
             </div>
 
 
-        </div>
-
-        <div >
             <div >
                 <sticky style="color:#030" class="rside" [sticky-offset-top]="48">
                     <div class="panel">
@@ -89,11 +88,7 @@
             </div>
 
 
-        </div>
 
-
-
-        <div >
             <div >
                 <sticky class="rside" [sticky-offset-top]="48" [sticky-offset-bottom]="0" [sticky-media-query]="'min-width: 500px'">
                     <div class="panel">
@@ -144,7 +139,8 @@
 
             </div>
 
-        </div>
+
+    </div>
     </div>
 <!--</div>-->
 
