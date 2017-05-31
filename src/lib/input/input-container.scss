@@ -5,68 +5,13 @@
 
 // Min amount of space between start and end hint.
 $mat-input-hint-min-space: 1em !default;
-// The amount of additional line space beyond 1em on the input (1/2 below, 1/2 above).
-$mat-input-line-spacing: 0.125 !default;
 // The height of the underline.
 $mat-input-underline-height: 1px !default;
-// The amount to scale the font for the floating label and subscript.
-$mat-input-subscript-font-scale: 0.75 !default;
-// The amount to scale the font for the prefix and suffix icons.
-$mat-input-prefix-suffix-icon-font-scale: 1.5 !default;
-
-// The line-height for all text in the md-input-container
-$mat-input-line-height: 1 + $mat-input-line-spacing;
-// The padding on the infix. Mocks show half of the text size, but seem to measure from the edge of
-// the text itself, not the edge of the line; therefore we subtract off 1/2 of the line spacing.
-$mat-input-infix-padding: 0.5em - $mat-input-line-spacing / 2;
-// The margin applied to the input-infix to reserve space for the floating label.
-$mat-input-infix-margin-top: 1em * $mat-input-line-height * $mat-input-subscript-font-scale;
-// Font size to use for the label and subscript text.
-$mat-input-subscript-font-size: $mat-input-subscript-font-scale * 100%;
-// Font size to use for the for the prefix and suffix icons.
-$mat-input-prefix-suffix-icon-font-size: $mat-input-prefix-suffix-icon-font-scale * 100%;
-// The space between the bottom of the input table and the subscript container. Mocks show half of
-// the text size, but this margin is applied to an element with the subscript text font size, so we
-// need to divide by the scale factor to make it half of the original text size. We again need to
-// subtract off 1/2 of the line spacing since the mocks measure to the edge of the text, not the
-// edge of the line.
-$mat-input-subscript-margin-top:
-    0.5em / $mat-input-subscript-font-scale - $mat-input-line-spacing / 2;
-// The padding applied to the input-wrapper to reserve space for the subscript, since it's
-// absolutely positioned. This is a combination of the subscript's margin and line-height, but we
-// need to multiply by the subscript font scale factor since the wrapper has a larger font size.
-$mat-input-wrapper-padding-bottom:
-    ($mat-input-subscript-margin-top + $mat-input-line-height) * $mat-input-subscript-font-scale;
-
-
-// Applies a floating placeholder above the input itself.
-@mixin mat-input-placeholder-floating {
-  display: block;
-
-  transform: translateY(-$mat-input-infix-margin-top - $mat-input-infix-padding)
-             scale($mat-input-subscript-font-scale)
-             // We use perspecitve to fix the text blurriness as described here:
-             // http://www.useragentman.com/blog/2014/05/04/fixing-typography-inside-of-2-d-css-transforms/
-             // This results in a small jitter after the label floats on Firefox, which the
-             // translateZ fixes.
-             perspective(1px) translateZ(0.001px);
-  // The tricks above used to smooth out the animation on chrome and firefox actually make things
-  // worse on IE, so we don't include them in the IE version.
-  -ms-transform: translateY(-$mat-input-infix-margin-top - $mat-input-infix-padding)
-                 scale($mat-input-subscript-font-scale);
-
-  width: 100% / $mat-input-subscript-font-scale;
-}
 
 
 .mat-input-container {
   display: inline-block;
   position: relative;
-  font-family: $mat-font-family;
-
-  // TODO(mmalerba): should this come from typography settings? If so a lot of this CSS needs to go
-  // into some sort of typography mixin.
-  line-height: $mat-input-line-height;
 
   // To avoid problems with text-align.
   text-align: left;
@@ -80,7 +25,6 @@ $mat-input-wrapper-padding-bottom:
 // cannot apply it to the host element directly.
 .mat-input-wrapper {
   position: relative;
-  padding-bottom: $mat-input-wrapper-padding-bottom;
 }
 
 // We use a flex layout to baseline align the prefix and suffix elements.
@@ -101,21 +45,16 @@ $mat-input-wrapper-padding-bottom:
   .mat-datepicker-toggle {
     width: 1em;
     height: 1em;
-    font-size: $mat-input-prefix-suffix-icon-font-size;
     vertical-align: text-bottom;
   }
 
   // Allow icon buttons in a prefix or suffix to adapt to the correct size.
   .mat-icon-button {
-    font-size: inherit;
-    line-height: $mat-input-line-height;
-    height: $mat-input-prefix-suffix-icon-font-scale * 1em;
-    width: $mat-input-prefix-suffix-icon-font-scale * 1em;
+    font: inherit;
     vertical-align: baseline;
 
     .mat-icon {
       font-size: inherit;
-      line-height: $mat-input-prefix-suffix-icon-font-scale;
       width: 1em;
       height: 1em;
       vertical-align: baseline;
@@ -126,9 +65,6 @@ $mat-input-wrapper-padding-bottom:
 .mat-input-infix {
   display: block;
   position: relative;
-  padding: $mat-input-infix-padding 0;
-  // Throws off the baseline if we do it as a real margin, so we do it as a border instead.
-  border-top: $mat-input-infix-margin-top solid transparent;
   flex: auto;
 }
 
@@ -173,7 +109,6 @@ $mat-input-wrapper-padding-bottom:
   // classes take over to fulfill this behaviour.
   // Assumes the autofill is non-empty.
   &:-webkit-autofill + .mat-input-placeholder-wrapper .mat-float {
-    @include mat-input-placeholder-floating;
     transition: none;
   }
 
@@ -192,11 +127,9 @@ $mat-input-wrapper-padding-bottom:
 .mat-input-placeholder-wrapper {
   position: absolute;
   left: 0;
-  top: -$mat-input-infix-margin-top;
   box-sizing: content-box;
   width: 100%;
   height: 100%;
-  padding-top: $mat-input-infix-margin-top;
   overflow: hidden;
   pointer-events: none;  // We shouldn't catch mouse events (let them through).
 }
@@ -209,8 +142,8 @@ $mat-input-wrapper-padding-bottom:
   // infix <div>.
   position: absolute;
   left: 0;
-  top: $mat-input-infix-margin-top + $mat-input-infix-padding;
 
+  font: inherit;
   pointer-events: none;  // We shouldn't catch mouse events (let them through).
 
   // Put ellipsis text overflow.
@@ -221,7 +154,7 @@ $mat-input-wrapper-padding-bottom:
   overflow: hidden;
 
   // The perspective helps smooth out animations on Chrome and Firefox but isn't needed on IE.
-  transform: perspective(1px);
+  transform: perspective(100px);
   -ms-transform: none;
 
   transform-origin: 0 0;
@@ -230,13 +163,7 @@ $mat-input-wrapper-padding-bottom:
               width $swift-ease-out-duration $swift-ease-out-timing-function;
 
   &.mat-empty {
-    display: block;
     cursor: text;
-  }
-
-  // Show the placeholder above the input when it's not empty, or focused.
-  &.mat-float:not(.mat-empty), .mat-focused &.mat-float {
-    @include mat-input-placeholder-floating;
   }
 
   [dir='rtl'] & {
@@ -258,10 +185,6 @@ $mat-input-wrapper-padding-bottom:
   position: absolute;
   height: $mat-input-underline-height;
   width: 100%;
-
-  // We want the underline to start at the end of the content box, not the padding box,
-  // so we move it up by the padding amount;
-  bottom: $mat-input-wrapper-padding-bottom;
 
   &.mat-disabled {
     @include mat-control-disabled-underline();
@@ -293,14 +216,8 @@ $mat-input-wrapper-padding-bottom:
 // Note that we're using `top` in order to allow for stacked children to flow downwards.
 .mat-input-subscript-wrapper {
   position: absolute;
-  font-size: $mat-input-subscript-font-size;
-  margin-top: $mat-input-subscript-margin-top;
   width: 100%;
   overflow: hidden; // prevents multi-line errors from overlapping the input
-
-  // We want the subscript to start at the end of the content box, not the padding box,
-  // so we move it up by the padding amount (adjusted for the smaller font size);
-  top: calc(100% - #{$mat-input-wrapper-padding-bottom / $mat-input-subscript-font-scale});
 }
 
 // Scale down icons in the placeholder and hint to be the same size as the text.
