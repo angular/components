@@ -90,7 +90,8 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
   _buttonToggles: QueryList<MdButtonToggle> = null;
 
   ngAfterViewInit() {
-    this._isInitialized = true;
+    // Defer until the next tick to avoid the value accessor's initial value.
+    Promise.resolve().then(() => this._isInitialized = true);
   }
 
   /** `name` attribute for the underlying `input` element. */

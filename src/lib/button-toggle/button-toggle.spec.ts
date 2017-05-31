@@ -5,8 +5,8 @@ import {
   ComponentFixture,
   TestBed,
 } from '@angular/core/testing';
-import {NgModel, FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
-import {Component, DebugElement} from '@angular/core';
+import {NgModel, FormsModule, ReactiveFormsModule, FormControl, NgControl} from '@angular/forms';
+import {Component, DebugElement, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
   MdButtonToggleGroup,
@@ -29,6 +29,7 @@ describe('MdButtonToggle', () => {
         ButtonToggleGroupWithInitialValue,
         ButtonToggleGroupWithFormControl,
         StandaloneButtonToggle,
+        ButtonToggleGroupWithValueAccessorInitialValue
       ],
     });
 
@@ -158,21 +159,21 @@ describe('MdButtonToggle', () => {
       expect(changeSpy).toHaveBeenCalledTimes(1);
     }));
 
-    it('should emit a change event from the button toggle group', fakeAsync(() => {
+    it('should emit a change event from the button toggle group', async(() => {
       expect(groupInstance.value).toBeFalsy();
 
       let changeSpy = jasmine.createSpy('button-toggle-group change listener');
       groupInstance.change.subscribe(changeSpy);
 
-      groupInstance.value = 'test1';
-      fixture.detectChanges();
-      tick();
-      expect(changeSpy).toHaveBeenCalled();
+      fixture.whenStable().then(() => {
+        groupInstance.value = 'test1';
+        fixture.detectChanges();
+        expect(changeSpy).toHaveBeenCalled();
 
-      groupInstance.value = 'test2';
-      fixture.detectChanges();
-      tick();
-      expect(changeSpy).toHaveBeenCalledTimes(2);
+        groupInstance.value = 'test2';
+        fixture.detectChanges();
+        expect(changeSpy).toHaveBeenCalledTimes(2);
+      });
     }));
 
     it('should update the group and button toggles when updating the group value', () => {
@@ -338,7 +339,7 @@ describe('MdButtonToggle', () => {
 
   describe('with initial value and change event', () => {
 
-    it('should not fire an initial change event', () => {
+    it('should not fire an initial change event', async(() => {
       let fixture = TestBed.createComponent(ButtonToggleGroupWithInitialValue);
       let testComponent = fixture.debugElement.componentInstance;
       let groupDebugElement = fixture.debugElement.query(By.directive(MdButtonToggleGroup));
@@ -347,15 +348,24 @@ describe('MdButtonToggle', () => {
 
       fixture.detectChanges();
 
-      expect(groupInstance.value).toBe('red');
-      expect(testComponent.lastEvent).toBeFalsy();
+      fixture.whenStable().then(() => {
+        expect(groupInstance.value).toBe('red');
+        expect(testComponent.lastEvent).toBeFalsy();
 
-      groupInstance.value = 'green';
+        groupInstance.value = 'green';
+        fixture.detectChanges();
+
+        expect(groupInstance.value).toBe('green');
+        expect(testComponent.lastEvent.value).toBe('green');
+      });
+    }));
+
+    it('should not be dirty on load with a value accessor', async(() => {
+      let fixture = TestBed.createComponent(ButtonToggleGroupWithValueAccessorInitialValue);
+
       fixture.detectChanges();
-
-      expect(groupInstance.value).toBe('green');
-      expect(testComponent.lastEvent.value).toBe('green');
-    });
+      fixture.whenStable().then(() => expect(fixture.componentInstance.control.dirty).toBe(false));
+    }));
 
   });
 
@@ -661,4 +671,17 @@ class ButtonToggleGroupWithInitialValue {
 })
 class ButtonToggleGroupWithFormControl {
   control = new FormControl();
+}
+
+@Component({
+  template: `
+  <md-button-toggle-group [(ngModel)]="value">
+    <md-button-toggle value="one">One</md-button-toggle>
+    <md-button-toggle value="two">Two</md-button-toggle>
+  </md-button-toggle-group>
+  `
+})
+class ButtonToggleGroupWithValueAccessorInitialValue {
+  @ViewChild(NgControl) control: NgControl;
+  value = 'two';
 }
