@@ -119,7 +119,7 @@
 }
 
 @mixin mat-button-typography($config) {
-  .mat-button, .mat-raised-button {
+  .mat-button, .mat-raised-button, .mat-icon-button {
     @include mat-typography-level-to-styles($config, button);
   }
 }
