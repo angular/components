@@ -83,6 +83,12 @@ export class TabsDemo {
   deleteTab(tab: any) {
     this.dynamicTabs.splice(this.dynamicTabs.indexOf(tab), 1);
   }
+
+  swapTabLinks() {
+    const temp = this.tabLinks[0];
+    this.tabLinks[0] = this.tabLinks[1];
+    this.tabLinks[1] = temp;
+  }
 }
 
 

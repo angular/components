@@ -1,5 +1,9 @@
 <h1>Tab Nav Bar</h1>
 
+<button md-button (click)="tabLinks.push({label: 'New', link: 'sunny-tab'})">Add tab</button>
+<button md-button (click)="tabLinks.shift()">Remove tab</button>
+<button md-button (click)="swapTabLinks()">Swap first two</button>
+
 <div class="demo-nav-bar">
   <nav md-tab-nav-bar aria-label="weather navigation links">
     <a md-tab-link
