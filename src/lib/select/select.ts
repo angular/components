@@ -768,15 +768,15 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     const maxScroll = scrollContainerHeight - panelHeight;
 
     if (this._selectionModel.hasValue()) {
-      let selectedIndex = this._getOptionIndex(this._selectionModel.selected[0]);
+      let selectedOptionOffset = this._getOptionIndex(this._selectionModel.selected[0]);
 
-      selectedIndex += this._getLabelCountBeforeOption(selectedIndex);
+      selectedOptionOffset += this._getLabelCountBeforeOption(selectedOptionOffset);
 
       // We must maintain a scroll buffer so the selected option will be scrolled to the
       // center of the overlay panel rather than the top.
       const scrollBuffer = panelHeight / 2;
-      this._scrollTop = this._calculateOverlayScroll(selectedIndex, scrollBuffer, maxScroll);
-      this._offsetY = this._calculateOverlayOffsetY(selectedIndex, scrollBuffer, maxScroll);
+      this._scrollTop = this._calculateOverlayScroll(selectedOptionOffset, scrollBuffer, maxScroll);
+      this._offsetY = this._calculateOverlayOffsetY(selectedOptionOffset, scrollBuffer, maxScroll);
     } else {
       // If no option is selected, the panel centers on the first option. In this case,
       // we must only adjust for the height difference between the option element

@@ -6,7 +6,7 @@ export class MdOptgroupBase { }
 export const _MdOptgroupMixinBase = mixinDisabled(MdOptgroupBase);
 
 // Counter for unique group ids.
-let nextId = 0;
+let _uniqueOptgroupIdCounter = 0;
 
 /**
  * Component that is used to group instances of `md-option`.
@@ -30,5 +30,5 @@ export class MdOptgroup extends _MdOptgroupMixinBase implements CanDisable {
   @Input() label: string;
 
   /** Unique id for the underlying label. */
-  _labelId: string = `mat-optgroup-label-${nextId++}`;
+  _labelId: string = `mat-optgroup-label-${_uniqueOptgroupIdCounter++}`;
 }
