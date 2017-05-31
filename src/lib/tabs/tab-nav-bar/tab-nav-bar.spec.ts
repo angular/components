@@ -10,7 +10,7 @@ import {LayoutDirection, Dir} from '../../core/rtl/dir';
 import {Subject} from 'rxjs/Subject';
 
 
-fdescribe('MdTabNavBar', () => {
+describe('MdTabNavBar', () => {
   let dir: LayoutDirection = 'ltr';
   let dirChange = new Subject();
 
