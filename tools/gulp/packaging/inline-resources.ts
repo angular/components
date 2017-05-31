@@ -4,8 +4,8 @@ import {dirname, join} from 'path';
 import {readFileSync, writeFileSync} from 'fs';
 import {sync as glob} from 'glob';
 
-/** Finds all JavaScript files and inlines all external resources of Angular components. */
-export function inlineResourcesFolder(folderPath: string) {
+/** Finds all JavaScript files in a directory and inlines all resources of Angular components. */
+export function inlineResourcesForDirectory(folderPath: string) {
   glob(join(folderPath, '**/*.js')).forEach(filePath => inlineResources(filePath));
 }
 
@@ -23,25 +23,24 @@ export function inlineResources(filePath: string) {
 /** Inlines the templates of Angular components for a specified source file. */
 function inlineTemplate(fileContent: string, filePath: string) {
   return fileContent.replace(/templateUrl:\s*'([^']+?\.html)'/g, (match, templateUrl) => {
-    const templateFile = join(dirname(filePath), templateUrl);
-    const templateContent = loadResourceFile(templateFile);
+    const templatePath = join(dirname(filePath), templateUrl);
+    const templateContent = loadResourceFile(templatePath);
     return `template: "${templateContent}"`;
   });
 }
 
-
 /** Inlines the external styles of Angular components for a specified source file. */
 function inlineStyles(fileContent: string, filePath: string) {
-  return fileContent.replace(/styleUrls:\s*(\[[\s\S]*?])/gm, (match, styleUrls) => {
+  return fileContent.replace(/styleUrls:\s*(\[[\s\S]*?])/gm, (match, styleUrlsValue) => {
     // The RegExp matches the array of external style files. This is a string right now and
-    // can to be parsed using the `eval` method.
-    const parsedUrls = eval(styleUrls) as string[];
+    // can to be parsed using the `eval` method. The value looks like "['AAA.css', 'BBB.css"]"
+    const styleUrls = eval(styleUrlsValue) as string[];
 
-    return 'styles: [' + parsedUrls.map(styleUrl => {
-      const stylePath = join(dirname(filePath), styleUrl);
-      const styleContent = loadResourceFile(stylePath);
-      return `"${styleContent}"`;
-    }).join(',\n') + ']';
+    const styleContents = styleUrls
+      .map(url => join(dirname(filePath), url))
+      .map(path => loadResourceFile(path));
+
+    return `styles: ["${styleContents.join(',')}"]`;
   });
 }
 
