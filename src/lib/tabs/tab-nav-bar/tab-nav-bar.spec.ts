@@ -1,12 +1,12 @@
-import {async, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {MdTabsModule} from '../index';
 import {MdTabNavBar} from './tab-nav-bar';
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {ViewportRuler} from '../../core/overlay/position/viewport-ruler';
 import {FakeViewportRuler} from '../../core/overlay/position/fake-viewport-ruler';
-import {dispatchMouseEvent, dispatchFakeEvent} from '../../core/testing/dispatch-events';
-import {LayoutDirection, Dir} from '../../core/rtl/dir';
+import {dispatchFakeEvent, dispatchMouseEvent} from '../../core/testing/dispatch-events';
+import {Dir, LayoutDirection} from '../../core/rtl/dir';
 import {Subject} from 'rxjs/Subject';
 
 
@@ -63,7 +63,7 @@ describe('MdTabNavBar', () => {
       expect(inkBar.alignToElement).toHaveBeenCalled();
     });
 
-    it('should re-align the ink bar when the tabs change', () => {
+    it('should re-align the ink bar when the tabs list change', () => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;
 
       spyOn(inkBar, 'alignToElement');
@@ -72,6 +72,20 @@ describe('MdTabNavBar', () => {
       fixture.detectChanges();
 
       expect(inkBar.alignToElement).toHaveBeenCalled();
+    });
+
+    it('should re-align the ink bar when the tab labels change the width', done => {
+      const inkBar = fixture.componentInstance.tabNavBar._inkBar;
+
+      const spy = spyOn(inkBar, 'alignToElement').and.callFake(() => {
+        expect(spy.calls.any()).toBe(true);
+        done();
+      });
+
+      fixture.componentInstance.label = 'label change';
+      fixture.detectChanges();
+
+      expect(spy.calls.any()).toBe(false);
     });
 
     it('should re-align the ink bar when the window is resized', fakeAsync(() => {
@@ -111,7 +125,7 @@ describe('MdTabNavBar', () => {
          *ngFor="let tab of tabs; let index = index"
          [active]="activeIndex === index"
          (click)="activeIndex = index">
-        Tab link
+        Tab link {{label}}
       </a>
     </nav>
   `
@@ -119,6 +133,7 @@ describe('MdTabNavBar', () => {
 class SimpleTabNavBarTestApp {
   @ViewChild(MdTabNavBar) tabNavBar: MdTabNavBar;
 
+  label = '';
   tabs = [0, 1, 2];
 
   activeIndex = 0;

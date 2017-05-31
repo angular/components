@@ -38,9 +38,6 @@ import {Subject} from 'rxjs/Subject';
   encapsulation: ViewEncapsulation.None,
 })
 export class MdTabNavBar implements AfterContentInit, OnDestroy {
-  /** Combines listeners that will re-align the ink bar whenever they're invoked. */
-  private _realignInkBar: Subscription = null;
-
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
 
@@ -48,7 +45,6 @@ export class MdTabNavBar implements AfterContentInit, OnDestroy {
   _activeLinkElement: ElementRef;
 
   @ViewChild(MdInkBar) _inkBar: MdInkBar;
-  @ContentChildren(forwardRef(() => MdTabLink)) _tabLinks: QueryList<MdTabLink>;
 
   constructor(@Optional() private _dir: Dir, private _ngZone: NgZone) { }
 
@@ -59,12 +55,7 @@ export class MdTabNavBar implements AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit(): void {
-    /** Realign the ink bar if the list of tab links have been added, removed, or moved. */
-    this._tabLinks.changes
-        .takeUntil(this._onDestroy)
-        .subscribe(() => this._alignInkBar());
-
-    this._realignInkBar = this._ngZone.runOutsideAngular(() => {
+    this._ngZone.runOutsideAngular(() => {
       let dirChange = this._dir ? this._dir.dirChange : Observable.of(null);
       let resize = typeof window !== 'undefined' ?
           Observable.fromEvent(window, 'resize').auditTime(10) :
@@ -89,7 +80,7 @@ export class MdTabNavBar implements AfterContentInit, OnDestroy {
   }
 
   /** Aligns the ink bar to the active link. */
-  private _alignInkBar(): void {
+  _alignInkBar(): void {
     if (this._activeLinkElement) {
       this._inkBar.alignToElement(this._activeLinkElement.nativeElement);
     }

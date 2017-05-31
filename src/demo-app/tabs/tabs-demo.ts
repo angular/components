@@ -89,6 +89,10 @@ export class TabsDemo {
     this.tabLinks[0] = this.tabLinks[1];
     this.tabLinks[1] = temp;
   }
+
+  scrambleLabels() {
+    this.tabLinks.forEach(link => link.label += 'a');
+  }
 }
 
 
