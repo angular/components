@@ -1,15 +1,13 @@
 import {
   AfterContentInit,
   Component,
-  ContentChildren,
   Directive,
-  ElementRef, forwardRef,
+  ElementRef,
   Inject,
   Input,
   NgZone,
   OnDestroy,
   Optional,
-  QueryList,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
@@ -18,7 +16,6 @@ import {MdRipple} from '../../core/ripple/index';
 import {ViewportRuler} from '../../core/overlay/position/viewport-ruler';
 import {Dir, MD_RIPPLE_GLOBAL_OPTIONS, Platform, RippleGlobalOptions} from '../../core';
 import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/auditTime';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/observable/of';

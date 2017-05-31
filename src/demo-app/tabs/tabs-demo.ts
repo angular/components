@@ -90,8 +90,8 @@ export class TabsDemo {
     this.tabLinks[1] = temp;
   }
 
-  scrambleLabels() {
-    this.tabLinks.forEach(link => link.label += 'a');
+  addToLabel() {
+    this.tabLinks.forEach(link => link.label += 'extracontent');
   }
 }
 
