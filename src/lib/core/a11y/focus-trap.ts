@@ -115,12 +115,12 @@ export class FocusTrap {
     let markers = this._element.querySelectorAll(`[cdk-focus-region-${bound}], ` +
                                                  `[cdk-focus-${bound}]`) as NodeListOf<HTMLElement>;
 
-    Array.prototype.forEach.call(markers, (el: HTMLElement) => {
-      if (el.hasAttribute(`cdk-focus-${bound}`)) {
+    for (let i = 0; i < markers.length; i++) {
+      if (markers[i].hasAttribute(`cdk-focus-${bound}`)) {
         console.warn(`Found use of deprecated attribute 'cdk-focus-${bound}',` +
-                     ` use 'cdk-focus-region-${bound}' instead.`, el);
+                     ` use 'cdk-focus-region-${bound}' instead.`, markers[i]);
       }
-    });
+    }
 
     if (bound == 'start') {
       return markers.length ? markers[0] : this._getFirstTabbableElement(this._element);
