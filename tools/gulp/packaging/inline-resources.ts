@@ -33,7 +33,7 @@ function inlineTemplate(fileContent: string, filePath: string) {
 function inlineStyles(fileContent: string, filePath: string) {
   return fileContent.replace(/styleUrls:\s*(\[[\s\S]*?])/gm, (match, styleUrlsValue) => {
     // The RegExp matches the array of external style files. This is a string right now and
-    // can to be parsed using the `eval` method. The value looks like "['AAA.css', 'BBB.css"]"
+    // can to be parsed using the `eval` method. The value looks like "['AAA.css', 'BBB.css']"
     const styleUrls = eval(styleUrlsValue) as string[];
 
     const styleContents = styleUrls
