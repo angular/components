@@ -406,6 +406,16 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
     this._disabled = coerceBooleanProperty(value);
   }
 
+  /** The color of the button. Can be `primary`, `accent`, or `warn`. */
+  @Input()
+  get color(): string {
+    return this._color;
+  }
+
+  set color(value: string) {
+    this._updateColor(value);
+  }
+
   /**
    * Event emitted when the checked state of this radio button changes.
    * Change events are only emitted when the value changes due to user interaction with
@@ -432,6 +442,9 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
 
   /** Whether the ripple effect on click should be disabled. */
   private _disableRipple: boolean;
+
+  /** Current color. Can be `primary`, `accent`, or `warn`. */
+  private _color: string;
 
   /** The child ripple instance. */
   @ViewChild(MdRipple) _ripple: MdRipple;
@@ -537,6 +550,22 @@ export class MdRadioButton implements OnInit, AfterViewInit, OnDestroy {
       this.radioGroup._touch();
       if (groupValueChanged) {
         this.radioGroup._emitChangeEvent();
+      }
+    }
+  }
+
+  _updateColor(newColor: string) {
+    this._setElementColor(this._color, false);
+    this._setElementColor(newColor, true);
+    this._color = newColor;
+  }
+
+  _setElementColor(color: string, isAdd: boolean) {
+    if (color != null && color != '') {
+      if (isAdd) {
+        this._renderer.addClass(this._elementRef.nativeElement, `mat-${color}`);
+      } else {
+        this._renderer.removeClass(this._elementRef.nativeElement, `mat-${color}`);
       }
     }
   }
