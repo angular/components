@@ -1,5 +1,6 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/style/form-common';
 
 
 @mixin mat-input-theme($theme) {
@@ -52,6 +53,11 @@
 
   .mat-input-underline {
     border-color: $input-underline-color;
+
+    &.mat-disabled {
+      // Since this is a dotted line, we need to make it slightly darker to get it to stand out.
+      @include mat-control-disabled-underline(rgba($input-underline-color, 0.38));
+    }
   }
 
   .mat-input-ripple {
