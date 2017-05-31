@@ -107,7 +107,7 @@ npm install --save hammerjs
 
 After installing, import it on your app's root module.
 ```ts
-import 'hammerjs';
+import 'hammerjs/hammer';
 ```
 
 ## Step 6 (Optional): Add Material Icons
