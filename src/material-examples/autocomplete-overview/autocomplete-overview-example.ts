@@ -73,7 +73,7 @@ export class AutocompleteOverviewExample {
   }
 
   escapeSpecChars(val: string) {
-    return val ? val.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
+    return val ? val.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
                : val;
   }
 
