@@ -5,6 +5,7 @@
 /tmp
 /src/assets/documents
 /src/assets/examples
+/src/assets/plunker/examples
 
 # dependencies
 /node_modules

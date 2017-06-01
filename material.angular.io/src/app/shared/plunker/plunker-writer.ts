@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { ExampleData } from '../../examples/example-data';
+import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
+import {ExampleData} from '@angular/material-examples';
 import 'rxjs/add/operator/toPromise';
 
 const PLUNKER_URL = 'https://plnkr.co/edit/?p=preview';

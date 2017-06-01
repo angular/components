@@ -9,6 +9,8 @@ docAssetsPath=./src/assets/documents/
 # Dir where live-example assets will be copied
 exampleAssetsPath=./src/assets/
 
+plunkerExampleAssetsPath=./src/assets/plunker/
+
 # Dir where published assets will temporarily copied to (using `git clone`).
 tmpAssetClonePath=/tmp/material-assets
 
@@ -17,21 +19,26 @@ docsContentRepo=https://github.com/angular/material2-docs-content
 
 # Dirs for each of api docs, guides, overviews, and live-examples within the
 # cloned content repo.
-apiPath=$tmpAssetClonePath/api
-guidesPath=$tmpAssetClonePath/guides
-overviewPath=$tmpAssetClonePath/overview
-examplesPath=$tmpAssetClonePath/examples/
+apiPath=${tmpAssetClonePath}/api
+guidesPath=${tmpAssetClonePath}/guides
+overviewPath=${tmpAssetClonePath}/overview
+examplesPath=${tmpAssetClonePath}/examples/
+plunkerExamplesPath=${tmpAssetClonePath}/plunker/examples/
 
 # Create folders into which to copy content and assets.
-mkdir -p $tmpAssetClonePath
-mkdir -p $exampleAssetsPath $docAssetsPath
+mkdir -p ${tmpAssetClonePath}
+mkdir -p ${exampleAssetsPath} ${docAssetsPath}
 
 # Pull assets from repo and remove .git directory
-git clone $docsContentRepo $tmpAssetClonePath
+git clone ${docsContentRepo} ${tmpAssetClonePath}
 
 # Copy files over to their proper place in src/assets
-cp -r $apiPath $overviewPath $guidesPath $docAssetsPath
-cp -r $examplesPath $exampleAssetsPath
+cp -r ${apiPath} ${overviewPath} ${guidesPath} ${docAssetsPath}
+cp -r ${examplesPath} ${exampleAssetsPath}
+cp -r ${plunkerExamplesPath} ${plunkerExampleAssetsPath}
+
+# Install the live examples component library
+npm i ${tmpAssetClonePath}/examples-package
 
 # Remove temporary directory
-rm -rf $tmpAssetClonePath
+rm -rf ${tmpAssetClonePath}

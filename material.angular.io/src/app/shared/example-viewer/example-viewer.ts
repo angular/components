@@ -3,7 +3,7 @@ import {Http} from '@angular/http';
 import {ComponentPortal} from '@angular/material';
 import 'rxjs/add/operator/first';
 
-import {EXAMPLE_COMPONENTS, LiveExample} from '../../examples/example-module';
+import {EXAMPLE_COMPONENTS, LiveExample} from '@angular/material-examples';
 
 
 @Component({

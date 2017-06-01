@@ -1,13 +1,12 @@
-import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CommonModule} from '@angular/common';
 import {ReactiveFormsModule} from '@angular/forms';
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Http} from '@angular/http';
-import {MaterialModule, ComponentPortal} from '@angular/material';
+import {MaterialModule} from '@angular/material';
 
-import {AutocompleteOverviewExample} from '../../examples/autocomplete-overview/autocomplete-overview-example';
-import {EXAMPLE_COMPONENTS} from '../../examples/example-module';
+import {EXAMPLE_COMPONENTS, ExampleModule, LiveExample} from '@angular/material-examples';
 import {ExampleViewer} from './example-viewer';
 
 const exampleComponentString = 'autocomplete-overview';
@@ -16,14 +15,13 @@ const exampleComponentString = 'autocomplete-overview';
 // Required for the set example function
 @NgModule({
   imports: [
+    ExampleModule,
     BrowserAnimationsModule,
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  declarations: [AutocompleteOverviewExample],
-  entryComponents: [AutocompleteOverviewExample]
 })
 class TestAutocompleteOverviewModule {
 }
@@ -62,7 +60,8 @@ describe('ExampleViewer', () => {
     component.example = exampleComponentString;
     fixture.detectChanges();
     const data = component.exampleData;
-    expect(data).toEqual(EXAMPLE_COMPONENTS[exampleComponentString]);
+    // TODO(jelbourn): remove `as any` once LiveExample is updated to hve optional members.
+    expect(data).toEqual(EXAMPLE_COMPONENTS[exampleComponentString] as any);
   });
 
   it('should log message about missing example', () => {
