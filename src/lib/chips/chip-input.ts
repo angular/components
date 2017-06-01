@@ -1,5 +1,6 @@
 import {Directive, Output, EventEmitter, Renderer, ElementRef, Input} from '@angular/core';
 import {ENTER} from '../core/keyboard/keycodes';
+import {MdChipList} from './chip-list';
 
 export interface MdChipInputEvent {
   input: HTMLInputElement;
@@ -7,13 +8,25 @@ export interface MdChipInputEvent {
 }
 
 @Directive({
-  selector: '[mdChipInput], [matChipInput]',
+  selector: 'input[mdChipList], input[matChipList]',
   host: {
+    'class': 'mat-chip-input',
     '(keydown)': '_keydown($event)',
     '(blur)': '_blur()'
   }
 })
 export class MdChipInput {
+
+  _chipList: MdChipList;
+
+  /** Register input for chip list */
+  @Input()
+  set mdChipList(value: MdChipList) {
+    if (value) {
+      this._chipList = value;
+      this._chipList.registerInput(this._inputElement);
+    }
+  }
 
   /**
    * Whether or not the chipAdded event will be emitted when the input is blurred.

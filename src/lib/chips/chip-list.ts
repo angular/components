@@ -16,7 +16,6 @@ import {
   ViewEncapsulation,
   OnDestroy,
   ElementRef,
-  QueryList,
   Renderer2,
 } from '@angular/core';
 
@@ -46,8 +45,6 @@ import {coerceBooleanProperty} from '@angular/cdk';
     'role': 'listbox',
     'class': 'mat-chip-list',
 
-    '[attr.tabindex]': '_tabIndex',
-
     '(focus)': 'focus($event)',
     '(keydown)': '_keydown($event)'
   },
@@ -74,8 +71,8 @@ export class MdChipList implements AfterContentInit, OnDestroy {
 
   protected _inputElement: HTMLInputElement;
 
-  /** Whether or not the chip list is currently focusable via keyboard interaction. */
-  _tabIndex = -1;
+  /** Tab index for the chip list. */
+  _tabIndex = 0;
 
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager;
@@ -83,10 +80,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   /** The chip components contained within this chip list. */
   chips: QueryList<MdChip>;
 
-  /** Tab index for the chip list. */
-  _tabIndex = 0;
-
-  constructor(protected _renderer: Renderer, protected _elementRef: ElementRef,
+  constructor(protected _renderer: Renderer2, protected _elementRef: ElementRef,
               protected _dir: Dir) {
   }
 
@@ -147,9 +141,8 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   /**
    * Programmatically focus the chip list. This in turn focuses the first non-disabled chip in this
    * chip list, or the input if available and there are 0 chips.
-   *
-   * TODO: ARIA says this should focus the first `selected` chip if any are selected.
    */
+  // TODO: ARIA says this should focus the first `selected` chip if any are selected.
   focus(event?: Event) {
     if (this.chips.length > 0) {
       this._keyManager.setFirstItemActive();
@@ -178,7 +171,6 @@ export class MdChipList implements AfterContentInit, OnDestroy {
     let isNextKey = (code == (isRtl ? LEFT_ARROW : RIGHT_ARROW));
     let isBackKey = (code == BACKSPACE || code == DELETE || code == UP_ARROW || isPrevKey);
     let isForwardKey = (code == DOWN_ARROW || isNextKey);
-
     // If they are on an empty input and hit backspace/delete/left arrow, focus the last chip
     if (isInputEmpty && isBackKey) {
       this._keyManager.setLastItemActive();
@@ -213,7 +205,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
    *
    * @param chips The list of chips to be subscribed.
    */
-  protected _subscribeChips(chips: QueryList < MdChip >): void {
+  protected _subscribeChips(chips: QueryList<MdChip>): void {
     chips.forEach(chip => this._addChip(chip));
   }
 
@@ -274,7 +266,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
    * one.
    */
   protected _checkDestroyedFocus() {
-    let chipsArray = this.chips.toArray();
+    let chipsArray = this.chips;
     let focusChip: MdChip;
 
     if (this._destroyedIndex != null && chipsArray.length > 0) {

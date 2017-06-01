@@ -46,11 +46,6 @@ export class ChipsDemo {
     alert(message);
   }
 
-  add(input: HTMLInputElement): void {
-    if (input.value && input.value.trim() != '') {
-      this.people.push({ name: input.value.trim() });
-      input.value = '';
-=======
   add(event: MdChipInputEvent): void {
     let input = event.input;
     let value = event.value;
@@ -71,7 +66,6 @@ export class ChipsDemo {
 
     if (index >= 0) {
       this.people.splice(index, 1);
->>>>>>> feat(chips): Add remove functionality/styling.
     }
   }
 

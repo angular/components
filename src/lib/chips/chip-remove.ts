@@ -1,6 +1,6 @@
-import {Directive, Renderer, ElementRef, OnInit, OnDestroy} from '@angular/core';
+import {Directive, Renderer2, ElementRef, OnInit, OnDestroy} from '@angular/core';
 import {MdChip} from './chip';
-import {Subscription} from 'rxjs';
+import {Subscription} from 'rxjs/Subscription';
 
 /**
  * Applies proper (click) support and adds styling for use with the Material Design "cancel" icon
@@ -16,9 +16,9 @@ import {Subscription} from 'rxjs';
  * to properly center the icon within the chip.
  */
 @Directive({
-  selector: '[md-chip-remove], [mat-chip-remove], [mdChipRemove], [matChipRemove]',
+  selector: '[mdChipRemove], [matChipRemove]',
   host: {
-    '[class.mat-chip-remove]': 'true',
+    'class': 'mat-chip-remove',
     '[class.mat-chip-remove-hidden]': '!_isVisible',
     '(click)': '_handleClick($event)'
   }
@@ -31,11 +31,11 @@ export class MdChipRemove implements OnInit, OnDestroy {
   /** Subscription for our onRemoveChange Observable */
   _onRemoveChangeSubscription: Subscription;
 
-  constructor(protected _renderer: Renderer, protected _elementRef: ElementRef,
+  constructor(protected _renderer: Renderer2, protected _elementRef: ElementRef,
               protected _parentChip: MdChip) {
     if (this._parentChip) {
-      this._onRemoveChangeSubscription = this._parentChip.onRemovableChange$
-        .subscribe((value: boolean) => {
+      this._onRemoveChangeSubscription = this._parentChip.onRemovableChange
+        .subscribe((value) => {
           this._updateParent(value);
         });
     }

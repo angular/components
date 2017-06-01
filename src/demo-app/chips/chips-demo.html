@@ -26,7 +26,7 @@
 
         <md-chip color="warn" selected="true" *ngIf="visible"
                  (destroy)="alert('chip destroyed')" (remove)="toggleVisible()">
-          <md-icon md-chip-remove>cancel</md-icon>
+          <md-icon mdChipRemove>cancel</md-icon>
           With Events
         </md-chip>
       </md-chip-list>
@@ -44,18 +44,22 @@
         <code>&lt;md-input-container&gt;</code>.
       </p>
 
-      <md-input-container [floatPlaceholder]="people.length > 0 ? 'always' : 'auto'">
-        <md-chip-list>
+      <md-input-container>
+        <md-chip-list mdPrefix #chipList>
           <md-chip *ngFor="let person of people" [color]="color" [selectable]="selectable"
                    [removable]="removable" (remove)="remove(person)">
             {{person.name}}
             <md-icon mdChipRemove>cancel</md-icon>
           </md-chip>
 
-          <input mdInput placeholder="New Contributor..."
-                 mdChipInput (chipAdded)="add($event)"
-                 [separatorKeys]="separatorKeys" [addOnBlur]="addOnBlur" />
         </md-chip-list>
+        <input mdInput placeholder="New Contributor..."
+               [mdChipList] ="chipList" (chipAdded)="add($event)"
+               [separatorKeys]="separatorKeys" [addOnBlur]="addOnBlur" />
+      </md-input-container>
+
+      <md-input-container>
+        <input mdInput placeholder="New Contributor..."/>
       </md-input-container>
 
       <p>

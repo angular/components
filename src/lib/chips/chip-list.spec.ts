@@ -1,23 +1,15 @@
 import {async, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {Component, DebugElement, QueryList} from '@angular/core';
 import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdChip, MdChipList, MdChipsModule} from './index';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB} from '../core/keyboard/keycodes';
 import {createKeyboardEvent} from '@angular/cdk/testing';
 
 import {MdInputModule} from '../input/index';
-import {FakeEvent} from '../core/a11y/list-key-manager.spec';
-import {LEFT_ARROW, RIGHT_ARROW, BACKSPACE, DELETE} from '../core/keyboard/keycodes';
+import {LEFT_ARROW, RIGHT_ARROW, BACKSPACE, DELETE, SPACE, TAB} from '../core/keyboard/keycodes';
 import {Dir} from '../core/rtl/dir';
-
-export class FakeKeyboardEvent extends FakeEvent {
-  constructor(keyCode: number, protected target: HTMLElement) {
-    super(keyCode);
-
-    this.target = target;
-  }
-}
 
 describe('MdChipList', () => {
   let fixture: ComponentFixture<any>;
@@ -32,9 +24,9 @@ describe('MdChipList', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdChipsModule, MdInputModule],
+      imports: [MdChipsModule, MdInputModule, NoopAnimationsModule],
       declarations: [
-        StaticChipList, StandardChipList, InputContainerChipList
+        StandardChipList, InputContainerChipList
       ],
       providers: [{
         provide: Dir, useFactory: () => {
@@ -122,10 +114,6 @@ describe('MdChipList', () => {
           expect(manager.activeItemIndex).toEqual(2);
         });
 
-      let LEFT_EVENT = createKeyboardEvent('keydown', LEFT_ARROW, lastNativeChip);
-      let array = chips.toArray();
-      let lastIndex = array.length - 1;
-      let lastItem = array[lastIndex];
 
         it('focuses the previous item', () => {
           let array = chips.toArray();
@@ -153,15 +141,11 @@ describe('MdChipList', () => {
           manager = chipListInstance._keyManager;
         }));
 
-      let RIGHT_EVENT = createKeyboardEvent('keydown', RIGHT_ARROW, firstNativeChip);
-      let array = chips.toArray();
-      let firstItem = array[0];
-
         it('LEFT ARROW focuses previous item', () => {
           let nativeChips = chipListNativeElement.querySelectorAll('md-chip');
           let lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
 
-          let LEFT_EVENT = new FakeKeyboardEvent(LEFT_ARROW, lastNativeChip) as any;
+          let LEFT_EVENT = createKeyboardEvent('keydown', LEFT_ARROW, lastNativeChip);
           let array = chips.toArray();
           let lastIndex = array.length - 1;
           let lastItem = array[lastIndex];
@@ -183,7 +167,7 @@ describe('MdChipList', () => {
           let firstNativeChip = nativeChips[0] as HTMLElement;
 
           let RIGHT_EVENT: KeyboardEvent =
-                new FakeKeyboardEvent(RIGHT_ARROW, firstNativeChip) as any;
+            createKeyboardEvent('keydown', RIGHT_ARROW, firstNativeChip);
           let array = chips.toArray();
           let firstItem = array[0];
 
@@ -208,17 +192,12 @@ describe('MdChipList', () => {
           manager = chipListInstance._keyManager;
         }));
 
-        let SPACE_EVENT = createKeyboardEvent('keydown', SPACE, firstNativeChip);
-        let firstChip: MdChip = chips.toArray()[0];
-
         it('RIGHT ARROW focuses previous item', () => {
-          fixture.detectChanges();
-
           let nativeChips = chipListNativeElement.querySelectorAll('md-chip');
           let lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
 
           let RIGHT_EVENT: KeyboardEvent =
-                new FakeKeyboardEvent(RIGHT_ARROW, lastNativeChip) as any;
+              createKeyboardEvent('keydown', RIGHT_ARROW, lastNativeChip);
           let array = chips.toArray();
           let lastIndex = array.length - 1;
           let lastItem = array[lastIndex];
@@ -239,7 +218,8 @@ describe('MdChipList', () => {
           let nativeChips = chipListNativeElement.querySelectorAll('md-chip');
           let firstNativeChip = nativeChips[0] as HTMLElement;
 
-          let LEFT_EVENT: KeyboardEvent = new FakeKeyboardEvent(LEFT_ARROW, firstNativeChip) as any;
+          let LEFT_EVENT: KeyboardEvent =
+              createKeyboardEvent('keydown', LEFT_ARROW, firstNativeChip);
           let array = chips.toArray();
           let firstItem = array[0];
 
@@ -255,18 +235,17 @@ describe('MdChipList', () => {
           expect(manager.activeItemIndex).toEqual(1);
         });
 
-      });
+        it('allow focus to escape when tabbing away', fakeAsync(() => {
+          chipListInstance._keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
 
-      it('allow focus to escape when tabbing away', fakeAsync(() => {
-        chipListInstance._keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
-
-        expect(chipListInstance._tabIndex)
+          expect(chipListInstance._tabIndex)
             .toBe(-1, 'Expected tabIndex to be set to -1 temporarily.');
 
-        tick();
+          tick();
 
-        expect(chipListInstance._tabIndex).toBe(0, 'Expected tabIndex to be reset back to 0');
-      }));
+          expect(chipListInstance._tabIndex).toBe(0, 'Expected tabIndex to be reset back to 0');
+        }));
+      });
     });
   });
 
@@ -290,7 +269,8 @@ describe('MdChipList', () => {
 
         it('DELETE focuses the last chip', () => {
           let nativeInput = chipListNativeElement.querySelector('input');
-          let DELETE_EVENT: KeyboardEvent = new FakeKeyboardEvent(DELETE, nativeInput) as any;
+          let DELETE_EVENT: KeyboardEvent =
+              createKeyboardEvent('keydown', DELETE, nativeInput);
 
           // Focus the input
           nativeInput.focus();
@@ -306,7 +286,8 @@ describe('MdChipList', () => {
 
         it('BACKSPACE focuses the last chip', () => {
           let nativeInput = chipListNativeElement.querySelector('input');
-          let BACKSPACE_EVENT: KeyboardEvent = new FakeKeyboardEvent(BACKSPACE, nativeInput) as any;
+          let BACKSPACE_EVENT: KeyboardEvent =
+              createKeyboardEvent('keydown', BACKSPACE, nativeInput);
 
           // Focus the input
           nativeInput.focus();
@@ -376,7 +357,6 @@ class StandardChipList {
         <md-chip>Chip 1</md-chip>
         <md-chip>Chip 1</md-chip>
         <md-chip>Chip 1</md-chip>
-        
         <input mdInput name="test" />
       </md-chip-list>
     </md-input-container>

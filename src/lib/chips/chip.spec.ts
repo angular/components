@@ -2,8 +2,8 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement}  from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdChipList, MdChip, MdChipEvent, MdChipsModule} from './index';
-import {FakeEvent} from '../core/a11y/list-key-manager.spec';
 import {SPACE, DELETE, BACKSPACE} from '../core/keyboard/keycodes';
+import {createKeyboardEvent} from '../core/testing/event-objects';
 import {Dir} from '../core/rtl/dir';
 
 describe('Chips', () => {
@@ -141,8 +141,8 @@ describe('Chips', () => {
           fixture.detectChanges();
         });
 
-        it('SPACE selects/deselects the currently focused chip', () => {
-          const SPACE_EVENT: KeyboardEvent = new FakeEvent(SPACE) as KeyboardEvent;
+        it('should selects/deselects the currently focused chip on SPACE', () => {
+          const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE) as KeyboardEvent;
           const CHIP_EVENT: MdChipEvent = {chip: chipInstance};
 
           spyOn(testComponent, 'chipSelect');
@@ -173,7 +173,7 @@ describe('Chips', () => {
         });
 
         it('SPACE ignores selection', () => {
-          const SPACE_EVENT: KeyboardEvent = new FakeEvent(SPACE) as KeyboardEvent;
+          const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE) as KeyboardEvent;
 
           spyOn(testComponent, 'chipSelect');
 
@@ -193,7 +193,7 @@ describe('Chips', () => {
         });
 
         it('DELETE emits the (remove) event', () => {
-          const DELETE_EVENT = new FakeEvent(DELETE) as KeyboardEvent;
+          const DELETE_EVENT = createKeyboardEvent('keydown', DELETE) as KeyboardEvent;
 
           spyOn(testComponent, 'chipRemove');
 
@@ -205,7 +205,7 @@ describe('Chips', () => {
         });
 
         it('BACKSPACE emits the (remove) event', () => {
-          const BACKSPACE_EVENT = new FakeEvent(BACKSPACE) as KeyboardEvent;
+          const BACKSPACE_EVENT = createKeyboardEvent('keydown', BACKSPACE) as KeyboardEvent;
 
           spyOn(testComponent, 'chipRemove');
 
@@ -224,7 +224,7 @@ describe('Chips', () => {
         });
 
         it('DELETE does not emit the (remove) event', () => {
-          const DELETE_EVENT = new FakeEvent(DELETE) as KeyboardEvent;
+          const DELETE_EVENT = createKeyboardEvent('keydown', DELETE) as KeyboardEvent;
 
           spyOn(testComponent, 'chipRemove');
 
@@ -236,7 +236,7 @@ describe('Chips', () => {
         });
 
         it('BACKSPACE does not emit the (remove) event', () => {
-          const BACKSPACE_EVENT = new FakeEvent(BACKSPACE) as KeyboardEvent;
+          const BACKSPACE_EVENT = createKeyboardEvent('keydown', BACKSPACE) as KeyboardEvent;
 
           spyOn(testComponent, 'chipRemove');
 

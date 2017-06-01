@@ -90,7 +90,7 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
 
   /** Emitted when the removable property changes. */
   private _onRemovableChange = new EventEmitter<boolean>();
-  onRemovableChange$: Observable<boolean> = this._onRemovableChange.asObservable();
+  onRemovableChange: Observable<boolean> = this._onRemovableChange.asObservable();
 
   /** Emitted when the chip is focused. */
   onFocus = new EventEmitter<MdChipEvent>();

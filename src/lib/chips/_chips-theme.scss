@@ -22,7 +22,7 @@ $mat-chip-line-height: 16px;
 
   // The spec only provides guidance for light-themed chips. When inside of a dark theme, fall back
   // to standard background and foreground colors.
-  $unselected-background: if($is-dark-theme, #656565, #e0e0e0);
+  $unselected-background: if($is-dark-theme, mat-color($background, card), #e0e0e0);
   $unselected-foreground: if($is-dark-theme, mat-color($foreground, text), $light-foreground);
 
   $selected-background: if($is-dark-theme, mat-color($background, app-bar), #808080);
@@ -46,10 +46,10 @@ $mat-chip-line-height: 16px;
     .mat-chip-remove {
       color: $unselected-foreground;
       opacity: 0.3;
+    }
 
-      &:hover {
-        opacity: 0.54;
-      }
+    .mat-chip-remove:hover {
+      opacity: 0.54;
     }
   }
 
@@ -60,10 +60,10 @@ $mat-chip-line-height: 16px;
     .mat-chip-remove {
       color: $selected-foreground;
       opacity: 0.4;
+    }
 
-      &:hover {
-        opacity: 0.54;
-      }
+    .mat-chip-remove:hover {
+      opacity: 0.54;
     }
 
     &.mat-primary {
@@ -79,17 +79,16 @@ $mat-chip-line-height: 16px;
     &.mat-warn {
       background-color: mat-color($warn);
       color: mat-color($warn, default-contrast);
-      background-color: mat-color($primary, 500);
-      color: mat-contrast($primary, 500);
 
       .mat-chip-remove {
         color: mat-contrast($primary, 500);
         opacity: 0.4;
-
-        &:hover {
-          opacity: 0.54;
-        }
       }
+
+      .mat-chip-remove:hover {
+        opacity: 0.54;
+      }
+
     }
 
     &.mat-accent {
@@ -99,10 +98,10 @@ $mat-chip-line-height: 16px;
       .mat-chip-remove {
         color: mat-contrast($accent, 500);
         opacity: 0.4;
+      }
 
-        &:hover {
-          opacity: 0.54;
-        }
+      .mat-chip-remove:hover {
+        opacity: 0.54;
       }
     }
 
@@ -113,10 +112,10 @@ $mat-chip-line-height: 16px;
       .mat-chip-remove {
         color: mat-contrast($warn, 500);
         opacity: 0.4;
+      }
 
-        &:hover {
-          opacity: 0.54;
-        }
+      .mat-chip-remove:hover {
+        opacity: 0.54;
       }
     }
   }

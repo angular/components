@@ -14,6 +14,7 @@ $mat-chip-remove-size: 24px;
 $mat-chip-remove-font-size: 18px;
 
 .mat-chip-list-wrapper {
+
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -58,6 +59,10 @@ $mat-chip-remove-font-size: 18px;
       }
     }
   }
+}
+
+.mat-input-prefix .mat-chip-list-wrapper {
+  flex-wrap: nowrap;
 }
 
 .mat-chip:not(.mat-basic-chip) {
@@ -117,14 +122,12 @@ $mat-chip-remove-font-size: 18px;
   display: none;
 }
 
-// Override a few styles when inside an mat-input-container
-.mat-input-container .mat-chip-list-wrapper input {
-  width: auto;
-  height: 38px;
-  margin-left: 8px;
-}
+.mat-chip-input {
+  [dir='rtl'] & {
+    margin-right: 8px;
+  }
 
-// Fix the label offset
-.mat-input-container mat-chip-list ~ label.mat-empty {
-  transform: translateY(22px);
+  [dir='ltr'] & {
+    margin-left: 8px;
+  }
 }

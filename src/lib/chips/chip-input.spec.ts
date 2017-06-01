@@ -4,7 +4,8 @@ import {Component, DebugElement} from '@angular/core';
 import {MdChipInput, MdChipInputEvent} from './chip-input';
 import {By} from '@angular/platform-browser';
 import {Dir} from '../core/rtl/dir';
-import {FakeKeyboardEvent} from './chip-list.spec';
+import {createKeyboardEvent} from '../core/testing/event-objects';
+
 import {ENTER, COMMA} from '../core/keyboard/keycodes';
 
 describe('MdChipInput', () => {
@@ -42,7 +43,7 @@ describe('MdChipInput', () => {
 
   describe('basic behavior', () => {
     it('emits the (chipAdded) on enter keyup', () => {
-      let ENTER_EVENT = new FakeKeyboardEvent(ENTER, inputNativeElement) as any;
+      let ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement) as any;
 
       spyOn(testChipInput, 'add');
 
@@ -75,7 +76,7 @@ describe('MdChipInput', () => {
 
   describe('[separatorKeys]', () => {
     it('does not emit (chipAdded) when a non-separator key is pressed', () => {
-      let ENTER_EVENT = new FakeKeyboardEvent(ENTER, inputNativeElement) as any;
+      let ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement) as any;
       spyOn(testChipInput, 'add');
 
       testChipInput.separatorKeys = [COMMA];
@@ -86,7 +87,7 @@ describe('MdChipInput', () => {
     });
 
     it('emits (chipAdded) when a custom separator keys is pressed', () => {
-      let COMMA_EVENT = new FakeKeyboardEvent(COMMA, inputNativeElement) as any;
+      let COMMA_EVENT = createKeyboardEvent('keydown', COMMA, inputNativeElement) as any;
       spyOn(testChipInput, 'add');
 
       testChipInput.separatorKeys = [COMMA];
