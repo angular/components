@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { PlunkerWriter } from './plunker-writer';
-import { ExampleData } from '../../examples/example-data';
+import {Component, Input} from '@angular/core';
+import {PlunkerWriter} from './plunker-writer';
+import {ExampleData} from '@angular/material-examples';
 
 @Component({
   selector: 'plunker-button',

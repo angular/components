@@ -2,7 +2,7 @@ import {TestBed, inject, async, flushMicrotasks, fakeAsync} from '@angular/core/
 import {MockBackend} from '@angular/http/testing';
 import {BaseRequestOptions, Http, Response, ResponseOptions, XHRBackend} from '@angular/http';
 import {PlunkerWriter} from './plunker-writer';
-import {ExampleData} from '../../examples/example-data';
+import {ExampleData} from '@angular/material-examples';
 
 
 describe('PlunkerWriter', () => {
