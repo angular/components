@@ -1,9 +1,9 @@
 // todo: sticky-header-demo : Lin
 import {Component} from '@angular/core';
-import {TooltipPosition} from '@angular/material';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {MdStickyHeaderModule} from '@angular/material';
+import {StickyParentDirective, StickyHeaderDirective} from '@angular/material';
+export {StickyParentDirective, StickyHeaderDirective};
 
 
 
@@ -16,11 +16,9 @@ import {MdStickyHeaderModule} from '@angular/material';
 
 
 export class StickyHeaderDemo {
-    message: string = 'Here is the sticky-header';
-    position: TooltipPosition = 'below';
-    disabled = false;
-    showDelay = 0;
-    hideDelay = 1000;
+    constructor() {
+        console.log('===========++=============');
+    }
 }
 
 

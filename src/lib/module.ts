@@ -36,7 +36,7 @@ import {PlatformModule} from './core/platform/index';
 import {MdAutocompleteModule} from './autocomplete/index';
 import {StyleModule} from './core/style/index';
 import {MdDatepickerModule} from './datepicker/index';
-import {MdStickyHeaderModule} from './sticky-header/index'
+import {StickyParentDirective, StickyHeaderDirective} from './sticky-header/index';
 
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
@@ -72,7 +72,8 @@ const MATERIAL_MODULES = [
   PlatformModule,
   MdCommonModule,
   ObserveContentModule,
-  MdStickyHeaderModule,
+  StickyParentDirective,
+  StickyHeaderDirective,
 ];
 
 /** @deprecated */

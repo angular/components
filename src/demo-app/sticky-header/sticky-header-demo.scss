@@ -14,13 +14,13 @@ body {
     width: 900px;
     overflow: auto;}
 
-    button {
-      margin: 16px;
-    }
+  button {
+    margin: 16px;
   }
-  .mat-radio-button {
-    display: block;
-  }
+}
+.mat-radio-button {
+  display: block;
+}
 
 
 header {
@@ -79,12 +79,21 @@ nav {
   width: 100%;
 }
 
-.lside {
-  background: #cecece;
-  float: left;
+.rside2 {
+  background: #cea7a7;
+  float: right;
   padding: 20px;
-  width: 400px;
+  width: 100%;
 }
+
+.rside3 {
+  background: #c2eae5;
+  float: right;
+  padding: 20px;
+  width: 100%;
+}
+
+
 
 h2 {
   font-size: 20px;

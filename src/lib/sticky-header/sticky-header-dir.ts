@@ -8,28 +8,53 @@ import {
     OnDestroy,
     AfterViewInit,
     ElementRef,
-    ViewContainerRef,
-    NgZone,
-    Optional,
-    Renderer2,
-    ChangeDetectorRef} from '@angular/core';
+    ViewContainerRef,} from '@angular/core';
 
-@Component({
-    moduleId: module.id,
-    selector: 'sticky',
-    template: '<ng-content></ng-content>',
+import {Observable} from 'rxjs/Observable';
+
+@Directive({
+    selector: '[md-sticky-viewport]',
 })
 
-export class StickyHeaderComponent implements OnInit, OnDestroy, AfterViewInit {
+export class StickyParentDirective implements OnInit, OnDestroy, AfterViewInit {
+
+    private pelem: any;
+
+    constructor(private element: ElementRef) {
+        this.pelem = element.nativeElement;
+    }
+
+    ngOnInit(): void {
+        this.pelem.classList.add('sticky-parent');
+    }
+
+    ngAfterViewInit(): void {
+
+    }
+
+    ngOnDestroy(): void {
+        this.pelem.classList.remove('sticky-parent');
+    }
+}
+
+
+
+@Directive({
+    selector: '[md-sticky]',
+})
+
+
+
+export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
 
     @Input('sticky-zIndex') zIndex: number = 10;
     @Input('sticky-width') width: string = 'auto'; //sticky's width
     @Input('sticky-offset-top') offsetTop: number = 0; //sticky距离页面顶端多远
-    @Input('sticky-offset-bottom') offsetBottom: number = 0; //?
+    @Input('sticky-offset-bottom') offsetBottom: number = 0;
     @Input('sticky-start') start: number = 0;
     @Input('sticky-class') stickClass: string = 'sticky';
     @Input('sticky-end-class') endStickClass: string = 'sticky-end';
-    @Input('sticky-media-query') mediaQuery: string = ''; //?
+    @Input('sticky-media-query') mediaQuery: string = '';
     @Input('sticky-parent') parentMode: boolean = true;
 
     @Output() activated = new EventEmitter();
@@ -50,19 +75,34 @@ export class StickyHeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     private containerStart: number;
     private scrollFinish: number;
 
+    private stickyParent: any;
+
     constructor(private element: ElementRef) {
         this.elem = element.nativeElement;
     }
 
     ngOnInit(): void {
-        window.addEventListener('scroll', this.onScrollBind);
-        window.addEventListener('resize', this.onResizeBind);
+
     }
 
     ngAfterViewInit(): void {
 
         // define scroll container as parent element
         this.container = this.elem.parentNode;
+
+        //this.container = document.querySelector('.sticky-parent');
+        this.stickyParent = document.querySelector('.sticky-parent');
+
+        while (!this.container.classList.contains('sticky-parent')) {
+            this.container = this.elem.parentNode;
+        }
+
+        console.log('original container: ' + this.container);
+        console.log('original container class: ' + this.container.classList.contains('sticky-parent'));
+
+        console.log('my stickyParent: ' + this.stickyParent);
+
+        console.log('this is: ' + this);
 
         this.originalCss = {
             zIndex: this.getCssValue(this.elem, 'zIndex'),
@@ -73,6 +113,14 @@ export class StickyHeaderComponent implements OnInit, OnDestroy, AfterViewInit {
             bottom: this.getCssValue(this.elem, 'bottom'),
             width: this.getCssValue(this.elem, 'width'),
         };
+        console.log('===================');
+        console.log('this element this.zIndex : ' + this.zIndex);
+        console.log('this element originalCss.top : ' + this.originalCss.top);
+        console.log('this element originalCss.right : ' + this.originalCss.right);
+
+        this.attach();
+        this.attachDocument();
+
 
         if (this.width == 'auto') {
             this.width = this.originalCss.width;
@@ -83,8 +131,30 @@ export class StickyHeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy(): void {
+        this.detach();
+        this.detachDocument();
+    }
+
+    attach() {
+        window.addEventListener('scroll', this.onScrollBind);
+        window.addEventListener('resize', this.onResizeBind);
+
+        Observable.fromEvent(this.elem, 'scroll')
+            .subscribe(() => this.onScroll());
+    }
+    attachDocument() {
+        this.container.addEventListener('scroll', this.onScrollBind);
+        this.container.addEventListener('resize', this.onResizeBind);
+    }
+
+
+    detach() {
         window.removeEventListener('scroll', this.onScrollBind);
         window.removeEventListener('resize', this.onResizeBind);
+    }
+    detachDocument() {
+        document.removeEventListener('scroll', this.onScrollBind);
+        document.removeEventListener('resize', this.onResizeBind);
     }
 
     onScroll(): void {
@@ -102,12 +172,30 @@ export class StickyHeaderComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+
+    //getBoundingClientRect用于获得页面中某个元素的左，上，右和下分别相对浏览器视窗的位置。
+    // getBoundingClientRect是DOM元素到浏览器可视范围的距离（不包含文档卷起的部分）。
+    // 该函数返回一个Object对象，该对象有6个属性：top,lef,right,bottom,width,height；
+    // 这里的top、left和css中的理解很相似，width、height是元素自身的宽高，
+    // 但是right，bottom和css中的理解有点不一样。right是指元素右边界距窗口最左边的距离，
+    // bottom是指元素下边界距窗口最上面的距离。
+
     defineDimensions(): void {
         let containerTop: number = this.getBoundingClientRectValue(this.container, 'top');
         this.windowHeight = window.innerHeight;
         this.elemHeight = this.getCssNumber(this.elem, 'height');
         this.containerHeight = this.getCssNumber(this.container, 'height');
         this.containerStart = containerTop + this.scrollbarYPos() - this.offsetTop + this.start;
+
+        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+        console.log('containerTop: ' + containerTop);
+        console.log('this.windowHeight: ' + this.windowHeight);
+        console.log('this.elemHeight: ' + this.elemHeight);
+        console.log('this.scrollbarYPos(): ' + this.scrollbarYPos());
+        console.log('this.containerHeight: ' + this.containerHeight);
+        console.log('this.containerStart: ' + this.containerStart);
+        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+
         if (this.parentMode) {
             this.scrollFinish = this.containerStart - this.start - this.offsetBottom + (this.containerHeight - this.elemHeight);
         } else {
@@ -156,7 +244,13 @@ export class StickyHeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     matchMediaQuery(): any {
-        if (!this.mediaQuery) return true;
+        console.log('[][][][][]this.mediaQuery is : ' + this.mediaQuery);
+        if (!this.mediaQuery) {
+            console.log('!this.mediaQuery成立');
+            console.log('matchMedia.media: ' + window.matchMedia(this.mediaQuery).matches);
+
+            return true;
+        }
         return (
             window.matchMedia('(' + this.mediaQuery + ')').matches ||
             window.matchMedia(this.mediaQuery).matches
@@ -201,8 +295,10 @@ export class StickyHeaderComponent implements OnInit, OnDestroy, AfterViewInit {
         let result = 0;
         if (element.getBoundingClientRect) {
             let rect = element.getBoundingClientRect();
+            console.log("element.getBoundingClientRect(): " + rect.height);
             result = (typeof rect[property] !== 'undefined') ? rect[property] : 0;
         }
+        console.log('current element: ' + element);
         return result;
     }
 
