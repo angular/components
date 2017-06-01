@@ -96,6 +96,8 @@ describe('CdkTable', () => {
     });
   });
 
+  // TODO(andrewseguin): Add test for dynamic classes on header/rows
+
   it('should use differ to add/remove/move rows', () => {
     // Each row receives an attribute 'initialIndex' the element's original place
     getRows(tableElement).forEach((row: Element, index: number) => {
@@ -129,32 +131,43 @@ describe('CdkTable', () => {
     expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
   });
 
-  // TODO(andrewseguin): Add test for dynamic classes on header/rows
-
   it('should match the right table content with dynamic data', () => {
     const initialDataLength = dataSource.data.length;
     expect(dataSource.data.length).toBe(3);
     const headerContent = ['Column A', 'Column B', 'Column C'];
 
-    const initialTableContent = [headerContent];
-    dataSource.data.forEach(rowData => initialTableContent.push([rowData.a, rowData.b, rowData.c]));
-    expect(tableElement).toMatchTableContent(initialTableContent);
+    let data = dataSource.data;
+    expect(tableElement).toMatchTableContent([
+      ['Column A', 'Column B', 'Column C'],
+      [data[0].a, data[0].b, data[0].c],
+      [data[1].a, data[1].b, data[1].c],
+      [data[2].a, data[2].b, data[2].c],
+    ]);
 
     // Add data to the table and recreate what the rendered output should be.
     dataSource.addData();
     expect(dataSource.data.length).toBe(initialDataLength + 1); // Make sure data was added
 
-    const changedTableContent = [headerContent];
-    dataSource.data.forEach(rowData => changedTableContent.push([rowData.a, rowData.b, rowData.c]));
-    expect(tableElement).toMatchTableContent(changedTableContent);
+    data = dataSource.data;
+    expect(tableElement).toMatchTableContent([
+      ['Column A', 'Column B', 'Column C'],
+      [data[0].a, data[0].b, data[0].c],
+      [data[1].a, data[1].b, data[1].c],
+      [data[2].a, data[2].b, data[2].c],
+      [data[3].a, data[3].b, data[3].c],
+    ]);
   });
 
   it('should be able to dynamically change the columns for header and rows', () => {
     expect(dataSource.data.length).toBe(3);
 
-    let initialTableContent = [['Column A', 'Column B', 'Column C']];
-    dataSource.data.forEach(rowData => initialTableContent.push([rowData.a, rowData.b, rowData.c]));
-    expect(tableElement).toMatchTableContent(initialTableContent);
+    let data = dataSource.data;
+    expect(tableElement).toMatchTableContent([
+      ['Column A', 'Column B', 'Column C'],
+      [data[0].a, data[0].b, data[0].c],
+      [data[1].a, data[1].b, data[1].c],
+      [data[2].a, data[2].b, data[2].c],
+    ]);
 
     // Remove column_a and swap column_b/column_c.
     component.columnsToRender = ['column_c', 'column_b'];
@@ -162,6 +175,14 @@ describe('CdkTable', () => {
 
     let changedTableContent = [['Column C', 'Column B']];
     dataSource.data.forEach(rowData => changedTableContent.push([rowData.c, rowData.b]));
+
+    data = dataSource.data;
+    expect(tableElement).toMatchTableContent([
+      ['Column C', 'Column B'],
+      [data[0].c, data[0].b],
+      [data[1].c, data[1].b],
+      [data[2].c, data[2].b],
+    ]);
     expect(tableElement).toMatchTableContent(changedTableContent);
   });
 });
