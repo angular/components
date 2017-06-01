@@ -10,7 +10,6 @@ import {
   OverlayModule,
   ScrollStrategy,
   ScrollDispatcher,
-  RepositionScrollStrategy,
 } from '../../core';
 
 

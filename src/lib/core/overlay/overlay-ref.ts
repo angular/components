@@ -23,8 +23,11 @@ export class OverlayRef implements PortalHost {
       private _scrollStrategy: ScrollStrategy,
       private _ngZone: NgZone) {
 
-    _scrollStrategy.attach(this,
-        typeof _state.scrollStrategy === 'string' ? null : _state.scrollStrategy.config);
+    let scrollStrategyConfig = typeof _state.scrollStrategy === 'string' ?
+        null :
+        _state.scrollStrategy.config;
+
+    _scrollStrategy.attach(this, scrollStrategyConfig);
   }
 
   /** The overlay's HTML element */

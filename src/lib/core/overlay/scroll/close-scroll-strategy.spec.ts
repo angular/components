@@ -10,7 +10,6 @@ import {
   OverlayModule,
   ScrollStrategy,
   ScrollDispatcher,
-  CloseScrollStrategy,
 } from '../../core';
 
 

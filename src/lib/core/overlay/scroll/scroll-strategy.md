@@ -26,16 +26,47 @@ interface. There are three stages of a scroll strategy's life cycle:
 3. When an overlay is detached from the DOM or destroyed, it'll call the `disable` method on its
 scroll strategy, allowing it to clean up after itself.
 
-Afterwards the scroll strategy has to be registered with the `Overlay` service:
+Afterwards you have to override the `ScrollStrategyOptions` provider, which is used to instantiate
+the scroll strategies and to handle the dependency injection.
 
 ```ts
-overlay.registerScrollStrategy('custom', CustomScrollStrategy);
-```
+import {NgModule} from '@angular/core';
+import {
+  ScrollStrategy,
+  ScrollStrategyOptions,
+  ScrollDispatcher,
+  ViewportRuler,
+} from '@angular/material';
 
-Finally, you can use the strategy by passing its name to the `OverlayState`:
-```ts
-let overlayState = new OverlayState();
+// Your custom scroll strategy.
+export class CustomScrollStrategy implements ScrollStrategy {
+  // your implementation
+}
 
-overlayState.scrollStrategy = 'custom';
-this._overlay.create(overlayState).attach(yourPortal);
+// Provider that'll instantiate your custom strategies, as well as the built-in ones from Material.
+class ScrollStrategyOptionsOverride extends ScrollStrategyOptions {
+  constructor(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler) {
+    super(scrollDispatcher, viewportRuler);
+  }
+
+  get(strategy: string): ScrollStrategy {
+    if (strategy === 'custom') {
+      return new CustomScrollStrategy();
+    }
+
+    return super.get(strategy);
+  }
+}
+
+// Register the provider with your module.
+@NgModule({
+  providers: [
+    {
+      provide: ScrollStrategyOptions,
+      useClass: ScrollStrategyOptionsOverride,
+      deps: [ScrollDispatcher, ViewportRuler]
+    }
+  ]
+})
+export class YourModule { }
 ```

@@ -4,7 +4,6 @@ import {
   ComponentPortal,
   OverlayModule,
   PortalModule,
-  BlockScrollStrategy,
   Platform,
   ViewportRuler,
   OverlayState,

@@ -1,4 +1,3 @@
-import {Injectable} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {ScrollStrategy, getMdScrollStrategyAlreadyAttachedError} from './scroll-strategy';
 import {OverlayRef} from '../overlay-ref';
@@ -14,7 +13,6 @@ export interface RepositionScrollStrategyConfig {
 /**
  * Strategy that will update the element position as the user is scrolling.
  */
-@Injectable()
 export class RepositionScrollStrategy implements ScrollStrategy {
   private _scrollSubscription: Subscription|null = null;
   private _overlayRef: OverlayRef;
