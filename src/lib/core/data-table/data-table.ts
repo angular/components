@@ -9,6 +9,7 @@ import {
   IterableChangeRecord,
   IterableDiffer,
   IterableDiffers,
+  NgIterable,
   QueryList,
   ViewChild,
   ViewContainerRef,
@@ -41,7 +42,7 @@ export class HeaderRowPlaceholder {
 }
 
 /**
- * A data table that connects with a data source to retrieve data and renders
+ * A data table that connects with a data source to retrieve data of type T and renders
  * a header row and data rows. Updates the rows when new data is provided by the data source.
  */
 @Component({
@@ -57,12 +58,12 @@ export class HeaderRowPlaceholder {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CdkTable implements CollectionViewer {
+export class CdkTable<T> implements CollectionViewer {
   /**
    * Provides a stream containing the latest data array to render. Influenced by the table's
    * stream of view window (what rows are currently on screen).
    */
-  @Input() dataSource: DataSource<any>;
+  @Input() dataSource: DataSource<T>;
 
   // TODO(andrewseguin): Remove max value as the end index
   // and instead calculate the view on init and scroll.
@@ -80,7 +81,7 @@ export class CdkTable implements CollectionViewer {
   private _columnDefinitionsByName = new Map<string,  CdkColumnDef>();
 
   /** Differ used to find the changes in the data provided by the data source. */
-  private _dataDiffer: IterableDiffer<any> = null;
+  private _dataDiffer: IterableDiffer<T> = null;
 
   // Placeholders within the table's template where the header and data rows will be inserted.
   @ViewChild(RowPlaceholder) _rowPlaceholder: RowPlaceholder;
@@ -104,6 +105,7 @@ export class CdkTable implements CollectionViewer {
         'and should be considered unstable.');
 
     // TODO(andrewseguin): Add trackby function input.
+    // Find and construct an iterable differ that can be used to find the diff in an array.
     this._dataDiffer = this._differs.find([]).create();
   }
 
@@ -132,7 +134,7 @@ export class CdkTable implements CollectionViewer {
     // TODO(andrewseguin): If the data source is not
     //   present after view init, connect it when it is defined.
     // TODO(andrewseguin): Unsubscribe from this on destroy.
-    this.dataSource.connect(this).subscribe((rowsData: any[]) => {
+    this.dataSource.connect(this).subscribe((rowsData: NgIterable<T>) => {
       this.renderRowChanges(rowsData);
     });
   }
@@ -153,7 +155,7 @@ export class CdkTable implements CollectionViewer {
   }
 
   /** Check for changes made in the data and render each change (row added/removed/moved). */
-  renderRowChanges(dataRows: any[]) {
+  renderRowChanges(dataRows: NgIterable<T>) {
     const changes = this._dataDiffer.diff(dataRows);
     if (!changes) { return; }
 
@@ -176,7 +178,7 @@ export class CdkTable implements CollectionViewer {
    * Create the embedded view for the data row template and place it in the correct index location
    * within the data row view container.
    */
-  insertRow(rowData: any, index: number) {
+  insertRow(rowData: T, index: number) {
     // TODO(andrewseguin): Add when predicates to the row definitions
     //   to find the right template to used based on
     //   the data rather than choosing the first row definition.

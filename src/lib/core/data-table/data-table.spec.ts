@@ -12,7 +12,7 @@ describe('CdkTable', () => {
 
   let component: SimpleCdkTableApp;
   let dataSource: FakeDataSource;
-  let table: CdkTable;
+  let table: CdkTable<any>;
   let tableElement: HTMLElement;
 
   beforeEach(async(() => {
@@ -222,7 +222,7 @@ class SimpleCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(CdkTable) table: CdkTable;
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
 }
 
 function getElements(element: Element, query: string): Element[] {
