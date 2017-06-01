@@ -30,13 +30,13 @@ describe('Chip Remove', () => {
   }));
 
   describe('basic behavior', () => {
-    it('applies the `mat-chip-remove` CSS class', () => {
+    it('should applies the `mat-chip-remove` CSS class', () => {
       let hrefElement = chipNativeElement.querySelector('a');
 
       expect(hrefElement.classList).toContain('mat-chip-remove');
     });
 
-    it('emits (remove) on click', () => {
+    it('should emits (remove) on click', () => {
       let hrefElement = chipNativeElement.querySelector('a');
 
       testChip.removable = true;
@@ -49,7 +49,7 @@ describe('Chip Remove', () => {
       expect(testChip.didRemove).toHaveBeenCalled();
     });
 
-    it(`monitors the parent chip's [removable] property`, () => {
+    it(`should monitors the parent chip's [removable] property`, () => {
       let hrefElement = chipNativeElement.querySelector('a');
 
       testChip.removable = true;
@@ -67,7 +67,7 @@ describe('Chip Remove', () => {
 
 @Component({
   template: `
-    <md-chip [removable]="removable" (remove)="didRemove()"><a md-chip-remove></a></md-chip>
+    <md-chip [removable]="removable" (remove)="didRemove()"><a mdChipRemove></a></md-chip>
   `
 })
 class TestChip {

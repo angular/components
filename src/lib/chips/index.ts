@@ -7,8 +7,8 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MdChipList} from './chip-list';
-import {MdChip, MdBasicChip} from './chip';
+import {MdChipList, MdChipListContainer} from './chip-list';
+import {MdChip} from './chip';
 import {MdChipInput} from './chip-input';
 import {MdChipRemove} from './chip-remove';
 
@@ -19,11 +19,7 @@ export * from './chip-remove';
 
 @NgModule({
   imports: [],
-  exports: [MdChipList, MdChip, MdBasicChip, MdChipInput, MdChipRemove],
-  declarations: [MdChipList, MdChip, MdBasicChip, MdChipInput, MdChipRemove]
+  exports: [MdChipList, MdChip, MdChipInput, MdChipRemove, MdChipListContainer, MdChipRemove],
+  declarations: [MdChipList, MdChip, MdChipInput, MdChipRemove, MdChipListContainer, MdChipRemove]
 })
 export class MdChipsModule {}
-
-
-export * from './chip-list';
-export * from './chip';

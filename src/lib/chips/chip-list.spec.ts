@@ -44,7 +44,7 @@ describe('MdChipList', () => {
         setupStandardList();
       }));
 
-      it('adds the `mat-chip-list` class', () => {
+      it('should add the `mat-chip-list` class', () => {
         expect(chipListNativeElement.classList).toContain('mat-chip-list');
       });
     });
@@ -66,7 +66,6 @@ describe('MdChipList', () => {
         let array = chips.toArray();
         let lastIndex = array.length - 1;
         let lastItem = array[lastIndex];
-
         lastItem.focus();
         fixture.detectChanges();
 
@@ -99,7 +98,7 @@ describe('MdChipList', () => {
       });
 
       describe('on chip destroy', () => {
-        it('focuses the next item', () => {
+        it('should focus the next item', () => {
           let array = chips.toArray();
           let midItem = array[2];
 
@@ -115,7 +114,7 @@ describe('MdChipList', () => {
         });
 
 
-        it('focuses the previous item', () => {
+        it('should focus the previous item', () => {
           let array = chips.toArray();
           let lastIndex = array.length - 1;
           let lastItem = array[lastIndex];
@@ -141,7 +140,7 @@ describe('MdChipList', () => {
           manager = chipListInstance._keyManager;
         }));
 
-        it('LEFT ARROW focuses previous item', () => {
+        it('should focus previous item when press LEFT ARROW', () => {
           let nativeChips = chipListNativeElement.querySelectorAll('md-chip');
           let lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
 
@@ -162,7 +161,7 @@ describe('MdChipList', () => {
           expect(manager.activeItemIndex).toEqual(lastIndex - 1);
         });
 
-        it('RIGHT ARROW focuses next item', () => {
+        it('should focus next item when press RIGHT ARROW', () => {
           let nativeChips = chipListNativeElement.querySelectorAll('md-chip');
           let firstNativeChip = nativeChips[0] as HTMLElement;
 
@@ -192,7 +191,7 @@ describe('MdChipList', () => {
           manager = chipListInstance._keyManager;
         }));
 
-        it('RIGHT ARROW focuses previous item', () => {
+        it('should focus previous item when press RIGHT ARROW', () => {
           let nativeChips = chipListNativeElement.querySelectorAll('md-chip');
           let lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
 
@@ -214,7 +213,7 @@ describe('MdChipList', () => {
           expect(manager.activeItemIndex).toEqual(lastIndex - 1);
         });
 
-        it('LEFT ARROW focuses next item', () => {
+        it('should focus next item when press LEFT ARROW', () => {
           let nativeChips = chipListNativeElement.querySelectorAll('md-chip');
           let firstNativeChip = nativeChips[0] as HTMLElement;
 
@@ -235,7 +234,7 @@ describe('MdChipList', () => {
           expect(manager.activeItemIndex).toEqual(1);
         });
 
-        it('allow focus to escape when tabbing away', fakeAsync(() => {
+        it('should allow focus to escape when tabbing away', fakeAsync(() => {
           chipListInstance._keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
 
           expect(chipListInstance._tabIndex)
@@ -260,15 +259,10 @@ describe('MdChipList', () => {
         manager = chipListInstance._keyManager;
       });
 
-      it('SPACE ignores selection', () => {
-        let SPACE_EVENT = createKeyboardEvent('keydown', SPACE);
-        let firstChip: MdChip = chips.toArray()[0];
-      });
-
       describe('when the input has focus', () => {
 
-        it('DELETE focuses the last chip', () => {
-          let nativeInput = chipListNativeElement.querySelector('input');
+        it('should focus the last chip when press DELETE', () => {
+          let nativeInput = fixture.nativeElement.querySelector('input');
           let DELETE_EVENT: KeyboardEvent =
               createKeyboardEvent('keydown', DELETE, nativeInput);
 
@@ -284,8 +278,8 @@ describe('MdChipList', () => {
           expect(manager.activeItemIndex).toEqual(chips.length - 1);
         });
 
-        it('BACKSPACE focuses the last chip', () => {
-          let nativeInput = chipListNativeElement.querySelector('input');
+        it('should focus the last chip when press BACKSPACE', () => {
+          let nativeInput = fixture.nativeElement.querySelector('input');
           let BACKSPACE_EVENT: KeyboardEvent =
               createKeyboardEvent('keydown', BACKSPACE, nativeInput);
 
@@ -353,12 +347,12 @@ class StandardChipList {
 @Component({
   template: `
     <md-input-container>
-      <md-chip-list>
+      <md-chip-list mdPrefix #chipList>
         <md-chip>Chip 1</md-chip>
         <md-chip>Chip 1</md-chip>
         <md-chip>Chip 1</md-chip>
-        <input mdInput name="test" />
       </md-chip-list>
+      <input mdInput name="test" [mdChipList]="chipList"/>
     </md-input-container>
   `
 })

@@ -20,45 +20,33 @@ $mat-chip-remove-font-size: 18px;
   flex-wrap: wrap;
   align-items: flex-start;
 
-  /*
-   * Only apply the margins to chips
-   */
   .mat-chip:not(.mat-basic-chip) {
     margin: $mat-chip-margin;
 
     // Do not apply the special margins inside an input container
-    :not(.mat-input-wrapper) & {
-      // Remove the margin from the first element (in both LTR and RTL)
-      &:first-child {
-        margin: {
-          left: 0;
-          right: $mat-chip-margin;
-        }
+    // Remove the margin from the first element (in both LTR and RTL)
+    &:first-child {
+      margin-left: 0;
+      margin-right: $mat-chip-margin;
 
-        [dir='rtl'] & {
-          margin: {
-            left: $mat-chip-margin;
-            right: 0;
-          }
-        }
+      [dir='rtl'] & {
+        margin-right: 0;
+        margin-left: $mat-chip-margin;
       }
+    }
 
-      // Remove the margin from the last element (in both LTR and RTL)
-      &:last-child {
-        margin: {
-          left: $mat-chip-margin;
-          right: 0;
-        }
+    // Remove the margin from the last element (in both LTR and RTL)
+    &:last-child {
+      margin-right: 0;
+      margin-left: $mat-chip-margin;
 
-        [dir='rtl'] & {
-          margin: {
-            left: 0;
-            right: $mat-chip-margin;
-          }
-        }
+      [dir='rtl'] & {
+        margin-left: 0;
+        margin-right: $mat-chip-margin;
       }
     }
   }
+
 }
 
 .mat-input-prefix .mat-chip-list-wrapper {
@@ -94,15 +82,6 @@ $mat-chip-remove-font-size: 18px;
     display: block;
     margin: 0;
     margin-bottom: $mat-chip-vertical-padding;
-
-    [dir='rtl'] & {
-      margin: 0;
-      margin-bottom: $mat-chip-vertical-padding;
-    }
-
-    &:last-child, [dir='rtl'] &:last-child {
-      margin-bottom: 0;
-    }
   }
 }
 
@@ -120,6 +99,18 @@ $mat-chip-remove-font-size: 18px;
 
 .mat-chip-remove.mat-chip-remove-hidden {
   display: none;
+}
+
+.mat-chip-list-container .mat-input-placeholder-wrapper {
+  top: -4px;
+
+  [dir='rtl'] & {
+    right: 8px;
+  }
+
+  [dir='ltr'] & {
+    margin-left: 8px;
+  }
 }
 
 .mat-chip-input {

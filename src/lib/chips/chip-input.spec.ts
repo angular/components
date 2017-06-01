@@ -102,9 +102,9 @@ describe('MdChipInput', () => {
 @Component({
   template: `
     <md-chip-list>
-      <input mdChipInput [addOnBlur]="addOnBlur" [separatorKeys]="separatorKeys"
-             (chipAdded)="add($event)" />
     </md-chip-list>
+    <input mdInput mdChipList [addOnBlur]="addOnBlur" [separatorKeys]="separatorKeys"
+       (chipAdded)="add($event)" />
   `
 })
 class TestChipInput {

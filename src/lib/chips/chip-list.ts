@@ -11,6 +11,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
+  Directive,
   Input,
   QueryList,
   ViewEncapsulation,
@@ -24,6 +25,14 @@ import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {SPACE, LEFT_ARROW, RIGHT_ARROW} from '../core/keyboard/keycodes';
 import {Subscription} from 'rxjs/Subscription';
 import {coerceBooleanProperty} from '@angular/cdk';
+
+@Directive({
+  selector: '[mdChipListContainer], [matChipListContainer]',
+  host: {
+    '[class.mat-chip-list-container]': 'true'
+  }
+})
+export class MdChipListContainer {}
 
 /**
  * A material design chips component (named ChipList for it's similarity to the List component).
@@ -123,17 +132,13 @@ export class MdChipList implements AfterContentInit, OnDestroy {
     }
   }
 
-  /**
-   * Associates an HTML input element with this chip list.
-   *
-   * @param inputElement The input to associate.
-   */
   @Input()
   get selectable(): boolean { return this._selectable; }
   set selectable(value: boolean) {
     this._selectable = coerceBooleanProperty(value);
   }
 
+  /** Associates an HTML input element with this chip list. */
   registerInput(inputElement: HTMLInputElement) {
     this._inputElement = inputElement;
   }
