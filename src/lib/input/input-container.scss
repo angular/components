@@ -108,8 +108,17 @@ $mat-input-underline-height: 1px !default;
   // Once the autofill is committed, a change event happen and the regular md-input-container
   // classes take over to fulfill this behaviour.
   // Assumes the autofill is non-empty.
-  &:-webkit-autofill + .mat-input-placeholder-wrapper .mat-float {
-    transition: none;
+  &:-webkit-autofill + .mat-input-placeholder-wrapper {
+    // The input is still technically empty at this point, so we need to hide non-floating
+    // placeholders to prevent overlapping with the autofilled value.
+    .mat-input-placeholder {
+      display: none;
+    }
+
+    .mat-float {
+      display: block;
+      transition: none;
+    }
   }
 
   // Note that we can't use something like visibility: hidden or
@@ -148,7 +157,6 @@ $mat-input-underline-height: 1px !default;
 
   // Put ellipsis text overflow.
   width: 100%;
-  display: block;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -162,8 +170,13 @@ $mat-input-underline-height: 1px !default;
               color $swift-ease-out-duration $swift-ease-out-timing-function,
               width $swift-ease-out-duration $swift-ease-out-timing-function;
 
-  &.mat-empty {
-    cursor: text;
+  // Hide the placeholder initially, and only show it when it's floating or the input is empty.
+  display: none;
+
+  &.mat-empty,
+  &.mat-float:not(.mat-empty),
+  .mat-focused &.mat-float {
+    display: block;
   }
 
   [dir='rtl'] & {
