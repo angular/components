@@ -1,1 +1,1 @@
-Core library code for other `@angular/material` components.
+Please see the official documentation at https://material.angular.io/components/core
