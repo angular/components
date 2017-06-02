@@ -8,7 +8,6 @@ import {
   ComponentType,
   OverlayState,
   ComponentPortal,
-  ScrollStrategyOptions,
 } from '../core';
 import {extendObject} from '../core/util/object-extend';
 import {ESCAPE} from '../core/keyboard/keycodes';
@@ -55,7 +54,6 @@ export class MdDialog {
   constructor(
       private _overlay: Overlay,
       private _injector: Injector,
-      private _scrollStrategyOptions: ScrollStrategyOptions,
       @Optional() private _location: Location,
       @Optional() @SkipSelf() private _parentDialog: MdDialog) {
 
@@ -128,7 +126,7 @@ export class MdDialog {
     let overlayState = new OverlayState();
     overlayState.panelClass = dialogConfig.panelClass;
     overlayState.hasBackdrop = dialogConfig.hasBackdrop;
-    overlayState.scrollStrategy = this._scrollStrategyOptions.block;
+    overlayState.scrollStrategy = this._overlay.scrollStrategies.block();
     if (dialogConfig.backdropClass) {
       overlayState.backdropClass = dialogConfig.backdropClass;
     }

@@ -32,10 +32,10 @@ let defaultState = new OverlayState();
  */
 @Injectable()
 export class Overlay {
-  constructor(private _overlayContainer: OverlayContainer,
+  constructor(public scrollStrategies: ScrollStrategyOptions,
+              private _overlayContainer: OverlayContainer,
               private _componentFactoryResolver: ComponentFactoryResolver,
               private _positionBuilder: OverlayPositionBuilder,
-              private _scrollStrategyOptions: ScrollStrategyOptions,
               private _appRef: ApplicationRef,
               private _injector: Injector,
               private _ngZone: NgZone) { }
@@ -86,23 +86,9 @@ export class Overlay {
    * @param state
    */
   private _createOverlayRef(pane: HTMLElement, state: OverlayState): OverlayRef {
-    let scrollStrategy = this._createScrollStrategy(state);
+    let scrollStrategy = state.scrollStrategy || this.scrollStrategies.noop();
     let portalHost = this._createPortalHost(pane);
     return new OverlayRef(portalHost, pane, state, scrollStrategy, this._ngZone);
-  }
-
-  /**
-   * Creates a scroll strategy for the given overlay state.
-   * @param state
-   */
-  private _createScrollStrategy(state: OverlayState): ScrollStrategy {
-    if (state.scrollStrategy) {
-      return typeof state.scrollStrategy === 'function' ?
-          state.scrollStrategy() :
-          state.scrollStrategy.strategy();
-    }
-
-    return this._scrollStrategyOptions.noop();
   }
 }
 

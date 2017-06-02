@@ -1,9 +1,7 @@
 import {PositionStrategy} from './position/position-strategy';
 import {LayoutDirection} from '../rtl/dir';
-import {ScrollStrategyOption} from './scroll/scroll-strategy-options';
+import {ScrollStrategy} from './scroll/scroll-strategy';
 
-export type OverlayStateScrollStrategy = {strategy: ScrollStrategyOption; config: any} |
-                                         ScrollStrategyOption;
 
 /**
  * OverlayState is a bag of values for either the initial configuration or current state of an
@@ -14,7 +12,7 @@ export class OverlayState {
   positionStrategy: PositionStrategy;
 
   /** Strategy to be used when handling scroll events while the overlay is open. */
-  scrollStrategy: OverlayStateScrollStrategy;
+  scrollStrategy: ScrollStrategy;
 
   /** Custom class to add to the overlay pane. */
   panelClass: string = '';

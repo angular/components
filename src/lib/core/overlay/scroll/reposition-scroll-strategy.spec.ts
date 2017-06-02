@@ -10,7 +10,6 @@ import {
   OverlayModule,
   ScrollStrategy,
   ScrollDispatcher,
-  ScrollStrategyOptions,
 } from '../../core';
 
 
@@ -34,10 +33,10 @@ describe('RepositionScrollStrategy', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([Overlay, ScrollStrategyOptions], (o: Overlay, sso: ScrollStrategyOptions) => {
+  beforeEach(inject([Overlay], (overlay: Overlay) => {
     let overlayState = new OverlayState();
-    overlayState.scrollStrategy = sso.reposition;
-    overlayRef = o.create(overlayState);
+    overlayState.scrollStrategy = overlay.scrollStrategies.reposition();
+    overlayRef = overlay.create(overlayState);
     componentPortal = new ComponentPortal(PastaMsg);
   }));
 

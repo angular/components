@@ -9,7 +9,6 @@ import {
   OverlayState,
   Overlay,
   OverlayRef,
-  ScrollStrategyOptions,
 } from '../../core';
 
 
@@ -26,15 +25,14 @@ describe('BlockScrollStrategy', () => {
     }).compileComponents();
   }));
 
-  beforeEach(inject([Overlay, ViewportRuler, ScrollStrategyOptions],
-    (o: Overlay, v: ViewportRuler, sso: ScrollStrategyOptions) => {
+  beforeEach(inject([Overlay, ViewportRuler], (overlay: Overlay, viewportRuler: ViewportRuler) => {
       let overlayState = new OverlayState();
 
-      overlayState.scrollStrategy = sso.block;
-      overlayRef = o.create(overlayState);
+      overlayState.scrollStrategy = overlay.scrollStrategies.block();
+      overlayRef = overlay.create(overlayState);
       componentPortal = new ComponentPortal(FocacciaMsg);
 
-      viewport = v;
+      viewport = viewportRuler;
       forceScrollElement = document.createElement('div');
       document.body.appendChild(forceScrollElement);
       forceScrollElement.style.width = '100px';

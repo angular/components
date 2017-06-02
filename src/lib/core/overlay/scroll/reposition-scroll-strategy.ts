@@ -16,17 +16,17 @@ export interface RepositionScrollStrategyConfig {
 export class RepositionScrollStrategy implements ScrollStrategy {
   private _scrollSubscription: Subscription|null = null;
   private _overlayRef: OverlayRef;
-  private _config: RepositionScrollStrategyConfig;
 
-  constructor(private _scrollDispatcher: ScrollDispatcher) { }
+  constructor(
+    private _scrollDispatcher: ScrollDispatcher,
+    private _config: RepositionScrollStrategyConfig) { }
 
-  attach(overlayRef: OverlayRef, config?: RepositionScrollStrategyConfig) {
+  attach(overlayRef: OverlayRef) {
     if (this._overlayRef) {
       throw getMdScrollStrategyAlreadyAttachedError();
     }
 
     this._overlayRef = overlayRef;
-    this._config = config;
   }
 
   enable() {

@@ -9,12 +9,7 @@ import {OverlayRef} from './overlay-ref';
 import {PositionStrategy} from './position/position-strategy';
 import {OverlayModule} from './overlay-directives';
 import {ViewportRuler} from './position/viewport-ruler';
-import {
-  ScrollStrategy,
-  ScrollStrategyOptions,
-  ScrollStrategyOption,
-  ScrollDispatcher,
-} from './scroll/index';
+import {ScrollStrategy, ScrollDispatcher} from './scroll/index';
 
 
 describe('Overlay', () => {
@@ -27,22 +22,13 @@ describe('Overlay', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, PortalModule, OverlayTestModule],
-      providers: [
-        ScrollDispatcher,
-        ViewportRuler,
-        {
-          provide: ScrollStrategyOptions,
-          useClass: ScrollStrategyOptionsOverride,
-          deps: [ScrollDispatcher, ViewportRuler]
-        },
-        {
-          provide: OverlayContainer,
-          useFactory: () => {
-            overlayContainerElement = document.createElement('div');
-            return {getContainerElement: () => overlayContainerElement};
-          }
+      providers: [{
+        provide: OverlayContainer,
+        useFactory: () => {
+          overlayContainerElement = document.createElement('div');
+          return {getContainerElement: () => overlayContainerElement};
         }
-      ]
+      }]
     }).compileComponents();
   }));
 
@@ -371,15 +357,10 @@ describe('Overlay', () => {
     let overlayRef: OverlayRef;
 
     beforeEach(() => {
-    });
-
-    beforeEach(inject([ScrollStrategyOptions], (scrollOptions: ScrollStrategyOptionsOverride) => {
       config = new OverlayState();
-      config.scrollStrategy = scrollOptions.fake;
+      fakeScrollStrategy = config.scrollStrategy = new FakeScrollStrategy();
       overlayRef = overlay.create(config);
-      fakeScrollStrategy =
-          scrollOptions.instances[scrollOptions.instances.length - 1] as FakeScrollStrategy;
-    }));
+    });
 
     it('should attach the overlay ref to the scroll strategy', () => {
       expect(fakeScrollStrategy.overlayRef).toBe(overlayRef,
@@ -493,21 +474,5 @@ class FakeScrollStrategy implements ScrollStrategy {
 
   disable() {
     this.isEnabled = false;
-  }
-}
-
-
-class ScrollStrategyOptionsOverride extends ScrollStrategyOptions {
-  constructor(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler) {
-    super(scrollDispatcher, viewportRuler);
-  }
-
-  // used for accessing the current instance in unit tests.
-  public instances: ScrollStrategy[] = [];
-
-  fake: ScrollStrategyOption = () => {
-    let instance = new FakeScrollStrategy();
-    this.instances.push(instance);
-    return instance;
   }
 }
