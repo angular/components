@@ -9,7 +9,7 @@ export {ScrollDispatcher} from './scroll-dispatcher';
 
 // Export pre-defined scroll strategies and interface to build custom ones.
 export {ScrollStrategy} from './scroll-strategy';
-export {ScrollStrategyOptions} from './scroll-strategy-options';
+export {ScrollStrategyOptions, ScrollStrategyOption} from './scroll-strategy-options';
 export {RepositionScrollStrategy} from './reposition-scroll-strategy';
 export {CloseScrollStrategy} from './close-scroll-strategy';
 export {NoopScrollStrategy} from './noop-scroll-strategy';

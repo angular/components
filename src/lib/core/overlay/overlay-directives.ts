@@ -25,7 +25,7 @@ import {PortalModule} from '../portal/portal-directives';
 import {ConnectedPositionStrategy} from './position/connected-position-strategy';
 import {Dir, LayoutDirection} from '../rtl/dir';
 import {Scrollable} from './scroll/scrollable';
-import {RepositionScrollStrategy} from './scroll/reposition-scroll-strategy';
+import {ScrollStrategyOptions} from './scroll/scroll-strategy-options';
 import {ScrollStrategy} from './scroll/scroll-strategy';
 import {coerceBooleanProperty} from '../coercion/boolean-property';
 import {ESCAPE} from '../keyboard/keycodes';
@@ -124,7 +124,7 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
   @Input() backdropClass: string;
 
   /** Strategy to be used when handling scroll events while the overlay is open. */
-  @Input() scrollStrategy: OverlayStateScrollStrategy = 'reposition';
+  @Input() scrollStrategy: OverlayStateScrollStrategy = this._scrollStrategyOptions.reposition;
 
   /** Whether the overlay is open. */
   @Input() open: boolean = false;
@@ -156,6 +156,7 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
   constructor(
       private _overlay: Overlay,
       private _renderer: Renderer2,
+      private _scrollStrategyOptions: ScrollStrategyOptions,
       templateRef: TemplateRef<any>,
       viewContainerRef: ViewContainerRef,
       @Optional() private _dir: Dir) {

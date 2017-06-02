@@ -9,6 +9,7 @@ import {
   OverlayState,
   Overlay,
   OverlayRef,
+  ScrollStrategyOptions,
 } from '../../core';
 
 
@@ -25,19 +26,20 @@ describe('BlockScrollStrategy', () => {
     }).compileComponents();
   }));
 
-  beforeEach(inject([Overlay, ViewportRuler], (overlay: Overlay, viewportRuler: ViewportRuler) => {
-    let overlayState = new OverlayState();
+  beforeEach(inject([Overlay, ViewportRuler, ScrollStrategyOptions],
+    (o: Overlay, v: ViewportRuler, sso: ScrollStrategyOptions) => {
+      let overlayState = new OverlayState();
 
-    overlayState.scrollStrategy = 'block';
-    overlayRef = overlay.create(overlayState);
-    componentPortal = new ComponentPortal(FocacciaMsg);
+      overlayState.scrollStrategy = sso.block;
+      overlayRef = o.create(overlayState);
+      componentPortal = new ComponentPortal(FocacciaMsg);
 
-    viewport = viewportRuler;
-    forceScrollElement = document.createElement('div');
-    document.body.appendChild(forceScrollElement);
-    forceScrollElement.style.width = '100px';
-    forceScrollElement.style.height = '3000px';
-  }));
+      viewport = v;
+      forceScrollElement = document.createElement('div');
+      document.body.appendChild(forceScrollElement);
+      forceScrollElement.style.width = '100px';
+      forceScrollElement.style.height = '3000px';
+    }));
 
   afterEach(() => {
     overlayRef.dispose();

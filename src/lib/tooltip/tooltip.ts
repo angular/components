@@ -25,6 +25,7 @@ import {
   ComponentPortal,
   OverlayConnectionPosition,
   OriginConnectionPosition,
+  ScrollStrategyOptions,
 } from '../core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
@@ -155,6 +156,7 @@ export class MdTooltip implements OnDestroy {
     private _ngZone: NgZone,
     private _renderer: Renderer2,
     private _platform: Platform,
+    private _scrollStrategyOptions: ScrollStrategyOptions,
     @Optional() private _dir: Dir) {
 
     // The mouse events shouldn't be bound on iOS devices, because
@@ -240,7 +242,7 @@ export class MdTooltip implements OnDestroy {
     config.direction = this._dir ? this._dir.value : 'ltr';
     config.positionStrategy = strategy;
     config.scrollStrategy = {
-      name: 'reposition',
+      strategy: this._scrollStrategyOptions.reposition,
       config: { scrollThrottle: SCROLL_THROTTLE_MS }
     };
 

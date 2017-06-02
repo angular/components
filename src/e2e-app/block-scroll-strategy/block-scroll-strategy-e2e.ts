@@ -9,5 +9,5 @@ import {ScrollStrategyOptions, ScrollStrategy} from '@angular/material';
 })
 export class BlockScrollStrategyE2E {
   constructor(private _scrollStrategyOptions: ScrollStrategyOptions) { }
-  scrollStrategy: ScrollStrategy = this._scrollStrategyOptions.get('block');
+  scrollStrategy: ScrollStrategy = this._scrollStrategyOptions.block();
 }

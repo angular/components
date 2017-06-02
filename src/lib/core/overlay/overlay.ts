@@ -86,13 +86,23 @@ export class Overlay {
    * @param state
    */
   private _createOverlayRef(pane: HTMLElement, state: OverlayState): OverlayRef {
-    let scrollStrategyName = typeof state.scrollStrategy === 'string' ?
-      state.scrollStrategy :
-      state.scrollStrategy.name;
-
-    let scrollStrategy = this._scrollStrategyOptions.get(scrollStrategyName);
+    let scrollStrategy = this._createScrollStrategy(state);
     let portalHost = this._createPortalHost(pane);
     return new OverlayRef(portalHost, pane, state, scrollStrategy, this._ngZone);
+  }
+
+  /**
+   * Creates a scroll strategy for the given overlay state.
+   * @param state
+   */
+  private _createScrollStrategy(state: OverlayState): ScrollStrategy {
+    if (state.scrollStrategy) {
+      return typeof state.scrollStrategy === 'function' ?
+          state.scrollStrategy() :
+          state.scrollStrategy.strategy();
+    }
+
+    return this._scrollStrategyOptions.noop();
   }
 }
 

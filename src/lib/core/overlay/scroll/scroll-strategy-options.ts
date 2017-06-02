@@ -7,6 +7,8 @@ import {BlockScrollStrategy} from './block-scroll-strategy';
 import {ScrollDispatcher} from './scroll-dispatcher';
 import {ViewportRuler} from '../position/viewport-ruler';
 
+export type ScrollStrategyOption = () => ScrollStrategy;
+
 
 /**
  * Factory that instantiates scroll strategies. Provides the built-in `reposition`, `close`,
@@ -18,14 +20,8 @@ export class ScrollStrategyOptions {
     private _scrollDispatcher: ScrollDispatcher,
     private _viewportRuler: ViewportRuler) { }
 
-  get(strategy: string): ScrollStrategy {
-    switch (strategy) {
-      case 'reposition': return new RepositionScrollStrategy(this._scrollDispatcher);
-      case 'close': return new CloseScrollStrategy(this._scrollDispatcher);
-      case 'noop': return new NoopScrollStrategy();
-      case 'block': return new BlockScrollStrategy(this._viewportRuler);
-    }
-
-    throw new Error(`Unsupported scroll strategy "${strategy}".`);
-  }
+  noop: ScrollStrategyOption = () => new NoopScrollStrategy();
+  close: ScrollStrategyOption = () => new CloseScrollStrategy(this._scrollDispatcher);
+  block: ScrollStrategyOption = () => new BlockScrollStrategy(this._viewportRuler);
+  reposition: ScrollStrategyOption = () => new RepositionScrollStrategy(this._scrollDispatcher);
 }

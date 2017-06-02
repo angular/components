@@ -8,8 +8,13 @@ import {OverlayState} from './overlay-state';
 import {OverlayRef} from './overlay-ref';
 import {PositionStrategy} from './position/position-strategy';
 import {OverlayModule} from './overlay-directives';
-import {ScrollStrategy, ScrollStrategyOptions, ScrollDispatcher} from './scroll/index';
 import {ViewportRuler} from './position/viewport-ruler';
+import {
+  ScrollStrategy,
+  ScrollStrategyOptions,
+  ScrollStrategyOption,
+  ScrollDispatcher,
+} from './scroll/index';
 
 
 describe('Overlay', () => {
@@ -370,7 +375,7 @@ describe('Overlay', () => {
 
     beforeEach(inject([ScrollStrategyOptions], (scrollOptions: ScrollStrategyOptionsOverride) => {
       config = new OverlayState();
-      config.scrollStrategy = 'fake';
+      config.scrollStrategy = scrollOptions.fake;
       overlayRef = overlay.create(config);
       fakeScrollStrategy =
           scrollOptions.instances[scrollOptions.instances.length - 1] as FakeScrollStrategy;
@@ -500,8 +505,8 @@ class ScrollStrategyOptionsOverride extends ScrollStrategyOptions {
   // used for accessing the current instance in unit tests.
   public instances: ScrollStrategy[] = [];
 
-  get(strategy: string): ScrollStrategy {
-    let instance = strategy === 'fake' ? new FakeScrollStrategy() : super.get(strategy);
+  fake: ScrollStrategyOption = () => {
+    let instance = new FakeScrollStrategy();
     this.instances.push(instance);
     return instance;
   }

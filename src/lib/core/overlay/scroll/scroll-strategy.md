@@ -6,14 +6,14 @@ while the overlay is open. The strategy has a reference to the `OverlayRef`, all
 recalculate the position, close the overlay, block scrolling, etc.
 
 ## Usage
-To associate an overlay with a scroll strategy, you have to pass in the name of the scroll strategy
-to the `OverlayState`. By default, all overlays will use the `noop` strategy which doesn't do
-anything. The other available strategies are `reposition`, `block` and `close`:
+To associate an overlay with a scroll strategy, you have to pass in a function, that returns a
+scroll strategy, to the `OverlayState`. By default, all overlays will use the `noop` strategy which
+doesn't do anything. The other available strategies are `reposition`, `block` and `close`:
 
 ```ts
 let overlayState = new OverlayState();
 
-overlayState.scrollStrategy = 'block';
+overlayState.scrollStrategy = scrollStrategyOptions.block;
 this._overlay.create(overlayState).attach(yourPortal);
 ```
 
@@ -34,6 +34,7 @@ import {NgModule} from '@angular/core';
 import {
   ScrollStrategy,
   ScrollStrategyOptions,
+  ScrollStrategyOption,
   ScrollDispatcher,
   ViewportRuler,
 } from '@angular/material';
@@ -49,13 +50,7 @@ class ScrollStrategyOptionsOverride extends ScrollStrategyOptions {
     super(scrollDispatcher, viewportRuler);
   }
 
-  get(strategy: string): ScrollStrategy {
-    if (strategy === 'custom') {
-      return new CustomScrollStrategy();
-    }
-
-    return super.get(strategy);
-  }
+  custom: ScrollStrategyOption = () => new CustomScrollStrategy();
 }
 
 // Register the provider with your module.
