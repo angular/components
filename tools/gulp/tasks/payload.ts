@@ -1,12 +1,10 @@
 import {task} from 'gulp';
 import {join} from 'path';
 import {statSync} from 'fs';
-import {DIST_ROOT} from '../build-config';
 import {spawnSync} from 'child_process';
 import {isTravisMasterBuild} from '../util/travis-ci';
 import {openFirebaseDashboardApp} from '../util/firebase';
-
-const bundlesDir = join(DIST_ROOT, 'bundles');
+import {bundlesDir} from '../packaging/build-paths';
 
 /** Task which runs test against the size of material. */
 task('payload', ['material:clean-build'], () => {

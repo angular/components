@@ -2,8 +2,8 @@ import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as gulp from 'gulp';
 import * as path from 'path';
-import {PROJECT_ROOT} from '../build-config';
 import {yellow} from 'chalk';
+import {projectDir} from '../packaging/build-paths';
 
 /* Those imports lack typings. */
 const gulpClean = require('gulp-clean');
@@ -157,11 +157,11 @@ export function buildAppTask(appName: string) {
  */
 export function serverTask(packagePath: string, livereload = true) {
   // The http-rewrite-middlware only supports relative paths as rewrite destinations.
-  let relativePath = path.relative(PROJECT_ROOT, packagePath);
+  let relativePath = path.relative(projectDir, packagePath);
 
   return () => {
     gulpConnect.server({
-      root: PROJECT_ROOT,
+      root: projectDir,
       livereload: livereload,
       port: 4200,
       fallback: path.join(packagePath, 'index.html'),
