@@ -38,7 +38,8 @@ cp -r ${examplesPath} ${exampleAssetsPath}
 cp -r ${plunkerExamplesPath} ${plunkerExampleAssetsPath}
 
 # Install the live examples component library
-npm i ${tmpAssetClonePath}/examples-package
+mkdir -p ./node_modules/@angular/material-examples
+cp -r ${tmpAssetClonePath}/examples-package/* ./node_modules/@angular/material-examples
 
 # Remove temporary directory
 rm -rf ${tmpAssetClonePath}
