@@ -1,4 +1,6 @@
 <div class="mat-tooltip"
+     role="tooltip"
+     [id]="id"
      [style.transform-origin]="_transformOrigin"
      [@state]="_visibility"
      (@state.done)="_afterVisibilityAnimation($event)">

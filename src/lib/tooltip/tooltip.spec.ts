@@ -1,21 +1,22 @@
 import {
   async,
   ComponentFixture,
-  TestBed,
-  tick,
   fakeAsync,
-  flushMicrotasks
+  flushMicrotasks,
+  TestBed,
+  tick
 } from '@angular/core/testing';
 import {
+  ChangeDetectionStrategy,
   Component,
   DebugElement,
-  ViewChild,
-  ChangeDetectionStrategy
+  ElementRef,
+  ViewChild
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {TooltipPosition, MdTooltip, MdTooltipModule, SCROLL_THROTTLE_MS} from './index';
+import {MdTooltip, MdTooltipModule, SCROLL_THROTTLE_MS, TooltipPosition} from './index';
 import {OverlayContainer} from '../core';
 import {Dir, LayoutDirection} from '../core/rtl/dir';
 import {OverlayModule} from '../core/overlay/overlay-directives';
@@ -366,6 +367,33 @@ describe('MdTooltip', () => {
       expect(tooltipWrapper).toBeTruthy('Expected tooltip to be shown.');
       expect(tooltipWrapper.getAttribute('dir')).toBe('rtl', 'Expected tooltip to be in RTL mode.');
     }));
+
+    it('should associate trigger and tooltip through aria-describedby', fakeAsync(() => {
+      // Expect that the trigger does not have an associated tooltip since there is no tooltip shown
+      const trigger = fixture.componentInstance.trigger.nativeElement;
+      expect(trigger.getAttribute('aria-describedBy')).toBe(null);
+
+      tooltipDirective.show(0);
+      tick(0); // Tick for the show delay
+
+      // Tooltip is shown, check that the tooltip's id matches the aria-describedby
+      fixture.detectChanges();
+      expect(tooltipDirective._getTooltipId()).toContain('md-tooltip-');
+      expect(tooltipDirective._tooltipInstance.id).toContain('md-tooltip-');
+      expect(trigger.getAttribute('aria-describedBy')).toContain('md-tooltip-');
+
+      tooltipDirective.hide(0);
+      tick(0); // Tick for the hide delay
+      fixture.detectChanges();
+
+      // Let animation play out and resolve to remove the tooltip
+      flushMicrotasks();
+      fixture.detectChanges();
+
+      // Tooltip is hidden again, check that the trigger does not have an aria-describedby
+      expect(tooltipDirective._getTooltipId()).toBe('');
+      expect(trigger.getAttribute('aria-describedBy')).toBe('');
+    }));
   });
 
   describe('scrollable usage', () => {
@@ -467,6 +495,7 @@ describe('MdTooltip', () => {
   selector: 'app',
   template: `
     <button *ngIf="showButton"
+            #trigger
             [mdTooltip]="message"
             [mdTooltipPosition]="position">
       Button
@@ -476,6 +505,7 @@ class BasicTooltipDemo {
   position: string = 'below';
   message: string = initialTooltipMessage;
   showButton: boolean = true;
+  @ViewChild('trigger') trigger: ElementRef;
   @ViewChild(MdTooltip) tooltip: MdTooltip;
 }
 
