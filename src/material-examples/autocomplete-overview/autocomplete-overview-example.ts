@@ -72,14 +72,8 @@ export class AutocompleteOverviewExample {
         .map(name => this.filterStates(name));
   }
 
-  escapeSpecChars(val: string) {
-    return val ? val.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
-               : val;
-  }
-
   filterStates(val: string) {
-    let escVal: string = this.escapeSpecChars(val);
-    return val ? this.states.filter(s => new RegExp(`^${escVal}`, 'gi').test(s))
+    return val ? this.states.filter(s => s.toLowerCase().includes(val.toLowerCase()))
                : this.states;
   }
 
