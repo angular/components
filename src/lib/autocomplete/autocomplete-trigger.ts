@@ -52,7 +52,8 @@ export const MD_AUTOCOMPLETE_VALUE_ACCESSOR: any = {
 };
 
 @Directive({
-  selector: 'input[mdAutocomplete], input[matAutocomplete]',
+  selector: 'input[mdAutocomplete], input[matAutocomplete],' +
+  'textarea[mdAutocomplete], textarea[matAutocomplete]',
   host: {
     'role': 'combobox',
     'autocomplete': 'off',
