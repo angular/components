@@ -96,7 +96,7 @@ For a fullscreen sidenav, the recommended approach is set up the DOM such that t
 html, body, material-app, md-sidenav-container, .my-content {
   margin: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
 }
 ```
 
