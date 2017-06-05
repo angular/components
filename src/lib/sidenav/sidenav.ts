@@ -178,20 +178,20 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
 
 
   /**  Open the sidenav. */
-  open(): void {
-    return this.toggle(true);
+  open() {
+    this.toggle(true);
   }
 
   /** Close the sidenav. */
-  close(): void {
-    return this.toggle(false);
+  close() {
+    this.toggle(false);
   }
 
   /**
    * Toggle this sidenav.
    * @param isOpen Whether the sidenav should be open.
    */
-  toggle(isOpen: boolean = !this.opened): void {
+  toggle(isOpen: boolean = !this.opened) {
     if (!this._isAnimating) {
       this._opened = isOpen;
 
