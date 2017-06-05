@@ -99,8 +99,8 @@ export class CdkTable<T> implements CollectionViewer {
   /** Set of templates that used as the data row containers. */
   @ContentChildren(CdkRowDef) _rowDefinitions: QueryList<CdkRowDef>;
 
-  constructor(private _differs: IterableDiffers,
-              private _changeDetectorRef: ChangeDetectorRef) {
+  constructor(private readonly _differs: IterableDiffers,
+              private readonly _changeDetectorRef: ChangeDetectorRef) {
     console.warn('The data table is still in active development ' +
         'and should be considered unstable.');
 
