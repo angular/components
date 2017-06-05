@@ -143,6 +143,10 @@ export class CdkTable<T> implements CollectionViewer {
     this._columnsChange.subscribe(() => {
       this._headerRowPlaceholder.viewContainer.clear();
       this.renderHeaderRow();
+
+      // Reset the data to an empty array so that renderRowChanges will re-render all new rows.
+      this._rowPlaceholder.viewContainer.clear();
+      this._dataDiffer.diff([]);
     });
 
     // TODO(andrewseguin): If the data source is not
