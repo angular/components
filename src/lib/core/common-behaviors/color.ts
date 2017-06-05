@@ -1,31 +1,31 @@
 import {Constructor} from './constructor';
 import {ElementRef, Renderer2} from '@angular/core';
 
-/** List of possible color values that can be set. */
-const AVAILABLE_COLOR_VALUES = ['primary', 'accent', 'warn'];
-
 /** @docs-private */
-export interface IsColorable {
+export interface CanColor {
   color: string;
 }
 
 /** @docs-private */
-export interface ColorableBase {
+export interface HasRenderer {
   _renderer: Renderer2;
   _elementRef: ElementRef;
 }
 
+/** Possible color palette values.  */
+export type ThemePalette = 'primary' | 'accent' | 'warn' | null;
+
 /** Mixin to augment a directive with a `color` property. */
-export function mixinColor<T extends Constructor<ColorableBase>>(base: T, allowNoColor = false)
-    : Constructor<IsColorable> & T {
+export function mixinColor<T extends Constructor<HasRenderer>>(base: T, allowNoColor = false)
+    : Constructor<CanColor> & T {
   return class extends base {
-    private _color: string = null;
+    private _color: ThemePalette = undefined;
 
     constructor(...args: any[]) { super(...args); }
 
-    get color(): string { return this._color; }
-    set color(value: string) {
-      if (AVAILABLE_COLOR_VALUES.indexOf(value) !== -1 || (allowNoColor && !value)) {
+    get color(): ThemePalette { return this._color; }
+    set color(value: ThemePalette) {
+      if (value || allowNoColor && !value) {
         this._setColorClass(this._color, false);
         this._setColorClass(value, true);
         this._color = value;

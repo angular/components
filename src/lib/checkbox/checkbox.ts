@@ -17,7 +17,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 import {FocusOrigin, FocusOriginMonitor, MdRipple, RippleRef} from '../core';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
-import {IsColorable, mixinColor} from '../core/common-behaviors/color';
+import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
 
 /** Monotonically increasing integer used to auto-generate unique ids for checkbox components. */
@@ -59,7 +59,8 @@ export class MdCheckboxChange {
 
 // Boilerplate for applying mixins to MdCheckbox.
 export class MdCheckboxBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  _renderer: Renderer2;
+  _elementRef: ElementRef;
 }
 export const _MdCheckboxMixinBase = mixinColor(mixinDisabled(MdCheckboxBase));
 
@@ -90,7 +91,7 @@ export const _MdCheckboxMixinBase = mixinColor(mixinDisabled(MdCheckboxBase));
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MdCheckbox extends _MdCheckboxMixinBase
-    implements ControlValueAccessor, AfterViewInit, OnDestroy, IsColorable, CanDisable {
+    implements ControlValueAccessor, AfterViewInit, OnDestroy, CanColor, CanDisable {
   /**
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
    * take precedence so this may be omitted.
@@ -191,11 +192,11 @@ export class MdCheckbox extends _MdCheckboxMixinBase
   /** Reference to the focused state ripple. */
   private _focusRipple: RippleRef;
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef,
-              private _focusOriginMonitor: FocusOriginMonitor,
-              _renderer: Renderer2,
-              _elementRef: ElementRef) {
-    super(_renderer, _elementRef);
+  constructor(public _renderer: Renderer2,
+              public _elementRef: ElementRef,
+              private _changeDetectorRef: ChangeDetectorRef,
+              private _focusOriginMonitor: FocusOriginMonitor) {
+    super();
 
     // By default the checkbox uses the accent color for styling.
     this.color = 'accent';

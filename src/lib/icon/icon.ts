@@ -11,12 +11,13 @@ import {
   AfterViewChecked,
 } from '@angular/core';
 import {MdIconRegistry} from './icon-registry';
-import {IsColorable, mixinColor} from '../core/common-behaviors/color';
+import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
 
 // Boilerplate for applying mixins to MdIcon.
 export class MdIconBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  _renderer: Renderer2;
+  _elementRef: ElementRef;
 }
 export const _MdIconMixinBase = mixinColor(MdIconBase, true);
 
@@ -68,7 +69,7 @@ export const _MdIconMixinBase = mixinColor(MdIconBase, true);
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdIcon extends _MdIconMixinBase implements OnChanges, OnInit, AfterViewChecked,
-    IsColorable {
+    CanColor {
 
   /** Name of the icon in the SVG icon set. */
   @Input() svgIcon: string;
@@ -90,9 +91,9 @@ export class MdIcon extends _MdIconMixinBase implements OnChanges, OnInit, After
   private _previousAriaLabel: string;
 
   constructor(private _mdIconRegistry: MdIconRegistry,
-              renderer: Renderer2,
-              elementRef: ElementRef) {
-    super(renderer, elementRef);
+              public _renderer: Renderer2,
+              public _elementRef: ElementRef) {
+    super();
   }
 
   /**

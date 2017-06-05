@@ -34,7 +34,7 @@ import {getMdSelectDynamicMultipleError, getMdSelectNonArrayValueError} from './
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/filter';
-import {IsColorable, mixinColor} from '../core/common-behaviors/color';
+import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisable} from '../core/common-behaviors/disabled';
 
 
@@ -99,7 +99,8 @@ export type MdSelectFloatPlaceholderType = 'always' | 'never' | 'auto';
 
 // Boilerplate for applying mixins to MdSelect.
 export class MdSelectBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  _renderer: Renderer2;
+  _elementRef: ElementRef;
 }
 export const _MdSelectMixinBase = mixinColor(MdSelectBase);
 
@@ -133,7 +134,7 @@ export const _MdSelectMixinBase = mixinColor(MdSelectBase);
   exportAs: 'mdSelect',
 })
 export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, OnDestroy, OnInit,
-    ControlValueAccessor, IsColorable {
+    ControlValueAccessor, CanColor {
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
 
@@ -312,12 +313,12 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   constructor(private _viewportRuler: ViewportRuler,
               private _changeDetectorRef: ChangeDetectorRef,
-              renderer: Renderer2,
-              elementRef: ElementRef,
+              public _renderer: Renderer2,
+              public _elementRef: ElementRef,
               @Optional() private _dir: Dir,
               @Self() @Optional() public _control: NgControl,
               @Attribute('tabindex') tabIndex: string) {
-    super(renderer, elementRef);
+    super();
 
     if (this._control) {
       this._control.valueAccessor = this;

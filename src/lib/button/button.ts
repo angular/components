@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {coerceBooleanProperty, FocusOriginMonitor, Platform} from '../core';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
-import {IsColorable, mixinColor} from '../core/common-behaviors/color';
+import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
 
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
@@ -73,7 +73,8 @@ export class MdMiniFabCssMatStyler {}
 
 // Boilerplate for applying mixins to MdButton.
 export class MdButtonBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  _renderer: Renderer2;
+  _elementRef: ElementRef;
 }
 export const _MdButtonMixinBase = mixinColor(mixinDisabled(MdButtonBase), true);
 
@@ -96,7 +97,7 @@ export const _MdButtonMixinBase = mixinColor(mixinDisabled(MdButtonBase), true);
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisable, IsColorable {
+export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisable, CanColor {
   /** Whether the button is round. */
   _isRoundButton: boolean = this._hasAttributeWithPrefix('fab', 'mini-fab');
 
@@ -111,11 +112,11 @@ export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisabl
   get disableRipple() { return this._disableRipple; }
   set disableRipple(v) { this._disableRipple = coerceBooleanProperty(v); }
 
-  constructor(private _platform: Platform,
-              private _focusOriginMonitor: FocusOriginMonitor,
-              renderer: Renderer2,
-              elementRef: ElementRef) {
-    super(renderer, elementRef);
+  constructor(public _renderer: Renderer2,
+              public _elementRef: ElementRef,
+              private _platform: Platform,
+              private _focusOriginMonitor: FocusOriginMonitor) {
+    super();
     this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
   }
 
@@ -179,7 +180,7 @@ export class MdAnchor extends MdButton {
       focusOriginMonitor: FocusOriginMonitor,
       elementRef: ElementRef,
       renderer: Renderer2) {
-    super(platform, focusOriginMonitor, renderer, elementRef);
+    super(renderer, elementRef, platform, focusOriginMonitor);
   }
 
   /** @docs-private */

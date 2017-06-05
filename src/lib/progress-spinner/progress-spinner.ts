@@ -10,7 +10,7 @@ import {
   Directive,
   ViewChild,
 } from '@angular/core';
-import {IsColorable, mixinColor} from '../core/common-behaviors/color';
+import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
 
 // TODO(josephperrott): Benchpress tests.
@@ -52,7 +52,8 @@ export class MdProgressSpinnerCssMatStyler {}
 
 // Boilerplate for applying mixins to MdProgressSpinner.
 export class MdProgressSpinnerBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  _renderer: Renderer2;
+  _elementRef: ElementRef;
 }
 export const _MdProgressSpinnerMixinBase = mixinColor(MdProgressSpinnerBase);
 
@@ -73,7 +74,7 @@ export const _MdProgressSpinnerMixinBase = mixinColor(MdProgressSpinnerBase);
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdProgressSpinner extends _MdProgressSpinnerMixinBase
-    implements OnDestroy, IsColorable {
+    implements OnDestroy, CanColor {
 
   /** The id of the last requested animation. */
   private _lastAnimationId: number = 0;
@@ -159,10 +160,10 @@ export class MdProgressSpinner extends _MdProgressSpinnerMixinBase
     }
   }
 
-  constructor(private _ngZone: NgZone,
-              renderer: Renderer2,
-              elementRef: ElementRef) {
-    super(renderer, elementRef);
+  constructor(public _renderer: Renderer2,
+              public _elementRef: ElementRef,
+              private _ngZone: NgZone) {
+    super();
 
     // By default the progress-spinner component uses the primary color palette.
     this.color = 'primary';
@@ -282,7 +283,7 @@ export class MdProgressSpinner extends _MdProgressSpinnerMixinBase
 export class MdSpinner extends MdProgressSpinner implements OnDestroy {
 
   constructor(elementRef: ElementRef, ngZone: NgZone, renderer: Renderer2) {
-    super(ngZone, renderer, elementRef);
+    super(renderer, elementRef, ngZone);
     this.mode = 'indeterminate';
   }
 

@@ -11,7 +11,7 @@ import {
 
 import {Focusable} from '../core/a11y/focus-key-manager';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
-import {IsColorable, mixinColor} from '../core/common-behaviors/color';
+import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
 export interface MdChipEvent {
   chip: MdChip;
@@ -19,7 +19,8 @@ export interface MdChipEvent {
 
 // Boilerplate for applying mixins to MdChip.
 export class MdChipBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  _renderer: Renderer2;
+  _elementRef: ElementRef;
 }
 export const _MdChipMixinBase = mixinColor(MdChipBase);
 
@@ -44,7 +45,7 @@ export const _MdChipMixinBase = mixinColor(MdChipBase);
     '(click)': '_handleClick($event)'
   }
 })
-export class MdChip extends _MdChipMixinBase implements Focusable, OnInit, OnDestroy, IsColorable {
+export class MdChip extends _MdChipMixinBase implements Focusable, OnInit, OnDestroy, CanColor {
 
   /** Whether or not the chip is disabled. Disabled chips cannot be focused. */
   protected _disabled: boolean = null;
@@ -64,9 +65,8 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnInit, OnDes
   /** Emitted when the chip is destroyed. */
   @Output() destroy = new EventEmitter<MdChipEvent>();
 
-  constructor(renderer: Renderer2, elementRef: ElementRef) {
-    super(renderer, elementRef);
-
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {
+    super();
     // By default the chip component uses the primary color palette.
     this.color = 'primary';
   }

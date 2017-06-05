@@ -6,7 +6,7 @@ import {
   ElementRef,
   Renderer2,
 } from '@angular/core';
-import {IsColorable, mixinColor} from '../core/common-behaviors/color';
+import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
 
 @Directive({
@@ -19,7 +19,8 @@ export class MdToolbarRow {}
 
 // Boilerplate for applying mixins to MdToolbar.
 export class MdToolbarBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  _renderer: Renderer2;
+  _elementRef: ElementRef;
 }
 export const _MdToolbarMixinBase = mixinColor(MdToolbarBase);
 
@@ -37,10 +38,10 @@ export const _MdToolbarMixinBase = mixinColor(MdToolbarBase);
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class MdToolbar extends _MdToolbarMixinBase implements IsColorable {
+export class MdToolbar extends _MdToolbarMixinBase implements CanColor {
 
-  constructor(renderer: Renderer2, elementRef: ElementRef) {
-    super(renderer, elementRef);
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {
+    super();
   }
 
 }

@@ -24,7 +24,7 @@ import {
 } from '../core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
-import {IsColorable, mixinColor} from '../core/common-behaviors/color';
+import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
 
 export const MD_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {
@@ -46,7 +46,8 @@ let nextId = 0;
 
 // Boilerplate for applying mixins to MdSlideToggle.
 export class MdSlideToggleBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  _renderer: Renderer2;
+  _elementRef: ElementRef;
 }
 export const _MdSlideToggleMixinBase = mixinColor(mixinDisabled(MdSlideToggleBase));
 
@@ -68,7 +69,7 @@ export const _MdSlideToggleMixinBase = mixinColor(mixinDisabled(MdSlideToggleBas
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MdSlideToggle extends _MdSlideToggleMixinBase
-    implements OnDestroy, AfterContentInit, ControlValueAccessor, CanDisable, IsColorable {
+    implements OnDestroy, AfterContentInit, ControlValueAccessor, CanDisable, CanColor {
   private onChange = (_: any) => {};
   private onTouched = () => {};
 

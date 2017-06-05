@@ -5,14 +5,15 @@ import {
   ElementRef,
   Renderer2,
 } from '@angular/core';
-import {IsColorable, mixinColor} from '../../common-behaviors/color';
+import {CanColor, mixinColor} from '../../common-behaviors/color';
 
 export type MdPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
 
 // Boilerplate for applying mixins to MdChip.
 export class MdPseudoCheckboxBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  _renderer: Renderer2;
+  _elementRef: ElementRef;
 }
 export const _MdPseudoCheckboxBase = mixinColor(MdPseudoCheckboxBase);
 
@@ -42,15 +43,15 @@ export const _MdPseudoCheckboxBase = mixinColor(MdPseudoCheckboxBase);
     '[class.mat-pseudo-checkbox-disabled]': 'disabled',
   },
 })
-export class MdPseudoCheckbox extends _MdPseudoCheckboxBase implements IsColorable {
+export class MdPseudoCheckbox extends _MdPseudoCheckboxBase implements CanColor {
   /** Display state of the checkbox. */
   @Input() state: MdPseudoCheckboxState = 'unchecked';
 
   /** Whether the checkbox is disabled. */
   @Input() disabled: boolean = false;
 
-  constructor(elementRef: ElementRef, renderer: Renderer2) {
-    super(renderer, elementRef);
+  constructor(public _elementRef: ElementRef, public _renderer: Renderer2) {
+    super();
     this.color = 'accent';
   }
 }
