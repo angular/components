@@ -1,6 +1,8 @@
-import {Directive, Renderer2, ElementRef, OnInit, OnDestroy} from '@angular/core';
+import {Directive, Renderer2, ElementRef, Input, OnInit, OnDestroy} from '@angular/core';
 import {MdChip} from './chip';
 import {Subscription} from 'rxjs/Subscription';
+
+import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 
 /**
  * Applies proper (click) support and adds styling for use with the Material Design "cancel" icon
@@ -19,36 +21,23 @@ import {Subscription} from 'rxjs/Subscription';
   selector: '[mdChipRemove], [matChipRemove]',
   host: {
     'class': 'mat-chip-remove',
-    '[class.mat-chip-remove-hidden]': '!_isVisible',
+    '[class.mat-chip-remove-hidden]': '!visible',
     '(click)': '_handleClick($event)'
   }
 })
-export class MdChipRemove implements OnInit, OnDestroy {
+export class MdChipRemove {
 
   /** Whether or not the remove icon is visible. */
-  _isVisible: boolean = false;
+  _isVisible: boolean = true;
 
   /** Subscription for our onRemoveChange Observable */
   _onRemoveChangeSubscription: Subscription;
 
-  constructor(protected _renderer: Renderer2, protected _elementRef: ElementRef,
-              protected _parentChip: MdChip) {
-    if (this._parentChip) {
-      this._onRemoveChangeSubscription = this._parentChip.onRemovableChange
-        .subscribe((value) => {
-          this._updateParent(value);
-        });
-    }
-  }
+  @Input('mdChipRemoveVisible')
+  get visible() { return this._isVisible; }
+  set visible(value) {this._isVisible = coerceBooleanProperty(value);}
 
-  ngOnInit() {
-    this._updateParent(true);
-  }
-
-  ngOnDestroy() {
-    this._updateParent(false);
-    this._onRemoveChangeSubscription.unsubscribe();
-  }
+  constructor(protected _parentChip: MdChip) {}
 
   /** Calls the parent chip's public `remove()` method if applicable. */
   _handleClick(event: Event) {
@@ -56,11 +45,4 @@ export class MdChipRemove implements OnInit, OnDestroy {
       this._parentChip.remove();
     }
   }
-
-  /** Informs the parent chip whether or not it contains a remove icon. */
-  _updateParent(isRemovable: boolean) {
-    this._isVisible = isRemovable;
-    this._parentChip._setHasRemoveIcon(isRemovable);
-  }
-
 }

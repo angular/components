@@ -6,6 +6,23 @@
 $mat-chip-font-size: 13px;
 $mat-chip-line-height: 16px;
 
+@mixin mat-chips-theme-color($color) {
+  @include mat-chips-color(mat-contrast($color, 500), mat-color($color, 500));
+}
+
+@mixin mat-chips-color($foreground, $background) {
+  background-color: $background;
+  color: $foreground;
+
+  .mat-chip-remove {
+    color: $foreground;
+    opacity: 0.4;
+  }
+
+  .mat-chip-remove:hover {
+    opacity: 0.54;
+  }
+}
 
 @mixin mat-chips-theme($theme) {
   $is-dark-theme: map-get($theme, is-dark);
@@ -30,9 +47,8 @@ $mat-chip-line-height: 16px;
 
   $focus-color: mat-color($foreground, secondary-text);
 
-  .mat-chip:not(.mat-basic-chip) {
-    background-color: $unselected-background;
-    color: $unselected-foreground;
+  .mat-chip {
+    @include mat-chips-color($unselected-foreground, $unselected-background);
 
     .mat-chip-focus-border {
       pointer-events: none;
@@ -42,87 +58,27 @@ $mat-chip-line-height: 16px;
       outline: none;
       border: 2px solid $focus-color;
     }
-
-    .mat-chip-remove {
-      color: $unselected-foreground;
-      opacity: 0.3;
-    }
-
-    .mat-chip-remove:hover {
-      opacity: 0.54;
-    }
   }
 
-  .mat-chip.mat-chip-selected:not(.mat-basic-chip) {
-    background-color: $selected-background;
-    color: $selected-foreground;
-
-    .mat-chip-remove {
-      color: $selected-foreground;
-      opacity: 0.4;
-    }
-
-    .mat-chip-remove:hover {
-      opacity: 0.54;
-    }
+  .mat-chip.mat-chip-selected {
+    @include mat-chips-color($selected-foreground, $selected-background);
 
     &.mat-primary {
-      background-color: mat-color($primary);
-      color: mat-color($primary, default-contrast);
-    }
-
-    &.mat-accent {
-      background-color: mat-color($accent);
-      color: mat-color($accent, default-contrast);
+      @include mat-chips-theme-color($primary);
     }
 
     &.mat-warn {
-      background-color: mat-color($warn);
-      color: mat-color($warn, default-contrast);
-
-      .mat-chip-remove {
-        color: mat-contrast($primary, 500);
-        opacity: 0.4;
-      }
-
-      .mat-chip-remove:hover {
-        opacity: 0.54;
-      }
-
+      @include mat-chips-theme-color($warn);
     }
 
     &.mat-accent {
-      background-color: mat-color($accent, 500);
-      color: mat-contrast($accent, 500);
-
-      .mat-chip-remove {
-        color: mat-contrast($accent, 500);
-        opacity: 0.4;
-      }
-
-      .mat-chip-remove:hover {
-        opacity: 0.54;
-      }
-    }
-
-    &.mat-warn {
-      background-color: mat-color($warn, 500);
-      color: mat-contrast($warn, 500);
-
-      .mat-chip-remove {
-        color: mat-contrast($warn, 500);
-        opacity: 0.4;
-      }
-
-      .mat-chip-remove:hover {
-        opacity: 0.54;
-      }
+      @include mat-chips-theme-color($accent);
     }
   }
 }
 
 @mixin mat-chips-typography($config) {
-  .mat-chip:not(.mat-basic-chip) {
+  .mat-chip{
     font-size: $mat-chip-font-size;
     line-height: $mat-chip-line-height;
   }

@@ -13,6 +13,30 @@ $mat-chip-remove-icon-offset: 3px;
 $mat-chip-remove-size: 24px;
 $mat-chip-remove-font-size: 18px;
 
+@mixin chip-margin() {
+  [dir='rtl'] & {
+    margin-left: 0;
+    margin-right: $mat-chip-margin;
+  }
+
+  [dir='ltr'] & {
+    margin-right: 0;
+    margin-left: $mat-chip-margin;
+  }
+}
+
+@mixin chip-margin-reverse() {
+  [dir='ltr'] & {
+    margin-left: 0;
+    margin-right: $mat-chip-margin;
+  }
+
+  [dir='rtl'] & {
+    margin-right: 0;
+    margin-left: $mat-chip-margin;
+  }
+}
+
 .mat-chip-list-wrapper {
 
   display: flex;
@@ -20,30 +44,18 @@ $mat-chip-remove-font-size: 18px;
   flex-wrap: wrap;
   align-items: flex-start;
 
-  .mat-chip:not(.mat-basic-chip) {
+  .mat-chip {
     margin: $mat-chip-margin;
 
     // Do not apply the special margins inside an input container
     // Remove the margin from the first element (in both LTR and RTL)
     &:first-child {
-      margin-left: 0;
-      margin-right: $mat-chip-margin;
-
-      [dir='rtl'] & {
-        margin-right: 0;
-        margin-left: $mat-chip-margin;
-      }
+      @include chip-margin-reverse();
     }
 
     // Remove the margin from the last element (in both LTR and RTL)
     &:last-child {
-      margin-right: 0;
-      margin-left: $mat-chip-margin;
-
-      [dir='rtl'] & {
-        margin-left: 0;
-        margin-right: $mat-chip-margin;
-      }
+      @include chip-margin();
     }
   }
 
@@ -53,7 +65,7 @@ $mat-chip-remove-font-size: 18px;
   flex-wrap: nowrap;
 }
 
-.mat-chip:not(.mat-basic-chip) {
+.mat-chip {
   display: inline-block;
   position: relative;
 
@@ -78,47 +90,23 @@ $mat-chip-remove-font-size: 18px;
 .mat-chip-list-stacked .mat-chip-list-wrapper {
   display: block;
 
-  .mat-chip:not(.mat-basic-chip) {
+  .mat-chip {
     display: block;
     margin: 0;
     margin-bottom: $mat-chip-vertical-padding;
   }
 }
 
-.mat-chip-remove {
-  position: absolute;
-  top: $mat-chip-border-width;
-  right: $mat-chip-border-width * 2;
-  width: $mat-chip-remove-size;
-  height: $mat-chip-remove-size - $mat-chip-remove-icon-offset;
-  padding-top: $mat-chip-remove-icon-offset;
-  font-size: $mat-chip-remove-font-size;
-  text-align: center;
-  cursor: default;
+md-chip-list .mat-chip-input {
+  line-height: 34px;
+  @include chip-margin();
+}
+
+md-chip-list .mat-input-placeholder-wrapper {
+  top: 0;
+  @include chip-margin();
 }
 
 .mat-chip-remove.mat-chip-remove-hidden {
   display: none;
-}
-
-.mat-chip-list-container .mat-input-placeholder-wrapper {
-  top: -4px;
-
-  [dir='rtl'] & {
-    right: 8px;
-  }
-
-  [dir='ltr'] & {
-    margin-left: 8px;
-  }
-}
-
-.mat-chip-input {
-  [dir='rtl'] & {
-    margin-right: 8px;
-  }
-
-  [dir='ltr'] & {
-    margin-left: 8px;
-  }
 }

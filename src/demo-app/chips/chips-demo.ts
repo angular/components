@@ -22,9 +22,10 @@ export class ChipsDemo {
   selectable: boolean = true;
   removable: boolean = true;
   addOnBlur: boolean = true;
+  message: string = '';
 
   // Enter, comma, semi-colon
-  separatorKeys = [ENTER, COMMA, 186];
+  separatorKeysCodes = [ENTER, COMMA, 186];
 
   people: Person[] = [
     { name: 'Kara' },
@@ -42,8 +43,8 @@ export class ChipsDemo {
     { name: 'Warn', color: 'warn' }
   ];
 
-  alert(message: string): void {
-    alert(message);
+  displayMessage(message: string): void {
+    this.message = message;
   }
 
   add(event: MdChipInputEvent): void {
@@ -51,7 +52,7 @@ export class ChipsDemo {
     let value = event.value;
 
     // Add our person
-    if (value && value.trim() != '') {
+    if ((value || '').trim()) {
       this.people.push({ name: value.trim() });
     }
 

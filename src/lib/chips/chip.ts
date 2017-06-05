@@ -8,6 +8,8 @@
 
 import {
   Directive,
+  Component,
+  ContentChild,
   ElementRef,
   EventEmitter,
   Input,
@@ -22,6 +24,8 @@ import {coerceBooleanProperty} from '@angular/cdk';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import {SPACE, BACKSPACE, DELETE} from '../core/keyboard/keycodes';
+
+import {MdChipRemove} from './chip-remove';
 
 export interface MdChipEvent {
   chip: MdChip;
@@ -66,6 +70,8 @@ export class MdBasicChip { }
 })
 export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, CanColor, CanDisable {
 
+  @ContentChild(MdChipRemove) _chipRemove: MdChipRemove;
+
   /** Whether the chip is selected. */
   @Input() get selected(): boolean { return this._selected; }
   set selected(value: boolean) {
@@ -84,13 +90,6 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
 
   /** Whether the chip has focus. */
   _hasFocus: boolean = false;
-
-  /** Whether or not the chip is displaying the remove icon. */
-  _hasRemoveIcon: boolean = false;
-
-  /** Emitted when the removable property changes. */
-  private _onRemovableChange = new EventEmitter<boolean>();
-  onRemovableChange: Observable<boolean> = this._onRemovableChange.asObservable();
 
   /** Emitted when the chip is focused. */
   onFocus = new EventEmitter<MdChipEvent>();
@@ -119,19 +118,6 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
     this.destroy.emit({chip: this});
   }
 
-  /**
-   * Toggles the current selected state of this chip.
-   * @return Whether the chip is selected.
-   */
-  @Input() get disabled(): boolean {
-    return this._disabled;
-  }
-
-  /** Sets the disabled state of the chip. */
-  set disabled(value: boolean) {
-    this._disabled = coerceBooleanProperty(value) ? true : null;
-  }
-
   /** A String representation of the current disabled state. */
   get _isAriaDisabled(): string {
     return String(coerceBooleanProperty(this.disabled));
@@ -158,7 +144,7 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
 
   set removable(value: boolean) {
     this._removable = coerceBooleanProperty(value);
-    this._onRemovableChange.emit(this._removable);
+    if (this._chipRemove) { this._chipRemove.visible = this._removable; }
   }
 
   /** Toggles the current selected state of this chip. */
@@ -189,7 +175,7 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
   /** Ensures events fire properly upon click. */
   _handleClick(event: Event) {
     // Check disabled
-    if (this._checkDisabled(event)) {
+    if (this.disabled) {
       return;
     }
 
@@ -201,7 +187,7 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
 
   /** Handle custom key presses. */
   _handleKeydown(event: KeyboardEvent) {
-    if (this._checkDisabled(event)) {
+    if (this.disabled) {
       return;
     }
 
@@ -243,5 +229,37 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
     }
 
     return this.disabled;
+  }
+
+  /** Initializes the appropriate CSS classes based on the chip type (basic or standard). */
+  private _addDefaultCSSClass() {
+    let el: HTMLElement = this._elementRef.nativeElement;
+
+    // Always add the `mat-chip` class
+    this._renderer.addClass(el, 'mat-chip');
+
+    // If we are a basic chip, also add the `mat-basic-chip` class for :not() targeting
+    if (el.nodeName.toLowerCase() == 'mat-basic-chip' || el.hasAttribute('mat-basic-chip') ||
+        el.nodeName.toLowerCase() == 'md-basic-chip' || el.hasAttribute('md-basic-chip')) {
+      this._renderer.addClass(el, 'mat-basic-chip');
+    }
+  }
+
+  /** Updates the private _color variable and the native element. */
+  private _updateColor(newColor: string) {
+    this._setElementColor(this._color, false);
+    this._setElementColor(newColor, true);
+    this._color = newColor;
+  }
+
+  /** Sets the mat-color on the native element. */
+  private _setElementColor(color: string, isAdd: boolean) {
+    if (color != null && color != '') {
+      if (isAdd) {
+        this._renderer.addClass(this._elementRef.nativeElement, `mat-${color}`);
+      } else {
+        this._renderer.removeClass(this._elementRef.nativeElement, `mat-${color}`);
+      }
+    }
   }
 }

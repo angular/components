@@ -347,12 +347,12 @@ class StandardChipList {
 @Component({
   template: `
     <md-input-container>
-      <md-chip-list mdPrefix #chipList>
+      <md-chip-list #chipList>
         <md-chip>Chip 1</md-chip>
         <md-chip>Chip 1</md-chip>
         <md-chip>Chip 1</md-chip>
+        <input mdInput name="test" [mdChipList]="chipList"/>
       </md-chip-list>
-      <input mdInput name="test" [mdChipList]="chipList"/>
     </md-input-container>
   `
 })

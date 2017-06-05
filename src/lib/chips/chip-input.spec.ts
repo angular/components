@@ -42,7 +42,7 @@ describe('MdChipInput', () => {
   }));
 
   describe('basic behavior', () => {
-    it('emits the (chipAdded) on enter keyup', () => {
+    it('emits the (chipEnd) on enter keyup', () => {
       let ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement) as any;
 
       spyOn(testChipInput, 'add');
@@ -53,7 +53,7 @@ describe('MdChipInput', () => {
   });
 
   describe('[addOnBlur]', () => {
-    it('allows (chipAdded) when true', () => {
+    it('allows (chipEnd) when true', () => {
       spyOn(testChipInput, 'add');
 
       testChipInput.addOnBlur = true;
@@ -63,7 +63,7 @@ describe('MdChipInput', () => {
       expect(testChipInput.add).toHaveBeenCalled();
     });
 
-    it('disallows (chipAdded) when false', () => {
+    it('disallows (chipEnd) when false', () => {
       spyOn(testChipInput, 'add');
 
       testChipInput.addOnBlur = false;
@@ -74,8 +74,8 @@ describe('MdChipInput', () => {
     });
   });
 
-  describe('[separatorKeys]', () => {
-    it('does not emit (chipAdded) when a non-separator key is pressed', () => {
+  describe('[separatorKeysCodes]', () => {
+    it('does not emit (chipEnd) when a non-separator key is pressed', () => {
       let ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement) as any;
       spyOn(testChipInput, 'add');
 
@@ -86,7 +86,7 @@ describe('MdChipInput', () => {
       expect(testChipInput.add).not.toHaveBeenCalled();
     });
 
-    it('emits (chipAdded) when a custom separator keys is pressed', () => {
+    it('emits (chipEnd) when a custom separator keys is pressed', () => {
       let COMMA_EVENT = createKeyboardEvent('keydown', COMMA, inputNativeElement) as any;
       spyOn(testChipInput, 'add');
 
@@ -102,9 +102,9 @@ describe('MdChipInput', () => {
 @Component({
   template: `
     <md-chip-list>
+        <input mdInput mdChipList [mdChipListAddOnBlur]="addOnBlur" [separatorKeysCodes]="separatorKeys"
+       (mdChipEnd)="add($event)" />
     </md-chip-list>
-    <input mdInput mdChipList [addOnBlur]="addOnBlur" [separatorKeys]="separatorKeys"
-       (chipAdded)="add($event)" />
   `
 })
 class TestChipInput {

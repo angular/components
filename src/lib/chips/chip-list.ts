@@ -26,13 +26,16 @@ import {SPACE, LEFT_ARROW, RIGHT_ARROW} from '../core/keyboard/keycodes';
 import {Subscription} from 'rxjs/Subscription';
 import {coerceBooleanProperty} from '@angular/cdk';
 
-@Directive({
-  selector: '[mdChipListContainer], [matChipListContainer]',
-  host: {
-    '[class.mat-chip-list-container]': 'true'
+/** Utility to check if an input element has no value. */
+function _isInputEmpty(element: HTMLElement): boolean {
+  if (element && element.nodeName.toLowerCase() == 'input') {
+    let input = element as HTMLInputElement;
+
+    return !input.value;
   }
-})
-export class MdChipListContainer {}
+
+  return false;
+}
 
 /**
  * A material design chips component (named ChipList for it's similarity to the List component).
@@ -49,7 +52,6 @@ export class MdChipListContainer {}
   selector: 'md-chip-list, mat-chip-list',
   template: `<div class="mat-chip-list-wrapper"><ng-content></ng-content></div>`,
   host: {
-    // Properties
     '[attr.tabindex]': '_tabIndex',
     'role': 'listbox',
     'class': 'mat-chip-list',
@@ -70,7 +72,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   protected _destroyedIndex: number = null;
 
   /** Track which chips we're listening to for focus/destruction. */
-  protected _subscribed: WeakMap<MdChip, boolean> = new WeakMap();
+  protected _chipSet: WeakMap<MdChip, boolean> = new WeakMap();
 
   /** Subscription to tabbing out from the chip list. */
   private _tabOutSubscription: Subscription;
@@ -169,7 +171,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   _keydown(event: KeyboardEvent) {
     let code = event.keyCode;
     let target = event.target as HTMLElement;
-    let isInputEmpty = MdChipList._isInputEmpty(target);
+    let isInputEmpty = _isInputEmpty(target);
     let isRtl = this._dir.value == 'rtl';
 
     let isPrevKey = (code == (isRtl ? RIGHT_ARROW : LEFT_ARROW));
@@ -232,7 +234,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
    */
   protected _addChip(chip: MdChip) {
     // If we've already been subscribed to a parent, do nothing
-    if (this._subscribed.has(chip)) {
+    if (this._chipSet.has(chip)) {
       return;
     }
 
@@ -259,11 +261,11 @@ export class MdChipList implements AfterContentInit, OnDestroy {
         this._destroyedIndex = chipIndex;
       }
 
-      this._subscribed.delete(chip);
+      this._chipSet.delete(chip);
       chip.destroy.unsubscribe();
     });
 
-    this._subscribed.set(chip, true);
+    this._chipSet.set(chip, true);
   }
 
   /**
@@ -300,16 +302,5 @@ export class MdChipList implements AfterContentInit, OnDestroy {
    */
   private _isValidIndex(index: number): boolean {
     return index >= 0 && index < this.chips.length;
-  }
-
-  /** Utility to check if an input element has no value. */
-  private static _isInputEmpty(element: HTMLElement): boolean {
-    if (element && element.nodeName.toLowerCase() == 'input') {
-      let input = element as HTMLInputElement;
-
-      return input.value == '' || input.value == null;
-    }
-
-    return false;
   }
 }
