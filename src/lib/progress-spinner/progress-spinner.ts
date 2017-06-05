@@ -10,6 +10,7 @@ import {
   Directive,
   ViewChild,
 } from '@angular/core';
+import {IsColorable, mixinColor} from '../core/common-behaviors/color';
 
 
 // TODO(josephperrott): Benchpress tests.
@@ -49,6 +50,11 @@ type EasingFn = (currentTime: number, startValue: number,
 })
 export class MdProgressSpinnerCssMatStyler {}
 
+// Boilerplate for applying mixins to MdProgressSpinner.
+export class MdProgressSpinnerBase {
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+}
+export const _MdProgressSpinnerMixinBase = mixinColor(MdProgressSpinnerBase);
 
 /**
  * <md-progress-spinner> component.
@@ -61,11 +67,14 @@ export class MdProgressSpinnerCssMatStyler {}
     '[attr.aria-valuemin]': '_ariaValueMin',
     '[attr.aria-valuemax]': '_ariaValueMax'
   },
+  inputs: ['color'],
   templateUrl: 'progress-spinner.html',
   styleUrls: ['progress-spinner.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdProgressSpinner implements OnDestroy {
+export class MdProgressSpinner extends _MdProgressSpinnerMixinBase
+    implements OnDestroy, IsColorable {
+
   /** The id of the last requested animation. */
   private _lastAnimationId: number = 0;
 
@@ -77,7 +86,6 @@ export class MdProgressSpinner implements OnDestroy {
 
   private _mode: ProgressSpinnerMode = 'determinate';
   private _value: number;
-  private _color: string = 'primary';
 
   /** Stroke width of the progress spinner. By default uses 10px as stroke width. */
   @Input() strokeWidth: number = PROGRESS_SPINNER_STROKE_WIDTH;
@@ -110,17 +118,6 @@ export class MdProgressSpinner implements OnDestroy {
    */
   ngOnDestroy() {
     this._cleanupIndeterminateAnimation();
-  }
-
-  /** The color of the progress-spinner. Can be primary, accent, or warn. */
-  @Input()
-  get color(): string { return this._color; }
-  set color(value: string) {
-    if (value) {
-      this._renderer.removeClass(this._elementRef.nativeElement, `mat-${this._color}`);
-      this._renderer.addClass(this._elementRef.nativeElement, `mat-${value}`);
-      this._color = value;
-    }
   }
 
   /** Value of the progress circle. It is bound to the host as the attribute aria-valuenow. */
@@ -162,10 +159,14 @@ export class MdProgressSpinner implements OnDestroy {
     }
   }
 
-  constructor(
-    private _ngZone: NgZone,
-    private _elementRef: ElementRef,
-    private _renderer: Renderer2) { }
+  constructor(private _ngZone: NgZone,
+              renderer: Renderer2,
+              elementRef: ElementRef) {
+    super(renderer, elementRef);
+
+    // By default the progress-spinner component uses the primary color palette.
+    this.color = 'primary';
+  }
 
 
   /**
@@ -274,13 +275,14 @@ export class MdProgressSpinner implements OnDestroy {
     'mode': 'indeterminate',
     '[class.mat-spinner]': 'true',
   },
+  inputs: ['color'],
   templateUrl: 'progress-spinner.html',
   styleUrls: ['progress-spinner.css'],
 })
 export class MdSpinner extends MdProgressSpinner implements OnDestroy {
 
   constructor(elementRef: ElementRef, ngZone: NgZone, renderer: Renderer2) {
-    super(ngZone, elementRef, renderer);
+    super(ngZone, renderer, elementRef);
     this.mode = 'indeterminate';
   }
 
