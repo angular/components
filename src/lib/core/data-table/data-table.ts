@@ -76,7 +76,7 @@ export class CdkTable<T> implements CollectionViewer {
       new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
 
   /** Stream that emits when a row def has a change to its array of columns to render. */
-  columnsChange = new Observable<void[]>();
+  _columnsChange = new Observable<void>();
 
   /**
    * Map of all the user's defined columns identified by name.
@@ -131,15 +131,16 @@ export class CdkTable<T> implements CollectionViewer {
 
     // Get and merge the streams for column changes made to the row defs
     const rowDefs = [...this._rowDefinitions.toArray(), this._headerDefinition];
-    const columnChangeStreams = rowDefs.map((rowDef: BaseRowDef) => rowDef.columnsChange);
-    this.columnsChange = Observable.combineLatest(columnChangeStreams);
+    const columnChangeStreams =
+        rowDefs.map((rowDef: BaseRowDef) => rowDef.columnsChange);
+    this._columnsChange = Observable.merge(...columnChangeStreams);
   }
 
   ngAfterViewInit() {
     this.renderHeaderRow();
 
     // Re-render the header row if the columns changed.
-    this.columnsChange.subscribe(() => {
+    this._columnsChange.subscribe(() => {
       this._headerRowPlaceholder.viewContainer.clear();
       this.renderHeaderRow();
     });
@@ -147,7 +148,7 @@ export class CdkTable<T> implements CollectionViewer {
     // TODO(andrewseguin): If the data source is not
     //   present after view init, connect it when it is defined.
     // TODO(andrewseguin): Unsubscribe from this on destroy.
-    const streams = [this.dataSource.connect(this), this.columnsChange];
+    const streams = [this.dataSource.connect(this), this._columnsChange];
     Observable.combineLatest(streams).subscribe(([rowsData]) => {
       this.renderRowChanges(rowsData);
     });
