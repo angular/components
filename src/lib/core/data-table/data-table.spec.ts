@@ -81,13 +81,14 @@ describe('CdkTable', () => {
         expect(row).toBeRole('row');
         getCells(row).forEach(cell => expect(cell).toBeRole('gridcell'));
       });
-
-      // Check that if the component was created with a custom role, that it does not override it.
-      fixture = TestBed.createComponent(CustomRoleCdkTableApp);
-      fixture.detectChanges();
-
-      expect(fixture.nativeElement.querySelector('cdk-table')).toBeRole('custom-role');
     });
+  });
+
+  it('should not clobber an existing table role', () => {
+    fixture = TestBed.createComponent(CustomRoleCdkTableApp);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('cdk-table')).toBeRole('treegrid');
   });
 
   it('should re-render the rows when the data changes', () => {
@@ -263,7 +264,7 @@ class SimpleCdkTableApp {
 
 @Component({
   template: `
-    <cdk-table [dataSource]="dataSource" role="custom-role">
+    <cdk-table [dataSource]="dataSource" role="treegrid">
       <ng-container cdkColumnDef="column_a">
         <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
         <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
