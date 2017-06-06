@@ -109,7 +109,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
     this._subscribeChips(this.chips);
 
     // Make sure we set our tab index at the start
-    this._checkTabIndex();
+    this._updateTabIndex();
 
     // When the list changes, re-subscribe
     this.chips.changes.subscribe((chips: QueryList<MdChip>) => {
@@ -121,7 +121,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
       }
 
       // Check to see if we need to update our tab index
-      this._checkTabIndex();
+      this._updateTabIndex();
 
       // Check to see if we have a destroyed chip and need to refocus
       this._updateFocusForDestroyedChips();
@@ -223,7 +223,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   /**
    * Check the tab index as you should not be allowed to focus an empty list.
    */
-  protected _checkTabIndex(): void {
+  protected _updateTabIndex(): void {
     // If we have 0 chips, we should not allow keyboard focus
     this._tabIndex = (this.chips.length == 0 ? -1 : 0);
   }
