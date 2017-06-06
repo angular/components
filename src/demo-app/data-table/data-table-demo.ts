@@ -26,7 +26,7 @@ export class DataTableDemo {
   }
 
   toggleColorColumn() {
-    let colorColumnIndex = this.propertiesToDisplay.findIndex((col: string) => col === 'color');
+    let colorColumnIndex = this.propertiesToDisplay.indexOf('color');
     if (colorColumnIndex == -1) {
       this.propertiesToDisplay.push('color');
     } else {
