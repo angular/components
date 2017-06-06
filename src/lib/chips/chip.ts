@@ -10,22 +10,21 @@ import {
   Directive,
   Component,
   ContentChild,
+  Directive,
   ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
   Output,
   Renderer2,
+  forwardRef,
 } from '@angular/core';
 
-import {Observable} from 'rxjs/Observable';
 import {Focusable} from '../core/a11y/focus-key-manager';
 import {coerceBooleanProperty} from '@angular/cdk';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import {SPACE, BACKSPACE, DELETE} from '../core/keyboard/keycodes';
-
-import {MdChipRemove} from './chip-remove';
 
 export interface MdChipEvent {
   chip: MdChip;
@@ -70,7 +69,7 @@ export class MdBasicChip { }
 })
 export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, CanColor, CanDisable {
 
-  @ContentChild(MdChipRemove) _chipRemove: MdChipRemove;
+  @ContentChild(forwardRef(() => MdChipRemove)) _chipRemove: MdChipRemove;
 
   /** Whether the chip is selected. */
   @Input() get selected(): boolean { return this._selected; }
@@ -260,6 +259,47 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
       } else {
         this._renderer.removeClass(this._elementRef.nativeElement, `mat-${color}`);
       }
+    }
+  }
+}
+
+
+/**
+ * Applies proper (click) support and adds styling for use with the Material Design "cancel" icon
+ * available at https://material.io/icons/#ic_cancel.
+ *
+ * Example:
+ *
+ *     <md-chip>
+ *       <md-icon mdChipRemove>clear</md-icon>
+ *     </md-chip>
+ *
+ * You *may* use a custom icon, but you may need to override the `md-chip-remove` positioning styles
+ * to properly center the icon within the chip.
+ */
+@Directive({
+  selector: '[mdChipRemove], [matChipRemove]',
+  host: {
+    'class': 'mat-chip-remove',
+    '[class.mat-chip-remove-hidden]': '!visible',
+    '(click)': '_handleClick($event)'
+  }
+})
+export class MdChipRemove {
+
+  /** Whether or not the remove icon is visible. */
+  _isVisible: boolean = true;
+
+  @Input('mdChipRemoveVisible')
+  get visible() { return this._isVisible; }
+  set visible(value) {this._isVisible = coerceBooleanProperty(value);}
+
+  constructor(protected _parentChip: MdChip) {}
+
+  /** Calls the parent chip's public `remove()` method if applicable. */
+  _handleClick(event: Event) {
+    if (this._parentChip.removable) {
+      this._parentChip.remove();
     }
   }
 }

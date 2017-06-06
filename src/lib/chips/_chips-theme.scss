@@ -78,7 +78,7 @@ $mat-chip-line-height: 16px;
 }
 
 @mixin mat-chips-typography($config) {
-  .mat-chip{
+  .mat-chip {
     font-size: $mat-chip-font-size;
     line-height: $mat-chip-line-height;
   }
