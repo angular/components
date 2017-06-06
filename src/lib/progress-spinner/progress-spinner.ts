@@ -52,10 +52,9 @@ export class MdProgressSpinnerCssMatStyler {}
 
 // Boilerplate for applying mixins to MdProgressSpinner.
 export class MdProgressSpinnerBase {
-  _renderer: Renderer2;
-  _elementRef: ElementRef;
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
-export const _MdProgressSpinnerMixinBase = mixinColor(MdProgressSpinnerBase);
+export const _MdProgressSpinnerMixinBase = mixinColor(MdProgressSpinnerBase, 'primary');
 
 /**
  * <md-progress-spinner> component.
@@ -160,13 +159,10 @@ export class MdProgressSpinner extends _MdProgressSpinnerMixinBase
     }
   }
 
-  constructor(public _renderer: Renderer2,
-              public _elementRef: ElementRef,
+  constructor(renderer: Renderer2,
+              elementRef: ElementRef,
               private _ngZone: NgZone) {
-    super();
-
-    // By default the progress-spinner component uses the primary color palette.
-    this.color = 'primary';
+    super(renderer, elementRef);
   }
 
 

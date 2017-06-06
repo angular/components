@@ -19,10 +19,9 @@ export interface MdChipEvent {
 
 // Boilerplate for applying mixins to MdChip.
 export class MdChipBase {
-  _renderer: Renderer2;
-  _elementRef: ElementRef;
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
-export const _MdChipMixinBase = mixinColor(MdChipBase);
+export const _MdChipMixinBase = mixinColor(MdChipBase, 'primary');
 
 
 /**
@@ -65,10 +64,8 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnInit, OnDes
   /** Emitted when the chip is destroyed. */
   @Output() destroy = new EventEmitter<MdChipEvent>();
 
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {
-    super();
-    // By default the chip component uses the primary color palette.
-    this.color = 'primary';
+  constructor(renderer: Renderer2, elementRef: ElementRef) {
+    super(renderer, elementRef);
   }
 
   ngOnInit(): void {

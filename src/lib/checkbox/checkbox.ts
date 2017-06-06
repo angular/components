@@ -59,10 +59,9 @@ export class MdCheckboxChange {
 
 // Boilerplate for applying mixins to MdCheckbox.
 export class MdCheckboxBase {
-  _renderer: Renderer2;
-  _elementRef: ElementRef;
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
-export const _MdCheckboxMixinBase = mixinColor(mixinDisabled(MdCheckboxBase));
+export const _MdCheckboxMixinBase = mixinColor(mixinDisabled(MdCheckboxBase), 'accent');
 
 
 /**
@@ -192,14 +191,11 @@ export class MdCheckbox extends _MdCheckboxMixinBase
   /** Reference to the focused state ripple. */
   private _focusRipple: RippleRef;
 
-  constructor(public _renderer: Renderer2,
-              public _elementRef: ElementRef,
+  constructor(renderer: Renderer2,
+              elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
               private _focusOriginMonitor: FocusOriginMonitor) {
-    super();
-
-    // By default the checkbox uses the accent color for styling.
-    this.color = 'accent';
+    super(renderer, elementRef);
   }
 
   ngAfterViewInit() {

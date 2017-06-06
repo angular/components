@@ -73,10 +73,9 @@ export class MdMiniFabCssMatStyler {}
 
 // Boilerplate for applying mixins to MdButton.
 export class MdButtonBase {
-  _renderer: Renderer2;
-  _elementRef: ElementRef;
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
-export const _MdButtonMixinBase = mixinColor(mixinDisabled(MdButtonBase), true);
+export const _MdButtonMixinBase = mixinColor(mixinDisabled(MdButtonBase));
 
 
 /**
@@ -112,11 +111,11 @@ export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisabl
   get disableRipple() { return this._disableRipple; }
   set disableRipple(v) { this._disableRipple = coerceBooleanProperty(v); }
 
-  constructor(public _renderer: Renderer2,
-              public _elementRef: ElementRef,
+  constructor(renderer: Renderer2,
+              elementRef: ElementRef,
               private _platform: Platform,
               private _focusOriginMonitor: FocusOriginMonitor) {
-    super();
+    super(renderer, elementRef);
     this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
   }
 

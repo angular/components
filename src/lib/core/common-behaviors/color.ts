@@ -16,31 +16,32 @@ export interface HasRenderer {
 export type ThemePalette = 'primary' | 'accent' | 'warn' | null;
 
 /** Mixin to augment a directive with a `color` property. */
-export function mixinColor<T extends Constructor<HasRenderer>>(base: T, allowNoColor = false)
+export function mixinColor<T extends Constructor<HasRenderer>>(base: T, defaultColor?: ThemePalette)
     : Constructor<CanColor> & T {
   return class extends base {
-    private _color: ThemePalette = undefined;
-
-    constructor(...args: any[]) { super(...args); }
+    private _color: ThemePalette = null;
 
     get color(): ThemePalette { return this._color; }
     set color(value: ThemePalette) {
-      if (value || allowNoColor && !value) {
-        this._setColorClass(this._color, false);
-        this._setColorClass(value, true);
-        this._color = value;
+      const colorPalette = value || defaultColor;
+
+      if (colorPalette !== this._color) {
+        if (this._color) {
+          this._renderer.removeClass(this._elementRef.nativeElement, `mat-${this._color}`);
+        }
+        if (colorPalette) {
+          this._renderer.addClass(this._elementRef.nativeElement, `mat-${colorPalette}`);
+        }
+
+        this._color = colorPalette;
       }
     }
 
-    /** Method that changes the color classes on the host element. */
-    private _setColorClass(colorName: string, isAdd: boolean) {
-      if (colorName) {
-        if (isAdd) {
-          this._renderer.addClass(this._elementRef.nativeElement, `mat-${colorName}`);
-        } else {
-          this._renderer.removeClass(this._elementRef.nativeElement, `mat-${colorName}`);
-        }
-      }
+    constructor(...args: any[]) {
+      super(...args);
+
+      // Set the default color that can be specified from the mixin.
+      this.color = defaultColor;
     }
   };
 }

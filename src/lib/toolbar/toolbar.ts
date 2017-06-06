@@ -19,8 +19,7 @@ export class MdToolbarRow {}
 
 // Boilerplate for applying mixins to MdToolbar.
 export class MdToolbarBase {
-  _renderer: Renderer2;
-  _elementRef: ElementRef;
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
 export const _MdToolbarMixinBase = mixinColor(MdToolbarBase);
 
@@ -40,8 +39,8 @@ export const _MdToolbarMixinBase = mixinColor(MdToolbarBase);
 })
 export class MdToolbar extends _MdToolbarMixinBase implements CanColor {
 
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {
-    super();
+  constructor(renderer: Renderer2, elementRef: ElementRef) {
+    super(renderer, elementRef);
   }
 
 }

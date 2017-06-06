@@ -12,10 +12,9 @@ export type MdPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
 // Boilerplate for applying mixins to MdChip.
 export class MdPseudoCheckboxBase {
-  _renderer: Renderer2;
-  _elementRef: ElementRef;
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
-export const _MdPseudoCheckboxBase = mixinColor(MdPseudoCheckboxBase);
+export const _MdPseudoCheckboxBase = mixinColor(MdPseudoCheckboxBase, 'accent');
 
 
 /**
@@ -50,8 +49,7 @@ export class MdPseudoCheckbox extends _MdPseudoCheckboxBase implements CanColor 
   /** Whether the checkbox is disabled. */
   @Input() disabled: boolean = false;
 
-  constructor(public _elementRef: ElementRef, public _renderer: Renderer2) {
-    super();
-    this.color = 'accent';
+  constructor(elementRef: ElementRef, renderer: Renderer2) {
+    super(renderer, elementRef);
   }
 }

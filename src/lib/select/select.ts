@@ -99,10 +99,9 @@ export type MdSelectFloatPlaceholderType = 'always' | 'never' | 'auto';
 
 // Boilerplate for applying mixins to MdSelect.
 export class MdSelectBase {
-  _renderer: Renderer2;
-  _elementRef: ElementRef;
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
-export const _MdSelectMixinBase = mixinColor(MdSelectBase);
+export const _MdSelectMixinBase = mixinColor(MdSelectBase, 'primary');
 
 
 @Component({
@@ -313,19 +312,18 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   constructor(private _viewportRuler: ViewportRuler,
               private _changeDetectorRef: ChangeDetectorRef,
-              public _renderer: Renderer2,
-              public _elementRef: ElementRef,
+              renderer: Renderer2,
+              elementRef: ElementRef,
               @Optional() private _dir: Dir,
               @Self() @Optional() public _control: NgControl,
               @Attribute('tabindex') tabIndex: string) {
-    super();
+    super(renderer, elementRef);
 
     if (this._control) {
       this._control.valueAccessor = this;
     }
 
     this._tabIndex = parseInt(tabIndex) || 0;
-    this.color = 'primary';
   }
 
   ngOnInit() {

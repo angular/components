@@ -16,10 +16,9 @@ import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
 // Boilerplate for applying mixins to MdIcon.
 export class MdIconBase {
-  _renderer: Renderer2;
-  _elementRef: ElementRef;
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
-export const _MdIconMixinBase = mixinColor(MdIconBase, true);
+export const _MdIconMixinBase = mixinColor(MdIconBase);
 
 
 /**
@@ -91,9 +90,9 @@ export class MdIcon extends _MdIconMixinBase implements OnChanges, OnInit, After
   private _previousAriaLabel: string;
 
   constructor(private _mdIconRegistry: MdIconRegistry,
-              public _renderer: Renderer2,
-              public _elementRef: ElementRef) {
-    super();
+              renderer: Renderer2,
+              elementRef: ElementRef) {
+    super(renderer, elementRef);
   }
 
   /**

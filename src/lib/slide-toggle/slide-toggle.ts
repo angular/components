@@ -46,10 +46,9 @@ let nextId = 0;
 
 // Boilerplate for applying mixins to MdSlideToggle.
 export class MdSlideToggleBase {
-  _renderer: Renderer2;
-  _elementRef: ElementRef;
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
-export const _MdSlideToggleMixinBase = mixinColor(mixinDisabled(MdSlideToggleBase));
+export const _MdSlideToggleMixinBase = mixinColor(mixinDisabled(MdSlideToggleBase), 'accent');
 
 /** Represents a slidable "switch" toggle that can be moved between on and off. */
 @Component({
@@ -123,11 +122,11 @@ export class MdSlideToggle extends _MdSlideToggleMixinBase
   /** Reference to the ripple directive on the thumb container. */
   @ViewChild(MdRipple) _ripple: MdRipple;
 
-  constructor(public _elementRef: ElementRef,
-              public _renderer: Renderer2,
+  constructor(elementRef: ElementRef,
+              renderer: Renderer2,
               private _focusOriginMonitor: FocusOriginMonitor,
               private _changeDetectorRef: ChangeDetectorRef) {
-    super();
+    super(renderer, elementRef);
   }
 
   ngAfterContentInit() {
