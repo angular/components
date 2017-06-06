@@ -1,7 +1,7 @@
 import {task, src, dest} from 'gulp';
 import {Dgeni} from 'dgeni';
 import * as path from 'path';
-import {outputDir, packagesDir} from '../packaging/build-paths';
+import {buildConfig} from '../packaging/build-config';
 
 // There are no type definitions available for these imports.
 const markdown = require('gulp-markdown');
@@ -12,6 +12,8 @@ const flatten = require('gulp-flatten');
 const htmlmin = require('gulp-htmlmin');
 const hljs = require('highlight.js');
 const dom  = require('gulp-dom');
+
+const {outputDir, packagesDir} = buildConfig;
 
 const DIST_DOCS = path.join(outputDir, 'docs');
 

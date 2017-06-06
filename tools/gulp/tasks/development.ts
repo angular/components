@@ -5,10 +5,15 @@ import {
 } from '../util/task_helpers';
 import {join} from 'path';
 import {copyFiles} from '../util/copy-files';
-import {bundlesDir, outputDir, packagesDir, projectDir} from '../packaging/build-paths';
+import {buildConfig} from '../packaging/build-config';
 
 // These imports don't have any typings provided.
 const firebaseTools = require('firebase-tools');
+
+const {outputDir, packagesDir, projectDir} = buildConfig;
+
+/** Path to the directory where all bundles live. */
+const bundlesDir = join(outputDir, 'bundles');
 
 const appDir = join(packagesDir, 'demo-app');
 const outDir = join(outputDir, 'packages', 'demo-app');

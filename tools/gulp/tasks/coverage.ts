@@ -4,10 +4,10 @@ import {existsSync} from 'fs-extra';
 import {spawnSync} from 'child_process';
 import {isTravisMasterBuild} from '../util/travis-ci';
 import {openFirebaseDashboardApp} from '../util/firebase';
-import {outputDir} from '../packaging/build-paths';
+import {buildConfig} from '../packaging/build-config';
 
 /** Path to the file that includes all coverage information form Karma. */
-const coverageResultFile = join(outputDir, 'coverage/coverage-summary.json');
+const coverageResultFile = join(buildConfig.outputDir, 'coverage/coverage-summary.json');
 
 task('coverage:upload', () => {
   if (!existsSync(coverageResultFile)) {

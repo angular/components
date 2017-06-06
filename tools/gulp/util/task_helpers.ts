@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as gulp from 'gulp';
 import * as path from 'path';
 import {yellow} from 'chalk';
-import {projectDir} from '../packaging/build-paths';
+import {buildConfig} from '../packaging/build-config';
 
 /* Those imports lack typings. */
 const gulpClean = require('gulp-clean');
@@ -16,6 +16,8 @@ const gulpCleanCss = require('gulp-clean-css');
 // There are no type definitions available for these imports.
 const resolveBin = require('resolve-bin');
 const httpRewrite = require('http-rewrite-middleware');
+
+const {projectDir} = buildConfig;
 
 /** If the string passed in is a glob, returns it, otherwise append '**\/*' to it. */
 function _globify(maybeGlob: string, suffix = '**/*') {
@@ -157,7 +159,7 @@ export function buildAppTask(appName: string) {
  */
 export function serverTask(packagePath: string, livereload = true) {
   // The http-rewrite-middlware only supports relative paths as rewrite destinations.
-  let relativePath = path.relative(projectDir, packagePath);
+  const relativePath = path.relative(projectDir, packagePath);
 
   return () => {
     gulpConnect.server({

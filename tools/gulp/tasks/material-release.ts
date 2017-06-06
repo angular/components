@@ -4,10 +4,15 @@ import {writeFileSync} from 'fs';
 import {Bundler} from 'scss-bundle';
 import {sequenceTask} from '../util/task_helpers';
 import {composeRelease} from '../packaging/build-release';
-import {packagesDir, releasesDir} from '../packaging/build-paths';
+import {buildConfig} from '../packaging/build-config';
 
 // There are no type definitions available for these imports.
 const gulpRename = require('gulp-rename');
+
+const {packagesDir, outputDir} = buildConfig;
+
+/** Path to the directory where all releases are created. */
+const releasesDir = join(outputDir, 'releases');
 
 // Path to the sources of the Material package.
 const materialPath = join(packagesDir, 'lib');

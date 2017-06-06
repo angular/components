@@ -1,10 +1,12 @@
 import {join} from 'path';
 import {task, watch} from 'gulp';
 import {sequenceTask} from '../util/task_helpers';
-import {packagesDir, projectDir} from '../packaging/build-paths';
+import {buildConfig} from '../packaging/build-config';
 
 // There are no type definitions available for these imports.
 const runSequence = require('run-sequence');
+
+const {packagesDir, projectDir} = buildConfig;
 
 /** Builds everything that is necessary for karma. */
 task(':test:build', sequenceTask(

@@ -1,6 +1,3 @@
-// Configure the packaging tool.
-import './configure-build';
-
 import {createPackageBuildTasks} from './packaging/build-tasks-gulp';
 
 // Create gulp tasks to build the different packages in the project.

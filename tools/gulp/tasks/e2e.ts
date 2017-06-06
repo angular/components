@@ -2,10 +2,15 @@ import {task, watch} from 'gulp';
 import {join} from 'path';
 import {ngcBuildTask, copyTask, execNodeTask, sequenceTask, serverTask} from '../util/task_helpers';
 import {copySync} from 'fs-extra';
-import {outputDir, packagesDir, projectDir, releasesDir} from '../packaging/build-paths';
+import {buildConfig} from '../packaging/build-config';
 
 // There are no type definitions available for these imports.
 const gulpConnect = require('gulp-connect');
+
+const {outputDir, packagesDir, projectDir} = buildConfig;
+
+/** Path to the directory where all releases are created. */
+const releasesDir = join(outputDir, 'releases');
 
 const appDir = join(packagesDir, 'e2e-app');
 const outDir = join(outputDir, 'packages', 'e2e-app');

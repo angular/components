@@ -1,7 +1,7 @@
 import {task} from 'gulp';
 import {execNodeTask} from '../util/task_helpers';
-import {outputDir} from '../packaging/build-paths';
 import {join} from 'path';
+import {buildConfig} from '../packaging/build-config';
 
 /** Glob that matches all SCSS or CSS files that should be linted. */
 const stylesGlob = '+(tools|src)/**/*.+(css|scss)';
@@ -12,10 +12,10 @@ const tsLintBaseFlags = [
 ];
 
 /** Path to the output of the Material package. */
-const materialOutPath = join(outputDir, 'packages', 'material');
+const materialOutPath = join(buildConfig.outputDir, 'packages', 'material');
 
 /** Path to the output of the CDK package. */
-const cdkOutPath = join(outputDir, 'packages', 'cdk');
+const cdkOutPath = join(buildConfig.outputDir, 'packages', 'cdk');
 
 task('lint', ['tslint', 'stylelint', 'madge']);
 

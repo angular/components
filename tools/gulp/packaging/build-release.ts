@@ -5,8 +5,12 @@ import {updatePackageVersion} from './package-versions';
 import {inlinePackageMetadataFiles} from './metadata-inlining';
 import {createTypingsReexportFile} from './typings-reexport';
 import {createMetadataReexportFile} from './metadata-reexport';
-import {bundlesDir, outputDir, packagesDir, projectDir} from './build-paths';
+import {buildConfig} from './build-config';
 
+const {packagesDir, outputDir, projectDir} = buildConfig;
+
+/** Directory where all bundles will be created in. */
+const bundlesDir = join(outputDir, 'bundles');
 
 /**
  * Copies different output files into a folder structure that follows the `angular/angular`

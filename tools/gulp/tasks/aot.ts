@@ -2,7 +2,12 @@ import {task} from 'gulp';
 import {copySync} from 'fs-extra';
 import {sequenceTask, execNodeTask} from '../util/task_helpers';
 import {join} from 'path';
-import {outputDir, releasesDir} from '../packaging/build-paths';
+import {buildConfig} from '../packaging/build-config';
+
+const {outputDir} = buildConfig;
+
+/** Path to the directory where all releases are living. */
+const releasesDir = join(outputDir, 'releases');
 
 /** Path to the demo-app output directory. */
 const demoAppOut = join(outputDir, 'packages', 'demo-app');

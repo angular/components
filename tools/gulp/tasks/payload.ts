@@ -4,7 +4,10 @@ import {statSync} from 'fs';
 import {spawnSync} from 'child_process';
 import {isTravisMasterBuild} from '../util/travis-ci';
 import {openFirebaseDashboardApp} from '../util/firebase';
-import {bundlesDir} from '../packaging/build-paths';
+import {buildConfig} from '../packaging/build-config';
+
+/** Path to the directory where all bundles are living. */
+const bundlesDir = join(buildConfig.outputDir, 'bundles');
 
 /** Task which runs test against the size of material. */
 task('payload', ['material:clean-build'], () => {

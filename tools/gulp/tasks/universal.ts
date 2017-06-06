@@ -2,7 +2,12 @@ import {task} from 'gulp';
 import {ngcBuildTask, tsBuildTask, copyTask, sequenceTask, execTask} from '../util/task_helpers';
 import {join} from 'path';
 import {copySync} from 'fs-extra';
-import {outputDir, packagesDir, releasesDir} from '../packaging/build-paths';
+import {buildConfig} from '../packaging/build-config';
+
+const {outputDir, packagesDir} = buildConfig;
+
+/** Path to the directory where all releases are created. */
+const releasesDir = join(outputDir, 'releases');
 
 const appDir = join(packagesDir, 'universal-app');
 const outDir = join(outputDir, 'packages', 'universal-app');

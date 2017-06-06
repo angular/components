@@ -4,7 +4,10 @@ import {join} from 'path';
 import {green, red} from 'chalk';
 import {sequenceTask} from '../util/task_helpers';
 import {releasePackages} from './publish';
-import {releasesDir} from '../packaging/build-paths';
+import {buildConfig} from '../packaging/build-config';
+
+/** Path to the directory where all releases are created. */
+const releasesDir = join(buildConfig.outputDir, 'releases');
 
 /** RegExp that matches Angular component inline styles that contain a sourcemap reference. */
 const inlineStylesSourcemapRegex = /styles: ?\[["'].*sourceMappingURL=.*["']/;
