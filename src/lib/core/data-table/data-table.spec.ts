@@ -21,7 +21,7 @@ describe('CdkTable', () => {
 
     TestBed.configureTestingModule({
       imports: [CdkDataTableModule],
-      declarations: [SimpleCdkTableApp],
+      declarations: [SimpleCdkTableApp, CustomRoleCdkTableApp],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SimpleCdkTableApp);
@@ -81,6 +81,12 @@ describe('CdkTable', () => {
         expect(row).toBeRole('row');
         getCells(row).forEach(cell => expect(cell).toBeRole('gridcell'));
       });
+
+      // Check that if the component was created with a custom role, that it does not override it.
+      fixture = TestBed.createComponent(CustomRoleCdkTableApp);
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('cdk-table')).toBeRole('custom-role');
     });
   });
 
@@ -251,6 +257,26 @@ class FakeDataSource extends DataSource<TestData> {
 class SimpleCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource" role="custom-role">
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
+    </cdk-table>
+  `
+})
+class CustomRoleCdkTableApp {
+  dataSource: FakeDataSource = new FakeDataSource();
+  columnsToRender = ['column_a'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
 }
