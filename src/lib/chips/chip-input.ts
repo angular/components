@@ -9,7 +9,7 @@ export interface MdChipInputEvent {
 }
 
 @Directive({
-  selector: 'input[mdChipList], input[matChipList]',
+  selector: 'input[mdChipInputFor], input[matChipInputFor]',
   host: {
     'class': 'mat-chip-input',
     '(keydown)': '_keydown($event)',
@@ -21,7 +21,7 @@ export class MdChipInput {
   _chipList: MdChipList;
 
   /** Register input for chip list */
-  @Input('mdChipList')
+  @Input('mdChipInputFor')
   set chipList(value: MdChipList) {
     if (value) {
       this._chipList = value;
@@ -32,7 +32,7 @@ export class MdChipInput {
   /**
    * Whether or not the chipEnd event will be emitted when the input is blurred.
    */
-  @Input('mdChipListAddOnBlur')
+  @Input('mdChipInputAddOnBlur')
   get addOnBlur() { return this._addOnBlur; }
   set addOnBlur(value) { this._addOnBlur = coerceBooleanProperty(value); }
   _addOnBlur: boolean = false;
@@ -43,18 +43,22 @@ export class MdChipInput {
    * Defaults to `[ENTER]`.
    */
   // TODO(tinayuangao): Support Set here
-  @Input() separatorKeysCodes: number[] = [ENTER];
+  @Input('mdChipInputSeparatorKeyCodes') separatorKeyCodes: number[] = [ENTER];
 
   /** Emitted when a chip is to be added. */
-  @Output('mdChipEnd')
+  @Output('mdChipInputTokenEnd')
   chipEnd = new EventEmitter<MdChipInputEvent>();
 
-  @Input('matChipList')
+  @Input('matChipInputFor')
   set matChipList(value: MdChipList) { this.chipList = value; }
 
-  @Input('matChipListAddOnBlur')
+  @Input('matChipInputAddOnBlur')
   get matAddOnBlur() { return this._addOnBlur; }
   set matAddOnBlur(value) { this.addOnBlur = value; }
+
+  @Input('matChipInputSeparatorKeyCodes')
+  get matSeparatorKeyCodes() { return this.separatorKeyCodes; }
+  set matSeparatorKeyCodes(v: number[]) { this.separatorKeyCodes = v; }
 
   /** The native input element to which this directive is attached. */
   protected _inputElement: HTMLInputElement;
@@ -77,7 +81,7 @@ export class MdChipInput {
 
   /** Checks to see if the (chipEnd) event needs to be emitted. */
   _emitChipEnd(event?: KeyboardEvent) {
-    if (!event || this.separatorKeysCodes.indexOf(event.keyCode) > -1) {
+    if (!event || this.separatorKeyCodes.indexOf(event.keyCode) > -1) {
       this.chipEnd.emit({ input: this._inputElement, value: this._inputElement.value });
 
       if (event) {

@@ -351,7 +351,7 @@ class StandardChipList {
         <md-chip>Chip 1</md-chip>
         <md-chip>Chip 1</md-chip>
         <md-chip>Chip 1</md-chip>
-        <input mdInput name="test" [mdChipList]="chipList"/>
+        <input mdInput name="test" [mdChipInputFor]="chipList"/>
       </md-chip-list>
     </md-input-container>
   `

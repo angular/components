@@ -53,8 +53,10 @@
             <md-icon mdChipRemove>cancel</md-icon>
           </md-chip>
           <input mdInput placeholder="New Contributor..."
-                 [mdChipList]="chipList" (mdChipEnd)="add($event)"
-                 [separatorKeysCodes]="separatorKeysCodes" [mdChipListAddOnBlur]="addOnBlur" />
+                 [mdChipInputFor]="chipList"
+                 [mdChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 [mdChipInputAddOnBlur]="addOnBlur"
+                 (mdChipInputTokenEnd)="add($event)" />
         </md-chip-list>
       </md-input-container>
 

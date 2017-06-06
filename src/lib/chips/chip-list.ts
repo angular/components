@@ -69,7 +69,7 @@ function _isInputEmpty(element: HTMLElement): boolean {
 export class MdChipList implements AfterContentInit, OnDestroy {
 
   /** When a chip is destroyed, we track the index so we can focus the appropriate next chip. */
-  protected _destroyedIndex: number = null;
+  protected _lastDestroyedIndex: number = null;
 
   /** Track which chips we're listening to for focus/destruction. */
   protected _chipSet: WeakMap<MdChip, boolean> = new WeakMap();
@@ -117,14 +117,14 @@ export class MdChipList implements AfterContentInit, OnDestroy {
 
       // If we have 0 chips, attempt to focus an input (if available)
       if (chips.length == 0) {
-        this.focusInput();
+        this._focusInput();
       }
 
       // Check to see if we need to update our tab index
       this._checkTabIndex();
 
       // Check to see if we have a destroyed chip and need to refocus
-      this._checkDestroyedFocus();
+      this._updateFocusForDestroyedChips();
     });
   }
 
@@ -134,6 +134,10 @@ export class MdChipList implements AfterContentInit, OnDestroy {
     }
   }
 
+  /**
+   * Whether or not this chip is selectable. When a chip is not selectable,
+   * it's selected state is always ignored.
+   */
   @Input()
   get selectable(): boolean { return this._selectable; }
   set selectable(value: boolean) {
@@ -146,20 +150,20 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   }
 
   /**
-   * Programmatically focus the chip list. This in turn focuses the first non-disabled chip in this
-   * chip list, or the input if available and there are 0 chips.
+   * Focuses the the first non-disabled chip in this chip list, or the associated input when there
+   * are no eligible chips.
    */
-  // TODO: ARIA says this should focus the first `selected` chip if any are selected.
   focus(event?: Event) {
+    // TODO: ARIA says this should focus the first `selected` chip if any are selected.
     if (this.chips.length > 0) {
       this._keyManager.setFirstItemActive();
     } else {
-      this.focusInput();
+      this._focusInput();
     }
   }
 
   /** Attempt to focus an input if we have one. */
-  focusInput() {
+  _focusInput() {
     if (this._inputElement) {
       this._inputElement.focus();
     }
@@ -258,7 +262,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
         } else if (chipIndex - 1 >= 0) {
           this._keyManager.setActiveItem(chipIndex - 1);
         }
-        this._destroyedIndex = chipIndex;
+        this._lastDestroyedIndex = chipIndex;
       }
 
       this._chipSet.delete(chip);
@@ -272,17 +276,14 @@ export class MdChipList implements AfterContentInit, OnDestroy {
    * Checks to see if a focus chip was recently destroyed so that we can refocus the next closest
    * one.
    */
-  protected _checkDestroyedFocus() {
+  protected _updateFocusForDestroyedChips() {
     let chipsArray = this.chips;
     let focusChip: MdChip;
 
-    if (this._destroyedIndex != null && chipsArray.length > 0) {
+    if (this._lastDestroyedIndex != null && chipsArray.length > 0) {
       // Check whether the destroyed chip was the last item
-      if (this._destroyedIndex >= chipsArray.length) {
-        this._keyManager.setActiveItem(chipsArray.length - 1);
-      } else if (this._destroyedIndex >= 0) {
-        this._keyManager.setActiveItem(this._destroyedIndex);
-      }
+      const newFocusIndex = Math.min(this._lastDestroyedIndex, chipsArray.length - 1);
+      this._keyManager.setActiveItem(newFocusIndex);
 
       // Focus the chip
       if (focusChip) {
@@ -291,7 +292,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
     }
 
     // Reset our destroyed index
-    this._destroyedIndex = null;
+    this._lastDestroyedIndex = null;
   }
 
   /**
