@@ -142,6 +142,6 @@ System.config({
 ```
 
 
-## Sample Angular Material projects
-- [Material Sample App](https://github.com/jelbourn/material2-app)
-- [Angular Connect 2016 Demo](https://github.com/kara/leashed-in)
+## Example Angular Material projects
+- [material.angular.io](https://material.angular.io) -
+We build our own documentation with Angular Material!
