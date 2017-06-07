@@ -73,7 +73,7 @@ export class AutocompleteOverviewExample {
   }
 
   filterStates(val: string) {
-    return val ? this.states.filter(s => s.toLowerCase().includes(val.toLowerCase()))
+    return val ? this.states.filter(s => s.toLowerCase().indexOf(val.toLowerCase()) === 0)
                : this.states;
   }
 
