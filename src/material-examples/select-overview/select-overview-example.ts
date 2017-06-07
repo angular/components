@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 
 
 @Component({
+  moduleId: module.id,
   selector: 'select-overview-example',
   templateUrl: 'select-overview-example.html',
 })

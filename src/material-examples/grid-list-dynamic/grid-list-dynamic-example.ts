@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 
 
 @Component({
+  moduleId: module.id,
   selector: 'grid-list-dynamic-example',
   templateUrl: 'grid-list-dynamic-example.html',
 })

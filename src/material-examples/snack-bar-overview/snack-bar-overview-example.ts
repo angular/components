@@ -3,6 +3,7 @@ import {MdSnackBar} from '@angular/material';
 
 
 @Component({
+  moduleId: module.id,
   selector: 'snack-bar-overview-example',
   templateUrl: 'snack-bar-overview-example.html',
 })

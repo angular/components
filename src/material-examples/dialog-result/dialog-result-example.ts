@@ -3,6 +3,7 @@ import {MdDialog, MdDialogRef} from '@angular/material';
 
 
 @Component({
+  moduleId: module.id,
   selector: 'dialog-result-example',
   templateUrl: 'dialog-result-example.html',
 })
@@ -21,6 +22,7 @@ export class DialogResultExample {
 
 
 @Component({
+  moduleId: module.id,
   selector: 'dialog-result-example-dialog',
   templateUrl: 'dialog-result-example-dialog.html',
 })
