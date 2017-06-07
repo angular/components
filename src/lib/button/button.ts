@@ -3,13 +3,15 @@ import {
   Component,
   Directive,
   ElementRef,
+  forwardRef,
   HostBinding,
   Input,
   OnDestroy,
   Optional,
   Renderer2,
   Self,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Inject
 } from '@angular/core';
 import {coerceBooleanProperty, FocusOriginMonitor, Platform} from '../core';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
@@ -63,7 +65,8 @@ export class MdIconButtonCssMatStyler {}
   host: {'class': 'mat-fab'}
 })
 export class MdFab {
-  constructor(@Self() @Optional() button: MdButton, @Self() @Optional() anchor: MdAnchor) {
+  constructor(@Self() @Optional() @Inject(forwardRef(() => MdButton)) button: MdButton,
+              @Self() @Optional() @Inject(forwardRef(() => MdAnchor)) anchor: MdAnchor) {
     // Set the default color palette for the md-fab components.
     (button || anchor).color = DEFAULT_ROUND_BUTTON_COLOR;
   }
@@ -79,7 +82,8 @@ export class MdFab {
   host: {'class': 'mat-mini-fab'}
 })
 export class MdMiniFab {
-  constructor(@Self() @Optional() button: MdButton, @Self() @Optional() anchor: MdAnchor) {
+  constructor(@Self() @Optional() @Inject(forwardRef(() => MdButton)) button: MdButton,
+              @Self() @Optional() @Inject(forwardRef(() => MdAnchor)) anchor: MdAnchor) {
     // Set the default color palette for the md-mini-fab components.
     (button || anchor).color = DEFAULT_ROUND_BUTTON_COLOR;
   }
