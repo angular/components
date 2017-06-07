@@ -83,12 +83,12 @@ export class NestedJsonDataSource extends TreeDataSource<any> {
     //             this.parentMap.set(child, node);
     //             this._flattenNode(child, level + 1, flatNodes);
     //
-    //             let dottedLineLevels = this.dottedLineLevels.get(node)|| [];
-    //             dottedLineLevels = dottedLineLevels.slice();
+    //             let parentBitLevels = this.parentBitLevels.get(node)|| [];
+    //             parentBitLevels = parentBitLevels.slice();
     //             if (index != children.length - 1) {
-    //                 dottedLineLevels.push(level);
+    //                 parentBitLevels.push(level);
     //             }
-    //             this.dottedLineLevels.set(child, dottedLineLevels);
+    //             this.parentBitLevels.set(child, parentBitLevels);
     //
     //         });
     //     }

@@ -26,19 +26,22 @@
   </cdk-tree>
 </div>
 
+<div style="margin: 10px">
+  <button md-button color="primary" (click)="expandAll()">Expand All</button>
+  <button md-button color="primary" (click)="collapseAll()">Collapse All</button>
+</div>
+
 Selected: <span *ngFor="let node of selection.selected">{{node.key}}: {{node.value}}, </span>
 
-<button md-button (click)="expandAll()">Expand All</button>
-<button md-button (click)="collapseAll()">Collapse All</button>
 
-
-<md-card>
+<md-card *ngIf="!!currentNode">
+  <md-card-title>Add child node</md-card-title>
   <md-input-container>
     <input mdInput [(ngModel)]="key" placeholder="Key"/>
   </md-input-container>
   <md-input-container>
     <input mdInput [(ngModel)]="value" placeholder="Value"/>
   </md-input-container>
-  <span *ngIf="!!currentNode"> {{currentNode.key}} </span>
+  <span> {{currentNode.key}} </span>
   <button md-button (click)="addChild()">Add Child</button>
 </md-card>

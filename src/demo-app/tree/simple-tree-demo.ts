@@ -1,7 +1,7 @@
 import {Component, ChangeDetectionStrategy, Directive, Input, OnInit, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
-import {JsonDataSource, JsonNode} from './simple-data-source'
-import {SelectionModel, CdkTree} from '@angular/material';
+import {JsonDataSource, JsonNode} from './simple-data-source';
+import {SelectionModel, CdkTree, TreeControl, TreeAdapter} from '@angular/material';
 import {SimpleTreeNode} from './simple-tree-node';
 
 @Component({
@@ -105,7 +105,8 @@ export class SimpleTreeDemo implements OnInit {
     };
   }
   selection = new SelectionModel<UserData>(true, []);
-  dataSource: JsonDataSource = new JsonDataSource();
+  dataSource: JsonDataSource = new JsonDataSource(this.treeAdapter);
+  treeAdapter: TreeAdapter = new TreeAdapter();
 
   @ViewChild(CdkTree) tree: CdkTree;
 
@@ -118,16 +119,12 @@ export class SimpleTreeDemo implements OnInit {
 
   expandIncludeChildren: boolean = true;
 
-  get expansionModel() {
-    return this.dataSource.expansionModel;
-  }
-
   getPadding(level: number) {
     return `${(level - 1) * 45}px`;
   }
 
   toggleExpand(node: UserData) {
-    this.dataSource.expansionModel.toggle(node);
+    this.tree.expansionModel.toggle(node);
   }
 
   gotoParent(node: UserData) {

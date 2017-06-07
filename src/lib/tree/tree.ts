@@ -27,10 +27,11 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/let';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/combineLatest';
-import {TreeDataSource, CdkTreeContext, MdTreeViewData} from './data-source';
+import {TreeDataSource, CdkTreeContext, TreeAdapter, TreeControl} from './data-source';
 import {SelectionModel, UP_ARROW, DOWN_ARROW, RIGHT_ARROW, LEFT_ARROW, HOME, ENTER, ESCAPE, FocusOriginMonitor} from '../core';
 import {FocusKeyManager, Focusable} from '../core/a11y/focus-key-manager';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {CollectionViewer} from './data-source';
 
 /** Height of each row in pixels (48 + 1px border) */
 export const ROW_HEIGHT = 49;
@@ -74,7 +75,7 @@ export class CdkNode  implements Focusable, OnDestroy {
   }
 
   get level() {
-    return this.tree.dataSource.getLevel(this.data);
+    return this.tree.treeControl.getLevel(this.data);
   }
 
   ngOnDestroy() {
@@ -191,8 +192,10 @@ export class CdkNestedNode implements OnInit {
   ngOnInit() {
     let children = this.tree.dataSource.getChildren(this.node);
     if (!!children) {
-      children.forEach((child, index) => {
-        this.tree.addNode(this.nodePlaceholder.viewContainer, child, index);
+      children.subscribe((childrenNodes) => {
+        childrenNodes.forEach((child, index) => {
+          this.tree.addNode(this.nodePlaceholder.viewContainer, child, index);
+        });
       });
     }
   }
@@ -213,19 +216,22 @@ export class CdkNestedNode implements OnInit {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CdkTree {
+export class CdkTree extends TreeControl implements CollectionViewer {
   @Input() dataSource: TreeDataSource<any>;
+  @Input() treeAdapter: TreeAdapter<any>;
+
+  /** Whether nested tree or flattened tree */
   @Input() nested: boolean = false;
 
-  viewChange = new BehaviorSubject<MdTreeViewData>({start: 0, end: 20});
+  /** View changed for CollectionViewer */
+  viewChanged = new BehaviorSubject({start: 0, end: 20})
 
+  // Data differ
   private _dataDiffer: IterableDiffer<any> = null;
 
   // Focus related
   private _keyManager: FocusKeyManager;
 
-  // Only for "expand all" feature
-  private dataNodes: any[];
 
   @ContentChildren(CdkNode) items: QueryList<CdkNode>;
   @ContentChildren(CdkNodeDef) nodeDefinitions: QueryList<CdkNodeDef>;
@@ -235,6 +241,7 @@ export class CdkTree {
   constructor(private _differs: IterableDiffers, private elementRef: ElementRef,
               private changeDetectorRef: ChangeDetectorRef) {
     this._dataDiffer = this._differs.find([]).create();
+    this.treeAdapter = new TreeAdapter(this);
   }
 
   ngOnInit() {
@@ -247,13 +254,13 @@ export class CdkTree {
     // Focus related
     this._keyManager = new FocusKeyManager(this.items).withWrap();
 
-    this.dataSource.connectTree(this.viewChange).subscribe((result: any[]) => {
+    this.dataSource.connect(this).subscribe((result: any[]) => {
       this.nested ? this.renderNestedNodeChanges(result) : this.renderNodeChanges(result);
     });
   }
 
   renderNestedNodeChanges(dataNodes: any[]) {
-    this.dataNodes = dataNodes;
+
     console.time('Rendering rows');
 
     const oldScrollTop = this.elementRef.nativeElement.scrollTop;
@@ -275,8 +282,6 @@ export class CdkTree {
   }
 
   renderNodeChanges(dataNodes: any[]) {
-    console.log(`render nodes`);
-    this.dataNodes = dataNodes;
     console.time('Rendering rows');
     const changes = this._dataDiffer.diff(dataNodes);
     if (!changes) { return; }
@@ -321,7 +326,7 @@ export class CdkTree {
     let expandable = !!children;
     const context: CdkTreeContext = {
       $implicit: data,
-      level: this.dataSource.getLevel(data),
+      level: this.getLevel(data),
       expandable
     };
     container.createEmbeddedView(node.template, context, currentIndex);
@@ -351,24 +356,23 @@ export class CdkTree {
       end: Math.ceil(topIndex + (elementHeight / ROW_HEIGHT)) + BUFFER
     };
 
-    this.viewChange.next(view);
+    this.viewChanged.next(view);
   }
 
   scrollToIndex(topIndex: number) {
-    console.log(`scroll to index`);
     const elementHeight = this.elementRef.nativeElement.getBoundingClientRect().height;
     const view = {
       start: Math.max(topIndex - BUFFER, 0),
       end: Math.ceil(topIndex + (elementHeight / ROW_HEIGHT)) + BUFFER
     };
-    this.viewChange.next(view);
+    this.viewChanged.next(view);
     this.elementRef.nativeElement.scrollTop = topIndex * ROW_HEIGHT;
   }
 
 
   gotoParent(node: any) {
-    let parent = this.dataSource.getParent(node);
-    let index = this.dataSource.getIndex(parent);
+    let parent = this.getParent(node);
+    let index = this.getIndex(parent);
     this.scrollToIndex(index);
   }
   /** Scroll related end */
@@ -394,42 +398,6 @@ export class CdkTree {
     }
   }
 
-  /** Expand related */
-  expandable(node: any) {
-    return !!this.dataSource.getChildren(node);
-  }
 
-  expanded(node: any) {
-    return this.dataSource.expansionModel.isSelected(node);
-  }
-
-  toggleAll(expand: boolean, node?: any, recursive: boolean = true) {
-    if (node) {
-      let children = this.dataSource.getChildren(node);
-      expand
-        ? this.dataSource.expansionModel.select(node)
-        : this.dataSource.expansionModel.deselect(node);
-      if (!!children && recursive) {
-        children.forEach((child) => this.toggleAll(expand, child, recursive));
-      }
-    } else {
-
-      this.dataNodes.forEach((node) => {
-        console.log(node);
-        console.log(`data nodes ${node} ${expand} ${recursive}`);
-        this.toggleAll(expand, node, recursive)
-      });
-      console.log(this.dataSource.expansionModel);
-    }
-  }
-
-  toggleExpand(node: any, recursive: boolean = true) {
-    this.dataSource.expansionModel.toggle(node);
-    let expand = this.dataSource.expansionModel.isSelected(node);
-    let children = this.dataSource.getChildren(node);
-    if (recursive && children) {
-      children.forEach((child) => this.toggleAll(expand, child, recursive));
-    }
-  }
   /** Expand related end */
 }

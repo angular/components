@@ -2,9 +2,8 @@ import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {SelectionModel} from '../core';
 
-export interface MdTreeViewData {
-  start: number;
-  end: number;
+export interface CollectionViewer {
+  viewChanged: Observable<{start: number, end: number}>;
 }
 
 export interface CdkTreeContext {
@@ -13,21 +12,37 @@ export interface CdkTreeContext {
   expandable: boolean;
 }
 
-export abstract class TreeDataSource<T extends object> {
+export interface TreeDataSource<T extends Object> {
+  /** Connect the data source with the tree component */
+  connect(collectionViewer: CollectionViewer): Observable<T[]>;
 
+  /** Get the observable children */
+  getChildren(node: T): Observable<T[]>;
+}
+
+export class TreeControl<T extends Object> {
+
+  flatNodes: T[];
+
+  /** Level info */
   levelMap: WeakMap<T, number> = new WeakMap<T, number>();
+
+  /** Parent info */
   parentMap: WeakMap<T, T> = new WeakMap<T, T>();
-  indexMap: Map<T, number> = new Map<T, number>();
+
+  /** Index info (for flatten version) */
+  indexMap: WeakMap<T, number> = new WeakMap<T, number>();
+
+  /** Parent bit information: to draw dotted lines of tree structure */
+  parentBitLevels: WeakMap<T, number[]> = new WeakMap<T, number[]>();
+
+  /** Expansion info: the changes */
   expandChange = new BehaviorSubject<T[]>([]);
 
-
-  abstract connectTree(viewChanged: Observable<MdTreeViewData>): Observable<T[]>;
-
-  abstract getChildren(node: T): T[];
-
+  /** Expansion info: the model */
   constructor(public expansionModel: SelectionModel<T> = new SelectionModel<T>(true)) {
     expansionModel.onChange.subscribe((_) => this.expandChange.next(expansionModel.selected));
-  };
+  }
 
   getLevel(node: T) {
     return this.levelMap.get(node);
@@ -41,38 +56,80 @@ export abstract class TreeDataSource<T extends object> {
     return this.indexMap.get(node);
   }
 
-  flattenNodes(structuredData: Observable<T[]>): Observable<T[]> {
-    return Observable.combineLatest(structuredData, this.expandChange).map((result: any[]) => {
-      let [dataNodes, selectionChange] = result;
-      let flatNodes = [];
-      dataNodes.forEach((node) => {
-        this._flattenNode(node, 0, flatNodes);
-      });
-      return flatNodes;
-    });
+  initialize() {
+    this.flatNodes = [];
+    this.levelMap = new WeakMap<T, number>();
+    this.parentMap = new WeakMap<T, T>();
+    this.indexMap = new WeakMap<T, number>();
+    this.parentBitLevels = new WeakMap<T, number[]>();
   }
 
-  _flattenNode(node: T, level: number, flatNodes: T[]) {
-    let children = this.getChildren(node);
-    let selected = this.expansionModel.isSelected(node);
-    this.levelMap.set(node, level);
+  expanded(node: any) {
+    return this.expansionModel.isSelected(node);
+  }
 
-    this.indexMap.set(node, flatNodes.length);
-    flatNodes.push(node);
+  toggleAll(expand: boolean, node?: any, recursive: boolean = true) {
+    if (node) {
+      let children = this.dataSource.getChildren(node);
+      expand
+        ? this.expansionModel.select(node)
+        : this.expansionModel.deselect(node);
+      if (!!children && recursive) {
+        children.forEach((child) => this.toggleAll(expand, child, recursive));
+      }
+    } else {
 
-    if (!!children && selected) {
-
-      children.forEach((child, index) => {
-        this.parentMap.set(child, node);
-        this._flattenNode(child, level + 1, flatNodes);
+      this.dataNodes.forEach((node) => {
+        this.toggleAll(expand, node, recursive)
       });
     }
   }
 
-  getChildrenRecursive(node: T, collection: T[]) {
-    this.getChildren(node).forEach((child) => {
-      collection.push(child);
-      this.getChildrenRecursive(node, collection)
+  toggleExpand(node: any, recursive: boolean = true) {
+    this.expansionModel.toggle(node);
+    let expand = this.expansionModel.isSelected(node);
+    let children = this.dataSource.getChildren(node);
+    if (recursive && children) {
+      children.forEach((child) => this.toggleAll(expand, child, recursive));
+    }
+  }
+}
+
+export class TreeAdapter<T extends Object> {
+  getChildrenFunc: (node: T) = T[];
+
+  constructor(public treeControl: TreeControl<T>) {}
+
+  flattenNodes(getChildrenFunc: (node: T) => T[], structuredData: Observable<T[]>): Observable<T[]> {
+    this.getChildrenFunc = getChildrenFunc;
+    return structuredData.map((nodes: T[]) => {
+      this.treeControl.initialize();
+
+      nodes.forEach((node) => {
+        this._flattenNode(node, 0);
+      });
+      return this.treeControl.flatNodes;
     });
+  }
+
+  _flattenNode(node: T, level: number) {
+    let children = this.getChildrenFunc(node);
+    let expanded = this.treeControl.expansionModel.isSelected(node);
+    this.treeControl.levelMap.set(node, level);
+    this.treeControl.indexMap.set(node, this.treeControl.flatNodes.length);
+    this.treeControl.flatNodes.push(node);
+
+    if (!!children && expanded) {
+      children.forEach((child, index) => {
+        this.treeControl.parentMap.set(child, node);
+        this._flattenNode(child, level + 1);
+
+        let levels = this.treeControl.parentBitLevels.get(node)|| [];
+        if (index != children.length - 1) {
+          levels.push(level);
+        }
+        this.treeControl.parentBitLevels.set(child, levels);
+      });
+    }
   }
 }
