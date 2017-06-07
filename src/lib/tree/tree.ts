@@ -67,15 +67,7 @@ export class CdkNode  implements Focusable, OnDestroy {
 
   @Input()
   get role() {
-    return this.expandable ? 'group' : 'treeitem';
-  }
-
-  get expandable() {
-    return this.tree.expandable(this.data);
-  }
-
-  get level() {
-    return this.tree.treeControl.getLevel(this.data);
+    return 'treeitem';
   }
 
   ngOnDestroy() {
@@ -118,7 +110,7 @@ export class CdkNodePadding {
   @Input('cdkNodePaddingIndex') indent: number = 28;
 
   get paddingIndent() {
-    return `${(this.level ? this.level : this.node.level) * this.indent}px`;
+    return `${this.level * this.indent}px`;
   }
 
   constructor(public node: CdkNode) {}
@@ -216,15 +208,15 @@ export class CdkNestedNode implements OnInit {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CdkTree extends TreeControl implements CollectionViewer {
+export class CdkTree  implements CollectionViewer {
   @Input() dataSource: TreeDataSource<any>;
-  @Input() treeAdapter: TreeAdapter<any>;
+  @Input() treeControl: TreeControl<any>;
 
   /** Whether nested tree or flattened tree */
   @Input() nested: boolean = false;
 
   /** View changed for CollectionViewer */
-  viewChanged = new BehaviorSubject({start: 0, end: 20})
+  viewChanged = new BehaviorSubject({start: 0, end: 20});
 
   // Data differ
   private _dataDiffer: IterableDiffer<any> = null;
@@ -241,7 +233,6 @@ export class CdkTree extends TreeControl implements CollectionViewer {
   constructor(private _differs: IterableDiffers, private elementRef: ElementRef,
               private changeDetectorRef: ChangeDetectorRef) {
     this._dataDiffer = this._differs.find([]).create();
-    this.treeAdapter = new TreeAdapter(this);
   }
 
   ngOnInit() {
@@ -322,14 +313,16 @@ export class CdkTree extends TreeControl implements CollectionViewer {
 
   _addNodeInContainer(container: ViewContainerRef, data: any, currentIndex: number) {
     let node = this.getNodeDefForItem(data);
-    let children = this.dataSource.getChildren(data);
-    let expandable = !!children;
-    const context: CdkTreeContext = {
-      $implicit: data,
-      level: this.getLevel(data),
-      expandable
-    };
-    container.createEmbeddedView(node.template, context, currentIndex);
+    this.dataSource.getChildren(data).subscribe((children) => {
+      let expandable = !!children;
+      const context: CdkTreeContext = {
+        $implicit: data,
+        level: this.treeControl.getLevel(data),
+        expandable
+      };
+      container.createEmbeddedView(node.template, context, currentIndex);
+    });
+
   }
 
   getNodeDefForItem(item: any) {
@@ -371,8 +364,8 @@ export class CdkTree extends TreeControl implements CollectionViewer {
 
 
   gotoParent(node: any) {
-    let parent = this.getParent(node);
-    let index = this.getIndex(parent);
+    let parent = this.treeControl.getParent(node);
+    let index = this.treeControl.getIndex(parent);
     this.scrollToIndex(index);
   }
   /** Scroll related end */

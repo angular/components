@@ -183,14 +183,16 @@ export class DemoMaterialModule {}
     FoggyTabContent,
     PlatformDemo,
 <<<<<<< HEAD
+<<<<<<< HEAD
     TypographyDemo,
     ExpansionDemo,
     TreeDemo,
 =======
     TreeDemo, TreeDottedLine, TreeExpansion,
 >>>>>>> .
+=======
+>>>>>>> sth
     SimpleTreeNode,
-    SimpleNestedTreeDemo,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},

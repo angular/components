@@ -1,5 +1,5 @@
 import {CdkTree, CdkNode, CdkNodeDef, CdkNodePlaceholder, MdNodeSelectTrigger, CdkNodeTrigger, CdkNodePadding, CdkNestedNode} from './tree';
-import {TreeDataSource, MdTreeViewData} from './data-source';
+import {TreeDataSource} from './data-source';
 import {NgModule, ModuleWithProviders} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FocusOriginMonitor, MdRippleModule} from '../core';

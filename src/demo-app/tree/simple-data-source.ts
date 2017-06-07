@@ -19,11 +19,14 @@ export class JsonNode {
   children: any[];
 }
 
-export class JsonDataSource extends TreeDataSource<any> {
+export class JsonDataSource implements TreeDataSource<any> {
   dottedLineLevels = new Map<any, number[]>();
   flat: boolean = false;
 
   _renderedData: any[] = [];
+
+  _flattenedData = new BehaviorSubject<any>([]);
+  get flattenedData() { return this._flattenedData.value; }
 
   _filteredData = new BehaviorSubject<any>([]);
   get filteredData(): any { return this._filteredData.value; }
@@ -32,17 +35,26 @@ export class JsonDataSource extends TreeDataSource<any> {
   set data(value: any) {
     let tree = this.buildJsonTree(value);
     this._filteredData.next(tree);
+    console.log(`set filtered data`);
   }
 
   constructor(public treeAdapter: TreeAdapter<any>) {
-    super();
+    Observable.combineLatest([
+      this.treeAdapter.treeControl.expandChange,
+      this.treeAdapter.flattenNodes(
+        this.getChildrenFunc, this._filteredData)])
+      .map((result: any[]) => {
+        console.log(`combine ${result}`);
+      return this.treeAdapter.treeControl.flatNodes;
+    });
+
   }
 
-  connectTree(viewChange: CollectionViewer): Observable<UserData[]> {
+  connect(collectionViewer: CollectionViewer): Observable<UserData[]> {
 
-    return Observable.combineLatest([viewChange, this.treeAdapter.flattenNodes(this._filteredData)]).map((result: any[]) => {
-      const [view, displayData] = result;
-      console.log(displayData);
+    return collectionViewer.viewChanged.map((view) => {
+      let displayData = this.treeAdapter.treeControl.flatNodes;
+      console.log(displayData); console.log(`combineLatest in side `);
       // Set the rendered rows length to the virtual page size. Fill in the data provided
       // from the index start until the end index or pagination size, whichever is smaller.
       this._renderedData.length = displayData.length;
@@ -57,8 +69,13 @@ export class JsonDataSource extends TreeDataSource<any> {
     });
   }
 
-  getChildren(node: any): any[] {
+  getChildrenFunc(node: any): any[] {
     return node.children;
+  }
+
+  getChildren(node: any): Observable<any[]> {
+    console.log(node);
+    return Observable.of(node.children);
   }
 
   buildJsonTree(value: any) {
@@ -71,9 +88,7 @@ export class JsonDataSource extends TreeDataSource<any> {
         // no action
       } else if (typeof v === 'object') {
         node.children = this.buildJsonTree(v);
-        console.log(`json key value ${k}: ${v} with children ${node.children}`)
       } else {
-        console.log(`json key value ${k}: ${v}`)
         node.value = v;
       }
       data.push(node);

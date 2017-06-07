@@ -2,25 +2,23 @@
 <md-input-container>
   <textarea mdInput [(ngModel)]="data"></textarea>
 </md-input-container>
-<md-slide-toggle [(ngModel)]="flat">Flat: {{flat}}</md-slide-toggle>
+<!--<md-slide-toggle [(ngModel)]="flat">Flat: {{flat}}</md-slide-toggle>-->
 <button md-button (click)="submit()">Submit</button>
 
 <div class="tree-container mat-elevation-z4">
 
-  <div class="empty-tree" *ngIf="!dataSource.filteredData.length">
-    No data to display.
-  </div>
 
-  <cdk-tree #tree [dataSource]="dataSource" [style.display]="!!dataSource.filteredData.length ? '' : 'none'">
+  <cdk-tree #tree [dataSource]="dataSource" [treeControl]="treeControl">
     <!-- Row templates. The columns used are set at the row template level -->
     <cdk-node *cdkNodeDef="let node let level=level let expandable=expandable" (click)="currentNode=node">
         <simple-tree-node [node]="node"
                           [level]="level"
                           [expandable]="expandable"
+                          [flat]="true"
                           [expandIncludeChildren]="expandIncludeChildren"
                           [dataSource]="dataSource"
-                          [flat]="flat"
-                          [selection]="selection" class="simple-tree-node">
+                          [selection]="selection" class="simple-tree-node"
+                          [treeControl]="treeControl">
         </simple-tree-node>
     </cdk-node>
   </cdk-tree>

@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy, Directive, Input, OnInit, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Directive, Input, OnInit, AfterViewInit, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
 import {JsonDataSource, JsonNode} from './simple-data-source';
 import {SelectionModel, CdkTree, TreeControl, TreeAdapter} from '@angular/material';
@@ -11,7 +11,7 @@ import {SimpleTreeNode} from './simple-tree-node';
   styleUrls: ['simple-tree-demo.css'],
   changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
-export class SimpleTreeDemo implements OnInit {
+export class SimpleTreeDemo implements OnInit, AfterViewInit {
   data: string = `{
 
   "results" : [
@@ -105,10 +105,14 @@ export class SimpleTreeDemo implements OnInit {
     };
   }
   selection = new SelectionModel<UserData>(true, []);
-  dataSource: JsonDataSource = new JsonDataSource(this.treeAdapter);
-  treeAdapter: TreeAdapter = new TreeAdapter();
+
 
   @ViewChild(CdkTree) tree: CdkTree;
+
+  treeControl: TreeControl<UserData> = new TreeControl<UserData>();
+  treeAdapter: TreeAdapter<UserData> = new TreeAdapter<UserData>(this.treeControl);
+  dataSource: JsonDataSource = new JsonDataSource(this.treeAdapter);
+
 
   constructor() { }
 
@@ -116,36 +120,24 @@ export class SimpleTreeDemo implements OnInit {
     this.submit();
   }
 
+  ngAfterViewInit() {
+  }
 
-  expandIncludeChildren: boolean = true;
+
+  expandIncludeChildren: boolean = false;
 
   getPadding(level: number) {
     return `${(level - 1) * 45}px`;
   }
 
   toggleExpand(node: UserData) {
-    this.tree.expansionModel.toggle(node);
+    this.treeControl.expansionModel.toggle(node);
   }
 
   gotoParent(node: UserData) {
     this.tree.gotoParent(node);
   }
 
-  expandAll() {
-    this.tree.toggleAll(true);
-  }
-
-  collapseAll() {
-    this.tree.toggleAll(false);
-  }
-
-  expand(node: UserData) {
-    this.tree.toggleAll(true, node);
-  }
-
-  collapse(node: UserData) {
-    this.tree.toggleAll(false, node);
-  }
 
   createArray(level: number) {
     return new Array(level);

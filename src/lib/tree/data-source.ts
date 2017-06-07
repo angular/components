@@ -18,6 +18,8 @@ export interface TreeDataSource<T extends Object> {
 
   /** Get the observable children */
   getChildren(node: T): Observable<T[]>;
+
+  getChildrenFunc(node: T): T[];
 }
 
 export class TreeControl<T extends Object> {
@@ -39,9 +41,21 @@ export class TreeControl<T extends Object> {
   /** Expansion info: the changes */
   expandChange = new BehaviorSubject<T[]>([]);
 
+  set expansionModel(model: SelectionModel<T>) {
+    this._expansionModel.onChange.unsubscribe();
+    this._expansionModel = model;
+    this._expansionModel.onChange.subscribe((_) => this.expandChange.next(this.expansionModel.selected));
+  }
+  get expansionModel() {
+    return this._expansionModel;
+  }
+  _expansionModel = new SelectionModel<T>(true);
+
   /** Expansion info: the model */
-  constructor(public expansionModel: SelectionModel<T> = new SelectionModel<T>(true)) {
-    expansionModel.onChange.subscribe((_) => this.expandChange.next(expansionModel.selected));
+  constructor() {
+    this._expansionModel.onChange.subscribe((_) =>
+      this.expandChange.next(this.expansionModel.selected));
+    this.expandChange.next([]);
   }
 
   getLevel(node: T) {
@@ -68,44 +82,46 @@ export class TreeControl<T extends Object> {
     return this.expansionModel.isSelected(node);
   }
 
-  toggleAll(expand: boolean, node?: any, recursive: boolean = true) {
-    if (node) {
-      let children = this.dataSource.getChildren(node);
-      expand
-        ? this.expansionModel.select(node)
-        : this.expansionModel.deselect(node);
-      if (!!children && recursive) {
-        children.forEach((child) => this.toggleAll(expand, child, recursive));
-      }
-    } else {
-
-      this.dataNodes.forEach((node) => {
-        this.toggleAll(expand, node, recursive)
-      });
-    }
-  }
-
-  toggleExpand(node: any, recursive: boolean = true) {
-    this.expansionModel.toggle(node);
-    let expand = this.expansionModel.isSelected(node);
-    let children = this.dataSource.getChildren(node);
-    if (recursive && children) {
-      children.forEach((child) => this.toggleAll(expand, child, recursive));
-    }
-  }
+  // toggleAll(expand: boolean, node?: any, recursive: boolean = true) {
+  //   if (node) {
+  //     let children = this.dataSource.getChildren(node);
+  //     expand
+  //       ? this.expansionModel.select(node)
+  //       : this.expansionModel.deselect(node);
+  //     if (!!children && recursive) {
+  //       children.forEach((child) => this.toggleAll(expand, child, recursive));
+  //     }
+  //   } else {
+  //
+  //     this.dataNodes.forEach((node) => {
+  //       this.toggleAll(expand, node, recursive)
+  //     });
+  //   }
+  // }
+  //
+  // toggleExpand(node: any, recursive: boolean = true) {
+  //   this.expansionModel.toggle(node);
+  //   let expand = this.expansionModel.isSelected(node);
+  //   let children = this.dataSource.getChildren(node);
+  //   if (recursive && children) {
+  //     children.forEach((child) => this.toggleAll(expand, child, recursive));
+  //   }
+  // }
 }
 
 export class TreeAdapter<T extends Object> {
-  getChildrenFunc: (node: T) = T[];
+  getChildrenFunc: (node: T) => T[];
 
   constructor(public treeControl: TreeControl<T>) {}
 
   flattenNodes(getChildrenFunc: (node: T) => T[], structuredData: Observable<T[]>): Observable<T[]> {
     this.getChildrenFunc = getChildrenFunc;
     return structuredData.map((nodes: T[]) => {
-      this.treeControl.initialize();
 
+      console.log(`start with structure data`);
+      this.treeControl.initialize();
       nodes.forEach((node) => {
+        console.log(`flatten node ${node}`)
         this._flattenNode(node, 0);
       });
       return this.treeControl.flatNodes;
@@ -119,6 +135,7 @@ export class TreeAdapter<T extends Object> {
     this.treeControl.indexMap.set(node, this.treeControl.flatNodes.length);
     this.treeControl.flatNodes.push(node);
 
+    console.log(`has children ${!!children} expanded ${expanded}`)
     if (!!children && expanded) {
       children.forEach((child, index) => {
         this.treeControl.parentMap.set(child, node);
