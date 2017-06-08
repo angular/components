@@ -110,6 +110,15 @@ export class MdGridList implements OnInit, AfterContentChecked {
 
   /** Creates correct Tile Styler subtype based on rowHeight passed in by user */
   private _setTileStyler(): void {
+    if (this._tileStyler) {
+      // leftover styles must be cleared before setting a new TileStyler
+      this._tiles.forEach((tile, index) => {
+        this._tileStyler.clearRowStyles(tile);
+      });
+      // clear styles set on grid by _layoutTiles()
+      this._setListStyle(['paddingBottom', '0px']);
+      this._setListStyle(['height', '0px']);
+    }
     if (this._rowHeight === MD_FIT_MODE) {
       this._tileStyler = new FitTileStyler();
     } else if (this._rowHeight && this._rowHeight.indexOf(':') > -1) {
