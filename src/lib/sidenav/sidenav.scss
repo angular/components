@@ -70,10 +70,6 @@
   overflow: auto;
 }
 
-.mat-sidenav-hidden {
-  visibility: hidden;
-}
-
 .mat-sidenav {
   @include mat-sidenav-stacking-context();
 

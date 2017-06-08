@@ -54,7 +54,13 @@ export function throwMdDuplicatedSidenavError(align: string) {
   encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('transform', [
-      state('open', style({ transform: 'translate3d(0, 0, 0)'})),
+      state('open', style({
+        transform: 'translate3d(0, 0, 0)',
+        visibility: 'visible',
+      })),
+      state('void', style({
+        visibility: 'hidden',
+      })),
       transition('* => *', animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)'))
     ])
   ],
@@ -66,7 +72,6 @@ export function throwMdDuplicatedSidenavError(align: string) {
     '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
     '[attr.align]': 'null',
-    '[class.mat-sidenav-hidden]': '!opened && !_isAnimating',
     '[class.mat-sidenav-end]': 'align === "end"',
     '[class.mat-sidenav-over]': 'mode === "over"',
     '[class.mat-sidenav-push]': 'mode === "push"',
