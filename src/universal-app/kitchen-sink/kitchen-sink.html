@@ -91,6 +91,34 @@
   <md-datepicker #birthday></md-datepicker>
 </md-input-container>
 
+<h2>Expansion</h2>
+
+<md-expansion-panel class="md-expansion-demo-width" #myPanel>
+  <md-expansion-panel-header>
+    <md-panel-description>This is a panel description.</md-panel-description>
+    <md-panel-title>Panel Title</md-panel-title>
+  </md-expansion-panel-header>
+    This is the content text that makes sense here.
+  <md-action-row>
+    <button md-button>Cancel</button>
+    <button md-button>Save</button>
+  </md-action-row>
+</md-expansion-panel>
+
+<md-accordion multi>
+  <md-expansion-panel>
+    <md-expansion-panel-header>Section 1</md-expansion-panel-header>
+    <p>This is the content text that makes sense here.</p>
+  </md-expansion-panel>
+  <md-expansion-panel>
+    <md-expansion-panel-header>Section 2</md-expansion-panel-header>
+    <p>This is the content text that makes sense here.</p>
+  </md-expansion-panel>
+  <md-expansion-panel>
+    <md-expansion-panel-header>Section 3</md-expansion-panel-header>
+  </md-expansion-panel>
+</md-accordion>
+
 <h2>Grid list</h2>
 
 <md-grid-list cols="4">
@@ -184,18 +212,17 @@
 
 <h2>Tabs</h2>
 
-<!-- Tabs don't work because `_updateTabScrollPosition` tries to set the transform on start-up -->
-<!--<md-tab-group>-->
-  <!--<md-tab label="Overview">-->
-    <!--The overview-->
-  <!--</md-tab>-->
-  <!--<md-tab>-->
-    <!--<ng-template md-tab-label>-->
-      <!--API docs-->
-    <!--</ng-template>-->
-    <!--The API docs-->
-  <!--</md-tab>-->
-<!--</md-tab-group>-->
+<md-tab-group>
+  <md-tab label="Overview">
+    The overview
+  </md-tab>
+  <md-tab>
+    <ng-template md-tab-label>
+      API docs
+    </ng-template>
+    The API docs
+  </md-tab>
+</md-tab-group>
 
 <nav md-tab-nav-bar>
  <a md-tab-link href="https://google.com">Google</a>

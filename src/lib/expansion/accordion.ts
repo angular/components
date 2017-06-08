@@ -51,8 +51,6 @@ export class CdkAccordion {
  */
 @Directive({
   selector: 'mat-accordion, md-accordion',
-  host: {
-    class: 'mat-accordion'
-  }
+  host: {'class': 'mat-accordion'}
 })
 export class MdAccordion extends CdkAccordion {}
