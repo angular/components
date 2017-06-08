@@ -55,7 +55,6 @@ export class TreeControl<T extends Object> {
   constructor() {
     this._expansionModel.onChange.subscribe((_) =>
       this.expandChange.next(this.expansionModel.selected));
-    this.expandChange.next([]);
   }
 
   getLevel(node: T) {
@@ -108,7 +107,7 @@ export class TreeControl<T extends Object> {
   //   }
   // }
 }
-
+/*
 export class TreeAdapter<T extends Object> {
   getChildrenFunc: (node: T) => T[];
 
@@ -150,3 +149,6 @@ export class TreeAdapter<T extends Object> {
     }
   }
 }
+
+
+*/

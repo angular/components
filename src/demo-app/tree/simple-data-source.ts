@@ -51,9 +51,8 @@ export class JsonDataSource implements TreeDataSource<any> {
   }
 
   connect(collectionViewer: CollectionViewer): Observable<UserData[]> {
-
     return collectionViewer.viewChanged.map((view) => {
-      let displayData = this.treeAdapter.treeControl.flatNodes;
+      let displayData = flattenedData;
       console.log(displayData); console.log(`combineLatest in side `);
       // Set the rendered rows length to the virtual page size. Fill in the data provided
       // from the index start until the end index or pagination size, whichever is smaller.

@@ -27,10 +27,11 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/let';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/combineLatest';
-import {TreeDataSource, CdkTreeContext, TreeAdapter, TreeControl} from './data-source';
+import {TreeDataSource} from './data-source';
+import {TreeControl} from './tree-control';
 import {SelectionModel, UP_ARROW, DOWN_ARROW, RIGHT_ARROW, LEFT_ARROW, HOME, ENTER, ESCAPE, FocusOriginMonitor} from '../core';
-import {FocusKeyManager, Focusable} from '../core/a11y/focus-key-manager';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {FocusKeyManager, Focusable} from '../a11y/focus-key-manager';
+import {coerceBooleanProperty} from '../coercion/boolean-property';
 import {CollectionViewer} from './data-source';
 
 /** Height of each row in pixels (48 + 1px border) */
@@ -168,6 +169,30 @@ export class MdNodeSelectTrigger extends CdkNodeTrigger{
 }
 
 
+/**
+ * Nested node, add children to `mdNodePlaceholder` in template
+ */
+@Directive({
+  selector: '[cdkNestedNode]'
+})
+export class CdkNestedNode implements OnInit {
+  @Input('cdkNestedNode') node: any;
+
+  @ContentChild(CdkNodePlaceholder) nodePlaceholder: CdkNodePlaceholder;
+
+  constructor(@Inject(forwardRef(() => CdkTree)) private tree: CdkTree) {}
+
+  ngOnInit() {
+    let children = this.tree.dataSource.getChildren(this.node);
+    if (!!children) {
+      children.subscribe((childrenNodes) => {
+        childrenNodes.forEach((child, index) => {
+          this.tree.addNode(this.nodePlaceholder.viewContainer, child, index);
+        });
+      });
+    }
+  }
+}
 
 @Component({
   selector: 'cdk-tree',
