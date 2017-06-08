@@ -1,0 +1,52 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+
+@mixin _md-date-picker-color($palette) {
+  ._top {
+    background: md-color($palette, 700);
+  }
+  ._days_selected {
+    ._background {
+      background-color: md-color($palette, 0.2) !important;
+    }
+    span {
+      color: md-color($palette, 500);
+    }
+  }
+  ._today {
+    z-index: 1;
+    span {
+      color: md-color($palette, 500);
+    }
+  }
+  ._day:not(._focused):hover {
+    ._background {
+      background: md-color($palette, 200) !important;
+    }
+    span {
+      color: #fff;
+    }
+  }
+  ._day._focused {
+    ._background {
+      background: md-color($palette, 500) !important;
+    }
+    span {
+      color: #fff;
+    }
+  }
+}
+@mixin md-date-picker-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  .primary {
+    @include _md-date-picker-color($primary);
+  }
+  .accent {
+    @include _md-date-picker-color($accent);
+  }
+  .warn {
+    @include _md-date-picker-color($warn);
+  }
+}
