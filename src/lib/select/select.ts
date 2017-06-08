@@ -583,7 +583,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   private _selectValue(value: any): MdOption {
     let optionsArray = this.options.toArray();
     let correspondingOption = optionsArray.find(option => {
-      return option.value != null && option.value === value;
+      return option.value !== null && option.value !== '' && option.value !== undefined && option.value === value;
     });
 
     if (correspondingOption) {
