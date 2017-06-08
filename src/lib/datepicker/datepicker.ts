@@ -234,7 +234,7 @@ export class MdDatepicker<D> implements OnDestroy {
     config.viewContainerRef = this._viewContainerRef;
 
     this._dialogRef = this._dialog.open(MdDatepickerContent, config);
-    this._dialogRef.afterClosed().first().subscribe(() => this.close());
+    this._dialogRef.afterClosed().subscribe(() => this.close());
     this._dialogRef.componentInstance.datepicker = this;
   }
 
