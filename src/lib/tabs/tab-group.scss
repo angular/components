@@ -34,6 +34,7 @@
   position: relative;
   overflow: hidden;
   display: flex;
+  flex-grow: 1;
   transition: height $mat-tab-animation-duration $ease-in-out-curve-function;
 }
 

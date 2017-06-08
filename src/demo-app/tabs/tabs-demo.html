@@ -202,6 +202,16 @@
   </md-tab>
 </md-tab-group>
 
+<h1>Tabs with 100% Height</h1>
+
+<md-tab-group class="demo-tab-group" style="height: 400px">
+  <md-tab *ngFor="let tab of tabs" [label]="tab.label" [disabled]="tab.disabled">
+    <div style="background: lightblue; height: 100%">
+      Should fill the tab group.
+    </div>
+  </md-tab>
+</md-tab-group>
+
 
 <h1>Async Tabs</h1>
 
