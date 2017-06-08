@@ -8,6 +8,21 @@ For existing apps, follow these steps to begin using Angular Material.
 ```bash
 npm install --save @angular/material
 ```
+Once you've intalled Angular Material, include the `MaterialModule` in your app.
+
+
+
+```ts
+import { MaterialModule } from '@angular/material';
+
+@NgModule({
+  ...
+  imports: [MaterialModule],
+  ...
+})
+export class PizzaPartyAppModule { }
+```
+
 
 ## Step 2: Animations
 
