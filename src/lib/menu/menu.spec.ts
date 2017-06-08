@@ -20,7 +20,7 @@ import {
 import {OverlayContainer} from '../core/overlay/overlay-container';
 import {Dir, LayoutDirection} from '../core/rtl/dir';
 import {extendObject} from '../core/util/object-extend';
-import {ESCAPE} from '../core/keyboard/keycodes';
+import {ESCAPE, TAB} from '../core/keyboard/keycodes';
 import {dispatchKeyboardEvent} from '../core/testing/dispatch-events';
 
 
@@ -457,12 +457,70 @@ describe('MdMenu', () => {
       expect(fixture.destroy.bind(fixture)).not.toThrow();
     });
   });
+
+  describe('disableClose', () => {
+    let fixture: ComponentFixture<SimpleMenu>;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SimpleMenu);
+      fixture.componentInstance.disableClose = true;
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.openMenu();
+    });
+
+    it('should not close when pressing ESCAPE', () => {
+      const panel = overlayContainerElement.querySelector('.mat-menu-panel');
+
+      dispatchKeyboardEvent(panel, 'keydown', ESCAPE);
+      fixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.mat-menu-panel')).toBeTruthy();
+    });
+
+    it('should not close when pressing TAB', () => {
+      const panel = overlayContainerElement.querySelector('.mat-menu-panel');
+
+      dispatchKeyboardEvent(panel, 'keydown', TAB);
+      fixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.mat-menu-panel')).toBeTruthy();
+    });
+
+    it('should not close when clicking on the backdrop', () => {
+      const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+
+      (backdrop as HTMLElement).click();
+      fixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.mat-menu-panel')).toBeTruthy();
+    });
+
+    it('should not close when clicking inside the panel', () => {
+      const panel = overlayContainerElement.querySelector('.mat-menu-panel') as HTMLElement;
+
+      panel.click();
+      fixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.mat-menu-panel')).toBeTruthy();
+    });
+
+    it('should still be able to close programmatically', () => {
+      expect(overlayContainerElement.querySelector('.mat-menu-panel')).toBeTruthy();
+
+      fixture.componentInstance.trigger.closeMenu();
+      fixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.mat-menu-panel')).toBeFalsy();
+    });
+
+  });
+
 });
 
 @Component({
   template: `
     <button [mdMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
-    <md-menu #menu="mdMenu" (close)="closeCallback()">
+    <md-menu #menu="mdMenu" (close)="closeCallback()" [disableClose]="disableClose">
       <button md-menu-item> Item </button>
       <button md-menu-item disabled> Disabled </button>
     </md-menu>
@@ -472,6 +530,7 @@ class SimpleMenu {
   @ViewChild(MdMenuTrigger) trigger: MdMenuTrigger;
   @ViewChild('triggerEl') triggerEl: ElementRef;
   closeCallback = jasmine.createSpy('menu closed callback');
+  disableClose = false;
 }
 
 @Component({
@@ -520,7 +579,8 @@ class OverlapMenu implements TestableMenu {
 class CustomMenuPanel implements MdMenuPanel {
   xPosition: MenuPositionX = 'after';
   yPosition: MenuPositionY = 'below';
-  overlapTrigger: true;
+  overlapTrigger = true;
+  disableClose = false;
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
   @Output() close = new EventEmitter<void>();
