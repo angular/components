@@ -30,6 +30,7 @@ System.config({
     '@angular/forms/testing': 'node:@angular/forms/bundles/forms-testing.umd.js',
     '@angular/animations': 'node:@angular/animations/bundles/animations.umd.js',
     '@angular/animations/browser': 'node:@angular/animations/bundles/animations-browser.umd.js',
+    '@angular/router': 'node:@angular/router/bundles/router.umd.js',
     '@angular/platform-browser/animations':
       'node:@angular/platform-browser/bundles/platform-browser-animations.umd',
     '@angular/platform-browser':
