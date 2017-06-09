@@ -73,9 +73,11 @@ import {
   MdTabsModule,
   MdToolbarModule,
   MdTooltipModule,
-  OverlayContainer
+  OverlayContainer,
+  MdStickyHeaderModule,
 } from '@angular/material';
 import {TableHeaderDemo} from './data-table/table-header-demo';
+import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
@@ -111,6 +113,7 @@ import {TableHeaderDemo} from './data-table/table-header-demo';
     MdTooltipModule,
     MdNativeDateModule,
     CdkDataTableModule,
+    MdStickyHeaderModule,
   ]
 })
 export class DemoMaterialModule {}
@@ -176,6 +179,7 @@ export class DemoMaterialModule {}
     PlatformDemo,
     TypographyDemo,
     ExpansionDemo,
+    StickyHeaderDemo,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
