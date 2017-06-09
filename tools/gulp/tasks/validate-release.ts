@@ -64,7 +64,7 @@ function checkMaterialPackage(): string[] {
   const themingFilePath = join(packagePath, '_theming.scss');
   const failures = [];
 
-  if (!existsSync(prebuiltThemesPath) || glob('*.css', {cwd: prebuiltThemesPath}).length === 0) {
+  if (glob('*.css', {cwd: prebuiltThemesPath}).length === 0) {
     failures.push('Prebuilt themes are not present in the Material release output.');
   }
 
