@@ -15,11 +15,13 @@ $mat-chip-remove-font-size: 18px;
 
 @mixin chip-margin() {
   [dir='rtl'] & {
-    margin: $mat-chip-margin;
+    margin-right: $mat-chip-margin;
+    margin-left: $mat-chip-margin;
   }
 
   [dir='ltr'] & {
-    margin: $mat-chip-margin;
+    margin-right: $mat-chip-margin;
+    margin-left: $mat-chip-margin;
   }
 }
 
@@ -65,7 +67,7 @@ $mat-chip-remove-font-size: 18px;
 
     // Remove the margin from the last element (in both LTR and RTL)
     &:last-child {
-      @include chip-margin-last();
+        @include chip-margin-last();
     }
   }
 }
@@ -110,16 +112,10 @@ $mat-chip-remove-font-size: 18px;
   }
 }
 
-md-chip-list .mat-chip-input {
-  line-height: 34px;
-  @include chip-margin();
-}
-
-md-chip-list .mat-input-placeholder-wrapper {
-  top: 0;
-  @include chip-margin();
-}
-
 .mat-chip-remove.mat-chip-remove-hidden {
   display: none;
+}
+
+.mat-chip-input {
+  @include chip-margin-last();
 }

@@ -11,11 +11,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
-  Directive,
   Input,
   QueryList,
   ViewEncapsulation,
   OnDestroy,
+  Optional,
   ElementRef,
   Renderer2,
 } from '@angular/core';
@@ -24,7 +24,8 @@ import {MdChip} from './chip';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {SPACE, LEFT_ARROW, RIGHT_ARROW} from '../core/keyboard/keycodes';
 import {Subscription} from 'rxjs/Subscription';
-import {coerceBooleanProperty} from '@angular/cdk';
+import {coerceBooleanProperty, Directionality} from '@angular/cdk';
+import {Subscription} from 'rxjs/Subscription';
 
 /** Utility to check if an input element has no value. */
 function _isInputEmpty(element: HTMLElement): boolean {
@@ -56,7 +57,7 @@ function _isInputEmpty(element: HTMLElement): boolean {
     'role': 'listbox',
     'class': 'mat-chip-list',
 
-    '(focus)': 'focus($event)',
+    '(focus)': 'focus()',
     '(keydown)': '_keydown($event)'
   },
   queries: {
@@ -69,7 +70,7 @@ function _isInputEmpty(element: HTMLElement): boolean {
 export class MdChipList implements AfterContentInit, OnDestroy {
 
   /** When a chip is destroyed, we track the index so we can focus the appropriate next chip. */
-  protected _lastDestroyedIndex: number = null;
+  protected _lastDestroyedIndex: number|null = null;
 
   /** Track which chips we're listening to for focus/destruction. */
   protected _chipSet: WeakMap<MdChip, boolean> = new WeakMap();
@@ -92,7 +93,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   chips: QueryList<MdChip>;
 
   constructor(protected _renderer: Renderer2, protected _elementRef: ElementRef,
-              protected _dir: Dir) {
+              @Optional() private _dir: Directionality) {
   }
 
   ngAfterContentInit(): void {
@@ -153,7 +154,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
    * Focuses the the first non-disabled chip in this chip list, or the associated input when there
    * are no eligible chips.
    */
-  focus(event?: Event) {
+  focus() {
     // TODO: ARIA says this should focus the first `selected` chip if any are selected.
     if (this.chips.length > 0) {
       this._keyManager.setFirstItemActive();
@@ -176,7 +177,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
     let code = event.keyCode;
     let target = event.target as HTMLElement;
     let isInputEmpty = _isInputEmpty(target);
-    let isRtl = this._dir.value == 'rtl';
+    let isRtl = this._dir && this._dir.value == 'rtl';
 
     let isPrevKey = (code == (isRtl ? RIGHT_ARROW : LEFT_ARROW));
     let isNextKey = (code == (isRtl ? LEFT_ARROW : RIGHT_ARROW));
@@ -254,15 +255,19 @@ export class MdChipList implements AfterContentInit, OnDestroy {
     // On destroy, remove the item from our list, and setup our destroyed focus check
     chip.destroy.subscribe(() => {
       let chipIndex: number = this.chips.toArray().indexOf(chip);
-
-      if (this._isValidIndex(chipIndex) && chip._hasFocus) {
-        // Check whether the chip is the last item
-        if (chipIndex < this.chips.length - 1) {
-          this._keyManager.setActiveItem(chipIndex);
-        } else if (chipIndex - 1 >= 0) {
-          this._keyManager.setActiveItem(chipIndex - 1);
+      if (this._isValidIndex(chipIndex)) {
+        if (chip._hasFocus) {
+          // Check whether the chip is the last item
+          if (chipIndex < this.chips.length - 1) {
+            this._keyManager.setActiveItem(chipIndex);
+          } else if (chipIndex - 1 >= 0) {
+            this._keyManager.setActiveItem(chipIndex - 1);
+          }
         }
-        this._lastDestroyedIndex = chipIndex;
+        if (this._keyManager.activeItemIndex == chipIndex) {
+          this._lastDestroyedIndex = chipIndex;
+        }
+
       }
 
       this._chipSet.delete(chip);
@@ -278,12 +283,12 @@ export class MdChipList implements AfterContentInit, OnDestroy {
    */
   protected _updateFocusForDestroyedChips() {
     let chipsArray = this.chips;
-    let focusChip: MdChip;
 
     if (this._lastDestroyedIndex != null && chipsArray.length > 0) {
       // Check whether the destroyed chip was the last item
       const newFocusIndex = Math.min(this._lastDestroyedIndex, chipsArray.length - 1);
       this._keyManager.setActiveItem(newFocusIndex);
+      let focusChip = this._keyManager.activeItem;
 
       // Focus the chip
       if (focusChip) {

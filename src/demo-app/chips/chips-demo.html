@@ -45,16 +45,39 @@
         <code>&lt;md-input-container&gt;</code>.
       </p>
 
-      <md-input-container [floatPlaceholder]="people.length > 0 ? 'always' : 'auto'">
-        <md-chip-list mdPrefix #chipList>
+
+      <md-input-container>
+        <md-chip-list mdPrefix #chipList1>
           <md-chip *ngFor="let person of people" [color]="color" [selectable]="selectable"
                    [removable]="removable" (remove)="remove(person)">
             {{person.name}}
             <md-icon mdChipRemove>cancel</md-icon>
           </md-chip>
         </md-chip-list>
-        <input mdInput mdChipInput placeholder="New Contributor..."
-               [mdChipInputFor]="chipList"
+        <input mdInput placeholder="New Contributor..."
+               [mdChipInputFor]="chipList1"
+               [mdChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [mdChipInputAddOnBlur]="addOnBlur"
+               (mdChipInputTokenEnd)="add($event)" />
+      </md-input-container>
+
+
+
+      <p>
+        You can also put <code>&lt;md-input-container&gt;</code> outside of an <code>md-chip-list</code>.
+        With <code>mdChipInput</code> the input work with chip-list
+      </p>
+
+      <md-chip-list #chipList2>
+        <md-chip *ngFor="let person of people" [color]="color" [selectable]="selectable"
+                 [removable]="removable" (remove)="remove(person)">
+          {{person.name}}
+          <md-icon mdChipRemove>cancel</md-icon>
+        </md-chip>
+      </md-chip-list>
+      <md-input-container>
+        <input mdInput placeholder="New Contributor..."
+               [mdChipInputFor]="chipList2"
                [mdChipInputSeparatorKeyCodes]="separatorKeysCodes"
                [mdChipInputAddOnBlur]="addOnBlur"
                (mdChipInputTokenEnd)="add($event)" />

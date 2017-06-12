@@ -3,7 +3,7 @@ import {MdChipsModule} from './index';
 import {Component, DebugElement} from '@angular/core';
 import {MdChipInput, MdChipInputEvent} from './chip-input';
 import {By} from '@angular/platform-browser';
-import {Dir} from '../core/rtl/dir';
+import {Directionality} from '../core';
 import {createKeyboardEvent} from '../core/testing/event-objects';
 
 import {ENTER, COMMA} from '../core/keyboard/keycodes';
@@ -22,7 +22,7 @@ describe('MdChipInput', () => {
       imports: [MdChipsModule],
       declarations: [TestChipInput],
       providers: [{
-        provide: Dir, useFactory: () => {
+        provide: Directionality, useFactory: () => {
           return {value: dir.toLowerCase()};
         }
       }]
@@ -101,18 +101,18 @@ describe('MdChipInput', () => {
 
 @Component({
   template: `
-    <md-chip-list>
-        <input mdInput mdChipInputFor
+    <md-chip-list #chipList>
+    </md-chip-list>
+    <input mdInput [mdChipInputFor]="chipList"
               [mdChipInputAddOnBlur]="addOnBlur"
               [mdChipInputSeparatorKeyCodes]="separatorKeys"
               (mdChipInputTokenEnd)="add($event)" />
-    </md-chip-list>
   `
 })
 class TestChipInput {
   addOnBlur: boolean = false;
   separatorKeys: number[] = [ENTER];
 
-  add(event: MdChipInputEvent) {
+  add(_: MdChipInputEvent) {
   }
 }

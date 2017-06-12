@@ -8,9 +8,7 @@
 
 import {
   Directive,
-  Component,
   ContentChild,
-  Directive,
   ElementRef,
   EventEmitter,
   Input,
@@ -54,17 +52,18 @@ export class MdBasicChip { }
 @Directive({
   selector: `md-basic-chip, [md-basic-chip], md-chip, [md-chip],
              mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]`,
-  inputs: ['color'],
+  inputs: ['color', 'disabled'],
   host: {
     'class': 'mat-chip',
     'tabindex': '-1',
     'role': 'option',
     '[class.mat-chip-selected]': 'selected',
-    '[class.mat-chip-has-remove-icon]': '_hasRemoveIcon',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_handleClick($event)',
-    '(keydown)': '_handleKeydown($event)'
+    '(keydown)': '_handleKeydown($event)',
+    '(focus)': '_hasFocus = true',
+    '(blur)': '_hasFocus = false',
   }
 })
 export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, CanColor, CanDisable {
@@ -77,15 +76,33 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
     this._selected = coerceBooleanProperty(value);
     (this.selected ? this.select : this.deselect).emit({chip: this});
   }
+  protected _selected: boolean = false;
 
-  /** Whether or not the chip is selectable. */
+  /**
+   * Whether or not the chips are selectable. When a chip is not selectable,
+   * changes to it's selected state are always ignored.
+   */
+  @Input() get selectable(): boolean {
+    return this._selectable;
+  }
+
+  set selectable(value: boolean) {
+    this._selectable = coerceBooleanProperty(value);
+  }
   protected _selectable: boolean = true;
 
-  /** Whether or not the chip is removable. */
-  protected _removable: boolean = true;
+  /**
+   * Determines whether or not the chip displays the remove styling and emits (remove) events.
+   */
+  @Input() get removable(): boolean {
+    return this._removable;
+  }
 
-  /** Whether or not the chip is selected. */
-  protected _selected: boolean = false;
+  set removable(value: boolean) {
+    this._removable = coerceBooleanProperty(value);
+    if (this._chipRemove) { this._chipRemove.visible = this._removable; }
+  }
+  protected _removable: boolean = true;
 
   /** Whether the chip has focus. */
   _hasFocus: boolean = false;
@@ -104,46 +121,13 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
 
   constructor(renderer: Renderer2, elementRef: ElementRef) {
     super(renderer, elementRef);
+  }
 
   /** Emitted when a chip is to be removed. */
   @Output('remove') onRemove = new EventEmitter<MdChipEvent>();
 
-  ngOnInit(): void {
-    this._addDefaultCSSClass();
-    this._updateColor(this._color);
-  }
-
   ngOnDestroy(): void {
     this.destroy.emit({chip: this});
-  }
-
-  /** A String representation of the current disabled state. */
-  get _isAriaDisabled(): string {
-    return String(coerceBooleanProperty(this.disabled));
-  }
-
-  /**
-   * Whether or not the chips are selectable. When a chip is not selectable,
-   * changes to it's selected state are always ignored.
-   */
-  @Input() get selectable(): boolean {
-    return this._selectable;
-  }
-
-  set selectable(value: boolean) {
-    this._selectable = coerceBooleanProperty(value);
-  }
-
-  /**
-   * Determines whether or not the chip displays the remove styling and emits (remove) events.
-   */
-  @Input() get removable(): boolean {
-    return this._removable;
-  }
-
-  set removable(value: boolean) {
-    this._removable = coerceBooleanProperty(value);
-    if (this._chipRemove) { this._chipRemove.visible = this._removable; }
   }
 
   /** Toggles the current selected state of this chip. */
@@ -171,6 +155,11 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
     }
   }
 
+  /** The aria-disabled state for the chip */
+  _isAriaDisabled(): string {
+    return String(this.disabled);
+  }
+
   /** Ensures events fire properly upon click. */
   _handleClick(event: Event) {
     // Check disabled
@@ -194,10 +183,7 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
       case DELETE:
       case BACKSPACE:
         // If we are removable, remove the focused chip
-        if (this.removable) {
-          this.onRemove.emit();
-        }
-
+        this.remove();
         // Always prevent so page navigation does not occur
         event.preventDefault();
         break;
@@ -213,14 +199,6 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
     }
   }
 
-  /**
-   * Sets whether or not this chip is displaying a remove icon. Adds/removes the
-   * `md-chip-has-remove-icon` class.
-   */
-  _setHasRemoveIcon(value: boolean) {
-    this._hasRemoveIcon = value;
-  }
-
   protected _checkDisabled(event: Event): boolean {
     if (this.disabled) {
       event.preventDefault();
@@ -228,38 +206,6 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
     }
 
     return this.disabled;
-  }
-
-  /** Initializes the appropriate CSS classes based on the chip type (basic or standard). */
-  private _addDefaultCSSClass() {
-    let el: HTMLElement = this._elementRef.nativeElement;
-
-    // Always add the `mat-chip` class
-    this._renderer.addClass(el, 'mat-chip');
-
-    // If we are a basic chip, also add the `mat-basic-chip` class for :not() targeting
-    if (el.nodeName.toLowerCase() == 'mat-basic-chip' || el.hasAttribute('mat-basic-chip') ||
-        el.nodeName.toLowerCase() == 'md-basic-chip' || el.hasAttribute('md-basic-chip')) {
-      this._renderer.addClass(el, 'mat-basic-chip');
-    }
-  }
-
-  /** Updates the private _color variable and the native element. */
-  private _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  /** Sets the mat-color on the native element. */
-  private _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      if (isAdd) {
-        this._renderer.addClass(this._elementRef.nativeElement, `mat-${color}`);
-      } else {
-        this._renderer.removeClass(this._elementRef.nativeElement, `mat-${color}`);
-      }
-    }
   }
 }
 
@@ -292,12 +238,12 @@ export class MdChipRemove {
 
   @Input('mdChipRemoveVisible')
   get visible() { return this._isVisible; }
-  set visible(value) {this._isVisible = coerceBooleanProperty(value);}
+  set visible(value) { this._isVisible = coerceBooleanProperty(value); }
 
   constructor(protected _parentChip: MdChip) {}
 
   /** Calls the parent chip's public `remove()` method if applicable. */
-  _handleClick(event: Event) {
+  _handleClick() {
     if (this._parentChip.removable) {
       this._parentChip.remove();
     }

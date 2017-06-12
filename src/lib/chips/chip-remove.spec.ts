@@ -31,13 +31,13 @@ describe('Chip Remove', () => {
 
   describe('basic behavior', () => {
     it('should applies the `mat-chip-remove` CSS class', () => {
-      let hrefElement = chipNativeElement.querySelector('a');
+      let hrefElement = chipNativeElement.querySelector('a')!;
 
       expect(hrefElement.classList).toContain('mat-chip-remove');
     });
 
     it('should emits (remove) on click', () => {
-      let hrefElement = chipNativeElement.querySelector('a');
+      let hrefElement = chipNativeElement.querySelector('a')!;
 
       testChip.removable = true;
       fixture.detectChanges();
@@ -50,7 +50,7 @@ describe('Chip Remove', () => {
     });
 
     it(`should monitors the parent chip's [removable] property`, () => {
-      let hrefElement = chipNativeElement.querySelector('a');
+      let hrefElement = chipNativeElement.querySelector('a')!;
 
       testChip.removable = true;
       fixture.detectChanges();

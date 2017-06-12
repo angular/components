@@ -1,6 +1,14 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Directive, Output, EventEmitter, ElementRef, Input} from '@angular/core';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
-import {ENTER, BACKSPACE} from '../core/keyboard/keycodes';
+import {coerceBooleanProperty} from '@angular/cdk';
+import {ENTER} from '../core/keyboard/keycodes';
 import {MdChipList} from './chip-list';
 
 export interface MdChipInputEvent {
@@ -9,7 +17,7 @@ export interface MdChipInputEvent {
 }
 
 @Directive({
-  selector: 'input[mdChipInput], input[matChipInput]',
+  selector: 'input[mdChipInputFor], input[matChipInputFor]',
   host: {
     'class': 'mat-chip-input',
     '(keydown)': '_keydown($event)',
@@ -81,8 +89,8 @@ export class MdChipInput {
 
   /** Checks to see if the (chipEnd) event needs to be emitted. */
   _emitChipEnd(event?: KeyboardEvent) {
-    if (!this._inputElement.value && !!event && event.keyCode == BACKSPACE) {
-      this._chipList.chips.last.focus();
+    if (!this._inputElement.value && !!event) {
+      this._chipList._keydown(event);
     }
     if (!event || this.separatorKeyCodes.indexOf(event.keyCode) > -1) {
       this.chipEnd.emit({ input: this._inputElement, value: this._inputElement.value });

@@ -9,7 +9,7 @@ import {createKeyboardEvent} from '@angular/cdk/testing';
 
 import {MdInputModule} from '../input/index';
 import {LEFT_ARROW, RIGHT_ARROW, BACKSPACE, DELETE, SPACE, TAB} from '../core/keyboard/keycodes';
-import {Dir} from '../core/rtl/dir';
+import {Directionality} from '../core';
 
 describe('MdChipList', () => {
   let fixture: ComponentFixture<any>;
@@ -29,7 +29,7 @@ describe('MdChipList', () => {
         StandardChipList, InputContainerChipList
       ],
       providers: [{
-        provide: Dir, useFactory: () => {
+        provide: Directionality, useFactory: () => {
           return {value: dir.toLowerCase()};
         }
       }]
@@ -76,20 +76,6 @@ describe('MdChipList', () => {
         let array = chips.toArray();
         let lastIndex = array.length - 1;
         let lastItem = array[lastIndex];
-
-        lastItem.focus();
-        fixture.detectChanges();
-
-        expect(manager.activeItemIndex).toBe(lastIndex);
-      });
-
-
-      it('should focus the previous item', () => {
-        // Focus the last item by fake updating the _hasFocus state for unit tests.
-        lastItem._hasFocus = true;
-
-        // Destroy the last item
-        testComponent.remove = lastIndex;
 
         lastItem.focus();
         fixture.detectChanges();
@@ -268,7 +254,7 @@ describe('MdChipList', () => {
 
           // Focus the input
           nativeInput.focus();
-          expect(manager.activeItemIndex).toBeFalsy();
+          expect(manager.activeItemIndex).toBe(-1);
 
           // Press the DELETE key
           chipListInstance._keydown(DELETE_EVENT);
@@ -285,7 +271,7 @@ describe('MdChipList', () => {
 
           // Focus the input
           nativeInput.focus();
-          expect(manager.activeItemIndex).toBeFalsy();
+          expect(manager.activeItemIndex).toBe(-1);
 
           // Press the BACKSPACE key
           chipListInstance._keydown(BACKSPACE_EVENT);
@@ -351,8 +337,8 @@ class StandardChipList {
         <md-chip>Chip 1</md-chip>
         <md-chip>Chip 1</md-chip>
         <md-chip>Chip 1</md-chip>
-        <input mdInput name="test" [mdChipInputFor]="chipList"/>
       </md-chip-list>
+      <input mdInput name="test" [mdChipInputFor]="chipList"/>
     </md-input-container>
   `
 })

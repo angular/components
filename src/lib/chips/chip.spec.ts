@@ -4,7 +4,7 @@ import {By} from '@angular/platform-browser';
 import {MdChipList, MdChip, MdChipEvent, MdChipsModule} from './index';
 import {SPACE, DELETE, BACKSPACE} from '../core/keyboard/keycodes';
 import {createKeyboardEvent} from '../core/testing/event-objects';
-import {Dir} from '../core/rtl/dir';
+import {Directionality} from '../core';
 
 describe('Chips', () => {
   let fixture: ComponentFixture<any>;
@@ -22,7 +22,7 @@ describe('Chips', () => {
         BasicChip, SingleChip
       ],
       providers: [{
-        provide: Dir, useFactory: () => {
+        provide: Directionality, useFactory: () => {
           return {value: dir};
         }
       }]
@@ -64,7 +64,7 @@ describe('Chips', () => {
       chipDebugElement = fixture.debugElement.query(By.directive(MdChip));
       chipListNativeElement = fixture.debugElement.query(By.directive(MdChipList)).nativeElement;
       chipNativeElement = chipDebugElement.nativeElement;
-      chipInstance = chipDebugElement.componentInstance;
+      chipInstance = chipDebugElement.injector.get(MdChip);
       testComponent = fixture.debugElement.componentInstance;
 
       document.body.appendChild(chipNativeElement);
