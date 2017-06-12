@@ -22,8 +22,7 @@ export const payloadGithubStatus = https.onRequest(async (request, response) => 
   await setGithubStatus(commitSha, {
     result: true,
     name: 'Library Payload',
-    url: `https://travis-ci.org/angular/material2/jobs/${process.env['TRAVIS_JOB_ID']}`,
-    description: `${payloadDiff > 0 ? `+` : ''} ${payloadDiff.toFixed(2)}KB`
+    description: `${payloadDiff >= 0 ? `+` : ''} ${payloadDiff.toFixed(2)}KB`
   });
 
   response.json({message: 'Payload Github status successfully set.'});
