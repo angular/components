@@ -1,31 +1,29 @@
-<div  *ngIf="flat" [class.selected]="node ? selection.isSelected(node) : false"
+<div *ngIf="flat" [class.selected]="node ? selected : false"
      [class.data-row]="!!node">
   <div class="row">
     <div class="space">
-      <div *ngFor="let a of createArray(level); let index = index" [class.special]="getSpecial(node, index)"></div>
+      <div *ngFor="let a of createArray(node.parentMap.length); let index = index" [class.special]="node.parentMap[index]"></div>
     </div>
-    <a md-icon-button [cdkNodeTrigger]="node" [cdkNodeTriggerRecursive]="expandIncludeChildren" [cdkNodeTriggerSelection]="treeControl.expansionModel">
-      <md-icon *ngIf="expandable">{{ treeControl.expansionModel.isSelected(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</md-icon>
+    <a md-icon-button [cdkNodeTrigger]="node" [cdkNodeTriggerRecursive]="expandIncludeChildren" [cdkNodeTriggerSelection]="treeControl.expansionModel" (click)="treeControl.toggleDecedents(node)">
+      <md-icon *ngIf="node.expandable">{{ treeControl.expansionModel.isSelected(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</md-icon>
     </a>
     <md-checkbox (click)="$event.stopPropagation()"
-                 (change)="$event ? selection.toggle(node) : null"
-                 [checked]="selection.isSelected(node)">
+                 (change)="selectNode(node, $event)"
+                 [checked]="selected">
       {{node.key}}<span *ngIf="node.value">: {{node.value}}</span> </md-checkbox>
   </div>
 </div>
-<p *ngIf="!flat"  [cdkNodeTrigger]="node" [cdkNodeTriggerRecursive]="expandIncludeChildren" [cdkNodeTriggerSelection]="treeControl.expansionModel">
-  {{flat}}{{node.key}}<span *ngIf="node.value">: {{node.value}}</span>
-</p>
 
-<p>{{flat}}</p>
-<!--<ul *ngIf="!flat && expandable && treeControl.expansionModel.isSelected(node) ">-->
-  <!--<li *ngFor="let child of getChildren(node)" [class.container]="!!getChildren(child)">-->
-    <!--<simple-tree-node [node]="child"-->
-                      <!--[flat]="flat"-->
-                      <!--[selection]="selection"-->
-                      <!--[dataSource]="dataSource"-->
-                      <!--[level]="level+1"-->
-                      <!--[expandable]="!!getChildren(child)"-->
-                      <!--[expandIncludeChildren]="expandIncludeChildren"></simple-tree-node>-->
-  <!--</li>-->
-<!--</ul>-->
+ <ul *ngIf="!flat">
+   <li *ngFor="let child of node.getChildren() | async">
+     <simple-tree-node [node]="child"
+                       [flat]="false"
+                       [selection]="selection"
+                       [dataSource]="dataSource"
+                       [level]="level+1"
+                       [expandable]="!!getChildren(child)"
+                       [treeControl]="treeControl"
+                       [selected]="selection.isSelected(child)"
+                       [expandIncludeChildren]="expandIncludeChildren"></simple-tree-node>
+   </li>
+ </ul>

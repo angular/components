@@ -2,7 +2,7 @@
 <md-input-container>
   <textarea mdInput [(ngModel)]="data"></textarea>
 </md-input-container>
-<!--<md-slide-toggle [(ngModel)]="flat">Flat: {{flat}}</md-slide-toggle>-->
+<md-slide-toggle [(ngModel)]="flat">Flat: {{flat}}</md-slide-toggle>
 <button md-button (click)="submit()">Submit</button>
 
 <div class="tree-container mat-elevation-z4">
@@ -10,11 +10,12 @@
 
   <cdk-tree #tree [dataSource]="dataSource" [treeControl]="treeControl">
     <!-- Row templates. The columns used are set at the row template level -->
-    <cdk-node *cdkNodeDef="let node let level=level let expandable=expandable" (click)="currentNode=node">
+    <cdk-node *cdkNodeDef="let node" (click)="currentNode=node">
         <simple-tree-node [node]="node"
                           [level]="level"
+                          [selected]="selection.isSelected(node)"
                           [expandable]="expandable"
-                          [flat]="true"
+                          [flat]="flat"
                           [expandIncludeChildren]="expandIncludeChildren"
                           [dataSource]="dataSource"
                           [selection]="selection" class="simple-tree-node"
@@ -29,7 +30,11 @@
   <button md-button color="primary" (click)="collapseAll()">Collapse All</button>
 </div>
 
-Selected: <span *ngFor="let node of selection.selected">{{node.key}}: {{node.value}}, </span>
+<div *ngIf="treeControl">
+  Selected: <span *ngFor="let node of selection.selected">{{node.key}}: {{node.value}}, </span>
+  <br>
+  Expanded: <span *ngFor="let node of treeControl.expansionModel.selected">{{node.key}}: {{node.value}}, </span>
+</div>
 
 
 <md-card *ngIf="!!currentNode">

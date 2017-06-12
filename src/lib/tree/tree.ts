@@ -27,11 +27,12 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/let';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/combineLatest';
-import {TreeDataSource, CdkTreeContext, TreeAdapter, TreeControl} from './data-source';
+import {TreeDataSource, TreeAdapter, TreeControl} from './data-source';
 import {SelectionModel, UP_ARROW, DOWN_ARROW, RIGHT_ARROW, LEFT_ARROW, HOME, ENTER, ESCAPE, FocusOriginMonitor} from '../core';
 import {FocusKeyManager, Focusable} from '../core/a11y/focus-key-manager';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 import {CollectionViewer} from './data-source';
+import {NestedNode, FlatNode} from './tree-node';
 
 /** Height of each row in pixels (48 + 1px border) */
 export const ROW_HEIGHT = 49;
@@ -136,19 +137,23 @@ export class CdkNodeTrigger {
 
   trigger(event: Event) {
     this.selection.toggle(this.node);
-    if (this.recursive) {
-      this.selectRecursive(this.node, this.selection.isSelected(this.node));
-    }
+     if (this.recursive) {
+       this.selectRecursive(this.node, this.selection.isSelected(this.node));
+     }
   }
 
   selectRecursive(node: any, select: boolean) {
-    let children = this.tree.dataSource.getChildren(node);
-    if (!!children) {
-      children.forEach((child: any) => {
-        select ? this.selection.select(child) : this.selection.deselect(child);
-        this.selectRecursive(child, select);
-      });
-    }
+    /**
+     * if (flat) {
+     *   tree
+     * */
+    // let children = this.tree.dataSource.getChildren(node);
+    // if (!!children) {
+    //   children.forEach((child: any) => {
+    //     select ? this.selection.select(child) : this.selection.deselect(child);
+    //     this.selectRecursive(child, select);
+    //   });
+    // }
   }
 }
 
@@ -186,7 +191,7 @@ export class MdNodeSelectTrigger extends CdkNodeTrigger{
 })
 export class CdkTree  implements CollectionViewer {
   @Input() dataSource: TreeDataSource<any>;
-  @Input() treeControl: TreeControl<any>;
+  @Input() treeControl: TreeControl;
 
   /** Whether nested tree or flattened tree */
   @Input() nested: boolean = false;
@@ -226,7 +231,7 @@ export class CdkTree  implements CollectionViewer {
     });
   }
 
-  renderNestedNodeChanges(dataNodes: any[]) {
+  renderNestedNodeChanges(dataNodes: NestedNode[]) {
 
     console.time('Rendering rows');
 
@@ -248,7 +253,7 @@ export class CdkTree  implements CollectionViewer {
     console.timeEnd('Rendering rows');
   }
 
-  renderNodeChanges(dataNodes: any[]) {
+  renderNodeChanges(dataNodes: FlatNode[]) {
     console.time('Rendering rows');
     const changes = this._dataDiffer.diff(dataNodes);
     if (!changes) { return; }
@@ -289,15 +294,12 @@ export class CdkTree  implements CollectionViewer {
 
   _addNodeInContainer(container: ViewContainerRef, data: any, currentIndex: number) {
     let node = this.getNodeDefForItem(data);
-    this.dataSource.getChildren(data).subscribe((children) => {
-      let expandable = !!children;
-      const context: CdkTreeContext = {
-        $implicit: data,
-        level: this.treeControl.getLevel(data),
-        expandable
-      };
-      container.createEmbeddedView(node.template, context, currentIndex);
-    });
+    let context = {
+      $implicit: data
+    };
+    //data.getChildren().subscribe((children) => {
+    container.createEmbeddedView(node.template, context, currentIndex);
+    //});
 
   }
 
@@ -339,11 +341,11 @@ export class CdkTree  implements CollectionViewer {
   }
 
 
-  gotoParent(node: any) {
-    let parent = this.treeControl.getParent(node);
-    let index = this.treeControl.getIndex(parent);
-    this.scrollToIndex(index);
-  }
+  // gotoParent(node: any) {
+  //   let parent = this.treeControl.getParent(node);
+  //   let index = this.treeControl.getIndex(parent);
+  //   this.scrollToIndex(index);
+  // }
   /** Scroll related end */
 
 
@@ -366,7 +368,5 @@ export class CdkTree  implements CollectionViewer {
       // goToParent(focusIndex), collapse parent data
     }
   }
-
-
   /** Expand related end */
 }

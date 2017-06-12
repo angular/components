@@ -1,7 +1,7 @@
-import {Component, ChangeDetectionStrategy, Directive, Input, OnInit, AfterViewInit, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ChangeDetectorRef, Directive, Input, OnInit, AfterViewInit, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
-import {JsonDataSource, JsonNode} from './simple-data-source';
-import {SelectionModel, CdkTree, TreeControl, TreeAdapter} from '@angular/material';
+import {JsonDataSource, JsonNode, JsonAdapter, JsonFlatNode} from './simple-data-source';
+import {SelectionModel, CdkTree, TreeControl, FlatTreeControl, TreeAdapter, nodeDecedents, FlatNode, NestedNode} from '@angular/material';
 import {SimpleTreeNode} from './simple-tree-node';
 
 @Component({
@@ -85,12 +85,20 @@ export class SimpleTreeDemo implements OnInit, AfterViewInit {
   "status" : "OK"
 
 }`;
+
   _flat: boolean = true;
   @Input()
   set flat(value: boolean) {
     this._flat = value;
-    this.dataSource.flat = value;
-
+    if (value) {
+      this.treeControl = new FlatTreeControl<JsonFlatNode>();
+      this.dataSource = new JsonDataSource(this.treeControl as FlatTreeControl<JsonFlatNode>);
+      this.treeControl.expandChange.next([]);
+    } else {
+      // this.treeControl = new NestedTreeControl<JsonNestedNode>();
+      // this.dataSource = new JsonDataSource(this.treeControl as NestedTreeControl<JsonNestedNode>);
+      // this.treeControl.expandChange.next([]);
+    }
   }
   get flat() {
     return this._flat;
@@ -104,23 +112,35 @@ export class SimpleTreeDemo implements OnInit, AfterViewInit {
       console.log(e);
     };
   }
-  selection = new SelectionModel<UserData>(true, []);
+  selection = new SelectionModel<any>(true, []);
 
 
   @ViewChild(CdkTree) tree: CdkTree;
 
-  treeControl: TreeControl<UserData> = new TreeControl<UserData>();
-  treeAdapter: TreeAdapter<UserData> = new TreeAdapter<UserData>(this.treeControl);
-  dataSource: JsonDataSource = new JsonDataSource(this.treeAdapter);
+  treeControl: TreeControl;
+
+  dataSource: JsonDataSource;
 
 
-  constructor() { }
+  constructor(public changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.submit();
+
+    this.treeControl = new FlatTreeControl<JsonFlatNode>();
+    this.dataSource = new JsonDataSource(this.treeControl as FlatTreeControl<JsonFlatNode>);
+    this.treeControl.expandChange.next([]);
   }
 
   ngAfterViewInit() {
+
+    this.selection.onChange.subscribe(() => {
+      this.changeDetectorRef.markForCheck();
+    });
+  }
+
+  ngOnDestroy() {
+    this.selection.onChange.unsubscribe();
   }
 
 
@@ -130,13 +150,12 @@ export class SimpleTreeDemo implements OnInit, AfterViewInit {
     return `${(level - 1) * 45}px`;
   }
 
-  toggleExpand(node: UserData) {
-    this.treeControl.expansionModel.toggle(node);
-  }
 
-  gotoParent(node: UserData) {
-    this.tree.gotoParent(node);
-  }
+
+  //
+  // gotoParent(node: JsonFlatNode) {
+  //   this.tree.gotoParent(node);
+  // }
 
 
   createArray(level: number) {

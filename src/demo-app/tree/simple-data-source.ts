@@ -1,4 +1,4 @@
-import {CollectionViewer, TreeDataSource, TreeAdapter, TreeControl} from '@angular/material';
+import {CollectionViewer, TreeDataSource, TreeAdapter, FlatTreeControl, TreeControl, FlatNode, NestedNode, SelectionModel} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/combineLatest';
@@ -13,10 +13,97 @@ import {
   IterableDiffer,
 } from '@angular/core';
 
-export class JsonNode {
+export interface SimpleTreeNode {
+  children: SimpleTreeNode[];
+}
+
+export class JsonNode implements SimpleTreeNode {
+  children: JsonNode[];
   key: string;
   value: any;
-  children: any[];
+}
+export class JsonFlatNode implements FlatNode {
+  key: string;
+  value: any;
+  level: number;
+  expandable: boolean;
+  parentMap: boolean[];
+}
+
+// export class JsonNestedNode implements NestedNode {
+//   key: string;
+//   value: any;
+//   children: JsonNode[];
+//   getChildren(): Observable<JsonNestedNode> {
+//     return this.children;
+//   }
+// }
+
+export class JsonAdapter {
+
+  static flattenNodes( structuredData: JsonNode[]): JsonFlatNode[] {
+    console.log(`flatten nodes`);
+    let resultNodes: JsonFlatNode[] = [];
+    structuredData.forEach((node) => {
+      this._flattenNode(node, 0, resultNodes, []);
+    });
+    return resultNodes;
+  }
+
+  static _flattenNode(node: JsonNode, level: number,
+                      resultNodes: JsonFlatNode[], parentMap: boolean[]) {
+    let flatNode: JsonFlatNode = new JsonFlatNode();
+    flatNode.key = node.key;
+    flatNode.value = node.value;
+    flatNode.level = level;
+    flatNode.expandable = !!node.children;
+    flatNode.parentMap = parentMap;
+    resultNodes.push(flatNode);
+
+    if (flatNode.expandable) {
+      node.children.forEach((child, index) => {
+        let childParentMap: boolean[] = parentMap.slice();
+        childParentMap.push(index != node.children.length - 1);
+        this._flattenNode(child, level + 1, resultNodes, childParentMap);
+      });
+    }
+    return flatNode;
+  }
+
+  static expandFlattenedNodes(nodes: JsonFlatNode[],
+                              expansionModel: SelectionModel<any>): JsonFlatNode[] {
+    console.log(`expand flatten nodes`);
+    let results: JsonFlatNode[] = [];
+    let currentExpand: boolean[] = [];
+    currentExpand[0] = true;
+
+    nodes.forEach((node, index) => {
+      let expand = true;
+      for (let i = 0; i <= node.level; i++) {
+        expand = expand && currentExpand[i];
+      }
+      if (expand) {
+        results.push(node);
+      }
+      if (node.expandable) {
+
+        currentExpand[node.level + 1] = expansionModel.isSelected(node);
+      }
+    });
+    return results;
+  }
+
+  static nodeDecedents(node: JsonFlatNode, nodes: JsonFlatNode[], onlyExpandable: boolean = true) {
+    let results: JsonFlatNode[] = [];
+    let startIndex = nodes.indexOf(node);
+    if (startIndex < 0) { return results; }
+    for (let i = startIndex; i < nodes.length && nodes[i].level > node.level; ++i) {
+      if (!onlyExpandable || nodes[i].expandable) {
+        results.push(nodes[i]);
+      }
+    }
+    return results;
+  }
 }
 
 export class JsonDataSource implements TreeDataSource<any> {
@@ -31,29 +118,29 @@ export class JsonDataSource implements TreeDataSource<any> {
   _filteredData = new BehaviorSubject<any>([]);
   get filteredData(): any { return this._filteredData.value; }
 
+  _expandedData = new BehaviorSubject<any>([]);
+  get expandedData() { return this._expandedData.value; }
+
 
   set data(value: any) {
-    let tree = this.buildJsonTree(value);
+    let tree = this.buildJsonTree(value, 0);
     this._filteredData.next(tree);
-    console.log(`set filtered data`);
   }
 
-  constructor(public treeAdapter: TreeAdapter<any>) {
-    Observable.combineLatest([
-      this.treeAdapter.treeControl.expandChange,
-      this.treeAdapter.flattenNodes(
-        this.getChildrenFunc, this._filteredData)])
-      .map((result: any[]) => {
-        console.log(`combine ${result}`);
-      return this.treeAdapter.treeControl.flatNodes;
+  constructor(public treeControl: FlatTreeControl<JsonFlatNode>) {
+    this._filteredData.subscribe((filteredData: JsonNode[]) => {
+      this._flattenedData.next(JsonAdapter.flattenNodes(filteredData));
+      this.treeControl.flatNodes = this.flattenedData;
     });
-
+    Observable.combineLatest([this.treeControl.expandChange, this._flattenedData]).subscribe(() => {
+      this._expandedData.next(JsonAdapter.expandFlattenedNodes(this.flattenedData, this.treeControl.expansionModel));
+    });
   }
 
-  connect(collectionViewer: CollectionViewer): Observable<UserData[]> {
-    return collectionViewer.viewChanged.map((view) => {
-      let displayData = flattenedData;
-      console.log(displayData); console.log(`combineLatest in side `);
+  connect(collectionViewer: CollectionViewer): Observable<JsonFlatNode[]> {
+    return Observable.combineLatest([collectionViewer.viewChanged, this._expandedData])
+        .map((results: any[]) => {
+      let [view, displayData] = results;
       // Set the rendered rows length to the virtual page size. Fill in the data provided
       // from the index start until the end index or pagination size, whichever is smaller.
       this._renderedData.length = displayData.length;
@@ -73,11 +160,10 @@ export class JsonDataSource implements TreeDataSource<any> {
   }
 
   getChildren(node: any): Observable<any[]> {
-    console.log(node);
     return Observable.of(node.children);
   }
 
-  buildJsonTree(value: any) {
+  buildJsonTree(value: any, level: number) {
     let data: any[] = [];
     for (let k in value) {
       let v = value[k];
@@ -86,7 +172,7 @@ export class JsonDataSource implements TreeDataSource<any> {
       if (v === null || v === undefined) {
         // no action
       } else if (typeof v === 'object') {
-        node.children = this.buildJsonTree(v);
+        node.children = this.buildJsonTree(v, level + 1);
       } else {
         node.value = v;
       }
@@ -96,7 +182,6 @@ export class JsonDataSource implements TreeDataSource<any> {
   }
 
   addChild(key: string, value: string, node: JsonNode) {
-    console.log(node.children);
     if (!node.children) {
       node.children = [];
     }
@@ -104,8 +189,6 @@ export class JsonDataSource implements TreeDataSource<any> {
     child.key = key;
     child.value = value;
     node.children.push(child);
-    console.log(node);
-    console.log(this.filteredData);
     this._filteredData.next(this._filteredData.value);
   }
 }

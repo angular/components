@@ -1,7 +1,7 @@
-import {OnInit, Component, ChangeDetectionStrategy, Directive, Input, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
+import {OnInit, Component, ChangeDetectionStrategy, AfterViewInit, OnDestroy, ChangeDetectorRef, Directive, Input, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
-import {JsonDataSource} from './simple-data-source'
-import {CdkNodePlaceholder, SelectionModel, CdkTree, TreeControl} from '@angular/material';
+import {JsonDataSource, JsonFlatNode} from './simple-data-source'
+import {CdkNodePlaceholder, SelectionModel, CdkTree, TreeControl, FlatTreeControl} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -20,10 +20,11 @@ export class SimpleTreeNode {
   @Input() expandable: boolean;
   @Input() expandIncludeChildren: boolean;
   @Input() selection: SelectionModel<any>;
+  @Input() selected: boolean;
   @Input() dataSource: JsonDataSource;
-  @Input() treeControl: TreeControl<any>;
+  @Input() treeControl: FlatTreeControl<JsonFlatNode>;
 
-  constructor(public tree: CdkTree) {}
+  constructor(public tree: CdkTree, public changeDetectorRef: ChangeDetectorRef) {}
 
   createArray(level: number) {
     return new Array(level);
@@ -36,5 +37,15 @@ export class SimpleTreeNode {
   getSpecial(node: any, index: number) {
     let levels = this.dataSource.dottedLineLevels.get(node);
     return !!levels && levels.indexOf(index) != -1;
+  }
+
+  selectNode(node: any, event: any) {
+    this.selection.toggle(node);
+    let select = this.selection.isSelected(node);
+    let decedents = this.treeControl.getDecedents(node);
+    decedents.forEach((decedent: JsonFlatNode) => {
+      select ? this.selection.select(decedent) : this.selection.deselect(decedent);
+    });
+    this.changeDetectorRef.markForCheck();
   }
 }
