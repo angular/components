@@ -22,7 +22,7 @@ export const payloadGithubStatus = https.onRequest(async (request, response) => 
   await setGithubStatus(commitSha, {
     result: true,
     name: 'Library Payload',
-    description: `${payloadDiff >= 0 ? `+` : ''} ${payloadDiff.toFixed(2)}KB`
+    description: `${payloadDiff >= 0 ? `+` : ''}${payloadDiff.toFixed(2)}KB`
   });
 
   response.json({message: 'Payload Github status successfully set.'});
