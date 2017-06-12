@@ -42,7 +42,6 @@ const ROLLUP_GLOBALS = {
   'rxjs/add/operator/finally': 'Rx.Observable.prototype',
   'rxjs/add/operator/first': 'Rx.Observable.prototype',
   'rxjs/add/operator/let': 'Rx.Observable.prototype',
-  'rxjs/add/operator/merge': 'Rx.Observable.prototype',
   'rxjs/add/operator/map': 'Rx.Observable.prototype',
   'rxjs/add/operator/share': 'Rx.Observable.prototype',
   'rxjs/add/operator/startWith': 'Rx.Observable.prototype',
