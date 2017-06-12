@@ -1,6 +1,6 @@
 import {Directive, Output, EventEmitter, ElementRef, Input} from '@angular/core';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
-import {ENTER} from '../core/keyboard/keycodes';
+import {ENTER, BACKSPACE} from '../core/keyboard/keycodes';
 import {MdChipList} from './chip-list';
 
 export interface MdChipInputEvent {
@@ -9,7 +9,7 @@ export interface MdChipInputEvent {
 }
 
 @Directive({
-  selector: 'input[mdChipInputFor], input[matChipInputFor]',
+  selector: 'input[mdChipInput], input[matChipInput]',
   host: {
     'class': 'mat-chip-input',
     '(keydown)': '_keydown($event)',
@@ -81,6 +81,9 @@ export class MdChipInput {
 
   /** Checks to see if the (chipEnd) event needs to be emitted. */
   _emitChipEnd(event?: KeyboardEvent) {
+    if (!this._inputElement.value && !!event && event.keyCode == BACKSPACE) {
+      this._chipList.chips.last.focus();
+    }
     if (!event || this.separatorKeyCodes.indexOf(event.keyCode) > -1) {
       this.chipEnd.emit({ input: this._inputElement, value: this._inputElement.value });
 

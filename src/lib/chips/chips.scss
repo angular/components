@@ -15,6 +15,16 @@ $mat-chip-remove-font-size: 18px;
 
 @mixin chip-margin() {
   [dir='rtl'] & {
+    margin: $mat-chip-margin;
+  }
+
+  [dir='ltr'] & {
+    margin: $mat-chip-margin;
+  }
+}
+
+@mixin chip-margin-last() {
+  [dir='rtl'] & {
     margin-left: 0;
     margin-right: $mat-chip-margin;
   }
@@ -25,7 +35,7 @@ $mat-chip-remove-font-size: 18px;
   }
 }
 
-@mixin chip-margin-reverse() {
+@mixin chip-margin-first() {
   [dir='ltr'] & {
     margin-left: 0;
     margin-right: $mat-chip-margin;
@@ -50,15 +60,18 @@ $mat-chip-remove-font-size: 18px;
     // Do not apply the special margins inside an input container
     // Remove the margin from the first element (in both LTR and RTL)
     &:first-child {
-      @include chip-margin-reverse();
+      @include chip-margin-first();
     }
 
     // Remove the margin from the last element (in both LTR and RTL)
     &:last-child {
-      @include chip-margin();
+      @include chip-margin-last();
     }
   }
+}
 
+.mat-input-container .mat-chip-list-wrapper .map-chip:last-child {
+  @include chip-margin();
 }
 
 .mat-input-prefix .mat-chip-list-wrapper {

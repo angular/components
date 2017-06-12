@@ -46,18 +46,18 @@
       </p>
 
       <md-input-container [floatPlaceholder]="people.length > 0 ? 'always' : 'auto'">
-        <md-chip-list #chipList>
+        <md-chip-list mdPrefix #chipList>
           <md-chip *ngFor="let person of people" [color]="color" [selectable]="selectable"
                    [removable]="removable" (remove)="remove(person)">
             {{person.name}}
             <md-icon mdChipRemove>cancel</md-icon>
           </md-chip>
-          <input mdInput placeholder="New Contributor..."
-                 [mdChipInputFor]="chipList"
-                 [mdChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                 [mdChipInputAddOnBlur]="addOnBlur"
-                 (mdChipInputTokenEnd)="add($event)" />
         </md-chip-list>
+        <input mdInput mdChipInput placeholder="New Contributor..."
+               [mdChipInputFor]="chipList"
+               [mdChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [mdChipInputAddOnBlur]="addOnBlur"
+               (mdChipInputTokenEnd)="add($event)" />
       </md-input-container>
 
       <p>
