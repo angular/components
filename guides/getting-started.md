@@ -45,20 +45,7 @@ export class PizzaPartyAppModule { }
 
 ## Step 3: Import the component modules
 
-Import MaterialModule in your NgModule:
-
-```ts
-import {MaterialModule} from '@angular/material';
-
-@NgModule({
-  ...
-  imports: [MaterialModule],
-  ...
-})
-export class PizzaPartyAppModule { }
-```
-
-Or import the NgModule for each component you want to use: 
+Import the NgModule for each component you want to use: 
 
 ```ts
 import {MdButtonModule, MdCheckboxModule} from '@angular/material';
