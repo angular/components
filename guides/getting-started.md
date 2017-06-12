@@ -45,7 +45,20 @@ export class PizzaPartyAppModule { }
 
 ## Step 3: Import the component modules
 
-Import the NgModule for each component you want to use: 
+Import MaterialModule in your NgModule:
+
+```ts
+import {MaterialModule} from '@angular/material';
+
+@NgModule({
+  ...
+  imports: [MaterialModule],
+  ...
+})
+export class PizzaPartyAppModule { }
+```
+
+Or import the NgModule for each component you want to use: 
 
 ```ts
 import {MdButtonModule, MdCheckboxModule} from '@angular/material';
@@ -83,6 +96,14 @@ To get started with a prebuilt theme, include the following in your app's index.
 
 ```html
 <link href="../node_modules/@angular/material/prebuilt-themes/indigo-pink.css" rel="stylesheet">
+```
+Alternatively you can include the following in your angular-cli.json at styles section:
+
+```json
+      "styles": [
+        "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+        "styles.css"
+      ],
 ```
 
 Note that your app's project structure may have a different relative location for your node_modules.
