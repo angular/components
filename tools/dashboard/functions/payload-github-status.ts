@@ -5,7 +5,7 @@ import {setGithubStatus} from './github/github-status';
 export const payloadGithubStatus = https.onRequest(async (request, response) => {
   const authToken = request.header('auth-token');
   const commitSha = request.header('commit-sha');
-  const payloadDiff = parseInt(request.header('commit-payload-diff'));
+  const payloadDiff = parseFloat(request.header('commit-payload-diff'));
 
   if (!verifyToken(authToken)) {
     return response.status(403).json({message: 'Auth token is not valid'});
