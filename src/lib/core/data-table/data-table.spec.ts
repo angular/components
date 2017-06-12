@@ -25,7 +25,8 @@ describe('CdkTable', () => {
         SimpleCdkTableApp,
         DynamicDataSourceCdkTableApp,
         CustomRoleCdkTableApp,
-        RowContextCdkTableApp
+        TrackByCdkTableApp,
+        RowContextCdkTableApp,
       ],
     }).compileComponents();
   }));
@@ -143,6 +144,119 @@ describe('CdkTable', () => {
     expect(changedRows[0].getAttribute('initialIndex')).toBe('1');
     expect(changedRows[1].getAttribute('initialIndex')).toBe('0');
     expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
+  });
+
+  describe('should properly use trackBy when diffing to add/remove/move rows', () => {
+
+    afterEach(() => {
+      // Resetting the static value of the trackby function for TrackByCdkTableApp
+      TrackByCdkTableApp.TRACK_BY = 'reference';
+    });
+
+    function createComponent() {
+      fixture = TestBed.createComponent(TrackByCdkTableApp);
+
+      component = fixture.componentInstance;
+      dataSource = component.dataSource as FakeDataSource;
+      table = component.table;
+      tableElement = fixture.nativeElement.querySelector('cdk-table');
+
+      fixture.detectChanges();  // Let the component and table create embedded views
+      fixture.detectChanges();  // Let the cells render
+
+      // Each row receives an attribute 'initialIndex' the element's original place
+      getRows(tableElement).forEach((row: Element, index: number) => {
+        row.setAttribute('initialIndex', index.toString());
+      });
+
+      // Prove that the attributes match their indicies
+      const initialRows = getRows(tableElement);
+      expect(initialRows[0].getAttribute('initialIndex')).toBe('0');
+      expect(initialRows[1].getAttribute('initialIndex')).toBe('1');
+      expect(initialRows[2].getAttribute('initialIndex')).toBe('2');
+    }
+
+    // Swap first two elements, remove the third, add new data
+    function changeData() {
+      // Swap first and second data in data array
+      const copiedData = component.dataSource.data.slice();
+      const temp = copiedData[0];
+      copiedData[0] = copiedData[1];
+      copiedData[1] = temp;
+
+      // Remove the third element
+      copiedData.splice(2, 1);
+
+      // Add new data
+      component.dataSource.data = copiedData;
+      component.dataSource.addData();
+    }
+
+    it('with reference-based trackBy', () => {
+      createComponent();
+      changeData();
+
+      // Expect that the first and second rows were swapped and that the last row is new
+      const changedRows = getRows(tableElement);
+      expect(changedRows.length).toBe(3);
+      expect(changedRows[0].getAttribute('initialIndex')).toBe('1');
+      expect(changedRows[1].getAttribute('initialIndex')).toBe('0');
+      expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
+    });
+
+    it('with changed references without property-based trackBy', () => {
+      createComponent();
+      changeData();
+
+      // Change each item reference to show that the trackby is not checking the item properties.
+      component.dataSource.data = component.dataSource.data
+          .map(item => { return {a: item.a, b: item.b, c: item.c}; });
+
+      // Expect that all the rows are considered new since their references are all different
+      const changedRows = getRows(tableElement);
+      expect(changedRows.length).toBe(3);
+      expect(changedRows[0].getAttribute('initialIndex')).toBe(null);
+      expect(changedRows[1].getAttribute('initialIndex')).toBe(null);
+      expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
+    });
+
+    it('with changed references with property-based trackBy', () => {
+      TrackByCdkTableApp.TRACK_BY = 'propertyA';
+      createComponent();
+      changeData();
+
+      // Change each item reference to show that the trackby is checking the item properties.
+      // Otherwise this would cause them all to be removed/added.
+      component.dataSource.data = component.dataSource.data
+          .map(item => { return {a: item.a, b: item.b, c: item.c}; });
+
+      // Expect that the first and second rows were swapped and that the last row is new
+      const changedRows = getRows(tableElement);
+      expect(changedRows.length).toBe(3);
+      expect(changedRows[0].getAttribute('initialIndex')).toBe('1');
+      expect(changedRows[1].getAttribute('initialIndex')).toBe('0');
+      expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
+    });
+
+    it('with changed references with index-based trackBy', () => {
+      TrackByCdkTableApp.TRACK_BY = 'index';
+      createComponent();
+      changeData();
+
+      // Change each item reference to show that the trackby is checking the index.
+      // Otherwise this would cause them all to be removed/added.
+      component.dataSource.data = component.dataSource.data
+          .map(item => { return {a: item.a, b: item.b, c: item.c}; });
+
+      // Expect first two to be the same since they were swapped but indicies are consistent.
+      // The third element was removed and caught by the table so it was removed before another
+      // item was added, so it is without an initial index.
+      const changedRows = getRows(tableElement);
+      expect(changedRows.length).toBe(3);
+      expect(changedRows[0].getAttribute('initialIndex')).toBe('0');
+      expect(changedRows[1].getAttribute('initialIndex')).toBe('1');
+      expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
+    });
   });
 
   it('should match the right table content with dynamic data', () => {
@@ -404,6 +518,41 @@ class DynamicDataSourceCdkTableApp {
   columnsToRender = ['column_a'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource" [trackBy]="trackBy">
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_b">
+        <cdk-header-cell *cdkHeaderCellDef> Column B</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.b}}</cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
+    </cdk-table>
+  `
+})
+class TrackByCdkTableApp {
+  static TRACK_BY: 'reference' | 'propertyA' | 'index' = 'reference';
+
+  dataSource: FakeDataSource = new FakeDataSource();
+  columnsToRender = ['column_a', 'column_b'];
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
+
+  trackBy(index: number, item: TestData) {
+    switch (TrackByCdkTableApp.TRACK_BY) {
+      case 'reference': return item;
+      case 'propertyA': return item.a;
+      case 'index': return index;
+    }
+  }
 }
 
 @Component({
