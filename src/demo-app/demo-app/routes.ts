@@ -38,6 +38,7 @@ import {TypographyDemo} from '../typography/typography-demo';
 import {ExpansionDemo} from '../expansion/expansion-demo';
 import {TreeDemo} from '../tree/tree-demo';
 import {SimpleTreeDemo} from '../tree/simple-tree-demo';
+import {NestedTreeDemo} from '../tree/nested-tree-demo';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: Home},
@@ -72,6 +73,7 @@ export const DEMO_APP_ROUTES: Routes = [
   {path: 'dialog', component: DialogDemo},
   {path: 'tooltip', component: TooltipDemo},
   {path: 'simple-tree', component: SimpleTreeDemo},
+  {path: 'nested-tree', component: NestedTreeDemo},
   {path: 'snack-bar', component: SnackBarDemo},
   {path: 'platform', component: PlatformDemo},
   {path: 'style', component: StyleDemo},

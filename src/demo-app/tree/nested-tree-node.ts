@@ -1,16 +1,16 @@
 import {OnInit, Component, ChangeDetectionStrategy, AfterViewInit, OnDestroy, ChangeDetectorRef, Directive, Input, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
-import {JsonDataSource, JsonFlatNode} from './simple-data-source'
-import {CdkNodePlaceholder, SelectionModel, CdkTree, TreeControl, FlatTreeControl} from '@angular/material';
+import {JsonNestedDataSource, JsonNestedNode} from './nested-data-source'
+import {CdkNodePlaceholder, SelectionModel, CdkTree, TreeControl, FlatTreeControl, NestedTreeControl} from '@angular/material';
 
 @Component({
   moduleId: module.id,
-  selector: 'simple-tree-node',
-  templateUrl: 'simple-tree-node.html',
-  styleUrls: ['simple-tree-node.css'],
+  selector: 'nested-tree-node',
+  templateUrl: 'nested-tree-node.html',
+  styleUrls: ['nested-tree-node.css'],
   changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
-export class SimpleTreeNode {
+export class NestedTreeNode {
 
 
   @ViewChild(CdkNodePlaceholder) nodePlaceholder: CdkNodePlaceholder;
@@ -20,8 +20,8 @@ export class SimpleTreeNode {
   @Input() expandIncludeChildren: boolean;
   @Input() selection: SelectionModel<any>;
   @Input() selected: boolean;
-  @Input() dataSource: JsonDataSource;
-  @Input() treeControl: FlatTreeControl<JsonFlatNode>;
+  @Input() dataSource: JsonNestedDataSource;
+  @Input() treeControl: NestedTreeControl<JsonNestedNode>;
 
   constructor(public tree: CdkTree, public changeDetectorRef: ChangeDetectorRef) {}
 
@@ -42,7 +42,7 @@ export class SimpleTreeNode {
     this.selection.toggle(node);
     let select = this.selection.isSelected(node);
     let decedents = this.treeControl.getDecedents(node);
-    decedents.forEach((decedent: JsonFlatNode) => {
+    decedents.forEach((decedent: JsonNestedNode) => {
       select ? this.selection.select(decedent) : this.selection.deselect(decedent);
     });
     this.changeDetectorRef.markForCheck();

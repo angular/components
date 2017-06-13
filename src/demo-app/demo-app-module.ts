@@ -44,8 +44,8 @@ import {TypographyDemo} from './typography/typography-demo';
 import {ExpansionDemo} from './expansion/expansion-demo';
 import {SimpleTreeDemo} from './tree/simple-tree-demo';
 import {SimpleTreeNode} from './tree/simple-tree-node';
-import {SimpleNestedTreeDemo} from './tree/simple-nested-tree';
-import {SimpleNestedTreeNode} from './tree/simple-nested-node';
+import {NestedTreeDemo} from './tree/nested-tree-demo';
+import {NestedTreeNode} from './tree/nested-tree-node';
 import {
   CdkDataTableModule,
   FullscreenOverlayContainer,
@@ -179,6 +179,7 @@ export class DemoMaterialModule {}
     TabsDemo,
     SunnyTabContent,
     SimpleTreeDemo,
+    NestedTreeDemo,
     RainyTabContent,
     FoggyTabContent,
     PlatformDemo,
@@ -193,6 +194,7 @@ export class DemoMaterialModule {}
 =======
 >>>>>>> sth
     SimpleTreeNode,
+    NestedTreeNode,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},

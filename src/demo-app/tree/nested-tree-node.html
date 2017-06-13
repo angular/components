@@ -1,0 +1,22 @@
+<ul>
+  <a md-icon-button (click)="treeControl.toggleDecedents(node)" >
+    <md-icon *ngIf="(node.getChildren()) | async">{{ treeControl.expansionModel.isSelected(node) ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</md-icon>
+    <md-icon *ngIf="(!node.getChildren()) | async">accessibility</md-icon>
+  </a>
+  <md-checkbox (click)="$event.stopPropagation()"
+               (change)="selectNode(node, $event)"
+               [checked]="selected">
+    {{node.key}}<span *ngIf="node.value">: {{node.value}}</span> </md-checkbox>
+  <div *ngIf="treeControl.expanded(node)">
+    <li *ngFor="let child of node.getChildren() | async">
+      <nested-tree-node [node]="child"
+                        [selection]="selection"
+                        [dataSource]="dataSource"
+                        [level]="level+1"
+                        [expandable]="!!getChildren(child)"
+                        [treeControl]="treeControl"
+                        [selected]="selection.isSelected(child)"
+                        [expandIncludeChildren]="expandIncludeChildren"></nested-tree-node>
+    </li>
+  </div>
+</ul>

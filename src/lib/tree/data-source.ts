@@ -102,12 +102,20 @@ export class FlatTreeControl<T extends FlatNode> implements TreeControl {
       this.expandChange.next(this.expansionModel.selected));
   }
 
+  toggle(node: T) {
+    this.expansionModel.toggle(node);
+  }
+
   expand(node: T) {
     this.expansionModel.select(node);
   }
 
   collapse(node: T) {
     this.expansionModel.deselect(node);
+  }
+
+  expanded(node: any) {
+    return this.expansionModel.isSelected(node);
   }
 
   expandAll() {
@@ -170,12 +178,20 @@ export class NestedTreeControl<T extends NestedNode> implements TreeControl {
       this.expandChange.next(this.expansionModel.selected));
   }
 
+  toggle(node: T) {
+    this.expansionModel.toggle(node);
+  }
+
   expand(node: T) {
     this.expansionModel.select(node);
   }
 
   collapse(node: T) {
     this.expansionModel.deselect(node);
+  }
+
+  expanded(node: any) {
+    return this.expansionModel.isSelected(node);
   }
 
   expandAll() {
@@ -194,124 +210,35 @@ export class NestedTreeControl<T extends NestedNode> implements TreeControl {
   }
 
   expandDecedents(node: T) {
+    this.expansionModel.select(node);
+    let subscription = node.getChildren().subscribe((children: T[]) => {
+      if (children) {
+        children.forEach((child) => this.expandDecedents(child));
+      }
+    });
+    subscription.unsubscribe();
   }
 
   collapseDecedents(node: T) {
+    this.expansionModel.deselect(node);
+    let subscription = node.getChildren().subscribe((children: T[]) => {
+      if (children) {
+        children.forEach((child) => this.collapseDecedents(child));
+      }
+    });
+    subscription.unsubscribe();
   }
 
   toggleDecedents(node: T) {
+    this.expansionModel.toggle(node);
+    let expand = this.expansionModel.isSelected(node);
+    let subscription = node.getChildren().subscribe((children: T[]) => {
+      console.log(`children ${children}`);
+      if (children) {
+        children.forEach((child) =>
+          expand ? this.expandDecedents(child) : this.collapseDecedents(child));
+      }
+    });
+    subscription.unsubscribe();
   }
 }
-
-// export class TreeControl<T extends (FlatNode|NestedNode)> {
-//
-//   getChildrenFunc: (node: T) => T[];
-//
-//   flatNodes: T[];
-//   nestedNodes: T[];
-//
-//   /** Level info */
-//   levelMap: WeakMap<T, number> = new WeakMap<T, number>();
-//
-//   /** Parent info */
-//   parentMap: WeakMap<T, T> = new WeakMap<T, T>();
-//
-//   /** Index info (for flatten version) */
-//   indexMap: WeakMap<T, number> = new WeakMap<T, number>();
-//
-//   /** Parent bit information: to draw dotted lines of tree structure */
-//   parentBitLevels: WeakMap<T, number[]> = new WeakMap<T, number[]>();
-//
-//   decedentsMap: WeakMap<T, T[]> = new WeakMap<T, T[]>();
-//
-//   /** Expansion info: the changes */
-//   expandChange = new BehaviorSubject<T[]>([]);
-//
-//   set expansionModel(model: SelectionModel<T>) {
-//     this._expansionModel.onChange.unsubscribe();
-//     this._expansionModel = model;
-//     this._expansionModel.onChange.subscribe((_) => this.expandChange.next(this.expansionModel.selected));
-//   }
-//   get expansionModel() {
-//     return this._expansionModel;
-//   }
-//   _expansionModel = new SelectionModel<T>(true);
-//
-//   /** Expansion info: the model */
-//   constructor() {
-//     this._expansionModel.onChange.subscribe((_) =>
-//       this.expandChange.next(this.expansionModel.selected));
-//   }
-//
-//   getLevel(node: T) {
-//     return this.levelMap.get(node);
-//   }
-//
-//   getParent(node: T) {
-//     return this.parentMap.get(node);
-//   }
-//
-//   getIndex(node: T) {
-//     return this.indexMap.get(node);
-//   }
-//
-//   initialize() {
-//     this.flatNodes = [];
-//     this.levelMap = new WeakMap<T, number>();
-//     this.parentMap = new WeakMap<T, T>();
-//     this.indexMap = new WeakMap<T, number>();
-//     this.parentBitLevels = new WeakMap<T, number[]>();
-//     this.decedentsMap = new WeakMap<T, T[]>();
-//   }
-//
-//   expanded(node: any) {
-//     return this.expansionModel.isSelected(node);
-//   }
-//
-//   expandAll() {
-//     this.expansionModel.clear();
-//     // flat tree
-//     this.flatNodes.forEach((node) => {
-//       if ('expandable' in node) {
-//         if (node.expandable) {
-//           this.expansionModel.select(node);
-//         }
-//       }
-//     });
-//
-//     // Nested tree
-//     this.nestedNodes.forEach((node) => {
-//       this.toggleRecursive(node, true, this.expansionModel);
-//     });
-//   }
-//
-//   toggleRecursive(node: any, expand: boolean, selection: SelectionModel<any>) {
-//     // flat
-//     let startIndex = this.flatNodes.indexOf(node);
-//     for (let i = startIndex; i < this.flatNodes.length && this.flatNodes[i].level > node.level; i++) {
-//       expand ? selection.select(this.flatNodes[i]) : selection.deselect(this.flatNodes[i]);
-//     }
-//
-//     // nested tree
-//     this.nestedNodes.forEach((child) => this._toggleNestedNodes(child, expand, selection));
-//   }
-//
-//   _toggleNestedNodes(node: any, expand: boolean, selection: SelectionModel<any>) {
-//     node.getChildren().subscribe((children) => {
-//       if (!!children) {
-//         expand ? selection.select(node) : selection.deselect(node);
-//         children.forEach((child) => {
-//           children.forEach((child) => {
-//             this._toggleNestedNodes(child, expand, selection);
-//           });
-//         });
-//       } else {
-//         selection.deselect(node);
-//       }
-//     });
-//   }
-//
-//   collapseAll() {
-//     this.expansionModel.clear();
-//   }
-// }

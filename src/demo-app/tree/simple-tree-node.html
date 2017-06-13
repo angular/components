@@ -1,4 +1,4 @@
-<div *ngIf="flat" [class.selected]="node ? selected : false"
+<div [class.selected]="node ? selected : false"
      [class.data-row]="!!node">
   <div class="row">
     <div class="space">
@@ -13,17 +13,3 @@
       {{node.key}}<span *ngIf="node.value">: {{node.value}}</span> </md-checkbox>
   </div>
 </div>
-
- <ul *ngIf="!flat">
-   <li *ngFor="let child of node.getChildren() | async">
-     <simple-tree-node [node]="child"
-                       [flat]="false"
-                       [selection]="selection"
-                       [dataSource]="dataSource"
-                       [level]="level+1"
-                       [expandable]="!!getChildren(child)"
-                       [treeControl]="treeControl"
-                       [selected]="selection.isSelected(child)"
-                       [expandIncludeChildren]="expandIncludeChildren"></simple-tree-node>
-   </li>
- </ul>

@@ -68,7 +68,8 @@ export class DemoApp {
     {name: 'Platform', route: 'platform'},
     {name: 'Style', route: 'style'},
     {name: 'Typography', route: 'typography'}
-    {name: 'Tree', route: 'tree'}
+    {name: 'Tree', route: 'simple-tree'},
+    {name: 'Nested tree', route: 'nested-tree'}
   ];
 
   constructor(private _element: ElementRef) {

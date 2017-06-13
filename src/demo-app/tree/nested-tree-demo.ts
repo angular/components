@@ -1,17 +1,17 @@
 import {Component, ChangeDetectionStrategy, ChangeDetectorRef, Directive, Input, OnInit, AfterViewInit, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
 import {UserData, PeopleDatabase} from './person-database';
-import {JsonDataSource, JsonNode, JsonAdapter, JsonFlatNode} from './simple-data-source';
-import {SelectionModel, CdkTree, TreeControl, FlatTreeControl, TreeAdapter, nodeDecedents, FlatNode, NestedNode} from '@angular/material';
+import {JsonNestedDataSource, JsonNode, JsonNestedNode} from './nested-data-source';
+import {SelectionModel, CdkTree, TreeControl, FlatTreeControl, TreeAdapter, nodeDecedents, FlatNode, NestedNode, NestedTreeControl} from '@angular/material';
 import {SimpleTreeNode} from './simple-tree-node';
 
 @Component({
   moduleId: module.id,
-  selector: 'simple-tree-demo',
-  templateUrl: 'simple-tree-demo.html',
-  styleUrls: ['simple-tree-demo.css'],
+  selector: 'nested-tree-demo',
+  templateUrl: 'nested-tree-demo.html',
+  styleUrls: ['nested-tree-demo.css'],
   changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
-export class SimpleTreeDemo implements OnInit, AfterViewInit {
+export class NestedTreeDemo implements OnInit, AfterViewInit {
   data: string = `{
 
   "results" : [
@@ -102,12 +102,12 @@ export class SimpleTreeDemo implements OnInit, AfterViewInit {
 
   treeControl: TreeControl;
 
-  dataSource: JsonDataSource;
+  dataSource: JsonNestedDataSource;
 
 
   constructor(public changeDetectorRef: ChangeDetectorRef) {
-    this.treeControl = new FlatTreeControl<JsonFlatNode>();
-    this.dataSource = new JsonDataSource(this.treeControl as FlatTreeControl<JsonFlatNode>);
+    this.treeControl = new NestedTreeControl<JsonNestedNode>();
+    this.dataSource = new JsonNestedDataSource();
   }
 
   ngOnInit() {

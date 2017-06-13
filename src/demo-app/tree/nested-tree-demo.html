@@ -11,15 +11,15 @@
   <cdk-tree #tree [dataSource]="dataSource" [treeControl]="treeControl">
     <!-- Row templates. The columns used are set at the row template level -->
     <cdk-node *cdkNodeDef="let node" (click)="currentNode=node">
-        <simple-tree-node [node]="node"
-                          [level]="level"
-                          [selected]="selection.isSelected(node)"
-                          [expandable]="expandable"
-                          [expandIncludeChildren]="expandIncludeChildren"
-                          [dataSource]="dataSource"
-                          [selection]="selection" class="simple-tree-node"
-                          [treeControl]="treeControl">
-        </simple-tree-node>
+      <nested-tree-node [node]="node"
+                        [level]="level"
+                        [selected]="selection.isSelected(node)"
+                        [expandable]="expandable"
+                        [expandIncludeChildren]="expandIncludeChildren"
+                        [dataSource]="dataSource"
+                        [selection]="selection" class="simple-tree-node"
+                        [treeControl]="treeControl">
+      </nested-tree-node>
     </cdk-node>
   </cdk-tree>
 </div>
