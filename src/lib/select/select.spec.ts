@@ -1320,23 +1320,15 @@ fdescribe('MdSelect', () => {
     describe('x-axis positioning', () => {
 
       beforeEach(() => {
-<<<<<<< HEAD
         select.style.position = 'fixed';
         select.style.left = '30px';
       });
 
       it('should align the trigger and the selected option on the x-axis in ltr', fakeAsync(() => {
-=======
-        select.style.marginLeft = select.style.marginRight = '50px';
-      });
-
-      it('should align the trigger and the selected option on the x-axis in ltr', async(() => {
->>>>>>> chore: try to fix edge tests
         trigger.click();
         tick(400);
         fixture.detectChanges();
 
-<<<<<<< HEAD
         const triggerLeft = trigger.getBoundingClientRect().left;
         const firstOptionLeft = document.querySelector('.cdk-overlay-pane md-option')
             .getBoundingClientRect().left;
@@ -1348,22 +1340,6 @@ fdescribe('MdSelect', () => {
       }));
 
       it('should align the trigger and the selected option on the x-axis in rtl', fakeAsync(() => {
-=======
-        fixture.whenStable().then(() => {
-          const triggerLeft = trigger.getBoundingClientRect().left;
-          const firstOptionLeft =
-              document.querySelector('.cdk-overlay-pane md-option').getBoundingClientRect().left;
-
-          // Each option is 32px wider than the trigger, so it must be adjusted 16px
-          // to ensure the text overlaps correctly.
-          expect(firstOptionLeft.toFixed(2))
-              .toEqual((triggerLeft - 16).toFixed(2),
-                  `Expected trigger to align with the selected option on the x-axis in LTR.`);
-        });
-      }));
-
-      it('should align the trigger and the selected option on the x-axis in rtl', async(() => {
->>>>>>> chore: try to fix edge tests
         dir.value = 'rtl';
         fixture.detectChanges();
 
@@ -1371,7 +1347,6 @@ fdescribe('MdSelect', () => {
         tick(400);
         fixture.detectChanges();
 
-<<<<<<< HEAD
         const triggerRight = trigger.getBoundingClientRect().right;
         const firstOptionRight =
             document.querySelector('.cdk-overlay-pane md-option').getBoundingClientRect().right;
@@ -1494,21 +1469,6 @@ fdescribe('MdSelect', () => {
           expect(Math.floor(selectedOptionLeft)).toEqual(Math.floor(triggerLeft - 16));
         }));
 
-=======
-        fixture.whenStable().then(() => {
-          const triggerRight = trigger.getBoundingClientRect().right;
-          const firstOptionRight =
-              document.querySelector('.cdk-overlay-pane md-option').getBoundingClientRect().right;
-
-          // Each option is 32px wider than the trigger, so it must be adjusted 16px
-          // to ensure the text overlaps correctly.
-          expect(firstOptionRight.toFixed(2))
-              .toEqual((triggerRight + 16).toFixed(2),
-                  `Expected trigger to align with the selected option on the x-axis in RTL.`);
-        });
-      }));
-
->>>>>>> chore: try to fix edge tests
     });
 
     describe('with header', () => {
