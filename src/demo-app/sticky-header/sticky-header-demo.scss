@@ -5,6 +5,9 @@
 
 body {
   font: 14px/1.5 Helvetica, Arial, sans-serif;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
 }
 
 
@@ -13,12 +16,15 @@ body {
 .demo-sticky {
   .centered {
     text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
     height: 500px;
-    width: 900px;
     overflow: auto;}
 
   button {
+    position: fixed;
     margin: 16px;
+    z-index: 99;
   }
 }
 .mat-radio-button {
@@ -27,12 +33,17 @@ body {
 
 .centered {
   text-align: center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   height: 500px;
-  width: 900px;
+  //width: 900px;
   overflow: auto;}
 
 header {
   display: block;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   width: 100%;
   height: 200px;
   background: #aaa;
@@ -40,57 +51,54 @@ header {
 
 .container {
   margin: 0 auto;
-  width: 900px;
-}
-
-.row {
-  border-bottom: 10px;
-  margin-bottom: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  position: relative;
-}
-
-.row:after {
-  clear: both;
-  content: ".";
-  display: block;
-  height: 0;
-  visibility: hidden;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  //width: 900px;
 }
 
 .content {
   float: left;
   width: 600px;
   padding: 20px;
+  -webkit-appearance: none;
 }
 
 .rside {
   background: #cecece;
-  float: right;
+  -webkit-appearance: none;
   padding: 20px;
-  width: 100%;
+  //width: 100%;
 }
 
 .rside2 {
   background: #cea7a7;
-  float: right;
+  -webkit-appearance: none;
   padding: 20px;
-  width: 100%;
+  //width: 100%;
 }
 
 .rside3 {
   background: #c2eae5;
-  float: right;
+  -webkit-appearance: none;
   padding: 20px;
-  width: 100%;
+  //width: 100%;
 }
 
 
 h2 {
   font-size: 20px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
 }
 
 p {
   margin-bottom: 1.5em;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+div{
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }

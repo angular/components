@@ -19,13 +19,14 @@ import {Subject} from 'rxjs/Subject';
 
 
 @Directive({
-    selector: '[md-sticky-viewport]',
+    selector: '[md-sticky-viewport], [cdkStickyViewport]',
 })
 
 
 @Injectable()
 export class StickyParentDirective implements OnInit, OnDestroy, AfterViewInit {
 
+    // The parent element, which with the 'md-sticky-viewport' tag
     private pelem: any;
 
     constructor(private element: ElementRef) {
@@ -48,7 +49,7 @@ export class StickyParentDirective implements OnInit, OnDestroy, AfterViewInit {
 
 
 @Directive({
-    selector: '[md-sticky]',
+    selector: '[md-sticky], [cdkSticky]',
 })
 
 
@@ -62,6 +63,7 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
 
     private onScrollBind: EventListener = this.onScroll.bind(this);
     private onResizeBind: EventListener = this.onResize.bind(this);
+    private onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
 
     private stickStartClass: string = 'sticky';
     private stickEndClass: string = 'sticky-end';
@@ -101,6 +103,7 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
     constructor(private element: ElementRef, public findScroll: Scrollable) {
         this.elem = element.nativeElement;
         this.upperScrollableContainer = findScroll.getElementRef().nativeElement;
+
     }
 
     ngOnInit(): void {
@@ -144,19 +147,31 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     attach() {
-        this.upperScrollableContainer.addEventListener('scroll', this.onScrollBind);
-        this.upperScrollableContainer.addEventListener('resize', this.onResizeBind);
+        this.upperScrollableContainer.addEventListener('scroll', this.onScrollBind, false);
+        this.upperScrollableContainer.addEventListener('resize', this.onResizeBind, false);
 
-        // Observable.fromEvent(this.upperScrollableContainer, 'scroll')
-        //     .subscribe(() => this.onScroll());
+        // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
+        this.upperScrollableContainer.addEventListener('touchmove', this.onTouchMoveBind, false);
+
+         Observable.fromEvent(this.upperScrollableContainer, 'scroll')
+             .subscribe(() => this.onScroll());
+
+         Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
+             .subscribe(() => this.onTouchMove());
     }
 
     detach() {
         this.upperScrollableContainer.removeEventListener('scroll', this.onScrollBind);
         this.upperScrollableContainer.removeEventListener('resize', this.onResizeBind);
+        this.upperScrollableContainer.removeEventListener('touchmove', this.onTouchMoveBind);
     }
 
     onScroll(): void {
+        this.defineRestrictions();
+        this.sticker();
+    }
+
+    onTouchMove(): void {
         this.defineRestrictions();
         this.sticker();
     }
@@ -171,13 +186,13 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-
     // define the restrictions of the sticky header(including stickyWidth, when to start, when to finish)
     defineRestrictions(): void {
         let containerTop: any = this.stickyParent.getBoundingClientRect();
         this.elemHeight = this.getCssNumber(this.elem, 'height');
         this.containerHeight = this.getCssNumber(this.stickyParent, 'height');
-        this.containerStart = containerTop['top'];
+        // this.containerStart = containerTop['top'];
+        this.containerStart = containerTop.top;
 
         // the padding of the element being sticked
         this.elementPadding = this.getCssValue(this.elem, 'padding');
@@ -201,16 +216,47 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         this.elem.classList.remove(this.stickEndClass);
         this.elem.classList.add(this.stickStartClass);
 
+        /** Have to add the translate3d function for the sticky element's css style.
+         * Because iPhone and iPad's browser is using its owning rendering engine. And
+         * even if you are using Chrome on an iPhone, you are just using Safari with
+         * a Chrome skin around it.
+         *
+         * Safari on iPad and Safari on iPhone do not have resizable windows.
+         * In Safari on iPhone and iPad, the window size is set to the size of
+         * the screen (minus Safari user interface controls), and cannot be changed
+         * by the user. To move around a webpage, the user changes the zoom level and position
+         * of the viewport as they double tap or pinch to zoom in or out, or by touching
+         * and dragging to pan the page. As a user changes the zoom level and position of the
+         * viewport they are doing so within a viewable content area of fixed size
+         * (that is, the window). This means that webpage elements that have their position
+         * "fixed" to the viewport can end up outside the viewable content area, offscreen.
+         *
+         * So the 'position: fixed' does not work on iPhone and iPad. To make it work,
+         * I need to use translate3d(0,0,0) to force Safari rerendering the sticky element.
+        **/
+        this.elem.style.transform = 'translate3d(0,0,0)';
+
         this.elem.style.zIndex = this.zIndex;
         this.elem.style.position = 'fixed';
-        this.elem.style.top = this.upperScrollableContainer.offsetTop + 'px';
+        // this.elem.style.top = this.upperScrollableContainer.offsetTop + 'px';
+        this.elem.style.top = this.getCssNumber(this.upperScrollableContainer, 'top') + 'px';
+
         this.scrollingRight = this.upperScrollableContainer.offsetLeft + this.upperScrollableContainer.offsetWidth;
-        let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect()['right'];
+        // let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect()['right'];
+        let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
         this.elem.style.right = stuckRight + 'px';
 
         this.elem.style.left = this.upperScrollableContainer.offsetLeft + 'px';
         this.elem.style.bottom = 'auto';
         this.elem.style.width = this.scrollingWidth + 'px';
+
+        // Set style for sticky element again for Mobile Views.
+        this.elem.style.setProperty('zIndex', this.zIndex);
+        this.elem.style.setProperty('position', 'fixed');
+        this.elem.style.setProperty('top', this.upperScrollableContainer.offsetTop + 'px');
+        this.elem.style.setProperty('right', stuckRight + 'px');
+        this.elem.style.setProperty('left', this.upperScrollableContainer.offsetLeft + 'px');
+        this.elem.style.setProperty('width', this.scrollingWidth + 'px');
 
         this.activated.next(this.elem);
     }
@@ -240,7 +286,6 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
             this.defineRestrictions();
         }
 
-
         let currentPosition: number = this.upperScrollableContainer.offsetTop;
 
         // unstick when the element is scrolled out of the sticky region
@@ -250,8 +295,10 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
             this.isStuck = false;
         }
         // stick when the element is within the sticky region
-        else if (this.isStuck === false && currentPosition > this.containerStart && currentPosition < this.scrollFinish) {
+            // this.isStuck === false &&
+        else if ( this.isStuck === false && currentPosition > this.containerStart && currentPosition < this.scrollFinish) {
             this.stickElement();
+            console.log('stick');
         }
     }
 
@@ -262,7 +309,8 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
             result = window.getComputedStyle(element, null).getPropertyValue(property);
         }
         else if (typeof element.currentStyle !== 'undefined')  {
-            result = element.currentStyle[property];
+            // result = element.currentStyle[property];
+            result = element.currentStyle.property;
         }
         return result;
     }
