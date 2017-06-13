@@ -29,7 +29,7 @@ import {
   FloatPlaceholderType,
   MD_PLACEHOLDER_GLOBAL_OPTIONS
 } from '../core/placeholder/placeholder-options';
-import 'rxjs/add/operator/map';
+import {map} from 'rxjs/operator/map';
 
 
 describe('MdSelect', () => {
@@ -1680,7 +1680,7 @@ describe('MdSelect', () => {
       it('should consider the selection as a result of a user action when closed', () => {
         const option = fixture.componentInstance.options.first;
         const spy = jasmine.createSpy('option selection spy');
-        const subscription = option.onSelectionChange.map(e => e.isUserInput).subscribe(spy);
+        const subscription = map.call(option.onSelectionChange, e => e.isUserInput).subscribe(spy);
 
         dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
         expect(spy).toHaveBeenCalledWith(true);
