@@ -1,0 +1,24 @@
+<div class="rows-per-page">
+  Rows per page:
+  <md-select [(ngModel)]="pageSize">
+    <md-option *ngFor="let pageSizeOption of pageSizeOptions" [value]="pageSizeOption">
+      {{pageSizeOption}}
+    </md-option>
+  </md-select>
+</div>
+
+<div class="range">
+  {{startIndex}} - {{endIndex}}
+
+</div>
+
+<button md-icon-button
+        (click)="increasePage.emit()"
+        [disabled]="startIndex == 0">
+  <div class="prev"></div>
+</button>
+<button md-icon-button
+        (click)="decreasePage.emit()"
+        [disabled]="endIndex == maxLength">
+  <div class="next"></div>
+</button>

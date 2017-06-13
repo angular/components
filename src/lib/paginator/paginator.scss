@@ -1,0 +1,58 @@
+.host {
+  font-size: 20px;
+}
+
+:host {
+  min-height: 56px;
+  background: white;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  color: rgba(0, 0, 0, .54);
+  font-size: 12px;
+  justify-content: flex-end;
+
+  &.hide * {
+    opacity: 0;
+  }
+}
+
+.rows-per-page {
+  display: flex;
+  align-items: center;
+
+  .mat-select {
+    margin-left: 8px;
+    /deep/ .mat-select-trigger {
+      font-size: 12px;
+      min-width: 56px;
+    }
+  }
+}
+
+.range {
+  margin: 0 32px;
+}
+
+button[md-icon-button] + button[md-icon-button] {
+  margin-left: 8px;
+}
+
+.prev,
+.next {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-top: 1px solid #666;
+  border-right: 1px solid #666;
+  border-width: 2px;
+}
+
+.next {
+  margin-left: 12px;
+  transform: rotate(45deg);
+}
+.prev {
+  margin-left: 16px;
+  transform: rotate(225deg);
+}
