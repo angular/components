@@ -109,24 +109,8 @@ export class CdkTable<T> implements CollectionViewer {
   @Input()
   get dataSource(): DataSource<T> { return this._dataSource; }
   set dataSource(dataSource: DataSource<T>) {
-    if (this._dataSource == dataSource) { return; }
-    this._data = [];
-    this._dataSource = dataSource;
-
-    // If the view has already been initialized, then unsubscribe from the current render change
-    // subscription if one exists, and recreate a stream with this data source if one exists.
-    if (this._isViewInitialized) {
-      if (this._renderChangeSubscription) {
-        this._renderChangeSubscription.unsubscribe();
-      }
-
-      // If there is a data source provided, begin listening for its data. Otherwise, clear the
-      // rows from the table's row placeholder.
-      if (this._dataSource) {
-        this._observeRenderChanges();
-      } else {
-        this._rowPlaceholder.viewContainer.clear();
-      }
+    if (this._dataSource !== dataSource) {
+      this._switchDataSource(dataSource);
     }
   }
   private _dataSource: DataSource<T>;
@@ -169,7 +153,7 @@ export class CdkTable<T> implements CollectionViewer {
   }
 
   ngOnDestroy() {
-    this._onDestroy.next();
+    this._onDestroy.complete();
   }
 
   ngOnInit() {
@@ -185,9 +169,7 @@ export class CdkTable<T> implements CollectionViewer {
 
     // Re-render the rows if any of their columns change.
     // TODO(andrewseguin): Determine how to only re-render the rows that have their columns changed.
-    const rowColumnsChange =
-        this._rowDefinitions.toArray().map((rowDef: BaseRowDef) => rowDef.columnsChange);
-    Observable.merge(...rowColumnsChange)
+    Observable.merge(...this._rowDefinitions.map(rowDef => rowDef.columnsChange))
         .takeUntil(this._onDestroy)
         .subscribe(() => {
           // Reset the data to an empty array so that renderRowChanges will re-render all new rows.
@@ -215,8 +197,30 @@ export class CdkTable<T> implements CollectionViewer {
     this._isViewInitialized = true;
   }
 
+  /**
+   * Switch to the provided data source by resetting the data and unsubscribing from the current
+   * render change subscription if one exists. If the data source is null, interpret this by
+   * clearing the row placeholder. Otherwise start listening for new data.
+   */
+  private _switchDataSource(dataSource: DataSource<T>) {
+    this._data = [];
+    this._dataSource = dataSource;
+
+    if (this._isViewInitialized) {
+      if (this._renderChangeSubscription) {
+        this._renderChangeSubscription.unsubscribe();
+      }
+
+      if (this._dataSource) {
+        this._observeRenderChanges();
+      } else {
+        this._rowPlaceholder.viewContainer.clear();
+      }
+    }
+  }
+
   /** Set up a subscription for the data provided by the data source. */
-  _observeRenderChanges() {
+  private _observeRenderChanges() {
     this._renderChangeSubscription = this.dataSource.connect(this)
         .takeUntil(this._onDestroy)
         .subscribe(data => {
@@ -228,7 +232,7 @@ export class CdkTable<T> implements CollectionViewer {
   /**
    * Create the embedded view for the header template and place it in the header row view container.
    */
-  _renderHeaderRow() {
+  private _renderHeaderRow() {
     const cells = this._getHeaderCellTemplatesForRow(this._headerDefinition);
     if (!cells.length) { return; }
 
@@ -244,7 +248,7 @@ export class CdkTable<T> implements CollectionViewer {
   }
 
   /** Check for changes made in the data and render each change (row added/removed/moved). */
-  _renderRowChanges() {
+  private _renderRowChanges() {
     const changes = this._dataDiffer.diff(this._data);
     if (!changes) { return; }
 
@@ -265,7 +269,7 @@ export class CdkTable<T> implements CollectionViewer {
    * Create the embedded view for the data row template and place it in the correct index location
    * within the data row view container.
    */
-  _insertRow(rowData: T, index: number) {
+  private _insertRow(rowData: T, index: number) {
     // TODO(andrewseguin): Add when predicates to the row definitions
     //   to find the right template to used based on
     //   the data rather than choosing the first row definition.
@@ -289,7 +293,7 @@ export class CdkTable<T> implements CollectionViewer {
    * Returns the cell template definitions to insert into the header
    * as defined by its list of columns to display.
    */
-  _getHeaderCellTemplatesForRow(headerDef: CdkHeaderRowDef): CdkHeaderCellDef[] {
+  private _getHeaderCellTemplatesForRow(headerDef: CdkHeaderRowDef): CdkHeaderCellDef[] {
     return headerDef.columns.map(columnId => {
       // TODO(andrewseguin): Throw an error if there is no column with this columnId
       return this._columnDefinitionsByName.get(columnId).headerCell;
@@ -300,7 +304,7 @@ export class CdkTable<T> implements CollectionViewer {
    * Returns the cell template definitions to insert in the provided row
    * as defined by its list of columns to display.
    */
-  _getCellTemplatesForRow(rowDef: CdkRowDef): CdkCellDef[] {
+  private _getCellTemplatesForRow(rowDef: CdkRowDef): CdkCellDef[] {
     return rowDef.columns.map(columnId => {
       // TODO(andrewseguin): Throw an error if there is no column with this columnId
       return this._columnDefinitionsByName.get(columnId).cell;
