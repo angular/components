@@ -93,6 +93,8 @@ async function calculatePayloadDiff(database: firebaseAdmin.database.Database, c
   const materialFullSize = currentPayload.material_fesm_2015;
   const materialDiff = materialFullSize - previousPayload.material_fesm_2015;
 
+  console.log(cdkDiff, materialDiff);
+  
   // Set the Github statuses for the packages by sending a HTTP request to the dashboard functions.
   await Promise.all([
     updateGithubStatus(currentSha, 'material', materialDiff, materialFullSize, authToken),
@@ -148,6 +150,8 @@ async function getLastPayloadResults(database: firebaseAdmin.database.Database) 
   // The value of the DataSnapshot is an object with the SHA as a key. Later only the
   // first value of the object will be returned because the SHA is unnecessary.
   const results = snapshot.val();
+
+  console.log('Previous Payload', results);
 
   return snapshot.hasChildren() ? results[Object.keys(results)[0]] : null;
 }
