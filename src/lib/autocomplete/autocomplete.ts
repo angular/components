@@ -13,6 +13,10 @@ import {
 import {MdOption} from '../core';
 import {ActiveDescendantKeyManager} from '../core/a11y/activedescendant-key-manager';
 
+export const EXTRA_PAYLOAD = [
+  'dsdsadasdasdas',
+];
+
 /**
  * Autocomplete IDs need to be unique across components, so this counter exists outside of
  * the component definition.
