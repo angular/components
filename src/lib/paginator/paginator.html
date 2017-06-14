@@ -1,6 +1,8 @@
 <div class="mat-paginator-page-length-select">
   {{_intl.itemsPerPageLabel}}
-  <md-select [ngModel]="pageLength" (change)="_changePageLength($event.value)">
+  <md-select [ngModel]="pageLength"
+             [attr.aria-label]="_intl.itemsPerPageLabel"
+             (change)="_changePageLength($event.value)">
     <md-option *ngFor="let pageLengthOption of pageLengthOptions" [value]="pageLengthOption">
       {{pageLengthOption}}
     </md-option>
@@ -14,6 +16,7 @@
 <button md-icon-button
         class="mat-paginator-increment-button"
         (click)="incrementPage(-1)"
+        [attr.aria-label]="_intl.decrementLabel"
         [mdTooltip]="_intl.decrementLabel"
         [mdTooltipPosition]="'above'"
         [disabled]="!_canIncrementPage(-1)">
@@ -22,6 +25,7 @@
 <button md-icon-button
         class="mat-paginator-increment-button"
         (click)="incrementPage(1)"
+        [attr.aria-label]="_intl.incrementLabel"
         [mdTooltip]="_intl.incrementLabel"
         [mdTooltipPosition]="'above'"
         [disabled]="!_canIncrementPage(1)">

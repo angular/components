@@ -7,6 +7,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {MdPaginatorIntl} from './paginator-intl';
+import {MATERIAL_COMPATIBILITY_MODE} from '../core';
 
 /**
  * Change event object that is emitted when the user selects a
@@ -26,6 +27,9 @@ export class PageChangeEvent {
   host: {
     'class': 'mat-paginator',
   },
+  providers: [
+    {provide: MATERIAL_COMPATIBILITY_MODE, useValue: false}
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
