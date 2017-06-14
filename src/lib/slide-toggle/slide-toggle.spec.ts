@@ -606,6 +606,31 @@ describe('MdSlideToggle with forms', () => {
       expect(slideToggle.checked).toBe(true);
       expect(slideToggleElement.classList).toContain('mat-checked');
     }));
+
+    it('should update checked state on click if control is checked initially', fakeAsync(() => {
+      fixture = TestBed.createComponent(SlideToggleWithModel);
+      slideToggle = fixture.debugElement.query(By.directive(MdSlideToggle)).componentInstance;
+      labelElement = fixture.debugElement.query(By.css('label')).nativeElement;
+
+      fixture.componentInstance.modelValue = true;
+      fixture.detectChanges();
+
+      // Flush the microtasks because the forms module updates the model state asynchronously.
+      flushMicrotasks();
+
+      // Now the new checked variable has been updated in the slide-toggle and the slide-toggle
+      // is marked for check because it still needs to update the underlying input.
+      fixture.detectChanges();
+
+      expect(slideToggle.checked)
+        .toBe(true, 'Expected slide-toggle to be checked initially');
+
+      labelElement.click();
+      fixture.detectChanges();
+
+      expect(slideToggle.checked)
+        .toBe(false, 'Expected slide-toggle to be no longer checked after label click.');
+    }));
   });
 
   describe('with a FormControl', () => {

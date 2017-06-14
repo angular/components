@@ -86,6 +86,7 @@ export class MdSlideToggle extends _MdSlideToggleMixinBase implements OnDestroy,
   private _uniqueId: string = `md-slide-toggle-${++nextUniqueId}`;
   private _slideRenderer: SlideToggleRenderer;
   private _required: boolean = false;
+  private _checked: boolean = false;
 
   /** Reference to the focus state ripple. */
   private _focusRipple: RippleRef | null;
@@ -103,7 +104,6 @@ export class MdSlideToggle extends _MdSlideToggleMixinBase implements OnDestroy,
   @Input() labelPosition: 'before' | 'after' = 'after';
 
   /** Whether the slide-toggle element is checked or not */
-  @Input() checked: boolean = false;
 
   /** Used to set the aria-label attribute on the underlying input element. */
   @Input('aria-label') ariaLabel: string | null = null;
@@ -116,6 +116,13 @@ export class MdSlideToggle extends _MdSlideToggleMixinBase implements OnDestroy,
   get required(): boolean { return this._required; }
   set required(value) { this._required = coerceBooleanProperty(value); }
 
+  /** Whether the slide-toggle element is checked or not */
+  @Input()
+  get checked(): boolean { return this._checked; }
+  set checked(value) {
+    this._checked = !!value;
+    this._changeDetectorRef.markForCheck();
+  }
   /** An event will be dispatched each time the slide-toggle changes its value. */
   @Output() change: EventEmitter<MdSlideToggleChange> = new EventEmitter<MdSlideToggleChange>();
 
