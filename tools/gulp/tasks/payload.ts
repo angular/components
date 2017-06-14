@@ -142,7 +142,7 @@ async function uploadPayloadResults(database: firebaseAdmin.database.Database, c
   }
 }
 
-/** Gets the last payload uploaded from previous Travis builds. */
+/** Gets payload results of the specified commit sha. */
 async function getPayloadResults(database: firebaseAdmin.database.Database, commitSha: string) {
   const snapshot = await database.ref('payloads').child(commitSha).once('value');
 
