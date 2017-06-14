@@ -1,24 +1,29 @@
-<div class="rows-per-page">
-  Rows per page:
-  <md-select [(ngModel)]="pageSize">
-    <md-option *ngFor="let pageSizeOption of pageSizeOptions" [value]="pageSizeOption">
-      {{pageSizeOption}}
+<div class="mat-paginator-page-length-select">
+  {{_intl.itemsPerPageLabel}}
+  <md-select [ngModel]="pageLength" (change)="_changePageLength($event.value)">
+    <md-option *ngFor="let pageLengthOption of pageLengthOptions" [value]="pageLengthOption">
+      {{pageLengthOption}}
     </md-option>
   </md-select>
 </div>
 
-<div class="range">
-  {{startIndex}} - {{endIndex}}
-
+<div class="mat-paginator-range-label">
+  {{_intl.getRangeLabel(currentPageIndex, pageLength, listLength)}}
 </div>
 
 <button md-icon-button
-        (click)="increasePage.emit()"
-        [disabled]="startIndex == 0">
-  <div class="prev"></div>
+        class="mat-paginator-increment-button"
+        (click)="incrementPage(-1)"
+        [mdTooltip]="_intl.decrementLabel"
+        [mdTooltipPosition]="'above'"
+        [disabled]="!_canIncrementPage(-1)">
+  <div class="mat-paginator-increment"></div>
 </button>
 <button md-icon-button
-        (click)="decreasePage.emit()"
-        [disabled]="endIndex == maxLength">
-  <div class="next"></div>
+        class="mat-paginator-increment-button"
+        (click)="incrementPage(1)"
+        [mdTooltip]="_intl.incrementLabel"
+        [mdTooltipPosition]="'above'"
+        [disabled]="!_canIncrementPage(1)">
+  <div class="mat-paginator-decrement"></div>
 </button>

@@ -79,5 +79,10 @@
     </cdk-row>
   </cdk-table>
   
-  <md-paginator></md-paginator>
+  <md-paginator #paginator
+                [currentPageIndex]="0"
+                [pageLength]="10"
+                [listLength]="_peopleDatabase.data.length"
+                [pageLengthOptions]="[5, 10, 25, 100]">
+  </md-paginator>
 </div>

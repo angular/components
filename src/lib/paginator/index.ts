@@ -1,23 +1,29 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {OverlayModule, MdCommonModule} from '../core';
-import {MdPaginator} from './paginator';
-import {MdSelectModule} from '../select';
-import {MdButtonModule} from '../button';
 import {FormsModule} from '@angular/forms';
+import {MdCommonModule, OverlayModule} from '../core';
+import {MdButtonModule} from '../button';
+import {MdSelectModule} from '../select';
+import {MdPaginator} from './paginator';
+import {MdPaginatorIntl} from './paginator-intl';
+import {MdTooltipModule} from '../tooltip';
 
 
 @NgModule({
   imports: [
-    OverlayModule,
     CommonModule,
+    FormsModule,
+    MdButtonModule,
     MdCommonModule,
     MdSelectModule,
-    MdButtonModule,
-    FormsModule,
+    MdTooltipModule,
+    OverlayModule,
   ],
   exports: [MdPaginator],
   declarations: [MdPaginator],
+  providers: [
+    MdPaginatorIntl,
+  ],
 })
 export class MdPaginatorModule {}
 

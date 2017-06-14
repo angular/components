@@ -1,58 +1,70 @@
-.host {
-  font-size: 20px;
-}
-
-:host {
-  min-height: 56px;
-  background: white;
+.mat-paginator {
   display: flex;
   align-items: center;
-  padding: 0 16px;
-  color: rgba(0, 0, 0, .54);
-  font-size: 12px;
   justify-content: flex-end;
-
-  &.hide * {
-    opacity: 0;
-  }
+  font-size: 12px;
+  min-height: 56px;
+  padding: 0 8px;
+  color: rgba(0, 0, 0, 0.54);
 }
 
-.rows-per-page {
+.mat-paginator-page-length-select {
   display: flex;
   align-items: center;
 
   .mat-select {
-    margin-left: 8px;
-    /deep/ .mat-select-trigger {
-      font-size: 12px;
-      min-width: 56px;
-    }
+    margin: 0 8px;
+  }
+
+  .mat-select-trigger {
+    font-size: 12px;
+    min-width: 56px;
   }
 }
 
-.range {
+.mat-paginator-range-label {
   margin: 0 32px;
 }
 
-button[md-icon-button] + button[md-icon-button] {
-  margin-left: 8px;
+.mat-paginator-increment-button + .mat-paginator-increment-button {
+  margin: 0 0 0 8px;
+
+  [dir='rtl'] & {
+    margin: 0 8px 0 0;
+  }
 }
 
-.prev,
-.next {
-  display: block;
-  width: 9px;
-  height: 9px;
-  border-top: 1px solid #666;
-  border-right: 1px solid #666;
-  border-width: 2px;
+.mat-paginator-increment,
+.mat-paginator-decrement {
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #666;
+  border-right: 2px solid #666;
+
+  .mat-icon-button[disabled] & {
+    border-color: rgba(0, 0, 0, 0.25);
+  }
 }
 
-.next {
-  margin-left: 12px;
+.mat-paginator-decrement,
+[dir='rtl'] .mat-paginator-increment {
   transform: rotate(45deg);
 }
-.prev {
-  margin-left: 16px;
+.mat-paginator-increment,
+[dir='rtl'] .mat-paginator-decrement {
   transform: rotate(225deg);
+}
+
+.mat-paginator-decrement {
+  margin-left: 12px;
+  [dir='rtl'] & {
+    margin-right: 12px;
+  }
+}
+
+.mat-paginator-increment {
+  margin-left: 16px;
+  [dir='rtl'] & {
+    margin-right: 16px;
+  }
 }
