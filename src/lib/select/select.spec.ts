@@ -32,7 +32,7 @@ import {
 import {map} from 'rxjs/operator/map';
 
 
-fdescribe('MdSelect', () => {
+describe('MdSelect', () => {
   let overlayContainerElement: HTMLElement;
   let dir: {value: 'ltr'|'rtl'};
   let scrolledSubject = new Subject();
@@ -984,7 +984,7 @@ fdescribe('MdSelect', () => {
         trigger.click();
         groupFixture.detectChanges();
 
-        const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel');
+        const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-content');
 
         // The selected option should be scrolled to the center of the panel.
         // This will be its original offset from the scrollTop - half the panel height + half the
