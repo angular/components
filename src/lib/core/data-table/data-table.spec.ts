@@ -146,14 +146,14 @@ describe('CdkTable', () => {
     expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
   });
 
-  describe('should properly use trackBy when diffing to add/remove/move rows', () => {
+  describe('with trackBy', () => {
 
     afterEach(() => {
       // Resetting the static value of the trackby function for TrackByCdkTableApp
-      TrackByCdkTableApp.TRACK_BY = 'reference';
+      TrackByCdkTableApp.trackBy = 'reference';
     });
 
-    function createComponent() {
+    function createTestComponentWithTrackyByTable() {
       fixture = TestBed.createComponent(TrackByCdkTableApp);
 
       component = fixture.componentInstance;
@@ -177,7 +177,7 @@ describe('CdkTable', () => {
     }
 
     // Swap first two elements, remove the third, add new data
-    function changeData() {
+    function mutateData() {
       // Swap first and second data in data array
       const copiedData = component.dataSource.data.slice();
       const temp = copiedData[0];
@@ -192,9 +192,9 @@ describe('CdkTable', () => {
       component.dataSource.addData();
     }
 
-    it('with reference-based trackBy', () => {
-      createComponent();
-      changeData();
+    it('should add/remove/move rows with reference-based trackBy', () => {
+      createTestComponentWithTrackyByTable();
+      mutateData();
 
       // Expect that the first and second rows were swapped and that the last row is new
       const changedRows = getRows(tableElement);
@@ -204,9 +204,9 @@ describe('CdkTable', () => {
       expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
     });
 
-    it('with changed references without property-based trackBy', () => {
-      createComponent();
-      changeData();
+    it('should add/remove/move rows with changed references without property-based trackBy', () => {
+      createTestComponentWithTrackyByTable();
+      mutateData();
 
       // Change each item reference to show that the trackby is not checking the item properties.
       component.dataSource.data = component.dataSource.data
@@ -220,10 +220,10 @@ describe('CdkTable', () => {
       expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
     });
 
-    it('with changed references with property-based trackBy', () => {
-      TrackByCdkTableApp.TRACK_BY = 'propertyA';
-      createComponent();
-      changeData();
+    it('should add/remove/move rows with changed references with property-based trackBy', () => {
+      TrackByCdkTableApp.trackBy = 'propertyA';
+      createTestComponentWithTrackyByTable();
+      mutateData();
 
       // Change each item reference to show that the trackby is checking the item properties.
       // Otherwise this would cause them all to be removed/added.
@@ -238,10 +238,10 @@ describe('CdkTable', () => {
       expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
     });
 
-    it('with changed references with index-based trackBy', () => {
-      TrackByCdkTableApp.TRACK_BY = 'index';
-      createComponent();
-      changeData();
+    it('should add/remove/move rows with changed references with index-based trackBy', () => {
+      TrackByCdkTableApp.trackBy = 'index';
+      createTestComponentWithTrackyByTable();
+      mutateData();
 
       // Change each item reference to show that the trackby is checking the index.
       // Otherwise this would cause them all to be removed/added.
@@ -539,7 +539,7 @@ class DynamicDataSourceCdkTableApp {
   `
 })
 class TrackByCdkTableApp {
-  static TRACK_BY: 'reference' | 'propertyA' | 'index' = 'reference';
+  static trackBy: 'reference' | 'propertyA' | 'index' = 'reference';
 
   dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b'];
@@ -547,7 +547,7 @@ class TrackByCdkTableApp {
   @ViewChild(CdkTable) table: CdkTable<TestData>;
 
   trackBy(index: number, item: TestData) {
-    switch (TrackByCdkTableApp.TRACK_BY) {
+    switch (TrackByCdkTableApp.trackBy) {
       case 'reference': return item;
       case 'propertyA': return item.a;
       case 'index': return index;

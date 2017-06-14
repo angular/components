@@ -28,7 +28,7 @@ export class PeopleDatabase {
     for (let i = 0; i < 100; i++) { this.addPerson(); }
   }
 
-  randomize(changeReferences: boolean) {
+  shuffle(changeReferences: boolean) {
     let copiedData = this.data.slice();
     for (let i = copiedData.length; i; i--) {
       let j = Math.floor(Math.random() * i);

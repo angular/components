@@ -1,20 +1,17 @@
-<div class="demo-database-actions">
+<div class="demo-data-source-actions">
   <div>
     <button md-raised-button (click)="connect()">Connect New Data Source</button>
     <button md-raised-button (click)="disconnect()" [disabled]="!dataSource">Disconnect Data Source</button>
 
-  <button md-raised-button (click)="_peopleDatabase.shuffle(changeReferences)">Randomize Data</button>
-  <md-checkbox [(ngModel)]="changeReferences">Change references</md-checkbox>
-</div>
+    <button md-raised-button (click)="_peopleDatabase.shuffle(changeReferences)">Randomize Data</button>
+    <md-checkbox [(ngModel)]="changeReferences">Change references</md-checkbox>
 
-<span>Track By</span>
-<md-radio-group [(ngModel)]="trackBy">
-  <md-radio-button [value]="'id'">ID</md-radio-button>
-  <md-radio-button [value]="'reference'">Reference</md-radio-button>
-  <md-radio-button [value]="'index'">Index</md-radio-button>
-</md-radio-group>
-
-<div class="demo-data-source-actions">
+    <span>Track By</span>
+    <md-radio-group [(ngModel)]="trackBy">
+      <md-radio-button [value]="'id'">ID</md-radio-button>
+      <md-radio-button [value]="'reference'">Reference</md-radio-button>
+      <md-radio-button [value]="'index'">Index</md-radio-button>
+    </md-radio-group>
   </div>
 
   <div class="demo-highlighter">
