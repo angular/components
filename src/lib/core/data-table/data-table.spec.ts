@@ -148,21 +148,21 @@ describe('CdkTable', () => {
 
   describe('with trackBy', () => {
 
-    afterEach(() => {
-      // Resetting the static value of the trackby function for TrackByCdkTableApp
-      TrackByCdkTableApp.trackBy = 'reference';
-    });
+    let trackByComponent: TrackByCdkTableApp;
+    let trackByFixture: ComponentFixture<TrackByCdkTableApp>;
 
-    function createTestComponentWithTrackyByTable() {
-      fixture = TestBed.createComponent(TrackByCdkTableApp);
+    function createTestComponentWithTrackyByTable(trackByStrategy) {
+      trackByFixture = TestBed.createComponent(TrackByCdkTableApp);
 
-      component = fixture.componentInstance;
-      dataSource = component.dataSource as FakeDataSource;
-      table = component.table;
-      tableElement = fixture.nativeElement.querySelector('cdk-table');
+      trackByComponent = trackByFixture.componentInstance;
+      trackByComponent.trackByStrategy = trackByStrategy;
 
-      fixture.detectChanges();  // Let the component and table create embedded views
-      fixture.detectChanges();  // Let the cells render
+      dataSource = trackByComponent.dataSource as FakeDataSource;
+      table = trackByComponent.table;
+      tableElement = trackByFixture.nativeElement.querySelector('cdk-table');
+
+      trackByFixture.detectChanges();  // Let the component and table create embedded views
+      trackByFixture.detectChanges();  // Let the cells render
 
       // Each row receives an attribute 'initialIndex' the element's original place
       getRows(tableElement).forEach((row: Element, index: number) => {
@@ -179,7 +179,7 @@ describe('CdkTable', () => {
     // Swap first two elements, remove the third, add new data
     function mutateData() {
       // Swap first and second data in data array
-      const copiedData = component.dataSource.data.slice();
+      const copiedData = trackByComponent.dataSource.data.slice();
       const temp = copiedData[0];
       copiedData[0] = copiedData[1];
       copiedData[1] = temp;
@@ -188,12 +188,12 @@ describe('CdkTable', () => {
       copiedData.splice(2, 1);
 
       // Add new data
-      component.dataSource.data = copiedData;
-      component.dataSource.addData();
+      trackByComponent.dataSource.data = copiedData;
+      trackByComponent.dataSource.addData();
     }
 
     it('should add/remove/move rows with reference-based trackBy', () => {
-      createTestComponentWithTrackyByTable();
+      createTestComponentWithTrackyByTable('reference');
       mutateData();
 
       // Expect that the first and second rows were swapped and that the last row is new
@@ -205,11 +205,11 @@ describe('CdkTable', () => {
     });
 
     it('should add/remove/move rows with changed references without property-based trackBy', () => {
-      createTestComponentWithTrackyByTable();
+      createTestComponentWithTrackyByTable('reference');
       mutateData();
 
       // Change each item reference to show that the trackby is not checking the item properties.
-      component.dataSource.data = component.dataSource.data
+      trackByComponent.dataSource.data = trackByComponent.dataSource.data
           .map(item => { return {a: item.a, b: item.b, c: item.c}; });
 
       // Expect that all the rows are considered new since their references are all different
@@ -221,13 +221,12 @@ describe('CdkTable', () => {
     });
 
     it('should add/remove/move rows with changed references with property-based trackBy', () => {
-      TrackByCdkTableApp.trackBy = 'propertyA';
-      createTestComponentWithTrackyByTable();
+      createTestComponentWithTrackyByTable('propertyA');
       mutateData();
 
       // Change each item reference to show that the trackby is checking the item properties.
       // Otherwise this would cause them all to be removed/added.
-      component.dataSource.data = component.dataSource.data
+      trackByComponent.dataSource.data = trackByComponent.dataSource.data
           .map(item => { return {a: item.a, b: item.b, c: item.c}; });
 
       // Expect that the first and second rows were swapped and that the last row is new
@@ -239,13 +238,12 @@ describe('CdkTable', () => {
     });
 
     it('should add/remove/move rows with changed references with index-based trackBy', () => {
-      TrackByCdkTableApp.trackBy = 'index';
-      createTestComponentWithTrackyByTable();
+      createTestComponentWithTrackyByTable('index');
       mutateData();
 
       // Change each item reference to show that the trackby is checking the index.
       // Otherwise this would cause them all to be removed/added.
-      component.dataSource.data = component.dataSource.data
+      trackByComponent.dataSource.data = trackByComponent.dataSource.data
           .map(item => { return {a: item.a, b: item.b, c: item.c}; });
 
       // Expect first two to be the same since they were swapped but indicies are consistent.
@@ -539,15 +537,15 @@ class DynamicDataSourceCdkTableApp {
   `
 })
 class TrackByCdkTableApp {
-  static trackBy: 'reference' | 'propertyA' | 'index' = 'reference';
+  trackByStrategy: 'reference' | 'propertyA' | 'index' = 'reference';
 
   dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
 
-  trackBy(index: number, item: TestData) {
-    switch (TrackByCdkTableApp.trackBy) {
+  trackBy = (index: number, item: TestData) => {
+    switch (this.trackByStrategy) {
       case 'reference': return item;
       case 'propertyA': return item.a;
       case 'index': return index;

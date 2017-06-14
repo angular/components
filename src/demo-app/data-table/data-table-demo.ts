@@ -13,13 +13,9 @@ export type TrackByStrategy = 'id' | 'reference' | 'index';
   styleUrls: ['data-table-demo.css'],
 })
 export class DataTableDemo {
-  static TRACK_BY: 'id' | 'reference' | 'index' = 'reference';
-
-  get trackBy(): TrackByStrategy { return DataTableDemo.TRACK_BY; }
-  set trackBy(trackBy: TrackByStrategy) { DataTableDemo.TRACK_BY = trackBy; }
-
   dataSource: PersonDataSource | null;
   propertiesToDisplay: UserProperties[] = [];
+  trackByStrategy: TrackByStrategy = 'reference';
   changeReferences = false;
   highlights = new Set<string>();
 
@@ -43,8 +39,8 @@ export class DataTableDemo {
     return distanceFromMiddle / 50 + .3;
   }
 
-  userTrackBy(index: number, item: UserData) {
-    switch (DataTableDemo.TRACK_BY) {
+  userTrackBy = (index: number, item: UserData) => {
+    switch (this.trackByStrategy) {
       case 'id': return item.id;
       case 'reference': return item;
       case 'index': return index;
