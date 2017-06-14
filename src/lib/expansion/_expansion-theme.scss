@@ -7,14 +7,14 @@
 
   .mat-expansion-panel {
     background: mat-color($background, card);
-    color: mat-color($foreground, base);
+    color: mat-color($foreground, text);
   }
 
   .mat-action-row {
     border-top-color: mat-color($foreground, divider);
   }
 
-  .mat-expansion-panel-header:focus, 
+  .mat-expansion-panel-header:focus,
   .mat-expansion-panel-header:hover {
     background: mat-color($background, hover);
   }
