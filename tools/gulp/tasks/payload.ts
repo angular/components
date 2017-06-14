@@ -157,10 +157,19 @@ async function getPayloadResults(database: firebaseAdmin.database.Database, comm
 function getCommitFromPreviousPayloadUpload(): string {
   if (isTravisMasterBuild()) {
     const commitRange = process.env['TRAVIS_COMMIT_RANGE'];
+    // In some situations Travis will include multiple commits in a single Travis Job. This means
+    // that we can't just resolve the previous commit by using the parent commit of HEAD.
+    // By resolving the amount of commits inside of the current Travis Job we can figure out
+    // how many commits before HEAD the last Travis Job ran.
     const commitCount = spawnSync('git', ['rev-list', '--count', commitRange]).stdout
       .toString().trim();
+    // With the amount of commits inside of the current Travis Job we can query Git to print
+    // the SHA of the commit that ran before this Travis Job was created.
     return spawnSync('git', ['rev-parse', `HEAD~${commitCount}`]).stdout.toString().trim();
   } else {
+    // Travis applies the changes of Pull Requests in new branches. This means that resolving
+    // the commit, that previously ran on the target branch (mostly "master"), can be done
+    // by just loading the SHA of the most recent commit in the target branch.
     return spawnSync('git', ['rev-parse', process.env['TRAVIS_BRANCH']]).stdout.toString().trim();
   }
 }
