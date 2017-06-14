@@ -1,27 +1,36 @@
-import gulp = require('gulp');
+import {task} from 'gulp';
 import {execNodeTask} from '../util/task_helpers';
-import {DIST_MATERIAL} from '../constants';
+import {join} from 'path';
+import {buildConfig} from '../packaging/build-config';
 
-gulp.task('lint', ['tslint', 'stylelint', 'madge', 'dashboardlint']);
+/** Glob that matches all SCSS or CSS files that should be linted. */
+const stylesGlob = '+(tools|src)/**/*.+(css|scss)';
+
+/** List of flags that will passed to the different TSLint tasks. */
+const tsLintBaseFlags = [
+  '-c', 'tslint.json', '+(src|e2e|tools)/**/*.ts', '--exclude', '**/node_modules/**/*'
+];
+
+/** Path to the output of the Material package. */
+const materialOutPath = join(buildConfig.outputDir, 'packages', 'material');
+
+/** Path to the output of the CDK package. */
+const cdkOutPath = join(buildConfig.outputDir, 'packages', 'cdk');
+
+task('lint', ['tslint', 'stylelint', 'madge']);
 
 /** Task that runs madge to detect circular dependencies. */
-gulp.task('madge', ['library:clean-build'], execNodeTask('madge', ['--circular', DIST_MATERIAL]));
+task('madge', ['material:clean-build'], execNodeTask(
+  'madge', ['--circular', materialOutPath, cdkOutPath])
+);
 
 /** Task to lint Angular Material's scss stylesheets. */
-gulp.task('stylelint', execNodeTask(
-  'stylelint', ['src/**/*.scss', '--config', 'stylelint-config.json', '--syntax', 'scss']
+task('stylelint', execNodeTask(
+  'stylelint', [stylesGlob, '--config', 'stylelint-config.json', '--syntax', 'scss']
 ));
-
-gulp.task('dashboardlint', execNodeTask(
-  'stylelint', ['tools/screenshot-test/**/*.css', '--config', 'stylelint-config.json',
-    '--syntax', 'scss']
-));
-
-const tsLintBaseFlags = ['-c', 'tslint.json', '+(src|e2e|tools)/**/*.ts', '--exclude',
-    '**/node_modules/**/*'];
 
 /** Task to run TSLint against the e2e/ and src/ directories. */
-gulp.task('tslint', execNodeTask('tslint', tsLintBaseFlags));
+task('tslint', execNodeTask('tslint', tsLintBaseFlags));
 
 /** Task that automatically fixes TSLint warnings. */
-gulp.task('tslint:fix', execNodeTask('tslint', [...tsLintBaseFlags, '--fix']));
+task('tslint:fix', execNodeTask('tslint', [...tsLintBaseFlags, '--fix']));

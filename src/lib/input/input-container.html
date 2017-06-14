@@ -1,8 +1,7 @@
 <div class="mat-input-wrapper">
-  <div class="mat-input-table">
+  <div class="mat-input-flex">
     <div class="mat-input-prefix" *ngIf="_prefixChildren.length">
-      <!-- TODO(andrewseguin): remove [md-prefix] -->
-      <ng-content select="[mdPrefix], [matPrefix], [md-prefix]"></ng-content>
+      <ng-content select="[mdPrefix], [matPrefix]"></ng-content>
     </div>
 
     <div class="mat-input-infix" [class.mat-end]="align == 'end'">
@@ -18,18 +17,17 @@
                *ngIf="_hasPlaceholder()">
           <ng-content select="md-placeholder, mat-placeholder"></ng-content>
           {{_mdInputChild.placeholder}}
-          <span class="mat-placeholder-required" *ngIf="_mdInputChild.required">*</span>
+          <span class="mat-placeholder-required" *ngIf="!hideRequiredMarker && _mdInputChild.required">*</span>
         </label>
       </span>
     </div>
 
     <div class="mat-input-suffix" *ngIf="_suffixChildren.length">
-      <!-- TODO(andrewseguin): remove [md-suffix] -->
-      <ng-content select="[mdSuffix], [matSuffix], [md-suffix]"></ng-content>
+      <ng-content select="[mdSuffix], [matSuffix]"></ng-content>
     </div>
   </div>
 
-  <div class="mat-input-underline"
+  <div class="mat-input-underline" #underline
        [class.mat-disabled]="_mdInputChild.disabled">
     <span class="mat-input-ripple"
           [class.mat-accent]="color == 'accent'"

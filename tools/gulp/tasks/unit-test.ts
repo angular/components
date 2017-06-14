@@ -1,18 +1,18 @@
 import {join} from 'path';
 import {task, watch} from 'gulp';
-import {PROJECT_ROOT, SOURCE_ROOT} from '../constants';
 import {sequenceTask} from '../util/task_helpers';
+import {buildConfig} from '../packaging/build-config';
 
 // There are no type definitions available for these imports.
 const runSequence = require('run-sequence');
 
+const {packagesDir, projectDir} = buildConfig;
+
 /** Builds everything that is necessary for karma. */
 task(':test:build', sequenceTask(
   'clean',
-  // Build the library bundles without any test files. (CDK will be also built)
-  'library:build',
-  // Additionally build the test files for the library and the CDK.
-  ['library:build:esm:tests', 'cdk:build:esm:tests']
+  // Build ESM output of Material that also includes all test files.
+  'material:build-tests',
 ));
 
 /**
@@ -24,7 +24,7 @@ task('test:single-run', [':test:build'], (done: () => void) => {
   let karma = require('karma');
 
   new karma.Server({
-    configFile: join(PROJECT_ROOT, 'test/karma.conf.js'),
+    configFile: join(projectDir, 'test/karma.conf.js'),
     singleRun: true
   }, (exitCode: number) => {
     // Immediately exit the process if Karma reported errors, because due to
@@ -45,13 +45,13 @@ task('test:single-run', [':test:build'], (done: () => void) => {
  * This task should be used when running unit tests locally.
  */
 task('test', [':test:build'], () => {
-  let patternRoot = join(SOURCE_ROOT, '**/*');
+  let patternRoot = join(packagesDir, '**/*');
   // Load karma not outside. Karma pollutes Promise with a different implementation.
   let karma = require('karma');
 
   // Configure the Karma server and override the autoWatch and singleRun just in case.
   let server = new karma.Server({
-    configFile: join(PROJECT_ROOT, 'test/karma.conf.js'),
+    configFile: join(projectDir, 'test/karma.conf.js'),
     autoWatch: false,
     singleRun: false
   });

@@ -7,7 +7,7 @@ import {
   QueryList,
   ContentChildren,
   ElementRef,
-  Renderer
+  Renderer2,
 } from '@angular/core';
 import {coerceBooleanProperty} from '../core';
 import {Observable} from 'rxjs/Observable';
@@ -38,7 +38,7 @@ export type MdTabHeaderPosition = 'above' | 'below';
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
   host: {
-    '[class.mat-tab-group]': 'true',
+    'class': 'mat-tab-group',
     '[class.mat-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-tab-group-inverted-header]': 'headerPosition === "below"',
   }
@@ -68,6 +68,13 @@ export class MdTabGroup {
   get _dynamicHeightDeprecated(): boolean { return this._dynamicHeight; }
   set _dynamicHeightDeprecated(value: boolean) { this._dynamicHeight = value; }
 
+  /** Whether ripples for the tab-group should be disabled or not. */
+  @Input()
+  get disableRipple(): boolean { return this._disableRipple; }
+  set disableRipple(value) { this._disableRipple = coerceBooleanProperty(value); }
+  private _disableRipple: boolean = false;
+
+
   private _selectedIndex: number = null;
 
   /** The index of the active tab. */
@@ -92,7 +99,7 @@ export class MdTabGroup {
 
   private _groupId: number;
 
-  constructor(private _renderer: Renderer) {
+  constructor(private _renderer: Renderer2) {
     this._groupId = nextId++;
   }
 
@@ -167,13 +174,13 @@ export class MdTabGroup {
   _setTabBodyWrapperHeight(tabHeight: number): void {
     if (!this._dynamicHeight || !this._tabBodyWrapperHeight) { return; }
 
-    this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height',
+    this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height',
         this._tabBodyWrapperHeight + 'px');
 
     // This conditional forces the browser to paint the height so that
     // the animation to the new height can have an origin.
     if (this._tabBodyWrapper.nativeElement.offsetHeight) {
-      this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height',
+      this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height',
           tabHeight + 'px');
     }
   }
@@ -181,6 +188,6 @@ export class MdTabGroup {
   /** Removes the height of the tab body wrapper. */
   _removeTabBodyWrapperHeight(): void {
     this._tabBodyWrapperHeight = this._tabBodyWrapper.nativeElement.clientHeight;
-    this._renderer.setElementStyle(this._tabBodyWrapper.nativeElement, 'height', '');
+    this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height', '');
   }
 }

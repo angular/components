@@ -18,21 +18,22 @@ export class MdDialogRef<T> {
   /** The instance of component opened into the dialog. */
   componentInstance: T;
 
+  /** Whether the user is allowed to close the dialog. */
+  disableClose: boolean = this._containerInstance._config.disableClose;
+
   /** Subject for notifying the user that the dialog has finished closing. */
   private _afterClosed: Subject<any> = new Subject();
 
   /** Result to be passed to afterClosed. */
   private _result: any;
 
-  constructor(private _overlayRef: OverlayRef, public _containerInstance: MdDialogContainer) {
+  constructor(private _overlayRef: OverlayRef, private _containerInstance: MdDialogContainer) {
     _containerInstance._onAnimationStateChange
       .filter((event: AnimationEvent) => event.toState === 'exit')
-      .subscribe(() => {
-        this._overlayRef.dispose();
-        this.componentInstance = null;
-      }, null, () => {
+      .subscribe(() => this._overlayRef.dispose(), null, () => {
         this._afterClosed.next(this._result);
         this._afterClosed.complete();
+        this.componentInstance = null;
       });
   }
 
@@ -42,7 +43,7 @@ export class MdDialogRef<T> {
    */
   close(dialogResult?: any): void {
     this._result = dialogResult;
-    this._containerInstance._exit();
+    this._containerInstance._state = 'exit';
     this._overlayRef.detachBackdrop(); // Transition the backdrop in parallel with the dialog.
   }
 

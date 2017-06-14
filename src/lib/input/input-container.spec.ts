@@ -18,11 +18,11 @@ import {PlatformModule} from '../core/platform/index';
 import {wrappedErrorMessage} from '../core/testing/wrapped-error-message';
 import {dispatchFakeEvent} from '../core/testing/dispatch-events';
 import {
-  MdInputContainerDuplicatedHintError,
-  MdInputContainerMissingMdInputError,
-  MdInputContainerPlaceholderConflictError
+  getMdInputContainerDuplicatedHintError,
+  getMdInputContainerMissingMdInputError,
+  getMdInputContainerPlaceholderConflictError
 } from './input-container-errors';
-
+import {MD_PLACEHOLDER_GLOBAL_OPTIONS} from '../core/placeholder/placeholder-options';
 
 describe('MdInputContainer', function () {
   beforeEach(async(() => {
@@ -65,6 +65,7 @@ describe('MdInputContainer', function () {
         MdInputContainerWithValueBinding,
         MdInputContainerZeroTestController,
         MdTextareaWithBindings,
+        MdInputContainerWithNgIf,
       ],
     });
 
@@ -81,9 +82,32 @@ describe('MdInputContainer', function () {
         'Expected MdInputContainer to set floatingLabel to auto by default.');
   });
 
+  it('should default to global floating placeholder type', () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        MdInputModule,
+        NoopAnimationsModule
+      ],
+      declarations: [
+        MdInputContainerBaseTestController
+      ],
+      providers: [{ provide: MD_PLACEHOLDER_GLOBAL_OPTIONS, useValue: { float: 'always' } }]
+    });
+
+    let fixture = TestBed.createComponent(MdInputContainerBaseTestController);
+    fixture.detectChanges();
+
+    let inputContainer = fixture.debugElement.query(By.directive(MdInputContainer))
+        .componentInstance as MdInputContainer;
+    expect(inputContainer.floatPlaceholder).toBe('always',
+        'Expected MdInputContainer to set floatingLabel to always from global option.');
+  });
+
   it('should not be treated as empty if type is date',
       inject([Platform], (platform: Platform) => {
-        if (!(platform.TRIDENT || platform.FIREFOX)) {
+        if (!(platform.TRIDENT || platform.FIREFOX || (platform.SAFARI && !platform.IOS))) {
           let fixture = TestBed.createComponent(MdInputContainerDateTestController);
           fixture.detectChanges();
 
@@ -93,10 +117,10 @@ describe('MdInputContainer', function () {
         }
       }));
 
-  // Firefox and IE don't support type="date" and fallback to type="text".
+  // Firefox, Safari Desktop and IE don't support type="date" and fallback to type="text".
   it('should be treated as empty if type is date on Firefox and IE',
       inject([Platform], (platform: Platform) => {
-        if (platform.TRIDENT || platform.FIREFOX) {
+        if (platform.TRIDENT || platform.FIREFOX || (platform.SAFARI && !platform.IOS)) {
           let fixture = TestBed.createComponent(MdInputContainerDateTestController);
           fixture.detectChanges();
 
@@ -203,7 +227,7 @@ describe('MdInputContainer', function () {
     fixture.detectChanges();
 
     let input = fixture.debugElement.query(By.directive(MdInputDirective))
-      .injector.get(MdInputDirective) as MdInputDirective;
+      .injector.get<MdInputDirective>(MdInputDirective);
 
     expect(input.value).toBeFalsy();
 
@@ -242,29 +266,41 @@ describe('MdInputContainer', function () {
     let fixture = TestBed.createComponent(MdInputContainerInvalidHintTestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
-        wrappedErrorMessage(new MdInputContainerDuplicatedHintError('start')));
+        wrappedErrorMessage(getMdInputContainerDuplicatedHintError('start')));
   });
 
   it('validates there\'s only one hint label per side (attribute)', () => {
     let fixture = TestBed.createComponent(MdInputContainerInvalidHint2TestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
-        wrappedErrorMessage(new MdInputContainerDuplicatedHintError('start')));
+        wrappedErrorMessage(getMdInputContainerDuplicatedHintError('start')));
   });
 
   it('validates there\'s only one placeholder', () => {
     let fixture = TestBed.createComponent(MdInputContainerInvalidPlaceholderTestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
-        wrappedErrorMessage(new MdInputContainerPlaceholderConflictError()));
+        wrappedErrorMessage(getMdInputContainerPlaceholderConflictError()));
   });
 
   it('validates that mdInput child is present', () => {
     let fixture = TestBed.createComponent(MdInputContainerMissingMdInputTestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
-        wrappedErrorMessage(new MdInputContainerMissingMdInputError()));
+        wrappedErrorMessage(getMdInputContainerMissingMdInputError()));
   });
+
+  it('validates that mdInput child is present after initialization', async(() => {
+    let fixture = TestBed.createComponent(MdInputContainerWithNgIf);
+
+    expect(() => fixture.detectChanges()).not.toThrowError(
+        wrappedErrorMessage(getMdInputContainerMissingMdInputError()));
+
+    fixture.componentInstance.renderInput = false;
+
+    expect(() => fixture.detectChanges()).toThrowError(
+        wrappedErrorMessage(getMdInputContainerMissingMdInputError()));
+  }));
 
   it('validates the type', () => {
     let fixture = TestBed.createComponent(MdInputContainerInvalidTypeTestController);
@@ -369,6 +405,20 @@ describe('MdInputContainer', function () {
     let el = fixture.debugElement.query(By.css('label'));
     expect(el).not.toBeNull();
     expect(el.nativeElement.textContent).toMatch(/hello\s+\*/g);
+  });
+
+  it('hide placeholder required star when set to hide the required marker', () => {
+    let fixture = TestBed.createComponent(MdInputContainerPlaceholderRequiredTestComponent);
+    fixture.detectChanges();
+
+    let el = fixture.debugElement.query(By.css('label'));
+    expect(el).not.toBeNull();
+    expect(el.nativeElement.textContent).toMatch(/hello\s+\*/g);
+
+    fixture.componentInstance.hideRequiredMarker = true;
+    fixture.detectChanges();
+
+    expect(el.nativeElement.textContent).toMatch(/hello/g);
   });
 
   it('supports the disabled attribute as binding', async(() => {
@@ -569,17 +619,21 @@ describe('MdInputContainer', function () {
     let fixture: ComponentFixture<MdInputContainerWithFormErrorMessages>;
     let testComponent: MdInputContainerWithFormErrorMessages;
     let containerEl: HTMLElement;
+    let inputEl: HTMLElement;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MdInputContainerWithFormErrorMessages);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       containerEl = fixture.debugElement.query(By.css('md-input-container')).nativeElement;
+      inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
     });
 
     it('should not show any errors if the user has not interacted', () => {
       expect(testComponent.formControl.untouched).toBe(true, 'Expected untouched form control');
       expect(containerEl.querySelectorAll('md-error').length).toBe(0, 'Expected no error messages');
+      expect(inputEl.getAttribute('aria-invalid'))
+          .toBe('false', 'Expected aria-invalid to be set to "false".');
     });
 
     it('should display an error message when the input is touched and invalid', async(() => {
@@ -594,6 +648,8 @@ describe('MdInputContainer', function () {
             .toContain('mat-input-invalid', 'Expected container to have the invalid CSS class.');
         expect(containerEl.querySelectorAll('md-error').length)
             .toBe(1, 'Expected one error message to have been rendered.');
+        expect(inputEl.getAttribute('aria-invalid'))
+            .toBe('true', 'Expected aria-invalid to be set to "true".');
       });
     }));
 
@@ -611,6 +667,8 @@ describe('MdInputContainer', function () {
             .toContain('mat-input-invalid', 'Expected container to have the invalid CSS class.');
         expect(containerEl.querySelectorAll('md-error').length)
             .toBe(1, 'Expected one error message to have been rendered.');
+        expect(inputEl.getAttribute('aria-invalid'))
+            .toBe('true', 'Expected aria-invalid to be set to "true".');
       });
     }));
 
@@ -623,9 +681,12 @@ describe('MdInputContainer', function () {
       groupFixture.detectChanges();
       component = groupFixture.componentInstance;
       containerEl = groupFixture.debugElement.query(By.css('md-input-container')).nativeElement;
+      inputEl = groupFixture.debugElement.query(By.css('input')).nativeElement;
 
       expect(component.formGroup.invalid).toBe(true, 'Expected form control to be invalid');
       expect(containerEl.querySelectorAll('md-error').length).toBe(0, 'Expected no error messages');
+      expect(inputEl.getAttribute('aria-invalid'))
+          .toBe('false', 'Expected aria-invalid to be set to "false".');
       expect(component.formGroupDirective.submitted)
           .toBe(false, 'Expected form not to have been submitted');
 
@@ -639,6 +700,8 @@ describe('MdInputContainer', function () {
             .toContain('mat-input-invalid', 'Expected container to have the invalid CSS class.');
         expect(containerEl.querySelectorAll('md-error').length)
             .toBe(1, 'Expected one error message to have been rendered.');
+        expect(inputEl.getAttribute('aria-invalid'))
+            .toBe('true', 'Expected aria-invalid to be set to "true".');
       });
     }));
 
@@ -741,9 +804,13 @@ class MdInputContainerWithType {
 }
 
 @Component({
-  template: `<md-input-container><input mdInput required placeholder="hello"></md-input-container>`
+  template: `<md-input-container [hideRequiredMarker]="hideRequiredMarker">
+                <input mdInput required placeholder="hello">
+             </md-input-container>`
 })
-class MdInputContainerPlaceholderRequiredTestComponent {}
+class MdInputContainerPlaceholderRequiredTestComponent {
+  hideRequiredMarker: boolean;
+}
 
 @Component({
   template: `
@@ -979,3 +1046,14 @@ class MdInputContainerWithFormGroupErrorMessages {
   `
 })
 class MdInputContainerWithPrefixAndSuffix {}
+
+@Component({
+  template: `
+    <md-input-container>
+      <input mdInput *ngIf="renderInput">
+    </md-input-container>
+  `
+})
+class MdInputContainerWithNgIf {
+  renderInput = true;
+}

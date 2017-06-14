@@ -1,5 +1,11 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/typography/typography-utils';
+
+// TODO(crisbeto): these values don't correspond to any of the typography breakpoints.
+$mat-chip-font-size: 13px;
+$mat-chip-line-height: 16px;
+
 
 @mixin mat-chips-theme($theme) {
   $is-dark-theme: map-get($theme, is-dark);
@@ -32,18 +38,25 @@
     color: $selected-foreground;
 
     &.mat-primary {
-      background-color: mat-color($primary, 500);
-      color: mat-contrast($primary, 500);
+      background-color: mat-color($primary);
+      color: mat-color($primary, default-contrast);
     }
 
     &.mat-accent {
-      background-color: mat-color($accent, 500);
-      color: mat-contrast($accent, 500);
+      background-color: mat-color($accent);
+      color: mat-color($accent, default-contrast);
     }
 
     &.mat-warn {
-      background-color: mat-color($warn, 500);
-      color: mat-contrast($warn, 500);
+      background-color: mat-color($warn);
+      color: mat-color($warn, default-contrast);
     }
+  }
+}
+
+@mixin mat-chips-typography($config) {
+  .mat-chip:not(.mat-basic-chip) {
+    font-size: $mat-chip-font-size;
+    line-height: $mat-chip-line-height;
   }
 }

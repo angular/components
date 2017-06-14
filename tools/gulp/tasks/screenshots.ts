@@ -1,7 +1,7 @@
 import {task} from 'gulp';
 import {readdirSync, statSync, existsSync, mkdirp, readFileSync, writeFileSync} from 'fs-extra';
 import * as path from 'path';
-import * as admin from 'firebase-admin';
+import * as firebaseAdmin from 'firebase-admin';
 import * as firebase from 'firebase';
 import {
   openScreenshotsBucket,
@@ -25,14 +25,14 @@ const FIREBASE_STORAGE_GOLDENS = 'goldens';
 
 /** Task which upload screenshots generated from e2e test. */
 task('screenshots', () => {
-  let prNumber = process.env['TRAVIS_PULL_REQUEST'];
+  const prNumber = process.env['TRAVIS_PULL_REQUEST'];
 
   if (isTravisMasterBuild()) {
     // Only update goldens for master build
     return uploadScreenshots();
   } else if (prNumber) {
-    let firebaseApp = connectFirebaseScreenshots();
-    let database = firebaseApp.database();
+    const firebaseApp = connectFirebaseScreenshots();
+    const database = firebaseApp.database();
 
     return updateTravis(database, prNumber)
       .then(() => getScreenshotFiles(database))
@@ -40,7 +40,8 @@ task('screenshots', () => {
       .then((results: boolean) => updateResult(database, prNumber, results))
       .then(() => uploadScreenshotsData(database, 'diff', prNumber))
       .then(() => uploadScreenshotsData(database, 'test', prNumber))
-      .then(() => database.goOffline(), () => database.goOffline());
+      .catch((err: any) => console.error(err))
+      .then(() => firebaseApp.delete());
   }
 });
 
@@ -54,7 +55,7 @@ function updateResult(database: firebase.database.Database, prNumber: string, re
     .child(process.env['TRAVIS_PULL_REQUEST_SHA']).set(result).then(() => result);
 }
 
-function getPullRequestRef(database: firebase.database.Database | admin.database.Database,
+function getPullRequestRef(database: firebase.database.Database | firebaseAdmin.database.Database,
                            prNumber: string) {
   let secureToken = getSecureToken();
   return database.ref(FIREBASE_REPORT).child(prNumber).child(secureToken);
@@ -94,7 +95,7 @@ function extractScreenshotName(fileName: string) {
 
 function getLocalScreenshotFiles(dir: string): string[] {
   return readdirSync(dir)
-    .filter((fileName: string) => !statSync(path.join(SCREENSHOT_DIR, fileName)).isDirectory())
+    .filter((fileName: string) => !statSync(path.join(dir, fileName)).isDirectory())
     .filter((fileName: string) => fileName.endsWith('.screenshot.png'));
 }
 

@@ -4,6 +4,7 @@
 {
   "extends": "./tsconfig-build",
   "compilerOptions": {
+    "importHelpers": false,
     "module": "commonjs",
     "target": "es5",
     "types": ["jasmine"],
@@ -11,6 +12,5 @@
   },
   "include": [
     "**/*.spec.ts"
-  ],
-  "files": null
+  ]
 }

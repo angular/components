@@ -1,4 +1,4 @@
-import {NgModule, ModuleWithProviders} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PortalModule} from '../core';
 import {MdRippleModule} from '../core/ripple/index';
@@ -7,12 +7,12 @@ import {MdTab} from './tab';
 import {MdTabGroup} from './tab-group';
 import {MdTabLabel} from './tab-label';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
-import {MdTabNavBar, MdTabLink, MdTabLinkRipple} from './tab-nav-bar/tab-nav-bar';
+import {MdTabNav, MdTabLink, MdTabLinkRipple} from './tab-nav-bar/tab-nav-bar';
 import {MdInkBar} from './ink-bar';
 import {MdTabBody} from './tab-body';
 import {VIEWPORT_RULER_PROVIDER} from '../core/overlay/position/viewport-ruler';
 import {MdTabHeader} from './tab-header';
-import {SCROLL_DISPATCHER_PROVIDER} from '../core/overlay/scroll/scroll-dispatcher';
+import {ScrollDispatchModule} from '../core/overlay/scroll/index';
 
 
 @NgModule({
@@ -21,13 +21,14 @@ import {SCROLL_DISPATCHER_PROVIDER} from '../core/overlay/scroll/scroll-dispatch
     PortalModule,
     MdRippleModule,
     ObserveContentModule,
+    ScrollDispatchModule,
   ],
   // Don't export all components because some are only to be used internally.
   exports: [
     MdTabGroup,
     MdTabLabel,
     MdTab,
-    MdTabNavBar,
+    MdTabNav,
     MdTabLink,
     MdTabLinkRipple
   ],
@@ -37,23 +38,15 @@ import {SCROLL_DISPATCHER_PROVIDER} from '../core/overlay/scroll/scroll-dispatch
     MdTab,
     MdInkBar,
     MdTabLabelWrapper,
-    MdTabNavBar,
+    MdTabNav,
     MdTabLink,
     MdTabBody,
     MdTabLinkRipple,
     MdTabHeader
   ],
-  providers: [VIEWPORT_RULER_PROVIDER, SCROLL_DISPATCHER_PROVIDER],
+  providers: [VIEWPORT_RULER_PROVIDER],
 })
-export class MdTabsModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdTabsModule,
-      providers: []
-    };
-  }
-}
+export class MdTabsModule {}
 
 
 export * from './tab-group';
@@ -63,3 +56,4 @@ export {MdTabHeader, ScrollDirection} from './tab-header';
 export {MdTabLabelWrapper} from './tab-label-wrapper';
 export {MdTab} from './tab';
 export {MdTabLabel} from './tab-label';
+export {MdTabNav, MdTabLink} from './tab-nav-bar/index';

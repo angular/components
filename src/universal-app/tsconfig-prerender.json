@@ -1,0 +1,27 @@
+// TypeScript config file that is used to compile the files that prerender the Universal app.
+{
+  "compilerOptions": {
+    "declaration": false,
+    "stripInternal": false,
+    "experimentalDecorators": true,
+    // TODO(paul): Remove once Angular has been upgraded and supports noUnusedParameters in AOT.
+    "noUnusedParameters": false,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": ".",
+    "rootDir": ".",
+    "sourceMap": true,
+    "target": "es2015",
+    "lib": ["es2015", "dom"],
+    "skipLibCheck": true,
+    "types": [],
+    "baseUrl": ".",
+    "paths": {
+      "@angular/material": ["./material"],
+      "@angular/cdk": ["./cdk"]
+    }
+  },
+  "files": [
+    "prerender.ts"
+  ]
+}

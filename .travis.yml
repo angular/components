@@ -2,7 +2,7 @@ language: node_js
 sudo: false
 
 node_js:
-  - '6.10.2'
+  - '--lts'
 
 addons:
   jwt:
@@ -14,6 +14,20 @@ branches:
   only:
   - master
 
+jobs:
+  include:
+    - env: "MODE=lint"
+    - env: "MODE=e2e"
+    - env: "MODE=aot"
+    - env: "MODE=payload"
+    - env: "MODE=prerender"
+    - env: "MODE=closure-compiler"
+    - env: "MODE=saucelabs_required"
+    - env: "MODE=browserstack_required"
+    - stage: Deploy
+      script: ./scripts/ci/publish-artifacts.sh
+      env: "MODE=release"
+
 env:
   global:
   - LOGS_DIR=/tmp/angular-material2-build/logs
@@ -23,24 +37,9 @@ env:
   - BROWSER_PROVIDER_READY_FILE=/tmp/angular-material2-build/readyfile
   - BROWSER_PROVIDER_ERROR_FILE=/tmp/angular-material2-build/errorfile
 
-  matrix:
-    # Order: a slower build first, so that we don't occupy an idle travis worker waiting for others to complete.
-    - MODE=lint
-    - MODE=aot
-    - MODE=closure-compiler
-    - MODE=payload
-    - MODE=e2e
-    - MODE=saucelabs_required
-    - MODE=browserstack_required
-
-matrix:
-  fast_finish: true
-  allow_failures:
-  - env: "MODE=saucelabs_optional"
-  - env: "MODE=browserstack_optional"
-
 before_install:
   - source ./scripts/ci/env.sh
+  - npm i -g npm@^5.0.1
 
 install:
   - npm install
@@ -51,10 +50,6 @@ before_script:
 script:
   - ./scripts/ci/build-and-test.sh
 
-after_success:
-  - ./scripts/ci/after-success.sh
-
 cache:
   directories:
-    - node_modules
-    - $HOME/.pub-cache
+    - $HOME/.npm

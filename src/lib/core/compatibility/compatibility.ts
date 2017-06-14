@@ -1,56 +1,39 @@
-import {
-  NgModule,
-  ModuleWithProviders,
-  Directive,
-  OpaqueToken,
-  Inject,
-  Optional,
-  isDevMode,
-  ElementRef,
-} from '@angular/core';
-import {DOCUMENT} from '@angular/platform-browser';
-import {MdError} from '../errors/error';
+import {NgModule, Directive, Inject, Optional, ElementRef, InjectionToken} from '@angular/core';
 
-/** Whether we've done the global sanity checks (e.g. a theme is loaded, there is a doctype). */
-let hasDoneGlobalChecks = false;
-
-export const MATERIAL_COMPATIBILITY_MODE = new OpaqueToken('md-compatibility-mode');
+export const MATERIAL_COMPATIBILITY_MODE = new InjectionToken<boolean>('md-compatibility-mode');
 
 /**
- * Exception thrown if the consumer has used an invalid Material prefix on a component.
+ * Returns an exception to be thrown if the consumer has used
+ * an invalid Material prefix on a component.
  * @docs-private
  */
-export class MdCompatibilityInvalidPrefixError extends MdError {
-  constructor(prefix: string, nodeName: string) {
-    super(
-      `The "${prefix}-" prefix cannot be used in ng-material v1 compatibility mode. ` +
-      `It was used on an "${nodeName.toLowerCase()}" element.`
-    );
-  }
+export function getMdCompatibilityInvalidPrefixError(prefix: string, nodeName: string) {
+  return new Error(`The "${prefix}-" prefix cannot be used in ng-material v1 compatibility mode. ` +
+                   `It was used on an "${nodeName.toLowerCase()}" element.`);
 }
 
 /** Selector that matches all elements that may have style collisions with AngularJS Material. */
 export const MAT_ELEMENTS_SELECTOR = `
   [mat-button],
-  [mat-card-subtitle],
-  [mat-card-title],
-  [mat-dialog-actions],
-  [mat-dialog-close],
-  [mat-dialog-content],
-  [mat-dialog-title],
   [mat-fab],
   [mat-icon-button],
-  [mat-menu-trigger-for],
   [mat-mini-fab],
   [mat-raised-button],
-  [mat-tab-label],
-  [mat-tab-link],
-  [mat-tab-nav-bar],
+  [matCardSubtitle],
+  [matCardTitle],
+  [matDialogActions],
+  [matDialogClose],
+  [matDialogContent],
+  [matDialogTitle],
+  [matLine],
+  [matTabLabel],
+  [matTabLink],
+  [matTabNav],
   [matTooltip],
   mat-autocomplete,
   mat-button-toggle,
-  mat-button-toggle-group,
   mat-button-toggle,
+  mat-button-toggle-group,
   mat-card,
   mat-card-actions,
   mat-card-content,
@@ -65,6 +48,7 @@ export const MAT_ELEMENTS_SELECTOR = `
   mat-dialog-container,
   mat-dialog-content,
   mat-divider,
+  mat-error,
   mat-grid-list,
   mat-grid-tile,
   mat-grid-tile-footer,
@@ -88,31 +72,30 @@ export const MAT_ELEMENTS_SELECTOR = `
   mat-spinner,
   mat-tab,
   mat-tab-group,
-  mat-toolbar,
-  mat-error`;
+  mat-toolbar`;
 
 /** Selector that matches all elements that may have style collisions with AngularJS Material. */
 export const MD_ELEMENTS_SELECTOR = `
   [md-button],
-  [md-card-subtitle],
-  [md-card-title],
-  [md-dialog-actions],
-  [md-dialog-close],
-  [md-dialog-content],
-  [md-dialog-title],
   [md-fab],
   [md-icon-button],
-  [md-menu-trigger-for],
   [md-mini-fab],
   [md-raised-button],
-  [md-tab-label],
-  [md-tab-link],
-  [md-tab-nav-bar],
+  [mdCardSubtitle],
+  [mdCardTitle],
+  [mdDialogActions],
+  [mdDialogClose],
+  [mdDialogContent],
+  [mdDialogTitle],
+  [mdLine],
+  [mdTabLabel],
+  [mdTabLink],
+  [mdTabNav],
   [mdTooltip],
   md-autocomplete,
   md-button-toggle,
-  md-button-toggle-group,
   md-button-toggle,
+  md-button-toggle-group,
   md-card,
   md-card-actions,
   md-card-content,
@@ -127,6 +110,7 @@ export const MD_ELEMENTS_SELECTOR = `
   md-dialog-container,
   md-dialog-content,
   md-divider,
+  md-error,
   md-grid-list,
   md-grid-tile,
   md-grid-tile-footer,
@@ -150,8 +134,7 @@ export const MD_ELEMENTS_SELECTOR = `
   md-spinner,
   md-tab,
   md-tab-group,
-  md-toolbar,
-  md-error`;
+  md-toolbar`;
 
 /** Directive that enforces that the `mat-` prefix cannot be used. */
 @Directive({selector: MAT_ELEMENTS_SELECTOR})
@@ -161,7 +144,7 @@ export class MatPrefixRejector {
     elementRef: ElementRef) {
 
     if (!isCompatibilityMode) {
-      throw new MdCompatibilityInvalidPrefixError('mat', elementRef.nativeElement.nodeName);
+      throw getMdCompatibilityInvalidPrefixError('mat', elementRef.nativeElement.nodeName);
     }
   }
 }
@@ -174,7 +157,7 @@ export class MdPrefixRejector {
     elementRef: ElementRef) {
 
     if (isCompatibilityMode) {
-      throw new MdCompatibilityInvalidPrefixError('md', elementRef.nativeElement.nodeName);
+      throw getMdCompatibilityInvalidPrefixError('md', elementRef.nativeElement.nodeName);
     }
   }
 }
@@ -189,50 +172,7 @@ export class MdPrefixRejector {
   declarations: [MatPrefixRejector, MdPrefixRejector],
   exports: [MatPrefixRejector, MdPrefixRejector],
 })
-export class CompatibilityModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: CompatibilityModule,
-      providers: [],
-    };
-  }
-
-  constructor(@Optional() @Inject(DOCUMENT) private _document: any) {
-    if (!hasDoneGlobalChecks && isDevMode()) {
-      this._checkDoctype();
-      this._checkTheme();
-      hasDoneGlobalChecks = true;
-    }
-  }
-
-  private _checkDoctype(): void {
-    if (this._document && !this._document.doctype) {
-      console.warn(
-        'Current document does not have a doctype. This may cause ' +
-        'some Angular Material components not to behave as expected.'
-      );
-    }
-  }
-
-  private _checkTheme(): void {
-    if (this._document && typeof getComputedStyle === 'function') {
-      const testElement = this._document.createElement('div');
-
-      testElement.classList.add('mat-theme-loaded-marker');
-      this._document.body.appendChild(testElement);
-
-      if (getComputedStyle(testElement).display !== 'none') {
-        console.warn(
-          'Could not find Angular Material core theme. Most Material ' +
-          'components may not work as expected. For more info refer ' +
-          'to the theming guide: https://material.angular.io/guide/theming'
-        );
-      }
-
-      this._document.body.removeChild(testElement);
-    }
-  }
-}
+export class CompatibilityModule {}
 
 
 /**

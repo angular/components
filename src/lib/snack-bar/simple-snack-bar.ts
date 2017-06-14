@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {MdSnackBarRef} from './snack-bar-ref';
 
 
@@ -11,8 +11,9 @@ import {MdSnackBarRef} from './snack-bar-ref';
   selector: 'simple-snack-bar',
   templateUrl: 'simple-snack-bar.html',
   styleUrls: ['simple-snack-bar.css'],
+  encapsulation: ViewEncapsulation.None,
   host: {
-    '[class.mat-simple-snackbar]': 'true',
+    'class': 'mat-simple-snackbar',
   }
 })
 export class SimpleSnackBar {
@@ -31,5 +32,7 @@ export class SimpleSnackBar {
   }
 
   /** If the action button should be shown. */
-  get hasAction(): boolean { return !!this.action; }
+  get hasAction(): boolean {
+    return !!this.action;
+  }
 }

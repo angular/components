@@ -1,4 +1,5 @@
 import {ViewContainerRef} from '@angular/core';
+import {LayoutDirection} from '../core';
 
 /** Valid ARIA roles for a dialog element. */
 export type DialogRole = 'dialog' | 'alertdialog';
@@ -27,6 +28,15 @@ export class MdDialogConfig {
   /** The ARIA role of the dialog element. */
   role?: DialogRole = 'dialog';
 
+  /** Custom class for the overlay pane. */
+  panelClass?: string = '';
+
+  /** Whether the dialog has a backdrop. */
+  hasBackdrop?: boolean = true;
+
+  /** Custom class for the backdrop, */
+  backdropClass?: string = '';
+
   /** Whether the user can use escape or clicking outside to close a modal. */
   disableClose?: boolean = false;
 
@@ -41,6 +51,9 @@ export class MdDialogConfig {
 
   /** Data being injected into the child component. */
   data?: any = null;
+
+  /** Layout direction for the dialog's content. */
+  direction?: LayoutDirection = 'ltr';
 
   // TODO(jelbourn): add configuration for lifecycle hooks, ARIA labelling.
 }

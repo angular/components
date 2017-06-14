@@ -8,7 +8,7 @@
 
       <table style="width: 100%" cellspacing="0"><tr>
         <td>
-          <md-input-container style="width: 100%">
+          <md-input-container style="width: 100%" floatPlaceholder="never">
             <input mdInput placeholder="First name">
           </md-input-container>
         </td>
@@ -39,10 +39,11 @@
         </td>
         <td>
           <md-input-container class="demo-full-width">
-            <input mdInput #postalCode maxLength="5" placeholder="Postal Code" value="94043">
+            <input mdInput #postalCode maxLength="5" placeholder="Postal Code" value="94043"
+                   pattern="[0-9]{5}">
             <md-hint align="end">
               <md-icon>mode_edit</md-icon>
-              {{postalCode.value.length}} / 5
+              <span aria-live="polite">{{postalCode.value.length}} / 5</span>
             </md-hint>
           </md-input-container>
         </td>
@@ -112,6 +113,13 @@
       <md-icon mdPrefix>attach_money</md-icon>
       <md-icon mdSuffix>mode_edit</md-icon>
     </md-input-container>
+
+    <h4>Icon buttons</h4>
+    <md-input-container>
+      <input mdInput placeholder="amount">
+      <button md-icon-button mdPrefix><md-icon>attach_money</md-icon></button>
+      <button md-icon-button mdSuffix><md-icon>mode_edit</md-icon></button>
+    </md-input-container>
   </md-card-content>
 </md-card>
 
@@ -139,6 +147,20 @@
     <md-input-container color="warn">
       <textarea mdInput placeholder="Warn Color">example</textarea>
     </md-input-container>
+
+    <h4>With error</h4>
+    <md-input-container color="primary" >
+      <input mdInput placeholder="Default Color" [(ngModel)]="dividerColorExample1" required>
+      <md-error>This field is required</md-error>
+    </md-input-container>
+    <md-input-container color="accent">
+      <input mdInput placeholder="Accent Color" [(ngModel)]="dividerColorExample2" required>
+      <md-error>This field is required</md-error>
+    </md-input-container>
+    <md-input-container color="warn">
+      <input mdInput placeholder="Warn Color" [(ngModel)]="dividerColorExample3" required>
+      <md-error>This field is required</md-error>
+    </md-input-container>
   </md-card-content>
 </md-card>
 
@@ -153,7 +175,9 @@
                placeholder="Character count (100 max)"
                maxLength="100"
                value="Hello world. How are you?">
-        <md-hint align="end">{{characterCountInputHintExample.value.length}} / 100</md-hint>
+        <md-hint align="end" aria-live="polite">
+          {{characterCountInputHintExample.value.length}} / 100
+        </md-hint>
       </md-input-container>
     </p>
 
@@ -164,7 +188,9 @@
                   #characterCountTextareaHintExample
                   placeholder="Character count (100 max)"
                   maxLength="100">Hello world. How are you?</textarea>
-        <md-hint align="end">{{characterCountTextareaHintExample.value.length}} / 100</md-hint>
+        <md-hint align="end" aria-live="polite">
+          {{characterCountTextareaHintExample.value.length}} / 100
+        </md-hint>
       </md-input-container>
     </p>
   </md-card-content>
@@ -195,7 +221,7 @@
     <p>
       <md-input-container style="width: 100%">
         <input mdInput #input placeholder="Character count (100 max)" maxLength="100">
-        <md-hint align="end">{{input.value.length}} / 100</md-hint>
+        <md-hint align="end" aria-live="polite">{{input.value.length}} / 100</md-hint>
       </md-input-container>
     </p>
     <p>
@@ -218,16 +244,19 @@
     <p>
       <md-input-container hintLabel="Hint label" style="width: 100%">
         <input mdInput #hintLabelWithCharCount placeholder="Show Hint Label With Character Count">
-        <md-hint align="end">{{hintLabelWithCharCount.value.length}}</md-hint>
+        <md-hint align="end" aria-live="polite">{{hintLabelWithCharCount.value.length}}</md-hint>
       </md-input-container>
     </p>
     <p>
       <md-input-container style="margin-bottom: 4em">
         <textarea mdInput #longHint placeholder="Enter text to count"></textarea>
         <md-hint>
-          Enter some text to count how many characters are in it. The character count is shown on the right.
+          Enter some text to count how many characters are in it. The character count is shown on
+          the right.
         </md-hint>
-        <md-hint align="end" style="white-space: nowrap">Length: {{longHint.value.length}}</md-hint>
+        <md-hint align="end" style="white-space: nowrap" aria-live="polite">
+          Length: {{longHint.value.length}}
+        </md-hint>
       </md-input-container>
     </p>
     <p>
@@ -242,6 +271,15 @@
         <input mdInput
                [required]="requiredField"
                [placeholder]="requiredField ? 'Required field' : 'Not required field'">
+      </md-input-container>
+    </p>
+    <p>
+      <md-checkbox [(ngModel)]="hideRequiredMarker">Check to hide the required marker:</md-checkbox>
+      <md-input-container [hideRequiredMarker]="hideRequiredMarker" style="width: 300px">
+        <input mdInput
+               required
+               [placeholder]="hideRequiredMarker ?
+                   'Required Without Marker' : 'Required With Marker'">
       </md-input-container>
     </p>
     <p>
@@ -319,11 +357,13 @@
 <md-card class="demo-card demo-basic">
   <md-toolbar color="primary">Forms</md-toolbar>
   <md-card-content>
-    <md-input-container><input mdInput placeholder="reactive" [formControl]="formControl"></md-input-container>
+    <md-input-container><input mdInput placeholder="reactive" [formControl]="formControl">
+    </md-input-container>
     <md-input-container>
       <input mdInput placeholder="template" [(ngModel)]="model" required [disabled]="ctrlDisabled">
     </md-input-container>
-    <button md-raised-button color="primary" (click)="formControl.enabled ? formControl.disable() : formControl.enable()">
+    <button md-raised-button color="primary"
+            (click)="formControl.enabled ? formControl.disable() : formControl.enable()">
       DISABLE REACTIVE CTRL
     </button>
     <button md-raised-button color="primary" (click)="ctrlDisabled = !ctrlDisabled">

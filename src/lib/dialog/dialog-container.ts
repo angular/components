@@ -3,7 +3,8 @@ import {
   ComponentRef,
   ViewChild,
   ViewEncapsulation,
-  Renderer,
+  NgZone,
+  OnDestroy,
   ElementRef,
   EventEmitter,
   Inject,
@@ -20,9 +21,16 @@ import {
 import {DOCUMENT} from '@angular/platform-browser';
 import {BasePortalHost, ComponentPortal, PortalHostDirective, TemplatePortal} from '../core';
 import {MdDialogConfig} from './dialog-config';
-import {MdDialogContentAlreadyAttachedError} from './dialog-errors';
 import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
 
+/**
+ * Throws an exception for the case when a ComponentPortal is
+ * attached to a DomPortalHost without an origin.
+ * @docs-private
+ */
+export function throwMdDialogContentAlreadyAttachedError() {
+  throw new Error('Attempting to attach dialog content after content is already attached');
+}
 
 /**
  * Internal component that wraps user-provided dialog content.
@@ -37,15 +45,19 @@ import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
   encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('slideDialog', [
+      // Note: The `enter` animation doesn't transition to something like `translate3d(0, 0, 0)
+      // scale(1)`, because for some reason specifying the transform explicitly, causes IE both
+      // to blur the dialog content and decimate the animation performance. Leaving it as `none`
+      // solves both issues.
+      state('enter', style({ transform: 'none', opacity: 1 })),
       state('void', style({ transform: 'translate3d(0, 25%, 0) scale(0.9)', opacity: 0 })),
-      state('enter', style({ transform: 'translate3d(0, 0, 0) scale(1)', opacity: 1 })),
       state('exit', style({ transform: 'translate3d(0, 25%, 0)', opacity: 0 })),
       transition('* => *', animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)')),
     ])
   ],
   host: {
-    '[class.mat-dialog-container]': 'true',
-    '[attr.role]': 'dialogConfig?.role',
+    'class': 'mat-dialog-container',
+    '[attr.role]': '_config?.role',
     '[@slideDialog]': '_state',
     '(@slideDialog.done)': '_onAnimationDone($event)',
   },
@@ -64,7 +76,7 @@ export class MdDialogContainer extends BasePortalHost {
   private _document: Document;
 
   /** The dialog configuration. */
-  dialogConfig: MdDialogConfig;
+  _config: MdDialogConfig;
 
   /** State of the dialog animation. */
   _state: 'void' | 'enter' | 'exit' = 'enter';
@@ -73,7 +85,7 @@ export class MdDialogContainer extends BasePortalHost {
   _onAnimationStateChange = new EventEmitter<AnimationEvent>();
 
   constructor(
-    private _renderer: Renderer,
+    private _ngZone: NgZone,
     private _elementRef: ElementRef,
     private _focusTrapFactory: FocusTrapFactory,
     @Optional() @Inject(DOCUMENT) _document: any) {
@@ -88,7 +100,7 @@ export class MdDialogContainer extends BasePortalHost {
    */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     if (this._portalHost.hasAttached()) {
-      throw new MdDialogContentAlreadyAttachedError();
+      throwMdDialogContentAlreadyAttachedError();
     }
 
     this._savePreviouslyFocusedElement();
@@ -101,16 +113,14 @@ export class MdDialogContainer extends BasePortalHost {
    */
   attachTemplatePortal(portal: TemplatePortal): Map<string, any> {
     if (this._portalHost.hasAttached()) {
-      throw new MdDialogContentAlreadyAttachedError();
+      throwMdDialogContentAlreadyAttachedError();
     }
 
     this._savePreviouslyFocusedElement();
     return this._portalHost.attachTemplatePortal(portal);
   }
 
-  /**
-   * Moves the focus inside the focus trap.
-   */
+  /** Moves the focus inside the focus trap. */
   private _trapFocus() {
     if (!this._focusTrap) {
       this._focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
@@ -119,40 +129,14 @@ export class MdDialogContainer extends BasePortalHost {
     // If were to attempt to focus immediately, then the content of the dialog would not yet be
     // ready in instances where change detection has to run first. To deal with this, we simply
     // wait for the microtask queue to be empty.
-    this._focusTrap.focusFirstTabbableElementWhenReady();
+    this._focusTrap.focusInitialElementWhenReady();
   }
 
-  /**
-   * Saves a reference to the element that was focused before the dialog was opened.
-   */
-  private _savePreviouslyFocusedElement() {
-    if (this._document) {
-      this._elementFocusedBeforeDialogWasOpened = this._document.activeElement as HTMLElement;
-    }
-  }
+  /** Restores focus to the element that was focused before the dialog opened. */
+  private _restoreFocus() {
+    const toFocus = this._elementFocusedBeforeDialogWasOpened;
 
-  /**
-   * Callback, invoked whenever an animation on the host completes.
-   * @docs-private
-   */
-  _onAnimationDone(event: AnimationEvent) {
-    this._onAnimationStateChange.emit(event);
-
-    if (event.toState === 'enter') {
-      this._trapFocus();
-    } else if (event.toState === 'exit') {
-      this._onAnimationStateChange.complete();
-    }
-  }
-
-  /**
-   * Kicks off the leave animation and restores focus to the previously-focused element.
-   * @docs-private
-   */
-  _exit(): void {
     // We need the extra check, because IE can set the `activeElement` to null in some cases.
-    let toFocus = this._elementFocusedBeforeDialogWasOpened;
-
     if (toFocus && 'focus' in toFocus) {
       toFocus.focus();
     }
@@ -160,7 +144,24 @@ export class MdDialogContainer extends BasePortalHost {
     if (this._focusTrap) {
       this._focusTrap.destroy();
     }
+  }
 
-    this._state = 'exit';
+  /** Saves a reference to the element that was focused before the dialog was opened. */
+  private _savePreviouslyFocusedElement() {
+    if (this._document) {
+      this._elementFocusedBeforeDialogWasOpened = this._document.activeElement as HTMLElement;
+    }
+  }
+
+  /** Callback, invoked whenever an animation on the host completes. */
+  _onAnimationDone(event: AnimationEvent) {
+    this._onAnimationStateChange.emit(event);
+
+    if (event.toState === 'enter') {
+      this._trapFocus();
+    } else if (event.toState === 'exit') {
+      this._restoreFocus();
+      this._onAnimationStateChange.complete();
+    }
   }
 }

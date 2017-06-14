@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {async, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
-import {FormsModule, NgControl, ReactiveFormsModule, FormControl} from '@angular/forms';
+import {NgModel, FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
 import {MdSlideToggle, MdSlideToggleChange, MdSlideToggleModule} from './index';
 import {TestGestureConfig} from '../slider/test-gesture-config';
 import {dispatchFakeEvent} from '../core/testing/dispatch-events';
@@ -13,7 +13,7 @@ describe('MdSlideToggle', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSlideToggleModule.forRoot(), FormsModule, ReactiveFormsModule],
+      imports: [MdSlideToggleModule, FormsModule, ReactiveFormsModule],
       declarations: [SlideToggleTestApp, SlideToggleFormsTestApp, SlideToggleWithFormControl],
       providers: [
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => gestureConfig = new TestGestureConfig()}
@@ -29,7 +29,7 @@ describe('MdSlideToggle', () => {
     let testComponent: SlideToggleTestApp;
     let slideToggle: MdSlideToggle;
     let slideToggleElement: HTMLElement;
-    let slideToggleControl: NgControl;
+    let slideToggleModel: NgModel;
     let labelElement: HTMLLabelElement;
     let inputElement: HTMLInputElement;
 
@@ -51,7 +51,7 @@ describe('MdSlideToggle', () => {
 
       slideToggle = slideToggleDebug.componentInstance;
       slideToggleElement = slideToggleDebug.nativeElement;
-      slideToggleControl = slideToggleDebug.injector.get(NgControl);
+      slideToggleModel = slideToggleDebug.injector.get<NgModel>(NgModel);
       inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
       labelElement = fixture.debugElement.query(By.css('label')).nativeElement;
     }));
@@ -291,37 +291,37 @@ describe('MdSlideToggle', () => {
 
     it('should have the correct control state initially and after interaction', () => {
       // The control should start off valid, pristine, and untouched.
-      expect(slideToggleControl.valid).toBe(true);
-      expect(slideToggleControl.pristine).toBe(true);
-      expect(slideToggleControl.touched).toBe(false);
+      expect(slideToggleModel.valid).toBe(true);
+      expect(slideToggleModel.pristine).toBe(true);
+      expect(slideToggleModel.touched).toBe(false);
 
       // After changing the value programmatically, the control should
       // become dirty (not pristine), but remain untouched.
       slideToggle.checked = true;
       fixture.detectChanges();
 
-      expect(slideToggleControl.valid).toBe(true);
-      expect(slideToggleControl.pristine).toBe(false);
-      expect(slideToggleControl.touched).toBe(false);
+      expect(slideToggleModel.valid).toBe(true);
+      expect(slideToggleModel.pristine).toBe(false);
+      expect(slideToggleModel.touched).toBe(false);
 
       // After a user interaction occurs (such as a click), the control should remain dirty and
       // now also be touched.
       labelElement.click();
       fixture.detectChanges();
 
-      expect(slideToggleControl.valid).toBe(true);
-      expect(slideToggleControl.pristine).toBe(false);
-      expect(slideToggleControl.touched).toBe(true);
+      expect(slideToggleModel.valid).toBe(true);
+      expect(slideToggleModel.pristine).toBe(false);
+      expect(slideToggleModel.touched).toBe(true);
     });
 
     it('should not set the control to touched when changing the state programmatically', () => {
       // The control should start off with being untouched.
-      expect(slideToggleControl.touched).toBe(false);
+      expect(slideToggleModel.touched).toBe(false);
 
       testComponent.slideChecked = true;
       fixture.detectChanges();
 
-      expect(slideToggleControl.touched).toBe(false);
+      expect(slideToggleModel.touched).toBe(false);
       expect(slideToggleElement.classList).toContain('mat-checked');
 
       // After a user interaction occurs (such as a click), the control should remain dirty and
@@ -329,20 +329,20 @@ describe('MdSlideToggle', () => {
       inputElement.click();
       fixture.detectChanges();
 
-      expect(slideToggleControl.touched).toBe(true);
+      expect(slideToggleModel.touched).toBe(true);
       expect(slideToggleElement.classList).not.toContain('mat-checked');
     });
 
     // TODO(kara): update when core/testing adds fix
     it('should not set the control to touched when changing the model', async(() => {
       // The control should start off with being untouched.
-      expect(slideToggleControl.touched).toBe(false);
+      expect(slideToggleModel.touched).toBe(false);
 
       testComponent.slideModel = true;
       fixture.detectChanges();
       fixture.whenStable().then(() => {
         fixture.detectChanges();
-        expect(slideToggleControl.touched).toBe(false);
+        expect(slideToggleModel.touched).toBe(false);
         expect(slideToggle.checked).toBe(true);
         expect(slideToggleElement.classList).toContain('mat-checked');
       });
@@ -468,7 +468,7 @@ describe('MdSlideToggle', () => {
     let testComponent: SlideToggleTestApp;
     let slideToggle: MdSlideToggle;
     let slideToggleElement: HTMLElement;
-    let slideToggleControl: NgControl;
+    let slideToggleModel: NgModel;
     let slideThumbContainer: HTMLElement;
     let inputElement: HTMLInputElement;
 
@@ -484,7 +484,7 @@ describe('MdSlideToggle', () => {
 
       slideToggle = slideToggleDebug.componentInstance;
       slideToggleElement = slideToggleDebug.nativeElement;
-      slideToggleControl = slideToggleDebug.injector.get(NgControl);
+      slideToggleModel = slideToggleDebug.injector.get<NgModel>(NgModel);
       slideThumbContainer = thumbContainerDebug.nativeElement;
 
       inputElement = slideToggleElement.querySelector('input');
@@ -618,6 +618,7 @@ describe('MdSlideToggle', () => {
 
     let testComponent: SlideToggleWithFormControl;
     let slideToggle: MdSlideToggle;
+    let inputElement: HTMLInputElement;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SlideToggleWithFormControl);
@@ -625,20 +626,24 @@ describe('MdSlideToggle', () => {
 
       testComponent = fixture.debugElement.componentInstance;
       slideToggle = fixture.debugElement.query(By.directive(MdSlideToggle)).componentInstance;
+      inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
     });
 
     it('should toggle the disabled state', () => {
       expect(slideToggle.disabled).toBe(false);
+      expect(inputElement.disabled).toBe(false);
 
       testComponent.formControl.disable();
       fixture.detectChanges();
 
       expect(slideToggle.disabled).toBe(true);
+      expect(inputElement.disabled).toBe(true);
 
       testComponent.formControl.enable();
       fixture.detectChanges();
 
       expect(slideToggle.disabled).toBe(false);
+      expect(inputElement.disabled).toBe(false);
     });
   });
 });
@@ -680,10 +685,8 @@ class SlideToggleTestApp {
   lastEvent: MdSlideToggleChange;
   labelPosition: string;
 
-  onSlideClick(event: Event) {}
-  onSlideChange(event: MdSlideToggleChange) {
-    this.lastEvent = event;
-  }
+  onSlideClick: (event?: Event) => void = () => {};
+  onSlideChange = (event: MdSlideToggleChange) => this.lastEvent = event;
 }
 
 

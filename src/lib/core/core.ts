@@ -1,8 +1,8 @@
-import {NgModule, ModuleWithProviders} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {MdLineModule} from './line/line';
 import {RtlModule} from './rtl/dir';
 import {ObserveContentModule} from './observe-content/observe-content';
-import {MdOptionModule} from './option/option';
+import {MdOptionModule} from './option/index';
 import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/overlay-directives';
 import {A11yModule} from './a11y/index';
@@ -16,7 +16,7 @@ export {Dir, LayoutDirection, RtlModule} from './rtl/dir';
 // Mutation Observer
 export {ObserveContentModule, ObserveContent} from './observe-content/observe-content';
 
-export {MdOptionModule, MdOption} from './option/option';
+export * from './option/index';
 
 // Portals
 export {
@@ -37,20 +37,7 @@ export {DomPortalHost} from './portal/dom-portal-host';
 export * from './platform/index';
 
 // Overlay
-export {Overlay, OVERLAY_PROVIDERS} from './overlay/overlay';
-export {OverlayContainer} from './overlay/overlay-container';
-export {FullscreenOverlayContainer} from './overlay/fullscreen-overlay-container';
-export {OverlayRef} from './overlay/overlay-ref';
-export {OverlayState} from './overlay/overlay-state';
-export {
-  ConnectedOverlayDirective,
-  OverlayOrigin,
-  OverlayModule,
-} from './overlay/overlay-directives';
-export * from './overlay/position/global-position-strategy';
-export * from './overlay/position/connected-position-strategy';
-export * from './overlay/position/connected-position';
-export {ScrollDispatcher} from './overlay/scroll/scroll-dispatcher';
+export * from './overlay/index';
 
 // Gestures
 export {GestureConfig} from './gestures/gesture-config';
@@ -89,9 +76,6 @@ export {MdLineModule, MdLine, MdLineSetter} from './line/line';
 // Style
 export * from './style/index';
 
-// Error
-export {MdError} from './errors/error';
-
 // Misc
 export {ComponentType} from './overlay/generic-component-type';
 
@@ -113,6 +97,18 @@ export {coerceNumberProperty} from './coercion/number-property';
 // Compatibility
 export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibility/compatibility';
 
+// Common material module
+export {MdCommonModule, MATERIAL_SANITY_CHECKS} from './common-behaviors/common-module';
+
+// Datetime
+export * from './datetime/index';
+
+// Placeholder
+export {
+  FloatPlaceholderType,
+  PlaceholderOptions,
+  MD_PLACEHOLDER_GLOBAL_OPTIONS
+} from './placeholder/placeholder-options';
 
 @NgModule({
   imports: [
@@ -138,12 +134,4 @@ export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibi
     MdSelectionModule,
   ],
 })
-export class MdCoreModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdCoreModule,
-      providers: [],
-    };
-  }
-}
+export class MdCoreModule {}

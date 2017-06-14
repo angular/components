@@ -1,7 +1,7 @@
 import {
   Component,
   ViewEncapsulation,
-  Renderer,
+  Renderer2,
   ElementRef,
   Input,
   ContentChildren,
@@ -16,7 +16,7 @@ import {coerceToNumber} from './grid-list-measure';
   selector: 'md-grid-tile, mat-grid-tile',
   host: {
     'role': 'listitem',
-    '[class.mat-grid-tile]': 'true',
+    'class': 'mat-grid-tile',
   },
   templateUrl: 'grid-tile.html',
   styleUrls: ['grid-list.css'],
@@ -26,7 +26,7 @@ export class MdGridTile {
   _rowspan: number = 1;
   _colspan: number = 1;
 
-  constructor(private _renderer: Renderer, private _element: ElementRef) {}
+  constructor(private _renderer: Renderer2, private _element: ElementRef) {}
 
   /** Amount of rows that the grid tile takes up. */
   @Input()
@@ -43,7 +43,7 @@ export class MdGridTile {
    * "Changed after checked" errors that would occur with HostBinding.
    */
   _setStyle(property: string, value: string): void {
-    this._renderer.setElementStyle(this._element.nativeElement, property, value);
+    this._renderer.setStyle(this._element.nativeElement, property, value);
   }
 }
 
@@ -60,7 +60,7 @@ export class MdGridTileText implements AfterContentInit {
   _lineSetter: MdLineSetter;
   @ContentChildren(MdLine) _lines: QueryList<MdLine>;
 
-  constructor(private _renderer: Renderer, private _element: ElementRef) {}
+  constructor(private _renderer: Renderer2, private _element: ElementRef) {}
 
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
@@ -72,10 +72,8 @@ export class MdGridTileText implements AfterContentInit {
  * @docs-private
  */
 @Directive({
-  selector: '[md-grid-avatar], [mat-grid-avatar]',
-  host: {
-    '[class.mat-grid-avatar]': 'true'
-  }
+  selector: '[md-grid-avatar], [mat-grid-avatar], [mdGridAvatar], [matGridAvatar]',
+  host: {'class': 'mat-grid-avatar'}
 })
 export class MdGridAvatarCssMatStyler {}
 
@@ -85,9 +83,7 @@ export class MdGridAvatarCssMatStyler {}
  */
 @Directive({
   selector: 'md-grid-tile-header, mat-grid-tile-header',
-  host: {
-    '[class.mat-grid-tile-header]': 'true'
-  }
+  host: {'class': 'mat-grid-tile-header'}
 })
 export class MdGridTileHeaderCssMatStyler {}
 
@@ -97,8 +93,6 @@ export class MdGridTileHeaderCssMatStyler {}
  */
 @Directive({
   selector: 'md-grid-tile-footer, mat-grid-tile-footer',
-  host: {
-    '[class.mat-grid-tile-footer]': 'true'
-  }
+  host: {'class': 'mat-grid-tile-footer'}
 })
 export class MdGridTileFooterCssMatStyler {}

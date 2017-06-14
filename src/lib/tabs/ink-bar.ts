@@ -1,4 +1,4 @@
-import {Directive, Renderer, ElementRef, NgZone} from '@angular/core';
+import {Directive, Renderer2, ElementRef, NgZone} from '@angular/core';
 
 
 /**
@@ -8,12 +8,12 @@ import {Directive, Renderer, ElementRef, NgZone} from '@angular/core';
 @Directive({
   selector: 'md-ink-bar, mat-ink-bar',
   host: {
-    '[class.mat-ink-bar]': 'true',
+    'class': 'mat-ink-bar',
   },
 })
 export class MdInkBar {
   constructor(
-    private _renderer: Renderer,
+    private _renderer: Renderer2,
     private _elementRef: ElementRef,
     private _ngZone: NgZone) {}
 
@@ -27,9 +27,9 @@ export class MdInkBar {
 
     this._ngZone.runOutsideAngular(() => {
       requestAnimationFrame(() => {
-        this._renderer.setElementStyle(this._elementRef.nativeElement, 'left',
+        this._renderer.setStyle(this._elementRef.nativeElement, 'left',
             this._getLeftPosition(element));
-        this._renderer.setElementStyle(this._elementRef.nativeElement, 'width',
+        this._renderer.setStyle(this._elementRef.nativeElement, 'width',
             this._getElementWidth(element));
       });
     });
@@ -37,12 +37,12 @@ export class MdInkBar {
 
   /** Shows the ink bar. */
   show(): void {
-    this._renderer.setElementStyle(this._elementRef.nativeElement, 'visibility', 'visible');
+    this._renderer.setStyle(this._elementRef.nativeElement, 'visibility', 'visible');
   }
 
   /** Hides the ink bar. */
   hide(): void {
-    this._renderer.setElementStyle(this._elementRef.nativeElement, 'visibility', 'hidden');
+    this._renderer.setStyle(this._elementRef.nativeElement, 'visibility', 'hidden');
   }
 
   /**

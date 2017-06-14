@@ -7,8 +7,7 @@ import {
   NgZone,
   Optional,
   OnDestroy,
-  Renderer,
-  OnInit,
+  Renderer2,
   ChangeDetectorRef,
 } from '@angular/core';
 import {
@@ -27,23 +26,26 @@ import {
   OverlayConnectionPosition,
   OriginConnectionPosition,
 } from '../core';
-import {MdTooltipInvalidPositionError} from './tooltip-errors';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Dir} from '../core/rtl/dir';
 import {Platform} from '../core/platform/index';
 import 'rxjs/add/operator/first';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
-import {Subscription} from 'rxjs/Subscription';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
 /** Time in ms to delay before changing the tooltip visibility to hidden */
-export const TOUCHEND_HIDE_DELAY  = 1500;
+export const TOUCHEND_HIDE_DELAY = 1500;
 
 /** Time in ms to throttle repositioning after scroll events. */
 export const SCROLL_THROTTLE_MS = 20;
+
+/** Throws an error if the user supplied an invalid tooltip position. */
+export function throwMdTooltipInvalidPositionError(position: string) {
+  throw new Error(`Tooltip position "${position}" is invalid.`);
+}
 
 /**
  * Directive that attaches a material design tooltip to the host element. Animates the showing and
@@ -59,10 +61,9 @@ export const SCROLL_THROTTLE_MS = 20;
   },
   exportAs: 'mdTooltip',
 })
-export class MdTooltip implements OnInit, OnDestroy {
+export class MdTooltip implements OnDestroy {
   _overlayRef: OverlayRef;
   _tooltipInstance: TooltipComponent;
-  scrollSubscription: Subscription;
 
   private _position: TooltipPosition = 'below';
   private _disabled: boolean = false;
@@ -152,7 +153,7 @@ export class MdTooltip implements OnInit, OnDestroy {
     private _scrollDispatcher: ScrollDispatcher,
     private _viewContainerRef: ViewContainerRef,
     private _ngZone: NgZone,
-    private _renderer: Renderer,
+    private _renderer: Renderer2,
     private _platform: Platform,
     @Optional() private _dir: Dir) {
 
@@ -164,26 +165,12 @@ export class MdTooltip implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() {
-    // When a scroll on the page occurs, update the position in case this tooltip needs
-    // to be repositioned.
-    this.scrollSubscription = this._scrollDispatcher.scrolled(SCROLL_THROTTLE_MS, () => {
-      if (this._overlayRef) {
-        this._overlayRef.updatePosition();
-      }
-    });
-  }
-
   /**
    * Dispose the tooltip when destroyed.
    */
   ngOnDestroy() {
     if (this._tooltipInstance) {
       this._disposeTooltip();
-    }
-
-    if (this.scrollSubscription) {
-      this.scrollSubscription.unsubscribe();
     }
   }
 
@@ -247,8 +234,14 @@ export class MdTooltip implements OnInit, OnDestroy {
         this.hide(0);
       }
     });
+
     let config = new OverlayState();
+
+    config.direction = this._dir ? this._dir.value : 'ltr';
     config.positionStrategy = strategy;
+    config.scrollStrategy = this._overlay.scrollStrategies.reposition({
+      scrollThrottle: SCROLL_THROTTLE_MS
+    });
 
     this._overlayRef = this._overlay.create(config);
   }
@@ -279,7 +272,7 @@ export class MdTooltip implements OnInit, OnDestroy {
       return {originX: 'end', originY: 'center'};
     }
 
-    throw new MdTooltipInvalidPositionError(this.position);
+    throwMdTooltipInvalidPositionError(this.position);
   }
 
   /** Returns the overlay position based on the user's preference */
@@ -305,7 +298,7 @@ export class MdTooltip implements OnInit, OnDestroy {
       return {overlayX: 'start', overlayY: 'center'};
     }
 
-    throw new MdTooltipInvalidPositionError(this.position);
+    throwMdTooltipInvalidPositionError(this.position);
   }
 
   /** Updates the tooltip message and repositions the overlay according to the new message length */
@@ -345,6 +338,9 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
     ])
   ],
   host: {
+    // Forces the element to have a layout in IE and Edge. This fixes issues where the element
+    // won't be rendered if the animations are disabled or there is no web animations polyfill.
+    '[style.zoom]': '_visibility === "visible" ? 1 : null',
     '(body:click)': 'this._handleBodyInteraction()'
   }
 })
@@ -445,7 +441,7 @@ export class TooltipComponent {
       case 'right':  this._transformOrigin = 'left'; break;
       case 'above':  this._transformOrigin = 'bottom'; break;
       case 'below':  this._transformOrigin = 'top'; break;
-      default: throw new MdTooltipInvalidPositionError(value);
+      default: throwMdTooltipInvalidPositionError(value);
     }
   }
 

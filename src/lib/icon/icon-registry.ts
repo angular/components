@@ -1,7 +1,6 @@
-import {Injectable, SecurityContext} from '@angular/core';
+import {Injectable, SecurityContext, Optional, SkipSelf} from '@angular/core';
 import {SafeResourceUrl, DomSanitizer} from '@angular/platform-browser';
 import {Http} from '@angular/http';
-import {MdError} from '../core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
@@ -15,24 +14,23 @@ import 'rxjs/add/observable/throw';
 
 
 /**
- * Exception thrown when attempting to load an icon with a name that cannot be found.
+ * Returns an exception to be thrown in the case when attempting to
+ * load an icon with a name that cannot be found.
  * @docs-private
  */
-export class MdIconNameNotFoundError extends MdError {
-  constructor(iconName: string) {
-    super(`Unable to find icon with the name "${iconName}"`);
-  }
+export function getMdIconNameNotFoundError(iconName: string): Error {
+  return new Error(`Unable to find icon with the name "${iconName}"`);
 }
 
+
 /**
- * Exception thrown when attempting to load SVG content that does not contain the expected
- * <svg> tag.
+ * Returns an exception to be thrown when the consumer attempts to use
+ * `<md-icon>` without including @angular/http.
  * @docs-private
  */
-export class MdIconSvgTagNotFoundError extends MdError {
-  constructor() {
-    super('<svg> tag not found');
-  }
+export function getMdIconNoHttpProviderError(): Error {
+  return new Error('Could not find Http provider for use with Angular Material icons. ' +
+                   'Please include the HttpModule from @angular/http in your app imports.');
 }
 
 /**
@@ -43,9 +41,6 @@ class SvgIconConfig {
   svgElement: SVGElement = null;
   constructor(public url: SafeResourceUrl) { }
 }
-
-/** Returns the cache key to use for an icon namespace and name. */
-const iconKey = (namespace: string, name: string) => namespace + ':' + name;
 
 /**
  * Service to register and display icons used by the <md-icon> component.
@@ -83,7 +78,7 @@ export class MdIconRegistry {
    */
   private _defaultFontSetClass = 'material-icons';
 
-  constructor(private _http: Http, private _sanitizer: DomSanitizer) {}
+  constructor(@Optional() private _http: Http, private _sanitizer: DomSanitizer) {}
 
   /**
    * Registers an icon by URL in the default namespace.
@@ -191,7 +186,7 @@ export class MdIconRegistry {
   /**
    * Returns an Observable that produces the icon (as an <svg> DOM element) with the given name
    * and namespace. The icon must have been previously registered with addIcon or addIconSet;
-   * if not, the Observable will throw an MdIconNameNotFoundError.
+   * if not, the Observable will throw an error.
    *
    * @param name Name of the icon to be retrieved.
    * @param namespace Namespace in which to look for the icon.
@@ -207,7 +202,7 @@ export class MdIconRegistry {
     if (iconSetConfigs) {
       return this._getSvgFromIconSetConfigs(name, iconSetConfigs);
     }
-    return Observable.throw(new MdIconNameNotFoundError(key));
+    return Observable.throw(getMdIconNameNotFoundError(key));
   }
 
   /**
@@ -231,7 +226,7 @@ export class MdIconRegistry {
    * if found copies the element to a new <svg> element. If not found, fetches all icon sets
    * that have not been cached, and searches again after all fetches are completed.
    * The returned Observable produces the SVG element if possible, and throws
-   * MdIconNameNotFoundError if no icon with the specified name can be found.
+   * an error if no icon with the specified name can be found.
    */
   private _getSvgFromIconSetConfigs(name: string, iconSetConfigs: SvgIconConfig[]):
       Observable<SVGElement> {
@@ -250,7 +245,7 @@ export class MdIconRegistry {
         .filter(iconSetConfig => !iconSetConfig.svgElement)
         .map(iconSetConfig =>
             this._loadSvgIconSetFromConfig(iconSetConfig)
-                .catch((err: any, caught: Observable<SVGElement>): Observable<SVGElement> => {
+                .catch((err: any): Observable<SVGElement> => {
                   let url =
                       this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, iconSetConfig.url);
 
@@ -268,10 +263,10 @@ export class MdIconRegistry {
     // Fetch all the icon set URLs. When the requests complete, every IconSet should have a
     // cached SVG element (unless the request failed), and we can check again for the icon.
     return Observable.forkJoin(iconSetFetchRequests)
-        .map((ignoredResults: any) => {
+        .map(() => {
           const foundIcon = this._extractIconWithNameFromAnySet(name, iconSetConfigs);
           if (!foundIcon) {
-            throw new MdIconNameNotFoundError(name);
+            throw getMdIconNameNotFoundError(name);
           }
           return foundIcon;
         });
@@ -332,14 +327,24 @@ export class MdIconRegistry {
    */
   private _extractSvgIconFromSet(iconSet: SVGElement, iconName: string): SVGElement {
     const iconNode = iconSet.querySelector('#' + iconName);
+
     if (!iconNode) {
       return null;
     }
+
     // If the icon node is itself an <svg> node, clone and return it directly. If not, set it as
     // the content of a new <svg> node.
-    if (iconNode.tagName.toLowerCase() == 'svg') {
+    if (iconNode.tagName.toLowerCase() === 'svg') {
       return this._setSvgAttributes(iconNode.cloneNode(true) as SVGElement);
     }
+
+    // If the node is a <symbol>, it won't be rendered so we have to convert it into <svg>. Note
+    // that the same could be achieved by referring to it via <use href="#id">, however the <use>
+    // tag is problematic on Firefox, because it needs to include the current page path.
+    if (iconNode.nodeName.toLowerCase() === 'symbol') {
+      return this._setSvgAttributes(this._toSvgElement(iconNode));
+    }
+
     // createElement('SVG') doesn't work as expected; the DOM ends up with
     // the correct nodes, but the SVG content doesn't render. Instead we
     // have to create an empty SVG node using innerHTML and append its content.
@@ -348,6 +353,7 @@ export class MdIconRegistry {
     const svg = this._svgElementFromString('<svg></svg>');
     // Clone the node so we don't remove it from the parent icon set element.
     svg.appendChild(iconNode.cloneNode(true));
+
     return this._setSvgAttributes(svg);
   }
 
@@ -361,8 +367,23 @@ export class MdIconRegistry {
     div.innerHTML = str;
     const svg = div.querySelector('svg') as SVGElement;
     if (!svg) {
-      throw new MdIconSvgTagNotFoundError();
+      throw new Error('<svg> tag not found');
     }
+    return svg;
+  }
+
+  /**
+   * Converts an element into an SVG node by cloning all of its children.
+   */
+  private _toSvgElement(element: Element): SVGElement {
+    let svg = this._svgElementFromString('<svg></svg>');
+
+    for (let i = 0; i < element.childNodes.length; i++) {
+      if (element.childNodes[i].nodeType === Node.ELEMENT_NODE) {
+        svg.appendChild(element.childNodes[i].cloneNode(true));
+      }
+    }
+
     return svg;
   }
 
@@ -386,7 +407,11 @@ export class MdIconRegistry {
    * cached, so future calls with the same URL may not cause another HTTP request.
    */
   private _fetchUrl(safeUrl: SafeResourceUrl): Observable<string> {
-    let url = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, safeUrl);
+    if (!this._http) {
+      throw getMdIconNoHttpProviderError();
+    }
+
+    const url = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, safeUrl);
 
     // Store in-progress fetches to avoid sending a duplicate request for a URL when there is
     // already a request in progress for that URL. It's necessary to call share() on the
@@ -408,8 +433,24 @@ export class MdIconRegistry {
   }
 }
 
+export function ICON_REGISTRY_PROVIDER_FACTORY(
+    parentRegistry: MdIconRegistry, http: Http, sanitizer: DomSanitizer) {
+  return parentRegistry || new MdIconRegistry(http, sanitizer);
+}
+
+export const ICON_REGISTRY_PROVIDER = {
+  // If there is already an MdIconRegistry available, use that. Otherwise, provide a new one.
+  provide: MdIconRegistry,
+  deps: [[new Optional(), new SkipSelf(), MdIconRegistry], [new Optional(), Http], DomSanitizer],
+  useFactory: ICON_REGISTRY_PROVIDER_FACTORY
+};
 
 /** Clones an SVGElement while preserving type information. */
 function cloneSvg(svg: SVGElement): SVGElement {
   return svg.cloneNode(true) as SVGElement;
+}
+
+/** Returns the cache key to use for an icon namespace and name. */
+function iconKey(namespace: string, name: string) {
+  return namespace + ':' + name;
 }

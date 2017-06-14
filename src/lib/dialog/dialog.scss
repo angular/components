@@ -32,11 +32,10 @@ $mat-dialog-max-height: 65vh !default;
   padding: 0 $mat-dialog-padding;
   max-height: $mat-dialog-max-height;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mat-dialog-title {
-  font-size: 20px;
-  font-weight: bold;
   margin: 0 0 20px;
   display: block;
 }
@@ -44,6 +43,7 @@ $mat-dialog-max-height: 65vh !default;
 .mat-dialog-actions {
   padding: $mat-dialog-padding / 2 0;
   display: flex;
+  flex-wrap: wrap;
 
   &:last-child {
     // If the actions are the last element in a dialog, we need to pull them down

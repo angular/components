@@ -5,24 +5,21 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Renderer,
+  Renderer2,
   SimpleChange,
   ViewEncapsulation,
-  AfterViewChecked,
-  Optional,
-  SkipSelf,
+  Attribute,
 } from '@angular/core';
-import {Http} from '@angular/http';
-import {DomSanitizer} from '@angular/platform-browser';
-import {MdError} from '../core';
-import {MdIconRegistry, MdIconNameNotFoundError} from './icon-registry';
+import {MdIconRegistry} from './icon-registry';
+import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
-/** Exception thrown when an invalid icon name is passed to an md-icon component. */
-export class MdIconInvalidNameError extends MdError {
-  constructor(iconName: string) {
-      super(`Invalid icon name: "${iconName}"`);
-  }
+
+// Boilerplate for applying mixins to MdIcon.
+export class MdIconBase {
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
+export const _MdIconMixinBase = mixinColor(MdIconBase);
+
 
 /**
  * Component to display an icon. It can be used in the following ways:
@@ -62,15 +59,15 @@ export class MdIconInvalidNameError extends MdError {
   template: '<ng-content></ng-content>',
   selector: 'md-icon, mat-icon',
   styleUrls: ['icon.css'],
+  inputs: ['color'],
   host: {
     'role': 'img',
-    '[class.mat-icon]': 'true',
+    'class': 'mat-icon',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
-  private _color: string;
+export class MdIcon extends _MdIconMixinBase implements OnChanges, OnInit, CanColor {
 
   /** Name of the icon in the SVG icon set. */
   @Input() svgIcon: string;
@@ -81,35 +78,20 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
   /** Name of an icon within a font set. */
   @Input() fontIcon: string;
 
-  /** Alt label to be used for accessibility. */
-  @Input() alt: string;
-
-  /** Screenreader label for the icon. */
-  @Input('aria-label') hostAriaLabel: string = '';
-
-  /** Color of the icon. */
-  @Input()
-  get color(): string { return this._color; }
-  set color(value: string) { this._updateColor(value); }
-
   private _previousFontSetClass: string;
   private _previousFontIconClass: string;
-  private _previousAriaLabel: string;
 
   constructor(
-      private _elementRef: ElementRef,
-      private _renderer: Renderer,
-      private _mdIconRegistry: MdIconRegistry) { }
+      renderer: Renderer2,
+      elementRef: ElementRef,
+      private _mdIconRegistry: MdIconRegistry,
+      @Attribute('aria-hidden') ariaHidden: string) {
+    super(renderer, elementRef);
 
-  _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      this._renderer.setElementClass(this._elementRef.nativeElement, `mat-${color}`, isAdd);
+    // If the user has not explicitly set aria-hidden, mark the icon as hidden, as this is
+    // the right thing to do for the majority of icon use-cases.
+    if (!ariaHidden) {
+      renderer.setAttribute(elementRef.nativeElement, 'aria-hidden', 'true');
     }
   }
 
@@ -119,12 +101,12 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
    * The separator for the two fields is ':'. If there is no separator, an empty
    * string is returned for the icon set and the entire value is returned for
    * the icon name. If the argument is falsy, returns an array of two empty strings.
-   * Throws a MdIconInvalidNameError if the name contains two or more ':' separators.
+   * Throws an error if the name contains two or more ':' separators.
    * Examples:
    *   'social:cake' -> ['social', 'cake']
    *   'penguin' -> ['', 'penguin']
    *   null -> ['', '']
-   *   'a:b:c' -> (throws MdIconInvalidNameError)
+   *   'a:b:c' -> (throws Error)
    */
   private _splitIconName(iconName: string): [string, string] {
     if (!iconName) {
@@ -138,11 +120,11 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
       case 2:
         return <[string, string]>parts;
       default:
-        throw new MdIconInvalidNameError(iconName);
+        throw new Error(`Invalid icon name: "${iconName}"`);
     }
   }
 
-  ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+  ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
     const changedInputs = Object.keys(changes);
     // Only update the inline SVG icon if the inputs changed, to avoid unnecessary DOM operations.
     if (changedInputs.indexOf('svgIcon') != -1 || changedInputs.indexOf('svgSrc') != -1) {
@@ -150,13 +132,12 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
         const [namespace, iconName] = this._splitIconName(this.svgIcon);
         this._mdIconRegistry.getNamedSvgIcon(iconName, namespace).first().subscribe(
             svg => this._setSvgElement(svg),
-            (err: MdIconNameNotFoundError) => console.log(`Error retrieving icon: ${err.message}`));
+            (err: Error) => console.log(`Error retrieving icon: ${err.message}`));
       }
     }
     if (this._usingFontIcon()) {
       this._updateFontIconClasses();
     }
-    this._updateAriaLabel();
   }
 
   ngOnInit() {
@@ -165,43 +146,6 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
     if (this._usingFontIcon()) {
       this._updateFontIconClasses();
     }
-  }
-
-  ngAfterViewChecked() {
-    // Update aria label here because it may depend on the projected text content.
-    // (e.g. <md-icon>home</md-icon> should use 'home').
-    this._updateAriaLabel();
-  }
-
-  private _updateAriaLabel() {
-      const ariaLabel = this._getAriaLabel();
-      if (ariaLabel && ariaLabel !== this._previousAriaLabel) {
-        this._previousAriaLabel = ariaLabel;
-        this._renderer.setElementAttribute(this._elementRef.nativeElement, 'aria-label', ariaLabel);
-      }
-  }
-
-  private _getAriaLabel() {
-    // If the parent provided an aria-label attribute value, use it as-is. Otherwise look for a
-    // reasonable value from the alt attribute, font icon name, SVG icon name, or (for ligatures)
-    // the text content of the directive.
-    const label =
-        this.hostAriaLabel ||
-        this.alt ||
-        this.fontIcon ||
-        this._splitIconName(this.svgIcon)[1];
-    if (label) {
-      return label;
-    }
-    // The "content" of an SVG icon is not a useful label.
-    if (this._usingFontIcon()) {
-      const text = this._elementRef.nativeElement.textContent;
-      if (text) {
-        return text;
-      }
-    }
-    // TODO: Warn here in dev mode.
-    return null;
   }
 
   private _usingFontIcon(): boolean {
@@ -214,7 +158,7 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
     // We would use renderer.detachView(Array.from(layoutElement.childNodes)) here,
     // but it fails in IE11: https://github.com/angular/angular/issues/6327
     layoutElement.innerHTML = '';
-    this._renderer.projectNodes(layoutElement, [svg]);
+    this._renderer.appendChild(layoutElement, svg);
   }
 
   private _updateFontIconClasses() {
@@ -227,34 +171,22 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
         this._mdIconRegistry.getDefaultFontSetClass();
     if (fontSetClass != this._previousFontSetClass) {
       if (this._previousFontSetClass) {
-        this._renderer.setElementClass(elem, this._previousFontSetClass, false);
+        this._renderer.removeClass(elem, this._previousFontSetClass);
       }
       if (fontSetClass) {
-        this._renderer.setElementClass(elem, fontSetClass, true);
+        this._renderer.addClass(elem, fontSetClass);
       }
       this._previousFontSetClass = fontSetClass;
     }
 
     if (this.fontIcon != this._previousFontIconClass) {
       if (this._previousFontIconClass) {
-        this._renderer.setElementClass(elem, this._previousFontIconClass, false);
+        this._renderer.removeClass(elem, this._previousFontIconClass);
       }
       if (this.fontIcon) {
-        this._renderer.setElementClass(elem, this.fontIcon, true);
+        this._renderer.addClass(elem, this.fontIcon);
       }
       this._previousFontIconClass = this.fontIcon;
     }
   }
 }
-
-export function ICON_REGISTRY_PROVIDER_FACTORY(
-    parentRegistry: MdIconRegistry, http: Http, sanitizer: DomSanitizer) {
-  return parentRegistry || new MdIconRegistry(http, sanitizer);
-}
-
-export const ICON_REGISTRY_PROVIDER = {
-  // If there is already an MdIconRegistry available, use that. Otherwise, provide a new one.
-  provide: MdIconRegistry,
-  deps: [[new Optional(), new SkipSelf(), MdIconRegistry], Http, DomSanitizer],
-  useFactory: ICON_REGISTRY_PROVIDER_FACTORY,
-};

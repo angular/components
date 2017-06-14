@@ -1,9 +1,10 @@
-import {NgModule, ModuleWithProviders} from '@angular/core';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {
   OverlayModule,
   PortalModule,
   A11yModule,
-  CompatibilityModule,
+  MdCommonModule,
 } from '../core';
 import {MdDialog} from './dialog';
 import {MdDialogContainer} from './dialog-container';
@@ -17,10 +18,11 @@ import {
 
 @NgModule({
   imports: [
+    CommonModule,
     OverlayModule,
     PortalModule,
     A11yModule,
-    CompatibilityModule,
+    MdCommonModule,
   ],
   exports: [
     MdDialogContainer,
@@ -28,7 +30,7 @@ import {
     MdDialogTitle,
     MdDialogContent,
     MdDialogActions,
-    CompatibilityModule,
+    MdCommonModule,
   ],
   declarations: [
     MdDialogContainer,
@@ -42,15 +44,7 @@ import {
   ],
   entryComponents: [MdDialogContainer],
 })
-export class MdDialogModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdDialogModule,
-      providers: [],
-    };
-  }
-}
+export class MdDialogModule {}
 
 export * from './dialog';
 export * from './dialog-container';

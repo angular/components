@@ -1,6 +1,4 @@
-import {
-  Response,
-  ResponseOptions} from '@angular/http';
+import {Response, ResponseOptions} from '@angular/http';
 
 /**
  * Fake URLs and associated SVG documents used by tests.
@@ -29,6 +27,14 @@ const FAKE_SVGS = (() => {
           <g id="cow"><path id="moo moo"></path></g>
           <g id="sheep"><path id="baa"></path></g>
         </defs>
+      </svg>
+  `);
+
+  svgs.set('farm-set-3.svg', `
+      <svg>
+        <symbol id="duck">
+          <path id="quack"></path>
+        </symbol>
       </svg>
   `);
 

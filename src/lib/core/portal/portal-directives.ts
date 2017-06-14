@@ -1,6 +1,5 @@
 import {
     NgModule,
-    ModuleWithProviders,
     ComponentRef,
     Directive,
     TemplateRef,
@@ -22,7 +21,7 @@ import {Portal, TemplatePortal, ComponentPortal, BasePortalHost} from './portal'
  * </ng-template>
  */
 @Directive({
-  selector: '[cdk-portal], [portal]',
+  selector: '[cdk-portal], [cdkPortal], [portal]',
   exportAs: 'cdkPortal',
 })
 export class TemplatePortalDirective extends TemplatePortal {
@@ -128,12 +127,4 @@ export class PortalHostDirective extends BasePortalHost implements OnDestroy {
   exports: [TemplatePortalDirective, PortalHostDirective],
   declarations: [TemplatePortalDirective, PortalHostDirective],
 })
-export class PortalModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: PortalModule,
-      providers: []
-    };
-  }
-}
+export class PortalModule {}

@@ -1,4 +1,4 @@
-import {Directive, ElementRef, OnInit, OnDestroy, NgZone, Renderer} from '@angular/core';
+import {Directive, ElementRef, OnInit, OnDestroy, NgZone, Renderer2} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {ScrollDispatcher} from './scroll-dispatcher';
@@ -11,7 +11,7 @@ import 'rxjs/add/observable/fromEvent';
  * can be listened to through the service.
  */
 @Directive({
-  selector: '[cdk-scrollable]'
+  selector: '[cdk-scrollable], [cdkScrollable]'
 })
 export class Scrollable implements OnInit, OnDestroy {
   private _elementScrolled: Subject<Event> = new Subject();
@@ -20,7 +20,7 @@ export class Scrollable implements OnInit, OnDestroy {
   constructor(private _elementRef: ElementRef,
               private _scroll: ScrollDispatcher,
               private _ngZone: NgZone,
-              private _renderer: Renderer) {}
+              private _renderer: Renderer2) {}
 
   ngOnInit() {
     this._scrollListener = this._ngZone.runOutsideAngular(() => {

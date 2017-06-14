@@ -9,22 +9,21 @@ import {
   QueryList,
   ChangeDetectionStrategy,
   EventEmitter,
-  Renderer,
+  Renderer2,
   ViewEncapsulation,
   NgZone,
-  OnDestroy,
+  OnDestroy, Inject,
 } from '@angular/core';
-import {Dir, MdError, coerceBooleanProperty} from '../core';
+import {Dir, coerceBooleanProperty} from '../core';
 import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import 'rxjs/add/operator/first';
+import {DOCUMENT} from '@angular/platform-browser';
 
 
-/** Exception thrown when two MdSidenav are matching the same side. */
-export class MdDuplicatedSidenavError extends MdError {
-  constructor(align: string) {
-    super(`A sidenav was already declared for 'align="${align}"'`);
-  }
+/** Throws an exception when two MdSidenav are matching the same side. */
+export function throwMdDuplicatedSidenavError(align: string) {
+  throw new Error(`A sidenav was already declared for 'align="${align}"'`);
 }
 
 
@@ -47,7 +46,7 @@ export class MdSidenavToggleResult {
   // TODO(mmalerba): move template to separate file.
   templateUrl: 'sidenav.html',
   host: {
-    '[class.mat-sidenav]': 'true',
+    'class': 'mat-sidenav',
     '(transitionend)': '_onTransitionEnd($event)',
     '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
@@ -128,28 +127,37 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
    * @param _elementRef The DOM element reference. Used for transition and width calculation.
    *     If not available we do not hook on transitions.
    */
-  constructor(
-    private _elementRef: ElementRef,
-    private _renderer: Renderer,
-    private _focusTrapFactory: FocusTrapFactory) {
-
+  constructor(private _elementRef: ElementRef,
+              private _focusTrapFactory: FocusTrapFactory,
+              @Optional() @Inject(DOCUMENT) private _doc: any) {
     this.onOpen.subscribe(() => {
-      this._elementFocusedBeforeSidenavWasOpened = document.activeElement as HTMLElement;
+      if (this._doc) {
+        this._elementFocusedBeforeSidenavWasOpened = this._doc.activeElement as HTMLElement;
+      }
 
       if (this.isFocusTrapEnabled && this._focusTrap) {
-        this._focusTrap.focusFirstTabbableElementWhenReady();
+        this._focusTrap.focusInitialElementWhenReady();
       }
     });
 
-    this.onClose.subscribe(() => {
+    this.onClose.subscribe(() => this._restoreFocus());
+  }
+
+  /**
+   * If focus is currently inside the sidenav, restores it to where it was before the sidenav
+   * opened.
+   */
+  private _restoreFocus() {
+    let activeEl = this._doc && this._doc.activeElement;
+    if (activeEl && this._elementRef.nativeElement.contains(activeEl)) {
       if (this._elementFocusedBeforeSidenavWasOpened instanceof HTMLElement) {
-        this._renderer.invokeElementMethod(this._elementFocusedBeforeSidenavWasOpened, 'focus');
+        this._elementFocusedBeforeSidenavWasOpened.focus();
       } else {
-        this._renderer.invokeElementMethod(this._elementRef.nativeElement, 'blur');
+        this._elementRef.nativeElement.blur();
       }
+    }
 
-      this._elementFocusedBeforeSidenavWasOpened = null;
-    });
+    this._elementFocusedBeforeSidenavWasOpened = null;
   }
 
   ngAfterContentInit() {
@@ -316,7 +324,7 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
     'sidenav-transitions.css',
   ],
   host: {
-    '[class.mat-sidenav-container]': 'true',
+    'class': 'mat-sidenav-container',
     '[class.mat-sidenav-transition]': '_enableTransitions',
   },
   encapsulation: ViewEncapsulation.None,
@@ -350,7 +358,7 @@ export class MdSidenavContainer implements AfterContentInit {
   _enableTransitions = false;
 
   constructor(@Optional() private _dir: Dir, private _element: ElementRef,
-              private _renderer: Renderer, private _ngZone: NgZone) {
+              private _renderer: Renderer2, private _ngZone: NgZone) {
     // If a `Dir` directive exists up the tree, listen direction changes and update the left/right
     // properties to point to the proper start/end.
     if (_dir != null) {
@@ -371,6 +379,16 @@ export class MdSidenavContainer implements AfterContentInit {
     this._ngZone.onMicrotaskEmpty.first().subscribe(() => this._enableTransitions = true);
   }
 
+  /** Calls `open` of both start and end sidenavs */
+  public open() {
+    return Promise.all([this._start, this._end].map(sidenav => sidenav && sidenav.open()));
+  }
+
+  /** Calls `close` of both start and end sidenavs */
+  public close() {
+    return Promise.all([this._start, this._end].map(sidenav => sidenav && sidenav.close()));
+  }
+
   /**
    * Subscribes to sidenav events in order to set a class on the main container element when the
    * sidenav is open and the backdrop is visible. This ensures any overflow on the container element
@@ -378,8 +396,8 @@ export class MdSidenavContainer implements AfterContentInit {
    */
   private _watchSidenavToggle(sidenav: MdSidenav): void {
     if (!sidenav || sidenav.mode === 'side') { return; }
-    sidenav.onOpen.subscribe(() => this._setContainerClass(sidenav, true));
-    sidenav.onClose.subscribe(() => this._setContainerClass(sidenav, false));
+    sidenav.onOpen.subscribe(() => this._setContainerClass(true));
+    sidenav.onClose.subscribe(() => this._setContainerClass(false));
   }
 
   /**
@@ -397,8 +415,12 @@ export class MdSidenavContainer implements AfterContentInit {
   }
 
   /** Toggles the 'mat-sidenav-opened' class on the main 'md-sidenav-container' element. */
-  private _setContainerClass(sidenav: MdSidenav, bool: boolean): void {
-    this._renderer.setElementClass(this._element.nativeElement, 'mat-sidenav-opened', bool);
+  private _setContainerClass(isAdd: boolean): void {
+    if (isAdd) {
+      this._renderer.addClass(this._element.nativeElement, 'mat-sidenav-opened');
+    } else {
+      this._renderer.removeClass(this._element.nativeElement, 'mat-sidenav-opened');
+    }
   }
 
   /** Validate the state of the sidenav children components. */
@@ -411,12 +433,12 @@ export class MdSidenavContainer implements AfterContentInit {
     for (let sidenav of this._sidenavs.toArray()) {
       if (sidenav.align == 'end') {
         if (this._end != null) {
-          throw new MdDuplicatedSidenavError('end');
+          throwMdDuplicatedSidenavError('end');
         }
         this._end = sidenav;
       } else {
         if (this._start != null) {
-          throw new MdDuplicatedSidenavError('start');
+          throwMdDuplicatedSidenavError('start');
         }
         this._start = sidenav;
       }

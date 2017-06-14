@@ -1,60 +1,44 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  Input,
   ViewEncapsulation,
   Directive,
   ElementRef,
-  Renderer
+  Renderer2,
 } from '@angular/core';
+import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
 
 @Directive({
   selector: 'md-toolbar-row, mat-toolbar-row',
-  host: {
-    '[class.mat-toolbar-row]': 'true',
-  },
+  host: {'class': 'mat-toolbar-row'},
 })
 export class MdToolbarRow {}
+
+// Boilerplate for applying mixins to MdToolbar.
+export class MdToolbarBase {
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+}
+export const _MdToolbarMixinBase = mixinColor(MdToolbarBase);
+
 
 @Component({
   moduleId: module.id,
   selector: 'md-toolbar, mat-toolbar',
   templateUrl: 'toolbar.html',
   styleUrls: ['toolbar.css'],
+  inputs: ['color'],
   host: {
-    '[class.mat-toolbar]': 'true',
+    'class': 'mat-toolbar',
     'role': 'toolbar'
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class MdToolbar {
+export class MdToolbar extends _MdToolbarMixinBase implements CanColor {
 
-  private _color: string;
-
-  constructor(private elementRef: ElementRef, private renderer: Renderer) { }
-
-  /** The color of the toolbar. Can be primary, accent, or warn. */
-  @Input()
-  get color(): string {
-    return this._color;
-  }
-
-  set color(value: string) {
-    this._updateColor(value);
-  }
-
-  private _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  private _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      this.renderer.setElementClass(this.elementRef.nativeElement, `mat-${color}`, isAdd);
-    }
+  constructor(renderer: Renderer2, elementRef: ElementRef) {
+    super(renderer, elementRef);
   }
 
 }

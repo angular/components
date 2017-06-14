@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, Renderer} from '@angular/core';
+import {Component, ElementRef, Input} from '@angular/core';
 import {Focusable} from '../core/a11y/focus-key-manager';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 
@@ -11,7 +11,7 @@ import {coerceBooleanProperty} from '../core/coercion/boolean-property';
   selector: '[md-menu-item], [mat-menu-item]',
   host: {
     'role': 'menuitem',
-    '[class.mat-menu-item]': 'true',
+    'class': 'mat-menu-item',
     '[attr.tabindex]': '_getTabIndex()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.disabled]': '_getDisabledAttr()',
@@ -24,11 +24,11 @@ export class MdMenuItem implements Focusable {
   /** Whether the menu item is disabled */
   private _disabled: boolean = false;
 
-  constructor(private _renderer: Renderer, private _elementRef: ElementRef) {}
+  constructor(private _elementRef: ElementRef) {}
 
   /** Focuses the menu item. */
   focus(): void {
-    this._renderer.invokeElementMethod(this._getHostElement(), 'focus');
+    this._getHostElement().focus();
   }
 
   /** Whether the menu item is disabled. */

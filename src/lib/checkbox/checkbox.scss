@@ -187,14 +187,10 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
 }
 
 .mat-checkbox {
-  font-family: $mat-font-family;
-
   // Animation
   transition: background $swift-ease-out-duration $swift-ease-out-timing-function,
               mat-elevation-transition-property-value();
-}
 
-.mat-checkbox-label {
   cursor: pointer;
 }
 
@@ -228,9 +224,11 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
   }
 }
 
-// TODO(kara): Remove this style when fixing vertical baseline
-.mat-checkbox-layout .mat-checkbox-label {
-  line-height: 24px;
+.mat-checkbox-inner-container-no-side-margin {
+  margin: {
+    left: 0;
+    right: 0;
+  }
 }
 
 .mat-checkbox-frame {

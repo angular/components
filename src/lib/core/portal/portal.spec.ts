@@ -21,7 +21,7 @@ describe('Portals', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [PortalModule.forRoot(), PortalTestModule],
+      imports: [PortalModule, PortalTestModule],
     });
 
     TestBed.compileComponents();
@@ -244,7 +244,7 @@ describe('Portals', () => {
 
       let componentInstance: PizzaMsg = portal.attach(host).instance;
 
-      expect(componentInstance).toEqual(jasmine.any(PizzaMsg));
+      expect(componentInstance instanceof PizzaMsg).toBe(true);
       expect(someDomElement.textContent).toContain('Pizza');
 
       host.detach();
@@ -263,7 +263,7 @@ describe('Portals', () => {
       let componentInstance: PizzaMsg = portal.attach(host).instance;
       fixture.detectChanges();
 
-      expect(componentInstance).toEqual(jasmine.any(PizzaMsg));
+      expect(componentInstance instanceof PizzaMsg).toBe(true);
       expect(someDomElement.textContent).toContain('Pizza');
       expect(someDomElement.textContent).toContain('Chocolate');
 
@@ -342,8 +342,8 @@ describe('Portals', () => {
 
       let componentInstance: PizzaMsg = portal.attach(host).instance;
 
-      expect(componentInstance)
-          .toEqual(jasmine.any(PizzaMsg), 'Expected a PizzaMsg component to be created');
+      expect(componentInstance instanceof PizzaMsg)
+          .toBe(true, 'Expected a PizzaMsg component to be created');
       expect(someDomElement.textContent)
           .toContain('Pizza', 'Expected the static string "Pizza" in the DomPortalHost.');
 
@@ -368,6 +368,12 @@ describe('Portals', () => {
 
       expect(spy).toHaveBeenCalled();
     });
+
+    it('should run change detection in the created component when a ComponentPortal is attached',
+      () => {
+        host.attach(new ComponentPortal(ComponentWithBoundVariable, someViewContainerRef));
+        expect(someDomElement.textContent).toContain('initial value');
+      });
   });
 });
 
@@ -382,7 +388,7 @@ class ChocolateInjector {
   constructor(public parentInjector: Injector) { }
 
   get(token: any) {
-    return token === Chocolate ? new Chocolate() : this.parentInjector.get(token);
+    return token === Chocolate ? new Chocolate() : this.parentInjector.get<any>(token);
   }
 }
 
@@ -402,6 +408,15 @@ class PizzaMsg {
 })
 class ArbitraryViewContainerRefComponent {
   constructor(public viewContainerRef: ViewContainerRef, public injector: Injector) { }
+}
+
+/** Simple component with a bound variable in the template */
+@Component({
+  selector: 'bound-text',
+  template: '<p>{{text}}</p>'
+})
+class ComponentWithBoundVariable {
+  text: string = 'initial value';
 }
 
 
@@ -453,7 +468,12 @@ class PortalTestApp {
 
 // Create a real (non-test) NgModule as a workaround for
 // https://github.com/angular/angular/issues/10760
-const TEST_COMPONENTS = [PortalTestApp, ArbitraryViewContainerRefComponent, PizzaMsg];
+const TEST_COMPONENTS = [
+  PortalTestApp,
+  ArbitraryViewContainerRefComponent,
+  PizzaMsg,
+  ComponentWithBoundVariable
+];
 @NgModule({
   imports: [CommonModule, PortalModule],
   exports: TEST_COMPONENTS,

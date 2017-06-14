@@ -8,7 +8,10 @@ import {
   Injectable,
 } from '@angular/core';
 import {InteractivityChecker} from './interactivity-checker';
+import {Platform} from '../platform/platform';
 import {coerceBooleanProperty} from '../coercion/boolean-property';
+
+import 'rxjs/add/operator/first';
 
 
 /**
@@ -36,6 +39,7 @@ export class FocusTrap {
 
   constructor(
     private _element: HTMLElement,
+    private _platform: Platform,
     private _checker: InteractivityChecker,
     private _ngZone: NgZone,
     deferAnchors = false) {
@@ -63,6 +67,11 @@ export class FocusTrap {
    * in the constructor, but can be deferred for cases like directives with `*ngIf`.
    */
   attachAnchors(): void {
+    // If we're not on the browser, there can be no focus to trap.
+    if (!this._platform.isBrowser) {
+      return;
+    }
+
     if (!this._startAnchor) {
       this._startAnchor = this._createAnchor();
     }
@@ -81,26 +90,66 @@ export class FocusTrap {
   }
 
   /**
-   * Waits for microtask queue to empty, then focuses
-   * the first tabbable element within the focus trap region.
+   * Waits for the zone to stabilize, then either focuses the first element that the
+   * user specified, or the first tabbable element..
    */
-  focusFirstTabbableElementWhenReady() {
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => this.focusFirstTabbableElement());
+  focusInitialElementWhenReady() {
+    this._executeOnStable(() => this.focusInitialElement());
   }
 
   /**
-   * Waits for microtask queue to empty, then focuses
+   * Waits for the zone to stabilize, then focuses
+   * the first tabbable element within the focus trap region.
+   */
+  focusFirstTabbableElementWhenReady() {
+    this._executeOnStable(() => this.focusFirstTabbableElement());
+  }
+
+  /**
+   * Waits for the zone to stabilize, then focuses
    * the last tabbable element within the focus trap region.
    */
   focusLastTabbableElementWhenReady() {
-    this._ngZone.onMicrotaskEmpty.first().subscribe(() => this.focusLastTabbableElement());
+    this._executeOnStable(() => this.focusLastTabbableElement());
+  }
+
+  /**
+   * Get the specified boundary element of the trapped region.
+   * @param bound The boundary to get (start or end of trapped region).
+   * @returns The boundary element.
+   */
+  private _getRegionBoundary(bound: 'start' | 'end'): HTMLElement | null {
+    // Contains the deprecated version of selector, for temporary backwards comparability.
+    let markers = this._element.querySelectorAll(`[cdk-focus-region-${bound}], ` +
+                                                 `[cdk-focus-${bound}]`) as NodeListOf<HTMLElement>;
+
+    for (let i = 0; i < markers.length; i++) {
+      if (markers[i].hasAttribute(`cdk-focus-${bound}`)) {
+        console.warn(`Found use of deprecated attribute 'cdk-focus-${bound}',` +
+                     ` use 'cdk-focus-region-${bound}' instead.`, markers[i]);
+      }
+    }
+
+    if (bound == 'start') {
+      return markers.length ? markers[0] : this._getFirstTabbableElement(this._element);
+    }
+    return markers.length ?
+        markers[markers.length - 1] : this._getLastTabbableElement(this._element);
+  }
+
+  /** Focuses the element that should be focused when the focus trap is initialized. */
+  focusInitialElement() {
+    let redirectToElement = this._element.querySelector('[cdk-focus-initial]') as HTMLElement;
+    if (redirectToElement) {
+      redirectToElement.focus();
+    } else {
+      this.focusFirstTabbableElement();
+    }
   }
 
   /** Focuses the first tabbable element within the focus trap region. */
   focusFirstTabbableElement() {
-    let redirectToElement = this._element.querySelector('[cdk-focus-start]') as HTMLElement ||
-                            this._getFirstTabbableElement(this._element);
-
+    let redirectToElement = this._getRegionBoundary('start');
     if (redirectToElement) {
       redirectToElement.focus();
     }
@@ -108,15 +157,7 @@ export class FocusTrap {
 
   /** Focuses the last tabbable element within the focus trap region. */
   focusLastTabbableElement() {
-    let focusTargets = this._element.querySelectorAll('[cdk-focus-end]');
-    let redirectToElement: HTMLElement = null;
-
-    if (focusTargets.length) {
-      redirectToElement = focusTargets[focusTargets.length - 1] as HTMLElement;
-    } else {
-      redirectToElement = this._getLastTabbableElement(this._element);
-    }
-
+    let redirectToElement = this._getRegionBoundary('end');
     if (redirectToElement) {
       redirectToElement.focus();
     }
@@ -175,16 +216,28 @@ export class FocusTrap {
     anchor.classList.add('cdk-focus-trap-anchor');
     return anchor;
   }
+
+  /** Executes a function when the zone is stable. */
+  private _executeOnStable(fn: () => any): void {
+    if (this._ngZone.isStable) {
+      fn();
+    } else {
+      this._ngZone.onStable.first().subscribe(fn);
+    }
+  }
 }
 
 
 /** Factory that allows easy instantiation of focus traps. */
 @Injectable()
 export class FocusTrapFactory {
-  constructor(private _checker: InteractivityChecker, private _ngZone: NgZone) { }
+  constructor(
+      private _checker: InteractivityChecker,
+      private _platform: Platform,
+      private _ngZone: NgZone) { }
 
   create(element: HTMLElement, deferAnchors = false): FocusTrap {
-    return new FocusTrap(element, this._checker, this._ngZone, deferAnchors);
+    return new FocusTrap(element, this._platform, this._checker, this._ngZone, deferAnchors);
   }
 }
 

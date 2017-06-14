@@ -1,8 +1,7 @@
-import {NgModule, ModuleWithProviders} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MdSelect} from './select';
-import {MdOptionModule} from '../core/option/option';
-import {CompatibilityModule, OverlayModule} from '../core';
+import {MdCommonModule, OverlayModule, MdOptionModule} from '../core';
 
 
 @NgModule({
@@ -10,20 +9,12 @@ import {CompatibilityModule, OverlayModule} from '../core';
     CommonModule,
     OverlayModule,
     MdOptionModule,
-    CompatibilityModule,
+    MdCommonModule,
   ],
-  exports: [MdSelect, MdOptionModule, CompatibilityModule],
+  exports: [MdSelect, MdOptionModule, MdCommonModule],
   declarations: [MdSelect],
 })
-export class MdSelectModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdSelectModule,
-      providers: []
-    };
-  }
-}
+export class MdSelectModule {}
 
 
 export * from './select';

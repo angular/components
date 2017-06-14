@@ -18,12 +18,16 @@ describe('MdRipple', () => {
   let originalBodyMargin: string;
   let viewportRuler: ViewportRuler;
 
+  const startingWindowWidth = window.innerWidth;
+  const startingWindowHeight = window.innerHeight;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MdRippleModule],
       declarations: [
         BasicRippleContainer,
         RippleContainerWithInputBindings,
+        RippleContainerWithoutBindings,
         RippleContainerWithNgIf,
       ],
     });
@@ -53,6 +57,43 @@ describe('MdRipple', () => {
 
       rippleTarget = fixture.nativeElement.querySelector('[mat-ripple]');
       rippleDirective = fixture.componentInstance.ripple;
+    });
+
+    it('sizes ripple to cover element', () => {
+      // In the iOS simulator (BrowserStack & SauceLabs), adding the content to the
+      // body causes karma's iframe for the test to stretch to fit that content once we attempt to
+      // scroll the page. Setting width / height / maxWidth / maxHeight on the iframe does not
+      // successfully constrain its size. As such, skip assertions in environments where the
+      // window size has changed since the start of the test.
+      if (window.innerWidth > startingWindowWidth || window.innerHeight > startingWindowHeight) {
+        return;
+      }
+
+      let elementRect = rippleTarget.getBoundingClientRect();
+
+      // Dispatch a ripple at the following relative coordinates (X: 50| Y: 75)
+      dispatchMouseEvent(rippleTarget, 'mousedown', 50, 75);
+      dispatchMouseEvent(rippleTarget, 'mouseup');
+
+      // Calculate distance from the click to farthest edge of the ripple target.
+      let maxDistanceX = TARGET_WIDTH - 50;
+      let maxDistanceY = TARGET_HEIGHT - 75;
+
+      // At this point the foreground ripple should be created with a div centered at the click
+      // location, and large enough to reach the furthest corner, which is 250px to the right
+      // and 125px down relative to the click position.
+      let expectedRadius = Math.sqrt(maxDistanceX * maxDistanceX + maxDistanceY * maxDistanceY);
+      let expectedLeft = elementRect.left + 50 - expectedRadius;
+      let expectedTop = elementRect.top + 75 - expectedRadius;
+
+      let ripple = rippleTarget.querySelector('.mat-ripple-element') as HTMLElement;
+
+      // Note: getBoundingClientRect won't work because there's a transform applied to make the
+      // ripple start out tiny.
+      expect(pxStringToFloat(ripple.style.left)).toBeCloseTo(expectedLeft, 1);
+      expect(pxStringToFloat(ripple.style.top)).toBeCloseTo(expectedTop, 1);
+      expect(pxStringToFloat(ripple.style.width)).toBeCloseTo(2 * expectedRadius, 1);
+      expect(pxStringToFloat(ripple.style.height)).toBeCloseTo(2 * expectedRadius, 1);
     });
 
     it('creates ripple on mousedown', () => {
@@ -136,35 +177,6 @@ describe('MdRipple', () => {
       expect(parseFloat(rippleElement.style.top)).toBeCloseTo(TARGET_HEIGHT / 2 - radius, 1);
     });
 
-    it('sizes ripple to cover element', () => {
-      let elementRect = rippleTarget.getBoundingClientRect();
-
-      // Dispatch a ripple at the following relative coordinates (X: 50| Y: 75)
-      dispatchMouseEvent(rippleTarget, 'mousedown', 50, 75);
-      dispatchMouseEvent(rippleTarget, 'mouseup');
-
-      // Calculate distance from the click to farthest edge of the ripple target.
-      let maxDistanceX = TARGET_WIDTH - 50;
-      let maxDistanceY = TARGET_HEIGHT - 75;
-
-      // At this point the foreground ripple should be created with a div centered at the click
-      // location, and large enough to reach the furthest corner, which is 250px to the right
-      // and 125px down relative to the click position.
-      let expectedRadius = Math.sqrt(maxDistanceX * maxDistanceX + maxDistanceY * maxDistanceY);
-      let expectedLeft = elementRect.left + 50 - expectedRadius;
-      let expectedTop = elementRect.top + 75 - expectedRadius;
-
-      let ripple = rippleTarget.querySelector('.mat-ripple-element') as HTMLElement;
-
-      // Note: getBoundingClientRect won't work because there's a transform applied to make the
-      // ripple start out tiny.
-      expect(pxStringToFloat(ripple.style.left)).toBeCloseTo(expectedLeft, 1);
-      expect(pxStringToFloat(ripple.style.top)).toBeCloseTo(expectedTop, 1);
-      expect(pxStringToFloat(ripple.style.width)).toBeCloseTo(2 * expectedRadius, 1);
-      expect(pxStringToFloat(ripple.style.height)).toBeCloseTo(2 * expectedRadius, 1);
-    });
-
-
     it('cleans up the event handlers when the container gets destroyed', () => {
       fixture = TestBed.createComponent(RippleContainerWithNgIf);
       fixture.detectChanges();
@@ -192,9 +204,6 @@ describe('MdRipple', () => {
     });
 
     describe('when page is scrolled', () => {
-      const startingWindowWidth = window.innerWidth;
-      const startingWindowHeight = window.innerHeight;
-
       let veryLargeElement: HTMLDivElement = document.createElement('div');
       let pageScrollTop = 500;
       let pageScrollLeft = 500;
@@ -351,22 +360,37 @@ describe('MdRipple', () => {
   describe('global ripple options', () => {
     let rippleDirective: MdRipple;
 
-    function createTestComponent(rippleConfig: RippleGlobalOptions) {
+    function createTestComponent(rippleConfig: RippleGlobalOptions,
+                                 testComponent: any = BasicRippleContainer) {
       // Reset the previously configured testing module to be able set new providers.
       // The testing module has been initialized in the root describe group for the ripples.
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         imports: [MdRippleModule],
-        declarations: [BasicRippleContainer],
+        declarations: [testComponent],
         providers: [{ provide: MD_RIPPLE_GLOBAL_OPTIONS, useValue: rippleConfig }]
       });
 
-      fixture = TestBed.createComponent(BasicRippleContainer);
+      fixture = TestBed.createComponent(testComponent);
       fixture.detectChanges();
 
       rippleTarget = fixture.nativeElement.querySelector('[mat-ripple]');
       rippleDirective = fixture.componentInstance.ripple;
     }
+
+    it('should work without having any binding set', () => {
+      createTestComponent({ disabled: true }, RippleContainerWithoutBindings);
+
+      dispatchMouseEvent(rippleTarget, 'mousedown');
+      dispatchMouseEvent(rippleTarget, 'mouseup');
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+
+      dispatchMouseEvent(rippleTarget, 'mousedown');
+      dispatchMouseEvent(rippleTarget, 'mouseup');
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+    });
 
     it('when disabled should not show any ripples on mousedown', () => {
       createTestComponent({ disabled: true });
@@ -576,6 +600,11 @@ class RippleContainerWithInputBindings {
   color = '';
   @ViewChild(MdRipple) ripple: MdRipple;
 }
+
+@Component({
+  template: `<div id="container" #ripple="mdRipple" mat-ripple></div>`,
+})
+class RippleContainerWithoutBindings {}
 
 @Component({ template: `<div id="container" mat-ripple [mdRippleSpeedFactor]="0"
                              *ngIf="!isDestroyed"></div>` })

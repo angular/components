@@ -3,7 +3,7 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
-  Renderer,
+  Renderer2,
   EventEmitter,
   HostBinding,
   Input,
@@ -51,8 +51,8 @@ export class MdButtonToggleChange {
   selector: 'md-button-toggle-group:not([multiple]), mat-button-toggle-group:not([multiple])',
   providers: [MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
   host: {
-    '[class.mat-button-toggle-group]': 'true',
     'role': 'radiogroup',
+    'class': 'mat-button-toggle-group',
     '[class.mat-button-toggle-vertical]': 'vertical'
   },
   exportAs: 'mdButtonToggleGroup',
@@ -80,7 +80,7 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
    * The method to be called in order to update ngModel.
    * Now `ngModel` binding is not supported in multiple selection mode.
    */
-  private _controlValueAccessorChangeFn: (value: any) => void = (value) => {};
+  private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
   onTouched: () => any = () => {};
@@ -238,7 +238,7 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
   selector: 'md-button-toggle-group[multiple], mat-button-toggle-group[multiple]',
   exportAs: 'mdButtonToggleGroup',
   host: {
-    '[class.mat-button-toggle-group]': 'true',
+    'class': 'mat-button-toggle-group',
     '[class.mat-button-toggle-vertical]': 'vertical'
   }
 })
@@ -278,7 +278,7 @@ export class MdButtonToggleGroupMultiple {
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
   host: {
-    '[class.mat-button-toggle]': 'true'
+    'class': 'mat-button-toggle'
   }
 })
 export class MdButtonToggle implements OnInit {
@@ -374,7 +374,7 @@ export class MdButtonToggle implements OnInit {
   constructor(@Optional() toggleGroup: MdButtonToggleGroup,
               @Optional() toggleGroupMultiple: MdButtonToggleGroupMultiple,
               private _buttonToggleDispatcher: UniqueSelectionDispatcher,
-              private _renderer: Renderer,
+              private _renderer: Renderer2,
               private _elementRef: ElementRef,
               private _focusOriginMonitor: FocusOriginMonitor) {
     this.buttonToggleGroup = toggleGroup;
@@ -412,7 +412,7 @@ export class MdButtonToggle implements OnInit {
 
   /** Focuses the button. */
   focus() {
-    this._renderer.invokeElementMethod(this._inputElement.nativeElement, 'focus');
+    this._inputElement.nativeElement.focus();
   }
 
   /** Toggle the state of the current button toggle. */

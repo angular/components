@@ -20,3 +20,11 @@ is_closure_compiler() {
 is_payload() {
   [[ "$MODE" = payload ]]
 }
+
+is_unit() {
+  [[ "$MODE" = saucelabs_required || "$MODE" = browserstack_required ]]
+}
+
+is_prerender() {
+  [[ "$MODE" = prerender ]]
+}

@@ -5,22 +5,28 @@ const cloudStorage = require('@google-cloud/storage');
 // Firebase configuration for the Screenshot project. Use the config from the screenshot functions.
 const screenshotFirebaseConfig = require('../../screenshot-test/functions/config.json');
 
-/** Opens a connection to the firebase realtime database. */
-export function openFirebaseDashboardDatabase() {
+/** Database URL of the dashboard firebase project.*/
+const dashboardDatabaseUrl = 'https://material2-board.firebaseio.com';
+
+/** Opens a connection to the Firebase dashboard app using a service account. */
+export function openFirebaseDashboardApp() {
   // Initialize the Firebase application with firebaseAdmin credentials.
   // Credentials need to be for a Service Account, which can be created in the Firebase console.
-  firebaseAdmin.initializeApp({
+  return firebaseAdmin.initializeApp({
+    databaseURL: dashboardDatabaseUrl,
     credential: firebaseAdmin.credential.cert({
-      project_id: 'material2-dashboard',
-      client_email: 'firebase-adminsdk-ch1ob@material2-dashboard.iam.gserviceaccount.com',
+      project_id: 'material2-board',
+      client_email: 'material2-board@appspot.gserviceaccount.com',
       // In Travis CI the private key will be incorrect because the line-breaks are escaped.
       // The line-breaks need to persist in the service account private key.
-      private_key: decode(process.env['MATERIAL2_FIREBASE_PRIVATE_KEY'])
+      private_key: decode(process.env['MATERIAL2_BOARD_FIREBASE_SERVICE_KEY'])
     }),
-    databaseURL: 'https://material2-dashboard.firebaseio.com'
   });
+}
 
-  return firebaseAdmin.database();
+/** Opens a connection to the Firebase dashboard app with no authentication. */
+export function openFirebaseDashboardAppAsGuest() {
+  return firebase.initializeApp({ databaseURL: dashboardDatabaseUrl });
 }
 
 /**

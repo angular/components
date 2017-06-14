@@ -29,7 +29,7 @@ describe('MdSnackBar', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSnackBarModule.forRoot(), SnackBarTestModule, NoopAnimationsModule],
+      imports: [MdSnackBarModule, SnackBarTestModule, NoopAnimationsModule],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
@@ -67,7 +67,7 @@ describe('MdSnackBar', () => {
    });
 
    it('should open and close a snackbar without a ViewContainerRef', async(() => {
-     let snackBarRef = snackBar.open('Snack time!', 'CHEW');
+     let snackBarRef = snackBar.open('Snack time!', 'Chew');
      viewContainerFixture.detectChanges();
 
      let messageElement = overlayContainerElement.querySelector('snack-bar-container');
@@ -89,9 +89,8 @@ describe('MdSnackBar', () => {
 
     viewContainerFixture.detectChanges();
 
-    expect(snackBarRef.instance)
-      .toEqual(jasmine.any(SimpleSnackBar),
-               'Expected the snack bar content component to be SimpleSnackBar');
+    expect(snackBarRef.instance instanceof SimpleSnackBar)
+      .toBe(true, 'Expected the snack bar content component to be SimpleSnackBar');
     expect(snackBarRef.instance.snackBarRef)
       .toBe(snackBarRef, 'Expected the snack bar reference to be placed in the component instance');
 
@@ -113,9 +112,8 @@ describe('MdSnackBar', () => {
 
     viewContainerFixture.detectChanges();
 
-    expect(snackBarRef.instance)
-      .toEqual(jasmine.any(SimpleSnackBar),
-               'Expected the snack bar content component to be SimpleSnackBar');
+    expect(snackBarRef.instance instanceof SimpleSnackBar)
+      .toBe(true, 'Expected the snack bar content component to be SimpleSnackBar');
     expect(snackBarRef.instance.snackBarRef)
       .toBe(snackBarRef, 'Expected the snack bar reference to be placed in the component instance');
 
@@ -180,9 +178,8 @@ describe('MdSnackBar', () => {
     let config = {viewContainerRef: testViewContainerRef};
     let snackBarRef = snackBar.openFromComponent(BurritosNotification, config);
 
-    expect(snackBarRef.instance)
-      .toEqual(jasmine.any(BurritosNotification),
-               'Expected the snack bar content component to be BurritosNotification');
+    expect(snackBarRef.instance instanceof BurritosNotification)
+      .toBe(true, 'Expected the snack bar content component to be BurritosNotification');
     expect(overlayContainerElement.textContent.trim())
         .toBe('Burritos are on the way.',
               `Expected the overlay text content to be 'Burritos are on the way'`);
@@ -236,7 +233,7 @@ describe('MdSnackBar', () => {
 
   it('should open a new snackbar after dismissing a previous snackbar', async(() => {
     let config = {viewContainerRef: testViewContainerRef};
-    let snackBarRef = snackBar.open(simpleMessage, 'DISMISS', config);
+    let snackBarRef = snackBar.open(simpleMessage, 'Dismiss', config);
     viewContainerFixture.detectChanges();
 
     snackBarRef.dismiss();
@@ -244,7 +241,7 @@ describe('MdSnackBar', () => {
 
     // Wait for the snackbar dismiss animation to finish.
     viewContainerFixture.whenStable().then(() => {
-      snackBarRef = snackBar.open('Second snackbar', 'DISMISS', config);
+      snackBarRef = snackBar.open('Second snackbar', 'Dismiss', config);
       viewContainerFixture.detectChanges();
 
       // Wait for the snackbar open animation to finish.
@@ -290,7 +287,7 @@ describe('MdSnackBar', () => {
      fakeAsync(() => {
        let dismissObservableCompleted = false;
        let actionObservableCompleted = false;
-       let snackBarRef = snackBar.open('Some content', 'dismiss');
+       let snackBarRef = snackBar.open('Some content', 'Dismiss');
        viewContainerFixture.detectChanges();
 
        snackBarRef.afterDismissed().subscribe(null, null, () => {
@@ -312,36 +309,44 @@ describe('MdSnackBar', () => {
       tick(500);
     }));
 
-    it('should dismiss automatically after a specified timeout', fakeAsync(() => {
-      let dismissObservableCompleted = false;
-      let config = new MdSnackBarConfig();
-      config.duration = 250;
-      let snackBarRef = snackBar.open('content', 'test', config);
-      snackBarRef.afterDismissed().subscribe(() => {
-        dismissObservableCompleted = true;
-      });
-
-      viewContainerFixture.detectChanges();
-      flushMicrotasks();
-      expect(dismissObservableCompleted).toBeFalsy('Expected the snack bar not to be dismissed');
-
-      tick(1000);
-      viewContainerFixture.detectChanges();
-      flushMicrotasks();
-      expect(dismissObservableCompleted).toBeTruthy('Expected the snack bar to be dismissed');
-    }));
-
-    it('should add extra classes to the container', () => {
-      snackBar.open(simpleMessage, simpleActionLabel, {
-        viewContainerRef: testViewContainerRef,
-        extraClasses: ['one', 'two']
-      });
-
-      let containerClasses = overlayContainerElement.querySelector('snack-bar-container').classList;
-
-      expect(containerClasses).toContain('one');
-      expect(containerClasses).toContain('two');
+  it('should dismiss automatically after a specified timeout', fakeAsync(() => {
+    let dismissObservableCompleted = false;
+    let config = new MdSnackBarConfig();
+    config.duration = 250;
+    let snackBarRef = snackBar.open('content', 'test', config);
+    snackBarRef.afterDismissed().subscribe(() => {
+      dismissObservableCompleted = true;
     });
+
+    viewContainerFixture.detectChanges();
+    flushMicrotasks();
+    expect(dismissObservableCompleted).toBeFalsy('Expected the snack bar not to be dismissed');
+
+    tick(1000);
+    viewContainerFixture.detectChanges();
+    flushMicrotasks();
+    expect(dismissObservableCompleted).toBeTruthy('Expected the snack bar to be dismissed');
+  }));
+
+  it('should add extra classes to the container', () => {
+    snackBar.open(simpleMessage, simpleActionLabel, { extraClasses: ['one', 'two'] });
+    viewContainerFixture.detectChanges();
+
+    let containerClasses = overlayContainerElement.querySelector('snack-bar-container').classList;
+
+    expect(containerClasses).toContain('one');
+    expect(containerClasses).toContain('two');
+  });
+
+  it('should set the layout direction', () => {
+    snackBar.open(simpleMessage, simpleActionLabel, { direction: 'rtl' });
+    viewContainerFixture.detectChanges();
+
+    let pane = overlayContainerElement.querySelector('.cdk-overlay-pane');
+
+    expect(pane.getAttribute('dir')).toBe('rtl', 'Expected the pane to be in RTL mode.');
+  });
+
 });
 
 describe('MdSnackBar with parent MdSnackBar', () => {
@@ -349,10 +354,11 @@ describe('MdSnackBar with parent MdSnackBar', () => {
   let childSnackBar: MdSnackBar;
   let overlayContainerElement: HTMLElement;
   let fixture: ComponentFixture<ComponentThatProvidesMdSnackBar>;
+  let liveAnnouncer: LiveAnnouncer;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSnackBarModule.forRoot(), SnackBarTestModule, NoopAnimationsModule],
+      imports: [MdSnackBarModule, SnackBarTestModule, NoopAnimationsModule],
       declarations: [ComponentThatProvidesMdSnackBar],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -365,8 +371,9 @@ describe('MdSnackBar with parent MdSnackBar', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([MdSnackBar], (sb: MdSnackBar) => {
+  beforeEach(inject([MdSnackBar, LiveAnnouncer], (sb: MdSnackBar, la: LiveAnnouncer) => {
     parentSnackBar = sb;
+    liveAnnouncer = la;
 
     fixture = TestBed.createComponent(ComponentThatProvidesMdSnackBar);
     childSnackBar = fixture.componentInstance.snackBar;
@@ -375,6 +382,7 @@ describe('MdSnackBar with parent MdSnackBar', () => {
 
   afterEach(() => {
     overlayContainerElement.innerHTML = '';
+    liveAnnouncer._removeLiveElement();
   });
 
   it('should close snackBars opened by parent when opening from child MdSnackBar', fakeAsync(() => {

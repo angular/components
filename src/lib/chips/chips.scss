@@ -1,53 +1,13 @@
 $mat-chip-vertical-padding: 8px;
 $mat-chip-horizontal-padding: 12px;
-$mat-chip-font-size: 13px;
-$mat-chip-line-height: 16px;
 
 $mat-chips-chip-margin: $mat-chip-horizontal-padding / 4;
 
 .mat-chip-list-wrapper {
-
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-start;
-
-  /*
-   * Only apply the margins to chips
-   */
-  .mat-chip:not(.mat-basic-chip) {
-    margin: 0 $mat-chips-chip-margin 0 $mat-chips-chip-margin;
-
-    // Remove the margin from the first element (in both LTR and RTL)
-    &:first-child {
-      margin: {
-        left: 0;
-        right: $mat-chips-chip-margin;
-      }
-
-      [dir='rtl'] & {
-        margin: {
-          left: $mat-chips-chip-margin;
-          right: 0;
-        }
-      }
-    }
-
-    // Remove the margin from the last element (in both LTR and RTL)
-    &:last-child {
-      margin: {
-        left: $mat-chips-chip-margin;
-        right: 0;
-      }
-
-      [dir='rtl'] & {
-        margin: {
-          left: 0;
-          right: $mat-chips-chip-margin;
-        }
-      }
-    }
-  }
 }
 
 .mat-chip:not(.mat-basic-chip) {
@@ -55,8 +15,14 @@ $mat-chips-chip-margin: $mat-chip-horizontal-padding / 4;
   padding: $mat-chip-vertical-padding $mat-chip-horizontal-padding $mat-chip-vertical-padding $mat-chip-horizontal-padding;
   border-radius: $mat-chip-horizontal-padding * 2;
 
-  font-size: $mat-chip-font-size;
-  line-height: $mat-chip-line-height;
+  // Apply a margin to adjacent sibling chips.
+  & + & {
+    margin: 0 0 0 $mat-chips-chip-margin;
+
+    [dir='rtl'] & {
+      margin: 0 $mat-chips-chip-margin 0 0;
+    }
+  }
 }
 
 .mat-chip-list-stacked .mat-chip-list-wrapper {

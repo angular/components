@@ -1,5 +1,6 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/typography/typography-utils';
 
 @mixin mat-tabs-theme($theme) {
   $primary: map-get($theme, primary);
@@ -7,7 +8,7 @@
   $warn: map-get($theme, warn);
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
-  $header-border: 1px solid mat-color($background, status-bar);
+  $header-border: 1px solid mat-color($foreground, divider);
 
   .mat-tab-nav-bar,
   .mat-tab-header {
@@ -23,18 +24,32 @@
   }
 
   .mat-tab-label:focus {
-    background-color: mat-color($primary, 100, 0.3);
+    background-color: mat-color($primary, lighter, 0.3);
   }
 
   .mat-ink-bar {
-    background-color: mat-color($primary, 500);
+    background-color: mat-color($primary);
   }
 
   .mat-tab-label, .mat-tab-link {
-    color: currentColor;
+    color: mat-color($foreground, text);
 
     &.mat-tab-disabled {
       color: mat-color($foreground, disabled-text);
+    }
+  }
+}
+
+@mixin mat-tabs-typography($config) {
+  .mat-tab-group {
+    font-family: mat-font-family($config);
+  }
+
+  .mat-tab-label, .mat-tab-link {
+    font: {
+      family: mat-font-family($config);
+      size: mat-font-size($config, button);
+      weight: mat-font-weight($config, button);
     }
   }
 }

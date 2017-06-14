@@ -1,5 +1,5 @@
-import {NgModule, ModuleWithProviders} from '@angular/core';
-import {MdLineModule, MdRippleModule, CompatibilityModule} from '../core';
+import {NgModule} from '@angular/core';
+import {MdLineModule, MdRippleModule, MdCommonModule} from '../core';
 import {
   MdList,
   MdListItem,
@@ -14,14 +14,14 @@ import {
 
 
 @NgModule({
-  imports: [MdLineModule, MdRippleModule, CompatibilityModule],
+  imports: [MdLineModule, MdRippleModule, MdCommonModule],
   exports: [
     MdList,
     MdListItem,
     MdListDivider,
     MdListAvatarCssMatStyler,
     MdLineModule,
-    CompatibilityModule,
+    MdCommonModule,
     MdListIconCssMatStyler,
     MdListCssMatStyler,
     MdNavListCssMatStyler,
@@ -40,15 +40,7 @@ import {
     MdListSubheaderCssMatStyler,
   ],
 })
-export class MdListModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MdListModule,
-      providers: []
-    };
-  }
-}
+export class MdListModule {}
 
 
 export * from './list';
