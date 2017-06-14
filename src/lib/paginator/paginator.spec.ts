@@ -1,35 +1,26 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
+import {async, TestBed} from '@angular/core/testing';
 import {MdPaginatorModule} from './index';
+import {Component} from '@angular/core';
 
-describe('CdkTable', () => {
-  let fixture: ComponentFixture<SimpleMdPaginatorApp>;
-
-  let component: SimpleMdPaginatorApp;
+describe('MdPaginator', () => {
+  let x = 0;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdPaginatorModule],
-      declarations: [SimpleMdPaginatorApp],
+      declarations: [MdPaginatorApp],
     }).compileComponents();
-
-    fixture = TestBed.createComponent(SimpleMdPaginatorApp);
-
-    component = fixture.componentInstance;
-
-    fixture.detectChanges();
   }));
 
-  it('should initially fail', () => {
+  it('should test', () => {
     expect(true).toBe(false);
   });
 });
 
 @Component({
   template: `
-    <md-paginator></md-paginator>
+    test
   `
 })
-class SimpleMdPaginatorApp {
-
+class MdPaginatorApp {
 }
