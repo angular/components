@@ -153,6 +153,7 @@ export class CdkTable<T> implements CollectionViewer {
   }
 
   ngOnDestroy() {
+    this._onDestroy.next();
     this._onDestroy.complete();
   }
 
