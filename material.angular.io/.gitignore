@@ -6,6 +6,8 @@
 /src/assets/documents
 /src/assets/examples
 /src/assets/plunker/examples
+/src/assets/*.css
+/src/assets/*.html
 
 # dependencies
 /node_modules

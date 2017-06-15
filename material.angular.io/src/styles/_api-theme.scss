@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@import '../../node_modules/@angular/material/theming';
 
 // Mixin to apply theme colors for generated API docs.
 @mixin docs-site-api-theme($theme) {

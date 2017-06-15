@@ -4,15 +4,16 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
-    "start": "ng serve",
+    "start": "npm run build-themes && ng serve",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
-    "prod-build": "ng build --aot --prod && npm run prerender && cp -r tmp/prerendered/* dist/",
+    "build-themes": "./tools/build-themes.sh",
+    "prod-build": "npm run build-themes && ng build --aot --prod && npm run prerender && cp -r tmp/prerendered/* dist/",
     "postinstall": "webdriver-manager update && tools/fetch-assets.sh",
-    "publish-prod": "ng build --aot --prod && firebase use material-angular-io && firebase deploy",
-    "publish-dev": "ng build --aot --prod && firebase use material2-docs-dev && firebase deploy"
+    "publish-prod": "npm run build-themes && ng build --aot --prod && firebase use material-angular-io && firebase deploy",
+    "publish-dev": "npm run build-themes && ng build --aot --prod && firebase use material2-docs-dev && firebase deploy"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +27,7 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
+    "color": "^1.0.3",
     "core-js": "^2.4.1",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4"
@@ -44,6 +46,7 @@
     "karma-jasmine": "^1.1.0",
     "karma-remap-istanbul": "^0.2.1",
     "karma-sauce-launcher": "^1.1.0",
+    "node-sass": "^4.5.3",
     "protractor": "^5.1.1",
     "ts-node": "^2.0.0",
     "tslint": "^4.4.2",

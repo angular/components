@@ -1,6 +1,7 @@
 .docs-navbar {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   padding: 8px 16px;
 
   > .mat-button {
@@ -8,6 +9,10 @@
       margin-left: auto;
     }
   }
+}
+
+.flex-spacer {
+  flex-grow: 1;
 }
 
 .docs-angular-logo {

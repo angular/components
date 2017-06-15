@@ -19,7 +19,11 @@
       "mobile": false,
       "styles": [
         "main.scss",
-        "highlightjs/solarized-light.css"
+        "highlightjs/solarized-light.css",
+        {"input": "assets/pink-bluegrey.css", "lazy": true},
+        {"input": "assets/deeppurple-amber.css", "lazy": true},
+        {"input": "assets/indigo-pink.css", "lazy": true},
+        {"input": "assets/purple-green.css", "lazy": true}
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

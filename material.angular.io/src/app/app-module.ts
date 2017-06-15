@@ -20,6 +20,7 @@ import {ComponentSidenav} from './pages/component-sidenav/component-sidenav';
 import {Footer} from './shared/footer/footer';
 import {ComponentPageTitle} from './pages/page-title/page-title';
 import {ComponentPageHeader} from './pages/component-page-header/component-page-header';
+import {StyleManager} from './shared/style-manager/style-manager';
 
 
 @NgModule({
@@ -33,7 +34,11 @@ import {ComponentPageHeader} from './pages/component-page-header/component-page-
     GuideList,
     GuideViewer,
     Homepage,
-    Footer
+    Footer,
+  ],
+  exports: [
+    MaterialDocsApp,
+    Homepage,
   ],
   imports: [
     BrowserModule,
@@ -49,6 +54,7 @@ import {ComponentPageHeader} from './pages/component-page-header/component-page-
   providers: [
     Location,
     ComponentPageTitle,
+    StyleManager,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
   ],
   bootstrap: [MaterialDocsApp],

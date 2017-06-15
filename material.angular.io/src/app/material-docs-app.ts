@@ -15,7 +15,9 @@ export class MaterialDocsApp {
   isDarkTheme = false;
   showShadow = false;
 
-  constructor(router: Router) {
+  constructor(
+    router: Router,
+  ) {
     router.events.subscribe((data: NavigationStart) => {
       this.showShadow = data.url.startsWith('/components');
     });
