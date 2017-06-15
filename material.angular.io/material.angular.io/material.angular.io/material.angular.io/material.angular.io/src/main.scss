@@ -3,6 +3,7 @@
 @import './styles/api';
 @import './styles/markdown';
 @import './styles/tables';
+@import './styles/general';
 
 
 // Include material core styles.
@@ -16,38 +17,3 @@ $accent:  mat-palette($mat-amber, A200, A100, A400);
 $theme: mat-light-theme($primary, $accent);
 @include angular-material-theme($theme);
 @include material-docs-app-theme($theme);
-
-body {
-  font-family: "Roboto","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
-  margin: 0;
-}
-
-.docs-button[md-button], .docs-button[md-raised-button] {
-  text-transform: uppercase;
-}
-
-h1, h2 {
-  font-weight: 400;
-}
-
-pre {
-  // Pre elements won't wrap text by default and can exceed the boundaries of their parent element.
-  // This adds extra scroll space when visiting the docs mobile. Pre-wrapping the code examples
-  // will ensure that the code never exceeds the page width.
-  white-space: pre-wrap;
-}
-
-.docs-primary-header {
-  padding-left: 20px;
-
-  h1 {
-    font-size: 30px;
-    font-weight: 300;
-    margin: 0;
-    padding: 50px;
-  }
-}
-
-code {
-  font-size: 90%;
-}

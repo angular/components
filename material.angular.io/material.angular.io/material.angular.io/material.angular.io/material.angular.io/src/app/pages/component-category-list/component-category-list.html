@@ -5,8 +5,8 @@
       [routerLink]="['/components/category/', category.id]">
     <md-card-title>{{category.name}}</md-card-title>
     <p class="docs-component-category-list-card-summary">{{category.summary}}</p>
-    <div class="docs-component-category-list-card-image"
-         [style.backgroundImage]="'url(\'../../../assets/img/component-categories/' + category.id +'.svg\')'">
-    </div>
+    <docs-svg-viewer class="docs-component-category-list-card-image"
+      [svgHref]="'../../../assets/img/component-categories/' + category.id + '.svg'">
+    </docs-svg-viewer>
   </md-card>
 </div>

@@ -1,0 +1,17 @@
+<button md-icon-button [md-menu-trigger-for]="themeMenu">
+  <md-icon>format_color_fill</md-icon>
+</button>
+
+<!-- TODO: replace use of `md-menu` here with a custom overlay -->
+<md-menu class="docs-theme-chooser-menu" #themeMenu="mdMenu" x-position="before">
+  <md-grid-list cols="2">
+    <md-grid-tile *ngFor="let theme of themes">
+      <div md-menu-item (click)="installTheme(theme.href)">
+        <div class="docs-theme-chooser-swatch">
+          <md-icon class="docs-theme-chosen-icon" *ngIf="currentTheme === theme">check_circle</md-icon>
+          <div class="docs-theme-chooser-primary" [style.background]="theme.primary"></div>
+        </div>
+      </div>
+    </md-grid-tile>
+  </md-grid-list>
+</md-menu>

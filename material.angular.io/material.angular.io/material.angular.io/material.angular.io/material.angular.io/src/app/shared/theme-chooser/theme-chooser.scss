@@ -1,0 +1,58 @@
+$theme-chooser-menu-padding: 8px;
+$theme-chooser-grid-cell-size: 48px;
+$theme-chooser-grid-cells-per-row: 2;
+$theme-chooser-swatch-size: 36px;
+$theme-chooser-accent-stripe-size: 6px;
+
+
+.docs-theme-chooser-menu {
+  .md-menu-content {
+    padding: $theme-chooser-menu-padding;
+  }
+
+  [md-menu-item] {
+    flex: 0 0 auto;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .docs-theme-chooser-swatch {
+    position: relative;
+    width: $theme-chooser-swatch-size;
+    height: $theme-chooser-swatch-size;
+    margin: ($theme-chooser-grid-cell-size - $theme-chooser-swatch-size) / 2;
+    border-radius: 50%;
+    overflow: hidden;
+
+    .docs-theme-chosen-icon {
+      color: white;
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      border: 1px solid rgba(0,0,0,.2);
+      border-radius: 50%;
+    }
+  }
+
+  .docs-theme-chooser-primary {
+    width: 100%;
+    height: 100%;
+  }
+
+  .docs-theme-chooser-accent {
+    position: absolute;
+    bottom: $theme-chooser-accent-stripe-size;
+    width: 100%;
+    height: $theme-chooser-accent-stripe-size;
+  }
+}
