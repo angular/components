@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This script deploys the Dashboard App and their Cloud Functions to Firebase.
+# Before the script installs all dependencies and builds the dashboard app in production.
+
 # Go to the project root directory
 cd $(dirname ${0})/../..
 
@@ -10,7 +13,7 @@ dashboardFolder=tools/dashboard
 cd ${dashboardFolder}
 
 # Install node_modules for the dashboard and afterwards build the dashboard app in production.
-(npm install; npm run build-production) &
+(npm install; $(npm bin)/ng build --aot -prod) &
 
 # Install node modules for dashboard functions. Firebase CLI needs to execute the functions
 # to collect all function names before it can deploy them.
@@ -28,4 +31,4 @@ fi
 
 # Deploy the dashboard to Firebase. Based on the current configuration hosting and functions
 # will be deployed.
-$(npm bin)/firebase deploy --token ${MATERIAL2_BOARD_FIREBASE_DEPLOY_KEY} --project material2-dashboard
+$(npm bin)/firebase deploy --token ${MATERIAL2_BOARD_FIREBASE_DEPLOY_KEY} --project material2-board
