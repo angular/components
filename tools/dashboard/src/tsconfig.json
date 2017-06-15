@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "../dist",
+    "baseUrl": ".",
+    "lib": ["es2016", "dom"],
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "module": "es2015",
+    "typeRoots": ["node_modules/@types"],
+    "types": []
+  }
+}
