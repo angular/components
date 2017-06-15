@@ -1,22 +1,18 @@
-<ul>
-  <a md-icon-button (click)="treeControl.toggleDecedents(node)" >
-    <md-icon *ngIf="(node.getChildren()) | async">{{ treeControl.expansionModel.isSelected(node) ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</md-icon>
-    <md-icon *ngIf="(!node.getChildren()) | async">accessibility</md-icon>
-  </a>
+<li [cdkNestedNode]="node">
+  <div style="width: 40px; display: inline-block">
+    <a md-icon-button (click)="treeControl.toggleDecedents(node)" *ngIf="(node.getChildren()) | async">
+      <md-icon>{{ treeControl.expanded(node) ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</md-icon>
+    </a>
+  </div>
+
   <md-checkbox (click)="$event.stopPropagation()"
                (change)="selectNode(node, $event)"
                [checked]="selected">
-    {{node.key}}<span *ngIf="node.value">: {{node.value}}</span> </md-checkbox>
-  <div *ngIf="treeControl.expanded(node)">
-    <li *ngFor="let child of node.getChildren() | async">
-      <nested-tree-node [node]="child"
-                        [selection]="selection"
-                        [dataSource]="dataSource"
-                        [level]="level+1"
-                        [expandable]="!!getChildren(child)"
-                        [treeControl]="treeControl"
-                        [selected]="selection.isSelected(child)"
-                        [expandIncludeChildren]="expandIncludeChildren"></nested-tree-node>
-    </li>
-  </div>
-</ul>
+    {{node.key}}
+    <span *ngIf="node.value">
+      : {{node.value}}</span>
+  </md-checkbox>
+  <ul [style.display]="treeControl.expanded(node) ? 'inherit' : 'none'">
+    <ng-container cdkNodePlaceholder></ng-container>
+  </ul>
+</li>

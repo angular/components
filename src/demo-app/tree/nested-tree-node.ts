@@ -1,50 +1,31 @@
-import {OnInit, Component, ChangeDetectionStrategy, AfterViewInit, OnDestroy, ChangeDetectorRef, Directive, Input, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
-import {UserData, PeopleDatabase} from './person-database';
-import {JsonNestedDataSource, JsonNestedNode} from './nested-data-source'
-import {CdkNodePlaceholder, SelectionModel, CdkTree, TreeControl, FlatTreeControl, NestedTreeControl} from '@angular/material';
+import {Component, Input} from '@angular/core';
+import {SelectionModel, CdkTree} from '@angular/material';
+import {JsonNestedNode} from './nested-data-source'
+
 
 @Component({
   moduleId: module.id,
   selector: 'nested-tree-node',
   templateUrl: 'nested-tree-node.html',
   styleUrls: ['nested-tree-node.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
+//  changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
 export class NestedTreeNode {
-
-
-  @ViewChild(CdkNodePlaceholder) nodePlaceholder: CdkNodePlaceholder;
   @Input() node: any;
-  @Input() level: number;
-  @Input() expandable: boolean;
-  @Input() expandIncludeChildren: boolean;
   @Input() selection: SelectionModel<any>;
-  @Input() selected: boolean;
-  @Input() dataSource: JsonNestedDataSource;
-  @Input() treeControl: NestedTreeControl<JsonNestedNode>;
 
-  constructor(public tree: CdkTree, public changeDetectorRef: ChangeDetectorRef) {}
+  constructor(public tree: CdkTree) {}
 
-  createArray(level: number) {
-    return new Array(level);
-  }
+  get dataSource() { return this.tree.dataSource; }
+  get treeControl() { return this.tree.treeControl; }
 
-  getChildren(node: any) {
-    return node.children;
-  }
+  get selected() { return this.selection.isSelected(this.node); }
 
-  getSpecial(node: any, index: number) {
-    let levels = this.dataSource.dottedLineLevels.get(node);
-    return !!levels && levels.indexOf(index) != -1;
-  }
-
-  selectNode(node: any, event: any) {
+  selectNode(node: any) {
     this.selection.toggle(node);
-    let select = this.selection.isSelected(node);
     let decedents = this.treeControl.getDecedents(node);
     decedents.forEach((decedent: JsonNestedNode) => {
-      select ? this.selection.select(decedent) : this.selection.deselect(decedent);
+      this.selected ? this.selection.select(decedent) : this.selection.deselect(decedent);
     });
-    this.changeDetectorRef.markForCheck();
   }
 }

@@ -1,8 +1,7 @@
-import {Component, ChangeDetectionStrategy, ChangeDetectorRef, Directive, Input, OnInit, AfterViewInit, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
-import {UserData, PeopleDatabase} from './person-database';
+import {Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
 import {JsonNestedDataSource, JsonNode, JsonNestedNode} from './nested-data-source';
-import {SelectionModel, CdkTree, TreeControl, FlatTreeControl, TreeAdapter, nodeDecedents, FlatNode, NestedNode, NestedTreeControl} from '@angular/material';
-import {SimpleTreeNode} from './simple-tree-node';
+import {SelectionModel, TreeControl, NestedTreeControl} from '@angular/material';
+import {jsonExample} from './sample-json';
 
 @Component({
   moduleId: module.id,
@@ -11,99 +10,13 @@ import {SimpleTreeNode} from './simple-tree-node';
   styleUrls: ['nested-tree-demo.css'],
   changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
-export class NestedTreeDemo implements OnInit, AfterViewInit {
-  data: string = `{
+export class NestedTreeDemo implements OnInit, OnDestroy, AfterViewInit {
+  data: string = jsonExample;
 
-  "results" : [
-
-      {
-
-        "formatted_address" : "Puławska, Piaseczno, Polska",
-
-        "geometry" : {
-
-          "bounds" : {
-
-            "northeast" : {
-
-              "lat" : 52.0979041,
-
-              "lng" : 21.0293984
-
-            },
-
-            "southwest" : {
-
-              "lat" : 52.0749265,
-
-              "lng" : 21.0145743
-
-            }
-
-          },
-
-          "location" : {
-
-            "lat" : 52.0860667,
-
-            "lng" : 21.0205308
-
-          },
-
-          "location_type" : "GEOMETRIC_CENTER",
-
-          "viewport" : {
-
-            "northeast" : {
-
-              "lat" : 52.0979041,
-
-              "lng" : 21.0293984
-
-            },
-
-            "southwest" : {
-
-              "lat" : 52.0749265,
-
-              "lng" : 21.0145743
-
-            }
-
-          }
-
-        },
-
-        "partial_match" : true,
-
-        "types" : [ "route" ]
-
-      }
-
-      ],
-
-  "status" : "OK"
-
-}`;
-
-
-  submit() {
-    try {
-      var obj = JSON.parse(this.data);
-      this.dataSource.data = obj;
-    } catch (e) {
-      console.log(e);
-    };
-  }
   selection = new SelectionModel<any>(true, []);
 
-
-  @ViewChild(CdkTree) tree: CdkTree;
-
   treeControl: TreeControl;
-
   dataSource: JsonNestedDataSource;
-
 
   constructor(public changeDetectorRef: ChangeDetectorRef) {
     this.treeControl = new NestedTreeControl<JsonNestedNode>();
@@ -125,19 +38,13 @@ export class NestedTreeDemo implements OnInit, AfterViewInit {
     this.selection.onChange.unsubscribe();
   }
 
-
-  expandIncludeChildren: boolean = false;
-
-  getPadding(level: number) {
-    return `${(level - 1) * 45}px`;
-  }
-
-  createArray(level: number) {
-    return new Array(level);
-  }
-
-  getChildren(node: any) {
-    return node.children;
+  submit() {
+    try {
+      let obj = JSON.parse(this.data);
+      this.dataSource.data = obj;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   key: string;

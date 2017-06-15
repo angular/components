@@ -197,8 +197,12 @@ export class DemoMaterialModule {}
     NestedTreeNode,
   ],
   providers: [
+<<<<<<< HEAD
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
     PeopleDatabase
+=======
+    {provide: OverlayContainer, useClass: FullscreenOverlayContainer}
+>>>>>>> A working version with nested tree and flat tree
   ],
   entryComponents: [
     DemoApp,

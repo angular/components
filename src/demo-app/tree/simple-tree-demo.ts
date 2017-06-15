@@ -1,8 +1,8 @@
-import {Component, ChangeDetectionStrategy, ChangeDetectorRef, Directive, Input, OnInit, AfterViewInit, ViewChildren, ViewChild, QueryList, TemplateRef} from '@angular/core';
-import {UserData, PeopleDatabase} from './person-database';
-import {JsonDataSource, JsonNode, JsonAdapter, JsonFlatNode} from './simple-data-source';
-import {SelectionModel, CdkTree, TreeControl, FlatTreeControl, TreeAdapter, nodeDecedents, FlatNode, NestedNode} from '@angular/material';
-import {SimpleTreeNode} from './simple-tree-node';
+import {Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, AfterViewInit, ViewChild} from '@angular/core';
+import {JsonDataSource, JsonNode, JsonFlatNode} from './simple-data-source';
+import {SelectionModel, CdkTree, TreeControl, FlatTreeControl} from '@angular/material';
+import {jsonExample} from './sample-json';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   moduleId: module.id,
@@ -12,89 +12,8 @@ import {SimpleTreeNode} from './simple-tree-node';
   changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
 export class SimpleTreeDemo implements OnInit, AfterViewInit {
-  data: string = `{
+  data: string = jsonExample;
 
-  "results" : [
-
-      {
-
-        "formatted_address" : "Puławska, Piaseczno, Polska",
-
-        "geometry" : {
-
-          "bounds" : {
-
-            "northeast" : {
-
-              "lat" : 52.0979041,
-
-              "lng" : 21.0293984
-
-            },
-
-            "southwest" : {
-
-              "lat" : 52.0749265,
-
-              "lng" : 21.0145743
-
-            }
-
-          },
-
-          "location" : {
-
-            "lat" : 52.0860667,
-
-            "lng" : 21.0205308
-
-          },
-
-          "location_type" : "GEOMETRIC_CENTER",
-
-          "viewport" : {
-
-            "northeast" : {
-
-              "lat" : 52.0979041,
-
-              "lng" : 21.0293984
-
-            },
-
-            "southwest" : {
-
-              "lat" : 52.0749265,
-
-              "lng" : 21.0145743
-
-            }
-
-          }
-
-        },
-
-        "partial_match" : true,
-
-        "types" : [ "route" ]
-
-      }
-
-      ],
-
-  "status" : "OK"
-
-}`;
-
-
-  submit() {
-    try {
-      var obj = JSON.parse(this.data);
-      this.dataSource.data = obj;
-    } catch (e) {
-      console.log(e);
-    };
-  }
   selection = new SelectionModel<any>(true, []);
 
 
@@ -103,6 +22,8 @@ export class SimpleTreeDemo implements OnInit, AfterViewInit {
   treeControl: TreeControl;
 
   dataSource: JsonDataSource;
+
+  _selectSubscription: Subscription;
 
 
   constructor(public changeDetectorRef: ChangeDetectorRef) {
@@ -116,28 +37,22 @@ export class SimpleTreeDemo implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.selection.onChange.subscribe(() => {
+    this._selectSubscription = this.selection.onChange.subscribe(() => {
       this.changeDetectorRef.markForCheck();
     });
   }
 
   ngOnDestroy() {
-    this.selection.onChange.unsubscribe();
+    this._selectSubscription.unsubscribe();
   }
 
-
-  expandIncludeChildren: boolean = false;
-
-  getPadding(level: number) {
-    return `${(level - 1) * 45}px`;
-  }
-
-  createArray(level: number) {
-    return new Array(level);
-  }
-
-  getChildren(node: any) {
-    return node.children;
+  submit() {
+    try {
+      let obj = JSON.parse(this.data);
+      this.dataSource.data = obj;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   key: string;

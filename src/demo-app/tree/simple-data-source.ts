@@ -7,11 +7,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/pairwise';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/combineLatest';
-import {PeopleDatabase, UserData} from './person-database';
-import {
-  IterableDiffers,
-  IterableDiffer,
-} from '@angular/core';
+
 
 export interface SimpleTreeNode {
   children: SimpleTreeNode[];
@@ -22,6 +18,7 @@ export class JsonNode implements SimpleTreeNode {
   key: string;
   value: any;
 }
+
 export class JsonFlatNode implements FlatNode {
   key: string;
   value: any;
