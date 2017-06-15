@@ -27,19 +27,9 @@ export class JsonFlatNode implements FlatNode {
   parentMap: boolean[];
 }
 
-// export class JsonNestedNode implements NestedNode {
-//   key: string;
-//   value: any;
-//   children: JsonNode[];
-//   getChildren(): Observable<JsonNestedNode> {
-//     return this.children;
-//   }
-// }
-
 export class JsonAdapter {
 
   static flattenNodes( structuredData: JsonNode[]): JsonFlatNode[] {
-    console.log(`flatten nodes`);
     let resultNodes: JsonFlatNode[] = [];
     structuredData.forEach((node) => {
       this._flattenNode(node, 0, resultNodes, []);
@@ -69,7 +59,6 @@ export class JsonAdapter {
 
   static expandFlattenedNodes(nodes: JsonFlatNode[],
                               expansionModel: SelectionModel<any>): JsonFlatNode[] {
-    console.log(`expand flatten nodes`);
     let results: JsonFlatNode[] = [];
     let currentExpand: boolean[] = [];
     currentExpand[0] = true;
@@ -150,14 +139,6 @@ export class JsonDataSource implements TreeDataSource<any> {
       }
       return this._renderedData; // Currently ignoring the view
     });
-  }
-
-  getChildrenFunc(node: any): any[] {
-    return node.children;
-  }
-
-  getChildren(node: any): Observable<any[]> {
-    return Observable.of(node.children);
   }
 
   buildJsonTree(value: any, level: number) {
