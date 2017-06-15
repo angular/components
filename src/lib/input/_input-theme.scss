@@ -142,7 +142,10 @@
   }
 
   .mat-input-container {
-    @include mat-typography-level-to-styles($config, input);
+    font-family: mat-font-family($config);
+    font-size: inherit;
+    font-weight: mat-font-weight($config, input);
+    line-height: mat-line-height($config, input);
   }
 
   .mat-input-wrapper {
