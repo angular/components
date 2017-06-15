@@ -2,10 +2,12 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  font-size: 12px;
   min-height: 56px;
   padding: 0 8px;
-  color: rgba(0, 0, 0, 0.54);
+}
+
+.mat-paginator-items-per-page-label {
+  margin: 0 4px;
 }
 
 .mat-paginator-page-length-select {
@@ -13,11 +15,10 @@
   align-items: center;
 
   .mat-select {
-    margin: 0 8px;
+    margin: 0 4px;
   }
 
   .mat-select-trigger {
-    font-size: 12px;
     min-width: 56px;
   }
 }
@@ -38,12 +39,6 @@
 .mat-paginator-decrement {
   width: 8px;
   height: 8px;
-  border-top: 2px solid #666;
-  border-right: 2px solid #666;
-
-  .mat-icon-button[disabled] & {
-    border-color: rgba(0, 0, 0, 0.25);
-  }
 }
 
 .mat-paginator-decrement,

@@ -1,12 +1,18 @@
 <div class="mat-paginator-page-length-select">
-  {{_intl.itemsPerPageLabel}}
-  <md-select [ngModel]="pageLength"
-             [attr.aria-label]="_intl.itemsPerPageLabel"
+  <div class="mat-paginator-items-per-page-label">
+    {{_intl.itemsPerPageLabel}}
+  </div>
+
+  <md-select *ngIf="_displayedPageLengthOptions.length > 1"
+             [ngModel]="pageLength"
+             [aria-label]="_intl.itemsPerPageLabel"
              (change)="_changePageLength($event.value)">
-    <md-option *ngFor="let pageLengthOption of pageLengthOptions" [value]="pageLengthOption">
+    <md-option *ngFor="let pageLengthOption of _displayedPageLengthOptions" [value]="pageLengthOption">
       {{pageLengthOption}}
     </md-option>
   </md-select>
+
+  <div *ngIf="_displayedPageLengthOptions.length <= 1">{{pageLength}}</div>
 </div>
 
 <div class="mat-paginator-range-label">
@@ -14,20 +20,20 @@
 </div>
 
 <button md-icon-button
-        class="mat-paginator-increment-button"
-        (click)="incrementPage(-1)"
-        [attr.aria-label]="_intl.decrementLabel"
-        [mdTooltip]="_intl.decrementLabel"
+        class="mat-paginator-navigation-button mat-paginator-navigation-previous"
+        (click)="navigateToPreviousPage()"
+        [attr.aria-label]="_intl.previousPageLabel"
+        [mdTooltip]="_intl.previousPageLabel"
         [mdTooltipPosition]="'above'"
-        [disabled]="!_canIncrementPage(-1)">
+        [disabled]="!canNavigateToPreviousPage(-1)">
   <div class="mat-paginator-increment"></div>
 </button>
 <button md-icon-button
-        class="mat-paginator-increment-button"
-        (click)="incrementPage(1)"
-        [attr.aria-label]="_intl.incrementLabel"
-        [mdTooltip]="_intl.incrementLabel"
+        class="mat-paginator-navigation-button mat-paginator-navigation-next"
+        (click)="navigateToNextPage()"
+        [attr.aria-label]="_intl.nextPageLabel"
+        [mdTooltip]="_intl.nextPageLabel"
         [mdTooltipPosition]="'above'"
-        [disabled]="!_canIncrementPage(1)">
+        [disabled]="!canNavigateToNextPage(1)">
   <div class="mat-paginator-decrement"></div>
 </button>
