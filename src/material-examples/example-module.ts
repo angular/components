@@ -11,7 +11,9 @@ import {
   PizzaPartyComponent,
   SnackBarComponentExample
 } from './snack-bar-component/snack-bar-component-example';
-import {ProgressBarConfigurableExample} from './progress-bar-configurable/progress-bar-configurable-example';
+import {
+  ProgressBarConfigurableExample
+} from './progress-bar-configurable/progress-bar-configurable-example';
 import {
   DialogOverviewExample,
   DialogOverviewExampleDialog
@@ -28,7 +30,9 @@ import {SlideToggleOverviewExample} from './slide-toggle-overview/slide-toggle-o
 import {SlideToggleFormsExample} from './slide-toggle-forms/slide-toggle-forms-example';
 import {MenuOverviewExample} from './menu-overview/menu-overview-example';
 import {CheckboxConfigurableExample} from './checkbox-configurable/checkbox-configurable-example';
-import {ButtonToggleExclusiveExample} from './button-toggle-exclusive/button-toggle-exclusive-example';
+import {
+  ButtonToggleExclusiveExample
+} from './button-toggle-exclusive/button-toggle-exclusive-example';
 import {ListSectionsExample} from './list-sections/list-sections-example';
 import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
 import {
@@ -43,14 +47,20 @@ import {TooltipOverviewExample} from './tooltip-overview/tooltip-overview-exampl
 import {ButtonToggleOverviewExample} from './button-toggle-overview/button-toggle-overview-example';
 import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
 import {TooltipPositionExample} from './tooltip-position/tooltip-position-example';
-import {ProgressSpinnerConfigurableExample} from './progress-spinner-configurable/progress-spinner-configurable-example';
+import {
+  ProgressSpinnerConfigurableExample
+} from './progress-spinner-configurable/progress-spinner-configurable-example';
 import {ListOverviewExample} from './list-overview/list-overview-example';
 import {SliderOverviewExample} from './slider-overview/slider-overview-example';
-import {SlideToggleConfigurableExample} from './slide-toggle-configurable/slide-toggle-configurable-example';
+import {
+  SlideToggleConfigurableExample
+} from './slide-toggle-configurable/slide-toggle-configurable-example';
 import {IconSvgExample} from './icon-svg-example/icon-svg-example';
 import {SidenavFabExample} from './sidenav-fab/sidenav-fab-example';
 import {CardOverviewExample} from './card-overview/card-overview-example';
-import {ProgressSpinnerOverviewExample} from './progress-spinner-overview/progress-spinner-overview-example';
+import {
+  ProgressSpinnerOverviewExample
+} from './progress-spinner-overview/progress-spinner-overview-example';
 import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-label-example';
 import {RadioOverviewExample} from './radio-overview/radio-overview-example';
 import {SidenavOverviewExample} from './sidenav-overview/sidenav-overview-example';
@@ -60,13 +70,14 @@ import {ChipsStackedExample} from './chips-stacked/chips-stacked-example';
 import {SelectFormExample} from './select-form/select-form-example';
 import {PaginatorOverviewExample} from './paginator-overview/paginator-overview-example';
 import {DatepickerOverviewExample} from './datepicker-overview/datepicker-overview-example';
-import {PaginatorConfigurableExample} from './paginator-configurable/paginator-configurable-example';
+import {
+  PaginatorConfigurableExample
+} from './paginator-configurable/paginator-configurable-example';
 import {InputOverviewExample} from './input-overview/input-overview-example';
 import {InputErrorsExample} from './input-errors/input-errors-example';
 import {InputFormExample} from './input-form/input-form-example';
 import {InputPrefixSuffixExample} from './input-prefix-suffix/input-prefix-suffix-example';
 import {InputHintExample} from './input-hint/input-hint-example';
-
 import {
   MdAutocompleteModule, MdButtonModule, MdButtonToggleModule, MdCardModule, MdCheckboxModule,
   MdChipsModule, MdDatepickerModule, MdDialogModule, MdGridListModule, MdIconModule, MdInputModule,
@@ -135,7 +146,10 @@ export const EXAMPLE_COMPONENTS = {
   'menu-icons': {title: 'Menu with icons', component: MenuIconsExample},
   'menu-overview': {title: 'Basic menu', component: MenuOverviewExample},
   'paginator-overview': {title: 'Paginator', component: PaginatorOverviewExample},
-  'paginator-configurable': {title: 'Configurable paginator', component: PaginatorConfigurableExample},
+  'paginator-configurable': {
+    title: 'Configurable paginator',
+    component: PaginatorConfigurableExample
+  },
   'progress-bar-configurable': {
     title: 'Configurable progress-bar',
     component: ProgressBarConfigurableExample

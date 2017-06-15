@@ -24,7 +24,7 @@ export class MdPaginatorIntl {
   previousPageLabel = 'Previous page';
 
   getRangeLabel(currentPage: number, pageSize: number, listLength: number) {
-    if (listLength == 0 || pageSize == 0) { return `0 of ${listLength}`}
+    if (listLength == 0 || pageSize == 0) { return `0 of ${listLength}`; }
 
     listLength = Math.max(listLength, 0);
 
