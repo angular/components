@@ -58,7 +58,7 @@ export class JsonAdapter {
   }
 
   static expandFlattenedNodes(nodes: JsonFlatNode[],
-                              expansionModel: SelectionModel<any>): JsonFlatNode[] {
+                              treeControl: TreeControl): JsonFlatNode[] {
     let results: JsonFlatNode[] = [];
     let currentExpand: boolean[] = [];
     currentExpand[0] = true;
@@ -73,7 +73,7 @@ export class JsonAdapter {
       }
       if (node.expandable) {
 
-        currentExpand[node.level + 1] = expansionModel.isSelected(node);
+        currentExpand[node.level + 1] = treeControl.expanded(node);
       }
     });
     return results;
@@ -116,16 +116,19 @@ export class JsonDataSource implements TreeDataSource<any> {
   constructor(public treeControl: FlatTreeControl<JsonFlatNode>) {
     this._filteredData.subscribe((filteredData: JsonNode[]) => {
       this._flattenedData.next(JsonAdapter.flattenNodes(filteredData));
+      console.log(`flattende`);
       this.treeControl.flatNodes = this.flattenedData;
     });
     Observable.combineLatest([this.treeControl.expandChange, this._flattenedData]).subscribe(() => {
-      this._expandedData.next(JsonAdapter.expandFlattenedNodes(this.flattenedData, this.treeControl.expansionModel));
+      console.log(`expand change | flattened`);
+      this._expandedData.next(JsonAdapter.expandFlattenedNodes(this.flattenedData, this.treeControl));
     });
   }
 
   connect(collectionViewer: CollectionViewer): Observable<JsonFlatNode[]> {
     return Observable.combineLatest([collectionViewer.viewChanged, this._expandedData])
         .map((results: any[]) => {
+          console.log(`view changed | expand`)
       let [view, displayData] = results;
       // Set the rendered rows length to the virtual page size. Fill in the data provided
       // from the index start until the end index or pagination size, whichever is smaller.

@@ -46,46 +46,40 @@ export class FlatTreeControl<T extends FlatNode> implements TreeControl {
 
   /** Expansion Statues */
   set expansionModel(model: SelectionModel<T>) {
-    this._expansionModel.onChange.unsubscribe();
     this._expansionModel = model;
-    this._expansionModel.onChange.subscribe((_) => this.expandChange.next(this.expansionModel.selected));
-  }
-  get expansionModel() {
-    return this._expansionModel;
   }
   _expansionModel = new SelectionModel<T>(true);
 
-  /** Expansion info: the model */
-  constructor() {
-    this._expansionModel.onChange.subscribe((_) =>
-      this.expandChange.next(this.expansionModel.selected));
-  }
-
   toggle(node: T) {
-    this.expansionModel.toggle(node);
+    this._expansionModel.toggle(node);
+    this.expandChange.next(this._expansionModel.selected);
   }
 
   expand(node: T) {
-    this.expansionModel.select(node);
+    this._expansionModel.select(node);
+    this.expandChange.next(this._expansionModel.selected);
   }
 
   collapse(node: T) {
-    this.expansionModel.deselect(node);
+    this._expansionModel.deselect(node);
+    this.expandChange.next(this._expansionModel.selected);
   }
 
   expanded(node: any) {
-    return this.expansionModel.isSelected(node);
+    return this._expansionModel.isSelected(node);
   }
 
   expandAll() {
-    this.expansionModel.clear();
+    this._expansionModel.clear();
     this.flatNodes.forEach((node) => {
-      node.expandable && this.expansionModel.select(node);
+      node.expandable && this._expansionModel.select(node);
     });
+    this.expandChange.next(this._expansionModel.selected);
   }
 
   collapseAll() {
-    this.expansionModel.clear();
+    this._expansionModel.clear();
+    this.expandChange.next(this._expansionModel.selected);
   }
 
   getDecedents(node: T) {
@@ -100,18 +94,19 @@ export class FlatTreeControl<T extends FlatNode> implements TreeControl {
 
   expandDecedents(node: T) {
     let decedents = this.getDecedents(node);
-    decedents.forEach((child) => child.expandable && this.expansionModel.select(child));
+    decedents.forEach((child) => child.expandable && this._expansionModel.select(child));
+    this.expandChange.next(this._expansionModel.selected);
   }
 
   collapseDecedents(node: T) {
     let decedents = this.getDecedents(node);
-    decedents.forEach((child) => this.expansionModel.deselect(child));
+    decedents.forEach((child) => this._expansionModel.deselect(child));
+    this.expandChange.next(this._expansionModel.selected);
   }
 
   toggleDecedents(node: T) {
-    console.log(`toggle decedents`);
-    this.expansionModel.toggle(node);
-    let expand = this.expansionModel.isSelected(node);
+    this._expansionModel.toggle(node);
+    let expand = this._expansionModel.isSelected(node);
     expand ? this.expandDecedents(node) : this.collapseDecedents(node);
   }
 }

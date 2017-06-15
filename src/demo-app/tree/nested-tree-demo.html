@@ -24,8 +24,6 @@
 
 <div *ngIf="treeControl">
   Selected: <span *ngFor="let node of selection.selected">{{node.key}}: {{node.value}}, </span>
-  <br>
-  Expanded: <span *ngFor="let node of treeControl.expansionModel.selected">{{node.key}}: {{node.value}}, </span>
 </div>
 
 
