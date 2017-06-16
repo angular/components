@@ -15,11 +15,12 @@ describe('my test for sticky-header', () => {
     let stickyElement: DebugElement;
     let stickyParentElement: DebugElement;
     let scrollableElement: HTMLElement;
+    let stickyHeaderDir: StickyHeaderDirective;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [MdStickyHeaderModule, OverlayModule, MdCommonModule, CommonModule],
-            declarations:  [
+            declarations: [
                 TestApp
             ],
         });
@@ -32,20 +33,23 @@ describe('my test for sticky-header', () => {
         testComponent = fixture.debugElement.componentInstance;
         stickyElement = fixture.debugElement.query(By.directive(StickyHeaderDirective));
         stickyParentElement = fixture.debugElement.query(By.directive(StickyParentDirective));
+        stickyHeaderDir = stickyElement.injector.get<StickyHeaderDirective>(StickyHeaderDirective);
     });
 
-    fit('true is true' , () => expect(true).toBe(true));
+    fit('true is true', () => expect(true).toBe(true));
 
     fit('md-sticky-viewport element should have sticky-parent class in its classList', () => {
         fixture.detectChanges();
         expect(stickyParentElement.nativeElement.classList.contains('sticky-parent')).toBe(true);
     });
 
-    fit('md-sticky element should have sticky-parent class in its classList', () => {
-        fixture.detectChanges();
-        expect(stickyParentElement.nativeElement.classList.contains('sticky-parent')).toBe(true);
-    });
-
+    fit('make sure the cdkSticky element has the right cdkStickyViewport parent element afterViewInit',
+        async(() => {
+            fixture.detectChanges();
+            console.log('stickyElement.nativeElement is: ' + stickyElement.nativeElement);
+            console.log('stickyElement.nativeElement.stickyParent is: ' + stickyElement.nativeElement.stickyParent);
+            expect(stickyElement.nativeElement.stickyParent.classList.contains('sticky-parent')).toBe(true);
+        }));
 });
 
 @Component({
@@ -56,10 +60,22 @@ describe('my test for sticky-header', () => {
         -moz-appearance: none;
         height: 300px;
         overflow: auto;">
-        <div md-sticky-viewport id="theStickyHeaderLalala">
-            <div md-sticky >
+        <p>test test test</p>
+        <p>test test test</p>
+        <p>test test test</p>
+        <p>test test test</p>
+        <p>test test test</p>
+        <p>test test test</p>
+        <div cdkStickyViewport id="theStickyHeaderLalala">
+            <div cdkSticky style="background: whitesmoke; padding: 5px;">
                 <h2>Heading 1</h2>
             </div>
+            <p>test test test</p>
+            <p>test test test</p>
+            <p>test test test</p>
+            <p>test test test</p>
+            <p>test test test</p>
+            <p>test test test</p>
             <p>test test test</p>
             <p>test test test</p>
             <p>test test test</p>

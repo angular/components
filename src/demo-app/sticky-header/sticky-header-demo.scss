@@ -50,7 +50,7 @@ header {
 }
 
 .container {
-  margin: 0 auto;
+  margin: 0;
   -webkit-appearance: none;
   -moz-appearance: none;
   //width: 900px;
@@ -64,6 +64,14 @@ header {
 }
 
 .rside {
+  //background: #cecece;
+  background: white;
+  -webkit-appearance: none;
+  padding: 20px;
+  //width: 100%;
+}
+
+.rside1 {
   background: #cecece;
   -webkit-appearance: none;
   padding: 20px;

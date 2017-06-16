@@ -153,11 +153,11 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
         this.upperScrollableContainer.addEventListener('touchmove', this.onTouchMoveBind, false);
 
-         Observable.fromEvent(this.upperScrollableContainer, 'scroll')
-             .subscribe(() => this.onScroll());
+        Observable.fromEvent(this.upperScrollableContainer, 'scroll')
+            .subscribe(() => this.onScroll());
 
-         Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
-             .subscribe(() => this.onTouchMove());
+        Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
+            .subscribe(() => this.onTouchMove());
     }
 
     detach() {
@@ -189,8 +189,7 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
     // define the restrictions of the sticky header(including stickyWidth, when to start, when to finish)
     defineRestrictions(): void {
         let containerTop: any = this.stickyParent.getBoundingClientRect();
-        //this.elemHeight = this.getCssNumber(this.elem, 'height');
-        this.elemHeight = this.elem.offsetHeight;
+        this.elemHeight = this.getCssNumber(this.elem, 'height');
         this.containerHeight = this.getCssNumber(this.stickyParent, 'height');
         // this.containerStart = containerTop['top'];
         this.containerStart = containerTop.top;
@@ -234,7 +233,7 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
          *
          * So the 'position: fixed' does not work on iPhone and iPad. To make it work,
          * I need to use translate3d(0,0,0) to force Safari rerendering the sticky element.
-        **/
+         **/
         this.elem.style.transform = 'translate3d(0,0,0)';
 
         this.elem.style.zIndex = this.zIndex;
@@ -273,7 +272,7 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         this.elem.style.top = 'auto';
         this.elem.style.right = 0;
         this.elem.style.left = 'auto';
-        this.elem.style.bottom = 0;
+        this.elem.style.bottom = 'auto';
         this.elem.style.width = this.width;
 
         this.deactivated.next(this.elem);
@@ -290,13 +289,13 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         let currentPosition: number = this.upperScrollableContainer.offsetTop;
 
         // unstick when the element is scrolled out of the sticky region
-        if (this.isStuck && (currentPosition < this.containerStart || currentPosition > this.scrollFinish) || currentPosition >= this.scrollFinish) {
+        if (this.isStuck && (currentPosition < this.containerStart || currentPosition > this.scrollFinish) || currentPosition > this.scrollFinish) {
             this.resetElement();
-            if (currentPosition >= this.scrollFinish) this.unstickElement();
+            if (currentPosition > this.scrollFinish) this.unstickElement();
             this.isStuck = false;
         }
         // stick when the element is within the sticky region
-            // this.isStuck === false &&
+        // this.isStuck === false &&
         else if ( this.isStuck === false && currentPosition > this.containerStart && currentPosition < this.scrollFinish) {
             this.stickElement();
             console.log('stick');
