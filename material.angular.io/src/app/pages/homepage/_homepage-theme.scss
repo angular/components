@@ -7,7 +7,7 @@
 
   app-homepage {
     .docs-header-background {
-      background: url('/assets/img/homepage/material_splash.svg') repeat-x center center, mat-color($primary);
+      background: mat-color($primary);
     }
 
     .docs-header-headline {

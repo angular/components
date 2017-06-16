@@ -13,7 +13,8 @@ import {ThemeStorage, DocsSiteTheme} from '../theme-chooser/theme-storage/theme-
 })
 
 export class SvgViewer {
-  @Input() public svgHref: string;
+  @Input() svgHref: string;
+  @Input() scaleToContainer: boolean;
 
   private _subscription: Subscription;
   private currTheme: DocsSiteTheme;
@@ -63,6 +64,13 @@ export class SvgViewer {
 
   public injectSvg(template) {
     this.el.nativeElement.innerHTML = template;
+
+    if (this.scaleToContainer) {
+      let svg = this.el.nativeElement.querySelector('svg');
+      svg.setAttribute('width', '100%');
+      svg.setAttribute('height', '100%');
+      svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    }
   }
 
   private _getSvgFromDom() {
