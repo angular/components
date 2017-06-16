@@ -24,7 +24,7 @@ export class PeopleDatabase {
 
   initialize() {
     LATEST_ID = 0;
-    this.data = [];
+    this.dataChange.next([]);
     for (let i = 0; i < 100; i++) { this.addPerson(); }
   }
 
