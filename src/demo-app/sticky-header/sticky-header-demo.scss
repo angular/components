@@ -10,9 +10,6 @@ body {
 
 }
 
-
-
-
 .demo-sticky {
   .centered {
     text-align: center;
@@ -27,6 +24,7 @@ body {
     z-index: 99;
   }
 }
+
 .mat-radio-button {
   display: block;
 }
@@ -92,12 +90,10 @@ header {
   //width: 100%;
 }
 
-
 h2 {
   font-size: 20px;
   -webkit-appearance: none;
   -moz-appearance: none;
-
 }
 
 p {
@@ -107,6 +103,7 @@ p {
 }
 
 div{
+  margin: 0; border: 0; padding: 0;
   -webkit-appearance: none;
   -moz-appearance: none;
 }

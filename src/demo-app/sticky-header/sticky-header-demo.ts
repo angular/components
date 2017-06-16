@@ -1,9 +1,6 @@
 import {Component} from '@angular/core';
-import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {StickyParentDirective, StickyHeaderDirective} from '@angular/material';
-export {StickyParentDirective, StickyHeaderDirective};
-
 
 
 @Component({
@@ -13,8 +10,4 @@ export {StickyParentDirective, StickyHeaderDirective};
     styleUrls: ['sticky-header-demo.css'],
 })
 
-
-export class StickyHeaderDemo {
-    constructor() {
-    }
-}
+export class StickyHeaderDemo { }

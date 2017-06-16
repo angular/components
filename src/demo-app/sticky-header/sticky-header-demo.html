@@ -1,12 +1,15 @@
 
 <div class="demo-sticky">
     <div class="centered" cdk-scrollable>
-        <h1>Sticky-header Demo</h1>
+        <div>
+            <h1>Sticky-header Demo</h1>
+        </div>
+
         <div id="testFor" class="container">
 
-            <div id="theStickyHeaderLalala" style="margin: 0; border: 0; padding: 0;">
-                <div cdkSticky parent="false"  class="rside1" >
-                    <h2 style = "z-index: 999; color: #ff3d00">Heading 1</h2>
+            <div>
+                <div cdkStickyHeader class="rside1" >
+                    <h2>Heading 1</h2>
                 </div>
                 <P>test sticky-header</P>
                 <P>test sticky-header</P>
@@ -25,13 +28,12 @@
                 <P>test sticky-header</P>
                 <P>test sticky-header</P>
                 <P>test sticky-header</P>
-
             </div>
 
 
-            <div cdkStickyViewport style="margin: 0; border: 0; padding: 0;">
-                <div cdkSticky style="color:#030" class="rside2">
-                    <h2 style = "z-index: 999; color: blue">Heading 2</h2>
+            <div cdkStickyRegion >
+                <div cdkStickyHeader class="rside2">
+                    <h2>Heading 2</h2>
                 </div>
                 <P>test sticky-header</P>
                 <P>test sticky-header</P>
@@ -53,12 +55,11 @@
                 <P>test sticky-header</P>
                 <P>test sticky-header</P>
                 <P>test sticky-header</P>
-
             </div>
 
-            <div cdkStickyViewport style="margin: 0; border: 0; padding: 0;">
-                <div cdkSticky class="rside3" >
-                    <h2 style="color: #4a148c">Heading 3</h2>
+            <div cdkStickyRegion>
+                <div cdkStickyHeader class="rside3" >
+                    <h2>Heading 3</h2>
                 </div>
                 <P>test sticky-header</P>
                 <P>test sticky-header</P>
@@ -99,7 +100,6 @@
                 <P>test sticky-header</P>
                 <P>test sticky-header</P>
                 <P>test sticky-header</P>
-
             </div>
         </div>
     </div>
