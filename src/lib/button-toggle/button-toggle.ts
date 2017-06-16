@@ -376,11 +376,12 @@ export class MdButtonToggle implements OnInit, OnDestroy {
     this.buttonToggleGroupMultiple = toggleGroupMultiple;
 
     if (this.buttonToggleGroup) {
-      this._buttonToggleDispatcherListener = _buttonToggleDispatcher.listen((id: string, name: string) => {
-        if (id != this.id && name == this.name) {
-          this.checked = false;
-        }
-      });
+      this._buttonToggleDispatcherListener = _buttonToggleDispatcher.listen(
+        (id: string, name: string) => {
+          if (id != this.id && name == this.name) {
+            this.checked = false;
+          }
+        });
 
       this._type = 'radio';
       this.name = this.buttonToggleGroup.name;

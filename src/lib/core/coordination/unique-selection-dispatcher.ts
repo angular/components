@@ -46,7 +46,7 @@ export class UniqueSelectionDispatcher {
       this._listeners = this._listeners.filter((registered: UniqueSelectionDispatcherListener) => {
         return listener !== registered;
       });
-    }
+    };
   }
 }
 
