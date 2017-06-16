@@ -454,7 +454,7 @@ export class MdButtonToggle implements OnInit, OnDestroy {
 
   // Unregister buttonToggleDispatcherListener on destroy
   ngOnDestroy(): void {
-    if(this._buttonToggleDispatcherListener) {
+    if (this._buttonToggleDispatcherListener) {
       this._buttonToggleDispatcherListener();
     }
   }
