@@ -23,6 +23,7 @@ export class MdPaginatorIntl {
   /** A label for the button that decrements the current page. */
   previousPageLabel = 'Previous page';
 
+  /** A label for the range of items within the current page and the length of the whole list. */
   getRangeLabel(currentPage: number, pageSize: number, listLength: number) {
     if (listLength == 0 || pageSize == 0) { return `0 of ${listLength}`; }
 
