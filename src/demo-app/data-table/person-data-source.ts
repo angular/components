@@ -26,24 +26,24 @@ export class PersonDataSource extends DataSource<any> {
     this.updateDisplayData();
 
     const streams = [collectionViewer.viewChange, this._displayData];
-    return Observable.combineLatest(streams).map((results: any[]) => {
-      const view: {start: number, end: number} = results[0];
-      const data = results[1];
+    return Observable.combineLatest(streams)
+        .map((results: [{start: number, end: number}, UserData[]]) => {
+          const [view, data] = results;
 
-      // Set the rendered rows length to the virtual page size. Fill in the data provided
-      // from the index start until the end index or pagination size, whichever is smaller.
-      this._renderedData.length = data.length;
+          // Set the rendered rows length to the virtual page size. Fill in the data provided
+          // from the index start until the end index or pagination size, whichever is smaller.
+          this._renderedData.length = data.length;
 
-      const buffer = 20;
-      let rangeStart = Math.max(0, view.start - buffer);
-      let rangeEnd = Math.min(data.length, view.end + buffer);
+          const buffer = 20;
+          let rangeStart = Math.max(0, view.start - buffer);
+          let rangeEnd = Math.min(data.length, view.end + buffer);
 
-      for (let i = rangeStart; i < rangeEnd; i++) {
-        this._renderedData[i] = data[i];
-      }
+          for (let i = rangeStart; i < rangeEnd; i++) {
+            this._renderedData[i] = data[i];
+          }
 
-      return this._renderedData;
-    });
+          return this._renderedData;
+        });
   }
 
   updateDisplayData() {
