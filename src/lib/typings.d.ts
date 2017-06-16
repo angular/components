@@ -4,8 +4,6 @@ declare var module: {id: string};
 declare namespace jasmine {
   interface Matchers {
     toBeRole(expectedRole: string): boolean;
-    toHaveAriaLabel(expectedAriaLabel: string): boolean;
-    toHaveAttribute(attr: string, test: string, expectedContent: any[]): boolean;
     toMatchTableContent(expectedContent: any[]): boolean;
   }
 }

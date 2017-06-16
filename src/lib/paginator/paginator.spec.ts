@@ -12,7 +12,7 @@ import {customMatchers} from '../core/testing/jasmine-matchers';
 import {dispatchMouseEvent} from '../core/testing/dispatch-events';
 
 
-describe('MdPaginator', () => {
+fdescribe('MdPaginator', () => {
   let fixture: ComponentFixture<MdPaginatorApp>;
   let component: MdPaginatorApp;
   let paginator: MdPaginator;
@@ -93,12 +93,14 @@ describe('MdPaginator', () => {
     });
 
     it('should show right aria-labels for select and buttons', () => {
-      expect(fixture.nativeElement.querySelector('.mat-select'))
-          .toHaveAriaLabel('Items per page:');
-      expect(fixture.nativeElement.querySelector('.mat-paginator-navigation-previous'))
-          .toHaveAriaLabel('Previous page');
-      expect(fixture.nativeElement.querySelector('.mat-paginator-navigation-next'))
-          .toHaveAriaLabel('Next page');
+      const select = fixture.nativeElement.querySelector('.mat-select');
+      expect(select.getAttribute('aria-label')).toBe('Items per page:');
+
+      const prevButton = fixture.nativeElement.querySelector('.mat-paginator-navigation-previous');
+      expect(prevButton.getAttribute('aria-label')).toBe('Previous page');
+
+      const nextButton = fixture.nativeElement.querySelector('.mat-paginator-navigation-next');
+      expect(nextButton.getAttribute('aria-label')).toBe('Next page');
     });
   });
 
