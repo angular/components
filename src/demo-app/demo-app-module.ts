@@ -76,7 +76,8 @@ import {
   MdToolbarModule,
   MdTooltipModule,
   OverlayContainer,
-  StyleModule
+  StyleModule,
+  CdkStickyHeaderModule,
 } from '@angular/material';
 import {CdkTableModule} from '@angular/cdk';
 import {TableHeaderDemo} from './table/table-header-demo';
@@ -184,6 +185,7 @@ export class DemoMaterialModule {}
     PlatformDemo,
     TypographyDemo,
     ExpansionDemo,
+    StickyHeaderDemo,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},

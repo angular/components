@@ -49,6 +49,8 @@ import {MdTableModule} from './table/index';
 import {MdSortModule} from './sort/index';
 import {MdPaginatorModule} from './paginator/index';
 
+
+
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
   MdButtonModule,

@@ -19,10 +19,12 @@ import {E2E_APP_ROUTES} from './e2e-app/routes';
 import {SlideToggleE2E} from './slide-toggle/slide-toggle-e2e';
 import {InputE2E} from './input/input-e2e';
 import {BlockScrollStrategyE2E} from './block-scroll-strategy/block-scroll-strategy-e2e';
+import {StickyHeaderE2E} from './sticky-header/sticky-header-e2e';
 import {
   OverlayContainer, FullscreenOverlayContainer, MdGridListModule, MdProgressBarModule,
   MdProgressSpinnerModule, MdTabsModule, MdRadioModule, MdSlideToggleModule, MdMenuModule,
-  MdListModule, MdInputModule, MdIconModule, MdDialogModule, MdCheckboxModule, MdButtonModule
+  MdListModule, MdInputModule, MdIconModule, MdDialogModule, MdCheckboxModule, MdButtonModule,
+  MdStickyHeaderModule, ScrollDispatchModule,
 } from '@angular/material';
 
 /**
@@ -42,7 +44,10 @@ import {
     MdRadioModule,
     MdProgressBarModule,
     MdProgressSpinnerModule,
-    MdTabsModule
+    MdTabsModule,
+    MdStickyHeaderModule,
+    ScrollDispatchModule,
+
   ]
 })
 export class E2eMaterialModule {}
@@ -73,7 +78,8 @@ export class E2eMaterialModule {}
     SlideToggleE2E,
     TestDialog,
     TestDialogFullScreen,
-    BlockScrollStrategyE2E
+    BlockScrollStrategyE2E,
+    StickyHeaderE2E,
   ],
   bootstrap: [E2EApp],
   providers: [

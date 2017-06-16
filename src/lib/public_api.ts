@@ -44,3 +44,4 @@ export * from './tabs/index';
 export * from './tabs/tab-nav-bar/index';
 export * from './toolbar/index';
 export * from './tooltip/index';
+export * from './sticky-header/index';
