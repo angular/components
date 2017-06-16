@@ -12,7 +12,7 @@ import {customMatchers} from '../core/testing/jasmine-matchers';
 import {dispatchMouseEvent} from '../core/testing/dispatch-events';
 
 
-fdescribe('MdPaginator', () => {
+describe('MdPaginator', () => {
   let fixture: ComponentFixture<MdPaginatorApp>;
   let component: MdPaginatorApp;
   let paginator: MdPaginator;
