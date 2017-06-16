@@ -24,8 +24,8 @@ export interface HasRenderer {
 export type ThemePalette = 'primary' | 'accent' | 'warn' | null;
 
 /** Mixin to augment a directive with a `color` property. */
-export function mixinColor<T extends Constructor<HasRenderer>>(base: T, defaultColor?: ThemePalette)
-    : Constructor<CanColor> & T {
+export function mixinColor<T extends
+    Constructor<HasRenderer>>(base: T, defaultColor?: ThemePalette): Constructor<CanColor> & T {
   return class extends base {
     private _color: ThemePalette = null;
 
