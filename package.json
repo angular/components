@@ -86,7 +86,7 @@
     "highlight.js": "^9.11.0",
     "http-rewrite-middleware": "^0.1.6",
     "image-diff": "^1.6.3",
-    "jasmine-core": "^2.6.2",
+    "jasmine-core": "^2.6.3",
     "jsonwebtoken": "^7.4.1",
     "karma": "^1.7.0",
     "karma-browserstack-launcher": "^1.2.0",
