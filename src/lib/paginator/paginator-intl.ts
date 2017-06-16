@@ -24,12 +24,12 @@ export class MdPaginatorIntl {
   previousPageLabel = 'Previous page';
 
   /** A label for the range of items within the current page and the length of the whole list. */
-  getRangeLabel(pageIndex: number, pageSize: number, length: number) {
+  getRangeLabel = (page: number, pageSize: number, length: number) => {
     if (length == 0 || pageSize == 0) { return `0 of ${length}`; }
 
     length = Math.max(length, 0);
 
-    const startIndex = pageIndex * pageSize;
+    const startIndex = page * pageSize;
 
     // If the start index exceeds the list length, do not try and fix the end index to the end.
     const endIndex = startIndex < length ?
