@@ -17,9 +17,11 @@
     border-right: 2px solid mat-color($foreground, 'icon');
   }
 
-  .mat-icon-button[disabled] .mat-paginator-increment,
-  .mat-icon-button[disabled] .mat-paginator-decrement {
-    border-color: mat-color($foreground, 'disabled');
+  .mat-icon-button[disabled] {
+    .mat-paginator-increment,
+    .mat-paginator-decrement {
+      border-color: mat-color($foreground, 'disabled');
+    }
   }
 }
 

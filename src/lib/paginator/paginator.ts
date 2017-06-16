@@ -20,17 +20,17 @@ import {MATERIAL_COMPATIBILITY_MODE} from '../core';
 
 /**
  * Change event object that is emitted when the user selects a
- * different page length or navigates to another page.
+ * different page size or navigates to another page.
  */
-export class PageChangeEvent {
-  currentPageIndex: number;
-  pageLength: number;
-  listLength: number;
+export class PageEvent {
+  pageIndex: number;
+  pageSize: number;
+  length: number;
 }
 
 /**
- * Component to provide navigation between paged information. Displays the length of the current
- * page, user-selectable options to change that length, what items are being shown, and
+ * Component to provide navigation between paged information. Displays the size of the current
+ * page, user-selectable options to change that size, what items are being shown, and
  * navigational button to go to the previous or next page.
  */
 @Component({
@@ -50,117 +50,117 @@ export class PageChangeEvent {
 export class MdPaginator implements OnInit {
   private _initialized: boolean;
 
-  /** The zero-based current page index of the displayed list of items. Defaulted to 0. */
-  @Input() currentPageIndex: number = 0;
+  /** The zero-based page index of the displayed list of items. Defaulted to 0. */
+  @Input() pageIndex: number = 0;
 
-  /** The list length of the total number of items that are being paginated. Defaulted to 0. */
-  @Input() listLength: number = 0;
+  /** The length of the total number of items that are being paginated. Defaulted to 0. */
+  @Input() length: number = 0;
 
-  /** Number of items to display on a page. By default set to the first of page length option. */
+  /** Number of items to display on a page. By default set to the first of page size option. */
   @Input()
-  set pageLength(pageLength: number) {
-    this._pageLength = pageLength;
-    this._updateDisplayedPageLengthOptions();
+  get pageSize(): number { return this._pageSize; }
+  set pageSize(pageSize: number) {
+    this._pageSize = pageSize;
+    this._updateDisplayedPageSizeOptions();
   }
-  get pageLength(): number { return this._pageLength; }
-  _pageLength: number;
+  private _pageSize: number;
 
-  /** The set of provided page length options to display to the user. */
+  /** The set of provided page size options to display to the user. */
   @Input()
-  set pageLengthOptions(pageLengthOptions: number[]) {
-    this._pageLengthOptions = pageLengthOptions;
-    this._updateDisplayedPageLengthOptions();
+  get pageSizeOptions(): number[] { return this._pageSizeOptions; }
+  set pageSizeOptions(pageSizeOptions: number[]) {
+    this._pageSizeOptions = pageSizeOptions;
+    this._updateDisplayedPageSizeOptions();
   }
-  get pageLengthOptions(): number[] { return this._pageLengthOptions; }
-  _pageLengthOptions: number[] = [];
+  private _pageSizeOptions: number[] = [];
 
-  /** Event emitted when the paginator changes the page length or current page index. */
-  @Output() pageChange = new EventEmitter<PageChangeEvent>();
+  /** Event emitted when the paginator changes the page size or page index. */
+  @Output() page = new EventEmitter<PageEvent>();
 
-  /** Displayed set of page length options. Will be sorted and include current page length. */
-  _displayedPageLengthOptions: number[];
+  /** Displayed set of page size options. Will be sorted and include current page size. */
+  _displayedPageSizeOptions: number[];
 
   constructor(public _intl: MdPaginatorIntl) { }
 
   ngOnInit() {
     this._initialized = true;
 
-    // If no page length or options have been provided, use the list length as the only option.
-    // Otherwise if there is no page length but there are options, then use the first option.
-    if (this.pageLength == undefined) {
-      this.pageLength = this.pageLengthOptions.length != 0 ?
-          this.pageLengthOptions[0] :
-          this.listLength;
+    // If no page size or options have been provided, use the list length as the only option.
+    // Otherwise if there is no page size but there are options, then use the first option.
+    if (this.pageSize == undefined) {
+      this.pageSize = this.pageSizeOptions.length != 0 ?
+          this.pageSizeOptions[0] :
+          this.length;
     }
 
-    this._updateDisplayedPageLengthOptions();
+    this._updateDisplayedPageSizeOptions();
   }
 
-  /** Increments the current page index to the next page index if a next page exists. */
-  navigateToNextPage() {
-    if (!this.canNavigateToNextPage()) { return; }
-    this.currentPageIndex++;
-    this._sendPageEvent();
+  /** Increments the page index to the next page index if a next page exists. */
+  nextPage() {
+    if (!this.hasNextPage()) { return; }
+    this.pageIndex++;
+    this._emitPageEvent();
   }
 
-  /** Decrements the current page index to the previous page index if a next page exists. */
-  navigateToPreviousPage() {
-    if (!this.canNavigateToPreviousPage()) { return; }
-    this.currentPageIndex--;
-    this._sendPageEvent();
-  }
-
-  /** Returns true if the user can go to the next page. */
-  canNavigateToPreviousPage() {
-    return (this.currentPageIndex - 1) >= 0 && this.pageLength != 0;
+  /** Decrements the page index to the previous page index if a next page exists. */
+  previousPage() {
+    if (!this.hasPreviousPage()) { return; }
+    this.pageIndex--;
+    this._emitPageEvent();
   }
 
   /** Returns true if the user can go to the next page. */
-  canNavigateToNextPage() {
-    const numberOfPages = Math.ceil(this.listLength / this.pageLength) - 1;
-    return (this.currentPageIndex + 1) <= numberOfPages && this.pageLength != 0;
+  hasPreviousPage() {
+    return (this.pageIndex - 1) >= 0 && this.pageSize != 0;
+  }
+
+  /** Returns true if the user can go to the next page. */
+  hasNextPage() {
+    const numberOfPages = Math.ceil(this.length / this.pageSize) - 1;
+    return (this.pageIndex + 1) <= numberOfPages && this.pageSize != 0;
   }
 
   /**
-   * Changes the current page length so that the first item displayed on the page will still be
-   * displayed using the new page length.
+   * Changes the page size so that the first item displayed on the page will still be
+   * displayed using the new page size.
    *
-   * For example, if the page length is 10 and on the second page (items indexed 10-19) then
-   * switching so that the page length is 5 will set the third page as the current page so
+   * For example, if the page size is 10 and on the second page (items indexed 10-19) then
+   * switching so that the page size is 5 will set the third page as the current page so
    * that the 10th item will still be displayed.
    */
-  _changePageLength(pageLength: number) {
-    // Current page needs to be updated to reflect the new page length. Navigate to the page
+  _changePageSize(pageSize: number) {
+    // Current page needs to be updated to reflect the new page size. Navigate to the page
     // containing the previous page's first item.
-    const startIndex = this.currentPageIndex * this.pageLength;
-    this.currentPageIndex = Math.floor(startIndex / pageLength) || 0;
+    const startIndex = this.pageIndex * this.pageSize;
+    this.pageIndex = Math.floor(startIndex / pageSize) || 0;
 
-    this.pageLength = pageLength;
-    this._sendPageEvent();
+    this.pageSize = pageSize;
+    this._emitPageEvent();
   }
 
   /**
-   * Updates the list of page length options to display to the user. Includes making sure that
-   * the current page length is an option and that the list is sorted.
+   * Updates the list of page size options to display to the user. Includes making sure that
+   * the page size is an option and that the list is sorted.
    */
-  private _updateDisplayedPageLengthOptions() {
+  private _updateDisplayedPageSizeOptions() {
     if (!this._initialized) { return; }
 
-    this._displayedPageLengthOptions = this.pageLengthOptions.slice();
-    if (this._displayedPageLengthOptions.indexOf(this.pageLength) == -1) {
-      this._displayedPageLengthOptions.push(this.pageLength);
+    this._displayedPageSizeOptions = this.pageSizeOptions.slice();
+    if (this._displayedPageSizeOptions.indexOf(this.pageSize) == -1) {
+      this._displayedPageSizeOptions.push(this.pageSize);
     }
 
     // Sort the numbers using a number-specific sort function.
-    this._displayedPageLengthOptions.sort((a, b) => (a - b));
+    this._displayedPageSizeOptions.sort((a, b) => a - b);
   }
 
   /** Emits an event notifying that a change of the paginator's properties has been triggered. */
-  private _sendPageEvent() {
-    this.pageChange.next({
-      currentPageIndex: this.currentPageIndex,
-      pageLength: this.pageLength,
-      listLength: this.listLength
+  private _emitPageEvent() {
+    this.page.next({
+      pageIndex: this.pageIndex,
+      pageSize: this.pageSize,
+      length: this.length
     });
   }
 }

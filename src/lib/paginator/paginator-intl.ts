@@ -24,18 +24,18 @@ export class MdPaginatorIntl {
   previousPageLabel = 'Previous page';
 
   /** A label for the range of items within the current page and the length of the whole list. */
-  getRangeLabel(currentPage: number, pageSize: number, listLength: number) {
-    if (listLength == 0 || pageSize == 0) { return `0 of ${listLength}`; }
+  getRangeLabel(pageIndex: number, pageSize: number, length: number) {
+    if (length == 0 || pageSize == 0) { return `0 of ${length}`; }
 
-    listLength = Math.max(listLength, 0);
+    length = Math.max(length, 0);
 
-    const startIndex = currentPage * pageSize;
+    const startIndex = pageIndex * pageSize;
 
     // If the start index exceeds the list length, do not try and fix the end index to the end.
-    const endIndex = startIndex < listLength ?
-        Math.min(startIndex + pageSize, listLength) :
+    const endIndex = startIndex < length ?
+        Math.min(startIndex + pageSize, length) :
         startIndex + pageSize;
 
-    return `${startIndex + 1} - ${endIndex} of ${listLength}`;
+    return `${startIndex + 1} - ${endIndex} of ${length}`;
   }
 }

@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MdPaginatorModule} from './index';
-import {MdPaginator, PageChangeEvent} from './paginator';
+import {MdPaginator, PageEvent} from './paginator';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {MdCommonModule} from '../core';
 import {MdSelectModule} from '../select/index';
@@ -31,8 +31,8 @@ describe('MdPaginator', () => {
       ],
       declarations: [
         MdPaginatorApp,
-        MdPaginatorWithoutPageLengthOrOptionsApp,
-        MdPaginatorWithoutPageLengthApp,
+        MdPaginatorWithoutPageSizeOrOptionsApp,
+        MdPaginatorWithoutPageSizeApp,
         MdPaginatorWithoutOptionsApp,
       ],
       providers: [MdPaginatorIntl]
@@ -50,37 +50,44 @@ describe('MdPaginator', () => {
       const rangeElement = fixture.nativeElement.querySelector('.mat-paginator-range-label');
 
       // View second page of list of 100, each page contains 10 items.
-      component.listLength = 100;
-      component.pageLength = 10;
-      component.currentPageIndex = 1;
+      component.length = 100;
+      component.pageSize = 10;
+      component.pageIndex = 1;
       fixture.detectChanges();
       expect(rangeElement.innerText).toBe('11 - 20 of 100');
 
       // View third page of list of 200, each page contains 20 items.
-      component.listLength = 200;
-      component.pageLength = 20;
-      component.currentPageIndex = 2;
+      component.length = 200;
+      component.pageSize = 20;
+      component.pageIndex = 2;
       fixture.detectChanges();
       expect(rangeElement.innerText).toBe('41 - 60 of 200');
 
       // View first page of list of 0, each page contains 5 items.
-      component.listLength = 0;
-      component.pageLength = 5;
-      component.currentPageIndex = 2;
+      component.length = 0;
+      component.pageSize = 5;
+      component.pageIndex = 2;
       fixture.detectChanges();
       expect(rangeElement.innerText).toBe('0 of 0');
 
+      // View third page of list of 12, each page contains 5 items.
+      component.length = 12;
+      component.pageSize = 5;
+      component.pageIndex = 2;
+      fixture.detectChanges();
+      expect(rangeElement.innerText).toBe('11 - 12 of 12');
+
       // View third page of list of 10, each page contains 5 items.
-      component.listLength = 10;
-      component.pageLength = 5;
-      component.currentPageIndex = 2;
+      component.length = 10;
+      component.pageSize = 5;
+      component.pageIndex = 2;
       fixture.detectChanges();
       expect(rangeElement.innerText).toBe('11 - 15 of 10');
 
       // View third page of list of -5, each page contains 5 items.
-      component.listLength = -5;
-      component.pageLength = 5;
-      component.currentPageIndex = 2;
+      component.length = -5;
+      component.pageSize = 5;
+      component.pageIndex = 2;
       fixture.detectChanges();
       expect(rangeElement.innerText).toBe('11 - 15 of 0');
     });
@@ -97,127 +104,132 @@ describe('MdPaginator', () => {
 
   describe('when navigating with the navigation buttons', () => {
     it('should be able to go to the next page', () => {
-      expect(paginator.currentPageIndex).toBe(0);
+      expect(paginator.pageIndex).toBe(0);
 
       component.clickNextButton();
 
-      expect(paginator.currentPageIndex).toBe(1);
-      expect(component.latestPageChangeEvent.currentPageIndex).toBe(1);
+      expect(paginator.pageIndex).toBe(1);
+      expect(component.latestPageEvent.pageIndex).toBe(1);
     });
 
     it('should be able to go to the previous page', () => {
-      paginator.currentPageIndex = 1;
+      paginator.pageIndex = 1;
       fixture.detectChanges();
-      expect(paginator.currentPageIndex).toBe(1);
+      expect(paginator.pageIndex).toBe(1);
 
       component.clickPreviousButton();
 
-      expect(paginator.currentPageIndex).toBe(0);
-      expect(component.latestPageChangeEvent.currentPageIndex).toBe(0);
+      expect(paginator.pageIndex).toBe(0);
+      expect(component.latestPageEvent.pageIndex).toBe(0);
     });
 
     it('should disable navigating to the next page if at first page', () => {
       component.goToLastPage();
       fixture.detectChanges();
-      expect(paginator.currentPageIndex).toBe(10);
-      expect(paginator.canNavigateToNextPage()).toBe(false);
+      expect(paginator.pageIndex).toBe(10);
+      expect(paginator.hasNextPage()).toBe(false);
 
-      component.latestPageChangeEvent = null;
+      component.latestPageEvent = null;
       component.clickNextButton();
 
-      expect(component.latestPageChangeEvent).toBe(null);
-      expect(paginator.currentPageIndex).toBe(10);
+      expect(component.latestPageEvent).toBe(null);
+      expect(paginator.pageIndex).toBe(10);
     });
 
     it('should disable navigating to the previous page if at first page', () => {
-      expect(paginator.currentPageIndex).toBe(0);
-      expect(paginator.canNavigateToPreviousPage()).toBe(false);
+      expect(paginator.pageIndex).toBe(0);
+      expect(paginator.hasPreviousPage()).toBe(false);
 
-      component.latestPageChangeEvent = null;
+      component.latestPageEvent = null;
       component.clickPreviousButton();
 
-      expect(component.latestPageChangeEvent).toBe(null);
-      expect(paginator.currentPageIndex).toBe(0);
+      expect(component.latestPageEvent).toBe(null);
+      expect(paginator.pageIndex).toBe(0);
     });
   });
 
-  it('should fail if page length and page length options are not provided', () => {
-    expect(() => {
-      TestBed.createComponent(MdPaginatorWithoutPageLengthOrOptionsApp).detectChanges();
-    }).toThrowError('No page length options available for the MdPaginator');
+  it('should have page size and options match the list length if not provided', () => {
+    const withoutPageSizeOrOptionsAppFixture =
+        TestBed.createComponent(MdPaginatorWithoutPageSizeOrOptionsApp);
+    withoutPageSizeOrOptionsAppFixture.detectChanges();
+
+    const withoutPageSizeOrOptionsPaginator =
+        withoutPageSizeOrOptionsAppFixture.componentInstance.mdPaginator;
+    expect(withoutPageSizeOrOptionsPaginator.pageSize).toEqual(100);
+    expect(withoutPageSizeOrOptionsPaginator._displayedPageSizeOptions).toEqual([100]);
   });
 
-  it('should default the page length options to the page length if no options provided', () => {
+  it('should default the page size options to the page size if no options provided', () => {
     const withoutOptionsAppFixture = TestBed.createComponent(MdPaginatorWithoutOptionsApp);
     withoutOptionsAppFixture.detectChanges();
 
-    expect(withoutOptionsAppFixture.componentInstance.mdPaginator._displayedPageLengthOptions)
+    expect(withoutOptionsAppFixture.componentInstance.mdPaginator._displayedPageSizeOptions)
         .toEqual([10]);
   });
 
-  it('should default the page length to the first page length option if no length provided', () => {
-    const withoutLengthAppFixture = TestBed.createComponent(MdPaginatorWithoutPageLengthApp);
+  it('should default the page size to the first page size option if no length provided', () => {
+    const withoutLengthAppFixture = TestBed.createComponent(MdPaginatorWithoutPageSizeApp);
     withoutLengthAppFixture.detectChanges();
 
-    expect(withoutLengthAppFixture.componentInstance.mdPaginator._pageLength).toBe(10);
+    expect(withoutLengthAppFixture.componentInstance.mdPaginator.pageSize).toBe(10);
   });
 
-  it('should show a sorted list of page length options including the current page length', () => {
-    expect(paginator._displayedPageLengthOptions).toEqual([5, 10, 25, 100]);
+  it('should show a sorted list of page size options including the current page size', () => {
+    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 100]);
 
-    component.pageLength = 30;
+    component.pageSize = 30;
     fixture.detectChanges();
-    expect(paginator.pageLengthOptions).toEqual([5, 10, 25, 100]);
-    expect(paginator._displayedPageLengthOptions).toEqual([5, 10, 25, 30, 100]);
+    expect(paginator.pageSizeOptions).toEqual([5, 10, 25, 100]);
+    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 30, 100]);
 
-    component.pageLengthOptions = [100, 25, 10, 5];
+    component.pageSizeOptions = [100, 25, 10, 5];
     fixture.detectChanges();
-    expect(paginator._displayedPageLengthOptions).toEqual([5, 10, 25, 30, 100]);
+    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 30, 100]);
   });
 
-  it('should be able to change the page length while keeping the first item present', () => {
-    // Start on the third page of a list of 100 with a page length of 10.
-    component.currentPageIndex = 4;
-    component.pageLength = 10;
-    component.listLength = 100;
+  it('should be able to change the page size while keeping the first item present', () => {
+    // Start on the third page of a list of 100 with a page size of 10.
+    component.pageIndex = 4;
+    component.pageSize = 10;
+    component.length = 100;
     fixture.detectChanges();
 
     // The first item of the page should be item with index 40
-    let firstPageItemIndex = paginator.currentPageIndex * paginator.pageLength;
+    let firstPageItemIndex = paginator.pageIndex * paginator.pageSize;
     expect(firstPageItemIndex).toBe(40);
 
-    // The first item on the page is now 25. Change the page length to 25 so that we should now be
+    // The first item on the page is now 25. Change the page size to 25 so that we should now be
     // on the second page where the top item is index 25.
-    paginator._changePageLength(25);
-    let paginationEvent = component.latestPageChangeEvent;
-    firstPageItemIndex = paginationEvent.currentPageIndex * paginationEvent.pageLength;
+    paginator._changePageSize(25);
+    let paginationEvent = component.latestPageEvent;
+    firstPageItemIndex = paginationEvent.pageIndex * paginationEvent.pageSize;
     expect(firstPageItemIndex).toBe(25);
-    expect(paginationEvent.currentPageIndex).toBe(1);
+    expect(paginationEvent.pageIndex).toBe(1);
 
-    // The first item on the page is still 25. Change the page length to 8 so that we should now be
+    // The first item on the page is still 25. Change the page size to 8 so that we should now be
     // on the fourth page where the top item is index 24.
-    paginator._changePageLength(8);
-    paginationEvent = component.latestPageChangeEvent;
-    firstPageItemIndex = paginationEvent.currentPageIndex * paginationEvent.pageLength;
+    paginator._changePageSize(8);
+    paginationEvent = component.latestPageEvent;
+    firstPageItemIndex = paginationEvent.pageIndex * paginationEvent.pageSize;
     expect(firstPageItemIndex).toBe(24);
-    expect(paginationEvent.currentPageIndex).toBe(3);
+    expect(paginationEvent.pageIndex).toBe(3);
 
-    // The first item on the page is 24. Change the page length to 16 so that we should now be
+    // The first item on the page is 24. Change the page size to 16 so that we should now be
     // on the first page where the top item is index 0.
-    paginator._changePageLength(25);
-    paginationEvent = component.latestPageChangeEvent;
-    firstPageItemIndex = paginationEvent.currentPageIndex * paginationEvent.pageLength;
+    paginator._changePageSize(25);
+    paginationEvent = component.latestPageEvent;
+    firstPageItemIndex = paginationEvent.pageIndex * paginationEvent.pageSize;
     expect(firstPageItemIndex).toBe(0);
-    expect(paginationEvent.currentPageIndex).toBe(0);
+    expect(paginationEvent.pageIndex).toBe(0);
   });
 
   it('should show a select only if there are multiple options', () => {
-    expect(paginator._displayedPageLengthOptions).toEqual([5, 10, 25, 100]);
+    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 100]);
     expect(fixture.nativeElement.querySelector('.mat-select')).not.toBeNull();
 
-    // Remove options so that the paginator only uses the current page length (10) as an option.
+    // Remove options so that the paginator only uses the current page size (10) as an option.
     // Should no longer show the select component since there is only one option.
-    component.pageLengthOptions = [];
+    component.pageSizeOptions = [];
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.mat-select')).toBeNull();
   });
@@ -225,21 +237,21 @@ describe('MdPaginator', () => {
 
 @Component({
   template: `
-    <md-paginator [currentPageIndex]="currentPageIndex"
-                  [pageLength]="pageLength"
-                  [pageLengthOptions]="pageLengthOptions"
-                  [listLength]="listLength"
-                  (pageChange)="latestPageChangeEvent = $event">
+    <md-paginator [pageIndex]="pageIndex"
+                  [pageSize]="pageSize"
+                  [pageSizeOptions]="pageSizeOptions"
+                  [length]="length"
+                  (page)="latestPageEvent = $event">
     </md-paginator>
   `,
 })
 class MdPaginatorApp {
-  currentPageIndex = 0;
-  pageLength = 10;
-  pageLengthOptions = [5, 10, 25, 100];
-  listLength = 100;
+  pageIndex = 0;
+  pageSize = 10;
+  pageSizeOptions = [5, 10, 25, 100];
+  length = 100;
 
-  latestPageChangeEvent: PageChangeEvent;
+  latestPageEvent: PageEvent;
 
   @ViewChild(MdPaginator) mdPaginator: MdPaginator;
 
@@ -257,29 +269,31 @@ class MdPaginatorApp {
     dispatchMouseEvent(nextButton, 'click');  }
 
   goToLastPage() {
-    this.currentPageIndex = Math.ceil(this.listLength / this.pageLength);
+    this.pageIndex = Math.ceil(this.length / this.pageSize);
   }
 }
 
 @Component({
   template: `
-    <md-paginator></md-paginator>
+    <md-paginator [length]="100"></md-paginator>
   `,
 })
-class MdPaginatorWithoutPageLengthOrOptionsApp { }
-
-@Component({
-  template: `
-    <md-paginator [pageLengthOptions]="[10, 20, 30]"></md-paginator>
-  `,
-})
-class MdPaginatorWithoutPageLengthApp {
+class MdPaginatorWithoutPageSizeOrOptionsApp {
   @ViewChild(MdPaginator) mdPaginator: MdPaginator;
 }
 
 @Component({
   template: `
-    <md-paginator [pageLength]="10"></md-paginator>
+    <md-paginator [pageSizeOptions]="[10, 20, 30]"></md-paginator>
+  `,
+})
+class MdPaginatorWithoutPageSizeApp {
+  @ViewChild(MdPaginator) mdPaginator: MdPaginator;
+}
+
+@Component({
+  template: `
+    <md-paginator [pageSize]="10"></md-paginator>
   `,
 })
 class MdPaginatorWithoutOptionsApp {

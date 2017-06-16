@@ -1,13 +1,29 @@
+$mat-paginator-height: 56px;
+$mat-paginator-padding: 0 8px;
+
+$mat-paginator-items-per-page-label-margin: 0 4px;
+$mat-paginator-selector-margin: 0 4px;
+$mat-paginator-selector-trigger-min-width: 56px;
+
+$mat-paginator-range-label-margin: 0 32px;
+
+$mat-paginator-button-margin: 8px;
+$mat-paginator-button-icon-height: 8px;
+$mat-paginator-button-icon-width: 8px;
+
+$mat-paginator-button-decrement-icon-margin: 12px;
+$mat-paginator-button-increment-icon-margin: 16px;
+
 .mat-paginator {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  min-height: 56px;
-  padding: 0 8px;
+  min-height: $mat-paginator-height;
+  padding: $mat-paginator-padding;
 }
 
 .mat-paginator-items-per-page-label {
-  margin: 0 4px;
+  margin: $mat-paginator-items-per-page-label-margin;
 }
 
 .mat-paginator-page-length-select {
@@ -15,30 +31,30 @@
   align-items: center;
 
   .mat-select {
-    margin: 0 4px;
+    margin: $mat-paginator-selector-margin;
   }
 
   .mat-select-trigger {
-    min-width: 56px;
+    min-width: $mat-paginator-selector-trigger-min-width;
   }
 }
 
 .mat-paginator-range-label {
-  margin: 0 32px;
+  margin: $mat-paginator-range-label-margin;
 }
 
 .mat-paginator-increment-button + .mat-paginator-increment-button {
-  margin: 0 0 0 8px;
+  margin: 0 0 0 $mat-paginator-button-margin;
 
   [dir='rtl'] & {
-    margin: 0 8px 0 0;
+    margin: 0 $mat-paginator-button-margin 0 0;
   }
 }
 
 .mat-paginator-increment,
 .mat-paginator-decrement {
-  width: 8px;
-  height: 8px;
+  width: $mat-paginator-button-icon-width;
+  height: $mat-paginator-button-icon-height;
 }
 
 .mat-paginator-decrement,
@@ -51,15 +67,15 @@
 }
 
 .mat-paginator-decrement {
-  margin-left: 12px;
+  margin-left: $mat-paginator-button-decrement-icon-margin;
   [dir='rtl'] & {
-    margin-right: 12px;
+    margin-right: $mat-paginator-button-decrement-icon-margin;
   }
 }
 
 .mat-paginator-increment {
-  margin-left: 16px;
+  margin-left: $mat-paginator-button-increment-icon-margin;
   [dir='rtl'] & {
-    margin-right: 16px;
+    margin-right: $mat-paginator-button-increment-icon-margin;
   }
 }

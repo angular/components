@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {PageChangeEvent} from '@angular/material';
+import {PageEvent} from '@angular/material';
 
 @Component({
   selector: 'paginator-configurable-example',
@@ -7,14 +7,14 @@ import {PageChangeEvent} from '@angular/material';
 })
 export class PaginatorConfigurableExample {
   // MdPaginator Inputs
-  listLength = 100;
-  pageLength = 10;
-  pageLengthOptions = [5, 10, 25, 100];
+  length = 100;
+  pageSize = 10;
+  pageSizeOptions = [5, 10, 25, 100];
 
   // MdPaginator Output
-  pageChangeEvent: PageChangeEvent;
+  pageEvent: PageEvent;
 
-  setPageLengthOptions(pageLengthOptionsInput: string) {
-    this.pageLengthOptions = pageLengthOptionsInput.split(',').map(str => +str);
+  setPageSizeOptions(setPageSizeOptionsInput: string) {
+    this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
   }
 }

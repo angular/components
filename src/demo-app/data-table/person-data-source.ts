@@ -1,4 +1,4 @@
-import {CollectionViewer, DataSource, MdPaginator, PageChangeEvent} from '@angular/material';
+import {CollectionViewer, DataSource, MdPaginator, PageEvent} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {PeopleDatabase, UserData} from './people-database';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
@@ -16,7 +16,7 @@ export class PersonDataSource extends DataSource<any> {
 
     // Subscribe to page changes and database changes by clearing the cached data and
     // determining the updated display data.
-    Observable.merge(this._paginator.pageChange, this._peopleDatabase.dataChange).subscribe(() => {
+    Observable.merge(this._paginator.page, this._peopleDatabase.dataChange).subscribe(() => {
       this._renderedData = [];
       this.updateDisplayData();
     });
@@ -50,8 +50,8 @@ export class PersonDataSource extends DataSource<any> {
     const data = this._peopleDatabase.data.slice();
 
     // Grab the page's slice of data.
-    const startIndex = this._paginator.currentPageIndex * this._paginator.pageLength;
-    const paginatedData = data.splice(startIndex, this._paginator.pageLength);
+    const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
+    const paginatedData = data.splice(startIndex, this._paginator.pageSize);
 
     this._displayData.next(paginatedData);
   }

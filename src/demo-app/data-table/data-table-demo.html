@@ -80,9 +80,9 @@
   </cdk-table>
   
   <md-paginator #paginator
-                [listLength]="_peopleDatabase.data.length"
-                [currentPageIndex]="0"
-                [pageLength]="10"
-                [pageLengthOptions]="[5, 10, 25, 100]">
+                [length]="_peopleDatabase.data.length"
+                [pageIndex]="0"
+                [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]">
   </md-paginator>
 </div>
