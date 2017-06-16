@@ -16,6 +16,7 @@ import {
   HostBinding,
   Input,
   OnInit,
+  OnDestroy,
   Optional,
   Output,
   QueryList,
@@ -271,7 +272,7 @@ export class MdButtonToggleGroupMultiple extends _MdButtonToggleGroupMixinBase
     'class': 'mat-button-toggle'
   }
 })
-export class MdButtonToggle implements OnInit {
+export class MdButtonToggle implements OnInit, OnDestroy {
   /** Whether or not this button toggle is checked. */
   private _checked: boolean = false;
 
@@ -286,6 +287,9 @@ export class MdButtonToggle implements OnInit {
 
   /** Whether or not the button toggle is a single selection. */
   private _isSingleSelector: boolean = null;
+
+  /** Unregister function for _buttonToggleDispatcherListener **/
+  private _buttonToggleDispatcherListener: Function;
 
   @ViewChild('input') _inputElement: ElementRef;
 
@@ -372,7 +376,7 @@ export class MdButtonToggle implements OnInit {
     this.buttonToggleGroupMultiple = toggleGroupMultiple;
 
     if (this.buttonToggleGroup) {
-      _buttonToggleDispatcher.listen((id: string, name: string) => {
+      this._buttonToggleDispatcherListener = _buttonToggleDispatcher.listen((id: string, name: string) => {
         if (id != this.id && name == this.name) {
           this.checked = false;
         }
@@ -445,5 +449,12 @@ export class MdButtonToggle implements OnInit {
     event.source = this;
     event.value = this._value;
     this.change.emit(event);
+  }
+
+  // Unregister buttonToggleDispatcherListener on destroy
+  ngOnDestroy(): void {
+    if(this._buttonToggleDispatcherListener) {
+      this._buttonToggleDispatcherListener();
+    }
   }
 }

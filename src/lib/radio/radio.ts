@@ -458,6 +458,9 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
   /** Reference to the current focus ripple. */
   private _focusRipple: RippleRef;
 
+  /** Unregister function for _radioDispatcher **/
+  private _radioDispatcherListener: Function;
+
   /** The native `<input type=radio>` element */
   @ViewChild('input') _inputElement: ElementRef;
 
@@ -473,7 +476,7 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
     this.radioGroup = radioGroup;
 
-    _radioDispatcher.listen((id: string, name: string) => {
+    this._radioDispatcherListener = _radioDispatcher.listen((id: string, name: string) => {
       if (id != this.id && name == this.name) {
         this.checked = false;
       }
@@ -513,6 +516,7 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
 
   ngOnDestroy() {
     this._focusOriginMonitor.stopMonitoring(this._inputElement.nativeElement);
+    this._radioDispatcherListener();
   }
 
   /** Dispatch change event with current value. */
