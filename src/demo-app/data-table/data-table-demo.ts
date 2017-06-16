@@ -22,7 +22,9 @@ export class DataTableDemo {
 
   @ViewChild(MdPaginator) _paginator: MdPaginator;
 
-  constructor(public _peopleDatabase: PeopleDatabase) {
+  constructor(public _peopleDatabase: PeopleDatabase) { }
+
+  ngOnInit() {
     this.connect();
   }
 

@@ -9,8 +9,8 @@
 import {Injectable} from '@angular/core';
 
 /**
- * Paginator labels that require internationalization. To modify the labels and text displayed,
- * extend this class with custom values and inject it as a custom provider.
+ * To modify the labels and text displayed, create a new instance of MdPaginatorIntl and
+ * include it in a custom provider
  */
 @Injectable()
 export class MdPaginatorIntl {
