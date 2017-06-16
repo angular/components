@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {OverlayRef, GlobalPositionStrategy} from '../core';
 import {AnimationEvent} from '@angular/animations';
 import {DialogPosition} from './dialog-config';
@@ -19,7 +27,7 @@ export class MdDialogRef<T> {
   componentInstance: T;
 
   /** Whether the user is allowed to close the dialog. */
-  disableClose: boolean = this._containerInstance.config.disableClose;
+  disableClose: boolean = this._containerInstance._config.disableClose;
 
   /** Subject for notifying the user that the dialog has finished closing. */
   private _afterClosed: Subject<any> = new Subject();

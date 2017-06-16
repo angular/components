@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   Component,
   ComponentRef,
@@ -29,7 +37,7 @@ import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
  * @docs-private
  */
 export function throwMdDialogContentAlreadyAttachedError() {
-  throw new Error('Attempting to attach dialog content after content is already attached');
+  throw Error('Attempting to attach dialog content after content is already attached');
 }
 
 /**
@@ -56,8 +64,8 @@ export function throwMdDialogContentAlreadyAttachedError() {
     ])
   ],
   host: {
-    '[class.mat-dialog-container]': 'true',
-    '[attr.role]': 'config?.role',
+    'class': 'mat-dialog-container',
+    '[attr.role]': '_config?.role',
     '[@slideDialog]': '_state',
     '(@slideDialog.done)': '_onAnimationDone($event)',
   },
@@ -76,7 +84,7 @@ export class MdDialogContainer extends BasePortalHost {
   private _document: Document;
 
   /** The dialog configuration. */
-  config: MdDialogConfig;
+  _config: MdDialogConfig;
 
   /** State of the dialog animation. */
   _state: 'void' | 'enter' | 'exit' = 'enter';

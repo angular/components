@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {MdGridTile} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
 
@@ -199,7 +207,7 @@ export class RatioTileStyler extends TileStyler {
     let ratioParts = value.split(':');
 
     if (ratioParts.length !== 2) {
-      throw new Error(`md-grid-list: invalid ratio given for row-height: "${value}"`);
+      throw Error(`md-grid-list: invalid ratio given for row-height: "${value}"`);
     }
 
     this.rowHeightRatio = parseFloat(ratioParts[0]) / parseFloat(ratioParts[1]);

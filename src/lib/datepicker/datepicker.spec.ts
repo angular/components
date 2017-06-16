@@ -8,7 +8,7 @@ import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent, dispatchMouseEvent} from '../core/testing/dispatch-events';
 import {MdInputModule} from '../input/index';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MdNativeDateModule} from '../core/datetime/index';
+import {MdNativeDateModule, DateAdapter, NativeDateAdapter} from '../core/datetime/index';
 
 
 // When constructing a Date, the month is zero-based. This can be confusing, since people are
@@ -29,12 +29,20 @@ describe('MdDatepicker', () => {
           NoopAnimationsModule,
           ReactiveFormsModule,
         ],
+        providers: [
+          {provide: DateAdapter, useFactory: () => {
+            let adapter = new NativeDateAdapter();
+            adapter.setLocale('en-US');
+            return adapter;
+          }},
+        ],
         declarations: [
           DatepickerWithFilterAndValidation,
           DatepickerWithFormControl,
           DatepickerWithMinAndMaxValidation,
           DatepickerWithNgModel,
           DatepickerWithStartAt,
+          DatepickerWithStartView,
           DatepickerWithToggle,
           InputContainerDatepicker,
           MultiInputDatepicker,
@@ -193,6 +201,35 @@ describe('MdDatepicker', () => {
 
       it('explicit startAt should override input value', () => {
         expect(testComponent.datepicker.startAt).toEqual(new Date(2010, JAN, 1));
+      });
+    });
+
+    describe('datepicker with startView', () => {
+      let fixture: ComponentFixture<DatepickerWithStartView>;
+      let testComponent: DatepickerWithStartView;
+
+      beforeEach(async(() => {
+        fixture = TestBed.createComponent(DatepickerWithStartView);
+        fixture.detectChanges();
+
+        testComponent = fixture.componentInstance;
+      }));
+
+      afterEach(async(() => {
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+      }));
+
+      it('should start at the specified view', () => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+
+        const firstCalendarCell = document.querySelector('.mat-calendar-body-cell');
+
+        // When the calendar is in year view, the first cell should be for a month rather than
+        // for a date.
+        expect(firstCalendarCell.textContent)
+            .toBe('JAN', 'Expected the calendar to be in year-view');
       });
     });
 
@@ -687,6 +724,18 @@ class NoInputDatepicker {
 class DatepickerWithStartAt {
   date = new Date(2020, JAN, 1);
   startDate = new Date(2010, JAN, 1);
+  @ViewChild('d') datepicker: MdDatepicker<Date>;
+}
+
+
+@Component({
+  template: `
+    <input [mdDatepicker]="d" [value]="date">
+    <md-datepicker #d startView="year"></md-datepicker>
+  `,
+})
+class DatepickerWithStartView {
+  date = new Date(2020, JAN, 1);
   @ViewChild('d') datepicker: MdDatepicker<Date>;
 }
 

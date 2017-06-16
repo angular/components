@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   AfterContentInit,
   AfterContentChecked,
@@ -20,7 +28,7 @@ import {
   Inject
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {coerceBooleanProperty} from '../core';
+import {coerceBooleanProperty, Platform} from '../core';
 import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {getSupportedInputTypes} from '../core/platform/features';
 import {
@@ -66,7 +74,7 @@ export class MdPlaceholder {}
 @Directive({
   selector: 'md-hint, mat-hint',
   host: {
-    '[class.mat-hint]': 'true',
+    'class': 'mat-hint',
     '[class.mat-right]': 'align == "end"',
     '[attr.id]': 'id',
   }
@@ -83,7 +91,7 @@ export class MdHint {
 @Directive({
   selector: 'md-error, mat-error',
   host: {
-    '[class.mat-input-error]': 'true'
+    'class': 'mat-input-error'
   }
 })
 export class MdErrorDirective { }
@@ -106,7 +114,7 @@ export class MdSuffix {}
 @Directive({
   selector: `input[mdInput], textarea[mdInput], input[matInput], textarea[matInput]`,
   host: {
-    '[class.mat-input-element]': 'true',
+    'class': 'mat-input-element',
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
     '[id]': 'id',
@@ -213,6 +221,7 @@ export class MdInputDirective {
 
   constructor(private _elementRef: ElementRef,
               private _renderer: Renderer2,
+              private _platform: Platform,
               @Optional() @Self() public _ngControl: NgControl,
               @Optional() private _parentForm: NgForm,
               @Optional() private _parentFormGroup: FormGroupDirective) {
@@ -267,7 +276,12 @@ export class MdInputDirective {
   /** Determines if the component host is a textarea. If not recognizable it returns false. */
   private _isTextarea() {
     let nativeElement = this._elementRef.nativeElement;
-    return nativeElement ? nativeElement.nodeName.toLowerCase() === 'textarea' : false;
+
+    // In Universal, we don't have access to `nodeName`, but the same can be achieved with `name`.
+    // Note that this shouldn't be necessary once Angular switches to an API that resembles the
+    // DOM closer.
+    let nodeName = this._platform.isBrowser ? nativeElement.nodeName : nativeElement.name;
+    return nodeName ? nodeName.toLowerCase() === 'textarea' : false;
   }
 }
 
@@ -292,7 +306,7 @@ export class MdInputDirective {
   host: {
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
-    '[class.mat-input-container]': 'true',
+    'class': 'mat-input-container',
     '[class.mat-input-invalid]': '_mdInputChild._isErrorState()',
     '[class.mat-focused]': '_mdInputChild.focused',
     '[class.ng-untouched]': '_shouldForward("untouched")',
@@ -376,8 +390,6 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   constructor(
     public _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
-    @Optional() private _parentForm: NgForm,
-    @Optional() private _parentFormGroup: FormGroupDirective,
     @Optional() @Inject(MD_PLACEHOLDER_GLOBAL_OPTIONS) placeholderOptions: PlaceholderOptions) {
       this._placeholderOptions = placeholderOptions ? placeholderOptions : {};
       this.floatPlaceholder = this._placeholderOptions.float || 'auto';

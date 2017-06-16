@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   AfterContentInit,
   Component,
@@ -125,7 +133,7 @@ export const _MdSelectMixinBase = mixinColor(MdSelectBase, 'primary');
     '[attr.aria-invalid]': '_control?.invalid || "false"',
     '[attr.aria-owns]': '_optionIds',
     '[class.mat-select-disabled]': 'disabled',
-    '[class.mat-select]': 'true',
+    'class': 'mat-select',
     '(keydown)': '_handleClosedKeydown($event)',
     '(blur)': '_onBlur()',
   },
@@ -566,7 +574,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
    * Sets the selected option based on a value. If no option can be
    * found with the designated value, the select trigger is cleared.
    */
-  private _setSelectionByValue(value: any | any[]): void {
+  private _setSelectionByValue(value: any | any[], isUserInput = false): void {
     const isArray = Array.isArray(value);
 
     if (this.multiple && value && !isArray) {
@@ -576,10 +584,10 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     this._clearSelection();
 
     if (isArray) {
-      value.forEach((currentValue: any) => this._selectValue(currentValue));
+      value.forEach((currentValue: any) => this._selectValue(currentValue, isUserInput));
       this._sortValues();
     } else {
-      this._selectValue(value);
+      this._selectValue(value, isUserInput);
     }
 
     this._setValueWidth();
@@ -595,14 +603,14 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
    * Finds and selects and option based on its value.
    * @returns Option that has the corresponding value.
    */
-  private _selectValue(value: any): MdOption {
+  private _selectValue(value: any, isUserInput = false): MdOption {
     let optionsArray = this.options.toArray();
     let correspondingOption = optionsArray.find(option => {
       return option.value != null && option.value === value;
     });
 
     if (correspondingOption) {
-      correspondingOption.select();
+      isUserInput ? correspondingOption._selectViaInteraction() : correspondingOption.select();
       this._selectionModel.select(correspondingOption);
       this._keyManager.setActiveItem(optionsArray.indexOf(correspondingOption));
     }
@@ -1027,7 +1035,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
       if (currentActiveItem !== prevActiveItem) {
         this._clearSelection();
-        this._setSelectionByValue(currentActiveItem.value);
+        this._setSelectionByValue(currentActiveItem.value, true);
         this._propagateChanges();
       }
     }

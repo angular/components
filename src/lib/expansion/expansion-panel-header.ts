@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   Component,
   Directive,
@@ -56,7 +64,7 @@ export class MdExpansionPanelHeader {
   constructor(@Host() public panel: MdExpansionPanel) {}
 
   /** Toggles the expanded state of the panel. */
-  _toggle(event?: KeyboardEvent): void {
+  _toggle(): void {
     this.panel.toggle();
   }
 

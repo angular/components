@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   AfterContentInit,
   Component,
@@ -23,7 +31,7 @@ import {DOCUMENT} from '@angular/platform-browser';
 
 /** Throws an exception when two MdSidenav are matching the same side. */
 export function throwMdDuplicatedSidenavError(align: string) {
-  throw new Error(`A sidenav was already declared for 'align="${align}"'`);
+  throw Error(`A sidenav was already declared for 'align="${align}"'`);
 }
 
 
@@ -46,7 +54,7 @@ export class MdSidenavToggleResult {
   // TODO(mmalerba): move template to separate file.
   templateUrl: 'sidenav.html',
   host: {
-    '[class.mat-sidenav]': 'true',
+    'class': 'mat-sidenav',
     '(transitionend)': '_onTransitionEnd($event)',
     '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
@@ -324,7 +332,7 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
     'sidenav-transitions.css',
   ],
   host: {
-    '[class.mat-sidenav-container]': 'true',
+    'class': 'mat-sidenav-container',
     '[class.mat-sidenav-transition]': '_enableTransitions',
   },
   encapsulation: ViewEncapsulation.None,

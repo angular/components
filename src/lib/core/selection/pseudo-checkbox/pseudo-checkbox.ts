@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   Component,
   ViewEncapsulation,
@@ -36,7 +44,7 @@ export const _MdPseudoCheckboxBase = mixinColor(MdPseudoCheckboxBase, 'accent');
   inputs: ['color'],
   template: '',
   host: {
-    '[class.mat-pseudo-checkbox]': 'true',
+    'class': 'mat-pseudo-checkbox',
     '[class.mat-pseudo-checkbox-indeterminate]': 'state === "indeterminate"',
     '[class.mat-pseudo-checkbox-checked]': 'state === "checked"',
     '[class.mat-pseudo-checkbox-disabled]': 'disabled',

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   Directive,
   ElementRef,
@@ -54,7 +62,7 @@ export const MD_AUTOCOMPLETE_VALUE_ACCESSOR: any = {
  * Creates an error to be thrown when attempting to use an autocomplete trigger without a panel.
  */
 export function getMdAutocompleteMissingPanelError(): Error {
-  return new Error('Attempting to open an undefined instance of `md-autocomplete`. ' +
+  return Error('Attempting to open an undefined instance of `md-autocomplete`. ' +
                    'Make sure that the id passed to the `mdAutocomplete` is correct and that ' +
                    'you\'re attempting to open it after the ngAfterContentInit hook.');
 }

@@ -29,6 +29,7 @@ import {
   FloatPlaceholderType,
   MD_PLACEHOLDER_GLOBAL_OPTIONS
 } from '../core/placeholder/placeholder-options';
+import {map} from 'rxjs/operator/map';
 
 
 describe('MdSelect', () => {
@@ -1676,6 +1677,17 @@ describe('MdSelect', () => {
         expect(event.defaultPrevented).toBe(true);
       });
 
+      it('should consider the selection as a result of a user action when closed', () => {
+        const option = fixture.componentInstance.options.first;
+        const spy = jasmine.createSpy('option selection spy');
+        const subscription = map.call(option.onSelectionChange, e => e.isUserInput).subscribe(spy);
+
+        dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+        expect(spy).toHaveBeenCalledWith(true);
+
+        subscription.unsubscribe();
+      });
+
     });
 
     describe('for options', () => {
@@ -2544,7 +2556,7 @@ class SelectWithErrorSibling {
 })
 export class ThrowsErrorOnInit implements OnInit {
   ngOnInit() {
-    throw new Error('Oh no!');
+    throw Error('Oh no!');
   }
 }
 

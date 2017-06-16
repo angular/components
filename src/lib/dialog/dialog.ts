@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Injector, ComponentRef, Injectable, Optional, SkipSelf, TemplateRef} from '@angular/core';
 import {Location} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
@@ -146,7 +154,7 @@ export class MdDialog {
     let containerPortal = new ComponentPortal(MdDialogContainer, viewContainer);
 
     let containerRef: ComponentRef<MdDialogContainer> = overlay.attach(containerPortal);
-    containerRef.instance.config = config;
+    containerRef.instance._config = config;
 
     return containerRef.instance;
   }

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component, ElementRef, Input} from '@angular/core';
 import {Focusable} from '../core/a11y/focus-key-manager';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
@@ -11,7 +19,7 @@ import {coerceBooleanProperty} from '../core/coercion/boolean-property';
   selector: '[md-menu-item], [mat-menu-item]',
   host: {
     'role': 'menuitem',
-    '[class.mat-menu-item]': 'true',
+    'class': 'mat-menu-item',
     '[attr.tabindex]': '_getTabIndex()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.disabled]': '_getDisabledAttr()',

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   Component,
   ElementRef,
@@ -44,7 +52,7 @@ export class MdOptionSelectionChange {
     '[class.mat-option-disabled]': 'disabled',
     '(click)': '_selectViaInteraction()',
     '(keydown)': '_handleKeydown($event)',
-    '[class.mat-option]': 'true',
+    'class': 'mat-option',
   },
   templateUrl: 'option.html',
   encapsulation: ViewEncapsulation.None

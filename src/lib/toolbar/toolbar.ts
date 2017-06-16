@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   Component,
   ChangeDetectionStrategy,
@@ -11,9 +19,7 @@ import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
 @Directive({
   selector: 'md-toolbar-row, mat-toolbar-row',
-  host: {
-    '[class.mat-toolbar-row]': 'true',
-  },
+  host: {'class': 'mat-toolbar-row'},
 })
 export class MdToolbarRow {}
 
@@ -31,7 +37,7 @@ export const _MdToolbarMixinBase = mixinColor(MdToolbarBase);
   styleUrls: ['toolbar.css'],
   inputs: ['color'],
   host: {
-    '[class.mat-toolbar]': 'true',
+    'class': 'mat-toolbar',
     'role': 'toolbar'
   },
   changeDetection: ChangeDetectionStrategy.OnPush,

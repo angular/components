@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {NgModule} from '@angular/core';
 
 import {
@@ -38,6 +46,7 @@ import {StyleModule} from './core/style/index';
 import {MdDatepickerModule} from './datepicker/index';
 import {CdkDataTableModule} from './core/data-table/index';
 import {MdExpansionModule} from './expansion/index';
+import {MdStickyHeaderModule} from './sticky-header/index';
 
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
@@ -74,7 +83,8 @@ const MATERIAL_MODULES = [
   PlatformModule,
   MdCommonModule,
   ObserveContentModule,
-  CdkDataTableModule
+  CdkDataTableModule,
+  MdStickyHeaderModule,
 ];
 
 /** @deprecated */

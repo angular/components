@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   Directive,
   ElementRef,
@@ -19,7 +27,7 @@ import 'rxjs/add/operator/debounceTime';
 @Injectable()
 export class MdMutationObserverFactory {
   create(callback): MutationObserver {
-    return new MutationObserver(callback);
+    return typeof MutationObserver === 'undefined' ? null : new MutationObserver(callback);
   }
 }
 
@@ -59,11 +67,13 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
       this._debouncer.next(mutations);
     });
 
-    this._observer.observe(this._elementRef.nativeElement, {
-      characterData: true,
-      childList: true,
-      subtree: true
-    });
+    if (this._observer) {
+      this._observer.observe(this._elementRef.nativeElement, {
+        characterData: true,
+        childList: true,
+        subtree: true
+      });
+    }
   }
 
   ngOnDestroy() {

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   AfterContentInit,
   Component,
@@ -29,7 +37,7 @@ export type AutocompletePositionY = 'above' | 'below';
   encapsulation: ViewEncapsulation.None,
   exportAs: 'mdAutocomplete',
   host: {
-    '[class.mat-autocomplete]': 'true'
+    'class': 'mat-autocomplete'
   }
 })
 export class MdAutocomplete implements AfterContentInit {

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   Component,
   HostBinding,
@@ -44,9 +52,7 @@ type EasingFn = (currentTime: number, startValue: number,
  */
 @Directive({
   selector: 'md-progress-spinner, mat-progress-spinner',
-  host: {
-    '[class.mat-progress-spinner]': 'true'
-  }
+  host: {'class': 'mat-progress-spinner'}
 })
 export class MdProgressSpinnerCssMatStyler {}
 
@@ -270,7 +276,7 @@ export class MdProgressSpinner extends _MdProgressSpinnerMixinBase
   host: {
     'role': 'progressbar',
     'mode': 'indeterminate',
-    '[class.mat-spinner]': 'true',
+    'class': 'mat-spinner',
   },
   inputs: ['color'],
   templateUrl: 'progress-spinner.html',

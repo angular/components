@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Directive, Renderer2, ElementRef, NgZone} from '@angular/core';
 
 
@@ -8,7 +16,7 @@ import {Directive, Renderer2, ElementRef, NgZone} from '@angular/core';
 @Directive({
   selector: 'md-ink-bar, mat-ink-bar',
   host: {
-    '[class.mat-ink-bar]': 'true',
+    'class': 'mat-ink-bar',
   },
 })
 export class MdInkBar {

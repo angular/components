@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Injectable} from '@angular/core';
 
 // Whether the current platform supports the V8 Break Iterator. The V8 check
@@ -37,4 +45,9 @@ export class Platform {
 
   // Trident on mobile adds the android platform to the userAgent to trick detections.
   ANDROID = this.isBrowser && /android/i.test(navigator.userAgent) && !this.TRIDENT;
+
+  // Safari browsers will include the Safari keyword in their userAgent. Some browsers may fake
+  // this and just place the Safari keyword in the userAgent. To be more safe about Safari every
+  // Safari browser should also use Webkit as its layout engine.
+  SAFARI = this.isBrowser && /safari/i.test(navigator.userAgent) && this.WEBKIT;
 }

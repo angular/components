@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Injectable, ComponentRef, Optional, SkipSelf} from '@angular/core';
 import {
   ComponentType,
@@ -122,6 +130,11 @@ export class MdSnackBar {
     let containerPortal = new ComponentPortal(MdSnackBarContainer, config.viewContainerRef);
     let containerRef: ComponentRef<MdSnackBarContainer> = overlayRef.attach(containerPortal);
     containerRef.instance.snackBarConfig = config;
+
+    // The snackbar animation needs the content to be resolved in order to transform the bar
+    // out of the view initially (so it can slide in). To make the content resolve, we manually
+    // detect changes.
+    containerRef.changeDetectorRef.detectChanges();
 
     return containerRef.instance;
   }

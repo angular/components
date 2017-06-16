@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -49,7 +57,7 @@ let datepickerUid = 0;
   styleUrls: ['datepicker-content.css'],
   host: {
     'class': 'mat-datepicker-content',
-    '[class.mat-datepicker-content-touch]': 'datepicker?.touchUi',
+    '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
     '(keydown)': '_handleKeydown($event)',
   },
   encapsulation: ViewEncapsulation.None,
@@ -190,7 +198,7 @@ export class MdDatepicker<D> implements OnDestroy {
    */
   _registerInput(input: MdDatepickerInput<D>): void {
     if (this._datepickerInput) {
-      throw new Error('An MdDatepicker can only be associated with a single input.');
+      throw Error('An MdDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
     this._inputSubscription =
@@ -203,7 +211,7 @@ export class MdDatepicker<D> implements OnDestroy {
       return;
     }
     if (!this._datepickerInput) {
-      throw new Error('Attempted to open an MdDatepicker with no associated input.');
+      throw Error('Attempted to open an MdDatepicker with no associated input.');
     }
 
     this.touchUi ? this._openAsDialog() : this._openAsPopup();

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -62,7 +70,7 @@ export const _MdIconMixinBase = mixinColor(MdIconBase);
   inputs: ['color'],
   host: {
     'role': 'img',
-    'class': 'mat-icon'
+    'class': 'mat-icon',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -120,7 +128,7 @@ export class MdIcon extends _MdIconMixinBase implements OnChanges, OnInit, CanCo
       case 2:
         return <[string, string]>parts;
       default:
-        throw new Error(`Invalid icon name: "${iconName}"`);
+        throw Error(`Invalid icon name: "${iconName}"`);
     }
   }
 

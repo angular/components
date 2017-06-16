@@ -1,9 +1,17 @@
 /**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
  * Throws an exception for the case when menu trigger doesn't have a valid md-menu instance
  * @docs-private
  */
 export function throwMdMenuMissingError() {
-  throw new Error(`md-menu-trigger: must pass in an md-menu instance.
+  throw Error(`md-menu-trigger: must pass in an md-menu instance.
 
     Example:
       <md-menu #menu="mdMenu"></md-menu>
@@ -16,7 +24,7 @@ export function throwMdMenuMissingError() {
  * @docs-private
  */
 export function throwMdMenuInvalidPositionX() {
-  throw new Error(`x-position value must be either 'before' or after'.
+  throw Error(`x-position value must be either 'before' or after'.
       Example: <md-menu x-position="before" #menu="mdMenu"></md-menu>`);
 }
 
@@ -26,6 +34,6 @@ export function throwMdMenuInvalidPositionX() {
  * @docs-private
  */
 export function throwMdMenuInvalidPositionY() {
-  throw new Error(`y-position value must be either 'above' or below'.
+  throw Error(`y-position value must be either 'above' or below'.
       Example: <md-menu y-position="above" #menu="mdMenu"></md-menu>`);
 }

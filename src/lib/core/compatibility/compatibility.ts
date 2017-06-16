@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {NgModule, Directive, Inject, Optional, ElementRef, InjectionToken} from '@angular/core';
 
 export const MATERIAL_COMPATIBILITY_MODE = new InjectionToken<boolean>('md-compatibility-mode');
@@ -8,32 +16,32 @@ export const MATERIAL_COMPATIBILITY_MODE = new InjectionToken<boolean>('md-compa
  * @docs-private
  */
 export function getMdCompatibilityInvalidPrefixError(prefix: string, nodeName: string) {
-  return new Error(`The "${prefix}-" prefix cannot be used in ng-material v1 compatibility mode. ` +
+  return Error(`The "${prefix}-" prefix cannot be used in ng-material v1 compatibility mode. ` +
                    `It was used on an "${nodeName.toLowerCase()}" element.`);
 }
 
 /** Selector that matches all elements that may have style collisions with AngularJS Material. */
 export const MAT_ELEMENTS_SELECTOR = `
   [mat-button],
-  [mat-card-subtitle],
-  [mat-card-title],
-  [mat-dialog-actions],
-  [mat-dialog-close],
-  [mat-dialog-content],
-  [mat-dialog-title],
   [mat-fab],
   [mat-icon-button],
-  [mat-menu-trigger-for],
   [mat-mini-fab],
   [mat-raised-button],
-  [mat-tab-label],
-  [mat-tab-link],
-  [mat-tab-nav-bar],
+  [matCardSubtitle],
+  [matCardTitle],
+  [matDialogActions],
+  [matDialogClose],
+  [matDialogContent],
+  [matDialogTitle],
+  [matLine],
+  [matTabLabel],
+  [matTabLink],
+  [matTabNav],
   [matTooltip],
   mat-autocomplete,
   mat-button-toggle,
-  mat-button-toggle-group,
   mat-button-toggle,
+  mat-button-toggle-group,
   mat-card,
   mat-card-actions,
   mat-card-content,
@@ -48,6 +56,7 @@ export const MAT_ELEMENTS_SELECTOR = `
   mat-dialog-container,
   mat-dialog-content,
   mat-divider,
+  mat-error,
   mat-grid-list,
   mat-grid-tile,
   mat-grid-tile-footer,
@@ -71,31 +80,30 @@ export const MAT_ELEMENTS_SELECTOR = `
   mat-spinner,
   mat-tab,
   mat-tab-group,
-  mat-toolbar,
-  mat-error`;
+  mat-toolbar`;
 
 /** Selector that matches all elements that may have style collisions with AngularJS Material. */
 export const MD_ELEMENTS_SELECTOR = `
   [md-button],
-  [md-card-subtitle],
-  [md-card-title],
-  [md-dialog-actions],
-  [md-dialog-close],
-  [md-dialog-content],
-  [md-dialog-title],
   [md-fab],
   [md-icon-button],
-  [md-menu-trigger-for],
   [md-mini-fab],
   [md-raised-button],
-  [md-tab-label],
-  [md-tab-link],
-  [md-tab-nav-bar],
+  [mdCardSubtitle],
+  [mdCardTitle],
+  [mdDialogActions],
+  [mdDialogClose],
+  [mdDialogContent],
+  [mdDialogTitle],
+  [mdLine],
+  [mdTabLabel],
+  [mdTabLink],
+  [mdTabNav],
   [mdTooltip],
   md-autocomplete,
   md-button-toggle,
-  md-button-toggle-group,
   md-button-toggle,
+  md-button-toggle-group,
   md-card,
   md-card-actions,
   md-card-content,
@@ -110,6 +118,7 @@ export const MD_ELEMENTS_SELECTOR = `
   md-dialog-container,
   md-dialog-content,
   md-divider,
+  md-error,
   md-grid-list,
   md-grid-tile,
   md-grid-tile-footer,
@@ -133,8 +142,7 @@ export const MD_ELEMENTS_SELECTOR = `
   md-spinner,
   md-tab,
   md-tab-group,
-  md-toolbar,
-  md-error`;
+  md-toolbar`;
 
 /** Directive that enforces that the `mat-` prefix cannot be used. */
 @Directive({selector: MAT_ELEMENTS_SELECTOR})
