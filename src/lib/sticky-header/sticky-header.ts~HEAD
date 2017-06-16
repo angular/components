@@ -146,19 +146,10 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     }
   }
 
-  attach() {
-    // this.upperScrollableContainer.addEventListener('scroll', this._onScrollBind, false);
-    // this.upperScrollableContainer.addEventListener('resize', this._onResizeBind, false);
-    //
-    // // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
-    // this.upperScrollableContainer.addEventListener('touchmove', this._onTouchMoveBind, false);
   /** Add listeners for events that affect sticky positioning. */
   private _attachEventListeners() {
     this._onScrollSubscription = RxChain.from(fromEvent(this.upperScrollableContainer, 'scroll'))
       .call(debounceTime, DEBOUNCE_TIME).subscribe(() => this._updateStickyPositioning());
-
-    Observable.fromEvent(this.upperScrollableContainer, 'scroll').debounceTime(5)
-      .subscribe(() => this.defineRestrictionsAndStick());
 
     // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
     this._onTouchSubscription = RxChain.from(fromEvent(this.upperScrollableContainer, 'touchmove'))
