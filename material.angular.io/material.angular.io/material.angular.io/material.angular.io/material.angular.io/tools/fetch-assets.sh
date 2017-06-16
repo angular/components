@@ -29,8 +29,8 @@ plunkerExamplesPath=${tmpAssetClonePath}/plunker/examples/
 mkdir -p ${tmpAssetClonePath}
 mkdir -p ${exampleAssetsPath} ${docAssetsPath}
 
-# Pull assets from repo and remove .git directory
-git clone ${docsContentRepo} ${tmpAssetClonePath}
+# Clone the assets from Github but only fetch the last commit to download less unused data.
+git clone ${docsContentRepo} ${tmpAssetClonePath} --depth 1
 
 # Copy files over to their proper place in src/assets
 cp -r ${apiPath} ${overviewPath} ${guidesPath} ${docAssetsPath}
