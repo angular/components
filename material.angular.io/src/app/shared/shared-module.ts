@@ -11,7 +11,6 @@ import {GuideItems} from './guide-items/guide-items';
 import {ThemeStorage} from './theme-picker/theme-storage/theme-storage';
 import {ThemePicker} from './theme-picker/theme-picker';
 import {NavBar} from './navbar/navbar';
-import {SvgBuilder} from './svg-viewer/svg-builder';
 import {SvgViewer} from './svg-viewer/svg-viewer';
 import {DocsMaterialModule} from '../app-module';
 
@@ -25,7 +24,7 @@ import {DocsMaterialModule} from '../app-module';
   ],
   declarations: [DocViewer, ExampleViewer, NavBar, PlunkerButton, ThemePicker, SvgViewer],
   exports: [DocViewer, ExampleViewer, NavBar, PlunkerButton, ThemePicker, SvgViewer],
-  providers: [DocumentationItems, GuideItems, ThemeStorage, SvgBuilder],
+  providers: [DocumentationItems, GuideItems, ThemeStorage],
   entryComponents: [
     ExampleViewer,
   ],
