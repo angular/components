@@ -14,7 +14,7 @@ import {
   MdNativeDateModule,
   MdSidenavModule, MdTabsModule,
   MdToolbarModule,
-  MdTooltipModule,
+  MdTooltipModule, PortalModule,
 } from '@angular/material';
 import {ExampleModule} from '@angular/material-examples';
 
@@ -45,6 +45,7 @@ export const MATERIAL_COMPONENTS_USED = [
   MdTabsModule,
   MdToolbarModule,
   MdTooltipModule,
+  PortalModule,
 ];
 
 @NgModule({

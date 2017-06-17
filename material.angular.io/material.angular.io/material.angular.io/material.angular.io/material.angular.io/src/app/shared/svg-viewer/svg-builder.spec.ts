@@ -3,7 +3,7 @@ import {async, inject, TestBed} from '@angular/core/testing';
 import {HttpModule} from '@angular/http';
 import {MaterialModule} from '@angular/material';
 
-import {DocsSiteTheme} from '../theme-chooser/theme-storage/theme-storage';
+import {DocsSiteTheme} from '../theme-picker/theme-storage/theme-storage';
 import {SvgBuilder} from './svg-builder';
 
 

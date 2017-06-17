@@ -3,13 +3,13 @@
 </button>
 
 <!-- TODO: replace use of `md-menu` here with a custom overlay -->
-<md-menu class="docs-theme-chooser-menu" #themeMenu="mdMenu" x-position="before">
+<md-menu class="docs-theme-picker-menu" #themeMenu="mdMenu" x-position="before">
   <md-grid-list cols="2">
     <md-grid-tile *ngFor="let theme of themes">
       <div md-menu-item (click)="installTheme(theme.href)">
-        <div class="docs-theme-chooser-swatch">
+        <div class="docs-theme-picker-swatch">
           <md-icon class="docs-theme-chosen-icon" *ngIf="currentTheme === theme">check_circle</md-icon>
-          <div class="docs-theme-chooser-primary" [style.background]="theme.primary"></div>
+          <div class="docs-theme-picker-primary" [style.background]="theme.primary"></div>
         </div>
       </div>
     </md-grid-tile>

@@ -4,14 +4,14 @@ import {ThemeStorage, DocsSiteTheme} from './theme-storage/theme-storage';
 
 
 @Component({
-  selector: 'theme-chooser',
-  templateUrl: 'theme-chooser.html',
-  styleUrls: ['theme-chooser.scss'],
+  selector: 'theme-picker',
+  templateUrl: 'theme-picker.html',
+  styleUrls: ['theme-picker.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {'aria-hidden': 'true'},
 })
-export class ThemeChooser {
+export class ThemePicker {
   currentTheme;
 
   themes = [

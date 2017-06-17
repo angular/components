@@ -1,13 +1,13 @@
-$theme-chooser-menu-padding: 8px;
-$theme-chooser-grid-cell-size: 48px;
-$theme-chooser-grid-cells-per-row: 2;
-$theme-chooser-swatch-size: 36px;
-$theme-chooser-accent-stripe-size: 6px;
+$theme-picker-menu-padding: 8px;
+$theme-picker-grid-cell-size: 48px;
+$theme-picker-grid-cells-per-row: 2;
+$theme-picker-swatch-size: 36px;
+$theme-picker-accent-stripe-size: 6px;
 
 
-.docs-theme-chooser-menu {
+.docs-theme-picker-menu {
   .md-menu-content {
-    padding: $theme-chooser-menu-padding;
+    padding: $theme-picker-menu-padding;
   }
 
   [md-menu-item] {
@@ -16,11 +16,11 @@ $theme-chooser-accent-stripe-size: 6px;
     overflow: hidden;
   }
 
-  .docs-theme-chooser-swatch {
+  .docs-theme-picker-swatch {
     position: relative;
-    width: $theme-chooser-swatch-size;
-    height: $theme-chooser-swatch-size;
-    margin: ($theme-chooser-grid-cell-size - $theme-chooser-swatch-size) / 2;
+    width: $theme-picker-swatch-size;
+    height: $theme-picker-swatch-size;
+    margin: ($theme-picker-grid-cell-size - $theme-picker-swatch-size) / 2;
     border-radius: 50%;
     overflow: hidden;
 
@@ -44,15 +44,15 @@ $theme-chooser-accent-stripe-size: 6px;
     }
   }
 
-  .docs-theme-chooser-primary {
+  .docs-theme-picker-primary {
     width: 100%;
     height: 100%;
   }
 
-  .docs-theme-chooser-accent {
+  .docs-theme-picker-accent {
     position: absolute;
-    bottom: $theme-chooser-accent-stripe-size;
+    bottom: $theme-picker-accent-stripe-size;
     width: 100%;
-    height: $theme-chooser-accent-stripe-size;
+    height: $theme-picker-accent-stripe-size;
   }
 }

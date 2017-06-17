@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {HttpModule} from '@angular/http';
-import {MaterialModule} from '@angular/material';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
 
@@ -9,11 +8,12 @@ import {DocViewer} from './doc-viewer/doc-viewer';
 import {DocumentationItems} from './documentation-items/documentation-items';
 import {PlunkerButton} from './plunker';
 import {GuideItems} from './guide-items/guide-items';
-import {ThemeStorage} from './theme-chooser/theme-storage/theme-storage';
-import {ThemeChooser} from './theme-chooser/theme-chooser';
+import {ThemeStorage} from './theme-picker/theme-storage/theme-storage';
+import {ThemePicker} from './theme-picker/theme-picker';
 import {NavBar} from './navbar/navbar';
 import {SvgBuilder} from './svg-viewer/svg-builder';
 import {SvgViewer} from './svg-viewer/svg-viewer';
+import {DocsMaterialModule} from '../app-module';
 
 
 @NgModule({
@@ -21,10 +21,10 @@ import {SvgViewer} from './svg-viewer/svg-viewer';
     HttpModule,
     RouterModule,
     BrowserModule,
-    MaterialModule,
+    DocsMaterialModule,
   ],
-  declarations: [DocViewer, ExampleViewer, NavBar, PlunkerButton, ThemeChooser, SvgViewer],
-  exports: [DocViewer, ExampleViewer, NavBar, PlunkerButton, ThemeChooser, SvgViewer],
+  declarations: [DocViewer, ExampleViewer, NavBar, PlunkerButton, ThemePicker, SvgViewer],
+  exports: [DocViewer, ExampleViewer, NavBar, PlunkerButton, ThemePicker, SvgViewer],
   providers: [DocumentationItems, GuideItems, ThemeStorage, SvgBuilder],
   entryComponents: [
     ExampleViewer,
