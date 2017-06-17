@@ -26,7 +26,7 @@ const configuration = {
   'iOS7':         { unitTest: {target: null}, e2e: {target: null}},
   'iOS8':         { unitTest: {target: null}, e2e: {target: null}},
   'iOS9':         { unitTest: {target: 'BS'}, e2e: {target: null}},
-  'WindowsPhone': { unitTest: {target: 'BS'}, e2e: {target: null}}
+  'WindowsPhone': { unitTest: {target: null}, e2e: {target: null}}
 };
 
 exports.customLaunchers = {
