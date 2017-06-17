@@ -9,7 +9,7 @@ import {ThemeStorage, DocsSiteTheme} from './theme-storage/theme-storage';
   styleUrls: ['theme-chooser.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  host: { 'aria-hidden': 'true' },
+  host: {'aria-hidden': 'true'},
 })
 export class ThemeChooser {
   currentTheme;
