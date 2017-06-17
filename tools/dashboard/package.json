@@ -16,7 +16,7 @@
     "@angular/core": "^4.2.2",
     "@angular/forms": "^4.2.2",
     "@angular/http": "^4.2.2",
-    "@angular/material": "^2.0.0-beta.6",
+    "@angular/material": "github:angular/material2-builds",
     "@angular/platform-browser": "^4.2.2",
     "@angular/platform-browser-dynamic": "^4.2.2",
     "@angular/router": "^4.2.2",
