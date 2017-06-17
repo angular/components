@@ -5,6 +5,7 @@ export interface DocsSiteTheme {
   accent: string;
   primary: string;
   isDark?: boolean;
+  isDefault?: boolean;
 };
 
 

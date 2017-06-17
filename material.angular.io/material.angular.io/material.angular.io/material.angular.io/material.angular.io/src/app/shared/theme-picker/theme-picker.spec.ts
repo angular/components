@@ -22,7 +22,11 @@ describe('ThemePicker', () => {
     const component = fixture.componentInstance;
     const href = 'pink-bluegrey.css';
     spyOn(component.styleManager, 'setStyle');
-    component.installTheme(href);
+    component.installTheme({
+      primary: '#E91E63',
+      accent: '#607D8B',
+      href,
+    });
     expect(component.styleManager.setStyle).toHaveBeenCalled();
     expect(component.styleManager.setStyle).toHaveBeenCalledWith('theme', `assets/${href}`);
   });

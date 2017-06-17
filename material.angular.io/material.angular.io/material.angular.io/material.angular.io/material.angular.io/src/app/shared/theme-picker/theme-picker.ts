@@ -26,6 +26,7 @@ export class ThemePicker {
       accent: '#E91E63',
       href: 'indigo-pink.css',
       isDark: false,
+      isDefault: true,
     },
     {
       primary: '#E91E63',
@@ -47,13 +48,19 @@ export class ThemePicker {
   ) {
     const currentTheme = this._themeStorage.getStoredTheme();
     if (currentTheme) {
-      this.installTheme(currentTheme.href);
+      this.installTheme(currentTheme);
     }
   }
 
-  installTheme(href: string) {
-    this.currentTheme = this._getCurrentThemeFromHref(href);
-    this.styleManager.setStyle('theme', `assets/${href}`);
+  installTheme(theme: DocsSiteTheme) {
+    this.currentTheme = this._getCurrentThemeFromHref(theme.href);
+
+    if (theme.isDefault) {
+      this.styleManager.removeStyle('theme');
+    } else {
+      this.styleManager.setStyle('theme', `assets/${theme.href}`);
+    }
+
     if (this.currentTheme) {
       this._themeStorage.storeTheme(this.currentTheme);
     }

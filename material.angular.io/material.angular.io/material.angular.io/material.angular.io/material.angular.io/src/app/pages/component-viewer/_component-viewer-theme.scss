@@ -7,6 +7,7 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
+  guide-viewer,
   app-component-viewer {
     color: mat-color($foreground, text);
 

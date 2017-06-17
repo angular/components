@@ -1,7 +1,6 @@
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {RouterTestingModule} from '@angular/router/testing';
 import {MaterialModule} from '@angular/material';
 
