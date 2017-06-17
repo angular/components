@@ -4,7 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 
 import {ThemeColors, SvgBuilder} from './svg-builder';
-import {ThemeStorage, DocsSiteTheme} from '../theme-chooser/theme-storage/theme-storage';
+import {ThemeStorage, DocsSiteTheme} from '../theme-picker/theme-storage/theme-storage';
 
 
 @Component({

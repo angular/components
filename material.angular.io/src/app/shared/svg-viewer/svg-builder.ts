@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 
-import {DocsSiteTheme} from '../theme-chooser/theme-storage/theme-storage';
+import {DocsSiteTheme} from '../theme-picker/theme-storage/theme-storage';
 
 import * as Color from 'color';
 
