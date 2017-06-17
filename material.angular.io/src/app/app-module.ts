@@ -4,7 +4,18 @@ import {NgModule} from '@angular/core';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
-import {MaterialModule, MdNativeDateModule} from '@angular/material';
+import {
+  MdButtonModule,
+  MdCardModule,
+  MdGridListModule,
+  MdIconModule,
+  MdListModule,
+  MdMenuModule,
+  MdNativeDateModule,
+  MdSidenavModule, MdTabsModule,
+  MdToolbarModule,
+  MdTooltipModule,
+} from '@angular/material';
 import {ExampleModule} from '@angular/material-examples';
 
 import {MaterialDocsApp} from './material-docs-app';
@@ -21,6 +32,26 @@ import {Footer} from './shared/footer/footer';
 import {ComponentPageTitle} from './pages/page-title/page-title';
 import {ComponentPageHeader} from './pages/component-page-header/component-page-header';
 import {StyleManager} from './shared/style-manager/style-manager';
+
+
+export const MATERIAL_COMPONENTS_USED = [
+  MdButtonModule,
+  MdCardModule,
+  MdGridListModule,
+  MdIconModule,
+  MdListModule,
+  MdMenuModule,
+  MdSidenavModule,
+  MdTabsModule,
+  MdToolbarModule,
+  MdTooltipModule,
+];
+
+@NgModule({
+  imports: MATERIAL_COMPONENTS_USED,
+  exports: MATERIAL_COMPONENTS_USED,
+})
+export class DocsMaterialModule {}
 
 
 @NgModule({
@@ -47,7 +78,7 @@ import {StyleManager} from './shared/style-manager/style-manager';
     SharedModule,
     FormsModule,
     HttpModule,
-    MaterialModule,
+    DocsMaterialModule,
     MdNativeDateModule,
     routing,
   ],
