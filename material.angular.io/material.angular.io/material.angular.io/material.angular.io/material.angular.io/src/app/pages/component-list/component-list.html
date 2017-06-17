@@ -3,8 +3,8 @@
     class="docs-component-list-item"
     [routerLink]="['/components/component/', component.id]">
     <docs-svg-viewer class="docs-component-list-item-icon"
-      [attr.aria-label]="component.name"
-      [svgHref]="'../../../assets/img/components/' + component.id + '.svg'">
+                     [attr.aria-label]="component.name"
+                     [src]="'../../../assets/img/components/' + component.id + '.svg'">
     </docs-svg-viewer>
     {{component.name}}
   </a>

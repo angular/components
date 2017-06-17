@@ -1,0 +1,42 @@
+// @import '~@angular/material/theming';
+@import '../../node_modules/@angular/material/theming';
+
+// Mixin to create a css class for each fill, stroke, and stop-color for a given color.
+@mixin _svgColorProperties($className, $color) {
+  .docs-svg-#{$className}-fill {
+    fill: $color;
+  }
+
+  .docs-svg-#{$className}-stroke {
+    stroke: $color;
+  }
+
+  .docs-svg-#{$className}-stop-color {
+    stop-color: $color;
+  }
+}
+
+// Mixin to apply theme colors for generated API docs.
+@mixin docs-site-svg-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  $is-dark-theme: map-get($theme, is-dark);
+
+  @include _svgColorProperties(primary, mat-color($primary));
+  @include _svgColorProperties(accent, mat-color($accent));
+
+  // Use sass's `lighten` and `darken` to create gradient colors for the docs SVGs.
+  // This is specifically tailored to the SVGs in this app and is not a general approach.
+  $base: mat-color($primary);
+  @include _svgColorProperties(primary-dark-30,  scale_color($base, $lightness: -30%));
+  @include _svgColorProperties(primary-dark-40,  scale_color($base, $lightness: -40%));
+  @include _svgColorProperties(primary-light-20, scale_color($base, $lightness: +20%));
+  @include _svgColorProperties(primary-light-30, scale_color($base, $lightness: +30%));
+  @include _svgColorProperties(primary-light-40, scale_color($base, $lightness: +40%));
+  @include _svgColorProperties(primary-light-60, scale_color($base, $lightness: +60%));
+  @include _svgColorProperties(primary-light-80, scale_color($base, $lightness: +80%));
+  @include _svgColorProperties(primary-light-85, scale_color($base, $lightness: +85%));
+}
