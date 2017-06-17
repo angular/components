@@ -18,7 +18,7 @@ export class ComponentViewer {
               public docItems: DocumentationItems) {
     _route.params.subscribe(p => {
       this.componentDocItem = docItems.getItemById(p['id']);
-      this._componentPageTitle.title = `Component - ${this.componentDocItem.name}`;
+      this._componentPageTitle.title = `${this.componentDocItem.name}`;
     });
   }
 }

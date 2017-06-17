@@ -44,7 +44,7 @@ describe('ComponentViewer', () => {
   it('should set page title correctly', () => {
     const component = fixture.componentInstance;
     fixture.detectChanges();
-    const expected = `Component - ${component.docItems.getItemById(docItemsID).name}`;
+    const expected = `${component.docItems.getItemById(docItemsID).name}`;
     expect(component._componentPageTitle.title).toEqual(expected);
   });
 });
