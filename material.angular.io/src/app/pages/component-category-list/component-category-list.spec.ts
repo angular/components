@@ -1,10 +1,6 @@
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {MaterialModule} from '@angular/material';
-import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-
-import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
-import {ComponentPageTitle} from '../page-title/page-title';
-import {ComponentCategoryList} from './component-category-list';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentCategoryList, ComponentCategoryListModule} from './component-category-list';
+import {DocsAppTestingModule} from '../../testing/testing-module';
 
 
 describe('ComponentCategoryList', () => {
@@ -12,17 +8,13 @@ describe('ComponentCategoryList', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MaterialModule],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [ComponentCategoryList],
-      providers: [
-        DocumentationItems,
-        ComponentPageTitle
-      ]
-    });
-
-    fixture = TestBed.createComponent(ComponentCategoryList)
+      imports: [ComponentCategoryListModule, DocsAppTestingModule],
+    }).compileComponents();
   }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ComponentCategoryList);
+  });
 
   it('should set page title on init', () => {
     const component = fixture.componentInstance;

@@ -1,4 +1,3 @@
-import {async, inject, TestBed, ComponentFixture} from '@angular/core/testing';
 import {ComponentPageTitle} from './page-title';
 
 

@@ -1,13 +1,8 @@
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {MaterialModule} from '@angular/material';
-import {ActivatedRoute, Router} from '@angular/router';
-import {RouterTestingModule} from '@angular/router/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
-
-import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
-import {ComponentPageTitle} from '../page-title/page-title';
-import {ComponentList} from './component-list';
+import {ComponentList, ComponentListModule} from './component-list';
+import {DocsAppTestingModule} from '../../testing/testing-module';
 
 const CATEGORY_ID = 'forms';
 const mockActivatedRoute = {
@@ -22,18 +17,16 @@ describe('ComponentList', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MaterialModule, RouterTestingModule],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [ComponentList],
+      imports: [ComponentListModule, DocsAppTestingModule],
       providers: [
-        {provide: ActivatedRoute, useValue: mockActivatedRoute},
-        ComponentPageTitle,
-        DocumentationItems,
+        {provide: ActivatedRoute, useValue: mockActivatedRoute}
       ]
-    });
-
-    fixture = TestBed.createComponent(ComponentList);
+    }).compileComponents();
   }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ComponentList);
+  });
 
   it('should set the category from router params', done => {
     const component = fixture.componentInstance;

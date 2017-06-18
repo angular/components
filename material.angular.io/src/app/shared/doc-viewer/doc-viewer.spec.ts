@@ -1,26 +1,19 @@
 import {Component} from '@angular/core';
-import {TestBed, inject, async} from '@angular/core/testing';
+import {async, inject, TestBed} from '@angular/core/testing';
 import {MockBackend} from '@angular/http/testing';
-import {Response, ResponseOptions, XHRBackend} from '@angular/http';
+import {Response, ResponseOptions} from '@angular/http';
 import {By} from '@angular/platform-browser';
 import {DocViewer} from './doc-viewer';
-import {SharedModule} from '../shared-module';
+import {DocsAppTestingModule} from '../../testing/testing-module';
+import {DocViewerModule} from './doc-viewer-module';
 
 
 describe('DocViewer', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [SharedModule],
-      declarations: [
-        DocViewerTestComponent,
-      ],
-      providers: [
-        MockBackend,
-        {provide: XHRBackend, useExisting: MockBackend},
-      ]
-    });
-
-    TestBed.compileComponents();
+      imports: [DocViewerModule, DocsAppTestingModule],
+      declarations: [DocViewerTestComponent],
+    }).compileComponents();
   }));
 
   beforeEach(inject([MockBackend], (mockBackend: MockBackend) => {

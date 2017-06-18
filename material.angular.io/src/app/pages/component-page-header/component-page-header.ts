@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, NgModule, Output} from '@angular/core';
 import 'rxjs/add/operator/first';
 import {ComponentPageTitle} from '../page-title/page-title';
+import {MdButtonModule, MdIconModule} from '@angular/material';
 
 @Component({
   selector: 'component-page-header',
@@ -16,3 +17,11 @@ export class ComponentPageHeader {
     return this._componentPageTitle.title;
   }
 }
+
+@NgModule({
+  imports: [MdButtonModule, MdIconModule],
+  exports: [ComponentPageHeader],
+  declarations: [ComponentPageHeader],
+  providers: [ComponentPageTitle],
+})
+export class ComponentHeaderModule { }

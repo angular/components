@@ -1,8 +1,7 @@
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {MaterialModule} from '@angular/material';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {Footer} from './footer';
+import {Footer, FooterModule} from './footer';
+import {DocsAppTestingModule} from '../../testing/testing-module';
 
 
 describe('Footer', () => {
@@ -11,14 +10,15 @@ describe('Footer', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MaterialModule],
-      declarations: [Footer],
-    });
+      imports: [FooterModule, DocsAppTestingModule],
+    }).compileComponents();
+  }));
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(Footer);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should have a link to angular.io', () => {
     const link = fixture

@@ -1,9 +1,6 @@
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {MaterialModule} from '@angular/material';
-import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-
-import {ComponentPageTitle} from '../page-title/page-title';
-import {ComponentPageHeader} from './component-page-header';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentHeaderModule, ComponentPageHeader} from './component-page-header';
+import {DocsAppTestingModule} from '../../testing/testing-module';
 
 
 describe('ComponentPageHeader', () => {
@@ -11,14 +8,13 @@ describe('ComponentPageHeader', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MaterialModule],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [ComponentPageHeader],
-      providers: [ComponentPageTitle],
-    });
-
-    fixture = TestBed.createComponent(ComponentPageHeader);
+      imports: [ComponentHeaderModule, DocsAppTestingModule],
+    }).compileComponents();
   }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ComponentPageHeader);
+  });
 
   it('should return the title', () => {
     const component = fixture.componentInstance;

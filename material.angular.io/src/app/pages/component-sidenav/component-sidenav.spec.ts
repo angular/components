@@ -1,19 +1,7 @@
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {MaterialModule, MdSidenav} from '@angular/material';
-import {RouterTestingModule} from '@angular/router/testing';
-import {Observable} from 'rxjs/Observable';
-import {Router} from '@angular/router';
-import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from '@angular/core';
-
-import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
-import {ComponentSidenav} from './component-sidenav';
-
-const mockRouter = {
-  events: Observable.create(observer => {
-    observer.next(null);
-    observer.complete();
-  })
-};
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {MdSidenav} from '@angular/material';
+import {ComponentSidenav, ComponentSidenavModule} from './component-sidenav';
+import {DocsAppTestingModule} from '../../testing/testing-module';
 
 
 describe('ComponentSidenav', () => {
@@ -21,17 +9,13 @@ describe('ComponentSidenav', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MaterialModule],
-      schemas: [NO_ERRORS_SCHEMA],
-      declarations: [ComponentSidenav],
-      providers: [
-        {provide: Router, useValue: mockRouter},
-        DocumentationItems
-      ],
-    });
-
-    fixture = TestBed.createComponent(ComponentSidenav);
+      imports: [ComponentSidenavModule, DocsAppTestingModule],
+    }).compileComponents();
   }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ComponentSidenav);
+  });
 
   it('should close the sidenav on init', () => {
     const component = fixture.componentInstance;
@@ -41,14 +25,11 @@ describe('ComponentSidenav', () => {
       matches: true
     });
 
-    // Spy on viewChild component's `close` method
-    spyOn(component.sidenav, 'close');
-
     fixture.detectChanges();
 
     expect(component.sidenav instanceof MdSidenav).toBeTruthy();
     expect(component.isScreenSmall()).toBeTruthy();
-    expect(component.sidenav.close).toHaveBeenCalled();
+    expect(component.sidenav.opened).toBe(false);
   });
 
   it('should show a link for each item in doc items categories', () => {

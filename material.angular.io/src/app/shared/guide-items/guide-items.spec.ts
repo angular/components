@@ -7,12 +7,8 @@ describe('GuideItems', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [],
-      declarations: [],
       providers: [GuideItems]
-    });
-
-    TestBed.compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(inject([GuideItems], (gi: GuideItems) => {

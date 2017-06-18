@@ -1,92 +1,69 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
-import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
-import {
-  MdButtonModule,
-  MdCardModule,
-  MdGridListModule,
-  MdIconModule,
-  MdListModule,
-  MdMenuModule,
-  MdNativeDateModule,
-  MdSidenavModule, MdTabsModule,
-  MdToolbarModule,
-  MdTooltipModule, PortalModule,
-} from '@angular/material';
+import {RouterModule} from '@angular/router';
+import {MdNativeDateModule} from '@angular/material';
 import {ExampleModule} from '@angular/material-examples';
 
 import {MaterialDocsApp} from './material-docs-app';
-import {Homepage} from './pages/homepage/homepage';
-import {routing} from './routes';
-import {ComponentList} from './pages/component-list/component-list';
-import {ComponentViewer} from './pages/component-viewer/component-viewer';
-import {GuideList} from './pages/guide-list';
-import {GuideViewer} from './pages/guide-viewer';
-import {SharedModule} from './shared/shared-module';
-import {ComponentCategoryList} from './pages/component-category-list/component-category-list';
-import {ComponentSidenav} from './pages/component-sidenav/component-sidenav';
-import {Footer} from './shared/footer/footer';
+import {HomepageModule} from './pages/homepage/homepage';
+import {MATERIAL_DOCS_ROUTES} from './routes';
+import {ComponentListModule} from './pages/component-list/component-list';
+import {ComponentViewerModule} from './pages/component-viewer/component-viewer';
+import {ComponentCategoryListModule} from './pages/component-category-list/component-category-list';
+import {ComponentSidenavModule} from './pages/component-sidenav/component-sidenav';
+import {FooterModule} from './shared/footer/footer';
 import {ComponentPageTitle} from './pages/page-title/page-title';
-import {ComponentPageHeader} from './pages/component-page-header/component-page-header';
+import {ComponentHeaderModule} from './pages/component-page-header/component-page-header';
 import {StyleManager} from './shared/style-manager/style-manager';
-
-
-export const MATERIAL_COMPONENTS_USED = [
-  MdButtonModule,
-  MdCardModule,
-  MdGridListModule,
-  MdIconModule,
-  MdListModule,
-  MdMenuModule,
-  MdSidenavModule,
-  MdTabsModule,
-  MdToolbarModule,
-  MdTooltipModule,
-  PortalModule,
-];
+import {SvgViewerModule} from './shared/svg-viewer/svg-viewer';
+import {ThemePickerModule} from './shared/theme-picker/theme-picker';
+import {PlunkerButtonModule} from './shared/plunker/plunker-button';
+import {NavBarModule} from './shared/navbar/navbar';
+import {ExampleViewer} from './shared/example-viewer/example-viewer';
+import {ThemeStorage} from './shared/theme-picker/theme-storage/theme-storage';
+import {GuideItems} from './shared/guide-items/guide-items';
+import {DocumentationItems} from './shared/documentation-items/documentation-items';
+import {GuideListModule} from './pages/guide-list/guide-list';
+import {GuideViewerModule} from './pages/guide-viewer/guide-viewer';
+import {DocViewerModule} from './shared/doc-viewer/doc-viewer-module';
 
 @NgModule({
-  imports: MATERIAL_COMPONENTS_USED,
-  exports: MATERIAL_COMPONENTS_USED,
-})
-export class DocsMaterialModule {}
-
-
-@NgModule({
-  declarations: [
-    MaterialDocsApp,
-    ComponentCategoryList,
-    ComponentList,
-    ComponentSidenav,
-    ComponentViewer,
-    ComponentPageHeader,
-    GuideList,
-    GuideViewer,
-    Homepage,
-    Footer,
-  ],
-  exports: [
-    MaterialDocsApp,
-    Homepage,
-  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     ExampleModule,
-    SharedModule,
     FormsModule,
     HttpModule,
-    DocsMaterialModule,
     MdNativeDateModule,
-    routing,
+    RouterModule.forRoot(MATERIAL_DOCS_ROUTES),
+
+    ComponentCategoryListModule,
+    ComponentHeaderModule,
+    ComponentListModule,
+    ComponentSidenavModule,
+    ComponentViewerModule,
+    DocViewerModule,
+    FooterModule,
+    GuideListModule,
+    GuideListModule,
+    GuideViewerModule,
+    HomepageModule,
+    NavBarModule,
+    PlunkerButtonModule,
+    SvgViewerModule,
+    ThemePickerModule,
   ],
+  declarations: [MaterialDocsApp],
   providers: [
-    Location,
     ComponentPageTitle,
+    DocumentationItems,
+    GuideItems,
     StyleManager,
+    ThemeStorage,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
   ],
   bootstrap: [MaterialDocsApp],

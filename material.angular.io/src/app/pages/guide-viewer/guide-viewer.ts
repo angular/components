@@ -1,6 +1,8 @@
-import {Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {GuideItems, GuideItem} from '../../shared/guide-items/guide-items';
+import {Component, NgModule} from '@angular/core';
+import {ActivatedRoute, RouterModule} from '@angular/router';
+import {GuideItem, GuideItems} from '../../shared/guide-items/guide-items';
+import {FooterModule} from '../../shared/footer/footer';
+import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 
 
 @Component({
@@ -17,3 +19,11 @@ export class GuideViewer {
     });
   }
 }
+
+@NgModule({
+  imports: [DocViewerModule, FooterModule, RouterModule],
+  exports: [GuideViewer],
+  declarations: [GuideViewer],
+  providers: [GuideItems],
+})
+export class GuideViewerModule {}

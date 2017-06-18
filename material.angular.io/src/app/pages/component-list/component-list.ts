@@ -1,10 +1,12 @@
-import {Component} from '@angular/core';
+import {Component, NgModule} from '@angular/core';
 import {
   DocumentationItems,
   DocCategory
 } from '../../shared/documentation-items/documentation-items';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, RouterModule} from '@angular/router';
 import {ComponentPageTitle} from '../page-title/page-title';
+import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-components',
@@ -23,3 +25,11 @@ export class ComponentList {
     });
   }
 }
+
+@NgModule({
+  imports: [SvgViewerModule, RouterModule, CommonModule],
+  exports: [ComponentList],
+  declarations: [ComponentList],
+  providers: [DocumentationItems, ComponentPageTitle],
+})
+export class ComponentListModule { }

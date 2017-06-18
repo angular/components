@@ -1,16 +1,14 @@
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Observable} from 'rxjs/Observable';
-import {MaterialModule} from '@angular/material';
 import {ActivatedRoute} from '@angular/router';
+import {GuideViewer, GuideViewerModule} from './guide-viewer';
+import {DocsAppTestingModule} from '../../testing/testing-module';
 
-import {GuideItems} from '../../shared/guide-items/guide-items';
-import {GuideViewer} from './guide-viewer';
+const guideItemsId = 'getting-started';
 
-const guideItemsID = 'getting-started';
 const mockActivatedRoute = {
   params: Observable.create(observer => {
-    observer.next({id: guideItemsID});
+    observer.next({id: guideItemsId});
     observer.complete();
   })
 };
@@ -21,22 +19,21 @@ describe('GuideViewer', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MaterialModule],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [GuideViewer],
+      imports: [GuideViewerModule, DocsAppTestingModule],
       providers: [
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
-        GuideItems
       ]
-    });
-
-    fixture = TestBed.createComponent(GuideViewer);
+    }).compileComponents();
   }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(GuideViewer);
+  });
 
   it('should set the guide based off route params', () => {
     const component = fixture.componentInstance;
     fixture.detectChanges();
     expect(component.guide)
-      .toEqual(component.guideItems.getItemById(guideItemsID));
+      .toEqual(component.guideItems.getItemById(guideItemsId));
   });
 });
