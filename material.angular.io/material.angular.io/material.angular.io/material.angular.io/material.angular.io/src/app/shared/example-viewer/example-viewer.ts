@@ -1,5 +1,4 @@
 import {Component, Input} from '@angular/core';
-import {Http} from '@angular/http';
 import {ComponentPortal} from '@angular/material';
 import 'rxjs/add/operator/first';
 
@@ -22,11 +21,6 @@ export class ExampleViewer {
 
   /** Whether the source for the example is being displayed. */
   showSource: boolean = false;
-
-  /** Map of file extension (html|ts|css) to source file content. */
-  sourceFileContent: Map<string, string> = new Map<string, string>();
-
-  constructor(private _http: Http) { }
 
   get example() {
     return this._example;

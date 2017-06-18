@@ -1,15 +1,15 @@
 import {
-  Component,
-  Input,
-  ElementRef,
-  ComponentFactoryResolver,
-  ViewContainerRef,
   ApplicationRef,
+  Component,
+  ComponentFactoryResolver,
+  ElementRef,
   Injector,
+  Input,
   OnDestroy,
+  ViewContainerRef
 } from '@angular/core';
 import {Http} from '@angular/http';
-import {DomPortalHost, ComponentPortal} from '@angular/material';
+import {ComponentPortal, DomPortalHost} from '@angular/material';
 import {ExampleViewer} from '../example-viewer/example-viewer';
 
 

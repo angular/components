@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, NgModule} from '@angular/core';
 
 @Component({
   selector: 'app-footer',
@@ -6,3 +6,10 @@ import {Component} from '@angular/core';
   styleUrls: ['./footer.scss']
 })
 export class Footer { }
+
+
+@NgModule({
+  exports: [Footer],
+  declarations: [Footer],
+})
+export class FooterModule {}

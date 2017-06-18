@@ -7,12 +7,8 @@ describe('DocViewer', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [],
-      declarations: [],
       providers: [DocumentationItems]
-    });
-
-    TestBed.compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(inject([DocumentationItems], (di: DocumentationItems) => {

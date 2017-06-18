@@ -16,7 +16,8 @@ module.exports = function (config) {
       require('karma-sauce-launcher'),
     ],
     files: [
-      { pattern: './src/test.ts', watched: false }
+      {pattern: './src/test.ts', watched: false},
+      {pattern: 'node_modules/hammerjs/hammer.js', included: true, watched: false},
     ],
     preprocessors: {
       './src/test.ts': ['@angular/cli']

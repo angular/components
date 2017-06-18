@@ -1,6 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, NgModule} from '@angular/core';
+import {MdCardModule} from '@angular/material';
+import {CommonModule} from '@angular/common';
+import {RouterModule} from '@angular/router';
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {ComponentPageTitle} from '../page-title/page-title';
+import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
 
 
 @Component({
@@ -16,3 +20,11 @@ export class ComponentCategoryList {
     this._componentPageTitle.title = 'Component Library';
   }
 }
+
+@NgModule({
+  imports: [SvgViewerModule, MdCardModule, CommonModule, RouterModule],
+  exports: [ComponentCategoryList],
+  declarations: [ComponentCategoryList],
+  providers: [DocumentationItems, ComponentPageTitle],
+})
+export class ComponentCategoryListModule { }

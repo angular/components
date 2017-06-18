@@ -1,50 +1,57 @@
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {RouterTestingModule} from '@angular/router/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {ActivatedRoute} from '@angular/router';
-import {MaterialModule} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
+import {ComponentViewer, ComponentViewerModule} from './component-viewer';
+import {DocsAppTestingModule} from '../../testing/testing-module';
 
-import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
-import {ComponentPageTitle} from '../page-title/page-title';
-import {ComponentViewer} from './component-viewer';
+import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
+import {MdButtonModule} from '@angular/material';
+import {NgModule} from '@angular/core';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
-const docItemsID = 'button';
+const docItemsId = 'button';
+const exampleKey = 'button-types';
 
 const mockActivatedRoute = {
   params: Observable.create(observer => {
-    observer.next({id: docItemsID});
+    observer.next({id: docItemsId});
     observer.complete();
   })
 };
-
 
 describe('ComponentViewer', () => {
   let fixture: ComponentFixture<ComponentViewer>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        BrowserAnimationsModule,
-        MaterialModule,
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [ComponentViewer],
+      imports: [ComponentViewerModule, DocsAppTestingModule, TestExampleModule],
       providers: [
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
-        ComponentPageTitle,
-        DocumentationItems
       ]
-    });
-
-    fixture = TestBed.createComponent(ComponentViewer);
+    }).compileComponents();
   }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ComponentViewer);
+  });
 
   it('should set page title correctly', () => {
     const component = fixture.componentInstance;
     fixture.detectChanges();
-    const expected = `${component.docItems.getItemById(docItemsID).name}`;
+    const expected = `${component.docItems.getItemById(docItemsId).name}`;
     expect(component._componentPageTitle.title).toEqual(expected);
   });
 });
+
+
+// Create a version of ExampleModule for testing with only one component so that we odn't have
+// to compile all of the examples for these tests.
+@NgModule({
+  imports: [
+    MdButtonModule,
+    NoopAnimationsModule,
+  ],
+  declarations: [EXAMPLE_COMPONENTS[exampleKey].component],
+  entryComponents: [EXAMPLE_COMPONENTS[exampleKey].component],
+})
+class TestExampleModule { }

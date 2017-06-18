@@ -1,6 +1,7 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, NgModule} from '@angular/core';
 import {PlunkerWriter} from './plunker-writer';
 import {ExampleData} from '@angular/material-examples';
+import {MdButtonModule, MdIconModule, MdTooltipModule} from '@angular/material';
 
 @Component({
   selector: 'plunker-button',
@@ -23,6 +24,12 @@ export class PlunkerButton {
   @Input()
   set example(example: string) {
     const exampleData = new ExampleData(example);
+
+    // TODO(jelbourn): remove this when bad defaults are no longer included in the source
+    exampleData.exampleFiles = [];
+    exampleData.examplePath = '';
+    exampleData.indexFilename = '';
+
     this.plunkerWriter.constructPlunkerForm(exampleData).then(plunkerForm => {
       this.plunkerForm = plunkerForm;
       this.isDisabled = false;
@@ -41,3 +48,11 @@ export class PlunkerButton {
     document.body.removeChild(this.plunkerForm);
   }
 }
+
+@NgModule({
+  imports: [MdTooltipModule, MdButtonModule, MdIconModule],
+  exports: [PlunkerButton],
+  declarations: [PlunkerButton],
+  providers: [PlunkerWriter],
+})
+export class PlunkerButtonModule {}

@@ -1,20 +1,13 @@
-import {MaterialModule} from '@angular/material';
 import {async, TestBed} from '@angular/core/testing';
-
-import {ThemeStorage} from './theme-storage/theme-storage';
-import {ThemePicker} from './theme-picker';
-import {StyleManager} from '../style-manager';
+import {ThemePicker, ThemePickerModule} from './theme-picker';
+import {DocsAppTestingModule} from '../../testing/testing-module';
 
 
 describe('ThemePicker', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MaterialModule],
-      declarations: [ThemePicker],
-      providers: [StyleManager, ThemeStorage]
-    });
-
-    TestBed.compileComponents();
+      imports: [ThemePickerModule, DocsAppTestingModule],
+    }).compileComponents();
   }));
 
   it('should install theme based on href', () => {

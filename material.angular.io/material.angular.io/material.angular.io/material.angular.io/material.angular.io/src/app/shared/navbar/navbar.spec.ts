@@ -1,8 +1,7 @@
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {MaterialModule} from '@angular/material';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {NavBar} from './navbar';
+import {NavBar, NavBarModule} from './navbar';
+import {DocsAppTestingModule} from '../../testing/testing-module';
 
 
 describe('NavBar', () => {
@@ -11,15 +10,15 @@ describe('NavBar', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MaterialModule],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      declarations: [NavBar],
-    });
+      imports: [NavBarModule, DocsAppTestingModule],
+    }).compileComponents();
+  }));
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(NavBar);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should have a link to material github', () => {
     const githublink = 'https://github.com/angular/material2';

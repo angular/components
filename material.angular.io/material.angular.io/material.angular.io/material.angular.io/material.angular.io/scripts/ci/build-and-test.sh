@@ -18,6 +18,7 @@ if is_lint; then
 elif is_e2e; then
   $(npm bin)/ng e2e
 else
+  npm run build-themes
   $(npm bin)/ng test --watch false
 fi
 
