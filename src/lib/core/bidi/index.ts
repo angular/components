@@ -6,28 +6,26 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ModuleWithProviders, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
+import {DOCUMENT} from '@angular/platform-browser';
 import {Dir} from './dir';
-import {Directionality, DIRECTIONALITY_PROVIDER} from './directionality';
+import {DIR_DOCUMENT, Directionality, DIRECTIONALITY_PROVIDER} from './directionality';
+
 
 export {
   Directionality,
   DIRECTIONALITY_PROVIDER,
-  Direction
+  DIR_DOCUMENT,
+  Direction,
 } from './directionality';
 export {Dir} from './dir';
 
 @NgModule({
   exports: [Dir],
   declarations: [Dir],
-  providers: [Directionality]
+  providers: [
+    {provide: DIR_DOCUMENT, useExisting: DOCUMENT},
+    Directionality,
+  ]
 })
-export class BidiModule {
-  /** @deprecated */
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: BidiModule,
-      providers: [DIRECTIONALITY_PROVIDER]
-    };
-  }
-}
+export class BidiModule { }

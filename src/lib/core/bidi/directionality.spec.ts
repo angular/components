@@ -1,33 +1,24 @@
 import {async, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {Component, getDebugNode} from '@angular/core';
+import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {Directionality, BidiModule} from './index';
+import {BidiModule, Directionality, DIR_DOCUMENT} from './index';
 
 describe('Directionality', () => {
-  let documentElementDir, bodyDir;
-
-  beforeAll(() => {
-    documentElementDir = document.documentElement.dir;
-    bodyDir = document.body.dir;
-  });
-
-  afterAll(() => {
-    document.documentElement.dir = documentElementDir;
-    document.body.dir = bodyDir;
-  });
+  let fakeDocument: FakeDocument;
 
   beforeEach(async(() => {
+    fakeDocument = {body: {}, documentElement: {}};
+
     TestBed.configureTestingModule({
       imports: [BidiModule],
-      declarations: [ElementWithDir, InjectsDirectionality]
+      declarations: [ElementWithDir, InjectsDirectionality],
+      providers: [{provide: DIR_DOCUMENT, useFactory: () => fakeDocument}],
     }).compileComponents();
-
-    clearDocumentDirAttributes();
   }));
 
   describe('Service', () => {
     it('should read dir from the html element if not specified on the body', () => {
-      document.documentElement.dir = 'rtl';
+      fakeDocument.documentElement.dir = 'rtl';
 
       let fixture = TestBed.createComponent(InjectsDirectionality);
       let testComponent = fixture.debugElement.componentInstance;
@@ -36,8 +27,8 @@ describe('Directionality', () => {
     });
 
     it('should read dir from the body even it is also specified on the html element', () => {
-      document.documentElement.dir = 'ltr';
-      document.body.dir = 'rtl';
+      fakeDocument.documentElement.dir = 'ltr';
+      fakeDocument.body.dir = 'rtl';
 
       let fixture = TestBed.createComponent(InjectsDirectionality);
       let testComponent = fixture.debugElement.componentInstance;
@@ -86,11 +77,6 @@ describe('Directionality', () => {
 });
 
 
-function clearDocumentDirAttributes() {
-  document.documentElement.dir = '';
-  document.body.dir = '';
-}
-
 @Component({
   template: `
     <div [dir]="direction" (dirChange)="changeCount= changeCount + 1">
@@ -109,6 +95,10 @@ class ElementWithDir {
   template: `<div></div>`
 })
 class InjectsDirectionality {
-  constructor(public dir: Directionality) {
-  }
+  constructor(public dir: Directionality) { }
+}
+
+interface FakeDocument {
+  documentElement: {dir?: string};
+  body: {dir?: string};
 }
