@@ -2,26 +2,19 @@
 
 app-component-viewer {
   font-weight: 400;
+  margin: 20px 70px 50px 70px;
+}
+
+.docs-component-viewer-section-tab {
+  text-transform: uppercase;
 }
 
 .docs-component-viewer-tabbed-content {
-  margin: 50px 70px;
-  @media (max-width: $small-breakpoint-width) {
-    margin: 16px;
-  }
+  margin-bottom: 50px;
+}
 
-  // Direct chain is necessary to avoid styling tabs in the example viewer
-  & > .mat-tab-header {
-    border: none;
-    margin-bottom: 30px;
-
-    & > .mat-tab-label-container > .mat-tab-list > .mat-tab-labels > .mat-tab-label {
-      font-weight: 400;
-      margin: 0 10px;
-      min-width: 0;
-      padding: 0 5px;
-    }
-  }
+.docs-component-viewer-content {
+  min-height: 500px;
 }
 
 .docs-example-source {

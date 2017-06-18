@@ -21,8 +21,7 @@ export class ThemeStorage {
   }
 
   public getStoredTheme(): DocsSiteTheme {
-    const theme = JSON.parse(window.localStorage[ThemeStorage.storageKey] || null);
-    return theme
+    return JSON.parse(window.localStorage[ThemeStorage.storageKey] || null);
   }
 
   public clearStorage() {

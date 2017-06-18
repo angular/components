@@ -26,10 +26,35 @@ export class ComponentViewer {
   }
 }
 
+@Component({
+  selector: 'component-overview',
+  templateUrl: './component-overview.html',
+  encapsulation: ViewEncapsulation.None,
+})
+export class ComponentOverview {
+  constructor(public componentViewer: ComponentViewer) {}
+}
+
+@Component({
+  selector: 'component-api',
+  templateUrl: './component-api.html',
+  encapsulation: ViewEncapsulation.None,
+})
+export class ComponentApi extends ComponentOverview {}
+
+@Component({
+  selector: 'component-examples',
+  templateUrl: './component-examples.html',
+  encapsulation: ViewEncapsulation.None,
+})
+export class ComponentExamples extends ComponentOverview {}
+
+
+
 @NgModule({
   imports: [MdTabsModule, RouterModule, DocViewerModule, CommonModule],
   exports: [ComponentViewer],
-  declarations: [ComponentViewer],
+  declarations: [ComponentViewer, ComponentOverview, ComponentApi, ComponentExamples],
   providers: [DocumentationItems, ComponentPageTitle],
 })
 export class ComponentViewerModule {}

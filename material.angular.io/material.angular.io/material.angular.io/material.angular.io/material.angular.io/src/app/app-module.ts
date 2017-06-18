@@ -23,7 +23,6 @@ import {SvgViewerModule} from './shared/svg-viewer/svg-viewer';
 import {ThemePickerModule} from './shared/theme-picker/theme-picker';
 import {PlunkerButtonModule} from './shared/plunker/plunker-button';
 import {NavBarModule} from './shared/navbar/navbar';
-import {ExampleViewer} from './shared/example-viewer/example-viewer';
 import {ThemeStorage} from './shared/theme-picker/theme-storage/theme-storage';
 import {GuideItems} from './shared/guide-items/guide-items';
 import {DocumentationItems} from './shared/documentation-items/documentation-items';

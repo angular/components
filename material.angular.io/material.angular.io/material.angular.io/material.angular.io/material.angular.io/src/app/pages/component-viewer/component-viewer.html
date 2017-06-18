@@ -1,22 +1,12 @@
 <!-- TODO(jelbourn): turn this into nav tabs -->
-<md-tab-group class="docs-component-viewer-tabbed-content"
-    (selectedIndexChange)="overviewViewer.releadLiveExamples()">
-  <md-tab label="OVERVIEW">
-    <doc-viewer #overviewViewer
-        documentUrl="/assets/documents/overview/{{componentDocItem.id}}.html"
-        class="docs-component-view-text-content">
-    </doc-viewer>
-  </md-tab>
+<nav md-tab-nav-bar class="docs-component-viewer-tabbed-content">
+  <a md-tab-link class="docs-component-viewer-section-tab"
+      *ngFor="let section of ['Overview', 'API', 'Examples']"
+      [routerLink]="section.toLowerCase()"
+      routerLinkActive #rla="routerLinkActive"
+      [active]="rla.isActive">{{section}}</a>
+</nav>
 
-  <md-tab label="API REFERENCE">
-    <doc-viewer documentUrl="/assets/documents/api/{{componentDocItem.id}}.html"
-        class="docs-component-view-text-content"></doc-viewer>
-  </md-tab>
-
-  <md-tab label="EXAMPLES">
-
-    <example-viewer *ngFor="let example of componentDocItem.examples" [example]="example">
-    </example-viewer>
-
-  </md-tab>
-</md-tab-group>
+<div class="docs-component-viewer-content">
+  <router-outlet></router-outlet>
+</div>

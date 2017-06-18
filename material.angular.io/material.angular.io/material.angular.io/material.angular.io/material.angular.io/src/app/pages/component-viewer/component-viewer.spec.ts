@@ -13,6 +13,7 @@ const docItemsId = 'button';
 const exampleKey = 'button-types';
 
 const mockActivatedRoute = {
+  snapshot: {},
   params: Observable.create(observer => {
     observer.next({id: docItemsId});
     observer.complete();
