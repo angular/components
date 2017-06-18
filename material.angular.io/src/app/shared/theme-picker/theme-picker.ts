@@ -1,7 +1,10 @@
 import {Component, ViewEncapsulation, ChangeDetectionStrategy, NgModule} from '@angular/core';
 import {StyleManager} from '../style-manager/style-manager';
 import {ThemeStorage, DocsSiteTheme} from './theme-storage/theme-storage';
-import {MdButtonModule, MdGridListModule, MdIconModule, MdMenuModule} from '@angular/material';
+import {
+  MdButtonModule, MdGridListModule, MdIconModule, MdMenuModule,
+  MdTooltipModule
+} from '@angular/material';
 import {CommonModule} from '@angular/common';
 
 
@@ -74,7 +77,14 @@ export class ThemePicker {
 }
 
 @NgModule({
-  imports: [MdButtonModule, MdIconModule, MdMenuModule, MdGridListModule, CommonModule],
+  imports: [
+    MdButtonModule,
+    MdIconModule,
+    MdMenuModule,
+    MdGridListModule,
+    MdTooltipModule,
+    CommonModule
+  ],
   exports: [ThemePicker],
   declarations: [ThemePicker],
   providers: [StyleManager, ThemeStorage],
