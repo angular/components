@@ -6,7 +6,7 @@
       <h3>{{category.name}}</h3>
       <ul>
         <li *ngFor="let component of category.items">
-          <a [routerLink]="['/components/component/', component.id]"
+          <a [routerLink]="['/components/', component.id]"
              routerLinkActive="docs-component-viewer-sidenav-item-selected">
             {{component.name}}
           </a>

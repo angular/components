@@ -2,7 +2,7 @@
   <md-card
       *ngFor="let category of docItems.getItemsInCategories()"
       class="docs-component-category-list-card"
-      [routerLink]="['/components/category/', category.id]">
+      [routerLink]="['/categories/', category.id]">
     <md-card-title>{{category.name}}</md-card-title>
     <p class="docs-component-category-list-card-summary">{{category.summary}}</p>
     <docs-svg-viewer class="docs-component-category-list-card-image"

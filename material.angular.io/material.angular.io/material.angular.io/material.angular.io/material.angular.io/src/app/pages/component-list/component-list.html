@@ -1,7 +1,7 @@
 <div class="docs-component-list-category">
   <a *ngFor="let component of category.items"
     class="docs-component-list-item"
-    [routerLink]="['/components/component/', component.id]">
+    [routerLink]="['/components/', component.id]">
     <docs-svg-viewer class="docs-component-list-item-icon"
                      [attr.aria-label]="component.name"
                      [src]="'../../../assets/img/components/' + component.id + '.svg'">
