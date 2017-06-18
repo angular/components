@@ -6,20 +6,24 @@ import {Router, NavigationStart} from '@angular/router';
   selector: 'material-docs-app',
   templateUrl: './material-docs-app.html',
   styleUrls: ['./material-docs-app.scss'],
-  host: {
-    '[class.docs-dark-theme]': 'isDarkTheme',
-  },
   encapsulation: ViewEncapsulation.None,
 })
 export class MaterialDocsApp {
-  isDarkTheme = false;
   showShadow = false;
 
-  constructor(
-    router: Router,
-  ) {
+  constructor(router: Router) {
     router.events.subscribe((data: NavigationStart) => {
       this.showShadow = data.url.startsWith('/components');
+      resetScrollPosition();
     });
+  }
+}
+
+function resetScrollPosition() {
+  if (typeof document === 'object' && document) {
+    const sidenavContent = document.querySelector('.mat-sidenav-content');
+    if (sidenavContent) {
+      sidenavContent.scrollTop = 0;
+    }
   }
 }
