@@ -20,7 +20,7 @@ export class ExampleViewer {
   exampleData: LiveExample;
 
   /** Whether the source for the example is being displayed. */
-  showSource: boolean = false;
+  showSource = false;
 
   get example() {
     return this._example;
