@@ -95,7 +95,7 @@ own components:
 
 * `mat-font-size($config, $level)` - Gets the font-size, based on the provided config and level.
 * `mat-font-family($config)` - Gets the font-family, based on the provided config.
-* `mat-line-height($config, $level)` - Gets the line, based on the provided config and level.
+* `mat-line-height($config, $level)` - Gets the line height, based on the provided config and level.
 * `mat-font-weight($config, $level)` - Gets the font weight, based on the provided config and level.
 * `mat-typography-level-to-styles($config, $level)` - Mixin that takes in a configuration object
 and a typography level, and outputs a short-hand CSS `font` declaration.
