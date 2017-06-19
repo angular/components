@@ -81,9 +81,9 @@ import {InputHintExample} from './input-hint/input-hint-example';
 import {
   MdAutocompleteModule, MdButtonModule, MdButtonToggleModule, MdCardModule, MdCheckboxModule,
   MdChipsModule, MdDatepickerModule, MdDialogModule, MdGridListModule, MdIconModule, MdInputModule,
-  MdListModule, MdMenuModule,MdPaginatorModule, MdProgressBarModule, MdProgressSpinnerModule, MdRadioModule,
-  MdSelectModule,MdSidenavModule, MdSliderModule, MdSlideToggleModule, MdSnackBarModule, MdTabsModule,
-  MdToolbarModule, MdTooltipModule
+  MdListModule, MdMenuModule, MdPaginatorModule, MdProgressBarModule, MdProgressSpinnerModule,
+  MdRadioModule, MdSelectModule, MdSidenavModule, MdSliderModule, MdSlideToggleModule,
+  MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule
 } from '@angular/material';
 
 export interface LiveExample {

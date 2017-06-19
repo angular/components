@@ -31,7 +31,6 @@ describe('MdPaginator', () => {
       ],
       declarations: [
         MdPaginatorApp,
-        MdPaginatorWithoutPageSizeOrOptionsApp,
         MdPaginatorWithoutPageSizeApp,
         MdPaginatorWithoutOptionsApp,
       ],
@@ -150,30 +149,12 @@ describe('MdPaginator', () => {
     });
   });
 
-  it('should have page size and options match the list length if not provided', () => {
-    const withoutPageSizeOrOptionsAppFixture =
-        TestBed.createComponent(MdPaginatorWithoutPageSizeOrOptionsApp);
-    withoutPageSizeOrOptionsAppFixture.detectChanges();
-
-    const withoutPageSizeOrOptionsPaginator =
-        withoutPageSizeOrOptionsAppFixture.componentInstance.mdPaginator;
-    expect(withoutPageSizeOrOptionsPaginator.pageSize).toEqual(100);
-    expect(withoutPageSizeOrOptionsPaginator._displayedPageSizeOptions).toEqual([100]);
-  });
-
   it('should default the page size options to the page size if no options provided', () => {
     const withoutOptionsAppFixture = TestBed.createComponent(MdPaginatorWithoutOptionsApp);
     withoutOptionsAppFixture.detectChanges();
 
     expect(withoutOptionsAppFixture.componentInstance.mdPaginator._displayedPageSizeOptions)
         .toEqual([10]);
-  });
-
-  it('should default the page size to the first page size option if no length provided', () => {
-    const withoutLengthAppFixture = TestBed.createComponent(MdPaginatorWithoutPageSizeApp);
-    withoutLengthAppFixture.detectChanges();
-
-    expect(withoutLengthAppFixture.componentInstance.mdPaginator.pageSize).toBe(10);
   });
 
   it('should show a sorted list of page size options including the current page size', () => {

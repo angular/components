@@ -103,13 +103,13 @@ export class MdPaginator implements OnInit {
 
   /** Returns true if the user can go to the next page. */
   hasPreviousPage() {
-    return (this.pageIndex - 1) >= 0 && this.pageSize != 0;
+    return this.pageIndex >= 1 && this.pageSize != 0;
   }
 
   /** Returns true if the user can go to the next page. */
   hasNextPage() {
     const numberOfPages = Math.ceil(this.length / this.pageSize) - 1;
-    return (this.pageIndex + 1) <= numberOfPages && this.pageSize != 0;
+    return this.pageIndex < numberOfPages && this.pageSize != 0;
   }
 
   /**
