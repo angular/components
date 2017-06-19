@@ -4,7 +4,7 @@
 
 ### Basic use
 Each paginator instance requires:
-* The number of items per page
+* The number of items per page (default set to 50)
 * The total number of items being paged
 
 The current page index defaults to 0, but can be explicitly set via pageIndex.

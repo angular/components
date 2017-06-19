@@ -56,14 +56,14 @@ export class MdPaginator implements OnInit {
   /** The length of the total number of items that are being paginated. Defaulted to 0. */
   @Input() length: number = 0;
 
-  /** Number of items to display on a page. By default set to the first of page size option. */
+  /** Number of items to display on a page. By default set to 50. */
   @Input()
   get pageSize(): number { return this._pageSize; }
   set pageSize(pageSize: number) {
     this._pageSize = pageSize;
     this._updateDisplayedPageSizeOptions();
   }
-  private _pageSize: number = 0;
+  private _pageSize: number = 50;
 
   /** The set of provided page size options to display to the user. */
   @Input()
@@ -84,15 +84,6 @@ export class MdPaginator implements OnInit {
 
   ngOnInit() {
     this._initialized = true;
-
-    // If no page size or options have been provided, use the list length as the only option.
-    // Otherwise if there is no page size but there are options, then use the first option.
-    if (this.pageSize == undefined) {
-      this.pageSize = this.pageSizeOptions.length != 0 ?
-          this.pageSizeOptions[0] :
-          this.length;
-    }
-
     this._updateDisplayedPageSizeOptions();
   }
 
