@@ -1,4 +1,4 @@
-import {CollectionViewer, DataSource, MdPaginator} from '@angular/material';
+import {CollectionViewer, DataSource, MdPaginator, MdSort} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {PeopleDatabase, UserData} from './people-database';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
@@ -12,12 +12,15 @@ export class PersonDataSource extends DataSource<any> {
   _renderedData: any[] = [];
 
   constructor(private _peopleDatabase: PeopleDatabase,
-              private _paginator: MdPaginator) {
+              private _paginator: MdPaginator,
+              private _sort: MdSort) {
     super();
 
     // Subscribe to page changes and database changes by clearing the cached data and
     // determining the updated display data.
-    Observable.merge(this._paginator.page, this._peopleDatabase.dataChange).subscribe(() => {
+    Observable.merge(this._paginator.page,
+        this._peopleDatabase.dataChange,
+        this._sort.sortChange).subscribe(() => {
       this._renderedData = [];
       this.updateDisplayData();
     });

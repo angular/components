@@ -33,17 +33,19 @@
                      (toggleColorColumn)="toggleColorColumn()">
   </table-header-demo>
 
-  <cdk-table #table [dataSource]="dataSource" [trackBy]="userTrackBy">
+  <cdk-table #table mdSort
+             [dataSource]="dataSource"
+             [trackBy]="userTrackBy">
 
     <!-- Column Definition: ID -->
     <ng-container cdkColumnDef="userId">
-      <cdk-header-cell *cdkHeaderCellDef> ID </cdk-header-cell>
+      <cdk-header-cell *cdkHeaderCellDef mdSortHeader> ID </cdk-header-cell>
       <cdk-cell *cdkCellDef="let row"> {{row.id}} </cdk-cell>
     </ng-container>
 
     <!-- Column Definition: Progress -->
     <ng-container cdkColumnDef="progress">
-      <cdk-header-cell *cdkHeaderCellDef> Progress </cdk-header-cell>
+      <cdk-header-cell *cdkHeaderCellDef mdSortHeader> Progress </cdk-header-cell>
       <cdk-cell *cdkCellDef="let row">
         <div class="demo-progress-stat">{{row.progress}}%</div>
         <div class="demo-progress-indicator-container">
@@ -57,7 +59,7 @@
 
     <!-- Column Definition: Name -->
     <ng-container cdkColumnDef="userName">
-      <cdk-header-cell *cdkHeaderCellDef> Name </cdk-header-cell>
+      <cdk-header-cell *cdkHeaderCellDef mdSortHeader> Name </cdk-header-cell>
       <cdk-cell *cdkCellDef="let row"> {{row.name}} </cdk-cell>
     </ng-container>
 
