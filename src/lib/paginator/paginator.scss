@@ -22,17 +22,17 @@ $mat-paginator-button-increment-icon-margin: 16px;
   padding: $mat-paginator-padding;
 }
 
-.mat-paginator-items-per-page-label {
+.mat-paginator-page-size {
+  display: flex;
+  align-items: center;
+}
+
+.mat-paginator-page-size-label {
   margin: $mat-paginator-items-per-page-label-margin;
 }
 
-.mat-paginator-page-length-select {
-  display: flex;
-  align-items: center;
-
-  .mat-select {
-    margin: $mat-paginator-selector-margin;
-  }
+.mat-paginator-page-size-select {
+  margin: $mat-paginator-selector-margin;
 
   .mat-select-trigger {
     min-width: $mat-paginator-selector-trigger-min-width;

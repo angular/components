@@ -63,7 +63,7 @@ export class MdPaginator implements OnInit {
     this._pageSize = pageSize;
     this._updateDisplayedPageSizeOptions();
   }
-  private _pageSize: number;
+  private _pageSize: number = 0;
 
   /** The set of provided page size options to display to the user. */
   @Input()
