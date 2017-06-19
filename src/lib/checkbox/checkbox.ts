@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -17,6 +25,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 import {FocusOrigin, FocusOriginMonitor, MdRipple, RippleRef} from '../core';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
+import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
 
 /** Monotonically increasing integer used to auto-generate unique ids for checkbox components. */
@@ -57,8 +66,10 @@ export class MdCheckboxChange {
 }
 
 // Boilerplate for applying mixins to MdCheckbox.
-export class MdCheckboxBase { }
-export const _MdCheckboxMixinBase = mixinDisabled(MdCheckboxBase);
+export class MdCheckboxBase {
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+}
+export const _MdCheckboxMixinBase = mixinColor(mixinDisabled(MdCheckboxBase), 'accent');
 
 
 /**
@@ -82,12 +93,12 @@ export const _MdCheckboxMixinBase = mixinDisabled(MdCheckboxBase);
     '[class.mat-checkbox-label-before]': 'labelPosition == "before"',
   },
   providers: [MD_CHECKBOX_CONTROL_VALUE_ACCESSOR],
-  inputs: ['disabled'],
+  inputs: ['disabled', 'color'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MdCheckbox extends _MdCheckboxMixinBase
-    implements ControlValueAccessor, AfterViewInit, OnDestroy, CanDisable {
+    implements ControlValueAccessor, AfterViewInit, OnDestroy, CanColor, CanDisable {
   /**
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
    * take precedence so this may be omitted.
@@ -158,14 +169,6 @@ export class MdCheckbox extends _MdCheckboxMixinBase
   /** The native `<input type="checkbox"> element */
   @ViewChild('input') _inputElement: ElementRef;
 
-  @ViewChild('labelWrapper') _labelWrapper: ElementRef;
-
-  /** Whether the checkbox has label */
-  _hasLabel(): boolean {
-    const labelText = this._labelWrapper.nativeElement.textContent || '';
-    return !!labelText.trim().length;
-  }
-
   /** Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor. */
   @ViewChild(MdRipple) _ripple: MdRipple;
 
@@ -183,19 +186,16 @@ export class MdCheckbox extends _MdCheckboxMixinBase
 
   private _indeterminate: boolean = false;
 
-  private _color: string;
-
-  private _controlValueAccessorChangeFn: (value: any) => void = (value) => {};
+  private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   /** Reference to the focused state ripple. */
   private _focusRipple: RippleRef;
 
-  constructor(private _renderer: Renderer2,
-              private _elementRef: ElementRef,
+  constructor(renderer: Renderer2,
+              elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
               private _focusOriginMonitor: FocusOriginMonitor) {
-    super();
-    this.color = 'accent';
+    super(renderer, elementRef);
   }
 
   ngAfterViewInit() {
@@ -247,29 +247,16 @@ export class MdCheckbox extends _MdCheckboxMixinBase
     }
   }
 
-  /** The color of the button. Can be `primary`, `accent`, or `warn`. */
-  @Input()
-  get color(): string { return this._color; }
-  set color(value: string) { this._updateColor(value); }
-
-  _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      if (isAdd) {
-        this._renderer.addClass(this._elementRef.nativeElement, `mat-${color}`);
-      } else {
-        this._renderer.removeClass(this._elementRef.nativeElement, `mat-${color}`);
-      }
-    }
-  }
-
   _isRippleDisabled() {
     return this.disableRipple || this.disabled;
+  }
+
+  /** Method being called whenever the label text changes. */
+  _onLabelTextChange() {
+    // This method is getting called whenever the label of the checkbox changes.
+    // Since the checkbox uses the OnPush strategy we need to notify it about the change
+    // that has been recognized by the cdkObserveContent directive.
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -393,7 +380,7 @@ export class MdCheckbox extends _MdCheckboxMixinBase
 
   /** Focuses the checkbox. */
   focus(): void {
-    this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, this._renderer, 'keyboard');
+    this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
   }
 
   _onInteractionEvent(event: Event) {

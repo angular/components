@@ -1,18 +1,27 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
-  ElementRef,
   Input,
   QueryList,
-  ViewEncapsulation
+  ViewEncapsulation,
+  OnDestroy,
 } from '@angular/core';
 
 import {MdChip} from './chip';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
-import {SPACE, LEFT_ARROW, RIGHT_ARROW} from '../core/keyboard/keycodes';
+import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB} from '../core/keyboard/keycodes';
+import {Subscription} from 'rxjs/Subscription';
 
 /**
  * A material design chips component (named ChipList for it's similarity to the List component).
@@ -30,9 +39,9 @@ import {SPACE, LEFT_ARROW, RIGHT_ARROW} from '../core/keyboard/keycodes';
   template: `<div class="mat-chip-list-wrapper"><ng-content></ng-content></div>`,
   host: {
     // Properties
-    'tabindex': '0',
+    '[attr.tabindex]': '_tabIndex',
     'role': 'listbox',
-    '[class.mat-chip-list]': 'true',
+    'class': 'mat-chip-list',
 
     // Events
     '(focus)': 'focus()',
@@ -45,10 +54,13 @@ import {SPACE, LEFT_ARROW, RIGHT_ARROW} from '../core/keyboard/keycodes';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdChipList implements AfterContentInit {
+export class MdChipList implements AfterContentInit, OnDestroy {
 
   /** Track which chips we're listening to for focus/destruction. */
   private _subscribed: WeakMap<MdChip, boolean> = new WeakMap();
+
+  /** Subscription to tabbing out from the chip list. */
+  private _tabOutSubscription: Subscription;
 
   /** Whether or not the chip is selectable. */
   protected _selectable: boolean = true;
@@ -59,10 +71,18 @@ export class MdChipList implements AfterContentInit {
   /** The chip components contained within this chip list. */
   chips: QueryList<MdChip>;
 
-  constructor(private _elementRef: ElementRef) { }
+  /** Tab index for the chip list. */
+  _tabIndex = 0;
 
   ngAfterContentInit(): void {
     this._keyManager = new FocusKeyManager(this.chips).withWrap();
+
+    // Prevents the chip list from capturing focus and redirecting
+    // it back to the first chip when the user tabs out.
+    this._tabOutSubscription = this._keyManager.tabOut.subscribe(() => {
+      this._tabIndex = -1;
+      setTimeout(() => this._tabIndex = 0);
+    });
 
     // Go ahead and subscribe all of the initial chips
     this._subscribeChips(this.chips);
@@ -73,14 +93,18 @@ export class MdChipList implements AfterContentInit {
     });
   }
 
+  ngOnDestroy(): void {
+    if (this._tabOutSubscription) {
+      this._tabOutSubscription.unsubscribe();
+    }
+  }
+
   /**
    * Whether or not this chip is selectable. When a chip is not selectable,
    * it's selected state is always ignored.
    */
-  @Input() get selectable(): boolean {
-    return this._selectable;
-  }
-
+  @Input()
+  get selectable(): boolean { return this._selectable; }
   set selectable(value: boolean) {
     this._selectable = coerceBooleanProperty(value);
   }
@@ -179,7 +203,7 @@ export class MdChipList implements AfterContentInit {
     chip.destroy.subscribe(() => {
       let chipIndex: number = this.chips.toArray().indexOf(chip);
 
-      if (this._isValidIndex(chipIndex)) {
+      if (this._isValidIndex(chipIndex) && chip._hasFocus) {
         // Check whether the chip is the last item
         if (chipIndex < this.chips.length - 1) {
           this._keyManager.setActiveItem(chipIndex);

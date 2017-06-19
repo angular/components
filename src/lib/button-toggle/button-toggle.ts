@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   Component,
   ContentChildren,
@@ -17,13 +25,15 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
 import {UniqueSelectionDispatcher, coerceBooleanProperty, FocusOriginMonitor} from '../core';
+import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 
 /** Acceptable types for a button toggle. */
 export type ToggleType = 'checkbox' | 'radio';
 
-
+// Boilerplate for applying mixins to MdButtonToggleGroup and MdButtonToggleGroupMultiple
+export class MdButtonToggleGroupBase {}
+export const _MdButtonToggleGroupMixinBase = mixinDisabled(MdButtonToggleGroupBase);
 
 /**
  * Provider Expression that allows md-button-toggle-group to register as a ControlValueAccessor.
@@ -50,22 +60,22 @@ export class MdButtonToggleChange {
 @Directive({
   selector: 'md-button-toggle-group:not([multiple]), mat-button-toggle-group:not([multiple])',
   providers: [MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
+  inputs: ['disabled'],
   host: {
-    '[class.mat-button-toggle-group]': 'true',
     'role': 'radiogroup',
+    'class': 'mat-button-toggle-group',
     '[class.mat-button-toggle-vertical]': 'vertical'
   },
   exportAs: 'mdButtonToggleGroup',
 })
-export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor {
+export class MdButtonToggleGroup extends _MdButtonToggleGroupMixinBase implements AfterViewInit,
+    ControlValueAccessor, CanDisable {
+
   /** The value for the button toggle group. Should match currently selected button toggle. */
   private _value: any = null;
 
   /** The HTML name attribute applied to toggles in this group. */
   private _name: string = `md-button-toggle-group-${_uniqueIdCounter++}`;
-
-  /** Disables all toggles in the group. */
-  private _disabled: boolean = null;
 
   /** Whether the button toggle group should be vertical. */
   private _vertical: boolean = false;
@@ -80,7 +90,7 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
    * The method to be called in order to update ngModel.
    * Now `ngModel` binding is not supported in multiple selection mode.
    */
-  private _controlValueAccessorChangeFn: (value: any) => void = (value) => {};
+  private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
   onTouched: () => any = () => {};
@@ -102,16 +112,6 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
   set name(value: string) {
     this._name = value;
     this._updateButtonToggleNames();
-  }
-
-  /** Whether the toggle group is disabled. */
-  @Input()
-  get disabled(): boolean {
-    return this._disabled;
-  }
-
-  set disabled(value) {
-    this._disabled = coerceBooleanProperty(value);
   }
 
   /** Whether the toggle group is vertical. */
@@ -237,27 +237,17 @@ export class MdButtonToggleGroup implements AfterViewInit, ControlValueAccessor 
 @Directive({
   selector: 'md-button-toggle-group[multiple], mat-button-toggle-group[multiple]',
   exportAs: 'mdButtonToggleGroup',
+  inputs: ['disabled'],
   host: {
-    '[class.mat-button-toggle-group]': 'true',
+    'class': 'mat-button-toggle-group',
     '[class.mat-button-toggle-vertical]': 'vertical'
   }
 })
-export class MdButtonToggleGroupMultiple {
-  /** Disables all toggles in the group. */
-  private _disabled: boolean = null;
+export class MdButtonToggleGroupMultiple extends _MdButtonToggleGroupMixinBase
+    implements CanDisable {
 
   /** Whether the button toggle group should be vertical. */
   private _vertical: boolean = false;
-
-  /** Whether the toggle group is disabled. */
-  @Input()
-  get disabled(): boolean {
-    return this._disabled;
-  }
-
-  set disabled(value) {
-    this._disabled = (value != null && value !== false) ? true : null;
-  }
 
   /** Whether the toggle group is vertical. */
   @Input()
@@ -278,7 +268,7 @@ export class MdButtonToggleGroupMultiple {
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
   host: {
-    '[class.mat-button-toggle]': 'true'
+    'class': 'mat-button-toggle'
   }
 })
 export class MdButtonToggle implements OnInit {

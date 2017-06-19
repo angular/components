@@ -28,18 +28,19 @@ describe('MdList', () => {
 
   it('should add and remove focus class on focus/blur', () => {
     let fixture = TestBed.createComponent(ListWithOneAnchorItem);
-    let listItem = fixture.debugElement.query(By.directive(MdListItem));
-    let listItemDiv = fixture.debugElement.query(By.css('.mat-list-item-content'));
     fixture.detectChanges();
-    expect(listItemDiv.nativeElement.classList).not.toContain('mat-list-item-focus');
+    let listItem = fixture.debugElement.query(By.directive(MdListItem));
+    let listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
+
+    expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
 
     listItem.componentInstance._handleFocus();
     fixture.detectChanges();
-    expect(listItemDiv.nativeElement.classList).toContain('mat-list-item-focus');
+    expect(listItemEl.nativeElement.classList).toContain('mat-list-item-focus');
 
     listItem.componentInstance._handleBlur();
     fixture.detectChanges();
-    expect(listItemDiv.nativeElement.classList).not.toContain('mat-list-item-focus');
+    expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
   });
 
   it('should not apply any additional class to a list without lines', () => {
@@ -99,7 +100,9 @@ describe('MdList', () => {
     fixture.detectChanges();
 
     let listItem = fixture.debugElement.children[0].query(By.css('md-list-item'));
-    expect(listItem.nativeElement.className).toBe('mat-2-line mat-list-item');
+    expect(listItem.nativeElement.classList.length).toBe(2);
+    expect(listItem.nativeElement.classList).toContain('mat-2-line');
+    expect(listItem.nativeElement.classList).toContain('mat-list-item');
 
     fixture.debugElement.componentInstance.showThirdLine = true;
     fixture.detectChanges();

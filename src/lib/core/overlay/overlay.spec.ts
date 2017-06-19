@@ -8,7 +8,8 @@ import {OverlayState} from './overlay-state';
 import {OverlayRef} from './overlay-ref';
 import {PositionStrategy} from './position/position-strategy';
 import {OverlayModule} from './overlay-directives';
-import {ScrollStrategy} from './scroll/scroll-strategy';
+import {ViewportRuler} from './position/viewport-ruler';
+import {ScrollStrategy, ScrollDispatcher} from './scroll/index';
 
 
 describe('Overlay', () => {
@@ -21,15 +22,14 @@ describe('Overlay', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, PortalModule, OverlayTestModule],
-      providers: [
-        {provide: OverlayContainer, useFactory: () => {
+      providers: [{
+        provide: OverlayContainer,
+        useFactory: () => {
           overlayContainerElement = document.createElement('div');
           return {getContainerElement: () => overlayContainerElement};
-        }}
-      ]
-    });
-
-    TestBed.compileComponents();
+        }
+      }]
+    }).compileComponents();
   }));
 
   beforeEach(inject([Overlay], (o: Overlay) => {
@@ -147,6 +147,24 @@ describe('Overlay', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  it('should emit the attachment event after everything is added to the DOM', () => {
+    let state = new OverlayState();
+
+    state.hasBackdrop = true;
+
+    let overlayRef = overlay.create(state);
+
+    overlayRef.attachments().subscribe(() => {
+      expect(overlayContainerElement.querySelector('pizza'))
+          .toBeTruthy('Expected the overlay to have been attached.');
+
+      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop'))
+          .toBeTruthy('Expected the backdrop to have been attached.');
+    });
+
+    overlayRef.attach(componentPortal);
+  });
+
   it('should emit when an overlay is detached', () => {
     let overlayRef = overlay.create();
     let spy = jasmine.createSpy('detachments spy');
@@ -156,6 +174,18 @@ describe('Overlay', () => {
     overlayRef.detach();
 
     expect(spy).toHaveBeenCalled();
+  });
+
+  it('should emit the detachment event after the overlay is removed from the DOM', () => {
+    let overlayRef = overlay.create();
+
+    overlayRef.detachments().subscribe(() => {
+      expect(overlayContainerElement.querySelector('pizza'))
+          .toBeFalsy('Expected the overlay to have been detached.');
+    });
+
+    overlayRef.attach(componentPortal);
+    overlayRef.detach();
   });
 
   it('should emit and complete the observables when an overlay is disposed', () => {
@@ -173,6 +203,19 @@ describe('Overlay', () => {
     expect(disposeSpy).toHaveBeenCalled();
     expect(attachCompleteSpy).toHaveBeenCalled();
     expect(detachCompleteSpy).toHaveBeenCalled();
+  });
+
+  it('should complete the attachment observable before the detachment one', () => {
+    let overlayRef = overlay.create();
+    let callbackOrder = [];
+
+    overlayRef.attachments().subscribe(null, null, () => callbackOrder.push('attach'));
+    overlayRef.detachments().subscribe(null, null, () => callbackOrder.push('detach'));
+
+    overlayRef.attach(componentPortal);
+    overlayRef.dispose();
+
+    expect(callbackOrder).toEqual(['attach', 'detach']);
   });
 
   describe('positioning', () => {
@@ -284,6 +327,21 @@ describe('Overlay', () => {
       expect(backdropClickHandler).toHaveBeenCalled();
     });
 
+    it('should complete the backdrop click stream once the overlay is destroyed', () => {
+      let overlayRef = overlay.create(config);
+
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+
+      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+      let completeHandler = jasmine.createSpy('backdrop complete handler');
+
+      overlayRef.backdropClick().subscribe(null, null, completeHandler);
+      overlayRef.dispose();
+
+      expect(completeHandler).toHaveBeenCalled();
+    });
+
     it('should apply the default overlay backdrop class', () => {
       let overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
@@ -336,33 +394,43 @@ describe('Overlay', () => {
 
   });
 
+  describe('panelClass', () => {
+    let config: OverlayState;
+    config = new OverlayState();
+    config.panelClass = 'custom-panel-class';
+
+    it('should apply a custom overlay pane class', () => {
+      let overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+
+      let pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      expect(pane.classList).toContain('custom-panel-class');
+    });
+  });
+
   describe('scroll strategy', () => {
     let fakeScrollStrategy: FakeScrollStrategy;
     let config: OverlayState;
+    let overlayRef: OverlayRef;
 
     beforeEach(() => {
       config = new OverlayState();
-      fakeScrollStrategy = new FakeScrollStrategy();
-      config.scrollStrategy = fakeScrollStrategy;
+      fakeScrollStrategy = config.scrollStrategy = new FakeScrollStrategy();
+      overlayRef = overlay.create(config);
     });
 
     it('should attach the overlay ref to the scroll strategy', () => {
-      let overlayRef = overlay.create(config);
-
       expect(fakeScrollStrategy.overlayRef).toBe(overlayRef,
           'Expected scroll strategy to have been attached to the current overlay ref.');
     });
 
     it('should enable the scroll strategy when the overlay is attached', () => {
-      let overlayRef = overlay.create(config);
-
       overlayRef.attach(componentPortal);
       expect(fakeScrollStrategy.isEnabled).toBe(true, 'Expected scroll strategy to be enabled.');
     });
 
     it('should disable the scroll strategy once the overlay is detached', () => {
-      let overlayRef = overlay.create(config);
-
       overlayRef.attach(componentPortal);
       expect(fakeScrollStrategy.isEnabled).toBe(true, 'Expected scroll strategy to be enabled.');
 
@@ -371,8 +439,6 @@ describe('Overlay', () => {
     });
 
     it('should disable the scroll strategy when the overlay is destroyed', () => {
-      let overlayRef = overlay.create(config);
-
       overlayRef.dispose();
       expect(fakeScrollStrategy.isEnabled).toBe(false, 'Expected scroll strategy to be disabled.');
     });
@@ -413,7 +479,10 @@ describe('OverlayContainer theming', () => {
 });
 
 /** Simple component for testing ComponentPortal. */
-@Component({template: '<p>Pizza</p>'})
+@Component({
+  selector: 'pizza',
+  template: '<p>Pizza</p>'
+})
 class PizzaMsg { }
 
 
@@ -450,6 +519,7 @@ class FakePositionStrategy implements PositionStrategy {
 
   dispose() {}
 }
+
 
 class FakeScrollStrategy implements ScrollStrategy {
   isEnabled = false;

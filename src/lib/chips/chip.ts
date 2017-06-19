@@ -1,50 +1,78 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
-  Component,
+  Directive,
   ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
-  OnInit,
   Output,
   Renderer2,
 } from '@angular/core';
 
 import {Focusable} from '../core/a11y/focus-key-manager';
 import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {CanColor, mixinColor} from '../core/common-behaviors/color';
+import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 
 export interface MdChipEvent {
   chip: MdChip;
 }
 
+// Boilerplate for applying mixins to MdChip.
+export class MdChipBase {
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+}
+export const _MdChipMixinBase = mixinColor(mixinDisabled(MdChipBase), 'primary');
+
+
+/**
+ * Dummy directive to add CSS class to basic chips.
+ * @docs-private
+ */
+@Directive({
+  selector: `md-basic-chip, [md-basic-chip], mat-basic-chip, [mat-basic-chip]`,
+  host: {'class': 'mat-basic-chip'}
+})
+export class MdBasicChip { }
+
 /**
  * Material design styled Chip component. Used inside the MdChipList component.
  */
-@Component({
+@Directive({
   selector: `md-basic-chip, [md-basic-chip], md-chip, [md-chip],
              mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]`,
-  template: `<ng-content></ng-content>`,
+  inputs: ['color', 'disabled'],
   host: {
-    '[class.mat-chip]': 'true',
+    'class': 'mat-chip',
     'tabindex': '-1',
     'role': 'option',
-
     '[class.mat-chip-selected]': 'selected',
-    '[attr.disabled]': 'disabled',
-    '[attr.aria-disabled]': '_isAriaDisabled',
-
-    '(click)': '_handleClick($event)'
+    '[attr.disabled]': 'disabled || null',
+    '[attr.aria-disabled]': '_isAriaDisabled()',
+    '(click)': '_handleClick($event)',
+    '(focus)': '_hasFocus = true',
+    '(blur)': '_hasFocus = false',
   }
 })
-export class MdChip implements Focusable, OnInit, OnDestroy {
+export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, CanColor, CanDisable {
 
-  /** Whether or not the chip is disabled. Disabled chips cannot be focused. */
-  protected _disabled: boolean = null;
-
-  /** Whether or not the chip is selected. */
+  /** Whether the chip is selected. */
+  @Input() get selected(): boolean { return this._selected; }
+  set selected(value: boolean) {
+    this._selected = coerceBooleanProperty(value);
+    (this.selected ? this.select : this.deselect).emit({chip: this});
+  }
   protected _selected: boolean = false;
 
-  /** The palette color of selected chips. */
-  protected _color: string = 'primary';
+  /** Whether the chip has focus. */
+  _hasFocus: boolean = false;
 
   /** Emitted when the chip is focused. */
   onFocus = new EventEmitter<MdChipEvent>();
@@ -58,45 +86,12 @@ export class MdChip implements Focusable, OnInit, OnDestroy {
   /** Emitted when the chip is destroyed. */
   @Output() destroy = new EventEmitter<MdChipEvent>();
 
-  constructor(protected _renderer: Renderer2, protected _elementRef: ElementRef) { }
-
-  ngOnInit(): void {
-    this._addDefaultCSSClass();
-    this._updateColor(this._color);
+  constructor(renderer: Renderer2, elementRef: ElementRef) {
+    super(renderer, elementRef);
   }
 
   ngOnDestroy(): void {
     this.destroy.emit({chip: this});
-  }
-
-  /** Whether or not the chip is disabled. */
-  @Input() get disabled(): boolean {
-    return this._disabled;
-  }
-
-  /** Sets the disabled state of the chip. */
-  set disabled(value: boolean) {
-    this._disabled = coerceBooleanProperty(value) ? true : null;
-  }
-
-  /** A String representation of the current disabled state. */
-  get _isAriaDisabled(): string {
-    return String(coerceBooleanProperty(this.disabled));
-  }
-
-  /** Whether or not this chip is selected. */
-  @Input() get selected(): boolean {
-    return this._selected;
-  }
-
-  set selected(value: boolean) {
-    this._selected = coerceBooleanProperty(value);
-
-    if (this._selected) {
-      this.select.emit({chip: this});
-    } else {
-      this.deselect.emit({chip: this});
-    }
   }
 
   /**
@@ -108,19 +103,15 @@ export class MdChip implements Focusable, OnInit, OnDestroy {
     return this.selected;
   }
 
-  /** The color of the chip. Can be `primary`, `accent`, or `warn`. */
-  @Input() get color(): string {
-    return this._color;
-  }
-
-  set color(value: string) {
-    this._updateColor(value);
-  }
-
   /** Allows for programmatic focusing of the chip. */
   focus(): void {
     this._elementRef.nativeElement.focus();
     this.onFocus.emit({chip: this});
+  }
+
+  /** The aria-disabled state for the chip */
+  _isAriaDisabled(): string {
+    return String(this.disabled);
   }
 
   /** Ensures events fire properly upon click. */
@@ -131,38 +122,6 @@ export class MdChip implements Focusable, OnInit, OnDestroy {
       event.stopPropagation();
     } else {
       this.focus();
-    }
-  }
-
-  /** Initializes the appropriate CSS classes based on the chip type (basic or standard). */
-  private _addDefaultCSSClass() {
-    let el: HTMLElement = this._elementRef.nativeElement;
-
-    // Always add the `mat-chip` class
-    this._renderer.addClass(el, 'mat-chip');
-
-    // If we are a basic chip, also add the `mat-basic-chip` class for :not() targeting
-    if (el.nodeName.toLowerCase() == 'mat-basic-chip' || el.hasAttribute('mat-basic-chip') ||
-        el.nodeName.toLowerCase() == 'md-basic-chip' || el.hasAttribute('md-basic-chip')) {
-      this._renderer.addClass(el, 'mat-basic-chip');
-    }
-  }
-
-  /** Updates the private _color variable and the native element. */
-  private _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  /** Sets the mat-color on the native element. */
-  private _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      if (isAdd) {
-        this._renderer.addClass(this._elementRef.nativeElement, `mat-${color}`);
-      } else {
-        this._renderer.removeClass(this._elementRef.nativeElement, `mat-${color}`);
-      }
     }
   }
 }

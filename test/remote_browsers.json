@@ -1,8 +1,8 @@
 {
-  "ChromeNoSandbox": {
-    "base": "Chrome",
+  "ChromeHeadless_CI": {
+    "base": "ChromeHeadless",
     "flags": [
-      "--no-sandbox"
+      "--window-size=1024,768"
     ]
   },
   "Chrome_1024x768": {
@@ -166,6 +166,13 @@
     "browser": "safari",
     "os": "OS X",
     "os_version": "El Capitan"
+  },
+  "BS_SAFARI10": {
+    "base": "BrowserStack",
+    "browser": "safari",
+    "browser_version": "10.1",
+    "os": "OS X",
+    "os_version": "Sierra"
   },
   "BS_IOS7": {
     "base": "BrowserStack",

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {ElementRef, Injectable, NgZone, Optional, SkipSelf} from '@angular/core';
 import {Platform} from '../../platform/index';
 import {Scrollable} from './scrollable';
@@ -105,7 +113,7 @@ export class ScrollDispatcher {
   getScrollContainers(elementRef: ElementRef): Scrollable[] {
     const scrollingContainers: Scrollable[] = [];
 
-    this.scrollableReferences.forEach((subscription: Subscription, scrollable: Scrollable) => {
+    this.scrollableReferences.forEach((_subscription: Subscription, scrollable: Scrollable) => {
       if (this.scrollableContainsElement(scrollable, elementRef)) {
         scrollingContainers.push(scrollable);
       }

@@ -1,8 +1,16 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {NgModule} from '@angular/core';
 import {MdLineModule} from './line/line';
 import {RtlModule} from './rtl/dir';
 import {ObserveContentModule} from './observe-content/observe-content';
-import {MdOptionModule} from './option/option';
+import {MdOptionModule} from './option/index';
 import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/overlay-directives';
 import {A11yModule} from './a11y/index';
@@ -16,7 +24,7 @@ export {Dir, LayoutDirection, RtlModule} from './rtl/dir';
 // Mutation Observer
 export {ObserveContentModule, ObserveContent} from './observe-content/observe-content';
 
-export {MdOptionModule, MdOption, MdOptionSelectionChange} from './option/option';
+export * from './option/index';
 
 // Portals
 export {
@@ -98,10 +106,17 @@ export {coerceNumberProperty} from './coercion/number-property';
 export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibility/compatibility';
 
 // Common material module
-export {MdCommonModule} from './common-behaviors/common-module';
+export {MdCommonModule, MATERIAL_SANITY_CHECKS} from './common-behaviors/common-module';
 
 // Datetime
 export * from './datetime/index';
+
+// Placeholder
+export {
+  FloatPlaceholderType,
+  PlaceholderOptions,
+  MD_PLACEHOLDER_GLOBAL_OPTIONS
+} from './placeholder/placeholder-options';
 
 @NgModule({
   imports: [

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 /** Creates a browser MouseEvent with the specified options. */
 export function createMouseEvent(type: string, x = 0, y = 0) {
   let event = document.createEvent('MouseEvent');
@@ -22,7 +30,7 @@ export function createMouseEvent(type: string, x = 0, y = 0) {
 }
 
 /** Dispatches a keydown event from an element. */
-export function createKeyboardEvent(type: string, keyCode: number) {
+export function createKeyboardEvent(type: string, keyCode: number, target?: Element) {
   let event = document.createEvent('KeyboardEvent') as any;
   // Firefox does not support `initKeyboardEvent`, but supports `initKeyEvent`.
   let initEventFn = (event.initKeyEvent || event.initKeyboardEvent).bind(event);
@@ -32,7 +40,10 @@ export function createKeyboardEvent(type: string, keyCode: number) {
 
   // Webkit Browsers don't set the keyCode when calling the init function.
   // See related bug https://bugs.webkit.org/show_bug.cgi?id=16735
-  Object.defineProperty(event, 'keyCode', { get: () => keyCode });
+  Object.defineProperties(event, {
+    keyCode: { get: () => keyCode },
+    target: { get: () => target }
+  });
 
   // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
   event.preventDefault = function() {

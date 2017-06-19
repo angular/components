@@ -2,19 +2,19 @@ import {spawn} from 'child_process';
 import {existsSync, statSync} from 'fs-extra';
 import {join} from 'path';
 import {task} from 'gulp';
-import {execTask, sequenceTask} from '../util/task_helpers';
-import {DIST_RELEASES} from '../constants';
+import {execTask} from '../util/task_helpers';
+import {buildConfig, sequenceTask} from 'material2-build-tools';
 import {yellow, green, red, grey} from 'chalk';
 import * as minimist from 'minimist';
 
-/** Parse command-line arguments for release task. */
-const argv = minimist(process.argv.slice(3));
-
-/** Packages that will be published to NPM. */
-const releasePackages = [
+/** Packages that will be published to NPM by the release task. */
+export const releasePackages = [
   'cdk',
   'material',
 ];
+
+/** Parse command-line arguments for release task. */
+const argv = minimist(process.argv.slice(3));
 
 /** Task that builds all releases that will be published. */
 task(':publish:build-releases', sequenceTask(
@@ -32,7 +32,7 @@ task(':publish:logout', execTask('npm', ['logout']));
 
 
 function _execNpmPublish(label: string, packageName: string): Promise<{}> {
-  const packageDir = join(DIST_RELEASES, packageName);
+  const packageDir = join(buildConfig.outputDir, 'releases', packageName);
 
   if (!statSync(packageDir).isDirectory()) {
     return;
@@ -104,6 +104,7 @@ task(':publish', async () => {
 task('publish', sequenceTask(
   ':publish:whoami',
   ':publish:build-releases',
+  'validate-release:check-bundles',
   ':publish',
   ':publish:logout',
 ));

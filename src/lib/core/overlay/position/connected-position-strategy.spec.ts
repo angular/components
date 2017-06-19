@@ -336,10 +336,12 @@ describe('ConnectedPositionStrategy', () => {
       const subscription = strategy.onPositionChange.subscribe(positionChangeHandler);
 
       strategy.apply(overlayElement);
+
+      const latestCall = positionChangeHandler.calls.mostRecent();
+
       expect(positionChangeHandler).toHaveBeenCalled();
-      expect(positionChangeHandler.calls.mostRecent().args[0])
-          .toEqual(jasmine.any(ConnectedOverlayPositionChange),
-              `Expected strategy to emit an instance of ConnectedOverlayPositionChange.`);
+      expect(latestCall.args[0] instanceof ConnectedOverlayPositionChange)
+          .toBe(true, `Expected strategy to emit an instance of ConnectedOverlayPositionChange.`);
 
       it('should pick the fallback position that shows the largest area of the element', () => {
         positionBuilder = new OverlayPositionBuilder(viewportRuler);
@@ -433,7 +435,7 @@ describe('ConnectedPositionStrategy', () => {
         let overlayRect = overlayElement.getBoundingClientRect();
 
         expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.bottom));
-        expect(Math.floor(overlayRect.right)).toBe(Math.floor(originRect.left));
+        expect(Math.round(overlayRect.right)).toBe(Math.round(originRect.left));
       });
 
       it('should position above, right aligned', () => {
@@ -445,8 +447,8 @@ describe('ConnectedPositionStrategy', () => {
         strategy.apply(overlayElement);
 
         let overlayRect = overlayElement.getBoundingClientRect();
-        expect(Math.floor(overlayRect.bottom)).toBe(Math.floor(originRect.top));
-        expect(Math.floor(overlayRect.right)).toBe(Math.floor(originRect.right));
+        expect(Math.round(overlayRect.bottom)).toBe(Math.round(originRect.top));
+        expect(Math.round(overlayRect.right)).toBe(Math.round(originRect.right));
       });
 
       it('should position below, centered', () => {

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Injectable} from '@angular/core';
 import {Platform} from '../platform/platform';
 
@@ -48,6 +56,10 @@ export class InteractivityChecker {
    * @returns Whether the element is tabbable.
    */
   isTabbable(element: HTMLElement): boolean {
+    // Nothing is tabbable on the the server 😎
+    if (!this._platform.isBrowser) {
+      return false;
+    }
 
     let frameElement = getWindow(element).frameElement as HTMLElement;
 

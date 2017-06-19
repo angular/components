@@ -8,9 +8,7 @@ import {
   OverlayState,
   OverlayRef,
   OverlayModule,
-  ScrollStrategy,
   ScrollDispatcher,
-  RepositionScrollStrategy,
 } from '../../core';
 
 
@@ -24,7 +22,7 @@ describe('RepositionScrollStrategy', () => {
       imports: [OverlayModule, PortalModule, OverlayTestModule],
       providers: [
         {provide: ScrollDispatcher, useFactory: () => {
-          return {scrolled: (delay: number, callback: () => any) => {
+          return {scrolled: (_delay: number, callback: () => any) => {
             return scrolledSubject.asObservable().subscribe(callback);
           }};
         }}
@@ -34,11 +32,9 @@ describe('RepositionScrollStrategy', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([Overlay, ScrollDispatcher], (overlay: Overlay,
-    scrollDispatcher: ScrollDispatcher) => {
-
+  beforeEach(inject([Overlay], (overlay: Overlay) => {
     let overlayState = new OverlayState();
-    overlayState.scrollStrategy = new RepositionScrollStrategy(scrollDispatcher);
+    overlayState.scrollStrategy = overlay.scrollStrategies.reposition();
     overlayRef = overlay.create(overlayState);
     componentPortal = new ComponentPortal(PastaMsg);
   }));

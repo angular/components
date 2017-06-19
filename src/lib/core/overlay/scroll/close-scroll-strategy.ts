@@ -1,4 +1,12 @@
-import {ScrollStrategy} from './scroll-strategy';
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {ScrollStrategy, getMdScrollStrategyAlreadyAttachedError} from './scroll-strategy';
 import {OverlayRef} from '../overlay-ref';
 import {Subscription} from 'rxjs/Subscription';
 import {ScrollDispatcher} from './scroll-dispatcher';
@@ -14,6 +22,10 @@ export class CloseScrollStrategy implements ScrollStrategy {
   constructor(private _scrollDispatcher: ScrollDispatcher) { }
 
   attach(overlayRef: OverlayRef) {
+    if (this._overlayRef) {
+      throw getMdScrollStrategyAlreadyAttachedError();
+    }
+
     this._overlayRef = overlayRef;
   }
 

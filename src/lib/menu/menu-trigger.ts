@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
     AfterViewInit,
     Directive,
@@ -22,8 +30,6 @@ import {
     ConnectedPositionStrategy,
     HorizontalConnectionPos,
     VerticalConnectionPos,
-    RepositionScrollStrategy,
-    ScrollDispatcher,
 } from '../core';
 import {Subscription} from 'rxjs/Subscription';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
@@ -80,8 +86,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   @Output() onMenuClose = new EventEmitter<void>();
 
   constructor(private _overlay: Overlay, private _element: ElementRef,
-              private _viewContainerRef: ViewContainerRef, @Optional() private _dir: Dir,
-              private _scrollDispatcher: ScrollDispatcher) { }
+              private _viewContainerRef: ViewContainerRef, @Optional() private _dir: Dir) { }
 
   ngAfterViewInit() {
     this._checkMenu();
@@ -219,7 +224,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
     overlayState.hasBackdrop = true;
     overlayState.backdropClass = 'cdk-overlay-transparent-backdrop';
     overlayState.direction = this.dir;
-    overlayState.scrollStrategy = new RepositionScrollStrategy(this._scrollDispatcher);
+    overlayState.scrollStrategy = this._overlay.scrollStrategies.reposition();
     return overlayState;
   }
 

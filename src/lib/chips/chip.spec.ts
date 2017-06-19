@@ -29,7 +29,7 @@ describe('Chips', () => {
 
       chipDebugElement = fixture.debugElement.query(By.directive(MdChip));
       chipNativeElement = chipDebugElement.nativeElement;
-      chipInstance = chipDebugElement.componentInstance;
+      chipInstance = chipDebugElement.injector.get(MdChip);
 
       document.body.appendChild(chipNativeElement);
     });
@@ -56,7 +56,7 @@ describe('Chips', () => {
         chipDebugElement = fixture.debugElement.query(By.directive(MdChip));
         chipListNativeElement = fixture.debugElement.query(By.directive(MdChipList)).nativeElement;
         chipNativeElement = chipDebugElement.nativeElement;
-        chipInstance = chipDebugElement.componentInstance;
+        chipInstance = chipDebugElement.injector.get(MdChip);
         testComponent = fixture.debugElement.componentInstance;
 
         document.body.appendChild(chipNativeElement);
@@ -113,6 +113,15 @@ describe('Chips', () => {
         expect(testComponent.chipSelect).toHaveBeenCalledWith({ chip: chipInstance });
       });
 
+      it('should update the aria-label for disabled chips', () => {
+        expect(chipNativeElement.getAttribute('aria-disabled')).toBe('false');
+
+        testComponent.disabled = true;
+        fixture.detectChanges();
+
+        expect(chipNativeElement.getAttribute('aria-disabled')).toBe('true');
+      });
+
     });
   });
 });
@@ -121,7 +130,7 @@ describe('Chips', () => {
   template: `
     <md-chip-list>
       <div *ngIf="shouldShow">
-        <md-chip [color]="color" [selected]="selected"
+        <md-chip [color]="color" [selected]="selected" [disabled]="disabled"
                  (focus)="chipFocus($event)" (destroy)="chipDestroy($event)"
                  (select)="chipSelect($event)" (deselect)="chipDeselect($event)">
           {{name}}
@@ -130,22 +139,16 @@ describe('Chips', () => {
     </md-chip-list>`
 })
 class SingleChip {
+  disabled: boolean = false;
   name: string = 'Test';
   color: string = 'primary';
   selected: boolean = false;
   shouldShow: boolean = true;
 
-  chipFocus(event: MdChipEvent) {
-  }
-
-  chipDestroy(event: MdChipEvent) {
-  }
-
-  chipSelect(event: MdChipEvent) {
-  }
-
-  chipDeselect(event: MdChipEvent) {
-  }
+  chipFocus: (event?: MdChipEvent) => void = () => {};
+  chipDestroy: (event?: MdChipEvent) => void = () => {};
+  chipSelect: (event?: MdChipEvent) => void = () => {};
+  chipDeselect: (event?: MdChipEvent) => void = () => {};
 }
 
 @Component({

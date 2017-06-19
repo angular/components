@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Directive, ElementRef, Input, AfterViewInit} from '@angular/core';
 
 
@@ -10,14 +18,16 @@ import {Directive, ElementRef, Input, AfterViewInit} from '@angular/core';
   exportAs: 'mdTextareaAutosize',
   host: {
     '(input)': 'resizeToFitContent()',
+    // Textarea elements that have the directive applied should have a single row by default.
+    // Browsers normally show two rows by default and therefore this limits the minRows binding.
+    'rows': '1',
   },
 })
 export class MdTextareaAutosize implements AfterViewInit {
   private _minRows: number;
   private _maxRows: number;
 
-  /** @deprecated Use mdAutosizeMinRows */
-  @Input()
+  @Input('mdAutosizeMinRows')
   get minRows() { return this._minRows; }
 
   set minRows(value: number) {
@@ -25,24 +35,20 @@ export class MdTextareaAutosize implements AfterViewInit {
     this._setMinHeight();
   }
 
-  /** @deprecated Use mdAutosizeMaxRows */
-  @Input()
+  @Input('mdAutosizeMaxRows')
   get maxRows() { return this._maxRows; }
-
   set maxRows(value: number) {
     this._maxRows = value;
     this._setMaxHeight();
   }
 
-  /** Minimum number of rows for this textarea. */
-  @Input()
-  get mdAutosizeMinRows(): number { return this.minRows; }
-  set mdAutosizeMinRows(value: number) { this.minRows = value; }
+  @Input('matAutosizeMaxRows')
+  get _matAutosizeMinRows() { return this.minRows; }
+  set _matAutosizeMinRows(v) { this.minRows = v; }
 
-  /** Maximum number of rows for this textarea. */
-  @Input()
-  get mdAutosizeMaxRows(): number { return this.maxRows; }
-  set mdAutosizeMaxRows(value: number) { this.maxRows = value; }
+  @Input('matAutosizeMaxRows')
+  get _matAutosizeMaxRows() { return this.maxRows; }
+  set _matAutosizeMaxRows(v) { this.maxRows = v; }
 
   /** Cached height of a textarea with a single row. */
   private _cachedLineHeight: number;
@@ -116,7 +122,8 @@ export class MdTextareaAutosize implements AfterViewInit {
 
   /** Resize the textarea to fit its content. */
   resizeToFitContent() {
-    let textarea = this._elementRef.nativeElement as HTMLTextAreaElement;
+    const textarea = this._elementRef.nativeElement as HTMLTextAreaElement;
+
     // Reset the textarea height to auto in order to shrink back to its default size.
     textarea.style.height = 'auto';
 

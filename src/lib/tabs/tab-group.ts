@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   ViewChild,
   Component,
@@ -38,7 +46,7 @@ export type MdTabHeaderPosition = 'above' | 'below';
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
   host: {
-    '[class.mat-tab-group]': 'true',
+    'class': 'mat-tab-group',
     '[class.mat-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-tab-group-inverted-header]': 'headerPosition === "below"',
   }

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   AfterContentInit,
   AfterContentChecked,
@@ -16,10 +24,11 @@ import {
   Renderer2,
   Self,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Inject
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {coerceBooleanProperty} from '../core';
+import {coerceBooleanProperty, Platform} from '../core';
 import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {getSupportedInputTypes} from '../core/platform/features';
 import {
@@ -28,7 +37,11 @@ import {
   getMdInputContainerPlaceholderConflictError,
   getMdInputContainerUnsupportedTypeError
 } from './input-container-errors';
-
+import {
+  FloatPlaceholderType,
+  PlaceholderOptions,
+  MD_PLACEHOLDER_GLOBAL_OPTIONS
+} from '../core/placeholder/placeholder-options';
 
 // Invalid input type. Using one of these will throw an MdInputContainerUnsupportedTypeError.
 const MD_INPUT_INVALID_TYPES = [
@@ -43,9 +56,6 @@ const MD_INPUT_INVALID_TYPES = [
   'reset',
   'submit'
 ];
-
-/** Type for the available floatPlaceholder values. */
-export type FloatPlaceholderType = 'always' | 'never' | 'auto';
 
 let nextUniqueId = 0;
 
@@ -64,16 +74,16 @@ export class MdPlaceholder {}
 @Directive({
   selector: 'md-hint, mat-hint',
   host: {
-    '[class.mat-hint]': 'true',
+    'class': 'mat-hint',
     '[class.mat-right]': 'align == "end"',
     '[attr.id]': 'id',
   }
 })
 export class MdHint {
-  // Whether to align the hint label at the start or end of the line.
+  /** Whether to align the hint label at the start or end of the line. */
   @Input() align: 'start' | 'end' = 'start';
 
-  // Unique ID for the hint. Used for the aria-describedby on the input.
+  /** Unique ID for the hint. Used for the aria-describedby on the input. */
   @Input() id: string = `md-input-hint-${nextUniqueId++}`;
 }
 
@@ -81,7 +91,7 @@ export class MdHint {
 @Directive({
   selector: 'md-error, mat-error',
   host: {
-    '[class.mat-input-error]': 'true'
+    'class': 'mat-input-error'
   }
 })
 export class MdErrorDirective { }
@@ -104,7 +114,7 @@ export class MdSuffix {}
 @Directive({
   selector: `input[mdInput], textarea[mdInput], input[matInput], textarea[matInput]`,
   host: {
-    '[class.mat-input-element]': 'true',
+    'class': 'mat-input-element',
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
     '[id]': 'id',
@@ -112,6 +122,7 @@ export class MdSuffix {}
     '[disabled]': 'disabled',
     '[required]': 'required',
     '[attr.aria-describedby]': 'ariaDescribedby || null',
+    '[attr.aria-invalid]': '_isErrorState()',
     '(blur)': '_onBlur()',
     '(focus)': '_onFocus()',
     '(input)': '_onInput()',
@@ -187,6 +198,7 @@ export class MdInputDirective {
    */
   @Output() _placeholderChange = new EventEmitter<string>();
 
+  /** Whether the input is empty. */
   get empty() {
     return !this._isNeverEmpty() &&
         (this.value == null || this.value === '') &&
@@ -209,7 +221,10 @@ export class MdInputDirective {
 
   constructor(private _elementRef: ElementRef,
               private _renderer: Renderer2,
-              @Optional() @Self() public _ngControl: NgControl) {
+              private _platform: Platform,
+              @Optional() @Self() public _ngControl: NgControl,
+              @Optional() private _parentForm: NgForm,
+              @Optional() private _parentFormGroup: FormGroupDirective) {
 
     // Force setter to be called in case id was not specified.
     this.id = this.id;
@@ -232,6 +247,17 @@ export class MdInputDirective {
     // FormsModule or ReactiveFormsModule, because Angular forms also listens to input events.
   }
 
+  /** Whether the input is in an error state. */
+  _isErrorState(): boolean {
+    const control = this._ngControl;
+    const isInvalid = control && control.invalid;
+    const isTouched = control && control.touched;
+    const isSubmitted = (this._parentFormGroup && this._parentFormGroup.submitted) ||
+        (this._parentForm && this._parentForm.submitted);
+
+    return !!(isInvalid && (isTouched || isSubmitted));
+  }
+
   /** Make sure the input is a supported type. */
   private _validateType() {
     if (MD_INPUT_INVALID_TYPES.indexOf(this._type) !== -1) {
@@ -242,13 +268,20 @@ export class MdInputDirective {
   private _isNeverEmpty() { return this._neverEmptyInputTypes.indexOf(this._type) !== -1; }
 
   private _isBadInput() {
-    return (this._elementRef.nativeElement as HTMLInputElement).validity.badInput;
+    // The `validity` property won't be present on platform-server.
+    let validity = (this._elementRef.nativeElement as HTMLInputElement).validity;
+    return validity && validity.badInput;
   }
 
   /** Determines if the component host is a textarea. If not recognizable it returns false. */
   private _isTextarea() {
     let nativeElement = this._elementRef.nativeElement;
-    return nativeElement ? nativeElement.nodeName.toLowerCase() === 'textarea' : false;
+
+    // In Universal, we don't have access to `nodeName`, but the same can be achieved with `name`.
+    // Note that this shouldn't be necessary once Angular switches to an API that resembles the
+    // DOM closer.
+    let nodeName = this._platform.isBrowser ? nativeElement.nodeName : nativeElement.name;
+    return nodeName ? nodeName.toLowerCase() === 'textarea' : false;
   }
 }
 
@@ -273,8 +306,8 @@ export class MdInputDirective {
   host: {
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
-    '[class.mat-input-container]': 'true',
-    '[class.mat-input-invalid]': '_isErrorState()',
+    'class': 'mat-input-container',
+    '[class.mat-input-invalid]': '_mdInputChild._isErrorState()',
     '[class.mat-focused]': '_mdInputChild.focused',
     '[class.ng-untouched]': '_shouldForward("untouched")',
     '[class.ng-touched]': '_shouldForward("touched")',
@@ -287,9 +320,9 @@ export class MdInputDirective {
   },
   encapsulation: ViewEncapsulation.None,
 })
+
 export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterContentChecked {
-  /** Alignment of the input container's content. */
-  @Input() align: 'start' | 'end' = 'start';
+  private _placeholderOptions: PlaceholderOptions;
 
   /** Color of the input divider, based on the theme. */
   @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
@@ -299,7 +332,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   get dividerColor() { return this.color; }
   set dividerColor(value) { this.color = value; }
 
-  /** Whether we should hide the required marker. */
+  /** Whether the required marker should be hidden. */
   @Input()
   get hideRequiredMarker() { return this._hideRequiredMarker; }
   set hideRequiredMarker(value: any) {
@@ -332,10 +365,11 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   @Input()
   get floatPlaceholder() { return this._floatPlaceholder; }
   set floatPlaceholder(value: FloatPlaceholderType) {
-    this._floatPlaceholder = value || 'auto';
+    this._floatPlaceholder = value || this._placeholderOptions.float || 'auto';
   }
-  private _floatPlaceholder: FloatPlaceholderType = 'auto';
+  private _floatPlaceholder: FloatPlaceholderType;
 
+  /** Reference to the input's underline element. */
   @ViewChild('underline') underlineRef: ElementRef;
 
   @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
@@ -353,8 +387,10 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   constructor(
     public _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
-    @Optional() private _parentForm: NgForm,
-    @Optional() private _parentFormGroup: FormGroupDirective) { }
+    @Optional() @Inject(MD_PLACEHOLDER_GLOBAL_OPTIONS) placeholderOptions: PlaceholderOptions) {
+      this._placeholderOptions = placeholderOptions ? placeholderOptions : {};
+      this.floatPlaceholder = this._placeholderOptions.float || 'auto';
+    }
 
   ngAfterContentInit() {
     this._validateInputChild();
@@ -388,20 +424,10 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   /** Focuses the underlying input. */
   _focusInput() { this._mdInputChild.focus(); }
 
-  /** Whether the input container is in an error state. */
-  _isErrorState(): boolean {
-    const control = this._mdInputChild._ngControl;
-    const isInvalid = control && control.invalid;
-    const isTouched = control && control.touched;
-    const isSubmitted = (this._parentFormGroup && this._parentFormGroup.submitted) ||
-        (this._parentForm && this._parentForm.submitted);
-
-    return !!(isInvalid && (isTouched || isSubmitted));
-  }
-
   /** Determines whether to display hints or errors. */
   _getDisplayedMessages(): 'error' | 'hint' {
-    return (this._errorChildren.length > 0 && this._isErrorState()) ? 'error' : 'hint';
+    let input = this._mdInputChild;
+    return (this._errorChildren.length > 0 && input._isErrorState()) ? 'error' : 'hint';
   }
 
   /**

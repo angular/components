@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   AfterContentInit,
   Component,
@@ -12,17 +20,18 @@ import {
   Renderer2,
   ViewEncapsulation,
   NgZone,
-  OnDestroy,
+  OnDestroy, Inject,
 } from '@angular/core';
 import {Dir, coerceBooleanProperty} from '../core';
 import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import 'rxjs/add/operator/first';
+import {DOCUMENT} from '@angular/platform-browser';
 
 
 /** Throws an exception when two MdSidenav are matching the same side. */
 export function throwMdDuplicatedSidenavError(align: string) {
-  throw new Error(`A sidenav was already declared for 'align="${align}"'`);
+  throw Error(`A sidenav was already declared for 'align="${align}"'`);
 }
 
 
@@ -45,7 +54,7 @@ export class MdSidenavToggleResult {
   // TODO(mmalerba): move template to separate file.
   templateUrl: 'sidenav.html',
   host: {
-    '[class.mat-sidenav]': 'true',
+    'class': 'mat-sidenav',
     '(transitionend)': '_onTransitionEnd($event)',
     '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
@@ -126,24 +135,37 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
    * @param _elementRef The DOM element reference. Used for transition and width calculation.
    *     If not available we do not hook on transitions.
    */
-  constructor(private _elementRef: ElementRef, private _focusTrapFactory: FocusTrapFactory) {
+  constructor(private _elementRef: ElementRef,
+              private _focusTrapFactory: FocusTrapFactory,
+              @Optional() @Inject(DOCUMENT) private _doc: any) {
     this.onOpen.subscribe(() => {
-      this._elementFocusedBeforeSidenavWasOpened = document.activeElement as HTMLElement;
+      if (this._doc) {
+        this._elementFocusedBeforeSidenavWasOpened = this._doc.activeElement as HTMLElement;
+      }
 
       if (this.isFocusTrapEnabled && this._focusTrap) {
-        this._focusTrap.focusFirstTabbableElementWhenReady();
+        this._focusTrap.focusInitialElementWhenReady();
       }
     });
 
-    this.onClose.subscribe(() => {
+    this.onClose.subscribe(() => this._restoreFocus());
+  }
+
+  /**
+   * If focus is currently inside the sidenav, restores it to where it was before the sidenav
+   * opened.
+   */
+  private _restoreFocus() {
+    let activeEl = this._doc && this._doc.activeElement;
+    if (activeEl && this._elementRef.nativeElement.contains(activeEl)) {
       if (this._elementFocusedBeforeSidenavWasOpened instanceof HTMLElement) {
         this._elementFocusedBeforeSidenavWasOpened.focus();
       } else {
         this._elementRef.nativeElement.blur();
       }
+    }
 
-      this._elementFocusedBeforeSidenavWasOpened = null;
-    });
+    this._elementFocusedBeforeSidenavWasOpened = null;
   }
 
   ngAfterContentInit() {
@@ -310,7 +332,7 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
     'sidenav-transitions.css',
   ],
   host: {
-    '[class.mat-sidenav-container]': 'true',
+    'class': 'mat-sidenav-container',
     '[class.mat-sidenav-transition]': '_enableTransitions',
   },
   encapsulation: ViewEncapsulation.None,
@@ -382,8 +404,8 @@ export class MdSidenavContainer implements AfterContentInit {
    */
   private _watchSidenavToggle(sidenav: MdSidenav): void {
     if (!sidenav || sidenav.mode === 'side') { return; }
-    sidenav.onOpen.subscribe(() => this._setContainerClass(sidenav, true));
-    sidenav.onClose.subscribe(() => this._setContainerClass(sidenav, false));
+    sidenav.onOpen.subscribe(() => this._setContainerClass(true));
+    sidenav.onClose.subscribe(() => this._setContainerClass(false));
   }
 
   /**
@@ -401,7 +423,7 @@ export class MdSidenavContainer implements AfterContentInit {
   }
 
   /** Toggles the 'mat-sidenav-opened' class on the main 'md-sidenav-container' element. */
-  private _setContainerClass(sidenav: MdSidenav, isAdd: boolean): void {
+  private _setContainerClass(isAdd: boolean): void {
     if (isAdd) {
       this._renderer.addClass(this._element.nativeElement, 'mat-sidenav-opened');
     } else {

@@ -4,14 +4,7 @@ import {HttpModule} from '@angular/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {DemoApp, Home} from './demo-app/demo-app';
-import {
-  FullscreenOverlayContainer,
-  MaterialModule,
-  MdNativeDateModule,
-  MdSelectionModule,
-  OverlayContainer
-} from '@angular/material';
+import {DemoApp, DemoAppOnPush, Home} from './demo-app/demo-app';
 import {DEMO_APP_ROUTES} from './demo-app/routes';
 import {ProgressBarDemo} from './progress-bar/progress-bar-demo';
 import {ContentElementDialog, DialogDemo, IFrameDialog, JazzDialog} from './dialog/dialog-demo';
@@ -44,7 +37,85 @@ import {PlatformDemo} from './platform/platform-demo';
 import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
 import {InputDemo} from './input/input-demo';
 import {StyleDemo} from './style/style-demo';
+import {DataTableDemo} from './data-table/data-table-demo';
+import {PeopleDatabase} from './data-table/people-database';
 import {DatepickerDemo} from './datepicker/datepicker-demo';
+import {TypographyDemo} from './typography/typography-demo';
+import {ExpansionDemo} from './expansion/expansion-demo';
+import {
+  CdkDataTableModule,
+  FullscreenOverlayContainer,
+  MdAutocompleteModule,
+  MdButtonModule,
+  MdButtonToggleModule,
+  MdCardModule,
+  MdCheckboxModule,
+  MdChipsModule,
+  MdCoreModule,
+  MdDatepickerModule,
+  MdDialogModule,
+  MdExpansionModule,
+  MdGridListModule,
+  MdIconModule,
+  MdInputModule,
+  MdListModule,
+  MdMenuModule,
+  MdNativeDateModule,
+  MdProgressBarModule,
+  MdProgressSpinnerModule,
+  MdRadioModule,
+  MdRippleModule,
+  MdSelectModule,
+  MdSidenavModule,
+  MdSliderModule,
+  MdSlideToggleModule,
+  MdSnackBarModule,
+  MdTabsModule,
+  MdToolbarModule,
+  MdTooltipModule,
+  OverlayContainer,
+  StyleModule
+} from '@angular/material';
+import {TableHeaderDemo} from './data-table/table-header-demo';
+
+/**
+ * NgModule that includes all Material modules that are required to serve the demo-app.
+ */
+@NgModule({
+  exports: [
+    MdAutocompleteModule,
+    MdButtonModule,
+    MdButtonToggleModule,
+    MdCardModule,
+    MdCheckboxModule,
+    MdChipsModule,
+    MdDatepickerModule,
+    MdDialogModule,
+    MdExpansionModule,
+    MdGridListModule,
+    MdIconModule,
+    MdInputModule,
+    MdListModule,
+    MdMenuModule,
+    MdCoreModule,
+    MdProgressBarModule,
+    MdProgressSpinnerModule,
+    MdRadioModule,
+    MdRippleModule,
+    MdSelectModule,
+    MdSidenavModule,
+    MdSlideToggleModule,
+    MdSliderModule,
+    MdSnackBarModule,
+    MdTabsModule,
+    MdToolbarModule,
+    MdTooltipModule,
+    MdNativeDateModule,
+    CdkDataTableModule,
+    StyleModule
+  ]
+})
+export class DemoMaterialModule {}
 
 
 @NgModule({
@@ -55,9 +126,7 @@ import {DatepickerDemo} from './datepicker/datepicker-demo';
     HttpModule,
     ReactiveFormsModule,
     RouterModule.forRoot(DEMO_APP_ROUTES),
-    MaterialModule,
-    MdNativeDateModule,
-    MdSelectionModule,
+    DemoMaterialModule,
   ],
   declarations: [
     AutocompleteDemo,
@@ -67,8 +136,10 @@ import {DatepickerDemo} from './datepicker/datepicker-demo';
     CardDemo,
     ChipsDemo,
     CheckboxDemo,
+    DataTableDemo,
     DatepickerDemo,
     DemoApp,
+    DemoAppOnPush,
     DialogDemo,
     GesturesDemo,
     GridListDemo,
@@ -97,6 +168,7 @@ import {DatepickerDemo} from './datepicker/datepicker-demo';
     SlideToggleDemo,
     SpagettiPanel,
     StyleDemo,
+    TableHeaderDemo,
     ToolbarDemo,
     TooltipDemo,
     TabsDemo,
@@ -104,9 +176,12 @@ import {DatepickerDemo} from './datepicker/datepicker-demo';
     RainyTabContent,
     FoggyTabContent,
     PlatformDemo,
+    TypographyDemo,
+    ExpansionDemo,
   ],
   providers: [
-    {provide: OverlayContainer, useClass: FullscreenOverlayContainer}
+    {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
+    PeopleDatabase
   ],
   entryComponents: [
     DemoApp,

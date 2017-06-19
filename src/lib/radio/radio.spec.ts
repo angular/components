@@ -143,7 +143,7 @@ describe('MdRadio', () => {
       expect(radioInstances[0].checked).toBe(false);
 
       let spies = radioInstances
-        .map((value, index) => jasmine.createSpy(`onChangeSpy ${index}`));
+        .map((radio, index) => jasmine.createSpy(`onChangeSpy ${index} for ${radio.name}`));
 
       spies.forEach((spy, index) => radioInstances[index].change.subscribe(spy));
 
@@ -229,7 +229,7 @@ describe('MdRadio', () => {
     });
 
     it('should not show ripples on disabled radio buttons', () => {
-      radioInstances[0].disabled = true;
+      testComponent.isFirstDisabled = true;
       fixture.detectChanges();
 
       dispatchFakeEvent(radioLabelElements[0], 'mousedown');
@@ -238,7 +238,7 @@ describe('MdRadio', () => {
       expect(radioNativeElements[0].querySelectorAll('.mat-ripple-element').length)
         .toBe(0, 'Expected a disabled radio button to not show ripples');
 
-      radioInstances[0].disabled = false;
+      testComponent.isFirstDisabled = false;
       fixture.detectChanges();
 
       dispatchFakeEvent(radioLabelElements[0], 'mousedown');
@@ -332,6 +332,29 @@ describe('MdRadio', () => {
       expect(radioInstances[1].checked).toBeFalsy('should not select the second button');
       expect(radioInstances[2].checked).toBeFalsy('should not select the third button');
     });
+
+    it('should apply class based on color attribute', () => {
+      expect(radioNativeElements.every(radioEl => radioEl.classList.contains('mat-accent')))
+        .toBe(true, 'Expected every radio element to use the accent color by default.');
+
+      testComponent.color = 'primary';
+      fixture.detectChanges();
+
+      expect(radioNativeElements.every(radioEl => radioEl.classList.contains('mat-primary')))
+        .toBe(true, 'Expected every radio element to use the primary color from the binding.');
+
+      testComponent.color = 'warn';
+      fixture.detectChanges();
+
+      expect(radioNativeElements.every(radioEl => radioEl.classList.contains('mat-warn')))
+        .toBe(true, 'Expected every radio element to use the primary color from the binding.');
+
+      testComponent.color = null;
+      fixture.detectChanges();
+
+      expect(radioNativeElements.every(radioEl => radioEl.classList.contains('mat-accent')))
+        .toBe(true, 'Expected every radio element to fallback to accent color if value is falsy.');
+    });
   });
 
   describe('group with ngModel', () => {
@@ -417,11 +440,13 @@ describe('MdRadio', () => {
 
     it('should write to the radio button based on ngModel', fakeAsync(() => {
       testComponent.modelValue = 'chocolate';
+
       fixture.detectChanges();
       tick();
       fixture.detectChanges();
 
       expect(innerRadios[1].nativeElement.checked).toBe(true);
+      expect(radioInstances[1].checked).toBe(true);
     }));
 
     it('should update the ngModel value when selecting a radio button', () => {
@@ -551,7 +576,7 @@ describe('MdRadio', () => {
     it('should change aria-label attribute if property is changed at runtime', () => {
       expect(fruitRadioNativeInputs[0].getAttribute('aria-label')).toBe('Banana');
 
-      fruitRadioInstances[0].ariaLabel = 'Pineapple';
+      testComponent.ariaLabel = 'Pineapple';
       fixture.detectChanges();
 
       expect(fruitRadioNativeInputs[0].getAttribute('aria-label')).toBe('Pineapple');
@@ -568,7 +593,7 @@ describe('MdRadio', () => {
     it('should change aria-labelledby attribute if property is changed at runtime', () => {
       expect(fruitRadioNativeInputs[0].getAttribute('aria-labelledby')).toBe('xyz');
 
-      fruitRadioInstances[0].ariaLabelledby = 'uvw';
+      testComponent.ariaLabelledby = 'uvw';
       fixture.detectChanges();
 
       expect(fruitRadioNativeInputs[0].getAttribute('aria-labelledby')).toBe('uvw');
@@ -593,17 +618,26 @@ describe('MdRadio', () => {
                   [labelPosition]="labelPos"
                   [value]="groupValue"
                   name="test-name">
-    <md-radio-button value="fire" [disableRipple]="disableRipple">Charmander</md-radio-button>
-    <md-radio-button value="water" [disableRipple]="disableRipple">Squirtle</md-radio-button>
-    <md-radio-button value="leaf" [disableRipple]="disableRipple">Bulbasaur</md-radio-button>
+    <md-radio-button value="fire" [disableRipple]="disableRipple" [disabled]="isFirstDisabled"
+                     [color]="color">
+      Charmander
+    </md-radio-button>
+    <md-radio-button value="water" [disableRipple]="disableRipple" [color]="color">
+      Squirtle
+    </md-radio-button>
+    <md-radio-button value="leaf" [disableRipple]="disableRipple" [color]="color">
+      Bulbasaur
+    </md-radio-button>
   </md-radio-group>
   `
 })
 class RadiosInsideRadioGroup {
   labelPos: 'before' | 'after';
   isGroupDisabled: boolean = false;
+  isFirstDisabled: boolean = false;
   groupValue: string = null;
   disableRipple: boolean = false;
+  color: string;
 }
 
 
@@ -618,12 +652,18 @@ class RadiosInsideRadioGroup {
     <md-radio-button name="weather" value="cool">Autumn</md-radio-button>
 
     <span id="xyz">Baby Banana</span>
-    <md-radio-button name="fruit" value="banana" aria-label="Banana" aria-labelledby="xyz">
+    <md-radio-button name="fruit"
+                     value="banana"
+                     [aria-label]="ariaLabel"
+                     [aria-labelledby]="ariaLabelledby">
     </md-radio-button>
     <md-radio-button name="fruit" value="raspberry">Raspberry</md-radio-button>
   `
 })
-class StandaloneRadioButtons { }
+class StandaloneRadioButtons {
+  ariaLabel: string = 'Banana';
+  ariaLabelledby: string = 'xyz';
+}
 
 
 @Component({

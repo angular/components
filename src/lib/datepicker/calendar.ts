@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -26,6 +34,7 @@ import {DateAdapter} from '../core/datetime/index';
 import {MdDatepickerIntl} from './datepicker-intl';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
+import {MATERIAL_COMPATIBILITY_MODE} from '../core';
 
 
 /**
@@ -38,7 +47,7 @@ import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
   templateUrl: 'calendar.html',
   styleUrls: ['calendar.css'],
   host: {
-    '[class.mat-calendar]': 'true',
+    'class': 'mat-calendar',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -111,6 +120,7 @@ export class MdCalendar<D> implements AfterContentInit {
   constructor(private _elementRef: ElementRef,
               private _intl: MdDatepickerIntl,
               private _ngZone: NgZone,
+              @Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) public _isCompatibilityMode: boolean,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats) {
     if (!this._dateAdapter) {

@@ -8,7 +8,7 @@
 
       <table style="width: 100%" cellspacing="0"><tr>
         <td>
-          <md-input-container style="width: 100%">
+          <md-input-container style="width: 100%" floatPlaceholder="never">
             <input mdInput placeholder="First name">
           </md-input-container>
         </td>
@@ -101,7 +101,7 @@
   <md-toolbar color="primary">Prefix + Suffix</md-toolbar>
   <md-card-content>
     <h4>Text</h4>
-    <md-input-container align="end">
+    <md-input-container class="demo-text-align-end">
       <input mdInput placeholder="amount">
       <span mdPrefix>$&nbsp;</span>
       <span mdSuffix>.00</span>
@@ -112,6 +112,13 @@
       <input mdInput placeholder="amount">
       <md-icon mdPrefix>attach_money</md-icon>
       <md-icon mdSuffix>mode_edit</md-icon>
+    </md-input-container>
+
+    <h4>Icon buttons</h4>
+    <md-input-container>
+      <input mdInput placeholder="amount">
+      <button md-icon-button mdPrefix><md-icon>attach_money</md-icon></button>
+      <button md-icon-button mdSuffix><md-icon>mode_edit</md-icon></button>
     </md-input-container>
   </md-card-content>
 </md-card>
@@ -139,6 +146,20 @@
     </md-input-container>
     <md-input-container color="warn">
       <textarea mdInput placeholder="Warn Color">example</textarea>
+    </md-input-container>
+
+    <h4>With error</h4>
+    <md-input-container color="primary" >
+      <input mdInput placeholder="Default Color" [(ngModel)]="dividerColorExample1" required>
+      <md-error>This field is required</md-error>
+    </md-input-container>
+    <md-input-container color="accent">
+      <input mdInput placeholder="Accent Color" [(ngModel)]="dividerColorExample2" required>
+      <md-error>This field is required</md-error>
+    </md-input-container>
+    <md-input-container color="warn">
+      <input mdInput placeholder="Warn Color" [(ngModel)]="dividerColorExample3" required>
+      <md-error>This field is required</md-error>
     </md-input-container>
   </md-card-content>
 </md-card>
@@ -280,13 +301,13 @@
         <input mdInput placeholder="Prefixed" value="example">
         <div mdPrefix>Example:&nbsp;</div>
       </md-input-container>
-      <md-input-container align="end">
+      <md-input-container class="demo-text-align-end">
         <input mdInput placeholder="Suffixed" value="123">
         <span mdSuffix>.00 €</span>
       </md-input-container>
       <br/>
       Both:
-      <md-input-container align="end">
+      <md-input-container class="demo-text-align-end">
         <input mdInput #email placeholder="Email Address" value="angular-core">
         <span mdPrefix><md-icon [class.primary]="email.focused">email</md-icon>&nbsp;</span>
         <span mdSuffix [class.primary]="email.focused">&nbsp;@gmail.com</span>

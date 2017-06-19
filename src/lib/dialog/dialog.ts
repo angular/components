@@ -1,8 +1,22 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Injector, ComponentRef, Injectable, Optional, SkipSelf, TemplateRef} from '@angular/core';
 import {Location} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {Overlay, OverlayRef, ComponentType, OverlayState, ComponentPortal} from '../core';
+import {
+  Overlay,
+  OverlayRef,
+  ComponentType,
+  OverlayState,
+  ComponentPortal,
+} from '../core';
 import {extendObject} from '../core/util/object-extend';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {DialogInjector} from './dialog-injector';
@@ -10,9 +24,6 @@ import {MdDialogConfig} from './dialog-config';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
 import {TemplatePortal} from '../core/portal/portal';
-import {BlockScrollStrategy} from '../core/overlay/scroll/block-scroll-strategy';
-import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
-import 'rxjs/add/operator/first';
 
 
 /**
@@ -50,7 +61,6 @@ export class MdDialog {
   constructor(
       private _overlay: Overlay,
       private _injector: Injector,
-      private _viewportRuler: ViewportRuler,
       @Optional() private _location: Location,
       @Optional() @SkipSelf() private _parentDialog: MdDialog) {
 
@@ -121,8 +131,10 @@ export class MdDialog {
    */
   private _getOverlayState(dialogConfig: MdDialogConfig): OverlayState {
     let overlayState = new OverlayState();
+    overlayState.panelClass = dialogConfig.panelClass;
     overlayState.hasBackdrop = dialogConfig.hasBackdrop;
-    overlayState.scrollStrategy = new BlockScrollStrategy(this._viewportRuler);
+    overlayState.scrollStrategy = this._overlay.scrollStrategies.block();
+    overlayState.direction = dialogConfig.direction;
     if (dialogConfig.backdropClass) {
       overlayState.backdropClass = dialogConfig.backdropClass;
     }
@@ -142,7 +154,7 @@ export class MdDialog {
     let containerPortal = new ComponentPortal(MdDialogContainer, viewContainer);
 
     let containerRef: ComponentRef<MdDialogContainer> = overlay.attach(containerPortal);
-    containerRef.instance.dialogConfig = config;
+    containerRef.instance._config = config;
 
     return containerRef.instance;
   }
@@ -161,14 +173,18 @@ export class MdDialog {
       dialogContainer: MdDialogContainer,
       overlayRef: OverlayRef,
       config: MdDialogConfig): MdDialogRef<T> {
+
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
-
     let dialogRef = new MdDialogRef<T>(overlayRef, dialogContainer);
 
-    if (!config.disableClose) {
-      // When the dialog backdrop is clicked, we want to close it.
-      overlayRef.backdropClick().first().subscribe(() => dialogRef.close());
+    // When the dialog backdrop is clicked, we want to close it.
+    if (config.hasBackdrop) {
+      overlayRef.backdropClick().subscribe(() => {
+        if (!dialogRef.disableClose) {
+          dialogRef.close();
+        }
+      });
     }
 
     // We create an injector specifically for the component we're instantiating so that it can
@@ -216,7 +232,7 @@ export class MdDialog {
    */
   private _handleKeydown(event: KeyboardEvent): void {
     let topDialog = this._openDialogs[this._openDialogs.length - 1];
-    let canClose = topDialog ? !topDialog._containerInstance.dialogConfig.disableClose : false;
+    let canClose = topDialog ? !topDialog.disableClose : false;
 
     if (event.keyCode === ESCAPE && canClose) {
       topDialog.close();

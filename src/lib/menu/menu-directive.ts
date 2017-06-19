@@ -1,4 +1,10 @@
-// TODO(kara): prevent-close functionality
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 
 import {
   AfterContentInit,
@@ -12,6 +18,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
+  ElementRef,
 } from '@angular/core';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {throwMdMenuInvalidPositionX, throwMdMenuInvalidPositionY} from './menu-errors';
@@ -20,6 +27,8 @@ import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {MdMenuPanel} from './menu-panel';
 import {Subscription} from 'rxjs/Subscription';
 import {transformMenu, fadeInItems} from './menu-animations';
+import {ESCAPE} from '../core/keyboard/keycodes';
+
 
 @Component({
   moduleId: module.id,
@@ -75,6 +84,30 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   /** Whether the menu should overlap its trigger. */
   @Input() overlapTrigger = true;
 
+  /**
+   * This method takes classes set on the host md-menu element and applies them on the
+   * menu template that displays in the overlay container.  Otherwise, it's difficult
+   * to style the containing menu from outside the component.
+   * @param classes list of class names
+   */
+  @Input('class')
+  set classList(classes: string) {
+    if (classes && classes.length) {
+      this._classList = classes.split(' ').reduce((obj: any, className: string) => {
+        obj[className] = true;
+        return obj;
+      }, {});
+
+      this._elementRef.nativeElement.className = '';
+      this.setPositionClasses();
+    }
+  }
+
+  /** Event emitted when the menu is closed. */
+  @Output() close = new EventEmitter<void>();
+
+  constructor(private _elementRef: ElementRef) { }
+
   ngAfterContentInit() {
     this._keyManager = new FocusKeyManager(this.items).withWrap();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => this._emitCloseEvent());
@@ -86,23 +119,16 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
     }
   }
 
-  /**
-   * This method takes classes set on the host md-menu element and applies them on the
-   * menu template that displays in the overlay container.  Otherwise, it's difficult
-   * to style the containing menu from outside the component.
-   * @param classes list of class names
-   */
-  @Input('class')
-  set classList(classes: string) {
-    this._classList = classes.split(' ').reduce((obj: any, className: string) => {
-      obj[className] = true;
-      return obj;
-    }, {});
-    this.setPositionClasses();
+  /** Handle a keyboard event from the menu, delegating to the appropriate action. */
+  _handleKeydown(event: KeyboardEvent) {
+    switch (event.keyCode) {
+      case ESCAPE:
+        this._emitCloseEvent();
+        return;
+      default:
+        this._keyManager.onKeydown(event);
+    }
   }
-
-  /** Event emitted when the menu is closed. */
-  @Output() close = new EventEmitter<void>();
 
   /**
    * Focus the first item in the menu. This method is used by the menu trigger

@@ -1,4 +1,12 @@
 /**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
  * @module
  * @description
  * Entry point for all public APIs of Angular Material.
@@ -13,8 +21,10 @@ export * from './button-toggle/index';
 export * from './card/index';
 export * from './chips/index';
 export * from './checkbox/index';
+export * from './core/data-table/index';
 export * from './datepicker/index';
 export * from './dialog/index';
+export * from './expansion/index';
 export * from './grid-list/index';
 export * from './icon/index';
 export * from './input/index';

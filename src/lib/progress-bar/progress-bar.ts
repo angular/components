@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   Component,
   ChangeDetectionStrategy,
@@ -22,7 +30,7 @@ import {
     '[class.mat-primary]': 'color == "primary"',
     '[class.mat-accent]': 'color == "accent"',
     '[class.mat-warn]': 'color == "warn"',
-    '[class.mat-progress-bar]': 'true',
+    'class': 'mat-progress-bar',
   },
   templateUrl: 'progress-bar.html',
   styleUrls: ['progress-bar.css'],

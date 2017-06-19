@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {MaterialModule} from '@angular/material';
 import {AutocompleteOverviewExample} from './autocomplete-overview/autocomplete-overview-example';
 import {ButtonOverviewExample} from './button-overview/button-overview-example';
 import {ButtonTypesExample} from './button-types/button-types-example';
@@ -28,6 +27,7 @@ import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-exam
 import {IconOverviewExample} from './icon-overview/icon-overview-example';
 import {ProgressBarOverviewExample} from './progress-bar-overview/progress-bar-overview-example';
 import {SlideToggleOverviewExample} from './slide-toggle-overview/slide-toggle-overview-example';
+import {SlideToggleFormsExample} from './slide-toggle-forms/slide-toggle-forms-example';
 import {InputOverviewExample} from './input-overview/input-overview-example';
 import {MenuOverviewExample} from './menu-overview/menu-overview-example';
 import {CheckboxConfigurableExample} from './checkbox-configurable/checkbox-configurable-example';
@@ -71,13 +71,20 @@ import {ChipsOverviewExample} from './chips-overview/chips-overview-example';
 import {ChipsStackedExample} from './chips-stacked/chips-stacked-example';
 import {SelectFormExample} from './select-form/select-form-example';
 import {DatepickerOverviewExample} from './datepicker-overview/datepicker-overview-example';
-
+import {
+  MdAutocompleteModule, MdButtonModule, MdButtonToggleModule, MdCardModule, MdCheckboxModule,
+  MdChipsModule, MdDatepickerModule, MdDialogModule, MdGridListModule, MdIconModule, MdInputModule,
+  MdListModule, MdMenuModule, MdProgressBarModule, MdProgressSpinnerModule, MdRadioModule,
+  MdSelectModule, MdSidenavModule, MdSliderModule, MdSlideToggleModule, MdSnackBarModule,
+  MdTabsModule,
+  MdToolbarModule, MdTooltipModule
+} from '@angular/material';
 
 export interface LiveExample {
   title: string;
   component: any;
-  additionalFiles: string[];
-  selectorName: string;
+  additionalFiles?: string[];
+  selectorName?: string;
 }
 
 /**
@@ -154,6 +161,7 @@ export const EXAMPLE_COMPONENTS = {
     title: 'Configurable slide-toggle',
     component: SlideToggleConfigurableExample
   },
+  'slide-toggle-forms': {title: 'Slide-toggle with forms', component: SlideToggleFormsExample},
   'slide-toggle-overview': {title: 'Basic slide-toggles', component: SlideToggleOverviewExample},
   'snack-bar-component': {
     title: 'Snack-bar with a custom component',
@@ -167,6 +175,39 @@ export const EXAMPLE_COMPONENTS = {
   'tooltip-overview': {title: 'Basic tooltip', component: TooltipOverviewExample},
   'tooltip-position': {title: 'Tooltip with custom position', component: TooltipPositionExample},
 };
+
+/**
+ * NgModule that includes all Material modules that are required to serve the examples.
+ */
+@NgModule({
+  exports: [
+    MdAutocompleteModule,
+    MdButtonModule,
+    MdButtonToggleModule,
+    MdCardModule,
+    MdCheckboxModule,
+    MdChipsModule,
+    MdDatepickerModule,
+    MdDialogModule,
+    MdGridListModule,
+    MdIconModule,
+    MdInputModule,
+    MdListModule,
+    MdMenuModule,
+    MdProgressBarModule,
+    MdProgressSpinnerModule,
+    MdRadioModule,
+    MdSelectModule,
+    MdSlideToggleModule,
+    MdSliderModule,
+    MdSidenavModule,
+    MdSnackBarModule,
+    MdTabsModule,
+    MdToolbarModule,
+    MdTooltipModule
+  ]
+})
+export class ExampleMaterialModule {}
 
 /**
  * The list of all example components.
@@ -215,6 +256,7 @@ export const EXAMPLE_LIST = [
   SliderOverviewExample,
   SlideToggleConfigurableExample,
   SlideToggleOverviewExample,
+  SlideToggleFormsExample,
   SnackBarComponentExample,
   PizzaPartyComponent,
   SnackBarOverviewExample,
@@ -230,7 +272,7 @@ export const EXAMPLE_LIST = [
   declarations: EXAMPLE_LIST,
   entryComponents: EXAMPLE_LIST,
   imports: [
-    MaterialModule,
+    ExampleMaterialModule,
     FormsModule,
     ReactiveFormsModule,
     CommonModule,

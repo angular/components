@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   Component,
   Directive,
@@ -9,6 +17,7 @@ import {
   OnDestroy,
   Renderer2,
   ChangeDetectorRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   style,
@@ -25,7 +34,6 @@ import {
   ComponentPortal,
   OverlayConnectionPosition,
   OriginConnectionPosition,
-  RepositionScrollStrategy,
 } from '../core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
@@ -45,7 +53,7 @@ export const SCROLL_THROTTLE_MS = 20;
 
 /** Throws an error if the user supplied an invalid tooltip position. */
 export function throwMdTooltipInvalidPositionError(position: string) {
-  throw new Error(`Tooltip position "${position}" is invalid.`);
+  throw Error(`Tooltip position "${position}" is invalid.`);
 }
 
 /**
@@ -68,6 +76,7 @@ export class MdTooltip implements OnDestroy {
 
   private _position: TooltipPosition = 'below';
   private _disabled: boolean = false;
+  private _tooltipClass: string|string[]|Set<string>|{[key: string]: any};
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   @Input('mdTooltipPosition')
@@ -118,6 +127,16 @@ export class MdTooltip implements OnDestroy {
     }
   }
 
+  /** Classes to be passed to the tooltip. Supports the same syntax as `ngClass`. */
+  @Input('mdTooltipClass')
+  get tooltipClass() { return this._tooltipClass; }
+  set tooltipClass(value: string|string[]|Set<string>|{[key: string]: any}) {
+    this._tooltipClass = value;
+    if (this._tooltipInstance) {
+      this._setTooltipClass(this._tooltipClass);
+    }
+  }
+
   /** @deprecated */
   @Input('md-tooltip')
   get _deprecatedMessage(): string { return this.message; }
@@ -147,6 +166,11 @@ export class MdTooltip implements OnDestroy {
   @Input('matTooltipShowDelay')
   get _matShowDelay() { return this.showDelay; }
   set _matShowDelay(v) { this.showDelay = v; }
+
+  // Properties with `mat-` prefix for nonconflict mode.
+  @Input('matTooltipClass')
+  get _matClass() { return this.tooltipClass; }
+  set _matClass(v) { this.tooltipClass = v; }
 
   constructor(
     private _overlay: Overlay,
@@ -183,6 +207,7 @@ export class MdTooltip implements OnDestroy {
       this._createTooltip();
     }
 
+    this._setTooltipClass(this._tooltipClass);
     this._setTooltipMessage(this._message);
     this._tooltipInstance.show(this._position, delay);
   }
@@ -237,10 +262,12 @@ export class MdTooltip implements OnDestroy {
     });
 
     let config = new OverlayState();
+
     config.direction = this._dir ? this._dir.value : 'ltr';
     config.positionStrategy = strategy;
-    config.scrollStrategy =
-        new RepositionScrollStrategy(this._scrollDispatcher, SCROLL_THROTTLE_MS);
+    config.scrollStrategy = this._overlay.scrollStrategies.reposition({
+      scrollThrottle: SCROLL_THROTTLE_MS
+    });
 
     this._overlayRef = this._overlay.create(config);
   }
@@ -313,6 +340,12 @@ export class MdTooltip implements OnDestroy {
       }
     });
   }
+
+  /** Updates the tooltip class */
+  private _setTooltipClass(tooltipClass: string|string[]|Set<string>|{[key: string]: any}) {
+    this._tooltipInstance.tooltipClass = tooltipClass;
+    this._tooltipInstance._markForCheck();
+  }
 }
 
 export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
@@ -326,6 +359,7 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
   selector: 'md-tooltip-component, mat-tooltip-component',
   templateUrl: 'tooltip.html',
   styleUrls: ['tooltip.css'],
+  encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('state', [
       state('void', style({transform: 'scale(0)'})),
@@ -337,12 +371,18 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
     ])
   ],
   host: {
+    // Forces the element to have a layout in IE and Edge. This fixes issues where the element
+    // won't be rendered if the animations are disabled or there is no web animations polyfill.
+    '[style.zoom]': '_visibility === "visible" ? 1 : null',
     '(body:click)': 'this._handleBodyInteraction()'
   }
 })
 export class TooltipComponent {
   /** Message to display in the tooltip */
   message: string;
+
+  /** Classes to be added to the tooltip. Supports the same syntax as `ngClass`. */
+  tooltipClass: string|string[]|Set<string>|{[key: string]: any};
 
   /** The timeout ID of any current timer set to show the tooltip */
   _showTimeoutId: number;

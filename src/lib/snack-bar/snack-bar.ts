@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Injectable, ComponentRef, Optional, SkipSelf} from '@angular/core';
 import {
   ComponentType,
@@ -54,7 +62,7 @@ export class MdSnackBar {
    */
   openFromComponent<T>(component: ComponentType<T>, config?: MdSnackBarConfig): MdSnackBarRef<T> {
     config = _applyConfigDefaults(config);
-    let overlayRef = this._createOverlay();
+    let overlayRef = this._createOverlay(config);
     let snackBarContainer = this._attachSnackBarContainer(overlayRef, config);
     let snackBarRef = this._attachSnackbarContent(component, snackBarContainer, overlayRef);
 
@@ -123,6 +131,11 @@ export class MdSnackBar {
     let containerRef: ComponentRef<MdSnackBarContainer> = overlayRef.attach(containerPortal);
     containerRef.instance.snackBarConfig = config;
 
+    // The snackbar animation needs the content to be resolved in order to transform the bar
+    // out of the view initially (so it can slide in). To make the content resolve, we manually
+    // detect changes.
+    containerRef.changeDetectorRef.detectChanges();
+
     return containerRef.instance;
   }
 
@@ -139,12 +152,12 @@ export class MdSnackBar {
 
   /**
    * Creates a new overlay and places it in the correct location.
+   * @param config The user-specified snack bar config.
    */
-  private _createOverlay(): OverlayRef {
+  private _createOverlay(config: MdSnackBarConfig): OverlayRef {
     let state = new OverlayState();
-    state.positionStrategy = this._overlay.position().global()
-        .centerHorizontally()
-        .bottom('0');
+    state.direction = config.direction;
+    state.positionStrategy = this._overlay.position().global().centerHorizontally().bottom('0');
     return this._overlay.create(state);
   }
 }

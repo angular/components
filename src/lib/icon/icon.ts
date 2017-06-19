@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,9 +16,17 @@ import {
   Renderer2,
   SimpleChange,
   ViewEncapsulation,
-  AfterViewChecked,
+  Attribute,
 } from '@angular/core';
 import {MdIconRegistry} from './icon-registry';
+import {CanColor, mixinColor} from '../core/common-behaviors/color';
+
+
+// Boilerplate for applying mixins to MdIcon.
+export class MdIconBase {
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+}
+export const _MdIconMixinBase = mixinColor(MdIconBase);
 
 
 /**
@@ -51,15 +67,15 @@ import {MdIconRegistry} from './icon-registry';
   template: '<ng-content></ng-content>',
   selector: 'md-icon, mat-icon',
   styleUrls: ['icon.css'],
+  inputs: ['color'],
   host: {
     'role': 'img',
-    '[class.mat-icon]': 'true',
+    'class': 'mat-icon',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
-  private _color: string;
+export class MdIcon extends _MdIconMixinBase implements OnChanges, OnInit, CanColor {
 
   /** Name of the icon in the SVG icon set. */
   @Input() svgIcon: string;
@@ -70,39 +86,20 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
   /** Name of an icon within a font set. */
   @Input() fontIcon: string;
 
-  /** Alt label to be used for accessibility. */
-  @Input() alt: string;
-
-  /** Screenreader label for the icon. */
-  @Input('aria-label') hostAriaLabel: string = '';
-
-  /** Color of the icon. */
-  @Input()
-  get color(): string { return this._color; }
-  set color(value: string) { this._updateColor(value); }
-
   private _previousFontSetClass: string;
   private _previousFontIconClass: string;
-  private _previousAriaLabel: string;
 
   constructor(
-      private _elementRef: ElementRef,
-      private _renderer: Renderer2,
-      private _mdIconRegistry: MdIconRegistry) { }
+      renderer: Renderer2,
+      elementRef: ElementRef,
+      private _mdIconRegistry: MdIconRegistry,
+      @Attribute('aria-hidden') ariaHidden: string) {
+    super(renderer, elementRef);
 
-  _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      if (isAdd) {
-        this._renderer.addClass(this._elementRef.nativeElement, `mat-${color}`);
-      } else {
-        this._renderer.removeClass(this._elementRef.nativeElement, `mat-${color}`);
-      }
+    // If the user has not explicitly set aria-hidden, mark the icon as hidden, as this is
+    // the right thing to do for the majority of icon use-cases.
+    if (!ariaHidden) {
+      renderer.setAttribute(elementRef.nativeElement, 'aria-hidden', 'true');
     }
   }
 
@@ -131,11 +128,11 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
       case 2:
         return <[string, string]>parts;
       default:
-        throw new Error(`Invalid icon name: "${iconName}"`);
+        throw Error(`Invalid icon name: "${iconName}"`);
     }
   }
 
-  ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+  ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
     const changedInputs = Object.keys(changes);
     // Only update the inline SVG icon if the inputs changed, to avoid unnecessary DOM operations.
     if (changedInputs.indexOf('svgIcon') != -1 || changedInputs.indexOf('svgSrc') != -1) {
@@ -149,7 +146,6 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
     if (this._usingFontIcon()) {
       this._updateFontIconClasses();
     }
-    this._updateAriaLabel();
   }
 
   ngOnInit() {
@@ -158,43 +154,6 @@ export class MdIcon implements OnChanges, OnInit, AfterViewChecked {
     if (this._usingFontIcon()) {
       this._updateFontIconClasses();
     }
-  }
-
-  ngAfterViewChecked() {
-    // Update aria label here because it may depend on the projected text content.
-    // (e.g. <md-icon>home</md-icon> should use 'home').
-    this._updateAriaLabel();
-  }
-
-  private _updateAriaLabel() {
-      const ariaLabel = this._getAriaLabel();
-      if (ariaLabel && ariaLabel !== this._previousAriaLabel) {
-        this._previousAriaLabel = ariaLabel;
-        this._renderer.setAttribute(this._elementRef.nativeElement, 'aria-label', ariaLabel);
-      }
-  }
-
-  private _getAriaLabel() {
-    // If the parent provided an aria-label attribute value, use it as-is. Otherwise look for a
-    // reasonable value from the alt attribute, font icon name, SVG icon name, or (for ligatures)
-    // the text content of the directive.
-    const label =
-        this.hostAriaLabel ||
-        this.alt ||
-        this.fontIcon ||
-        this._splitIconName(this.svgIcon)[1];
-    if (label) {
-      return label;
-    }
-    // The "content" of an SVG icon is not a useful label.
-    if (this._usingFontIcon()) {
-      const text = this._elementRef.nativeElement.textContent;
-      if (text) {
-        return text;
-      }
-    }
-    // TODO: Warn here in dev mode.
-    return null;
   }
 
   private _usingFontIcon(): boolean {

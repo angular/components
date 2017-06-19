@@ -1,5 +1,13 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {QueryList} from '@angular/core';
-import {UP_ARROW, DOWN_ARROW, TAB, HOME, END} from '../core';
+import {UP_ARROW, DOWN_ARROW, TAB} from '../core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
@@ -56,12 +64,6 @@ export class ListKeyManager<T extends CanDisable> {
         break;
       case UP_ARROW:
         this.setPreviousItemActive();
-        break;
-      case HOME:
-        this.setFirstItemActive();
-        break;
-      case END:
-        this.setLastItemActive();
         break;
       case TAB:
         // Note that we shouldn't prevent the default action on tab.
@@ -174,4 +176,3 @@ export class ListKeyManager<T extends CanDisable> {
   }
 
 }
-

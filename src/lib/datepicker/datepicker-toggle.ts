@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
 import {MdDatepicker} from './datepicker';
 import {MdDatepickerIntl} from './datepicker-intl';
@@ -9,8 +17,8 @@ import {MdDatepickerIntl} from './datepicker-intl';
   template: '',
   styleUrls: ['datepicker-toggle.css'],
   host: {
-    '[attr.type]': 'type',
-    '[class.mat-datepicker-toggle]': 'true',
+    'type': 'button',
+    'class': 'mat-datepicker-toggle',
     '[attr.aria-label]': '_intl.openCalendarLabel',
     '(click)': '_open($event)',
   },
@@ -20,9 +28,6 @@ import {MdDatepickerIntl} from './datepicker-intl';
 export class MdDatepickerToggle<D> {
   /** Datepicker instance that the button will toggle. */
   @Input('mdDatepickerToggle') datepicker: MdDatepicker<D>;
-
-  /** Type of the button. */
-  @Input() type: string = 'button';
 
   @Input('matDatepickerToggle')
   get _datepicker() { return this.datepicker; }

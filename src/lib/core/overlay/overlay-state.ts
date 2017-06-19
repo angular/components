@@ -1,7 +1,14 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {PositionStrategy} from './position/position-strategy';
 import {LayoutDirection} from '../rtl/dir';
 import {ScrollStrategy} from './scroll/scroll-strategy';
-import {NoopScrollStrategy} from './scroll/noop-scroll-strategy';
 
 
 /**
@@ -13,7 +20,10 @@ export class OverlayState {
   positionStrategy: PositionStrategy;
 
   /** Strategy to be used when handling scroll events while the overlay is open. */
-  scrollStrategy: ScrollStrategy = new NoopScrollStrategy();
+  scrollStrategy: ScrollStrategy;
+
+  /** Custom class to add to the overlay pane. */
+  panelClass: string = '';
 
   /** Whether the overlay has a backdrop. */
   hasBackdrop: boolean = false;

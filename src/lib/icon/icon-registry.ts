@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Injectable, SecurityContext, Optional, SkipSelf} from '@angular/core';
 import {SafeResourceUrl, DomSanitizer} from '@angular/platform-browser';
 import {Http} from '@angular/http';
@@ -19,7 +27,7 @@ import 'rxjs/add/observable/throw';
  * @docs-private
  */
 export function getMdIconNameNotFoundError(iconName: string): Error {
-  return new Error(`Unable to find icon with the name "${iconName}"`);
+  return Error(`Unable to find icon with the name "${iconName}"`);
 }
 
 
@@ -29,7 +37,7 @@ export function getMdIconNameNotFoundError(iconName: string): Error {
  * @docs-private
  */
 export function getMdIconNoHttpProviderError(): Error {
-  return new Error('Could not find Http provider for use with Angular Material icons. ' +
+  return Error('Could not find Http provider for use with Angular Material icons. ' +
                    'Please include the HttpModule from @angular/http in your app imports.');
 }
 
@@ -245,7 +253,7 @@ export class MdIconRegistry {
         .filter(iconSetConfig => !iconSetConfig.svgElement)
         .map(iconSetConfig =>
             this._loadSvgIconSetFromConfig(iconSetConfig)
-                .catch((err: any, caught: Observable<SVGElement>): Observable<SVGElement> => {
+                .catch((err: any): Observable<SVGElement> => {
                   let url =
                       this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, iconSetConfig.url);
 
@@ -263,7 +271,7 @@ export class MdIconRegistry {
     // Fetch all the icon set URLs. When the requests complete, every IconSet should have a
     // cached SVG element (unless the request failed), and we can check again for the icon.
     return Observable.forkJoin(iconSetFetchRequests)
-        .map((ignoredResults: any) => {
+        .map(() => {
           const foundIcon = this._extractIconWithNameFromAnySet(name, iconSetConfigs);
           if (!foundIcon) {
             throw getMdIconNameNotFoundError(name);
@@ -327,14 +335,24 @@ export class MdIconRegistry {
    */
   private _extractSvgIconFromSet(iconSet: SVGElement, iconName: string): SVGElement {
     const iconNode = iconSet.querySelector('#' + iconName);
+
     if (!iconNode) {
       return null;
     }
+
     // If the icon node is itself an <svg> node, clone and return it directly. If not, set it as
     // the content of a new <svg> node.
-    if (iconNode.tagName.toLowerCase() == 'svg') {
+    if (iconNode.tagName.toLowerCase() === 'svg') {
       return this._setSvgAttributes(iconNode.cloneNode(true) as SVGElement);
     }
+
+    // If the node is a <symbol>, it won't be rendered so we have to convert it into <svg>. Note
+    // that the same could be achieved by referring to it via <use href="#id">, however the <use>
+    // tag is problematic on Firefox, because it needs to include the current page path.
+    if (iconNode.nodeName.toLowerCase() === 'symbol') {
+      return this._setSvgAttributes(this._toSvgElement(iconNode));
+    }
+
     // createElement('SVG') doesn't work as expected; the DOM ends up with
     // the correct nodes, but the SVG content doesn't render. Instead we
     // have to create an empty SVG node using innerHTML and append its content.
@@ -343,6 +361,7 @@ export class MdIconRegistry {
     const svg = this._svgElementFromString('<svg></svg>');
     // Clone the node so we don't remove it from the parent icon set element.
     svg.appendChild(iconNode.cloneNode(true));
+
     return this._setSvgAttributes(svg);
   }
 
@@ -356,8 +375,23 @@ export class MdIconRegistry {
     div.innerHTML = str;
     const svg = div.querySelector('svg') as SVGElement;
     if (!svg) {
-      throw new Error('<svg> tag not found');
+      throw Error('<svg> tag not found');
     }
+    return svg;
+  }
+
+  /**
+   * Converts an element into an SVG node by cloning all of its children.
+   */
+  private _toSvgElement(element: Element): SVGElement {
+    let svg = this._svgElementFromString('<svg></svg>');
+
+    for (let i = 0; i < element.childNodes.length; i++) {
+      if (element.childNodes[i].nodeType === Node.ELEMENT_NODE) {
+        svg.appendChild(element.childNodes[i].cloneNode(true));
+      }
+    }
+
     return svg;
   }
 

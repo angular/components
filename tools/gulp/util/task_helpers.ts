@@ -2,20 +2,18 @@ import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as gulp from 'gulp';
 import * as path from 'path';
-import {PROJECT_ROOT} from '../constants';
+import {buildConfig} from 'material2-build-tools';
 
 /* Those imports lack typings. */
 const gulpClean = require('gulp-clean');
 const gulpRunSequence = require('run-sequence');
-const gulpSass = require('gulp-sass');
-const gulpSourcemaps = require('gulp-sourcemaps');
 const gulpConnect = require('gulp-connect');
-const gulpIf = require('gulp-if');
-const gulpCleanCss = require('gulp-clean-css');
 
 // There are no type definitions available for these imports.
 const resolveBin = require('resolve-bin');
 const httpRewrite = require('http-rewrite-middleware');
+
+const {projectDir} = buildConfig;
 
 /** If the string passed in is a glob, returns it, otherwise append '**\/*' to it. */
 function _globify(maybeGlob: string, suffix = '**/*') {
@@ -37,19 +35,10 @@ export function tsBuildTask(tsConfigPath: string) {
   return execNodeTask('typescript', 'tsc', ['-p', tsConfigPath]);
 }
 
-
-/** Create a SASS Build Task. */
-export function sassBuildTask(dest: string, root: string, minify = false) {
-  return () => {
-    return gulp.src(_globify(root, '**/*.scss'))
-      .pipe(gulpSourcemaps.init({ loadMaps: true }))
-      .pipe(gulpSass().on('error', gulpSass.logError))
-      .pipe(gulpIf(minify, gulpCleanCss()))
-      .pipe(gulpSourcemaps.write('.'))
-      .pipe(gulp.dest(dest));
-  };
+/** Creates a task that runs the Angular Compiler CLI. */
+export function ngcBuildTask(tsConfigPath: string) {
+  return execNodeTask('@angular/compiler-cli', 'ngc', ['-p', tsConfigPath]);
 }
-
 
 /** Options that can be passed to execTask or execNodeTask. */
 export interface ExecTaskOptions {
@@ -59,12 +48,15 @@ export interface ExecTaskOptions {
   silentStdout?: boolean;
   // If an error happens, this will replace the standard error.
   errMessage?: string;
+  // Environment variables being passed to the child process.
+  env?: any;
 }
 
 /** Create a task that executes a binary as if from the command line. */
 export function execTask(binPath: string, args: string[], options: ExecTaskOptions = {}) {
   return (done: (err?: string) => void) => {
-    const childProcess = child_process.spawn(binPath, args);
+    const env = Object.assign({}, process.env, options.env);
+    const childProcess = child_process.spawn(binPath, args, {env});
 
     if (!options.silentStdout && !options.silent) {
       childProcess.stdout.on('data', (data: string) => process.stdout.write(data));
@@ -152,11 +144,11 @@ export function buildAppTask(appName: string) {
  */
 export function serverTask(packagePath: string, livereload = true) {
   // The http-rewrite-middlware only supports relative paths as rewrite destinations.
-  let relativePath = path.relative(PROJECT_ROOT, packagePath);
+  const relativePath = path.relative(projectDir, packagePath);
 
   return () => {
     gulpConnect.server({
-      root: PROJECT_ROOT,
+      root: projectDir,
       livereload: livereload,
       port: 4200,
       fallback: path.join(packagePath, 'index.html'),
@@ -168,21 +160,5 @@ export function serverTask(packagePath: string, livereload = true) {
         ])];
       }
     });
-  };
-}
-
-/** Triggers a reload when livereload is enabled and a gulp-connect server is running. */
-export function triggerLivereload() {
-  gulp.src('dist').pipe(gulpConnect.reload());
-}
-
-
-/** Create a task that's a sequence of other tasks. */
-export function sequenceTask(...args: any[]) {
-  return (done: any) => {
-    gulpRunSequence(
-      ...args,
-      done
-    );
   };
 }

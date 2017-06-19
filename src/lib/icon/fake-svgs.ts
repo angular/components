@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Response, ResponseOptions} from '@angular/http';
 
 /**
@@ -27,6 +35,14 @@ const FAKE_SVGS = (() => {
           <g id="cow"><path id="moo moo"></path></g>
           <g id="sheep"><path id="baa"></path></g>
         </defs>
+      </svg>
+  `);
+
+  svgs.set('farm-set-3.svg', `
+      <svg>
+        <symbol id="duck">
+          <path id="quack"></path>
+        </symbol>
       </svg>
   `);
 

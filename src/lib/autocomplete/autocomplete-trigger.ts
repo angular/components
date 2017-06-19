@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   Directive,
   ElementRef,
@@ -13,16 +21,15 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DOCUMENT} from '@angular/platform-browser';
-import {Overlay, OverlayRef, OverlayState, TemplatePortal, RepositionScrollStrategy} from '../core';
+import {Overlay, OverlayRef, OverlayState, TemplatePortal} from '../core';
 import {MdAutocomplete} from './autocomplete';
 import {PositionStrategy} from '../core/overlay/position/position-strategy';
 import {ConnectedPositionStrategy} from '../core/overlay/position/connected-position-strategy';
 import {Observable} from 'rxjs/Observable';
 import {MdOptionSelectionChange, MdOption} from '../core/option/option';
-import {ENTER, UP_ARROW, DOWN_ARROW} from '../core/keyboard/keycodes';
+import {ENTER, UP_ARROW, DOWN_ARROW, ESCAPE} from '../core/keyboard/keycodes';
 import {Dir} from '../core/rtl/dir';
 import {MdInputContainer} from '../input/input-container';
-import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/fromEvent';
@@ -51,8 +58,18 @@ export const MD_AUTOCOMPLETE_VALUE_ACCESSOR: any = {
   multi: true
 };
 
+/**
+ * Creates an error to be thrown when attempting to use an autocomplete trigger without a panel.
+ */
+export function getMdAutocompleteMissingPanelError(): Error {
+  return Error('Attempting to open an undefined instance of `md-autocomplete`. ' +
+                   'Make sure that the id passed to the `mdAutocomplete` is correct and that ' +
+                   'you\'re attempting to open it after the ngAfterContentInit hook.');
+}
+
 @Directive({
-  selector: 'input[mdAutocomplete], input[matAutocomplete]',
+  selector: 'input[mdAutocomplete], input[matAutocomplete],' +
+  'textarea[mdAutocomplete], textarea[matAutocomplete]',
   host: {
     'role': 'combobox',
     'autocomplete': 'off',
@@ -83,7 +100,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   private _manuallyFloatingPlaceholder = false;
 
   /** View -> model callback called when value changes */
-  _onChange = (value: any) => {};
+  _onChange: (value: any) => void = () => {};
 
   /** View -> model callback called when autocomplete has been touched */
   _onTouched = () => {};
@@ -104,7 +121,6 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   constructor(private _element: ElementRef, private _overlay: Overlay,
               private _viewContainerRef: ViewContainerRef,
               private _changeDetectorRef: ChangeDetectorRef,
-              private _scrollDispatcher: ScrollDispatcher,
               @Optional() private _dir: Dir, private _zone: NgZone,
               @Optional() @Host() private _inputContainer: MdInputContainer,
               @Optional() @Inject(DOCUMENT) private _document: any) {}
@@ -124,6 +140,10 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   /** Opens the autocomplete suggestion panel. */
   openPanel(): void {
+    if (!this.autocomplete) {
+      throw getMdAutocompleteMissingPanelError();
+    }
+
     if (!this._overlayRef) {
       this._createOverlay();
     } else {
@@ -177,7 +197,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   /** The currently active option, coerced to MdOption type. */
   get activeOption(): MdOption {
-    if (this.autocomplete._keyManager) {
+    if (this.autocomplete && this.autocomplete._keyManager) {
       return this.autocomplete._keyManager.activeItem as MdOption;
     }
   }
@@ -231,7 +251,9 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   }
 
   _handleKeydown(event: KeyboardEvent): void {
-    if (this.activeOption && event.keyCode === ENTER) {
+    if (event.keyCode === ESCAPE && this.panelOpen) {
+      this.closePanel();
+    } else if (this.activeOption && event.keyCode === ENTER) {
       this.activeOption._selectViaInteraction();
       event.preventDefault();
     } else {
@@ -339,6 +361,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this._clearPreviousSelectedOption(event.source);
       this._setTriggerValue(event.source.value);
       this._onChange(event.source.value);
+      this._element.nativeElement.focus();
     }
 
     this.closePanel();
@@ -365,7 +388,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     overlayState.positionStrategy = this._getOverlayPosition();
     overlayState.width = this._getHostWidth();
     overlayState.direction = this._dir ? this._dir.value : 'ltr';
-    overlayState.scrollStrategy = new RepositionScrollStrategy(this._scrollDispatcher);
+    overlayState.scrollStrategy = this._overlay.scrollStrategies.reposition();
     return overlayState;
   }
 

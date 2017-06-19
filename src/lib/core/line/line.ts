@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   NgModule,
   Directive,
@@ -14,10 +22,8 @@ import {MdCommonModule} from '../common-behaviors/common-module';
  * counted by checking the query list's length.
  */
 @Directive({
-  selector: '[md-line], [mat-line]',
-  host: {
-    '[class.mat-line]': 'true'
-  }
+  selector: '[md-line], [mat-line], [mdLine], [matLine]',
+  host: {'class': 'mat-line'}
 })
 export class MdLine {}
 

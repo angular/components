@@ -9,10 +9,8 @@
     // The container should be the size of the viewport.
     top: 0;
     left: 0;
-
-    // Note: we prefer viewport units, because they aren't being offset by the global scrollbar.
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
   }
 
   // The overlay-container is an invisible element which contains all individual overlays.
@@ -72,8 +70,10 @@
   .cdk-global-scrollblock {
     position: fixed;
 
-    // Necessary for iOS not to expand past the viewport.
-    max-width: 100vw;
+    // Necessary for the content not to lose its width. Note that we're using 100%, instead of
+    // 100vw, because 100vw includes the width plus the scrollbar, whereas 100% is the width
+    // that the element had before we made it `fixed`.
+    width: 100%;
 
     // Note: this will always add a scrollbar to whatever element it is on, which can
     // potentially result in double scrollbars. It shouldn't be an issue, because we won't

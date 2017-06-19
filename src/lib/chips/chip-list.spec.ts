@@ -1,18 +1,11 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {Component, DebugElement, QueryList} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdChip, MdChipList, MdChipsModule} from './index';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
-import {FakeEvent} from '../core/a11y/list-key-manager.spec';
-import {SPACE, LEFT_ARROW, RIGHT_ARROW} from '../core/keyboard/keycodes';
+import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB} from '../core/keyboard/keycodes';
+import {createKeyboardEvent} from '../core/testing/event-objects';
 
-class FakeKeyboardEvent extends FakeEvent {
-  constructor(keyCode: number, protected target: HTMLElement) {
-    super(keyCode);
-
-    this.target = target;
-  }
-}
 
 describe('MdChipList', () => {
   let fixture: ComponentFixture<any>;
@@ -26,9 +19,7 @@ describe('MdChipList', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdChipsModule],
-      declarations: [
-        StaticChipList
-      ]
+      declarations: [StaticChipList]
     });
 
     TestBed.compileComponents();
@@ -56,14 +47,14 @@ describe('MdChipList', () => {
       manager = chipListInstance._keyManager;
     });
 
-    it('focuses the first chip on focus', () => {
+    it('should focus the first chip on focus', () => {
       chipListInstance.focus();
       fixture.detectChanges();
 
       expect(manager.activeItemIndex).toBe(0);
     });
 
-    it('watches for chip focus', () => {
+    it('should watch for chip focus', () => {
       let array = chips.toArray();
       let lastIndex = array.length - 1;
       let lastItem = array[lastIndex];
@@ -90,13 +81,13 @@ describe('MdChipList', () => {
         expect(manager.activeItemIndex).toEqual(2);
       });
 
-      it('focuses the previous item', () => {
+      it('should focus the previous item', () => {
         let array = chips.toArray();
         let lastIndex = array.length - 1;
         let lastItem = array[lastIndex];
 
-        // Focus the last item
-        lastItem.focus();
+        // Focus the last item by fake updating the _hasFocus state for unit tests.
+        lastItem._hasFocus = true;
 
         // Destroy the last item
         testComponent.remove = lastIndex;
@@ -117,7 +108,7 @@ describe('MdChipList', () => {
       let nativeChips = chipListNativeElement.querySelectorAll('md-chip');
       let lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
 
-      let LEFT_EVENT = new FakeKeyboardEvent(LEFT_ARROW, lastNativeChip) as any;
+      let LEFT_EVENT = createKeyboardEvent('keydown', LEFT_ARROW, lastNativeChip);
       let array = chips.toArray();
       let lastIndex = array.length - 1;
       let lastItem = array[lastIndex];
@@ -138,7 +129,7 @@ describe('MdChipList', () => {
       let nativeChips = chipListNativeElement.querySelectorAll('md-chip');
       let firstNativeChip = nativeChips[0] as HTMLElement;
 
-      let RIGHT_EVENT: KeyboardEvent = new FakeKeyboardEvent(RIGHT_ARROW, firstNativeChip) as any;
+      let RIGHT_EVENT = createKeyboardEvent('keydown', RIGHT_ARROW, firstNativeChip);
       let array = chips.toArray();
       let firstItem = array[0];
 
@@ -164,7 +155,7 @@ describe('MdChipList', () => {
         let nativeChips = chipListNativeElement.querySelectorAll('md-chip');
         let firstNativeChip = nativeChips[0] as HTMLElement;
 
-        let SPACE_EVENT: KeyboardEvent = new FakeKeyboardEvent(SPACE, firstNativeChip) as any;
+        let SPACE_EVENT = createKeyboardEvent('keydown', SPACE, firstNativeChip);
         let firstChip: MdChip = chips.toArray()[0];
 
         spyOn(testComponent, 'chipSelect');
@@ -189,6 +180,17 @@ describe('MdChipList', () => {
         expect(testComponent.chipDeselect).toHaveBeenCalledTimes(1);
         expect(testComponent.chipDeselect).toHaveBeenCalledWith(0);
       });
+
+      it('allow focus to escape when tabbing away', fakeAsync(() => {
+        chipListInstance._keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+
+        expect(chipListInstance._tabIndex)
+            .toBe(-1, 'Expected tabIndex to be set to -1 temporarily.');
+
+        tick();
+
+        expect(chipListInstance._tabIndex).toBe(0, 'Expected tabIndex to be reset back to 0');
+      }));
     });
 
     describe('when selectable is false', () => {
@@ -198,7 +200,7 @@ describe('MdChipList', () => {
       });
 
       it('SPACE ignores selection', () => {
-        let SPACE_EVENT: KeyboardEvent = new FakeEvent(SPACE) as KeyboardEvent;
+        let SPACE_EVENT = createKeyboardEvent('keydown', SPACE);
         let firstChip: MdChip = chips.toArray()[0];
 
         spyOn(testComponent, 'chipSelect');
@@ -234,11 +236,8 @@ describe('MdChipList', () => {
 class StaticChipList {
   name: string = 'Test';
   selectable: boolean = true;
-  remove: Number;
+  remove: number;
 
-  chipSelect(index: Number) {
-  }
-
-  chipDeselect(index: Number) {
-  }
+  chipSelect: (index?: number) => void = () => {};
+  chipDeselect: (index?: number) => void = () => {};
 }
