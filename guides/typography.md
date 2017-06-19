@@ -45,7 +45,6 @@ descendant native elements.
 <!-- Applying the mat-tyography class adds styles for native elements. -->
 <section class="mat-typography">
   <h1>This header will be styled</h1>
-  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil, molestias.</p>
 </section>
 ```
 
@@ -68,7 +67,7 @@ $custom-typography: mat-typography-config(
 As the above example demonstrates, a typography configuration is created by using the
 `mat-typography-config` function, which is given both the font-family and the set of typographic
 levels described earlier. Each typographic level is defined by the `mat-typography-level` function,
-which requires a font-size, line-height, and font-weight.
+which requires a `font-size`, `line-height`, and `font-weight`.
 
 
 Once the custom typography definition is created, it can be consumed to generate styles via
@@ -93,10 +92,12 @@ For more details about the typography functions and default config, see the
 Angular Material includes typography utility mixins and functions that you can use to customize your
 own components:
 
-* `mat-font-size($config, $level)` - Gets the font-size, based on the provided config and level.
-* `mat-font-family($config)` - Gets the font-family, based on the provided config.
-* `mat-line-height($config, $level)` - Gets the line height, based on the provided config and level.
-* `mat-font-weight($config, $level)` - Gets the font weight, based on the provided config and level.
+* `mat-font-size($config, $level)` - Gets the `font-size`, based on the provided config and level.
+* `mat-font-family($config)` - Gets the `font-family`, based on the provided config.
+* `mat-line-height($config, $level)` - Gets the `line-height`, based on the provided
+config and level.
+* `mat-font-weight($config, $level)` - Gets the `font-weight`, based on the provided
+config and level.
 * `mat-typography-level-to-styles($config, $level)` - Mixin that takes in a configuration object
 and a typography level, and outputs a short-hand CSS `font` declaration.
 
