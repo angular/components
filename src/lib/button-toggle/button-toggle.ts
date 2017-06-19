@@ -268,6 +268,7 @@ export class MdButtonToggleGroupMultiple extends _MdButtonToggleGroupMixinBase
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
   host: {
+    '[class.mat-button-toggle-standalone]': '!buttonToggleGroup',
     'class': 'mat-button-toggle'
   }
 })
