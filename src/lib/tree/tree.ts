@@ -101,7 +101,7 @@ export class CdkNode  implements Focusable, OnDestroy {
 
   /** Focuses the menu item. */
   focus(): void {
-    this._getHostElement().focus();
+  //  this._getHostElement().focus();
   }
 
   /** Returns the host DOM element. */
