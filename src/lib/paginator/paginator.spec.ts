@@ -12,7 +12,7 @@ import {customMatchers} from '../core/testing/jasmine-matchers';
 import {dispatchMouseEvent} from '../core/testing/dispatch-events';
 
 
-describe('MdPaginator', () => {
+fdescribe('MdPaginator', () => {
   let fixture: ComponentFixture<MdPaginatorApp>;
   let component: MdPaginatorApp;
   let paginator: MdPaginator;
@@ -22,10 +22,6 @@ describe('MdPaginator', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        MdButtonModule,
-        MdCommonModule,
-        MdSelectModule,
-        MdTooltipModule,
         MdPaginatorModule,
         NoopAnimationsModule,
       ],
