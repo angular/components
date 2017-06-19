@@ -217,12 +217,12 @@ describe('CdkTable', () => {
     const rowElements = contextFixture.nativeElement.querySelectorAll('cdk-row');
 
     // Rows should not have any context classes
-    rowElements.forEach(rowElement => {
-      expect(rowElement.classList.contains('custom-row-class-first')).toBe(false);
-      expect(rowElement.classList.contains('custom-row-class-last')).toBe(false);
-      expect(rowElement.classList.contains('custom-row-class-even')).toBe(false);
-      expect(rowElement.classList.contains('custom-row-class-odd')).toBe(false);
-    });
+    for (let i = 0; i < rowElements.length; i++) {
+      expect(rowElements[i].classList.contains('custom-row-class-first')).toBe(false);
+      expect(rowElements[i].classList.contains('custom-row-class-last')).toBe(false);
+      expect(rowElements[i].classList.contains('custom-row-class-even')).toBe(false);
+      expect(rowElements[i].classList.contains('custom-row-class-odd')).toBe(false);
+    }
 
     // Enable all the context classes
     contextComponent.enableRowContextClasses = true;
@@ -254,16 +254,16 @@ describe('CdkTable', () => {
 
     const rowElements = contextFixture.nativeElement.querySelectorAll('cdk-row');
 
-    rowElements.forEach(rowElement => {
+    for (let i = 0; i < rowElements.length; i++) {
       // Cells should not have any context classes
-      const cellElements = rowElement.querySelectorAll('cdk-cell');
-      cellElements.forEach(cellElement => {
-        expect(cellElement.classList.contains('custom-cell-class-first')).toBe(false);
-        expect(cellElement.classList.contains('custom-cell-class-last')).toBe(false);
-        expect(cellElement.classList.contains('custom-cell-class-even')).toBe(false);
-        expect(cellElement.classList.contains('custom-cell-class-odd')).toBe(false);
-      });
-    });
+      const cellElements = rowElements[i].querySelectorAll('cdk-cell');
+      for (let j = 0; j < rowElements.length; j++) {
+        expect(cellElements[j].classList.contains('custom-cell-class-first')).toBe(false);
+        expect(cellElements[j].classList.contains('custom-cell-class-last')).toBe(false);
+        expect(cellElements[j].classList.contains('custom-cell-class-even')).toBe(false);
+        expect(cellElements[j].classList.contains('custom-cell-class-odd')).toBe(false);
+      }
+    }
 
     // Enable the context classes
     contextComponent.enableCellContextClasses = true;
@@ -460,8 +460,6 @@ class RowContextCdkTableApp {
   columnsToRender = ['column_a'];
   enableRowContextClasses = false;
   enableCellContextClasses = false;
-
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
 }
 
 function getElements(element: Element, query: string): Element[] {

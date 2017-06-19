@@ -97,19 +97,19 @@ export class CdkCellOutletRowContext<T> {
   /** Length of the number of total rows. */
   count: number;
 
-  constructor(public $implicit: T) {}
-
   /** True if this cell is contained in the first row. */
-  get first(): boolean { return this.index === 0; }
+  first: boolean;
 
   /** True if this cell is contained in the last row. */
-  get last(): boolean { return this.index === this.count - 1; }
+  last: boolean;
 
   /** True if this cell is contained in a row with an even-numbered index. */
-  get even(): boolean { return this.index % 2 === 0; }
+  even: boolean;
 
   /** True if this cell is contained in a row with an odd-numbered index. */
-  get odd(): boolean { return !this.even; }
+  odd: boolean;
+
+  constructor(public $implicit: T) {}
 }
 
 /**

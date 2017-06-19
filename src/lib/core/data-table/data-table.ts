@@ -279,14 +279,7 @@ export class CdkTable<T> implements CollectionViewer {
           }
         });
 
-    // Update the context for each row context to reflect any data changes that may have caused
-    // rows to be added, removed, or moved. The view container contains the same context
-    // that was provided to each of its cells.
-    for (let index = 0, count = viewContainer.length; index < count; index++) {
-      const viewRef = <EmbeddedViewRef<CdkCellOutletRowContext<T>>> viewContainer.get(index);
-      viewRef.context.index = index;
-      viewRef.context.count = count;
-    }
+    this._updateRowContext();
   }
 
   /**
@@ -314,6 +307,24 @@ export class CdkTable<T> implements CollectionViewer {
     });
 
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Updates the context for each row to reflect any data changes that may have caused
+   * rows to be added, removed, or moved. The view container contains the same context
+   * that was provided to each of its cells.
+   */
+  private _updateRowContext() {
+    const viewContainer = this._rowPlaceholder.viewContainer;
+    for (let index = 0, count = viewContainer.length; index < count; index++) {
+      const viewRef = viewContainer.get(index) as EmbeddedViewRef<CdkCellOutletRowContext<T>>;
+      viewRef.context.index = index;
+      viewRef.context.count = count;
+      viewRef.context.first = index === 0;
+      viewRef.context.last = index === count - 1;
+      viewRef.context.even = index % 2 === 0;
+      viewRef.context.odd = index % 2 !== 0;
+    }
   }
 
   /**

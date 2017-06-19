@@ -44,7 +44,7 @@ export class DataTableDemo {
     }
   }
 
-  toggleHighlight(property: string, enable: any) {
+  toggleHighlight(property: string, enable: boolean) {
     enable ? this.highlights.add(property) : this.highlights.delete(property);
   }
 }
