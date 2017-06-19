@@ -8,7 +8,9 @@
 
 import {Directive, EventEmitter, Input, Output} from '@angular/core';
 
-export interface MdSortable { }
+export interface MdSortable {
+  id: string;
+}
 
 export interface Sort {
   direction: string;
@@ -19,7 +21,7 @@ export interface Sort {
   selector: '[mdSort], [matSort]',
 })
 export class MdSort {
-  sortables: MdSortable[] = [];
+  sortables = new Map<string, MdSortable>();
 
   active: MdSortable;
 
@@ -30,11 +32,11 @@ export class MdSort {
   @Output() sortChange = new EventEmitter<Sort>();
 
   register(sortable: MdSortable) {
-    this.sortables.push(sortable);
+    this.sortables.set(sortable.id, sortable);
   }
 
   unregister(sortable: MdSortable) {
-    this.sortables = this.sortables.filter(s => s != sortable);
+    this.sortables.delete(sortable.id);
   }
 
   isSorted(sortable: MdSortable) {

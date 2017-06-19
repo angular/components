@@ -1,20 +1,25 @@
 :host {
   display: flex;
-  align-items: baseline;
+  cursor: pointer;
 }
 
 .mat-sort-header-arrow {
-  height: 12px;
-  width: 12px;
+  height: 10px;
+  width: 10px;
   position: relative;
   transform: rotate(45deg);
-  margin-left: 4px;
+  margin-left: 6px;
+}
+
+.mat-sort-header-descending {
+  transform: rotate(225deg);
+  top: 2px;
 }
 
 .mat-sort-header-stem {
   background: black;
   transform: rotate(135deg);
-  height: 12px;
+  height: 10px;
   width: 2px;
   margin: auto;
 }

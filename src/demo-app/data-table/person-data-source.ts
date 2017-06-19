@@ -51,12 +51,34 @@ export class PersonDataSource extends DataSource<any> {
   }
 
   updateDisplayData() {
-    const data = this._peopleDatabase.data.slice();
+    const data = this.getSortedData();
 
     // Grab the page's slice of data.
     const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
     const paginatedData = data.splice(startIndex, this._paginator.pageSize);
 
     this._displayData.next(paginatedData);
+  }
+
+  /** Returns a sorted copy of the database data. */
+  getSortedData(): UserData[] {
+    const data = this._peopleDatabase.data.slice();
+    if (!this._sort.active) { return data; }
+
+    return data.sort((a, b) => {
+      let propertyA, propertyB;
+
+      switch (this._sort.active.id) {
+        case 'userId': [propertyA, propertyB] = [a.id, b.id]; break;
+        case 'userName': [propertyA, propertyB] = [a.name, b.name]; break;
+        case 'progress': [propertyA, propertyB] = [a.progress, b.progress]; break;
+        case 'color': [propertyA, propertyB] = [a.color, b.color]; break;
+      }
+
+      let valueA = isNaN(+propertyA) ? propertyA : +propertyA;
+      let valueB = isNaN(+propertyB) ? propertyB : +propertyB;
+
+      return (valueA < valueB ? -1 : 1) * (this._sort.direction == 'ascending' ? 1 : -1);
+    });
   }
 }

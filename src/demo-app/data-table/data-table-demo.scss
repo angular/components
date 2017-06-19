@@ -63,6 +63,11 @@
   font-size: 12px;
   font-weight: bold;
   color: rgba(0, 0, 0, 0.54);
+  user-select: none;
+
+  &.mat-sort-header-sorted {
+    color: black;
+  }
 }
 
 .cdk-cell {
