@@ -89,6 +89,29 @@ export class CdkRowDef extends BaseRowDef {
   }
 }
 
+/** Context provided to the row cells */
+export class CdkCellOutletRowContext<T> {
+  /** Index location of the row that this cell is located within. */
+  index: number;
+
+  /** Length of the number of total rows. */
+  count: number;
+
+  constructor(public $implicit: T) {}
+
+  /** True if this cell is contained in the first row. */
+  get first(): boolean { return this.index === 0; }
+
+  /** True if this cell is contained in the last row. */
+  get last(): boolean { return this.index === this.count - 1; }
+
+  /** True if this cell is contained in a row with an even-numbered index. */
+  get even(): boolean { return this.index % 2 === 0; }
+
+  /** True if this cell is contained in a row with an odd-numbered index. */
+  get odd(): boolean { return !this.even; }
+}
+
 /**
  * Outlet for rendering cells inside of a row or header row.
  * @docs-private
@@ -110,14 +133,8 @@ export class CdkCellOutlet {
    */
   static mostRecentCellOutlet: CdkCellOutlet;
 
-  constructor(private _viewContainer: ViewContainerRef) {
+  constructor(public _viewContainer: ViewContainerRef) {
     CdkCellOutlet.mostRecentCellOutlet = this;
-  }
-
-  ngOnInit() {
-    this.cells.forEach(cell => {
-      this._viewContainer.createEmbeddedView(cell.template, this.context);
-    });
   }
 }
 
