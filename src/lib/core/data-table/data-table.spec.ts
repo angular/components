@@ -375,7 +375,7 @@ class FakeDataSource extends DataSource<TestData> {
       <cdk-header-row class="customHeaderRowClass"
                       *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
       <cdk-row class="customRowClass"
-               *cdkRowDef="let row; columns: columnsToRender" [class.test]="true"></cdk-row>
+               *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
     </cdk-table>
   `
 })
