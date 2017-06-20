@@ -1,11 +1,11 @@
 import {ComponentFixture, TestBed, async} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {ConnectedOverlayDirective, OverlayModule, OverlayOrigin} from './overlay-directives';
+import {ConnectedOverlayDirective, OverlayModule, OverlayOrigin} from './index';
 import {OverlayContainer} from './overlay-container';
 import {ConnectedPositionStrategy} from './position/connected-position-strategy';
 import {ConnectedOverlayPositionChange} from './position/connected-position';
-import {Dir} from '../rtl/dir';
+import {Directionality} from '../bidi/index';
 import {dispatchKeyboardEvent} from '../testing/dispatch-events';
 import {ESCAPE} from '../keyboard/keycodes';
 
@@ -24,7 +24,7 @@ describe('Overlay directives', () => {
           overlayContainerElement = document.createElement('div');
           return {getContainerElement: () => overlayContainerElement};
         }},
-        {provide: Dir, useFactory: () => {
+        {provide: Directionality, useFactory: () => {
           return dir = { value: 'ltr' };
         }}
       ],

@@ -16,11 +16,9 @@ import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {TooltipPosition, MdTooltip, MdTooltipModule, SCROLL_THROTTLE_MS} from './index';
-import {OverlayContainer} from '../core';
-import {Dir, LayoutDirection} from '../core/rtl/dir';
-import {OverlayModule} from '../core/overlay/overlay-directives';
+import {Directionality, Direction} from '../core/bidi/index';
+import {OverlayModule, Scrollable, OverlayContainer} from '../core/overlay/index';
 import {Platform} from '../core/platform/platform';
-import {Scrollable} from '../core/overlay/scroll/scrollable';
 import {dispatchFakeEvent} from '../core/testing/dispatch-events';
 
 
@@ -28,7 +26,7 @@ const initialTooltipMessage = 'initial tooltip message';
 
 describe('MdTooltip', () => {
   let overlayContainerElement: HTMLElement;
-  let dir: {value: LayoutDirection};
+  let dir: {value: Direction};
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -41,7 +39,7 @@ describe('MdTooltip', () => {
           document.body.appendChild(overlayContainerElement);
           return {getContainerElement: () => overlayContainerElement};
         }},
-        {provide: Dir, useFactory: () => {
+        {provide: Directionality, useFactory: () => {
           return dir = { value: 'ltr' };
         }}
       ]
