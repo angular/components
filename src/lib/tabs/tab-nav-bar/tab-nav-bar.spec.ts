@@ -53,6 +53,30 @@ describe('MdTabNavBar', () => {
       expect(fixture.componentInstance.activeIndex).toBe(2);
     });
 
+    it('should add the disabled class if disabled', () => {
+      const tabLinkElements = fixture.debugElement.queryAll(By.css('a'))
+        .map(tabLinkDebugEl => tabLinkDebugEl.nativeElement);
+
+      expect(tabLinkElements.every(tabLinkEl => !tabLinkEl.classList.contains('mat-tab-disabled')))
+        .toBe(true, 'Expected every tab link to not have the disabled class initially');
+
+      fixture.componentInstance.disabled = true;
+      fixture.detectChanges();
+
+      expect(tabLinkElements.every(tabLinkEl => tabLinkEl.classList.contains('mat-tab-disabled')))
+        .toBe(true, 'Expected every tab link to have the disabled class if set through binding');
+    });
+
+    it('should show ripples for tab links', () => {
+      const tabLink = fixture.debugElement.nativeElement.querySelector('.mat-tab-link');
+
+      dispatchMouseEvent(tabLink, 'mousedown');
+      dispatchMouseEvent(tabLink, 'mouseup');
+
+      expect(tabLink.querySelectorAll('.mat-ripple-element').length)
+        .toBe(1, 'Expected one ripple to show up if user clicks on tab link.');
+    });
+
     it('should re-align the ink bar when the direction changes', () => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;
 
@@ -125,6 +149,7 @@ describe('MdTabNavBar', () => {
       <a md-tab-link
          *ngFor="let tab of tabs; let index = index"
          [active]="activeIndex === index"
+         [disabled]="disabled"
          (click)="activeIndex = index">
         Tab link {{label}}
       </a>
@@ -135,6 +160,7 @@ class SimpleTabNavBarTestApp {
   @ViewChild(MdTabNav) tabNavBar: MdTabNav;
 
   label = '';
+  disabled: boolean = false;
   tabs = [0, 1, 2];
 
   activeIndex = 0;
