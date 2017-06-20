@@ -48,13 +48,13 @@ export class AccordionItem implements OnDestroy {
   }
   private _expanded: boolean;
 
-  /** Unregister function for _expansionDispatcherListener **/
-  private _expansionDispatcherListener: Function;
+  /** Unregister function for _expansionDispatcher **/
+  private _removeUniqueSelectionListener: () => void = () => {};
 
   constructor(@Optional() public accordion: CdkAccordion,
               protected _expansionDispatcher: UniqueSelectionDispatcher) {
-     this._expansionDispatcherListener = _expansionDispatcher.listen(
-       (id: string, accordionId: string) => {
+     this._removeUniqueSelectionListener =
+       _expansionDispatcher.listen((id: string, accordionId: string) => {
          if (this.accordion && !this.accordion.multi &&
              this.accordion.id === accordionId && this.id !== id) {
            this.expanded = false;
@@ -65,7 +65,7 @@ export class AccordionItem implements OnDestroy {
   /** Emits an event for the accordion item being destroyed. */
   ngOnDestroy() {
     this.destroyed.emit();
-    this._expansionDispatcherListener();
+    this._removeUniqueSelectionListener();
   }
 
   /** Toggles the expanded state of the accordion item. */
