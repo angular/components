@@ -76,7 +76,7 @@ export class MdTooltip implements OnDestroy {
 
   private _position: TooltipPosition = 'below';
   private _disabled: boolean = false;
-  private _tooltipClass: string|string[]|Set<string>|{[key: string]: any};
+  private _tooltipClass: string | string[] | Set<string> | { [key: string]: any };
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   @Input('mdTooltipPosition')
@@ -128,7 +128,7 @@ export class MdTooltip implements OnDestroy {
   /** Classes to be passed to the tooltip. Supports the same syntax as `ngClass`. */
   @Input('mdTooltipClass')
   get tooltipClass() { return this._tooltipClass; }
-  set tooltipClass(value: string|string[]|Set<string>|{[key: string]: any}) {
+  set tooltipClass(value: string | string[] | Set<string> | { [key: string]: any }) {
     this._tooltipClass = value;
     if (this._tooltipInstance) {
       this._setTooltipClass(this._tooltipClass);
@@ -186,12 +186,10 @@ export class MdTooltip implements OnDestroy {
     // The mouse events shouldn't be bound on iOS devices, because
     // they can prevent the first tap from firing its click event.
     if (!_platform.IOS) {
-      this._enterListener = _renderer.listen(_elementRef.nativeElement,
-                                              'mouseenter',
-                                              () => this.show());
-      this._leaveListener = _renderer.listen(_elementRef.nativeElement,
-                                              'mouseleave',
-                                              () => this.hide());
+      this._enterListener =
+        _renderer.listen(_elementRef.nativeElement, 'mouseenter', () => this.show());
+      this._leaveListener =
+        _renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
     }
   }
 
@@ -267,7 +265,7 @@ export class MdTooltip implements OnDestroy {
     strategy.withScrollableContainers(this._scrollDispatcher.getScrollContainers(this._elementRef));
     strategy.onPositionChange.subscribe(change => {
       if (change.scrollableViewProperties.isOverlayClipped &&
-          this._tooltipInstance && this._tooltipInstance.isVisible()) {
+        this._tooltipInstance && this._tooltipInstance.isVisible()) {
         this.hide(0);
       }
     });
@@ -298,20 +296,20 @@ export class MdTooltip implements OnDestroy {
   /** Returns the origin position based on the user's position preference */
   _getOrigin(): OriginConnectionPosition {
     if (this.position == 'above' || this.position == 'below') {
-      return {originX: 'center', originY: this.position == 'above' ? 'top' : 'bottom'};
+      return { originX: 'center', originY: this.position == 'above' ? 'top' : 'bottom' };
     }
 
     const isDirectionLtr = !this._dir || this._dir.value == 'ltr';
     if (this.position == 'left' ||
-        this.position == 'before' && isDirectionLtr ||
-        this.position == 'after' && !isDirectionLtr) {
-      return {originX: 'start', originY: 'center'};
+      this.position == 'before' && isDirectionLtr ||
+      this.position == 'after' && !isDirectionLtr) {
+      return { originX: 'start', originY: 'center' };
     }
 
     if (this.position == 'right' ||
-        this.position == 'after' && isDirectionLtr ||
-        this.position == 'before' && !isDirectionLtr) {
-      return {originX: 'end', originY: 'center'};
+      this.position == 'after' && isDirectionLtr ||
+      this.position == 'before' && !isDirectionLtr) {
+      return { originX: 'end', originY: 'center' };
     }
 
     throw getMdTooltipInvalidPositionError(this.position);
@@ -320,24 +318,24 @@ export class MdTooltip implements OnDestroy {
   /** Returns the overlay position based on the user's preference */
   _getOverlayPosition(): OverlayConnectionPosition {
     if (this.position == 'above') {
-      return {overlayX: 'center', overlayY: 'bottom'};
+      return { overlayX: 'center', overlayY: 'bottom' };
     }
 
     if (this.position == 'below') {
-      return {overlayX: 'center', overlayY: 'top'};
+      return { overlayX: 'center', overlayY: 'top' };
     }
 
     const isLtr = !this._dir || this._dir.value == 'ltr';
     if (this.position == 'left' ||
-        this.position == 'before' && isLtr ||
-        this.position == 'after' && !isLtr) {
-      return {overlayX: 'end', overlayY: 'center'};
+      this.position == 'before' && isLtr ||
+      this.position == 'after' && !isLtr) {
+      return { overlayX: 'end', overlayY: 'center' };
     }
 
     if (this.position == 'right' ||
-        this.position == 'after' && isLtr ||
-        this.position == 'before' && !isLtr) {
-      return {overlayX: 'start', overlayY: 'center'};
+      this.position == 'after' && isLtr ||
+      this.position == 'before' && !isLtr) {
+      return { overlayX: 'start', overlayY: 'center' };
     }
 
     throw getMdTooltipInvalidPositionError(this.position);
@@ -382,10 +380,10 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
   encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('state', [
-      state('void', style({transform: 'scale(0)'})),
-      state('initial', style({transform: 'scale(0)'})),
-      state('visible', style({transform: 'scale(1)'})),
-      state('hidden', style({transform: 'scale(0)'})),
+      state('void', style({ transform: 'scale(0)' })),
+      state('initial', style({ transform: 'scale(0)' })),
+      state('visible', style({ transform: 'scale(1)' })),
+      state('hidden', style({ transform: 'scale(0)' })),
       transition('* => visible', animate('150ms cubic-bezier(0.0, 0.0, 0.2, 1)')),
       transition('* => hidden', animate('150ms cubic-bezier(0.4, 0.0, 1, 1)')),
     ])
@@ -402,7 +400,7 @@ export class TooltipComponent {
   message: string;
 
   /** Classes to be added to the tooltip. Supports the same syntax as `ngClass`. */
-  tooltipClass: string|string[]|Set<string>|{[key: string]: any};
+  tooltipClass: string | string[] | Set<string> | { [key: string]: any };
 
   /** The timeout ID of any current timer set to show the tooltip */
   _showTimeoutId: number;
@@ -422,8 +420,8 @@ export class TooltipComponent {
   /** Subject for notifying that the tooltip has been hidden from the view */
   private _onHide: Subject<any> = new Subject();
 
-  constructor(@Optional() private _dir: Directionality,
-              private _changeDetectorRef: ChangeDetectorRef) {}
+  constructor( @Optional() private _dir: Directionality,
+    private _changeDetectorRef: ChangeDetectorRef) { }
 
   /**
    * Shows the tooltip with an animation originating from the provided origin
