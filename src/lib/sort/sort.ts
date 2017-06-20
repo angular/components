@@ -36,6 +36,10 @@ export class MdSort {
   }
 
   unregister(sortable: MdSortable) {
+    if (this.active === sortable) {
+      this.active = null;
+    }
+
     this.sortables.delete(sortable.id);
   }
 
