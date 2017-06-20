@@ -41,14 +41,14 @@ export class Directionality {
   change = new EventEmitter<void>();
 
   constructor(@Optional() @Inject(DIR_DOCUMENT) _document?: any) {
-    const parent = _document ? (_document.body || _document.documentElement) : null;
-
-    if (parent) {
+    if (_document) {
       // TODO: handle 'auto' value -
       // We still need to account for dir="auto".
       // It looks like HTMLElemenet.dir is also "auto" when that's set to the attribute,
       // but getComputedStyle return either "ltr" or "rtl". avoiding getComputedStyle for now
-      this.value = (parent.dir || 'ltr') as Direction;
+      const bodyDir = _document.body ? _document.body.dir : null;
+      const htmlDir = _document.documentElement ? _document.documentElement.dir : null;
+      this.value = (bodyDir || htmlDir || 'ltr') as Direction;
     }
   }
 }
