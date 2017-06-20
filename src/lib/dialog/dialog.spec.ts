@@ -667,8 +667,8 @@ describe('MdDialog', () => {
     }));
 
     it('should set the aria-labelled by attribute to the id of the title', async(() => {
-      let title = overlayContainerElement.querySelector('[md-dialog-title]');
-      let container = overlayContainerElement.querySelector('md-dialog-container');
+      let title = overlayContainerElement.querySelector('[md-dialog-title]')!;
+      let container = overlayContainerElement.querySelector('md-dialog-container')!;
 
       viewContainerFixture.whenStable().then(() => {
         expect(title.id).toBeTruthy('Expected title element to have an id.');
