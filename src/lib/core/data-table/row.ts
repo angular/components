@@ -10,11 +10,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   Directive,
+  HostBinding,
+  Input,
   IterableDiffer,
   IterableDiffers,
   SimpleChanges,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import {CdkCellDef} from './cell';
 import {Subject} from 'rxjs/Subject';
@@ -111,6 +113,30 @@ export interface CdkCellOutletRowContext<T> {
 
   /** True if this cell is contained in a row with an odd-numbered index. */
   odd?: boolean;
+}
+
+/**
+ * Data row definition for the CDK data-table.
+ * Specifies if a row should "stick" to the top of the table.
+ */
+@Directive({
+  selector: '[cdkStickyRow]',
+  host: {
+    'class': 'cdk-sticky-row',
+    '[style.top.px]': 'topOffset',
+    '[style.backgroundColor]': 'backgroundColor'
+  },
+})
+export class CdkStickyRow {
+  /** The offset from the top of the container the row should absolutely position itself from  */
+  public topOffset: number;
+
+  /** The color the row should be (so the row does not look transparent when scrolling over the
+   * tables content).
+   */
+  public backgroundColor: string;
+
+  constructor(public viewContainer: ViewContainerRef) {}
 }
 
 /**

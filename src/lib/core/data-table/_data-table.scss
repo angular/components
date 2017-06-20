@@ -1,0 +1,30 @@
+/*CSS FOR THE DATA TABLE*/
+@mixin cdk-data-table() {
+    .ckd-table-sticky-rows-enabled {
+        position: relative;
+        overflow: hidden;
+
+        .cdk-table-body {
+            overflow-y: auto;
+            pointer-events: auto;
+            height: inherit;
+        }
+
+        .cdk-header-row {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .cdk-sticky-row {
+            z-index: 1;
+            left: 0;
+            // ORDER MATTERS WITH THESE OVERFLOW RULES
+            overflow: scroll;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            position: absolute;
+            box-sizing: border-box;
+            width: 100%;
+        }
+    }
+}
