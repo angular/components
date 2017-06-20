@@ -1,17 +1,4 @@
-import {
-    Component,
-    Directive,
-    Input,
-    Output,
-    EventEmitter,
-    OnInit,
-    OnDestroy,
-    AfterViewInit,
-    ElementRef,
-    Injectable,
-    Optional,
-    Renderer2,
-    ViewContainerRef,} from '@angular/core';
+import {Component, Directive, Input, Output, EventEmitter, OnInit, OnDestroy, AfterViewInit, ElementRef, Injectable, Optional} from '@angular/core';
 
 import {Observable} from 'rxjs/Observable';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
@@ -20,31 +7,10 @@ import {Subject} from 'rxjs/Subject';
 
 
 @Directive({
-    selector: '[md-sticky-viewport], [cdkStickyViewport], [cdkStickyRegion]',
+    selector: '[cdkStickyRegion]',
 })
-
-
-@Injectable()
-export class StickyParentDirective implements OnInit, OnDestroy, AfterViewInit {
-
-    // The parent element, which with the 'md-sticky-viewport' tag
-    private pelem: any;
-
-    constructor(private element: ElementRef) {
-        this.pelem = element.nativeElement;
-    }
-
-    ngOnInit(): void {
-        this.pelem.classList.add('sticky-parent');
-    }
-
-    ngAfterViewInit(): void {
-
-    }
-
-    ngOnDestroy(): void {
-        this.pelem.classList.remove('sticky-parent');
-    }
+export class StickyParentDirective {
+    constructor(private element: ElementRef) { }
 
     getElementRef(): ElementRef {
         return this.element;
@@ -52,11 +18,9 @@ export class StickyParentDirective implements OnInit, OnDestroy, AfterViewInit {
 }
 
 
-
 @Directive({
-    selector: '[md-sticky], [cdkSticky], [cdkStickyHeader]',
+    selector: '[cdkStickyHeader]',
 })
-
 
 @Injectable()
 export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
