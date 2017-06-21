@@ -23,35 +23,44 @@ export class StickyParentDirective {
 })
 
 @Injectable()
-export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
+export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
 
+    /**Set the sticky-header's z-index as 10 in default. Make it as an input
+     * variable to make user be able to customize the zIndex when
+     * the sticky-header's zIndex is not the largest in current page.
+     * Because if the sticky-header's zIndex is not the largest in current page,
+     * it may be sheltered by other element when being sticked.
+     */
     @Input('sticky-zIndex') zIndex: number = 10;
-    @Input('parentRegion') parentRegion: any;
+    @Input() cdkStickyParentRegion: any;
     @Input('scrollRegion') scrollableRegion: any;
 
 
-    private activated = new EventEmitter();
-    private deactivated = new EventEmitter();
+    private _activated = new EventEmitter();
+    private _deactivated = new EventEmitter();
 
     private onScrollBind: EventListener = this.onScroll.bind(this);
     private onResizeBind: EventListener = this.onResize.bind(this);
     private onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
 
-    private stickStartClass: string = 'sticky';
-    private stickEndClass: string = 'sticky-end';
+    public STICK_START_CLASS: string = 'sticky';
+    public STICK_END_CLASS: string = 'sticky-end';
     private isStuck: boolean = false;
 
     // the element with the 'md-sticky' tag
-    private elem: any;
+    public elem: any;
 
     // the uppercontainer element with the 'md-sticky-viewport' tag
-    stickyParent: any;
+    public stickyParent: any;
 
     // the upper scrollable container
-    private upperScrollableContainer: any;
+    public upperScrollableContainer: any;
 
-    // the original css of the sticky element, used to reset the sticky element when it is being unstick
-    private originalCss: any;
+    /**
+     * the original css of the sticky element, used to reset the sticky element
+     * when it is being unstuck
+     */
+    public originalCss: any;
 
     // the height of 'stickyParent'
     private containerHeight: number;
@@ -62,46 +71,34 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
     private containerStart: number;
     private scrollFinish: number;
 
-    private scrollingWidth: any;
-    private scrollingRight: any;
+    private scrollingWidth: number;
+    private scrollingRight: number;
 
     // the padding of 'elem'
     private elementPadding: any;
-    private paddingNumber: any;
+    private paddingNumber: number;
 
     // sticky element's width
     private width: string = 'auto';
 
     constructor(private element: ElementRef,
-                public findScroll: Scrollable,
+                public scrollable: Scrollable,
                 @Optional() public parentReg: StickyParentDirective) {
         this.elem = element.nativeElement;
-        this.upperScrollableContainer = findScroll.getElementRef().nativeElement;
-        this.scrollableRegion = findScroll.getElementRef().nativeElement;
+        this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
+        this.scrollableRegion = scrollable.getElementRef().nativeElement;
         if(parentReg != null) {
-            this.parentRegion = parentReg.getElementRef().nativeElement;
+            this.cdkStickyParentRegion = parentReg.getElementRef().nativeElement;
         }
-    }
-
-    ngOnInit(): void {
-
     }
 
     ngAfterViewInit(): void {
 
-        if(this.parentRegion != null) {
-            this.stickyParent = this.parentRegion;
+        if(this.cdkStickyParentRegion != null) {
+            this.stickyParent = this.cdkStickyParentRegion;
         }else {
             this.stickyParent = this.elem.parentNode;
         }
-
-        // // define parent scrollable container as parent element
-        // this.stickyParent = this.elem.parentNode;
-        //
-        // // make sure this.stickyParent is the element with 'sticky-parent' tag
-        // while (!this.stickyParent.classList.contains('sticky-parent')) {
-        //     this.stickyParent = this.elem.parentNode;
-        // }
 
         this.originalCss = {
             zIndex: this.getCssValue(this.elem, 'zIndex'),
@@ -137,10 +134,10 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         this.upperScrollableContainer.addEventListener('touchmove', this.onTouchMoveBind, false);
 
         Observable.fromEvent(this.upperScrollableContainer, 'scroll')
-            .subscribe(() => this.onScroll());
+            .subscribe(() => this.defineRestrictionsAndStick());
 
         Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
-            .subscribe(() => this.onTouchMove());
+            .subscribe(() => this.defineRestrictionsAndStick());
     }
 
     detach() {
@@ -150,26 +147,31 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onScroll(): void {
-        this.defineRestrictions();
-        this.sticker();
+        this.defineRestrictionsAndStick();
     }
 
     onTouchMove(): void {
-        this.defineRestrictions();
-        this.sticker();
+        this.defineRestrictionsAndStick();
     }
 
     onResize(): void {
-        this.defineRestrictions();
-        this.sticker();
+        this.defineRestrictionsAndStick();
 
+        /**
+         * If there's already a header being sticked when the page is
+         * resized. The CSS style of the sticky-header may be not fit
+         * the resized window. So we need to unstick it then restick it.
+         */
         if (this.isStuck) {
-            this.unstickElement();
+            this.unstuckElement();
             this.stickElement();
         }
     }
 
-    // define the restrictions of the sticky header(including stickyWidth, when to start, when to finish)
+    /**
+     * define the restrictions of the sticky header(including stickyWidth,
+     * when to start, when to finish)
+     */
     defineRestrictions(): void {
         let containerTop: any = this.stickyParent.getBoundingClientRect();
         this.elemHeight = this.elem.offsetHeight;
@@ -185,18 +187,22 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         this.scrollFinish = this.containerStart + (this.containerHeight - this.elemHeight);
     }
 
-    // reset element to its original CSS
+    /**
+     * reset element to its original CSS
+     */
     resetElement(): void {
-        this.elem.classList.remove(this.stickStartClass);
+        this.elem.classList.remove(this.STICK_START_CLASS);
         Object.assign(this.elem.style, this.originalCss);
     }
 
-    // stuck element, make the element stick to the top of the scrollable container.
+    /**
+     * stuck element, make the element stick to the top of the scrollable container.
+     */
     stickElement(): void {
         this.isStuck = true;
 
-        this.elem.classList.remove(this.stickEndClass);
-        this.elem.classList.add(this.stickStartClass);
+        this.elem.classList.remove(this.STICK_END_CLASS);
+        this.elem.classList.add(this.STICK_START_CLASS);
 
         /** Have to add the translate3d function for the sticky element's css style.
          * Because iPhone and iPad's browser is using its owning rendering engine. And
@@ -238,14 +244,16 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         this.elem.style.setProperty('left', this.upperScrollableContainer.offsetLeft + 'px');
         this.elem.style.setProperty('width', this.scrollingWidth + 'px');
 
-        this.activated.next(this.elem);
+        this._activated.next(this.elem);
     }
 
-    // unstuck element
-    unstickElement(): void {
+    /**
+     * unstuck element
+     */
+    unstuckElement(): void {
         this.isStuck = false;
 
-        this.elem.classList.add(this.stickEndClass);
+        this.elem.classList.add(this.STICK_END_CLASS);
 
         this.stickyParent.style.position = 'relative';
         this.elem.style.position = 'absolute';
@@ -255,29 +263,28 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         this.elem.style.bottom = 0;
         this.elem.style.width = this.width;
 
-        this.deactivated.next(this.elem);
+        this._deactivated.next(this.elem);
     }
 
 
     sticker(): void {
-        // detecting when a container's height changes
-        let currentContainerHeight: number = this.getCssNumber(this.stickyParent, 'height');
-        if (currentContainerHeight !== this.containerHeight) {
-            this.defineRestrictions();
-        }
-
         let currentPosition: number = this.upperScrollableContainer.offsetTop;
 
         // unstick when the element is scrolled out of the sticky region
         if (this.isStuck && (currentPosition < this.containerStart || currentPosition > this.scrollFinish) || currentPosition >= this.scrollFinish) {
             this.resetElement();
-            if (currentPosition >= this.scrollFinish) this.unstickElement();
+            if (currentPosition >= this.scrollFinish) this.unstuckElement();
             this.isStuck = false;
         }
         // stick when the element is within the sticky region
         else if ( this.isStuck === false && currentPosition > this.containerStart && currentPosition < this.scrollFinish) {
             this.stickElement();
         }
+    }
+
+    defineRestrictionsAndStick(): void {
+        this.defineRestrictions();
+        this.sticker();
     }
 
 
