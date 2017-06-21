@@ -5,310 +5,288 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {Component, Directive, Input, Output, EventEmitter,
-    OnDestroy, AfterViewInit, ElementRef, Injectable, Optional} from '@angular/core';
-
-import {Observable} from 'rxjs/Observable';
-import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
+import {Component, Directive, Input, Output,
+  OnDestroy, AfterViewInit, ElementRef, Injectable, Optional} from '@angular/core';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
-import {Subject} from 'rxjs/Subject';
+import {extendObject} from '../core/util/object-extend';
 
 
+/**
+ * Directive that marks an element as a "sticky region", meant to contain exactly one sticky-header
+ * along with the content associated with that header. The sticky-header inside of the region will
+ * "stick" to the top of the scrolling container as long as this region is within the scrolling
+ * viewport.
+ *
+ * If a user does not explicitly define a sticky-region for a sticky-header, the direct
+ * parent node of the sticky-header will be used as the sticky-region.
+ */
 @Directive({
-    selector: '[cdkStickyRegion]',
+  selector: '[cdkStickyRegion]',
 })
-export class StickyParentDirective {
-    constructor(private element: ElementRef) { }
-
-    getElementRef(): ElementRef {
-        return this.element;
-    }
+export class CdkStickyRegion {
+  constructor(public readonly _elementRef: ElementRef) { }
 }
 
 
+const STICK_START_CLASS = 'mat-stick-start';
+const STICK_END_CLASS = 'mat-stick-end';
 @Directive({
-    selector: '[cdkStickyHeader]',
+  selector: '[cdkStickyHeader]',
 })
-export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
+/**
+ * Directive that marks an element as a sticky-header. Inside of a scrolling container (marked with
+ * cdkScrollable), this header will "stick" to the top of the scrolling viewport while its sticky
+ * region (see cdkStickyRegion) is in view.
+ */
+export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
-    /**Set the sticky-header's z-index as 10 in default. Make it as an input
-     * variable to make user be able to customize the zIndex when
-     * the sticky-header's zIndex is not the largest in current page.
-     * Because if the sticky-header's zIndex is not the largest in current page,
-     * it may be sheltered by other element when being sticked.
-     */
-    @Input('sticky-zIndex') zIndex: number = 10;
-    @Input() cdkStickyParentRegion: any;
-    @Input() scrollableRegion: any;
+  /**
+   * Set the sticky-header's z-index as 10 in default. Make it as an input
+   * variable to make user be able to customize the zIndex when
+   * the sticky-header's zIndex is not the largest in current page.
+   * Because if the sticky-header's zIndex is not the largest in current page,
+   * it may be sheltered by other element when being stuck.
+   */
+  @Input('cdkStickyHeaderZIndex') zIndex: number = 10;
+  @Input('cdkStickyParentRegion') parentRegion: HTMLElement;
+  @Input('cdkStickyScrollableRegion') scrollableRegion: HTMLElement;
 
+  private _onScrollBind: EventListener = this.onScroll.bind(this);
+  private _onResizeBind: EventListener = this.onResize.bind(this);
+  private _onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
+  isStuck: boolean = false;
 
-    private _activated = new EventEmitter();
-    private _deactivated = new EventEmitter();
+  // the element with the 'cdkStickyHeader' tag
+  element: HTMLElement;
 
-    private _onScrollBind: EventListener = this.onScroll.bind(this);
-    private _onResizeBind: EventListener = this.onResize.bind(this);
-    private _onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
+  // the upper container element with the 'cdkStickyRegion' tag
+  stickyParent: HTMLElement | null;
+  upperScrollableContainer: HTMLElement;
 
-    public STICK_START_CLASS: string = 'sticky';
-    public STICK_END_CLASS: string = 'sticky-end';
-    public isStuck: boolean = false;
+  /**
+   * the original css of the sticky element, used to reset the sticky element
+   * when it is being unstuck
+   */
+  originalCss: any;
 
-    // the element with the 'md-sticky' tag
-    public elem: any;
+  private _containerStart: number;
+  private _scrollFinish: number;
 
-    // the uppercontainer element with the 'md-sticky-viewport' tag
-    public stickyParent: any;
+  private _scrollingWidth: number;
 
-    // the upper scrollable container
-    public upperScrollableContainer: any;
+  constructor(_element: ElementRef,
+              scrollable: Scrollable,
+              @Optional() public parentReg: CdkStickyRegion) {
+    this.element = _element.nativeElement;
+    this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
+    this.scrollableRegion = scrollable.getElementRef().nativeElement;
+  }
+
+  ngAfterViewInit(): void {
+    this.stickyParent = this.parentReg != null ?
+      this.parentReg._elementRef.nativeElement : this.element.parentElement;
+    this.originalCss = {
+      zIndex: this.getCssValue(this.element, 'zIndex'),
+      position: this.getCssValue(this.element, 'position'),
+      top: this.getCssValue(this.element, 'top'),
+      right: this.getCssValue(this.element, 'right'),
+      left: this.getCssValue(this.element, 'left'),
+      bottom: this.getCssValue(this.element, 'bottom'),
+      width: this.getCssValue(this.element, 'width'),
+    };
+    this.attach();
+    this.defineRestrictionsAndStick();
+  }
+
+  ngOnDestroy(): void {
+    this.upperScrollableContainer.removeEventListener('scroll', this._onScrollBind);
+    this.upperScrollableContainer.removeEventListener('resize', this._onResizeBind);
+    this.upperScrollableContainer.removeEventListener('touchmove', this._onTouchMoveBind);
+  }
+
+  attach() {
+    this.upperScrollableContainer.addEventListener('scroll', this._onScrollBind, false);
+    this.upperScrollableContainer.addEventListener('resize', this._onResizeBind, false);
+
+    // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
+    this.upperScrollableContainer.addEventListener('touchmove', this._onTouchMoveBind, false);
+  }
+
+  onScroll(): void {
+    this.defineRestrictionsAndStick();
+  }
+
+  onTouchMove(): void {
+    this.defineRestrictionsAndStick();
+  }
+
+  onResize(): void {
+    this.defineRestrictionsAndStick();
+    // If there's already a header being stick when the page is
+    // resized. The CSS style of the cdkStickyHeader element may be not fit
+    // the resized window. So we need to unstuck it then re-stick it.
+    // unstuck() can set 'isStuck' to FALSE. Then stickElement() can work.
+    if (this.isStuck) {
+      this.unstuckElement();
+      this.stickElement();
+    }
+  }
+
+  /**
+   * define the restrictions of the sticky header(including stickyWidth,
+   * when to start, when to finish)
+   */
+  defineRestrictions(): void {
+    if(this.stickyParent == null) {
+      return;
+    }
+    let containerTop: any = this.stickyParent.getBoundingClientRect();
+    let elemHeight: number = this.element.offsetHeight;
+    let containerHeight: number = this.getCssNumber(this.stickyParent, 'height');
+    this._containerStart = containerTop.top;
+
+    // the padding of the element being sticked
+    let elementPadding: any = this.getCssValue(this.element, 'padding');
+
+    let paddingNumber: any = Number(elementPadding.slice(0, -2));
+    this._scrollingWidth = this.upperScrollableContainer.clientWidth -
+      paddingNumber - paddingNumber;
+
+    this._scrollFinish = this._containerStart + (containerHeight - elemHeight);
+  }
+
+  /**
+   * Reset element to its original CSS
+   */
+  resetElement(): void {
+    this.element.classList.remove(STICK_START_CLASS);
+    extendObject(this.element.style, this.originalCss);
+  }
+
+  /**
+   * Stuck element, make the element stick to the top of the scrollable container.
+   */
+  stickElement(): void {
+    this.isStuck = true;
+
+    this.element.classList.remove(STICK_END_CLASS);
+    this.element.classList.add(STICK_START_CLASS);
 
     /**
-     * the original css of the sticky element, used to reset the sticky element
-     * when it is being unstuck
-     */
-    public originalCss: any;
+     * Have to add the translate3d function for the sticky element's css style.
+     * Because iPhone and iPad's browser is using its owning rendering engine. And
+     * even if you are using Chrome on an iPhone, you are just using Safari with
+     * a Chrome skin around it.
+     *
+     * Safari on iPad and Safari on iPhone do not have resizable windows.
+     * In Safari on iPhone and iPad, the window size is set to the size of
+     * the screen (minus Safari user interface controls), and cannot be changed
+     * by the user. To move around a webpage, the user changes the zoom level and position
+     * of the viewport as they double tap or pinch to zoom in or out, or by touching
+     * and dragging to pan the page. As a user changes the zoom level and position of the
+     * viewport they are doing so within a viewable content area of fixed size
+     * (that is, the window). This means that webpage elements that have their position
+     * "fixed" to the viewport can end up outside the viewable content area, offscreen.
+     *
+     * So the 'position: fixed' does not work on iPhone and iPad. To make it work,
+     * 'translate3d(0,0,0)' needs to be used to force Safari re-rendering the sticky element.
+     **/
+    this.element.style.transform = 'translate3d(0px,0px,0px)';
 
-    // the height of 'stickyParent'
-    public containerHeight: number;
+    let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
 
-    // the height of 'elem'
-    public elemHeight: number;
+    let stickyCss:any = {
+      zIndex: this.zIndex,
+      position: 'fixed',
+      top: this.upperScrollableContainer.offsetTop + 'px',
+      right: stuckRight + 'px',
+      left: this.upperScrollableContainer.offsetLeft + 'px',
+      bottom: 'auto',
+      width: this._scrollingWidth + 'px',
+    };
+    extendObject(this.element.style, stickyCss);
+  }
 
-    private _containerStart: number;
-    private _scrollFinish: number;
+  /**
+   * Unstuck element: When an element reaches the bottom of its cdkStickyRegion,
+   * It should be unstuck. And its position will be set as 'relative', its bottom
+   * will be set as '0'. So it will be stick at the bottom of its cdkStickyRegion and
+   * will be scrolled up with its cdkStickyRegion element. In this way, the sticky header
+   * can be changed smoothly when two sticky header meet and the later one need to replace
+   * the former one.
+   */
+  unstuckElement(): void {
+    this.isStuck = false;
 
-    private _scrollingWidth: number;
-    private _scrollingRight: number;
-
-    // the padding of 'elem'
-    private _elementPadding: any;
-    private _paddingNumber: number;
-
-    // sticky element's width
-    private _width: string = 'auto';
-
-    constructor(private element: ElementRef,
-                public scrollable: Scrollable,
-                @Optional() public parentReg: StickyParentDirective) {
-        this.elem = element.nativeElement;
-        this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
-        this.scrollableRegion = scrollable.getElementRef().nativeElement;
-        if (parentReg != null) {
-            this.cdkStickyParentRegion = parentReg.getElementRef().nativeElement;
-        }
+    if(this.stickyParent == null) {
+      return;
     }
 
-    ngAfterViewInit(): void {
+    this.element.classList.add(STICK_END_CLASS);
+    this.stickyParent.style.position = 'relative';
+    let unstuckCss: any = {
+      position: 'absolute',
+      top: 'auto',
+      right: '0',
+      left: 'auto',
+      bottom: '0',
+      width: this.originalCss.width,
+    };
+    extendObject(this.element.style, unstuckCss);
+  }
 
-        if (this.cdkStickyParentRegion != null) {
-            this.stickyParent = this.cdkStickyParentRegion;
-        }else {
-            this.stickyParent = this.elem.parentNode;
-        }
 
-        this.originalCss = {
-            zIndex: this.getCssValue(this.elem, 'zIndex'),
-            position: this.getCssValue(this.elem, 'position'),
-            top: this.getCssValue(this.elem, 'top'),
-            right: this.getCssValue(this.elem, 'right'),
-            left: this.getCssValue(this.elem, 'left'),
-            bottom: this.getCssValue(this.elem, 'bottom'),
-            width: this.getCssValue(this.elem, 'width'),
-        };
+  /**
+   * 'sticker()' function contains the main logic of sticky-header. It decides when
+   * a header should be stick and when should it be unstuck. It will first get
+   * the offsetTop of the upper scrollable container. And then get the Start and End
+   * of the sticky-header's stickyRegion.
+   * The header will be stick if 'stickyRegion Start < container offsetTop < stickyRegion End'.
+   * And when 'stickyRegion End < container offsetTop', the header will be unstuck. It will be
+   * stick to the bottom of its stickyRegion container and being scrolled up with its stickyRegion
+   * container.
+   * When 'stickyRegion Start > container offsetTop', which means the header come back to the
+   * middle of the scrollable container, the header will be reset to its
+   * original CSS.
+   * A flag, isStuck. is used in this function. When a header is stick, isStuck = true.
+   * And when the 'isStuck' flag is TRUE, the sticky-header will not be repaint, which
+   * decreases the times on repainting sticky-header.
+   */
+  sticker(): void {
+    let currentPosition: number = this.upperScrollableContainer.offsetTop;
 
-        this._scrollingWidth = this.upperScrollableContainer.scrollWidth;
-
-        this.attach();
-
-        if (this._width == 'auto') {
-            this._width = this.originalCss.width;
-        }
-
-        this.defineRestrictions();
-        this.sticker();
+    // unstuck when the element is scrolled out of the sticky region
+    if (this.isStuck &&
+      (currentPosition < this._containerStart || currentPosition > this._scrollFinish) ||
+      currentPosition >= this._scrollFinish) {
+      this.resetElement();
+      if (currentPosition >= this._scrollFinish) {
+        this.unstuckElement();
+      }
+      this.isStuck = false;    // stick when the element is within the sticky region
+    } else if ( this.isStuck === false &&
+      currentPosition > this._containerStart && currentPosition < this._scrollFinish) {
+      this.stickElement();
     }
+  }
 
-    ngOnDestroy(): void {
-        this.detach();
+  defineRestrictionsAndStick(): void {
+    this.defineRestrictions();
+    this.sticker();
+  }
+
+
+  private getCssValue(element: any, property: string): any {
+    let result: any = '';
+    if (typeof window.getComputedStyle !== 'undefined') {
+      result = window.getComputedStyle(element, '').getPropertyValue(property);
+    } else if (typeof element.currentStyle !== 'undefined')  {
+      result = element.currentStyle.property;
     }
+    return result;
+  }
 
-    attach() {
-        this.upperScrollableContainer.addEventListener('scroll', this._onScrollBind, false);
-        this.upperScrollableContainer.addEventListener('resize', this._onResizeBind, false);
-
-        // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
-        this.upperScrollableContainer.addEventListener('touchmove', this._onTouchMoveBind, false);
-
-        Observable.fromEvent(this.upperScrollableContainer, 'scroll')
-            .subscribe(() => this.defineRestrictionsAndStick());
-
-        Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
-            .subscribe(() => this.defineRestrictionsAndStick());
-    }
-
-    detach() {
-        this.upperScrollableContainer.removeEventListener('scroll', this._onScrollBind);
-        this.upperScrollableContainer.removeEventListener('resize', this._onResizeBind);
-        this.upperScrollableContainer.removeEventListener('touchmove', this._onTouchMoveBind);
-    }
-
-    onScroll(): void {
-        this.defineRestrictionsAndStick();
-    }
-
-    onTouchMove(): void {
-        this.defineRestrictionsAndStick();
-    }
-
-    onResize(): void {
-        this.defineRestrictionsAndStick();
-
-        /**
-         * If there's already a header being sticked when the page is
-         * resized. The CSS style of the sticky-header may be not fit
-         * the resized window. So we need to unstick it then restick it.
-         */
-        if (this.isStuck) {
-            this.unstuckElement();
-            this.stickElement();
-        }
-    }
-
-    /**
-     * define the restrictions of the sticky header(including stickyWidth,
-     * when to start, when to finish)
-     */
-    defineRestrictions(): void {
-        let containerTop: any = this.stickyParent.getBoundingClientRect();
-        this.elemHeight = this.elem.offsetHeight;
-        this.containerHeight = this.getCssNumber(this.stickyParent, 'height');
-        this._containerStart = containerTop.top;
-
-        // the padding of the element being sticked
-        this._elementPadding = this.getCssValue(this.elem, 'padding');
-
-        this._paddingNumber = Number(this._elementPadding.slice(0, -2));
-        this._scrollingWidth = this.upperScrollableContainer.clientWidth -
-            this._paddingNumber - this._paddingNumber;
-
-        this._scrollFinish = this._containerStart + (this.containerHeight - this.elemHeight);
-    }
-
-    /**
-     * reset element to its original CSS
-     */
-    resetElement(): void {
-        this.elem.classList.remove(this.STICK_START_CLASS);
-        Object.assign(this.elem.style, this.originalCss);
-    }
-
-    /**
-     * stuck element, make the element stick to the top of the scrollable container.
-     */
-    stickElement(): void {
-        this.isStuck = true;
-
-        this.elem.classList.remove(this.STICK_END_CLASS);
-        this.elem.classList.add(this.STICK_START_CLASS);
-
-        /** Have to add the translate3d function for the sticky element's css style.
-         * Because iPhone and iPad's browser is using its owning rendering engine. And
-         * even if you are using Chrome on an iPhone, you are just using Safari with
-         * a Chrome skin around it.
-         *
-         * Safari on iPad and Safari on iPhone do not have resizable windows.
-         * In Safari on iPhone and iPad, the window size is set to the size of
-         * the screen (minus Safari user interface controls), and cannot be changed
-         * by the user. To move around a webpage, the user changes the zoom level and position
-         * of the viewport as they double tap or pinch to zoom in or out, or by touching
-         * and dragging to pan the page. As a user changes the zoom level and position of the
-         * viewport they are doing so within a viewable content area of fixed size
-         * (that is, the window). This means that webpage elements that have their position
-         * "fixed" to the viewport can end up outside the viewable content area, offscreen.
-         *
-         * So the 'position: fixed' does not work on iPhone and iPad. To make it work,
-         * I need to use translate3d(0,0,0) to force Safari rerendering the sticky element.
-         **/
-        this.elem.style.transform = 'translate3d(0,0,0)';
-
-        this.elem.style.zIndex = this.zIndex;
-        this.elem.style.position = 'fixed';
-        this.elem.style.top = this.getCssNumber(this.upperScrollableContainer, 'top') + 'px';
-
-        this._scrollingRight = this.upperScrollableContainer.offsetLeft +
-            this.upperScrollableContainer.offsetWidth;
-        let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
-        this.elem.style.right = stuckRight + 'px';
-
-        this.elem.style.left = this.upperScrollableContainer.offsetLeft + 'px';
-        this.elem.style.bottom = 'auto';
-        this.elem.style.width = this._scrollingWidth + 'px';
-
-        // Set style for sticky element again for Mobile Views.
-        this.elem.style.setProperty('zIndex', this.zIndex);
-        this.elem.style.setProperty('position', 'fixed');
-        this.elem.style.setProperty('top', this.upperScrollableContainer.offsetTop + 'px');
-        this.elem.style.setProperty('right', stuckRight + 'px');
-        this.elem.style.setProperty('left', this.upperScrollableContainer.offsetLeft + 'px');
-        this.elem.style.setProperty('width', this._scrollingWidth + 'px');
-
-        this._activated.next(this.elem);
-    }
-
-    /**
-     * unstuck element
-     */
-    unstuckElement(): void {
-        this.isStuck = false;
-
-        this.elem.classList.add(this.STICK_END_CLASS);
-
-        this.stickyParent.style.position = 'relative';
-        this.elem.style.position = 'absolute';
-        this.elem.style.top = 'auto';
-        this.elem.style.right = 0;
-        this.elem.style.left = 'auto';
-        this.elem.style.bottom = 0;
-        this.elem.style.width = this._width;
-
-        this._deactivated.next(this.elem);
-    }
-
-
-    sticker(): void {
-        let currentPosition: number = this.upperScrollableContainer.offsetTop;
-
-        // unstick when the element is scrolled out of the sticky region
-        if (this.isStuck && (currentPosition < this._containerStart ||
-            currentPosition > this._scrollFinish) || currentPosition >= this._scrollFinish) {
-            this.resetElement();
-            if (currentPosition >= this._scrollFinish) {
-                this.unstuckElement();
-            }
-            this.isStuck = false;    // stick when the element is within the sticky region
-        }else if ( this.isStuck === false &&
-            currentPosition > this._containerStart && currentPosition < this._scrollFinish) {
-            this.stickElement();
-        }
-    }
-
-    defineRestrictionsAndStick(): void {
-        this.defineRestrictions();
-        this.sticker();
-    }
-
-
-    private getCssValue(element: any, property: string): any {
-        let result: any = '';
-        if (typeof window.getComputedStyle !== 'undefined') {
-            result = window.getComputedStyle(element, '').getPropertyValue(property);
-        }else if (typeof element.currentStyle !== 'undefined')  {
-            result = element.currentStyle.property;
-        }
-        return result;
-    }
-
-    private getCssNumber(element: any, property: string): number {
-        return parseInt(this.getCssValue(element, property), 10) || 0;
-    }
+  private getCssNumber(element: any, property: string): number {
+    return parseInt(this.getCssValue(element, property), 10) || 0;
+  }
 }
