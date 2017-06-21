@@ -3,15 +3,33 @@
   cursor: pointer;
 }
 
+.mat-sort-header-button {
+  border: none;
+  background: 0 0;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  cursor: pointer;
+  outline: 0;
+  font: inherit;
+  color: currentColor;
+}
+
 .mat-sort-header-arrow {
+  display: none;
   height: 10px;
   width: 10px;
   position: relative;
-  transform: rotate(45deg);
   margin-left: 6px;
 }
 
+.mat-sort-header-ascending {
+  display: block;
+  transform: rotate(45deg);
+}
+
 .mat-sort-header-descending {
+  display: block;
   transform: rotate(225deg);
   top: 2px;
 }

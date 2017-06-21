@@ -16,7 +16,7 @@ export class PersonDataSource extends DataSource<any> {
               private _sort: MdSort) {
     super();
 
-    // Subscribe to page changes and database changes by clearing the cached data and
+    // Subscribe to paging, sorting, and database changes by clearing the cached data and
     // determining the updated display data.
     Observable.merge(this._paginator.page,
         this._peopleDatabase.dataChange,
@@ -63,14 +63,14 @@ export class PersonDataSource extends DataSource<any> {
   /** Returns a sorted copy of the database data. */
   getSortedData(): UserData[] {
     const data = this._peopleDatabase.data.slice();
-    if (!this._sort.active) { return data; }
+    if (!this._sort.active || this._sort.direction == '') { return data; }
 
     return data.sort((a, b) => {
       let propertyA, propertyB;
 
-      switch (this._sort.active.id) {
-        case 'userId': [propertyA, propertyB] = [a.id, b.id]; break;
-        case 'userName': [propertyA, propertyB] = [a.name, b.name]; break;
+      switch (this._sort.active) {
+        case 'id': [propertyA, propertyB] = [a.id, b.id]; break;
+        case 'name': [propertyA, propertyB] = [a.name, b.name]; break;
         case 'progress': [propertyA, propertyB] = [a.progress, b.progress]; break;
         case 'color': [propertyA, propertyB] = [a.color, b.color]; break;
       }

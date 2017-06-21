@@ -13,9 +13,11 @@ export interface MdSortable {
 }
 
 export interface Sort {
-  direction: string;
-  sortable: MdSortable;
+  active: string;
+  direction: SortDirection;
 }
+
+export type SortDirection = 'ascending' | 'descending' | '';
 
 @Directive({
   selector: '[mdSort], [matSort]',
@@ -23,20 +25,24 @@ export interface Sort {
 export class MdSort {
   sortables = new Map<string, MdSortable>();
 
-  active: MdSortable;
+  @Input('mdSortActive') active: string;
 
-  @Input('mdSortOrder') order: string[] = ['ascending', 'descending'];
+  @Input('mdSortStart') sortStart: SortDirection = 'ascending';
 
-  @Input('mdSortDirection') direction: string = '';
+  @Input('mdSortDirection') direction: SortDirection = '';
 
-  @Output() sortChange = new EventEmitter<Sort>();
+  @Input('mdSortDisableClear') disableClear: boolean;
+
+  @Input('mdSortReverseOrder') reverseOrder: boolean;
+
+  @Output() mdSortChange = new EventEmitter<Sort>();
 
   register(sortable: MdSortable) {
     this.sortables.set(sortable.id, sortable);
   }
 
   unregister(sortable: MdSortable) {
-    if (this.active === sortable) {
+    if (this.active === sortable.id) {
       this.active = null;
     }
 
@@ -44,18 +50,34 @@ export class MdSort {
   }
 
   isSorted(sortable: MdSortable) {
-    return this.active == sortable;
+    return this.active == sortable.id && this.direction != '';
   }
 
   sort(sortable: MdSortable) {
-    if (this.active != sortable) {
-      this.direction = this.order[0];
-      this.active = sortable;
+    if (this.active != sortable.id) {
+      this.direction = this.sortStart;
+      this.active = sortable.id;
     } else {
-      let nextDirectionIndex = this.order.indexOf(this.direction) + 1;
-      this.direction = this.order[nextDirectionIndex < this.order.length ? nextDirectionIndex : 0];
+      let sortDirectionCycle = this._getSortDirectionCycle();
+
+      // Take the next direction in the cycle
+      let nextDirectionIndex = sortDirectionCycle.indexOf(this.direction) + 1;
+      if (nextDirectionIndex >= sortDirectionCycle.length) { nextDirectionIndex = 0; }
+
+      this.direction = sortDirectionCycle[nextDirectionIndex];
     }
 
-    this.sortChange.next({direction: this.direction, sortable});
+    this.mdSortChange.next({
+      active: this.active,
+      direction: this.direction
+    });
+  }
+
+  _getSortDirectionCycle(): SortDirection[] {
+    let sortOrder: SortDirection[] = ['ascending', 'descending'];
+    if (this.reverseOrder) { sortOrder.reverse(); }
+    if (!this.disableClear) { sortOrder.push(''); }
+
+    return sortOrder;
   }
 }
