@@ -11,6 +11,7 @@ import {MdSelectChange} from '@angular/material';
 export class SelectDemo {
   drinksRequired = false;
   pokemonRequired = false;
+  hideRequiredMarker: boolean = false;
   drinksDisabled = false;
   pokemonDisabled = false;
   showSelect = false;

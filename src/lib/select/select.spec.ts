@@ -677,6 +677,26 @@ describe('MdSelect', () => {
         .toContain('*', `Expected placeholder to have an asterisk, as control was required.`);
     });
 
+    it('hide asterisk after the placeholder when set to hide the required marker', () => {
+      const placeholder =
+          fixture.debugElement.query(By.css('.mat-select-placeholder')).nativeElement;
+      const initialContent =  getComputedStyle(placeholder, '::after').getPropertyValue('content');
+
+      // must support both default cases to work in all browsers in Saucelabs
+      expect(initialContent === 'none' || initialContent === '')
+          .toBe(true, `Expected placeholder not to have an asterisk, as control was not required.`);
+
+      fixture.componentInstance.isRequired = true;
+      fixture.detectChanges();
+      expect(getComputedStyle(placeholder, '::after').getPropertyValue('content'))
+          .toContain('*', `Expected placeholder to have an asterisk, as control was required.`);
+
+      fixture.componentInstance.hideRequiredMarker = true;
+      fixture.detectChanges();
+      expect(initialContent === 'none' || initialContent === '')
+          .toBe(true, `Expected not to have an asterisk, as required marker was hidden.`);
+    });
+
     it('should be able to programmatically select a falsy option', () => {
       fixture.destroy();
 
@@ -2402,9 +2422,9 @@ describe('MdSelect', () => {
   selector: 'basic-select',
   template: `
     <div [style.height.px]="heightAbove"></div>
-    <md-select placeholder="Food" [formControl]="control" [required]="isRequired"
-      [tabIndex]="tabIndexOverride" [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"
-      [panelClass]="panelClass">
+    <md-select placeholder="Food" [formControl]="control"
+      [required]="isRequired && !hideRequiredMarker" [tabIndex]="tabIndexOverride"
+      [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby" [panelClass]="panelClass">
       <md-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
         {{ food.viewValue }}
       </md-option>
@@ -2425,6 +2445,7 @@ class BasicSelect {
   ];
   control = new FormControl();
   isRequired: boolean;
+  hideRequiredMarker: boolean;
   heightAbove = 0;
   heightBelow = 0;
   tabIndexOverride: number;
