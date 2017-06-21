@@ -9,9 +9,7 @@ import {Component, Directive, Input, Output, EventEmitter,
     OnDestroy, AfterViewInit, ElementRef, Injectable, Optional} from '@angular/core';
 
 import {Observable} from 'rxjs/Observable';
-import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
-import {Subject} from 'rxjs/Subject';
 
 
 @Directive({
@@ -31,19 +29,16 @@ export class StickyParentDirective {
 })
 export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
 
-    /**Set the sticky-header's z-index as 10 in default. Make it as an input
+    /**
+     * Set the sticky-header's z-index as 10 in default. Make it as an input
      * variable to make user be able to customize the zIndex when
      * the sticky-header's zIndex is not the largest in current page.
      * Because if the sticky-header's zIndex is not the largest in current page,
      * it may be sheltered by other element when being sticked.
      */
-    @Input('sticky-zIndex') zIndex: number = 10;
-    @Input() cdkStickyParentRegion: any;
-    @Input() scrollableRegion: any;
-
-
-    private _activated = new EventEmitter();
-    private _deactivated = new EventEmitter();
+    @Input('cdkStickyHeaderZIndex') zIndex: number = 10;
+    @Input('cdkStickyParentRegion') cdkStickyParentRegion: any;
+    @Input('cdkStickyScrollableRegion') scrollableRegion: any;
 
     private _onScrollBind: EventListener = this.onScroll.bind(this);
     private _onResizeBind: EventListener = this.onResize.bind(this);
@@ -230,42 +225,21 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
          * So the 'position: fixed' does not work on iPhone and iPad. To make it work,
          * I need to use translate3d(0,0,0) to force Safari rerendering the sticky element.
          **/
-        this.elem.style.transform = 'translate3d(0,0,0)';
-
-        this.elem.style.zIndex = this.zIndex;
-        this.elem.style.position = 'fixed';
-        this.elem.style.top = this.getCssNumber(this.upperScrollableContainer, 'top') + 'px';
 
         this._scrollingRight = this.upperScrollableContainer.offsetLeft +
             this.upperScrollableContainer.offsetWidth;
         let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
-        this.elem.style.right = stuckRight + 'px';
-
-        this.elem.style.left = this.upperScrollableContainer.offsetLeft + 'px';
-        this.elem.style.bottom = 'auto';
-        this.elem.style.width = this._scrollingWidth + 'px';
-
 
         this.stickyCSS = {
             zIndex: this.zIndex,
             position: 'fixed',
-            top: this.getCssNumber(this.upperScrollableContainer, 'top') + 'px',
+            top: this.upperScrollableContainer.offsetTop + 'px',
             right: stuckRight + 'px',
             left: this.upperScrollableContainer.offsetLeft + 'px',
             bottom: 'auto',
             width: this._scrollingWidth + 'px',
         };
         Object.assign(this.elem.style, this.stickyCSS);
-
-        // Set style for sticky element again for Mobile Views.
-        this.elem.style.setProperty('zIndex', this.zIndex);
-        this.elem.style.setProperty('position', 'fixed');
-        this.elem.style.setProperty('top', this.upperScrollableContainer.offsetTop + 'px');
-        this.elem.style.setProperty('right', stuckRight + 'px');
-        this.elem.style.setProperty('left', this.upperScrollableContainer.offsetLeft + 'px');
-        this.elem.style.setProperty('width', this._scrollingWidth + 'px');
-
-        this._activated.next(this.elem);
     }
 
     /**
@@ -283,8 +257,6 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         this.elem.style.left = 'auto';
         this.elem.style.bottom = 0;
         this.elem.style.width = this._width;
-
-        this._deactivated.next(this.elem);
     }
 
 
