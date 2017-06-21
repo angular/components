@@ -37,7 +37,7 @@ describe('my test for sticky-header', () => {
     });
 
 
-    fit('make sure defineRestrictions() is called when the element is scrolled',
+    it('make sure defineRestrictions() is called when the element is scrolled',
         fakeAsync(() => {
             stickyHeaderDir.ngAfterViewInit();
             stickyHeaderDir.onScroll();
@@ -47,7 +47,7 @@ describe('my test for sticky-header', () => {
             expect(stickyHeaderDir.elemHeight).not.toEqual(null);
         }));
 
-    fit('make sure defineRestrictions() is called when the element is onTouchmove on mobile screen',
+    it('make sure defineRestrictions() is called when the element is onTouchmove on mobile screen',
         fakeAsync(() => {
             stickyHeaderDir.ngAfterViewInit();
             stickyHeaderDir.onTouchMove();
@@ -57,7 +57,7 @@ describe('my test for sticky-header', () => {
             expect(stickyHeaderDir.elemHeight).not.toEqual(null);
         }));
 
-    fit('make sure defineRestrictions() is called when the element is resized',
+    it('make sure defineRestrictions() is called when the element is resized',
         fakeAsync(() => {
             stickyHeaderDir.ngAfterViewInit();
             stickyHeaderDir.onResize();
@@ -67,7 +67,7 @@ describe('my test for sticky-header', () => {
             expect(stickyHeaderDir.elemHeight).not.toEqual(null);
         }));
 
-    fit('make sure sticked successfully after being sticked',
+    it('make sure sticked successfully after being sticked',
         fakeAsync(() => {
             stickyHeaderDir.ngAfterViewInit();
             stickyHeaderDir.onScroll();
@@ -79,7 +79,7 @@ describe('my test for sticky-header', () => {
             expect(stickyHeaderDir.elem.style.top).toEqual(exp);
         }));
 
-    fit('make sure stickElement() successfully change isStuck flag to be TRUE',
+    it('make sure stickElement() successfully change isStuck flag to be TRUE',
         fakeAsync(() => {
             fixture.detectChanges();
             stickyHeaderDir.ngAfterViewInit();
@@ -91,7 +91,7 @@ describe('my test for sticky-header', () => {
             expect(stickyHeaderDir.isStuck).toBe(true);
         }));
 
-    fit('make sure unstickedElement successfully works',
+    it('make sure unstickedElement successfully works',
         fakeAsync(() => {
             stickyHeaderDir.ngAfterViewInit();
             stickyHeaderDir.onScroll();
@@ -103,7 +103,7 @@ describe('my test for sticky-header', () => {
             expect(stickyHeaderDir.elem.style.bottom).toEqual('0px');
         }));
 
-    fit('make sure unstickElement() successfully change isStuck flag to be FALSE',
+    it('make sure unstickElement() successfully change isStuck flag to be FALSE',
         fakeAsync(() => {
             fixture.detectChanges();
             stickyHeaderDir.ngAfterViewInit();
@@ -116,7 +116,7 @@ describe('my test for sticky-header', () => {
             expect(stickyHeaderDir.isStuck).toBe(false);
         }));
 
-    fit('make sure resetElement() successfully works',
+    it('make sure resetElement() successfully works',
         fakeAsync(() => {
             stickyHeaderDir.ngAfterViewInit();
             let expWidth = stickyHeaderDir.originalCss.width;

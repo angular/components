@@ -1,10 +1,18 @@
-import {Component, Directive, Input, Output, EventEmitter, OnInit, OnDestroy, AfterViewInit, ElementRef, Injectable, Optional} from '@angular/core';
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {Component, Directive, Input, Output, EventEmitter,
+    OnDestroy, AfterViewInit, ElementRef, Injectable, Optional} from '@angular/core';
 
 import {Observable} from 'rxjs/Observable';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
 import {Subject} from 'rxjs/Subject';
-import {noUndefined} from "@angular/compiler/src/util";
 
 
 @Directive({
@@ -88,14 +96,14 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         this.elem = element.nativeElement;
         this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
         this.scrollableRegion = scrollable.getElementRef().nativeElement;
-        if(parentReg != null) {
+        if ( parentReg != null) {
             this.cdkStickyParentRegion = parentReg.getElementRef().nativeElement;
         }
     }
 
     ngAfterViewInit(): void {
 
-        if(this.cdkStickyParentRegion != null) {
+        if ( this.cdkStickyParentRegion != null) {
             this.stickyParent = this.cdkStickyParentRegion;
         }else {
             this.stickyParent = this.elem.parentNode;
@@ -182,8 +190,9 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         // the padding of the element being sticked
         this.elementPadding = this.getCssValue(this.elem, 'padding');
 
-        this.paddingNumber = Number(this.elementPadding.slice(0,-2));
-        this.scrollingWidth = this.upperScrollableContainer.clientWidth - this.paddingNumber - this.paddingNumber;
+        this.paddingNumber = Number(this.elementPadding.slice(0, -2));
+        this.scrollingWidth = this.upperScrollableContainer.clientWidth -
+            this.paddingNumber - this.paddingNumber;
 
         this.scrollFinish = this.containerStart + (this.containerHeight - this.elemHeight);
     }
@@ -229,7 +238,8 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         this.elem.style.position = 'fixed';
         this.elem.style.top = this.getCssNumber(this.upperScrollableContainer, 'top') + 'px';
 
-        this.scrollingRight = this.upperScrollableContainer.offsetLeft + this.upperScrollableContainer.offsetWidth;
+        this.scrollingRight = this.upperScrollableContainer.offsetLeft +
+            this.upperScrollableContainer.offsetWidth;
         let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
         this.elem.style.right = stuckRight + 'px';
 
@@ -272,13 +282,16 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         let currentPosition: number = this.upperScrollableContainer.offsetTop;
 
         // unstick when the element is scrolled out of the sticky region
-        if (this.isStuck && (currentPosition < this.containerStart || currentPosition > this.scrollFinish) || currentPosition >= this.scrollFinish) {
+        if (this.isStuck &&
+            (currentPosition < this.containerStart || currentPosition > this.scrollFinish)
+            || currentPosition >= this.scrollFinish) {
             this.resetElement();
-            if (currentPosition >= this.scrollFinish) this.unstuckElement();
-            this.isStuck = false;
-        }
-        // stick when the element is within the sticky region
-        else if ( this.isStuck === false && currentPosition > this.containerStart && currentPosition < this.scrollFinish) {
+            if (currentPosition >= this.scrollFinish) {
+                this.unstuckElement();
+            }
+            this.isStuck = false;    // stick when the element is within the sticky region
+        } else if ( this.isStuck === false &&
+            currentPosition > this.containerStart && currentPosition < this.scrollFinish) {
             this.stickElement();
         }
     }
@@ -292,9 +305,8 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
     private getCssValue(element: any, property: string): any {
         let result: any = '';
         if (typeof window.getComputedStyle !== 'undefined') {
-            result = window.getComputedStyle(element, null).getPropertyValue(property);
-        }
-        else if (typeof element.currentStyle !== 'undefined')  {
+            result = window.getComputedStyle(element, '').getPropertyValue(property);
+        }else if (typeof element.currentStyle !== 'undefined')  {
             result = element.currentStyle.property;
         }
         return result;

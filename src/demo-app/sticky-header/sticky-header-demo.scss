@@ -16,7 +16,8 @@ body {
     -webkit-appearance: none;
     -moz-appearance: none;
     height: 500px;
-    overflow: auto;}
+    overflow: auto;
+  }
 
   button {
     position: fixed;
@@ -33,10 +34,10 @@ body {
   text-align: center;
   -webkit-appearance: none;
   -moz-appearance: none;
-  appearance: none;
   height: 500px;
   //width: 900px;
-  overflow: auto;}
+  overflow: auto;
+}
 
 header {
   display: block;
@@ -102,8 +103,10 @@ p {
   -moz-appearance: none;
 }
 
-div{
-  margin: 0; border: 0; padding: 0;
+div {
+  margin: 0;
+  border: 0;
+  padding: 0;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
