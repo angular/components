@@ -17,6 +17,7 @@ export class SelectDemo {
   currentDrink: string;
   currentPokemon: string[];
   currentPokemonFromGroup: string;
+  searchTerm: string;
   latestChangeEvent: MdSelectChange;
   floatPlaceholder: string = 'auto';
   foodControl = new FormControl('pizza-1');
@@ -42,6 +43,8 @@ export class SelectDemo {
     {value: 'wine-7', viewValue: 'Wine'},
     {value: 'milk-8', viewValue: 'Milk'},
   ];
+
+  filteredDrinks = this.drinks.slice();
 
   pokemon = [
     {value: 'bulbasaur-0', viewValue: 'Bulbasaur'},
@@ -100,5 +103,11 @@ export class SelectDemo {
 
   setPokemonValue() {
     this.currentPokemon = ['eevee-4', 'psyduck-6'];
+  }
+
+  filterDrinks() {
+    this.filteredDrinks = this.searchTerm ? this.drinks.filter(item => {
+      return item.viewValue.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1;
+    }) : this.drinks.slice();
   }
 }

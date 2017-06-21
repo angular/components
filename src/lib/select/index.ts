@@ -9,6 +9,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MdSelect} from './select';
+import {MdSelectHeader} from './select-header';
 import {MdCommonModule, OverlayModule, MdOptionModule} from '../core';
 
 
@@ -19,11 +20,12 @@ import {MdCommonModule, OverlayModule, MdOptionModule} from '../core';
     MdOptionModule,
     MdCommonModule,
   ],
-  exports: [MdSelect, MdOptionModule, MdCommonModule],
-  declarations: [MdSelect],
+  exports: [MdSelect, MdSelectHeader, MdOptionModule, MdCommonModule],
+  declarations: [MdSelect, MdSelectHeader],
 })
 export class MdSelectModule {}
 
 
 export * from './select';
+export * from './select-header';
 export {fadeInContent, transformPanel, transformPlaceholder} from './select-animations';

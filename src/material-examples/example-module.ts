@@ -68,6 +68,7 @@ import {SelectOverviewExample} from './select-overview/select-overview-example';
 import {ChipsOverviewExample} from './chips-overview/chips-overview-example';
 import {ChipsStackedExample} from './chips-stacked/chips-stacked-example';
 import {SelectFormExample} from './select-form/select-form-example';
+import {SelectHeaderExample} from './select-header/select-header-example';
 import {DatepickerOverviewExample} from './datepicker-overview/datepicker-overview-example';
 import {InputOverviewExample} from './input-overview/input-overview-example';
 import {InputErrorsExample} from './input-errors/input-errors-example';
@@ -83,6 +84,7 @@ import {
   MdTabsModule,
   MdToolbarModule, MdTooltipModule
 } from '@angular/material';
+
 
 export interface LiveExample {
   title: string;
@@ -160,6 +162,7 @@ export const EXAMPLE_COMPONENTS = {
   'radio-overview': {title: 'Basic radios', component: RadioOverviewExample},
   'select-overview': {title: 'Basic select', component: SelectOverviewExample},
   'select-form': {title: 'Select in a form', component: SelectFormExample},
+  'select-header': {title: 'Select header', component: SelectHeaderExample},
   'sidenav-fab': {title: 'Sidenav with a FAB', component: SidenavFabExample},
   'sidenav-overview': {title: 'Basic sidenav', component: SidenavOverviewExample},
   'slider-configurable': {title: 'Configurable slider', component: SliderConfigurableExample},
@@ -261,6 +264,7 @@ export const EXAMPLE_LIST = [
   SidenavFabExample,
   SelectOverviewExample,
   SelectFormExample,
+  SelectHeaderExample,
   SidenavOverviewExample,
   SliderConfigurableExample,
   SliderOverviewExample,
