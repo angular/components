@@ -41,19 +41,19 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
      */
     @Input('sticky-zIndex') zIndex: number = 10;
     @Input() cdkStickyParentRegion: any;
-    @Input('scrollRegion') scrollableRegion: any;
+    @Input() scrollableRegion: any;
 
 
     private _activated = new EventEmitter();
     private _deactivated = new EventEmitter();
 
-    private onScrollBind: EventListener = this.onScroll.bind(this);
-    private onResizeBind: EventListener = this.onResize.bind(this);
-    private onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
+    private _onScrollBind: EventListener = this.onScroll.bind(this);
+    private _onResizeBind: EventListener = this.onResize.bind(this);
+    private _onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
 
     public STICK_START_CLASS: string = 'sticky';
     public STICK_END_CLASS: string = 'sticky-end';
-    private isStuck: boolean = false;
+    public isStuck: boolean = false;
 
     // the element with the 'md-sticky' tag
     public elem: any;
@@ -71,23 +71,23 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
     public originalCss: any;
 
     // the height of 'stickyParent'
-    private containerHeight: number;
+    public containerHeight: number;
 
     // the height of 'elem'
-    private elemHeight: number;
+    public elemHeight: number;
 
-    private containerStart: number;
-    private scrollFinish: number;
+    private _containerStart: number;
+    private _scrollFinish: number;
 
-    private scrollingWidth: number;
-    private scrollingRight: number;
+    private _scrollingWidth: number;
+    private _scrollingRight: number;
 
     // the padding of 'elem'
-    private elementPadding: any;
-    private paddingNumber: number;
+    private _elementPadding: any;
+    private _paddingNumber: number;
 
     // sticky element's width
-    private width: string = 'auto';
+    private _width: string = 'auto';
 
     constructor(private element: ElementRef,
                 public scrollable: Scrollable,
@@ -118,12 +118,12 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
             width: this.getCssValue(this.elem, 'width'),
         };
 
-        this.scrollingWidth = this.upperScrollableContainer.scrollWidth;
+        this._scrollingWidth = this.upperScrollableContainer.scrollWidth;
 
         this.attach();
 
-        if (this.width == 'auto') {
-            this.width = this.originalCss.width;
+        if (this._width == 'auto') {
+            this._width = this.originalCss.width;
         }
 
         this.defineRestrictions();
@@ -135,11 +135,11 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
     }
 
     attach() {
-        this.upperScrollableContainer.addEventListener('scroll', this.onScrollBind, false);
-        this.upperScrollableContainer.addEventListener('resize', this.onResizeBind, false);
+        this.upperScrollableContainer.addEventListener('scroll', this._onScrollBind, false);
+        this.upperScrollableContainer.addEventListener('resize', this._onResizeBind, false);
 
         // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
-        this.upperScrollableContainer.addEventListener('touchmove', this.onTouchMoveBind, false);
+        this.upperScrollableContainer.addEventListener('touchmove', this._onTouchMoveBind, false);
 
         Observable.fromEvent(this.upperScrollableContainer, 'scroll')
             .subscribe(() => this.defineRestrictionsAndStick());
@@ -149,9 +149,9 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
     }
 
     detach() {
-        this.upperScrollableContainer.removeEventListener('scroll', this.onScrollBind);
-        this.upperScrollableContainer.removeEventListener('resize', this.onResizeBind);
-        this.upperScrollableContainer.removeEventListener('touchmove', this.onTouchMoveBind);
+        this.upperScrollableContainer.removeEventListener('scroll', this._onScrollBind);
+        this.upperScrollableContainer.removeEventListener('resize', this._onResizeBind);
+        this.upperScrollableContainer.removeEventListener('touchmove', this._onTouchMoveBind);
     }
 
     onScroll(): void {
@@ -184,15 +184,16 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         let containerTop: any = this.stickyParent.getBoundingClientRect();
         this.elemHeight = this.elem.offsetHeight;
         this.containerHeight = this.getCssNumber(this.stickyParent, 'height');
-        this.containerStart = containerTop.top;
+        this._containerStart = containerTop.top;
 
         // the padding of the element being sticked
-        this.elementPadding = this.getCssValue(this.elem, 'padding');
+        this._elementPadding = this.getCssValue(this.elem, 'padding');
 
-        this.paddingNumber = Number(this.elementPadding.slice(0, -2));
-        this.scrollingWidth = this.upperScrollableContainer.clientWidth - this.paddingNumber - this.paddingNumber;
+        this._paddingNumber = Number(this._elementPadding.slice(0, -2));
+        this._scrollingWidth = this.upperScrollableContainer.clientWidth -
+            this._paddingNumber - this._paddingNumber;
 
-        this.scrollFinish = this.containerStart + (this.containerHeight - this.elemHeight);
+        this._scrollFinish = this._containerStart + (this.containerHeight - this.elemHeight);
     }
 
     /**
@@ -236,13 +237,14 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         this.elem.style.position = 'fixed';
         this.elem.style.top = this.getCssNumber(this.upperScrollableContainer, 'top') + 'px';
 
-        this.scrollingRight = this.upperScrollableContainer.offsetLeft + this.upperScrollableContainer.offsetWidth;
+        this._scrollingRight = this.upperScrollableContainer.offsetLeft +
+            this.upperScrollableContainer.offsetWidth;
         let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
         this.elem.style.right = stuckRight + 'px';
 
         this.elem.style.left = this.upperScrollableContainer.offsetLeft + 'px';
         this.elem.style.bottom = 'auto';
-        this.elem.style.width = this.scrollingWidth + 'px';
+        this.elem.style.width = this._scrollingWidth + 'px';
 
         // Set style for sticky element again for Mobile Views.
         this.elem.style.setProperty('zIndex', this.zIndex);
@@ -250,7 +252,7 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         this.elem.style.setProperty('top', this.upperScrollableContainer.offsetTop + 'px');
         this.elem.style.setProperty('right', stuckRight + 'px');
         this.elem.style.setProperty('left', this.upperScrollableContainer.offsetLeft + 'px');
-        this.elem.style.setProperty('width', this.scrollingWidth + 'px');
+        this.elem.style.setProperty('width', this._scrollingWidth + 'px');
 
         this._activated.next(this.elem);
     }
@@ -269,7 +271,7 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         this.elem.style.right = 0;
         this.elem.style.left = 'auto';
         this.elem.style.bottom = 0;
-        this.elem.style.width = this.width;
+        this.elem.style.width = this._width;
 
         this._deactivated.next(this.elem);
     }
@@ -279,15 +281,15 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         let currentPosition: number = this.upperScrollableContainer.offsetTop;
 
         // unstick when the element is scrolled out of the sticky region
-        if (this.isStuck && (currentPosition < this.containerStart ||
-            currentPosition > this.scrollFinish) || currentPosition >= this.scrollFinish) {
+        if (this.isStuck && (currentPosition < this._containerStart ||
+            currentPosition > this._scrollFinish) || currentPosition >= this._scrollFinish) {
             this.resetElement();
-            if (currentPosition >= this.scrollFinish) {
+            if (currentPosition >= this._scrollFinish) {
                 this.unstuckElement();
             }
             this.isStuck = false;    // stick when the element is within the sticky region
         }else if ( this.isStuck === false &&
-            currentPosition > this.containerStart && currentPosition < this.scrollFinish) {
+            currentPosition > this._containerStart && currentPosition < this._scrollFinish) {
             this.stickElement();
         }
     }
