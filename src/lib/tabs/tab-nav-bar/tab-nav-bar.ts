@@ -11,6 +11,7 @@ import {
   Component,
   Directive,
   ElementRef,
+  HostBinding,
   Inject,
   Input,
   NgZone,
@@ -21,7 +22,7 @@ import {
 } from '@angular/core';
 import {MdInkBar} from '../ink-bar';
 import {CanDisable, mixinDisabled} from '../../core/common-behaviors/disabled';
-import {MdRipple, coerceBooleanProperty} from '../../core';
+import {MdRipple} from '../../core';
 import {ViewportRuler} from '../../core/overlay/position/viewport-ruler';
 import {Directionality, MD_RIPPLE_GLOBAL_OPTIONS, Platform, RippleGlobalOptions} from '../../core';
 import {Observable} from 'rxjs/Observable';
@@ -106,10 +107,12 @@ export const _MdTabLinkMixinBase = mixinDisabled(MdTabLinkBase);
   inputs: ['disabled'],
   host: {
     'class': 'mat-tab-link',
+    '[attr.aria-disabled]': 'disabled.toString()',
     '[class.mat-tab-disabled]': 'disabled'
   }
 })
-export class MdTabLink extends _MdTabLinkMixinBase implements CanDisable {
+export class MdTabLink extends _MdTabLinkMixinBase implements OnDestroy, CanDisable {
+  /** Whether the tab link is active or not. */
   private _isActive: boolean = false;
 
   /** Reference to the instance of the ripple for the tab link. */
@@ -125,6 +128,12 @@ export class MdTabLink extends _MdTabLinkMixinBase implements CanDisable {
     }
   }
 
+  /** @docs-private */
+  @HostBinding('tabIndex')
+  get tabIndex(): number {
+    return this.disabled ? -1 : 0;
+  }
+
   constructor(private _mdTabNavBar: MdTabNav,
               private _elementRef: ElementRef,
               ngZone: NgZone,
@@ -134,7 +143,13 @@ export class MdTabLink extends _MdTabLinkMixinBase implements CanDisable {
     super();
 
     // Manually create a ripple instance that uses the tab link element as trigger element.
-    // Notice that the lifecycle hook `ngOnChanges` for the ripple config can't be called anymore.
+    // Notice that the lifecycle hooks for the ripple config won't be called anymore.
     this._tabLinkRipple = new MdRipple(_elementRef, ngZone, ruler, platform, globalOptions);
+  }
+
+  ngOnDestroy() {
+    // Manually call the ngOnDestroy lifecycle hook of the ripple instance because it won't be
+    // called automatically since its instance is not created by Angular.
+    this._tabLinkRipple.ngOnDestroy();
   }
 }

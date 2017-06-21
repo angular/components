@@ -67,6 +67,34 @@ describe('MdTabNavBar', () => {
         .toBe(true, 'Expected every tab link to have the disabled class if set through binding');
     });
 
+    it('should update aria-disabled if disabled', () => {
+      const tabLinkElements = fixture.debugElement.queryAll(By.css('a'))
+        .map(tabLinkDebugEl => tabLinkDebugEl.nativeElement);
+
+      expect(tabLinkElements.every(tabLink => tabLink.getAttribute('aria-disabled') === 'false'))
+        .toBe(true, 'Expected aria-disabled to be set to "false" by default.');
+
+      fixture.componentInstance.disabled = true;
+      fixture.detectChanges();
+
+      expect(tabLinkElements.every(tabLink => tabLink.getAttribute('aria-disabled') === 'true'))
+        .toBe(true, 'Expected aria-disabled to be set to "true" if link is disabled.');
+    });
+
+    it('should update the tabindex if links are disabled', () => {
+      const tabLinkElements = fixture.debugElement.queryAll(By.css('a'))
+        .map(tabLinkDebugEl => tabLinkDebugEl.nativeElement);
+
+      expect(tabLinkElements.every(tabLink => tabLink.tabIndex === 0))
+        .toBe(true, 'Expected element to be keyboard focusable by default');
+
+      fixture.componentInstance.disabled = true;
+      fixture.detectChanges();
+
+      expect(tabLinkElements.every(tabLink => tabLink.tabIndex === -1))
+        .toBe(true, 'Expected element to no longer be keyboard focusable if disabled.');
+    });
+
     it('should show ripples for tab links', () => {
       const tabLink = fixture.debugElement.nativeElement.querySelector('.mat-tab-link');
 
