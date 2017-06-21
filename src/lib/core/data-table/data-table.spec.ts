@@ -257,7 +257,7 @@ describe('CdkTable', () => {
     for (let i = 0; i < rowElements.length; i++) {
       // Cells should not have any context classes
       const cellElements = rowElements[i].querySelectorAll('cdk-cell');
-      for (let j = 0; j < rowElements.length; j++) {
+      for (let j = 0; j < cellElements.length; j++) {
         expect(cellElements[j].classList.contains('custom-cell-class-first')).toBe(false);
         expect(cellElements[j].classList.contains('custom-cell-class-last')).toBe(false);
         expect(cellElements[j].classList.contains('custom-cell-class-even')).toBe(false);
