@@ -90,26 +90,27 @@ export class CdkRowDef extends BaseRowDef {
 }
 
 /** Context provided to the row cells */
-export class CdkCellOutletRowContext<T> {
+export interface CdkCellOutletRowContext<T> {
+  /** Data for the row that this cell is located within. */
+  $implicit: T;
+
   /** Index location of the row that this cell is located within. */
-  index: number;
+  index?: number;
 
   /** Length of the number of total rows. */
-  count: number;
+  count?: number;
 
   /** True if this cell is contained in the first row. */
-  first: boolean;
+  first?: boolean;
 
   /** True if this cell is contained in the last row. */
-  last: boolean;
+  last?: boolean;
 
   /** True if this cell is contained in a row with an even-numbered index. */
-  even: boolean;
+  even?: boolean;
 
   /** True if this cell is contained in a row with an odd-numbered index. */
-  odd: boolean;
-
-  constructor(public $implicit: T) {}
+  odd?: boolean;
 }
 
 /**

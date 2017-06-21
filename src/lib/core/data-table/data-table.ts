@@ -293,7 +293,7 @@ export class CdkTable<T> implements CollectionViewer {
     const row = this._rowDefinitions.first;
 
     // Row context that will be provided to both the created embedded row view and its cells.
-    const context = new CdkCellOutletRowContext(rowData);
+    const context: CdkCellOutletRowContext<T> = {$implicit: rowData};
 
     // TODO(andrewseguin): add some code to enforce that exactly one
     //   CdkCellOutlet was instantiated as a result  of `createEmbeddedView`.
