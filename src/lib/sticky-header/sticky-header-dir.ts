@@ -67,6 +67,7 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
      * when it is being unstuck
      */
     public originalCss: any;
+    public stickyCSS: any;
 
     // the height of 'stickyParent'
     public containerHeight: number;
@@ -243,6 +244,18 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         this.elem.style.left = this.upperScrollableContainer.offsetLeft + 'px';
         this.elem.style.bottom = 'auto';
         this.elem.style.width = this._scrollingWidth + 'px';
+
+
+        this.stickyCSS = {
+            zIndex: this.zIndex,
+            position: 'fixed',
+            top: this.getCssNumber(this.upperScrollableContainer, 'top') + 'px',
+            right: stuckRight + 'px',
+            left: this.upperScrollableContainer.offsetLeft + 'px',
+            bottom: 'auto',
+            width: this._scrollingWidth + 'px',
+        };
+        Object.assign(this.elem.style, this.stickyCSS);
 
         // Set style for sticky element again for Mobile Views.
         this.elem.style.setProperty('zIndex', this.zIndex);
