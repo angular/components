@@ -189,7 +189,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
    * The width of the trigger. Must be saved to set the min width of the overlay panel
    * and the width of the selected value.
    */
-
   _triggerWidth: number;
 
   /** Manages keyboard events for options in the panel. */

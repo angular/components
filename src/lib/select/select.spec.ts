@@ -693,8 +693,9 @@ describe('MdSelect', () => {
 
       fixture.componentInstance.hideRequiredMarker = true;
       fixture.detectChanges();
-      expect(initialContent === 'none' || initialContent === '')
-          .toBe(true, `Expected not to have an asterisk, as required marker was hidden.`);
+      const newContent = getComputedStyle(placeholder, '::after').getPropertyValue('content');
+      expect(newContent === 'none' || newContent === '')
+          .toBe(true, `Expected to hide the asterisk, as required marker was set to hidden.`);
     });
 
     it('should be able to programmatically select a falsy option', () => {
@@ -2423,8 +2424,9 @@ describe('MdSelect', () => {
   template: `
     <div [style.height.px]="heightAbove"></div>
     <md-select placeholder="Food" [formControl]="control"
-      [required]="isRequired && !hideRequiredMarker" [tabIndex]="tabIndexOverride"
-      [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby" [panelClass]="panelClass">
+      [required]="isRequired" [hideRequiredMarker]="hideRequiredMarker"
+      [tabIndex]="tabIndexOverride" [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"
+      [panelClass]="panelClass">
       <md-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
         {{ food.viewValue }}
       </md-option>
