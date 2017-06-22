@@ -120,7 +120,7 @@ export {
 
 // Error
 export {
-  ErrorStateMatcherType,
+  ErrorStateMatcher,
   ErrorOptions,
   MD_ERROR_GLOBAL_OPTIONS
 } from './error/error-options';

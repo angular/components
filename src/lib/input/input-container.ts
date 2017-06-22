@@ -43,7 +43,8 @@ import {
   MD_PLACEHOLDER_GLOBAL_OPTIONS
 } from '../core/placeholder/placeholder-options';
 import {
-  ErrorStateMatcherType,
+  DefaultErrorStateMatcher,
+  ErrorStateMatcher,
   ErrorOptions,
   MD_ERROR_GLOBAL_OPTIONS
 } from '../core/error/error-options';
@@ -196,7 +197,7 @@ export class MdInputDirective {
   }
 
   /** A function used to control when error messages are shown. */
-  @Input() errorStateMatcher: ErrorStateMatcherType;
+  @Input() errorStateMatcher: ErrorStateMatcher;
 
   /** The input element's value. */
   get value() { return this._elementRef.nativeElement.value; }
@@ -240,7 +241,8 @@ export class MdInputDirective {
     this.id = this.id;
 
     this._errorOptions = errorOptions ? errorOptions : {};
-    this.errorStateMatcher = this._errorOptions.errorStateMatcher || undefined;
+    this.errorStateMatcher = this._errorOptions.errorStateMatcher
+        || new DefaultErrorStateMatcher().errorStateMatcher;
   }
 
   /** Focuses the input element. */
@@ -263,24 +265,7 @@ export class MdInputDirective {
   /** Whether the input is in an error state. */
   _isErrorState(): boolean {
     const control = this._ngControl;
-    return this.errorStateMatcher
-      ? this.errorStateMatcher(control, this._parentFormGroup, this._parentForm)
-      : this._defaultErrorStateMatcher(control);
-  }
-
-  /** Default error state calculation */
-  private _defaultErrorStateMatcher(control: NgControl): boolean {
-    const isInvalid = control && control.invalid;
-    const isTouched = control && control.touched;
-    const isDirty = control && control.dirty;
-    const isSubmitted = (this._parentFormGroup && this._parentFormGroup.submitted) ||
-        (this._parentForm && this._parentForm.submitted);
-
-    if (this._errorOptions.showOnDirty) {
-      return !!(isInvalid && (isDirty || isSubmitted));
-    }
-
-    return !!(isInvalid && (isTouched || isSubmitted));
+    return this.errorStateMatcher(control, this._parentFormGroup, this._parentForm);
   }
 
   /** Make sure the input is a supported type. */

@@ -142,8 +142,17 @@ to all inputs.
 
 Here are the available global options:
 
-
 | Name              | Type     | Description |
 | ----------------- | -------- | ----------- |
 | errorStateMatcher | Function | Returns a boolean specifying if the error should be shown |
-| showOnDirty       | boolean  | If true, the error will show when the control is dirty, not touched. |P
+
+
+If you just wish to make all inputs behave the same as the default, but show errors when
+dirty instead of touched, you can use the `ShowOnDirtyErrorStateMatcher` implementation.
+
+```ts
+@NgModule({
+  providers: [
+    { provide: MD_ERROR_GLOBAL_OPTIONS, useClass: ShowOnDirtyErrorStateMatcher }
+  ]
+})
