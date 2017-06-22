@@ -2,13 +2,14 @@
   <div>
     <button md-raised-button (click)="connect()">Connect New Data Source</button>
     <button md-raised-button (click)="disconnect()" [disabled]="!dataSource">Disconnect Data Source</button>
+  </div>
 
-    <div>
+  <div>
     <button md-raised-button (click)="_peopleDatabase.shuffle(changeReferences)">Randomize Data</button>
     <md-checkbox [(ngModel)]="changeReferences">Change references</md-checkbox>
   </div>
 
-    <div class="demo-track-by-select">
+  <div class="demo-track-by-select">
     <div class="demo-track-by-label">Track By</div>
     <md-radio-group [(ngModel)]="trackByStrategy">
       <md-radio-button [value]="'reference'">Reference</md-radio-button>
@@ -16,7 +17,6 @@
       <md-radio-button [value]="'index'">Index</md-radio-button>
     </md-radio-group>
   </div>
-</div>
 
   <div class="demo-highlighter">
     Highlight:
