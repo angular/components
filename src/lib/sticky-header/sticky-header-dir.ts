@@ -59,10 +59,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     // the element with the 'md-sticky' tag
     public element: HTMLElement;
 
-    // the uppercontainer element with the 'md-sticky-viewport' tag
+    // the upper container element with the 'md-sticky-viewport' tag
     public stickyParent: HTMLElement;
-
-    // the upper scrollable container
     public upperScrollableContainer: HTMLElement;
 
     /**
@@ -243,6 +241,19 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     }
 
 
+    /**
+     * 'sticker()' function contains the main logic of sticky-header. It decides when
+     * a header should be stick and when should it be unstuck. It will first get
+     * the offsetTop of the upper scrollable container. And then get the Start and End
+     * of the sticky-header's stickyRegion.
+     * The header will be stick if 'stickyRegion Start < container offsetTop < stickyRegion End'.
+     * And when 'stickyRegion End < container offsetTop', the header will be unstuck. It will be
+     * stick to the bottom of its stickyRegion container and being scrolled up with its stickyRegion
+     * container.
+     * When 'stickyRegion Start > container offsetTop', which means the header come back to the
+     * middle of the scrollable container, the header will be reset to its
+     * original CSS.
+     */
     sticker(): void {
         let currentPosition: number = this.upperScrollableContainer.offsetTop;
 
