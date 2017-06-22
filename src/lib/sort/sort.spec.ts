@@ -161,7 +161,7 @@ function testSingleColumnSortDirectionSequence(fixture: ComponentFixture<SimpleM
 
   // Reset the md sort to make sure there are no side affects from previous tests
   const component = fixture.componentInstance;
-  component.mdSort.active = null;
+  component.mdSort.active = '';
   component.mdSort.direction = '';
 
   // Run through the sequence to confirm the order
