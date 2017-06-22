@@ -23,7 +23,8 @@ export class StickyParentDirective {
     }
 }
 
-
+const STICK_START_CLASS = 'stick';
+const STICK_END_CLASS = 'sticky-end';
 @Directive({
     selector: '[cdkStickyHeader]',
 })
@@ -44,8 +45,8 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
     private _onResizeBind: EventListener = this.onResize.bind(this);
     private _onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
 
-    public STICK_START_CLASS: string = 'sticky';
-    public STICK_END_CLASS: string = 'sticky-end';
+    // public STICK_START_CLASS: string = 'sticky';
+    // public STICK_END_CLASS: string = 'sticky-end';
     public isStuck: boolean = false;
 
     // the element with the 'md-sticky' tag
@@ -188,7 +189,7 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
      * reset element to its original CSS
      */
     resetElement(): void {
-        this.elem.classList.remove(this.STICK_START_CLASS);
+        this.elem.classList.remove(STICK_START_CLASS);
         Object.assign(this.elem.style, this.originalCss);
     }
 
@@ -198,8 +199,8 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
     stickElement(): void {
         this.isStuck = true;
 
-        this.elem.classList.remove(this.STICK_END_CLASS);
-        this.elem.classList.add(this.STICK_START_CLASS);
+        this.elem.classList.remove(STICK_END_CLASS);
+        this.elem.classList.add(STICK_START_CLASS);
 
         /** Have to add the translate3d function for the sticky element's css style.
          * Because iPhone and iPad's browser is using its owning rendering engine. And
@@ -242,7 +243,7 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
     unstuckElement(): void {
         this.isStuck = false;
 
-        this.elem.classList.add(this.STICK_END_CLASS);
+        this.elem.classList.add(STICK_END_CLASS);
 
         this.stickyParent.style.position = 'relative';
         this.elem.style.position = 'absolute';
