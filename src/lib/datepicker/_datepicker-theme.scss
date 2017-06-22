@@ -1,5 +1,6 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/style/escape-color';
 @import '../core/typography/typography-utils';
 
 
@@ -83,6 +84,10 @@ $mat-calendar-weekday-table-font-size: 11px !default;
   .mat-calendar-body-disabled > .mat-calendar-body-today:not(.mat-calendar-body-selected) {
     border-color: fade-out(mat-color($foreground, hint-text), $mat-datepicker-today-fade-amount);
   }
+
+  .mat-datepicker-toggle {
+    background-image: _mat-datepicker-toggle-icon($foreground, icon);
+  }
 }
 
 @mixin mat-datepicker-typography($config) {
@@ -108,4 +113,25 @@ $mat-calendar-weekday-table-font-size: 11px !default;
       weight: mat-font-weight($config, body-1);
     }
   }
+}
+
+
+// Returns the URL-encoded version of the following:
+// <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"
+//  fill="{INJECTED_COLOR}">
+//  <path d="M0 0h24v24H0z" fill="none"/>
+//  <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2
+//  2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+//</svg>
+@function _mat-datepicker-toggle-icon($palette, $hue) {
+  $result: '' +
+    'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000' +
+    '%2Fsvg%22%20width%3D%2224px%22%20height%3D%2224px%22%20viewBox%3D%220%200%2024%2024' +
+    '%22%20fill%3D%22' + escape-color(mat-color($palette, $hue)) + '%22%3E%0A%20%20%3Cpa' +
+    'th%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M' +
+    '19%203h-1V1h-2v2H8V1H6v2H5c-1.11%200-1.99.9-1.99%202L3%2019c0%201.1.89%202%202%202h' +
+    '14c1.1%200%202-.9%202-2V5c0-1.1-.9-2-2-2zm0%2016H5V8h14v11zM7%2010h5v5H7z%22%2F%3E%' +
+    '0A%3C%2Fsvg%3E';
+
+  @return url($result);
 }

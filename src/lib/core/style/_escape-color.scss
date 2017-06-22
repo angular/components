@@ -1,0 +1,10 @@
+// URL-encodes a hex color. Useful when concatenating a color into a URL-encoded SVG.
+@function escape-color($color) {
+  $stringified: $color + '';
+
+  @if str-index($stringified, '#') == 1 {
+    @return '%23' + str-slice($stringified, 2);
+  }
+
+  @return $stringified;
+}
