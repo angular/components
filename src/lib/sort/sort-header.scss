@@ -1,6 +1,18 @@
+$mat-sort-header-arrow-margin: 6px;
+$mat-sort-header-arrow-container-size: 10px;
+$mat-sort-header-arrow-pointer-length: 8px;
+$mat-sort-header-arrow-thickness: 2px;
+
 :host {
-  display: flex;
   cursor: pointer;
+}
+
+.mat-sort-header-container {
+  display: flex;
+}
+
+.mat-sort-header-position-before {
+  flex-direction: row-reverse;
 }
 
 .mat-sort-header-button {
@@ -17,10 +29,14 @@
 
 .mat-sort-header-arrow {
   display: none;
-  height: 10px;
-  width: 10px;
+  height: $mat-sort-header-arrow-container-size;
+  width: $mat-sort-header-arrow-container-size;
   position: relative;
-  margin-left: 6px;
+  margin: 0 0 0 $mat-sort-header-arrow-margin;
+
+  .mat-sort-header-position-before & {
+    margin: 0 $mat-sort-header-arrow-margin 0 0;
+  }
 }
 
 .mat-sort-header-ascending {
@@ -31,21 +47,21 @@
 .mat-sort-header-descending {
   display: block;
   transform: rotate(225deg);
-  top: 2px;
+  top: $mat-sort-header-arrow-thickness;
 }
 
 .mat-sort-header-stem {
   background: black;
   transform: rotate(135deg);
-  height: 10px;
-  width: 2px;
+  height: $mat-sort-header-arrow-container-size;
+  width: $mat-sort-header-arrow-thickness;
   margin: auto;
 }
 
 .mat-sort-header-pointer-left {
   background: black;
-  width: 2px;
-  height: 8px;
+  width: $mat-sort-header-arrow-thickness;
+  height: $mat-sort-header-arrow-pointer-length;
   position: absolute;
   bottom: 0;
   right: 0;
@@ -53,8 +69,8 @@
 
 .mat-sort-header-pointer-right {
   background: black;
-  width: 8px;
-  height: 2px;
+  width: $mat-sort-header-arrow-pointer-length;
+  height: $mat-sort-header-arrow-thickness;
   position: absolute;
   bottom: 0;
   right: 0;

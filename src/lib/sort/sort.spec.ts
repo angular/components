@@ -4,8 +4,14 @@ import {MdSort, MdSortHeader, Sort, SortDirection, MdSortModule} from './index';
 import {CdkDataTableModule, DataSource, CollectionViewer} from '../core/data-table/index';
 import {Observable} from 'rxjs/Observable';
 import {dispatchMouseEvent} from '../core/testing/dispatch-events';
+import {
+  getMdSortDuplicateMdSortableIdError,
+  getMdSortHeaderMissingIdError,
+  getMdSortHeaderNotContainedWithinMdSortError
+} from './sort-errors';
+import {wrappedErrorMessage} from '../core/testing/wrapped-error-message';
 
-fdescribe('MdSort', () => {
+describe('MdSort', () => {
   let fixture: ComponentFixture<SimpleMdSortApp>;
 
   let component: SimpleMdSortApp;
@@ -13,7 +19,13 @@ fdescribe('MdSort', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdSortModule, CdkDataTableModule],
-      declarations: [SimpleMdSortApp, CdkTableMdSortApp],
+      declarations: [
+        SimpleMdSortApp,
+        CdkTableMdSortApp,
+        MdSortHeaderMissingMdSortApp,
+        MdSortDuplicateMdSortableIdsApp,
+        MdSortableMissingIdApp
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SimpleMdSortApp);
@@ -25,16 +37,12 @@ fdescribe('MdSort', () => {
 
   it('should have the sort headers register and unregister themselves', () => {
     const sortables = component.mdSort.sortables;
-    expect(sortables.size).toBe(3);
-    expect(sortables.get('a')).toBe(component.mdSortHeaderA);
-    expect(sortables.get('b')).toBe(component.mdSortHeaderB);
-    expect(sortables.get('c')).toBe(component.mdSortHeaderC);
+    expect(sortables.size).toBe(5);
+    expect(sortables.get('defaultSortHeaderA')).toBe(component.mdSortHeaderDefaultA);
+    expect(sortables.get('defaultSortHeaderB')).toBe(component.mdSortHeaderDefaultB);
 
     fixture.destroy();
     expect(sortables.size).toBe(0);
-    expect(sortables.has('a')).toBeFalsy();
-    expect(sortables.has('b')).toBeFalsy();
-    expect(sortables.has('c')).toBeFalsy();
   });
 
   it('should use the column definition if used within a cdk table', () => {
@@ -89,17 +97,54 @@ fdescribe('MdSort', () => {
   });
 
   it('should reset sort direction when a different column is sorted', () => {
-    component.sort('a');
-    expect(component.mdSort.active).toBe('a');
+    component.sort('defaultSortHeaderA');
+    expect(component.mdSort.active).toBe('defaultSortHeaderA');
     expect(component.mdSort.direction).toBe('ascending');
 
-    component.sort('a');
-    expect(component.mdSort.active).toBe('a');
+    component.sort('defaultSortHeaderA');
+    expect(component.mdSort.active).toBe('defaultSortHeaderA');
     expect(component.mdSort.direction).toBe('descending');
 
-    component.sort('b');
-    expect(component.mdSort.active).toBe('b');
+    component.sort('defaultSortHeaderB');
+    expect(component.mdSort.active).toBe('defaultSortHeaderB');
     expect(component.mdSort.direction).toBe('ascending');
+  });
+
+  it('should throw an error if an MdSortable is not contained within an MdSort directive', () => {
+    expect(() => TestBed.createComponent(MdSortHeaderMissingMdSortApp).detectChanges())
+        .toThrowError(wrappedErrorMessage(getMdSortHeaderNotContainedWithinMdSortError()));
+  });
+
+  it('should throw an error if two MdSortables have the same id', () => {
+    expect(() => TestBed.createComponent(MdSortDuplicateMdSortableIdsApp).detectChanges())
+        .toThrowError(wrappedErrorMessage(getMdSortDuplicateMdSortableIdError('duplicateId')));
+  });
+
+  it('should throw an error if an MdSortable is missing an id', () => {
+    expect(() => TestBed.createComponent(MdSortableMissingIdApp).detectChanges())
+        .toThrowError(wrappedErrorMessage(getMdSortHeaderMissingIdError()));
+  });
+
+  it('should allow let MdSortable override the default sort parameters', () => {
+    testSingleColumnSortDirectionSequence(
+        fixture, ['ascending', 'descending', '']);
+
+    testSingleColumnSortDirectionSequence(
+        fixture, ['descending', '', 'ascending'],
+        'overrideStart');
+
+    testSingleColumnSortDirectionSequence(
+        fixture, ['ascending', 'descending'],
+        'overrideDisableClear');
+
+    testSingleColumnSortDirectionSequence(
+        fixture, ['descending', 'ascending', ''],
+        'overrideReverseOrder');
+  });
+
+  it('should apply the aria-labels to the button', () => {
+    const button = fixture.nativeElement.querySelector('#defaultSortHeaderA button');
+    expect(button.getAttribute('aria-label')).toBe('Change sorting for defaultSortHeaderA');
   });
 });
 
@@ -109,7 +154,8 @@ fdescribe('MdSort', () => {
  * the inputs and resets the MdSort to remove any side effects from previous tests.
  */
 function testSingleColumnSortDirectionSequence(fixture: ComponentFixture<SimpleMdSortApp>,
-                                               expectedSequence: SortDirection[]) {
+                                               expectedSequence: SortDirection[],
+                                               id: string = 'defaultSortHeaderA') {
   // Detect any changes that were made in preparation for this sort sequence
   fixture.detectChanges();
 
@@ -120,11 +166,11 @@ function testSingleColumnSortDirectionSequence(fixture: ComponentFixture<SimpleM
 
   // Run through the sequence to confirm the order
   let actualSequence = expectedSequence.map(() => {
-    component.sort('a');
+    component.sort(id);
 
     // Check that the sort event's active sort is consistent with the MdSort
-    expect(component.mdSort.active).toBe('a');
-    expect(component.latestSortEvent.active).toBe('a');
+    expect(component.mdSort.active).toBe(id);
+    expect(component.latestSortEvent.active).toBe(id);
 
     // Check that the sort event's direction is consistent with the MdSort
     expect(component.mdSort.direction).toBe(component.latestSortEvent.direction);
@@ -133,7 +179,7 @@ function testSingleColumnSortDirectionSequence(fixture: ComponentFixture<SimpleM
   expect(actualSequence).toEqual(expectedSequence);
 
   // Expect that performing one more sort will loop it back to the beginning.
-  component.sort('a');
+  component.sort(id);
   expect(component.mdSort.direction).toBe(expectedSequence[0]);
 }
 
@@ -146,9 +192,11 @@ function testSingleColumnSortDirectionSequence(fixture: ComponentFixture<SimpleM
          [mdSortDisableClear]="disableClear"
          [mdSortReverseOrder]="reverseOrder"
          (mdSortChange)="latestSortEvent = $event">
-      <div id="a" #sortHeaderA md-sort-header="a"> A </div>
-      <div id="b" #sortHeaderB md-sort-header="b"> B </div>
-      <div id="c" #sortHeaderC md-sort-header="c"> C </div>
+      <div id="defaultSortHeaderA" #defaultSortHeaderA md-sort-header="defaultSortHeaderA"> A </div>
+      <div id="defaultSortHeaderB" #defaultSortHeaderB md-sort-header="defaultSortHeaderB"> B </div>
+      <div id="overrideStart" md-sort-header="overrideStart" start="descending"> D </div>
+      <div id="overrideDisableClear" md-sort-header="overrideDisableClear" disableClear> E </div>
+      <div id="overrideReverseOrder" md-sort-header="overrideReverseOrder" reverseOrder> F </div>
     </div>
   `
 })
@@ -162,9 +210,8 @@ class SimpleMdSortApp {
   reverseOrder: boolean;
 
   @ViewChild(MdSort) mdSort: MdSort;
-  @ViewChild('sortHeaderA') mdSortHeaderA: MdSortHeader;
-  @ViewChild('sortHeaderB') mdSortHeaderB: MdSortHeader;
-  @ViewChild('sortHeaderC') mdSortHeaderC: MdSortHeader;
+  @ViewChild('defaultSortHeaderA') mdSortHeaderDefaultA: MdSortHeader;
+  @ViewChild('defaultSortHeaderB') mdSortHeaderDefaultB: MdSortHeader;
 
   constructor (public elementRef: ElementRef) { }
 
@@ -206,10 +253,34 @@ class FakeDataSource extends DataSource<any> {
 })
 class CdkTableMdSortApp {
   @ViewChild(MdSort) mdSort: MdSort;
-  @ViewChild('sortHeaderA') mdSortHeaderA: MdSortHeader;
-  @ViewChild('sortHeaderB') mdSortHeaderB: MdSortHeader;
-  @ViewChild('sortHeaderC') mdSortHeaderC: MdSortHeader;
 
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 }
+
+
+@Component({
+  template: `<div md-sort-header="a"> A </div>`
+})
+class MdSortHeaderMissingMdSortApp { }
+
+
+@Component({
+  template: `
+    <div mdSort>
+      <div md-sort-header="duplicateId"> A </div>
+      <div md-sort-header="duplicateId"> A </div>
+    </div>
+  `
+})
+class MdSortDuplicateMdSortableIdsApp { }
+
+
+@Component({
+  template: `
+    <div mdSort>
+      <div md-sort-header> A </div>
+    </div>
+  `
+})
+class MdSortableMissingIdApp { }

@@ -69,8 +69,8 @@ export class PersonDataSource extends DataSource<any> {
       let propertyA, propertyB;
 
       switch (this._sort.active) {
-        case 'id': [propertyA, propertyB] = [a.id, b.id]; break;
-        case 'name': [propertyA, propertyB] = [a.name, b.name]; break;
+        case 'userId': [propertyA, propertyB] = [a.id, b.id]; break;
+        case 'userName': [propertyA, propertyB] = [a.name, b.name]; break;
         case 'progress': [propertyA, propertyB] = [a.progress, b.progress]; break;
         case 'color': [propertyA, propertyB] = [a.color, b.color]; break;
       }

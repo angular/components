@@ -39,13 +39,16 @@
 
     <!-- Column Definition: ID -->
     <ng-container cdkColumnDef="userId">
-      <cdk-header-cell *cdkHeaderCellDef md-sort-header> ID </cdk-header-cell>
+      <cdk-header-cell *cdkHeaderCellDef md-sort-header arrowPosition="before"> ID </cdk-header-cell>
       <cdk-cell *cdkCellDef="let row"> {{row.id}} </cdk-cell>
     </ng-container>
 
     <!-- Column Definition: Progress -->
     <ng-container cdkColumnDef="progress">
-      <cdk-header-cell *cdkHeaderCellDef md-sort-header> Progress </cdk-header-cell>
+      <cdk-header-cell *cdkHeaderCellDef
+                       md-sort-header start="descending">
+        Progress
+      </cdk-header-cell>
       <cdk-cell *cdkCellDef="let row">
         <div class="demo-progress-stat">{{row.progress}}%</div>
         <div class="demo-progress-indicator-container">
@@ -59,13 +62,19 @@
 
     <!-- Column Definition: Name -->
     <ng-container cdkColumnDef="userName">
-      <cdk-header-cell *cdkHeaderCellDef md-sort-header> Name </cdk-header-cell>
+      <cdk-header-cell *cdkHeaderCellDef
+                       md-sort-header reverseOrder>
+        Name
+      </cdk-header-cell>
       <cdk-cell *cdkCellDef="let row"> {{row.name}} </cdk-cell>
     </ng-container>
 
     <!-- Column Definition: Color -->
     <ng-container cdkColumnDef="color">
-      <cdk-header-cell *cdkHeaderCellDef>Color</cdk-header-cell>
+      <cdk-header-cell *cdkHeaderCellDef
+                       md-sort-header disableClear>
+        Color
+      </cdk-header-cell>
       <cdk-cell *cdkCellDef="let row" [style.color]="row.color"> {{row.color}} </cdk-cell>
     </ng-container>
 

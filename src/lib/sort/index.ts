@@ -9,15 +9,18 @@
 import {NgModule} from '@angular/core';
 import {MdSortHeader} from './sort-header';
 import {MdSort} from './sort';
+import {MdSortIntl} from './sort-intl';
 import {CommonModule} from '@angular/common';
 
+export * from './sort-direction';
 export * from './sort-header';
+export * from './sort-intl';
 export * from './sort';
 
 @NgModule({
   imports: [CommonModule],
   exports: [MdSort, MdSortHeader],
   declarations: [MdSort, MdSortHeader],
+  providers: [MdSortIntl]
 })
 export class MdSortModule {}
-
