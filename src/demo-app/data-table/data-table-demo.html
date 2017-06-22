@@ -39,7 +39,10 @@
 
     <!-- Column Definition: ID -->
     <ng-container cdkColumnDef="userId">
-      <cdk-header-cell *cdkHeaderCellDef md-sort-header arrowPosition="before"> ID </cdk-header-cell>
+      <cdk-header-cell *cdkHeaderCellDef
+                       md-sort-header arrowPosition="before">
+        ID
+      </cdk-header-cell>
       <cdk-cell *cdkCellDef="let row"> {{row.id}} </cdk-cell>
     </ng-container>
 
