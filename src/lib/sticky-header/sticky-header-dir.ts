@@ -134,12 +134,6 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
 
         // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
         this.upperScrollableContainer.addEventListener('touchmove', this._onTouchMoveBind, false);
-
-        Observable.fromEvent(this.upperScrollableContainer, 'scroll')
-            .subscribe(() => this.defineRestrictionsAndStick());
-
-        Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
-            .subscribe(() => this.defineRestrictionsAndStick());
     }
 
     detach() {
