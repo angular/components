@@ -1,7 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
 import {PeopleDatabase, UserData} from './people-database';
 import {PersonDataSource} from './person-data-source';
-import {MdPaginator} from '@angular/material';
+import {MdPaginator, SimpleDataSource} from '@angular/material';
 import {MdSort} from '@angular/material';
 
 export type UserProperties = 'userId' | 'userName' | 'progress' | 'color' | undefined;
@@ -16,6 +16,7 @@ export type TrackByStrategy = 'id' | 'reference' | 'index';
 })
 export class DataTableDemo {
   dataSource: PersonDataSource | null;
+  simpleDataSource = new SimpleDataSource<UserData>();
   propertiesToDisplay: UserProperties[] = [];
   trackByStrategy: TrackByStrategy = 'reference';
   changeReferences = false;
@@ -36,6 +37,8 @@ export class DataTableDemo {
     this.dataSource = new PersonDataSource(this._peopleDatabase,
         this._paginator, this.sort);
     this._peopleDatabase.initialize();
+
+    this.simpleDataSource.data = this._peopleDatabase.data;
   }
 
   disconnect() {

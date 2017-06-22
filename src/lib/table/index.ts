@@ -15,6 +15,7 @@ import {MdHeaderRow, MdRow} from './row';
 export * from './cell';
 export * from './table';
 export * from './row';
+export *from './simple-data-source';
 
 @NgModule({
   imports: [CdkDataTableModule],

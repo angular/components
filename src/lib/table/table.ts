@@ -10,7 +10,7 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
 import {CdkTable} from '../core/data-table/data-table';
 
 /**
- * Material design styled CdkTable.
+ * Wrapper for the CdkTable with Material design styles.
  */
 @Component({
   moduleId: module.id,
