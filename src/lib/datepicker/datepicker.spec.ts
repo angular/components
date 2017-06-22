@@ -960,7 +960,9 @@ class DatepickerWithFormControl {
 @Component({
   template: `
     <input [mdDatepicker]="d">
-    <button [mdDatepickerToggle]="d"></button>
+    <button [mdDatepickerToggle]="d">
+      <md-datepicker-toggle-icon></md-datepicker-toggle-icon>
+    </button>
     <md-datepicker #d [touchUi]="touchUI"></md-datepicker>
   `,
 })
@@ -987,7 +989,9 @@ class InputContainerDatepicker {
 @Component({
   template: `
     <input [mdDatepicker]="d" [(ngModel)]="date" [min]="minDate" [max]="maxDate">
-    <button [mdDatepickerToggle]="d"></button>
+    <button [mdDatepickerToggle]="d">
+      <md-datepicker-toggle-icon></md-datepicker-toggle-icon>
+    </button>
     <md-datepicker #d></md-datepicker>
   `,
 })
@@ -1002,7 +1006,9 @@ class DatepickerWithMinAndMaxValidation {
 @Component({
   template: `
     <input [mdDatepicker]="d" [(ngModel)]="date" [mdDatepickerFilter]="filter">
-    <button [mdDatepickerToggle]="d"></button>
+    <button [mdDatepickerToggle]="d">
+      <md-datepicker-toggle-icon></md-datepicker-toggle-icon>
+    </button>
     <md-datepicker #d [touchUi]="true"></md-datepicker>
   `,
 })
