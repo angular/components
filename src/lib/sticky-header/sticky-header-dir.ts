@@ -5,24 +5,34 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {Component, Directive, Input, Output, EventEmitter,
+import {Component, Directive, Input, Output,
     OnDestroy, AfterViewInit, ElementRef, Injectable, Optional} from '@angular/core';
-
-import {Observable} from 'rxjs/Observable';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
 
 
+/**
+ * The 'cdkStickyRegion' is a region contains one sticky header and other
+ * contents that user wants to put under the sticky-header. It can help There only can
+ * be one sticky-header in one 'cdkStickyRegion'.
+ * If a user does not define a 'cdkStickyRegion' for a sticky-header, the direct
+ * parent node of the sticky-header will be set as the 'cdkStickyRegion'.
+ */
 @Directive({
     selector: '[cdkStickyRegion]',
 })
 export class StickyParentDirective {
-    constructor(private element: ElementRef) { }
+    constructor(private _element: ElementRef) { }
 
     getElementRef(): ElementRef {
-        return this.element;
+        return this._element;
     }
 }
 
+
+/**
+ * The 'cdkStickyHeader' is the header which user wants to be stick at top of the
+ * scrollable container.
+ */
 const STICK_START_CLASS = 'stick';
 const STICK_END_CLASS = 'sticky-end';
 @Directive({
@@ -35,18 +45,15 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
      * variable to make user be able to customize the zIndex when
      * the sticky-header's zIndex is not the largest in current page.
      * Because if the sticky-header's zIndex is not the largest in current page,
-     * it may be sheltered by other element when being sticked.
+     * it may be sheltered by other element when being stick.
      */
     @Input('cdkStickyHeaderZIndex') zIndex: number = 10;
-    @Input('cdkStickyParentRegion') parentRegion: any;
-    @Input('cdkStickyScrollableRegion') scrollableRegion: any;
+    @Input('cdkStickyParentRegion') parentRegion: HTMLElement;
+    @Input('cdkStickyScrollableRegion') scrollableRegion: HTMLElement;
 
     private _onScrollBind: EventListener = this.onScroll.bind(this);
     private _onResizeBind: EventListener = this.onResize.bind(this);
     private _onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
-
-    // public STICK_START_CLASS: string = 'sticky';
-    // public STICK_END_CLASS: string = 'sticky-end';
     public isStuck: boolean = false;
 
     // the element with the 'md-sticky' tag
@@ -63,7 +70,7 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
      * when it is being unstuck
      */
     public originalCss: any;
-    public stickyCSS: any;
+    public stickyCss: any;
 
     // the height of 'stickyParent'
     public containerHeight: number;
@@ -84,10 +91,10 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
     // sticky element's width
     private _width: string = 'auto';
 
-    constructor(private element: ElementRef,
+    constructor(private _element: ElementRef,
                 public scrollable: Scrollable,
                 @Optional() public parentReg: StickyParentDirective) {
-        this.elem = element.nativeElement;
+        this.elem = _element.nativeElement;
         this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
         this.scrollableRegion = scrollable.getElementRef().nativeElement;
         if (parentReg != null) {
@@ -113,8 +120,6 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
             width: this.getCssValue(this.elem, 'width'),
         };
 
-        this._scrollingWidth = this.upperScrollableContainer.scrollWidth;
-
         this.attach();
 
         if (this._width == 'auto') {
@@ -126,7 +131,9 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy(): void {
-        this.detach();
+        this.upperScrollableContainer.removeEventListener('scroll', this._onScrollBind);
+        this.upperScrollableContainer.removeEventListener('resize', this._onResizeBind);
+        this.upperScrollableContainer.removeEventListener('touchmove', this._onTouchMoveBind);
     }
 
     attach() {
@@ -135,12 +142,6 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
 
         // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
         this.upperScrollableContainer.addEventListener('touchmove', this._onTouchMoveBind, false);
-    }
-
-    detach() {
-        this.upperScrollableContainer.removeEventListener('scroll', this._onScrollBind);
-        this.upperScrollableContainer.removeEventListener('resize', this._onResizeBind);
-        this.upperScrollableContainer.removeEventListener('touchmove', this._onTouchMoveBind);
     }
 
     onScroll(): void {
@@ -155,9 +156,9 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         this.defineRestrictionsAndStick();
 
         /**
-         * If there's already a header being sticked when the page is
+         * If there's already a header being stick when the page is
          * resized. The CSS style of the sticky-header may be not fit
-         * the resized window. So we need to unstick it then restick it.
+         * the resized window. So we need to unstuck it then re-stick it.
          */
         if (this.isStuck) {
             this.unstuckElement();
@@ -186,7 +187,7 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
     }
 
     /**
-     * reset element to its original CSS
+     * Reset element to its original CSS
      */
     resetElement(): void {
         this.elem.classList.remove(STICK_START_CLASS);
@@ -194,7 +195,7 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
     }
 
     /**
-     * stuck element, make the element stick to the top of the scrollable container.
+     * Stuck element, make the element stick to the top of the scrollable container.
      */
     stickElement(): void {
         this.isStuck = true;
@@ -202,7 +203,8 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         this.elem.classList.remove(STICK_END_CLASS);
         this.elem.classList.add(STICK_START_CLASS);
 
-        /** Have to add the translate3d function for the sticky element's css style.
+        /**
+         * Have to add the translate3d function for the sticky element's css style.
          * Because iPhone and iPad's browser is using its owning rendering engine. And
          * even if you are using Chrome on an iPhone, you are just using Safari with
          * a Chrome skin around it.
@@ -218,14 +220,14 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
          * "fixed" to the viewport can end up outside the viewable content area, offscreen.
          *
          * So the 'position: fixed' does not work on iPhone and iPad. To make it work,
-         * I need to use translate3d(0,0,0) to force Safari rerendering the sticky element.
+         * 'translate3d(0,0,0)' needs to be used to force Safari re-rendering the sticky element.
          **/
 
         this._scrollingRight = this.upperScrollableContainer.offsetLeft +
             this.upperScrollableContainer.offsetWidth;
         let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
 
-        this.stickyCSS = {
+        this.stickyCss = {
             zIndex: this.zIndex,
             position: 'fixed',
             top: this.upperScrollableContainer.offsetTop + 'px',
@@ -234,11 +236,16 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
             bottom: 'auto',
             width: this._scrollingWidth + 'px',
         };
-        Object.assign(this.elem.style, this.stickyCSS);
+        Object.assign(this.elem.style, this.stickyCss);
     }
 
     /**
-     * unstuck element
+     * Unstuck element: When an element reaches the bottom of its cdkStickyRegion,
+     * It should be unstuck. And its position will be set as 'relative', its bottom
+     * will be set as '0'. So it will be stick at the bottom of its cdkStickyRegion and
+     * will be scrolled up with its cdkStickyRegion element. In this way, the sticky header
+     * can be changed smoothly when two sticky header meet and the later one need to replace
+     * the former one.
      */
     unstuckElement(): void {
         this.isStuck = false;
@@ -258,9 +265,10 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
     sticker(): void {
         let currentPosition: number = this.upperScrollableContainer.offsetTop;
 
-        // unstick when the element is scrolled out of the sticky region
-        if (this.isStuck && (currentPosition < this._containerStart ||
-            currentPosition > this._scrollFinish) || currentPosition >= this._scrollFinish) {
+        // unstuck when the element is scrolled out of the sticky region
+        if (this.isStuck &&
+            (currentPosition < this._containerStart || currentPosition > this._scrollFinish) ||
+            currentPosition >= this._scrollFinish) {
             this.resetElement();
             if (currentPosition >= this._scrollFinish) {
                 this.unstuckElement();
