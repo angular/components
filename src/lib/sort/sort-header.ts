@@ -11,7 +11,7 @@ import {MdSort, MdSortable} from './sort';
 import {MdSortIntl} from './sort-intl';
 import {CdkColumnDef} from '../core/data-table/cell';
 import {SortDirection} from './sort-direction';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {coerceBooleanProperty} from '../core';
 import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
 
 /**
