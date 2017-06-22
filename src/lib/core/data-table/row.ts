@@ -142,7 +142,7 @@ export class CdkCellOutlet {
 /** Header template container that contains the cell outlet. Adds the right class and role. */
 @Component({
   selector: 'cdk-header-row',
-  template: '<ng-container cdkCellOutlet></ng-container>',
+  templateUrl: 'row.html',
   host: {
     'class': 'cdk-header-row',
     'role': 'row',
@@ -154,7 +154,7 @@ export class CdkHeaderRow { }
 /** Data row template container that contains the cell outlet. Adds the right class and role. */
 @Component({
   selector: 'cdk-row',
-  template: '<ng-container cdkCellOutlet></ng-container>',
+  templateUrl: 'row.html',
   host: {
     'class': 'cdk-row',
     'role': 'row',

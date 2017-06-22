@@ -71,10 +71,7 @@ export class HeaderRowPlaceholder {
  */
 @Component({
   selector: 'cdk-table',
-  template: `
-    <ng-container headerRowPlaceholder></ng-container>
-    <ng-container rowPlaceholder></ng-container>
-  `,
+  templateUrl: 'table.html',
   host: {
     'class': 'cdk-table',
   },

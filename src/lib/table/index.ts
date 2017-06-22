@@ -7,13 +7,13 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MdTable} from './data-table';
+import {MdTable} from './table';
 import {CdkDataTableModule} from '../core/data-table/index';
 import {MdCell, MdHeaderCell} from './cell';
 import {MdHeaderRow, MdRow} from './row';
 
 export * from './cell';
-export * from './data-table';
+export * from './table';
 export * from './row';
 
 @NgModule({

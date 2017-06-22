@@ -6,25 +6,29 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CdkHeaderRow, CdkRow} from '../core/data-table/row';
 
 /** Header template container that contains the cell outlet. Adds the right class and role. */
 @Component({
   selector: 'md-header-row, mat-header-row',
-  template: '<ng-container cdkCellOutlet></ng-container>',
+  templateUrl: '../core/data-table/row.html',
   host: {
     'class': 'mat-header-row',
+    'role': 'row',
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdHeaderRow extends CdkHeaderRow { }
 
 /** Data row template container that contains the cell outlet. Adds the right class and role. */
 @Component({
   selector: 'md-row, mat-row',
-  template: '<ng-container cdkCellOutlet></ng-container>',
+  templateUrl: '../core/data-table/row.html',
   host: {
     'class': 'mat-row',
+    'role': 'row',
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdRow extends CdkRow { }

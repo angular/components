@@ -46,7 +46,7 @@ import {StyleModule} from './core/style/index';
 import {MdDatepickerModule} from './datepicker/index';
 import {CdkDataTableModule} from './core/data-table/index';
 import {MdExpansionModule} from './expansion/index';
-import {MdDataTableModule} from './data-table/index';
+import {MdDataTableModule} from './table/index';
 import {MdSortModule} from './sort/index';
 import {MdPaginatorModule} from './paginator/index';
 

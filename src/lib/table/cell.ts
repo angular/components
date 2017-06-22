@@ -14,6 +14,7 @@ import {CdkCell, CdkColumnDef, CdkHeaderCell} from '../core/data-table/cell';
   selector: 'md-header-cell, mat-header-cell',
   host: {
     'class': 'mat-header-cell',
+    'role': 'columnheader',
   },
 })
 export class MdHeaderCell extends CdkHeaderCell {
@@ -29,6 +30,7 @@ export class MdHeaderCell extends CdkHeaderCell {
   selector: 'md-cell, mat-cell',
   host: {
     'class': 'mat-cell',
+    'role': 'gridcell',
   },
 })
 export class MdCell extends CdkCell {

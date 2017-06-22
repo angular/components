@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {CdkTable} from '../core/data-table/data-table';
 
 /**
@@ -15,14 +15,12 @@ import {CdkTable} from '../core/data-table/data-table';
 @Component({
   moduleId: module.id,
   selector: 'md-table, mat-table',
-  template: `
-    <ng-container headerRowPlaceholder></ng-container>
-    <ng-container rowPlaceholder></ng-container>
-  `,
-  styleUrls: ['data-table.css'],
+  templateUrl: '../core/data-table/table.html',
+  styleUrls: ['table.css'],
   host: {
     'class': 'mat-table',
   },
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdTable<T> extends CdkTable<T> { }
