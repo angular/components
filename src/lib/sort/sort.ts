@@ -104,6 +104,8 @@ export class MdSort {
   /** Returns the first sort direction to be used for the active sortable. */
   _getInitialDirection() {
     const sortable = this.sortables.get(this.active);
+    if (!sortable) { return ''; }
+
     if (sortable.start) { return sortable.start; }
 
     // If the sortable is reversed, the start direction should be opposite of the MdSort start.
@@ -117,6 +119,7 @@ export class MdSort {
   /** Returns the next sort direction of the active sortable, checking for potential overrides. */
   _getNextSortDirection(): SortDirection {
     const sortable = this.sortables.get(this.active);
+    if (!sortable) { return ''; }
 
     // Get the sort direction cycle with the potential sortable overrides.
     const reverseOrder = sortable.reverseOrder != undefined ?
