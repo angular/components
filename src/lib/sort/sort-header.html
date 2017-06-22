@@ -15,6 +15,6 @@
   </div>
 </div>
 
-<span class="cdk-visually-hidden">
+<span class="cdk-visually-hidden" *ngIf="_isSorted()">
   {{_intl.sortDescriptionLabel(id, _sort.direction)}}
 </span>
