@@ -43,7 +43,7 @@ import {
   MD_PLACEHOLDER_GLOBAL_OPTIONS
 } from '../core/placeholder/placeholder-options';
 import {
-  DefaultErrorStateMatcher,
+  defaultErrorStateMatcher,
   ErrorStateMatcher,
   ErrorOptions,
   MD_ERROR_GLOBAL_OPTIONS
@@ -241,8 +241,7 @@ export class MdInputDirective {
     this.id = this.id;
 
     this._errorOptions = errorOptions ? errorOptions : {};
-    this.errorStateMatcher = this._errorOptions.errorStateMatcher
-        || new DefaultErrorStateMatcher().errorStateMatcher;
+    this.errorStateMatcher = this._errorOptions.errorStateMatcher || defaultErrorStateMatcher;
   }
 
   /** Focuses the input element. */

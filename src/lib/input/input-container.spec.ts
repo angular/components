@@ -24,7 +24,7 @@ import {
   getMdInputContainerPlaceholderConflictError
 } from './input-container-errors';
 import {MD_PLACEHOLDER_GLOBAL_OPTIONS} from '../core/placeholder/placeholder-options';
-import {MD_ERROR_GLOBAL_OPTIONS, ShowOnDirtyErrorStateMatcher} from '../core/error/error-options';
+import {MD_ERROR_GLOBAL_OPTIONS, showOnDirtyErrorStateMatcher} from '../core/error/error-options';
 
 describe('MdInputContainer', function () {
   beforeEach(async(() => {
@@ -817,7 +817,7 @@ describe('MdInputContainer', function () {
       expect(containerEl.querySelectorAll('md-error').length).toBe(1, 'Expected an error message');
     });
 
-    it('should display an error message when using ShowOnDirtyErrorStateMatcher', async(() => {
+    it('should display an error message when using showOnDirtyErrorStateMatcher', async(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         imports: [
@@ -830,7 +830,10 @@ describe('MdInputContainer', function () {
           MdInputContainerWithFormErrorMessages
         ],
         providers: [
-          { provide: MD_ERROR_GLOBAL_OPTIONS, useClass: ShowOnDirtyErrorStateMatcher }
+          {
+            provide: MD_ERROR_GLOBAL_OPTIONS,
+            useValue: { errorStateMatcher: showOnDirtyErrorStateMatcher }
+          }
         ]
       });
 
@@ -1136,8 +1139,8 @@ class MdInputContainerWithFormErrorMessages {
     <form #form="ngForm" novalidate>
       <md-input-container>
         <input mdInput
-          [formControl]="formControl"
-          [errorStateMatcher]="customErrorStateMatcher.bind(this)">
+            [formControl]="formControl"
+            [errorStateMatcher]="customErrorStateMatcher.bind(this)">
         <md-hint>Please type something</md-hint>
         <md-error>This field is required</md-error>
       </md-input-container>

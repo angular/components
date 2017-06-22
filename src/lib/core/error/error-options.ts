@@ -10,8 +10,7 @@ import {InjectionToken} from '@angular/core';
 import {NgControl, FormGroupDirective, NgForm} from '@angular/forms';
 
 /** Injection token that can be used to specify the global error options. */
-export const MD_ERROR_GLOBAL_OPTIONS =
-  new InjectionToken<ErrorOptions>('md-error-global-options');
+export const MD_ERROR_GLOBAL_OPTIONS = new InjectionToken<ErrorOptions>('md-error-global-options');
 
 export type ErrorStateMatcher =
   (control: NgControl, parentFormGroup: FormGroupDirective, parentForm: NgForm) => boolean;
@@ -20,26 +19,24 @@ export interface ErrorOptions {
   errorStateMatcher?: ErrorStateMatcher;
 }
 
-export class DefaultErrorStateMatcher {
+export function defaultErrorStateMatcher(control: NgControl, formGroup: FormGroupDirective,
+    form: NgForm): boolean {
 
-  errorStateMatcher(control: NgControl, formGroup: FormGroupDirective, form: NgForm): boolean {
-    const isInvalid = control && control.invalid;
-    const isTouched = control && control.touched;
-    const isSubmitted = (formGroup && formGroup.submitted) ||
-        (form && form.submitted);
+  const isInvalid = control && control.invalid;
+  const isTouched = control && control.touched;
+  const isSubmitted = (formGroup && formGroup.submitted) ||
+      (form && form.submitted);
 
-    return !!(isInvalid && (isTouched || isSubmitted));
-  }
+  return !!(isInvalid && (isTouched || isSubmitted));
 }
 
-export class ShowOnDirtyErrorStateMatcher {
+export function showOnDirtyErrorStateMatcher(control: NgControl, formGroup: FormGroupDirective,
+    form: NgForm): boolean {
 
-  errorStateMatcher(control: NgControl, formGroup: FormGroupDirective, form: NgForm): boolean {
-    const isInvalid = control && control.invalid;
-    const isDirty = control && control.dirty;
-    const isSubmitted = (formGroup && formGroup.submitted) ||
-        (form && form.submitted);
+  const isInvalid = control && control.invalid;
+  const isDirty = control && control.dirty;
+  const isSubmitted = (formGroup && formGroup.submitted) ||
+      (form && form.submitted);
 
-    return !!(isInvalid && (isDirty || isSubmitted));
-  }
+  return !!(isInvalid && (isDirty || isSubmitted));
 }

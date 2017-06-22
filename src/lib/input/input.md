@@ -110,11 +110,12 @@ warn color.
 
 ### Custom Error Matcher
 
-By default, error messages are shown when the control is invalid and the user has interacted with
-(touched) the element or the parent form has been submitted. If you wish to customize this
-behavior (e.g. to show the error as soon as the invalid control is dirty), you can use the
-`errorStateMatcher` property of the `mdInput`. To use this property, create a function in
-your component class that returns a boolean. A result of `true` will display the error messages.
+By default, error messages are shown when the control is invalid and either the user has interacted with
+(touched) the element or the parent form has been submitted. If you wish to override this
+behavior (e.g. to show the error as soon as the invalid control is dirty or when a parent form group
+is invalid), you can use the `errorStateMatcher` property of the `mdInput`. To use this property,
+create a function in your component class that returns a boolean. A result of `true` will display
+the error messages.
 
 ```html
 <md-input-container>
@@ -125,17 +126,18 @@ your component class that returns a boolean. A result of `true` will display the
 
 ```ts
 function myErrorStateMatcher(control: NgControl, parentFg: FormGroupDirective, parentForm: NgForm): boolean {
-  return control.invalid && control.dirty;
+  return !!(control.invalid && control.dirty);
 }
 ```
 
 A global error state matcher can be specified by setting the `MD_ERROR_GLOBAL_OPTIONS` provider. This applies
-to all inputs.
+to all inputs. For convenience, `showOnDirtyErrorStateMatcher` is available in order to globally cause
+input errors to show when the input is dirty and invalid.
 
 ```ts
 @NgModule({
   providers: [
-    {provide: MD_ERROR_GLOBAL_OPTIONS, useValue: { errorStateMatcher: myErrorStateMatcher }}
+    {provide: MD_ERROR_GLOBAL_OPTIONS, useValue: { errorStateMatcher: showOnDirtyErrorStateMatcher }}
   ]
 })
 ```
@@ -145,14 +147,3 @@ Here are the available global options:
 | Name              | Type     | Description |
 | ----------------- | -------- | ----------- |
 | errorStateMatcher | Function | Returns a boolean specifying if the error should be shown |
-
-
-If you just wish to make all inputs behave the same as the default, but show errors when
-dirty instead of touched, you can use the `ShowOnDirtyErrorStateMatcher` implementation.
-
-```ts
-@NgModule({
-  providers: [
-    { provide: MD_ERROR_GLOBAL_OPTIONS, useClass: ShowOnDirtyErrorStateMatcher }
-  ]
-})

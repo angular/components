@@ -46,9 +46,9 @@ export class InputDemo {
   }
 
   customErrorStateMatcher(c: NgControl): boolean {
-    const isDirty = c.dirty;
+    const hasInteraction = c.dirty || c.touched;
     const isInvalid = c.invalid;
 
-    return isDirty && isInvalid;
+    return !!(hasInteraction && isInvalid);
   }
 }
