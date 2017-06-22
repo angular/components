@@ -66,7 +66,8 @@ export class PersonDataSource extends DataSource<any> {
     if (!this._sort.active || this._sort.direction == '') { return data; }
 
     return data.sort((a, b) => {
-      let propertyA, propertyB;
+      let propertyA: number|string = '';
+      let propertyB: number|string = '';
 
       switch (this._sort.active) {
         case 'userId': [propertyA, propertyB] = [a.id, b.id]; break;
