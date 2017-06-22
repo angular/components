@@ -132,12 +132,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
     onResize(): void {
         this.defineRestrictionsAndStick();
-
-        /**
-         * If there's already a header being stick when the page is
-         * resized. The CSS style of the sticky-header may be not fit
-         * the resized window. So we need to unstuck it then re-stick it.
-         */
+         // If there's already a header being stick when the page is
+         // resized. The CSS style of the sticky-header may be not fit
+         // the resized window. So we need to unstuck it then re-stick it.
         if (this.isStuck) {
             this.unstuckElement();
             this.stickElement();
@@ -253,6 +250,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
      * When 'stickyRegion Start > container offsetTop', which means the header come back to the
      * middle of the scrollable container, the header will be reset to its
      * original CSS.
+     * A flag, isStuck. is used in this function. When a header is stick, isStuck = true.
+     * And when the 'isStuck' flag is TRUE, the sticky-header will not be repaint, which
+     * decreases the times on repainting sticky-header.
      */
     sticker(): void {
         let currentPosition: number = this.upperScrollableContainer.offsetTop;
