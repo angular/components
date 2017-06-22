@@ -37,7 +37,7 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
      * it may be sheltered by other element when being sticked.
      */
     @Input('cdkStickyHeaderZIndex') zIndex: number = 10;
-    @Input('cdkStickyParentRegion') cdkStickyParentRegion: any;
+    @Input('cdkStickyParentRegion') parentRegion: any;
     @Input('cdkStickyScrollableRegion') scrollableRegion: any;
 
     private _onScrollBind: EventListener = this.onScroll.bind(this);
@@ -90,14 +90,14 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
         this.scrollableRegion = scrollable.getElementRef().nativeElement;
         if (parentReg != null) {
-            this.cdkStickyParentRegion = parentReg.getElementRef().nativeElement;
+            this.parentRegion = parentReg.getElementRef().nativeElement;
         }
     }
 
     ngAfterViewInit(): void {
 
-        if (this.cdkStickyParentRegion != null) {
-            this.stickyParent = this.cdkStickyParentRegion;
+        if (this.parentRegion != null) {
+            this.stickyParent = this.parentRegion;
         }else {
             this.stickyParent = this.elem.parentNode;
         }
