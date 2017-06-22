@@ -7,8 +7,8 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <md-card-subtitle>ngModel</md-card-subtitle>
 
     <md-select placeholder="Drink" [color]="drinksTheme" [(ngModel)]="currentDrink" [required]="drinksRequired"
-      [hideRequiredMarker]="hideRequiredMarker" [disabled]="drinksDisabled" [floatPlaceholder]="floatPlaceholder"
-      #drinkControl="ngModel">
+        [hideRequiredMarker]="hideRequiredMarker" [disabled]="drinksDisabled" [floatPlaceholder]="floatPlaceholder"
+        #drinkControl="ngModel">
       <md-option>None</md-option>
       <md-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drink.disabled">
         {{ drink.viewValue }}
