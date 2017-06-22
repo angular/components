@@ -11,8 +11,8 @@ import {Scrollable} from '../core/overlay/scroll/scrollable';
 
 
 /**
- * The 'cdkStickyRegion' is a region contains one sticky header and other
- * contents that user wants to put under the sticky-header. It can help There only can
+ * 'cdkStickyRegion' is a region contains one sticky header and other
+ * contents that user wants to put under the sticky-header. There only can
  * be one sticky-header in one 'cdkStickyRegion'.
  * If a user does not define a 'cdkStickyRegion' for a sticky-header, the direct
  * parent node of the sticky-header will be set as the 'cdkStickyRegion'.
@@ -30,10 +30,10 @@ export class CdkStickyRegion {
 
 
 /**
- * The 'cdkStickyHeader' is the header which user wants to be stick at top of the
+ * The 'cdkStickyHeader' is the header which user wants to be stuck at top of the
  * scrollable container. The main logic is in the 'sticker()' function.
  */
-const STICK_START_CLASS = 'stick';
+const STICK_START_CLASS = 'stick-start';
 const STICK_END_CLASS = 'sticky-end';
 @Directive({
   selector: '[cdkStickyHeader]',
@@ -56,10 +56,10 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   private _onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
   public isStuck: boolean = false;
 
-  // the element with the 'md-sticky' tag
+  // the element with the 'cdkStickyHeader' tag
   public element: HTMLElement;
 
-  // the upper container element with the 'md-sticky-viewport' tag
+  // the upper container element with the 'cdkStickyRegion' tag
   public stickyParent: HTMLElement;
   public upperScrollableContainer: HTMLElement;
 
@@ -267,7 +267,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this.unstuckElement();
       }
       this.isStuck = false;    // stick when the element is within the sticky region
-    }else if ( this.isStuck === false &&
+    } else if ( this.isStuck === false &&
       currentPosition > this._containerStart && currentPosition < this._scrollFinish) {
       this.stickElement();
     }
@@ -283,7 +283,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     let result: any = '';
     if (typeof window.getComputedStyle !== 'undefined') {
       result = window.getComputedStyle(element, '').getPropertyValue(property);
-    }else if (typeof element.currentStyle !== 'undefined')  {
+    } else if (typeof element.currentStyle !== 'undefined')  {
       result = element.currentStyle.property;
     }
     return result;
