@@ -12,17 +12,11 @@ elif [ -d ${MATERIAL2_LOCAL} ] ; then
   baseSrcPath = ${MATERIAL2_LOCAL}
 fi
 
-# Ensure Docs Dist
-if [ ! -d ${baseSrcPath}/dist/docs ] ; then
-  echo "- Missing /dist/docs...Running 'gulp docs'"
-  ( cd ${baseSrcPath} && gulp docs )
-fi
+# Build Docs
+(cd ${baseSrcPath} && gulp docs)
 
-# Ensure Material Examples Pkg
-if [ ! -d ${baseSrcPath}/dist/releases/material-examples ] ; then
-  echo "- Missing material-examples...Running 'gulp material-examples:build-release'"
-  ( cd ${baseSrcPath} && gulp material-examples:build-release)
-fi
+# Build Examples
+(cd ${baseSrcPath} && gulp material-examples:build-release)
 
 # Base Target Path
 baseTargetPath=./src/assets
