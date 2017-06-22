@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {StickyParentDirective, StickyHeaderDirective} from '@angular/material';
+import {CdkStickyRegion, CdkStickyHeader} from '@angular/material';
 
 
 @Component({
