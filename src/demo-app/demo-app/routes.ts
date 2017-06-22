@@ -36,7 +36,6 @@ import {DatepickerDemo} from '../datepicker/datepicker-demo';
 import {TableDemo} from '../table/table-demo';
 import {TypographyDemo} from '../typography/typography-demo';
 import {ExpansionDemo} from '../expansion/expansion-demo';
-import {StickyHeaderDemo} from '../sticky-header/sticky-header-demo';
 
 
 export const DEMO_APP_ROUTES: Routes = [
@@ -76,5 +75,4 @@ export const DEMO_APP_ROUTES: Routes = [
   {path: 'style', component: StyleDemo},
   {path: 'typography', component: TypographyDemo},
   {path: 'expansion', component: ExpansionDemo},
-  {path: 'sticky-header', component: StickyHeaderDemo},
 ];
