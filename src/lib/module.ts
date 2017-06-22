@@ -46,7 +46,7 @@ import {StyleModule} from './core/style/index';
 import {MdDatepickerModule} from './datepicker/index';
 import {CdkDataTableModule} from './core/data-table/index';
 import {MdExpansionModule} from './expansion/index';
-import {MdStickyHeaderModule} from './sticky-header/index';
+import {CdkStickyHeaderModule} from './sticky-header/index';
 
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
@@ -84,7 +84,7 @@ const MATERIAL_MODULES = [
   MdCommonModule,
   ObserveContentModule,
   CdkDataTableModule,
-  MdStickyHeaderModule,
+  CdkStickyHeaderModule,
 ];
 
 /** @deprecated */
