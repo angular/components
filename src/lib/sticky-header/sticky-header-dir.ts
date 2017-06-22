@@ -75,11 +75,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     private _scrollFinish: number;
 
     private _scrollingWidth: number;
-    private _scrollingRight: number;
-
-    // the padding of 'element'
-    private _elementPadding: any;
-    private _paddingNumber: number;
 
     // sticky element's width
     private _width: string = 'auto';
@@ -169,11 +164,11 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this._containerStart = containerTop.top;
 
         // the padding of the element being sticked
-        this._elementPadding = this.getCssValue(this.element, 'padding');
+        let elementPadding: any = this.getCssValue(this.element, 'padding');
 
-        this._paddingNumber = Number(this._elementPadding.slice(0, -2));
+        let paddingNumber: any = Number(elementPadding.slice(0, -2));
         this._scrollingWidth = this.upperScrollableContainer.clientWidth -
-            this._paddingNumber - this._paddingNumber;
+            paddingNumber - paddingNumber;
 
         this._scrollFinish = this._containerStart + (containerHeight - elemHeight);
     }
@@ -216,8 +211,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
          **/
         this.element.style.transform = 'translate3d(0,0,0)';
 
-        this._scrollingRight = this.upperScrollableContainer.offsetLeft +
-            this.upperScrollableContainer.offsetWidth;
         let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
 
         let stickyCss:any = {
@@ -251,7 +244,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
             right: '0',
             left: 'auto',
             bottom: '0',
-            width: this._width,
+            width: this.originalCss.width,
         };
         Object.assign(this.element.style, unstuckCss);
     }
