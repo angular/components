@@ -116,6 +116,9 @@ export class MdDatepicker<D> implements OnDestroy {
    */
   @Input() touchUi = false;
 
+  /** Whether the datepicker pop-up should be disabled for read-only mode. */
+  @Input() readOnly = false;
+
   /** Emits new selected date when selected date changes. */
   @Output() selectedChanged = new EventEmitter<D>();
 
@@ -207,6 +210,9 @@ export class MdDatepicker<D> implements OnDestroy {
   /** Open the calendar. */
   open(): void {
     if (this.opened) {
+      return;
+    }
+    if (this.readOnly) {
       return;
     }
     if (!this._datepickerInput) {
