@@ -1,26 +1,7 @@
-/* Structure */
-.demo-table-container {
-  display: flex;
-  flex-direction: column;
-  max-height: 800px;
-}
-
-// Table fills in the remaining area with a scroll
-.cdk-table, .mat-table {
-  overflow: auto;
-}
-
-.demo-cdk-table-example {
-  border: 1px solid #CCC;
-}
-
 .demo-data-source-actions {
   & > div {
     margin: 16px 0;
   }
-
-.demo-cdk-table-example {
-  border: 1px solid #CCC;
 
   .demo-track-by-select {
     display: flex;
@@ -32,39 +13,34 @@
   }
 
   .demo-highlighter .mat-checkbox {
-      margin: 0 8px;
-    }
+    margin: 0 8px;
   }
 }
 
-  .demo-row-highlight-first { background: #f3f315; }
-  .demo-row-highlight-last { background: #0dd5fc; }
-  .demo-row-highlight-even { background: #ff0099; }
-  .demo-row-highlight-odd { background: #83f52c; }/*
- * Styles to make the demo's cdk-table match the material design spec
- * https://material.io/guidelines/components/data-tables.html
- */
+.demo-row-highlight-first { background: #f3f315; }
+.demo-row-highlight-last { background: #0dd5fc; }
+.demo-row-highlight-even { background: #ff0099; }
+.demo-row-highlight-odd { background: #83f52c; }
+
+/** Styles so that the CDK Table columns have width and font size. */
 .cdk-table {
   font-size: 12px;
-  padding: 16px;
-}
 
-.cdk-row, .cdk-header-row {
-  display: flex;
-  align-items: center;
-  height: 20px;
-}
+  .cdk-row, .cdk-header-row {
+    display: flex;
+  }
 
-.cdk-cell, .cdk-header-cell {
-  flex: 1;
-}
+  .cdk-cell, .cdk-header-cell {
+    flex: 1;
+  }
 
   .cdk-header-cell {
     font-weight: bold;
+    &.mat-sort-header-sorted {
+      color: black;
     }
-  &.mat-sort-header-sorted {
-    color: black;
   }
+}
 
 .demo-mat-table-example {
   table-header-demo {
@@ -72,7 +48,18 @@
   }
 }
 
-  /* Column max widths */
+  /* Structure so that the table is contained on a card */
+.demo-table-container {
+  max-height: 800px;
+  display: flex;
+  flex-direction: column;
+
+  md-table {
+    overflow: auto;
+  }
+}
+
+/* Column max widths */
   .cdk-column-userId {
     max-width: 32px;
   text-align: right;

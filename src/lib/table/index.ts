@@ -11,17 +11,15 @@ import {MdTable} from './table';
 import {CdkDataTableModule} from '../core/data-table/index';
 import {MdCell, MdHeaderCell} from './cell';
 import {MdHeaderRow, MdRow} from './row';
-import {MdSimpleTable, MdSimpleColumn} from './simple-table';
 import {CommonModule} from '@angular/common';
 
 export * from './cell';
 export * from './table';
 export * from './row';
-export *from './simple-data-source';
 
 @NgModule({
   imports: [CdkDataTableModule, CommonModule],
-  exports: [MdTable, MdHeaderCell, MdCell, MdHeaderRow, MdRow, MdSimpleTable, MdSimpleColumn],
-  declarations: [MdTable, MdHeaderCell, MdCell, MdHeaderRow, MdRow, MdSimpleTable, MdSimpleColumn],
+  exports: [MdTable, MdHeaderCell, MdCell, MdHeaderRow, MdRow],
+  declarations: [MdTable, MdHeaderCell, MdCell, MdHeaderRow, MdRow],
 })
 export class MdDataTableModule {}
