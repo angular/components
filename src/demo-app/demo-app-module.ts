@@ -76,8 +76,7 @@ import {
   MdToolbarModule,
   MdTooltipModule,
   OverlayContainer,
-  StyleModule,
-  CdkStickyHeaderModule,
+  StyleModule
 } from '@angular/material';
 import {CdkTableModule} from '@angular/cdk';
 import {TableHeaderDemo} from './table/table-header-demo';
@@ -122,8 +121,7 @@ import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
     CdkTableModule,
     StyleModule
     CdkDataTableModule,
-    StyleModule,
-    CdkStickyHeaderModule,
+    StyleModule
   ]
 })
 export class DemoMaterialModule {}
