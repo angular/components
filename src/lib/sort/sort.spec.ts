@@ -233,17 +233,17 @@ class FakeDataSource extends DataSource<any> {
     <cdk-table [dataSource]="dataSource" mdSort>
       <ng-container cdkColumnDef="column_a">
         <cdk-header-cell *cdkHeaderCellDef #sortHeaderA md-sort-header> Column A </cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}} </cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="column_b">
         <cdk-header-cell *cdkHeaderCellDef #sortHeaderB md-sort-header> Column B </cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> {{row.b}}</cdk-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.b}} </cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="column_c">
         <cdk-header-cell *cdkHeaderCellDef #sortHeaderC md-sort-header> Column C </cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> {{row.c}}</cdk-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.c}} </cdk-cell>
       </ng-container>
 
       <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>

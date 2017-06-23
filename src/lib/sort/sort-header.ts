@@ -35,8 +35,6 @@ import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
     '(click)': '_sort.sort(this)',
     '[class.mat-sort-header-sorted]': '_isSorted()',
   },
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdSortHeader implements MdSortable {
   /**
