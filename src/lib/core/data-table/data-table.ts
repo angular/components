@@ -344,6 +344,7 @@ export class CdkTable<T> implements CollectionViewer {
    * as defined by its list of columns to display.
    */
   private _getHeaderCellTemplatesForRow(headerDef: CdkHeaderRowDef): CdkHeaderCellDef[] {
+    if (!headerDef.columns) { return []; }
     return headerDef.columns.map(columnId => {
       const column = this._columnDefinitionsByName.get(columnId);
 
@@ -360,6 +361,7 @@ export class CdkTable<T> implements CollectionViewer {
    * as defined by its list of columns to display.
    */
   private _getCellTemplatesForRow(rowDef: CdkRowDef): CdkCellDef[] {
+    if (!rowDef.columns) { return []; }
     return rowDef.columns.map(columnId => {
       const column = this._columnDefinitionsByName.get(columnId);
 

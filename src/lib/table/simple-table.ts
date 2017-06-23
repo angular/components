@@ -47,7 +47,8 @@ export class MdSimpleColumn<T> {
 export class MdSimpleTable<T> {
   _dataSource = new SimpleDataSource<T>();
 
-  columnProperties: string[] = [];
+  columnProperties: {headerText: string, property: string}[] = [];
+  columnIds: string[];
 
   @Input()
   set data(data: T[]) { this._dataSource.data = data; }
@@ -55,7 +56,13 @@ export class MdSimpleTable<T> {
 
   @ContentChildren(MdSimpleColumn) columns: QueryList<MdSimpleColumn<T>>;
 
-  ngAfterContentInit() {
-    this.columnProperties = this.columns.map(column => column.property);
+  ngAfterContentChecked() {
+    this.columnProperties = this.columns.map(column => {
+      return {
+        headerText: column.headerText,
+        property: column.property
+      };
+    });
+    this.columnIds = this.columnProperties.map(column => column.property);
   }
 }

@@ -10,8 +10,13 @@
   overflow: auto;
 }
 
-  .demo-data-source-actions {
-    & > div {margin: 16px 0;
+.demo-cdk-table-example {
+  border: 1px solid #CCC;
+}
+
+.demo-data-source-actions {
+  & > div {
+    margin: 16px 0;
   }
 
 .demo-cdk-table-example {
@@ -30,36 +35,36 @@
       margin: 0 8px;
     }
   }
+}
 
   .demo-row-highlight-first { background: #f3f315; }
   .demo-row-highlight-last { background: #0dd5fc; }
   .demo-row-highlight-even { background: #ff0099; }
   .demo-row-highlight-odd { background: #83f52c; }/*
-   * Styles to make the demo's cdk-table match the material design spec
-   * https://material.io/guidelines/components/data-tables.html
-   */
-  .cdk-table {
-    font-size: 12px;
-    padding: 16px;
-  }
+ * Styles to make the demo's cdk-table match the material design spec
+ * https://material.io/guidelines/components/data-tables.html
+ */
+.cdk-table {
+  font-size: 12px;
+  padding: 16px;
+}
 
-  .cdk-row, .cdk-header-row {
-    display: flex;
-    align-items: center;
-    height: 20px;
-  }
+.cdk-row, .cdk-header-row {
+  display: flex;
+  align-items: center;
+  height: 20px;
+}
 
-  .cdk-cell, .cdk-header-cell {
-    flex: 1;
-  }
+.cdk-cell, .cdk-header-cell {
+  flex: 1;
+}
 
   .cdk-header-cell {
-
     font-weight: bold;
     }
   &.mat-sort-header-sorted {
     color: black;
-  }}
+  }
 
 .demo-mat-table-example {
   table-header-demo {

@@ -1,10 +1,9 @@
 <div class="demo-data-source-actions">
   <div>
-  <button md-raised-button (click)="connect()">Connect New Data Source</button>
-  <button md-raised-button (click)="disconnect()" [disabled]="!dataSource">Disconnect Data Source</button>
-</div>
+    <button md-raised-button (click)="connect()">Connect New Data Source</button>
+    <button md-raised-button (click)="disconnect()" [disabled]="!dataSource">Disconnect Data Source</button>
+  </div>
 
-<div class="demo-table-container demo-cdk-table-example">
   <div>
     <button md-raised-button (click)="_peopleDatabase.shuffle(changeReferences)">Randomize Data</button>
     <md-checkbox [(ngModel)]="changeReferences">Change references</md-checkbox>
@@ -32,6 +31,9 @@
 
 <md-simple-table [data]="_peopleDatabase.data">
   <md-simple-column headerText="User ID" property="id"></md-simple-column>
+  <md-simple-column headerText="Name" property="name"></md-simple-column>
+  <md-simple-column headerText="Progress" property="progress"></md-simple-column>
+  <md-simple-column headerText="Color" property="color"></md-simple-column>
 </md-simple-table>
 
 <h3>CdkTable Example</h3>
@@ -99,15 +101,7 @@
                  'demo-row-highlight-odd': highlights.has('odd') && odd
                }">
       </cdk-row>
-    </cdk-table>
-
-    <md-paginator #paginator
-                  [length]="_peopleDatabase.data.length"
-                  [pageIndex]="0"
-                  [pageSize]="10"
-                  [pageSizeOptions]="[5, 10, 25, 100]">
-    </md-paginator>
-  </div>
+  </cdk-table>
 </div>
 
 <h3>MdTable Example</h3>
@@ -156,13 +150,6 @@
     <md-row *cdkRowDef="let row; columns: propertiesToDisplay"></md-row>
 
   </md-table>
-
-  <md-paginator #paginator
-                [length]="_peopleDatabase.data.length"
-                [pageIndex]="0"
-                [pageSize]="10"
-                [pageSizeOptions]="[5, 10, 25, 100]">
-  </md-paginator>
 </div>
 
 <h3>MdTable With Simple Data Source</h3>

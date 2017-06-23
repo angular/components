@@ -45,7 +45,7 @@ export abstract class BaseRowDef {
   ngOnChanges(changes: SimpleChanges): void {
     // Create a new columns differ if one does not yet exist. Initialize it based on initial value
     // of the columns property.
-    if (!this._columnsDiffer) {
+    if (!this._columnsDiffer && changes['columns'].currentValue) {
       this._columnsDiffer = this._differs.find(changes['columns'].currentValue).create();
     }
   }
