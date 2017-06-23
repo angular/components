@@ -4,6 +4,7 @@
   <button md-raised-button (click)="disconnect()" [disabled]="!dataSource">Disconnect Data Source</button>
 </div>
 
+<div class="demo-table-container demo-cdk-table-example">
   <div>
     <button md-raised-button (click)="_peopleDatabase.shuffle(changeReferences)">Randomize Data</button>
     <md-checkbox [(ngModel)]="changeReferences">Change references</md-checkbox>
@@ -26,6 +27,12 @@
     <md-checkbox (change)="toggleHighlight('odd', $event.checked)">Odd Rows</md-checkbox>
   </div>
 </div>
+
+<h3>Simple MdTable</h3>
+
+<md-simple-table [data]="_peopleDatabase.data">
+  <md-simple-column headerText="User ID" property="id"></md-simple-column>
+</md-simple-table>
 
 <h3>CdkTable Example</h3>
 

@@ -1,0 +1,11 @@
+<md-table [dataSource]="_dataSource">
+
+  <ng-container [cdkColumnDef]="column" *ngFor="let column of columns">
+    <md-header-cell *cdkHeaderCellDef> {{column.headerText}} </md-header-cell>
+    <md-cell *cdkCellDef="let row"> {{row[column.property]}} </md-cell>
+  </ng-container>
+
+  <md-header-row *cdkHeaderRowDef="columnProperties"></md-header-row>
+  <md-row *cdkRowDef="let row; columns: columnProperties"></md-row>
+
+</md-table>
