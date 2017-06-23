@@ -13,9 +13,8 @@ import {getMdSortDuplicateMdSortableIdError, getMdSortHeaderMissingIdError} from
 
 export interface MdSortable {
   id: string;
-  start: SortDirection;
+  start: 'ascending' | 'descending';
   disableClear: boolean;
-  reverseOrder: boolean;
 }
 
 export interface Sort {
@@ -38,7 +37,7 @@ export class MdSort {
    * The direction to set when an MdSortable is initially sorted.
    * May be overriden by the MdSortable's sort start.
    */
-  @Input('mdSortStart') start: SortDirection = 'ascending';
+  @Input('mdSortStart') start: 'ascending' | 'descending' = 'ascending';
 
   /** The sort direction of the currently active MdSortable. */
   @Input('mdSortDirection') direction: SortDirection = '';
@@ -51,15 +50,6 @@ export class MdSort {
   get disableClear() { return this._disableClear; }
   set disableClear(v) { this._disableClear = coerceBooleanProperty(v); }
   private _disableClear: boolean;
-
-  /**
-   * Whether to reverse the default sort direction order cycle.
-   * May be overriden by the MdSortable's reverse order input.
-   */
-  @Input('mdSortReverseOrder')
-  get reverseOrder() { return this._reverseOrder; }
-  set reverseOrder(v) { this._reverseOrder = coerceBooleanProperty(v); }
-  private _reverseOrder: boolean;
 
   /** Event emitted when the user changes either the active sort or sort direction. */
   @Output() mdSortChange = new EventEmitter<Sort>();
@@ -91,27 +81,12 @@ export class MdSort {
   sort(sortable: MdSortable) {
     if (this.active != sortable.id) {
       this.active = sortable.id;
-      this.direction = this._getInitialDirection();
+      this.direction = sortable.start ? sortable.start : this.start;
     } else {
       this.direction = this._getNextSortDirection();
     }
 
     this.mdSortChange.next({active: this.active, direction: this.direction});
-  }
-
-  /** Returns the first sort direction to be used for the active sortable. */
-  _getInitialDirection() {
-    const sortable = this.sortables.get(this.active);
-    if (!sortable) { return ''; }
-
-    if (sortable.start) { return sortable.start; }
-
-    // If the sortable is reversed, the start direction should be opposite of the MdSort start.
-    if (sortable.reverseOrder) {
-      return this.start == 'ascending' ? 'descending' : 'ascending';
-    }
-
-    return this.start;
   }
 
   /** Returns the next sort direction of the active sortable, checking for potential overrides. */
@@ -120,13 +95,10 @@ export class MdSort {
     if (!sortable) { return ''; }
 
     // Get the sort direction cycle with the potential sortable overrides.
-    const reverseOrder = sortable.reverseOrder != undefined ?
-        sortable.reverseOrder :
-        this.reverseOrder;
     const disableClear = sortable.disableClear != undefined ?
         sortable.disableClear :
         this.disableClear;
-    let sortDirectionCycle = getSortDirectionCycle(reverseOrder, disableClear);
+    let sortDirectionCycle = getSortDirectionCycle(sortable.start || this.start, disableClear);
 
     // Get and return the next direction in the cycle
     let nextDirectionIndex = sortDirectionCycle.indexOf(this.direction) + 1;
@@ -136,9 +108,10 @@ export class MdSort {
 }
 
 /** Returns the sort direction cycle to use given the provided parameters of order and clear. */
-function getSortDirectionCycle(reverseOrder: boolean, disableClear: boolean): SortDirection[] {
+function getSortDirectionCycle(start: 'ascending' | 'descending',
+                               disableClear: boolean): SortDirection[] {
   let sortOrder: SortDirection[] = ['ascending', 'descending'];
-  if (reverseOrder) { sortOrder.reverse(); }
+  if (start == 'descending') { sortOrder.reverse(); }
   if (!disableClear) { sortOrder.push(''); }
 
   return sortOrder;

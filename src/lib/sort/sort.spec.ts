@@ -38,7 +38,7 @@ describe('MdSort', () => {
 
   it('should have the sort headers register and unregister themselves', () => {
     const sortables = component.mdSort.sortables;
-    expect(sortables.size).toBe(5);
+    expect(sortables.size).toBe(4);
     expect(sortables.get('defaultSortHeaderA')).toBe(component.mdSortHeaderDefaultA);
     expect(sortables.get('defaultSortHeaderB')).toBe(component.mdSortHeaderDefaultB);
 
@@ -61,40 +61,25 @@ describe('MdSort', () => {
     expect(sortables.has('column_c')).toBe(true);
   });
 
-  it('should be able to cycle from asc -> desc from any start point', () => {
+  it('should be able to cycle from asc -> desc from either start point', () => {
     component.disableClear = true;
 
     component.start = 'ascending';
     testSingleColumnSortDirectionSequence(fixture, ['ascending', 'descending']);
 
     // Reverse directions
-    component.reverseOrder = true;
-
     component.start = 'descending';
     testSingleColumnSortDirectionSequence(fixture, ['descending', 'ascending']);
   });
 
-  it('should be able to cycle between asc, desc, and [none] from any start point', () => {
+  it('should be able to cycle asc -> desc -> [none]', () => {
     component.start = 'ascending';
     testSingleColumnSortDirectionSequence(fixture, ['ascending', 'descending', '']);
+  });
 
-    component.start = 'descending';
-    testSingleColumnSortDirectionSequence(fixture, ['descending', '', 'ascending']);
-
-    component.start = '';
-    testSingleColumnSortDirectionSequence(fixture, ['', 'ascending', 'descending']);
-
-    // Reverse directions
-    component.reverseOrder = true;
-
+  it('should be able to cycle desc -> asc -> [none]', () => {
     component.start = 'descending';
     testSingleColumnSortDirectionSequence(fixture, ['descending', 'ascending', '']);
-
-    component.start = 'ascending';
-    testSingleColumnSortDirectionSequence(fixture, ['ascending', '', 'descending']);
-
-    component.start = '';
-    testSingleColumnSortDirectionSequence(fixture, ['', 'descending', 'ascending']);
   });
 
   it('should reset sort direction when a different column is sorted', () => {
@@ -131,16 +116,10 @@ describe('MdSort', () => {
         fixture, ['ascending', 'descending', '']);
 
     testSingleColumnSortDirectionSequence(
-        fixture, ['descending', '', 'ascending'],
-        'overrideStart');
+        fixture, ['descending', 'ascending', ''], 'overrideStart');
 
     testSingleColumnSortDirectionSequence(
-        fixture, ['ascending', 'descending'],
-        'overrideDisableClear');
-
-    testSingleColumnSortDirectionSequence(
-        fixture, ['descending', 'ascending', ''],
-        'overrideReverseOrder');
+        fixture, ['ascending', 'descending'], 'overrideDisableClear');
   });
 
   it('should apply the aria-labels to the button', () => {
@@ -191,13 +170,11 @@ function testSingleColumnSortDirectionSequence(fixture: ComponentFixture<SimpleM
          [mdSortStart]="start"
          [mdSortDirection]="direction"
          [mdSortDisableClear]="disableClear"
-         [mdSortReverseOrder]="reverseOrder"
          (mdSortChange)="latestSortEvent = $event">
       <div id="defaultSortHeaderA" #defaultSortHeaderA md-sort-header="defaultSortHeaderA"> A </div>
       <div id="defaultSortHeaderB" #defaultSortHeaderB md-sort-header="defaultSortHeaderB"> B </div>
       <div id="overrideStart" md-sort-header="overrideStart" start="descending"> D </div>
       <div id="overrideDisableClear" md-sort-header="overrideDisableClear" disableClear> E </div>
-      <div id="overrideReverseOrder" md-sort-header="overrideReverseOrder" reverseOrder> F </div>
     </div>
   `
 })
@@ -208,7 +185,6 @@ class SimpleMdSortApp {
   start: SortDirection = 'ascending';
   direction: SortDirection = '';
   disableClear: boolean;
-  reverseOrder: boolean;
 
   @ViewChild(MdSort) mdSort: MdSort;
   @ViewChild('defaultSortHeaderA') mdSortHeaderDefaultA: MdSortHeader;

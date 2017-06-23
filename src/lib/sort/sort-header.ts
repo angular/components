@@ -6,14 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Optional,
-  ViewEncapsulation
-} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, Optional} from '@angular/core';
 import {MdSort, MdSortable} from './sort';
 import {MdSortHeaderIntl} from './sort-header-intl';
 import {CdkColumnDef} from '../core/data-table/cell';
-import {SortDirection} from './sort-direction';
 import {coerceBooleanProperty} from '../core';
 import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
 
@@ -47,19 +43,13 @@ export class MdSortHeader implements MdSortable {
   @Input() arrowPosition: 'before' | 'after' = 'after';
 
   /** Overrides the sort start value of the containing MdSort for this MdSortable. */
-  @Input('start') start: SortDirection;
+  @Input('start') start: 'ascending' | 'descending';
 
   /** Overrides the disable clear value of the containing MdSort for this MdSortable. */
   @Input()
   get disableClear() { return this._disableClear; }
   set disableClear(v) { this._disableClear = coerceBooleanProperty(v); }
   private _disableClear: boolean;
-
-  /** Overrides the reverse order value of the containing MdSort for this MdSortable. */
-  @Input()
-  get reverseOrder() { return this._reverseOrder; }
-  set reverseOrder(v) { this._reverseOrder = coerceBooleanProperty(v); }
-  private _reverseOrder: boolean;
 
   @Input('mat-sort-header')
   get _id() { return this.id; }

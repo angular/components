@@ -65,8 +65,7 @@
 
     <!-- Column Definition: Name -->
     <ng-container cdkColumnDef="userName">
-      <cdk-header-cell *cdkHeaderCellDef
-                       md-sort-header reverseOrder>
+      <cdk-header-cell *cdkHeaderCellDef md-sort-header>
         Name
       </cdk-header-cell>
       <cdk-cell *cdkCellDef="let row"> {{row.name}} </cdk-cell>
