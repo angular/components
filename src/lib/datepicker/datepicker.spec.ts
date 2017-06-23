@@ -97,7 +97,7 @@ describe('MdDatepicker', () => {
       }));
 
       it('open in read only mode should not open the calendar', async(() => {
-        testComponent.readOnly = true;
+        testComponent.disabled = true;
         fixture.detectChanges();
 
         expect(document.querySelector('.cdk-overlay-pane')).toBeNull();
@@ -748,12 +748,12 @@ describe('MdDatepicker', () => {
 @Component({
   template: `
     <input [mdDatepicker]="d" [value]="date">
-    <md-datepicker #d [touchUi]="touch" [readOnly]="readOnly"></md-datepicker>
+    <md-datepicker #d [touchUi]="touch" [disabled]="disabled"></md-datepicker>
   `,
 })
 class StandardDatepicker {
   touch = false;
-  readOnly = false;
+  disabled = false;
   date = new Date(2020, JAN, 1);
   @ViewChild('d') datepicker: MdDatepicker<Date>;
   @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput<Date>;
