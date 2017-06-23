@@ -96,7 +96,7 @@
                      (toggleColorColumn)="toggleColorColumn()">
   </table-header-demo>
 
-  <md-table [dataSource]="dataSource">
+  <md-table [dataSource]="dataSource" [trackBy]="userTrackBy">
 
     <!-- Column Definition: ID -->
     <ng-container cdkColumnDef="userId">
@@ -137,8 +137,6 @@
 
   <md-paginator #paginator
                 [length]="_peopleDatabase.data.length"
-                [pageIndex]="paginator.pageIndex"
-                [pageSize]="paginator.pageSize"
                 [pageSizeOptions]="[5, 10, 25, 100]">
   </md-paginator>
 </div>
