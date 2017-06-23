@@ -1,4 +1,4 @@
-import {CollectionViewer, DataSource, MdPaginator, PageEvent} from '@angular/material';
+import {CollectionViewer, DataSource, MdPaginator} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {PeopleDatabase, UserData} from './people-database';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';

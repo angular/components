@@ -2,10 +2,6 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MdPaginatorModule} from './index';
 import {MdPaginator, PageEvent} from './paginator';
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {MdCommonModule} from '../core';
-import {MdSelectModule} from '../select/index';
-import {MdTooltipModule} from '../tooltip/index';
-import {MdButtonModule} from '../button/index';
 import {MdPaginatorIntl} from './paginator-intl';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {customMatchers} from '../core/testing/jasmine-matchers';
@@ -106,7 +102,7 @@ describe('MdPaginator', () => {
       component.clickNextButton();
 
       expect(paginator.pageIndex).toBe(1);
-      expect(component.latestPageEvent.pageIndex).toBe(1);
+      expect(component.latestPageEvent ? component.latestPageEvent.pageIndex : null).toBe(1);
     });
 
     it('should be able to go to the previous page', () => {
@@ -117,7 +113,7 @@ describe('MdPaginator', () => {
       component.clickPreviousButton();
 
       expect(paginator.pageIndex).toBe(0);
-      expect(component.latestPageEvent.pageIndex).toBe(0);
+      expect(component.latestPageEvent ? component.latestPageEvent.pageIndex : null).toBe(0);
     });
 
     it('should disable navigating to the next page if at first page', () => {
@@ -174,32 +170,35 @@ describe('MdPaginator', () => {
     fixture.detectChanges();
 
     // The first item of the page should be item with index 40
-    let firstPageItemIndex = paginator.pageIndex * paginator.pageSize;
+    let firstPageItemIndex: number | null = paginator.pageIndex * paginator.pageSize;
     expect(firstPageItemIndex).toBe(40);
 
     // The first item on the page is now 25. Change the page size to 25 so that we should now be
     // on the second page where the top item is index 25.
     paginator._changePageSize(25);
     let paginationEvent = component.latestPageEvent;
-    firstPageItemIndex = paginationEvent.pageIndex * paginationEvent.pageSize;
+    firstPageItemIndex = paginationEvent ?
+        paginationEvent.pageIndex * paginationEvent.pageSize : null;
     expect(firstPageItemIndex).toBe(25);
-    expect(paginationEvent.pageIndex).toBe(1);
+    expect(paginationEvent ? paginationEvent.pageIndex : null).toBe(1);
 
     // The first item on the page is still 25. Change the page size to 8 so that we should now be
     // on the fourth page where the top item is index 24.
     paginator._changePageSize(8);
     paginationEvent = component.latestPageEvent;
-    firstPageItemIndex = paginationEvent.pageIndex * paginationEvent.pageSize;
+    firstPageItemIndex = paginationEvent ?
+        paginationEvent.pageIndex * paginationEvent.pageSize : null;
     expect(firstPageItemIndex).toBe(24);
-    expect(paginationEvent.pageIndex).toBe(3);
+    expect(paginationEvent ? paginationEvent.pageIndex : null).toBe(3);
 
     // The first item on the page is 24. Change the page size to 16 so that we should now be
     // on the first page where the top item is index 0.
     paginator._changePageSize(25);
     paginationEvent = component.latestPageEvent;
-    firstPageItemIndex = paginationEvent.pageIndex * paginationEvent.pageSize;
+    firstPageItemIndex = paginationEvent ?
+        paginationEvent.pageIndex * paginationEvent.pageSize : null;
     expect(firstPageItemIndex).toBe(0);
-    expect(paginationEvent.pageIndex).toBe(0);
+    expect(paginationEvent ? paginationEvent.pageIndex : null).toBe(0);
   });
 
   it('should show a select only if there are multiple options', () => {
@@ -230,7 +229,7 @@ class MdPaginatorApp {
   pageSizeOptions = [5, 10, 25, 100];
   length = 100;
 
-  latestPageEvent: PageEvent;
+  latestPageEvent: PageEvent | null;
 
   @ViewChild(MdPaginator) mdPaginator: MdPaginator;
 
