@@ -11,7 +11,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {MdSort, MdSortable} from './sort';
-import {MdSortIntl} from './sort-intl';
+import {MdSortHeaderIntl} from './sort-header-intl';
 import {CdkColumnDef} from '../core/data-table/cell';
 import {SortDirection} from './sort-direction';
 import {coerceBooleanProperty} from '../core';
@@ -65,7 +65,7 @@ export class MdSortHeader implements MdSortable {
   get _id() { return this.id; }
   set _id(v: string) { this.id = v; }
 
-  constructor(private _intl: MdSortIntl,
+  constructor(public _intl: MdSortHeaderIntl,
               private _changeDetectorRef: ChangeDetectorRef,
               @Optional() public _sort: MdSort,
               @Optional() public _cdkColumnDef: CdkColumnDef) {

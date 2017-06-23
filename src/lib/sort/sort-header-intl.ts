@@ -10,11 +10,11 @@ import {Injectable} from '@angular/core';
 import {SortDirection} from './sort-direction';
 
 /**
- * To modify the labels and text displayed, create a new instance of MdSortIntl and
+ * To modify the labels and text displayed, create a new instance of MdSortHeaderIntl and
  * include it in a custom provider.
  */
 @Injectable()
-export class MdSortIntl {
+export class MdSortHeaderIntl {
   sortButtonLabel = (id: string) => {
     return `Change sorting for ${id}`;
   }
