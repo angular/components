@@ -6,7 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, Input, Optional} from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Optional,
+  ViewEncapsulation
+} from '@angular/core';
 import {MdSort, MdSortable} from './sort';
 import {MdSortIntl} from './sort-intl';
 import {CdkColumnDef} from '../core/data-table/cell';
@@ -31,7 +34,9 @@ import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
   host: {
     '(click)': '_sort.sort(this)',
     '[class.mat-sort-header-sorted]': '_isSorted()',
-  }
+  },
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdSortHeader implements MdSortable {
   /**
@@ -62,12 +67,15 @@ export class MdSortHeader implements MdSortable {
   get _id() { return this.id; }
   set _id(v: string) { this.id = v; }
 
-  constructor(@Optional() public _sort: MdSort,
-              public _intl: MdSortIntl,
+  constructor(private _intl: MdSortIntl,
+              private _changeDetectorRef: ChangeDetectorRef,
+              @Optional() public _sort: MdSort,
               @Optional() public _cdkColumnDef: CdkColumnDef) {
     if (!_sort) {
       throw getMdSortHeaderNotContainedWithinMdSortError();
     }
+
+    _sort.mdSortChange.subscribe(() => _changeDetectorRef.markForCheck());
   }
 
   ngOnInit() {
@@ -84,6 +92,6 @@ export class MdSortHeader implements MdSortable {
 
   /** Whether this MdSortHeader is currently sorted in either ascending or descending order. */
   _isSorted() {
-    return this._sort.active == this.id && this._sort.direction != '';
+    return this._sort.active == this.id && this._sort.direction;
   }
 }

@@ -3,12 +3,9 @@ $mat-sort-header-arrow-container-size: 10px;
 $mat-sort-header-arrow-pointer-length: 8px;
 $mat-sort-header-arrow-thickness: 2px;
 
-:host {
-  cursor: pointer;
-}
-
 .mat-sort-header-container {
   display: flex;
+  cursor: pointer;
 }
 
 .mat-sort-header-position-before {
@@ -51,7 +48,7 @@ $mat-sort-header-arrow-thickness: 2px;
 }
 
 .mat-sort-header-stem {
-  background: black;
+  background: currentColor;
   transform: rotate(135deg);
   height: $mat-sort-header-arrow-container-size;
   width: $mat-sort-header-arrow-thickness;
@@ -59,7 +56,7 @@ $mat-sort-header-arrow-thickness: 2px;
 }
 
 .mat-sort-header-pointer-left {
-  background: black;
+  background: currentColor;
   width: $mat-sort-header-arrow-thickness;
   height: $mat-sort-header-arrow-pointer-length;
   position: absolute;
@@ -68,7 +65,7 @@ $mat-sort-header-arrow-thickness: 2px;
 }
 
 .mat-sort-header-pointer-right {
-  background: black;
+  background: currentColor;
   width: $mat-sort-header-arrow-pointer-length;
   height: $mat-sort-header-arrow-thickness;
   position: absolute;

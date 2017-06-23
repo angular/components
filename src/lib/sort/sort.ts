@@ -67,7 +67,6 @@ export class MdSort {
   /**
    * Register function to be used by the contained MdSortables. Adds the MdSortable to the
    * collection of MdSortables.
-   * @docs-private
    */
   register(sortable: MdSortable) {
     if (!sortable.id) {
@@ -83,7 +82,6 @@ export class MdSort {
   /**
    * Unregister function to be used by the contained MdSortables. Removes the MdSortable from the
    * collection of contained MdSortables.
-   * @docs-private
    */
   unregister(sortable: MdSortable) {
     this.sortables.delete(sortable.id);
