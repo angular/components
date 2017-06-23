@@ -3,32 +3,33 @@
   <md-checkbox [(ngModel)]="touch">Use touch UI</md-checkbox>
   <md-checkbox [(ngModel)]="filterOdd">Filter odd months and dates</md-checkbox>
   <md-checkbox [(ngModel)]="yearView">Start in year view</md-checkbox>
-  <md-checkbox [(ngModel)]="disabled">Read-only mode</md-checkbox>
+  <md-checkbox [(ngModel)]="inputDisabled">Disable input</md-checkbox>
+  <md-checkbox [(ngModel)]="datepickerDisabled">Disable datepicker</md-checkbox>
 </p>
 <p>
   <md-input-container>
-    <input mdInput [mdDatepicker]="minDatePicker" [(ngModel)]="minDate" placeholder="Min date">
-    <button mdSuffix [mdDatepickerToggle]="minDatePicker"></button>
+    <input mdInput #mdInput1 [mdDatepicker]="minDatePicker" [(ngModel)]="minDate" [disabled]="inputDisabled" placeholder="Min date">
+    <button mdSuffix [mdDatepickerToggle]="minDatePicker" [disabled]="mdInput1.disabled"></button>
   </md-input-container>
-  <md-datepicker #minDatePicker [touchUi]="touch" [disabled]="disabled"></md-datepicker>
+  <md-datepicker #minDatePicker [touchUi]="touch" [disabled]="datepickerDisabled"></md-datepicker>
   <md-input-container>
-    <input mdInput [mdDatepicker]="maxDatePicker" [(ngModel)]="maxDate" placeholder="Max date">
-    <button mdSuffix [mdDatepickerToggle]="maxDatePicker"></button>
+    <input mdInput #mdInput2 [mdDatepicker]="maxDatePicker" [(ngModel)]="maxDate" [disabled]="inputDisabled" placeholder="Max date">
+    <button mdSuffix [mdDatepickerToggle]="maxDatePicker" [disabled]="mdInput2.disabled"></button>
   </md-input-container>
-  <md-datepicker #maxDatePicker [touchUi]="touch" [disabled]="disabled"></md-datepicker>
+  <md-datepicker #maxDatePicker [touchUi]="touch" [disabled]="datepickerDisabled"></md-datepicker>
 </p>
 <p>
   <md-input-container>
-    <input mdInput [mdDatepicker]="startAtPicker" [(ngModel)]="startAt" placeholder="Start at date">
-    <button mdSuffix [mdDatepickerToggle]="startAtPicker"></button>
+    <input mdInput #mdInput3 [mdDatepicker]="startAtPicker" [(ngModel)]="startAt" [disabled]="inputDisabled" placeholder="Start at date">
+    <button mdSuffix [mdDatepickerToggle]="startAtPicker" [disabled]="mdInput3.disabled"></button>
   </md-input-container>
-  <md-datepicker #startAtPicker [touchUi]="touch" [disabled]="disabled"></md-datepicker>
+  <md-datepicker #startAtPicker [touchUi]="touch" [disabled]="datepickerDisabled"></md-datepicker>
 </p>
 
 <h2>Result</h2>
 
 <p>
-  <button [mdDatepickerToggle]="resultPicker"></button>
+  <button [mdDatepickerToggle]="resultPicker" [disabled]="resultPickerModel.disabled"></button>
   <md-input-container>
     <input mdInput
            #resultPickerModel="ngModel"
@@ -37,6 +38,7 @@
            [min]="minDate"
            [max]="maxDate"
            [mdDatepickerFilter]="filterOdd ? dateFilter : null"
+           [disabled]="inputDisabled"
            placeholder="Pick a date">
     <md-error *ngIf="resultPickerModel.hasError('mdDatepickerMin')">Too early!</md-error>
     <md-error *ngIf="resultPickerModel.hasError('mdDatepickerMax')">Too late!</md-error>
@@ -45,23 +47,25 @@
   <md-datepicker
       #resultPicker
       [touchUi]="touch"
-      [disabled]="disabled"
+      [disabled]="datepickerDisabled"
       [startAt]="startAt"
       [startView]="yearView ? 'year' : 'month'">
   </md-datepicker>
 </p>
 <p>
-  <input [mdDatepicker]="resultPicker2"
+  <input #resultPickerModel2
+         [mdDatepicker]="resultPicker2"
          [(ngModel)]="date"
          [min]="minDate"
          [max]="maxDate"
          [mdDatepickerFilter]="filterOdd ? dateFilter : null"
+         [disabled]="inputDisabled"
          placeholder="Pick a date">
-  <button [mdDatepickerToggle]="resultPicker2"></button>
+  <button [mdDatepickerToggle]="resultPicker2" [disabled]="resultPickerModel2.disabled"></button>
   <md-datepicker
       #resultPicker2
       [touchUi]="touch"
-      [disabled]="disabled"
+      [disabled]="datepickerDisabled"
       [startAt]="startAt"
       [startView]="yearView ? 'year' : 'month'">
   </md-datepicker>

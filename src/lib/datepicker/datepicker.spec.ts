@@ -96,7 +96,7 @@ describe('MdDatepicker', () => {
         expect(document.querySelector('md-dialog-container')).not.toBeNull();
       }));
 
-      it('open in read only mode should not open the calendar', async(() => {
+      it('open in disabled mode should not open the calendar', async(() => {
         testComponent.disabled = true;
         fixture.detectChanges();
 
