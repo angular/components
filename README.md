@@ -59,45 +59,45 @@ Note that all "planned" work is tentative / best estimate and is subject to chan
 
 | Feature          | Status                              | Docs         | Issue          |
 |------------------|-------------------------------------|--------------|----------------|
+| autocomplete     |                           Available | [README][24] |   [#117][0117] |
+| bottom-nav       |            Not started, not planned |           -  |   [#408][0408] |
+| bottom-sheet     |            Not started, not planned |           -  |              - |
 | button           |                           Available | [README][1]  |              - |
+| button-toggle    |                           Available | [README][15] |              - |
 | cards            |                           Available | [README][2]  |              - |
 | checkbox         |                           Available | [README][3]  |              - |
-| radio            |                           Available | [README][4]  |              - |
-| input            |                           Available | [README][5]  |              - |
-| sidenav          |                           Available | [README][6]  |              - |
-| toolbar          |                           Available | [README][7]  |              - |
-| list             |                           Available | [README][8]  |   [#107][0107] |
-| grid-list        |                           Available | [README][9]  |              - |
-| icon             |                           Available | [README][10] |              - |
-| progress-spinner |                           Available | [README][11] |              - |
-| progress-bar     |                           Available | [README][12] |              - |
-| tabs             |                           Available | [README][13] |              - |
-| slide-toggle     |                           Available | [README][14] |              - |
-| button-toggle    |                           Available | [README][15] |              - |
-| slider           |                           Available | [README][16] |              - |
-| menu             |                           Available | [README][17] |   [#119][0119] |
-| tooltip          |                           Available | [README][18] |              - |
-| ripples          |                           Available | [README][19] |   [#108][0108] |
-| dialog           |                           Available | [README][22] |   [#114][0114] |
-| snackbar / toast |                           Available | [README][21] |   [#115][0115] |
-| select           |                           Available | [README][23] |   [#118][0118] |
-| textarea         |                           Available | [README][5]  |              - |
-| autocomplete     |                           Available | [README][24] |   [#117][0117] |
-| datepicker       |                           Available | [README][25] |              - |
 | chips            |  Initial version, features evolving |           -  |   [#120][0120] |
-| theming          |                           Available | [Guide][20]  |              - |
-| docs site        |                Launched & iterating | [Docs][26]   |              - |
-| typography       |                Started, coming soon |           -  |   [#205][0205] |
 | data-table       |                         In-progress |           -  |   [#581][0581] |
+| datepicker       |                           Available | [README][25] |              - |
+| dialog           |                           Available | [README][22] |   [#114][0114] |
+| docs site        |                Launched & iterating | [Docs][26]   |              - |
 | expansion-panel  |                         In-progress |           -  |  [#4191][4191] |
-| tree             |                  Design in-progress |           -  |  [#3175][3175] |
-| virtual-repeat   |        Not started, planned Q3 2017 |           -  |   [#823][0823] |
-| stepper          |           Not started, planned 2017 |           -  |   [#508][0508] |
-| layout           |   See [angular/flex-layout][lay_rp] | [Wiki][0]    |              - |
 | fab speed-dial   |            Not started, not planned |           -  |   [#860][0860] |
 | fab toolbar      |            Not started, not planned |           -  |              - |
-| bottom-sheet     |            Not started, not planned |           -  |              - |
-| bottom-nav       |            Not started, not planned |           -  |   [#408][0408] |
+| grid-list        |                           Available | [README][9]  |              - |
+| icon             |                           Available | [README][10] |              - |
+| input            |                           Available | [README][5]  |              - |
+| layout           |   See [angular/flex-layout][lay_rp] | [Wiki][0]    |              - |
+| list             |                           Available | [README][8]  |   [#107][0107] |
+| menu             |                           Available | [README][17] |   [#119][0119] |
+| progress-bar     |                           Available | [README][12] |              - |
+| progress-spinner |                           Available | [README][11] |              - |
+| radio            |                           Available | [README][4]  |              - |
+| ripples          |                           Available | [README][19] |   [#108][0108] |
+| select           |                           Available | [README][23] |   [#118][0118] |
+| sidenav          |                           Available | [README][6]  |              - |
+| slide-toggle     |                           Available | [README][14] |              - |
+| slider           |                           Available | [README][16] |              - |
+| snackbar / toast |                           Available | [README][21] |   [#115][0115] |
+| stepper          |           Not started, planned 2017 |           -  |   [#508][0508] |
+| tabs             |                           Available | [README][13] |              - |
+| textarea         |                           Available | [README][5]  |              - |
+| theming          |                           Available | [Guide][20]  |              - |
+| toolbar          |                           Available | [README][7]  |              - |
+| tooltip          |                           Available | [README][18] |              - |
+| tree             |                  Design in-progress |           -  |  [#3175][3175] |
+| typography       |                Started, coming soon |           -  |   [#205][0205] |
+| virtual-repeat   |        Not started, planned Q3 2017 |           -  |   [#823][0823] |
 
  [0]: https://github.com/angular/flex-layout/wiki
  [1]: https://material.angular.io/components/component/button
