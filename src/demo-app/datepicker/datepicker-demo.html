@@ -8,19 +8,22 @@
 </p>
 <p>
   <md-input-container>
-    <input mdInput #mdInput1 [mdDatepicker]="minDatePicker" [(ngModel)]="minDate" [disabled]="inputDisabled" placeholder="Min date">
+    <input mdInput #mdInput1 [mdDatepicker]="minDatePicker" [(ngModel)]="minDate"
+        [disabled]="inputDisabled" placeholder="Min date">
     <button mdSuffix [mdDatepickerToggle]="minDatePicker" [disabled]="mdInput1.disabled"></button>
   </md-input-container>
   <md-datepicker #minDatePicker [touchUi]="touch" [disabled]="datepickerDisabled"></md-datepicker>
   <md-input-container>
-    <input mdInput #mdInput2 [mdDatepicker]="maxDatePicker" [(ngModel)]="maxDate" [disabled]="inputDisabled" placeholder="Max date">
+    <input mdInput #mdInput2 [mdDatepicker]="maxDatePicker" [(ngModel)]="maxDate"
+        [disabled]="inputDisabled" placeholder="Max date">
     <button mdSuffix [mdDatepickerToggle]="maxDatePicker" [disabled]="mdInput2.disabled"></button>
   </md-input-container>
   <md-datepicker #maxDatePicker [touchUi]="touch" [disabled]="datepickerDisabled"></md-datepicker>
 </p>
 <p>
   <md-input-container>
-    <input mdInput #mdInput3 [mdDatepicker]="startAtPicker" [(ngModel)]="startAt" [disabled]="inputDisabled" placeholder="Start at date">
+    <input mdInput #mdInput3 [mdDatepicker]="startAtPicker" [(ngModel)]="startAt"
+        [disabled]="inputDisabled" placeholder="Start at date">
     <button mdSuffix [mdDatepickerToggle]="startAtPicker" [disabled]="mdInput3.disabled"></button>
   </md-input-container>
   <md-datepicker #startAtPicker [touchUi]="touch" [disabled]="datepickerDisabled"></md-datepicker>
