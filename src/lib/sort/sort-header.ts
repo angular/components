@@ -6,7 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChangeDetectorRef, Component, Input, Optional} from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
+  Optional, ViewEncapsulation
+} from '@angular/core';
 import {MdSort, MdSortable} from './sort';
 import {MdSortHeaderIntl} from './sort-header-intl';
 import {CdkColumnDef} from '../core/data-table/cell';
@@ -31,6 +34,8 @@ import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
     '(click)': '_sort.sort(this)',
     '[class.mat-sort-header-sorted]': '_isSorted()',
   },
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdSortHeader implements MdSortable {
   /**
