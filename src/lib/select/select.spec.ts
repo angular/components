@@ -696,7 +696,7 @@ describe('MdSelect', () => {
       fixture.detectChanges();
       content = getComputedStyle(placeholder, '::after').getPropertyValue('content');
       expect(content === 'none' || content === '')
-          .toBe(true, `Expected to hide the asterisk, as required marker was set to hidden.' + content);
+          .toBe(true, `Expected to hide the asterisk, as required marker was set to hidden.` + content);
     });
 
     it('should be able to programmatically select a falsy option', () => {
