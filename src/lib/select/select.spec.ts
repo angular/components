@@ -695,6 +695,7 @@ describe('MdSelect', () => {
       fixture.componentInstance.hideRequiredMarker = true;
       fixture.detectChanges();
       content = getComputedStyle(placeholder, '::after').getPropertyValue('content');
+      console.error(`test file error` + content);
       expect(content === 'none' || content === '')
           .toBe(true, `Expected to hide the asterisk, as required marker was set to hidden.`);
     });

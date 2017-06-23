@@ -276,7 +276,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Whether we should hide the required marker. */
   @Input()
   get hideRequiredMarker() { return this._hideRequiredMarker; }
-  set hideRequiredMarker(value: any) { this._hideRequiredMarker = coerceBooleanProperty(value); }
+  set hideRequiredMarker(value: any) {
+    console.error('required mark error' + value);
+    this._hideRequiredMarker = coerceBooleanProperty(value); }
 
   /** Whether the user should be allowed to select multiple options. */
   @Input()
