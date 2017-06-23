@@ -2,7 +2,7 @@
 <md-input-container>
   <textarea mdInput [(ngModel)]="data"></textarea>
 </md-input-container>
-<md-slide-toggle [(ngModel)]="flat">Flat: {{flat}}</md-slide-toggle>
+<!--<md-slide-toggle [(ngModel)]="flat">Flat: {{flat}}</md-slide-toggle>-->
 <button md-button (click)="submit()">Submit</button>
 
 <div class="tree-container mat-elevation-z4">
@@ -11,9 +11,26 @@
   <cdk-tree #tree [dataSource]="dataSource" [treeControl]="treeControl">
     <!-- Row templates. The columns used are set at the row template level -->
     <cdk-node *cdkNodeDef="let node" [cdkNode]="node" (click)="currentNode=node">
-        <simple-tree-node [node]="node"
-                          [selection]="selection">
-        </simple-tree-node>
+        <!--<simple-tree-node [node]="node"-->
+                          <!--[selection]="selection">-->
+        <!--</simple-tree-node>-->
+
+      <div class="row">
+        <div class="space">
+          <div *ngFor="let a of createArray(node.parentMap.length); let index = index" [class.special]="node.parentMap[index]"></div>
+        </div>
+        <div style="width: 40px; display: inline-block">
+          <a md-icon-button (click)="treeControl.toggleDecedents(node)" *ngIf="node.expandable">
+            <md-icon>{{ treeControl.expanded(node) ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</md-icon>
+          </a>
+        </div>
+
+        <md-checkbox (click)="$event.stopPropagation()"
+                     (change)="selectNode(node, $event)"
+                     [checked]="selected">
+          {{node.key}}<span *ngIf="node.value">: {{node.value}}</span> </md-checkbox>
+      </div>
+
     </cdk-node>
   </cdk-tree>
 </div>

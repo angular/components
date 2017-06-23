@@ -1,5 +1,6 @@
 import {
   AfterContentInit,
+  Optional,
   ViewChild,
   Component,
   Directive,
@@ -20,7 +21,8 @@ import {
   Renderer2,
   OnInit,
   OnDestroy,
-  IterableChangeRecord
+  IterableChangeRecord,
+  DoCheck,
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
@@ -31,7 +33,6 @@ import {TreeDataSource, TreeAdapter} from './data-source';
 import {TreeControl} from './tree-control';
 import {SelectionModel, UP_ARROW, DOWN_ARROW, RIGHT_ARROW, LEFT_ARROW, HOME, ENTER, ESCAPE, FocusOriginMonitor} from '../core';
 import {FocusKeyManager, Focusable} from '../core/a11y/focus-key-manager';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
 import {CollectionViewer} from './data-source';
 import {NestedNode, FlatNode} from './tree-node';
 import {Subscription} from 'rxjs/Subscription';
@@ -41,7 +42,6 @@ export const ROW_HEIGHT = 49;
 
 /** Amount of rows to buffer around the view */
 export const BUFFER = 3;
-
 
 /**
  * Node template
@@ -59,7 +59,10 @@ export class CdkNodeDef {
   selector: 'cdk-node',
   template: '<ng-content></ng-content>',
   host: {
-    'role': 'treeitem'
+    'role': 'treeitem',
+    '(focus)': 'focus()',
+    '(blur)': 'hasFocus=false',
+    'tabindex': '0',
   }
 })
 export class CdkNode  implements Focusable, OnDestroy {
@@ -75,12 +78,21 @@ export class CdkNode  implements Focusable, OnDestroy {
       })
     }
   }
+
   get data(): any {
     return this._data;
   }
   _data: any;
 
+  @Input()
+  get role() {
+    return this._role;
+  }
   _role: string;
+
+  get offsetTop() {
+    return this.elementRef.nativeElement.offsetTop;
+  }
 
   constructor(private elementRef: ElementRef,
               private renderer: Renderer2,
@@ -90,10 +102,6 @@ export class CdkNode  implements Focusable, OnDestroy {
     this._focusOriginMonitor.monitor(this.elementRef.nativeElement, this.renderer, true);
   }
 
-  @Input()
-  get role() {
-    return this._role;
-  }
 
   ngOnDestroy() {
     this._focusOriginMonitor.stopMonitoring(this.elementRef.nativeElement);
@@ -101,12 +109,7 @@ export class CdkNode  implements Focusable, OnDestroy {
 
   /** Focuses the menu item. */
   focus(): void {
-  //  this._getHostElement().focus();
-  }
-
-  /** Returns the host DOM element. */
-  _getHostElement(): HTMLElement {
-    return this.elementRef.nativeElement;
+    this.elementRef.nativeElement.focus();
   }
 }
 
@@ -126,35 +129,51 @@ export class CdkNodePlaceholder {
 @Directive({
   selector: '[cdkNestedNode]'
 })
-export class CdkNestedNode implements OnInit, OnDestroy {
+export class CdkNestedNode implements AfterContentInit, OnDestroy {
   @Input('cdkNestedNode') node: NestedNode;
 
-  @ContentChild(CdkNodePlaceholder) nodePlaceholder: CdkNodePlaceholder;
+  @ContentChildren(CdkNodePlaceholder) nodePlaceholder: QueryList<CdkNodePlaceholder>;
 
   _childrenSubscription: Subscription;
 
-  constructor(@Inject(forwardRef(() => CdkTree)) private tree: CdkTree) {}
+  constructor(@Inject(forwardRef(() => CdkTree)) private tree: CdkTree,
+              public changeDetectorRef: ChangeDetectorRef) {}
 
-  ngOnInit() {
-    this._childrenSubscription = this.node.getChildren().subscribe((children) => {
+  viewContainer: ViewContainerRef;
 
-      this.nodePlaceholder.viewContainer.clear();
-      if (children) {
-        children.forEach((child, index) => {
-          console.log(child);
-          this.tree.addNode(this.nodePlaceholder.viewContainer, child, index);
-        });
+  ngAfterContentInit() {
+    this._childrenSubscription =
+        Observable.combineLatest([this.node.getChildren(), this.nodePlaceholder.changes])
+        .subscribe((results) => {
+      let [children, expanded] = results;
+      if (expanded.length) {
+        this.viewContainer = this.nodePlaceholder.first.viewContainer;
+        this.viewContainer.clear();
+        if (children) {
+          children.forEach((child, index) => {
+            this.tree.addNode(this.viewContainer, child, index);
+          });
+        }
+      } else {
+        this.clear();
       }
+      this.changeDetectorRef.detectChanges();
     });
   }
 
   ngOnDestroy() {
     if (this._childrenSubscription) {
-      // this._childrenSubscription.unsubscribe();
+      this._childrenSubscription.unsubscribe();
+    }
+    this.clear();
+  }
+
+  clear() {
+    if (this.viewContainer) {
+      this.viewContainer.clear();
     }
   }
 }
-
 
 /**
  * Indent for the children
@@ -227,7 +246,7 @@ export class MdNodeSelectTrigger extends CdkNodeTrigger{
   @Input('mdNodeSelectTrigger') node: any;
 }
 
-
+import {By} from '@angular/platform-browser';
 
 @Component({
   selector: 'cdk-tree',
@@ -239,26 +258,32 @@ export class MdNodeSelectTrigger extends CdkNodeTrigger{
   host: {
     'role': 'tree',
     'class': 'mat-tree',
-    '(keydown)': 'handleKeydown($event)',
+    '(focus)': 'focus()',
+    '(keydown)': 'handleKeydown($event)'
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CdkTree implements CollectionViewer {
+
+  /** Data source */
   @Input() dataSource: TreeDataSource<any>;
+
+  /** The tree controller */
   @Input() treeControl: TreeControl;
 
   /** View changed for CollectionViewer */
   viewChanged = new BehaviorSubject({start: 0, end: 20});
 
-  // Data differ
+  /** Data differerences for the ndoes */
   private _dataDiffer: IterableDiffer<any> = null;
 
   // Focus related
-  private _keyManager: FocusKeyManager;
+  _keyManager: FocusKeyManager;
 
+  orderedNodes: QueryList<CdkNode> = new QueryList<CdkNode>();
 
-  @ContentChildren(CdkNode) items: QueryList<CdkNode>;
+  @ContentChildren(CdkNode, {descendants: true}) items: QueryList<CdkNode>;
   @ContentChildren(CdkNodeDef) nodeDefinitions: QueryList<CdkNodeDef>;
   @ViewChild(CdkNodePlaceholder) nodePlaceholder: CdkNodePlaceholder;
   @ViewChild('emptyNode') emptyNodeTemplate: TemplateRef<any>;
@@ -275,14 +300,28 @@ export class CdkTree implements CollectionViewer {
   }
 
   ngAfterViewInit() {
-    // Focus related
-    this._keyManager = new FocusKeyManager(this.items).withWrap();
-
     this.dataSource.connect(this).subscribe((result: any[]) => {
       this.renderNodeChanges(result);
     });
-  }
 
+    this.items.changes.subscribe((items) => {
+      console.log(items);
+      let nodes = items.toArray();
+
+      nodes.sort((a, b) => {
+        return a.offsetTop - b.offsetTop;
+      });
+      this.orderedNodes.reset(nodes);
+
+      let activeItem = this._keyManager ? this._keyManager.activeItem : null;
+      this._keyManager = new FocusKeyManager(this.orderedNodes);
+      if (activeItem instanceof CdkNode) {
+        this.updateFocusedNode(activeItem);
+      }
+      this.changeDetectorRef.detectChanges();
+      console.log(`key manager is ${this._keyManager.activeItemIndex} ${this.orderedNodes.length}`);
+    })
+  }
 
   renderNodeChanges(dataNodes: FlatNode[]) {
     console.time('Rendering rows');
@@ -293,13 +332,10 @@ export class CdkTree implements CollectionViewer {
     changes.forEachOperation(
       (item: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
         if (item.previousIndex == null) {
-          console.log('Adding node ');
           this.addNode(this.nodePlaceholder.viewContainer, dataNodes[currentIndex], currentIndex);
         } else if (currentIndex == null) {
-          console.log('Removing a node ');
           this.nodePlaceholder.viewContainer.remove(adjustedPreviousIndex);
         } else {
-          console.log('Moving a node');
           const view = this.nodePlaceholder.viewContainer.get(adjustedPreviousIndex);
           this.nodePlaceholder.viewContainer.move(view, currentIndex);
         }
@@ -310,7 +346,6 @@ export class CdkTree implements CollectionViewer {
     // would cause a loop.
     this.elementRef.nativeElement.scrollTop = oldScrollTop;
     this.changeDetectorRef.detectChanges();
-    console.timeEnd('Rendering nodes');
   }
 
   addNode(viewContainer: ViewContainerRef, data: any, currentIndex: number) {
@@ -334,11 +369,6 @@ export class CdkTree implements CollectionViewer {
     return this.nodeDefinitions.first;
   }
 
-  /** TODO(tinayuangao): Make sure scrollable works */
-  scrollToTop() {
-    this.elementRef.nativeElement.scrollTop = 0;
-  }
-
   scrollEvent() {
     const scrollTop = this.elementRef.nativeElement.scrollTop;
     const elementHeight = this.elementRef.nativeElement.getBoundingClientRect().height;
@@ -353,14 +383,8 @@ export class CdkTree implements CollectionViewer {
     this.viewChanged.next(view);
   }
 
-  scrollToIndex(topIndex: number) {
-    const elementHeight = this.elementRef.nativeElement.getBoundingClientRect().height;
-    const view = {
-      start: Math.max(topIndex - BUFFER, 0),
-      end: Math.ceil(topIndex + (elementHeight / ROW_HEIGHT)) + BUFFER
-    };
-    this.viewChanged.next(view);
-    this.elementRef.nativeElement.scrollTop = topIndex * ROW_HEIGHT;
+  printData() {
+    this.items.forEach((node) => console.log(node.data));
   }
 
   // Key related
@@ -368,19 +392,27 @@ export class CdkTree implements CollectionViewer {
   handleKeydown(event) {
     if (event.keyCode == UP_ARROW) {
       this._keyManager.setPreviousItemActive();
-      // Move to previous index scrollToIndex(focusIndex - 1)
-      console.log(`// Move to previous index scrollToIndex(focusIndex - 1)`);
     } else if (event.keyCode == DOWN_ARROW) {
       this._keyManager.setNextItemActive();
-      console.log(`// Move to next index scrollToIndex(focusIndex + 1)`);
-      // Move to next index scrollToIndex(focusIndex + 1)
     } else if (event.keyCode == RIGHT_ARROW) {
-      console.log(`// If focus expandable, expand, scrollToIndex(focusIndex + 1)`);
-      // If focus expandable, expand, scrollToIndex(focusIndex + 1)
+      let activeNode = this._keyManager.activeItem;
+      if (activeNode instanceof CdkNode) {
+        this.treeControl.expand(activeNode.data);
+        this.changeDetectorRef.detectChanges();
+      }
     } else if (event.keyCode == LEFT_ARROW) {
-      console.log(`// goToParent(focusIndex), collapse parent node`);
-      // goToParent(focusIndex), collapse parent data
+      let activeNode = this._keyManager.activeItem;
+      if (activeNode instanceof CdkNode) {
+        this.treeControl.collapse(activeNode.data);
+        this.changeDetectorRef.detectChanges();
+      }
     }
   }
-  /** Expand related end */
+
+  updateFocusedNode(node: CdkNode) {
+    let index = this.orderedNodes.toArray().indexOf(node);
+    if (this._keyManager && index > -1) {
+      this._keyManager.setActiveItem(Math.min(this.orderedNodes.length -1, index));
+    }
+  }
 }

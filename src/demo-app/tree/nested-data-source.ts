@@ -1,4 +1,4 @@
-import {CollectionViewer, TreeDataSource, NestedNode} from '@angular/material';
+import {CollectionViewer, TreeDataSource, NestedNode, TreeControl} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/combineLatest';
@@ -41,10 +41,13 @@ export class JsonNestedDataSource implements TreeDataSource<any> {
     this._filteredData.next(tree);
   }
 
+  constructor(public treeControl: TreeControl) {}
+
   connect(collectionViewer: CollectionViewer): Observable<JsonNestedNode[]> {
     return Observable.combineLatest([collectionViewer.viewChanged, this._filteredData])
       .map((results: any[]) => {
         let [view, displayData] = results;
+
         // Set the rendered rows length to the virtual page size. Fill in the data provided
         // from the index start until the end index or pagination size, whichever is smaller.
         this._renderedData.length = displayData.length;
@@ -55,6 +58,7 @@ export class JsonNestedDataSource implements TreeDataSource<any> {
         for (let i = rangeStart; i < rangeEnd; i++) {
           this._renderedData[i] = displayData[i];
         }
+
         return this._renderedData; // Currently ignoring the view
       });
   }

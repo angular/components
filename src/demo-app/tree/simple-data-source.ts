@@ -116,11 +116,9 @@ export class JsonDataSource implements TreeDataSource<any> {
   constructor(public treeControl: FlatTreeControl<JsonFlatNode>) {
     this._filteredData.subscribe((filteredData: JsonNode[]) => {
       this._flattenedData.next(JsonAdapter.flattenNodes(filteredData));
-      console.log(`flattende`);
       this.treeControl.flatNodes = this.flattenedData;
     });
     Observable.combineLatest([this.treeControl.expandChange, this._flattenedData]).subscribe(() => {
-      console.log(`expand change | flattened`);
       this._expandedData.next(JsonAdapter.expandFlattenedNodes(this.flattenedData, this.treeControl));
     });
   }

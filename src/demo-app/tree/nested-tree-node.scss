@@ -3,3 +3,9 @@ ul, li {
   margin-top: 0;
   margin-bottom: 0;
 }
+
+cdk-node.cdk-keyboard-focus .single-node,
+cdk-node.cdk-program-focus .single-node {
+  outline: none;
+  background-color: rgba(0,0,0,0.1);
+}

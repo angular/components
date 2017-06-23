@@ -2,7 +2,7 @@
 <md-input-container>
   <textarea mdInput [(ngModel)]="data"></textarea>
 </md-input-container>
-<md-slide-toggle [(ngModel)]="flat">Flat: {{flat}}</md-slide-toggle>
+<!--<md-slide-toggle [(ngModel)]="flat">Flat: {{flat}}</md-slide-toggle>-->
 <button md-button (click)="submit()">Submit</button>
 
 <div class="tree-container mat-elevation-z4">
@@ -27,14 +27,16 @@
 </div>
 
 
-<md-card *ngIf="!!currentNode">
-  <md-card-title>Add child node</md-card-title>
-  <md-input-container>
-    <input mdInput [(ngModel)]="key" placeholder="Key"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput [(ngModel)]="value" placeholder="Value"/>
-  </md-input-container>
-  <span> {{currentNode.key}} </span>
-  <button md-button (click)="addChild()">Add Child</button>
-</md-card>
+<!--<md-card *ngIf="!!currentNode">-->
+  <!--<md-card-title>Add child node</md-card-title>-->
+  <!--<md-input-container>-->
+    <!--<input mdInput [(ngModel)]="key" placeholder="Key"/>-->
+  <!--</md-input-container>-->
+  <!--<md-input-container>-->
+    <!--<input mdInput [(ngModel)]="value" placeholder="Value"/>-->
+  <!--</md-input-container>-->
+  <!--<span> {{currentNode.key}} </span>-->
+  <!--<button md-button (click)="addChild()">Add Child</button>-->
+<!--</md-card>-->
+
+<!--<button md-button (click)="printNodes()"> PrintNodes</button>-->

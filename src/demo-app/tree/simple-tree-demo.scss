@@ -38,16 +38,16 @@ div.space div:last-child {
   z-index: 0;
 }
 
-.mat-checkbox {
-  background-color: white;
-  z-index: 10;
-}
-
 .mat-node-trigger .mat-icon {
-  background-color: white;
   z-index: 10;
 }
 
 md-icon {
   cursor: hand;
+}
+
+cdk-node.cdk-keyboard-focused,
+cdk-node.cdk-program-focused {
+  background-color: rgba(0, 0, 0, 0.1);
+  outline-width: 0;
 }

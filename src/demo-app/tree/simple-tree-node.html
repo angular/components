@@ -2,9 +2,11 @@
   <div class="space">
     <div *ngFor="let a of createArray(node.parentMap.length); let index = index" [class.special]="node.parentMap[index]"></div>
   </div>
-  <a md-icon-button (click)="treeControl.toggleDecedents(node)">
-    <md-icon *ngIf="node.expandable">{{ selected ? 'arrow_drop_up' : 'arrow_drop_down' }}</md-icon>
-  </a>
+  <div style="width: 40px; display: inline-block">
+    <a md-icon-button (click)="treeControl.toggleDecedents(node)" *ngIf="node.expandable">
+      <md-icon>{{ treeControl.expanded(node) ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</md-icon>
+    </a>
+  </div>
 
   <md-checkbox (click)="$event.stopPropagation()"
                (change)="selectNode(node, $event)"

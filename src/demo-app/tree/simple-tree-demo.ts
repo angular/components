@@ -59,6 +59,22 @@ export class SimpleTreeDemo implements OnInit, AfterViewInit {
   value: string;
   currentNode: JsonNode;
   addChild() {
+    console.log(this.currentNode);
     this.dataSource.addChild(this.key, this.value, this.currentNode);
+  }
+
+
+  createArray(level: number) {
+    return new Array(level);
+  }
+
+  selectNode(node: any, event: any) {
+    this.selection.toggle(node);
+    let decedents = this.treeControl.getDecedents(node);
+    let selected = this.selection.isSelected(node);
+    decedents.forEach((decedent: JsonFlatNode) => {
+      selected ? this.selection.select(decedent) : this.selection.deselect(decedent);
+    });
+    this.changeDetectorRef.markForCheck();
   }
 }

@@ -53,3 +53,9 @@ md-icon {
 }
 
 ul, li { list-style: none; margin: 0; padding: 0; }
+
+cdk-node.cdk-keyboard-focused,
+cdk-node.cdk-program-focused {
+  background-color: rgba(0, 0, 0, 0.1);
+  outline-width: 0;
+}

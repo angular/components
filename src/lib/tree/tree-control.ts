@@ -1,4 +1,5 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {QueryList} from '@angular/core';
 import {SelectionModel} from '../core';
 import {FlatNode, NestedNode} from './tree-node';
 
@@ -6,7 +7,6 @@ import {FlatNode, NestedNode} from './tree-node';
  * Tree control interface
  */
 export interface TreeControl {
-
   /** The expansion change event */
   expandChange: BehaviorSubject<any>;
 
@@ -109,24 +109,6 @@ export class FlatTreeControl<T extends FlatNode> implements TreeControl {
     let expand = this._expansionModel.isSelected(node);
     expand ? this.expandDecedents(node) : this.collapseDecedents(node);
   }
-
-  moveToParent(node: T) {
-    let index = this.flatNodes.indexOf(node);
-    // Up until level = level -1
-  }
-
-  moveToPrevious(node: T) {
-
-    // get index
-    // up -1
-
-  }
-
-  moveToNext(node: T) {
-    // get index
-    // idnex + 1
-  }
-
 }
 
 export class NestedTreeControl<T extends NestedNode> implements TreeControl {
@@ -228,35 +210,5 @@ export class NestedTreeControl<T extends NestedNode> implements TreeControl {
         });
       }
     });
-  }
-
-  moveToParent(node: T) {
-    // Don't know howo to do this
-    // Have a map <Parent, Child>
-    // <Child, Parent>
-    // Go to parent
-
-    // Go to Parent cdkNode (nested) Get Parent cdkNode and get indx  
-    // All by dom traversal
-  }
-
-  moveToPrevious(node: T) {
-    // <Go to Parent
-    // Find index
-    // Find previous sibling
-
-    // Don't know howo to do this
-    // Find previous cdkNode in the dom
-
-  }
-
-  moveToNext(node: T) {
-    // Don't know howo to do this
-    // <Go to Parent
-    // Find index
-    // Find next sibling
-    // Find next cdkNode in the dom
-
-
   }
 }

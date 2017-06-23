@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ChangeDetectionStrategy} from '@angular/core';
 import {SelectionModel, CdkTree} from '@angular/material';
 import {JsonNestedNode} from './nested-data-source'
 
@@ -8,7 +8,7 @@ import {JsonNestedNode} from './nested-data-source'
   selector: 'nested-tree-node',
   templateUrl: 'nested-tree-node.html',
   styleUrls: ['nested-tree-node.css'],
-//  changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
+  //changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
 export class NestedTreeNode {
   @Input() node: any;

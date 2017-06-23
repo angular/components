@@ -1,6 +1,6 @@
-import {Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, AfterViewInit, OnDestroy, ViewChild} from '@angular/core';
 import {JsonNestedDataSource, JsonNode, JsonNestedNode} from './nested-data-source';
-import {SelectionModel, TreeControl, NestedTreeControl} from '@angular/material';
+import {SelectionModel, TreeControl, NestedTreeControl, CdkTree} from '@angular/material';
 import {jsonExample} from './sample-json';
 
 @Component({
@@ -18,9 +18,11 @@ export class NestedTreeDemo implements OnInit, OnDestroy, AfterViewInit {
   treeControl: TreeControl;
   dataSource: JsonNestedDataSource;
 
+  @ViewChild(CdkTree) tree: CdkTree;
+
   constructor(public changeDetectorRef: ChangeDetectorRef) {
     this.treeControl = new NestedTreeControl<JsonNestedNode>();
-    this.dataSource = new JsonNestedDataSource();
+    this.dataSource = new JsonNestedDataSource(this.treeControl);
   }
 
   ngOnInit() {
@@ -52,5 +54,9 @@ export class NestedTreeDemo implements OnInit, OnDestroy, AfterViewInit {
   currentNode: JsonNode;
   addChild() {
     this.dataSource.addChild(this.key, this.value, this.currentNode);
+  }
+
+  printNodes() {
+    console.log(this.tree.items);
   }
 }

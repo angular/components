@@ -1,18 +1,20 @@
 <li [cdkNestedNode]="node">
-  <div style="width: 40px; display: inline-block">
-    <a md-icon-button (click)="treeControl.toggleDecedents(node)" *ngIf="(node.getChildren()) | async">
-      <md-icon>{{ treeControl.expanded(node) ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</md-icon>
-    </a>
-  </div>
+  <div class="single-node" tabindex="0">
+    <div style="width: 40px; display: inline-block">
+      <a md-icon-button (click)="treeControl.toggleDecedents(node)" *ngIf="(node.getChildren()) | async">
+        <md-icon>{{ treeControl.expanded(node) ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</md-icon>
+      </a>
+    </div>
 
-  <md-checkbox (click)="$event.stopPropagation()"
-               (change)="selectNode(node, $event)"
-               [checked]="selected">
-    {{node.key}}
-    <span *ngIf="node.value">
+    <md-checkbox (click)="$event.stopPropagation()"
+                 (change)="selectNode(node, $event)"
+                 [checked]="selected">
+      {{node.key}}
+      <span *ngIf="node.value">
       : {{node.value}}</span>
-  </md-checkbox>
-  <ul [style.display]="treeControl.expanded(node) ? 'inherit' : 'none'">
+    </md-checkbox>
+  </div>
+  <ul *ngIf="treeControl.expanded(node)" >
     <ng-container cdkNodePlaceholder></ng-container>
   </ul>
 </li>

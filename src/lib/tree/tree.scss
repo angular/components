@@ -10,6 +10,6 @@ cdk-node, .mat-placeholder {
   padding: 0 8px;
 }
 
-cdk-node.cdk-keyboard-focused {
-  background-color: rgba(0, 0, 0, 0.1);
+cdk-node {
+  outline-width: 0;
 }
