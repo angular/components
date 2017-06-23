@@ -133,7 +133,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   onResize(): void {
     this.defineRestrictionsAndStick();
     // If there's already a header being stick when the page is
-    // resized. The CSS style of the sticky-header may be not fit
+    // resized. The CSS style of the cdkStickyHeader element may be not fit
     // the resized window. So we need to unstuck it then re-stick it.
     // unstuck() can set 'isStuck' to FALSE. Then stickElement() can work.
     if (this.isStuck) {
