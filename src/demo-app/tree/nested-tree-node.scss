@@ -9,3 +9,9 @@ cdk-node.cdk-program-focus .single-node {
   outline: none;
   background-color: rgba(0,0,0,0.1);
 }
+
+.single-node {
+  height: 40px;
+  display: flex;
+  align-items: center;
+}

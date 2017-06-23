@@ -1,4 +1,4 @@
-import {Component, Input, ChangeDetectionStrategy} from '@angular/core';
+import {Component, Input, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
 import {SelectionModel, CdkTree} from '@angular/material';
 import {JsonNestedNode} from './nested-data-source'
 
@@ -14,7 +14,15 @@ export class NestedTreeNode {
   @Input() node: any;
   @Input() selection: SelectionModel<any>;
 
-  constructor(public tree: CdkTree) {}
+  constructor(public tree: CdkTree, public detectorRef: ChangeDetectorRef) {
+
+  }
+
+  ngOnInit() {
+    this.treeControl.expandChange.subscribe(() => {
+      this.detectorRef.detectChanges();
+    })
+  }
 
   get dataSource() { return this.tree.dataSource; }
   get treeControl() { return this.tree.treeControl; }
@@ -27,5 +35,13 @@ export class NestedTreeNode {
     decedents.forEach((decedent: JsonNestedNode) => {
       this.selected ? this.selection.select(decedent) : this.selection.deselect(decedent);
     });
+  }
+
+  toggleExpand(node: any) {
+    if (this.treeControl.expanded(node)) {
+      this.treeControl.toggleDecedents(node);
+    } else {
+      this.treeControl.expand(node);
+    }
   }
 }

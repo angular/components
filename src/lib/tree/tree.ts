@@ -1,5 +1,6 @@
 import {
   AfterContentInit,
+  AfterViewInit,
   Optional,
   ViewChild,
   Component,
@@ -141,24 +142,42 @@ export class CdkNestedNode implements AfterContentInit, OnDestroy {
 
   viewContainer: ViewContainerRef;
 
+  ngAfterViewInit() {
+    this.nodePlaceholder.changes.subscribe((expanded) => {
+      console.log(`node ${this.node} placeholder length is ${expanded.length}`);
+    });
+  }
   ngAfterContentInit() {
+    // this._addChildrenNodes(children);
+    // this.node.getChildren().subscribe((children) => {
+
+      // console.log(`add children from getChildren subscription`);
+
+    // });
     this._childrenSubscription =
         Observable.combineLatest([this.node.getChildren(), this.nodePlaceholder.changes])
         .subscribe((results) => {
-      let [children, expanded] = results;
-      if (expanded.length) {
-        this.viewContainer = this.nodePlaceholder.first.viewContainer;
-        this.viewContainer.clear();
-        if (children) {
-          children.forEach((child, index) => {
-            this.tree.addNode(this.viewContainer, child, index);
-          });
-        }
-      } else {
-        this.clear();
-      }
-      this.changeDetectorRef.detectChanges();
+          // console.log(`add children from getChildren & nodePlaceholder subscription`);
+     this._addChildrenNodes(results[0]);
     });
+  }
+
+  _addChildrenNodes(children: NestedNode[]) {
+    if (this.nodePlaceholder.length) {
+      this.viewContainer = this.nodePlaceholder.first.viewContainer;
+      this.viewContainer.clear();
+      if (children) {
+        children.forEach((child, index) => {
+          this.tree.addNode(this.viewContainer, child, index);
+          console.log(child);
+          console.log(`add node`);
+        });
+
+      }
+    } else {
+      this.clear();
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   ngOnDestroy() {
@@ -262,9 +281,11 @@ import {By} from '@angular/platform-browser';
     '(keydown)': 'handleKeydown($event)'
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CdkTree implements CollectionViewer {
+export class CdkTree implements CollectionViewer, AfterViewInit, OnInit {
+
+  _viewInitialized: boolean = false;
 
   /** Data source */
   @Input() dataSource: TreeDataSource<any>;
@@ -299,11 +320,17 @@ export class CdkTree implements CollectionViewer {
       .subscribe(() => this.scrollEvent());
   }
 
-  ngAfterViewInit() {
-    this.dataSource.connect(this).subscribe((result: any[]) => {
-      this.renderNodeChanges(result);
-    });
+  ngDoCheck() {
+    if (this.dataSource && this._viewInitialized) {
+      this.dataSource.connect(this).subscribe((result: any[]) => {
+        this.renderNodeChanges(result);
+      });
+    }
 
+  }
+
+  ngAfterViewInit() {
+    this._viewInitialized = true;
     this.items.changes.subscribe((items) => {
       console.log(items);
       let nodes = items.toArray();

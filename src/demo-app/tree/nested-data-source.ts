@@ -39,6 +39,7 @@ export class JsonNestedDataSource implements TreeDataSource<any> {
   set data(value: any) {
     let tree = this.buildJsonTree(value, 0);
     this._filteredData.next(tree);
+    this.treeControl.nodes = this.filteredData;
   }
 
   constructor(public treeControl: TreeControl) {}

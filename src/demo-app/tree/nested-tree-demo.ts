@@ -8,7 +8,7 @@ import {jsonExample} from './sample-json';
   selector: 'nested-tree-demo',
   templateUrl: 'nested-tree-demo.html',
   styleUrls: ['nested-tree-demo.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
+  //changeDetection: ChangeDetectionStrategy.OnPush // make sure tooltip also works OnPush
 })
 export class NestedTreeDemo implements OnInit, OnDestroy, AfterViewInit {
   data: string = jsonExample;
@@ -26,11 +26,12 @@ export class NestedTreeDemo implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.submit();
-    this.treeControl.expandChange.next([]);
+
   }
 
   ngAfterViewInit() {
+    this.submit();
+    this.treeControl.expandChange.next([]);
     this.selection.onChange.subscribe(() => {
       this.changeDetectorRef.markForCheck();
     });
@@ -47,6 +48,24 @@ export class NestedTreeDemo implements OnInit, OnDestroy, AfterViewInit {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  selectNode(node: any) {
+    this.selection.toggle(node);
+    let decedents = this.treeControl.getDecedents(node);
+    decedents.forEach((decedent: JsonNestedNode) => {
+      this.selection.isSelected(node) ? this.selection.select(decedent) : this.selection.deselect(decedent);
+    });
+  }
+
+  expandAll() {
+    this.treeControl.expandAll();
+    this.changeDetectorRef.detectChanges();
+  }
+
+  collapseAll() {
+    this.treeControl.collapseAll();
+    this.changeDetectorRef.detectChanges();
   }
 
   key: string;

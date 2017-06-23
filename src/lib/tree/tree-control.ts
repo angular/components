@@ -7,6 +7,7 @@ import {FlatNode, NestedNode} from './tree-node';
  * Tree control interface
  */
 export interface TreeControl {
+  nodes: any[];
   /** The expansion change event */
   expandChange: BehaviorSubject<any>;
 
@@ -39,7 +40,7 @@ export interface TreeControl {
 
 
 export class FlatTreeControl<T extends FlatNode> implements TreeControl {
-  flatNodes: T[];
+  nodes: T[];
 
   /** Expansion info: the changes */
   expandChange = new BehaviorSubject<T[]>([]);
@@ -71,7 +72,7 @@ export class FlatTreeControl<T extends FlatNode> implements TreeControl {
 
   expandAll() {
     this._expansionModel.clear();
-    this.flatNodes.forEach((node) => {
+    this.nodes.forEach((node) => {
       node.expandable && this._expansionModel.select(node);
     });
     this.expandChange.next(this._expansionModel.selected);
@@ -83,11 +84,11 @@ export class FlatTreeControl<T extends FlatNode> implements TreeControl {
   }
 
   getDecedents(node: T) {
-    let startIndex = this.flatNodes.indexOf(node);
+    let startIndex = this.nodes.indexOf(node);
     let results = [];
     let i = startIndex + 1;
-    for (; i < this.flatNodes.length && node.level < this.flatNodes[i].level; i++) {
-      results.push(this.flatNodes[i]);
+    for (; i < this.nodes.length && node.level < this.nodes[i].level; i++) {
+      results.push(this.nodes[i]);
     }
     return results;
   }
@@ -112,7 +113,7 @@ export class FlatTreeControl<T extends FlatNode> implements TreeControl {
 }
 
 export class NestedTreeControl<T extends NestedNode> implements TreeControl {
-  nestedNodes: T[];
+  nodes: T[];
 
   /** Expansion info: the changes */
   expandChange = new BehaviorSubject<T[]>([]);
@@ -152,7 +153,7 @@ export class NestedTreeControl<T extends NestedNode> implements TreeControl {
 
   expandAll() {
     this.expansionModel.clear();
-    this.nestedNodes.forEach((node) => {
+    this.nodes.forEach((node) => {
       this.expansionModel.select(node);
     });
   }

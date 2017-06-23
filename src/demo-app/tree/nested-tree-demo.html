@@ -1,5 +1,6 @@
 
-<md-input-container>
+
+<md-input-container style="width: 500px;">
   <textarea mdInput [(ngModel)]="data"></textarea>
 </md-input-container>
 <!--<md-slide-toggle [(ngModel)]="flat">Flat: {{flat}}</md-slide-toggle>-->
@@ -13,6 +14,9 @@
     <cdk-node *cdkNodeDef="let node" [cdkNode]="node" (click)="currentNode=node">
       <nested-tree-node [node]="node" [selection]="selection">
       </nested-tree-node>
+
+
+
     </cdk-node>
   </cdk-tree>
 </div>
