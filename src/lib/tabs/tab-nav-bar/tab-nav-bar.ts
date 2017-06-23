@@ -27,6 +27,7 @@ import {ViewportRuler} from '../../core/overlay/position/viewport-ruler';
 import {Directionality, MD_RIPPLE_GLOBAL_OPTIONS, Platform, RippleGlobalOptions} from '../../core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import {Subscription} from "rxjs/Subscription";
 import {takeUntil, auditTime} from '../../core/rxjs/index';
 import {of as observableOf} from 'rxjs/observable/of';
 import {merge} from 'rxjs/observable/merge';
@@ -53,6 +54,9 @@ export class MdTabNav implements AfterContentInit, OnDestroy {
 
   @ViewChild(MdInkBar) _inkBar: MdInkBar;
 
+  /** Subscription for window.resize event **/
+  private _resizeSubscription: Subscription;
+
   constructor(@Optional() private _dir: Directionality, private _ngZone: NgZone) { }
 
   /** Notifies the component that the active link has been changed. */
@@ -62,7 +66,7 @@ export class MdTabNav implements AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit(): void {
-    this._ngZone.runOutsideAngular(() => {
+    this._resizeSubscription = this._ngZone.runOutsideAngular(() => {
       let dirChange = this._dir ? this._dir.change : observableOf(null);
       let resize = typeof window !== 'undefined' ?
           auditTime.call(fromEvent(window, 'resize'), 10) :
@@ -83,6 +87,7 @@ export class MdTabNav implements AfterContentInit, OnDestroy {
 
   ngOnDestroy() {
     this._onDestroy.next();
+    this._resizeSubscription.unsubscribe();
   }
 
   /** Aligns the ink bar to the active link. */
