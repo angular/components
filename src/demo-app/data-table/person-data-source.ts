@@ -2,6 +2,8 @@ import {CollectionViewer, DataSource, MdPaginator, MdSort} from '@angular/materi
 import {Observable} from 'rxjs/Observable';
 import {PeopleDatabase, UserData} from './people-database';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/map';
 
 export class PersonDataSource extends DataSource<any> {
@@ -20,7 +22,7 @@ export class PersonDataSource extends DataSource<any> {
     // determining the updated display data.
     Observable.merge(this._paginator.page,
         this._peopleDatabase.dataChange,
-        this._sort.sortChange).subscribe(() => {
+        this._sort.mdSortChange).subscribe(() => {
       this._renderedData = [];
       this.updateDisplayData();
     });

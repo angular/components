@@ -10,6 +10,7 @@ import {
   getMdSortHeaderNotContainedWithinMdSortError
 } from './sort-errors';
 import {wrappedErrorMessage} from '../core/testing/wrapped-error-message';
+import {map} from '../core/rxjs/index';
 
 describe('MdSort', () => {
   let fixture: ComponentFixture<SimpleMdSortApp>;
@@ -224,7 +225,7 @@ class SimpleMdSortApp {
 
 class FakeDataSource extends DataSource<any> {
   connect(collectionViewer: CollectionViewer): Observable<any[]> {
-    return collectionViewer.viewChange.map(() => []);
+    return map.call(collectionViewer.viewChange, () => []);
   }
 }
 
