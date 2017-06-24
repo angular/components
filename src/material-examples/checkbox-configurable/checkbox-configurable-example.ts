@@ -1,6 +1,10 @@
 import {Component} from '@angular/core';
 
-
+/**
+ * @title Configurable checkbox
+ * @id checkbox-configurable
+ * @component CheckboxConfigurableExample
+ */
 @Component({
   selector: 'checkbox-configurable-example',
   templateUrl: 'checkbox-configurable-example.html',

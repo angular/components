@@ -1,7 +1,12 @@
 import {Component} from '@angular/core';
 import {MdSnackBar} from '@angular/material';
 
-
+/**
+ * @title Snack-bar with a custom component
+ * @id snack-bar-component
+ * @component SnackBarComponentExample
+ * @addlComponents PizzaPartyComponent
+ */
 @Component({
   selector: 'snack-bar-component-example',
   templateUrl: 'snack-bar-component-example.html',

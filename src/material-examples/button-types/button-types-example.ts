@@ -1,6 +1,10 @@
 import {Component} from '@angular/core';
 
-
+/**
+ * @title Button varieties
+ * @id button-types
+ * @component ButtonTypesExample
+ */
 @Component({
   selector: 'button-types-example',
   templateUrl: 'button-types-example.html',

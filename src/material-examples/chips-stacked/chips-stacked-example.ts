@@ -1,6 +1,10 @@
 import {Component} from '@angular/core';
 
-
+/**
+ * @title Stacked chips
+ * @id chips-stacked
+ * @component ChipsStackedExample
+ */
 @Component({
   selector: 'chips-stacked-example',
   templateUrl: 'chips-stacked-example.html',

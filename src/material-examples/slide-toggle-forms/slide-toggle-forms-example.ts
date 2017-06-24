@@ -1,6 +1,11 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
+/**
+ * @title Slide-toggle with forms
+ * @id slide-toggle-forms
+ * @component SlideToggleFormsExample
+ */
 @Component({
   selector: 'slide-toggle-forms-example',
   templateUrl: './slide-toggle-forms-example.html',

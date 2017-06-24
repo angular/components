@@ -1,6 +1,10 @@
 import {Component} from '@angular/core';
 
-
+/**
+ * @title Configurable progress spinner
+ * @id progress-spinner-configurable
+ * @component ProgressSpinnerConfigurableExample
+ */
 @Component({
   selector: 'progress-spinner-configurable-example',
   templateUrl: 'progress-spinner-configurable-example.html',

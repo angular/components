@@ -1,6 +1,10 @@
 import {Component} from '@angular/core';
 
-
+/**
+ * @title Select in a form
+ * @id select-form
+ * @component SelectFormExample
+ */
 @Component({
   selector: 'select-form-example',
   templateUrl: 'select-form-example.html',

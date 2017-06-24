@@ -1,6 +1,10 @@
 import {Component} from '@angular/core';
 
-
+/**
+ * @title Basic select
+ * @id select-overview
+ * @component SelectOverviewExample
+ */
 @Component({
   selector: 'select-overview-example',
   templateUrl: 'select-overview-example.html',

@@ -1,6 +1,10 @@
 import {Component} from '@angular/core';
 
-
+/**
+ * @title Dynamic grid-list
+ * @id grid-list-dynamic
+ * @component GridListDynamicExample
+ */
 @Component({
   selector: 'grid-list-dynamic-example',
   templateUrl: 'grid-list-dynamic-example.html',

@@ -1,7 +1,14 @@
 import {Component} from '@angular/core';
 import {MdDialog} from '@angular/material';
 
-
+/**
+ * @title Dialog elements
+ * @id dialog-elements
+ * @component DialogElementsExample
+ * @addlComponents DialogElementsExampleDialog
+ * @additionalFiles dialog-elements-example-dialog.html
+ * @selectorName DialogElementsExample, DialogElementsExampleDialog
+ */
 @Component({
   selector: 'dialog-elements-example',
   templateUrl: 'dialog-elements-example.html',
