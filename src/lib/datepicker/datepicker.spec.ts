@@ -87,7 +87,6 @@ describe('MdDatepicker', () => {
       it('open touch should open dialog', async(() => {
         testComponent.touch = true;
         fixture.detectChanges();
-
         expect(document.querySelector('md-dialog-container')).toBeNull();
 
         testComponent.datepicker.open();

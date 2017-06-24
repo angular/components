@@ -39,6 +39,8 @@ import {createMissingDateImplError} from './datepicker-errors';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {MdCalendar} from './calendar';
 import {first} from '../core/rxjs/index';
+import 'rxjs/add/operator/first';
+import {coerceBooleanProperty} from '@angular/cdk';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -116,8 +118,16 @@ export class MdDatepicker<D> implements OnDestroy {
    */
   @Input() touchUi = false;
 
-  /** Whether the datepicker pop-up should be disabled for read-only mode. */
-  @Input() disabled = false;
+  /** Whether the datepicker pop-up should be disabled. */
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
+    if (this._disabled === undefined) {
+      this._disabled = this._datepickerInput.disabled;
+    }
+  }
+  private _disabled: boolean;
 
   /** Emits new selected date when selected date changes. */
   @Output() selectedChanged = new EventEmitter<D>();

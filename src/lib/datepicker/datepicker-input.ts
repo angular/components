@@ -35,6 +35,7 @@ import {DOWN_ARROW} from '../core/keyboard/keycodes';
 import {DateAdapter} from '../core/datetime/index';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
+import {coerceBooleanProperty} from '@angular/cdk';
 
 
 export const MD_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -123,6 +124,16 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
     this._validatorOnChange();
   }
   private _max: D;
+
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
+    if (this._datepicker.disabled === undefined) {
+      this._datepicker.disabled = this._disabled;
+    }
+  }
+  private _disabled: boolean;
 
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D|null>();
