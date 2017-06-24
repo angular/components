@@ -2,9 +2,11 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {CdkTable} from './data-table';
 import {CollectionViewer, DataSource} from './data-source';
-import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {customMatchers} from '../testing/jasmine-matchers';
+import {Observable} from 'rxjs/Observable';
+import {combineLatest} from 'rxjs/observable/combineLatest';
+import {map} from '../rxjs/index';
 import {CdkDataTableModule} from './index';
 
 describe('CdkTable', () => {
@@ -21,9 +23,17 @@ describe('CdkTable', () => {
 
     TestBed.configureTestingModule({
       imports: [CdkDataTableModule],
-      declarations: [SimpleCdkTableApp, DynamicDataSourceCdkTableApp, CustomRoleCdkTableApp],
+      declarations: [
+        SimpleCdkTableApp,
+        DynamicDataSourceCdkTableApp,
+        CustomRoleCdkTableApp,
+        TrackByCdkTableApp,
+        RowContextCdkTableApp,
+      ],
     }).compileComponents();
+  }));
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(SimpleCdkTableApp);
 
     component = fixture.componentInstance;
@@ -33,7 +43,7 @@ describe('CdkTable', () => {
 
     fixture.detectChanges();  // Let the component and table create embedded views
     fixture.detectChanges();  // Let the cells render
-  }));
+  });
 
   describe('should initialize', () => {
     it('with a connected data source', () => {
@@ -118,7 +128,7 @@ describe('CdkTable', () => {
     expect(initialRows[2].getAttribute('initialIndex')).toBe('2');
 
     // Swap first and second data in data array
-    const copiedData = component.dataSource.data.slice();
+    const copiedData = component.dataSource!.data.slice();
     const temp = copiedData[0];
     copiedData[0] = copiedData[1];
     copiedData[1] = temp;
@@ -127,8 +137,8 @@ describe('CdkTable', () => {
     copiedData.splice(2, 1);
 
     // Add new data
-    component.dataSource.data = copiedData;
-    component.dataSource.addData();
+    component.dataSource!.data = copiedData;
+    component.dataSource!.addData();
 
     // Expect that the first and second rows were swapped and that the last row is new
     const changedRows = getRows(tableElement);
@@ -136,6 +146,117 @@ describe('CdkTable', () => {
     expect(changedRows[0].getAttribute('initialIndex')).toBe('1');
     expect(changedRows[1].getAttribute('initialIndex')).toBe('0');
     expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
+  });
+
+  describe('with trackBy', () => {
+
+    let trackByComponent: TrackByCdkTableApp;
+    let trackByFixture: ComponentFixture<TrackByCdkTableApp>;
+
+    function createTestComponentWithTrackyByTable(trackByStrategy) {
+      trackByFixture = TestBed.createComponent(TrackByCdkTableApp);
+
+      trackByComponent = trackByFixture.componentInstance;
+      trackByComponent.trackByStrategy = trackByStrategy;
+
+      dataSource = trackByComponent.dataSource as FakeDataSource;
+      table = trackByComponent.table;
+      tableElement = trackByFixture.nativeElement.querySelector('cdk-table');
+
+      trackByFixture.detectChanges();  // Let the component and table create embedded views
+      trackByFixture.detectChanges();  // Let the cells render
+
+      // Each row receives an attribute 'initialIndex' the element's original place
+      getRows(tableElement).forEach((row: Element, index: number) => {
+        row.setAttribute('initialIndex', index.toString());
+      });
+
+      // Prove that the attributes match their indicies
+      const initialRows = getRows(tableElement);
+      expect(initialRows[0].getAttribute('initialIndex')).toBe('0');
+      expect(initialRows[1].getAttribute('initialIndex')).toBe('1');
+      expect(initialRows[2].getAttribute('initialIndex')).toBe('2');
+    }
+
+    // Swap first two elements, remove the third, add new data
+    function mutateData() {
+      // Swap first and second data in data array
+      const copiedData = trackByComponent.dataSource.data.slice();
+      const temp = copiedData[0];
+      copiedData[0] = copiedData[1];
+      copiedData[1] = temp;
+
+      // Remove the third element
+      copiedData.splice(2, 1);
+
+      // Add new data
+      trackByComponent.dataSource.data = copiedData;
+      trackByComponent.dataSource.addData();
+    }
+
+    it('should add/remove/move rows with reference-based trackBy', () => {
+      createTestComponentWithTrackyByTable('reference');
+      mutateData();
+
+      // Expect that the first and second rows were swapped and that the last row is new
+      const changedRows = getRows(tableElement);
+      expect(changedRows.length).toBe(3);
+      expect(changedRows[0].getAttribute('initialIndex')).toBe('1');
+      expect(changedRows[1].getAttribute('initialIndex')).toBe('0');
+      expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
+    });
+
+    it('should add/remove/move rows with changed references without property-based trackBy', () => {
+      createTestComponentWithTrackyByTable('reference');
+      mutateData();
+
+      // Change each item reference to show that the trackby is not checking the item properties.
+      trackByComponent.dataSource.data = trackByComponent.dataSource.data
+          .map(item => { return {a: item.a, b: item.b, c: item.c}; });
+
+      // Expect that all the rows are considered new since their references are all different
+      const changedRows = getRows(tableElement);
+      expect(changedRows.length).toBe(3);
+      expect(changedRows[0].getAttribute('initialIndex')).toBe(null);
+      expect(changedRows[1].getAttribute('initialIndex')).toBe(null);
+      expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
+    });
+
+    it('should add/remove/move rows with changed references with property-based trackBy', () => {
+      createTestComponentWithTrackyByTable('propertyA');
+      mutateData();
+
+      // Change each item reference to show that the trackby is checking the item properties.
+      // Otherwise this would cause them all to be removed/added.
+      trackByComponent.dataSource.data = trackByComponent.dataSource.data
+          .map(item => { return {a: item.a, b: item.b, c: item.c}; });
+
+      // Expect that the first and second rows were swapped and that the last row is new
+      const changedRows = getRows(tableElement);
+      expect(changedRows.length).toBe(3);
+      expect(changedRows[0].getAttribute('initialIndex')).toBe('1');
+      expect(changedRows[1].getAttribute('initialIndex')).toBe('0');
+      expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
+    });
+
+    it('should add/remove/move rows with changed references with index-based trackBy', () => {
+      createTestComponentWithTrackyByTable('index');
+      mutateData();
+
+      // Change each item reference to show that the trackby is checking the index.
+      // Otherwise this would cause them all to be removed/added.
+      trackByComponent.dataSource.data = trackByComponent.dataSource.data
+          .map(item => { return {a: item.a, b: item.b, c: item.c}; });
+
+      // Expect first two to be the same since they were swapped but indicies are consistent.
+      // The third element was removed and caught by the table so it was removed before another
+      // item was added, so it is without an initial index.
+      const changedRows = getRows(tableElement);
+      expect(changedRows.length).toBe(3);
+      expect(changedRows[0].getAttribute('initialIndex')).toBe('0');
+      expect(changedRows[1].getAttribute('initialIndex')).toBe('1');
+      expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
+    });
   });
 
   it('should match the right table content with dynamic data', () => {
@@ -153,6 +274,7 @@ describe('CdkTable', () => {
     // Add data to the table and recreate what the rendered output should be.
     dataSource.addData();
     expect(dataSource.data.length).toBe(initialDataLength + 1); // Make sure data was added
+    fixture.detectChanges();
 
     data = dataSource.data;
     expect(tableElement).toMatchTableContent([
@@ -196,6 +318,88 @@ describe('CdkTable', () => {
     expect(tableElement).toMatchTableContent([
       ['Column A']
     ]);
+  });
+
+  it('should be able to apply classes to rows based on their context', () => {
+    const contextFixture = TestBed.createComponent(RowContextCdkTableApp);
+    const contextComponent = contextFixture.componentInstance;
+    tableElement = contextFixture.nativeElement.querySelector('cdk-table');
+
+    contextFixture.detectChanges();  // Let the table initialize its view
+    contextFixture.detectChanges();  // Let the table render the rows and cells
+
+    const rowElements = contextFixture.nativeElement.querySelectorAll('cdk-row');
+
+    // Rows should not have any context classes
+    for (let i = 0; i < rowElements.length; i++) {
+      expect(rowElements[i].classList.contains('custom-row-class-first')).toBe(false);
+      expect(rowElements[i].classList.contains('custom-row-class-last')).toBe(false);
+      expect(rowElements[i].classList.contains('custom-row-class-even')).toBe(false);
+      expect(rowElements[i].classList.contains('custom-row-class-odd')).toBe(false);
+    }
+
+    // Enable all the context classes
+    contextComponent.enableRowContextClasses = true;
+    contextFixture.detectChanges();
+
+    expect(rowElements[0].classList.contains('custom-row-class-first')).toBe(true);
+    expect(rowElements[0].classList.contains('custom-row-class-last')).toBe(false);
+    expect(rowElements[0].classList.contains('custom-row-class-even')).toBe(true);
+    expect(rowElements[0].classList.contains('custom-row-class-odd')).toBe(false);
+
+    expect(rowElements[1].classList.contains('custom-row-class-first')).toBe(false);
+    expect(rowElements[1].classList.contains('custom-row-class-last')).toBe(false);
+    expect(rowElements[1].classList.contains('custom-row-class-even')).toBe(false);
+    expect(rowElements[1].classList.contains('custom-row-class-odd')).toBe(true);
+
+    expect(rowElements[2].classList.contains('custom-row-class-first')).toBe(false);
+    expect(rowElements[2].classList.contains('custom-row-class-last')).toBe(true);
+    expect(rowElements[2].classList.contains('custom-row-class-even')).toBe(true);
+    expect(rowElements[2].classList.contains('custom-row-class-odd')).toBe(false);
+  });
+
+  it('should be able to apply classes to cells based on their row context', () => {
+    const contextFixture = TestBed.createComponent(RowContextCdkTableApp);
+    const contextComponent = contextFixture.componentInstance;
+    tableElement = contextFixture.nativeElement.querySelector('cdk-table');
+
+    contextFixture.detectChanges();  // Let the table initialize its view
+    contextFixture.detectChanges();  // Let the table render the rows and cells
+
+    const rowElements = contextFixture.nativeElement.querySelectorAll('cdk-row');
+
+    for (let i = 0; i < rowElements.length; i++) {
+      // Cells should not have any context classes
+      const cellElements = rowElements[i].querySelectorAll('cdk-cell');
+      for (let j = 0; j < cellElements.length; j++) {
+        expect(cellElements[j].classList.contains('custom-cell-class-first')).toBe(false);
+        expect(cellElements[j].classList.contains('custom-cell-class-last')).toBe(false);
+        expect(cellElements[j].classList.contains('custom-cell-class-even')).toBe(false);
+        expect(cellElements[j].classList.contains('custom-cell-class-odd')).toBe(false);
+      }
+    }
+
+    // Enable the context classes
+    contextComponent.enableCellContextClasses = true;
+    contextFixture.detectChanges();
+
+    let cellElement = rowElements[0].querySelectorAll('cdk-cell')[0];
+    expect(cellElement.classList.contains('custom-cell-class-first')).toBe(true);
+    expect(cellElement.classList.contains('custom-cell-class-last')).toBe(false);
+    expect(cellElement.classList.contains('custom-cell-class-even')).toBe(true);
+    expect(cellElement.classList.contains('custom-cell-class-odd')).toBe(false);
+
+    cellElement = rowElements[1].querySelectorAll('cdk-cell')[0];
+    expect(cellElement.classList.contains('custom-cell-class-first')).toBe(false);
+    expect(cellElement.classList.contains('custom-cell-class-last')).toBe(false);
+    expect(cellElement.classList.contains('custom-cell-class-even')).toBe(false);
+    expect(cellElement.classList.contains('custom-cell-class-odd')).toBe(true);
+
+    cellElement = rowElements[2].querySelectorAll('cdk-cell')[0];
+    expect(cellElement.classList.contains('custom-cell-class-first')).toBe(false);
+    expect(cellElement.classList.contains('custom-cell-class-last')).toBe(true);
+    expect(cellElement.classList.contains('custom-cell-class-even')).toBe(true);
+    expect(cellElement.classList.contains('custom-cell-class-odd')).toBe(false);
   });
 
   it('should be able to dynamically change the columns for header and rows', () => {
@@ -247,7 +451,7 @@ class FakeDataSource extends DataSource<TestData> {
   connect(collectionViewer: CollectionViewer): Observable<TestData[]> {
     this.isConnected = true;
     const streams = [this._dataChange, collectionViewer.viewChange];
-    return Observable.combineLatest(streams).map(([data]) => data);
+    return map.call(combineLatest(streams), ([data]) => data);
   }
 
   addData() {
@@ -290,7 +494,7 @@ class FakeDataSource extends DataSource<TestData> {
   `
 })
 class SimpleCdkTableApp {
-  dataSource: FakeDataSource = new FakeDataSource();
+  dataSource: FakeDataSource | null = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
@@ -318,6 +522,41 @@ class DynamicDataSourceCdkTableApp {
 
 @Component({
   template: `
+    <cdk-table [dataSource]="dataSource" [trackBy]="trackBy">
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_b">
+        <cdk-header-cell *cdkHeaderCellDef> Column B</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.b}}</cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
+    </cdk-table>
+  `
+})
+class TrackByCdkTableApp {
+  trackByStrategy: 'reference' | 'propertyA' | 'index' = 'reference';
+
+  dataSource: FakeDataSource = new FakeDataSource();
+  columnsToRender = ['column_a', 'column_b'];
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
+
+  trackBy = (index: number, item: TestData) => {
+    switch (this.trackByStrategy) {
+      case 'reference': return item;
+      case 'propertyA': return item.a;
+      case 'index': return index;
+    }
+  }
+}
+
+@Component({
+  template: `
     <cdk-table [dataSource]="dataSource" role="treegrid">
       <ng-container cdkColumnDef="column_a">
         <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
@@ -336,12 +575,48 @@ class CustomRoleCdkTableApp {
   @ViewChild(CdkTable) table: CdkTable<TestData>;
 }
 
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row; let first = first;
+                               let last = last; let even = even; let odd = odd"
+                  [ngClass]="{
+                    'custom-cell-class-first': enableCellContextClasses && first,
+                    'custom-cell-class-last': enableCellContextClasses && last,
+                    'custom-cell-class-even': enableCellContextClasses && even,
+                    'custom-cell-class-odd': enableCellContextClasses && odd
+                  }">
+          {{row.a}}
+        </cdk-cell>
+      </ng-container>
+      <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: columnsToRender;
+                           let first = first; let last = last; let even = even; let odd = odd"
+               [ngClass]="{
+                 'custom-row-class-first': enableRowContextClasses && first,
+                 'custom-row-class-last': enableRowContextClasses && last,
+                 'custom-row-class-even': enableRowContextClasses && even,
+                 'custom-row-class-odd': enableRowContextClasses && odd
+               }">
+      </cdk-row>
+    </cdk-table>
+  `
+})
+class RowContextCdkTableApp {
+  dataSource: FakeDataSource = new FakeDataSource();
+  columnsToRender = ['column_a'];
+  enableRowContextClasses = false;
+  enableCellContextClasses = false;
+}
+
 function getElements(element: Element, query: string): Element[] {
   return [].slice.call(element.querySelectorAll(query));
 }
 
 function getHeaderRow(tableElement: Element): Element {
-  return tableElement.querySelector('.cdk-header-row');
+  return tableElement.querySelector('.cdk-header-row')!;
 }
 
 function getRows(tableElement: Element): Element[] {
@@ -359,9 +634,9 @@ const tableCustomMatchers: jasmine.CustomMatcherFactories = {
   toMatchTableContent: () => {
     return {
       compare: function (tableElement: Element, expectedTableContent: any[]) {
-        const missedExpectations = [];
+        const missedExpectations: string[] = [];
         function checkCellContent(cell: Element, expectedTextContent: string) {
-          const actualTextContent = cell.textContent.trim();
+          const actualTextContent = cell.textContent!.trim();
           if (actualTextContent !== expectedTextContent) {
             missedExpectations.push(
                 `Expected cell contents to be ${expectedTextContent} but was ${actualTextContent}`);

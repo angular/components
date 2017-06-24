@@ -3,7 +3,7 @@
   import {FormsModule, ReactiveFormsModule} from '@angular/forms';
   import {CommonModule} from '@angular/common';
   import {
-    MdAutocompleteModule, MdButtonModule, MdButtonToggleModule,
+    MdAutocompleteModule, MdButtonModule, MdButtonToggleModule, MdPaginatorModule,
     MdCardModule, MdCheckboxModule, MdChipsModule, MdDatepickerModule,
     MdDialogModule, MdGridListModule, MdIconModule, MdInputModule,
     MdListModule, MdMenuModule, MdProgressBarModule, MdProgressSpinnerModule,
@@ -46,6 +46,8 @@
   import {ListSectionsExample} from './list-sections/list-sections-example';
   import {MenuIconsExample} from './menu-icons/menu-icons-example';
   import {MenuOverviewExample} from './menu-overview/menu-overview-example';
+  import {PaginatorConfigurableExample} from './paginator-configurable/paginator-configurable-example';
+  import {PaginatorOverviewExample} from './paginator-overview/paginator-overview-example';
   import {ProgressBarConfigurableExample} from './progress-bar-configurable/progress-bar-configurable-example';
   import {ProgressBarOverviewExample} from './progress-bar-overview/progress-bar-overview-example';
   import {ProgressSpinnerConfigurableExample} from './progress-spinner-configurable/progress-spinner-configurable-example';
@@ -239,6 +241,18 @@
         additionalFiles: undefined,
         selectorName: undefined
     },
+    'paginator-configurable': {
+        title: 'Configurable paginator',
+        component: PaginatorConfigurableExample,
+        additionalFiles: undefined,
+        selectorName: undefined
+    },
+    'paginator-overview': {
+        title: 'Paginator',
+        component: PaginatorOverviewExample,
+        additionalFiles: undefined,
+        selectorName: undefined
+    },
     'progress-bar-configurable': {
         title: 'Configurable progress-bar',
         component: ProgressBarConfigurableExample,
@@ -404,7 +418,8 @@
       MdSnackBarModule,
       MdTabsModule,
       MdToolbarModule,
-      MdTooltipModule
+      MdTooltipModule,
+      MdPaginatorModule
     ]
   })
   export class ExampleMaterialModule {}
@@ -438,6 +453,8 @@
     ListSectionsExample,
     MenuIconsExample,
     MenuOverviewExample,
+    PaginatorConfigurableExample,
+    PaginatorOverviewExample,
     ProgressBarConfigurableExample,
     ProgressBarOverviewExample,
     ProgressSpinnerConfigurableExample,

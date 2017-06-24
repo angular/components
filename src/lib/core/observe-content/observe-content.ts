@@ -18,7 +18,7 @@ import {
   Injectable,
 } from '@angular/core';
 import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/operator/debounceTime';
+import {RxChain, debounceTime} from '../rxjs/index';
 
 /**
  * Factory that creates a new MutationObserver and allows us to stub it out in unit tests.
@@ -26,7 +26,7 @@ import 'rxjs/add/operator/debounceTime';
  */
 @Injectable()
 export class MdMutationObserverFactory {
-  create(callback): MutationObserver {
+  create(callback): MutationObserver | null {
     return typeof MutationObserver === 'undefined' ? null : new MutationObserver(callback);
   }
 }
@@ -39,7 +39,7 @@ export class MdMutationObserverFactory {
   selector: '[cdkObserveContent]'
 })
 export class ObserveContent implements AfterContentInit, OnDestroy {
-  private _observer: MutationObserver;
+  private _observer: MutationObserver | null;
 
   /** Event emitted for each change in the element's content. */
   @Output('cdkObserveContent') event = new EventEmitter<MutationRecord[]>();
@@ -56,9 +56,9 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
 
   ngAfterContentInit() {
     if (this.debounce > 0) {
-      this._debouncer
-        .debounceTime(this.debounce)
-        .subscribe(mutations => this.event.emit(mutations));
+      RxChain.from(this._debouncer)
+        .call(debounceTime, this.debounce)
+        .subscribe((mutations: MutationRecord[]) => this.event.emit(mutations));
     } else {
       this._debouncer.subscribe(mutations => this.event.emit(mutations));
     }
@@ -80,7 +80,6 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
     if (this._observer) {
       this._observer.disconnect();
       this._debouncer.complete();
-      this._debouncer = this._observer = null;
     }
   }
 }

@@ -15,27 +15,37 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
+  EmbeddedViewRef,
   Input,
+  isDevMode,
   IterableChangeRecord,
   IterableDiffer,
   IterableDiffers,
   NgIterable,
   QueryList,
   Renderer2,
+  TrackByFunction,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
 import {CollectionViewer, DataSource} from './data-source';
-import {BaseRowDef, CdkCellOutlet, CdkHeaderRowDef, CdkRowDef} from './row';
-import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
-import {Observable} from 'rxjs/Observable';
+import {CdkCellOutlet, CdkCellOutletRowContext, CdkHeaderRowDef, CdkRowDef} from './row';
+import {merge} from 'rxjs/observable/merge';
+import {takeUntil} from '../rxjs/index';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import 'rxjs/add/operator/let';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/observable/combineLatest';
 import {Subscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
+import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
+
+/**
+ * Returns an error to be thrown when attempting to find an unexisting column.
+ * @param id Id whose lookup failed.
+ * @docs-private
+ */
+export function getDataTableUnknownColumnError(id: string) {
+  return new Error(`md-data-table: Could not find column with id "${id}".`);
+}
 
 /**
  * Provides a handle for the table to grab the view container's ng-container to insert data rows.
@@ -91,7 +101,25 @@ export class CdkTable<T> implements CollectionViewer {
   private _columnDefinitionsByName = new Map<string,  CdkColumnDef>();
 
   /** Differ used to find the changes in the data provided by the data source. */
-  private _dataDiffer: IterableDiffer<T> = null;
+  private _dataDiffer: IterableDiffer<T>;
+
+  /**
+   * Tracking function that will be used to check the differences in data changes. Used similarly
+   * to ngFor trackBy function. Optimize row operations by identifying a row based on its data
+   * relative to the function to know if a row should be added/removed/moved.
+   * Accepts a function that takes two parameters, `index` and `item`.
+   */
+  @Input()
+  set trackBy(fn: TrackByFunction<T>) {
+    if (isDevMode() &&
+        fn != null && typeof fn !== 'function' &&
+        <any>console && <any>console.warn) {
+        console.warn(`trackBy must be a function, but received ${JSON.stringify(fn)}.`);
+    }
+    this._trackByFn = fn;
+  }
+  get trackBy(): TrackByFunction<T> { return this._trackByFn; }
+  private _trackByFn: TrackByFunction<T>;
 
   // TODO(andrewseguin): Remove max value as the end index
   //   and instead calculate the view on init and scroll.
@@ -146,10 +174,6 @@ export class CdkTable<T> implements CollectionViewer {
     if (!role) {
       renderer.setAttribute(elementRef.nativeElement, 'role', 'grid');
     }
-
-    // TODO(andrewseguin): Add trackby function input.
-    // Find and construct an iterable differ that can be used to find the diff in an array.
-    this._dataDiffer = this._differs.find(this._data).create();
   }
 
   ngOnDestroy() {
@@ -170,32 +194,34 @@ export class CdkTable<T> implements CollectionViewer {
 
     // Re-render the rows if any of their columns change.
     // TODO(andrewseguin): Determine how to only re-render the rows that have their columns changed.
-    Observable.merge(...this._rowDefinitions.map(rowDef => rowDef.columnsChange))
-        .takeUntil(this._onDestroy)
-        .subscribe(() => {
-          // Reset the data to an empty array so that renderRowChanges will re-render all new rows.
-          this._rowPlaceholder.viewContainer.clear();
-          this._dataDiffer.diff([]);
-          this._renderRowChanges();
-        });
+    const columnChangeEvents = this._rowDefinitions.map(rowDef => rowDef.columnsChange);
+
+    takeUntil.call(merge(...columnChangeEvents), this._onDestroy).subscribe(() => {
+      // Reset the data to an empty array so that renderRowChanges will re-render all new rows.
+      this._rowPlaceholder.viewContainer.clear();
+      this._dataDiffer.diff([]);
+      this._renderRowChanges();
+    });
 
     // Re-render the header row if the columns change
-    this._headerDefinition.columnsChange
-        .takeUntil(this._onDestroy)
-        .subscribe(() => {
-          this._headerRowPlaceholder.viewContainer.clear();
-          this._renderHeaderRow();
-        });
+    takeUntil.call(this._headerDefinition.columnsChange, this._onDestroy).subscribe(() => {
+      this._headerRowPlaceholder.viewContainer.clear();
+      this._renderHeaderRow();
+    });
   }
 
   ngAfterViewInit() {
-    this._renderHeaderRow();
+    // Find and construct an iterable differ that can be used to find the diff in an array.
+    this._dataDiffer = this._differs.find([]).create(this._trackByFn);
 
-    if (this.dataSource) {
+    this._renderHeaderRow();
+    this._isViewInitialized = true;
+  }
+
+  ngDoCheck() {
+    if (this._isViewInitialized && this.dataSource && !this._renderChangeSubscription) {
       this._observeRenderChanges();
     }
-
-    this._isViewInitialized = true;
   }
 
   /**
@@ -222,12 +248,11 @@ export class CdkTable<T> implements CollectionViewer {
 
   /** Set up a subscription for the data provided by the data source. */
   private _observeRenderChanges() {
-    this._renderChangeSubscription = this.dataSource.connect(this)
-        .takeUntil(this._onDestroy)
-        .subscribe(data => {
-          this._data = data;
-          this._renderRowChanges();
-        });
+    this._renderChangeSubscription = takeUntil.call(this.dataSource.connect(this), this._onDestroy)
+      .subscribe(data => {
+        this._data = data;
+        this._renderRowChanges();
+      });
   }
 
   /**
@@ -242,8 +267,10 @@ export class CdkTable<T> implements CollectionViewer {
     //   of `createEmbeddedView`.
     this._headerRowPlaceholder.viewContainer
         .createEmbeddedView(this._headerDefinition.template, {cells});
-    CdkCellOutlet.mostRecentCellOutlet.cells = cells;
-    CdkCellOutlet.mostRecentCellOutlet.context = {};
+
+    cells.forEach(cell => {
+      CdkCellOutlet.mostRecentCellOutlet._viewContainer.createEmbeddedView(cell.template, {});
+    });
 
     this._changeDetectorRef.markForCheck();
   }
@@ -253,17 +280,20 @@ export class CdkTable<T> implements CollectionViewer {
     const changes = this._dataDiffer.diff(this._data);
     if (!changes) { return; }
 
+    const viewContainer = this._rowPlaceholder.viewContainer;
     changes.forEachOperation(
         (item: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
           if (item.previousIndex == null) {
             this._insertRow(this._data[currentIndex], currentIndex);
           } else if (currentIndex == null) {
-            this._rowPlaceholder.viewContainer.remove(adjustedPreviousIndex);
+            viewContainer.remove(adjustedPreviousIndex);
           } else {
-            const view = this._rowPlaceholder.viewContainer.get(adjustedPreviousIndex);
-            this._rowPlaceholder.viewContainer.move(view, currentIndex);
+            const view = viewContainer.get(adjustedPreviousIndex);
+            viewContainer.move(view!, currentIndex);
           }
         });
+
+    this._updateRowContext();
   }
 
   /**
@@ -276,18 +306,39 @@ export class CdkTable<T> implements CollectionViewer {
     //   the data rather than choosing the first row definition.
     const row = this._rowDefinitions.first;
 
-    // TODO(andrewseguin): Add more context, such as first/last/isEven/etc
-    const context = {$implicit: rowData};
+    // Row context that will be provided to both the created embedded row view and its cells.
+    const context: CdkCellOutletRowContext<T> = {$implicit: rowData};
 
     // TODO(andrewseguin): add some code to enforce that exactly one
     //   CdkCellOutlet was instantiated as a result  of `createEmbeddedView`.
     this._rowPlaceholder.viewContainer.createEmbeddedView(row.template, context, index);
 
     // Insert empty cells if there is no data to improve rendering time.
-    CdkCellOutlet.mostRecentCellOutlet.cells = rowData ? this._getCellTemplatesForRow(row) : [];
-    CdkCellOutlet.mostRecentCellOutlet.context = context;
+    const cells = rowData ? this._getCellTemplatesForRow(row) : [];
+
+    cells.forEach(cell => {
+      CdkCellOutlet.mostRecentCellOutlet._viewContainer.createEmbeddedView(cell.template, context);
+    });
 
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Updates the context for each row to reflect any data changes that may have caused
+   * rows to be added, removed, or moved. The view container contains the same context
+   * that was provided to each of its cells.
+   */
+  private _updateRowContext() {
+    const viewContainer = this._rowPlaceholder.viewContainer;
+    for (let index = 0, count = viewContainer.length; index < count; index++) {
+      const viewRef = viewContainer.get(index) as EmbeddedViewRef<CdkCellOutletRowContext<T>>;
+      viewRef.context.index = index;
+      viewRef.context.count = count;
+      viewRef.context.first = index === 0;
+      viewRef.context.last = index === count - 1;
+      viewRef.context.even = index % 2 === 0;
+      viewRef.context.odd = index % 2 !== 0;
+    }
   }
 
   /**
@@ -296,8 +347,13 @@ export class CdkTable<T> implements CollectionViewer {
    */
   private _getHeaderCellTemplatesForRow(headerDef: CdkHeaderRowDef): CdkHeaderCellDef[] {
     return headerDef.columns.map(columnId => {
-      // TODO(andrewseguin): Throw an error if there is no column with this columnId
-      return this._columnDefinitionsByName.get(columnId).headerCell;
+      const column = this._columnDefinitionsByName.get(columnId);
+
+      if (!column) {
+        throw getDataTableUnknownColumnError(columnId);
+      }
+
+      return column.headerCell;
     });
   }
 
@@ -307,8 +363,14 @@ export class CdkTable<T> implements CollectionViewer {
    */
   private _getCellTemplatesForRow(rowDef: CdkRowDef): CdkCellDef[] {
     return rowDef.columns.map(columnId => {
-      // TODO(andrewseguin): Throw an error if there is no column with this columnId
-      return this._columnDefinitionsByName.get(columnId).cell;
+      const column = this._columnDefinitionsByName.get(columnId);
+
+      if (!column) {
+        throw getDataTableUnknownColumnError(columnId);
+      }
+
+      return column.cell;
     });
   }
 }
+

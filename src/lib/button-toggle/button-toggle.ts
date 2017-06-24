@@ -16,6 +16,7 @@ import {
   HostBinding,
   Input,
   OnInit,
+  OnDestroy,
   Optional,
   Output,
   QueryList,
@@ -32,6 +33,7 @@ import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 export type ToggleType = 'checkbox' | 'radio';
 
 // Boilerplate for applying mixins to MdButtonToggleGroup and MdButtonToggleGroupMultiple
+/** @docs-private */
 export class MdButtonToggleGroupBase {}
 export const _MdButtonToggleGroupMixinBase = mixinDisabled(MdButtonToggleGroupBase);
 
@@ -51,7 +53,7 @@ let _uniqueIdCounter = 0;
 /** Change event object emitted by MdButtonToggle. */
 export class MdButtonToggleChange {
   /** The MdButtonToggle that emits the event. */
-  source: MdButtonToggle;
+  source: MdButtonToggle | null;
   /** The value assigned to the MdButtonToggle. */
   value: any;
 }
@@ -81,7 +83,7 @@ export class MdButtonToggleGroup extends _MdButtonToggleGroupMixinBase implement
   private _vertical: boolean = false;
 
   /** The currently selected button toggle, should match the value. */
-  private _selected: MdButtonToggle = null;
+  private _selected: MdButtonToggle | null = null;
 
   /** Whether the button toggle group is initialized or not. */
   private _isInitialized: boolean = false;
@@ -96,8 +98,7 @@ export class MdButtonToggleGroup extends _MdButtonToggleGroupMixinBase implement
   onTouched: () => any = () => {};
 
   /** Child button toggle buttons. */
-  @ContentChildren(forwardRef(() => MdButtonToggle))
-  _buttonToggles: QueryList<MdButtonToggle> = null;
+  @ContentChildren(forwardRef(() => MdButtonToggle)) _buttonToggles: QueryList<MdButtonToggle>;
 
   ngAfterViewInit() {
     this._isInitialized = true;
@@ -150,7 +151,7 @@ export class MdButtonToggleGroup extends _MdButtonToggleGroupMixinBase implement
     return this._selected;
   }
 
-  set selected(selected: MdButtonToggle) {
+  set selected(selected: MdButtonToggle | null) {
     this._selected = selected;
     this.value = selected ? selected.value : null;
 
@@ -268,10 +269,11 @@ export class MdButtonToggleGroupMultiple extends _MdButtonToggleGroupMixinBase
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
   host: {
+    '[class.mat-button-toggle-standalone]': '!buttonToggleGroup && !buttonToggleGroupMultiple',
     'class': 'mat-button-toggle'
   }
 })
-export class MdButtonToggle implements OnInit {
+export class MdButtonToggle implements OnInit, OnDestroy {
   /** Whether or not this button toggle is checked. */
   private _checked: boolean = false;
 
@@ -279,13 +281,16 @@ export class MdButtonToggle implements OnInit {
   _type: ToggleType;
 
   /** Whether or not this button toggle is disabled. */
-  private _disabled: boolean = null;
+  private _disabled: boolean = false;
 
   /** Value assigned to this button toggle. */
   private _value: any = null;
 
   /** Whether or not the button toggle is a single selection. */
-  private _isSingleSelector: boolean = null;
+  private _isSingleSelector: boolean = false;
+
+  /** Unregister function for _buttonToggleDispatcher **/
+  private _removeUniqueSelectionListener: () => void = () => {};
 
   @ViewChild('input') _inputElement: ElementRef;
 
@@ -355,7 +360,7 @@ export class MdButtonToggle implements OnInit {
   }
 
   set disabled(value: boolean) {
-    this._disabled = (value != null && value !== false) ? true : null;
+    this._disabled = coerceBooleanProperty(value);
   }
 
   /** Event emitted when the group value changes. */
@@ -372,11 +377,12 @@ export class MdButtonToggle implements OnInit {
     this.buttonToggleGroupMultiple = toggleGroupMultiple;
 
     if (this.buttonToggleGroup) {
-      _buttonToggleDispatcher.listen((id: string, name: string) => {
-        if (id != this.id && name == this.name) {
-          this.checked = false;
-        }
-      });
+      this._removeUniqueSelectionListener =
+        _buttonToggleDispatcher.listen((id: string, name: string) => {
+          if (id != this.id && name == this.name) {
+            this.checked = false;
+          }
+        });
 
       this._type = 'radio';
       this.name = this.buttonToggleGroup.name;
@@ -445,5 +451,10 @@ export class MdButtonToggle implements OnInit {
     event.source = this;
     event.value = this._value;
     this.change.emit(event);
+  }
+
+  // Unregister buttonToggleDispatcherListener on destroy
+  ngOnDestroy(): void {
+    this._removeUniqueSelectionListener();
   }
 }

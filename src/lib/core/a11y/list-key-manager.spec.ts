@@ -5,6 +5,7 @@ import {DOWN_ARROW, UP_ARROW, TAB} from '../keyboard/keycodes';
 import {ListKeyManager} from './list-key-manager';
 import {ActiveDescendantKeyManager} from './activedescendant-key-manager';
 import {createKeyboardEvent} from '../testing/event-objects';
+import {first} from '../rxjs/index';
 
 
 class FakeFocusable {
@@ -79,7 +80,7 @@ describe('Key managers', () => {
       });
 
       it('should set first item active when down arrow pressed if no active item', () => {
-        keyManager.setActiveItem(null);
+        keyManager.setActiveItem(-1);
         keyManager.onKeydown(fakeKeyEvents.downArrow);
 
         expect(keyManager.activeItemIndex)
@@ -104,11 +105,11 @@ describe('Key managers', () => {
       });
 
       it('should do nothing when up arrow is pressed if no active item and not wrap', () => {
-        keyManager.setActiveItem(null);
+        keyManager.setActiveItem(-1);
         keyManager.onKeydown(fakeKeyEvents.upArrow);
 
         expect(keyManager.activeItemIndex)
-            .toBe(null, 'Expected nothing to happen if up arrow occurs and no active item.');
+            .toBe(-1, 'Expected nothing to happen if up arrow occurs and no active item.');
         expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(0);
         expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(1);
         expect(keyManager.setActiveItem).not.toHaveBeenCalledWith(2);
@@ -189,7 +190,7 @@ describe('Key managers', () => {
 
       it('should emit tabOut when the tab key is pressed', () => {
         let spy = jasmine.createSpy('tabOut spy');
-        keyManager.tabOut.first().subscribe(spy);
+        first.call(keyManager.tabOut).subscribe(spy);
         keyManager.onKeydown(fakeKeyEvents.tab);
 
         expect(spy).toHaveBeenCalled();
@@ -228,7 +229,7 @@ describe('Key managers', () => {
       it('should activate the first item when pressing down on a clean key manager', () => {
         keyManager = new ListKeyManager<FakeFocusable>(itemList);
 
-        expect(keyManager.activeItemIndex).toBeNull('Expected active index to default to null.');
+        expect(keyManager.activeItemIndex).toBe(-1, 'Expected active index to default to -1.');
 
         keyManager.onKeydown(fakeKeyEvents.downArrow);
 
@@ -366,7 +367,7 @@ describe('Key managers', () => {
 
       it('should set last item active when up arrow is pressed if no active item', () => {
         keyManager.withWrap();
-        keyManager.setActiveItem(null);
+        keyManager.setActiveItem(-1);
         keyManager.onKeydown(fakeKeyEvents.upArrow);
 
         expect(keyManager.activeItemIndex)

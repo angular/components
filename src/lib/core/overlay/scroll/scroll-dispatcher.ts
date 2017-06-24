@@ -10,11 +10,10 @@ import {ElementRef, Injectable, NgZone, Optional, SkipSelf} from '@angular/core'
 import {Platform} from '../../platform/index';
 import {Scrollable} from './scrollable';
 import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/auditTime';
+import {fromEvent} from 'rxjs/observable/fromEvent';
+import {merge} from 'rxjs/observable/merge';
+import {auditTime} from '../../rxjs/index';
 
 
 /** Time in ms to throttle the scrolling events by default. */
@@ -32,7 +31,7 @@ export class ScrollDispatcher {
   _scrolled: Subject<void> = new Subject<void>();
 
   /** Keeps track of the global `scroll` and `resize` subscriptions. */
-  _globalSubscription: Subscription = null;
+  _globalSubscription: Subscription | null = null;
 
   /** Keeps track of the amount of subscriptions to `scrolled`. Used for cleaning up afterwards. */
   private _scrolledCount = 0;
@@ -59,8 +58,10 @@ export class ScrollDispatcher {
    * @param scrollable Scrollable instance to be deregistered.
    */
   deregister(scrollable: Scrollable): void {
-    if (this.scrollableReferences.has(scrollable)) {
-      this.scrollableReferences.get(scrollable).unsubscribe();
+    const scrollableReference = this.scrollableReferences.get(scrollable);
+
+    if (scrollableReference) {
+      scrollableReference.unsubscribe();
       this.scrollableReferences.delete(scrollable);
     }
   }
@@ -79,16 +80,16 @@ export class ScrollDispatcher {
     // In the case of a 0ms delay, use an observable without auditTime
     // since it does add a perceptible delay in processing overhead.
     let observable = auditTimeInMs > 0 ?
-      this._scrolled.asObservable().auditTime(auditTimeInMs) :
+      auditTime.call(this._scrolled.asObservable(), auditTimeInMs) :
       this._scrolled.asObservable();
 
     this._scrolledCount++;
 
     if (!this._globalSubscription) {
       this._globalSubscription = this._ngZone.runOutsideAngular(() => {
-        return Observable.merge(
-          Observable.fromEvent(window.document, 'scroll'),
-          Observable.fromEvent(window, 'resize')
+        return merge(
+          fromEvent(window.document, 'scroll'),
+          fromEvent(window, 'resize')
         ).subscribe(() => this._notify());
       });
     }
@@ -132,6 +133,8 @@ export class ScrollDispatcher {
     do {
       if (element == scrollableElement) { return true; }
     } while (element = element.parentElement);
+
+    return false;
   }
 
   /** Sends a notification that a scroll event has been fired. */

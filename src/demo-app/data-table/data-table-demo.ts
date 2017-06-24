@@ -1,8 +1,11 @@
-import {Component} from '@angular/core';
-import {PeopleDatabase} from './people-database';
+import {Component, ViewChild} from '@angular/core';
+import {PeopleDatabase, UserData} from './people-database';
 import {PersonDataSource} from './person-data-source';
+import {MdPaginator} from '@angular/material';
 
-export type UserProperties = 'userId' | 'userName' | 'progress' | 'color';
+export type UserProperties = 'userId' | 'userName' | 'progress' | 'color' | undefined;
+
+export type TrackByStrategy = 'id' | 'reference' | 'index';
 
 @Component({
   moduleId: module.id,
@@ -11,16 +14,23 @@ export type UserProperties = 'userId' | 'userName' | 'progress' | 'color';
   styleUrls: ['data-table-demo.css'],
 })
 export class DataTableDemo {
-  dataSource: PersonDataSource;
+  dataSource: PersonDataSource | null;
   propertiesToDisplay: UserProperties[] = [];
+  trackByStrategy: TrackByStrategy = 'reference';
+  changeReferences = false;
+  highlights = new Set<string>();
 
-  constructor(private _peopleDatabase: PeopleDatabase) {
+  @ViewChild(MdPaginator) _paginator: MdPaginator;
+
+  constructor(public _peopleDatabase: PeopleDatabase) { }
+
+  ngOnInit() {
     this.connect();
   }
 
   connect() {
     this.propertiesToDisplay = ['userId', 'userName', 'progress', 'color'];
-    this.dataSource = new PersonDataSource(this._peopleDatabase);
+    this.dataSource = new PersonDataSource(this._peopleDatabase, this._paginator);
     this._peopleDatabase.initialize();
   }
 
@@ -34,6 +44,14 @@ export class DataTableDemo {
     return distanceFromMiddle / 50 + .3;
   }
 
+  userTrackBy = (index: number, item: UserData) => {
+    switch (this.trackByStrategy) {
+      case 'id': return item.id;
+      case 'reference': return item;
+      case 'index': return index;
+    }
+  }
+
   toggleColorColumn() {
     let colorColumnIndex = this.propertiesToDisplay.indexOf('color');
     if (colorColumnIndex == -1) {
@@ -41,5 +59,9 @@ export class DataTableDemo {
     } else {
       this.propertiesToDisplay.splice(colorColumnIndex, 1);
     }
+  }
+
+  toggleHighlight(property: string, enable: boolean) {
+    enable ? this.highlights.add(property) : this.highlights.delete(property);
   }
 }

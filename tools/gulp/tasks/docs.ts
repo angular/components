@@ -235,7 +235,7 @@ const buildTemplate = (results: ExampleMetadata[]): string => {
   import {FormsModule, ReactiveFormsModule} from '@angular/forms';
   import {CommonModule} from '@angular/common';
   import {
-    MdAutocompleteModule, MdButtonModule, MdButtonToggleModule,
+    MdAutocompleteModule, MdButtonModule, MdButtonToggleModule, MdPaginatorModule,
     MdCardModule, MdCheckboxModule, MdChipsModule, MdDatepickerModule,
     MdDialogModule, MdGridListModule, MdIconModule, MdInputModule,
     MdListModule, MdMenuModule, MdProgressBarModule, MdProgressSpinnerModule,
@@ -281,7 +281,8 @@ const buildTemplate = (results: ExampleMetadata[]): string => {
       MdSnackBarModule,
       MdTabsModule,
       MdToolbarModule,
-      MdTooltipModule
+      MdTooltipModule,
+      MdPaginatorModule
     ]
   })
   export class ExampleMaterialModule {}
