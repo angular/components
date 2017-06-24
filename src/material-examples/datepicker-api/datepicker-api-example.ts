@@ -5,5 +5,5 @@ import {Component} from '@angular/core';
   templateUrl: 'datepicker-api-example.html',
   styleUrls: ['datepicker-api-example.css'],
 })
-export class DatepickerAPIExample {
+export class DatepickerApiExample {
 }

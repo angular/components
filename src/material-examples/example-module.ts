@@ -78,7 +78,7 @@ import {DatepickerStartViewExample} from './datepicker-start-view/datepicker-sta
 import {DatepickerMinMaxExample} from './datepicker-min-max/datepicker-min-max-example';
 import {DatepickerFilterExample} from './datepicker-filter/datepicker-filter-example';
 import {DatepickerTouchExample} from './datepicker-touch/datepicker-touch-example';
-import {DatepickerAPIExample} from './datepicker-api/datepicker-api-example';
+import {DatepickerApiExample} from './datepicker-api/datepicker-api-example';
 
 import {
   MdAutocompleteModule, MdButtonModule, MdButtonToggleModule, MdCardModule, MdCheckboxModule,
@@ -121,7 +121,7 @@ export const EXAMPLE_COMPONENTS = {
   'datepicker-min-max': {title: 'Min/Max Validation', component: DatepickerMinMaxExample},
   'datepicker-filter': {title: 'Filter Validation', component: DatepickerFilterExample},
   'datepicker-touch': {title: 'Touch', component: DatepickerTouchExample},
-  'datepicker-api': {title: 'API', component: DatepickerAPIExample},
+  'datepicker-api': {title: 'API', component: DatepickerApiExample},
   'dialog-overview': {
     title: 'Basic dialog',
     component: DialogOverviewExample,
@@ -247,7 +247,7 @@ export const EXAMPLE_LIST = [
   DatepickerMinMaxExample,
   DatepickerFilterExample,
   DatepickerTouchExample,
-  DatepickerAPIExample,
+  DatepickerApiExample,
   DialogOverviewExample,
   DialogOverviewExampleDialog,
   DialogResultExample,
