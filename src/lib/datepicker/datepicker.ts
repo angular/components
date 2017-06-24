@@ -38,7 +38,7 @@ import {DateAdapter} from '../core/datetime/index';
 import {createMissingDateImplError} from './datepicker-errors';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {MdCalendar} from './calendar';
-import 'rxjs/add/operator/first';
+import {first} from '../core/rxjs/index';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -126,7 +126,7 @@ export class MdDatepicker<D> implements OnDestroy {
   id = `md-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
-  _selected: D = null;
+  _selected: D | null = null;
 
   /** The minimum selectable date. */
   get _minDate(): D {
@@ -146,7 +146,7 @@ export class MdDatepicker<D> implements OnDestroy {
   private _popupRef: OverlayRef;
 
   /** A reference to the dialog when the calendar is opened as a dialog. */
-  private _dialogRef: MdDialogRef<any>;
+  private _dialogRef: MdDialogRef<any> | null;
 
   /** A portal containing the calendar for this datepicker. */
   private _calendarPortal: ComponentPortal<MdDatepickerContent<D>>;
@@ -155,7 +155,7 @@ export class MdDatepicker<D> implements OnDestroy {
   private _datepickerInput: MdDatepickerInput<D>;
 
   /** The element that was focused before the datepicker was opened. */
-  private _focusedElementBeforeOpen: HTMLElement;
+  private _focusedElementBeforeOpen: HTMLElement | null = null;
 
   private _inputSubscription: Subscription;
 
@@ -245,10 +245,10 @@ export class MdDatepicker<D> implements OnDestroy {
 
   /** Open the calendar as a dialog. */
   private _openAsDialog(): void {
-    let config = new MdDialogConfig();
-    config.viewContainerRef = this._viewContainerRef;
-
-    this._dialogRef = this._dialog.open(MdDatepickerContent, config);
+    this._dialogRef = this._dialog.open(MdDatepickerContent, {
+      viewContainerRef: this._viewContainerRef,
+      direction: this._dir ? this._dir.value : 'ltr'
+    });
     this._dialogRef.afterClosed().subscribe(() => this.close());
     this._dialogRef.componentInstance.datepicker = this;
   }
@@ -269,7 +269,7 @@ export class MdDatepicker<D> implements OnDestroy {
       componentRef.instance.datepicker = this;
 
       // Update the position once the calendar has rendered.
-      this._ngZone.onStable.first().subscribe(() => this._popupRef.updatePosition());
+      first.call(this._ngZone.onStable).subscribe(() => this._popupRef.updatePosition());
     }
 
     this._popupRef.backdropClick().subscribe(() => this.close());

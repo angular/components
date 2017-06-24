@@ -30,7 +30,7 @@ import {dispatchFakeEvent} from '../core/testing/dispatch-events';
 import {createKeyboardEvent} from '../core/testing/event-objects';
 import {typeInElement} from '../core/testing/type-in-element';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
-import 'rxjs/add/operator/map';
+import {RxChain, map, startWith, filter} from '../core/rxjs/index';
 
 
 describe('MdAutocomplete', () => {
@@ -101,7 +101,7 @@ describe('MdAutocomplete', () => {
       expect(fixture.componentInstance.trigger.panelOpen)
           .toBe(false, `Expected panel state to start out closed.`);
 
-      dispatchFakeEvent(input, 'focus');
+      dispatchFakeEvent(input, 'focusin');
       fixture.whenStable().then(() => {
         fixture.detectChanges();
 
@@ -136,7 +136,7 @@ describe('MdAutocomplete', () => {
         // Note that we're running outside the Angular zone, in order to be able
         // to test properly without the subscription from `_subscribeToClosingActions`
         // giving us a false positive.
-        fixture.ngZone.runOutsideAngular(() => {
+        fixture.ngZone!.runOutsideAngular(() => {
           fixture.componentInstance.trigger.openPanel();
 
           Promise.resolve().then(() => {
@@ -146,8 +146,8 @@ describe('MdAutocomplete', () => {
         });
       }));
 
-    it('should close the panel when input loses focus', async(() => {
-      dispatchFakeEvent(input, 'focus');
+    it('should close the panel when the user clicks away', async(() => {
+      dispatchFakeEvent(input, 'focusin');
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
@@ -160,8 +160,22 @@ describe('MdAutocomplete', () => {
       });
     }));
 
-    it('should close the panel when an option is clicked', async(() => {
+    it('should close the panel when the user taps away on a touch device', async(() => {
       dispatchFakeEvent(input, 'focus');
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        dispatchFakeEvent(document, 'touchend');
+
+        expect(fixture.componentInstance.trigger.panelOpen)
+            .toBe(false, `Expected tapping outside the panel to set its state to closed.`);
+        expect(overlayContainerElement.textContent)
+            .toEqual('', `Expected tapping outside the panel to close the panel.`);
+      });
+    }));
+
+    it('should close the panel when an option is clicked', async(() => {
+      dispatchFakeEvent(input, 'focusin');
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
@@ -177,7 +191,7 @@ describe('MdAutocomplete', () => {
     }));
 
     it('should close the panel when a newly created option is clicked', async(() => {
-      dispatchFakeEvent(input, 'focus');
+      dispatchFakeEvent(input, 'focusin');
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
@@ -222,7 +236,7 @@ describe('MdAutocomplete', () => {
     });
 
     it('should hide the panel when the options list is empty', async(() => {
-      dispatchFakeEvent(input, 'focus');
+      dispatchFakeEvent(input, 'focusin');
 
       fixture.whenStable().then(() => {
         fixture.detectChanges();
@@ -328,7 +342,7 @@ describe('MdAutocomplete', () => {
     rtlFixture.componentInstance.trigger.openPanel();
     rtlFixture.detectChanges();
 
-    const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane');
+    const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
     expect(overlayPane.getAttribute('dir')).toEqual('rtl');
 
   });
@@ -731,7 +745,7 @@ describe('MdAutocomplete', () => {
     it('should scroll to active options below the fold', fakeAsync(() => {
       tick();
       const scrollContainer =
-          document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel');
+          document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
 
       fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
       tick();
@@ -752,7 +766,7 @@ describe('MdAutocomplete', () => {
     it('should scroll to active options on UP arrow', fakeAsync(() => {
       tick();
       const scrollContainer =
-          document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel');
+          document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
 
       const UP_ARROW_EVENT = createKeyboardEvent('keydown', UP_ARROW);
       fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
@@ -934,7 +948,7 @@ describe('MdAutocomplete', () => {
       fixture.detectChanges();
 
       const inputBottom = input.getBoundingClientRect().bottom;
-      const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel');
+      const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel')!;
       const panelTop = panel.getBoundingClientRect().top;
 
       // Panel is offset by 6px in styles so that the underline has room to display.
@@ -958,7 +972,7 @@ describe('MdAutocomplete', () => {
       fixture.detectChanges();
 
       const inputBottom = input.getBoundingClientRect().bottom;
-      const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel');
+      const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel')!;
       const panelTop = panel.getBoundingClientRect().top;
 
       expect(Math.floor(inputBottom + 6)).toEqual(Math.floor(panelTop),
@@ -976,7 +990,7 @@ describe('MdAutocomplete', () => {
       fixture.detectChanges();
 
       const inputTop = input.getBoundingClientRect().top;
-      const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel');
+      const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel')!;
       const panelBottom = panel.getBoundingClientRect().bottom;
 
       // Panel is offset by 24px in styles so that the label has room to display.
@@ -999,7 +1013,7 @@ describe('MdAutocomplete', () => {
         fixture.detectChanges();
 
         const inputTop = input.getBoundingClientRect().top;
-        const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel');
+        const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel')!;
         const panelBottom = panel.getBoundingClientRect().bottom;
 
         // Panel is offset by 24px in styles so that the label has room to display.
@@ -1127,7 +1141,7 @@ describe('MdAutocomplete', () => {
       fixture.detectChanges();
 
       const input = fixture.debugElement.query(By.css('input')).nativeElement;
-      dispatchFakeEvent(input, 'focus');
+      dispatchFakeEvent(input, 'focusin');
 
       fixture.whenStable().then(() => {
         fixture.detectChanges();
@@ -1182,7 +1196,7 @@ describe('MdAutocomplete', () => {
 
     const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
     // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
-    expect(Math.ceil(parseFloat(overlayPane.style.width))).toBe(300);
+    expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
 
     widthFixture.componentInstance.trigger.closePanel();
     widthFixture.detectChanges();
@@ -1194,7 +1208,7 @@ describe('MdAutocomplete', () => {
     widthFixture.detectChanges();
 
     // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
-    expect(Math.ceil(parseFloat(overlayPane.style.width))).toBe(500);
+    expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(500);
   });
 
   it('should update the width while the panel is open', () => {
@@ -1209,7 +1223,7 @@ describe('MdAutocomplete', () => {
     const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
     const input = widthFixture.debugElement.query(By.css('input')).nativeElement;
 
-    expect(Math.ceil(parseFloat(overlayPane.style.width))).toBe(300);
+    expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
 
     widthFixture.componentInstance.width = 500;
     widthFixture.detectChanges();
@@ -1218,7 +1232,7 @@ describe('MdAutocomplete', () => {
     dispatchFakeEvent(input, 'input');
     widthFixture.detectChanges();
 
-    expect(Math.ceil(parseFloat(overlayPane.style.width))).toBe(500);
+    expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(500);
   });
 
   it('should show the panel when the options are initialized later within a component with ' +
@@ -1226,7 +1240,7 @@ describe('MdAutocomplete', () => {
       let fixture = TestBed.createComponent(AutocompleteWithOnPushDelay);
 
       fixture.detectChanges();
-      dispatchFakeEvent(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
+      dispatchFakeEvent(fixture.debugElement.query(By.css('input')).nativeElement, 'focusin');
       tick(1000);
       fixture.detectChanges();
 
@@ -1321,10 +1335,13 @@ class NgIfAutocomplete {
   @ViewChildren(MdOption) mdOptions: QueryList<MdOption>;
 
   constructor() {
-    this.filteredOptions = this.optionCtrl.valueChanges.startWith(null).map((val) => {
-      return val ? this.options.filter(option => new RegExp(val, 'gi').test(option))
-                 : this.options.slice();
-    });
+    this.filteredOptions = RxChain.from(this.optionCtrl.valueChanges)
+      .call(startWith, null)
+      .call(map, (val: string) => {
+        return val ? this.options.filter(option => new RegExp(val, 'gi').test(option))
+                   : this.options.slice();
+      })
+      .result();
   }
 }
 
@@ -1430,10 +1447,13 @@ class AutocompleteWithNativeInput {
   @ViewChildren(MdOption) mdOptions: QueryList<MdOption>;
 
   constructor() {
-    this.filteredOptions = this.optionCtrl.valueChanges.startWith(null).map((val) => {
-      return val ? this.options.filter(option => new RegExp(val, 'gi').test(option))
-                 : this.options.slice();
-    });
+    this.filteredOptions = RxChain.from(this.optionCtrl.valueChanges)
+      .call(startWith, null)
+      .call(map, (val: string) => {
+        return val ? this.options.filter(option => new RegExp(val, 'gi').test(option))
+                   : this.options.slice();
+      })
+      .result();
   }
 }
 

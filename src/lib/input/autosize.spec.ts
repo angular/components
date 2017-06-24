@@ -1,5 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, async} from '@angular/core/testing';
+import {FormsModule} from '@angular/forms';
+import {ComponentFixture, TestBed, async, fakeAsync, flushMicrotasks} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MdInputModule} from './index';
 import {MdTextareaAutosize} from './autosize';
@@ -12,8 +13,12 @@ describe('MdTextareaAutosize', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdInputModule],
-      declarations: [AutosizeTextAreaWithContent, AutosizeTextAreaWithValue],
+      imports: [MdInputModule, FormsModule],
+      declarations: [
+        AutosizeTextAreaWithContent,
+        AutosizeTextAreaWithValue,
+        AutosizeTextareaWithNgModel
+      ],
     });
 
     TestBed.compileComponents();
@@ -74,11 +79,11 @@ describe('MdTextareaAutosize', () => {
 
     expect(textarea.style.minHeight).toBeDefined('Expected a min-height to be set via minRows.');
 
-    let previousMinHeight = parseInt(textarea.style.minHeight);
+    let previousMinHeight = parseInt(textarea.style.minHeight as string);
     fixture.componentInstance.minRows = 6;
     fixture.detectChanges();
 
-    expect(parseInt(textarea.style.minHeight))
+    expect(parseInt(textarea.style.minHeight as string))
         .toBeGreaterThan(previousMinHeight, 'Expected increased min-height with minRows increase.');
   });
 
@@ -90,11 +95,11 @@ describe('MdTextareaAutosize', () => {
 
     expect(textarea.style.maxHeight).toBeDefined('Expected a max-height to be set via maxRows.');
 
-    let previousMaxHeight = parseInt(textarea.style.maxHeight);
+    let previousMaxHeight = parseInt(textarea.style.maxHeight as string);
     fixture.componentInstance.maxRows = 6;
     fixture.detectChanges();
 
-    expect(parseInt(textarea.style.maxHeight))
+    expect(parseInt(textarea.style.maxHeight as string))
         .toBeGreaterThan(previousMaxHeight, 'Expected increased max-height with maxRows increase.');
   });
 
@@ -113,7 +118,7 @@ describe('MdTextareaAutosize', () => {
     expect(textarea.rows)
       .toBe(1, 'Expected the textarea to have the rows property set to one.');
 
-    const previousMinHeight = parseInt(textarea.style.minHeight);
+    const previousMinHeight = parseInt(textarea.style.minHeight as string);
 
     fixture.componentInstance.minRows = 2;
     fixture.detectChanges();
@@ -121,7 +126,7 @@ describe('MdTextareaAutosize', () => {
     expect(textarea.rows).toBe(1, 'Expected the rows property to be set to one. ' +
       'The amount of rows will be specified using CSS.');
 
-    expect(parseInt(textarea.style.minHeight))
+    expect(parseInt(textarea.style.minHeight as string))
       .toBeGreaterThan(previousMinHeight, 'Expected the textarea to grow to two rows.');
   });
 
@@ -145,6 +150,26 @@ describe('MdTextareaAutosize', () => {
       .toBe(textarea.scrollHeight, 'Expected textarea height to match its scrollHeight');
   });
 
+  it('should resize when an associated form control value changes', fakeAsync(() => {
+    const fixtureWithForms = TestBed.createComponent(AutosizeTextareaWithNgModel);
+    textarea = fixtureWithForms.nativeElement.querySelector('textarea');
+    fixtureWithForms.detectChanges();
+
+    const previousHeight =  textarea.clientHeight;
+
+    fixtureWithForms.componentInstance.model = `
+        And the silken, sad, uncertain rustling of each purple curtain
+    Thrilled me—filled me with fantastic terrors never felt before;
+        So that now, to still the beating of my heart, I stood repeating
+        “’Tis some visitor entreating entrance at my chamber door—
+    Some late visitor entreating entrance at my chamber door;—
+                This it is and nothing more.” `;
+    fixtureWithForms.detectChanges();
+    flushMicrotasks();
+
+    expect(textarea.clientHeight)
+        .toBeGreaterThan(previousHeight, 'Expected increased height when ngModel is updated.');
+  }));
 });
 
 
@@ -166,8 +191,8 @@ const textareaStyleReset = `
 })
 class AutosizeTextAreaWithContent {
   @ViewChild('autosize') autosize: MdTextareaAutosize;
-  minRows: number = null;
-  maxRows: number = null;
+  minRows: number | null = null;
+  maxRows: number | null = null;
   content: string = '';
 }
 
@@ -177,4 +202,12 @@ class AutosizeTextAreaWithContent {
 })
 class AutosizeTextAreaWithValue {
   value: string = '';
+}
+
+@Component({
+  template: `<textarea mdTextareaAutosize [(ngModel)]="model"></textarea>`,
+  styles: [textareaStyleReset],
+})
+class AutosizeTextareaWithNgModel {
+  model = '';
 }

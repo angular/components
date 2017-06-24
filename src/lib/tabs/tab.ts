@@ -15,6 +15,7 @@ import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import {MdTabLabel} from './tab-label';
 
 // Boilerplate for applying mixins to MdTab.
+/** @docs-private */
 export class MdTabBase {}
 export const _MdTabMixinBase = mixinDisabled(MdTabBase);
 
@@ -35,20 +36,20 @@ export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable {
   @Input('label') textLabel: string = '';
 
   /** The portal that will be the hosted content of the tab */
-  private _contentPortal: TemplatePortal = null;
-  get content(): TemplatePortal { return this._contentPortal; }
+  private _contentPortal: TemplatePortal | null = null;
+  get content(): TemplatePortal | null { return this._contentPortal; }
 
   /**
    * The relatively indexed position where 0 represents the center, negative is left, and positive
    * represents the right.
    */
-  position: number = null;
+  position: number | null = null;
 
   /**
    * The initial relatively index origin of the tab if it was created and selected after there
    * was already a selected tab. Provides context of what position the tab should originate from.
    */
-  origin: number = null;
+  origin: number | null = null;
 
   constructor(private _viewContainerRef: ViewContainerRef) {
     super();

@@ -15,8 +15,8 @@ import {
   ProgressBarConfigurableExample
 } from './progress-bar-configurable/progress-bar-configurable-example';
 import {
-  DialogOverviewExampleDialog,
-  DialogOverviewExample
+  DialogOverviewExample,
+  DialogOverviewExampleDialog
 } from './dialog-overview/dialog-overview-example';
 import {RadioNgModelExample} from './radio-ng-model/radio-ng-model-example';
 import {CardFancyExample} from './card-fancy/card-fancy-example';
@@ -36,12 +36,12 @@ import {
 import {ListSectionsExample} from './list-sections/list-sections-example';
 import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
 import {
-  DialogResultExampleDialog,
-  DialogResultExample
+  DialogResultExample,
+  DialogResultExampleDialog
 } from './dialog-result/dialog-result-example';
 import {
-  DialogElementsExampleDialog,
-  DialogElementsExample
+  DialogElementsExample,
+  DialogElementsExampleDialog
 } from './dialog-elements/dialog-elements-example';
 import {TooltipOverviewExample} from './tooltip-overview/tooltip-overview-example';
 import {ButtonToggleOverviewExample} from './button-toggle-overview/button-toggle-overview-example';
@@ -68,7 +68,11 @@ import {SelectOverviewExample} from './select-overview/select-overview-example';
 import {ChipsOverviewExample} from './chips-overview/chips-overview-example';
 import {ChipsStackedExample} from './chips-stacked/chips-stacked-example';
 import {SelectFormExample} from './select-form/select-form-example';
+import {PaginatorOverviewExample} from './paginator-overview/paginator-overview-example';
 import {DatepickerOverviewExample} from './datepicker-overview/datepicker-overview-example';
+import {
+  PaginatorConfigurableExample
+} from './paginator-configurable/paginator-configurable-example';
 import {InputOverviewExample} from './input-overview/input-overview-example';
 import {InputErrorsExample} from './input-errors/input-errors-example';
 import {InputFormExample} from './input-form/input-form-example';
@@ -83,10 +87,9 @@ import {DatepickerApiExample} from './datepicker-api/datepicker-api-example';
 import {
   MdAutocompleteModule, MdButtonModule, MdButtonToggleModule, MdCardModule, MdCheckboxModule,
   MdChipsModule, MdDatepickerModule, MdDialogModule, MdGridListModule, MdIconModule, MdInputModule,
-  MdListModule, MdMenuModule, MdProgressBarModule, MdProgressSpinnerModule, MdRadioModule,
-  MdSelectModule, MdSidenavModule, MdSliderModule, MdSlideToggleModule, MdSnackBarModule,
-  MdTabsModule,
-  MdToolbarModule, MdTooltipModule
+  MdListModule, MdMenuModule, MdPaginatorModule, MdProgressBarModule, MdProgressSpinnerModule,
+  MdRadioModule, MdSelectModule, MdSidenavModule, MdSliderModule, MdSlideToggleModule,
+  MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule
 } from '@angular/material';
 
 export interface LiveExample {
@@ -153,6 +156,11 @@ export const EXAMPLE_COMPONENTS = {
   'list-sections': {title: 'List with sections', component: ListSectionsExample},
   'menu-icons': {title: 'Menu with icons', component: MenuIconsExample},
   'menu-overview': {title: 'Basic menu', component: MenuOverviewExample},
+  'paginator-overview': {title: 'Paginator', component: PaginatorOverviewExample},
+  'paginator-configurable': {
+    title: 'Configurable paginator',
+    component: PaginatorConfigurableExample
+  },
   'progress-bar-configurable': {
     title: 'Configurable progress-bar',
     component: ProgressBarConfigurableExample
@@ -211,6 +219,7 @@ export const EXAMPLE_COMPONENTS = {
     MdInputModule,
     MdListModule,
     MdMenuModule,
+    MdPaginatorModule,
     MdProgressBarModule,
     MdProgressSpinnerModule,
     MdRadioModule,
@@ -267,6 +276,8 @@ export const EXAMPLE_LIST = [
   ListSectionsExample,
   MenuIconsExample,
   MenuOverviewExample,
+  PaginatorOverviewExample,
+  PaginatorConfigurableExample,
   ProgressBarConfigurableExample,
   ProgressBarOverviewExample,
   ProgressSpinnerConfigurableExample,

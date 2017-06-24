@@ -20,7 +20,7 @@ import {
 import {coerceBooleanProperty} from '../core';
 import {Observable} from 'rxjs/Observable';
 import {MdTab} from './tab';
-import 'rxjs/add/operator/map';
+import {map} from '../core/rxjs/index';
 
 
 /** Used to generate unique ID's for each tab component */
@@ -60,16 +60,16 @@ export class MdTabGroup {
   private _isInitialized: boolean = false;
 
   /** The tab index that should be selected after the content has been checked. */
-  private _indexToSelect = 0;
+  private _indexToSelect: number | null = 0;
 
   /** Snapshot of the height of the tab body wrapper before another tab is activated. */
-  private _tabBodyWrapperHeight: number = null;
+  private _tabBodyWrapperHeight: number = 0;
 
-  /** Whether the tab group should grow to the size of the active tab */
-  private _dynamicHeight: boolean = false;
+  /** Whether the tab group should grow to the size of the active tab. */
   @Input()
   get dynamicHeight(): boolean { return this._dynamicHeight; }
   set dynamicHeight(value: boolean) { this._dynamicHeight = coerceBooleanProperty(value); }
+  private _dynamicHeight: boolean = false;
 
   /** @deprecated */
   @Input('md-dynamic-height')
@@ -83,12 +83,12 @@ export class MdTabGroup {
   private _disableRipple: boolean = false;
 
 
-  private _selectedIndex: number = null;
+  private _selectedIndex: number | null = null;
 
   /** The index of the active tab. */
   @Input()
-  set selectedIndex(value: number) { this._indexToSelect = value; }
-  get selectedIndex(): number { return this._selectedIndex; }
+  set selectedIndex(value: number | null) { this._indexToSelect = value; }
+  get selectedIndex(): number | null { return this._selectedIndex; }
 
   /** Position of the tab header. */
   @Input()
@@ -96,7 +96,7 @@ export class MdTabGroup {
 
   /** Output to enable support for two-way binding on `[(selectedIndex)]` */
   @Output() get selectedIndexChange(): Observable<number> {
-    return this.selectChange.map(event => event.index);
+    return map.call(this.selectChange, event => event.index);
   }
 
   /** Event emitted when focus has changed within a tab group. */
@@ -121,27 +121,27 @@ export class MdTabGroup {
     // Clamp the next selected index to the bounds of 0 and the tabs length. Note the `|| 0`, which
     // ensures that values like NaN can't get through and which would otherwise throw the
     // component into an infinite loop (since Math.max(NaN, 0) === NaN).
-    this._indexToSelect =
+    let indexToSelect = this._indexToSelect =
         Math.min(this._tabs.length - 1, Math.max(this._indexToSelect || 0, 0));
 
     // If there is a change in selected index, emit a change event. Should not trigger if
     // the selected index has not yet been initialized.
-    if (this._selectedIndex != this._indexToSelect && this._selectedIndex != null) {
-      this.selectChange.emit(this._createChangeEvent(this._indexToSelect));
+    if (this._selectedIndex != indexToSelect && this._selectedIndex != null) {
+      this.selectChange.emit(this._createChangeEvent(indexToSelect));
     }
 
     // Setup the position for each tab and optionally setup an origin on the next selected tab.
     this._tabs.forEach((tab: MdTab, index: number) => {
-      tab.position = index - this._indexToSelect;
+      tab.position = index - indexToSelect;
 
       // If there is already a selected tab, then set up an origin for the next selected tab
       // if it doesn't have one already.
       if (this._selectedIndex != null && tab.position == 0 && !tab.origin) {
-        tab.origin = this._indexToSelect - this._selectedIndex;
+        tab.origin = indexToSelect - this._selectedIndex;
       }
     });
 
-    this._selectedIndex = this._indexToSelect;
+    this._selectedIndex = indexToSelect;
   }
 
   /**

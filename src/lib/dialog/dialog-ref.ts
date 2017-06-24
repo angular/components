@@ -12,7 +12,7 @@ import {DialogPosition} from './dialog-config';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {MdDialogContainer} from './dialog-container';
-import 'rxjs/add/operator/filter';
+import {filter} from '../core/rxjs/index';
 
 
 // TODO(jelbourn): resizing
@@ -27,7 +27,7 @@ export class MdDialogRef<T> {
   componentInstance: T;
 
   /** Whether the user is allowed to close the dialog. */
-  disableClose: boolean = this._containerInstance._config.disableClose;
+  disableClose = this._containerInstance._config.disableClose;
 
   /** Subject for notifying the user that the dialog has finished closing. */
   private _afterClosed: Subject<any> = new Subject();
@@ -36,12 +36,12 @@ export class MdDialogRef<T> {
   private _result: any;
 
   constructor(private _overlayRef: OverlayRef, private _containerInstance: MdDialogContainer) {
-    _containerInstance._onAnimationStateChange
-      .filter((event: AnimationEvent) => event.toState === 'exit')
-      .subscribe(() => this._overlayRef.dispose(), null, () => {
+    filter.call(_containerInstance._onAnimationStateChange,
+      (event: AnimationEvent) => event.toState === 'exit')
+      .subscribe(() => this._overlayRef.dispose(), undefined, () => {
         this._afterClosed.next(this._result);
         this._afterClosed.complete();
-        this.componentInstance = null;
+        this.componentInstance = null!;
       });
   }
 
