@@ -25,11 +25,6 @@ export class PlunkerButton {
   set example(example: string) {
     const exampleData = new ExampleData(example);
 
-    // TODO(jelbourn): remove this when bad defaults are no longer included in the source
-    exampleData.exampleFiles = [];
-    exampleData.examplePath = '';
-    exampleData.indexFilename = '';
-
     this.plunkerWriter.constructPlunkerForm(exampleData).then(plunkerForm => {
       this.plunkerForm = plunkerForm;
       this.isDisabled = false;
