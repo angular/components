@@ -1,12 +1,13 @@
 import {CollectionViewer, TreeDataSource, NestedNode, TreeControl} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
+import {of as ofObservable} from 'rxjs/observable/of';
+import {combineLatest} from 'rxjs/observable/combineLatest';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/pairwise';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/combineLatest';
+// import 'rxjs/add/observable/combineLatest';
+// import 'rxjs/add/operator/debounceTime';
+// import 'rxjs/add/operator/mergeMap';
+// import 'rxjs/add/operator/pairwise';
+// import 'rxjs/add/operator/distinctUntilChanged';
 
 export interface SimpleTreeNode {
   children: SimpleTreeNode[];
@@ -23,7 +24,7 @@ export class JsonNestedNode implements NestedNode {
   value: any;
   children: JsonNestedNode[];
   getChildren(): Observable<JsonNestedNode[]> {
-    return Observable.of(this.children);
+    return ofObservable(this.children);
   }
 }
 
@@ -45,7 +46,7 @@ export class JsonNestedDataSource implements TreeDataSource<any> {
   constructor(public treeControl: TreeControl) {}
 
   connect(collectionViewer: CollectionViewer): Observable<JsonNestedNode[]> {
-    return Observable.combineLatest([collectionViewer.viewChanged, this._filteredData])
+    return combineLatest([collectionViewer.viewChange, this._filteredData])
       .map((results: any[]) => {
         let [view, displayData] = results;
 

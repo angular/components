@@ -17,7 +17,7 @@
         <div class="space">
           <div *ngFor="let a of createArray(node.parentMap.length); let index = index" [class.special]="node.parentMap[index]"></div>
         </div>
-        <div style="width: 40px; display: inline-block">
+        <div class="expand-trigger">
           <a md-icon-button (click)="treeControl.toggleDecedents(node)" *ngIf="node.expandable">
             <md-icon>{{ treeControl.expanded(node) ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</md-icon>
           </a>

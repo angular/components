@@ -22,9 +22,12 @@ export class SimpleTreeNode implements OnDestroy, AfterViewInit {
   get treeControl() { return this.tree.treeControl; }
 
   ngAfterViewInit() {
-    this._selectSubscription = this.selection.onChange.subscribe(() => {
-      this.changeDetectorRef.markForCheck();
-    });
+    if (this.selection.onChange) {
+      this._selectSubscription = this.selection.onChange.subscribe(() => {
+        this.changeDetectorRef.markForCheck();
+      });
+    }
+
   }
 
   ngOnDestroy() {
@@ -35,7 +38,7 @@ export class SimpleTreeNode implements OnDestroy, AfterViewInit {
     return new Array(level);
   }
 
-  selectNode(node: any, event: any) {
+  selectNode(node: any, _: any) {
     this.selection.toggle(node);
     let decedents = this.treeControl.getDecedents(node);
     decedents.forEach((decedent: JsonFlatNode) => {

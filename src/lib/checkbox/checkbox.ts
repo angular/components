@@ -49,11 +49,11 @@ export const MD_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
 export enum TransitionCheckState {
   /** The initial state of the component before any user interaction. */
   Init,
-  /** The state representing the component when it's becoming checked. */
+    /** The state representing the component when it's becoming checked. */
   Checked,
-  /** The state representing the component when it's becoming unchecked. */
+    /** The state representing the component when it's becoming unchecked. */
   Unchecked,
-  /** The state representing the component when it's becoming indeterminate. */
+    /** The state representing the component when it's becoming indeterminate. */
   Indeterminate
 }
 
@@ -99,7 +99,7 @@ export const _MdCheckboxMixinBase = mixinColor(mixinDisabled(MdCheckboxBase), 'a
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MdCheckbox extends _MdCheckboxMixinBase
-    implements ControlValueAccessor, AfterViewInit, OnDestroy, CanColor, CanDisable {
+implements ControlValueAccessor, AfterViewInit, OnDestroy, CanColor, CanDisable {
   /**
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
    * take precedence so this may be omitted.
@@ -248,29 +248,6 @@ export class MdCheckbox extends _MdCheckboxMixinBase
     }
   }
 
-  /** The color of the button. Can be `primary`, `accent`, or `warn`. */
-  @Input()
-  get color(): string { return this._color; }
-  set color(value: string) { this._updateColor(value); }
-
-  set disabled(value: any) {}
-
-  _updateColor(newColor: string) {
-    this._setElementColor(this._color, false);
-    this._setElementColor(newColor, true);
-    this._color = newColor;
-  }
-
-  _setElementColor(color: string, isAdd: boolean) {
-    if (color != null && color != '') {
-      if (isAdd) {
-        this._renderer.addClass(this._elementRef.nativeElement, `mat-${color}`);
-      } else {
-        this._renderer.removeClass(this._elementRef.nativeElement, `mat-${color}`);
-      }
-    }
-  }
-
   _isRippleDisabled() {
     return this.disableRipple || this.disabled;
   }
@@ -331,7 +308,7 @@ export class MdCheckbox extends _MdCheckboxMixinBase
     }
 
     this._currentAnimationClass = this._getAnimationClassForCheckStateTransition(
-        oldState, newState);
+      oldState, newState);
     this._currentCheckState = newState;
 
     if (this._currentAnimationClass.length > 0) {
@@ -415,7 +392,7 @@ export class MdCheckbox extends _MdCheckboxMixinBase
   }
 
   private _getAnimationClassForCheckStateTransition(
-      oldState: TransitionCheckState, newState: TransitionCheckState): string {
+    oldState: TransitionCheckState, newState: TransitionCheckState): string {
     let animSuffix: string = '';
 
     switch (oldState) {
@@ -432,15 +409,15 @@ export class MdCheckbox extends _MdCheckboxMixinBase
         break;
       case TransitionCheckState.Unchecked:
         animSuffix = newState === TransitionCheckState.Checked ?
-            'unchecked-checked' : 'unchecked-indeterminate';
+          'unchecked-checked' : 'unchecked-indeterminate';
         break;
       case TransitionCheckState.Checked:
         animSuffix = newState === TransitionCheckState.Unchecked ?
-            'checked-unchecked' : 'checked-indeterminate';
+          'checked-unchecked' : 'checked-indeterminate';
         break;
       case TransitionCheckState.Indeterminate:
         animSuffix = newState === TransitionCheckState.Checked ?
-            'indeterminate-checked' : 'indeterminate-unchecked';
+          'indeterminate-checked' : 'indeterminate-unchecked';
         break;
     }
 

@@ -38,9 +38,12 @@ export class SimpleTreeDemo implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.submit();
     this.treeControl.expandChange.next([]);
-    this._selectSubscription = this.selection.onChange.subscribe(() => {
-      this.changeDetectorRef.markForCheck();
-    });
+    this.changeDetectorRef.markForCheck();
+    if (this.selection.onChange) {
+      this._selectSubscription = this.selection.onChange.subscribe(() => {
+        this.changeDetectorRef.markForCheck();
+      });
+    }
   }
 
   ngOnDestroy() {
@@ -69,7 +72,7 @@ export class SimpleTreeDemo implements OnInit, AfterViewInit {
     return new Array(level);
   }
 
-  selectNode(node: any, event: any) {
+  selectNode(node: any, _: any) {
     this.selection.toggle(node);
     let decedents = this.treeControl.getDecedents(node);
     let selected = this.selection.isSelected(node);

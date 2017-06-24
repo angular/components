@@ -36,7 +36,6 @@ import {DatepickerDemo} from '../datepicker/datepicker-demo';
 import {DataTableDemo} from '../data-table/data-table-demo';
 import {TypographyDemo} from '../typography/typography-demo';
 import {ExpansionDemo} from '../expansion/expansion-demo';
-import {TreeDemo} from '../tree/tree-demo';
 import {SimpleTreeDemo} from '../tree/simple-tree-demo';
 import {NestedTreeDemo} from '../tree/nested-tree-demo';
 

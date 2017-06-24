@@ -25,18 +25,17 @@ import {
   IterableChangeRecord,
   DoCheck,
 } from '@angular/core';
-import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import 'rxjs/add/operator/let';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/observable/combineLatest';
 import {TreeDataSource, TreeAdapter} from './data-source';
 import {TreeControl} from './tree-control';
 import {SelectionModel, UP_ARROW, DOWN_ARROW, RIGHT_ARROW, LEFT_ARROW, HOME, ENTER, ESCAPE, FocusOriginMonitor} from '../core';
 import {FocusKeyManager, Focusable} from '../core/a11y/focus-key-manager';
-import {CollectionViewer} from './data-source';
+import {CollectionViewer} from '../core/data-table';
 import {NestedNode, FlatNode} from './tree-node';
 import {Subscription} from 'rxjs/Subscription';
+import {fromEvent} from 'rxjs/observable/fromEvent';
+import {RxChain, debounceTime} from '../core/rxjs/index';
+import {combineLatest} from 'rxjs/observable/combineLatest';
 
 /** Height of each row in pixels (48 + 1px border) */
 export const ROW_HEIGHT = 49;
@@ -110,7 +109,7 @@ export class CdkNode  implements Focusable, OnDestroy {
 
   /** Focuses the menu item. */
   focus(): void {
-    this.elementRef.nativeElement.focus();
+    // this.elementRef.nativeElement.focus();
   }
 }
 
@@ -143,19 +142,12 @@ export class CdkNestedNode implements AfterContentInit, OnDestroy {
   viewContainer: ViewContainerRef;
 
   ngAfterViewInit() {
-    this.nodePlaceholder.changes.subscribe((expanded) => {
-      console.log(`node ${this.node} placeholder length is ${expanded.length}`);
-    });
+    // this.tree.treeControl.expandChange.subscribe(() => this.changeDetectorRef.detectChanges());
   }
+
   ngAfterContentInit() {
-    // this._addChildrenNodes(children);
-    // this.node.getChildren().subscribe((children) => {
-
-      // console.log(`add children from getChildren subscription`);
-
-    // });
     this._childrenSubscription =
-        Observable.combineLatest([this.node.getChildren(), this.nodePlaceholder.changes])
+        combineLatest([this.node.getChildren(), this.nodePlaceholder.changes])
         .subscribe((results) => {
           // console.log(`add children from getChildren & nodePlaceholder subscription`);
      this._addChildrenNodes(results[0]);
@@ -169,8 +161,6 @@ export class CdkNestedNode implements AfterContentInit, OnDestroy {
       if (children) {
         children.forEach((child, index) => {
           this.tree.addNode(this.viewContainer, child, index);
-          console.log(child);
-          console.log(`add node`);
         });
 
       }
@@ -235,7 +225,7 @@ export class CdkNodeTrigger {
 
   constructor(@Inject(forwardRef(() => CdkTree)) private tree: CdkTree) {}
 
-  trigger(event: Event) {
+  trigger(_: Event) {
     this.selection.toggle(this.node);
      if (this.recursive) {
        this.selectRecursive(this.node, this.selection.isSelected(this.node));
@@ -294,10 +284,10 @@ export class CdkTree implements CollectionViewer, AfterViewInit, OnInit {
   @Input() treeControl: TreeControl;
 
   /** View changed for CollectionViewer */
-  viewChanged = new BehaviorSubject({start: 0, end: 20});
+  viewChange = new BehaviorSubject({start: 0, end: 20});
 
   /** Data differerences for the ndoes */
-  private _dataDiffer: IterableDiffer<any> = null;
+  private _dataDiffer: IterableDiffer<any>;
 
   // Focus related
   _keyManager: FocusKeyManager;
@@ -315,8 +305,8 @@ export class CdkTree implements CollectionViewer, AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    Observable.fromEvent(this.elementRef.nativeElement, 'scroll')
-      .debounceTime(100)
+    RxChain.from(fromEvent(this.elementRef.nativeElement, 'scroll'))
+      .call(debounceTime, 100)
       .subscribe(() => this.scrollEvent());
   }
 
@@ -330,9 +320,9 @@ export class CdkTree implements CollectionViewer, AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
+    // this.treeControl.expandChange.subscribe(() => this.changeDetectorRef.detectChanges());
     this._viewInitialized = true;
     this.items.changes.subscribe((items) => {
-      console.log(items);
       let nodes = items.toArray();
 
       nodes.sort((a, b) => {
@@ -346,12 +336,10 @@ export class CdkTree implements CollectionViewer, AfterViewInit, OnInit {
         this.updateFocusedNode(activeItem);
       }
       this.changeDetectorRef.detectChanges();
-      console.log(`key manager is ${this._keyManager.activeItemIndex} ${this.orderedNodes.length}`);
     })
   }
 
   renderNodeChanges(dataNodes: FlatNode[]) {
-    console.time('Rendering rows');
     const changes = this._dataDiffer.diff(dataNodes);
     if (!changes) { return; }
 
@@ -364,7 +352,9 @@ export class CdkTree implements CollectionViewer, AfterViewInit, OnInit {
           this.nodePlaceholder.viewContainer.remove(adjustedPreviousIndex);
         } else {
           const view = this.nodePlaceholder.viewContainer.get(adjustedPreviousIndex);
-          this.nodePlaceholder.viewContainer.move(view, currentIndex);
+          if (view) {
+            this.nodePlaceholder.viewContainer.move(view, currentIndex);
+          }
         }
       });
 
@@ -391,7 +381,7 @@ export class CdkTree implements CollectionViewer, AfterViewInit, OnInit {
     container.createEmbeddedView(node.template, context, currentIndex);
   }
 
-  getNodeDefForItem(item: any) {
+  getNodeDefForItem(_) {
     // proof-of-concept: only supporting one row definition
     return this.nodeDefinitions.first;
   }
@@ -407,7 +397,7 @@ export class CdkTree implements CollectionViewer, AfterViewInit, OnInit {
       end: Math.ceil(topIndex + (elementHeight / ROW_HEIGHT)) + BUFFER
     };
 
-    this.viewChanged.next(view);
+    this.viewChange.next(view);
   }
 
   printData() {

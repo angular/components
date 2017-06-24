@@ -48,6 +48,7 @@ import {NestedTreeDemo} from './tree/nested-tree-demo';
 import {NestedTreeNode} from './tree/nested-tree-node';
 import {
   CdkDataTableModule,
+  CdkTreeModule,
   FullscreenOverlayContainer,
   MdAutocompleteModule,
   MdButtonModule,
@@ -118,6 +119,7 @@ import {TableHeaderDemo} from './data-table/table-header-demo';
     MdTooltipModule,
     MdNativeDateModule,
     CdkDataTableModule,
+    CdkTreeModule,
     StyleModule
   ]
 })
@@ -183,26 +185,14 @@ export class DemoMaterialModule {}
     RainyTabContent,
     FoggyTabContent,
     PlatformDemo,
-<<<<<<< HEAD
-<<<<<<< HEAD
     TypographyDemo,
     ExpansionDemo,
-    TreeDemo,
-=======
-    TreeDemo, TreeDottedLine, TreeExpansion,
->>>>>>> .
-=======
->>>>>>> sth
     SimpleTreeNode,
     NestedTreeNode,
   ],
   providers: [
-<<<<<<< HEAD
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
     PeopleDatabase
-=======
-    {provide: OverlayContainer, useClass: FullscreenOverlayContainer}
->>>>>>> A working version with nested tree and flat tree
   ],
   entryComponents: [
     DemoApp,

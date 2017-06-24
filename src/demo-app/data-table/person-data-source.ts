@@ -2,6 +2,8 @@ import {CollectionViewer, DataSource, MdPaginator} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {PeopleDatabase, UserData} from './people-database';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {merge} from 'rxjs/observable/merge';
+import {combineLatest} from 'rxjs/observable/combineLatest';
 import 'rxjs/add/operator/map';
 
 export class PersonDataSource extends DataSource<any> {
@@ -17,7 +19,7 @@ export class PersonDataSource extends DataSource<any> {
 
     // Subscribe to page changes and database changes by clearing the cached data and
     // determining the updated display data.
-    Observable.merge(this._paginator.page, this._peopleDatabase.dataChange).subscribe(() => {
+    merge(this._paginator.page, this._peopleDatabase.dataChange).subscribe(() => {
       this._renderedData = [];
       this.updateDisplayData();
     });
@@ -27,7 +29,7 @@ export class PersonDataSource extends DataSource<any> {
     this.updateDisplayData();
 
     const streams = [collectionViewer.viewChange, this._displayData];
-    return Observable.combineLatest(streams)
+    return combineLatest(streams)
         .map((results: [{start: number, end: number}, UserData[]]) => {
           const [view, data] = results;
 

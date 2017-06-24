@@ -26,9 +26,9 @@
 div.space div {
   width: 45px;
   height: 48px;
+  left: 20px;
+  bottom: 20px;
   position: relative;
-  bottom: 34px;
-  left: 12px;
   display: inline-block;
 }
 
@@ -54,4 +54,10 @@ cdk-node.cdk-program-focused {
 
 .mat-checkbox {
   z-index: 10;
+}
+
+.expand-trigger {
+  width: 40px;
+  display: inline-block;
+  z-index: 9;
 }

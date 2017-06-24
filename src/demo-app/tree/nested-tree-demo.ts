@@ -2,6 +2,7 @@ import {Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, AfterView
 import {JsonNestedDataSource, JsonNode, JsonNestedNode} from './nested-data-source';
 import {SelectionModel, TreeControl, NestedTreeControl, CdkTree} from '@angular/material';
 import {jsonExample} from './sample-json';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   moduleId: module.id,
@@ -12,6 +13,8 @@ import {jsonExample} from './sample-json';
 })
 export class NestedTreeDemo implements OnInit, OnDestroy, AfterViewInit {
   data: string = jsonExample;
+
+  _subscription: Subscription;
 
   selection = new SelectionModel<any>(true, []);
 
@@ -32,13 +35,18 @@ export class NestedTreeDemo implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     this.submit();
     this.treeControl.expandChange.next([]);
-    this.selection.onChange.subscribe(() => {
-      this.changeDetectorRef.markForCheck();
-    });
+    if (this.selection.onChange) {
+      this._subscription = this.selection.onChange.subscribe(() => {
+        this.changeDetectorRef.markForCheck();
+      });
+    }
+
   }
 
   ngOnDestroy() {
-    this.selection.onChange.unsubscribe();
+    if (this._subscription) {
+      this._subscription.unsubscribe();
+    }
   }
 
   submit() {

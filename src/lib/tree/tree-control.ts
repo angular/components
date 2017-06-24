@@ -85,7 +85,7 @@ export class FlatTreeControl<T extends FlatNode> implements TreeControl {
 
   getDecedents(node: T) {
     let startIndex = this.nodes.indexOf(node);
-    let results = [];
+    let results: T[] = [];
     let i = startIndex + 1;
     for (; i < this.nodes.length && node.level < this.nodes[i].level; i++) {
       results.push(this.nodes[i]);
@@ -120,19 +120,25 @@ export class NestedTreeControl<T extends NestedNode> implements TreeControl {
 
   /** Expansion Statues */
   set expansionModel(model: SelectionModel<T>) {
-    this._expansionModel.onChange.unsubscribe();
-    this._expansionModel = model;
-    this._expansionModel.onChange.subscribe((_) => this.expandChange.next(this.expansionModel.selected));
+    if (this._expansionModel != null && this._expansionModel.onChange != null) {
+      this._expansionModel.onChange.unsubscribe();
+      this._expansionModel = model;
+    }
+    if ( this._expansionModel != null && this._expansionModel.onChange != null) {
+      this._expansionModel.onChange.subscribe((_) => this.expandChange.next(this.expansionModel.selected));
+    }
   }
-  get expansionModel() {
+  get expansionModel(): SelectionModel<T> {
     return this._expansionModel;
   }
-  _expansionModel = new SelectionModel<T>(true);
+  _expansionModel: SelectionModel<T> = new SelectionModel<T>(true);
 
   /** Expansion info: the model */
   constructor() {
-    this._expansionModel.onChange.subscribe((_) =>
-      this.expandChange.next(this.expansionModel.selected));
+    if (this._expansionModel != null && this._expansionModel.onChange != null) {
+      this._expansionModel.onChange.subscribe((_) =>
+        this.expandChange.next(this.expansionModel.selected));
+    }
   }
 
   toggle(node: T) {

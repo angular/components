@@ -1,12 +1,13 @@
 import {CollectionViewer, TreeDataSource, TreeAdapter, FlatTreeControl, TreeControl, FlatNode, NestedNode, SelectionModel} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
+import {combineLatest} from 'rxjs/observable/combineLatest';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/pairwise';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/combineLatest';
+// import 'rxjs/add/observable/combineLatest';
+// import 'rxjs/add/operator/debounceTime';
+// import 'rxjs/add/operator/mergeMap';
+// import 'rxjs/add/operator/pairwise';
+// import 'rxjs/add/operator/distinctUntilChanged';
+// import 'rxjs/add/operator/combineLatest';
 
 
 export interface SimpleTreeNode {
@@ -63,7 +64,7 @@ export class JsonAdapter {
     let currentExpand: boolean[] = [];
     currentExpand[0] = true;
 
-    nodes.forEach((node, index) => {
+    nodes.forEach((node) => {
       let expand = true;
       for (let i = 0; i <= node.level; i++) {
         expand = expand && currentExpand[i];
@@ -118,13 +119,13 @@ export class JsonDataSource implements TreeDataSource<any> {
       this._flattenedData.next(JsonAdapter.flattenNodes(filteredData));
       this.treeControl.nodes = this.flattenedData;
     });
-    Observable.combineLatest([this.treeControl.expandChange, this._flattenedData]).subscribe(() => {
+    combineLatest([this.treeControl.expandChange, this._flattenedData]).subscribe(() => {
       this._expandedData.next(JsonAdapter.expandFlattenedNodes(this.flattenedData, this.treeControl));
     });
   }
 
   connect(collectionViewer: CollectionViewer): Observable<JsonFlatNode[]> {
-    return Observable.combineLatest([collectionViewer.viewChanged, this._expandedData])
+    return combineLatest([collectionViewer.viewChange, this._expandedData])
         .map((results: any[]) => {
           console.log(`view changed | expand`)
       let [view, displayData] = results;
