@@ -8,6 +8,7 @@
 
 import {EventEmitter, TemplateRef} from '@angular/core';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
+import {Direction} from '../core';
 
 export interface MdMenuPanel {
   xPosition: MenuPositionX;
@@ -15,7 +16,8 @@ export interface MdMenuPanel {
   overlapTrigger: boolean;
   templateRef: TemplateRef<any>;
   close: EventEmitter<void>;
+  isSubmenu: boolean;
+  direction: Direction;
   focusFirstItem: () => void;
   setPositionClasses: (x: MenuPositionX, y: MenuPositionY) => void;
-  _emitCloseEvent: () => void;
 }

@@ -7,40 +7,44 @@
  */
 
 import {
-    AfterViewInit,
-    Directive,
-    ElementRef,
-    EventEmitter,
-    Input,
-    OnDestroy,
-    Optional,
-    Output,
-    ViewContainerRef,
-    InjectionToken,
-    Inject,
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Optional,
+  Output,
+  ViewContainerRef,
+  Self,
+  Inject,
+  InjectionToken,
 } from '@angular/core';
-import {MdMenuPanel} from './menu-panel';
-import {throwMdMenuMissingError} from './menu-errors';
 import {
-    isFakeMousedownFromScreenReader,
-    Directionality,
-    Direction,
-    Overlay,
-    OverlayState,
-    OverlayRef,
-    TemplatePortal,
-    ConnectedPositionStrategy,
-    HorizontalConnectionPos,
-    VerticalConnectionPos,
-    RepositionScrollStrategy,
-    // This import is only used to define a generic type. The current TypeScript version incorrectly
-    // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
-    // tslint:disable-next-line:no-unused-variable
-    ScrollStrategy,
+  isFakeMousedownFromScreenReader,
+  Directionality,
+  Direction,
+  Overlay,
+  OverlayState,
+  OverlayRef,
+  TemplatePortal,
+  ConnectedPositionStrategy,
+  HorizontalConnectionPos,
+  VerticalConnectionPos,
+  RIGHT_ARROW,
+  LEFT_ARROW,
+  RepositionScrollStrategy,
+  // This import is only used to define a generic type. The current TypeScript version incorrectly
+  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
+  // tslint:disable-next-line:no-unused-variable
+  ScrollStrategy,
 } from '../core';
-import {Subscription} from 'rxjs/Subscription';
-import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {MdMenu} from './menu-directive';
+import {MdMenuItem} from './menu-item';
+import {MdMenuPanel} from './menu-panel';
+import {MenuPositionX, MenuPositionY} from './menu-positions';
+import {throwMdMenuMissingError} from './menu-errors';
+import {Subscription} from 'rxjs/Subscription';
 
 /** Injection token that determines the scroll handling while the menu is open. */
 export const MD_MENU_SCROLL_STRATEGY =
@@ -61,6 +65,9 @@ export const MD_MENU_SCROLL_STRATEGY_PROVIDER = {
 
 // TODO(andrewseguin): Remove the kebab versions in favor of camelCased attribute selectors
 
+/** Default top padding of the menu panel. */
+export const MENU_PANEL_TOP_PADDING = 8;
+
 /**
  * This directive is intended to be used in conjunction with an md-menu tag.  It is
  * responsible for toggling the display of the provided menu instance.
@@ -71,7 +78,8 @@ export const MD_MENU_SCROLL_STRATEGY_PROVIDER = {
   host: {
     'aria-haspopup': 'true',
     '(mousedown)': '_handleMousedown($event)',
-    '(click)': 'toggleMenu()',
+    '(keydown)': '_handleKeydown($event)',
+    '(click)': '_handleClick($event)',
   },
   exportAs: 'mdMenuTrigger'
 })
@@ -81,8 +89,9 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   private _menuOpen: boolean = false;
   private _backdropSubscription: Subscription;
   private _positionSubscription: Subscription;
+  private _parentMenuSubscriptions: Subscription[] = [];
 
-  // tracking input type is necessary so it's possible to only auto-focus
+  // Tracking input type is necessary so it's possible to only auto-focus
   // the first item of the list when the menu is opened via the keyboard
   private _openedByMouse: boolean = false;
 
@@ -110,20 +119,43 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   /** Event emitted when the associated menu is closed. */
   @Output() onMenuClose = new EventEmitter<void>();
 
-  constructor(private _overlay: Overlay, private _element: ElementRef,
+  constructor(private _overlay: Overlay,
+              private _element: ElementRef,
               private _viewContainerRef: ViewContainerRef,
               @Inject(MD_MENU_SCROLL_STRATEGY) private _scrollStrategy,
+              @Optional() private _parentMenu: MdMenu,
+              @Optional() @Self() private _menuItemInstance: MdMenuItem,
               @Optional() private _dir: Directionality) { }
 
   ngAfterViewInit() {
     this._checkMenu();
     this.menu.close.subscribe(() => this.closeMenu());
+    this._subscribeToParentMenu();
   }
 
-  ngOnDestroy() { this.destroyMenu(); }
+  ngOnDestroy() {
+    if (this._overlayRef) {
+      this._overlayRef.dispose();
+      this._overlayRef = null;
+    }
+
+    this._cleanUpSubscriptions();
+  }
 
   /** Whether the menu is open. */
-  get menuOpen(): boolean { return this._menuOpen; }
+  get menuOpen(): boolean {
+    return this._menuOpen;
+  }
+
+  /** The text direction of the containing app. */
+  get dir(): Direction {
+    return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
+  }
+
+  /** Whether the menu triggers a sub-menu or a top-level one. */
+  triggersSubmenu(): boolean {
+    return !!(this._menuItemInstance && this._parentMenu);
+  }
 
   /** Toggles the menu between the open and closed states. */
   toggleMenu(): void {
@@ -145,7 +177,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
 
   /** Closes the menu. */
   closeMenu(): void {
-    if (this._overlayRef) {
+    if (this._overlayRef && this.menuOpen) {
       this._overlayRef.detach();
       this._backdropSubscription.unsubscribe();
       this._resetMenu();
@@ -156,24 +188,9 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
     }
   }
 
-  /** Removes the menu from the DOM. */
-  destroyMenu(): void {
-    if (this._overlayRef) {
-      this._overlayRef.dispose();
-      this._overlayRef = null;
-
-      this._cleanUpSubscriptions();
-    }
-  }
-
   /** Focuses the menu trigger. */
   focus() {
     this._element.nativeElement.focus();
-  }
-
-  /** The text direction of the containing app. */
-  get dir(): Direction {
-    return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
   }
 
   /**
@@ -185,7 +202,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   private _subscribeToBackdrop(): void {
     if (this._overlayRef) {
       this._backdropSubscription = this._overlayRef.backdropClick().subscribe(() => {
-        this.menu._emitCloseEvent();
+        this.menu.close.emit();
       });
     }
   }
@@ -195,6 +212,8 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    * the menu was opened via the keyboard.
    */
   private _initMenu(): void {
+    this.menu.isSubmenu = this.triggersSubmenu();
+    this.menu.direction = this.dir;
     this._setIsMenuOpen(true);
 
     // Should only set focus if opened via the keyboard, so keyboard users can
@@ -217,6 +236,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
     if (!this._openedByMouse) {
       this.focus();
     }
+
     this._openedByMouse = false;
   }
 
@@ -224,11 +244,15 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   private _setIsMenuOpen(isOpen: boolean): void {
     this._menuOpen = isOpen;
     this._menuOpen ? this.onMenuOpen.emit() : this.onMenuClose.emit();
+
+    if (this.triggersSubmenu()) {
+      this._menuItemInstance._highlighted = isOpen;
+    }
   }
 
   /**
-   *  This method checks that a valid instance of MdMenu has been passed into
-   *  mdMenuTriggerFor. If not, an exception is thrown.
+   * This method checks that a valid instance of MdMenu has been passed into
+   * mdMenuTriggerFor. If not, an exception is thrown.
    */
   private _checkMenu() {
     if (!this.menu) {
@@ -237,8 +261,8 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   }
 
   /**
-   *  This method creates the overlay from the provided menu's template and saves its
-   *  OverlayRef so that it can be attached to the DOM when openMenu is called.
+   * This method creates the overlay from the provided menu's template and saves its
+   * OverlayRef so that it can be attached to the DOM when openMenu is called.
    */
   private _createOverlay(): OverlayRef {
     if (!this._overlayRef) {
@@ -257,9 +281,8 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    */
   private _getOverlayConfig(): OverlayState {
     const overlayState = new OverlayState();
-    overlayState.positionStrategy = this._getPosition()
-                                        .withDirection(this.dir);
-    overlayState.hasBackdrop = true;
+    overlayState.positionStrategy = this._getPosition();
+    overlayState.hasBackdrop = !this.triggersSubmenu();
     overlayState.backdropClass = 'cdk-overlay-transparent-backdrop';
     overlayState.direction = this.dir;
     overlayState.scrollStrategy = this._scrollStrategy();
@@ -285,47 +308,109 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    * to the trigger.
    * @returns ConnectedPositionStrategy
    */
-  private _getPosition(): ConnectedPositionStrategy  {
-    const [posX, fallbackX]: HorizontalConnectionPos[] =
+  private _getPosition(): ConnectedPositionStrategy {
+    let [originX, originFallbackX]: HorizontalConnectionPos[] =
       this.menu.xPosition === 'before' ? ['end', 'start'] : ['start', 'end'];
 
-    const [overlayY, fallbackOverlayY]: VerticalConnectionPos[] =
+    let [overlayY, overlayFallbackY]: VerticalConnectionPos[] =
       this.menu.yPosition === 'above' ? ['bottom', 'top'] : ['top', 'bottom'];
 
-    let originY = overlayY;
-    let fallbackOriginY = fallbackOverlayY;
+    let [originY, originFallbackY] = [overlayY, overlayFallbackY];
+    let [overlayX, overlayFallbackX] = [originX, originFallbackX];
+    let offsetY = 0;
 
-    if (!this.menu.overlapTrigger) {
+    if (this.triggersSubmenu()) {
+      // When the menu is a sub-menu, it should always align itself
+      // to the edges of the trigger, instead of overlapping it.
+      overlayFallbackX = originX = this.menu.xPosition === 'before' ? 'start' : 'end';
+      originFallbackX = overlayX = originX === 'end' ? 'start' : 'end';
+
+      // TODO(crisbeto): this should be a function, once the overlay supports it.
+      // Right now it will be wrong for the fallback positions.
+      offsetY = overlayY === 'bottom' ? MENU_PANEL_TOP_PADDING : -MENU_PANEL_TOP_PADDING;
+    } else if (!this.menu.overlapTrigger) {
       originY = overlayY === 'top' ? 'bottom' : 'top';
-      fallbackOriginY = fallbackOverlayY === 'top' ? 'bottom' : 'top';
+      originFallbackY = overlayFallbackY === 'top' ? 'bottom' : 'top';
     }
 
     return this._overlay.position()
-      .connectedTo(this._element,
-          {originX: posX, originY: originY}, {overlayX: posX, overlayY: overlayY})
+      .connectedTo(this._element, {originX, originY}, {overlayX, overlayY})
+      .withDirection(this.dir)
+      .withOffsetY(offsetY)
       .withFallbackPosition(
-          {originX: fallbackX, originY: originY},
-          {overlayX: fallbackX, overlayY: overlayY})
+          {originX: originFallbackX, originY},
+          {overlayX: overlayFallbackX, overlayY})
       .withFallbackPosition(
-          {originX: posX, originY: fallbackOriginY},
-          {overlayX: posX, overlayY: fallbackOverlayY})
+          {originX, originY: originFallbackY},
+          {overlayX, overlayY: overlayFallbackY})
       .withFallbackPosition(
-          {originX: fallbackX, originY: fallbackOriginY},
-          {overlayX: fallbackX, overlayY: fallbackOverlayY});
+          {originX: originFallbackX, originY: originFallbackY},
+          {overlayX: overlayFallbackX, overlayY: overlayFallbackY});
   }
 
+  /** Cleans up the active subscriptions. */
   private _cleanUpSubscriptions(): void {
     if (this._backdropSubscription) {
       this._backdropSubscription.unsubscribe();
     }
+
     if (this._positionSubscription) {
       this._positionSubscription.unsubscribe();
     }
+
+    this._parentMenuSubscriptions.forEach(subscription => subscription.unsubscribe());
+    this._parentMenuSubscriptions = [];
   }
 
+  /** Sets up the subscriptions to parent menu events. */
+  private _subscribeToParentMenu(): void {
+    if (!this.triggersSubmenu()) {
+      return;
+    }
+
+    // Subscribe to changes in the hovered item in order to toggle the panel.
+    this._parentMenuSubscriptions.push(this._parentMenu.hover().subscribe(active => {
+      if (active === this._menuItemInstance) {
+        this._openedByMouse = true;
+        this.openMenu();
+      } else {
+        this.menu.close.emit();
+      }
+    }));
+
+    // Subscribe to the parent menu closing, allowing for the close event
+    // to propagate to any child menus that the current trigger may have.
+    this._parentMenuSubscriptions.push(this._parentMenu.close.subscribe(() => {
+      this.menu.close.emit();
+    }));
+  }
+
+  /** Handles mouse presses on the trigger. */
   _handleMousedown(event: MouseEvent): void {
     if (!isFakeMousedownFromScreenReader(event)) {
       this._openedByMouse = true;
+    }
+  }
+
+  /** Handles key presses on the trigger. */
+  _handleKeydown(event: KeyboardEvent): void {
+    const keyCode = event.keyCode;
+
+    if (this.triggersSubmenu() && (
+        (keyCode === RIGHT_ARROW && this.dir === 'ltr') ||
+        (keyCode === LEFT_ARROW && this.dir === 'rtl'))) {
+        this.openMenu();
+    }
+  }
+
+  /** Handles click events on the trigger. */
+  _handleClick(event: MouseEvent): void {
+    if (this.triggersSubmenu()) {
+      // Stop event propagation to avoid closing the parent menu.
+      event.stopPropagation();
+      this.openMenu();
+    } else {
+      this.toggleMenu();
     }
   }
 
