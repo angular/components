@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk';
 import {InteractivityChecker} from './interactivity-checker';
-import {Platform} from '../platform/platform';
+import {Platform} from '@angular/cdk';
 import {first} from '../rxjs/index';
 
 

@@ -18,7 +18,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {TooltipPosition, MdTooltip, MdTooltipModule, SCROLL_THROTTLE_MS} from './index';
 import {Directionality, Direction} from '../core/bidi/index';
 import {OverlayModule, Scrollable, OverlayContainer} from '../core/overlay/index';
-import {Platform} from '../core/platform/platform';
+import {Platform} from '@angular/cdk';
 import {dispatchFakeEvent} from '../core/testing/dispatch-events';
 
 

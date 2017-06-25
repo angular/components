@@ -10,12 +10,12 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MdSlideToggle} from './slide-toggle';
+import {PlatformModule} from '@angular/cdk';
 import {
   FOCUS_ORIGIN_MONITOR_PROVIDER,
   GestureConfig,
   MdCommonModule,
   MdRippleModule,
-  PlatformModule,
 } from '../core';
 
 @NgModule({

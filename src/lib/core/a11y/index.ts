@@ -11,7 +11,7 @@ import {FocusTrapDirective, FocusTrapDeprecatedDirective, FocusTrapFactory} from
 import {LIVE_ANNOUNCER_PROVIDER} from './live-announcer';
 import {InteractivityChecker} from './interactivity-checker';
 import {CommonModule} from '@angular/common';
-import {PlatformModule} from '../platform/index';
+import {PlatformModule} from '@angular/cdk';
 
 @NgModule({
   imports: [CommonModule, PlatformModule],

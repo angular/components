@@ -21,7 +21,8 @@ import {
   ViewEncapsulation,
   Inject
 } from '@angular/core';
-import {coerceBooleanProperty, FocusOriginMonitor, Platform} from '../core';
+import {coerceBooleanProperty, FocusOriginMonitor} from '../core';
+import {Platform} from '@angular/cdk';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 

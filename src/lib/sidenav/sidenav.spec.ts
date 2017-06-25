@@ -3,7 +3,7 @@ import {Component, ElementRef, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdSidenav, MdSidenavModule, MdSidenavToggleResult, MdSidenavContainer} from './index';
 import {A11yModule} from '../core/a11y/index';
-import {PlatformModule} from '../core/platform/index';
+import {PlatformModule} from '@angular/cdk';
 import {ESCAPE} from '../core/keyboard/keycodes';
 
 function endSidenavTransition(fixture: ComponentFixture<any>) {
