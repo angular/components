@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Go to project directory
+cd $(dirname ${0})/..
+
 # Base Source Path
 if [ -d ~/material2 ] ; then
   echo "- Using path ~/material2"
@@ -21,8 +24,10 @@ fi
 # Base Target Path
 baseTargetPath=./src/assets
 
+# Path to all overview HTML files.
+overviewHtmlFiles=$(find ${baseSrcPath}/dist/docs/markdown -path "*/*.html" ! -name 'README.*')
+
 # Copy Packages
-mkdir -p ./node_modules/@angular/material-examples
 cp -r ${baseSrcPath}/dist/releases/material-examples ./node_modules/@angular/
 
 # Copy Examples
@@ -37,4 +42,4 @@ cp ${baseSrcPath}/dist/docs/markdown/*.html ${baseTargetPath}/documents/guides
 
 # Copy Overview
 mkdir -p ./src/assets/documents/overview
-cp ${baseSrcPath}/dist/docs/markdown/*/*.html ${baseTargetPath}/documents/overview
+cp ${overviewHtmlFiles} ${baseTargetPath}/documents/overview

@@ -9,9 +9,9 @@
     "test": "ng test",
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
-    "build-themes": "./tools/build-themes.sh",
+    "build-themes": "bash ./tools/build-themes.sh",
     "prod-build": "npm run build-themes && ng build --aot --prod && npm run prerender && cp -r tmp/prerendered/* dist/",
-    "postinstall": "webdriver-manager update && tools/fetch-assets.sh",
+    "postinstall": "webdriver-manager update && bash ./tools/fetch-assets.sh",
     "publish-prod": "npm run build-themes && ng build --aot --prod && firebase use material-angular-io && firebase deploy",
     "publish-dev": "npm run build-themes && ng build --aot --prod && firebase use material2-docs-dev && firebase deploy"
   },
