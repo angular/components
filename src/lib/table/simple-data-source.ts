@@ -7,12 +7,12 @@
  */
 
 import {CollectionViewer, DataSource} from '../core/data-table/data-source';
-import {Observable} from 'rxjs/Observable';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {combineLatest} from 'rxjs/observable/combineLatest';
 import {map} from '../core/rxjs/index';
 import {MdPaginator} from '../paginator/index';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
+import {combineLatest} from 'rxjs/observable/combineLatest';
 
 /**
  * Data source that can be used for the MdTable or CdkTable. Provides a getter/setter for
@@ -40,7 +40,7 @@ export class SimpleDataSource<T> extends DataSource<T> {
 
   connect(collectionViewer: CollectionViewer): Observable<T[]> {
     return map.call(combineLatest(this._renderedData, collectionViewer.viewChange),
-        ([data]) => data);
+        ([data]: [T[]]) => data);
   }
 
   refresh() {
