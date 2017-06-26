@@ -22,6 +22,7 @@ export class MdHeaderCell extends CdkHeaderCell {
               elementRef: ElementRef,
               renderer: Renderer2) {
     super(columnDef, elementRef, renderer);
+    renderer.addClass(elementRef.nativeElement, `mat-column-${columnDef.name}`);
   }
 }
 
@@ -38,5 +39,6 @@ export class MdCell extends CdkCell {
               elementRef: ElementRef,
               renderer: Renderer2) {
     super(columnDef, elementRef, renderer);
+    renderer.addClass(elementRef.nativeElement, `mat-column-${columnDef.name}`);
   }
 }
