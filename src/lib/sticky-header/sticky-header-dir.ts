@@ -27,15 +27,16 @@ export class CdkStickyRegion {
 }
 
 
-/**
- * The 'cdkStickyHeader' is the header which user wants to be stuck at top of the
- * scrollable container. The main logic is in the 'sticker()' function.
- */
-const STICK_START_CLASS = 'stick-start';
-const STICK_END_CLASS = 'sticky-end';
+const STICK_START_CLASS = 'mat-stick-start';
+const STICK_END_CLASS = 'mat-stick-end';
 @Directive({
   selector: '[cdkStickyHeader]',
 })
+/**
+ * Directive that marks an element as a sticky-header. Inside of a scrolling container (marked with
+ * cdkScrollable), this header will "stick" to the top of the scrolling viewport while its sticky
+ * region (see cdkStickyRegion) is in view.
+ */
 export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   /**
