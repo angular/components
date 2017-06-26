@@ -292,6 +292,20 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     this.sticker();
   }
 
+  generateCssStyle(zIndex:any, position:any, top:any, right:any,
+                   left:any, bottom:any, width:any): any {
+    let curCSS = {
+      zIndex: zIndex,
+      position: position,
+      top: top,
+      right: right,
+      left: left,
+      bottom: bottom,
+      width: width,
+    };
+    return curCSS;
+}
+
 
   private getCssValue(element: any, property: string): any {
     let result: any = '';
