@@ -39,7 +39,6 @@ import {createMissingDateImplError} from './datepicker-errors';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {MdCalendar} from './calendar';
 import {first} from '../core/rxjs/index';
-import 'rxjs/add/operator/first';
 import {coerceBooleanProperty} from '@angular/cdk';
 
 

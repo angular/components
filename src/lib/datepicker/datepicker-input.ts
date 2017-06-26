@@ -125,6 +125,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   }
   private _max: D;
 
+  /** Whether the datepicker-input is disabled. */
   @Input()
   get disabled() { return this._disabled; }
   set disabled(value: any) {
