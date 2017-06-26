@@ -23,11 +23,7 @@ import {Scrollable} from '../core/overlay/scroll/scrollable';
   selector: '[cdkStickyRegion]',
 })
 export class CdkStickyRegion {
-  constructor(private _element: ElementRef) { }
-
-  getElementRef(): ElementRef {
-    return this._element;
-  }
+  constructor(public readonly _elementRef: ElementRef) { }
 }
 
 
@@ -82,15 +78,12 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     this.element = _element.nativeElement;
     this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
     this.scrollableRegion = scrollable.getElementRef().nativeElement;
-    if (parentReg != null) {
-      this.parentRegion = parentReg.getElementRef().nativeElement;
-    }
   }
 
   ngAfterViewInit(): void {
 
-    if (this.parentRegion != null) {
-      this.stickyParent = this.parentRegion;
+    if (this.parentReg != null) {
+      this.stickyParent = this.parentReg._elementRef.nativeElement;
     }else {
       this.stickyParent = this.element.parentElement;
     }
