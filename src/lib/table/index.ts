@@ -12,7 +12,7 @@ import {CdkDataTableModule} from '../core/data-table/index';
 import {MdCell, MdHeaderCell} from './cell';
 import {MdHeaderRow, MdRow} from './row';
 import {CommonModule} from '@angular/common';
-import {MdCommonModule} from '@angular/material';
+import {MdCommonModule} from '../core';
 
 export * from './cell';
 export * from './table';
