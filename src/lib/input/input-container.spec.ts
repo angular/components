@@ -6,7 +6,6 @@ import {
   FormGroupDirective,
   FormsModule,
   NgForm,
-  NgControl,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
@@ -760,10 +759,12 @@ describe('MdInputContainer', function () {
       let component = fixture.componentInstance;
       let containerEl = fixture.debugElement.query(By.css('md-input-container')).nativeElement;
 
-      expect(component.formControl.invalid).toBe(true, 'Expected form control to be invalid');
+      const control = component.formGroup.get('name')!;
+
+      expect(control.invalid).toBe(true, 'Expected form control to be invalid');
       expect(containerEl.querySelectorAll('md-error').length).toBe(0, 'Expected no error messages');
 
-      component.formControl.markAsTouched();
+      control.markAsTouched();
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
@@ -1136,10 +1137,10 @@ class MdInputContainerWithFormErrorMessages {
 
 @Component({
   template: `
-    <form #form="ngForm" novalidate>
+    <form [formGroup]="formGroup">
       <md-input-container>
         <input mdInput
-            [formControl]="formControl"
+            formControlName="name"
             [errorStateMatcher]="customErrorStateMatcher.bind(this)">
         <md-hint>Please type something</md-hint>
         <md-error>This field is required</md-error>
@@ -1148,8 +1149,10 @@ class MdInputContainerWithFormErrorMessages {
   `
 })
 class MdInputContainerWithCustomErrorStateMatcher {
-  @ViewChild('form') form: NgForm;
-  formControl = new FormControl('', Validators.required);
+  formGroup = new FormGroup({
+    name: new FormControl('', Validators.required)
+  });
+
   errorState = false;
 
   customErrorStateMatcher(): boolean {

@@ -7,36 +7,31 @@
  */
 
 import {InjectionToken} from '@angular/core';
-import {NgControl, FormGroupDirective, NgForm} from '@angular/forms';
+import {FormControl, FormGroupDirective, Form, NgForm} from '@angular/forms';
 
 /** Injection token that can be used to specify the global error options. */
 export const MD_ERROR_GLOBAL_OPTIONS = new InjectionToken<ErrorOptions>('md-error-global-options');
 
 export type ErrorStateMatcher =
-  (control: NgControl, parentFormGroup: FormGroupDirective, parentForm: NgForm) => boolean;
+    (control: FormControl, form: FormGroupDirective | NgForm) => boolean;
 
 export interface ErrorOptions {
   errorStateMatcher?: ErrorStateMatcher;
 }
 
-export function defaultErrorStateMatcher(control: NgControl, formGroup: FormGroupDirective,
-    form: NgForm): boolean {
-
-  const isInvalid = control && control.invalid;
-  const isTouched = control && control.touched;
-  const isSubmitted = (formGroup && formGroup.submitted) ||
-      (form && form.submitted);
+export function defaultErrorStateMatcher(control: FormControl, form: FormGroupDirective | NgForm) {
+  const isInvalid = control.invalid;
+  const isTouched = control.touched;
+  const isSubmitted = form && form.submitted;
 
   return !!(isInvalid && (isTouched || isSubmitted));
 }
 
-export function showOnDirtyErrorStateMatcher(control: NgControl, formGroup: FormGroupDirective,
-    form: NgForm): boolean {
-
-  const isInvalid = control && control.invalid;
-  const isDirty = control && control.dirty;
-  const isSubmitted = (formGroup && formGroup.submitted) ||
-      (form && form.submitted);
+export function showOnDirtyErrorStateMatcher(control: FormControl,
+    form: FormGroupDirective | NgForm) {
+  const isInvalid = control.invalid;
+  const isDirty = control.dirty;
+  const isSubmitted = form && form.submitted;
 
   return !!(isInvalid && (isDirty || isSubmitted));
 }

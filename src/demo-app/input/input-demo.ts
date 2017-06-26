@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormControl, Validators, NgControl} from '@angular/forms';
+import {FormControl, Validators} from '@angular/forms';
 
 
 let max = 5;
@@ -45,7 +45,7 @@ export class InputDemo {
     }
   }
 
-  customErrorStateMatcher(c: NgControl): boolean {
+  customErrorStateMatcher(c: FormControl): boolean {
     const hasInteraction = c.dirty || c.touched;
     const isInvalid = c.invalid;
 

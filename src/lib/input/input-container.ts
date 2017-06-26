@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {coerceBooleanProperty, Platform} from '../core';
-import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
+import {FormGroupDirective, NgControl, NgForm, FormControl} from '@angular/forms';
 import {getSupportedInputTypes} from '../core/platform/features';
 import {
   getMdInputContainerDuplicatedHintError,
@@ -264,7 +264,8 @@ export class MdInputDirective {
   /** Whether the input is in an error state. */
   _isErrorState(): boolean {
     const control = this._ngControl;
-    return this.errorStateMatcher(control, this._parentFormGroup, this._parentForm);
+    const form = this._parentFormGroup || this._parentForm;
+    return control && this.errorStateMatcher(control.control as FormControl, form);
   }
 
   /** Make sure the input is a supported type. */
