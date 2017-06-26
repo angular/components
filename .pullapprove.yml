@@ -118,6 +118,7 @@ groups:
     conditions:
       files:
         - 'src/(demo-app|e2e-app|lib)/data-table/*'
+        - 'src/lib/core/data-table/*'
         - 'src/material-examples/data-table-*'
     users:
       - andrewseguin # primary
@@ -127,6 +128,7 @@ groups:
     conditions:
       files:
         - 'src/(demo-app|e2e-app|lib)/datepicker/*'
+        - 'src/lib/core/datetime/*'
         - 'src/material-examples/datepicker-*'
     users:
       - mmalerba # primary
@@ -198,7 +200,8 @@ groups:
   overlay:
     conditions:
       files:
-        - 'src/(demo-app|e2e-app|lib)/overlay/*'
+        - 'src/(demo-app|e2e-app)/overlay/*'
+        - 'src/lib/core/overlay/*'
         - 'src/material-examples/overlay-*'
     users:
       - jelbourn # primary
@@ -207,7 +210,8 @@ groups:
   portal:
     conditions:
       files:
-        - 'src/(demo-app|e2e-app|lib)/portal/*'
+        - 'src/(demo-app|e2e-app)/portal/*'
+        - 'src/lib/core/portal/*'
         - 'src/material-examples/portal-*'
     users:
       - jelbourn # primary
@@ -234,7 +238,8 @@ groups:
   ripple:
     conditions:
       files:
-        - 'src/(demo-app|e2e-app|lib)/ripple/*'
+        - 'src/(demo-app|e2e-app)/ripple/*'
+        - 'src/lib/core/ripple/*'
         - 'src/material-examples/ripple-*'
     users:
       - devversion # primary
@@ -315,8 +320,9 @@ groups:
   typography:
     conditions:
       files:
-        - 'src/(demo-app|e2e-app|lib)/slide-toggle/*'
-        - 'src/material-examples/slide-toggle-*'
+        - 'src/(demo-app|e2e-app)/typography/*'
+        - 'src/lib/core/typography/*'
+        - 'src/material-examples/typography-*'
     users:
       - crisbeto # primary
       - jelbourn
