@@ -37,7 +37,7 @@ export class MdSort {
    * The direction to set when an MdSortable is initially sorted.
    * May be overriden by the MdSortable's sort start.
    */
-  @Input('mdSortStart') start: 'asc' | 'desc' = 'desc';
+  @Input('mdSortStart') start: 'asc' | 'desc' = 'asc';
 
   /** The sort direction of the currently active MdSortable. */
   @Input('mdSortDirection') direction: SortDirection = '';
@@ -73,7 +73,7 @@ export class MdSort {
    * Unregister function to be used by the contained MdSortables. Removes the MdSortable from the
    * collection of contained MdSortables.
    */
-  unregister(sortable: MdSortable) {
+  deregister(sortable: MdSortable) {
     this.sortables.delete(sortable.id);
   }
 
@@ -83,22 +83,20 @@ export class MdSort {
       this.active = sortable.id;
       this.direction = sortable.start ? sortable.start : this.start;
     } else {
-      this.direction = this._getNextSortDirection();
+      this.direction = this.getNextSortDirection(sortable);
     }
 
     this.mdSortChange.next({active: this.active, direction: this.direction});
   }
 
   /** Returns the next sort direction of the active sortable, checking for potential overrides. */
-  _getNextSortDirection(): SortDirection {
-    const sortable = this.sortables.get(this.active);
+  getNextSortDirection(sortable: MdSortable): SortDirection {
     if (!sortable) { return ''; }
 
     // Get the sort direction cycle with the potential sortable overrides.
-    const disableClear = sortable.disableClear != undefined ?
-        sortable.disableClear :
-        this.disableClear;
+    const disableClear = sortable.disableClear != null ? sortable.disableClear : this.disableClear;
     let sortDirectionCycle = getSortDirectionCycle(sortable.start || this.start, disableClear);
+    console.log(sortDirectionCycle)
 
     // Get and return the next direction in the cycle
     let nextDirectionIndex = sortDirectionCycle.indexOf(this.direction) + 1;

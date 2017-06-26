@@ -28,15 +28,15 @@ describe('MdSort', () => {
         MdSortableMissingIdApp
       ],
     }).compileComponents();
-
-    fixture = TestBed.createComponent(SimpleMdSortApp);
-
-    component = fixture.componentInstance;
-
-    fixture.detectChanges();
   }));
 
-  it('should have the sort headers register and unregister themselves', () => {
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SimpleMdSortApp);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should have the sort headers register and deregister themselves', () => {
     const sortables = component.mdSort.sortables;
     expect(sortables.size).toBe(4);
     expect(sortables.get('defaultSortHeaderA')).toBe(component.mdSortHeaderDefaultA);

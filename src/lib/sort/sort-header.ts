@@ -15,6 +15,7 @@ import {MdSortHeaderIntl} from './sort-header-intl';
 import {CdkColumnDef} from '../core/data-table/cell';
 import {coerceBooleanProperty} from '../core';
 import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
+import {Subscription} from 'rxjs/Subscription';
 
 /**
  * Applies sorting behavior (click to change sort) and styles to an element, including an
@@ -38,6 +39,8 @@ import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdSortHeader implements MdSortable {
+  sortSubscription: Subscription;
+
   /**
    * ID of this sort header. If used within the context of a CdkColumnDef, this will default to
    * the column's name.
@@ -68,7 +71,7 @@ export class MdSortHeader implements MdSortable {
       throw getMdSortHeaderNotContainedWithinMdSortError();
     }
 
-    _sort.mdSortChange.subscribe(() => _changeDetectorRef.markForCheck());
+    this.sortSubscription = _sort.mdSortChange.subscribe(() => _changeDetectorRef.markForCheck());
   }
 
   ngOnInit() {
@@ -80,7 +83,8 @@ export class MdSortHeader implements MdSortable {
   }
 
   ngOnDestroy() {
-    this._sort.unregister(this);
+    this._sort.deregister(this);
+    this.sortSubscription.unsubscribe();
   }
 
   /** Whether this MdSortHeader is currently sorted in either ascending or descending order. */
