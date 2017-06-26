@@ -21,6 +21,6 @@ export class MdSortHeaderIntl {
 
   /** A label to describe the current sort (visible only to screenreaders). */
   sortDescriptionLabel = (id: string, direction: SortDirection) => {
-    return `Sorted by ${id} ${direction}`;
+    return `Sorted by ${id} ${direction == 'asc' ? 'ascending' : 'descending'}`;
   }
 }
