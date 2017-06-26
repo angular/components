@@ -45,7 +45,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * variable to make user be able to customize the zIndex when
    * the sticky-header's zIndex is not the largest in current page.
    * Because if the sticky-header's zIndex is not the largest in current page,
-   * it may be sheltered by other element when being stick.
+   * it may be sheltered by other element when being stuck.
    */
   @Input('cdkStickyHeaderZIndex') zIndex: number = 10;
   @Input('cdkStickyParentRegion') parentRegion: HTMLElement;
@@ -83,13 +83,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-
-    if (this.parentReg != null) {
-      this.stickyParent = this.parentReg._elementRef.nativeElement;
-    }else {
-      this.stickyParent = this.element.parentElement;
-    }
-
+    this.stickyParent = this.parentReg != null ?
+      this.parentReg._elementRef.nativeElement : this.element.parentElement;
     this.originalCss = {
       zIndex: this.getCssValue(this.element, 'zIndex'),
       position: this.getCssValue(this.element, 'position'),
@@ -99,9 +94,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       bottom: this.getCssValue(this.element, 'bottom'),
       width: this.getCssValue(this.element, 'width'),
     };
-
     this.attach();
-
     this.defineRestrictionsAndStick();
   }
 
@@ -198,7 +191,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
      * So the 'position: fixed' does not work on iPhone and iPad. To make it work,
      * 'translate3d(0,0,0)' needs to be used to force Safari re-rendering the sticky element.
      **/
-    this.element.style.transform = 'translate3d(0,0,0)';
+    this.element.style.transform = 'translate3d(0px,0px,0px)';
 
     let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
 
