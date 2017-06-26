@@ -17,7 +17,6 @@ export type TrackByStrategy = 'id' | 'reference' | 'index';
 })
 export class DataTableDemo {
   dataSource: PersonDataSource | null;
-  simpleDatasource: SimpleDataSource<UserData>;
   propertiesToDisplay: UserProperties[] = [];
   trackByStrategy: TrackByStrategy = 'reference';
   changeReferences = false;
@@ -38,8 +37,6 @@ export class DataTableDemo {
     this.dataSource = new PersonDataSource(this._peopleDatabase,
         this._paginator, this.sort);
     this._peopleDatabase.initialize();
-
-    this.simpleDatasource.data = this._peopleDatabase.data;
   }
 
   disconnect() {
