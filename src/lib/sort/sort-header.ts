@@ -48,7 +48,7 @@ export class MdSortHeader implements MdSortable {
   @Input() arrowPosition: 'before' | 'after' = 'after';
 
   /** Overrides the sort start value of the containing MdSort for this MdSortable. */
-  @Input('start') start: 'ascending' | 'descending';
+  @Input('start') start: 'asc' | 'desc';
 
   /** Overrides the disable clear value of the containing MdSort for this MdSortable. */
   @Input()

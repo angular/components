@@ -36,12 +36,12 @@ $mat-sort-header-arrow-thickness: 2px;
   }
 }
 
-.mat-sort-header-ascending {
+.mat-sort-header-asc {
   display: block;
   transform: rotate(45deg);
 }
 
-.mat-sort-header-descending {
+.mat-sort-header-desc {
   display: block;
   transform: rotate(225deg);
   top: $mat-sort-header-arrow-thickness;

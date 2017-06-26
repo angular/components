@@ -13,7 +13,7 @@ import {getMdSortDuplicateMdSortableIdError, getMdSortHeaderMissingIdError} from
 
 export interface MdSortable {
   id: string;
-  start: 'ascending' | 'descending';
+  start: 'asc' | 'desc';
   disableClear: boolean;
 }
 
@@ -37,7 +37,7 @@ export class MdSort {
    * The direction to set when an MdSortable is initially sorted.
    * May be overriden by the MdSortable's sort start.
    */
-  @Input('mdSortStart') start: 'ascending' | 'descending' = 'ascending';
+  @Input('mdSortStart') start: 'asc' | 'desc' = 'desc';
 
   /** The sort direction of the currently active MdSortable. */
   @Input('mdSortDirection') direction: SortDirection = '';
@@ -108,10 +108,10 @@ export class MdSort {
 }
 
 /** Returns the sort direction cycle to use given the provided parameters of order and clear. */
-function getSortDirectionCycle(start: 'ascending' | 'descending',
+function getSortDirectionCycle(start: 'asc' | 'desc',
                                disableClear: boolean): SortDirection[] {
-  let sortOrder: SortDirection[] = ['ascending', 'descending'];
-  if (start == 'descending') { sortOrder.reverse(); }
+  let sortOrder: SortDirection[] = ['asc', 'desc'];
+  if (start == 'desc') { sortOrder.reverse(); }
   if (!disableClear) { sortOrder.push(''); }
 
   return sortOrder;
