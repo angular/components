@@ -60,7 +60,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   public element: HTMLElement;
 
   // the upper container element with the 'cdkStickyRegion' tag
-  public stickyParent: HTMLElement;
+  public stickyParent: HTMLElement | null;
   public upperScrollableContainer: HTMLElement;
 
   /**
@@ -147,6 +147,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * when to start, when to finish)
    */
   defineRestrictions(): void {
+    if(this.stickyParent == null) {
+      return;
+    }
     let containerTop: any = this.stickyParent.getBoundingClientRect();
     let elemHeight: number = this.element.offsetHeight;
     let containerHeight: number = this.getCssNumber(this.stickyParent, 'height');
@@ -224,6 +227,10 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    */
   unstuckElement(): void {
     this.isStuck = false;
+
+    if(this.stickyParent == null) {
+      return;
+    }
 
     this.element.classList.add(STICK_END_CLASS);
     this.stickyParent.style.position = 'relative';
