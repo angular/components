@@ -89,7 +89,7 @@ const MATERIAL_MODULES = [
   MdCommonModule,
   ObserveContentModule,
   CdkDataTableModule,
-  CdkStickyHeaderModule,
+  StickyHeaderModule,
 ];
 
 /** @deprecated */
