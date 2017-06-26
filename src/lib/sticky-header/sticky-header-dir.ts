@@ -11,11 +11,13 @@ import {Scrollable} from '../core/overlay/scroll/scrollable';
 
 
 /**
- * 'cdkStickyRegion' is a region contains one sticky header and other
- * contents that user wants to put under the sticky-header. There only can
- * be one sticky-header in one 'cdkStickyRegion'.
- * If a user does not define a 'cdkStickyRegion' for a sticky-header, the direct
- * parent node of the sticky-header will be set as the 'cdkStickyRegion'.
+ * Directive that marks an element as a "sticky region", meant to contain exactly one sticky-header
+ * along with the content associated with that header. The sticky-header inside of the region will
+ * "stick" to the top of the scrolling container as long as this region is within the scrolling
+ * viewport.
+ *
+ * If a user does not explicitly define a sticky-region for a sticky-header, the direct
+ * parent node of the sticky-header will be used as the sticky-region.
  */
 @Directive({
   selector: '[cdkStickyRegion]',
