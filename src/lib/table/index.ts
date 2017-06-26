@@ -22,4 +22,4 @@ export * from './row';
   exports: [MdTable, MdHeaderCell, MdCell, MdHeaderRow, MdRow],
   declarations: [MdTable, MdHeaderCell, MdCell, MdHeaderRow, MdRow],
 })
-export class MdDataTableModule {}
+export class MdTableModule {}
