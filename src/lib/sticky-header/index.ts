@@ -17,7 +17,7 @@ import {CdkStickyRegion, CdkStickyHeader} from './sticky-header-dir';
   declarations: [CdkStickyRegion, CdkStickyHeader],
   exports: [CdkStickyRegion, CdkStickyHeader, MdCommonModule],
 })
-export class CdkStickyHeaderModule {}
+export class StickyHeaderModule {}
 
 
 export * from './sticky-header-dir';
