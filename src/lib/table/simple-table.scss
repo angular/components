@@ -1,0 +1,20 @@
+@import '../core/style/elevation';
+
+.mat-simple-table {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  @include mat-elevation(8);
+
+  & .mat-table {
+    overflow: auto;
+  }
+}
+
+.mat-simple-table-header {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+  font-size: 20px;
+}
