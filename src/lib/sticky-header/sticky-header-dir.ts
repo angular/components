@@ -53,28 +53,28 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   private _onScrollBind: EventListener = this.onScroll.bind(this);
   private _onResizeBind: EventListener = this.onResize.bind(this);
   private _onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
-  public isStuck: boolean = false;
+  isStuck: boolean = false;
 
   // the element with the 'cdkStickyHeader' tag
-  public element: HTMLElement;
+  element: HTMLElement;
 
   // the upper container element with the 'cdkStickyRegion' tag
-  public stickyParent: HTMLElement | null;
-  public upperScrollableContainer: HTMLElement;
+  stickyParent: HTMLElement | null;
+  upperScrollableContainer: HTMLElement;
 
   /**
    * the original css of the sticky element, used to reset the sticky element
    * when it is being unstuck
    */
-  public originalCss: any;
+  originalCss: any;
 
   private _containerStart: number;
   private _scrollFinish: number;
 
   private _scrollingWidth: number;
 
-  constructor(private _element: ElementRef,
-              public scrollable: Scrollable,
+  constructor(_element: ElementRef,
+              scrollable: Scrollable,
               @Optional() public parentReg: CdkStickyRegion) {
     this.element = _element.nativeElement;
     this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
