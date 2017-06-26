@@ -8,6 +8,7 @@
 import {Component, Directive, Input, Output,
   OnDestroy, AfterViewInit, ElementRef, Injectable, Optional} from '@angular/core';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
+import {extendObject} from '../core/util/object-extend';
 
 
 /**
@@ -166,7 +167,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    */
   resetElement(): void {
     this.element.classList.remove(STICK_START_CLASS);
-    Object.assign(this.element.style, this.originalCss);
+    extendObject(this.element.style, this.originalCss);
   }
 
   /**
@@ -210,7 +211,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       bottom: 'auto',
       width: this._scrollingWidth + 'px',
     };
-    Object.assign(this.element.style, stickyCss);
+    extendObject(this.element.style, stickyCss);
   }
 
   /**
@@ -238,7 +239,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       bottom: '0',
       width: this.originalCss.width,
     };
-    Object.assign(this.element.style, unstuckCss);
+    extendObject(this.element.style, unstuckCss);
   }
 
 
