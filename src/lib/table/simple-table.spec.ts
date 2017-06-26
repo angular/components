@@ -1,12 +1,10 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
-import {combineLatest} from 'rxjs/observable/combineLatest';
 import {SimpleDataSource} from './simple-data-source';
-import {MdTable, MdTableModule} from '@angular/material';
+import {MdTable, MdTableModule} from './index';
+import {CdkDataTableModule} from '../core/data-table/index';
 
-describe('CdkTable', () => {
+describe('MdTable', () => {
   let fixture: ComponentFixture<SimpleMdTableApp>;
 
   let component: SimpleMdTableApp;
@@ -15,7 +13,7 @@ describe('CdkTable', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdTableModule],
+      imports: [MdTableModule, CdkDataTableModule],
       declarations: [
         SimpleMdTableApp,
       ],
@@ -27,13 +25,23 @@ describe('CdkTable', () => {
 
     component = fixture.componentInstance;
     table = component.table;
-    tableElement = fixture.nativeElement.querySelector('cdk-table');
+    tableElement = fixture.nativeElement.querySelector('md-table');
 
     fixture.detectChanges();  // Let the component and table create embedded views
     fixture.detectChanges();  // Let the cells render
   });
 
-  it('should create a table', () => {
+  it('should create a table with the right content', () => {
+    const headerRow = tableElement.querySelector('.mat-header-row');
+    const headerRowCells = headerRow ? headerRow.querySelectorAll('.mat-header-cell') : [];
+    expect(headerRowCells[0].innerHTML.trim()).toBe('Column A');
+    expect(headerRowCells[1].innerHTML.trim()).toBe('Column B');
+    expect(headerRowCells[2].innerHTML.trim()).toBe('Column C');
+
+    const rows = tableElement.querySelectorAll('.mat-row');
+    expect(rows[0] ? rows[0].textContent : '').toBe(' a_1 b_1 c_1');
+    expect(rows[1] ? rows[1].textContent : '').toBe(' a_2 b_2 c_2');
+    expect(rows[2] ? rows[2].textContent : '').toBe(' a_3 b_3 c_3');
   });
 });
 
@@ -69,7 +77,7 @@ interface TestData {
   `
 })
 class SimpleMdTableApp {
-  dataSource: SimpleDataSource<TestData>;
+  dataSource = new SimpleDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(MdTable) table: MdTable<TestData>;
