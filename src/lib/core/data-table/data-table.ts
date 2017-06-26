@@ -73,15 +73,15 @@ export class HeaderRowPlaceholder {
   selector: 'cdk-table',
   template: `
     <div class="cdk-table-body" role="presentation"
-      [style.marginTop.px]="stickyRowsMarginTop"
-      [style.height.px]="tableHeight - stickyRowsMarginTop">
+         [style.marginTop.px]="stickyRowsMarginTop"
+         [style.height.px]="tableHeight - stickyRowsMarginTop">
       <ng-container headerRowPlaceholder></ng-container>
       <ng-container rowPlaceholder></ng-container>
     </div>
   `,
   host: {
     'class': 'cdk-table',
-    '[class.ckd-table-sticky-rows-enabled]': 'stickyRowsEnabled',
+    '[class.cdk-table-sticky-rows-enabled]': 'stickyRowsEnabled',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -148,16 +148,23 @@ export class CdkTable<T> implements CollectionViewer {
   }
   private _dataSource: DataSource<T>;
 
-  /** Used to toggle the neccessary class for sticky rows. */
+  /**
+   * Toggle to add the neccessary class for sticky rows.
+   */
   public stickyRowsEnabled  = false;
 
-  /** Used to style the table to accomodate for sticky rows. */
+  /**
+   * Toggle for styling the table to accomodate sticky rows.
+   */
   public stickyRowsMarginTop: number;
 
-  /** Used to maintain the correct table height when sticky rows are present. */
+  /**
+   * Toggle for maintaining the correct table height when sticky rows are present.
+   */
   public tableHeight: number;
 
-  /**  Placeholders within the table's template where the header and data
+  /**
+   *   Placeholders within the table's template where the header and data
    *   rows will be inserted.
    */
   @ViewChild(RowPlaceholder) _rowPlaceholder: RowPlaceholder;
@@ -169,13 +176,19 @@ export class CdkTable<T> implements CollectionViewer {
    */
   @ContentChildren(CdkColumnDef) _columnDefinitions: QueryList<CdkColumnDef>;
 
-  /** Template used as the header container. */
+  /**
+   * Template used as the header container.
+   */
   @ContentChild(CdkHeaderRowDef) _headerDefinition: CdkHeaderRowDef;
 
-  /** Set of templates that used as the data row containers. */
+  /**
+   * Set of templates that used as the data row containers.
+   */
   @ContentChildren(CdkRowDef) _rowDefinitions: QueryList<CdkRowDef>;
 
-  /** Set of sticky rows. */
+  /**
+   * Set of sticky rows.
+   */
   @ContentChildren(CdkStickyRow) _StickyRows: QueryList<CdkStickyRow>;
 
   constructor(private readonly _differs: IterableDiffers,
@@ -242,7 +255,8 @@ export class CdkTable<T> implements CollectionViewer {
         if (queryList.toArray().length) {
         this.stickyRowsEnabled = true;
           setTimeout(() => {
-            /** This needs to be called AFTER the "ckd-table-sticky-rows-enabled" class
+            /**
+             * This needs to be called AFTER the "cdk-table-sticky-rows-enabled" class
              *  gets added to the table body to properly calculate the table's height.
              */
             this.tableHeight  = this.elementRef.nativeElement.getBoundingClientRect().height;
@@ -291,7 +305,9 @@ export class CdkTable<T> implements CollectionViewer {
     }
   }
 
-  /** Set up a subscription for the data provided by the data source. */
+  /**
+   * Set up a subscription for the data provided by the data source.
+   */
   private _observeRenderChanges() {
     this._renderChangeSubscription = takeUntil.call(this.dataSource.connect(this), this._onDestroy)
       .subscribe(data => {
@@ -320,7 +336,9 @@ export class CdkTable<T> implements CollectionViewer {
     this._changeDetectorRef.markForCheck();
   }
 
-  /** Check for changes made in the data and render each change (row added/removed/moved). */
+  /**
+   * Check for changes made in the data and render each change (row added/removed/moved).
+   */
   private _renderRowChanges() {
     const changes = this._dataDiffer.diff(this._data);
     if (!changes) { return; }

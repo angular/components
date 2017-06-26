@@ -1,6 +1,5 @@
-/*CSS FOR THE DATA TABLE*/
 @mixin cdk-data-table() {
-    .ckd-table-sticky-rows-enabled {
+    .cdk-table-sticky-rows-enabled {
         position: relative;
         overflow: hidden;
 

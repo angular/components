@@ -26,13 +26,19 @@ import {Subject} from 'rxjs/Subject';
  * for changes and notifying the table.
  */
 export abstract class BaseRowDef {
-  /** The columns to be displayed on this row. */
+  /**
+   * The columns to be displayed on this row.
+   */
   columns: string[];
 
-  /** Event stream that emits when changes are made to the columns. */
+  /**
+   * Event stream that emits when changes are made to the columns.
+   */
   columnsChange: Subject<void> = new Subject<void>();
 
-  /** Differ used to check if any changes were made to the columns. */
+  /**
+   * Differ used to check if any changes were made to the columns.
+   */
   protected _columnsDiffer: IterableDiffer<any>;
 
   private viewInitialized = false;
@@ -128,7 +134,9 @@ export interface CdkCellOutletRowContext<T> {
   },
 })
 export class CdkStickyRow {
-  /** The offset from the top of the container the row should absolutely position itself from  */
+  /**
+   * The offset from the top of the container the row should absolutely position itself from.
+   */
   public topOffset: number;
 
   /** The color the row should be (so the row does not look transparent when scrolling over the
@@ -145,10 +153,14 @@ export class CdkStickyRow {
  */
 @Directive({selector: '[cdkCellOutlet]'})
 export class CdkCellOutlet {
-  /** The ordered list of cells to render within this outlet's view container */
+  /**
+   * The ordered list of cells to render within this outlet's view container
+   */
   cells: CdkCellDef[];
 
-  /** The data context to be provided to each cell */
+  /**
+   * The data context to be provided to each cell
+   */
   context: any;
 
   /**
@@ -165,7 +177,9 @@ export class CdkCellOutlet {
   }
 }
 
-/** Header template container that contains the cell outlet. Adds the right class and role. */
+/**
+ * Header template container that contains the cell outlet. Adds the right class and role.
+ */
 @Component({
   selector: 'cdk-header-row',
   template: '<ng-container cdkCellOutlet></ng-container>',
@@ -177,7 +191,9 @@ export class CdkCellOutlet {
 })
 export class CdkHeaderRow { }
 
-/** Data row template container that contains the cell outlet. Adds the right class and role. */
+/**
+ * Data row template container that contains the cell outlet. Adds the right class and role.
+ */
 @Component({
   selector: 'cdk-row',
   template: '<ng-container cdkCellOutlet></ng-container>',

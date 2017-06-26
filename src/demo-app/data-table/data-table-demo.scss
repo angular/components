@@ -7,7 +7,7 @@
   // Table fills in the remaining area with a scroll
   .cdk-table {
     flex: 1 1 auto;
-    &.ckd-table-sticky-rows-enabled {
+    &.cdk-table-sticky-rows-enabled {
         height: 390px;
     }
   }
