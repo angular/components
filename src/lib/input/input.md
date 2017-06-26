@@ -127,12 +127,8 @@ the error messages.
 ```ts
 function myErrorStateMatcher(control: FormControl, form: FormGroupDirective | NgForm): boolean {
   // Error when invalid control is dirty, touched, or submitted
-  const isInvalid = control.invalid;
-  const isDirty = control.dirty;
-  const isTouched = control.touched;
   const isSubmitted = form && form.submitted;
-
-  return !!(isInvalid && (isDirty || isTouched || isSubmitted)));
+  return !!(control.invalid && (control.dirty || control.touched || isSubmitted)));
 }
 ```
 

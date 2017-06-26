@@ -20,18 +20,12 @@ export interface ErrorOptions {
 }
 
 export function defaultErrorStateMatcher(control: FormControl, form: FormGroupDirective | NgForm) {
-  const isInvalid = control.invalid;
-  const isTouched = control.touched;
   const isSubmitted = form && form.submitted;
-
-  return !!(isInvalid && (isTouched || isSubmitted));
+  return !!(control.invalid && (control.touched || isSubmitted));
 }
 
 export function showOnDirtyErrorStateMatcher(control: FormControl,
     form: FormGroupDirective | NgForm) {
-  const isInvalid = control.invalid;
-  const isDirty = control.dirty;
   const isSubmitted = form && form.submitted;
-
-  return !!(isInvalid && (isDirty || isSubmitted));
+  return !!(control.invalid && (control.dirty || isSubmitted));
 }

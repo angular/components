@@ -752,7 +752,7 @@ describe('MdInputContainer', function () {
   });
 
   describe('custom error behavior', () => {
-    it('should display an error message when a custom error matcher returns true', async(() => {
+    it('should display an error message when a custom error matcher returns true', () => {
       let fixture = TestBed.createComponent(MdInputContainerWithCustomErrorStateMatcher);
       fixture.detectChanges();
 
@@ -762,24 +762,21 @@ describe('MdInputContainer', function () {
       const control = component.formGroup.get('name')!;
 
       expect(control.invalid).toBe(true, 'Expected form control to be invalid');
-      expect(containerEl.querySelectorAll('md-error').length).toBe(0, 'Expected no error messages');
+      expect(containerEl.querySelectorAll('md-error').length)
+          .toBe(0, 'Expected no error messages');
 
       control.markAsTouched();
       fixture.detectChanges();
 
-      fixture.whenStable().then(() => {
-        expect(containerEl.querySelectorAll('md-error').length)
-            .toBe(0, 'Expected no error messages after being touched.');
+      expect(containerEl.querySelectorAll('md-error').length)
+          .toBe(0, 'Expected no error messages after being touched.');
 
-        component.errorState = true;
-        fixture.detectChanges();
+      component.errorState = true;
+      fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          expect(containerEl.querySelectorAll('md-error').length)
-              .toBe(1, 'Expected one error messages to have been rendered.');
-        });
-      });
-    }));
+      expect(containerEl.querySelectorAll('md-error').length)
+          .toBe(1, 'Expected one error messages to have been rendered.');
+    });
 
     it('should display an error message when global error matcher returns true', () => {
 
@@ -850,19 +847,14 @@ describe('MdInputContainer', function () {
       testComponent.formControl.markAsTouched();
       fixture.detectChanges();
 
-      fixture.whenStable().then(() => {
-        expect(containerEl.querySelectorAll('md-error').length)
-            .toBe(0, 'Expected no error messages when touched');
+      expect(containerEl.querySelectorAll('md-error').length)
+          .toBe(0, 'Expected no error messages when touched');
 
-        testComponent.formControl.markAsDirty();
-        fixture.detectChanges();
+      testComponent.formControl.markAsDirty();
+      fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          expect(containerEl.querySelectorAll('md-error').length)
-              .toBe(1, 'Expected one error message when dirty');
-        });
-      });
-
+      expect(containerEl.querySelectorAll('md-error').length)
+          .toBe(1, 'Expected one error message when dirty');
     }));
   });
 
