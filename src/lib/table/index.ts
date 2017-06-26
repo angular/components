@@ -12,13 +12,14 @@ import {CdkDataTableModule} from '../core/data-table/index';
 import {MdCell, MdHeaderCell} from './cell';
 import {MdHeaderRow, MdRow} from './row';
 import {CommonModule} from '@angular/common';
+import {MdCommonModule} from '@angular/material';
 
 export * from './cell';
 export * from './table';
 export * from './row';
 
 @NgModule({
-  imports: [CdkDataTableModule, CommonModule],
+  imports: [CdkDataTableModule, CommonModule, MdCommonModule],
   exports: [MdTable, MdHeaderCell, MdCell, MdHeaderRow, MdRow],
   declarations: [MdTable, MdHeaderCell, MdCell, MdHeaderRow, MdRow],
 })
