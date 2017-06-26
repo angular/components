@@ -96,7 +96,6 @@ export class MdSort {
     // Get the sort direction cycle with the potential sortable overrides.
     const disableClear = sortable.disableClear != null ? sortable.disableClear : this.disableClear;
     let sortDirectionCycle = getSortDirectionCycle(sortable.start || this.start, disableClear);
-    console.log(sortDirectionCycle)
 
     // Get and return the next direction in the cycle
     let nextDirectionIndex = sortDirectionCycle.indexOf(this.direction) + 1;
