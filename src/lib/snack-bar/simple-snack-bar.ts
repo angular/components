@@ -7,7 +7,8 @@
  */
 
 import {Component, ViewEncapsulation, Inject, ChangeDetectionStrategy} from '@angular/core';
-import {MdSnackBarRef, MD_SNACK_BAR_DATA} from './index';
+import {MdSnackBarRef} from './snack-bar-ref';
+import {MD_SNACK_BAR_DATA} from './snack-bar-config';
 
 
 /**
@@ -26,9 +27,14 @@ import {MdSnackBarRef, MD_SNACK_BAR_DATA} from './index';
   }
 })
 export class SimpleSnackBar {
+  /** Data that was injected into the snack bar. */
+  data: { message: string, action: string };
+
   constructor(
     public snackBarRef: MdSnackBarRef<SimpleSnackBar>,
-    @Inject(MD_SNACK_BAR_DATA) public data: { message: string, action: string }) { }
+    @Inject(MD_SNACK_BAR_DATA) data: any) {
+    this.data = data;
+  }
 
   /** Dismisses the snack bar. */
   dismiss(): void {

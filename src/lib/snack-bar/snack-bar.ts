@@ -12,7 +12,6 @@ import {
   Optional,
   SkipSelf,
   Injector,
-  InjectionToken,
 } from '@angular/core';
 import {
   ComponentType,
@@ -23,10 +22,12 @@ import {
   LiveAnnouncer,
 } from '../core';
 import {PortalInjector} from '../core/portal/portal-injector';
-import {MdSnackBarConfig, MdSnackBarRef, MdSnackBarContainer, SimpleSnackBar} from './index';
 import {extendObject} from '../core/util/object-extend';
+import {MdSnackBarConfig, MD_SNACK_BAR_DATA} from './snack-bar-config';
+import {MdSnackBarRef} from './snack-bar-ref';
+import {MdSnackBarContainer} from './snack-bar-container';
+import {SimpleSnackBar} from './simple-snack-bar';
 
-export const MD_SNACK_BAR_DATA = new InjectionToken<any>('MdSnackBarData');
 
 /**
  * Service to dispatch Material Design snack bar messages.

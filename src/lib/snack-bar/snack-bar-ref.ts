@@ -11,8 +11,6 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {MdSnackBarContainer} from './snack-bar-container';
 
-// TODO(josephperrott): Implement onAction observable.
-
 /**
  * Reference to a snack bar dispatched from the snack bar service.
  */
