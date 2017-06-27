@@ -67,13 +67,11 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * The upper scrollable container
    */
   upperScrollableContainer: HTMLElement;
-
   /**
    * The original css of the sticky element, used to reset the sticky element
    * when it is being unstuck
    */
   originalCss: any;
-
   /**
    * 'getBoundingClientRect().top' of CdkStickyRegion of current sticky header.
    * It is used with '_scrollFinish' to judge whether the current header
@@ -134,10 +132,12 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   onResize(): void {
     this.defineRestrictionsAndStick();
-    // If there's already a header being stick when the page is
-    // resized. The CSS style of the cdkStickyHeader element may be not fit
-    // the resized window. So we need to unstuck it then re-stick it.
-    // unstuck() can set 'isStuck' to FALSE. Then stickElement() can work.
+    /**
+     * If there's already a header being stick when the page is
+     * resized. The CSS style of the cdkStickyHeader element may be not fit
+     * the resized window. So we need to unstuck it then re-stick it.
+     * unstuck() can set 'isStuck' to FALSE. Then stickElement() can work.
+     */
     if (this.isStuck) {
       this.unstuckElement();
       this.stickElement();
@@ -157,7 +157,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     let containerHeight: number = this.getCssNumber(this.stickyParent, 'height');
     this._containerStart = containerTop.top;
 
-    // the padding of the element being sticked
+    // the padding of the element being stuck
     let elementPadding: any = this.getCssValue(this.element, 'padding');
 
     let paddingNumber: any = Number(elementPadding.slice(0, -2));
