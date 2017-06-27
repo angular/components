@@ -6,5 +6,8 @@ import {Component} from '@angular/core';
   styleUrls: ['datepicker-filter-example.css'],
 })
 export class DatepickerFilterExample {
-  myFilter = (d: Date) => d.getFullYear() > 2017;
+  myFilter = (d: Date): boolean => {
+    const day = d.getDay();
+    return day !== 0 && day !== 6;
+  };
 }
