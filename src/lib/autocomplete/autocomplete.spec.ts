@@ -781,7 +781,7 @@ describe('MdAutocomplete', () => {
 
       // Expect option bottom minus the panel height (288 - 256 = 32)
       expect(scrollContainer.scrollTop)
-        .toEqual(32, `Expected panel to reveal the sixth option.`);
+          .toEqual(32, `Expected panel to reveal the sixth option.`);
 
       // These up arrows will set the 2nd option active
       [4, 3, 2, 1].forEach(() => {
@@ -791,7 +791,7 @@ describe('MdAutocomplete', () => {
 
       // Expect no scrolling to have occurred. Still showing bottom of 6th option.
       expect(scrollContainer.scrollTop)
-        .toEqual(32, `Expected panel to not scroll back.`);
+          .toEqual(32, `Expected panel not to scroll up since sixth option still fully visible.`);
     }));
 
     it('should scroll to active options that are above the panel', fakeAsync(() => {
@@ -818,7 +818,7 @@ describe('MdAutocomplete', () => {
 
       // Expect to show the top of the 2nd option at the top of the panel
       expect(scrollContainer.scrollTop)
-        .toEqual(48, `Expected panel to scroll up when option is above panel.`);
+          .toEqual(48, `Expected panel to scroll up when option is above panel.`);
     }));
 
     it('should close the panel when pressing escape', async(() => {
