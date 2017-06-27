@@ -205,7 +205,7 @@ groups:
         - 'src/material-examples/overlay-*'
     users:
       - jelbourn # primary
-      - mmalerba
+      - crisbeto
 
   portal:
     conditions:
