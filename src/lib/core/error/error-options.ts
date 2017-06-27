@@ -19,11 +19,13 @@ export interface ErrorOptions {
   errorStateMatcher?: ErrorStateMatcher;
 }
 
+/** Returns whether control is invalid and is either touched or is a part of a submitted form. */
 export function defaultErrorStateMatcher(control: FormControl, form: FormGroupDirective | NgForm) {
   const isSubmitted = form && form.submitted;
   return !!(control.invalid && (control.touched || isSubmitted));
 }
 
+/** Returns whether control is invalid and is either dirty or is a part of a submitted form. */
 export function showOnDirtyErrorStateMatcher(control: FormControl,
     form: FormGroupDirective | NgForm) {
   const isSubmitted = form && form.submitted;
