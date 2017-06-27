@@ -18,7 +18,13 @@ import {MdSelectionModule} from './selection/index';
 import {MdRippleModule} from './ripple/index';
 
 // Re-exports of the CDK to avoid breaking changes.
-export {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk';
+export {
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  PlatformModule,
+  Platform,
+  getSupportedInputTypes
+} from '@angular/cdk';
 
 // RTL
 export {Dir, Direction, Directionality, BidiModule} from './bidi/index';
@@ -42,9 +48,6 @@ export {
   PortalModule,
 } from './portal/portal-directives';
 export {DomPortalHost} from './portal/dom-portal-host';
-
-// Platform
-export * from './platform/index';
 
 // Overlay
 export * from './overlay/index';

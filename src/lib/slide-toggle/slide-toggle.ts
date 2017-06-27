@@ -29,8 +29,8 @@ import {
   HammerInput,
   MdRipple,
   RippleRef,
-  Platform,
 } from '../core';
+import {Platform} from '@angular/cdk';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';

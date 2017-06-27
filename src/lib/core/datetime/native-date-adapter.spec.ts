@@ -1,5 +1,5 @@
 import {NativeDateAdapter} from './native-date-adapter';
-import {Platform} from '../platform/index';
+import {Platform} from '@angular/cdk';
 
 
 const SUPPORTS_INTL = typeof Intl != 'undefined';

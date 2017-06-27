@@ -38,7 +38,7 @@ import {
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Directionality} from '../core/bidi/index';
-import {Platform} from '../core/platform/index';
+import {Platform} from '@angular/cdk';
 import {first} from '../core/rxjs/index';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {coerceBooleanProperty} from '@angular/cdk';

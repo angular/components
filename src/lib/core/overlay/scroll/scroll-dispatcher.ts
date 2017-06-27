@@ -7,7 +7,7 @@
  */
 
 import {ElementRef, Injectable, NgZone, Optional, SkipSelf} from '@angular/core';
-import {Platform} from '../../platform/index';
+import {Platform} from '@angular/cdk';
 import {Scrollable} from './scrollable';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';

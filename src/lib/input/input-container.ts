@@ -28,9 +28,9 @@ import {
   Inject
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {coerceBooleanProperty, Platform} from '../core';
+import {coerceBooleanProperty} from '../core';
 import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
-import {getSupportedInputTypes} from '../core/platform/features';
+import {getSupportedInputTypes, Platform} from '@angular/cdk';
 import {
   getMdInputContainerDuplicatedHintError,
   getMdInputContainerMissingMdInputError,

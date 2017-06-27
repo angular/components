@@ -20,7 +20,7 @@ import {
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {Platform} from '../platform/platform';
+import {Platform} from '@angular/cdk';
 import {of as observableOf} from 'rxjs/observable/of';
 
 
