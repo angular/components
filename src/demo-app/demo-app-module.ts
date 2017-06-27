@@ -43,7 +43,6 @@ import {DatepickerDemo} from './datepicker/datepicker-demo';
 import {TypographyDemo} from './typography/typography-demo';
 import {ExpansionDemo} from './expansion/expansion-demo';
 import {
-  CdkTableModule,
   FullscreenOverlayContainer,
   MdAutocompleteModule,
   MdButtonModule,
@@ -79,6 +78,7 @@ import {
   OverlayContainer,
   StyleModule
 } from '@angular/material';
+import {CdkTableModule} from '@angular/cdk';
 import {TableHeaderDemo} from './table/table-header-demo';
 
 /**

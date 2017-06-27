@@ -3,10 +3,10 @@ import {Component, ViewChild} from '@angular/core';
 import {CdkTable} from './table';
 import {CollectionViewer, DataSource} from './data-source';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {customMatchers} from '../testing/jasmine-matchers';
+import {customMatchers} from '../../lib/core/testing/jasmine-matchers';
 import {Observable} from 'rxjs/Observable';
 import {combineLatest} from 'rxjs/observable/combineLatest';
-import {map} from '../rxjs/index';
+import {map} from '../../lib/core/rxjs/index';
 import {CdkTableModule} from './index';
 
 describe('CdkTable', () => {

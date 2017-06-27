@@ -32,7 +32,7 @@ import {
 import {CollectionViewer, DataSource} from './data-source';
 import {CdkCellOutlet, CdkCellOutletRowContext, CdkHeaderRowDef, CdkRowDef} from './row';
 import {merge} from 'rxjs/observable/merge';
-import {takeUntil} from '../rxjs/index';
+import {takeUntil} from 'rxjs/operator/takeUntil';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
