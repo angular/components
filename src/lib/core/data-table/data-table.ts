@@ -185,7 +185,7 @@ export class CdkTable<T> implements CollectionViewer {
     this._onDestroy.next();
     this._onDestroy.complete();
     if (this.dataSource) {
-      this.dataSource.disconnect();
+      this.dataSource.disconnect(this);
     }
   }
 
@@ -242,7 +242,7 @@ export class CdkTable<T> implements CollectionViewer {
     this._data = [];
 
     if (this._dataSource) {
-      this.dataSource.disconnect();
+      this.dataSource.disconnect(this);
     }
     this._dataSource = dataSource;
 

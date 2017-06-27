@@ -14,5 +14,5 @@ export interface CollectionViewer {
 
 export abstract class DataSource<T> {
   abstract connect(collectionViewer: CollectionViewer): Observable<T[]>;
-  disconnect() {}
+  abstract disconnect(collectionViewer: CollectionViewer): void;
 }
