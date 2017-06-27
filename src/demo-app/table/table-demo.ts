@@ -11,7 +11,7 @@ export type TrackByStrategy = 'id' | 'reference' | 'index';
 @Component({
   moduleId: module.id,
   selector: 'table-demo',
-  templateUrl: 'demo-app/table/table-demo.html',
+  templateUrl: 'table-demo.html',
   styleUrls: ['table-demo.css'],
 })
 export class TableDemo {
