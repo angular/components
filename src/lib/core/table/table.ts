@@ -43,8 +43,8 @@ import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
  * @param id Id whose lookup failed.
  * @docs-private
  */
-export function getDataTableUnknownColumnError(id: string) {
-  return new Error(`md-data-table: Could not find column with id "${id}".`);
+export function getTableUnknownColumnError(id: string) {
+  return new Error(`cdk-table: Could not find column with id "${id}".`);
 }
 
 /**
@@ -357,7 +357,7 @@ export class CdkTable<T> implements CollectionViewer {
       const column = this._columnDefinitionsByName.get(columnId);
 
       if (!column) {
-        throw getDataTableUnknownColumnError(columnId);
+        throw getTableUnknownColumnError(columnId);
       }
 
       return column.headerCell;
@@ -374,7 +374,7 @@ export class CdkTable<T> implements CollectionViewer {
       const column = this._columnDefinitionsByName.get(columnId);
 
       if (!column) {
-        throw getDataTableUnknownColumnError(columnId);
+        throw getTableUnknownColumnError(columnId);
       }
 
       return column.cell;

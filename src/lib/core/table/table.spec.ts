@@ -1,13 +1,13 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
-import {CdkTable} from './data-table';
+import {CdkTable} from './table';
 import {CollectionViewer, DataSource} from './data-source';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {customMatchers} from '../testing/jasmine-matchers';
 import {Observable} from 'rxjs/Observable';
 import {combineLatest} from 'rxjs/observable/combineLatest';
 import {map} from '../rxjs/index';
-import {CdkDataTableModule} from './index';
+import {CdkTableModule} from './index';
 
 describe('CdkTable', () => {
   let fixture: ComponentFixture<SimpleCdkTableApp>;
@@ -22,7 +22,7 @@ describe('CdkTable', () => {
     jasmine.addMatchers(tableCustomMatchers);
 
     TestBed.configureTestingModule({
-      imports: [CdkDataTableModule],
+      imports: [CdkTableModule],
       declarations: [
         SimpleCdkTableApp,
         DynamicDataSourceCdkTableApp,
