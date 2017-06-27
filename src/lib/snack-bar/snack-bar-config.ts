@@ -30,4 +30,7 @@ export class MdSnackBarConfig {
 
   /** Text layout direction for the snack bar. */
   direction?: Direction = 'ltr';
+
+  /** Data being injected into the child component. */
+  data?: any = null;
 }
