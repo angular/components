@@ -7,7 +7,7 @@ import {Observable} from 'rxjs/Observable';
 import {CdkDataTableModule} from '../core/data-table/index';
 import {MdTableModule} from './index';
 
-fdescribe('MdTable', () => {
+describe('MdTable', () => {
   let fixture: ComponentFixture<SimpleMdTableApp>;
 
   beforeEach(async(() => {
