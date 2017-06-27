@@ -119,12 +119,11 @@ export class MdDatepicker<D> implements OnDestroy {
 
   /** Whether the datepicker pop-up should be disabled. */
   @Input()
-  get disabled() { return this._disabled; }
+  get disabled() {
+    return this._disabled === undefined ? this._datepickerInput.disabled : this._disabled;
+  }
   set disabled(value: any) {
     this._disabled = coerceBooleanProperty(value);
-    if (this._disabled === undefined) {
-      this._disabled = this._datepickerInput.disabled;
-    }
   }
   private _disabled: boolean;
 

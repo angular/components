@@ -62,6 +62,7 @@ export const MD_DATEPICKER_VALIDATORS: any = {
     '[attr.aria-owns]': '_datepicker?.id',
     '[attr.min]': 'min ? _dateAdapter.getISODateString(min) : null',
     '[attr.max]': 'max ? _dateAdapter.getISODateString(max) : null',
+    '[disabled]': 'disabled',
     '(input)': '_onInput($event.target.value)',
     '(blur)': '_onTouched()',
     '(keydown)': '_onKeydown($event)',
@@ -130,9 +131,6 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   get disabled() { return this._disabled; }
   set disabled(value: any) {
     this._disabled = coerceBooleanProperty(value);
-    if (this._datepicker.disabled === undefined) {
-      this._datepicker.disabled = this._disabled;
-    }
   }
   private _disabled: boolean;
 
