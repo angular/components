@@ -1,5 +1,5 @@
 import {task} from 'gulp';
-import * as glob from 'glob';
+import {sync as glob} from 'glob';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
@@ -14,11 +14,15 @@ interface ExampleMetadata {
   selectorName: string[];
 }
 
+interface ParsedMetadata {
+  primary: boolean;
+  component: string;
+  title: string;
+  templateUrl: string;
+}
+
 /**
- * Build the import template
- * 
- * @param {ExampleMetadata} metadata 
- * @returns {string} template
+ * Build ecmascript module import statements
  */
 function buildImportsTemplate(metadata: ExampleMetadata): string {
   const components = [metadata.component];
@@ -32,32 +36,28 @@ function buildImportsTemplate(metadata: ExampleMetadata): string {
 }
 
 /**
- * Build the examples template
- * 
- * @param {ExampleMetadata} metadata 
- * @returns {string} template
+ * Builds the examples metadata including title, component, etc.
  */
 function buildExamplesTemplate(metadata: ExampleMetadata): string {
-  const addlFiles = metadata.additionalFiles ? 
+  // if no additional files or selectors were provided, 
+  // return undefined since we don't care about if these were not found
+  const additionalFiles = metadata.additionalFiles ? 
     JSON.stringify(metadata.additionalFiles) : 'undefined';
 
   const selectorName = metadata.selectorName ? 
-    ("'" + metadata.selectorName.join(', ') + "'") : 'undefined';
+    `'${metadata.selectorName.join(', ')}'` : 'undefined';
 
   return `'${metadata.id}': {
     title: '${metadata.title}',
     component: ${metadata.component},
-    additionalFiles: ${addlFiles},
+    additionalFiles: ${additionalFiles},
     selectorName: ${selectorName}
   },
   `;
 }
 
 /**
- * Build the list template
- * 
- * @param {ExampleMetadata} metadata 
- * @returns {string} 
+ * Build the list of components template
  */
 function buildListTemplate(metadata: ExampleMetadata): string {
   const components = [metadata.component];
@@ -71,11 +71,8 @@ function buildListTemplate(metadata: ExampleMetadata): string {
 
 /**
  * Builds the template for the examples module
- * 
- * @param {ExampleMetadata[]} extractedMetadata 
- * @returns {string} resulting template
  */
-function buildTemplate(extractedMetadata: ExampleMetadata[]): string {
+function generateExampleNgModule(extractedMetadata: ExampleMetadata[]): string {
   return `
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -116,9 +113,6 @@ export class ExampleModule { }
 /**
  * Given a string that is a camel or pascal case,
  * this function will convert to dash case.
- * 
- * @param {string} name 
- * @returns {string} 
  */
 function convertToDashCase(name: string): string {
   name = name.replace(/[A-Z]/g, ' $&');
@@ -128,12 +122,9 @@ function convertToDashCase(name: string): string {
 
 /**
  * Parse the AST of a file and get metadata about it
- * 
- * @param {string} filename 
- * @param {string} src 
- * @returns {{ primary: any, seconds: any[] }} 
  */
-function createMetas(filename: string, src: string): { primaryComponent: any, secondaryComponents: any[] } {
+function parseExampleMetadata(filename: string, src: string): 
+    { primaryComponent: ParsedMetadata, secondaryComponents: ParsedMetadata[] } {
   const sourceFile = ts.createSourceFile(
     filename, src, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
 
@@ -192,56 +183,50 @@ function createMetas(filename: string, src: string): { primaryComponent: any, se
 /**
  * Creates the examples module and metadata
  */
-task('build-examples-module', (cb) => {
+task('build-examples-module', (done) => {
   const results: ExampleMetadata[] = [];
 
-  glob('src/material-examples/**/*.ts', (err, matches) => {
-    if (err) {
-      throw err;
-    }
+  const matchedFiles = glob('src/material-examples/**/*.ts');
+  for (const file of matchedFiles) {
+    const src = fs.readFileSync(file, 'utf-8');
+    const filename = file
+      .replace('src/material-examples/', './')
+      .replace('.ts', '');
+      
+    const { primaryComponent, secondaryComponents } = parseExampleMetadata(file, src);
 
-    for (const match of matches) {
-      const src = fs.readFileSync(match, 'utf-8');
-      const filename = match
-        .replace('src/material-examples/', './')
-        .replace('.ts', '');
-       
-      const { primaryComponent, secondaryComponents } = createMetas(match, src);
+    if (primaryComponent) {
+      // convert the class name to dashcase id
+      const id = convertToDashCase(primaryComponent.component.replace('Example', ''));
+      
+      const example: ExampleMetadata = {
+        filename,
+        id,
+        component: primaryComponent.component,
+        title: primaryComponent.title,
+        additionalComponents: [],
+        additionalFiles: [],
+        selectorName: []
+      };
 
-      if(primaryComponent) {
-        // convert the class name to dashcase id
-        let id = primaryComponent.component.replace('Example', '');
-        id = convertToDashCase(id);
-        
-        const example: ExampleMetadata = {
-          filename,
-          id,
-          component: primaryComponent.component,
-          title: primaryComponent.title,
-          additionalComponents: [],
-          additionalFiles: [],
-          selectorName: []
-        };
+      if (secondaryComponents.length) {
+        // for whatever reason the primary is listed here
+        example.selectorName.push(example.component);
 
-        if(secondaryComponents.length) {
-          // for whatever reason the primary is listed here
-          example.selectorName.push(example.component);
-
-          for(const meta of secondaryComponents) {
-            example.additionalComponents.push(meta.component);
-            example.additionalFiles.push(meta.templateUrl);
-            example.selectorName.push(meta.component);
-          }
+        for(const meta of secondaryComponents) {
+          example.additionalComponents.push(meta.component);
+          example.additionalFiles.push(meta.templateUrl);
+          example.selectorName.push(meta.component);
         }
-
-        results.push(example);
       }
+
+      results.push(example);
     }
+  }
 
-    const template = buildTemplate(results);
-    const outFile = path.resolve('./src/material-examples/example-module.ts');
-    fs.writeFileSync(outFile, template);
+  const template = generateExampleNgModule(results);
+  const outFile = path.resolve('./src/material-examples/example-module.ts');
+  fs.writeFileSync(outFile, template);
 
-    cb();
-  });
+  done();
 });
