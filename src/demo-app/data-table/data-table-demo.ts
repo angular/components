@@ -3,7 +3,6 @@ import {PeopleDatabase, UserData} from './people-database';
 import {PersonDataSource} from './person-data-source';
 import {MdPaginator} from '@angular/material';
 import {MdSort} from '@angular/material';
-import {SimpleDataSource} from '../../lib/table/simple-data-source';
 
 export type UserProperties = 'userId' | 'userName' | 'progress' | 'color' | undefined;
 

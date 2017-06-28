@@ -36,6 +36,7 @@
 
   .cdk-header-cell {
     font-weight: bold;
+
     &.mat-sort-header-sorted {
       color: black;
     }
@@ -60,8 +61,8 @@
 }
 
 /* Column max widths */
-  .cdk-column-userId {
-    max-width: 32px;
+.cdk-column-userId {
+  max-width: 32px;
   text-align: right;
   justify-content: flex-end;}
 

@@ -20,6 +20,7 @@ describe('MdTable', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SimpleMdTableApp);
     fixture.detectChanges();
+    fixture.detectChanges();
   });
 
   it('should create a table with the right content', () => {
