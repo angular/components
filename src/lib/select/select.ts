@@ -180,7 +180,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Deals with configuring placeholder options */
   private _placeholderOptions: PlaceholderOptions;
-  
+
   /**
    * The width of the trigger. Must be saved to set the min width of the overlay panel
    * and the width of the selected value.
