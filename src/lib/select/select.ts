@@ -180,7 +180,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Deals with configuring placeholder options */
   private _placeholderOptions: PlaceholderOptions;
-
+  
   /**
    * The width of the trigger. Must be saved to set the min width of the overlay panel
    * and the width of the selected value.
@@ -668,10 +668,10 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
         this._selectionModel.select(option);
       }
     }
-
     if (wasSelected !== this._selectionModel.isSelected(option)) {
       this._propagateChanges();
-    }
+    }    
+    this._setAriaLabel(option.viewValue); 
   }
 
   /**
@@ -839,8 +839,30 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Returns the aria-label of the select component. */
   get _ariaLabel(): string | null {
     // If an ariaLabelledby value has been set, the select should not overwrite the
-    // `aria-labelledby` value by setting the ariaLabel to the placeholder.
+    // `aria-labelledby` value by setting the ariaLabel to the placeholder.    
     return this.ariaLabelledby ? null : this.ariaLabel || this.placeholder;
+  }
+
+  /**
+   * Setter for aria-labels for both single and multiple select. 
+   * Format is: 
+   * single-select: {placeholder}; selection is {selectionValue}
+   * multi-select: {placeholder}; selected options are {item},{item}
+   */
+  private _setAriaLabel(label: string) {     
+    if (this.multiple) { 
+      if (this._selectionModel.selected.length >= 1) {        
+        let selectedOptions: string = '';
+        this._selectionModel.selected.forEach(option => {          
+          selectedOptions += `${option.viewValue}, `;          
+        });        
+        this.ariaLabel = `${this.placeholder}; selected options are ${selectedOptions.replace(/, +$/, '')}`; 
+       } else {         
+        this.ariaLabel = this.placeholder; //no options selected, go back to just the placeholder
+       }
+    } else { 
+      this.ariaLabel = `${this.placeholder}; selection is ${label}`;       
+    }
   }
 
   /**
