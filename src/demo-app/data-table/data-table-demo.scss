@@ -2,13 +2,14 @@
 .demo-table-container {
   display: flex;
   flex-direction: column;
-  max-height: 800px;
   background: white;
 
   // Table fills in the remaining area with a scroll
   .cdk-table {
     flex: 1 1 auto;
-    overflow: auto;
+    &.cdk-table-sticky-rows-enabled {
+        height: 390px;
+    }
   }
 }
 

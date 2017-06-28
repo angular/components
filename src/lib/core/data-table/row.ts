@@ -10,11 +10,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   Directive,
+  HostBinding,
+  Input,
   IterableDiffer,
   IterableDiffers,
   SimpleChanges,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import {CdkCellDef} from './cell';
 import {Subject} from 'rxjs/Subject';
@@ -24,13 +26,19 @@ import {Subject} from 'rxjs/Subject';
  * for changes and notifying the table.
  */
 export abstract class BaseRowDef {
-  /** The columns to be displayed on this row. */
+  /**
+   * The columns to be displayed on this row.
+   */
   columns: string[];
 
-  /** Event stream that emits when changes are made to the columns. */
+  /**
+   * Event stream that emits when changes are made to the columns.
+   */
   columnsChange: Subject<void> = new Subject<void>();
 
-  /** Differ used to check if any changes were made to the columns. */
+  /**
+   * Differ used to check if any changes were made to the columns.
+   */
   protected _columnsDiffer: IterableDiffer<any>;
 
   private viewInitialized = false;
@@ -114,15 +122,45 @@ export interface CdkCellOutletRowContext<T> {
 }
 
 /**
+ * Data row definition for the CDK data-table.
+ * Specifies if a row should "stick" to the top of the table.
+ */
+@Directive({
+  selector: '[cdkStickyRow]',
+  host: {
+    'class': 'cdk-sticky-row',
+    '[style.top.px]': 'topOffset',
+    '[style.backgroundColor]': 'backgroundColor'
+  },
+})
+export class CdkStickyRow {
+  /**
+   * The offset from the top of the container the row should absolutely position itself from.
+   */
+  public topOffset: number;
+
+  /** The color the row should be (so the row does not look transparent when scrolling over the
+   * tables content).
+   */
+  public backgroundColor: string;
+
+  constructor(public viewContainer: ViewContainerRef) {}
+}
+
+/**
  * Outlet for rendering cells inside of a row or header row.
  * @docs-private
  */
 @Directive({selector: '[cdkCellOutlet]'})
 export class CdkCellOutlet {
-  /** The ordered list of cells to render within this outlet's view container */
+  /**
+   * The ordered list of cells to render within this outlet's view container
+   */
   cells: CdkCellDef[];
 
-  /** The data context to be provided to each cell */
+  /**
+   * The data context to be provided to each cell
+   */
   context: any;
 
   /**
@@ -139,7 +177,9 @@ export class CdkCellOutlet {
   }
 }
 
-/** Header template container that contains the cell outlet. Adds the right class and role. */
+/**
+ * Header template container that contains the cell outlet. Adds the right class and role.
+ */
 @Component({
   selector: 'cdk-header-row',
   template: '<ng-container cdkCellOutlet></ng-container>',
@@ -151,7 +191,9 @@ export class CdkCellOutlet {
 })
 export class CdkHeaderRow { }
 
-/** Data row template container that contains the cell outlet. Adds the right class and role. */
+/**
+ * Data row template container that contains the cell outlet. Adds the right class and role.
+ */
 @Component({
   selector: 'cdk-row',
   template: '<ng-container cdkCellOutlet></ng-container>',

@@ -29,6 +29,7 @@ describe('CdkTable', () => {
         CustomRoleCdkTableApp,
         TrackByCdkTableApp,
         RowContextCdkTableApp,
+        StickyRowCdkTableApp,
       ],
     }).compileComponents();
   }));
@@ -428,6 +429,29 @@ describe('CdkTable', () => {
       [data[2].c, data[2].b],
     ]);
   });
+
+  describe('with sticky rows', () => {
+    let stickyFixture: ComponentFixture<StickyRowCdkTableApp>;
+
+    beforeEach(() => {
+      stickyFixture = TestBed.createComponent(StickyRowCdkTableApp);
+      tableElement = stickyFixture.nativeElement.querySelector('cdk-table');
+
+      stickyFixture.detectChanges(false);
+    });
+
+    it('should add the "ckd-table-sticky-rows-enabled" class to the table body', async(() => {
+      stickyFixture.whenStable().then(() => {
+          stickyFixture.detectChanges(false);
+          expect(tableElement.classList).toContain('ckd-table-sticky-rows-enabled');
+        });
+    }));
+
+    it('should add the "cdk-sticky-row" class to row the directive is added to', () => {
+      const header = getHeaderRow(tableElement);
+      expect(header.classList).toContain('cdk-sticky-row');
+    });
+  });
 });
 
 interface TestData {
@@ -508,6 +532,38 @@ class SimpleCdkTableApp {
         <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
       </ng-container>
 
+      <ng-container cdkColumnDef="column_b">
+        <cdk-header-cell *cdkHeaderCellDef> Column B</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.b}}</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_c">
+        <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.c}}</cdk-cell>
+      </ng-container>
+
+      <cdk-header-row class="customHeaderRowClass"
+                      *cdkHeaderRowDef="columnsToRender" cdkStickyRow></cdk-header-row>
+      <cdk-row class="customRowClass"
+               *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
+    </cdk-table>
+  `
+})
+class StickyRowCdkTableApp {
+  dataSource: FakeDataSource | null = new FakeDataSource();
+  columnsToRender = ['column_a', 'column_b', 'column_c'];
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
       <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
       <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
     </cdk-table>
@@ -523,16 +579,6 @@ class DynamicDataSourceCdkTableApp {
 @Component({
   template: `
     <cdk-table [dataSource]="dataSource" [trackBy]="trackBy">
-      <ng-container cdkColumnDef="column_a">
-        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
-      </ng-container>
-
-      <ng-container cdkColumnDef="column_b">
-        <cdk-header-cell *cdkHeaderCellDef> Column B</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> {{row.b}}</cdk-cell>
-      </ng-container>
-
       <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
       <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
     </cdk-table>

@@ -80,7 +80,7 @@
       <cdk-cell *cdkCellDef="let row" [style.color]="row.color"> {{row.color}} </cdk-cell>
     </ng-container>
 
-    <cdk-header-row *cdkHeaderRowDef="propertiesToDisplay"></cdk-header-row>
+    <cdk-header-row *cdkHeaderRowDef="propertiesToDisplay" cdkStickyRow></cdk-header-row>
     <cdk-row *cdkRowDef="let row; columns: propertiesToDisplay;
                          let first = first; let last = last; let even = even; let odd = odd"
              [ngClass]="{

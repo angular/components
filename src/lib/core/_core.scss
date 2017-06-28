@@ -9,6 +9,7 @@
 @import 'option/optgroup-theme';
 @import 'selection/pseudo-checkbox/pseudo-checkbox-theme';
 @import 'typography/all-typography';
+@import 'data-table/data-table';
 
 // Mixin that renders all of the core styles that are not theme-dependent.
 @mixin mat-core() {
@@ -27,6 +28,7 @@
   @include mat-optgroup();
   @include cdk-a11y();
   @include cdk-overlay();
+  @include cdk-data-table();
 }
 
 // Mixin that renders all of the core styles that depend on the theme.

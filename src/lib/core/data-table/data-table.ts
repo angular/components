@@ -30,7 +30,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {CollectionViewer, DataSource} from './data-source';
-import {CdkCellOutlet, CdkCellOutletRowContext, CdkHeaderRowDef, CdkRowDef} from './row';
+import {CdkCellOutlet, CdkCellOutletRowContext, CdkHeaderRowDef, CdkRowDef, CdkStickyRow} from './row';
 import {merge} from 'rxjs/observable/merge';
 import {takeUntil} from '../rxjs/index';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
@@ -72,11 +72,16 @@ export class HeaderRowPlaceholder {
 @Component({
   selector: 'cdk-table',
   template: `
-    <ng-container headerRowPlaceholder></ng-container>
-    <ng-container rowPlaceholder></ng-container>
+    <div class="cdk-table-body" role="presentation"
+         [style.marginTop.px]="stickyRowsMarginTop"
+         [style.height.px]="tableHeight - stickyRowsMarginTop">
+      <ng-container headerRowPlaceholder></ng-container>
+      <ng-container rowPlaceholder></ng-container>
+    </div>
   `,
   host: {
     'class': 'cdk-table',
+    '[class.cdk-table-sticky-rows-enabled]': 'stickyRowsEnabled',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -143,7 +148,25 @@ export class CdkTable<T> implements CollectionViewer {
   }
   private _dataSource: DataSource<T>;
 
-  // Placeholders within the table's template where the header and data rows will be inserted.
+  /**
+   * Toggle to add the neccessary class for sticky rows.
+   */
+  public stickyRowsEnabled  = false;
+
+  /**
+   * Toggle for styling the table to accomodate sticky rows.
+   */
+  public stickyRowsMarginTop: number;
+
+  /**
+   * Toggle for maintaining the correct table height when sticky rows are present.
+   */
+  public tableHeight: number;
+
+  /**
+   *   Placeholders within the table's template where the header and data
+   *   rows will be inserted.
+   */
   @ViewChild(RowPlaceholder) _rowPlaceholder: RowPlaceholder;
   @ViewChild(HeaderRowPlaceholder) _headerRowPlaceholder: HeaderRowPlaceholder;
 
@@ -153,15 +176,24 @@ export class CdkTable<T> implements CollectionViewer {
    */
   @ContentChildren(CdkColumnDef) _columnDefinitions: QueryList<CdkColumnDef>;
 
-  /** Template used as the header container. */
+  /**
+   * Template used as the header container.
+   */
   @ContentChild(CdkHeaderRowDef) _headerDefinition: CdkHeaderRowDef;
 
-  /** Set of templates that used as the data row containers. */
+  /**
+   * Set of templates that used as the data row containers.
+   */
   @ContentChildren(CdkRowDef) _rowDefinitions: QueryList<CdkRowDef>;
+
+  /**
+   * Set of sticky rows.
+   */
+  @ContentChildren(CdkStickyRow) _StickyRows: QueryList<CdkStickyRow>;
 
   constructor(private readonly _differs: IterableDiffers,
               private readonly _changeDetectorRef: ChangeDetectorRef,
-              elementRef: ElementRef,
+              public elementRef: ElementRef,
               renderer: Renderer2,
               @Attribute('role') role: string) {
     // Show the stability warning of the data-table only if it doesn't run inside of jasmine.
@@ -214,6 +246,33 @@ export class CdkTable<T> implements CollectionViewer {
     // Find and construct an iterable differ that can be used to find the diff in an array.
     this._dataDiffer = this._differs.find([]).create(this._trackByFn);
     this._isViewInitialized = true;
+
+    this._StickyRows.changes.subscribe((queryList: QueryList<CdkStickyRow>) => {
+        let topOffset = 0;
+
+        if (queryList.toArray().length) {
+        this.stickyRowsEnabled = true;
+          setTimeout(() => {
+            /**
+             * This needs to be called AFTER the "cdk-table-sticky-rows-enabled" class
+             *  gets added to the table body to properly calculate the table's height.
+             */
+            this.tableHeight  = this.elementRef.nativeElement.getBoundingClientRect().height;
+            this._changeDetectorRef.markForCheck();
+          });
+        } else {
+          this.stickyRowsEnabled = false;
+        }
+
+        queryList.forEach((item) => {
+            item.topOffset = topOffset;
+            item.backgroundColor = window.getComputedStyle(item.viewContainer
+              .element.nativeElement).backgroundColor;
+            topOffset += item.viewContainer.element.nativeElement.getBoundingClientRect().height;
+        });
+
+        this.stickyRowsMarginTop = topOffset;
+    });
   }
 
   ngDoCheck() {
@@ -247,7 +306,9 @@ export class CdkTable<T> implements CollectionViewer {
     }
   }
 
-  /** Set up a subscription for the data provided by the data source. */
+  /**
+   * Set up a subscription for the data provided by the data source.
+   */
   private _observeRenderChanges() {
     this._renderChangeSubscription = takeUntil.call(this.dataSource.connect(this), this._onDestroy)
       .subscribe(data => {
@@ -276,7 +337,9 @@ export class CdkTable<T> implements CollectionViewer {
     this._changeDetectorRef.markForCheck();
   }
 
-  /** Check for changes made in the data and render each change (row added/removed/moved). */
+  /**
+   * Check for changes made in the data and render each change (row added/removed/moved).
+   */
   private _renderRowChanges() {
     const changes = this._dataDiffer.diff(this._data);
     if (!changes) { return; }
