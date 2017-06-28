@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {CdkTable} from '../core/data-table/data-table';
+import {CDK_TABLE_TEMPLATE, CdkTable} from '../core/data-table/data-table';
 
 /**
  * Wrapper for the CdkTable with Material design styles.
@@ -15,7 +15,7 @@ import {CdkTable} from '../core/data-table/data-table';
 @Component({
   moduleId: module.id,
   selector: 'md-table, mat-table',
-  templateUrl: '../core/data-table/table.html',
+  template: CDK_TABLE_TEMPLATE,
   styleUrls: ['table.css'],
   host: {
     'class': 'mat-table',

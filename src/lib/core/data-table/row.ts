@@ -20,6 +20,12 @@ import {CdkCellDef} from './cell';
 import {Subject} from 'rxjs/Subject';
 
 /**
+ * The row template that can be used by the md-table. Should not be used outside of the
+ * material library.
+ */
+export const CDK_ROW_TEMPLATE = `<ng-container cdkCellOutlet></ng-container>`;
+
+/**
  * Base class for the CdkHeaderRowDef and CdkRowDef that handles checking their columns inputs
  * for changes and notifying the table.
  */
@@ -142,7 +148,7 @@ export class CdkCellOutlet {
 /** Header template container that contains the cell outlet. Adds the right class and role. */
 @Component({
   selector: 'cdk-header-row',
-  templateUrl: 'row.html',
+  template: CDK_ROW_TEMPLATE,
   host: {
     'class': 'cdk-header-row',
     'role': 'row',
@@ -154,7 +160,7 @@ export class CdkHeaderRow { }
 /** Data row template container that contains the cell outlet. Adds the right class and role. */
 @Component({
   selector: 'cdk-row',
-  templateUrl: 'row.html',
+  template: CDK_ROW_TEMPLATE,
   host: {
     'class': 'cdk-row',
     'role': 'row',

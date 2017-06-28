@@ -66,12 +66,20 @@ export class HeaderRowPlaceholder {
 }
 
 /**
+ * The table template that can be used by the md-table. Should not be used outside of the
+ * material library.
+ */
+export const CDK_TABLE_TEMPLATE = `
+  <ng-container headerRowPlaceholder></ng-container>
+  <ng-container rowPlaceholder></ng-container>`;
+
+/**
  * A data table that connects with a data source to retrieve data of type T and renders
  * a header row and data rows. Updates the rows when new data is provided by the data source.
  */
 @Component({
   selector: 'cdk-table',
-  templateUrl: 'table.html',
+  template: CDK_TABLE_TEMPLATE,
   host: {
     'class': 'cdk-table',
   },

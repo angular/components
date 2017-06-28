@@ -7,12 +7,12 @@
  */
 
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {CdkHeaderRow, CdkRow} from '../core/data-table/row';
+import {CdkHeaderRow, CdkRow, CDK_ROW_TEMPLATE} from '../core/data-table/row';
 
 /** Header template container that contains the cell outlet. Adds the right class and role. */
 @Component({
   selector: 'md-header-row, mat-header-row',
-  templateUrl: '../core/data-table/row.html',
+  template: CDK_ROW_TEMPLATE,
   host: {
     'class': 'mat-header-row',
     'role': 'row',
@@ -24,7 +24,7 @@ export class MdHeaderRow extends CdkHeaderRow { }
 /** Data row template container that contains the cell outlet. Adds the right class and role. */
 @Component({
   selector: 'md-row, mat-row',
-  templateUrl: '../core/data-table/row.html',
+  template: CDK_ROW_TEMPLATE,
   host: {
     'class': 'mat-row',
     'role': 'row',
