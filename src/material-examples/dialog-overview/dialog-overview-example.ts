@@ -3,11 +3,6 @@ import {MdDialog} from '@angular/material';
 
 /**
  * @title Dialog Overview
- * @component DialogOverviewExample
- * @id dialog-overview
- * @addlComponents DialogOverviewExampleDialog
- * @additionalFiles dialog-overview-example-dialog.html
- * @selectorName DialogOverviewExample, DialogOverviewExampleDialog
  */
 @Component({
   selector: 'dialog-overview-example',

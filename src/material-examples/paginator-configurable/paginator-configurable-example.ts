@@ -3,8 +3,6 @@ import {PageEvent} from '@angular/material';
 
 /**
  * @title Configurable paginator
- * @id paginator-configurable
- * @component PaginatorConfigurableExample
  */
 @Component({
   selector: 'paginator-configurable-example',

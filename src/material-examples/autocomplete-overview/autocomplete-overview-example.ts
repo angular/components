@@ -6,8 +6,6 @@ import 'rxjs/add/operator/map';
 
 /**
  * @title Basic autocomplete
- * @id autocomplete-overview
- * @component AutocompleteOverviewExample
  */
 @Component({
   selector: 'autocomplete-overview-example',

@@ -2,8 +2,6 @@ import {Component} from '@angular/core';
 
 /**
  * @title Basic tooltip
- * @id tooltip-overview
- * @component TooltipOverviewExample
  */
 @Component({
   selector: 'tooltip-overview-example',

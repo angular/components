@@ -2,8 +2,6 @@ import {Component} from '@angular/core';
 
 /**
  * @title Input Prefixes and Suffixes
- * @id input-prefix-suffix
- * @component InputPrefixSuffixExample
  */
 @Component({
   selector: 'input-prefix-suffix-example',

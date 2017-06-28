@@ -5,8 +5,6 @@ const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA
 
 /**
  * @title Input Errors
- * @id input-errors
- * @component InputErrorsExample
  */
 @Component({
   selector: 'input-errors-example',

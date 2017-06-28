@@ -2,8 +2,6 @@ import {Component, ViewEncapsulation} from '@angular/core';
 
 /**
  * @title Sidenav with a FAB
- * @id sidenav-fab
- * @component SidenavFabExample
  */
 @Component({
   selector: 'sidenav-fab-example',

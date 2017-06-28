@@ -2,8 +2,6 @@ import {Component} from '@angular/core';
 
 /**
  * @title Basic radios
- * @id radio-overview
- * @component RadioOverviewExample
  */
 @Component({
   selector: 'radio-overview-example',

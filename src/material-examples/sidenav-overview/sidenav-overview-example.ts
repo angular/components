@@ -2,8 +2,6 @@ import {Component} from '@angular/core';
 
 /**
  * @title Basic sidenav
- * @id sidenav-overview
- * @component SidenavOverviewExample
  */
 @Component({
   selector: 'sidenav-overview-example',

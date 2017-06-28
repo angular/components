@@ -2,8 +2,6 @@ import {Component} from '@angular/core';
 
 /**
  * @title Basic grid-list
- * @id grid-list-overview
- * @component GridListOverviewExample
  */
 @Component({
   selector: 'grid-list-overview-example',

@@ -4,8 +4,6 @@ import {MdIconRegistry} from '@angular/material';
 
 /**
  * @title SVG icons
- * @id icon-svg
- * @component IconSvgExample
  */
 @Component({
   selector: 'icon-svg-example',

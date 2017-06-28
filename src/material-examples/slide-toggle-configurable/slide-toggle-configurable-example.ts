@@ -2,8 +2,6 @@ import {Component} from '@angular/core';
 
 /**
  * @title Configurable slide-toggle
- * @id slide-toggle-configurable
- * @component SlideToggleConfigurableExample
  */
 @Component({
   selector: 'slide-toggle-configurable-example',

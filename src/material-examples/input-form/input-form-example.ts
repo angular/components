@@ -2,8 +2,6 @@ import {Component} from '@angular/core';
 
 /**
  * @title Inputs in a form
- * @id input-form
- * @component InputFormExample
  */
 @Component({
   selector: 'input-form-example',
