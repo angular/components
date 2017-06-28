@@ -265,9 +265,20 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
     let originY = overlayY;
     let fallbackOriginY = fallbackOverlayY;
 
+    let xOffset = 0;
+    let yOffset = 0;
+
     if (!this.menu.overlapTrigger) {
       originY = overlayY === 'top' ? 'bottom' : 'top';
       fallbackOriginY = fallbackOverlayY === 'top' ? 'bottom' : 'top';
+    }
+
+    if (this.menu.xOffset && !isNaN(Number(this.menu.xOffset))) {
+      xOffset = Number(this.menu.xOffset);
+    }
+
+    if (this.menu.yOffset && !isNaN(Number(this.menu.yOffset))) {
+      yOffset = Number(this.menu.yOffset);
     }
 
     return this._overlay.position()
@@ -281,7 +292,9 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
           {overlayX: posX, overlayY: fallbackOverlayY})
       .withFallbackPosition(
           {originX: fallbackX, originY: fallbackOriginY},
-          {overlayX: fallbackX, overlayY: fallbackOverlayY});
+          {overlayX: fallbackX, overlayY: fallbackOverlayY})
+      .withOffsetX(xOffset)
+      .withOffsetY(yOffset);
   }
 
   private _cleanUpSubscriptions(): void {

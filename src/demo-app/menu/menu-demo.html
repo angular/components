@@ -112,4 +112,20 @@
       </button>
     </md-menu>
   </div>
+    <div class="menu-section">
+    <p>
+      Position y: above, overlapTrigger: false, xoffset: 100 yoffset: 100 
+    </p>
+    <md-toolbar>
+      <button md-icon-button [md-menu-trigger-for]="posYMenuOverlay">
+        <md-icon>more_vert</md-icon>
+      </button>
+    </md-toolbar>
+
+    <md-menu yPosition="above" xOffset="100" yOffset="100" [overlapTrigger]="false" #posYMenuOverlay="mdMenu">
+      <button md-menu-item *ngFor="let item of items" [disabled]="item.disabled">
+        {{ item.text }}
+      </button>
+    </md-menu>
+  </div>
 </div>

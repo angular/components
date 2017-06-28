@@ -12,6 +12,8 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
 export interface MdMenuPanel {
   xPosition: MenuPositionX;
   yPosition: MenuPositionY;
+  xOffset: string;
+  yOffset: string;
   overlapTrigger: boolean;
   templateRef: TemplateRef<any>;
   close: EventEmitter<void>;

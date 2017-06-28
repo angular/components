@@ -21,7 +21,12 @@ import {
   ElementRef,
 } from '@angular/core';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
-import {throwMdMenuInvalidPositionX, throwMdMenuInvalidPositionY} from './menu-errors';
+import {
+  throwMdMenuInvalidPositionX,
+  throwMdMenuInvalidPositionY,
+  throwInvalidOffsetX,
+  throwInvalidOffsetY
+} from './menu-errors';
 import {MdMenuItem} from './menu-item';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {MdMenuPanel} from './menu-panel';
@@ -46,6 +51,8 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   private _keyManager: FocusKeyManager;
   private _xPosition: MenuPositionX = 'after';
   private _yPosition: MenuPositionY = 'below';
+  private _xOffset: string = '';
+  private _yOffset: string = '';
 
   /** Subscription to tab events on the menu panel */
   private _tabSubscription: Subscription;
@@ -73,6 +80,26 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
     }
     this._yPosition = value;
     this.setPositionClasses();
+  }
+
+  /** Amount of x offset of the menu. */
+  @Input()
+  get xOffset() { return this._xOffset; }
+  set xOffset(value: string) {
+    if (value === '' || isNaN(Number(value))) {
+      throwInvalidOffsetX();
+    }
+    this._xOffset = value;
+  }
+
+    /** Amount of y offset of the menu. */
+  @Input()
+  get yOffset() { return this._yOffset; }
+  set yOffset(value: string) {
+    if (value === '' || isNaN(Number(value))) {
+      throwInvalidOffsetY();
+    }
+    this._yOffset = value;
   }
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;

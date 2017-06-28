@@ -32,7 +32,14 @@ describe('MdMenu', () => {
     dir = 'ltr';
     TestBed.configureTestingModule({
       imports: [MdMenuModule, NoopAnimationsModule],
-      declarations: [SimpleMenu, PositionedMenu, OverlapMenu, CustomMenuPanel, CustomMenu],
+      declarations: [
+        SimpleMenu,
+        PositionedMenu,
+        OffsetMenu,
+        OverlapMenu,
+        CustomMenuPanel,
+        CustomMenu
+      ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
           overlayContainerElement = document.createElement('div');
@@ -204,9 +211,46 @@ describe('MdMenu', () => {
       expect(panel.classList).toContain('mat-menu-after');
     });
 
+    function getOverlayPane(): HTMLElement {
+      return overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+    }
+
   });
 
   describe('fallback positions', () => {
+
+    it('should set x Offset and y offset', () => {
+      // value of offset
+      const xOffsetToSet = 30;
+      const yOffsetToSet = 30;
+      const offsetFixture = TestBed.createComponent(OffsetMenu);
+      offsetFixture.detectChanges();
+
+      // set the x offset and y offset
+      offsetFixture.componentInstance.xOffset = xOffsetToSet.toString();
+      offsetFixture.componentInstance.yOffset = yOffsetToSet.toString();
+      offsetFixture.detectChanges();
+
+      const triggerOffset = offsetFixture.componentInstance.triggerEl.nativeElement;
+      const triggerRect = triggerOffset.getBoundingClientRect();
+
+      offsetFixture.componentInstance.trigger.openMenu();
+      offsetFixture.detectChanges();
+      const overlayPane = getOverlayPane();
+      const overlayRect = overlayPane.getBoundingClientRect();
+
+      // calculate difference between overlay and trigger positions
+      const overlayRectLeftOffset = overlayRect.left - triggerRect.left;
+      const overlayRectBottomOffset = overlayRect.top -  triggerRect.top;
+
+      expect(Math.floor(overlayRectLeftOffset))
+        .toBe(Math.floor(xOffsetToSet),
+          `Expected x offset of the menu to be set`);
+
+      expect(Math.floor(overlayRectBottomOffset))
+        .toBe(Math.floor(yOffsetToSet),
+          `Expected y offset of the menu to be set`);
+    });
 
     it('should fall back to "before" mode if "after" mode would not fit on screen', () => {
       const fixture = TestBed.createComponent(SimpleMenu);
@@ -505,7 +549,7 @@ class SimpleMenu {
 @Component({
   template: `
     <button [mdMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
-    <md-menu [xPosition]="xPosition" [yPosition]="yPosition" #menu="mdMenu">
+    <md-menu [xPosition]="xPosition" [yPosition]="yPosition"#menu="mdMenu">
       <button md-menu-item> Positioned Content </button>
     </md-menu>
   `
@@ -515,6 +559,22 @@ class PositionedMenu {
   @ViewChild('triggerEl') triggerEl: ElementRef;
   xPosition: MenuPositionX = 'before';
   yPosition: MenuPositionY = 'above';
+}
+
+@Component({
+  template: `
+    <button [mdMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
+    <md-menu class="custom-one custom-two" #menu="mdMenu"
+      [xOffset]="xOffset" [yOffset]="yOffset">
+      <button md-menu-item> Offset </button>
+    </md-menu>
+  `
+})
+class OffsetMenu {
+  @ViewChild(MdMenuTrigger) trigger: MdMenuTrigger;
+  @ViewChild('triggerEl') triggerEl: ElementRef;
+  xOffset: string = '0';
+  yOffset: string = '0';
 }
 
 interface TestableMenu {
@@ -548,6 +608,9 @@ class OverlapMenu implements TestableMenu {
 class CustomMenuPanel implements MdMenuPanel {
   xPosition: MenuPositionX = 'after';
   yPosition: MenuPositionY = 'below';
+  xOffset: string = '0';
+  yOffset: string = '0';
+
   overlapTrigger: true;
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
