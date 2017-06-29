@@ -1,0 +1,14 @@
+<div class="mat-stepper-container">
+    <div *ngFor="let step of _steps" class="mat-step" (click)="selectStep(step)">
+        <div *ngIf="step.active" class="activeStep">{{_steps.indexOf(step) + 1}}</div>
+        <div *ngIf="!step.active" class="inactiveStep"></div>
+        <div class="mat-step-header">
+            <div class="mat-step-label">{{step.label}}</div>
+            <div *ngIf="step.optional" class="mat-step-optional">Optional</div>
+        </div>
+        <div *ngIf="!step.isLast" class="connector-line"></div>
+    </div>
+    <div *ngIf="'orientation' == 'vertical' && step.active">{{step.content}}</div>
+</div>
+<div class="mat-stepper-horizontal" *ngIf="'orientation' == 'horizontal'">
+</div>

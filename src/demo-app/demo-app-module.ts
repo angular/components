@@ -76,10 +76,12 @@ import {
   MdToolbarModule,
   MdTooltipModule,
   OverlayContainer,
-  StyleModule
+  StyleModule,
+  MdStepperModule,
 } from '@angular/material';
 import {CdkTableModule} from '@angular/cdk';
 import {TableHeaderDemo} from './table/table-header-demo';
+import {StepperDemo} from './stepper/stepper-demo';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
@@ -118,7 +120,8 @@ import {TableHeaderDemo} from './table/table-header-demo';
     MdTooltipModule,
     MdNativeDateModule,
     CdkTableModule,
-    StyleModule
+    StyleModule,
+    MdStepperModule,
   ]
 })
 export class DemoMaterialModule {}
@@ -184,6 +187,7 @@ export class DemoMaterialModule {}
     PlatformDemo,
     TypographyDemo,
     ExpansionDemo,
+    StepperDemo,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
