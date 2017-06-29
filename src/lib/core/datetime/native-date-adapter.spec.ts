@@ -1,4 +1,6 @@
-import {NativeDateAdapter} from './native-date-adapter';
+import {TestBed, async, inject} from '@angular/core/testing';
+import {LOCALE_ID} from '@angular/core';
+import {NativeDateAdapter, NativeDateModule, DateAdapter} from './index';
 import {Platform} from '../platform/index';
 
 
@@ -12,13 +14,18 @@ const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SE
 
 
 describe('NativeDateAdapter', () => {
-  let adapter;
-  let platform;
+  const platform = new Platform();
+  let adapter: NativeDateAdapter;
 
-  beforeEach(() => {
-    adapter = new NativeDateAdapter();
-    platform = new Platform();
-  });
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [NativeDateModule]
+    }).compileComponents();
+  }));
+
+  beforeEach(inject([DateAdapter], (d: NativeDateAdapter) => {
+    adapter = d;
+  }));
 
   it('should get year', () => {
     expect(adapter.getYear(new Date(2017, JAN, 1))).toBe(2017);
@@ -202,9 +209,9 @@ describe('NativeDateAdapter', () => {
 
   it('should format', () => {
     if (SUPPORTS_INTL) {
-      expect(adapter.format(new Date(2017, JAN, 1))).toEqual('1/1/2017');
+      expect(adapter.format(new Date(2017, JAN, 1), {})).toEqual('1/1/2017');
     } else {
-      expect(adapter.format(new Date(2017, JAN, 1))).toEqual('Sun Jan 01 2017');
+      expect(adapter.format(new Date(2017, JAN, 1), {})).toEqual('Sun Jan 01 2017');
     }
   });
 
@@ -229,12 +236,12 @@ describe('NativeDateAdapter', () => {
     if (SUPPORTS_INTL) {
       // Edge & IE use a different format in Japanese.
       if (platform.EDGE || platform.TRIDENT) {
-        expect(adapter.format(new Date(2017, JAN, 1))).toEqual('2017年1月1日');
+        expect(adapter.format(new Date(2017, JAN, 1), {})).toEqual('2017年1月1日');
       } else {
-        expect(adapter.format(new Date(2017, JAN, 1))).toEqual('2017/1/1');
+        expect(adapter.format(new Date(2017, JAN, 1), {})).toEqual('2017/1/1');
       }
     } else {
-      expect(adapter.format(new Date(2017, JAN, 1))).toEqual('Sun Jan 01 2017');
+      expect(adapter.format(new Date(2017, JAN, 1), {})).toEqual('Sun Jan 01 2017');
     }
   });
 
@@ -296,4 +303,29 @@ describe('NativeDateAdapter', () => {
         new Date(2018, FEB, 1), new Date(2018, JAN, 1), new Date(2019, JAN, 1)))
         .toEqual(new Date(2018, FEB, 1));
   });
+});
+
+
+describe('NativeDateAdapter with LOCALE_ID override', () => {
+  let adapter: NativeDateAdapter;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [NativeDateModule],
+      providers: [{provide: LOCALE_ID, useValue: 'da-DK'}]
+    }).compileComponents();
+  }));
+
+  beforeEach(inject([DateAdapter], (d: NativeDateAdapter) => {
+    adapter = d;
+  }));
+
+  it('should take the default locale id from the LOCALE_ID injection token', () => {
+    const expectedValue = SUPPORTS_INTL ?
+        ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'] :
+        ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    expect(adapter.getDayOfWeekNames('long')).toEqual(expectedValue);
+  });
+
 });

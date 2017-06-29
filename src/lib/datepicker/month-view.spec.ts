@@ -18,13 +18,6 @@ describe('MdMonthView', () => {
       imports: [
         MdNativeDateModule,
       ],
-      providers: [
-        {provide: DateAdapter, useFactory: () => {
-          let adapter = new NativeDateAdapter();
-          adapter.setLocale('en-US');
-          return adapter;
-        }}
-      ],
       declarations: [
         MdCalendarBody,
         MdMonthView,
