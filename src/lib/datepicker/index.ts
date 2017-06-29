@@ -20,9 +20,10 @@ import {
 import {MdDatepickerInput} from './datepicker-input';
 import {MdDialogModule} from '../dialog/index';
 import {MdCalendar} from './calendar';
-import {MdDatepickerToggle, MdDatepickerToggleIcon} from './datepicker-toggle';
+import {MdDatepickerToggle} from './datepicker-toggle';
 import {MdButtonModule} from '../button/index';
 import {MdDatepickerIntl} from './datepicker-intl';
+import {MdIconModule} from '../icon/index';
 
 
 export * from './calendar';
@@ -40,6 +41,7 @@ export * from './year-view';
     CommonModule,
     MdButtonModule,
     MdDialogModule,
+    MdIconModule,
     OverlayModule,
     StyleModule,
     A11yModule,
@@ -49,7 +51,6 @@ export * from './year-view';
     MdDatepickerContent,
     MdDatepickerInput,
     MdDatepickerToggle,
-    MdDatepickerToggleIcon,
   ],
   declarations: [
     MdCalendar,
@@ -58,7 +59,6 @@ export * from './year-view';
     MdDatepickerContent,
     MdDatepickerInput,
     MdDatepickerToggle,
-    MdDatepickerToggleIcon,
     MdMonthView,
     MdYearView,
   ],

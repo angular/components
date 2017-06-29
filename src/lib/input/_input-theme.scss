@@ -163,8 +163,7 @@
   .mat-input-prefix,
   .mat-input-suffix {
     // Allow icons in a prefix or suffix to adapt to the correct size.
-    .mat-icon,
-    .mat-datepicker-toggle-icon {
+    .mat-icon {
       font-size: $prefix-suffix-icon-font-size;
       line-height: $line-height;
     }
@@ -174,8 +173,7 @@
       height: $prefix-suffix-icon-font-scale * 1em;
       width: $prefix-suffix-icon-font-scale * 1em;
 
-      .mat-icon,
-      .mat-datepicker-toggle-icon {
+      .mat-icon {
         height: $line-height * 1em;
         line-height: $line-height;
       }

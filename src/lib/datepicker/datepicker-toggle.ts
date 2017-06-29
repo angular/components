@@ -9,8 +9,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Directive,
-  ElementRef,
   Input,
   ViewEncapsulation,
   OnDestroy,
@@ -22,27 +20,21 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Subscription} from 'rxjs/Subscription';
 
 
-@Directive({
-  selector: '[mdDatepickerToggle], [matDatepickerToggle]',
+@Component({
+  moduleId: module.id,
+  selector: 'md-datepicker-toggle, mat-datepicker-toggle',
+  templateUrl: 'datepicker-toggle.html',
   host: {
-    '[type]': '_isButton ? "button" : undefined',
-    '[attr.aria-label]': '_intl.openCalendarLabel',
-    '[disabled]': 'disabled',
-    '(click)': '_open($event)',
+    'class': 'mat-datepicker-toggle',
   },
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdDatepickerToggle<D> implements OnDestroy {
   private _intlChanges: Subscription;
 
   /** Datepicker instance that the button will toggle. */
-  @Input('mdDatepickerToggle') datepicker: MdDatepicker<D>;
-
-  @Input('matDatepickerToggle')
-  get _datepicker() { return this.datepicker; }
-  set _datepicker(v: MdDatepicker<D>) { this.datepicker = v; }
-
-  /** Whether the host element is an HTML button. */
-  _isButton = false;
+  @Input('for') datepicker: MdDatepicker<D>;
 
   /** Whether the toggle button is disabled. */
   @Input()
@@ -54,8 +46,7 @@ export class MdDatepickerToggle<D> implements OnDestroy {
   }
   private _disabled: boolean;
 
-  constructor(elementRef: ElementRef, public _intl: MdDatepickerIntl, changeDetectorRef: ChangeDetectorRef) {
-    this._isButton = elementRef.nativeElement.tagName.toLowerCase() === 'button';
+  constructor(public _intl: MdDatepickerIntl, changeDetectorRef: ChangeDetectorRef) {
     this._intlChanges = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
   }
 
@@ -70,17 +61,3 @@ export class MdDatepickerToggle<D> implements OnDestroy {
     }
   }
 }
-
-
-@Component({
-  moduleId: module.id,
-  selector: 'md-datepicker-toggle-icon, mat-datepicker-toggle-icon',
-  templateUrl: 'datepicker-toggle.html',
-  styleUrls: ['datepicker-toggle.css'],
-  host: {
-    'class': 'mat-datepicker-toggle-icon',
-  },
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MdDatepickerToggleIcon {}
