@@ -17,6 +17,8 @@ import {
   EventEmitter,
   Inject,
   Optional,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   animate,
@@ -50,6 +52,7 @@ export function throwMdDialogContentAlreadyAttachedError() {
   selector: 'md-dialog-container, mat-dialog-container',
   templateUrl: 'dialog-container.html',
   styleUrls: ['dialog.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('slideDialog', [
@@ -100,6 +103,7 @@ export class MdDialogContainer extends BasePortalHost {
     private _ngZone: NgZone,
     private _elementRef: ElementRef,
     private _focusTrapFactory: FocusTrapFactory,
+    private _changeDetectorRef: ChangeDetectorRef,
     @Optional() @Inject(DOCUMENT) _document: any) {
 
     super();
@@ -116,7 +120,12 @@ export class MdDialogContainer extends BasePortalHost {
     }
 
     this._savePreviouslyFocusedElement();
-    return this._portalHost.attachComponentPortal(portal);
+    const componentRef = this._portalHost.attachComponentPortal(portal);
+
+    // Ensure that the initial view change are picked up.
+    componentRef.changeDetectorRef.markForCheck();
+
+    return componentRef;
   }
 
   /**
@@ -129,7 +138,12 @@ export class MdDialogContainer extends BasePortalHost {
     }
 
     this._savePreviouslyFocusedElement();
-    return this._portalHost.attachTemplatePortal(portal);
+    const locals = this._portalHost.attachTemplatePortal(portal);
+
+    // Ensure that the initial view change are picked up.
+    this._changeDetectorRef.markForCheck();
+
+    return locals;
   }
 
   /** Moves the focus inside the focus trap. */
