@@ -87,7 +87,7 @@ import {
   MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule
 } from '@angular/material';
 import {TableOverviewExample} from './table-overview/table-overview-example';
-import {TableBasicExample} from './table-basic/table-basic-example';
+import {TablePaginationExample} from './table-pagination/table-pagination-example';
 
 export interface LiveExample {
   title: string;
@@ -185,8 +185,8 @@ export const EXAMPLE_COMPONENTS = {
     component: SnackBarComponentExample
   },
   'snack-bar-overview': {title: 'Basic snack-bar', component: SnackBarOverviewExample},
-  'table-overview': {title: 'Feature-rich datatable', component: TableOverviewExample},
-  'table-basic': {title: 'Basic table', component: TableBasicExample},
+  'table-overview': {title: 'Feature-rich data table', component: TableOverviewExample},
+  'table-pagination': {title: 'Table with pagination', component: TablePaginationExample},
   'tabs-overview': {title: 'Basic tabs', component: TabsOverviewExample},
   'tabs-template-label': {title: 'Coming soon!', component: TabsTemplateLabelExample},
   'toolbar-multirow': {title: 'Multi-row toolbar', component: ToolbarMultirowExample},
@@ -287,7 +287,7 @@ export const EXAMPLE_LIST = [
   PizzaPartyComponent,
   SnackBarOverviewExample,
   TableOverviewExample,
-  TableBasicExample,
+  TablePaginationExample,
   TabsOverviewExample,
   TabsTemplateLabelExample,
   ToolbarMultirowExample,

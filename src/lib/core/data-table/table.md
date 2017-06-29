@@ -11,4 +11,4 @@ In the near future, the material library will include an additional "simple tabl
 <md-table> with a more minimal interface and sorting, pagination, and selection built-in.
 
 
-<!-- example(table-basic) -->
+<!-- example(table-pagination) -->
