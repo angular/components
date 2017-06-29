@@ -89,6 +89,7 @@ import {CdkTableModule} from '@angular/cdk';
 import {TableOverviewExample} from './table-overview/table-overview-example';
 import {TablePaginationExample} from './table-pagination/table-pagination-example';
 import {TableBasicExample} from './table-basic/table-basic-example';
+import {TableSortingExample} from './table-sorting/table-sorting-example';
 
 export interface LiveExample {
   title: string;
@@ -188,6 +189,7 @@ export const EXAMPLE_COMPONENTS = {
   'snack-bar-overview': {title: 'Basic snack-bar', component: SnackBarOverviewExample},
   'table-overview': {title: 'Feature-rich data table', component: TableOverviewExample},
   'table-pagination': {title: 'Table with pagination', component: TablePaginationExample},
+  'table-sorting': {title: 'Table with sorting', component: TableSortingExample},
   'table-basic': {title: 'Basic table', component: TableBasicExample},
   'tabs-overview': {title: 'Basic tabs', component: TabsOverviewExample},
   'tabs-template-label': {title: 'Coming soon!', component: TabsTemplateLabelExample},
@@ -202,7 +204,7 @@ export const EXAMPLE_COMPONENTS = {
  */
 @NgModule({
   exports: [
-    CdkDataTableModule,
+    CdkTableModule,
     MdAutocompleteModule,
     MdButtonModule,
     MdButtonToggleModule,
@@ -291,6 +293,7 @@ export const EXAMPLE_LIST = [
   TableBasicExample,
   TableOverviewExample,
   TablePaginationExample,
+  TableSortingExample,
   TabsOverviewExample,
   TabsTemplateLabelExample,
   ToolbarMultirowExample,

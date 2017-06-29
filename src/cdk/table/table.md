@@ -139,7 +139,7 @@ Note that the column definition directives (`cdkColumnDef` and `cdkHeaderCellDef
       <md-cell *cdkCellDef="let row"> {{row.c}} </md-cell>
     </ng-container>
 
-    <!-- Header and Row Declarations (define columns; provide attribute and event binding) ->
+    <!-- Header and Row Declarations (define columns; provide attribute and event binding) -->
     <md-header-row *cdkHeaderRowDef="['column_a', 'column_b', 'column_c']"></md-header-row>
     <md-row *cdkRowDef="let row; columns: ['column_a', 'column_b', 'column_c']"></md-row>
   </md-table>
@@ -162,3 +162,16 @@ paging events from the component and appropriately slice the right data from wha
 is used. Sending this new data to the table will cause it to render the new page of data.
 
 <!-- example(table-pagination) -->
+
+### Sorting
+Use the MdSort component to enable sorting the table's data through the column headers.
+The data source can listen to sorting events from the component and sort the data before giving it
+to the table to render.
+
+<!-- example(table-sorting) -->
+
+### Filtering
+Apply filtering to your table's data by listening to an input's changes. When a change occurs, filter
+the data in the data source and send it to the table to render.
+
+<!-- example(table-filtering) -->
