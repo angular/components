@@ -1,6 +1,5 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {DataSource} from '@angular/cdk';
-import {MdPaginator} from '@angular/material';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/startWith';
@@ -8,19 +7,17 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/map';
 
 @Component({
-  selector: 'table-pagination-example',
-  styleUrls: ['table-pagination-example.css'],
-  templateUrl: 'table-pagination-example.html',
+  selector: 'table-basic-example',
+  styleUrls: ['table-basic-example.css'],
+  templateUrl: 'table-basic-example.html',
 })
-export class TablePaginationExample {
+export class TableBasicExample {
   displayedColumns = ['userId', 'userName', 'progress', 'color'];
   exampleDatabase = new ExampleDatabase();
   dataSource: ExampleDataSource | null;
 
-  @ViewChild(MdPaginator) paginator: MdPaginator;
-
   ngOnInit() {
-    this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator);
+    this.dataSource = new ExampleDataSource(this.exampleDatabase);
   }
 }
 
@@ -79,24 +76,13 @@ export class ExampleDatabase {
  * should be rendered.
  */
 export class ExampleDataSource extends DataSource<any> {
-  constructor(private _exampleDatabase: ExampleDatabase, private _paginator: MdPaginator) {
+  constructor(private _exampleDatabase: ExampleDatabase) {
     super();
   }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect(): Observable<UserData[]> {
-    const displayDataChanges = [
-      this._exampleDatabase.dataChange,
-      this._paginator.page,
-    ];
-
-    return Observable.merge(...displayDataChanges).map(() => {
-      const data = this._exampleDatabase.data.slice();
-
-      // Grab the page's slice of data.
-      const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-      return data.splice(startIndex, this._paginator.pageSize);
-    });
+    return this._exampleDatabase.dataChange;
   }
 
   disconnect() {}

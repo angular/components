@@ -79,15 +79,16 @@ import {InputFormExample} from './input-form/input-form-example';
 import {InputPrefixSuffixExample} from './input-prefix-suffix/input-prefix-suffix-example';
 import {InputHintExample} from './input-hint/input-hint-example';
 import {
-  CdkDataTableModule,
   MdAutocompleteModule, MdButtonModule, MdButtonToggleModule, MdCardModule, MdCheckboxModule,
   MdChipsModule, MdDatepickerModule, MdDialogModule, MdGridListModule, MdIconModule, MdInputModule,
   MdListModule, MdMenuModule, MdPaginatorModule, MdProgressBarModule, MdProgressSpinnerModule,
   MdRadioModule, MdSelectModule, MdSidenavModule, MdSliderModule, MdSlideToggleModule,
   MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule
 } from '@angular/material';
+import {CdkTableModule} from '@angular/cdk';
 import {TableOverviewExample} from './table-overview/table-overview-example';
 import {TablePaginationExample} from './table-pagination/table-pagination-example';
+import {TableBasicExample} from './table-basic/table-basic-example';
 
 export interface LiveExample {
   title: string;
@@ -187,6 +188,7 @@ export const EXAMPLE_COMPONENTS = {
   'snack-bar-overview': {title: 'Basic snack-bar', component: SnackBarOverviewExample},
   'table-overview': {title: 'Feature-rich data table', component: TableOverviewExample},
   'table-pagination': {title: 'Table with pagination', component: TablePaginationExample},
+  'table-basic': {title: 'Basic table', component: TableBasicExample},
   'tabs-overview': {title: 'Basic tabs', component: TabsOverviewExample},
   'tabs-template-label': {title: 'Coming soon!', component: TabsTemplateLabelExample},
   'toolbar-multirow': {title: 'Multi-row toolbar', component: ToolbarMultirowExample},
@@ -286,6 +288,7 @@ export const EXAMPLE_LIST = [
   SnackBarComponentExample,
   PizzaPartyComponent,
   SnackBarOverviewExample,
+  TableBasicExample,
   TableOverviewExample,
   TablePaginationExample,
   TabsOverviewExample,
