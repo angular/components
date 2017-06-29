@@ -217,10 +217,7 @@ export class MdDatepicker<D> implements OnDestroy {
 
   /** Open the calendar. */
   open(): void {
-    if (this.opened) {
-      return;
-    }
-    if (this.disabled) {
+    if (this.opened || this.disabled) {
       return;
     }
     if (!this._datepickerInput) {

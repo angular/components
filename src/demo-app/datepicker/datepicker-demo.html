@@ -28,7 +28,7 @@
 <h2>Result</h2>
 
 <p>
-  <button [mdDatepickerToggle]="resultPicker" [disabled]="resultPickerModel.disabled"></button>
+  <button [mdDatepickerToggle]="resultPicker"></button>
   <md-input-container>
     <input mdInput
            #resultPickerModel="ngModel"
@@ -84,8 +84,8 @@
 <p>
   <button [mdDatepickerToggle]="datePicker2"></button>
   <md-input-container>
-    <input mdInput [mdDatepicker]="datePicker2" [(ngModel)]="date" [min]="minDate" [max]="maxDate"
-           [mdDatepickerFilter]="filterOdd ? dateFilter : null" [disabled]="true"
+    <input mdInput disabled [mdDatepicker]="datePicker2" [(ngModel)]="date" [min]="minDate" [max]="maxDate"
+           [mdDatepickerFilter]="filterOdd ? dateFilter : null"
            placeholder="Input disabled, datepicker enabled">
   </md-input-container>
   <md-datepicker #datePicker2 [touchUi]="touch" [disabled]="false" [startAt]="startAt"

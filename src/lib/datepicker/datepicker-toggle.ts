@@ -48,7 +48,7 @@ export class MdDatepickerToggle<D> {
   constructor(public _intl: MdDatepickerIntl) {}
 
   _open(event: Event): void {
-    if (this.datepicker && !this._disabled) {
+    if (this.datepicker && !this.disabled) {
       this.datepicker.open();
       event.stopPropagation();
     }
