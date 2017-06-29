@@ -12,7 +12,7 @@ import 'rxjs/add/operator/map';
   templateUrl: 'table-pagination-example.html',
 })
 export class TablePaginationExample {
-  propertiesToDisplay = ['userId', 'userName', 'progress', 'color'];
+  displayedColumns = ['userId', 'userName', 'progress', 'color'];
   exampleDatabase = new ExampleDatabase();
   dataSource: ExampleDataSource | null;
 
