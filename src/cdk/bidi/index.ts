@@ -11,9 +11,9 @@ import {DOCUMENT} from '@angular/platform-browser';
 import {Dir} from './dir';
 import {DIR_DOCUMENT, Directionality, DIRECTIONALITY_PROVIDER} from './directionality';
 
-
 export {
   Directionality,
+  DIRECTIONALITY_PROVIDER_FACTORY,
   DIRECTIONALITY_PROVIDER,
   DIR_DOCUMENT,
   Direction,
