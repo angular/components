@@ -77,31 +77,31 @@ export interface StrictRxChain<T> {
 }
 
 
-export class FinallyBrand { private _; } 
-export class CatchBrand { private _; } 
-export class DoBrand { private _; } 
-export class MapBrand { private _; } 
-export class FilterBrand { private _; } 
-export class ShareBrand { private _; } 
-export class FirstBrand { private _; } 
-export class SwitchMapBrand { private _; } 
-export class StartWithBrand { private _; } 
-export class DebounceTimeBrand { private _; } 
-export class AuditTimeBrand { private _; } 
+export class FinallyBrand { private _; }
+export class CatchBrand { private _; }
+export class DoBrand { private _; }
+export class MapBrand { private _; }
+export class FilterBrand { private _; }
+export class ShareBrand { private _; }
+export class FirstBrand { private _; }
+export class SwitchMapBrand { private _; }
+export class StartWithBrand { private _; }
+export class DebounceTimeBrand { private _; }
+export class AuditTimeBrand { private _; }
 export class TakeUntilBrand { private _; }
 
 
-export type finallyOperatorType<T> = typeof _finallyOperator & FinallyBrand; 
-export type catchOperatorType<T, R> = typeof _catchOperator & CatchBrand; 
-export type doOperatorType<T> = typeof _doOperator & DoBrand; 
-export type mapOperatorType<T, R> = typeof mapOperator & MapBrand; 
-export type filterOperatorType<T> = typeof filterOperator & FilterBrand; 
-export type shareOperatorType<T> = typeof shareOperator & ShareBrand; 
-export type firstOperatorType<T> = typeof firstOperator & FirstBrand; 
-export type switchMapOperatorType<T, R> = typeof switchMapOperator & SwitchMapBrand; 
-export type startWithOperatorType<T> = typeof startWithOperator & StartWithBrand; 
-export type debounceTimeOperatorType<T> = typeof debounceTimeOperator & DebounceTimeBrand; 
-export type auditTimeOperatorType<T> = typeof auditTimeOperator & AuditTimeBrand; 
+export type finallyOperatorType<T> = typeof _finallyOperator & FinallyBrand;
+export type catchOperatorType<T, R> = typeof _catchOperator & CatchBrand;
+export type doOperatorType<T> = typeof _doOperator & DoBrand;
+export type mapOperatorType<T, R> = typeof mapOperator & MapBrand;
+export type filterOperatorType<T> = typeof filterOperator & FilterBrand;
+export type shareOperatorType<T> = typeof shareOperator & ShareBrand;
+export type firstOperatorType<T> = typeof firstOperator & FirstBrand;
+export type switchMapOperatorType<T, R> = typeof switchMapOperator & SwitchMapBrand;
+export type startWithOperatorType<T> = typeof startWithOperator & StartWithBrand;
+export type debounceTimeOperatorType<T> = typeof debounceTimeOperator & DebounceTimeBrand;
+export type auditTimeOperatorType<T> = typeof auditTimeOperator & AuditTimeBrand;
 export type takeUntilOperatorType<T> = typeof takeUntilOperator & TakeUntilBrand;
 
 
