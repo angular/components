@@ -180,7 +180,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Deals with configuring placeholder options */
   private _placeholderOptions: PlaceholderOptions;
-
+  
   /**
    * The width of the trigger. Must be saved to set the min width of the overlay panel
    * and the width of the selected value.
@@ -849,19 +849,21 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
    * single-select: {placeholder}; selection is {selectionValue}
    * multi-select: {placeholder}; selected options are {item},{item}
    */
-  private _setAriaLabel(label: string) {     
-    if (this.multiple) { 
-      if (this._selectionModel.selected.length >= 1) {        
+  private _setAriaLabel(label: string) {
+    if (this.multiple) {
+      if (this._selectionModel.selected.length >= 1) {
         let selectedOptions: string = '';
-        this._selectionModel.selected.forEach(option => {          
-          selectedOptions += `${option.viewValue}, `;          
-        });        
-        this.ariaLabel = `${this.placeholder}; selected options are ${selectedOptions.replace(/, +$/, '')}`; 
-       } else {         
-        this.ariaLabel = this.placeholder; //no options selected, go back to just the placeholder
+        this._selectionModel.selected.forEach(option => {
+          selectedOptions += `${option.viewValue}, `;
+        });
+        this.ariaLabel = `
+            ${this.placeholder}; selected options are ${selectedOptions.replace(/, +$/, '')}
+          `;
+       } else {
+        this.ariaLabel = this.placeholder; // no options selected, go back to just the placeholder
        }
-    } else { 
-      this.ariaLabel = `${this.placeholder}; selection is ${label}`;       
+    } else {
+      this.ariaLabel = `${this.placeholder}; selection is ${label}`;
     }
   }
 
