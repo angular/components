@@ -1,4 +1,3 @@
-## Overview
 The CDK data-table displays rows of data with fully customizable cell templates.
 Its single responsibility is the efficient rendering of rows in a fully accessible way.
 

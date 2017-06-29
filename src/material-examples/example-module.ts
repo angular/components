@@ -79,6 +79,7 @@ import {InputFormExample} from './input-form/input-form-example';
 import {InputPrefixSuffixExample} from './input-prefix-suffix/input-prefix-suffix-example';
 import {InputHintExample} from './input-hint/input-hint-example';
 import {
+  CdkDataTableModule,
   MdAutocompleteModule, MdButtonModule, MdButtonToggleModule, MdCardModule, MdCheckboxModule,
   MdChipsModule, MdDatepickerModule, MdDialogModule, MdGridListModule, MdIconModule, MdInputModule,
   MdListModule, MdMenuModule, MdPaginatorModule, MdProgressBarModule, MdProgressSpinnerModule,
@@ -86,7 +87,7 @@ import {
   MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule
 } from '@angular/material';
 import {TableOverviewExample} from './table-overview/table-overview-example';
-import {TableBasicExample} from './table-basic/table-basic';
+import {TableBasicExample} from './table-basic/table-basic-example';
 
 export interface LiveExample {
   title: string;
@@ -199,6 +200,7 @@ export const EXAMPLE_COMPONENTS = {
  */
 @NgModule({
   exports: [
+    CdkDataTableModule,
     MdAutocompleteModule,
     MdButtonModule,
     MdButtonToggleModule,
