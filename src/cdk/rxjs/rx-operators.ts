@@ -104,16 +104,21 @@ export type debounceTimeOperatorType<T> = typeof debounceTimeOperator & Debounce
 export type auditTimeOperatorType<T> = typeof auditTimeOperator & AuditTimeBrand;
 export type takeUntilOperatorType<T> = typeof takeUntilOperator & TakeUntilBrand;
 
-
-export const finallyOperator = _finallyOperator as typeof _finallyOperator & FinallyBrand;
-export const catchOperator = _catchOperator as typeof _catchOperator & CatchBrand;
-export const doOperator = _doOperator as typeof _doOperator & DoBrand;
-export const map = mapOperator as typeof mapOperator & MapBrand;
-export const filter = filterOperator as typeof filterOperator & FilterBrand;
-export const share = shareOperator as typeof shareOperator & ShareBrand;
-export const first = firstOperator as typeof firstOperator & FirstBrand;
-export const switchMap = switchMapOperator as typeof switchMapOperator & SwitchMapBrand;
-export const startWith = startWithOperator as typeof startWithOperator & StartWithBrand;
-export const debounceTime = debounceTimeOperator as typeof debounceTimeOperator & DebounceTimeBrand;
-export const auditTime = auditTimeOperator as typeof auditTimeOperator & AuditTimeBrand;
-export const takeUntil = takeUntilOperator as typeof takeUntilOperator & TakeUntilBrand;
+// We add `Function` to the type intersection to make this nomically different from
+// `finallyOperatorType` while still being structurally the same. Without this, TypeScript tries to
+// reduce `typeof _finallyOperator & FinallyBrand` to `finallyOperatorType<T>` and then fails
+// because `T` isn't known.
+export const finallyOperator =
+    _finallyOperator as typeof _finallyOperator & FinallyBrand & Function;
+export const catchOperator = _catchOperator as typeof _catchOperator & CatchBrand & Function;
+export const doOperator = _doOperator as typeof _doOperator & DoBrand & Function;
+export const map = mapOperator as typeof mapOperator & MapBrand & Function;
+export const filter = filterOperator as typeof filterOperator & FilterBrand & Function;
+export const share = shareOperator as typeof shareOperator & ShareBrand & Function;
+export const first = firstOperator as typeof firstOperator & FirstBrand & Function;
+export const switchMap = switchMapOperator as typeof switchMapOperator & SwitchMapBrand & Function;
+export const startWith = startWithOperator as typeof startWithOperator & StartWithBrand & Function;
+export const debounceTime =
+    debounceTimeOperator as typeof debounceTimeOperator & DebounceTimeBrand & Function;
+export const auditTime = auditTimeOperator as typeof auditTimeOperator & AuditTimeBrand & Function;
+export const takeUntil = takeUntilOperator as typeof takeUntilOperator & TakeUntilBrand & Function;
