@@ -1,0 +1,4 @@
+<h2>Horizontal Stepper Demo</h2>
+<mat-stepper [orientation]="horizontal">
+    <mat-step *ngFor="let step of steps" [active]="step.active"></mat-step>
+</mat-stepper>
