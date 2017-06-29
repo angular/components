@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {CDK_TABLE_TEMPLATE, CdkTable} from '../core/data-table/data-table';
+import {CDK_TABLE_TEMPLATE, CdkTable} from '@angular/cdk';
 
 /**
  * Wrapper for the CdkTable with Material design styles.

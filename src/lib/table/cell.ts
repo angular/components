@@ -7,7 +7,7 @@
  */
 
 import {Directive, ElementRef, Renderer2} from '@angular/core';
-import {CdkCell, CdkColumnDef, CdkHeaderCell} from '../core/data-table/cell';
+import {CdkCell, CdkColumnDef, CdkHeaderCell} from '@angular/cdk';
 
 /** Header cell template container that adds the right classes and role. */
 @Directive({

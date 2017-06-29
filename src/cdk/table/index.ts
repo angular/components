@@ -15,6 +15,7 @@ import {CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCell, CdkCellDef} from
 export * from './data-source';
 export * from './table';
 export * from './cell';
+export * from './row';
 
 const EXPORTED_DECLARATIONS = [
   CdkTable,

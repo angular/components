@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {CdkHeaderRow, CdkRow, CDK_ROW_TEMPLATE} from '../core/data-table/row';
+import {CdkHeaderRow, CdkRow, CDK_ROW_TEMPLATE} from '@angular/cdk';
 
 /** Header template container that contains the cell outlet. Adds the right class and role. */
 @Component({
