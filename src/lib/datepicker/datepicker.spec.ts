@@ -661,7 +661,7 @@ describe('MdDatepicker', () => {
     describe('datepicker with change and input events', () => {
       let fixture: ComponentFixture<DatepickerWithChangeAndInputEvents>;
       let testComponent: DatepickerWithChangeAndInputEvents;
-      let inputEl: HTMLInputElement;;
+      let inputEl: HTMLInputElement;
 
       beforeEach(async(() => {
         fixture = TestBed.createComponent(DatepickerWithChangeAndInputEvents);

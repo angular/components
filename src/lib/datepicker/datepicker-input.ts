@@ -53,16 +53,16 @@ export const MD_DATEPICKER_VALIDATORS: any = {
 };
 
 
-/** An event used for datepicker input and change events. */
+/**
+ * An event used for datepicker input and change events. We don't always have access to a native
+ * input or change event because the event may have been triggered by the user clicking on the
+ * calendar popup. For consistency we always use MdDatepickerInputEvent instead.
+ */
 export class MdDatepickerInputEvent<D> {
-  /** The HTMLElement for the target datepicker input. */
-  targetElement: HTMLElement;
-
   /** The new value for the target datepicker input. */
-  value: D;
+  value: D | null;
 
-  constructor(public target: MdDatepickerInput<D>) {
-    this.targetElement = this.target._elementRef.nativeElement;
+  constructor(public target: MdDatepickerInput<D>, public targetElement: HTMLElement) {
     this.value = this.target.value;
   }
 }
@@ -192,7 +192,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
       Validators.compose([this._minValidator, this._maxValidator, this._filterValidator]);
 
   constructor(
-      public _elementRef: ElementRef,
+      private _elementRef: ElementRef,
       private _renderer: Renderer2,
       @Optional() private _dateAdapter: DateAdapter<D>,
       @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats,
@@ -211,8 +211,8 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
           this._datepicker.selectedChanged.subscribe((selected: D) => {
             this.value = selected;
             this._cvaOnChange(selected);
-            this.dateInput.emit(new MdDatepickerInputEvent(this));
-            this.dateChange.emit(new MdDatepickerInputEvent(this));
+            this.dateInput.emit(new MdDatepickerInputEvent(this, this._elementRef.nativeElement));
+            this.dateChange.emit(new MdDatepickerInputEvent(this, this._elementRef.nativeElement));
           });
     }
   }
@@ -270,10 +270,10 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     this._cvaOnChange(date);
     this._valueChange.emit(date);
-    this.dateInput.emit(new MdDatepickerInputEvent(this));
+    this.dateInput.emit(new MdDatepickerInputEvent(this, this._elementRef.nativeElement));
   }
 
   _onChange() {
-    this.dateChange.emit(new MdDatepickerInputEvent(this));
+    this.dateChange.emit(new MdDatepickerInputEvent(this, this._elementRef.nativeElement));
   }
 }

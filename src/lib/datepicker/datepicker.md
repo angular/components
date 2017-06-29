@@ -85,9 +85,9 @@ Each validation property has a different error that can be checked:
  
 ### Input and change events
 The input's native `input` and `change` events will only trigger due to user interaction with the
-input element, they will not fire when the user selects a date from the calendar popup. Because of
-this limitation, the datepicker input also has support for `dateInput` and `dateChange` events,
-these trigger when the user interacts with either the input or the popup.
+input element; they will not fire when the user selects a date from the calendar popup. Because of
+this limitation, the datepicker input also has support for `dateInput` and `dateChange` events.
+These trigger when the user interacts with either the input or the popup.
   
 ```html
 <input [mdDatepicker]="d" (dateInput)="onInput($event)" (dateChange)="onChange($event)">
