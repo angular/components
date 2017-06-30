@@ -1,0 +1,44 @@
+<div class="example-container mat-elevation-z8">
+  <div class="example-header"> Users </div>
+
+  <cdk-table #table [dataSource]="dataSource">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- ID Column -->
+    <ng-container cdkColumnDef="userId">
+      <cdk-header-cell *cdkHeaderCellDef> ID </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row"> {{row.id}} </cdk-cell>
+    </ng-container>
+
+    <!-- Progress Column -->
+    <ng-container cdkColumnDef="progress">
+      <cdk-header-cell *cdkHeaderCellDef> Progress </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row"> {{row.progress}}% </cdk-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container cdkColumnDef="userName">
+      <cdk-header-cell *cdkHeaderCellDef> Name </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row"> {{row.name}} </cdk-cell>
+    </ng-container>
+
+    <!-- Color Column -->
+    <ng-container cdkColumnDef="color">
+      <cdk-header-cell *cdkHeaderCellDef> Color </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row" [style.color]="row.color"> {{row.color}} </cdk-cell>
+    </ng-container>
+
+    <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
+    <cdk-row *cdkRowDef="let row; columns: displayedColumns;">
+    </cdk-row>
+  </cdk-table>
+
+  <md-paginator #paginator
+                [length]="exampleDatabase.data.length"
+                [pageIndex]="0"
+                [pageSize]="25"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+  </md-paginator>
+</div>

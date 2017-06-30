@@ -91,6 +91,12 @@ import {
   MdRadioModule, MdSelectModule, MdSidenavModule, MdSliderModule, MdSlideToggleModule,
   MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule
 } from '@angular/material';
+import {CdkTableModule} from '@angular/cdk';
+import {TableOverviewExample} from './table-overview/table-overview-example';
+import {TablePaginationExample} from './table-pagination/table-pagination-example';
+import {TableBasicExample} from './table-basic/table-basic-example';
+import {TableSortingExample} from './table-sorting/table-sorting-example';
+import {TableFilteringExample} from './table-filtering/table-filtering-example';
 
 export interface LiveExample {
   title: string;
@@ -194,6 +200,11 @@ export const EXAMPLE_COMPONENTS = {
     component: SnackBarComponentExample
   },
   'snack-bar-overview': {title: 'Basic snack-bar', component: SnackBarOverviewExample},
+  'table-overview': {title: 'Feature-rich data table', component: TableOverviewExample},
+  'table-pagination': {title: 'Table with pagination', component: TablePaginationExample},
+  'table-sorting': {title: 'Table with sorting', component: TableSortingExample},
+  'table-filtering': {title: 'Table with filtering', component: TableFilteringExample},
+  'table-basic': {title: 'Basic table', component: TableBasicExample},
   'tabs-overview': {title: 'Basic tabs', component: TabsOverviewExample},
   'tabs-template-label': {title: 'Coming soon!', component: TabsTemplateLabelExample},
   'toolbar-multirow': {title: 'Multi-row toolbar', component: ToolbarMultirowExample},
@@ -207,6 +218,7 @@ export const EXAMPLE_COMPONENTS = {
  */
 @NgModule({
   exports: [
+    CdkTableModule,
     MdAutocompleteModule,
     MdButtonModule,
     MdButtonToggleModule,
@@ -298,6 +310,11 @@ export const EXAMPLE_LIST = [
   SnackBarComponentExample,
   PizzaPartyComponent,
   SnackBarOverviewExample,
+  TableBasicExample,
+  TableOverviewExample,
+  TableFilteringExample,
+  TablePaginationExample,
+  TableSortingExample,
   TabsOverviewExample,
   TabsTemplateLabelExample,
   ToolbarMultirowExample,
