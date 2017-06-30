@@ -1,1 +1,79 @@
-Table example coming soon
+<div class="example-container mat-elevation-z8">
+  <div class="example-header" [style.display]="selection.isEmpty() ? '' : 'none'">
+    Users
+
+    <md-input-container floatPlaceholder="never">
+      <input mdInput #filter placeholder="Filter users">
+    </md-input-container>
+  </div>
+  <div class="example-header example-selection-header"
+       *ngIf="!selection.isEmpty()">
+    {{selection.selected.length}}
+    {{selection.selected.length == 1 ? 'user' : 'users'}}
+    selected
+  </div>
+
+  <cdk-table #table [dataSource]="dataSource" mdSort>
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Checkbox Column -->
+    <ng-container cdkColumnDef="select">
+      <cdk-header-cell *cdkHeaderCellDef>
+        <md-checkbox (change)="$event ? masterToggle() : null"
+                     [checked]="isAllSelected()"
+                     [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </md-checkbox>
+      </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row">
+        <md-checkbox (click)="$event.stopPropagation()"
+                     (change)="$event ? selection.toggle(row.id) : null"
+                     [checked]="selection.isSelected(row.id)">
+        </md-checkbox>
+      </cdk-cell>
+    </ng-container>
+
+    <!-- ID Column -->
+    <ng-container cdkColumnDef="userId">
+      <cdk-header-cell *cdkHeaderCellDef md-sort-header> ID </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row"> {{row.id}} </cdk-cell>
+    </ng-container>
+
+    <!-- Progress Column -->
+    <ng-container cdkColumnDef="progress">
+      <cdk-header-cell *cdkHeaderCellDef md-sort-header> Progress </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row"> {{row.progress}}% </cdk-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container cdkColumnDef="userName">
+      <cdk-header-cell *cdkHeaderCellDef md-sort-header> Name </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row"> {{row.name}} </cdk-cell>
+    </ng-container>
+
+    <!-- Color Column -->
+    <ng-container cdkColumnDef="color">
+      <cdk-header-cell *cdkHeaderCellDef md-sort-header> Color </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row" [style.color]="row.color"> {{row.color}} </cdk-cell>
+    </ng-container>
+
+    <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
+    <cdk-row *cdkRowDef="let row; columns: displayedColumns;"
+             [class.example-selected-row]="selection.isSelected(row.id)"
+             (click)="selection.toggle(row.id)">
+    </cdk-row>
+  </cdk-table>
+
+  <div class="example-no-results"
+       [style.display]="dataSource.renderedData.length == 0 ? '' : 'none'">
+    No users found matching filter.
+  </div>
+
+  <md-paginator #paginator
+                [length]="dataSource.renderedData.length"
+                [pageIndex]="0"
+                [pageSize]="25"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+  </md-paginator>
+</div>

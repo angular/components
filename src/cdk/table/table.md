@@ -78,8 +78,9 @@ and Column A and in that order, then the template would look like this:
 ```
 
 Adding attribute and event binding to the header and rows is as simple as applying them to the
-<cdk-header-row> and <cdk-row>. For example, here the table is adding a click handler to both.
-In addition, the CSS class `a-bigger-than-twenty` will be applied to any row where its data’s `a` property is greater than 20.
+`<cdk-header-row>` and `<cdk-row>`. For example, here the table is adding a click handler to both.
+In addition, the CSS class `a-bigger-than-twenty` will be applied to any row where its data’s `a`
+property is greater than 20.
 
 ```html
     <cdk-header-row *cdkHeaderRowDef="['column_b', 'column_a']"
