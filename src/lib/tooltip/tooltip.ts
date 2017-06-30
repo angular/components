@@ -125,6 +125,8 @@ export class MdTooltip implements OnDestroy {
     this._setTooltipMessage(this._message);
   }
 
+  @Input('mdIsHTML') isHTML = false;
+
   /** Classes to be passed to the tooltip. Supports the same syntax as `ngClass`. */
   @Input('mdTooltipClass')
   get tooltipClass() { return this._tooltipClass; }
@@ -337,6 +339,7 @@ export class MdTooltip implements OnDestroy {
     // calculate the correct positioning based on the size of the text.
     if (this._tooltipInstance) {
       this._tooltipInstance.message = message;
+      this._tooltipInstance.isHTML = this.isHTML;
       this._tooltipInstance._markForCheck();
 
       first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => {
@@ -388,6 +391,8 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
 export class TooltipComponent {
   /** Message to display in the tooltip */
   message: string;
+
+  isHTML: boolean;
 
   /** Classes to be added to the tooltip. Supports the same syntax as `ngClass`. */
   tooltipClass: string|string[]|Set<string>|{[key: string]: any};

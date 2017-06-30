@@ -14,6 +14,19 @@
       Mouse over to see the tooltip
     </button>
     <div>Scroll down while tooltip is open to see it hide automatically</div>
+
+    <button #tooltip="mdTooltip"
+            md-raised-button
+            color="primary"
+            [mdTooltip]="messageHTML"
+            [mdTooltipPosition]="'below'"
+            [mdIsHTML]="isHtml"
+            [mdTooltipDisabled]="disabled"
+            [mdTooltipShowDelay]="showDelay"
+            [mdTooltipHideDelay]="hideDelay"
+            [mdTooltipClass]="'cust-tooltip'">
+      Mouse over to see the html tooltip below
+    </button>
     <div style="height: 400px;"></div>
   </div>
 
