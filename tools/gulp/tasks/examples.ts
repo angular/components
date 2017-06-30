@@ -3,10 +3,12 @@ import {sync as glob} from 'glob';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
+import {buildConfig} from 'material2-build-tools';
+const {packagesDir} = buildConfig;
 
 interface ExampleMetadata {
   component: string;
-  fileName: string;
+  sourcePath: string;
   id: string;
   title: string;
   additionalComponents: string[];
@@ -26,6 +28,12 @@ interface ParsedMetadataResults {
   secondaryComponents: ParsedMetadata[];
 }
 
+/** Path to find the examples */
+const examplesPath = path.join(packagesDir, 'material-examples');
+
+/** Output path of the module that is being created */
+const outputModuleFilename = path.join(examplesPath, 'example-module.ts');
+
 /**
  * Build ecmascript module import statements
  */
@@ -37,7 +45,11 @@ function buildImportsTemplate(metadata: ExampleMetadata): string {
   }
 
   // imports the template from the /src/material-examples directory
-  return `import {${components.join(',')}} from './${metadata.fileName}';
+  const relativeSrcPath = path
+    .relative('./src/material-examples', metadata.sourcePath)
+    .replace('.ts', '');
+
+  return `import {${components.join(',')}} from './${relativeSrcPath}';
 `;
 }
 
@@ -80,6 +92,7 @@ function buildListTemplate(metadata: ExampleMetadata): string {
  */
 function generateExampleNgModule(extractedMetadata: ExampleMetadata[]): string {
   return `
+/* tslint:disable */
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
@@ -191,18 +204,17 @@ function parseExampleMetadata(fileName: string, src: string): ParsedMetadataResu
 task('build-examples-module', (done) => {
   const results: ExampleMetadata[] = [];
 
-  const matchedFiles = glob('src/material-examples/**/*.ts');
-  for (const file of matchedFiles) {
-    const src = fs.readFileSync(file, 'utf-8');
-    const fileName = path.basename(file);
-    const { primaryComponent, secondaryComponents } = parseExampleMetadata(file, src);
+  const matchedFiles = glob(path.join(examplesPath, '**/*.ts'));
+  for (const sourcePath of matchedFiles) {
+    const src = fs.readFileSync(sourcePath, 'utf-8');
+    const { primaryComponent, secondaryComponents } = parseExampleMetadata(sourcePath, src);
 
     if (primaryComponent) {
       // convert the class name to dashcase id
       const id = convertToDashCase(primaryComponent.component.replace('Example', ''));
 
       const example: ExampleMetadata = {
-        fileName,
+        sourcePath,
         id,
         component: primaryComponent.component,
         title: primaryComponent.title,
@@ -227,8 +239,7 @@ task('build-examples-module', (done) => {
   }
 
   const template = generateExampleNgModule(results);
-  const outFile = path.resolve('./src/material-examples/example-module.ts');
-  fs.writeFileSync(outFile, template);
+  fs.writeFileSync(outputModuleFilename, template);
 
   done();
 });
