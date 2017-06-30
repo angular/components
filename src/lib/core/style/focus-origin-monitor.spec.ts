@@ -23,9 +23,6 @@ fdescribe('FocusOriginMonitor', () => {
         PlainButton,
       ],
     }).compileComponents();
-
-    // Reset focus to the document body for each test.
-    document.body.focus();
   }));
 
   beforeEach(inject([FocusOriginMonitor], (fom: FocusOriginMonitor) => {
@@ -235,7 +232,7 @@ fdescribe('FocusOriginMonitor', () => {
       fixture.detectChanges();
 
       expect(buttonElement.classList.length).toBe(0, 'button should not have any focus classes');
-    }, 0);
+    }, 10);
   }));
 });
 
