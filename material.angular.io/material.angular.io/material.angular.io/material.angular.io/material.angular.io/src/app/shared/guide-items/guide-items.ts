@@ -22,6 +22,11 @@ const GUIDES = [
     name: 'Theming your own components',
     document: '/assets/documents/guides/theming-your-components.html',
   },
+  {
+    id: 'typography',
+    name: `Using Angular Material's Typography`,
+    document: '/assets/documents/guides/typography.html',
+  },
 ];
 
 @Injectable()
