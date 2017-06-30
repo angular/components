@@ -6,12 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {TemplatePortal} from '../core';
+
 @Component({
     moduleId: module.id,
     selector: 'mat-step',
-    templateUrl: ''
+    template: ''
 })
 export class MdStep {
     active: boolean = false;
