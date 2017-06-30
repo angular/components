@@ -172,4 +172,7 @@ to the table to render.
 
 ### Filtering
 
+Apply filtering to your table's data by listening to an input's changes.
+When a change occurs, filter the data in the data source and send it to the table to render.
+
 <!--- example(table-filtering) -->
