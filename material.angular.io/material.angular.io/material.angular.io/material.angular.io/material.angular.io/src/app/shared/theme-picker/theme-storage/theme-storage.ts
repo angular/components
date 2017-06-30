@@ -6,7 +6,7 @@ export interface DocsSiteTheme {
   primary: string;
   isDark?: boolean;
   isDefault?: boolean;
-};
+}
 
 
 @Injectable()
@@ -16,15 +16,24 @@ export class ThemeStorage {
   public onThemeUpdate: EventEmitter<DocsSiteTheme> = new EventEmitter<DocsSiteTheme>();
 
   public storeTheme(theme: DocsSiteTheme) {
-    window.localStorage[ThemeStorage.storageKey] = JSON.stringify(theme);
+    try {
+      window.localStorage[ThemeStorage.storageKey] = JSON.stringify(theme);
+    } catch (e) { }
+
     this.onThemeUpdate.emit(theme);
   }
 
   public getStoredTheme(): DocsSiteTheme {
-    return JSON.parse(window.localStorage[ThemeStorage.storageKey] || null);
+    try {
+      return JSON.parse(window.localStorage[ThemeStorage.storageKey] || null);
+    } catch (e) {
+      return null;
+    }
   }
 
   public clearStorage() {
-    window.localStorage.removeItem(ThemeStorage.storageKey);
+    try {
+      window.localStorage.removeItem(ThemeStorage.storageKey);
+    } catch (e) { }
   }
 }
