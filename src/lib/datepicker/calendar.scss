@@ -32,8 +32,7 @@ $mat-calendar-next-icon-transform: translateX(-2px) rotate(45deg);
 
 .mat-calendar-controls {
   display: flex;
-  margin: $mat-calendar-controls-vertical-padding $mat-calendar-controls-side-margin
-           $mat-calendar-controls-vertical-padding $mat-calendar-controls-side-margin;
+  margin: $mat-calendar-controls-vertical-padding $mat-calendar-controls-side-margin;
 }
 
 .mat-calendar-spacer {
