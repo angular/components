@@ -6,7 +6,7 @@ import * as ts from 'typescript';
 
 interface ExampleMetadata {
   component: string;
-  filename: string;
+  fileName: string;
   id: string;
   title: string;
   additionalComponents: string[];
@@ -21,6 +21,11 @@ interface ParsedMetadata {
   templateUrl: string;
 }
 
+interface ParsedMetadataResults {
+  primaryComponent: ParsedMetadata;
+  secondaryComponents: ParsedMetadata[];
+}
+
 /**
  * Build ecmascript module import statements
  */
@@ -31,7 +36,8 @@ function buildImportsTemplate(metadata: ExampleMetadata): string {
     components.push(...metadata.additionalComponents);
   }
 
-  return `import {${components.join(',')}} from '${metadata.filename}';
+  // imports the template from the /src/material-examples directory
+  return `import {${components.join(',')}} from './${metadata.fileName}';
 `;
 }
 
@@ -39,12 +45,12 @@ function buildImportsTemplate(metadata: ExampleMetadata): string {
  * Builds the examples metadata including title, component, etc.
  */
 function buildExamplesTemplate(metadata: ExampleMetadata): string {
-  // if no additional files or selectors were provided, 
+  // if no additional files or selectors were provided,
   // return undefined since we don't care about if these were not found
-  const additionalFiles = metadata.additionalFiles ? 
+  const additionalFiles = metadata.additionalFiles ?
     JSON.stringify(metadata.additionalFiles) : 'undefined';
 
-  const selectorName = metadata.selectorName ? 
+  const selectorName = metadata.selectorName ?
     `'${metadata.selectorName.join(', ')}'` : 'undefined';
 
   return `'${metadata.id}': {
@@ -117,16 +123,15 @@ export class ExampleModule { }
 function convertToDashCase(name: string): string {
   name = name.replace(/[A-Z]/g, ' $&');
   name = name.toLowerCase().trim();
-  return name.split(' ').join('-')
+  return name.split(' ').join('-');
 }
 
 /**
  * Parse the AST of a file and get metadata about it
  */
-function parseExampleMetadata(filename: string, src: string): 
-    { primaryComponent: ParsedMetadata, secondaryComponents: ParsedMetadata[] } {
+function parseExampleMetadata(fileName: string, src: string): ParsedMetadataResults {
   const sourceFile = ts.createSourceFile(
-    filename, src, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
+    fileName, src, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
 
   const metas: any[] = [];
 
@@ -137,13 +142,13 @@ function parseExampleMetadata(filename: string, src: string):
       };
 
       let primary = false;
-      if(node.jsDoc && node.jsDoc.length) {
-        for(const doc of node.jsDoc) {
-          if(doc.tags && doc.tags.length) {
-            for(const tag of doc.tags) {
+      if (node.jsDoc && node.jsDoc.length) {
+        for (const doc of node.jsDoc) {
+          if (doc.tags && doc.tags.length) {
+            for (const tag of doc.tags) {
               const tagValue = tag.comment;
               const tagName = tag.tagName.text;
-              if(tagName === 'title') {
+              if (tagName === 'title') {
                 meta.title = tagValue;
                 meta.primary = true;
               }
@@ -189,18 +194,15 @@ task('build-examples-module', (done) => {
   const matchedFiles = glob('src/material-examples/**/*.ts');
   for (const file of matchedFiles) {
     const src = fs.readFileSync(file, 'utf-8');
-    const filename = file
-      .replace('src/material-examples/', './')
-      .replace('.ts', '');
-      
+    const fileName = path.basename(file);
     const { primaryComponent, secondaryComponents } = parseExampleMetadata(file, src);
 
     if (primaryComponent) {
       // convert the class name to dashcase id
       const id = convertToDashCase(primaryComponent.component.replace('Example', ''));
-      
+
       const example: ExampleMetadata = {
-        filename,
+        fileName,
         id,
         component: primaryComponent.component,
         title: primaryComponent.title,
@@ -213,7 +215,7 @@ task('build-examples-module', (done) => {
         // for whatever reason the primary is listed here
         example.selectorName.push(example.component);
 
-        for(const meta of secondaryComponents) {
+        for (const meta of secondaryComponents) {
           example.additionalComponents.push(meta.component);
           example.additionalFiles.push(meta.templateUrl);
           example.selectorName.push(meta.component);
