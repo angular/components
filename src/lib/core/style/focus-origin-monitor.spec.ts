@@ -9,7 +9,7 @@ import {
 } from '../testing/dispatch-events';
 
 
-describe('FocusOriginMonitor', () => {
+fdescribe('FocusOriginMonitor', () => {
   let fixture: ComponentFixture<PlainButton>;
   let buttonElement: HTMLElement;
   let buttonRenderer: Renderer2;
@@ -22,9 +22,7 @@ describe('FocusOriginMonitor', () => {
       declarations: [
         PlainButton,
       ],
-    });
-
-    TestBed.compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(inject([FocusOriginMonitor], (fom: FocusOriginMonitor) => {
@@ -234,7 +232,7 @@ describe('FocusOriginMonitor', () => {
       fixture.detectChanges();
 
       expect(buttonElement.classList.length).toBe(0, 'button should not have any focus classes');
-    }, 0);
+    }, 10);
   }));
 });
 
