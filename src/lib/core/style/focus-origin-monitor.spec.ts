@@ -9,7 +9,7 @@ import {
 } from '../testing/dispatch-events';
 
 
-describe('FocusOriginMonitor', () => {
+fdescribe('FocusOriginMonitor', () => {
   let fixture: ComponentFixture<PlainButton>;
   let buttonElement: HTMLElement;
   let buttonRenderer: Renderer2;
@@ -22,9 +22,10 @@ describe('FocusOriginMonitor', () => {
       declarations: [
         PlainButton,
       ],
-    });
+    }).compileComponents();
 
-    TestBed.compileComponents();
+    // Reset focus to the document body for each test.
+    document.body.focus();
   }));
 
   beforeEach(inject([FocusOriginMonitor], (fom: FocusOriginMonitor) => {

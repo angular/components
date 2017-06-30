@@ -248,7 +248,7 @@ export class FocusOriginMonitor {
    * @param event The focus event.
    * @param element The monitored element.
    */
-  private _onFocus(event: FocusEvent, element: HTMLElement) {
+  _onFocus(event: FocusEvent, element: HTMLElement) {
     // NOTE(mmalerba): We currently set the classes based on the focus origin of the most recent
     // focus event affecting the monitored element. If we want to use the origin of the first event
     // instead we should check for the cdk-focused class here and return if the element already has
