@@ -73,6 +73,14 @@ const DOCS = [
       {id: 'snack-bar', name: 'Snackbar', examples: ['snack-bar-component']},
     ]
   },
+  {
+    id: 'tables',
+    name: 'Data table',
+    summary: 'Tables, sorting, and pagination',
+    items: [
+      {id: 'paginator', name: 'Paginator', examples: ['paginator-configurable']},
+    ]
+  }
 ];
 
 const ALL_ITEMS = DOCS.reduce((result, category) => result.concat(category.items), []);
