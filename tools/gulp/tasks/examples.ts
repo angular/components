@@ -34,19 +34,15 @@ const examplesPath = path.join(packagesDir, 'material-examples');
 /** Output path of the module that is being created */
 const outputModuleFilename = path.join(examplesPath, 'example-module.ts');
 
-/**
- * Build ecmascript module import statements
- */
+/** Build ecmascript module import statements */
 function buildImportsTemplate(metadata: ExampleMetadata): string {
-  const components = [metadata.component];
+  const components = metadata.additionalComponents.concat(metadata.component);
 
-  if (metadata.additionalComponents) {
-    components.push(...metadata.additionalComponents);
-  }
-
-  // imports the template from the /src/material-examples directory
+  // Create a relative path to the source file of the current example.
+  // The relative path will be used inside of a TypeScript import statement.
   const relativeSrcPath = path
     .relative('./src/material-examples', metadata.sourcePath)
+    .replace(/\\/g, '')
     .replace('.ts', '');
 
   return `import {${components.join(',')}} from './${relativeSrcPath}';
@@ -59,11 +55,11 @@ function buildImportsTemplate(metadata: ExampleMetadata): string {
 function buildExamplesTemplate(metadata: ExampleMetadata): string {
   // if no additional files or selectors were provided,
   // return undefined since we don't care about if these were not found
-  const additionalFiles = metadata.additionalFiles ?
-    JSON.stringify(metadata.additionalFiles) : 'undefined';
+  const additionalFiles = metadata.additionalFiles.length ?
+    JSON.stringify(metadata.additionalFiles) : 'null';
 
-  const selectorName = metadata.selectorName ?
-    `'${metadata.selectorName.join(', ')}'` : 'undefined';
+  const selectorName = metadata.selectorName.length ?
+    `'${metadata.selectorName.join(', ')}'` : 'null';
 
   return `'${metadata.id}': {
     title: '${metadata.title}',
@@ -78,11 +74,7 @@ function buildExamplesTemplate(metadata: ExampleMetadata): string {
  * Build the list of components template
  */
 function buildListTemplate(metadata: ExampleMetadata): string {
-  const components = [metadata.component];
-
-  if (metadata.additionalComponents) {
-    components.push(...metadata.additionalComponents);
-  }
+  const components = metadata.additionalComponents.concat(metadata.component);
   return `${components.join(',')},
   `;
 }
@@ -201,7 +193,7 @@ function parseExampleMetadata(fileName: string, src: string): ParsedMetadataResu
 /**
  * Creates the examples module and metadata
  */
-task('build-examples-module', (done) => {
+task('build-examples-module', () => {
   const results: ExampleMetadata[] = [];
 
   const matchedFiles = glob(path.join(examplesPath, '**/*.ts'));
@@ -210,7 +202,7 @@ task('build-examples-module', (done) => {
     const { primaryComponent, secondaryComponents } = parseExampleMetadata(sourcePath, src);
 
     if (primaryComponent) {
-      // convert the class name to dashcase id
+      // Generate a unique id for the component by converting the class name to dash-case.
       const id = convertToDashCase(primaryComponent.component.replace('Example', ''));
 
       const example: ExampleMetadata = {
@@ -224,7 +216,6 @@ task('build-examples-module', (done) => {
       };
 
       if (secondaryComponents.length) {
-        // for whatever reason the primary is listed here
         example.selectorName.push(example.component);
 
         for (const meta of secondaryComponents) {
@@ -238,8 +229,6 @@ task('build-examples-module', (done) => {
     }
   }
 
-  const template = generateExampleNgModule(results);
-  fs.writeFileSync(outputModuleFilename, template);
-
-  done();
+  const generatedModuleFile = generateExampleNgModule(results);
+  fs.writeFileSync(outputModuleFilename, generatedModuleFile);
 });

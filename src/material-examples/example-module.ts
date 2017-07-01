@@ -24,9 +24,9 @@ import {CheckboxOverviewExample} from './checkbox-overview/checkbox-overview-exa
 import {ChipsOverviewExample} from './chips-overview/chips-overview-example';
 import {ChipsStackedExample} from './chips-stacked/chips-stacked-example';
 import {DatepickerOverviewExample} from './datepicker-overview/datepicker-overview-example';
-import {DialogElementsExample,DialogElementsExampleDialog} from './dialog-elements/dialog-elements-example';
-import {DialogOverviewExample,DialogOverviewExampleDialog} from './dialog-overview/dialog-overview-example';
-import {DialogResultExample,DialogResultExampleDialog} from './dialog-result/dialog-result-example';
+import {DialogElementsExampleDialog,DialogElementsExample} from './dialog-elements/dialog-elements-example';
+import {DialogOverviewExampleDialog,DialogOverviewExample} from './dialog-overview/dialog-overview-example';
+import {DialogResultExampleDialog,DialogResultExample} from './dialog-result/dialog-result-example';
 import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-example';
 import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
 import {IconOverviewExample} from './icon-overview/icon-overview-example';
@@ -57,7 +57,7 @@ import {SlideToggleFormsExample} from './slide-toggle-forms/slide-toggle-forms-e
 import {SlideToggleOverviewExample} from './slide-toggle-overview/slide-toggle-overview-example';
 import {SliderConfigurableExample} from './slider-configurable/slider-configurable-example';
 import {SliderOverviewExample} from './slider-overview/slider-overview-example';
-import {SnackBarComponentExample,PizzaPartyComponent} from './snack-bar-component/snack-bar-component-example';
+import {PizzaPartyComponent,SnackBarComponentExample} from './snack-bar-component/snack-bar-component-example';
 import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
 import {TabsOverviewExample} from './tabs-overview/tabs-overview-example';
 import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-label-example';
@@ -70,74 +70,74 @@ export const EXAMPLE_COMPONENTS = {
   'autocomplete-overview': {
     title: 'Basic autocomplete',
     component: AutocompleteOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'button-overview': {
     title: 'Basic buttons',
     component: ButtonOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'button-toggle-exclusive': {
     title: 'Exclusive selection',
     component: ButtonToggleExclusiveExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'button-toggle-overview': {
     title: 'Basic button-toggles',
     component: ButtonToggleOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'button-types': {
     title: 'Button varieties',
     component: ButtonTypesExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'card-fancy': {
     title: 'Card with multiple sections',
     component: CardFancyExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'card-overview': {
     title: 'Basic cards',
     component: CardOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'checkbox-configurable': {
     title: 'Configurable checkbox',
     component: CheckboxConfigurableExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'checkbox-overview': {
     title: 'Basic checkboxes',
     component: CheckboxOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'chips-overview': {
     title: 'Basic chips',
     component: ChipsOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'chips-stacked': {
     title: 'Stacked chips',
     component: ChipsStackedExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'datepicker-overview': {
     title: 'Basic datepicker',
     component: DatepickerOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'dialog-elements': {
     title: 'Dialog elements',
@@ -160,182 +160,182 @@ export const EXAMPLE_COMPONENTS = {
   'grid-list-dynamic': {
     title: 'Dynamic grid-list',
     component: GridListDynamicExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'grid-list-overview': {
     title: 'Basic grid-list',
     component: GridListOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'icon-overview': {
     title: 'Basic icons',
     component: IconOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'icon-svg': {
     title: 'SVG icons',
     component: IconSvgExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'input-errors': {
     title: 'Input Errors',
     component: InputErrorsExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'input-form': {
     title: 'Inputs in a form',
     component: InputFormExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'input-hint': {
     title: 'Input hints',
     component: InputHintExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'input-overview': {
     title: 'Basic Inputs',
     component: InputOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'input-prefix-suffix': {
     title: 'Input Prefixes and Suffixes',
     component: InputPrefixSuffixExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'list-overview': {
     title: 'Basic list',
     component: ListOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'list-sections': {
     title: 'List with sections',
     component: ListSectionsExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'menu-icons': {
     title: 'Menu with icons',
     component: MenuIconsExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'menu-overview': {
     title: 'Basic menu',
     component: MenuOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'paginator-configurable': {
     title: 'Configurable paginator',
     component: PaginatorConfigurableExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'paginator-overview': {
     title: 'Paginator',
     component: PaginatorOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'progress-bar-configurable': {
     title: 'Configurable progress-bar',
     component: ProgressBarConfigurableExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'progress-bar-overview': {
     title: 'Basic progress-bar',
     component: ProgressBarOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'progress-spinner-configurable': {
     title: 'Configurable progress spinner',
     component: ProgressSpinnerConfigurableExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'progress-spinner-overview': {
     title: 'Basic progress-spinner',
     component: ProgressSpinnerOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'radio-ng-model': {
     title: 'Radios with ngModel',
     component: RadioNgModelExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'radio-overview': {
     title: 'Basic radios',
     component: RadioOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'select-form': {
     title: 'Select in a form',
     component: SelectFormExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'select-overview': {
     title: 'Basic select',
     component: SelectOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'sidenav-fab': {
     title: 'Sidenav with a FAB',
     component: SidenavFabExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'sidenav-overview': {
     title: 'Basic sidenav',
     component: SidenavOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'slide-toggle-configurable': {
     title: 'Configurable slide-toggle',
     component: SlideToggleConfigurableExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'slide-toggle-forms': {
     title: 'Slide-toggle with forms',
     component: SlideToggleFormsExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'slide-toggle-overview': {
     title: 'Basic slide-toggles',
     component: SlideToggleOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'slider-configurable': {
     title: 'Configurable slider',
     component: SliderConfigurableExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'slider-overview': {
     title: 'Basic slider',
     component: SliderOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'snack-bar-component': {
     title: 'Snack-bar with a custom component',
@@ -346,44 +346,44 @@ export const EXAMPLE_COMPONENTS = {
   'snack-bar-overview': {
     title: 'Basic snack-bar',
     component: SnackBarOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'tabs-overview': {
     title: 'Basic tabs',
     component: TabsOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'tabs-template-label': {
     title: 'Coming soon!',
     component: TabsTemplateLabelExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'toolbar-multirow': {
     title: 'Multi-row toolbar',
     component: ToolbarMultirowExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'toolbar-overview': {
     title: 'Basic toolbar',
     component: ToolbarOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'tooltip-overview': {
     title: 'Basic tooltip',
     component: TooltipOverviewExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
   'tooltip-position': {
     title: 'Tooltip with custom position',
     component: TooltipPositionExample,
-    additionalFiles: [],
-    selectorName: ''
+    additionalFiles: null,
+    selectorName: null
   },
 };
 
@@ -400,9 +400,9 @@ export const EXAMPLE_LIST = [
   ChipsOverviewExample,
   ChipsStackedExample,
   DatepickerOverviewExample,
-  DialogElementsExample,DialogElementsExampleDialog,
-  DialogOverviewExample,DialogOverviewExampleDialog,
-  DialogResultExample,DialogResultExampleDialog,
+  DialogElementsExampleDialog,DialogElementsExample,
+  DialogOverviewExampleDialog,DialogOverviewExample,
+  DialogResultExampleDialog,DialogResultExample,
   GridListDynamicExample,
   GridListOverviewExample,
   IconOverviewExample,
@@ -433,7 +433,7 @@ export const EXAMPLE_LIST = [
   SlideToggleOverviewExample,
   SliderConfigurableExample,
   SliderOverviewExample,
-  SnackBarComponentExample,PizzaPartyComponent,
+  PizzaPartyComponent,SnackBarComponentExample,
   SnackBarOverviewExample,
   TabsOverviewExample,
   TabsTemplateLabelExample,

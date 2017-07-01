@@ -1,7 +1,6 @@
 import {task, src, dest} from 'gulp';
 import {Dgeni} from 'dgeni';
 import {buildConfig} from 'material2-build-tools';
-import * as fs from 'fs';
 import * as path from 'path';
 
 // There are no type definitions available for these imports.
