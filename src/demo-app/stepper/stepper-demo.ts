@@ -6,7 +6,7 @@ import {Component} from '@angular/core';
     templateUrl: 'stepper-demo.html',
 })
 export class StepperDemo {
-    steps: [
+    steps = [
         {label: 'Step 1', content: 'Content 1'},
         {label: 'Step 2', content: 'Content 2', active: true},
         {label: 'Step 3', content: 'Content 3', disabled: true}
