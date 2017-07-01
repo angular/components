@@ -78,6 +78,9 @@ import {InputErrorsExample} from './input-errors/input-errors-example';
 import {InputFormExample} from './input-form/input-form-example';
 import {InputPrefixSuffixExample} from './input-prefix-suffix/input-prefix-suffix-example';
 import {InputHintExample} from './input-hint/input-hint-example';
+import {AutocompleteSimpleExample} from './autocomplete-simple/autocomplete-simple-example';
+import {AutocompleteFilterExample} from './autocomplete-filter/autocomplete-filter-example';
+import {AutocompleteDisplayExample} from './autocomplete-display/autocomplete-display-example';
 import {
   MdAutocompleteModule, MdButtonModule, MdButtonToggleModule, MdCardModule, MdCheckboxModule,
   MdChipsModule, MdDatepickerModule, MdDialogModule, MdGridListModule, MdIconModule, MdInputModule,
@@ -100,6 +103,12 @@ export interface LiveExample {
  */
 export const EXAMPLE_COMPONENTS = {
   'autocomplete-overview': {title: 'Basic autocomplete', component: AutocompleteOverviewExample},
+  'autocomplete-simple': {title: 'Simple autocomplete', component: AutocompleteSimpleExample},
+  'autocomplete-filter': {title: 'Filter autocomplete', component: AutocompleteFilterExample},
+  'autocomplete-display': {
+    title: 'Display value autocomplete',
+    component: AutocompleteDisplayExample
+  },
   'button-overview': {title: 'Basic buttons', component: ButtonOverviewExample},
   'button-types': {title: 'Button varieties', component: ButtonTypesExample},
   'button-toggle-exclusive': {
@@ -230,6 +239,9 @@ export class ExampleMaterialModule {}
  */
 export const EXAMPLE_LIST = [
   AutocompleteOverviewExample,
+  AutocompleteFilterExample,
+  AutocompleteSimpleExample,
+  AutocompleteDisplayExample,
   ButtonOverviewExample,
   ButtonToggleExclusiveExample,
   ButtonToggleOverviewExample,
