@@ -1,18 +1,18 @@
-@mixin cust-tooltip($position: 'top', $bg: #3F434F, $color: #FFFFFF){
+@mixin cust-tooltip($position: 'top', $bg: #3F434F, $color: #FFFFFF) {
     border-radius: 3px;
     background-color: $bg;
     color: $color;
-    box-shadow: 0 2px 3px 0 rgba(0,0,0,0.1);
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
     text-align: center;
     font-size: 11px;
     font-weight: 200;
     padding: 8px 16px;
-    &:after{
+    &::after {
         bottom: 100%;
         border-bottom-color: $bg !important;
         left: 50%;
         border: solid transparent;
-        content: " ";
+        content: ' ';
         height: 0;
         width: 0;
         position: absolute;
@@ -23,7 +23,7 @@
     }
 }
 
-.cust-tooltip{
+.cust-tooltip {
   @include cust-tooltip();
 }
 
@@ -47,24 +47,24 @@
   color: black;
 }
 
-.cust-tt-container{
+.cust-tt-container {
   padding: 0 10px;
-  .tt-heading{
-    color: #FFFFFF;
+  .tt-heading {
+    color: #ffffff;
     font-size: 14px;
     letter-spacing: 4px;
   }
 
-  .tt-items{
+  .tt-items {
     padding-top: 10px;
-    .tt-item{
-      color: #FFFFFF;
+    .tt-item {
+      color: #ffffff;
       font-size: 13px;
       text-align: left;
       margin-bottom: 8px;
     }
   }
 }
-.upvote-items{
+.upvote-items {
   padding: 16px 8px;
 }
