@@ -1,7 +1,7 @@
 import {task, src, dest} from 'gulp';
 import {Dgeni} from 'dgeni';
-import * as path from 'path';
 import {buildConfig} from 'material2-build-tools';
+import * as path from 'path';
 
 // There are no type definitions available for these imports.
 const markdown = require('gulp-markdown');
@@ -61,6 +61,7 @@ const htmlMinifierOptions = {
 /** Generate all docs content. */
 task('docs', [
   'markdown-docs',
+  'build-examples-module',
   'highlight-examples',
   'api-docs',
   'minified-api-docs',
