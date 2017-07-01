@@ -15,10 +15,27 @@ import {TemplatePortal} from '../core';
     template: ''
 })
 export class MdStep {
-    active: boolean = false;
+
+    @Input()
+    get active() { return this._active; }
+    set active(value: boolean) {
+        this._active = value;
+    }
+    private _active: boolean;
+
+    @Input()
+    label: string;
+
+    @Input()
+    get completed() { return this._completed; }
+    set completed(value: boolean) {
+        this._completed = value;
+    }
+    private _completed: boolean = false;
+
     isLast: boolean = false;
 
     /** The portal that will be the hosted content of the step */
     private _contentPortal: TemplatePortal | null = null;
-    get content(): TemplatePortal | null { return this._contentPortal; };
+    get content(): TemplatePortal | null { return this._contentPortal; }
 }

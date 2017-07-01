@@ -33,9 +33,19 @@ export class MdStepper {
     set orientation(value: string) {
         this._orientation = value;
     }
-    private _orientation: string = "horizontal";
+    private _orientation: string;
+
+    horizontal: boolean = this._orientation === 'horizontal';
+
+    activeStep: MdStep;
 
     selectStep(step: MdStep): void {
         step.active = true;
+        this.activeStep = step;
+    }
+
+    indexOf(step: MdStep): number {
+        let stepsArray = this._steps.toArray();
+        return stepsArray.indexOf(step);
     }
 }
