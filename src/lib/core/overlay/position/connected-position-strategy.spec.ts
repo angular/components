@@ -3,7 +3,7 @@ import {TestBed, inject} from '@angular/core/testing';
 import {ConnectedPositionStrategy} from './connected-position-strategy';
 import {ViewportRuler, VIEWPORT_RULER_PROVIDER} from './viewport-ruler';
 import {OverlayPositionBuilder} from './overlay-position-builder';
-import {ConnectedOverlayPositionChange} from './connected-position';
+import {ConnectedOverlayPositionChange, ConnectionPositionPair} from './connected-position';
 import {Scrollable} from '../scroll/scrollable';
 import {Subscription} from 'rxjs/Subscription';
 import Spy = jasmine.Spy;
@@ -287,36 +287,6 @@ describe('ConnectedPositionStrategy', () => {
         expect(Math.floor(overlayRect.right)).toBe(Math.floor(originRect.right));
       });
 
-      it('should position a panel with the x offset provided', () => {
-        originRect = originElement.getBoundingClientRect();
-        strategy = positionBuilder.connectedTo(
-            fakeElementRef,
-            {originX: 'start', originY: 'top'},
-            {overlayX: 'start', overlayY: 'top'});
-
-        strategy.withOffsetX(10);
-        strategy.apply(overlayElement);
-
-        let overlayRect = overlayElement.getBoundingClientRect();
-        expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.top));
-        expect(Math.floor(overlayRect.left)).toBe(Math.floor(originRect.left + 10));
-      });
-
-      it('should position a panel with the y offset provided', () => {
-        originRect = originElement.getBoundingClientRect();
-        strategy = positionBuilder.connectedTo(
-            fakeElementRef,
-            {originX: 'start', originY: 'top'},
-            {overlayX: 'start', overlayY: 'top'});
-
-        strategy.withOffsetY(50);
-        strategy.apply(overlayElement);
-
-        let overlayRect = overlayElement.getBoundingClientRect();
-        expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.top + 50));
-        expect(Math.floor(overlayRect.left)).toBe(Math.floor(originRect.left));
-      });
-
     });
 
     it('should emit onPositionChange event when position changes', () => {
@@ -390,6 +360,95 @@ describe('ConnectedPositionStrategy', () => {
       });
     });
 
+    it('should position a panel with the x offset provided', () => {
+      originRect = originElement.getBoundingClientRect();
+      strategy = positionBuilder.connectedTo(
+          fakeElementRef,
+          {originX: 'start', originY: 'top'},
+          {overlayX: 'start', overlayY: 'top'});
+
+      strategy.withOffsetX(10);
+      strategy.apply(overlayElement);
+
+      let overlayRect = overlayElement.getBoundingClientRect();
+      expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.top));
+      expect(Math.floor(overlayRect.left)).toBe(Math.floor(originRect.left + 10));
+    });
+
+    it('should allow passing in a function as the x offset', () => {
+      const spy = jasmine.createSpy('offsetX spy').and.returnValue(10);
+
+      originElement.style.right = '0';
+      originRect = originElement.getBoundingClientRect();
+      strategy = positionBuilder
+        .connectedTo(fakeElementRef,
+            {originX: 'start', originY: 'top'},
+            {overlayX: 'start', overlayY: 'top'})
+        .withFallbackPosition(
+            {originX: 'end', originY: 'top'},
+            {overlayX: 'end', overlayY: 'top'});
+
+      strategy.withOffsetX(spy);
+      strategy.apply(overlayElement);
+
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy).toHaveBeenCalledWith(jasmine.objectContaining({
+        originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'top'
+      }));
+
+      expect(spy).toHaveBeenCalledWith(jasmine.objectContaining({
+        originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'top'
+      }));
+
+      let overlayRect = overlayElement.getBoundingClientRect();
+      expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.top));
+      expect(Math.floor(overlayRect.right)).toBe(Math.floor(originRect.right + 10));
+    });
+
+    it('should position a panel with the y offset provided', () => {
+      originRect = originElement.getBoundingClientRect();
+      strategy = positionBuilder.connectedTo(
+          fakeElementRef,
+          {originX: 'start', originY: 'top'},
+          {overlayX: 'start', overlayY: 'top'});
+
+      strategy.withOffsetY(50);
+      strategy.apply(overlayElement);
+
+      let overlayRect = overlayElement.getBoundingClientRect();
+      expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.top + 50));
+      expect(Math.floor(overlayRect.left)).toBe(Math.floor(originRect.left));
+    });
+
+    it('should allow passing in a function as the y offset', () => {
+      const spy = jasmine.createSpy('offsetY spy').and.returnValue(50);
+
+      originElement.style.bottom = '0';
+      originRect = originElement.getBoundingClientRect();
+      strategy = positionBuilder
+        .connectedTo(fakeElementRef,
+            {originX: 'start', originY: 'top'},
+            {overlayX: 'start', overlayY: 'top'})
+        .withFallbackPosition(
+            {originX: 'start', originY: 'bottom'},
+            {overlayX: 'start', overlayY: 'bottom'});
+
+      strategy.withOffsetY(spy);
+      strategy.apply(overlayElement);
+
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy).toHaveBeenCalledWith(jasmine.objectContaining({
+        originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'top'
+      }));
+
+      expect(spy).toHaveBeenCalledWith(jasmine.objectContaining({
+        originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'bottom'
+      }));
+
+      let overlayRect = overlayElement.getBoundingClientRect();
+      expect(Math.floor(overlayRect.bottom)).toBe(Math.floor(originRect.bottom + 50));
+      expect(Math.floor(overlayRect.left)).toBe(Math.floor(originRect.left));
+    });
 
     /**
      * Run all tests for connecting the overlay to the origin such that first preferred
