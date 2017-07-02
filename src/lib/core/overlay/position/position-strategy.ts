@@ -12,6 +12,9 @@ export interface PositionStrategy {
   /** Updates the position of the overlay element. */
   apply(element: Element): void;
 
+  /** Re-positions the overlay element based on its last calculated position. */
+  recalculateLastPosition(): void;
+
   /** Cleans up any DOM modifications made by the position strategy, if necessary. */
   dispose(): void;
 }

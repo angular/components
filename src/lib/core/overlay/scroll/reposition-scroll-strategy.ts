@@ -42,7 +42,7 @@ export class RepositionScrollStrategy implements ScrollStrategy {
       let throttle = this._config ? this._config.scrollThrottle : 0;
 
       this._scrollSubscription = this._scrollDispatcher.scrolled(throttle, () => {
-        this._overlayRef.updatePosition();
+        this._overlayRef.recalculateLastPosition();
       });
     }
   }

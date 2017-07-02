@@ -45,33 +45,33 @@ describe('RepositionScrollStrategy', () => {
 
   it('should update the overlay position when the page is scrolled', () => {
     overlayRef.attach(componentPortal);
-    spyOn(overlayRef, 'updatePosition');
+    spyOn(overlayRef, 'recalculateLastPosition');
 
     scrolledSubject.next();
-    expect(overlayRef.updatePosition).toHaveBeenCalledTimes(1);
+    expect(overlayRef.recalculateLastPosition).toHaveBeenCalledTimes(1);
 
     scrolledSubject.next();
-    expect(overlayRef.updatePosition).toHaveBeenCalledTimes(2);
+    expect(overlayRef.recalculateLastPosition).toHaveBeenCalledTimes(2);
   });
 
   it('should not be updating the position after the overlay is detached', () => {
     overlayRef.attach(componentPortal);
-    spyOn(overlayRef, 'updatePosition');
+    spyOn(overlayRef, 'recalculateLastPosition');
 
     overlayRef.detach();
     scrolledSubject.next();
 
-    expect(overlayRef.updatePosition).not.toHaveBeenCalled();
+    expect(overlayRef.recalculateLastPosition).not.toHaveBeenCalled();
   });
 
   it('should not be updating the position after the overlay is destroyed', () => {
     overlayRef.attach(componentPortal);
-    spyOn(overlayRef, 'updatePosition');
+    spyOn(overlayRef, 'recalculateLastPosition');
 
     overlayRef.dispose();
     scrolledSubject.next();
 
-    expect(overlayRef.updatePosition).not.toHaveBeenCalled();
+    expect(overlayRef.recalculateLastPosition).not.toHaveBeenCalled();
   });
 
 });

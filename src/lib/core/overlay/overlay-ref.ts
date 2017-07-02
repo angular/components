@@ -150,6 +150,13 @@ export class OverlayRef implements PortalHost {
     }
   }
 
+  /** Re-positions the overlay based on its last calculated position. */
+  recalculateLastPosition() {
+    if (this._state.positionStrategy) {
+      this._state.positionStrategy.recalculateLastPosition();
+    }
+  }
+
   /** Updates the text direction of the overlay panel. */
   private updateDirection() {
     this._pane.setAttribute('dir', this._state.direction!);
