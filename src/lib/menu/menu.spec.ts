@@ -25,6 +25,7 @@ import {
   MenuPositionX,
   MenuPositionY,
   MdMenu,
+  MD_MENU_DEFAULT_OPTIONS,
 } from './index';
 import {MENU_PANEL_TOP_PADDING} from './menu-trigger';
 import {extendObject} from '../core/util/object-extend';
@@ -875,6 +876,29 @@ describe('MdMenu', () => {
 
 });
 
+describe('MdMenu default overrides', () => {
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [MdMenuModule, NoopAnimationsModule],
+      declarations: [SimpleMenu],
+      providers: [{
+        provide: MD_MENU_DEFAULT_OPTIONS,
+        useValue: {overlapTrigger: false, xPosition: 'before', yPosition: 'above'},
+      }],
+    }).compileComponents();
+  }));
+
+  it('should allow for the default menu options to be overriden', () => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    const menu = fixture.componentInstance.menu;
+
+    expect(menu.overlapTrigger).toBe(false);
+    expect(menu.xPosition).toBe('before');
+    expect(menu.yPosition).toBe('above');
+  });
+});
+
 @Component({
   template: `
     <button [mdMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
@@ -887,7 +911,11 @@ describe('MdMenu', () => {
 class SimpleMenu {
   @ViewChild(MdMenuTrigger) trigger: MdMenuTrigger;
   @ViewChild('triggerEl') triggerEl: ElementRef;
+<<<<<<< HEAD
   @ViewChild(MdMenu) menu: MdMenu;
+=======
+  @ViewChild('menu') menu: MdMenu;
+>>>>>>> feat(menu): add injection token for overriding the default options
   closeCallback = jasmine.createSpy('menu closed callback');
 }
 
