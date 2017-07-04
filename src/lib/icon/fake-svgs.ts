@@ -46,6 +46,14 @@ const FAKE_SVGS = (() => {
       </svg>
   `);
 
+  svgs.set('farm-set-4.svg', `
+      <svg>
+        <symbol id="donkey" viewBox="0 0 48 48">
+          <path id="bray"></path>
+        </symbol>
+      </svg>
+  `);
+
   svgs.set('arrow-set.svg', `
       <svg>
         <defs>
