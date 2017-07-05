@@ -1,7 +1,7 @@
 import {browser, by, element} from 'protractor';
 
 
-fdescribe('input', () => {
+describe('input', () => {
   describe('text input', () => {
     beforeEach(() => browser.get('/input'));
 
