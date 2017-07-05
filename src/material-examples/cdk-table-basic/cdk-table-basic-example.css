@@ -10,12 +10,12 @@
  * Styles to make the demo's cdk-table match the material design spec
  * https://material.io/guidelines/components/data-tables.html
  */
-.cdk-table {
+.example-table {
   flex: 1 1 auto;
   overflow: auto;
 }
 
-.cdk-row, .cdk-header-row {
+.example-header-row, .example-row {
   display: flex;
   border-bottom: 1px solid #ccc;
   align-items: center;
@@ -23,17 +23,17 @@
   padding: 0 8px;
 }
 
-.cdk-cell, .cdk-header-cell {
+.example-cell, .example-header-cell {
   flex: 1;
 }
 
-.cdk-header-cell {
+.example-header-cell {
   font-size: 12px;
   font-weight: bold;
   color: rgba(0, 0, 0, 0.54);
 }
 
-.cdk-cell {
+.example-cell {
   font-size: 13px;
   color: rgba(0, 0, 0, 0.87);
 }

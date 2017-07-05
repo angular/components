@@ -97,7 +97,7 @@ import {TablePaginationExample} from './table-pagination/table-pagination-exampl
 import {TableBasicExample} from './table-basic/table-basic-example';
 import {TableSortingExample} from './table-sorting/table-sorting-example';
 import {TableFilteringExample} from './table-filtering/table-filtering-example';
-import {CdkTableBasicExample} from './cdk-table-basic/ckd-table-basic-example';
+import {CdkTableBasicExample} from './cdk-table-basic/cdk-table-basic-example';
 
 export interface LiveExample {
   title: string;
