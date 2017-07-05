@@ -97,6 +97,7 @@ import {TablePaginationExample} from './table-pagination/table-pagination-exampl
 import {TableBasicExample} from './table-basic/table-basic-example';
 import {TableSortingExample} from './table-sorting/table-sorting-example';
 import {TableFilteringExample} from './table-filtering/table-filtering-example';
+import {CdkTableBasicExample} from './cdk-table-basic/ckd-table-basic-example';
 
 export interface LiveExample {
   title: string;
@@ -120,6 +121,7 @@ export const EXAMPLE_COMPONENTS = {
   },
   'button-toggle-overview': {title: 'Basic button-toggles', component: ButtonToggleOverviewExample},
   'chips-overview': {title: 'Basic chips', component: ChipsOverviewExample},
+  'cdk-table-basic': {title: 'Basic CDK data-table', component: CdkTableBasicExample}
   'chips-stacked': {title: 'Stacked chips', component: ChipsStackedExample},
   'card-fancy': {title: 'Card with multiple sections', component: CardFancyExample},
   'card-overview': {title: 'Basic cards', component: CardOverviewExample},
@@ -261,6 +263,7 @@ export const EXAMPLE_LIST = [
   ButtonTypesExample,
   CardFancyExample,
   CardOverviewExample,
+  CdkTableBasicExample,
   ChipsOverviewExample,
   ChipsStackedExample,
   CheckboxConfigurableExample,

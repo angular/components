@@ -1,115 +1,128 @@
-The CDK data-table displays rows of data with fully customizable cell templates.
-Its single responsibility is the efficient rendering of rows in a fully accessible way.
+The `<cdk-table>` is an unopinionated, customizable data-table with a fully-templated API, dynamic
+columns, and an accessible DOM structure. This component acts as the core upon which anyone can
+build their own tailored data-table experience.
 
-The table provides a foundation upon which other features, such as sorting and pagination, can be built.
-Because it enforces no opinions on these matters, developers have full control over the interaction patterns associated with the table.
+The table provides a foundation upon which other features, such as sorting and pagination, can be
+built. Because it enforces no opinions on these matters, developers have full control over the
+interaction patterns associated with the table.
 
-For a Material Design styled table, see the documentation for `<md-table>` which builds on top of the CDK data-table.
+For a Material Design styled table, see the documentation for `<md-table>` which builds on top of
+the CDK data-table.
 
-In the near future, the material library will include an additional "simple table",
-building `<md-table>` with a more minimal interface and sorting, pagination, and selection built-in.
+<!-- example(cdk-table-basic) -->
 
-## Using the CDK Data Table
+### Using the CDK data-table
 
-### Writing your table template
+#### Writing your table template
 
 The first step to writing the data-table template is to define the columns.
 A column definition is specified via an `<ng-container>` with the `cdkColumnDef` directive, giving
-column a name. Each column definition then contains further definitions for both a header-cell
-template (`cdkHeaderCellDef`) and a data-cell template (`cdkCellDef`).
+column a name. Each column definition then further defines both a header-cell template
+(`cdkHeaderCellDef`) and a data-cell template (`cdkCellDef`).
 
 
 ```html
-    <ng-container cdkColumnDef="column_a">
-      <cdk-header-cell *cdkHeaderCellDef> Column A </cdk-header-cell>
+    <ng-container cdkColumnDef="username">
+      <cdk-header-cell *cdkHeaderCellDef> User name </cdk-header-cell>
       <cdk-cell *cdkCellDef="let row"> {{row.a}} </cdk-cell>
     </ng-container>
 ```
 
-Note that `cdkCellDef` exports the row context such that the row data (and additional fields) can
-be referenced in the cell template.
+The set of columns defined represent the columns that are _available_ to be rendered. The specific
+columns rendered in a given row, and their order, are specified on the row (see below). 
+
+Note that `cdkCellDef` exports the row context such that the row data can be referenced in the cell
+template. The directive also exports the same properties as `ngFor` (index, even, odd, first,
+last).
 
 The next step is to define the table's header-row (`cdkHeaderRowDef`) and data-row (`cdkRowDef`). 
-Each should be provided a list of which columns should be rendered and in which order.
 
 ```html
-    <cdk-header-row *cdkHeaderRowDef="['column_a', 'column_b', 'column_c']"></cdk-header-row>
-    <cdk-row *cdkRowDef="let row; columns: ['column_a', 'column_b', 'column_c']"></cdk-row>
+    <cdk-header-row *cdkHeaderRowDef="['username', 'age', 'title']"></cdk-header-row>
+    <cdk-row *cdkRowDef="let row; columns: ['username', 'age', 'title']"></cdk-row>
 ```
 
-Note that `cdkRowDef` also exports row context, which can be used to apply event and attribute
-bindings that use the row data (and additional fields).
+These row templates accept the specific columns to be rendered via the name given to the
+`cdkColumnDef`.
 
-In the following template, we have a data table that displays three columns: Column A, Column B, and Column C.
-The <cdk-header-row> and <cdk-row> are given an input of what columns to display.
 
+The `cdkRowDef` also exports row context, which can be used for event and property
+bindings on the row element. Any content placed _inside_ of the header row or data row template
+will be ignored, as the rendered content of the row comes from the cell templates described
+above.
+
+
+##### Example: table with three columns
 ```html
 <cdk-table [dataSource]="dataSource">
-    <!-- Column A Definition -->
-    <ng-container cdkColumnDef="column_a">
-      <cdk-header-cell *cdkHeaderCellDef> Column A </cdk-header-cell>
-      <cdk-cell *cdkCellDef="let row"> {{row.a}} </cdk-cell>
+    <!-- User name Definition -->
+    <ng-container cdkColumnDef="username">
+      <cdk-header-cell *cdkHeaderCellDef> User name </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row"> {{row.username}} </cdk-cell>
     </ng-container>
 
-    <!-- Column B Definition -->
-    <ng-container cdkColumnDef="column_b">
-      <cdk-header-cell *cdkHeaderCellDef> Column B </cdk-header-cell>
-      <cdk-cell *cdkCellDef="let row"> {{row.b}} </cdk-cell>
+    <!-- Age Definition -->
+    <ng-container cdkColumnDef="age">
+      <cdk-header-cell *cdkHeaderCellDef> Age </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row"> {{row.age}} </cdk-cell>
     </ng-container>
 
-    <!-- Column C Definition -->
-    <ng-container cdkColumnDef="column_c">
-      <cdk-header-cell *cdkHeaderCellDef> Column C </cdk-header-cell>
-      <cdk-cell *cdkCellDef="let row"> {{row.c}} </cdk-cell>
+    <!-- Title Definition -->
+    <ng-container cdkColumnDef="title">
+      <cdk-header-cell *cdkHeaderCellDef> Title </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row"> {{row.title}} </cdk-cell>
     </ng-container>
 
     <!-- Header and Row Declarations -->
-    <cdk-header-row *cdkHeaderRowDef="['column_a', 'column_b', 'column_c']"></cdk-header-row>
-    <cdk-row *cdkRowDef="let row; columns: ['column_a', 'column_b', 'column_c']"></cdk-row>
+    <cdk-header-row *cdkHeaderRowDef="['username', 'age', 'title']"></cdk-header-row>
+    <cdk-row *cdkRowDef="let row; columns: ['username', 'age', 'title']"></cdk-row>
   </cdk-table>
 ```
 
-Note that it is not required to display all the columns that are defined within the template,
-nor use the same ordering. For example, to display the table with only Column B
-and Column A and in that order, then the row and header definitions would be written as:
+The columns given on the row determine which cells are rendered and in which order. Thus, the
+columns can be set via binding to support dynamically changing the columns shown at run-time.
+
+
+It is not required to display all the columns that are defined within the template,
+nor use the same ordering. For example, to display the table with only `age`
+and `username` and in that order, then the row and header definitions would be written as:
 
 ```html
-    <cdk-header-row *cdkHeaderRowDef="['column_b', 'column_a’]"></cdk-header-row>
-    <cdk-row *cdkRowDef="let row; columns: ['column_b', 'column_a']"></cdk-row>
+    <cdk-row *cdkRowDef="let row; columns: myDisplayedColumns"></cdk-row>
 ```
 
-Adding attribute and event binding to the header and rows is as simple as applying them to the
-`<cdk-header-row>` and `<cdk-row>`. For example, here the table is adding a click handler to both.
-In addition, the CSS class `a-bigger-than-twenty` will be applied to any row where its data’s `a`
-property is greater than 20.
+Event and property bindings can be added directly to the row element. 
 
+##### Example: table with event and class binding
 ```html
-    <cdk-header-row *cdkHeaderRowDef="['column_b', 'column_a']"
+    <cdk-header-row *cdkHeaderRowDef="['age', 'username']"
                     (click)=”handleHeaderRowClick(row)”>
     </cdk-header-row>
 
-    <cdk-row *cdkRowDef="let row; columns: ['column_b', 'column_a']"
-             [class.a-bigger-than-twenty]=”row.a > 20”
+    <cdk-row *cdkRowDef="let row; columns: ['age', 'username']"
+             [class.can-vote]=”row.age >= 18”
              (click)=”handleRowClick(row)”>
     </cdk-row>
 ```
 
-Changing the list of columns provided to the `<cdk-header-row>` and `<cdk-row>` will automatically
-cause the table to re-render to reflect those changes.
-
-### Connecting the table to a data source
-Data is provided to the table through the `DataSource` interface. When the table receives a DataSource,
+#### Connecting the table to a data source
+Data is provided to the table through a `DataSource`. When the table receives a data source,
 it calls the DataSource's connect function which returns an observable that emits an array of data. 
-Whenever the Data Source emits data to this stream, the table will use it to render its rows.
+Whenever the data source emits data to this stream, the table will update.
 
-Since the Data Source provides this data stream, it is responsible for watching for data changes
-and notifying the table when to re-render. Examples of these data changes includes sorting, pagination, 
-filtering, and more.
+Because the _data source_ provides this stream, it bears the responsibility of triggering table
+updates. This can be based on _anything_: websocket connections, user interaction, model updates,
+time-based intervals, etc. Most commonly, updates will be triggered by user interactions like
+sorting and pagination.
 
-To improve performance, a trackBy function can be provided to the table similar to Angular’s ngFor trackBy.
-This allows you to customize how the table to identifies rows and helps it to understand how
-the data is changing.
+##### `trackBy`
+To improve performance, a trackBy function can be provided to the table similar to Angular’s
+(`ngFor` trackBy)[trackBy]. This informs the table how to uniquely identify rows to track how the
+data changes with each update.
 
-In the future, the connect function will be able to use the CollectionViewer parameter to be
-notified about table events, such as what rows the user is currently viewing. This could be used to
-help the Data Source know what data does not need to be retrieved and rendered, further improving performance.
+```html
+<cdk-table [dataSource]="dataSource" [trackBy]="myTrackById">
+```
+
+
+[trackBy][https://angular.io/api/common/NgForOf#change-propagation]
