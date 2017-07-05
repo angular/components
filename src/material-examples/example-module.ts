@@ -121,7 +121,7 @@ export const EXAMPLE_COMPONENTS = {
   },
   'button-toggle-overview': {title: 'Basic button-toggles', component: ButtonToggleOverviewExample},
   'chips-overview': {title: 'Basic chips', component: ChipsOverviewExample},
-  'cdk-table-basic': {title: 'Basic CDK data-table', component: CdkTableBasicExample}
+  'cdk-table-basic': {title: 'Basic CDK data-table', component: CdkTableBasicExample},
   'chips-stacked': {title: 'Stacked chips', component: ChipsStackedExample},
   'card-fancy': {title: 'Card with multiple sections', component: CardFancyExample},
   'card-overview': {title: 'Basic cards', component: CardOverviewExample},
