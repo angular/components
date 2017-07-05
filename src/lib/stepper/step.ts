@@ -6,15 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, Input} from '@angular/core';
-import {TemplatePortal} from '../core';
+import {Component, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {TemplatePortal, PortalHostDirective} from '../core';
 
 @Component({
     moduleId: module.id,
     selector: 'mat-step',
-    template: ''
+    templateUrl: '',
 })
 export class MdStep {
+
+    // @ViewChild(TemplateRef) _content: TemplateRef<any>;
+    // @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
     @Input()
     get active() { return this._active; }
@@ -35,7 +38,11 @@ export class MdStep {
 
     isLast: boolean = false;
 
-    /** The portal that will be the hosted content of the step */
-    private _contentPortal: TemplatePortal | null = null;
-    get content(): TemplatePortal | null { return this._contentPortal; }
+    // /** The portal that will be the hosted content of the step */
+    // private _contentPortal: TemplatePortal | null = null;
+    // get content(): TemplatePortal | null { return this._contentPortal; }
+
+    // constructor(private _viewContainerRef: ViewContainerRef) {}
+
+
 }
