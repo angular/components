@@ -19,7 +19,7 @@
   min-height: 64px;
   display: flex;
   align-items: baseline;
-  padding: 8px 24px 0 24px;
+  padding: 8px 24px 0;
   font-size: 20px;
   justify-content: space-between;
 }
