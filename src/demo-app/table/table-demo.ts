@@ -1,12 +1,18 @@
-import {Component, ViewChild} from '@angular/core';
+import {
+  ChangeDetectorRef, Component, ContentChildren, QueryList, ViewChild,
+  ViewChildren
+} from '@angular/core';
 import {PeopleDatabase, UserData} from './people-database';
 import {PersonDataSource} from './person-data-source';
 import {MdPaginator} from '@angular/material';
 import {MdSort} from '@angular/material';
+import {CdkColumnDef} from '@angular/cdk';
 
 export type UserProperties = 'userId' | 'userName' | 'progress' | 'color' | undefined;
 
 export type TrackByStrategy = 'id' | 'reference' | 'index';
+
+const properties = ['id', 'name', 'progress', 'color'];
 
 @Component({
   moduleId: module.id,
@@ -21,7 +27,7 @@ export class TableDemo {
   changeReferences = false;
   highlights = new Set<string>();
 
-  dynamicColumns: any[] = [];
+  dynamicColumnDefs: any[] = [];
   dynamicColumnIds: string[] = [];
 
   @ViewChild(MdPaginator) _paginator: MdPaginator;
@@ -35,15 +41,13 @@ export class TableDemo {
   }
 
   addDynamicColumnDef() {
-    const properties = ['userId', 'userName', 'progress', 'color'];
-    const nextProperty = properties[this.dynamicColumns.length];
-    this.dynamicColumns.push({
-      id: nextProperty,
+    const nextProperty = properties[this.dynamicColumnDefs.length];
+    this.dynamicColumnDefs.push({
+      id: nextProperty.toUpperCase(),
       property: nextProperty,
       headerText: nextProperty
     });
-
-    this.dynamicColumnIds.push(nextProperty);
+    this.dynamicColumnIds = this.dynamicColumnDefs.map(columnDef => columnDef.id);
   }
 
   connect() {

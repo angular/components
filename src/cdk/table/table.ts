@@ -31,7 +31,6 @@ import {
 } from '@angular/core';
 import {CollectionViewer, DataSource} from './data-source';
 import {CdkCellOutlet, CdkCellOutletRowContext, CdkHeaderRowDef, CdkRowDef} from './row';
-import {merge} from 'rxjs/observable/merge';
 import {takeUntil} from 'rxjs/operator/takeUntil';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subscription} from 'rxjs/Subscription';
@@ -171,6 +170,21 @@ export class CdkTable<T> implements CollectionViewer {
     }
   }
 
+  ngOnInit() {
+    // TODO(andrewseguin): Setup a listener for scrolling, emit the calculated view to viewChange
+    this._dataDiffer = this._differs.find([]).create(this._trackByFn);
+  }
+
+  ngAfterContentChecked() {
+    this._updateColumnDefinitions();
+  }
+
+  ngAfterViewInit() {
+    if (this.dataSource && !this._renderChangeSubscription) {
+      this._observeRenderChanges();
+    }
+  }
+
   ngOnDestroy() {
     this._rowPlaceholder.viewContainer.clear();
     this._headerRowPlaceholder.viewContainer.clear();
@@ -182,47 +196,49 @@ export class CdkTable<T> implements CollectionViewer {
     }
   }
 
-  ngOnInit() {
-    // TODO(andrewseguin): Setup a listener for scroll events
-    //   and emit the calculated view to this.viewChange
-    this._dataDiffer = this._differs.find([]).create(this._trackByFn);
-  }
-
   ngAfterContentInit() {
     // TODO(andrewseguin): Throw an error if two columns share the same name
     this._columnDefinitions.forEach(columnDef => {
       this._columnDefinitionsByName.set(columnDef.name, columnDef);
     });
 
-    this._columnDefinitions.changes.subscribe(() => {
-      console.log('Column def change');
-    });
-
-    // Re-render the rows if any of their columns change.
-    // TODO(andrewseguin): Determine how to only re-render the rows that have their columns changed.
-    const columnChangeEvents = this._rowDefinitions.map(rowDef => rowDef.columnsChange);
-
-    takeUntil.call(merge(...columnChangeEvents), this._onDestroy).subscribe(() => {
-      // Reset the data to an empty array so that renderRowChanges will re-render all new rows.
-      this._rowPlaceholder.viewContainer.clear();
-      this._dataDiffer.diff([]);
-      this._renderRowChanges();
-    });
-
-    // Re-render the header row if the columns change
-    takeUntil.call(this._headerDefinition.columnsChange, this._onDestroy).subscribe(() => {
-      console.log('Header columns changed');
-      this._headerRowPlaceholder.viewContainer.clear();
-      this._renderHeaderRow();
-    });
-
-    this._renderHeaderRow();
-  }
-
-  ngAfterContentChecked() {
     if (this.dataSource && !this._renderChangeSubscription) {
       this._observeRenderChanges();
     }
+  }
+
+
+  /** Update the map containing the content's column definitions. */
+  private _updateColumnDefinitions() {
+    // TODO(andrewseguin): Throw an error if two columns share the same name
+    this._columnDefinitions.forEach(columnDef => {
+      this._columnDefinitionsByName.set(columnDef.name, columnDef);
+    });
+  }
+
+  /**
+   * Check if the header or rows have changed what columns they want to display. If there is a diff,
+   * then re-render that section.
+   */
+  private _checkColumnsChange() {
+    // Re-render the rows when the row definition columns change.
+    this._rowDefinitions.forEach(def => {
+      if (!!def.getColumnsDiff()) {
+        // Reset the data to an empty array so that renderRowChanges will re-render all new rows.
+        this._dataDiffer.diff([]);
+
+        this._rowPlaceholder.viewContainer.clear();
+        this._renderRowChanges();
+      }
+    });
+
+    // Re-render the header row if there is a difference in its columns.
+    if (this._headerDefinition.getColumnsDiff()) {
+      this._headerRowPlaceholder.viewContainer.clear();
+      this._renderHeaderRow();
+    }
+
+    this._renderHeaderRow();
   }
 
   /**

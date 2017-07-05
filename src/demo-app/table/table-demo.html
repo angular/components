@@ -27,14 +27,16 @@
   </div>
 
   <div>
-    <button md-raised-button (click)="addDynamicColumnDef()">Add Dynamic Column Def</button>
+    <button md-raised-button (click)="addDynamicColumnDef()" [disabled]="dynamicColumnIds.length >= 4">
+      Add Dynamic Column Def
+    </button>
   </div>
 </div>
 
 <h3>CdkTable With Dynamic Column Def</h3>
 
 <cdk-table [dataSource]="dataSource">
-  <ng-container cdkColumnDef="column.id" *ngFor="let column of dynamicColumns">
+  <ng-container [cdkColumnDef]="column.id" *ngFor="let column of dynamicColumnDefs">
     <cdk-header-cell *cdkHeaderCellDef> {{column.headerText}} </cdk-header-cell>
     <cdk-cell *cdkCellDef="let row"> {{row[column.property]}} </cdk-cell>
   </ng-container>

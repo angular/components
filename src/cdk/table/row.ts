@@ -9,7 +9,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Directive,
+  Directive, IterableChanges,
   IterableDiffer,
   IterableDiffers,
   SimpleChanges,
@@ -33,37 +33,28 @@ export abstract class BaseRowDef {
   /** The columns to be displayed on this row. */
   columns: string[];
 
-  /** Event stream that emits when changes are made to the columns. */
-  columnsChange: Subject<void> = new Subject<void>();
-
   /** Differ used to check if any changes were made to the columns. */
-  protected _columnsDiffer: IterableDiffer<any>;
-
-  private viewInitialized = false;
+  columnsDiffer: IterableDiffer<any>;
 
   constructor(public template: TemplateRef<any>,
               protected _differs: IterableDiffers) { }
-
-  ngAfterViewInit() {
-    this.viewInitialized = true;
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
     // Create a new columns differ if one does not yet exist. Initialize it based on initial value
     // of the columns property.
     const columns = changes['columns'].currentValue;
-    if (!this._columnsDiffer && columns) {
-      this._columnsDiffer = this._differs.find(columns).create();
+    if (!this.columnsDiffer && columns) {
+      this.columnsDiffer = this._differs.find(columns).create();
       this._columnsDiffer.diff(columns);
     }
   }
 
-  ngDoCheck(): void {
-    if (!this.viewInitialized || !this._columnsDiffer || !this.columns) { return; }
-
-    // Notify the table if there are any changes to the columns.
-    const changes = this._columnsDiffer.diff(this.columns);
-    if (changes) { this.columnsChange.next(); }
+  /**
+   * Returns the difference between the current columns and the collumns from the last diff, or null
+   * if there is no difference.
+   */
+  getColumnsDiff(): IterableChanges<any> | null {
+    return this.columnsDiffer.diff(this.columns);
   }
 }
 
