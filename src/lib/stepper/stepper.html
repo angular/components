@@ -7,11 +7,10 @@
             <div *ngIf="step.optional" class="mat-step-optional">Optional</div>
         </div>
         <div *ngIf="!step.isLast" class="connector-line"></div>
-        <div *ngIf="!horizontal && step.active">{{step.content}}</div>
+        <div *ngIf="orientation == 'vertical' && step.active"></div>
     </div>
-
 </div>
-<div class="mat-stepper-horizontal" *ngIf="horizontal">
+<div class="mat-stepper-horizontal" *ngIf="orientation == 'horizontal'">
     ad
 </div>
 <div>

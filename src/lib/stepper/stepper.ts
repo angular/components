@@ -8,6 +8,7 @@
 
 import {Component, ContentChildren, Input, QueryList} from '@angular/core';
 import {MdStep} from './step';
+import {TemplatePortal} from '../core';
 
 export class MdStepChangeEvent {
     index: number;
@@ -20,7 +21,7 @@ export class MdStepChangeEvent {
     templateUrl: 'stepper.html',
     //styleUrls: ['stepper.scss'],
     host: {
-        '[attr.aria-orientation]': 'orientation'
+        '[attr.aria-orientation]': 'orientation',
     },
 })
 
@@ -28,14 +29,14 @@ export class MdStepper {
 
     @ContentChildren(MdStep) _steps: QueryList<MdStep>;
 
+    // @Input('content') _content: TemplatePortal;
+
     @Input()
     get orientation() { return this._orientation; }
     set orientation(value: string) {
         this._orientation = value;
     }
     private _orientation: string;
-
-    horizontal: boolean = this._orientation === 'horizontal';
 
     activeStep: MdStep;
 
