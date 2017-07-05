@@ -24,6 +24,7 @@ fdescribe('CdkTable', () => {
         DynamicDataSourceCdkTableApp,
         CustomRoleCdkTableApp,
         TrackByCdkTableApp,
+        DynamicColumnDefinitionsCdkTableApp,
         RowContextCdkTableApp,
       ],
     }).compileComponents();
@@ -105,6 +106,16 @@ fdescribe('CdkTable', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('cdk-table').getAttribute('role')).toBe('treegrid');
+  });
+
+  fit('should be able to dynamically add/remove column definitions', () => {
+    const dynamicColumnDefFixture = TestBed.createComponent(DynamicColumnDefinitionsCdkTableApp);
+    dynamicColumnDefFixture.detectChanges();
+
+    const dynamicColumnDefComp = dynamicColumnDefFixture.componentInstance;
+    expect(dynamicColumnDefComp.dynamicColumns.push('columnA'));
+
+    dynamicColumnDefFixture.detectChanges();
   });
 
   it('should re-render the rows when the data changes', () => {
@@ -590,34 +601,25 @@ class TrackByCdkTableApp {
 @Component({
   template: `
     <cdk-table [dataSource]="dataSource">
-      <ng-container [cdkColumnDef]="column.id" *ngFor="let column of dynamicColumnDefs">
-        <cdk-header-cell *cdkHeaderCellDef> {{column.headerText}} </cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> {{row[column.property]}} </cdk-cell>
+      <ng-container [cdkColumnDef]="column" *ngFor="let column of dynamicColumns">
+        <cdk-header-cell *cdkHeaderCellDef> {{column}}</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{column}}</cdk-cell>
       </ng-container>
 
-      <cdk-header-row *cdkHeaderRowDef="dynamicColumnIds"></cdk-header-row>
-      <cdk-row *cdkRowDef="let row; columns: dynamicColumnIds;"></cdk-row>
+      <cdk-header-row *cdkHeaderRowDef="dynamicColumns"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: dynamicColumns;"></cdk-row>
     </cdk-table>
   `
 })
 class DynamicColumnDefinitionsCdkTableApp {
-  dynamicColumnDefs: any[] = [];
-  dynamicColumnIds: string[] = [];
+  dynamicColumns: any[] = [];
 
   dataSource: FakeDataSource = new FakeDataSource();
-  columnsToRender = ['column_a', 'column_b'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
 
   addDynamicColumnDef() {
-    const nextProperty = this.dynamicColumnDefs.length;
-    this.dynamicColumnDefs.push({
-      id: nextProperty,
-      property: nextProperty,
-      headerText: nextProperty
-    });
-
-    this.dynamicColumnIds = this.dynamicColumnDefs.map(columnDef => columnDef.id);
+    this.dynamicColumns.push(this.dynamicColumns.length);
   }
 }
 

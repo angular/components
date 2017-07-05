@@ -190,6 +190,7 @@ export class CdkTable<T> implements CollectionViewer {
   }
 
   ngAfterContentChecked() {
+    console.log('Content checked');
     this._updateColumnDefinitions();
   }
 
@@ -224,6 +225,7 @@ export class CdkTable<T> implements CollectionViewer {
 
   /** Update the map containing the content's column definitions. */
   private _updateColumnDefinitions() {
+    console.log('Updating columns');
     this._columnDefinitionsByName.clear();
     this._columnDefinitions.forEach(columnDef => {
       if (this._columnDefinitionsByName.has(columnDef.name)) {

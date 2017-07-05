@@ -36,7 +36,7 @@
 <h3>CdkTable With Dynamic Column Def</h3>
 
 <cdk-table [dataSource]="dataSource">
-  <ng-container [cdkColumnDef]="column.id" *ngFor="let column of dynamicColumnDefs">
+  <ng-container [cdkColumnDef]="column.id" *ngFor="let column of dynamicColumns">
     <cdk-header-cell *cdkHeaderCellDef> {{column.headerText}} </cdk-header-cell>
     <cdk-cell *cdkCellDef="let row"> {{row[column.property]}} </cdk-cell>
   </ng-container>
