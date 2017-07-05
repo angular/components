@@ -31,3 +31,5 @@ To prevent the user from clearing the sort sort state from an already sorted col
 
 When used on an `md-table` header, it is not required to set an `md-sort-header` id on because
 by default it will use the id of the column.
+
+<!-- example(table-sorting) -->
