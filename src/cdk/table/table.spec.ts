@@ -8,7 +8,7 @@ import {combineLatest} from 'rxjs/observable/combineLatest';
 import {CdkTableModule} from './index';
 import {map} from 'rxjs/operator/map';
 
-describe('CdkTable', () => {
+fdescribe('CdkTable', () => {
   let fixture: ComponentFixture<SimpleCdkTableApp>;
 
   let component: SimpleCdkTableApp;
@@ -584,6 +584,40 @@ class TrackByCdkTableApp {
       case 'propertyA': return item.a;
       case 'index': return index;
     }
+  }
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource">
+      <ng-container [cdkColumnDef]="column.id" *ngFor="let column of dynamicColumnDefs">
+        <cdk-header-cell *cdkHeaderCellDef> {{column.headerText}} </cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row[column.property]}} </cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="dynamicColumnIds"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: dynamicColumnIds;"></cdk-row>
+    </cdk-table>
+  `
+})
+class DynamicColumnDefinitionsCdkTableApp {
+  dynamicColumnDefs: any[] = [];
+  dynamicColumnIds: string[] = [];
+
+  dataSource: FakeDataSource = new FakeDataSource();
+  columnsToRender = ['column_a', 'column_b'];
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
+
+  addDynamicColumnDef() {
+    const nextProperty = this.dynamicColumnDefs.length;
+    this.dynamicColumnDefs.push({
+      id: nextProperty,
+      property: nextProperty,
+      headerText: nextProperty
+    });
+
+    this.dynamicColumnIds = this.dynamicColumnDefs.map(columnDef => columnDef.id);
   }
 }
 

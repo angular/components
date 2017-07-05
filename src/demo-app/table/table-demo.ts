@@ -47,6 +47,7 @@ export class TableDemo {
       property: nextProperty,
       headerText: nextProperty
     });
+
     this.dynamicColumnIds = this.dynamicColumnDefs.map(columnDef => columnDef.id);
   }
 

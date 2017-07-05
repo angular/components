@@ -50,7 +50,7 @@ export abstract class BaseRowDef {
   }
 
   /**
-   * Returns the difference between the current columns and the collumns from the last diff, or null
+   * Returns the difference between the current columns and the columns from the last diff, or null
    * if there is no difference.
    */
   getColumnsDiff(): IterableChanges<any> | null {

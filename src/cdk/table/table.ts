@@ -36,6 +36,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
 import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
+import {startWith} from 'rxjs/operator/startWith';
 
 /**
  * Returns an error to be thrown when attempting to find an unexisting column.
@@ -44,6 +45,14 @@ import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
  */
 export function getTableUnknownColumnError(id: string) {
   return new Error(`cdk-table: Could not find column with id "${id}".`);
+}
+
+/**
+ * Returns an error to be thrown when attempting to find an unexisting column.
+ * @docs-private
+ */
+export function getTableDuplicateColumnNameError(name: string) {
+  return new Error(`cdk-table: Duplicate column definition name provided: "${name}".`);
 }
 
 /**
@@ -175,6 +184,11 @@ export class CdkTable<T> implements CollectionViewer {
     this._dataDiffer = this._differs.find([]).create(this._trackByFn);
   }
 
+  ngAfterContentInit() {
+    this._updateColumnDefinitions();
+    this._columnDefinitions.changes.subscribe(() => this._updateColumnDefinitions());
+  }
+
   ngAfterContentChecked() {
     this._updateColumnDefinitions();
   }
@@ -210,8 +224,11 @@ export class CdkTable<T> implements CollectionViewer {
 
   /** Update the map containing the content's column definitions. */
   private _updateColumnDefinitions() {
-    // TODO(andrewseguin): Throw an error if two columns share the same name
+    this._columnDefinitionsByName.clear();
     this._columnDefinitions.forEach(columnDef => {
+      if (this._columnDefinitionsByName.has(columnDef.name)) {
+        throw getTableDuplicateColumnNameError(columnDef.name);
+      }
       this._columnDefinitionsByName.set(columnDef.name, columnDef);
     });
   }
