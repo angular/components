@@ -119,6 +119,7 @@ export class ExampleDataSource extends DataSource<any> {
   get filter(): string { return this._filterChange.value; }
   set filter(filter: string) { this._filterChange.next(filter); }
 
+  filteredData: UserData[] = [];
   renderedData: UserData[] = [];
 
   constructor(private _exampleDatabase: ExampleDatabase,
@@ -139,13 +140,13 @@ export class ExampleDataSource extends DataSource<any> {
 
     return Observable.merge(...displayDataChanges).map(() => {
       // Filter data
-      const filteredData = this._exampleDatabase.data.slice().filter((item: UserData) => {
+      this.filteredData = this._exampleDatabase.data.slice().filter((item: UserData) => {
         let searchStr = (item.name + item.color).toLowerCase();
         return searchStr.indexOf(this.filter.toLowerCase()) != -1;
       });
 
       // Sort filtered data
-      const sortedData = this.sortData(filteredData);
+      const sortedData = this.sortData(this.filteredData.slice());
 
       // Grab the page's slice of the filtered sorted data.
       const startIndex = this._paginator.pageIndex * this._paginator.pageSize;

@@ -89,7 +89,7 @@ import {
   MdChipsModule, MdDatepickerModule, MdDialogModule, MdGridListModule, MdIconModule, MdInputModule,
   MdListModule, MdMenuModule, MdPaginatorModule, MdProgressBarModule, MdProgressSpinnerModule,
   MdRadioModule, MdSelectModule, MdSidenavModule, MdSliderModule, MdSlideToggleModule,
-  MdSnackBarModule, MdSortModule, MdTabsModule, MdToolbarModule, MdTooltipModule
+  MdSnackBarModule, MdSortModule, MdTableModule, MdTabsModule, MdToolbarModule, MdTooltipModule
 } from '@angular/material';
 import {CdkTableModule} from '@angular/cdk';
 import {TableOverviewExample} from './table-overview/table-overview-example';
@@ -244,6 +244,7 @@ export const EXAMPLE_COMPONENTS = {
     MdSliderModule,
     MdSidenavModule,
     MdSnackBarModule,
+    MdTableModule,
     MdTabsModule,
     MdToolbarModule,
     MdTooltipModule

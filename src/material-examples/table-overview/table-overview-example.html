@@ -71,7 +71,7 @@
   </div>
 
   <md-paginator #paginator
-                [length]="dataSource.renderedData.length"
+                [length]="dataSource.filteredData.length"
                 [pageIndex]="0"
                 [pageSize]="25"
                 [pageSizeOptions]="[5, 10, 25, 100]">
