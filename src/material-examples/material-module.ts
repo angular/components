@@ -5,7 +5,7 @@ import {
   MdCardModule, MdCheckboxModule, MdChipsModule, MdDatepickerModule,
   MdDialogModule, MdGridListModule, MdIconModule, MdInputModule,
   MdListModule, MdMenuModule, MdProgressBarModule, MdProgressSpinnerModule,
-  MdRadioModule, MdSelectModule, MdSidenavModule, MdSliderModule,
+  MdRadioModule, MdSelectModule, MdSidenavModule, MdSliderModule, MdSortModule,
   MdSlideToggleModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule
 } from '@angular/material';
 
@@ -35,7 +35,8 @@ import {
     MdTabsModule,
     MdToolbarModule,
     MdTooltipModule,
-    MdPaginatorModule
+    MdPaginatorModule,
+    MdSortModule
   ]
 })
 export class ExampleMaterialModule {}
