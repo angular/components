@@ -30,21 +30,19 @@ export class SortOverviewExample {
     }
 
     this.sortedData = data.sort((a, b) => {
-      let propertyA: number|string = '';
-      let propertyB: number|string = '';
-
+      let isAsc = sort.direction == 'asc';
       switch (sort.active) {
-        case 'name': [propertyA, propertyB] = [a.name, b.name]; break;
-        case 'calories': [propertyA, propertyB] = [a.calories, b.calories]; break;
-        case 'fat': [propertyA, propertyB] = [a.fat, b.fat]; break;
-        case 'carbs': [propertyA, propertyB] = [a.carbs, b.carbs]; break;
-        case 'protein': [propertyA, propertyB] = [a.protein, b.protein]; break;
+        case 'name': return compare(a.name, b.name, isAsc);
+        case 'calories': return compare(+a.calories, +b.calories, isAsc);
+        case 'fat': return compare(+a.fat, +b.fat, isAsc);
+        case 'carbs': return compare(+a.carbs, +b.carbs, isAsc);
+        case 'protein': return compare(+a.protein, +b.protein, isAsc);
+        default: return 0;
       }
-
-      let valueA = isNaN(+propertyA) ? propertyA : +propertyA;
-      let valueB = isNaN(+propertyB) ? propertyB : +propertyB;
-
-      return (valueA < valueB ? -1 : 1) * (sort.direction == 'asc' ? 1 : -1);
     });
   }
+}
+
+function compare(a, b, isAsc) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
