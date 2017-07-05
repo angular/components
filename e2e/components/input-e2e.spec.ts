@@ -1,7 +1,7 @@
 import {browser, by, element} from 'protractor';
 
 
-describe('input', () => {
+fdescribe('input', () => {
   describe('text input', () => {
     beforeEach(() => browser.get('/input'));
 
@@ -41,6 +41,16 @@ describe('input', () => {
           .perform();
 
       expect(input.getAttribute('value')).toBe('0');
+    });
+  });
+
+  describe('textarea', () => {
+    beforeEach(() => browser.get('/input'));
+
+    it('should update input value when user types', () => {
+      let input = element(by.id('text-area'));
+      input.sendKeys('abc123');
+      expect(input.getAttribute('value')).toBe('abc123');
     });
   });
 });
