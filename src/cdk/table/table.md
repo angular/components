@@ -1,28 +1,23 @@
-The CDK Data Table displays rows of data with fully customizable cell templates.
+The CDK data-table displays rows of data with fully customizable cell templates.
 Its single responsibility is the efficient rendering of rows in a fully accessible way.
 
-The CDK table provides a foundation upon which other features, such as sorting and pagination, can be built.
-Because the CDK table enforces no opinions on these matters, developers have full control over the interaction patterns associated with the table.
+The table provides a foundation upon which other features, such as sorting and pagination, can be built.
+Because it enforces no opinions on these matters, developers have full control over the interaction patterns associated with the table.
 
-For a Material Design styled table, see `<md-table>`, which builds on top of the CDK Data Table.
+For a Material Design styled table, see the documentation for `<md-table>` which builds on top of the CDK data-table.
 
 In the near future, the material library will include an additional "simple table",
-building  `<md-table>` with a more minimal interface and sorting, pagination, and selection built-in.
-
-<!-- example(table-basic) -->
+building `<md-table>` with a more minimal interface and sorting, pagination, and selection built-in.
 
 ## Using the CDK Data Table
 
 ### Writing your table template
 
-The first step to writing the CDK Data Table template is to define the columns that will be used in your table.
-Each column definition will consist of a header cell template and a data cell template by using
-the `<cdk-header-cell>` and `<cdk-cell>`, respectively. These will be wrapped in an `<ng-container>` and given a column name.
+The first step to writing the data-table template is to define the columns.
+A column definition is specified via an `<ng-container>` with the `cdkColumnDef` directive, giving
+column a name. Each column definition then contains further definitions for both a header-cell
+template (`cdkHeaderCellDef`) and a data-cell template (`cdkCellDef`).
 
-Both the `<cdk-header-cell>` and `<cdk-cell>` require an additional directive so that the table can
-capture the inner template. For `<cdk-header-cell>` you must include the attribute `*cdkHeaderCellDef`
-and for `<cdk-cell>` you must include `*cdkCellDef`. Note that the `*cdkCellDef` provides an outlet
-to capture the cell’s row data to be used in the template.
 
 ```html
     <ng-container cdkColumnDef="column_a">
@@ -31,13 +26,19 @@ to capture the cell’s row data to be used in the template.
     </ng-container>
 ```
 
-After the columns have been defined, you must include a `<cdk-header-row>` and `<cdk-row>` which will
-each take an array of the column names. This will be the columns that will be rendered in the table and in the order provided.
+Note that `cdkCellDef` exports the row context such that the row data (and additional fields) can
+be referenced in the cell template.
+
+The next step is to define the table's header-row (`cdkHeaderRowDef`) and data-row (`cdkRowDef`). 
+Each should be provided a list of which columns should be rendered and in which order.
 
 ```html
     <cdk-header-row *cdkHeaderRowDef="['column_a', 'column_b', 'column_c']"></cdk-header-row>
     <cdk-row *cdkRowDef="let row; columns: ['column_a', 'column_b', 'column_c']"></cdk-row>
 ```
+
+Note that `cdkRowDef` also exports row context, which can be used to apply event and attribute
+bindings that use the row data (and additional fields).
 
 In the following template, we have a data table that displays three columns: Column A, Column B, and Column C.
 The <cdk-header-row> and <cdk-row> are given an input of what columns to display.
@@ -62,15 +63,15 @@ The <cdk-header-row> and <cdk-row> are given an input of what columns to display
       <cdk-cell *cdkCellDef="let row"> {{row.c}} </cdk-cell>
     </ng-container>
 
-    <!-- Header and Row Declarations (define columns; provide attribute and event binding) -->
+    <!-- Header and Row Declarations -->
     <cdk-header-row *cdkHeaderRowDef="['column_a', 'column_b', 'column_c']"></cdk-header-row>
     <cdk-row *cdkRowDef="let row; columns: ['column_a', 'column_b', 'column_c']"></cdk-row>
   </cdk-table>
 ```
 
-It is not required to display all the columns that are defined within the template,
-nor is the order required. For example, if we wanted the table to display only Column B
-and Column A and in that order, then the template would look like this:
+Note that it is not required to display all the columns that are defined within the template,
+nor use the same ordering. For example, to display the table with only Column B
+and Column A and in that order, then the row and header definitions would be written as:
 
 ```html
     <cdk-header-row *cdkHeaderRowDef="['column_b', 'column_a’]"></cdk-header-row>
@@ -94,86 +95,21 @@ property is greater than 20.
 ```
 
 Changing the list of columns provided to the `<cdk-header-row>` and `<cdk-row>` will automatically
-cause the table to re-render to reflect those changes. For more information, see Dynamic Columns below under Features.
+cause the table to re-render to reflect those changes.
 
 ### Connecting the table to a data source
 Data is provided to the table through the `DataSource` interface. When the table receives a DataSource,
-it calls its connect function to receive an observable that emits an array of data. Whenever the Data Source emits data to this stream, the table will use it to render its rows.
+it calls the DataSource's connect function which returns an observable that emits an array of data. 
+Whenever the Data Source emits data to this stream, the table will use it to render its rows.
 
 Since the Data Source provides this data stream, it is responsible for watching for data changes
-and notifying the table when to re-render. Examples of these data changes includes sorting, pagination, filtering, and more.
-To see how these examples can be incorporated in the Data Source, see below under Features.
+and notifying the table when to re-render. Examples of these data changes includes sorting, pagination, 
+filtering, and more.
 
-Note that a trackBy function can be provided to the table similar to Angular’s ngFor trackBy.
-This allows you to customize how the table to identifies rows and improves performance.
+To improve performance, a trackBy function can be provided to the table similar to Angular’s ngFor trackBy.
+This allows you to customize how the table to identifies rows and helps it to understand how
+the data is changing.
 
 In the future, the connect function will be able to use the CollectionViewer parameter to be
 notified about table events, such as what rows the user is currently viewing. This could be used to
 help the Data Source know what data does not need to be retrieved and rendered, further improving performance.
-
-## Material Table
-To use the CDK Data Table with styles matching the Material Design spec, you can use the `<md-table>`
-defined in `@angular/material`.  This will build on the CDK Data Table and apply built-in Material Design styles.
-
-The interface for the `<md-table>` matches the `<cdk-table>`, except that its element selectors
-will be prefixed with `md-` instead of `cdk-`.
-
-Note that the column definition directives (`cdkColumnDef` and `cdkHeaderCellDef`) are still prefixed with `cdk-`.
-
-```html
-<md-table [dataSource]="dataSource">
-    <!-- Column A Definition -->
-    <ng-container cdkColumnDef="column_a">
-      <md-header-cell *cdkHeaderCellDef> Column A </md-header-cell>
-      <md-cell *cdkCellDef="let row"> {{row.a}} </md-cell>
-    </ng-container>
-
-    <!-- Column B Definition -->
-    <ng-container cdkColumnDef="column_b">
-      <md-header-cell *cdkHeaderCellDef> Column B </md-header-cell>
-      <md-cell *cdkCellDef="let row"> {{row.b}} </md-cell>
-    </ng-container>
-
-    <!-- Column C Definition -->
-    <ng-container cdkColumnDef="column_c">
-      <md-header-cell *cdkHeaderCellDef> Column C </md-header-cell>
-      <md-cell *cdkCellDef="let row"> {{row.c}} </md-cell>
-    </ng-container>
-
-    <!-- Header and Row Declarations (define columns; provide attribute and event binding) -->
-    <md-header-row *cdkHeaderRowDef="['column_a', 'column_b', 'column_c']"></md-header-row>
-    <md-row *cdkRowDef="let row; columns: ['column_a', 'column_b', 'column_c']"></md-row>
-  </md-table>
-```
-
-## Simple Table
-
-In the near future, we would like to provide a simple version of the data table that includes an easy-to-use interface,
-material styling, data array input, and out-of-the-box features such as sorting, pagination, and selection.
-
-## Features
-
-The CDK Table’s responsibility is to handle efficient rendering of rows and it’s the Data Source’s job
-to let the table know what data should be rendered. As such, features that manipulate what data should
-be rendered should be the responsibility of the data source.
-
-### Pagination
-Use the MdPagination component to add data paging to the data table. The data source can listen to
-paging events from the component and appropriately slice the right data from whatever data provider
-is used. Sending this new data to the table will cause it to render the new page of data.
-
-<!-- example(table-pagination) -->
-
-### Sorting
-Use the MdSort component to enable sorting the table's data through the column headers.
-The data source can listen to sorting events from the component and sort the data before giving it
-to the table to render.
-
-<!-- example(table-sorting) -->
-
-### Filtering
-
-Apply filtering to your table's data by listening to an input's changes.
-When a change occurs, filter the data in the data source and send it to the table to render.
-
-<!--- example(table-filtering) -->
