@@ -12,5 +12,10 @@
   .docs-markdown-a {
     color: mat-color($primary);
   }
+
+  .docs-markdown-pre {
+    background: rgba(mat-color($foreground, secondary-text), .01);
+    border: .5px solid rgba(mat-color($foreground, secondary-text), .03);
+  }
 }
 
