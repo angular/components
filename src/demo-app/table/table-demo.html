@@ -25,7 +25,23 @@
     <md-checkbox (change)="toggleHighlight('even', $event.checked)">Even Rows</md-checkbox>
     <md-checkbox (change)="toggleHighlight('odd', $event.checked)">Odd Rows</md-checkbox>
   </div>
+
+  <div>
+    <button md-raised-button (click)="addDynamicColumnDef()">Add Dynamic Column Def</button>
+  </div>
 </div>
+
+<h3>CdkTable With Dynamic Column Def</h3>
+
+<cdk-table [dataSource]="dataSource">
+  <ng-container cdkColumnDef="column.id" *ngFor="let column of dynamicColumns">
+    <cdk-header-cell *cdkHeaderCellDef> {{column.headerText}} </cdk-header-cell>
+    <cdk-cell *cdkCellDef="let row"> {{row[column.property]}} </cdk-cell>
+  </ng-container>
+
+  <cdk-header-row *cdkHeaderRowDef="dynamicColumnIds"></cdk-header-row>
+  <cdk-row *cdkRowDef="let row; columns: dynamicColumnIds;"></cdk-row>
+</cdk-table>
 
 <h3>CdkTable Example</h3>
 

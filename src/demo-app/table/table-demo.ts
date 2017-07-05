@@ -21,6 +21,9 @@ export class TableDemo {
   changeReferences = false;
   highlights = new Set<string>();
 
+  dynamicColumns: any[] = [];
+  dynamicColumnIds: string[] = [];
+
   @ViewChild(MdPaginator) _paginator: MdPaginator;
 
   @ViewChild(MdSort) sort: MdSort;
@@ -29,6 +32,18 @@ export class TableDemo {
 
   ngOnInit() {
     this.connect();
+  }
+
+  addDynamicColumnDef() {
+    const properties = ['userId', 'userName', 'progress', 'color'];
+    const nextProperty = properties[this.dynamicColumns.length];
+    this.dynamicColumns.push({
+      id: nextProperty,
+      property: nextProperty,
+      headerText: nextProperty
+    });
+
+    this.dynamicColumnIds.push(nextProperty);
   }
 
   connect() {

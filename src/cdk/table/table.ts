@@ -194,6 +194,10 @@ export class CdkTable<T> implements CollectionViewer {
       this._columnDefinitionsByName.set(columnDef.name, columnDef);
     });
 
+    this._columnDefinitions.changes.subscribe(() => {
+      console.log('Column def change');
+    });
+
     // Re-render the rows if any of their columns change.
     // TODO(andrewseguin): Determine how to only re-render the rows that have their columns changed.
     const columnChangeEvents = this._rowDefinitions.map(rowDef => rowDef.columnsChange);
@@ -207,6 +211,7 @@ export class CdkTable<T> implements CollectionViewer {
 
     // Re-render the header row if the columns change
     takeUntil.call(this._headerDefinition.columnsChange, this._onDestroy).subscribe(() => {
+      console.log('Header columns changed');
       this._headerRowPlaceholder.viewContainer.clear();
       this._renderHeaderRow();
     });
