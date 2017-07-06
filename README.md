@@ -15,7 +15,7 @@ This is the home for the Angular team's Material Design components built for and
 
 The latest release of Angular Material can be installed from npm
 
-`npm install @angular/material`
+`npm install @angular/material @angular/cdk`
 
 A snapshot build with the latest changes from
 [master](https://github.com/angular/material2/tree/master) is also available.
