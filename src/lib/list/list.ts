@@ -7,19 +7,22 @@
  */
 
 import {
-  AfterContentInit,
+  AfterContentInit, AfterViewInit,
   Component,
   ContentChild,
   ContentChildren,
   Directive,
   ElementRef,
-  Input,
+  Input, OnInit,
   Optional,
   QueryList,
-  Renderer2,
+  Renderer2, ViewChild, ViewChildren,
   ViewEncapsulation
 } from '@angular/core';
-import {coerceBooleanProperty, MdLine, MdLineSetter} from '../core';
+import {coerceBooleanProperty, MdLine, MdLineSetter, MdPseudoCheckbox, MdSelectionModule, SelectionModel} from '../core';
+import {CommonModule} from '@angular/common';
+import {MdCheckbox} from '../checkbox';
+import {MdCheckboxModule} from '../checkbox';
 
 @Directive({
   selector: 'md-divider, mat-divider',
@@ -50,6 +53,26 @@ export class MdList {
   set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
 }
 
+@Component({
+  moduleId: module.id,
+  selector: 'md-selection-list, mat-selection-list',
+  host: {'role': 'listbox'},
+  template: '<ng-content></ng-content>',
+  styleUrls: ['list.css'],
+  encapsulation: ViewEncapsulation.None
+})
+export class MdSelectionList {
+  private _disableRipple: boolean = false;
+
+  /**
+   * Whether the ripple effect should be disabled on the list-items or not.
+   * This flag only has an effect for `md-nav-list` components.
+   */
+  @Input()
+  get disableRipple() { return this._disableRipple; }
+  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+}
+
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
@@ -69,6 +92,12 @@ export class MdListCssMatStyler {}
   host: {'class': 'mat-nav-list'}
 })
 export class MdNavListCssMatStyler {}
+
+@Directive({
+  selector: 'md-selection-list, mat-selection-list',
+  host: {'class': 'mat-selection-list'}
+})
+export class MdSelectionListCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
@@ -175,3 +204,70 @@ export class MdListItem implements AfterContentInit {
     return this._element.nativeElement;
   }
 }
+
+@Component({
+  moduleId: module.id,
+  selector: 'md-list-option',
+  host: {
+    'role': 'option',
+    'class': 'mat-list-item',
+    '(focus)': '_handleFocus()',
+    '(blur)': '_handleBlur()',
+    '(click)': 'onchange()',
+    '(keydown)':'onKeydown($event)',
+    '[tabIndex]': 'disabled ? -1 : 0',
+    '[attr.aria-selected]': '',
+
+  },
+  templateUrl: 'list-option.html',
+  encapsulation: ViewEncapsulation.None
+})
+export class MdListOption implements AfterContentInit {
+  private _lineSetter: MdLineSetter;
+  private _disableRipple: boolean = false;
+  private _isNavList: boolean = false;
+  private _isSelectionList: boolean = false;
+  isSelected: boolean = false;
+
+  /**
+   * Whether the ripple effect on click should be disabled. This applies only to list items that are
+   * part of a nav list. The value of `disableRipple` on the `md-nav-list` overrides this flag.
+   */
+  @Input()
+  get disableRipple() { return this._disableRipple; }
+  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+
+  @ContentChildren(MdLine) _lines: QueryList<MdLine>;
+
+  /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
+
+  @Input() checkboxPosition: 'before' | 'after' = 'after';
+
+  @ViewChild('autocheckbox') pCheckbox;
+
+  constructor(private _renderer: Renderer2,
+              private _element: ElementRef,
+              @Optional() private _slist: MdSelectionList,
+              @Optional() navList: MdNavListCssMatStyler,
+              @Optional() selectionListStyler: MdSelectionListCssMatStyler,
+              @Optional() public selectionList: MdSelectionListCheckboxer) {
+    this._isNavList = !!navList;
+    this._isSelectionList = !!selectionListStyler;
+  }
+
+
+  ngAfterContentInit() {
+    this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
+  }
+}
+
+@Directive({
+  selector: 'md-selection-list, mat-selection-list',
+})
+export class MdSelectionListCheckboxer {
+
+  checkedItems: SelectionModel<HTMLElement> = new SelectionModel<HTMLElement>(true);
+
+  constructor(public _element: ElementRef) { }
+}
+
