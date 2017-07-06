@@ -16,7 +16,7 @@ import {TemplatePortal, PortalHostDirective} from '../core';
 })
 export class MdStep {
 
-    // @ViewChild(TemplateRef) _content: TemplateRef<any>;
+    @ViewChild('stepContent') stepContent: TemplateRef<any>;
     // @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
     @Input()
