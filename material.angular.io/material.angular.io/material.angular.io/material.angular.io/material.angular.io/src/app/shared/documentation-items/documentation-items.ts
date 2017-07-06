@@ -79,6 +79,9 @@ const DOCS = [
     summary: 'Tables, sorting, and pagination',
     items: [
       {id: 'paginator', name: 'Paginator', examples: ['paginator-configurable']},
+      {id: 'sort', name: 'Sort header', examples: ['sort-overview']},
+      {id: 'table', name: 'Table',
+          examples: ['table-filtering', 'table-pagination', 'table-sorting']},
     ]
   }
 ];

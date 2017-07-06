@@ -27,6 +27,11 @@ const GUIDES = [
     name: `Using Angular Material's Typography`,
     document: '/assets/documents/guides/typography.html',
   },
+  {
+    id: 'cdk-table',
+    name: `CDK data-table`,
+    document: '/assets/documents/guides/cdk-table.html',
+  },
 ];
 
 @Injectable()
