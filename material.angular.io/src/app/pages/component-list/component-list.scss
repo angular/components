@@ -11,18 +11,37 @@
 }
 
 .docs-component-list-item {
-  display: inline-flex;
-  flex-direction: column;
+  display: inline-block;
+  margin: 20px;
+  vertical-align: top;
+  width: 260px;
+
+  .mat-card-title {
+    font-size: 20px;
+  }
+
+  &, &:active, &:hover, &:focus {
+    text-decoration: none;
+  }
+}
+
+.docs-component-list-icon-spacer {
+  flex-grow: 1;
+}
+
+.docs-component-list-card-title {
+  margin: 0;
+}
+
+.docs-component-list-card {
+  display: flex;
   align-items: center;
-  margin: 30px;
-  text-decoration: none;
 }
 
 .docs-component-list-item-icon {
-  margin-bottom: 20px;
-  width: 100px;
-  height: 100px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  margin: 0 0 0 10px;
+  width: 40px;
+  height: 40px;
+  align-self: flex-end;
+  flex-grow: 0;
 }

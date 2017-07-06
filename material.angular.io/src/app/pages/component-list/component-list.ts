@@ -7,6 +7,7 @@ import {ActivatedRoute, RouterModule} from '@angular/router';
 import {ComponentPageTitle} from '../page-title/page-title';
 import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
 import {CommonModule} from '@angular/common';
+import {MdCardModule} from '@angular/material';
 
 @Component({
   selector: 'app-components',
@@ -27,7 +28,7 @@ export class ComponentList {
 }
 
 @NgModule({
-  imports: [SvgViewerModule, RouterModule, CommonModule],
+  imports: [SvgViewerModule, RouterModule, CommonModule, MdCardModule],
   exports: [ComponentList],
   declarations: [ComponentList],
   providers: [DocumentationItems, ComponentPageTitle],
