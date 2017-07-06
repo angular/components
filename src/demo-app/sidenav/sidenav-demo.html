@@ -48,6 +48,45 @@
   </div>
 </md-sidenav-container>
 
+<h2>Sidenav Collapsed</h2>
+
+<md-sidenav-container class="demo-sidenav-container tall">
+  <md-sidenav #start3 closed mode="side">
+    <md-nav-list>
+      <md-list-item>
+        <md-icon md-list-icon>apps</md-icon>
+        <h4 md-line style="width: 100%;">Apps</h4>
+      </md-list-item>
+
+      <md-divider></md-divider>
+
+      <md-list-item>
+        <md-icon md-list-icon>home</md-icon>
+        <h4 md-line style="width: 100%;">Home</h4>
+      </md-list-item>
+
+      <md-divider></md-divider>
+
+      <md-list-item>
+        <md-icon md-list-icon>folder</md-icon>
+        <h4 md-line style="width: 100%;">Documents</h4>
+      </md-list-item>
+
+      <md-divider></md-divider>
+
+      <md-list-item>
+        <md-icon md-list-icon>link</md-icon>
+        <h4 md-line style="width: 100%;">Links</h4>
+      </md-list-item>
+    </md-nav-list>
+  </md-sidenav>
+
+  <div class="demo-sidenav-content">
+    <button md-button (click)="start3.collapse()">Collapse Start Side Drawer</button>
+    <button md-button (click)="start3.toggle()">Toggle Start Side Drawer</button>
+  </div>
+</md-sidenav-container>
+
 <h2>Dynamic Alignment Sidenav</h2>
 
 <md-sidenav-container class="demo-sidenav-container">

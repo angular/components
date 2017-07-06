@@ -38,7 +38,7 @@ export function throwMdDuplicatedSidenavError(align: string) {
 
 /** Sidenav toggle promise result. */
 export class MdSidenavToggleResult {
-  constructor(public type: 'open' | 'close', public animationFinished: boolean) {}
+  constructor(public type: 'open' | 'close' | 'collapse', public animationFinished: boolean) {}
 }
 
 
@@ -64,6 +64,7 @@ export class MdSidenavToggleResult {
     '[class.mat-sidenav-closing]': '_isClosing',
     '[class.mat-sidenav-end]': '_isEnd',
     '[class.mat-sidenav-opened]': '_isOpened',
+    '[class.mat-sidenav-collapsed]': '_isCollapsed',
     '[class.mat-sidenav-opening]': '_isOpening',
     '[class.mat-sidenav-over]': '_modeOver',
     '[class.mat-sidenav-push]': '_modePush',
@@ -78,6 +79,7 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
 
   /** Alignment of the sidenav (direction neutral); whether 'start' or 'end'. */
   private _align: 'start' | 'end' = 'start';
+
 
   /** Direction which the sidenav is aligned in. */
   @Input()
@@ -103,6 +105,9 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
   /** Whether the sidenav is opened. */
   _opened: boolean = false;
 
+  /** Whether the sidenav is opened and collapsed. */
+  _collapsed: boolean = false;
+
   /** Event emitted when the sidenav is being opened. Use this to synchronize animations. */
   @Output('open-start') onOpenStart = new EventEmitter<void>();
 
@@ -114,6 +119,9 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
 
   /** Event emitted when the sidenav is fully closed. */
   @Output('close') onClose = new EventEmitter<void>();
+
+  /** Event emitted when the sidenav is collapsed. */
+  @Output('collapse') onCollapse = new EventEmitter<void>();
 
   /** Event emitted when the sidenav alignment changes. */
   @Output('align-changed') onAlignChanged = new EventEmitter<void>();
@@ -193,6 +201,7 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
    */
   @Input()
   get opened(): boolean { return this._opened; }
+  get collapsed(): boolean { return this._collapsed; }
   set opened(v: boolean) {
     this.toggle(coerceBooleanProperty(v));
   }
@@ -246,7 +255,20 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
     });
     return this._toggleAnimationPromise;
   }
+  /**
+   * Collapse this sidenav.
+   *
+   * @param isCollapsed Whether the sidenav should be collapsed.
+   * @returns TODO - Resolves with the result of whether the sidenav was collapsed or closed.
+   */
+  collapse(isCollapsed: boolean = !this.collapsed) {
+    this._collapsed = isCollapsed;
+    if (this._focusTrap) {
+      this._focusTrap.enabled = this.isFocusTrapEnabled;
+    }
 
+    this._opened = true;
+  }
   /**
    * Handles the keyboard events.
    * @docs-private
@@ -291,6 +313,9 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
   }
   get _isOpened() {
     return this._opened && !this._toggleAnimationPromise;
+  }
+  get _isCollapsed() {
+    return this._collapsed && !this._toggleAnimationPromise;
   }
   get _isEnd() {
     return this.align == 'end';
@@ -395,6 +420,13 @@ export class MdSidenavContainer implements AfterContentInit {
       .map(sidenav => sidenav!.open()));
   }
 
+  /** Calls `collapse` of both start and end sidenavs */
+  public collapse() {
+    return Promise.all([this._start, this._end]
+        .filter(sidenav => sidenav)
+        .map(sidenav => sidenav!.collapse()));
+  }
+
   /** Calls `close` of both start and end sidenavs */
   public close() {
     return Promise.all([this._start, this._end]
@@ -489,7 +521,9 @@ export class MdSidenavContainer implements AfterContentInit {
   private _isSidenavOpen(side: MdSidenav | null): boolean {
     return side != null && side.opened;
   }
-
+  private _isSidenavCollapsed(side: MdSidenav | null): boolean {
+    return side != null && side.collapsed;
+  }
   /**
    * Return the width of the sidenav, if it's in the proper mode and opened.
    * This may relayout the view, so do not call this often.
@@ -501,13 +535,16 @@ export class MdSidenavContainer implements AfterContentInit {
   }
 
   _getMarginLeft() {
-    return this._left ? this._getSidenavEffectiveWidth(this._left, 'side') : 0;
+    let marginLeft = this._left ? this._getSidenavEffectiveWidth(this._left, 'side') : 0;
+    return this._isSidenavCollapsed(this._left) ? marginLeft / 2 : marginLeft;
   }
 
   _getMarginRight() {
-    return this._right ? this._getSidenavEffectiveWidth(this._right, 'side') : 0;
+    let marginRight = this._right ? this._getSidenavEffectiveWidth(this._right, 'side') : 0;
+    return this._isSidenavCollapsed(this._right) ? marginRight / 2 : marginRight;
   }
 
+  // TODO - position collapsed
   _getPositionLeft() {
     return this._left ? this._getSidenavEffectiveWidth(this._left, 'push') : 0;
   }
