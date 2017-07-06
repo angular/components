@@ -84,7 +84,7 @@ $mat-dense-list-icon-size: 20px;
 
   // list items with more than 3 lines should expand to match
   // the height of its contained text
-  &.mat-multi-line .mat-list-item-content .mat-list-item-content-reverse{
+  &.mat-multi-line .mat-list-item-content .mat-list-item-content-reverse {
     height: 100%;
     padding: 8px $mat-list-side-padding;
   }
