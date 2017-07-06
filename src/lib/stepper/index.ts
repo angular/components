@@ -11,8 +11,10 @@ import {MdStep} from './step';
 import {MdStepper} from './stepper';
 import {MdCommonModule} from '../core';
 import {CommonModule} from '@angular/common';
+import {PortalModule} from "@angular/cdk";
+import {MdButtonModule} from "../button/index";
 @NgModule({
-    imports: [MdCommonModule, CommonModule],
+    imports: [MdCommonModule, CommonModule, PortalModule, MdButtonModule],
     exports: [MdStep, MdStepper, MdCommonModule],
     declarations: [MdStep, MdStepper]
 })

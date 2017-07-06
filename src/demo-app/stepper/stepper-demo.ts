@@ -8,7 +8,7 @@ import {Component} from '@angular/core';
 export class StepperDemo {
     steps = [
         {label: 'Step 1', content: 'Content 1'},
-        {label: 'Step 2', content: 'Content 2', active: true},
-        {label: 'Step 3', content: 'Content 3', disabled: true}
+        {label: 'Step 2', content: 'Content 2'},
+        {label: 'Step 3', content: 'Content 3'},
         ];
 }

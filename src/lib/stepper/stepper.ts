@@ -6,7 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ContentChildren, Input, QueryList} from '@angular/core';
+import {
+    Component, ContentChildren, EventEmitter, Input, Output, QueryList, OnInit,
+    AfterViewChecked, AfterViewInit
+} from '@angular/core';
 import {MdStep} from './step';
 import {TemplatePortal} from '../core';
 
@@ -25,11 +28,9 @@ export class MdStepChangeEvent {
     },
 })
 
-export class MdStepper {
+export class MdStepper implements AfterViewInit {
 
     @ContentChildren(MdStep) _steps: QueryList<MdStep>;
-
-    // @Input('content') _content: TemplatePortal;
 
     @Input()
     get orientation() { return this._orientation; }
@@ -38,15 +39,36 @@ export class MdStepper {
     }
     private _orientation: string;
 
-    activeStep: MdStep;
+    @Output() stepChangeEvent = new EventEmitter<MdStepChangeEvent>();
+
+    selectedStep: MdStep;
+    selectedIndex: number = 0;
+
+    ngAfterViewInit() {
+        this._steps.toArray()[this.selectedIndex].selected = true;
+    }
 
     selectStep(step: MdStep): void {
-        step.active = true;
-        this.activeStep = step;
+        if (!step.active) { return; }
+        this.selectedIndex = this.indexOf(step);
+        this.stepChangeEvent.emit(this._emitStepChangeEvent());
     }
 
     indexOf(step: MdStep): number {
         let stepsArray = this._steps.toArray();
         return stepsArray.indexOf(step);
+    }
+
+    nextStep(): void {
+        this.selectedIndex++;
+        this.stepChangeEvent.emit(this._emitStepChangeEvent());
+    }
+
+    private _emitStepChangeEvent(): MdStepChangeEvent {
+        const event = new MdStepChangeEvent();
+        event.index = this.selectedIndex;
+        event.step = this._steps.toArray()[this.selectedIndex];
+        this.selectedStep = event.step;
+        return event;
     }
 }
