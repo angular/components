@@ -113,14 +113,14 @@ describe('CdkTable', () => {
     dynamicColumnDefFixture.detectChanges();
     dynamicColumnDefFixture.detectChanges();
 
-    const dynamicColumnDefTableEl = dynamicColumnDefFixture.nativeElement.querySelector('cdk-table');
+    const dynamicColumnDefTable = dynamicColumnDefFixture.nativeElement.querySelector('cdk-table');
     const dynamicColumnDefComp = dynamicColumnDefFixture.componentInstance;
 
     // Add a new column and expect it to show up in the table
     let columnA = 'columnA';
     dynamicColumnDefComp.dynamicColumns.push(columnA);
     dynamicColumnDefFixture.detectChanges();
-    expectTableToMatchContent(dynamicColumnDefTableEl, [
+    expectTableToMatchContent(dynamicColumnDefTable, [
       [columnA], // Header row
       [columnA], // Data rows
       [columnA],
@@ -131,7 +131,7 @@ describe('CdkTable', () => {
     let columnB = 'columnB';
     dynamicColumnDefComp.dynamicColumns.push(columnB);
     dynamicColumnDefFixture.detectChanges();
-    expectTableToMatchContent(dynamicColumnDefTableEl, [
+    expectTableToMatchContent(dynamicColumnDefTable, [
       [columnA, columnB], // Header row
       [columnA, columnB], // Data rows
       [columnA, columnB],
@@ -141,7 +141,7 @@ describe('CdkTable', () => {
     // Remove column A expect only column B to be rendered
     dynamicColumnDefComp.dynamicColumns.shift();
     dynamicColumnDefFixture.detectChanges();
-    expectTableToMatchContent(dynamicColumnDefTableEl, [
+    expectTableToMatchContent(dynamicColumnDefTable, [
       [columnB], // Header row
       [columnB], // Data rows
       [columnB],
