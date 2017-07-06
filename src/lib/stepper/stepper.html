@@ -1,3 +1,4 @@
+
 <div class="mat-stepper-container">
     <div *ngFor="let step of _steps" class="mat-step">
         <div class="mat-step-header" (click)="selectStep(step)">
@@ -6,7 +7,7 @@
             <div class="mat-step-label">{{step.label}}</div>
         </div>
         <div *ngIf="!step.isLast" class="connector-line"></div>
-        <div *ngIf="orientation == 'vertical' && step.selected"><ng-content></ng-content></div>
+        <div *ngIf="orientation == 'vertical' && step.selected"><ng-container *ngTemplateOutlet="stepContent"></ng-container></div>
     </div>
 </div>
 <div class="mat-stepper-horizontal" *ngIf="orientation == 'horizontal'">

@@ -39,6 +39,13 @@ export class MdStepper implements AfterViewInit {
     }
     private _orientation: string;
 
+    /** The index of the active tab. */
+    @Input()
+    set selectedIndex(value: number | null) { this._indexToSelect = value; }
+    get selectedIndex(): number | null { return this._selectedIndex; }
+    private _selectedIndex: number | null = null;
+    private _indexToSelect: number | null = null;
+
     @Output() stepChangeEvent = new EventEmitter<MdStepChangeEvent>();
 
     selectedStep: MdStep;
@@ -62,6 +69,7 @@ export class MdStepper implements AfterViewInit {
     nextStep(): void {
         this.selectedIndex++;
         this.stepChangeEvent.emit(this._emitStepChangeEvent());
+        console.log(this.selectedStep.label);
     }
 
     private _emitStepChangeEvent(): MdStepChangeEvent {
