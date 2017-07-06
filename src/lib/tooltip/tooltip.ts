@@ -16,6 +16,8 @@ import {
   OnDestroy,
   Optional,
   Renderer2,
+  ViewContainerRef,
+  ViewEncapsulation
   ViewContainerRef
   ChangeDetectorRef,
   ChangeDetectionStrategy,
@@ -105,10 +107,9 @@ export class MdTooltip implements OnDestroy {
   _tooltipInstance: TooltipComponent | null;
 
   /** Strategy used to reposition the tooltip. Used for enabling/disabling while shown/hidden. */
-  _scrollStrategy: RepositionScrollStrategy;
+  _scrollStrategy: RepositionScrollStrategy | null;
 
   private _position: TooltipPosition = 'below';
-  private _disabled: boolean = false;
   private _tooltipClass: string|string[]|Set<string>|{[key: string]: any};
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
@@ -127,7 +128,6 @@ export class MdTooltip implements OnDestroy {
     }
   }
 
-  private _disabled: boolean = false;
 
   /** Disables the display of the tooltip. */
   @Input('mdTooltipDisabled')
@@ -140,6 +140,7 @@ export class MdTooltip implements OnDestroy {
       this.hide(0);
     }
   }
+  private _disabled: boolean = false;
 
   /** @deprecated */
   @Input('tooltip-position')
@@ -251,10 +252,14 @@ export class MdTooltip implements OnDestroy {
   show(delay: number = this.showDelay): void {
     if (this.disabled || !this._message || !this._message.trim()) { return; }
 
-    this._scrollStrategy.enable();
+    if (this._scrollStrategy) {
+      this._scrollStrategy.enable();
+    }
+
     if (this._tooltipInstance) {
       this._tooltipInstance.show(this._position, delay);
     }
+
     if (this._overlayRef) {
       this._overlayRef.overlayElement.classList.remove('cdk-visually-hidden');
       this._overlayRef.updatePosition();
@@ -263,7 +268,10 @@ export class MdTooltip implements OnDestroy {
 
   /** Hides the tooltip after the delay in ms, defaults to tooltip-delay-hide or 0ms if no input */
   hide(delay: number = this.hideDelay): void {
-    this._scrollStrategy.disable();
+    if (this._scrollStrategy) {
+      this._scrollStrategy.disable();
+    }
+
     if (this._tooltipInstance) {
       this._tooltipInstance.hide(delay);
     }
@@ -276,9 +284,7 @@ export class MdTooltip implements OnDestroy {
 
   /** Returns true if the tooltip is currently visible to the user */
   _isTooltipVisible(): boolean {
-    if (this._tooltipInstance) {
-      return this._tooltipInstance && this._tooltipInstance.isVisible();
-    }
+    return !!this._tooltipInstance && this._tooltipInstance.isVisible();
   }
 
   /** Handles the keydown events on the host element. */
@@ -361,7 +367,10 @@ export class MdTooltip implements OnDestroy {
   private _hideOverlay(): void {
     if (this._overlayRef) {
       this._overlayRef.overlayElement.classList.add('cdk-visually-hidden');
-      this._scrollStrategy.disable();
+
+      if (this._scrollStrategy) {
+        this._scrollStrategy.disable();
+      }
     }
   }
 
@@ -499,8 +508,6 @@ export class TooltipComponent {
   /** Classes to be added to the tooltip. Supports the same syntax as `ngClass`. */
   tooltipClass: string|string[]|Set<string>|{[key: string]: any};
 
-  a11y: string = 'hidden';
-
   /** The timeout ID of any current timer set to show the tooltip */
   _showTimeoutId: number;
 
@@ -582,7 +589,7 @@ export class TooltipComponent {
 
   /** Whether the tooltip is being displayed */
   isVisible(): boolean {
-    return this._visibility === 'visible';
+    return this._visibility === 'visible';\
   }
 
   /** Sets the tooltip transform origin according to the tooltip position */
