@@ -104,11 +104,8 @@ export class CdkTable<T> implements CollectionViewer {
   /** Subscription that listens for the data provided by the data source. */
   private _renderChangeSubscription: Subscription | null;
 
-  /**
-   * Map of all the user's defined columns identified by name.
-   * Contains the header and data-cell templates.
-   */
-  private _columnDefinitionsByName = new Map<string,  CdkColumnDef>();
+  /** Map of all the user's defined columns (header and data cell template) identified by name. */
+  private _columnDefinitionsMap = new Map<string,  CdkColumnDef>();
 
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<T>;
@@ -131,15 +128,6 @@ export class CdkTable<T> implements CollectionViewer {
   get trackBy(): TrackByFunction<T> { return this._trackByFn; }
   private _trackByFn: TrackByFunction<T>;
 
-  // TODO(andrewseguin): Remove max value as the end index
-  //   and instead calculate the view on init and scroll.
-  /**
-   * Stream containing the latest information on the range of rows being displayed on screen.
-   * Can be used by the data source to as a heuristic of what data should be provided.
-   */
-  viewChange =
-      new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
-
   /**
    * Provides a stream containing the latest data array to render. Influenced by the table's
    * stream of view window (what rows are currently on screen).
@@ -152,6 +140,15 @@ export class CdkTable<T> implements CollectionViewer {
     }
   }
   private _dataSource: DataSource<T>;
+
+  // TODO(andrewseguin): Remove max value as the end index
+  //   and instead calculate the view on init and scroll.
+  /**
+   * Stream containing the latest information on what rows are being displayed on screen.
+   * Can be used by the data source to as a heuristic of what data should be provided.
+   */
+  viewChange =
+      new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
 
   // Placeholders within the table's template where the header and data rows will be inserted.
   @ViewChild(RowPlaceholder) _rowPlaceholder: RowPlaceholder;
@@ -185,13 +182,12 @@ export class CdkTable<T> implements CollectionViewer {
   }
 
   ngAfterContentInit() {
-    this._updateColumnDefinitions();
-    this._columnDefinitions.changes.subscribe(() => this._updateColumnDefinitions());
+    this._cacheColumnDefinitionsByName();
+    this._columnDefinitions.changes.subscribe(() => this._cacheColumnDefinitionsByName());
   }
 
   ngAfterContentChecked() {
-    console.log('Content checked');
-    this._updateColumnDefinitions();
+    this._cacheColumnDefinitionsByName();
   }
 
   ngAfterViewInit() {
@@ -224,14 +220,13 @@ export class CdkTable<T> implements CollectionViewer {
 
 
   /** Update the map containing the content's column definitions. */
-  private _updateColumnDefinitions() {
-    console.log('Updating columns');
-    this._columnDefinitionsByName.clear();
+  private _cacheColumnDefinitionsByName() {
+    this._columnDefinitionsMap.clear();
     this._columnDefinitions.forEach(columnDef => {
-      if (this._columnDefinitionsByName.has(columnDef.name)) {
+      if (this._columnDefinitionsMap.has(columnDef.name)) {
         throw getTableDuplicateColumnNameError(columnDef.name);
       }
-      this._columnDefinitionsByName.set(columnDef.name, columnDef);
+      this._columnDefinitionsMap.set(columnDef.name, columnDef);
     });
   }
 
@@ -388,7 +383,7 @@ export class CdkTable<T> implements CollectionViewer {
   private _getHeaderCellTemplatesForRow(headerDef: CdkHeaderRowDef): CdkHeaderCellDef[] {
     if (!headerDef.columns) { return []; }
     return headerDef.columns.map(columnId => {
-      const column = this._columnDefinitionsByName.get(columnId);
+      const column = this._columnDefinitionsMap.get(columnId);
 
       if (!column) {
         throw getTableUnknownColumnError(columnId);
@@ -405,7 +400,7 @@ export class CdkTable<T> implements CollectionViewer {
   private _getCellTemplatesForRow(rowDef: CdkRowDef): CdkCellDef[] {
     if (!rowDef.columns) { return []; }
     return rowDef.columns.map(columnId => {
-      const column = this._columnDefinitionsByName.get(columnId);
+      const column = this._columnDefinitionsMap.get(columnId);
 
       if (!column) {
         throw getTableUnknownColumnError(columnId);

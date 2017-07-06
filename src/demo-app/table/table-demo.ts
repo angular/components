@@ -51,6 +51,11 @@ export class TableDemo {
     this.dynamicColumnIds = this.dynamicColumnDefs.map(columnDef => columnDef.id);
   }
 
+  removeDynamicColumnDef() {
+    this.dynamicColumnDefs.pop();
+    this.dynamicColumnIds.pop();
+  }
+
   connect() {
     this.displayedColumns = ['userId', 'userName', 'progress', 'color'];
     this.dataSource = new PersonDataSource(this._peopleDatabase,

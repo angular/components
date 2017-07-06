@@ -8,7 +8,7 @@ import {combineLatest} from 'rxjs/observable/combineLatest';
 import {CdkTableModule} from './index';
 import {map} from 'rxjs/operator/map';
 
-fdescribe('CdkTable', () => {
+describe('CdkTable', () => {
   let fixture: ComponentFixture<SimpleCdkTableApp>;
 
   let component: SimpleCdkTableApp;
@@ -108,14 +108,45 @@ fdescribe('CdkTable', () => {
     expect(fixture.nativeElement.querySelector('cdk-table').getAttribute('role')).toBe('treegrid');
   });
 
-  fit('should be able to dynamically add/remove column definitions', () => {
+  it('should be able to dynamically add/remove column definitions', () => {
     const dynamicColumnDefFixture = TestBed.createComponent(DynamicColumnDefinitionsCdkTableApp);
     dynamicColumnDefFixture.detectChanges();
-
-    const dynamicColumnDefComp = dynamicColumnDefFixture.componentInstance;
-    expect(dynamicColumnDefComp.dynamicColumns.push('columnA'));
-
     dynamicColumnDefFixture.detectChanges();
+
+    const dynamicColumnDefTableEl = dynamicColumnDefFixture.nativeElement.querySelector('cdk-table');
+    const dynamicColumnDefComp = dynamicColumnDefFixture.componentInstance;
+
+    // Add a new column and expect it to show up in the table
+    let columnA = 'columnA';
+    dynamicColumnDefComp.dynamicColumns.push(columnA);
+    dynamicColumnDefFixture.detectChanges();
+    expectTableToMatchContent(dynamicColumnDefTableEl, [
+      [columnA], // Header row
+      [columnA], // Data rows
+      [columnA],
+      [columnA],
+    ]);
+
+    // Add another new column and expect it to show up in the table
+    let columnB = 'columnB';
+    dynamicColumnDefComp.dynamicColumns.push(columnB);
+    dynamicColumnDefFixture.detectChanges();
+    expectTableToMatchContent(dynamicColumnDefTableEl, [
+      [columnA, columnB], // Header row
+      [columnA, columnB], // Data rows
+      [columnA, columnB],
+      [columnA, columnB],
+    ]);
+
+    // Remove column A expect only column B to be rendered
+    dynamicColumnDefComp.dynamicColumns.shift();
+    dynamicColumnDefFixture.detectChanges();
+    expectTableToMatchContent(dynamicColumnDefTableEl, [
+      [columnB], // Header row
+      [columnB], // Data rows
+      [columnB],
+      [columnB],
+    ]);
   });
 
   it('should re-render the rows when the data changes', () => {
@@ -602,8 +633,8 @@ class TrackByCdkTableApp {
   template: `
     <cdk-table [dataSource]="dataSource">
       <ng-container [cdkColumnDef]="column" *ngFor="let column of dynamicColumns">
-        <cdk-header-cell *cdkHeaderCellDef> {{column}}</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> {{column}}</cdk-cell>
+        <cdk-header-cell *cdkHeaderCellDef> {{column}} </cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{column}} </cdk-cell>
       </ng-container>
 
       <cdk-header-row *cdkHeaderRowDef="dynamicColumns"></cdk-header-row>
@@ -613,14 +644,9 @@ class TrackByCdkTableApp {
 })
 class DynamicColumnDefinitionsCdkTableApp {
   dynamicColumns: any[] = [];
-
   dataSource: FakeDataSource = new FakeDataSource();
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
-
-  addDynamicColumnDef() {
-    this.dynamicColumns.push(this.dynamicColumns.length);
-  }
 }
 
 @Component({
