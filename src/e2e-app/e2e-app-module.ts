@@ -22,8 +22,7 @@ import {BlockScrollStrategyE2E} from './block-scroll-strategy/block-scroll-strat
 import {
   OverlayContainer, FullscreenOverlayContainer, MdGridListModule, MdProgressBarModule,
   MdProgressSpinnerModule, MdTabsModule, MdRadioModule, MdSlideToggleModule, MdMenuModule,
-  MdListModule, MdInputModule, MdIconModule, MdDialogModule, MdCheckboxModule, MdButtonModule,
-  ScrollDispatchModule,
+  MdListModule, MdInputModule, MdIconModule, MdDialogModule, MdCheckboxModule, MdButtonModule
 } from '@angular/material';
 
 /**
@@ -43,9 +42,7 @@ import {
     MdRadioModule,
     MdProgressBarModule,
     MdProgressSpinnerModule,
-    MdTabsModule,
-    ScrollDispatchModule,
-
+    MdTabsModule
   ]
 })
 export class E2eMaterialModule {}
@@ -76,6 +73,7 @@ export class E2eMaterialModule {}
     SlideToggleE2E,
     TestDialog,
     TestDialogFullScreen,
+    BlockScrollStrategyE2E
   ],
   bootstrap: [E2EApp],
   providers: [
