@@ -2,10 +2,17 @@
   <a *ngFor="let component of category.items"
     class="docs-component-list-item"
     [routerLink]="['/components/', component.id]">
-    <docs-svg-viewer class="docs-component-list-item-icon"
-                     [attr.aria-label]="component.name"
-                     [src]="'../../../assets/img/components/' + component.id + '.svg'">
-    </docs-svg-viewer>
-    {{component.name}}
+    <md-card class="docs-component-list-card">
+      <md-card-title class="docs-component-list-card-title">{{component.name}}</md-card-title>
+      <div class="docs-component-list-icon-spacer"></div>
+      <div class="docs-component-list-item-icon">
+        <docs-svg-viewer
+            [attr.aria-label]="component.name"
+            scaleToContainer="true"
+            [src]="'../../../assets/img/components/' + component.id + '.svg'"></docs-svg-viewer>
+      </div>
+    </md-card>
   </a>
 </div>
+
+
