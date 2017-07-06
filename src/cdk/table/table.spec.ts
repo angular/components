@@ -7,6 +7,7 @@ import {Observable} from 'rxjs/Observable';
 import {combineLatest} from 'rxjs/observable/combineLatest';
 import {CdkTableModule} from './index';
 import {map} from 'rxjs/operator/map';
+import {getTableDuplicateColumnNameError, getTableUnknownColumnError} from './table-errors';
 
 describe('CdkTable', () => {
   let fixture: ComponentFixture<SimpleCdkTableApp>;
@@ -26,6 +27,8 @@ describe('CdkTable', () => {
         TrackByCdkTableApp,
         DynamicColumnDefinitionsCdkTableApp,
         RowContextCdkTableApp,
+        DuplicateColumnDefNameCdkTableApp,
+        MissingColumnDefCdkTableApp,
       ],
     }).compileComponents();
   }));
@@ -106,6 +109,16 @@ describe('CdkTable', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('cdk-table').getAttribute('role')).toBe('treegrid');
+  });
+
+  it('should throw an error if two column definitions have the same name', () => {
+    expect(() => TestBed.createComponent(DuplicateColumnDefNameCdkTableApp).detectChanges())
+        .toThrowError(getTableDuplicateColumnNameError('column_a').message);
+  });
+
+  it('should throw an error if a column definition is requested but not defined', () => {
+    expect(() => TestBed.createComponent(MissingColumnDefCdkTableApp).detectChanges())
+        .toThrowError(getTableUnknownColumnError('column_a').message);
   });
 
   it('should be able to dynamically add/remove column definitions', () => {
@@ -667,6 +680,45 @@ class CustomRoleCdkTableApp {
   columnsToRender = ['column_a'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="['column_a']"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: ['column_a']"></cdk-row>
+    </cdk-table>
+  `
+})
+class DuplicateColumnDefNameCdkTableApp {
+  dataSource: FakeDataSource = new FakeDataSource();
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_b">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="['column_a']"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: ['column_a']"></cdk-row>
+    </cdk-table>
+  `
+})
+class MissingColumnDefCdkTableApp {
+  dataSource: FakeDataSource = new FakeDataSource();
 }
 
 @Component({
