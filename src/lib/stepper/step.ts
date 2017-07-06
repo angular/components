@@ -12,7 +12,7 @@ import {TemplatePortal, PortalHostDirective} from '../core';
 @Component({
     moduleId: module.id,
     selector: 'mat-step',
-    templateUrl: '',
+    templateUrl: 'step.html',
 })
 export class MdStep {
 
@@ -24,7 +24,7 @@ export class MdStep {
     set active(value: boolean) {
         this._active = value;
     }
-    private _active: boolean;
+    private _active: boolean = true;
 
     @Input()
     label: string;
@@ -38,9 +38,15 @@ export class MdStep {
 
     isLast: boolean = false;
 
-    // /** The portal that will be the hosted content of the step */
-    // private _contentPortal: TemplatePortal | null = null;
-    // get content(): TemplatePortal | null { return this._contentPortal; }
+    private _selected: boolean = false;
+    set selected(value: boolean) {
+        this._selected = value;
+    }
+    get selected(): boolean { return this._selected; }
+
+    /** The portal that will be the hosted content of the step */
+    private _contentPortal: TemplatePortal | null = null;
+    get content(): TemplatePortal | null { return this._contentPortal; }
 
     // constructor(private _viewContainerRef: ViewContainerRef) {}
 

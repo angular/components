@@ -1,7 +1,9 @@
 <h2>Veritcal Stepper Demo</h2>
 <mat-stepper [orientation]="'vertical'">
     <mat-step *ngFor="let step of steps" [label]="step.label"
-              [active]="step.active" [completed]="step.completed">{{step.content}}</mat-step>
+              [active]="step.active" [completed]="step.completed">
+        <div *ngIf="step.selected">{{step.content}}</div>
+    </mat-step>
 </mat-stepper>
 
 <h2>Horizontal Stepper Demo</h2>
