@@ -9,7 +9,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Directive, IterableChanges,
+  Directive,
+  IterableChanges,
   IterableDiffer,
   IterableDiffers,
   SimpleChanges,
@@ -17,7 +18,6 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import {CdkCellDef} from './cell';
-import {Subject} from 'rxjs/Subject';
 
 /**
  * The row template that can be used by the md-table. Should not be used outside of the
@@ -34,7 +34,7 @@ export abstract class BaseRowDef {
   columns: string[];
 
   /** Differ used to check if any changes were made to the columns. */
-  columnsDiffer: IterableDiffer<any>;
+  protected _columnsDiffer: IterableDiffer<any>;
 
   constructor(public template: TemplateRef<any>,
               protected _differs: IterableDiffers) { }
@@ -43,8 +43,8 @@ export abstract class BaseRowDef {
     // Create a new columns differ if one does not yet exist. Initialize it based on initial value
     // of the columns property.
     const columns = changes['columns'].currentValue;
-    if (!this.columnsDiffer && columns) {
-      this.columnsDiffer = this._differs.find(columns).create();
+    if (!this._columnsDiffer && columns) {
+      this._columnsDiffer = this._differs.find(columns).create();
       this._columnsDiffer.diff(columns);
     }
   }
@@ -54,7 +54,7 @@ export abstract class BaseRowDef {
    * if there is no difference.
    */
   getColumnsDiff(): IterableChanges<any> | null {
-    return this.columnsDiffer.diff(this.columns);
+    return this._columnsDiffer.diff(this.columns);
   }
 }
 

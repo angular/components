@@ -36,7 +36,6 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
 import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
-import {startWith} from 'rxjs/operator/startWith';
 
 /**
  * Returns an error to be thrown when attempting to find an unexisting column.
