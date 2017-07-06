@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
-import {TemplatePortal, PortalHostDirective} from '../core';
+import {Component, ContentChild, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {TemplatePortal} from '../core/portal/portal';
 
 @Component({
     moduleId: module.id,
@@ -16,7 +16,7 @@ import {TemplatePortal, PortalHostDirective} from '../core';
 })
 export class MdStep {
 
-    @ViewChild('stepContent') stepContent: TemplateRef<any>;
+    @ViewChild(TemplateRef) stepContent: TemplateRef<any>;
     // @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
     @Input()
@@ -44,11 +44,15 @@ export class MdStep {
     }
     get selected(): boolean { return this._selected; }
 
-    /** The portal that will be the hosted content of the step */
-    private _contentPortal: TemplatePortal | null = null;
-    get content(): TemplatePortal | null { return this._contentPortal; }
+    // /** The portal that will be the hosted content of the step */
+    // private _contentPortal: TemplatePortal | null = null;
+    // get content(): TemplatePortal | null { return this._contentPortal; }
 
     // constructor(private _viewContainerRef: ViewContainerRef) {}
+    //
+    // ngOnInit() {
+    //     this._contentPortal = new TemplatePortal(this.stepContent, this._viewContainerRef);
+    // }
 
 
 }

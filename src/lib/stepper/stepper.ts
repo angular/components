@@ -12,6 +12,8 @@ import {
 } from '@angular/core';
 import {MdStep} from './step';
 import {TemplatePortal} from '../core';
+import {Observable} from 'rxjs/Observable';
+import {map} from '../core/rxjs/index';
 
 export class MdStepChangeEvent {
     index: number;
@@ -28,7 +30,7 @@ export class MdStepChangeEvent {
     },
 })
 
-export class MdStepper implements AfterViewInit {
+export class MdStepper {
 
     @ContentChildren(MdStep) _steps: QueryList<MdStep>;
 
@@ -41,23 +43,34 @@ export class MdStepper implements AfterViewInit {
 
     /** The index of the active tab. */
     @Input()
-    set selectedIndex(value: number | null) { this._indexToSelect = value; }
-    get selectedIndex(): number | null { return this._selectedIndex; }
-    private _selectedIndex: number | null = null;
-    private _indexToSelect: number | null = null;
+    set selectedIndex(value: number) {
+        this._selectedIndex = value;
+        //this.selectedStep = this._steps.toArray()[this._selectedIndex];
+        //this.stepChangeEvent.emit(this._emitStepChangeEvent());
+    }
+    get selectedIndex(): number { return this._selectedIndex; }
+    private _selectedIndex: number;
+
+    @Output() get selectedIndexChange(): Observable<number> {
+        return map.call(this.stepChangeEvent, event => event.index);
+    }
 
     @Output() stepChangeEvent = new EventEmitter<MdStepChangeEvent>();
 
-    selectedStep: MdStep;
-    selectedIndex: number = 0;
-
-    ngAfterViewInit() {
-        this._steps.toArray()[this.selectedIndex].selected = true;
+    get selectedStep(): MdStep {
+        return this._steps.toArray()[this._selectedIndex];
     }
+    private _selectedStep: MdStep;
+
+    //selectedIndex: number = 0;
+
+    // ngAfterContentChecked() {
+    //     this._steps.toArray()[this._selectedIndex].selected = true;
+    // }
 
     selectStep(step: MdStep): void {
         if (!step.active) { return; }
-        this.selectedIndex = this.indexOf(step);
+        this._selectedIndex = this.indexOf(step);
         this.stepChangeEvent.emit(this._emitStepChangeEvent());
     }
 
@@ -67,16 +80,15 @@ export class MdStepper implements AfterViewInit {
     }
 
     nextStep(): void {
-        this.selectedIndex++;
+        this._selectedIndex++;
         this.stepChangeEvent.emit(this._emitStepChangeEvent());
-        console.log(this.selectedStep.label);
     }
 
     private _emitStepChangeEvent(): MdStepChangeEvent {
         const event = new MdStepChangeEvent();
-        event.index = this.selectedIndex;
-        event.step = this._steps.toArray()[this.selectedIndex];
-        this.selectedStep = event.step;
+        event.index = this._selectedIndex;
+        event.step = this._steps.toArray()[this._selectedIndex];
+        this._selectedStep = event.step;
         return event;
     }
 }

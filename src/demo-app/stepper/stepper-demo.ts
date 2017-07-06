@@ -6,6 +6,8 @@ import {Component} from '@angular/core';
     templateUrl: 'stepper-demo.html',
 })
 export class StepperDemo {
+    verticalActiveIndex = 0;
+    horizontalActiveIndex = 0;
     steps = [
         {label: 'Step 1', content: 'Content 1'},
         {label: 'Step 2', content: 'Content 2'},
