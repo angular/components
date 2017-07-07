@@ -23,7 +23,8 @@ import {BlockScrollStrategyE2E} from './block-scroll-strategy/block-scroll-strat
 import {
   OverlayContainer, FullscreenOverlayContainer, MdGridListModule, MdProgressBarModule,
   MdProgressSpinnerModule, MdTabsModule, MdRadioModule, MdSlideToggleModule, MdMenuModule,
-  MdListModule, MdInputModule, MdIconModule, MdDialogModule, MdCheckboxModule, MdButtonModule, MdSidenavModule
+  MdListModule, MdInputModule, MdIconModule, MdDialogModule, MdCheckboxModule, MdButtonModule,
+  MdSidenavModule
 } from '@angular/material';
 
 /**
