@@ -18,12 +18,13 @@ tmpAssetClonePath=/tmp/material-assets
 docsContentRepo=https://github.com/angular/material2-docs-content
 
 # Dirs for each of api docs, guides, overviews, and live-examples within the
-# cloned content repo.
+# cloned content repo. The absense of the trailing slash here is significant if
+# someone is running on a Mac.
 apiPath=${tmpAssetClonePath}/api
 guidesPath=${tmpAssetClonePath}/guides
 overviewPath=${tmpAssetClonePath}/overview
-examplesPath=${tmpAssetClonePath}/examples/
-plunkerExamplesPath=${tmpAssetClonePath}/plunker/examples/
+examplesPath=${tmpAssetClonePath}/examples
+plunkerExamplesPath=${tmpAssetClonePath}/plunker/examples
 
 # Create folders into which to copy content and assets.
 mkdir -p ${tmpAssetClonePath}
@@ -33,13 +34,13 @@ mkdir -p ${exampleAssetsPath} ${docAssetsPath}
 git clone ${docsContentRepo} ${tmpAssetClonePath} --depth 1
 
 # Copy files over to their proper place in src/assets
-cp -r ${apiPath} ${overviewPath} ${guidesPath} ${docAssetsPath}
-cp -r ${examplesPath} ${exampleAssetsPath}
-cp -r ${plunkerExamplesPath} ${plunkerExampleAssetsPath}
+cp -R ${apiPath} ${overviewPath} ${guidesPath} ${docAssetsPath}
+cp -R ${examplesPath} ${exampleAssetsPath}
+cp -R ${plunkerExamplesPath} ${plunkerExampleAssetsPath}
 
 # Install the live examples component library
 mkdir -p ./node_modules/@angular/material-examples
-cp -r ${tmpAssetClonePath}/examples-package/* ./node_modules/@angular/material-examples
+cp -R ${tmpAssetClonePath}/examples-package/* ./node_modules/@angular/material-examples
 
 # Remove temporary directory
 rm -rf ${tmpAssetClonePath}
