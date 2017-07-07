@@ -4,6 +4,7 @@ import {Component} from '@angular/core';
     moduleId: module.id,
     selector: 'stepper-demo',
     templateUrl: 'stepper-demo.html',
+    //styleUrls: ['stepper-demo.scss'],
 })
 export class StepperDemo {
     verticalActiveIndex = 0;

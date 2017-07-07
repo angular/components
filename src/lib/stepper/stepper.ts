@@ -24,7 +24,7 @@ export class MdStepChangeEvent {
     moduleId: module.id,
     selector: 'mat-stepper',
     templateUrl: 'stepper.html',
-    //styleUrls: ['stepper.scss'],
+    styleUrls: ['stepper.scss'],
     host: {
         '[attr.aria-orientation]': 'orientation',
     },
