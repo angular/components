@@ -9,6 +9,9 @@ import {Component, Directive, Input, Output,
   OnDestroy, AfterViewInit, ElementRef, Injectable, Optional} from '@angular/core';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
 import {extendObject} from '../core/util/object-extend';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/debounceTime';
 
 
 /**
@@ -115,11 +118,21 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   attach() {
-    this.upperScrollableContainer.addEventListener('scroll', this._onScrollBind, false);
-    this.upperScrollableContainer.addEventListener('resize', this._onResizeBind, false);
+    // this.upperScrollableContainer.addEventListener('scroll', this._onScrollBind, false);
+    // this.upperScrollableContainer.addEventListener('resize', this._onResizeBind, false);
+    //
+    // // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
+    // this.upperScrollableContainer.addEventListener('touchmove', this._onTouchMoveBind, false);
+
+    Observable.fromEvent(this.upperScrollableContainer, 'scroll').debounceTime(5)
+      .subscribe(() => this.defineRestrictionsAndStick());
 
     // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
-    this.upperScrollableContainer.addEventListener('touchmove', this._onTouchMoveBind, false);
+    Observable.fromEvent(this.upperScrollableContainer, 'touchmove').debounceTime(5)
+      .subscribe(() => this.defineRestrictionsAndStick());
+
+    Observable.fromEvent(this.upperScrollableContainer, 'resize').debounceTime(5)
+      .subscribe(() => this.onResize());
   }
 
   onScroll(): void {
