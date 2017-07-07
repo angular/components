@@ -37,13 +37,12 @@ import {PlatformDemo} from './platform/platform-demo';
 import {AutocompleteDemo} from './autocomplete/autocomplete-demo';
 import {InputDemo} from './input/input-demo';
 import {StyleDemo} from './style/style-demo';
-import {DataTableDemo} from './data-table/data-table-demo';
-import {PeopleDatabase} from './data-table/people-database';
+import {TableDemo} from './table/table-demo';
+import {PeopleDatabase} from './table/people-database';
 import {DatepickerDemo} from './datepicker/datepicker-demo';
 import {TypographyDemo} from './typography/typography-demo';
 import {ExpansionDemo} from './expansion/expansion-demo';
 import {
-  CdkDataTableModule,
   FullscreenOverlayContainer,
   MdAutocompleteModule,
   MdButtonModule,
@@ -52,6 +51,7 @@ import {
   MdCheckboxModule,
   MdChipsModule,
   MdCoreModule,
+  MdTableModule,
   MdDatepickerModule,
   MdDialogModule,
   MdExpansionModule,
@@ -61,6 +61,7 @@ import {
   MdListModule,
   MdMenuModule,
   MdNativeDateModule,
+  MdPaginatorModule,
   MdProgressBarModule,
   MdProgressSpinnerModule,
   MdRadioModule,
@@ -70,13 +71,15 @@ import {
   MdSliderModule,
   MdSlideToggleModule,
   MdSnackBarModule,
+  MdSortModule,
   MdTabsModule,
   MdToolbarModule,
   MdTooltipModule,
   OverlayContainer,
   StyleModule
 } from '@angular/material';
-import {TableHeaderDemo} from './data-table/table-header-demo';
+import {CdkTableModule} from '@angular/cdk';
+import {TableHeaderDemo} from './table/table-header-demo';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
@@ -89,6 +92,7 @@ import {TableHeaderDemo} from './data-table/table-header-demo';
     MdCardModule,
     MdCheckboxModule,
     MdChipsModule,
+    MdTableModule,
     MdDatepickerModule,
     MdDialogModule,
     MdExpansionModule,
@@ -98,6 +102,7 @@ import {TableHeaderDemo} from './data-table/table-header-demo';
     MdListModule,
     MdMenuModule,
     MdCoreModule,
+    MdPaginatorModule,
     MdProgressBarModule,
     MdProgressSpinnerModule,
     MdRadioModule,
@@ -107,11 +112,12 @@ import {TableHeaderDemo} from './data-table/table-header-demo';
     MdSlideToggleModule,
     MdSliderModule,
     MdSnackBarModule,
+    MdSortModule,
     MdTabsModule,
     MdToolbarModule,
     MdTooltipModule,
     MdNativeDateModule,
-    CdkDataTableModule,
+    CdkTableModule,
     StyleModule
   ]
 })
@@ -136,7 +142,6 @@ export class DemoMaterialModule {}
     CardDemo,
     ChipsDemo,
     CheckboxDemo,
-    DataTableDemo,
     DatepickerDemo,
     DemoApp,
     DemoAppOnPush,
@@ -171,6 +176,7 @@ export class DemoMaterialModule {}
     TableHeaderDemo,
     ToolbarDemo,
     TooltipDemo,
+    TableDemo,
     TabsDemo,
     SunnyTabContent,
     RainyTabContent,

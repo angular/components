@@ -20,9 +20,9 @@ import {
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
 import {Platform} from '../platform/platform';
-
-import 'rxjs/add/observable/of';
+import {of as observableOf} from 'rxjs/observable/of';
 
 
 // This is the value used by AngularJS Material. Through trial and error (on iPhone 6S) they found
@@ -80,7 +80,7 @@ export class FocusOriginMonitor {
       checkChildren: boolean): Observable<FocusOrigin> {
     // Do nothing if we're not on the browser platform.
     if (!this._platform.isBrowser) {
-      return Observable.of(null);
+      return observableOf(null);
     }
     // Check if we're already monitoring this element.
     if (this._elementInfo.has(element)) {
@@ -288,7 +288,7 @@ export class FocusOriginMonitor {
    * @param event The blur event.
    * @param element The monitored element.
    */
-  private _onBlur(event: FocusEvent, element: HTMLElement) {
+  _onBlur(event: FocusEvent, element: HTMLElement) {
     // If we are counting child-element-focus as focused, make sure that we aren't just blurring in
     // order to focus another child of the monitored element.
     const elementInfo = this._elementInfo.get(element);
@@ -317,11 +317,12 @@ export class FocusOriginMonitor {
   selector: '[cdkMonitorElementFocus], [cdkMonitorSubtreeFocus]',
 })
 export class CdkMonitorFocus implements OnDestroy {
+  private _monitorSubscription: Subscription;
   @Output() cdkFocusChange = new EventEmitter<FocusOrigin>();
 
   constructor(private _elementRef: ElementRef, private _focusOriginMonitor: FocusOriginMonitor,
               renderer: Renderer2) {
-    this._focusOriginMonitor.monitor(
+    this._monitorSubscription = this._focusOriginMonitor.monitor(
         this._elementRef.nativeElement, renderer,
         this._elementRef.nativeElement.hasAttribute('cdkMonitorSubtreeFocus'))
         .subscribe(origin => this.cdkFocusChange.emit(origin));
@@ -329,6 +330,7 @@ export class CdkMonitorFocus implements OnDestroy {
 
   ngOnDestroy() {
     this._focusOriginMonitor.stopMonitoring(this._elementRef.nativeElement);
+    this._monitorSubscription.unsubscribe();
   }
 }
 

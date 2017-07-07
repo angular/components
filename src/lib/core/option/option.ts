@@ -18,7 +18,7 @@ import {
   Optional,
 } from '@angular/core';
 import {ENTER, SPACE} from '../keyboard/keycodes';
-import {coerceBooleanProperty} from '../coercion/boolean-property';
+import {coerceBooleanProperty} from '@angular/cdk';
 import {MATERIAL_COMPATIBILITY_MODE} from '../../core/compatibility/compatibility';
 import {MdOptgroup} from './optgroup';
 
@@ -149,6 +149,9 @@ export class MdOption {
   _handleKeydown(event: KeyboardEvent): void {
     if (event.keyCode === ENTER || event.keyCode === SPACE) {
       this._selectViaInteraction();
+
+      // Prevent the page from scrolling down and form submits.
+      event.preventDefault();
     }
   }
 

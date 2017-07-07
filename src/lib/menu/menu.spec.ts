@@ -21,7 +21,7 @@ import {OverlayContainer} from '../core/overlay/overlay-container';
 import {Directionality, Direction} from '../core/bidi/index';
 import {extendObject} from '../core/util/object-extend';
 import {ESCAPE} from '../core/keyboard/keycodes';
-import {dispatchKeyboardEvent} from '../core/testing/dispatch-events';
+import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 
 
 describe('MdMenu', () => {
@@ -130,6 +130,20 @@ describe('MdMenu', () => {
 
     expect(panel.classList).toContain('custom-one');
     expect(panel.classList).toContain('custom-two');
+  });
+
+  it('should set the "menu" role on the overlay panel', () => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const menuPanel = overlayContainerElement.querySelector('.mat-menu-panel');
+
+    expect(menuPanel).toBeTruthy('Expected to find a menu panel.');
+
+    const role = menuPanel ? menuPanel.getAttribute('role') : '';
+    expect(role).toBe('menu', 'Expected panel to have the "menu" role.');
   });
 
   describe('positions', () => {

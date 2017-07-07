@@ -26,11 +26,9 @@ import {MdOption} from '../core/option/option';
 import {MdInputContainer} from '../input/input-container';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {dispatchFakeEvent} from '../core/testing/dispatch-events';
-import {createKeyboardEvent} from '../core/testing/event-objects';
-import {typeInElement} from '../core/testing/type-in-element';
+import {createKeyboardEvent, dispatchFakeEvent, typeInElement} from '@angular/cdk/testing';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
-import 'rxjs/add/operator/map';
+import {RxChain, map, startWith, filter} from '../core/rxjs/index';
 
 
 describe('MdAutocomplete', () => {
@@ -53,6 +51,7 @@ describe('MdAutocomplete', () => {
         AutocompleteWithoutForms,
         NgIfAutocomplete,
         AutocompleteWithNgModel,
+        AutocompleteWithNumbers,
         AutocompleteWithOnPushDelay,
         AutocompleteWithNativeInput,
         AutocompleteWithoutPanel
@@ -146,7 +145,7 @@ describe('MdAutocomplete', () => {
         });
       }));
 
-    it('should close the panel when input loses focus', async(() => {
+    it('should close the panel when the user clicks away', async(() => {
       dispatchFakeEvent(input, 'focusin');
       fixture.detectChanges();
 
@@ -157,6 +156,20 @@ describe('MdAutocomplete', () => {
             .toBe(false, `Expected clicking outside the panel to set its state to closed.`);
         expect(overlayContainerElement.textContent)
             .toEqual('', `Expected clicking outside the panel to close the panel.`);
+      });
+    }));
+
+    it('should close the panel when the user taps away on a touch device', async(() => {
+      dispatchFakeEvent(input, 'focus');
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        dispatchFakeEvent(document, 'touchend');
+
+        expect(fixture.componentInstance.trigger.panelOpen)
+            .toBe(false, `Expected tapping outside the panel to set its state to closed.`);
+        expect(overlayContainerElement.textContent)
+            .toEqual('', `Expected tapping outside the panel to close the panel.`);
       });
     }));
 
@@ -534,6 +547,7 @@ describe('MdAutocomplete', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
     let input: HTMLInputElement;
     let DOWN_ARROW_EVENT: KeyboardEvent;
+    let UP_ARROW_EVENT: KeyboardEvent;
     let ENTER_EVENT: KeyboardEvent;
 
     beforeEach(() => {
@@ -542,6 +556,7 @@ describe('MdAutocomplete', () => {
 
       input = fixture.debugElement.query(By.css('input')).nativeElement;
       DOWN_ARROW_EVENT = createKeyboardEvent('keydown', DOWN_ARROW);
+      UP_ARROW_EVENT = createKeyboardEvent('keydown', UP_ARROW);
       ENTER_EVENT = createKeyboardEvent('keydown', ENTER);
 
       fixture.componentInstance.trigger.openPanel();
@@ -600,7 +615,6 @@ describe('MdAutocomplete', () => {
       const optionEls =
           overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
 
-      const UP_ARROW_EVENT = createKeyboardEvent('keydown', UP_ARROW);
       fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
       tick();
       fixture.detectChanges();
@@ -754,13 +768,70 @@ describe('MdAutocomplete', () => {
       const scrollContainer =
           document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
 
-      const UP_ARROW_EVENT = createKeyboardEvent('keydown', UP_ARROW);
       fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
       tick();
       fixture.detectChanges();
 
       // Expect option bottom minus the panel height (528 - 256 = 272)
       expect(scrollContainer.scrollTop).toEqual(272, `Expected panel to reveal last option.`);
+    }));
+
+    it('should not scroll to active options that are fully in the panel', fakeAsync(() => {
+      tick();
+      const scrollContainer =
+          document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+      tick();
+      fixture.detectChanges();
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+      // These down arrows will set the 6th option active, below the fold.
+      [1, 2, 3, 4, 5].forEach(() => {
+        fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+        tick();
+      });
+
+      // Expect option bottom minus the panel height (288 - 256 = 32)
+      expect(scrollContainer.scrollTop)
+          .toEqual(32, `Expected panel to reveal the sixth option.`);
+
+      // These up arrows will set the 2nd option active
+      [4, 3, 2, 1].forEach(() => {
+        fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
+        tick();
+      });
+
+      // Expect no scrolling to have occurred. Still showing bottom of 6th option.
+      expect(scrollContainer.scrollTop)
+          .toEqual(32, `Expected panel not to scroll up since sixth option still fully visible.`);
+    }));
+
+    it('should scroll to active options that are above the panel', fakeAsync(() => {
+      tick();
+      const scrollContainer =
+          document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+      tick();
+      fixture.detectChanges();
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+      // These down arrows will set the 7th option active, below the fold.
+      [1, 2, 3, 4, 5, 6].forEach(() => {
+        fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+        tick();
+      });
+
+      // These up arrows will set the 2nd option active
+      [5, 4, 3, 2, 1].forEach(() => {
+        fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
+        tick();
+      });
+
+      // Expect to show the top of the 2nd option at the top of the panel
+      expect(scrollContainer.scrollTop)
+          .toEqual(48, `Expected panel to scroll up when option is above panel.`);
     }));
 
     it('should close the panel when pressing escape', async(() => {
@@ -1122,6 +1193,19 @@ describe('MdAutocomplete', () => {
       });
     }));
 
+    it('should display the number when the selected option is the number zero', async(() => {
+      const fixture = TestBed.createComponent(AutocompleteWithNumbers);
+
+      fixture.componentInstance.selectedNumber = 0;
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        const input = fixture.debugElement.query(By.css('input')).nativeElement;
+
+        expect(input.value).toBe('0');
+      });
+    }));
+
     it('should work when input is wrapped in ngIf', async(() => {
       const fixture = TestBed.createComponent(NgIfAutocomplete);
       fixture.detectChanges();
@@ -1321,10 +1405,13 @@ class NgIfAutocomplete {
   @ViewChildren(MdOption) mdOptions: QueryList<MdOption>;
 
   constructor() {
-    this.filteredOptions = this.optionCtrl.valueChanges.startWith(null).map((val) => {
-      return val ? this.options.filter(option => new RegExp(val, 'gi').test(option))
-                 : this.options.slice();
-    });
+    this.filteredOptions = RxChain.from(this.optionCtrl.valueChanges)
+      .call(startWith, null)
+      .call(map, (val: string) => {
+        return val ? this.options.filter(option => new RegExp(val, 'gi').test(option))
+                   : this.options.slice();
+      })
+      .result();
   }
 }
 
@@ -1387,6 +1474,23 @@ class AutocompleteWithNgModel {
 
 }
 
+@Component({
+  template: `
+    <md-input-container>
+      <input mdInput placeholder="Number" [mdAutocomplete]="auto" [(ngModel)]="selectedNumber">
+    </md-input-container>
+
+    <md-autocomplete #auto="mdAutocomplete">
+      <md-option *ngFor="let number of numbers" [value]="number">
+        <span>{{ number }}</span>
+      </md-option>
+    </md-autocomplete>
+  `
+})
+class AutocompleteWithNumbers {
+  selectedNumber: number;
+  numbers = [0, 1, 2];
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1430,10 +1534,13 @@ class AutocompleteWithNativeInput {
   @ViewChildren(MdOption) mdOptions: QueryList<MdOption>;
 
   constructor() {
-    this.filteredOptions = this.optionCtrl.valueChanges.startWith(null).map((val) => {
-      return val ? this.options.filter(option => new RegExp(val, 'gi').test(option))
-                 : this.options.slice();
-    });
+    this.filteredOptions = RxChain.from(this.optionCtrl.valueChanges)
+      .call(startWith, null)
+      .call(map, (val: string) => {
+        return val ? this.options.filter(option => new RegExp(val, 'gi').test(option))
+                   : this.options.slice();
+      })
+      .result();
   }
 }
 

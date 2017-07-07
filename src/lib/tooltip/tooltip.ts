@@ -39,9 +39,9 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Directionality} from '../core/bidi/index';
 import {Platform} from '../core/platform/index';
-import 'rxjs/add/operator/first';
+import {first} from '../core/rxjs/index';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {coerceBooleanProperty} from '@angular/cdk';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
@@ -170,6 +170,9 @@ export class MdTooltip implements OnDestroy {
   get _matClass() { return this.tooltipClass; }
   set _matClass(v) { this.tooltipClass = v; }
 
+  private _enterListener: Function;
+  private _leaveListener: Function;
+
   constructor(
     private _overlay: Overlay,
     private _elementRef: ElementRef,
@@ -183,8 +186,10 @@ export class MdTooltip implements OnDestroy {
     // The mouse events shouldn't be bound on iOS devices, because
     // they can prevent the first tap from firing its click event.
     if (!_platform.IOS) {
-      _renderer.listen(_elementRef.nativeElement, 'mouseenter', () => this.show());
-      _renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
+      this._enterListener =
+        _renderer.listen(_elementRef.nativeElement, 'mouseenter', () => this.show());
+      this._leaveListener =
+        _renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
     }
   }
 
@@ -194,6 +199,11 @@ export class MdTooltip implements OnDestroy {
   ngOnDestroy() {
     if (this._tooltipInstance) {
       this._disposeTooltip();
+    }
+    // Clean up the event listeners set in the constructor
+    if (!this._platform.IOS) {
+      this._enterListener();
+      this._leaveListener();
     }
   }
 
@@ -339,7 +349,7 @@ export class MdTooltip implements OnDestroy {
       this._tooltipInstance.message = message;
       this._tooltipInstance._markForCheck();
 
-      this._ngZone.onMicrotaskEmpty.first().subscribe(() => {
+      first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => {
         if (this._tooltipInstance) {
           this._overlayRef!.updatePosition();
         }

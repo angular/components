@@ -31,11 +31,10 @@ import {ENTER, UP_ARROW, DOWN_ARROW, ESCAPE} from '../core/keyboard/keycodes';
 import {Directionality} from '../core/bidi/index';
 import {MdInputContainer} from '../input/input-container';
 import {Subscription} from 'rxjs/Subscription';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/observable/of';
+import {merge} from 'rxjs/observable/merge';
+import {fromEvent} from 'rxjs/observable/fromEvent';
+import {of as observableOf} from 'rxjs/observable/of';
+import {RxChain, switchMap, first, filter} from '../core/rxjs/index';
 
 /**
  * The following style constants are necessary to save here in order
@@ -102,6 +101,9 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   /** Whether or not the placeholder state is being overridden. */
   private _manuallyFloatingPlaceholder = false;
 
+  /** The subscription for closing actions (some are bound to document). */
+  private _closingActionsSubscription: Subscription;
+
   /** View -> model callback called when value changes */
   _onChange: (value: any) => void = () => {};
 
@@ -158,7 +160,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
     if (this._overlayRef && !this._overlayRef.hasAttached()) {
       this._overlayRef.attach(this._portal);
-      this._subscribeToClosingActions();
+      this._closingActionsSubscription = this._subscribeToClosingActions();
     }
 
     this.autocomplete._setVisibility();
@@ -170,6 +172,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   closePanel(): void {
     if (this._overlayRef && this._overlayRef.hasAttached()) {
       this._overlayRef.detach();
+      this._closingActionsSubscription.unsubscribe();
     }
 
     this._panelOpen = false;
@@ -187,7 +190,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    * when an option is selected, on blur, and when TAB is pressed.
    */
   get panelClosingActions(): Observable<MdOptionSelectionChange> {
-    return Observable.merge(
+    return merge(
       this.optionSelections,
       this.autocomplete._keyManager.tabOut,
       this._outsideClickStream
@@ -196,7 +199,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   /** Stream of autocomplete option selections. */
   get optionSelections(): Observable<MdOptionSelectionChange> {
-    return Observable.merge(...this.autocomplete.options.map(option => option.onSelectionChange));
+    return merge(...this.autocomplete.options.map(option => option.onSelectionChange));
   }
 
   /** The currently active option, coerced to MdOption type. */
@@ -210,20 +213,23 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   /** Stream of clicks outside of the autocomplete panel. */
   private get _outsideClickStream(): Observable<any> {
-    if (this._document) {
-      return Observable.fromEvent(this._document, 'click').filter((event: MouseEvent) => {
-        const clickTarget = event.target as HTMLElement;
-        const inputContainer = this._inputContainer ?
-            this._inputContainer._elementRef.nativeElement : null;
-
-        return this._panelOpen &&
-               clickTarget !== this._element.nativeElement &&
-               (!inputContainer || !inputContainer.contains(clickTarget)) &&
-               (!!this._overlayRef && !this._overlayRef.overlayElement.contains(clickTarget));
-      });
+    if (!this._document) {
+      return observableOf(null);
     }
 
-    return Observable.of(null);
+    return RxChain.from(merge(
+      fromEvent(this._document, 'click'),
+      fromEvent(this._document, 'touchend')
+    )).call(filter, (event: MouseEvent | TouchEvent) => {
+      const clickTarget = event.target as HTMLElement;
+      const inputContainer = this._inputContainer ?
+          this._inputContainer._elementRef.nativeElement : null;
+
+      return this._panelOpen &&
+             clickTarget !== this._element.nativeElement &&
+             (!inputContainer || !inputContainer.contains(clickTarget)) &&
+             (!!this._overlayRef && !this._overlayRef.overlayElement.contains(clickTarget));
+    }).result();
   }
 
   /**
@@ -315,34 +321,45 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   /**
    * Given that we are not actually focusing active options, we must manually adjust scroll
    * to reveal options below the fold. First, we find the offset of the option from the top
-   * of the panel. The new scrollTop will be that offset - the panel height + the option
-   * height, so the active option will be just visible at the bottom of the panel.
+   * of the panel. If that offset is below the fold, the new scrollTop will be the offset -
+   * the panel height + the option height, so the active option will be just visible at the
+   * bottom of the panel. If that offset is above the top of the visible panel, the new scrollTop
+   * will become the offset. If that offset is visible within the panel already, the scrollTop is
+   * not adjusted.
    */
   private _scrollToOption(): void {
     const optionOffset = this.autocomplete._keyManager.activeItemIndex ?
         this.autocomplete._keyManager.activeItemIndex * AUTOCOMPLETE_OPTION_HEIGHT : 0;
-    const newScrollTop =
-        Math.max(0, optionOffset - AUTOCOMPLETE_PANEL_HEIGHT + AUTOCOMPLETE_OPTION_HEIGHT);
-    this.autocomplete._setScrollTop(newScrollTop);
+    const panelTop = this.autocomplete._getScrollTop();
+
+    if (optionOffset < panelTop) {
+      // Scroll up to reveal selected option scrolled above the panel top
+      this.autocomplete._setScrollTop(optionOffset);
+    } else if (optionOffset + AUTOCOMPLETE_OPTION_HEIGHT > panelTop + AUTOCOMPLETE_PANEL_HEIGHT) {
+      // Scroll down to reveal selected option scrolled below the panel bottom
+      const newScrollTop =
+          Math.max(0, optionOffset - AUTOCOMPLETE_PANEL_HEIGHT + AUTOCOMPLETE_OPTION_HEIGHT);
+      this.autocomplete._setScrollTop(newScrollTop);
+    }
   }
 
   /**
    * This method listens to a stream of panel closing actions and resets the
    * stream every time the option list changes.
    */
-  private _subscribeToClosingActions(): void {
+  private _subscribeToClosingActions(): Subscription {
     // When the zone is stable initially, and when the option list changes...
-    Observable.merge(this._zone.onStable.first(), this.autocomplete.options.changes)
-        // create a new stream of panelClosingActions, replacing any previous streams
-        // that were created, and flatten it so our stream only emits closing events...
-        .switchMap(() => {
-          this._resetPanel();
-          return this.panelClosingActions;
-        })
-        // when the first closing event occurs...
-        .first()
-        // set the value, close the panel, and complete.
-        .subscribe(event => this._setValueAndClose(event));
+    return RxChain.from(merge(first.call(this._zone.onStable), this.autocomplete.options.changes))
+      // create a new stream of panelClosingActions, replacing any previous streams
+      // that were created, and flatten it so our stream only emits closing events...
+      .call(switchMap, () => {
+        this._resetPanel();
+        return this.panelClosingActions;
+      })
+      // when the first closing event occurs...
+      .call(first)
+      // set the value, close the panel, and complete.
+      .subscribe(event => this._setValueAndClose(event));
   }
 
   /** Destroys the autocomplete suggestion panel. */
@@ -356,7 +373,9 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   private _setTriggerValue(value: any): void {
     const toDisplay = this.autocomplete.displayWith ? this.autocomplete.displayWith(value) : value;
-    this._element.nativeElement.value = toDisplay || '';
+    // Simply falling back to an empty string if the display value is falsy does not work properly.
+    // The display value can also be the number zero and shouldn't fall back to an empty string.
+    this._element.nativeElement.value = toDisplay != null ? toDisplay : '';
   }
 
    /**
@@ -442,4 +461,3 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   }
 
 }
-

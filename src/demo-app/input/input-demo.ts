@@ -18,11 +18,13 @@ export class InputDemo {
   requiredField: boolean;
   hideRequiredMarker: boolean;
   ctrlDisabled = false;
+  textareaNgModelValue: string;
 
   name: string;
   errorMessageExample1: string;
   errorMessageExample2: string;
   errorMessageExample3: string;
+  errorMessageExample4: string;
   dividerColorExample1: string;
   dividerColorExample2: string;
   dividerColorExample3: string;
@@ -42,5 +44,12 @@ export class InputDemo {
     for (let x = 0; x < n; x++) {
       this.items.push({ value: ++max });
     }
+  }
+
+  customErrorStateMatcher(c: FormControl): boolean {
+    const hasInteraction = c.dirty || c.touched;
+    const isInvalid = c.invalid;
+
+    return !!(hasInteraction && isInvalid);
   }
 }

@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 
 import {Focusable} from '../core/a11y/focus-key-manager';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {coerceBooleanProperty} from '@angular/cdk';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 
@@ -26,6 +26,7 @@ export interface MdChipEvent {
 }
 
 // Boilerplate for applying mixins to MdChip.
+/** @docs-private */
 export class MdChipBase {
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
@@ -55,7 +56,7 @@ export class MdBasicChip { }
     'role': 'option',
     '[class.mat-chip-selected]': 'selected',
     '[attr.disabled]': 'disabled || null',
-    '[attr.aria-disabled]': '_isAriaDisabled()',
+    '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_handleClick($event)',
     '(focus)': '_hasFocus = true',
     '(blur)': '_hasFocus = false',
@@ -107,11 +108,6 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
   focus(): void {
     this._elementRef.nativeElement.focus();
     this.onFocus.emit({chip: this});
-  }
-
-  /** The aria-disabled state for the chip */
-  _isAriaDisabled(): string {
-    return String(this.disabled);
   }
 
   /** Ensures events fire properly upon click. */

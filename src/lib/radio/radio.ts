@@ -35,7 +35,7 @@ import {
   FocusOriginMonitor,
   FocusOrigin,
 } from '../core';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {coerceBooleanProperty} from '@angular/cdk';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
@@ -63,6 +63,7 @@ export class MdRadioChange {
 
 
 // Boilerplate for applying mixins to MdRadioGroup.
+/** @docs-private */
 export class MdRadioGroupBase { }
 export const _MdRadioGroupMixinBase = mixinDisabled(MdRadioGroupBase);
 
@@ -296,6 +297,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
 }
 
 // Boilerplate for applying mixins to MdRadioButton.
+/** @docs-private */
 export class MdRadioButtonBase {
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
@@ -457,6 +459,9 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
   /** Reference to the current focus ripple. */
   private _focusRipple: RippleRef | null;
 
+  /** Unregister function for _radioDispatcher **/
+  private _removeUniqueSelectionListener: () => void = () => {};
+
   /** The native `<input type=radio>` element */
   @ViewChild('input') _inputElement: ElementRef;
 
@@ -472,11 +477,12 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
     this.radioGroup = radioGroup;
 
-    _radioDispatcher.listen((id: string, name: string) => {
-      if (id != this.id && name == this.name) {
-        this.checked = false;
-      }
-    });
+    this._removeUniqueSelectionListener =
+      _radioDispatcher.listen((id: string, name: string) => {
+        if (id != this.id && name == this.name) {
+          this.checked = false;
+        }
+      });
   }
 
   /** Focuses the radio button. */
@@ -512,6 +518,7 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
 
   ngOnDestroy() {
     this._focusOriginMonitor.stopMonitoring(this._inputElement.nativeElement);
+    this._removeUniqueSelectionListener();
   }
 
   /** Dispatch change event with current value. */

@@ -16,6 +16,7 @@ import {
   HostBinding,
   Input,
   OnInit,
+  OnDestroy,
   Optional,
   Output,
   QueryList,
@@ -32,6 +33,7 @@ import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 export type ToggleType = 'checkbox' | 'radio';
 
 // Boilerplate for applying mixins to MdButtonToggleGroup and MdButtonToggleGroupMultiple
+/** @docs-private */
 export class MdButtonToggleGroupBase {}
 export const _MdButtonToggleGroupMixinBase = mixinDisabled(MdButtonToggleGroupBase);
 
@@ -267,10 +269,11 @@ export class MdButtonToggleGroupMultiple extends _MdButtonToggleGroupMixinBase
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
   host: {
+    '[class.mat-button-toggle-standalone]': '!buttonToggleGroup && !buttonToggleGroupMultiple',
     'class': 'mat-button-toggle'
   }
 })
-export class MdButtonToggle implements OnInit {
+export class MdButtonToggle implements OnInit, OnDestroy {
   /** Whether or not this button toggle is checked. */
   private _checked: boolean = false;
 
@@ -285,6 +288,9 @@ export class MdButtonToggle implements OnInit {
 
   /** Whether or not the button toggle is a single selection. */
   private _isSingleSelector: boolean = false;
+
+  /** Unregister function for _buttonToggleDispatcher **/
+  private _removeUniqueSelectionListener: () => void = () => {};
 
   @ViewChild('input') _inputElement: ElementRef;
 
@@ -371,11 +377,12 @@ export class MdButtonToggle implements OnInit {
     this.buttonToggleGroupMultiple = toggleGroupMultiple;
 
     if (this.buttonToggleGroup) {
-      _buttonToggleDispatcher.listen((id: string, name: string) => {
-        if (id != this.id && name == this.name) {
-          this.checked = false;
-        }
-      });
+      this._removeUniqueSelectionListener =
+        _buttonToggleDispatcher.listen((id: string, name: string) => {
+          if (id != this.id && name == this.name) {
+            this.checked = false;
+          }
+        });
 
       this._type = 'radio';
       this.name = this.buttonToggleGroup.name;
@@ -444,5 +451,10 @@ export class MdButtonToggle implements OnInit {
     event.source = this;
     event.value = this._value;
     this.change.emit(event);
+  }
+
+  // Unregister buttonToggleDispatcherListener on destroy
+  ngOnDestroy(): void {
+    this._removeUniqueSelectionListener();
   }
 }

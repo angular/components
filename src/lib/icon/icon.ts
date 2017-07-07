@@ -20,9 +20,11 @@ import {
 } from '@angular/core';
 import {MdIconRegistry} from './icon-registry';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
+import {first} from '../core/rxjs/index';
 
 
 // Boilerplate for applying mixins to MdIcon.
+/** @docs-private */
 export class MdIconBase {
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
@@ -138,7 +140,7 @@ export class MdIcon extends _MdIconMixinBase implements OnChanges, OnInit, CanCo
     if (changedInputs.indexOf('svgIcon') != -1 || changedInputs.indexOf('svgSrc') != -1) {
       if (this.svgIcon) {
         const [namespace, iconName] = this._splitIconName(this.svgIcon);
-        this._mdIconRegistry.getNamedSvgIcon(iconName, namespace).first().subscribe(
+        first.call(this._mdIconRegistry.getNamedSvgIcon(iconName, namespace)).subscribe(
             svg => this._setSvgElement(svg),
             (err: Error) => console.log(`Error retrieving icon: ${err.message}`));
       }

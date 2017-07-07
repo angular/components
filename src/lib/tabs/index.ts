@@ -9,14 +9,14 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MdCommonModule} from '../core';
+import {ObserveContentModule} from '@angular/cdk';
 import {PortalModule} from '../core';
 import {MdRippleModule} from '../core/ripple/index';
-import {ObserveContentModule} from '../core/observe-content/observe-content';
 import {MdTab} from './tab';
 import {MdTabGroup} from './tab-group';
 import {MdTabLabel} from './tab-label';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
-import {MdTabNav, MdTabLink, MdTabLinkRipple} from './tab-nav-bar/tab-nav-bar';
+import {MdTabNav, MdTabLink} from './tab-nav-bar/tab-nav-bar';
 import {MdInkBar} from './ink-bar';
 import {MdTabBody} from './tab-body';
 import {VIEWPORT_RULER_PROVIDER} from '../core/overlay/position/viewport-ruler';
@@ -41,7 +41,6 @@ import {ScrollDispatchModule} from '../core/overlay/scroll/index';
     MdTab,
     MdTabNav,
     MdTabLink,
-    MdTabLinkRipple
   ],
   declarations: [
     MdTabGroup,
@@ -52,7 +51,6 @@ import {ScrollDispatchModule} from '../core/overlay/scroll/index';
     MdTabNav,
     MdTabLink,
     MdTabBody,
-    MdTabLinkRipple,
     MdTabHeader
   ],
   providers: [VIEWPORT_RULER_PROVIDER],

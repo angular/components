@@ -89,7 +89,7 @@ export class MdSnackBar {
     // If a dismiss timeout is provided, set up dismiss based on after the snackbar is opened.
     if (config.duration && config.duration > 0) {
       snackBarRef.afterOpened().subscribe(() => {
-        setTimeout(() => snackBarRef.dismiss(), config!.duration);
+        snackBarRef._dismissAfter(config!.duration!);
       });
     }
 
@@ -135,12 +135,6 @@ export class MdSnackBar {
     let containerPortal = new ComponentPortal(MdSnackBarContainer, config.viewContainerRef);
     let containerRef: ComponentRef<MdSnackBarContainer> = overlayRef.attach(containerPortal);
     containerRef.instance.snackBarConfig = config;
-
-    // The snackbar animation needs the content to be resolved in order to transform the bar
-    // out of the view initially (so it can slide in). To make the content resolve, we manually
-    // detect changes.
-    containerRef.changeDetectorRef.detectChanges();
-
     return containerRef.instance;
   }
 

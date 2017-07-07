@@ -34,14 +34,13 @@ import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {transformPlaceholder, transformPanel, fadeInContent} from './select-animations';
 import {ControlValueAccessor, NgControl} from '@angular/forms';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {coerceBooleanProperty} from '@angular/cdk';
 import {ConnectedOverlayDirective} from '../core/overlay/overlay-directives';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {SelectionModel} from '../core/selection/selection';
 import {getMdSelectDynamicMultipleError, getMdSelectNonArrayValueError} from './select-errors';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/filter';
+import {startWith, filter} from '../core/rxjs/index';
+import {merge} from 'rxjs/observable/merge';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import {
@@ -110,6 +109,7 @@ export class MdSelectChange {
 }
 
 // Boilerplate for applying mixins to MdSelect.
+/** @docs-private */
 export class MdSelectBase {
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
@@ -305,7 +305,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Combined stream of all of the child options' change events. */
   get optionSelectionChanges(): Observable<MdOptionSelectionChange> {
-    return Observable.merge(...this.options.map(option => option.onSelectionChange));
+    return merge(...this.options.map(option => option.onSelectionChange));
   }
 
   /** Event emitted when the select has been opened. */
@@ -333,7 +333,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     }
 
     this._tabIndex = parseInt(tabIndex) || 0;
-
     this._placeholderOptions = placeholderOptions ? placeholderOptions : {};
     this.floatPlaceholder = this._placeholderOptions.float || 'auto';
   }
@@ -345,7 +344,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   ngAfterContentInit() {
     this._initKeyManager();
 
-    this._changeSubscription = this.options.changes.startWith(null).subscribe(() => {
+    this._changeSubscription = startWith.call(this.options.changes, null).subscribe(() => {
       this._resetOptions();
 
       if (this._control) {
@@ -397,7 +396,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
         this._placeholderState = '';
       }
 
-      this._focusHost();
+      this.focus();
     }
   }
 
@@ -535,7 +534,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
    * "blur" to the panel when it opens, causing a false positive.
    */
   _onBlur() {
-    if (!this.panelOpen) {
+    if (!this.disabled && !this.panelOpen) {
       this._onTouched();
     }
   }
@@ -640,9 +639,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Listens to user-generated selection events on each option. */
   private _listenToOptions(): void {
-    this._optionSubscription = this.optionSelectionChanges
-      .filter(event => event.isUserInput)
-      .subscribe(event => {
+    this._optionSubscription = filter.call(this.optionSelectionChanges,
+      event => event.isUserInput).subscribe(event => {
         this._onSelect(event.source);
         this._setValueWidth();
 
@@ -752,8 +750,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     }
   }
 
-  /** Focuses the host element when the panel closes. */
-  private _focusHost(): void {
+  /** Focuses the select element. */
+  focus(): void {
     this._elementRef.nativeElement.focus();
   }
 
@@ -788,7 +786,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       // we must only adjust for the height difference between the option element
       // and the trigger element, then multiply it by -1 to ensure the panel moves
       // in the correct direction up the page.
-      this._offsetY = (SELECT_ITEM_HEIGHT - SELECT_TRIGGER_HEIGHT) / 2 * -1;
+      this._offsetY = (SELECT_ITEM_HEIGHT - SELECT_TRIGGER_HEIGHT) / 2 * -1 -
+          (this._getLabelCountBeforeOption(0) * SELECT_ITEM_HEIGHT);
     }
 
     this._checkOverlayWithinViewport(maxScroll);
@@ -863,7 +862,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     if (this.multiple) {
       offsetX = SELECT_MULTIPLE_PANEL_PADDING_X;
     } else {
-      let selected = this._selectionModel.selected[0];
+      let selected = this._selectionModel.selected[0] || this.options.first;
       offsetX = selected && selected.group ? SELECT_PANEL_INDENT_PADDING_X : SELECT_PANEL_PADDING_X;
     }
 
