@@ -1,15 +1,15 @@
 <h2>Veritcal Stepper Demo</h2>
 <mat-stepper [orientation]="'vertical'" [(selectedIndex)]="verticalActiveIndex">
-    <mat-step *ngFor="let step of steps" [label]="step.label"
-              [active]="step.active" [completed]="step.completed">
+    <mat-step *ngFor="let step of steps" [label]="step.label">
         <div>{{step.content}}</div>
+        <div>optional {{step.optional}}</div>
+        <div>editable {{step.editable}}</div>
     </mat-step>
 </mat-stepper>
 
 <h2>Horizontal Stepper Demo</h2>
 <mat-stepper [orientation]="'horizontal'" [(selectedIndex)]="horizontalActiveIndex">
-    <mat-step *ngFor="let step of steps" [label]="step.label"
-              [active]="step.active" [completed]="step.completed">
+    <mat-step *ngFor="let step of steps" [label]="step.label">
         <div>{{step.content}}</div>
     </mat-step>
 </mat-stepper>

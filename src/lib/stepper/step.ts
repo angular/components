@@ -8,6 +8,7 @@
 
 import {Component, ContentChild, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {TemplatePortal} from '../core/portal/portal';
+import {coerceBooleanProperty} from "@angular/cdk";
 
 @Component({
     moduleId: module.id,
@@ -20,29 +21,36 @@ export class MdStep {
     // @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
     @Input()
+    label: string;
+
+    /** Whether the step is optional or not. */
+    @Input() optional: boolean = false;
+
+    /** Whether the step is editable or not. */
+    @Input() editable: boolean = true;
+
+    isLast: boolean = false;
+
+    /** Whether the step is active. */
     get active() { return this._active; }
     set active(value: boolean) {
         this._active = value;
     }
-    private _active: boolean = true;
+    private _active: boolean = false;
 
-    @Input()
-    label: string;
+    /** Whether the step has been selected. */
+    get selected(): boolean { return this._selected; }
+    set selected(value: boolean) {
+        this._selected = value;
+    }
+    private _selected: boolean = false;
 
-    @Input()
+    /** Whether the step has been completed. */
     get completed() { return this._completed; }
     set completed(value: boolean) {
         this._completed = value;
     }
     private _completed: boolean = false;
-
-    isLast: boolean = false;
-
-    private _selected: boolean = false;
-    set selected(value: boolean) {
-        this._selected = value;
-    }
-    get selected(): boolean { return this._selected; }
 
     // /** The portal that will be the hosted content of the step */
     // private _contentPortal: TemplatePortal | null = null;

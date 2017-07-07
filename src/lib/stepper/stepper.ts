@@ -34,6 +34,7 @@ export class MdStepper {
 
     @ContentChildren(MdStep) _steps: QueryList<MdStep>;
 
+    /** Orientation of the stepper component. */
     @Input()
     get orientation() { return this._orientation; }
     set orientation(value: string) {
@@ -41,7 +42,7 @@ export class MdStepper {
     }
     private _orientation: string;
 
-    /** The index of the active tab. */
+    /** The index of the currently selected step. */
     @Input()
     set selectedIndex(value: number) {
         this._selectedIndex = value;
@@ -51,10 +52,15 @@ export class MdStepper {
     get selectedIndex(): number { return this._selectedIndex; }
     private _selectedIndex: number;
 
+    /** Optional input to support both linear and non-linear stepper component. */
+    @Input() linear: boolean = true;
+
+    /** Output to enable support for two-way binding on `[(selectedIndex)]` */
     @Output() get selectedIndexChange(): Observable<number> {
         return map.call(this.stepChangeEvent, event => event.index);
     }
 
+    /** Event emitted when the selected step has changed. */
     @Output() stepChangeEvent = new EventEmitter<MdStepChangeEvent>();
 
     get selectedStep(): MdStep {
@@ -80,7 +86,14 @@ export class MdStepper {
     }
 
     nextStep(): void {
+        if (this._selectedIndex == this._steps.length - 1) { return; }
         this._selectedIndex++;
+        this.stepChangeEvent.emit(this._emitStepChangeEvent());
+    }
+
+    previousStep(): void {
+        if (this._selectedIndex == 0) { return; }
+        this._selectedIndex--;
         this.stepChangeEvent.emit(this._emitStepChangeEvent());
     }
 

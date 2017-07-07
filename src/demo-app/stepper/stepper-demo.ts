@@ -11,7 +11,7 @@ export class StepperDemo {
     horizontalActiveIndex = 0;
     steps = [
         {label: 'Step 1', content: 'Content 1'},
-        {label: 'Step 2', content: 'Content 2'},
-        {label: 'Step 3', content: 'Content 3'},
+        {label: 'Step 2', content: 'Content 2', optional: true},
+        {label: 'Step 3', content: 'Content 3', editable: false},
         ];
 }
