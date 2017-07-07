@@ -77,18 +77,18 @@ export interface StrictRxChain<T> {
 }
 
 
-export class FinallyBrand { private _; }
-export class CatchBrand { private _; }
-export class DoBrand { private _; }
-export class MapBrand { private _; }
-export class FilterBrand { private _; }
-export class ShareBrand { private _; }
-export class FirstBrand { private _; }
-export class SwitchMapBrand { private _; }
-export class StartWithBrand { private _; }
-export class DebounceTimeBrand { private _; }
-export class AuditTimeBrand { private _; }
-export class TakeUntilBrand { private _; }
+export declare class FinallyBrand { private _; }
+export declare class CatchBrand { private _; }
+export declare class DoBrand { private _; }
+export declare class MapBrand { private _; }
+export declare class FilterBrand { private _; }
+export declare class ShareBrand { private _; }
+export declare class FirstBrand { private _; }
+export declare class SwitchMapBrand { private _; }
+export declare class StartWithBrand { private _; }
+export declare class DebounceTimeBrand { private _; }
+export declare class AuditTimeBrand { private _; }
+export declare class TakeUntilBrand { private _; }
 
 
 export type finallyOperatorType<T> = typeof _finallyOperator & FinallyBrand;
