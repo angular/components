@@ -54,7 +54,7 @@ function buildImportsTemplate(metadata: ExampleMetadata): string {
  */
 function buildExamplesTemplate(metadata: ExampleMetadata): string {
   // if no additional files or selectors were provided,
-  // return undefined since we don't care about if these were not found
+  // return null since we don't care about if these were not found
   const additionalFiles = metadata.additionalFiles.length ?
     JSON.stringify(metadata.additionalFiles) : 'null';
 
@@ -134,9 +134,9 @@ function convertToDashCase(name: string): string {
 /**
  * Parse the AST of a file and get metadata about it
  */
-function parseExampleMetadata(fileName: string, src: string): ParsedMetadataResults {
+function parseExampleMetadata(fileName: string, sourceContent: string): ParsedMetadataResults {
   const sourceFile = ts.createSourceFile(
-    fileName, src, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
+    fileName, sourceContent, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
 
   const metas: any[] = [];
 
@@ -146,7 +146,6 @@ function parseExampleMetadata(fileName: string, src: string): ParsedMetadataResu
         component: node.name.text
       };
 
-      let primary = false;
       if (node.jsDoc && node.jsDoc.length) {
         for (const doc of node.jsDoc) {
           if (doc.tags && doc.tags.length) {
@@ -198,8 +197,9 @@ task('build-examples-module', () => {
 
   const matchedFiles = glob(path.join(examplesPath, '**/*.ts'));
   for (const sourcePath of matchedFiles) {
-    const src = fs.readFileSync(sourcePath, 'utf-8');
-    const { primaryComponent, secondaryComponents } = parseExampleMetadata(sourcePath, src);
+    const sourceContent = fs.readFileSync(sourcePath, 'utf-8');
+    const { primaryComponent, secondaryComponents } =
+      parseExampleMetadata(sourcePath, sourceContent);
 
     if (primaryComponent) {
       // Generate a unique id for the component by converting the class name to dash-case.
