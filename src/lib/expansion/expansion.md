@@ -44,10 +44,6 @@ For more complex headers, use the `<md-panel-title>` and `<md-panel-description>
     </md-panel-description>
   </md-expansion-panel-header>
 
-  <md-action-row>
-    <button md-button>Action</button>
-  </md-action-row>
-
   <p>...</p>
 
 </md-expansion-panel>
@@ -57,7 +53,7 @@ For more complex headers, use the `<md-panel-title>` and `<md-panel-description>
 
 It's possible to group expansions in a fancy way, allowing the expansions state to be set independently of each other, or allowing just one expansion to be expanded at a given time:
 
-```
+```html
 <md-accordion>
   
   <md-expansion-panel multi="false">
