@@ -357,8 +357,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    * not adjusted.
    */
   private _scrollToOption(): void {
-    const optionOffset = this.autocomplete._keyManager.activeItemIndex ?
-        this.autocomplete._keyManager.activeItemIndex * AUTOCOMPLETE_OPTION_HEIGHT : 0;
+    const optionOffset = this._getActiveOptionIndex() * AUTOCOMPLETE_OPTION_HEIGHT;
     const panelTop = this.autocomplete._getScrollTop();
 
     if (optionOffset < panelTop) {
@@ -370,6 +369,29 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
           Math.max(0, optionOffset - AUTOCOMPLETE_PANEL_HEIGHT + AUTOCOMPLETE_OPTION_HEIGHT);
       this.autocomplete._setScrollTop(newScrollTop);
     }
+  }
+
+  /** Determines the index of the active option. */
+  private _getActiveOptionIndex(): number {
+    let optionIndex = this.autocomplete._keyManager.activeItemIndex || 0;
+
+    // If there are any option groups, we need to offset
+    // the index by the amount of groups that come before the option.
+    if (this.autocomplete.optionGroups.length) {
+      const options = this.autocomplete.options.toArray();
+      const groups = this.autocomplete.optionGroups.toArray();
+      let groupCounter = 0;
+
+      for (let i = 0; i < optionIndex + 1; i++) {
+        if (options[i].group && options[i].group === groups[groupCounter]) {
+          groupCounter++;
+        }
+      }
+
+      optionIndex += groupCounter;
+    }
+
+    return optionIndex;
   }
 
   /**
