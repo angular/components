@@ -51,7 +51,7 @@ For more complex headers, use the `<md-panel-title>` and `<md-panel-description>
 
 ### Accordion
 
-It's possible to group expansions in a fancy way. The `multi="true"` (default) input allows the expansions state to be set independently of each other. When `multi="false"`just one expansion can be expanded at a given time:
+It's possible to group expansions in a fancy way. The `multi="true"` input allows the expansions state to be set independently of each other. When `multi="false"` (default) just one expansion can be expanded at a given time:
 
 ```html
 <md-accordion>
