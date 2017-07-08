@@ -1,6 +1,6 @@
 <form class="example-form">
   <md-input-container class="example-full-width">
-    <input type="text" placeholder="Assignee" mdInput [formControl]="myControl" [mdAutocomplete]="auto">
+    <input type="text" placeholder="Assignee" aria-label="Assignee" mdInput [formControl]="myControl" [mdAutocomplete]="auto">
   </md-input-container>
 
   <md-autocomplete #auto="mdAutocomplete" [displayWith]="displayFn">

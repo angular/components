@@ -33,7 +33,8 @@ export class AutocompleteDisplayExample {
   }
 
   filter(name: string): User[] {
-    return this.options.filter(option => new RegExp(`^${name}`, 'gi').test(option.name));
+    return this.options.filter(option =>
+      option.name.toLowerCase().indexOf(name.toLowerCase()) > -1);
   }
 
   displayFn(user: User): string {

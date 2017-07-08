@@ -27,8 +27,9 @@ export class AutocompleteFilterExample {
          .map(val => val ? this.filter(val) : this.options.slice());
    }
 
-   filter(val: string): string[] {
-      return this.options.filter(option => new RegExp(`^${val}`, 'gi').test(option));
+    filter(val: string): string[] {
+      return this.options.filter(option =>
+        option.toLowerCase().indexOf(val.toLowerCase()) > -1);
    }
 
 }

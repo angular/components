@@ -45,12 +45,12 @@ export class AutocompleteOverviewExample {
     this.stateCtrl = new FormControl();
     this.filteredStates = this.stateCtrl.valueChanges
         .startWith(null)
-        .map(name => this.filterStates(name));
+        .map(state => state ? this.filterStates(state) : this.states.slice());
   }
 
-  filterStates(val: string) {
-    return val ? this.states.filter(s => s.name.toLowerCase().indexOf(val.toLowerCase()) === 0)
-               : this.states;
+  filterStates(name: string) {
+    return this.states.filter(state =>
+      state.name.toLowerCase().indexOf(name.toLowerCase()) > -1);
   }
 
 }
