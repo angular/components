@@ -10,9 +10,9 @@ import {NgModule} from '@angular/core';
 
 import {
   A11yModule,
+  BidiModule,
   MdCommonModule,
   MdRippleModule,
-  BidiModule,
   ObserveContentModule,
   OverlayModule,
   PortalModule
@@ -44,8 +44,8 @@ import {PlatformModule} from './core/platform/index';
 import {MdAutocompleteModule} from './autocomplete/index';
 import {StyleModule} from './core/style/index';
 import {MdDatepickerModule} from './datepicker/index';
-import {CdkDataTableModule} from './core/data-table/index';
 import {MdExpansionModule} from './expansion/index';
+import {MdTableModule} from './table/index';
 import {MdSortModule} from './sort/index';
 import {MdPaginatorModule} from './paginator/index';
 
@@ -57,6 +57,7 @@ const MATERIAL_MODULES = [
   MdChipsModule,
   MdCheckboxModule,
   MdDatepickerModule,
+  MdTableModule,
   MdDialogModule,
   MdExpansionModule,
   MdGridListModule,
@@ -85,8 +86,7 @@ const MATERIAL_MODULES = [
   A11yModule,
   PlatformModule,
   MdCommonModule,
-  ObserveContentModule,
-  CdkDataTableModule
+  ObserveContentModule
 ];
 
 /** @deprecated */

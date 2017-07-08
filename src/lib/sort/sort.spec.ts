@@ -1,15 +1,15 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {MdSort, MdSortHeader, Sort, SortDirection, MdSortModule} from './index';
-import {CdkDataTableModule, DataSource, CollectionViewer} from '../core/data-table/index';
+import {CdkTableModule, DataSource, CollectionViewer} from '@angular/cdk';
 import {Observable} from 'rxjs/Observable';
-import {dispatchMouseEvent} from '../core/testing/dispatch-events';
+import {dispatchMouseEvent} from '@angular/cdk/testing';
 import {
   getMdSortDuplicateMdSortableIdError,
   getMdSortHeaderMissingIdError,
   getMdSortHeaderNotContainedWithinMdSortError
 } from './sort-errors';
-import {wrappedErrorMessage} from '../core/testing/wrapped-error-message';
+import {wrappedErrorMessage} from '@angular/cdk/testing';
 import {map} from '../core/rxjs/index';
 
 describe('MdSort', () => {
@@ -19,7 +19,7 @@ describe('MdSort', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSortModule, CdkDataTableModule],
+      imports: [MdSortModule, CdkTableModule],
       declarations: [
         SimpleMdSortApp,
         CdkTableMdSortApp,
@@ -203,6 +203,7 @@ class FakeDataSource extends DataSource<any> {
   connect(collectionViewer: CollectionViewer): Observable<any[]> {
     return map.call(collectionViewer.viewChange, () => []);
   }
+  disconnect() {}
 }
 
 @Component({

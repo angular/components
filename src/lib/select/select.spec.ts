@@ -22,8 +22,7 @@ import {
 } from '@angular/forms';
 import {Subject} from 'rxjs/Subject';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '../core/testing/dispatch-events';
-import {wrappedErrorMessage} from '../core/testing/wrapped-error-message';
+import {dispatchFakeEvent, dispatchKeyboardEvent, wrappedErrorMessage} from '@angular/cdk/testing';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {
   FloatPlaceholderType,
@@ -634,6 +633,17 @@ describe('MdSelect', () => {
       fixture.detectChanges();
       expect(fixture.componentInstance.control.touched)
         .toEqual(true, `Expected the control to be touched as soon as focus left the select.`);
+    });
+
+    it('should not set touched when a disabled select is touched', () => {
+      expect(fixture.componentInstance.control.touched)
+        .toBe(false, 'Expected the control to start off as untouched.');
+
+      fixture.componentInstance.control.disable();
+      dispatchFakeEvent(trigger, 'blur');
+
+      expect(fixture.componentInstance.control.touched)
+        .toBe(false, 'Expected the control to stay untouched.');
     });
 
     it('should set the control to dirty when the select\'s value changes in the DOM', () => {
@@ -1727,6 +1737,15 @@ describe('MdSelect', () => {
         fixture.componentInstance.select.focus();
 
         expect(document.activeElement).toBe(select, 'Expected select element to be focused.');
+      });
+
+      // Having `aria-hidden` on the trigger avoids issues where
+      // screen readers read out the wrong amount of options.
+      it('should set aria-hidden on the trigger element', () => {
+        const trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+
+        expect(trigger.getAttribute('aria-hidden'))
+            .toBe('true', 'Expected aria-hidden to be true when the select is open.');
       });
 
     });

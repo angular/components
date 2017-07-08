@@ -29,6 +29,7 @@
     "no-var-keyword": true,
     "no-exposed-todo": true,
     "no-debugger": true,
+    "no-unused-variable": [true, {"ignore-pattern": "^_"}],
     "no-rxjs-patch-imports": [
       true,
       "src/lib",
@@ -70,7 +71,8 @@
       "check-decl",
       "check-operator",
       "check-separator",
-      "check-type"
+      "check-type",
+      "check-preblock"
     ],
     // Bans jasmine helper functions that will prevent the CI from properly running tests.
     "ban": [true, ["fit"], ["fdescribe"], ["xit"], ["xdescribe"]],

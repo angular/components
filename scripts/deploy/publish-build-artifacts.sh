@@ -3,10 +3,17 @@
 # Script to publish the build artifacts to a GitHub repository.
 # Builds will be automatically published once new changes are made to the repository.
 
-set -e -o pipefail
+# The script should immediately exit if any command in the script fails.
+set -e
 
 # Go to the project root directory
 cd $(dirname ${0})/../..
+
+if [ -z ${MATERIAL2_BUILDS_TOKEN} ]; then
+  echo "Error: No access token for GitHub could be found." \
+       "Please set the environment variable 'MATERIAL2_BUILDS_TOKEN'."
+  exit 1
+fi
 
 # Material packages that need to published.
 PACKAGES=(cdk material)
@@ -23,7 +30,7 @@ publishPackage() {
   packageRepo=${2}
 
   buildDir="dist/releases/${packageName}"
-  buildVersion=$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' package.json)
+  buildVersion=$(node -pe "require('./package.json').version")
 
   commitSha=$(git rev-parse --short HEAD)
   commitAuthorName=$(git --no-pager show -s --format='%an' HEAD)
@@ -71,7 +78,7 @@ publishPackage() {
   git tag "${buildVersion}-${commitSha}"
   git push origin master --tags
 
-  echo "Published artifacts for ${packageName} package."
+  echo "Published package artifacts for ${packageName}#${commitSha}."
 }
 
 for ((i = 0; i < ${#PACKAGES[@]}; i++)); do
