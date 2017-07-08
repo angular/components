@@ -1,5 +1,6 @@
 
 /* tslint:disable */
+/** DO NOT MANUALLY EDIT THIS FILE, IT IS GENERATED VIA GULP 'build-examples-module' */
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
@@ -19,6 +20,7 @@ import {ButtonToggleOverviewExample} from './button-toggle-overview/button-toggl
 import {ButtonTypesExample} from './button-types/button-types-example';
 import {CardFancyExample} from './card-fancy/card-fancy-example';
 import {CardOverviewExample} from './card-overview/card-overview-example';
+import {CdkTableBasicExample} from './cdk-table-basic/cdk-table-basic-example';
 import {CheckboxConfigurableExample} from './checkbox-configurable/checkbox-configurable-example';
 import {CheckboxOverviewExample} from './checkbox-overview/checkbox-overview-example';
 import {ChipsOverviewExample} from './chips-overview/chips-overview-example';
@@ -59,6 +61,11 @@ import {SliderConfigurableExample} from './slider-configurable/slider-configurab
 import {SliderOverviewExample} from './slider-overview/slider-overview-example';
 import {PizzaPartyComponent,SnackBarComponentExample} from './snack-bar-component/snack-bar-component-example';
 import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
+import {TableBasicExample} from './table-basic/table-basic-example';
+import {TableFilteringExample} from './table-filtering/table-filtering-example';
+import {TableOverviewExample} from './table-overview/table-overview-example';
+import {TablePaginationExample} from './table-pagination/table-pagination-example';
+import {TableSortingExample} from './table-sorting/table-sorting-example';
 import {TabsOverviewExample} from './tabs-overview/tabs-overview-example';
 import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-label-example';
 import {ToolbarMultirowExample} from './toolbar-multirow/toolbar-multirow-example';
@@ -106,6 +113,12 @@ export const EXAMPLE_COMPONENTS = {
   'card-overview': {
     title: 'Basic cards',
     component: CardOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'cdk-table-basic': {
+    title: 'Basic CDK data-table',
+    component: CdkTableBasicExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -349,6 +362,36 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'table-basic': {
+    title: 'Basic table',
+    component: TableBasicExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'table-filtering': {
+    title: 'Table with filtering',
+    component: TableFilteringExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'table-overview': {
+    title: 'Feature-rich data table',
+    component: TableOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'table-pagination': {
+    title: 'Table with pagination',
+    component: TablePaginationExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'table-sorting': {
+    title: 'Table with sorting',
+    component: TableSortingExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'tabs-overview': {
     title: 'Basic tabs',
     component: TabsOverviewExample,
@@ -395,6 +438,7 @@ export const EXAMPLE_LIST = [
   ButtonTypesExample,
   CardFancyExample,
   CardOverviewExample,
+  CdkTableBasicExample,
   CheckboxConfigurableExample,
   CheckboxOverviewExample,
   ChipsOverviewExample,
@@ -435,6 +479,11 @@ export const EXAMPLE_LIST = [
   SliderOverviewExample,
   PizzaPartyComponent,SnackBarComponentExample,
   SnackBarOverviewExample,
+  TableBasicExample,
+  TableFilteringExample,
+  TableOverviewExample,
+  TablePaginationExample,
+  TableSortingExample,
   TabsOverviewExample,
   TabsTemplateLabelExample,
   ToolbarMultirowExample,

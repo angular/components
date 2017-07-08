@@ -85,6 +85,7 @@ function buildListTemplate(metadata: ExampleMetadata): string {
 function generateExampleNgModule(extractedMetadata: ExampleMetadata[]): string {
   return `
 /* tslint:disable */
+/** DO NOT MANUALLY EDIT THIS FILE, IT IS GENERATED VIA GULP 'build-examples-module' */
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
