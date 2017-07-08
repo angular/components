@@ -4,7 +4,7 @@ Each expansion has a header and an action sections. The header section is always
 
 When grouped by an `<md-accordion>` element, the expansions can be used for the creation of flows, as it brings up the possibility to expand one view at a time.
 
-<!-- example(tabs-overview) -->
+<!-- example(expansion-overview) -->
 
 ### Events
 
