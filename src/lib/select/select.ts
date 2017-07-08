@@ -132,6 +132,7 @@ export const _MdSelectMixinBase = mixinColor(mixinDisabled(MdSelectBase), 'prima
     '[attr.aria-invalid]': '_control?.invalid || "false"',
     '[attr.aria-owns]': '_optionIds',
     '[class.mat-select-disabled]': 'disabled',
+    '[class.mat-select-show-required-marker]': '!hideRequiredMarker',
     'class': 'mat-select',
     '(keydown)': '_handleClosedKeydown($event)',
     '(blur)': '_onBlur()',
@@ -159,6 +160,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Whether filling out the select is required in the form.  */
   private _required: boolean = false;
+
+  /** Whether required marker is hidden in the placeholder.  */
+  private _hideRequiredMarker: boolean = false;
 
   /** The scroll position of the overlay panel, calculated to center the selected option. */
   private _scrollTop = 0;
@@ -268,6 +272,13 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   @Input()
   get required() { return this._required; }
   set required(value: any) { this._required = coerceBooleanProperty(value); }
+
+  /** Whether we should hide the required marker. */
+  @Input()
+  get hideRequiredMarker() { return this._hideRequiredMarker; }
+  set hideRequiredMarker(value: any) {
+    console.error('required mark error' + value);
+    this._hideRequiredMarker = coerceBooleanProperty(value); }
 
   /** Whether the user should be allowed to select multiple options. */
   @Input()
