@@ -1,39 +1,28 @@
-Angular Material expansion provides a way to show and hide lightweight content, by collapsing and expanding a view. Each expansion has a header section, containing title and description subsections, always visible in a row at the top of the comopent. The `expanded` input allows to choose among the collapsed or expanded the state of the expansion
+Angular Material expansion provides a way to show and hide lightweight content, by collapsing and expanding a view with a nice animation. The `expanded` input allows to choose among the collapsed or expanded the state of the expansion. 
+
+Each expansion has a header section and an action section. The header section is always visible at the top of the component and contains one title and one description subsections. The action section is shown at the bottom of the expansion in the expanded state and is intended to contains action elements right aligned, like buttons and links.
 
 When grouped by an `<md-accordion>` element, the expansions can be used for the creation of flows, as it brings up the possibility to expand one view at a time.
-
-tabs organize content into separate views where only one view can be
-visible at a time. Each tab's label is shown in the tab header and the active
-tab's label is designated with the animated ink bar. When the list of tab labels exceeds the width
-of the header, pagination controls appear to let the user scroll left and right across the labels.
-
-The active tab may be set using the `selectedIndex` input or when the user selects one of the
-tab labels in the header.
 
 <!-- example(tabs-overview) -->
 
 ### Events
 
-The `selectChange` output event is emitted when the active tab changes.
+The `closed` and `opened` output events are emitted when the expansion is collapsed/expanded.
 
 The `focusChange` output event is emitted when the user puts focus on any of the tab labels in
 the header, usually through keyboard navigation.
 
-### Labels
+### Headers section
 
-If a tab's label is only text then the simple tab-group API can be used.
+By default, each expension header has a toogle sign at the right edge, pointing up when the expansion is expanded and down when it's collapsed. The toogle icon can be hiden setting the `toogleHide` to `true`. 
+
+The `<md-panel-title>` subsecion is shown in the begining of the header, followed by the `<md-panel-description>` subsection, which is supposed to have a sumary of what's in the expansion content.
 
 ```html
-<md-tab-group>
-  <md-tab label="One">
-    <h1>Some tab content</h1>
-    <p>...</p>
-  </md-tab>
-  <md-tab label="Two">
-    <h1>Some more tab content</h1>
-    <p>...</p>
-  </md-tab>
-</md-tab-group>
+<md-expansion-panel>
+  
+</md-expansion-panel>
 ```
 
 For more complex labels, add a template with the `md-tab-label` directive inside the `md-tab`.
