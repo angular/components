@@ -33,6 +33,7 @@ import {
 } from '../core';
 import {Subscription} from 'rxjs/Subscription';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
+import {MdMenu} from './menu-directive';
 
 // TODO(andrewseguin): Remove the kebab versions in favor of camelCased attribute selectors
 
@@ -110,6 +111,10 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
       this._createOverlay().attach(this._portal);
       this._subscribeToBackdrop();
       this._initMenu();
+
+      if (this.menu instanceof MdMenu) {
+        this.menu._startAnimation();
+      }
     }
   }
 
@@ -119,6 +124,10 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
       this._overlayRef.detach();
       this._backdropSubscription.unsubscribe();
       this._resetMenu();
+
+      if (this.menu instanceof MdMenu) {
+        this.menu._resetAnimation();
+      }
     }
   }
 
@@ -238,13 +247,9 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    * correct, even if a fallback position is used for the overlay.
    */
   private _subscribeToPositions(position: ConnectedPositionStrategy): void {
-    this._positionSubscription = position.onPositionChange.subscribe((change) => {
-      const posX: MenuPositionX = change.connectionPair.originX === 'start' ? 'after' : 'before';
-      let posY: MenuPositionY = change.connectionPair.originY === 'top' ? 'below' : 'above';
-
-      if (!this.menu.overlapTrigger) {
-        posY = posY === 'below' ? 'above' : 'below';
-      }
+    this._positionSubscription = position.onPositionChange.subscribe(change => {
+      const posX: MenuPositionX = change.connectionPair.overlayX === 'start' ? 'after' : 'before';
+      const posY: MenuPositionY = change.connectionPair.overlayY === 'top' ? 'below' : 'above';
 
       this.menu.setPositionClasses(posX, posY);
     });

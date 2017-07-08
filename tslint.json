@@ -28,7 +28,9 @@
     "no-unused-expression": true,
     "no-var-keyword": true,
     "no-exposed-todo": true,
+	"no-unescaped-html-tag": true,
     "no-debugger": true,
+    "no-unused-variable": [true, {"ignore-pattern": "^_"}],
     "no-rxjs-patch-imports": [
       true,
       "src/lib",

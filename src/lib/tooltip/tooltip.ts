@@ -17,6 +17,7 @@ import {
   OnDestroy,
   Renderer2,
   ChangeDetectorRef,
+  ChangeDetectionStrategy,
   ViewEncapsulation,
 } from '@angular/core';
 import {
@@ -50,6 +51,9 @@ export const TOUCHEND_HIDE_DELAY = 1500;
 
 /** Time in ms to throttle repositioning after scroll events. */
 export const SCROLL_THROTTLE_MS = 20;
+
+/** CSS class that will be attached to the overlay panel. */
+export const TOOLTIP_PANEL_CLASS = 'mat-tooltip-panel';
 
 /** Creates an error to be thrown if the user supplied an invalid tooltip position. */
 export function getMdTooltipInvalidPositionError(position: string) {
@@ -170,6 +174,9 @@ export class MdTooltip implements OnDestroy {
   get _matClass() { return this.tooltipClass; }
   set _matClass(v) { this.tooltipClass = v; }
 
+  private _enterListener: Function;
+  private _leaveListener: Function;
+
   constructor(
     private _overlay: Overlay,
     private _elementRef: ElementRef,
@@ -183,8 +190,10 @@ export class MdTooltip implements OnDestroy {
     // The mouse events shouldn't be bound on iOS devices, because
     // they can prevent the first tap from firing its click event.
     if (!_platform.IOS) {
-      _renderer.listen(_elementRef.nativeElement, 'mouseenter', () => this.show());
-      _renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
+      this._enterListener =
+        _renderer.listen(_elementRef.nativeElement, 'mouseenter', () => this.show());
+      this._leaveListener =
+        _renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
     }
   }
 
@@ -194,6 +203,11 @@ export class MdTooltip implements OnDestroy {
   ngOnDestroy() {
     if (this._tooltipInstance) {
       this._disposeTooltip();
+    }
+    // Clean up the event listeners set in the constructor
+    if (!this._platform.IOS) {
+      this._enterListener();
+      this._leaveListener();
     }
   }
 
@@ -264,6 +278,7 @@ export class MdTooltip implements OnDestroy {
 
     config.direction = this._dir ? this._dir.value : 'ltr';
     config.positionStrategy = strategy;
+    config.panelClass = TOOLTIP_PANEL_CLASS;
     config.scrollStrategy = this._overlay.scrollStrategies.reposition({
       scrollThrottle: SCROLL_THROTTLE_MS
     });
@@ -368,6 +383,7 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
   templateUrl: 'tooltip.html',
   styleUrls: ['tooltip.css'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('state', [
       state('void', style({transform: 'scale(0)'})),
