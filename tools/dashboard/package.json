@@ -11,6 +11,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^4.2.2",
+    "@angular/cdk": "github:angular/cdk-builds",
     "@angular/common": "^4.2.2",
     "@angular/compiler": "^4.2.2",
     "@angular/core": "^4.2.2",
@@ -20,8 +21,10 @@
     "@angular/platform-browser": "^4.2.2",
     "@angular/platform-browser-dynamic": "^4.2.2",
     "@angular/router": "^4.2.2",
+    "@swimlane/ngx-charts": "^5.3.1",
     "angularfire2": "^4.0.0-rc.1",
     "core-js": "^2.4.1",
+    "d3": "^4.9.1",
     "firebase": "^4.1.2",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.12"

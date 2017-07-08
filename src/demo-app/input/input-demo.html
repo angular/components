@@ -94,6 +94,17 @@
 
       <button color="primary" md-raised-button>Submit</button>
     </form>
+
+    <h4>With a custom error function</h4>
+    <md-input-container>
+      <input mdInput
+        placeholder="example"
+        [(ngModel)]="errorMessageExample4"
+        [errorStateMatcher]="customErrorStateMatcher"
+        required>
+      <md-error>This field is required</md-error>
+    </md-input-container>
+
   </md-card-content>
 </md-card>
 
@@ -198,11 +209,13 @@
 
 <md-card class="demo-card demo-basic">
   <md-toolbar color="primary">
-    Hello&nbsp;
-    <md-input-container color="accent">
-      <input mdInput [(ngModel)]="name" type="text" placeholder="First name">
-    </md-input-container>,
-    how are you?
+    <span>
+      Hello&nbsp;
+      <md-input-container color="accent">
+        <input mdInput [(ngModel)]="name" type="text" placeholder="First name">
+      </md-input-container>,
+      how are you?
+    </span>
   </md-toolbar>
   <md-card-content>
     <p>

@@ -8,7 +8,7 @@
     "url": "https://github.com/angular/material2.git"
   },
   "scripts": {
-    "build": "gulp material:build-release:clean",
+    "build": "gulp :publish:build-releases",
     "demo-app": "gulp serve:devapp",
     "test": "gulp test",
     "tslint": "gulp lint",
@@ -19,7 +19,7 @@
     "docs": "gulp docs",
     "api": "gulp api-docs"
   },
-  "version": "2.0.0-beta.7",
+  "version": "2.0.0-beta.8",
   "license": "MIT",
   "engines": {
     "node": ">= 5.4.1 < 7"
@@ -55,7 +55,6 @@
     "@types/minimist": "^1.2.0",
     "@types/node": "^7.0.21",
     "@types/run-sequence": "^0.0.29",
-    "@types/rx": "2.5.33",
     "autoprefixer": "^6.7.6",
     "axe-core": "^2.2.1",
     "axe-webdriverjs": "^1.1.1",
@@ -114,7 +113,7 @@
     "stylelint": "^7.10.1",
     "ts-node": "^3.0.4",
     "tsconfig-paths": "^2.2.0",
-    "tslint": "^5.2.0",
+    "tslint": "~5.4.3",
     "typescript": "~2.2.1",
     "uglify-js": "^2.8.14",
     "web-animations-js": "^2.2.5"
