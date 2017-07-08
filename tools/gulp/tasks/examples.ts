@@ -171,11 +171,11 @@ function parseExampleMetadata(fileName: string, sourceContent: string): ParsedMe
                 meta[name] = value;
               }
             }
+
+            metas.push(meta);
           }
         }
       }
-
-      metas.push(meta);
     }
 
     ts.forEachChild(node, visit);
