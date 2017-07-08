@@ -33,6 +33,7 @@ import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-exam
 import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
 import {IconOverviewExample} from './icon-overview/icon-overview-example';
 import {IconSvgExample} from './icon-svg-example/icon-svg-example';
+import {InputClearableExample} from './input-clearable/input-clearable-example';
 import {InputErrorsExample} from './input-errors/input-errors-example';
 import {InputFormExample} from './input-form/input-form-example';
 import {InputHintExample} from './input-hint/input-hint-example';
@@ -61,6 +62,7 @@ import {SliderConfigurableExample} from './slider-configurable/slider-configurab
 import {SliderOverviewExample} from './slider-overview/slider-overview-example';
 import {PizzaPartyComponent,SnackBarComponentExample} from './snack-bar-component/snack-bar-component-example';
 import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
+import {SortOverviewExample} from './sort-overview/sort-overview-example';
 import {TableBasicExample} from './table-basic/table-basic-example';
 import {TableFilteringExample} from './table-filtering/table-filtering-example';
 import {TableOverviewExample} from './table-overview/table-overview-example';
@@ -191,6 +193,12 @@ export const EXAMPLE_COMPONENTS = {
   'icon-svg': {
     title: 'SVG icons',
     component: IconSvgExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'input-clearable': {
+    title: 'Input Clearable',
+    component: InputClearableExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -362,6 +370,12 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'sort-overview': {
+    title: 'Sorting overview',
+    component: SortOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'table-basic': {
     title: 'Basic table',
     component: TableBasicExample,
@@ -451,6 +465,7 @@ export const EXAMPLE_LIST = [
   GridListOverviewExample,
   IconOverviewExample,
   IconSvgExample,
+  InputClearableExample,
   InputErrorsExample,
   InputFormExample,
   InputHintExample,
@@ -479,6 +494,7 @@ export const EXAMPLE_LIST = [
   SliderOverviewExample,
   PizzaPartyComponent,SnackBarComponentExample,
   SnackBarOverviewExample,
+  SortOverviewExample,
   TableBasicExample,
   TableFilteringExample,
   TableOverviewExample,
