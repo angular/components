@@ -5,6 +5,9 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
 
+/**
+ * @title Basic autocomplete
+ */
 @Component({
   selector: 'autocomplete-overview-example',
   templateUrl: 'autocomplete-overview-example.html',

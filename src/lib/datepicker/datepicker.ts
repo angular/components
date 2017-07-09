@@ -38,6 +38,7 @@ import {createMissingDateImplError} from './datepicker-errors';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {MdCalendar} from './calendar';
 import {first} from '../core/rxjs/index';
+import {coerceBooleanProperty} from '@angular/cdk';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -94,6 +95,7 @@ export class MdDatepickerContent<D> implements AfterContentInit {
   moduleId: module.id,
   selector: 'md-datepicker, mat-datepicker',
   template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdDatepicker<D> implements OnDestroy {
   /** The date to open the calendar to initially. */
@@ -114,6 +116,16 @@ export class MdDatepicker<D> implements OnDestroy {
    * than a popup and elements have more padding to allow for bigger touch targets.
    */
   @Input() touchUi = false;
+
+  /** Whether the datepicker pop-up should be disabled. */
+  @Input()
+  get disabled() {
+    return this._disabled === undefined ? this._datepickerInput.disabled : this._disabled;
+  }
+  set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
+  }
+  private _disabled: boolean;
 
   /** Emits new selected date when selected date changes. */
   @Output() selectedChanged = new EventEmitter<D>();
@@ -205,7 +217,7 @@ export class MdDatepicker<D> implements OnDestroy {
 
   /** Open the calendar. */
   open(): void {
-    if (this.opened) {
+    if (this.opened || this.disabled) {
       return;
     }
     if (!this._datepickerInput) {

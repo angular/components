@@ -62,7 +62,8 @@ describe('MdSelect', () => {
         BasicSelectWithTheming,
         ResetValuesSelect,
         FalsyValueSelect,
-        SelectWithGroups
+        SelectWithGroups,
+        InvalidSelectInForm
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -1572,6 +1573,17 @@ describe('MdSelect', () => {
           .toEqual('true', `Expected aria-required attr to be true for required selects.`);
       });
 
+      it('should set the mat-select-required class for required selects', () => {
+        expect(select.classList).not.toContain(
+            'mat-select-required', `Expected the mat-select-required class not to be set.`);
+
+        fixture.componentInstance.isRequired = true;
+        fixture.detectChanges();
+
+        expect(select.classList).toContain(
+          'mat-select-required', `Expected the mat-select-required class to be set.`);
+      });
+
       it('should set aria-invalid for selects that are invalid', () => {
         expect(select.getAttribute('aria-invalid'))
           .toEqual('false', `Expected aria-invalid attr to be false for valid selects.`);
@@ -1960,6 +1972,17 @@ describe('MdSelect', () => {
         TestBed.createComponent(SelectEarlyAccessSibling).detectChanges();
       }).not.toThrow();
     }));
+
+    it('should not throw selection model-related errors in addition to the errors from ngModel',
+      async(() => {
+        const fixture = TestBed.createComponent(InvalidSelectInForm);
+
+        // The first change detection run will throw the "ngModel is missing a name" error.
+        expect(() => fixture.detectChanges()).toThrowError(/the name attribute must be set/g);
+
+        // The second run shouldn't throw selection-model related errors.
+        expect(() => fixture.detectChanges()).not.toThrow();
+      }));
 
   });
 
@@ -2860,4 +2883,12 @@ class SelectWithGroups {
 
   @ViewChild(MdSelect) select: MdSelect;
   @ViewChildren(MdOption) options: QueryList<MdOption>;
+}
+
+
+@Component({
+  template: `<form><md-select [(ngModel)]="value"></md-select></form>`
+})
+class InvalidSelectInForm {
+  value: any;
 }
