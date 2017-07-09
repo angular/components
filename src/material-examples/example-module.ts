@@ -1,12 +1,12 @@
-import {NgModule} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CommonModule} from '@angular/common';
-import {AutocompleteOverviewExample} from './autocomplete-overview/autocomplete-overview-example';
-import {ButtonOverviewExample} from './button-overview/button-overview-example';
-import {ButtonTypesExample} from './button-types/button-types-example';
-import {CheckboxOverviewExample} from './checkbox-overview/checkbox-overview-example';
-import {SliderConfigurableExample} from './slider-configurable/slider-configurable-example';
-import {TabsOverviewExample} from './tabs-overview/tabs-overview-example';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AutocompleteOverviewExample } from './autocomplete-overview/autocomplete-overview-example';
+import { ButtonOverviewExample } from './button-overview/button-overview-example';
+import { ButtonTypesExample } from './button-types/button-types-example';
+import { CheckboxOverviewExample } from './checkbox-overview/checkbox-overview-example';
+import { SliderConfigurableExample } from './slider-configurable/slider-configurable-example';
+import { TabsOverviewExample } from './tabs-overview/tabs-overview-example';
 import {
   PizzaPartyComponent,
   SnackBarComponentExample
@@ -18,23 +18,23 @@ import {
   DialogOverviewExample,
   DialogOverviewExampleDialog
 } from './dialog-overview/dialog-overview-example';
-import {RadioNgModelExample} from './radio-ng-model/radio-ng-model-example';
-import {CardFancyExample} from './card-fancy/card-fancy-example';
-import {ToolbarOverviewExample} from './toolbar-overview/toolbar-overview-example';
-import {ToolbarMultirowExample} from './toolbar-multirow/toolbar-multirow-example';
-import {MenuIconsExample} from './menu-icons/menu-icons-example';
-import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-example';
-import {IconOverviewExample} from './icon-overview/icon-overview-example';
-import {ProgressBarOverviewExample} from './progress-bar-overview/progress-bar-overview-example';
-import {SlideToggleOverviewExample} from './slide-toggle-overview/slide-toggle-overview-example';
-import {SlideToggleFormsExample} from './slide-toggle-forms/slide-toggle-forms-example';
-import {MenuOverviewExample} from './menu-overview/menu-overview-example';
-import {CheckboxConfigurableExample} from './checkbox-configurable/checkbox-configurable-example';
+import { RadioNgModelExample } from './radio-ng-model/radio-ng-model-example';
+import { CardFancyExample } from './card-fancy/card-fancy-example';
+import { ToolbarOverviewExample } from './toolbar-overview/toolbar-overview-example';
+import { ToolbarMultirowExample } from './toolbar-multirow/toolbar-multirow-example';
+import { MenuIconsExample } from './menu-icons/menu-icons-example';
+import { GridListDynamicExample } from './grid-list-dynamic/grid-list-dynamic-example';
+import { IconOverviewExample } from './icon-overview/icon-overview-example';
+import { ProgressBarOverviewExample } from './progress-bar-overview/progress-bar-overview-example';
+import { SlideToggleOverviewExample } from './slide-toggle-overview/slide-toggle-overview-example';
+import { SlideToggleFormsExample } from './slide-toggle-forms/slide-toggle-forms-example';
+import { MenuOverviewExample } from './menu-overview/menu-overview-example';
+import { CheckboxConfigurableExample } from './checkbox-configurable/checkbox-configurable-example';
 import {
   ButtonToggleExclusiveExample
 } from './button-toggle-exclusive/button-toggle-exclusive-example';
-import {ListSectionsExample} from './list-sections/list-sections-example';
-import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
+import { ListSectionsExample } from './list-sections/list-sections-example';
+import { SnackBarOverviewExample } from './snack-bar-overview/snack-bar-overview-example';
 import {
   DialogResultExample,
   DialogResultExampleDialog
@@ -43,62 +43,65 @@ import {
   DialogElementsExample,
   DialogElementsExampleDialog
 } from './dialog-elements/dialog-elements-example';
-import {TooltipOverviewExample} from './tooltip-overview/tooltip-overview-example';
-import {ButtonToggleOverviewExample} from './button-toggle-overview/button-toggle-overview-example';
-import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
-import {TooltipPositionExample} from './tooltip-position/tooltip-position-example';
+import { TooltipOverviewExample } from './tooltip-overview/tooltip-overview-example';
+import { ButtonToggleOverviewExample } from './button-toggle-overview/button-toggle-overview-example';
+import { GridListOverviewExample } from './grid-list-overview/grid-list-overview-example';
+import { TooltipPositionExample } from './tooltip-position/tooltip-position-example';
 import {
   ProgressSpinnerConfigurableExample
 } from './progress-spinner-configurable/progress-spinner-configurable-example';
-import {ListOverviewExample} from './list-overview/list-overview-example';
-import {SliderOverviewExample} from './slider-overview/slider-overview-example';
+import { ListOverviewExample } from './list-overview/list-overview-example';
+import { SliderOverviewExample } from './slider-overview/slider-overview-example';
 import {
   SlideToggleConfigurableExample
 } from './slide-toggle-configurable/slide-toggle-configurable-example';
-import {IconSvgExample} from './icon-svg-example/icon-svg-example';
-import {SidenavFabExample} from './sidenav-fab/sidenav-fab-example';
-import {CardOverviewExample} from './card-overview/card-overview-example';
+import { IconSvgExample } from './icon-svg-example/icon-svg-example';
+import { SidenavFabExample } from './sidenav-fab/sidenav-fab-example';
+import { CardOverviewExample } from './card-overview/card-overview-example';
 import {
   ProgressSpinnerOverviewExample
 } from './progress-spinner-overview/progress-spinner-overview-example';
-import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-label-example';
-import {RadioOverviewExample} from './radio-overview/radio-overview-example';
-import {SidenavOverviewExample} from './sidenav-overview/sidenav-overview-example';
-import {SelectOverviewExample} from './select-overview/select-overview-example';
-import {ChipsOverviewExample} from './chips-overview/chips-overview-example';
-import {ChipsStackedExample} from './chips-stacked/chips-stacked-example';
-import {SelectFormExample} from './select-form/select-form-example';
-import {PaginatorOverviewExample} from './paginator-overview/paginator-overview-example';
-import {DatepickerOverviewExample} from './datepicker-overview/datepicker-overview-example';
+import { TabsTemplateLabelExample } from './tabs-template-label/tabs-template-label-example';
+import { RadioOverviewExample } from './radio-overview/radio-overview-example';
+import { SidenavOverviewExample } from './sidenav-overview/sidenav-overview-example';
+import { SelectOverviewExample } from './select-overview/select-overview-example';
+import { ChipsOverviewExample } from './chips-overview/chips-overview-example';
+import { ChipsStackedExample } from './chips-stacked/chips-stacked-example';
+import { SelectFormExample } from './select-form/select-form-example';
+import { PaginatorOverviewExample } from './paginator-overview/paginator-overview-example';
+import { DatepickerOverviewExample } from './datepicker-overview/datepicker-overview-example';
 import {
   PaginatorConfigurableExample
 } from './paginator-configurable/paginator-configurable-example';
-import {InputOverviewExample} from './input-overview/input-overview-example';
-import {InputErrorsExample} from './input-errors/input-errors-example';
-import {InputFormExample} from './input-form/input-form-example';
-import {InputPrefixSuffixExample} from './input-prefix-suffix/input-prefix-suffix-example';
-import {InputHintExample} from './input-hint/input-hint-example';
-import {DatepickerStartViewExample} from './datepicker-start-view/datepicker-start-view-example';
-import {DatepickerMinMaxExample} from './datepicker-min-max/datepicker-min-max-example';
-import {DatepickerFilterExample} from './datepicker-filter/datepicker-filter-example';
-import {DatepickerTouchExample} from './datepicker-touch/datepicker-touch-example';
-import {DatepickerApiExample} from './datepicker-api/datepicker-api-example';
-import {InputClearableExample} from './input-clearable/input-clearable-example';
+import { InputOverviewExample } from './input-overview/input-overview-example';
+import { InputErrorsExample } from './input-errors/input-errors-example';
+import { InputFormExample } from './input-form/input-form-example';
+import { InputPrefixSuffixExample } from './input-prefix-suffix/input-prefix-suffix-example';
+import { InputHintExample } from './input-hint/input-hint-example';
+import { DatepickerStartViewExample } from './datepicker-start-view/datepicker-start-view-example';
+import { DatepickerMinMaxExample } from './datepicker-min-max/datepicker-min-max-example';
+import { DatepickerFilterExample } from './datepicker-filter/datepicker-filter-example';
+import { DatepickerTouchExample } from './datepicker-touch/datepicker-touch-example';
+import { DatepickerApiExample } from './datepicker-api/datepicker-api-example';
+import { ExpansionOverviewExample } from './expansion-overview/expansion-overview-example';
+import { ExpansionStepsExample } from './expansion-steps/expansion-steps-example';
+import { InputClearableExample } from './input-clearable/input-clearable-example';
 import {
   MdAutocompleteModule, MdButtonModule, MdButtonToggleModule, MdCardModule, MdCheckboxModule,
-  MdChipsModule, MdDatepickerModule, MdDialogModule, MdGridListModule, MdIconModule, MdInputModule,
-  MdListModule, MdMenuModule, MdPaginatorModule, MdProgressBarModule, MdProgressSpinnerModule,
-  MdRadioModule, MdSelectModule, MdSidenavModule, MdSliderModule, MdSlideToggleModule,
-  MdSnackBarModule, MdSortModule, MdTableModule, MdTabsModule, MdToolbarModule, MdTooltipModule
+  MdChipsModule, MdDatepickerModule, MdDialogModule, MdExpansionModule, MdGridListModule,
+  MdIconModule, MdInputModule, MdListModule, MdMenuModule, MdPaginatorModule, MdProgressBarModule,
+  MdProgressSpinnerModule, MdRadioModule, MdSelectModule, MdSidenavModule, MdSliderModule,
+  MdSlideToggleModule, MdSnackBarModule, MdSortModule, MdTableModule, MdTabsModule,
+  MdToolbarModule, MdTooltipModule
 } from '@angular/material';
-import {CdkTableModule} from '@angular/cdk';
-import {TableOverviewExample} from './table-overview/table-overview-example';
-import {TablePaginationExample} from './table-pagination/table-pagination-example';
-import {TableBasicExample} from './table-basic/table-basic-example';
-import {TableSortingExample} from './table-sorting/table-sorting-example';
-import {TableFilteringExample} from './table-filtering/table-filtering-example';
-import {CdkTableBasicExample} from './cdk-table-basic/cdk-table-basic-example';
-import {SortOverviewExample} from './sort-overview/sort-overview-example';
+import { CdkTableModule } from '@angular/cdk';
+import { TableOverviewExample } from './table-overview/table-overview-example';
+import { TablePaginationExample } from './table-pagination/table-pagination-example';
+import { TableBasicExample } from './table-basic/table-basic-example';
+import { TableSortingExample } from './table-sorting/table-sorting-example';
+import { TableFilteringExample } from './table-filtering/table-filtering-example';
+import { CdkTableBasicExample } from './cdk-table-basic/cdk-table-basic-example';
+import { SortOverviewExample } from './sort-overview/sort-overview-example';
 
 export interface LiveExample {
   title: string;
@@ -113,27 +116,27 @@ export interface LiveExample {
  * Value is the component.
  */
 export const EXAMPLE_COMPONENTS = {
-  'autocomplete-overview': {title: 'Basic autocomplete', component: AutocompleteOverviewExample},
-  'button-overview': {title: 'Basic buttons', component: ButtonOverviewExample},
-  'button-types': {title: 'Button varieties', component: ButtonTypesExample},
+  'autocomplete-overview': { title: 'Basic autocomplete', component: AutocompleteOverviewExample },
+  'button-overview': { title: 'Basic buttons', component: ButtonOverviewExample },
+  'button-types': { title: 'Button varieties', component: ButtonTypesExample },
   'button-toggle-exclusive': {
     title: 'Exclusive selection',
     component: ButtonToggleExclusiveExample
   },
-  'button-toggle-overview': {title: 'Basic button-toggles', component: ButtonToggleOverviewExample},
-  'chips-overview': {title: 'Basic chips', component: ChipsOverviewExample},
-  'cdk-table-basic': {title: 'Basic CDK data-table', component: CdkTableBasicExample},
-  'chips-stacked': {title: 'Stacked chips', component: ChipsStackedExample},
-  'card-fancy': {title: 'Card with multiple sections', component: CardFancyExample},
-  'card-overview': {title: 'Basic cards', component: CardOverviewExample},
-  'checkbox-configurable': {title: 'Configurable checkbox', component: CheckboxConfigurableExample},
-  'checkbox-overview': {title: 'Basic checkboxes', component: CheckboxOverviewExample},
-  'datepicker-overview': {title: 'Basic datepicker', component: DatepickerOverviewExample},
-  'datepicker-start-view': {title: 'Start View', component: DatepickerStartViewExample},
-  'datepicker-min-max': {title: 'Min/Max Validation', component: DatepickerMinMaxExample},
-  'datepicker-filter': {title: 'Filter Validation', component: DatepickerFilterExample},
-  'datepicker-touch': {title: 'Touch', component: DatepickerTouchExample},
-  'datepicker-api': {title: 'API', component: DatepickerApiExample},
+  'button-toggle-overview': { title: 'Basic button-toggles', component: ButtonToggleOverviewExample },
+  'chips-overview': { title: 'Basic chips', component: ChipsOverviewExample },
+  'cdk-table-basic': { title: 'Basic CDK data-table', component: CdkTableBasicExample },
+  'chips-stacked': { title: 'Stacked chips', component: ChipsStackedExample },
+  'card-fancy': { title: 'Card with multiple sections', component: CardFancyExample },
+  'card-overview': { title: 'Basic cards', component: CardOverviewExample },
+  'checkbox-configurable': { title: 'Configurable checkbox', component: CheckboxConfigurableExample },
+  'checkbox-overview': { title: 'Basic checkboxes', component: CheckboxOverviewExample },
+  'datepicker-overview': { title: 'Basic datepicker', component: DatepickerOverviewExample },
+  'datepicker-start-view': { title: 'Start View', component: DatepickerStartViewExample },
+  'datepicker-min-max': { title: 'Min/Max Validation', component: DatepickerMinMaxExample },
+  'datepicker-filter': { title: 'Filter Validation', component: DatepickerFilterExample },
+  'datepicker-touch': { title: 'Touch', component: DatepickerTouchExample },
+  'datepicker-api': { title: 'API', component: DatepickerApiExample },
   'dialog-overview': {
     title: 'Basic dialog',
     component: DialogOverviewExample,
@@ -152,21 +155,23 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: ['dialog-elements-example-dialog.html'],
     selectorName: 'DialogElementsExample, DialogElementsExampleDialog',
   },
-  'grid-list-dynamic': {title: 'Dynamic grid-list', component: GridListDynamicExample},
-  'grid-list-overview': {title: 'Basic grid-list', component: GridListOverviewExample},
-  'icon-overview': {title: 'Basic icons', component: IconOverviewExample},
-  'icon-svg': {title: 'SVG icons', component: IconSvgExample},
-  'input-clearable': {title: 'Input with clear button', component: InputClearableExample},
-  'input-form': {title: 'Inputs in a form', component: InputFormExample},
-  'input-overview': {title: 'Basic inputs', component: InputOverviewExample},
-  'input-errors': {title: 'Input Errors', component: InputErrorsExample},
-  'input-prefix-suffix': {title: 'Input Prefixes/Suffixes', component: InputPrefixSuffixExample},
-  'input-hint': {title: 'Input Hint', component: InputHintExample},
-  'list-overview': {title: 'Basic list', component: ListOverviewExample},
-  'list-sections': {title: 'List with sections', component: ListSectionsExample},
-  'menu-icons': {title: 'Menu with icons', component: MenuIconsExample},
-  'menu-overview': {title: 'Basic menu', component: MenuOverviewExample},
-  'paginator-overview': {title: 'Paginator', component: PaginatorOverviewExample},
+  'expansion-overview': { title: 'Basic Expansion', component: ExpansionOverviewExample },
+  'expansion-steps': { title: 'Accordion', component: ExpansionStepsExample },
+  'grid-list-dynamic': { title: 'Dynamic grid-list', component: GridListDynamicExample },
+  'grid-list-overview': { title: 'Basic grid-list', component: GridListOverviewExample },
+  'icon-overview': { title: 'Basic icons', component: IconOverviewExample },
+  'icon-svg': { title: 'SVG icons', component: IconSvgExample },
+  'input-clearable': { title: 'Input with clear button', component: InputClearableExample },
+  'input-form': { title: 'Inputs in a form', component: InputFormExample },
+  'input-overview': { title: 'Basic inputs', component: InputOverviewExample },
+  'input-errors': { title: 'Input Errors', component: InputErrorsExample },
+  'input-prefix-suffix': { title: 'Input Prefixes/Suffixes', component: InputPrefixSuffixExample },
+  'input-hint': { title: 'Input Hint', component: InputHintExample },
+  'list-overview': { title: 'Basic list', component: ListOverviewExample },
+  'list-sections': { title: 'List with sections', component: ListSectionsExample },
+  'menu-icons': { title: 'Menu with icons', component: MenuIconsExample },
+  'menu-overview': { title: 'Basic menu', component: MenuOverviewExample },
+  'paginator-overview': { title: 'Paginator', component: PaginatorOverviewExample },
   'paginator-configurable': {
     title: 'Configurable paginator',
     component: PaginatorConfigurableExample
@@ -175,7 +180,7 @@ export const EXAMPLE_COMPONENTS = {
     title: 'Configurable progress-bar',
     component: ProgressBarConfigurableExample
   },
-  'progress-bar-overview': {title: 'Basic progress-bar', component: ProgressBarOverviewExample},
+  'progress-bar-overview': { title: 'Basic progress-bar', component: ProgressBarOverviewExample },
   'progress-spinner-configurable': {
     title: 'Configurable progress-bar',
     component: ProgressSpinnerConfigurableExample
@@ -184,37 +189,37 @@ export const EXAMPLE_COMPONENTS = {
     title: 'Basic progress-spinner',
     component: ProgressSpinnerOverviewExample
   },
-  'radio-ng-model': {title: 'Radios with ngModel', component: RadioNgModelExample},
-  'radio-overview': {title: 'Basic radios', component: RadioOverviewExample},
-  'select-overview': {title: 'Basic select', component: SelectOverviewExample},
-  'select-form': {title: 'Select in a form', component: SelectFormExample},
-  'sidenav-fab': {title: 'Sidenav with a FAB', component: SidenavFabExample},
-  'sidenav-overview': {title: 'Basic sidenav', component: SidenavOverviewExample},
-  'slider-configurable': {title: 'Configurable slider', component: SliderConfigurableExample},
-  'slider-overview': {title: 'Basic slider', component: SliderOverviewExample},
+  'radio-ng-model': { title: 'Radios with ngModel', component: RadioNgModelExample },
+  'radio-overview': { title: 'Basic radios', component: RadioOverviewExample },
+  'select-overview': { title: 'Basic select', component: SelectOverviewExample },
+  'select-form': { title: 'Select in a form', component: SelectFormExample },
+  'sidenav-fab': { title: 'Sidenav with a FAB', component: SidenavFabExample },
+  'sidenav-overview': { title: 'Basic sidenav', component: SidenavOverviewExample },
+  'slider-configurable': { title: 'Configurable slider', component: SliderConfigurableExample },
+  'slider-overview': { title: 'Basic slider', component: SliderOverviewExample },
   'slide-toggle-configurable': {
     title: 'Configurable slide-toggle',
     component: SlideToggleConfigurableExample
   },
-  'slide-toggle-forms': {title: 'Slide-toggle with forms', component: SlideToggleFormsExample},
-  'slide-toggle-overview': {title: 'Basic slide-toggles', component: SlideToggleOverviewExample},
-  'sort-overview': {title: 'Sorting overview', component: SortOverviewExample},
+  'slide-toggle-forms': { title: 'Slide-toggle with forms', component: SlideToggleFormsExample },
+  'slide-toggle-overview': { title: 'Basic slide-toggles', component: SlideToggleOverviewExample },
+  'sort-overview': { title: 'Sorting overview', component: SortOverviewExample },
   'snack-bar-component': {
     title: 'Snack-bar with a custom component',
     component: SnackBarComponentExample
   },
-  'snack-bar-overview': {title: 'Basic snack-bar', component: SnackBarOverviewExample},
-  'table-overview': {title: 'Feature-rich data table', component: TableOverviewExample},
-  'table-pagination': {title: 'Table with pagination', component: TablePaginationExample},
-  'table-sorting': {title: 'Table with sorting', component: TableSortingExample},
-  'table-filtering': {title: 'Table with filtering', component: TableFilteringExample},
-  'table-basic': {title: 'Basic table', component: TableBasicExample},
-  'tabs-overview': {title: 'Basic tabs', component: TabsOverviewExample},
-  'tabs-template-label': {title: 'Coming soon!', component: TabsTemplateLabelExample},
-  'toolbar-multirow': {title: 'Multi-row toolbar', component: ToolbarMultirowExample},
-  'toolbar-overview': {title: 'basic toolbar', component: ToolbarOverviewExample},
-  'tooltip-overview': {title: 'Basic tooltip', component: TooltipOverviewExample},
-  'tooltip-position': {title: 'Tooltip with custom position', component: TooltipPositionExample},
+  'snack-bar-overview': { title: 'Basic snack-bar', component: SnackBarOverviewExample },
+  'table-overview': { title: 'Feature-rich data table', component: TableOverviewExample },
+  'table-pagination': { title: 'Table with pagination', component: TablePaginationExample },
+  'table-sorting': { title: 'Table with sorting', component: TableSortingExample },
+  'table-filtering': { title: 'Table with filtering', component: TableFilteringExample },
+  'table-basic': { title: 'Basic table', component: TableBasicExample },
+  'tabs-overview': { title: 'Basic tabs', component: TabsOverviewExample },
+  'tabs-template-label': { title: 'Coming soon!', component: TabsTemplateLabelExample },
+  'toolbar-multirow': { title: 'Multi-row toolbar', component: ToolbarMultirowExample },
+  'toolbar-overview': { title: 'basic toolbar', component: ToolbarOverviewExample },
+  'tooltip-overview': { title: 'Basic tooltip', component: TooltipOverviewExample },
+  'tooltip-position': { title: 'Tooltip with custom position', component: TooltipPositionExample },
 };
 
 /**
@@ -231,6 +236,7 @@ export const EXAMPLE_COMPONENTS = {
     MdChipsModule,
     MdDatepickerModule,
     MdDialogModule,
+    MdExpansionModule,
     MdGridListModule,
     MdIconModule,
     MdInputModule,
@@ -252,7 +258,7 @@ export const EXAMPLE_COMPONENTS = {
     MdTooltipModule
   ]
 })
-export class ExampleMaterialModule {}
+export class ExampleMaterialModule { }
 
 /**
  * The list of all example components.
@@ -283,6 +289,8 @@ export const EXAMPLE_LIST = [
   DialogResultExampleDialog,
   DialogElementsExample,
   DialogElementsExampleDialog,
+  ExpansionOverviewExample,
+  ExpansionStepsExample,
   GridListDynamicExample,
   GridListOverviewExample,
   IconOverviewExample,
