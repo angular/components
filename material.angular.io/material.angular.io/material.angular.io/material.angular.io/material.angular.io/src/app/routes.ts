@@ -37,10 +37,12 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
           {path: 'overview', component: ComponentOverview, pathMatch: 'full'},
           {path: 'api', component: ComponentApi, pathMatch: 'full'},
           {path: 'examples', component: ComponentExamples, pathMatch: 'full'},
+          {path: '**', redirectTo: 'overview'},
         ],
       },
     ],
   },
   {path: 'guides', component: GuideList},
   {path: 'guide/:id', component: GuideViewer},
+  {path: '**', redirectTo: ''},
 ];
