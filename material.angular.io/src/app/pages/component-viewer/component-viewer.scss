@@ -2,7 +2,17 @@
 
 app-component-viewer {
   font-weight: 400;
-  margin: 20px 70px 50px 70px;
+  padding: 20px $content-padding-side 50px;
+
+  @media ($mat-xsmall) {
+    padding-left: $content-padding-side-xs;
+    padding-right: $content-padding-side-xs;
+  }
+}
+
+.docs-component-viewer {
+  margin: 0 auto;
+  max-width: 940px;
 }
 
 .docs-component-viewer-section-tab {
