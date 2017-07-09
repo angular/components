@@ -1,0 +1,88 @@
+/** Adapted from https://github.com/atom-material/atom-material-syntax-light */
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+  background: #FAFAFA;
+  color: #607D8B;
+  font-family: "Roboto Mono", monospace;
+  font-size: 1em;
+}
+
+.hljs > *::selection,
+.hljs-section {
+  background-color: #D6EDEA;
+}
+
+.hljs-comment {
+  color: #B0BEC5;
+  font-style: italic;
+}
+
+.hljs-tag,
+.hljs-selector-tag,
+.hljs-regexp,
+.hljs-meta {
+  color: #39ADB5;
+}
+
+.hljs-string,
+.hljs-subst {
+  color: #91B859;
+}
+
+.hljs-number,
+.hljs-variable,
+.hljs-template-variable {
+  color: #80CBC4;
+}
+
+.hljs-name,
+.hljs-keyword,
+.hljs-type,
+.hljs-attribute {
+  color: #7C4DFF;
+}
+
+.hljs-title,
+.hljs-function > .hljs-title,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-link {
+  color: #6182B8;
+}
+
+.hljs-params {
+  color: #F76D47;
+}
+
+.hljs-addition {
+  color: #7C4DFF;
+  display: inline-block;
+  width: 100%;
+}
+
+.hljs-deletion {
+  color: #E53935;
+  display: inline-block;
+  width: 100%;
+}
+
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #8796B0;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-link {
+  text-decoration: underline;
+}

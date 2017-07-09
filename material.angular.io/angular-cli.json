@@ -19,7 +19,7 @@
       "mobile": false,
       "styles": [
         "main.scss",
-        "highlightjs/solarized-light.css",
+        "highlightjs/material-light.css",
         {"input": "assets/pink-bluegrey.css", "lazy": true},
         {"input": "assets/deeppurple-amber.css", "lazy": true},
         {"input": "assets/indigo-pink.css", "lazy": true},
