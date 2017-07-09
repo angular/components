@@ -11,11 +11,11 @@ export class ExpansionStepsExample {
   openEvent(stepNumb: number) {
     this.step = stepNumb;
   }
-  
+
   nextStep() {
     this.step++;
   }
-  
+
   prevStep() {
     this.step--;
   }
