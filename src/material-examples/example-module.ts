@@ -44,8 +44,8 @@ import {
   DialogElementsExampleDialog
 } from './dialog-elements/dialog-elements-example';
 import { TooltipOverviewExample } from './tooltip-overview/tooltip-overview-example';
-import { 
-  ButtonToggleOverviewExample 
+import {
+  ButtonToggleOverviewExample
 } from './button-toggle-overview/button-toggle-overview-example';
 import { GridListOverviewExample } from './grid-list-overview/grid-list-overview-example';
 import { TooltipPositionExample } from './tooltip-position/tooltip-position-example';
@@ -125,7 +125,7 @@ export const EXAMPLE_COMPONENTS = {
     title: 'Exclusive selection',
     component: ButtonToggleExclusiveExample
   },
-  'button-toggle-overview': { 
+  'button-toggle-overview': {
     title: 'Basic button-toggles', component: ButtonToggleOverviewExample
   },
   'chips-overview': { title: 'Basic chips', component: ChipsOverviewExample },
@@ -133,8 +133,8 @@ export const EXAMPLE_COMPONENTS = {
   'chips-stacked': { title: 'Stacked chips', component: ChipsStackedExample },
   'card-fancy': { title: 'Card with multiple sections', component: CardFancyExample },
   'card-overview': { title: 'Basic cards', component: CardOverviewExample },
-  'checkbox-configurable': { 
-    title: 'Configurable checkbox', component: CheckboxConfigurableExample 
+  'checkbox-configurable': {
+    title: 'Configurable checkbox', component: CheckboxConfigurableExample
   },
   'checkbox-overview': { title: 'Basic checkboxes', component: CheckboxOverviewExample },
   'datepicker-overview': { title: 'Basic datepicker', component: DatepickerOverviewExample },
