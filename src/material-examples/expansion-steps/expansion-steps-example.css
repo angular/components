@@ -2,3 +2,11 @@
 .headers-align .mat-expansion-panel-header-description {
   flex-basis: 0;
 }
+
+.icons-to-right {
+    display: inline-block;
+    width: 100%;
+    text-align: right;
+    margin-top: 5px;
+    color: blue;
+}
