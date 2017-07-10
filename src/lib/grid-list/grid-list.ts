@@ -17,6 +17,7 @@ import {
   Renderer2,
   ElementRef,
   Optional,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {MdGridTile} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
@@ -43,6 +44,7 @@ const MD_FIT_MODE = 'fit';
     'role': 'list',
     'class': 'mat-grid-list',
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MdGridList implements OnInit, AfterContentChecked {
@@ -142,7 +144,7 @@ export class MdGridList implements OnInit, AfterContentChecked {
   }
 
   /** Sets style on the main grid-list element, given the style name and value. */
-  _setListStyle(style: [string, string]): void {
+  _setListStyle(style: [string, string] | null): void {
     if (style) {
       this._renderer.setStyle(this._element.nativeElement, style[0], style[1]);
     }

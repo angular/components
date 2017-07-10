@@ -6,6 +6,7 @@
     "stripInternal": false,
     "experimentalDecorators": true,
     "noUnusedParameters": true,
+    "strictNullChecks": true,
     "importHelpers": true,
     "module": "es2015",
     "moduleResolution": "node",
@@ -19,7 +20,8 @@
     "types": [],
     "baseUrl": ".",
     "paths": {
-      "@angular/material": ["../../dist/packages/material/public_api"]
+      "@angular/material": ["../../dist/packages/material/public_api"],
+      "@angular/cdk": ["../../dist/packages/cdk/public_api"]
     }
   },
   "files": [

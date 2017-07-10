@@ -19,6 +19,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   ElementRef,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {throwMdMenuInvalidPositionX, throwMdMenuInvalidPositionY} from './menu-errors';
@@ -33,9 +34,9 @@ import {ESCAPE} from '../core/keyboard/keycodes';
 @Component({
   moduleId: module.id,
   selector: 'md-menu, mat-menu',
-  host: {'role': 'menu'},
   templateUrl: 'menu.html',
   styleUrls: ['menu.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   animations: [
     transformMenu,
@@ -117,6 +118,9 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
     if (this._tabSubscription) {
       this._tabSubscription.unsubscribe();
     }
+
+    this._emitCloseEvent();
+    this.close.complete();
   }
 
   /** Handle a keyboard event from the menu, delegating to the appropriate action. */

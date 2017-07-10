@@ -6,6 +6,7 @@
 @import '../../card/card-theme';
 @import '../../checkbox/checkbox-theme';
 @import '../../chips/chips-theme';
+@import '../../table/table-theme';
 @import '../../datepicker/datepicker-theme';
 @import '../../dialog/dialog-theme';
 @import '../../expansion/expansion-theme';
@@ -14,6 +15,7 @@
 @import '../../input/input-theme';
 @import '../../list/list-theme';
 @import '../../menu/menu-theme';
+@import '../../paginator/paginator-theme';
 @import '../../progress-bar/progress-bar-theme';
 @import '../../progress-spinner/progress-spinner-theme';
 @import '../../radio/radio-theme';
@@ -36,6 +38,7 @@
   @include mat-card-theme($theme);
   @include mat-checkbox-theme($theme);
   @include mat-chips-theme($theme);
+  @include mat-table-theme($theme);
   @include mat-datepicker-theme($theme);
   @include mat-dialog-theme($theme);
   @include mat-expansion-panel-theme($theme);
@@ -44,6 +47,7 @@
   @include mat-input-theme($theme);
   @include mat-list-theme($theme);
   @include mat-menu-theme($theme);
+  @include mat-paginator-theme($theme);
   @include mat-progress-bar-theme($theme);
   @include mat-progress-spinner-theme($theme);
   @include mat-radio-theme($theme);

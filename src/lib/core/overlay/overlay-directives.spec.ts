@@ -6,7 +6,7 @@ import {OverlayContainer} from './overlay-container';
 import {ConnectedPositionStrategy} from './position/connected-position-strategy';
 import {ConnectedOverlayPositionChange} from './position/connected-position';
 import {Directionality} from '../bidi/index';
-import {dispatchKeyboardEvent} from '../testing/dispatch-events';
+import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ESCAPE} from '../keyboard/keycodes';
 
 
@@ -62,7 +62,7 @@ describe('Overlay directives', () => {
     fixture.detectChanges();
     fixture.destroy();
 
-    expect(overlayContainerElement.textContent.trim()).toBe('');
+    expect(overlayContainerElement.textContent!.trim()).toBe('');
     expect(getPaneElement())
       .toBeFalsy('Expected the overlay pane element to be removed when disposed.');
   });
@@ -107,7 +107,7 @@ describe('Overlay directives', () => {
     dispatchKeyboardEvent(document, 'keydown', ESCAPE);
     fixture.detectChanges();
 
-    expect(overlayContainerElement.textContent.trim()).toBe('',
+    expect(overlayContainerElement.textContent!.trim()).toBe('',
         'Expected overlay to have been detached.');
   });
 

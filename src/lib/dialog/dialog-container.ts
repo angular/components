@@ -12,7 +12,6 @@ import {
   ViewChild,
   ViewEncapsulation,
   NgZone,
-  OnDestroy,
   ElementRef,
   EventEmitter,
   Inject,
@@ -67,6 +66,7 @@ export function throwMdDialogContentAlreadyAttachedError() {
     'class': 'mat-dialog-container',
     '[attr.role]': '_config?.role',
     '[attr.aria-labelledby]': '_ariaLabelledBy',
+    '[attr.aria-describedby]': '_config?.ariaDescribedBy || null',
     '[@slideDialog]': '_state',
     '(@slideDialog.done)': '_onAnimationDone($event)',
   },
@@ -79,7 +79,7 @@ export class MdDialogContainer extends BasePortalHost {
   private _focusTrap: FocusTrap;
 
   /** Element that was focused before the dialog was opened. Save this to restore upon close. */
-  private _elementFocusedBeforeDialogWasOpened: HTMLElement = null;
+  private _elementFocusedBeforeDialogWasOpened: HTMLElement | null = null;
 
   /** Reference to the global document object. */
   private _document: Document;

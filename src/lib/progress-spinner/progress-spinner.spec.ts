@@ -27,10 +27,10 @@ describe('MdProgressSpinner', () => {
 
   it('should apply a mode of "determinate" if no mode is provided.', () => {
     let fixture = TestBed.createComponent(BasicProgressSpinner);
-      fixture.detectChanges();
+    fixture.detectChanges();
 
-      let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
-      expect(progressElement.componentInstance.mode).toBe('determinate');
+    let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
+    expect(progressElement.componentInstance.mode).toBe('determinate');
   });
 
   it('should not modify the mode if a valid mode is provided.', () => {
@@ -49,7 +49,7 @@ describe('MdProgressSpinner', () => {
     expect(progressElement.componentInstance.value).toBeUndefined();
   });
 
-  it('should set the value to undefined when the mode is set to indeterminate', () => {
+  it('should set the value to 0 when the mode is set to indeterminate', () => {
     let fixture = TestBed.createComponent(ProgressSpinnerWithValueAndBoundMode);
     let progressElement = fixture.debugElement.query(By.css('md-progress-spinner'));
     fixture.componentInstance.mode = 'determinate';
@@ -58,7 +58,7 @@ describe('MdProgressSpinner', () => {
     expect(progressElement.componentInstance.value).toBe(50);
     fixture.componentInstance.mode = 'indeterminate';
     fixture.detectChanges();
-    expect(progressElement.componentInstance.value).toBe(undefined);
+    expect(progressElement.componentInstance.value).toBe(0);
   });
 
   it('should clamp the value of the progress between 0 and 100', () => {

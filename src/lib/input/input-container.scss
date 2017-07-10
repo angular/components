@@ -85,6 +85,10 @@ $mat-input-underline-height: 1px !default;
   padding: 0;
   width: 100%;
 
+  // Prevent textareas from being resized outside the container.
+  max-width: 100%;
+  resize: vertical;
+
   // Needed to make last line of the textarea line up with the baseline.
   vertical-align: bottom;
 
@@ -206,6 +210,7 @@ textarea.mat-input-element {
     position: absolute;
     height: $mat-input-underline-height * 2;
     top: 0;
+    left: 0;
     width: 100%;
     transform-origin: 50%;
     transform: scaleX(0.5);

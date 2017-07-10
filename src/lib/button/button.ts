@@ -12,14 +12,13 @@ import {
   Directive,
   ElementRef,
   forwardRef,
-  HostBinding,
   Input,
   OnDestroy,
   Optional,
   Renderer2,
   Self,
   ViewEncapsulation,
-  Inject
+  Inject,
 } from '@angular/core';
 import {coerceBooleanProperty, FocusOriginMonitor, Platform} from '../core';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
@@ -100,6 +99,7 @@ export class MdMiniFab {
 
 
 // Boilerplate for applying mixins to MdButton.
+/** @docs-private */
 export class MdButtonBase {
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
@@ -192,14 +192,16 @@ export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisabl
   selector: `a[md-button], a[md-raised-button], a[md-icon-button], a[md-fab], a[md-mini-fab],
              a[mat-button], a[mat-raised-button], a[mat-icon-button], a[mat-fab], a[mat-mini-fab]`,
   host: {
+    '[attr.tabindex]': 'disabled ? -1 : 0',
     '[attr.disabled]': 'disabled || null',
-    '[attr.aria-disabled]': '_isAriaDisabled',
+    '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_haltDisabledEvents($event)',
   },
   inputs: ['disabled', 'color'],
   templateUrl: 'button.html',
   styleUrls: ['button.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdAnchor extends MdButton {
   constructor(
@@ -208,16 +210,6 @@ export class MdAnchor extends MdButton {
       elementRef: ElementRef,
       renderer: Renderer2) {
     super(renderer, elementRef, platform, focusOriginMonitor);
-  }
-
-  /** @docs-private */
-  @HostBinding('tabIndex')
-  get tabIndex(): number {
-    return this.disabled ? -1 : 0;
-  }
-
-  get _isAriaDisabled(): string {
-    return this.disabled ? 'true' : 'false';
   }
 
   _haltDisabledEvents(event: Event) {

@@ -1,10 +1,13 @@
 import {Component} from '@angular/core';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-import {async, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {
+  async, ComponentFixture, TestBed, fakeAsync, tick,
+  flushMicrotasks
+} from '@angular/core/testing';
 import {NgModel, FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
 import {MdSlideToggle, MdSlideToggleChange, MdSlideToggleModule} from './index';
 import {TestGestureConfig} from '../slider/test-gesture-config';
-import {dispatchFakeEvent} from '../core/testing/dispatch-events';
+import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {RIPPLE_FADE_IN_DURATION, RIPPLE_FADE_OUT_DURATION} from '../core/ripple/ripple-renderer';
 
 describe('MdSlideToggle', () => {
@@ -22,6 +25,53 @@ describe('MdSlideToggle', () => {
 
     TestBed.compileComponents();
   }));
+
+  describe('without form modules', () => {
+    let fixture: ComponentFixture<SlideToggleWithoutForms>;
+    let slideToggleInstance: MdSlideToggle;
+    let labelElement: HTMLLabelElement;
+
+    beforeEach(async(() => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [MdSlideToggleModule],
+        declarations: [SlideToggleWithoutForms]
+      });
+    }));
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SlideToggleWithoutForms);
+      fixture.detectChanges();
+
+      const slideToggleDebug = fixture.debugElement.query(By.directive(MdSlideToggle));
+
+      slideToggleInstance = slideToggleDebug.componentInstance;
+      labelElement = fixture.debugElement.query(By.css('label')).nativeElement;
+    });
+
+    it('should update the checked state on click', () => {
+      expect(slideToggleInstance.checked)
+        .toBe(false, 'Expected the slide-toggle not to be checked initially.');
+
+      labelElement.click();
+      fixture.detectChanges();
+
+      expect(slideToggleInstance.checked)
+        .toBe(true, 'Expected the slide-toggle to be checked after click.');
+    });
+
+    it('should update the checked state from binding', () => {
+      expect(slideToggleInstance.checked)
+        .toBe(false, 'Expected the slide-toggle not to be checked initially.');
+
+      fixture.componentInstance.isChecked = true;
+      fixture.detectChanges();
+
+      expect(slideToggleInstance.checked)
+        .toBe(true, 'Expected the slide-toggle to be checked after click.');
+    });
+
+  });
 
   describe('basic behavior', () => {
     let fixture: ComponentFixture<any>;
@@ -56,17 +106,17 @@ describe('MdSlideToggle', () => {
       labelElement = fixture.debugElement.query(By.css('label')).nativeElement;
     }));
 
-    // TODO(kara); update when core/testing adds fix
-    it('should update the model correctly', async(() => {
+    it('should update the model correctly', fakeAsync(() => {
       expect(slideToggleElement.classList).not.toContain('mat-checked');
 
       testComponent.slideModel = true;
       fixture.detectChanges();
-      fixture.whenStable().then(() => {
-        fixture.detectChanges();
-        expect(slideToggleElement.classList).toContain('mat-checked');
-      });
 
+      // Flush the microtasks because the forms module updates the model state asynchronously.
+      flushMicrotasks();
+
+      fixture.detectChanges();
+      expect(slideToggleElement.classList).toContain('mat-checked');
     }));
 
     it('should apply class based on color attribute', () => {
@@ -333,19 +383,23 @@ describe('MdSlideToggle', () => {
       expect(slideToggleElement.classList).not.toContain('mat-checked');
     });
 
-    // TODO(kara): update when core/testing adds fix
-    it('should not set the control to touched when changing the model', async(() => {
+    it('should not set the control to touched when changing the model', fakeAsync(() => {
       // The control should start off with being untouched.
       expect(slideToggleModel.touched).toBe(false);
 
       testComponent.slideModel = true;
       fixture.detectChanges();
-      fixture.whenStable().then(() => {
-        fixture.detectChanges();
-        expect(slideToggleModel.touched).toBe(false);
-        expect(slideToggle.checked).toBe(true);
-        expect(slideToggleElement.classList).toContain('mat-checked');
-      });
+
+      // Flush the microtasks because the forms module updates the model state asynchronously.
+      flushMicrotasks();
+
+      // The checked property has been updated from the model and now the view needs
+      // to reflect the state change.
+      fixture.detectChanges();
+
+      expect(slideToggleModel.touched).toBe(false);
+      expect(slideToggle.checked).toBe(true);
+      expect(slideToggleElement.classList).toContain('mat-checked');
     }));
 
     it('should forward the required attribute', () => {
@@ -487,7 +541,7 @@ describe('MdSlideToggle', () => {
       slideToggleModel = slideToggleDebug.injector.get<NgModel>(NgModel);
       slideThumbContainer = thumbContainerDebug.nativeElement;
 
-      inputElement = slideToggleElement.querySelector('input');
+      inputElement = slideToggleElement.querySelector('input')!;
     }));
 
     it('should drag from start to end', fakeAsync(() => {
@@ -677,10 +731,10 @@ class SlideToggleTestApp {
   slideModel: boolean = false;
   slideChecked: boolean = false;
   slideColor: string;
-  slideId: string;
-  slideName: string;
-  slideLabel: string;
-  slideLabelledBy: string;
+  slideId: string | null;
+  slideName: string | null;
+  slideLabel: string | null;
+  slideLabelledBy: string | null;
   slideTabindex: number;
   lastEvent: MdSlideToggleChange;
   labelPosition: string;
@@ -712,4 +766,11 @@ class SlideToggleFormsTestApp {
 })
 class SlideToggleWithFormControl {
   formControl = new FormControl();
+}
+
+@Component({
+  template: `<md-slide-toggle [checked]="isChecked"></md-slide-toggle>`
+})
+class SlideToggleWithoutForms {
+  isChecked = false;
 }

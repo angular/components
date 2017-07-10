@@ -6,10 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewEncapsulation, ContentChildren, QueryList, Input} from '@angular/core';
+import {Component, ViewEncapsulation, Input} from '@angular/core';
 import {mixinDisabled, CanDisable} from '../common-behaviors/disabled';
 
 // Boilerplate for applying mixins to MdOptgroup.
+/** @docs-private */
 export class MdOptgroupBase { }
 export const _MdOptgroupMixinBase = mixinDisabled(MdOptgroupBase);
 

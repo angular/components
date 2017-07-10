@@ -35,7 +35,7 @@ import {
   FocusOriginMonitor,
   FocusOrigin,
 } from '../core';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
+import {coerceBooleanProperty} from '@angular/cdk';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
@@ -56,13 +56,14 @@ let _uniqueIdCounter = 0;
 /** Change event object emitted by MdRadio and MdRadioGroup. */
 export class MdRadioChange {
   /** The MdRadioButton that emits the change event. */
-  source: MdRadioButton;
+  source: MdRadioButton | null;
   /** The value of the MdRadioButton. */
   value: any;
 }
 
 
 // Boilerplate for applying mixins to MdRadioGroup.
+/** @docs-private */
 export class MdRadioGroupBase { }
 export const _MdRadioGroupMixinBase = mixinDisabled(MdRadioGroupBase);
 
@@ -92,7 +93,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
   private _name: string = `md-radio-group-${_uniqueIdCounter++}`;
 
   /** The currently selected radio button. Should match value. */
-  private _selected: MdRadioButton = null;
+  private _selected: MdRadioButton | null = null;
 
   /** Whether the `value` has been set to its initial value. */
   private _isInitialized: boolean = false;
@@ -120,8 +121,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
   @Output() change: EventEmitter<MdRadioChange> = new EventEmitter<MdRadioChange>();
 
   /** Child radio buttons. */
-  @ContentChildren(forwardRef(() => MdRadioButton))
-  _radios: QueryList<MdRadioButton> = null;
+  @ContentChildren(forwardRef(() => MdRadioButton)) _radios: QueryList<MdRadioButton>;
 
   /** Name of the radio button group. All radio buttons inside this group will use this name. */
   @Input()
@@ -172,7 +172,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
   }
 
   _checkSelectedRadioButton() {
-    if (this.selected && !this._selected.checked) {
+    if (this._selected && !this._selected.checked) {
       this._selected.checked = true;
     }
   }
@@ -180,7 +180,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
   /** Whether the radio button is selected. */
   @Input()
   get selected() { return this._selected; }
-  set selected(selected: MdRadioButton) {
+  set selected(selected: MdRadioButton | null) {
     this._selected = selected;
     this.value = selected ? selected.value : null;
     this._checkSelectedRadioButton();
@@ -297,6 +297,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
 }
 
 // Boilerplate for applying mixins to MdRadioButton.
+/** @docs-private */
 export class MdRadioButtonBase {
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
@@ -456,7 +457,10 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
   @ViewChild(MdRipple) _ripple: MdRipple;
 
   /** Reference to the current focus ripple. */
-  private _focusRipple: RippleRef;
+  private _focusRipple: RippleRef | null;
+
+  /** Unregister function for _radioDispatcher **/
+  private _removeUniqueSelectionListener: () => void = () => {};
 
   /** The native `<input type=radio>` element */
   @ViewChild('input') _inputElement: ElementRef;
@@ -473,11 +477,12 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
     this.radioGroup = radioGroup;
 
-    _radioDispatcher.listen((id: string, name: string) => {
-      if (id != this.id && name == this.name) {
-        this.checked = false;
-      }
-    });
+    this._removeUniqueSelectionListener =
+      _radioDispatcher.listen((id: string, name: string) => {
+        if (id != this.id && name == this.name) {
+          this.checked = false;
+        }
+      });
   }
 
   /** Focuses the radio button. */
@@ -513,6 +518,7 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
 
   ngOnDestroy() {
     this._focusOriginMonitor.stopMonitoring(this._inputElement.nativeElement);
+    this._removeUniqueSelectionListener();
   }
 
   /** Dispatch change event with current value. */

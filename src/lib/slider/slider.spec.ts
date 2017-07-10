@@ -13,12 +13,12 @@ import {
   PAGE_DOWN,
   PAGE_UP,
   RIGHT_ARROW,
-  UP_ARROW
+  UP_ARROW,
+  BACKSPACE
 } from '../core/keyboard/keycodes';
-import {dispatchKeyboardEvent, dispatchMouseEvent} from '../core/testing/dispatch-events';
+import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
 
-
-describe('MdSlider', () => {
+describe('MdSlider without forms', () => {
   let gestureConfig: TestGestureConfig;
 
   beforeEach(async(() => {
@@ -34,8 +34,6 @@ describe('MdSlider', () => {
         SliderWithSetTickInterval,
         SliderWithThumbLabel,
         SliderWithOneWayBinding,
-        SliderWithFormControl,
-        SliderWithNgModel,
         SliderWithValueSmallerThanMin,
         SliderWithValueGreaterThanMax,
         SliderWithChangeHandler,
@@ -499,7 +497,7 @@ describe('MdSlider', () => {
       expect(sliderNativeElement.classList)
           .toContain('mat-slider-has-ticks', 'Expected element to have ticks initially.');
 
-      fixture.componentInstance.tickInterval = null;
+      fixture.componentInstance.tickInterval = 0;
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList)
@@ -523,7 +521,7 @@ describe('MdSlider', () => {
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
       sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
-      thumbLabelTextElement = sliderNativeElement.querySelector('.mat-slider-thumb-label-text');
+      thumbLabelTextElement = sliderNativeElement.querySelector('.mat-slider-thumb-label-text')!;
     });
 
     it('should add the thumb label class to the slider container', () => {
@@ -548,156 +546,6 @@ describe('MdSlider', () => {
 
       // The thumb label text is set to the slider's value. These should always be the same.
       expect(thumbLabelTextElement.textContent).toBe(`${sliderInstance.value}`);
-    });
-  });
-
-  describe('slider as a custom form control', () => {
-    let fixture: ComponentFixture<SliderWithFormControl>;
-    let sliderDebugElement: DebugElement;
-    let sliderNativeElement: HTMLElement;
-    let sliderInstance: MdSlider;
-    let sliderWrapperElement: HTMLElement;
-    let testComponent: SliderWithFormControl;
-
-    beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithFormControl);
-      fixture.detectChanges();
-
-      testComponent = fixture.debugElement.componentInstance;
-
-      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
-      sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.injector.get<MdSlider>(MdSlider);
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
-    });
-
-    it('should not update the control when the value is updated', () => {
-      expect(testComponent.control.value).toBe(0);
-
-      sliderInstance.value = 11;
-      fixture.detectChanges();
-
-      expect(testComponent.control.value).toBe(0);
-    });
-
-    it('should update the control on click', () => {
-      expect(testComponent.control.value).toBe(0);
-
-      dispatchClickEventSequence(sliderNativeElement, 0.76);
-      fixture.detectChanges();
-
-      expect(testComponent.control.value).toBe(76);
-    });
-
-    it('should update the control on slide', () => {
-      expect(testComponent.control.value).toBe(0);
-
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.19, gestureConfig);
-      fixture.detectChanges();
-
-      expect(testComponent.control.value).toBe(19);
-    });
-
-    it('should update the value when the control is set', () => {
-      expect(sliderInstance.value).toBe(0);
-
-      testComponent.control.setValue(7);
-      fixture.detectChanges();
-
-      expect(sliderInstance.value).toBe(7);
-    });
-
-    it('should update the disabled state when control is disabled', () => {
-      expect(sliderInstance.disabled).toBe(false);
-
-      testComponent.control.disable();
-      fixture.detectChanges();
-
-      expect(sliderInstance.disabled).toBe(true);
-    });
-
-    it('should update the disabled state when the control is enabled', () => {
-      sliderInstance.disabled = true;
-
-      testComponent.control.enable();
-      fixture.detectChanges();
-
-      expect(sliderInstance.disabled).toBe(false);
-    });
-
-    it('should have the correct control state initially and after interaction', () => {
-      let sliderControl = testComponent.control;
-
-      // The control should start off valid, pristine, and untouched.
-      expect(sliderControl.valid).toBe(true);
-      expect(sliderControl.pristine).toBe(true);
-      expect(sliderControl.touched).toBe(false);
-
-      // After changing the value, the control should become dirty (not pristine),
-      // but remain untouched.
-      dispatchClickEventSequence(sliderNativeElement, 0.5);
-      fixture.detectChanges();
-
-      expect(sliderControl.valid).toBe(true);
-      expect(sliderControl.pristine).toBe(false);
-      expect(sliderControl.touched).toBe(false);
-
-      // If the control has been visited due to interaction, the control should remain
-      // dirty and now also be touched.
-      sliderInstance._onBlur();
-      fixture.detectChanges();
-
-      expect(sliderControl.valid).toBe(true);
-      expect(sliderControl.pristine).toBe(false);
-      expect(sliderControl.touched).toBe(true);
-    });
-  });
-
-  describe('slider with ngModel', () => {
-    let fixture: ComponentFixture<SliderWithNgModel>;
-    let sliderDebugElement: DebugElement;
-    let sliderNativeElement: HTMLElement;
-    let sliderInstance: MdSlider;
-    let sliderWrapperElement: HTMLElement;
-    let testComponent: SliderWithNgModel;
-
-    beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithNgModel);
-      fixture.detectChanges();
-
-      testComponent = fixture.debugElement.componentInstance;
-
-      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
-      sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.injector.get<MdSlider>(MdSlider);
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
-    });
-
-    it('should update the model on click', () => {
-      expect(testComponent.val).toBe(0);
-
-      dispatchClickEventSequence(sliderNativeElement, 0.76);
-      fixture.detectChanges();
-
-      expect(testComponent.val).toBe(76);
-    });
-
-    it('should update the model on slide', () => {
-      expect(testComponent.val).toBe(0);
-
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.19, gestureConfig);
-      fixture.detectChanges();
-
-      expect(testComponent.val).toBe(19);
-    });
-
-    it('should update the model on keydown', () => {
-      expect(testComponent.val).toBe(0);
-
-      dispatchKeyboardEvent(sliderNativeElement, 'keydown', UP_ARROW);
-      fixture.detectChanges();
-
-      expect(testComponent.val).toBe(1);
     });
   });
 
@@ -895,18 +743,21 @@ describe('MdSlider', () => {
   });
 
   describe('keyboard support', () => {
-    let fixture: ComponentFixture<StandardSlider>;
+    let fixture: ComponentFixture<SliderWithChangeHandler>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
     let sliderWrapperElement: HTMLElement;
-    let testComponent: StandardSlider;
+    let testComponent: SliderWithChangeHandler;
     let sliderInstance: MdSlider;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(StandardSlider);
+      fixture = TestBed.createComponent(SliderWithChangeHandler);
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
+      spyOn(testComponent, 'onInput');
+      spyOn(testComponent, 'onChange');
+
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
@@ -914,67 +765,121 @@ describe('MdSlider', () => {
     });
 
     it('should increment slider by 1 on up arrow pressed', () => {
+      expect(testComponent.onChange).not.toHaveBeenCalled();
+
       dispatchKeyboardEvent(sliderNativeElement, 'keydown', UP_ARROW);
       fixture.detectChanges();
 
+      // The `onInput` event should be emitted once due to a single keyboard press.
+      expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
       expect(sliderInstance.value).toBe(1);
     });
 
     it('should increment slider by 1 on right arrow pressed', () => {
+      expect(testComponent.onChange).not.toHaveBeenCalled();
+
       dispatchKeyboardEvent(sliderNativeElement, 'keydown', RIGHT_ARROW);
       fixture.detectChanges();
 
+      // The `onInput` event should be emitted once due to a single keyboard press.
+      expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
       expect(sliderInstance.value).toBe(1);
     });
 
     it('should decrement slider by 1 on down arrow pressed', () => {
       sliderInstance.value = 100;
 
+      expect(testComponent.onChange).not.toHaveBeenCalled();
+
       dispatchKeyboardEvent(sliderNativeElement, 'keydown', DOWN_ARROW);
       fixture.detectChanges();
 
+      // The `onInput` event should be emitted once due to a single keyboard press.
+      expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
       expect(sliderInstance.value).toBe(99);
     });
 
     it('should decrement slider by 1 on left arrow pressed', () => {
       sliderInstance.value = 100;
 
+      expect(testComponent.onChange).not.toHaveBeenCalled();
+
       dispatchKeyboardEvent(sliderNativeElement, 'keydown', LEFT_ARROW);
       fixture.detectChanges();
 
+      // The `onInput` event should be emitted once due to a single keyboard press.
+      expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
       expect(sliderInstance.value).toBe(99);
     });
 
     it('should increment slider by 10 on page up pressed', () => {
+      expect(testComponent.onChange).not.toHaveBeenCalled();
+
       dispatchKeyboardEvent(sliderNativeElement, 'keydown', PAGE_UP);
       fixture.detectChanges();
 
+      // The `onInput` event should be emitted once due to a single keyboard press.
+      expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
       expect(sliderInstance.value).toBe(10);
     });
 
     it('should decrement slider by 10 on page down pressed', () => {
       sliderInstance.value = 100;
 
+      expect(testComponent.onChange).not.toHaveBeenCalled();
+
       dispatchKeyboardEvent(sliderNativeElement, 'keydown', PAGE_DOWN);
       fixture.detectChanges();
 
+      // The `onInput` event should be emitted once due to a single keyboard press.
+      expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
       expect(sliderInstance.value).toBe(90);
     });
 
     it('should set slider to max on end pressed', () => {
+      expect(testComponent.onChange).not.toHaveBeenCalled();
+
       dispatchKeyboardEvent(sliderNativeElement, 'keydown', END);
       fixture.detectChanges();
 
+      // The `onInput` event should be emitted once due to a single keyboard press.
+      expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
       expect(sliderInstance.value).toBe(100);
     });
 
     it('should set slider to min on home pressed', () => {
       sliderInstance.value = 100;
 
+      expect(testComponent.onChange).not.toHaveBeenCalled();
+
       dispatchKeyboardEvent(sliderNativeElement, 'keydown', HOME);
       fixture.detectChanges();
 
+      // The `onInput` event should be emitted once due to a single keyboard press.
+      expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
       expect(sliderInstance.value).toBe(0);
+    });
+
+    it(`should take not action for presses of keys it doesn't care about`, () => {
+      sliderInstance.value = 50;
+
+      expect(testComponent.onChange).not.toHaveBeenCalled();
+
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', BACKSPACE);
+      fixture.detectChanges();
+
+      // The `onInput` event should be emitted once due to a single keyboard press.
+      expect(testComponent.onInput).not.toHaveBeenCalled();
+      expect(testComponent.onChange).not.toHaveBeenCalled();
+      expect(sliderInstance.value).toBe(50);
     });
   });
 
@@ -1167,6 +1072,179 @@ describe('MdSlider', () => {
   });
 });
 
+describe('MdSlider with forms module', () => {
+  let gestureConfig: TestGestureConfig;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [MdSliderModule, ReactiveFormsModule, FormsModule, BidiModule],
+      declarations: [
+        SliderWithFormControl,
+        SliderWithNgModel,
+      ],
+      providers: [
+        {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
+          gestureConfig = new TestGestureConfig();
+          return gestureConfig;
+        }}
+      ],
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  describe('slider with ngModel', () => {
+    let fixture: ComponentFixture<SliderWithNgModel>;
+    let sliderDebugElement: DebugElement;
+    let sliderNativeElement: HTMLElement;
+    let sliderInstance: MdSlider;
+    let sliderWrapperElement: HTMLElement;
+    let testComponent: SliderWithNgModel;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SliderWithNgModel);
+      fixture.detectChanges();
+
+      testComponent = fixture.debugElement.componentInstance;
+
+      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderNativeElement = sliderDebugElement.nativeElement;
+      sliderInstance = sliderDebugElement.injector.get<MdSlider>(MdSlider);
+      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
+    });
+
+    it('should update the model on click', () => {
+      expect(testComponent.val).toBe(0);
+
+      dispatchClickEventSequence(sliderNativeElement, 0.76);
+      fixture.detectChanges();
+
+      expect(testComponent.val).toBe(76);
+    });
+
+    it('should update the model on slide', () => {
+      expect(testComponent.val).toBe(0);
+
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.19, gestureConfig);
+      fixture.detectChanges();
+
+      expect(testComponent.val).toBe(19);
+    });
+
+    it('should update the model on keydown', () => {
+      expect(testComponent.val).toBe(0);
+
+      dispatchKeyboardEvent(sliderNativeElement, 'keydown', UP_ARROW);
+      fixture.detectChanges();
+
+      expect(testComponent.val).toBe(1);
+    });
+  });
+
+  describe('slider as a custom form control', () => {
+    let fixture: ComponentFixture<SliderWithFormControl>;
+    let sliderDebugElement: DebugElement;
+    let sliderNativeElement: HTMLElement;
+    let sliderInstance: MdSlider;
+    let sliderWrapperElement: HTMLElement;
+    let testComponent: SliderWithFormControl;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SliderWithFormControl);
+      fixture.detectChanges();
+
+      testComponent = fixture.debugElement.componentInstance;
+
+      sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
+      sliderNativeElement = sliderDebugElement.nativeElement;
+      sliderInstance = sliderDebugElement.injector.get<MdSlider>(MdSlider);
+      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
+    });
+
+    it('should not update the control when the value is updated', () => {
+      expect(testComponent.control.value).toBe(0);
+
+      sliderInstance.value = 11;
+      fixture.detectChanges();
+
+      expect(testComponent.control.value).toBe(0);
+    });
+
+    it('should update the control on click', () => {
+      expect(testComponent.control.value).toBe(0);
+
+      dispatchClickEventSequence(sliderNativeElement, 0.76);
+      fixture.detectChanges();
+
+      expect(testComponent.control.value).toBe(76);
+    });
+
+    it('should update the control on slide', () => {
+      expect(testComponent.control.value).toBe(0);
+
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.19, gestureConfig);
+      fixture.detectChanges();
+
+      expect(testComponent.control.value).toBe(19);
+    });
+
+    it('should update the value when the control is set', () => {
+      expect(sliderInstance.value).toBe(0);
+
+      testComponent.control.setValue(7);
+      fixture.detectChanges();
+
+      expect(sliderInstance.value).toBe(7);
+    });
+
+    it('should update the disabled state when control is disabled', () => {
+      expect(sliderInstance.disabled).toBe(false);
+
+      testComponent.control.disable();
+      fixture.detectChanges();
+
+      expect(sliderInstance.disabled).toBe(true);
+    });
+
+    it('should update the disabled state when the control is enabled', () => {
+      sliderInstance.disabled = true;
+
+      testComponent.control.enable();
+      fixture.detectChanges();
+
+      expect(sliderInstance.disabled).toBe(false);
+    });
+
+    it('should have the correct control state initially and after interaction', () => {
+      let sliderControl = testComponent.control;
+
+      // The control should start off valid, pristine, and untouched.
+      expect(sliderControl.valid).toBe(true);
+      expect(sliderControl.pristine).toBe(true);
+      expect(sliderControl.touched).toBe(false);
+
+      // After changing the value, the control should become dirty (not pristine),
+      // but remain untouched.
+      dispatchClickEventSequence(sliderNativeElement, 0.5);
+      fixture.detectChanges();
+
+      expect(sliderControl.valid).toBe(true);
+      expect(sliderControl.pristine).toBe(false);
+      expect(sliderControl.touched).toBe(false);
+
+      // If the control has been visited due to interaction, the control should remain
+      // dirty and now also be touched.
+      sliderInstance._onBlur();
+      fixture.detectChanges();
+
+      expect(sliderControl.valid).toBe(true);
+      expect(sliderControl.pristine).toBe(false);
+      expect(sliderControl.touched).toBe(true);
+    });
+  });
+
+});
+
 // Disable animations and make the slider an even 100px (+ 8px padding on either side)
 // so we get nice round values in tests.
 const styles = `
@@ -1300,7 +1378,7 @@ class VerticalSlider {
  * physical location of the click.
  */
 function dispatchClickEventSequence(sliderElement: HTMLElement, percentage: number): void {
-  let trackElement = sliderElement.querySelector('.mat-slider-wrapper');
+  let trackElement = sliderElement.querySelector('.mat-slider-wrapper')!;
   let dimensions = trackElement.getBoundingClientRect();
   let x = dimensions.left + (dimensions.width * percentage);
   let y = dimensions.top + (dimensions.height * percentage);
@@ -1333,7 +1411,7 @@ function dispatchSlideEventSequence(sliderElement: HTMLElement, startPercent: nu
  */
 function dispatchSlideEvent(sliderElement: HTMLElement, percent: number,
                             gestureConfig: TestGestureConfig): void {
-  let trackElement = sliderElement.querySelector('.mat-slider-wrapper');
+  let trackElement = sliderElement.querySelector('.mat-slider-wrapper')!;
   let dimensions = trackElement.getBoundingClientRect();
   let x = dimensions.left + (dimensions.width * percent);
   let y = dimensions.top + (dimensions.height * percent);
@@ -1352,7 +1430,7 @@ function dispatchSlideEvent(sliderElement: HTMLElement, percent: number,
  */
 function dispatchSlideStartEvent(sliderElement: HTMLElement, percent: number,
                                  gestureConfig: TestGestureConfig): void {
-  let trackElement = sliderElement.querySelector('.mat-slider-wrapper');
+  let trackElement = sliderElement.querySelector('.mat-slider-wrapper')!;
   let dimensions = trackElement.getBoundingClientRect();
   let x = dimensions.left + (dimensions.width * percent);
   let y = dimensions.top + (dimensions.height * percent);
@@ -1373,7 +1451,7 @@ function dispatchSlideStartEvent(sliderElement: HTMLElement, percent: number,
  */
 function dispatchSlideEndEvent(sliderElement: HTMLElement, percent: number,
                                gestureConfig: TestGestureConfig): void {
-  let trackElement = sliderElement.querySelector('.mat-slider-wrapper');
+  let trackElement = sliderElement.querySelector('.mat-slider-wrapper')!;
   let dimensions = trackElement.getBoundingClientRect();
   let x = dimensions.left + (dimensions.width * percent);
   let y = dimensions.top + (dimensions.height * percent);

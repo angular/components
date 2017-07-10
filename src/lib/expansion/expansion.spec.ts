@@ -1,7 +1,7 @@
-import {async, TestBed} from '@angular/core/testing';
+import {async, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdExpansionModule} from './index';
 
 
@@ -9,7 +9,7 @@ describe('MdExpansionPanel', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        BrowserAnimationsModule,
+        NoopAnimationsModule,
         MdExpansionModule
       ],
       declarations: [
@@ -56,6 +56,26 @@ describe('MdExpansionPanel', () => {
     const panelIdTwo = headerElTwo.getAttribute('aria-controls');
     expect(panelIdOne).not.toBe(panelIdTwo);
   });
+
+  it('should not be able to focus content while closed', fakeAsync(() => {
+    const fixture = TestBed.createComponent(PanelWithContent);
+    const button = fixture.debugElement.query(By.css('button')).nativeElement;
+
+    fixture.componentInstance.expanded = true;
+    fixture.detectChanges();
+    tick(250);
+
+    button.focus();
+    expect(document.activeElement).toBe(button, 'Expected button to start off focusable.');
+
+    button.blur();
+    fixture.componentInstance.expanded = false;
+    fixture.detectChanges();
+    tick(250);
+
+    button.focus();
+    expect(document.activeElement).not.toBe(button, 'Expected button to no longer be focusable.');
+  }));
 });
 
 
@@ -65,6 +85,7 @@ describe('MdExpansionPanel', () => {
                       (closed)="closeCallback()">
     <md-expansion-panel-header>Panel Title</md-expansion-panel-header>
     <p>Some content</p>
+    <button>I am a button</button>
   </md-expansion-panel>`})
 class PanelWithContent {
   expanded: boolean = false;

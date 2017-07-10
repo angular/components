@@ -2,5 +2,11 @@
   <span>Angular Material - Board</span>
 </md-toolbar>
 
-<p>Payload Test Data</p>
-{{ payloads | async | json }}
+<div class="dashboard-content">
+  <md-card class="payload-size-card">
+    <md-card-title>Payload Size Chart</md-card-title>
+    <md-card-content>
+      <payload-chart [data]="payloads | async"></payload-chart>
+    </md-card-content>
+  </md-card>
+</div>

@@ -10,7 +10,6 @@ import {Directive, ElementRef, OnInit, OnDestroy, NgZone, Renderer2} from '@angu
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {ScrollDispatcher} from './scroll-dispatcher';
-import 'rxjs/add/observable/fromEvent';
 
 
 /**
@@ -23,7 +22,7 @@ import 'rxjs/add/observable/fromEvent';
 })
 export class Scrollable implements OnInit, OnDestroy {
   private _elementScrolled: Subject<Event> = new Subject();
-  private _scrollListener: Function;
+  private _scrollListener: Function | null;
 
   constructor(private _elementRef: ElementRef,
               private _scroll: ScrollDispatcher,

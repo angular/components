@@ -19,9 +19,9 @@ import {
 
 import {MdChip} from './chip';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
-import {coerceBooleanProperty} from '../core/coercion/boolean-property';
-import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB} from '../core/keyboard/keycodes';
+import {SPACE, LEFT_ARROW, RIGHT_ARROW} from '../core/keyboard/keycodes';
 import {Subscription} from 'rxjs/Subscription';
+import {coerceBooleanProperty} from '@angular/cdk';
 
 /**
  * A material design chips component (named ChipList for it's similarity to the List component).
@@ -157,7 +157,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
 
     let focusedIndex = this._keyManager.activeItemIndex;
 
-    if (this._isValidIndex(focusedIndex)) {
+    if (typeof focusedIndex === 'number' && this._isValidIndex(focusedIndex)) {
       let focusedChip: MdChip = this.chips.toArray()[focusedIndex];
 
       if (focusedChip) {

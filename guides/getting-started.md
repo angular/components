@@ -3,10 +3,17 @@ For help getting started with a new Angular app, check out the
 
 For existing apps, follow these steps to begin using Angular Material.
 
-## Step 1: Install Angular Material
+## Step 1: Install Angular Material and Angular CDK
 
 ```bash
-npm install --save @angular/material
+npm install --save @angular/material @angular/cdk
+```
+
+A snapshot build with the latest changes from master is also available. Note that this snapshot
+build should not be considered stable and may break between releases.
+
+```bash
+npm install --save angular/material2-builds angular/cdk-builds
 ```
 
 ## Step 2: Animations
@@ -79,13 +86,14 @@ Whichever approach you use, be sure to import the Angular Material modules _afte
 
 Including a theme is **required** to apply all of the core and theme styles to your application.
 
-To get started with a prebuilt theme, include the following in your app's index.html:
-
-```html
-<link href="../node_modules/@angular/material/prebuilt-themes/indigo-pink.css" rel="stylesheet">
+To get started with a prebuilt theme, include one of Angular Material's prebuilt themes globally
+in your application. If you're using the Angular CLI, you can add this to your `styles.css`:
+```css
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 ```
 
-Note that your app's project structure may have a different relative location for your node_modules.
+If you are not using the Angular CLI, you can include a prebuilt theme via a `<link>` element in
+your `index.html`.
 
 For more information on theming and instructions on how to create a custom theme, see the
 [theming guide](./theming.md).
@@ -127,8 +135,8 @@ Note that `md-icon` supports any font or svg icons; using Material Icons is one 
 
 ## Appendix: Configuring SystemJS
 
-If your project is using SystemJS for module loading, you will need to add `@angular/material`
-to the SystemJS configuration:
+If your project is using SystemJS for module loading, you will need to add `@angular/material` and
+`@angular/cdk` to the SystemJS configuration:
 
 ```js
 System.config({
@@ -136,12 +144,13 @@ System.config({
   map: {
     // ...
     '@angular/material': 'npm:@angular/material/bundles/material.umd.js',
+    '@angular/cdk': 'npm:@angular/cdk/bundles/cdk.umd.js'
     // ...
   }
 });
 ```
 
 
-## Sample Angular Material projects
-- [Material Sample App](https://github.com/jelbourn/material2-app)
-- [Angular Connect 2016 Demo](https://github.com/kara/leashed-in)
+## Example Angular Material projects
+- [material.angular.io](https://material.angular.io) -
+We build our own documentation with Angular Material!

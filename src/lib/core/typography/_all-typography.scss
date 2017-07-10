@@ -5,6 +5,7 @@
 @import '../../card/card-theme';
 @import '../../checkbox/checkbox-theme';
 @import '../../chips/chips-theme';
+@import '../../table/table-theme';
 @import '../../datepicker/datepicker-theme';
 @import '../../dialog/dialog-theme';
 @import '../../grid-list/grid-list-theme';
@@ -12,6 +13,7 @@
 @import '../../input/input-theme';
 @import '../../list/list-theme';
 @import '../../menu/menu-theme';
+@import '../../paginator/paginator-theme';
 @import '../../progress-bar/progress-bar-theme';
 @import '../../progress-spinner/progress-spinner-theme';
 @import '../../radio/radio-theme';
@@ -36,12 +38,14 @@
   @include mat-card-typography($config);
   @include mat-checkbox-typography($config);
   @include mat-chips-typography($config);
+  @include mat-table-typography($config);
   @include mat-datepicker-typography($config);
   @include mat-dialog-typography($config);
   @include mat-grid-list-typography($config);
   @include mat-icon-typography($config);
   @include mat-input-typography($config);
   @include mat-menu-typography($config);
+  @include mat-paginator-typography($config);
   @include mat-progress-bar-typography($config);
   @include mat-progress-spinner-typography($config);
   @include mat-radio-typography($config);

@@ -7,9 +7,9 @@
  */
 
 import {NgModule} from '@angular/core';
+import {ObserveContentModule} from '@angular/cdk';
 import {MdLineModule} from './line/line';
 import {BidiModule} from './bidi/index';
-import {ObserveContentModule} from './observe-content/observe-content';
 import {MdOptionModule} from './option/index';
 import {PortalModule} from './portal/portal-directives';
 import {OverlayModule} from './overlay/index';
@@ -17,12 +17,16 @@ import {A11yModule} from './a11y/index';
 import {MdSelectionModule} from './selection/index';
 import {MdRippleModule} from './ripple/index';
 
+// Re-exports of the CDK to avoid breaking changes.
+export {
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  ObserveContentModule,
+  ObserveContent
+} from '@angular/cdk';
 
 // RTL
 export {Dir, Direction, Directionality, BidiModule} from './bidi/index';
-
-// Mutation Observer
-export {ObserveContentModule, ObserveContent} from './observe-content/observe-content';
 
 export * from './option/index';
 
@@ -98,10 +102,6 @@ export * from './animation/animation';
 // Selection
 export * from './selection/index';
 
-// Coercion
-export {coerceBooleanProperty} from './coercion/boolean-property';
-export {coerceNumberProperty} from './coercion/number-property';
-
 // Compatibility
 export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibility/compatibility';
 
@@ -117,6 +117,15 @@ export {
   PlaceholderOptions,
   MD_PLACEHOLDER_GLOBAL_OPTIONS
 } from './placeholder/placeholder-options';
+
+// Error
+export {
+  ErrorStateMatcher,
+  ErrorOptions,
+  MD_ERROR_GLOBAL_OPTIONS,
+  defaultErrorStateMatcher,
+  showOnDirtyErrorStateMatcher
+} from './error/error-options';
 
 @NgModule({
   imports: [

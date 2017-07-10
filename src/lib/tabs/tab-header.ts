@@ -21,6 +21,7 @@ import {
   AfterContentInit,
   OnDestroy,
   NgZone,
+  Renderer2,
 } from '@angular/core';
 import {
   RIGHT_ARROW,
@@ -33,13 +34,10 @@ import {
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdInkBar} from './ink-bar';
 import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
-import {applyCssTransform} from '../core/style/apply-transform';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/auditTime';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/startWith';
+import {auditTime, startWith} from '../core/rxjs/index';
+import {of as observableOf} from 'rxjs/observable/of';
+import {merge} from 'rxjs/observable/merge';
+import {fromEvent} from 'rxjs/observable/fromEvent';
 
 
 /**
@@ -91,7 +89,7 @@ export class MdTabHeader implements AfterContentChecked, AfterContentInit, OnDes
   private _selectedIndexChanged = false;
 
   /** Combines listeners that will re-align the ink bar whenever they're invoked. */
-  private _realignInkBar: Subscription = null;
+  private _realignInkBar: Subscription | null = null;
 
   /** Whether the controls for pagination should be displayed */
   _showPaginationControls = false;
@@ -138,6 +136,7 @@ export class MdTabHeader implements AfterContentChecked, AfterContentInit, OnDes
   constructor(
     private _elementRef: ElementRef,
     private _ngZone: NgZone,
+    private _renderer: Renderer2,
     @Optional() private _dir: Directionality) { }
 
   ngAfterContentChecked(): void {
@@ -183,12 +182,12 @@ export class MdTabHeader implements AfterContentChecked, AfterContentInit, OnDes
    */
   ngAfterContentInit() {
     this._realignInkBar = this._ngZone.runOutsideAngular(() => {
-      let dirChange = this._dir ? this._dir.change : Observable.of(null);
+      let dirChange = this._dir ? this._dir.change : observableOf(null);
       let resize = typeof window !== 'undefined' ?
-          Observable.fromEvent(window, 'resize').auditTime(10) :
-          Observable.of(null);
+          auditTime.call(fromEvent(window, 'resize'), 10) :
+          observableOf(null);
 
-      return Observable.merge(dirChange, resize).startWith(null).subscribe(() => {
+      return startWith.call(merge(dirChange, resize), null).subscribe(() => {
         this._updatePagination();
         this._alignInkBarToSelectedTab();
       });
@@ -240,7 +239,7 @@ export class MdTabHeader implements AfterContentChecked, AfterContentInit, OnDes
     if (!this._labelWrappers) { return true; }
 
     const tab = this._labelWrappers ? this._labelWrappers.toArray()[index] : null;
-    return tab && !tab.disabled;
+    return !!tab && !tab.disabled;
   }
 
   /**
@@ -301,12 +300,11 @@ export class MdTabHeader implements AfterContentChecked, AfterContentInit, OnDes
 
   /** Performs the CSS transformation on the tab list that will cause the list to scroll. */
   _updateTabScrollPosition() {
-    let translateX = this.scrollDistance + 'px';
-    if (this._getLayoutDirection() == 'ltr') {
-      translateX = '-' + translateX;
-    }
+    const scrollDistance = this.scrollDistance;
+    const translateX = this._getLayoutDirection() === 'ltr' ? -scrollDistance : scrollDistance;
 
-    applyCssTransform(this._tabList.nativeElement, `translate3d(${translateX}, 0, 0)`);
+    this._renderer.setStyle(this._tabList.nativeElement, 'transform',
+        `translate3d(${translateX}px, 0, 0)`);
   }
 
   /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */
@@ -319,7 +317,7 @@ export class MdTabHeader implements AfterContentChecked, AfterContentInit, OnDes
 
     this._checkScrollingControls();
   }
-  get scrollDistance(): number { return this._scrollDistance;  }
+  get scrollDistance(): number { return this._scrollDistance; }
 
   /**
    * Moves the tab list in the 'before' or 'after' direction (towards the beginning of the list or
@@ -415,7 +413,7 @@ export class MdTabHeader implements AfterContentChecked, AfterContentInit, OnDes
   _getMaxScrollDistance(): number {
     const lengthOfTabList = this._tabList.nativeElement.scrollWidth;
     const viewLength = this._tabListContainer.nativeElement.offsetWidth;
-    return lengthOfTabList - viewLength;
+    return (lengthOfTabList - viewLength) || 0;
   }
 
   /** Tells the ink-bar to align itself to the current label wrapper */

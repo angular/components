@@ -26,13 +26,15 @@ import {TemplatePortal} from '../portal/portal';
 import {OverlayState} from './overlay-state';
 import {
     ConnectionPositionPair,
+    // This import is only used to define a generic type. The current TypeScript version incorrectly
+    // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
+    // tslint:disable-next-line:no-unused-variable
     ConnectedOverlayPositionChange
 } from './position/connected-position';
 import {ConnectedPositionStrategy} from './position/connected-position-strategy';
 import {Directionality, Direction} from '../bidi/index';
-import {Scrollable} from './scroll/scrollable';
 import {ScrollStrategy} from './scroll/scroll-strategy';
-import {coerceBooleanProperty} from '../coercion/boolean-property';
+import {coerceBooleanProperty} from '@angular/cdk';
 import {ESCAPE} from '../keyboard/keycodes';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -73,7 +75,7 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
   private _overlayRef: OverlayRef;
   private _templatePortal: TemplatePortal;
   private _hasBackdrop = false;
-  private _backdropSubscription: Subscription;
+  private _backdropSubscription: Subscription | null;
   private _positionSubscription: Subscription;
   private _offsetX: number = 0;
   private _offsetY: number = 0;

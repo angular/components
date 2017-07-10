@@ -2,22 +2,22 @@ import {TestBed, ComponentFixture, fakeAsync, tick, inject} from '@angular/core/
 import {Component, ViewChild} from '@angular/core';
 import {ViewportRuler} from '../overlay/position/viewport-ruler';
 import {RIPPLE_FADE_OUT_DURATION, RIPPLE_FADE_IN_DURATION} from './ripple-renderer';
-import {dispatchMouseEvent} from '../testing/dispatch-events';
+import {dispatchMouseEvent} from '@angular/cdk/testing';
 import {
   MdRipple, MdRippleModule, MD_RIPPLE_GLOBAL_OPTIONS, RippleState, RippleGlobalOptions
 } from './index';
+import {Platform} from '@angular/cdk';
 
-/** Extracts the numeric value of a pixel size string like '123px'.  */
-const pxStringToFloat = (s: string) => {
-  return parseFloat(s.replace('px', ''));
-};
 
 describe('MdRipple', () => {
   let fixture: ComponentFixture<any>;
   let rippleTarget: HTMLElement;
-  let originalBodyMargin: string;
+  let originalBodyMargin: string | null;
   let viewportRuler: ViewportRuler;
+  let platform: Platform;
 
+  /** Extracts the numeric value of a pixel size string like '123px'.  */
+  const pxStringToFloat = s => parseFloat(s) || 0;
   const startingWindowWidth = window.innerWidth;
   const startingWindowHeight = window.innerHeight;
 
@@ -33,8 +33,9 @@ describe('MdRipple', () => {
     });
   });
 
-  beforeEach(inject([ViewportRuler], (ruler: ViewportRuler) => {
+  beforeEach(inject([ViewportRuler, Platform], (ruler: ViewportRuler, p: Platform) => {
     viewportRuler = ruler;
+    platform = p;
 
     // Set body margin to 0 during tests so it doesn't mess up position calculations.
     originalBodyMargin = document.body.style.margin;
@@ -60,12 +61,10 @@ describe('MdRipple', () => {
     });
 
     it('sizes ripple to cover element', () => {
-      // In the iOS simulator (BrowserStack & SauceLabs), adding the content to the
-      // body causes karma's iframe for the test to stretch to fit that content once we attempt to
-      // scroll the page. Setting width / height / maxWidth / maxHeight on the iframe does not
-      // successfully constrain its size. As such, skip assertions in environments where the
-      // window size has changed since the start of the test.
-      if (window.innerWidth > startingWindowWidth || window.innerHeight > startingWindowHeight) {
+      // This test is consistently flaky on iOS (vs. Safari on desktop and all other browsers).
+      // Temporarily skip this test on iOS until we can determine the source of the flakiness.
+      // TODO(jelbourn): determine the source of flakiness here
+      if (platform.IOS) {
         return;
       }
 
@@ -173,8 +172,10 @@ describe('MdRipple', () => {
       let rippleElement = rippleTarget.querySelector('.mat-ripple-element') as HTMLElement;
 
       expect(rippleElement).toBeTruthy();
-      expect(parseFloat(rippleElement.style.left)).toBeCloseTo(TARGET_WIDTH / 2 - radius, 1);
-      expect(parseFloat(rippleElement.style.top)).toBeCloseTo(TARGET_HEIGHT / 2 - radius, 1);
+      expect(parseFloat(rippleElement.style.left as string))
+          .toBeCloseTo(TARGET_WIDTH / 2 - radius, 1);
+      expect(parseFloat(rippleElement.style.top as string))
+          .toBeCloseTo(TARGET_HEIGHT / 2 - radius, 1);
     });
 
     it('cleans up the event handlers when the container gets destroyed', () => {
@@ -194,7 +195,7 @@ describe('MdRipple', () => {
 
     it('does not run events inside the NgZone', () => {
       const spy = jasmine.createSpy('zone unstable callback');
-      const subscription = fixture.ngZone.onUnstable.subscribe(spy);
+      const subscription = fixture.ngZone!.onUnstable.subscribe(spy);
 
       dispatchMouseEvent(rippleTarget, 'mousedown');
       dispatchMouseEvent(rippleTarget, 'mouseup');
@@ -475,7 +476,7 @@ describe('MdRipple', () => {
       dispatchMouseEvent(rippleTarget, 'mousedown');
       dispatchMouseEvent(rippleTarget, 'mouseup');
 
-      let ripple = rippleTarget.querySelector('.mat-ripple-element');
+      let ripple = rippleTarget.querySelector('.mat-ripple-element')!;
       expect(window.getComputedStyle(ripple).backgroundColor).toBe(backgroundColor);
     });
 
@@ -593,7 +594,7 @@ class BasicRippleContainer {
   `,
 })
 class RippleContainerWithInputBindings {
-  trigger: HTMLElement = null;
+  trigger: HTMLElement;
   centered = false;
   disabled = false;
   radius = 0;
