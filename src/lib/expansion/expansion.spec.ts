@@ -20,9 +20,9 @@ describe('MdExpansionPanel', () => {
   }));
 
   it('should expanded and collapse the panel', () => {
-    let fixture = TestBed.createComponent(PanelWithContent);
-    let contentEl = fixture.debugElement.query(By.css('.mat-expansion-panel-content'));
-    let headerEl = fixture.debugElement.query(By.css('.mat-expansion-panel-header'));
+    const fixture = TestBed.createComponent(PanelWithContent);
+    const contentEl = fixture.debugElement.query(By.css('.mat-expansion-panel-content'));
+    const headerEl = fixture.debugElement.query(By.css('.mat-expansion-panel-header'));
     fixture.detectChanges();
     expect(headerEl.classes['mat-expanded']).toBeFalsy();
     expect(contentEl.classes['mat-expanded']).toBeFalsy();
@@ -34,7 +34,7 @@ describe('MdExpansionPanel', () => {
   });
 
   it('emit correct events for change in panel expanded state', () => {
-    let fixture = TestBed.createComponent(PanelWithContent);
+    const fixture = TestBed.createComponent(PanelWithContent);
     fixture.componentInstance.expanded = true;
     fixture.detectChanges();
     expect(fixture.componentInstance.openCallback).toHaveBeenCalled();
@@ -45,15 +45,15 @@ describe('MdExpansionPanel', () => {
   });
 
   it('creates a unique panel id for each panel', () => {
-    let fixtureOne = TestBed.createComponent(PanelWithContent);
-    let headerElOne = fixtureOne.nativeElement.querySelector('.mat-expansion-panel-header');
-    let fixtureTwo = TestBed.createComponent(PanelWithContent);
-    let headerElTwo = fixtureTwo.nativeElement.querySelector('.mat-expansion-panel-header');
+    const fixtureOne = TestBed.createComponent(PanelWithContent);
+    const headerElOne = fixtureOne.nativeElement.querySelector('.mat-expansion-panel-header');
+    const fixtureTwo = TestBed.createComponent(PanelWithContent);
+    const headerElTwo = fixtureTwo.nativeElement.querySelector('.mat-expansion-panel-header');
     fixtureOne.detectChanges();
     fixtureTwo.detectChanges();
 
-    let panelIdOne = headerElOne.getAttribute('aria-controls');
-    let panelIdTwo = headerElTwo.getAttribute('aria-controls');
+    const panelIdOne = headerElOne.getAttribute('aria-controls');
+    const panelIdTwo = headerElTwo.getAttribute('aria-controls');
     expect(panelIdOne).not.toBe(panelIdTwo);
   });
 });
