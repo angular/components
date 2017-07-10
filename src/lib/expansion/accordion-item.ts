@@ -47,7 +47,7 @@ export class AccordionItem implements OnDestroy {
          * In the unique selection dispatcher, the id parameter is the id of the CdkAccordionItem,
          * the name value is the id of the accordion.
          */
-        let accordionId = this.accordion ? this.accordion.id : this.id;
+        const accordionId = this.accordion ? this.accordion.id : this.id;
         this._expansionDispatcher.notify(this.id, accordionId);
       } else {
         this.closed.emit();
