@@ -75,7 +75,7 @@
 
 <h2>Input disabled datepicker</h2>
 <p>
-  <button [mdDatepickerToggle]="datePicker1"></button>
+  <md-datepicker-toggle [for]="datePicker1"></md-datepicker-toggle>
   <md-input-container>
     <input mdInput [mdDatepicker]="datePicker1" [(ngModel)]="date" [min]="minDate" [max]="maxDate"
            [mdDatepickerFilter]="filterOdd ? dateFilter : null" [disabled]="true"
@@ -87,10 +87,10 @@
 
 <h2>Input disabled, datepicker popup enabled</h2>
 <p>
-  <button [mdDatepickerToggle]="datePicker2"></button>
+  <md-datepicker-toggle [for]="datePicker2"></md-datepicker-toggle>
   <md-input-container>
-    <input mdInput disabled [mdDatepicker]="datePicker2" [(ngModel)]="date" [min]="minDate" [max]="maxDate"
-           [mdDatepickerFilter]="filterOdd ? dateFilter : null"
+    <input mdInput disabled [mdDatepicker]="datePicker2" [(ngModel)]="date" [min]="minDate"
+           [max]="maxDate" [mdDatepickerFilter]="filterOdd ? dateFilter : null"
            placeholder="Input disabled, datepicker enabled">
   </md-input-container>
   <md-datepicker #datePicker2 [touchUi]="touch" [disabled]="false" [startAt]="startAt"

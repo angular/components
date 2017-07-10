@@ -465,7 +465,7 @@ describe('MdDatepicker', () => {
       });
     });
 
-    describe('datepicker with mdDatepickerToggle', () => {
+    describe('datepicker with md-datepicker-toggle', () => {
       let fixture: ComponentFixture<DatepickerWithToggle>;
       let testComponent: DatepickerWithToggle;
 
