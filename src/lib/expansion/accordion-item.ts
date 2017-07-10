@@ -66,14 +66,14 @@ export class AccordionItem implements OnDestroy {
   constructor(@Optional() public accordion: CdkAccordion,
               private _changeDetectorRef: ChangeDetectorRef,
               protected _expansionDispatcher: UniqueSelectionDispatcher) {
-     this._removeUniqueSelectionListener =
-       _expansionDispatcher.listen((id: string, accordionId: string) => {
-         if (this.accordion && !this.accordion.multi &&
-             this.accordion.id === accordionId && this.id !== id) {
-           this.expanded = false;
-         }
-       });
-    }
+    this._removeUniqueSelectionListener =
+      _expansionDispatcher.listen((id: string, accordionId: string) => {
+        if (this.accordion && !this.accordion.multi &&
+            this.accordion.id === accordionId && this.id !== id) {
+          this.expanded = false;
+        }
+      });
+  }
 
   /** Emits an event for the accordion item being destroyed. */
   ngOnDestroy() {
