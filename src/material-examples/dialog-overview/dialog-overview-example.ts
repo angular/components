@@ -17,12 +17,12 @@ export class DialogOverviewExample {
 
   openDialog(): void {
     let dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      width: "250px",
+      width: '250px',
       data: { name: this.name, animal: this.animal }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed')
+      console.log('The dialog was closed');
       this.animal = result;
     });
   }
@@ -34,13 +34,13 @@ export class DialogOverviewExample {
   templateUrl: 'dialog-overview-example-dialog.html',
 })
 export class DialogOverviewExampleDialog {
-  
+
   constructor(
     public dialogRef: MdDialogRef<DialogOverviewExampleDialog>,
     @Inject(MD_DIALOG_DATA) public data: any) { }
-    
+
   onNoClick(): void {
     this.dialogRef.close();
   }
-  
+
 }
