@@ -91,8 +91,6 @@ export const EXAMPLE_COMPONENTS = {
     title: 'Display value autocomplete',
     component: AutocompleteDisplayExample
   },
-  'button-overview': {title: 'Basic buttons', component: ButtonOverviewExample},
-  'button-types': {title: 'Button varieties', component: ButtonTypesExample},
   'button-overview': {
     title: 'Basic buttons',
     component: ButtonOverviewExample,

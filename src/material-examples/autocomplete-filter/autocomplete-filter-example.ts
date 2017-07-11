@@ -29,7 +29,7 @@ export class AutocompleteFilterExample {
 
     filter(val: string): string[] {
       return this.options.filter(option =>
-        option.toLowerCase().indexOf(val.toLowerCase()) > -1);
+        option.toLowerCase().indexOf(val.toLowerCase()) === 0);
    }
 
 }
