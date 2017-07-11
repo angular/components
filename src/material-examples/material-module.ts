@@ -6,8 +6,9 @@ import {
   MdCardModule, MdCheckboxModule, MdChipsModule, MdDatepickerModule,
   MdDialogModule, MdGridListModule, MdIconModule, MdInputModule,
   MdListModule, MdMenuModule, MdProgressBarModule, MdProgressSpinnerModule,
-  MdRadioModule, MdSelectModule, MdSidenavModule, MdSliderModule, MdSortModule, MdTableModule,
-  MdSlideToggleModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule
+  MdRadioModule, MdSelectModule, MdSidenavModule, MdSliderModule, MdSortModule,
+  MdSlideToggleModule, MdSnackBarModule, MdTableModule, MdTabsModule, MdToolbarModule,
+  MdTooltipModule
 } from '@angular/material';
 
 @NgModule({
@@ -34,6 +35,7 @@ import {
     MdSliderModule,
     MdSidenavModule,
     MdSnackBarModule,
+    MdTableModule,
     MdTabsModule,
     MdToolbarModule,
     MdTooltipModule,
