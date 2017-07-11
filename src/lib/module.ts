@@ -48,7 +48,7 @@ import {MdExpansionModule} from './expansion/index';
 import {MdTableModule} from './table/index';
 import {MdSortModule} from './sort/index';
 import {MdPaginatorModule} from './paginator/index';
-import {MdStepperModule} from './stepper/index';
+import {CdkStepperModule} from './stepper/index';
 
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
@@ -88,7 +88,7 @@ const MATERIAL_MODULES = [
   PlatformModule,
   MdCommonModule,
   ObserveContentModule,
-  MdStepperModule,
+  CdkStepperModule,
 ];
 
 /** @deprecated */

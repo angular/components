@@ -7,17 +7,19 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MdStep} from './step';
-import {MdStepper} from './stepper';
+import {CdkStep, MdStep} from './step';
+import {CdkStepper} from './stepper';
 import {MdCommonModule} from '../core';
 import {CommonModule} from '@angular/common';
 import {PortalModule} from "@angular/cdk";
 import {MdButtonModule} from "../button/index";
+import {MdHorizontalStepper} from "./stepper-horizontal";
+import {MdVerticalStepper} from "./stepper-vertical";
 @NgModule({
     imports: [MdCommonModule, CommonModule, PortalModule, MdButtonModule],
-    exports: [MdStep, MdStepper, MdCommonModule],
-    declarations: [MdStep, MdStepper]
+    exports: [CdkStep, MdCommonModule, MdHorizontalStepper, MdVerticalStepper, MdStep],
+    declarations: [CdkStep, CdkStepper, MdHorizontalStepper, MdVerticalStepper, MdStep]
 })
-export class MdStepperModule {}
+export class CdkStepperModule {}
 
 export * from './stepper';

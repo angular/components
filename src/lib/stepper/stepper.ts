@@ -8,46 +8,37 @@
 
 import {
     Component, ContentChildren, EventEmitter, Input, Output, QueryList, OnInit,
-    AfterViewChecked, AfterViewInit
+    AfterViewChecked, AfterViewInit, Directive, ElementRef
 } from '@angular/core';
-import {MdStep} from './step';
+import {CdkStep} from './step';
 import {TemplatePortal} from '../core';
 import {Observable} from 'rxjs/Observable';
 import {map} from '../core/rxjs/index';
+import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk';
+import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 
-export class MdStepChangeEvent {
+export class CdkStepEvent {
     index: number;
-    step: MdStep;
+    step: CdkStep;
 }
 
-@Component({
-    moduleId: module.id,
-    selector: 'mat-stepper',
-    templateUrl: 'stepper.html',
-    styleUrls: ['stepper.scss'],
-    host: {
-        '[attr.aria-orientation]': 'orientation',
-    },
+@Directive({
+    selector: '[cdkStepper]',
+    // host: {
+    //     '(focus)': '_onFocus()',
+    //     '(keydown)': '_onKeydown($event)'
+    // },
 })
+export class CdkStepper {
 
-export class MdStepper {
-
-    @ContentChildren(MdStep) _steps: QueryList<MdStep>;
-
-    /** Orientation of the stepper component. */
-    @Input()
-    get orientation() { return this._orientation; }
-    set orientation(value: string) {
-        this._orientation = value;
-    }
-    private _orientation: string;
+    @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
 
     /** The index of the currently selected step. */
     @Input()
     set selectedIndex(value: number) {
         this._selectedIndex = value;
         //this.selectedStep = this._steps.toArray()[this._selectedIndex];
-        //this.stepChangeEvent.emit(this._emitStepChangeEvent());
+        //this.stepEvent.emit(this._emitstepEvent());
     }
     get selectedIndex(): number { return this._selectedIndex; }
     private _selectedIndex: number;
@@ -57,16 +48,17 @@ export class MdStepper {
 
     /** Output to enable support for two-way binding on `[(selectedIndex)]` */
     @Output() get selectedIndexChange(): Observable<number> {
-        return map.call(this.stepChangeEvent, event => event.index);
+        return map.call(this.stepEvent, event => event.index);
     }
 
     /** Event emitted when the selected step has changed. */
-    @Output() stepChangeEvent = new EventEmitter<MdStepChangeEvent>();
+    @Output() stepEvent = new EventEmitter<CdkStepEvent>();
 
-    get selectedStep(): MdStep {
+    get selectedStep(): CdkStep {
         return this._steps.toArray()[this._selectedIndex];
     }
-    private _selectedStep: MdStep;
+    private _selectedStep: CdkStep;
+    // _keyManager: FocusKeyManager;
 
     //selectedIndex: number = 0;
 
@@ -74,13 +66,19 @@ export class MdStepper {
     //     this._steps.toArray()[this._selectedIndex].selected = true;
     // }
 
-    selectStep(step: MdStep): void {
+    // constructor(private _element: ElementRef) { }
+    //
+    // ngAfterContentInit(): void {
+    //     this._keyManager = new FocusKeyManager(this._steps).withWrap();
+    // }
+
+    selectStep(step: CdkStep): void {
         if (!step.active) { return; }
         this._selectedIndex = this.indexOf(step);
-        this.stepChangeEvent.emit(this._emitStepChangeEvent());
+        this.stepEvent.emit(this._emitStepEvent());
     }
 
-    indexOf(step: MdStep): number {
+    indexOf(step: CdkStep): number {
         let stepsArray = this._steps.toArray();
         return stepsArray.indexOf(step);
     }
@@ -88,20 +86,34 @@ export class MdStepper {
     nextStep(): void {
         if (this._selectedIndex == this._steps.length - 1) { return; }
         this._selectedIndex++;
-        this.stepChangeEvent.emit(this._emitStepChangeEvent());
+        this.stepEvent.emit(this._emitStepEvent());
     }
 
     previousStep(): void {
         if (this._selectedIndex == 0) { return; }
         this._selectedIndex--;
-        this.stepChangeEvent.emit(this._emitStepChangeEvent());
+        this.stepEvent.emit(this._emitStepEvent());
     }
 
-    private _emitStepChangeEvent(): MdStepChangeEvent {
-        const event = new MdStepChangeEvent();
+    private _emitStepEvent(): CdkStepEvent {
+        const event = new CdkStepEvent();
         event.index = this._selectedIndex;
         event.step = this._steps.toArray()[this._selectedIndex];
         this._selectedStep = event.step;
         return event;
     }
+
+    // _onKeyDown(event: KeyboardEvent) {
+    //     switch (event.keyCode) {
+    //         case RIGHT_ARROW:
+    //             ;
+    //         case LEFT_ARROW:
+    //             ;
+    //     }
+    //     event.preventDefault();
+    // }
+    // _onFocus() {
+    //     //this._keyManager.setFirstItemActive();
+    //     this._element.nativeElement.focus();
+    // }
 }

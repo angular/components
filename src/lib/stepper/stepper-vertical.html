@@ -1,0 +1,21 @@
+<div class="mat-stepper-container">
+    <div *ngFor="let step of _steps; let i = index" class="mat-step">
+        <div class="mat-step-header"
+             [attr.aria-selected]="selectedIndex == i"
+             [tabIndex]="0"
+             (click)="selectStep(step)">
+            <div *ngIf="step.active" class="activeStep">{{indexOf(step) + 1}}</div>
+            <div *ngIf="!step.active" class="inactiveStep">{{indexOf(step) + 1}}</div>
+            <div class="mat-step-label">{{step.label}}</div>
+        </div>
+        <div *ngIf="!step.isLast" class="connector-line"></div>
+        <div *ngIf="indexOf(step) == selectedIndex">
+            <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+            <div>
+                <button md-button (click)="previousStep()">Back</button>
+                <button md-button (click)="nextStep()">Next</button>
+                <button md-button>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -6,18 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ContentChild, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {
+    Component, ContentChild, Directive, Input, OnInit, TemplateRef, ViewChild,
+    ViewContainerRef
+} from '@angular/core';
 import {TemplatePortal} from '../core/portal/portal';
-import {coerceBooleanProperty} from "@angular/cdk";
+import {coerceBooleanProperty} from '@angular/cdk';
 
 @Component({
     moduleId: module.id,
-    selector: 'mat-step',
+    selector: '[cdk-step]',
     templateUrl: 'step.html',
 })
-export class MdStep {
+export class CdkStep {
 
-    @ViewChild(TemplateRef) stepContent: TemplateRef<any>;
+    @ViewChild(TemplateRef) content: TemplateRef<any>;
     // @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
     @Input()
@@ -61,6 +64,15 @@ export class MdStep {
     // ngOnInit() {
     //     this._contentPortal = new TemplatePortal(this.stepContent, this._viewContainerRef);
     // }
+}
 
-
+@Component({
+    moduleId: module.id,
+    selector: 'mat-step',
+    templateUrl: 'step.html',
+    //viewProviders: [CdkStep],
+    inputs: ['label'],
+})
+export class MdStep extends CdkStep{
+    @ViewChild(TemplateRef) content: TemplateRef<any>;
 }
