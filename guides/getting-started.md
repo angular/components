@@ -91,6 +91,14 @@ in your application. If you're using the Angular CLI, you can add this to your `
 ```css
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 ```
+Alternatively you can include the following in your angular-cli.json at styles section:
+
+```json
+      "styles": [
+        "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+        "styles.css"
+      ],
+```
 
 If you are not using the Angular CLI, you can include a prebuilt theme via a `<link>` element in
 your `index.html`.
