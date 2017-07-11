@@ -35,7 +35,6 @@ import {
     MdSliderModule,
     MdSidenavModule,
     MdSnackBarModule,
-    MdTableModule,
     MdTabsModule,
     MdToolbarModule,
     MdTooltipModule,

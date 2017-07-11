@@ -9,13 +9,12 @@ import {MdDialog} from '@angular/material';
   templateUrl: 'dialog-basic-example.html',
 })
 export class DialogBasicExample {
-  constructor(public dialog: MdDialog) {}
+  constructor(private dialog: MdDialog) {}
 
   openDialog() {
     this.dialog.open(DialogBasicExampleDialog);
   }
 }
-
 
 @Component({
   selector: 'dialog-basic-example-dialog',
