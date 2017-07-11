@@ -1,7 +1,7 @@
 The `MdDialog` service can be used to open modal dialogs with Material Design styling and 
 animations.
 
-<!-- example(dialog-overview) -->
+<!-- example(dialog-basic) -->
 
 A dialog is opened by calling the `open` method with a component to be loaded and an optional 
 config object. The `open` method will return an instance of `MdDialogRef`:
@@ -45,24 +45,26 @@ If you want to share data with your dialog, you can use the `data` option to pas
 
 ```ts
 let dialogRef = dialog.open(YourDialog, {
-  data: 'your data',
+  data: { name: 'austin' },
 });
 ```
 
 To access the data in your dialog component, you have to use the MD_DIALOG_DATA injection token:
+
 ```ts
 import {Component, Inject} from '@angular/core';
 import {MD_DIALOG_DATA} from '@angular/material';
 
 @Component({
   selector: 'your-dialog',
-  template: 'passed in {{ data }}',
+  template: 'passed in {{ data.name }}',
 })
-
 export class YourDialog {
   constructor(@Inject(MD_DIALOG_DATA) public data: any) { }
 }
 ```
+
+<!-- example(dialog-data) -->
 
 ### Dialog content
 Several directives are available to make it easier to structure your dialog content:
@@ -92,6 +94,8 @@ You can control which elements are tab stops with the `tabindex` attribute
 ```html
 <button md-button tabindex="-1">Not Tabbable</button>
 ```
+
+<!-- example(dialog-content) -->
 
 ### AOT Compilation
 
