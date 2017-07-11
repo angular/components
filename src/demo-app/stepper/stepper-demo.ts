@@ -9,6 +9,7 @@ import {Component} from '@angular/core';
 export class StepperDemo {
     verticalActiveIndex = 0;
     horizontalActiveIndex = 0;
+    labelTemplateIndex = 0;
     steps = [
         {label: 'Step 1', content: 'Content 1'},
         {label: 'Step 2', content: 'Content 2', optional: true},

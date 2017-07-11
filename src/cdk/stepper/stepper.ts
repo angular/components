@@ -11,11 +11,8 @@ import {
     AfterViewChecked, AfterViewInit, Directive, ElementRef
 } from '@angular/core';
 import {CdkStep} from './step';
-import {TemplatePortal} from '../core';
 import {Observable} from 'rxjs/Observable';
-import {map} from '../core/rxjs/index';
-import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk';
-import {FocusKeyManager} from '../core/a11y/focus-key-manager';
+import {map} from "rxjs/operator/map";
 
 export class CdkStepEvent {
     index: number;

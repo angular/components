@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CdkStepper} from './stepper';
 import {Component, ContentChildren, QueryList} from '@angular/core';
-import {MdStep} from "./step";
+import {MdStep} from './step';
+import {CdkStepper} from "@angular/cdk";
 @Component({
     moduleId: module.id,
     selector: 'mat-vertical-stepper',

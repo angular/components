@@ -77,7 +77,7 @@ import {
   MdTooltipModule,
   OverlayContainer,
   StyleModule,
-  CdkStepperModule,
+  MdStepperModule,
 } from '@angular/material';
 import {CdkTableModule} from '@angular/cdk';
 import {TableHeaderDemo} from './table/table-header-demo';
@@ -121,7 +121,7 @@ import {StepperDemo} from './stepper/stepper-demo';
     MdNativeDateModule,
     CdkTableModule,
     StyleModule,
-    CdkStepperModule,
+    MdStepperModule,
   ]
 })
 export class DemoMaterialModule {}

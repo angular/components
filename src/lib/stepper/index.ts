@@ -7,19 +7,23 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CdkStep, MdStep} from './step';
-import {CdkStepper} from './stepper';
-import {MdCommonModule} from '../core';
 import {CommonModule} from '@angular/common';
-import {PortalModule} from "@angular/cdk";
-import {MdButtonModule} from "../button/index";
-import {MdHorizontalStepper} from "./stepper-horizontal";
-import {MdVerticalStepper} from "./stepper-vertical";
+import {PortalModule} from '@angular/cdk';
+import {MdButtonModule} from '../button/index';
+import {MdHorizontalStepper} from './stepper-horizontal';
+import {MdVerticalStepper} from './stepper-vertical';
+import {MdStep} from './step';
+import {CdkStepperModule} from '@angular/cdk';
+import {MdCommonModule} from '../core';
+import {MdStepLabel} from './step-label';
 @NgModule({
-    imports: [MdCommonModule, CommonModule, PortalModule, MdButtonModule],
-    exports: [CdkStep, MdCommonModule, MdHorizontalStepper, MdVerticalStepper, MdStep],
-    declarations: [CdkStep, CdkStepper, MdHorizontalStepper, MdVerticalStepper, MdStep]
+    imports: [MdCommonModule, CommonModule, PortalModule, MdButtonModule, CdkStepperModule],
+    exports: [MdCommonModule, MdHorizontalStepper, MdVerticalStepper, MdStep, MdStepLabel],
+    declarations: [MdHorizontalStepper, MdVerticalStepper, MdStep, MdStepLabel]
 })
-export class CdkStepperModule {}
+export class MdStepperModule {}
 
-export * from './stepper';
+export * from './stepper-horizontal';
+export * from './stepper-vertical';
+export * from './step';
+export * from './step-label';

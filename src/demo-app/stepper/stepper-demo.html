@@ -13,3 +13,11 @@
         <div>{{step.content}}</div>
     </mat-step>
 </mat-horizontal-stepper>
+
+<h2>Horizontal Stepper with label template</h2>
+<mat-horizontal-stepper [(selectedIndex)]="labelTemplateIndex">
+    <mat-step *ngFor="let step of steps">
+        <ng-template mat-step-label>{{step.label}}</ng-template>
+        <div>{{step.content}}</div>
+    </mat-step>
+</mat-horizontal-stepper>
