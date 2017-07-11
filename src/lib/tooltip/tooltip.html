@@ -1,7 +1,15 @@
 <div class="mat-tooltip"
-     [ngClass]="tooltipClass"
-     [style.transform-origin]="_transformOrigin"
-     [@state]="_visibility"
-     (@state.done)="_afterVisibilityAnimation($event)">
-  {{message}}
+    [ngClass]="tooltipClass"
+    [style.transform-origin]="_transformOrigin"
+    [@state]="_visibility"
+    (@state.done)="_afterVisibilityAnimation($event)">
+
+    <div class="tooltip-html" 
+        [innerHTML]="message" 
+        *ngIf="isHTML; else messageString;">
+    </div>
+    <ng-template #messageString>
+      {{message}}
+    </ng-template>
+
 </div>
