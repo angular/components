@@ -45,3 +45,39 @@ snackbar.open('Message archived', 'Undo', {
   duration: 3000
 });
 ```
+
+If you use a custom component and wish to have it close itself you must pass in a self reference.
+
+```ts
+import { MdSnackBarRef } from '@angular/material';
+
+export class SnackBarComponentCaller {
+  
+  private snackBarRef: MdSnackBarRef<YourSnackBarComponent>;
+
+  ...
+
+  openSnackBar() {
+    this.snackBarRef = this.snackBar.openFromComponent(YourSnackBarComponent, {
+      duration: 50000,
+    });
+    this.snackBarRef.instance.snackBarRef = this.snackBarRef;
+  }
+}
+
+// In your snackbar component.
+import { MdSnackBarRef } from '@angular/material';
+
+export class YourSnackBarComponent {
+
+  public snackBarRef: MdSnackBarRef<YourSnackBarComponent>;
+
+  ...
+
+  private yourHandler() {
+    ...
+    this.snackBarRef.dismiss();
+  }
+  
+}
+```
