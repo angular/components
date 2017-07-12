@@ -2,13 +2,12 @@ import {async, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/t
 import {Component, DebugElement, QueryList} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MdChip, MdChipList, MdChipsModule} from './index';
+import {MdChipList, MdChipsModule} from './index';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
-import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB} from '../core/keyboard/keycodes';
 import {createKeyboardEvent} from '@angular/cdk/testing';
 
 import {MdInputModule} from '../input/index';
-import {LEFT_ARROW, RIGHT_ARROW, BACKSPACE, DELETE, SPACE, TAB} from '../core/keyboard/keycodes';
+import {LEFT_ARROW, RIGHT_ARROW, BACKSPACE, DELETE, TAB} from '../core/keyboard/keycodes';
 import {Directionality} from '../core';
 
 describe('MdChipList', () => {
@@ -17,7 +16,7 @@ describe('MdChipList', () => {
   let chipListNativeElement: HTMLElement;
   let chipListInstance: MdChipList;
   let testComponent: StandardChipList;
-  let chips: QueryList<MdChip>;
+  let chips: QueryList<any>;
   let manager: FocusKeyManager;
 
   let dir = 'ltr';

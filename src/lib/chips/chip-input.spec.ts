@@ -4,9 +4,11 @@ import {Component, DebugElement} from '@angular/core';
 import {MdChipInput, MdChipInputEvent} from './chip-input';
 import {By} from '@angular/platform-browser';
 import {Directionality} from '../core';
-import {createKeyboardEvent} from '../core/testing/event-objects';
+import {createKeyboardEvent} from '@angular/cdk/testing';
 
-import {ENTER, COMMA} from '../core/keyboard/keycodes';
+import {ENTER} from '../core/keyboard/keycodes';
+
+const COMMA = 188;
 
 describe('MdChipInput', () => {
   let fixture: ComponentFixture<any>;

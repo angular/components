@@ -51,7 +51,7 @@
           <md-chip *ngFor="let person of people" [color]="color" [selectable]="selectable"
                    [removable]="removable" (remove)="remove(person)">
             {{person.name}}
-            <md-icon mdChipRemove>cancel</md-icon>
+            <md-icon mdChipRemove *ngIf="removable">cancel</md-icon>
           </md-chip>
         </md-chip-list>
         <input mdInput placeholder="New Contributor..."
@@ -72,7 +72,7 @@
         <md-chip *ngFor="let person of people" [color]="color" [selectable]="selectable"
                  [removable]="removable" (remove)="remove(person)">
           {{person.name}}
-          <md-icon mdChipRemove>cancel</md-icon>
+          <md-icon mdChipRemove *ngIf="removable">cancel</md-icon>
         </md-chip>
       </md-chip-list>
       <md-input-container>

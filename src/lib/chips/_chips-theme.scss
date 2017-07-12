@@ -45,19 +45,8 @@ $mat-chip-line-height: 16px;
   $selected-background: if($is-dark-theme, mat-color($background, app-bar), #808080);
   $selected-foreground: if($is-dark-theme, mat-color($foreground, text), $light-selected-foreground);
 
-  $focus-color: mat-color($foreground, secondary-text);
-
   .mat-chip {
     @include mat-chips-color($unselected-foreground, $unselected-background);
-
-    .mat-chip-focus-border {
-      pointer-events: none;
-    }
-
-    &:focus {
-      outline: none;
-      border: 2px solid $focus-color;
-    }
   }
 
   .mat-chip.mat-chip-selected {

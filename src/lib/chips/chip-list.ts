@@ -22,20 +22,9 @@ import {
 
 import {MdChip} from './chip';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
-import {BACKSPACE, DELETE, SPACE, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '../core/keyboard/keycodes';
+import {BACKSPACE, DELETE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '../core/keyboard/keycodes';
 import {coerceBooleanProperty, Directionality} from '@angular/cdk';
 import {Subscription} from 'rxjs/Subscription';
-
-/** Utility to check if an input element has no value. */
-function _isInputEmpty(element: HTMLElement): boolean {
-  if (element && element.nodeName.toLowerCase() == 'input') {
-    let input = element as HTMLInputElement;
-
-    return !input.value;
-  }
-
-  return false;
-}
 
 /**
  * A material design chips component (named ChipList for it's similarity to the List component).
@@ -116,7 +105,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
       this._subscribeChips(chips);
 
       // If we have 0 chips, attempt to focus an input (if available)
-      if (chips.length == 0) {
+      if (chips.length === 0) {
         this._focusInput();
       }
 
@@ -139,7 +128,10 @@ export class MdChipList implements AfterContentInit, OnDestroy {
    * it's selected state is always ignored.
    */
   @Input()
-  get selectable(): boolean { return this._selectable; }
+  get selectable(): boolean {
+    return this._selectable;
+  }
+
   set selectable(value: boolean) {
     this._selectable = coerceBooleanProperty(value);
   }
@@ -175,24 +167,17 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   _keydown(event: KeyboardEvent) {
     let code = event.keyCode;
     let target = event.target as HTMLElement;
-    let isInputEmpty = _isInputEmpty(target);
+    let isInputEmpty = this._isInputEmpty(target);
     let isRtl = this._dir && this._dir.value == 'rtl';
 
-    let isPrevKey = (code == (isRtl ? RIGHT_ARROW : LEFT_ARROW));
-    let isNextKey = (code == (isRtl ? LEFT_ARROW : RIGHT_ARROW));
-    let isBackKey = (code == BACKSPACE || code == DELETE || code == UP_ARROW || isPrevKey);
-    let isForwardKey = (code == DOWN_ARROW || isNextKey);
+    let isPrevKey = (code === (isRtl ? RIGHT_ARROW : LEFT_ARROW));
+    let isNextKey = (code === (isRtl ? LEFT_ARROW : RIGHT_ARROW));
+    let isBackKey = (code === BACKSPACE || code == DELETE || code == UP_ARROW || isPrevKey);
     // If they are on an empty input and hit backspace/delete/left arrow, focus the last chip
     if (isInputEmpty && isBackKey) {
       this._keyManager.setLastItemActive();
       event.preventDefault();
       return;
-    }
-
-    let focusedIndex = this._keyManager.activeItemIndex;
-
-    if (typeof focusedIndex === 'number' && this._isValidIndex(focusedIndex)) {
-      let focusedChip: MdChip = this.chips.toArray()[focusedIndex];
     }
 
     // If they are on a chip, check for space/left/right, otherwise pass to our key manager (like
@@ -225,7 +210,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
    */
   protected _updateTabIndex(): void {
     // If we have 0 chips, we should not allow keyboard focus
-    this._tabIndex = (this.chips.length == 0 ? -1 : 0);
+    this._tabIndex = (this.chips.length === 0 ? -1 : 0);
   }
 
   /**
@@ -263,7 +248,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
             this._keyManager.setActiveItem(chipIndex - 1);
           }
         }
-        if (this._keyManager.activeItemIndex == chipIndex) {
+        if (this._keyManager.activeItemIndex === chipIndex) {
           this._lastDestroyedIndex = chipIndex;
         }
 
@@ -307,5 +292,15 @@ export class MdChipList implements AfterContentInit, OnDestroy {
    */
   private _isValidIndex(index: number): boolean {
     return index >= 0 && index < this.chips.length;
+  }
+
+  private _isInputEmpty(element: HTMLElement): boolean {
+    if (element && element.nodeName.toLowerCase() === 'input') {
+      let input = element as HTMLInputElement;
+
+      return !input.value;
+    }
+
+    return false;
   }
 }

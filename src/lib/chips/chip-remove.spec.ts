@@ -48,20 +48,6 @@ describe('Chip Remove', () => {
 
       expect(testChip.didRemove).toHaveBeenCalled();
     });
-
-    it(`should monitors the parent chip's [removable] property`, () => {
-      let hrefElement = chipNativeElement.querySelector('a')!;
-
-      testChip.removable = true;
-      fixture.detectChanges();
-
-      expect(hrefElement.classList).not.toContain('mat-chip-remove-hidden');
-
-      testChip.removable = false;
-      fixture.detectChanges();
-
-      expect(hrefElement.classList).toContain('mat-chip-remove-hidden');
-    });
   });
 });
 
