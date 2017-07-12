@@ -58,6 +58,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   private _onResizeBind: EventListener = this.onResize.bind(this);
   private _onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
   isStuck: boolean = false;
+  public isIE: boolean = false;
+
+
   /**
    * The element with the 'cdkStickyHeader' tag
    */
@@ -98,6 +101,20 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     this.element = _element.nativeElement;
     this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
     this.scrollableRegion = scrollable.getElementRef().nativeElement;
+
+    let browserVersion: string = navigator.appVersion;
+
+    if(browserVersion.includes('iPhone')) {
+      _element.nativeElement.style.top = '0px';
+      _element.nativeElement.style.position = '-webkit-sticky';
+    } else if(browserVersion.includes('Tablet')) {
+      this.isIE = true;
+    } else if(!browserVersion.includes('IE')) {
+      _element.nativeElement.style.top = '0px';
+      _element.nativeElement.style.position = 'sticky';
+    }else {
+      this.isIE = true;
+    }
   }
 
   ngAfterViewInit(): void {
@@ -107,8 +124,10 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       this.getCssValue(this.element, 'position'), this.getCssValue(this.element, 'top'),
       this.getCssValue(this.element, 'right'), this.getCssValue(this.element, 'left'),
       this.getCssValue(this.element, 'bottom'), this.getCssValue(this.element, 'width'));
-    this.attach();
-    this.defineRestrictionsAndStick();
+    if(this.isIE == true) {
+      this.attach();
+      this.defineRestrictionsAndStick();
+    }
   }
 
   ngOnDestroy(): void {
@@ -223,7 +242,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     let stickyCss:any = this.generateCssStyle(this.zIndex, 'fixed',
       this.upperScrollableContainer.offsetTop + 'px', stuckRight + 'px',
       this.upperScrollableContainer.offsetLeft + 'px', 'auto',
-      this._scrollingWidth + 'px');
+      this.originalCss.width);
     extendObject(this.element.style, stickyCss);
   }
 
