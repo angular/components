@@ -56,7 +56,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   private _onResizeBind: EventListener = this.onResize.bind(this);
   private _onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
   isStuck: boolean = false;
-  public isIE: boolean = false;
+  isIE: boolean = false;
 
 
   /**
