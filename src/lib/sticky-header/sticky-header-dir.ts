@@ -51,8 +51,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * it may be sheltered by other element when being stuck.
    */
   @Input('cdkStickyHeaderZIndex') zIndex: number = 10;
-  @Input('cdkStickyParentRegion') parentRegion: HTMLElement;
-  @Input('cdkStickyScrollableRegion') scrollableRegion: HTMLElement;
 
   private _onScrollBind: EventListener = this.onScroll.bind(this);
   private _onResizeBind: EventListener = this.onResize.bind(this);
@@ -100,7 +98,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
               @Optional() public parentReg: CdkStickyRegion) {
     this.element = _element.nativeElement;
     this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
-    this.scrollableRegion = scrollable.getElementRef().nativeElement;
 
     let browserVersion: string = navigator.appVersion;
 
