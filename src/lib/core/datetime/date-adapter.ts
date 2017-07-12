@@ -157,6 +157,13 @@ export abstract class DateAdapter<D> {
   abstract getISODateString(date: D): string;
 
   /**
+   * Checks whether the given value is a date object of type `D`.
+   * @param value The value to check.
+   * @returns Whether the value is a date object of type `D`.
+   */
+  abstract isDateObject(value: any): boolean;
+
+  /**
    * Sets the locale used for all dates.
    * @param locale The new locale.
    */

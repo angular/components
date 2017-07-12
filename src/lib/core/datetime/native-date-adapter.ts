@@ -207,6 +207,10 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     ].join('-');
   }
 
+  isDateObject(value: any) {
+    return value instanceof Date;
+  }
+
   /** Creates a date but allows the month and date to overflow. */
   private _createDateWithOverflow(year: number, month: number, date: number) {
     let result = new Date(year, month, date);

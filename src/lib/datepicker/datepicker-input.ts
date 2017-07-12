@@ -116,12 +116,14 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
         this._dateFormats.parse.dateInput);
   }
   set value(value: D | null) {
-    let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
+    if (value != null && !this._dateAdapter.isDateObject(value)) {
+      throw new Error('Datepicker: value not recognized as a date object by DateAdapter.');
+    }
     let oldDate = this.value;
     this._renderer.setProperty(this._elementRef.nativeElement, 'value',
-        date ? this._dateAdapter.format(date, this._dateFormats.display.dateInput) : '');
-    if (!this._dateAdapter.sameDate(oldDate, date)) {
-      this._valueChange.emit(date);
+        value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '');
+    if (!this._dateAdapter.sameDate(oldDate, value)) {
+      this._valueChange.emit(value);
     }
   }
 
