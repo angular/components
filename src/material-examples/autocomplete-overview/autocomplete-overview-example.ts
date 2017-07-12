@@ -15,7 +15,7 @@ import 'rxjs/add/operator/map';
 })
 export class AutocompleteOverviewExample {
   stateCtrl: FormControl;
-  filteredStates: any;
+  filteredStates: Observable<any[]>;
 
   states: any[] = [
     {
