@@ -29,6 +29,9 @@ import {DatepickerApiExample} from './datepicker-api/datepicker-api-example';
 import {DatepickerFilterExample} from './datepicker-filter/datepicker-filter-example';
 import {DatepickerMinMaxExample} from './datepicker-min-max/datepicker-min-max-example';
 import {DatepickerOverviewExample} from './datepicker-overview/datepicker-overview-example';
+import {AutocompleteSimpleExample} from './autocomplete-simple/autocomplete-simple-example';
+import {AutocompleteFilterExample} from './autocomplete-filter/autocomplete-filter-example';
+import {AutocompleteDisplayExample} from './autocomplete-display/autocomplete-display-example';
 import {DatepickerStartViewExample} from './datepicker-start-view/datepicker-start-view-example';
 import {DatepickerTouchExample} from './datepicker-touch/datepicker-touch-example';
 import {DialogElementsExampleDialog,DialogElementsExample} from './dialog-elements/dialog-elements-example';
@@ -81,11 +84,12 @@ import {TooltipOverviewExample} from './tooltip-overview/tooltip-overview-exampl
 import {TooltipPositionExample} from './tooltip-position/tooltip-position-example';
 
 export const EXAMPLE_COMPONENTS = {
-  'autocomplete-overview': {
-    title: 'Basic autocomplete',
-    component: AutocompleteOverviewExample,
-    additionalFiles: null,
-    selectorName: null
+  'autocomplete-overview': {title: 'Basic autocomplete', component: AutocompleteOverviewExample},
+  'autocomplete-simple': {title: 'Simple autocomplete', component: AutocompleteSimpleExample},
+  'autocomplete-filter': {title: 'Filter autocomplete', component: AutocompleteFilterExample},
+  'autocomplete-display': {
+    title: 'Display value autocomplete',
+    component: AutocompleteDisplayExample
   },
   'button-overview': {
     title: 'Basic buttons',
@@ -481,6 +485,9 @@ export const EXAMPLE_COMPONENTS = {
 
 export const EXAMPLE_LIST = [
   AutocompleteOverviewExample,
+  AutocompleteFilterExample,
+  AutocompleteSimpleExample,
+  AutocompleteDisplayExample,
   ButtonOverviewExample,
   ButtonToggleExclusiveExample,
   ButtonToggleOverviewExample,
