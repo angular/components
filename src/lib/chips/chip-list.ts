@@ -22,8 +22,7 @@ import {
 
 import {MdChip} from './chip';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
-import {SPACE, LEFT_ARROW, RIGHT_ARROW} from '../core/keyboard/keycodes';
-import {Subscription} from 'rxjs/Subscription';
+import {BACKSPACE, DELETE, SPACE, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '../core/keyboard/keycodes';
 import {coerceBooleanProperty, Directionality} from '@angular/cdk';
 import {Subscription} from 'rxjs/Subscription';
 

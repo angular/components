@@ -100,7 +100,6 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
 
   set removable(value: boolean) {
     this._removable = coerceBooleanProperty(value);
-    if (this._chipRemove) { this._chipRemove.visible = this._removable; }
   }
   protected _removable: boolean = true;
 
@@ -146,18 +145,12 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
    * Allows for programmatic removal of the chip. Called by the MdChipList when the DELETE or
    * BACKSPACE keys are pressed.
    *
-   * Note: This only informs any listeners of the removal request, it does **not** actually remove
-   * the chip from the DOM.
+   * Informs any listeners of the removal request. Does not remove the chip from the DOM.
    */
   remove(): void {
     if (this.removable) {
       this.onRemove.emit({chip: this});
     }
-  }
-
-  /** The aria-disabled state for the chip */
-  _isAriaDisabled(): string {
-    return String(this.disabled);
   }
 
   /** Ensures events fire properly upon click. */
@@ -198,15 +191,6 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
         break;
     }
   }
-
-  protected _checkDisabled(event: Event): boolean {
-    if (this.disabled) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    return this.disabled;
-  }
 }
 
 
@@ -217,7 +201,7 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
  * Example:
  *
  *     <md-chip>
- *       <md-icon mdChipRemove>clear</md-icon>
+ *       <md-icon mdChipRemove>cancel</md-icon>
  *     </md-chip>
  *
  * You *may* use a custom icon, but you may need to override the `md-chip-remove` positioning styles
@@ -227,19 +211,10 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
   selector: '[mdChipRemove], [matChipRemove]',
   host: {
     'class': 'mat-chip-remove',
-    '[class.mat-chip-remove-hidden]': '!visible',
     '(click)': '_handleClick($event)'
   }
 })
 export class MdChipRemove {
-
-  /** Whether or not the remove icon is visible. */
-  _isVisible: boolean = true;
-
-  @Input('mdChipRemoveVisible')
-  get visible() { return this._isVisible; }
-  set visible(value) { this._isVisible = coerceBooleanProperty(value); }
-
   constructor(protected _parentChip: MdChip) {}
 
   /** Calls the parent chip's public `remove()` method if applicable. */

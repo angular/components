@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
-import {MdChipInputEvent, ENTER, COMMA} from '@angular/material';
+import {MdChipInputEvent, ENTER} from '@angular/material';
+
+const COMMA = 188;
 
 export interface Person {
   name: string;
