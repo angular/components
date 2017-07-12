@@ -887,12 +887,12 @@ class CheckboxWithFormDirectives {
 }
 
 /** Simple test component with multiple checkboxes. */
-@Component(({
+@Component({
   template: `
     <md-checkbox>Option 1</md-checkbox>
     <md-checkbox>Option 2</md-checkbox>
   `
-}))
+})
 class MultipleCheckboxes { }
 
 

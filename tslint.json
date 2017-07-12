@@ -35,6 +35,10 @@
       "src/lib",
       "src/cdk"
     ],
+    "on-push-change-detection": [
+      true,
+      "(lib|cdk)\/((?!spec.ts).)*.ts$"
+    ],
     "one-line": [
       true,
       "check-catch",
