@@ -3,7 +3,7 @@ import {
   DocumentationItems,
   DocCategory
 } from '../../shared/documentation-items/documentation-items';
-import {ActivatedRoute, RouterModule} from '@angular/router';
+import {ActivatedRoute, Router, RouterModule} from '@angular/router';
 import {ComponentPageTitle} from '../page-title/page-title';
 import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
 import {CommonModule} from '@angular/common';
@@ -19,10 +19,16 @@ export class ComponentList {
 
   constructor(public docItems: DocumentationItems,
               private _componentPageTitle: ComponentPageTitle,
-              private _route: ActivatedRoute) {
+              private _route: ActivatedRoute,
+              private router: Router) {
     _route.params.subscribe(p => {
       this.category = docItems.getCategoryById(p['id']);
-      this._componentPageTitle.title = this.category.name;
+
+      if (this.category) {
+        this._componentPageTitle.title = this.category.name;
+      } else {
+        this.router.navigate(['/categories']);
+      }
     });
   }
 }
