@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {MdDialog, MD_DIALOG_DATA} from '@angular/material';
 
 /**
- * @title Dialog Data Sharing
+ * @title Injecting data when opening a dialog
  */
 @Component({
   selector: 'dialog-data-example',

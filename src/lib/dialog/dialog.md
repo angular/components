@@ -1,7 +1,7 @@
 The `MdDialog` service can be used to open modal dialogs with Material Design styling and 
 animations.
 
-<!-- example(dialog-basic) -->
+<!-- example(dialog-overview) -->
 
 A dialog is opened by calling the `open` method with a component to be loaded and an optional 
 config object. The `open` method will return an instance of `MdDialogRef`:
@@ -22,7 +22,6 @@ dialogRef.afterClosed().subscribe(result => {
 });
 
 dialogRef.close('Pizza!');
-
 ```
 
 Components created via `MdDialog` can _inject_ `MdDialogRef` and use it to close the dialog
@@ -120,7 +119,7 @@ that the AOT compiler knows to create the `ComponentFactory` for it.
 
   entryComponents: [
     ExampleDialogComponent
-  ]
+  ],
 
   providers: [],
   bootstrap: [AppComponent]

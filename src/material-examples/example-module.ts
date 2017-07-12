@@ -31,7 +31,6 @@ import {DatepickerMinMaxExample} from './datepicker-min-max/datepicker-min-max-e
 import {DatepickerOverviewExample} from './datepicker-overview/datepicker-overview-example';
 import {DatepickerStartViewExample} from './datepicker-start-view/datepicker-start-view-example';
 import {DatepickerTouchExample} from './datepicker-touch/datepicker-touch-example';
-import {DialogBasicExampleDialog,DialogBasicExample} from './dialog-basic/dialog-basic-example';
 import {DialogContentExampleDialog,DialogContentExample} from './dialog-content/dialog-content-example';
 import {DialogDataExampleDialog,DialogDataExample} from './dialog-data/dialog-data-example';
 import {DialogElementsExampleDialog,DialogElementsExample} from './dialog-elements/dialog-elements-example';
@@ -191,20 +190,14 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
-  'dialog-basic': {
-    title: 'Basic Dialog',
-    component: DialogBasicExample,
-    additionalFiles: ["dialog-basic-example-dialog.html"],
-    selectorName: 'DialogBasicExample, DialogBasicExampleDialog'
-  },
   'dialog-content': {
-    title: 'Dialog Content',
+    title: 'Dialog with header, scrollable content and actions',
     component: DialogContentExample,
     additionalFiles: ["dialog-content-example-dialog.html"],
     selectorName: 'DialogContentExample, DialogContentExampleDialog'
   },
   'dialog-data': {
-    title: 'Dialog Data Sharing',
+    title: 'Injecting data when opening a dialog',
     component: DialogDataExample,
     additionalFiles: ["dialog-data-example-dialog.html"],
     selectorName: 'DialogDataExample, DialogDataExampleDialog'
@@ -512,7 +505,6 @@ export const EXAMPLE_LIST = [
   DatepickerOverviewExample,
   DatepickerStartViewExample,
   DatepickerTouchExample,
-  DialogBasicExampleDialog,DialogBasicExample,
   DialogContentExampleDialog,DialogContentExample,
   DialogDataExampleDialog,DialogDataExample,
   DialogElementsExampleDialog,DialogElementsExample,

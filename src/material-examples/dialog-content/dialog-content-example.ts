@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {MdDialog} from '@angular/material';
 
 /**
- * @title Dialog Content
+ * @title Dialog with header, scrollable content and actions
  */
 @Component({
   selector: 'dialog-content-example',
@@ -12,7 +12,10 @@ export class DialogContentExample {
   constructor(public dialog: MdDialog) {}
 
   openDialog() {
-    const dialogRef = this.dialog.open(DialogContentExampleDialog);
+    const dialogRef = this.dialog.open(DialogContentExampleDialog, {
+      height: '350px'
+    });
+    
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
