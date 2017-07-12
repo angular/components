@@ -5,8 +5,8 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {Component, Directive, Input, Output,
-  OnDestroy, AfterViewInit, ElementRef, Injectable, Optional} from '@angular/core';
+import {Directive, Input,
+  OnDestroy, AfterViewInit, ElementRef, Optional} from '@angular/core';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
 import {extendObject} from '../core/util/object-extend';
 import {Observable} from 'rxjs/Observable';
