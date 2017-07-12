@@ -16,10 +16,8 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
-  EventEmitter,
   Input,
   Optional,
-  Output,
   QueryList,
   Renderer2,
   Self,
@@ -53,7 +51,6 @@ import {
   MD_ERROR_GLOBAL_OPTIONS
 } from '../core/error/error-options';
 import {Subject} from 'rxjs/Subject';
-import {filter} from '../core/rxjs/index';
 
 // Invalid input type. Using one of these will throw an MdInputContainerUnsupportedTypeError.
 const MD_INPUT_INVALID_TYPES = [
