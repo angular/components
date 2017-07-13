@@ -132,6 +132,7 @@ export const _MdSelectMixinBase = mixinColor(mixinDisabled(MdSelectBase), 'prima
     '[attr.aria-invalid]': '_control?.invalid || "false"',
     '[attr.aria-owns]': '_optionIds',
     '[class.mat-select-disabled]': 'disabled',
+    '[class.mat-select-required]': 'required',
     'class': 'mat-select',
     '(keydown)': '_handleClosedKeydown($event)',
     '(blur)': '_onBlur()',
@@ -534,7 +535,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
    * "blur" to the panel when it opens, causing a false positive.
    */
   _onBlur() {
-    if (!this.panelOpen) {
+    if (!this.disabled && !this.panelOpen) {
       this._onTouched();
     }
   }
@@ -545,6 +546,11 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   _onAttached(): void {
     this._calculateOverlayOffsetX();
     this._setScrollTop();
+  }
+
+  /** Whether the select has a value. */
+  _hasValue(): boolean {
+    return this._selectionModel && this._selectionModel.hasValue();
   }
 
   /**
@@ -771,7 +777,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     // The farthest the panel can be scrolled before it hits the bottom
     const maxScroll = scrollContainerHeight - panelHeight;
 
-    if (this._selectionModel.hasValue()) {
+    if (this._hasValue()) {
       let selectedOptionOffset = this._getOptionIndex(this._selectionModel.selected[0])!;
 
       selectedOptionOffset += this._getLabelCountBeforeOption(selectedOptionOffset);

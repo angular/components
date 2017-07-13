@@ -25,7 +25,7 @@ import {MdDialog, MD_DIALOG_DATA} from './dialog';
 import {MdDialogContainer} from './dialog-container';
 import {OverlayContainer, ESCAPE} from '../core';
 import {MdDialogRef} from './dialog-ref';
-import {dispatchKeyboardEvent} from '../core/testing/dispatch-events';
+import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 
 
 describe('MdDialog', () => {
@@ -115,6 +115,15 @@ describe('MdDialog', () => {
 
     let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container')!;
     expect(dialogContainerElement.getAttribute('role')).toBe('alertdialog');
+  });
+
+  it('should apply the specified `aria-describedby`', () => {
+    dialog.open(PizzaMsg, { ariaDescribedBy: 'description-element' });
+
+    viewContainerFixture.detectChanges();
+
+    let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container')!;
+    expect(dialogContainerElement.getAttribute('aria-describedby')).toBe('description-element');
   });
 
   it('should close a dialog and get back a result', async(() => {
@@ -310,7 +319,7 @@ describe('MdDialog', () => {
   });
 
   it('should allow setting the layout direction', () => {
-    let dialogRef = dialog.open(PizzaMsg, { direction: 'rtl' });
+    dialog.open(PizzaMsg, { direction: 'rtl' });
 
     viewContainerFixture.detectChanges();
 
@@ -666,7 +675,7 @@ describe('MdDialog', () => {
       });
     }));
 
-    it('should set the aria-labelled by attribute to the id of the title', async(() => {
+    it('should set the aria-labelledby attribute to the id of the title', async(() => {
       let title = overlayContainerElement.querySelector('[md-dialog-title]')!;
       let container = overlayContainerElement.querySelector('md-dialog-container')!;
 

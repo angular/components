@@ -3,27 +3,14 @@ import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdYearView} from './year-view';
 import {MdCalendarBody} from './calendar-body';
-import {MdNativeDateModule, DateAdapter, NativeDateAdapter} from '../core/datetime/index';
-
-
-// When constructing a Date, the month is zero-based. This can be confusing, since people are
-// used to seeing them one-based. So we create these aliases to make reading the tests easier.
-const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9,
-      NOV = 10, DEC = 11;
-
+import {MdNativeDateModule} from '../core/datetime/index';
+import {FEB, JAN, MAR} from '../core/testing/month-constants';
 
 describe('MdYearView', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         MdNativeDateModule,
-      ],
-      providers: [
-        {provide: DateAdapter, useFactory: () => {
-          let adapter = new NativeDateAdapter();
-          adapter.setLocale('en-US');
-          return adapter;
-        }}
       ],
       declarations: [
         MdCalendarBody,

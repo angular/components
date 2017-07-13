@@ -26,11 +26,9 @@ import {MdOption} from '../core/option/option';
 import {MdInputContainer} from '../input/input-container';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {dispatchFakeEvent} from '../core/testing/dispatch-events';
-import {createKeyboardEvent} from '../core/testing/event-objects';
-import {typeInElement} from '../core/testing/type-in-element';
+import {createKeyboardEvent, dispatchFakeEvent, typeInElement} from '@angular/cdk/testing';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
-import {RxChain, map, startWith, filter} from '../core/rxjs/index';
+import {RxChain, map, startWith} from '../core/rxjs/index';
 
 
 describe('MdAutocomplete', () => {
@@ -223,17 +221,31 @@ describe('MdAutocomplete', () => {
       });
     }));
 
-    it('should close the panel programmatically', () => {
+    it('should close the panel programmatically', async(() => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
-      fixture.componentInstance.trigger.closePanel();
-      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        fixture.componentInstance.trigger.closePanel();
+        fixture.detectChanges();
 
-      expect(fixture.componentInstance.trigger.panelOpen)
-          .toBe(false, `Expected closing programmatically to set the panel state to closed.`);
-      expect(overlayContainerElement.textContent)
-          .toEqual('', `Expected closing programmatically to close the panel.`);
+        fixture.whenStable().then(() => {
+          expect(fixture.componentInstance.trigger.panelOpen)
+              .toBe(false, `Expected closing programmatically to set the panel state to closed.`);
+          expect(overlayContainerElement.textContent)
+              .toEqual('', `Expected closing programmatically to close the panel.`);
+        });
+      });
+    }));
+
+    it('should not throw when attempting to close the panel of a destroyed autocomplete', () => {
+      const trigger = fixture.componentInstance.trigger;
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      fixture.destroy();
+
+      expect(() => trigger.closePanel()).not.toThrow();
     });
 
     it('should hide the panel when the options list is empty', async(() => {
@@ -765,17 +777,19 @@ describe('MdAutocomplete', () => {
           .toEqual(32, `Expected panel to reveal the sixth option.`);
     }));
 
-    it('should scroll to active options on UP arrow', fakeAsync(() => {
-      tick();
-      const scrollContainer =
-          document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+    it('should scroll to active options on UP arrow', async(() => {
+      fixture.whenStable().then(() => {
+        const scrollContainer =
+            document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
 
-      fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
-      tick();
-      fixture.detectChanges();
+        fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
+        fixture.detectChanges();
 
-      // Expect option bottom minus the panel height (528 - 256 = 272)
-      expect(scrollContainer.scrollTop).toEqual(272, `Expected panel to reveal last option.`);
+        fixture.whenStable().then(() => {
+          // Expect option bottom minus the panel height (528 - 256 = 272)
+          expect(scrollContainer.scrollTop).toEqual(272, `Expected panel to reveal last option.`);
+        });
+      });
     }));
 
     it('should not scroll to active options that are fully in the panel', fakeAsync(() => {

@@ -19,7 +19,7 @@ import {TooltipPosition, MdTooltip, MdTooltipModule, SCROLL_THROTTLE_MS} from '.
 import {Directionality, Direction} from '../core/bidi/index';
 import {OverlayModule, Scrollable, OverlayContainer} from '../core/overlay/index';
 import {Platform} from '../core/platform/platform';
-import {dispatchFakeEvent} from '../core/testing/dispatch-events';
+import {dispatchFakeEvent} from '@angular/cdk/testing';
 
 
 const initialTooltipMessage = 'initial tooltip message';
@@ -415,17 +415,21 @@ describe('MdTooltip', () => {
       tick(0);
 
       // Expect that the tooltip is displayed
-      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+      expect(tooltipDirective._isTooltipVisible())
+          .toBe(true, 'Expected tooltip to be initially visible');
 
       // Scroll the page but tick just before the default throttle should update.
       fixture.componentInstance.scrollDown();
       tick(SCROLL_THROTTLE_MS - 1);
-      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+      expect(tooltipDirective._isTooltipVisible())
+          .toBe(true, 'Expected tooltip to be visible when scrolling, before throttle limit');
 
       // Finish ticking to the throttle's limit and check that the scroll event notified the
       // tooltip and it was hidden.
-      tick(1);
-      expect(tooltipDirective._isTooltipVisible()).toBe(false);
+      tick(100);
+      fixture.detectChanges();
+      expect(tooltipDirective._isTooltipVisible())
+          .toBe(false, 'Expected tooltip hidden when scrolled out of view, after throttle limit');
     }));
   });
 
