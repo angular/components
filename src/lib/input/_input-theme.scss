@@ -39,6 +39,10 @@
     }
   }
 
+  .mat-input-element {
+    color: mat-color($foreground, text);
+  }
+
   .mat-input-element:disabled {
     color: mat-color($foreground, disabled-text);
   }
