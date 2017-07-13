@@ -133,8 +133,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * It won't always work on IE phone.
    *
    * So the detectBrowser() function detects the current browser version. If it is about iPhone
-   * safari, set the style.position as '-webkit-sticky'. If it is an IE or an Tablet, use the original
-   * implmentation. And for other circumstances, use 'position: 'sticky''.
+   * safari, set the style.position as '-webkit-sticky'. If it is an IE or an Tablet, use the
+   * original implementation. And for other circumstances, use 'position: 'sticky''.
    */
   detectBrowser(): void {
     let browserVersion: string = navigator.appVersion;
