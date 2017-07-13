@@ -7,6 +7,7 @@
  */
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Directive,
