@@ -30,7 +30,7 @@ export class MdDialogClose {
   @Input('aria-label') ariaLabel: string = 'Close dialog';
 
   /** Dialog close input. */
-  @Input('md-dialog-close') dialogResult: any;
+  @Input('md-dialog-close') dialogResult: any = null;
 
   /** Dialog close input for compatibility mode. */
   @Input('mat-dialog-close') set _matDialogClose(value: any) { this.dialogResult = value; }
