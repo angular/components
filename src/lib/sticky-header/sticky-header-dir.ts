@@ -161,10 +161,10 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     // ios
     let isiOS = !!browserAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
 
-    if(isiOS == true || (isSafari == true && isChrome == false)) {
+    if(isiOS === true || (isSafari === true && isChrome === false)) {
       this.element.style.top = '0px';
       this.element.style.position = '-webkit-sticky';
-    } else if (isChrome == true || isFirefox == true || isAndroid == true || isOpera == true) {
+    } else if (isChrome === true || isFirefox === true || isAndroid === true || isOpera === true) {
       this.element.style.top = '0px';
       this.element.style.position = 'sticky';
     }else {
