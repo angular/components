@@ -8,10 +8,10 @@
 
 import {Component, ContentChildren, QueryList} from '@angular/core';
 import {MdStep} from './step';
-import {CdkStepper} from "@angular/cdk";
+import {CdkStepper} from '@angular/cdk';
 @Component({
     moduleId: module.id,
-    selector: 'mat-vertical-stepper',
+    selector: 'md-vertical-stepper, mat-vertical-stepper',
     templateUrl: 'stepper-vertical.html',
     styleUrls: ['stepper.scss'],
     inputs: ['selectedIndex'],

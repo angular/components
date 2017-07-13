@@ -2,11 +2,11 @@
   background: yellow;
 }
 
-.mat-stepper-horizontal[aria-selected='false'] {
+.mat-stepper-horizontal[aria-expanded='false'] {
   display:none;
 }
 
-.mat-stepper-horizontal[aria-selected='true'] {
+.mat-stepper-horizontal[aria-expanded='true'] {
   background: pink;
 }
 

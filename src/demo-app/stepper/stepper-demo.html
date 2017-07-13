@@ -1,6 +1,8 @@
 <h2>Horizontal Stepper Demo</h2>
 <mat-horizontal-stepper [(selectedIndex)]="horizontalActiveIndex">
     <mat-step *ngFor="let step of steps" [label]="step.label">
-        <div>{{step.content}}</div>
+        <md-input-container>
+            <input mdInput placeholder="Answer" [(ngModel)]="step.content">
+        </md-input-container>
     </mat-step>
 </mat-horizontal-stepper>

@@ -7,11 +7,11 @@
  */
 
 import {Component, ContentChildren, QueryList} from '@angular/core';
-import {MdStep} from "./step";
-import {CdkStepper} from "@angular/cdk";
+import {MdStep} from './step';
+import {CdkStepper} from '@angular/cdk';
 @Component({
     moduleId: module.id,
-    selector: 'mat-horizontal-stepper',
+    selector: 'md-horizontal-stepper, mat-horizontal-stepper',
     templateUrl: 'stepper-horizontal.html',
     styleUrls: ['stepper.scss'],
     inputs: ['selectedIndex'],

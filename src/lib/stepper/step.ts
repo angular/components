@@ -1,11 +1,18 @@
-import {Component, ContentChild, TemplateRef, ViewChild} from "@angular/core";
-import {CdkStep} from "@angular/cdk";
-import {MdStepLabel} from "./step-label";
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {Component, ContentChild, TemplateRef, ViewChild} from '@angular/core';
+import {CdkStep} from '@angular/cdk';
+import {MdStepLabel} from './step-label';
 @Component({
     moduleId: module.id,
-    selector: 'mat-step',
+    selector: 'md-step, mat-step',
     templateUrl: 'step.html',
-    //viewProviders: [CdkStep],
     inputs: ['label'],
 })
 export class MdStep extends CdkStep {

@@ -15,8 +15,10 @@ import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operator/map';
 import {LEFT_ARROW, RIGHT_ARROW, ENTER, TAB} from '../keyboard/keycodes';
 
+/** Used to generate unique ID for each stepper component. */
 let nextId = 0;
 
+/** Change event emitted on focus or selection changes. */
 export class CdkStepEvent {
     index: number;
     step: CdkStep;
@@ -25,27 +27,18 @@ export class CdkStepEvent {
 @Directive({
     selector: '[cdkStepper]',
     host: {
-        //'(focus)': '_onFocus()',
         '(keydown)': '_onKeydown($event)'
     },
 })
 export class CdkStepper {
-
-    get focusIndex(): number {return this._focusIndex; }
-    private _focusIndex: number = 0;
-
     @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
 
     @ViewChildren('stepHeader') _stepHeader: QueryList<ElementRef>;
-
-    @ViewChildren('stepButton') _stepButton: QueryList<ElementRef>;
 
     /** The index of the currently selected step. */
     @Input()
     set selectedIndex(value: number) {
         this._selectedIndex = value;
-        //this.selectedStep = this._steps.toArray()[this._selectedIndex];
-        //this.stepEvent.emit(this._emitstepEvent());
     }
     get selectedIndex(): number { return this._selectedIndex; }
     private _selectedIndex: number;
@@ -65,45 +58,35 @@ export class CdkStepper {
     /** Event emitted when the selected step has changed. */
     @Output() stepEvent = new EventEmitter<CdkStepEvent>();
 
+    /** Event emitted when the focused step has changed. */
     @Output() focusChange = new EventEmitter<CdkStepEvent>();
 
+    /** The step that is currently selected. */
     get selectedStep(): CdkStep {
         return this._steps.toArray()[this._selectedIndex];
     }
     private _selectedStep: CdkStep;
+
+    /** The index of the step that the focus is currently on. */
+    get focusIndex(): number {return this._focusIndex; }
+    private _focusIndex: number = 0;
 
     private _groupId: number;
 
     constructor() {
         this._groupId = nextId++;
     }
-    // _keyManager: FocusKeyManager;
 
-    //selectedIndex: number = 0;
-
-    // ngAfterContentChecked() {
-    //     this._steps.toArray()[this._selectedIndex].selected = true;
-    // }
-
-    // constructor(private _element: ElementRef) { }
-    //
-    // ngAfterContentInit(): void {
-    //     this._keyManager = new FocusKeyManager(this._steps).withWrap();
-    // }
-
+    /** Selects and focuses the provided step. */
     selectStep(step: CdkStep): void {
-        //if (!step.active) { return; }
-        this._selectedIndex = this.indexOf(step);
+        let stepsArray = this._steps.toArray();
+        this._selectedIndex = stepsArray.indexOf(step);
         this.stepEvent.emit(this._emitStepEvent(this._selectedIndex));
         this._focusIndex = this._selectedIndex;
         this._setStepFocus();
     }
 
-    indexOf(step: CdkStep): number {
-        let stepsArray = this._steps.toArray();
-        return stepsArray.indexOf(step);
-    }
-
+    /** Selects and focuses the next step in list. */
     nextStep(): void {
         if (this._selectedIndex == this._steps.length - 1) { return; }
         this._selectedIndex++;
@@ -112,6 +95,7 @@ export class CdkStepper {
         this._setStepFocus();
     }
 
+    /** Selects and focuses the previous step in list. */
     previousStep(): void {
         if (this._selectedIndex == 0) { return; }
         this._selectedIndex--;
@@ -120,10 +104,12 @@ export class CdkStepper {
         this._setStepFocus();
     }
 
+    /** Returns a unique id for each step label element. */
     _getStepLabelId(i: number): string {
         return `mat-step-label-${this._groupId}-${i}`;
     }
 
+    /** Returns a unique id for each step content element. */
     _getStepContentId(i: number): string {
         return `mat-step-content-${this._groupId}-${i}`;
     }
@@ -133,11 +119,8 @@ export class CdkStepper {
         event.index = index;
         event.step = this._steps.toArray()[this._selectedIndex];
         this._selectedStep = event.step;
-        //this._focusIndex = this._selectedIndex;
-        //this._setStepFocus();
         return event;
     }
-
 
     _onKeydown(event: KeyboardEvent) {
         switch (event.keyCode) {
@@ -158,16 +141,13 @@ export class CdkStepper {
                 this._emitStepEvent(this._selectedIndex);
                 break;
         }
-        if (event.keyCode != TAB) event.preventDefault();
+        if (event.keyCode != TAB) {
+            event.preventDefault();
+        }
     }
 
     _setStepFocus() {
         this._stepHeader.toArray()[this._focusIndex].nativeElement.focus();
         this.focusChange.emit(this._emitStepEvent(this._selectedIndex));
     }
-
-    // _onFocus() {
-    //     //this._keyManager.setFirstItemActive();
-    //     this._element.nativeElement.focus();
-    // }
 }

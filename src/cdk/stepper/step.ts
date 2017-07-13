@@ -10,21 +10,17 @@ import {
     Component, ContentChild, Directive, Input, OnInit, TemplateRef, ViewChild,
     ViewContainerRef
 } from '@angular/core';
-import {CdkStepLabel} from "./step-label";
+import {CdkStepLabel} from './step-label';
 
 @Component({
     selector: '[cdk-step]',
     templateUrl: 'step.html',
-    host: {
-        '(keydown)': '_onKeydown($event)'
-    },
 })
 export class CdkStep {
-
     @ContentChild(CdkStepLabel) stepLabel: CdkStepLabel;
     @ViewChild(TemplateRef) content: TemplateRef<any>;
-    // @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
+    /** Label of the step. */
     @Input()
     label: string;
 
@@ -34,6 +30,7 @@ export class CdkStep {
     /** Whether the step is editable or not. */
     @Input() editable: boolean = true;
 
+    /** Whether the step is the last one in the list. */
     isLast: boolean = false;
 
     // /** Whether the step is active. */
@@ -56,15 +53,4 @@ export class CdkStep {
         this._completed = value;
     }
     private _completed: boolean = false;
-
-
-    // /** The portal that will be the hosted content of the step */
-    // private _contentPortal: TemplatePortal | null = null;
-    // get content(): TemplatePortal | null { return this._contentPortal; }
-
-    // constructor(private _viewContainerRef: ViewContainerRef) {}
-    //
-    // ngOnInit() {
-    //     this._contentPortal = new TemplatePortal(this.stepContent, this._viewContainerRef);
-    // }
 }

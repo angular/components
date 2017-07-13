@@ -1,28 +1,38 @@
 <div class="mat-stepper-container">
     <div *ngFor="let step of _steps; let i = index" class="mat-step" role="tablist">
-        <div class="mat-step-header" role="tab"
+        <div #stepHeader class="mat-step-header" role="tab"
+             [id]="_getStepLabelId(i)"
+             [attr.aria-controls]="_getStepContentId(i)"
              [attr.aria-selected]="selectedIndex == i"
-             [tabIndex]="selectedIndex == i ? 0 : -1"
-             (click)="selectStep(step)">
-            <div *ngIf="step.active" class="activeStep">{{indexOf(step) + 1}}</div>
-            <div *ngIf="!step.active" class="inactiveStep">{{indexOf(step) + 1}}</div>
+             [tabIndex]="focusIndex == i ? 0 : -1"
+             (click)="selectStep(step)"
+             (keydown)="_onKeydown($event)">
+            <div *ngIf="step.active" class="activeStep">{{i + 1}}</div>
+            <div *ngIf="!step.active" class="inactiveStep">{{i + 1}}</div>
 
-            <ng-template [ngIf]="step.stepLabel">
-                <ng-template [cdkPortalHost]="step.stepLabel"></ng-template>
-            </ng-template>
-            <ng-template [ngIf]="!step.stepLabel">
-                <div class="mat-step-label">{{step.label}}</div>
-            </ng-template>
+            <div class="mat-step-label">
+                <!-- If there is a label template, use it. -->
+                <ng-template [ngIf]="step.stepLabel">
+                    <ng-template [cdkPortalHost]="step.stepLabel"></ng-template>
+                </ng-template>
+                <!-- It there is no label template, fall back to the text label. -->
+                <ng-template [ngIf]="!step.stepLabel">
+                    <div>{{step.label}}</div>
+                </ng-template>
+            </div>
 
         </div>
         <div *ngIf="!step.isLast" class="connector-line"></div>
-        <div *ngIf="indexOf(step) == selectedIndex" role="tabpanel">
+        <div *ngIf="i == selectedIndex" role="tabpanel"
+             [id]="_getStepContentId(i)"
+             [attr.aria-labelledby]="_getStepLabelId(i)"
+             [attr.aria-expanded]="selectedIndex == i">
             <ng-container [ngTemplateOutlet]="step.content"></ng-container>
-            <div>
-                <button md-button (click)="previousStep()">Back</button>
-                <button md-button (click)="nextStep()">Next</button>
-                <button md-button>Cancel</button>
-            </div>
+        </div>
+        <div>
+            <button md-button (click)="previousStep()">Back</button>
+            <button md-button (click)="nextStep()">Next</button>
+            <button md-button>Cancel</button>
         </div>
     </div>
 </div>
