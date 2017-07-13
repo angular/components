@@ -1,12 +1,7 @@
-import {
-  ChangeDetectorRef, Component, ContentChildren, QueryList, ViewChild,
-  ViewChildren
-} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {PeopleDatabase, UserData} from './people-database';
 import {PersonDataSource} from './person-data-source';
-import {MdPaginator} from '@angular/material';
-import {MdSort} from '@angular/material';
-import {CdkColumnDef} from '@angular/cdk';
+import {MdPaginator, MdSort} from '@angular/material';
 
 export type UserProperties = 'userId' | 'userName' | 'progress' | 'color' | undefined;
 
