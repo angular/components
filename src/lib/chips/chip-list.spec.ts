@@ -66,9 +66,14 @@ describe('MdChipList', () => {
     });
 
     describe('on chip destroy', () => {
-      it('focuses the next item', () => {
+      it('focuses the next item', async(() => {
         let array = chips.toArray();
         let midItem = array[2];
+
+        // Next item to focus
+        let nextFocusedItem = array[3];
+        // Spy on its focus() method
+        spyOn(nextFocusedItem, 'focus');
 
         // Focus the middle item
         midItem.focus();
@@ -77,9 +82,14 @@ describe('MdChipList', () => {
         testComponent.remove = 2;
         fixture.detectChanges();
 
-        // It focuses the 4th item (now at index 2)
+        // It focuses the 3th item (now at index 2)
         expect(manager.activeItemIndex).toEqual(2);
-      });
+
+        fixture.whenStable().then(() => {
+          // Expect to focus the next item
+          expect(nextFocusedItem.focus).toHaveBeenCalledTimes(1);
+        });
+      }));
 
       it('should focus the previous item', () => {
         let array = chips.toArray();
