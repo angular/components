@@ -138,24 +138,25 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    */
   detectBrowser(): void {
     let browserVersion: string = navigator.appVersion;
+    let browserAgent: string = navigator.userAgent;
+    let browserAgentLowercase: string = navigator.userAgent.toLocaleLowerCase();
 
     // check if browser is using Safari
-    let isSafari = (navigator.userAgent.toLocaleLowerCase().indexOf('safari') != -1);
+    let isSafari = (browserAgentLowercase.indexOf('safari') != -1);
 
     // check if browser is Chrome
-    let isChrome = (navigator.userAgent.toLocaleLowerCase().indexOf('chrome') != -1);
+    let isChrome = (browserAgentLowercase.indexOf('chrome') != -1);
 
     // check if browser is Firefox
-    let isFirefox = (navigator.userAgent.toLocaleLowerCase().indexOf('firefox') != -1);
+    let isFirefox = (browserAgentLowercase.indexOf('firefox') != -1);
 
     // check if browser is Opera
-    let isOpera = (navigator.userAgent.toLocaleLowerCase().indexOf('presto') != -1);
+    let isOpera = (browserAgentLowercase.indexOf('presto') != -1);
 
     // check if browser is IE
     this.isIE = browserVersion.includes('.NET');
 
     // Check if is mobile browser
-    let browserAgent = navigator.userAgent;
     // android
     let isAndroid = browserAgent.indexOf('Android') > -1 || browserAgent.indexOf('Adr') > -1;
     // ios
