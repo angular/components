@@ -11,8 +11,9 @@ export class StepperDemo {
     horizontalActiveIndex = 0;
     labelTemplateIndex = 0;
     steps = [
-        {label: 'Step 1', content: 'Content 1'},
-        {label: 'Step 2', content: 'Content 2', optional: true},
-        {label: 'Step 3', content: 'Content 3', editable: false},
+        {label: 'Confirm your name', content: 'Last name, First name.'},
+        {label: 'Confirm your contact information', content: '123-456-7890'},
+        {label: 'Confirm your address', content: '1600 Amphitheater Pkwy MTV'},
+        {label: 'You are now done', content: 'Finished!'}
         ];
 }

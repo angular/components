@@ -15,6 +15,9 @@ import {CdkStepLabel} from "./step-label";
 @Component({
     selector: '[cdk-step]',
     templateUrl: 'step.html',
+    host: {
+        '(keydown)': '_onKeydown($event)'
+    },
 })
 export class CdkStep {
 
@@ -33,12 +36,12 @@ export class CdkStep {
 
     isLast: boolean = false;
 
-    /** Whether the step is active. */
-    get active() { return this._active; }
-    set active(value: boolean) {
-        this._active = value;
-    }
-    private _active: boolean = false;
+    // /** Whether the step is active. */
+    // get active() { return this._active; }
+    // set active(value: boolean) {
+    //     this._active = value;
+    // }
+    // private _active: boolean = false;
 
     /** Whether the step has been selected. */
     get selected(): boolean { return this._selected; }
@@ -53,6 +56,7 @@ export class CdkStep {
         this._completed = value;
     }
     private _completed: boolean = false;
+
 
     // /** The portal that will be the hosted content of the step */
     // private _contentPortal: TemplatePortal | null = null;

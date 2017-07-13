@@ -1,23 +1,6 @@
-<h2>Veritcal Stepper Demo</h2>
-<mat-vertical-stepper [(selectedIndex)]="verticalActiveIndex">
-    <mat-step *ngFor="let step of steps" [label]="step.label">
-        <div>{{step.content}}</div>
-        <div>optional {{step.optional}}</div>
-        <div>editable {{step.editable}}</div>
-    </mat-step>
-</mat-vertical-stepper>
-
 <h2>Horizontal Stepper Demo</h2>
 <mat-horizontal-stepper [(selectedIndex)]="horizontalActiveIndex">
     <mat-step *ngFor="let step of steps" [label]="step.label">
-        <div>{{step.content}}</div>
-    </mat-step>
-</mat-horizontal-stepper>
-
-<h2>Horizontal Stepper with label template</h2>
-<mat-horizontal-stepper [(selectedIndex)]="labelTemplateIndex">
-    <mat-step *ngFor="let step of steps">
-        <ng-template mat-step-label>{{step.label}}</ng-template>
         <div>{{step.content}}</div>
     </mat-step>
 </mat-horizontal-stepper>

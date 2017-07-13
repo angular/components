@@ -8,11 +8,14 @@
 
 import {
     Component, ContentChildren, EventEmitter, Input, Output, QueryList, OnInit,
-    AfterViewChecked, AfterViewInit, Directive, ElementRef
+    AfterViewChecked, AfterViewInit, Directive, ElementRef, ViewChild, ViewChildren
 } from '@angular/core';
 import {CdkStep} from './step';
 import {Observable} from 'rxjs/Observable';
-import {map} from "rxjs/operator/map";
+import {map} from 'rxjs/operator/map';
+import {LEFT_ARROW, RIGHT_ARROW, ENTER, TAB} from '../keyboard/keycodes';
+
+let nextId = 0;
 
 export class CdkStepEvent {
     index: number;
@@ -21,14 +24,21 @@ export class CdkStepEvent {
 
 @Directive({
     selector: '[cdkStepper]',
-    // host: {
-    //     '(focus)': '_onFocus()',
-    //     '(keydown)': '_onKeydown($event)'
-    // },
+    host: {
+        //'(focus)': '_onFocus()',
+        '(keydown)': '_onKeydown($event)'
+    },
 })
 export class CdkStepper {
 
+    get focusIndex(): number {return this._focusIndex; }
+    private _focusIndex: number = 0;
+
     @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
+
+    @ViewChildren('stepHeader') _stepHeader: QueryList<ElementRef>;
+
+    @ViewChildren('stepButton') _stepButton: QueryList<ElementRef>;
 
     /** The index of the currently selected step. */
     @Input()
@@ -48,13 +58,25 @@ export class CdkStepper {
         return map.call(this.stepEvent, event => event.index);
     }
 
+    // @Output() get focusIndexChange(): Observable<number> {
+    //     return map.call(this.focusChange, event => event.index);
+    // }
+
     /** Event emitted when the selected step has changed. */
     @Output() stepEvent = new EventEmitter<CdkStepEvent>();
+
+    @Output() focusChange = new EventEmitter<CdkStepEvent>();
 
     get selectedStep(): CdkStep {
         return this._steps.toArray()[this._selectedIndex];
     }
     private _selectedStep: CdkStep;
+
+    private _groupId: number;
+
+    constructor() {
+        this._groupId = nextId++;
+    }
     // _keyManager: FocusKeyManager;
 
     //selectedIndex: number = 0;
@@ -70,9 +92,11 @@ export class CdkStepper {
     // }
 
     selectStep(step: CdkStep): void {
-        if (!step.active) { return; }
+        //if (!step.active) { return; }
         this._selectedIndex = this.indexOf(step);
-        this.stepEvent.emit(this._emitStepEvent());
+        this.stepEvent.emit(this._emitStepEvent(this._selectedIndex));
+        this._focusIndex = this._selectedIndex;
+        this._setStepFocus();
     }
 
     indexOf(step: CdkStep): number {
@@ -83,32 +107,65 @@ export class CdkStepper {
     nextStep(): void {
         if (this._selectedIndex == this._steps.length - 1) { return; }
         this._selectedIndex++;
-        this.stepEvent.emit(this._emitStepEvent());
+        this.stepEvent.emit(this._emitStepEvent(this._selectedIndex));
+        this._focusIndex = this._selectedIndex;
+        this._setStepFocus();
     }
 
     previousStep(): void {
         if (this._selectedIndex == 0) { return; }
         this._selectedIndex--;
-        this.stepEvent.emit(this._emitStepEvent());
+        this.stepEvent.emit(this._emitStepEvent(this._selectedIndex));
+        this._focusIndex = this._selectedIndex;
+        this._setStepFocus();
     }
 
-    private _emitStepEvent(): CdkStepEvent {
+    _getStepLabelId(i: number): string {
+        return `mat-step-label-${this._groupId}-${i}`;
+    }
+
+    _getStepContentId(i: number): string {
+        return `mat-step-content-${this._groupId}-${i}`;
+    }
+
+    private _emitStepEvent(index: number): CdkStepEvent {
         const event = new CdkStepEvent();
-        event.index = this._selectedIndex;
+        event.index = index;
         event.step = this._steps.toArray()[this._selectedIndex];
         this._selectedStep = event.step;
+        //this._focusIndex = this._selectedIndex;
+        //this._setStepFocus();
         return event;
     }
 
-    // _onKeyDown(event: KeyboardEvent) {
-    //     switch (event.keyCode) {
-    //         case RIGHT_ARROW:
-    //             ;
-    //         case LEFT_ARROW:
-    //             ;
-    //     }
-    //     event.preventDefault();
-    // }
+
+    _onKeydown(event: KeyboardEvent) {
+        switch (event.keyCode) {
+            case RIGHT_ARROW:
+                if (this._focusIndex != this._steps.length - 1) {
+                    this._focusIndex++;
+                    this._setStepFocus();
+                }
+                break;
+            case LEFT_ARROW:
+                if (this._focusIndex != 0) {
+                    this._focusIndex--;
+                    this._setStepFocus();
+                }
+                break;
+            case ENTER:
+                this._selectedIndex = this._focusIndex;
+                this._emitStepEvent(this._selectedIndex);
+                break;
+        }
+        if (event.keyCode != TAB) event.preventDefault();
+    }
+
+    _setStepFocus() {
+        this._stepHeader.toArray()[this._focusIndex].nativeElement.focus();
+        this.focusChange.emit(this._emitStepEvent(this._selectedIndex));
+    }
+
     // _onFocus() {
     //     //this._keyManager.setFirstItemActive();
     //     this._element.nativeElement.focus();

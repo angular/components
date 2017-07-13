@@ -8,7 +8,7 @@ import {MdStepLabel} from "./step-label";
     //viewProviders: [CdkStep],
     inputs: ['label'],
 })
-export class MdStep extends CdkStep{
+export class MdStep extends CdkStep {
     /** Content for the step label given by <ng-template mat-step-label>. */
     @ContentChild(MdStepLabel) stepLabel: MdStepLabel;
 

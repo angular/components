@@ -1,15 +1,22 @@
 <div class="mat-stepper-container">
-    <div *ngFor="let step of _steps; let i = index" class="mat-step">
-        <div class="mat-step-header"
+    <div *ngFor="let step of _steps; let i = index" class="mat-step" role="tablist">
+        <div class="mat-step-header" role="tab"
              [attr.aria-selected]="selectedIndex == i"
-             [tabIndex]="0"
+             [tabIndex]="selectedIndex == i ? 0 : -1"
              (click)="selectStep(step)">
             <div *ngIf="step.active" class="activeStep">{{indexOf(step) + 1}}</div>
             <div *ngIf="!step.active" class="inactiveStep">{{indexOf(step) + 1}}</div>
-            <div class="mat-step-label">{{step.label}}</div>
+
+            <ng-template [ngIf]="step.stepLabel">
+                <ng-template [cdkPortalHost]="step.stepLabel"></ng-template>
+            </ng-template>
+            <ng-template [ngIf]="!step.stepLabel">
+                <div class="mat-step-label">{{step.label}}</div>
+            </ng-template>
+
         </div>
         <div *ngIf="!step.isLast" class="connector-line"></div>
-        <div *ngIf="indexOf(step) == selectedIndex">
+        <div *ngIf="indexOf(step) == selectedIndex" role="tabpanel">
             <ng-container [ngTemplateOutlet]="step.content"></ng-container>
             <div>
                 <button md-button (click)="previousStep()">Back</button>

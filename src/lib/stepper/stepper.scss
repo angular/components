@@ -1,3 +1,20 @@
 .mat-step-header:focus {
   background: yellow;
 }
+
+.mat-stepper-horizontal[aria-selected='false'] {
+  display:none;
+}
+
+.mat-stepper-horizontal[aria-selected='true'] {
+  background: pink;
+}
+
+.active-step, .inactive-step {
+  display: inline-block;
+}
+
+.mat-step-label {
+  display: inline-block;
+}
+
