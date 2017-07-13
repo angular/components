@@ -88,7 +88,7 @@ export class CdkTable<T> implements CollectionViewer {
   private _renderChangeSubscription: Subscription | null;
 
   /** Map of all the user's defined columns (header and data cell template) identified by name. */
-  private _columnDefinitionsMap = new Map<string,  CdkColumnDef>();
+  private _columnDefinitionsByName = new Map<string,  CdkColumnDef>();
 
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<T>;
@@ -170,6 +170,7 @@ export class CdkTable<T> implements CollectionViewer {
   }
 
   ngAfterContentChecked() {
+    this._renderUpdatedColumns();
     this._cacheColumnDefinitionsByName();
   }
 
@@ -204,12 +205,12 @@ export class CdkTable<T> implements CollectionViewer {
 
   /** Update the map containing the content's column definitions. */
   private _cacheColumnDefinitionsByName() {
-    this._columnDefinitionsMap.clear();
+    this._columnDefinitionsByName.clear();
     this._columnDefinitions.forEach(columnDef => {
-      if (this._columnDefinitionsMap.has(columnDef.name)) {
+      if (this._columnDefinitionsByName.has(columnDef.name)) {
         throw getTableDuplicateColumnNameError(columnDef.name);
       }
-      this._columnDefinitionsMap.set(columnDef.name, columnDef);
+      this._columnDefinitionsByName.set(columnDef.name, columnDef);
     });
   }
 
@@ -217,7 +218,7 @@ export class CdkTable<T> implements CollectionViewer {
    * Check if the header or rows have changed what columns they want to display. If there is a diff,
    * then re-render that section.
    */
-  private _checkColumnsChange() {
+  private _renderUpdatedColumns() {
     // Re-render the rows when the row definition columns change.
     this._rowDefinitions.forEach(def => {
       if (!!def.getColumnsDiff()) {
@@ -366,7 +367,7 @@ export class CdkTable<T> implements CollectionViewer {
   private _getHeaderCellTemplatesForRow(headerDef: CdkHeaderRowDef): CdkHeaderCellDef[] {
     if (!headerDef.columns) { return []; }
     return headerDef.columns.map(columnId => {
-      const column = this._columnDefinitionsMap.get(columnId);
+      const column = this._columnDefinitionsByName.get(columnId);
 
       if (!column) {
         throw getTableUnknownColumnError(columnId);
@@ -383,7 +384,7 @@ export class CdkTable<T> implements CollectionViewer {
   private _getCellTemplatesForRow(rowDef: CdkRowDef): CdkCellDef[] {
     if (!rowDef.columns) { return []; }
     return rowDef.columns.map(columnId => {
-      const column = this._columnDefinitionsMap.get(columnId);
+      const column = this._columnDefinitionsByName.get(columnId);
 
       if (!column) {
         throw getTableUnknownColumnError(columnId);
