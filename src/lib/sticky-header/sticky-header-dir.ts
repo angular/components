@@ -139,12 +139,32 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   detectBrowser(): void {
     let browserVersion: string = navigator.appVersion;
 
-    if(browserVersion.includes('iPhone')) {
+    // check if browser is using Safari
+    let isSafari = (navigator.userAgent.toLocaleLowerCase().indexOf('safari') != -1);
+
+    // check if browser is Chrome
+    let isChrome = (navigator.userAgent.toLocaleLowerCase().indexOf('chrome') != -1);
+
+    // check if browser is Firefox
+    let isFirefox = (navigator.userAgent.toLocaleLowerCase().indexOf('firefox') != -1);
+
+    // check if browser is Opera
+    let isOpera = (navigator.userAgent.toLocaleLowerCase().indexOf('presto') != -1);
+
+    // check if browser is IE
+    this.isIE = browserVersion.includes('.NET');
+
+    // Check if is mobile browser
+    let browserAgent = navigator.userAgent;
+    // android
+    let isAndroid = browserAgent.indexOf('Android') > -1 || browserAgent.indexOf('Adr') > -1;
+    // ios
+    let isiOS = !!browserAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+
+    if(isiOS == true || (isSafari == true && isChrome == false)) {
       this.element.style.top = '0px';
       this.element.style.position = '-webkit-sticky';
-    } else if (browserVersion.includes('Tablet')) {
-      this.isIE = true;
-    } else if (!browserVersion.includes('IE')) {
+    } else if (isChrome == true || isFirefox == true || isAndroid == true || isOpera == true) {
       this.element.style.top = '0px';
       this.element.style.position = 'sticky';
     }else {
