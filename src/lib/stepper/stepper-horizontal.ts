@@ -10,12 +10,12 @@ import {Component, ContentChildren, QueryList} from '@angular/core';
 import {MdStep} from './step';
 import {CdkStepper} from '@angular/cdk';
 @Component({
-    moduleId: module.id,
-    selector: 'md-horizontal-stepper, mat-horizontal-stepper',
-    templateUrl: 'stepper-horizontal.html',
-    styleUrls: ['stepper.scss'],
-    inputs: ['selectedIndex'],
+  moduleId: module.id,
+  selector: 'md-horizontal-stepper, mat-horizontal-stepper',
+  templateUrl: 'stepper-horizontal.html',
+  styleUrls: ['stepper.scss'],
+  inputs: ['selectedIndex'],
 })
 export class MdHorizontalStepper extends CdkStepper {
-    @ContentChildren(MdStep) _steps: QueryList<MdStep>;
+  @ContentChildren(MdStep) _steps: QueryList<MdStep>;
 }

@@ -13,9 +13,9 @@ import {CdkStep} from './step';
 import {CdkStepLabel} from './step-label';
 import {PortalModule} from '../portal';
 @NgModule({
-    imports: [CommonModule, PortalModule],
-    exports: [CdkStep, CdkStepper, CdkStepLabel],
-    declarations: [CdkStep, CdkStepper, CdkStepLabel]
+  imports: [CommonModule, PortalModule],
+  exports: [CdkStep, CdkStepper, CdkStepLabel],
+  declarations: [CdkStep, CdkStepper, CdkStepLabel]
 })
 export class CdkStepperModule {}
 

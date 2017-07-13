@@ -9,10 +9,10 @@
 import {Directive, TemplateRef, ViewContainerRef} from '@angular/core';
 import {TemplatePortalDirective} from '../portal';
 @Directive({
-    selector: '[cdk-step-label]',
+  selector: '[cdk-step-label]',
 })
 export class CdkStepLabel extends TemplatePortalDirective {
-    constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
-        super(templateRef, viewContainerRef);
-    }
+  constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
+    super(templateRef, viewContainerRef);
+  }
 }

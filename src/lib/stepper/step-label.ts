@@ -9,10 +9,10 @@
 import {Directive, TemplateRef, ViewContainerRef} from '@angular/core';
 import {CdkStepLabel} from '@angular/cdk';
 @Directive({
-    selector: '[md-step-label], [mat-step-label]',
+  selector: '[md-step-label], [mat-step-label]',
 })
 export class MdStepLabel extends CdkStepLabel {
-    constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
-        super(templateRef, viewContainerRef);
-    }
+  constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
+    super(templateRef, viewContainerRef);
+  }
 }
