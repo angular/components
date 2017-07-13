@@ -9,7 +9,7 @@ import {CdkTableModule} from './index';
 import {map} from 'rxjs/operator/map';
 import {getTableDuplicateColumnNameError, getTableUnknownColumnError} from './table-errors';
 
-fdescribe('CdkTable', () => {
+describe('CdkTable', () => {
   let fixture: ComponentFixture<SimpleCdkTableApp>;
 
   let component: SimpleCdkTableApp;
