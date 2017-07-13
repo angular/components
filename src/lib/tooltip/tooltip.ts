@@ -478,7 +478,7 @@ let _uniqueTooltipIdCounter = 0;
     // won't be rendered if the animations are disabled or there is no web animations polyfill.
     '[style.zoom]': '_visibility === "visible" ? 1 : null',
     '(body:click)': '_handleBodyInteraction()',
-    '[attr.aria-hidden]': "isVisible() ? '' : 'true'",
+    '[attr.aria-hidden]': 'isVisible()',
   }
 })
 export class TooltipComponent {
