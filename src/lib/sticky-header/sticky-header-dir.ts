@@ -99,19 +99,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     this.element = _element.nativeElement;
     this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
 
-    let browserVersion: string = navigator.appVersion;
-
-    if(browserVersion.includes('iPhone')) {
-      _element.nativeElement.style.top = '0px';
-      _element.nativeElement.style.position = '-webkit-sticky';
-    } else if(browserVersion.includes('Tablet')) {
-      this.isIE = true;
-    } else if(!browserVersion.includes('IE')) {
-      _element.nativeElement.style.top = '0px';
-      _element.nativeElement.style.position = 'sticky';
-    }else {
-      this.isIE = true;
-    }
+    this.detectBrowser();
   }
 
   ngAfterViewInit(): void {
@@ -131,6 +119,37 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     this.upperScrollableContainer.removeEventListener('scroll', this._onScrollBind);
     this.upperScrollableContainer.removeEventListener('resize', this._onResizeBind);
     this.upperScrollableContainer.removeEventListener('touchmove', this._onTouchMoveBind);
+  }
+
+  /**
+   * Use 'navigator.appVersion' to detect current browser. According to the "Position:sticky
+   * Browser compatibility" in "https://developer.mozilla.org/en-US/docs/Web/CSS/position".
+   *
+   * For Desktop: Sticky positioning works well on Chrome, Edge, Firefox and Opera. And can
+   * also work well on Safari with a "-webkit-" prefix. It only does not work on IE.
+   *
+   * For Mobile: Sticky positioning works well on Android Webview, Chrome for Android, Edge,
+   * Firefox Mobile, Opera Mobile. And can also work well on Safari Mobile with a "-webkit-" prefix.
+   * It won't always work on IE phone.
+   *
+   * So the detectBrowser() function detects the current browser version. If it is about iPhone
+   * safari, set the style.position as '-webkit-sticky'. If it is an IE or an Tablet, use the original
+   * implmentation. And for other circumstances, use 'position: 'sticky''.
+   */
+  detectBrowser(): void {
+    let browserVersion: string = navigator.appVersion;
+
+    if(browserVersion.includes('iPhone')) {
+      this.element.style.top = '0px';
+      this.element.style.position = '-webkit-sticky';
+    } else if (browserVersion.includes('Tablet')) {
+      this.isIE = true;
+    } else if (!browserVersion.includes('IE')) {
+      this.element.style.top = '0px';
+      this.element.style.position = 'sticky';
+    }else {
+      this.isIE = true;
+    }
   }
 
   attach() {
