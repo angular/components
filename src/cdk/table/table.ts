@@ -21,7 +21,7 @@ import {
   IterableChangeRecord,
   IterableDiffer,
   IterableDiffers,
-  NgIterable,
+  NgIterable, NgZone,
   QueryList,
   Renderer2,
   TrackByFunction,
@@ -37,6 +37,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
 import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
 import {getTableDuplicateColumnNameError, getTableUnknownColumnError} from './table-errors';
+import {first} from '../rxjs/rx-operators';
 
 /**
  * Provides a handle for the table to grab the view container's ng-container to insert data rows.
@@ -151,6 +152,7 @@ export class CdkTable<T> implements CollectionViewer {
 
   constructor(private readonly _differs: IterableDiffers,
               private readonly _changeDetectorRef: ChangeDetectorRef,
+              private readonly _ngZone: NgZone,
               elementRef: ElementRef,
               renderer: Renderer2,
               @Attribute('role') role: string) {
@@ -162,6 +164,15 @@ export class CdkTable<T> implements CollectionViewer {
   ngOnInit() {
     // TODO(andrewseguin): Setup a listener for scrolling, emit the calculated view to viewChange
     this._dataDiffer = this._differs.find([]).create(this._trackByFn);
+  }
+
+  ngDoCheck() {
+    // After the the content and view have been initialized and checked then we can connect
+    // to the data source and render data rows. This cannot be done from within change detection,
+    // so the table must wait until the next change detection cycle before rendering.
+    if (this._isViewInitialized && this.dataSource && !this._renderChangeSubscription) {
+      this._observeRenderChanges();
+    }
   }
 
   ngAfterContentInit() {
