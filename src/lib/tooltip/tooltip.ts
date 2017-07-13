@@ -568,7 +568,7 @@ export class TooltipComponent {
 
   /** Whether the tooltip is being displayed */
   isVisible(): boolean {
-    return this._visibility === 'visible';\
+    return this._visibility === 'visible';
   }
 
   /** Sets the tooltip transform origin according to the tooltip position */
