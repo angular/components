@@ -159,7 +159,9 @@ export class MdTooltip implements OnDestroy {
   @Input('mdTooltip') get message() { return this._message; }
   set message(value: string) {
     this._message = value;
-    this._setTooltipMessage(this._message);
+    if (this._tooltipInstance) {
+      this._setTooltipMessage(this._message);
+    }
   }
 
   /** Classes to be passed to the tooltip. Supports the same syntax as `ngClass`. */
@@ -252,29 +254,15 @@ export class MdTooltip implements OnDestroy {
   show(delay: number = this.showDelay): void {
     if (this.disabled || !this._message || !this._message.trim()) { return; }
 
-    if (this._scrollStrategy) {
-      this._scrollStrategy.enable();
-    }
-
-    if (this._tooltipInstance) {
-      this._tooltipInstance.show(this._position, delay);
-    }
-
-    if (this._overlayRef) {
-      this._overlayRef.overlayElement.classList.remove('cdk-visually-hidden');
-      this._overlayRef.updatePosition();
-    }
+    this._scrollStrategy!.enable();
+    this._tooltipInstance!.show(this._position, delay);
+    this._overlayRef!.overlayElement.classList.remove('cdk-visually-hidden');
+    this._overlayRef!.updatePosition();
   }
 
   /** Hides the tooltip after the delay in ms, defaults to tooltip-delay-hide or 0ms if no input */
   hide(delay: number = this.hideDelay): void {
-    if (this._scrollStrategy) {
-      this._scrollStrategy.disable();
-    }
-
-    if (this._tooltipInstance) {
-      this._tooltipInstance.hide(delay);
-    }
+    this._tooltipInstance!.hide(delay);
   }
 
   /** Shows/hides the tooltip */
@@ -284,14 +272,12 @@ export class MdTooltip implements OnDestroy {
 
   /** Returns true if the tooltip is currently visible to the user */
   _isTooltipVisible(): boolean {
-    return !!this._tooltipInstance && this._tooltipInstance.isVisible();
+    return this._tooltipInstance!.isVisible();
   }
 
   /** Handles the keydown events on the host element. */
   _handleKeydown(e: KeyboardEvent) {
-    if (this._tooltipInstance &&
-        this._tooltipInstance.isVisible() &&
-        e.keyCode === ESCAPE) {
+    if (this._tooltipInstance!.isVisible() && e.keyCode === ESCAPE) {
       e.stopPropagation();
       this.hide(0);
     }
@@ -303,9 +289,8 @@ export class MdTooltip implements OnDestroy {
   }
 
   /** Sets the trigger's aria-describedby attribute. */
-  private _setAriaDescribedBy(ariaDescribedby: string) {
-    this._renderer.setAttribute(
-        this._elementRef.nativeElement, 'aria-describedby', ariaDescribedby);
+  private _setAriaDescribedBy(describedBy: string) {
+    this._renderer.setAttribute(this._elementRef.nativeElement, 'aria-describedby', describedBy);
   }
 
   /** Create the tooltip to display */
@@ -322,13 +307,11 @@ export class MdTooltip implements OnDestroy {
       this._setAriaDescribedBy(this._tooltipInstance.id);
     }
 
-    if (this._tooltipInstance) {
-      this._tooltipInstance.afterHidden().subscribe(() => {
-        // After the tooltip is hidden, hide the overlay so that it does not block interaction
-        // with nearby existing elements.
-        this._hideOverlay();
-      });
-    }
+    this._tooltipInstance!.afterHidden().subscribe(() => {
+      // After the tooltip is hidden, hide the overlay so that it does not block interaction
+      // with nearby existing elements.
+      this._hideOverlay();
+    });
 
     this._setTooltipClass(this._tooltipClass);
     this._setTooltipMessage(this._message);
@@ -365,29 +348,31 @@ export class MdTooltip implements OnDestroy {
 
   /** Visually hides the overlay and disables the scrolling strategy. */
   private _hideOverlay(): void {
+    // Check if the overlay and scroll strategy are not null since this may be called after
+    // the tooltip is disposed.
     if (this._overlayRef) {
       this._overlayRef.overlayElement.classList.add('cdk-visually-hidden');
+    }
 
-      if (this._scrollStrategy) {
-        this._scrollStrategy.disable();
-      }
+    if (this._scrollStrategy) {
+      this._scrollStrategy.disable();
     }
   }
 
   /** Disposes the current tooltip and the overlay it is attached to */
   private _disposeTooltip(): void {
     if (this._overlayRef) {
-      this._overlayRef.dispose();
+      this._overlayRef!.dispose();
       this._overlayRef = null;
     }
 
     if (this._scrollStrategy) {
-      this._scrollStrategy.disable();
+      this._scrollStrategy!.disable();
       this._scrollStrategy = null;
     }
 
     // If the aria-describedby was set to the tooltip (e.g. not user-defined), then remove it.
-    if (this._tooltipInstance && this._getAriaDescribedby() == this._tooltipInstance.id) {
+    if (this._tooltipInstance && this._getAriaDescribedby() == this._tooltipInstance!.id) {
       this._setAriaDescribedBy('');
     }
 
@@ -446,24 +431,20 @@ export class MdTooltip implements OnDestroy {
   private _setTooltipMessage(message: string) {
     // Must wait for the message to be painted to the tooltip so that the overlay can properly
     // calculate the correct positioning based on the size of the text.
-    if (this._tooltipInstance) {
-      this._tooltipInstance.message = message;
-      this._tooltipInstance._markForCheck();
+    this._tooltipInstance!.message = message;
+    this._tooltipInstance!._markForCheck();
 
-      first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => {
-        if (this._tooltipInstance) {
-          this._overlayRef!.updatePosition();
-        }
-      });
-    }
+    first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => {
+      if (this._overlayRef) {
+        this._overlayRef!.updatePosition();
+      }
+    });
   }
 
   /** Updates the tooltip class */
   private _setTooltipClass(tooltipClass: string|string[]|Set<string>|{[key: string]: any}) {
-    if (this._tooltipInstance) {
-      this._tooltipInstance.tooltipClass = tooltipClass;
-      this._tooltipInstance._markForCheck();
-    }
+    this._tooltipInstance!.tooltipClass = tooltipClass;
+    this._tooltipInstance!._markForCheck();
   }
 }
 
@@ -485,9 +466,7 @@ let _uniqueTooltipIdCounter = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('state', [
-      state('void', style({transform: 'scale(0)'})),
-      state('initial', style({transform: 'scale(0)'})),
-      state('hidden', style({transform: 'scale(0)'})),
+      state('void, initial, hidden', style({transform: 'scale(0)'})),
       state('visible', style({transform: 'scale(1)'})),
       transition('* => visible', animate('150ms cubic-bezier(0.0, 0.0, 0.2, 1)')),
       transition('* => hidden', animate('150ms cubic-bezier(0.4, 0.0, 1, 1)')),
@@ -549,7 +528,6 @@ export class TooltipComponent {
     this._setTransformOrigin(position);
     this._showTimeoutId = setTimeout(() => {
       this._visibility = 'visible';
-      console.log('Setting visibility to', this._visibility);
 
       // If this was set to true immediately, then a body click that triggers show() would
       // trigger interaction and close the tooltip right after it was displayed.
@@ -607,14 +585,9 @@ export class TooltipComponent {
   }
 
   _afterVisibilityAnimation(e: AnimationEvent): void {
-    console.log('Visibility set', e);
     if (e.toState === 'hidden' && !this.isVisible()) {
       this._onHide.next();
     }
-  }
-
-  _whenVisibilityAnimation(e: AnimationEvent): void {
-    console.log('Visibility animation started', e);
   }
 
   /**

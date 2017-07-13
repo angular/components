@@ -4,7 +4,6 @@
      [ngClass]="tooltipClass"
      [style.transform-origin]="_transformOrigin"
      [@state]="_visibility"
-     (@state.start)="_whenVisibilityAnimation($event)"
      (@state.done)="_afterVisibilityAnimation($event)">
   {{message}}
 </div>
