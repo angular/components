@@ -6,6 +6,7 @@ import {ACCESSIBILITY_DEMO_ROUTES} from './routes';
 import {DemoMaterialModule} from '../demo-material-module';
 import {AccessibilityHome, AccessibilityDemo} from './a11y';
 import {ButtonAccessibilityDemo} from './button/button-a11y';
+import {ButtonToggleAccessibilityDemo} from './button-toggle/button-toggle-a11y';
 import {CheckboxAccessibilityDemo} from './checkbox/checkbox-a11y';
 import {RadioAccessibilityDemo} from './radio/radio-a11y';
 
@@ -25,12 +26,15 @@ export class AccessibilityRoutingModule {}
     FormsModule,
     ReactiveFormsModule,
     AccessibilityRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     DemoMaterialModule,
   ],
   declarations: [
     AccessibilityDemo,
     AccessibilityHome,
     ButtonAccessibilityDemo,
+    ButtonToggleAccessibilityDemo,
     CheckboxAccessibilityDemo,
     RadioAccessibilityDemo,
   ]
