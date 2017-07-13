@@ -21,7 +21,8 @@ import {
   IterableChangeRecord,
   IterableDiffer,
   IterableDiffers,
-  NgIterable, NgZone,
+  NgIterable,
+  NgZone,
   QueryList,
   Renderer2,
   TrackByFunction,
@@ -37,7 +38,6 @@ import {Subscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
 import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
 import {getTableDuplicateColumnNameError, getTableUnknownColumnError} from './table-errors';
-import {first} from '../rxjs/rx-operators';
 
 /**
  * Provides a handle for the table to grab the view container's ng-container to insert data rows.
