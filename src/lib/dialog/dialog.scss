@@ -59,4 +59,12 @@ $mat-dialog-max-height: 65vh !default;
   &[align='center'] {
     justify-content: center;
   }
+
+  :not(:last-child) {
+    margin-right: 8px;
+  }
+
+  :last-child {
+    margin-right: 0;
+  }
 }
