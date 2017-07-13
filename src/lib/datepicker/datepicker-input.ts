@@ -117,7 +117,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   }
   set value(value: D | null) {
     if (value != null && !this._dateAdapter.isDateObject(value)) {
-      throw new Error('Datepicker: value not recognized as a date object by DateAdapter.');
+      throw Error('Datepicker: value not recognized as a date object by DateAdapter.');
     }
     let oldDate = this.value;
     this._renderer.setProperty(this._elementRef.nativeElement, 'value',

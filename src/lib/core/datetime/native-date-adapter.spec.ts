@@ -304,6 +304,14 @@ describe('NativeDateAdapter', () => {
       expect(adapter.format(new Date(1800, 7, 14), {day: 'numeric'})).toBe('Thu Aug 14 1800');
     }
   });
+
+  it('should count a Date as a date object', () => {
+    expect(adapter.isDateObject(new Date())).toBe(true);
+  });
+
+  it('should not count a string as a date object', () => {
+    expect(adapter.isDateObject('1/1/2017')).toBe(false);
+  });
 });
 
 
