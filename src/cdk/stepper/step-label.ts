@@ -8,6 +8,7 @@
 
 import {Directive, TemplateRef, ViewContainerRef} from '@angular/core';
 import {TemplatePortalDirective} from '../portal';
+
 @Directive({
   selector: '[cdk-step-label]',
 })

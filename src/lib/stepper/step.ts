@@ -9,6 +9,7 @@
 import {Component, ContentChild, TemplateRef, ViewChild} from '@angular/core';
 import {CdkStep} from '@angular/cdk';
 import {MdStepLabel} from './step-label';
+
 @Component({
   moduleId: module.id,
   selector: 'md-step, mat-step',

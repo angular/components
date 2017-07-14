@@ -9,6 +9,7 @@
 import {Component, ContentChildren, QueryList} from '@angular/core';
 import {MdStep} from './step';
 import {CdkStepper} from '@angular/cdk';
+
 @Component({
   moduleId: module.id,
   selector: 'md-horizontal-stepper, mat-horizontal-stepper',

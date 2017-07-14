@@ -12,6 +12,7 @@ import {CommonModule} from '@angular/common';
 import {CdkStep} from './step';
 import {CdkStepLabel} from './step-label';
 import {PortalModule} from '../portal';
+
 @NgModule({
   imports: [CommonModule, PortalModule],
   exports: [CdkStep, CdkStepper, CdkStepLabel],

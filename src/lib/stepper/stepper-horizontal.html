@@ -4,8 +4,8 @@
              [id]="_getStepLabelId(i)"
              [attr.aria-controls]="_getStepContentId(i)"
              [attr.aria-selected]="selectedIndex == i"
-             [tabIndex]="focusIndex == i ? 0 : -1"
-             (click)="selectStep(step)"
+             [tabIndex]="_focusIndex == i ? 0 : -1"
+             (click)="select(step)"
              (keydown)="_onKeydown($event)">
             <div *ngIf="step.active" class="active-step">{{i + 1}}</div>
             <div *ngIf="!step.active" class="inactive-step">{{i + 1}}</div>
@@ -22,7 +22,7 @@
             </div>
 
         </div>
-        <div *ngIf="!step.isLast" class="connector-line"></div>
+        <div *ngIf="!step._isLast" class="connector-line"></div>
     </div>
 </div>
 <div *ngFor="let step of _steps; let i = index"
@@ -33,6 +33,6 @@
     <ng-container [ngTemplateOutlet]="step.content"></ng-container>
 </div>
 <div>
-    <button md-button (click)="previousStep()">Back</button>
-    <button md-button (click)="nextStep()">Next</button>
+    <button md-button (click)="previous()">Back</button>
+    <button md-button (click)="next()">Next</button>
 </div>

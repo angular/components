@@ -4,8 +4,8 @@
              [id]="_getStepLabelId(i)"
              [attr.aria-controls]="_getStepContentId(i)"
              [attr.aria-selected]="selectedIndex == i"
-             [tabIndex]="focusIndex == i ? 0 : -1"
-             (click)="selectStep(step)"
+             [tabIndex]="_focusIndex == i ? 0 : -1"
+             (click)="select(step)"
              (keydown)="_onKeydown($event)">
             <div *ngIf="step.active" class="activeStep">{{i + 1}}</div>
             <div *ngIf="!step.active" class="inactiveStep">{{i + 1}}</div>
@@ -22,17 +22,16 @@
             </div>
 
         </div>
-        <div *ngIf="!step.isLast" class="connector-line"></div>
+        <div *ngIf="!step._isLast" class="connector-line"></div>
         <div *ngIf="i == selectedIndex" role="tabpanel"
              [id]="_getStepContentId(i)"
              [attr.aria-labelledby]="_getStepLabelId(i)"
              [attr.aria-expanded]="selectedIndex == i">
             <ng-container [ngTemplateOutlet]="step.content"></ng-container>
         </div>
-        <div>
-            <button md-button (click)="previousStep()">Back</button>
-            <button md-button (click)="nextStep()">Next</button>
-            <button md-button>Cancel</button>
+        <div *ngIf="i == selectedIndex">
+            <button md-button (click)="previous()">Back</button>
+            <button md-button (click)="next()">Next</button>
         </div>
     </div>
 </div>

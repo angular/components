@@ -16,6 +16,7 @@ import {MdStep} from './step';
 import {CdkStepperModule} from '@angular/cdk';
 import {MdCommonModule} from '../core';
 import {MdStepLabel} from './step-label';
+
 @NgModule({
   imports: [MdCommonModule, CommonModule, PortalModule, MdButtonModule, CdkStepperModule],
   exports: [MdCommonModule, MdHorizontalStepper, MdVerticalStepper, MdStep, MdStepLabel],
