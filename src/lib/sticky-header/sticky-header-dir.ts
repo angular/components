@@ -69,6 +69,18 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   stickyParent: HTMLElement | null;
   /** The upper scrollable container. */
   upperScrollableContainer: HTMLElement;
+
+  /**
+   * The padding of the sticky-header. Put it here to avoid calling getComputedStyle()
+   * too many times.
+   */
+  padding: string;
+
+  /**
+   * The height of the sticky-region. Put it here to avoid calling getComputedStyle()
+   * too many times.
+   */
+  stickyRegionHeight: number;
   /**
    * The original css of the sticky element, used to reset the sticky element
    * when it is being unstuck
@@ -119,6 +131,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this.getCssValue(this.element, 'position'), this.getCssValue(this.element, 'top'),
         this.getCssValue(this.element, 'right'), this.getCssValue(this.element, 'left'),
         this.getCssValue(this.element, 'bottom'), this.getCssValue(this.element, 'width'));
+      this.padding = this.getCssValue(this.element, 'padding');
+      this.stickyRegionHeight = this.getCssNumber(this.stickyParent, 'height');
       this.attach();
       this.defineRestrictionsAndStick();
     }
@@ -237,17 +251,14 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     }
     let containerTop: any = this.stickyParent.getBoundingClientRect();
     let elemHeight: number = this.element.offsetHeight;
-    let containerHeight: number = this.getCssNumber(this.stickyParent, 'height');
     this._containerStart = containerTop.top;
 
     // the padding of the element being stuck
-    let elementPadding: any = this.getCssValue(this.element, 'padding');
-
-    let paddingNumber: any = Number(elementPadding.slice(0, -2));
+    let paddingNumber: any = Number(this.padding.slice(0, -2));
     this._scrollingWidth = this.upperScrollableContainer.clientWidth -
       paddingNumber - paddingNumber;
 
-    this._scrollFinish = this._containerStart + (containerHeight - elemHeight);
+    this._scrollFinish = this._containerStart + (this.stickyRegionHeight - elemHeight);
   }
 
   /** Reset element to its original CSS. */
