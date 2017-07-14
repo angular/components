@@ -298,12 +298,12 @@ describe('NativeDateAdapter', () => {
   });
 
   it('should use UTC for formatting by default', () => {
-    expect(adapter.format(new Date(1800, 7, 14), {day: 'numeric'})).toBe('14');
-
-    adapter.useUtcForDisplay = false;
-
-    expect(adapter.format(new Date(1800, 7, 14), {day: 'numeric'})).toBe('13');
-  })
+    if (SUPPORTS_INTL) {
+      expect(adapter.format(new Date(1800, 7, 14), {day: 'numeric'})).toBe('14');
+    } else {
+      expect(adapter.format(new Date(1800, 7, 14), {day: 'numeric'})).toBe('Thu Aug 14 1800');
+    }
+  });
 });
 
 
