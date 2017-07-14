@@ -30,15 +30,15 @@ $mat-chips-chip-margin: 8px;
     [dir='rtl'] & {
       margin: 0 $mat-chips-chip-margin 0 0;
     }
+  }
 
-    .mat-input-prefix & {
-      &:last-child {
-        margin-right: $mat-chips-chip-margin;
-      }
+  .mat-input-prefix & {
+    &:last-child {
+      margin-right: $mat-chips-chip-margin;
+    }
 
-      [dir='rtl'] &:last-child {
-        margin-left: $mat-chips-chip-margin;
-      }
+    [dir='rtl'] &:last-child {
+      margin-left: $mat-chips-chip-margin;
     }
   }
 
