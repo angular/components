@@ -10,6 +10,7 @@ import {Directive, Input,
 import {Scrollable} from '../core/overlay/scroll/scrollable';
 import {extendObject} from '../core/util/object-extend';
 import {Observable} from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
 
@@ -87,6 +88,12 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   /** The width of the sticky-header when it is stuck. */
   private _scrollingWidth: number;
 
+  private _onScrollSubscription: Subscription;
+
+  private _onTouchSubscription: Subscription;
+
+  private _onResizeSubscription: Subscription;
+
   constructor(_element: ElementRef,
               scrollable: Scrollable,
               @Optional() public parentReg: CdkStickyRegion) {
@@ -110,9 +117,17 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    this.upperScrollableContainer.removeEventListener('scroll', this._onScrollBind);
-    this.upperScrollableContainer.removeEventListener('resize', this._onResizeBind);
-    this.upperScrollableContainer.removeEventListener('touchmove', this._onTouchMoveBind);
+    if (this._onScrollSubscription) {
+      this._onScrollSubscription.unsubscribe();
+    }
+
+    if (this._onResizeSubscription) {
+      this._onResizeSubscription.unsubscribe();
+    }
+
+    if (this._onTouchSubscription) {
+      this._onTouchSubscription.unsubscribe();
+    }
   }
 
   /**
@@ -168,15 +183,15 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   attach() {
-    Observable.fromEvent(this.upperScrollableContainer, 'scroll').debounceTime(5)
-      .subscribe(() => this.defineRestrictionsAndStick());
+    this._onScrollSubscription =  Observable.fromEvent(this.upperScrollableContainer, 'scroll')
+      .debounceTime(5).subscribe(() => this.defineRestrictionsAndStick());
 
     // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
-    Observable.fromEvent(this.upperScrollableContainer, 'touchmove').debounceTime(5)
-      .subscribe(() => this.defineRestrictionsAndStick());
+    this._onTouchSubscription = Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
+      .debounceTime(5).subscribe(() => this.defineRestrictionsAndStick());
 
-    Observable.fromEvent(this.upperScrollableContainer, 'resize').debounceTime(5)
-      .subscribe(() => this.onResize());
+    this._onResizeSubscription = Observable.fromEvent(this.upperScrollableContainer, 'resize')
+      .debounceTime(5).subscribe(() => this.onResize());
   }
 
   onScroll(): void {
