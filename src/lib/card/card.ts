@@ -10,7 +10,8 @@ import {
   Component,
   ViewEncapsulation,
   ChangeDetectionStrategy,
-  Directive
+  Directive,
+  Input,
 } from '@angular/core';
 
 
@@ -32,7 +33,7 @@ export class MdCardContent {}
   selector: 'md-card-title, mat-card-title, [md-card-title], [mat-card-title],' +
   '[mdCardTitle], [matCardTitle]',
   host: {
-    'class': 'mat-card-title '
+    'class': 'mat-card-title'
   }
 })
 export class MdCardTitle {}
@@ -45,7 +46,7 @@ export class MdCardTitle {}
   selector: 'md-card-subtitle, mat-card-subtitle, [md-card-subtitle], [mat-card-subtitle],' +
   '[mdCardSubtitle], [matCardSubtitle]',
   host: {
-    'class': 'mat-card-subtitle '
+    'class': 'mat-card-subtitle'
   }
 })
 export class MdCardSubtitle {}
@@ -56,9 +57,15 @@ export class MdCardSubtitle {}
  */
 @Directive({
   selector: 'md-card-actions, mat-card-actions',
-  host: {'class': 'mat-card-actions'}
+  host: {
+    'class': 'mat-card-actions',
+    '[class.mat-card-actions-align-end]': 'align === "end"',
+  }
 })
-export class MdCardActions {}
+export class MdCardActions {
+  /** Position of the actions inside the card. */
+  @Input() align: 'start' | 'end' = 'start';
+}
 
 /**
  * Footer of a card, needed as it's used as a selector in the API.

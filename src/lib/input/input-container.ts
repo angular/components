@@ -104,14 +104,14 @@ export class MdErrorDirective { }
 
 /** Prefix to be placed the the front of the input. */
 @Directive({
-  selector: '[mdPrefix], [matPrefix], [md-prefix]'
+  selector: '[mdPrefix], [matPrefix]'
 })
 export class MdPrefix {}
 
 
 /** Suffix to be placed at the end of the input. */
 @Directive({
-  selector: '[mdSuffix], [matSuffix], [md-suffix]'
+  selector: '[mdSuffix], [matSuffix]'
 })
 export class MdSuffix {}
 
@@ -410,6 +410,12 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
     // Re-validate when things change.
     this._hintChildren.changes.subscribe(() => this._processHints());
     this._mdInputChild._placeholderChange.subscribe(() => this._validatePlaceholders());
+
+    // Mark for check when the input's value changes to recalculate whether input is empty
+    const control = this._mdInputChild._ngControl;
+    if (control && control.valueChanges) {
+      control.valueChanges.subscribe(() => this._changeDetectorRef.markForCheck());
+    }
   }
 
   ngAfterContentChecked() {
@@ -511,7 +517,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   /**
    * Throws an error if the container's input child was removed.
    */
-  private _validateInputChild() {
+  protected _validateInputChild() {
     if (!this._mdInputChild) {
       throw getMdInputContainerMissingMdInputError();
     }
