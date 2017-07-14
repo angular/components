@@ -1,0 +1,33 @@
+<div class="example-container mat-elevation-z8">
+  <md-table #table [dataSource]="dataSource">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Number Column -->
+    <ng-container cdkColumnDef="number">
+      <md-header-cell *cdkHeaderCellDef> Number </md-header-cell>
+      <md-cell *cdkCellDef="let row"> {{row.number}} </md-cell>
+    </ng-container>
+
+    <!-- Title Column -->
+    <ng-container cdkColumnDef="title">
+      <md-header-cell *cdkHeaderCellDef> Title </md-header-cell>
+      <md-cell *cdkCellDef="let row"> {{row.title}} </md-cell>
+    </ng-container>
+
+    <!-- State Column -->
+    <ng-container cdkColumnDef="state">
+      <md-header-cell *cdkHeaderCellDef> State </md-header-cell>
+      <md-cell *cdkCellDef="let row"> {{row.state}} </md-cell>
+    </ng-container>
+
+    <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
+    <md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>
+  </md-table>
+</div>
+
+
+<!-- Copyright 2017 Google Inc. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->

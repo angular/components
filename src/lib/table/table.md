@@ -40,7 +40,6 @@ While Angular Material does not offer a specific component for filtering tabular
 data source can be updated based on any custom filter UI. Any filtering pattern need only trigger
 an update via the table's data source.
 
-
 <!--- example(table-filtering) -->
 
 ### Simple Table

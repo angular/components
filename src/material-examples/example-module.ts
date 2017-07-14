@@ -69,6 +69,7 @@ import {PizzaPartyComponent,SnackBarComponentExample} from './snack-bar-componen
 import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
 import {SortOverviewExample} from './sort-overview/sort-overview-example';
 import {TableBasicExample} from './table-basic/table-basic-example';
+import {TableHttpExample} from './table-http/table-http-example';
 import {TableFilteringExample} from './table-filtering/table-filtering-example';
 import {TableOverviewExample} from './table-overview/table-overview-example';
 import {TablePaginationExample} from './table-pagination/table-pagination-example';
@@ -414,6 +415,12 @@ export const EXAMPLE_COMPONENTS = {
   'table-basic': {
     title: 'Basic table',
     component: TableBasicExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'table-http': {
+    title: 'Table retrieving data through HTTP',
+    component: TableHttpExample,
     additionalFiles: null,
     selectorName: null
   },
