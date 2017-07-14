@@ -42,6 +42,7 @@ an update via the table's data source.
 
 <!--- example(table-filtering) -->
 
+
 ### Simple Table
 
 In the near future, we will provide a simplified version of the data-table with an easy-to-use
