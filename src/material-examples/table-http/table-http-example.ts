@@ -47,7 +47,6 @@ export class ExampleHttpDatabase {
       };
     });
   }
-
 }
 
 /**
