@@ -238,7 +238,10 @@ export class MdTooltip implements OnDestroy {
    * screen readers immediately have a reference to the tooltip content.
    */
   ngOnInit() {
-    this._createTooltip();
+    // Only create the tooltip if we are on the browser platform
+    if (this._platform.isBrowser) {
+      this._createTooltip();
+    }
   }
 
   ngOnDestroy() {

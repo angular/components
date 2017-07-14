@@ -7,22 +7,16 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  TooltipPosition,
   MdTooltip,
   MdTooltipModule,
   SCROLL_THROTTLE_MS,
-  TOOLTIP_PANEL_CLASS
+  TOOLTIP_PANEL_CLASS,
+  TooltipComponent,
+  TooltipPosition
 } from './index';
 import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {
-  MdTooltip,
-  MdTooltipModule,
-  SCROLL_THROTTLE_MS,
-  TooltipComponent,
-  TooltipPosition
-} from './index';
 import {Direction, Directionality} from '../core/bidi/index';
 import {OverlayContainer, OverlayModule, Scrollable} from '../core/overlay/index';
 import {Platform} from '../core/platform/platform';
