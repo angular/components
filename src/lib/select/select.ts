@@ -751,10 +751,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
    */
   private _setValueWidth() {
 
-    if (!this._selectionModel.isEmpty()){
+    if (!this._selectionModel.isEmpty()) {
       this._selectedValueWidth = 0;
-    }
-    else {
+    } else {
     this._selectedValueWidth =  this._triggerWidth - 9;
     }
     this._changeDetectorRef.markForCheck();
