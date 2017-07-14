@@ -103,13 +103,13 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.stickyParent = this.parentReg != null ?
-      this.parentReg._elementRef.nativeElement : this.element.parentElement;
-    this.originalCss = this.generateCssStyle(this.getCssValue(this.element, 'zIndex'),
-      this.getCssValue(this.element, 'position'), this.getCssValue(this.element, 'top'),
-      this.getCssValue(this.element, 'right'), this.getCssValue(this.element, 'left'),
-      this.getCssValue(this.element, 'bottom'), this.getCssValue(this.element, 'width'));
-    if(this.isIE == true) {
+    if(this.isIE === true) {
+      this.stickyParent = this.parentReg != null ?
+        this.parentReg._elementRef.nativeElement : this.element.parentElement;
+      this.originalCss = this.generateCssStyle(this.getCssValue(this.element, 'zIndex'),
+        this.getCssValue(this.element, 'position'), this.getCssValue(this.element, 'top'),
+        this.getCssValue(this.element, 'right'), this.getCssValue(this.element, 'left'),
+        this.getCssValue(this.element, 'bottom'), this.getCssValue(this.element, 'width'));
       this.attach();
       this.defineRestrictionsAndStick();
     }
