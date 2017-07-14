@@ -61,17 +61,11 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   isIE: boolean = false;
 
 
-  /**
-   * The element with the 'cdkStickyHeader' tag
-   */
+  /** The element with the 'cdkStickyHeader' tag. */
   element: HTMLElement;
-  /**
-   * The upper container element with the 'cdkStickyRegion' tag
-   */
+  /** The upper container element with the 'cdkStickyRegion' tag. */
   stickyParent: HTMLElement | null;
-  /**
-   * The upper scrollable container
-   */
+  /** The upper scrollable container. */
   upperScrollableContainer: HTMLElement;
   /**
    * The original css of the sticky element, used to reset the sticky element
@@ -90,9 +84,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * need to be stuck.
    */
   private _scrollFinish: number;
-  /**
-   * The width of the sticky-header when it is stuck.
-   */
+  /** The width of the sticky-header when it is stuck. */
   private _scrollingWidth: number;
 
   constructor(_element: ElementRef,
@@ -232,17 +224,13 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     this._scrollFinish = this._containerStart + (containerHeight - elemHeight);
   }
 
-  /**
-   * Reset element to its original CSS
-   */
+  /** Reset element to its original CSS. */
   resetElement(): void {
     this.element.classList.remove(STICK_START_CLASS);
     extendObject(this.element.style, this.originalCss);
   }
 
-  /**
-   * Stuck element, make the element stick to the top of the scrollable container.
-   */
+  /** Stuck element, make the element stick to the top of the scrollable container. */
   stickElement(): void {
     this.isStuck = true;
 
