@@ -737,11 +737,16 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /**
    * Must set the width of the selected option's value programmatically
-   * because it is absolutely positioned and otherwise will not clip
-   * overflow. The selection arrow is 9px wide, add 4px of padding = 13
+   * for the placeholder so the flexbox expands correctly
+   * The selection arrow is 9px wide.
    */
   private _setValueWidth() {
-    this._selectedValueWidth =  this._triggerWidth - 13;
+    if (!this._selectionModel.isEmpty()){
+      this._selectedValueWidth = 0;
+    }
+    else {
+    this._selectedValueWidth =  this._triggerWidth - 9;
+    }
   }
 
   /**
