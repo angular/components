@@ -30,12 +30,10 @@ export class CdkStickyRegion {
   constructor(public readonly _elementRef: ElementRef) { }
 }
 
-/**
- * STICK_START_CLASS is used to mark a header is stuck.
- * STICK_END_CLASS is used to mark a header is unstuck.
- * @type {string}
- */
+
+// STICK_START_CLASS is used to mark a header is stuck.
 const STICK_START_CLASS = 'cdk-sticky-header-start';
+// STICK_END_CLASS is used to mark a header is unstuck.
 const STICK_END_CLASS = 'cdk-sticky-header-end';
 @Directive({
   selector: '[cdkStickyHeader]',
