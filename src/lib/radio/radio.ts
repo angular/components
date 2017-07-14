@@ -105,6 +105,9 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
   /** Whether the radio group is disabled. */
   private _disabled: boolean = false;
 
+  /** Whether the radio group is required. */
+  private _required: boolean = false;
+
   /** The method to be called in order to update ngModel */
   _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
@@ -192,6 +195,14 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
   get disabled() { return this._disabled; }
   set disabled(value) {
     this._disabled = coerceBooleanProperty(value);
+    this._markRadiosForCheck();
+  }
+
+  /** Whether the radio group is required */
+  @Input()
+  get required(): boolean { return this._required; }
+  set required(value) {
+    this._required = coerceBooleanProperty(value);
     this._markRadiosForCheck();
   }
 

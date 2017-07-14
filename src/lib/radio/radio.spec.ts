@@ -113,6 +113,15 @@ describe('MdRadio', () => {
       }
     });
 
+    it('should set required to each radio button when the group is required', () => {
+      testComponent.isGroupRequired = true;
+      fixture.detectChanges();
+
+      for (const radioNativeEl of radioNativeElements) {
+        expect(radioNativeEl.getAttribute('required')).toBeDefined();
+      }
+    });
+
     it('should update the group value when one of the radios changes', () => {
       expect(groupInstance.value).toBeFalsy();
 
@@ -647,8 +656,9 @@ describe('MdRadio', () => {
 })
 class RadiosInsideRadioGroup {
   labelPos: 'before' | 'after';
-  isGroupDisabled: boolean = false;
   isFirstDisabled: boolean = false;
+  isGroupDisabled: boolean = false;
+  isGroupRequired: boolean = false;
   groupValue: string | null = null;
   disableRipple: boolean = false;
   color: string | null;
