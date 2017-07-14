@@ -215,10 +215,6 @@ export class CdkTable<T> implements CollectionViewer {
     if (this.dataSource && !this._renderChangeSubscription) {
       this._observeRenderChanges();
     }
-
-    if (!this.dataSource && this._rowPlaceholder.viewContainer.length != 0) {
-      this._rowPlaceholder.viewContainer.clear();
-    }
   }
 
   /**
@@ -237,6 +233,11 @@ export class CdkTable<T> implements CollectionViewer {
     if (this._renderChangeSubscription) {
       this._renderChangeSubscription.unsubscribe();
       this._renderChangeSubscription = null;
+    }
+
+    // Remove the table's rows if there is now no data source
+    if (!dataSource) {
+      this._rowPlaceholder.viewContainer.clear();
     }
 
     this._dataSource = dataSource;
