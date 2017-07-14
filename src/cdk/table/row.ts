@@ -54,7 +54,7 @@ export abstract class BaseRowDef {
     const columns = changes['columns'].currentValue;
     if (!this._columnsDiffer && columns) {
       this._columnsDiffer = this._differs.find(columns).create();
-      this._columnsDiffer.diff(this.columns);
+      this._columnsDiffer.diff(columns);
     }
   }
 
