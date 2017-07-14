@@ -13,6 +13,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
+import {createElement} from "@angular/core/src/view/element";
 
 
 /**
@@ -94,13 +95,20 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   private _onResizeSubscription: Subscription;
 
+  /**
+   * A list of string which can be set to sticky-header's style.position
+   * and make Sticky positioning work.
+   */
+  private _supportList: Array<string>;
+
   constructor(_element: ElementRef,
               scrollable: Scrollable,
               @Optional() public parentReg: CdkStickyRegion) {
     this.element = _element.nativeElement;
     this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
 
-    this.detectBrowser();
+    this.getSupportList();
+    this.setStrategyAccordingToCompatibility();
   }
 
   ngAfterViewInit(): void {
@@ -131,8 +139,12 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   /**
-   * Use 'navigator.appVersion' to detect current browser. According to the "Position:sticky
-   * Browser compatibility" in "https://developer.mozilla.org/en-US/docs/Web/CSS/position".
+   * getSupportList() is used to get a list of string which can be set to
+   * sticky-header's style.position and make Sticky positioning work.
+   * It returns a list of string.
+   *
+   * According to the "Position:sticky Browser compatibility" in
+   * "https://developer.mozilla.org/en-US/docs/Web/CSS/position".
    *
    * For Desktop: Sticky positioning works well on Chrome, Edge, Firefox and Opera. And can
    * also work well on Safari with a "-webkit-" prefix. It only does not work on IE.
@@ -141,44 +153,43 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * Firefox Mobile, Opera Mobile. And can also work well on Safari Mobile with a "-webkit-" prefix.
    * It won't always work on IE phone.
    *
-   * So the detectBrowser() function detects the current browser version. If it is about iPhone
-   * safari, set the style.position as '-webkit-sticky'. If it is an IE or an Tablet, use the
-   * original implementation. And for other circumstances, use 'position: 'sticky''.
    */
-  detectBrowser(): void {
-    let browserVersion: string = navigator.appVersion;
-    let browserAgent: string = navigator.userAgent;
-    let browserAgentLowercase: string = navigator.userAgent.toLocaleLowerCase();
+  getSupportList(): void {
+    let prefixTestList = ['', '-webkit-', '-ms-', '-moz-', '-o-'];
+    this._supportList = new Array<string>();
+    let stickyText = '';
+    for (let i = 0; i < prefixTestList.length; i++ ) {
+      stickyText += 'position:' + prefixTestList[i] + 'sticky;';
+      // Create a DOM to check if the browser support current prefix for sticky-position.
+      let div = document.createElement('div');
+      let body = document.body;
+      div.style.cssText = 'display:none;' + stickyText;
+      body.appendChild(div);
+      let isSupport = /sticky/i.test(window.getComputedStyle(div).position);
+      body.removeChild(div);
+      div = null;
+      if(isSupport == true) {
+        this._supportList.push(prefixTestList[i]);
+      }
+    }
+  }
 
-    // check if browser is using Safari
-    let isSafari = (browserAgentLowercase.indexOf('safari') != -1);
-
-    // check if browser is Chrome
-    let isChrome = (browserAgentLowercase.indexOf('chrome') != -1);
-
-    // check if browser is Firefox
-    let isFirefox = (browserAgentLowercase.indexOf('firefox') != -1);
-
-    // check if browser is Opera
-    let isOpera = (browserAgentLowercase.indexOf('presto') != -1);
-
-    // check if browser is IE
-    this.isIE = browserVersion.includes('.NET');
-
-    // Check if is mobile browser
-    // android
-    let isAndroid = browserAgent.indexOf('Android') > -1 || browserAgent.indexOf('Adr') > -1;
-    // ios
-    let isiOS = !!browserAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-
-    if(isiOS === true || (isSafari === true && isChrome === false)) {
-      this.element.style.top = '0px';
-      this.element.style.position = '-webkit-sticky';
-    } else if (isChrome === true || isFirefox === true || isAndroid === true || isOpera === true) {
-      this.element.style.top = '0px';
-      this.element.style.position = 'sticky';
-    }else {
+  /**
+   * Get the first element from this._supportList. Set it as a prefix of
+   * sticky positioning.
+   *
+   * If the this._supportList is empty, which means the browser does not support
+   * sticky positioning. Set isIE as 'true' and use the original implementation of
+   * sticky-header.
+   */
+  setStrategyAccordingToCompatibility(): void {
+    if(this._supportList.length == 0) {
       this.isIE = true;
+    }else {
+      let prefix: string = this._supportList[0];
+
+      this.element.style.top = '0px';
+      this.element.style.position = prefix + 'sticky';
     }
   }
 
