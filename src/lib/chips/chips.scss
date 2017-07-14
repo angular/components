@@ -16,10 +16,9 @@ $mat-chips-chip-margin: 8px;
 }
 
 .mat-chip:not(.mat-basic-chip) {
-  display: inline-block;
+  display: inline-flex;
   padding: $mat-chip-vertical-padding $mat-chip-horizontal-padding $mat-chip-vertical-padding $mat-chip-horizontal-padding;
   border-radius: $mat-chip-horizontal-padding * 2;
-  display: flex;
   align-items: center;
   cursor: default;
 
