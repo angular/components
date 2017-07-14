@@ -32,7 +32,6 @@ paginator emits events that can be used to trigger an update via the table's dat
 Use the `mdSort` directive and `<md-sort-header>` adds a sorting UI the table's column headers. The
 sort headers emit events that can be used to trigger an update via the table's data source.
 
-
 <!-- example(table-sorting) -->
 
 #### Filtering
@@ -40,6 +39,7 @@ sort headers emit events that can be used to trigger an update via the table's d
 While Angular Material does not offer a specific component for filtering tabular data, the table's 
 data source can be updated based on any custom filter UI. Any filtering pattern need only trigger
 an update via the table's data source.
+
 
 <!--- example(table-filtering) -->
 
