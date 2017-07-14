@@ -8,13 +8,16 @@
     "module": "commonjs",
     "target": "es5",
     "types": ["jasmine"],
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "paths": {
+      "@angular/cdk/*": ["./*"]
+    }
   },
   "files": [
-    "./index.ts",
     "./testing/index.ts"
   ],
   "include": [
+    "./*/index.ts",
     "**/*.spec.ts"
   ]
 }

@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
-import {CdkTable, DataSource, CdkTableModule} from '@angular/cdk';
+import {CdkTable, DataSource, CdkTableModule} from '@angular/cdk/table';
 import {} from '../core/data-table/data-source';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
