@@ -127,10 +127,14 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     if (this.isIE) {
       this.stickyParent = this.parentRegion != null ?
         this.parentRegion._elementRef.nativeElement : this.element.parentElement;
-      this.originalCss = this.generateCssStyle(this.getCssValue(this.element, 'zIndex'),
-        this.getCssValue(this.element, 'position'), this.getCssValue(this.element, 'top'),
-        this.getCssValue(this.element, 'right'), this.getCssValue(this.element, 'left'),
-        this.getCssValue(this.element, 'bottom'), this.getCssValue(this.element, 'width'));
+      this.originalCss = this.generateCssStyle(
+        this.getCssValue(this.element, 'zIndex'),
+        this.getCssValue(this.element, 'position'),
+        this.getCssValue(this.element, 'top'),
+        this.getCssValue(this.element, 'right'),
+        this.getCssValue(this.element, 'left'),
+        this.getCssValue(this.element, 'bottom'),
+        this.getCssValue(this.element, 'width'));
       this.padding = this.getCssValue(this.element, 'padding');
       this.stickyRegionHeight = this.getCssNumber(this.stickyParent, 'height');
       this.attach();
@@ -297,9 +301,13 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
     let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
 
-    let stickyCss:any = this.generateCssStyle(this.zIndex, 'fixed',
-      this.upperScrollableContainer.offsetTop + 'px', stuckRight + 'px',
-      this.upperScrollableContainer.offsetLeft + 'px', 'auto',
+    let stickyCss:any = this.generateCssStyle(
+      this.zIndex,
+      'fixed',
+      this.upperScrollableContainer.offsetTop + 'px',
+      stuckRight + 'px',
+      this.upperScrollableContainer.offsetLeft + 'px',
+      'auto',
       this.originalCss.width);
     extendObject(this.element.style, stickyCss);
   }
@@ -321,8 +329,14 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
     this.element.classList.add(STICK_END_CLASS);
     this.stickyParent.style.position = 'relative';
-    let unstuckCss: any = this.generateCssStyle(this.originalCss.zIndex,
-      'absolute', 'auto', '0', 'auto', '0', this.originalCss.width);
+    let unstuckCss: any = this.generateCssStyle(
+      this.originalCss.zIndex,
+      'absolute',
+      'auto',
+      '0',
+      'auto',
+      '0',
+      this.originalCss.width);
     extendObject(this.element.style, unstuckCss);
   }
 
