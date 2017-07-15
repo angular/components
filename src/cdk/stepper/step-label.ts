@@ -6,14 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, TemplateRef, ViewContainerRef} from '@angular/core';
-import {TemplatePortalDirective} from '../portal';
+import {Directive, TemplateRef} from '@angular/core';
 
 @Directive({
   selector: '[cdk-step-label]',
 })
-export class CdkStepLabel extends TemplatePortalDirective {
-  constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
-    super(templateRef, viewContainerRef);
-  }
+export class CdkStepLabel {
+  constructor(public template: TemplateRef<any>) { }
 }

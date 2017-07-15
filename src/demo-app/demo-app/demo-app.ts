@@ -61,14 +61,14 @@ export class DemoApp {
     {name: 'Slider', route: 'slider'},
     {name: 'Slide Toggle', route: 'slide-toggle'},
     {name: 'Snack Bar', route: 'snack-bar'},
+    {name: 'Stepper', route: 'stepper'},
     {name: 'Table', route: 'table'},
     {name: 'Tabs', route: 'tabs'},
     {name: 'Toolbar', route: 'toolbar'},
     {name: 'Tooltip', route: 'tooltip'},
     {name: 'Platform', route: 'platform'},
     {name: 'Style', route: 'style'},
-    {name: 'Typography', route: 'typography'},
-    {name: 'Stepper', route: 'stepper'}
+    {name: 'Typography', route: 'typography'}
   ];
 
   constructor(private _element: ElementRef) {

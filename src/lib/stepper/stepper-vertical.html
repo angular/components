@@ -7,8 +7,8 @@
              [tabIndex]="_focusIndex == i ? 0 : -1"
              (click)="select(step)"
              (keydown)="_onKeydown($event)">
-            <div *ngIf="step.active" class="activeStep">{{i + 1}}</div>
-            <div *ngIf="!step.active" class="inactiveStep">{{i + 1}}</div>
+            <div *ngIf="step.active" class="active-step">{{i + 1}}</div>
+            <div *ngIf="!step.active" class="inactive-step">{{i + 1}}</div>
 
             <div class="mat-step-label">
                 <!-- If there is a label template, use it. -->

@@ -10,10 +10,9 @@ import {
   Component, ContentChild, Input, TemplateRef, ViewChild
 } from '@angular/core';
 import {CdkStepLabel} from './step-label';
-import {coerceBooleanProperty} from '../coercion/boolean-property';
 
 @Component({
-  selector: '[cdk-step]',
+  selector: 'cdk-step',
   templateUrl: 'step.html',
 })
 export class CdkStep {
@@ -26,22 +25,6 @@ export class CdkStep {
   /** Label of the step. */
   @Input()
   label: string;
-
-  /** Whether the step is optional or not. */
-  @Input()
-  get optional() { return this._optional; }
-  set optional(value: any) {
-    this._optional = coerceBooleanProperty(value);
-  }
-  private _optional: boolean = false;
-
-  /** Whether the step is editable or not. */
-  @Input()
-  get editable() { return this._editable; }
-  set editable(value: any) {
-    this._editable = coerceBooleanProperty(value);
-  }
-  private _editable: boolean = true;
 
   /** Whether the step is the last one in the list. */
   _isLast: boolean = false;

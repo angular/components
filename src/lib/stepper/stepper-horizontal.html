@@ -13,7 +13,7 @@
             <div class="mat-step-label">
                 <!-- If there is a label template, use it. -->
                 <ng-template [ngIf]="step.stepLabel">
-                    <ng-template [cdkPortalHost]="step.stepLabel"></ng-template>
+                    <ng-container [ngTemplateOutlet]="step.stepLabel.template"></ng-container>
                 </ng-template>
                 <!-- It there is no label template, fall back to the text label. -->
                 <ng-template [ngIf]="!step.stepLabel">
@@ -21,7 +21,7 @@
                 </ng-template>
             </div>
 
-        </div>
+        </ng-template>
         <div *ngIf="!step._isLast" class="connector-line"></div>
     </div>
 </div>

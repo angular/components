@@ -1,13 +1,5 @@
-.mat-step-header:focus {
-  background: yellow;
-}
-
 .mat-stepper-horizontal[aria-expanded='false'] {
   display:none;
-}
-
-.mat-stepper-horizontal[aria-expanded='true'] {
-  background: pink;
 }
 
 .active-step, .inactive-step {

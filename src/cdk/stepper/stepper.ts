@@ -19,7 +19,7 @@ import {
   ElementRef
 } from '@angular/core';
 import {CdkStep} from './step';
-import {LEFT_ARROW, RIGHT_ARROW, ENTER, TAB} from '../keyboard/keycodes';
+import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '../keyboard/keycodes';
 import {coerceNumberProperty} from '../coercion/number-property';
 
 /** Used to generate unique ID for each stepper component. */
@@ -27,14 +27,20 @@ let nextId = 0;
 
 /** Change event emitted on selection changes. */
 export class CdkStepperSelectionEvent {
-  index: number;
+  /** The index of the step that is newly selected during this change event. */
+  newIndex: number;
+
+  /** The index of the step that was previously selected. */
+  oldIndex: number;
+
+  /** The step component that is selected ruing this change event. */
   step: CdkStep;
 }
 
 @Directive({
-  selector: '[cdkStepper]',
+  selector: 'cdk-stepper',
   host: {
-    '(focus)': '_setStepfocus()',
+    '(focus)': '_setStepfocused()',
     '(keydown)': '_onKeydown($event)',
   },
 })
@@ -66,30 +72,31 @@ export class CdkStepper {
   }
 
   /** Selects and focuses the provided step. */
-  select(step: CdkStep): void {
-    let stepsArray = this._steps.toArray();
-    this._selectedIndex = stepsArray.indexOf(step);
-    this.selectionChange.emit(this._createStepperSelectionEvent(this._selectedIndex));
-    this._focusIndex = this._selectedIndex;
-    this._setStepFocus();
+  select(step: CdkStep | number): void {
+    if (typeof step == 'number') {
+      this.selectionChange.emit(this._createStepperSelectionEvent(step, this._selectedIndex));
+    } else {
+      let stepsArray = this._steps.toArray();
+      this.selectionChange.emit(
+          this._createStepperSelectionEvent(stepsArray.indexOf(step), this._selectedIndex));
+    }
+    this._setStepFocused(this._selectedIndex);
   }
 
   /** Selects and focuses the next step in list. */
   next(): void {
     if (this._selectedIndex == this._steps.length - 1) { return; }
-    this._selectedIndex++;
-    this.selectionChange.emit(this._createStepperSelectionEvent(this._selectedIndex));
-    this._focusIndex = this._selectedIndex;
-    this._setStepFocus();
+    this.selectionChange.emit(
+        this._createStepperSelectionEvent(this._selectedIndex + 1, this._selectedIndex));
+    this._setStepFocused(this._selectedIndex);
   }
 
   /** Selects and focuses the previous step in list. */
   previous(): void {
     if (this._selectedIndex == 0) { return; }
-    this._selectedIndex--;
-    this.selectionChange.emit(this._createStepperSelectionEvent(this._selectedIndex));
-    this._focusIndex = this._selectedIndex;
-    this._setStepFocus();
+    this.selectionChange.emit(
+        this._createStepperSelectionEvent(this._selectedIndex - 1, this._selectedIndex));
+    this._setStepFocused(this._selectedIndex);
   }
 
   /** Returns a unique id for each step label element. */
@@ -102,9 +109,12 @@ export class CdkStepper {
     return `mat-step-content-${this._groupId}-${i}`;
   }
 
-  private _createStepperSelectionEvent(index: number): CdkStepperSelectionEvent {
+  private _createStepperSelectionEvent(newIndex: number,
+                                       oldIndex: number): CdkStepperSelectionEvent {
+    this._selectedIndex = newIndex;
     const event = new CdkStepperSelectionEvent();
-    event.index = index;
+    event.newIndex = newIndex;
+    event.oldIndex = oldIndex;
     event.step = this._steps.toArray()[this._selectedIndex];
     return event;
   }
@@ -113,27 +123,26 @@ export class CdkStepper {
     switch (event.keyCode) {
       case RIGHT_ARROW:
         if (this._focusIndex != this._steps.length - 1) {
-          this._focusIndex++;
-          this._setStepFocus();
+          this._setStepFocused(this._focusIndex + 1);
         }
         break;
       case LEFT_ARROW:
         if (this._focusIndex != 0) {
-          this._focusIndex--;
-          this._setStepFocus();
+          this._setStepFocused(this._focusIndex - 1);
         }
         break;
+      case SPACE:
       case ENTER:
-        this._selectedIndex = this._focusIndex;
-        this._createStepperSelectionEvent(this._selectedIndex);
+        this._createStepperSelectionEvent(this._focusIndex, this._selectedIndex);
         break;
+      default:
+        return;
     }
-    if (event.keyCode != TAB) {
-      event.preventDefault();
-    }
+    event.preventDefault();
   }
 
-  private _setStepFocus() {
+  private _setStepFocused(index: number) {
+    this._focusIndex = index;
     this._stepHeader.toArray()[this._focusIndex].nativeElement.focus();
   }
 }
