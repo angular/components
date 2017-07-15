@@ -124,7 +124,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if(this.isIE === true) {
+    if (this.isIE) {
       this.stickyParent = this.parentRegion != null ?
         this.parentRegion._elementRef.nativeElement : this.element.parentElement;
       this.originalCss = this.generateCssStyle(this.getCssValue(this.element, 'zIndex'),
