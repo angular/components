@@ -7,8 +7,7 @@ All radio-buttons with the same `name` comprise a set from which only one may be
 
 ### Radio-button label
 The radio-button label is provided as the content to the `<md-radio-button>` element. The label can
-be positioned before or after the radio-button by setting the `labelPosition` property to `'before'`
-or `'after'`.
+be positioned before or after the radio-button by setting the `labelPosition` property to `'before'` or `'after'`.
 
 If you don't want the label to appear next to the radio-button, you can use
 [`aria-label`](https://www.w3.org/TR/wai-aria/states_and_properties#aria-label) or
