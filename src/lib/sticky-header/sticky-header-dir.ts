@@ -113,10 +113,10 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    */
   private _supportList: Array<string>;
 
-  constructor(_element: ElementRef,
+  constructor(element: ElementRef,
               scrollable: Scrollable,
               @Optional() public parentReg: CdkStickyRegion) {
-    this.element = _element.nativeElement;
+    this.element = element.nativeElement;
     this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
 
     this.getSupportList();
