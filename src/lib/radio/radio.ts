@@ -192,7 +192,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
 
   /** Whether the radio group is disabled */
   @Input()
-  get disabled() { return this._disabled; }
+  get disabled(): boolean { return this._disabled; }
   set disabled(value) {
     this._disabled = coerceBooleanProperty(value);
     this._markRadiosForCheck();
@@ -201,7 +201,7 @@ export class MdRadioGroup extends _MdRadioGroupMixinBase
   /** Whether the radio group is required */
   @Input()
   get required(): boolean { return this._required; }
-  set required(value) {
+  set required(value: boolean) {
     this._required = coerceBooleanProperty(value);
     this._markRadiosForCheck();
   }
@@ -435,6 +435,15 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
     this._disabled = coerceBooleanProperty(value);
   }
 
+  /** Whether the radio button is required. */
+  @Input()
+  get required(): boolean {
+    return this._required || (this.radioGroup && this.radioGroup.required);
+  }
+  set required(value: boolean) {
+    this._required = coerceBooleanProperty(value);
+  }
+
   /**
    * Event emitted when the checked state of this radio button changes.
    * Change events are only emitted when the value changes due to user interaction with
@@ -453,6 +462,9 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
 
   /** Whether this radio is disabled. */
   private _disabled: boolean;
+
+  /** Whether this radio is required. */
+  private _required: boolean;
 
   /** Value assigned to this radio.*/
   private _value: any = null;

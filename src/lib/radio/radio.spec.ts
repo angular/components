@@ -117,8 +117,8 @@ describe('MdRadio', () => {
       testComponent.isGroupRequired = true;
       fixture.detectChanges();
 
-      for (const radioNativeEl of radioNativeElements) {
-        expect(radioNativeEl.getAttribute('required')).toBeDefined();
+      for (const radio of radioInstances) {
+        expect(radio.required).toBe(true);
       }
     });
 
@@ -588,6 +588,14 @@ describe('MdRadio', () => {
       expect(weatherRadioInstances[2].checked).toBe(true);
     });
 
+    it('should add required attribute to the underlying input element if defined', () => {
+      const radioInstance = seasonRadioInstances[0];
+      radioInstance.required = true;
+      fixture.detectChanges();
+
+      expect(radioInstance.required).toBe(true);
+    });
+
     it('should add aria-label attribute to the underlying input element if defined', () => {
       expect(fruitRadioNativeInputs[0].getAttribute('aria-label')).toBe('Banana');
     });
@@ -639,6 +647,7 @@ describe('MdRadio', () => {
   template: `
   <md-radio-group [disabled]="isGroupDisabled"
                   [labelPosition]="labelPos"
+                  [required]="isGroupRequired"
                   [value]="groupValue"
                   name="test-name">
     <md-radio-button value="fire" [disableRipple]="disableRipple" [disabled]="isFirstDisabled"
