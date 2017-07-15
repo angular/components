@@ -15,7 +15,7 @@ export class DialogContentExample {
     const dialogRef = this.dialog.open(DialogContentExampleDialog, {
       height: '350px'
     });
-    
+
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
