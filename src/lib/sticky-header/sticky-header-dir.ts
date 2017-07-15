@@ -115,7 +115,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   constructor(element: ElementRef,
               scrollable: Scrollable,
-              @Optional() public parentReg: CdkStickyRegion) {
+              @Optional() public parentRegion: CdkStickyRegion) {
     this.element = element.nativeElement;
     this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
 
@@ -125,8 +125,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     if(this.isIE === true) {
-      this.stickyParent = this.parentReg != null ?
-        this.parentReg._elementRef.nativeElement : this.element.parentElement;
+      this.stickyParent = this.parentRegion != null ?
+        this.parentRegion._elementRef.nativeElement : this.element.parentElement;
       this.originalCss = this.generateCssStyle(this.getCssValue(this.element, 'zIndex'),
         this.getCssValue(this.element, 'position'), this.getCssValue(this.element, 'top'),
         this.getCssValue(this.element, 'right'), this.getCssValue(this.element, 'left'),
