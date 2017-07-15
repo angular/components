@@ -37,14 +37,14 @@ export class CdkStickyRegion {
 const STICK_START_CLASS = 'cdk-sticky-header-start';
 // STICK_END_CLASS is used to mark a header is unstuck.
 const STICK_END_CLASS = 'cdk-sticky-header-end';
-@Directive({
-  selector: '[cdkStickyHeader]',
-})
 /**
  * Directive that marks an element as a sticky-header. Inside of a scrolling container (marked with
  * cdkScrollable), this header will "stick" to the top of the scrolling viewport while its sticky
  * region (see cdkStickyRegion) is in view.
  */
+@Directive({
+  selector: '[cdkStickyHeader]',
+})
 export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   /**
