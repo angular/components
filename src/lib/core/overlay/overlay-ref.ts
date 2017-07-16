@@ -10,6 +10,7 @@ import {NgZone} from '@angular/core';
 import {PortalHost, Portal} from '../portal/portal';
 import {OverlayState} from './overlay-state';
 import {ScrollStrategy} from './scroll/scroll-strategy';
+import {ConnectedPositionStrategy} from './position/connected-position-strategy';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
@@ -146,6 +147,12 @@ export class OverlayRef implements PortalHost {
   /** Updates the position of the overlay based on the position strategy. */
   updatePosition() {
     if (this._state.positionStrategy) {
+      // Pass the state direction from here since we don't want to introduce a circular
+      // dependency between the OverlayState and the ConnectedPositionStrategy.
+      if (this._state.positionStrategy instanceof ConnectedPositionStrategy) {
+        this._state.positionStrategy.direction = this._state.direction!;
+      }
+
       this._state.positionStrategy.apply(this._pane);
     }
   }

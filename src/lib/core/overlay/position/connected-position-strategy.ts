@@ -6,17 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {PositionStrategy} from './position-strategy';
 import {ElementRef} from '@angular/core';
+import {Direction} from '@angular/cdk';
 import {ViewportRuler} from './viewport-ruler';
 import {
   ConnectionPositionPair,
   OriginConnectionPosition,
   OverlayConnectionPosition,
-  ConnectedOverlayPositionChange, ScrollableViewProperties
+  ConnectedOverlayPositionChange,
+  ScrollableViewProperties,
 } from './connected-position';
+import {PositionStrategy} from './position-strategy';
 import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
 import {Scrollable} from '../scroll/scrollable';
 
 /**
@@ -39,8 +40,6 @@ type ElementBoundingPositions = {
  * of the overlay.
  */
 export class ConnectedPositionStrategy implements PositionStrategy {
-  private _dir = 'ltr';
-
   /** The offset in pixels for the overlay connection point on the x-axis */
   private _offsetX: number = 0;
 
@@ -50,13 +49,8 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   /** The Scrollable containers used to check scrollable view properties on position change. */
   private scrollables: Scrollable[] = [];
 
-  /** Whether the we're dealing with an RTL context */
-  get _isRtl() {
-    return this._dir === 'rtl';
-  }
-
   /** Ordered list of preferred positions, from most to least desirable. */
-  _preferredPositions: ConnectionPositionPair[] = [];
+  private _preferredPositions: ConnectionPositionPair[] = [];
 
   /** The origin element against which the overlay will be positioned. */
   private _origin: HTMLElement;
@@ -67,13 +61,12 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   /** The last position to have been calculated as the best fit position. */
   private _lastConnectedPosition: ConnectionPositionPair;
 
-  _onPositionChange:
-      Subject<ConnectedOverlayPositionChange> = new Subject<ConnectedOverlayPositionChange>();
+  /** Layout direction of the associated overlay. */
+  direction: Direction = 'ltr';
 
   /** Emits an event when the connection point changes. */
-  get onPositionChange(): Observable<ConnectedOverlayPositionChange> {
-    return this._onPositionChange.asObservable();
-  }
+  onPositionChange:
+      Subject<ConnectedOverlayPositionChange> = new Subject<ConnectedOverlayPositionChange>();
 
   constructor(
       private _connectedTo: ElementRef,
@@ -136,7 +129,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
         // Notify that the position has been changed along with its change properties.
         const scrollableViewProperties = this.getScrollableViewProperties(element);
         const positionChange = new ConnectedOverlayPositionChange(pos, scrollableViewProperties);
-        this._onPositionChange.next(positionChange);
+        this.onPositionChange.next(positionChange);
 
         return;
       } else if (!fallbackPoint || fallbackPoint.visibleArea < overlayPoint.visibleArea) {
@@ -188,15 +181,6 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /**
-   * Sets the layout direction so the overlay's position can be adjusted to match.
-   * @param dir New layout direction.
-   */
-  withDirection(dir: 'ltr' | 'rtl'): this {
-    this._dir = dir;
-    return this;
-  }
-
-  /**
    * Sets an offset for the overlay's connection point on the x-axis
    * @param offset New offset in the X axis.
    */
@@ -219,7 +203,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * @param rect
    */
   private _getStartX(rect: ClientRect): number {
-    return this._isRtl ? rect.right : rect.left;
+    return this.direction === 'rtl' ? rect.right : rect.left;
   }
 
   /**
@@ -227,7 +211,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * @param rect
    */
   private _getEndX(rect: ClientRect): number {
-    return this._isRtl ? rect.left : rect.right;
+    return this.direction === 'rtl' ? rect.left : rect.right;
   }
 
 
@@ -274,9 +258,9 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     if (pos.overlayX == 'center') {
       overlayStartX = -overlayRect.width / 2;
     } else if (pos.overlayX === 'start') {
-      overlayStartX = this._isRtl ? -overlayRect.width : 0;
+      overlayStartX = this.direction === 'rtl' ? -overlayRect.width : 0;
     } else {
-      overlayStartX = this._isRtl ? 0 : -overlayRect.width;
+      overlayStartX = this.direction === 'rtl' ? 0 : -overlayRect.width;
     }
 
     let overlayStartY: number;
@@ -376,7 +360,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     // For the horizontal axis, the meaning of "before" and "after" change based on whether the
     // page is in RTL or LTR.
     let horizontalStyleProperty: string;
-    if (this._dir === 'rtl') {
+    if (this.direction === 'rtl') {
       horizontalStyleProperty = pos.overlayX === 'end' ? 'left' : 'right';
     } else {
       horizontalStyleProperty = pos.overlayX === 'end' ? 'right' : 'left';

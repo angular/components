@@ -277,9 +277,9 @@ describe('ConnectedPositionStrategy', () => {
         strategy = positionBuilder.connectedTo(
             fakeElementRef,
             {originX: 'start', originY: 'bottom'},
-            {overlayX: 'start', overlayY: 'top'})
-            .withDirection('rtl');
+            {overlayX: 'start', overlayY: 'top'});
 
+        strategy.direction = 'rtl';
         strategy.apply(overlayElement);
 
         let overlayRect = overlayElement.getBoundingClientRect();
@@ -376,8 +376,9 @@ describe('ConnectedPositionStrategy', () => {
         strategy = positionBuilder.connectedTo(
             fakeElementRef,
             {originX: 'start', originY: 'bottom'},
-            {overlayX: 'start', overlayY: 'top'})
-            .withDirection('rtl');
+            {overlayX: 'start', overlayY: 'top'});
+
+        strategy.direction = 'rtl';
         originElement.style.top = '0';
         originElement.style.left = '0';
 
@@ -639,10 +640,11 @@ describe('ConnectedPositionStrategy', () => {
             fakeElementRef,
             {originX: 'start', originY: 'top'},
             {overlayX: 'start', overlayY: 'top'}
-        )
-        .withDirection('rtl');
+        );
 
+        strategy.direction = 'rtl';
         strategy.apply(overlayElement);
+
         expect(overlayElement.style.right).toBeTruthy();
         expect(overlayElement.style.left).toBeFalsy();
       });
@@ -652,8 +654,9 @@ describe('ConnectedPositionStrategy', () => {
             fakeElementRef,
             {originX: 'end', originY: 'top'},
             {overlayX: 'end', overlayY: 'top'}
-        ).withDirection('rtl');
+        );
 
+        strategy.direction = 'rtl';
         strategy.apply(overlayElement);
         expect(overlayElement.style.left).toBeTruthy();
         expect(overlayElement.style.right).toBeFalsy();

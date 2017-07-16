@@ -232,8 +232,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    */
   private _getOverlayConfig(): OverlayState {
     const overlayState = new OverlayState();
-    overlayState.positionStrategy = this._getPosition()
-                                        .withDirection(this.dir);
+    overlayState.positionStrategy = this._getPosition();
     overlayState.hasBackdrop = true;
     overlayState.backdropClass = 'cdk-overlay-transparent-backdrop';
     overlayState.direction = this.dir;

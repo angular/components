@@ -219,6 +219,19 @@ describe('Overlay', () => {
     expect(callbackOrder).toEqual(['attach', 'detach']);
   });
 
+  it('should pass the layout direction to connected overlays', () => {
+    let state = new OverlayState();
+    let positionStrategy = overlay.position().connectedTo({ nativeElement: document.body },
+      {originX: 'end', originY: 'top'},
+      {overlayX: 'end', overlayY: 'bottom'});
+
+    state.direction = 'rtl';
+    state.positionStrategy = positionStrategy;
+    overlay.create(state).attach(componentPortal);
+
+    expect(positionStrategy.direction).toBe('rtl');
+  });
+
   describe('positioning', () => {
     let state: OverlayState;
 
