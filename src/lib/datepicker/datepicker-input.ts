@@ -56,7 +56,7 @@ export const MD_DATEPICKER_VALIDATORS: any = {
 /**
  * An event used for datepicker input and change events. We don't always have access to a native
  * input or change event because the event may have been triggered by the user clicking on the
- * calendar popup. For consistency we always use MdDatepickerInputEvent instead.
+ * calendar popup. For consistency, we always use MdDatepickerInputEvent instead.
  */
 export class MdDatepickerInputEvent<D> {
   /** The new value for the target datepicker input. */
@@ -152,8 +152,10 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   }
   private _disabled: boolean;
 
+  /** Emits when a `change` event is fired on this `<input>`. */
   @Output() dateChange = new EventEmitter<MdDatepickerInputEvent<D>>();
 
+  /** Emits when an `input` event is fired on this `<input>`. */
   @Output() dateInput = new EventEmitter<MdDatepickerInputEvent<D>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
