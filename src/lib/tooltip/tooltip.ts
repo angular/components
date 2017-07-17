@@ -23,10 +23,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
-// Importing ScrollStrategy is only used to define a generic type.
-// The current TypeScript version incorrectly considers such imports as
-// unused (https://github.com/Microsoft/TypeScript/issues/14953)
-// tslint:disable-next-line:no-unused-variable
 import {
   ComponentPortal,
   OriginConnectionPosition,
