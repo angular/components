@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TemplatePortal} from '../core/portal/portal';
+import {TemplatePortal} from '@angular/cdk';
 import {
   ViewContainerRef, Input, TemplateRef, ViewChild, OnInit, ContentChild,
   Component, ChangeDetectionStrategy, OnDestroy, OnChanges, SimpleChanges,

@@ -32,7 +32,7 @@ import {
 import {MdSnackBarConfig} from './snack-bar-config';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {first} from '../core/rxjs/index';
+import {first} from '@angular/cdk';
 
 
 

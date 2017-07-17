@@ -1,10 +1,8 @@
 import {fakeAsync, async, tick, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
+import {ESCAPE, PlatformModule, A11yModule} from '@angular/cdk';
 import {MdSidenav, MdSidenavModule, MdSidenavContainer} from './index';
-import {A11yModule} from '../core/a11y/index';
-import {PlatformModule} from '../core/platform/index';
-import {ESCAPE} from '../core/keyboard/keycodes';
 
 function endSidenavTransition(fixture: ComponentFixture<any>) {
   let sidenav: any = fixture.debugElement.query(By.directive(MdSidenav)).componentInstance;

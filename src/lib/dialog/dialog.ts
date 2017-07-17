@@ -27,11 +27,10 @@ import {
 } from '../core';
 import {PortalInjector} from '../core/portal/portal-injector';
 import {extendObject} from '../core/util/object-extend';
-import {ESCAPE} from '../core/keyboard/keycodes';
+import {ESCAPE, TemplatePortal} from '@angular/cdk';
 import {MdDialogConfig} from './dialog-config';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
-import {TemplatePortal} from '../core/portal/portal';
 
 export const MD_DIALOG_DATA = new InjectionToken<any>('MdDialogData');
 

@@ -20,9 +20,15 @@ import {
     OnChanges,
     SimpleChanges,
 } from '@angular/core';
+import {
+  Directionality,
+  Direction,
+  ESCAPE,
+  TemplatePortal,
+  coerceBooleanProperty
+} from '@angular/cdk';
 import {Overlay} from './overlay';
 import {OverlayRef} from './overlay-ref';
-import {TemplatePortal} from '../portal/portal';
 import {OverlayState} from './overlay-state';
 import {
     ConnectionPositionPair,
@@ -32,10 +38,7 @@ import {
     ConnectedOverlayPositionChange
 } from './position/connected-position';
 import {ConnectedPositionStrategy} from './position/connected-position-strategy';
-import {Directionality, Direction} from '../bidi/index';
 import {ScrollStrategy} from './scroll/scroll-strategy';
-import {coerceBooleanProperty} from '@angular/cdk';
-import {ESCAPE} from '../keyboard/keycodes';
 import {Subscription} from 'rxjs/Subscription';
 
 

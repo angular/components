@@ -6,7 +6,7 @@ import {By} from '@angular/platform-browser';
 import {ViewportRuler} from '../../core/overlay/position/viewport-ruler';
 import {FakeViewportRuler} from '../../core/overlay/position/fake-viewport-ruler';
 import {dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing';
-import {Direction, Directionality} from '../../core/bidi/index';
+import {Direction, Directionality} from '@angular/cdk';
 import {Subject} from 'rxjs/Subject';
 
 

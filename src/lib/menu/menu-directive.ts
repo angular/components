@@ -29,7 +29,7 @@ import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {MdMenuPanel} from './menu-panel';
 import {Subscription} from 'rxjs/Subscription';
 import {transformMenu, fadeInItems} from './menu-animations';
-import {ESCAPE} from '../core/keyboard/keycodes';
+import {ESCAPE} from '@angular/cdk';
 
 
 @Component({

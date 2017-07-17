@@ -7,7 +7,7 @@
  */
 
 import {QueryList} from '@angular/core';
-import {ListKeyManager, CanDisable} from './list-key-manager';
+import {CanDisable, ListKeyManager} from '@angular/cdk';
 
 /**
  * This is the interface for focusable items (used by the FocusKeyManager).

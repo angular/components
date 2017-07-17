@@ -1,9 +1,9 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement}  from '@angular/core';
 import {By} from '@angular/platform-browser';
+import {SPACE, DELETE, BACKSPACE} from '@angular/cdk';
 import {createKeyboardEvent} from '@angular/cdk/testing';
 import {MdChipList, MdChip, MdChipEvent, MdChipsModule} from './index';
-import {SPACE, DELETE, BACKSPACE} from '../core/keyboard/keycodes';
 import {Directionality} from '../core';
 
 describe('Chips', () => {

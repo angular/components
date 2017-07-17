@@ -29,7 +29,7 @@ import {ViewportRuler} from '../../core/overlay/position/viewport-ruler';
 import {Directionality, MD_RIPPLE_GLOBAL_OPTIONS, Platform, RippleGlobalOptions} from '../../core';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
-import {takeUntil, auditTime} from '../../core/rxjs/index';
+import {takeUntil, auditTime} from '@angular/cdk';
 import {of as observableOf} from 'rxjs/observable/of';
 import {merge} from 'rxjs/observable/merge';
 import {fromEvent} from 'rxjs/observable/fromEvent';

@@ -27,9 +27,8 @@ import {coerceBooleanProperty} from '../core';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {MdTab} from './tab';
-import {map} from '../core/rxjs/index';
+import {map} from '@angular/cdk';
 import {merge} from 'rxjs/observable/merge';
-
 
 /** Used to generate unique ID's for each tab component */
 let nextId = 0;

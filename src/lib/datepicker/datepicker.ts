@@ -22,12 +22,11 @@ import {
   NgZone,
   Inject,
 } from '@angular/core';
+import {ComponentPortal, Directionality, ESCAPE, first, coerceBooleanProperty} from '@angular/cdk';
 import {DOCUMENT} from '@angular/platform-browser';
 import {Overlay} from '../core/overlay/overlay';
 import {OverlayRef} from '../core/overlay/overlay-ref';
-import {ComponentPortal} from '../core/portal/portal';
 import {OverlayState} from '../core/overlay/overlay-state';
-import {Directionality} from '../core/bidi/index';
 import {MdDialog} from '../dialog/dialog';
 import {MdDialogRef} from '../dialog/dialog-ref';
 import {PositionStrategy} from '../core/overlay/position/position-strategy';
@@ -35,11 +34,7 @@ import {MdDatepickerInput} from './datepicker-input';
 import {Subscription} from 'rxjs/Subscription';
 import {DateAdapter} from '../core/datetime/index';
 import {createMissingDateImplError} from './datepicker-errors';
-import {ESCAPE} from '../core/keyboard/keycodes';
 import {MdCalendar} from './calendar';
-import {first} from '../core/rxjs/index';
-import {coerceBooleanProperty} from '@angular/cdk';
-
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;

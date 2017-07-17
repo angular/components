@@ -27,20 +27,28 @@ import {
   Inject,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import {
+  ENTER,
+  SPACE,
+  UP_ARROW,
+  DOWN_ARROW,
+  HOME,
+  END,
+  Directionality,
+  startWith,
+  filter,
+  coerceBooleanProperty
+} from '@angular/cdk';
 import {MdOption, MdOptionSelectionChange, MdOptgroup} from '../core/option/index';
-import {ENTER, SPACE, UP_ARROW, DOWN_ARROW, HOME, END} from '../core/keyboard/keycodes';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
-import {Directionality} from '../core/bidi/index';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {transformPlaceholder, transformPanel, fadeInContent} from './select-animations';
 import {ControlValueAccessor, NgControl} from '@angular/forms';
-import {coerceBooleanProperty} from '@angular/cdk';
 import {ConnectedOverlayDirective} from '../core/overlay/overlay-directives';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {SelectionModel} from '../core/selection/selection';
 import {getMdSelectDynamicMultipleError, getMdSelectNonArrayValueError} from './select-errors';
-import {startWith, filter} from '../core/rxjs/index';
 import {merge} from 'rxjs/observable/merge';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';

@@ -10,11 +10,10 @@ import {
   Validators
 } from '@angular/forms';
 import {By} from '@angular/platform-browser';
+import {PlatformModule, Platform} from '@angular/cdk';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdInputModule} from './index';
 import {MdInputContainer, MdInputDirective} from './input-container';
-import {Platform} from '../core/platform/platform';
-import {PlatformModule} from '../core/platform/index';
 import {wrappedErrorMessage, dispatchFakeEvent} from '@angular/cdk/testing';
 import {
   getMdInputContainerDuplicatedHintError,

@@ -14,11 +14,11 @@ import {
   NgZone,
 } from '@angular/core';
 import {OverlayState} from './overlay-state';
-import {DomPortalHost} from '../portal/dom-portal-host';
+import {DomPortalHost} from '@angular/cdk';
 import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {OverlayContainer} from './overlay-container';
-import {ScrollStrategy, ScrollStrategyOptions} from './scroll/index';
+import {ScrollStrategyOptions} from './scroll/index';
 
 
 /** Next overlay unique ID. */

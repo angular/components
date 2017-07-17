@@ -7,8 +7,7 @@
  */
 
 import {Directive, Output, EventEmitter, ElementRef, Input} from '@angular/core';
-import {coerceBooleanProperty} from '@angular/cdk';
-import {ENTER} from '../core/keyboard/keycodes';
+import {coerceBooleanProperty, ENTER} from '@angular/cdk';
 import {MdChipList} from './chip-list';
 
 export interface MdChipInputEvent {
