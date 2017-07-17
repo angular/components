@@ -18,15 +18,18 @@ const DIRECTORY_BLACKLIST = ['testing'];
 export function getSecondaryEntryPointsForPackage(_packageName: string) {
   // Order matters
   return [
-    'keyboard',
-    'coercion',
     'platform',
-    'bidi',
-    'rxjs',
-    'observe-content',
-    'portal',
-    'a11y',
-    'table',
+
+
+    // 'keyboard',
+    // 'coercion',
+    // 'platform',
+    // 'bidi',
+    // 'rxjs',
+    // 'observe-content',
+    // 'portal',
+    // 'a11y',
+    // 'table',
   ];
 
   // const rootPackageDir = join(buildConfig.packagesDir, packageName);
