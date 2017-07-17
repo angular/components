@@ -209,7 +209,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     let supportList = this.getSupportList();
     if (supportList.length === 0) {
       this.isStickyPositionSupported = false;
-    }else {
+    } else {
       let prefix: string = supportList[0];
 
       this.element.style.top = '0px';
