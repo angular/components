@@ -210,6 +210,10 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     if (supportList.length === 0) {
       this.isStickyPositionSupported = false;
     } else {
+      // Only need supportList[0], Because supportList contains all the prefix
+      // that can make sticky positioning work in the current browser.
+      // We only need to get one prefix and make position: prefix + 'sticky',
+      // then sticky position will work.
       let prefix: string = supportList[0];
 
       this.element.style.top = '0px';
