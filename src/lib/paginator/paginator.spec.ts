@@ -7,7 +7,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {dispatchMouseEvent} from '@angular/cdk/testing';
 
 
-fdescribe('MdPaginator', () => {
+describe('MdPaginator', () => {
   let fixture: ComponentFixture<MdPaginatorApp>;
   let component: MdPaginatorApp;
   let paginator: MdPaginator;
@@ -104,7 +104,7 @@ fdescribe('MdPaginator', () => {
       expect(component.latestPageEvent ? component.latestPageEvent.pageIndex : null).toBe(1);
     });
 
-    fit('should be able to go to the previous page', () => {
+    it('should be able to go to the previous page', () => {
       paginator.pageIndex = 1;
       fixture.detectChanges();
       expect(paginator.pageIndex).toBe(1);

@@ -7,7 +7,7 @@
  */
 
 import {
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -59,10 +59,22 @@ export class MdPaginator implements OnInit {
   private _initialized: boolean;
 
   /** The zero-based page index of the displayed list of items. Defaulted to 0. */
-  @Input() pageIndex: number = 0;
+  @Input()
+  get pageIndex(): number { return this._pageIndex; }
+  set pageIndex(pageIndex: number) {
+    this._pageIndex = pageIndex;
+    this._changeDetectorRef.markForCheck();
+  }
+  _pageIndex: number = 0;
 
   /** The length of the total number of items that are being paginated. Defaulted to 0. */
-  @Input() length: number = 0;
+  @Input()
+  get length(): number { return this._length; }
+  set length(length: number) {
+    this._length = length;
+    this._changeDetectorRef.markForCheck();
+  }
+  _length: number = 0;
 
   /** Number of items to display on a page. By default set to 50. */
   @Input()
@@ -88,7 +100,8 @@ export class MdPaginator implements OnInit {
   /** Displayed set of page size options. Will be sorted and include current page size. */
   _displayedPageSizeOptions: number[];
 
-  constructor(public _intl: MdPaginatorIntl) { }
+  constructor(public _intl: MdPaginatorIntl,
+              private _changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this._initialized = true;
@@ -159,6 +172,8 @@ export class MdPaginator implements OnInit {
 
     // Sort the numbers using a number-specific sort function.
     this._displayedPageSizeOptions.sort((a, b) => a - b);
+
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Emits an event notifying that a change of the paginator's properties has been triggered. */
