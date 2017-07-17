@@ -198,8 +198,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * sticky positioning.
    *
    * If the this._supportList is empty, which means the browser does not support
-   * sticky positioning. Set isStickyPositionSupported as 'true' and use the original implementation of
-   * sticky-header.
+   * sticky positioning. Set isStickyPositionSupported as 'true' and use the original
+   * implementation of sticky-header.
    */
   setStrategyAccordingToCompatibility(): void {
     let supportList = this.getSupportList();
@@ -304,7 +304,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
 
     let stickyCss:any = this.generateCssStyle(
-      this.zIndex,
+      this.zIndex + '',
       'fixed',
       this.upperScrollableContainer.offsetTop + 'px',
       stuckRight + 'px',
@@ -384,18 +384,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   /**
    * This function is used to generate a variable which contains 7 css styles.
-   * @param zIndex
-   * @param position
-   * @param top
-   * @param right
-   * @param left
-   * @param bottom
-   * @param width
-   * @returns {{zIndex: any, position: any, top: any, right: any,
-   * left: any, bottom: any, width: any}}
    */
-  generateCssStyle(zIndex:any, position:any, top:any, right:any,
-                   left:any, bottom:any, width:any): any {
+  generateCssStyle(zIndex:string, position:string, top:string, right:string,
+                   left:string, bottom:string, width:string): any {
     let targetCSS = {
       zIndex: zIndex,
       position: position,
