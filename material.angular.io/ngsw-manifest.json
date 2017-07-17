@@ -1,0 +1,10 @@
+{
+  "external": {
+    "urls": [
+      {"url": "https://fonts.googleapis.com/icon?family=Material+Icons"},
+      {"url": "https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono"},
+      {"url": "https://ajax.googleapis.com/ajax/libs/hammerjs/2.0.8/hammer.min.js"},
+      {"url": "https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.5/web-animations.min.js"}
+    ]
+  }
+}

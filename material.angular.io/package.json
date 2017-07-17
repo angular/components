@@ -9,8 +9,9 @@
     "test": "ng test",
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
+    "fetch-local": "bash ./tools/fetch-assets-local.sh",
     "build-themes": "bash ./tools/build-themes.sh",
-    "prod-build": "npm run build-themes && ng build --aot --prod && npm run prerender && cp -r tmp/prerendered/* dist/",
+    "prod-build": "npm run build-themes && ng build --aot --prod",
     "postinstall": "webdriver-manager update && bash ./tools/fetch-assets.sh",
     "publish-prod": "npm run build-themes && ng build --aot --prod && firebase use material-angular-io && firebase deploy",
     "publish-dev": "npm run build-themes && ng build --aot --prod && firebase use material2-docs-dev && firebase deploy"
@@ -28,6 +29,7 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
+    "@angular/service-worker": "^1.0.0-beta.16",
     "core-js": "^2.4.1",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4"

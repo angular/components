@@ -1,5 +1,11 @@
 {
-  "name": "Angular.io",
+  "name": "Angular Material",
+  "short_name": "Angular Material",
+  "theme_color": "#FFFFFF",
+  "background_color": "#3F51B5",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "\/android-chrome-36x36.png",
