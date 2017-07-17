@@ -111,7 +111,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * A list of string which can be set to sticky-header's style.position
    * and make Sticky positioning work.
    */
-  private _supportList: Array<string>;
+  //private _supportList: Array<string>;
 
   constructor(element: ElementRef,
               scrollable: Scrollable,
@@ -174,9 +174,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * The implementation references the compatibility checking in Modernizer
    * (https://github.com/Modernizr/Modernizr/blob/master/feature-detects/css/positionsticky.js).
    */
-  getSupportList(): void {
+  getSupportList(): Array<string> {
     let prefixTestList = ['', '-webkit-', '-ms-', '-moz-', '-o-'];
-    this._supportList = new Array<string>();
+    let supportList: Array<string> = new Array<string>();
     let stickyText = '';
     for (let i = 0; i < prefixTestList.length; i++ ) {
       stickyText += 'position:' + prefixTestList[i] + 'sticky;';
@@ -189,9 +189,10 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       body.removeChild(div);
       div = null;
       if(isSupport == true) {
-        this._supportList.push(prefixTestList[i]);
+        supportList.push(prefixTestList[i]);
       }
     }
+    return supportList;
   }
 
   /**
@@ -203,10 +204,11 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * sticky-header.
    */
   setStrategyAccordingToCompatibility(): void {
-    if(this._supportList.length == 0) {
+    let supportList = this.getSupportList();
+    if(supportList.length == 0) {
       this.isIE = true;
     }else {
-      let prefix: string = this._supportList[0];
+      let prefix: string = supportList[0];
 
       this.element.style.top = '0px';
       this.element.style.position = prefix + 'sticky';
