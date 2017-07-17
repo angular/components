@@ -22,8 +22,8 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {coerceBooleanProperty, coerceNumberProperty, HammerInput} from '../core';
-import {Directionality} from '../core/bidi/index';
 import {
+  Directionality,
   DOWN_ARROW,
   END,
   HOME,
@@ -32,7 +32,7 @@ import {
   PAGE_UP,
   RIGHT_ARROW,
   UP_ARROW
-} from '../core/keyboard/keycodes';
+} from '@angular/cdk';
 import {FocusOrigin, FocusOriginMonitor} from '../core/style/focus-origin-monitor';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
 

@@ -19,6 +19,17 @@ import {
   Inject,
   ChangeDetectorRef,
 } from '@angular/core';
+import {
+  ENTER,
+  UP_ARROW,
+  DOWN_ARROW,
+  ESCAPE,
+  Directionality,
+  RxChain,
+  switchMap,
+  first,
+  filter
+} from '@angular/cdk';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DOCUMENT} from '@angular/platform-browser';
 import {Overlay, OverlayRef, OverlayState, TemplatePortal} from '../core';
@@ -27,14 +38,11 @@ import {PositionStrategy} from '../core/overlay/position/position-strategy';
 import {ConnectedPositionStrategy} from '../core/overlay/position/connected-position-strategy';
 import {Observable} from 'rxjs/Observable';
 import {MdOptionSelectionChange, MdOption} from '../core/option/option';
-import {ENTER, UP_ARROW, DOWN_ARROW, ESCAPE} from '../core/keyboard/keycodes';
-import {Directionality} from '../core/bidi/index';
 import {MdInputContainer} from '../input/input-container';
 import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {of as observableOf} from 'rxjs/observable/of';
-import {RxChain, switchMap, first, filter} from '../core/rxjs/index';
 
 /**
  * The following style constants are necessary to save here in order

@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {NgModule, Provider} from '@angular/core';
+import {PortalModule} from '@angular/cdk';
 import {Overlay} from './overlay';
 import {ScrollDispatchModule} from './scroll/index';
-import {PortalModule} from '../portal/portal-directives';
 import {ConnectedOverlayDirective, OverlayOrigin} from './overlay-directives';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {VIEWPORT_RULER_PROVIDER} from './position/viewport-ruler';

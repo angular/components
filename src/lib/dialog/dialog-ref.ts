@@ -12,7 +12,7 @@ import {DialogPosition} from './dialog-config';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {MdDialogContainer} from './dialog-container';
-import {filter} from '../core/rxjs/index';
+import {filter} from '@angular/cdk';
 
 
 // TODO(jelbourn): resizing

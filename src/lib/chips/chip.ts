@@ -19,10 +19,9 @@ import {
 } from '@angular/core';
 
 import {Focusable} from '../core/a11y/focus-key-manager';
-import {coerceBooleanProperty} from '@angular/cdk';
+import {coerceBooleanProperty, SPACE, BACKSPACE, DELETE} from '@angular/cdk';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
-import {SPACE, BACKSPACE, DELETE} from '../core/keyboard/keycodes';
 
 export interface MdChipEvent {
   chip: MdChip;

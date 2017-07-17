@@ -18,7 +18,7 @@ import {
 } from './input-container';
 import {MdTextareaAutosize} from './autosize';
 import {CommonModule} from '@angular/common';
-import {PlatformModule} from '../core/platform/index';
+import {PlatformModule} from '@angular/cdk';
 
 
 @NgModule({

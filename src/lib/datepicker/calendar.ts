@@ -28,14 +28,14 @@ import {
   PAGE_DOWN,
   PAGE_UP,
   RIGHT_ARROW,
-  UP_ARROW
-} from '../core/keyboard/keycodes';
+  UP_ARROW,
+  first
+} from '@angular/cdk';
 import {DateAdapter} from '../core/datetime/index';
 import {MdDatepickerIntl} from './datepicker-intl';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
 import {MATERIAL_COMPATIBILITY_MODE} from '../core';
-import {first} from '../core/rxjs/index';
 
 
 /**

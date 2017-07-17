@@ -19,11 +19,17 @@ import {
   ElementRef,
   Renderer2,
 } from '@angular/core';
-
+import {
+  Directionality,
+  coerceBooleanProperty,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  UP_ARROW,
+  BACKSPACE,
+  DELETE
+} from '@angular/cdk';
 import {MdChip} from './chip';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
-import {BACKSPACE, DELETE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '../core/keyboard/keycodes';
-import {coerceBooleanProperty, Directionality} from '@angular/cdk';
 import {Subscription} from 'rxjs/Subscription';
 
 /**

@@ -19,6 +19,7 @@ describe('MdCalendarBody', () => {
     TestBed.compileComponents();
   }));
 
+
   describe('standard calendar body', () => {
     let fixture: ComponentFixture<StandardCalendarBody>;
     let testComponent: StandardCalendarBody;

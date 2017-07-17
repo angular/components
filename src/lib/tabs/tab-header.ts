@@ -36,7 +36,7 @@ import {
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdInkBar} from './ink-bar';
 import {Subscription} from 'rxjs/Subscription';
-import {auditTime, startWith} from '../core/rxjs/index';
+import {auditTime, startWith} from '@angular/cdk';
 import {of as observableOf} from 'rxjs/observable/of';
 import {merge} from 'rxjs/observable/merge';
 import {fromEvent} from 'rxjs/observable/fromEvent';

@@ -4,11 +4,10 @@ import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdChipList, MdChipsModule} from './index';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
+import {LEFT_ARROW, RIGHT_ARROW, TAB, BACKSPACE, DELETE, Directionality} from '@angular/cdk';
 import {createKeyboardEvent} from '@angular/cdk/testing';
 
 import {MdInputModule} from '../input/index';
-import {LEFT_ARROW, RIGHT_ARROW, BACKSPACE, DELETE, TAB} from '../core/keyboard/keycodes';
-import {Directionality} from '../core';
 
 describe('MdChipList', () => {
   let fixture: ComponentFixture<any>;

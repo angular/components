@@ -15,8 +15,7 @@ import {OverlayContainer} from '../core/overlay/overlay-container';
 import {MdSelect} from './select';
 import {getMdSelectDynamicMultipleError, getMdSelectNonArrayValueError} from './select-errors';
 import {MdOption} from '../core/option/option';
-import {Directionality} from '../core/bidi/index';
-import {DOWN_ARROW, UP_ARROW, ENTER, SPACE, HOME, END, TAB} from '../core/keyboard/keycodes';
+import {DOWN_ARROW, UP_ARROW, ENTER, SPACE, HOME, END, TAB, Directionality} from '@angular/cdk';
 import {
   ControlValueAccessor, FormControl, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule
 } from '@angular/forms';

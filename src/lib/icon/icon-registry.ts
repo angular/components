@@ -13,7 +13,7 @@ import {Observable} from 'rxjs/Observable';
 import {_throw as observableThrow} from 'rxjs/observable/throw';
 import {of as observableOf} from 'rxjs/observable/of';
 import {forkJoin} from 'rxjs/observable/forkJoin';
-import {RxChain, map, doOperator, catchOperator, finallyOperator, share} from '../core/rxjs/index';
+import {RxChain, map, doOperator, catchOperator, finallyOperator, share} from '@angular/cdk';
 
 /**
  * Returns an exception to be thrown in the case when attempting to

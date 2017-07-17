@@ -1,7 +1,7 @@
 import {TestBed, async, inject} from '@angular/core/testing';
 import {LOCALE_ID} from '@angular/core';
+import {Platform} from '@angular/cdk';
 import {NativeDateAdapter, NativeDateModule, DateAdapter} from './index';
-import {Platform} from '../platform/index';
 import {DEC, FEB, JAN, MAR} from '../testing/month-constants';
 
 const SUPPORTS_INTL = typeof Intl != 'undefined';

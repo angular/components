@@ -1,8 +1,7 @@
 import {async, ComponentFixture, TestBed, flushMicrotasks, fakeAsync} from '@angular/core/testing';
 import {Component, ViewChild, TemplateRef, ViewContainerRef} from '@angular/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {Direction, Directionality} from '../core/bidi/index';
-import {TemplatePortal} from '../core/portal/portal';
+import {Direction, Directionality, TemplatePortal} from '@angular/cdk';
 import {MdTabBody} from './tab-body';
 import {MdRippleModule} from '../core/ripple/index';
 import {CommonModule} from '@angular/common';

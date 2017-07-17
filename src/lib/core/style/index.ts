@@ -8,7 +8,7 @@
 
 import {NgModule} from '@angular/core';
 import {CdkMonitorFocus, FOCUS_ORIGIN_MONITOR_PROVIDER} from './focus-origin-monitor';
-import {PlatformModule} from '../platform/index';
+import {PlatformModule} from '@angular/cdk';
 
 
 @NgModule({

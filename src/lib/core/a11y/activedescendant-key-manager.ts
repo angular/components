@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ListKeyManager, CanDisable} from './list-key-manager';
+import {ListKeyManager, CanDisable} from '@angular/cdk';
 
 /**
  * This is the interface for highlightable items (used by the ActiveDescendantKeyManager).

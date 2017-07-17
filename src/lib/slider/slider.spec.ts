@@ -4,8 +4,8 @@ import {Component, DebugElement} from '@angular/core';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MdSlider, MdSliderModule} from './index';
 import {TestGestureConfig} from './test-gesture-config';
-import {BidiModule} from '../core/bidi/index';
 import {
+  BidiModule,
   DOWN_ARROW,
   END,
   HOME,
@@ -15,7 +15,7 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
   BACKSPACE
-} from '../core/keyboard/keycodes';
+} from '@angular/cdk';
 import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
 
 describe('MdSlider without forms', () => {

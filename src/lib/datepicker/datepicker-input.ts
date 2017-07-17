@@ -31,7 +31,7 @@ import {
 } from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import {MdInputContainer} from '../input/input-container';
-import {DOWN_ARROW} from '../core/keyboard/keycodes';
+import {DOWN_ARROW} from '@angular/cdk';
 import {DateAdapter} from '../core/datetime/index';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';

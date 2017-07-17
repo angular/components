@@ -9,7 +9,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {OverlayModule, MdCommonModule} from '../core';
-import {PlatformModule} from '../core/platform/index';
+import {PlatformModule} from '@angular/cdk';
 import {MdTooltip, TooltipComponent} from './tooltip';
 
 

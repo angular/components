@@ -36,13 +36,10 @@ import {
   OverlayConnectionPosition,
   OriginConnectionPosition,
 } from '../core';
+import {Directionality, Platform, first, coerceBooleanProperty} from '@angular/cdk';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {Directionality} from '../core/bidi/index';
-import {Platform} from '../core/platform/index';
-import {first} from '../core/rxjs/index';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
-import {coerceBooleanProperty} from '@angular/cdk';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 

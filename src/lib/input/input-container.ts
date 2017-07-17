@@ -30,7 +30,7 @@ import {
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {coerceBooleanProperty, Platform} from '../core';
 import {FormGroupDirective, NgControl, NgForm, FormControl} from '@angular/forms';
-import {getSupportedInputTypes} from '../core/platform/features';
+import {getSupportedInputTypes} from '@angular/cdk';
 import {
   getMdInputContainerDuplicatedHintError,
   getMdInputContainerMissingMdInputError,

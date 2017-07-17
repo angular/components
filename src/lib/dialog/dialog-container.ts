@@ -28,7 +28,7 @@ import {
 import {DOCUMENT} from '@angular/platform-browser';
 import {BasePortalHost, ComponentPortal, PortalHostDirective, TemplatePortal} from '../core';
 import {MdDialogConfig} from './dialog-config';
-import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
+import {FocusTrapFactory, FocusTrap} from '@angular/cdk';
 
 /**
  * Throws an exception for the case when a ComponentPortal is

@@ -16,7 +16,7 @@ import {
   PAGE_UP,
   RIGHT_ARROW,
   UP_ARROW
-} from '../core/keyboard/keycodes';
+} from '@angular/cdk';
 import {MdDatepickerIntl} from './datepicker-intl';
 import {MdNativeDateModule} from '../core/datetime/index';
 import {NoConflictStyleCompatibilityMode} from '../core';
