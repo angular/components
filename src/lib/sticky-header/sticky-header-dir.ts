@@ -252,7 +252,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * when to start, when to finish)
    */
   defineRestrictions(): void {
-    if(this.stickyParent == null) {
+    if(!this.stickyParent) {
       return;
     }
     let containerTop: any = this.stickyParent.getBoundingClientRect();
