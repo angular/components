@@ -15,12 +15,22 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition
+} from '@angular/animations';
+import {MdSort, MdSortable} from './sort';
+import {MdSortHeaderIntl} from './sort-header-intl';
 import {CdkColumnDef} from '@angular/cdk/table';
 import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
 import {MdSort, MdSortable} from './sort';
 import {MdSortHeaderIntl} from './sort-header-intl';
 import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
+
 
 /**
  * Applies sorting behavior (click to change sort) and styles to an element, including an
@@ -42,6 +52,14 @@ import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('indicatorRotate', [
+      state('asc', style({transform: 'rotate(45deg)'})),
+      state('desc', style({transform: 'rotate(225deg)'})),
+      /** Use standart animation curve from material guidelines */
+      transition('asc <=> desc', animate('225ms cubic-bezier(0.4,0.0,0.2,1)'))
+    ])
+  ]
 })
 export class MdSortHeader implements MdSortable {
   private _rerenderSubscription: Subscription;
@@ -97,5 +115,9 @@ export class MdSortHeader implements MdSortable {
   /** Whether this MdSortHeader is currently sorted in either ascending or descending order. */
   _isSorted() {
     return this._sort.active == this.id && this._sort.direction;
+  }
+
+  _getSortingState() {
+    return this._sort.direction;
   }
 }
