@@ -17,7 +17,7 @@ export class ComponentCategoryList {
               public _componentPageTitle: ComponentPageTitle) {}
 
   ngOnInit() {
-    this._componentPageTitle.title = 'Component Library';
+    this._componentPageTitle.title = 'Component Categories';
   }
 }
 

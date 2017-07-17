@@ -21,7 +21,7 @@ describe('ComponentCategoryList', () => {
     spyOn(component, 'ngOnInit').and.callThrough();
     fixture.detectChanges();
     expect(component.ngOnInit).toHaveBeenCalled();
-    expect(component._componentPageTitle.title).toEqual('Component Library');
+    expect(component._componentPageTitle.title).toEqual('Component Categories');
   });
 
   it('should render a card for every category', () => {
