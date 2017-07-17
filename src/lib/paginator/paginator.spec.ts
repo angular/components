@@ -7,7 +7,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {dispatchMouseEvent} from '@angular/cdk/testing';
 
 
-describe('MdPaginator', () => {
+fdescribe('MdPaginator', () => {
   let fixture: ComponentFixture<MdPaginatorApp>;
   let component: MdPaginatorApp;
   let paginator: MdPaginator;
@@ -25,13 +25,15 @@ describe('MdPaginator', () => {
       ],
       providers: [MdPaginatorIntl]
     }).compileComponents();
+  }));
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(MdPaginatorApp);
     component = fixture.componentInstance;
     paginator = component.mdPaginator;
 
     fixture.detectChanges();
-  }));
+  });
 
   describe('with the default internationalization provider', () => {
     it('should show the right range text', () => {
@@ -102,7 +104,7 @@ describe('MdPaginator', () => {
       expect(component.latestPageEvent ? component.latestPageEvent.pageIndex : null).toBe(1);
     });
 
-    it('should be able to go to the previous page', () => {
+    fit('should be able to go to the previous page', () => {
       paginator.pageIndex = 1;
       fixture.detectChanges();
       expect(paginator.pageIndex).toBe(1);
@@ -144,6 +146,13 @@ describe('MdPaginator', () => {
 
     expect(withoutOptionsAppFixture.componentInstance.mdPaginator._displayedPageSizeOptions)
         .toEqual([10]);
+  });
+
+  it('should default the page size to the first page size option if not provided', () => {
+    const withoutPageSizeAppFixture = TestBed.createComponent(MdPaginatorWithoutPageSizeApp);
+    withoutPageSizeAppFixture.detectChanges();
+
+    expect(withoutPageSizeAppFixture.componentInstance.mdPaginator.pageSize).toEqual(10);
   });
 
   it('should show a sorted list of page size options including the current page size', () => {

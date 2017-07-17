@@ -18,6 +18,9 @@ import {
 import {MdPaginatorIntl} from './paginator-intl';
 import {MATERIAL_COMPATIBILITY_MODE} from '../core';
 
+/** The default page size if there is no page size and there are no provided page size options. */
+const DEFAULT_PAGE_SIZE = 50;
+
 /**
  * Change event object that is emitted when the user selects a
  * different page size or navigates to another page.
@@ -68,7 +71,7 @@ export class MdPaginator implements OnInit {
     this._pageSize = pageSize;
     this._updateDisplayedPageSizeOptions();
   }
-  private _pageSize: number = 50;
+  private _pageSize: number;
 
   /** The set of provided page size options to display to the user. */
   @Input()
@@ -141,6 +144,13 @@ export class MdPaginator implements OnInit {
    */
   private _updateDisplayedPageSizeOptions() {
     if (!this._initialized) { return; }
+
+    // If no page size is provided, use the first page size option or the default page size.
+    if (!this.pageSize) {
+      this._pageSize = this.pageSizeOptions.length != 0 ?
+          this.pageSizeOptions[0] :
+          DEFAULT_PAGE_SIZE;
+    }
 
     this._displayedPageSizeOptions = this.pageSizeOptions.slice();
     if (this._displayedPageSizeOptions.indexOf(this.pageSize) == -1) {
