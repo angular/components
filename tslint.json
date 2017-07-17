@@ -28,6 +28,7 @@
     "no-unused-expression": true,
     "no-var-keyword": true,
     "member-access": [true, "no-public"],
+    "no-unescaped-html-tag": true,
     "no-debugger": true,
     "no-unused-variable": true,
     "one-line": [
@@ -79,7 +80,11 @@
       {"name": "Object.assign", "message": "Use the spread operator instead."}
     ],
     // Disallows importing the whole RxJS library. Submodules can be still imported.
-    "import-blacklist": [true, "rxjs", "rxjs/operators"],
+    "import-blacklist": [
+      true,
+      "rxjs",
+      "rxjs/operators"
+    ],
     // Avoids inconsistent linebreak styles in source files. Forces developers to use LF linebreaks.
     "linebreak-style": [true, "LF"],
     // Namespaces are no allowed, because of Closure compiler.
