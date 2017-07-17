@@ -190,7 +190,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       let isSupport = /sticky/i.test(window.getComputedStyle(div).position);
       body.removeChild(div);
       div = null;
-      if(isSupport == true) {
+      if (isSupport == true) {
         supportList.push(prefixTestList[i]);
       }
     }
@@ -207,7 +207,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    */
   setStrategyAccordingToCompatibility(): void {
     let supportList = this.getSupportList();
-    if(supportList.length == 0) {
+    if (supportList.length === 0) {
       this.isStickyPositionSupported = false;
     }else {
       let prefix: string = supportList[0];
@@ -256,7 +256,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * when to start, when to finish)
    */
   defineRestrictions(): void {
-    if(!this.stickyParent) {
+    if (!this.stickyParent) {
       return;
     }
     let containerTop: any = this.stickyParent.getBoundingClientRect();
@@ -329,7 +329,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   unstuckElement(): void {
     this.isStuck = false;
 
-    if(this.stickyParent == null) {
+    if (this.stickyParent == null) {
       return;
     }
 
