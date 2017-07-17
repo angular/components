@@ -96,9 +96,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    */
   private _containerStart: number;
   /**
-   * It is 'The bottom of CdkStickyRegion of current sticky header - the height
-   * of current header', which is used with '_containerStart' to judge whether the current header
-   * need to be stuck.
+   * `_scrollFinish` is the place from where the stuck element should be unstuck
    */
   private _scrollFinish: number;
   /** The width of the sticky-header when it is stuck. */
