@@ -38,8 +38,9 @@ const STICK_START_CLASS = 'cdk-sticky-header-start';
 // STICK_END_CLASS is used to mark a header is unstuck.
 const STICK_END_CLASS = 'cdk-sticky-header-end';
 /**
- * Set a debounce time.
- * @type {number}
+ * Set a debounce time which is used in debounce() function when adding event listeners.
+ * Set is as 5. Because if the DEBOUNCE_TIME is set as a too large number. The sticky effect
+ * during scroll will become vary strange and can not be scrolled smoothly.
  */
 const DEBOUNCE_TIME: number = 5;
 /**
