@@ -60,7 +60,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   private _onResizeBind: EventListener = this.onResize.bind(this);
   private _onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
   isStuck: boolean = false;
-  isIE: boolean = false;
+  isStickyPositionSupported: boolean = false;
 
 
   /** The element with the 'cdkStickyHeader' tag. */
@@ -107,24 +107,16 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   private _onResizeSubscription: Subscription;
 
-  /**
-   * A list of string which can be set to sticky-header's style.position
-   * and make Sticky positioning work.
-   */
-  //private _supportList: Array<string>;
-
   constructor(element: ElementRef,
               scrollable: Scrollable,
               @Optional() public parentRegion: CdkStickyRegion) {
     this.element = element.nativeElement;
     this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
-
-    this.getSupportList();
     this.setStrategyAccordingToCompatibility();
   }
 
   ngAfterViewInit(): void {
-    if (this.isIE) {
+    if (this.isStickyPositionSupported) {
       this.stickyParent = this.parentRegion != null ?
         this.parentRegion._elementRef.nativeElement : this.element.parentElement;
       this.originalCss = this.generateCssStyle(
@@ -200,13 +192,13 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * sticky positioning.
    *
    * If the this._supportList is empty, which means the browser does not support
-   * sticky positioning. Set isIE as 'true' and use the original implementation of
+   * sticky positioning. Set isStickyPositionSupported as 'true' and use the original implementation of
    * sticky-header.
    */
   setStrategyAccordingToCompatibility(): void {
     let supportList = this.getSupportList();
     if(supportList.length == 0) {
-      this.isIE = true;
+      this.isStickyPositionSupported = true;
     }else {
       let prefix: string = supportList[0];
 
@@ -216,7 +208,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   attach() {
-    this._onScrollSubscription =  Observable.fromEvent(this.upperScrollableContainer, 'scroll')
+    this._onScrollSubscription = Observable.fromEvent(this.upperScrollableContainer, 'scroll')
       .debounceTime(5).subscribe(() => this.defineRestrictionsAndStick());
 
     // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
