@@ -171,6 +171,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * Firefox Mobile, Opera Mobile. And can also work well on Safari Mobile with a "-webkit-" prefix.
    * It won't always work on IE phone.
    *
+   * The implementation references the compatibility checking in Modernizer
+   * (https://github.com/Modernizr/Modernizr/blob/master/feature-detects/css/positionsticky.js).
    */
   getSupportList(): void {
     let prefixTestList = ['', '-webkit-', '-ms-', '-moz-', '-o-'];
