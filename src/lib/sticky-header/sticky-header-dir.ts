@@ -38,6 +38,11 @@ const STICK_START_CLASS = 'cdk-sticky-header-start';
 // STICK_END_CLASS is used to mark a header is unstuck.
 const STICK_END_CLASS = 'cdk-sticky-header-end';
 /**
+ * Set a debounce time.
+ * @type {number}
+ */
+const DEBOUNCE_TIME: number = 5;
+/**
  * Directive that marks an element as a sticky-header. Inside of a scrolling container (marked with
  * cdkScrollable), this header will "stick" to the top of the scrolling viewport while its sticky
  * region (see cdkStickyRegion) is in view.
@@ -209,14 +214,14 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   attach() {
     this._onScrollSubscription = Observable.fromEvent(this.upperScrollableContainer, 'scroll')
-      .debounceTime(5).subscribe(() => this.defineRestrictionsAndStick());
+      .debounceTime(DEBOUNCE_TIME).subscribe(() => this.defineRestrictionsAndStick());
 
     // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
     this._onTouchSubscription = Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
-      .debounceTime(5).subscribe(() => this.defineRestrictionsAndStick());
+      .debounceTime(DEBOUNCE_TIME).subscribe(() => this.defineRestrictionsAndStick());
 
     this._onResizeSubscription = Observable.fromEvent(this.upperScrollableContainer, 'resize')
-      .debounceTime(5).subscribe(() => this.onResize());
+      .debounceTime(DEBOUNCE_TIME).subscribe(() => this.onResize());
   }
 
   onScroll(): void {
