@@ -32,9 +32,9 @@ export class CdkStickyRegion {
 }
 
 
-// STICK_START_CLASS is used to mark a header is stuck.
+/** Class applied when the header is "stuck" */
 const STICK_START_CLASS = 'cdk-sticky-header-start';
-// STICK_END_CLASS is used to mark a header is unstuck.
+/** Class applied when the header is not "stuck" */
 const STICK_END_CLASS = 'cdk-sticky-header-end';
 /**
  * Set a debounce time which is used in debounce() function when adding event listeners.
@@ -62,13 +62,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   @Input('cdkStickyHeaderZIndex') zIndex: number = 10;
 
   isStuck: boolean = false;
-  /**
-   * isStickyPositionSupported == true, means current browser support 'position: sticky'
-   * or 'position: -webkit-sticky'.
-   * isStickyPositionSupported == false, means current browser does not support sticky
-   * positioning and need to use the original implementation to get the sticky effect.
-   * @type {boolean}
-   */
+  /** Whether the browser support CSS sticky positioning. */
   isStickyPositionSupported: boolean = true;
 
 
