@@ -12,6 +12,8 @@ import {
   Component,
   Directive,
   ElementRef,
+  Inject,
+  InjectionToken,
   Input,
   NgZone,
   OnDestroy,
@@ -19,27 +21,21 @@ import {
   Renderer2,
   ViewContainerRef,
   ViewEncapsulation
-  ViewContainerRef
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  InjectionToken,
-  Inject,
 } from '@angular/core';
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
+// Importing ScrollStrategy is only used to define a generic type.
+// The current TypeScript version incorrectly considers such imports as
+// unused (https://github.com/Microsoft/TypeScript/issues/14953)
+// tslint:disable-next-line:no-unused-variable
 import {
   ComponentPortal,
   OriginConnectionPosition,
-  RepositionScrollStrategy,
-  // This import is only used to define a generic type. The current TypeScript version incorrectly
-  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
-  // tslint:disable-next-line:no-unused-variable
-  ScrollStrategy,
   Overlay,
   OverlayConnectionPosition,
   OverlayRef,
   OverlayState,
-  RepositionScrollStrategy
+  RepositionScrollStrategy,
+  ScrollStrategy
 } from '../core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
@@ -128,7 +124,6 @@ export class MdTooltip implements OnDestroy {
       }
     }
   }
-
 
   /** Disables the display of the tooltip. */
   @Input('mdTooltipDisabled')
@@ -221,8 +216,8 @@ export class MdTooltip implements OnDestroy {
       private _ngZone: NgZone,
       private _renderer: Renderer2,
       private _platform: Platform,
-      @Inject(MD_TOOLTIP_SCROLL_STRATEGY) private _scrollStrategy,
-    @Optional() private _dir: Directionality) {
+      @Optional() private _dir: Directionality,
+      @Inject(MD_TOOLTIP_SCROLL_STRATEGY) private _scrollStrategyProvider) {
     // The mouse events shouldn't be bound on iOS devices, because
     // they can prevent the first tap from firing its click event.
     if (!_platform.IOS) {
@@ -344,8 +339,8 @@ export class MdTooltip implements OnDestroy {
     config.positionStrategy = strategy;
     config.panelClass = TOOLTIP_PANEL_CLASS;
 
-    this._scrollStrategy = this._scrollStrategy();
-    config.scrollStrategy = this._scrollStrategy;
+    this._scrollStrategy = this._scrollStrategyProvider();
+    config.scrollStrategy = this._scrollStrategy!;
 
     return this._overlay.create(config);
   }
