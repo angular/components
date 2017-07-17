@@ -62,11 +62,15 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    */
   @Input('cdkStickyHeaderZIndex') zIndex: number = 10;
 
-  private _onScrollBind: EventListener = this.onScroll.bind(this);
-  private _onResizeBind: EventListener = this.onResize.bind(this);
-  private _onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
   isStuck: boolean = false;
-  isStickyPositionSupported: boolean = false;
+  /**
+   * isStickyPositionSupported == true, means current browser support 'position: sticky'
+   * or 'position: -webkit-sticky'.
+   * isStickyPositionSupported == false, means current browser does not support sticky
+   * positioning and need to use the original implementation to get the sticky effect.
+   * @type {boolean}
+   */
+  isStickyPositionSupported: boolean = true;
 
 
   /** The element with the 'cdkStickyHeader' tag. */
@@ -122,7 +126,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.isStickyPositionSupported) {
+    if (!this.isStickyPositionSupported) {
       this.stickyParent = this.parentRegion != null ?
         this.parentRegion._elementRef.nativeElement : this.element.parentElement;
       this.originalCss = this.generateCssStyle(
@@ -204,7 +208,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   setStrategyAccordingToCompatibility(): void {
     let supportList = this.getSupportList();
     if(supportList.length == 0) {
-      this.isStickyPositionSupported = true;
+      this.isStickyPositionSupported = false;
     }else {
       let prefix: string = supportList[0];
 
