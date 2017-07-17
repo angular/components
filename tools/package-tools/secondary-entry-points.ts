@@ -15,9 +15,22 @@ const DIRECTORY_BLACKLIST = ['testing'];
  * @param packageName The package name for which to get entry points, e.g., 'cdk'.
  * @returns An array of secondary entry-points names, e.g., ['a11y', 'bidi', ...]
  */
-export function getSecondaryEntryPointsForPackage(packageName: string) {
-  const rootPackageDir = join(buildConfig.packagesDir, packageName);
-  return readdirSync(rootPackageDir)
-      .filter(f =>
-          lstatSync(join(rootPackageDir, f)).isDirectory() && DIRECTORY_BLACKLIST.indexOf(f) < 0);
+export function getSecondaryEntryPointsForPackage(_packageName: string) {
+  // Order matters
+  return [
+    'keyboard',
+    'coercion',
+    'platform',
+    'bidi',
+    'rxjs',
+    'observe-content',
+    'portal',
+    'a11y',
+    'table',
+  ];
+
+  // const rootPackageDir = join(buildConfig.packagesDir, packageName);
+  // return readdirSync(rootPackageDir)
+  //     .filter(f =>
+  //         lstatSync(join(rootPackageDir, f)).isDirectory() && DIRECTORY_BLACKLIST.indexOf(f) < 0);
 }
