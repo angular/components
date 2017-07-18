@@ -175,6 +175,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     }
     return supportList;
   }
+  
 
   /**
    * Get the first element from this._supportList. Set it as a prefix of
