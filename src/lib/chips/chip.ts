@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 
 import {Focusable} from '../core/a11y/focus-key-manager';
-import {coerceBooleanProperty} from '@angular/cdk';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 

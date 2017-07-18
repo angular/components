@@ -22,18 +22,28 @@ const ROLLUP_GLOBALS = {
 
   // Local Angular packages inside of Material.
   '@angular/material': 'ng.material',
-  '@angular/cdk': 'ng.cdk',
 
   // TODO(jelbourn): don't hard-code these
   '@angular/cdk/a11y': 'ng.cdk.a11y',
   '@angular/cdk/bidi': 'ng.cdk.bidi',
   '@angular/cdk/coercion': 'ng.cdk.coercion',
   '@angular/cdk/keyboard': 'ng.cdk.keyboard',
-  '@angular/cdk/observe-content': 'ng.cdk.observe-content',
+  '@angular/cdk/observe-content': 'ng.cdk.observeContent',
   '@angular/cdk/platform': 'ng.cdk.platform',
   '@angular/cdk/portal': 'ng.cdk.portal',
   '@angular/cdk/rxjs': 'ng.cdk.rxjs',
   '@angular/cdk/table': 'ng.cdk.table',
+  '@angular/cdk': 'ng.cdk',
+  
+  '@angular/cdk/a11y/index': 'ng.cdk.a11y',
+  '@angular/cdk/bidi/index': 'ng.cdk.bidi',
+  '@angular/cdk/coercion/index': 'ng.cdk.coercion',
+  '@angular/cdk/keyboard/index': 'ng.cdk.keyboard',
+  '@angular/cdk/observe-content/index': 'ng.cdk.observeContent',
+  '@angular/cdk/platform/index': 'ng.cdk.platform',
+  '@angular/cdk/portal/index': 'ng.cdk.portal',
+  '@angular/cdk/rxjs/index': 'ng.cdk.rxjs',
+  '@angular/cdk/table/index': 'ng.cdk.table',
 
   // RxJS dependencies
   'rxjs/BehaviorSubject': 'Rx',

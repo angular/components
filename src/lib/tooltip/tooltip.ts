@@ -42,7 +42,7 @@ import {Directionality} from '../core/bidi/index';
 import {Platform} from '../core/platform/index';
 import {first} from '../core/rxjs/index';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
-import {coerceBooleanProperty} from '@angular/cdk';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 

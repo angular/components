@@ -38,7 +38,7 @@ import {createMissingDateImplError} from './datepicker-errors';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {MdCalendar} from './calendar';
 import {first} from '../core/rxjs/index';
-import {coerceBooleanProperty} from '@angular/cdk';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
