@@ -88,14 +88,13 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * `_scrollFinish` is the place from where the stuck element should be unstuck
    */
   private _scrollFinish: number;
+  //
 
   private _onScrollSubscription: Subscription;
 
   private _onTouchSubscription: Subscription;
 
   private _onResizeSubscription: Subscription;
-
-  
 
   constructor(element: ElementRef,
               scrollable: Scrollable,
