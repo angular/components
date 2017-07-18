@@ -15,4 +15,3 @@ export * from './portal/index';
 export * from './rxjs/index';
 export * from './observe-content/index';
 export * from './keyboard/index';
-export * from './sticky-header/index';
