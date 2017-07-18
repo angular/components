@@ -16,6 +16,7 @@ import {CdkColumnDef} from '@angular/cdk/table';
 import {coerceBooleanProperty} from '../core';
 import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
 import {Subscription} from 'rxjs/Subscription';
+import {MdColumnDef} from '../table/cell';
 
 /**
  * Applies sorting behavior (click to change sort) and styles to an element, including an
@@ -67,7 +68,8 @@ export class MdSortHeader implements MdSortable {
   constructor(public _intl: MdSortHeaderIntl,
               private _changeDetectorRef: ChangeDetectorRef,
               @Optional() public _sort: MdSort,
-              @Optional() public _cdkColumnDef: CdkColumnDef) {
+              @Optional() public _cdkColumnDef: CdkColumnDef,
+              @Optional() public _mdColumnDef: MdColumnDef) {
     if (!_sort) {
       throw getMdSortHeaderNotContainedWithinMdSortError();
     }
@@ -76,8 +78,8 @@ export class MdSortHeader implements MdSortable {
   }
 
   ngOnInit() {
-    if (!this.id && this._cdkColumnDef) {
-      this.id = this._cdkColumnDef.name;
+    if (!this.id && (this._cdkColumnDef || this._mdColumnDef)) {
+      this.id = this._cdkColumnDef ? this._cdkColumnDef.name : this._mdColumnDef.name;
     }
 
     this._sort.register(this);

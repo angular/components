@@ -6,8 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy, Component, ContentChild, ContentChildren, QueryList,
+  ViewEncapsulation
+} from '@angular/core';
 import {CDK_TABLE_TEMPLATE, CdkTable} from '@angular/cdk/table';
+import {MdRowDef, MdHeaderRowDef} from './row';
+import {MdColumnDef} from './cell';
 
 /** Workaround for https://github.com/angular/angular/issues/17849 */
 export const _MdTable = CdkTable;
@@ -26,4 +31,16 @@ export const _MdTable = CdkTable;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdTable<T> extends _MdTable<T> { }
+export class MdTable<T> extends _MdTable<T> {
+  /**
+   * The column definitions provided by the user that contain what the header and cells should
+   * render for each column.
+   */
+  @ContentChildren(MdColumnDef) _columnDefinitions: QueryList<MdColumnDef>;
+
+  /** Template used as the header container. */
+  @ContentChild(MdHeaderRowDef) _headerDefinition: MdHeaderRowDef;
+
+  /** Set of templates that used as the data row containers. */
+  @ContentChildren(MdRowDef) _rowDefinitions: QueryList<MdRowDef>;
+}

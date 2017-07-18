@@ -6,12 +6,45 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, Renderer2} from '@angular/core';
-import {CdkCell, CdkColumnDef, CdkHeaderCell} from '@angular/cdk/table';
+import {ContentChild, Directive, ElementRef, Input, Renderer2} from '@angular/core';
+import {CdkCell, CdkCellDef, CdkColumnDef, CdkHeaderCell, CdkHeaderCellDef} from '@angular/cdk/table';
 
 /** Workaround for https://github.com/angular/angular/issues/17849 */
-export const _MdHeaderCellBase = CdkHeaderCell;
+export const _MdCellDef = CdkCellDef;
+export const _MdHeaderCellDef = CdkHeaderCellDef;
+export const _MdColumnDef = CdkColumnDef;
+export const _MdHeaderCell = CdkHeaderCell;
 export const _MdCell = CdkCell;
+
+/**
+ * Cell definition for the md-table.
+ * Captures the template of a column's data row cell as well as cell-specific properties.
+ */
+@Directive({selector: '[mdCellDef]'})
+export class MdCellDef extends _MdCellDef { }
+
+/**
+ * Header cell definition for the md-table.
+ * Captures the template of a column's header cell and as well as cell-specific properties.
+ */
+@Directive({selector: '[mdHeaderCellDef]'})
+export class MdHeaderCellDef extends _MdHeaderCellDef { }
+
+/**
+ * Column definition for the md-table.
+ * Defines a set of cells available for a table column.
+ */
+@Directive({selector: '[mdColumnDef]'})
+export class MdColumnDef extends _MdColumnDef {
+  /** Unique name for this column. */
+  @Input('mdColumnDef') name: string;
+
+  /** @docs-private */
+  @ContentChild(MdCellDef) cell: MdCellDef;
+
+  /** @docs-private */
+  @ContentChild(MdHeaderCellDef) headerCell: MdHeaderCellDef;
+}
 
 /** Header cell template container that adds the right classes and role. */
 @Directive({
@@ -21,8 +54,8 @@ export const _MdCell = CdkCell;
     'role': 'columnheader',
   },
 })
-export class MdHeaderCell extends _MdHeaderCellBase {
-  constructor(columnDef: CdkColumnDef,
+export class MdHeaderCell extends _MdHeaderCell {
+  constructor(columnDef: MdColumnDef,
               elementRef: ElementRef,
               renderer: Renderer2) {
     super(columnDef, elementRef, renderer);
@@ -39,7 +72,7 @@ export class MdHeaderCell extends _MdHeaderCellBase {
   },
 })
 export class MdCell extends _MdCell {
-  constructor(columnDef: CdkColumnDef,
+  constructor(columnDef: MdColumnDef,
               elementRef: ElementRef,
               renderer: Renderer2) {
     super(columnDef, elementRef, renderer);
