@@ -9,6 +9,7 @@
 import {Component, ContentChild, TemplateRef, ViewChild} from '@angular/core';
 import {CdkStep} from '@angular/cdk';
 import {MdStepLabel} from './step-label';
+import {MdStepper} from './stepper';
 
 @Component({
   moduleId: module.id,
@@ -21,4 +22,8 @@ export class MdStep extends CdkStep {
 
   /** Template inside the MdStep view that contains an <ng-content>. */
   @ViewChild(TemplateRef) content: TemplateRef<any>;
+
+  constructor(mdStepper: MdStepper) {
+    super(mdStepper);
+  }
 }

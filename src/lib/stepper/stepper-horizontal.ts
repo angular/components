@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ContentChildren, QueryList} from '@angular/core';
+import {Component, ContentChildren, forwardRef, QueryList} from '@angular/core';
 import {MdStep} from './step';
-import {CdkStepper} from '@angular/cdk';
+import {MdStepper} from './stepper';
 
 @Component({
   moduleId: module.id,
@@ -16,7 +16,9 @@ import {CdkStepper} from '@angular/cdk';
   templateUrl: 'stepper-horizontal.html',
   styleUrls: ['stepper.scss'],
   inputs: ['selectedIndex'],
+  providers: [{ provide: MdStepper, useExisting: forwardRef(() => MdHorizontalStepper) }]
 })
-export class MdHorizontalStepper extends CdkStepper {
+export class MdHorizontalStepper extends MdStepper {
+  /** Steps that the horizontal stepper holds. */
   @ContentChildren(MdStep) _steps: QueryList<MdStep>;
 }

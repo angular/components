@@ -13,7 +13,7 @@ import {CdkStepLabel} from '@angular/cdk';
   selector: '[md-step-label], [mat-step-label]',
 })
 export class MdStepLabel extends CdkStepLabel {
-  constructor(public template: TemplateRef<any>) {
+  constructor(template: TemplateRef<any>) {
     super(template);
   }
 }

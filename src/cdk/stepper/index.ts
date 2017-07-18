@@ -7,9 +7,8 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CdkStepper} from './stepper';
+import {CdkStepper, CdkStep} from './stepper';
 import {CommonModule} from '@angular/common';
-import {CdkStep} from './step';
 import {CdkStepLabel} from './step-label';
 import {PortalModule} from '../portal';
 
@@ -21,5 +20,4 @@ import {PortalModule} from '../portal';
 export class CdkStepperModule {}
 
 export * from './stepper';
-export * from './step';
 export * from './step-label';

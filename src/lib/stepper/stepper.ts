@@ -6,11 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, TemplateRef} from '@angular/core';
+import {CdkStepper} from '@angular/cdk';
 
-@Directive({
-  selector: 'cdkStepLabel',
-})
-export class CdkStepLabel {
-  constructor(public template: TemplateRef<any>) { }
-}
+export class MdStepper extends CdkStepper { }

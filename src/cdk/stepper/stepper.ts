@@ -14,13 +14,14 @@ import {
   QueryList,
   Directive,
   ViewChildren,
-  // tslint doesn't recognize `ElementRef` is used since it's only used as a generic.
-  // tslint:disable-next-line
-  ElementRef
+  // This import is only used to define a generic type. The current TypeScript version incorrectly
+  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
+  // tslint:disable-next-line:no-unused-variable
+  ElementRef, Component, ContentChild, ViewChild, TemplateRef
 } from '@angular/core';
-import {CdkStep} from './step';
 import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '../keyboard/keycodes';
 import {coerceNumberProperty} from '../coercion/number-property';
+import {CdkStepLabel} from './step-label';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
@@ -33,12 +34,38 @@ export class CdkStepperSelectionEvent {
   /** The index of the step that was previously selected. */
   oldIndex: number;
 
-  /** The step component that is selected ruing this change event. */
-  step: CdkStep;
+  /** The new step component that is selected ruing this change event. */
+  newStep: CdkStep;
+
+  /** The step component that was previously selected. */
+  oldStep: CdkStep;
+}
+
+@Component({
+  selector: 'cdk-step',
+  templateUrl: 'step.html',
+})
+export class CdkStep {
+  /** Template for step label if it exists. */
+  @ContentChild(CdkStepLabel) stepLabel: CdkStepLabel;
+
+  /** Template for step content. */
+  @ViewChild(TemplateRef) content: TemplateRef<any>;
+
+  /** Label of the step. */
+  @Input()
+  label: string;
+
+  constructor(private _stepper: CdkStepper) { }
+
+  /** Selects this step component. */
+  select(): void {
+    this._stepper.select(this);
+  }
 }
 
 @Directive({
-  selector: 'cdk-stepper',
+  selector: 'cdkStepper',
   host: {
     '(focus)': '_setStepfocused()',
     '(keydown)': '_onKeydown($event)',
@@ -62,9 +89,10 @@ export class CdkStepper {
   /** Event emitted when the selected step has changed. */
   @Output() selectionChange = new EventEmitter<CdkStepperSelectionEvent>();
 
-  /** The index of the step that the focus is currently on. */
+  /** The index of the step that the focus can be set. */
   _focusIndex: number = 0;
 
+  /** Used to track unique ID for each stepper component. */
   private _groupId: number;
 
   constructor() {
@@ -74,11 +102,10 @@ export class CdkStepper {
   /** Selects and focuses the provided step. */
   select(step: CdkStep | number): void {
     if (typeof step == 'number') {
-      this.selectionChange.emit(this._createStepperSelectionEvent(step, this._selectedIndex));
+      this._emitStepperSelectionEvent(step, this._selectedIndex);
     } else {
       let stepsArray = this._steps.toArray();
-      this.selectionChange.emit(
-          this._createStepperSelectionEvent(stepsArray.indexOf(step), this._selectedIndex));
+      this._emitStepperSelectionEvent(stepsArray.indexOf(step), this._selectedIndex);
     }
     this._setStepFocused(this._selectedIndex);
   }
@@ -86,16 +113,14 @@ export class CdkStepper {
   /** Selects and focuses the next step in list. */
   next(): void {
     if (this._selectedIndex == this._steps.length - 1) { return; }
-    this.selectionChange.emit(
-        this._createStepperSelectionEvent(this._selectedIndex + 1, this._selectedIndex));
+    this._emitStepperSelectionEvent(this._selectedIndex + 1, this._selectedIndex);
     this._setStepFocused(this._selectedIndex);
   }
 
   /** Selects and focuses the previous step in list. */
   previous(): void {
     if (this._selectedIndex == 0) { return; }
-    this.selectionChange.emit(
-        this._createStepperSelectionEvent(this._selectedIndex - 1, this._selectedIndex));
+    this._emitStepperSelectionEvent(this._selectedIndex - 1, this._selectedIndex);
     this._setStepFocused(this._selectedIndex);
   }
 
@@ -104,19 +129,20 @@ export class CdkStepper {
     return `mat-step-label-${this._groupId}-${i}`;
   }
 
-  /** Returns a unique id for each step content element. */
+  /** Returns nique id for each step content element. */
   _getStepContentId(i: number): string {
     return `mat-step-content-${this._groupId}-${i}`;
   }
 
-  private _createStepperSelectionEvent(newIndex: number,
-                                       oldIndex: number): CdkStepperSelectionEvent {
+  private _emitStepperSelectionEvent(newIndex: number,
+                                       oldIndex: number): void {
     this._selectedIndex = newIndex;
     const event = new CdkStepperSelectionEvent();
     event.newIndex = newIndex;
     event.oldIndex = oldIndex;
-    event.step = this._steps.toArray()[this._selectedIndex];
-    return event;
+    event.oldStep = this._steps.toArray()[oldIndex];
+    event.newStep = this._steps.toArray()[this._selectedIndex];
+    this.selectionChange.emit(event);
   }
 
   _onKeydown(event: KeyboardEvent) {
@@ -124,16 +150,20 @@ export class CdkStepper {
       case RIGHT_ARROW:
         if (this._focusIndex != this._steps.length - 1) {
           this._setStepFocused(this._focusIndex + 1);
+        } else {
+          this._setStepFocused(0);
         }
         break;
       case LEFT_ARROW:
         if (this._focusIndex != 0) {
           this._setStepFocused(this._focusIndex - 1);
+        } else {
+          this._setStepFocused(this._steps.length - 1);
         }
         break;
       case SPACE:
       case ENTER:
-        this._createStepperSelectionEvent(this._focusIndex, this._selectedIndex);
+        this._emitStepperSelectionEvent(this._focusIndex, this._selectedIndex);
         break;
       default:
         return;
