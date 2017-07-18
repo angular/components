@@ -288,7 +288,10 @@ export class MdTooltip implements OnDestroy {
     this._renderer.setAttribute(this._elementRef.nativeElement, 'aria-describedby', describedBy);
   }
 
-  /** Create the tooltip to display */
+  /**
+   * Create the tooltip to display. Uses the trigger's view container reference and should not be
+   * called within the change detection after the view has already been checked.
+   */
   private _createTooltip(): void {
     let portal = new ComponentPortal(TooltipComponent, this._viewContainerRef);
     this._overlayRef = this._createTooltipOverlay();
