@@ -72,18 +72,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   stickyParent: HTMLElement | null;
   /** The upper scrollable container. */
   upperScrollableContainer: HTMLElement;
-
-  /**
-   * The padding of the sticky-header. Put it here to avoid calling getComputedStyle()
-   * too many times.
-   */
-  padding: string;
-
-  /**
-   * The height of the sticky-region. Put it here to avoid calling getComputedStyle()
-   * too many times.
-   */
-  stickyRegionHeight: number;
   /**
    * The original css of the sticky element, used to reset the sticky element
    * when it is being unstuck
@@ -99,8 +87,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * `_scrollFinish` is the place from where the stuck element should be unstuck
    */
   private _scrollFinish: number;
-  /** The width of the sticky-header when it is stuck. */
-  private _scrollingWidth: number;
 
   private _onScrollSubscription: Subscription;
 
@@ -128,8 +114,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this.getCssValue(this.element, 'left'),
         this.getCssValue(this.element, 'bottom'),
         this.getCssValue(this.element, 'width'));
-      this.padding = this.getCssValue(this.element, 'padding');
-      this.stickyRegionHeight = this.getCssNumber(this.stickyParent, 'height');
       this.attach();
       this.defineRestrictionsAndStick();
     }
@@ -254,16 +238,12 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     if (!this.stickyParent) {
       return;
     }
-    let containerTop: any = this.stickyParent.getBoundingClientRect();
+    let boundingClientRect: any = this.stickyParent.getBoundingClientRect();
     let elemHeight: number = this.element.offsetHeight;
-    this._containerStart = containerTop.top;
+    this._containerStart = boundingClientRect.top;
+    let stickRegionHeight = boundingClientRect.height;
 
-    // the padding of the element being stuck
-    let paddingNumber: any = Number(this.padding.slice(0, -2));
-    this._scrollingWidth = this.upperScrollableContainer.clientWidth -
-      paddingNumber - paddingNumber;
-
-    this._scrollFinish = this._containerStart + (this.stickyRegionHeight - elemHeight);
+    this._scrollFinish = this._containerStart + (stickRegionHeight - elemHeight);
   }
 
   /** Reset element to its original CSS. */
