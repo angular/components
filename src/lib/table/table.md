@@ -1,14 +1,14 @@
 The `md-table` provides a Material Design styled data-table that can be used to display rows of
 data.
-
-This table builds on the foundation of the CDK data-table and uses a similar interface for its
-data source input and template, except that its element selectors will be prefixed with `md-`
-instead of `cdk-`.
  
 <!-- example(table-basic) -->
 
-Note that the column definition directives (`cdkColumnDef` and `cdkHeaderCellDef`) are still
-prefixed with `cdk-`.
+This table builds on the foundation of the CDK data-table and uses a similar interface for its
+data source input and template, except that its element selectors will be prefixed with `md-`
+instead of `cdk-`. 
+
+Note that the column definition directives (`cdkColumnDef` and `cdkHeaderCellDef`) are from the CDK
+and are prefixed with `cdk`. Be sure to import `CdkTableModule` to use these directives.
 
 For more information on the interface and how it works, see the
 [guide covering the CDK data-table](https://material.angular.io/guide/cdk-table).
