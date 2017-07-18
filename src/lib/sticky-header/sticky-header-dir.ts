@@ -155,7 +155,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * The implementation references the compatibility checking in Modernizer
    * (https://github.com/Modernizr/Modernizr/blob/master/feature-detects/css/positionsticky.js).
    */
-  getSupportList(): Array<string> {
+  getSupportList(): string[] {
     let prefixTestList = ['', '-webkit-', '-ms-', '-moz-', '-o-'];
     let supportList: Array<string> = new Array<string>();
     let stickyText = '';
