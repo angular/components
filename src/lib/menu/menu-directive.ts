@@ -20,7 +20,6 @@ import {
   ViewEncapsulation,
   ElementRef,
   ChangeDetectionStrategy,
-  Directive,
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {MenuPositionX, MenuPositionY} from './menu-positions';

@@ -70,7 +70,7 @@ The position can be changed using the `xPosition` (`before | after`) and `yPosit
 
 ### Nested menu
 
-Material supports the ability for a `md-menu-item` to open a sub-menu. To do so, you have to define
+Material supports the ability for an `md-menu-item` to open a sub-menu. To do so, you have to define
 your root menu and sub-menus, in addition to setting the `[mdMenuTriggerFor]` on the `md-menu-item`
 that should trigger the sub-menu:
 

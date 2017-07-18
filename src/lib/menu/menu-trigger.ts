@@ -44,6 +44,9 @@ import {MdMenuItem} from './menu-item';
 import {MdMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {throwMdMenuMissingError} from './menu-errors';
+import {RxChain, filter} from '../core/rxjs/index';
+import {of as observableOf} from 'rxjs/observable/of';
+import {merge} from 'rxjs/observable/merge';
 import {Subscription} from 'rxjs/Subscription';
 
 /** Injection token that determines the scroll handling while the menu is open. */
@@ -87,9 +90,9 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   private _portal: TemplatePortal;
   private _overlayRef: OverlayRef | null = null;
   private _menuOpen: boolean = false;
-  private _backdropSubscription: Subscription;
+  private _closeSubscription: Subscription;
   private _positionSubscription: Subscription;
-  private _parentMenuSubscriptions: Subscription[] = [];
+  private _hoverSubscription: Subscription;
 
   // Tracking input type is necessary so it's possible to only auto-focus
   // the first item of the list when the menu is opened via the keyboard
@@ -130,7 +133,16 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this._checkMenu();
     this.menu.close.subscribe(() => this.closeMenu());
-    this._subscribeToParentMenu();
+
+    if (this.triggersSubmenu()) {
+      // Subscribe to changes in the hovered item in order to toggle the panel.
+      this._hoverSubscription = filter
+        .call(this._parentMenu.hover(), active => active === this._menuItemInstance)
+        .subscribe(() => {
+          this._openedByMouse = true;
+          this.openMenu();
+        });
+    }
   }
 
   ngOnDestroy() {
@@ -166,7 +178,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   openMenu(): void {
     if (!this._menuOpen) {
       this._createOverlay().attach(this._portal);
-      this._subscribeToBackdrop();
+      this._closeSubscription = this._menuClosingActions().subscribe(() => this.menu.close.emit());
       this._initMenu();
 
       if (this.menu instanceof MdMenu) {
@@ -179,7 +191,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   closeMenu(): void {
     if (this._overlayRef && this.menuOpen) {
       this._overlayRef.detach();
-      this._backdropSubscription.unsubscribe();
+      this._closeSubscription.unsubscribe();
       this._resetMenu();
 
       if (this.menu instanceof MdMenu) {
@@ -191,20 +203,6 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   /** Focuses the menu trigger. */
   focus() {
     this._element.nativeElement.focus();
-  }
-
-  /**
-   * This method ensures that the menu closes when the overlay backdrop is clicked.
-   * We do not use first() here because doing so would not catch clicks from within
-   * the menu, and it would fail to unsubscribe properly. Instead, we unsubscribe
-   * explicitly when the menu is closed or destroyed.
-   */
-  private _subscribeToBackdrop(): void {
-    if (this._overlayRef) {
-      this._backdropSubscription = this._overlayRef.backdropClick().subscribe(() => {
-        this.menu.close.emit();
-      });
-    }
   }
 
   /**
@@ -350,39 +348,25 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
 
   /** Cleans up the active subscriptions. */
   private _cleanUpSubscriptions(): void {
-    if (this._backdropSubscription) {
-      this._backdropSubscription.unsubscribe();
-    }
-
-    if (this._positionSubscription) {
-      this._positionSubscription.unsubscribe();
-    }
-
-    this._parentMenuSubscriptions.forEach(subscription => subscription.unsubscribe());
-    this._parentMenuSubscriptions = [];
+    [
+      this._closeSubscription,
+      this._positionSubscription,
+      this._hoverSubscription
+    ]
+    .filter(subscription => !!subscription)
+    .forEach(subscription => subscription.unsubscribe());
   }
 
-  /** Sets up the subscriptions to parent menu events. */
-  private _subscribeToParentMenu(): void {
-    if (!this.triggersSubmenu()) {
-      return;
-    }
+  /** Returns a stream that emits whenever an action that should close the menu occurs. */
+  private _menuClosingActions() {
+    const backdrop = this._overlayRef!.backdropClick();
+    const parentClose = !this._parentMenu ? observableOf(null) : this._parentMenu.close;
+    const hover = !this._parentMenu ? observableOf(null) : RxChain.from(this._parentMenu.hover())
+      .call(filter, active => active !== this._menuItemInstance)
+      .call(filter, () => this._menuOpen)
+      .result();
 
-    // Subscribe to changes in the hovered item in order to toggle the panel.
-    this._parentMenuSubscriptions.push(this._parentMenu.hover().subscribe(active => {
-      if (active === this._menuItemInstance) {
-        this._openedByMouse = true;
-        this.openMenu();
-      } else {
-        this.menu.close.emit();
-      }
-    }));
-
-    // Subscribe to the parent menu closing, allowing for the close event
-    // to propagate to any child menus that the current trigger may have.
-    this._parentMenuSubscriptions.push(this._parentMenu.close.subscribe(() => {
-      this.menu.close.emit();
-    }));
+    return merge(backdrop, parentClose, hover);
   }
 
   /** Handles mouse presses on the trigger. */

@@ -566,7 +566,7 @@ describe('MdMenu', () => {
       fixture.detectChanges();
 
       const spy = jasmine.createSpy('hover spy');
-      const subscription = instance.rootMenu.hover.subscribe(spy);
+      const subscription = instance.rootMenu.hover().subscribe(spy);
       const menuItems = overlay.querySelectorAll('[md-menu-item]');
 
       dispatchMouseEvent(menuItems[0], 'mouseenter');
