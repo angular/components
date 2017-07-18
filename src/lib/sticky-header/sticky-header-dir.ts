@@ -168,14 +168,12 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       body.appendChild(div);
       let isSupport = /sticky/i.test(window.getComputedStyle(div).position);
       body.removeChild(div);
-      div = null;
       if (isSupport == true) {
         supportList.push(prefixTestList[i]);
       }
     }
     return supportList;
   }
-  
 
   /**
    * Get the first element from this._supportList. Set it as a prefix of
