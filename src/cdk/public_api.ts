@@ -6,8 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-// export const VERSION = 1;
-
 export * from './a11y/index';
 export * from './bidi/index';
 export * from './coercion/index';

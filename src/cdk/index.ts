@@ -11,4 +11,7 @@
  * Angular Compiler CLI. This file is used inside of Google and is also used to simplify the
  * SystemJS configuration
  */
-export * from './public_api';
+
+export const VERSION = 1;
+
+//export * from './public_api';
