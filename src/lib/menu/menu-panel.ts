@@ -15,7 +15,7 @@ export interface MdMenuPanel {
   yPosition: MenuPositionY;
   overlapTrigger: boolean;
   templateRef: TemplateRef<any>;
-  close: EventEmitter<void>;
+  close: EventEmitter<void | 'click' | 'keydown'>;
   isSubmenu: boolean;
   direction: Direction;
   focusFirstItem: () => void;

@@ -850,6 +850,27 @@ describe('MdMenu', () => {
       expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + MENU_PANEL_TOP_PADDING);
     });
 
+    it('should close all of the menus when an item is clicked', () => {
+      compileTestComponent();
+      instance.rootTriggerEl.nativeElement.click();
+      fixture.detectChanges();
+
+      instance.levelOneTrigger.openMenu();
+      fixture.detectChanges();
+
+      instance.levelTwoTrigger.openMenu();
+      fixture.detectChanges();
+
+      const menus = overlay.querySelectorAll('.mat-menu-panel');
+
+      expect(menus.length).toBe(3, 'Expected three open menus');
+
+      (menus[2].querySelector('.mat-menu-item')! as HTMLElement).click();
+      fixture.detectChanges();
+
+      expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
+    });
+
   });
 
 });
@@ -921,7 +942,7 @@ class CustomMenuPanel implements MdMenuPanel {
   isSubmenu = false;
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
-  @Output() close = new EventEmitter<void>();
+  @Output() close = new EventEmitter<void | 'click' | 'keydown'>();
   focusFirstItem = () => {};
   setPositionClasses = () => {};
 }

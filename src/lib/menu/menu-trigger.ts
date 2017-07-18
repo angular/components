@@ -132,7 +132,15 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this._checkMenu();
-    this.menu.close.subscribe(() => this.closeMenu());
+
+    this.menu.close.subscribe(reason => {
+      this.closeMenu();
+
+      // If a click closed the menu, we should close the entire chain of nested menus.
+      if (reason === 'click' && this._parentMenu) {
+        this._parentMenu.close.emit(reason);
+      }
+    });
 
     if (this.triggersSubmenu()) {
       // Subscribe to changes in the hovered item in order to toggle the panel.
@@ -360,11 +368,11 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   /** Returns a stream that emits whenever an action that should close the menu occurs. */
   private _menuClosingActions() {
     const backdrop = this._overlayRef!.backdropClick();
-    const parentClose = !this._parentMenu ? observableOf(null) : this._parentMenu.close;
-    const hover = !this._parentMenu ? observableOf(null) : RxChain.from(this._parentMenu.hover())
+    const parentClose = this._parentMenu ? this._parentMenu.close : observableOf(null);
+    const hover = this._parentMenu ? RxChain.from(this._parentMenu.hover())
       .call(filter, active => active !== this._menuItemInstance)
       .call(filter, () => this._menuOpen)
-      .result();
+      .result() : observableOf(null);
 
     return merge(backdrop, parentClose, hover);
   }
