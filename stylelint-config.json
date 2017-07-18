@@ -73,7 +73,6 @@
     "selector-pseudo-element-no-unknown": true,
     "selector-type-case": "lower",
     "selector-max-id": 0,
-
     "no-missing-end-of-source-newline": true
   }
 }
