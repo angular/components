@@ -7,6 +7,7 @@
  */
 import {Directive, Input,
   OnDestroy, AfterViewInit, ElementRef, Optional} from '@angular/core';
+import {Platform} from '../core/platform';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
 import {extendObject} from '../core/util/object-extend';
 import {Observable} from 'rxjs/Observable';
@@ -96,10 +97,13 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   constructor(element: ElementRef,
               scrollable: Scrollable,
-              @Optional() public parentRegion: CdkStickyRegion) {
-    this.element = element.nativeElement;
-    this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
-    this.setStrategyAccordingToCompatibility();
+              @Optional() public parentRegion: CdkStickyRegion,
+              platform: Platform) {
+    if (platform.isBrowser) {
+      this.element = element.nativeElement;
+      this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
+      this.setStrategyAccordingToCompatibility();
+    }
   }
 
   ngAfterViewInit(): void {
