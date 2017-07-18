@@ -6,7 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, Optional, SkipSelf} from '@angular/core';
+import {
+  Injectable,
+  Inject,
+  Optional,
+  SkipSelf,
+  Renderer2,
+  RendererFactory2,
+  // This isn't being used anywhere, but we need to import it to keep TypeScript happy.
+  // tslint:disable-next-line:no-unused-variable
+  InjectionToken,
+} from '@angular/core';
+import {DOCUMENT} from '@angular/platform-browser';
 
 
 /**
@@ -18,6 +29,11 @@ export class OverlayContainer {
   protected _containerElement: HTMLElement;
 
   private _themeClass: string;
+  private _renderer: Renderer2;
+
+  constructor(rendererFactory: RendererFactory2, @Inject(DOCUMENT) private _document: any) {
+    this._renderer = rendererFactory.createRenderer(null, null);
+  }
 
   /**
    * Base theme to be applied to all overlay-based components.
@@ -51,25 +67,27 @@ export class OverlayContainer {
    * with the 'cdk-overlay-container' class on the document body.
    */
   protected _createContainer(): void {
-    let container = document.createElement('div');
-    container.classList.add('cdk-overlay-container');
+    const container = this._renderer.createElement('div');
+
+    this._renderer.addClass(container, 'cdk-overlay-container');
 
     if (this._themeClass) {
-      container.classList.add(this._themeClass);
+      this._renderer.addClass(container, this._themeClass);
     }
 
-    document.body.appendChild(container);
+    this._renderer.appendChild(this._document.body, container);
     this._containerElement = container;
   }
 }
 
-export function OVERLAY_CONTAINER_PROVIDER_FACTORY(parentContainer: OverlayContainer) {
-  return parentContainer || new OverlayContainer();
+export function OVERLAY_CONTAINER_PROVIDER_FACTORY(parentContainer: OverlayContainer,
+  rendererFactory: RendererFactory2, document: any) {
+  return parentContainer || new OverlayContainer(rendererFactory, document);
 }
 
 export const OVERLAY_CONTAINER_PROVIDER = {
   // If there is already an OverlayContainer available, use that. Otherwise, provide a new one.
   provide: OverlayContainer,
-  deps: [[new Optional(), new SkipSelf(), OverlayContainer]],
+  deps: [[new Optional(), new SkipSelf(), OverlayContainer], RendererFactory2, DOCUMENT],
   useFactory: OVERLAY_CONTAINER_PROVIDER_FACTORY
 };

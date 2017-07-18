@@ -11,7 +11,6 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
-  Renderer2,
   EventEmitter,
   HostBinding,
   Input,
@@ -372,7 +371,6 @@ export class MdButtonToggle implements OnInit, OnDestroy {
               @Optional() toggleGroupMultiple: MdButtonToggleGroupMultiple,
               private _changeDetectorRef: ChangeDetectorRef,
               private _buttonToggleDispatcher: UniqueSelectionDispatcher,
-              private _renderer: Renderer2,
               private _elementRef: ElementRef,
               private _focusOriginMonitor: FocusOriginMonitor) {
 
@@ -407,7 +405,7 @@ export class MdButtonToggle implements OnInit, OnDestroy {
     if (this.buttonToggleGroup && this._value == this.buttonToggleGroup.value) {
       this._checked = true;
     }
-    this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
+    this._focusOriginMonitor.monitor(this._elementRef.nativeElement, true);
   }
 
   /** Focuses the button. */

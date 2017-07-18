@@ -201,7 +201,7 @@ export class MdCheckbox extends _MdCheckboxMixinBase
 
   ngAfterViewInit() {
     this._focusOriginMonitor
-      .monitor(this._inputElement.nativeElement, this._renderer, false)
+      .monitor(this._inputElement.nativeElement, false)
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 

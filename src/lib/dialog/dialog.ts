@@ -15,6 +15,8 @@ import {
   TemplateRef,
   Inject,
   InjectionToken,
+  Renderer2,
+  RendererFactory2,
 } from '@angular/core';
 import {Location} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
@@ -64,10 +66,11 @@ export const MD_DIALOG_SCROLL_STRATEGY_PROVIDER = {
  */
 @Injectable()
 export class MdDialog {
+  private _renderer: Renderer2;
   private _openDialogsAtThisLevel: MdDialogRef<any>[] = [];
   private _afterAllClosedAtThisLevel = new Subject<void>();
   private _afterOpenAtThisLevel = new Subject<MdDialogRef<any>>();
-  private _boundKeydown = this._handleKeydown.bind(this);
+  private _globalKeydownHandler: () => void;
 
   /** Keeps track of the currently-open dialogs. */
   get _openDialogs(): MdDialogRef<any>[] {
@@ -96,7 +99,10 @@ export class MdDialog {
       private _injector: Injector,
       @Inject(MD_DIALOG_SCROLL_STRATEGY) private _scrollStrategy,
       @Optional() private _location: Location,
-      @Optional() @SkipSelf() private _parentDialog: MdDialog) {
+      @Optional() @SkipSelf() private _parentDialog: MdDialog,
+      rendererFactory: RendererFactory2) {
+
+    this._renderer = rendererFactory.createRenderer(null, null);
 
     // Close all of the dialogs when the user goes forwards/backwards in history or when the
     // location hash changes. Note that this usually doesn't include clicking on links (unless
@@ -123,7 +129,9 @@ export class MdDialog {
         this._attachDialogContent(componentOrTemplateRef, dialogContainer, overlayRef, config);
 
     if (!this._openDialogs.length) {
-      document.addEventListener('keydown', this._boundKeydown);
+      this._globalKeydownHandler = this._renderer.listen('document', 'keydown', event => {
+        this._handleKeydown(event);
+      });
     }
 
     this._openDialogs.push(dialogRef);
@@ -271,7 +279,7 @@ export class MdDialog {
       // no open dialogs are left, call next on afterAllClosed Subject
       if (!this._openDialogs.length) {
         this._afterAllClosed.next();
-        document.removeEventListener('keydown', this._boundKeydown);
+        this._globalKeydownHandler();
       }
     }
   }

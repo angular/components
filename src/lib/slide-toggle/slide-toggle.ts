@@ -141,7 +141,7 @@ export class MdSlideToggle extends _MdSlideToggleMixinBase
     this._slideRenderer = new SlideToggleRenderer(this._elementRef, this._platform);
 
     this._focusOriginMonitor
-      .monitor(this._inputElement.nativeElement, this._renderer, false)
+      .monitor(this._inputElement.nativeElement, false)
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 

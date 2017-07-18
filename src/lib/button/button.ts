@@ -144,7 +144,7 @@ export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisabl
               private _platform: Platform,
               private _focusOriginMonitor: FocusOriginMonitor) {
     super(renderer, elementRef);
-    this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
+    this._focusOriginMonitor.monitor(this._elementRef.nativeElement, true);
   }
 
   ngOnDestroy() {
