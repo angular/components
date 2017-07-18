@@ -111,7 +111,6 @@ export class MdListIconCssMatStyler {}
   host: {'class': 'mat-subheader'}
 })
 export class MdListSubheaderCssMatStyler {}
-
 @Component({
   moduleId: module.id,
   selector: 'md-list-item, mat-list-item, a[md-list-item], a[mat-list-item]',
