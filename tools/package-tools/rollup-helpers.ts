@@ -24,6 +24,17 @@ const ROLLUP_GLOBALS = {
   '@angular/material': 'ng.material',
   '@angular/cdk': 'ng.cdk',
 
+  // TODO(jelbourn): don't hard-code these
+  '@angular/cdk/a11y': 'ng.cdk.a11y',
+  '@angular/cdk/bidi': 'ng.cdk.bidi',
+  '@angular/cdk/coercion': 'ng.cdk.coercion',
+  '@angular/cdk/keyboard': 'ng.cdk.keyboard',
+  '@angular/cdk/observe-content': 'ng.cdk.observe-content',
+  '@angular/cdk/platform': 'ng.cdk.platform',
+  '@angular/cdk/portal': 'ng.cdk.portal',
+  '@angular/cdk/rxjs': 'ng.cdk.rxjs',
+  '@angular/cdk/table': 'ng.cdk.table',
+
   // RxJS dependencies
   'rxjs/BehaviorSubject': 'Rx',
   'rxjs/Observable': 'Rx',

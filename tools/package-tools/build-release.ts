@@ -40,7 +40,7 @@ export function composeRelease(packageName: string, options: ReleaseBuildOptions
   createTypingsReexportFile(releasePath, './typings/index', packageName);
   createMetadataReexportFile(releasePath, packageName, './typings/index');
 
-  if (options && packageName === 'cdk') {
+  if (options && packageName === 'xxx') {
   //if (options.useSecondaryEntryPoints) {
     createFilesForSecondaryEntryPoint(packageName, releasePath);
 
