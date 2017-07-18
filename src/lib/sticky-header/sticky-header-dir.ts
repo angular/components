@@ -95,6 +95,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   private _onResizeSubscription: Subscription;
 
+  
+
   constructor(element: ElementRef,
               scrollable: Scrollable,
               @Optional() public parentRegion: CdkStickyRegion,
