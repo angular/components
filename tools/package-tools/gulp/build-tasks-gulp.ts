@@ -1,16 +1,14 @@
-import {task, watch, src, dest} from 'gulp';
+import {dest, src, task, watch} from 'gulp';
 import {join} from 'path';
-import {readFileSync, writeFileSync, unlink} from 'fs';
-import {parseConfigFileTextToJson} from 'typescript';
+import {readFileSync, unlink, writeFileSync} from 'fs';
 import {main as tsc} from '@angular/tsc-wrapped';
 import {buildConfig} from '../build-config';
 import {composeRelease} from '../build-release';
-import {buildPrimaryEntryPointBundles, buildAllSecondaryEntryPointBundles} from '../build-bundles';
+import {buildAllSecondaryEntryPointBundles, buildPrimaryEntryPointBundles} from '../build-bundles';
 import {inlineResourcesForDirectory} from '../inline-resources';
 import {buildScssTask} from './build-scss-task';
 import {sequenceTask} from './sequence-task';
 import {triggerLivereload} from './trigger-livereload';
-import {getSecondaryEntryPointsForPackage} from '../secondary-entry-points';
 
 // There are no type definitions available for these imports.
 const htmlmin = require('gulp-htmlmin');
@@ -89,36 +87,7 @@ export function createPackageBuildTasks(packageName: string, dependencies: strin
    * TypeScript compilation tasks. Tasks are creating ESM, FESM, UMD bundles for releases.
    */
 
-  task(`${packageName}:build:esm`, () => {
-    const primaryEntryPointPromise = tsc(tsconfigBuild, {basePath: packageRoot});
-
-    if (options.useSecondaryEntryPoints) {
-      const tsconfig =
-          parseConfigFileTextToJson(tsconfigBuild, readFileSync(tsconfigBuild, 'utf-8'), true).config;
-
-      Promise.all(
-          getSecondaryEntryPointsForPackage(packageName)
-              .map(entryPointName => {
-                const buildConfig = Object.assign({}, tsconfig);
-                const tmpBuildConfigPath = join(packageRoot, 'tsconfig-build-tmp.json');
-
-                buildConfig.files = [`${entryPointName}/index.ts`];
-                buildConfig.angularCompilerOptions.flatModuleId = `@angular/cdk/${entryPointName}`;
-                buildConfig.angularCompilerOptions.flatModuleOutFile = `${entryPointName}.js`;
-                writeFileSync(tmpBuildConfigPath, JSON.stringify(buildConfig), 'utf-8');
-                return tsc(tmpBuildConfigPath, {basePath: packageRoot}).then(() => {
-                  //unlink(tmpBuildConfigPath);
-                    console.log('mini-success ', entryPointName);
-                }).catch((e) => {
-                  //unlink(tmpBuildConfigPath);
-                  console.log('ERROR ', entryPointName, e);
-                });
-              })
-              .concat(primaryEntryPointPromise));
-    }
-
-    return primaryEntryPointPromise;
-  });
+  task(`${packageName}:build:esm`, () => tsc(tsconfigBuild, {basePath: packageRoot}));
   task(`${packageName}:build:esm:tests`, () => tsc(tsconfigTests, {basePath: packageRoot}));
 
   task(`${packageName}:build:bundles`, () => {
