@@ -779,8 +779,8 @@ describe('MdMenu', () => {
     it('should position the sub-menu to the right edge of the trigger in ltr', () => {
       compileTestComponent();
       instance.rootTriggerEl.nativeElement.style.position = 'fixed';
-      instance.rootTriggerEl.nativeElement.style.left = '50%';
-      instance.rootTriggerEl.nativeElement.style.top = '50%';
+      instance.rootTriggerEl.nativeElement.style.left = '50px';
+      instance.rootTriggerEl.nativeElement.style.top = '50px';
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
 
