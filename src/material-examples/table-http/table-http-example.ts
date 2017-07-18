@@ -13,32 +13,32 @@ import 'rxjs/add/operator/map';
 })
 export class TableHttpExample {
   displayedColumns = ['number', 'state', 'title'];
-  exampleDatabase: ExampleHttpDatabase | null;
+  exampleDatabase: ExampleHttpDao | null;
   dataSource: ExampleDataSource | null;
 
   constructor(http: Http) {
-    this.exampleDatabase = new ExampleHttpDatabase(http);
+    this.exampleDatabase = new ExampleHttpDao(http);
     this.dataSource = new ExampleDataSource(this.exampleDatabase);
   }
 }
 
-export interface MyGithubIssue {
+export interface GithubIssue {
   number: string;
   state: string;
   title: string;
 }
 
 /** An example database that the data source uses to retrieve data for the table. */
-export class ExampleHttpDatabase {
+export class ExampleHttpDao {
   private issuesUrl = 'https://api.github.com/repos/angular/material2/issues';  // URL to web API
 
   constructor(private http: Http) {}
 
-  getRepoIssues(): Observable<MyGithubIssue[]> {
-    return this.http.get(this.issuesUrl).map(this.extractData);
+  getRepoIssues(): Observable<GithubIssue[]> {
+    return this.http.get(this.issuesUrl).map(this.readGithubResult);
   }
 
-  extractData(result: Response): MyGithubIssue[] {
+  private readGithubResult(result: Response): GithubIssue[] {
     return result.json().map(issue => {
       return {
         number: issue.number,
@@ -52,17 +52,17 @@ export class ExampleHttpDatabase {
 /**
  * Data source to provide what data should be rendered in the table. Note that the data source
  * can retrieve its data in any way. In this case, the data source is provided a reference
- * to a common data base, ExampleHttpDatabase. It is not the data source's responsibility to manage
+ * to a common data base, ExampleHttpDao. It is not the data source's responsibility to manage
  * the underlying data. Instead, it only needs to take the data and send the table exactly what
  * should be rendered.
  */
-export class ExampleDataSource extends DataSource<MyGithubIssue> {
-  constructor(private _exampleDatabase: ExampleHttpDatabase) {
+export class ExampleDataSource extends DataSource<GithubIssue> {
+  constructor(private _exampleDatabase: ExampleHttpDao) {
     super();
   }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<MyGithubIssue[]> {
+  connect(): Observable<GithubIssue[]> {
     return this._exampleDatabase.getRepoIssues();
   }
 
