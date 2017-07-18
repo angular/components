@@ -14,6 +14,8 @@ import {
   OnDestroy,
   AfterContentInit,
   Injectable,
+  Renderer2,
+  RendererFactory2,
 } from '@angular/core';
 import {coerceBooleanProperty} from '../coercion/boolean-property';
 import {InteractivityChecker} from './interactivity-checker';
@@ -39,7 +41,9 @@ export class FocusTrap {
     this._enabled = val;
 
     if (this._startAnchor && this._endAnchor) {
-      this._startAnchor.tabIndex = this._endAnchor.tabIndex = this._enabled ? 0 : -1;
+      const tabindex = this._enabled ? '0' : '-1';
+      this._renderer.setAttribute(this._startAnchor, 'tabindex', tabindex);
+      this._renderer.setAttribute(this._endAnchor, 'tabindex', tabindex);
     }
   }
   private _enabled: boolean = true;
@@ -49,6 +53,7 @@ export class FocusTrap {
     private _platform: Platform,
     private _checker: InteractivityChecker,
     private _ngZone: NgZone,
+    private _renderer: Renderer2,
     deferAnchors = false) {
 
     if (!deferAnchors) {
@@ -58,12 +63,12 @@ export class FocusTrap {
 
   /** Destroys the focus trap by cleaning up the anchors. */
   destroy() {
-    if (this._startAnchor && this._startAnchor.parentNode) {
-      this._startAnchor.parentNode.removeChild(this._startAnchor);
+    if (this._startAnchor) {
+      this._renderer.removeChild(this._renderer.parentNode(this._startAnchor), this._startAnchor);
     }
 
-    if (this._endAnchor && this._endAnchor.parentNode) {
-      this._endAnchor.parentNode.removeChild(this._endAnchor);
+    if (this._endAnchor) {
+      this._renderer.removeChild(this._renderer.parentNode(this._endAnchor), this._endAnchor);
     }
 
     this._startAnchor = this._endAnchor = null;
@@ -74,11 +79,6 @@ export class FocusTrap {
    * in the constructor, but can be deferred for cases like directives with `*ngIf`.
    */
   attachAnchors(): void {
-    // If we're not on the browser, there can be no focus to trap.
-    if (!this._platform.isBrowser) {
-      return;
-    }
-
     if (!this._startAnchor) {
       this._startAnchor = this._createAnchor();
     }
@@ -88,12 +88,15 @@ export class FocusTrap {
     }
 
     this._ngZone.runOutsideAngular(() => {
-      this._startAnchor!.addEventListener('focus', () => this.focusLastTabbableElement());
-      this._endAnchor!.addEventListener('focus', () => this.focusFirstTabbableElement());
+      this._renderer.listen(this._startAnchor, 'focus', () => this.focusLastTabbableElement());
+      this._renderer.listen(this._endAnchor, 'focus', () => this.focusFirstTabbableElement());
 
-      if (this._element.parentNode) {
-        this._element.parentNode.insertBefore(this._startAnchor!, this._element);
-        this._element.parentNode.insertBefore(this._endAnchor!, this._element.nextSibling);
+      const parent = this._renderer.parentNode(this._element);
+
+      if (parent) {
+        const nextSibling = this._renderer.nextSibling(this._element);
+        this._renderer.insertBefore(parent, this._startAnchor, this._element);
+        this._renderer.insertBefore(parent, this._endAnchor, nextSibling);
       }
     });
   }
@@ -219,10 +222,10 @@ export class FocusTrap {
 
   /** Creates an anchor element. */
   private _createAnchor(): HTMLElement {
-    let anchor = document.createElement('div');
-    anchor.tabIndex = this._enabled ? 0 : -1;
-    anchor.classList.add('cdk-visually-hidden');
-    anchor.classList.add('cdk-focus-trap-anchor');
+    const anchor = this._renderer.createElement('div');
+    this._renderer.setAttribute(anchor, 'tabindex', this._enabled ? '0' : '-1');
+    this._renderer.addClass(anchor, 'cdk-visually-hidden');
+    this._renderer.addClass(anchor, 'cdk-focus-trap-anchor');
     return anchor;
   }
 
@@ -243,10 +246,17 @@ export class FocusTrapFactory {
   constructor(
       private _checker: InteractivityChecker,
       private _platform: Platform,
-      private _ngZone: NgZone) { }
+      private _ngZone: NgZone,
+      private _rendererFactory: RendererFactory2) { }
 
   create(element: HTMLElement, deferAnchors = false): FocusTrap {
-    return new FocusTrap(element, this._platform, this._checker, this._ngZone, deferAnchors);
+    return new FocusTrap(
+        element,
+        this._platform,
+        this._checker,
+        this._ngZone,
+        this._rendererFactory.createRenderer(null, null),
+        deferAnchors);
   }
 }
 

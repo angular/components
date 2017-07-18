@@ -13,8 +13,10 @@ import {
   Inject,
   SkipSelf,
   OnDestroy,
+  Renderer2,
+  RendererFactory2,
 } from '@angular/core';
-import {Platform} from '../platform/platform';
+import {DOCUMENT} from '@angular/platform-browser';
 
 
 export const LIVE_ANNOUNCER_ELEMENT_TOKEN = new InjectionToken<HTMLElement>('liveAnnouncerElement');
@@ -25,17 +27,19 @@ export type AriaLivePoliteness = 'off' | 'polite' | 'assertive';
 @Injectable()
 export class LiveAnnouncer implements OnDestroy {
   private _liveElement: Element;
+  private _renderer: Renderer2;
 
   constructor(
       @Optional() @Inject(LIVE_ANNOUNCER_ELEMENT_TOKEN) elementToken: any,
-      platform: Platform) {
-    // Only do anything if we're on the browser platform.
-    if (platform.isBrowser) {
-      // We inject the live element as `any` because the constructor signature cannot reference
-      // browser globals (HTMLElement) on non-browser environments, since having a class decorator
-      // causes TypeScript to preserve the constructor signature types.
-      this._liveElement = elementToken || this._createLiveElement();
-    }
+      @Inject(DOCUMENT) private _document: any,
+      rendererFactory: RendererFactory2) {
+
+    this._renderer = rendererFactory.createRenderer(null, null);
+
+    // We inject the live element as `any` because the constructor signature cannot reference
+    // browser globals (HTMLElement) on non-browser environments, since having a class decorator
+    // causes TypeScript to preserve the constructor signature types.
+    this._liveElement = elementToken || this._createLiveElement();
   }
 
   /**
@@ -44,17 +48,17 @@ export class LiveAnnouncer implements OnDestroy {
    * @param politeness The politeness of the announcer element
    */
   announce(message: string, politeness: AriaLivePoliteness = 'polite'): void {
-    this._liveElement.textContent = '';
+    this._renderer.setProperty(this._liveElement, 'textContent', '');
 
     // TODO: ensure changing the politeness works on all environments we support.
-    this._liveElement.setAttribute('aria-live', politeness);
+    this._renderer.setAttribute(this._liveElement, 'aria-live', politeness);
 
     // This 100ms timeout is necessary for some browser + screen-reader combinations:
     // - Both JAWS and NVDA over IE11 will not announce anything without a non-zero timeout.
     // - With Chrome and IE11 with NVDA or JAWS, a repeated (identical) message won't be read a
     //   second time without clearing and then using a non-zero delay.
     // (using JAWS 17 at time of this writing).
-    setTimeout(() => this._liveElement.textContent = message, 100);
+    setTimeout(() => this._renderer.setProperty(this._liveElement, 'textContent', message), 100);
   }
 
   ngOnDestroy() {
@@ -64,22 +68,21 @@ export class LiveAnnouncer implements OnDestroy {
   }
 
   private _createLiveElement(): Element {
-    let liveEl = document.createElement('div');
+    const liveEl = this._renderer.createElement('div');
 
-    liveEl.classList.add('cdk-visually-hidden');
-    liveEl.setAttribute('aria-atomic', 'true');
-    liveEl.setAttribute('aria-live', 'polite');
-
-    document.body.appendChild(liveEl);
+    this._renderer.addClass(liveEl, 'cdk-visually-hidden');
+    this._renderer.setAttribute(liveEl, 'aria-atomic', 'true');
+    this._renderer.setAttribute(liveEl, 'aria-live', 'polite');
+    this._renderer.appendChild(this._document.body, liveEl);
 
     return liveEl;
   }
 
 }
 
-export function LIVE_ANNOUNCER_PROVIDER_FACTORY(
-    parentDispatcher: LiveAnnouncer, liveElement: any, platform: Platform) {
-  return parentDispatcher || new LiveAnnouncer(liveElement, platform);
+export function LIVE_ANNOUNCER_PROVIDER_FACTORY(parentDispatcher: LiveAnnouncer, liveElement: any,
+  document: any, rendererFactory: RendererFactory2) {
+  return parentDispatcher || new LiveAnnouncer(liveElement, document, rendererFactory);
 }
 
 export const LIVE_ANNOUNCER_PROVIDER = {
@@ -88,7 +91,8 @@ export const LIVE_ANNOUNCER_PROVIDER = {
   deps: [
     [new Optional(), new SkipSelf(), LiveAnnouncer],
     [new Optional(), new Inject(LIVE_ANNOUNCER_ELEMENT_TOKEN)],
-    Platform,
+    DOCUMENT,
+    RendererFactory2,
   ],
   useFactory: LIVE_ANNOUNCER_PROVIDER_FACTORY
 };

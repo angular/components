@@ -15,7 +15,6 @@ import {
   OnDestroy,
   Optional,
   Output,
-  Renderer2,
   ViewEncapsulation,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -407,13 +406,13 @@ export class MdSlider extends _MdSliderMixinBase
     return (this._dir && this._dir.value == 'rtl') ? 'rtl' : 'ltr';
   }
 
-  constructor(renderer: Renderer2, private _elementRef: ElementRef,
+  constructor(private _elementRef: ElementRef,
               private _focusOriginMonitor: FocusOriginMonitor,
               private _changeDetectorRef: ChangeDetectorRef,
               @Optional() private _dir: Directionality) {
     super();
     this._focusOriginMonitor
-        .monitor(this._elementRef.nativeElement, renderer, true)
+        .monitor(this._elementRef.nativeElement, true)
         .subscribe((origin: FocusOrigin) => this._isActive = !!origin && origin !== 'keyboard');
     this._renderer = new SliderRenderer(this._elementRef);
   }

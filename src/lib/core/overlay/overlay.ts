@@ -12,6 +12,8 @@ import {
   ApplicationRef,
   Injector,
   NgZone,
+  Renderer2,
+  RendererFactory2,
 } from '@angular/core';
 import {OverlayState} from './overlay-state';
 import {DomPortalHost} from '../portal/dom-portal-host';
@@ -38,13 +40,19 @@ let defaultState = new OverlayState();
  */
 @Injectable()
 export class Overlay {
+  private _renderer: Renderer2;
+
   constructor(public scrollStrategies: ScrollStrategyOptions,
               private _overlayContainer: OverlayContainer,
               private _componentFactoryResolver: ComponentFactoryResolver,
               private _positionBuilder: OverlayPositionBuilder,
               private _appRef: ApplicationRef,
               private _injector: Injector,
-              private _ngZone: NgZone) { }
+              private _ngZone: NgZone,
+              rendererFactory: RendererFactory2) {
+
+    this._renderer = rendererFactory.createRenderer(null, null);
+  }
 
   /**
    * Creates an overlay.
@@ -68,11 +76,11 @@ export class Overlay {
    * @returns Newly-created pane element
    */
   private _createPaneElement(): HTMLElement {
-    let pane = document.createElement('div');
+    const pane = this._renderer.createElement('div');
 
-    pane.id = `cdk-overlay-${nextUniqueId++}`;
-    pane.classList.add('cdk-overlay-pane');
-    this._overlayContainer.getContainerElement().appendChild(pane);
+    this._renderer.setAttribute(pane, 'id', `cdk-overlay-${nextUniqueId++}`);
+    this._renderer.addClass(pane, 'cdk-overlay-pane');
+    this._renderer.appendChild(this._overlayContainer.getContainerElement(), pane);
 
     return pane;
   }
