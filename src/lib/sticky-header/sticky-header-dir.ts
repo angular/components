@@ -110,14 +110,15 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     if (!this.isStickyPositionSupported) {
       this.stickyParent = this.parentRegion != null ?
         this.parentRegion._elementRef.nativeElement : this.element.parentElement;
+      let values = window.getComputedStyle(this.element, '');
       this.originalCss = this.generateCssStyle(
-        this.getCssValue(this.element, 'zIndex'),
-        this.getCssValue(this.element, 'position'),
-        this.getCssValue(this.element, 'top'),
-        this.getCssValue(this.element, 'right'),
-        this.getCssValue(this.element, 'left'),
-        this.getCssValue(this.element, 'bottom'),
-        this.getCssValue(this.element, 'width'));
+        values.getPropertyValue('zIndex'),
+        values.getPropertyValue('position'),
+        values.getPropertyValue('top'),
+        values.getPropertyValue('right'),
+        values.getPropertyValue('left'),
+        values.getPropertyValue('bottom'),
+        values.getPropertyValue('width'));
       this.attach();
       this.defineRestrictionsAndStick();
     }
@@ -166,7 +167,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       let body = document.body;
       div.style.cssText = 'display:none;' + stickyText;
       body.appendChild(div);
-      let isSupport = /sticky/i.test(window.getComputedStyle(div).position);
+      let isSupport = /sticky/i.test(this.getCssValue(div, 'position'));
       body.removeChild(div);
       if (isSupport == true) {
         supportList.push(prefixTestList[i]);
