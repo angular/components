@@ -83,14 +83,14 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   private _originalStyles = {} as CSSStyleDeclaration;
   /**
    * 'getBoundingClientRect().top' of CdkStickyRegion of current sticky header.
-   * It is used with '_scrollFinish' to judge whether the current header
+   * It is used with '_stickyRegionBottomThreshold' to judge whether the current header
    * need to be stuck.
    */
   private _stickyRegionTop: number;
   /**
-   * `_scrollFinish` is the place from where the stuck element should be unstuck
+   * `_stickyRegionBottomThreshold` is the place from where the stuck element should be unstuck
    */
-  private _scrollFinish: number;
+  private _stickyRegionBottomThreshold: number;
 
   private _onScrollSubscription: Subscription;
 
@@ -250,7 +250,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     this._stickyRegionTop = boundingClientRect.top;
     let stickRegionHeight = boundingClientRect.height;
 
-    this._scrollFinish = this._stickyRegionTop + (stickRegionHeight - elemHeight);
+    this._stickyRegionBottomThreshold = this._stickyRegionTop + (stickRegionHeight - elemHeight);
   }
 
   /** Reset element to its original CSS. */
@@ -349,15 +349,15 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
     // unstuck when the element is scrolled out of the sticky region
     if (this.isStuck &&
-      (currentPosition < this._stickyRegionTop || currentPosition > this._scrollFinish) ||
-      currentPosition >= this._scrollFinish) {
+      (currentPosition < this._stickyRegionTop || currentPosition > this._stickyRegionBottomThreshold) ||
+      currentPosition >= this._stickyRegionBottomThreshold) {
       this.resetElement();
-      if (currentPosition >= this._scrollFinish) {
+      if (currentPosition >= this._stickyRegionBottomThreshold) {
         this.unstuckElement();
       }
       this.isStuck = false;    // stick when the element is within the sticky region
     } else if ( this.isStuck === false &&
-      currentPosition > this._stickyRegionTop && currentPosition < this._scrollFinish) {
+      currentPosition > this._stickyRegionTop && currentPosition < this._stickyRegionBottomThreshold) {
       this.stickElement();
     }
   }
