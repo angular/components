@@ -22,6 +22,10 @@
     }
   }
 
+  .mat-list-item-disabled {
+    background-color: mat-color($background, disabled-list-option);
+  }
+
   .mat-divider {
     border-top-color: mat-color($foreground, divider);
   }

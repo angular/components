@@ -155,18 +155,19 @@ $mat-dense-list-icon-size: 20px;
   }
 
   .mat-list-option {
-    @include mat-line-base(
+    @include mat-list-item-base(
       $mat-list-base-height,
       $mat-list-avatar-height,
       $mat-list-two-line-height,
       $mat-list-three-line-height,
       $mat-list-icon-size
-    )
+    );
   }
 }
 
 
 .mat-list[dense], .mat-nav-list[dense], .mat-selection-list[dense] {
+
   padding-top: $mat-dense-top-padding;
   display: block;
 
@@ -193,7 +194,6 @@ $mat-dense-list-icon-size: 20px;
       $mat-dense-list-icon-size
     );
   }
-
 }
 
 .mat-divider {
@@ -217,5 +217,3 @@ $mat-dense-list-icon-size: 20px;
     }
   }
 }
-
-

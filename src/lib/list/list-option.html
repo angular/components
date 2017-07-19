@@ -1,4 +1,4 @@
-<div class="mat-list-item-content"  [class.mat-list-item-content-reverse]="checkboxPosition == 'after'">
+<div class="mat-list-item-content"  [class.mat-list-item-content-reverse]="checkboxPosition == 'after'" [class.mat-list-item-disabled]="disabled">
   <div class="mat-list-item-ripple" md-ripple
        [mdRippleTrigger]="_getHostElement()"
        [mdRippleDisabled]="!isRippleEnabled()">

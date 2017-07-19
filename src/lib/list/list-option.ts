@@ -9,9 +9,7 @@
 import {
   AfterContentInit,
   Component,
-  ContentChild,
   ContentChildren,
-  Directive,
   ElementRef,
   Input,
   Optional,
@@ -22,6 +20,7 @@ import {
   OnDestroy,
   EventEmitter,
   Output,
+  HostBinding,
   ChangeDetectorRef
 } from '@angular/core';
 import {coerceBooleanProperty, MdLine, MdLineSetter} from '../core';
@@ -44,10 +43,10 @@ const FOCUSED_STYLE: string = 'mat-list-item-focus';
   selector: 'md-list-option, mat-list-option',
   host: {
     'role': 'option',
-    'class': 'mat-list-item, mat-list-option',
+    'class': 'mat-list-item mat-list-option',
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
-    '(click)': 'toggle()',
+    '(click)': '_handleClick()',
     'tabindex': '-1',
     '[attr.aria-selected]': 'selected.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
@@ -69,7 +68,8 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
 
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
-   * part of a nav list. The value of `disableRipple` on the `md-nav-list` overrides this flag.
+   * part of a selection list. The value of `disableRipple` on the `md-selection-list` overrides
+   * this flag
    */
   @Input()
   get disableRipple() { return this._disableRipple; }
@@ -77,10 +77,11 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
 
   @ContentChildren(MdLine) _lines: QueryList<MdLine>;
 
-  /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
+  /** Whether the label should appear before or after the checkbox. Defaults to 'after' */
   @Input() checkboxPosition: 'before' | 'after' = 'after';
 
   /** Whether the option is disabled. */
+  @HostBinding('class.mat-list-item-disabled')
   @Input()
   get disabled() { return (this.selectionList && this.selectionList.disabled) || this._disabled; }
   set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
@@ -97,34 +98,36 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   onFocus = new EventEmitter<MdSelectionListOptionEvent>();
 
   /** Emitted when the option is selected. */
-  @Output() select = new EventEmitter<MdSelectionListOptionEvent>();
+  @Output() selectChange = new EventEmitter<MdSelectionListOptionEvent>();
 
   /** Emitted when the option is deselected. */
-  @Output() deselect = new EventEmitter<MdSelectionListOptionEvent>();
+  @Output() deselected = new EventEmitter<MdSelectionListOptionEvent>();
 
   /** Emitted when the option is destroyed. */
-  @Output() destroy = new EventEmitter<MdSelectionListOptionEvent>();
+  @Output() destroyed = new EventEmitter<MdSelectionListOptionEvent>();
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
               private _changeDetector: ChangeDetectorRef,
-              @Optional() public selectionList: MdSelectionList,) { }
+              @Optional() public selectionList: MdSelectionList) { }
 
 
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
+
+    if (this.selectionList.disabled) {
+      this.disabled(true);
+    }
   }
 
   ngOnDestroy(): void {
-    this.destroy.emit({option: this});
+    this.destroyed.emit({option: this});
   }
 
   toggle(): void {
-    if(this._disabled == false) {
-      this.selected = !this.selected;
-      this.selectionList.selectedOptions.toggle(this);
-      this._changeDetector.markForCheck();
-    }
+    this.selected = !this.selected;
+    this.selectionList.selectedOptions.toggle(this);
+    this._changeDetector.markForCheck();
   }
 
   /** Allows for programmatic focusing of the option. */
@@ -136,6 +139,12 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   /** Whether this list item should show a ripple effect when clicked.  */
   isRippleEnabled() {
     return !this.disableRipple && !this.selectionList.disableRipple;
+  }
+
+  _handleClick() {
+    if (!this.disabled) {
+      this.toggle();
+    }
   }
 
   _handleFocus() {
