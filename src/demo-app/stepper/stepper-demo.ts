@@ -7,9 +7,6 @@ import {Component} from '@angular/core';
   styleUrls: ['stepper-demo.scss'],
 })
 export class StepperDemo {
-  verticalActiveIndex = 0;
-  horizontalActiveIndex = 0;
-  labelTemplateIndex = 0;
   steps = [
     {label: 'Confirm your name', content: 'Last name, First name.'},
     {label: 'Confirm your contact information', content: '123-456-7890'},

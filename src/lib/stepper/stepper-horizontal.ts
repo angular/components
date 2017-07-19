@@ -16,6 +16,10 @@ import {MdStepper} from './stepper';
   templateUrl: 'stepper-horizontal.html',
   styleUrls: ['stepper.scss'],
   inputs: ['selectedIndex'],
+  host: {
+    'class': 'mat-stepper-horizontal',
+    'role': 'tablist',
+  },
   providers: [{ provide: MdStepper, useExisting: forwardRef(() => MdHorizontalStepper) }]
 })
 export class MdHorizontalStepper extends MdStepper {

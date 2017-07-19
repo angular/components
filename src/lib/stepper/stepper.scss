@@ -1,11 +1,7 @@
-.mat-stepper-horizontal[aria-expanded='false'] {
+.mat-stepper-content[aria-expanded='false'] {
   display:none;
 }
 
-.active-step, .inactive-step {
-  display: inline-block;
-}
-
-.mat-step-label {
+.mat-stepper-index, .mat-stepper-label {
   display: inline-block;
 }

@@ -1,38 +1,35 @@
-<div class="mat-stepper-container">
-  <div *ngFor="let step of _steps; let i = index; let isLast = last"
-       class="mat-step" role="tablist">
-    <div #stepHeader class="mat-step-header" role="tab"
-         [id]="_getStepLabelId(i)"
-         [attr.aria-controls]="_getStepContentId(i)"
-         [attr.aria-selected]="selectedIndex == i"
-         [tabIndex]="_focusIndex == i ? 0 : -1"
-         (click)="step.select()"
-         (keydown)="_onKeydown($event)">
-      <div [ngClass]="{'active-step' : step.active, 'inactive-step' : !step.active}">
-        {{i + 1}}
-      </div>
-
-      <div class="mat-step-label">
-        <!-- If there is a label template, use it. -->
-        <ng-container *ngIf="step.stepLabel"[ngTemplateOutlet]="step.stepLabel.template">
-        </ng-container>
-        <!-- It there is no label template, fall back to the text label. -->
-        <div *ngIf="!step.stepLabel">{{step.label}}</div>
-      </div>
-
-      </ng-template>
-      <div *ngIf="!isLast" class="connector-line"></div>
+<div *ngFor="let step of _steps; let i = index; let isLast = last">
+  <div #stepHeader class="mat-stepper-header" role="tab"
+       [id]="_getStepLabelId(i)"
+       [attr.aria-controls]="_getStepContentId(i)"
+       [attr.aria-selected]="selectedIndex == i"
+       [tabIndex]="_focusIndex == i ? 0 : -1"
+       (click)="step.select()"
+       (keydown)="_onKeydown($event)">
+    <div class="mat-stepper-index">
+      {{i + 1}}
     </div>
+
+    <div class="mat-stepper-label">
+      <!-- If there is a label template, use it. -->
+      <ng-container *ngIf="step.stepLabel"[ngTemplateOutlet]="step.stepLabel.template">
+      </ng-container>
+      <!-- It there is no label template, fall back to the text label. -->
+      <div *ngIf="!step.stepLabel">{{step.label}}</div>
+    </div>
+
+    </ng-template>
+    <div *ngIf="!isLast" class="connector-line"></div>
   </div>
-  <div *ngFor="let step of _steps; let i = index"
-       class="mat-stepper-horizontal" role="tabpanel"
-       [id]="_getStepContentId(i)"
-       [attr.aria-labelledby]="_getStepLabelId(i)"
-       [attr.aria-expanded]="selectedIndex == i">
-    <ng-container [ngTemplateOutlet]="step.content"></ng-container>
-  </div>
-  <div>
-    <button md-button (click)="previous()">Back</button>
-    <button md-button (click)="next()">Next</button>
-  </div>
+</div>
+<div *ngFor="let step of _steps; let i = index"
+     class="mat-stepper-content" role="tabpanel"
+     [id]="_getStepContentId(i)"
+     [attr.aria-labelledby]="_getStepLabelId(i)"
+     [attr.aria-expanded]="selectedIndex == i">
+  <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+</div>
+<div>
+  <button md-button (click)="previous()">Back</button>
+  <button md-button (click)="next()">Next</button>
 </div>

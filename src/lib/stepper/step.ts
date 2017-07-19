@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ContentChild, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ContentChild} from '@angular/core';
 import {CdkStep} from '@angular/cdk';
 import {MdStepLabel} from './step-label';
 import {MdStepper} from './stepper';
@@ -19,9 +19,6 @@ import {MdStepper} from './stepper';
 export class MdStep extends CdkStep {
   /** Content for the step label given by <ng-template mat-step-label>. */
   @ContentChild(MdStepLabel) stepLabel: MdStepLabel;
-
-  /** Template inside the MdStep view that contains an <ng-content>. */
-  @ViewChild(TemplateRef) content: TemplateRef<any>;
 
   constructor(mdStepper: MdStepper) {
     super(mdStepper);
