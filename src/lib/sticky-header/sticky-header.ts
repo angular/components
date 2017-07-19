@@ -67,7 +67,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   isStuck: boolean = false;
   /** Whether the browser support CSS sticky positioning. */
-  isStickyPositionSupported: boolean = true;
+  private _isStickyPositionSupported: boolean = true;
 
 
   /** The element with the 'cdkStickyHeader' tag. */
@@ -110,7 +110,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (!this.isStickyPositionSupported) {
+    if (!this._isStickyPositionSupported) {
       this.stickyParent = this.parentRegion != null ?
         this.parentRegion._elementRef.nativeElement : this.element.parentElement;
       let values = window.getComputedStyle(this.element, '');
@@ -190,7 +190,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   setStrategyAccordingToCompatibility(): void {
     let supportList = this.getSupportList();
     if (supportList.length === 0) {
-      this.isStickyPositionSupported = false;
+      this._isStickyPositionSupported = false;
     } else {
       // Only need supportList[0], Because supportList contains all the prefix
       // that can make sticky positioning work in the current browser.
