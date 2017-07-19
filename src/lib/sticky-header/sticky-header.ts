@@ -86,7 +86,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * It is used with '_scrollFinish' to judge whether the current header
    * need to be stuck.
    */
-  private _containerStart: number;
+  private _stickyRegionTop: number;
   /**
    * `_scrollFinish` is the place from where the stuck element should be unstuck
    */
@@ -247,10 +247,10 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     }
     let boundingClientRect: any = this.stickyParent.getBoundingClientRect();
     let elemHeight: number = this.element.offsetHeight;
-    this._containerStart = boundingClientRect.top;
+    this._stickyRegionTop = boundingClientRect.top;
     let stickRegionHeight = boundingClientRect.height;
 
-    this._scrollFinish = this._containerStart + (stickRegionHeight - elemHeight);
+    this._scrollFinish = this._stickyRegionTop + (stickRegionHeight - elemHeight);
   }
 
   /** Reset element to its original CSS. */
@@ -349,7 +349,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
     // unstuck when the element is scrolled out of the sticky region
     if (this.isStuck &&
-      (currentPosition < this._containerStart || currentPosition > this._scrollFinish) ||
+      (currentPosition < this._stickyRegionTop || currentPosition > this._scrollFinish) ||
       currentPosition >= this._scrollFinish) {
       this.resetElement();
       if (currentPosition >= this._scrollFinish) {
@@ -357,7 +357,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       }
       this.isStuck = false;    // stick when the element is within the sticky region
     } else if ( this.isStuck === false &&
-      currentPosition > this._containerStart && currentPosition < this._scrollFinish) {
+      currentPosition > this._stickyRegionTop && currentPosition < this._scrollFinish) {
       this.stickElement();
     }
   }
