@@ -88,7 +88,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    */
   private _stickyRegionTop: number;
   /**
-   * `_stickyRegionBottomThreshold` is the place from where the stuck element should be unstuck
+   * Bottom of the sticky region offset by the height of the sticky header.
+   * Once the sticky header is scrolled to this position it will stay in place
+   * so that it will scroll naturally out of view with the rest of the sticky region.
    */
   private _stickyRegionBottomThreshold: number;
 
