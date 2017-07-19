@@ -35,14 +35,17 @@ export class CdkStickyRegion {
 
 /** Class applied when the header is "stuck" */
 const STICK_START_CLASS = 'cdk-sticky-header-start';
+
 /** Class applied when the header is not "stuck" */
 const STICK_END_CLASS = 'cdk-sticky-header-end';
+
 /**
  * Set a debounce time which is used in debounce() function when adding event listeners.
  * Set is as 5. Because if the DEBOUNCE_TIME is set as a too large number. The sticky effect
  * during scroll will become vary strange and can not be scrolled smoothly.
  */
 const DEBOUNCE_TIME: number = 5;
+
 /**
  * Directive that marks an element as a sticky-header. Inside of a scrolling container (marked with
  * cdkScrollable), this header will "stick" to the top of the scrolling viewport while its sticky
