@@ -80,7 +80,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * The original css of the sticky element, used to reset the sticky element
    * when it is being unstuck
    */
-  originalCss: any;
+  private _originalStyles = {} as CSSStyleDeclaration;
   /**
    * 'getBoundingClientRect().top' of CdkStickyRegion of current sticky header.
    * It is used with '_scrollFinish' to judge whether the current header
@@ -114,14 +114,14 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       this.stickyParent = this.parentRegion != null ?
         this.parentRegion._elementRef.nativeElement : this.element.parentElement;
       let values = window.getComputedStyle(this.element, '');
-      this.originalCss = this.generateCssStyle(
-        values.getPropertyValue('zIndex'),
+      this._originalStyles = this.generateCssStyle(
         values.getPropertyValue('position'),
         values.getPropertyValue('top'),
         values.getPropertyValue('right'),
         values.getPropertyValue('left'),
         values.getPropertyValue('bottom'),
-        values.getPropertyValue('width'));
+        values.getPropertyValue('width'),
+        values.getPropertyValue('zIndex'));
       this.attach();
       this.defineRestrictionsAndStick();
     }
@@ -256,7 +256,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   /** Reset element to its original CSS. */
   resetElement(): void {
     this.element.classList.remove(STICK_START_CLASS);
-    extendObject(this.element.style, this.originalCss);
+    extendObject(this.element.style, this._originalStyles);
   }
 
   /** Stuck element, make the element stick to the top of the scrollable container. */
@@ -290,13 +290,13 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
 
     let stickyCss:any = this.generateCssStyle(
-      this.zIndex + '',
       'fixed',
       this.upperScrollableContainer.offsetTop + 'px',
       stuckRight + 'px',
       this.upperScrollableContainer.offsetLeft + 'px',
       'auto',
-      this.originalCss.width);
+      this._originalStyles.width,
+      this.zIndex + '',);
     extendObject(this.element.style, stickyCss);
   }
 
@@ -318,13 +318,12 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     this.element.classList.add(STICK_END_CLASS);
     this.stickyParent.style.position = 'relative';
     let unstuckCss: any = this.generateCssStyle(
-      this.originalCss.zIndex,
       'absolute',
       'auto',
       '0',
       'auto',
       '0',
-      this.originalCss.width);
+      this._originalStyles.width);
     extendObject(this.element.style, unstuckCss);
   }
 
@@ -371,16 +370,16 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   /**
    * This function is used to generate a variable which contains 7 css styles.
    */
-  generateCssStyle(zIndex:string, position:string, top:string, right:string,
-                   left:string, bottom:string, width:string): any {
+  generateCssStyle(position:string, top:string, right:string,
+                   left:string, bottom:string, width:string | null, zIndex?:string, ): any {
     let targetCSS = {
-      zIndex: zIndex,
       position: position,
       top: top,
       right: right,
       left: left,
       bottom: bottom,
       width: width,
+      zIndex: zIndex
     };
     return targetCSS;
 }
