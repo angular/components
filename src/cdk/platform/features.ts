@@ -63,7 +63,6 @@ export function getSupportedInputTypes(): Set<string> {
   return supportedInputTypes;
 }
 
-
 let computedPositionStickySupported: boolean | null = null;
 
 /**
