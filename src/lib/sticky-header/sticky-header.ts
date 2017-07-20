@@ -80,7 +80,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * The original css of the sticky element, used to reset the sticky element
    * when it is being unstuck
    */
-  private _originalStyles: any;
+  private _originalStyles = {} as CSSStyleDeclaration;
   /**
    * 'getBoundingClientRect().top' of CdkStickyRegion of current sticky header.
    * It is used with '_stickyRegionBottomThreshold' to judge whether the current header
@@ -123,7 +123,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         left: values.left,
         bottom: values.bottom,
         width: values.width,
-        zIndex: values.zIndex};
+        zIndex: values.zIndex} as CSSStyleDeclaration;
       this.attach();
       this.defineRestrictionsAndStick();
     }
