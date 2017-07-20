@@ -49,7 +49,7 @@ export const transformMenu: AnimationTriggerMetadata = trigger('transformMenu', 
 ]);
 
 /**
- * This animation fades in the background color and content of the menu panel
+ * This animation fades in the content of the menu panel
  * after its containing element is scaled in.
  */
 export const fadeInItems: AnimationTriggerMetadata = trigger('fadeInItems', [
