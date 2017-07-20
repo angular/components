@@ -234,11 +234,11 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
      * If there's already a header being stick when the page is
      * resized. The CSS style of the cdkStickyHeader element may be not fit
      * the resized window. So we need to unstuck it then re-stick it.
-     * unstuck() can set 'isStuck' to FALSE. Then stickElement() can work.
+     * unstuck() can set 'isStuck' to FALSE. Then _stickElement() can work.
      */
     if (this.isStuck) {
       this.unstuckElement();
-      this.stickElement();
+      this._stickElement();
     }
   }
 
@@ -265,31 +265,29 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   /** Stuck element, make the element stick to the top of the scrollable container. */
-  stickElement(): void {
+  private _stickElement(): void {
     this.isStuck = true;
 
     this.element.classList.remove(STICK_END_CLASS);
     this.element.classList.add(STICK_START_CLASS);
 
-    /**
-     * Have to add the translate3d function for the sticky element's css style.
-     * Because iPhone and iPad's browser is using its owning rendering engine. And
-     * even if you are using Chrome on an iPhone, you are just using Safari with
-     * a Chrome skin around it.
-     *
-     * Safari on iPad and Safari on iPhone do not have resizable windows.
-     * In Safari on iPhone and iPad, the window size is set to the size of
-     * the screen (minus Safari user interface controls), and cannot be changed
-     * by the user. To move around a webpage, the user changes the zoom level and position
-     * of the viewport as they double tap or pinch to zoom in or out, or by touching
-     * and dragging to pan the page. As a user changes the zoom level and position of the
-     * viewport they are doing so within a viewable content area of fixed size
-     * (that is, the window). This means that webpage elements that have their position
-     * "fixed" to the viewport can end up outside the viewable content area, offscreen.
-     *
-     * So the 'position: fixed' does not work on iPhone and iPad. To make it work,
-     * 'translate3d(0,0,0)' needs to be used to force Safari re-rendering the sticky element.
-     **/
+    // Have to add the translate3d function for the sticky element's css style.
+    // Because iPhone and iPad's browser is using its owning rendering engine. And
+    // even if you are using Chrome on an iPhone, you are just using Safari with
+    // a Chrome skin around it.
+    //
+    // Safari on iPad and Safari on iPhone do not have resizable windows.
+    // In Safari on iPhone and iPad, the window size is set to the size of
+    // the screen (minus Safari user interface controls), and cannot be changed
+    // by the user. To move around a webpage, the user changes the zoom level and position
+    // of the viewport as they double tap or pinch to zoom in or out, or by touching
+    // and dragging to pan the page. As a user changes the zoom level and position of the
+    // viewport they are doing so within a viewable content area of fixed size
+    // (that is, the window). This means that webpage elements that have their position
+    // "fixed" to the viewport can end up outside the viewable content area, offscreen.
+    //
+    // So the 'position: fixed' does not work on iPhone and iPad. To make it work,
+    // 'translate3d(0,0,0)' needs to be used to force Safari re-rendering the sticky element.
     this.element.style.transform = 'translate3d(0px,0px,0px)';
 
     let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
@@ -363,7 +361,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       this.isStuck = false;    // stick when the element is within the sticky region
     } else if ( this.isStuck === false &&
       currentPosition > this._stickyRegionTop && currentPosition < this._stickyRegionBottomThreshold) {
-      this.stickElement();
+      this._stickElement();
     }
   }
 
