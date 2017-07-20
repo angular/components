@@ -4,6 +4,7 @@
   flex-direction: column;
   max-height: 500px;
   min-width: 300px;
+  position: relative;
 }
 
 .example-header {
@@ -14,8 +15,9 @@
   font-size: 20px;
 }
 
-.mat-table {
+.example-table {
   overflow: auto;
+  min-height: 300px;
 }
 
 .mat-column-title {
@@ -27,7 +29,29 @@
 
 /* Column Widths */
 .mat-column-number,
-.mat-column-state,
-.mat-column-commentCount {
+.mat-column-state {
   max-width: 64px;
+}
+
+.mat-column-created {
+  max-width: 124px;
+}
+
+.example-loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-rate-limit-reached {
+  color: #980000;
+  max-width: 360px;
+  text-align: center;
 }

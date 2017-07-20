@@ -1,9 +1,15 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {Http, Response} from '@angular/http';
 import {DataSource} from '@angular/cdk';
+import {MdPaginator, MdSort} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/map';
 
 @Component({
@@ -12,13 +18,20 @@ import 'rxjs/add/operator/map';
   templateUrl: 'table-http-example.html',
 })
 export class TableHttpExample {
-  displayedColumns = ['number', 'state', 'title'];
+  displayedColumns = ['created', 'state', 'number', 'title'];
   exampleDatabase: ExampleHttpDao | null;
   dataSource: ExampleDataSource | null;
 
+  @ViewChild(MdPaginator) paginator: MdPaginator;
+  @ViewChild(MdSort) sort: MdSort;
+
   constructor(http: Http) {
     this.exampleDatabase = new ExampleHttpDao(http);
-    this.dataSource = new ExampleDataSource(this.exampleDatabase);
+  }
+
+  ngOnInit() {
+    this.dataSource = new ExampleDataSource(this.exampleDatabase!,
+        this.sort, this.paginator);
   }
 }
 
@@ -26,26 +39,18 @@ export interface GithubIssue {
   number: string;
   state: string;
   title: string;
+  created: Date;
 }
 
 /** An example database that the data source uses to retrieve data for the table. */
 export class ExampleHttpDao {
-  private issuesUrl = 'https://api.github.com/repos/angular/material2/issues';  // URL to web API
-
   constructor(private http: Http) {}
 
-  getRepoIssues(): Observable<GithubIssue[]> {
-    return this.http.get(this.issuesUrl).map(this.readGithubResult);
-  }
-
-  private readGithubResult(result: Response): GithubIssue[] {
-    return result.json().map(issue => {
-      return {
-        number: issue.number,
-        state: issue.state,
-        title: issue.title,
-      };
-    });
+  getRepoIssues(sort: string, order: string, page: number): Observable<Response> {
+    const href = 'https://api.github.com/search/issues';
+    const requestUrl =
+        `${href}?q=repo:angular/material2&sort=${sort}&order=${order}&page=${page + 1}`;
+    return this.http.get(requestUrl);
   }
 }
 
@@ -57,14 +62,63 @@ export class ExampleHttpDao {
  * should be rendered.
  */
 export class ExampleDataSource extends DataSource<GithubIssue> {
-  constructor(private _exampleDatabase: ExampleHttpDao) {
+  // The number of issues returned by github matching the query.
+  resultsLength: number = 0;
+  isLoadingResults: boolean;
+  isRateLimitReached: boolean;
+
+  constructor(private _exampleDatabase: ExampleHttpDao,
+              private _sort: MdSort,
+              private _paginator: MdPaginator) {
     super();
   }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect(): Observable<GithubIssue[]> {
-    return this._exampleDatabase.getRepoIssues();
+    const displayDataChanges = [
+      this._sort.mdSortChange,
+      this._paginator.page,
+    ];
+
+    return Observable.merge(...displayDataChanges)
+        .startWith(null)
+        .switchMap(() => {
+          this.isLoadingResults = true;
+          return this._exampleDatabase.getRepoIssues(
+              this._sort.active, this._sort.direction, this._paginator.pageIndex);
+        })
+        .catch(() => {
+          // Catch if the GitHub API has reached its rate limit. Return empty result.
+          this.isRateLimitReached = true;
+          return Observable.of(null);
+        })
+        .map(result => {
+          // Flip flag to show that loading has finished.
+          this.isLoadingResults = false;
+          return result;
+        })
+        .map(result => {
+          if (!result) { return []; }
+
+          this.isRateLimitReached = false;
+          this.resultsLength = result.json().total_count;
+
+          return this.readGithubResult(result);
+        });
+
+
   }
 
   disconnect() {}
+
+  private readGithubResult(result: Response): GithubIssue[] {
+    return result.json().items.map(issue => {
+      return {
+        number: issue.number,
+        created: new Date(issue.created_at),
+        state: issue.state,
+        title: issue.title,
+      };
+    });
+  }
 }
