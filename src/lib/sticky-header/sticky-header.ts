@@ -172,10 +172,13 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       let body = document.body;
       div.style.cssText = 'display:none;' + stickyText;
       body.appendChild(div);
-      let isSupport = /sticky/i.test(this.getCssValue(div, 'position'));
-      body.removeChild(div);
-      if (isSupport == true) {
-        supportList.push(prefixTestList[i]);
+      let values = window.getComputedStyle(div).position;
+      if (values != null) {
+        let isSupport = /sticky/i.test(values);
+        body.removeChild(div);
+        if (isSupport == true) {
+          supportList.push(prefixTestList[i]);
+        }
       }
     }
     return supportList;
@@ -367,15 +370,5 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   defineRestrictionsAndStick(): void {
     this.defineRestrictions();
     this.sticker();
-  }
-
-  private getCssValue(element: any, property: string): any {
-    let result: any = '';
-    if (typeof window.getComputedStyle !== 'undefined') {
-      result = window.getComputedStyle(element, '').getPropertyValue(property);
-    } else if (typeof element.currentStyle !== 'undefined')  {
-      result = element.currentStyle.property;
-    }
-    return result;
   }
 }
