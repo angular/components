@@ -80,6 +80,11 @@ export class ExampleDataSource extends DataSource<GithubIssue> {
       this._paginator.page,
     ];
 
+    // If the user changes the sort order, reset back to the first page.
+    this._sort.mdSortChange.subscribe(() => {
+      this._paginator.pageIndex = 0;
+    })
+
     return Observable.merge(...displayDataChanges)
         .startWith(null)
         .switchMap(() => {
