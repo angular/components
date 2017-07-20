@@ -4,9 +4,7 @@
 
 ### Expansion panel content
 
-Each expansion panel has a header section and an action (optional) sections.
-
-When grouped by an `<md-accordion>` element the expansion panels can be used to create ordered views or flows, as it brings up the possibility to expand one view at a time.
+Each expansion panel has a header section (mandatory) and an actions (optional) sections.
 
 #### Header
 
