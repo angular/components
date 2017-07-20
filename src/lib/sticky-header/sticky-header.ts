@@ -328,7 +328,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       right: '0',
       left: 'auto',
       bottom: '0',
-      width: this._originalStyles.width};
+      width: this.upperScrollableContainer.clientWidth};
     extendObject(this.element.style, unstuckCss);
   }
 
