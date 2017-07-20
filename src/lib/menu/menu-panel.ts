@@ -17,7 +17,7 @@ export interface MdMenuPanel {
   templateRef: TemplateRef<any>;
   close: EventEmitter<void | 'click' | 'keydown'>;
   isSubmenu?: boolean;
-  direction: Direction;
+  direction?: Direction;
   focusFirstItem: () => void;
   setPositionClasses: (x: MenuPositionX, y: MenuPositionY) => void;
 }
