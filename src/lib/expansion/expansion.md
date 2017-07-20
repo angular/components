@@ -10,9 +10,9 @@ Each expansion panel has a header section (mandatory) and an actions (optional) 
 
 The header section is always visible at the top of the component and contains a `<md-panel-title>` and a description `<md-panel-description>` subsections.
 
-The `<md-panel-title>` subsecion is shown in the begining of the header, followed by the `<md-panel-description>` subsection, which is supposed to contain a sumary of what's in the expansion content.
+The `<md-panel-title>` subsection is shown in the beginning of the header, followed by the `<md-panel-description>` subsection, which is supposed to contain a summary of what's in the expansion content.
 
-By default, the expansion panel header has a toogle sign at the right edge, pointing up when the panel is expanded and down when it's collapsed. The toogle icon can be hidden by setting the input property `toogleHide` to `true`. 
+By default, the expansion panel header has a toggle icon at the right edge, pointing up when the panel is expanded and down when it's collapsed. The toogle icon can be hidden by setting the input property `toggleHide` to `true`. 
 
 ```html
 <md-expansion-panel>
@@ -32,7 +32,7 @@ By default, the expansion panel header has a toogle sign at the right edge, poin
 
 #### Actions
 
-The actions section is optional and fixed at the bottom, being visible only when the expansion is in its expanded state.
+The actions section is optional and fixed at the bottom, visible only when the expansion is in its expanded state.
 
 ```html
 <md-expansion-panel>
