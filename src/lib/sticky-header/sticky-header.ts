@@ -80,7 +80,14 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * The original css of the sticky element, used to reset the sticky element
    * when it is being unstuck
    */
-  private _originalStyles = {} as CSSStyleDeclaration;
+  private _originalStyles = {
+    position: '',
+    top: '',
+    right: '',
+    left: '',
+    bottom: '',
+    width:  '',
+    zIndex: ''};
   /**
    * 'getBoundingClientRect().top' of CdkStickyRegion of current sticky header.
    * It is used with '_stickyRegionBottomThreshold' to judge whether the current header
