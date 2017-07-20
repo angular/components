@@ -54,7 +54,7 @@ Menus support displaying `md-icon` elements before the menu item text.
 
 By default, the menu will display below (y-axis), after (x-axis), and overlapping its trigger.  The position can be changed
 using the `xPosition` (`before | after`) and `yPosition` (`above | below`) attributes.
-The menu can be be forced to not overlap the trigger using `[overlapTrigger]="false"` attribute.
+The menu can be be forced to not overlap the trigger using `overlapTrigger="false"` attribute.
 
 ```html
 <md-menu #appMenu="mdMenu" yPosition="above">
