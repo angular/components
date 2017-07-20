@@ -32,16 +32,16 @@ let nextId = 0;
 /** Change event emitted on selection changes. */
 export class CdkStepperSelectionEvent {
   /** The index of the step that is newly selected during this change event. */
-  newIndex: number;
+  selectedIndex: number;
 
   /** The index of the step that was previously selected. */
-  oldIndex: number;
+  previouslySelectedIndex: number;
 
   /** The new step component that is selected ruing this change event. */
-  newStep: CdkStep;
+  selectedStep: CdkStep;
 
   /** The step component that was previously selected. */
-  oldStep: CdkStep;
+  previouslySelectedStep: CdkStep;
 }
 
 @Component({
@@ -70,7 +70,7 @@ export class CdkStep {
 @Directive({
   selector: 'cdk-stepper',
   host: {
-    '(focus)': '_setStepfocused()',
+    '(focus)': '_setStepFocused()',
     '(keydown)': '_onKeydown($event)',
   },
 })
@@ -79,14 +79,15 @@ export class CdkStepper {
   @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
 
   /** The list of step headers of the steps in the stepper. */
-  @ViewChildren('stepHeader') _stepHeader: QueryList<ElementRef>;
+  _stepHeader: QueryList<ElementRef>;
 
   /** The index of the selected step. */
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
-    if (this._selectedIndex == index) { return; }
-    this._emitStepperSelectionEvent(index);
-    this._setStepFocused(this._selectedIndex);
+    if (this._selectedIndex != index) {
+      this._emitStepperSelectionEvent(index);
+      this._setStepFocused(this._selectedIndex);
+    }
   }
   private _selectedIndex: number = 0;
 
@@ -113,14 +114,12 @@ export class CdkStepper {
 
   /** Selects and focuses the next step in list. */
   next(): void {
-    if (this._selectedIndex == this._steps.length - 1) { return; }
-    this.selectedIndex++;
+    this.selectedIndex = Math.min(this._selectedIndex + 1, this._steps.length - 1);
   }
 
   /** Selects and focuses the previous step in list. */
   previous(): void {
-    if (this._selectedIndex == 0) { return; }
-    this.selectedIndex--;
+    this.selectedIndex = Math.max(this._selectedIndex - 1, 0);
   }
 
   /** Returns a unique id for each step label element. */
@@ -134,14 +133,14 @@ export class CdkStepper {
   }
 
   private _emitStepperSelectionEvent(newIndex: number): void {
-    const event = new CdkStepperSelectionEvent();
-    event.oldIndex = this._selectedIndex;
-    event.newIndex = newIndex;
-    let stepsArray = this._steps.toArray();
-    event.oldStep = stepsArray[this._selectedIndex];
-    event.newStep = stepsArray[newIndex];
+    const stepsArray = this._steps.toArray();
+    this.selectionChange.emit({
+      selectedIndex: newIndex,
+      previouslySelectedIndex: this._selectedIndex,
+      selectedStep: stepsArray[newIndex],
+      previouslySelectedStep: stepsArray[this._selectedIndex],
+    });
     this._selectedIndex = newIndex;
-    this.selectionChange.emit(event);
   }
 
   _onKeydown(event: KeyboardEvent) {

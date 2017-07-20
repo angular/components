@@ -12,7 +12,7 @@
 
     <div class="mat-stepper-label">
       <!-- If there is a label template, use it. -->
-      <ng-container *ngIf="step.stepLabel"[ngTemplateOutlet]="step.stepLabel.template">
+      <ng-container *ngIf="step.stepLabel" [ngTemplateOutlet]="step.stepLabel.template">
       </ng-container>
       <!-- It there is no label template, fall back to the text label. -->
       <div *ngIf="!step.stepLabel">{{step.label}}</div>

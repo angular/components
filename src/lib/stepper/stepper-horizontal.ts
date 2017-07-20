@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ContentChildren, forwardRef, QueryList} from '@angular/core';
+import {Component, ContentChildren, QueryList} from '@angular/core';
 import {MdStep} from './step';
 import {MdStepper} from './stepper';
 
@@ -20,7 +20,7 @@ import {MdStepper} from './stepper';
     'class': 'mat-stepper-horizontal',
     'role': 'tablist',
   },
-  providers: [{ provide: MdStepper, useExisting: forwardRef(() => MdHorizontalStepper) }]
+  providers: [{ provide: MdStepper, useExisting: MdHorizontalStepper }]
 })
 export class MdHorizontalStepper extends MdStepper {
   /** Steps that the horizontal stepper holds. */

@@ -7,5 +7,8 @@
  */
 
 import {CdkStepper} from '@angular/cdk';
+import {ElementRef, QueryList, ViewChildren} from '@angular/core';
 
-export class MdStepper extends CdkStepper { }
+export class MdStepper extends CdkStepper {
+  @ViewChildren('stepHeader') _stepHeader: QueryList<ElementRef>;
+}

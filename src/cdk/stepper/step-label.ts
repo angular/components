@@ -9,7 +9,7 @@
 import {Directive, TemplateRef} from '@angular/core';
 
 @Directive({
-  selector: 'cdkStepLabel',
+  selector: '[cdkStepLabel]',
 })
 export class CdkStepLabel {
   constructor(public template: TemplateRef<any>) { }
