@@ -14,6 +14,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
+import {isPositionStickySupported} from '../../cdk/platform/features';
 
 
 /**
@@ -144,67 +145,15 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   /**
-   * getSupportList() is used to get a list of string which can be set to
-   * sticky-header's style.position and make Sticky positioning work.
-   * It returns a list of string.
-   *
-   * According to the "Position:sticky Browser compatibility" in
-   * "https://developer.mozilla.org/en-US/docs/Web/CSS/position".
-   *
-   * For Desktop: Sticky positioning works well on Chrome, Edge, Firefox and Opera. And can
-   * also work well on Safari with a "-webkit-" prefix. It only does not work on IE.
-   *
-   * For Mobile: Sticky positioning works well on Android Webview, Chrome for Android, Edge,
-   * Firefox Mobile, Opera Mobile. And can also work well on Safari Mobile with a "-webkit-" prefix.
-   * It won't always work on IE phone.
-   *
-   * The implementation references the compatibility checking in Modernizer
-   * (https://github.com/Modernizr/Modernizr/blob/master/feature-detects/css/positionsticky.js).
-   */
-  getSupportList(): string[] {
-    let prefixTestList = ['', '-webkit-', '-ms-', '-moz-', '-o-'];
-    let supportList: Array<string> = new Array<string>();
-    let stickyText = '';
-    for (let i = 0; i < prefixTestList.length; i++ ) {
-      stickyText = 'position:' + prefixTestList[i] + 'sticky;';
-      // Create a DOM to check if the browser support current prefix for sticky-position.
-      let div = document.createElement('div');
-      let body = document.body;
-      div.style.cssText = 'display:none;' + stickyText;
-      body.appendChild(div);
-      let values = window.getComputedStyle(div).position;
-      if (values != null) {
-        let isSupport = /sticky/i.test(values);
-        body.removeChild(div);
-        if (isSupport == true) {
-          supportList.push(prefixTestList[i]);
-        }
-      }
-    }
-    return supportList;
-  }
-
-  /**
-   * Get the first element from this._supportList. Set it as a prefix of
-   * sticky positioning.
-   *
-   * If the this._supportList is empty, which means the browser does not support
-   * sticky positioning. Set isStickyPositionSupported as 'true' and use the original
-   * implementation of sticky-header.
+   * Check if current browser supports sticky positioning. If yes, apply
+   * sticky positioning. If not, use the original implementation.
    */
   setStrategyAccordingToCompatibility(): void {
-    let supportList = this.getSupportList();
-    if (supportList.length === 0) {
-      this._isStickyPositionSupported = false;
-    } else {
-      // Only need supportList[0], Because supportList contains all the prefix
-      // that can make sticky positioning work in the current browser.
-      // We only need to get one prefix and make position: prefix + 'sticky',
-      // then sticky position will work.
-      let prefix: string = supportList[0];
-
+    this._isStickyPositionSupported = isPositionStickySupported();
+    if (this._isStickyPositionSupported == true) {
       this.element.style.top = '0px';
-      this.element.style.position = prefix + 'sticky';
+      this.element.style.cssText += 'position: -webkit-sticky; position: sticky; ';
+      // TODO add css class with both 'sticky' and '-webkit-sticky' on position when @directory support adding CSS class
     }
   }
 
