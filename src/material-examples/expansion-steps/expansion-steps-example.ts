@@ -6,7 +6,7 @@ import {Component} from '@angular/core';
   templateUrl: 'expansion-overview-example.html',
 })
 export class ExpansionStepsExample {
-  public step = 0;
+  step = 0;
 
   openEvent(stepNumb: number) {
     this.step = stepNumb;
