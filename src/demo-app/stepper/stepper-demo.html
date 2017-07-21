@@ -1,0 +1,27 @@
+<h2>Horizontal Stepper Demo</h2>
+<md-horizontal-stepper>
+  <md-step *ngFor="let step of steps" [label]="step.label">
+    <md-input-container>
+      <input mdInput placeholder="Answer" [(ngModel)]="step.content">
+    </md-input-container>
+  </md-step>
+</md-horizontal-stepper>
+
+<h2>Horizontal Stepper Demo with Templated Label</h2>
+<md-horizontal-stepper>
+  <md-step *ngFor="let step of steps">
+    <ng-template mdStepLabel>{{step.label}}</ng-template>
+    <md-input-container>
+      <input mdInput placeholder="Answer" [(ngModel)]="step.content">
+    </md-input-container>
+  </md-step>
+</md-horizontal-stepper>
+
+<h2>Vertical Stepper Demo</h2>
+<md-vertical-stepper>
+  <md-step *ngFor="let step of steps" [label]="step.label">
+    <md-input-container>
+      <input mdInput placeholder="Answer" [(ngModel)]="step.content">
+    </md-input-container>
+  </md-step>
+</md-vertical-stepper>
