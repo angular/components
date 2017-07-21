@@ -21,6 +21,7 @@ export const _MdRow = CdkRow;
  */
 @Directive({
   selector: '[mdHeaderRowDef]',
+  providers: [{provide: CdkHeaderRowDef, useExisting: MdHeaderRowDef}],
   inputs: ['columns: mdHeaderRowDef'],
 })
 export class MdHeaderRowDef extends _MdHeaderRowDef { }
@@ -31,6 +32,7 @@ export class MdHeaderRowDef extends _MdHeaderRowDef { }
  */
 @Directive({
   selector: '[mdRowDef]',
+  providers: [{provide: CdkRowDef, useExisting: MdRowDef}],
   inputs: ['columns: mdRowDefColumns'],
 })
 export class MdRowDef extends _MdCdkRowDef { }

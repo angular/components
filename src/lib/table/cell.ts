@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ContentChild, Directive, ElementRef, Input, Renderer2} from '@angular/core';
+import {Directive, ElementRef, Input, Renderer2} from '@angular/core';
 import {CdkCell, CdkCellDef, CdkColumnDef, CdkHeaderCell, CdkHeaderCellDef} from '@angular/cdk/table';
 
 /** Workaround for https://github.com/angular/angular/issues/17849 */
@@ -20,30 +20,33 @@ export const _MdCell = CdkCell;
  * Cell definition for the md-table.
  * Captures the template of a column's data row cell as well as cell-specific properties.
  */
-@Directive({selector: '[mdCellDef]'})
+@Directive({
+  selector: '[mdCellDef]',
+  providers: [{provide: CdkCellDef, useExisting: MdCellDef}]
+})
 export class MdCellDef extends _MdCellDef { }
 
 /**
  * Header cell definition for the md-table.
  * Captures the template of a column's header cell and as well as cell-specific properties.
  */
-@Directive({selector: '[mdHeaderCellDef]'})
+@Directive({
+  selector: '[mdHeaderCellDef]',
+  providers: [{provide: CdkHeaderCellDef, useExisting: MdHeaderCellDef}]
+})
 export class MdHeaderCellDef extends _MdHeaderCellDef { }
 
 /**
  * Column definition for the md-table.
  * Defines a set of cells available for a table column.
  */
-@Directive({selector: '[mdColumnDef]'})
+@Directive({
+  selector: '[mdColumnDef]',
+  providers: [{provide: CdkColumnDef, useExisting: MdColumnDef}],
+})
 export class MdColumnDef extends _MdColumnDef {
   /** Unique name for this column. */
   @Input('mdColumnDef') name: string;
-
-  /** @docs-private */
-  @ContentChild(MdCellDef) cell: MdCellDef;
-
-  /** @docs-private */
-  @ContentChild(MdHeaderCellDef) headerCell: MdHeaderCellDef;
 }
 
 /** Header cell template container that adds the right classes and role. */
