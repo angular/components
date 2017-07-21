@@ -34,6 +34,7 @@ export const MAT_ELEMENTS_SELECTOR = `
   [matDialogContent],
   [matDialogTitle],
   [matLine],
+  [matStepLabel],
   [matTabLabel],
   [matTabLink],
   [matTabNav],
@@ -64,6 +65,7 @@ export const MAT_ELEMENTS_SELECTOR = `
   mat-grid-tile-header,
   mat-header-cell,
   mat-hint,
+  mat-horizontal-stepper,
   mat-icon,
   mat-list,
   mat-list-item,
@@ -81,10 +83,12 @@ export const MAT_ELEMENTS_SELECTOR = `
   mat-sidenav-container,
   mat-slider,
   mat-spinner,
+  mat-step,
   mat-tab,
   mat-table,
   mat-tab-group,
-  mat-toolbar`;
+  mat-toolbar,
+  mat-vertical-stepper`;
 
 /** Selector that matches all elements that may have style collisions with AngularJS Material. */
 export const MD_ELEMENTS_SELECTOR = `
@@ -100,6 +104,7 @@ export const MD_ELEMENTS_SELECTOR = `
   [mdDialogContent],
   [mdDialogTitle],
   [mdLine],
+  [mdStepLabel],
   [mdTabLabel],
   [mdTabLink],
   [mdTabNav],
@@ -130,6 +135,7 @@ export const MD_ELEMENTS_SELECTOR = `
   md-grid-tile-header,
   md-header-cell,
   md-hint,
+  md-horizontal-stepper,
   md-icon,
   md-list,
   md-list-item,
@@ -147,10 +153,12 @@ export const MD_ELEMENTS_SELECTOR = `
   md-sidenav-container,
   md-slider,
   md-spinner,
+  md-step,
   md-tab,
   md-table,
   md-tab-group,
-  md-toolbar`;
+  md-toolbar,
+  md-vertical-stepper`;
 
 /** Directive that enforces that the `mat-` prefix cannot be used. */
 @Directive({selector: MAT_ELEMENTS_SELECTOR})

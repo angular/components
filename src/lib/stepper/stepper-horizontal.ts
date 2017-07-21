@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ContentChildren, QueryList} from '@angular/core';
-import {MdStep} from './step';
+import {Component} from '@angular/core';
 import {MdStepper} from './stepper';
 
 @Component({
@@ -22,7 +21,4 @@ import {MdStepper} from './stepper';
   },
   providers: [{provide: MdStepper, useExisting: MdHorizontalStepper}]
 })
-export class MdHorizontalStepper extends MdStepper {
-  /** Steps that the horizontal stepper holds. */
-  @ContentChildren(MdStep) _steps: QueryList<MdStep>;
-}
+export class MdHorizontalStepper extends MdStepper { }

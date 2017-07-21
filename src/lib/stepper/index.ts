@@ -12,8 +12,7 @@ import {PortalModule} from '@angular/cdk';
 import {MdButtonModule} from '../button/index';
 import {MdHorizontalStepper} from './stepper-horizontal';
 import {MdVerticalStepper} from './stepper-vertical';
-import {MdStep} from './step';
-import {MdStepper} from './stepper';
+import {MdStep, MdStepper} from './stepper';
 import {CdkStepperModule} from '@angular/cdk';
 import {MdCommonModule} from '../core';
 import {MdStepLabel} from './step-label';
@@ -27,6 +26,5 @@ export class MdStepperModule {}
 
 export * from './stepper-horizontal';
 export * from './stepper-vertical';
-export * from './step';
 export * from './step-label';
 export * from './stepper';
