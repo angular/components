@@ -60,10 +60,10 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   /** z-index to be applied to the sticky header (default is 10). */
   @Input('cdkStickyHeaderZIndex') zIndex: number = 10;
 
+  /** boolean value to mark whether the current header is stuck*/
   isStuck: boolean = false;
   /** Whether the browser support CSS sticky positioning. */
   private _isStickyPositionSupported: boolean = true;
-
 
   /** The element with the 'cdkStickyHeader' tag. */
   element: HTMLElement;
@@ -147,7 +147,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     if (this._isStickyPositionSupported == true) {
       this.element.style.top = '0px';
       this.element.style.cssText += 'position: -webkit-sticky; position: sticky; ';
-      // TODO add css class with both 'sticky' and '-webkit-sticky' on position when @Directory supports adding CSS class
+      // TODO add css class with both 'sticky' and '-webkit-sticky' on position
+      // when @Directory supports adding CSS class
     }
   }
 
@@ -295,15 +296,17 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
     // unstuck when the element is scrolled out of the sticky region
     if (this.isStuck &&
-      (currentPosition < this._stickyRegionTop || currentPosition > this._stickyRegionBottomThreshold) ||
-      currentPosition >= this._stickyRegionBottomThreshold) {
+      (currentPosition < this._stickyRegionTop ||
+      currentPosition > this._stickyRegionBottomThreshold)
+      || currentPosition >= this._stickyRegionBottomThreshold) {
       this.resetElement();
       if (currentPosition >= this._stickyRegionBottomThreshold) {
         this.unstuckElement();
       }
       this.isStuck = false;    // stick when the element is within the sticky region
     } else if ( this.isStuck === false &&
-      currentPosition > this._stickyRegionTop && currentPosition < this._stickyRegionBottomThreshold) {
+      currentPosition > this._stickyRegionTop &&
+      currentPosition < this._stickyRegionBottomThreshold) {
       this._stickElement();
     }
   }
