@@ -20,7 +20,7 @@ import {MdStepper} from './stepper';
     'class': 'mat-stepper-horizontal',
     'role': 'tablist',
   },
-  providers: [{ provide: MdStepper, useExisting: MdHorizontalStepper }]
+  providers: [{provide: MdStepper, useExisting: MdHorizontalStepper}]
 })
 export class MdHorizontalStepper extends MdStepper {
   /** Steps that the horizontal stepper holds. */

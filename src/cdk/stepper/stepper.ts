@@ -13,7 +13,6 @@ import {
   Output,
   QueryList,
   Directive,
-  ViewChildren,
   // This import is only used to define a generic type. The current TypeScript version incorrectly
   // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
   // tslint:disable-next-line:no-unused-variable
@@ -31,16 +30,16 @@ let nextId = 0;
 
 /** Change event emitted on selection changes. */
 export class CdkStepperSelectionEvent {
-  /** The index of the step that is newly selected during this change event. */
+  /** Index of the step now selected. */
   selectedIndex: number;
 
-  /** The index of the step that was previously selected. */
+  /** Index of the step previously selected. */
   previouslySelectedIndex: number;
 
-  /** The new step component that is selected ruing this change event. */
+  /** The step instance now selected. */
   selectedStep: CdkStep;
 
-  /** The step component that was previously selected. */
+  /** The step instance previously selected. */
   previouslySelectedStep: CdkStep;
 }
 
@@ -70,7 +69,7 @@ export class CdkStep {
 @Directive({
   selector: 'cdk-stepper',
   host: {
-    '(focus)': '_setStepFocused()',
+    '(focus)': '_focusStep()',
     '(keydown)': '_onKeydown($event)',
   },
 })
@@ -82,18 +81,19 @@ export class CdkStepper {
   _stepHeader: QueryList<ElementRef>;
 
   /** The index of the selected step. */
+  @Input()
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
     if (this._selectedIndex != index) {
       this._emitStepperSelectionEvent(index);
-      this._setStepFocused(this._selectedIndex);
+      this._focusStep(this._selectedIndex);
     }
   }
   private _selectedIndex: number = 0;
 
-  /** Returns the step that is selected. */
+  /** The step that is selected. */
+  @Input()
   get selected() { return this._steps[this.selectedIndex]; }
-  /** Sets selectedIndex as the index of the provided step. */
   set selected(step: CdkStep) {
     let index = this._steps.toArray().indexOf(step);
     this.selectedIndex = index;
@@ -146,10 +146,10 @@ export class CdkStepper {
   _onKeydown(event: KeyboardEvent) {
     switch (event.keyCode) {
       case RIGHT_ARROW:
-        this._setStepFocused((this._focusIndex + 1) % this._steps.length);
+        this._focusStep((this._focusIndex + 1) % this._steps.length);
         break;
       case LEFT_ARROW:
-        this._setStepFocused((this._focusIndex + this._steps.length - 1) % this._steps.length);
+        this._focusStep((this._focusIndex + this._steps.length - 1) % this._steps.length);
         break;
       case SPACE:
       case ENTER:
@@ -162,7 +162,7 @@ export class CdkStepper {
     event.preventDefault();
   }
 
-  private _setStepFocused(index: number) {
+  private _focusStep(index: number) {
     this._focusIndex = index;
     this._stepHeader.toArray()[this._focusIndex].nativeElement.focus();
   }

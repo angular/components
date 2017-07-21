@@ -10,10 +10,9 @@ import {NgModule} from '@angular/core';
 import {CdkStepper, CdkStep} from './stepper';
 import {CommonModule} from '@angular/common';
 import {CdkStepLabel} from './step-label';
-import {PortalModule} from '../portal';
 
 @NgModule({
-  imports: [CommonModule, PortalModule],
+  imports: [CommonModule],
   exports: [CdkStep, CdkStepper, CdkStepLabel],
   declarations: [CdkStep, CdkStepper, CdkStepLabel]
 })
