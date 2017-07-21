@@ -195,7 +195,7 @@ describe('Chips', () => {
         });
 
         it('should have empty aria-selected', () => {
-          expect(chipNativeElement.getAttribute('aria-selected')).toBe('');
+          expect(chipNativeElement.getAttribute('aria-selected')).toBeFalsy();
 
           testComponent.selectable = true;
           fixture.detectChanges();
