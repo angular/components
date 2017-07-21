@@ -62,7 +62,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   /** boolean value to mark whether the current header is stuck*/
   isStuck: boolean = false;
   /** Whether the browser support CSS sticky positioning. */
-  private _isStickyPositionSupported: boolean = true;
+  private _isPositionStickySupported: boolean = true;
 
   /** The element with the 'cdkStickyHeader' tag. */
   element: HTMLElement;
@@ -106,7 +106,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (!this._isStickyPositionSupported) {
+    if (!this._isPositionStickySupported) {
 
       this.stickyParent = this.parentRegion != null ?
         this.parentRegion._elementRef.nativeElement : this.element.parentElement;
@@ -145,8 +145,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * sticky positioning. If not, use the original implementation.
    */
   private _setStrategyAccordingToCompatibility(): void {
-    this._isStickyPositionSupported = isPositionStickySupported();
-    if (this._isStickyPositionSupported) {
+    this._isPositionStickySupported = isPositionStickySupported();
+    if (this._isPositionStickySupported) {
       this.element.style.top = '0px';
       this.element.style.cssText += 'position: -webkit-sticky; position: sticky; ';
       // TODO add css class with both 'sticky' and '-webkit-sticky' on position
