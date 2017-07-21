@@ -14,7 +14,7 @@ const bundlesDir = join(buildConfig.outputDir, 'bundles');
 
 /** Builds bundles for the primary entry-point w/ given entry file, e.g. @angular/cdk */
 export async function buildPrimaryEntryPointBundles(entryFile: string, packageName: string) {
-  return createBunldesForEntryPoint({
+  return createBundlesForEntryPoint({
     entryFile,
     moduleName:   `ng.${packageName}`,
     fesm2015Dest: join(bundlesDir, `${packageName}.js`),
@@ -36,13 +36,13 @@ export async function buildAllSecondaryEntryPointBundles(packageName: string) {
 /** Builds bundles for a single secondary entry-point w/ given entry file, e.g. @angular/cdk/a11y */
 export async function buildSecondaryEntryPointBundles(
     entryFile: string, packageName: string, entryPointName: string) {
-  return createBunldesForEntryPoint({
+  return createBundlesForEntryPoint({
     entryFile,
-    moduleName:   `ng.${packageName}.${entryPointName}`,
+    moduleName: `ng.${packageName}.${entryPointName}`,
     fesm2015Dest: join(bundlesDir, `${packageName}`, `${entryPointName}.js`),
     fesm2014Dest: join(bundlesDir, `${packageName}`, `${entryPointName}.es5.js`),
-    umdDest:      join(bundlesDir, `${packageName}-${entryPointName}.umd.js`),
-    umdMinDest:   join(bundlesDir, `${packageName}-${entryPointName}.umd.min.js`),
+    umdDest: join(bundlesDir, `${packageName}-${entryPointName}.umd.js`),
+    umdMinDest: join(bundlesDir, `${packageName}-${entryPointName}.umd.min.js`),
   });
 }
 
@@ -51,7 +51,7 @@ export async function buildSecondaryEntryPointBundles(
  * @param config Configuration that specifies the entry-point, module name, and output
  *     bundle paths.
  */
-async function createBunldesForEntryPoint(config: BundlesConfig) {
+async function createBundlesForEntryPoint(config: BundlesConfig) {
   // Build FESM-2015 bundle file.
   await createRollupBundle({
     moduleName: config.moduleName,

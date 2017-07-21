@@ -1,5 +1,4 @@
 import {join} from 'path';
-import {readdirSync, lstatSync, writeFileSync} from 'fs';
 import {mkdirpSync} from 'fs-extra';
 import {copyFiles} from './copy-files';
 import {addPureAnnotationsToFile} from './pure-annotations';
@@ -8,6 +7,7 @@ import {inlinePackageMetadataFiles} from './metadata-inlining';
 import {createTypingsReexportFile} from './typings-reexport';
 import {createMetadataReexportFile} from './metadata-reexport';
 import {getSecondaryEntryPointsForPackage} from './secondary-entry-points';
+import {createEntryPointPackageJson} from './entry-point-package-json';
 import {buildConfig} from './build-config';
 
 const {packagesDir, outputDir, projectDir} = buildConfig;
@@ -20,7 +20,7 @@ const bundlesDir = join(outputDir, 'bundles');
  * release folder structure. The output will also contain a README and the according package.json
  * file. Additionally the package will be Closure Compiler and AOT compatible.
  */
-export function composeRelease(packageName: string, options: ReleaseBuildOptions = {}) {
+export function composeRelease(packageName: string, options: ComposeReleaseOptions = {}) {
   // To avoid refactoring of the project the package material will map to the source path `lib/`.
   const sourcePath = join(packagesDir, packageName === 'material' ? 'lib' : packageName);
   const packagePath = join(outputDir, 'packages', packageName);
@@ -29,7 +29,7 @@ export function composeRelease(packageName: string, options: ReleaseBuildOptions
   inlinePackageMetadataFiles(packagePath);
 
   copyFiles(packagePath, '**/*.+(d.ts|metadata.json)', join(releasePath, 'typings'));
-  copyFiles(bundlesDir, `*.umd?(.min).js?(.map)`, join(releasePath, 'bundles'));
+  copyFiles(bundlesDir, `${packageName}?(-*).umd.js?(.map)`, join(releasePath, 'bundles'));
   copyFiles(bundlesDir, `${packageName}?(.es5).js?(.map)`, join(releasePath, '@angular'));
   copyFiles(join(bundlesDir, packageName), '**', join(releasePath, '@angular', packageName));
   copyFiles(projectDir, 'LICENSE', releasePath);
@@ -47,12 +47,7 @@ export function composeRelease(packageName: string, options: ReleaseBuildOptions
   addPureAnnotationsToFile(join(releasePath, '@angular', `${packageName}.es5.js`));
 }
 
-/**
- * Creates files necessary for a secondary entry-point.
- * @param packageName The name of the package for which to create entry-point files.
- * @param packagePath
- * @param releasePath The path to the release package.
- */
+/** Creates files necessary for a secondary entry-point. */
 function createFilesForSecondaryEntryPoint(packageName: string, packagePath: string, releasePath: string) {
   getSecondaryEntryPointsForPackage(packageName).forEach(entryPointName => {
     // Create a directory in the root of the package for this entry point that contains
@@ -81,21 +76,6 @@ function createFilesForSecondaryEntryPoint(packageName: string, packagePath: str
   });
 }
 
-
-/** Creates a package.json file for a secondary entry-point within a package. */
-function createEntryPointPackageJson(destDir: string, packageName: string, entryPointName: string) {
-  const packageJsonContent = {
-    name: `@angular/${packageName}/${entryPointName}`,
-    typings: `../${entryPointName}.d.ts`,
-    main: `../bundles/${packageName}-${entryPointName}.umd.js`,
-    module: `../@angular/${packageName}/${entryPointName}.es5.js`,
-    es2015: `../@angular/${packageName}/${entryPointName}.js`,
-  };
-
-  writeFileSync(join(destDir, 'package.json'), JSON.stringify(packageJsonContent), 'utf-8');
-}
-
-
-interface ReleaseBuildOptions {
+interface ComposeReleaseOptions {
   useSecondaryEntryPoints?: boolean;
 }

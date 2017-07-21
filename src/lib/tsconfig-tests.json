@@ -11,16 +11,7 @@
     "experimentalDecorators": true,
     "strictNullChecks": true,
     "paths": {
-      "@angular/cdk/a11y": ["../../dist/packages/cdk/a11y"],
-      "@angular/cdk/bidi": ["../../dist/packages/cdk/bidi"],
-      "@angular/cdk/coercion": ["../../dist/packages/cdk/coercion"],
-      "@angular/cdk/platform": ["../../dist/packages/cdk/platform"],
-      "@angular/cdk/portal": ["../../dist/packages/cdk/portal"],
-      "@angular/cdk/keyboard": ["../../dist/packages/cdk/keyboard"],
-      "@angular/cdk/rxjs": ["../../dist/packages/cdk/rxjs"],
-      "@angular/cdk/table": ["../../dist/packages/cdk/table"],
-      "@angular/cdk/observe-content": ["../../dist/packages/cdk/observe-content"],
-      "@angular/cdk/testing": ["../../dist/packages/cdk/testing"]
+      "@angular/cdk/*": ["../../dist/packages/cdk/*"]
     }
   },
   "include": [

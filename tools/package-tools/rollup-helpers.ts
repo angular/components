@@ -35,16 +35,6 @@ const ROLLUP_GLOBALS = {
   '@angular/cdk/table': 'ng.cdk.table',
   '@angular/cdk': 'ng.cdk',
 
-  '@angular/cdk/a11y/index': 'ng.cdk.a11y',
-  '@angular/cdk/bidi/index': 'ng.cdk.bidi',
-  '@angular/cdk/coercion/index': 'ng.cdk.coercion',
-  '@angular/cdk/keyboard/index': 'ng.cdk.keyboard',
-  '@angular/cdk/observe-content/index': 'ng.cdk.observeContent',
-  '@angular/cdk/platform/index': 'ng.cdk.platform',
-  '@angular/cdk/portal/index': 'ng.cdk.portal',
-  '@angular/cdk/rxjs/index': 'ng.cdk.rxjs',
-  '@angular/cdk/table/index': 'ng.cdk.table',
-
   // RxJS dependencies
   'rxjs/BehaviorSubject': 'Rx',
   'rxjs/Observable': 'Rx',

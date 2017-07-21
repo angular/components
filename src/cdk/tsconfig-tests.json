@@ -17,6 +17,7 @@
     "./testing/index.ts"
   ],
   "include": [
+    // Include the index.ts for each secondary entry-point
     "./*/index.ts",
     "**/*.spec.ts"
   ]
