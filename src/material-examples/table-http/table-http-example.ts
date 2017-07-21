@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Http, Response} from '@angular/http';
 import {DataSource} from '@angular/cdk';
 import {MdPaginator, MdSort} from '@angular/material';
@@ -17,7 +17,7 @@ import 'rxjs/add/operator/map';
   styleUrls: ['table-http-example.css'],
   templateUrl: 'table-http-example.html',
 })
-export class TableHttpExample {
+export class TableHttpExample implements OnInit {
   displayedColumns = ['created', 'state', 'number', 'title'];
   exampleDatabase: ExampleHttpDao | null;
   dataSource: ExampleDataSource | null;
