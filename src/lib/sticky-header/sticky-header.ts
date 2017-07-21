@@ -253,7 +253,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   private _unstuckElement(): void {
     this.isStuck = false;
 
-    if (this.stickyParent == null) {
+    if (!this.stickyParent) {
       return;
     }
 
