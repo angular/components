@@ -10,10 +10,9 @@ import {Directive, Input,
 import {Platform} from '../core/platform';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
 import {extendObject} from '../core/util/object-extend';
-import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/debounceTime';
+import {fromEvent} from 'rxjs/observable/fromEvent';
+import {RxChain, debounceTime} from '../core/rxjs/index';
 import {isPositionStickySupported} from '../../cdk/platform/features';
 
 
@@ -156,15 +155,15 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   attach() {
-    this._onScrollSubscription = Observable.fromEvent(this.upperScrollableContainer, 'scroll')
-      .debounceTime(DEBOUNCE_TIME).subscribe(() => this.defineRestrictionsAndStick());
+    this._onScrollSubscription = RxChain.from(fromEvent(this.upperScrollableContainer, 'scroll'))
+      .call(debounceTime, DEBOUNCE_TIME).subscribe(() => this.defineRestrictionsAndStick());
 
     // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
-    this._onTouchSubscription = Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
-      .debounceTime(DEBOUNCE_TIME).subscribe(() => this.defineRestrictionsAndStick());
+    this._onTouchSubscription = RxChain.from(fromEvent(this.upperScrollableContainer, 'touchmove'))
+      .call(debounceTime, DEBOUNCE_TIME).subscribe(() => this.defineRestrictionsAndStick());
 
-    this._onResizeSubscription = Observable.fromEvent(this.upperScrollableContainer, 'resize')
-      .debounceTime(DEBOUNCE_TIME).subscribe(() => this.onResize());
+    this._onResizeSubscription = RxChain.from(fromEvent(this.upperScrollableContainer, 'resize'))
+      .call(debounceTime, DEBOUNCE_TIME).subscribe(() => this.onResize());
   }
 
   onResize(): void {
