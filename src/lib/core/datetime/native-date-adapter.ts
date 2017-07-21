@@ -8,6 +8,7 @@
 
 import {Inject, Injectable, Optional, LOCALE_ID} from '@angular/core';
 import {DateAdapter} from './date-adapter';
+import {extendObject} from '../util/object-extend';
 
 
 // TODO(mmalerba): Remove when we no longer support safari 9.
@@ -166,7 +167,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
         date = new Date(Date.UTC(
             date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(),
             date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
-        displayFormat = Object.assign({}, displayFormat, {timeZone: 'utc'});
+        displayFormat = extendObject({}, displayFormat, {timeZone: 'utc'});
       }
       let dtf = new Intl.DateTimeFormat(this.locale, displayFormat);
       return this._stripDirectionalityCharacters(dtf.format(date));
