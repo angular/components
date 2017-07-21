@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Http, Response} from '@angular/http';
+import {Http} from '@angular/http';
 import {DataSource} from '@angular/cdk';
 import {MdPaginator, MdSort} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
@@ -33,12 +33,12 @@ export class TableHttpExample implements OnInit {
   }
 }
 
-interface GithubApi {
+export interface GithubApi {
   items: GithubIssue[];
   total_count: number;
 }
 
-interface GithubIssue {
+export interface GithubIssue {
   created_at: string;
   number: string;
   state: string;
