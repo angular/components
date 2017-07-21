@@ -41,9 +41,9 @@ const STICK_START_CLASS = 'cdk-sticky-header-start';
 const STICK_END_CLASS = 'cdk-sticky-header-end';
 
 /**
- * Set a debounce time which is used in debounce() function when adding event listeners.
- * Set is as 5. Because if the DEBOUNCE_TIME is set as a too large number. The sticky effect
- * during scroll will become vary strange and can not be scrolled smoothly.
+ * Debounce time in milliseconds for events that affect the sticky positioning (e.g. scroll, resize,
+ * touch move). Set as 5 milliseconds which is the highest delay that doesn't drastically affect the
+ * positioning adversely.
  */
 const DEBOUNCE_TIME: number = 5;
 
