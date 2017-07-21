@@ -57,13 +57,7 @@ const DEBOUNCE_TIME: number = 5;
 })
 export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
-  /**
-   * Set the sticky-header's z-index as 10 in default. Make it as an input
-   * variable to make user be able to customize the zIndex when
-   * the sticky-header's zIndex is not the largest in current page.
-   * Because if the sticky-header's zIndex is not the largest in current page,
-   * it may be sheltered by other element when being stuck.
-   */
+  /** z-index to be applied to the sticky header (default is 10). */
   @Input('cdkStickyHeaderZIndex') zIndex: number = 10;
 
   isStuck: boolean = false;
