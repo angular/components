@@ -153,7 +153,6 @@ describe('MdSidenav', () => {
     it('should restore focus on close if focus is inside sidenav', fakeAsync(() => {
       let fixture = TestBed.createComponent(BasicTestApp);
       let sidenav = fixture.debugElement.query(By.directive(MdSidenav)).componentInstance;
-      let trigger = document.createElement('button');
       let openButton = fixture.componentInstance.openButton.nativeElement;
       let sidenavButton = fixture.componentInstance.sidenavButton.nativeElement;
 
