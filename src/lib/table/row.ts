@@ -20,7 +20,7 @@ export const _MdRow = CdkRow;
  * Captures the header row's template and other header properties such as the columns to display.
  */
 @Directive({
-  selector: '[mdHeaderRowDef]',
+  selector: '[mdHeaderRowDef], [matHeaderRowDef]',
   providers: [{provide: CdkHeaderRowDef, useExisting: MdHeaderRowDef}],
   inputs: ['columns: mdHeaderRowDef'],
 })
@@ -31,7 +31,7 @@ export class MdHeaderRowDef extends _MdHeaderRowDef { }
  * Captures the header row's template and other row properties such as the columns to display.
  */
 @Directive({
-  selector: '[mdRowDef]',
+  selector: '[mdRowDef], [matRowDef]',
   providers: [{provide: CdkRowDef, useExisting: MdRowDef}],
   inputs: ['columns: mdRowDefColumns'],
 })

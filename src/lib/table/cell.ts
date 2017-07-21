@@ -21,7 +21,7 @@ export const _MdCell = CdkCell;
  * Captures the template of a column's data row cell as well as cell-specific properties.
  */
 @Directive({
-  selector: '[mdCellDef]',
+  selector: '[mdCellDef], [matCellDef]',
   providers: [{provide: CdkCellDef, useExisting: MdCellDef}]
 })
 export class MdCellDef extends _MdCellDef { }
@@ -31,7 +31,7 @@ export class MdCellDef extends _MdCellDef { }
  * Captures the template of a column's header cell and as well as cell-specific properties.
  */
 @Directive({
-  selector: '[mdHeaderCellDef]',
+  selector: '[mdHeaderCellDef], [matHeaderCellDef]',
   providers: [{provide: CdkHeaderCellDef, useExisting: MdHeaderCellDef}]
 })
 export class MdHeaderCellDef extends _MdHeaderCellDef { }
@@ -41,7 +41,7 @@ export class MdHeaderCellDef extends _MdHeaderCellDef { }
  * Defines a set of cells available for a table column.
  */
 @Directive({
-  selector: '[mdColumnDef]',
+  selector: '[mdColumnDef], [matColumnDef]',
   providers: [{provide: CdkColumnDef, useExisting: MdColumnDef}],
 })
 export class MdColumnDef extends _MdColumnDef {
