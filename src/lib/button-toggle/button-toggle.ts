@@ -103,7 +103,8 @@ export class MdButtonToggleGroup extends _MdButtonToggleGroupMixinBase implement
   @ContentChildren(forwardRef(() => MdButtonToggle)) _buttonToggles: QueryList<MdButtonToggle>;
 
   ngAfterViewInit() {
-    this._isInitialized = true;
+    // Defer until the next tick to avoid the value accessor's initial value.
+    Promise.resolve().then(() => this._isInitialized = true);
   }
 
   /** `name` attribute for the underlying `input` element. */
