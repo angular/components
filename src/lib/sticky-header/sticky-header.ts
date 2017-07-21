@@ -102,14 +102,16 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     if (platform.isBrowser) {
       this.element = element.nativeElement;
       this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
-      this.setStrategyAccordingToCompatibility();
+      this._setStrategyAccordingToCompatibility();
     }
   }
 
   ngAfterViewInit(): void {
     if (!this._isStickyPositionSupported) {
+
       this.stickyParent = this.parentRegion != null ?
         this.parentRegion._elementRef.nativeElement : this.element.parentElement;
+
       let values = window.getComputedStyle(this.element, '');
       this._originalStyles = {
         position: values.position,
@@ -119,6 +121,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         bottom: values.bottom,
         width: values.width,
         zIndex: values.zIndex} as CSSStyleDeclaration;
+
       this.attach();
       this.defineRestrictionsAndStick();
     }
@@ -142,9 +145,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * Check if current browser supports sticky positioning. If yes, apply
    * sticky positioning. If not, use the original implementation.
    */
-  setStrategyAccordingToCompatibility(): void {
+  private _setStrategyAccordingToCompatibility(): void {
     this._isStickyPositionSupported = isPositionStickySupported();
-    if (this._isStickyPositionSupported == true) {
+    if (this._isStickyPositionSupported) {
       this.element.style.top = '0px';
       this.element.style.cssText += 'position: -webkit-sticky; position: sticky; ';
       // TODO add css class with both 'sticky' and '-webkit-sticky' on position
@@ -164,14 +167,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       .debounceTime(DEBOUNCE_TIME).subscribe(() => this.onResize());
   }
 
-  onScroll(): void {
-    this.defineRestrictionsAndStick();
-  }
-
-  onTouchMove(): void {
-    this.defineRestrictionsAndStick();
-  }
-
   onResize(): void {
     this.defineRestrictionsAndStick();
     /**
@@ -181,7 +176,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
      * unstuck() can set 'isStuck' to FALSE. Then _stickElement() can work.
      */
     if (this.isStuck) {
-      this.unstuckElement();
+      this._unstuckElement();
       this._stickElement();
     }
   }
@@ -255,7 +250,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * can be changed smoothly when two sticky header meet and the later one need to replace
    * the former one.
    */
-  unstuckElement(): void {
+  private _unstuckElement(): void {
     this.isStuck = false;
 
     if (this.stickyParent == null) {
@@ -301,7 +296,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       || currentPosition >= this._stickyRegionBottomThreshold) {
       this.resetElement();
       if (currentPosition >= this._stickyRegionBottomThreshold) {
-        this.unstuckElement();
+        this._unstuckElement();
       }
       this.isStuck = false;    // stick when the element is within the sticky region
     } else if ( this.isStuck === false &&
