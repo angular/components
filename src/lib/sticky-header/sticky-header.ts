@@ -189,12 +189,12 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     if (!this.stickyParent) {
       return;
     }
-    let boundingClientRect: any = this.stickyParent.getBoundingClientRect();
-    let elemHeight: number = this.element.offsetHeight;
+    const boundingClientRect: any = this.stickyParent.getBoundingClientRect();
     this._stickyRegionTop = boundingClientRect.top;
     let stickRegionHeight = boundingClientRect.height;
 
-    this._stickyRegionBottomThreshold = this._stickyRegionTop + (stickRegionHeight - elemHeight);
+    this._stickyRegionBottomThreshold = this._stickyRegionTop +
+      (stickRegionHeight - this.element.offsetHeight);
   }
 
   /** Reset element to its original CSS. */
