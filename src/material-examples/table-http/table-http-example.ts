@@ -28,8 +28,7 @@ export class TableHttpExample implements OnInit {
   ngOnInit() {
     this.exampleDatabase = new ExampleHttpDao(this.http);
     this.dataSource = new ExampleDataSource(
-      this.exampleDatabase!, this.paginator, this.sort
-    );
+      this.exampleDatabase!, this.paginator, this.sort);
   }
 }
 
@@ -93,8 +92,7 @@ export class ExampleDataSource extends DataSource<GithubIssue> {
       .switchMap(() => {
         this.isLoadingResults = true;
         return this.exampleDatabase.getRepoIssues(
-          this.sort.active, this.sort.direction, this.paginator.pageIndex
-        );
+          this.sort.active, this.sort.direction, this.paginator.pageIndex);
       })
       .map(data => {
         // Flip flag to show that loading has finished.
