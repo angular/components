@@ -80,6 +80,7 @@
     "import-blacklist": [true, "rxjs"],
     // Avoids inconsistent linebreak styles in source files. Forces developers to use LF linebreaks.
     "linebreak-style": [true, "LF"],
-    "require-license-banner": true
+    "require-license-banner": true,
+    "prefer-const": true
   }
 }
