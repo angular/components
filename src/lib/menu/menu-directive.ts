@@ -47,6 +47,13 @@ export interface MdMenuDefaultOptions {
 export const MD_MENU_DEFAULT_OPTIONS =
     new InjectionToken<MdMenuDefaultOptions>('md-menu-default-options');
 
+/**
+ * Start elevation for the menu panel.
+ * @docs-private
+ */
+const MD_MENU_BASE_ELEVATION = 2;
+
+
 @Component({
   moduleId: module.id,
   selector: 'md-menu, mat-menu',
@@ -75,7 +82,7 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   /** Current state of the panel animation. */
   _panelAnimationState: 'void' | 'enter-start' | 'enter' = 'void';
 
-  /** Parent menu os the current menu panel. */
+  /** Parent menu of the current menu panel. */
   parentMenu: MdMenuPanel | undefined;
 
   /** Layout direction of the menu. */
@@ -198,11 +205,11 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
 
   /**
    * Sets the menu panel elevation.
-   * @param depth Amount of parent menus that come before the menu.
+   * @param depth Number of parent menus that come before the menu.
    */
   setElevation(depth: number): void {
-    // The elevation starts at 2 and increases by one for each level.
-    const newElevation = `mat-elevation-z${depth + 2}`;
+    // The elevation starts at the base and increases by one for each level.
+    const newElevation = `mat-elevation-z${MD_MENU_BASE_ELEVATION + depth}`;
     const customElevation = Object.keys(this._classList).find(c => c.startsWith('mat-elevation-z'));
 
     if (!customElevation || customElevation === this._previousElevation) {
