@@ -28,18 +28,18 @@ export const _MdTabMixinBase = mixinDisabled(MdTabBase);
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
-  /** Content for the tab label given by <ng-template md-tab-label>. */
+  /** Content for the tab label given by `<ng-template md-tab-label>`. */
   @ContentChild(MdTabLabel) templateLabel: MdTabLabel;
 
-  /** Template inside the MdTab view that contains an <ng-content>. */
+  /** Template inside the MdTab view that contains an `<ng-content>`. */
   @ViewChild(TemplateRef) _content: TemplateRef<any>;
 
   /** The plain text label for the tab, used when there is no template label. */
   @Input('label') textLabel: string = '';
 
   /** The portal that will be the hosted content of the tab */
-  private _contentPortal: TemplatePortal | null = null;
   get content(): TemplatePortal | null { return this._contentPortal; }
+  private _contentPortal: TemplatePortal | null = null;
 
   /** Emits whenever the label changes. */
   _labelChange = new Subject<void>();
@@ -48,13 +48,13 @@ export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChan
    * The relatively indexed position where 0 represents the center, negative is left, and positive
    * represents the right.
    */
-  position: number | null = null;
+  _position: number | null = null;
 
   /**
    * The initial relatively index origin of the tab if it was created and selected after there
    * was already a selected tab. Provides context of what position the tab should originate from.
    */
-  origin: number | null = null;
+  _origin: number | null = null;
 
   constructor(private _viewContainerRef: ViewContainerRef) {
     super();
