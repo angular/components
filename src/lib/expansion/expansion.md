@@ -18,7 +18,7 @@ expansion content.
 
 By default, the expansion panel header has a toggle icon at the right edge, pointing up when 
 the panel is expanded and down when it's collapsed. The toggle icon can be hidden by setting the
-input property `toggleHide` to `true`. 
+input property `hideToggle` to `true`. 
 
 ```html
 <md-expansion-panel>
