@@ -166,7 +166,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
      // the resized window. So we need to unstuck it then re-stick it.
      // unstuck() can set 'isStuck' to FALSE. Then _stickElement() can work.
     if (this.isStuck) {
-      this._unstuckElement();
+      this._unstickElement();
       this._stickElement();
     }
   }
@@ -236,7 +236,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * This should be called when the element reaches the bottom of its cdkStickyRegion so that it
    * smoothly scrolls out of view as the next sticky-header moves in.
    */
-  private _unstuckElement(): void {
+  private _unstickElement(): void {
     this.isStuck = false;
 
     if (!this.stickyParent) {
@@ -272,7 +272,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       || currentPosition >= this._stickyRegionBottomThreshold) {
       this._resetElementStyles();
       if (currentPosition >= this._stickyRegionBottomThreshold) {
-        this._unstuckElement();
+        this._unstickElement();
       }
       this.isStuck = false;    // stick when the element is within the sticky region
     } else if ( this.isStuck === false &&
