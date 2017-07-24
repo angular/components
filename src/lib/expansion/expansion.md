@@ -1,24 +1,25 @@
-`<md-expansion-panel>` provides a way to show and hide content, by collapsing and expanding a 
-view with animation.
+`<md-expansion-panel>` provides a expandable details-summary view.
 
 <!-- example(expansion-overview) -->
 
-### Expansion panel content
+### Expansion-panel content
 
-Each expansion panel has a header section (mandatory) and an actions (optional) sections.
+Each expansion panel must include a header and may optionally include an action bar.
 
 #### Header
 
-The header section is always visible at the top of the component and contains a `<md-panel-title>`
- and a description `<md-panel-description>` subsections.
+The `<md-expansion-panel-header>` shows a summary of the panel content and acts
+as the control for expanding and collapsing. This header may optionally contain an
+`<md-panel-title>` and an `<md-panel-description>`, which format the content of the
+header to align with Material Design specifications.
 
-The `<md-panel-title>` subsection is shown in the beginning of the header, followed by the 
-`<md-panel-description>` subsection, which is supposed to contain a summary of what's in the
-expansion content.
+The `<md-panel-title>` is shown in the beginning of the header, followed by the 
+`<md-panel-description>`, which is intended to contain a summary of the primary content 
+of the panel.
 
-By default, the expansion panel header has a toggle icon at the right edge, pointing up when 
-the panel is expanded and down when it's collapsed. The toggle icon can be hidden by setting the
-input property `hideToggle` to `true`. 
+By default, the expansion-panel header includes a toggle icon at the end of the
+header to indicate the expansion state. This icon can be hidden via the 
+`hideToggle` property.
 
 ```html
 <md-expansion-panel>
@@ -31,14 +32,14 @@ input property `hideToggle` to `true`.
     </md-panel-description>
   </md-expansion-panel-header>
 
-  <p>...</p>
+  <p>This is the primary content of the panel.</p>
 
 </md-expansion-panel>
 ```
 
-#### Actions
+#### Action bar
 
-The actions section is optional and fixed at the bottom, visible only when the expansion is in its
+Actions may optionally be included at the bottom of the panel, visible only when the expansion is in its
 expanded state.
 
 ```html
@@ -47,7 +48,7 @@ expanded state.
     This is the expansion title
   </md-expansion-panel-header>
 
-  <p>...</p>
+  <p>This is the primary content of the panel.</p>
 
   <md-action-row>
     <button md-button>Click me</button>
@@ -57,7 +58,7 @@ expanded state.
 
 ### Accordion
 
-Multiple expansion panels can be combined into an accordion. The `multi="true"` input allows the
+Multiple expansion-panels can be combined into an accordion. The `multi="true"` input allows the
 expansions state to be set independently of each other. When `multi="false"` (default) just one
 panel can be expanded at a given time:
 
