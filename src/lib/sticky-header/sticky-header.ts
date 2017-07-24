@@ -185,7 +185,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   /** Reset element to its original CSS. */
-  resetElement(): void {
+  private _resetElementStyles(): void {
     this.element.classList.remove(STICK_START_CLASS);
     extendObject(this.element.style, this._originalStyles);
   }
@@ -270,7 +270,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       (currentPosition < this._stickyRegionTop ||
       currentPosition > this._stickyRegionBottomThreshold)
       || currentPosition >= this._stickyRegionBottomThreshold) {
-      this.resetElement();
+      this._resetElementStyles();
       if (currentPosition >= this._stickyRegionBottomThreshold) {
         this._unstuckElement();
       }
