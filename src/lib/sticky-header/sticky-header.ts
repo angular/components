@@ -62,7 +62,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   /** boolean value to mark whether the current header is stuck*/
   isStuck: boolean = false;
   /** Whether the browser support CSS sticky positioning. */
-  private _isPositionStickySupported: boolean = true;
+  private _isPositionStickySupported: boolean = false;
 
   /** The element with the 'cdkStickyHeader' tag. */
   element: HTMLElement;
@@ -128,17 +128,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    if (this._onScrollSubscription) {
-      this._onScrollSubscription.unsubscribe();
-    }
-
-    if (this._onResizeSubscription) {
-      this._onResizeSubscription.unsubscribe();
-    }
-
-    if (this._onTouchSubscription) {
-      this._onTouchSubscription.unsubscribe();
-    }
+    [this._onScrollSubscription, this._onScrollSubscription, this._onResizeSubscription]
+      .forEach(s => s && s.unsubscribe());
   }
 
   /**
