@@ -172,7 +172,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   /** Measures the boundaries of the sticky regions to be used in subsequent positioning. */
-  private _defineRestrictions(): void {
+  private _measureStickyRegionBounds(): void {
     if (!this.stickyParent) {
       return;
     }
@@ -283,7 +283,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   defineRestrictionsAndStick(): void {
-    this._defineRestrictions();
+    this._measureStickyRegionBounds();
     this.sticker();
   }
 }
