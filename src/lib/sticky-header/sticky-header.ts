@@ -231,12 +231,10 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   /**
-   * Unstuck element: When an element reaches the bottom of its cdkStickyRegion,
-   * It should be unstuck. And its position will be set as 'relative', its bottom
-   * will be set as '0'. So it will be stick at the bottom of its cdkStickyRegion and
-   * will be scrolled up with its cdkStickyRegion element. In this way, the sticky header
-   * can be changed smoothly when two sticky header meet and the later one need to replace
-   * the former one.
+   * Unsticks the header so that it goes back to scrolling normally.
+   *
+   * This should be called when the element reaches the bottom of its cdkStickyRegion so that it
+   * smoothly scrolls out of view as the next sticky-header moves in.
    */
   private _unstuckElement(): void {
     this.isStuck = false;
