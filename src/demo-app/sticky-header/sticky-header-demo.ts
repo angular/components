@@ -1,7 +1,4 @@
 import {Component} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {StickyParentDirective, StickyHeaderDirective} from '@angular/material';
-
 
 @Component({
     moduleId: module.id,
@@ -9,5 +6,4 @@ import {StickyParentDirective, StickyHeaderDirective} from '@angular/material';
     templateUrl: 'sticky-header-demo.html',
     styleUrls: ['sticky-header-demo.css'],
 })
-
 export class StickyHeaderDemo { }
