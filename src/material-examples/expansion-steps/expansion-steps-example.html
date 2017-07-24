@@ -9,20 +9,20 @@
         <md-icon>account_circle</md-icon>
       </md-panel-description>
     </md-expansion-panel-header>
-    
+
     <md-input-container>
       <input mdInput placeholder="First name">
     </md-input-container>
-    
+
     <md-input-container>
       <input mdInput type="number" min="1" placeholder="Age">
     </md-input-container>
-    
+
     <md-action-row>
       <button md-button color="primary" (click)="nextStep()">Next</button>
     </md-action-row>
   </md-expansion-panel>
-  
+
   <md-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
     <md-expansion-panel-header>
       <md-panel-title>
@@ -33,17 +33,17 @@
         <md-icon>map</md-icon>
       </md-panel-description>
     </md-expansion-panel-header>
-    
+
     <md-input-container>
       <input mdInput placeholder="Country">
     </md-input-container>
-    
+
     <md-action-row>
       <button md-button color="warn" (click)="prevStep()">Previous</button>
       <button md-button color="primary" (click)="nextStep()">Next</button>
     </md-action-row>
   </md-expansion-panel>
-  
+
   <md-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true">
     <md-expansion-panel-header>
       <md-panel-title>
@@ -54,13 +54,12 @@
         <md-icon>date_range</md-icon>
       </md-panel-description>
     </md-expansion-panel-header>
-    
+
     <md-input-container>
-      <input mdInput placeholder="Date" [mdDatepicker]="picker" 
-        (focus)="picker.open()" readonly>
+      <input mdInput placeholder="Date" [mdDatepicker]="picker" (focus)="picker.open()" readonly>
     </md-input-container>
     <md-datepicker #picker></md-datepicker>
-    
+
     <md-action-row>
       <button md-button color="warn" (click)="prevStep()">Previous</button>
       <button md-button color="primary" (click)="nextStep()">End</button>
