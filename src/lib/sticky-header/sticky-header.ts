@@ -111,15 +111,15 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       this.stickyParent = this.parentRegion != null ?
         this.parentRegion._elementRef.nativeElement : this.element.parentElement;
 
-      let values = window.getComputedStyle(this.element, '');
+      let headerStyles = window.getComputedStyle(this.element, '');
       this._originalStyles = {
-        position: values.position,
-        top: values.top,
-        right: values.right,
-        left: values.left,
-        bottom: values.bottom,
-        width: values.width,
-        zIndex: values.zIndex} as CSSStyleDeclaration;
+        position: headerStyles.position,
+        top: headerStyles.top,
+        right: headerStyles.right,
+        left: headerStyles.left,
+        bottom: headerStyles.bottom,
+        width: headerStyles.width,
+        zIndex: headerStyles.zIndex} as CSSStyleDeclaration;
 
       this.attach();
       this.defineRestrictionsAndStick();
