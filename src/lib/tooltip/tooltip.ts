@@ -42,7 +42,7 @@ import {
   // tslint:disable-next-line:no-unused-variable
   ScrollStrategy,
 } from '@angular/cdk/overlay';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty, ESCAPE} from '@angular/cdk/coercion';
 
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
@@ -78,6 +78,14 @@ export const MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER = {
   useFactory: MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER_FACTORY
 };
 
+export interface RegisteredA11yMessage {
+  element: HTMLElement;
+  count: number;
+}
+
+let latestA11yMessageId = 0;
+
+const a11yMessages = new Map<string, RegisteredA11yMessage>();
 
 /**
  * Directive that attaches a material design tooltip to the host element. Animates the showing and
@@ -89,6 +97,9 @@ export const MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER = {
   selector: '[md-tooltip], [mdTooltip], [mat-tooltip], [matTooltip]',
   host: {
     '(longpress)': 'show()',
+    '(focus)': 'show()',
+    '(blur)': 'hide(0)',
+    '(keydown)': '_handleKeydown($event)',
     '(touchend)': 'hide(' + TOUCHEND_HIDE_DELAY + ')',
   },
   exportAs: 'mdTooltip',
@@ -144,8 +155,11 @@ export class MdTooltip implements OnDestroy {
   /** The message to be displayed in the tooltip */
   @Input('mdTooltip') get message() { return this._message; }
   set message(value: string) {
+    if (this._message) { this.unregisterMessage(this._message); }
+
     this._message = value;
     this._setTooltipMessage(this._message);
+    this.registerMessage(value);
   }
 
   /** Classes to be passed to the tooltip. Supports the same syntax as `ngClass`. */
@@ -217,6 +231,51 @@ export class MdTooltip implements OnDestroy {
     }
   }
 
+  registerMessage(message: string) {
+    if (!this._platform.isBrowser) { return; }
+
+    // Check if map already has constructed element
+    // If not, create element and increment references
+    if (a11yMessages.get(message)) {
+      a11yMessages.get(message)!.count++;
+    } else {
+      const messageElement = document.body.appendChild(document.createElement('div'));
+      messageElement.id = `md-tooltip-message-${latestA11yMessageId++}`;
+      messageElement.innerHTML = message;
+      messageElement.className = 'cdk-visually-hidden';
+      a11yMessages.set(message, {element: messageElement, count: 1});
+    }
+
+    this._setAriaDescribedBy();
+
+  }
+
+  unregisterMessage(message: string) {
+    if (!this._platform.isBrowser) { return; }
+
+    const a11yMessage = a11yMessages.get(message);
+    if (a11yMessage && --a11yMessage.count == 0) {
+      document.body.removeChild(a11yMessage.element);
+      a11yMessages.delete(message);
+    }
+  }
+
+  /** Returns the trigger's aria-describedby attribute. */
+  private _getAriaDescribedby(): string {
+    return this._elementRef.nativeElement.getAttribute('aria-describedby');
+  }
+
+  /** Sets the trigger's aria-describedby attribute to the tooltip message element. */
+  private _setAriaDescribedBy() {
+    // Return if an aria-describedby already exists and it is not referencing a tooltip message.
+    const ariaDescribedBy = this._elementRef.nativeElement.getAttribute('aria-describedby');
+    if (ariaDescribedBy && ariaDescribedBy.indexOf('md-tooltip-message') == -1) { return; }
+
+    const tooltipMessageElementId = a11yMessages.get(this.message)!.element.id;
+    this._renderer.setAttribute(
+        this._elementRef.nativeElement, 'aria-describedby', tooltipMessageElementId);
+  }
+
   /**
    * Dispose the tooltip when destroyed.
    */
@@ -229,6 +288,8 @@ export class MdTooltip implements OnDestroy {
       this._enterListener();
       this._leaveListener();
     }
+
+    this.unregisterMessage(this.message);
   }
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
@@ -259,6 +320,14 @@ export class MdTooltip implements OnDestroy {
   /** Returns true if the tooltip is currently visible to the user */
   _isTooltipVisible(): boolean {
     return !!this._tooltipInstance && this._tooltipInstance.isVisible();
+  }
+
+  /** Handles the keydown events on the host element. */
+  _handleKeydown(e: KeyboardEvent) {
+    if (this._tooltipInstance!.isVisible() && e.keyCode === ESCAPE) {
+      e.stopPropagation();
+      this.hide(0);
+    }
   }
 
   /** Create the tooltip to display */
@@ -416,7 +485,8 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
     // Forces the element to have a layout in IE and Edge. This fixes issues where the element
     // won't be rendered if the animations are disabled or there is no web animations polyfill.
     '[style.zoom]': '_visibility === "visible" ? 1 : null',
-    '(body:click)': 'this._handleBodyInteraction()'
+    '(body:click)': 'this._handleBodyInteraction()',
+    'aria-hidden': 'true',
   }
 })
 export class TooltipComponent {

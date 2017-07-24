@@ -1,7 +1,44 @@
+<button *ngFor="let tooltip of tooltips" mdTooltip="Tooltip message">I'm a button with a</button>
+<button (click)="tooltips.push('another')">Add tooltip</button>
+<button (click)="tooltips.shift()" [disabled]="tooltips.length == 0">Remove tooltip</button>
+
 <div class="demo-tooltip">
   <h1>Tooltip Demo</h1>
 
   <div class="centered" cdk-scrollable>
+    <button #tooltip="mdTooltip"
+            md-raised-button
+            color="primary"
+            [mdTooltip]="message"
+            [mdTooltipPosition]="position"
+            [mdTooltipDisabled]="disabled"
+            [mdTooltipShowDelay]="showDelay"
+            [mdTooltipHideDelay]="hideDelay"
+            [mdTooltipClass]="{'red-tooltip': showExtraClass}">
+      Mouse over to see the tooltip
+    </button>
+    <button #tooltip="mdTooltip"
+            md-raised-button
+            color="primary"
+            [mdTooltip]="message"
+            [mdTooltipPosition]="position"
+            [mdTooltipDisabled]="disabled"
+            [mdTooltipShowDelay]="showDelay"
+            [mdTooltipHideDelay]="hideDelay"
+            [mdTooltipClass]="{'red-tooltip': showExtraClass}">
+      Mouse over to see the tooltip
+    </button>
+    <button #tooltip="mdTooltip"
+            md-raised-button
+            color="primary"
+            [mdTooltip]="message"
+            [mdTooltipPosition]="position"
+            [mdTooltipDisabled]="disabled"
+            [mdTooltipShowDelay]="showDelay"
+            [mdTooltipHideDelay]="hideDelay"
+            [mdTooltipClass]="{'red-tooltip': showExtraClass}">
+      Mouse over to see the tooltip
+    </button>
     <button #tooltip="mdTooltip"
             md-raised-button
             color="primary"
