@@ -258,11 +258,11 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
 
   /**
-   * 'sticker()' function contains the main logic of sticky-header. It decides when
+   * 'applyStickyPositionStyles()' function contains the main logic of sticky-header. It decides when
    * a header should be stick and when should it be unstuck by comparing the offsetTop
    * of scrollable container with the top and bottom of the sticky region.
    */
-  sticker(): void {
+  applyStickyPositionStyles(): void {
     let currentPosition: number = this.upperScrollableContainer.offsetTop;
 
     // unstuck when the element is scrolled out of the sticky region
@@ -284,6 +284,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   defineRestrictionsAndStick(): void {
     this._measureStickyRegionBounds();
-    this.sticker();
+    this.applyStickyPositionStyles();
   }
 }
