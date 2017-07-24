@@ -8,6 +8,8 @@ import {
   NG_VALIDATORS,
 } from '@angular/forms';
 
+export const _MdCheckboxRequiredValidator = CheckboxRequiredValidator;
+
 export const MD_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => MdCheckboxRequiredValidator),
@@ -21,4 +23,4 @@ export const MD_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
   providers: [MD_CHECKBOX_REQUIRED_VALIDATOR],
   host: {'[attr.required]': 'required ? "" : null'}
 })
-export class MdCheckboxRequiredValidator extends CheckboxRequiredValidator {}
+export class MdCheckboxRequiredValidator extends _MdCheckboxRequiredValidator {}
