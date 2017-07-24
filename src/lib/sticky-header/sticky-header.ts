@@ -13,7 +13,7 @@ import {extendObject} from '../core/util/object-extend';
 import {Subscription} from 'rxjs/Subscription';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {RxChain, debounceTime} from '../core/rxjs/index';
-import {isPositionStickySupported} from '../../cdk/platform/features';
+import {isPositionStickySupported} from '@angular/cdk';
 
 
 /**
@@ -62,7 +62,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   /** boolean value to mark whether the current header is stuck*/
   isStuck: boolean = false;
   /** Whether the browser support CSS sticky positioning. */
-  private _isPositionStickySupported: boolean = true;
+  private _isPositionStickySupported: boolean = false;
 
   /** The element with the 'cdkStickyHeader' tag. */
   element: HTMLElement;
@@ -111,33 +111,25 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       this.stickyParent = this.parentRegion != null ?
         this.parentRegion._elementRef.nativeElement : this.element.parentElement;
 
-      let values = window.getComputedStyle(this.element, '');
+      let headerStyles = window.getComputedStyle(this.element, '');
       this._originalStyles = {
-        position: values.position,
-        top: values.top,
-        right: values.right,
-        left: values.left,
-        bottom: values.bottom,
-        width: values.width,
-        zIndex: values.zIndex} as CSSStyleDeclaration;
+        position: headerStyles.position,
+        top: headerStyles.top,
+        right: headerStyles.right,
+        left: headerStyles.left,
+        bottom: headerStyles.bottom,
+        width: headerStyles.width,
+        zIndex: headerStyles.zIndex
+      } as CSSStyleDeclaration;
 
-      this.attach();
-      this.defineRestrictionsAndStick();
+      this._attachEventListeners();
+      this._updateStickyPositioning();
     }
   }
 
   ngOnDestroy(): void {
-    if (this._onScrollSubscription) {
-      this._onScrollSubscription.unsubscribe();
-    }
-
-    if (this._onResizeSubscription) {
-      this._onResizeSubscription.unsubscribe();
-    }
-
-    if (this._onTouchSubscription) {
-      this._onTouchSubscription.unsubscribe();
-    }
+    [this._onScrollSubscription, this._onScrollSubscription, this._onResizeSubscription]
+      .forEach(s => s && s.unsubscribe());
   }
 
   /**
@@ -147,42 +139,40 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   private _setStrategyAccordingToCompatibility(): void {
     this._isPositionStickySupported = isPositionStickySupported();
     if (this._isPositionStickySupported) {
-      this.element.style.top = '0px';
+      this.element.style.top = '0';
       this.element.style.cssText += 'position: -webkit-sticky; position: sticky; ';
-      // TODO add css class with both 'sticky' and '-webkit-sticky' on position
+      // TODO(sllethe): add css class with both 'sticky' and '-webkit-sticky' on position
       // when @Directory supports adding CSS class
     }
   }
 
-  attach() {
+  /** Add listeners for events that affect sticky positioning. */
+  private _attachEventListeners() {
     this._onScrollSubscription = RxChain.from(fromEvent(this.upperScrollableContainer, 'scroll'))
-      .call(debounceTime, DEBOUNCE_TIME).subscribe(() => this.defineRestrictionsAndStick());
+      .call(debounceTime, DEBOUNCE_TIME).subscribe(() => this._updateStickyPositioning());
 
     // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
     this._onTouchSubscription = RxChain.from(fromEvent(this.upperScrollableContainer, 'touchmove'))
-      .call(debounceTime, DEBOUNCE_TIME).subscribe(() => this.defineRestrictionsAndStick());
+      .call(debounceTime, DEBOUNCE_TIME).subscribe(() => this._updateStickyPositioning());
 
     this._onResizeSubscription = RxChain.from(fromEvent(this.upperScrollableContainer, 'resize'))
       .call(debounceTime, DEBOUNCE_TIME).subscribe(() => this.onResize());
   }
 
   onResize(): void {
-    this.defineRestrictionsAndStick();
+    this._updateStickyPositioning();
      // If there's already a header being stick when the page is
      // resized. The CSS style of the cdkStickyHeader element may be not fit
      // the resized window. So we need to unstuck it then re-stick it.
      // unstuck() can set 'isStuck' to FALSE. Then _stickElement() can work.
     if (this.isStuck) {
-      this._unstuckElement();
+      this._unstickElement();
       this._stickElement();
     }
   }
 
-  /**
-   * define the restrictions of the sticky header(including stickyWidth,
-   * when to start, when to finish)
-   */
-  private _defineRestrictions(): void {
+  /** Measures the boundaries of the sticky regions to be used in subsequent positioning. */
+  private _measureStickyRegionBounds(): void {
     if (!this.stickyParent) {
       return;
     }
@@ -195,7 +185,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   /** Reset element to its original CSS. */
-  resetElement(): void {
+  private _resetElementStyles(): void {
     this.element.classList.remove(STICK_START_CLASS);
     extendObject(this.element.style, this._originalStyles);
   }
@@ -226,7 +216,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     // 'translate3d(0,0,0)' needs to be used to force Safari re-rendering the sticky element.
     this.element.style.transform = 'translate3d(0px,0px,0px)';
 
-    let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
+    let stuckRight: number = this.upperScrollableContainer.getBoundingClientRect().right;
 
     let stickyCss = {
       position: 'fixed',
@@ -235,19 +225,18 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       left: this.upperScrollableContainer.offsetLeft + 'px',
       bottom: 'auto',
       width: this._originalStyles.width,
-      zIndex: this.zIndex + '',};
+      zIndex: this.zIndex + ''
+    };
     extendObject(this.element.style, stickyCss);
   }
 
   /**
-   * Unstuck element: When an element reaches the bottom of its cdkStickyRegion,
-   * It should be unstuck. And its position will be set as 'relative', its bottom
-   * will be set as '0'. So it will be stick at the bottom of its cdkStickyRegion and
-   * will be scrolled up with its cdkStickyRegion element. In this way, the sticky header
-   * can be changed smoothly when two sticky header meet and the later one need to replace
-   * the former one.
+   * Unsticks the header so that it goes back to scrolling normally.
+   *
+   * This should be called when the element reaches the bottom of its cdkStickyRegion so that it
+   * smoothly scrolls out of view as the next sticky-header moves in.
    */
-  private _unstuckElement(): void {
+  private _unstickElement(): void {
     this.isStuck = false;
 
     if (!this.stickyParent) {
@@ -262,27 +251,28 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       right: '0',
       left: 'auto',
       bottom: '0',
-      width: this._originalStyles.width};
+      width: this._originalStyles.width
+    };
     extendObject(this.element.style, unstuckCss);
   }
 
 
   /**
-   * 'sticker()' function contains the main logic of sticky-header. It decides when
+   * '_applyStickyPositionStyles()' function contains the main logic of sticky-header. It decides when
    * a header should be stick and when should it be unstuck by comparing the offsetTop
    * of scrollable container with the top and bottom of the sticky region.
    */
-  sticker(): void {
+  _applyStickyPositionStyles(): void {
     let currentPosition: number = this.upperScrollableContainer.offsetTop;
 
     // unstuck when the element is scrolled out of the sticky region
     if (this.isStuck &&
       (currentPosition < this._stickyRegionTop ||
-      currentPosition > this._stickyRegionBottomThreshold)
-      || currentPosition >= this._stickyRegionBottomThreshold) {
-      this.resetElement();
+      currentPosition > this._stickyRegionBottomThreshold) ||
+      currentPosition >= this._stickyRegionBottomThreshold) {
+      this._resetElementStyles();
       if (currentPosition >= this._stickyRegionBottomThreshold) {
-        this._unstuckElement();
+        this._unstickElement();
       }
       this.isStuck = false;    // stick when the element is within the sticky region
     } else if ( this.isStuck === false &&
@@ -292,8 +282,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     }
   }
 
-  defineRestrictionsAndStick(): void {
-    this._defineRestrictions();
-    this.sticker();
+  _updateStickyPositioning(): void {
+    this._measureStickyRegionBounds();
+    this._applyStickyPositionStyles();
   }
 }
