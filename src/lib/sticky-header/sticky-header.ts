@@ -119,7 +119,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         left: headerStyles.left,
         bottom: headerStyles.bottom,
         width: headerStyles.width,
-        zIndex: headerStyles.zIndex} as CSSStyleDeclaration;
+        zIndex: headerStyles.zIndex
+      } as CSSStyleDeclaration;
 
       this.attach();
       this.defineRestrictionsAndStick();
