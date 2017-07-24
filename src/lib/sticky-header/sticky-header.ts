@@ -225,7 +225,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       left: this.upperScrollableContainer.offsetLeft + 'px',
       bottom: 'auto',
       width: this._originalStyles.width,
-      zIndex: this.zIndex + '',};
+      zIndex: this.zIndex + ''
+    };
     extendObject(this.element.style, stickyCss);
   }
 
@@ -252,7 +253,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       right: '0',
       left: 'auto',
       bottom: '0',
-      width: this._originalStyles.width};
+      width: this._originalStyles.width
+    };
     extendObject(this.element.style, unstuckCss);
   }
 
