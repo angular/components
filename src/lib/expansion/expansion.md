@@ -1,4 +1,4 @@
-`<md-expansion-panel>` provides a expandable details-summary view.
+`<md-expansion-panel>` provides an expandable details-summary view.
 
 <!-- example(expansion-overview) -->
 

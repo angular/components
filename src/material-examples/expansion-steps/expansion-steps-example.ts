@@ -8,8 +8,8 @@ import {Component} from '@angular/core';
 export class ExpansionStepsExample {
   step = 0;
 
-  openEvent(stepNumb: number) {
-    this.step = stepNumb;
+  setStep(index: number) {
+    this.step = index;
   }
 
   nextStep() {

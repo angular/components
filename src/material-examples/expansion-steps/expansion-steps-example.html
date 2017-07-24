@@ -1,12 +1,12 @@
 <md-accordion class="example-headers-align">
-  <md-expansion-panel [expanded]="step === 0" (opened)="openEvent(0)" hideToggle="true">
+  <md-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
     <md-expansion-panel-header>
       <md-panel-title>
         Personal data
       </md-panel-title>
       <md-panel-description>
-        <div>Type your name and age</div>
-        <div class="example-icons-to-right"><md-icon>account_circle</md-icon></div>
+        Type your name and age
+        <md-icon>account_circle</md-icon>
       </md-panel-description>
     </md-expansion-panel-header>
     
@@ -15,7 +15,7 @@
     </md-input-container>
     
     <md-input-container>
-      <input mdInput placeholder="Age">
+      <input mdInput type="number" min="1" placeholder="Age">
     </md-input-container>
     
     <md-action-row>
@@ -23,14 +23,14 @@
     </md-action-row>
   </md-expansion-panel>
   
-  <md-expansion-panel [expanded]="step === 1" (opened)="openEvent(1)" hideToggle="true">
+  <md-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
     <md-expansion-panel-header>
       <md-panel-title>
         Destination
       </md-panel-title>
       <md-panel-description>
-        <div>Type the country name</div>
-        <div class="example-icons-to-right"><md-icon>map</md-icon></div>
+        Type the country name
+        <md-icon>map</md-icon>
       </md-panel-description>
     </md-expansion-panel-header>
     
@@ -44,14 +44,14 @@
     </md-action-row>
   </md-expansion-panel>
   
-  <md-expansion-panel [expanded]="step === 2" (opened)="openEvent(2)" hideToggle="true">
+  <md-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true">
     <md-expansion-panel-header>
       <md-panel-title>
         Day of the trip
       </md-panel-title>
       <md-panel-description>
-        <div>Inform the date you wish to travel</div>
-        <div class="example-icons-to-right"><md-icon>date_range</md-icon></div>
+        Inform the date you wish to travel
+        <md-icon>date_range</md-icon>
       </md-panel-description>
     </md-expansion-panel-header>
     

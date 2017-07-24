@@ -3,10 +3,7 @@
   flex-basis: 0;
 }
 
-.example-icons-to-right {
-  display: inline-block;
-  width: 100%;
-  text-align: right;
-  margin-top: 5px;
-  color: blue;
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
 }
