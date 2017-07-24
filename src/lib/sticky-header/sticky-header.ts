@@ -216,7 +216,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     // 'translate3d(0,0,0)' needs to be used to force Safari re-rendering the sticky element.
     this.element.style.transform = 'translate3d(0px,0px,0px)';
 
-    let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
+    let stuckRight: number = this.upperScrollableContainer.getBoundingClientRect().right;
 
     let stickyCss = {
       position: 'fixed',
