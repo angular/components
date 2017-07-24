@@ -171,10 +171,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     }
   }
 
-  /**
-   * define the restrictions of the sticky header(including stickyWidth,
-   * when to start, when to finish)
-   */
+  /** Measures the boundaries of the sticky regions to be used in subsequent positioning. */
   private _defineRestrictions(): void {
     if (!this.stickyParent) {
       return;
