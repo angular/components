@@ -99,7 +99,7 @@
   <md-table [dataSource]="dataSource" [trackBy]="userTrackBy">
 
     <!-- Column Definition: ID -->
-    <ng-container mdColumnDef="userId">
+    <ng-container cdkColumnDef="userId">
       <md-header-cell *mdHeaderCellDef> ID </md-header-cell>
       <md-cell *mdCellDef="let row"> {{row.id}} </md-cell>
     </ng-container>

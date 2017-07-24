@@ -58,7 +58,7 @@ export class MdColumnDef extends _MdColumnDef {
   },
 })
 export class MdHeaderCell extends _MdHeaderCell {
-  constructor(columnDef: MdColumnDef,
+  constructor(columnDef: CdkColumnDef,
               elementRef: ElementRef,
               renderer: Renderer2) {
     super(columnDef, elementRef, renderer);
@@ -75,7 +75,7 @@ export class MdHeaderCell extends _MdHeaderCell {
   },
 })
 export class MdCell extends _MdCell {
-  constructor(columnDef: MdColumnDef,
+  constructor(columnDef: CdkColumnDef,
               elementRef: ElementRef,
               renderer: Renderer2) {
     super(columnDef, elementRef, renderer);
