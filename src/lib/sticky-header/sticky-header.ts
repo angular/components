@@ -122,7 +122,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         zIndex: headerStyles.zIndex
       } as CSSStyleDeclaration;
 
-      this.attach();
+      this._attachEventListeners();
       this.defineRestrictionsAndStick();
     }
   }
@@ -146,7 +146,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     }
   }
 
-  attach() {
+  /** Add listeners for events that affect sticky positioning. */
+  private _attachEventListeners() {
     this._onScrollSubscription = RxChain.from(fromEvent(this.upperScrollableContainer, 'scroll'))
       .call(debounceTime, DEBOUNCE_TIME).subscribe(() => this.defineRestrictionsAndStick());
 
