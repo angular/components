@@ -16,17 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@angular/material": ["./src/lib/public_api.ts"],
-      "@angular/cdk": ["./src/cdk/public_api.ts"],
-      "@angular/cdk/a11y": ["./src/cdk/a11y"],
-      "@angular/cdk/bidi": ["./src/cdk/bidi"],
-      "@angular/cdk/coercion": ["./src/cdk/coercion"],
-      "@angular/cdk/keyboard": ["./src/cdk/keyboard"],
-      "@angular/cdk/observe-content": ["./src/cdk/observe-content"],
-      "@angular/cdk/platform": ["./src/cdk/platform"],
-      "@angular/cdk/portal": ["./src/cdk/portal"],
-      "@angular/cdk/rxjs": ["./src/cdk/rxjs"],
-      "@angular/cdk/table": ["./src/cdk/table"],
-      "@angular/cdk/testing": ["./src/cdk/testing"],
+      "@angular/cdk*": ["./src/cdk/*"],
       "@angular/material-examples": ["./src/material-examples"]
     }
   },

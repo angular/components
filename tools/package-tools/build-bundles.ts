@@ -16,11 +16,11 @@ const bundlesDir = join(buildConfig.outputDir, 'bundles');
 export async function buildPrimaryEntryPointBundles(entryFile: string, packageName: string) {
   return createBundlesForEntryPoint({
     entryFile,
-    moduleName:   `ng.${packageName}`,
+    moduleName: `ng.${packageName}`,
     fesm2015Dest: join(bundlesDir, `${packageName}.js`),
     fesm2014Dest: join(bundlesDir, `${packageName}.es5.js`),
-    umdDest:      join(bundlesDir, `${packageName}.umd.js`),
-    umdMinDest:   join(bundlesDir, `${packageName}.umd.min.js`),
+    umdDest: join(bundlesDir, `${packageName}.umd.js`),
+    umdMinDest: join(bundlesDir, `${packageName}.umd.min.js`),
   });
 }
 
