@@ -1,14 +1,4 @@
-* {
-  margin: 0;
-  padding: 0;
-}
 
-body {
-  font: 14px/1.5 Helvetica, Arial, sans-serif;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-}
 
 .demo-sticky {
   .centered {
@@ -22,6 +12,37 @@ body {
     position: fixed;
     margin: 16px;
     z-index: 99;
+  }
+
+  h2 {
+    font-size: 20px;
+    padding: 20px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  p {
+    margin-bottom: 1.5em;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  div{
+    margin: 0; border: 0; padding: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font: 14px/1.5 Helvetica, Arial, sans-serif;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
   }
 }
 
@@ -88,22 +109,4 @@ header {
   -webkit-appearance: none;
   padding: 20px;
   //width: 100%;
-}
-
-h2 {
-  font-size: 20px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-p {
-  margin-bottom: 1.5em;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-div{
-  margin: 0; border: 0; padding: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }
