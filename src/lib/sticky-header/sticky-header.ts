@@ -139,7 +139,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   private _setStrategyAccordingToCompatibility(): void {
     this._isPositionStickySupported = isPositionStickySupported();
     if (this._isPositionStickySupported) {
-      this.element.style.top = '0px';
+      this.element.style.top = '0';
       this.element.style.cssText += 'position: -webkit-sticky; position: sticky; ';
       // TODO add css class with both 'sticky' and '-webkit-sticky' on position
       // when @Directory supports adding CSS class
