@@ -97,23 +97,23 @@ describe('MdTabGroup', () => {
           fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
       const tabs: MdTab[] = component._tabs.toArray();
 
-      expect(tabs[0].position).toBeLessThan(0);
-      expect(tabs[1].position).toBe(0);
-      expect(tabs[2].position).toBeGreaterThan(0);
+      expect(tabs[0]._position).toBeLessThan(0);
+      expect(tabs[1]._position).toBe(0);
+      expect(tabs[2]._position).toBeGreaterThan(0);
 
       // Move to third tab
       component.selectedIndex = 2;
       fixture.detectChanges();
-      expect(tabs[0].position).toBeLessThan(0);
-      expect(tabs[1].position).toBeLessThan(0);
-      expect(tabs[2].position).toBe(0);
+      expect(tabs[0]._position).toBeLessThan(0);
+      expect(tabs[1]._position).toBeLessThan(0);
+      expect(tabs[2]._position).toBe(0);
 
       // Move to the first tab
       component.selectedIndex = 0;
       fixture.detectChanges();
-      expect(tabs[0].position).toBe(0);
-      expect(tabs[1].position).toBeGreaterThan(0);
-      expect(tabs[2].position).toBeGreaterThan(0);
+      expect(tabs[0]._position).toBe(0);
+      expect(tabs[1]._position).toBeGreaterThan(0);
+      expect(tabs[2]._position).toBeGreaterThan(0);
     });
 
     it('should clamp the selected index to the size of the number of tabs', () => {
@@ -189,9 +189,9 @@ describe('MdTabGroup', () => {
           fixture.debugElement.query(By.css('md-tab-group')).componentInstance;
 
       let tabs: MdTab[] = component._tabs.toArray();
-      expect(tabs[0].origin).toBe(null);
-      expect(tabs[1].origin).toBe(0);
-      expect(tabs[2].origin).toBe(null);
+      expect(tabs[0]._origin).toBe(null);
+      expect(tabs[1]._origin).toBe(0);
+      expect(tabs[2]._origin).toBe(null);
 
       // Add a new tab on the right and select it, expect an origin >= than 0 (animate right)
       fixture.componentInstance.tabs.push({label: 'New tab', content: 'to right of index'});
@@ -199,7 +199,7 @@ describe('MdTabGroup', () => {
       fixture.detectChanges();
 
       tabs = component._tabs.toArray();
-      expect(tabs[3].origin).toBeGreaterThanOrEqual(0);
+      expect(tabs[3]._origin).toBeGreaterThanOrEqual(0);
 
       // Add a new tab in the beginning and select it, expect an origin < than 0 (animate left)
       fixture.componentInstance.tabs.push({label: 'New tab', content: 'to left of index'});
@@ -207,7 +207,7 @@ describe('MdTabGroup', () => {
       fixture.detectChanges();
 
       tabs = component._tabs.toArray();
-      expect(tabs[0].origin).toBeLessThan(0);
+      expect(tabs[0]._origin).toBeLessThan(0);
     });
 
 
