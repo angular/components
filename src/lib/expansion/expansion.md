@@ -4,7 +4,7 @@
 
 ### Expansion-panel content
 
-Each expansion panel must include a header and may optionally include an action bar.
+Each expansion-panel must include a header and may optionally include an action bar.
 
 #### Header
 
