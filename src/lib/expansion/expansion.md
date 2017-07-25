@@ -13,10 +13,6 @@ as the control for expanding and collapsing. This header may optionally contain 
 `<md-panel-title>` and an `<md-panel-description>`, which format the content of the
 header to align with Material Design specifications.
 
-The `<md-panel-title>` is shown in the beginning of the header, followed by the 
-`<md-panel-description>`, which is intended to contain a summary of the primary content 
-of the panel.
-
 By default, the expansion-panel header includes a toggle icon at the end of the
 header to indicate the expansion state. This icon can be hidden via the 
 `hideToggle` property.
