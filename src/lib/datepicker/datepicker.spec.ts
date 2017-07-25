@@ -1001,7 +1001,7 @@ class InputContainerDatepicker {
 })
 class DatepickerWithMinAndMaxValidation {
   @ViewChild('d') datepicker: MdDatepicker<Date>;
-  date: Date;
+  date: Date | null;
   minDate = new Date(2010, JAN, 1);
   maxDate = new Date(2020, JAN, 1);
 }
