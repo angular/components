@@ -62,3 +62,22 @@ export function getSupportedInputTypes(): Set<string> {
 
   return supportedInputTypes;
 }
+
+let computedPositionStickySupported: boolean | null = null;
+
+/**
+ * Whether the browser support css `position: sticky`.
+ * Based on the check from modernizr:
+ * https://github.com/Modernizr/Modernizr/blob/master/feature-detects/css/positionsticky.js
+ */
+export function isPositionStickySupported() {
+  if (computedPositionStickySupported != null) {
+    return computedPositionStickySupported;
+  }
+
+  const elementStyle = document.createElement('div').style;
+  elementStyle.cssText = ['', '-webkit-'].map(p => `position: ${p}sticky`).join(';');
+  computedPositionStickySupported = elementStyle.cssText.indexOf('sticky') !== -1;
+  return computedPositionStickySupported;
+}
+
