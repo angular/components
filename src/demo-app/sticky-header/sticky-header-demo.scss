@@ -62,20 +62,19 @@
   -moz-appearance: none;
 }
 
-.headerStyle1 {
+.headerStyle{
+  -webkit-appearance: none;
+  padding: 20px;
+}
+
+.headerColor1 {
   background: #cecece;
-  -webkit-appearance: none;
-  padding: 20px;
 }
 
-.headerStyle2 {
+.headerColor2 {
   background: #cea7a7;
-  -webkit-appearance: none;
-  padding: 20px;
 }
 
-.headerStyle3 {
+.headerColor3 {
   background: #c2eae5;
-  -webkit-appearance: none;
-  padding: 20px;
 }
