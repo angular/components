@@ -6,7 +6,7 @@ import {MdSidenav, MdSidenavModule, MdSidenavContainer} from './index';
 import {A11yModule} from '../core/a11y/index';
 import {PlatformModule} from '../core/platform/index';
 import {ESCAPE} from '../core/keyboard/keycodes';
-import {dispatchKeyboardEvent} from '../core/testing/dispatch-events';
+import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 
 
 describe('MdSidenav', () => {

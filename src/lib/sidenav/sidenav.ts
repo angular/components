@@ -40,6 +40,14 @@ export function throwMdDuplicatedSidenavError(align: string) {
 
 
 /**
+ * Sidenav toggle promise result.
+ * @deprecated
+ */
+export class MdSidenavToggleResult {
+  constructor(public type: 'open' | 'close', public animationFinished: boolean) {}
+}
+
+/**
  * <md-sidenav> component.
  *
  * This component corresponds to the drawer of the sidenav.
@@ -113,11 +121,18 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
   /** Whether the sidenav is animating. Used to prevent overlapping animations. */
   _isAnimating = false;
 
+  /**
+   * Promise that resolves when the open/close animation completes. It is here for backwards
+   * compatibility and should be removed next time we do sidenav breaking changes.
+   * @deprecated
+   */
+  private _currentTogglePromise: Promise<MdSidenavToggleResult> | null;
+
   /** Event emitted when the sidenav is fully opened. */
-  @Output('open') onOpen = new EventEmitter<void>();
+  @Output('open') onOpen = new EventEmitter<MdSidenavToggleResult | void>();
 
   /** Event emitted when the sidenav is fully closed. */
-  @Output('close') onClose = new EventEmitter<void>();
+  @Output('close') onClose = new EventEmitter<MdSidenavToggleResult | void>();
 
   /** Event emitted when the sidenav alignment changes. */
   @Output('align-changed') onAlignChanged = new EventEmitter<void>();
@@ -183,27 +198,34 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
 
 
   /**  Open the sidenav. */
-  open() {
-    this.toggle(true);
+  open(): Promise<MdSidenavToggleResult> {
+    return this.toggle(true);
   }
 
   /** Close the sidenav. */
-  close() {
-    this.toggle(false);
+  close(): Promise<MdSidenavToggleResult> {
+    return this.toggle(false);
   }
 
   /**
    * Toggle this sidenav.
    * @param isOpen Whether the sidenav should be open.
    */
-  toggle(isOpen: boolean = !this.opened) {
+  toggle(isOpen: boolean = !this.opened): Promise<MdSidenavToggleResult> {
     if (!this._isAnimating) {
       this._opened = isOpen;
+      this._currentTogglePromise = new Promise(resolve => {
+        first.call(isOpen ? this.onOpen : this.onClose).subscribe(resolve);
+      });
 
       if (this._focusTrap) {
         this._focusTrap.enabled = this.isFocusTrapEnabled;
       }
     }
+
+    // TODO(crisbeto): This promise is here backwards-compatibility.
+    // It should be removed next time we do breaking changes in the sidenav.
+    return this._currentTogglePromise!;
   }
 
   /**
@@ -219,19 +241,17 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
 
   _onAnimationEnd(event: AnimationEvent) {
     if (event.toState === 'open') {
-      this.onOpen.emit();
+      this.onOpen.emit(new MdSidenavToggleResult('open', true));
     } else if (event.toState === 'void') {
-      this.onClose.emit();
+      this.onClose.emit(new MdSidenavToggleResult('close', true));
     }
 
     this._isAnimating = false;
+    this._currentTogglePromise = null;
   }
 
   get _width() {
-    if (this._elementRef.nativeElement) {
-      return this._elementRef.nativeElement.offsetWidth;
-    }
-    return 0;
+    return this._elementRef.nativeElement ? (this._elementRef.nativeElement.offsetWidth || 0) : 0;
   }
 }
 
