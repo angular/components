@@ -7,29 +7,25 @@
  */
 
 import {Directive} from '@angular/core';
-import {CdkStepperNext, CdkStepperPrevious} from '@angular/cdk';
+import {CdkStepper, CdkStepperNext, CdkStepperPrevious} from '@angular/cdk';
 import {MdStepper} from './stepper';
 
+/** Button that moves to the next step in a stepper workflow. */
 @Directive({
   selector: 'button[mdStepperNext], button[matStepperNext]',
   host: {
     '(click)': '_onClick()',
-  }
+  },
+  providers: [{provide: CdkStepper, useExisting: MdStepper}],
 })
-export class MdStepperNext extends CdkStepperNext {
-  constructor(mdStepper: MdStepper) {
-    super(mdStepper);
-  }
-}
+export class MdStepperNext extends CdkStepperNext { }
 
+/** Button that moves to the previous step in a stepper workflow. */
 @Directive({
   selector: 'button[mdStepperPrevious], button[matStepperPrevious]',
   host: {
     '(click)': '_onClick()',
-  }
+  },
+  providers: [{provide: CdkStepper, useExisting: MdStepper}]
 })
-export class MdStepperPrevious extends CdkStepperPrevious {
-  constructor(mdStepper: MdStepper) {
-    super(mdStepper);
-  }
-}
+export class MdStepperPrevious extends CdkStepperPrevious { }
