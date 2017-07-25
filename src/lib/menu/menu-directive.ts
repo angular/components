@@ -36,7 +36,7 @@ import {merge} from 'rxjs/observable/merge';
 import {Observable} from 'rxjs/Observable';
 import {Direction} from '../core';
 
-/** Default `md-menu` options that can be overriden. */
+/** Default `md-menu` options that can be overridden. */
 export interface MdMenuDefaultOptions {
   xPosition: MenuPositionX;
   yPosition: MenuPositionY;

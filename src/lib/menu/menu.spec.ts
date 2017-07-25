@@ -888,7 +888,7 @@ describe('MdMenu default overrides', () => {
     }).compileComponents();
   }));
 
-  it('should allow for the default menu options to be overriden', () => {
+  it('should allow for the default menu options to be overridden', () => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const menu = fixture.componentInstance.menu;
@@ -911,11 +911,7 @@ describe('MdMenu default overrides', () => {
 class SimpleMenu {
   @ViewChild(MdMenuTrigger) trigger: MdMenuTrigger;
   @ViewChild('triggerEl') triggerEl: ElementRef;
-<<<<<<< HEAD
   @ViewChild(MdMenu) menu: MdMenu;
-=======
-  @ViewChild('menu') menu: MdMenu;
->>>>>>> feat(menu): add injection token for overriding the default options
   closeCallback = jasmine.createSpy('menu closed callback');
 }
 
