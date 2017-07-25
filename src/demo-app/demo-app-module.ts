@@ -81,6 +81,7 @@ import {
 } from '@angular/material';
 import {CdkTableModule} from '@angular/cdk';
 import {TableHeaderDemo} from './table/table-header-demo';
+import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
