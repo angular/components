@@ -124,15 +124,13 @@ export class MdDatepickerContent<D> implements AfterContentInit {
 export class MdDatepicker<D> implements OnDestroy {
   /** The date to open the calendar to initially. */
   @Input()
-  get startAt(): D {
+  get startAt(): D | null {
     // If an explicit startAt is set we start there, otherwise we start at whatever the currently
     // selected value is.
-    return this._startAt ||
-        (this._datepickerInput && this._dateAdapter.isValidDate(this._datepickerInput.value) ?
-            this._datepickerInput.value : null);
+    return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
   }
-  set startAt(date: D) { this._startAt = date; }
-  private _startAt: D;
+  set startAt(date: D | null) { this._startAt = this._dateAdapter.getValidDateOrNull(date); }
+  private _startAt: D | null;
 
   /** The view that the calendar should start in. */
   @Input() startView: 'month' | 'year' = 'month';
@@ -169,12 +167,12 @@ export class MdDatepicker<D> implements OnDestroy {
   _selected: D | null = null;
 
   /** The minimum selectable date. */
-  get _minDate(): D {
+  get _minDate(): D | null {
     return this._datepickerInput && this._datepickerInput.min;
   }
 
   /** The maximum selectable date. */
-  get _maxDate(): D {
+  get _maxDate(): D | null {
     return this._datepickerInput && this._datepickerInput.max;
   }
 
@@ -242,8 +240,7 @@ export class MdDatepicker<D> implements OnDestroy {
     }
     this._datepickerInput = input;
     this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: D) =>
-            this._selected = this._dateAdapter.isValidDate(value) ? value : null);
+        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
   }
 
   /** Open the calendar. */

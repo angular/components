@@ -157,11 +157,26 @@ export abstract class DateAdapter<D> {
   abstract getISODateString(date: D): string;
 
   /**
-   * Checks whether the given value is a valid date object.
-   * @param value The value to check.
-   * @returns Whether the value is a valid date object.
+   * Checks whether the given object is considered a date instance by this DateAdapter.
+   * @param obj The object to check
+   * @returns Whether the object is a date instance.
    */
-  abstract isValidDate(value: any): boolean;
+  abstract isDateInstance(obj: any): boolean;
+
+  /**
+   * Checks whether the given date is valid.
+   * @param date The date to check.
+   * @returns Whether the date is valid.
+   */
+  abstract isValid(date: D): boolean;
+
+  /**
+   * @param {obj} The object to check.
+   * @returns The given object if it is both a date instance and valid, otherwise null.
+   */
+  getValidDateOrNull(obj: any): D | null {
+    return (this.isDateInstance(obj) && this.isValid(obj)) ? obj : null;
+  }
 
   /**
    * Sets the locale used for all dates.

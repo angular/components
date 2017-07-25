@@ -112,10 +112,16 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   /** The value of the input. */
   @Input()
   get value(): D | null {
-    return this._dateAdapter.parse(this._elementRef.nativeElement.value,
-        this._dateFormats.parse.dateInput);
+    return this._dateAdapter.getValidDateOrNull(
+        this._dateAdapter.parse(
+            this._elementRef.nativeElement.value, this._dateFormats.parse.dateInput));
   }
   set value(value: D | null) {
+    if (value != null && !this._dateAdapter.isDateInstance(value)) {
+      throw Error('Datepicker: value not recognized as a date object by DateAdapter.');
+    }
+    value = this._dateAdapter.getValidDateOrNull(value);
+
     let oldDate = this.value;
     this._renderer.setProperty(this._elementRef.nativeElement, 'value',
         value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '');
@@ -126,21 +132,21 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   /** The minimum valid date. */
   @Input()
-  get min(): D { return this._min; }
-  set min(value: D) {
-    this._min = value;
+  get min(): D | null { return this._min; }
+  set min(value: D | null) {
+    this._min = this._dateAdapter.getValidDateOrNull(value);
     this._validatorOnChange();
   }
-  private _min: D;
+  private _min: D | null;
 
   /** The maximum valid date. */
   @Input()
-  get max(): D { return this._max; }
-  set max(value: D) {
-    this._max = value;
+  get max(): D | null { return this._max; }
+  set max(value: D | null) {
+    this._max = this._dateAdapter.getValidDateOrNull(value);
     this._validatorOnChange();
   }
-  private _max: D;
+  private _max: D | null;
 
   /** Whether the datepicker-input is disabled. */
   @Input()
@@ -169,20 +175,20 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   /** The form control validator for whether the input parses. */
   private _parseValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    return (!control.value || this._dateAdapter.isValidDate(control.value)) ?
+    return (!control.value || this._dateAdapter.isValid(control.value)) ?
         null : {'mdDatepickerParse': true};
   }
 
   /** The form control validator for the min date. */
   private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    return (!this.min || !this._dateAdapter.isValidDate(this.min) || !control.value ||
+    return (!this.min || !control.value ||
         this._dateAdapter.compareDate(this.min, control.value) <= 0) ?
         null : {'mdDatepickerMin': {'min': this.min, 'actual': control.value}};
   }
 
   /** The form control validator for the max date. */
   private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    return (!this.max || !this._dateAdapter.isValidDate(this.max) || !control.value ||
+    return (!this.max || !control.value ||
         this._dateAdapter.compareDate(this.max, control.value) >= 0) ?
         null : {'mdDatepickerMax': {'max': this.max, 'actual': control.value}};
   }

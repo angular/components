@@ -164,7 +164,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   }
 
   format(date: Date, displayFormat: Object): string {
-    if (!this.isValidDate(date)) {
+    if (!this.isValid(date)) {
       return 'INVALID DATE';
     }
     if (SUPPORTS_INTL_API) {
@@ -212,14 +212,12 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     ].join('-');
   }
 
-  isValidDate(value: any) {
-    if (value == null) {
-      return true;
-    }
-    if (value instanceof Date) {
-      return !isNaN(value.getTime());
-    }
-    return false;
+  isDateInstance(obj: any) {
+    return obj instanceof Date;
+  }
+
+  isValid(date: Date) {
+    return !isNaN(date.getTime());
   }
 
   /** Creates a date but allows the month and date to overflow. */
