@@ -85,6 +85,8 @@ export interface RegisteredA11yMessage {
 
 let latestA11yMessageId = 0;
 
+const A11Y_MESSAGES_CONTAINER_ID = 'md-tooltip-a11y-messages';
+
 const a11yMessages = new Map<string, RegisteredA11yMessage>();
 
 /**
@@ -155,11 +157,11 @@ export class MdTooltip implements OnDestroy {
   /** The message to be displayed in the tooltip */
   @Input('mdTooltip') get message() { return this._message; }
   set message(value: string) {
-    if (this._message) { this.unregisterMessage(this._message); }
+    if (this._message) { this._unregisterA11yMessage(this._message); }
 
     this._message = value;
     this._setTooltipMessage(this._message);
-    this.registerMessage(value);
+    this._registerA11yMessage(value);
   }
 
   /** Classes to be passed to the tooltip. Supports the same syntax as `ngClass`. */
@@ -229,35 +231,69 @@ export class MdTooltip implements OnDestroy {
       this._leaveListener =
         _renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
     }
+
+    // Create a visually hidden container for the accessibility messages if one does not yet exist.
+    if (_platform.isBrowser && !document.getElementById(A11Y_MESSAGES_CONTAINER_ID)) {
+      const a11yMessagesContainer = document.body.appendChild(document.createElement('div'));
+      a11yMessagesContainer.className = 'cdk-visually-hidden';
+    }
   }
 
-  registerMessage(message: string) {
-    if (!this._platform.isBrowser) { return; }
-
-    // Check if map already has constructed element
-    // If not, create element and increment references
-    if (a11yMessages.get(message)) {
-      a11yMessages.get(message)!.count++;
+  /**
+   * Registers the tooltip message for accessibility concerns. If this message has not yet been
+   * registered, a new element will be created in a visually hidden container with the message
+   * as its content. This provides screenreaders a reference the tooltip trigger's aria-describedby.
+   * If an element has already been created for this message, increase that registered message's
+   * reference count.
+   */
+  private _registerA11yMessage(message: string) {
+    const a11yMessage = a11yMessages.get(message);
+    if (a11yMessage) {
+      a11yMessage.count++;
     } else {
-      const messageElement = document.body.appendChild(document.createElement('div'));
-      messageElement.id = `md-tooltip-message-${latestA11yMessageId++}`;
-      messageElement.innerHTML = message;
-      messageElement.className = 'cdk-visually-hidden';
-      a11yMessages.set(message, {element: messageElement, count: 1});
+      this._createA11yMessageElement(message);
     }
 
     this._setAriaDescribedBy();
-
   }
 
-  unregisterMessage(message: string) {
+  /**
+   * Removes the a11y tooltip message element if no other tooltips are registered with the same
+   * message. Otherwise, decrease the reference count of the registered a11y tooltip message.
+   */
+  private _unregisterA11yMessage(message: string) {
     if (!this._platform.isBrowser) { return; }
 
-    const a11yMessage = a11yMessages.get(message);
-    if (a11yMessage && --a11yMessage.count == 0) {
-      document.body.removeChild(a11yMessage.element);
-      a11yMessages.delete(message);
+    const a11yMessageElement = a11yMessages.get(message);
+    if (a11yMessageElement && --a11yMessageElement.count == 0) {
+      this._deleteA11yMessageElement(message);
     }
+  }
+
+  /**
+   * Creates a new element in the visually hidden a11y message container element with the message
+   * as its content.
+   */
+  private _createA11yMessageElement(message: string) {
+    if (!this._platform.isBrowser) { return; }
+
+    const a11yMessagesContainer = document.getElementById(A11Y_MESSAGES_CONTAINER_ID)!;
+
+    const messageElement = a11yMessagesContainer.appendChild(document.createElement('div'));
+    messageElement.id = `md-tooltip-message-${latestA11yMessageId++}`;
+    messageElement.innerHTML = message;
+    a11yMessages.set(message, {element: messageElement, count: 1});
+
+    return messageElement;
+  }
+
+  private _deleteA11yMessageElement(message: string) {
+    if (!this._platform.isBrowser) { return; }
+
+    const a11yMessage = a11yMessages.get(message)!;
+    const a11yMessagesContainer = document.getElementById(A11Y_MESSAGES_CONTAINER_ID)!;
+    a11yMessagesContainer.removeChild(a11yMessage.element);
+    a11yMessages.delete(message);
   }
 
   /** Returns the trigger's aria-describedby attribute. */
@@ -271,9 +307,13 @@ export class MdTooltip implements OnDestroy {
     const ariaDescribedBy = this._elementRef.nativeElement.getAttribute('aria-describedby');
     if (ariaDescribedBy && ariaDescribedBy.indexOf('md-tooltip-message') == -1) { return; }
 
-    const tooltipMessageElementId = a11yMessages.get(this.message)!.element.id;
-    this._renderer.setAttribute(
-        this._elementRef.nativeElement, 'aria-describedby', tooltipMessageElementId);
+    if (this.message) {
+      const tooltipMessageElementId = a11yMessages.get(this.message)!.element.id;
+      this._renderer.setAttribute(
+          this._elementRef.nativeElement, 'aria-describedby', tooltipMessageElementId);
+    } else {
+      this._renderer.setAttribute(this._elementRef.nativeElement, 'aria-describedby', '');
+    }
   }
 
   /**
@@ -289,7 +329,7 @@ export class MdTooltip implements OnDestroy {
       this._leaveListener();
     }
 
-    this.unregisterMessage(this.message);
+    this._unregisterA11yMessage(this.message);
   }
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
