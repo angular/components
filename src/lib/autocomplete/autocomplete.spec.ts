@@ -1003,6 +1003,7 @@ describe('MdAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       tick();
+      fixture.detectChanges();
       container = document.querySelector('.mat-autocomplete-panel') as HTMLElement;
     }));
 
