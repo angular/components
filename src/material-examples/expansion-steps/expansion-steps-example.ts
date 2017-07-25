@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 
 
 @Component({
-  selector: 'expansion-overview-example',
-  templateUrl: 'expansion-overview-example.html',
+  selector: 'expansion-steps-example',
+  templateUrl: 'expansion-steps-example.html',
   styleUrls: ['expansion-steps-example.css']
 })
 export class ExpansionStepsExample {
