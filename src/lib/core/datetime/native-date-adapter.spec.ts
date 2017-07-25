@@ -305,12 +305,16 @@ describe('NativeDateAdapter', () => {
     }
   });
 
-  it('should count a Date as a date object', () => {
-    expect(adapter.isDateObject(new Date())).toBe(true);
+  it('should count a Date as a valid date object', () => {
+    expect(adapter.isValidDate(new Date())).toBe(true);
   });
 
-  it('should not count a string as a date object', () => {
-    expect(adapter.isDateObject('1/1/2017')).toBe(false);
+  it('should not count a string as a valid date object', () => {
+    expect(adapter.isValidDate('1/1/2017')).toBe(false);
+  });
+
+  it('should not count InvalidDate as a valid date object', () => {
+    expect(adapter.isValidDate(new Date(NaN))).toBe(false);
   });
 });
 

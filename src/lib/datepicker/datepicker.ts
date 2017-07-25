@@ -127,7 +127,9 @@ export class MdDatepicker<D> implements OnDestroy {
   get startAt(): D {
     // If an explicit startAt is set we start there, otherwise we start at whatever the currently
     // selected value is.
-    return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
+    return this._startAt ||
+        (this._datepickerInput && this._dateAdapter.isValidDate(this._datepickerInput.value) ?
+            this._datepickerInput.value : null);
   }
   set startAt(date: D) { this._startAt = date; }
   private _startAt: D;
@@ -240,7 +242,8 @@ export class MdDatepicker<D> implements OnDestroy {
     }
     this._datepickerInput = input;
     this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: D) => this._selected = value);
+        this._datepickerInput._valueChange.subscribe((value: D) =>
+            this._selected = this._dateAdapter.isValidDate(value) ? value : null);
   }
 
   /** Open the calendar. */

@@ -116,9 +116,6 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
         this._dateFormats.parse.dateInput);
   }
   set value(value: D | null) {
-    if (value != null && !this._dateAdapter.isDateObject(value)) {
-      throw Error('Datepicker: value not recognized as a date object by DateAdapter.');
-    }
     let oldDate = this.value;
     this._renderer.setProperty(this._elementRef.nativeElement, 'value',
         value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '');
@@ -170,16 +167,22 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   private _datepickerSubscription: Subscription;
 
+  /** The form control validator for whether the input parses. */
+  private _parseValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    return (!control.value || this._dateAdapter.isValidDate(control.value)) ?
+        null : {'mdDatepickerParse': true};
+  }
+
   /** The form control validator for the min date. */
   private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    return (!this.min || !control.value ||
+    return (!this.min || !this._dateAdapter.isValidDate(this.min) || !control.value ||
         this._dateAdapter.compareDate(this.min, control.value) <= 0) ?
         null : {'mdDatepickerMin': {'min': this.min, 'actual': control.value}};
   }
 
   /** The form control validator for the max date. */
   private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    return (!this.max || !control.value ||
+    return (!this.max || !this._dateAdapter.isValidDate(this.max) || !control.value ||
         this._dateAdapter.compareDate(this.max, control.value) >= 0) ?
         null : {'mdDatepickerMax': {'max': this.max, 'actual': control.value}};
   }
@@ -192,7 +195,8 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   /** The combined form control validator for this input. */
   private _validator: ValidatorFn | null =
-      Validators.compose([this._minValidator, this._maxValidator, this._filterValidator]);
+      Validators.compose(
+          [this._parseValidator, this._minValidator, this._maxValidator, this._filterValidator]);
 
   constructor(
       private _elementRef: ElementRef,

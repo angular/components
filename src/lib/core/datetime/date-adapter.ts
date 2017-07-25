@@ -107,15 +107,15 @@ export abstract class DateAdapter<D> {
    * @param value The value to parse.
    * @param parseFormat The expected format of the value being parsed
    *     (type is implementation-dependent).
-   * @returns The parsed date, or null if date could not be parsed.
+   * @returns The parsed date.
    */
   abstract parse(value: any, parseFormat: any): D | null;
 
   /**
    * Formats a date as a string.
-   * @param date The value to parse.
+   * @param date The value to format.
    * @param displayFormat The format to use to display the date as a string.
-   * @returns The parsed date, or null if date could not be parsed.
+   * @returns The formatted date string.
    */
   abstract format(date: D, displayFormat: any): string;
 
@@ -157,11 +157,11 @@ export abstract class DateAdapter<D> {
   abstract getISODateString(date: D): string;
 
   /**
-   * Checks whether the given value is a date object of type `D`.
+   * Checks whether the given value is a valid date object.
    * @param value The value to check.
-   * @returns Whether the value is a date object of type `D`.
+   * @returns Whether the value is a valid date object.
    */
-  abstract isDateObject(value: any): boolean;
+  abstract isValidDate(value: any): boolean;
 
   /**
    * Sets the locale used for all dates.
