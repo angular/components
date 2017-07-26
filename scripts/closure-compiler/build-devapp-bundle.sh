@@ -51,6 +51,7 @@ OPTS=(
   "--js_module_root=dist/releases/cdk/platform"
   "--js_module_root=dist/releases/cdk/portal"
   "--js_module_root=dist/releases/cdk/rxjs"
+  "--js_module_root=dist/releases/cdk/stepper"
   "--js_module_root=dist/releases/cdk/table"
   "--js_module_root=node_modules/@angular/core"
   "--js_module_root=node_modules/@angular/common"
@@ -79,6 +80,7 @@ OPTS=(
   dist/releases/cdk/@angular/cdk/platform.js
   dist/releases/cdk/@angular/cdk/portal.js
   dist/releases/cdk/@angular/cdk/rxjs.js
+  dist/releases/cdk/@angular/cdk/stepper.js
   dist/releases/cdk/@angular/cdk/table.js
 
   # Include all Angular FESM bundles.

@@ -32,6 +32,7 @@ const ROLLUP_GLOBALS = {
   '@angular/cdk/platform': 'ng.cdk.platform',
   '@angular/cdk/portal': 'ng.cdk.portal',
   '@angular/cdk/rxjs': 'ng.cdk.rxjs',
+  '@angular/cdk/stepper': 'ng.cdk.stepper',
   '@angular/cdk/table': 'ng.cdk.table',
   '@angular/cdk': 'ng.cdk',
 

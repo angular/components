@@ -16,6 +16,7 @@ const CDK_ENTRY_POINTS = [
   'table',
   'portal',
   'observe-content',
+  'stepper',
   'a11y',
 ];
 
