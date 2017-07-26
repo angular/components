@@ -129,14 +129,10 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       // If the overlay in the calculated position fits on-screen, put it there and we're done.
       if (overlayPoint.fitsInViewport) {
         this._setElementPosition(element, overlayRect, overlayPoint, pos);
+        this._notifyPositionChange(element, pos);
 
         // Save the last connected position in case the position needs to be re-calculated.
         this._lastConnectedPosition = pos;
-
-        // Notify that the position has been changed along with its change properties.
-        const scrollableViewProperties = this.getScrollableViewProperties(element);
-        const positionChange = new ConnectedOverlayPositionChange(pos, scrollableViewProperties);
-        this._onPositionChange.next(positionChange);
 
         return;
       } else if (!fallbackPoint || fallbackPoint.visibleArea < overlayPoint.visibleArea) {
@@ -148,6 +144,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     // If none of the preferred positions were in the viewport, take the one
     // with the largest visible area.
     this._setElementPosition(element, overlayRect, fallbackPoint!, fallbackPosition!);
+    this._notifyPositionChange(element, fallbackPosition!);
   }
 
   /**
@@ -352,6 +349,13 @@ export class ConnectedPositionStrategy implements PositionStrategy {
 
       return clippedAbove || clippedBelow || clippedLeft || clippedRight;
     });
+  }
+
+  /** Notify that the position has been changed along with its change properties. */
+  private _notifyPositionChange(element: HTMLElement, pos: ConnectionPositionPair) {
+    const scrollableViewProperties = this.getScrollableViewProperties(element);
+    const positionChange = new ConnectedOverlayPositionChange(pos, scrollableViewProperties);
+    this._onPositionChange.next(positionChange);
   }
 
   /** Physically positions the overlay element to the given coordinate. */
