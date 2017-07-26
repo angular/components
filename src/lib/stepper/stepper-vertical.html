@@ -25,11 +25,5 @@
        [attr.aria-labelledby]="_getStepLabelId(i)"
        [attr.aria-expanded]="selectedIndex == i">
     <ng-container [ngTemplateOutlet]="step.content"></ng-container>
-
-    <!-- TODO(jwshin): Remove these buttons when stepper-button directives are created. -->
-    <div>
-      <button md-button (click)="previous()">Back</button>
-      <button md-button (click)="next()">Next</button>
-    </div>
   </div>
 </div>
