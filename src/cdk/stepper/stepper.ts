@@ -22,7 +22,7 @@ import {
   ViewChild,
   TemplateRef
 } from '@angular/core';
-import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '../keyboard/keycodes';
+import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '@angular/cdk/keyboard';
 import {CdkStepLabel} from './step-label';
 
 /** Used to generate unique ID for each stepper component. */
