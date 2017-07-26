@@ -71,7 +71,9 @@ export class FirebaseService {
             this._readResults(childSnapshot);
             break;
         }
-        return ++counter === snapshot.numChildren();
+
+        counter++;
+        return counter === snapshot.numChildren();
       });
     });
   }
@@ -123,7 +125,8 @@ export class FirebaseService {
       if (resultSnapshot.key) {
         this._addTestResults(resultSnapshot.key, resultSnapshot.val());
       }
-      return ++childCounter === childSnapshot.numChildren();
+      childCounter++;
+      return childCounter === childSnapshot.numChildren();
     });
   }
 

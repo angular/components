@@ -23,7 +23,8 @@ export function copyTestImagesToGoldens(prNumber: string) {
           failedFilenames.push(childSnapshot.key);
         }
 
-        return ++counter === snapshot.numChildren();
+        counter++;
+        return counter === snapshot.numChildren();
       });
 
       return failedFilenames;
