@@ -41,6 +41,9 @@ export class ConnectionPositionPair {
   }
 }
 
+/** The offset that can be assigned to a connected overlay. */
+export type ConnectedPositionOffset = number | ((pair?: ConnectionPositionPair) => number);
+
 /**
  * Set of properties regarding the position of the origin and overlay relative to the viewport
  * with respect to the containing Scrollable elements.

@@ -13,7 +13,9 @@ import {
   ConnectionPositionPair,
   OriginConnectionPosition,
   OverlayConnectionPosition,
-  ConnectedOverlayPositionChange, ScrollableViewProperties
+  ConnectedPositionOffset,
+  ConnectedOverlayPositionChange,
+  ScrollableViewProperties,
 } from './connected-position';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
@@ -42,10 +44,10 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   private _dir = 'ltr';
 
   /** The offset in pixels for the overlay connection point on the x-axis */
-  private _offsetX: number = 0;
+  private _offsetX: ConnectedPositionOffset = 0;
 
   /** The offset in pixels for the overlay connection point on the y-axis */
-  private _offsetY: number = 0;
+  private _offsetY: ConnectedPositionOffset = 0;
 
   /** The Scrollable containers used to check scrollable view properties on position change. */
   private scrollables: Scrollable[] = [];
@@ -200,7 +202,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * Sets an offset for the overlay's connection point on the x-axis
    * @param offset New offset in the X axis.
    */
-  withOffsetX(offset: number): this {
+  withOffsetX(offset: ConnectedPositionOffset): this {
     this._offsetX = offset;
     return this;
   }
@@ -209,7 +211,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * Sets an offset for the overlay's connection point on the y-axis
    * @param  offset New offset in the Y axis.
    */
-  withOffsetY(offset: number): this {
+  withOffsetY(offset: ConnectedPositionOffset): this {
     this._offsetY = offset;
     return this;
   }
@@ -286,9 +288,13 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       overlayStartY = pos.overlayY == 'top' ? 0 : -overlayRect.height;
     }
 
+    // Determine the overlay offset.
+    let offsetX = typeof this._offsetX === 'function' ? this._offsetX(pos) : this._offsetX;
+    let offsetY = typeof this._offsetY === 'function' ? this._offsetY(pos) : this._offsetY;
+
     // The (x, y) coordinates of the overlay.
-    let x = originPoint.x + overlayStartX + this._offsetX;
-    let y = originPoint.y + overlayStartY + this._offsetY;
+    let x = originPoint.x + overlayStartX + offsetX;
+    let y = originPoint.y + overlayStartY + offsetY;
 
     // How much the overlay would overflow at this position, on each side.
     let leftOverflow = 0 - x;
