@@ -8,7 +8,8 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {OverlayModule, MdCommonModule, PlatformModule} from '../core';
-import {CdkStickyRegion, CdkStickyHeader} from './sticky-header';
+import {CdkStickyRegion, CdkStickyHeader,
+  STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER} from './sticky-header';
 
 
 
@@ -16,6 +17,7 @@ import {CdkStickyRegion, CdkStickyHeader} from './sticky-header';
   imports: [OverlayModule, MdCommonModule, CommonModule, PlatformModule],
   declarations: [CdkStickyRegion, CdkStickyHeader],
   exports: [CdkStickyRegion, CdkStickyHeader, MdCommonModule],
+  providers: [STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER]
 })
 export class StickyHeaderModule {}
 
