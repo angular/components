@@ -95,7 +95,20 @@ You only need this single Sass file; you do not need to use Sass to style the re
 
 If you are using the Angular CLI, support for compiling Sass to css is built-in; you only have to
 add a new entry to the `"styles"` list in `angular-cli.json` pointing to the theme
-file (e.g., `unicorn-app-theme.scss`).
+file e.g.:
+```
+{
+    "apps": [
+        {
+            "name": "unicorn-app",
+            ... main, polyfills, etc
+            "styles": [
+                "unicorn-app-theme.scss"
+            ]
+        }
+    ]
+}
+```
 
 If you're not using the Angular CLI, you can use any existing Sass tooling to build the file (such
 as gulp-sass or grunt-sass). The simplest approach is to use the `node-sass` CLI; you simply run:
