@@ -148,7 +148,7 @@ class MyComp {
 ```
 
 
-#### Keyboard interaction:
+### Keyboard interaction
 - <kbd>DOWN_ARROW</kbd>: Next option becomes active.
 - <kbd>UP_ARROW</kbd>: Previous option becomes active.
 - <kbd>ENTER</kbd>: Select currently active item.
