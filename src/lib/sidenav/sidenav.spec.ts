@@ -29,6 +29,10 @@ describe('MdSidenav', () => {
   describe('methods', () => {
     it('should be able to open and close', fakeAsync(() => {
       let fixture = TestBed.createComponent(BasicTestApp);
+
+      fixture.detectChanges();
+      tick();
+
       let testComponent: BasicTestApp = fixture.debugElement.componentInstance;
       let sidenav = fixture.debugElement.query(By.directive(MdSidenav));
       let sidenavBackdropElement = fixture.debugElement.query(By.css('.mat-sidenav-backdrop'));
@@ -99,6 +103,10 @@ describe('MdSidenav', () => {
 
     it('should close when pressing escape', fakeAsync(() => {
       let fixture = TestBed.createComponent(BasicTestApp);
+
+      fixture.detectChanges();
+      tick();
+
       let testComponent: BasicTestApp = fixture.debugElement.componentInstance;
       let sidenav = fixture.debugElement.query(By.directive(MdSidenav));
 
@@ -152,6 +160,10 @@ describe('MdSidenav', () => {
 
     it('should restore focus on close if focus is inside sidenav', fakeAsync(() => {
       let fixture = TestBed.createComponent(BasicTestApp);
+
+      fixture.detectChanges();
+      tick();
+
       let sidenav = fixture.debugElement.query(By.directive(MdSidenav)).componentInstance;
       let openButton = fixture.componentInstance.openButton.nativeElement;
       let sidenavButton = fixture.componentInstance.sidenavButton.nativeElement;
@@ -223,15 +235,16 @@ describe('MdSidenav', () => {
           .toBe(false, 'Expected sidenav not to have a native align attribute.');
     });
 
-    it('should throw when multiple sidenavs have the same align', () => {
+    it('should throw when multiple sidenavs have the same align', fakeAsync(() => {
       const fixture = TestBed.createComponent(SidenavDynamicAlign);
       fixture.detectChanges();
+      tick();
 
       const testComponent: SidenavDynamicAlign = fixture.debugElement.componentInstance;
       testComponent.sidenav1Align = 'end';
 
       expect(() => fixture.detectChanges()).toThrow();
-    });
+    }));
 
     it('should not throw when sidenavs swap sides', () => {
       const fixture = TestBed.createComponent(SidenavDynamicAlign);

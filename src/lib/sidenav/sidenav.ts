@@ -62,19 +62,20 @@ export class MdSidenavToggleResult {
   encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('transform', [
-      state('open', style({
+      state('open, open-instant', style({
         transform: 'translate3d(0, 0, 0)',
         visibility: 'visible',
       })),
       state('void', style({
         visibility: 'hidden',
       })),
-      transition('* => *', animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)'))
+      transition('void => open-instant', animate('0ms')),
+      transition('void <=> open', animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)'))
     ])
   ],
   host: {
     'class': 'mat-sidenav',
-    '[@transform]': 'opened ? "open" : "void"',
+    '[@transform]': '_getAnimationState()',
     '(@transform.start)': '_isAnimating = true',
     '(@transform.done)': '_onAnimationEnd($event)',
     '(keydown)': 'handleKeydown($event)',
@@ -90,6 +91,9 @@ export class MdSidenavToggleResult {
 export class MdSidenav implements AfterContentInit, OnDestroy {
   private _focusTrap: FocusTrap;
   private _elementFocusedBeforeSidenavWasOpened: HTMLElement | null = null;
+
+  /** Whether the sidenav is initialized. Used for disabling the initial animation. */
+  private _enableAnimations = false;
 
   /** Alignment of the sidenav (direction neutral); whether 'start' or 'end'. */
   private _align: 'start' | 'end' = 'start';
@@ -178,6 +182,7 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
   ngAfterContentInit() {
     this._focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
     this._focusTrap.enabled = this.isFocusTrapEnabled;
+    Promise.resolve().then(() => this._enableAnimations = true);
   }
 
   ngOnDestroy() {
@@ -239,10 +244,23 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
     }
   }
 
+  /**
+   * Figures out the state of the sidenav animation.
+   */
+  _getAnimationState(): 'open-instant' | 'open' | 'void' {
+    if (this.opened) {
+      return this._enableAnimations ? 'open' : 'open-instant';
+    }
+
+    return 'void';
+  }
+
   _onAnimationEnd(event: AnimationEvent) {
-    if (event.toState === 'open') {
+    const {fromState, toState} = event;
+
+    if (toState === 'open' && fromState === 'void') {
       this.onOpen.emit(new MdSidenavToggleResult('open', true));
-    } else if (event.toState === 'void') {
+    } else if (toState === 'void' && fromState === 'open') {
       this.onClose.emit(new MdSidenavToggleResult('close', true));
     }
 
