@@ -312,20 +312,17 @@ describe('NativeDateAdapter', () => {
     let d = new Date();
     expect(adapter.isValid(d)).toBe(true);
     expect(adapter.isDateInstance(d)).toBe(true);
-    expect(adapter.getValidDateOrNull(d)).toBe(d);
   });
 
   it('should count an invalid date as an invalid date instance', () => {
     let d = new Date(NaN);
     expect(adapter.isValid(d)).toBe(false);
     expect(adapter.isDateInstance(d)).toBe(true);
-    expect(adapter.getValidDateOrNull(d)).toBeNull();
   });
 
   it('should count a string as not a date instance', () => {
     let d = '1/1/2017';
     expect(adapter.isDateInstance(d)).toBe(false);
-    expect(adapter.getValidDateOrNull(d)).toBeNull();
   });
 });
 

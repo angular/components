@@ -171,14 +171,6 @@ export abstract class DateAdapter<D> {
   abstract isValid(date: D): boolean;
 
   /**
-   * @param {obj} The object to check.
-   * @returns The given object if it is both a date instance and valid, otherwise null.
-   */
-  getValidDateOrNull(obj: any): D | null {
-    return (this.isDateInstance(obj) && this.isValid(obj)) ? obj : null;
-  }
-
-  /**
    * Sets the locale used for all dates.
    * @param locale The new locale.
    */
