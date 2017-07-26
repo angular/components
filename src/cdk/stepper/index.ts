@@ -6,19 +6,4 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {CdkStepper, CdkStep} from './stepper';
-import {CommonModule} from '@angular/common';
-import {CdkStepLabel} from './step-label';
-import {CdkStepperNext, CdkStepperPrevious} from './stepper-button';
-
-@NgModule({
-  imports: [CommonModule],
-  exports: [CdkStep, CdkStepper, CdkStepLabel, CdkStepperNext, CdkStepperPrevious],
-  declarations: [CdkStep, CdkStepper, CdkStepLabel, CdkStepperNext, CdkStepperPrevious]
-})
-export class CdkStepperModule {}
-
-export * from './stepper';
-export * from './step-label';
-export * from './stepper-button';
+export * from './public_api';

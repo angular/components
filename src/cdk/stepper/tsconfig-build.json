@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig-build",
+  "compilerOptions": {
+    "outDir": "../../../dist/packages/cdk",
+    "baseUrl": ".",
+    "paths": {
+      "@angular/cdk/keyboard": ["../../../dist/packages/cdk/keyboard/public_api"]
+    }
+  },
+  "files": [
+    "public_api.ts"
+  ],
+  "angularCompilerOptions": {
+    "annotateForClosureCompiler": true,
+    "strictMetadataEmit": true,
+    "flatModuleOutFile": "index.js",
+    "flatModuleId": "@angular/cdk/stepper",
+    "skipTemplateCodegen": true
+  }
+}

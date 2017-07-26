@@ -29,6 +29,7 @@
       "@angular/cdk/platform": ["../../dist/packages/cdk/platform/public_api"],
       "@angular/cdk/portal": ["../../dist/packages/cdk/portal/public_api"],
       "@angular/cdk/rxjs": ["../../dist/packages/cdk/rxjs/public_api"],
+      "@angular/cdk/stepper": ["../../dist/packages/cdk/stepper/public_api"],
       "@angular/cdk/table": ["../../dist/packages/cdk/table/public_api"]
     }
   },
