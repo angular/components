@@ -1,6 +1,6 @@
 <section>
   <h2>Radio buttons in group</h2>
-  <md-radio-group name="seasons" [(ngModel)]="favoriteSeason">
+  <md-radio-group name="seasons" [(ngModel)]="favoriteSeason" aria-label="Seasons">
     <md-radio-button *ngFor="let season of seasonOptions" [value]="season">
       {{season}}
     </md-radio-button>
@@ -9,10 +9,10 @@
 
 <section>
   <h2>Radio buttons with align-end label position</h2>
-  <md-radio-group name="my_options" align="end">
-    <md-radio-button value="option_1">Option 1</md-radio-button>
-    <md-radio-button value="option_2">Option 2</md-radio-button>
-    <md-radio-button value="option_3">Option 3</md-radio-button>
+  <md-radio-group name="bread" align="end" aria-label="Breads">
+    <md-radio-button value="toast">Toast</md-radio-button>
+    <md-radio-button value="biscuit">Biscuit</md-radio-button>
+    <md-radio-button value="bagel">Bagel</md-radio-button>
   </md-radio-group>
 </section>
 
