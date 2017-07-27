@@ -56,7 +56,6 @@ export function STICKY_HEADER_SUPPORT_STRATEGY_FACTORY() {
 /** Create a factory for sticky-positioning check to make code more testable */
 export const STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER = {
   provide: STICKY_HEADER_SUPPORT_STRATEGY,
-  deps: [],
   useFactory: STICKY_HEADER_SUPPORT_STRATEGY_FACTORY
 };
 
